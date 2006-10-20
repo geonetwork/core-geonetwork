@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+	<heading>Erruer de privilège</heading>
+	<message>Vous n'avez pas le droit de réaliser cette action.</message>
+	<button>Retour</button>
+</strings>

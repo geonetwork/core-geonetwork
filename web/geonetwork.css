@@ -1,0 +1,332 @@
+
+/*******************************************************************************
+general
+*******************************************************************************/
+
+
+* {
+	font-size: 100%; /* without this font sizes are not inherited correctly */
+}
+
+body {
+	font-family: Verdana;
+	font-size: 9pt;
+	margin: 0px;
+	color: #064377;
+}
+
+table, tr, td {
+	border-width: 0px;
+	border-spacing: 0px;
+	border-collapse: collapse; /* border-spacing should be enough, but added for IE compatibility */
+	padding: 0px;
+}
+
+th {
+	text-align: left;
+	font-weight: bold;
+	border-width: 0px;
+	border-spacing: 0px;
+	border-collapse: collapse; /* border-spacing should be enough, but added for IE compatibility */
+}
+
+img {
+	border-width: 0px;
+}
+
+h1 {
+	font-size: 110%;
+	font-weight: bold;
+}
+
+h2 {
+	font-size: 110%;
+	font-weight: normal;
+}
+
+a {
+	/*
+	color: #266377;
+	text-decoration: none;
+	*/
+	color: #064377;
+	text-decoration: underline;
+}
+
+a:hover
+{
+	color: #ffffff;
+	background: #4683b7;
+}
+
+/*******************************************************************************
+banner
+*******************************************************************************/
+
+tr.banner {
+	/* moved to td, since IE does not accept it
+	border-bottom: 1px solid #ffffff;
+	*/
+}
+
+td.banner {
+	font-size: 8pt;
+	color: #ffffff;
+	background-image: url('images/blue-stripes.jpg');
+	border-bottom: 1px solid #ffffff; /* moved here from tr since IE accepts it only here */
+}
+
+td.banner-menu {
+	font-size: 8pt;
+	color: #ffffff;
+	background: #064377;
+	padding-left: 8px;
+	padding-right: 8px;
+	border-bottom: 1px solid #ffffff; /* moved here from tr since IE accepts it only here */
+	height: 16px;
+}
+
+td.banner-login {
+	font-size: 8pt;
+	color: #ffffff;
+	/*
+	background-image: url('images/blue-stripes.jpg');
+	*/
+	background: #266397;
+	padding-left: 8px;
+	padding-right: 8px;
+	border-bottom: 1px solid #ffffff; /* moved here from tr since IE accepts it only here */
+	height: 16px;
+	vertical-align: middle
+}
+
+a.banner {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+a.banner:hover
+{
+	background: #266397;
+}
+
+font.banner-active {
+	color: #ffffff;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+font.banner-passive {
+	color: #a0a0a0;
+	text-decoration: none;
+}
+
+input.banner {
+	font-family: Verdana;
+	font-size: 7pt;
+	color: #064377;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+button.banner {
+	font-family: Verdana;
+	font-size: 7pt;
+	color: #064377;
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+a.palette {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+a.palette:hover
+{
+	background: #064377;
+}
+
+/* added since the browser adds some margin for the form */
+form {
+	margin: 0px;
+}
+
+/*******************************************************************************
+content
+*******************************************************************************/
+
+td.content {
+	background: #e7edf5;
+}
+
+td.padded-content {
+	background: #e7edf5;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+td.green-content {
+	color: #ffffff;
+	background: #beb800;
+	font-weight: bold;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+td.blue-content {
+	color: #ffffff;
+	background: #266397;
+	/*
+	background-image: url('images/blue-stripes.jpg');
+	*/
+	height: 30;
+}
+
+input.content, select.content, textarea.content {
+	font-family: Verdana;
+	font-size: 9pt;
+	color: #064377;
+	max-width: 400;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+button.content {
+	font-family: Verdana;
+	font-size: 9pt;
+	color: #064377;
+	max-width: 400;
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+input.content-small, button.content-small {
+	font-family: Verdana;
+	font-size: 7pt;
+	color: #064377;
+	min-width: 150px;
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+a.green-content {
+	background: #beb800;
+	color: #ffffff;
+}
+
+a.green-content:hover {
+	background: #9e9800;
+}
+
+/*******************************************************************************
+footer
+*******************************************************************************/
+
+td.footer {
+	font-size: 8pt;
+	background: #beb800;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+a.footer {
+	color: #064377;
+}
+
+a.footer:hover
+{
+	color: #ffffff;
+	background: #9e9800;
+}
+
+/*******************************************************************************
+metadata
+*******************************************************************************/
+
+table.md {
+	font-size: 8pt;
+}
+
+th.md {
+	text-align: left;
+	font-weight: bold;
+}
+
+input.md, select.md, textarea.md {
+	font-family: Verdana;
+	font-size: 8pt;
+	color: #064377;
+	/* max-width: 400; */
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+button.md {
+	font-family: Verdana;
+	font-size: 8pt;
+	color: #064377;
+	/* max-width: 400; */
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+/*******************************************************************************
+utilities
+*******************************************************************************/
+
+font.error, font.warning {
+	color: #ff4040;
+}
+
+td.box {
+	border: 2px solid #266397;
+	background: #4683b7;
+}
+
+td.separator {
+	background: #ffffff;
+	height: 4px;
+	width: 4px;
+}
+
+td.dots {
+	height: 4px;
+	width: 4px;
+	background-image: url('images/dot.gif');
+}
+
+th.padded, td.padded {
+	padding: 2px;
+}
+
+th.padded-center {
+	text-align:  center;
+	padding: 2px;
+}
+
+a.image:hover
+{
+	background: transparent;
+}
+
+td.spacer {
+	height: 16px;
+}
+
+div.track  {
+	background: #064377;
+	margin-top:2px;
+}
+
+div.handle {
+	background: #beb800;
+	cursor:move;
+}

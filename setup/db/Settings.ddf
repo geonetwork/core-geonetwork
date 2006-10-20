@@ -1,0 +1,41 @@
+#---------------------------------------------------------
+#--- File exported in DDF format on 2006-07-19 18:01:35
+#---
+#--- SELECT id,parentId,name,value FROM APP.Settings
+#---------------------------------------------------------
+
+[FIELDS]
+id,            INTEGER
+parentId,      INTEGER
+name,          VARCHAR
+value,         VARCHAR
+
+[DATA]
+0		root	
+1	0	system	
+2	0	harvesting	
+
+10	1	site	
+11	10	name	myGeonetwork
+12	10	siteId	mySiteId
+
+13	1	gnVersion	$VERSION
+
+15	1	usePublication	false
+16	15	host	
+17	15	port	
+
+18	1	intranet	
+19	18	network	127.0.0.1
+20	18	netmask	255.255.255.0
+
+21	1	z3950Port	2100
+
+22	1	useProxy	false
+23	22	host	
+24	22	port	
+
+25	1	sendFeedback	false
+26	25	email	
+27	25	smtpHost	
+28	25	smtpPort	

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<audioVideo>视频/音频</audioVideo>
+	<caseStudies>案例研究</caseStudies>
+	<datasets>数据集</datasets>
+	<directories>产品目录</directories>
+	<interactiveResources>在线资源</interactiveResources>
+	<maps>地图图形</maps>
+	<otherResources>其他资源</otherResources>
+	<photo>相片影像</photo>
+	<applications>应用系统</applications>
+	<proceedings>会议文集</proceedings>
+</strings>

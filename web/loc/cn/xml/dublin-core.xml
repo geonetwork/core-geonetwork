@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:dc = "http://purl.org/dc/elements/1.1/">
+	<simpledc>元数据</simpledc>
+	<dc:title>题名</dc:title>
+	<dc:creator>作者</dc:creator>
+	<dc:subject>主题与关键词</dc:subject>
+	<dc:description>说明</dc:description>
+	<dc:publisher>出版商</dc:publisher>
+	<dc:contributor>投稿人</dc:contributor>
+	<dc:date>日期</dc:date>
+	<dc:type>资源类型</dc:type>
+	<dc:format>格式</dc:format>
+	<dc:identifier>资源标识</dc:identifier>
+	<dc:source>来源</dc:source>
+	<dc:language>语言</dc:language>
+	<dc:relation>关系</dc:relation>
+	<dc:coverage>覆盖范围</dc:coverage>
+	<dc:rights>知识产权管理</dc:rights>
+</root>

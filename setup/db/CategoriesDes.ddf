@@ -1,0 +1,55 @@
+#---------------------------------------------------------
+#--- File exported in DDF format on 2005-03-12 17:26:02
+#---
+#--- SELECT id,name FROM APP.Categories
+#---------------------------------------------------------
+
+[FIELDS]
+idDes,          INTEGER
+langId,         VARCHAR
+label,          VARCHAR
+
+[DATA]
+1	en	Maps & graphics
+2	en	Datasets
+3	en	Interactive resources
+4	en	Applications
+5	en	Case studies, best practices
+6	en	Conference proceedings
+7	en	Photo
+8	en	Audio/Video
+9	en	Directories
+10	en	Other information resources
+
+1	fr	Maps & graphics
+2	fr	Datasets
+3	fr	Interactive resources
+4	fr	Applications
+5	fr	Case studies, best practices
+6	fr	Conference proceedings
+7	fr	Photo
+8	fr	Audio/Video
+9	fr	Directories
+10	fr	Other information resources
+
+1	es	Maps & graphics
+2	es	Datasets
+3	es	Interactive resources
+4	es	Applications
+5	es	Case studies, best practices
+6	es	Conference proceedings
+7	es	Photo
+8	es	Audio/Video
+9	es	Directories
+10	es	Other information resources
+
+1	cn	Maps & graphics
+2	cn	Datasets
+3	cn	Interactive resources
+4	cn	Applications
+5	cn	Case studies, best practices
+6	cn	Conference proceedings
+7	cn	Photo
+8	cn	Audio/Video
+9	cn	Directories
+10	cn	Other information resources

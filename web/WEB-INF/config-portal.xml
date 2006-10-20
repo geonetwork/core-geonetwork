@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<geonet>
+	<services package="org.fao.geonet">
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Portal XML services -->
+
+		<service name="portal.search">
+			<class name=".services.main.Search">
+				<param name="maxSummaryKeys" value="10" />
+			</class>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="portal.present">
+			<class name=".services.main.Result"/>
+
+			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="portal.search.present">
+			<class name=".services.main.Search">
+				<param name="maxSummaryKeys" value="10" />
+			</class>
+			<class name=".services.main.Result">
+				<param name="range" value="all" />
+			</class>
+
+			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="portal.full">
+			<class name=".services.main.Result"/>
+
+			<output sheet="portal-full.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="portal.latest.updated">
+			<output sheet="portal-latest-updated.xsl" contentType="text/xml; charset=UTF-8">
+				<call name="latestUpdated"  class=".guiservices.metadata.GetLatestUpdated">
+					<param name="maxItems"           value="5" />
+					<param name="timeBetweenUpdates" value="10" />
+				</call>
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="portal.featured">
+			<class name=".guiservices.metadata.GetRandom">
+				<param name="maxItems"           value="1" />
+				<param name="timeBetweenUpdates" value="10" />
+			</class>
+
+			<output sheet="portal-featured.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="portal.categories">
+			<class name=".services.category.List"/>
+
+			<output sheet="portal-categories.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+
+	</services>
+</geonet>
+

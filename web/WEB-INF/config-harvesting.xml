@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<geonet>
+	<services package="org.fao.geonet">
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Harvesting services -->
+
+		<service name="harvesting">
+			<output sheet="harvesting/harvesting.xsl">
+				<xml name="harvesting" file="xml/harvesting.xml" />
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.harvesting.get" type="xml">
+			<class name=".services.harvesting.Get" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.harvesting.add" type="xml">
+			<class name=".services.harvesting.Add" />
+			<class name=".services.harvesting.Get" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.harvesting.update" type="xml">
+			<class name=".services.harvesting.Update" />
+			<class name=".services.harvesting.Get" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.harvesting.remove" type="xml">
+			<class name=".services.harvesting.Remove" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.harvesting.start" type="xml">
+			<class name=".services.harvesting.Start" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.harvesting.stop" type="xml">
+			<class name=".services.harvesting.Stop" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.harvesting.run" type="xml">
+			<class name=".services.harvesting.Run" />
+		</service>
+
+	</services>
+</geonet>
+

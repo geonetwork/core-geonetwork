@@ -1,0 +1,17 @@
+#---------------------------------------------------------
+#--- File exported in DDF format on 2006-10-08 22:49:43
+#---
+#--- SELECT id,name,description,email,referrer FROM APP.Groups order by id
+#---------------------------------------------------------
+
+[FIELDS]
+id,            INTEGER
+name,          VARCHAR
+description,   VARCHAR
+email,         VARCHAR
+referrer,      INTEGER
+
+[DATA]
+0	internal			
+1	all			
+2	editor	This is a sample group for editors. You can create specific user groups that fit best with your organization. After this, you can administer your users to be part of different groups in the user admin section.		

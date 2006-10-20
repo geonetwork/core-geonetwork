@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<any>Cualquier sitio</any>
+	<absres>Resolución en la Abscisa</absres>
+	<abstract>Resumen</abstract>
+	<accconst>Restricciones de acceso</accconst>
+	<accsinst>Intrucciones de acceso</accsinst>
+	<address>Dirección</address>
+	<addrtype>Tipo de dirección</addrtype>
+	<albers>Proyección de Albers Cónica conforme</albers>
+	<altdatum>Nombre del datum altimétrico</altdatum>
+	<altenc>Método de codificación de la altimetría</altenc>
+	<altres>Resolución altimétrica</altres>
+	<altsys>Definición del sistema altimétrico</altsys>
+	<altunits>Unidades de distancia en altitud</altunits>
+	<arcsys>Sistema de coordenadas ARC</arcsys>
+	<arczone>Sistema identificador de Zona ARC</arczone>
+	<attr>Atributo</attr>
+	<attracc>Exactitud del atributo</attracc>
+	<attracce>Descripción de la precisión del atributo</attracce>
+	<attraccr>Informe de la precisión del atributo</attraccr>
+	<attraccv>Valor de la precisión del atributo</attraccv>
+	<attrdef>Definición del atributo</attrdef>
+	<attrdefs>Fuente de la definición del atributo</attrdefs>
+	<attrdomv>Valores de dominio para el atributo</attrdomv>
+	<attrlabl>Etiqueta del atributo</attrlabl>
+	<attrmfrq>Frecuencia de medidad del atributo</attrmfrq>
+	<attrmres>Resolución de medida del atributo</attrmres>
+	<attrunit>Unidades de medida del atributo</attrunit>
+	<attrva>Precisión de los valores del atributo</attrva>
+	<attrvae>ADescripción de la precisión del atributo</attrvae>
+	<attrvai>Información sobre la precisión de los valores del atributo</attrvai>
+	<availabl>Periodo de validez temporal</availabl>
+	<azimangl>Ángulo Azimutal</azimangl>
+	<azimequi>Azimutal equidistante</azimequi>
+	<azimptl>Azimuth Measure Point Longitude</azimptl>
+	<bearrefd>Dirección de referencia de la orientación</bearrefd>
+	<bearrefm>Meridiano de referencia de la orientación</bearrefm>
+	<bearres>Resolución de la orientación</bearres>
+	<bearunit>Unidades de la orientación</bearunit>
+	<begdate>Fecha de comienzo</begdate>
+	<begdatea>Fecha de inicio de los valores de los atributos</begdatea>
+	<begtime>Fecha de inicio</begtime>
+	<bounding>Coordenadas de la envolvente</bounding>
+	<browse>Gráfico con la vista previa</browse>
+	<browsed>Descripción del gráfico de vista previa</browsed>
+	<browsen>Nombre del fichero de vista previa</browsen>
+	<browset>Tipo de fichero de vista previa</browset>
+	<caldate>Fecha de calendario</caldate>
+	<citation>Cita</citation>
+	<citeinfo>Información sobre la Cita</citeinfo>
+	<city>Ciudad</city>
+	<cloud>Nubosidad</cloud>
+	<cntaddr>Dirección de contacto</cntaddr>
+	<cntemail>Dirección de correo electrónico de contacto</cntemail>
+	<cntfax>Teléfono / Fax de contacto</cntfax>
+	<cntinfo>Información de contacto</cntinfo>
+	<cntinst>Instrucciones de contacto</cntinst>
+	<cntorg>Organización de contacto</cntorg>
+	<cntorgp>Contacto principal de la organización</cntorgp>
+	<cntper>Pesona de contacto</cntper>
+	<cntperp>Persona de contacto principal</cntperp>
+	<cntpos>Cargo del contacto</cntpos>
+	<cnttdd>Teléfono de contacto para datos</cnttdd>
+	<cntvoice>Teléfono de contacto para voz</cntvoice>
+	<codesetd>Dominio del conjunto de códigos</codesetd>
+	<codesetn>Nombre del conjunto de códigos</codesetn>
+	<codesets>Fuente de la codificación</codesets>
+	<colcount>Número de columnas</colcount>
+	<compat>Información de compatibilidad</compat>
+	<complete>Informe de completitud</complete>
+	<compress>Soporte de compresión</compress>
+	<computer>Información de contacto de informática</computer>
+	<coordrep>Sistema de coordenadas</coordrep>
+	<country>País</country>
+	<crossref>Referencia cruzada</crossref>
+	<current>Actualidad de la referencia</current>
+	<custom>Formalidad del proceso de peticiones</custom>
+	<datacred>Créditos del conjunto de datos</datacred>
+	<dataqual>Información de calidad de los datos</dataqual>
+	<denflat>Denominador del factor de achatamiento</denflat>
+	<depthdn>Nombre del datum altimétrico</depthdn>
+	<depthdu>Unidad de distancia de profundidad</depthdu>
+	<depthem>Método de codificación de la profundidad</depthem>
+	<depthres>Resoluciçión de la profundidad</depthres>
+	<depthsys>Sistema de definición de la profundiad</depthsys>
+	<descript>Descripción</descript>
+	<detailed>Descripción detallada</detailed>
+	<dialfile>Nombre del fichero de descarga</dialfile>
+	<dialinst>Intrucciones de descarga</dialinst>
+	<dialtel>Teléfono de descarga</dialtel>
+	<digform>Formato digital</digform>
+	<digtinfo>Información relativa a la transmisión digital</digtinfo>
+	<digtopt>Opciones de transmisión digital</digtopt>
+	<direct>Método de referencia espacial directa</direct>
+	<distbrep>Representación en distancia y orientación</distbrep>
+	<distinfo>Información de la distribución</distinfo>
+	<distliab>Responsabilidad de la distribución</distliab>
+	<distres>Resolución de la distancia</distres>
+	<distrib>Distribuidor</distrib>
+	<dsgpoly>Conjunto de datos de tipo polígono G</dsgpoly>
+	<dsgpolyo>Conjunto de datos polígonos G exteriores a los anillos G</dsgpolyo>
+	<dsgpolyx>Conjunto de datos polígonos G excluyen a los anillos G</dsgpolyx>
+	<eadetcit>Cita a los detalles de los atributos y entidades</eadetcit>
+	<eainfo>Información sobre los atributos y las entidades</eainfo>
+	<eaover>Vista previa de los atributos y entidades</eaover>
+	<eastbc>Coordenadas Este de la envolvente</eastbc>
+	<edition>Edición</edition>
+	<edom>Dominio enumerado</edom>
+	<edomv>Valor de un dominio enumerado</edomv>
+	<edomvd>Definición de un valor de un dominio enumerado</edomvd>
+	<edomvds>Fuente de la definición de un valor de un dominio enumerado</edomvds>
+	<ellips>Nombre del elipsoide</ellips>
+	<enddate>Fecha de finalización</enddate>
+	<enddatea>Fecha final de un valor de atributo</enddatea>
+	<endtime>Tiempo de finalización</endtime>
+	<enttyp>Tipo de entidad</enttyp>
+	<enttypd>Definición del tipo de entidad</enttypd>
+	<enttypds>Fuente de la definición del tipo de entidad</enttypds>
+	<enttypl>Etiqueta del tipo de entidad</enttypl>
+	<equicon>Cónica equidistante</equicon>
+	<equirect>Equirectangular</equirect>
+	<extent>Extensión</extent>
+	<feast>Falso Este</feast>
+	<fees>Tasas</fees>
+	<filedec>Técnica de descompresión del fichero</filedec>
+	<fnorth>Falso Norte</fnorth>
+	<formcont>Información sobre el nombre del formato</formcont>
+	<formname>Nombre del formato</formname>
+	<formspec>Especificación del formato</formspec>
+	<formverd>Fecha de la versión del formato</formverd>
+	<formvern>Número de la versión del formato</formvern>
+	<geodetic>Modelo Geodésico</geodetic>
+	<geoform>Formato de representación de los datos Geoespaciales</geoform>
+	<geograph>Geográficas</geograph>
+	<geogunit>Unidades de las coordenadas Geográficas</geogunit>
+	<gnomonic>Gnomonica</gnomonic>
+	<gridsys>Sistema de coordenadas Mallado</gridsys>
+	<gridsysn>Nombre del sistema de coordendas Mallado</gridsysn>
+	<gringlat>Latitud G-Ring</gringlat>
+	<gringlon>Longitud G-Ring</gringlon>
+	<gvnsp>Proyección Vertical general próxima "Near-sided"</gvnsp>
+	<heightpt>Height of Perspective Point Above Surface</heightpt>
+	<highbps>Bits por segundo máximos</highbps>
+	<horizdn>Nombre del Datum Horizontal</horizdn>
+	<horizpa>Horizontal Positional Accuracy</horizpa>
+	<horizpae>Descripción de la precisión posicional Horizontal</horizpae>
+	<horizpar>Informe de la precisión posicional Horizontal</horizpar>
+	<horizpav>Valor de la precisión posicional Horizontal</horizpav>
+	<horizsys>Definición del Sistema de Coordenadas Horizontales</horizsys>
+	<hours>Horario del servicio</hours>
+	<idinfo>Información de identificación</idinfo>
+	<indspref>Referencia espacial indirecta</indspref>
+	<issue>Issue Identification</issue>
+	<keywords>Palabras clave</keywords>
+	<lamberta>Lambert Azimutal Conforme</lamberta>
+	<lambertc>Lambert Conformal Conic</lambertc>
+	<landsat>Número de Satélite Landsat</landsat>
+	<latprjc>Latitud del centro de proyección</latprjc>
+	<latprjo>Latitud del origen de proyección</latprjo>
+	<latres>Resolución de la latitud</latres>
+	<lineage>Genealogía</lineage>
+	<local>Local</local>
+	<localdes>Descripción local</localdes>
+	<localgeo>Información de la georreferenciación local</localgeo>
+	<localp>Coordenadas locales planas</localp>
+	<localpd>Descripción de las coordendas locales planas</localpd>
+	<localpgi>Información de georreferenciación local plano</localpgi>
+	<logic>Informe de consistencia lógica</logic>
+	<longcm>Longitud del meridiano central</longcm>
+	<longpc>Longitud del centro de proyección</longpc>
+	<longres>Resolución de la Longitud</longres>
+	<lowbps>Bit spor segundo mínimos</lowbps>
+	<lworkcit>Cita extendida del trabajo</lworkcit>
+	<mapproj>Proyección Cartográfica</mapproj>
+	<mapprojn>Nombre de la proyección cartográfica</mapprojn>
+	<mdattim>Varias fechas/horas</mdattim>
+	<mercator>Mercator</mercator>
+	<metac>Restricciones de acceso a los metadatos</metac>
+	<metadata>Metadatos</metadata>
+	<metainfo>Información de referencia de los metadatos</metainfo>
+	<metc>Contacto de los Metadatos</metc>
+	<metd>Fecha del metadato</metd>
+	<metfrd>Fecha de revisión de los metadatos</metfrd>
+	<metrd>Fecha de la revisión</metrd>
+	<metsc>Clasificación de seguridad de los metadatos</metsc>
+	<metscs>Sistema de clasificación del sistema de seguridad de los metadatos</metscs>
+	<metshd>Descripción de la gestión sobre la seguridad</metshd>
+	<metsi>Información relativa a la seguridad de los metadatos</metsi>
+	<metstdn>Nombre de la norma de metadatos</metstdn>
+	<metstdv>Versión de la norma de metadatos</metstdv>
+	<mettc>Convención para las fechas de los metadatos</mettc>
+	<metuc>Restricciones de uso sobre los metadatos</metuc>
+	<miller>Miller Cilíndrica</miller>
+	<modsak>Estereográfica modificada para Alaska</modsak>
+	<native>Conjunto de datos medio ambientales nativo</native>
+	<networka>Dirección de Red</networka>
+	<networkr>Nombre del recurso en Red</networkr>
+	<nondig>Formato No digital</nondig>
+	<northbc>Coordenada Norte de la envolvente</northbc>
+	<numdata>Número de bits de datos</numdata>
+	<numstop>Número de bits de parada</numstop>
+	<obqlazim>Azimut de la línea oblicua</obqlazim>
+	<obqllat>Latitud de la línea oblicua</obqllat>
+	<obqllong>Longitud de la línea oblicua</obqllong>
+	<obqlpt>Punto de la línea oblicua</obqlpt>
+	<obqmerc>Oblicua Mercator</obqmerc>
+	<offmedia>Medios fuera de línea</offmedia>
+	<offoptn>Opciones fuera de línea</offoptn>
+	<oncomp>Ordenador y Sistema Operativo en línea</oncomp>
+	<onlink>Enlace en línea</onlink>
+	<onlinopt>Opciones en línea</onlinopt>
+	<ordering>Intrucciones para las peticiones</ordering>
+	<ordres>Resolución en el eje de ordenadas</ordres>
+	<origin>Fuente o responsable</origin>
+	<orthogr>Ortográfica</orthogr>
+	<othercit>Otros detalles de la cita</othercit>
+	<othergrd>Definición de otros sistemas Mallados</othergrd>
+	<otherprj>Otras definiciones de proyecciones</otherprj>
+	<overview>Descripción de la vista rápida</overview>
+	<parity>Paridad</parity>
+	<pathnum>Número de camino</pathnum>
+	<place>Lugar</place>
+	<placekey>Palabras clave de lugar</placekey>
+	<placekt>Tesauro de palabras clave de lugar</placekt>
+	<planar>Planas</planar>
+	<plance>Método de codificación de las coordenadas planas</plance>
+	<planci>Información sobre las coordendas planas</planci>
+	<plandu>Unidades de distancia planas</plandu>
+	<polarst>Polar Estereográfica</polarst>
+	<polycon>Policónica</polycon>
+	<posacc>Precisión posicional</posacc>
+	<postal>Código Postal</postal>
+	<proccont>Contacto del proceso</proccont>
+	<procdate>Fecha del proceso</procdate>
+	<procdesc>Descripción del proceso</procdesc>
+	<procstep>Paso del proceso</procstep>
+	<proctime>Fecha del proceso</proctime>
+	<progress>Progreso</progress>
+	<ptcontac>Punto de contacto</ptcontac>
+	<ptvctcnt>Número de puntos y vectores</ptvctcnt>
+	<ptvctinf>Información sobre los puntos y vectores</ptvctinf>
+	<pubdate>Fecha de la publicación</pubdate>
+	<pubinfo>Información de la publicación</pubinfo>
+	<publish>Editor</publish>
+	<pubplace>Lugar de la publicación</pubplace>
+	<pubtime>Fecha de publicación</pubtime>
+	<purpose>Propósito</purpose>
+	<qattracc>Valor de la precisión cuantitativa de los atributos</qattracc>
+	<qhorizpa>Valor de la precisión cuantitativa de la posición horizontal</qhorizpa>
+	<qvertpa>Valor de la precisión cuantitativa de la posición vertical</qvertpa>
+	<rastinfo>Información de objetos raster</rastinfo>
+	<rasttype>Tipo de objeto raster</rasttype>
+	<rdom>Rango del dominio</rdom>
+	<rdommax>Valor máximo del rango</rdommax>
+	<rdommin>Valor mínimo del rango</rdommin>
+	<reccap>Capacidad de almacenamiento</reccap>
+	<recden>Densidad de almacenamiento</recden>
+	<recdenu>Unidades de medidad de la densidad</recdenu>
+	<recfmt>Formato de almacenamiento</recfmt>
+	<resdesc>Descripción del recurso</resdesc>
+	<rngdates>Rango de fecha y hora</rngdates>
+	<robinson>Robinson</robinson>
+	<rowcount>Número de filas</rowcount>
+	<sdtsterm>Descripción de términos SDTS</sdtsterm>
+	<sdtstype>Tipo de objetos punto y vectores SDTS</sdtstype>
+	<secclass>Clasificación de la seguridad</secclass>
+	<sechandl>Descripción de la gestión de la seguridad</sechandl>
+	<secinfo>Información de seguridad</secinfo>
+	<secsys>Sistema de clasificación de la seguridad</secsys>
+	<semiaxis>Semieje mayor</semiaxis>
+	<serinfo>Información de la serie</serinfo>
+	<sername>Nombre de la serie</sername>
+	<sfctrlin>Factor de escala en el centro de la línea</sfctrlin>
+	<sfctrmer>Factor de escala en el centro del meridiano</sfctrmer>
+	<sfequat>Factor de escala en el ecuador</sfequat>
+	<sfprjorg>Factor de escala en el origen de la proyección</sfprjorg>
+	<sinusoid>Sinusoidal</sinusoid>
+	<sngdate>Fecha y hora simples</sngdate>
+	<southbc>Coordenada Sur de la envolvente</southbc>
+	<spaceobq>Proyección Oblicua Mercator en el espacior (Landsat)</spaceobq>
+	<spcs>Sistema de coordendas planas locales</spcs>
+	<spcszone>Identificador de zona SPCS</spcszone>
+	<spdoinfo>Información relativa a los sistemas de coordendas</spdoinfo>
+	<spdom>Dominio espacial</spdom>
+	<spref>Información del Sistema de Referencia</spref>
+	<srccite>Cita a las fuentes</srccite>
+	<srccitea>Resumen sobre las fuentes</srccitea>
+	<srccontr>Créditos de las fuentes</srccontr>
+	<srccurr>Referencia a la exactitud de las fuentes</srccurr>
+	<srcinfo>Información sobre las fuentes</srcinfo>
+	<srcprod>Cita abreviada de las fuentes producidas</srcprod>
+	<srcscale>Denominador de la escala de la fuente</srcscale>
+	<srctime>Perido temporal del contenido de la fuente</srctime>
+	<srcused>Cita abreviada a las fuentes usadas</srcused>
+	<state>Comunidad o provincia</state>
+	<status>Estado</status>
+	<stdorder>Procedimiento de petición normalizado</stdorder>
+	<stdparll>Paralelo estándar</stdparll>
+	<stereo>Estereográfica</stereo>
+	<stratkey>Palabras clave del estrato</stratkey>
+	<stratkt>Tesauro de palabras clave del estrato</stratkt>
+	<stratum>Estrato</stratum>
+	<supplinf>Información suplimentaria</supplinf>
+	<svlong>Longitud de la línea vertical desde el Polo</svlong>
+	<techpreq>Prerequisitos técnicos</techpreq>
+	<tempkey>Palabras clave de tiempo</tempkey>
+	<tempkeyt>Tesauro de palabras clave de tiempo</tempkeyt>
+	<temporal>Tiempo</temporal>
+	<theme>Tema</theme>
+	<themekey>Palabras clave de Tema</themekey>
+	<themekt>Tesauro de las palabras clave del tema</themekt>
+	<time>Hora del día</time>
+	<timeinfo>Inoformación de un periodo de tiempo</timeinfo>
+	<timeperd>Perido de tiempo del contenido</timeperd>
+	<title>Título</title>
+	<transize>Tamaño de transferencia</transize>
+	<transmer>Mercator Transversa</transmer>
+	<turnarnd>Tiempo de respuesta a la petición</turnarnd>
+	<typesrc>Tipo de medio de las fuentes</typesrc>
+	<udom>Dominio no representable</udom>
+	<update>Frecuencia de mantenimiento y actualización</update>
+	<ups>Estereográfica Polar Universal</ups>
+	<upszone>Identificador de Zona UPS</upszone>
+	<useconst>Restricciones de Uso</useconst>
+	<utm>Mercator Transversa Universal</utm>
+	<utmzone>Número de zona UTM</utmzone>
+	<vdgrin>van der Grinten</vdgrin>
+	<vertacc>Vertical Positional Accuracy</vertacc>
+	<vertacce>Vertical Positional Accuracy Explanation</vertacce>
+	<vertaccr>Vertical Positional Accuracy Report</vertaccr>
+	<vertaccv>Vertical Positional Accuracy Value</vertaccv>
+	<vertdef>Vertical Coordinate System Definition</vertdef>
+	<vpflevel>Nivel topológico VPF</vpflevel>
+	<vpfterm>Descripción de los términos VPF</vpfterm>
+	<vpftype>Tipo de objetos puntuales y vectoriales VPF</vpftype>
+	<vrtcount>Número de niveles, capas, etc.. Vertical</vrtcount>
+	<westbc>Coordenada Este de la envolvente</westbc>
+</root>

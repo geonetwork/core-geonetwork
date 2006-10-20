@@ -1,0 +1,413 @@
+//=============================================================================
+//===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: GeoNetwork@fao.org
+//==============================================================================
+
+package org.fao.geonet.kernel.csw.services.getrecords;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
+import jeeves.utils.Xml;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Hits;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.csw.common.Csw.TypeName;
+import org.fao.geonet.csw.common.exceptions.CatalogException;
+import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.jdom.Element;
+
+//=============================================================================
+
+class CatalogSearcher
+{
+	private static String[][] mapping =
+	{
+		{ "Identifier", "identifier" },
+		{ "Title",      "title"      },
+		{ "Abstract",   "abstract"   },
+		{ "Modified",   "changeDate" },
+		{ "Subject",    "keyword"    },
+		{ "Type",       "type"       },
+		{ "CRS",        "crs"        },
+		{ "AnyText",    "any"        },
+		{ "Format",     "format"     },
+
+		{ "FileIdentifier",        "fileId"      },
+		{ "Language",              "language"    },
+		{ "AlternateTitle",        "altTitle"    },
+		{ "CreationDate",          "createDate"  },
+		{ "OrganisationName",      "orgName"     },
+		{ "HasSecurityConstraints","secConstr"   },
+		{ "HierarchyLevelName",    "levelName"   },
+		{ "ParentIdentifier",      "parentId"    },
+		{ "KeywordType",           "keywordType" },
+
+		{ "TopicCategory",            "topicCat"        },
+		{ "DatasetLanguage",          "datasetLang"     },
+		{ "GeographicDescriptionCode","geoDescCode"     },
+		{ "TempExtent_begin",         "tempExtentBegin" },
+		{ "TempExtent_end",           "tempExtentEnd"   },
+		{ "Denominator",              "denominator"     },
+		{ "DistanceValue",            "distanceVal"     },
+		{ "DistanceUOM",              "distanceUom"     },
+
+		//--- these are needed just to avoid a warning when converting field names
+		//--- from CSW names -> lucene names
+
+		{ "northBL", "northBL" },
+		{ "southBL", "southBL" },
+		{ "eastBL",  "eastBL"  },
+		{ "westBL",  "westBL"  }
+	};
+
+	//---------------------------------------------------------------------------
+
+	private static HashMap<String, String> hmMapping = new HashMap<String, String>();
+
+	//---------------------------------------------------------------------------
+
+	static
+	{
+		for(String[] couple : mapping)
+			hmMapping.put(couple[0], couple[1]);
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Main search method
+	//---
+	//---------------------------------------------------------------------------
+
+	//--- should return a list of id that match the given filter, ordered by sortFields
+
+	public List<ResultItem> search(ServiceContext context, Element filterExpr, Set<TypeName> typeNames,
+										List<SortField> sortFields) throws CatalogException
+	{
+		Element luceneExpr = filterToLucene(context, filterExpr);
+
+		checkForErrors(luceneExpr);
+		remapFields(luceneExpr);
+
+//System.out.println("============================================");
+//System.out.println("LUCENE:\n"+Xml.getString(luceneExpr));
+
+		try
+		{
+			List<ResultItem> results = search(context, luceneExpr);
+
+			sort(results, sortFields);
+
+			return results;
+		}
+		catch (Exception e)
+		{
+			context.error("Error while searching metadata ");
+			context.error("  (C) StackTrace:\n"+ Util.getStackTrace(e));
+
+			throw new NoApplicableCodeEx("Rised exception while searching metadata : "+ e);
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Private methods
+	//---
+	//---------------------------------------------------------------------------
+
+	private Element filterToLucene(ServiceContext context, Element filterExpr) throws NoApplicableCodeEx
+	{
+		String styleSheet = context.getAppPath() + Geonet.Path.CSW + Geonet.File.FILTER_TO_LUCENE;
+
+		try
+		{
+			return Xml.transform(filterExpr, styleSheet);
+		}
+		catch (Exception e)
+		{
+			context.error("Error during Filter to Lucene conversion : "+ e);
+			context.error("  (C) StackTrace\n"+ Util.getStackTrace(e));
+
+			throw new NoApplicableCodeEx("Error during Filter to Lucene conversion : "+ e);
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void checkForErrors(Element elem) throws NoApplicableCodeEx
+	{
+		List children = elem.getChildren();
+
+		if (elem.getName().equals("error"))
+		{
+			String type = elem.getAttributeValue("type");
+			String oper = Xml.getString((Element) children.get(0));
+
+			throw new NoApplicableCodeEx(type +":"+ oper);
+		}
+
+		for(int i=0; i<children.size(); i++)
+			checkForErrors((Element) children.get(i));
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void remapFields(Element elem)
+	{
+		String field = elem.getAttributeValue("fld");
+
+		if (field != null)
+		{
+			String mapped = hmMapping.get(field);
+
+			if (mapped != null)
+				elem.setAttribute("fld", mapped);
+			else
+				System.out.println("Unknown queryable field : "+ field);
+		}
+
+		List children = elem.getChildren();
+
+		for(int i=0; i<children.size(); i++)
+			remapFields((Element) children.get(i));
+	}
+
+	//---------------------------------------------------------------------------
+
+	private List<ResultItem> search(ServiceContext context, Element luceneExpr) throws Exception
+	{
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SearchManager sm = gc.getSearchmanager();
+
+		Query data   = LuceneSearcher.makeQuery(luceneExpr);
+		Query groups = getGroupsQuery(context);
+		Query templ  = new TermQuery(new Term("_isTemplate", "n"));
+
+		//--- put query on groups in AND with lucene query
+
+		BooleanQuery query  = new BooleanQuery();
+
+		query.add(data,   true, false);
+		query.add(groups, true, false);
+		query.add(templ,  true, false);
+
+		//--- proper search
+
+		IndexReader   reader   = IndexReader.open(sm.getLuceneDir());
+		IndexSearcher searcher = new IndexSearcher(reader);
+
+		try
+		{
+			Hits hits = searcher.search(query);
+
+			//--- retrieve results
+
+			ArrayList<ResultItem> results = new ArrayList<ResultItem>();
+
+			for(int i=0; i<hits.length(); i++)
+			{
+				Document doc = hits.doc(i);
+				String   id  = doc.get("_id");
+
+				ResultItem ri = new ResultItem(id);
+				results.add(ri);
+
+				for(String[] couple : mapping)
+				{
+					String value = doc.get(couple[1]);
+
+					if (value != null)
+						ri.add(couple[1], value);
+				}
+			}
+
+			return results;
+		}
+		finally
+		{
+			searcher.close();
+			reader  .close();
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private Query getGroupsQuery(ServiceContext context) throws Exception
+	{
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+		GeonetContext   gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		AccessManager   am = gc.getAccessManager();
+		HashSet<String> hs = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
+
+		BooleanQuery query = new BooleanQuery();
+
+		String operView = "_op0";
+
+		for(Object group: hs)
+		{
+			TermQuery tq = new TermQuery(new Term(operView, group.toString()));
+			query.add(tq, false, false);
+		}
+
+		return query;
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void sort(List<ResultItem> results, List<SortField> sortFields)
+	{
+		if (sortFields.isEmpty())
+			return;
+
+		ArrayList<SortField> fields = new ArrayList<SortField>();
+
+		for(SortField sf : sortFields)
+		{
+			String mapped = hmMapping.get(sf.field);
+
+			if (mapped != null)
+			{
+				sf.field = mapped;
+				fields.add(sf);
+			}
+			else
+				System.out.println("Skipping unknown sortable field : "+ sf.field);
+		}
+
+		Collections.sort(results, new ItemComparator(fields));
+	}
+}
+
+//=============================================================================
+
+class ResultItem
+{
+	private String id;
+
+	private HashMap<String, String> hmFields = new HashMap<String, String>();
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Constructor
+	//---
+	//---------------------------------------------------------------------------
+
+	public ResultItem(String id)
+	{
+		this.id = id;
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- API methods
+	//---
+	//---------------------------------------------------------------------------
+
+	public String getID() { return id; }
+
+	//---------------------------------------------------------------------------
+
+	public void add(String field, String value)
+	{
+		hmFields.put(field, value);
+	}
+
+	//---------------------------------------------------------------------------
+
+	public String getValue(String field) { return hmFields.get(field); }
+}
+
+//=============================================================================
+
+class ItemComparator implements Comparator<ResultItem>
+{
+	private List<SortField> sortFields;
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Constructor
+	//---
+	//---------------------------------------------------------------------------
+
+	public ItemComparator(List<SortField> sf)
+	{
+		sortFields = sf;
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Comparator interface
+	//---
+	//---------------------------------------------------------------------------
+
+	public int compare(ResultItem ri1, ResultItem ri2)
+	{
+		for(SortField sf : sortFields)
+		{
+			String value1 = ri1.getValue(sf.field);
+			String value2 = ri2.getValue(sf.field);
+
+			//--- some metadata may have null values for some fields
+			//--- in this case we push null values at the bottom
+
+			if (value1 == null && value2 != null)
+				return 1;
+
+			if (value1 != null && value2 == null)
+				return -1;
+
+			if (value1 == null || value2 == null)
+				return 0;
+
+			//--- values are ok, do a proper comparison
+
+			int comp = value1.compareTo(value2);
+
+			if (comp == 0)
+				continue;
+
+			return (!sf.descend) ? comp : -comp;
+		}
+
+		return 0;
+	}
+}
+
+//=============================================================================
+

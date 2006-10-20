@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<fields>
+	<field name="CI_OnlineResource">
+		<suggest name="protocol"/>
+		<suggest name="name"/>
+		<suggest name="description"/>
+	</field>
+	
+	<field name="CI_ResponsibleParty">
+		<suggest name="individualName"/>
+		<suggest name="organisationName"/>
+		<suggest name="positionName"/>
+		<suggest name="contactInfo"/>
+	</field>
+	
+	<field name="CI_Contact">
+		<suggest name="phone"/>
+		<suggest name="address"/>
+	</field>
+	
+	<field name="CI_Telephone">
+		<suggest name="voice"/>
+		<suggest name="facsimile"/>
+	</field>
+	
+	<field name="CI_Address">
+		<suggest name="deliveryPoint"/>
+		<suggest name="city"/>
+		<suggest name="administrativeArea"/>
+		<suggest name="postalCode"/>
+		<suggest name="country"/>
+		<suggest name="electronicMailAddress"/>
+	</field>
+</fields>

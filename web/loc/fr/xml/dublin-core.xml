@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:dc = "http://purl.org/dc/elements/1.1/">
+	<simpledc>Métadonnées</simpledc>
+	<dc:title>Titre</dc:title>
+	<dc:creator>Créateur</dc:creator>
+	<dc:subject>Sujet et mots-clés</dc:subject>
+	<dc:description>Description</dc:description>
+	<dc:publisher>Editeur</dc:publisher>
+	<dc:contributor>Contributeur</dc:contributor>
+	<dc:date>Date</dc:date>
+	<dc:type>Type</dc:type>
+	<dc:format>Format</dc:format>
+	<dc:identifier>Identifiant</dc:identifier>
+	<dc:source>Source</dc:source>
+	<dc:language>Langue</dc:language>
+	<dc:relation>Relation</dc:relation>
+	<dc:coverage>Couvertures</dc:coverage>
+	<dc:rights>Droits</dc:rights>
+</root>

@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+<xsd:element name="dataqual" type="dataqualType"/>
+<xsd:complexType name="dataqualType">
+	<xsd:sequence>
+		<xsd:element ref="attracc" minOccurs="0"/>
+		<xsd:element ref="logic"/>
+		<xsd:element ref="complete"/>
+		<xsd:element ref="posacc" minOccurs="0"/>
+		<xsd:element ref="lineage"/>
+		<xsd:element ref="cloud" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="attracc" type="attraccType"/>
+<xsd:complexType name="attraccType">
+	<xsd:sequence>
+		<xsd:element ref="attraccr"/>
+		<xsd:element ref="qattracc" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="attraccr" type="attraccrType"/>
+<xsd:simpleType name="attraccrType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="qattracc" type="qattraccType"/>
+<xsd:complexType name="qattraccType">
+	<xsd:sequence>
+		<xsd:element ref="attraccv"/>
+		<xsd:element ref="attracce"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="attraccv" type="attraccvType"/>
+<xsd:simpleType name="attraccvType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="attracce" type="attracceType"/>
+<xsd:simpleType name="attracceType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="logic" type="logicType"/>
+<xsd:simpleType name="logicType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="complete" type="completeType"/>
+<xsd:simpleType name="completeType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="posacc" type="posaccType"/>
+<xsd:complexType name="posaccType">
+	<xsd:sequence>
+		<xsd:element ref="horizpa" minOccurs="0"/>
+		<xsd:element ref="vertacc" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="horizpa" type="horizpaType"/>
+<xsd:complexType name="horizpaType">
+	<xsd:sequence>
+		<xsd:element ref="horizpar"/>
+		<xsd:element ref="qhorizpa" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="horizpar" type="horizparType"/>
+<xsd:simpleType name="horizparType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="qhorizpa" type="qhorizpaType"/>
+<xsd:complexType name="qhorizpaType">
+	<xsd:sequence>
+		<xsd:element ref="horizpav"/>
+		<xsd:element ref="horizpae"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="horizpav" type="horizpavType"/>
+<xsd:simpleType name="horizpavType">
+	<xsd:restriction base="xsd:double"/>
+</xsd:simpleType>
+
+<xsd:element name="horizpae" type="horizpaeType"/>
+<xsd:simpleType name="horizpaeType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="vertacc" type="vertaccType"/>
+<xsd:complexType name="vertaccType">
+	<xsd:sequence>
+		<xsd:element ref="vertaccr"/>
+		<xsd:element ref="qvertpa" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="vertaccr" type="vertaccrType"/>
+<xsd:simpleType name="vertaccrType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="qvertpa" type="qvertpaType"/>
+<xsd:complexType name="qvertpaType">
+	<xsd:sequence>
+		<xsd:element ref="vertaccv"/>
+		<xsd:element ref="vertacce"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="vertaccv" type="vertaccvType"/>
+<xsd:simpleType name="vertaccvType">
+	<xsd:restriction base="xsd:double"/>
+</xsd:simpleType>
+
+<xsd:element name="vertacce" type="vertacceType"/>
+<xsd:simpleType name="vertacceType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="lineage" type="lineageType">
+	<xsd:key name="srcciteaKey">
+		<xsd:selector xpath="srcinfo"/>
+		<xsd:field xpath="srccitea"/>
+	</xsd:key>
+	<xsd:keyref name="srcusedKeyRef" refer="srcciteaKey">
+		<xsd:selector xpath="procstep/srcused"/>
+		<xsd:field xpath="."/>
+	</xsd:keyref>
+	<xsd:keyref name="srcprodKeyRef" refer="srcciteaKey">
+		<xsd:selector xpath="procstep/srcprod"/>
+		<xsd:field xpath="."/>
+	</xsd:keyref>
+</xsd:element>
+<xsd:complexType name="lineageType">
+	<xsd:sequence>
+		<xsd:element ref="srcinfo" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="procstep" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="srcinfo" type="srcinfoType"/>
+<xsd:complexType name="srcinfoType">
+	<xsd:sequence>
+		<xsd:element ref="srccite"/>
+		<xsd:element ref="srcscale" minOccurs="0"/>
+		<xsd:element ref="typesrc"/>
+		<xsd:element ref="srctime"/>
+		<xsd:element ref="srccitea"/>
+		<xsd:element ref="srccontr"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="srccite" type="srcciteType"/>
+<xsd:complexType name="srcciteType">
+	<xsd:sequence>
+		<xsd:element ref="citeinfo"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="srcscale" type="srcscaleType"/>
+<xsd:simpleType name="srcscaleType">
+	<xsd:restriction base="xsd:integer">
+		<xsd:minExclusive value="1"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="typesrc" type="typesrcType"/>
+<xsd:simpleType name="typesrcType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="srctime" type="srctimeType"/>
+<xsd:complexType name="srctimeType">
+	<xsd:sequence>
+		<xsd:element ref="timeinfo"/>
+		<xsd:element ref="srccurr"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="srccurr" type="srccurrType"/>
+<xsd:simpleType name="srccurrType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="srccitea" type="srcciteaType"/>
+<xsd:simpleType name="srcciteaType">
+	<xsd:restriction base="xsd:token"/>
+</xsd:simpleType>
+
+<xsd:element name="srccontr" type="srccontrType"/>
+<xsd:simpleType name="srccontrType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="procstep" type="procstepType"/>
+<xsd:complexType name="procstepType">
+	<xsd:sequence>
+		<xsd:element ref="procdesc"/>
+		<xsd:element ref="srcused" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="procdate"/>
+		<xsd:element ref="proctime" minOccurs="0"/>
+		<xsd:element ref="srcprod" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="proccont" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="procdesc" type="procdescType"/>
+<xsd:simpleType name="procdescType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="srcused" type="srcciteaType"/>
+<!--
+<xsd:simpleType name="srcusedType">
+	<xsd:restriction base="xsd:token"/>
+</xsd:simpleType>
+-->
+
+<xsd:element name="procdate" type="procdateType"/>
+<xsd:simpleType name="procdateType">
+	<xsd:union memberTypes="FGDCdate">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Unknown"/>
+				<xsd:enumeration value="Not complete"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+<xsd:element name="proctime" type="proctimeType"/>
+<xsd:simpleType name="proctimeType">
+	<xsd:restriction base="FGDCtime"/>
+</xsd:simpleType>
+
+<xsd:element name="srcprod" type="srcciteaType"/>
+<!--
+<xsd:simpleType name="srcprodType">
+	<xsd:restriction base="xsd:token"/>
+</xsd:simpleType>
+-->
+
+<xsd:element name="proccont" type="proccontType"/>
+<xsd:complexType name="proccontType">
+	<xsd:sequence>
+		<xsd:element ref="cntinfo"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="cloud" type="cloudType"/>
+<xsd:simpleType name="cloudType">
+	<xsd:union>
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:integer">
+				<xsd:minInclusive value="0"/>
+				<xsd:maxInclusive value="100"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Unknown"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+</xsd:schema>

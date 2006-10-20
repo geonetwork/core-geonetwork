@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<any>Anywhere</any>
+	<absres>Abscissa Resolution</absres>
+	<abstract>Abstract</abstract>
+	<accconst>Access Constraints</accconst>
+	<accsinst>Access Instructions</accsinst>
+	<address>Address</address>
+	<addrtype>Address Type</addrtype>
+	<albers>Albers Conical Equal Area</albers>
+	<altdatum>Altitude Datum Name</altdatum>
+	<altenc>Altitude Encoding Method</altenc>
+	<altres>Altitude Resolution</altres>
+	<altsys>Altitude System Definition</altsys>
+	<altunits>Altitude Distance Units</altunits>
+	<arcsys>ARC Coordinate System</arcsys>
+	<arczone>ARC System Zone Identifier</arczone>
+	<attr>Attribute</attr>
+	<attracc>Attribute Accuracy</attracc>
+	<attracce>Attribute Accuracy Explanation</attracce>
+	<attraccr>Attribute Accuracy Report</attraccr>
+	<attraccv>Attribute Accuracy Value</attraccv>
+	<attrdef>Attribute Definition</attrdef>
+	<attrdefs>Attribute Definition Source</attrdefs>
+	<attrdomv>Attribute Domain Values</attrdomv>
+	<attrlabl>Attribute Label</attrlabl>
+	<attrmfrq>Attribute Measurement Frequency</attrmfrq>
+	<attrmres>Attribute Measurement Resolution</attrmres>
+	<attrunit>Attribute Units of Measurement</attrunit>
+	<attrva>Attribute Value Accuracy</attrva>
+	<attrvae>Attribute Value Accuracy Explanation</attrvae>
+	<attrvai>Attribute Value Accuracy Information</attrvai>
+	<availabl>Available Time Period</availabl>
+	<azimangl>Azimuthal Angle</azimangl>
+	<azimequi>Azimuthal Equidistant</azimequi>
+	<azimptl>Azimuth Measure Point Longitude</azimptl>
+	<bearrefd>Bearing Reference Direction</bearrefd>
+	<bearrefm>Bearing Reference Meridian</bearrefm>
+	<bearres>Bearing Resolution</bearres>
+	<bearunit>Bearing Units</bearunit>
+	<begdate>Beginning Date</begdate>
+	<begdatea>Beginning Date of Attribute Values</begdatea>
+	<begtime>Beginning Time</begtime>
+	<bounding>Bounding Coordinates</bounding>
+	<browse>Browse Graphic</browse>
+	<browsed>Browse Graphic File Description</browsed>
+	<browsen>Browse Graphic File Name</browsen>
+	<browset>Browse Graphic File Type</browset>
+	<caldate>Calendar Date</caldate>
+	<citation>Citation</citation>
+	<citeinfo>Citation Information</citeinfo>
+	<city>City</city>
+	<cloud>Cloud Cover</cloud>
+	<cntaddr>Contact Address</cntaddr>
+	<cntemail>Contact Electronic Mail Address</cntemail>
+	<cntfax>Contact Facsimile Telephone</cntfax>
+	<cntinfo>Contact Information</cntinfo>
+	<cntinst>Contact Instructions</cntinst>
+	<cntorg>Contact Organization</cntorg>
+	<cntorgp>Contact Organization Primary</cntorgp>
+	<cntper>Contact Person</cntper>
+	<cntperp>Contact Person Primary</cntperp>
+	<cntpos>Contact Position</cntpos>
+	<cnttdd>Contact TDD/TTY Telephone</cnttdd>
+	<cntvoice>Contact Voice Telephone</cntvoice>
+	<codesetd>Codeset Domain</codesetd>
+	<codesetn>Codeset Name</codesetn>
+	<codesets>Codeset Source</codesets>
+	<colcount>Column Count</colcount>
+	<compat>Compatibility Information</compat>
+	<complete>Completeness Report</complete>
+	<compress>Compression Support</compress>
+	<computer>Computer Contact Information</computer>
+	<coordrep>Coordinate Representation</coordrep>
+	<country>Country</country>
+	<crossref>Cross Reference</crossref>
+	<current>Currentness Reference</current>
+	<custom>Custom Order Process</custom>
+	<datacred>Data Set Credit</datacred>
+	<dataqual>Data Quality Information</dataqual>
+	<denflat>Denominator of Flattening Ratio</denflat>
+	<depthdn>Depth Datum Name</depthdn>
+	<depthdu>Depth Distance Units</depthdu>
+	<depthem>Depth Encoding Method</depthem>
+	<depthres>Depth Resolution</depthres>
+	<depthsys>Depth System Definition</depthsys>
+	<descript>Description</descript>
+	<detailed>Detailed Description</detailed>
+	<dialfile>Dialup File Name</dialfile>
+	<dialinst>Dialup Instructions</dialinst>
+	<dialtel>Dialup Telephone</dialtel>
+	<digform>Digital Form</digform>
+	<digtinfo>Digital Transfer Information</digtinfo>
+	<digtopt>Digital Transfer Option</digtopt>
+	<direct>Direct Spatial Reference Method</direct>
+	<distbrep>Distance and Bearing Representation</distbrep>
+	<distinfo>Distribution Information</distinfo>
+	<distliab>Distribution Liability</distliab>
+	<distres>Distance Resolution</distres>
+	<distrib>Distributor</distrib>
+	<dsgpoly>Data Set G-Polygon</dsgpoly>
+	<dsgpolyo>Data Set G-Polygon Outer G-Ring</dsgpolyo>
+	<dsgpolyx>Data Set G-Polygon Exclusion G-Ring</dsgpolyx>
+	<eadetcit>Entity and Attribute Detail Citation</eadetcit>
+	<eainfo>Entity and Attribute Information</eainfo>
+	<eaover>Entity and Attribute Overview</eaover>
+	<eastbc>East Bounding Coordinate</eastbc>
+	<edition>Edition</edition>
+	<edom>Enumerated Domain</edom>
+	<edomv>Enumerated Domain Value</edomv>
+	<edomvd>Enumerated Domain Value Definition</edomvd>
+	<edomvds>Enumerated Domain Value Definition Source</edomvds>
+	<ellips>Ellipsoid Name</ellips>
+	<enddate>Ending Date</enddate>
+	<enddatea>Ending Date of Attribute Values</enddatea>
+	<endtime>Ending Time</endtime>
+	<enttyp>Entity Type</enttyp>
+	<enttypd>Entity Type Definition</enttypd>
+	<enttypds>Entity Type Definition Source</enttypds>
+	<enttypl>Entity Type Label</enttypl>
+	<equicon>Equidistant Conic</equicon>
+	<equirect>Equirectangular</equirect>
+	<extent>Extent</extent>
+	<feast>False Easting</feast>
+	<fees>Fees</fees>
+	<filedec>File Decompression Technique</filedec>
+	<fnorth>False Northing</fnorth>
+	<formcont>Format Information Content</formcont>
+	<formname>Format Name</formname>
+	<formspec>Format Specification</formspec>
+	<formverd>Format Version Date</formverd>
+	<formvern>Format Version Number</formvern>
+	<geodetic>Geodetic Model</geodetic>
+	<geoform>Geospatial Data Presentation Form</geoform>
+	<geograph>Geographic</geograph>
+	<geogunit>Geographic Coordinate Units</geogunit>
+	<gnomonic>Gnomonic</gnomonic>
+	<gridsys>Grid Coordinate System</gridsys>
+	<gridsysn>Grid Coordinate System Name</gridsysn>
+	<gringlat>G-Ring Latitude</gringlat>
+	<gringlon>G-Ring Longitude</gringlon>
+	<gvnsp>General Vertical Near-sided Projection</gvnsp>
+	<heightpt>Height of Perspective Point Above Surface</heightpt>
+	<highbps>Highest BPS</highbps>
+	<horizdn>Horizontal Datum Name</horizdn>
+	<horizpa>Horizontal Positional Accuracy</horizpa>
+	<horizpae>Horizontal Positional Accuracy Explanation</horizpae>
+	<horizpar>Horizontal Positional Accuracy Report</horizpar>
+	<horizpav>Horizontal Positional Accuracy Value</horizpav>
+	<horizsys>Horizontal Coordinate System Definition</horizsys>
+	<hours>Hours of Service</hours>
+	<idinfo>Identification Information</idinfo>
+	<indspref>Indirect Spatial Reference</indspref>
+	<issue>Issue Identification</issue>
+	<keywords>Keywords</keywords>
+	<lamberta>Lambert Azimuthal Equal Area</lamberta>
+	<lambertc>Lambert Conformal Conic</lambertc>
+	<landsat>Landsat Number</landsat>
+	<latprjc>Latitude of Projection Center</latprjc>
+	<latprjo>Latitude of Projection Origin</latprjo>
+	<latres>Latitude Resolution</latres>
+	<lineage>Lineage</lineage>
+	<local>Local</local>
+	<localdes>Local Description</localdes>
+	<localgeo>Local Georeference Information</localgeo>
+	<localp>Local Planar</localp>
+	<localpd>Local Planar Description</localpd>
+	<localpgi>Local Planar Georeference Information</localpgi>
+	<logic>Logical Consistency Report</logic>
+	<longcm>Longitude of Central Meridian</longcm>
+	<longpc>Longitude of Projection Center</longpc>
+	<longres>Longitude Resolution</longres>
+	<lowbps>Lowest BPS</lowbps>
+	<lworkcit>Larger Work Citation</lworkcit>
+	<mapproj>Map Projection</mapproj>
+	<mapprojn>Map Projection Name</mapprojn>
+	<mdattim>Multiple Dates/Times</mdattim>
+	<mercator>Mercator</mercator>
+	<metac>Metadata Access Constraints</metac>
+	<metadata>Metadata</metadata>
+	<metainfo>Metadata Reference Information</metainfo>
+	<metc>Metadata Contact</metc>
+	<metd>Metadata Date</metd>
+	<metfrd>Metadata Future Review Date</metfrd>
+	<metrd>Metadata Review Date</metrd>
+	<metsc>Metadata Security Classification</metsc>
+	<metscs>Metadata Security Classification System</metscs>
+	<metshd>Metadata Security Handling Description</metshd>
+	<metsi>Metadata Security Information</metsi>
+	<metstdn>Metadata Standard Name</metstdn>
+	<metstdv>Metadata Standard Version</metstdv>
+	<mettc>Metadata Time Convention</mettc>
+	<metuc>Metadata Use Constraints</metuc>
+	<miller>Miller Cylindrical</miller>
+	<modsak>Modified Stereographic for Alaska</modsak>
+	<native>Native Data Set Environment</native>
+	<networka>Network Address</networka>
+	<networkr>Network Resource Name</networkr>
+	<nondig>Non-digital Form</nondig>
+	<northbc>North Bounding Coordinate</northbc>
+	<numdata>Number DataBits</numdata>
+	<numstop>Number StopBits</numstop>
+	<obqlazim>Oblique Line Azimuth</obqlazim>
+	<obqllat>Oblique Line Latitude</obqllat>
+	<obqllong>Oblique Line Longitude</obqllong>
+	<obqlpt>Oblique Line Point</obqlpt>
+	<obqmerc>Oblique Mercator</obqmerc>
+	<offmedia>Offline Media</offmedia>
+	<offoptn>Offline Option</offoptn>
+	<oncomp>Online Computer and Operating System</oncomp>
+	<onlink>Online Linkage</onlink>
+	<onlinopt>Online Option</onlinopt>
+	<ordering>Ordering Instructions</ordering>
+	<ordres>Ordinate Resolution</ordres>
+	<origin>Originator</origin>
+	<orthogr>Orthographic</orthogr>
+	<othercit>Other Citation Details</othercit>
+	<othergrd>Other Grid System's Definition</othergrd>
+	<otherprj>Other Projection's Definition</otherprj>
+	<overview>Overview Description</overview>
+	<parity>Parity</parity>
+	<pathnum>Path Number</pathnum>
+	<place>Place</place>
+	<placekey>Place Keyword</placekey>
+	<placekt>Place Keyword Thesaurus</placekt>
+	<planar>Planar</planar>
+	<plance>Planar Coordinate Encoding Method</plance>
+	<planci>Planar Coordinate Information</planci>
+	<plandu>Planar Distance Units</plandu>
+	<polarst>Polar Stereographic</polarst>
+	<polycon>Polyconic</polycon>
+	<posacc>Positional Accuracy</posacc>
+	<postal>Postal Code</postal>
+	<proccont>Process Contact</proccont>
+	<procdate>Process Date</procdate>
+	<procdesc>Process Description</procdesc>
+	<procstep>Process Step</procstep>
+	<proctime>Process Time</proctime>
+	<progress>Progress</progress>
+	<ptcontac>Point of Contact</ptcontac>
+	<ptvctcnt>Point and Vector Object Count</ptvctcnt>
+	<ptvctinf>Point and Vector Object Information</ptvctinf>
+	<pubdate>Publication Date</pubdate>
+	<pubinfo>Publication Information</pubinfo>
+	<publish>Publisher</publish>
+	<pubplace>Publication Place</pubplace>
+	<pubtime>Publication Time</pubtime>
+	<purpose>Purpose</purpose>
+	<qattracc>Quantitative Attribute Accuracy Assessment</qattracc>
+	<qhorizpa>Quantitative Horizontal Positional Accuracy Assessment</qhorizpa>
+	<qvertpa>Quantitative Vertical Positional Accuracy Assessment</qvertpa>
+	<rastinfo>Raster Object Information</rastinfo>
+	<rasttype>Raster Object Type</rasttype>
+	<rdom>Range Domain</rdom>
+	<rdommax>Range Domain Maximum</rdommax>
+	<rdommin>Range Domain Minimum</rdommin>
+	<reccap>Recording Capacity</reccap>
+	<recden>Recording Density</recden>
+	<recdenu>Recording Density Units</recdenu>
+	<recfmt>Recording Format</recfmt>
+	<resdesc>Resource Description</resdesc>
+	<rngdates>Range of Dates/Times</rngdates>
+	<robinson>Robinson</robinson>
+	<rowcount>Row Count</rowcount>
+	<sdtsterm>SDTS Terms Description</sdtsterm>
+	<sdtstype>SDTS Point and Vector Object Type</sdtstype>
+	<secclass>Security Classification</secclass>
+	<sechandl>Security Handling Description</sechandl>
+	<secinfo>Security Information</secinfo>
+	<secsys>Security Classification System</secsys>
+	<semiaxis>Semi-major Axis</semiaxis>
+	<serinfo>Series Information</serinfo>
+	<sername>Series Name</sername>
+	<sfctrlin>Scale Factor at Center Line</sfctrlin>
+	<sfctrmer>Scale Factor at Central Meridian</sfctrmer>
+	<sfequat>Scale Factor at Equator</sfequat>
+	<sfprjorg>Scale Factor at Projection Origin</sfprjorg>
+	<sinusoid>Sinusoidal</sinusoid>
+	<sngdate>Single Date/Time</sngdate>
+	<southbc>South Bounding Coordinate</southbc>
+	<spaceobq>Space Oblique Mercator (Landsat)</spaceobq>
+	<spcs>State Plane Coordinate System</spcs>
+	<spcszone>SPCS Zone Identifier</spcszone>
+	<spdoinfo>Spatial Data Organization Information</spdoinfo>
+	<spdom>Spatial Domain</spdom>
+	<spref>Spatial Reference Information</spref>
+	<srccite>Source Citation</srccite>
+	<srccitea>Source Citation Abbreviation</srccitea>
+	<srccontr>Source Contribution</srccontr>
+	<srccurr>Source Currentness Reference</srccurr>
+	<srcinfo>Source Information</srcinfo>
+	<srcprod>Source Produced Citation Abbreviation</srcprod>
+	<srcscale>Source Scale Denominator</srcscale>
+	<srctime>Source Time Period of Content</srctime>
+	<srcused>Source Used Citation Abbreviation</srcused>
+	<state>State or Province</state>
+	<status>Status</status>
+	<stdorder>Standard Order Process</stdorder>
+	<stdparll>Standard Parallel</stdparll>
+	<stereo>Stereographic</stereo>
+	<stratkey>Stratum Keyword</stratkey>
+	<stratkt>Stratum Keyword Thesaurus</stratkt>
+	<stratum>Stratum</stratum>
+	<supplinf>Supplemental Information</supplinf>
+	<svlong>Straight Vertical Longitude from Pole</svlong>
+	<techpreq>Technical Prerequisites</techpreq>
+	<tempkey>Temporal Keyword</tempkey>
+	<tempkeyt>Temporal Keyword Thesaurus</tempkeyt>
+	<temporal>Temporal</temporal>
+	<theme>Theme</theme>
+	<themekey>Theme Keyword</themekey>
+	<themekt>Theme Keyword Thesaurus</themekt>
+	<time>Time of Day</time>
+	<timeinfo>Time Period Information</timeinfo>
+	<timeperd>Time Period of Content</timeperd>
+	<title>Title</title>
+	<transize>Transfer Size</transize>
+	<transmer>Transverse Mercator</transmer>
+	<turnarnd>Turnaround</turnarnd>
+	<typesrc>Type of Source Media</typesrc>
+	<udom>Unrepresentable Domain</udom>
+	<update>Maintenance and Update Frequency</update>
+	<ups>Universal Polar Stereographic</ups>
+	<upszone>UPS Zone Identifier</upszone>
+	<useconst>Use Constraints</useconst>
+	<utm>Universal Transverse Mercator</utm>
+	<utmzone>UTM Zone Number</utmzone>
+	<vdgrin>van der Grinten</vdgrin>
+	<vertacc>Vertical Positional Accuracy</vertacc>
+	<vertacce>Vertical Positional Accuracy Explanation</vertacce>
+	<vertaccr>Vertical Positional Accuracy Report</vertaccr>
+	<vertaccv>Vertical Positional Accuracy Value</vertaccv>
+	<vertdef>Vertical Coordinate System Definition</vertdef>
+	<vpflevel>VPF Topology Level</vpflevel>
+	<vpfterm>VPF Terms Description</vpfterm>
+	<vpftype>VPF Point and Vector Object Type</vpftype>
+	<vrtcount>Vertical Count</vrtcount>
+	<westbc>West Bounding Coordinate</westbc>
+</root>

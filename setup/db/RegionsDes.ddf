@@ -1,0 +1,1160 @@
+#---------------------------------------------------------
+#--- File exported in DDF format on 2006-10-08 22:09:57
+#---
+#--- SELECT idDes,langId,label FROM APP.RegionsDes order by idDes
+#---------------------------------------------------------
+
+[FIELDS]
+idDes,         INTEGER
+langId,        VARCHAR
+label,         VARCHAR
+
+[DATA]
+1	en	Armenia
+1	fr	Armenia
+1	es	Armenia
+1	cn	Armenia
+2	en	Afghanistan
+2	fr	Afghanistan
+2	es	Afghanistan
+2	cn	Afghanistan
+3	en	Albania
+3	fr	Albania
+3	es	Albania
+3	cn	Albania
+4	en	Algeria
+4	fr	Algeria
+4	es	Algeria
+4	cn	Algeria
+5	en	American Samoa
+5	fr	American Samoa
+5	es	American Samoa
+5	cn	American Samoa
+6	en	Andorra
+6	fr	Andorra
+6	es	Andorra
+6	cn	Andorra
+7	en	Angola
+7	fr	Angola
+7	es	Angola
+7	cn	Angola
+8	en	Antigua and Barbuda
+8	fr	Antigua and Barbuda
+8	es	Antigua and Barbuda
+8	cn	Antigua and Barbuda
+9	en	Argentina
+9	fr	Argentina
+9	es	Argentina
+9	cn	Argentina
+10	en	Australia
+10	fr	Australia
+10	es	Australia
+10	cn	Australia
+11	en	Austria
+11	fr	Austria
+11	es	Austria
+11	cn	Austria
+12	en	Bahamas
+12	fr	Bahamas
+12	es	Bahamas
+12	cn	Bahamas
+13	en	Bahrain
+13	fr	Bahrain
+13	es	Bahrain
+13	cn	Bahrain
+14	en	Barbados
+14	fr	Barbados
+14	es	Barbados
+14	cn	Barbados
+16	en	Bangladesh
+16	fr	Bangladesh
+16	es	Bangladesh
+16	cn	Bangladesh
+17	en	Bermuda
+17	fr	Bermuda
+17	es	Bermuda
+17	cn	Bermuda
+18	en	Bhutan
+18	fr	Bhutan
+18	es	Bhutan
+18	cn	Bhutan
+19	en	Bolivia
+19	fr	Bolivia
+19	es	Bolivia
+19	cn	Bolivia
+20	en	Botswana
+20	fr	Botswana
+20	es	Botswana
+20	cn	Botswana
+21	en	Brazil
+21	fr	Brazil
+21	es	Brazil
+21	cn	Brazil
+22	en	Aruba
+22	fr	Aruba
+22	es	Aruba
+22	cn	Aruba
+23	en	Belize
+23	fr	Belize
+23	es	Belize
+23	cn	Belize
+24	en	British Indian Ocean Ter
+24	fr	British Indian Ocean Ter
+24	es	British Indian Ocean Ter
+24	cn	British Indian Ocean Ter
+25	en	Solomon Islands
+25	fr	Solomon Islands
+25	es	Solomon Islands
+25	cn	Solomon Islands
+26	en	Brunei Darussalam
+26	fr	Brunei Darussalam
+26	es	Brunei Darussalam
+26	cn	Brunei Darussalam
+27	en	Bulgaria
+27	fr	Bulgaria
+27	es	Bulgaria
+27	cn	Bulgaria
+28	en	Myanmar
+28	fr	Myanmar
+28	es	Myanmar
+28	cn	Myanmar
+29	en	Burundi
+29	fr	Burundi
+29	es	Burundi
+29	cn	Burundi
+30	en	Antarctica
+30	fr	Antarctica
+30	es	Antarctica
+30	cn	Antarctica
+31	en	Bouvet Island
+31	fr	Bouvet Island
+31	es	Bouvet Island
+31	cn	Bouvet Island
+32	en	Cameroon
+32	fr	Cameroon
+32	es	Cameroon
+32	cn	Cameroon
+33	en	Canada
+33	fr	Canada
+33	es	Canada
+33	cn	Canada
+35	en	Cape Verde
+35	fr	Cape Verde
+35	es	Cape Verde
+35	cn	Cape Verde
+36	en	Cayman Island
+36	fr	Cayman Island
+36	es	Cayman Island
+36	cn	Cayman Island
+37	en	Central African Republic
+37	fr	Central African Republic
+37	es	Central African Republic
+37	cn	Central African Republic
+38	en	Sri Lanka
+38	fr	Sri Lanka
+38	es	Sri Lanka
+38	cn	Sri Lanka
+39	en	Chad
+39	fr	Chad
+39	es	Chad
+39	cn	Chad
+40	en	Chile
+40	fr	Chile
+40	es	Chile
+40	cn	Chile
+41	en	China, Mainland
+41	fr	China, Mainland
+41	es	China, Mainland
+41	cn	China, Mainland
+42	en	Christmas Island
+42	fr	Christmas Island
+42	es	Christmas Island
+42	cn	Christmas Island
+43	en	Cocos Islands
+43	fr	Cocos Islands
+43	es	Cocos Islands
+43	cn	Cocos Islands
+44	en	Colombia
+44	fr	Colombia
+44	es	Colombia
+44	cn	Colombia
+45	en	Comoros
+45	fr	Comoros
+45	es	Comoros
+45	cn	Comoros
+46	en	Congo, Republic of
+46	fr	Congo, Republic of
+46	es	Congo, Republic of
+46	cn	Congo, Republic of
+47	en	Cook Islands
+47	fr	Cook Islands
+47	es	Cook Islands
+47	cn	Cook Islands
+48	en	Costa Rica
+48	fr	Costa Rica
+48	es	Costa Rica
+48	cn	Costa Rica
+49	en	Cuba
+49	fr	Cuba
+49	es	Cuba
+49	cn	Cuba
+50	en	Cyprus
+50	fr	Cyprus
+50	es	Cyprus
+50	cn	Cyprus
+52	en	Azerbaijan, Republic of
+52	fr	Azerbaijan, Republic of
+52	es	Azerbaijan, Republic of
+52	cn	Azerbaijan, Republic of
+53	en	Benin
+53	fr	Benin
+53	es	Benin
+53	cn	Benin
+54	en	Denmark
+54	fr	Denmark
+54	es	Denmark
+54	cn	Denmark
+55	en	Dominica
+55	fr	Dominica
+55	es	Dominica
+55	cn	Dominica
+56	en	Dominican Republic
+56	fr	Dominican Republic
+56	es	Dominican Republic
+56	cn	Dominican Republic
+57	en	Belarus
+57	fr	Belarus
+57	es	Belarus
+57	cn	Belarus
+58	en	Ecuador
+58	fr	Ecuador
+58	es	Ecuador
+58	cn	Ecuador
+59	en	Egypt
+59	fr	Egypt
+59	es	Egypt
+59	cn	Egypt
+60	en	El Salvador
+60	fr	El Salvador
+60	es	El Salvador
+60	cn	El Salvador
+61	en	Equatorial Guinea
+61	fr	Equatorial Guinea
+61	es	Equatorial Guinea
+61	cn	Equatorial Guinea
+63	en	Estonia
+63	fr	Estonia
+63	es	Estonia
+63	cn	Estonia
+64	en	Faeroe Islands
+64	fr	Faeroe Islands
+64	es	Faeroe Islands
+64	cn	Faeroe Islands
+65	en	Falkland Islands
+65	fr	Falkland Islands
+65	es	Falkland Islands
+65	cn	Falkland Islands
+66	en	Fiji Islands
+66	fr	Fiji Islands
+66	es	Fiji Islands
+66	cn	Fiji Islands
+67	en	Finland
+67	fr	Finland
+67	es	Finland
+67	cn	Finland
+68	en	France
+68	fr	France
+68	es	France
+68	cn	France
+69	en	French Guiana
+69	fr	French Guiana
+69	es	French Guiana
+69	cn	French Guiana
+70	en	French Polynesia
+70	fr	French Polynesia
+70	es	French Polynesia
+70	cn	French Polynesia
+71	en	French South Terr
+71	fr	French South Terr
+71	es	French South Terr
+71	cn	French South Terr
+72	en	Djibouti
+72	fr	Djibouti
+72	es	Djibouti
+72	cn	Djibouti
+73	en	Georgia
+73	fr	Georgia
+73	es	Georgia
+73	cn	Georgia
+74	en	Gabon
+74	fr	Gabon
+74	es	Gabon
+74	cn	Gabon
+75	en	Gambia
+75	fr	Gambia
+75	es	Gambia
+75	cn	Gambia
+76	en	Gaza Strip
+76	fr	Gaza Strip
+76	es	Gaza Strip
+76	cn	Gaza Strip
+79	en	Germany
+79	fr	Germany
+79	es	Germany
+79	cn	Germany
+80	en	Bosnia and Herzegovina
+80	fr	Bosnia and Herzegovina
+80	es	Bosnia and Herzegovina
+80	cn	Bosnia and Herzegovina
+81	en	Ghana
+81	fr	Ghana
+81	es	Ghana
+81	cn	Ghana
+82	en	Gibraltar
+82	fr	Gibraltar
+82	es	Gibraltar
+82	cn	Gibraltar
+83	en	Kiribati
+83	fr	Kiribati
+83	es	Kiribati
+83	cn	Kiribati
+84	en	Greece
+84	fr	Greece
+84	es	Greece
+84	cn	Greece
+85	en	Greenland
+85	fr	Greenland
+85	es	Greenland
+85	cn	Greenland
+86	en	Grenada
+86	fr	Grenada
+86	es	Grenada
+86	cn	Grenada
+87	en	Guadeloupe
+87	fr	Guadeloupe
+87	es	Guadeloupe
+87	cn	Guadeloupe
+88	en	Guam
+88	fr	Guam
+88	es	Guam
+88	cn	Guam
+89	en	Guatemala
+89	fr	Guatemala
+89	es	Guatemala
+89	cn	Guatemala
+90	en	Guinea
+90	fr	Guinea
+90	es	Guinea
+90	cn	Guinea
+91	en	Guyana
+91	fr	Guyana
+91	es	Guyana
+91	cn	Guyana
+92	en	Heard and McDonald Is
+92	fr	Heard and McDonald Is
+92	es	Heard and McDonald Is
+92	cn	Heard and McDonald Is
+93	en	Haiti
+93	fr	Haiti
+93	es	Haiti
+93	cn	Haiti
+95	en	Honduras
+95	fr	Honduras
+95	es	Honduras
+95	cn	Honduras
+97	en	Hungary
+97	fr	Hungary
+97	es	Hungary
+97	cn	Hungary
+98	en	Croatia
+98	fr	Croatia
+98	es	Croatia
+98	cn	Croatia
+99	en	Iceland
+99	fr	Iceland
+99	es	Iceland
+99	cn	Iceland
+100	en	India
+100	fr	India
+100	es	India
+100	cn	India
+101	en	Indonesia
+101	fr	Indonesia
+101	es	Indonesia
+101	cn	Indonesia
+102	en	Iran, Islamic Rep of
+102	fr	Iran, Islamic Rep of
+102	es	Iran, Islamic Rep of
+102	cn	Iran, Islamic Rep of
+103	en	Iraq
+103	fr	Iraq
+103	es	Iraq
+103	cn	Iraq
+104	en	Ireland
+104	fr	Ireland
+104	es	Ireland
+104	cn	Ireland
+105	en	Israel
+105	fr	Israel
+105	es	Israel
+105	cn	Israel
+106	en	Italy
+106	fr	Italy
+106	es	Italy
+106	cn	Italy
+107	en	Ivory Coast
+107	fr	Ivory Coast
+107	es	Ivory Coast
+107	cn	Ivory Coast
+108	en	Kazakhstan
+108	fr	Kazakhstan
+108	es	Kazakhstan
+108	cn	Kazakhstan
+109	en	Jamaica
+109	fr	Jamaica
+109	es	Jamaica
+109	cn	Jamaica
+110	en	Japan
+110	fr	Japan
+110	es	Japan
+110	cn	Japan
+112	en	Jordan
+112	fr	Jordan
+112	es	Jordan
+112	cn	Jordan
+113	en	Kyrgyzstan
+113	fr	Kyrgyzstan
+113	es	Kyrgyzstan
+113	cn	Kyrgyzstan
+114	en	Kenya
+114	fr	Kenya
+114	es	Kenya
+114	cn	Kenya
+115	en	Cambodia
+115	fr	Cambodia
+115	es	Cambodia
+115	cn	Cambodia
+116	en	Korea, Dem People's Rep
+116	fr	Korea, Dem People's Rep
+116	es	Korea, Dem People's Rep
+116	cn	Korea, Dem People's Rep
+117	en	Korea, Republic of
+117	fr	Korea, Republic of
+117	es	Korea, Republic of
+117	cn	Korea, Republic of
+118	en	Kuwait
+118	fr	Kuwait
+118	es	Kuwait
+118	cn	Kuwait
+119	en	Latvia
+119	fr	Latvia
+119	es	Latvia
+119	cn	Latvia
+120	en	Laos
+120	fr	Laos
+120	es	Laos
+120	cn	Laos
+121	en	Lebanon
+121	fr	Lebanon
+121	es	Lebanon
+121	cn	Lebanon
+122	en	Lesotho
+122	fr	Lesotho
+122	es	Lesotho
+122	cn	Lesotho
+123	en	Liberia
+123	fr	Liberia
+123	es	Liberia
+123	cn	Liberia
+124	en	Libyan Arab Jamahiriya
+124	fr	Libyan Arab Jamahiriya
+124	es	Libyan Arab Jamahiriya
+124	cn	Libyan Arab Jamahiriya
+125	en	Liechtensten
+125	fr	Liechtensten
+125	es	Liechtensten
+125	cn	Liechtensten
+126	en	Lithuania
+126	fr	Lithuania
+126	es	Lithuania
+126	cn	Lithuania
+127	en	Marshall Island
+127	fr	Marshall Island
+127	es	Marshall Island
+127	cn	Marshall Island
+129	en	Madagascar
+129	fr	Madagascar
+129	es	Madagascar
+129	cn	Madagascar
+130	en	Malawi
+130	fr	Malawi
+130	es	Malawi
+130	cn	Malawi
+131	en	Malaysia
+131	fr	Malaysia
+131	es	Malaysia
+131	cn	Malaysia
+132	en	Maldives
+132	fr	Maldives
+132	es	Maldives
+132	cn	Maldives
+133	en	Mali
+133	fr	Mali
+133	es	Mali
+133	cn	Mali
+134	en	Malta
+134	fr	Malta
+134	es	Malta
+134	cn	Malta
+135	en	Martinique
+135	fr	Martinique
+135	es	Martinique
+135	cn	Martinique
+136	en	Mauritania
+136	fr	Mauritania
+136	es	Mauritania
+136	cn	Mauritania
+137	en	Mauritius
+137	fr	Mauritius
+137	es	Mauritius
+137	cn	Mauritius
+138	en	Mexico
+138	fr	Mexico
+138	es	Mexico
+138	cn	Mexico
+139	en	Midway Islands
+139	fr	Midway Islands
+139	es	Midway Islands
+139	cn	Midway Islands
+140	en	Monaco
+140	fr	Monaco
+140	es	Monaco
+140	cn	Monaco
+141	en	Mongolia
+141	fr	Mongolia
+141	es	Mongolia
+141	cn	Mongolia
+142	en	Montserrat
+142	fr	Montserrat
+142	es	Montserrat
+142	cn	Montserrat
+143	en	Morocco
+143	fr	Morocco
+143	es	Morocco
+143	cn	Morocco
+144	en	Mozambique
+144	fr	Mozambique
+144	es	Mozambique
+144	cn	Mozambique
+145	en	Micronesia,Fed States of
+145	fr	Micronesia,Fed States of
+145	es	Micronesia,Fed States of
+145	cn	Micronesia,Fed States of
+146	en	Moldova, Republic of
+146	fr	Moldova, Republic of
+146	es	Moldova, Republic of
+146	cn	Moldova, Republic of
+147	en	Namibia
+147	fr	Namibia
+147	es	Namibia
+147	cn	Namibia
+148	en	Nauru
+148	fr	Nauru
+148	es	Nauru
+148	cn	Nauru
+149	en	Nepal
+149	fr	Nepal
+149	es	Nepal
+149	cn	Nepal
+150	en	Netherlands
+150	fr	Netherlands
+150	es	Netherlands
+150	cn	Netherlands
+151	en	Neth Antilles
+151	fr	Neth Antilles
+151	es	Neth Antilles
+151	cn	Neth Antilles
+153	en	NewCaledonia
+153	fr	NewCaledonia
+153	es	NewCaledonia
+153	cn	NewCaledonia
+154	en	Macedonia
+154	fr	Macedonia
+154	es	Macedonia
+154	cn	Macedonia
+155	en	Vanuatu
+155	fr	Vanuatu
+155	es	Vanuatu
+155	cn	Vanuatu
+156	en	New Zealand
+156	fr	New Zealand
+156	es	New Zealand
+156	cn	New Zealand
+157	en	Nicaragua
+157	fr	Nicaragua
+157	es	Nicaragua
+157	cn	Nicaragua
+158	en	Niger
+158	fr	Niger
+158	es	Niger
+158	cn	Niger
+159	en	Nigeria
+159	fr	Nigeria
+159	es	Nigeria
+159	cn	Nigeria
+160	en	Niue
+160	fr	Niue
+160	es	Niue
+160	cn	Niue
+161	en	Norfolk Island
+161	fr	Norfolk Island
+161	es	Norfolk Island
+161	cn	Norfolk Island
+162	en	Norway
+162	fr	Norway
+162	es	Norway
+162	cn	Norway
+163	en	Northern Mariana Is
+163	fr	Northern Mariana Is
+163	es	Northern Mariana Is
+163	cn	Northern Mariana Is
+165	en	Pakistan
+165	fr	Pakistan
+165	es	Pakistan
+165	cn	Pakistan
+166	en	Panama
+166	fr	Panama
+166	es	Panama
+166	cn	Panama
+167	en	Czech Republic
+167	fr	Czech Republic
+167	es	Czech Republic
+167	cn	Czech Republic
+168	en	Papua New Guinea
+168	fr	Papua New Guinea
+168	es	Papua New Guinea
+168	cn	Papua New Guinea
+169	en	Paraguay
+169	fr	Paraguay
+169	es	Paraguay
+169	cn	Paraguay
+170	en	Peru
+170	fr	Peru
+170	es	Peru
+170	cn	Peru
+171	en	Philippines
+171	fr	Philippines
+171	es	Philippines
+171	cn	Philippines
+172	en	Pitcairn Islands
+172	fr	Pitcairn Islands
+172	es	Pitcairn Islands
+172	cn	Pitcairn Islands
+173	en	Poland
+173	fr	Poland
+173	es	Poland
+173	cn	Poland
+174	en	Portugal
+174	fr	Portugal
+174	es	Portugal
+174	cn	Portugal
+175	en	Guinea-Bissau
+175	fr	Guinea-Bissau
+175	es	Guinea-Bissau
+175	cn	Guinea-Bissau
+176	en	East Timor
+176	fr	East Timor
+176	es	East Timor
+176	cn	East Timor
+177	en	Puerto Rico
+177	fr	Puerto Rico
+177	es	Puerto Rico
+177	cn	Puerto Rico
+178	en	Eritrea
+178	fr	Eritrea
+178	es	Eritrea
+178	cn	Eritrea
+179	en	Qatar
+179	fr	Qatar
+179	es	Qatar
+179	cn	Qatar
+181	en	Zimbabwe
+181	fr	Zimbabwe
+181	es	Zimbabwe
+181	cn	Zimbabwe
+182	en	Reunion
+182	fr	Reunion
+182	es	Reunion
+182	cn	Reunion
+183	en	Romania
+183	fr	Romania
+183	es	Romania
+183	cn	Romania
+184	en	Rwanda
+184	fr	Rwanda
+184	es	Rwanda
+184	cn	Rwanda
+185	en	Russian Federation
+185	fr	Russian Federation
+185	es	Russian Federation
+185	cn	Russian Federation
+187	en	Saint Helena
+187	fr	Saint Helena
+187	es	Saint Helena
+187	cn	Saint Helena
+188	en	Saint Kitts and Nevis
+188	fr	Saint Kitts and Nevis
+188	es	Saint Kitts and Nevis
+188	cn	Saint Kitts and Nevis
+189	en	Saint Lucia
+189	fr	Saint Lucia
+189	es	Saint Lucia
+189	cn	Saint Lucia
+190	en	Saint Pierre & Miquelon
+190	fr	Saint Pierre & Miquelon
+190	es	Saint Pierre & Miquelon
+190	cn	Saint Pierre & Miquelon
+191	en	Saint Vincent/Grenadines
+191	fr	Saint Vincent/Grenadines
+191	es	Saint Vincent/Grenadines
+191	cn	Saint Vincent/Grenadines
+192	en	San Marino
+192	fr	San Marino
+192	es	San Marino
+192	cn	San Marino
+193	en	Sao Tome and Principe
+193	fr	Sao Tome and Principe
+193	es	Sao Tome and Principe
+193	cn	Sao Tome and Principe
+194	en	Saudi Arabia
+194	fr	Saudi Arabia
+194	es	Saudi Arabia
+194	cn	Saudi Arabia
+195	en	Senegal
+195	fr	Senegal
+195	es	Senegal
+195	cn	Senegal
+196	en	Seychelles
+196	fr	Seychelles
+196	es	Seychelles
+196	cn	Seychelles
+197	en	Sierra Leone
+197	fr	Sierra Leone
+197	es	Sierra Leone
+197	cn	Sierra Leone
+198	en	Slovenia
+198	fr	Slovenia
+198	es	Slovenia
+198	cn	Slovenia
+199	en	Slovakia
+199	fr	Slovakia
+199	es	Slovakia
+199	cn	Slovakia
+200	en	Singapore
+200	fr	Singapore
+200	es	Singapore
+200	cn	Singapore
+201	en	Somalia
+201	fr	Somalia
+201	es	Somalia
+201	cn	Somalia
+202	en	South Africa
+202	fr	South Africa
+202	es	South Africa
+202	cn	South Africa
+203	en	Spain
+203	fr	Spain
+203	es	Spain
+203	cn	Spain
+205	en	Western Sahara
+205	fr	Western Sahara
+205	es	Western Sahara
+205	cn	Western Sahara
+206	en	Sudan
+206	fr	Sudan
+206	es	Sudan
+206	cn	Sudan
+207	en	Suriname
+207	fr	Suriname
+207	es	Suriname
+207	cn	Suriname
+208	en	Tajikistan
+208	fr	Tajikistan
+208	es	Tajikistan
+208	cn	Tajikistan
+209	en	Swaziland
+209	fr	Swaziland
+209	es	Swaziland
+209	cn	Swaziland
+210	en	Sweden
+210	fr	Sweden
+210	es	Sweden
+210	cn	Sweden
+211	en	Switzerland
+211	fr	Switzerland
+211	es	Switzerland
+211	cn	Switzerland
+212	en	Syrian Arab Republic
+212	fr	Syrian Arab Republic
+212	es	Syrian Arab Republic
+212	cn	Syrian Arab Republic
+213	en	Turkmenistan
+213	fr	Turkmenistan
+213	es	Turkmenistan
+213	cn	Turkmenistan
+214	en	China, Taiwan Prov of
+214	fr	China, Taiwan Prov of
+214	es	China, Taiwan Prov of
+214	cn	China, Taiwan Prov of
+215	en	Tanzania, United Rep of
+215	fr	Tanzania, United Rep of
+215	es	Tanzania, United Rep of
+215	cn	Tanzania, United Rep of
+216	en	Thailand
+216	fr	Thailand
+216	es	Thailand
+216	cn	Thailand
+217	en	Togo
+217	fr	Togo
+217	es	Togo
+217	cn	Togo
+218	en	Tokelau
+218	fr	Tokelau
+218	es	Tokelau
+218	cn	Tokelau
+219	en	Tonga
+219	fr	Tonga
+219	es	Tonga
+219	cn	Tonga
+220	en	Trinidad and Tobago
+220	fr	Trinidad and Tobago
+220	es	Trinidad and Tobago
+220	cn	Trinidad and Tobago
+221	en	Oman
+221	fr	Oman
+221	es	Oman
+221	cn	Oman
+222	en	Tunisia
+222	fr	Tunisia
+222	es	Tunisia
+222	cn	Tunisia
+223	en	Turkey
+223	fr	Turkey
+223	es	Turkey
+223	cn	Turkey
+224	en	Turks and Caicos Is
+224	fr	Turks and Caicos Is
+224	es	Turks and Caicos Is
+224	cn	Turks and Caicos Is
+225	en	United Arab Emirates
+225	fr	United Arab Emirates
+225	es	United Arab Emirates
+225	cn	United Arab Emirates
+226	en	Uganda
+226	fr	Uganda
+226	es	Uganda
+226	cn	Uganda
+227	en	Tuvalu
+227	fr	Tuvalu
+227	es	Tuvalu
+227	cn	Tuvalu
+229	en	United Kingdom
+229	fr	United Kingdom
+229	es	United Kingdom
+229	cn	United Kingdom
+230	en	Ukraine
+230	fr	Ukraine
+230	es	Ukraine
+230	cn	Ukraine
+231	en	United States of America
+231	fr	United States of America
+231	es	United States of America
+231	cn	United States of America
+232	en	US Minor Outlying Is
+232	fr	US Minor Outlying Is
+232	es	US Minor Outlying Is
+232	cn	US Minor Outlying Is
+233	en	Burkina Faso
+233	fr	Burkina Faso
+233	es	Burkina Faso
+233	cn	Burkina Faso
+234	en	Uruguay
+234	fr	Uruguay
+234	es	Uruguay
+234	cn	Uruguay
+235	en	Uzbekistan
+235	fr	Uzbekistan
+235	es	Uzbekistan
+235	cn	Uzbekistan
+236	en	Venezuela
+236	fr	Venezuela
+236	es	Venezuela
+236	cn	Venezuela
+237	en	Viet Nam
+237	fr	Viet Nam
+237	es	Viet Nam
+237	cn	Viet Nam
+238	en	Ethiopia
+238	fr	Ethiopia
+238	es	Ethiopia
+238	cn	Ethiopia
+239	en	British Virgin Island
+239	fr	British Virgin Island
+239	es	British Virgin Island
+239	cn	British Virgin Island
+240	en	US Virgin Islands
+240	fr	US Virgin Islands
+240	es	US Virgin Islands
+240	cn	US Virgin Islands
+242	en	Wake Island
+242	fr	Wake Island
+242	es	Wake Island
+242	cn	Wake Island
+243	en	Wallis and Futuna Is
+243	fr	Wallis and Futuna Is
+243	es	Wallis and Futuna Is
+243	cn	Wallis and Futuna Is
+244	en	Samoa
+244	fr	Samoa
+244	es	Samoa
+244	cn	Samoa
+245	en	West Bank
+245	fr	West Bank
+245	es	West Bank
+245	cn	West Bank
+249	en	Yemen
+249	fr	Yemen
+249	es	Yemen
+249	cn	Yemen
+250	en	Congo, Dem Republic of
+250	fr	Congo, Dem Republic of
+250	es	Congo, Dem Republic of
+250	cn	Congo, Dem Republic of
+251	en	Zambia
+251	fr	Zambia
+251	es	Zambia
+251	cn	Zambia
+255	en	Belgium
+255	fr	Belgium
+255	es	Belgium
+255	cn	Belgium
+256	en	Luxembourg
+256	fr	Luxembourg
+256	es	Luxembourg
+256	cn	Luxembourg
+258	en	Anguilla
+258	fr	Anguilla
+258	es	Anguilla
+258	cn	Anguilla
+260	en	Svalbard Is
+260	fr	Svalbard Is
+260	es	Svalbard Is
+260	cn	Svalbard Is
+264	en	Isle of Man
+264	fr	Isle of Man
+264	es	Isle of Man
+264	cn	Isle of Man
+270	en	Mayotte
+270	fr	Mayotte
+270	es	Mayotte
+270	cn	Mayotte
+271	en	SouthGeorgia/Sandwich Is
+271	fr	SouthGeorgia/Sandwich Is
+271	es	SouthGeorgia/Sandwich Is
+271	cn	SouthGeorgia/Sandwich Is
+303	en	Western Europe
+303	fr	Western Europe
+303	es	Western Europe
+303	cn	Western Europe
+307	en	Intergvt Author Devpment
+307	fr	Intergvt Author Devpment
+307	es	Intergvt Author Devpment
+307	cn	Intergvt Author Devpment
+310	en	North Western Africa
+310	fr	North Western Africa
+310	es	North Western Africa
+310	cn	North Western Africa
+311	en	Western Africa
+311	fr	Western Africa
+311	es	Western Africa
+311	cn	Western Africa
+312	en	Central Africa
+312	fr	Central Africa
+312	es	Central Africa
+312	cn	Central Africa
+313	en	Eastern Africa
+313	fr	Eastern Africa
+313	es	Eastern Africa
+313	cn	Eastern Africa
+314	en	Southern Africa
+314	fr	Southern Africa
+314	es	Southern Africa
+314	cn	Southern Africa
+315	en	Latin Amer & Caribbean
+315	fr	Latin Amer & Caribbean
+315	es	Latin Amer & Caribbean
+315	cn	Latin Amer & Caribbean
+316	en	Central America
+316	fr	Central America
+316	es	Central America
+316	cn	Central America
+317	en	Caribbean
+317	fr	Caribbean
+317	es	Caribbean
+317	cn	Caribbean
+318	en	South America
+318	fr	South America
+318	es	South America
+318	cn	South America
+319	en	Near East
+319	fr	Near East
+319	es	Near East
+319	cn	Near East
+320	en	Near East in Africa
+320	fr	Near East in Africa
+320	es	Near East in Africa
+320	cn	Near East in Africa
+321	en	Near East in Asia
+321	fr	Near East in Asia
+321	es	Near East in Asia
+321	cn	Near East in Asia
+322	en	Far East
+322	fr	Far East
+322	es	Far East
+322	cn	Far East
+323	en	South Asia
+323	fr	South Asia
+323	es	South Asia
+323	cn	South Asia
+324	en	East & South East Asia
+324	fr	East & South East Asia
+324	es	East & South East Asia
+324	cn	East & South East Asia
+325	en	Near East and North Africa
+325	fr	Near East and North Africa
+325	es	Near East and North Africa
+325	cn	Near East and North Africa
+334	en	Eastern Europe
+334	fr	Eastern Europe
+334	es	Eastern Europe
+334	cn	Eastern Europe
+335	en	Europe
+335	fr	Europe
+335	es	Europe
+335	cn	Europe
+337	en	Asia
+337	fr	Asia
+337	es	Asia
+337	cn	Asia
+338	en	Africa
+338	fr	Africa
+338	es	Africa
+338	cn	Africa
+348	en	Latin America
+348	fr	Latin America
+348	es	Latin America
+348	cn	Latin America
+390	en	South of Sahara
+390	fr	South of Sahara
+390	es	South of Sahara
+390	cn	South of Sahara
+421	en	North Africa
+421	fr	North Africa
+421	es	North Africa
+421	cn	North Africa
+427	en	Europe, Non-EU Countries
+427	fr	Europe, Non-EU Countries
+427	es	Europe, Non-EU Countries
+427	cn	Europe, Non-EU Countries
+428	en	North America
+428	fr	North America
+428	es	North America
+428	cn	North America
+469	en	USSR, Former Area of
+469	fr	USSR, Former Area of
+469	es	USSR, Former Area of
+469	cn	USSR, Former Area of
+1008	en	Arctic Sea
+1008	fr	Arctic Sea
+1008	es	Arctic Sea
+1008	cn	Arctic Sea
+1009	en	Atlantic, Northwest
+1009	fr	Atlantic, Northwest
+1009	es	Atlantic, Northwest
+1009	cn	Atlantic, Northwest
+1010	en	Atlantic, Northeast
+1010	fr	Atlantic, Northeast
+1010	es	Atlantic, Northeast
+1010	cn	Atlantic, Northeast
+1011	en	Atlantic, Western Central
+1011	fr	Atlantic, Western Central
+1011	es	Atlantic, Western Central
+1011	cn	Atlantic, Western Central
+1012	en	Atlantic, Eastern Central
+1012	fr	Atlantic, Eastern Central
+1012	es	Atlantic, Eastern Central
+1012	cn	Atlantic, Eastern Central
+1013	en	Mediterran and Black Sea
+1013	fr	Mediterran and Black Sea
+1013	es	Mediterran and Black Sea
+1013	cn	Mediterran and Black Sea
+1014	en	Atlantic, Southwest
+1014	fr	Atlantic, Southwest
+1014	es	Atlantic, Southwest
+1014	cn	Atlantic, Southwest
+1015	en	Atlantic, Southeast
+1015	fr	Atlantic, Southeast
+1015	es	Atlantic, Southeast
+1015	cn	Atlantic, Southeast
+1016	en	Atlantic, Antarctic
+1016	fr	Atlantic, Antarctic
+1016	es	Atlantic, Antarctic
+1016	cn	Atlantic, Antarctic
+1017	en	Indian Ocean, Western
+1017	fr	Indian Ocean, Western
+1017	es	Indian Ocean, Western
+1017	cn	Indian Ocean, Western
+1018	en	Indian Ocean, Eastern
+1018	fr	Indian Ocean, Eastern
+1018	es	Indian Ocean, Eastern
+1018	cn	Indian Ocean, Eastern
+1019	en	Indian Ocean, Antarctic
+1019	fr	Indian Ocean, Antarctic
+1019	es	Indian Ocean, Antarctic
+1019	cn	Indian Ocean, Antarctic
+1020	en	Pacific, Northwest
+1020	fr	Pacific, Northwest
+1020	es	Pacific, Northwest
+1020	cn	Pacific, Northwest
+1021	en	Pacific, Northeast
+1021	fr	Pacific, Northeast
+1021	es	Pacific, Northeast
+1021	cn	Pacific, Northeast
+1022	en	Pacific, Western Central
+1022	fr	Pacific, Western Central
+1022	es	Pacific, Western Central
+1022	cn	Pacific, Western Central
+1023	en	Pacific, Eastern Central
+1023	fr	Pacific, Eastern Central
+1023	es	Pacific, Eastern Central
+1023	cn	Pacific, Eastern Central
+1024	en	Pacific, Southwest
+1024	fr	Pacific, Southwest
+1024	es	Pacific, Southwest
+1024	cn	Pacific, Southwest
+1025	en	Pacific, Southeast
+1025	fr	Pacific, Southeast
+1025	es	Pacific, Southeast
+1025	cn	Pacific, Southeast
+1026	en	Pacific, Antarctic
+1026	fr	Pacific, Antarctic
+1026	es	Pacific, Antarctic
+1026	cn	Pacific, Antarctic
+1220	en	All fishing areas
+1220	fr	All fishing areas
+1220	es	All fishing areas
+1220	cn	All fishing areas
+9999	en	World
+9999	fr	World
+9999	es	World
+9999	cn	World

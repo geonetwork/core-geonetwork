@@ -1,0 +1,15 @@
+#---------------------------------------------------------
+#--- File exported in DDF format on 2006-10-08 21:26:58
+#---
+#--- SELECT id,name FROM APP.Languages
+#---------------------------------------------------------
+
+[FIELDS]
+id,            VARCHAR
+name,          VARCHAR
+
+[DATA]
+en	English
+fr	French
+es	Espanol
+cn	Chinese

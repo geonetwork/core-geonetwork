@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<CI_OnlineResource help="information about online sources from which the resource can be obtained">OnLine resource</CI_OnlineResource>
+
+	<_not_mapped name19139="aggregateDataSetIdentifier"/>
+	<_not_mapped name19139="aggregateDataSetName"/>
+	<_not_mapped name19139="aggregationInfo"/>
+	<_not_mapped name19139="associationType"/>
+	<_not_mapped name19139="axisDimensionProperties"/>
+	<_not_mapped name19139="characterEncoding"/>
+	<_not_mapped name19139="codeSpace"/>
+	<_not_mapped name19139="composedOf"/>
+	<_not_mapped name19139="Country"/>
+	<_not_mapped name19139="dataSetURI"/>
+	<_not_mapped name19139="describes"/>
+	<_not_mapped name19139="distributionOrderProcess"/>
+	<_not_mapped name19139="DS_Association"/>
+	<_not_mapped name19139="DS_DataSet"/>
+	<_not_mapped name19139="DS_Initiative"/>
+	<_not_mapped name19139="DS_OtherAggregate"/>
+	<_not_mapped name19139="DS_Platform"/>
+	<_not_mapped name19139="DS_ProductionSeries"/>
+	<_not_mapped name19139="DS_Sensor"/>
+	<_not_mapped name19139="DS_Series"/>
+	<_not_mapped name19139="DS_StereoMate"/>
+	<_not_mapped name19139="EX_SpatialTemporalExtent"/>
+	<_not_mapped name19139="featureAttribute"/>
+	<_not_mapped name19139="featureType"/>
+	<_not_mapped name19139="georeferencedParameters"/>
+	<_not_mapped name19139="has"/>
+	<_not_mapped name19139="initiativeType"/>
+	<_not_mapped name19139="LanguageCode"/>
+	<_not_mapped name19139="locale"/>
+	<_not_mapped name19139="locale"/>
+	<_not_mapped name19139="LocalisedCharacterString"/>
+	<_not_mapped name19139="localisedString"/>
+	<_not_mapped name19139="MD_AggregateInformation"/>
+	<_not_mapped name19139="MD_DistributionUnits"/>
+	<_not_mapped name19139="onlineResource"/>
+	<_not_mapped name19139="partOf"/>
+	<_not_mapped name19139="propertyType"/>
+	<_not_mapped name19139="PT_Locale"/>
+	<_not_mapped name19139="PT_LocaleContainer"/>
+	<_not_mapped name19139="responsibleParty"/>
+	<_not_mapped name19139="seriesMetadata"/>
+	<_not_mapped name19139="subset"/>
+	<_not_mapped name19139="superset"/>
+	<_not_mapped name19139="textGroup"/>
+	<_not_mapped name19139="URL"/>
+	<_not_mapped name19139="verticalCRS"/>
+	<abstract condition="mandatory" help="brief narrative summary of the content of the resource(s)">Abstract</abstract>
+	<accessConstraints help="access constraints applied to assure the protection of privacy or intellectual property, and any special restrictions or limitations on obtaining the resource">Access constraints</accessConstraints>
+	<address help="physical and email address at which the organization or individual may be contacted">Address</address>
+	<administrativeArea help="state, province of the location">Administrative area</administrativeArea>
+	<alternateTitle help="short name or other language name by which the cited information is known. Example: &quot;DCW&quot; as an alternative title for &quot;Digital Chart of the World">Alternate title</alternateTitle>
+	<amendmentNumber help="amendment number of the format version">Amendment number</amendmentNumber>
+	<applicationProfile help="name of an application profile that can be used with the online resource">Application profile</applicationProfile>
+	<applicationSchemaInfo help="provides information about the conceptual schema of a dataset">Application schema info</applicationSchemaInfo>
+	<attributeDescription condition="mandatory" help="description of the attribute described by the measurement value">Attribute description</attributeDescription>
+	<attributeInstances condition="conditional" consdesc="attributes, features, featureInstances, dataset and other not documented" help="attribute instances to which the information applies">Attribute instances</attributeInstances>
+	<attributes condition="conditional" consdesc="features, featureInstances, attributeInstances, dataset and other not documented" help="attributes to which the information applies">Attributes</attributes>
+	<authority help="person or party responsible for maintenance of the namespace">Authority</authority>
+	<bitsPerValue help="maximum number of significant bits in the uncompressed representation for the value in each band of each pixel">Bits per value</bitsPerValue>
+	<cameraCalibrationInformationAvailability help="indication of whether or not constants are available which allow for camera calibration corrections">Camera calibration information availability</cameraCalibrationInformationAvailability>
+	<cellGeometry condition="mandatory" help="identification of grid data as point or cell">Cell geometry</cellGeometry>
+	<centerPoint help="earth location in the coordinate system defined by the Spatial Reference System and the grid coordinate of the cell halfway between opposite ends of the grid in the spatial dimensions">Center point</centerPoint>
+	<characterSet condition="conditional" consdesc="ISO/IEC 10646-1 not used and not defined by encoding" help="full name of the character coding standard used for the metadata set">Character set</characterSet>
+	<characterSet condition="conditional" consdesc="ISO/IEC 10646-1 not used and not defined by encoding" help="full name of the character coding standard used for the metadata set">Character set</characterSet>
+	<checkPointAvailability condition="mandatory" help="indication of whether or not geographic position points are available to test the accuracy of the georeferenced grid data">Check point availability</checkPointAvailability>
+	<checkPointDescription condition="conditional" consdesc="checkPointAvailability equals “yes”" help="description of geographic position points used to test the accuracy of the georeferenced grid data">Check point description</checkPointDescription>
+	<CI_Address help="location of the responsible individual or organization">Address</CI_Address>
+	<CI_Citation help="standardized resource reference">CI Citation</CI_Citation>
+	<CI_Contact help="information required to enable contact with the responsible person and/or organization">Contact</CI_Contact>
+	<CI_Date help="reference date and event used to describe it (YYYY-MM-DD)">Date</CI_Date>
+	<CI_DateTypeCode>Date type code</CI_DateTypeCode>
+	<CI_OnLineFunctionCode>OnLine function code</CI_OnLineFunctionCode>
+	<CI_PresentationFormCode>Presentation form code</CI_PresentationFormCode>
+	<CI_ResponsibleParty help="identification of, and means of communication with, person(s) and organizations associated with the dataset">Responsible party</CI_ResponsibleParty>
+	<CI_RoleCode>Role code</CI_RoleCode>
+	<CI_Series help="information about the series, or aggregate dataset, to which a dataset belongs">Series</CI_Series>
+	<CI_Telephone help="telephone numbers for contacting the responsible individual or organization">Telephone</CI_Telephone>
+	<citation help="citation data for the resource(s)">Citation</citation>
+	<citedResponsibleParty help="name and position information for an individual or organization that is responsible for the resource">Cited responsible party</citedResponsibleParty>
+	<city help="city of the location">City</city>
+	<classification condition="mandatory" help="name of the handling restrictions on the resource">Class</classification>
+	<classificationSystem help="name of the classification system">Classification system</classificationSystem>
+	<cloudCoverPercentage help="area of the dataset obscured by clouds, expressed as a percentage of the spatial extent">Cloud cover percentage</cloudCoverPercentage>
+	<code condition="mandatory" help="alphanumeric value identifying an instance in the namespace">Code</code>
+	<collectiveTitle help="common title with holdings note. NOTE title identifies elements of a series collectively, combined with information about what volumes are available at the source cited">Collective title</collectiveTitle>
+	<complianceCode help="indication of whether or not the cited feature catalogue complies with ISO 19110">Compliance code</complianceCode>
+	<compressionGenerationQuantity help="count of the number the number of lossy compression cycles performed on the image">Compression generation quantity</compressionGenerationQuantity>
+	<condition help="condition under which the extended element is mandatory">Condition</condition>
+	<constraintLanguage condition="mandatory" help="formal language used in Application Schema">Constraint language</constraintLanguage>
+	<contact condition="mandatory" help="party responsible for the metadata information">Metadata author</contact>
+	<contact condition="mandatory" help="party responsible for the metadata information">Metadata author</contact>
+	<contactInfo help="address of the responsible party">Contact info</contactInfo>
+	<contactInstructions help="supplemental instructions on how or when to contact the individual or organization">Contact instructions</contactInstructions>
+	<contentInfo help="provides information about the feature catalogue and describes the coverage and image data characteristics">Content info</contentInfo>
+	<contentType condition="mandatory" help="type of information represented by the cell value">Content type</contentType>
+	<controlPointAvailability condition="mandatory" help="indication of whether or not control point(s) exists">Control point availability</controlPointAvailability>
+	<cornerPoints condition="mandatory" help="earth location in the coordinate system defined by the Spatial Reference System and the grid coordinate of the cells at opposite ends of grid coverage along two diagonals in the grid spatial dimensions. There are four corner points in a georectified grid; at least two corner points along one diagonal are required">Corner points</cornerPoints>
+	<country help="country of the physical address">Country</country>
+	<country help="country of the physical address">Country</country>
+	<credit help="recognition of those who contributed to the resource(s)">Credit</credit>
+	<dataQualityInfo help="provides overall assessment of quality of a resource(s)">Data quality info</dataQualityInfo>
+	<dataset condition="conditional" consdesc="attributes, features, featureInstances, attributeInstances, and other not documented" help="dataset to which the information applies">Dataset Set</dataset>
+	<dataType condition="mandatory" help="code which identifies the kind of valueprovidedeprovided in the extended element">Data type</dataType>
+	<date condition="mandatory" help="reference date for the cited resource (YYYY-MM-DD)">Date</date>
+	<date condition="mandatory" help="reference date for the cited resource (YYYY-MM-DD)">Date</date>
+	<date condition="mandatory" help="reference date for the cited resource (YYYY-MM-DD)">Date</date>
+	<dateOfNextUpdate help="scheduled revision date for resource (YYYY-MM-DD)">Date of next update</dateOfNextUpdate>
+	<dateStamp condition="mandatory" help="date that the metadata was created (YYYY-MM-DDThh:mm:ss)">Date stamp</dateStamp>
+	<dateTime help="date and time or range of date and time on or over which the process step occurred (YYYY-MM-DDThh:mm:ss)">DateTime</dateTime>
+	<dateTime help="date and time or range of date and time on or over which the process step occurred (YYYY-MM-DDThh:mm:ss)">DateTime</dateTime>
+	<dateType condition="mandatory" help="event used for reference date">Date type</dateType>
+	<definition condition="mandatory" help="definition of the extended element">Definition</definition>
+	<deliveryPoint help="address line for the location (as described in ISO 11180, annex A)">Delivery point</deliveryPoint>
+	<denominator condition="mandatory" help="the number below the line in a vulgar fraction">Denominator</denominator>
+	<density help="density at which the data is recorded">Density</density>
+	<densityUnits condition="conditional" consdesc="density documented" help="units of measure for the recording density">Density units</densityUnits>
+	<description condition="mandatory" consdesc="sourceExtent not provided" help="description of the event, including related parameters or tolerances">Description</description>
+	<description condition="mandatory" consdesc="sourceExtent not provided" help="description of the event, including related parameters or tolerances">Description</description>
+	<description condition="mandatory" consdesc="sourceExtent not provided" help="description of the event, including related parameters or tolerances">Description</description>
+	<description condition="mandatory" consdesc="sourceExtent not provided" help="description of the event, including related parameters or tolerances">Description</description>
+	<description condition="mandatory" consdesc="sourceExtent not provided" help="description of the event, including related parameters or tolerances">Description</description>
+	<descriptiveKeywords help="provides category keywords, their type, and reference source">Descriptive keywords</descriptiveKeywords>
+	<descriptor help="description of the range of a cell measurement value">Descriptor</descriptor>
+	<dimension help="information on the dimensions of the cell measurement value">Dimension</dimension>
+	<dimensionName condition="mandatory" help="name of the axis">Dimension name</dimensionName>
+	<dimensionSize condition="mandatory" help="number of elements along the axis">Dimension size</dimensionSize>
+	<distance condition="conditional" consdesc="equivalentScale not documented" help="ground sample distance">Distance</distance>
+	<distributionFormat condition="mandatory">Distribution format</distributionFormat>
+	<distributionInfo help="provides information about the distributor of and options for obtaining the resource(s)">Distribution info</distributionInfo>
+	<distributor help="provides information about the distributor">Distributor</distributor>
+	<distributorContact condition="mandatory" help="party from whom the resource may be obtained. This list need not be exhaustive">Distributor contact</distributorContact>
+	<distributorFormat condition="conditional" consdesc="MD_Distribution.distributionFormat not documented" help="provides information about the format used by the distributor">Distributor format</distributorFormat>
+	<distributorTransferOptions help="provides information about the technical means and media used by the distributor">Distributor transfer options</distributorTransferOptions>
+	<domainCode condition="conditional" consdesc="is dataType “codelistElement”?" help="three digit code assigned to the extended element">Domain code</domainCode>
+	<domainOfValidity help="range which is valid for the referencesystem">Domain of validity</domainOfValidity>
+	<domainValue help="valid values that can be assigned to the extended element">Domain value</domainValue>
+	<DQ_AbsoluteExternalPositionalAccuracy help="closeness of reported coordinate values to values accepted as or being true">Absolute external positional accuracy</DQ_AbsoluteExternalPositionalAccuracy>
+	<DQ_AccuracyOfATimeMeasurement help="correctness of the temporal references of an item (reporting of error in time measurement)">Accuracy of time measurement</DQ_AccuracyOfATimeMeasurement>
+	<DQ_CompletenessCommission help="excess data present in the dataset, as described by the scope">Completeness commission</DQ_CompletenessCommission>
+	<DQ_CompletenessOmission help="data absent from the dataset, as described by the scope">Completeness omission</DQ_CompletenessOmission>
+	<DQ_ConceptualConsistency help="adherence to rules of the conceptual schema">Conceptual consistency</DQ_ConceptualConsistency>
+	<DQ_ConformanceResult help="Information about the outcome of evaluating the obtained value (or set of values) against a specified acceptable conformance quality level">Conformance result</DQ_ConformanceResult>
+	<DQ_DataQuality help="quality information for the data specified by a data quality scope">Data quality</DQ_DataQuality>
+	<DQ_DomainConsistency help="adherence of values to the value domains">Domain consistency</DQ_DomainConsistency>
+	<DQ_EvaluationMethodTypeCode help="type of method for evaluating an identified data quality measure">Evaluation method type code</DQ_EvaluationMethodTypeCode>
+	<DQ_FormatConsistency help="degree to which data is stored in accordance with the physical structure of the dataset, as described by the scope">Format consistency</DQ_FormatConsistency>
+	<DQ_GriddedDataPositionalAccuracy help="closeness of gridded data position values to values accepted as or being true">Gridded data positional accuracy</DQ_GriddedDataPositionalAccuracy>
+	<DQ_NonQuantitativeAttributeAccuracy help="correctness of non-quantitative attributes">Non quantitative attribute accuracy</DQ_NonQuantitativeAttributeAccuracy>
+	<DQ_QuantitativeAttributeAccuracy help="accuracy of quantitative attributes">Quantitative attribute accuracy</DQ_QuantitativeAttributeAccuracy>
+	<DQ_QuantitativeResult help="Information about the value (or set of values) obtained from applying a data quality measure">Quantitative result</DQ_QuantitativeResult>
+	<DQ_RelativeInternalPositionalAccuracy help="closeness of the relative positions of features in the scope to their respective relative positions accepted as or being true">Relative internal positional accuracy</DQ_RelativeInternalPositionalAccuracy>
+	<DQ_Scope condition="mandatory" help="description of the data specified by the scope">Scope</DQ_Scope>
+	<DQ_TemporalConsistency help="correctness of ordered events or sequences, if reported">Temporal consistency</DQ_TemporalConsistency>
+	<DQ_TemporalValidity help="validity of data specified by the scope with respect to time">Temporal validity</DQ_TemporalValidity>
+	<DQ_ThematicClassificationCorrectness help="comparison of the classes assigned to features or their attributes to a universe of discourse">Thematic classification correctness</DQ_ThematicClassificationCorrectness>
+	<DQ_TopologicalConsistency help="correctness of the explicitly encoded topological characteristics of the dataset as described by the scope">Topological consistency</DQ_TopologicalConsistency>
+	<DS_AssociationTypeCode help="justification for the correlation of two datasets">Association type code</DS_AssociationTypeCode>
+	<DS_AssociationTypeCode help="justification for the correlation of two datasets">Association type code</DS_AssociationTypeCode>
+	<DS_InitiativeTypeCode help="type of aggregation activity in which datasets are related">Initiative type code</DS_InitiativeTypeCode>
+	<eastBoundLongitude condition="mandatory" help="eastern-most coordinate of the limit of the dataset extent, expressed in longitude in decimal degrees (positive east)">East bound longitude</eastBoundLongitude>
+	<edition help="version of the cited resource">Edition</edition>
+	<editionDate help="date of the edition (YYYY-MM-DD)">Edition date</editionDate>
+	<electronicMailAddress help="address of the electronic mailbox of the responsible organization or individual">Electronic mail address</electronicMailAddress>
+	<environmentDescription help="description of the dataset in the producer_s processing environment, including items such as the software, the computer operating system, file name, and the dataset size">Environment description</environmentDescription>
+	<equivalentScale condition="conditional" consdesc="distance not documented" help="level of detail expressed as the scale of a comparable hardcopy map or chart">Equivalent scale</equivalentScale>
+	<errorStatistic help="statistical method used to determine the value">Error statistic</errorStatistic>
+	<evaluationMethodDescription help="description of the evaluation method">Evaluation method description</evaluationMethodDescription>
+	<evaluationMethodType help="type of method used to evaluate quality of the dataset">Evaluation method type code</evaluationMethodType>
+	<evaluationProcedure help="reference to the procedure information">Evaluation procedure</evaluationProcedure>
+	<EX_BoundingPolygon help="boundary enclosing the dataset, expressed as the closed set of (x,y) coordinates of the polygon (last point replicates first point)">EX_BoundingPolygon</EX_BoundingPolygon>
+	<EX_Extent help="information about spatial, vertical, and temporal extent">Extent</EX_Extent>
+	<EX_GeographicBoundingBox help="geographic position of the dataset">Geographic bounding box</EX_GeographicBoundingBox>
+	<EX_GeographicDescription help="Description of the geographic area using identifiers">Geographic description</EX_GeographicDescription>
+	<EX_TemporalExtent help="time period covered by the content of the dataset">Temporal Extent</EX_TemporalExtent>
+	<EX_VerticalExtent help="vertical domain of dataset">Vertical extent</EX_VerticalExtent>
+	<explanation condition="mandatory" help="explanation of the meaning of conformance for this result">Explanation</explanation>
+	<extendedElementInformation help="provides information about a new metadata element, not found in ISO 19115, which is required to describe geographic data">Extended elemen information</extendedElementInformation>
+	<extensionOnLineResource help="information about on-line sources containing the community profile name and the extended metadata elements. Information for all new metadata elements">Extension Online resource</extensionOnLineResource>
+	<extent condition="conditional" consdesc="if hierarchyLevel equals “dataset” either extent.geographicElemen t.EX_GeographicBoundin gBox or extent.geographicElemen t.EX_GeographicDescript ion is  required" help="information about the spatial, vertical and temporal extent of the data specified by the scope">Extent</extent>
+	<extent condition="conditional" consdesc="if hierarchyLevel equals “dataset” either extent.geographicElemen t.EX_GeographicBoundin gBox or extent.geographicElemen t.EX_GeographicDescript ion is  required" help="information about the spatial, vertical and temporal extent of the data specified by the scope">Extent</extent>
+	<extent condition="conditional" consdesc="if hierarchyLevel equals “dataset” either extent.geographicElemen t.EX_GeographicBoundin gBox or extent.geographicElemen t.EX_GeographicDescript ion is  required" help="information about the spatial, vertical and temporal extent of the data specified by the scope">Extent</extent>
+	<extentTypeCode help="indication of whether the bounding polygon encompasses an area covered by the data or an area where data is not present">Extent type code</extentTypeCode>
+	<facsimile help="telephone number of a facsimile machine for the responsible organization or individual">Facsimile</facsimile>
+	<featureCatalogueCitation condition="mandatory" help="complete bibliographic reference to one or more external feature catalogues">Feature catalogue citation</featureCatalogueCitation>
+	<featureInstances condition="conditional" consdesc="attributes, features, attributeInstances, dataset and other not documented" help="feature instances to which the information applies">Feature instances</featureInstances>
+	<features condition="conditional" consdesc="attributes, featureInstances, attributeInstances, dataset and other not documented" help="features to which the information applies">Features</features>
+	<featureTypes help="subset of feature types from cited feature catalogue occurring in data">Feature types</featureTypes>
+	<fees help="fees and terms for retrieving the resource. Include monetary units (as specified in ISO 4217)">Fees</fees>
+	<fileDecompressionTechnique help="recommendations of algorithms or processes that can be applied to read or expand resources to which compression techniques have been applied">File decompression technique</fileDecompressionTechnique>
+	<fileDescription help="text description of the illustration">File description</fileDescription>
+	<fileIdentifier help="unique identifier for this metadata file">File identifier</fileIdentifier>
+	<fileName condition="mandatory" help="name of the file that contains a graphic that provides an illustration of the dataset">File name</fileName>
+	<fileType help="format in which the illustration is encoded">File type</fileType>
+	<filmDistortionInformationAvailability help="indication of whether or not Calibration Reseau information is available">Film distortion information availability</filmDistortionInformationAvailability>
+	<formatDistributor help="provides information about the distributor’format">Format distributor</formatDistributor>
+	<function help="code for function performed by the online resource">Function</function>
+	<geographicElement condition="conditional" consdesc="description and temporalElement and verticalElement not documented" help="provides geographic component of the extent of the referring object">Geographic element</geographicElement>
+	<geographicIdentifier condition="mandatory" help="identifier used to represent a geographic area">Geographic identifier</geographicIdentifier>
+	<geometricObjectCount help="total number of the point or vector object type occurring in the dataset">Geometric object count</geometricObjectCount>
+	<geometricObjects help="information about the geometric objects used in the dataset">Geometric objects</geometricObjects>
+	<geometricObjectType condition="mandatory" help="name of point and vector spatial objects used to locate zero-, one-, and two-dimensional spatial locations in the dataset">Geometric object type</geometricObjectType>
+	<graphicOverview help="provides a graphic that illustrates the resource(s) (should include a legend for the graphic)">Graphic overview</graphicOverview>
+	<graphicsFile help="full application schema given as a graphics file">Graphics file</graphicsFile>
+	<handlingDescription help="additional information about the restrictions on handling the resource">Handling description</handlingDescription>
+	<hierarchyLevel help="scope to which the metadata applies (see annex H for more information about metadata hierarchy levels)">Hierarchy level</hierarchyLevel>
+	<hierarchyLevelName help="name of the hierarchy levels for which the metadata is provided">Hierarchy level name</hierarchyLevelName>
+	<hoursOfService help="time period (including time zone) when individuals can contact the organization or individual">Hours of service</hoursOfService>
+	<identificationInfo condition="mandatory" help="basic information about the resource(s) to which the metadata applies">Identification info</identificationInfo>
+	<identifier help="unique identifier for the resource. EXAMPLE: Universal Product Code (UPC), National Stock Number (NSN)">Identifier</identifier>
+	<illuminationAzimuthAngle help="illumination azimuth measured in degrees clockwise from true north at the time the image is taken. For images from a scanning device, refer to the centre pixel of the image">Illumination azimuth angle</illuminationAzimuthAngle>
+	<illuminationElevationAngle help="illumination elevation measured in degrees clockwise from the target plane at intersection of the optical line of sight with the Earth_s surface. For images from a scanning device, refer to the centre pixel of the image">Illumination elevation angle</illuminationElevationAngle>
+	<imageQualityCode help="specifies the image quality">Image quality code</imageQualityCode>
+	<imagingCondition help="conditions affected the image">Imaging condition</imagingCondition>
+	<includedWithDataset condition="mandatory" help="indication of whether or not the feature catalogue is included with the dataset">Included with dataset</includedWithDataset>
+	<individualName condition="conditional" consdesc="organisationName and positionName not documented" help="name of the responsible person- surname, given name, title separated by a delimiter">Individual name</individualName>
+	<ISBN help="international Standard Book Number">ISBN</ISBN>
+	<ISSN help="international Standard Serial Number">ISSN</ISSN>
+	<issueIdentification help="information identifying the issue of the series">Issue identification</issueIdentification>
+	<keyword help="commonly used word(s) or formalised word(s) or phrase(s) used to describe the subject">Keyword</keyword>
+	<language help="language used for documenting metadata" condition="conditional" consdesc="not defined by encoding">Language</language>
+	<language help="language used for documenting metadata" condition="conditional" consdesc="not defined by encoding">Language</language>
+	<language help="language used for documenting metadata" condition="conditional" consdesc="not defined by encoding">Language</language>
+	<languageCode help="language used for documenting a plain text">Language code</languageCode>
+	<lensDistortionInformationAvailability help="indication of whether or not lens aberration correction information is available">Lens distortion information availability</lensDistortionInformationAvailability>
+	<level condition="mandatory" help="hierarchical level of the data specified by the scope">Hierarchy level</level>
+	<levelDescription condition="conditional" consdesc="level not equal “dataset” or “series”" help="detailed description about the level of the data specified by the scope">Level description</levelDescription>
+	<LI_Lineage help="information about the events or source data used in constructing the data specified by the scope or lack of knowledge about lineage">Lineage</LI_Lineage>
+	<LI_ProcessStep help="information about an event in the creation process for the data specified by the scope">Process step</LI_ProcessStep>
+	<LI_Source help="information about the source data used in creating the data specified by the scope">Source</LI_Source>
+	<lineage condition="conditional" consdesc="report not provided" help="non-quantitative quality information about the lineage of the data specified by the scope">Lineage</lineage>
+	<linkage condition="mandatory" help="location (address) for on-line access using a Uniform Resource Locator address or similar addressing scheme such as http://www.statkart.no/isotc211">Linkage</linkage>
+	<maintenanceAndUpdateFrequency condition="mandatory" help="frequency with which changes and additions are made to the resource after the initial resource is completed">Maintenance and update frequency</maintenanceAndUpdateFrequency>
+	<maintenanceNote help="information regarding specific requirements for maintaining the resource">Maintenance note</maintenanceNote>
+	<maximumOccurrence help="maximum occurrence of the extended element">Maximum occurrence</maximumOccurrence>
+	<maximumValue condition="mandatory" help="highest vertical extent contained in the dataset">Maximum value</maximumValue>
+	<maxValue help="longest wavelength that the sensor is capable of collecting within a designated band">Maximum value</maxValue>
+	<MD_ApplicationSchemaInformation help="information about the application schema used to build the dataset">Application schema info</MD_ApplicationSchemaInformation>
+	<MD_Band help="range of wavelengths in the electromagnetic spectrum">Band</MD_Band>
+	<MD_BrowseGraphic help="graphic that provides an illustration of the dataset (should include a legend for the graphic)">MD_BrowseGraphic</MD_BrowseGraphic>
+	<MD_CellGeometryCode help="code indicating whether grid data is point or area">Cell geometry code</MD_CellGeometryCode>
+	<MD_CharacterSetCode help="name of the character coding standard used for the resource">Character set code</MD_CharacterSetCode>
+	<MD_ClassificationCode help="name of the handling restrictions on the dataset">Classification code</MD_ClassificationCode>
+	<MD_Constraints help="restrictions on the access and use of a resource or metadata">Constraints</MD_Constraints>
+	<MD_CoverageContentTypeCode help="specific type of information represented in the cell">Content type code</MD_CoverageContentTypeCode>
+	<MD_CoverageDescription help="information about the content of a grid data cell">Coverage description</MD_CoverageDescription>
+	<MD_DataIdentification help="information required to identify a dataset">Data identification</MD_DataIdentification>
+	<MD_DatatypeCode help="datatype of element or entity">Data type code</MD_DatatypeCode>
+	<MD_DigitalTransferOptions help="technical means and media by which a resource is obtained from the distributor">Digital transfer options</MD_DigitalTransferOptions>
+	<MD_Dimension help="axis properties">Dimension</MD_Dimension>
+	<MD_DimensionNameTypeCode help="name of the dimension">Dimension name type code</MD_DimensionNameTypeCode>
+	<MD_Distribution help="information about the distributor of and options for obtaining the resource">Distribution</MD_Distribution>
+	<MD_Distributor help="information about the distributor">Distributor</MD_Distributor>
+	<MD_ExtendedElementInformation help="new metadata element, not found in ISO 19115, which is required to describe geographic data">Extended elemen information</MD_ExtendedElementInformation>
+	<MD_FeatureCatalogueDescription help="information identifying the feature catalogue">Feature catalogue description</MD_FeatureCatalogueDescription>
+	<MD_Format help="description of the computer language construct that specifies the representation of data objects in a record, file, message, storage device or transmission channel">Format</MD_Format>
+	<MD_GeometricObjects help="number of objects, listed by geometric object type, used in the dataset">Geometric objects</MD_GeometricObjects>
+	<MD_GeometricObjectTypeCode help="name of point and vector spatial objects used to locate zero-, one-, and two-dimensional spatial locations in the dataset">Geometric object type code</MD_GeometricObjectTypeCode>
+	<MD_Georectified help="grid whose cells are regularly spaced in a geographic (i.e., lat / long) or map coordinate system defined in the Spatial Referencing System (SRS) so that any cell in the grid can be geolocated given its grid coordinate and the grid origin, cell spacing, and orientation">Georectified</MD_Georectified>
+	<MD_Georeferenceable help="grid with cells irregularly spaced in any given geographic/map projection coordinate system, whose individual cells can be geolocated using geolocation information supplied with the data but cannot be geolocated from the grid properties alone">Georeferenceable</MD_Georeferenceable>
+	<MD_GridSpatialRepresentation help="information about grid spatial objects in the dataset">Grid spatial representation</MD_GridSpatialRepresentation>
+	<MD_Identifier help="value uniquely identifying an object within a namespace">Identifier</MD_Identifier>
+	<MD_ImageDescription help="information about an image_s suitability for use">Image description</MD_ImageDescription>
+	<MD_ImagingConditionCode help="code which indicates conditions which may affect the image">Imaging condition code</MD_ImagingConditionCode>
+	<MD_Keywords help="keywords, their type and reference source">Keywords</MD_Keywords>
+	<MD_KeywordTypeCode help="methods used to group similar keywords">Keyword type code</MD_KeywordTypeCode>
+	<MD_LegalConstraints help="restrictions and legal prerequisites for accessing and using the resource">Legal constraints</MD_LegalConstraints>
+	<MD_MaintenanceFrequencyCode help="Code frequency with which modifications and deletions are made to the data after it isfirst produced">Maintenance frequency code</MD_MaintenanceFrequencyCode>
+	<MD_MaintenanceInformation help="information about the scope and frequency of updating">Maintenance information</MD_MaintenanceInformation>
+	<MD_Medium help="information about the media on which the resource can be distributed">Medium</MD_Medium>
+	<MD_MediumFormatCode help="method used to write to the medium">Medium format</MD_MediumFormatCode>
+	<MD_MediumNameCode help="name of the medium">Medium name code</MD_MediumNameCode>
+	<MD_Metadata help="root entity which defines metadata about a resource or resources">Metadata</MD_Metadata>
+	<MD_MetadataExtensionInformation help="information describing metadata extensions">Metadata extension info</MD_MetadataExtensionInformation>
+	<MD_ObligationCode help="obligation of the element or entity">Obligation code</MD_ObligationCode>
+	<MD_PixelOrientationCode help="point in a pixel corresponding to the Earth location of the pixel">Pixel orientation code</MD_PixelOrientationCode>
+	<MD_PortrayalCatalogueReference help="information identifying the portrayal catalogue used">Portrayal catalogue reference</MD_PortrayalCatalogueReference>
+	<MD_ProgressCode help="status of the dataset or progress of a review">Progress code</MD_ProgressCode>
+	<MD_RangeDimension help="information on the range of each dimension of a cell measurement value">Range dimension</MD_RangeDimension>
+	<MD_ReferenceSystem help="information about the reference system.">Reference system</MD_ReferenceSystem>
+	<MD_RepresentativeFraction help="derived from Scale where MD_RepresentativeFraction.denominator = 1 / Scale.measure And Scale.targetUnits = Scale.sourceUnits">Representative fraction</MD_RepresentativeFraction>
+	<MD_Resolution help="level of detail expressed as a scale factor or a ground distance">Resolution</MD_Resolution>
+	<MD_RestrictionCode help="limitation(s) placed upon the access or use of the data">Restriction code</MD_RestrictionCode>
+	<MD_ScopeCode help="class of information to which the referencing entity applies">Scope code</MD_ScopeCode>
+	<MD_ScopeDescription help="description of the class of information covered by the information">Scope description</MD_ScopeDescription>
+	<MD_SecurityConstraints help="handling restrictions imposed on the resource for national security or similar security concerns">Security constraints</MD_SecurityConstraints>
+	<MD_ServiceIdentification help="identification of capabilities which a service provider makes available to a service user through a set of interfaces that define a behaviour; See ISO 19119 – Services for furtherinformation">MD Service identification</MD_ServiceIdentification>
+	<MD_ServiceIdentification help="identification of capabilities which a serviceprovider makes available to a service user through a set of interfaces that define a behaviour - See ISO 19119 – Services for furtherinformation">Service identification</MD_ServiceIdentification>
+	<MD_SpatialRepresentationTypeCode help="method used to represent geographic information in the dataset">Spatial representation type code</MD_SpatialRepresentationTypeCode>
+	<MD_StandardOrderProcess help="common ways in which the resource may be obtained or received, and related instructions and fee information">Standard order process</MD_StandardOrderProcess>
+	<MD_TopicCategoryCode help="high-level geographic data thematic classification to assist in the grouping and search of available geographic data sets. Can be used to group keywords as well. Listed examples are not exhaustive. NOTE It is understood there are overlaps between general categories and the user is encouraged to select the one most appropriate.">Topic category code</MD_TopicCategoryCode>
+	<MD_TopologyLevelCode help="degree of complexity of the spatial relationships">Topology level code</MD_TopologyLevelCode>
+	<MD_Usage help="brief description of ways in which the resource(s) is/are currently used">Usage</MD_Usage>
+	<MD_VectorSpatialRepresentation help="information about the vector spatial objects in the dataset">Vector spatial representation</MD_VectorSpatialRepresentation>
+	<measureDescription help="description of the measure being determined">Measure description</measureDescription>
+	<measureIdentification help="code identifying a registered standard procedure">Measure identification</measureIdentification>
+	<mediumFormat help="method used to write to the medium">Medium format</mediumFormat>
+	<mediumNote help="description of other limitations or requirements for using the medium">Medium note</mediumNote>
+	<metadataConstraints help="provides restrictions on the access and use of data">Metadata constraints</metadataConstraints>
+	<metadataExtensionInfo help="information describing metadata extensions">Metadata extension info</metadataExtensionInfo>
+	<metadataMaintenance help="provides information about the frequency of metadata updates, and the scope of those updates">Metadata maintenance</metadataMaintenance>
+	<metadataStandardName help="name of the metadata standard (including profile name) used">Metadata standard name</metadataStandardName>
+	<metadataStandardVersion help="version (profile) of the metadata standard used">Metadata standard version</metadataStandardVersion>
+	<minimumValue condition="mandatory" help="lowest vertical extent contained in the dataset">Minimum value</minimumValue>
+	<minValue help="shortest wavelength that the sensor is capable of collecting within a designated band">Minimum value</minValue>
+	<name condition="mandatory" help="name of the series, or aggregate dataset, of which the dataset is a part">Name</name>
+	<name condition="mandatory" help="name of the series, or aggregate dataset, of which the dataset is a part">Name</name>
+	<name condition="mandatory" help="name of the series, or aggregate dataset, of which the dataset is a part">Name</name>
+	<name condition="mandatory" help="name of the series, or aggregate dataset, of which the dataset is a part">Name</name>
+	<name condition="mandatory" help="name of the series, or aggregate dataset, of which the dataset is a part">Name</name>
+	<name condition="mandatory" help="name of the series, or aggregate dataset, of which the dataset is a part">Name</name>
+	<name condition="mandatory" help="name of the series, or aggregate dataset, of which the dataset is a part">Name</name>
+	<nameOfMeasure help="name of the test applied to the data">Name of measure</nameOfMeasure>
+	<northBoundLatitude condition="mandatory" help="northern-most, coordinate of the limit of the dataset extent expressed in latitude in decimal degrees (positive north)">North bound latitude</northBoundLatitude>
+	<numberOfDimensions condition="mandatory" help="number of independent spatial-temporal axes">Number of dimensions</numberOfDimensions>
+	<obligation help="obligation of the extended element">Obligation</obligation>
+	<offLine help="information about offline media on whichthe resource can be obtaned">Offline</offLine>
+	<offset help="the physical value corresponding to a cell value of zero">Offset</offset>
+	<onLine help="information about online sources from which the resource can be obtained">OnLine resource</onLine>
+	<orderingInstructions help="general instructions, terms and services provided by the distributor">Ordering instructions</orderingInstructions>
+	<organisationName condition="conditional" consdesc="individualName and positionName not documented" help="name of the responsible organization">Organisation name</organisationName>
+	<orientationParameterAvailability condition="mandatory" help="indication of whether or not orientation parameters are available">Orientation parameter availability</orientationParameterAvailability>
+	<orientationParameterDescription help=" description of parameters used to describe sensor orientation">Orientation parameter description</orientationParameterDescription>
+	<other condition="conditional" consdesc="attributes, features, featureInstances, attributeInstances, and dataset not documented" help="class of information that does not fall into the other categories to which the information applies">Other</other>
+	<otherCitationDetails help="other information required to complete the citation that is not recorded elsewhere">Other citation details</otherCitationDetails>
+	<otherConstraints condition="conditional" consdesc="accessConstraints or useConstraints equal otherRestrictions" help="other restrictions and legal prerequisites for accessing and using the resource">Other constraints</otherConstraints>
+	<page help="details on which pages of the publication the article was published">Page</page>
+	<parameterCitation help="reference providing description of the parameters">Parameter citation</parameterCitation>
+	<parentEntity condition="mandatory" help="name of the metadata entity(s) under which this extended metadata element may appear. The name(s) may be standard metadata element(s) or other extended metadata element(s).">Parent entity</parentEntity>
+	<parentIdentifier help="file identifier of the metadata to which this metadata is a subset (child)">Parent identifier</parentIdentifier>
+	<pass condition="mandatory" help="indication of the conformance result where 0 = fail and 1 = pass">Pass</pass>
+	<peakResponse help="wavelength at which the response is the highest">Peak response</peakResponse>
+	<phone help="telephone numbers at which the organization or individual may be contacted">Phone</phone>
+	<plannedAvailableDateTime help="date and time when the dataset will be available (CCYY-MM-DDThh:mm:ss)">Planned available datetime</plannedAvailableDateTime>
+	<pointInPixel condition="mandatory" help="point in a pixel corresponding to the Earth location of the pixel">PointIn pixel</pointInPixel>
+	<pointOfContact help="identification of, and means of communication with, person(s) and organizations(s) associated with the resource(s)">Point of contact</pointOfContact>
+	<polygon condition="mandatory" help="sets of points defining the bounding polygon">polygon</polygon>
+	<portrayalCatalogueCitation condition="mandatory" help="bibliographic reference to the portrayal catalogue cited">Portrayal catalogue citation</portrayalCatalogueCitation>
+	<portrayalCatalogueInfo help="provides information about the catalogue of rules defined for the portrayal of a resource(s)">Portrayal catalogue info</portrayalCatalogueInfo>
+	<positionName condition="conditional" consdesc="individualName and organisationName not documented" help="role or position of the responsible person">Position name</positionName>
+	<postalCode help="ZIP or other postal code">Postal code</postalCode>
+	<presentationForm help="mode in which the resource is represented">Presentation form</presentationForm>
+	<processingLevelCode help="image distributor_s code that identifies the level of radiometric and geometric processing that has been applied">Processing level code</processingLevelCode>
+	<processor help="identification of, and means of communication with, person(s) and organization(s) associated with the process step">Processor</processor>
+	<processStep condition="conditional" consdesc="mandatory if statement and source not provided" help="information about an event in the creation process for the data specified by the scope">Process step</processStep>
+	<protocol help="connection protocol to be used">Protocol</protocol>
+	<PT_FreeText help="description of a multi-language free text metadata element">Free text</PT_FreeText>
+	<purpose help="summary of the intentions with which the resource(s) was developed">Purpose</purpose>
+	<radiometricCalibrationDataAvailability help="indication of whether or not the radiometric calibration information for generating the radiometrically calibrated standard data product is available">Radiometric calibration data availability</radiometricCalibrationDataAvailability>
+	<rationale help="requirement or purpose for the process step">Rationale</rationale>
+	<rationale help="requirement or purpose for the process step">Rationale</rationale>
+	<referenceSystemIdentifier condition="conditional" consdesc="MD_CRS.projection, MD_CRS.ellipsoid, and MD_CRS.datum not documented" help="name of reference system">Reference system identifier</referenceSystemIdentifier>
+	<referenceSystemInfo help="description of the spatial and temporal reference systems used in the dataset">Reference system info</referenceSystemInfo>
+	<report condition="conditional" consdesc="lineage not provided" help="quantitative quality information for the data specified by the scope">Report</report>
+	<resolution help="degree of detail in the grid dataset">Resolution</resolution>
+	<resourceConstraints help="provides information about constraints which apply to the resource(s)">Resource constraints</resourceConstraints>
+	<resourceFormat help="provides a description of the format of the resource(s)">Resource format</resourceFormat>
+	<resourceMaintenance help="provides information about the frequency of resource updates, and the scope of those updates">Resource maintenance</resourceMaintenance>
+	<resourceSpecificUsage help="provides basic information about specific application(s) for which the resource(s) has/have been or is being used by different users">Resource specific usage</resourceSpecificUsage>
+	<result condition="mandatory" help="value (or set of values) obtained from applying a data quality measure or the out come of evaluating the obtained value (or set of values) against a specified acceptable conformance quality level">Result</result>
+	<role condition="mandatory" help="function performed by the responsible party">Role</role>
+	<RS_Identifier help="identifier used for reference systems">RS identifier</RS_Identifier>
+	<RS_Identifier help="identifier used for reference systems">RS Identifier</RS_Identifier>
+	<rule condition="mandatory" help="specifies how the extended element relates to other existing elements and entities">Rule</rule>
+	<scaleDenominator help="denominator of the representative fraction on a source map">Scale</scaleDenominator>
+	<scaleFactor help="scale factor which has been applied to the cell value">Scale factor</scaleFactor>
+	<schemaAscii help="full application schema given as an ASCII file">schemaAscii</schemaAscii>
+	<schemaLanguage condition="mandatory" help="identification of the schema language used">Schema language</schemaLanguage>
+	<scope help="the specific data to which the data quality information applies">Scope</scope>
+	<sequenceIdentifier help="number that uniquely identifies instances of bands of wavelengths on which a sensor operates">Sequence identifier</sequenceIdentifier>
+	<series help="information about the series, or aggregate dataset, of which the dataset is a part">Series</series>
+	<series help="information about the series, or aggregate dataset, of which the dataset is a part">Series</series>
+	<shortName help="short form suitable for use in an implementation method such as XML or SGML. NOTE other methods may be used">Short name</shortName>
+	<softwareDevelopmentFile help="full application schema given as a software development file">Software development file</softwareDevelopmentFile>
+	<softwareDevelopmentFileFormat help="software dependent format used for the application schema software dependent file">Software development file format</softwareDevelopmentFileFormat>
+	<source condition="mandatory" consdesc="mandatory if statement and processStep not provided" help="information about the source data used in creating the data specified by the scope">Source</source>
+	<source condition="mandatory" consdesc="mandatory if statement and processStep not provided" help="information about the source data used in creating the data specified by the scope">Source</source>
+	<source condition="mandatory" consdesc="mandatory if statement and processStep not provided" help="information about the source data used in creating the data specified by the scope">Source</source>
+	<sourceCitation help="recommended reference to be used for the source data">Source citation</sourceCitation>
+	<sourceExtent condition="conditional" consdesc="description not provided" help="information about the spatial, vertical and temporal extent of the source data">Source extent</sourceExtent>
+	<sourceReferenceSystem help="spatial reference system used by the source data">Source reference system</sourceReferenceSystem>
+	<sourceStep help="information about an event in the creation process for the source data">Source step</sourceStep>
+	<southBoundLatitude condition="mandatory" help="southern-most coordinate of the limit of the dataset extent, expressed in latitude in decimal degrees (positive north)">South bound latitude</southBoundLatitude>
+	<spatialExtent condition="mandatory" help="spatial extent component of composite spatial and temporal extent">Spatial extent</spatialExtent>
+	<spatialRepresentationInfo help="digital representation of spatial information in the dataset">Spatial representation info</spatialRepresentationInfo>
+	<spatialRepresentationType help="method used to spatially represent geographic information">Spatial representation type</spatialRepresentationType>
+	<spatialResolution help="factor which provides a general understanding of the density of spatial data in the dataset">Spatial resolution</spatialResolution>
+	<specification condition="mandatory" help="name of a subset, profile, or product specification of the format">Specification</specification>
+	<specification condition="mandatory" help="name of a subset, profile, or product specification of the format">Specification</specification>
+	<specificUsage condition="mandatory" help="brief description of the resource and/or resource series usage">Specific usage</specificUsage>
+	<statement condition="conditional" consdesc="(DQ_DataQuality.scope. DQ_Scope.level = “dataset” or “series”)" help="general explanation of the data producer_s knowledge about the lineage of a dataset">Statement</statement>
+	<status help="status of the resource(s)">Status</status>
+	<supplementalInformation help="any other descriptive information about the dataset">Supplemental Information</supplementalInformation>
+	<temporalElement condition="conditional" consdesc="description and geographicElement and verticalElement not documented" help="provides temporal component of the extent of the referring object">Temporal element</temporalElement>
+	<thesaurusName help="name of the formally registered thesaurus or a similar authoritative source of keywords">Thesaurus name</thesaurusName>
+	<title condition="mandatory" help="name by which the cited resource is known">Title</title>
+	<toneGradation help="number of discrete numerical values in the grid data">Tone gradation</toneGradation>
+	<topicCategory condition="mandatory" help="main theme(s) of the datset">Topic category</topicCategory>
+	<topologyLevel help="code which identifies the degree of complexity of the spatial relationships">Topology level</topologyLevel>
+	<transferOptions help="provides information about technical means and media by which a resource is obtained from the distributor">Transfer options</transferOptions>
+	<transferSize help="estimated size of a unit in the specified transfer format, expressed in megabytes. The transfer size is &gt; 0.0">Transfer size</transferSize>
+	<transformationDimensionDescription help="description of the information about which grid dimensions are the spatial dimensions">Transformation dimension description</transformationDimensionDescription>
+	<transformationDimensionMapping help="information about which grid dimensions are the spatial dimensions">Transformation dimension mapping</transformationDimensionMapping>
+	<transformationParameterAvailability condition="mandatory" help="indication of whether or not parameters for transformation exists">Transformation parameter availability</transformationParameterAvailability>
+	<triangulationIndicator help="indication of whether or not triangulation has been performed upon the image">Triangulation indicator</triangulationIndicator>
+	<turnaround help="typical turnaround time for the filling of an order">Turnaround</turnaround>
+	<type help="subject matter used to group similar keywords">Type</type>
+	<units help="units in which sensor wavelengths are expressed">Value unit</units>
+	<unitsOfDistribution help="tiles, layers, geographic areas, etc., in which data is available">Units of distribution</unitsOfDistribution>
+	<updateScope help="scope of data to which maintenance is applied">Update scope</updateScope>
+	<updateScopeDescription help="additional information about the range or extent of the resource">Update scope description</updateScopeDescription>
+	<usageDateTime help="date and time of the first use or range of uses of the resource and/or resource series (YYYY-MM-DDThh:mm:ss)">Usage datetime</usageDateTime>
+	<useConstraints help="constraints applied to assure the protection of privacy or intellectual property, and any special restrictions or limitations or warnings on using the resource">Use constraints</useConstraints>
+	<useLimitation help="limitation affecting the fitness for use of the resource. Example, _not to be used for navigation_">Use limitation</useLimitation>
+	<userContactInfo condition="mandatory" help="identification of and means of communicating with person(s) and organization(s) using the resource(s)">User contact info</userContactInfo>
+	<userDefinedMaintenanceFrequency help="maintenance period other than those defined">User defined maintenance frequency</userDefinedMaintenanceFrequency>
+	<userDeterminedLimitations help="applications, determined by the user for which the resource and/or resource series is not suitable">User determined limitations</userDeterminedLimitations>
+	<userNote help="explanation of the application of the legal constraints or other restrictions and legal prerequisites for obtaining and using the resource">User note</userNote>
+	<value condition="mandatory">Value</value>
+	<valueType help="value type for reporting a data quality result">Value type</valueType>
+	<valueUnit condition="mandatory" help="value unit for reporting a data quality result">Value unit</valueUnit>
+	<version condition="mandatory" help="version of the format (date, number, etc.)">Version</version>
+	<version condition="mandatory" help="version of the format (date, number, etc.)">Version</version>
+	<verticalElement condition="conditional" consdesc="description and geographicElement and temporalElement not documented" help="provides vertical component of the extent of the referring object">Vertical element</verticalElement>
+	<voice help="telephone number by which individuals can speak to the responsible organization or individual">Voice</voice>
+	<volumes help="number of items in the media identified">Volumes</volumes>
+	<westBoundLongitude condition="mandatory" help="western-most coordinate of the limit of the dataset extent, expressed in longitude in decimal degrees (positive east)">West bound longitude</westBoundLongitude>
+</root>

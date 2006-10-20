@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<profiles>
+
+	<!-- FIXME: check for unused services -->
+
+	<!-- External system services are still missing-->
+	<!-- ====================================================================== -->
+
+	<profile name="Administrator" extends="UserAdmin">
+
+		<!-- Group maintenance services -->
+		<allow service="group.remove"/>
+		<allow service="group.update"/>
+
+		<!-- Category maintenance services -->
+		<allow service="category.remove"/>
+		<allow service="category.update"/>
+
+		<!-- Utilities  -->
+		<allow service="util.import"/>
+		<allow service="util.ping"/>
+		<allow service="util.empty"/>
+		<allow service="util.select"/>
+
+		<!-- Edit the context sensitive help -->
+		<allow service="help.edit.form"/>
+		<allow service="help.update"/>
+
+		<!-- Insert metadata from ISO19115 XML files from a local directory -->
+		<allow service="metadata.batchimport.form"/>
+
+		<!-- Search for orphaned metadata records -->
+		<allow service="metadata.searchunused.form"/>
+		<allow service="metadata.searchunused"/>
+
+		<!-- Harvesting facilities -->
+		<allow service="harvesting"/>
+		<allow service="xml.harvesting.get"/>
+		<allow service="xml.harvesting.add"/>
+		<allow service="xml.harvesting.update"/>
+		<allow service="xml.harvesting.remove"/>
+		<allow service="xml.harvesting.start"/>
+		<allow service="xml.harvesting.stop"/>
+		<allow service="xml.harvesting.run"/>
+	</profile>
+
+	<!-- ====================================================================== -->
+
+	<profile name="UserAdmin" extends="Editor">
+
+		<!-- User maintenance services -->
+		<allow service="user.get"/>
+		<allow service="user.list"/>
+		<allow service="user.remove"/>
+		<allow service="user.update"/>
+
+	</profile>
+
+	<!-- ====================================================================== -->
+
+	<profile name="Editor" extends="RegisteredUser">
+
+		<!-- Allow to see the list of groups the user is member of -->
+		<allow service="group.list"/>
+		<allow service="group.get"/>
+
+		<!-- These are the metadata categories forms -->
+		<allow service="metadata.category"/>
+		<allow service="metadata.category.form"/>
+		<allow service="category.list"/>
+		<allow service="category.get"/>
+
+		<!-- Allow to add a metadata record -->
+		<allow service="metadata.add"/>
+		<allow service="metadata.add.form"/>
+
+		<!-- These are the metadata privileges forms -->
+		<allow service="metadata.admin"/>
+		<allow service="metadata.admin.form"/>
+
+		<!-- Allow to delete a metadata record -->
+		<allow service="metadata.delete"/>
+
+		<allow service="metadata.duplicate.form"/>
+		<allow service="metadata.create.form"/>
+		<allow service="metadata.create"/>
+
+		<!-- Allow to edit a metadata record -->
+		<allow service="metadata.edit"/>
+		<allow service="metadata.elem.add"/>
+		<allow service="metadata.elem.delete"/>
+		<allow service="metadata.elem.down"/>
+		<allow service="metadata.elem.up"/>
+		<allow service="metadata.update"/>
+		<allow service="metadata.update.finish"/>
+		<allow service="metadata.update.validate"/>
+
+		<!-- Allow to add a metadata record in XML format -->
+		<allow service="metadata.xmlinsert.form"/>
+		<allow service="metadata.insert"/>
+
+		<!-- Allow to upload a file -->
+		<allow service="file.upload"/>
+		<allow service="resources.upload"/>
+		<allow service="resources.del"/>
+
+		<!-- Allow thumbnail services -->
+		<allow service="metadata.thumbnail.form"/>
+		<allow service="metadata.thumbnail.set"/>
+		<allow service="metadata.thumbnail.unset"/>
+
+		<!-- Allow GeoNetwork Mapping services -->
+		<allow service="xml.metadata.insert"/>
+		<allow service="xml.metadata.delete"/>
+		<allow service="xml.user.list"/>
+
+	</profile>
+
+	<!-- ====================================================================== -->
+
+	<profile name="RegisteredUser" extends="Guest">
+
+		<!-- gives access to the admin form -->
+		<allow service="admin"/>
+
+		<!-- Allow the user to change it's password -->
+		<allow service="user.pwedit"/>
+		<allow service="user.pwupdate"/>
+		<allow service="user.logout"/>
+
+	</profile>
+
+	<!-- ====================================================================== -->
+
+	<profile name="Guest">
+
+		<!-- Basic services to search and display the results -->
+		<allow service="main.home"/>
+		<allow service="main.search"/>
+		<allow service="main.present"/>
+		<allow service="metadata.show"/>
+		<allow service="remote.show"/>
+
+		<!-- Login and logout services -->
+		<allow service="user.login"/>
+
+		<!-- User privileges -->
+		<allow service="user.privileges.error"/>
+		<allow service="res"/>
+
+		<!-- Get help -->
+		<allow service="help"/>
+		<allow service="help.metadata"/>
+		<allow service="links"/>
+		<allow service="about"/>
+
+		<!-- Give feedback -->
+		<allow service="feedback"/>
+		<allow service="feedback.insert"/>
+
+		<!-- Download a file -->
+		<allow service="file.download"/>
+		<allow service="file.disclaimer"/>
+		<allow service="feedback.download.insert"/>
+		<allow service="resources.get"/>
+		<allow service="resources.get2"/>
+
+		<!-- Get metadata from external application -->
+		<allow service="external.getmetadata"/>
+		<allow service="resources.getgraphover"/>
+		<allow service="graphover.show"/>
+
+		<!-- WMC -->
+		<allow service="intermap.wmc.setWmcContext"/>
+
+		<!-- XML services -->
+		<allow service="xml.user.login"/>
+		<allow service="xml.user.logout"/>
+		<allow service="xml.search"/>
+		<allow service="xml.metadata.get"/>
+		<allow service="xml.info"/>
+		<allow service="xml.forward"/>
+
+		<!-- Portal XML services -->
+		<allow service="portal.search"/>
+		<allow service="portal.search.present"/>
+		<allow service="portal.present"/>
+		<allow service="portal.full"/>
+		<allow service="portal.latest.updated"/>
+		<allow service="portal.featured"/>
+		<allow service="portal.categories"/>
+
+		<!-- RSS services -->
+		<allow service="rss.latest"/>
+		<allow service="rss.search"/>
+		<allow service="rss.present"/>
+
+		<!-- Allow GeoNetwork Mapping services -->
+		<allow service="xml.group.list"/>
+
+		<!-- Catalogue Services for the Web -->
+		<allow service="csw"/>
+	</profile>
+
+	<!-- ====================================================================== -->
+</profiles>
+
