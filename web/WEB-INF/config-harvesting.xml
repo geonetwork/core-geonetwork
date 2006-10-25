@@ -14,45 +14,45 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.harvesting.get" type="xml">
+		<service name="xml.harvesting.get">
 			<class name=".services.harvesting.Get" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.harvesting.add" type="xml">
+		<service name="xml.harvesting.add">
 			<class name=".services.harvesting.Add" />
 			<class name=".services.harvesting.Get" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.harvesting.update" type="xml">
+		<service name="xml.harvesting.update">
 			<class name=".services.harvesting.Update" />
 			<class name=".services.harvesting.Get" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.harvesting.remove" type="xml">
+		<service name="xml.harvesting.remove">
 			<class name=".services.harvesting.Remove" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.harvesting.start" type="xml">
+		<service name="xml.harvesting.start">
 			<class name=".services.harvesting.Start" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.harvesting.stop" type="xml">
+		<service name="xml.harvesting.stop">
 			<class name=".services.harvesting.Stop" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.harvesting.run" type="xml">
+		<service name="xml.harvesting.run">
 			<class name=".services.harvesting.Run" />
 		</service>
 

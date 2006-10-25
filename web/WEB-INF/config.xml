@@ -503,19 +503,19 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- XML services -->
 
-		<service name="xml.user.login" type="xml">
+		<service name="xml.user.login">
 			<class name=".services.login.Login"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.user.logout" type="xml">
+		<service name="xml.user.logout">
 			<class name=".services.login.Logout"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.search" type="xml">
+		<service name="xml.search">
 			<class name=".services.main.XmlSearch"/>
 
 			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8"/>
@@ -523,19 +523,19 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.metadata.get" type="xml">
+		<service name="xml.metadata.get">
 			<class name=".services.metadata.Show"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.info" type="xml">
+		<service name="xml.info">
 			<class name=".services.main.Info"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.forward" type="xml">
+		<service name="xml.forward">
 			<class name=".services.main.Forward"/>
 		</service>
 
@@ -548,26 +548,26 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.group.list" type="xml">
+		<service name="xml.group.list">
 			<class name=".services.group.List"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.metadata.insert" type="xml">
+		<service name="xml.metadata.insert">
 			<class name=".services.metadata.Insert"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.metadata.delete" type="xml">
+		<service name="xml.metadata.delete">
 			<class name=".services.metadata.Delete"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Catalogue Services for the Web -->
 
-		<service name="csw" type="xml">
+		<service name="csw">
 			<class name=".services.main.CswDispatcher"/>
 		</service>
 
