@@ -23,13 +23,47 @@
 
 package org.fao.geonet.lib;
 
+import java.sql.SQLException;
+import java.util.Iterator;
+import jeeves.resources.dbms.Dbms;
+import org.jdom.Element;
+
 //=============================================================================
 
-public class Lib
+public class DbLib
 {
-	public static LocalLib   local   = new LocalLib();
-	public static ElementLib element = new ElementLib();
-	public static DbLib      db      = new DbLib();
+	//-----------------------------------------------------------------------------
+	//---
+	//--- API methods
+	//---
+	//-----------------------------------------------------------------------------
+
+	public Element select(Dbms dbms, String table, String name) throws SQLException
+	{
+		return select(dbms, table, name, null);
+	}
+
+	//-----------------------------------------------------------------------------
+
+	public Element select(Dbms dbms, String table, String name, String where) throws SQLException
+	{
+		String query = "SELECT * FROM "+table;
+
+		if (where != null)
+			query += " WHERE "+ where;
+
+		Element result = dbms.select(query);
+
+		Iterator i = result.getChildren().iterator();
+
+		while (i.hasNext())
+		{
+			Element record = (Element) i.next();
+			record.setName(name);
+		}
+
+		return result.setName(table.toLowerCase());
+	}
 }
 
 //=============================================================================
