@@ -143,8 +143,8 @@ public class DataManager
 		Vector moreFields = new Vector();
 
 		// get metadata table fields
-		Element md         = XmlSerializer.select(dbms, "Metadata", id);
-		String  root       = md.getName();
+		Element md   = XmlSerializer.select(dbms, "Metadata", id);
+		String  root = md.getName();
 
 		String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, uuid, "+
 									"isHarvested FROM Metadata WHERE id = " + id;

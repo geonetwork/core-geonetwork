@@ -35,7 +35,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ScheduleContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-import jeeves.xml.XmlRequest;
+import jeeves.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -167,8 +167,8 @@ public class MetadataSync implements Schedule
 
 			XmlRequest req = new XmlRequest(si.host, si.port);
 
-			req.setSiteName(si.name);
-			req.setLanguage(si.language);
+//			req.setSiteName(si.name);
+//			req.setLanguage(si.language);
 
 			//--- login
 
@@ -178,7 +178,7 @@ public class MetadataSync implements Schedule
 
 				req.addParam("username", si.username);
 				req.addParam("password", si.password);
-				req.execute(si.login);
+//				req.execute(si.login);
 			}
 
 			//--- search
@@ -191,7 +191,7 @@ public class MetadataSync implements Schedule
 				req.clearParams();
 				req.setParams(params);
 
-				Element result = req.execute(si.search);
+				Element result = req.execute(); //si.search);
 
 				context.debug("Obtained:\n"+Xml.getString(result));
 
@@ -215,7 +215,7 @@ public class MetadataSync implements Schedule
 				context.info("Logging out from : "+ si.name);
 
 				req.clearParams();
-				req.execute(si.logout);
+//				req.execute(si.logout);
 			}
 		}
 	}
@@ -415,7 +415,7 @@ public class MetadataSync implements Schedule
 		req.clearParams();
 		req.addParam("id", id);
 
-		Element elMetadata = req.execute(si.get);
+		Element elMetadata = req.execute();//si.get);
 
 		Element elInfo = elMetadata.getChild("info", Edit.NAMESPACE);
 

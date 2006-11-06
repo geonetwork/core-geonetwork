@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Set;
 import jeeves.utils.Xml;
 import org.fao.geonet.apps.common.SimpleLogger;
-import org.fao.geonet.exceptions.GeoNetException;
 import org.jdom.Element;
 
 //==============================================================================
@@ -115,7 +114,7 @@ public class Migrator extends Thread
 			logBanner("Ending migration process");
 			out.close();
 		}
-		catch(GeoNetException e)
+		catch(Exception e)
 		{
 			logBanner("Aborting");
 			destin.abort();

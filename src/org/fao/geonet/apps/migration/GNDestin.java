@@ -43,7 +43,6 @@ import jeeves.server.ServiceConfig;
 import jeeves.utils.Xml;
 import org.fao.geonet.apps.common.SimpleLogger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.exceptions.GeoNetException;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -88,7 +87,7 @@ public class GNDestin
 	//---
 	//---------------------------------------------------------------------------
 
-	public void open() throws GeoNetException
+	public void open() throws Exception
 	{
 		//--- load config file
 		config = Util.getConfigFile(logger, geonetDir +"web/WEB-INF/config.xml");
@@ -126,7 +125,7 @@ public class GNDestin
 
 	//---------------------------------------------------------------------------
 
-	public void commit() throws GeoNetException
+	public void commit() throws Exception
 	{
 		try
 		{
@@ -155,7 +154,7 @@ public class GNDestin
 
 	//---------------------------------------------------------------------------
 
-	public Set<String> getAllIsoMetadataId() throws GeoNetException
+	public Set<String> getAllIsoMetadataId() throws Exception
 	{
 		String query = "SELECT id FROM Metadata WHERE schemaId='iso19115'";
 
@@ -181,7 +180,7 @@ public class GNDestin
 
 	//---------------------------------------------------------------------------
 
-	public Element getMetadata(String id) throws GeoNetException
+	public Element getMetadata(String id) throws Exception
 	{
 		try
 		{
@@ -202,7 +201,7 @@ public class GNDestin
 
 	//---------------------------------------------------------------------------
 
-	public Element getUnmappedFields(Element md) throws GeoNetException
+	public Element getUnmappedFields(Element md) throws Exception
 	{
 		try
 		{
@@ -216,7 +215,7 @@ public class GNDestin
 
 	//---------------------------------------------------------------------------
 
-	public void upgradeMetadata(String id, Element md) throws GeoNetException
+	public void upgradeMetadata(String id, Element md) throws Exception
 	{
 		//--- step 1 : convert metadata from ISO19115 to ISO19139
 
@@ -250,7 +249,7 @@ public class GNDestin
 
 	//---------------------------------------------------------------------------
 
-	public void removeLuceneFiles() throws GeoNetException
+	public void removeLuceneFiles() throws Exception
 	{
 		String luceneDir = geonetDir +"web/"+ appHand.getValue(Geonet.Config.LUCENE_DIR);
 
@@ -259,7 +258,7 @@ public class GNDestin
 
 	//---------------------------------------------------------------------------
 
-	public void addMetadata(List list) throws GeoNetException
+	public void addMetadata(List list) throws Exception
 	{
 		logger.logInfo("Migrating "+ list.size() +" metadata");
 
@@ -297,7 +296,7 @@ public class GNDestin
 	//---
 	//---------------------------------------------------------------------------
 
-	private void cleanDir(File dir) throws GeoNetException
+	private void cleanDir(File dir) throws Exception
 	{
 		File files[] = dir.listFiles();
 
@@ -316,7 +315,7 @@ public class GNDestin
 	//---------------------------------------------------------------------------
 
 	private void insertRecords(String table, List records, String fields[],
-										Mapper mapper) throws GeoNetException
+										Mapper mapper) throws Exception
 	{
 		for(int i=0; i<records.size(); i++)
 		{
@@ -329,7 +328,7 @@ public class GNDestin
 	//---------------------------------------------------------------------------
 
 	private void insertRecord(String table, Element rec, String fields[],
-									  Mapper mapper) throws GeoNetException
+									  Mapper mapper) throws Exception
 	{
 		StringBuffer names = new StringBuffer();
 		StringBuffer marks = new StringBuffer();
@@ -370,7 +369,7 @@ public class GNDestin
 			for(int i=0; i<values.size(); i++)
 				logger.logError("   - Value : "+ values.get(i));
 
-			throw new GeoNetException("");
+			throw new Exception("");
 		}
 	}
 
@@ -455,12 +454,12 @@ public class GNDestin
 
 	//--------------------------------------------------------------------------
 
-	private String getBaseURL() throws GeoNetException
+	private String getBaseURL() throws Exception
 	{
 		Element web = Util.getConfigFile(logger, geonetDir +"web/WEB-INF/web.xml");
 
 		if (web == null)
-			throw new GeoNetException("");
+			throw new Exception("");
 
 		Namespace ns = Namespace.getNamespace("http://java.sun.com/xml/ns/j2ee");
 
@@ -485,14 +484,14 @@ public class GNDestin
 
 	//--------------------------------------------------------------------------
 
-	private GeoNetException geoNetExc(Exception e, String message)
+	private Exception geoNetExc(Exception e, String message)
 	{
 		logger.logError(message);
 
 		if (e != null)
 			logger.logError("Error : "+ e.getMessage());
 
-		return new GeoNetException("");
+		return new Exception("");
 	}
 }
 

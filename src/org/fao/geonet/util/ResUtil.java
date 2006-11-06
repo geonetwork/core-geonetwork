@@ -25,8 +25,7 @@ package org.fao.geonet.util;
 
 import java.io.File;
 import java.util.HashSet;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.JeevesException;
+import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -79,7 +78,7 @@ public class ResUtil
 		HashSet hsOper = accessMan.getOperations(context, id, context.getIpAddress());
 
 		if (!hsOper.contains(operation))
-			throw new JeevesException(JeevesException.PRIVILEGES);
+			throw new OperationNotAllowedEx();
 	}
 
 	//-----------------------------------------------------------------------------

@@ -37,7 +37,6 @@ import jeeves.interfaces.Activator;
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Xml;
 import org.fao.geonet.apps.common.SimpleLogger;
-import org.fao.geonet.exceptions.GeoNetException;
 import org.jdom.Element;
 
 //==============================================================================
@@ -50,7 +49,7 @@ public class Util
 	//---
 	//---------------------------------------------------------------------------
 
-	public static Element getConfigFile(SimpleLogger logger, String file) throws GeoNetException
+	public static Element getConfigFile(SimpleLogger logger, String file) throws Exception
 	{
 		try
 		{
@@ -61,13 +60,13 @@ public class Util
 			logger.logError("Cannot open config file");
 			logger.logError("Error is : "+ e.getMessage());
 
-			throw new GeoNetException("error");
+			throw new Exception("error");
 		}
 	}
 
 	//---------------------------------------------------------------------------
 
-	public static Element getUserProfiles(SimpleLogger logger, String file) throws GeoNetException
+	public static Element getUserProfiles(SimpleLogger logger, String file) throws Exception
 	{
 		try
 		{
@@ -78,13 +77,13 @@ public class Util
 			logger.logError("Cannot open user profiles");
 			logger.logError("Error is : "+ e.getMessage());
 
-			throw new GeoNetException("error");
+			throw new Exception("error");
 		}
 	}
 
 	//---------------------------------------------------------------------------
 
-	public static Element getDBResource(Element config) throws GeoNetException
+	public static Element getDBResource(Element config) throws Exception
 	{
 		List resources = config .getChild(ConfigFile.Child.RESOURCES)
 										.getChildren(ConfigFile.Resources.Child.RESOURCE);
@@ -98,13 +97,13 @@ public class Util
 					return res;
 		}
 
-		throw new GeoNetException("error");
+		throw new Exception("error");
 	}
 
 	//---------------------------------------------------------------------------
 
 	public static Activator getActivator(SimpleLogger logger, String appPath,
-													 Element resource) throws GeoNetException
+													 Element resource) throws Exception
 	{
 		Element activConfig = resource.getChild(ConfigFile.Resource.Child.ACTIVATOR);
 
@@ -124,7 +123,7 @@ public class Util
 			logger.logError("Cannot create activator");
 			logger.logError("Error is : "+ e);
 
-			throw new GeoNetException("error");
+			throw new Exception("error");
 		}
 
 		//--- try to start activator
@@ -138,7 +137,7 @@ public class Util
 			logger.logError("Cannot start the activator");
 			logger.logError("Error is : "+ e.getMessage());
 
-			throw new GeoNetException("error");
+			throw new Exception("error");
 		}
 
 		return activator;
@@ -146,7 +145,7 @@ public class Util
 
 	//---------------------------------------------------------------------------
 
-	public static Dbms getDbms(SimpleLogger logger, Element jdbc) throws GeoNetException
+	public static Dbms getDbms(SimpleLogger logger, Element jdbc) throws Exception
 	{
 		String driver = jdbc.getChildText(Jeeves.Res.Pool.DRIVER);
 		String url    = jdbc.getChildText(Jeeves.Res.Pool.URL);
@@ -162,14 +161,14 @@ public class Util
 			logger.logError("DBMS driver not found");
 			logger.logError("Error is : "+ e.getMessage());
 
-			throw new GeoNetException("error");
+			throw new Exception("error");
 		}
 	}
 
 	//---------------------------------------------------------------------------
 
 	public static Connection getConnection(SimpleLogger logger, Dbms dbms,
-														Element jdbc) throws GeoNetException
+														Element jdbc) throws Exception
 	{
 		String user   = jdbc.getChildText(Jeeves.Res.Pool.USER);
 		String passwd = jdbc.getChildText(Jeeves.Res.Pool.PASSWORD);
@@ -187,7 +186,7 @@ public class Util
 			logger.logError("Unable to connect to the dbms");
 			logger.logError("Error is : "+ e.getMessage());
 
-			throw new GeoNetException("error");
+			throw new Exception("error");
 		}
 	}
 }
