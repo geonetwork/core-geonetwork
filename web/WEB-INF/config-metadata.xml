@@ -34,7 +34,7 @@
 				<xml name="sources" file ="xml/sources.xml"  localized="false" />
 			</output>
 
-			<error id="access" sheet="error-form.xsl">
+			<error id="operation-not-allowed" sheet="error-form.xsl">
 				<xml name="privError" file="xml/privileges-error.xml" />
 			</error>
 		</service>
@@ -64,7 +64,7 @@
 
 			<output forward="metadata.edit" />
 
-			<error id="update" sheet="metadata-error.xsl"/>
+			<error id="concurrent-update" sheet="metadata-error.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -74,7 +74,7 @@
 
 			<output forward="metadata.edit" />
 
-			<error id="update" sheet="metadata-error.xsl"/>
+			<error id="concurrent-update" sheet="metadata-error.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -84,7 +84,7 @@
 
 			<output forward="metadata.edit" />
 
-			<error id="update" sheet="metadata-error.xsl"/>
+			<error id="concurrent-update" sheet="metadata-error.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -95,7 +95,7 @@
 
 			<output forward="metadata.show" />
 
-			<error id="update" sheet="metadata-error.xsl"/>
+			<error id="concurrent-update" sheet="metadata-error.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -124,7 +124,7 @@
 
 			<output forward="metadata.edit" />
 
-			<error id="update" sheet="metadata-error.xsl"/>
+			<error id="concurrent-update" sheet="metadata-error.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -136,7 +136,7 @@
 
 			<output forward="metadata.edit" />
 
-			<error id="update" sheet="metadata-error.xsl"/>
+			<error id="concurrent-update" sheet="metadata-error.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -146,7 +146,7 @@
 
 			<output forward="metadata.edit" />
 
-			<error id="update" sheet="metadata-error.xsl"/>
+			<error id="concurrent-update" sheet="metadata-error.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -156,7 +156,7 @@
 
 			<output forward="metadata.edit" />
 
-			<error id="update" sheet="metadata-error.xsl"/>
+			<error id="concurrent-update" sheet="metadata-error.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

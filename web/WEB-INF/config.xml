@@ -39,13 +39,13 @@
 
 		<!-- no privileges to access the service -->
 
-		<error id="privileges" sheet="error.xsl">
+		<error id="operation-not-allowed" sheet="error.xsl">
 			<xml name="error" file="xml/privileges-error.xml" />
 		</error>
 
 		<!-- data in upload too big -->
 
-		<error id="file-too-big" sheet="error.xsl">
+		<error id="file-upload-too-big" sheet="error.xsl">
 			<xml name="error" file="xml/file-too-big-error.xml" />
 		</error>
 
@@ -385,7 +385,7 @@
 
 			<output forward="main.home" />
 
-			<error id="login" sheet="error.xsl">
+			<error id="user-login" sheet="error.xsl">
 				<xml  name="error"   file="xml/login-error.xml" />
 			</error>
 		</service>
@@ -416,6 +416,8 @@
 				<xml name="page" file="xml/help.xml" />
 			</output>
 		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="help.metadata">
 			<output sheet="metadata-help.xsl"/>
