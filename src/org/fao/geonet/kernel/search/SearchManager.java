@@ -22,28 +22,33 @@
 
 package org.fao.geonet.kernel.search;
 
-import org.fao.geonet.constants.Geonet;
-
-import jeeves.utils.Xml;
-
-import org.apache.lucene.analysis.standard.*;
-import org.apache.lucene.document.*;
-import org.apache.lucene.index.*;
-
 import com.k_int.IR.Searchable;
-import com.k_int.util.Repository.CollectionDirectory;
 import com.k_int.hss.HeterogeneousSetOfSearchable;
-import com.k_int.util.LoggingFacade.*;
-
+import com.k_int.util.LoggingFacade.LogContextFactory;
+import com.k_int.util.LoggingFacade.LoggingContext;
+import com.k_int.util.Repository.CollectionDirectory;
+import java.io.File;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.Vector;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import jeeves.utils.Xml;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.index.TermEnum;
 import org.jdom.Element;
 
-import java.io.*;
-import java.util.*;
-import javax.naming.*;
-
-//--------------------------------------------------------------------------------
-// index metadata using lucene
-//--------------------------------------------------------------------------------
+//==============================================================================
+//=== index metadata using lucene
+//==============================================================================
 
 public class SearchManager
 {

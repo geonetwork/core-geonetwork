@@ -22,16 +22,25 @@
 
 package org.fao.geonet.kernel.search;
 
-import com.k_int.IR.*;
-import java.util.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
+import com.k_int.IR.IRQuery;
+import com.k_int.IR.InformationFragment;
+import com.k_int.IR.RecordFormatSpecification;
+import com.k_int.IR.SearchTask;
+import com.k_int.IR.TimeoutExceededException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
+import jeeves.exceptions.BadParameterEx;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
+import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.jdom.input.DOMBuilder;
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.services.util.MainUtil;
 
 //--------------------------------------------------------------------------------
 // search metadata remotely using Z39.50
@@ -63,9 +72,13 @@ class Z3950Searcher extends MetaSearcher
 	public void search(ServiceContext srvContext, Element request, ServiceConfig config)
 		throws Exception
 	{
-		// System.out.println("CRITERIA:\n" + jeeves.utils.Xml.getString(request)); // DEBUG
+		Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+		Log.debug(Geonet.SEARCH_ENGINE, "CRITERIA:\n"+ Xml.getString(request));
+		request.addContent(Lib.db.select(dbms, "Regions", "region"));
 
 		Element xmlQuery = _sm.transform(_styleSheetName, request);
+		Log.debug(Geonet.SEARCH_ENGINE, "XML QUERY:\n"+ Xml.getString(xmlQuery));
 
 		// System.out.println("XML QUERY:\n" + jeeves.utils.Xml.getString(xmlQuery)); // DEBUG
 
@@ -118,7 +131,7 @@ class Z3950Searcher extends MetaSearcher
 		throws Exception
 	{
 		updateSearchRange(request);
-		
+
 		// get request parameters
 		String syntax = request.getChildText("syntax");
 		if (syntax == null)
@@ -207,8 +220,8 @@ class Z3950Searcher extends MetaSearcher
 			String attrset = xmlQuery.getAttributeValue("attrset");
 			List children = xmlQuery.getChildren();
 			if (children.size() == 0)
-				throw new JeevesException("empty Z59.50 query: " + Xml.getString(xmlQuery), "empty-query");
-			
+				throw new BadParameterEx("Z59.50-query", Xml.getString(xmlQuery));
+
 			Element child = (Element)children.get(0);
 			return "@attrset " + attrset + " " + newQuery(child);
 		}

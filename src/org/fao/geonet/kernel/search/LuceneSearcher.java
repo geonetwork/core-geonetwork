@@ -40,6 +40,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PhraseQuery;
@@ -47,11 +48,11 @@ import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.RangeQuery;
 import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //--------------------------------------------------------------------------------
@@ -104,7 +105,7 @@ public class LuceneSearcher extends MetaSearcher
 
 		// srvContext.log("METASEARCHER " + _styleSheetName + " FROM: " + from + "(" + sFrom + ")"); // DEBUG
 		// srvContext.log("METASEARCHER " + _styleSheetName + " TO:   " + to   + "(" + sTo   + ")"); // DEBUG
-	
+
 		// build response
 		Element response =  new Element("response");
 		response.setAttribute("from",  getFrom()+"");
@@ -175,6 +176,8 @@ public class LuceneSearcher extends MetaSearcher
 			request.addContent(new Element("group").addContent(group));
 
 		Log.debug(Geonet.SEARCH_ENGINE, "CRITERIA:\n"+ Xml.getString(request));
+		request.addContent(Lib.db.select(dbms, "Regions", "region"));
+
 		Element xmlQuery = _sm.transform(_styleSheetName, request);
 		Log.debug(Geonet.SEARCH_ENGINE, "XML QUERY:\n"+ Xml.getString(xmlQuery));
 
