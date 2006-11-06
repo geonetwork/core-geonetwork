@@ -145,13 +145,15 @@ Harvesting.prototype.remove = function()
 	var idList = view.getIdList();
 	var request= gn.createRequest('id', idList);
 	
-	if (confirm(xmlLoader.getText('confirmRemove')) == false)
-		return;
-		
 	if (idList.length == 0)
 		alert(xmlLoader.getText('pleaseSelect'));
 	else
+	{
+		if (confirm(xmlLoader.getText('confirmRemove')) == false)
+			return;
+		
 		gn.send('xml.harvesting.remove', request, gn.wrap(this, this.removeSuccess));
+	}
 }
 
 //-------------------------------------------------------------------------------------
@@ -218,13 +220,32 @@ Harvesting.prototype.start = function()
 	else
 		gn.send('xml.harvesting.start', request, gn.wrap(this, this.startSuccess));
 }
-
+	
 //-------------------------------------------------------------------------------------
 
 Harvesting.prototype.startSuccess = function(xml)
 {
-	//TODO - togliere la selezione alle checkbox
-	//TODO - cambiare lo stato a video
+	//--- skip the document node
+	var xmlRoot = xml.firstChild;
+
+	if (xmlRoot.nodeName == 'error')
+		gn.showError(xmlLoader.getText('cannotStart'), xmlRoot);
+	else
+	{
+		var ids = xmlRoot.getElementsByTagName('id');
+	
+		for (var i=0; i<ids.length; i++)
+		{
+			var id     = ids[i].firstChild.nodeValue;
+			var status = ids[i].getAttribute('status');
+	
+			if (status == 'ok' || status=='already-active')
+			{
+				view.unselect(id);
+				view.setStarted(id);
+			}
+		}
+	}
 }
 
 //=====================================================================================
@@ -244,8 +265,27 @@ Harvesting.prototype.stop = function()
 
 Harvesting.prototype.stopSuccess = function(xml)
 {
-	//TODO - togliere la selezione alle checkbox
-	//TODO - cambiare lo stato a video
+	//--- skip the document node
+	var xmlRoot = xml.firstChild;
+
+	if (xmlRoot.nodeName == 'error')
+		gn.showError(xmlLoader.getText('cannotStop'), xmlRoot);
+	else
+	{
+		var ids = xmlRoot.getElementsByTagName('id');
+	
+		for (var i=0; i<ids.length; i++)
+		{
+			var id     = ids[i].firstChild.nodeValue;
+			var status = ids[i].getAttribute('status');
+	
+			if (status == 'ok' || status=='already-inactive')
+			{
+				view.unselect(id);
+				view.setStopped(id);
+			}
+		}
+	}
 }
 
 //=====================================================================================
@@ -265,8 +305,27 @@ Harvesting.prototype.run = function()
 
 Harvesting.prototype.runSuccess = function(xml)
 {
-	//TODO - togliere la selezione alle checkbox
-	//TODO - cambiare lo stato a video
+	//--- skip the document node
+	var xmlRoot = xml.firstChild;
+
+	if (xmlRoot.nodeName == 'error')
+		gn.showError(xmlLoader.getText('cannotRun'), xmlRoot);
+	else
+	{
+		var ids = xmlRoot.getElementsByTagName('id');
+	
+		for (var i=0; i<ids.length; i++)
+		{
+			var id     = ids[i].firstChild.nodeValue;
+			var status = ids[i].getAttribute('status');
+	
+			if (status == 'ok' || status=='already-running')
+			{
+				view.unselect(id);
+				view.setRunning(id);
+			}
+		}
+	}
 }
 
 //=====================================================================================

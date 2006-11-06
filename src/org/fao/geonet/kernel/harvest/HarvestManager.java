@@ -27,13 +27,13 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.resources.ProviderManager;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Type;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -119,10 +119,11 @@ public class HarvestManager
 
 		AbstractHarvester ah = AbstractHarvester.create(nodeType, settingMan, providMan);
 
-		String id = ah.add(dbms, node);
+		ah.add(dbms, node);
 		hmHarvesters.put(ah.getID(), ah);
+		Log.debug(Geonet.HARVEST_MAN, "Added node with id : \n"+ ah.getID());
 
-		return id;
+		return ah.getID();
 	}
 
 	//---------------------------------------------------------------------------
@@ -148,62 +149,62 @@ public class HarvestManager
 	//---------------------------------------------------------------------------
 	/** This method must be synchronized because it cannot run if we are updating some entries */
 
-	public synchronized boolean remove(Dbms dbms, String id) throws SQLException
+	public synchronized OperResult remove(Dbms dbms, String id) throws SQLException
 	{
 		Log.debug(Geonet.HARVEST_MAN, "Removing harvesting with id : "+ id);
 
 		AbstractHarvester ah = hmHarvesters.get(id);
 
 		if (ah == null)
-			return false;
+			return OperResult.NOT_FOUND;
 
 		ah.destroy();
 		hmHarvesters.remove(id);
 		settingMan.remove(dbms, "harvesting/id:"+id);
 
-		return true;
+		return OperResult.OK;
 	}
 
 	//---------------------------------------------------------------------------
 
-	public boolean start(Dbms dbms, String id) throws SQLException
+	public OperResult start(Dbms dbms, String id) throws SQLException
 	{
 		Log.debug(Geonet.HARVEST_MAN, "Starting harvesting with id : "+ id);
 
 		AbstractHarvester ah = hmHarvesters.get(id);
 
 		if (ah == null)
-			return false;
+			return OperResult.NOT_FOUND;
 
-		ah.start(dbms);
-		return true;
+		return ah.start(dbms);
 	}
 
 	//---------------------------------------------------------------------------
 
-	public boolean stop(Dbms dbms, String id) throws SQLException
+	public OperResult stop(Dbms dbms, String id) throws SQLException
 	{
 		Log.debug(Geonet.HARVEST_MAN, "Stopping harvesting with id : "+ id);
 
 		AbstractHarvester ah = hmHarvesters.get(id);
 
 		if (ah == null)
-			return false;
+			return OperResult.NOT_FOUND;
 
-		ah.stop(dbms);
-		return true;
+		return ah.stop(dbms);
 	}
 
 	//---------------------------------------------------------------------------
 
-	public boolean run(String id)
+	public OperResult run(String id)
 	{
 		Log.debug(Geonet.HARVEST_MAN, "Running harvesting with id : "+ id);
 
 		AbstractHarvester ah = hmHarvesters.get(id);
 
-		if (ah == null)	return false;
-			else 				return ah.run();
+		if (ah == null)
+			return OperResult.NOT_FOUND;
+
+		return ah.run();
 	}
 
 	//---------------------------------------------------------------------------

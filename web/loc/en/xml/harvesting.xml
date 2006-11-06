@@ -72,6 +72,9 @@
 	<days>days</days>
 	<hours>hours</hours>
 	<mins>minutes</mins>
+	
+	<!-- validator messages -->
+	
 	<validator>
 		<length>
 			<cannotBeEmpty>The field '{NAME}' cannot be empty</cannotBeEmpty>
@@ -105,6 +108,9 @@
 	<cannotAdd>Unable to add a new entry</cannotAdd>
 	<cannotGet>Unable to get the entry/ies</cannotGet>
 	<cannotRemove>Cannot remove the selected entry/ies</cannotRemove>
+	<cannotStart>Cannot start the selected entry/ies</cannotStart>
+	<cannotStop>Cannot stop the selected entry/ies</cannotStop>
+	<cannotRun>Cannot run the selected entry/ies</cannotRun>
 	<confirmRemove>Remove the selected entries ?</confirmRemove>
 	<everyZero>The harvesting period cannot be 0:0:0</everyZero>
 	<pleaseRetrieve>Please retrieve some sites first</pleaseRetrieve>

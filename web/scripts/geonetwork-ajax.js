@@ -64,11 +64,18 @@ gn.send = function(service, request, onSuccessFnc)
 		},
 		on404: function(t) 
 		{
-			alert('Error 404: location "' + t.statusText + '" was not found.');
+			alert('Error 404: service "' + t.statusText + '" was not found.');
 		},
 		onFailure: function(t) 
 		{
-			alert('Error ' + t.status + ' -- ' + t.statusText);
+			//--- 
+			if (t.status >= 400 && t.status <= 500)
+			{
+				if (onSuccessFnc)
+					onSuccessFnc(t.responseXML);
+			}
+			else		
+				alert('Error ' + t.status + ' -- ' + t.statusText);
 		}
 	}
 
@@ -297,9 +304,9 @@ URLLoader = function(file, onSuccessFnc)
 		onSuccess: onSuccessFnc,
 		on404: function(t) 
 		{
-			alert('Error 404: location "' + t.statusText + '" was not found.');
+			alert('Error 404: location "' + t.statusText + '" not found.');
 		},
-		onFailure: function(t) 
+		onFailure: function(t)
 		{
 			alert('Error ' + t.status + ' -- ' + t.statusText);
 		}

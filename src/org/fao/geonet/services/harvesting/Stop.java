@@ -28,6 +28,7 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.jdom.Element;
 
@@ -53,7 +54,7 @@ public class Stop implements Service
 	{
 		return Util.exec(params, context, new Util.Job()
 		{
-			public boolean execute(Dbms dbms, HarvestManager hm, String id) throws SQLException
+			public OperResult execute(Dbms dbms, HarvestManager hm, String id) throws SQLException
 			{
 				return hm.stop(dbms, id);
 			}

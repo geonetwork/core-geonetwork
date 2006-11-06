@@ -39,7 +39,7 @@
 
 		<!-- no privileges to access the service -->
 
-		<error id="operation-not-allowed" sheet="error.xsl">
+		<error id="service-not-allowed" sheet="error.xsl">
 			<xml name="error" file="xml/privileges-error.xml" />
 		</error>
 

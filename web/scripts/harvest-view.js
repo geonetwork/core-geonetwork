@@ -14,11 +14,6 @@ SHOW.LIST = new Object();
 SHOW.ADD  = new Object();
 SHOW.EDIT = new Object();
 
-//TODO: aggiustare il last run
-//TODO: aggiornamento entry nella list a seguito di start, stop, run
-//TODO: mostrare le info se ci sono errori nell'harvesting (colonna Errors nella lista)
-//TODO: mostrare info extra (discussione con Michelle A.)
- 
 //=====================================================================================
 
 function HarvestView(xmlLoader)
@@ -110,6 +105,40 @@ HarvestView.prototype.getHostData = function()
 	};
 	
 	return data;
+}
+
+//=====================================================================================
+
+HarvestView.prototype.unselect = function(id) 
+{
+	$(id).getElementsByTagName('input')[0].checked = false;
+}
+
+//=====================================================================================
+
+HarvestView.prototype.setStarted = function(id) 
+{
+	var img = gn.getElementById($(id), 'status');
+	
+	img.setAttribute('src', Env.url +'/images/clock.png');
+}
+
+//=====================================================================================
+
+HarvestView.prototype.setStopped = function(id) 
+{
+	var img = gn.getElementById($(id), 'status');
+	
+	img.setAttribute('src', Env.url +'/images/stop.png');
+}
+
+//=====================================================================================
+
+HarvestView.prototype.setRunning = function(id) 
+{
+	var img = gn.getElementById($(id), 'status');
+	
+	img.setAttribute('src', Env.url +'/images/exec.png');
 }
 
 //=====================================================================================
@@ -256,12 +285,17 @@ HarvestView.prototype.edit = function(xmlEntry)
 
 HarvestView.prototype.getIdList = function()
 {
-	var inputs = $('table').getElementsByTagName('input');
+	var rows = $('table').getElementsByTagName('tr');
 	var idList = new Array();
 	
-	for (var i=0; i<inputs.length; i++)
-		if (inputs[i].checked)
-			idList[idList.length] = inputs[i].name;
+	//--- we have to skip the first row, the header
+	for (var i=1; i<rows.length; i++)
+	{
+		var inputs = rows[i].getElementsByTagName('input');
+	
+		if (inputs[0].checked)
+			idList.push(rows[i].id);
+	}
 	
 	return idList;
 }

@@ -90,6 +90,32 @@ public class Common
 
 		private String type;
 	}
+
+	//---------------------------------------------------------------------------
+	//--- Result
+	//---------------------------------------------------------------------------
+
+	public enum OperResult
+	{
+		OK("ok"),
+		NOT_FOUND("not-found"),
+		INACTIVE("inactive"),
+		ALREADY_ACTIVE("already-active"),
+		ALREADY_INACTIVE("already-inactive"),
+		ALREADY_RUNNING("already-running");
+
+		//------------------------------------------------------------------------
+
+		private OperResult(String result) { this.result = result; }
+
+		//------------------------------------------------------------------------
+
+		public String toString() { return result; }
+
+		//------------------------------------------------------------------------
+
+		private String result;
+	}
 }
 
 //=============================================================================

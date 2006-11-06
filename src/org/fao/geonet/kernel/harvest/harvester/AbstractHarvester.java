@@ -26,13 +26,13 @@ package org.fao.geonet.kernel.harvest.harvester;
 import java.sql.SQLException;
 import java.util.Map;
 import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.harvest.Common.Type;
 import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester;
@@ -76,7 +76,7 @@ public abstract class AbstractHarvester
 	//---
 	//--------------------------------------------------------------------------
 
-	public String add(Dbms dbms, Element node) throws BadInputEx, SQLException
+	public void add(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
 		name = node.getAttributeValue("name");
 
@@ -86,13 +86,11 @@ public abstract class AbstractHarvester
 			node.setAttribute("name", name);
 		}
 
-		String id = doAdd(dbms, node);
-
+		id       = doAdd(dbms, node);
+		name     = node.getAttributeValue("name");
 		status   = Status.INACTIVE;
 		executor = null;
 		error    = null;
-
-		return id;
 	}
 
 	//--------------------------------------------------------------------------
@@ -129,10 +127,10 @@ public abstract class AbstractHarvester
 
 	//--------------------------------------------------------------------------
 
-	public synchronized void start(Dbms dbms) throws SQLException
+	public synchronized OperResult start(Dbms dbms) throws SQLException
 	{
 		if (status != Status.INACTIVE)
-			return;
+			return OperResult.ALREADY_ACTIVE;
 
 		settingMan.setValue(dbms, "harvesting/id:"+id+"/options/status", Status.ACTIVE);
 
@@ -141,33 +139,39 @@ public abstract class AbstractHarvester
 		executor   = new Executor(this);
 		executor.setTimeout(getEvery());
 		executor.start();
+
+		return OperResult.OK;
 	}
 
 	//--------------------------------------------------------------------------
 
-	public synchronized void stop(Dbms dbms) throws SQLException
+	public synchronized OperResult stop(Dbms dbms) throws SQLException
 	{
 		if (status != Status.ACTIVE)
-			return;
+			return OperResult.ALREADY_INACTIVE;
 
 		settingMan.setValue(dbms, "harvesting/id:"+id+"/options/status", Status.INACTIVE);
 
 		executor.terminate();
 		status   = Status.INACTIVE;
 		executor = null;
+
+		return OperResult.OK;
 	}
 
 	//--------------------------------------------------------------------------
 
-	public synchronized boolean run()
+	public synchronized OperResult run()
 	{
 		if (status == Status.INACTIVE)
-			return false;
+			return OperResult.INACTIVE;
 
-		if (!executor.isRunning())
-			executor.interrupt();
+		if (executor.isRunning())
+			return OperResult.ALREADY_RUNNING;
 
-		return true;
+		executor.interrupt();
+
+		return OperResult.OK;
 	}
 
 	//--------------------------------------------------------------------------
@@ -184,7 +188,16 @@ public abstract class AbstractHarvester
 		doUpdate(dbms, id, node);
 
 		if (status == Status.ACTIVE)
+		{
+			//--- stop executor
+			executor.terminate();
+
+			//--- restart executor
+			error      = null;
+			executor   = new Executor(this);
 			executor.setTimeout(getEvery());
+			executor.start();
+		}
 	}
 
 	//--------------------------------------------------------------------------

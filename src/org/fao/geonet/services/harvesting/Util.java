@@ -30,6 +30,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -46,7 +47,7 @@ public class Util
 
 	public interface Job
 	{
-		public boolean execute(Dbms dbms, HarvestManager hm, String id) throws SQLException;
+		public OperResult execute(Dbms dbms, HarvestManager hm, String id) throws SQLException;
 	}
 
 	//--------------------------------------------------------------------------
@@ -71,7 +72,7 @@ public class Util
 		{
 			Element el  = (Element) i.next();
 			String  id  = el.getText();
-			String  res = job.execute(dbms, hm, id) ? "ok" : "error";
+			String  res = job.execute(dbms, hm, id).toString();
 
 			el = new Element("id")
 							.setText(id)

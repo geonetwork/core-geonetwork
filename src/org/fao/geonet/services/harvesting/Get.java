@@ -24,6 +24,7 @@
 package org.fao.geonet.services.harvesting;
 
 import jeeves.constants.Jeeves;
+import jeeves.exceptions.ObjectNotFoundEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -64,10 +65,7 @@ public class Get implements Service
 
 		//--- we get here only if the 'id' is present and the node was not found
 
-		params.setName(Jeeves.Elem.RESPONSE);
-		params.getChild("id").setAttribute("status", "not-found");
-
-		return params;
+		throw new ObjectNotFoundEx(id);
 	}
 }
 

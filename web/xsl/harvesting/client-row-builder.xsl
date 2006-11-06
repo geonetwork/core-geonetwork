@@ -9,7 +9,7 @@
 	<xsl:template match="/root/node[@type='geonetwork' or @type='webFolder']">
 
 		<tr id="{@id}">
-			<td class="padded" align="center"><input name="{@id}" type="checkbox"/></td>
+			<td class="padded" align="center"><input type="checkbox"/></td>
 			<td class="padded" id="node.name"><xsl:value-of select="@name"/></td>
 
 			<!-- Type - - - - - - - - - - - - - - - - - - - - - -->
@@ -29,20 +29,20 @@
 			<td class="padded" align="center">
 				<xsl:choose>
 					<xsl:when test="options/status = 'inactive'">
-						<img src="{/root/env/url}/images/stop.png" alt="I" />
+						<img id="status" src="{/root/env/url}/images/stop.png" alt="I" />
 					</xsl:when>
 					<xsl:when test="options/status = 'active'">
-						<img src="{/root/env/url}/images/clock.png" alt="A" />
+						<img id="status" src="{/root/env/url}/images/clock.png" alt="A" />
 					</xsl:when>
 					<xsl:when test="options/status = 'running'">
-						<img src="{/root/env/url}/images/exec.png" alt="R" />
+						<img id="status" src="{/root/env/url}/images/exec.png" alt="R" />
 					</xsl:when>
 				</xsl:choose>
 			</td>
 
 			<!-- Errors - - - - - - - - - - - - - - - - - - - - - -->
 
-			<td class="padded">
+			<td class="padded" align="center">
 				<xsl:choose>
 					<xsl:when test="count(errors/*) = 0">
 						<img src="{/root/env/url}/images/button_ok.png" alt="I" />
@@ -64,7 +64,7 @@
 			
 			<!-- Last run - - - - - - - - - - - - - - - - - - - - - -->
 			
-			<td class="padded" id="node.lastRun"><xsl:value-of select="stats/lastRun"/></td>
+			<td class="padded" id="node.lastRun"><xsl:value-of select="info/lastRun"/></td>
 
 			<!-- Edit button - - - - - - - - - - - - - - - - - - - - - -->
 			
