@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SchemaMappings>
 	<templatesource directory="$INSTALL_PATH/web/xml/mappings"/>
+<!--	<templatesource directory="/my/work/fao/geonetwork/cvs/geonetwork/trunk/web/xml/mappings"/> -->
 
 	<!--
 	why the jzkit library sends me this horrible source-target pair?
