@@ -25,12 +25,13 @@ package org.fao.geonet.kernel.harvest.harvester;
 
 import java.sql.SQLException;
 import java.util.Map;
+import jeeves.exceptions.BadInputEx;
+import jeeves.exceptions.BadParameterEx;
+import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.JeevesException;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
-import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.harvest.Common.Type;
@@ -39,7 +40,6 @@ import org.fao.geonet.kernel.harvest.harvester.webfolder.WAFHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
-import jeeves.interfaces.Logger;
 
 //=============================================================================
 
@@ -76,7 +76,7 @@ public abstract class AbstractHarvester
 	//---
 	//--------------------------------------------------------------------------
 
-	public String add(Dbms dbms, Element node) throws JeevesException, SQLException
+	public String add(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
 		name = node.getAttributeValue("name");
 
@@ -97,7 +97,7 @@ public abstract class AbstractHarvester
 
 	//--------------------------------------------------------------------------
 
-	public void init(Element node) throws JeevesException
+	public void init(Element node) throws BadInputEx
 	{
 		id       = node.getAttributeValue("id");
 		name     = node.getAttributeValue("name");
@@ -172,7 +172,7 @@ public abstract class AbstractHarvester
 
 	//--------------------------------------------------------------------------
 
-	public synchronized void update(Dbms dbms, Element node) throws JeevesException, SQLException
+	public synchronized void update(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
 		//--- update name
 
@@ -273,13 +273,13 @@ public abstract class AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected abstract void doInit(Element entry) throws JeevesException;
+	protected abstract void doInit(Element entry) throws BadInputEx;
 
 	protected abstract String doAdd(Dbms dbms, Element node)
-											throws JeevesException, SQLException;
+											throws BadInputEx, SQLException;
 
 	protected abstract void doUpdate(Dbms dbms, String id, Element node)
-											throws JeevesException, SQLException;
+											throws BadInputEx, SQLException;
 
 	protected abstract String doGetEvery();
 

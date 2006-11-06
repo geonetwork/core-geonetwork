@@ -23,7 +23,7 @@
 
 package org.fao.geonet.kernel.harvest;
 
-import jeeves.server.JeevesException;
+import jeeves.exceptions.BadParameterEx;
 
 //=============================================================================
 
@@ -47,12 +47,12 @@ public class Common
 
 		//------------------------------------------------------------------------
 
-		public static Status parse(String status) throws JeevesException
+		public static Status parse(String status) throws BadParameterEx
 		{
 			if ("active"  .equals(status))	return ACTIVE;
 			if ("inactive".equals(status))	return INACTIVE;
 
-			throw JeevesException.BadRequest("Unknown status type", status);
+			throw new BadParameterEx("type", status);
 		}
 
 		//------------------------------------------------------------------------
@@ -78,12 +78,12 @@ public class Common
 
 		//------------------------------------------------------------------------
 
-		public static Type parse(String type) throws JeevesException
+		public static Type parse(String type) throws BadParameterEx
 		{
 			if ("geonetwork".equals(type))	return GEONETWORK;
 			if ("webFolder" .equals(type))	return WEB_FOLDER;
 
-			throw JeevesException.BadRequest("Unknown node type", type);
+			throw new BadParameterEx("type", type);
 		}
 
 		//------------------------------------------------------------------------

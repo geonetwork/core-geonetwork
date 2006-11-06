@@ -26,9 +26,10 @@ package org.fao.geonet.kernel.harvest;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import jeeves.exceptions.BadInputEx;
+import jeeves.exceptions.BadParameterEx;
+import jeeves.exceptions.MissingParameterEx;
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.JeevesException;
 import jeeves.server.resources.ProviderManager;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
@@ -103,14 +104,14 @@ public class HarvestManager
 
 	//---------------------------------------------------------------------------
 
-	public String add(Dbms dbms, Element node) throws Exception
+	public String add(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
 		Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n"+ Xml.getString(node));
 
 		String type = node.getAttributeValue("type");
 
 		if (type == null)
-			throw JeevesException.BadRequest("Missing 'type' attribute", node);
+			throw new MissingParameterEx("attribute:type", node);
 
 		//--- raises an exception if type is unknown
 
@@ -126,14 +127,14 @@ public class HarvestManager
 
 	//---------------------------------------------------------------------------
 
-	public synchronized boolean update(Dbms dbms, Element node) throws Exception
+	public synchronized boolean update(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
 		Log.debug(Geonet.HARVEST_MAN, "Updating harvesting node : \n"+ Xml.getString(node));
 
 		String id = node.getAttributeValue("id");
 
 		if (id == null)
-			throw JeevesException.BadRequest("Missing 'id' attribute", node);
+			throw new MissingParameterEx("attribute:id", node);
 
 		AbstractHarvester ah = hmHarvesters.get(id);
 

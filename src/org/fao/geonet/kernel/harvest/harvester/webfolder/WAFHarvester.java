@@ -27,9 +27,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import jeeves.exceptions.BadInputEx;
+import jeeves.exceptions.BadParameterEx;
+import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.JeevesException;
 import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.harvest.Common.Status;
@@ -47,7 +49,7 @@ public class WAFHarvester extends AbstractHarvester
 	//---
 	//--------------------------------------------------------------------------
 
-	protected void doInit(Element node) throws JeevesException
+	protected void doInit(Element node) throws BadInputEx
 	{
 		Element site   = node.getChild("site");
 		Element opt    = node.getChild("options");
@@ -98,7 +100,7 @@ public class WAFHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected String doAdd(Dbms dbms, Element node) throws JeevesException, SQLException
+	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
 		Element site   = node.getChild("site");
 		Element opt    = node.getChild("options");
@@ -164,7 +166,7 @@ public class WAFHarvester extends AbstractHarvester
 	//---------------------------------------------------------------------------
 
 	protected void doUpdate(Dbms dbms, String id, Element node)
-									throws JeevesException, SQLException
+									throws BadInputEx, SQLException
 	{
 		Element site   = node.getChild("site");
 		Element opt    = node.getChild("options");
@@ -225,7 +227,7 @@ public class WAFHarvester extends AbstractHarvester
 	//---------------------------------------------------------------------------
 
 	private void addPrivileges(Dbms dbms, String path, Element privil)
-										throws JeevesException, SQLException
+										throws BadInputEx, SQLException
 	{
 		alPrivileges.clear();
 
@@ -237,7 +239,7 @@ public class WAFHarvester extends AbstractHarvester
 			String  groupID = group.getAttributeValue("id");
 
 			if (groupID == null)
-				throw JeevesException.BadRequest("'group' element without 'id' attribute", group);
+				throw new MissingParameterEx("attribute:id", group);
 
 			Privilege p = new Privilege();
 			p.groupId = groupID;
@@ -261,20 +263,20 @@ public class WAFHarvester extends AbstractHarvester
 
 	//---------------------------------------------------------------------------
 
-	private int getOperationID(Element oper) throws JeevesException
+	private int getOperationID(Element oper) throws BadInputEx
 	{
 		String operName = oper.getAttributeValue("name");
 
 		if (operName == null)
-			throw JeevesException.BadRequest("'operation' element without 'name' attribute", oper);
+			throw new MissingParameterEx("attribute:name", oper);
 
 		int operID = AccessManager.getPrivilegeId(operName);
 
 		if (operID == -1)
-			throw JeevesException.BadRequest("Unkown operation", operName);
+			throw new BadParameterEx("attribute:name", operName);
 
 		if (operID == 2 || operID == 4)
-			throw JeevesException.BadRequest("'edit' and 'admin' operations are not allowed", oper);
+			throw new BadParameterEx("attribute:name", operName);
 
 		return operID;
 	}
