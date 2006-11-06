@@ -24,6 +24,7 @@
 package org.fao.geonet.services.thumbnail;
 
 import java.io.File;
+import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -32,10 +33,9 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.exceptions.GeoNetException;
-import org.fao.geonet.exceptions.UpdateException;
 import org.fao.geonet.util.ResUtil;
 import org.jdom.Element;
 
@@ -77,17 +77,17 @@ public class Unset implements Service
 		//--- check if the metadata has been modified from last time
 
 		if (version != null && !dataMan.getVersion(id).equals(version))
-			throw new UpdateException(id);
+			throw new ConcurrentUpdateEx(id);
 
 		Element result = dataMan.getThumbnails(dbms, id);
 
 		if (result == null)
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+			throw new OperationAbortedEx("Metadata not found", id);
 
 		result = result.getChild(type);
 
 		if (result == null)
-			throw new GeoNetException("Metadata has no thumbnail : "+id, GeoNetException.ERROR);
+			throw new OperationAbortedEx("Metadata has no thumbnail", id);
 
 		String file = ResUtil.getResDir(context, Params.Access.PUBLIC, id) + result.getText();
 

@@ -23,20 +23,20 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.util.*;
-import org.jdom.*;
-
-import jeeves.constants.*;
-import jeeves.interfaces.*;
-import jeeves.resources.dbms.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-import jeeves.utils.*;
-
-import org.fao.geonet.constants.*;
-import org.fao.geonet.kernel.*;
-import org.fao.geonet.exceptions.*;
-import org.fao.geonet.*;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
+import jeeves.utils.Xml;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.ConcurrentUpdateEx;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -69,7 +69,7 @@ public class Update implements Service
 		EditUtils.preprocessUpdate(params, context, AccessManager.OPER_EDIT);
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan   = gc.getDataManager();
+		DataManager   dataMan = gc.getDataManager();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
@@ -85,7 +85,7 @@ public class Update implements Service
 			Element md = Xml.loadString(data, false);
 
 			if (!dataMan.updateMetadata(dbms, id, md, validate, version))
-				throw new UpdateException(id);
+				throw new ConcurrentUpdateEx(id);
 		}
 		else
 			EditUtils.updateContent(params, context, validate);

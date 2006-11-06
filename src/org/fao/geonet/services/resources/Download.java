@@ -23,20 +23,21 @@
 
 package org.fao.geonet.services.resources;
 
-import jeeves.utils.*;
-import org.fao.geonet.constants.*;
-import org.fao.geonet.kernel.*;
-import org.fao.geonet.exceptions.*;
-
 import java.io.File;
 import java.util.Iterator;
+import jeeves.exceptions.ResourceNotFoundEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.BinaryFile;
+import jeeves.utils.Util;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.util.MailSender;
 import org.fao.geonet.util.ResUtil;
 import org.jdom.Element;
-import org.fao.geonet.util.MailSender;
 
 //=============================================================================
 
@@ -87,7 +88,7 @@ public class Download implements Service
 		context.info("File is : " +file);
 
 		if (!file.exists())
-			throw new GeoNetException("resource '" + fname + "' not found", GeoNetException.FILE_NOT_FOUND);
+			throw new ResourceNotFoundEx(fname);
 
 		if (doNotify)
 		{

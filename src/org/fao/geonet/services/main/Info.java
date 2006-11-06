@@ -25,9 +25,9 @@ package org.fao.geonet.services.main;
 
 import java.sql.SQLException;
 import java.util.Iterator;
+import jeeves.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.JeevesException;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
@@ -75,7 +75,7 @@ public class Info implements Service
 			String type = el.getText();
 
 			if (!name.equals("type"))
-				throw JeevesException.BadRequest("Only 'type' elements are allowed", el);
+				throw new BadParameterEx(name, type);
 
 			if (type.equals("site"))
 				result.addContent(gc.getSettingManager().get("system", -1));
@@ -90,7 +90,7 @@ public class Info implements Service
 				result.addContent(getKnownNodes(dbms));
 
 			else
-				throw JeevesException.BadRequest("Unknown info type", type);
+				throw new BadParameterEx("type", type);
 		}
 
 		result.addContent(getEnv(context));

@@ -52,7 +52,7 @@ public class CswDispatcher implements Service
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		return gc.getCatalogDispatcher().dispatch(params, gc, context);
+		return gc.getCatalogDispatcher().dispatch(params, context);
 	}
 }
 

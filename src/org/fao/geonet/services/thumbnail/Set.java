@@ -37,9 +37,9 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.exceptions.UpdateException;
 import org.fao.geonet.util.ResUtil;
 import org.jdom.Element;
 
@@ -92,7 +92,7 @@ public class Set implements Service
 		//--- check if the metadata has been modified from last time
 
 		if (version != null && !dataMan.getVersion(id).equals(version))
-			throw new UpdateException(id);
+			throw new ConcurrentUpdateEx(id);
 
 		//-----------------------------------------------------------------------
 		//--- create destination directory

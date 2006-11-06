@@ -23,21 +23,23 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.util.*;
-import org.jdom.*;
-
-import jeeves.constants.*;
-import jeeves.interfaces.*;
-import jeeves.resources.dbms.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-import jeeves.utils.*;
-
-import org.fao.geonet.constants.*;
-import org.fao.geonet.kernel.*;
-import org.fao.geonet.exceptions.*;
-import org.fao.geonet.*;
+import java.util.HashSet;
+import jeeves.constants.Jeeves;
+import jeeves.exceptions.OperationNotAllowedEx;
+import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.ConcurrentUpdateEx;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -74,13 +76,13 @@ public class Delete implements Service
 		HashSet hsOper = accessMan.getOperations(context, id, context.getIpAddress());
 
 		if (!hsOper.contains(AccessManager.OPER_EDIT))
-			throw new JeevesException(JeevesException.PRIVILEGES);
+			throw new OperationNotAllowedEx();
 
 		//-----------------------------------------------------------------------
 		//--- delete metadata and return status
 
 		if (!dataMan.deleteMetadata(dbms, id))
-			throw new GeoNetException(JeevesException.ERROR);
+			throw new ConcurrentUpdateEx(id);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));

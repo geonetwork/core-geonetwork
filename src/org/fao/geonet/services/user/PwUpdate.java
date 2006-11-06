@@ -23,18 +23,18 @@
 
 package org.fao.geonet.services.user;
 
-import java.util.*;
-import org.jdom.*;
-
-import jeeves.constants.*;
-import jeeves.interfaces.*;
-import jeeves.resources.dbms.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-import jeeves.utils.*;
-
-import org.fao.geonet.constants.*;
-import org.fao.geonet.exceptions.GeoNetException;
+import java.util.Vector;
+import jeeves.constants.Jeeves;
+import jeeves.exceptions.UserNotFoundEx;
+import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -66,15 +66,16 @@ public class PwUpdate implements Service
 
 		// check old password
 		UserSession session = context.getUserSession();
-		String userId = session.getUserId();
+		String      userId  = session.getUserId();
+
 		if (userId == null)
-			throw new GeoNetException("unknown user", GeoNetException.ERROR);
-		
+			throw new UserNotFoundEx(null);
+
 		Element elUser = dbms.select(	"SELECT * FROM Users " +
 												"WHERE id=" + userId + " AND password='" + password + "'");
 		if (elUser.getChildren().size() == 0)
-			throw new GeoNetException("unknown user", GeoNetException.ERROR);
-		
+			throw new UserNotFoundEx(userId);
+
 		// change password
 		Vector vArgs = new Vector ();
 		vArgs.add(newPassword);

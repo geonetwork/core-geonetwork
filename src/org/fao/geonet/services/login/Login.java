@@ -23,17 +23,17 @@
 
 package org.fao.geonet.services.login;
 
-import java.util.*;
-import org.jdom.*;
-
-import jeeves.interfaces.*;
-import jeeves.resources.dbms.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-import jeeves.utils.*;
-
-import org.fao.geonet.constants.*;
-import org.fao.geonet.exceptions.GeoNetException;
+import java.util.List;
+import java.util.Vector;
+import jeeves.exceptions.UserLoginEx;
+import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -74,7 +74,7 @@ public class Login implements Service
 		List list = elUser.getChildren();
 
 		if (list.size() == 0)
-			throw new GeoNetException("unknown user", GeoNetException.LOGIN);
+			throw new UserLoginEx(sUser);
 		else
 		{
 			elUser = (Element) list.get(0);

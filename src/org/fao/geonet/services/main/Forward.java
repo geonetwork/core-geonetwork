@@ -23,20 +23,14 @@
 
 package org.fao.geonet.services.main;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
+import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
-import jeeves.server.JeevesException;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-import jeeves.utils.Xml;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.jdom.Document;
+import jeeves.utils.XmlRequest;
 import org.jdom.Element;
 
 //=============================================================================
@@ -65,42 +59,14 @@ public class Forward implements Service
 		List list = par.getChildren();
 
 		if (list.size() == 0)
-			throw JeevesException.BadRequest("Missing request inside the 'params' element", params);
+			throw new MissingParameterEx("<request>", par);
 
 		params = (Element) list.get(0);
 
-		String req = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+ Xml.getString(params);
+		XmlRequest req = new XmlRequest(new URL(url));
+		req.setParams(params);
 
-		PostMethod post = new PostMethod(url);
-		post.setRequestEntity(new StringRequestEntity(req, "application/xml", "UTF-8"));
-
-		HttpClient http = new HttpClient();
-
-		int statusCode;
-
-		try
-		{
-			statusCode = http.executeMethod(post);
-
-			InputStream is = new ByteArrayInputStream(post.getResponseBody());
-
-			if (statusCode == HttpStatus.SC_OK)
-				return Xml.loadStream(is);
-		}
-		catch(Exception e)
-		{
-			context.warning("Raised exception when connecting to host");
-			context.warning(Util.getStackTrace(e));
-
-			throw JeevesException.OperationAborted("Raise exception", e);
-		}
-		finally
-		{
-			post.releaseConnection();
-		}
-
-		context.warning("Bad status code received from host : "+ statusCode);
-		throw JeevesException.OperationAborted("Bad status code from host", statusCode);
+		return req.execute();
 	}
 }
 

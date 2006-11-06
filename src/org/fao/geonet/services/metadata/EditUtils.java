@@ -23,18 +23,22 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.util.*;
-import org.jdom.*;
-
-import jeeves.resources.dbms.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-import jeeves.utils.*;
-
-import org.fao.geonet.constants.*;
-import org.fao.geonet.kernel.*;
-import org.fao.geonet.exceptions.*;
-import org.fao.geonet.*;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.List;
+import jeeves.exceptions.BadParameterEx;
+import jeeves.exceptions.OperationNotAllowedEx;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.ConcurrentUpdateEx;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -60,7 +64,7 @@ class EditUtils
 		UserSession   session   = context.getUserSession();
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		String id      = Util.getParam(params, Params.ID);
+		String id = Util.getParam(params, Params.ID);
 
 		//-----------------------------------------------------------------------
 		//--- handle current tab
@@ -74,12 +78,12 @@ class EditUtils
 		//--- check access
 
 		if (!dataMan.existsMetadata(dbms, id))
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+			throw new BadParameterEx("id", id);
 
 		HashSet hsOper = accessMan.getOperations(context, id, context.getIpAddress());
 
 		if (!hsOper.contains(operation))
-			throw new JeevesException(JeevesException.PRIVILEGES);
+			throw new OperationNotAllowedEx();
 	}
 
 	//--------------------------------------------------------------------------
@@ -118,7 +122,7 @@ class EditUtils
 		//--- update element and return status
 
 		if (!dataMan.updateMetadata(dbms, id, version, htChanges, validate))
-			throw new UpdateException(id);
+			throw new ConcurrentUpdateEx(id);
 	}
 
 	//--------------------------------------------------------------------------

@@ -24,10 +24,10 @@
 package org.fao.geonet.services.resources;
 
 import java.io.File;
-import java.util.Hashtable;
+import jeeves.exceptions.ObjectNotFoundEx;
+import jeeves.exceptions.OperationAbortedEx;
+import jeeves.exceptions.ResourceNotFoundEx;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.JeevesException;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
@@ -36,7 +36,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.exceptions.GeoNetException;
 import org.fao.geonet.services.metadata.Update;
 import org.fao.geonet.util.ResUtil;
 import org.jdom.Element;
@@ -85,7 +84,7 @@ public class Remove implements Service
 		Element elem     = dataMan.getElementByRef(metadata, ref);
 
 		if (elem == null)
-			throw new GeoNetException("element with ref='" + ref + "' not found", GeoNetException.ERROR);
+			throw new ObjectNotFoundEx("element with ref='" + ref + "'");
 
 		String fname = elem.getText();
 
@@ -94,10 +93,10 @@ public class Remove implements Service
 		File file = new File(dir, fname);
 
 		if (!file.exists())
-			throw new GeoNetException("resource '" + fname + "' not found", GeoNetException.FILE_NOT_FOUND);
+			throw new ResourceNotFoundEx(fname);
 
 		if (!file.delete())
-			throw new IllegalArgumentException("unable to delete resource");
+			throw new OperationAbortedEx("unable to delete resource");
 
 		// update the metadata
 		params.addContent(new Element("_" + ref));
