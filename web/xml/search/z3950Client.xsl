@@ -4,13 +4,11 @@ xmlns:xalan= "http://xml.apache.org/xalan" exclude-result-prefixes="xalan">
 
 <xsl:import href="parser.xsl"/>
 
-<xsl:variable name="regions" select="document('../regions.xml')"/>
-
 <!--
 computes bounding box values
 -->
 <xsl:variable name="region" select="string(/request/region)"/>
-<xsl:variable name="regionData" select="$regions/regions/*[string(id)=$region]"/>
+<xsl:variable name="regionData" select="/request/regions/*[string(id)=$region]"/>
 <xsl:variable name="westBL">
 	<xsl:choose>
 		<xsl:when test="$region"><xsl:value-of select="$regionData/west"/></xsl:when>

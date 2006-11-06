@@ -5,8 +5,6 @@ xmlns:xalan= "http://xml.apache.org/xalan" exclude-result-prefixes="xalan">
 <xsl:import href="parser.xsl"/>
 <xsl:import href="lucene-utils.xsl"/>
 
-<xsl:variable name="regions" select="document('regions.xml')"/>
-
 <xsl:variable name="opView"     select="'_op0'"/>
 <xsl:variable name="opDownload" select="'_op1'"/>
 <xsl:variable name="opDynamic"  select="'_op5'"/>
@@ -17,8 +15,8 @@ xmlns:xalan= "http://xml.apache.org/xalan" exclude-result-prefixes="xalan">
 <!--
 computes bounding box values
 -->
-<xsl:variable name="region" select="string(/request/region)"/>
-<xsl:variable name="regionData" select="$regions/regions/*[string(id)=$region]"/>
+<xsl:variable name="region"     select="string(/request/region)"/>
+<xsl:variable name="regionData" select="/request/regions/*[string(id)=$region]"/>
 
 <xsl:variable name="westBL">
 	<xsl:choose>
@@ -130,6 +128,7 @@ compiles a request
 		
 		<!-- bounding box -->
 
+		<xsl:if test="$northBL != 'NaN' and $southBL != 'NaN' and $eastBL != 'NaN' and $westBL != 'NaN'">
 			<xsl:choose>
 				
 				<!-- equal -->
@@ -158,7 +157,8 @@ compiles a request
 				</xsl:when>
 
 			</xsl:choose>
-		
+		</xsl:if>
+
 		<xsl:choose>
 			<!-- featured: just use group "all" for view and featured privilege -->
 			<xsl:when test="string(/request/featured)='true'">
