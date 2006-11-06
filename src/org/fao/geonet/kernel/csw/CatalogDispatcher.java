@@ -27,10 +27,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.sources.ServiceRequest.InputMethod;
+import jeeves.server.sources.ServiceRequest.OutputMethod;
+import jeeves.utils.SOAPUtil;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
+import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.csw.common.exceptions.OperationNotSupportedEx;
 import org.fao.geonet.kernel.csw.services.DescribeRecord;
@@ -41,6 +44,8 @@ import org.fao.geonet.kernel.csw.services.GetRecords;
 import org.fao.geonet.kernel.csw.services.Harvest;
 import org.fao.geonet.kernel.csw.services.Transaction;
 import org.jdom.Element;
+
+import static org.fao.geonet.csw.common.Csw.*;
 
 //=============================================================================
 
@@ -78,58 +83,100 @@ public class CatalogDispatcher
 	//---
 	//---------------------------------------------------------------------------
 
-	public Element dispatch(Element request, GeonetContext gc, ServiceContext context)
+	public Element dispatch(Element request, ServiceContext context)
 	{
 		context.info("Received:\n"+Xml.getString(request));
 
+		InputMethod  im = context.getInputMethod();
+		OutputMethod om = context.getOutputMethod();
+
+		boolean inSOAP  = (im == InputMethod.SOAP);
+		boolean outSOAP = (inSOAP || om == OutputMethod.SOAP);
+
+		CatalogException exc;
+
 		try
 		{
-			String operation = request.getName();
+			if (inSOAP)
+				request = SOAPUtil.unembed(request);
 
-			CatalogService cs = hmServices.get(operation);
+			Element response = dispatchI(request, context);
 
-			//--- operation not found using the POST request format. Let's try with the GET
+			if (outSOAP)
+				response = SOAPUtil.embed(response);
 
-			if (cs == null)
-			{
-				Map<String, String> params = extractParams(request);
-
-				operation = params.get("request");
-
-				if (operation == null)
-					throw new NoApplicableCodeEx("Missing 'request' parameter");
-
-				cs = hmServices.get(operation);
-
-				//--- operation not found. Raise exception
-
-				if (cs == null)
-					throw new OperationNotSupportedEx(operation);
-
-				request = cs.adaptGetRequest(params);
-				context.debug("Adapted GET request is:\n"+Xml.getString(request));
-			}
-
-			context.info("Dispatching operation : "+ operation);
-
-			return cs.execute(request, context);
+			return response;
 		}
+
 		catch(CatalogException e)
 		{
-			return CatalogException.marshal(e);
+			exc = e;
 		}
+
 		catch(Exception e)
 		{
 			context.info("Exception stack trace : \n"+ Util.getStackTrace(e));
-
-			return CatalogException.marshal(new NoApplicableCodeEx(e.toString()));
+			exc = new NoApplicableCodeEx(e.toString());
 		}
+
+		Element response = CatalogException.marshal(exc);
+		boolean sender   = (exc instanceof NoApplicableCodeEx);
+
+		if (outSOAP)
+			return SOAPUtil.embedExc(response, sender, exc.getCode(), exc.toString());
+
+		//TODO: need to set the status code
+
+		return response;
 	}
 
 	//---------------------------------------------------------------------------
 	//---
 	//--- Private method
 	//---
+	//---------------------------------------------------------------------------
+
+	private Element dispatchI(Element request, ServiceContext context) throws CatalogException
+	{
+		InputMethod im = context.getInputMethod();
+
+		if (im == InputMethod.XML || im == InputMethod.SOAP)
+		{
+			String operation = request.getName();
+
+			CatalogService cs = hmServices.get(operation);
+
+			if (cs == null)
+				throw new OperationNotSupportedEx(operation);
+
+			context.info("Dispatching operation : "+ operation);
+
+			return cs.execute(request, context);
+		}
+
+		else //--- GET or POST/www-encoded request
+		{
+			Map<String, String> params = extractParams(request);
+
+			String operation = params.get("request");
+
+			if (operation == null)
+				throw new MissingParameterValueEx("request");
+
+			CatalogService cs = hmServices.get(operation);
+
+			if (cs == null)
+				throw new OperationNotSupportedEx(operation);
+
+			request = cs.adaptGetRequest(params);
+
+			context.debug("Adapted GET request is:\n"+Xml.getString(request));
+			context.info("Dispatching operation : "+ operation);
+
+			return cs.execute(request, context);
+		}
+	}
+
 	//---------------------------------------------------------------------------
 
 	private Map<String, String> extractParams(Element request)
