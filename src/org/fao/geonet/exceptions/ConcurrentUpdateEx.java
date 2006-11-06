@@ -23,44 +23,23 @@
 
 package org.fao.geonet.exceptions;
 
-import jeeves.server.JeevesException;
-import org.jdom.Element;
+import jeeves.exceptions.JeevesClientEx;
 
 //=============================================================================
 
-public class GeoNetException extends JeevesException
+public class ConcurrentUpdateEx extends JeevesClientEx
 {
-	public static final String LOGIN          = "login";
-	public static final String FILE_NOT_FOUND = "file-not-found";
-	public static final String UPDATE         = "update";
-	public static final String SETTING        = "setting";
-
+	//--------------------------------------------------------------------------
+	//---
+	//--- Constructor
+	//---
 	//--------------------------------------------------------------------------
 
-	public GeoNetException(String status)
+	public ConcurrentUpdateEx(String id)
 	{
-		super(status);
-	}
+		super("Concurrent update", id);
 
-	//--------------------------------------------------------------------------
-
-	public GeoNetException(String message, String status)
-	{
-		super(message, status);
-	}
-
-	//--------------------------------------------------------------------------
-
-	public GeoNetException(String status, Element xml)
-	{
-		super(null, status, xml);
-	}
-
-	//--------------------------------------------------------------------------
-
-	public GeoNetException(String message, String status, Element xml)
-	{
-		super(message, status, xml);
+		id = "concurrent-update";
 	}
 }
 
