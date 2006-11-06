@@ -31,7 +31,6 @@ import org.fao.geonet.csw.common.Csw.ElementSetName;
 import org.fao.geonet.csw.common.Csw.OutputSchema;
 import org.fao.geonet.csw.common.Csw.ResultType;
 import org.fao.geonet.csw.common.Csw.TypeName;
-import org.fao.geonet.csw.common.http.HttpRequest;
 import org.fao.geonet.csw.common.util.Xml;
 import org.jdom.Element;
 
@@ -186,35 +185,35 @@ public class GetRecordsRequest extends CatalogRequest
 
 	//---------------------------------------------------------------------------
 
-	protected void setupGetParams(HttpRequest request)
+	protected void setupGetParams()
 	{
-		request.addParam("request", getRequestName());
-		request.addParam("service", Csw.SERVICE);
-		request.addParam("version", Csw.CSW_VERSION);
+		addParam("request", getRequestName());
+		addParam("service", Csw.SERVICE);
+		addParam("version", Csw.CSW_VERSION);
 
-		request.addParam("resultType",     resultType);
-		request.addParam("namespace",      Csw.NAMESPACE_CSW.getPrefix() +":"+ Csw.NAMESPACE_CSW.getURI());
-		request.addParam("outputFormat",   outputFormat);
-		request.addParam("outputSchema",   outputSchema, Csw.NAMESPACE_CSW.getPrefix() + ":");
-		request.addParam("startPosition",  startPosition);
-		request.addParam("maxRecords",     maxRecords);
-		request.addParam("elementSetName", elemSetName);
-		request.addParam("constraint",     constraint);
-		request.addParam("hopCount",       hopCount);
+		addParam("resultType",     resultType);
+		addParam("namespace",      Csw.NAMESPACE_CSW.getPrefix() +":"+ Csw.NAMESPACE_CSW.getURI());
+		addParam("outputFormat",   outputFormat);
+		addParam("outputSchema",   outputSchema, Csw.NAMESPACE_CSW.getPrefix() + ":");
+		addParam("startPosition",  startPosition);
+		addParam("maxRecords",     maxRecords);
+		addParam("elementSetName", elemSetName);
+		addParam("constraint",     constraint);
+		addParam("hopCount",       hopCount);
 
 		if (distribSearch)
-			request.addParam("distributedSearch", "TRUE");
+			addParam("distributedSearch", "TRUE");
 
-		request.addParam("constraintLanguage",          constrLang);
-		request.addParam("constraint_language_version", constrLangVersion);
+		addParam("constraintLanguage",          constrLang);
+		addParam("constraint_language_version", constrLangVersion);
 
-		fill(request, "typeNames", hsTypeNames);
-		fill(request, "sortBy",    alSortBy);
+		fill("typeNames", hsTypeNames);
+		fill("sortBy",    alSortBy);
 	}
 
 	//---------------------------------------------------------------------------
 
-	protected void setupPostParams(HttpRequest request)
+	protected Element getPostParams()
 	{
 		Element params  = new Element(getRequestName(), Csw.NAMESPACE_CSW);
 
@@ -241,7 +240,7 @@ public class GetRecordsRequest extends CatalogRequest
 
 		params.addContent(getQuery());
 
-		request.setParams(params);
+		return params;
 	}
 
 	//---------------------------------------------------------------------------

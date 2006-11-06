@@ -52,6 +52,7 @@ import org.dlib.gui.TPanel;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.jdom.Element;
+import javax.swing.JCheckBox;
 
 //==============================================================================
 
@@ -67,6 +68,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 	private JComboBox      cmbMethod  = new JComboBox();
 	private JButton        btnSend    = new JButton("Send");
 	private JTextArea      txaLog     = new JTextArea(40,100);
+	private JCheckBox      chbSoap    = new JCheckBox("Use SOAP");
 
 	private MultiPanel paramsPanel= new MultiPanel();
 
@@ -171,34 +173,20 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 				req.login(txtUser.getText(), txtPass.getText());
 				log(req.getSentData());
 				logLine();
-				log(req.getResponseData());
+				log(req.getReceivedData());
 			}
 
 			Element response = req.execute();
-
-			logLine();
-			log(req.getSentData());
-			logLine();
-
-			if (response == null) log("Received error from server : \n"+ req.getStatusLine());
-				else					 log(req.getResponseData());
 		}
 		catch (Exception e)
 		{
-			log(req.getSentData());
-			logLine();
-
-			if (e instanceof CatalogException)
-				log(req.getResponseData());
-			else
-			{
-				StringWriter sw = new StringWriter();
-				PrintWriter  pw = new PrintWriter(sw);
-				e.printStackTrace(pw);
-
-				log(sw.toString());
-			}
+			log("Exception : "+e);
 		}
+
+		logLine();
+		log(req.getSentData());
+		logLine();
+		log(req.getReceivedData());
 	}
 
 	//---------------------------------------------------------------------------
@@ -236,6 +224,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 													: CatalogRequest.Method.POST;
 
 		request.setMethod(method);
+		request.setUseSOAP(chbSoap.isSelected());
 
 		return request;
 	}
@@ -323,7 +312,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 	{
 		JPanel p = new TPanel("Request");
 
-		FlexLayout flexL = new FlexLayout(2,2);
+		FlexLayout flexL = new FlexLayout(2,3);
 		flexL.setColProp(1, FlexLayout.EXPAND);
 		p.setLayout(flexL);
 
@@ -332,6 +321,8 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 
 		p.add("1,0,x", cmbOperat);
 		p.add("1,1,x", cmbMethod);
+
+		p.add("0,2,x,c,2", chbSoap);
 
 		return p;
 	}
@@ -397,7 +388,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 
 	private void logLine()
 	{
-		txaLog.append("--------------------------------------------------\n");
+		txaLog.append("==============================================================\n");
 	}
 }
 

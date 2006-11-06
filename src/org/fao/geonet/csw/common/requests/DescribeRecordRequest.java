@@ -26,7 +26,6 @@ package org.fao.geonet.csw.common.requests;
 import java.util.ArrayList;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.Csw.TypeName;
-import org.fao.geonet.csw.common.http.HttpRequest;
 import org.jdom.Element;
 
 //=============================================================================
@@ -87,26 +86,26 @@ public class DescribeRecordRequest extends CatalogRequest
 
 	//---------------------------------------------------------------------------
 
-	protected void setupGetParams(HttpRequest request)
+	protected void setupGetParams()
 	{
-		request.addParam("request", getRequestName());
-		request.addParam("service", Csw.SERVICE);
-		request.addParam("version", Csw.CSW_VERSION);
+		addParam("request", getRequestName());
+		addParam("service", Csw.SERVICE);
+		addParam("version", Csw.CSW_VERSION);
 
 		if (outputFormat != null)
-			request.addParam("outputFormat", outputFormat);
+			addParam("outputFormat", outputFormat);
 
 		if (schemaLang != null)
-			request.addParam("schemaLanguage", schemaLang);
+			addParam("schemaLanguage", schemaLang);
 
-		fill(request, "typeName", alTypeNames, Csw.NAMESPACE_CSW.getPrefix() + ":");
+		fill("typeName", alTypeNames, Csw.NAMESPACE_CSW.getPrefix() + ":");
 
-		request.addParam("namespace", Csw.NAMESPACE_CSW.getPrefix() +":"+ Csw.NAMESPACE_CSW.getURI());
+		addParam("namespace", Csw.NAMESPACE_CSW.getPrefix() +":"+ Csw.NAMESPACE_CSW.getURI());
 	}
 
 	//---------------------------------------------------------------------------
 
-	protected void setupPostParams(HttpRequest request)
+	protected Element getPostParams()
 	{
 		Element params  = new Element(getRequestName(), Csw.NAMESPACE_CSW);
 
@@ -132,7 +131,7 @@ public class DescribeRecordRequest extends CatalogRequest
 			params.addContent(el);
 		}
 
-		request.setParams(params);
+		return params;
 	}
 }
 

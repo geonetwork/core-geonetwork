@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.Csw.Section;
-import org.fao.geonet.csw.common.http.HttpRequest;
 import org.jdom.Element;
 
 //=============================================================================
@@ -97,22 +96,22 @@ public class GetCapabilitiesRequest extends CatalogRequest
 
 	//---------------------------------------------------------------------------
 
-	protected void setupGetParams(HttpRequest request)
+	protected void setupGetParams()
 	{
-		request.addParam("request", getRequestName());
-		request.addParam("service", Csw.SERVICE);
+		addParam("request", getRequestName());
+		addParam("service", Csw.SERVICE);
 
 		if (sequence != null)
-			request.addParam("updateSequence", sequence);
+			addParam("updateSequence", sequence);
 
-		fill(request, "acceptVersions", alVersions);
-		fill(request, "sections",       hsSections);
-		fill(request, "acceptFormats",  alFormats);
+		fill("acceptVersions", alVersions);
+		fill("sections",       hsSections);
+		fill("acceptFormats",  alFormats);
 	}
 
 	//---------------------------------------------------------------------------
 
-	protected void setupPostParams(HttpRequest request)
+	protected Element getPostParams()
 	{
 		Element params  = new Element(getRequestName(), Csw.NAMESPACE_CSW);
 
@@ -125,7 +124,7 @@ public class GetCapabilitiesRequest extends CatalogRequest
 		fill(params, "Sections",       "Section",      hsSections, Csw.NAMESPACE_OWS);
 		fill(params, "AcceptFormats",  "OutputFormat", alFormats,  Csw.NAMESPACE_OWS);
 
-		request.setParams(params);
+		return params;
 	}
 }
 

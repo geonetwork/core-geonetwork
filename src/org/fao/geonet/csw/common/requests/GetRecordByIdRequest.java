@@ -26,7 +26,6 @@ package org.fao.geonet.csw.common.requests;
 import java.util.ArrayList;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.Csw.ElementSetName;
-import org.fao.geonet.csw.common.http.HttpRequest;
 import org.jdom.Element;
 
 //=============================================================================
@@ -78,21 +77,21 @@ public class GetRecordByIdRequest extends CatalogRequest
 
 	//---------------------------------------------------------------------------
 
-	protected void setupGetParams(HttpRequest request)
+	protected void setupGetParams()
 	{
-		request.addParam("request", getRequestName());
-		request.addParam("service", Csw.SERVICE);
-		request.addParam("version", Csw.CSW_VERSION);
+		addParam("request", getRequestName());
+		addParam("service", Csw.SERVICE);
+		addParam("version", Csw.CSW_VERSION);
 
 		if (setName != null)
-			request.addParam("elementSetName", setName);
+			addParam("elementSetName", setName);
 
-		fill(request, "id", alIds);
+		fill("id", alIds);
 	}
 
 	//---------------------------------------------------------------------------
 
-	protected void setupPostParams(HttpRequest request)
+	protected Element getPostParams()
 	{
 		Element params = new Element(getRequestName(), Csw.NAMESPACE_CSW);
 
@@ -110,7 +109,7 @@ public class GetRecordByIdRequest extends CatalogRequest
 			params.addContent(elem);
 		}
 
-		request.setParams(params);
+		return params;
 	}
 }
 

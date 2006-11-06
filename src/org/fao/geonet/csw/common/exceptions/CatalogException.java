@@ -190,4 +190,68 @@ public abstract class CatalogException extends Exception
 }
 
 //=============================================================================
+/*
+
+il Content-Type deve essere "application/soap+xml; charset="utf-8" "
+il Content-Length deve essere settato
+
+<?xml version="1.0" ?>
+
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+	<env:Body>
+		<env:Fault>
+			<env:Code>
+				<env:Value>env:Sender|env:Receiver</env:Value>
+		[		<env:Subcode>
+					<env:Value>gn:xxx</env:Value>
+				[	<env:Subcode>...</env:Subcode> ]
+				</env:Subcode> ]
+			</env:Code>
+
+			<env:Reason>
+				<env:Text xml:lang="en">...human readable...</env:Text>
+				...
+			</env:Reason>
+
+			<env:Detail>
+				<... env:encodingStyle="geonet.org/encoding/error">
+					...altri figli con più info
+				</...>
+			</env:Detail>
+		</env:Fault>
+	</env:Body>
+</env:Envelope>
+
+
+
+	<env:Code>
+		<env:Value>env:Sender|env:Receiver</env:Value>
+[		<env:Subcode>
+			<env:Value>gn:xxx</env:Value>
+		[	<env:Subcode>...</env:Subcode> ]
+		</env:Subcode> ]
+	</env:Code>
+
+	<env:Reason>
+		<env:Text xml:lang="en">...human readable...</env:Text>
+		...
+	</env:Reason>
+
+	<env:Detail>
+		<... env:encodingStyle="geonet.org/encoding/error">
+			...altri figli con più info
+		</...>
+	</env:Detail>
+
+
+
+
+	<env:faultcode>env:Server</env:faultcode>
+	<env:faultstring>...human readable...</env:faultstring>
+
+	<env:detail>
+		<ows:ExceptionReport>...
+	</env:detail>
+
+ */
 

@@ -29,14 +29,27 @@ import java.util.List;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
-import org.fao.geonet.csw.common.http.HttpException;
-import org.fao.geonet.csw.common.http.HttpGetRequest;
-import org.fao.geonet.csw.common.http.HttpPostRequest;
-import org.fao.geonet.csw.common.http.HttpRequest;
 import org.fao.geonet.csw.common.util.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpState;
+import org.apache.commons.httpclient.Cookie;
+import org.apache.commons.httpclient.cookie.CookiePolicy;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.HttpMethodBase;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.NameValuePair;
+import java.util.ArrayList;
+import java.net.URLEncoder;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.jdom.Document;
+import java.io.UnsupportedEncodingException;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.Header;
 
 //=============================================================================
 
@@ -45,32 +58,16 @@ public abstract class CatalogRequest
 	public enum Method { GET, POST }
 
 	//---------------------------------------------------------------------------
-
-	private String host;
-	private int    port;
-	private String address;
-	private String loginAddr;
-	private Method method;
-
-	private HttpRequest request;
-
-	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//---------------------------------------------------------------------------
 
-	public CatalogRequest()
-	{
-		this(null);
-	}
+	public CatalogRequest() { this(null); }
 
 	//---------------------------------------------------------------------------
 
-	public CatalogRequest(String host)
-	{
-		this(host, 80);
-	}
+	public CatalogRequest(String host) { this(host, 80); }
 
 	//---------------------------------------------------------------------------
 
@@ -80,6 +77,9 @@ public abstract class CatalogRequest
 		this.port    = port;
 
 		setMethod(Method.POST);
+		state.addCookie(cookie);
+		client.setState(state);
+		client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 	}
 
 	//---------------------------------------------------------------------------
@@ -88,14 +88,12 @@ public abstract class CatalogRequest
 	//---
 	//---------------------------------------------------------------------------
 
-	public String getHost()         { return host;    }
-	public int    getPort()         { return port;    }
-	public String getAddress()      { return address; }
-	public Method getMethod()       { return method;  }
-	public String getResponseCode() { return request.getResponseCode(); }
-	public String getResponseData() { return request.getResponseData(); }
-	public String getStatusLine()   { return request.getStatusLine();   }
-	public List   getSentData()     { return request.getSentData();     }
+	public String getHost()         { return host;         }
+	public int    getPort()         { return port;         }
+	public String getAddress()      { return address;      }
+	public Method getMethod()       { return method;       }
+	public String getSentData()     { return sentData;     }
+	public String getReceivedData() { return receivedData; }
 
 	//---------------------------------------------------------------------------
 
@@ -123,9 +121,6 @@ public abstract class CatalogRequest
 	public void setMethod(Method m)
 	{
 		method = m;
-
-		if (method == Method.GET) 	request = new HttpGetRequest();
-			else 							request = new HttpPostRequest();
 	}
 
 	//---------------------------------------------------------------------------
@@ -137,84 +132,50 @@ public abstract class CatalogRequest
 
 	//---------------------------------------------------------------------------
 
-	public void login(String username, String password) throws IOException, CatalogException,
-																				  HttpException, Exception
+	public void setUseSOAP(boolean yesno)
 	{
-		request.clearParams();
-		request.addParam("username", username);
-		request.addParam("password", password);
-
-		request.setHost(host);
-		request.setPort(port);
-		request.setAddress(loginAddr);
-
-		Element response = null;
-
-		try
-		{
-			response = request.execute();
-		}
-		catch (JDOMException e)
-		{
-			throw new NoApplicableCodeEx("Response is not in xml format :\n"+ request.getResponseData());
-		}
-
-		if (!response.getName().toLowerCase().equals("ok"))
-			throw new NoApplicableCodeEx("Login denied :\n"+ request.getResponseData());
+		useSOAP = yesno;
 	}
 
 	//---------------------------------------------------------------------------
 
-	public Element execute() throws IOException, CatalogException, HttpException, Exception
+	public boolean login(String username, String password) throws IOException, CatalogException,
+																				  JDOMException, Exception
+
 	{
-		request.clearParams();
+		Element request = new Element("request")
+						.addContent(new Element("username").setText(username))
+						.addContent(new Element("password").setText(password));
 
-		if (method == Method.GET)	setupGetParams (request);
-			else 							setupPostParams(request);
+		PostMethod post = new PostMethod();
 
-		request.setHost(host);
-		request.setPort(port);
-		request.setAddress(address);
+		postData = Xml.getString(new Document(request));
 
-		Element response = null;
+		post.setRequestEntity(new StringRequestEntity(postData, "application/xml", "UTF8"));
+//		post.setFollowRedirects(true);
+		post.setPath(loginAddr);
 
-		try
-		{
-			response = request.execute();
-		}
-		catch (JDOMException e)
-		{
-			throw new NoApplicableCodeEx("Response is not in xml format :\n"+ request.getResponseData());
-		}
+		Element response = doExecute(post);
 
+		if (Csw.NAMESPACE_ENV.getURI().equals(response.getNamespace().getURI()))
+			response = soapUnembed(response);
+
+		return response.getName().equals("ok");
+	}
+
+	//---------------------------------------------------------------------------
+
+	public Element execute() throws IOException, CatalogException, JDOMException, Exception
+	{
+		HttpMethodBase httpMethod = setupHttpMethod();
+
+		Element response = doExecute(httpMethod);
+
+		if (useSOAP)
+			response = soapUnembed(response);
+
+		//--- raises an exception if the case
 		CatalogException.unmarshal(response);
-
-		//------------------------------------------------------------------------
-		//--- Start Hack
-		//--- we need this hack because Jeeves does not handle the 403 and 404 error
-		//--- codes
-
-		if (response.getName().equals("error"))
-		{
-			String id = response.getAttributeValue("id");
-
-			if (id == null)
-				throw new NoApplicableCodeEx("Returned error with no 'id' :\n"+ Xml.getString(response));
-
-			if (id.equals("error"))
-				throw new NoApplicableCodeEx("Returned general error :\n"+ Xml.getString(response));
-
-			if (id.equals("privileges"))
-			{
-				request.forceResponse("403");
-				throw new HttpException("Service forbidden", request.getStatusLine(), request.getResponseCode());
-			}
-
-			throw new NoApplicableCodeEx("Unknown error 'id' :\n"+ Xml.getString(response));
-		}
-
-		//--- End Hack
-		//------------------------------------------------------------------------
 
 		return response;
 	}
@@ -225,9 +186,9 @@ public abstract class CatalogRequest
 	//---
 	//---------------------------------------------------------------------------
 
-	protected abstract String getRequestName();
-	protected abstract void   setupGetParams (HttpRequest request);
-	protected abstract void   setupPostParams(HttpRequest request);
+	protected abstract String  getRequestName();
+	protected abstract void    setupGetParams();
+	protected abstract Element getPostParams ();
 
 	//---------------------------------------------------------------------------
 	//---
@@ -235,16 +196,18 @@ public abstract class CatalogRequest
 	//---
 	//---------------------------------------------------------------------------
 
+	//---------------------------------------------------------------------------
 	//--- GET fill methods
+	//---------------------------------------------------------------------------
 
-	protected void fill(HttpRequest request, String param, Iterable iter)
+	protected void fill(String param, Iterable iter)
 	{
-		fill(request, param, iter, "");
+		fill(param, iter, "");
 	}
 
 	//---------------------------------------------------------------------------
 
-	protected void fill(HttpRequest request, String param, Iterable iter, String prefix)
+	protected void fill(String param, Iterable iter, String prefix)
 	{
 		Iterator i = iter.iterator();
 
@@ -261,7 +224,7 @@ public abstract class CatalogRequest
 				sb.append(",");
 		}
 
-		request.addParam(param, sb.toString());
+		addParam(param, sb.toString());
 	}
 
 	//---------------------------------------------------------------------------
@@ -308,21 +271,6 @@ public abstract class CatalogRequest
 	}
 
 	//---------------------------------------------------------------------------
-
-	protected void addParam(Element root, String name, Object value)
-	{
-		addParam(root, name, value, Csw.NAMESPACE_CSW);
-	}
-
-	//---------------------------------------------------------------------------
-
-	protected void addParam(Element root, String name, Object value, Namespace ns)
-	{
-		if (value != null)
-			root.addContent(new Element(name, ns).setText(value.toString()));
-	}
-
-	//---------------------------------------------------------------------------
 	//--- Attribute facilities
 	//---------------------------------------------------------------------------
 
@@ -360,6 +308,197 @@ public abstract class CatalogRequest
 
 		el.setAttribute(name, sb.toString());
 	}
+
+	//--------------------------------------------------------------------------
+	//--- Parameters facilities (POST)
+	//---------------------------------------------------------------------------
+
+	protected void addParam(Element root, String name, Object value)
+	{
+		if (value != null)
+			root.addContent(new Element(name, Csw.NAMESPACE_CSW).setText(value.toString()));
+	}
+
+	//---------------------------------------------------------------------------
+	//--- Parameters facilities (GET)
+	//--------------------------------------------------------------------------
+
+	protected void addParam(String name, Object value)
+	{
+		addParam(name, value, "");
+	}
+
+	//--------------------------------------------------------------------------
+
+	protected void addParam(String name, Object value, String prefix)
+	{
+		if (value != null)
+			alGetParams.add(new NameValuePair(name, prefix+value.toString()));
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Private methods
+	//---
+	//---------------------------------------------------------------------------
+
+	private Element doExecute(HttpMethodBase httpMethod) throws IOException, JDOMException
+	{
+		client.getHostConfiguration().setHost(host, port, "http");
+
+		byte[] data = null;
+
+		try
+		{
+			client.executeMethod(httpMethod);
+			data = httpMethod.getResponseBody();
+
+			return Xml.loadStream(new ByteArrayInputStream(data));
+		}
+		finally
+		{
+			httpMethod.releaseConnection();
+
+			setupSentData(httpMethod);
+			setupReceivedData(httpMethod, data);
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private HttpMethodBase setupHttpMethod() throws UnsupportedEncodingException
+	{
+		HttpMethodBase httpMethod;
+
+		if (method == Method.GET)
+		{
+			alGetParams = new ArrayList<NameValuePair>();
+			setupGetParams();
+			httpMethod = new GetMethod();
+			httpMethod.setQueryString(alGetParams.toArray(new NameValuePair[1]));
+
+			if (useSOAP)
+				httpMethod.addRequestHeader("Accept", "application/soap+xml");
+		}
+		else
+		{
+			Element    params = getPostParams();
+			PostMethod post   = new PostMethod();
+
+			if (!useSOAP)
+			{
+				postData = Xml.getString(new Document(params));
+				post.setRequestEntity(new StringRequestEntity(postData, "application/xml", "UTF8"));
+			}
+			else
+			{
+				postData = Xml.getString(new Document(soapEmbed(params)));
+				post.setRequestEntity(new StringRequestEntity(postData, "application/soap+xml", "UTF8"));
+			}
+
+			httpMethod = post;
+		}
+
+//		httpMethod.setFollowRedirects(true);
+		httpMethod.setPath(address);
+
+		return httpMethod;
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void setupSentData(HttpMethodBase httpMethod)
+	{
+		sentData = httpMethod.getName() +" "+ httpMethod.getPath();
+
+		if (httpMethod.getQueryString() != null)
+			sentData += "?"+ httpMethod.getQueryString();
+
+		sentData += "\r\n";
+
+		for (Header h : httpMethod.getRequestHeaders())
+			sentData += h;
+
+		sentData += "\r\n";
+
+		if (httpMethod instanceof PostMethod)
+			sentData += postData;
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void setupReceivedData(HttpMethodBase httpMethod, byte[] response)
+	{
+		receivedData = httpMethod.getStatusText() +"\r\r";
+
+		for (Header h : httpMethod.getResponseHeaders())
+			receivedData += h;
+
+		receivedData += "\r\n";
+
+		try
+		{
+			if (response != null)
+				receivedData += new String(response, "UTF8");
+		}
+		catch (UnsupportedEncodingException e) {}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private Element soapEmbed(Element elem)
+	{
+		Element envl = new Element("Envelope", Csw.NAMESPACE_ENV);
+		Element body = new Element("Body",     Csw.NAMESPACE_ENV);
+
+		envl.addContent(body);
+		body.addContent(elem);
+
+		return envl;
+	}
+
+	//---------------------------------------------------------------------------
+
+	private Element soapUnembed(Element envelope) throws Exception
+	{
+		Namespace ns   = envelope.getNamespace();
+		Element   body = envelope.getChild("Body", ns);
+
+		if (body == null)
+			throw new Exception("Bad SOAP response");
+
+		List list = body.getChildren();
+
+		if (list.size() == 0)
+			throw new Exception("Bas SOAP response");
+
+		return (Element) list.get(0);
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//---------------------------------------------------------------------------
+
+	private String  host;
+	private int     port;
+	private String  address;
+	private String  loginAddr;
+	private Method  method;
+	private boolean useSOAP;
+
+	private HttpClient client = new HttpClient();
+	private HttpState  state  = new HttpState();
+	private Cookie     cookie = new Cookie();
+
+	private ArrayList<NameValuePair> alGetParams;
+
+	//--- transient vars
+
+	private String sentData;
+	private String receivedData;
+	private String postData;
 }
 
 //=============================================================================

@@ -24,6 +24,7 @@
 package org.fao.geonet.csw.common.util;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -53,6 +54,17 @@ public class Xml
 	{
 		SAXBuilder builder = new SAXBuilder(validate);
 		Document   jdoc    = builder.build(new StringReader(data));
+
+		return (Element) jdoc.getRootElement().detach();
+	}
+
+	//--------------------------------------------------------------------------
+	/** Loads an xml stream and returns its root node (validates the xml with a dtd) */
+
+	public static Element loadStream(InputStream input) throws IOException, JDOMException
+	{
+		SAXBuilder builder = new SAXBuilder();
+		Document   jdoc    = builder.build(input);
 
 		return (Element) jdoc.getRootElement().detach();
 	}
