@@ -28,10 +28,6 @@
 package org.fao.geonet.kernel.schema;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import org.jdom.Attribute;
-import org.jdom.Element;
 
 //==============================================================================
 
@@ -134,8 +130,6 @@ public class MetadataType
 
 	void addElement(String name, int minCard, int maxCard)
 	{
-		System.out.println("MetadataType.addElement(" + name + ", " + minCard + ", " + maxCard + ")"); // DEBUG
-
 		alElements.add(name);
 
 		alMinCard.add(new Integer(minCard));

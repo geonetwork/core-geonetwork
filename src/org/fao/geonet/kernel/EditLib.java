@@ -27,20 +27,12 @@
 
 package org.fao.geonet.kernel;
 
+import java.util.*;
+import org.fao.geonet.kernel.schema.*;
+import org.jdom.*;
+
 import java.io.File;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-import jeeves.utils.Xml;
 import org.fao.geonet.constants.Edit;
-import org.fao.geonet.kernel.schema.MetadataAttribute;
-import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.schema.MetadataType;
-import org.fao.geonet.kernel.schema.SchemaLoader;
-import org.jdom.Attribute;
-import org.jdom.Element;
-import org.jdom.Namespace;
 
 //=============================================================================
 
@@ -300,7 +292,6 @@ public class EditLib
 			if (child.getName().equals(name))
 				result.add(child);
 		}
-
 		return result;
 	}
 
@@ -436,39 +427,65 @@ public class EditLib
 
 	private void expandElement(String schemaName, MetadataSchema schema, Element md) throws Exception
 	{
-		String elemName = md.getQualifiedName(); // RGFIX: was: getname
+		System.out.println("entering expandElement()"); // DEBUG
+		
+		String elemName = md.getQualifiedName();
 		String elemType = schema.getElementType(elemName);
 
 		System.out.println("elemName = " + elemName); // DEBUG
+		System.out.println("elemType = " + elemType); // DEBUG
 		
 		Element elem = md.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
-//		addValues(schema, elem, elemName); // RGFIX
+		addValues(schema, elem, elemName);
 		
 		if (schema.isSimpleElement(elemName))
+		{
+			System.out.println("is simple element"); // DEBUG
 			return;
-
+		}
 		MetadataType type = schema.getTypeInfo(elemType);
+		
+		System.out.println("type is = " + type.getName()); // DEBUG
 		
 		if (!type.isOrType())
 		{
 			for(int i=0; i<type.getElementCount(); i++)
 			{
-				String childName = type.getElementAt(i);
+				String childQName = type.getElementAt(i);
 				
-				System.out.println("- childName = " + childName); // DEBUG
+				System.out.println("- childName = " + childQName); // DEBUG
 				
-				if (childName == null) continue; // schema extensions cause null types; just skip
+				if (childQName == null) continue; // schema extensions cause null types; just skip
 				
-				List list = md.getChildren();
+				String childName   = getUnqualifiedName(childQName);
+				String childPrefix = getPrefix(childQName);
+				String childNS     = getNamespace(childQName, md);
+				
+				System.out.println("- name      = " + childName); // DEBUG
+				System.out.println("- prefix    = " + childPrefix); // DEBUG
+				System.out.println("- namespace = " + childNS); // DEBUG
+				
+				List list = md.getChildren(childName, Namespace.getNamespace(childNS));
 				if (list.size() == 0)
 				{
-					Element newElem = createElement(schemaName, schema, childName);
-
+					System.out.println("- no children of this type already present"); // DEBUG
+				
+					Element newElem = createElement(schemaName, schema, childName, childPrefix, childNS);
 					if (i == 0)	insertFirst(md, newElem);
-						else		insertLast(md, type.getElementAt(i-1), newElem);
+					else
+					{
+						String prevQName = type.getElementAt(i-1);
+						String prevName = getUnqualifiedName(prevQName);
+						String prevNS   = getNamespace(prevQName, md);
+						insertLast(md, prevName, prevNS, newElem);
+					}
 				}
 				else
 				{
+					System.out.println("- " + list.size() + " children of this type already present"); // DEBUG
+					System.out.println("- min cardinality = " + type.getMinCardinAt(i)); // DEBUG
+					System.out.println("- max cardinality = " + type.getMaxCardinAt(i)); // DEBUG
+				
 					for(int j=0; j<list.size(); j++)
 					{
 						Element listChild = (Element) list.get(j);
@@ -483,15 +500,54 @@ public class EditLib
 						if (list.size() > type.getMinCardinAt(i))
 							listElem.setAttribute(new Attribute(Edit.Element.Attr.DEL, Edit.Value.TRUE));
 					}
-
 					if (list.size() < type.getMaxCardinAt(i))
-						insertLast(md, childName, createElement(schemaName, schema, childName));
+						insertLast(md, childName, childNS, createElement(schemaName, schema, childName, childPrefix, childNS));
 				}
 			}
 		}
 		addAttribs(type, md);
 	}
 
+	//--------------------------------------------------------------------------
+
+	private String getUnqualifiedName(String qname)
+	{
+		int pos = qname.indexOf(":");
+		if (pos < 0) return qname;
+		else         return qname.substring(pos + 1);
+	}
+	
+	//--------------------------------------------------------------------------
+	
+	private String getPrefix(String qname)
+	{
+		int pos = qname.indexOf(":");
+		if (pos < 0) return "";
+		else         return qname.substring(0, pos);
+	}
+	
+	//--------------------------------------------------------------------------
+	
+	private String getNamespace(String qname, Element md)
+	{
+		// find root element, where namespaces *must* be declared
+		Element root = md;
+		while (root.getParent() != null && root.getParent() instanceof Element) root = (Element)root.getParent();
+		
+		// get prefix
+		String prefix = getPrefix(qname);
+		
+		// loop on namespaces to fine the one corresponding to prefix
+		Namespace rns = root.getNamespace();
+		if (prefix.equals(rns.getPrefix())) return rns.getURI();
+		for (Iterator i = root.getAdditionalNamespaces().iterator(); i.hasNext(); )
+		{
+			Namespace ns = (Namespace)i.next();
+			if (prefix.equals(ns.getPrefix())) return ns.getURI();
+		}
+		return "UNKNOWN";
+	}
+	
 	//--------------------------------------------------------------------------
 
 	private void insertFirst(Element md, Element child)
@@ -514,7 +570,7 @@ public class EditLib
 
 	//--------------------------------------------------------------------------
 
-	private void insertLast(Element md, String childName, Element child)
+	private void insertLast(Element md, String childName, String childNS, Element child)
 	{
 		boolean added = false;
 
@@ -528,7 +584,7 @@ public class EditLib
 
 			v.add(el);
 
-			if (equal(childName, el) && !added)
+			if (equal(childName, childNS, el) && !added)
 			{
 				if (i == list.size() -1)
 				{
@@ -556,31 +612,32 @@ public class EditLib
 
 	//--------------------------------------------------------------------------
 
-	private boolean equal(String childName, Element el)
+	private boolean equal(String childName, String childNS, Element el)
 	{
-		if (Edit.NS_PREFIX.equals(el.getNamespacePrefix()))
+		if (Edit.NS_URI.equals(el.getNamespaceURI()))
 		{
 			if (Edit.RootChild.CHILD.equals(el.getName()))
-				return childName.equals(el.getAttributeValue(Edit.ChildElem.Attr.NAME));
+				return childName.equals(el.getAttributeValue(Edit.ChildElem.Attr.NAME)) &&
+						 childNS.equals(el.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE));
 			else
 				return false;
 		}
 		else
-			return childName.equals(el.getName());
+			return childName.equals(el.getName()) && childNS.equals(el.getNamespaceURI());
 	}
 
 	//--------------------------------------------------------------------------
 
 	private boolean equal(Element el1, Element el2)
 	{
-		String ns1 = el1.getNamespacePrefix();
-		String ns2 = el2.getNamespacePrefix();
+		String elemNS1 = el1.getNamespaceURI();
+		String elemNS2 = el2.getNamespaceURI();
 
-		if (Edit.NS_PREFIX.equals(ns1))
+		if (Edit.NS_URI.equals(elemNS1))
 		{
-			if (Edit.NS_PREFIX.equals(ns2))
+			if (Edit.NS_URI.equals(elemNS2))
 			{
-				//--- el1 has namespace, el2 has namespace
+				//--- both are geonet:child elements
 
 				if (!Edit.RootChild.CHILD.equals(el1.getName()))
 					return false;
@@ -591,38 +648,43 @@ public class EditLib
 				String name1 = el1.getAttributeValue(Edit.ChildElem.Attr.NAME);
 				String name2 = el2.getAttributeValue(Edit.ChildElem.Attr.NAME);
 
-				return name1.equals(name2);
+				String ns1 = el1.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE);
+				String ns2 = el2.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE);
+				
+				return name1.equals(name2) && ns1.equals(ns2);
 			}
 			else
 			{
-				//--- el1 has namespace, el2 not
+				//--- el1 is a geonet:child, el2 is not
 
 				if (!Edit.RootChild.CHILD.equals(el1.getName()))
 					return false;
 
 				String name1 = el1.getAttributeValue(Edit.ChildElem.Attr.NAME);
+				String ns1   = el1.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE);
 
-				return el2.getName().equals(name1);
+				return el2.getName().equals(name1) && el2.getNamespaceURI().equals(ns1);
 			}
 		}
 		else
 		{
-			if (Edit.NS_PREFIX.equals(ns2))
+			if (Edit.NS_URI.equals(elemNS2))
 			{
-				//--- el1 has no namespace, el2 yes
+				//--- el2 is a geonet:child, el1 is not
 
 				if (!Edit.RootChild.CHILD.equals(el2.getName()))
 					return false;
 
 				String name2 = el2.getAttributeValue(Edit.ChildElem.Attr.NAME);
+				String ns2   = el2.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE);
 
-				return el1.getName().equals(name2);
+				return el1.getName().equals(name2) && el1.getNamespaceURI().equals(ns2);
 			}
 			else
 			{
-				//--- el1 has no namespace, el2 neither
+				//--- both not geonet:child elements
 
-				return el1.getName().equals(el2.getName());
+				return el1.getName().equals(el2.getName()) && el1.getNamespaceURI().equals(el2.getNamespaceURI());
 			}
 		}
 	}
@@ -631,25 +693,12 @@ public class EditLib
 	/** Create a new element for editing, adding all mandatory subtags
 	  */
 
-	private Element createElement(String schemaName, MetadataSchema schema, String name) throws Exception
+	private Element createElement(String schemaName, MetadataSchema schema, String name, String prefix, String ns) throws Exception
 	{
 		Element child = new Element(Edit.RootChild.CHILD, Edit.NAMESPACE);
 		child.setAttribute(new Attribute(Edit.ChildElem.Attr.NAME, name));
-
-		String prefix    = "";
-		String namespace = "";
-
-		//FIXME: Cacciavitata
-
-		if (schemaName.equals("dublin-core") && !name.equals("simpledc"))
-		{
-			prefix    = "dc";
-			namespace = "http://purl.org/dc/elements/1.1/";
-		}
-
 		child.setAttribute(new Attribute(Edit.ChildElem.Attr.PREFIX,    prefix));
-		child.setAttribute(new Attribute(Edit.ChildElem.Attr.NAMESPACE, namespace));
-
+		child.setAttribute(new Attribute(Edit.ChildElem.Attr.NAMESPACE, ns));
 
 		if (!schema.isSimpleElement(name))
 		{
@@ -675,13 +724,14 @@ public class EditLib
 	private void addValues(MetadataSchema schema, Element elem, String name)
 	{
 		List values = schema.getElementValues(name);
-		for(int i=0; i<values.size(); i++)
-		{
-			Element text  = new Element(Edit.Element.Child.TEXT, Edit.NAMESPACE);
-			text.setAttribute(Edit.Attribute.Attr.VALUE, (String) values.get(i));
-
-			elem.addContent(text);
-		}
+		if (values != null)
+			for(int i=0; i<values.size(); i++)
+			{
+				Element text  = new Element(Edit.Element.Child.TEXT, Edit.NAMESPACE);
+				text.setAttribute(Edit.Attribute.Attr.VALUE, (String) values.get(i));
+	
+				elem.addContent(text);
+			}
 	}
 
 	//--------------------------------------------------------------------------

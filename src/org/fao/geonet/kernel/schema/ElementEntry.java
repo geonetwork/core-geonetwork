@@ -39,6 +39,7 @@ import org.jdom.Element;
 class ElementEntry
 {
 	public String  name;
+	public String  ns;
 	public String  type;
 	public int     min = 1;
 	public int     max = 1;
@@ -69,6 +70,7 @@ class ElementEntry
 
 	public ElementEntry(ElementInfo ei)
 	{
+		ns = ei.targetNS;
 		handleAttribs(ei);
 		handleChildren(ei);
 	}
@@ -84,6 +86,7 @@ class ElementEntry
 		ElementEntry ee = new ElementEntry();
 
 		ee.name        = name;
+		ee.ns          = ns;
 		ee.type        = type;
 		ee.min         = min;
 		ee.max         = max;
@@ -152,9 +155,6 @@ class ElementEntry
 
 		for(int i=0; i<children.size(); i++)
 		{
-			/* RGFIX
-			Element elChild = (Element) children.get(0);
-			*/
 			Element elChild = (Element) children.get(i);
 			String  elName  = elChild.getName();
 

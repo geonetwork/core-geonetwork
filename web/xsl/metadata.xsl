@@ -377,15 +377,9 @@
 		<xsl:param name="helpLink"/>
 		
 		<!-- if it's the last brother of it's type and there is a new brother make addLink -->
-		<xsl:variable name="name" select="name(.)"/>
-		<xsl:variable name="nextBrother" select="following-sibling::*[1]"/>
-		<xsl:variable name="newBrother" select="$nextBrother[name(.)='geonet:child' and @name=$name]"/>
 		<xsl:variable name="addLink">
-			<xsl:if test="$newBrother and not($newBrother/geonet:choose)">
-				<xsl:value-of select="concat('javascript:doNewElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,$name,$apos,');')"/>
-			</xsl:if>
+			<xsl:call-template name="addLink"/>
 		</xsl:variable>
-		
 		<xsl:variable name="removeLink">
 			<xsl:if test="geonet:element/@del='true'">
 				<xsl:value-of select="concat('javascript:doElementAction(',$apos,/root/gui/locService,'/metadata.elem.delete',$apos,',',geonet:element/@ref,');')"/>
@@ -410,6 +404,32 @@
 			<xsl:with-param name="downLink" select="$downLink"/>
 			<xsl:with-param name="helpLink" select="$helpLink"/>
 		</xsl:call-template>
+	</xsl:template>
+	
+	<xsl:template name="addLink">
+		<xsl:variable name="name" select="name(.)"/>
+		<xsl:variable name="nextBrother" select="following-sibling::*[1]"/>
+		<xsl:variable name="nb">
+			<xsl:if test="name($nextBrother)='geonet:child'">
+				<xsl:choose>
+					<xsl:when test="$nextBrother/@prefix=''">
+						<xsl:if test="$nextBrother/@name=$name"><xsl:copy-of select="$nextBrother"/></xsl:if>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:if test="concat($nextBrother/@prefix,':',$nextBrother/@name)=$name">
+							<xsl:copy-of select="$nextBrother"/>
+						</xsl:if>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:variable name="newBrother" select="xalan:nodeset($nb)"/>
+		<xsl:if test="$newBrother/* and not($newBrother/*/geonet:choose)">
+			<!--
+			<xsl:value-of select="concat('javascript:doNewElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,$name,$apos,');')"/>
+			-->
+			<xsl:value-of select="concat('javascript:doNewElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,$newBrother/geonet:child/@name,$apos,');')"/>
+		</xsl:if>
 	</xsl:template>
 	
 	<!--
@@ -441,15 +461,9 @@
 		<xsl:param name="helpLink"/>
 		
 		<!-- if it's the last brother of it's type and there is a new brother make addLink -->
-		<xsl:variable name="name" select="name(.)"/>
-		<xsl:variable name="nextBrother" select="following-sibling::*[1]"/>
-		<xsl:variable name="newBrother" select="$nextBrother[name(.)='geonet:child' and @name=$name]"/>
 		<xsl:variable name="addLink">
-			<xsl:if test="$newBrother and not($newBrother/geonet:choose)">
-				<xsl:value-of select="concat('javascript:doNewElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,$name,$apos,');')"/>
-			</xsl:if>
+			<xsl:call-template name="addLink"/>
 		</xsl:variable>
-		
 		<xsl:variable name="removeLink">
 			<xsl:if test="geonet:element/@del='true'">
 				<xsl:value-of select="concat('javascript:doElementAction(',$apos,/root/gui/locService,'/metadata.elem.delete',$apos,',',geonet:element/@ref,');')"/>

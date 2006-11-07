@@ -111,14 +111,8 @@ class ComplexContentEntry
 
 	private void handleExtension(Element el, ElementInfo ei)
 	{
-		System.out.println("# extension:\n" + Xml.getString(el)); // RGFIX
-		
 		base = el.getAttributeValue("base");
-
-		System.out.println("# - base = " + base); // RGFIX
-		
 		List extension = el.getChildren();
-
 		for(int j=0; j<extension.size(); j++)
 		{
 			Element elExt = (Element) extension.get(j);

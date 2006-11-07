@@ -27,9 +27,8 @@
 
 package org.fao.geonet.kernel.schema;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
+
 import org.jdom.Element;
 
 //==============================================================================
@@ -63,6 +62,8 @@ public class MetadataSchema
 
 	public String getElementType(String elem)
 	{
+		System.out.println("in getElementType(" + elem + ")"); // DEBUG
+		
 		return (String) hmElements.get(elem);
 	}
 
@@ -73,6 +74,8 @@ public class MetadataSchema
 
 	public boolean isSimpleElement(String elem)
 	{
+		System.out.println("in isSimpleElement(" + elem + ")"); // DEBUG
+		
 		return !hmTypes.containsKey(getElementType(elem));
 	}
 
@@ -91,6 +94,8 @@ public class MetadataSchema
 
 	void addElement(String name, String type, ArrayList values)
 	{
+		System.out.println("#### adding element " + name); // DEBUG
+		
 		hmElements.put(name, type);
 		hmRestric .put(name, values);
 	}
@@ -99,6 +104,8 @@ public class MetadataSchema
 
 	void addType(String name, MetadataType mdt)
 	{
+		System.out.println("#### adding type " + name); // DEBUG
+		
 		mdt.setName(name);
 		hmTypes.put(name, mdt);
 	}

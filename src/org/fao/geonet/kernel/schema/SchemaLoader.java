@@ -27,16 +27,11 @@
 
 package org.fao.geonet.kernel.schema;
 
+import java.util.*;
+import org.jdom.*;
+
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import jeeves.utils.Xml;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
 
 //==============================================================================
 
@@ -52,7 +47,6 @@ public class SchemaLoader
 	private HashMap   hmAttribs  = new HashMap();
 	private HashMap   hmGroups   = new HashMap();
 
-	// RGFIX
 	private String targetNS;
 	private String targetNSPrefix;
 	
@@ -78,13 +72,7 @@ public class SchemaLoader
 
 	public MetadataSchema load(String xmlSchemaFile) throws Exception
 	{
-		/*
-		// RGFIX
-		if (xmlSchemaFile.indexOf("19139") == -1)
-			return new MetadataSchema(new Element("MD_Metadata"));
-		if (xmlSchemaFile.indexOf("19139") != -1)
-			return new MetadataSchema(new Element("MD_Metadata"));
-		*/
+		if (xmlSchemaFile.startsWith("_")) return new MetadataSchema(new Element("root"));
 		
 		//--- PHASE 1 : pre-processing
 		//---
@@ -101,16 +89,10 @@ public class SchemaLoader
 		{
 			String elem = (String) i.next();
 
-			System.out.println("# resolving abstract element " + elem); // RGFIX
-			
 			ArrayList elements = (ArrayList) hmSubsGrp.get(elem);
-
 			for(int j=0; j<elements.size(); j++)
 			{
 				ElementEntry ee = (ElementEntry) elements.get(j);
-
-				System.out.println("# - scanning element " + ee.name); // RGFIX
-				
 				if (ee.type == null)
 				{
 					ee.type = (String) hmAbsElems.get(elem);
@@ -126,7 +108,6 @@ public class SchemaLoader
 		//--- PHASE 3 : add elements
 
 		MetadataSchema mds = new MetadataSchema(elRoot);
-
 		for(Iterator i=hmElements.keySet().iterator(); i.hasNext();)
 		{
 			String elem = (String) i.next();
@@ -179,7 +160,7 @@ public class SchemaLoader
 			if (cte.complexContent != null)
 			{
 				if (cte.complexContent.base != null)
-					cte.alElements = resolveInheritance(cte, 0);
+					cte.alElements = resolveInheritance(cte);
 
 				//--- add attribs from complexContent (if any)
 
@@ -230,33 +211,31 @@ public class SchemaLoader
 			{
 				ElementEntry ee = (ElementEntry) cte.alElements.get(j);
 
-				System.out.println("# resolving type of element " + ((ee.name != null) ? ee.name : ("ref --> " + ee.ref))); // RGFIX
+				System.out.println("resolving element " + (ee.name == null ? (" --> " + ee.ref) : ee.name)); // DEBUG
 				
 				String type;
-
 				if (ee.ref != null)
 				{
 					type = (String) hmElements.get(ee.ref);
 					
-					System.out.println("# - got type '" + type + "' for element '" + ee.ref + "'"); // RGFIX
+					System.out.println("- type = " + type); // DEBUG
 				}
 				else
 				{
 					if (ee.name == null)
 						throw new IllegalArgumentException("Reference and name are null for element : " + ee.name);
 
-					type = "string";
+					// RGFIX type = "string";
+					type = ee.type == null ? "string" : ee.type;
+					
+					System.out.println("- type = " + type); // DEBUG
 				}
-
 
 				//--- if type is null we have an abstract type
 
 				if (type == null)
 				{
-					System.out.println("# - ee.ref = '" + ee.ref + "'"); // RGFIX
-					
 					ArrayList al = (ArrayList) hmSubsGrp.get(ee.ref);
-
 					if (al == null)
 					{
 						al = (ArrayList) hmSubsLink.get(ee.ref);
@@ -289,7 +268,6 @@ public class SchemaLoader
 			}
 			mds.addType(cte.name, mdt);
 		}
-
 		return mds;
 	}
 
@@ -303,8 +281,6 @@ public class SchemaLoader
 
 	private ArrayList loadFile(String xmlSchemaFile, HashSet loadedFiles) throws Exception
 	{
-		System.out.println("#### loading " + xmlSchemaFile); // RGFIX
-		
 		loadedFiles.add(new File(xmlSchemaFile).getCanonicalPath());
 		Logger.log("Added : "+ new File(xmlSchemaFile).getCanonicalPath());
 
@@ -314,12 +290,13 @@ public class SchemaLoader
 
 		elRoot = Xml.loadFile(xmlSchemaFile);
 		
-		// RGFIX: change target namespace
+		// change target namespace
 		String oldtargetNS       = targetNS;
 		String oldtargetNSPrefix = targetNSPrefix;
 		targetNS = elRoot.getAttributeValue("targetNamespace");
 		targetNSPrefix = null;
 		if (targetNS != null)
+		{
 			for (Iterator i = elRoot.getAdditionalNamespaces().iterator(); i.hasNext(); )
 			{
 				Namespace ns = (Namespace)i.next();
@@ -330,9 +307,7 @@ public class SchemaLoader
 				}
 			}
 			if ("".equals(targetNSPrefix)) targetNSPrefix = null;
-				
-		System.out.println("#### - target namespace is " + targetNS + " (" + targetNSPrefix + ")"); // RGFIX
-		
+		}
 		List children = elRoot.getChildren();
 
 		//--- collect elements into an array because we have to add elements
@@ -365,7 +340,7 @@ public class SchemaLoader
 			else
 				alElementFiles.add(new ElementInfo(elChild, xmlSchemaFile, targetNS, targetNSPrefix));
 		}
-		// RGFIX: restore target namespace
+		// restore target namespace
 		targetNS       = oldtargetNS;
 		targetNSPrefix = oldtargetNSPrefix;
 		
@@ -428,12 +403,11 @@ public class SchemaLoader
 	private void buildGlobalElement(ElementInfo ei)
 	{
 		ElementEntry ee = new ElementEntry(ei);
-		
-		System.out.println("# building global element " + (ee.name != null ? ee.name : ("ref --> " + ee.ref))); // RGFIX
-		
 		if (ee.name == null)
 			throw new IllegalArgumentException("Name is null for element : " + ee.name);
 
+		System.out.println("building global element " + ee.name); // DEBUG
+		
 		if (ee.substGroup != null)
 		{
 			ArrayList al = (ArrayList) hmSubsGrp.get(ee.substGroup);
@@ -443,42 +417,33 @@ public class SchemaLoader
 				al = new ArrayList();
 				hmSubsGrp.put(ee.substGroup, al);
 			}
-
 			al.add(ee);
-			
-			System.out.println("# - storing " + ee.name + " for substitution group " + ee.substGroup); // RGFIX
-			
 			hmSubsLink.put(ee.name, al);
 		}
 		if (ee.abstrElem)
 		{
 			if (hmAbsElems.containsKey(ee.name))
 				throw new IllegalArgumentException("Namespace collision for : " + ee.name);
-
-			System.out.println("# - found abstract element " + (ee.name != null ? ee.name : ("ref --> " + ee.ref))); // RGFIX
-			
 			hmAbsElems.put(ee.name, ee.type);
 			
-			return; //RGFIX
+			System.out.println("- abstract element"); // DEBUG
+			
+			return;
 		}
 		if (ee.complexType != null)
 		{
 			String type = ee.name+"#I";
 			ee.complexType.name = type;
-			ee.type = type; // RGFIX
-
-			System.out.println("# - found complex type " + type); // RGFIX
-			
+			ee.type = type;
 			if (hmElements.containsKey(ee.name))
 				throw new IllegalArgumentException("Namespace collision for : " + ee.name);
 
 			hmElements.put(ee.name, type);
-			
-			System.out.println("# - stored type '" + type + "' for element '" + ee.name + "'"); // RGFIX
-			
 			hmTypes.put(type, ee.complexType);
+
+			System.out.println("- complex type"); // DEBUG
 		}
-		else if (ee.simpleType != null) // RGFIX: was just else
+		else if (ee.simpleType != null)
 		{
 			if (ee.type == null)
 				throw new IllegalArgumentException("Type is null for element : " + ee.name);
@@ -486,12 +451,17 @@ public class SchemaLoader
 			if (hmElements.containsKey(ee.name))
 				throw new IllegalArgumentException("Namespace collision for : " + ee.name);
 
-			System.out.println("# - found simple type " + ee.type); // RGFIX
-			
 			hmElements .put(ee.name, ee.type);
 			hmElemRestr.put(ee.name, ee.simpleType.alEnum);
+
+			System.out.println("- simple type"); // DEBUG
 		}
-		else hmElements.put(ee.name, ee.type);
+		else
+		{
+			hmElements.put(ee.name, ee.type);
+
+			System.out.println("- element"); // DEBUG
+		}
 	}
 
 	//---------------------------------------------------------------------------
@@ -499,17 +469,10 @@ public class SchemaLoader
 	private void buildComplexType(ElementInfo ei)
 	{
 		ComplexTypeEntry ct = new ComplexTypeEntry(ei);
-
-		System.out.println("# building complex type " + ct.name); // RGFIX
-		
 		if (hmTypes.containsKey(ct.name))
 			throw new IllegalArgumentException("Namespace collision for : " + ct.name);
 
-		System.out.println("# - registering complex type " + ct.name); // RGFIX
-		
 		hmTypes.put(ct.name, ct);
-		
-		System.out.println("# - read complex type " + hmTypes.get(ct.name)); // RGFIX
 	}
 
 	//---------------------------------------------------------------------------
@@ -517,9 +480,6 @@ public class SchemaLoader
 	private void buildSimpleType(ElementInfo ei)
 	{
 		SimpleTypeEntry  st = new SimpleTypeEntry(ei);
-
-		System.out.println("# building simple type " + st.name); // RGFIX
-		
 		if (hmTypeRestr.containsKey(st.name))
 			throw new IllegalArgumentException("Namespace collision for : " + st.name);
 
@@ -531,9 +491,6 @@ public class SchemaLoader
 	private void buildGlobalAttrib(ElementInfo ei)
 	{
 		AttributeEntry at = new AttributeEntry(ei);
-
-		System.out.println("# building global attribute " + at.name); // RGFIX
-		
 		if (hmAttribs.containsKey(at.name))
 			throw new IllegalArgumentException("Namespace collision for : " + at.name);
 
@@ -545,9 +502,6 @@ public class SchemaLoader
 	private void buildGlobalGroup(ElementInfo ei)
 	{
 		GroupEntry ge = new GroupEntry(ei);
-
-		System.out.println("# building global group " + ge.name); // RGFIX
-		
 		if (hmGroups.containsKey(ge.name))
 			throw new IllegalArgumentException("Namespace collision for : " + ge.name);
 
@@ -560,9 +514,6 @@ public class SchemaLoader
 	{
 		String name = ei.element.getAttributeValue("name");
 		if (ei.targetNSPrefix != null) name = ei.targetNSPrefix + ":" + name;
-
-		System.out.println("# building attribute group " + name); // RGFIX
-		
 		ArrayList al = (ArrayList) hmAttrGrp.get(name);
 
 		if (al == null)
@@ -591,27 +542,17 @@ public class SchemaLoader
 	//---
 	//---------------------------------------------------------------------------
 
-	private ArrayList resolveInheritance(ComplexTypeEntry cte, int n)
+	private ArrayList resolveInheritance(ComplexTypeEntry cte)
 	{
 		if (cte.complexContent == null)
 			return cte.alElements;
 
 		String baseType = cte.complexContent.base;
-
-		System.out.println(tab(n) + "# resolving inheritance for baseType " + baseType); // RGFIX
-		
-		System.out.println(tab(n) + "# - getting complex type " + baseType); // RGFIX
-		
-		System.out.println(tab(n) + "# - read complex type " + hmTypes.get(baseType)); // RGFIX
-		
 		ComplexTypeEntry baseCTE = (ComplexTypeEntry) hmTypes.get(baseType);
-
-		System.out.println(tab(n) + "# - baseCTE = " + baseCTE); // RGFIX
-		
 		if (baseCTE == null)
 			throw new IllegalArgumentException("Base type not found for : " + baseType);
 
-		ArrayList result = new ArrayList(resolveInheritance(baseCTE, n + 1));
+		ArrayList result = new ArrayList(resolveInheritance(baseCTE));
 
 		ArrayList al = cte.complexContent.alElements;
 
@@ -621,14 +562,6 @@ public class SchemaLoader
 		return result;
 	}
 
-	// RGFIX
-	private String tab(int n)
-	{
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < n; i++) sb.append("\t");
-		return sb.toString();
-	}
-	
 	//---------------------------------------------------------------------------
 
 	private MetadataAttribute buildMetadataAttrib(AttributeEntry ae)
@@ -670,8 +603,6 @@ class ElementInfo
 
 	public ElementInfo(Element e, String f, String tns, String tnsp)
 	{
-//		System.out.println("#### ElementInfo:\n" + Xml.getString(e)); // RGFIX
-		
 		element        = e;
 		file           = f;
 		targetNS       = tns;
