@@ -51,47 +51,7 @@ public class WAFHarvester extends AbstractHarvester
 
 	protected void doInit(Element node) throws BadInputEx
 	{
-		Element site   = node.getChild("site");
-		Element opt    = node.getChild("options");
-		Element privil = node.getChild("privileges");
-		Element account= site.getChild("account");
-
-		url = site.getChildText("url");
-
-		useAccount = account.getChildText("use").equals("true");
-		username   = account.getChildText("username");
-		password   = account.getChildText("password");
-
-		every      = opt.getChildText("every");
-		oneRunOnly = opt.getChildText("oneRunOnly").equals("true");
-		validate   = opt.getChildText("validate")  .equals("true");
-		structure  = opt.getChildText("structure") .equals("true");
-
-		//--- add privileges
-
-		alPrivileges.clear();
-
-		Iterator i = privil.getChildren("group").iterator();
-
-		while (i.hasNext())
-		{
-			Element group   = (Element) i.next();
-			String  groupID = group.getAttributeValue("id");
-
-			Privilege p = new Privilege();
-			p.groupId = groupID;
-
-			Iterator operList = group.getChildren("operation").iterator();
-
-			while (operList.hasNext())
-			{
-				Element oper = (Element) operList.next();
-
-				p.operations.add(getOperationID(oper));
-			}
-
-			alPrivileges.add(p);
-		}
+		params.init(node);
 	}
 
 	//---------------------------------------------------------------------------
@@ -102,27 +62,14 @@ public class WAFHarvester extends AbstractHarvester
 
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
-		Element site   = node.getChild("site");
-		Element opt    = node.getChild("options");
-		Element privil = node.getChild("privileges");
-		Element account= (site == null) ? null : site.getChild("account");
+		//--- retrieve/initialize information
+
+		params.create(node);
+
+		//--- setup waf node
 
 		String id   = settingMan.add(dbms, "harvesting", "node", Type.WEB_FOLDER);
 		String path = "id:"+ id;
-
-		//--- retrieve information
-
-		url        = getValue(site,    "url",      "");
-		useAccount = getValue(account, "use",      false);
-		username   = getValue(account, "username", "");
-		password   = getValue(account, "password", "");
-
-		every      = getValue(opt, "every",      "90");
-		oneRunOnly = getValue(opt, "oneRunOnly", false);
-		validate   = getValue(opt, "validate",   false);
-		structure  = getValue(opt, "structure",  false);
-
-		//--- setup waf node
 
 		String siteID    = settingMan.add(dbms, path, "site",       "");
 		String privID    = settingMan.add(dbms, path, "privileges", "");
@@ -132,24 +79,23 @@ public class WAFHarvester extends AbstractHarvester
 		//--- setup site node
 
 		settingMan.add(dbms, "id:"+siteID, "name", node.getAttributeValue("name"));
-		settingMan.add(dbms, "id:"+siteID, "url",  url);
+		settingMan.add(dbms, "id:"+siteID, "url",  params.url);
 
-		String useAccID = settingMan.add(dbms, "id:"+siteID, "useAccount", useAccount);
+		String useAccID = settingMan.add(dbms, "id:"+siteID, "useAccount", params.useAccount);
 
-		settingMan.add(dbms, "id:"+useAccID, "username", username);
-		settingMan.add(dbms, "id:"+useAccID, "password", password);
+		settingMan.add(dbms, "id:"+useAccID, "username", params.username);
+		settingMan.add(dbms, "id:"+useAccID, "password", params.password);
 
 		//--- setup privileges   ---------------------------------------
 
-		if (privil != null)
-			addPrivileges(dbms, "id:"+ privID, privil);
+		addPrivileges(dbms, "id:"+ privID, params);
 
 		//--- setup options node ---------------------------------------
 
-		settingMan.add(dbms, "id:"+optionsID, "every",      every);
-		settingMan.add(dbms, "id:"+optionsID, "oneRunOnly", oneRunOnly);
-		settingMan.add(dbms, "id:"+optionsID, "validate",   validate);
-		settingMan.add(dbms, "id:"+optionsID, "structure",  structure);
+		settingMan.add(dbms, "id:"+optionsID, "every",      params.every);
+		settingMan.add(dbms, "id:"+optionsID, "oneRunOnly", params.oneRunOnly);
+		settingMan.add(dbms, "id:"+optionsID, "validate",   params.validate);
+		settingMan.add(dbms, "id:"+optionsID, "structure",  params.structure);
 		settingMan.add(dbms, "id:"+optionsID, "status",     Status.INACTIVE);
 
 		//--- setup stats node ----------------------------------------
@@ -168,29 +114,22 @@ public class WAFHarvester extends AbstractHarvester
 	protected void doUpdate(Dbms dbms, String id, Element node)
 									throws BadInputEx, SQLException
 	{
+		//--- update variables
+
+		WAFParams copy = params.copy();
+		copy.update(node);
+
+		//--- update database
+
 		Element site   = node.getChild("site");
 		Element opt    = node.getChild("options");
 		Element privil = node.getChild("privileges");
 		Element account= (site == null) ? null : site.getChild("account");
 
-		Map<String, Object> values = new HashMap<String, Object>();
-
 		String path = "harvesting/id:"+ id;
 		String name = node.getAttributeValue("name");
 
-		//--- update variables
-
-		url        = getValue(site,    "url",      url);
-		useAccount = getValue(account, "use",      useAccount);
-		username   = getValue(account, "username", username);
-		password   = getValue(account, "password", password);
-
-		every      = getValue(opt, "every",      every);
-		oneRunOnly = getValue(opt, "oneRunOnly", oneRunOnly);
-		validate   = getValue(opt, "validate",   validate);
-		structure  = getValue(opt, "structure",  structure);
-
-		//--- update database
+		Map<String, Object> values = new HashMap<String, Object>();
 
 		if (name != null)
 			values.put(path +"/site/name", name);
@@ -220,65 +159,26 @@ public class WAFHarvester extends AbstractHarvester
 
 			//--- add new privileges entries
 
-			addPrivileges(dbms, path +"/id:"+ privID, privil);
+			addPrivileges(dbms, path +"/id:"+ privID, copy);
 		}
+
+		//--- we update a copy first because if there is an exception GeonetParams
+		//--- could be half updated and so it could be in an inconsistent state
+
+		params = copy;
 	}
 
 	//---------------------------------------------------------------------------
 
-	private void addPrivileges(Dbms dbms, String path, Element privil)
-										throws BadInputEx, SQLException
+	private void addPrivileges(Dbms dbms, String path, WAFParams params) throws SQLException
 	{
-		alPrivileges.clear();
-
-		Iterator groupList = privil.getChildren("group").iterator();
-
-		while (groupList.hasNext())
+		for (Privilege p : params.getPrivileges())
 		{
-			Element group   = (Element) groupList.next();
-			String  groupID = group.getAttributeValue("id");
+			String groupID = settingMan.add(dbms, path, "group", p.groupID);
 
-			if (groupID == null)
-				throw new MissingParameterEx("attribute:id", group);
-
-			Privilege p = new Privilege();
-			p.groupId = groupID;
-
-			groupID = settingMan.add(dbms, path, "group", groupID);
-
-			Iterator operList = group.getChildren("operation").iterator();
-
-			while (operList.hasNext())
-			{
-				Element oper = (Element) operList.next();
-				int     op   = getOperationID(oper);
-
-				p.operations.add(op);
-				settingMan.add(dbms, "id:"+ groupID, "operation", op);
-			}
-
-			alPrivileges.add(p);
+			for (int oper : p.getOperations())
+				settingMan.add(dbms, "id:"+ groupID, "operation", oper);
 		}
-	}
-
-	//---------------------------------------------------------------------------
-
-	private int getOperationID(Element oper) throws BadInputEx
-	{
-		String operName = oper.getAttributeValue("name");
-
-		if (operName == null)
-			throw new MissingParameterEx("attribute:name", oper);
-
-		int operID = AccessManager.getPrivilegeId(operName);
-
-		if (operID == -1)
-			throw new BadParameterEx("attribute:name", operName);
-
-		if (operID == 2 || operID == 4)
-			throw new BadParameterEx("attribute:name", operName);
-
-		return operID;
 	}
 
 	//---------------------------------------------------------------------------
@@ -287,9 +187,9 @@ public class WAFHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected String doGetEvery() { return every; }
+	protected int doGetEvery() { return params.every; }
 
-	protected boolean doIsOneRunOnly() { return oneRunOnly; }
+	protected boolean doIsOneRunOnly() { return params.oneRunOnly; }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -313,27 +213,14 @@ public class WAFHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	private String  url;
-
-	private boolean useAccount;
-	private String  username;
-	private String  password;
-
-	private String  every;
-	private boolean oneRunOnly;
-	private boolean validate;
-	private boolean structure;
-
-	private ArrayList<Privilege> alPrivileges = new ArrayList<Privilege>();
+	private WAFParams params = new WAFParams();
+	private WAFResult result = null;
 }
 
 //=============================================================================
 
-class Privilege
+class WAFResult
 {
-	public String groupId;
-
-	public ArrayList<Integer> operations = new ArrayList<Integer>();
 }
 
 //=============================================================================

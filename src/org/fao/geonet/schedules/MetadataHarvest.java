@@ -39,6 +39,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.harvester.CategMapping;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 

@@ -1,27 +1,7 @@
 //=============================================================================
-//===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
-//===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
-//===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
-//===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: GeoNetwork@fao.org
-//==============================================================================
 
 package org.fao.geonet.schedules;
+import org.fao.geonet.kernel.harvest.harvester.*;
 
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -46,180 +26,8 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class MetadataSync implements Schedule
+public class MetadataSync
 {
-	private class Attr
-	{
-		private static final String ID   = "id";
-		private static final String NAME = "name";
-	}
-
-	//--------------------------------------------------------------------------
-
-	private class Elem
-	{
-		private static final String SITES          ="sites";
-		private static final String    GENERAL     = "general";
-		private static final String       HOST     = "host";
-		private static final String       PORT     = "port";
-		private static final String       LANGUAGE = "lang";
-		private static final String       USERNAME = "username";
-		private static final String       PASSWORD = "password";
-		private static final String    SERVICES    = "services";
-		private static final String       LOGIN    = "login";
-		private static final String       LOGOUT   = "logout";
-	//	private static final String       SEARCH   = "search"; // same as SEARCH
-		private static final String       GET      = "get";
-		private static final String    SEARCH      = "search";
-		private static final String    GROUP       = "group";
-		private static final String    	PRIVILEGE = "privilege";
-	};
-
-	//--------------------------------------------------------------------------
-
-	private Vector veSites = new Vector();
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
-
-	public void init(String appPath, ServiceConfig params) throws Exception
-	{
-		for(Iterator sites = params.getChildren(Elem.SITES); sites.hasNext();)
-		{
-			Element  site = (Element) sites.next();
-			SiteInfo si   = new SiteInfo();
-
-			Element general  = Util.getChild(site, Elem.GENERAL);
-			Element services = Util.getChild(site, Elem.SERVICES);
-
-			si.name     = Util.getAttrib(site, Attr.NAME);
-			si.host     = Util.getParam(general, Elem.HOST);
-			si.port     = Integer.parseInt(Util.getParam(general, Elem.PORT, "80"));
-			si.language = Util.getParam(general, Elem.LANGUAGE, "en");
-			si.username = Util.getParam(general, Elem.USERNAME, "");
-			si.password = Util.getParam(general, Elem.PASSWORD, "");
-
-			si.login  = Util.getParam(services, Elem.LOGIN);
-			si.logout = Util.getParam(services, Elem.LOGOUT);
-			si.search = Util.getParam(services, Elem.SEARCH);
-			si.get    = Util.getParam(services, Elem.GET);
-
-			//--- setup search queries
-
-			for(Iterator q=site.getChildren(Elem.SEARCH).iterator(); q.hasNext(); )
-			{
-				Element query = (Element) q.next();
-
-				query = (Element) query.clone();
-				query.setName(Jeeves.Elem.REQUEST);
-				si.queries.add(query);
-			}
-
-			//--- setup group privileges
-
-			for(Iterator g=site.getChildren(Elem.GROUP).iterator(); g.hasNext(); )
-			{
-				Element group = (Element) g.next();
-
-				Group grp = new Group();
-				grp.groupId = Util.getAttrib(group, Attr.ID);
-				si.groups.add(grp);
-
-				for(Iterator p=group.getChildren(Elem.PRIVILEGE).iterator(); p.hasNext();)
-				{
-					String priv = ((Element) p.next()).getValue();
-
-					int numPriv = AccessManager.getPrivilegeId(priv);
-
-					if (numPriv == -1)
-						throw new IllegalArgumentException("Unknown privilege : "+ priv);
-
-					grp.privileges.add(new Integer(numPriv));
-				}
-			}
-
-			veSites.add(si);
-		}
-	}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Schedule
-	//---
-	//--------------------------------------------------------------------------
-
-	public void exec(ScheduleContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
-		DataManager dataMan = gc.getDataManager();
-
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-		CategMapping mapCategories = new CategMapping(dbms);
-
-		for(Iterator i=veSites.iterator(); i.hasNext();)
-		{
-			SiteInfo si = (SiteInfo) i.next();
-
-			XmlRequest req = new XmlRequest(si.host, si.port);
-
-//			req.setSiteName(si.name);
-//			req.setLanguage(si.language);
-
-			//--- login
-
-			if (!si.username.equals(""))
-			{
-				context.info("Logging in to : "+ si.name);
-
-				req.addParam("username", si.username);
-				req.addParam("password", si.password);
-//				req.execute(si.login);
-			}
-
-			//--- search
-
-			for(Iterator j=si.queries.iterator(); j.hasNext(); )
-			{
-				Element params = (Element) j.next();
-
-				context.info("Searching on : "+ si.name);
-				req.clearParams();
-				req.setParams(params);
-
-				Element result = req.execute(); //si.search);
-
-				context.debug("Obtained:\n"+Xml.getString(result));
-
-				//--- alignment
-
-				String siteId = params.getChildText("siteId");
-
-				if (siteId == null)
-				{
-					context.error("Missing 'siteId' parameter in search query");
-					throw new IllegalArgumentException("Missing 'siteId' parameter in search query");
-				}
-
-				alignSite(context, dataMan, dbms, result, si, req, mapCategories, siteId);
-			}
-
-			//--- logout
-
-			if (!si.username.equals(""))
-			{
-				context.info("Logging out from : "+ si.name);
-
-				req.clearParams();
-//				req.execute(si.logout);
-			}
-		}
-	}
-
 	//--------------------------------------------------------------------------
 	//---
 	//--- Alignment method
@@ -293,17 +101,17 @@ public class MetadataSync implements Schedule
 
 					for(Iterator g=si.groups.iterator(); g.hasNext();)
 					{
-						Group group = (Group) g.next();
-
-						context.debug("    - Setting privileges for group : "+group.groupId);
-
-						for(Iterator p=group.privileges.iterator(); p.hasNext(); )
-						{
-							int priv = ((Integer) p.next()).intValue();
-
-							dm.setOperation(dbms, id, group.groupId, priv +"");
-							context.debug("       --> "+ AccessManager.getPrivilegeName(priv));
-						}
+//						Group group = (Group) g.next();
+//
+//						context.debug("    - Setting privileges for group : "+group.groupId);
+//
+//						for(Iterator p=group.privileges.iterator(); p.hasNext(); )
+//						{
+//							int priv = ((Integer) p.next()).intValue();
+//
+//							dm.setOperation(dbms, id, group.groupId, priv +"");
+//							context.debug("       --> "+ AccessManager.getPrivilegeName(priv));
+//						}
 					}
 
 					//--- adding categories
@@ -505,14 +313,6 @@ class SiteInfo
 	//--- group
 
 	public Vector groups = new Vector();
-}
-
-//=============================================================================
-
-class Group
-{
-	public String  groupId;
-	public HashSet privileges = new HashSet();
 }
 
 //=============================================================================

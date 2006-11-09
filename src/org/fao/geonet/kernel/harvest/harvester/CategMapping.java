@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package org.fao.geonet.schedules;
+package org.fao.geonet.kernel.harvest.harvester;
 
 import java.util.Hashtable;
 import java.util.List;
@@ -33,7 +33,7 @@ import org.jdom.Element;
 /** Create a mapping categ name -> categ ID
   */
 
-class CategMapping
+public class CategMapping
 {
 	private Hashtable htNameId = new Hashtable();
 

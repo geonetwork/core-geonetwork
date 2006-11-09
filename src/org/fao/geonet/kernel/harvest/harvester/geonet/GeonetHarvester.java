@@ -22,17 +22,23 @@
 //==============================================================================
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
+
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import jeeves.exceptions.BadInputEx;
+import jeeves.exceptions.UserNotFoundEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.resources.ResourceManager;
+import jeeves.utils.Xml;
+import jeeves.utils.XmlRequest;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.harvest.Common.Type;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
+import org.fao.geonet.kernel.harvest.harvester.CategMapping;
 import org.jdom.Element;
 
 //=============================================================================
@@ -47,45 +53,7 @@ public class GeonetHarvester extends AbstractHarvester
 
 	protected void doInit(Element node)
 	{
-		Element site     = node.getChild("site");
-		Element opt      = node.getChild("options");
-		Element searches = node.getChild("searches");
-		Element account  = site.getChild("account");
-
-		host    = site.getChildText("host");
-		port    = site.getChildText("port");
-		servlet = site.getChildText("servlet");
-
-		useAccount = account.getChildText("use").equals("true");
-		username   = account.getChildText("username");
-		password   = account.getChildText("password");
-
-		every        = opt.getChildText("every");
-		createGroups = opt.getChildText("createGroups").equals("true");
-		oneRunOnly   = opt.getChildText("oneRunOnly")  .equals("true");
-
-		//--- add searches
-
-		alSearches.clear();
-
-		Iterator i = searches.getChildren("search").iterator();
-
-		while (i.hasNext())
-		{
-			Element search = (Element) i.next();
-
-			Search s = new Search();
-
-			s.freeText = search.getChildText("freeText");
-			s.title    = search.getChildText("title");
-			s.abstrac  = search.getChildText("abstract");
-			s.keywords = search.getChildText("keywords");
-			s.digital  = search.getChildText("digital");
-			s.hardcopy = search.getChildText("hardcopy");
-			s.siteId   = search.getChildText("siteId");
-
-			alSearches.add(s);
-		}
+		params.init(node);
 	}
 
 	//---------------------------------------------------------------------------
@@ -94,31 +62,16 @@ public class GeonetHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected String doAdd(Dbms dbms, Element node) throws SQLException
+	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
-		Element site     = node.getChild("site");
-		Element opt      = node.getChild("options");
-		Element searches = node.getChild("searches");
-		Element account  = (site == null) ? null : site.getChild("account");
+		//--- retrieve/initialize information
+
+		params.create(node);
+
+		//--- setup geonetwork node
 
 		String id   = settingMan.add(dbms, "harvesting", "node", Type.GEONETWORK);
 		String path = "id:"+ id;
-
-		//--- retrieve information
-
-		host    = getValue(site, "host",    "");
-		port    = getValue(site, "port",    "80");
-		servlet = getValue(site, "servlet", "geonetwork");
-
-		useAccount = getValue(account, "use",      false);
-		username   = getValue(account, "username", "");
-		password   = getValue(account, "password", "");
-
-		every        = getValue(opt, "every",        "90" );
-		createGroups = getValue(opt, "createGroups", true );
-		oneRunOnly   = getValue(opt, "oneRunOnly",   false);
-
-		//--- setup geonetwork node
 
 		String siteID    = settingMan.add(dbms, path, "site",    "");
 		String optionsID = settingMan.add(dbms, path, "options", "");
@@ -127,25 +80,24 @@ public class GeonetHarvester extends AbstractHarvester
 		//--- setup site node ----------------------------------------
 
 		settingMan.add(dbms, "id:"+siteID, "name",    node.getAttributeValue("name"));
-		settingMan.add(dbms, "id:"+siteID, "host",    host);
-		settingMan.add(dbms, "id:"+siteID, "port",    port);
-		settingMan.add(dbms, "id:"+siteID, "servlet", servlet);
+		settingMan.add(dbms, "id:"+siteID, "host",    params.host);
+		settingMan.add(dbms, "id:"+siteID, "port",    params.port);
+		settingMan.add(dbms, "id:"+siteID, "servlet", params.servlet);
 
-		String useAccID = settingMan.add(dbms, "id:"+siteID, "useAccount", useAccount);
+		String useAccID = settingMan.add(dbms, "id:"+siteID, "useAccount", params.useAccount);
 
-		settingMan.add(dbms, "id:"+useAccID, "username", username);
-		settingMan.add(dbms, "id:"+useAccID, "password", password);
+		settingMan.add(dbms, "id:"+useAccID, "username", params.username);
+		settingMan.add(dbms, "id:"+useAccID, "password", params.password);
 
 		//--- setup search nodes ---------------------------------------
 
-		if (searches != null)
-			addSearches(dbms, path, searches);
+		addSearches(dbms, path, params);
 
 		//--- setup options node ---------------------------------------
 
-		settingMan.add(dbms, "id:"+optionsID, "every",        every);
-		settingMan.add(dbms, "id:"+optionsID, "createGroups", createGroups);
-		settingMan.add(dbms, "id:"+optionsID, "oneRunOnly",   oneRunOnly);
+		settingMan.add(dbms, "id:"+optionsID, "every",        params.every);
+		settingMan.add(dbms, "id:"+optionsID, "createGroups", params.createGroups);
+		settingMan.add(dbms, "id:"+optionsID, "oneRunOnly",   params.oneRunOnly);
 		settingMan.add(dbms, "id:"+optionsID, "status",       Status.INACTIVE);
 
 		//--- setup stats node ----------------------------------------
@@ -161,33 +113,24 @@ public class GeonetHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doUpdate(Dbms dbms, String id, Element node) throws SQLException
+	protected void doUpdate(Dbms dbms, String id, Element node) throws BadInputEx, SQLException
 	{
+		//--- update variables
+
+		GeonetParams copy = params.copy();
+		copy.update(node);
+
+		//--- update database
+
 		Element site     = node.getChild("site");
 		Element opt      = node.getChild("options");
 		Element searches = node.getChild("searches");
 		Element account  = (site == null) ? null : site.getChild("account");
 
-		Map<String, Object> values = new HashMap<String, Object>();
-
 		String path = "harvesting/id:"+ id;
 		String name = node.getAttributeValue("name");
 
-		//--- update variables
-
-		host    = getValue(site, "host",    host);
-		port    = getValue(site, "port",    port);
-		servlet = getValue(site, "servlet", servlet);
-
-		useAccount = getValue(account, "use",      useAccount);
-		username   = getValue(account, "username", username);
-		password   = getValue(account, "password", password);
-
-		every        = getValue(opt, "every",        every);
-		createGroups = getValue(opt, "createGroups", createGroups);
-		oneRunOnly   = getValue(opt, "oneRunOnly",   oneRunOnly);
-
-		//--- update database
+		Map<String, Object> values = new HashMap<String, Object>();
 
 		if (name != null)
 			values.put(path +"/site/name", name);
@@ -224,32 +167,22 @@ public class GeonetHarvester extends AbstractHarvester
 
 			//--- add new search entries
 
-			addSearches(dbms, path, searches);
+			addSearches(dbms, path, copy);
 		}
+
+		//--- we update a copy first because if there is an exception GeonetParams
+		//--- could be half updated and so it could be in an inconsistent state
+
+		params = copy;
 	}
 
 	//---------------------------------------------------------------------------
 
-	private void addSearches(Dbms dbms, String path, Element searches) throws SQLException
+	private void addSearches(Dbms dbms, String path, GeonetParams params) throws SQLException
 	{
-		alSearches.clear();
-
-		Iterator searchList = searches.getChildren("search").iterator();
-
-		while (searchList.hasNext())
+		for (Search s : params.getSearches())
 		{
-			Element search   = (Element) searchList.next();
 			String  searchID = settingMan.add(dbms, path, "search", "");
-
-			Search s = new Search();
-
-			s.freeText = getValue(search, "freeText", "");
-			s.title    = getValue(search, "title",    "");
-			s.abstrac  = getValue(search, "abstract", "");
-			s.keywords = getValue(search, "keywords", "");
-			s.digital  = getValue(search, "digital",  "false");
-			s.hardcopy = getValue(search, "hardcopy", "false");
-			s.siteId   = getValue(search, "siteId",   "");
 
 			settingMan.add(dbms, "id:"+searchID, "freeText", s.freeText);
 			settingMan.add(dbms, "id:"+searchID, "title",    s.title);
@@ -258,8 +191,6 @@ public class GeonetHarvester extends AbstractHarvester
 			settingMan.add(dbms, "id:"+searchID, "digital",  s.digital);
 			settingMan.add(dbms, "id:"+searchID, "hardcopy", s.hardcopy);
 			settingMan.add(dbms, "id:"+searchID, "siteId",   s.siteId);
-
-			alSearches.add(s);
 		}
 	}
 
@@ -269,9 +200,9 @@ public class GeonetHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected String doGetEvery() { return every; }
+	protected int doGetEvery() { return params.every; }
 
-	protected boolean doIsOneRunOnly() { return oneRunOnly; }
+	protected boolean doIsOneRunOnly() { return params.oneRunOnly; }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -287,7 +218,57 @@ public class GeonetHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doHarvest(Logger l, ResourceManager rm) {}
+	protected void doHarvest(Logger log, ResourceManager rm) throws Exception
+	{
+		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
+
+		CategMapping mapCategories = new CategMapping(dbms);
+
+		XmlRequest req = new XmlRequest(params.host, params.port);
+
+		//--- login
+
+		if (params.useAccount)
+		{
+			log.info("Login into : "+ getName());
+
+			req.setAddress("/"+ params.servlet +"/srv/en/"+ SERVICE_LOGIN);
+			req.addParam("username", params.username);
+			req.addParam("password", params.password);
+
+			Element response = req.execute();
+
+			if (!response.getName().equals("ok"))
+				throw new UserNotFoundEx(params.username);
+		}
+
+		//--- search
+
+		for(Search s : params.getSearches())
+		{
+			log.info("Searching on : "+ getName() +"/"+ s.siteId);
+
+			req.setAddress("/"+ params.servlet +"/srv/en/"+ SERVICE_SEARCH);
+
+			Element result = req.execute(s.createRequest());
+
+			log.debug("Obtained:\n"+Xml.getString(result));
+
+			//--- alignment
+
+//			alignSite(context, dataMan, dbms, result, si, req, mapCategories, params.siteId);
+		}
+
+		//--- logout
+
+		if (params.useAccount)
+		{
+			log.info("Logout from : "+ getName());
+
+			req.clearParams();
+			req.setAddress("/"+ params.servlet +"/srv/en/"+ SERVICE_LOGOUT);
+		}
+	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -295,33 +276,20 @@ public class GeonetHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	private String  host;
-	private String  port;
-	private String  servlet;
+	private GeonetParams params = new GeonetParams();
+	private GeonetResult result = null;
 
-	private boolean useAccount;
-	private String  username;
-	private String  password;
+	//---------------------------------------------------------------------------
 
-	private String  every;
-	private boolean createGroups;
-	private boolean oneRunOnly;
-
-	private ArrayList<Search> alSearches = new ArrayList<Search>();
-
+	private static final String SERVICE_LOGIN  = "xml.user.login";
+	private static final String SERVICE_LOGOUT = "xml.user.logout";
+	private static final String SERVICE_SEARCH = "xml.search";
 }
 
 //=============================================================================
 
-class Search
+class GeonetResult
 {
-	public String freeText;
-	public String title;
-	public String abstrac;
-	public String keywords;
-	public String digital;
-	public String hardcopy;
-	public String siteId;
 }
 
 //=============================================================================

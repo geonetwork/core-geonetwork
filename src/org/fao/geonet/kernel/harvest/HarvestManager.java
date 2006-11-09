@@ -33,6 +33,7 @@ import jeeves.server.resources.ProviderManager;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Type;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
@@ -49,12 +50,13 @@ public class HarvestManager
 	//---
 	//---------------------------------------------------------------------------
 
-	public HarvestManager(String appPath, SettingManager sm, ProviderManager pm)
-								throws Exception
+	public HarvestManager(String appPath, SettingManager sm, ProviderManager pm,
+								 DataManager dm) throws Exception
 	{
 		xslPath    = appPath + Geonet.Path.STYLESHEETS+ "/xml";
 		settingMan = sm;
 		providMan  = pm;
+		dataMan    = dm;
 
 		Element entries = settingMan.get("harvesting", -1);
 		entries = Xml.transform(entries, xslPath +"/setting-to-harvesting.xsl");
@@ -66,7 +68,7 @@ public class HarvestManager
 			Element entry = (Element) i.next();
 			Type    type  = Type.parse(entry.getAttributeValue("type"));
 
-			AbstractHarvester ah = AbstractHarvester.create(type, sm, pm);
+			AbstractHarvester ah = AbstractHarvester.create(type, sm, pm, dm);
 			ah.init(entry);
 			hmHarvesters.put(ah.getID(), ah);
 		}
@@ -117,7 +119,7 @@ public class HarvestManager
 
 		Type nodeType = Type.parse(type);
 
-		AbstractHarvester ah = AbstractHarvester.create(nodeType, settingMan, providMan);
+		AbstractHarvester ah = AbstractHarvester.create(nodeType, settingMan, providMan, dataMan);
 
 		ah.add(dbms, node);
 		hmHarvesters.put(ah.getID(), ah);
@@ -228,6 +230,7 @@ public class HarvestManager
 	private String          xslPath;
 	private SettingManager  settingMan;
 	private ProviderManager providMan;
+	private DataManager     dataMan;
 
 	private HashMap<String, AbstractHarvester> hmHarvesters = new HashMap<String, AbstractHarvester>();
 }

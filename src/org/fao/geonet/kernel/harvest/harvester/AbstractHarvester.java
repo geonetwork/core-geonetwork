@@ -32,6 +32,7 @@ import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.harvest.Common.Type;
@@ -51,7 +52,8 @@ public abstract class AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	public static AbstractHarvester create(Type type, SettingManager sm, ProviderManager pm)
+	public static AbstractHarvester create(Type type, SettingManager sm,
+														ProviderManager pm, DataManager dm)
 	{
 		AbstractHarvester ah = null;
 
@@ -66,6 +68,7 @@ public abstract class AbstractHarvester
 
 		ah.settingMan = sm;
 		ah.providMan  = pm;
+		ah.dataMan    = dm;
 
 		return ah;
 	}
@@ -110,7 +113,7 @@ public abstract class AbstractHarvester
 		if (status == Status.ACTIVE)
 		{
 			executor = new Executor(this);
-			executor.setTimeout(getEvery());
+			executor.setTimeout(doGetEvery());
 			executor.start();
 		}
 	}
@@ -137,7 +140,7 @@ public abstract class AbstractHarvester
 		status     = Status.ACTIVE;
 		error      = null;
 		executor   = new Executor(this);
-		executor.setTimeout(getEvery());
+		executor.setTimeout(doGetEvery());
 		executor.start();
 
 		return OperResult.OK;
@@ -195,14 +198,15 @@ public abstract class AbstractHarvester
 			//--- restart executor
 			error      = null;
 			executor   = new Executor(this);
-			executor.setTimeout(getEvery());
+			executor.setTimeout(doGetEvery());
 			executor.start();
 		}
 	}
 
 	//--------------------------------------------------------------------------
 
-	public String getID() { return id; }
+	public String getID()   { return id;   }
+	public String getName() { return name; }
 
 	//--------------------------------------------------------------------------
 
@@ -294,41 +298,17 @@ public abstract class AbstractHarvester
 	protected abstract void doUpdate(Dbms dbms, String id, Element node)
 											throws BadInputEx, SQLException;
 
-	protected abstract String doGetEvery();
+	protected abstract int doGetEvery();
 
 	protected abstract boolean doIsOneRunOnly();
 
 	protected abstract void doAddInfo(Element info);
-	protected abstract void doHarvest(Logger l, ResourceManager rm);
+	protected abstract void doHarvest(Logger l, ResourceManager rm) throws Exception;
 
 	//---------------------------------------------------------------------------
 	//---
 	//--- Protected methods
 	//---
-	//---------------------------------------------------------------------------
-
-	protected String getValue(Element el, String name, String defValue)
-	{
-		if (el == null)
-			return defValue;
-
-		String value = el.getChildText(name);
-
-		return (value != null) ? value : defValue;
-	}
-
-	//---------------------------------------------------------------------------
-
-	protected boolean getValue(Element el, String name, boolean defValue)
-	{
-		if (el == null)
-			return defValue;
-
-		String value = el.getChildText(name);
-
-		return (value != null) ? Boolean.parseBoolean(value) : defValue;
-	}
-
 	//---------------------------------------------------------------------------
 
 	protected void setValue(Map<String, Object> values, String path, Element el, String name)
@@ -340,28 +320,6 @@ public abstract class AbstractHarvester
 
 		if (value != null)
 			values.put(path, value);
-	}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
-
-	private int getEvery()
-	{
-		String every = doGetEvery();
-
-		try
-		{
-			return Integer.parseInt(every);
-		}
-		catch(Exception e)
-		{
-			error = new HarvestError(HarvestError.BAD_EVERY, "'every' is not an int", every);
-
-			return -1;
-		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -379,6 +337,7 @@ public abstract class AbstractHarvester
 	private ProviderManager providMan;
 
 	protected SettingManager settingMan;
+	protected DataManager    dataMan;
 }
 
 //=============================================================================
