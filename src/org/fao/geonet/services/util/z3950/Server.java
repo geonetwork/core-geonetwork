@@ -49,6 +49,9 @@ public class Server
 	public static void init(String port, String schemaMappings, ServiceContext srvContext)
 		throws Exception
 	{
+		if (port == null || port.equals(""))
+			return;
+
 		String evaluator    = "org.fao.geonet.services.util.z3950.GNSearchable";
 		String configurator = "com.k_int.IR.Syntaxes.Conversion.XMLConfigurator";
 
@@ -69,7 +72,8 @@ public class Server
 	  */
 	public static void end()
 	{
-		_server.shutdown(0); // shutdown type is not used in current implementation
+		if (_server != null)
+			_server.shutdown(0); // shutdown type is not used in current implementation
 	}
 }
 
