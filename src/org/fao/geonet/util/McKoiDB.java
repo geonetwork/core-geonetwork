@@ -34,6 +34,7 @@ import com.mckoi.database.control.DefaultDBConfig;
 import com.mckoi.database.control.TCPJDBCServer;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 
 //==============================================================================
 
@@ -64,6 +65,22 @@ public class McKoiDB
 		_database = controller.startDatabase(config);
 
 		_server = new TCPJDBCServer(_database);
+		_server.start();
+	}
+
+	//---------------------------------------------------------------------------
+
+	public void start(String address) throws Exception
+	{
+
+		DBConfig config = getDBConfig();
+
+		int port = Integer.parseInt(config.getValue("jdbc_server_port"));
+
+		DBController controller = DBController.getDefault();
+		_database = controller.startDatabase(config);
+
+		_server = new TCPJDBCServer(_database, InetAddress.getByName(address), port);
 		_server.start();
 	}
 
