@@ -52,7 +52,7 @@ public class Csw
 	//---------------------------------------------------------------------------
 
 	public static final String SCHEMA_LANGUAGE = "http://www.w3.org/XML/Schema";
-	public static final String SERVICE         = "http://www.opengis.net/cat/csw";
+	public static final String SERVICE         = "CSW";
 
 	public static final String CSW_VERSION    = "2.0.1";
 	public static final String OWS_VERSION    = "1.0.0";

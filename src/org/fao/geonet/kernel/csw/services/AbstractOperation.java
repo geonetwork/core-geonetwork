@@ -50,8 +50,15 @@ public abstract class AbstractOperation
 		if (service == null)
 			return;
 
-		if (!service.equals(Csw.SERVICE))
-			throw new InvalidParameterValueEx("service", service);
+		if (service.equals(Csw.SERVICE))
+			return;
+
+		//--- this is just a fix to the incorrect XSD schema default
+
+		if (service.equals("http://www.opengis.net/cat/csw"))
+			return;
+
+		throw new InvalidParameterValueEx("service", service);
 	}
 
 	//---------------------------------------------------------------------------
