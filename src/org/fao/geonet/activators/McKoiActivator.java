@@ -46,9 +46,12 @@ public class McKoiActivator implements Activator
 	public void startup(String appPath, Element config) throws Exception
 	{
 		String configFile = config.getChildText("configFile");
+		String address    = config.getChildText("address");
 
 		mckoiDB.setConfigFile(appPath + configFile);
-		mckoiDB.start();
+
+		if (address != null)	mckoiDB.start(address);
+			else 					mckoiDB.start();
 	}
 
 	//---------------------------------------------------------------------------
