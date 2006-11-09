@@ -72,6 +72,14 @@ public class ElementLib
 
 		return elem;
 	}
+
+	//-----------------------------------------------------------------------------
+
+	public void add(Element el,String name, Object value)
+	{
+		if (value != null)
+			el.addContent(new Element(name).setText(value.toString()));
+	}
 }
 
 //=============================================================================
