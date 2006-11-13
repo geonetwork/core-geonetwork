@@ -119,18 +119,25 @@ public class LuceneSearcher extends MetaSearcher
 			{
 				Document doc = _hits.doc(i);
 				String id = doc.get("_id");
-
+				Element md = new Element ("md");
+				
 				if (fast)
 				{
-					Element md = getMetadataFromIndex(doc, id);
-					response.addContent(md);
+					md = getMetadataFromIndex(doc, id);
 				}
 				else
 				{
-					Element md = gc.getDataManager().getMetadata(srvContext, id, false);
-					if (md != null) // RGFIX: should not be necessary
-						response.addContent(md);
+					md = gc.getDataManager().getMetadata(srvContext, id, false);
 				}
+				
+				// Calculate score and add it to info elem
+				Float score = _hits.score(i);
+				Element info = md.getChild (Edit.RootChild.INFO, Edit.NAMESPACE);
+				addElement(info, Edit.Info.Elem.SCORE, score.toString());
+				
+				response.addContent(md);
+				
+				
 			}
 		}
 		return response;

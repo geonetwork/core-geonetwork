@@ -70,6 +70,7 @@ public class Edit
 			public static final String CREATE_DATE = "createDate";
 			public static final String CHANGE_DATE = "changeDate";
 			public static final String SOURCE      = "source";
+			public static final String SCORE       = "score";
 			public static final String CATEGORY    = "category";
 			public static final String SERVER      = "server";
 			public static final String IS_TEMPLATE = "isTemplate";

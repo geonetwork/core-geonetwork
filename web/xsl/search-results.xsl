@@ -158,6 +158,13 @@
 					</table>
 				</td>
 				<td class="padded" align="center" valign="center" width="200">
+					<xsl:call-template name="score">
+						<xsl:with-param name="score" select="$metadata/geonet:info/score * 100"/>
+						<xsl:with-param name="class" select="5"/>
+						<xsl:with-param name="currentClass" select="0"/>
+					</xsl:call-template>
+					
+					<br/>
 					<xsl:call-template name="thumbnail">
 						<xsl:with-param name="metadata" select="$metadata"/>
 					</xsl:call-template>
@@ -334,4 +341,33 @@
 		<a href="{/root/gui/locService}/main.present?from={$from}&amp;to={$to}"><xsl:value-of select="$label"/></a>
 	</xsl:template>
 
+
+	<!-- Display rating information -->
+	<xsl:template name="score">
+		<xsl:param name="score"/>
+		<xsl:param name="class"/>
+		<xsl:param name="currentClass"/>
+		<xsl:param name="interval" select="100 div $class"/>
+		<xsl:param name="value" select="100 - $interval * $currentClass"/>
+
+		<xsl:choose>
+			<xsl:when test="$score &gt;= $value">		
+				<img src="{/root/gui/url}/images/score.png" title="{floor($score)}%" alt="{floor($score)}%"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<img src="{/root/gui/url}/images/scoreno.png" title="{floor($score)}%" alt="{floor($score)}%"/>
+			</xsl:otherwise>
+		</xsl:choose>
+
+		<xsl:choose>
+			<xsl:when test="$currentClass &lt; $class - 1">			
+				<xsl:call-template name="score">
+					<xsl:with-param name="score" select="$score"/>
+					<xsl:with-param name="class" select="$class"/>
+					<xsl:with-param name="currentClass" select="$currentClass + 1"/>
+				</xsl:call-template>
+			</xsl:when>
+		</xsl:choose>
+	
+	</xsl:template>
 </xsl:stylesheet>
