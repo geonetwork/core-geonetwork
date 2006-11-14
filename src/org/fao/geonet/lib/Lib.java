@@ -27,9 +27,10 @@ package org.fao.geonet.lib;
 
 public class Lib
 {
-	public static LocalLib   local   = new LocalLib();
-	public static ElementLib element = new ElementLib();
-	public static DbLib      db      = new DbLib();
+	public static LocalLib   local     = new LocalLib();
+	public static ElementLib element   = new ElementLib();
+	public static DbLib      db        = new DbLib();
+	public static ResourceLib resource = new ResourceLib();
 }
 
 //=============================================================================

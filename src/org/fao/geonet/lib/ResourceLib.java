@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package org.fao.geonet.util;
+package org.fao.geonet.lib;
 
 import java.io.File;
 import java.util.HashSet;
@@ -34,7 +34,7 @@ import org.fao.geonet.kernel.AccessManager;
 
 //=============================================================================
 
-public class ResUtil
+public class ResourceLib
 {
 	//-----------------------------------------------------------------------------
 	//---
@@ -42,7 +42,7 @@ public class ResUtil
 	//---
 	//-----------------------------------------------------------------------------
 
-	public static String getResDir(ServiceContext context, String access, String id)
+	public String getDir(ServiceContext context, String access, String id)
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
@@ -51,12 +51,12 @@ public class ResUtil
 		if (!new File(dataDir).isAbsolute())
 			dataDir = context.getAppPath() + dataDir;
 
-		return getResDir(dataDir, access, id);
+		return getDir(dataDir, access, id);
 	}
 
 	//-----------------------------------------------------------------------------
 
-	public static String getResDir(String dataDir, String access, String id)
+	public String getDir(String dataDir, String access, String id)
 	{
 		String group    = pad(Integer.parseInt(id) / 100, 3);
 		String groupDir = group +"00-"+ group +"99";
@@ -69,7 +69,7 @@ public class ResUtil
 
 	//-----------------------------------------------------------------------------
 
-	public static void checkPrivilege(ServiceContext context, String id, String operation) throws Exception
+	public void checkPrivilege(ServiceContext context, String id, String operation) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
@@ -87,7 +87,7 @@ public class ResUtil
 	//---
 	//-----------------------------------------------------------------------------
 
-	private static String pad(int group, int lenght)
+	private String pad(int group, int lenght)
 	{
 		String text = Integer.toString(group);
 

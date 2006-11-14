@@ -63,16 +63,8 @@ public class LocalLib
 	{
 		String query = "INSERT INTO "+ baseTable +"Des(idDes, langId, label) VALUES (?,?,?)";
 
-		Vector args = new Vector();
-		args.add(id);
-		args.add("");
-		args.add(name);
-
 		for (String langId : languages)
-		{
-			args.set(1, langId);
-			dbms.execute(query, args);
-		}
+			dbms.execute(query, id, langId, name);
 	}
 
 	//-----------------------------------------------------------------------------
