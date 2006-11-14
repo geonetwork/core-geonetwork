@@ -234,12 +234,7 @@ public class GNDestin
 		{
 			String query = "UPDATE Metadata SET schemaId='iso19139', data=? WHERE id=?";
 
-			Vector args = new Vector();
-
-			args.add(Xml.getString(md));
-			args.add(new Integer(id));
-
-			dbms.execute(query, args);
+			dbms.execute(query, Xml.getString(md), id);
 		}
 		catch (Exception e)
 		{
@@ -358,7 +353,7 @@ public class GNDestin
 
 		try
 		{
-			dbms.execute(query, values);
+			dbms.execute(query, values.toArray());
 		}
 		catch (SQLException e)
 		{

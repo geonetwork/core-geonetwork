@@ -74,9 +74,8 @@ public class Transform
 				// System.out.println("- new field is " + newField); // DEBUG
 
 				// save transformed field
-				Vector v = new Vector();
-				v.add(newField);
-				dbms.execute("UPDATE " + table + " SET " + field + " = ? WHERE id = " + id, v);
+
+				dbms.execute("UPDATE " + table + " SET " + field + " = ? WHERE id = ?", newField, id);
 				System.out.println("- record " + id + " saved"); // DEBUG
 			}
 			// commit changes

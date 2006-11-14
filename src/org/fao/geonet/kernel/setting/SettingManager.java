@@ -155,7 +155,7 @@ public class SettingManager
 			if (s == null)
 				return false;
 
-			execute(dbms, "UPDATE Settings SET name=? WHERE id=?", name, s.getId());
+			dbms.execute("UPDATE Settings SET name=? WHERE id=?", name, s.getId());
 			tasks.add(Task.getNameChangedTask(dbms, s, name));
 
 			return true;
@@ -197,7 +197,7 @@ public class SettingManager
 					success = false;
 				else
 				{
-					execute(dbms, "UPDATE Settings SET value=? WHERE id=?", value, s.getId());
+					dbms.execute("UPDATE Settings SET value=? WHERE id=?", value, s.getId());
 					tasks.add(Task.getValueChangedTask(dbms, s, value));
 				}
 			}
@@ -242,7 +242,8 @@ public class SettingManager
 			Setting child = new Setting(getNextSerial(dbms), sName, sValue);
 
 			String query = "INSERT INTO Settings(id, parentId, name, value) VALUES(?, ?, ?, ?)";
-			execute(dbms, query, child.getId(), parent.getId(), sName, sValue);
+
+			dbms.execute(query, child.getId(), parent.getId(), sName, sValue);
 
 			tasks.add(Task.getAddedTask(dbms, parent, child));
 
@@ -447,18 +448,6 @@ public class SettingManager
 
 	//---------------------------------------------------------------------------
 
-	private void execute(Dbms dbms, String query, Object... args) throws SQLException
-	{
-		Vector v = new Vector();
-
-		for(Object obj : args)
-			v.add(obj);
-
-		dbms.execute(query, v);
-	}
-
-	//---------------------------------------------------------------------------
-
 	private int getNextSerial(Dbms dbms) throws SQLException
 	{
 		if (maxSerial == 0)
@@ -479,7 +468,7 @@ public class SettingManager
 		for (Setting child : s.getChildren())
 			remove(dbms, child);
 
-		execute(dbms, "DELETE FROM Settings WHERE id=?", s.getId());
+		dbms.execute("DELETE FROM Settings WHERE id=?", s.getId());
 		tasks.add(Task.getRemovedTask(dbms, s));
 	}
 
