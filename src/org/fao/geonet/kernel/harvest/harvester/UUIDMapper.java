@@ -21,21 +21,24 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package org.fao.geonet.schedules;
+package org.fao.geonet.kernel.harvest.harvester;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import jeeves.resources.dbms.Dbms;
 import org.jdom.Element;
 
 //=============================================================================
 
-/** Create a mapping group name -> group ID
+/** Create a mapping remote ID -> local ID / change date. Retrieves all metadata
+  * of a given siteID and puts them into an hashmap.
   */
 
-class GroupMapping
+public class UUIDMapper
 {
-	private Hashtable htNameId = new Hashtable();
+	private HashMap<String, String> hmUuidDate = new HashMap<String, String>();
+	private HashMap<String, String> hmUuidId   = new HashMap<String, String>();
 
 	//--------------------------------------------------------------------------
 	//---
@@ -43,9 +46,11 @@ class GroupMapping
 	//---
 	//--------------------------------------------------------------------------
 
-	public GroupMapping(Dbms dbms) throws Exception
+	public UUIDMapper(Dbms dbms, String siteId) throws Exception
 	{
-		String query = "SELECT id, name FROM Groups";
+		String query = "SELECT id, uuid, changeDate "+
+							"FROM   Metadata "+
+							"WHERE  source='"+siteId+"'";
 
 		List idsList = dbms.select(query).getChildren();
 
@@ -54,9 +59,11 @@ class GroupMapping
 			Element record = (Element) idsList.get(i);
 
 			String id   = record.getChildText("id");
-			String name = record.getChildText("name").toLowerCase();
+			String uuid = record.getChildText("uuid");
+			String date = record.getChildText("changedate");
 
-			htNameId.put(name, id);
+			hmUuidDate.put(uuid, date);
+			hmUuidId  .put(uuid, id);
 		}
 	}
 
@@ -66,9 +73,15 @@ class GroupMapping
 	//---
 	//--------------------------------------------------------------------------
 
-	/** Given a group name returns its id */
+	public String getChangeDate(String uuid) { return hmUuidDate.get(uuid); }
 
-	public String getId(String name) { return (String) htNameId.get(name); }
+	//--------------------------------------------------------------------------
+
+	public String getID(String uuid) { return hmUuidId.get(uuid); }
+
+	//--------------------------------------------------------------------------
+
+	public Iterator getUUIDs() { return hmUuidDate.keySet().iterator(); }
 }
 
 //=============================================================================
