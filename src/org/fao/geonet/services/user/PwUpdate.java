@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.user;
 
-import java.util.Vector;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.UserNotFoundEx;
 import jeeves.interfaces.Service;
@@ -77,11 +76,7 @@ public class PwUpdate implements Service
 			throw new UserNotFoundEx(userId);
 
 		// change password
-		Vector vArgs = new Vector ();
-		vArgs.add(newPassword);
-		vArgs.add(new Integer(userId));
-
-		dbms.execute ( "UPDATE Users SET password=? WHERE id=?", vArgs);
+		dbms.execute ( "UPDATE Users SET password=? WHERE id=?", newPassword, userId);
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}

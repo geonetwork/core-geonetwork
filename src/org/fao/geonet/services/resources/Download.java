@@ -35,8 +35,8 @@ import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.MailSender;
-import org.fao.geonet.util.ResUtil;
 import org.jdom.Element;
 
 //=============================================================================
@@ -78,11 +78,11 @@ public class Download implements Service
 		boolean doNotify = false;
 		if (access == null || access.equals(Params.Access.PRIVATE))
 		{
-			ResUtil.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
+			Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
 			doNotify = true;
 		}
 		// Build the response
-		File dir = new File(ResUtil.getResDir(context, access, id));
+		File dir = new File(Lib.resource.getDir(context, access, id));
 		File file= new File(dir, fname);
 
 		context.info("File is : " +file);

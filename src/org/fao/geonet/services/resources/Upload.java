@@ -30,8 +30,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.metadata.Update;
-import org.fao.geonet.util.ResUtil;
 import org.jdom.Element;
 
 //=============================================================================
@@ -70,12 +70,12 @@ public class Upload implements Service
 		String fname  = Util.getParam(params, Params.FNAME);
 		String access = Util.getParam(params, Params.ACCESS);
 
-		ResUtil.checkPrivilege(context, id, AccessManager.OPER_EDIT);
+		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_EDIT);
 
 		// move uploaded file to destination directory
 		// note: uploadDir and rootDir must be in the same volume
 
-		File dir = new File(ResUtil.getResDir(context, access, id));
+		File dir = new File(Lib.resource.getDir(context, access, id));
 		dir.mkdirs();
 
 		// move uploaded file to destination directory

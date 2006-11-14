@@ -854,10 +854,7 @@ public class DataManager
 	{
 		String query = "DELETE FROM OperationAllowed WHERE metadataId=?";
 
-		Vector args = new Vector();
-		args.add(new Integer(id));
-
-		dbms.execute(query, args);
+		dbms.execute(query, id);
 	}
 
 	//--------------------------------------------------------------------------
@@ -868,10 +865,7 @@ public class DataManager
 	{
 		String query = "DELETE FROM MetadataCateg WHERE metadataId=?";
 
-		Vector args = new Vector();
-		args.add(new Integer(id));
-
-		dbms.execute(query, args);
+		dbms.execute(query, id);
 	}
 
 	//--------------------------------------------------------------------------
@@ -976,18 +970,16 @@ public class DataManager
 
 	public void setOperation(Dbms dbms, String mdId, String grpId, String opId) throws Exception
 	{
-		Vector vArgs = new Vector();
+		Object args[] = { mdId, grpId, opId };
 
-		vArgs.add(new Integer(mdId));
-		vArgs.add(new Integer(grpId));
-		vArgs.add(new Integer(opId));
+		String query = "SELECT metadataId FROM OperationAllowed " +
+							"WHERE metadataId=? AND groupId=? AND operationId=?";
 
-		Element elRes = dbms.select("SELECT metadataId FROM OperationAllowed " +
-											 "WHERE metadataId=? AND groupId=? AND operationId=?", vArgs);
+		Element elRes = dbms.select(query, args);
 
 		if (elRes.getChildren().size() == 0)
 			dbms.execute("INSERT INTO OperationAllowed(metadataId, groupId, operationId) " +
-							 "VALUES(?,?,?)", vArgs);
+							 "VALUES(?,?,?)", args);
 	}
 
 	//--------------------------------------------------------------------------
@@ -1001,29 +993,23 @@ public class DataManager
 
 	public void setCategory(Dbms dbms, String mdId, String categId) throws Exception
 	{
-		Vector vArgs = new Vector();
+		Object args[] = { mdId, categId };
 
-		vArgs.add(new Integer(mdId));
-		vArgs.add(new Integer(categId));
+		String query = "SELECT metadataId FROM MetadataCateg WHERE metadataId=? AND categoryId=?";
 
-		Element elRes = dbms.select("SELECT metadataId FROM MetadataCateg " +
-											 "WHERE metadataId=? AND categoryId=?", vArgs);
+		Element elRes = dbms.select(query, args);
 
 		if (elRes.getChildren().size() == 0)
-			dbms.execute("INSERT INTO MetadataCateg(metadataId, categoryId) VALUES(?,?)", vArgs);
+			dbms.execute("INSERT INTO MetadataCateg(metadataId, categoryId) VALUES(?,?)", args);
 	}
 
 	//--------------------------------------------------------------------------
 
 	public boolean isCategorySet(Dbms dbms, String mdId, String categId) throws Exception
 	{
-		Vector vArgs = new Vector();
+		String query = "SELECT metadataId FROM MetadataCateg " +"WHERE metadataId=? AND categoryId=?";
 
-		vArgs.add(new Integer(mdId));
-		vArgs.add(new Integer(categId));
-
-		Element elRes = dbms.select("SELECT metadataId FROM MetadataCateg " +
-											 "WHERE metadataId=? AND categoryId=?", vArgs);
+		Element elRes = dbms.select(query, mdId, categId);
 
 		return (elRes.getChildren().size() != 0);
 	}
@@ -1032,25 +1018,19 @@ public class DataManager
 
 	public void unsetCategory(Dbms dbms, String mdId, String categId) throws Exception
 	{
-		Vector vArgs = new Vector();
+		String query = "DELETE FROM MetadataCateg WHERE metadataId=? AND categoryId=?";
 
-		vArgs.add(new Integer(mdId));
-		vArgs.add(new Integer(categId));
-
-		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=? AND categoryId=?", vArgs);
+		dbms.execute(query, mdId, categId);
 	}
 
 	//--------------------------------------------------------------------------
 
 	public Element getCategories(Dbms dbms, String mdId) throws Exception
 	{
-		Vector vArgs = new Vector();
+		String query = "SELECT id, name FROM Categories, MetadataCateg "+
+							"WHERE id=categoryId AND metadataId=?";
 
-		vArgs.add(new Integer(mdId));
-
-		return dbms.select("SELECT id, name "+
-								 "FROM Categories, MetadataCateg "+
-								 "WHERE id=categoryId AND metadataId=?", vArgs);
+		return dbms.select(query, mdId);
 	}
 
 	//--------------------------------------------------------------------------

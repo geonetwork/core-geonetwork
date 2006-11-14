@@ -36,7 +36,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.util.ResUtil;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
@@ -63,7 +63,7 @@ public class Unset implements Service
 		String type    = Util.getParam(params, Params.TYPE);
 		String version = Util.getParam(params, Params.VERSION);
 
-		ResUtil.checkPrivilege(context, id, AccessManager.OPER_EDIT);
+		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_EDIT);
 
 		//-----------------------------------------------------------------------
 		//--- extract thumbnail filename
@@ -89,7 +89,7 @@ public class Unset implements Service
 		if (result == null)
 			throw new OperationAbortedEx("Metadata has no thumbnail", id);
 
-		String file = ResUtil.getResDir(context, Params.Access.PUBLIC, id) + result.getText();
+		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + result.getText();
 
 		//-----------------------------------------------------------------------
 		//--- remove thumbnail

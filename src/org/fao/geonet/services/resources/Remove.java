@@ -36,8 +36,8 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.metadata.Update;
-import org.fao.geonet.util.ResUtil;
 import org.jdom.Element;
 
 //=============================================================================
@@ -77,7 +77,7 @@ public class Remove implements Service
 		String ref    = Util.getParam(params, Params.REF);
 		String access = Util.getParam(params, Params.ACCESS);
 
-		ResUtil.checkPrivilege(context, id, AccessManager.OPER_EDIT);
+		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_EDIT);
 
 		// get online resource name
 		Element metadata = dataMan.getMetadata(context, id, true);
@@ -89,7 +89,7 @@ public class Remove implements Service
 		String fname = elem.getText();
 
 		// delete online resource
-		File dir  = new File(ResUtil.getResDir(context, access, id));
+		File dir  = new File(Lib.resource.getDir(context, access, id));
 		File file = new File(dir, fname);
 
 		if (!file.exists())

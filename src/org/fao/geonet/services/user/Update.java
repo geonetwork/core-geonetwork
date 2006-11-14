@@ -33,7 +33,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.AccessManager;
 import org.jdom.Element;
 
 //=============================================================================
@@ -83,29 +82,16 @@ public class Update implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
-		Vector vArgs = new Vector ();
-
 		if (id == null)	// For Adding new user
 		{
 			id = context.getSerialFactory().getSerial(dbms, "Users") +"";
 
-			vArgs.add(new Integer(id));
-			vArgs.add(username);
-			vArgs.add(password);
-			vArgs.add(surname);
-			vArgs.add(name);
-			vArgs.add(profile);
-			vArgs.add(address);
-			vArgs.add(state);
-			vArgs.add(zip);
-			vArgs.add(country);
-			vArgs.add(email);
-			vArgs.add(organ);
-			vArgs.add(kind);
+			String query = "INSERT INTO Users (id, username, password, surname, name, profile, "+
+								"address, state, zip, country, email, organisation, kind) "+
+								"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-			dbms.execute("INSERT INTO Users (id, username, password, surname, name, profile, "+
-							 "address, state, zip, country, email, organisation, kind) "+
-							 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", vArgs);
+			dbms.execute(query, id, username, password, surname, name, profile,
+									  address, state, zip, country, email, organ, kind);
 
 			//--- add groups
 
@@ -118,28 +104,17 @@ public class Update implements Service
 
 		else 	//--- For Update
 		{
-			vArgs.add(username);
-			vArgs.add(password);
-			vArgs.add(surname);
-			vArgs.add(name);
-			vArgs.add(profile);
-			vArgs.add(address);
-			vArgs.add(state);
-			vArgs.add(zip);
-			vArgs.add(country);
-			vArgs.add(email);
-			vArgs.add(organ);
-			vArgs.add(kind);
-			vArgs.add(new Integer(id));
+			String query = "UPDATE Users SET username=?, password=?, surname=?, name=?, "+
+								"profile=?, address=?, state=?, zip=?, country=?, email=?," +
+								"organisation=?, kind=? WHERE id=?";
 
-			dbms.execute ( "UPDATE Users SET username=?, password=?," +
-							  "surname=?, name=?, profile=?, address=?," +
-							  "state=?, zip=?, country=?, email=?," +
-							  "organisation=?, kind=? WHERE id=?", vArgs);
+			dbms.execute (query, username, password, surname, name,
+							 			profile, address, state, zip, country, email,
+							 			organ, kind, id);
 
 			//--- add groups
 
-			dbms.execute ("DELETE FROM UserGroups WHERE userId=" + id);
+			dbms.execute("DELETE FROM UserGroups WHERE userId=?", id);
 
 			for(int i=0; i<listGroups.size(); i++)
 			{
@@ -162,12 +137,7 @@ public class Update implements Service
 
 	private void addGroup(Dbms dbms, String user, String group) throws Exception
 	{
-		Vector vArgs = new Vector();
-
-		vArgs.add(new Integer(user));
-		vArgs.add(new Integer(group));
-
-		dbms.execute("INSERT INTO UserGroups(userId, groupId) VALUES (?, ?)", vArgs);
+		dbms.execute("INSERT INTO UserGroups(userId, groupId) VALUES (?, ?)", user, group);
 	}
 }
 

@@ -24,7 +24,6 @@
 package org.fao.geonet.services.group;
 
 import java.util.Set;
-import java.util.Vector;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -60,8 +59,6 @@ public class Update implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-
-		Vector  vArgs = new Vector ();
 		Element elRes = new Element(Jeeves.Elem.RESPONSE);
 
 		if (id == null)	// For Adding new group
@@ -70,24 +67,18 @@ public class Update implements Service
 
 			int newId = context.getSerialFactory().getSerial(dbms, "Groups");
 
-			vArgs.add(newId);
-			vArgs.add(name);
-			vArgs.add(descr);
-			vArgs.add(email);
+			String query = "INSERT INTO Groups(id, name, description, email) VALUES (?, ?, ?, ?)";
 
-			dbms.execute("INSERT INTO Groups(id, name, description, email) VALUES (?, ?, ?, ?)", vArgs);
+			dbms.execute(query, newId, name, descr, email);
 			Lib.local.insert(dbms, "Groups", newId, name, langs);
 
 			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.ADDED));
 		}
 		else 	//--- For Update
 		{
-			vArgs.add(name);
-			vArgs.add(descr);
-			vArgs.add(email);
-			vArgs.add(new Integer(id));
+			String query = "UPDATE Groups SET name=?, description=?, email=? WHERE id=?";
 
-			dbms.execute("UPDATE Groups SET name=?, description=?, email=? WHERE id=?", vArgs);
+			dbms.execute(query, name, descr, email, id);
 
 			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.UPDATED));
 		}

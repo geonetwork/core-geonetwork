@@ -53,13 +53,15 @@ public class XmlSerializer
 	public static Element select(Dbms dbms, String table, String id) throws Exception
 	{
 		String query = "SELECT * FROM " + table + " WHERE id=?";
-		Vector args = new Vector();
-		args.add(new Integer(id));
-		Element rec = dbms.select(query, args).getChild(Jeeves.Elem.RECORD);
-		if (rec == null) return null;
+
+		Element rec = dbms.select(query, id).getChild(Jeeves.Elem.RECORD);
+
+		if (rec == null)
+			return null;
 
 		Element xmlField = rec.getChild("data");
-		String xmlData = 	"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + xmlField.getText();
+		String  xmlData  = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + xmlField.getText();
+
 		return Xml.loadString(xmlData, false);
 	}
 
@@ -105,7 +107,7 @@ public class XmlSerializer
 		if (sourceUri != null)
 			args.add(sourceUri);
 
-		dbms.execute(query, args);
+		dbms.execute(query, args.toArray());
 
 		return Integer.toString(serial);
 	}

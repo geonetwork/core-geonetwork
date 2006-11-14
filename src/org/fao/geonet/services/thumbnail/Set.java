@@ -40,7 +40,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.util.ResUtil;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
@@ -78,7 +78,7 @@ public class Set implements Service
 		String  smallScalingDir    = Util.getParam    (params, Params.SMALL_SCALING_DIR,   "");
 		int     smallScalingFactor = Util.getParamInt (params, Params.SMALL_SCALING_FACTOR, 0);
 
-		ResUtil.checkPrivilege(context, id, AccessManager.OPER_EDIT);
+		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_EDIT);
 
 		//-----------------------------------------------------------------------
 		//--- environment vars
@@ -97,7 +97,7 @@ public class Set implements Service
 		//-----------------------------------------------------------------------
 		//--- create destination directory
 
-		String dataDir = ResUtil.getResDir(context, Params.Access.PUBLIC, id);
+		String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
 
 		new File(dataDir).mkdirs();
 
@@ -191,7 +191,7 @@ public class Set implements Service
 
 		//--- remove file
 
-		String file = ResUtil.getResDir(context, Params.Access.PUBLIC, id) + result.getText();
+		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + result.getText();
 
 		if (!new File(file).delete())
 			context.error("Error while deleting thumbnail : "+file);

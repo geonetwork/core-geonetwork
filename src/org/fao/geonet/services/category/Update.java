@@ -58,7 +58,6 @@ public class Update implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		Vector  vArgs = new Vector ();
 		Element elRes = new Element(Jeeves.Elem.RESPONSE);
 
 		if (id == null)	// For Adding new category
@@ -66,19 +65,15 @@ public class Update implements Service
 			Set<String> langs = Lib.local.getLanguages(dbms).keySet();
 
 			int newId = context.getSerialFactory().getSerial(dbms, "Categories");
-			vArgs.add(newId);
-			vArgs.add(name);
 
-			dbms.execute("INSERT INTO Categories(id, name) VALUES (?, ?)", vArgs);
+			dbms.execute("INSERT INTO Categories(id, name) VALUES (?, ?)", newId, name);
 			Lib.local.insert(dbms, "Categories", newId, name, langs);
+
 			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.ADDED));
 		}
 		else 	//--- For Update
 		{
-			vArgs.add(name);
-			vArgs.add(new Integer(id));
-
-			dbms.execute("UPDATE Categories SET name=? WHERE id=?", vArgs);
+			dbms.execute("UPDATE Categories SET name=? WHERE id=?", name, id);
 
 			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.UPDATED));
 		}

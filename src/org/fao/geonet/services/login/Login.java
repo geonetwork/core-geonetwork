@@ -58,23 +58,19 @@ public class Login implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		String sUser = Util.getParam(params, Params.USERNAME);
-		String sPass = Util.getParam(params, Params.PASSWORD);
+		String user = Util.getParam(params, Params.USERNAME);
+		String pass = Util.getParam(params, Params.PASSWORD);
 
 		//--- attempt to load user from db
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		Vector args = new Vector();
-		args.add(sUser);
-		args.add(sPass);
-
-		Element elUser = dbms.select("SELECT * FROM Users WHERE username = ? AND password = ?", args);
+		Element elUser = dbms.select("SELECT * FROM Users WHERE username = ? AND password = ?", user, pass);
 
 		List list = elUser.getChildren();
 
 		if (list.size() == 0)
-			throw new UserLoginEx(sUser);
+			throw new UserLoginEx(user);
 		else
 		{
 			elUser = (Element) list.get(0);
@@ -84,9 +80,9 @@ public class Login implements Service
 			String sSurname  = elUser.getChildText(Geonet.Elem.SURNAME);
 			String sProfile  = elUser.getChildText(Geonet.Elem.PROFILE);
 
-			context.info("User '" + sUser + "' logged in.");
+			context.info("User '" + user + "' logged in.");
 
-			context.getUserSession().authenticate(sId, sUser, sName, sSurname, sProfile);
+			context.getUserSession().authenticate(sId, user, sName, sSurname, sProfile);
 		}
 
 		return new Element("ok");
