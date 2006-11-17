@@ -75,7 +75,7 @@ public class Transform
 
 				// save transformed field
 
-				dbms.execute("UPDATE " + table + " SET " + field + " = ? WHERE id = ?", newField, id);
+				dbms.execute("UPDATE " + table + " SET " + field + " = ? WHERE id = ?", newField, new Integer(id));
 				System.out.println("- record " + id + " saved"); // DEBUG
 			}
 			// commit changes

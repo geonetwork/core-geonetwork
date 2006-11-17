@@ -22,7 +22,6 @@
 //==============================================================================
 
 package org.fao.geonet.schedules;
-
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashSet;
@@ -39,7 +38,8 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.harvest.harvester.CategMapping;
+import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
+import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
@@ -101,8 +101,8 @@ public class MetadataHarvest implements Schedule
 
 		SerialFactory sf = context.getSerialFactory();
 
-		GroupMapping groupMapping = new GroupMapping(dbms);
-		CategMapping categMapping = new CategMapping(dbms);
+		GroupMapper    groupMapping = new GroupMapper(dbms);
+		CategoryMapper categMapping = new CategoryMapper(dbms);
 
 		//--- open file and read configuration
 
@@ -213,14 +213,14 @@ public class MetadataHarvest implements Schedule
 
 	//--------------------------------------------------------------------------
 
-	private void updateGroups(Dbms dbms, DataManager dataMan, GroupMapping groupMapping,
+	private void updateGroups(Dbms dbms, DataManager dataMan, GroupMapper groupMapping,
 									  String id, List groups) throws Exception
 	{
 		for(int i=0; i<groups.size(); i++)
 		{
 			Element group = (Element) groups.get(i);
 			String  name  = group.getAttributeValue(Attr.NAME);
-			String  grpId = groupMapping.getId(name);
+			String  grpId = groupMapping.getID(name);
 
 			if (grpId == null)
 				throw new Exception("Group not found : "+ name);
@@ -247,7 +247,7 @@ public class MetadataHarvest implements Schedule
 
 	//--------------------------------------------------------------------------
 
-	private void updateCategories(Dbms dbms, DataManager dataMan, CategMapping categMapping,
+	private void updateCategories(Dbms dbms, DataManager dataMan, CategoryMapper categMapping,
 											String id,List categs) throws Exception
 	{
 		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId="+id);
@@ -256,7 +256,7 @@ public class MetadataHarvest implements Schedule
 		{
 			Element categ = (Element) categs.get(i);
 			String  name  = categ.getText();
-			String  catId = categMapping.getId(name);
+			String  catId = categMapping.getID(name);
 
 			if (catId == null)
 				throw new Exception("Category not found : "+ name);

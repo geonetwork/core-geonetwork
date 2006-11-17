@@ -90,7 +90,7 @@ public class Update implements Service
 								"address, state, zip, country, email, organisation, kind) "+
 								"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-			dbms.execute(query, id, username, password, surname, name, profile,
+			dbms.execute(query, new Integer(id), username, password, surname, name, profile,
 									  address, state, zip, country, email, organ, kind);
 
 			//--- add groups
@@ -110,11 +110,11 @@ public class Update implements Service
 
 			dbms.execute (query, username, password, surname, name,
 							 			profile, address, state, zip, country, email,
-							 			organ, kind, id);
+							 			organ, kind, new Integer(id));
 
 			//--- add groups
 
-			dbms.execute("DELETE FROM UserGroups WHERE userId=?", id);
+			dbms.execute("DELETE FROM UserGroups WHERE userId=", new Integer(id));
 
 			for(int i=0; i<listGroups.size(); i++)
 			{

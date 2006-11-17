@@ -76,7 +76,7 @@ public class PwUpdate implements Service
 			throw new UserNotFoundEx(userId);
 
 		// change password
-		dbms.execute ( "UPDATE Users SET password=? WHERE id=?", newPassword, userId);
+		dbms.execute ( "UPDATE Users SET password=? WHERE id=?", newPassword, new Integer(userId));
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}

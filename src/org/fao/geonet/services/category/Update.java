@@ -73,7 +73,7 @@ public class Update implements Service
 		}
 		else 	//--- For Update
 		{
-			dbms.execute("UPDATE Categories SET name=? WHERE id=?", name, id);
+			dbms.execute("UPDATE Categories SET name=? WHERE id=?", name, new Integer(id));
 
 			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.UPDATED));
 		}

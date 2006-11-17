@@ -234,7 +234,7 @@ public class GNDestin
 		{
 			String query = "UPDATE Metadata SET schemaId='iso19139', data=? WHERE id=?";
 
-			dbms.execute(query, Xml.getString(md), id);
+			dbms.execute(query, Xml.getString(md), new Integer(id));
 		}
 		catch (Exception e)
 		{

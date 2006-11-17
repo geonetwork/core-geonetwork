@@ -78,7 +78,7 @@ public class Update implements Service
 		{
 			String query = "UPDATE Groups SET name=?, description=?, email=? WHERE id=?";
 
-			dbms.execute(query, name, descr, email, id);
+			dbms.execute(query, name, descr, email, new Integer(id));
 
 			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.UPDATED));
 		}

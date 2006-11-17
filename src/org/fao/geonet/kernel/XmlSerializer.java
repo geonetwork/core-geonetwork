@@ -52,9 +52,9 @@ public class XmlSerializer
 
 	public static Element select(Dbms dbms, String table, String id) throws Exception
 	{
-		String query = "SELECT * FROM " + table + " WHERE id=?";
+		String query = "SELECT * FROM " + table + " WHERE id = ?";
 
-		Element rec = dbms.select(query, id).getChild(Jeeves.Elem.RECORD);
+		Element rec = dbms.select(query, new Integer(id)).getChild(Jeeves.Elem.RECORD);
 
 		if (rec == null)
 			return null;
@@ -145,13 +145,9 @@ public class XmlSerializer
 
 	public static void delete(Dbms dbms, String table, String id) throws SQLException
 	{
-		String query = "DELETE FROM " + table + " WHERE id=?";
+		String query = "DELETE FROM " + table + " WHERE id="+id;
 
-		Vector args = new Vector();
-
-		args.add(new Integer(id));
-
-		dbms.execute(query, args);
+		dbms.execute(query);
 	}
 }
 

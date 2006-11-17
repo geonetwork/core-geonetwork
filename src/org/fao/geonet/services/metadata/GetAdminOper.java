@@ -94,11 +94,11 @@ public class GetAdminOper implements Service
 
 			//--- get all operations that this group can do on given metadata
 
-			String grpId = el.getChildText("id");
+			int grpId = Integer.parseInt(el.getChildText("id"));
 
 			String query = "SELECT operationId FROM OperationAllowed WHERE metadataId=? AND groupId=?";
 
-			List listAllow = dbms.select(query, id, grpId).getChildren();
+			List listAllow = dbms.select(query, new Integer(id), grpId).getChildren();
 
 			//--- now extend the group list adding proper operations
 

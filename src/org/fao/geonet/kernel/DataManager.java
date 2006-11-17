@@ -852,9 +852,9 @@ public class DataManager
 
 	public void deleteAllMetadataOper(Dbms dbms, String id) throws Exception
 	{
-		String query = "DELETE FROM OperationAllowed WHERE metadataId=?";
+		String query = "DELETE FROM OperationAllowed WHERE metadataId="+id;
 
-		dbms.execute(query, id);
+		dbms.execute(query);
 	}
 
 	//--------------------------------------------------------------------------
@@ -863,9 +863,9 @@ public class DataManager
 
 	public void deleteAllMetadataCateg(Dbms dbms, String id) throws Exception
 	{
-		String query = "DELETE FROM MetadataCateg WHERE metadataId=?";
+		String query = "DELETE FROM MetadataCateg WHERE metadataId="+id;
 
-		dbms.execute(query, id);
+		dbms.execute(query);
 	}
 
 	//--------------------------------------------------------------------------
@@ -970,7 +970,7 @@ public class DataManager
 
 	public void setOperation(Dbms dbms, String mdId, String grpId, String opId) throws Exception
 	{
-		Object args[] = { mdId, grpId, opId };
+		Object args[] = { new Integer(mdId), new Integer(grpId), new Integer(opId) };
 
 		String query = "SELECT metadataId FROM OperationAllowed " +
 							"WHERE metadataId=? AND groupId=? AND operationId=?";
@@ -993,7 +993,7 @@ public class DataManager
 
 	public void setCategory(Dbms dbms, String mdId, String categId) throws Exception
 	{
-		Object args[] = { mdId, categId };
+		Object args[] = { new Integer(mdId), new Integer(categId) };
 
 		String query = "SELECT metadataId FROM MetadataCateg WHERE metadataId=? AND categoryId=?";
 
@@ -1009,7 +1009,7 @@ public class DataManager
 	{
 		String query = "SELECT metadataId FROM MetadataCateg " +"WHERE metadataId=? AND categoryId=?";
 
-		Element elRes = dbms.select(query, mdId, categId);
+		Element elRes = dbms.select(query, new Integer(mdId), new Integer(categId));
 
 		return (elRes.getChildren().size() != 0);
 	}
@@ -1020,7 +1020,7 @@ public class DataManager
 	{
 		String query = "DELETE FROM MetadataCateg WHERE metadataId=? AND categoryId=?";
 
-		dbms.execute(query, mdId, categId);
+		dbms.execute(query, new Integer(mdId), new Integer(categId));
 	}
 
 	//--------------------------------------------------------------------------
@@ -1030,7 +1030,7 @@ public class DataManager
 		String query = "SELECT id, name FROM Categories, MetadataCateg "+
 							"WHERE id=categoryId AND metadataId=?";
 
-		return dbms.select(query, mdId);
+		return dbms.select(query, new Integer(mdId));
 	}
 
 	//--------------------------------------------------------------------------
