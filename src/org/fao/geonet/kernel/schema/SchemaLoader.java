@@ -49,7 +49,7 @@ public class SchemaLoader
 
 	private String targetNS;
 	private String targetNSPrefix;
-	
+
 	/** Restrictions for simple types (element restriction) */
 	private HashMap   hmElemRestr = new HashMap();
 
@@ -73,7 +73,7 @@ public class SchemaLoader
 	public MetadataSchema load(String xmlSchemaFile) throws Exception
 	{
 		if (xmlSchemaFile.startsWith("_")) return new MetadataSchema(new Element("root"));
-		
+
 		//--- PHASE 1 : pre-processing
 		//---
 		//--- the xml file is parsed and simplified. Xml schema subtrees are
@@ -212,12 +212,12 @@ public class SchemaLoader
 				ElementEntry ee = (ElementEntry) cte.alElements.get(j);
 
 				System.out.println("resolving element " + (ee.name == null ? (" --> " + ee.ref) : ee.name)); // DEBUG
-				
+
 				String type;
 				if (ee.ref != null)
 				{
 					type = (String) hmElements.get(ee.ref);
-					
+
 					System.out.println("- type = " + type); // DEBUG
 				}
 				else
@@ -227,8 +227,10 @@ public class SchemaLoader
 
 					// RGFIX type = "string";
 					type = ee.type == null ? "string" : ee.type;
-					
+
 					System.out.println("- type = " + type); // DEBUG
+
+					mds.addElement(ee.name, type, new ArrayList());
 				}
 
 				//--- if type is null we have an abstract type
@@ -268,6 +270,7 @@ public class SchemaLoader
 			}
 			mds.addType(cte.name, mdt);
 		}
+
 		return mds;
 	}
 
@@ -289,7 +292,7 @@ public class SchemaLoader
 		//--- load xml-schema
 
 		elRoot = Xml.loadFile(xmlSchemaFile);
-		
+
 		// change target namespace
 		String oldtargetNS       = targetNS;
 		String oldtargetNSPrefix = targetNSPrefix;
@@ -343,7 +346,7 @@ public class SchemaLoader
 		// restore target namespace
 		targetNS       = oldtargetNS;
 		targetNSPrefix = oldtargetNSPrefix;
-		
+
 		return alElementFiles;
 	}
 
@@ -407,7 +410,7 @@ public class SchemaLoader
 			throw new IllegalArgumentException("Name is null for element : " + ee.name);
 
 		System.out.println("building global element " + ee.name); // DEBUG
-		
+
 		if (ee.substGroup != null)
 		{
 			ArrayList al = (ArrayList) hmSubsGrp.get(ee.substGroup);
@@ -425,9 +428,9 @@ public class SchemaLoader
 			if (hmAbsElems.containsKey(ee.name))
 				throw new IllegalArgumentException("Namespace collision for : " + ee.name);
 			hmAbsElems.put(ee.name, ee.type);
-			
+
 			System.out.println("- abstract element"); // DEBUG
-			
+
 			return;
 		}
 		if (ee.complexType != null)
@@ -460,7 +463,7 @@ public class SchemaLoader
 		{
 			hmElements.put(ee.name, ee.type);
 
-			System.out.println("- element"); // DEBUG
+			System.out.println("- element of : "+ee.type); // DEBUG
 		}
 	}
 
