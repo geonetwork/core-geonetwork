@@ -184,6 +184,7 @@ public class Aligner
 		{
 			public void handleMetadata(Element md) throws Exception
 			{
+				String remoteId   = info.getChildText("id");
 				String remoteUuid = info.getChildText("uuid");
 				String schema     = info.getChildText("schema");
 				String createDate = info.getChildText("createDate");
@@ -191,7 +192,7 @@ public class Aligner
 
 				boolean isTemplate = "y".equals(info.getChildText("isTemplate"));
 
-				log.debug("  - Adding remote metadata with uuid="+ remoteUuid);
+				log.debug("  - Adding metadata with remote id="+ remoteId);
 
 				id[0] = dataMan.insertMetadataExt(dbms, schema, md, context.getSerialFactory(),
 															 siteId, createDate, changeDate, remoteUuid, null);
