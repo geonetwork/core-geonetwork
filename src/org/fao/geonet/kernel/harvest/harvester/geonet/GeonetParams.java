@@ -59,6 +59,7 @@ public class GeonetParams extends AbstractParams
 
 		every        = Integer.parseInt(opt.getChildText("every"));
 		createGroups = opt.getChildText("createGroups").equals("true");
+		createCateg  = opt.getChildText("createCateg") .equals("true");
 		oneRunOnly   = opt.getChildText("oneRunOnly")  .equals("true");
 
 		//--- add searches
@@ -108,6 +109,7 @@ public class GeonetParams extends AbstractParams
 		password   = getValue(account, "password", "");
 
 		createGroups = getValue(opt, "createGroups", true );
+		createCateg  = getValue(opt, "createCateg",  true );
 		oneRunOnly   = getValue(opt, "oneRunOnly",   false);
 		every        = getValue(opt, "every",        90   );
 
@@ -139,6 +141,7 @@ public class GeonetParams extends AbstractParams
 
 		every        = getValue(opt, "every",        every);
 		createGroups = getValue(opt, "createGroups", createGroups);
+		createCateg  = getValue(opt, "createCateg",  createCateg);
 		oneRunOnly   = getValue(opt, "oneRunOnly",   oneRunOnly);
 
 		checkEvery(every);
@@ -175,6 +178,7 @@ public class GeonetParams extends AbstractParams
 
 		copy.every        = every;
 		copy.createGroups = createGroups;
+		copy.createCateg  = createCateg;
 		copy.oneRunOnly   = oneRunOnly;
 
 		for (Search s : alSearches)
@@ -235,6 +239,7 @@ public class GeonetParams extends AbstractParams
 
 	public int     every;
 	public boolean createGroups;
+	public boolean createCateg;
 	public boolean oneRunOnly;
 
 	private ArrayList<Search> alSearches = new ArrayList<Search>();

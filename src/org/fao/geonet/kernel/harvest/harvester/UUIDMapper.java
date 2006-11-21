@@ -24,7 +24,6 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import jeeves.resources.dbms.Dbms;
 import org.jdom.Element;
@@ -48,11 +47,9 @@ public class UUIDMapper
 
 	public UUIDMapper(Dbms dbms, String siteId) throws Exception
 	{
-		String query = "SELECT id, uuid, changeDate "+
-							"FROM   Metadata "+
-							"WHERE  source='"+siteId+"'";
+		String query = "SELECT id, uuid, changeDate FROM Metadata WHERE source=?";
 
-		List idsList = dbms.select(query).getChildren();
+		List idsList = dbms.select(query, siteId).getChildren();
 
 		for (int i=0; i<idsList.size(); i++)
 		{
@@ -81,7 +78,7 @@ public class UUIDMapper
 
 	//--------------------------------------------------------------------------
 
-	public Iterator getUUIDs() { return hmUuidDate.keySet().iterator(); }
+	public Iterable<String> getUUIDs() { return hmUuidDate.keySet(); }
 }
 
 //=============================================================================

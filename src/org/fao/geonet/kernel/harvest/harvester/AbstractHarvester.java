@@ -28,9 +28,11 @@ import java.util.Map;
 import jeeves.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
+import jeeves.utils.SerialFactory;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
@@ -52,8 +54,8 @@ public abstract class AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	public static AbstractHarvester create(Type type, SettingManager sm,
-														ProviderManager pm, DataManager dm)
+	public static AbstractHarvester create(Type type, ServiceContext context,
+														SettingManager sm, DataManager dm)
 	{
 		AbstractHarvester ah = null;
 
@@ -66,8 +68,8 @@ public abstract class AbstractHarvester
 		if (ah == null)
 			throw new IllegalArgumentException("Unknown type : "+ type);
 
+		ah.context    = context;
 		ah.settingMan = sm;
-		ah.providMan  = pm;
 		ah.dataMan    = dm;
 
 		return ah;
@@ -237,7 +239,7 @@ public abstract class AbstractHarvester
 
 	void harvest()
 	{
-		ResourceManager rm = new ResourceManager(providMan);
+		ResourceManager rm = new ResourceManager(context.getProviderManager());
 
 		try
 		{
@@ -334,8 +336,8 @@ public abstract class AbstractHarvester
 
 	private Executor        executor;
 	private HarvestError    error;
-	private ProviderManager providMan;
 
+	protected ServiceContext context;
 	protected SettingManager settingMan;
 	protected DataManager    dataMan;
 }

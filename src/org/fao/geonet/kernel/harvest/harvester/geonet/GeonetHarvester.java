@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import jeeves.exceptions.BadInputEx;
+import jeeves.exceptions.BadServerResponseEx;
 import jeeves.exceptions.UserNotFoundEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
@@ -38,8 +39,11 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.harvest.Common.Type;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
-import org.fao.geonet.kernel.harvest.harvester.CategMapping;
+import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
+import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.jdom.Element;
+
+import static org.fao.geonet.kernel.harvest.harvester.geonet.GeonetConsts.*;
 
 //=============================================================================
 
@@ -97,6 +101,7 @@ public class GeonetHarvester extends AbstractHarvester
 
 		settingMan.add(dbms, "id:"+optionsID, "every",        params.every);
 		settingMan.add(dbms, "id:"+optionsID, "createGroups", params.createGroups);
+		settingMan.add(dbms, "id:"+optionsID, "createCateg",  params.createCateg);
 		settingMan.add(dbms, "id:"+optionsID, "oneRunOnly",   params.oneRunOnly);
 		settingMan.add(dbms, "id:"+optionsID, "status",       Status.INACTIVE);
 
@@ -145,6 +150,7 @@ public class GeonetHarvester extends AbstractHarvester
 
 		setValue(values, path +"/options/every",            opt, "every");
 		setValue(values, path +"/options/createGroups",     opt, "createGroups");
+		setValue(values, path +"/options/createCateg",      opt, "createCateg");
 		setValue(values, path +"/options/oneRunOnly",       opt, "oneRunOnly");
 
 		settingMan.setValues(dbms, values);
@@ -202,6 +208,8 @@ public class GeonetHarvester extends AbstractHarvester
 
 	protected int doGetEvery() { return params.every; }
 
+	//---------------------------------------------------------------------------
+
 	protected boolean doIsOneRunOnly() { return params.oneRunOnly; }
 
 	//---------------------------------------------------------------------------
@@ -222,7 +230,8 @@ public class GeonetHarvester extends AbstractHarvester
 	{
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
-		CategMapping mapCategories = new CategMapping(dbms);
+		CategoryMapper localCateg = new CategoryMapper(dbms);
+		GroupMapper    localGroups= new GroupMapper(dbms);
 
 		XmlRequest req = new XmlRequest(params.host, params.port);
 
@@ -242,7 +251,24 @@ public class GeonetHarvester extends AbstractHarvester
 				throw new UserNotFoundEx(params.username);
 		}
 
+		//--- retrieve info on categories and groups
+
+		log.info("Retrieving info on categories and groups from : "+ getName());
+
+		req.setAddress("/"+ params.servlet +"/srv/en/"+ SERVICE_INFO);
+		req.clearParams();
+		req.addParam("type", "categories");
+		req.addParam("type", "groups");
+
+		Element remoteInfo = req.execute();
+
+		if (!remoteInfo.getName().equals("info"))
+			throw new BadServerResponseEx(remoteInfo);
+
 		//--- search
+
+		Aligner aligner = new Aligner(log, req, params, dataMan, dbms, context,
+												localCateg, localGroups, remoteInfo);
 
 		for(Search s : params.getSearches())
 		{
@@ -254,9 +280,8 @@ public class GeonetHarvester extends AbstractHarvester
 
 			log.debug("Obtained:\n"+Xml.getString(result));
 
-			//--- alignment
-
-//			alignSite(context, dataMan, dbms, result, si, req, mapCategories, params.siteId);
+			//--- site alignment
+			aligner.align(result, s.siteId);
 		}
 
 		//--- logout
@@ -278,12 +303,6 @@ public class GeonetHarvester extends AbstractHarvester
 
 	private GeonetParams params = new GeonetParams();
 	private GeonetResult result = null;
-
-	//---------------------------------------------------------------------------
-
-	private static final String SERVICE_LOGIN  = "xml.user.login";
-	private static final String SERVICE_LOGOUT = "xml.user.logout";
-	private static final String SERVICE_SEARCH = "xml.search";
 }
 
 //=============================================================================
