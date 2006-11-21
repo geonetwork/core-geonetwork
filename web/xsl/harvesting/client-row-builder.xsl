@@ -32,10 +32,14 @@
 						<img id="status" src="{/root/env/url}/images/stop.png" alt="I" />
 					</xsl:when>
 					<xsl:when test="options/status = 'active'">
-						<img id="status" src="{/root/env/url}/images/clock.png" alt="A" />
-					</xsl:when>
-					<xsl:when test="options/status = 'running'">
-						<img id="status" src="{/root/env/url}/images/exec.png" alt="R" />
+						<xsl:choose>
+							<xsl:when test="info/running = 'true'">
+								<img id="status" src="{/root/env/url}/images/exec.png" alt="R" />
+							</xsl:when>
+							<xsl:otherwise>
+								<img id="status" src="{/root/env/url}/images/clock.png" alt="A" />
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:when>
 				</xsl:choose>
 			</td>
