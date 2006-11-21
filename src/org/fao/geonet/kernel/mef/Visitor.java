@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.mef;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import jeeves.exceptions.BadFormatEx;
@@ -54,7 +55,8 @@ public class Visitor
 
 	private static void handleXml(File mefFile, MEFVisitor v) throws Exception
 	{
-		ZipInputStream zis = new ZipInputStream(new FileInputStream(mefFile));
+		ZipInputStream    zis = new ZipInputStream(new FileInputStream(mefFile));
+		InputStreamBridge isb = new InputStreamBridge(zis);
 
 		ZipEntry entry;
 
@@ -68,10 +70,10 @@ public class Visitor
 				String name = entry.getName();
 
 				if (name.equals(FILE_METADATA))
-					md = Xml.loadStream(zis);
+					md = Xml.loadStream(isb);
 
 				else if (name.equals(FILE_INFO))
-					info = Xml.loadStream(zis);
+					info = Xml.loadStream(isb);
 
 				zis.closeEntry();
 			}
@@ -95,21 +97,23 @@ public class Visitor
 
 	private static void handleBin(File mefFile, MEFVisitor v) throws IOException
 	{
-		ZipInputStream zis = new ZipInputStream(new FileInputStream(mefFile));
+		ZipInputStream    zis = new ZipInputStream(new FileInputStream(mefFile));
+		InputStreamBridge isb = new InputStreamBridge(zis);
 
 		ZipEntry entry;
+
 
 		try
 		{
 			while ((entry=zis.getNextEntry()) != null)
 			{
-				String name = entry.getName();
+				String name = new File(entry.getName()).getName();
 
 				if (name.startsWith(DIR_THUMBNAILS))
-					v.handleThumbnail(name, zis);
+					v.handleThumbnail(name, isb);
 
 				else if (name.equals(DIR_DATA))
-					v.handleData(name, zis);
+					v.handleData(name, isb);
 
 				zis.closeEntry();
 			}
@@ -137,4 +141,46 @@ public class Visitor
 
 //=============================================================================
 
+class InputStreamBridge extends InputStream
+{
+	//--------------------------------------------------------------------------
+	//---
+	//--- Constructor
+	//---
+	//--------------------------------------------------------------------------
+
+	public InputStreamBridge(InputStream is)
+	{
+		this.is = is;
+	}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Bridging methods
+	//---
+	//--------------------------------------------------------------------------
+
+	public int read() throws IOException { return is.read(); }
+
+	public int available() throws IOException { return is.available(); }
+
+	//--- this *must* be empty to work with zip files
+	public void close() throws IOException {}
+
+	public synchronized void mark(int readlimit) { is.mark(readlimit); }
+
+	public synchronized void reset() throws IOException { is.reset(); }
+
+	public boolean markSupported() {	return is.markSupported(); }
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//--------------------------------------------------------------------------
+
+	private InputStream is;
+}
+
+//=============================================================================
 
