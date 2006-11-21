@@ -7,9 +7,9 @@
 	<!-- ============================================================================================= -->
 
 	<xsl:template match="/">
-		<response>
+		<info>
 			<xsl:apply-templates select="*"/>
-		</response>
+		</info>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
@@ -31,7 +31,7 @@
 	<xsl:template match="categories">
 		<xsl:copy>
 			<xsl:for-each select="record">
-				<category>
+				<category id="{id}">
 					<xsl:copy-of select="name"/>
 					<xsl:copy-of select="label"/>
 				</category>
