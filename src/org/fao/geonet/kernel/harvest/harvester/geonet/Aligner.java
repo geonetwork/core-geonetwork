@@ -180,7 +180,7 @@ public class Aligner
 
 		final String id[] = { "" };
 
-		MEFLib.visit(mefFile, new MEFVisitor()
+		MEFVisitor v = new MEFVisitor()
 		{
 			public void handleMetadata(Element md) throws Exception
 			{
@@ -229,7 +229,18 @@ public class Aligner
 			//--------------------------------------------------------------------
 
 			public void handleData(String file, InputStream is) throws IOException {}
-		});
+		};
+
+		//--- delete MEF file and exit
+
+		try
+		{
+			MEFLib.visit(mefFile, v);
+		}
+		finally
+		{
+			mefFile.delete();
+		}
 
 		return id[0];
 	}
