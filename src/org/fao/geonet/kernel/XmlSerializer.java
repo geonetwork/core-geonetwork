@@ -27,9 +27,9 @@ import java.sql.SQLException;
 import java.util.Vector;
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
-import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.fao.geonet.util.ISODate;
+import org.jdom.Document;
 import org.jdom.Element;
 
 //=============================================================================
@@ -59,8 +59,10 @@ public class XmlSerializer
 		if (rec == null)
 			return null;
 
-		Element xmlField = rec.getChild("data");
-		String  xmlData  = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + xmlField.getText();
+		String xmlData = rec.getChildText("data");
+
+		if (!xmlData.startsWith("<?xml"))
+			xmlData  = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" + xmlData;
 
 		return Xml.loadString(xmlData, false);
 	}
@@ -98,7 +100,7 @@ public class XmlSerializer
 
 		args.add(new Integer(serial));
 		args.add(schema);
-		args.add(Xml.getString(xml));
+		args.add(Xml.getString(new Document(xml)));
 		args.add(createDate);
 		args.add(changeDate);
 		args.add(source);
@@ -129,7 +131,7 @@ public class XmlSerializer
 
 		Vector args = new Vector();
 
-		args.add(Xml.getString(xml));
+		args.add(Xml.getString(new Document(xml)));
 
 		if (changeDate == null)		args.add(new ISODate().toString());
 			else							args.add(changeDate);

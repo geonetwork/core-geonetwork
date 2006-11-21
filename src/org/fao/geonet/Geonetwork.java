@@ -157,9 +157,7 @@ public class Geonetwork implements ApplicationHandler
 
 		logger.info("  - Harvest manager...");
 
-		HarvestManager harvestMan = new HarvestManager(path, settingMan,
-																	  context.getProviderManager(),
-																	  dataMan);
+		HarvestManager harvestMan = new HarvestManager(context, settingMan, dataMan);
 
 		//------------------------------------------------------------------------
 		//--- initialize catalogue services for the web

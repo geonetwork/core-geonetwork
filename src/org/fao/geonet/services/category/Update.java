@@ -62,12 +62,10 @@ public class Update implements Service
 
 		if (id == null)	// For Adding new category
 		{
-			Set<String> langs = Lib.local.getLanguages(dbms).keySet();
-
 			int newId = context.getSerialFactory().getSerial(dbms, "Categories");
 
 			dbms.execute("INSERT INTO Categories(id, name) VALUES (?, ?)", newId, name);
-			Lib.local.insert(dbms, "Categories", newId, name, langs);
+			Lib.local.insert(dbms, "Categories", newId, name);
 
 			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.ADDED));
 		}

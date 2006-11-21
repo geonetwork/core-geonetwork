@@ -63,14 +63,12 @@ public class Update implements Service
 
 		if (id == null)	// For Adding new group
 		{
-			Set<String> langs = Lib.local.getLanguages(dbms).keySet();
-
 			int newId = context.getSerialFactory().getSerial(dbms, "Groups");
 
 			String query = "INSERT INTO Groups(id, name, description, email) VALUES (?, ?, ?, ?)";
 
 			dbms.execute(query, newId, name, descr, email);
-			Lib.local.insert(dbms, "Groups", newId, name, langs);
+			Lib.local.insert(dbms, "Groups", newId, name);
 
 			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.ADDED));
 		}

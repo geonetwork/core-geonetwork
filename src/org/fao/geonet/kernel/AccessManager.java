@@ -107,11 +107,11 @@ public class AccessManager
 	  *
 	  */
 
-	public HashSet<String> getOperations(ServiceContext srvContext, String mdId, String ip)
+	public HashSet<String> getOperations(ServiceContext context, String mdId, String ip)
 														throws Exception
 	{
-		Dbms        dbms    = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
-		UserSession usrSess = srvContext.getUserSession();
+		Dbms        dbms    = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		UserSession usrSess = context.getUserSession();
 		String      profile = usrSess.getProfile();
 
 		// if user is an administrator just allow any operation
@@ -143,7 +143,7 @@ public class AccessManager
 		// build result
 		HashSet<String> result = new HashSet<String>();
 
-		ProfileManager pm = srvContext.getProfileManager();
+		ProfileManager pm = context.getProfileManager();
 		if (profile == null) profile = ProfileManager.GUEST;
 
 		for (Iterator iter= operations.getChildren().iterator() ; iter.hasNext(); )

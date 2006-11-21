@@ -29,8 +29,10 @@ import java.util.Iterator;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ProviderManager;
 import jeeves.utils.Log;
+import jeeves.utils.SerialFactory;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -50,12 +52,12 @@ public class HarvestManager
 	//---
 	//---------------------------------------------------------------------------
 
-	public HarvestManager(String appPath, SettingManager sm, ProviderManager pm,
-								 DataManager dm) throws Exception
+	public HarvestManager(ServiceContext context, SettingManager sm, DataManager dm) throws Exception
 	{
-		xslPath    = appPath + Geonet.Path.STYLESHEETS+ "/xml";
+		this.context = context;
+
+		xslPath    = context.getAppPath() + Geonet.Path.STYLESHEETS+ "/xml";
 		settingMan = sm;
-		providMan  = pm;
 		dataMan    = dm;
 
 		Element entries = settingMan.get("harvesting", -1);
@@ -68,7 +70,7 @@ public class HarvestManager
 			Element entry = (Element) i.next();
 			Type    type  = Type.parse(entry.getAttributeValue("type"));
 
-			AbstractHarvester ah = AbstractHarvester.create(type, sm, pm, dm);
+			AbstractHarvester ah = AbstractHarvester.create(type, context, sm, dm);
 			ah.init(entry);
 			hmHarvesters.put(ah.getID(), ah);
 		}
@@ -119,7 +121,7 @@ public class HarvestManager
 
 		Type nodeType = Type.parse(type);
 
-		AbstractHarvester ah = AbstractHarvester.create(nodeType, settingMan, providMan, dataMan);
+		AbstractHarvester ah = AbstractHarvester.create(nodeType, context, settingMan, dataMan);
 
 		ah.add(dbms, node);
 		hmHarvesters.put(ah.getID(), ah);
@@ -227,10 +229,10 @@ public class HarvestManager
 	//---
 	//---------------------------------------------------------------------------
 
-	private String          xslPath;
-	private SettingManager  settingMan;
-	private ProviderManager providMan;
-	private DataManager     dataMan;
+	private String         xslPath;
+	private SettingManager settingMan;
+	private DataManager    dataMan;
+	private ServiceContext context;
 
 	private HashMap<String, AbstractHarvester> hmHarvesters = new HashMap<String, AbstractHarvester>();
 }

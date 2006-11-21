@@ -42,7 +42,7 @@ public class ResourceLib
 	//---
 	//-----------------------------------------------------------------------------
 
-	public String getDir(ServiceContext context, String access, String id)
+	public String getDataDir(ServiceContext context)
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
@@ -50,6 +50,15 @@ public class ResourceLib
 
 		if (!new File(dataDir).isAbsolute())
 			dataDir = context.getAppPath() + dataDir;
+
+		return dataDir;
+	}
+
+	//-----------------------------------------------------------------------------
+
+	public String getDir(ServiceContext context, String access, String id)
+	{
+		String dataDir = getDataDir(context);
 
 		return getDir(dataDir, access, id);
 	}

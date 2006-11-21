@@ -46,8 +46,6 @@ public class ISODate
 
 	//---------------------------------------------------------------------------
 
-	private static final int SECS_IN_DAY = 3600*24;
-
 	private static Calendar calendar = Calendar.getInstance();
 
 	//---------------------------------------------------------------------------

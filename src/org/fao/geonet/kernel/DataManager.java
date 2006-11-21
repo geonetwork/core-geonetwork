@@ -41,6 +41,7 @@ import jeeves.utils.SerialFactory;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.util.ISODate;
@@ -276,6 +277,22 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
+	public String getMetadataId(Dbms dbms, String uuid) throws Exception
+	{
+		String query = "SELECT id FROM Metadata WHERE uuid=?";
+
+		List list = dbms.select(query, uuid).getChildren();
+
+		if (list.size() == 0)
+			return null;
+
+		Element record = (Element) list.get(0);
+
+		return record.getChildText("id");
+	}
+
+	//--------------------------------------------------------------------------
+
 	public String getVersion(String id)
 	{
 		return editLib.getVersion(id);
@@ -294,7 +311,17 @@ public class DataManager
 	{
 		String value = (yesno) ? "y" : "n";
 
-		dbms.execute("UPDATE Metadata SET isTemplate='"+value+"' WHERE id="+id);
+		dbms.execute("UPDATE Metadata SET isTemplate=? WHERE id=?", value, id);
+		indexMetadata(dbms, id);
+	}
+
+	//--------------------------------------------------------------------------
+
+	public void setHarvestedBit(Dbms dbms, String id, boolean yesno) throws Exception
+	{
+		String value = (yesno) ? "y" : "n";
+
+		dbms.execute("UPDATE Metadata SET isHarvested=? WHERE id=?", value, id);
 		indexMetadata(dbms, id);
 	}
 
@@ -965,7 +992,7 @@ public class DataManager
 	//---
 	//--------------------------------------------------------------------------
 
-	/** Adds a permission to a group
+	/** Adds a permission to a group. Metadata is not reindexed
 	  */
 
 	public void setOperation(Dbms dbms, String mdId, String grpId, String opId) throws Exception
@@ -988,7 +1015,7 @@ public class DataManager
 	//---
 	//--------------------------------------------------------------------------
 
-	/** Adds a category to a metadata
+	/** Adds a category to a metadata. Metadata is not reindexed
 	  */
 
 	public void setCategory(Dbms dbms, String mdId, String categId) throws Exception

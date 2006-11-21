@@ -58,13 +58,37 @@ public class LocalLib
 
 	//-----------------------------------------------------------------------------
 
-	public void insert(Dbms dbms, String baseTable, int id, String name,
-									  Set<String> languages) throws SQLException
+	public void insert(Dbms dbms, String baseTable, int id, String name) throws SQLException
 	{
+		Set<String> langs = getLanguages(dbms).keySet();
+
 		String query = "INSERT INTO "+ baseTable +"Des(idDes, langId, label) VALUES (?,?,?)";
 
-		for (String langId : languages)
+		for (String langId : langs)
 			dbms.execute(query, id, langId, name);
+	}
+
+	//-----------------------------------------------------------------------------
+
+	public void insert(Dbms dbms, String baseTable, int id, Map<String, String> locNames,
+							 String defName) throws SQLException
+	{
+		Set<String> langs = getLanguages(dbms).keySet();
+
+		String query = "INSERT INTO "+ baseTable +"Des(idDes, langId, label) VALUES (?,?,?)";
+
+		for (String langId : langs)
+		{
+			String name = locNames.get(langId);
+
+			//--- check if the local language does not exist in locNames
+			//--- this will help to align languages with remote sites
+
+			if (name == null)
+				name = defName;
+
+			dbms.execute(query, id, langId, name);
+		}
 	}
 
 	//-----------------------------------------------------------------------------
