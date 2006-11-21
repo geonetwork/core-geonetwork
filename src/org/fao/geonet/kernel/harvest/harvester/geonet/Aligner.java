@@ -156,7 +156,7 @@ public class Aligner
 			{
 				String id = dataMan.getMetadataId(dbms, remoteUuid);
 
-				if (id == null)	addMetadata(siteId, info);
+				if (id == null)	id = addMetadata(siteId, info);
 					else				updateMetadata(siteId, info, id);
 
 				dbms.commit();
@@ -173,7 +173,7 @@ public class Aligner
 	//---
 	//--------------------------------------------------------------------------
 
-	private void addMetadata(final String siteId, final Element info) throws Exception
+	private String addMetadata(final String siteId, final Element info) throws Exception
 	{
 		String remoteUuid = info.getChildText("uuid");
 		File   mefFile    = retrieveMEF(remoteUuid);
@@ -230,6 +230,8 @@ public class Aligner
 
 			public void handleData(String file, InputStream is) throws IOException {}
 		});
+
+		return id[0];
 	}
 
 	//--------------------------------------------------------------------------
