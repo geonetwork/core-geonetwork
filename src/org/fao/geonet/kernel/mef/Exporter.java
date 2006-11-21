@@ -145,7 +145,7 @@ class Exporter
 	{
 		ZipEntry entry = new ZipEntry(name);
 		zos.putNextEntry(entry);
-		BinaryFile.copy(is, zos, false, true);
+		BinaryFile.copy(is, zos, true, false);
 		zos.closeEntry();
 	}
 
