@@ -54,7 +54,7 @@ public class GroupMapper
 			Element record = (Element) idsList.get(i);
 
 			String id   = record.getChildText("id");
-			String name = record.getChildText("name").toLowerCase();
+			String name = record.getChildText("name");
 
 			hmNameId.put(name, id);
 		}
