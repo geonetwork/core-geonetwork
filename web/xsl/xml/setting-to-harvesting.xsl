@@ -48,6 +48,7 @@
 			<options>
 				<every><xsl:value-of select="$opt/every/value" /></every>
 				<createGroups><xsl:value-of select="$opt/createGroups/value" /></createGroups>
+				<createCateg><xsl:value-of select="$opt/createCateg/value" /></createCateg>
 				<oneRunOnly><xsl:value-of select="$opt/oneRunOnly/value" /></oneRunOnly>
 				<status><xsl:value-of select="$opt/status/value"/></status>
 			</options>
