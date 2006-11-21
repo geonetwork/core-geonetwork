@@ -44,7 +44,7 @@
 
 			<td class="padded" align="center">
 				<xsl:choose>
-					<xsl:when test="count(errors/*) = 0">
+					<xsl:when test="count(error/*) = 0">
 						<img src="{/root/env/url}/images/button_ok.png" alt="I" />
 					</xsl:when>
 					<xsl:otherwise>
