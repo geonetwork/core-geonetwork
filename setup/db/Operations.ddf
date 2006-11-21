@@ -15,5 +15,5 @@ reserved,      VARCHAR
 2	edit	y
 3	notify	y
 4	admin	y
-5	interactive	y
+5	dynamic	y
 6	featured	y
