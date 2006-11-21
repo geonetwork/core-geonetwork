@@ -15,9 +15,9 @@
 	<xsl:template match="gmd:MD_Metadata">
 		 <xsl:copy>
 		 		<xsl:if test="not(gmd:fileIdentifier)">
-		 			<fileIdentifier>
+		 			<gmd:fileIdentifier>
 						<gco:CharacterString><xsl:value-of select="/root/env/uuid"/></gco:CharacterString>
-					</fileIdentifier>
+					</gmd:fileIdentifier>
 				</xsl:if>
 			  <xsl:apply-templates select="@*|node()"/>
 		 </xsl:copy>
@@ -42,25 +42,25 @@
 	<!-- ================================================================= -->
 	
 	<xsl:template match="gmd:MD_Metadata/gmd:characterSet">
-		<characterSet>
+		<xsl:copy>
 			<MD_CharacterSetCode codeList="./resources/codeList.xml#MD_CharacterSetCode" codeListValue="utf8" />
-		</characterSet>
+		</xsl:copy>
 	</xsl:template>
 
 	<!-- ================================================================= -->
 	
 	<xsl:template match="gmd:metadataStandardName">
-		<metadataStandardName>
+		<xsl:copy>
 			<gco:CharacterString>ISO 19115:2003/19139</gco:CharacterString>
-		</metadataStandardName>
+		</xsl:copy>
 	</xsl:template>
 
 	<!-- ================================================================= -->
 	
 	<xsl:template match="gmd:metadataStandardVersion">
-		<metadataStandardVersion>
+		<xsl:copy>
 			<gco:CharacterString>1.0</gco:CharacterString>
-		</metadataStandardVersion>
+		</xsl:copy>
 	</xsl:template>
 
 	<!-- ================================================================= -->
@@ -71,11 +71,11 @@
 
 		<xsl:choose>
 			<xsl:when test="string(/root/env/siteID)=string(/root/env/source)">
-				<linkage>
-					<URL>
+				<gmd:linkage>
+					<gmd:URL>
 						<xsl:value-of select="concat(/root/env/siteURL,'/resources.get?id=',/root/env/id,'&amp;fname=',following-sibling::gmd:name/gco:CharacterString,'&amp;access=private')"/>
-					</URL>
-				</linkage>
+					</gmd:URL>
+				</gmd:linkage>
 			</xsl:when>
 
 			<xsl:otherwise>
