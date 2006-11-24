@@ -57,7 +57,7 @@ public class CategoryMapper
 			String id   = record.getChildText("id");
 			String name = record.getChildText("name");
 
-			hmNameId.put(name, id);
+			add(name, id);
 		}
 	}
 
@@ -65,6 +65,13 @@ public class CategoryMapper
 	//---
 	//--- API methods
 	//---
+	//--------------------------------------------------------------------------
+
+	public void add(String name, String id)
+	{
+		hmNameId.put(name, id);
+	}
+
 	//--------------------------------------------------------------------------
 
 	/** Given a category name returns its id */

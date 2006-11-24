@@ -26,13 +26,12 @@ package org.fao.geonet.kernel.harvest.harvester;
 import java.sql.SQLException;
 import java.util.Map;
 import jeeves.exceptions.BadInputEx;
+import jeeves.exceptions.JeevesException;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
@@ -228,7 +227,7 @@ public abstract class AbstractHarvester
 		//--- add error information
 
 		if (error != null)
-			node.addContent(error.getErrorElement());
+			node.addContent(JeevesException.toElement(error));
 	}
 
 	//---------------------------------------------------------------------------
@@ -241,6 +240,10 @@ public abstract class AbstractHarvester
 	{
 		ResourceManager rm = new ResourceManager(context.getProviderManager());
 
+		Logger logger = Log.createLogger(Geonet.HARVESTER);
+
+		String nodeName = name + " ("+ getClass().getSimpleName() +")";
+
 		try
 		{
 			Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
@@ -251,10 +254,6 @@ public abstract class AbstractHarvester
 			settingMan.setValue(dbms, "harvesting/id:"+ id +"/info/lastRun", lastRun);
 
 			//--- proper harvesting
-
-			String nodeName = name + " ("+ getClass().getSimpleName() +")";
-
-			Logger logger = Log.createLogger(Geonet.HARVESTER);
 
 			logger.info("Started harvesting from node : "+ nodeName);
 			doHarvest(logger, rm);
@@ -267,11 +266,11 @@ public abstract class AbstractHarvester
 		}
 		catch(Throwable t)
 		{
-			Log.warning(Geonet.HARVESTER, "Raised exception while harvesting");
-			Log.warning(Geonet.HARVESTER, " (C) Node ID  : "+ id);
-			Log.warning(Geonet.HARVESTER, " (C) Exception: "+ t);
+			logger.warning("Raised exception while harvesting from : "+ nodeName);
+			logger.warning(" (C) Class   : "+ t.getClass().getSimpleName());
+			logger.warning(" (C) Message : "+ t.getMessage());
 
-			error = new HarvestError(HarvestError.UNKNOWN, t.toString(), null);
+			error = t;
 			t.printStackTrace();
 
 			try
@@ -280,8 +279,8 @@ public abstract class AbstractHarvester
 			}
 			catch (Exception ex)
 			{
-				Log.warning(Geonet.HARVESTER, "CANNOT ABORT EXCEPTION");
-				Log.warning(Geonet.HARVESTER, " (C) Exc : "+ ex);
+				logger.warning("CANNOT ABORT EXCEPTION");
+				logger.warning(" (C) Exc : "+ ex);
 			}
 		}
 	}
@@ -334,8 +333,8 @@ public abstract class AbstractHarvester
 	private String name;
 	private Status status;
 
-	private Executor        executor;
-	private HarvestError    error;
+	private Executor  executor;
+	private Throwable error;
 
 	protected ServiceContext context;
 	protected SettingManager settingMan;
@@ -344,50 +343,4 @@ public abstract class AbstractHarvester
 
 //=============================================================================
 
-class HarvestError
-{
-	//--- error codes
-
-	public static final String BAD_EVERY = "bad-every";
-	public static final String UNKNOWN   = "unknown";
-
-	//--------------------------------------------------------------------------
-
-	public String code;
-	public String message;
-	public String object;
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
-
-	public HarvestError(String code, String message, String object)
-	{
-		this.code    = code;
-		this.message = message;
-		this.object  = object;
-	}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
-
-	public Element getErrorElement()
-	{
-		Element error = new Element("error")
-								.addContent(new Element("code")   .setText(code))
-								.addContent(new Element("message").setText(message));
-
-		if (object != null)
-			error.addContent(new Element("object").setText(object));
-
-		return error;
-	}
-}
-
-//=============================================================================
 

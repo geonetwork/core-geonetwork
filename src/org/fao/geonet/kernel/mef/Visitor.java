@@ -107,13 +107,14 @@ public class Visitor
 		{
 			while ((entry=zis.getNextEntry()) != null)
 			{
-				String name = new File(entry.getName()).getName();
+				String fullName   = entry.getName();
+				String simpleName = new File(fullName).getName();
 
-				if (name.startsWith(DIR_THUMBNAILS))
-					v.handleThumbnail(name, isb);
+				if (fullName.startsWith(DIR_THUMBNAILS) && !fullName.equals(DIR_THUMBNAILS))
+					v.handleThumbnail(simpleName, isb);
 
-				else if (name.equals(DIR_DATA))
-					v.handleData(name, isb);
+				else if (fullName.equals(DIR_DATA) && !fullName.equals(DIR_DATA))
+					v.handleData(simpleName, isb);
 
 				zis.closeEntry();
 			}

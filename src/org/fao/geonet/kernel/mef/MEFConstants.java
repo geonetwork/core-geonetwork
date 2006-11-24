@@ -29,8 +29,8 @@ import java.io.File;
 
 class MEFConstants
 {
-	static final String DIR_THUMBNAILS = "thumbnails" +File.separator;
-	static final String DIR_DATA       = "data"       +File.separator;
+	static final String DIR_THUMBNAILS = "thumbnails/";
+	static final String DIR_DATA       = "data/";
 	static final String FILE_METADATA  = "metadata.xml";
 	static final String FILE_INFO      = "info.xml";
 	static final String VERSION        = "1.0";

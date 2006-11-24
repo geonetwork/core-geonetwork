@@ -1010,6 +1010,16 @@ public class DataManager
 	}
 
 	//--------------------------------------------------------------------------
+
+	public void unsetOperation(Dbms dbms, int mdId, int groupId, int operId) throws Exception
+	{
+		String query = "DELETE FROM OperationAllowed "+
+							"WHERE metadataId=? AND groupId=? AND operationId=?";
+
+		dbms.execute(query, mdId, groupId, operId);
+	}
+
+	//--------------------------------------------------------------------------
 	//---
 	//--- Categories API
 	//---

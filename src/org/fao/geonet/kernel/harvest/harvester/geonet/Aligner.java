@@ -112,9 +112,12 @@ public class Aligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public void align(Element result, String siteId) throws Exception
+	public AlignerResult align(Element result, String siteId) throws Exception
 	{
-		log.info("Start of alignment for site-id : "+ siteId);
+		log.info("Start of alignment for site-id="+ siteId);
+
+		this.result = new AlignerResult();
+		this.result.siteId = siteId;
 
 		List mdList = result.getChildren("metadata");
 
@@ -131,9 +134,10 @@ public class Aligner
 			{
 				String id = localUuids.getID(uuid);
 
-				log.debug("  - Removing metadata with id="+ id);
+				log.debug("  - Removing old metadata with id="+ id);
 				dataMan.deleteMetadata(dbms, id);
 				dbms.commit();
+				this.result.locallyRemoved++;
 			}
 
 		//-----------------------------------------------------------------------
@@ -148,23 +152,39 @@ public class Aligner
 			String schema    = info.getChildText("schema");
 			String changeDate= info.getChildText("changeDate");
 
+			this.result.totalMetadata++;
+
 			log.debug("Obtained remote id="+ remoteId +", changeDate="+ changeDate);
 
 			if (!dataMan.existsSchema(schema))
+			{
 				log.debug("  - Skipping unsupported schema : "+ schema);
+				this.result.schemaSkipped++;
+			}
 			else
 			{
 				String id = dataMan.getMetadataId(dbms, remoteUuid);
 
-				if (id == null)	id = addMetadata(siteId, info);
-					else				updateMetadata(siteId, info, id);
+				File mefFile = retrieveMEF(remoteUuid);
+
+				try
+				{
+					if (id == null)	id = addMetadata(siteId, info, mefFile);
+						else				updateMetadata(siteId, info, id, mefFile);
+				}
+				finally
+				{
+					mefFile.delete();
+				}
 
 				dbms.commit();
 				dataMan.indexMetadata(dbms, id);
 			}
 		}
 
-		log.info("End of alignment for site-id : "+ siteId);
+		log.info("End of alignment for site-id="+ siteId);
+
+		return this.result;
 	}
 
 	//--------------------------------------------------------------------------
@@ -173,14 +193,14 @@ public class Aligner
 	//---
 	//--------------------------------------------------------------------------
 
-	private String addMetadata(final String siteId, final Element info) throws Exception
+	private String addMetadata(final String siteId, final Element info,
+										File mefFile) throws Exception
 	{
-		String remoteUuid = info.getChildText("uuid");
-		File   mefFile    = retrieveMEF(remoteUuid);
-
 		final String id[] = { "" };
 
-		MEFVisitor v = new MEFVisitor()
+		//--- import metadata from MEF file
+
+		MEFLib.visit(mefFile, new MEFVisitor()
 		{
 			public void handleMetadata(Element md) throws Exception
 			{
@@ -205,6 +225,8 @@ public class Aligner
 
 				new File(pubDir).mkdirs();
 				new File(priDir).mkdirs();
+
+				result.addedMetadata++;
 			}
 
 			//--------------------------------------------------------------------
@@ -229,18 +251,7 @@ public class Aligner
 			//--------------------------------------------------------------------
 
 			public void handleData(String file, InputStream is) throws IOException {}
-		};
-
-		//--- delete MEF file and exit
-
-		try
-		{
-			MEFLib.visit(mefFile, v);
-		}
-		finally
-		{
-			mefFile.delete();
-		}
+		});
 
 		return id[0];
 	}
@@ -292,6 +303,8 @@ public class Aligner
 
 		dbms.execute("INSERT INTO Categories(id, name) VALUES (?, ?)", id, name);
 		Lib.local.insert(dbms, "Categories", id, hm, "<"+name+">");
+
+		localCateg.add(name, id+"");
 
 		return id;
 	}
@@ -363,6 +376,8 @@ public class Aligner
 		dbms.execute("INSERT INTO Groups(id, name) VALUES (?, ?)", id, name);
 		Lib.local.insert(dbms, "Groups", id, hm, "<"+name+">");
 
+		localGroups.add(name, id +"");
+
 		return id;
 	}
 
@@ -372,69 +387,364 @@ public class Aligner
 	//---
 	//--------------------------------------------------------------------------
 
-	private void updateMetadata(String siteId, Element info, String id) throws Exception
+	private void updateMetadata(String siteId, Element info, final String id,
+										 File mefFile) throws Exception
 	{
-		String remoteId  = info.getChildText("id");
-		String remoteUuid= info.getChildText("uuid");
-		String changeDate= info.getChildText("changeDate");
+		//String remoteId  = info.getChildText("id");
+		final String remoteUuid= info.getChildText("uuid");
+		final String changeDate= info.getChildText("changeDate");
 
-		List catList = info.getChildren("category");
+		final Element thumbs[] = { null };
 
 		if (localUuids.getID(remoteUuid) == null)
 		{
 			log.error("  - Warning! The remote uuid '"+ remoteUuid +"' does not belong to site '"+ siteId+"'");
 			log.error("     - The site id of this metadata has been changed.");
 			log.error("     - The metadata update will be skipped.");
+
+			result.uuidSkipped++;
 		}
 		else
 		{
-			String date = localUuids.getChangeDate(remoteUuid);
-
-			if (updateCondition(date, changeDate))
+			MEFLib.visit(mefFile, new MEFVisitor()
 			{
-//				dataMan.updateMetadataExt(dbms, id, getRemoteMetadata(req, remoteId), changeDate);
+				public void handleMetadata(Element md) throws Exception
+				{
+					updateMetadata(id, md, remoteUuid, changeDate);
+				}
 
-				log.debug("  - Updated local metadata with id="+ id);
-			}
-			else
+				//-----------------------------------------------------------------
+
+				public void handleInfo(Element info) throws Exception
+				{
+					updateCategories(id, info.getChild("categories"));
+					updatePrivileges(id, info.getChild("privileges"));
+					thumbs[0] = info.getChild("thumbnails");
+				}
+
+				//-----------------------------------------------------------------
+
+				public void handleThumbnail(String file, InputStream is) throws IOException
+				{
+					updateThumbnail(id, file, is, thumbs[0]);
+				}
+
+				//-----------------------------------------------------------------
+
+				public void handleData(String file, InputStream is) {}
+			});
+		}
+	}
+
+	//--------------------------------------------------------------------------
+
+	private void updateMetadata(String id, Element md, String remoteUuid,
+										 String changeDate) throws Exception
+	{
+		String date = localUuids.getChangeDate(remoteUuid);
+
+		if (!updateCondition(date, changeDate))
+		{
+			log.debug("  - XML not changed to local metadata with id="+ id);
+			result.unchangedMetadata++;
+		}
+		else
+		{
+			log.debug("  - Updating local metadata with id="+ id);
+			dataMan.updateMetadataExt(dbms, id, md, changeDate);
+
+			result.updatedMetadata++;
+		}
+	}
+
+	//--------------------------------------------------------------------------
+
+	private void updateCategories(String id, Element categs) throws Exception
+	{
+		List catList = categs.getChildren("category");
+
+		//--- remove old categories
+
+		List locCateg = dataMan.getCategories(dbms, id).getChildren();
+
+		for (int i=0; i<locCateg.size(); i++)
+		{
+			Element el = (Element) locCateg.get(i);
+
+			String catId   = el.getChildText("id");
+			String catName = el.getChildText("name");
+
+			if (!existsCategory(catList, catName))
 			{
-				log.debug("  - Nothing to do to local metadata with id="+ id);
-			}
-
-			//--- removing categories
-
-			List locCateg = dataMan.getCategories(dbms, id).getChildren();
-
-			for(int c=0; c<locCateg.size(); c++)
-			{
-				Element el = (Element) locCateg.get(c);
-
-				String catId   = el.getChildText("id");
-				String catName = el.getChildText("name").toLowerCase();
-
-				if (!existsCategory(catList, catName))
-					if (dataMan.isCategorySet(dbms, id, catId))
-					{
-						dataMan.unsetCategory(dbms, id, catId);
-						log.debug("    - Unset category : "+ catName +" for id : "+id);
-					}
-			}
-
-			//--- checking categories
-
-			for(Iterator j=catList.iterator(); j.hasNext();)
-			{
-				String catName = ((Element) j.next()).getText();
-				String catId   = localCateg.getID(catName);
-
-				if (catId != null)
-					if (!dataMan.isCategorySet(dbms, id, catId))
-					{
-						dataMan.setCategory(dbms, id, catId);
-						log.debug("    - Set category : "+ catName +" for id : "+id);
-					}
+				log.debug("  - Unsetting category : "+ catName);
+				dataMan.unsetCategory(dbms, id, catId);
 			}
 		}
+
+		//--- add new categories
+
+		for (Iterator j=catList.iterator(); j.hasNext();)
+		{
+			Element categ   = (Element) j.next();
+			String  catName = categ.getAttributeValue("name");
+			String  catId   = localCateg.getID(catName);
+
+			if (catId != null)
+			{
+				//--- it is not necessary to query the db. Anyway...
+				if (!dataMan.isCategorySet(dbms, id, catId))
+				{
+					log.debug("  - Setting category : "+ catName);
+					dataMan.setCategory(dbms, id, catId);
+				}
+			}
+
+			else if (params.createCateg)
+			{
+				//--- the remote category does not exist locally : create it
+
+				log.debug("  - Creating local category : "+ catName);
+				catId = createCategory(catName) +"";
+
+				log.debug("  - Setting category : "+ catName);
+				dataMan.setCategory(dbms, id, catId);
+			}
+		}
+	}
+
+	//--------------------------------------------------------------------------
+
+	private boolean existsCategory(List catList, String name)
+	{
+		for(Iterator i=catList.iterator(); i.hasNext();)
+		{
+			Element categ   = (Element) i.next();
+			String  catName = categ.getAttributeValue("name");
+
+			if (catName.equals(name))
+				return true;
+		}
+
+		return false;
+	}
+
+	//--------------------------------------------------------------------------
+
+	private void updatePrivileges(String id, Element privil) throws Exception
+	{
+		List grpList = privil.getChildren("group");
+
+		//--- remove old operations
+
+		List locOper = getOperations(dbms, id).getChildren();
+
+		for (int i=0; i<locOper.size(); i++)
+		{
+			Element oper     = (Element) locOper.get(i);
+			String  grpName  = oper.getChildText("grpname");
+			String  operName = oper.getChildText("opname");
+
+			int grpId  = Integer.parseInt(oper.getChildText("grpid"));
+			int operId = Integer.parseInt(oper.getChildText("opid"));
+
+			if (!existsOperation(grpList, grpName, operName))
+			{
+				log.debug("  - Unsetting operation : "+ grpName +"/"+ operName);
+				dataMan.unsetOperation(dbms, new Integer(id), grpId, operId);
+			}
+		}
+
+		//--- add new operations
+
+		for (int i=0; i<grpList.size(); i++)
+		{
+			Element group   = (Element) grpList.get(i);
+			String  grpName = group.getAttributeValue("name");
+			String  grpId   = localGroups.getID(grpName);
+
+			if (grpId != null)
+				updateOperations(group, id, grpId, grpName, locOper);
+
+			else if (params.createGroups)
+			{
+				//--- the remote group does not exist locally : create it
+
+				log.debug("  - Creating local group : "+ grpName);
+				grpId = createGroup(grpName) +"";
+
+				log.debug("  - Setting privileges for group : "+ grpName);
+				addOperations(group, id, grpId);
+			}
+		}
+	}
+
+	//--------------------------------------------------------------------------
+
+	private Element getOperations(Dbms dbms, String mdId) throws Exception
+	{
+		String query = "SELECT G.id as grpId, O.id as opId, G.name AS grpName, O.name as opName "+
+							"FROM   Groups G, Operations O, OperationAllowed "+
+							"WHERE  G.id=groupId AND O.id=operationId AND metadataId=?";
+
+		return dbms.select(query, new Integer(mdId));
+	}
+
+	//--------------------------------------------------------------------------
+
+	private void updateOperations(Element group, String id, String grpId,
+											String grpName, List locOper) throws Exception
+	{
+		List opers = group.getChildren("operation");
+
+		for (int j=0; j<opers.size(); j++)
+		{
+			Element oper   = (Element) opers.get(j);
+			String  opName = oper.getAttributeValue("name");
+			String  opId   = AccessManager.getPrivilegeId(opName) +"";
+
+			if (!isOperationSet(locOper, grpId, opId))
+			{
+				log.debug("  - Setting operation : "+ grpName +"/"+ opName);
+				dataMan.setOperation(dbms, id, grpId, opId +"");
+			}
+		}
+	}
+
+	//--------------------------------------------------------------------------
+
+	private boolean existsOperation(List list, String grpName, String operName)
+	{
+		for (int i=0; i<list.size(); i++)
+		{
+			Element group = (Element) list.get(i);
+
+			if (grpName.equals(group.getAttributeValue("name")))
+			{
+				List operList = group.getChildren("operation");
+
+				for (int j=0; j<operList.size(); j++)
+				{
+					Element oper = (Element) operList.get(j);
+
+					if (operName.equals(oper.getAttributeValue("name")))
+						return true;
+				}
+
+				//--- there can be only 1 group with a given name
+				return false;
+			}
+		}
+
+		return false;
+	}
+
+	//--------------------------------------------------------------------------
+
+	private boolean isOperationSet(List locOpers, String grpId, String operId)
+	{
+		for (int i=0; i<locOpers.size(); i++)
+		{
+			Element oper = (Element) locOpers.get(i);
+
+			String gId = oper.getChildText("grpid");
+			String oId = oper.getChildText("opid");
+
+			if (grpId.equals(gId) && operId.equals(oId))
+				return true;
+		}
+
+		return false;
+	}
+
+	//--------------------------------------------------------------------------
+
+	private void updateThumbnail(String id, String file, InputStream is,
+										  Element thumbs) throws IOException
+	{
+		if (thumbs == null)
+			log.debug("  - No 'thumbnails' element in info.xml. Cannot update thumbnail :"+ file);
+		else
+		{
+			removeOldThumbs(id, thumbs);
+			updateChangedThumbs(id, file, is, thumbs);
+		}
+	}
+
+	//--------------------------------------------------------------------------
+
+	private void removeOldThumbs(String id, Element infoThumbs)
+	{
+		File pubDir = new File(Lib.resource.getDir(context, "public", id));
+
+		File thumbs[] = pubDir.listFiles();
+
+		if (thumbs == null)
+			log.error("  - Cannot scan directory for thumbnails : "+ pubDir.getAbsolutePath());
+
+		else for (File thumb : thumbs)
+			if (!existsThumb(thumb.getName(), infoThumbs))
+			{
+				log.debug("  - Removing old thumbnail with name="+ thumb.getName());
+				thumb.delete();
+			}
+	}
+
+	//--------------------------------------------------------------------------
+
+	private boolean existsThumb(String thumbName, Element thumbs)
+	{
+		List list = thumbs.getChildren("file");
+
+		for (int i=0; i<list.size(); i++)
+		{
+			Element elem = (Element) list.get(i);
+			String  name = elem.getAttributeValue("name");
+
+			if (thumbName.equals(name))
+				return true;
+		}
+
+		return false;
+	}
+
+	//--------------------------------------------------------------------------
+
+	private void updateChangedThumbs(String id, String file, InputStream is,
+												Element thumbs) throws IOException
+	{
+		String pubDir  = Lib.resource.getDir(context, "public", id);
+		File   locFile = new File(pubDir, file);
+
+		List list = thumbs.getChildren("file");
+
+		for (int i=0; i<list.size(); i++)
+		{
+			Element elem = (Element) list.get(i);
+			String  name = elem.getAttributeValue("name");
+			String  date = elem.getAttributeValue("changeDate");
+
+			if (file.equals(name))
+			{
+				ISODate locIsoDate = new ISODate(locFile.lastModified());
+				ISODate remIsoDate = new ISODate(date);
+
+				if (!locFile.exists() || remIsoDate.sub(locIsoDate) > 0)
+				{
+					log.debug("  - Adding remote thumbnail with name="+ file);
+
+					FileOutputStream os = new FileOutputStream(locFile);
+					BinaryFile.copy(is, os, false, true);
+				}
+				else
+				{
+					log.debug("  - Nothing to do to thumbnail with name="+ file);
+				}
+
+				return;
+			}
+		}
+
+		log.debug("  - Thumbnail file not found inside info.xml (possible race) : "+ file);
 	}
 
 	//--------------------------------------------------------------------------
@@ -460,22 +770,6 @@ public class Aligner
 
 	//--------------------------------------------------------------------------
 
-//	private Element getRemoteMetadata(XmlRequest req, String id) throws Exception
-//	{
-//		req.clearParams();
-//		req.addParam("id", id);
-//
-//		Element elMetadata = req.execute();//si.get);
-//
-//		Element elInfo = elMetadata.getChild("info", Edit.NAMESPACE);
-//
-//		if (elInfo != null)
-//			elInfo.detach();
-//
-//		return elMetadata;
-//
-//	}
-
 	private File retrieveMEF(String uuid) throws IOException
 	{
 		req.clearParams();
@@ -485,21 +779,6 @@ public class Aligner
 		req.setAddress("/"+ params.servlet +"/srv/en/"+ SERVICE_MEF_EXPORT);
 
 		return req.executeLarge();
-	}
-
-	//--------------------------------------------------------------------------
-
-	private boolean existsCategory(List catList, String name)
-	{
-		for(Iterator i=catList.iterator(); i.hasNext();)
-		{
-			String catName = ((Element) i.next()).getText();
-
-			if (catName.equals(name))
-				return true;
-		}
-
-		return false;
 	}
 
 	//--------------------------------------------------------------------------
@@ -529,9 +808,25 @@ public class Aligner
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
 	private UUIDMapper     localUuids;
+	private AlignerResult  result;
 
 	private HashMap<String, HashMap<String, String>> hmRemoteCateg  = new HashMap<String, HashMap<String, String>>();
 	private HashMap<String, HashMap<String, String>> hmRemoteGroups = new HashMap<String, HashMap<String, String>>();
+}
+
+//=============================================================================
+
+class AlignerResult
+{
+	public String siteId;
+
+	public int totalMetadata;
+	public int addedMetadata;
+	public int updatedMetadata;
+	public int unchangedMetadata;
+	public int locallyRemoved;
+	public int schemaSkipped;
+	public int uuidSkipped;
 }
 
 //=============================================================================

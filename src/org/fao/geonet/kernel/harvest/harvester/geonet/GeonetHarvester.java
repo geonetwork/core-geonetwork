@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -218,7 +219,37 @@ public class GeonetHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doAddInfo(Element info) {}
+	protected void doAddInfo(Element info)
+	{
+		//--- if the harvesting is not started yet, we don't have any info
+
+		if (result == null)
+			return;
+
+		//--- ok, add proper info
+
+		for (AlignerResult ar : result.alResult)
+		{
+			Element site = new Element("search");
+			site.setAttribute("siteId", ar.siteId);
+
+			add(site, "total",     ar.totalMetadata);
+			add(site, "added",     ar.addedMetadata);
+			add(site, "updated",   ar.updatedMetadata);
+			add(site, "unchanged", ar.unchangedMetadata);
+			add(site, "skipped",   ar.schemaSkipped+ ar.uuidSkipped);
+			add(site, "removed",   ar.locallyRemoved);
+
+			info.addContent(site);
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void add(Element el, String name, int value)
+	{
+		el.addContent(new Element(name).setText(Integer.toString(value)));
+	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -267,6 +298,8 @@ public class GeonetHarvester extends AbstractHarvester
 
 		//--- search
 
+		result = new GeonetResult();
+
 		Aligner aligner = new Aligner(log, req, params, dataMan, dbms, context,
 												localCateg, localGroups, remoteInfo);
 
@@ -276,12 +309,15 @@ public class GeonetHarvester extends AbstractHarvester
 
 			req.setAddress("/"+ params.servlet +"/srv/en/"+ SERVICE_SEARCH);
 
-			Element result = req.execute(s.createRequest());
+			Element searchResult = req.execute(s.createRequest());
 
-			log.debug("Obtained:\n"+Xml.getString(result));
+			log.debug("Obtained:\n"+Xml.getString(searchResult));
 
 			//--- site alignment
-			aligner.align(result, s.siteId);
+			AlignerResult ar = aligner.align(searchResult, s.siteId);
+
+			//--- collect some stats
+			result.alResult.add(ar);
 		}
 
 		//--- logout
@@ -309,6 +345,7 @@ public class GeonetHarvester extends AbstractHarvester
 
 class GeonetResult
 {
+	public ArrayList<AlignerResult> alResult = new ArrayList<AlignerResult>();
 }
 
 //=============================================================================

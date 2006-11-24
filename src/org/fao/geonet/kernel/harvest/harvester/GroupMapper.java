@@ -56,7 +56,7 @@ public class GroupMapper
 			String id   = record.getChildText("id");
 			String name = record.getChildText("name");
 
-			hmNameId.put(name, id);
+			add(name, id);
 		}
 	}
 
@@ -64,6 +64,13 @@ public class GroupMapper
 	//---
 	//--- API methods
 	//---
+	//--------------------------------------------------------------------------
+
+	public void add(String name, String id)
+	{
+		hmNameId.put(name, id);
+	}
+
 	//--------------------------------------------------------------------------
 
 	/** Given a group name returns its id */
