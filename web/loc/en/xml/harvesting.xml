@@ -127,5 +127,22 @@
 		<op id="5">Dynamic</op>
 		<op id="6">Featured</op>
 	</oper>
+	
+	<!-- tooltips -->
+	
+	<statusTip type="inactive">Inactive</statusTip>
+	<statusTip type="active">Active</statusTip>
+	<statusTip type="running">Running</statusTip>
+	
+	<tipHeader>
+		<siteId>Site ID</siteId>
+		<total>Total</total>
+		<added>Added</added>
+		<updated>Updated</updated>
+		<unchanged>Unchanged</unchanged>
+		<skipped>Skipped</skipped>
+	</tipHeader>
+	
+	<notRun>Waiting for the first run</notRun>
 </strings>
 
