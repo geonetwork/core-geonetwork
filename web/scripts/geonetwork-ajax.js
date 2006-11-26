@@ -273,6 +273,20 @@ gn.showError = function(message, xmlResult)
 }
 
 //=====================================================================================
+
+gn.wait = function(millis)
+{
+	var date = new Date();
+	var curDate = null;
+
+	do 
+	{ 
+		curDate = new Date(); 
+	} 
+	while (curDate-date < millis);
+}
+
+//=====================================================================================
 //===
 //=== GUI methods
 //===
@@ -415,6 +429,65 @@ Shower.prototype.update = function()
 {
 	if (this.source.checked)	Element.show(this.target);
 		else 							Element.hide(this.target);
+}
+
+//=====================================================================================
+//===
+//=== Tooltip
+//===
+//=== Shows a tooltip for an element.
+//=====================================================================================
+
+/* elem can be a DOM element or its id
+*/
+
+function Tooltip(elem, message)
+{
+	if (typeof elem == 'string')
+		elem = $(elem);
+		
+	this.elem = elem;
+	this.shown= false;
+	this.msg  = message;
+	
+	Event.observe(elem, 'mouseover', gn.wrap(this, this.mouseIn));
+	Event.observe(elem, 'mouseout',  gn.wrap(this, this.mouseOut));	
+}
+
+//=====================================================================================
+
+Tooltip.prototype.mouseIn = function(event)
+{
+	if (this.shown)
+		return;
+		
+	if (!this.tip)
+	{
+		this.tip = document.createElement('div');
+		this.tip.className = 'tooltip';
+		this.tip.innerHTML = this.msg;
+		
+		document.body.appendChild(this.tip);	
+	}
+		
+	Element.show(this.tip);
+	
+	this.tip.style.left = Event.pointerX(event) +12;
+	this.tip.style.top  = Event.pointerY(event) +12;
+	
+	this.shown = true;
+}
+
+//=====================================================================================
+
+Tooltip.prototype.mouseOut = function(e)
+{
+	if (!this.shown)
+		return;
+		
+	Element.hide(this.tip);
+	
+	this.shown = false;
 }
 
 //=====================================================================================

@@ -129,7 +129,7 @@ HarvestView.prototype.setStopped = function(id)
 {
 	var img = gn.getElementById($(id), 'status');
 	
-	img.setAttribute('src', Env.url +'/images/stop.png');
+	img.setAttribute('src', Env.url +'/images/fileclose.png');
 }
 
 //=====================================================================================
@@ -222,10 +222,27 @@ HarvestView.prototype.append = function(xmlNode)
 
 HarvestView.prototype.appendCallBack = function(xml)
 {
-	var html= gn.xmlToString(xml);
+	var elRow    = xml.getElementsByTagName('tr')    [0];
+	var elStatus = xml.getElementsByTagName('status')[0];
+	var elError  = xml.getElementsByTagName('error') [0];
+	
+	var htmlRow   = gn.xmlToString(elRow);
+	var htmlStatus= gn.xmlToString(elStatus);
+	var htmlError = gn.xmlToString(elError);
 	
 	//--- add the new entry in list
-	new Insertion.Bottom('table', html);
+	
+	new Insertion.Bottom('table', htmlRow);
+	
+	//--- add proper tooltips for both status and error columns
+	
+	var id = elRow.getAttribute('id');
+	
+	var imgStatus = gn.getElementById($(id), 'status');
+	var imgError  = gn.getElementById($(id), 'error');
+	
+	new Tooltip(imgStatus, htmlStatus);
+	new Tooltip(imgError,  htmlError);
 }
 
 //=====================================================================================
@@ -241,14 +258,30 @@ HarvestView.prototype.refresh = function(xmlNode)
 
 HarvestView.prototype.refreshCallBack = function(xml)
 {
-	var id   = xml.getAttribute('id');
-	var html = gn.xmlToString(xml);
+	var elRow    = xml.getElementsByTagName('tr')    [0];
+	var elStatus = xml.getElementsByTagName('status')[0];
+	var elError  = xml.getElementsByTagName('error') [0];
+	
+	var htmlRow   = gn.xmlToString(elRow);
+	var htmlStatus= gn.xmlToString(elStatus);
+	var htmlError = gn.xmlToString(elError);
+	
+	var id = elRow.getAttribute('id');
 	
 	//--- now we have to remove the <tr> </tr> root text
-	var from = html.indexOf('>') +1;
-	var to   = html.indexOf('</tr>');
+	
+	var from = htmlRow.indexOf('>') +1;
+	var to   = htmlRow.indexOf('</tr>');
 	
 	$(id).innerHTML = html.substring(from, to);	
+	
+	//--- add proper tooltips for both status and error columns
+	
+	var imgStatus = gn.getElementById($(id), 'status');
+	var imgError  = gn.getElementById($(id), 'error');
+	
+	new Tooltip(imgStatus, htmlStatus);
+	new Tooltip(imgError,  htmlError);
 }
 
 //=====================================================================================
