@@ -244,6 +244,8 @@ public abstract class AbstractHarvester
 
 		String nodeName = name + " ("+ getClass().getSimpleName() +")";
 
+		error = null;
+
 		try
 		{
 			Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
