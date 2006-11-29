@@ -166,17 +166,18 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
 		//--- remove not requested sections
 
-		if (!hsSections.contains("ServiceIdentification"))
-			capabilities.getChild("ServiceIdentification", Csw.NAMESPACE_OWS).detach();
+//		if (!hsSections.contains("ServiceIdentification"))
+//			capabilities.getChild("ServiceIdentification", Csw.NAMESPACE_OWS).detach();
+//
+//		if (!hsSections.contains("ServiceProvider"))
+//			capabilities.getChild("ServiceProvider", Csw.NAMESPACE_OWS).detach();
+//
+//		if (!hsSections.contains("OperationsMetadata"))
+//			capabilities.getChild("OperationsMetadata", Csw.NAMESPACE_OWS).detach();
 
-		if (!hsSections.contains("ServiceProvider"))
-			capabilities.getChild("ServiceProvider", Csw.NAMESPACE_OWS).detach();
-
-		if (!hsSections.contains("OperationsMetadata"))
-			capabilities.getChild("OperationsMetadata", Csw.NAMESPACE_OWS).detach();
-
-		if (!hsSections.contains("Filter_Capabilities"))
-			capabilities.getChild("Filter_Capabilities", Csw.NAMESPACE_OGC).detach();
+		//--- the filter section is mandatory
+//		if (!hsSections.contains("Filter_Capabilities"))
+//			capabilities.getChild("Filter_Capabilities", Csw.NAMESPACE_OGC).detach();
 	}
 }
 
