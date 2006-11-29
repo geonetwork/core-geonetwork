@@ -110,7 +110,8 @@ public class Csw
 					else if (typeName.equals(APPLICATION.toString()))
 						hs.add(APPLICATION);
 
-					else throw new InvalidParameterValueEx("typeName", typeName);
+					//--- avoid exception because the typeName is too ambiguous and not used now
+//					else throw new InvalidParameterValueEx("typeName", typeName);
 				}
 			}
 
