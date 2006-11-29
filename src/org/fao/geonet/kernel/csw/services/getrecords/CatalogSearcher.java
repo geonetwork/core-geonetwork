@@ -121,9 +121,11 @@ class CatalogSearcher
 	{
 		Element luceneExpr = filterToLucene(context, filterExpr);
 
-		checkForErrors(luceneExpr);
-		remapFields(luceneExpr);
-
+		if (luceneExpr != null)
+		{
+			checkForErrors(luceneExpr);
+			remapFields(luceneExpr);
+		}
 //System.out.println("============================================");
 //System.out.println("LUCENE:\n"+Xml.getString(luceneExpr));
 
@@ -152,6 +154,9 @@ class CatalogSearcher
 
 	private Element filterToLucene(ServiceContext context, Element filterExpr) throws NoApplicableCodeEx
 	{
+		if (filterExpr == null)
+			return null;
+
 		String styleSheet = context.getAppPath() + Geonet.Path.CSW + Geonet.File.FILTER_TO_LUCENE;
 
 		try
@@ -214,7 +219,7 @@ class CatalogSearcher
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
 
-		Query data   = LuceneSearcher.makeQuery(luceneExpr);
+		Query data   = (luceneExpr == null) ? null : LuceneSearcher.makeQuery(luceneExpr);
 		Query groups = getGroupsQuery(context);
 		Query templ  = new TermQuery(new Term("_isTemplate", "n"));
 
@@ -222,7 +227,9 @@ class CatalogSearcher
 
 		BooleanQuery query  = new BooleanQuery();
 
-		query.add(data,   true, false);
+		if (data != null)
+			query.add(data,   true, false);
+
 		query.add(groups, true, false);
 		query.add(templ,  true, false);
 
