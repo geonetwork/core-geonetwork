@@ -34,6 +34,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.Csw.ElementSetName;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
+import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.jdom.Element;
@@ -70,6 +71,9 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 		Element response = new Element(getName() +"Response", Csw.NAMESPACE_CSW);
 
 		Iterator ids = request.getChildren("Id", Csw.NAMESPACE_CSW).iterator();
+
+		if (!ids.hasNext())
+			throw new MissingParameterValueEx("id");
 
 		while(ids.hasNext())
 		{
