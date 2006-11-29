@@ -62,9 +62,10 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
 	public Element execute(Element request, ServiceContext context) throws CatalogException
 	{
-		if (!checkService(request))
-			throw new MissingParameterValueEx("service");
+//		if (!checkService(request))
+//			throw new MissingParameterValueEx("service");
 
+		checkService(request);
 		checkAcceptVersions(request);
 
 		//--- return capabilities
