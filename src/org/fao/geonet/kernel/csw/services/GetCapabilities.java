@@ -164,6 +164,15 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 			hsSections.add(section.getText());
 		}
 
+		if (hsSections.size() == 0)
+		{
+			capabilities.getChild("ServiceIdentification", Csw.NAMESPACE_OWS).detach();
+			capabilities.getChild("ServiceProvider",       Csw.NAMESPACE_OWS).detach();
+			capabilities.getChild("OperationsMetadata",    Csw.NAMESPACE_OWS).detach();
+
+			return;
+		}
+
 		//--- remove not requested sections
 
 //		if (!hsSections.contains("ServiceIdentification"))
