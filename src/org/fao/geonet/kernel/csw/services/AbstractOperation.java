@@ -43,20 +43,20 @@ public abstract class AbstractOperation
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void checkService(Element request) throws CatalogException
+	protected boolean checkService(Element request) throws CatalogException
 	{
 		String service = request.getAttributeValue("service");
 
 		if (service == null)
-			return;
+			return false;
 
 		if (service.equals(Csw.SERVICE))
-			return;
+			return true;
 
 		//--- this is just a fix to the incorrect XSD schema default
 
 		if (service.equals("http://www.opengis.net/cat/csw"))
-			return;
+			return true;
 
 		throw new InvalidParameterValueEx("service", service);
 	}

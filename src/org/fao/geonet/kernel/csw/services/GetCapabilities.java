@@ -32,6 +32,7 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
+import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.csw.common.exceptions.VersionNegotiationFailedEx;
 import org.fao.geonet.kernel.csw.CatalogService;
@@ -61,7 +62,9 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
 	public Element execute(Element request, ServiceContext context) throws CatalogException
 	{
-		checkService(request);
+		if (!checkService(request))
+			throw new MissingParameterValueEx("service");
+
 		checkAcceptVersions(request);
 
 		//--- return capabilities
