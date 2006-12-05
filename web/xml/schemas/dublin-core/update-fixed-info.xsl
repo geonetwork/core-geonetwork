@@ -2,7 +2,8 @@
 
 <xsl:stylesheet version="1.0" 
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-					 xmlns:dc="http://purl.org/dc/elements/1.1/">
+					 xmlns:dc ="http://purl.org/dc/elements/1.1/"
+  					 xmlns:dct="http://purl.org/dc/terms/">
 
 	<!-- ================================================================= -->
 	
@@ -46,11 +47,15 @@
 			<xsl:apply-templates select="dc:relation"/>
 			<xsl:apply-templates select="dc:coverage"/>
 			<xsl:apply-templates select="dc:rights"/>
+
+			<xsl:apply-templates select="dct:abstract"/>
+			<xsl:apply-templates select="dct:modified"/>
+			<xsl:apply-templates select="dct:spatial"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<!-- ================================================================= -->
-	
+
 	<xsl:template match="dc:identifier">
 		 <xsl:copy><xsl:value-of select="/root/env/uuid"/></xsl:copy>
 	</xsl:template>

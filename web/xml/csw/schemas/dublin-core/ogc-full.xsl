@@ -2,11 +2,13 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 										xmlns:csw="http://www.opengis.net/cat/csw"
-										xmlns:dc ="http://purl.org/dc/elements/1.1/"> 
+										xmlns:dc ="http://purl.org/dc/elements/1.1/"
+										xmlns:ows="http://www.opengis.net/ows" >
 
 	<xsl:template match="simpledc">
 		<csw:Record>
 			<xsl:apply-templates select="*"/>
+			<xsl:apply-templates select="dc:coverage" mode="bbox"/>
 		</csw:Record>
 	</xsl:template>
 
@@ -14,6 +16,26 @@
 		<xsl:copy>
 			<xsl:apply-templates select="@*|node()"/>
 		</xsl:copy>
+	</xsl:template>
+
+	<!-- this separate match is needed because the BBOX must be the last field
+        (after all dc:xxx and dct:xxx) -->
+
+	<xsl:template match="dc:coverage" mode="bbox">
+		<xsl:variable name="coverage" select="."/>
+		<xsl:variable name="n" select="substring-after($coverage,'North ')"/>
+		<xsl:variable name="north" select="substring-before($n,',')"/>
+		<xsl:variable name="s" select="substring-after($coverage,'South ')"/>
+		<xsl:variable name="south" select="substring-before($s,',')"/>
+		<xsl:variable name="e" select="substring-after($coverage,'East ')"/>
+		<xsl:variable name="east" select="substring-before($e,',')"/>
+		<xsl:variable name="w" select="substring-after($coverage,'West ')"/>
+		<xsl:variable name="west" select="substring-before($w,'. ')"/>
+
+		<ows:BoundingBox>
+			<ows:LowerCorner><xsl:value-of select="concat($west, ' ', $south)"/></ows:LowerCorner>
+			<ows:UpperCorner><xsl:value-of select="concat($east, ' ', $north)"/></ows:UpperCorner>
+		</ows:BoundingBox>
 	</xsl:template>
 
 </xsl:stylesheet>

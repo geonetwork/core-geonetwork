@@ -28,6 +28,9 @@
 		<xsl:choose>
 			<xsl:when test="ogc:PropertyName and ogc:Literal">
 				<BooleanQuery>
+					<BooleanClause required="true" prohibited="false">
+						<WildcardQuery fld="any" txt="*"/>
+					</BooleanClause>
 					<BooleanClause required="false" prohibited="true">
 						<TermQuery fld="{ogc:PropertyName}" txt="{ogc:Literal}"/>
 					</BooleanClause>
@@ -169,6 +172,10 @@
 
 	<xsl:template match="ogc:Not">
 		<BooleanQuery>
+			<BooleanClause required="true" prohibited="false">
+				<WildcardQuery fld="any" txt="*"/>
+			</BooleanClause>
+
 			<xsl:for-each select="*">
 				<BooleanClause required="false" prohibited="true">
 					<xsl:apply-templates select="." />
@@ -187,28 +194,39 @@
 
 		<xsl:variable name="northBL" select="substring-after($upper, ' ')  + 360"/>
 		<xsl:variable name="southBL" select="substring-after($lower, ' ')  + 360"/>
-		<xsl:variable name="westBL"  select="substring-before($upper, ' ') + 360"/>
-		<xsl:variable name="eastBL"  select="substring-before($lower, ' ') + 360"/>
+		<xsl:variable name="eastBL"  select="substring-before($upper, ' ') + 360"/>
+		<xsl:variable name="westBL"  select="substring-before($lower, ' ') + 360"/>
 
-		<!-- overlaps test : BBOX = not disjoint -->
+		<xsl:choose>
+			<!-- A better test should be done by java code -->
+			<xsl:when test="not (contains(ogc:PropertyName, 'ows:BoundingBox'))">
+				<error type="The queried property is not spatial">
+					<xsl:copy-of select="."/>
+				</error>
+			</xsl:when>
 
-		<BooleanQuery>
-			<BooleanClause required="true" prohibited="false">
-				<RangeQuery fld="eastBL" lowerTxt="{$westBL + 1}" upperTxt="{180 + 360}" inclusive="true"/>
-			</BooleanClause>
-
-			<BooleanClause required="true" prohibited="false">
-				<RangeQuery fld="westBL" lowerTxt="{-180 + 360}" upperTxt="{$eastBL - 1}" inclusive="true"/>
-			</BooleanClause>
-
-			<BooleanClause required="true" prohibited="false">
-				<RangeQuery fld="northBL" lowerTxt="{$southBL + 1}" upperTxt="{90 + 360}" inclusive="true"/>
-			</BooleanClause>
-
-			<BooleanClause required="true" prohibited="false">
-				<RangeQuery fld="southBL" lowerTxt="{-90 + 360}" upperTxt="{$northBL - 1}" inclusive="true"/>
-			</BooleanClause>
-		</BooleanQuery>
+			<xsl:otherwise>
+				<!-- overlaps test : BBOX = not disjoint -->
+		
+				<BooleanQuery>
+					<BooleanClause required="true" prohibited="false">
+						<RangeQuery fld="eastBL" lowerTxt="{$westBL + 1}" upperTxt="{180 + 360}" inclusive="true"/>
+					</BooleanClause>
+		
+					<BooleanClause required="true" prohibited="false">
+						<RangeQuery fld="westBL" lowerTxt="{-180 + 360}" upperTxt="{$eastBL - 1}" inclusive="true"/>
+					</BooleanClause>
+		
+					<BooleanClause required="true" prohibited="false">
+						<RangeQuery fld="northBL" lowerTxt="{$southBL + 1}" upperTxt="{90 + 360}" inclusive="true"/>
+					</BooleanClause>
+		
+					<BooleanClause required="true" prohibited="false">
+						<RangeQuery fld="southBL" lowerTxt="{-90 + 360}" upperTxt="{$northBL - 1}" inclusive="true"/>
+					</BooleanClause>
+				</BooleanQuery>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- ========================================================================== -->

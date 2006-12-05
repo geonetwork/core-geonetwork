@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-	xmlns:dc = "http://purl.org/dc/elements/1.1/">
+<xsl:stylesheet version="1.0"
+					 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+					 xmlns:dc = "http://purl.org/dc/elements/1.1/"
+					 xmlns:dct="http://purl.org/dc/terms/">
+
+<xsl:output method="xml" indent="yes"/>
 
 <xsl:template match="/">
 	<Document>
@@ -17,13 +21,33 @@
 		<xsl:variable name="p" select="substring-after($coverage,'(')"/>
 		<xsl:variable name="place" select="substring-before($p,')')"/>
 		
+		<xsl:for-each select="/simpledc/dc:identifier">
+			<Field name="identifier" string="{string(.)}" store="true" index="true" token="false"/>
+		</xsl:for-each>
+
+		<xsl:for-each select="/simpledc/dct:abstract">
+			<Field name="abstract" string="{string(.)}" store="true" index="true" token="true"/>
+		</xsl:for-each>
+		
+		<xsl:for-each select="/simpledc/dct:modified">
+			<Field name="changeDate" string="{string(.)}" store="true" index="true" token="false"/>
+		</xsl:for-each>
+
+		<xsl:for-each select="/simpledc/dc:format">
+			<Field name="format" string="{string(.)}" store="true" index="true" token="false"/>
+		</xsl:for-each>
+
+		<xsl:for-each select="/simpledc/dc:type">
+			<Field name="type" string="{string(.)}" store="true" index="true" token="false"/>
+		</xsl:for-each>
+
 		<xsl:apply-templates select="/simpledc/dc:title">
 			<xsl:with-param name="name" select="'title'"/>
 			<xsl:with-param name="token" select="'true'"/>
 		</xsl:apply-templates>
-		
+
 		<xsl:apply-templates select="/simpledc/dc:description">
-			<xsl:with-param name="name" select="'abstract'"/>
+			<xsl:with-param name="name" select="'description'"/>
 			<xsl:with-param name="token" select="'true'"/>
 		</xsl:apply-templates>
 		
