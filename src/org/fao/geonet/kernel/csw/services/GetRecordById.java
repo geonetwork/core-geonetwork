@@ -66,7 +66,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 		checkService(request);
 		checkVersion(request);
 
-		ElementSetName setName = getElementSetName(request);
+		ElementSetName setName = getElementSetName(request, ElementSetName.SUMMARY);
 
 		Element response = new Element(getName() +"Response", Csw.NAMESPACE_CSW);
 

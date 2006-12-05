@@ -62,8 +62,8 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
 	public Element execute(Element request, ServiceContext context) throws CatalogException
 	{
-//		if (!checkService(request))
-//			throw new MissingParameterValueEx("service");
+		if (!checkService(request))
+			throw new MissingParameterValueEx("service");
 
 		checkService(request);
 		checkAcceptVersions(request);
@@ -176,14 +176,14 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
 		//--- remove not requested sections
 
-//		if (!hsSections.contains("ServiceIdentification"))
-//			capabilities.getChild("ServiceIdentification", Csw.NAMESPACE_OWS).detach();
-//
-//		if (!hsSections.contains("ServiceProvider"))
-//			capabilities.getChild("ServiceProvider", Csw.NAMESPACE_OWS).detach();
-//
-//		if (!hsSections.contains("OperationsMetadata"))
-//			capabilities.getChild("OperationsMetadata", Csw.NAMESPACE_OWS).detach();
+		if (!hsSections.contains("ServiceIdentification"))
+			capabilities.getChild("ServiceIdentification", Csw.NAMESPACE_OWS).detach();
+
+		if (!hsSections.contains("ServiceProvider"))
+			capabilities.getChild("ServiceProvider", Csw.NAMESPACE_OWS).detach();
+
+		if (!hsSections.contains("OperationsMetadata"))
+			capabilities.getChild("OperationsMetadata", Csw.NAMESPACE_OWS).detach();
 
 		//--- the filter section is mandatory
 //		if (!hsSections.contains("Filter_Capabilities"))

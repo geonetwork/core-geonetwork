@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.csw.services;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.Csw.ElementSetName;
@@ -133,10 +134,10 @@ public abstract class AbstractOperation
 
 	//---------------------------------------------------------------------------
 
-	protected ElementSetName getElementSetName(Element parent) throws InvalidParameterValueEx
+	protected ElementSetName getElementSetName(Element parent, ElementSetName defValue) throws InvalidParameterValueEx
 	{
 		if (parent == null)
-			return ElementSetName.FULL;
+			return defValue;
 
 		return ElementSetName.parse(parent.getChildText("ElementSetName", parent.getNamespace()));
 	}

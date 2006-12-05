@@ -30,8 +30,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.apache.lucene.document.Document;
@@ -56,58 +58,6 @@ import org.jdom.Element;
 
 class CatalogSearcher
 {
-	private static String[][] mapping =
-	{
-		{ "Identifier", "identifier" },
-		{ "Title",      "title"      },
-		{ "Abstract",   "abstract"   },
-		{ "Modified",   "changeDate" },
-		{ "Subject",    "keyword"    },
-		{ "Type",       "type"       },
-		{ "CRS",        "crs"        },
-		{ "AnyText",    "any"        },
-		{ "Format",     "format"     },
-
-		{ "FileIdentifier",        "fileId"      },
-		{ "Language",              "language"    },
-		{ "AlternateTitle",        "altTitle"    },
-		{ "CreationDate",          "createDate"  },
-		{ "OrganisationName",      "orgName"     },
-		{ "HasSecurityConstraints","secConstr"   },
-		{ "HierarchyLevelName",    "levelName"   },
-		{ "ParentIdentifier",      "parentId"    },
-		{ "KeywordType",           "keywordType" },
-
-		{ "TopicCategory",            "topicCat"        },
-		{ "DatasetLanguage",          "datasetLang"     },
-		{ "GeographicDescriptionCode","geoDescCode"     },
-		{ "TempExtent_begin",         "tempExtentBegin" },
-		{ "TempExtent_end",           "tempExtentEnd"   },
-		{ "Denominator",              "denominator"     },
-		{ "DistanceValue",            "distanceVal"     },
-		{ "DistanceUOM",              "distanceUom"     },
-
-		//--- these are needed just to avoid a warning when converting field names
-		//--- from CSW names -> lucene names
-
-		{ "northBL", "northBL" },
-		{ "southBL", "southBL" },
-		{ "eastBL",  "eastBL"  },
-		{ "westBL",  "westBL"  }
-	};
-
-	//---------------------------------------------------------------------------
-
-	private static HashMap<String, String> hmMapping = new HashMap<String, String>();
-
-	//---------------------------------------------------------------------------
-
-	static
-	{
-		for(String[] couple : mapping)
-			hmMapping.put(couple[0], couple[1]);
-	}
-
 	//---------------------------------------------------------------------------
 	//---
 	//--- Main search method
@@ -125,6 +75,7 @@ class CatalogSearcher
 		{
 			checkForErrors(luceneExpr);
 			remapFields(luceneExpr);
+			convertPhrases(luceneExpr);
 		}
 //System.out.println("============================================");
 //System.out.println("LUCENE:\n"+Xml.getString(luceneExpr));
@@ -192,13 +143,48 @@ class CatalogSearcher
 
 	//---------------------------------------------------------------------------
 
+	private void convertPhrases(Element elem)
+	{
+		if (elem.getName().equals("TermQuery"))
+		{
+			String field = elem.getAttributeValue("fld");
+			String text  = elem.getAttributeValue("txt");
+
+			if (text.indexOf(" ") != -1)
+			{
+				elem.setName("PhraseQuery");
+
+				StringTokenizer st = new StringTokenizer(text, " ");
+
+				while (st.hasMoreTokens())
+				{
+					Element term = new Element("TermQuery");
+					term.setAttribute("fld", field);
+					term.setAttribute("txt", st.nextToken());
+
+					elem.addContent(term);
+				}
+			}
+		}
+
+		else
+		{
+			List children = elem.getChildren();
+
+			for(int i=0; i<children.size(); i++)
+				convertPhrases((Element) children.get(i));
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
 	private void remapFields(Element elem)
 	{
 		String field = elem.getAttributeValue("fld");
 
 		if (field != null)
 		{
-			String mapped = hmMapping.get(field);
+			String mapped = FieldMapper.map(field);
 
 			if (mapped != null)
 				elem.setAttribute("fld", mapped);
@@ -218,6 +204,9 @@ class CatalogSearcher
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
+
+		if (luceneExpr != null)
+			Log.debug(Geonet.CSW_SEARCH, "Search criteria:\n"+ Xml.getString(luceneExpr));
 
 		Query data   = (luceneExpr == null) ? null : LuceneSearcher.makeQuery(luceneExpr);
 		Query groups = getGroupsQuery(context);
@@ -242,6 +231,8 @@ class CatalogSearcher
 		{
 			Hits hits = searcher.search(query);
 
+			Log.debug(Geonet.CSW_SEARCH, "Records matched : "+ hits.length());
+
 			//--- retrieve results
 
 			ArrayList<ResultItem> results = new ArrayList<ResultItem>();
@@ -254,12 +245,12 @@ class CatalogSearcher
 				ResultItem ri = new ResultItem(id);
 				results.add(ri);
 
-				for(String[] couple : mapping)
+				for(String field : FieldMapper.getMappedFields())
 				{
-					String value = doc.get(couple[1]);
+					String value = doc.get(field);
 
 					if (value != null)
-						ri.add(couple[1], value);
+						ri.add(field, value);
 				}
 			}
 
@@ -306,7 +297,7 @@ class CatalogSearcher
 
 		for(SortField sf : sortFields)
 		{
-			String mapped = hmMapping.get(sf.field);
+			String mapped = FieldMapper.map(sf.field);
 
 			if (mapped != null)
 			{

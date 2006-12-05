@@ -429,6 +429,7 @@ public class DataManager
 		int serial = sf.getSerial(dbms, "Metadata");
 
 		xml = updateFixedInfo(schema, Integer.toString(serial), xml, uuid, source);
+System.out.println("AFTER:\n"+Xml.getString(xml));
 
 		//--- store metadata
 
@@ -1163,6 +1164,7 @@ public class DataManager
 
 		//--- do an XSL  transformation
 
+System.out.println("BEFORE:\n"+Xml.getString(root));
 		String styleSheet = editLib.getSchemaDir(schema) + Geonet.File.UPDATE_FIXED_INFO;
 		return Xml.transform(root, styleSheet);
 	}

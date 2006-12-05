@@ -24,6 +24,8 @@
 package org.fao.geonet.kernel.csw.services;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -81,9 +83,12 @@ public class GetRecords extends AbstractOperation implements CatalogService
 		int maxRecords = getMaxRecords(request);
 		int hopCount   = getHopCount(request);
 
+		Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
+
 		ResultType      resultType  = ResultType  .parse(request.getAttributeValue("resultType"));;
 		OutputSchema    outSchema   = OutputSchema.parse(request.getAttributeValue("outputSchema"));
-		ElementSetName  setName     = getElementSetName(request.getChild("Query", Csw.NAMESPACE_CSW));
+		ElementSetName  setName     = getElementSetName(query , ElementSetName.FULL);
+		Set<String>     elemNames   = getElementNames(query);
 		Set<TypeName>   typeNames   = getTypeNames(request);
 		Element         filterExpr  = getFilterExpression(request, context);
 		List<SortField> sortFields  = getSortFields(request);
@@ -100,7 +105,7 @@ public class GetRecords extends AbstractOperation implements CatalogService
 
 		response.addContent(status);
 		response.addContent(sc.search(context, startPos, maxRecords, hopCount, resultType,
-												outSchema, setName, typeNames, filterExpr, sortFields));
+												outSchema, setName, typeNames, filterExpr, sortFields, elemNames));
 
 		return response;
 	}
@@ -120,6 +125,7 @@ public class GetRecords extends AbstractOperation implements CatalogService
 		String distribSearch= params.get("distributedsearch");
 		String typeNames    = params.get("typenames");
 		String elemSetName  = params.get("elementsetname");
+		String elemName     = params.get("elementname");
 		String constraint   = params.get("constraint");
 		String constrLang   = params.get("constraintlanguage");
 		String constrLangVer= params.get("constraint_language_version");
@@ -157,7 +163,10 @@ public class GetRecords extends AbstractOperation implements CatalogService
 		if (typeNames != null)
 			setAttrib(query, "typeNames", typeNames.replace(',',' '));
 
+		//--- these 2 are in mutual exclusion
+
 		addElement(query, "ElementSetName", elemSetName);
+		fill(query, "ElementName", elemName);
 
 		//------------------------------------------------------------------------
 		//--- handle constraint
@@ -325,7 +334,7 @@ public class GetRecords extends AbstractOperation implements CatalogService
 		Element cql    = constr.getChild("CqlText", Csw.NAMESPACE_CSW);
 
 		if (filter == null && cql == null)
-			throw new InvalidParameterValueEx("Constraint", Xml.getString(constr));
+			throw new NoApplicableCodeEx("Missing filter expression or cql query");
 
 		String version = constr.getAttributeValue("version");
 
@@ -437,6 +446,30 @@ public class GetRecords extends AbstractOperation implements CatalogService
 
 			throw new NoApplicableCodeEx("Error during CQL to Filter conversion : "+ e);
 		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private Set<String> getElementNames(Element query)
+	{
+		if (query == null)
+			return null;
+
+		Iterator i = query.getChildren("ElementName", query.getNamespace()).iterator();
+
+		if (!i.hasNext())
+			return null;
+
+		HashSet<String> hs = new HashSet<String>();
+
+		while (i.hasNext())
+		{
+			Element elem = (Element) i.next();
+
+			hs.add(elem.getText());
+		}
+
+		return hs;
 	}
 }
 

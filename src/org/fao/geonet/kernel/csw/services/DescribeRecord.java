@@ -23,7 +23,9 @@
 
 package org.fao.geonet.kernel.csw.services;
 
+import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
@@ -35,6 +37,7 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 
 //=============================================================================
 
@@ -80,13 +83,17 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 
 		if (!i.hasNext())
 		{
-			response.addContent(getSchemaComponent(context, "dataset"));
-			response.addContent(getSchemaComponent(context, "service"));
+//			response.addContent(getSchemaComponent(context, "dataset"));
+//			response.addContent(getSchemaComponent(context, "service"));
+			response.addContent(getSchemaComponent(context, null));
 		}
 		else while(i.hasNext())
 		{
-			String typeName = ((Element) i.next()).getText();
-			response.addContent(getSchemaComponent(context, typeName));
+			String  typeName = ((Element) i.next()).getText();
+			Element schema   = getSchemaComponent(context, typeName);
+
+			if (schema != null)
+				response.addContent(schema);
 		}
 
 		return response;
@@ -135,8 +142,7 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 	private Element getSchemaComponent(ServiceContext context, String typeName)
 													throws NoApplicableCodeEx
 	{
-		String file = typeName.equals("service") ? "services.xsd" : "identification.xsd";
-		String dir  = context.getAppPath() + Geonet.Path.CSW + file;
+		String dir = context.getAppPath() + Geonet.Path.VALIDATION + "csw/2.0.1/csw-2.0.1.xsd";
 
 		try
 		{
@@ -148,18 +154,89 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 //			sc.setAttribute("parentSchema",    "?");
 			sc.setAttribute("schemaLanguage",  Csw.SCHEMA_LANGUAGE);
 
-			sc.addContent(schema);
+			if (typeName == null)
+			{
+				sc.addContent(schema);
+				return sc;
+			}
+			else
+			{
+				Element typeElem = findElement(schema, typeName);
 
-			return sc;
+				if (typeElem == null)
+					return null;
+
+				sc.addContent(typeElem);
+
+				return sc;
+			}
 		}
-		catch (Exception e)
+		catch (IOException e)
 		{
 			context.error("Cannot get schema file : "+ dir);
 			context.error("  (C) StackTrace\n"+ Util.getStackTrace(e));
 
 			throw new NoApplicableCodeEx("Cannot get schema file for : "+ typeName);
 		}
+		catch (JDOMException e)
+		{
+			context.error("Schema file is not well formed : "+ dir);
+			context.error("  (C) StackTrace\n"+ Util.getStackTrace(e));
+
+			throw new NoApplicableCodeEx("Schema file not well formed : "+ typeName);
+		}
 	}
+
+	//---------------------------------------------------------------------------
+
+	private Element findElement(Element schema, String typeName)
+	{
+		Iterator i = schema.getChildren().iterator();
+
+		while (i.hasNext())
+		{
+			Element elem = (Element) i.next();
+
+			String name = elem.getAttributeValue("name");
+
+			if (elem.getName().equals("element"))
+				if (name.equals(typeName))
+					return (Element) elem.detach();
+		}
+
+		return null;
+	}
+
+	//---------------------------------------------------------------------------
+
+//	private Element getSchemaComponent(ServiceContext context, String typeName)
+//													throws NoApplicableCodeEx
+//	{
+//		String file = typeName.equals("service") ? "services.xsd" : "identification.xsd";
+//		String dir  = context.getAppPath() + Geonet.Path.CSW + file;
+//
+//		try
+//		{
+//			Element schema = Xml.loadFile(dir);
+//
+//			Element sc = new Element("SchemaComponent", Csw.NAMESPACE_CSW);
+//
+//			sc.setAttribute("targetNamespace", Csw.NAMESPACE_CSW.getURI());
+////			sc.setAttribute("parentSchema",    "?");
+//			sc.setAttribute("schemaLanguage",  Csw.SCHEMA_LANGUAGE);
+//
+//			sc.addContent(schema);
+//
+//			return sc;
+//		}
+//		catch (Exception e)
+//		{
+//			context.error("Cannot get schema file : "+ dir);
+//			context.error("  (C) StackTrace\n"+ Util.getStackTrace(e));
+//
+//			throw new NoApplicableCodeEx("Cannot get schema file for : "+ typeName);
+//		}
+//	}
 }
 
 //=============================================================================

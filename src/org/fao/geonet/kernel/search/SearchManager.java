@@ -36,6 +36,7 @@ import java.util.Properties;
 import java.util.Vector;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -44,6 +45,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermEnum;
+import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
 //==============================================================================
@@ -167,9 +169,12 @@ public class SearchManager
 
 		// get metadata fields
 		String stylesheetName = type + ".xsl";
+
+		Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n"+ Xml.getString(metadata));
+
 		Element xmlDoc = transform(stylesheetName, metadata);
 
-//System.out.println("XML DOC for id:"+id+"\n" + jeeves.utils.Xml.getString(xmlDoc)); // DEBUG
+		Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n"+ Xml.getString(xmlDoc));
 
 		// add _id field
 		Element idField = new Element("Field");

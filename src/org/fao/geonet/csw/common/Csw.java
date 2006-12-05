@@ -111,7 +111,7 @@ public class Csw
 						hs.add(APPLICATION);
 
 					//--- avoid exception because the typeName is too ambiguous and not used now
-//					else throw new InvalidParameterValueEx("typeName", typeName);
+//FIXME			else throw new InvalidParameterValueEx("typeName", typeName);
 				}
 			}
 

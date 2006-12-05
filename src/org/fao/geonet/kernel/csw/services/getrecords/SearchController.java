@@ -53,8 +53,8 @@ public class SearchController
 
 	public Element search(ServiceContext context, int startPos, int maxRecords, int hopCount,
 								 ResultType resultType, OutputSchema outSchema, ElementSetName setName,
-								 Set<TypeName> typeNames, Element filterExpr, List<SortField> sortFields)
-									throws CatalogException
+								 Set<TypeName> typeNames, Element filterExpr, List<SortField> sortFields,
+								 Set<String> elemNames) throws CatalogException
 	{
 		Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
 
@@ -70,7 +70,7 @@ public class SearchController
 				counter++;
 
 				String  id = searchResults.get(i -1).getID();
-				Element md = retrieveMetadata(context, id, setName, outSchema);
+				Element md = retrieveMetadata(context, id, setName, outSchema, elemNames);
 
 				if (md == null)
 					context.warning("SearchController : Metadata not found or invalid schema : "+ id);
@@ -87,7 +87,8 @@ public class SearchController
 
 	//---------------------------------------------------------------------------
 
-	private Element retrieveMetadata(ServiceContext context, String id, ElementSetName setName, OutputSchema outSchema) throws CatalogException
+	private Element retrieveMetadata(ServiceContext context, String id, ElementSetName setName,
+												OutputSchema outSchema, Set<String> elemNames) throws CatalogException
 	{
 		try
 		{
@@ -126,7 +127,13 @@ public class SearchController
 			md = Xml.transform(md, styleSheet);
 
 			//--- needed to detach md from the document
+
 			md.detach();
+
+			//--- if the client has specified some ElementNames, then we remove the unwanted children
+
+			if (elemNames != null)
+				removeElements(md, elemNames);
 
 			return md;
 		}
@@ -136,6 +143,21 @@ public class SearchController
 			context.error("  (C) StackTrace:\n"+ Util.getStackTrace(e));
 
 			throw new NoApplicableCodeEx("Rised exception while getting metadata :"+ e);
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void removeElements(Element md, Set<String> elemNames)
+	{
+		Iterator i=md.getChildren().iterator();
+
+		while (i.hasNext())
+		{
+			Element elem = (Element) i.next();
+
+			if (!FieldMapper.match(elem, elemNames))
+				i.remove();
 		}
 	}
 }

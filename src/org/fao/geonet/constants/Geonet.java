@@ -88,6 +88,7 @@ public class Geonet
 	{
 		public static final String SCHEMAS            = Jeeves.Path.XML + "schemas/";
 		public static final String CSW                = Jeeves.Path.XML + "csw/";
+		public static final String VALIDATION         = Jeeves.Path.XML + "validation/";
 		public static final String STYLESHEETS        = "/xsl";
 		public static final String IMPORT_STYLESHEETS = "/xsl/batch-import";
 	}
@@ -210,6 +211,10 @@ public class Geonet
 	public static final String SETTINGS     = GEONETWORK + ".settings";
 	public static final String DATA_MANAGER = GEONETWORK + ".datamanager";
 	public static final String SEARCH_ENGINE= GEONETWORK + ".search";
+	public static final String INDEX_ENGINE = GEONETWORK + ".index";
+	public static final String CSW          = GEONETWORK + ".csw";
+
+	public static final String CSW_SEARCH   = CSW + ".search";
 }
 
 //=============================================================================

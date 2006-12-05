@@ -23,9 +23,21 @@
 
 package org.fao.geonet.kernel.csw;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
@@ -44,6 +56,8 @@ import org.fao.geonet.kernel.csw.services.GetRecords;
 import org.fao.geonet.kernel.csw.services.Harvest;
 import org.fao.geonet.kernel.csw.services.Transaction;
 import org.jdom.Element;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import static org.fao.geonet.csw.common.Csw.*;
 
@@ -104,6 +118,8 @@ public class CatalogDispatcher
 
 			if (outSOAP)
 				response = SOAPUtil.embed(response);
+
+//			validateResponse(context, response);
 
 			return response;
 		}
@@ -197,6 +213,47 @@ public class CatalogDispatcher
 
 		return hm;
 	}
+
+	//---------------------------------------------------------------------------
+
+	private void validateResponse(ServiceContext context, Element response)
+	{
+//		String xml  = Xml.getString(new org.jdom.Document(response));
+//		String path = context.getAppPath() +VALIDATE_PATH;
+//
+//		byte
+//
+//		DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+//		Document        doc    = parser.parse(new StringReader(xml));
+//
+//		// create a SchemaFactory capable of understanding WXS schemas
+//		SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+//
+//		// load a WXS schema, represented by a Schema instance
+//		Source schemaFile = new StreamSource(new File(path));
+//		Schema schema = factory.newSchema(schemaFile);
+//
+//		// create a Validator instance, which can be used to validate an instance document
+//		Validator validator = schema.newValidator();
+//
+//		// validate the DOM tree
+//
+//		try
+//		{
+//			validator.validate(new DOMSource(doc));
+//		}
+//		catch (SAXException e)
+//		{
+//			// instance document is invalid!
+//   	}
+//		catch (IOException e)
+//		{
+//		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private final static String VALIDATE_PATH = "web/xml/validation/csw/2.0.1/CSW-discovery.xsd";
 }
 
 //=============================================================================

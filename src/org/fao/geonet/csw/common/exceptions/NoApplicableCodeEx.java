@@ -40,6 +40,13 @@ public class NoApplicableCodeEx extends CatalogException
 
 	//---------------------------------------------------------------------------
 
+	public NoApplicableCodeEx(String message, String locator)
+	{
+		super(NO_APPLICABLE_CODE, message, locator);
+	}
+
+	//---------------------------------------------------------------------------
+
 	public NoApplicableCodeEx(String message, CatalogException prev)
 	{
 		super(NO_APPLICABLE_CODE, message, null, prev);

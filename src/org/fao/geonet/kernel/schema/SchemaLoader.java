@@ -211,14 +211,14 @@ public class SchemaLoader
 			{
 				ElementEntry ee = (ElementEntry) cte.alElements.get(j);
 
-				System.out.println("resolving element " + (ee.name == null ? (" --> " + ee.ref) : ee.name)); // DEBUG
+				//System.out.println("resolving element " + (ee.name == null ? (" --> " + ee.ref) : ee.name)); // DEBUG
 
 				String type;
 				if (ee.ref != null)
 				{
 					type = (String) hmElements.get(ee.ref);
 
-					System.out.println("- type = " + type); // DEBUG
+					//System.out.println("- type = " + type); // DEBUG
 				}
 				else
 				{
@@ -228,7 +228,7 @@ public class SchemaLoader
 					// RGFIX type = "string";
 					type = ee.type == null ? "string" : ee.type;
 
-					System.out.println("- type = " + type); // DEBUG
+					//System.out.println("- type = " + type); // DEBUG
 
 					mds.addElement(ee.name, type, new ArrayList());
 				}
@@ -409,7 +409,7 @@ public class SchemaLoader
 		if (ee.name == null)
 			throw new IllegalArgumentException("Name is null for element : " + ee.name);
 
-		System.out.println("building global element " + ee.name); // DEBUG
+		//System.out.println("building global element " + ee.name); // DEBUG
 
 		if (ee.substGroup != null)
 		{
@@ -429,7 +429,7 @@ public class SchemaLoader
 				throw new IllegalArgumentException("Namespace collision for : " + ee.name);
 			hmAbsElems.put(ee.name, ee.type);
 
-			System.out.println("- abstract element"); // DEBUG
+			//System.out.println("- abstract element"); // DEBUG
 
 			return;
 		}
@@ -444,7 +444,7 @@ public class SchemaLoader
 			hmElements.put(ee.name, type);
 			hmTypes.put(type, ee.complexType);
 
-			System.out.println("- complex type"); // DEBUG
+			//System.out.println("- complex type"); // DEBUG
 		}
 		else if (ee.simpleType != null)
 		{
@@ -457,13 +457,13 @@ public class SchemaLoader
 			hmElements .put(ee.name, ee.type);
 			hmElemRestr.put(ee.name, ee.simpleType.alEnum);
 
-			System.out.println("- simple type"); // DEBUG
+			//System.out.println("- simple type"); // DEBUG
 		}
 		else
 		{
 			hmElements.put(ee.name, ee.type);
 
-			System.out.println("- element of : "+ee.type); // DEBUG
+			//System.out.println("- element of : "+ee.type); // DEBUG
 		}
 	}
 
