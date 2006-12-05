@@ -2,7 +2,7 @@
 
 <project version="2">
 	<attribs>
-		<attrib name="build">123</attrib>
+		<attrib name="build">124</attrib>
 		<attrib name="serial">61525</attrib>
 	</attribs>
 	<database>
@@ -82,6 +82,16 @@
 				</row>
 			</list>
 		</fieldAttribs>
+		<vars>
+			<list>
+				<header>
+					<elem>name</elem>
+					<elem>type</elem>
+					<elem>value</elem>
+					<elem>descr</elem>
+				</header>
+			</list>
+		</vars>
 		<modsConfig>
 			<SqlGenModule>
 				<stdSql>
@@ -118,6 +128,9 @@
 						</list>
 					</sqlMapping>
 				</oraSql>
+				<mckoiSql>
+					<output>/my/work/fao/geonetwork/cvs/geonetwork/setup/sql/create-db-mckoi.sql</output>
+				</mckoiSql>
 				<pgSql>
 					<output>/my/work/fao/geonetwork/cvs/geonetwork/setup/sql/create-db-postgres.sql</output>
 					<sqlMapping type="l">
@@ -133,9 +146,6 @@
 						</list>
 					</sqlMapping>
 				</pgSql>
-				<mckoiSql>
-					<output>/my/work/fao/geonetwork/cvs/geonetwork/setup/sql/create-db-mckoi.sql</output>
-				</mckoiSql>
 			</SqlGenModule>
 		</modsConfig>
 		<modsUsage>
@@ -606,7 +616,7 @@ ORDER BY id
 			<query>
 				<attribs>
 					<attrib name="name">-UnNamed-</attrib>
-					<attrib name="sqlCode">alter table Metadata add column title varchar(255);</attrib>
+					<attrib name="sqlCode">update OperationAllowed set groupId=1 where groupId=2</attrib>
 				</attribs>
 				<modsConfig/>
 			</query>
@@ -790,6 +800,7 @@ ORDER BY id
 						<attrib name="comment"/>
 						<attrib name="name">Metadata</attrib>
 						<attrib name="id">44101</attrib>
+						<attrib name="schema"/>
 						<attrib name="tempPK"/>
 						<attrib name="tempFK"/>
 						<attrib name="tempOther"/>
@@ -816,6 +827,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">id</attrib>
 							<attrib name="id">44102</attrib>
@@ -837,6 +849,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">uuid</attrib>
 							<attrib name="id">54377</attrib>
@@ -858,6 +871,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">schemaId</attrib>
 							<attrib name="id">53458</attrib>
@@ -879,6 +893,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">isTemplate</attrib>
 							<attrib name="id">53520</attrib>
@@ -910,6 +925,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">isHarvested</attrib>
 							<attrib name="id">59878</attrib>
@@ -931,6 +947,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">createDate</attrib>
 							<attrib name="id">53519</attrib>
@@ -952,6 +969,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">changeDate</attrib>
 							<attrib name="id">51406</attrib>
@@ -973,6 +991,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">data</attrib>
 							<attrib name="id">44103</attrib>
@@ -994,6 +1013,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">source</attrib>
 							<attrib name="id">53995</attrib>
@@ -1015,6 +1035,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">sourceUri</attrib>
 							<attrib name="id">54697</attrib>
@@ -1036,6 +1057,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">title</attrib>
 							<attrib name="id">60994</attrib>
@@ -1057,6 +1079,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">root</attrib>
 							<attrib name="id">61259</attrib>
@@ -1085,6 +1108,7 @@ ORDER BY id
 						<attrib name="comment"/>
 						<attrib name="name">MetadataCateg</attrib>
 						<attrib name="id">54156</attrib>
+						<attrib name="schema"/>
 						<attrib name="tempPK"/>
 						<attrib name="tempFK"/>
 						<attrib name="tempOther"/>
@@ -1102,6 +1126,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">44102</attrib>
 							<attrib name="name">metadataId</attrib>
 							<attrib name="id">54160</attrib>
@@ -1123,6 +1148,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">54021</attrib>
 							<attrib name="name">categoryId</attrib>
 							<attrib name="id">54161</attrib>
@@ -1151,6 +1177,7 @@ ORDER BY id
 						<attrib name="comment"/>
 						<attrib name="name">OperationAllowed</attrib>
 						<attrib name="id">51311</attrib>
+						<attrib name="schema"/>
 						<attrib name="tempPK"/>
 						<attrib name="tempFK"/>
 						<attrib name="tempOther"/>
@@ -1177,6 +1204,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">51648</attrib>
 							<attrib name="name">groupId</attrib>
 							<attrib name="id">51312</attrib>
@@ -1198,6 +1226,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">44102</attrib>
 							<attrib name="name">metadataId</attrib>
 							<attrib name="id">51313</attrib>
@@ -1219,6 +1248,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">51878</attrib>
 							<attrib name="name">operationId</attrib>
 							<attrib name="id">51998</attrib>
@@ -1253,6 +1283,7 @@ ORDER BY id
 						<attrib name="comment"/>
 						<attrib name="name">Groups</attrib>
 						<attrib name="id">51647</attrib>
+						<attrib name="schema"/>
 						<attrib name="tempPK"/>
 						<attrib name="tempFK"/>
 						<attrib name="tempOther"/>
@@ -1279,6 +1310,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">id</attrib>
 							<attrib name="id">51648</attrib>
@@ -1300,6 +1332,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">name</attrib>
 							<attrib name="id">51649</attrib>
@@ -1321,6 +1354,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">description</attrib>
 							<attrib name="id">54453</attrib>
@@ -1342,6 +1376,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">email</attrib>
 							<attrib name="id">54452</attrib>
@@ -1363,6 +1398,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">51028</attrib>
 							<attrib name="name">referrer</attrib>
 							<attrib name="id">54454</attrib>
@@ -1391,6 +1427,7 @@ ORDER BY id
 						<attrib name="comment"/>
 						<attrib name="name">GroupsDes</attrib>
 						<attrib name="id">57899</attrib>
+						<attrib name="schema"/>
 						<attrib name="tempPK"/>
 						<attrib name="tempFK"/>
 						<attrib name="tempOther"/>
@@ -1408,6 +1445,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">51648</attrib>
 							<attrib name="name">idDes</attrib>
 							<attrib name="id">57901</attrib>
@@ -1429,6 +1467,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">57906</attrib>
 							<attrib name="name">langId</attrib>
 							<attrib name="id">57902</attrib>
@@ -1450,6 +1489,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">label</attrib>
 							<attrib name="id">57903</attrib>
@@ -1478,6 +1518,7 @@ ORDER BY id
 						<attrib name="comment"/>
 						<attrib name="name">UserGroups</attrib>
 						<attrib name="id">51752</attrib>
+						<attrib name="schema"/>
 						<attrib name="tempPK"/>
 						<attrib name="tempFK"/>
 						<attrib name="tempOther"/>
@@ -1504,6 +1545,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">51028</attrib>
 							<attrib name="name">userId</attrib>
 							<attrib name="id">51753</attrib>
@@ -1525,6 +1567,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">51648</attrib>
 							<attrib name="name">groupId</attrib>
 							<attrib name="id">51754</attrib>
@@ -1559,6 +1602,7 @@ ORDER BY id
 						<attrib name="comment"/>
 						<attrib name="name">Categories</attrib>
 						<attrib name="id">54017</attrib>
+						<attrib name="schema"/>
 						<attrib name="tempPK"/>
 						<attrib name="tempFK"/>
 						<attrib name="tempOther"/>
@@ -1576,6 +1620,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">id</attrib>
 							<attrib name="id">54021</attrib>
@@ -1597,6 +1642,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">name</attrib>
 							<attrib name="id">54022</attrib>
@@ -1625,6 +1671,7 @@ ORDER BY id
 						<attrib name="comment"/>
 						<attrib name="name">CategoriesDes</attrib>
 						<attrib name="id">57900</attrib>
+						<attrib name="schema"/>
 						<attrib name="tempPK"/>
 						<attrib name="tempFK"/>
 						<attrib name="tempOther"/>
@@ -1642,6 +1689,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">54021</attrib>
 							<attrib name="name">idDes</attrib>
 							<attrib name="id">58129</attrib>
@@ -1663,6 +1711,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">57906</attrib>
 							<attrib name="name">langId</attrib>
 							<attrib name="id">58133</attrib>
@@ -1684,6 +1733,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">label</attrib>
 							<attrib name="id">58137</attrib>
@@ -1718,6 +1768,7 @@ ORDER BY id
 						<attrib name="comment"/>
 						<attrib name="name">Settings</attrib>
 						<attrib name="id">1536</attrib>
+						<attrib name="schema"/>
 						<attrib name="tempPK"/>
 						<attrib name="tempFK"/>
 						<attrib name="tempOther"/>
@@ -1744,6 +1795,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">id</attrib>
 							<attrib name="id">1537</attrib>
@@ -1765,6 +1817,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">1537</attrib>
 							<attrib name="name">parentId</attrib>
 							<attrib name="id">1538</attrib>
@@ -1786,6 +1839,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">name</attrib>
 							<attrib name="id">1539</attrib>
@@ -1807,6 +1861,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">value</attrib>
 							<attrib name="id">55813</attrib>
@@ -1835,6 +1890,7 @@ ORDER BY id
 						<attrib name="comment"/>
 						<attrib name="name">Languages</attrib>
 						<attrib name="id">57905</attrib>
+						<attrib name="schema"/>
 						<attrib name="tempPK"/>
 						<attrib name="tempFK"/>
 						<attrib name="tempOther"/>
@@ -1852,6 +1908,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">id</attrib>
 							<attrib name="id">57906</attrib>
@@ -1873,6 +1930,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">name</attrib>
 							<attrib name="id">57907</attrib>
@@ -1901,6 +1959,7 @@ ORDER BY id
 						<attrib name="comment"/>
 						<attrib name="name">KnownNodes</attrib>
 						<attrib name="id">57288</attrib>
+						<attrib name="schema"/>
 						<attrib name="tempPK"/>
 						<attrib name="tempFK"/>
 						<attrib name="tempOther"/>
@@ -1918,6 +1977,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">siteId</attrib>
 							<attrib name="id">57291</attrib>
@@ -1939,6 +1999,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">name</attrib>
 							<attrib name="id">57292</attrib>
@@ -1965,6 +2026,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">host</attrib>
 							<attrib name="id">57293</attrib>
@@ -1986,6 +2048,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">port</attrib>
 							<attrib name="id">57294</attrib>
@@ -2007,6 +2070,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">servlet</attrib>
 							<attrib name="id">57295</attrib>
@@ -2028,6 +2092,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">icon</attrib>
 							<attrib name="id">57296</attrib>
@@ -2062,6 +2127,7 @@ ORDER BY id
 						<attrib name="comment"/>
 						<attrib name="name">Operations</attrib>
 						<attrib name="id">51877</attrib>
+						<attrib name="schema"/>
 						<attrib name="tempPK"/>
 						<attrib name="tempFK"/>
 						<attrib name="tempOther"/>
@@ -2088,6 +2154,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">id</attrib>
 							<attrib name="id">51878</attrib>
@@ -2109,6 +2176,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">name</attrib>
 							<attrib name="id">60730</attrib>
@@ -2130,6 +2198,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">reserved</attrib>
 							<attrib name="id">60599</attrib>
@@ -2158,6 +2227,7 @@ ORDER BY id
 						<attrib name="comment"/>
 						<attrib name="name">OperationsDes</attrib>
 						<attrib name="id">60329</attrib>
+						<attrib name="schema"/>
 						<attrib name="tempPK"/>
 						<attrib name="tempFK"/>
 						<attrib name="tempOther"/>
@@ -2184,6 +2254,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">51878</attrib>
 							<attrib name="name">idDes</attrib>
 							<attrib name="id">60330</attrib>
@@ -2205,6 +2276,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">57906</attrib>
 							<attrib name="name">langId</attrib>
 							<attrib name="id">60331</attrib>
@@ -2226,6 +2298,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">label</attrib>
 							<attrib name="id">60332</attrib>
@@ -2260,6 +2333,7 @@ ORDER BY id
 						<attrib name="comment"/>
 						<attrib name="name">Regions</attrib>
 						<attrib name="id">59071</attrib>
+						<attrib name="schema"/>
 						<attrib name="tempPK"/>
 						<attrib name="tempFK"/>
 						<attrib name="tempOther"/>
@@ -2277,6 +2351,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">id</attrib>
 							<attrib name="id">59072</attrib>
@@ -2298,6 +2373,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">north</attrib>
 							<attrib name="id">59073</attrib>
@@ -2319,6 +2395,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">south</attrib>
 							<attrib name="id">59096</attrib>
@@ -2340,6 +2417,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">west</attrib>
 							<attrib name="id">59097</attrib>
@@ -2361,6 +2439,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">east</attrib>
 							<attrib name="id">59098</attrib>
@@ -2389,6 +2468,7 @@ ORDER BY id
 						<attrib name="comment"/>
 						<attrib name="name">RegionsDes</attrib>
 						<attrib name="id">59084</attrib>
+						<attrib name="schema"/>
 						<attrib name="tempPK"/>
 						<attrib name="tempFK"/>
 						<attrib name="tempOther"/>
@@ -2406,6 +2486,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">59072</attrib>
 							<attrib name="name">idDes</attrib>
 							<attrib name="id">59085</attrib>
@@ -2427,6 +2508,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">57906</attrib>
 							<attrib name="name">langId</attrib>
 							<attrib name="id">59086</attrib>
@@ -2448,6 +2530,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">label</attrib>
 							<attrib name="id">59087</attrib>
@@ -2482,6 +2565,7 @@ ORDER BY id
 						<attrib name="comment"/>
 						<attrib name="name">Users</attrib>
 						<attrib name="id">51027</attrib>
+						<attrib name="schema"/>
 						<attrib name="tempPK"/>
 						<attrib name="tempFK"/>
 						<attrib name="tempOther"/>
@@ -2508,6 +2592,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">id</attrib>
 							<attrib name="id">51028</attrib>
@@ -2529,6 +2614,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">username</attrib>
 							<attrib name="id">51069</attrib>
@@ -2550,6 +2636,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">password</attrib>
 							<attrib name="id">51070</attrib>
@@ -2571,6 +2658,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">surname</attrib>
 							<attrib name="id">51071</attrib>
@@ -2592,6 +2680,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">name</attrib>
 							<attrib name="id">51072</attrib>
@@ -2613,6 +2702,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">profile</attrib>
 							<attrib name="id">51073</attrib>
@@ -2634,6 +2724,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">address</attrib>
 							<attrib name="id">56541</attrib>
@@ -2655,6 +2746,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">state</attrib>
 							<attrib name="id">56542</attrib>
@@ -2676,6 +2768,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">zip</attrib>
 							<attrib name="id">56543</attrib>
@@ -2697,6 +2790,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">country</attrib>
 							<attrib name="id">56544</attrib>
@@ -2718,6 +2812,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">email</attrib>
 							<attrib name="id">56545</attrib>
@@ -2739,6 +2834,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">organisation</attrib>
 							<attrib name="id">56546</attrib>
@@ -2760,6 +2856,7 @@ ORDER BY id
 						</fieldAttribs>
 						<attribs>
 							<attrib name="comment"/>
+							<attrib name="matchType">s</attrib>
 							<attrib name="refField">0</attrib>
 							<attrib name="name">kind</attrib>
 							<attrib name="id">56547</attrib>
