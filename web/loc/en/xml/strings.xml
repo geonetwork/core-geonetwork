@@ -17,6 +17,8 @@
 	<kindChoice value="company">Private company</kindChoice>
 	<kindChoice value="consultant">Independent consultant</kindChoice>
 	<kindChoice value="other">Other</kindChoice>
+	<userInfo>Change user information</userInfo>
+	<userInfoDes>Allow current user to change user information</userInfoDes>
 	
 	<language>en</language>
 	<!-- ISO code -->

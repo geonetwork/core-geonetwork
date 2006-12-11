@@ -313,6 +313,26 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="user.infoedit">
+			<class name=".services.user.Get"/>
+
+			<output sheet="user-infoupdate.xsl">
+				<xml  name="countries"  file  = "xml/countries.xml" />
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="user.infoupdate">
+			<class name=".services.user.InfoUpdate"/>
+
+			<output sheet="info.xsl">
+				<xml  name="info"    file="xml/info-changed.xml" />
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Group services                                                -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 

@@ -62,6 +62,12 @@
 								<td><xsl:value-of select="/root/gui/strings/userPwDes"/></td>
 							</tr>
 						</xsl:if>
+						<xsl:if test="/root/gui/services/service/@name='user.infoupdate'">
+							<tr>
+								<td><a href="{/root/gui/locService}/user.infoedit?id={/root/gui/session/userId}"><xsl:value-of select="/root/gui/strings/userInfo"/></a></td>
+								<td><xsl:value-of select="/root/gui/strings/userInfoDes"/></td>
+							</tr>
+						</xsl:if>
 					</xsl:variable>
 					<xsl:if test="$persInfoServices">
 						<tr>
