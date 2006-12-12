@@ -11,11 +11,13 @@
 
 	<xsl:template match="ogc:PropertyIsEqualTo">
 		<xsl:choose>
-			<xsl:when test="ogc:PropertyName and ogc:Literal">
+			<!-- we cannot check ogc:PropertyName because it can be null to search for
+              any property -->
+			<xsl:when test="ogc:Literal">
 				<TermQuery fld="{ogc:PropertyName}" txt="{ogc:Literal}"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<error type="Unkown content of expression">
+				<error type="Unknown content of expression">
 					<xsl:copy-of select="."/>
 				</error>
 			</xsl:otherwise>
@@ -37,7 +39,7 @@
 				</BooleanQuery>
 			</xsl:when>
 			<xsl:otherwise>
-				<error type="Unkown content of expression">
+				<error type="Unknown content of expression">
 					<xsl:copy-of select="."/>
 				</error>
 			</xsl:otherwise>
@@ -52,7 +54,7 @@
 				<RangeQuery fld="{ogc:PropertyName}" upperTxt="{ogc:Literal}" inclusive="false"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<error type="Unkown content of expression">
+				<error type="Unknown content of expression">
 					<xsl:copy-of select="."/>
 				</error>
 			</xsl:otherwise>
@@ -67,7 +69,7 @@
 				<RangeQuery fld="{ogc:PropertyName}" upperTxt="{ogc:Literal}" inclusive="true"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<error type="Unkown content of expression">
+				<error type="Unknown content of expression">
 					<xsl:copy-of select="."/>
 				</error>
 			</xsl:otherwise>
@@ -82,7 +84,7 @@
 				<RangeQuery fld="{ogc:PropertyName}" lowerTxt="{ogc:Literal}" inclusive="false"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<error type="Unkown content of expression">
+				<error type="Unknown content of expression">
 					<xsl:copy-of select="."/>
 				</error>
 			</xsl:otherwise>
@@ -97,7 +99,7 @@
 				<RangeQuery fld="{ogc:PropertyName}" lowerTxt="{ogc:Literal}" inclusive="true"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<error type="Unkown content of expression">
+				<error type="Unknown content of expression">
 					<xsl:copy-of select="."/>
 				</error>
 			</xsl:otherwise>
@@ -112,7 +114,7 @@
 				<WildcardQuery fld="{ogc:PropertyName}" txt="{translate(translate(ogc:Literal, @wildCard, '*'), @singleChar, '?')}"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<error type="Unkown content of expression">
+				<error type="Unknown content of expression">
 					<xsl:copy-of select="."/>
 				</error>
 			</xsl:otherwise>
@@ -127,7 +129,7 @@
 				<RangeQuery fld="{ogc:PropertyName}" lowerTxt="{ogc:LowerBoundary/ogc:Literal}" upperTxt="{ogc:UpperBoundary/ogc:Literal}" inclusive="true"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<error type="Unkown content of expression">
+				<error type="Unknown content of expression">
 					<xsl:copy-of select="."/>
 				</error>
 			</xsl:otherwise>
@@ -192,10 +194,10 @@
 		<xsl:variable name="lower" select="gml:Envelope/gml:lowerCorner"/>
 		<xsl:variable name="upper" select="gml:Envelope/gml:upperCorner"/>
 
-		<xsl:variable name="northBL" select="substring-after($upper, ' ')  + 360"/>
-		<xsl:variable name="southBL" select="substring-after($lower, ' ')  + 360"/>
-		<xsl:variable name="eastBL"  select="substring-before($upper, ' ') + 360"/>
-		<xsl:variable name="westBL"  select="substring-before($lower, ' ') + 360"/>
+		<xsl:variable name="northBL" select="substring-before($upper, ' ') + 360"/>
+		<xsl:variable name="eastBL"  select="substring-after($upper,  ' ') + 360"/>
+		<xsl:variable name="southBL" select="substring-before($lower, ' ') + 360"/>
+		<xsl:variable name="westBL"  select="substring-after($lower,  ' ') + 360"/>
 
 		<xsl:choose>
 			<!-- A better test should be done by java code -->

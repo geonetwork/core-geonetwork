@@ -33,8 +33,8 @@
 		<xsl:variable name="west" select="substring-before($w,'. ')"/>
 
 		<ows:BoundingBox>
-			<ows:LowerCorner><xsl:value-of select="concat($west, ' ', $south)"/></ows:LowerCorner>
-			<ows:UpperCorner><xsl:value-of select="concat($east, ' ', $north)"/></ows:UpperCorner>
+			<ows:LowerCorner><xsl:value-of select="concat($south, ' ', $west)"/></ows:LowerCorner>
+			<ows:UpperCorner><xsl:value-of select="concat($north, ' ', $east)"/></ows:UpperCorner>
 		</ows:BoundingBox>
 	</xsl:template>
 

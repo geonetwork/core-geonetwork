@@ -41,6 +41,21 @@
 			<Field name="type" string="{string(.)}" store="true" index="true" token="false"/>
 		</xsl:for-each>
 
+		<xsl:for-each select="/simpledc/dc:relation">
+			<Field name="relation" string="{string(.)}" store="true" index="true" token="false"/>
+		</xsl:for-each>
+
+		<xsl:for-each select="/simpledc/dct:spatial">
+			<Field name="spatial" string="{string(.)}" store="true" index="true" token="false"/>
+		</xsl:for-each>
+
+		<!-- This is needed by the CITE test script to look for strings like 'a b*'
+			  strings that contain spaces -->
+
+		<xsl:for-each select="/simpledc/dc:title">
+			<Field name="title" string="{string(.)}" store="false" index="true" token="false"/>
+		</xsl:for-each>
+
 		<xsl:apply-templates select="/simpledc/dc:title">
 			<xsl:with-param name="name" select="'title'"/>
 			<xsl:with-param name="token" select="'true'"/>

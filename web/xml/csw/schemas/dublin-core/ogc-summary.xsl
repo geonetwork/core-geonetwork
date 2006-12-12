@@ -5,6 +5,8 @@
 										xmlns:dc ="http://purl.org/dc/elements/1.1/"
    									xmlns:dct="http://purl.org/dc/terms/">
 
+	<!-- ================================================================= -->
+
 	<xsl:template match="simpledc">
 		<csw:SummaryRecord>
 
@@ -47,10 +49,14 @@
 		</csw:SummaryRecord>
 	</xsl:template>
 
+	<!-- ================================================================= -->
+
 	<xsl:template match="@*|node()">
 		<xsl:copy>
 			<xsl:apply-templates select="@*|node()"/>
 		</xsl:copy>
 	</xsl:template>
+
+	<!-- ================================================================= -->
 
 </xsl:stylesheet>

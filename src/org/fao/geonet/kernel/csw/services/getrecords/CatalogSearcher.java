@@ -184,6 +184,9 @@ class CatalogSearcher
 
 		if (field != null)
 		{
+			if (field.equals(""))
+				field = "any";
+
 			String mapped = FieldMapper.map(field);
 
 			if (mapped != null)

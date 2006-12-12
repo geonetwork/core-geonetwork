@@ -97,8 +97,10 @@ class FieldMapper
 		{ "dc:subject",    "keyword"    },
 		{ "dc:type",       "type"       },
 		{ "dct:spatial",   "crs"        },
-		{ "AnyText",       "any"        },
+		{ "any",           "any"        },
 		{ "dc:format",     "format"     },
+		{ "dc:relation",   "relation"   },
+		{ "dct:spatial",   "spatial"    },
 
 		{ "FileIdentifier",        "fileId"      },
 		{ "Language",              "language"    },
