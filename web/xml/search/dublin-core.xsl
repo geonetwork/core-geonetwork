@@ -76,7 +76,12 @@
 		<xsl:apply-templates select="/simpledc/dc:subject">
 			<xsl:with-param name="name" select="'keyword'"/>
 			<xsl:with-param name="store" select="'true'"/>
-			<xsl:with-param name="token" select="'true'"/>
+
+			<!--  the value was 'true' and has been changed to false to pass the CITE scripts 
+					Anyway, users should add several dc:subject elements each one containing a
+					single word. Hence, it is lecit to not tokenize the subject -->
+
+			<xsl:with-param name="token" select="'false'"/> 
 		</xsl:apply-templates>
 
 		<Field name="any" store="false" index="true" token="true">
