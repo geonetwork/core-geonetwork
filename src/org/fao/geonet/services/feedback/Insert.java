@@ -23,12 +23,14 @@
 
 package org.fao.geonet.services.feedback;
 
-import org.fao.geonet.constants.*;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.MailSender;
 import org.jdom.Element;
 
@@ -39,24 +41,13 @@ import org.jdom.Element;
 
 public class Insert implements Service
 {
-	private String subject;
-	private String user;
-	private String server;
-	private String port;
-
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception
-	{
-		subject = params.getMandatoryValue(Geonet.Config.SUBJECT);
-		user    = params.getMandatoryValue(Geonet.Config.USER);
-		server  = params.getMandatoryValue(Geonet.Config.MAIL_SERVER);
-		port    = params.getMandatoryValue(Geonet.Config.PORT);
-	}
+	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -66,14 +57,22 @@ public class Insert implements Service
 
 	public Element exec(Element params, final ServiceContext context) throws Exception
 	{
-		final String name     = Util.getParam(params, Params.NAME);
-		final String org      = Util.getParam(params, Params.ORG);
-		final String email    = Util.getParam(params, Params.EMAIL);
-		final String comments = Util.getParam(params, Params.COMMENTS);
+		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SettingManager sm = gc.getSettingManager();
+
+		String name     = Util.getParam(params, Params.NAME);
+		String org      = Util.getParam(params, Params.ORG);
+		String email    = Util.getParam(params, Params.EMAIL);
+		String comments = Util.getParam(params, Params.COMMENTS);
+		String subject  = Util.getParam(params, Params.SUBJECT, "New feedback");
+
+		String host = sm.getValue("system/feedback/smtpHost");
+		String port = sm.getValue("system/feedback/smtpPort");
+		String to   = sm.getValue("system/feedback/email");
 
 		MailSender sender = new MailSender(context);
-		sender.send(server, Integer.parseInt(port), email, name +" ("+org+")", user, null, subject, comments);
-		
+		sender.send(host, Integer.parseInt(port), email, name +" ("+org+")", to, null, subject, comments);
+
 		return params;
 	}
 }

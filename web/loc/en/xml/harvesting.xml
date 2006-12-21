@@ -46,6 +46,7 @@
 	<everySpec>(days : hours : minutes)</everySpec>
 	<oneRun>One run only</oneRun>
 	<createGroups>Create groups</createGroups>
+	<createCateg>Create categories</createCateg>
 	<status>Status</status>
 	<active>Active</active>
 	<inactive></inactive>

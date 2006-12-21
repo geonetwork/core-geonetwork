@@ -32,9 +32,11 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Util;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.MailSender;
 import org.jdom.Element;
@@ -46,22 +48,13 @@ import org.jdom.Element;
 
 public class Download implements Service
 {
-	private String _from;
-	private String _server;
-	private String _port;
-
 	//-----------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//-----------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception
-	{
-		_from    = params.getValue(Geonet.Config.USER);
-		_server  = params.getValue(Geonet.Config.MAIL_SERVER);
-		_port    = params.getValue(Geonet.Config.PORT);
-	}
+	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//-----------------------------------------------------------------------------
 	//---
@@ -76,11 +69,13 @@ public class Download implements Service
 		String access = Util.getParam(params, Params.ACCESS);
 
 		boolean doNotify = false;
+
 		if (access == null || access.equals(Params.Access.PRIVATE))
 		{
 			Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
 			doNotify = true;
 		}
+
 		// Build the response
 		File dir = new File(Lib.resource.getDir(context, access, id));
 		File file= new File(dir, fname);
@@ -90,8 +85,15 @@ public class Download implements Service
 		if (!file.exists())
 			throw new ResourceNotFoundEx(fname);
 
+		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SettingManager sm = gc.getSettingManager();
+
 		if (doNotify)
 		{
+			String host = sm.getValue("system/feedback/smtpHost");
+			String port = sm.getValue("system/feedback/smtpPort");
+			String from = sm.getValue("system/feedback/email");
+
 			String fromDescr = "GeoNetwork administrator";
 
 			// send emails about downloaded file to groups with notify privilege
@@ -105,6 +107,7 @@ public class Download implements Service
 			query.append("AND    oa.groupId = g.id");
 
 			Element groups = dbms.select(query.toString());
+
 			for (Iterator i = groups.getChildren().iterator(); i.hasNext(); )
 			{
 				Element group = (Element)i.next();
@@ -120,7 +123,7 @@ public class Download implements Service
 				try
 				{
 					MailSender sender = new MailSender(context);
-					sender.send(_server, Integer.parseInt(_port), _from, fromDescr, email, null, subject, message);
+					sender.send(host, Integer.parseInt(port), from, fromDescr, email, null, subject, message);
 				}
 				catch (Exception e)
 				{
@@ -128,6 +131,7 @@ public class Download implements Service
 				}
 			}
 		}
+
 		return BinaryFile.encode(200, file.getAbsolutePath());
 	}
 }

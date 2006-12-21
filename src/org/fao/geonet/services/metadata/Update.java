@@ -90,7 +90,7 @@ public class Update implements Service
 		else
 			EditUtils.updateContent(params, context, validate);
 
-		dataMan.setTemplateBit(dbms, id, isTemplate.equals("on"));
+		dataMan.setTemplateBit(dbms, Integer.parseInt(id), isTemplate.equals("on"));
 
 		//-----------------------------------------------------------------------
 		//--- update element and return status

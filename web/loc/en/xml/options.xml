@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<strings>
+	<site>Site</site>
+		<name>Name</name>
+	
+	<server>Server</server>
+		<host>Host</host>
+		<port>Port</port>
+	
+	<intranet>Intranet</intranet>
+		<network>Network</network>
+		<netmask>Netmask</netmask>
+	
+	<z3950>Z39.50 Server</z3950>
+		<enable>Enable</enable>
+		
+	<feedback>Feedback</feedback>
+		<email>EMail</email>
+		<smtpHost>SMTP Host</smtpHost>
+		<smtpPort>SMTP Port</smtpPort>
+	
+	<proxy>Proxy</proxy>
+	
+<!-- Buttons -->
+	
+	<save>Save</save>
+	<refresh>Refresh</refresh>
+	
+	<!-- validator messages -->
+	
+	<validator>
+		<length>
+			<cannotBeEmpty>The field '{NAME}' cannot be empty</cannotBeEmpty>
+			<invalidMinSize>The field '{NAME}' must be at least {VALUE} character(s) long</invalidMinSize>
+			<invalidMaxSize>The field '{NAME}' must be maximum {VALUE} character(s) long</invalidMaxSize>
+		</length>
+		
+		<integer>
+			<notInt>The field '{NAME}' must be an integer</notInt>
+			<invalidMinValue>The field '{NAME}' must be &gt;= {VALUE}</invalidMinValue>
+			<invalidMaxValue>The field '{NAME}' must be &lt;= {VALUE}</invalidMaxValue>
+		</integer>		
+		
+		<alphanum>
+			<notAlphaNumeric>The field '{NAME}' must be alphanumeric (starting with a letter)</notAlphaNumeric>
+		</alphanum>
+		
+		<hostname>
+			<notHostName>The field '{NAME}' is not a valid host name</notHostName>
+		</hostname>
+		
+		<url>
+			<notURL>The field '{NAME}' is not a valid URL</notURL>
+		</url>
+	</validator>
+	
+	<!-- display messages -->
+	
+	<pleaseSelect>Please select at least one entry</pleaseSelect>
+	
+	<!-- tooltips -->
+	
+</strings>
+

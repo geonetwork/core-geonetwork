@@ -50,6 +50,8 @@
 	<categoryManDes>Add/modify/delete and show categories</categoryManDes>
 	<harvestingManagement>Harvesting management</harvestingManagement>
 	<harvestingManDes>Add/modify/delete/start/stop harvesting tasks</harvestingManDes>
+	<systemOptions>System options</systemOptions>
+	<systemOptionsDes>Allows to change some system options</systemOptionsDes>
 	<choose>-Choose-</choose>
 	<chooseFile>Choose the location of the file to upload</chooseFile>
 	<chooseLargeThumbnail>Choose the location of the large thumbnail file</chooseLargeThumbnail>
