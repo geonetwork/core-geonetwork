@@ -29,10 +29,9 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.services.util.MainUtil;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
@@ -60,9 +59,10 @@ class UnusedSearcher extends MetaSearcher
 	public void search(ServiceContext context, Element request,
 							 ServiceConfig config) throws Exception
 	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SettingManager sm = gc.getSettingManager();
 
-		gc.getSiteId();
+		String siteId = sm.getValue("system/site/siteId");
 
 		alResult = new ArrayList();
 
@@ -76,7 +76,7 @@ class UnusedSearcher extends MetaSearcher
 
 		String query =	"SELECT DISTINCT id, createDate, changeDate "+
 							"FROM   Metadata "+
-							"WHERE  isTemplate='n' AND isHarvested='n' AND source='"+gc.getSiteId()+"'";
+							"WHERE  isTemplate='n' AND isHarvested='n' AND source='"+ siteId +"'";
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		List list = dbms.select(query).getChildren();

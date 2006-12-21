@@ -49,7 +49,7 @@ public class GetSiteURL implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dm = gc.getDataManager();
+		DataManager   dm = gc.getDataManager();
 
 		Element root = new Element("a");
 		root.addContent(new Element(Geonet.Elem.SITE_URL).setText(dm.getSiteURL()));

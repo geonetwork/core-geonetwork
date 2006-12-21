@@ -106,6 +106,13 @@
 								<td class="padded"><xsl:value-of select="/root/gui/strings/harvestingManDes"/></td>
 							</tr>
 						</xsl:if>
+
+						<xsl:if test="/root/gui/services/service/@name='system.options'">
+							<tr>
+								<td class="padded"><a href="{/root/gui/locService}/system.options"><xsl:value-of select="/root/gui/strings/systemOptions"/></a></td>
+								<td class="padded"><xsl:value-of select="/root/gui/strings/systemOptionsDes"/></td>
+							</tr>
+						</xsl:if>
 					</xsl:variable>
 					<xsl:if test="$adminServices">
 						<tr>
