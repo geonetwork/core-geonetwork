@@ -58,7 +58,7 @@ public class GeonetContext
 
 	//---------------------------------------------------------------------------
 
-	public String getSiteId() { return config.getValue(Geonet.Config.SITE_ID, "???"); }
+	public String getSiteId() { return settingMan.getValue("system/site/siteId"); }
 }
 
 //=============================================================================

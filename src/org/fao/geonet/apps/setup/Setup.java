@@ -392,6 +392,7 @@ public class Setup implements Starter
 												  uuid, date, schema, siteURL);
 
 			XmlSerializer.update(dbms, id, md, date);
+			//FIXME: some data changes, we should reindex the metadata
 			dbms.commit();
 		}
 	}
@@ -434,13 +435,17 @@ public class Setup implements Starter
 
 		ServiceConfig appHand = new ServiceConfig(config.getChild(ConfigFile.Child.APP_HANDLER).getChildren());
 
-		String publicHost = appHand.getMandatoryValue(Geonet.Config.PUBLIC_HOST);
-		String publicPort = appHand.getMandatoryValue(Geonet.Config.PUBLIC_PORT);
-		String locService = baseURL +"/"+ Jeeves.Prefix.SERVICE +"/"+ defaultLang;
+		//FIXME: the problem here is to obtain the baseURL
 
-		String siteURL = "http://" + publicHost + (publicPort == "80" ? "" : ":" + publicPort) + locService;
+//		String publicHost = appHand.getMandatoryValue(Geonet.Config.PUBLIC_HOST);
+//		String publicPort = appHand.getMandatoryValue(Geonet.Config.PUBLIC_PORT);
+//		String locService = baseURL +"/"+ Jeeves.Prefix.SERVICE +"/"+ defaultLang;
+//
+//		String siteURL = "http://" + publicHost + (publicPort == "80" ? "" : ":" + publicPort) + locService;
+//
+//		return siteURL;
 
-		return siteURL;
+		return "???";
 	}
 
 	//--------------------------------------------------------------------------
@@ -451,6 +456,7 @@ public class Setup implements Starter
 
 		Namespace ns = Namespace.getNamespace("http://java.sun.com/xml/ns/j2ee");
 
+		//FIXME: non c'è più in web.xml ! occorre prenderlo dal servlet in qualche modo
 		return "/"+ web.getChildText("display-name", ns);
 	}
 

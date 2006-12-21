@@ -91,6 +91,7 @@ public class Geonet
 		public static final String VALIDATION         = Jeeves.Path.XML + "validation/";
 		public static final String STYLESHEETS        = "/xsl";
 		public static final String IMPORT_STYLESHEETS = "/xsl/batch-import";
+		public static final String LOGOS              = "/images/logos/";
 	}
 
 	//--------------------------------------------------------------------------
@@ -172,22 +173,10 @@ public class Geonet
 
 	public class Config
 	{
-		public static final String NETWORK          = "network";
-		public static final String NETMASK          = "netmask";
 		public static final String LUCENE_DIR       = "luceneDir";
 		public static final String MAX_SUMMARY_KEYS = "maxSummaryKeys";
-		public static final String PORT             = "port";
-		public static final String Z3950PORT        = "z3950Port";
-		public static final String PUBLIC_HOST      = "publicHost";
-		public static final String PUBLIC_PORT      = "publicPort";
 		public static final String SCHEMA_MAPPINGS  = "schemaMappings";
 		public static final String DATA_DIR         = "dataDir";
-		public static final String SITE_ID          = "siteId";
-
-		public static final String NAME             = "name";
-		public static final String SUBJECT          = "subject";
-		public static final String USER             = "user";
-		public static final String MAIL_SERVER      = "mailServer";
 		public static final String DIR              = "dir";
 	}
 

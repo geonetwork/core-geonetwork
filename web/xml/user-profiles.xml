@@ -42,10 +42,11 @@
 		<allow service="xml.harvesting.start"/>
 		<allow service="xml.harvesting.stop"/>
 		<allow service="xml.harvesting.run"/>
-		
+
 		<!-- MEF facilities -->
 		<allow service="xml.mef.import"/>
-		
+
+		<allow service="system.options"/>
 	</profile>
 
 	<!-- ====================================================================== -->
@@ -206,7 +207,7 @@
 
 		<!-- Catalogue Services for the Web -->
 		<allow service="csw"/>
-		
+
 		<!-- MEF facilities -->
 		<allow service="xml.mef.export"/>
 	</profile>

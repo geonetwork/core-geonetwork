@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
+import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
@@ -41,9 +42,9 @@ import jeeves.utils.SerialFactory;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -57,18 +58,6 @@ import org.jdom.Text;
 public class DataManager
 {
 	//--------------------------------------------------------------------------
-	//--- vars
-
-	private EditLib editLib = new EditLib(this);
-
-	private AccessManager accessMan;
-	private SearchManager searchMan;
-
-	// site information needed by updateFixedinfo
-	private String siteURL;
-	private String siteID;
-
-	//--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
@@ -77,12 +66,14 @@ public class DataManager
 	/** initializes the search manager and index not-indexed metadata
 	  */
 
-	public DataManager(SearchManager sm, AccessManager am, Dbms dbms, String su, String si) throws Exception
+	public DataManager(SearchManager sm, AccessManager am, Dbms dbms, SettingManager ss,
+							 String baseURL) throws Exception
 	{
 		searchMan = sm;
 		accessMan = am;
-		siteURL   = su;
-		siteID    = si;
+		settingMan= ss;
+
+		this.baseURL = baseURL;
 
 		// get all metadata from DB
 		Element result = dbms.select("SELECT id, changeDate FROM Metadata ORDER BY id ASC");
@@ -307,29 +298,33 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
-	public void setTemplateBit(Dbms dbms, String id, boolean yesno) throws Exception
+	public void setTemplateBit(Dbms dbms, int id, boolean yesno) throws Exception
 	{
 		String value = (yesno) ? "y" : "n";
 
 		dbms.execute("UPDATE Metadata SET isTemplate=? WHERE id=?", value, id);
-		indexMetadata(dbms, id);
+		indexMetadata(dbms, Integer.toString(id));
 	}
 
 	//--------------------------------------------------------------------------
 
-	public void setHarvestedBit(Dbms dbms, String id, boolean yesno) throws Exception
+	public void setHarvestedBit(Dbms dbms, int id, boolean yesno) throws Exception
 	{
 		String value = (yesno) ? "y" : "n";
 
 		dbms.execute("UPDATE Metadata SET isHarvested=? WHERE id=?", value, id);
-		indexMetadata(dbms, id);
+		indexMetadata(dbms, Integer.toString(id));
 	}
 
-	//--------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
 
 	public String getSiteURL()
 	{
-		return siteURL;
+		String host    = settingMan.getValue("system/usePublication/host");
+		String port    = settingMan.getValue("system/usePublication/port");
+		String locServ = baseURL +"/"+ Jeeves.Prefix.SERVICE +"/en";
+
+		return "http://" + host + (port == "80" ? "" : ":" + port) + locServ;
 	}
 
 	//--------------------------------------------------------------------------
@@ -429,7 +424,7 @@ public class DataManager
 		int serial = sf.getSerial(dbms, "Metadata");
 
 		xml = updateFixedInfo(schema, Integer.toString(serial), xml, uuid, source);
-System.out.println("AFTER:\n"+Xml.getString(xml));
+//System.out.println("AFTER:\n"+Xml.getString(xml));
 
 		//--- store metadata
 
@@ -1152,8 +1147,8 @@ System.out.println("AFTER:\n"+Xml.getString(xml));
 		env.addContent(new Element("id")      .setText(id));
 		env.addContent(new Element("uuid")    .setText(uuid));
 		env.addContent(new Element("currDate").setText(new ISODate().toString()));
-		env.addContent(new Element("siteURL") .setText(siteURL));
-		env.addContent(new Element("siteID")  .setText(siteID));
+		env.addContent(new Element("siteURL") .setText(getSiteURL()));
+		env.addContent(new Element("siteID")  .setText(getSiteID()));
 		env.addContent(new Element("source")  .setText(source));
 
 		//--- setup root element
@@ -1164,7 +1159,7 @@ System.out.println("AFTER:\n"+Xml.getString(xml));
 
 		//--- do an XSL  transformation
 
-System.out.println("BEFORE:\n"+Xml.getString(root));
+//System.out.println("BEFORE:\n"+Xml.getString(root));
 		String styleSheet = editLib.getSchemaDir(schema) + Geonet.File.UPDATE_FIXED_INFO;
 		return Xml.transform(root, styleSheet);
 	}
@@ -1278,6 +1273,28 @@ System.out.println("BEFORE:\n"+Xml.getString(root));
 //			setOperation(dbms, id, sGrp, sOper);
 //		}
 	}
+
+	//--------------------------------------------------------------------------
+
+	private String getSiteID()
+	{
+		return settingMan.getValue("system/site/siteId");
+	}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//--------------------------------------------------------------------------
+
+	private String baseURL;
+
+	private EditLib editLib = new EditLib(this);
+
+	private AccessManager  accessMan;
+	private SearchManager  searchMan;
+	private SettingManager settingMan;
+
 }
 
 //=============================================================================

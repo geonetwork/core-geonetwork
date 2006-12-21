@@ -23,9 +23,7 @@
 
 package org.fao.geonet.kernel;
 
-import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -34,6 +32,7 @@ import jeeves.server.ProfileManager;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
 //=============================================================================
@@ -56,19 +55,6 @@ public class AccessManager
 	public static final String MD_ADMIN_SERVICE = "metadata.admin";
 	public static final String DOWNLOAD_SERVICE = "resources.get";  // resources.get is public due to thumbnails
 
-	private static final String privDescr[] =
-										{
-											"view",  "download", "edit", "notify",
-											"admin", "dynamic",  "featured"
-										};
-
-	//--------------------------------------------------------------------------
-
-	private long lIntranetNet  = 0;
-	private long lIntranetMask = 1;
-
-	private HashSet<String> hsAllOps = new HashSet<String>();
-
 	//--------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -78,10 +64,9 @@ public class AccessManager
 	/** Loads all permissions from database and caches them
 	 */
 
-	public AccessManager(String net, String mask)
+	public AccessManager(SettingManager sm)
 	{
-		lIntranetNet  = getAddress(net);
-		lIntranetMask = getAddress(mask);
+		settMan = sm;
 
 		//--- build Hashtable of all operations
 		hsAllOps.add(OPER_VIEW);
@@ -168,20 +153,12 @@ public class AccessManager
 
 	public HashSet<String> getUserGroups(Dbms dbms, UserSession usrSess, String ip) throws Exception
 	{
-		//--- this is a fix for IPv6
-		if (ip.equals("0:0:0:0:0:0:0:1"))
-			ip = "127.0.0.1";
-
 		HashSet<String> hs = new HashSet<String>();
 
 		// add All (1) network group
 		hs.add("1");
 
-		// possibly add Internal (0) network group
-		long    lAddress = getAddress(ip);
-		boolean internal = ((lAddress & lIntranetMask) == lIntranetNet) || ip.equals("127.0.0.1");
-
-		if (internal)
+		if (isIntranet(ip))
 			hs.add("0");
 
 		// get other groups
@@ -241,6 +218,24 @@ public class AccessManager
 	//---
 	//--------------------------------------------------------------------------
 
+	private boolean isIntranet(String ip)
+	{
+		//--- consider IPv4 & IPv6 loopback
+		if (ip.equals("0:0:0:0:0:0:0:1") || ip.equals("127.0.0.1"))
+			return true;
+
+		String network = settMan.getValue("system/intranet/network");
+		String netmask = settMan.getValue("system/intranet/netmask");
+
+		long lIntranetNet  = getAddress(network);
+		long lIntranetMask = getAddress(netmask);
+		long lAddress      = getAddress(ip);
+
+		return (lAddress & lIntranetMask) == lIntranetNet ;
+	}
+
+	//--------------------------------------------------------------------------
+
 	/** Converts an ip x.x.x.x into a long
 	  */
 
@@ -255,6 +250,23 @@ public class AccessManager
 
 		return a1<<24 | a2<<16 | a3<<8 | a4;
 	}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//--------------------------------------------------------------------------
+
+	private static final String privDescr[] =
+										{
+											"view",  "download", "edit", "notify",
+											"admin", "dynamic",  "featured"
+										};
+
+	//--------------------------------------------------------------------------
+
+	private SettingManager  settMan;
+	private HashSet<String> hsAllOps = new HashSet<String>();
 }
 
 //=============================================================================

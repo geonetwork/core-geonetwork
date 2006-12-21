@@ -7,9 +7,6 @@
 		<profiles>user-profiles.xml</profiles>
 		<uploadDir>WEB-INF/data/tmp</uploadDir>
 		<debug>true</debug>
-		<useProxy>false</useProxy>
-		<proxyHost>10.11.0.1</proxyHost>
-		<proxyPort>3128</proxyPort>
 	</general>
 
 	<!-- ====================================================================== -->
@@ -116,15 +113,9 @@
 	<!-- ====================================================================== -->
 
 	<appHandler class="org.fao.geonet.Geonetwork">
-		<param name="network"        value="10.10.10.0" />
-		<param name="netmask"        value="255.255.255.0" />
-		<param name="z3950Port"      value="2100" />
-		<param name="publicHost"     value="$PUBLIC_HOST" />
-		<param name="publicPort"     value="$PUBLIC_PORT" />
 		<param name="luceneDir"      value="WEB-INF/lucene" />
 		<param name="schemaMappings" value="schema-mappings.xml" />
 		<param name="dataDir"        value="WEB-INF/data" />
-		<param name="siteId"         value="$SITE_ID" />
 	</appHandler>
 
 	<!-- ====================================================================== -->
@@ -143,6 +134,7 @@
 				<call name="services"       class="jeeves.guiservices.services.Get"/>
 				<call name="categories"     class=".services.category.List"/>
 				<call name="regions"        class=".guiservices.regions.Get"/>
+				<call name="sources"        class=".guiservices.util.Sources"/>
 
 				<call name="latestUpdated"  class=".guiservices.metadata.GetLatestUpdated">
 					<param name="maxItems"           value="10" />
@@ -156,7 +148,6 @@
 
 				<xml name="repositories"   file ="xml/repositories.xml"    localized="false" />
 				<xml name="searchProfiles" file ="xml/search-profiles.xml" localized="false" />
-				<xml name="sources"        file ="xml/sources.xml"         localized="false" />
 			</output>
 		</service>
 
@@ -180,9 +171,9 @@
 			<output sheet="search-results.xsl">
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults"/>
 				<call name="groups"         class=".guiservices.groups.GetMine"/>
+				<call name="sources"        class=".guiservices.util.Sources"/>
 				<call name="services"       class="jeeves.guiservices.services.Get"/>
-				<xml  name="repositories"   file="xml/repositories.xml" localized="false" />
-				<xml  name="sources"        file ="xml/sources.xml"     localized="false" />
+				<xml  name="repositories"   file ="xml/repositories.xml" localized="false" />
 			</output>
 		</service>
 
@@ -194,11 +185,10 @@
 			</class>
 
 			<output sheet="remote-show.xsl">
-				<call name="services" class="jeeves.guiservices.services.Get"/>
-				<call name="currTab"  class=".guiservices.util.GetCurrentMDTab"/>
-				<xml name="isoLang"   file="xml/iso-languages.xml" />
-				<xml name="sources" file ="xml/sources.xml"  localized="false" />
-				<xml name="repositories" file="xml/repositories.xml" localized="false" />
+				<call name="services"     class="jeeves.guiservices.services.Get"/>
+				<call name="currTab"      class=".guiservices.util.GetCurrentMDTab"/>
+				<xml  name="isoLang"      file ="xml/iso-languages.xml" />
+				<xml  name="repositories" file ="xml/repositories.xml" localized="false" />
 			</output>
 		</service>
 
@@ -230,15 +220,10 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="feedback.insert">
-			<class name=".services.feedback.Insert">
-				<param name="subject"    value="New feedback" />
-				<param name="user"       value="$ADMIN_MAIL" />
-				<param name="mailServer" value="$SMTP_HOST" />
-				<param name="port"       value="$SMTP_PORT" />
-			</class>
+			<class name=".services.feedback.Insert"/>
 
 			<output sheet="info.xsl">
-				<xml  name="info"    file="xml/feedback-sent.xml" />
+				<xml name="info" file="xml/feedback-sent.xml" />
 			</output>
 		</service>
 
@@ -428,6 +413,14 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="system.options">
+			<output sheet="options/options.xsl">
+				<xml name="options" file="xml/options.xml" />
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Help services                                                 -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -454,12 +447,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="file.download">
-			<class name=".services.feedback.Insert">
-				<param name="subject"    value="Downloaded file" />
-				<param name="user"       value="$ADMIN_MAIL" />
-				<param name="mailServer" value="$SMTP_HOST" />
-				<param name="port"       value="$SMTP_PORT" />
-			</class>
+			<class name=".services.feedback.Insert"/>
 
 			<output sheet="file-download.xsl" />
 		</service>
@@ -473,27 +461,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="resources.get">
-			<class name=".services.resources.Download">
-				<param name="user"       value="$ADMIN_MAIL" />
-				<param name="mailServer" value="$SMTP_HOST" />
-				<param name="port"       value="$SMTP_PORT" />
-			</class>
-
-			<error id="file-not-found" sheet="error.xsl">
-				<xml name="error" file="xml/file-not-found-error.xml" />
-			</error>
-
-			<output file="true"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="resources.get2">
-			<class name=".services.resources.Download2">
-				<param name="user"       value="$ADMIN_MAIL" />
-				<param name="mailServer" value="$SMTP_HOST" />
-				<param name="port"       value="$SMTP_PORT" />
-			</class>
+			<class name=".services.resources.Download"/>
 
 			<error id="file-not-found" sheet="error.xsl">
 				<xml name="error" file="xml/file-not-found-error.xml" />

@@ -34,6 +34,7 @@ public class Params
 	public static final String CATEGORY     = "category";
 	public static final String CHILD        = "child";
 	public static final String COMMENTS     = "comments";
+	public static final String SUBJECT      = "subject";
 	public static final String CURRTAB      = "currTab";
 	public static final String DATA         = "data";
 	public static final String DIR          = "dir";
@@ -63,7 +64,7 @@ public class Params
 	public static final String ZIP          = "zip";
 	public static final String COUNTRY      = "country";
 	public static final String KIND         = "kind";
-	
+
 	public static final String SCALING              = "scaling";
 	public static final String SCALING_DIR          = "scalingDir";
 	public static final String SCALING_FACTOR       = "scalingFactor";

@@ -468,13 +468,18 @@ public class GNDestin
 		String defaultLang = config.getChild(ConfigFile.Child.DEFAULT)
 											.getChildText(ConfigFile.Default.Child.LANGUAGE);
 
-		String publicHost = appHand.getMandatoryValue(Geonet.Config.PUBLIC_HOST);
-		String publicPort = appHand.getMandatoryValue(Geonet.Config.PUBLIC_PORT);
-		String locService = baseURL +"/"+ Jeeves.Prefix.SERVICE +"/"+ defaultLang;
+		//--- this code will be removed for sure becasue it is related to the migration
+		//--- from GN 1.0 to GN 2.0
 
-		String siteURL = "http://" + publicHost + (publicPort == "80" ? "" : ":" + publicPort) + locService;
+//		String publicHost = appHand.getMandatoryValue(Geonet.Config.PUBLIC_HOST);
+//		String publicPort = appHand.getMandatoryValue(Geonet.Config.PUBLIC_PORT);
+//		String locService = baseURL +"/"+ Jeeves.Prefix.SERVICE +"/"+ defaultLang;
+//
+//		String siteURL = "http://" + publicHost + (publicPort == "80" ? "" : ":" + publicPort) + locService;
+//
+//		return siteURL;
 
-		return siteURL;
+		return "???";
 	}
 
 	//--------------------------------------------------------------------------

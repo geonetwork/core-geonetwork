@@ -73,11 +73,21 @@ public class Geonetwork implements ApplicationHandler
 	{
 		logger = context.getLogger();
 
-		String path = context.getAppPath();
+		String path    = context.getAppPath();
+		String baseURL = context.getBaseUrl();
 
 		logger.info("Initializing geonetwork...");
 
 		ServiceConfig handlerConfig = new ServiceConfig(config.getChildren());
+
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+		//------------------------------------------------------------------------
+		//--- initialize settings subsystem
+
+		logger.info("  - Setting manager...");
+
+		SettingManager settingMan = new SettingManager(dbms, context.getProviderManager());
 
 		//------------------------------------------------------------------------
 		//--- initialize search and editing
@@ -93,21 +103,14 @@ public class Geonetwork implements ApplicationHandler
 
 		logger.info("  - Access manager...");
 
-		String net  = handlerConfig.getMandatoryValue(Geonet.Config.NETWORK);
-		String mask = handlerConfig.getMandatoryValue(Geonet.Config.NETMASK);
-
-		AccessManager accessMan = new AccessManager(net, mask);
+		AccessManager accessMan = new AccessManager(settingMan);
 
 		//------------------------------------------------------------------------
 		//--- get edit params and initialize DataManager
 
 		logger.info("  - Data manager...");
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		String siteURL = getSiteURL(context, handlerConfig);
-		String siteID  = handlerConfig.getMandatoryValue(Geonet.Config.SITE_ID);
-
-		DataManager dataMan = new DataManager(searchMan, accessMan, dbms, siteURL, siteID);
+		DataManager dataMan = new DataManager(searchMan, accessMan, dbms, settingMan, baseURL);
 
 		String schemasDir = path + Geonet.Path.SCHEMAS;
 		String saSchemas[] = new File(schemasDir).list();
@@ -134,23 +137,17 @@ public class Geonetwork implements ApplicationHandler
 
 		// FIXME: should I move these to elSearch?
 
-		String z3950port      = handlerConfig.getMandatoryValue(Geonet.Config.Z3950PORT);
+		String z3950port      = settingMan.getValue("system/z3950Port");
 		String schemaMappings = handlerConfig.getMandatoryValue(Geonet.Config.SCHEMA_MAPPINGS);
+		String network        = settingMan.getValue("system/intranet/network");
 
 		logger.info("Schema mapping is : " + schemaMappings); // FIXME
 
 		UserSession session = new UserSession();
 		session.authenticate(null, "z39.50", "", "", "Guest");
 		context.setUserSession(session);
-		context.setIpAddress(net);
+		context.setIpAddress(network);
 		Server.init(z3950port, path + Jeeves.Path.XML + schemaMappings, context);
-
-		//------------------------------------------------------------------------
-		//--- initialize settings subsystem
-
-		logger.info("  - Setting manager...");
-
-		SettingManager settingMan = new SettingManager(dbms, context.getProviderManager());
 
 		//------------------------------------------------------------------------
 		//--- initialize harvesting subsystem
@@ -182,22 +179,6 @@ public class Geonetwork implements ApplicationHandler
 		logger.info("Site ID is : " + gnContext.getSiteId());
 
 		return gnContext;
-	}
-
-	//---------------------------------------------------------------------------
-
-	private String getSiteURL(ServiceContext srvContext, ServiceConfig handlerConfig)
-	{
-		// compute site url
-		String defaultLang= srvContext.getLanguage();
-		String baseUrl    = srvContext.getBaseUrl();
-		String publicHost = handlerConfig.getMandatoryValue(Geonet.Config.PUBLIC_HOST);
-		String publicPort = handlerConfig.getMandatoryValue(Geonet.Config.PUBLIC_PORT);
-
-		String locService = baseUrl +"/"+ Jeeves.Prefix.SERVICE +"/"+ defaultLang;
-		String siteURL = "http://" + publicHost + (publicPort == "80" ? "" : ":" + publicPort) + locService;
-
-		return siteURL;
 	}
 
 	//---------------------------------------------------------------------------
