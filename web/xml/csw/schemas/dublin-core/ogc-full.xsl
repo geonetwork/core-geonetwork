@@ -32,7 +32,7 @@
 		<xsl:variable name="w" select="substring-after($coverage,'West ')"/>
 		<xsl:variable name="west" select="substring-before($w,'. ')"/>
 
-		<ows:BoundingBox>
+		<ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
 			<ows:LowerCorner><xsl:value-of select="concat($south, ' ', $west)"/></ows:LowerCorner>
 			<ows:UpperCorner><xsl:value-of select="concat($north, ' ', $east)"/></ows:UpperCorner>
 		</ows:BoundingBox>

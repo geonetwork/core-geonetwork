@@ -85,7 +85,6 @@ compiles a request
 			</BooleanClause>
 		</xsl:if>
 		<xsl:if test="string(/request/paper)='on' and string(/request/digital)=''">
-			<xsl:message>******** PAPER</xsl:message>
 			<BooleanClause required="true" prohibited="false">
 				<TermQuery fld="paper" txt="true"/>
 			</BooleanClause>

@@ -89,8 +89,13 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 		}
 		else while(i.hasNext())
 		{
-			String  typeName = ((Element) i.next()).getText();
+			Element elem = (Element) i.next();
+			String  typeNS   = elem.getAttributeValue("targetNamespace");
+			String  typeName = elem.getText();
 			Element schema   = getSchemaComponent(context, typeName);
+
+			if (typeNS == null)
+				throw new NoApplicableCodeEx("Missing 'targetNamespace' attribute", "TypeName");
 
 			if (schema != null)
 				response.addContent(schema);
