@@ -60,6 +60,8 @@ public class HarvestManager
 		settingMan = sm;
 		dataMan    = dm;
 
+		AbstractHarvester.staticInit(context);
+
 		Element entries = settingMan.get("harvesting", -1);
 		entries = Xml.transform(entries, xslPath +"/setting-to-harvesting.xsl");
 

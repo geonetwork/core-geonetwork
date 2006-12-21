@@ -23,17 +23,23 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadServerResponseEx;
 import jeeves.exceptions.UserNotFoundEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.constants.Geonet;
@@ -50,6 +56,39 @@ import static org.fao.geonet.kernel.harvest.harvester.geonet.GeonetConsts.*;
 
 public class GeonetHarvester extends AbstractHarvester
 {
+	//--------------------------------------------------------------------------
+	//---
+	//--- Static init
+	//---
+	//--------------------------------------------------------------------------
+
+	public static void init(ServiceContext context) throws Exception
+	{
+		//--- init caching structures
+
+		try
+		{
+			Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+			List sites = dbms.select("SELECT siteId, name FROM KnownNodes").getChildren();
+
+			for (Iterator i=sites.iterator(); i.hasNext();)
+			{
+				Element rec = (Element) i.next();
+
+				String siteId = rec.getChildText("siteid");
+				String name   = rec.getChildText("name");
+
+				htSiteIdName.put(siteId, name);
+			}
+		}
+		catch (Exception e)
+		{
+			context.warning("Cannot cache siteId -> name mapping : "+ e.getMessage());
+			throw e;
+		}
+	}
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -109,6 +148,8 @@ public class GeonetHarvester extends AbstractHarvester
 		//--- setup stats node ----------------------------------------
 
 		settingMan.add(dbms, "id:"+infoID, "lastRun", "");
+
+		updateKnownNodes(dbms);
 
 		return id;
 	}
@@ -181,6 +222,8 @@ public class GeonetHarvester extends AbstractHarvester
 		//--- could be half updated and so it could be in an inconsistent state
 
 		params = copy;
+
+		updateKnownNodes(dbms);
 	}
 
 	//---------------------------------------------------------------------------
@@ -219,8 +262,27 @@ public class GeonetHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doAddInfo(Element info)
+	protected void doAddInfo(Element node)
 	{
+		Element info     = node.getChild("info");
+		Element searches = node.getChild("searches");
+
+		//--- add 'name' element for each siteId in searches
+
+		if (searches != null)
+			for (Iterator i=searches.getChildren().iterator(); i.hasNext();)
+			{
+				Element search = (Element) i.next();
+
+				String siteId   = search.getChildText("siteId");
+				String siteName = htSiteIdName.get(siteId);
+
+				//--- do we know about this siteId ?
+
+				if (siteName != null)
+					search.addContent(new Element("siteName").setText(siteName));
+			}
+
 		//--- if the harvesting is not started yet, we don't have any info
 
 		if (result == null)
@@ -288,8 +350,10 @@ public class GeonetHarvester extends AbstractHarvester
 
 		req.setAddress("/"+ params.servlet +"/srv/en/"+ SERVICE_INFO);
 		req.clearParams();
+		req.addParam("type", "site");
 		req.addParam("type", "categories");
 		req.addParam("type", "groups");
+		req.addParam("type", "knownNodes");
 
 		Element remoteInfo = req.execute();
 
@@ -329,6 +393,131 @@ public class GeonetHarvester extends AbstractHarvester
 			req.clearParams();
 			req.setAddress("/"+ params.servlet +"/srv/en/"+ SERVICE_LOGOUT);
 		}
+
+		updateKnownNodes(log, dbms, remoteInfo);
+		dbms.commit();
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- KnownNodes update
+	//---
+	//---------------------------------------------------------------------------
+
+	private void updateKnownNodes(Dbms dbms)
+	{
+		Logger log = Log.createLogger(Geonet.HARVEST_MAN);
+
+		XmlRequest req = new XmlRequest(params.host, params.port);
+
+		req.setAddress("/"+ params.servlet +"/srv/en/"+ SERVICE_INFO);
+		req.clearParams();
+		req.addParam("type", "site");
+		req.addParam("type", "knownNodes");
+
+		log.info("Retrieving site info and known nodes from : "+ getName());
+
+		try
+		{
+			Element remoteInfo = req.execute();
+
+			if (remoteInfo.getName().equals("info"))
+				updateKnownNodes(log, dbms, remoteInfo);
+		}
+		catch (Exception e)
+		{
+			log.warning("Cannot retrieve info from : "+ getName());
+			log.warning("  (C) Excep : "+ e.getMessage());
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void updateKnownNodes(Logger log, Dbms dbms, Element info)
+	{
+		log.info("Updating known nodes list");
+
+		Element site = info.getChild("site");
+
+		String name    = site.getChildText("name");
+		String siteId  = site.getChildText("siteId");
+		String host    = params.host;
+		int    port    = params.port;
+		String servlet = params.servlet;
+
+		updateNode(log, dbms, siteId, name, host, port, servlet);
+
+		Element nodes = site.getChild("knownNodes");
+
+		if (nodes != null)
+			for (Iterator i=nodes.getChildren().iterator(); i.hasNext();)
+			{
+				Element node = (Element) i.next();
+
+				name    = node.getChildText("name");
+				siteId  = node.getChildText("siteId");
+				host    = node.getChildText("host");
+				servlet = node.getChildText("servlet");
+				port    = Integer.parseInt(node.getChildText("port"));
+
+				updateNode(log, dbms, siteId, name, host, port, servlet);
+			}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void updateNode(Logger log, Dbms dbms, String siteId, String name,
+									String host, int port, String servlet)
+	{
+		retrieveNodeLogo(log, host, port, servlet, siteId);
+
+		String updQuery = "UPDATE KnownNodes SET name=?, host=?, port=?, servlet=? WHERE siteId=?";
+		String insQuery = "INSERT INTO KnownNodes(siteId, name, host, port, servlet) VALUES(?,?,?,?,?)";
+
+		try
+		{
+			int res = dbms.execute(updQuery, name, host, port, servlet, siteId);
+
+			if (res != 0)
+				log.debug("  - Updated node : "+ name +" ("+ siteId +")");
+			else
+			{
+				dbms.execute(insQuery, siteId, name, host, port, servlet);
+				log.debug("  - Inserted new node : "+ name +" ("+ siteId +")");
+			}
+
+			//--- save siteId -> name link for caching purposes
+			htSiteIdName.put(siteId, name);
+		}
+		catch(Exception e)
+		{
+			log.warning("Cannot update known nodes : "+ e.getMessage());
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void retrieveNodeLogo(Logger log, String host, int port, String servlet, String siteId)
+	{
+		String logo = siteId +".png";
+
+		XmlRequest req = new XmlRequest(host, port);
+		req.setAddress("/"+ servlet + Geonet.Path.LOGOS + logo);
+
+		File logoFile = new File(context.getAppPath() + Geonet.Path.LOGOS + logo);
+
+		try
+		{
+			req.executeLarge(logoFile);
+		}
+		catch (IOException e)
+		{
+			log.warning("Cannot retrieve logo file from : "+ host+":"+port);
+			log.warning("  (C) Logo  : "+ logo);
+			log.warning("  (C) Excep : "+ e.getMessage());
+
+			logoFile.delete();
+		}
 	}
 
 	//---------------------------------------------------------------------------
@@ -339,6 +528,9 @@ public class GeonetHarvester extends AbstractHarvester
 
 	private GeonetParams params = new GeonetParams();
 	private GeonetResult result = null;
+
+	//--- better to have a synchronized hashtable here than a HashMap
+	private static Hashtable<String, String> htSiteIdName = new Hashtable<String, String>();
 }
 
 //=============================================================================

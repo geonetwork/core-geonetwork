@@ -23,17 +23,13 @@
 
 package org.fao.geonet.kernel.harvest.harvester.webfolder;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.harvest.Common.Type;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
@@ -43,6 +39,16 @@ import org.jdom.Element;
 
 public class WAFHarvester extends AbstractHarvester
 {
+	//--------------------------------------------------------------------------
+	//---
+	//--- Static init
+	//---
+	//--------------------------------------------------------------------------
+
+	public static void init(ServiceContext context) throws Exception
+	{
+	}
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -197,7 +203,7 @@ public class WAFHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doAddInfo(Element info) {}
+	protected void doAddInfo(Element node) {}
 
 	//---------------------------------------------------------------------------
 	//---

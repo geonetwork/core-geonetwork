@@ -53,6 +53,14 @@ public abstract class AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
+	public static void staticInit(ServiceContext context) throws Exception
+	{
+		GeonetHarvester.init(context);
+		WAFHarvester   .init(context);
+	}
+
+	//---------------------------------------------------------------------------
+
 	public static AbstractHarvester create(Type type, ServiceContext context,
 														SettingManager sm, DataManager dm)
 	{
@@ -222,7 +230,7 @@ public abstract class AbstractHarvester
 
 		//--- harvester specific info
 
-		doAddInfo(info);
+		doAddInfo(node);
 
 		//--- add error information
 
@@ -305,7 +313,7 @@ public abstract class AbstractHarvester
 
 	protected abstract boolean doIsOneRunOnly();
 
-	protected abstract void doAddInfo(Element info);
+	protected abstract void doAddInfo(Element node);
 	protected abstract void doHarvest(Logger l, ResourceManager rm) throws Exception;
 
 	//---------------------------------------------------------------------------

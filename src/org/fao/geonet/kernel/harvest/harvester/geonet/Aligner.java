@@ -217,8 +217,10 @@ public class Aligner
 				id[0] = dataMan.insertMetadataExt(dbms, schema, md, context.getSerialFactory(),
 															 siteId, createDate, changeDate, remoteUuid, null);
 
-				dataMan.setTemplateBit (dbms, id[0], isTemplate);
-				dataMan.setHarvestedBit(dbms, id[0], true);
+				int iId = Integer.parseInt(id[0]);
+
+				dataMan.setTemplateBit (dbms, iId, isTemplate);
+				dataMan.setHarvestedBit(dbms, iId, true);
 
 				String pubDir = Lib.resource.getDir(context, "public",  id[0]);
 				String priDir = Lib.resource.getDir(context, "private", id[0]);
@@ -239,9 +241,9 @@ public class Aligner
 
 			//--------------------------------------------------------------------
 
-			public void handleThumbnail(String file, InputStream is) throws IOException
+			public void handlePublicFile(String file, InputStream is) throws IOException
 			{
-				log.debug("    - Adding remote thumbnail with name="+ file);
+				log.debug("    - Adding remote public file with name="+ file);
 				String pubDir = Lib.resource.getDir(context, "public", id[0]);
 
 				FileOutputStream os = new FileOutputStream(new File(pubDir, file));
@@ -250,7 +252,7 @@ public class Aligner
 
 			//--------------------------------------------------------------------
 
-			public void handleData(String file, InputStream is) throws IOException {}
+			public void handlePrivateFile(String file, InputStream is) throws IOException {}
 		});
 
 		return id[0];
@@ -424,14 +426,14 @@ public class Aligner
 
 				//-----------------------------------------------------------------
 
-				public void handleThumbnail(String file, InputStream is) throws IOException
+				public void handlePublicFile(String file, InputStream is) throws IOException
 				{
-					updateThumbnail(id, file, is, thumbs[0]);
+					updateFile(id, file, is, thumbs[0]);
 				}
 
 				//-----------------------------------------------------------------
 
-				public void handleData(String file, InputStream is) {}
+				public void handlePrivateFile(String file, InputStream is) {}
 			});
 		}
 	}
@@ -657,50 +659,52 @@ public class Aligner
 	}
 
 	//--------------------------------------------------------------------------
+	//--- Public file update methods
+	//--------------------------------------------------------------------------
 
-	private void updateThumbnail(String id, String file, InputStream is,
-										  Element thumbs) throws IOException
+	private void updateFile(String id, String file, InputStream is,
+									Element files) throws IOException
 	{
-		if (thumbs == null)
-			log.debug("  - No 'thumbnails' element in info.xml. Cannot update thumbnail :"+ file);
+		if (files == null)
+			log.debug("  - No 'public' element in info.xml. Cannot update public file :"+ file);
 		else
 		{
-			removeOldThumbs(id, thumbs);
-			updateChangedThumbs(id, file, is, thumbs);
+			removeOldFile(id, files);
+			updateChangedFile(id, file, is, files);
 		}
 	}
 
 	//--------------------------------------------------------------------------
 
-	private void removeOldThumbs(String id, Element infoThumbs)
+	private void removeOldFile(String id, Element infoFiles)
 	{
 		File pubDir = new File(Lib.resource.getDir(context, "public", id));
 
-		File thumbs[] = pubDir.listFiles();
+		File files[] = pubDir.listFiles();
 
-		if (thumbs == null)
-			log.error("  - Cannot scan directory for thumbnails : "+ pubDir.getAbsolutePath());
+		if (files == null)
+			log.error("  - Cannot scan directory for public files : "+ pubDir.getAbsolutePath());
 
-		else for (File thumb : thumbs)
-			if (!existsThumb(thumb.getName(), infoThumbs))
+		else for (File file : files)
+			if (!existsFile(file.getName(), infoFiles))
 			{
-				log.debug("  - Removing old thumbnail with name="+ thumb.getName());
-				thumb.delete();
+				log.debug("  - Removing old public file with name="+ file.getName());
+				file.delete();
 			}
 	}
 
 	//--------------------------------------------------------------------------
 
-	private boolean existsThumb(String thumbName, Element thumbs)
+	private boolean existsFile(String fileName, Element files)
 	{
-		List list = thumbs.getChildren("file");
+		List list = files.getChildren("file");
 
 		for (int i=0; i<list.size(); i++)
 		{
 			Element elem = (Element) list.get(i);
 			String  name = elem.getAttributeValue("name");
 
-			if (thumbName.equals(name))
+			if (fileName.equals(name))
 				return true;
 		}
 
@@ -709,13 +713,13 @@ public class Aligner
 
 	//--------------------------------------------------------------------------
 
-	private void updateChangedThumbs(String id, String file, InputStream is,
-												Element thumbs) throws IOException
+	private void updateChangedFile(String id, String file, InputStream is,
+											 Element files) throws IOException
 	{
 		String pubDir  = Lib.resource.getDir(context, "public", id);
 		File   locFile = new File(pubDir, file);
 
-		List list = thumbs.getChildren("file");
+		List list = files.getChildren("file");
 
 		for (int i=0; i<list.size(); i++)
 		{
@@ -730,21 +734,21 @@ public class Aligner
 
 				if (!locFile.exists() || remIsoDate.sub(locIsoDate) > 0)
 				{
-					log.debug("  - Adding remote thumbnail with name="+ file);
+					log.debug("  - Adding remote public file with name="+ file);
 
 					FileOutputStream os = new FileOutputStream(locFile);
 					BinaryFile.copy(is, os, false, true);
 				}
 				else
 				{
-					log.debug("  - Nothing to do to thumbnail with name="+ file);
+					log.debug("  - Nothing to do to public file with name="+ file);
 				}
 
 				return;
 			}
 		}
 
-		log.debug("  - Thumbnail file not found inside info.xml (possible race) : "+ file);
+		log.debug("  - Public file not found inside info.xml (possible race) : "+ file);
 	}
 
 	//--------------------------------------------------------------------------
@@ -778,7 +782,10 @@ public class Aligner
 
 		req.setAddress("/"+ params.servlet +"/srv/en/"+ SERVICE_MEF_EXPORT);
 
-		return req.executeLarge();
+		File tempFile = File.createTempFile("temp-", ".dat");
+		req.executeLarge(tempFile);
+
+		return tempFile;
 	}
 
 	//--------------------------------------------------------------------------
