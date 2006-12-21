@@ -18,7 +18,6 @@
 		<site>
 			<name><xsl:value-of select="children/site/children/name/value"/></name>
 			<siteId><xsl:value-of select="children/site/children/siteId/value"/></siteId>
-			<icon><xsl:value-of select="/root/env/baseURL"/>/images/logos/<xsl:value-of select="children/site/children/siteId/value"/>.png</icon>
 			<platform>
 				<name>geonetwork</name>
 				<version><xsl:value-of select="children/gnVersion/value"/></version>

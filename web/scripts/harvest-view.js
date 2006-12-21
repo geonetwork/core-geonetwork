@@ -273,7 +273,7 @@ HarvestView.prototype.refreshCallBack = function(xml)
 	var from = htmlRow.indexOf('>') +1;
 	var to   = htmlRow.indexOf('</tr>');
 	
-	$(id).innerHTML = html.substring(from, to);	
+	$(id).innerHTML = htmlRow.substring(from, to);	
 	
 	//--- add proper tooltips for both status and error columns
 	
@@ -571,6 +571,7 @@ HarvestView.prototype.setEmpty_GN = function()
 	$('gn.password')  .value = '';
 		
 	$('gn.createGroups').checked = true;
+	$('gn.createCateg') .checked = true;
 	$('gn.oneRunOnly')  .checked = false;
 
 	$('gn.every.days') .value = '0';
@@ -585,10 +586,12 @@ HarvestView.prototype.setEmpty_GN = function()
 
 HarvestView.prototype.setEdit_GN = function(xmlNode)
 {
-	var xmlSite   = xmlNode.getElementsByTagName('site')   [0];
-	var searches  = xmlNode.getElementsByTagName('search');
-	var xmlOptions= xmlNode.getElementsByTagName('options')[0];
+	var xmlSite   = xmlNode.getElementsByTagName('site')    [0];
+	var searches  = xmlNode.getElementsByTagName('searches')[0];
+	var xmlOptions= xmlNode.getElementsByTagName('options') [0];
 
+	searchesList = searches.getElementsByTagName('search');
+	
 	$('gn.name').value = xmlNode.getAttribute('name');
 	
 	this.set(xmlSite,    'host',       'gn.host');
@@ -602,12 +605,13 @@ HarvestView.prototype.setEdit_GN = function(xmlNode)
 	
 	this.removeAllSearch();
 	
-	for (var i=0; i<searches.length; i++)
-		this.addSearch(searches[i]);
+	for (var i=0; i<searchesList.length; i++)
+		this.addSearch(searchesList[i]);
 	
 	//--- setup other stuff
 	
 	this.set(xmlOptions, 'createGroups','gn.createGroups');
+	this.set(xmlOptions, 'createCateg', 'gn.createCateg');
 	this.set(xmlOptions, 'oneRunOnly',  'gn.oneRunOnly');
 
 	var every = new Every(this.find(xmlOptions, 'every'));
@@ -646,6 +650,7 @@ HarvestView.prototype.getEdit_GN = function()
 		//--- options		
 		EVERY         : Every.build(days, hours, mins),
 		CREATE_GROUPS : $('gn.createGroups').checked,
+		CREATE_CATEG  : $('gn.createCateg') .checked,
 		ONE_RUN_ONLY  : $('gn.oneRunOnly')  .checked
 	}
 	

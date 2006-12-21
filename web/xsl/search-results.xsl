@@ -105,8 +105,8 @@
 								<xsl:otherwise>
 									<td align="center" valign="middle">
 										<xsl:variable name="source" select="string($metadata/geonet:info/source)"/>
-										<xsl:if test="/root/gui/sources/source[string(code)=$source]">
-											<img src="{/root/gui/url}{/root/gui/sources/source[string(code)=$source]/logo}" width="40"/>
+										<xsl:if test="/root/gui/sources/record[string(siteid)=$source]">
+											<img src="{/root/gui/url}/images/logos/{$source}.png" width="40"/>
 										</xsl:if>
 									</td>
 									<td class="padded"><h1 align="left"><a href="{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple"><xsl:value-of select="$metadata/title"/></a></h1></td>

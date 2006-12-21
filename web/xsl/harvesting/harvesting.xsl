@@ -198,6 +198,11 @@
 			</tr>
 
 			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/createCateg"/></td>
+				<td class="padded"><input id="gn.createCateg" class="content" type="checkbox" value=""/></td>
+			</tr>
+			
+			<tr>
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/oneRun"/></td>
 				<td class="padded"><input id="gn.oneRunOnly" class="content" type="checkbox" value=""/></td>
 			</tr>

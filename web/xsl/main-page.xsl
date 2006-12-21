@@ -488,11 +488,11 @@
 								</xsl:if>
 								<xsl:value-of select="/root/gui/strings/any"/>
 							</option>
-							<xsl:for-each select="/root/gui/sources/source">
+							<xsl:for-each select="/root/gui/sources/record">
 								<!--
 								<xsl:sort order="ascending" select="name"/>
 								-->
-								<xsl:variable name="source"     select="code/text()"/>
+								<xsl:variable name="source"     select="siteid/text()"/>
 								<xsl:variable name="sourceName" select="name/text()"/>
 								<option>
 									<xsl:if test="$source=/root/gui/searchDefaults/siteId">

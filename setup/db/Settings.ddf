@@ -16,10 +16,10 @@ value,         VARCHAR
 2	0	harvesting	
 
 10	1	site	
-11	10	name	myGeonetwork
-12	10	siteId	mySiteId
-
-13	1	gnVersion	$VERSION
+11	10	name	dummy
+12	10	siteId	dummy
+13	10	organization	dummy
+14	1	gnVersion	$VERSION
 
 15	1	usePublication	false
 16	15	host	
@@ -35,7 +35,7 @@ value,         VARCHAR
 23	22	host	
 24	22	port	
 
-25	1	sendFeedback	false
+25	1	feedback	
 26	25	email	
 27	25	smtpHost	
 28	25	smtpPort	

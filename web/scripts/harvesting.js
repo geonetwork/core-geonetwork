@@ -514,6 +514,7 @@ var updateTemp_GN =
 '    <options>'+
 '      <every>{EVERY}</every>'+
 '      <createGroups>{CREATE_GROUPS}</createGroups>'+
+'      <createCateg>{CREATE_CATEG}</createCateg>'+
 '      <oneRunOnly>{ONE_RUN_ONLY}</oneRunOnly>'+
 '    </options>'+
 '  </node>';
