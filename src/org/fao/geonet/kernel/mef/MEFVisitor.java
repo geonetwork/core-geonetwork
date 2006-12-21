@@ -34,8 +34,8 @@ public interface MEFVisitor
 	public void handleMetadata(Element md) throws Exception;
 	public void handleInfo    (Element md) throws Exception;
 
-	public void handleThumbnail(String file, InputStream is) throws IOException;
-	public void handleData     (String file, InputStream is) throws IOException;
+	public void handlePublicFile (String file, InputStream is) throws IOException;
+	public void handlePrivateFile(String file, InputStream is) throws IOException;
 }
 
 //=============================================================================

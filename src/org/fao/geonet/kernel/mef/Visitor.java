@@ -102,7 +102,6 @@ public class Visitor
 
 		ZipEntry entry;
 
-
 		try
 		{
 			while ((entry=zis.getNextEntry()) != null)
@@ -110,11 +109,11 @@ public class Visitor
 				String fullName   = entry.getName();
 				String simpleName = new File(fullName).getName();
 
-				if (fullName.startsWith(DIR_THUMBNAILS) && !fullName.equals(DIR_THUMBNAILS))
-					v.handleThumbnail(simpleName, isb);
+				if (fullName.startsWith(DIR_PUBLIC) && !fullName.equals(DIR_PUBLIC))
+					v.handlePublicFile(simpleName, isb);
 
-				else if (fullName.equals(DIR_DATA) && !fullName.equals(DIR_DATA))
-					v.handleData(simpleName, isb);
+				else if (fullName.equals(DIR_PRIVATE) && !fullName.equals(DIR_PRIVATE))
+					v.handlePrivateFile(simpleName, isb);
 
 				zis.closeEntry();
 			}

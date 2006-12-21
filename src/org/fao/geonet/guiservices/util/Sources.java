@@ -21,21 +21,54 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package org.fao.geonet.kernel.mef;
+package org.fao.geonet.guiservices.util;
 
-import java.io.File;
+import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.jdom.Element;
 
 //=============================================================================
 
-class MEFConstants
+public class Sources implements Service
 {
-	static final String DIR_PUBLIC    = "public/";
-	static final String DIR_PRIVATE   = "private/";
-	static final String FILE_METADATA = "metadata.xml";
-	static final String FILE_INFO     = "info.xml";
-	static final String VERSION       = "1.0";
+	public void init(String appPath, ServiceConfig params) throws Exception {}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Service
+	//---
+	//--------------------------------------------------------------------------
+
+	public Element exec(Element params, ServiceContext context) throws Exception
+	{
+		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SettingManager sm =gc.getSettingManager();
+
+		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+
+		//--- create local node
+
+		String name   = sm.getValue("system/site/name");
+		String siteId = sm.getValue("system/site/siteId");
+
+		Element local = new Element("record");
+
+		local.addContent(new Element("name")  .setText(name));
+		local.addContent(new Element("siteid").setText(siteId));
+
+		//--- retrieve known nodes
+
+		Element nodes = dbms.select("SELECT siteId, name FROM KnownNodes");
+		nodes.addContent(local);
+
+		return nodes;
+	}
 }
 
 //=============================================================================
-
 

@@ -77,8 +77,8 @@ class Exporter
 
 		//--- create folders
 
-		createDir(zos, DIR_THUMBNAILS);
-		createDir(zos, DIR_DATA);
+		createDir(zos, DIR_PUBLIC);
+		createDir(zos, DIR_PRIVATE);
 
 		//--- save metadata
 
@@ -98,10 +98,10 @@ class Exporter
 		//--- save thumbnails and maps
 
 		if (format == Format.PARTIAL || format == Format.FULL)
-			saveThumbs(zos, pubDir);
+			savePublic(zos, pubDir);
 
 		if (format == Format.FULL)
-			saveMaps(zos, priDir);
+			savePrivate(zos, priDir);
 
 		//--- cleanup and exit
 
@@ -155,24 +155,24 @@ class Exporter
 	//---
 	//--------------------------------------------------------------------------
 
-	private static void saveThumbs(ZipOutputStream zos, String dir) throws IOException
+	private static void savePublic(ZipOutputStream zos, String dir) throws IOException
 	{
-		File[] thumbs = new File(dir).listFiles(filter);
+		File[] files = new File(dir).listFiles(filter);
 
-		if (thumbs != null)
-			for (File thumb : thumbs)
-				addFile(zos, DIR_THUMBNAILS + thumb.getName(), new FileInputStream(thumb));
+		if (files != null)
+			for (File file : files)
+				addFile(zos, DIR_PUBLIC + file.getName(), new FileInputStream(file));
 	}
 
 	//--------------------------------------------------------------------------
 
-	private static void saveMaps(ZipOutputStream zos, String dir) throws IOException
+	private static void savePrivate(ZipOutputStream zos, String dir) throws IOException
 	{
-		File[] maps = new File(dir).listFiles(filter);
+		File[] files = new File(dir).listFiles(filter);
 
-		if (maps != null)
-			for (File map : maps)
-				addFile(zos, DIR_DATA + map.getName(), new FileInputStream(map));
+		if (files != null)
+			for (File file : files)
+				addFile(zos, DIR_PRIVATE + file.getName(), new FileInputStream(file));
 	}
 
 	//--------------------------------------------------------------------------
@@ -191,8 +191,8 @@ class Exporter
 		info.addContent(buildInfoCategories(dbms, md));
 		info.addContent(buildInfoPrivileges(dbms, md));
 
-		info.addContent(buildInfoFiles("thumbnails", pubDir));
-		info.addContent(buildInfoFiles("data",       priDir));
+		info.addContent(buildInfoFiles("public",  pubDir));
+		info.addContent(buildInfoFiles("private", priDir));
 
 		return Xml.getString(new Document(info));
 	}
