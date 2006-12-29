@@ -413,11 +413,25 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- System configuration                                          -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="system.options">
-			<output sheet="options/options.xsl">
-				<xml name="options" file="xml/options.xml" />
+		<service name="config">
+			<output sheet="config/config.xsl">
+				<xml name="config" file="xml/config.xml" />
 			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.config.get">
+			<class name=".services.config.Get"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.config.set">
+			<class name=".services.config.Set"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -617,4 +631,5 @@
 	<!-- ====================================================================== -->
 
 </geonet>
+
 

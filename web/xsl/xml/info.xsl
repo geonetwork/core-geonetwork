@@ -17,6 +17,7 @@
 	<xsl:template match="system">
 		<site>
 			<name><xsl:value-of select="children/site/children/name/value"/></name>
+			<organization><xsl:value-of select="children/site/children/organization/value"/></organization>
 			<siteId><xsl:value-of select="children/site/children/siteId/value"/></siteId>
 			<platform>
 				<name>geonetwork</name>
