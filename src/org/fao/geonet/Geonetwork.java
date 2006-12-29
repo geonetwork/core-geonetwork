@@ -137,17 +137,22 @@ public class Geonetwork implements ApplicationHandler
 
 		// FIXME: should I move these to elSearch?
 
-		String z3950port      = settingMan.getValue("system/z3950Port");
-		String schemaMappings = handlerConfig.getMandatoryValue(Geonet.Config.SCHEMA_MAPPINGS);
-		String network        = settingMan.getValue("system/intranet/network");
+		boolean z3950Enable    = settingMan.getValueAsBool("system/z3950/enable", false);
+		String  z3950port      = settingMan.getValue("system/z3950/port");
+		String  schemaMappings = handlerConfig.getMandatoryValue(Geonet.Config.SCHEMA_MAPPINGS);
 
-		logger.info("Schema mapping is : " + schemaMappings); // FIXME
+		if (!z3950Enable)
+		logger.info("     disabled");
+		else
+		{
+			logger.info("     schema mapping is : " + schemaMappings); // FIXME
 
-		UserSession session = new UserSession();
-		session.authenticate(null, "z39.50", "", "", "Guest");
-		context.setUserSession(session);
-		context.setIpAddress(network);
-		Server.init(z3950port, path + Jeeves.Path.XML + schemaMappings, context);
+			UserSession session = new UserSession();
+			session.authenticate(null, "z39.50", "", "", "Guest");
+			context.setUserSession(session);
+			context.setIpAddress("127.0.0.1");
+			Server.init(z3950port, path + Jeeves.Path.XML + schemaMappings, context);
+		}
 
 		//------------------------------------------------------------------------
 		//--- initialize harvesting subsystem

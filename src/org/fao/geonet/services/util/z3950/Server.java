@@ -49,9 +49,6 @@ public class Server
 	public static void init(String port, String schemaMappings, ServiceContext srvContext)
 		throws Exception
 	{
-		if (port == null || port.equals(""))
-			return;
-
 		String evaluator    = "org.fao.geonet.services.util.z3950.GNSearchable";
 		String configurator = "com.k_int.IR.Syntaxes.Conversion.XMLConfigurator";
 

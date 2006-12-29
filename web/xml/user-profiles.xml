@@ -46,7 +46,9 @@
 		<!-- MEF facilities -->
 		<allow service="xml.mef.import"/>
 
-		<allow service="system.options"/>
+		<allow service="config"/>
+		<allow service="xml.config.get"/>
+		<allow service="xml.config.set"/>
 	</profile>
 
 	<!-- ====================================================================== -->

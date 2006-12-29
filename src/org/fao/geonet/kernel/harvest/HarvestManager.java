@@ -63,7 +63,7 @@ public class HarvestManager
 		AbstractHarvester.staticInit(context);
 
 		Element entries = settingMan.get("harvesting", -1);
-		entries = Xml.transform(entries, xslPath +"/setting-to-harvesting.xsl");
+		entries = Xml.transform(entries, xslPath +"/harvesting.xsl");
 
 		Iterator i = entries.getChildren().iterator();
 
@@ -93,7 +93,7 @@ public class HarvestManager
 		if (result == null)
 			return null;
 
-		result = Xml.transform(result, xslPath +"/setting-to-harvesting.xsl");
+		result = Xml.transform(result, xslPath +"/harvesting.xsl");
 
 		if (result.getName().equals("node"))
 			addInfo(result);

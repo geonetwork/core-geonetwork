@@ -107,10 +107,10 @@
 							</tr>
 						</xsl:if>
 
-						<xsl:if test="/root/gui/services/service/@name='system.options'">
+						<xsl:if test="/root/gui/services/service/@name='config'">
 							<tr>
-								<td class="padded"><a href="{/root/gui/locService}/system.options"><xsl:value-of select="/root/gui/strings/systemOptions"/></a></td>
-								<td class="padded"><xsl:value-of select="/root/gui/strings/systemOptionsDes"/></td>
+								<td class="padded"><a href="{/root/gui/locService}/config"><xsl:value-of select="/root/gui/strings/systemConfig"/></a></td>
+								<td class="padded"><xsl:value-of select="/root/gui/strings/systemConfigDes"/></td>
 							</tr>
 						</xsl:if>
 					</xsl:variable>

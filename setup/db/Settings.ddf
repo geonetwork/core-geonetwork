@@ -21,21 +21,25 @@ value,         VARCHAR
 13	10	organization	dummy
 14	1	gnVersion	$VERSION
 
-15	1	usePublication	false
-16	15	host	
-17	15	port	
+20	1	server	
+21	20	host	localhost
+22	20	port	8080
 
-18	1	intranet	
-19	18	network	127.0.0.1
-20	18	netmask	255.255.255.0
+30	1	intranet	
+31	30	network	127.0.0.1
+32	30	netmask	255.255.255.0
 
-21	1	z3950Port	2100
+40	1	z3950	
+41	40	enable	true
+42	40	port	2100
 
-22	1	useProxy	false
-23	22	host	
-24	22	port	
+50	1	proxy	
+51	50	use	true
+52	50	host	
+53	50	port	
 
-25	1	feedback	
-26	25	email	
-27	25	smtpHost	
-28	25	smtpPort	
+60	1	feedback	
+61	60	email	
+62	60	mailServer	
+63	62	host	
+64	62	port	25
