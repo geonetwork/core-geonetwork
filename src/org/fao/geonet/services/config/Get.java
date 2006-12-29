@@ -21,17 +21,43 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package org.fao.geonet.lib;
+package org.fao.geonet.services.config;
+
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Xml;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.jdom.Element;
 
 //=============================================================================
 
-public class Lib
+public class Get implements Service
 {
-	public static LocalLib    local     = new LocalLib();
-	public static ElementLib  element   = new ElementLib();
-	public static DbLib       db        = new DbLib();
-	public static ResourceLib resource  = new ResourceLib();
-	public static TypeLib     type      = new TypeLib();
+	//--------------------------------------------------------------------------
+	//---
+	//--- Init
+	//---
+	//--------------------------------------------------------------------------
+
+	public void init(String appPath, ServiceConfig params) throws Exception {}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Service
+	//---
+	//--------------------------------------------------------------------------
+
+	public Element exec(Element params, ServiceContext context) throws Exception
+	{
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+
+		String  xslPath = context.getAppPath() + Geonet.Path.STYLESHEETS+ "/xml";
+		Element system  = gc.getSettingManager().get("system", -1);
+
+		return Xml.transform(system, xslPath +"/config.xsl");
+	}
 }
 
 //=============================================================================

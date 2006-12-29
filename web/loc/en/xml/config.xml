@@ -3,6 +3,7 @@
 <strings>
 	<site>Site</site>
 		<name>Name</name>
+		<organ>Organization</organ>
 	
 	<server>Server</server>
 		<host>Host</host>
@@ -21,8 +22,9 @@
 		<smtpPort>SMTP Port</smtpPort>
 	
 	<proxy>Proxy</proxy>
+		<use>Use</use>
 	
-<!-- Buttons -->
+	<!-- Buttons -->
 	
 	<save>Save</save>
 	<refresh>Refresh</refresh>
@@ -53,13 +55,77 @@
 		<url>
 			<notURL>The field '{NAME}' is not a valid URL</notURL>
 		</url>
+		
+		<ipaddress>
+			<notIP>The field '{NAME}' is not a valid IP address</notIP>
+		</ipaddress>
 	</validator>
 	
 	<!-- display messages -->
 	
-	<pleaseSelect>Please select at least one entry</pleaseSelect>
+	<cannotGet>Unable to get the system configuration</cannotGet>
+	<cannotSave>Unable to save the system configuration</cannotSave>
+	<saveOk>System configuration saved.</saveOk>
 	
 	<!-- tooltips -->
+	
+	<tips>
+		<tip id="site.name">
+			Used to identify the installation.
+		</tip>
+		
+		<!-- server -->
+		
+		<tip id="server.host">
+			The server's <b>host</b> and <b>port</b> are used to create URLs to
+			the GeoNetwork server. For example, they are used during metadata
+			editing to create resource links and when returning the server's
+			capabilities during a CS/W request.
+			<br/>
+			<b>Please note:</b> you should use the GAST tool to reflect this
+			change inside the metadata.
+		</tip>
+		
+		<!-- intranet -->
+		
+		<tip id="intranet.network">
+			The <b>network</b> and <b>netmask</b> parameters are used to identify
+			internal connections to GeoNetwork, that is, to identify the intranet
+			group.
+		</tip>
+		
+		<!-- Z39.50 -->
+		
+		<tip id="z3950.enable">
+			If set, during startup GeoNetwork will start the Z39.50 server component.
+			<br/>
+			<b>Please note:</b> restart GeoNetwork to make this change active.
+		</tip>
+		
+		<tip id="z3950.port">
+			Change the Z39.50 listening port.
+			<br/>
+			<b>Please note:</b> restart GeoNetwork to make this change active.
+		</tip>
+		
+		<!-- proxy -->
+		
+		<tip id="proxy.use">
+			If set, GeoNetwork will use the provided proxy parameters when accessing
+			remote nodes. For example, this is used during the harvesting.
+		</tip>
+		
+		<!-- feedback -->
+		
+		<tip id="feedback.email">
+			This is the administrator's email address used to send feedback.
+		</tip>
+		
+		<tip id="feedback.mail.host">
+			The SMTP <b>host</b> and <b>port</b> parameters are used to send emails
+			to GeoNetwork's users when a resource is downloaded.
+		</tip>
+	</tips>
 	
 </strings>
 

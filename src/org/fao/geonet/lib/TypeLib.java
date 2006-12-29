@@ -23,15 +23,9 @@
 
 package org.fao.geonet.lib;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.StringTokenizer;
-import org.jdom.Element;
-
 //=============================================================================
 
-public class ElementLib
+public class TypeLib
 {
 	//-----------------------------------------------------------------------------
 	//---
@@ -39,64 +33,24 @@ public class ElementLib
 	//---
 	//-----------------------------------------------------------------------------
 
-	public Set<String> getIds(Element elem)
+	public boolean isInteger(String value)
 	{
-		HashSet<String> hs = new HashSet<String>();
-
-		for (Object child : elem.getChildren())
-			hs.add(((Element) child).getChildText("id"));
-
-		return hs;
-	}
-
-	//-----------------------------------------------------------------------------
-
-	public Element pruneChildren(Element elem, Set<String> ids)
-	{
-		ArrayList<Element> alToPrune = new ArrayList<Element>();
-
-		//--- collect elements to prune
-
-		for (Object obj : elem.getChildren())
+		try
 		{
-			Element child = (Element) obj;
-			String id = child.getChildText("id");
-
-			if (!ids.contains(id))
-				alToPrune.add(child);
+			Integer.parseInt(value);
+			return true;
 		}
-
-		//--- remove collected elements
-
-		for (Element child : alToPrune)
-			child.detach();
-
-		return elem;
-	}
-
-	//-----------------------------------------------------------------------------
-
-	public void add(Element el,String name, Object value)
-	{
-		if (value != null)
-			el.addContent(new Element(name).setText(value.toString()));
-	}
-
-	//-----------------------------------------------------------------------------
-
-	public String eval(Element elem, String path)
-	{
-		StringTokenizer st = new StringTokenizer(path, "/");
-
-		while (st.hasMoreTokens())
+		catch(Exception e)
 		{
-			elem = elem.getChild(st.nextToken());
-
-			if (elem == null)
-				return null;
+			return false;
 		}
+	}
 
-		return elem.getText().trim();
+	//--------------------------------------------------------------------------
+
+	public boolean isBoolean(String value)
+	{
+		return value.equals("true") || value.equals("false");
 	}
 }
 

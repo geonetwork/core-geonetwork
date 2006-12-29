@@ -113,6 +113,28 @@ gn.xmlToString = function(xml, ident)
 
 	//--- handle children
 
+	result += gn.xmlToStringCont(xml, ident);
+
+	return result + ident +'</'+ xml.nodeName +'>\n';
+}
+
+//=====================================================================================
+
+gn.xmlToStringCont = function(xml, ident)
+{
+	if (!ident)
+		ident = '';
+		
+	if (xml == null)
+		throw 'gn.xmlToStringCont: xml is null';
+		
+	//--- skip document node
+
+	if (xml.nodeType == Node.DOCUMENT_NODE)
+		xml = xml.firstChild;
+	
+	var result = '';
+	
 	for (var i=0; i<xml.childNodes.length; i++)
 	{
 		var child = xml.childNodes[i];
@@ -124,7 +146,7 @@ gn.xmlToString = function(xml, ident)
 			result += gn.escape(child.nodeValue);
 	}
 
-	return result + ident +'</'+ xml.nodeName +'>\n';
+	return result;
 }
 
 //=====================================================================================
@@ -153,6 +175,34 @@ gn.visit = function(node, callBack)
 			node = node.nextSibling;
 		}
 	}
+}
+
+//=====================================================================================
+
+gn.evalXPath = function(xmlNode, xpath)
+{
+	var names = xpath.split('/');
+			
+	for (var i=0; i<names.length; i++)
+	{	
+		xmlNode = xmlNode.firstChild;
+		
+		var found = false;
+		
+		while (xmlNode != null && !found)
+		{
+			if (xmlNode.nodeType == Node.ELEMENT_NODE && xmlNode.nodeName == names[i])
+				found = true;
+			else
+				xmlNode = xmlNode.nextSibling;
+		}
+		
+		if (xmlNode == null)
+			return null;
+	
+	}
+	
+	return xmlNode.textContent;
 }
 
 //=====================================================================================
@@ -293,7 +343,7 @@ gn.wait = function(millis)
 //=====================================================================================
 
 /* Given a table, removes all rows but the first
-*/
+ */
 
 gui.removeAllButFirst = function(tableId)
 {
@@ -301,6 +351,28 @@ gui.removeAllButFirst = function(tableId)
 	
 	for (var i=rows.length-1; i>0; i--)
 		Element.remove(rows[i]);		
+}
+
+//=====================================================================================
+/* Creates tooltips for all provided elements in an XML node
+ */
+
+gui.setupTooltips = function(xml)
+{
+	var node = xml.firstChild;
+	
+	while (node != null)
+	{
+		if (node.nodeType == Node.ELEMENT_NODE)
+		{
+			var elem = $(node.getAttribute('id'));
+			var mesg = gn.xmlToStringCont(node);
+		
+			new Tooltip(elem, mesg);
+		}
+		
+		node = node.nextSibling;
+	}
 }
 
 //=====================================================================================
@@ -365,13 +437,23 @@ XMLLoader.prototype.isLoaded = function()
 XMLLoader.prototype.getText = function(name)
 {
 	if (!this.strings)
-		return '*loading*';
+		return '*loading : '+ name +'*';
 			
 	var node = this.strings;	
 	var list = node.getElementsByTagName(name);
 	
 	if (list.length == 0)	return '*not-found:'+ name +'*';
 		else						return list[0].textContent;
+}
+
+//=====================================================================================
+
+XMLLoader.prototype.getNode = function(name)
+{
+	if (name)
+		return this.strings.getElementsByTagName(name)[0];
+		
+	return this.strings;
 }
 
 //=====================================================================================
@@ -450,6 +532,8 @@ function Tooltip(elem, message)
 	this.shown= false;
 	this.msg  = message;
 	
+	this.initDelay = 1000;
+	
 	Event.observe(elem, 'mouseover', gn.wrap(this, this.mouseIn));
 	Event.observe(elem, 'mouseout',  gn.wrap(this, this.mouseOut));	
 }
@@ -464,30 +548,45 @@ Tooltip.prototype.mouseIn = function(event)
 	if (!this.tip)
 	{
 		this.tip = document.createElement('div');
-		this.tip.className = 'tooltip';
-		this.tip.innerHTML = this.msg;
+		this.tip.className     = 'tooltip';
+		this.tip.innerHTML     = this.msg;
+		this.tip.style.display = 'none';
 		
 		document.body.appendChild(this.tip);	
 	}
 		
-	Element.show(this.tip);
-	
 	this.tip.style.left = Event.pointerX(event) +12;
 	this.tip.style.top  = Event.pointerY(event) +12;
+	
+	this.timer = setTimeout(gn.wrap(this, this.mouseIn_CB), this.initDelay);	
+}
+
+//-------------------------------------------------------------------------------------
+
+Tooltip.prototype.mouseIn_CB = function()
+{
+	Element.show(this.tip);	
 	
 	this.shown = true;
 }
 
 //=====================================================================================
 
-Tooltip.prototype.mouseOut = function(e)
+Tooltip.prototype.mouseOut = function(event)
 {
+	if (this.timer)
+	{
+		clearTimeout(this.timer);
+		this.timer = null;
+	}
+	
 	if (!this.shown)
 		return;
 		
-	Element.hide(this.tip);
+	Element.hide(this.tip);	
 	
 	this.shown = false;
 }
 
 //=====================================================================================
+

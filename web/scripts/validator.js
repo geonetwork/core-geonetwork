@@ -22,7 +22,9 @@
 	             can be empty.
 	 - hostname: the string can contains only letters, digits and '.','-'
 	 - url     : the string must conform to the URL specification (i.e. must be a valid URL).
-	             Notice that this validator is incomplete.
+	             *** Notice that this validator is incomplete. ***
+	 -	ipaddress:the string must be in the xxx.xxx.xxx.xxx form where each xxx must be an
+	             integer in the range 0-255. 'empty' means that the field can be empty.
 	             
 	This method expects to find some strings into the xmlLoader object.
 	This is a suggested layout for the string properties. Notice that this is not required:
@@ -49,6 +51,10 @@
 		<url>
 			<notURL>{NAME} is not a valid URL</notURL>
 		</url>
+		
+		<ipaddress>
+			<notIP>{NAME} is not a valid IP address</notIP>
+		</ipaddress>
 	</validator>
  */
 
@@ -58,6 +64,10 @@ function Validator(xmlLoader)
 	this.rules = [];	
 }
 
+//=====================================================================================
+//===
+//=== API methods
+//===
 //=====================================================================================
 
 Validator.prototype.add = function(rules, parentId)
@@ -89,6 +99,9 @@ Validator.prototype.add = function(rules, parentId)
 		else if (rule.type == 'url')
 			rule.validator = gn.wrap(this, this.urlVal);
 		
+		else if (rule.type == 'ipaddress')
+			rule.validator = gn.wrap(this, this.ipaddressVal);
+		
 		else
 			throw 'Unknown validator type : '+ rule.type;
 			
@@ -109,7 +122,28 @@ Validator.prototype.removeByParent = function(parentId)
 }
 
 //=====================================================================================
-//=== Private validators
+
+Validator.prototype.validate = function()
+{
+	for (var i=0; i<this.rules.length; i++)
+	{
+		var rule   = this.rules[i];		
+		var result = rule.validator(rule);
+		
+		if (result != null)
+		{
+			this.showError(rule.ctrl, result);
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+//=====================================================================================
+//===
+//=== Private validators methods
+//===
 //=====================================================================================
 
 Validator.prototype.lengthVal = function(rule)
@@ -192,23 +226,21 @@ Validator.prototype.integerVal = function(rule)
 	
 	return result;
 }
+
 //=====================================================================================
 
-Validator.prototype.validate = function()
+Validator.prototype.ipaddressVal = function(rule)
 {
-	for (var i=0; i<this.rules.length; i++)
-	{
-		var rule   = this.rules[i];		
-		var result = rule.validator(rule);
-		
-		if (result != null)
-		{
-			this.showError(rule.ctrl, result);
-			return false;
-		}
-	}
+	var text  = rule.ctrl.value;
+	var result= null;
 	
-	return true;
+	if (text == '' && rule.empty)
+		return null;
+	
+	if (!this.isIPAddress(text))
+		result = ['notIP'];
+		
+	return result;
 }
 
 //=====================================================================================
@@ -320,6 +352,32 @@ Validator.prototype.isURL = function(text)
 			continue;
 			
 		return false;
+	}
+	
+	return true;
+}
+
+//=====================================================================================
+
+Validator.prototype.isIPAddress = function(text)
+{
+	if (text.length < 7 || text.length > 15)
+		return false;
+		
+	var blocks = text.split('.');
+	
+	if (blocks.length != 4)
+		return false;
+		
+	for (var i=0; i<blocks.length; i++)
+	{
+		if (!this.isInteger(blocks[i]))
+			return false;
+			
+		var value = parseInt(blocks[i]);
+		
+		if (value <0 || value >255)
+			return false;
 	}
 	
 	return true;
