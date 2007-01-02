@@ -2,8 +2,8 @@
 
 <project version="2">
 	<attribs>
-		<attrib name="build">127</attrib>
-		<attrib name="serial">61532</attrib>
+		<attrib name="build">128</attrib>
+		<attrib name="serial">61534</attrib>
 	</attribs>
 	<database>
 		<attribs>
@@ -106,7 +106,7 @@
 		<modsConfig>
 			<SqlGenModule>
 				<stdSql>
-					<output>/my/work/fao/geonetwork/cvs/geonetwork/setup/sql/create-db-mysql.sql</output>
+					<output>/my/work/fao/geonetwork/cvs/geonetwork/trunk/setup/sql/create-db-mysql.sql</output>
 					<sqlMapping type="l">
 						<list>
 							<header>
@@ -125,7 +125,7 @@
 					</sqlMapping>
 				</stdSql>
 				<oraSql>
-					<output>/my/work/fao/geonetwork/cvs/geonetwork/setup/sql/create-db-oracle.sql</output>
+					<output>/my/work/fao/geonetwork/cvs/geonetwork/trunk/setup/sql/create-db-oracle.sql</output>
 					<sqlMapping type="l">
 						<list>
 							<header>
@@ -139,11 +139,8 @@
 						</list>
 					</sqlMapping>
 				</oraSql>
-				<mckoiSql>
-					<output>/my/work/fao/geonetwork/cvs/geonetwork/setup/sql/create-db-mckoi.sql</output>
-				</mckoiSql>
 				<pgSql>
-					<output>/my/work/fao/geonetwork/cvs/geonetwork/setup/sql/create-db-postgres.sql</output>
+					<output>/my/work/fao/geonetwork/cvs/geonetwork/trunk/setup/sql/create-db-postgres.sql</output>
 					<sqlMapping type="l">
 						<list>
 							<header>
@@ -157,6 +154,9 @@
 						</list>
 					</sqlMapping>
 				</pgSql>
+				<mckoiSql>
+					<output>/my/work/fao/geonetwork/cvs/geonetwork/trunk/setup/sql/create-db-mckoi.sql</output>
+				</mckoiSql>
 			</SqlGenModule>
 		</modsConfig>
 		<modsUsage>
@@ -861,6 +861,22 @@ ORDER BY id
 								</idx>
 								<ts>0</ts>
 							</oraSql>
+							<mckoiSql>
+								<idx type="l">
+									<list>
+										<header>
+											<elem type="i">id</elem>
+											<elem type="s">index</elem>
+											<elem type="s">name</elem>
+										</header>
+										<row>
+											<elem>61528</elem>
+											<elem>Idx1</elem>
+											<elem/>
+										</row>
+									</list>
+								</idx>
+							</mckoiSql>
 							<pgSql>
 								<idx type="l">
 									<list>
@@ -881,22 +897,6 @@ ORDER BY id
 									</list>
 								</idx>
 							</pgSql>
-							<mckoiSql>
-								<idx type="l">
-									<list>
-										<header>
-											<elem type="i">id</elem>
-											<elem type="s">index</elem>
-											<elem type="s">name</elem>
-										</header>
-										<row>
-											<elem>61528</elem>
-											<elem>Idx1</elem>
-											<elem/>
-										</row>
-									</list>
-								</idx>
-							</mckoiSql>
 						</SqlGenModule>
 					</modsConfig>
 					<field>

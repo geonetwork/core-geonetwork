@@ -1,7 +1,7 @@
 REM ======================================================================
 REM ===   Sql Script for Database : Geonet
 REM ===
-REM === Build : 120
+REM === Build : 127
 REM ======================================================================
 
 CREATE TABLE Metadata
@@ -16,9 +16,13 @@ CREATE TABLE Metadata
     data         long           not null,
     source       varchar(36)    not null,
     sourceUri    varchar(255),
+    title        varchar(255),
+    root         varchar(255),
     primary key(id),
     unique(uuid)
   );
+
+CREATE INDEX MetadataNDX1 ON Metadata(source);
 
 REM ======================================================================
 
@@ -60,7 +64,6 @@ CREATE TABLE KnownNodes
     host     varchar(250),
     port     int,
     servlet  varchar(250),
-    icon     varchar(250),
     primary key(siteId)
   );
 

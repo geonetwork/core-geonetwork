@@ -1,7 +1,7 @@
 -- ======================================================================
 -- ===   Sql Script for Database : Geonet
 -- ===
--- === Build : 120
+-- === Build : 127
 -- ======================================================================
 
 CREATE TABLE Metadata
@@ -16,10 +16,14 @@ CREATE TABLE Metadata
     data         longvarchar    not null,
     source       varchar(36)    not null,
     sourceUri    varchar(255),
+    title        varchar(255),
+    root         varchar(255),
 
     primary key(id),
     unique(uuid)
   );
+
+CREATE INDEX MetadataNDX1 ON Metadata(source);
 
 -- ======================================================================
 
@@ -65,7 +69,6 @@ CREATE TABLE KnownNodes
     host     varchar(250),
     port     int,
     servlet  varchar(250),
-    icon     varchar(250),
 
     primary key(siteId)
   );
