@@ -1,5 +1,5 @@
 #---------------------------------------------------------
-#--- File exported in DDF format on 2006-10-08 22:50:08
+#--- File exported in DDF format on 2007-01-02 16:14:13
 #---
 #--- SELECT idDes,langId,label FROM APP.GroupsDes
 #---------------------------------------------------------
@@ -14,13 +14,7 @@ label,         VARCHAR
 0	fr	Internal
 0	es	Internal
 0	cn	Internal
-
 1	en	All
 1	fr	All
 1	es	All
 1	cn	All
-
-2	en	Editors
-2	fr	Editors
-2	es	Editors
-2	cn	Editors
