@@ -53,10 +53,10 @@ public class Boot
 		String jdbcUrl = args[1];
 
 		boolean mckoi  = jdbcUrl.indexOf("mckoi")  != -1;
-		boolean mysql  = jdbcUrl.indexOf("mysql")  != -1;
-		boolean oracle = jdbcUrl.indexOf("oracle") != -1;
+//		boolean mysql  = jdbcUrl.indexOf("mysql")  != -1;
+//		boolean oracle = jdbcUrl.indexOf("oracle") != -1;
 
-		if (!mckoi && !mysql && !oracle)
+		if (!mckoi) // && !mysql && !oracle)
 			askForDrivers();
 
 		Util.boot(args[0], "org.fao.geonet.apps.setup.Setup");

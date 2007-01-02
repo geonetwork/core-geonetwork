@@ -19,7 +19,7 @@ value,         VARCHAR
 11	10	name	dummy
 12	10	siteId	dummy
 13	10	organization	dummy
-14	1	gnVersion	$VERSION
+14	1	gnVersion	changed-by-setup
 
 20	1	server	
 21	20	host	localhost

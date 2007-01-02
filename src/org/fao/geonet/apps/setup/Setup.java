@@ -35,6 +35,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.UUID;
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
@@ -49,7 +50,6 @@ import org.fao.geonet.util.McKoiDB;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import java.io.IOException;
 
 //==============================================================================
 
@@ -101,8 +101,12 @@ public class Setup implements Starter
 			fillTables(installDir, conn, schema);
 
 			log("Almost finished...");
-			setupMetadata(installDir, dbms, config);
 
+			//--- we don't provide any data by default.
+			//--- the GAST tool should be used to populate the db
+
+//			setupMetadata(installDir, dbms, config);
+			setupSite(installDir, dbms);
 			log("Disconnecting...");
 			dbms.disconnect();
 
@@ -370,94 +374,121 @@ public class Setup implements Starter
 	//---
 	//---------------------------------------------------------------------------
 
-	private void setupMetadata(String installDir, Dbms dbms, Element config) throws Exception
+//	private void setupMetadata(String installDir, Dbms dbms, Element config) throws Exception
+//	{
+//		List list = dbms.select("SELECT * FROM Metadata").getChildren();
+//		dbms.commit();
+//
+//		String baseURL = getBaseURL(installDir);
+//		String siteURL = getSiteURL(config, baseURL);
+//
+//		for(int i=0; i<list.size(); i++)
+//		{
+//			Element record = (Element) list.get(i);
+//
+//			String id     = record.getChildText("id");
+//			String schema = record.getChildText("schemaid");
+//			String data   = record.getChildText("data");
+//			String uuid   = record.getChildText("uuid");
+//			String date   = record.getChildText("createdate");
+//
+//			Element md = updateFixedInfo(installDir, id, Xml.loadString(data, false),
+//												  uuid, date, schema, siteURL);
+//
+//			XmlSerializer.update(dbms, id, md, date);
+//
+//			//--- we don't need to reindex the data because the lucene index is not
+//			//--- created yet
+//
+//			dbms.commit();
+//		}
+//	}
+
+	//--------------------------------------------------------------------------
+
+//	private Element updateFixedInfo(String installDir, String id, Element md,
+//											  String uuid, String date, String schema,
+//											  String siteURL) throws Exception
+//	{
+//		//--- setup environment
+//
+//		Element env = new Element("env");
+//
+//		env.addContent(new Element("id")      .setText(id));
+//		env.addContent(new Element("uuid")    .setText(uuid));
+//		env.addContent(new Element("currDate").setText(date));
+//		env.addContent(new Element("siteURL") .setText(siteURL));
+//
+//		//--- setup root element
+//
+//		Element root = new Element("root");
+//
+//		root.addContent(md);
+//		root.addContent(env);
+//
+//		//--- do an XSL  transformation
+//
+//		String styleSheet = installDir +"/web/xml/schemas/"+schema+"/"+ Geonet.File.UPDATE_FIXED_INFO;
+//
+//		return Xml.transform(root, styleSheet);
+//	}
+
+	//--------------------------------------------------------------------------
+
+//	private String getSiteURL(Element config, String baseURL)
+//	{
+//		String defaultLang = config.getChild(ConfigFile.Child.DEFAULT)
+//											.getChildText(ConfigFile.Default.Child.LANGUAGE);
+//
+//		ServiceConfig appHand = new ServiceConfig(config.getChild(ConfigFile.Child.APP_HANDLER).getChildren());
+//
+//		//FIXME: the problem here is to obtain the baseURL
+//
+////		String publicHost = appHand.getMandatoryValue(Geonet.Config.PUBLIC_HOST);
+////		String publicPort = appHand.getMandatoryValue(Geonet.Config.PUBLIC_PORT);
+////		String locService = baseURL +"/"+ Jeeves.Prefix.SERVICE +"/"+ defaultLang;
+////
+////		String siteURL = "http://" + publicHost + (publicPort == "80" ? "" : ":" + publicPort) + locService;
+////
+////		return siteURL;
+//
+//		return "???";
+//	}
+
+	//--------------------------------------------------------------------------
+
+//	private String getBaseURL(String installDir) throws Exception
+//	{
+//		Element web = Xml.loadFile(installDir +"/web/WEB-INF/web.xml");
+//
+//		Namespace ns = Namespace.getNamespace("http://java.sun.com/xml/ns/j2ee");
+//
+//		//FIXME: non c'è più in web.xml ! occorre prenderlo dal servlet in qualche modo
+//		return "/"+ web.getChildText("display-name", ns);
+//	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Setup other site parameters
+	//---
+	//---------------------------------------------------------------------------
+
+	private void setupSite(String installDir, Dbms dbms) throws Exception
 	{
-		List list = dbms.select("SELECT * FROM Metadata").getChildren();
+		String uuid = UUID.randomUUID().toString();
+
+		dbms.execute("UPDATE Settings SET value=? WHERE name='siteId'", uuid);
+		dbms.execute("UPDATE Metadata SET source=?", uuid);
 		dbms.commit();
 
-		String baseURL = getBaseURL(installDir);
-		String siteURL = getSiteURL(config, baseURL);
+		//--- rename site logo to reflect the uuid
 
-		for(int i=0; i<list.size(); i++)
-		{
-			Element record = (Element) list.get(i);
+		String logoPath = installDir +"/web/images/logos";
 
-			String id     = record.getChildText("id");
-			String schema = record.getChildText("schemaid");
-			String data   = record.getChildText("data");
-			String uuid   = record.getChildText("uuid");
-			String date   = record.getChildText("createdate");
+		File logoSrc = new File(logoPath, "dummy.png");
+		File logoDes = new File(logoPath, uuid +".png");
 
-			Element md = updateFixedInfo(installDir, id, Xml.loadString(data, false),
-												  uuid, date, schema, siteURL);
-
-			XmlSerializer.update(dbms, id, md, date);
-			//FIXME: some data changes, we should reindex the metadata
-			dbms.commit();
-		}
-	}
-
-	//--------------------------------------------------------------------------
-
-	private Element updateFixedInfo(String installDir, String id, Element md,
-											  String uuid, String date, String schema,
-											  String siteURL) throws Exception
-	{
-		//--- setup environment
-
-		Element env = new Element("env");
-
-		env.addContent(new Element("id")      .setText(id));
-		env.addContent(new Element("uuid")    .setText(uuid));
-		env.addContent(new Element("currDate").setText(date));
-		env.addContent(new Element("siteURL") .setText(siteURL));
-
-		//--- setup root element
-
-		Element root = new Element("root");
-
-		root.addContent(md);
-		root.addContent(env);
-
-		//--- do an XSL  transformation
-
-		String styleSheet = installDir +"/web/xml/schemas/"+schema+"/"+ Geonet.File.UPDATE_FIXED_INFO;
-
-		return Xml.transform(root, styleSheet);
-	}
-
-	//--------------------------------------------------------------------------
-
-	private String getSiteURL(Element config, String baseURL)
-	{
-		String defaultLang = config.getChild(ConfigFile.Child.DEFAULT)
-											.getChildText(ConfigFile.Default.Child.LANGUAGE);
-
-		ServiceConfig appHand = new ServiceConfig(config.getChild(ConfigFile.Child.APP_HANDLER).getChildren());
-
-		//FIXME: the problem here is to obtain the baseURL
-
-//		String publicHost = appHand.getMandatoryValue(Geonet.Config.PUBLIC_HOST);
-//		String publicPort = appHand.getMandatoryValue(Geonet.Config.PUBLIC_PORT);
-//		String locService = baseURL +"/"+ Jeeves.Prefix.SERVICE +"/"+ defaultLang;
-//
-//		String siteURL = "http://" + publicHost + (publicPort == "80" ? "" : ":" + publicPort) + locService;
-//
-//		return siteURL;
-
-		return "???";
-	}
-
-	//--------------------------------------------------------------------------
-
-	private String getBaseURL(String installDir) throws Exception
-	{
-		Element web = Xml.loadFile(installDir +"/web/WEB-INF/web.xml");
-
-		Namespace ns = Namespace.getNamespace("http://java.sun.com/xml/ns/j2ee");
-
-		//FIXME: non c'è più in web.xml ! occorre prenderlo dal servlet in qualche modo
-		return "/"+ web.getChildText("display-name", ns);
+		logoSrc.renameTo(logoDes);
 	}
 
 	//---------------------------------------------------------------------------

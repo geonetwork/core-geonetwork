@@ -111,15 +111,15 @@
 		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
 		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
-		<meta name="DC.title" lang="English French" content="$ORGANIZATION GeoNetwork opensource portal to spatial data and information"/>
+		<meta name="DC.title" lang="English French" content="GeoNetwork opensource portal to spatial data and information"/>
 		<meta name="DC.creator" content="GeoNetwork Team"/>
 		<meta name="DC.subject" lang="English French" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
-		<meta name="DC.description" lang="English French" content="$ORGANIZATION GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
-		<meta name="DC.publisher" content="$ORGANIZATION"/>
+		<meta name="DC.description" lang="English French" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
+<!--		<meta name="DC.publisher" content="$ORGANIZATION"/> -->
 		<meta name="DC.date" content="01-11-2005"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.identifier" content="http://$WEBSERVER_HOST/$SERVLET"/>
+<!--		<meta name="DC.identifier" content="http://$WEBSERVER_HOST/$SERVLET"/> -->
 		<meta name="DC.language" content="English French"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>

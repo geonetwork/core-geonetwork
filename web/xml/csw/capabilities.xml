@@ -65,8 +65,8 @@
 		<ows:Operation name="GetCapabilities">
 			<ows:DCP>
 				<ows:HTTP>
-					<ows:Get  xlink:href="http://$PUBLIC_HOST:$PUBLIC_PORT/$SERVLET/srv/en/csw" />
-					<ows:Post xlink:href="http://$PUBLIC_HOST:$PUBLIC_PORT/$SERVLET/srv/en/csw"  />
+					<ows:Get  xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw" />
+					<ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw"  />
 				</ows:HTTP>
 			</ows:DCP>
 			
@@ -84,8 +84,8 @@
 		<ows:Operation name="DescribeRecord">
 			<ows:DCP>
 				<ows:HTTP>
-					<ows:Get  xlink:href="http://$PUBLIC_HOST:$PUBLIC_PORT/$SERVLET/srv/en/csw" />
-					<ows:Post xlink:href="http://$PUBLIC_HOST:$PUBLIC_PORT/$SERVLET/srv/en/csw"  />
+					<ows:Get  xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw" />
+					<ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw"  />
 				</ows:HTTP>
 			</ows:DCP>
 						
@@ -110,8 +110,8 @@
 		<ows:Operation name="GetDomain">
 			<ows:DCP>
 				<ows:HTTP>
-					<ows:Get  xlink:href="http://$PUBLIC_HOST:$PUBLIC_PORT/$SERVLET/srv/en/csw" />
-					<ows:Post xlink:href="http://$PUBLIC_HOST:$PUBLIC_PORT/$SERVLET/srv/en/csw"  />
+					<ows:Get  xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw" />
+					<ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw"  />
 				</ows:HTTP>
 			</ows:DCP>
 		</ows:Operation>
@@ -121,8 +121,8 @@
 		<ows:Operation name="GetRecords">
 			<ows:DCP>
 				<ows:HTTP>
-					<ows:Get  xlink:href="http://$PUBLIC_HOST:$PUBLIC_PORT/$SERVLET/srv/en/csw" />
-					<ows:Post xlink:href="http://$PUBLIC_HOST:$PUBLIC_PORT/$SERVLET/srv/en/csw"  />
+					<ows:Get  xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw" />
+					<ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw"  />
 				</ows:HTTP>
 			</ows:DCP>
 		</ows:Operation>
@@ -132,8 +132,8 @@
 		<ows:Operation name="GetRecordById">
 			<ows:DCP>
 				<ows:HTTP>
-					<ows:Get  xlink:href="http://$PUBLIC_HOST:$PUBLIC_PORT/$SERVLET/srv/en/csw" />
-					<ows:Post xlink:href="http://$PUBLIC_HOST:$PUBLIC_PORT/$SERVLET/srv/en/csw"  />
+					<ows:Get  xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw" />
+					<ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw"  />
 				</ows:HTTP>
 			</ows:DCP>
 		</ows:Operation>
@@ -143,8 +143,8 @@
 		<ows:Operation name="Transaction">
 			<ows:DCP>
 				<ows:HTTP>
-					<ows:Get  xlink:href="http://$PUBLIC_HOST:$PUBLIC_PORT/$SERVLET/srv/en/csw" />
-					<ows:Post xlink:href="http://$PUBLIC_HOST:$PUBLIC_PORT/$SERVLET/srv/en/csw"  />
+					<ows:Get  xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw" />
+					<ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw"  />
 				</ows:HTTP>
 			</ows:DCP>
 		</ows:Operation>
@@ -154,8 +154,8 @@
 		<ows:Operation name="Harvest">
 			<ows:DCP>
 				<ows:HTTP>
-					<ows:Get  xlink:href="http://$PUBLIC_HOST:$PUBLIC_PORT/$SERVLET/srv/en/csw" />
-					<ows:Post xlink:href="http://$PUBLIC_HOST:$PUBLIC_PORT/$SERVLET/srv/en/csw"  />
+					<ows:Get  xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw" />
+					<ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw"  />
 				</ows:HTTP>
 			</ows:DCP>
 		</ows:Operation>

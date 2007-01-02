@@ -98,6 +98,7 @@
 		
 		<tip id="z3950.enable">
 			If set, during startup GeoNetwork will start the Z39.50 server component.
+			This component uses the ISO23950 protocol.
 			<br/>
 			<b>Please note:</b> restart GeoNetwork to make this change active.
 		</tip>

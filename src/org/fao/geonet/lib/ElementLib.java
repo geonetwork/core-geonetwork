@@ -25,9 +25,15 @@ package org.fao.geonet.lib;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import jeeves.utils.Util;
+import org.jdom.Attribute;
+import org.jdom.Content;
 import org.jdom.Element;
+import org.jdom.Text;
 
 //=============================================================================
 
@@ -97,6 +103,51 @@ public class ElementLib
 		}
 
 		return elem.getText().trim();
+	}
+
+	//-----------------------------------------------------------------------------
+
+	public void substitute(Element el, Map<String, ? extends Object> vars)
+	{
+		//--- handle attributes
+
+		for (Iterator i=el.getAttributes().iterator(); i.hasNext();)
+		{
+			Attribute a = (Attribute) i.next();
+
+			String text = a.getValue();
+			text = substitute(text, vars);
+			a.setValue(text);
+		}
+
+		//--- handle children
+
+		for (int i=0; i<el.getContentSize(); i++)
+		{
+			Content c = el.getContent(i);
+
+			if (c instanceof Element)
+				substitute((Element) c, vars);
+
+			else if (c instanceof Text)
+			{
+				Text t = (Text) c;
+
+				String text = t.getText();
+				text = substitute(text, vars);
+				t.setText(text);
+			}
+		}
+	}
+
+	//-----------------------------------------------------------------------------
+
+	private String substitute(String text, Map<String, ? extends Object> vars)
+	{
+		for (String name : vars.keySet())
+			text = Util.replaceString(text, name, vars.get(name).toString());
+
+		return text;
 	}
 }
 

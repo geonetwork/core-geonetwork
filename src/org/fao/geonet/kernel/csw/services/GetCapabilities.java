@@ -24,18 +24,23 @@
 package org.fao.geonet.kernel.csw.services;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.csw.common.exceptions.VersionNegotiationFailedEx;
 import org.fao.geonet.kernel.csw.CatalogService;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
@@ -76,6 +81,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		try
 		{
 			Element capabilities = Xml.loadFile(file);
+			substitute(context, capabilities);
 			handleSections(request, capabilities);
 
 			return capabilities;
@@ -188,6 +194,22 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		//--- the filter section is mandatory
 //		if (!hsSections.contains("Filter_Capabilities"))
 //			capabilities.getChild("Filter_Capabilities", Csw.NAMESPACE_OGC).detach();
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void substitute(ServiceContext context, Element capab) throws Exception
+	{
+		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SettingManager sm = gc.getSettingManager();
+
+		HashMap<String, String> vars = new HashMap<String, String>();
+
+		vars.put("$HOST",    sm.getValue("system/server/host"));
+		vars.put("$PORT",    sm.getValue("system/server/port"));
+		vars.put("$SERVLET", context.getBaseUrl());
+
+		Lib.element.substitute(capab, vars);
 	}
 }
 
