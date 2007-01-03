@@ -1562,7 +1562,7 @@
 			<xsl:copy-of select="geonet:info"/>
 		</metadata>
 	</xsl:template>
-				
+	
 	<!-- ============================================================================= -->
 	
 	<!--
@@ -1665,7 +1665,7 @@
 			<xsl:otherwise>
 				<!-- codelist? -->
 				<xsl:variable name="name" select="name(.)"/>
-				<xsl:if test="@codelist">
+				<xsl:if test="@codeList">
 					<xsl:if test="@codeListValue!=''">cdl</xsl:if>
 				</xsl:if>
 			</xsl:otherwise>

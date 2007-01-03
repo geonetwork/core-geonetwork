@@ -13,7 +13,7 @@
 
 	<xsl:template match="/">
 		<Document>
-			<xsl:apply-templates select="gmd:DS_DataSet/gmd:has/gmd:MD_Metadata" mode="metadata"/>
+			<xsl:apply-templates select="gmd:MD_Metadata" mode="metadata"/>
 		</Document>
 	</xsl:template>
 	

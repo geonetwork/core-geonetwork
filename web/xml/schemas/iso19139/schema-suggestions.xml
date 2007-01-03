@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <fields>
-	<field name="CI_OnlineResource">
-		<suggest name="protocol"/>
-		<suggest name="name"/>
-		<suggest name="description"/>
+	<field name="gmd:CI_OnlineResource">
+		<suggest name="gmd:protocol"/>
+		<suggest name="gmd:name"/>
+		<suggest name="gmd:description"/>
 	</field>
 	
-	<field name="CI_ResponsibleParty">
-		<suggest name="individualName"/>
-		<suggest name="organisationName"/>
-		<suggest name="positionName"/>
-		<suggest name="contactInfo"/>
+	<field name="gmd:CI_ResponsibleParty">
+		<suggest name="gmd:individualName"/>
+		<suggest name="gmd:organisationName"/>
+		<suggest name="gmd:positionName"/>
+		<suggest name="gmd:contactInfo"/>
 	</field>
 	
-	<field name="CI_Contact">
-		<suggest name="phone"/>
-		<suggest name="address"/>
+	<field name="gmd:CI_Contact">
+		<suggest name="gmd:phone"/>
+		<suggest name="gmd:address"/>
 	</field>
 	
-	<field name="CI_Telephone">
-		<suggest name="voice"/>
-		<suggest name="facsimile"/>
+	<field name="gmd:CI_Telephone">
+		<suggest name="gmd:voice"/>
+		<suggest name="gmd:facsimile"/>
 	</field>
 	
-	<field name="CI_Address">
-		<suggest name="deliveryPoint"/>
-		<suggest name="city"/>
-		<suggest name="administrativeArea"/>
-		<suggest name="postalCode"/>
-		<suggest name="country"/>
-		<suggest name="electronicMailAddress"/>
+	<field name="gmd:CI_Address">
+		<suggest name="gmd:deliveryPoint"/>
+		<suggest name="gmd:city"/>
+		<suggest name="gmd:administrativeArea"/>
+		<suggest name="gmd:postalCode"/>
+		<suggest name="gmd:country"/>
+		<suggest name="gmd:electronicMailAddress"/>
 	</field>
 </fields>

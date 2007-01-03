@@ -7,7 +7,7 @@
 	<!-- ================================================================= -->
 	
 	<xsl:template match="/root">
-		 <xsl:apply-templates select="gmd:DS_DataSet"/>
+		 <xsl:apply-templates select="gmd:MD_Metadata"/>
 	</xsl:template>
 
 	<!-- ================================================================= -->
@@ -43,7 +43,7 @@
 	
 	<xsl:template match="gmd:MD_Metadata/gmd:characterSet">
 		<xsl:copy>
-			<MD_CharacterSetCode codeList="./resources/codeList.xml#MD_CharacterSetCode" codeListValue="utf8" />
+			<gmd:MD_CharacterSetCode codeList="./resources/codeList.xml#MD_CharacterSetCode" codeListValue="utf8" />
 		</xsl:copy>
 	</xsl:template>
 

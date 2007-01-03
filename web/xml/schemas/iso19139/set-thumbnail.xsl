@@ -7,7 +7,7 @@
 	<!-- ================================================================= -->
 	
 	<xsl:template match="/root">
-		 <xsl:apply-templates select="gmd:DS_DataSet"/>
+		 <xsl:apply-templates select="gmd:MD_Metadata"/>
 	</xsl:template>
 
 	<!-- ================================================================= -->
