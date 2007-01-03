@@ -82,6 +82,12 @@
 				<xsl:with-param name="schema" select="$schema"/>
 			</xsl:call-template>
 		</xsl:variable>
+		<xsl:variable name="helpLink">
+			<xsl:call-template name="getHelpLink">
+				<xsl:with-param name="name"   select="name(.)"/>
+				<xsl:with-param name="schema" select="$schema"/>
+			</xsl:call-template>
+		</xsl:variable>
 		<xsl:variable name="text">
 			<xsl:for-each select="gco:*">
 				<xsl:call-template name="getElementText">
@@ -93,10 +99,11 @@
 			</xsl:for-each>
 		</xsl:variable>
 		<xsl:apply-templates mode="simpleElement" select="gco:*">
-			<xsl:with-param name="schema" select="$schema"/>
-			<xsl:with-param name="edit"   select="$edit"/>
-			<xsl:with-param name="title"  select="$title"/>
-			<xsl:with-param name="text"   select="$text"/>
+			<xsl:with-param name="schema"   select="$schema"/>
+			<xsl:with-param name="edit"     select="$edit"/>
+			<xsl:with-param name="title"    select="$title"/>
+			<xsl:with-param name="helpLink" select="$helpLink"/>
+			<xsl:with-param name="text"     select="$text"/>
 		</xsl:apply-templates>
 	</xsl:template>
 	
