@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xsl:stylesheet   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" 
+<xsl:stylesheet   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
 						xmlns:gco="http://www.isotc211.org/2005/gco"
 						xmlns:gmd="http://www.isotc211.org/2005/gmd" exclude-result-prefixes="gmd">
 
@@ -60,6 +60,19 @@
 	<xsl:template match="gmd:metadataStandardVersion">
 		<xsl:copy>
 			<gco:CharacterString>1.0</gco:CharacterString>
+		</xsl:copy>
+	</xsl:template>
+
+	<!-- ================================================================= -->
+	<!-- codelists: set @codeList path -->
+	<!-- ================================================================= -->
+	
+	<xsl:template match="gmd:*[@codeListValue]">
+		<xsl:copy>
+			<xsl:apply-templates select="@*"/>
+			<xsl:attribute name="codeList">
+				<xsl:value-of select="concat('./resources/codeList.xml#',local-name(.))"/>
+			</xsl:attribute>
 		</xsl:copy>
 	</xsl:template>
 

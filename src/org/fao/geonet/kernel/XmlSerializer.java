@@ -138,7 +138,7 @@ public class XmlSerializer
 
 		args.add(new Integer(id));
 
-		dbms.execute(query, args);
+		dbms.execute(query, args.toArray());
 	}
 
 	//--------------------------------------------------------------------------

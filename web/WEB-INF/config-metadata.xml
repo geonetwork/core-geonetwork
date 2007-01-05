@@ -34,7 +34,7 @@
 				<xml name="isoLang" file="xml/iso-languages.xml" />
 			</output>
 
-			<error id="operation-not-allowed" sheet="error-form.xsl">
+			<error id="operation-not-allowed" sheet="error.xsl">
 				<xml name="privError" file="xml/privileges-error.xml" />
 			</error>
 		</service>

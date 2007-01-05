@@ -97,10 +97,24 @@
 			<xsl:variable name="addLink">
 				<xsl:choose>
 					<xsl:when test="geonet:choose">
-						<xsl:value-of select="concat('javascript:doNewORElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,@name,$apos,',document.mainForm._',../geonet:element/@ref,'_',@name,'.value);')"/>
+						<xsl:choose>
+							<xsl:when test="@prefix=''">
+								<xsl:value-of select="concat('javascript:doNewORElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,@name,$apos,',document.mainForm._',../geonet:element/@ref,'_',@name,'.value);')"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="concat('javascript:doNewORElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,@name,$apos,',document.mainForm._',../geonet:element/@ref,'_',@prefix,':',@name,'.value);')"/>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="concat('javascript:doNewElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,@name,$apos,');')"/>
+						<xsl:choose>
+							<xsl:when test="@prefix=''">
+								<xsl:value-of select="concat('javascript:doNewElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,@name,$apos,');')"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="concat('javascript:doNewElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,@prefix,':',@name,$apos,');')"/>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
@@ -424,11 +438,16 @@
 			</xsl:if>
 		</xsl:variable>
 		<xsl:variable name="newBrother" select="xalan:nodeset($nb)"/>
+		
 		<xsl:if test="$newBrother/* and not($newBrother/*/geonet:choose)">
-			<!--
-			<xsl:value-of select="concat('javascript:doNewElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,$name,$apos,');')"/>
-			-->
-			<xsl:value-of select="concat('javascript:doNewElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,$newBrother/geonet:child/@name,$apos,');')"/>
+			<xsl:choose>
+				<xsl:when test="$nextBrother/@prefix=''">
+					<xsl:value-of select="concat('javascript:doNewElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,');')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="concat('javascript:doNewElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,$nextBrother/@prefix,':',$nextBrother/@name,$apos,');')"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:if>
 	</xsl:template>
 	

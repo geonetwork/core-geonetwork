@@ -98,7 +98,7 @@
 				</xsl:call-template>
 			</xsl:for-each>
 		</xsl:variable>
-		<xsl:apply-templates mode="simpleElement" select="gco:*">
+		<xsl:apply-templates mode="simpleElement" select=".">
 			<xsl:with-param name="schema"   select="$schema"/>
 			<xsl:with-param name="edit"     select="$edit"/>
 			<xsl:with-param name="title"    select="$title"/>
