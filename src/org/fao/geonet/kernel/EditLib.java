@@ -360,7 +360,8 @@ public class EditLib
 				if (attr.defValue != null)
 					value = attr.defValue;
 
-				md.setAttribute(new Attribute(attr.name, value));
+				String uname = getUnqualifiedName(attr.name); // FIXME: only allow unqualified attributes
+				md.setAttribute(new Attribute(uname, value));
 			}
 		}
 

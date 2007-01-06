@@ -168,6 +168,9 @@ class ElementEntry
 			else if (elName.equals("key"))
 				Logger.log("Skipping 'key' child in <element> element '"+ name +"'");
 
+			else if (elName.equals("annotation"))
+				;
+
 			else
 				Logger.log("Unknown child '" +elName+ "' in <element> element", ei);
 		}

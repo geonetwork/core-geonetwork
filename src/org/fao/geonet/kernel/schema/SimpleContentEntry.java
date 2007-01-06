@@ -1,6 +1,6 @@
 //==============================================================================
 //===
-//===   ComplexTypeEntry
+//===   SimpleContentEntry
 //===
 //==============================================================================
 //===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
@@ -32,18 +32,13 @@ import java.util.List;
 
 import org.jdom.Attribute;
 import org.jdom.Element;
+import jeeves.utils.Xml;
 
 //==============================================================================
 
-class ComplexTypeEntry
+class SimpleContentEntry
 {
-	public String  name;
-	public String  attribGroup;
-	public String  groupRef;
-	public boolean isOrType;
-
-	public ComplexContentEntry complexContent;
-	public SimpleContentEntry  simpleContent;
+	public String base;
 
 	public ArrayList alElements = new ArrayList();
 	public ArrayList alAttribs  = new ArrayList();
@@ -54,18 +49,14 @@ class ComplexTypeEntry
 	//---
 	//---------------------------------------------------------------------------
 
-	private ComplexTypeEntry() {}
-
-	//---------------------------------------------------------------------------
-
-	public ComplexTypeEntry(Element el, String file, String targetNS, String targetNSPrefix)
+	public SimpleContentEntry(Element el, String file, String targetNS, String targetNSPrefix)
 	{
 		this(new ElementInfo(el, file, targetNS, targetNSPrefix));
 	}
 
 	//---------------------------------------------------------------------------
 
-	public ComplexTypeEntry(ElementInfo ei)
+	public SimpleContentEntry(ElementInfo ei)
 	{
 		handleAttribs(ei);
 		handleChildren(ei);
@@ -87,14 +78,9 @@ class ComplexTypeEntry
 
 			String attrName = at.getName();
 
-			if (attrName.equals("name"))
-				name = (ei.targetNSPrefix == null) ? at.getValue() : ei.targetNSPrefix + ":" + at.getValue();
+			// TODO; handle attributes
 			
-			else if (attrName.equals("mixed"))
-				Logger.log("Skipping 'mixed' attribute in <complexType> element '"+ name +"'");
-
-			else
-				Logger.log("Unknown attribute '"+ attrName +"' in <complexType> element", ei);
+			Logger.log("Unknown attribute '"+ attrName +"' in <simpleContent> element", ei);
 		}
 	}
 
@@ -107,57 +93,68 @@ class ComplexTypeEntry
 		for(int i=0; i<children.size(); i++)
 		{
 			Element elChild = (Element) children.get(i);
-			String  elName    = elChild.getName();
+			String  elName  = elChild.getName();
 
-			if (elName.equals("sequence") || elName.equals("choice"))
-			{
-				isOrType = elName.equals("choice");
-
-				List sequence = elChild.getChildren();
-
-				for(int j=0; j<sequence.size(); j++)
-				{
-					Element elElem = (Element) sequence.get(j);
-
-					if (elElem.getName().equals("element"))
-						alElements.add(new ElementEntry(elElem, ei.file, ei.targetNS, ei.targetNSPrefix));
-
-					else if (elElem.getName().equals("group"))
-					{
-						isOrType = false;
-						groupRef = elElem.getAttributeValue("ref");
-
-						if (groupRef == null)
-							throw new IllegalArgumentException("Found 'group' element without 'ref' attrib in complexType : " +elName);
-					}
-
-					else
-						Logger.log("Unknown child '"+ elElem.getName() +"' in <sequence|choice> element", ei);
-				}
-			}
-
-			else if (elName.equals("attribute"))
-				alAttribs.add(new AttributeEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix)); // RGFIX
-
-			else if (elName.equals("attributeGroup"))
-			{
-				attribGroup = elChild.getAttributeValue("ref");
-
-				if (attribGroup == null)
-					throw new IllegalArgumentException("'ref' is null for <attributeGroup> in complexType : " + name);
-			}
-
-			else if (elName.equals("complexContent"))
-				complexContent = new ComplexContentEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
-
-			else if (elName.equals("simpleContent"))
-				simpleContent = new SimpleContentEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix); // RGFIX
-				
-			else if (elName.equals("annotation"))
-				;
+			if (elChild.getName().equals("extension"))
+				handleExtension(elChild, ei);
 
 			else
-				Logger.log("Unknown child '"+ elName +"' in <complexType> element", ei);
+				Logger.log("Unknown child '"+ elName +"' in <simpleContent> element", ei);
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void handleExtension(Element el, ElementInfo ei)
+	{
+		base = el.getAttributeValue("base");
+		List extension = el.getChildren();
+		for(int j=0; j<extension.size(); j++)
+		{
+			Element elExt = (Element) extension.get(j);
+			String  elName= elExt.getName();
+
+			if (elName.equals("attribute"))
+				alAttribs.add(new AttributeEntry(elExt, ei.file, ei.targetNS, ei.targetNSPrefix));
+
+			else
+				Logger.log("Unknown child '"+ elName +"' in <restriction> element", ei);
+
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void handleRestriction(Element el, ElementInfo ei)
+	{
+		base = el.getAttributeValue("base");
+		
+		List attribs = el.getAttributes();
+
+		for(int i=0; i<attribs.size(); i++)
+		{
+			Attribute at = (Attribute) attribs.get(i);
+
+			String attrName = at.getName();
+
+			Logger.log("Unknown attribute '"+ attrName +"' in <restriction> element", ei);
+		}
+
+		//--- handle children
+
+		List children = el.getChildren();
+
+		for(int i=0; i<children.size(); i++)
+		{
+			Element elRes = (Element) children.get(i);
+			String  elName= elRes.getName();
+
+			if (elName.equals("attribute"))
+				alAttribs.add(new AttributeEntry(elRes, ei.file, ei.targetNS, ei.targetNSPrefix));
+
+			else
+				Logger.log("Unknown child '"+ elName +"' in <restriction> element", ei);
+
 		}
 	}
 }

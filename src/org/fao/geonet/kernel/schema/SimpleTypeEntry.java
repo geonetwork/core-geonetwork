@@ -125,6 +125,9 @@ class SimpleTypeEntry
 			else if (elName.equals("union"))
 				Logger.log("Skipping 'union' child in <simpleType> element '"+ name +"'");
 
+			else if (elName.equals("annotation"))
+				;
+
 			else
 				Logger.log("Unknown child '"+ elName +"' in <simpleType> element ", ei);
 		}

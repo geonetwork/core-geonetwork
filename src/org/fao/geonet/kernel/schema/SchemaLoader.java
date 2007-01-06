@@ -140,6 +140,12 @@ public class SchemaLoader
 
 			//--- generate attribs
 
+			for(int j=0; j<cte.alAttribs.size(); j++) // RGFIX
+			{
+				AttributeEntry ae = (AttributeEntry) cte.alAttribs.get(j);
+
+				mdt.addAttribute(buildMetadataAttrib(ae));
+			}
 			if (cte.attribGroup != null)
 			{
 				ArrayList al = (ArrayList) hmAttrGrp.get(cte.attribGroup);
@@ -167,6 +173,21 @@ public class SchemaLoader
 				for(int j=0; j<cte.complexContent.alAttribs.size(); j++)
 				{
 					AttributeEntry ae = (AttributeEntry) cte.complexContent.alAttribs.get(j);
+
+					mdt.addAttribute(buildMetadataAttrib(ae));
+				}
+			}
+
+			//--- resolve inheritance & add attribs from simpleContent
+
+			// RGFIX
+			if (cte.simpleContent != null)
+			{
+				//--- add attribs from simpleContent (if any)
+
+				for(int j=0; j<cte.simpleContent.alAttribs.size(); j++)
+				{
+					AttributeEntry ae = (AttributeEntry) cte.simpleContent.alAttribs.get(j);
 
 					mdt.addAttribute(buildMetadataAttrib(ae));
 				}
