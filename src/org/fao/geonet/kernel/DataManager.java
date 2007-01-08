@@ -720,7 +720,7 @@ public class DataManager
 
 		int iSwapIndex = -1;
 
-		List list = ((Element) elSwap.getParent()).getChildren(elSwap.getName());
+		List list = ((Element) elSwap.getParent()).getChildren(elSwap.getName(), elSwap.getNamespace());
 
 		for(int i=0; i<list.size(); i++)
 			if (list.get(i) == elSwap)
