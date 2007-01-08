@@ -164,9 +164,10 @@
 									</table>
 								</td></tr>
 								<tr><td class="padded-content" height="100%" align="center" valign="top">
-									<xsl:call-template name="editButtons">
-										<xsl:with-param name="position" select="'bottom'"/>
-									</xsl:call-template>
+									<xsl:call-template name="editButtons"/>
+								</td></tr>
+								<tr><td class="padded-content" height="100%" align="center" valign="top">
+									<xsl:call-template name="templateChoice"/>
 								</td></tr>
 							</table>
 						</form>
@@ -178,7 +179,6 @@
 	</xsl:template>
 	
 	<xsl:template name="editButtons" match="*">
-		<xsl:param name="position" select="'top'"/>
 
 		<!-- reset button -->
 		<button class="content" onclick="goReset('mainForm')"><xsl:value-of select="/root/gui/strings/reset"/></button>
@@ -210,7 +210,7 @@
 		</xsl:if>
 		
 		<!-- create button -->
-		<xsl:if test="(string(geonet:info/isTemplate)='y' or string(geonet:info/source)=string(/root/gui/env/siteId)) and (/root/gui/services/service/@name='metadata.duplicate.form')">
+		<xsl:if test="string(geonet:info/isTemplate)!='s' and (geonet:info/isTemplate='y' or geonet:info/source=/root/gui/env/siteId) and /root/gui/services/service/@name='metadata.duplicate.form'">
 			&#160;
 			<button class="content" onclick="load('{/root/gui/locService}/metadata.duplicate.form?id={geonet:info/id}')">
 				<xsl:value-of select="/root/gui/strings/create"/>
@@ -222,18 +222,46 @@
 		<button class="content" onclick="doAction('{/root/gui/locService}/metadata.show')">
 			<xsl:value-of select="/root/gui/strings/cancel"/>
 		</button>
-
-		<xsl:if test="$position='top'">
-			<!-- isTemplate checkbox -->
-			&#160;
-			<input class="content" type="checkbox" name="template">
-				<xsl:if test="geonet:info/isTemplate='y'">
-					<xsl:attribute name="checked"/>
-				</xsl:if>
-				<xsl:value-of select="/root/gui/strings/template"/>
-			</input>
-		</xsl:if>
 		
 	</xsl:template>
 	
+	<xsl:template name="templateChoice" match="*">
+		
+		<b><xsl:value-of select="/root/gui/strings/kind"/></b>
+		<xsl:text>&#160;</xsl:text>
+		<select class="content" name="template" size="1">
+			<option value="n">
+				<xsl:if test="string(geonet:info/isTemplate)='n'">
+					<xsl:attribute name="selected">true</xsl:attribute>
+				</xsl:if>
+				<xsl:value-of select="/root/gui/strings/metadata"/>
+			</option>
+			<option value="y">
+				<xsl:if test="string(geonet:info/isTemplate)='y'">
+					<xsl:attribute name="selected">true</xsl:attribute>
+				</xsl:if>
+				<xsl:value-of select="/root/gui/strings/template"/>
+			</option>
+			<option value="s">
+				<xsl:if test="string(geonet:info/isTemplate)='s'">
+					<xsl:attribute name="selected">true</xsl:attribute>
+				</xsl:if>
+				<xsl:value-of select="/root/gui/strings/subtemplate"/>
+			</option>
+		</select>
+		<xsl:text>&#160;</xsl:text>
+		<xsl:value-of select="/root/gui/strings/subtemplateTitle"/>
+		<xsl:text>&#160;</xsl:text>
+		<input class="content" type="text" name="title" value="{geonet:info/title}"/>
+		<!--
+		<input class="content" type="checkbox" name="template">
+			<xsl:if test="geonet:info/isTemplate='y'">
+				<xsl:attribute name="checked"/>
+			</xsl:if>
+			<xsl:value-of select="/root/gui/strings/template"/>
+		</input>
+		-->
+		
+	</xsl:template>
+
 </xsl:stylesheet>

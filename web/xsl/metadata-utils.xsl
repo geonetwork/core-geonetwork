@@ -51,6 +51,14 @@
 		[schema:<xsl:value-of select="$schema"/>]
 		-->
 		<xsl:choose>
+			<!-- subtemplate -->
+			<xsl:when test="geonet:info/isTemplate='s'">
+				<metadata>
+					<title><xsl:value-of select="geonet:info/title"/></title>
+					<xsl:copy-of select="geonet:info"/>
+				</metadata>
+			</xsl:when>
+
 			<!-- ISO 19115 -->
 			<xsl:when test="$schema='iso19115'">
 				<xsl:call-template name="iso19115Brief"/>
@@ -136,13 +144,13 @@
 		<!-- When a user with access to the metadata.duplicate.form can see a template, he can use it.
 			  Also when not allowed to edit the template himself -->
 
-		<xsl:if test="(geonet:info/isTemplate='y' or geonet:info/source=/root/gui/env/siteId) and /root/gui/services/service/@name='metadata.duplicate.form'">
+		<xsl:if test="string(geonet:info/isTemplate)!='s' and (geonet:info/isTemplate='y' or geonet:info/source=/root/gui/env/siteId) and /root/gui/services/service/@name='metadata.duplicate.form'">
 			<button class="content" onclick="load('{/root/gui/locService}/metadata.duplicate.form?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/create"/></button>
 		</xsl:if>
 		
 		<!-- Only local metadata can be edited, deleted and administered -->
 		<xsl:if test="geonet:info/isHarvested = 'n'">
-			<xsl:if test="geonet:info/edit='true'">	
+			<xsl:if test="geonet:info/edit='true'">
 				<!-- edit button -->
 				&#160;
 				<button class="content" onclick="load('{/root/gui/locService}/metadata.edit?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/edit"/></button>
@@ -160,7 +168,7 @@
 				<!-- categories button -->
 				&#160;
 				<button class="content" onclick="load('{/root/gui/locService}/metadata.category.form?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/categories"/></button>
-			</xsl:if>		
+			</xsl:if>
 		</xsl:if>
 
 	</xsl:template>

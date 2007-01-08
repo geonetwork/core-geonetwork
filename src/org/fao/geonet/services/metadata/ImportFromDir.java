@@ -203,7 +203,6 @@ public class ImportFromDir implements Service
 				}
 			}
 		}
-
 		return counter;
 	}
 

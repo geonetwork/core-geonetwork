@@ -75,7 +75,8 @@ public class Update implements Service
 
 		String id         = Util.getParam(params, Params.ID);
 		String version    = Util.getParam(params, Params.VERSION);
-		String isTemplate = Util.getParam(params, Params.TEMPLATE, "off");
+		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
+		String title      = Util.getParam(params, Params.TITLE, null);
 		String data       = params.getChildText(Params.DATA);
 
 		boolean validate = config.getValue(Params.VALIDATE, "no").equals("yes");
@@ -90,7 +91,7 @@ public class Update implements Service
 		else
 			EditUtils.updateContent(params, context, validate);
 
-		dataMan.setTemplateBit(dbms, Integer.parseInt(id), isTemplate.equals("on"));
+		dataMan.setTemplate(dbms, Integer.parseInt(id), isTemplate, title);
 
 		//-----------------------------------------------------------------------
 		//--- update element and return status

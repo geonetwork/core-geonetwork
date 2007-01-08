@@ -138,7 +138,7 @@ public class DataManager
 		Element md   = XmlSerializer.select(dbms, "Metadata", id);
 		String  root = md.getName();
 
-		String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, uuid, "+
+		String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, title, uuid, "+
 									"isHarvested FROM Metadata WHERE id = " + id;
 
 		Element rec = dbms.select(query).getChild("record");
@@ -148,6 +148,7 @@ public class DataManager
 		String  changeDate = rec.getChildText("changedate");
 		String  source     = rec.getChildText("source");
 		String  isTemplate = rec.getChildText("istemplate");
+		String  title      = rec.getChildText("title");
 		String  uuid       = rec.getChildText("uuid");
 		String  isHarvested= rec.getChildText("isharvested");
 
@@ -157,6 +158,7 @@ public class DataManager
 		moreFields.add(makeField("_changeDate",  changeDate,  true, true, false));
 		moreFields.add(makeField("_source",      source,      true, true, false));
 		moreFields.add(makeField("_isTemplate",  isTemplate,  true, true, false));
+		moreFields.add(makeField("_title",       title,       true, true, false));
 		moreFields.add(makeField("_uuid",        uuid,        true, true, false));
 		moreFields.add(makeField("_isHarvested", isHarvested, true, true, false));
 
@@ -183,7 +185,7 @@ public class DataManager
 
 			moreFields.add(makeField("_cat", categoryName, true, true, false));
 		}
-		searchMan.index(schema, md, id, moreFields);
+		searchMan.index(schema, md, id, moreFields, isTemplate, title);
 	}
 
 	//--------------------------------------------------------------------------
@@ -298,11 +300,10 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
-	public void setTemplateBit(Dbms dbms, int id, boolean yesno) throws Exception
+	public void setTemplate(Dbms dbms, int id, String isTemplate, String title) throws Exception
 	{
-		String value = (yesno) ? "y" : "n";
-
-		dbms.execute("UPDATE Metadata SET isTemplate=? WHERE id=?", value, id);
+		if (title == null) dbms.execute("UPDATE Metadata SET isTemplate=? WHERE id=?", isTemplate, id);
+		else               dbms.execute("UPDATE Metadata SET isTemplate=?, title=? WHERE id=?", isTemplate, title, id);
 		indexMetadata(dbms, Integer.toString(id));
 	}
 
@@ -420,15 +421,22 @@ public class DataManager
 	public String insertMetadata(Dbms dbms, String schema, String groupId, Element xml,
 										  SerialFactory sf, String source, String uuid) throws Exception
 	{
+		return insertMetadata(dbms, schema, groupId, xml, sf, source, uuid, "n", null);
+	}
+	
+	public String insertMetadata(Dbms dbms, String schema, String groupId, Element xml,
+										  SerialFactory sf, String source, String uuid, String isTemplate, String title) throws Exception
+	{
 		//--- generate a new metadata id
 		int serial = sf.getSerial(dbms, "Metadata");
-
-		xml = updateFixedInfo(schema, Integer.toString(serial), xml, uuid, source);
-//System.out.println("AFTER:\n"+Xml.getString(xml));
-
+		
+		if (isTemplate.equals("n"))
+			xml = updateFixedInfo(schema, Integer.toString(serial), xml, uuid, source);
+		//System.out.println("AFTER:\n"+Xml.getString(xml));
+		
 		//--- store metadata
 
-		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid);
+		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid, isTemplate, title);
 
 		copyDefaultPrivForGroup(dbms, id, groupId);
 		indexMetadata(dbms, id);
@@ -1129,11 +1137,21 @@ public class DataManager
 
 	private Element updateFixedInfo(String schema, String id, Element md, Dbms dbms) throws Exception
 	{
-		Element rec = dbms.select("SELECT uuid, source FROM Metadata WHERE id = " + id).getChild("record");
-		String uuid   = rec.getChildText("uuid");
-		String source = rec.getChildText("source");
-
-		return updateFixedInfo(schema, id, md,uuid, source);
+		System.out.println("#### id = " + id); // DEBUG
+		
+		Element rec = dbms.select("SELECT uuid, source, isTemplate FROM Metadata WHERE id = " + id).getChild("record");
+		String isTemplate = rec.getChildText("istemplate");
+		
+		System.out.println("#### - isTemplate = " + isTemplate); // DEBUG
+		
+		// don't process templates
+		if (isTemplate.equals("n"))
+		{
+			String uuid     = rec.getChildText("uuid");
+			String source   = rec.getChildText("source");
+			return updateFixedInfo(schema, id, md,uuid, source);
+		}
+		else return md;
 	}
 
 	//--------------------------------------------------------------------------
@@ -1170,7 +1188,7 @@ public class DataManager
 	{
 		Dbms    dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, "+
+		String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, title, "+
 									"uuid, isHarvested FROM Metadata WHERE id = " + id;
 
 		// add Metadata table infos: schemaId, createDate, changeDate, source,
@@ -1181,6 +1199,7 @@ public class DataManager
 		String  changeDate = rec.getChildText("changedate");
 		String  source     = rec.getChildText("source");
 		String  isTemplate = rec.getChildText("istemplate");
+		String  title      = rec.getChildText("title");
 		String  uuid       = rec.getChildText("uuid");
 		String  isHarvested= rec.getChildText("isharvested");
 
@@ -1191,6 +1210,7 @@ public class DataManager
 		addElement(info, Edit.Info.Elem.CREATE_DATE, createDate);
 		addElement(info, Edit.Info.Elem.CHANGE_DATE, changeDate);
 		addElement(info, Edit.Info.Elem.IS_TEMPLATE, isTemplate);
+		addElement(info, Edit.Info.Elem.TITLE,       title);
 		addElement(info, Edit.Info.Elem.SOURCE,      source);
 		addElement(info, Edit.Info.Elem.UUID,        uuid);
 		addElement(info, Edit.Info.Elem.IS_HARVESTED,isHarvested);

@@ -64,9 +64,11 @@ public class Insert implements Service
 
 		DataManager dataMan = gc.getDataManager();
 
-		String data   = Util.getParam(params, Params.DATA);
-		String group  = Util.getParam(params, Params.GROUP);
-		String schema = Util.getParam(params, Params.SCHEMA);
+		String data       = Util.getParam(params, Params.DATA);
+		String group      = Util.getParam(params, Params.GROUP);
+		String schema     = Util.getParam(params, Params.SCHEMA);
+		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
+		String title      = Util.getParam(params, Params.TITLE);
 
 		boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
 
@@ -79,20 +81,23 @@ public class Insert implements Service
 			dataMan.validate(schema, xml);
 
 		//-----------------------------------------------------------------------
-		//--- if the uuid does not exist we generate it
-
-		String uuid = dataMan.extractUUID(schema, xml);
-
-		if (uuid.length() == 0)
-			uuid = UUID.randomUUID().toString();
-
+		//--- if the uuid does not exist and is not a template we generate it
+		
+		String uuid;
+		if (isTemplate.equals("n"))
+		{
+			uuid = dataMan.extractUUID(schema, xml);
+			if (uuid.length() == 0) uuid = UUID.randomUUID().toString();
+		}
+		else uuid = UUID.randomUUID().toString();
+		
 		//-----------------------------------------------------------------------
 		//--- insert metadata into the system
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String id = dataMan.insertMetadata(dbms, schema, group, xml,
-													  context.getSerialFactory(), gc.getSiteId(), uuid);
+													  context.getSerialFactory(), gc.getSiteId(), uuid, isTemplate, title);
 
 		Element response = new Element(Jeeves.Elem.RESPONSE);
 		response.addContent(new Element(Params.ID).setText(id));

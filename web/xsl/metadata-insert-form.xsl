@@ -44,6 +44,20 @@
 							<th class="padded"><xsl:value-of select="/root/gui/strings/validate"/></th>
 							<td><input class="content" type="checkbox" name="validate"/></td>
 						</tr>
+						<tr>
+							<th class="padded" valign="top"><xsl:value-of select="/root/gui/strings/kind"/></th>
+							<td>
+								<select class="content" name="template" size="1">
+									<option value="n"><xsl:value-of select="/root/gui/strings/metadata"/></option>
+									<option value="y"><xsl:value-of select="/root/gui/strings/template"/></option>
+									<option value="s"><xsl:value-of select="/root/gui/strings/subtemplate"/></option>
+								</select>
+								<xsl:text>&#160;</xsl:text>
+								<xsl:value-of select="/root/gui/strings/subtemplateTitle"/>
+								<xsl:text>&#160;</xsl:text>
+								<input class="content" type="text" name="title"/>
+							</td>
+						</tr>
 					</table>
 				</form>
 			</xsl:with-param>

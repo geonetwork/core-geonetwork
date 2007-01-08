@@ -163,27 +163,36 @@ public class SearchManager
 	//--------------------------------------------------------------------------------
 	// indexing methods
 
-	public synchronized void index(String type, Element metadata, String id, List moreFields) throws Exception
+	public synchronized void index(String type, Element metadata, String id, List moreFields, String isTemplate, String title) throws Exception
 	{
 		delete("_id", id);
 
-		// get metadata fields
-		String stylesheetName = type + ".xsl";
-
-		Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n"+ Xml.getString(metadata));
-
-		Element xmlDoc = transform(stylesheetName, metadata);
-
-		Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n"+ Xml.getString(xmlDoc));
-
+		Element xmlDoc;
+		
+		// check for subtemplates
+		if (isTemplate.equals("s"))
+		{
+			// create empty document with only title  and "any" fields
+			xmlDoc = new Element("Document");
+			
+			StringBuffer sb = new StringBuffer();
+			allText(metadata, sb);
+			addField(xmlDoc, "title", title,           true, true, true);
+			addField(xmlDoc, "any",   sb.toString(),   true, true, true);
+		}
+		else
+		{
+			// get metadata fields
+			String stylesheetName = type + ".xsl";
+	
+			Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n"+ Xml.getString(metadata));
+	
+			xmlDoc = transform(stylesheetName, metadata);
+	
+			Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n"+ Xml.getString(xmlDoc));
+		}
 		// add _id field
-		Element idField = new Element("Field");
-		idField.setAttribute("name",   "_id");
-		idField.setAttribute("string", id);
-		idField.setAttribute("store",  "true");
-		idField.setAttribute("index",  "true");
-		idField.setAttribute("token",  "false");
-		xmlDoc.addContent(idField);
+		addField(xmlDoc, "_id", id, true, true, false);
 
 		// add more fields
 		for (Iterator iter = moreFields.iterator(); iter.hasNext(); )
@@ -191,9 +200,9 @@ public class SearchManager
 			Element field = (Element)iter.next();
 			xmlDoc.addContent(field);
 		}
-
+		System.out.println("LUCENE DOCUMENT:\n" + Xml.getString(xmlDoc)); // DEBUG
+		
 		Document doc = newDocument(xmlDoc);
-
 		IndexWriter writer = new IndexWriter(_luceneDir, new StandardAnalyzer(new String[] {}), false);
 		try
 		{
@@ -205,7 +214,36 @@ public class SearchManager
 			writer.close();
 		}
 	}
-
+	
+	// creates a new field
+	private void addField(Element xmlDoc, String name, String value, boolean store, boolean index, boolean token)
+	{
+		Element field = new Element("Field");
+		field.setAttribute("name",   name);
+		field.setAttribute("string", value);
+		field.setAttribute("store",  store+"");
+		field.setAttribute("index",  index+"");
+		field.setAttribute("token",  token+"");
+		xmlDoc.addContent(field);
+	}
+	
+	// perform a preorder visit and returns all text in metadata elements
+	private void allText(Element metadata, StringBuffer sb)
+	{
+		String text = metadata.getText().trim();
+		if (text.length() > 0)
+		{
+			if (sb.length() > 0) sb.append(" ");
+			sb.append(text);
+		}
+		List children = metadata.getChildren();
+		if (children.size() > 0)
+		{
+			for (Iterator i = children.iterator(); i.hasNext(); )
+				allText((Element)i.next(), sb);
+		}
+	}
+	
 	//--------------------------------------------------------------------------------
 	//  delete a document
 

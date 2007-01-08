@@ -201,9 +201,14 @@ compiles a request
 
 		<!-- template -->
 		<xsl:choose>
-			<xsl:when test="string(/request/template)='on'">
+			<xsl:when test="string(/request/template)='y'">
 				<BooleanClause required="true" prohibited="false">
 					<TermQuery fld="_isTemplate" txt="y"/>
+				</BooleanClause>
+			</xsl:when>
+			<xsl:when test="string(/request/template)='s'">
+				<BooleanClause required="true" prohibited="false">
+					<TermQuery fld="_isTemplate" txt="s"/>
 				</BooleanClause>
 			</xsl:when>
 			<xsl:otherwise>

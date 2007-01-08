@@ -81,6 +81,25 @@ public class XmlSerializer
 										 String source, String uuid, String createDate,
 										 String changeDate, String sourceUri) throws SQLException
 	{
+		return insert(dbms, schema, xml, serial, source, uuid, createDate, changeDate, sourceUri, "n", null);
+	}
+	
+	//--------------------------------------------------------------------------
+
+	public static String insert(Dbms dbms, String schema, Element xml, int serial,
+										 String source, String uuid,
+										 String template, String title) throws SQLException
+	{
+		return insert(dbms, schema, xml, serial, source, uuid, null, null, null, template, title);
+	}
+
+	//--------------------------------------------------------------------------
+
+	public static String insert(Dbms dbms, String schema, Element xml, int serial,
+										 String source, String uuid, String createDate,
+										 String changeDate, String sourceUri,
+										 String isTemplate, String title) throws SQLException
+	{
 		String date = new ISODate().toString();
 
 		if (createDate == null)
@@ -88,16 +107,10 @@ public class XmlSerializer
 
 		if (changeDate == null)
 			changeDate = date;
-
-		String query = "INSERT INTO Metadata (id, schemaId, data, createDate, "+
-							"changeDate, source, uuid) VALUES(?,?,?,?,?,?,?)";
-
-		if (sourceUri != null)
-			query = "INSERT INTO Metadata (id, schemaId, data, createDate, "+
-					  "changeDate, source, uuid, sourceUri) VALUES(?,?,?,?,?,?,?,?)";
-
+		
+		StringBuffer fields = new StringBuffer("id, schemaId, data, createDate, changeDate, source, uuid, isTemplate, root");
+		StringBuffer values = new StringBuffer("?, ?, ?, ?, ?, ?, ?, ?, ?");
 		Vector args = new Vector();
-
 		args.add(new Integer(serial));
 		args.add(schema);
 		args.add(Xml.getString(new Document(xml)));
@@ -105,10 +118,22 @@ public class XmlSerializer
 		args.add(changeDate);
 		args.add(source);
 		args.add(uuid);
+		args.add(isTemplate);
+		args.add(xml.getQualifiedName());
 
 		if (sourceUri != null)
+		{
+			fields.append(", sourceUri");
+			values.append(", ?");
 			args.add(sourceUri);
-
+		}
+		if (title != null)
+		{
+			fields.append(", title");
+			values.append(", ?");
+			args.add(title);
+		}
+		String query = "INSERT INTO Metadata (" + fields + ") VALUES(" + values + ")";
 		dbms.execute(query, args.toArray());
 
 		return Integer.toString(serial);
@@ -127,15 +152,16 @@ public class XmlSerializer
 
 	public static void update(Dbms dbms, String id, Element xml, String changeDate) throws SQLException
 	{
-		String query = "UPDATE Metadata SET data=?, changeDate=? WHERE id=?";
+		String query = "UPDATE Metadata SET data=?, changeDate=?, root=? WHERE id=?";
 
 		Vector args = new Vector();
 
 		args.add(Xml.getString(new Document(xml)));
 
-		if (changeDate == null)		args.add(new ISODate().toString());
-			else							args.add(changeDate);
+		if (changeDate == null) args.add(new ISODate().toString());
+		else                    args.add(changeDate);
 
+		args.add(xml.getQualifiedName());
 		args.add(new Integer(id));
 
 		dbms.execute(query, args.toArray());

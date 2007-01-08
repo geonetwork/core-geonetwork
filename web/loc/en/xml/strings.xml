@@ -19,6 +19,8 @@
 	<kindChoice value="other">Other</kindChoice>
 	<userInfo>Change user information</userInfo>
 	<userInfoDes>Allow current user to change user information</userInfoDes>
+	<subtemplate>Subtemplate</subtemplate>
+	<subtemplateTitle>subtemplate title</subtemplateTitle>
 	
 	<language>en</language>
 	<!-- ISO code -->

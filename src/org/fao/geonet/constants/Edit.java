@@ -74,6 +74,7 @@ public class Edit
 			public static final String CATEGORY    = "category";
 			public static final String SERVER      = "server";
 			public static final String IS_TEMPLATE = "isTemplate";
+			public static final String TITLE       = "title";
 			public static final String IS_HARVESTED= "isHarvested";
 
 			//--- privileges

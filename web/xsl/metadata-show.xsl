@@ -55,6 +55,13 @@
 								<xsl:copy-of select="$buttons"/>
 							</xsl:if>
 							
+							<!-- subtemplate title button -->
+							<xsl:if test="(string(geonet:info/isTemplate)='s')">
+								<tr><td class="padded-content" height="100%" align="center" valign="top">
+									<b><xsl:value-of select="geonet:info/title"/></b>
+								</td></tr>
+							</xsl:if>
+
 							<tr><td class="padded-content">
 								<table class="md" width="100%">
 									<form name="mainForm" accept-charset="UTF-8" method="POST" action="{/root/gui/locService}/metadata.edit">

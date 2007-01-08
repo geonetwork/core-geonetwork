@@ -82,7 +82,7 @@ public class MainUtil
 						.addContent(new Element(Geonet.SearchResult.ONLINE)       .setText(Geonet.Text.OFF))
 						.addContent(new Element(Geonet.SearchResult.DIGITAL)      .setText(Geonet.Text.ON))
 						.addContent(new Element(Geonet.SearchResult.PAPER)        .setText(Geonet.Text.OFF))
-						.addContent(new Element(Geonet.SearchResult.TEMPLATE)     .setText(Geonet.Text.OFF))
+						.addContent(new Element(Geonet.SearchResult.TEMPLATE)     .setText("n"))
 						.addContent(new Element(Geonet.SearchResult.EXTENDED)     .setText(Geonet.Text.OFF))
 						.addContent(new Element(Geonet.SearchResult.HELP)         .setText(Geonet.Text.OFF))
 						.addContent(new Element(Geonet.SearchResult.REMOTE)       .setText(Geonet.Text.OFF))
@@ -182,8 +182,7 @@ public class MainUtil
 			// only save these checkbox values if mode is extended
 			if (elExtended.getText().equals(Geonet.Text.ON))
 			{
-				if (sTemplate    != null) elTemplate.setText(sTemplate);
-				else                      elTemplate.setText(Geonet.Text.OFF);
+				if (sTemplate  != null) elTemplate.setText(sTemplate);
 
 				if (sDownload != null) elDownload.setText(sDownload);
 				else                   elDownload.setText(Geonet.Text.OFF);

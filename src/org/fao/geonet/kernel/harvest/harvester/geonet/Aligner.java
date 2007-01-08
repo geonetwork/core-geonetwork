@@ -209,8 +209,7 @@ public class Aligner
 				String schema     = info.getChildText("schema");
 				String createDate = info.getChildText("createDate");
 				String changeDate = info.getChildText("changeDate");
-
-				boolean isTemplate = "y".equals(info.getChildText("isTemplate"));
+				String isTemplate = info.getChildText("isTemplate");
 
 				log.debug("  - Adding metadata with remote id="+ remoteId);
 
@@ -219,7 +218,7 @@ public class Aligner
 
 				int iId = Integer.parseInt(id[0]);
 
-				dataMan.setTemplateBit (dbms, iId, isTemplate);
+				dataMan.setTemplate(dbms, iId, isTemplate, null);
 				dataMan.setHarvestedBit(dbms, iId, true);
 
 				String pubDir = Lib.resource.getDir(context, "public",  id[0]);

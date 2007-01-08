@@ -341,8 +341,8 @@
 						<tr><td width="20px" align="center">-</td><td>
 							<div class="track" id="similarityTrack" style="width:100px;height:5px;">
 								<xsl:attribute name="alt"><xsl:value-of select="/root/gui/strings/fuzzySearch"/></xsl:attribute>
-								<xsl:attribute name="title"><xsl:value-of select="/root/gui/strings/fuzzySearch"/></xsl:attribute>												
-								<div class="handle" id="similarityHandle" style="width:5px;height:10px;"> </div>	
+								<xsl:attribute name="title"><xsl:value-of select="/root/gui/strings/fuzzySearch"/></xsl:attribute>
+								<div class="handle" id="similarityHandle" style="width:5px;height:10px;"> </div>
 							</div>
 						</td><td width="20px" align="center">+</td>
 						<td><div id="similarityDebug" style="display:none;"></div>
@@ -553,14 +553,28 @@
 			<!-- Template -->
 			<xsl:if test="string(/root/gui/session/userId)!='' and /root/gui/services/service[@name='metadata.edit'] and string(/root/gui/searchDefaults/remote)='off'">
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/template"/></th>
+					<th class="padded"><xsl:value-of select="/root/gui/strings/kind"/></th>
 					<td>
-						<input name="template" type="checkbox" value="on">
-							<xsl:if test="/root/gui/searchDefaults/template='on'">
-								<xsl:attribute name="checked"/>
-							</xsl:if>
-							<xsl:value-of select="/root/gui/strings/searchTemplates"/>
-						</input>
+						<select class="content" name="template" size="1">
+							<option value="n">
+								<xsl:if test="/root/gui/searchDefaults/template='n'">
+									<xsl:attribute name="selected">true</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="/root/gui/strings/metadata"/>
+							</option>
+							<option value="y">
+								<xsl:if test="/root/gui/searchDefaults/template='y'">
+									<xsl:attribute name="selected">true</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="/root/gui/strings/template"/>
+							</option>
+							<option value="s">
+								<xsl:if test="/root/gui/searchDefaults/template='s'">
+									<xsl:attribute name="selected">true</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="/root/gui/strings/subtemplate"/>
+							</option>
+						</select>
 					</td>
 				</tr>
 			</xsl:if>

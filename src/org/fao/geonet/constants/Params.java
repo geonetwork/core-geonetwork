@@ -55,6 +55,7 @@ public class Params
 	public static final String STYLESHEET   = "styleSheet";
 	public static final String SURNAME      = "surname";
 	public static final String TEMPLATE     = "template";
+	public static final String TITLE        = "title";
 	public static final String USERNAME     = "username";
 	public static final String VERSION      = "version";
 	public static final String VALIDATE     = "validate";
