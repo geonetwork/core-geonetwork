@@ -334,9 +334,9 @@
 	<!--
 	prevent drawing of geonet:* elements
 	-->
-	<xsl:template mode="element" match="geonet:element|geonet:info"/>
-	<xsl:template mode="simpleElement" match="geonet:element|geonet:info"/>
-	<xsl:template mode="complexElement" match="geonet:element|geonet:info"/>
+	<xsl:template mode="element" match="geonet:element|geonet:info|geonet:attribute"/>
+	<xsl:template mode="simpleElement" match="geonet:element|geonet:info|geonet:attribute"/>
+	<xsl:template mode="complexElement" match="geonet:element|geonet:info|geonet:attribute"/>
 	
 	<!--
 	prevent drawing of attributes starting with "_", used in old GeoNetwork versions
