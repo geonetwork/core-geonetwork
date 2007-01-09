@@ -27,28 +27,18 @@
 
 package org.fao.geonet.kernel;
 
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-import java.util.Vector;
+import java.util.*;
+import jeeves.utils.*;
+import org.fao.geonet.constants.*;
+import org.jdom.*;
+
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
-import jeeves.utils.Xml;
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
-import org.jdom.Attribute;
-import org.jdom.Element;
-import org.jdom.Text;
 
 //=============================================================================
 
@@ -550,18 +540,28 @@ public class DataManager
 
 		editLib.removeEditingInfo(md);
 		String  schema = getMetadataSchema(dbms, id);
-		Element child  = editLib.addElement(schema, el, name);
 
-		if (!childName.equals(""))
+		if (childName.startsWith("_s"))
 		{
-			Element orChild = new Element(childName, el.getNamespace());
-
-			child.addContent(orChild);
-
-			//--- add mandatory sub-tags
-			editLib.fillElement(schema, orChild);
+			// add subtemplate
+			String sid = childName.substring(2);
+			Element subtemplate = XmlSerializer.select(dbms, "Metadata", sid);
+			el.addContent(subtemplate);
 		}
-
+		else
+		{
+			// normal element
+			Element child  = editLib.addElement(schema, el, name);
+			if (!childName.equals(""))
+			{
+				// or element
+				Element orChild = new Element(childName, el.getNamespace());
+				child.addContent(orChild);
+	
+				//--- add mandatory sub-tags
+				editLib.fillElement(schema, orChild);
+			}
+		}
 		md = updateFixedInfo(schema, id, md, dbms);
 		XmlSerializer.update(dbms, id, md);
 
@@ -780,7 +780,6 @@ public class DataManager
 			String attr= null;
 
 			int at = ref.indexOf("_");
-
 			if (at != -1)
 			{
 				attr = ref.substring(at +1);
@@ -931,7 +930,6 @@ public class DataManager
 	public void setThumbnail(Dbms dbms, String id, boolean small, String file) throws Exception
 	{
 		int pos = file.lastIndexOf(".");
-
 		String ext = (pos == -1) ? "???" : file.substring(pos +1);
 
 		Element env = new Element("env");

@@ -71,6 +71,7 @@
 		- it is not simple mode and
 			- it is an OR element or
 			- it does not exists a preceding brother
+		- or there are subtemplates
 		-->
 		<xsl:variable name="name">
 			<xsl:choose>
@@ -78,11 +79,13 @@
 				<xsl:otherwise><xsl:value-of select="concat(@prefix,':',@name)"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+		<xsl:variable name="parentName" select="../geonet:element/@ref"/>
 		<xsl:variable name="prevBrother" select="preceding-sibling::*[1]"/>
-		<xsl:if test="$currTab!='simple' and (geonet:choose or name($prevBrother)!=$name)">
+		<xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)=$name]"/>
+		<xsl:if test="$currTab!='simple' and (geonet:choose or name($prevBrother)!=$name) or $subtemplates"> <!-- RGFIX -->
 			<xsl:variable name="text">
-				<xsl:if test="geonet:choose">
-					<select class="md" name="_{../geonet:element/@ref}_{@name}" size="1">
+				<xsl:if test="geonet:choose or $subtemplates">
+					<select class="md" name="_{$parentName}_{@name}" size="1">
 						<xsl:for-each select="geonet:choose">
 							<option value="{@name}">
 								<xsl:call-template name="getTitle">
@@ -91,30 +94,21 @@
 								</xsl:call-template>
 							</option>
 						</xsl:for-each>
+						<xsl:for-each select="$subtemplates">
+							<option value="_s{id}">
+								<xsl:value-of select="title"/>
+							</option>
+						</xsl:for-each>
 					</select>
 				</xsl:if>
 			</xsl:variable>
 			<xsl:variable name="addLink">
 				<xsl:choose>
-					<xsl:when test="geonet:choose">
-						<xsl:choose>
-							<xsl:when test="@prefix=''">
-								<xsl:value-of select="concat('javascript:doNewORElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,@name,$apos,',document.mainForm._',../geonet:element/@ref,'_',@name,'.value);')"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="concat('javascript:doNewORElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,@name,$apos,',document.mainForm._',../geonet:element/@ref,'_',@prefix,':',@name,'.value);')"/>
-							</xsl:otherwise>
-						</xsl:choose>
+					<xsl:when test="geonet:choose or $subtemplates">
+						<xsl:value-of select="concat('javascript:doNewORElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',$parentName,',',$apos,$name,$apos,',document.mainForm._',$parentName,'_',@name,'.value);')"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:choose>
-							<xsl:when test="@prefix=''">
-								<xsl:value-of select="concat('javascript:doNewElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,@name,$apos,');')"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="concat('javascript:doNewElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,@prefix,':',@name,$apos,');')"/>
-							</xsl:otherwise>
-						</xsl:choose>
+						<xsl:value-of select="concat('javascript:doNewElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',$parentName,',',$apos,$name,$apos,');')"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
@@ -422,6 +416,7 @@
 	
 	<xsl:template name="addLink">
 		<xsl:variable name="name" select="name(.)"/>
+		<xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)=$name]"/>
 		<xsl:variable name="nextBrother" select="following-sibling::*[1]"/>
 		<xsl:variable name="nb">
 			<xsl:if test="name($nextBrother)='geonet:child'">
@@ -439,7 +434,7 @@
 		</xsl:variable>
 		<xsl:variable name="newBrother" select="xalan:nodeset($nb)"/>
 		
-		<xsl:if test="$newBrother/* and not($newBrother/*/geonet:choose)">
+		<xsl:if test="$newBrother/* and not($newBrother/*/geonet:choose or $subtemplates)">
 			<xsl:choose>
 				<xsl:when test="$nextBrother/@prefix=''">
 					<xsl:value-of select="concat('javascript:doNewElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,');')"/>
