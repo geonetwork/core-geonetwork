@@ -1,8 +1,4 @@
-//==============================================================================
-//===
-//===   Boot
-//===
-//==============================================================================
+//=============================================================================
 //===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
@@ -25,35 +21,53 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package org.fao.geonet.apps.migration;
+package org.fao.gast.lib;
 
-import org.fao.gast.boot.Util;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import org.jdom.Document;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 
-//==============================================================================
+//=============================================================================
 
-public class Boot
+public class XMLLib
 {
 	//---------------------------------------------------------------------------
 	//---
-	//--- Main method
+	//--- API methods
 	//---
 	//---------------------------------------------------------------------------
 
-	public static void main(String[] args)
+	public Document load(String file) throws JDOMException, IOException
 	{
-		if (args.length < 1)
+		SAXBuilder builder = new SAXBuilder();
+		Document   jdoc    = builder.build(file);
+
+		return jdoc;
+	}
+
+	//---------------------------------------------------------------------------
+
+	public void save(String file, Document doc) throws FileNotFoundException, IOException
+	{
+		FileOutputStream os = new FileOutputStream(file);
+
+		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+
+		try
 		{
-			Util.showError("Missing installation directory parameter");
-
-			//--- we cannot use 'return' because the previous 'showError' creates an
-			//--- hidden frame that prevent the application from being terminated.
-			System.exit(-1);
+			outputter.output(doc, os);
 		}
-
-//		Util.boot(args[0], "org.fao.geonet.apps.migration.MainFrame");
+		finally
+		{
+			os.close();
+		}
 	}
 }
 
-//==============================================================================
-
+//=============================================================================
 

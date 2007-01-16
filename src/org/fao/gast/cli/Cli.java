@@ -1,8 +1,4 @@
 //==============================================================================
-//===
-//===   Boot
-//===
-//==============================================================================
 //===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
@@ -25,35 +21,19 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package org.fao.geonet.apps.migration;
+package org.fao.gast.cli;
 
-import org.fao.gast.boot.Util;
+import org.fao.gast.boot.Starter;
 
 //==============================================================================
 
-public class Boot
+public class Cli implements Starter
 {
-	//---------------------------------------------------------------------------
-	//---
-	//--- Main method
-	//---
-	//---------------------------------------------------------------------------
-
-	public static void main(String[] args)
+	public void start(String appPath, String args[]) throws Exception
 	{
-		if (args.length < 1)
-		{
-			Util.showError("Missing installation directory parameter");
-
-			//--- we cannot use 'return' because the previous 'showError' creates an
-			//--- hidden frame that prevent the application from being terminated.
-			System.exit(-1);
-		}
-
-//		Util.boot(args[0], "org.fao.geonet.apps.migration.MainFrame");
+		// TODO
 	}
 }
 
 //==============================================================================
-
 

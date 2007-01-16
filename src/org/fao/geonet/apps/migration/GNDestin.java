@@ -60,7 +60,6 @@ public class GNDestin
 	private ServiceConfig appHand;
 	private Activator     activ;
 	private Dbms          dbms;
-	private Connection    conn;
 	private SimpleLogger  logger;
 
 	private String baseURL;
@@ -99,7 +98,7 @@ public class GNDestin
 		appHand = new ServiceConfig(config.getChild(ConfigFile.Child.APP_HANDLER).getChildren());
 
 		dbms    = Util.getDbms(logger, jdbc);
-		conn    = Util.getConnection(logger, dbms, jdbc);
+		Util.connect(logger, dbms, jdbc);
 		profiles= Util.getUserProfiles(logger, geonetDir +"web/xml/user-profiles.xml");
 
 		baseURL = getBaseURL();
@@ -248,7 +247,7 @@ public class GNDestin
 	{
 		String luceneDir = geonetDir +"web/"+ appHand.getValue(Geonet.Config.LUCENE_DIR);
 
-		cleanDir(new File(luceneDir));
+//		cleanDir(new File(luceneDir));
 	}
 
 	//---------------------------------------------------------------------------
@@ -289,24 +288,6 @@ public class GNDestin
 	//---
 	//--- Private methods
 	//---
-	//---------------------------------------------------------------------------
-
-	private void cleanDir(File dir) throws Exception
-	{
-		File files[] = dir.listFiles();
-
-		for(int i=0; i<files.length; i++)
-			if (files[i].isDirectory())
-			{
-				if (!files[i].getName().equals("CVS"))
-					cleanDir(files[i]);
-			}
-			else if (!files[i].delete())
-			{
-				throw geoNetExc(null, "Cannot delete file : "+files[i]);
-			}
-	}
-
 	//---------------------------------------------------------------------------
 
 	private void insertRecords(String table, List records, String fields[],

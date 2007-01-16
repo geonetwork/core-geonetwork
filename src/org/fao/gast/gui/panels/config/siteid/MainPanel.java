@@ -1,8 +1,4 @@
 //==============================================================================
-//===
-//===   Boot
-//===
-//==============================================================================
 //===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
@@ -25,35 +21,57 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package org.fao.geonet.apps.migration;
+package org.fao.gast.gui.panels.config.siteid;
 
-import org.fao.gast.boot.Util;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import org.dlib.gui.FlexLayout;
+import org.fao.gast.gui.panels.FormPanel;
 
 //==============================================================================
 
-public class Boot
+public class MainPanel extends FormPanel
 {
 	//---------------------------------------------------------------------------
 	//---
-	//--- Main method
+	//--- Initialization
 	//---
 	//---------------------------------------------------------------------------
 
-	public static void main(String[] args)
+	protected JComponent buildInnerPanel()
 	{
-		if (args.length < 1)
-		{
-			Util.showError("Missing installation directory parameter");
+		JPanel p = new JPanel();
 
-			//--- we cannot use 'return' because the previous 'showError' creates an
-			//--- hidden frame that prevent the application from being terminated.
-			System.exit(-1);
-		}
+		FlexLayout fl = new FlexLayout(2,1);
+		fl.setColProp(1, FlexLayout.EXPAND);
+		p.setLayout(fl);
 
-//		Util.boot(args[0], "org.fao.geonet.apps.migration.MainFrame");
+		p.add("0,0",   new JLabel("Current"));
+		p.add("1,0,x", txtSiteID);
+
+		return p;
 	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- API methods
+	//---
+	//---------------------------------------------------------------------------
+
+	public void refresh()
+	{
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//---------------------------------------------------------------------------
+
+	private JTextField txtSiteID = new JTextField(20);
 }
 
 //==============================================================================
-
 

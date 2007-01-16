@@ -1,8 +1,4 @@
 //==============================================================================
-//===
-//===   Boot
-//===
-//==============================================================================
 //===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
@@ -25,35 +21,44 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package org.fao.geonet.apps.migration;
+package org.fao.gast.gui.panels.database.setup;
 
-import org.fao.gast.boot.Util;
+import java.awt.event.ActionEvent;
+import javax.swing.JComponent;
+import org.fao.gast.gui.panels.FormPanel;
+import org.fao.gast.lib.Lib;
 
 //==============================================================================
 
-public class Boot
+public class MainPanel extends FormPanel
 {
 	//---------------------------------------------------------------------------
 	//---
-	//--- Main method
+	//--- Initialization
 	//---
 	//---------------------------------------------------------------------------
 
-	public static void main(String[] args)
+	protected JComponent buildInnerPanel() { return null; }
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- ActionListener
+	//---
+	//---------------------------------------------------------------------------
+
+	public void actionPerformed(ActionEvent e)
 	{
-		if (args.length < 1)
+		try
 		{
-			Util.showError("Missing installation directory parameter");
-
-			//--- we cannot use 'return' because the previous 'showError' creates an
-			//--- hidden frame that prevent the application from being terminated.
-			System.exit(-1);
+			Lib.embDB.createDB();
+			Lib.gui.showInfo(this, "Data files created");
 		}
-
-//		Util.boot(args[0], "org.fao.geonet.apps.migration.MainFrame");
+		catch (Exception ex)
+		{
+			Lib.gui.showError(this, ex);
+		}
 	}
 }
 
 //==============================================================================
-
 

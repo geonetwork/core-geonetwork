@@ -1,8 +1,4 @@
-//==============================================================================
-//===
-//===   Boot
-//===
-//==============================================================================
+//=============================================================================
 //===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
@@ -25,61 +21,48 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package org.fao.geonet.apps.setup;
+package org.fao.gast.lib;
 
-import org.fao.geonet.apps.common.Util;
+import java.awt.Component;
+import javax.swing.JOptionPane;
 
-//==============================================================================
+//=============================================================================
 
-public class Boot
+public class GuiLib
 {
 	//---------------------------------------------------------------------------
 	//---
-	//--- Main method
+	//--- API methods
 	//---
 	//---------------------------------------------------------------------------
 
-	public static void main(String[] args)
+	public void showError(Component c, Throwable t)
 	{
-		if (args.length < 2)
-		{
-			Util.showError("Missing installation directory & jdbc url parameters");
+		String title   = t.getClass().getSimpleName();
+		String message = t.getMessage();
 
-			//--- we cannot use 'return' because the previous 'showError' creates an
-			//--- hidden frame that prevent the application from being terminated.
-			System.exit(-1);
-		}
+		if (message == null || message.length() == 0)
+			message = "<no message>";
 
-		String jdbcUrl = args[1];
-
-		boolean mckoi  = jdbcUrl.indexOf("mckoi")  != -1;
-//		boolean mysql  = jdbcUrl.indexOf("mysql")  != -1;
-//		boolean oracle = jdbcUrl.indexOf("oracle") != -1;
-
-		if (!mckoi) // && !mysql && !oracle)
-			askForDrivers();
-
-		Util.boot(args[0], "org.fao.geonet.apps.setup.Setup");
-		System.exit(0);
+		JOptionPane.showMessageDialog(c, message, title, JOptionPane.ERROR_MESSAGE);
+		t.printStackTrace();
 	}
 
 	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
 
-	private static void askForDrivers()
+	public void showError(Component c, String message)
 	{
 
-		String msg = "It is time to copy the java jdbc driver of your DBMS\n"+
-						 "into the web/WEB-INF/lib directory.\n"+
-						 "Press OK  when you have done.";
+		JOptionPane.showMessageDialog(c, message, "Error", JOptionPane.ERROR_MESSAGE);
+	}
 
-		Util.showInfo(msg);
+	//---------------------------------------------------------------------------
+
+	public void showInfo(Component c, String message)
+	{
+		JOptionPane.showMessageDialog(c, message, "Information", JOptionPane.INFORMATION_MESSAGE);
 	}
 }
 
-//==============================================================================
-
+//=============================================================================
 

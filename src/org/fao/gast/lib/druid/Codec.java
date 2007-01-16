@@ -6,7 +6,7 @@
 //===   This file may be distributed under the terms of the GPL license.
 //==============================================================================
 
-package org.fao.geonet.apps.setup.druid;
+package org.fao.gast.lib.druid;
 
 import org.dlib.tools.Util;
 

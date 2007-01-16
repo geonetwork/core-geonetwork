@@ -167,8 +167,8 @@ public class Util
 
 	//---------------------------------------------------------------------------
 
-	public static Connection getConnection(SimpleLogger logger, Dbms dbms,
-														Element jdbc) throws Exception
+	public static void connect(SimpleLogger logger, Dbms dbms,
+										Element jdbc) throws Exception
 	{
 		String user   = jdbc.getChildText(Jeeves.Res.Pool.USER);
 		String passwd = jdbc.getChildText(Jeeves.Res.Pool.PASSWORD);
@@ -178,8 +178,6 @@ public class Util
 		try
 		{
 			dbms.connect(user, passwd);
-
-			return dbms.getConnection();
 		}
 		catch (SQLException e)
 		{

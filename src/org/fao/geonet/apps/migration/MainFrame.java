@@ -45,8 +45,8 @@ import javax.swing.SwingUtilities;
 import org.dlib.gui.FlexLayout;
 import org.dlib.gui.TPanel;
 import org.fao.geonet.apps.common.SimpleLogger;
-import org.fao.geonet.apps.common.Starter;
-import org.fao.geonet.apps.common.Util;
+import org.fao.gast.boot.Starter;
+import org.fao.gast.boot.Util;
 
 //==============================================================================
 
@@ -204,9 +204,9 @@ public class MainFrame extends JFrame implements Starter, ActionListener, Simple
 	//---
 	//---------------------------------------------------------------------------
 
-	public void start(String installDir) throws Exception
+	public void start(String appPath, String[] args) throws Exception
 	{
-		geonetDir = installDir;
+		geonetDir = appPath;
 	}
 
 	//---------------------------------------------------------------------------

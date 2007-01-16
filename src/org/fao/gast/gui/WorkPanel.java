@@ -1,8 +1,4 @@
 //==============================================================================
-//===
-//===   Boot
-//===
-//==============================================================================
 //===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
@@ -25,35 +21,46 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package org.fao.geonet.apps.migration;
+package org.fao.gast.gui;
 
-import org.fao.gast.boot.Util;
+import java.awt.Dimension;
+import javax.swing.JPanel;
+import org.dlib.gui.MultiPanel;
 
 //==============================================================================
 
-public class Boot
+public class WorkPanel extends MultiPanel
 {
 	//---------------------------------------------------------------------------
 	//---
-	//--- Main method
+	//--- Constructor
 	//---
 	//---------------------------------------------------------------------------
 
-	public static void main(String[] args)
+	public WorkPanel()
 	{
-		if (args.length < 1)
-		{
-			Util.showError("Missing installation directory parameter");
-
-			//--- we cannot use 'return' because the previous 'showError' creates an
-			//--- hidden frame that prevent the application from being terminated.
-			System.exit(-1);
-		}
-
-//		Util.boot(args[0], "org.fao.geonet.apps.migration.MainFrame");
+		setMinimumSize(new Dimension(100, 50));
+		add("blank", new JPanel());
 	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- API methods
+	//---
+	//---------------------------------------------------------------------------
+
+	public void show(String id)
+	{
+		super.show((id == null) ? "blank" : id);
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//---------------------------------------------------------------------------
+
 }
 
 //==============================================================================
-
 

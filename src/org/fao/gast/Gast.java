@@ -1,8 +1,4 @@
-//==============================================================================
-//===
-//===   Boot
-//===
-//==============================================================================
+//=============================================================================
 //===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
@@ -25,35 +21,44 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package org.fao.geonet.apps.migration;
+package org.fao.gast;
 
+import java.io.File;
+import java.net.URL;
 import org.fao.gast.boot.Util;
 
-//==============================================================================
+//=============================================================================
 
-public class Boot
+public class Gast
 {
 	//---------------------------------------------------------------------------
 	//---
-	//--- Main method
+	//--- Constructor
 	//---
 	//---------------------------------------------------------------------------
 
-	public static void main(String[] args)
+	public static void main(String args[]) throws Exception
 	{
-		if (args.length < 1)
-		{
-			Util.showError("Missing installation directory parameter");
+		String jarFile = Util.getJarFile("org/fao/gast/Gast.class");
+		String appPath = getPath(jarFile);
+		URL[]  jars    = Util.getJarUrls(appPath +"/web/WEB-INF/lib");
 
-			//--- we cannot use 'return' because the previous 'showError' creates an
-			//--- hidden frame that prevent the application from being terminated.
-			System.exit(-1);
-		}
+		String starter = (args.length == 0)
+									? "org.fao.gast.gui.MainFrame"
+									: "org.fao.gast.cli.Cli";
 
-//		Util.boot(args[0], "org.fao.geonet.apps.migration.MainFrame");
+		Util.boot(appPath, jars, starter, args);
+	}
+
+	//---------------------------------------------------------------------------
+
+	private static String getPath(String jarFile)
+	{
+		//--- we suppose that the GAST jar file is inside the "gast" folder
+
+		return new File(jarFile).getParentFile().getParentFile().getAbsolutePath();
 	}
 }
 
-//==============================================================================
-
+//=============================================================================
 

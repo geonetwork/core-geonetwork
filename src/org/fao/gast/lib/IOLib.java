@@ -1,8 +1,4 @@
-//==============================================================================
-//===
-//===   Starter
-//===
-//==============================================================================
+//=============================================================================
 //===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
@@ -25,14 +21,34 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package org.fao.geonet.apps.common;
+package org.fao.gast.lib;
 
-//==============================================================================
+import java.io.File;
 
-public interface Starter
+//=============================================================================
+
+public class IOLib
 {
-	public void start(String installDir) throws Exception;
+	//---------------------------------------------------------------------------
+	//---
+	//--- API methods
+	//---
+	//---------------------------------------------------------------------------
+
+	public void cleanDir(File dir) throws Exception
+	{
+		File files[] = dir.listFiles();
+
+		for(int i=0; i<files.length; i++)
+			if (files[i].isDirectory())
+			{
+				if (!files[i].getName().equals(".svn"))
+					cleanDir(files[i]);
+			}
+			else if (!files[i].delete())
+				throw new Exception("Cannot delete file : "+files[i]);
+	}
 }
 
-//==============================================================================
+//=============================================================================
 

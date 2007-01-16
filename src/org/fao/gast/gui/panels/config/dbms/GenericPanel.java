@@ -1,8 +1,4 @@
 //==============================================================================
-//===
-//===   Util
-//===
-//==============================================================================
 //===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
@@ -25,127 +21,91 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package org.fao.geonet.apps.common;
+package org.fao.gast.gui.panels.config.dbms;
 
-import java.awt.Component;
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Vector;
-import javax.swing.JOptionPane;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import org.dlib.gui.FlexLayout;
+import org.fao.gast.lib.Lib;
 
 //==============================================================================
 
-public class Util
+public class GenericPanel extends DbmsPanel
 {
 	//---------------------------------------------------------------------------
 	//---
-	//--- Main method
+	//--- Constructor
 	//---
 	//---------------------------------------------------------------------------
 
-	public static void boot(String gnPath, String className)
+	public GenericPanel()
 	{
-		URL urls[] = getJarUrls(gnPath+"/web/WEB-INF/lib");
+		FlexLayout fl = new FlexLayout(3,4);
+		fl.setColProp(1, FlexLayout.EXPAND);
+		setLayout(fl);
 
-		if (urls == null)
-			return;
+		add("0,0", new JLabel("JDBC Driver"));
+		add("0,1", new JLabel("URL"));
+		add("0,2", new JLabel("Username"));
+		add("0,3", new JLabel("Password"));
 
-		URLClassLoader mcl = new URLClassLoader(urls);
+		add("1,0,x", txtDriver);
+		add("1,1,x", txtURL);
+		add("1,2",   txtUser);
+		add("1,3",   txtPass);
 
-		try
-		{
-			Starter starter = (Starter) Class.forName(className, true, mcl).newInstance();
-
-			starter.start(gnPath);
-		}
-		catch(Throwable e)
-		{
-			e.printStackTrace();
-			showError(e.getMessage());
-
-			while (e.getCause() != null)
-			{
-				e = e.getCause();
-				showError(e.getMessage());
-			}
-
-			//--- this line is needed to exit in case of Errors
-			//--- (not Exceptions) when the GUI is up
-
-			System.exit(-1);
-		}
-	}
-
-	//---------------------------------------------------------------------------
-
-	public static void showError(String message)
-	{
-		showError(null, message);
-	}
-
-	//---------------------------------------------------------------------------
-
-	public static void showError(Component c, String message)
-	{
-		JOptionPane.showMessageDialog(c, message, "Error", JOptionPane.ERROR_MESSAGE);
-	}
-
-	//---------------------------------------------------------------------------
-
-	public static void showInfo(String message)
-	{
-		showInfo(null, message);
-	}
-
-	//---------------------------------------------------------------------------
-
-	public static void showInfo(Component c, String message)
-	{
-		JOptionPane.showMessageDialog(c, message, "Information", JOptionPane.INFORMATION_MESSAGE);
+		add("2,0", new JLabel("<html><font color='red'>(REQ)</font>"));
+		add("2,1", new JLabel("<html><font color='red'>(REQ)</font>"));
 	}
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- Private methods
+	//--- DbmsPanel methods
 	//---
 	//---------------------------------------------------------------------------
 
-	private static URL[] getJarUrls(String dir)
+	public String getLabel() { return "Generic JDBC connection"; }
+
+	//---------------------------------------------------------------------------
+
+	public boolean matches(String url)
 	{
-		try
-		{
-			String jars[] = new File(dir).list();
-
-			Vector v = new Vector();
-
-			for(int i=0; i<jars.length; i++)
-				if (jars[i].endsWith(".jar"))
-					 v.addElement(jars[i]);
-
-			URL urls[] = new URL[v.size()];
-
-			for(int i=0; i<v.size(); i++)
-				urls[i] = new URL("file:" + dir + "/" + v.get(i));
-
-			return urls;
-		}
-
-		catch(MalformedURLException e)
-		{
-			showError("Malformed URL --> " + e.getMessage());
-			return null;
-		}
-
-		catch(NullPointerException e)
-		{
-			showError("Null pointer ex while scanning : " +dir);
-			return null;
-		}
+		return true;
 	}
+
+	//---------------------------------------------------------------------------
+
+	public void retrieve()
+	{
+		txtDriver.setText(Lib.config.getDbmsDriver());
+		txtURL   .setText(Lib.config.getDbmsURL());
+		txtUser  .setText(Lib.config.getDbmsUser());
+		txtPass  .setText(Lib.config.getDbmsPassword());
+	}
+
+	//---------------------------------------------------------------------------
+
+	public void save() throws Exception
+	{
+		Lib.config.setDbmsDriver  (txtDriver.getText());
+		Lib.config.setDbmsURL     (txtURL.getText());
+		Lib.config.setDbmsUser    (txtUser.getText());
+		Lib.config.setDbmsPassword(txtPass.getText());
+		Lib.config.removeActivator();
+		Lib.config.save();
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//---------------------------------------------------------------------------
+
+	private JTextField txtDriver = new JTextField();
+	private JTextField txtURL    = new JTextField();
+	private JTextField txtUser   = new JTextField(12);
+	private JTextField txtPass   = new JTextField(12);
 }
 
 //==============================================================================
-
 

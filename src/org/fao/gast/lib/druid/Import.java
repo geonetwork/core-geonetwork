@@ -6,7 +6,7 @@
 //===   This file may be distributed under the terms of the GPL license.
 //==============================================================================
 
-package org.fao.geonet.apps.setup.druid;
+package org.fao.gast.lib.druid;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -20,7 +20,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
-
 import org.dlib.tools.FullTokenizer;
 import org.dlib.tools.TVector;
 
@@ -31,13 +30,6 @@ public class Import
 	private static final int START  = 0;
 	private static final int FIELDS = 1;
 	private static final int DATA   = 2;
-
-
-	private static ResultSet rSet;
-
-	private static ResultSetMetaData rMeta;
-
-	private static int[] aColTypes;
 
 	//---------------------------------------------------------------------------
 
