@@ -19,6 +19,7 @@
 		<delete	file="migrate/lib/migration.jar" />
 		<delete	file="csw/lib/csw-client.jar" />
 		<delete	file="csw/lib/csw-common.jar" />
+		<delete	file="gast/gast.jar" />
 		<delete	dir =".build" />
 		<mkdir	dir =".build" />
 
@@ -59,6 +60,14 @@
 		<jar		jarfile ="csw/lib/csw-common.jar"
 					basedir =".build"
 					includes="org/fao/geonet/csw/common/**" />
+		
+		<jar		jarfile ="gast/gast.jar"
+					basedir =".build"
+					includes="org/fao/gast/Gast.class, org/fao/gast/boot/**">
+			<manifest>
+				<attribute name="Main-Class" value="org.fao.gast.Gast"/>
+			</manifest>
+		</jar>
 		
 		<delete dir=".build"/>
 	</target>
