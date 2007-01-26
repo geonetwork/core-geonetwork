@@ -37,8 +37,9 @@ public class Lib
 	public static GuiLib        gui  = new GuiLib();
 	public static IOLib         io   = new IOLib();
 	public static ConfigLib     config;
-	public static EmbeddedSCLib embSC;
-	public static EmbeddedDBLib embDB;
+	public static EmbeddedSCLib embeddedSC;
+	public static EmbeddedDBLib embeddedDB;
+	public static DatabaseLib   database;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -48,9 +49,10 @@ public class Lib
 
 	public static void init(String appPath) throws JDOMException, IOException
 	{
-		config = new ConfigLib(appPath);
-		embSC  = new EmbeddedSCLib (appPath);
-		embDB  = new EmbeddedDBLib (appPath);
+		config     = new ConfigLib(appPath);
+		embeddedSC = new EmbeddedSCLib (appPath);
+		embeddedDB = new EmbeddedDBLib (appPath);
+		database   = new DatabaseLib(appPath);
 	}
 }
 

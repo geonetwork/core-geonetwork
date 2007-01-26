@@ -25,7 +25,6 @@ package org.fao.geonet.kernel.csw.services;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
@@ -34,6 +33,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
+import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.jdom.Element;
@@ -95,7 +95,7 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 			Element schema   = getSchemaComponent(context, typeName);
 
 			if (typeNS == null)
-				throw new NoApplicableCodeEx("Missing 'targetNamespace' attribute", "TypeName");
+				throw new MissingParameterValueEx("targetNamespace");
 
 			if (schema != null)
 				response.addContent(schema);

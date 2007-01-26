@@ -71,7 +71,7 @@ public class EmbeddedPanel extends DbmsPanel
 
 	public void retrieve()
 	{
-		txtPort.setText(Lib.embDB.getPort());
+		txtPort.setText(Lib.embeddedDB.getPort());
 	}
 
 	//---------------------------------------------------------------------------
@@ -79,15 +79,29 @@ public class EmbeddedPanel extends DbmsPanel
 	public void save() throws Exception
 	{
 		String port = txtPort.getText();
-		String user = Lib.embDB.getUser();
-		String pass = Lib.embDB.getPassword();
+		String user = Lib.embeddedDB.getUser();
+		String pass = Lib.embeddedDB.getPassword();
 
 		if (!Lib.type.isInteger(port))
 			throw new Exception("The port must be an integer");
 
 		if (user == null || pass == null)
-			throw new Exception("The data files are missing.\n"+
-									  "Please create them using the 'database/data files' panel.");
+		{
+			//--- user & password can be null only if the data files of the
+			//--- embedded database are not there, so we create them
+
+			Lib.embeddedDB.createDB();
+
+			user = Lib.embeddedDB.getUser();
+			pass = Lib.embeddedDB.getPassword();
+
+			//--- then we store the generated account into the config.xml file
+			//--- and save it
+
+			Lib.config.setDbmsUser    (user);
+			Lib.config.setDbmsPassword(pass);
+			Lib.config.save();
+		}
 
 		Lib.config.setDbmsDriver  ("com.mckoi.JDBCDriver");
 		Lib.config.setDbmsURL     ("jdbc:mckoi://localhost:"+port+"/");
@@ -96,8 +110,8 @@ public class EmbeddedPanel extends DbmsPanel
 		Lib.config.addActivator();
 		Lib.config.save();
 
-		Lib.embDB.setPort(port);
-		Lib.embDB.save();
+		Lib.embeddedDB.setPort(port);
+		Lib.embeddedDB.save();
 	}
 
 	//---------------------------------------------------------------------------

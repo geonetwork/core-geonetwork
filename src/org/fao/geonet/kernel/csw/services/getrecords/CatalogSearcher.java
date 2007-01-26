@@ -48,6 +48,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw.TypeName;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
+import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
@@ -125,7 +126,7 @@ class CatalogSearcher
 
 	//---------------------------------------------------------------------------
 
-	private void checkForErrors(Element elem) throws NoApplicableCodeEx
+	private void checkForErrors(Element elem) throws InvalidParameterValueEx
 	{
 		List children = elem.getChildren();
 
@@ -134,7 +135,7 @@ class CatalogSearcher
 			String type = elem.getAttributeValue("type");
 			String oper = Xml.getString((Element) children.get(0));
 
-			throw new NoApplicableCodeEx(type +":"+ oper);
+			throw new InvalidParameterValueEx(type, oper);
 		}
 
 		for(int i=0; i<children.size(); i++)

@@ -25,7 +25,12 @@ package org.fao.gast.lib;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import jeeves.constants.ConfigFile;
+import jeeves.interfaces.Activator;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.resources.ProviderManager;
+import jeeves.server.resources.ResourceManager;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -80,7 +85,7 @@ public class ConfigLib
 	}
 
 	//---------------------------------------------------------------------------
-	//--- Setters
+	//--- Dbms setters
 	//---------------------------------------------------------------------------
 
 	public void setDbmsURL(String url)
@@ -110,10 +115,7 @@ public class ConfigLib
 	}
 
 	//---------------------------------------------------------------------------
-
-
-	//---------------------------------------------------------------------------
-	//--- Other
+	//--- Activator
 	//---------------------------------------------------------------------------
 
 	public void addActivator()
@@ -138,10 +140,19 @@ public class ConfigLib
 	}
 
 	//---------------------------------------------------------------------------
+	//--- Other
+	//---------------------------------------------------------------------------
 
 	public void save() throws FileNotFoundException, IOException
 	{
 		Lib.xml.save(appPath +"/web/WEB-INF/config.xml", config);
+	}
+
+	//---------------------------------------------------------------------------
+
+	public Resource createResource() throws Exception
+	{
+		return new Resource(appPath +"/web/", dbmsElem);
 	}
 
 	//---------------------------------------------------------------------------
@@ -180,4 +191,5 @@ public class ConfigLib
 }
 
 //=============================================================================
+
 

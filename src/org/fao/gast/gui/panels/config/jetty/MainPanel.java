@@ -45,8 +45,8 @@ public class MainPanel extends FormPanel
 
 	public MainPanel()
 	{
-		txtServlet.setText(Lib.embSC.getServlet());
-		txtPort   .setText(Lib.embSC.getPort());
+		txtServlet.setText(Lib.embeddedSC.getServlet());
+		txtPort   .setText(Lib.embeddedSC.getPort());
 	}
 
 	//---------------------------------------------------------------------------
@@ -68,12 +68,12 @@ public class MainPanel extends FormPanel
 			Lib.gui.showError(this, "The port must be an integer");
 		else
 		{
-			Lib.embSC.setServlet(txtServlet.getText());
-			Lib.embSC.setPort(txtPort.getText());
+			Lib.embeddedSC.setServlet(txtServlet.getText());
+			Lib.embeddedSC.setPort(txtPort.getText());
 
 			try
 			{
-				Lib.embSC.save();
+				Lib.embeddedSC.save();
 				Lib.gui.showInfo(this, "Configuration saved");
 			}
 			catch (IOException e)

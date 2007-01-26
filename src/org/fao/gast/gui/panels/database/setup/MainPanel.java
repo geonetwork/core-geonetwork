@@ -27,6 +27,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JComponent;
 import org.fao.gast.gui.panels.FormPanel;
 import org.fao.gast.lib.Lib;
+import org.fao.gast.lib.Resource;
 
 //==============================================================================
 
@@ -48,14 +49,22 @@ public class MainPanel extends FormPanel
 
 	public void actionPerformed(ActionEvent e)
 	{
+		Resource resource = null;
+
 		try
 		{
-			Lib.embDB.createDB();
-			Lib.gui.showInfo(this, "Data files created");
+			resource  = Lib.config.createResource();
+			Lib.database.setup(resource, null);
+			Lib.gui.showInfo(this, "Database setup completed");
 		}
 		catch (Exception ex)
 		{
 			Lib.gui.showError(this, ex);
+		}
+		finally
+		{
+			if (resource != null)
+				resource.close();
 		}
 	}
 }

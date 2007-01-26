@@ -92,13 +92,13 @@ public class GNDestin
 		config = Util.getConfigFile(logger, geonetDir +"web/WEB-INF/config.xml");
 
 		dbRes  = Util.getDBResource(config);
-		activ  = Util.getActivator(logger, geonetDir, dbRes);
+//		activ  = Util.getActivator(logger, geonetDir, dbRes);
 		jdbc   = dbRes.getChild(ConfigFile.Resource.Child.CONFIG);
 
 		appHand = new ServiceConfig(config.getChild(ConfigFile.Child.APP_HANDLER).getChildren());
 
-		dbms    = Util.getDbms(logger, jdbc);
-		Util.connect(logger, dbms, jdbc);
+//		dbms    = Util.getDbms(logger, jdbc);
+//		Util.connect(logger, dbms, jdbc);
 		profiles= Util.getUserProfiles(logger, geonetDir +"web/xml/user-profiles.xml");
 
 		baseURL = getBaseURL();

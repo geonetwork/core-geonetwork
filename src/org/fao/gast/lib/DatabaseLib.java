@@ -27,8 +27,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.UUID;
 import jeeves.resources.dbms.Dbms;
 import org.fao.gast.lib.druid.Import;
 
@@ -42,21 +45,11 @@ public class DatabaseLib
 	//---
 	//---------------------------------------------------------------------------
 
-	public static interface RemoveCallBack
+	public static interface CallBack
 	{
-	}
-
-	//---------------------------------------------------------------------------
-
-	public static interface CreateCallBack
-	{
+		public void removed(String object, String type);
+		public void cyclicRefs(List<String> objects);
 		public void creating(String object, String type);
-	}
-
-	//---------------------------------------------------------------------------
-
-	public static interface FillCallBack
-	{
 		public void skipping(String table);
 		public void filling (String table, String file);
 	}
@@ -78,13 +71,83 @@ public class DatabaseLib
 	//---
 	//---------------------------------------------------------------------------
 
-	public void removeObjects(Dbms dbms)
+	public void setup(Resource resource, CallBack cb) throws Exception
 	{
+		Dbms dbms = (Dbms) resource.open();
+
+		removeObjects(dbms, cb);
+		createSchema (dbms, cb);
+		fillTables   (dbms, cb);
+		setupSite(dbms);
 	}
 
 	//---------------------------------------------------------------------------
 
-	public void createSchema(Dbms dbms, CreateCallBack cb)
+	public void removeObjects(Dbms dbms, CallBack cb)
+									 throws FileNotFoundException, IOException, SQLException
+	{
+		List<String> schema = loadSchemaFile(dbms.getURL());
+
+		//--- step 1 : collect objects to remove
+
+		ArrayList<ObjectInfo> objects = new ArrayList<ObjectInfo>();
+
+		for (String row : schema)
+			if (row.toUpperCase().startsWith("CREATE "))
+			{
+				ObjectInfo oi = new ObjectInfo();
+				oi.name = getObjectName(row);
+				oi.type = getObjectType(row);
+
+				objects.add(oi);
+			}
+
+		//--- step 2 : remove objects
+
+		while(true)
+		{
+			boolean removed = false;
+
+			for (Iterator<ObjectInfo> i=objects.iterator(); i.hasNext();)
+			{
+				ObjectInfo oi    = i.next();
+				String     query = "DROP "+ oi.type +" "+ oi.name;
+
+				if (safeExecute(dbms, query))
+				{
+					removed = true;
+					i.remove();
+
+					if (cb != null)
+						cb.removed(oi.name, oi.type);
+				}
+			}
+
+			if (objects.size() == 0)
+				return;
+
+			//--- if no object was removed then we have a cyclic loop
+
+			if (!removed)
+			{
+				if (cb != null)
+				{
+					ArrayList<String> al = new ArrayList<String>();
+
+					for (ObjectInfo oi : objects)
+						al.add(oi.name);
+
+					cb.cyclicRefs(al);
+				}
+
+				return;
+			}
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	public void createSchema(Dbms dbms, CallBack cb)
 									 throws FileNotFoundException, IOException, SQLException
 	{
 		List<String> schema = loadSchemaFile(dbms.getURL());
@@ -92,7 +155,7 @@ public class DatabaseLib
 		StringBuffer sb = new StringBuffer();
 
 		for (String row : schema)
-			if (!row.startsWith("REM") && !row.startsWith("--") && !row.equals(""))
+			if (!row.toUpperCase().startsWith("REM") && !row.startsWith("--") && !row.trim().equals(""))
 			{
 				sb.append(" ");
 				sb.append(row);
@@ -114,15 +177,15 @@ public class DatabaseLib
 
 	//---------------------------------------------------------------------------
 
-	public void fillTables(Dbms dbms, FillCallBack cb) throws FileNotFoundException, IOException, SQLException
+	public void fillTables(Dbms dbms, CallBack cb) throws FileNotFoundException, IOException, SQLException
 	{
 		List<String> schema = loadSchemaFile(dbms.getURL());
 
 		for(String row : schema)
-			if (row.startsWith("CREATE TABLE "))
+			if (row.toUpperCase().startsWith("CREATE TABLE "))
 			{
 				String table = getObjectName(row);
-				String file  = appPath +"/setup/db/"+ table +".ddf";
+				String file  = appPath +SETUP_DIR+ "/db/"+ table +".ddf";
 
 				if (!new File(file).exists())
 				{
@@ -133,6 +196,7 @@ public class DatabaseLib
 				{
 					if (cb != null)
 						cb.filling(table, file);
+
 					Import.load(dbms.getConnection(), table, file);
 				}
 			}
@@ -161,7 +225,7 @@ public class DatabaseLib
 
 		//--- load the dbms schema
 
-		return Lib.text.load(appPath +"/setup/sql/"+file);
+		return Lib.text.load(appPath +SETUP_DIR+ "/sql/"+ file);
 	}
 
 	//---------------------------------------------------------------------------
@@ -186,12 +250,62 @@ public class DatabaseLib
 	}
 
 	//---------------------------------------------------------------------------
+
+	private boolean safeExecute(Dbms dbms, String query)
+	{
+		try
+		{
+			dbms.execute(query);
+			return true;
+		}
+		catch (SQLException e)
+		{
+			return false;
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void setupSite(Dbms dbms) throws SQLException
+	{
+		String uuid    = UUID.randomUUID().toString();
+
+		//TODO: finish version
+		String version = "X.Y.Z";
+
+		dbms.execute("UPDATE Settings SET value=? WHERE name='siteId'",    uuid);
+		dbms.execute("UPDATE Settings SET value=? WHERE name='gnVersion'", version);
+		dbms.commit();
+
+		//--- rename site logo to reflect the uuid
+
+		String logoPath = appPath +"/web/images/logos";
+//TODO: the image must be copied
+		File logoSrc = new File(logoPath, "dummy.png");
+		File logoDes = new File(logoPath, uuid +".png");
+
+		logoSrc.renameTo(logoDes);
+	}
+
+	//---------------------------------------------------------------------------
 	//---
 	//--- Variables
 	//---
 	//---------------------------------------------------------------------------
 
 	private String appPath;
+
+	//---------------------------------------------------------------------------
+
+	private static final String SETUP_DIR = "/gast/setup";
+}
+
+//=============================================================================
+
+class ObjectInfo
+{
+	public String name;
+	public String type;
 }
 
 //=============================================================================
