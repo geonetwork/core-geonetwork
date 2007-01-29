@@ -23,9 +23,12 @@
 
 package org.fao.gast.gui.panels.manag.mdsync;
 
+import java.awt.event.ActionEvent;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
+import jeeves.resources.dbms.Dbms;
 import org.fao.gast.gui.panels.FormPanel;
+import org.fao.gast.lib.Lib;
+import org.fao.gast.lib.Resource;
 
 //==============================================================================
 
@@ -33,19 +36,52 @@ public class MainPanel extends FormPanel
 {
 	//---------------------------------------------------------------------------
 	//---
-	//--- Initialization
+	//--- Constructor
+	//---
+	//---------------------------------------------------------------------------
+
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- ActionListener
+	//---
+	//---------------------------------------------------------------------------
+
+	public void actionPerformed(ActionEvent e)
+	{
+		sync();
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void sync()
+	{
+		Resource resource = null;
+
+		try
+		{
+			resource  = Lib.config.createResource();
+			Lib.metadata.sync((Dbms) resource.open());
+			Lib.gui.showInfo(this, "Metadata synchronized");
+		}
+		catch (Exception e)
+		{
+			Lib.gui.showError(this, e);
+		}
+		finally
+		{
+			if (resource != null)
+				resource.close();
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Protected methods
 	//---
 	//---------------------------------------------------------------------------
 
 	protected JComponent buildInnerPanel() { return null; }
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
-
-	public void refresh() {}
 
 	//---------------------------------------------------------------------------
 	//---

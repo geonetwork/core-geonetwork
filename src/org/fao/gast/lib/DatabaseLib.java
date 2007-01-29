@@ -24,7 +24,9 @@
 package org.fao.gast.lib;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -33,7 +35,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.UUID;
 import jeeves.resources.dbms.Dbms;
+import jeeves.utils.BinaryFile;
 import org.fao.gast.lib.druid.Import;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -203,6 +207,34 @@ public class DatabaseLib
 	}
 
 	//---------------------------------------------------------------------------
+
+	public String getSetting(Dbms dbms, String path) throws SQLException
+	{
+		String query = "SELECT id, value FROM Settings WHERE parentId=? AND name=?";
+
+		StringTokenizer st = new StringTokenizer(path , "/");
+
+		int    parent = 0;
+		String value  = null;
+
+		while (st.hasMoreTokens())
+		{
+			String name = st.nextToken();
+			List   list  = dbms.select(query, parent, name).getChildren();
+
+			if (list.size() == 0)
+				return null;
+
+			Element sett = (Element) list.get(0);
+
+			parent = Integer.parseInt(sett.getChildText("id"));
+			value  = sett.getChildText("value");
+		}
+
+		return value;
+	}
+
+	//---------------------------------------------------------------------------
 	//---
 	//--- Private methods
 	//---
@@ -266,25 +298,23 @@ public class DatabaseLib
 
 	//---------------------------------------------------------------------------
 
-	private void setupSite(Dbms dbms) throws SQLException
+	private void setupSite(Dbms dbms) throws SQLException, IOException
 	{
-		String uuid    = UUID.randomUUID().toString();
+		String uuid = UUID.randomUUID().toString();
 
-		//TODO: finish version
-		String version = "X.Y.Z";
+		//--- duplicate dummy logo to reflect the uuid
 
-		dbms.execute("UPDATE Settings SET value=? WHERE name='siteId'",    uuid);
-		dbms.execute("UPDATE Settings SET value=? WHERE name='gnVersion'", version);
+		FileInputStream  is = new FileInputStream (appPath +"/gast/images/dummy.png");
+		FileOutputStream os = new FileOutputStream(appPath +"/web/images/logos/"+ uuid +".png");
+		BinaryFile.copy(is, os, true, true);
+
+		String version    = Lib.server.getVersion();
+		String subVersion = Lib.server.getSubVersion();
+
+		dbms.execute("UPDATE Settings SET value=? WHERE name='siteId'",     uuid);
+		dbms.execute("UPDATE Settings SET value=? WHERE name='version'",    version);
+		dbms.execute("UPDATE Settings SET value=? WHERE name='subVersion'", subVersion);
 		dbms.commit();
-
-		//--- rename site logo to reflect the uuid
-
-		String logoPath = appPath +"/web/images/logos";
-//TODO: the image must be copied
-		File logoSrc = new File(logoPath, "dummy.png");
-		File logoDes = new File(logoPath, uuid +".png");
-
-		logoSrc.renameTo(logoDes);
 	}
 
 	//---------------------------------------------------------------------------

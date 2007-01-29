@@ -117,16 +117,7 @@ public class EmbeddedDBLib
 		String user = Lib.text.getRandomString(8);
 		String pass = Lib.text.getRandomString(8);
 
-		//--- third : save it to a file
-
-		ArrayList<String> al = new ArrayList<String>();
-		al.add("#--- DO NOT EDIT : file automatically generated");
-		al.add("username="+ user);
-		al.add("password="+ pass);
-
-		Lib.text.save(appPath + MCKOI_ACCOUNT, al);
-
-		//--- fourth : create database files
+		//--- third : create database files
 
 		String dbPath = appPath + MCKOI_CONFIG;
 
@@ -134,6 +125,15 @@ public class EmbeddedDBLib
 		mcKoi.setConfigFile(dbPath);
 
 		mcKoi.create(user, pass);
+
+		//--- fourth : save it to a file
+
+		ArrayList<String> al = new ArrayList<String>();
+		al.add("#--- DO NOT EDIT : file automatically generated");
+		al.add("username="+ user);
+		al.add("password="+ pass);
+
+		Lib.text.save(appPath + MCKOI_ACCOUNT, al);
 	}
 
 	//---------------------------------------------------------------------------

@@ -23,41 +23,49 @@
 
 package org.fao.gast.lib;
 
-import java.io.IOException;
-import org.fao.geonet.lib.TypeLib;
-import org.jdom.JDOMException;
-
 //=============================================================================
 
-public class Lib
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+public class ServerLib
 {
-	public static XMLLib        xml    = new XMLLib();
-	public static TextLib       text   = new TextLib();
-	public static TypeLib       type   = new TypeLib();
-	public static GuiLib        gui    = new GuiLib();
-	public static IOLib         io     = new IOLib();
-	public static ConfigLib     config;
-	public static EmbeddedSCLib embeddedSC;
-	public static EmbeddedDBLib embeddedDB;
-	public static DatabaseLib   database;
-	public static MetadataLib   metadata;
-	public static ServerLib     server;
-
 	//---------------------------------------------------------------------------
 	//---
-	//--- Initialization
+	//--- Constructor
 	//---
 	//---------------------------------------------------------------------------
 
-	public static void init(String appPath) throws JDOMException, IOException
+	public ServerLib(String appPath) throws IOException
 	{
-		config     = new ConfigLib    (appPath);
-		embeddedSC = new EmbeddedSCLib(appPath);
-		embeddedDB = new EmbeddedDBLib(appPath);
-		database   = new DatabaseLib  (appPath);
-		metadata   = new MetadataLib  (appPath);
-		server     = new ServerLib    (appPath);
+		this.appPath = appPath;
+
+		FileInputStream is = new FileInputStream(appPath + SERVER_PROPS);
+		serverProps = new Properties();
+		serverProps.load(is);
+		is.close();
 	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- API methods
+	//---
+	//---------------------------------------------------------------------------
+
+	public String getVersion()    { return serverProps.getProperty("version",    "???"); }
+	public String getSubVersion() { return serverProps.getProperty("subVersion", "???"); }
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//---------------------------------------------------------------------------
+
+	private String     appPath;
+	private Properties serverProps;
+
+	private static final String SERVER_PROPS = "/web/WEB-INF/server.prop";
 }
 
 //=============================================================================

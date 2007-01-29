@@ -25,6 +25,9 @@ package org.fao.gast.lib;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -125,6 +128,13 @@ public class EmbeddedSCLib
 	public void save() throws FileNotFoundException, IOException
 	{
 		Lib.xml.save(appPath +"/bin/jetty.xml", jetty);
+
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("$SERVLET", getServlet());
+
+		List<String> lines = Lib.text.load(appPath + INDEX_SRC_FILE);
+		Lib.text.replace(lines, vars);
+		Lib.text.save(appPath + INDEX_DES_FILE, lines);
 	}
 
 	//---------------------------------------------------------------------------
@@ -138,6 +148,9 @@ public class EmbeddedSCLib
 	private Element  hostElem;
 	private Element  portElem;
 	private Element  servletElem;
+
+	private static final String INDEX_SRC_FILE = "/gast/data/index.html";
+	private static final String INDEX_DES_FILE = "/web/index.html";
 }
 
 //=============================================================================

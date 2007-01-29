@@ -33,7 +33,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.Map;
+import jeeves.utils.Util;
 
 //=============================================================================
 
@@ -163,6 +164,21 @@ public class TextLib
 		pos -= 26;
 
 		return (char) ('0' + pos);
+	}
+
+	//---------------------------------------------------------------------------
+
+	public void replace(List<String> lines, Map<String, ? extends Object> vars)
+	{
+		for (int i=0; i<lines.size(); i++)
+		{
+			String line = lines.get(i);
+
+			for (Map.Entry<String, ? extends Object> entry : vars.entrySet())
+				line = Util.replaceString(line, entry.getKey(), entry.getValue().toString());
+
+			lines.set(i, line);
+		}
 	}
 }
 
