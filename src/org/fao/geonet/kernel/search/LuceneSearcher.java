@@ -120,7 +120,7 @@ public class LuceneSearcher extends MetaSearcher
 				Document doc = _hits.doc(i);
 				String id = doc.get("_id");
 				Element md = new Element ("md");
-				
+
 				if (fast)
 				{
 					md = getMetadataFromIndex(doc, id);
@@ -129,15 +129,15 @@ public class LuceneSearcher extends MetaSearcher
 				{
 					md = gc.getDataManager().getMetadata(srvContext, id, false);
 				}
-				
+
 				// Calculate score and add it to info elem
 				Float score = _hits.score(i);
 				Element info = md.getChild (Edit.RootChild.INFO, Edit.NAMESPACE);
 				addElement(info, Edit.Info.Elem.SCORE, score.toString());
-				
+
 				response.addContent(md);
-				
-				
+
+
 			}
 		}
 		return response;
@@ -249,13 +249,15 @@ public class LuceneSearcher extends MetaSearcher
 		}
 		else if (name.equals("RangeQuery"))
 		{
-			String fld = xmlQuery.getAttributeValue("fld");
-			String lowerTxt   = xmlQuery.getAttributeValue("lowerTxt");
-			String upperTxt   = xmlQuery.getAttributeValue("upperTxt");
-			String sInclusive = xmlQuery.getAttributeValue("inclusive");
-			boolean inclusive = sInclusive  != null && !sInclusive.equals("true");
+			String  fld        = xmlQuery.getAttributeValue("fld");
+			String  lowerTxt   = xmlQuery.getAttributeValue("lowerTxt");
+			String  upperTxt   = xmlQuery.getAttributeValue("upperTxt");
+			String  sInclusive = xmlQuery.getAttributeValue("inclusive");
+			boolean inclusive  = "true".equals(sInclusive);
+
 			Term lowerTerm = (lowerTxt == null ? null : new Term(fld, lowerTxt.toLowerCase()));
 			Term upperTerm = (upperTxt == null ? null : new Term(fld, upperTxt.toLowerCase()));
+
 			return new RangeQuery(lowerTerm, upperTerm, inclusive);
 		}
 		else if (name.equals("BooleanQuery"))
