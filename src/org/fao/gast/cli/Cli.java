@@ -23,7 +23,11 @@
 
 package org.fao.gast.cli;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.fao.gast.boot.Starter;
+import org.fao.gast.cli.setup.Setup;
+import org.fao.gast.lib.Lib;
 
 //==============================================================================
 
@@ -31,7 +35,23 @@ public class Cli implements Starter
 {
 	public void start(String appPath, String args[]) throws Exception
 	{
-		// TODO
+		Lib.init(appPath);
+
+		//--- convert args into a list
+
+		List<String> al = new ArrayList<String>();
+
+		for (String arg : args)
+			al.add(arg);
+
+		String command = al.get(0);
+		al.remove(0);
+
+		if (command.equals("-setup"))
+			new Setup().exec(appPath, al);
+
+		else
+			System.out.println("Unknown command : "+ command);
 	}
 }
 

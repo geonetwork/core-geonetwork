@@ -56,7 +56,7 @@ public class XMLLib
 	{
 		FileOutputStream os = new FileOutputStream(file);
 
-		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+		XMLOutputter outputter = new XMLOutputter();
 
 		try
 		{

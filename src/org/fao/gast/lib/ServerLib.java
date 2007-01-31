@@ -23,11 +23,11 @@
 
 package org.fao.gast.lib;
 
-//=============================================================================
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+
+//=============================================================================
 
 public class ServerLib
 {
@@ -41,8 +41,9 @@ public class ServerLib
 	{
 		this.appPath = appPath;
 
-		FileInputStream is = new FileInputStream(appPath + SERVER_PROPS);
 		serverProps = new Properties();
+
+		FileInputStream is = new FileInputStream(appPath + SERVER_PROPS);
 		serverProps.load(is);
 		is.close();
 	}

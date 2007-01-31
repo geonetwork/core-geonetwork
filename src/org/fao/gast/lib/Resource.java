@@ -54,7 +54,22 @@ public class Resource
 			activ.startup(appPath, activator);
 		}
 
-		provMan.register(provider, name, config);
+		try
+		{
+			provMan.register(provider, name, config);
+		}
+		catch (Exception e)
+		{
+			//--- in case of error we have to stop the activator
+
+			provMan.end();
+
+			if (activ != null)
+				activ.shutdown();
+
+			throw e;
+		}
+
 		resMan = new ResourceManager(provMan);
 	}
 
