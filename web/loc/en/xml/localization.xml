@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<strings>
+	<entity>Entity</entity>
+	
+	<entityType>
+		<type id="groups">Groups</type>
+		<type id="categories">Categories</type>
+		<type id="operations">Operations</type>
+		<type id="regions">Regions</type>
+	</entityType>
+	
+	<srcLang>Source language</srcLang>
+	<desLang>Target language</desLang>
+	
+			<!-- Buttons -->
+	
+	<save>Save</save>
+	<refresh>Refresh</refresh>
+	
+	<!-- validator messages -->
+	
+	<validator>
+		<length>
+			<cannotBeEmpty>The field '{NAME}' cannot be empty</cannotBeEmpty>
+			<invalidMinSize>The field '{NAME}' must be at least {VALUE} character(s) long</invalidMinSize>
+			<invalidMaxSize>The field '{NAME}' must be maximum {VALUE} character(s) long</invalidMaxSize>
+		</length>		
+	</validator>
+	
+	<!-- display messages -->
+	
+	
+	<!-- tooltips -->
+	
+	<tips>
+	</tips>
+	
+</strings>
+

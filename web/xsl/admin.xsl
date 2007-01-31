@@ -113,6 +113,13 @@
 								<td class="padded"><xsl:value-of select="/root/gui/strings/systemConfigDes"/></td>
 							</tr>
 						</xsl:if>
+						
+						<xsl:if test="/root/gui/services/service/@name='localization'">
+							<tr>
+								<td class="padded"><a href="{/root/gui/locService}/localization"><xsl:value-of select="/root/gui/strings/localiz"/></a></td>
+								<td class="padded"><xsl:value-of select="/root/gui/strings/localizDes"/></td>
+							</tr>
+						</xsl:if>
 					</xsl:variable>
 					<xsl:if test="$adminServices">
 						<tr>

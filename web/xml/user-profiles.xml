@@ -16,6 +16,9 @@
 		<allow service="category.remove"/>
 		<allow service="category.update"/>
 
+		<!-- Localization -->
+		<allow service="localization"/>
+		
 		<!-- Utilities  -->
 		<allow service="util.import"/>
 		<allow service="util.ping"/>

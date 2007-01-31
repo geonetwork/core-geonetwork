@@ -54,6 +54,8 @@
 	<harvestingManDes>Add/modify/delete/start/stop harvesting tasks</harvestingManDes>
 	<systemConfig>System configuration</systemConfig>
 	<systemConfigDes>Allows to change some system's parameters</systemConfigDes>
+	<localiz>Localization</localiz>
+	<localizDes>Allows to change localized entities, like groups, categories etc...</localizDes>
 	<choose>-Choose-</choose>
 	<chooseFile>Choose the location of the file to upload</chooseFile>
 	<chooseLargeThumbnail>Choose the location of the large thumbnail file</chooseLargeThumbnail>
