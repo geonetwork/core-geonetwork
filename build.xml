@@ -15,7 +15,6 @@
 
 	<target name="compile">
 		<delete	file="web/WEB-INF/lib/geonetwork.jar" />
-		<delete	file="web/WEB-INF/lib/setup.jar" />
 		<delete	file="migrate/lib/migration.jar" />
 		<delete	file="csw/lib/csw-client.jar" />
 		<delete	file="csw/lib/csw-common.jar" />
@@ -36,14 +35,6 @@
 		<jar		jarfile ="web/WEB-INF/lib/geonetwork.jar"
 					basedir =".build"
 					includes="**" />
-		
-		<jar		jarfile ="web/WEB-INF/lib/setup.jar"
-					basedir =".build"
-					includes="org/fao/geonet/apps/setup/Boot.class,org/fao/geonet/apps/common/**">
-			<manifest>
-				<attribute name="Main-Class" value="org.fao.geonet.apps.setup.Boot"/>
-			</manifest>
-		</jar>
 		
 		<jar		jarfile ="migrate/lib/migration.jar"
 					basedir =".build"
