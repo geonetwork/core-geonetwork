@@ -86,6 +86,12 @@ public class Info implements Service
 			else if (type.equals("groups"))
 				result.addContent(Lib.local.retrieve(dbms, "Groups"));
 
+			else if (type.equals("operations"))
+				result.addContent(Lib.local.retrieve(dbms, "Operations"));
+
+			else if (type.equals("regions"))
+				result.addContent(Lib.local.retrieve(dbms, "Regions"));
+
 			else if (type.equals("knownNodes"))
 				result.addContent(getKnownNodes(dbms));
 

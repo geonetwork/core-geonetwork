@@ -31,8 +31,9 @@ function Localiz()
 
 Localiz.prototype.refresh = function()
 {
-	var entity  = this.view.getSelEntity();
+	var entity  = this.view.getSelectedEntity();
 	
+	this.view.clearEntityList();
 	this.model.getEntityList(entity, gn.wrap(this.view, this.view.setEntityList));
 }
 

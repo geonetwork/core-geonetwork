@@ -7,53 +7,68 @@
 function Model(strLoader)
 {
 	this.strLoader = strLoader;
-	
-	this.entityServ = 
-	{ 
-		groups : 'xml.',
-	};
 }
 
 //=====================================================================================
 
 Model.prototype.getEntityList = function(entity, callBack)
 {
-	this.getConfigCB = callBack;
+	this.callBack = callBack;
 	
-	gn.send('xml.config.get', '<request/>', gn.wrap(this, this.getEntityList_OK));
+	var request = 
+		'<info>'+
+		'	<type>'+entity+'</type>'+
+		'</info>';
+
+	gn.send('xml.info', request, gn.wrap(this, this.getEntityList_OK));		
 }
 
 //-------------------------------------------------------------------------------------
 
-Model.prototype.getConfig_OK = function(xml)
+Model.prototype.getEntityList_OK = function(xml)
 {
 	//--- skip the document node
 	xml = xml.firstChild;
 
 	if (xml.nodeName == 'error')
-		gn.showError(this.strLoader.getText('cannotGet'), xml);
+		gn.showError(this.strLoader.getText('cannotGetList'), xml);
 	else
 	{
-		var data =
+		var data = [];
+		var list = xml.getElementsByTagName('group');
+		
+		for (var i=0; i<list.length; i++)
+			data.push(this.convertEntity(list[i]));
+		
+		this.callBack(data);
+	}
+}
+
+//-------------------------------------------------------------------------------------
+
+Model.prototype.convertEntity = function(xml)
+{
+	var data = 
+	{
+		ID : xml.getAttribute('id')
+	};
+	
+	var node = xml.firstChild;
+	
+	while (node != null)
+	{
+		if (node.nodeType == Node.ELEMENT_NODE)
 		{
-			SITE_NAME         : gn.evalXPath(xml, 'site/name'),
-			SITE_ORGAN        : gn.evalXPath(xml, 'site/organization'),
-			SERVER_HOST       : gn.evalXPath(xml, 'server/host'),
-			SERVER_PORT       : gn.evalXPath(xml, 'server/port'),
-			INTRANET_NETWORK  : gn.evalXPath(xml, 'intranet/network'),
-			INTRANET_NETMASK  : gn.evalXPath(xml, 'intranet/netmask'),
-			Z3950_ENABLE      : gn.evalXPath(xml, 'z3950/enable'),
-			Z3950_PORT        : gn.evalXPath(xml, 'z3950/port'),
-			PROXY_USE         : gn.evalXPath(xml, 'proxy/use'),
-			PROXY_HOST        : gn.evalXPath(xml, 'proxy/host'),
-			PROXY_PORT        : gn.evalXPath(xml, 'proxy/port'),
-			FEEDBACK_EMAIL    : gn.evalXPath(xml, 'feedback/email'),
-			FEEDBACK_MAIL_HOST: gn.evalXPath(xml, 'feedback/mailServer/host'),
-			FEEDBACK_MAIL_PORT: gn.evalXPath(xml, 'feedback/mailServer/port')
+			var name = node.nodeName;
+			var value= node.textContent;
+			
+			alert(name+':'+value);
 		}
 		
-		this.getConfigCB(data);
+		node = node.nextSibling;
 	}
+	
+	return data;
 }
 
 //=====================================================================================
@@ -86,37 +101,5 @@ Model.prototype.setConfig_OK = function(xml)
 //=====================================================================================
 //=== Private methods (or, at least, they should be so...)
 //=====================================================================================
-
-Model.updateTemp = 
-'<config>'+
-'	<site>'+
-'		<name>{SITE_NAME}</name>'+
-'		<organization>{SITE_ORGAN}</organization>'+
-'	</site>'+
-'	<server>'+
-'		<host>{SERVER_HOST}</host>'+
-'		<port>{SERVER_PORT}</port>'+
-'	</server>'+
-'	<intranet>'+
-'		<network>{INTRANET_NETWORK}</network>'+
-'		<netmask>{INTRANET_NETMASK}</netmask>'+
-'	</intranet>'+
-'	<z3950>'+
-'		<enable>{Z3950_ENABLE}</enable>'+
-'		<port>{Z3950_PORT}</port>'+
-'	</z3950>'+
-'	<proxy>'+
-'		<use>{PROXY_USE}</use>'+
-'		<host>{PROXY_HOST}</host>'+
-'		<port>{PROXY_PORT}</port>'+
-'	</proxy>'+
-'	<feedback>'+
-'		<email>{FEEDBACK_EMAIL}</email>'+
-'		<mailServer>'+
-'			<host>{FEEDBACK_MAIL_HOST}</host>'+
-'			<port>{FEEDBACK_MAIL_PORT}</port>'+
-'		</mailServer>'+
-'	</feedback>'+
-'</config>';
 
 //=====================================================================================

@@ -40,11 +40,21 @@ View.prototype.getSelectedEntity = function()
 }
 
 //=====================================================================================
+
+View.prototype.clearEntityList = function()
+{
+	var ctrl = $('entity.list');
+	
+	return ctrl.options.length = 0;
+}
+
+//=====================================================================================
 //--- data is an array of maps where each map contains (id, name)
 
 View.prototype.setEntityList = function(data)
 {
 //	$('site.name')  .value = data['SITE_NAME'];
+alert('here:\n'+data);
 }
 
 

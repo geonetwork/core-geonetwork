@@ -35,7 +35,7 @@
 	</xsl:template>
 	
 	<!-- ============================================================================================= -->
-	<!-- === Panel -->
+	<!-- === Panels -->
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="panel">
@@ -53,7 +53,7 @@
 		<div style="margin-right: 4px">
 			<div style="margin-bottom: 4px">
 				<span class="padded"><xsl:value-of select="/root/gui/localiz/entity"/> </span>
-				<select class="content" size="1" name="entity.type">
+				<select class="content" size="1" id="entity.type">
 					<xsl:for-each select="/root/gui/localiz/entityType/type">
 						<option value="{@id}">
 							<xsl:value-of select="."/>
@@ -62,7 +62,7 @@
 				</select>
 			</div>
 			<div>
-				<select class="content" size="20" style="width: 100%" name="entity.list"/>
+				<select class="content" size="20" style="width: 100%" id="entity.list"/>
 			</div>
 		</div>
 	</xsl:template>
