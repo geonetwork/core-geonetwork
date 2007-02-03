@@ -18,6 +18,10 @@
 
 		<!-- Localization -->
 		<allow service="localization"/>
+		<allow service="xml.group.update"/>
+		<allow service="xml.category.update"/>
+		<allow service="xml.operation.update"/>
+		<allow service="xml.region.update"/>
 		
 		<!-- Utilities  -->
 		<allow service="util.import"/>

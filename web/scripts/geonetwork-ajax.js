@@ -59,16 +59,20 @@ gn.send = function(service, request, onSuccessFnc)
 
 		onSuccess: function(t) 
 		{
+			gn.showAjaxWait(false);
+			
 			if (onSuccessFnc)
 				onSuccessFnc(t.responseXML);
 		},
 		on404: function(t) 
 		{
+			gn.showAjaxWait(false);			
 			alert('Error 404: service "' + t.statusText + '" was not found.');
 		},
 		onFailure: function(t) 
 		{
-			//--- 
+			gn.showAjaxWait(false);
+			
 			if (t.status >= 400 && t.status <= 500)
 			{
 				if (onSuccessFnc)
@@ -79,7 +83,22 @@ gn.send = function(service, request, onSuccessFnc)
 		}
 	}
 
+	gn.showAjaxWait(true);
+		
 	new Ajax.Request(Env.locService +'/'+ service, opt);
+}
+
+//-------------------------------------------------------------------------------------
+
+gn.showAjaxWait = function(yesno)
+{
+	var waitImg = $('ajax.wait');
+	
+	if (waitImg == null)	
+		return;
+	
+	if (yesno)	waitImg.show();
+		else		waitImg.hide();
 }
 
 //=====================================================================================

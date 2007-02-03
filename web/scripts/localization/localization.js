@@ -36,20 +36,20 @@ function Localiz()
 
 Localiz.prototype.refresh = function()
 {
-	var entity = this.view.getEntityType();
+	var type = this.view.getEntityType();
 	
 	this.view.clearEntityList();
-	this.model.getEntityList(entity, gn.wrap(this, this.refresh_OK));
+	this.model.getEntityList(type, gn.wrap(this, this.refresh_OK));
 }
 
 //-------------------------------------------------------------------------------------
 
 Localiz.prototype.refresh_OK = function(data)
 {
-	var entity = this.view.getEntityType();
+	var type = this.view.getEntityType();
 	
 	//--- cache data for later use
-	this.cache[entity] = data;
+	this.cache[type] = data;
 	
 	//--- data is an array of maps where each map contains (id, name)
 
@@ -61,32 +61,54 @@ Localiz.prototype.refresh_OK = function(data)
 
 Localiz.prototype.save = function()
 {
-	if (this.view.getSelectedEntity() == null)
+	if (this.view.getSelectedIndex() == -1)
 		return;
 	
 	if (!this.view.isDataValid())
 		return;
 			
-	var data = this.view.getData();
+	var data = 
+	{
+		ID   : this.view.getSelectedID(),
+		LANG : this.view.getTargetLanguage(),
+		TEXT : this.view.getTargetText(),
+		TYPE : this.view.getEntityType()
+	};
 	
-//	this.model.setConfig(data, gn.wrap(this, this.save_OK));
+	this.model.update(data, gn.wrap(this, this.save_OK));
 }
 
 //-------------------------------------------------------------------------------------
 
 Localiz.prototype.save_OK = function()
 {
-	alert(this.strLoader.getText('saveOk'));
+	//--- save is ok. Now store the new text into cache
+	
+	var type  = this.view.getEntityType();
+	var data  = this.cache[type];
+	var index = this.view.getSelectedIndex();	
+	var lang  = this.view.getTargetLanguage();
+	var text  = this.view.getTargetText();
+	
+	data[index].label[lang] = text;
+			
+	//--- Advance on the next list item
+	
+	var index = this.view.advanceOnList();
+
+	this.view.setEntity(index == -1 ? null : data[index]);
 }
 
 //=====================================================================================
+//===
 //=== Listeners
+//===
 //=====================================================================================
 
 Localiz.prototype.entityTypeChange = function(e)
 {
-	var entity = this.view.getEntityType();
-	var data   = this.cache[entity];
+	var type = this.view.getEntityType();
+	var data = this.cache[type];
 	
 	if (data == null)
 		this.refresh();
@@ -105,14 +127,9 @@ Localiz.prototype.entityListChange = function(e)
 {
 	var type = this.view.getEntityType();
 	var data = this.cache[type];
-	var id   = this.view.getSelectedEntity();	
+	var index= this.view.getSelectedIndex();	
 	
-	for (var i=0; i<data.length; i++)
-		if (data[i].id == id)
-		{
-			this.view.setEntity(data[i]);
-			return;
-		}
+	this.view.setEntity(data[index]);
 }
 
 //=====================================================================================

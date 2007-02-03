@@ -93,6 +93,33 @@ public class LocalLib
 
 	//-----------------------------------------------------------------------------
 
+	public void update(Dbms dbms, String baseTable, int id, Element label) throws SQLException
+	{
+		List labels = label.getChildren();
+
+		for (Object lt : labels)
+		{
+			Element locText = (Element) lt;
+
+			String langId = locText.getName();
+			String value  = locText.getText();
+
+			update(dbms, baseTable, id, langId, value);
+		}
+	}
+
+	//-----------------------------------------------------------------------------
+
+	public void update(Dbms dbms, String baseTable, int id, String langId,
+							 String label) throws SQLException
+	{
+		String query = "UPDATE "+ baseTable +"Des SET label=? WHERE idDes=? AND langId=?";
+
+		dbms.execute(query, label, id, langId);
+	}
+
+	//-----------------------------------------------------------------------------
+
 	public Element retrieve(Dbms dbms, String table) throws SQLException
 	{
 		return retrieve(dbms, table, null, null);

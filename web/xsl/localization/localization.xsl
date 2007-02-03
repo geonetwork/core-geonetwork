@@ -52,14 +52,15 @@
 	<xsl:template name="entityView">
 		<div style="margin-right: 4px">
 			<div style="margin-bottom: 4px">
-				<span class="padded"><xsl:value-of select="/root/gui/localiz/entity"/> </span>
-				<select class="content" size="1" id="entity.type">
+				<span><xsl:value-of select="/root/gui/localiz/entity"/> </span>
+				<select class="content" size="1" id="entity.type" style="margin-top: 8px;">
 					<xsl:for-each select="/root/gui/localiz/entityType/type">
 						<option value="{@id}">
 							<xsl:value-of select="."/>
 						</option>
 					</xsl:for-each>
 				</select>
+				<img id="ajax.wait" src="{/root/gui/url}/images/loading.gif" alt="Loading" valign="top"/>
 			</div>
 			<div>
 				<select class="content" size="20" style="width: 200px" id="entity.list"/>

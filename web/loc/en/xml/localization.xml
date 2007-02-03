@@ -30,6 +30,7 @@
 	<!-- display messages -->
 	
 	<cannotGetList>Cannot get the entity list</cannotGetList>
+	<cannotSave>An error raised while saving information</cannotSave>
 	
 	<!-- tooltips -->
 	

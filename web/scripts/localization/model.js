@@ -100,18 +100,23 @@ Model.prototype.convertLabel = function(xml)
 
 //=====================================================================================
 
-Model.prototype.setConfig = function(data, callBack)
+Model.prototype.update = function(data, callBack)
 {
-	this.updateCB = callBack;
+	this.callBack = callBack;
 	
-	var request = gn.substitute(ConfigModel.updateTemp, data);
+	var type   = data['TYPE'];
+	var entity = Model.entities[type];
 	
-	gn.send('xml.config.set', request, gn.wrap(this, this.setConfig_OK));
+	data['ENTITY'] = entity;
+	
+	var request = gn.substitute(Model.updateTemp, data);
+	
+	gn.send('xml.'+ entity +'.update', request, gn.wrap(this, this.update_OK));
 }
 
 //-------------------------------------------------------------------------------------
 
-Model.prototype.setConfig_OK = function(xml)
+Model.prototype.update_OK = function(xml)
 {
 	//--- skip the document node
 	xml = xml.firstChild;
@@ -120,13 +125,32 @@ Model.prototype.setConfig_OK = function(xml)
 		gn.showError(this.strLoader.getText('cannotSave'), xml);
 	else
 	{
-		if (this.updateCB)
-			this.updateCB();
+		if (this.callBack)
+			this.callBack();
 	}
 }
 
 //=====================================================================================
 //=== Private methods (or, at least, they should be so...)
 //=====================================================================================
+
+Model.entities = 
+{
+	'groups'     : 'group',
+	'categories' : 'category',
+	'operations' : 'operation',
+	'regions'    : 'regions'
+};
+
+//=====================================================================================
+
+Model.updateTemp =
+'<request>'+
+'   <{ENTITY} id="{ID}">'+
+'      <label>'+
+'         <{LANG}>{TEXT}</{LANG}>'+
+'      </label>'+
+'   </{ENTITY}>'+
+'</request>';
 
 //=====================================================================================

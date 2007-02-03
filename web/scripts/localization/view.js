@@ -44,9 +44,45 @@ View.prototype.getEntityType = function()
 
 //=====================================================================================
  
-View.prototype.getSelectedEntity = function()
+View.prototype.getSelectedID = function()
 {
 	return $F('entity.list');
+}
+
+//=====================================================================================
+ 
+View.prototype.getSelectedIndex = function()
+{
+	return $('entity.list').selectedIndex;
+}
+
+//=====================================================================================
+
+View.prototype.advanceOnList = function()
+{
+	var ctrl  = $('entity.list');
+	var index = ctrl.selectedIndex +1;
+	
+	if (index >= ctrl.options.length)
+		index = -1;
+		
+	ctrl.selectedIndex = index;
+	
+	return index;
+}
+
+//=====================================================================================
+ 
+View.prototype.getTargetLanguage = function()
+{
+	return $F('lang.destin');
+}
+
+//=====================================================================================
+ 
+View.prototype.getTargetText = function()
+{
+	return $F('editor.destin');
 }
 
 //=====================================================================================
@@ -112,18 +148,6 @@ View.prototype.setEntity = function(entity)
 }
 
 //=====================================================================================
-
-View.prototype.getData = function()
-{
-	var data =
-	{
-		SITE_NAME   : $('site.name')  .value,	
-	}
-		
-	return data;
-}
-
-//=====================================================================================
 //===
 //=== Listeners
 //===
@@ -171,7 +195,7 @@ View.prototype.colorUpdate = function()
 	var newValue = $F('editor.destin');
 	
 	if (oldValue == newValue)	$('editor.destin').style.background = '#FFFFFF';
-		else							$('editor.destin').style.background = '#FFFFA0';
+		else							$('editor.destin').style.background = '#FFFFB0';
 }
 
 //=====================================================================================
