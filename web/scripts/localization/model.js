@@ -34,8 +34,11 @@ Model.prototype.getEntityList_OK = function(xml)
 		gn.showError(this.strLoader.getText('cannotGetList'), xml);
 	else
 	{
+		//--- now xml = container
+		xml = gn.children(xml)[0];
+		             
 		var data = [];
-		var list = xml.getElementsByTagName('group');
+		var list = gn.children(xml);
 		
 		for (var i=0; i<list.length; i++)
 			data.push(this.convertEntity(list[i]));
@@ -50,7 +53,7 @@ Model.prototype.convertEntity = function(xml)
 {
 	var data = 
 	{
-		ID : xml.getAttribute('id')
+		id : xml.getAttribute('id')
 	};
 	
 	var node = xml.firstChild;
@@ -62,7 +65,31 @@ Model.prototype.convertEntity = function(xml)
 			var name = node.nodeName;
 			var value= node.textContent;
 			
-			alert(name+':'+value);
+			if (name == 'label')	data[name] = this.convertLabel(node);
+				else					data[name] = value;
+		}
+		
+		node = node.nextSibling;
+	}
+	
+	return data;
+}
+
+//-------------------------------------------------------------------------------------
+
+Model.prototype.convertLabel = function(xml)
+{
+	var data = {};	
+	var node = xml.firstChild;
+	
+	while (node != null)
+	{
+		if (node.nodeType == Node.ELEMENT_NODE)
+		{
+			var name = node.nodeName;
+			var value= node.textContent;
+			
+			data[name] = value;
 		}
 		
 		node = node.nextSibling;

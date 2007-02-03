@@ -179,6 +179,26 @@ gn.visit = function(node, callBack)
 
 //=====================================================================================
 
+gn.children = function(xml)
+{
+	var result = [];
+	
+	if (xml != null)
+		xml = xml.firstChild;
+		
+	while (xml != null)
+	{
+		if (xml.nodeType == Node.ELEMENT_NODE)
+			result.push(xml);
+			
+		xml = xml.nextSibling;
+	}
+	
+	return result;
+}
+
+//=====================================================================================
+
 gn.evalXPath = function(xmlNode, xpath)
 {
 	var names = xpath.split('/');
