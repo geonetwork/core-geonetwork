@@ -200,6 +200,9 @@ public class MainUtil
 				elServer.addContent(new Element(Geonet.SearchResult.SERVER).addContent(elSrv.getText()));
 			}
 		}
+
+		srvContext.info("Returning search data");
+
 		return elData;
 	}
 
