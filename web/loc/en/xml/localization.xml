@@ -22,14 +22,14 @@
 	
 	<validator>
 		<length>
-			<cannotBeEmpty>The field '{NAME}' cannot be empty</cannotBeEmpty>
-			<invalidMinSize>The field '{NAME}' must be at least {VALUE} character(s) long</invalidMinSize>
-			<invalidMaxSize>The field '{NAME}' must be maximum {VALUE} character(s) long</invalidMaxSize>
+			<cannotBeEmpty>The localized text cannot be empty</cannotBeEmpty>
+			<invalidMaxSize>The localized text must be maximum {VALUE} character(s) long</invalidMaxSize>
 		</length>		
 	</validator>
 	
 	<!-- display messages -->
 	
+	<cannotGetList>Cannot get the entity list</cannotGetList>
 	
 	<!-- tooltips -->
 	

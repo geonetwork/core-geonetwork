@@ -62,7 +62,7 @@
 				</select>
 			</div>
 			<div>
-				<select class="content" size="20" style="width: 100%" id="entity.list"/>
+				<select class="content" size="20" style="width: 200px" id="entity.list"/>
 			</div>
 		</div>
 	</xsl:template>
@@ -74,7 +74,7 @@
 			<div>
 				<div style="margin-bottom: 4px">
 					<span class="padded"><xsl:value-of select="/root/gui/localiz/srcLang"/></span>
-					<select class="content" size="1" name="lang.source">
+					<select class="content" size="1" id="lang.source">
 						<xsl:for-each select="/root/gui/languages/record">
 							<option value="{id}">
 								<xsl:value-of select="name"/>
@@ -83,14 +83,14 @@
 					</select>
 				</div>
 				<div>
-					<textarea style="width: 100%" readonly="true" class="content" name="editor.source" cols="60" rows="8" wrap="soft"/>
+					<textarea style="width: 100%" readonly="true" class="content" id="editor.source" cols="60" rows="8" wrap="soft"/>
 				</div>
 			</div>
 			<p/>
 			<div>
 				<div style="margin-bottom: 4px">
 					<span class="padded"><xsl:value-of select="/root/gui/localiz/desLang"/></span>
-					<select class="content" size="1" name="lang.destin">
+					<select class="content" size="1" id="lang.destin">
 						<xsl:for-each select="/root/gui/languages/record">
 							<option value="{id}">
 								<xsl:value-of select="name"/>
@@ -99,7 +99,7 @@
 					</select>
 				</div>
 				<div>
-					<textarea class="content" name="editor.destin" cols="60" rows="8" wrap="soft"/>
+					<textarea class="content" id="editor.destin" cols="60" rows="8" wrap="soft"/>
 				</div>
 			</div>		
 		</div>
@@ -114,11 +114,11 @@
 			<xsl:value-of select="/root/gui/strings/back"/>
 		</button>
 		&#160;
-		<button class="content" onclick="config.save()">
+		<button id="btn.save" class="content">
 			<xsl:value-of select="/root/gui/localiz/save"/>
 		</button>
 		&#160;
-		<button class="content" onclick="config.refresh()">
+		<button id="btn.refresh" class="content">
 			<xsl:value-of select="/root/gui/localiz/refresh"/>
 		</button>
 	</xsl:template>
