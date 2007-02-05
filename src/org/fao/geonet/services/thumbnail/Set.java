@@ -27,6 +27,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import jeeves.interfaces.Service;
@@ -34,6 +35,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+import lizard.tiff.Tiff;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -47,9 +49,6 @@ import org.jdom.Element;
 
 public class Set implements Service
 {
-	private static final String IMAGE_TYPE   = "png";
-	private static final String SMALL_SUFFIX = "_s";
-
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -202,7 +201,7 @@ public class Set implements Service
 	private void createThumbnail(String inFile, String outFile, int scalingFactor,
 										  String scalingDir) throws IOException
 	{
-		BufferedImage origImg = ImageIO.read(new File(inFile));
+		BufferedImage origImg = getImage(inFile);
 
 		int imgWidth  = origImg.getWidth();
 		int imgHeight = origImg.getHeight();
@@ -244,6 +243,55 @@ public class Set implements Service
 		return small 	? file + SMALL_SUFFIX +"."+ IMAGE_TYPE
 							: file +"."+ IMAGE_TYPE;
 	}
+
+	//--------------------------------------------------------------------------
+
+	public BufferedImage getImage(String inFile) throws IOException
+	{
+		String lcFile = inFile.toLowerCase();
+
+		if (lcFile.endsWith(".tif") || lcFile.endsWith(".tiff"))
+		{
+			//--- load the TIFF/GEOTIFF file format
+
+			Image image = getTiffImage(inFile);
+
+			int width = image.getWidth(null);
+			int height= image.getHeight(null);
+
+			BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+			Graphics2D g = bimg.createGraphics();
+			g.drawImage(image, 0,0, null);
+			g.dispose();
+
+			return bimg;
+		}
+
+		return ImageIO.read(new File(inFile));
+	}
+
+	//--------------------------------------------------------------------------
+
+	private Image getTiffImage(String inFile) throws IOException
+	{
+		Tiff t = new Tiff();
+		t.readInputStream(new FileInputStream(inFile));
+
+		if (t.getPageCount() == 0)
+			throw new IOException("No images inside TIFF file");
+
+		return t.getImage(0);
+	}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//--------------------------------------------------------------------------
+
+	private static final String IMAGE_TYPE   = "png";
+	private static final String SMALL_SUFFIX = "_s";
+
 }
 
 //=============================================================================
