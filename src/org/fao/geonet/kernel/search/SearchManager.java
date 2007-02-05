@@ -168,13 +168,13 @@ public class SearchManager
 		delete("_id", id);
 
 		Element xmlDoc;
-		
+
 		// check for subtemplates
 		if (isTemplate.equals("s"))
 		{
 			// create empty document with only title  and "any" fields
 			xmlDoc = new Element("Document");
-			
+
 			StringBuffer sb = new StringBuffer();
 			allText(metadata, sb);
 			addField(xmlDoc, "title", title,           true, true, true);
@@ -184,11 +184,11 @@ public class SearchManager
 		{
 			// get metadata fields
 			String stylesheetName = type + ".xsl";
-	
+
 			Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n"+ Xml.getString(metadata));
-	
+
 			xmlDoc = transform(stylesheetName, metadata);
-	
+
 			Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n"+ Xml.getString(xmlDoc));
 		}
 		// add _id field
@@ -200,8 +200,9 @@ public class SearchManager
 			Element field = (Element)iter.next();
 			xmlDoc.addContent(field);
 		}
-		System.out.println("LUCENE DOCUMENT:\n" + Xml.getString(xmlDoc)); // DEBUG
-		
+
+		Log.debug(Geonet.INDEX_ENGINE, "Lucene document:\n"+ Xml.getString(xmlDoc));
+
 		Document doc = newDocument(xmlDoc);
 		IndexWriter writer = new IndexWriter(_luceneDir, new StandardAnalyzer(new String[] {}), false);
 		try
@@ -214,7 +215,7 @@ public class SearchManager
 			writer.close();
 		}
 	}
-	
+
 	// creates a new field
 	private void addField(Element xmlDoc, String name, String value, boolean store, boolean index, boolean token)
 	{
@@ -226,7 +227,7 @@ public class SearchManager
 		field.setAttribute("token",  token+"");
 		xmlDoc.addContent(field);
 	}
-	
+
 	// perform a preorder visit and returns all text in metadata elements
 	private void allText(Element metadata, StringBuffer sb)
 	{
@@ -243,7 +244,7 @@ public class SearchManager
 				allText((Element)i.next(), sb);
 		}
 	}
-	
+
 	//--------------------------------------------------------------------------------
 	//  delete a document
 
