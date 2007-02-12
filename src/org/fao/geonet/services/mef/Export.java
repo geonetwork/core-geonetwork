@@ -73,7 +73,7 @@ public class Export implements Service
 			Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
 		}
 
-		String file = MEFLib.export(context, uuid, format);
+		String file = MEFLib.doExport(context, uuid, format);
 
 		return BinaryFile.encode(200, file, uuid +".mef", true);
 	}

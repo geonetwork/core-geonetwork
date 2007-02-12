@@ -51,7 +51,7 @@
 		<allow service="xml.harvesting.run"/>
 
 		<!-- MEF facilities -->
-		<allow service="xml.mef.import"/>
+		<allow service="mef.import"/>
 
 		<allow service="config"/>
 		<allow service="xml.config.get"/>
@@ -179,7 +179,6 @@
 		<allow service="file.disclaimer"/>
 		<allow service="feedback.download.insert"/>
 		<allow service="resources.get"/>
-		<allow service="resources.get2"/>
 
 		<!-- Get metadata from external application -->
 		<allow service="external.getmetadata"/>
@@ -218,7 +217,7 @@
 		<allow service="csw"/>
 
 		<!-- MEF facilities -->
-		<allow service="xml.mef.export"/>
+		<allow service="mef.export"/>
 	</profile>
 
 	<!-- ====================================================================== -->

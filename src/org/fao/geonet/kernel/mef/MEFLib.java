@@ -42,9 +42,16 @@ public class MEFLib
 	//---
 	//--------------------------------------------------------------------------
 
-	public static String export(ServiceContext context, String uuid, String format) throws Exception
+	public static int doImport(ServiceContext context, File mefFile) throws Exception
 	{
-		return Exporter.export(context, uuid, Format.parse(format));
+		return Importer.doImport(context, mefFile);
+	}
+
+	//--------------------------------------------------------------------------
+
+	public static String doExport(ServiceContext context, String uuid, String format) throws Exception
+	{
+		return Exporter.doExport(context, uuid, Format.parse(format));
 	}
 
 	//--------------------------------------------------------------------------

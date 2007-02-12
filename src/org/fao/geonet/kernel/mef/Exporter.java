@@ -60,7 +60,7 @@ class Exporter
 	//---
 	//--------------------------------------------------------------------------
 
-	public static String export(ServiceContext context, String uuid, Format format) throws Exception
+	public static String doExport(ServiceContext context, String uuid, Format format) throws Exception
 	{
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
@@ -68,6 +68,11 @@ class Exporter
 
 		String id     = record.getChildText("id");
 		String data   = record.getChildText("data");
+		String isTemp = record.getChildText("istemplate");
+
+		if (!"y".equals(isTemp) && !"n".equals(isTemp))
+			throw new Exception("Cannot export sub template");
+
 		File   file   = File.createTempFile("mef-", ".mef");
 		String pubDir = Lib.resource.getDir(context, "public",  id);
 		String priDir = Lib.resource.getDir(context, "private", id);
@@ -204,7 +209,7 @@ class Exporter
 		String id         = md.getChildText("id");
 		String uuid       = md.getChildText("uuid");
 		String schema     = md.getChildText("schemaid");
-		String isTemplate = md.getChildText("istemplate");
+		String isTemplate = md.getChildText("istemplate").equals("y") ? "true" : "false";
 		String createDate = md.getChildText("createdate");
 		String changeDate = md.getChildText("changedate");
 		String siteId     = md.getChildText("source");

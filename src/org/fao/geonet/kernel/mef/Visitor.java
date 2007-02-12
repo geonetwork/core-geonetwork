@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import jeeves.exceptions.BadFormatEx;
@@ -47,13 +48,13 @@ public class Visitor
 
 	public static void visit(File mefFile, MEFVisitor v) throws Exception
 	{
-		handleXml(mefFile, v);
-		handleBin(mefFile, v);
+		Element info = handleXml(mefFile, v);
+		handleBin(mefFile, v, info);
 	}
 
 	//--------------------------------------------------------------------------
 
-	private static void handleXml(File mefFile, MEFVisitor v) throws Exception
+	private static Element handleXml(File mefFile, MEFVisitor v) throws Exception
 	{
 		ZipInputStream    zis = new ZipInputStream(new FileInputStream(mefFile));
 		InputStreamBridge isb = new InputStreamBridge(zis);
@@ -91,14 +92,19 @@ public class Visitor
 
 		v.handleMetadata(md);
 		v.handleInfo(info);
+
+		return info;
 	}
 
 	//--------------------------------------------------------------------------
 
-	private static void handleBin(File mefFile, MEFVisitor v) throws IOException
+	private static void handleBin(File mefFile, MEFVisitor v, Element info) throws Exception
 	{
 		ZipInputStream    zis = new ZipInputStream(new FileInputStream(mefFile));
 		InputStreamBridge isb = new InputStreamBridge(zis);
+
+		List pubFiles = info.getChild("public") .getChildren();
+		List prvFiles = info.getChild("private").getChildren();
 
 		ZipEntry entry;
 
@@ -110,10 +116,10 @@ public class Visitor
 				String simpleName = new File(fullName).getName();
 
 				if (fullName.startsWith(DIR_PUBLIC) && !fullName.equals(DIR_PUBLIC))
-					v.handlePublicFile(simpleName, isb);
+					v.handlePublicFile(simpleName, getChangeDate(pubFiles, simpleName), isb);
 
 				else if (fullName.equals(DIR_PRIVATE) && !fullName.equals(DIR_PRIVATE))
-					v.handlePrivateFile(simpleName, isb);
+					v.handlePrivateFile(simpleName, getChangeDate(prvFiles, simpleName), isb);
 
 				zis.closeEntry();
 			}
@@ -122,6 +128,23 @@ public class Visitor
 		{
 			safeClose(zis);
 		}
+	}
+
+	//--------------------------------------------------------------------------
+
+	private static String getChangeDate(List files, String fileName) throws Exception
+	{
+		for (Object f : files)
+		{
+			Element file = (Element) f;
+			String  name = file.getAttributeValue("name");
+			String  date = file.getAttributeValue("changeDate");
+
+			if (name.equals(fileName))
+				return date;
+		}
+
+		throw new Exception("File not found in info.xml : "+ fileName);
 	}
 
 	//--------------------------------------------------------------------------

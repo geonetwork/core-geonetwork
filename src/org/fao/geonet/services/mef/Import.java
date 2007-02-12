@@ -23,9 +23,12 @@
 
 package org.fao.geonet.services.mef;
 
+import java.io.File;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.jdom.Element;
 
 //=============================================================================
@@ -42,7 +45,17 @@ public class Import implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		return new Element("ok");
+		String mefFile   = Util.getParam(params, "mefFile");
+		String uploadDir = context.getUploadDir();
+
+		int id = MEFLib.doImport(context, new File(uploadDir, mefFile));
+
+		//--- return success with the metadata id
+
+		Element result = new Element("ok");
+		result.setText(id +"");
+
+		return result;
 	}
 }
 
