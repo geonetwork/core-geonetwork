@@ -122,6 +122,13 @@ public class DataManager
 
 	public void indexMetadata(Dbms dbms, String id) throws Exception
 	{
+		indexMetadata(dbms, id, searchMan);
+	}
+
+	//--------------------------------------------------------------------------
+
+	public static void indexMetadata(Dbms dbms, String id, SearchManager sm) throws Exception
+	{
 		Vector moreFields = new Vector();
 
 		// get metadata table fields
@@ -175,12 +182,14 @@ public class DataManager
 
 			moreFields.add(makeField("_cat", categoryName, true, true, false));
 		}
-		searchMan.index(schema, md, id, moreFields, isTemplate, title);
+
+		sm.index(schema, md, id, moreFields, isTemplate, title);
 	}
 
 	//--------------------------------------------------------------------------
 
-	private Element makeField(String name, String value, boolean store, boolean index, boolean token)
+	private static Element makeField(String name, String value, boolean store,
+												boolean index, boolean token)
 	{
 		Element field = new Element("Field");
 
@@ -396,7 +405,6 @@ public class DataManager
 											  String uuid, String sourceUri) throws Exception
 	{
 		//--- Note: we cannot index metadata here. Indexing is done in the harvesting part
-		//---       (MetadataSync)
 
 		return XmlSerializer.insert(dbms, schema, md, id, source, uuid, createDate,
 											 changeDate, sourceUri);
@@ -413,17 +421,19 @@ public class DataManager
 	{
 		return insertMetadata(dbms, schema, groupId, xml, sf, source, uuid, "n", null);
 	}
-	
+
+	//--------------------------------------------------------------------------
+
 	public String insertMetadata(Dbms dbms, String schema, String groupId, Element xml,
 										  SerialFactory sf, String source, String uuid, String isTemplate, String title) throws Exception
 	{
 		//--- generate a new metadata id
 		int serial = sf.getSerial(dbms, "Metadata");
-		
+
 		if (isTemplate.equals("n"))
 			xml = updateFixedInfo(schema, Integer.toString(serial), xml, uuid, source);
 		//System.out.println("AFTER:\n"+Xml.getString(xml));
-		
+
 		//--- store metadata
 
 		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid, isTemplate, title);
@@ -557,7 +567,7 @@ public class DataManager
 				// or element
 				Element orChild = new Element(childName, el.getNamespace());
 				child.addContent(orChild);
-	
+
 				//--- add mandatory sub-tags
 				editLib.fillElement(schema, orChild);
 			}
@@ -1136,12 +1146,12 @@ public class DataManager
 	private Element updateFixedInfo(String schema, String id, Element md, Dbms dbms) throws Exception
 	{
 		System.out.println("#### id = " + id); // DEBUG
-		
+
 		Element rec = dbms.select("SELECT uuid, source, isTemplate FROM Metadata WHERE id = " + id).getChild("record");
 		String isTemplate = rec.getChildText("istemplate");
-		
+
 		System.out.println("#### - isTemplate = " + isTemplate); // DEBUG
-		
+
 		// don't process templates
 		if (isTemplate.equals("n"))
 		{
