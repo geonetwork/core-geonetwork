@@ -201,9 +201,23 @@ public class Geonet
 	public static final String DATA_MANAGER = GEONETWORK + ".datamanager";
 	public static final String SEARCH_ENGINE= GEONETWORK + ".search";
 	public static final String INDEX_ENGINE = GEONETWORK + ".index";
+	public static final String MEF          = GEONETWORK + ".mef";
 	public static final String CSW          = GEONETWORK + ".csw";
 
 	public static final String CSW_SEARCH   = CSW + ".search";
+
+	//--------------------------------------------------------------------------
+	//--- services
+
+	public class Service
+	{
+		public static final String XML_LOGIN  = "xml.user.login";
+		public static final String XML_LOGOUT = "xml.user.logout";
+		public static final String XML_INFO   = "xml.info";
+		public static final String XML_SEARCH = "xml.search";
+		public static final String MEF_IMPORT = "mef.import";
+		public static final String MEF_EXPORT = "mef.export";
+	}
 }
 
 //=============================================================================

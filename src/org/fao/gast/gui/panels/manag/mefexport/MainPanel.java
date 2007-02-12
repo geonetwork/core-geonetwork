@@ -23,19 +23,20 @@
 
 package org.fao.gast.gui.panels.manag.mefexport;
 
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import jeeves.resources.dbms.Dbms;
 import org.dlib.gui.FlexLayout;
+import org.dlib.gui.GuiUtil;
+import org.dlib.gui.ProgressDialog;
 import org.fao.gast.gui.panels.FormPanel;
-import org.fao.gast.lib.Lib;
-import org.fao.gast.lib.Resource;
 
 //==============================================================================
 
@@ -49,8 +50,8 @@ public class MainPanel extends FormPanel
 
 	public MainPanel()
 	{
-		txtPath.setText(System.getProperty("user.home", ""));
-		jfcBrowser.setDialogTitle("Choose destination folder");
+		txtOutDir.setText(System.getProperty("user.home", ""));
+		jfcBrowser.setDialogTitle("Choose output folder");
 		jfcBrowser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 	}
 
@@ -75,26 +76,26 @@ public class MainPanel extends FormPanel
 
 	private void browse()
 	{
-		jfcBrowser.setSelectedFile(new File(txtPath.getText()));
+		jfcBrowser.setSelectedFile(new File(txtOutDir.getText()));
 
 		int res = jfcBrowser.showDialog(this, "Choose");
 
 		if (res == JFileChooser.APPROVE_OPTION)
-			txtPath.setText(jfcBrowser.getSelectedFile().getAbsolutePath());
+			txtOutDir.setText(jfcBrowser.getSelectedFile().getAbsolutePath());
 	}
 
 	//---------------------------------------------------------------------------
 
 	private void export()
 	{
-		try
-		{
-			Lib.gui.showInfo(this, "Metadata exported with success");
-		}
-		catch (Exception e)
-		{
-			Lib.gui.showError(this, e);
-		}
+		Frame          owner  = GuiUtil.getFrame(this);
+		ProgressDialog dialog = new ProgressDialog(owner, "Exporting data");
+		Worker         worker = new Worker(dialog, panSearch);
+
+		worker.setOutDir(txtOutDir.getText());
+		worker.setFormat(cmbFormat.getSelectedItem().toString().toLowerCase());
+
+		dialog.run(worker);
 	}
 
 	//---------------------------------------------------------------------------
@@ -107,16 +108,25 @@ public class MainPanel extends FormPanel
 	{
 		JPanel p = new JPanel();
 
-		FlexLayout fl = new FlexLayout(3,1);
+		FlexLayout fl = new FlexLayout(3,3);
 		fl.setColProp(1, FlexLayout.EXPAND);
 		p.setLayout(fl);
 
-		p.add("0,0",   new JLabel("Destin. dir"));
-		p.add("1,0,x", txtPath);
+		p.add("0,0",   new JLabel("Output folder"));
+		p.add("1,0,x", txtOutDir);
 		p.add("2,0",   btnBrowse);
+
+		p.add("0,1", new JLabel("Format"));
+		p.add("1,1", cmbFormat);
+
+		p.add("0,2,x,c,3,1", panSearch);
 
 		btnBrowse.addActionListener(this);
 		btnBrowse.setActionCommand("browse");
+
+		cmbFormat.addItem("Simple");
+		cmbFormat.addItem("Partial");
+		cmbFormat.addItem("Full");
 
 		return p;
 	}
@@ -127,10 +137,11 @@ public class MainPanel extends FormPanel
 	//---
 	//---------------------------------------------------------------------------
 
-	private JTextField   txtPath    = new JTextField(20);
+	private JTextField   txtOutDir  = new JTextField(20);
 	private JButton      btnBrowse  = new JButton("Browse");
+	private JComboBox    cmbFormat  = new JComboBox();
 	private JFileChooser jfcBrowser = new JFileChooser();
-
+	private SearchPanel  panSearch  = new SearchPanel();
 }
 
 //==============================================================================
