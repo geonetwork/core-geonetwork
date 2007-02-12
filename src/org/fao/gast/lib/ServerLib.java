@@ -54,6 +54,7 @@ public class ServerLib
 	//---
 	//---------------------------------------------------------------------------
 
+	public String getAppPath()    { return appPath; }
 	public String getVersion()    { return serverProps.getProperty("version",    "???"); }
 	public String getSubVersion() { return serverProps.getProperty("subVersion", "???"); }
 

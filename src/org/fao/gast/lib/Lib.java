@@ -23,9 +23,7 @@
 
 package org.fao.gast.lib;
 
-import java.io.IOException;
 import org.fao.geonet.lib.TypeLib;
-import org.jdom.JDOMException;
 
 //=============================================================================
 
@@ -36,6 +34,7 @@ public class Lib
 	public static TypeLib       type   = new TypeLib();
 	public static GuiLib        gui    = new GuiLib();
 	public static IOLib         io     = new IOLib();
+	public static ServiceLib    service= new ServiceLib();
 	public static ConfigLib     config;
 	public static EmbeddedSCLib embeddedSC;
 	public static EmbeddedDBLib embeddedDB;
@@ -49,7 +48,7 @@ public class Lib
 	//---
 	//---------------------------------------------------------------------------
 
-	public static void init(String appPath) throws JDOMException, IOException
+	public static void init(String appPath) throws Exception
 	{
 		config     = new ConfigLib    (appPath);
 		embeddedSC = new EmbeddedSCLib(appPath);

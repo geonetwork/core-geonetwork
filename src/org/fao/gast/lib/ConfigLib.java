@@ -25,12 +25,8 @@ package org.fao.gast.lib;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.SQLException;
 import jeeves.constants.ConfigFile;
-import jeeves.interfaces.Activator;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.resources.ProviderManager;
-import jeeves.server.resources.ResourceManager;
+import org.fao.geonet.constants.Geonet;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -49,8 +45,9 @@ public class ConfigLib
 	{
 		this.appPath = appPath;
 
-		config   = Lib.xml.load(appPath +"/web/WEB-INF/config.xml");
-		dbmsElem = retrieveDbms(config);
+		config      = Lib.xml.load(appPath +"/web/WEB-INF/config.xml");
+		dbmsElem    = retrieveDbms(config);
+		appHandElem = config.getRootElement().getChild(ConfigFile.Child.APP_HANDLER);
 	}
 
 	//---------------------------------------------------------------------------
@@ -82,6 +79,13 @@ public class ConfigLib
 	public String getDbmsPassword()
 	{
 		return dbmsElem.getChild(ConfigFile.Resource.Child.CONFIG).getChildText("password");
+	}
+
+	//---------------------------------------------------------------------------
+
+	public String getLuceneDir()
+	{
+		return appHandElem.getChildText(Geonet.Config.LUCENE_DIR);
 	}
 
 	//---------------------------------------------------------------------------
@@ -188,6 +192,7 @@ public class ConfigLib
 	private String   appPath;
 	private Document config;
 	private Element  dbmsElem;
+	private Element  appHandElem;
 }
 
 //=============================================================================

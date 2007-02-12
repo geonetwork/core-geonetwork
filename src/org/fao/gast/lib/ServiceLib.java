@@ -23,13 +23,12 @@
 
 package org.fao.gast.lib;
 
-import java.awt.Component;
-import javax.swing.JOptionPane;
-import jeeves.exceptions.JeevesException;
+import jeeves.utils.Xml;
+import org.jdom.Element;
 
 //=============================================================================
 
-public class GuiLib
+public class ServiceLib
 {
 	//---------------------------------------------------------------------------
 	//---
@@ -37,39 +36,23 @@ public class GuiLib
 	//---
 	//---------------------------------------------------------------------------
 
-	public void showError(Component c, Throwable t)
+	public void checkError(Element response) throws Exception
 	{
-		String title   = t.getClass().getSimpleName();
-		String message = t.getMessage();
+		if (!response.getName().equals("error"))
+			return;
 
-		if (message == null || message.length() == 0)
-			message = "<no message>";
+		System.out.println("*** Error is:\n"+ Xml.getString(response));
 
-		if (t instanceof JeevesException)
-		{
-			Object obj = ((JeevesException) t).getObject();
+		String id = response.getAttributeValue("id");
+		String msg= response.getChildText("message");
 
-			if (obj != null)
-				message += "\n\n"+ obj.toString();
-		}
+		if (id.equals("service-not-allowed"))
+			throw new Exception("You need to authenticate");
 
-		JOptionPane.showMessageDialog(c, message, title, JOptionPane.ERROR_MESSAGE);
-		t.printStackTrace();
-	}
+		if (id.equals("user-login"))
+			throw new Exception("Invalid username/password");
 
-	//---------------------------------------------------------------------------
-
-	public void showError(Component c, String message)
-	{
-
-		JOptionPane.showMessageDialog(c, message, "Error", JOptionPane.ERROR_MESSAGE);
-	}
-
-	//---------------------------------------------------------------------------
-
-	public void showInfo(Component c, String message)
-	{
-		JOptionPane.showMessageDialog(c, message, "Information", JOptionPane.INFORMATION_MESSAGE);
+		throw new Exception(msg);
 	}
 }
 
