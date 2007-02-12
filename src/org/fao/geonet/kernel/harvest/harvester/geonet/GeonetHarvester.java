@@ -50,8 +50,6 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.jdom.Element;
 
-import static org.fao.geonet.kernel.harvest.harvester.geonet.GeonetConsts.*;
-
 //=============================================================================
 
 public class GeonetHarvester extends AbstractHarvester
@@ -334,7 +332,7 @@ public class GeonetHarvester extends AbstractHarvester
 		{
 			log.info("Login into : "+ getName());
 
-			req.setAddress("/"+ params.servlet +"/srv/en/"+ SERVICE_LOGIN);
+			req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_LOGIN);
 			req.addParam("username", params.username);
 			req.addParam("password", params.password);
 
@@ -348,7 +346,7 @@ public class GeonetHarvester extends AbstractHarvester
 
 		log.info("Retrieving info on categories and groups from : "+ getName());
 
-		req.setAddress("/"+ params.servlet +"/srv/en/"+ SERVICE_INFO);
+		req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_INFO);
 		req.clearParams();
 		req.addParam("type", "site");
 		req.addParam("type", "categories");
@@ -371,7 +369,7 @@ public class GeonetHarvester extends AbstractHarvester
 		{
 			log.info("Searching on : "+ getName() +"/"+ s.siteId);
 
-			req.setAddress("/"+ params.servlet +"/srv/en/"+ SERVICE_SEARCH);
+			req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_SEARCH);
 
 			Element searchResult = req.execute(s.createRequest());
 
@@ -391,7 +389,7 @@ public class GeonetHarvester extends AbstractHarvester
 			log.info("Logout from : "+ getName());
 
 			req.clearParams();
-			req.setAddress("/"+ params.servlet +"/srv/en/"+ SERVICE_LOGOUT);
+			req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_LOGOUT);
 		}
 
 		updateKnownNodes(log, dbms, remoteInfo);
@@ -410,7 +408,7 @@ public class GeonetHarvester extends AbstractHarvester
 
 		XmlRequest req = new XmlRequest(params.host, params.port);
 
-		req.setAddress("/"+ params.servlet +"/srv/en/"+ SERVICE_INFO);
+		req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_INFO);
 		req.clearParams();
 		req.addParam("type", "site");
 		req.addParam("type", "knownNodes");

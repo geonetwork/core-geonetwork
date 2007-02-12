@@ -38,6 +38,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -48,8 +49,6 @@ import org.fao.geonet.kernel.mef.MEFVisitor;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
-
-import static org.fao.geonet.kernel.harvest.harvester.geonet.GeonetConsts.*;
 
 //=============================================================================
 
@@ -232,26 +231,28 @@ public class Aligner
 
 			//--------------------------------------------------------------------
 
-			public void handleInfo(Element md) throws Exception
+			public void handleInfo(Element info) throws Exception
 			{
-				addCategories(id[0], md.getChild("categories"));
-				addPrivileges(id[0], md.getChild("privileges"));
+				addCategories(id[0], info.getChild("categories"));
+				addPrivileges(id[0], info.getChild("privileges"));
 			}
 
 			//--------------------------------------------------------------------
 
-			public void handlePublicFile(String file, InputStream is) throws IOException
+			public void handlePublicFile(String file, String changeDate, InputStream is) throws IOException
 			{
 				log.debug("    - Adding remote public file with name="+ file);
 				String pubDir = Lib.resource.getDir(context, "public", id[0]);
 
-				FileOutputStream os = new FileOutputStream(new File(pubDir, file));
+				File outFile = new File(pubDir, file);
+				FileOutputStream os = new FileOutputStream(outFile);
 				BinaryFile.copy(is, os, false, true);
+				outFile.setLastModified(new ISODate(changeDate).getSeconds() * 1000);
 			}
 
 			//--------------------------------------------------------------------
 
-			public void handlePrivateFile(String file, InputStream is) throws IOException {}
+			public void handlePrivateFile(String file, String changeDate, InputStream is) {}
 		});
 
 		return id[0];
@@ -425,14 +426,14 @@ public class Aligner
 
 				//-----------------------------------------------------------------
 
-				public void handlePublicFile(String file, InputStream is) throws IOException
+				public void handlePublicFile(String file, String changeDate, InputStream is) throws IOException
 				{
-					updateFile(id, file, is, thumbs[0]);
+					updateFile(id, file, changeDate, is, thumbs[0]);
 				}
 
 				//-----------------------------------------------------------------
 
-				public void handlePrivateFile(String file, InputStream is) {}
+				public void handlePrivateFile(String file, String changeDate, InputStream is) {}
 			});
 		}
 	}
@@ -661,7 +662,7 @@ public class Aligner
 	//--- Public file update methods
 	//--------------------------------------------------------------------------
 
-	private void updateFile(String id, String file, InputStream is,
+	private void updateFile(String id, String file, String changeDate, InputStream is,
 									Element files) throws IOException
 	{
 		if (files == null)
@@ -669,7 +670,7 @@ public class Aligner
 		else
 		{
 			removeOldFile(id, files);
-			updateChangedFile(id, file, is, files);
+			updateChangedFile(id, file, changeDate, is);
 		}
 	}
 
@@ -712,42 +713,27 @@ public class Aligner
 
 	//--------------------------------------------------------------------------
 
-	private void updateChangedFile(String id, String file, InputStream is,
-											 Element files) throws IOException
+	private void updateChangedFile(String id, String file, String changeDate,
+											 InputStream is) throws IOException
 	{
 		String pubDir  = Lib.resource.getDir(context, "public", id);
 		File   locFile = new File(pubDir, file);
 
-		List list = files.getChildren("file");
+		ISODate locIsoDate = new ISODate(locFile.lastModified());
+		ISODate remIsoDate = new ISODate(changeDate);
 
-		for (int i=0; i<list.size(); i++)
+		if (!locFile.exists() || remIsoDate.sub(locIsoDate) > 0)
 		{
-			Element elem = (Element) list.get(i);
-			String  name = elem.getAttributeValue("name");
-			String  date = elem.getAttributeValue("changeDate");
+			log.debug("  - Adding remote public file with name="+ file);
 
-			if (file.equals(name))
-			{
-				ISODate locIsoDate = new ISODate(locFile.lastModified());
-				ISODate remIsoDate = new ISODate(date);
-
-				if (!locFile.exists() || remIsoDate.sub(locIsoDate) > 0)
-				{
-					log.debug("  - Adding remote public file with name="+ file);
-
-					FileOutputStream os = new FileOutputStream(locFile);
-					BinaryFile.copy(is, os, false, true);
-				}
-				else
-				{
-					log.debug("  - Nothing to do to public file with name="+ file);
-				}
-
-				return;
-			}
+			FileOutputStream os = new FileOutputStream(locFile);
+			BinaryFile.copy(is, os, false, true);
+			locFile.setLastModified(remIsoDate.getSeconds() * 1000);
 		}
-
-		log.debug("  - Public file not found inside info.xml (possible race) : "+ file);
+		else
+		{
+			log.debug("  - Nothing to do to public file with name="+ file);
+		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -779,7 +765,7 @@ public class Aligner
 		req.addParam("uuid",   uuid);
 		req.addParam("format", "partial");
 
-		req.setAddress("/"+ params.servlet +"/srv/en/"+ SERVICE_MEF_EXPORT);
+		req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.MEF_EXPORT);
 
 		File tempFile = File.createTempFile("temp-", ".dat");
 		req.executeLarge(tempFile);
