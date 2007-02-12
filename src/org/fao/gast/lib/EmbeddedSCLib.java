@@ -98,7 +98,8 @@ public class EmbeddedSCLib
 
 	public String getServlet()
 	{
-		return (servletElem == null) ? null : servletElem.getText();
+		//--- we have to skip the initial '/'
+		return (servletElem == null) ? null : servletElem.getText().substring(1);
 	}
 
 	//---------------------------------------------------------------------------
@@ -120,7 +121,7 @@ public class EmbeddedSCLib
 	public void setServlet(String name)
 	{
 		if (servletElem != null)
-			servletElem.setText(name);
+			servletElem.setText("/"+name);
 	}
 
 	//---------------------------------------------------------------------------
