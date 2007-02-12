@@ -178,14 +178,6 @@
 				<WildcardQuery fld="any" txt="*"/>
 			</BooleanClause>
 
-			<!-- if we have a spatial query, we have to make a fix -->
-
-			<xsl:if test="ogc:BBOX">
-				<BooleanClause required="false" prohibited="true">
-					<TermQuery fld="northBL" txt="NaN"/>
-				</BooleanClause>
-			</xsl:if>
-
 			<xsl:for-each select="*">
 				<BooleanClause required="false" prohibited="true">
 					<xsl:apply-templates select="." />
