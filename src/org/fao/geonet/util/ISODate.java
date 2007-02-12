@@ -144,6 +144,19 @@ public class ISODate
 	}
 
 	//---------------------------------------------------------------------------
+
+	public long getSeconds()
+	{
+		synchronized(calendar)
+		{
+			calendar.clear();
+   	   calendar.set(year, month -1, day, hour, min, sec);
+
+			return calendar.getTimeInMillis() / 1000;
+		}
+	}
+
+	//---------------------------------------------------------------------------
 	//---
 	//--- Private methods
 	//---
@@ -155,19 +168,6 @@ public class ISODate
 			return Integer.toString(value);
 
 		return "0"+ value;
-	}
-
-	//---------------------------------------------------------------------------
-
-	private long getSeconds()
-	{
-		synchronized(calendar)
-		{
-			calendar.clear();
-   	   calendar.set(year, month -1, day, hour, min, sec);
-
-			return calendar.getTimeInMillis() / 1000;
-		}
 	}
 }
 
