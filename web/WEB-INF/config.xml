@@ -643,13 +643,13 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- MEF services -->
 
-		<service name="xml.mef.import">
+		<service name="mef.import">
 			<class name=".services.mef.Import"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.mef.export">
+		<service name="mef.export">
 			<class name=".services.mef.Export"/>
 
 			<output file="true"/>
