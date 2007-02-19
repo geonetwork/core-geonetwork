@@ -48,7 +48,7 @@ public class MetadataLib
 	{
 		this.appPath = appPath;
 
-		searchMan = new SearchManager(appPath, Lib.config.getLuceneDir());
+//		searchMan = new SearchManager(appPath +"/web/", Lib.config.getLuceneDir());
 	}
 
 	//---------------------------------------------------------------------------
