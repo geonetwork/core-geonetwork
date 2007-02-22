@@ -1,0 +1,42 @@
+List of bugs, issues to be resolved & todo list
+
+Bugs:
+- XML Metadata insert form requires a template "title" even for regular metadata. 
+  Without a title the import fails.
+	Proposed resolution: title field is not displayed when Metadata is selected in the 
+	drop down. In Insert.java the title parameter will be validated depending on the 
+	isTemplate parameter.
+-	XML Metadata insert using ISO19139 only works when the gmd: prefix is used for 
+  ISO19115 elements. The current import conversion from 19115 to 19139 does not 
+  create output that includes these prefixes. The related XSLTs need updating.
+	
+Issues:
+- A big issue is the backward compatibility of the harvesting. v2.1 does not harvest
+  nodes of v2.0. This can not be. Even if less optimal harvesting, this should remain 
+  possible when upgrading.
+
+- Sample metadata does not have:
+	- thumbnails
+	- online resources (requires InterMap integration too)
+	- code list issues with ISO19139 metadata
+	
+- The Back button's behavior in the administration services should be verified as at 
+  least a number of them should bring the user back to the administration page and 
+  not back into the editing forms for instance. User and Group management are among 
+  these.
+
+- The Check for ISO19139 fails.
+
+- General error handling seems to be missing. Raw Java errors are displayed in case 
+  of a session time out for instance
+  
+To do:
+- in metadata.show.xsl & search-results.xsl the href does not point to baseURL yet of
+  the resource yet.
+  
+- Revisit the help.xml, links.xml and about.xml to verify and update (a.o. links & 
+  some of the translations))
+ 
+- Further improve help through the use of DHTML tooltips and AJAX request to server
+ 
+- Integrated version with InterMap opensource
