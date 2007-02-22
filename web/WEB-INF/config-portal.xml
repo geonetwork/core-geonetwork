@@ -10,6 +10,7 @@
 			<class name=".services.main.Search">
 				<param name="maxSummaryKeys" value="10" />
 			</class>
+			<call name="sources" class=".guiservices.util.Sources"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -17,7 +18,9 @@
 		<service name="portal.present">
 			<class name=".services.main.Result"/>
 
-			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8"/>
+			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8">
+				<call name="sources" class=".guiservices.util.Sources"/>
+			</output>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -30,7 +33,9 @@
 				<param name="range" value="all" />
 			</class>
 
-			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8"/>
+			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8">
+				<call name="sources" class=".guiservices.util.Sources"/>
+			</output>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -38,7 +43,9 @@
 		<service name="portal.full">
 			<class name=".services.main.Result"/>
 
-			<output sheet="portal-full.xsl" contentType="text/xml; charset=UTF-8"/>
+			<output sheet="portal-full.xsl" contentType="text/xml; charset=UTF-8">
+				<call name="sources" class=".guiservices.util.Sources"/>
+			</output>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -49,6 +56,7 @@
 					<param name="maxItems"           value="5" />
 					<param name="timeBetweenUpdates" value="10" />
 				</call>
+				<call name="sources" class=".guiservices.util.Sources"/>
 			</output>
 		</service>
 
@@ -60,7 +68,9 @@
 				<param name="timeBetweenUpdates" value="10" />
 			</class>
 
-			<output sheet="portal-featured.xsl" contentType="text/xml; charset=UTF-8"/>
+			<output sheet="portal-featured.xsl" contentType="text/xml; charset=UTF-8">
+				<call name="sources" class=".guiservices.util.Sources"/>
+			</output>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

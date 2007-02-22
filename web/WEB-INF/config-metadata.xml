@@ -7,15 +7,6 @@
 		<!-- Metadata services                                             -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.xmlinsert.form">
-			<output sheet="metadata-insert-form.xsl">
-				<call name="groups"  class=".guiservices.groups.GetMine"/>
-				<call name="schemas" class=".guiservices.schemas.Get"/>
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
 		<service name="metadata.insert">
 			<class name=".services.metadata.Insert"/>
 
@@ -226,6 +217,17 @@
 			<class name=".services.metadata.UpdateCategories"/>
 
 			<output forward="metadata.show" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="metadata.xmlinsert.form">
+			<output sheet="metadata-insert-form.xsl">
+				<call name="groups"  class=".guiservices.groups.GetMine"/>
+				<call name="schemas" class=".guiservices.schemas.Get"/>
+				<call name="categories"        class=".services.category.List"/>
+				<call name="importStyleSheets" class=".guiservices.util.GetImportXSLs"/>
+			</output>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

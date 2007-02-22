@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-
+<?xml version="1.0" encoding="UTF-8"?>
 <geonet>
 	<!-- ====================================================================== -->
 
@@ -18,14 +17,14 @@
 		<contentType>text/html; charset=UTF-8</contentType>
 
 		<gui>
-			<xml  name="strings"     file ="xml/strings.xml" />
-			<xml  name="iso19115"    file ="xml/iso19115.xml" />
-			<xml  name="iso19139"    file ="xml/iso19139.xml" />
-		  	<xml  name="fgdc-std"    file ="xml/fgdc-std.xml" />
-			<xml  name="dublin-core" file ="xml/dublin-core.xml" />
-			<call name="session"     class="jeeves.guiservices.session.Get"/>
-			<call name="env"         class="org.fao.geonet.guiservices.util.Env"/>
-			<call name="results"     class="org.fao.geonet.guiservices.search.GetResultsInfo"/>
+			<xml name="strings" file="xml/strings.xml" />
+			<xml name="iso19115" file="xml/iso19115.xml" />
+			<xml name="iso19139" file="xml/iso19139.xml" />
+		  	<xml name="fgdc-std" file="xml/fgdc-std.xml" />
+			<xml name="dublin-core" file="xml/dublin-core.xml" />
+			<call name="session" class="jeeves.guiservices.session.Get" />
+			<call name="env" class="org.fao.geonet.guiservices.util.Env" />
+			<call name="results" class="org.fao.geonet.guiservices.search.GetResultsInfo" />
 		</gui>
 
 		<!-- service not found -->
@@ -65,16 +64,14 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.DbmsPool</provider>
 			<config>
-        <user>qbzZlRdy</user>
-        <password>Qp1PgFDy</password>
+        <user>ipXCRwNF</user>
+        <password>lYpRL4ro</password>
 				<driver>com.mckoi.JDBCDriver</driver>
-				<url>jdbc:mckoi://localhost/</url>
+				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>
 			</config>
-			<activator class="org.fao.geonet.activators.McKoiActivator">
-				<configFile>WEB-INF/db/db.conf</configFile>
-			</activator>
-		</resource>
+			
+		<activator class="org.fao.geonet.activators.McKoiActivator"><configFile>WEB-INF/db/db.conf</configFile></activator></resource>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- mysql -->
@@ -113,14 +110,14 @@
 	<!-- ====================================================================== -->
 
 	<appHandler class="org.fao.geonet.Geonetwork">
-		<param name="luceneDir"      value="WEB-INF/lucene" />
+		<param name="luceneDir" value="WEB-INF/lucene" />
 		<param name="schemaMappings" value="schema-mappings.xml" />
-		<param name="dataDir"        value="WEB-INF/data" />
+		<param name="dataDir" value="WEB-INF/data" />
 	</appHandler>
 
 	<!-- ====================================================================== -->
 
-	<schedules package="org.fao.geonet"/>
+	<schedules package="org.fao.geonet" />
 
 	<!-- ====================================================================== -->
 
@@ -128,26 +125,26 @@
 
 		<service name="main.home">
 			<output sheet="main-page.xsl">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults"/>
-				<call name="keywords"       class=".guiservices.keywords.Get"/>
-				<call name="groups"         class=".guiservices.groups.GetMine"/>
-				<call name="services"       class="jeeves.guiservices.services.Get"/>
-				<call name="categories"     class=".services.category.List"/>
-				<call name="regions"        class=".guiservices.regions.Get"/>
-				<call name="sources"        class=".guiservices.util.Sources"/>
+				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
+				<call name="keywords" class=".guiservices.keywords.Get" />
+				<call name="groups" class=".guiservices.groups.GetMine" />
+				<call name="services" class="jeeves.guiservices.services.Get" />
+				<call name="categories" class=".services.category.List" />
+				<call name="regions" class=".guiservices.regions.Get" />
+				<call name="sources" class=".guiservices.util.Sources" />
 
-				<call name="latestUpdated"  class=".guiservices.metadata.GetLatestUpdated">
-					<param name="maxItems"           value="10" />
+				<call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
+					<param name="maxItems" value="10" />
 					<param name="timeBetweenUpdates" value="10" />
 				</call>
 
-				<call name="featured"       class=".guiservices.metadata.GetRandom">
-					<param name="maxItems"           value="1" />
+				<call name="featured" class=".guiservices.metadata.GetRandom">
+					<param name="maxItems" value="1" />
 					<param name="timeBetweenUpdates" value="10" />
 				</call>
 
-				<xml name="repositories"   file ="xml/repositories.xml"    localized="false" />
-				<xml name="searchProfiles" file ="xml/search-profiles.xml" localized="false" />
+				<xml name="repositories" file="xml/repositories.xml" localized="false" />
+				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
 			</output>
 		</service>
 
@@ -158,7 +155,7 @@
 				<param name="maxSummaryKeys" value="10" />
 			</class>
 
-			<output forward="main.present"/>
+			<output forward="main.present" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -169,11 +166,11 @@
 			</class>
 
 			<output sheet="search-results.xsl">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults"/>
-				<call name="groups"         class=".guiservices.groups.GetMine"/>
-				<call name="sources"        class=".guiservices.util.Sources"/>
-				<call name="services"       class="jeeves.guiservices.services.Get"/>
-				<xml  name="repositories"   file ="xml/repositories.xml" localized="false" />
+				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
+				<call name="groups" class=".guiservices.groups.GetMine" />
+				<call name="sources" class=".guiservices.util.Sources" />
+				<call name="services" class="jeeves.guiservices.services.Get" />
+				<xml name="repositories" file="xml/repositories.xml" localized="false" />
 			</output>
 		</service>
 
@@ -185,17 +182,17 @@
 			</class>
 
 			<output sheet="remote-show.xsl">
-				<call name="services"     class="jeeves.guiservices.services.Get"/>
-				<call name="currTab"      class=".guiservices.util.GetCurrentMDTab"/>
-				<xml  name="isoLang"      file ="xml/iso-languages.xml" />
-				<xml  name="repositories" file ="xml/repositories.xml" localized="false" />
+				<call name="services" class="jeeves.guiservices.services.Get" />
+				<call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
+				<xml name="isoLang" file="xml/iso-languages.xml" />
+				<xml name="repositories" file="xml/repositories.xml" localized="false" />
 			</output>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="feedback">
-			<output sheet="feedback.xsl"/>
+			<output sheet="feedback.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -219,7 +216,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="feedback.insert">
-			<class name=".services.feedback.Insert"/>
+			<class name=".services.feedback.Insert" />
 
 			<output sheet="info.xsl">
 				<xml name="info" file="xml/feedback-sent.xml" />
@@ -231,13 +228,13 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="util.ping">
-			<class name="jeeves.services.Ping"/>
+			<class name="jeeves.services.Ping" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="util.import">
-			<class name=".services.metadata.ImportFromDir"/>
+			<class name=".services.metadata.ImportFromDir" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -245,7 +242,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="user.list">
-			<class name=".services.user.List"/>
+			<class name=".services.user.List" />
 
 			<output sheet="user-list.xsl">
 				<xml name="strings" file="xml/confirm.xml" />
@@ -255,64 +252,64 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="user.get">
-			<class name=".services.user.Get"/>
+			<class name=".services.user.Get" />
 
 			<output sheet="user-update.xsl">
-				<call name="groups"     class = ".guiservices.groups.GetMine"/>
-				<call name="profiles"   class = "jeeves.guiservices.profiles.Get"/>
-				<xml  name="countries"  file  = "xml/countries.xml" />
+				<call name="groups" class=".guiservices.groups.GetMine" />
+				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
+				<xml name="countries" file="xml/countries.xml" />
 			</output>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="user.update">
-			<class name=".services.user.Update"/>
+			<class name=".services.user.Update" />
 			<output forward="user.list" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="user.remove">
-			<class name=".services.user.Remove"/>
+			<class name=".services.user.Remove" />
 			<output forward="user.list" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="user.pwedit">
-			<class name=".services.user.Get"/>
+			<class name=".services.user.Get" />
 
-			<output sheet="user-pwupdate.xsl"/>
+			<output sheet="user-pwupdate.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="user.pwupdate">
-			<class name=".services.user.PwUpdate"/>
+			<class name=".services.user.PwUpdate" />
 
 			<output sheet="info.xsl">
-				<xml  name="info"    file="xml/password-changed.xml" />
+				<xml name="info" file="xml/password-changed.xml" />
 			</output>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="user.infoedit">
-			<class name=".services.user.Get"/>
+			<class name=".services.user.Get" />
 
 			<output sheet="user-infoupdate.xsl">
-				<xml  name="countries"  file  = "xml/countries.xml" />
+				<xml name="countries" file="xml/countries.xml" />
 			</output>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="user.infoupdate">
-			<class name=".services.user.InfoUpdate"/>
+			<class name=".services.user.InfoUpdate" />
 
 			<output sheet="info.xsl">
-				<xml  name="info"    file="xml/info-changed.xml" />
+				<xml name="info" file="xml/info-changed.xml" />
 			</output>
 		</service>
 
@@ -321,37 +318,37 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="group.list">
-			<class name=".services.group.List"/>
+			<class name=".services.group.List" />
 
-			<output sheet="group-list.xsl"/>
+			<output sheet="group-list.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="group.get">
-			<class name=".services.group.Get"/>
+			<class name=".services.group.Get" />
 
-			<output sheet="group-update.xsl"/>
+			<output sheet="group-update.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="group.update">
-			<class name=".services.group.Update"/>
+			<class name=".services.group.Update" />
 			<output forward="group.list" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="group.remove">
-			<class name=".services.group.Remove"/>
+			<class name=".services.group.Remove" />
 			<output forward="group.list" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.group.update">
-			<class name=".services.group.XmlUpdate"/>
+			<class name=".services.group.XmlUpdate" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -359,37 +356,37 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="category.list">
-			<class name=".services.category.List"/>
+			<class name=".services.category.List" />
 
-			<output sheet="category-list.xsl"/>
+			<output sheet="category-list.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="category.get">
-			<class name=".services.category.Get"/>
+			<class name=".services.category.Get" />
 
-			<output sheet="category-update.xsl"/>
+			<output sheet="category-update.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="category.update">
-			<class name=".services.category.Update"/>
+			<class name=".services.category.Update" />
 			<output forward="category.list" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="category.remove">
-			<class name=".services.category.Remove"/>
+			<class name=".services.category.Remove" />
 			<output forward="category.list" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.category.update">
-			<class name=".services.category.XmlUpdate"/>
+			<class name=".services.category.XmlUpdate" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -397,19 +394,19 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="user.login">
-			<class name=".services.login.Login"/>
+			<class name=".services.login.Login" />
 
 			<output forward="main.home" />
 
 			<error id="user-login" sheet="error.xsl">
-				<xml  name="error"   file="xml/login-error.xml" />
+				<xml name="error" file="xml/login-error.xml" />
 			</error>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="user.logout">
-			<class name=".services.login.Logout"/>
+			<class name=".services.login.Logout" />
 			<output forward="main.home" />
 		</service>
 
@@ -419,7 +416,7 @@
 
 		<service name="admin">
 			<output sheet="admin.xsl">
-				<call name="services" class="jeeves.guiservices.services.Get"/>
+				<call name="services" class="jeeves.guiservices.services.Get" />
 			</output>
 		</service>
 
@@ -436,13 +433,13 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.config.get">
-			<class name=".services.config.Get"/>
+			<class name=".services.config.Get" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.config.set">
-			<class name=".services.config.Set"/>
+			<class name=".services.config.Set" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -459,13 +456,13 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.operation.update">
-			<class name=".services.operation.Update"/>
+			<class name=".services.operation.Update" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.region.Update">
-			<class name=".services.region.Update"/>
+			<class name=".services.region.Update" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -481,7 +478,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="help.metadata">
-			<output sheet="metadata-help.xsl"/>
+			<output sheet="metadata-help.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -495,7 +492,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="file.download">
-			<class name=".services.feedback.Insert"/>
+			<class name=".services.feedback.Insert" />
 
 			<output sheet="file-download.xsl" />
 		</service>
@@ -503,19 +500,19 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="graphover.show">
-			<output sheet="graphover-show.xsl"/>
+			<output sheet="graphover-show.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="resources.get">
-			<class name=".services.resources.Download"/>
+			<class name=".services.resources.Download" />
 
 			<error id="file-not-found" sheet="error.xsl">
 				<xml name="error" file="xml/file-not-found-error.xml" />
 			</error>
 
-			<output file="true"/>
+			<output file="true" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -542,71 +539,71 @@
 		<!-- XML services -->
 
 		<service name="xml.user.login">
-			<class name=".services.login.Login"/>
+			<class name=".services.login.Login" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.user.logout">
-			<class name=".services.login.Logout"/>
+			<class name=".services.login.Logout" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.search">
-			<class name=".services.main.XmlSearch"/>
+			<class name=".services.main.XmlSearch" />
 
-			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8"/>
+			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.metadata.get">
-			<class name=".services.metadata.Show"/>
+			<class name=".services.metadata.Show" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.info">
-			<class name=".services.main.Info"/>
+			<class name=".services.main.Info" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.forward">
-			<class name=".services.main.Forward"/>
+			<class name=".services.main.Forward" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- GeoNetwork Mapping Application XML services  -->
 
 		<service name="xml.user.list">
-			<class name=".services.user.List"/>
+			<class name=".services.user.List" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.group.list">
-			<class name=".services.group.List"/>
+			<class name=".services.group.List" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.metadata.insert">
-			<class name=".services.metadata.Insert"/>
+			<class name=".services.metadata.Insert" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.metadata.delete">
-			<class name=".services.metadata.Delete"/>
+			<class name=".services.metadata.Delete" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Catalogue Services for the Web -->
 
 		<service name="csw">
-			<class name=".services.main.CswDispatcher"/>
+			<class name=".services.main.CswDispatcher" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -614,11 +611,11 @@
 
 		<service name="rss.latest">
 			<output sheet="rss-latest.xsl" contentType="text/xml; charset=UTF-8">
-				<call name="latestUpdated"  class=".guiservices.metadata.GetLatestUpdated">
-					<param name="maxItems"           value="20" />
+				<call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
+					<param name="maxItems" value="20" />
 					<param name="timeBetweenUpdates" value="10" />
 				</call>
-				<call name="siteURL" class=".guiservices.util.GetSiteURL"/>
+				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
 			</output>
 		</service>
 
@@ -633,10 +630,10 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="rss.present">
-			<class name=".services.main.Result"/>
+			<class name=".services.main.Result" />
 
 			<output sheet="rss-search.xsl" contentType="text/xml; charset=UTF-8">
-				<call name="siteURL" class=".guiservices.util.GetSiteURL"/>
+				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
 			</output>
 		</service>
 
@@ -644,15 +641,15 @@
 		<!-- MEF services -->
 
 		<service name="mef.import">
-			<class name=".services.mef.Import"/>
+			<class name=".services.mef.Import" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="mef.export">
-			<class name=".services.mef.Export"/>
+			<class name=".services.mef.Export" />
 
-			<output file="true"/>
+			<output file="true" />
 		</service>
 	</services>
 
@@ -661,10 +658,8 @@
 	<include>config-metadata.xml</include>
 	<include>config-harvesting.xml</include>
 	<include>config-portal.xml</include>
-
+	<include>config-export.xml</include>
+	
 	<!-- ====================================================================== -->
 
 </geonet>
-
-
-
