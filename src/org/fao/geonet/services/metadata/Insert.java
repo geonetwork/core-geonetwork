@@ -50,7 +50,12 @@ public class Insert implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+    private String stylePath;
+
+	public void init(String appPath, ServiceConfig params) throws Exception
+    {
+        this.stylePath = appPath + Geonet.Path.IMPORT_STYLESHEETS;
+    }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -69,6 +74,8 @@ public class Insert implements Service
 		String schema     = Util.getParam(params, Params.SCHEMA);
 		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
 		String title      = Util.getParam(params, Params.TITLE);
+		String category = Util.getParam(params, Params.CATEGORY);
+		String style    = Util.getParam(params, Params.STYLESHEET);
 
 		boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
 
@@ -76,6 +83,10 @@ public class Insert implements Service
 		//--- add the DTD to the input xml to perform validation
 
 		Element xml = Xml.loadString(data, false);
+
+        // Apply a stylesheet transformation if requested
+        if (!style.equals("_none_"))
+            xml = Xml.transform(xml, stylePath +"/"+ style);
 
 		if (validate)
 			dataMan.validate(schema, xml);
@@ -98,6 +109,10 @@ public class Insert implements Service
 
 		String id = dataMan.insertMetadata(dbms, schema, group, xml,
 													  context.getSerialFactory(), gc.getSiteId(), uuid, isTemplate, title);
+
+        //--- Insert category if requested
+        if (!"_none_".equals(category))
+            dataMan.setCategory(dbms, id, category);
 
 		Element response = new Element(Jeeves.Elem.RESPONSE);
 		response.addContent(new Element(Params.ID).setText(id));
