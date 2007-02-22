@@ -3,15 +3,14 @@
 	<title>Links page</title>
 	<content>
 		<h3>GeoNetwork opensource Community website</h3>
-		<a target="_blank" href="http://geonetwork.sourceforge.net">The GeoNetwork opensource Community website contains documentation, tutorials, excersises etc..</a><br/>
+		<a target="_blank" href="http://geonetwork-opensource.org">The GeoNetwork opensource Community website contains documentation, tutorials, excersises etc..</a><br/>
 		<h3>GeoNetwork at FAO-UN and WFP-UN</h3>
 		<a target="_blank" href="http://www.fao.org/geonetwork">GeoNetwork at the Food and Agriculture Organization of the United Nations</a><br/>
-		<a target="_blank" href="http://vam.wfp.org/geonetwork">GeoNetwork at the The Vulnerability Analysis and Mapping (VAM) Unit from the World Food Program (WFP)</a><br/>
+		<a target="_blank" href="http://vam.wfp.org/vamsie">GeoNetwork at the The Vulnerability Analysis and Mapping (VAM) Unit from the World Food Program (WFP)</a><br/>
 		<h3>Standards and Spatial Data Infrastructures</h3>
-		<a target="_blank" href="http://www.gsdi.org/">Global Spatial Data Infrastructure (GSDI)</a>
+		<a target="_blank" href="http://www.gsdi.org/">Global Spatial Data Infrastructure (GSDI)</a><br/>
 		<a target="_blank" href="http://www.opengeospatial.org/">Open Geospatial Consortium (OGC)</a><br/>
 		<a target="_blank" href="http://www.isotc211.org/">ISO - TC211</a> Geographic information/Geomatics<br/>
-		<a target="_blank" href="http://193.43.36.138/documentation/how-to/arcimswms">Configuring ESRI OGC 1.0.0 compliant WMS connector on Tomcat 4</a><br/>
 		<h3>Geographic Metadata Standard ISO-19115 related</h3>
 		<p>
 			UNGIWG ISO 19115 metadata template draft version 1.0 <a target="_blank" href="http://www.fao.org/geonetwork/html/en/UN_ISO_19115_metadata_template_draft_version_1.0.xml','XML">(XML template with sample data)</a>

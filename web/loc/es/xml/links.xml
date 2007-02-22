@@ -3,15 +3,14 @@
 	<title>Página de enlaces</title>
 	<content>
 		<h3>GeoNetwork opensource Community website</h3>
-		<a target="_blank" href="http://geonetwork.sourceforge.net">The GeoNetwork opensource Community website contains documentation, tutorials, excersises etc..</a><br/>
+		<a target="_blank" href="http://geonetwork-opensource.org">The GeoNetwork opensource Community website contains documentation, tutorials, excersises etc..</a><br/>
 		<h3>GeoNetwork en la FAO-UN y en WFP-UN</h3>
 		<a target="_blank" href="http://www.fao.org/geonetwork">GeoNetwork en la Organización para los Alimentos y la Agricultura de las Naciones Unidas</a><br/>
-		<a target="_blank" href="http://vam.wfp.org/geonetwork">GeoNetwork en el análisis de riesgos y Mapas (VAM), unidad que forma parte del programa para Alimentos en el Mundo (WFP)</a><br/>
+		<a target="_blank" href="http://vam.wfp.org/vamsie">GeoNetwork en el análisis de riesgos y Mapas (VAM), unidad que forma parte del programa para Alimentos en el Mundo (WFP)</a><br/>
 		<h3>Estándar e Infraestructura de Datos Espaciales</h3>
-		<a target="_blank" href="http://www.gsdi.org/">Infraestructura de Datos Espaciales Global (GSDI)</a>
+		<a target="_blank" href="http://www.gsdi.org/">Infraestructura de Datos Espaciales Global (GSDI)</a><br/>
 		<a target="_blank" href="http://www.opengeospatial.org/">Open Geospatial Consortium (OGC)</a><br/>
 		<a target="_blank" href="http://www.isotc211.org/">ISO - TC211</a> Información Geográfica/Geomática<br/>
-		<a target="_blank" href="http://193.43.36.138/documentation/how-to/arcimswms">Configuring ESRI OGC 1.0.0 compliant WMS connector on Tomcat 4</a><br/>
 		<h3>Estándar de metadatos ISO-19115</h3>
 		<p>
 			Borrador 1.0 de la plantilla de metadatos ISO19115 de UNGIWG <a target="_blank" href="http://www.fao.org/geonetwork/html/en/UN_ISO_19115_metadata_template_draft_version_1.0.xml','XML">(Template XML con datos de ejemplo)</a>

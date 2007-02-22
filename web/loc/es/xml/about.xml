@@ -3,7 +3,7 @@
 	<title>About GeoNetwork opensource page</title>
 	<content>
 		<h1>About GeoNetwork opensource</h1>
-		<p>This site is powered by <a href="http://geonetwork.sourceforge.net" target="_blank">GeoNetwork opensource 2.0.2</a>
+		<p>This site is powered by <a href="http://geonetwork-opensource.org" target="_blank">GeoNetwork opensource 2.1</a>
 		</p>
 		<p>
 			<strong>GeoNetwork opensource</strong> is a standardized and decentralized spatial information management environment, designed to enable access to geo-referenced databases, cartographic products and related metadata from a variety of sources, enhancing the spatial information exchange and sharing between organizations and their audience, using the capacities of the internet. This approach of geographic information management aims at facilitating a wide community of spatial information users to have easy and timely access to available spatial data and to existing thematic maps that might support informed decision making.
@@ -34,6 +34,6 @@
 		<p>
 			<b><span lang="EN-US">GeoNetwork opensource </span></b><span lang="EN-US"> has been developed to connect spatial information communities and their data </span>using <span lang="EN-US">a modern architecture, which is at the same time powerful and low cost, based on </span>the principles of Free and Open Source Software (FOSS) and International and Open Standards for services and protocols<span lang="EN-US"> (a.o. from <a href="http://www.isotc211.org" target="_blank">ISO/TC211</a> and <a href="http://www.opengeospatial.org" target="_blank">OGC</a>).</span>
 		</p>
-		<p><a href="http://geonetwork.sourceforge.net" target="_blank">Read more ...</a></p>
+		<p><a href="http://geonetwork-opensource.org" target="_blank">Read more ...</a></p>
 	</content>
 </help>

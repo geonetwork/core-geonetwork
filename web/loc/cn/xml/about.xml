@@ -3,7 +3,7 @@
 	<title>关于GeoNetwork opensource</title>
 	<content>
 		<h1>关于GeoNetwork opensource</h1>
-		<p>本站由<a href="http://geonetwork.sourceforge.net"  target="_blank">GeoNetwork opensource 2.0.2</a> 提供支持。
+		<p>本站由<a href="http://geonetwork-opensource.org"  target="_blank">GeoNetwork opensource 2.1</a> 提供支持。
 		</p>
 		<p>
 			<strong>GeoNetwork opensource</strong> 是一个标准化的分布式空间信息管理平台，设计用于访问具有空间特征的数据库、地图产品以及相关各种来源的元数据，从而促进基于因特网的空间信息交换与共享。这种地理信息管理方式旨在便于各界用户快速查找和获取已有的空间数据和专题地图等信息资源，以用于决策支持。
@@ -34,6 +34,6 @@
 		<p>
 			<b><span lang="EN-US">GeoNetwork opensource </span></b><span lang="EN-US"> 开发用于通过先进的结构连接空间信息各界及其数据，同时具有功能强大和成本低廉的特点，以免费开源软件(FOSS)的原则为指导，基于国际开放标准实现各类服务和协议(包括 <a href="http://www.isotc211.org" target="_blank">ISO/TC211</a>和<a href="http://www.opengeospatial.org"  target="_blank">OGC</a>)</span>
 		</p>
-		<p><a  href="http://geonetwork.sourceforge.net" target="_blank">更多 ... </a></p>
+		<p><a  href="http://geonetwork-opensource.org" target="_blank">更多 ... </a></p>
 	</content>
 </help>

@@ -3,15 +3,14 @@
 	<title>相关链接</title>
 	<content>
 		<h3>GeoNetwork opensource社区网站</h3>
-		<a target="_blank" href="http://geonetwork.sourceforge.net">GeoNetwork opensource网站包括文档，使用指南以及练习等</a><br/>
+		<a target="_blank" href="http://geonetwork-opensource.org">GeoNetwork opensource网站包括文档，使用指南以及练习等</a><br/>
 		<h3>GeoNetwork at FAO-UN and WFP-UN</h3>
 		<a target="_blank" href="http://www.fao.org/geonetwork">GeoNetwork：联合国粮农组织</a><br/>
-		<a target="_blank" href="http://vam.wfp.org/geonetwork">GeoNetwork：世界粮食计划(WFP)弱点分析与制图部(VAM)</a><br/>
+		<a target="_blank" href="http://vam.wfp.org/vamsie">GeoNetwork：世界粮食计划(WFP)弱点分析与制图部(VAM)</a><br/>
 		<h3>标准与空间数据基础设施</h3>
-		<a target="_blank" href="http://www.gsdi.org/">全球空间数据基础设施(GSDI)</a>
+		<a target="_blank" href="http://www.gsdi.org/">全球空间数据基础设施(GSDI)</a><br/>
 		<a target="_blank" href="http://www.opengeospatial.org/">开放地理空间协会(OGC)</a><br/>
 		<a target="_blank" href="http://www.isotc211.org/">ISO - TC211</a> 地理信息<br/>
-		<a target="_blank" href="http://193.43.36.138/documentation/how-to/arcimswms">在Tomcat 4上配置与ESRI OGC 1.0.0一致的WMS连接器</a><br/>
 		<h3>地理信息元数据标准（ISO-19115）相关信息</h3>
 		<p>
 			UNGIWG ISO 19115元数据模板草案1.0<a target="_blank" href="http://www.fao.org/geonetwork/html/en/UN_ISO_19115_metadata_template_draft_version_1.0.xml','XML">(XML模板及实例数据)</a>
