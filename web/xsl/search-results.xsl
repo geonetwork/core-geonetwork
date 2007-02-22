@@ -105,11 +105,57 @@
 								<xsl:otherwise>
 									<td align="center" valign="middle">
 										<xsl:variable name="source" select="string($metadata/geonet:info/source)"/>
-										<xsl:if test="/root/gui/sources/record[string(siteid)=$source]">
-											<img src="{/root/gui/url}/images/logos/{$source}.png" width="40"/>
-										</xsl:if>
+										<xsl:choose>
+											<!-- //FIXME does not point to baseURL yet -->
+											<xsl:when test="/root/gui/sources/record[string(siteid)=$source]">
+												<a href="{/root/gui/sources/record[string(siteid)=$source]/baseURL}" target="_blank">
+													<img src="{/root/gui/url}/images/logos/{$source}.png" width="40"/>
+												</a>
+											</xsl:when>
+											<xsl:when test="/root/gui/env/server[string(siteId)=$source]">
+												<img src="{/root/gui/url}/images/logos/{$source}.png" width="40"/>
+											</xsl:when>
+										</xsl:choose>
 									</td>
-									<td class="padded"><h1 align="left"><a href="{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple"><xsl:value-of select="$metadata/title"/></a></h1></td>
+									<td class="padded" width="90%">
+										<h1 align="left">
+											<a href="{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple">
+												<xsl:value-of select="$metadata/title"/>
+											</a>
+										</h1>
+									</td>
+								<!-- Download XML for ISO and FGDC for use in applications like GeoNetwork or ESRI ArcCatalog -->
+									<td class="padded" align="middle" nowrap="nowrap" width="40">
+										<xsl:choose>
+											<xsl:when test="contains($metadata/geonet:info/schema,'dublin-core')">
+												<a href="{/root/gui/locService}/dc.xml?id={$metadata/geonet:info/id}" target="_blank" title="Download Dublin Core metadata in XML">
+													<img src="{/root/gui/url}/images/xml.gif" alt="Dublin Core XML" title="Save Dublin Core metadata as XML" border="0"/>
+												</a>
+											</xsl:when>
+											<xsl:when test="contains($metadata/geonet:info/schema,'fgdc-std')">
+												<a href="{/root/gui/locService}/fgdc.xml?id={$metadata/geonet:info/id}" target="_blank" title="Download FGDC metadata in XML">
+													<img src="{/root/gui/url}/images/xml.gif" alt="FGDC XML" title="Save FGDC metadata as XML" border="0"/>
+												</a>
+											</xsl:when>
+											<xsl:when test="contains($metadata/geonet:info/schema,'iso19115')">
+												<a href="{/root/gui/locService}/iso19115to19139.xml?id={$metadata/geonet:info/id}" target="_blank" title="Save ISO19115/19139 metadata as XML">
+													<img src="{/root/gui/url}/images/xml.gif" alt="IISO19115/19139 XML" title="Save ISO19115/19139 metadata as XML" border="0"/>
+												</a>
+												<a href="{/root/gui/locService}/iso_arccatalog8.xml?id={$metadata/geonet:info/id}" target="_blank" title="Download ISO19115 metadata in XML for ESRI ArcCatalog">
+													<img src="{/root/gui/url}/images/ac.gif" alt="ISO19115 XML for ArcCatalog" title="Save ISO19115 metadata in XML for ESRI ArcCatalog" border="0"/>
+												</a>
+											</xsl:when>
+											<xsl:when test="contains($metadata/geonet:info/schema,'iso19139')">
+												<a href="{/root/gui/locService}/iso19139.xml?id={$metadata/geonet:info/id}" target="_blank" title="Download ISO19115/19139 metadata in XML">
+													<img src="{/root/gui/url}/images/xml.gif" alt="ISO19115/19139 XML" title="Save ISO19115/19139 metadata as XML" border="0"/>
+												</a>
+<!-- //FIXME												<a href="{/root/gui/locService}/iso_arccatalog8.xml?id={$metadata/geonet:info/id}" target="_blank" title="Download ISO19115 metadata in XML for ESRI ArcCatalog">
+													<img src="{/root/gui/url}/images/ac.gif" alt="ISO19115 XML for ArcCatalog" title="Save ISO19115 metadata in XML for ESRI ArcCatalog" border="0"/>
+												</a> -->
+											</xsl:when>
+											
+										</xsl:choose>
+									</td>
 								</xsl:otherwise>
 							</xsl:choose>
 						</tr>
@@ -118,7 +164,7 @@
 						<xsl:if test="$metadata/abstract">
 							<tr>
 								<th class="padded" valign="top"><xsl:value-of select="/root/gui/strings/abstract"/></th>
-								<td class="padded" valign="top">
+								<td class="padded" valign="top" colspan="2">
 									<xsl:choose>
 										<xsl:when test="string-length ($metadata/abstract) &gt; $maxAbstract">
 											<xsl:value-of select="substring ($metadata/abstract, 0, $maxAbstract)"/>
@@ -147,7 +193,7 @@
 						<xsl:if test="$metadata/keyword">
 							<tr>
 								<th class="padded" valign="top"><xsl:value-of select="/root/gui/strings/keywords"/></th>
-								<td class="padded" valign="top">
+								<td class="padded" valign="top" colspan="2">
 									<xsl:for-each select="$metadata/keyword">
 										<xsl:if test="position() &gt; 1">,	</xsl:if>
 										<xsl:value-of select="."/>

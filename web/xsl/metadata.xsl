@@ -541,7 +541,7 @@
 				<a name="{$anchor}"/>
 				<xsl:choose>
 					<xsl:when test="$helpLink!=''">
-						<a href="javascript:popNew('{$helpLink}')"><xsl:value-of select="$title"/></a>
+						<a href="javascript:popNew('{$helpLink}')" style="cursor:help;"><xsl:value-of select="$title"/></a>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="$title"/>
@@ -596,7 +596,9 @@
 									<a name="{$anchor}"/>
 									<xsl:choose>
 										<xsl:when test="$helpLink!=''">
-											<a class="green-content" href="javascript:popNew('{$helpLink}')"><xsl:value-of select="$title"/></a>
+											<a class="green-content" href="javascript:popNew('{$helpLink}')" style="cursor:help;">
+												<xsl:value-of select="$title"/>
+											</a>
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:value-of select="$title"/>

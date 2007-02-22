@@ -17,18 +17,6 @@
 							<td class="padded"><textarea class="content" name="data" cols="60" rows="15"/></td>
 						</tr>
 						<tr>
-							<th class="padded"><xsl:value-of select="/root/gui/strings/group"/></th>
-							<td class="padded">
-								<select class="content" name="group" size="1">
-									<xsl:for-each select="/root/gui/groups/record">
-										<option value="{id}">
-											<xsl:value-of select="name"/>
-										</option>
-									</xsl:for-each>
-								</select>
-							</td>
-						</tr>
-						<tr>
 							<th class="padded"><xsl:value-of select="/root/gui/strings/schema"/></th>
 							<td class="padded">
 								<select class="content" name="schema" size="1">
@@ -56,6 +44,56 @@
 								<xsl:value-of select="/root/gui/strings/subtemplateTitle"/>
 								<xsl:text>&#160;</xsl:text>
 								<input class="content" type="text" name="title"/>
+							</td>
+						</tr>
+						<tr>
+							<th class="padded"><xsl:value-of select="/root/gui/strings/styleSheet"/></th>
+							<td class="padded">
+								<select class="content" name="styleSheet" size="1">
+									<option value="_none_">
+										<xsl:value-of select="/root/gui/strings/none"/>
+									</option>
+									<xsl:for-each select="/root/gui/importStyleSheets/record">
+										<option value="{id}">
+											<xsl:value-of select="name"/>
+										</option>
+									</xsl:for-each>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th class="padded"><xsl:value-of select="/root/gui/strings/group"/></th>
+							<td class="padded">
+								<select class="content" name="group" size="1">
+									<xsl:for-each select="/root/gui/groups/record">
+										<option value="{id}">
+											<xsl:value-of select="name"/>
+										</option>
+									</xsl:for-each>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th class="padded"><xsl:value-of select="/root/gui/strings/category"/></th>
+							<td class="padded">
+								<select class="content" name="category" size="1">
+									<option value="_none_">
+										<xsl:value-of select="/root/gui/strings/none"/>
+									</option>
+									<xsl:for-each select="/root/gui/categories/record">
+										<xsl:variable name="category" select="name/text()"/>
+										<xsl:variable name="categoryName" select="/root/gui/categoryNames/*[name(.)=$category]/text()"/>
+										<xsl:variable name="categoryLabel">
+											<xsl:choose>
+												<xsl:when test="$categoryName"><xsl:value-of select="$categoryName"/></xsl:when>
+												<xsl:otherwise>[<xsl:value-of select="$category"/>]</xsl:otherwise>
+											</xsl:choose>
+										</xsl:variable>
+										<option value="{id}">
+											<xsl:value-of select="$categoryLabel"/>
+										</option>
+									</xsl:for-each>
+								</select>
 							</td>
 						</tr>
 					</table>
