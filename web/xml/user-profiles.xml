@@ -204,7 +204,14 @@
 		<allow service="portal.latest.updated"/>
 		<allow service="portal.featured"/>
 		<allow service="portal.categories"/>
-
+		
+		<!-- Metadata export services -->
+		<allow service="dc.xml"/>
+		<allow service="fgdc.xml"/>
+		<allow service="iso19115to19139.xml"/>
+		<allow service="iso19139.xml"/>
+		<allow service="iso_arccatalog8.xml"/>
+		
 		<!-- RSS services -->
 		<allow service="rss.latest"/>
 		<allow service="rss.search"/>
