@@ -40,3 +40,5 @@ To do:
 - Further improve help through the use of DHTML tooltips and AJAX request to server
  
 - Integrated version with InterMap opensource
+
+- Set logging options to OFF before creating final release
