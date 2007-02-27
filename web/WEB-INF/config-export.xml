@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<geonet>
+	<services package="org.fao.geonet">
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Metadata export services -->
+		
+		<service name="dc.xml">
+			<class name=".services.metadata.Show" />
+			<output sheet="conversion/export/xml_dc.xsl" contentType="text/xml; charset=UTF-8"/>
+			<error id="access" sheet="error-form.xsl">
+				<xml name="privError" file="xml/privileges-error.xml" />
+			</error>
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="fgdc.xml">
+			<class name=".services.metadata.Show" />
+			<output sheet="conversion/export/xml_fgdc.xsl" contentType="text/xml; charset=UTF-8"/>
+			<error id="access" sheet="error-form.xsl">
+				<xml name="privError" file="xml/privileges-error.xml" />
+			</error>
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="iso19115to19139.xml">
+			<class name=".services.metadata.Show" />
+			<output sheet="conversion/export/xml_iso19115_to_19139.xsl" contentType="text/xml; charset=UTF-8"/>
+			<error id="access" sheet="error-form.xsl">
+				<xml name="privError" file="xml/privileges-error.xml" />
+			</error>
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="iso19139.xml">
+			<class name=".services.metadata.Show" />
+			<output sheet="conversion/export/xml_iso19139.xsl" contentType="text/xml; charset=UTF-8"/>
+			<error id="access" sheet="error-form.xsl">
+				<xml name="privError" file="xml/privileges-error.xml" />
+			</error>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="iso_arccatalog8.xml">
+			<class name=".services.metadata.Show" />
+			<output sheet="conversion/export/xml_iso19115arccatalog.xsl" contentType="text/xml; charset=UTF-8"/>
+			<error id="access" sheet="error-form.xsl">
+				<xml name="privError" file="xml/privileges-error.xml" />
+			</error>
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	</services>
+</geonet>
+
