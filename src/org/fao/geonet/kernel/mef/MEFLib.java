@@ -49,9 +49,10 @@ public class MEFLib
 
 	//--------------------------------------------------------------------------
 
-	public static String doExport(ServiceContext context, String uuid, String format) throws Exception
+	public static String doExport(ServiceContext context, String uuid, String format,
+											boolean skipUUID) throws Exception
 	{
-		return Exporter.doExport(context, uuid, Format.parse(format));
+		return Exporter.doExport(context, uuid, Format.parse(format), skipUUID);
 	}
 
 	//--------------------------------------------------------------------------

@@ -60,8 +60,9 @@ public class Worker implements Runnable
 	//---
 	//---------------------------------------------------------------------------
 
-	public void setOutDir(String dir)    { this.outDir = dir;    }
-	public void setFormat(String format) { this.format = format; }
+	public void setOutDir  (String  dir)    { this.outDir   = dir;    }
+	public void setFormat  (String  format) { this.format   = format; }
+	public void setSkipUuid(boolean yesno)  { this.skipUuid = yesno;  }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -207,8 +208,9 @@ public class Worker implements Runnable
 	//---
 	//---------------------------------------------------------------------------
 
-	private String outDir;
-	private String format;
+	private String  outDir;
+	private String  format;
+	private boolean skipUuid;
 
 	private ProgressDialog dlg;
 	private SearchPanel    panSearch;

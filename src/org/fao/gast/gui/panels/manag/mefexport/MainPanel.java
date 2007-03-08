@@ -27,6 +27,7 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -94,6 +95,7 @@ public class MainPanel extends FormPanel
 
 		worker.setOutDir(txtOutDir.getText());
 		worker.setFormat(cmbFormat.getSelectedItem().toString().toLowerCase());
+		worker.setSkipUuid(chbSkipUuid.isSelected());
 
 		dialog.run(worker);
 	}
@@ -108,7 +110,7 @@ public class MainPanel extends FormPanel
 	{
 		JPanel p = new JPanel();
 
-		FlexLayout fl = new FlexLayout(3,3);
+		FlexLayout fl = new FlexLayout(3,4);
 		fl.setColProp(1, FlexLayout.EXPAND);
 		p.setLayout(fl);
 
@@ -119,7 +121,10 @@ public class MainPanel extends FormPanel
 		p.add("0,1", new JLabel("Format"));
 		p.add("1,1", cmbFormat);
 
-		p.add("0,2,x,c,3,1", panSearch);
+		p.add("0,2", new JLabel("Skip UUID"));
+		p.add("1,2", chbSkipUuid);
+
+		p.add("0,3,x,c,3,1", panSearch);
 
 		btnBrowse.addActionListener(this);
 		btnBrowse.setActionCommand("browse");
@@ -140,6 +145,7 @@ public class MainPanel extends FormPanel
 	private JTextField   txtOutDir  = new JTextField(20);
 	private JButton      btnBrowse  = new JButton("Browse");
 	private JComboBox    cmbFormat  = new JComboBox();
+	private JCheckBox    chbSkipUuid= new JCheckBox();
 	private JFileChooser jfcBrowser = new JFileChooser();
 	private SearchPanel  panSearch  = new SearchPanel();
 }

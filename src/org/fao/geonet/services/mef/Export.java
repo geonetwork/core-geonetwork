@@ -57,9 +57,10 @@ public class Export implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		String uuid   = Util.getParam(params, "uuid");
-		String id     = dm.getMetadataId(dbms, uuid);
-		String format = Util.getParam(params, "format");
+		String uuid    = Util.getParam(params, "uuid");
+		String id      = dm.getMetadataId(dbms, uuid);
+		String format  = Util.getParam(params, "format");
+		String skipUUID= Util.getParam(params, "skipUuid", "true");
 
 		if (id == null)
 			throw new MetadataNotFoundEx("uuid="+uuid);
@@ -73,7 +74,7 @@ public class Export implements Service
 			Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
 		}
 
-		String file = MEFLib.doExport(context, uuid, format);
+		String file = MEFLib.doExport(context, uuid, format, skipUUID.equals("true"));
 
 		return BinaryFile.encode(200, file, uuid +".mef", true);
 	}

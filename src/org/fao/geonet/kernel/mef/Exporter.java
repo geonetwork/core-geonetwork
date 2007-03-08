@@ -33,6 +33,7 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -40,8 +41,10 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Xml;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.ISODate;
@@ -60,7 +63,8 @@ class Exporter
 	//---
 	//--------------------------------------------------------------------------
 
-	public static String doExport(ServiceContext context, String uuid, Format format) throws Exception
+	public static String doExport(ServiceContext context, String uuid, Format format,
+											boolean skipUUID) throws Exception
 	{
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
@@ -96,7 +100,7 @@ class Exporter
 
 		//--- save info file
 
-		binData = buildInfoFile(dbms, record, format, pubDir, priDir).getBytes("UTF-8");
+		binData = buildInfoFile(context, record, format, pubDir, priDir, skipUUID).getBytes("UTF-8");
 
 		addFile(zos, FILE_INFO, new ByteArrayInputStream(binData));
 
@@ -186,15 +190,18 @@ class Exporter
 	//---
 	//--------------------------------------------------------------------------
 
-	private static String buildInfoFile(Dbms dbms, Element md, Format format,
-													String pubDir, String priDir) throws SQLException
+	private static String buildInfoFile(ServiceContext context, Element md, Format format,
+													String pubDir, String priDir, boolean skipUUID)
+													throws Exception
 	{
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
 		Element info = new Element("info");
 		info.setAttribute("version", VERSION);
 
-		info.addContent(buildInfoGeneral(md, format));
+		info.addContent(buildInfoGeneral(md, format, skipUUID));
 		info.addContent(buildInfoCategories(dbms, md));
-		info.addContent(buildInfoPrivileges(dbms, md));
+		info.addContent(buildInfoPrivileges(context, md));
 
 		info.addContent(buildInfoFiles("public",  pubDir));
 		info.addContent(buildInfoFiles("private", priDir));
@@ -204,7 +211,7 @@ class Exporter
 
 	//--------------------------------------------------------------------------
 
-	private static Element buildInfoGeneral(Element md, Format format)
+	private static Element buildInfoGeneral(Element md, Format format, boolean skipUUID)
 	{
 		String id         = md.getChildText("id");
 		String uuid       = md.getChildText("uuid");
@@ -214,8 +221,7 @@ class Exporter
 		String changeDate = md.getChildText("changedate");
 		String siteId     = md.getChildText("source");
 
-		return new Element("general")
-			.addContent(new Element("uuid")      .setText(uuid))
+		Element general = new Element("general")
 			.addContent(new Element("createDate").setText(createDate))
 			.addContent(new Element("changeDate").setText(changeDate))
 			.addContent(new Element("siteId")    .setText(siteId))
@@ -223,6 +229,11 @@ class Exporter
 			.addContent(new Element("isTemplate").setText(isTemplate))
 			.addContent(new Element("localId")   .setText(id))
 			.addContent(new Element("format")    .setText(format.toString()));
+
+		if (!skipUUID)
+			general.addContent(new Element("uuid").setText(uuid));
+
+		return general;
 	}
 
 	//--------------------------------------------------------------------------
@@ -253,16 +264,26 @@ class Exporter
 
 	//--------------------------------------------------------------------------
 
-	private static Element buildInfoPrivileges(Dbms dbms, Element md) throws SQLException
+	private static Element buildInfoPrivileges(ServiceContext context,
+															 Element md) throws Exception
 	{
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
 		String id    = md.getChildText("id");
-		String query = "SELECT Groups.name as grpName, Operations.name as operName "+
+		String query = "SELECT Groups.id as grpid, Groups.name as grpName, Operations.name as operName "+
 							"FROM   OperationAllowed, Groups, Operations "+
 							"WHERE  groupId = Groups.id "+
 							"  AND  operationId = Operations.id "+
 							"  AND  metadataId = " +id;
 
 		HashMap<String, ArrayList<String>> hmPriv = new HashMap<String, ArrayList<String>>();
+
+		//--- retrieve accessible groups
+
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		AccessManager am = gc.getAccessManager();
+
+		HashSet<String> userGroups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
 
 		//--- scan query result to collect info
 
@@ -271,8 +292,12 @@ class Exporter
 		for (int i=0; i<list.size(); i++)
 		{
 			Element record   = (Element) list.get(i);
+			String  grpId    = record.getChildText("grpid");
 			String  grpName  = record.getChildText("grpname");
 			String  operName = record.getChildText("opername");
+
+			if (!userGroups.contains(grpId))
+				continue;
 
 			ArrayList<String> al = hmPriv.get(grpName);
 
