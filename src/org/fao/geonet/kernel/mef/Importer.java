@@ -88,8 +88,11 @@ class Importer
 				String schema     = general.getChildText("schema");
 				String isTemplate = general.getChildText("isTemplate").equals("true") ? "y" : "n";
 
-				if (siteId == null)
-					siteId = UUID.randomUUID().toString();
+				if (uuid == null)
+				{
+					uuid = UUID.randomUUID().toString();
+					//TODO: set the new uuid inside the metadata
+				}
 
 				boolean dcore  = schema.equals("dublin-core");
 				boolean fgdc   = schema.equals("fgdc-std");
