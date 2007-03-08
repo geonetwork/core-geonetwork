@@ -92,10 +92,7 @@ public class Remove implements Service
 		File dir  = new File(Lib.resource.getDir(context, access, id));
 		File file = new File(dir, fname);
 
-		if (!file.exists())
-			throw new ResourceNotFoundEx(fname);
-
-		if (!file.delete())
+		if (file.exists() && !file.delete())
 			throw new OperationAbortedEx("unable to delete resource");
 
 		// update the metadata
