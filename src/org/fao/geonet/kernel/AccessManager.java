@@ -148,7 +148,7 @@ public class AccessManager
 	}
 
 	//	--------------------------------------------------------------------------
-	/** Returns all groups accessible by the user
+	/** Returns all groups accessible by the user (a set of ids)
 	  */
 
 	public HashSet<String> getUserGroups(Dbms dbms, UserSession usrSess, String ip) throws Exception
@@ -221,7 +221,9 @@ public class AccessManager
 	private boolean isIntranet(String ip)
 	{
 		//--- consider IPv4 & IPv6 loopback
-		if (ip.equals("0:0:0:0:0:0:0:1") || ip.equals("127.0.0.1"))
+		//--- we use 'startsWith' because some addresses can be 0:0:0:0:0:0:0:1%0
+
+		if (ip.startsWith("0:0:0:0:0:0:0:1") || ip.equals("127.0.0.1"))
 			return true;
 
 		String network = settMan.getValue("system/intranet/network");
