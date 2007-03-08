@@ -129,6 +129,20 @@ public class DataManager
 
 	public static void indexMetadata(Dbms dbms, String id, SearchManager sm) throws Exception
 	{
+		try
+		{
+			indexMetadataI(dbms, id, sm);
+		}
+		catch (JDOMException e)
+		{
+			Log.error(Geonet.DATA_MANAGER, "The metadata with id="+id+" is corrupted");
+		}
+	}
+
+	//--------------------------------------------------------------------------
+
+	private static void indexMetadataI(Dbms dbms, String id, SearchManager sm) throws Exception
+	{
 		Vector moreFields = new Vector();
 
 		// get metadata table fields
