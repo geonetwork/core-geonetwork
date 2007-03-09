@@ -48,6 +48,7 @@ import org.fao.geonet.kernel.harvest.Common.Type;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
@@ -326,6 +327,8 @@ public class GeonetHarvester extends AbstractHarvester
 
 		XmlRequest req = new XmlRequest(params.host, params.port);
 
+		Lib.net.setupProxy(context, req);
+
 		//--- login
 
 		if (params.useAccount)
@@ -407,6 +410,7 @@ public class GeonetHarvester extends AbstractHarvester
 		Logger log = Log.createLogger(Geonet.HARVEST_MAN);
 
 		XmlRequest req = new XmlRequest(params.host, params.port);
+		Lib.net.setupProxy(context, req);
 
 		req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_INFO);
 		req.clearParams();
@@ -500,6 +504,7 @@ public class GeonetHarvester extends AbstractHarvester
 		String logo = siteId +".png";
 
 		XmlRequest req = new XmlRequest(host, port);
+		Lib.net.setupProxy(context, req);
 		req.setAddress("/"+ servlet + Geonet.Path.LOGOS + logo);
 
 		File logoFile = new File(context.getAppPath() + Geonet.Path.LOGOS + logo);

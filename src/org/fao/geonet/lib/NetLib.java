@@ -21,55 +21,56 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package org.fao.geonet.services.main;
+package org.fao.geonet.lib;
 
-import java.net.URL;
-import java.util.List;
-import jeeves.exceptions.MissingParameterEx;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import jeeves.utils.Log;
 import jeeves.utils.XmlRequest;
-import org.fao.geonet.lib.Lib;
-import org.jdom.Element;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingManager;
 
 //=============================================================================
 
-public class Forward implements Service
+public class NetLib
 {
-	//--------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------
 	//---
-	//--- Init
+	//--- API methods
 	//---
-	//--------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception {}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public void setupProxy(ServiceContext context, XmlRequest req)
 	{
-		String  url = Util.getParam(params, "url");
-		Element par = Util.getChild(params, "params");
+		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SettingManager sm = gc.getSettingManager();
 
-		List list = par.getChildren();
+		setupProxy(sm, req);
+	}
 
-		if (list.size() == 0)
-			throw new MissingParameterEx("<request>", par);
+	//-----------------------------------------------------------------------------
+	/** Setup proxy
+	  */
 
-		params = (Element) list.get(0);
+	public void setupProxy(SettingManager sm, XmlRequest req)
+	{
+		boolean enabled = sm.getValueAsBool("system/proxy/use", false);
+		String  host    = sm.getValue("system/proxy/host");
+		String  port    = sm.getValue("system/proxy/port");
 
-		XmlRequest req = new XmlRequest(new URL(url));
-
-		Lib.net.setupProxy(context, req);
-		req.setRequest(params);
-
-		return req.execute();
+		if (!enabled)
+			req.setUseProxy(false);
+		else
+		{
+			if (!Lib.type.isInteger(port))
+				Log.error(Geonet.GEONETWORK, "Proxy port is not an integer : "+ port);
+			else
+			{
+				req.setUseProxy(true);
+				req.setProxyHost(host);
+				req.setProxyPort(Integer.parseInt(port));
+			}
+		}
 	}
 }
 

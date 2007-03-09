@@ -32,6 +32,7 @@ public class Lib
 	public static DbLib       db        = new DbLib();
 	public static ResourceLib resource  = new ResourceLib();
 	public static TypeLib     type      = new TypeLib();
+	public static NetLib      net       = new NetLib();
 }
 
 //=============================================================================
