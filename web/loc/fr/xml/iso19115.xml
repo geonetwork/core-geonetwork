@@ -1,135 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-	<accessConsts
-		help="access constraints applied to assure the protection of privacy or intellectual property, and any special restrictions or limitations on obtaining the resource">Contraintes d'accès</accessConsts>
-	<Address help="location of the responsible individual or organization">Adresse</Address>
-	<adminArea help="state, province of the location">Région adminsitrative</adminArea>
-	<aName>Nom</aName>
-	<appProfile
-		help="name of an application profile that can be used with the online resource">Profil d'application</appProfile>
-	<AppSchInfo help="information about the application schema used to build the dataset">Schéma d'application</AppSchInfo>
-	<appSchInfo help="provides information about the conceptual schema of a dataset">Schéma d'application</appSchInfo>
-	<artPage help="details on which pages of the publication the article was published">Page</artPage>
-	<asAscii help="full application schema given as an ASCII file">Schéma Ascii</asAscii>
-	<asCstLang condition="mandatory" help="formal language used in Application Schema">Constraint language</asCstLang>
-	<asGraFile help="full application schema given as a graphics file">Fichier graphique</asGraFile>
-	<asName condition="mandatory" help="name of the application schema used">Nom</asName>
-	<asSchLang condition="mandatory" help="identification of the schema language used">Schéma de la langue</asSchLang>
-	<asSwDevFiFt
-		help="software dependent format used for the application schema software dependent file">Format de fichier de développement</asSwDevFiFt>
-	<asSwDevFile help="full application schema given as a software development file">Fichier de développement</asSwDevFile>
-	<attDesc condition="mandatory"
-		help="description of the attribute described by the measurement value">Description de l'attribut</attDesc>
-	<attribIntSet condition="conditional"
-		consdesc="attributes, features, featureInstances, dataset and other not documented"
-		help="attribute instances to which the information applies">Attributs</attribIntSet>
-	<attribSet condition="conditional"
-		consdesc="features, featureInstances, attributeInstances, dataset and other not documented" help="attributes to which the information applies">Attributs</attribSet>
-	<attributeType>Type de l'attribute</attributeType>
-	<axDimProps condition="mandatory" help="information about spatial-temporal axis properties">Dimensions des axes</axDimProps>
-	<axisUnits condition="mandatory" help="units of the semi-major axis">Unités des axes</axisUnits>
-	<aziAngle condition="mandatory"
-		help="angle measured clockwise from north, and expressed in degrees">Azimut</aziAngle>
-	<aziPtLong condition="mandatory" help="longitude of the map projection origin">Longitude du point d'Azimut</aziPtLong>
-	<Band help="range of wavelengths in the electromagnetic spectrum">Bande</Band>
+	<accessConsts help="contraintes d'accès appliquées pour assurer la protection de la propriété privée et intellectuelle, et autres restrictions spéciales ou limitations pour obtenir les métadonnées ou la ressource">Contraintes d'accès</accessConsts>
+	<Address help="Adresse">Adresse</Address>
+	<adminArea help="Département ">département</adminArea>
+	<aName help="Nom">Nom</aName>
+	<appProfile help="nom d'un profil d'application qui peut être utilisé avec les ressources en ligne">profil d'application</appProfile>
+	<AppSchInfo help="Information sur le schéma utilisé pour construire la base de données de la ressource">Schéma d'application</AppSchInfo>
+	<appSchInfo help="Fournit des informations sur le modèle conceptuel de la ressource">Modèle de données</appSchInfo>
+	<artPage help="Pages de la publication où l'article concernant la resssource a été publié">Page</artPage>
+	<asAscii help="Schéma indiqué en texte">Schéma Ascii</asAscii>
+	<asCstLang help="Langue du schéma">Langue</asCstLang>
+	<asGraFile help="Schéma en fichier graphique">Fichier graphique</asGraFile>
+	<asName help="name of the application schema used">Nom</asName>
+	<asSchLang help="Langue du schéma">Langue</asSchLang>
+	<asSwDevFiFt help="Format de l'outil de modélisation">Format de fichier de développement</asSwDevFiFt>
+	<asSwDevFile help="Schéma au format de l'outil de modélisation">Fichier de développement</asSwDevFile>
+	<attDesc help="description de l'attribut décrit par la valeur mesurée">description de l'attribut</attDesc>
+	<attribIntSet help="instances d’attributs sur lesquels l’information s’applique">instance d'attribut</attribIntSet>
+	<attribSet help="Attributs sur lesquels l’information s’applique">Attribut</attribSet>
+	<attributeType>Type de l'attribut</attributeType>
+	<axDimProps help="information sur les propriétés des axes spatio-temporels">propriétés des axes</axDimProps>
+	<axisUnits help="unités de l’axe semi-majeur ">Unités des axes</axisUnits>
+	<aziAngle help="angle mesurée dans le sens horaire à partir du Nord et exprimée en degrés">Azimut</aziAngle>
+	<aziPtLong help="longitude de l’origine de la projection de carte">longitude origine</aziPtLong>
+	<Band help="Informations complémentaires s'il s'agit d'une bande spectrale">Bande</Band>
 	<begin help="beginning date of the validity period">Date de début</begin>
-	<bgFileDesc help="text description of the illustration">Description du fichier</bgFileDesc>
-	<bgFileName condition="mandatory"
-		help="name of the file that contains a graphic that provides an illustration of the dataset">Nom du fichier</bgFileName>
-	<bgFileType help="format in which the illustration is encoded">Type du fichier</bgFileType>
-	<Binary>Binaire</Binary>
-	<bitsPerVal
-		help="maximum number of significant bits in the uncompressed representation for the value in each band of each pixel">Bits
-		par valeur</bitsPerVal>
+	<bgFileDesc help="description textuelle de l'illustration ">Description de l'illustration</bgFileDesc>
+	<bgFileName help="nom du fichier qui contient  une illustration du jeu de données">Nom de l'illustration</bgFileName>
+	<bgFileType help="Format dans lequel l'illustration est enregistrée. Exemple : CGM, EPS, GIF, JPEG, PBM, PS, TIFF, XWD">Format de l'illustration</bgFileType>
+	<Binary help="Fichier de type binaire">Binaire</Binary>
+	<bitsPerVal help="Nombre maxi de bits significatifs dans la représentation non décompressée pour la valeur de chaque pixel dans chaque bande">Nombre de bit</bitsPerVal>
 	<Boolean>Booléen</Boolean>
-	<BoundPoly help="boundary enclosing the dataset, expressed as the closed set of (x,y) coordinates of the polygon (last point replicates first point)">EX_BoundingPolygon</BoundPoly>
+	<BoundPoly help="Ensemble des coordonnées du polygone englobant le jeu de données.">Polygone  englobant</BoundPoly>
 	<BrowGraph help="graphic that provides an illustration of the dataset (should include a legend for the graphic)">MD_BrowseGraphic</BrowGraph>
 	<calDate>Date</calDate>
-	<camCalInAv
-		help="indication of whether or not constants are available which allow for camera calibration corrections">Disponibilité des informations sur la calibration de la prise de vue</camCalInAv>
-	<catCitation condition="mandatory"
-		help="complete bibliographic reference to one or more external feature catalogues">Référence dans les catalogues</catCitation>
-	<catFetTypes>Types d'objet</catFetTypes>
-	<catLang help="language(s) used within the catalogue">Langue</catLang>
-	<cellGeo condition="mandatory" help="identification of grid data as point or cell">Géométrie des cellules</cellGeo>
-	<CellGeoCd>Code des cellules</CellGeoCd>
-	<centerPt
-		help="earth location in the coordinate system defined by the Spatial Reference System and the grid coordinate of the cell halfway between opposite ends of the grid in the spatial dimensions">Centre</centerPt>
-	<CharacterString>Caractère</CharacterString>
-	<CharSetCd>Code du jeu de caractère</CharSetCd>
-	<chkPtAv condition="mandatory"
-		help="indication of whether or not geographic position points are available to test the accuracy of the georeferenced grid data">Disponibilité des points de contrôles</chkPtAv>
-	<chkPtDesc condition="conditional" consdesc="checkPointAvailability equals “yes”"
-		help="description of geographic position points used to test the accuracy of the georeferenced grid data">Description des points de contrôles</chkPtDesc>
-	<Citation help="standardized resource reference">CI Citation</Citation>
-	<citId help="unique identifier for the resource. EXAMPLE: Universal Product Code (UPC), National Stock Number (NSN)">Identifiant</citId>
-	<citIdType help="reference form of the unique identifier (ID). Example: Universal Product Code (UPC), National Stock Number (NSN)">Type d'identifiant</citIdType>
-	<citRespParty
-		help="name and position information for an individual or organization that is responsible for the resource">Responsable</citRespParty>
-	<city help="city of the location">Ville</city>
-	<class condition="mandatory" help="name of the handling restrictions on the resource">Classe</class>
-	<ClasscationCd>Code de classification</ClasscationCd>
-	<classSys help="name of the classification system">Type de classification</classSys>
+	<camCalInAv help="code qui indique si oui ou non les constantes qui permettent les corrections de calibrage de l’appareil sont disponibles">constantes de calibrage</camCalInAv>
+	<catCitation help="référence bibliographique complète à un ou plusieurs catalogues d'objets externes (renvoi vers Ci-Citation)">référence du catalogue d'objet</catCitation>
+	<catFetTypes help="Type d'informations dans le catalogue">Type d'informations</catFetTypes>
+	<catLang help="Langue utilisée dans le catalogue">Langue</catLang>
+	<cellGeo help="identification du type de raster (point ou cellule) (B.5.9)">type de raster</cellGeo>
+	<CellGeoCd>type de raster</CellGeoCd>
+	<centerPt help="Point central">Point central</centerPt>
+	<CharacterString help="Chaine de caractère">Chaine de caractère</CharacterString>
+	<CharSetCd help="nom complet du standard de code de caractères utilisé pour le jeu de métadonnées (B.5.10)">jeu de caractère</CharSetCd>
+	<chkPtAv help="Indication si présence de points de validation de la précision du géoréférencement (booléen)">Validité des points de calage</chkPtAv>
+	<chkPtDesc help="Description des points de calage pour le géoréférencement">Description des points de calage</chkPtDesc>
+	<Citation help="informations de référence sur la ressource">CI Citation</Citation>
+	<citId help="identifiant unique pour la ressource. Exemple  : Universal Product Code (UPC), National Stock Number (NSN), SIRET,…">Identifiant</citId>
+	<citIdType help="Origine de l'identifiant (ID). Example: Universal Product Code (UPC), National Stock Number (NSN)">Type d'identifiant</citIdType>
+	<citRespParty help="Information sur le nom et la position d'une personne individuelle ou d'une organisation responsable pour la ressource">Responsable</citRespParty>
+	<city help="Nom de la ville">Ville</city>
+	<class help="noms des restrictions de manipulation sur les métadonnées">Restriction de manipulation</class>
+	<ClasscationCd help="Code du système de classification">Code de classification</ClasscationCd>
+	<classSys help="nom du système de classification">Système de classification</classSys>
 	<clkTime>Temps</clkTime>
-	<cloudCovPer
-		help="area of the dataset obscured by clouds, expressed as a percentage of the spatial extent">Couverture nuageuse</cloudCovPer>
-	<cmpGenQuan
-		help="count of the number the number of lossy compression cycles performed on the image">Nombre de cycle de compression</cmpGenQuan>
+	<cloudCovPer help="Surface de l’image couverte par des nuages, exprimée en pourcentage de l’étendue spatiale,">Pourcentage de nuages</cloudCovPer>
+	<cmpGenQuan help="dénombre les cycles de compression appliqués à l’image">cycles de compression</cmpGenQuan>
 	<cntAddress help="Adresse du point de contact">Adresse</cntAddress>
-	<cntHours
-		help="time period (including time zone) when individuals can contact the organization or individual">Heures de service</cntHours>
-	<cntInstr
-		help="supplemental instructions on how or when to contact the individual or organization">Contact</cntInstr>
-	<cntOnLineRes>Accès en ligne</cntOnLineRes>
-	<cntPhone help="telephone numbers at which the organization or individual may be contacted">Téléphone</cntPhone>
-	<collTitle
-		help="common title with holdings note. NOTE title identifies elements of a series collectively, combined with information about what volumes are available at the source cited">Titre</collTitle>
-	<compCode
-		help="indication of whether or not the cited feature catalogue complies with ISO 19110">Code de conformité</compCode>
-	<conExpl condition="mandatory" help="explanation of the meaning of conformance for this result">Explication</conExpl>
-	<conPass condition="mandatory" help="indication of the conformance result where 0 = fail and 1 = pass">Succès</conPass>
-	<ConResult
-		help="Information about the outcome of evaluating the obtained value (or set of values) against a specified acceptable conformance quality level">Résultat de conformité</ConResult>
-	<conSpec condition="mandatory" help="citation of product specification or user requirement against which data is being evaluated">Spécification</conSpec>
-	<Consts help="restrictions on the access and use of a resource or metadata">Contraintes</Consts>
-	<contentTyp condition="mandatory"
-		help="type of information represented by the cell value">Content type</contentTyp>
+	<cntHours help="Heures de service">Heures de service</cntHours>
+	<cntInstr help="Information utile pour prendre contact avec une personne ou un organisme">Contact</cntInstr>
+	<cntOnLineRes help="Information en ligne permettant d’accéder à la personne">Information en ligne</cntOnLineRes>
+	<cntPhone help="Numéro de téléphone">Numéro de téléphone</cntPhone>
+	<collTitle help="titre commun avec indication d'une appartenance. Note : ce titre contient les éléments d'une série collective, complété des informations sur le ou les volumes où la ressource est citée. ">Titre</collTitle>
+	<compCode help="Indication si les informations sont décrites selon la norme 19110">Conforme à 19110</compCode>
+	<conExpl help="Explication sur le résultat du test">Explication</conExpl>
+	<conPass help="Résultat positif / négatif">Résultat positif / négatif</conPass>
+	<ConResult help="Résultat d'un test de conformité (qualitatif)">Résultat d'un test de conformité</ConResult>
+	<conSpec help="Spécification ou contraintes mis en oeuvre pour le test">Spécification</conSpec>
+	<Consts help="contraintes sur l'accès et l'utilisation des données">Contraintes</Consts>
+	<contentTyp help="type d'information représenté par la valeur de la cellule (thématique, image, mesure physique) (B.5.12)">type d'information</contentTyp>
 	<ContentTypCd>Code du type de contenu</ContentTypCd>
-	<ContInfo help="description of the content of a dataset">Description de contenu</ContInfo>
-	<contInfo
-		help="provides information about the feature catalogue and describes the coverage and image data characteristics">Contenu</contInfo>
+	<ContInfo help="Informations sur le contenu de la ressource">Description de contenu</ContInfo>
+	<contInfo help="Informations sur le contenu de la ressource">Contenu</contInfo>
 	<conversionToISOstandarUnit>Conversion vers le format ISO des unités</conversionToISOstandarUnit>
 	<coordinates>Coordonnées</coordinates>
 	<coordSep>Séparateur de coordonnées</coordSep>
-	<cornerPts condition="mandatory"
-		help="earth location in the coordinate system defined by the Spatial Reference System and the grid coordinate of the cells at opposite ends of grid coverage along two diagonals in the grid spatial dimensions. There are four corner points in a georectified grid; at least two corner points along one diagonal are required">Coins</cornerPts>
-	<country help="country of the physical address">Pays</country>
+	<cornerPts help="Position des 4 &quot;coins&quot; de l'image">Coins du raster</cornerPts>
+	<country help="Pays">Pays</country>
 	<CovDesc help="information about the content of a grid data cell">Description de la couverture</CovDesc>
-	<covDim help="information on the dimensions of the cell measurement value">Dimension</covDim>
-	<ctrlPtAv condition="mandatory"
-		help="indication of whether or not control point(s) exists">Disponibilité des points de contrôles</ctrlPtAv>
-	<dataChar condition="conditional" consdesc="ISO/IEC 10646-1 not used"
-		help="full name of the character coding standard used for the dataset">Jeu de caractère</dataChar>
-	<dataExt condition="conditional"
-		consdesc="if hierarchyLevel equals “dataset” either extent.geographicElemen t.EX_GeographicBoundin gBox or extent.geographicElemen t.EX_GeographicDescript ion is  required" help="additional extent information including the bounding polygon, vertical, and temporal extent of the dataset">Emprise</dataExt>
-	<DataIdent help="information required to identify a dataset">Identification des données</DataIdent>
-	<dataIdInfo condition="mandatory"
-		help="basic information about the resource(s) to which the metadata applies">Information</dataIdInfo>
-	<dataLang condition="mandatory" help="language(s) used within the dataset">Langue</dataLang>
-	<dataLineage condition="conditional" consdesc="report not provided" help="non-quantitative quality information about the lineage of the data specified by the scope">Généalogie</dataLineage>
-	<DataQual help="quality information for the data specified by a data quality scope">Qualité des données</DataQual>
-	<dataScale
-		help="factor which provides a general understanding of the density of spatial data in the dataset">Résolution spatiale</dataScale>
-	<DatasetSeries help="information about the series, or aggregate dataset, to which a dataset belongs">Séries</DatasetSeries>
-	<datasetSeries help="information about the series, or aggregate dataset, of which the dataset is a part">Séries</datasetSeries>
-	<datasetSet condition="conditional"
-		consdesc="attributes, features, featureInstances, attributeInstances, and other not documented"
-		help="dataset to which the information applies">Type de lot de données</datasetSet>
-	<dataSource condition="conditional"
-		consdesc="mandatory if statement and processStep not provided" help="information about the source data used in creating the data specified by the scope">Source</dataSource>
+	<covDim help="Description de  chaque profondeur du raster">Dimension</covDim>
+	<ctrlPtAv help="Présence de points de contrôle (booléen)">Validité des points de contrôle</ctrlPtAv>
+	<dataChar help="Nom entier du standard de code de caractères utilisé pour le jeu de données">Jeu de caractère</dataChar>
+	<dataExt help="extension de la donnée. Type de données pour l'information sur l'étendue horizontale, verticale et temporelle du jeu de données">Emprise</dataExt>
+	<DataIdent help="Identification">Identification de la ressource</DataIdent>
+	<dataIdInfo help="Informations générales sur la ressource">Information</dataIdInfo>
+	<dataLang help="langue utilisée pour le jeu de données">Langue</dataLang>
+	<dataLineage help="informations de qualité concernant la provenance des données">Généalogie de la donnée</dataLineage>
+	<DataQual help="Information qualité pour les données">Qualité des données</DataQual>
+	<dataScale help="Facteur qui renseigne sur la densité spatiale de données ">Résolution spatiale</dataScale>
+	<DatasetSeries help="information sur la série (ou sur le jeu de données global) dans laquelle le jeu de données est une partie. Catalogue,...">Séries</DatasetSeries>
+	<datasetSeries help="information sur la série (ou sur le jeu de données global) dans laquelle le jeu de données est une partie. Catalogue,...">Séries</datasetSeries>
+	<datasetSet help="jeu de donnée sur lequel l’information s’applique">jeu de donnée</datasetSet>
+	<dataSource help="information about the source data used in creating the data specified by the scope">Référentiel utilisé</dataSource>
 	<DatatypeCd>Code du type de date</DatatypeCd>
 	<Date>Date de création des métadonnées</Date>
-	<dateNext help="Date de prochaine mise à jour des métadonnées (YYYY-MM-DD)">Prochaine mise à jour</dateNext>
+	<dateNext help="Date de prochaine mise à jour des métadonnées ou ressource(YYYY-MM-DD)">Prochaine mise à jour</dateNext>
 	<DateRef help="reference date and event used to describe it (YYYY-MM-DD)">Date</DateRef>
 	<DateTime>Date</DateTime>
 	<DateTypCd>Code du type de date</DateTypCd>
@@ -139,602 +104,496 @@
 	<days>Jours</days>
 	<Decimal>Décimal</Decimal>
 	<decimalChar>Caractère décimal</decimalChar>
-	<delPoint help="Adresse de livraison (tel que décrit dans l'ISO 11180, annexe A)">Adresse de livraison</delPoint>
-	<denFlatRat condition="conditional" consdesc="not a spheroid"
-		help="ratio of the difference between the equatorial and polar radii of the ellipsoid to the equatorial radius when the numerator is set to 1">Denominator
-		of flattening ratio</denFlatRat>
-	<descKeys help="provides category keywords, their type, and reference source">Mots-clés</descKeys>
+	<delPoint help="Adresse du point de distribution">Adresse courrier</delPoint>
+	<denFlatRat help="ratio of the difference between the equatorial and polar radii of the ellipsoid to the equatorial radius when the numerator is set to 1">
+    Denominator
+    of flattening ratio
+  	</denFlatRat>
+	<descKeys help="classe pour les mots clés, leur type et leur source de référence">Mots-clés</descKeys>
 	<designator>Indicateur</designator>
-	<DigTranOps
-		help="technical means and media by which a resource is obtained from the distributor">Options pour le type de transfert</DigTranOps>
-	<dimDescrp help="description of the range of a cell measurement value">Descripteur</dimDescrp>
+	<DigTranOps help="technical means and media by which a resource is obtained from the distributor">Options pour le type de transfert</DigTranOps>
+	<dimDescrp help="description de l’échelle de valeur de mesure de pixel">pixel</dimDescrp>
 	<Dimen help="axis properties">Dimension</Dimen>
 	<dimension>Dimension</dimension>
-	<dimName condition="mandatory" help="name of the axis">Nom de la dimension</dimName>
-	<DimNameTypCd>Type du code pour le nom de la dimension</DimNameTypCd>
-	<dimResol help="degree of detail in the grid dataset">Résolution</dimResol>
-	<dimSize condition="mandatory" help="number of elements along the axis">Taille de la dimension</dimSize>
+	<dimName help="nom de l'axe (liste de valeurs B 5.14)">noms des axes</dimName>
+	<DimNameTypCd>Noms des axes</DimNameTypCd>
+	<dimResol help="degré de détail dans le jeu de données de type raster">résolution</dimResol>
+	<dimSize help="nombre d'éléments le long de cet axe">nombre  de pixel</dimSize>
 	<Distance>Distance</Distance>
-	<distFormat condition="mandatory">Format de diffusion</distFormat>
-	<distInfo
-		help="provides information about the distributor of and options for obtaining the resource(s)">Information sur la distribution</distInfo>
-	<distorCont condition="mandatory"
-		help="party from whom the resource may be obtained. This list need not be exhaustive">Distributeur</distorCont>
-	<distorFormat condition="conditional"
-		consdesc="MD_Distribution.distributionFormat not documented"
-		help="provides information about the format used by the distributor">Format</distorFormat>
-	<distorOrdPrc
-		help="provides information about how the resource may be obtained, and related instructions and fee information">Processus d'acquisition</distorOrdPrc>
-	<Distrib help="information about the distributor of and options for obtaining the resource">Distribution</Distrib>
-	<Distributor help="information about the distributor">Distributeur</Distributor>
-	<distributor help="provides information about the distributor">Distributeur</distributor>
-	<distroTran>Transfert</distroTran>
-	<distTranOps
-		help="provides information about technical means and media by which a resource is obtained from the distributor">Options</distTranOps>
-	<DQAbsExtPosAcc
-		help="closeness of reported coordinate values to values accepted as or being true">Précision de la position absolue</DQAbsExtPosAcc>
-	<DQAccTimeMeas
-		help="correctness of the temporal references of an item (reporting of error in time measurement)">Précision des données temporelles</DQAccTimeMeas>
-	<DQCompComm help="excess data present in the dataset, as described by the scope">Complétude</DQCompComm>
-	<DQCompOm help="data absent from the dataset, as described by the scope">Omission</DQCompOm>
-	<DQConcConsis help="adherence to rules of the conceptual schema">Cohérence avec le modèle</DQConcConsis>
-	<DQDomConsis help="adherence of values to the value domains">Cohérence avec le domaine</DQDomConsis>
+	<distFormat help="classe avec la description du format informatique avec lequel la représentation du jeu de donnée peut être enregistrée et transférée, sous la forme d'un enregistrement de données, d'un fichier, d'un message, d'un support de stockage ou d'un canal de transport">Format de diffusion</distFormat>
+	<distInfo help="Information sur la distribution">Information sur la distribution</distInfo>
+	<distorCont help="Organisme ou personne auprès de qui la ressource peut être obtenue ; cette liste n’est pas obligatoirement exhaustive">Contact distribution</distorCont>
+	<distorFormat help="procure des infos sur le format utilisé par le distributeur">format de distribution</distorFormat>
+	<distorOrdPrc help="informations précisant comment les données peuvent êtres commandées, ainsi que sur leurs coûts et sur les formalités de commandes">processus de distribution et de commande</distorOrdPrc>
+	<Distrib help="Informations sur la distribution de la ressource">Distribution</Distrib>
+	<Distributor help="procure des informations sur le distributeur">Distributeur</Distributor>
+	<distributor help="procure des informations sur le distributeur">Distributeur</distributor>
+	<distroTran help="stipule les moyens techniques et le média utilisé par le distributeur">moyens de distribution</distroTran>
+	<distTranOps help="classe décrivant les possibilités techniques et les médias avec lesquels une ressource peut être obtenue par un distributeur">Options de transfert digital</distTranOps>
+	<DQAbsExtPosAcc help="exactitude de la position des éléments">exactitude de position</DQAbsExtPosAcc>
+	<DQAccTimeMeas help="exactitude des attributs et relations temporels des éléments">exactitude temporelle</DQAccTimeMeas>
+	<DQCompComm help="donnée excédentaire présente dans la ressource, comme décrite par la protée">Excédent</DQCompComm>
+	<DQCompOm help="donnée absente de la ressource, comme décrit dans la portée">donnée absente </DQCompOm>
+	<DQConcConsis help="obéissance aux règles du schéma conceptuelle">Conformité au schéma conceptuel</DQConcConsis>
+	<DQDomConsis help="appartenance des valeurs à l’intervalle de valeurs prévu">conformité des attributs</DQDomConsis>
 	<DQElementTypes>Type d'élément</DQElementTypes>
-	<DQFormConsis
-		help="degree to which data is stored in accordance with the physical structure of the dataset, as described by the scope">Cohérence du format</DQFormConsis>
-	<DQGridDataPosAcc
-		help="closeness of gridded data position values to values accepted as or being true">Précision de positionnement de la grid</DQGridDataPosAcc>
-	<dqInfo help="provides overall assessment of quality of a resource(s)">Information sur la qualité des données</dqInfo>
-	<DQNonQuanAttAcc help="correctness of non-quantitative attributes">Précision des attributs non quantitatif</DQNonQuanAttAcc>
-	<DQQuanAttAcc help="accuracy of quantitative attributes">Précision des attributs quantitatif</DQQuanAttAcc>
-	<DQRelIntPosAcc
-		help="closeness of the relative positions of features in the scope to their respective relative positions accepted as or being true">Précision interne relative du positionnement</DQRelIntPosAcc>
-	<dqReport condition="conditional" consdesc="lineage not provided" help="quantitative quality information for the data specified by the scope">Rapport</dqReport>
-	<DQScope condition="mandatory" help="description of the data specified by the scope">Sujet</DQScope>
-	<dqScope help="the specific data to which the data quality information applies">Sujet</dqScope>
-	<DQTempConsis help="correctness of ordered events or sequences, if reported">Cohérence temporelle</DQTempConsis>
-	<DQTempValid help="validity of data specified by the scope with respect to time">Validité temporelle</DQTempValid>
-	<DQThemClassCor
-		help="comparison of the classes assigned to features or their attributes to a universe of discourse">Cohérence de la représentation thématique</DQThemClassCor>
-	<DQTopConsis
-		help="correctness of the explicitly encoded topological characteristics of the dataset as described by the scope">Cohérence topologique</DQTopConsis>
+	<DQFormConsis help="degré de conformité avec la structure physique de la ressource, comme décrit dans la portée">Conformité physique</DQFormConsis>
+	<DQGridDataPosAcc help=": exactitude des valeurs de position des données raster par rapport à celles acceptées comme ou étant vraies">Exactitude de positionnement du raster</DQGridDataPosAcc>
+	<dqInfo help="Information sur la qualité des données">Information sur la qualité des données</dqInfo>
+	<DQNonQuanAttAcc help="exactitude des attributs non quantitatifs">Qualité des attributs non quantitatifs </DQNonQuanAttAcc>
+	<DQQuanAttAcc help=" Exactitude d’attributs quantitatifs">Attributs quantitatifs </DQQuanAttAcc>
+	<DQRelIntPosAcc help="exactitude de la position des éléments">exactitude de position</DQRelIntPosAcc>
+	<dqReport help="Description d'un rapport sur la qualité sur l'une des 5 composantes de la qualité">Rapport sur la qualité</dqReport>
+	<DQScope help="les données spécifiques auxquelles sont appliquées les informations de qualité des données">domaine concernant la qualité</DQScope>
+	<dqScope help="les données spécifiques auxquelles sont appliquées les informations de qualité des données">domaine concernant la qualité</dqScope>
+	<DQTempConsis help="exactitude d’étapes ou de séquences ordonnées">exactitude de séries</DQTempConsis>
+	<DQTempValid help=" validité de la donnée spécifiée par la portée en ce qui concerne le temps">validité de la portée temporelle</DQTempValid>
+	<DQThemClassCor help="précision des attributs quantitatifs et non quantitatifs et de la classification des éléments et de leurs relations">Précision thématique</DQThemClassCor>
+	<DQTopConsis help="exactitude des caractéristiques topologiques de la ressource comme décrit dans la portée">cohérence topologique</DQTopConsis>
 	<dsFormat help="provides a description of the format of the resource(s)">Format de la ressource</dsFormat>
-	<eastBL condition="mandatory"
-		help="eastern-most coordinate of the limit of the dataset extent, expressed in longitude in decimal degrees (positive east)">Borne est</eastBL>
-	<eleDatatype condition="mandatory">Type de données</eleDatatype>
+	<eastBL help="coordonnée la plus à l'est de la limite de l'étendue du jeu de données, exprimée en longitude avec des degrés décimaux (EST positif)">Longitude est</eastBL>
+	<eleDatatype help="code qui identifie le type de valeur prise de la nouvelle métadonnée">type de valeur</eleDatatype>
 	<ellipsoid help="identity of the ellipsoid used">Ellipsoïde</ellipsoid>
 	<EllParas help="set of parameters that describe the ellipsoid">Paramètres de l'ellipsoïde</EllParas>
 	<ellParas help="set of parameters that describe the ellipsoid">Paramètres de l'ellipsoïde</ellParas>
-	<eMailAdd
-		help="address of the electronic mailbox of the responsible organization or individual">Email</eMailAdd>
-	<end help="ending date of the validity period">Date de fin</end>
-	<envirDesc
-		help="description of the dataset in the producer_s processing environment, including items such as the software, the computer operating system, file name, and the dataset size">Description de l'environnement de travail</envirDesc>
-	<equScale condition="conditional" consdesc="distance not documented"
-		help="level of detail expressed as the scale of a comparable hardcopy map or chart">Echelle équivalente</equScale>
-	<errStat help="statistical method used to determine the value">Erreur statistique</errStat>
-	<evalMethDesc help="description of the evaluation method">Description de la méthode d'évaluation</evalMethDesc>
-	<evalMethType help="type of method used to evaluate quality of the dataset">Code du type de la méthode d'évaluation</evalMethType>
-	<EvalMethTypeCd/>
-	<evaluationProcedure>Procédure d'évaluation</evaluationProcedure>
-	<exDesc condition="conditional"
-		consdesc="geographicElement and temporalElement and verticalElement not documented" help="spatial and temporal extent for the referring object">Description</exDesc>
-	<exSpat condition="mandatory"
-		help="spatial extent component of composite spatial and temporal extent">Etendue spatiale</exSpat>
-	<extDomcode>Domain code</extDomcode>
-	<extEleCond help="condition under which the extended element is mandatory">Condition</extEleCond>
-	<extEleDef condition="mandatory" help="definition of the extended element">Définition</extEleDef>
-	<extEleDomVal help="valid values that can be assigned to the extended element">Valeur de domaine</extEleDomVal>
-	<ExtEleInfo
-		help="new metadata element, not found in ISO 19115, which is required to describe geographic data">Autre élément</ExtEleInfo>
-	<extEleInfo
-		help="provides information about a new metadata element, not found in ISO 19115, which is required to describe geographic data">Autre élément</extEleInfo>
-	<extEleMxOc help="maximum occurrence of the extended element">Nombre maximum d'occurences</extEleMxOc>
-	<extEleName condition="mandatory" help="name of the extended metadata element.">Nom</extEleName>
-	<extEleOb help="obligation of the extended element">Obligation</extEleOb>
-	<extEleParEnt condition="mandatory"
-		help="name of the metadata entity(s) under which this extended metadata element may appear. The name(s) may be standard metadata element(s) or other extended metadata element(s).">Entité parente</extEleParEnt>
-	<extEleRat help="reason for creating the extended element">Rationale</extEleRat>
-	<extEleRule condition="mandatory" help="specifies how the extended element relates to other existing elements and entities">Règles</extEleRule>
-	<extEleSrc condition="mandatory" help="name of the person or organization creating the extended element">Source</extEleSrc>
-	<exTemp condition="mandatory" help="date and time for the content of the dataset">Etendue</exTemp>
+	<eMailAdd help="Adresse mel">Mel</eMailAdd>
+	<end help="Date de fin de validité">Date de fin</end>
+	<envirDesc help="description de l'environnement de travail dans lequel le jeu de données a été créé, incluant des choses telles que logiciel, système d'exploitation, nom de fichier et taille du jeu de données">Description de l'environnement de travail</envirDesc>
+	<equScale help="échelle d'un graphique ou carte papier exprimé par son dénominateur (ex 25000 pour une carte au 1/25000) ">Echelle comparative</equScale>
+	<errStat help="Méthode statistique utilisée ">Erreur</errStat>
+	<evalMethDesc help="Description de la méthode utilisée">Description de la méthode</evalMethDesc>
+	<evalMethType help="Type de méthode utilisée pour évaluer la qualité de la ressource (directe, indirecte)">Type de méthode</evalMethType>
+	<EvalMethTypeCd>Type de méthode</EvalMethTypeCd>
+	<evaluationProcedure help="Référence de la procédure ">Référence</evaluationProcedure>
+	<exDesc help="Description textuelle de l’étendue spatiale et temporelle pour l'objet en question.">Description</exDesc>
+	<exSpat help="spatial extent component of composite spatial and temporal extent">Etendue spatiale</exSpat>
+	<extDomcode help="code à trois chiffres attribué à la nouvelle métadonnée">code</extDomcode>
+	<extEleCond help="condition sous laquelle la métadonnée est obligatoire">condition </extEleCond>
+	<extEleDef help="définition de la nouvelle métadonnée">définition</extEleDef>
+	<extEleDomVal help="valeurs valides/recevables pour qui peuvent être attribuées à la nouvelle métadonnée,">valeurs valides</extEleDomVal>
+	<ExtEleInfo help="Nouvelle métadonnée, non trouvé dans l’ISO 19115 ; qui est nécessaire pour décrire une métadonnée.">Autre élément</ExtEleInfo>
+	<extEleInfo help="Nouvelle métadonnée, non trouvé dans l’ISO 19115 ; qui est nécessaire pour décrire une métadonnée.">Autre élément</extEleInfo>
+	<extEleMxOc help="nombre maximum d’occurrences du nouvel élément de métadonnée">maximum d'occurrence </extEleMxOc>
+	<extEleName help="nom de la nouvelle métadonnée">nom</extEleName>
+	<extEleOb help="caractère obligatoire ou non de la métadonnée (B.5.21)">obligation</extEleOb>
+	<extEleParEnt help="Nom de(s) la métadonnée(s) « mère(s) » sous laquelle cette nouvelle métadonnée peut apparaître. Ces noms de métadonnées mères peuvent être standards ou nouveaux">métadonnée mére</extEleParEnt>
+	<extEleRat help="la raison de créer cette nouvelle métadonnée">raison</extEleRat>
+	<extEleRule help="précise comment cette nouvelle métadonnée est liée à d’autres existantes">lien avec les autres</extEleRule>
+	<extEleSrc help="Nom de la personne ou de l’organisation créatrice de cette extension">source</extEleSrc>
+	<exTemp help="date and time for the content of the dataset">Etendue</exTemp>
 	<Extent help="information about spatial, vertical, and temporal extent">Etendue</Extent>
-	<extOnRes
-		help="information about on-line sources containing the community profile name and the extended metadata elements. Information for all new metadata elements">Autres ressources en ligne</extOnRes>
-	<extShortName
-		help="short form suitable for use in an implementation method such as XML or SGML. NOTE other methods may be used">Nom court</extShortName>
-	<exTypeCode
-		help="indication of whether the bounding polygon encompasses an area covered by the data or an area where data is not present">Type de code de l'extension</exTypeCode>
-	<falEastng
-		help="value added to all _x_ values in the rectangular coordinates for a map projection. This value frequently is assigned to eliminate negative numbers. Expressed in the unit of measure identified in Planar Coordinate Units">Faux est</falEastng>
+	<extOnRes help="Nouvelle métadonnée décrite en ligne, non trouvé dans l’ISO 19115 ; qui est nécessaire pour décrire une métadonnée.">Autres ressources en ligne</extOnRes>
+	<extShortName help="forme courte convenant à l’implémentation dans des langages tels que XML ou SGML. Remarque : d’autres langages/méthodes peuvent être utilisés">nom court</extShortName>
+	<exTypeCode help="indication si le polygone de délimitation recouvre une surface recouverte par des données ou au contraire une surface ne comportant pas de données (booléen)">exclusion</exTypeCode>
+	<falEastng help="value added to all _x_ values in the rectangular coordinates for a map projection. This value frequently is assigned to eliminate negative numbers. Expressed in the unit of measure identified in Planar Coordinate Units">Faux est</falEastng>
 	<falENUnits help="units of false northing and false easting">Unité faux nord est</falENUnits>
-	<falNorthng
-		help="value added to all _y_ values in the rectangular coordinates for a map projection. This value frequently is assigned to eliminate negative numbers. Expressed in the unit of measure identified in Planar Coordinate Units">Faux nord</falNorthng>
-	<faxNum help="telephone number of a facsimile machine for the responsible organization or individual">Fax</faxNum>
-	<featIntSet condition="conditional"
-		consdesc="attributes, features, attributeInstances, dataset and other not documented"
-		help="feature instances to which the information applies">Entités</featIntSet>
-	<featSet condition="conditional"
-		consdesc="attributes, featureInstances, attributeInstances, dataset and other not documented" help="features to which the information applies">Entités</featSet>
-	<featTypeList
-		help="provides information about the list of feature types with the same spatial representation">Liste des types d'entité</featTypeList>
-	<FeatTypList
-		help="list of names of feature types with the same spatial representation (same as spatial attributes)">Liste des types d'entités</FeatTypList>
-	<FetCatDesc help="information identifying the feature catalogue">Description du catalogue d'entité</FetCatDesc>
+	<falNorthng help="value added to all _y_ values in the rectangular coordinates for a map projection. This value frequently is assigned to eliminate negative numbers. Expressed in the unit of measure identified in Planar Coordinate Units">Faux nord</falNorthng>
+	<faxNum help="Numéro du fax permettant de contacter l'organisme et/ou le contact">Fax</faxNum>
+	<featIntSet help="feature instances to which the information applies">Entités</featIntSet>
+	<featSet help="features to which the information applies">Entités</featSet>
+	<featTypeList help="provides information about the list of feature types with the same spatial representation">Liste des types d'entité</featTypeList>
+	<FeatTypList help="list of names of feature types with the same spatial representation (same as spatial attributes)">Liste des types d'entités</FeatTypList>
+	<FetCatDesc help="classe pour l'information qui définit le catalogue d'objets ou le modèle de donnée">Description du catalogue d'objet</FetCatDesc>
 	<fetCatSup>Autres informations sur les entités</fetCatSup>
-	<fileDecmTech
-		help="recommendations of algorithms or processes that can be applied to read or expand resources to which compression techniques have been applied">Technique de décompression</fileDecmTech>
-	<filmDistInAv
-		help="indication of whether or not Calibration Reseau information is available">Disponibilité d'un réseau de calibration</filmDistInAv>
-	<Format help="description of the computer language construct that specifies the representation of data objects in a record, file, message, storage device or transmission channel">Format</Format>
-	<formatAmdNum help="amendment number of the format version">Nombre d'amendement</formatAmdNum>
-	<formatName condition="mandatory" help="name of the data transfer format(s)">Nom</formatName>
-	<formatSpec help="name of a subset, profile, or product specification of the format">Spécification</formatSpec>
-	<formatVer condition="mandatory" help="version of the format (date, number, etc.)">Version</formatVer>
+	<fileDecmTech help="Format de compression recommandé pour l’échange">Compression</fileDecmTech>
+	<filmDistInAv help="code qui indique si oui ou non l’information sur le réseau de calibration est disponible">réseau de calibration</filmDistInAv>
+	<Format help="Description du format informatique">Format</Format>
+	<formatAmdNum help="Numéro de l'amendement sur la version du format de transfert des données">numéro d'amendement</formatAmdNum>
+	<formatName help="nom du format de transfert des données">nom</formatName>
+	<formatSpec help="Informations sur les spécifications du format de transfert des données">Spécifications</formatSpec>
+	<formatVer help="Version du format (date, nombre, etc)">version</formatVer>
 	<GenericNameTypes>Nom générique</GenericNameTypes>
-	<GeoBndBox help="geographic position of the dataset">Emprise géographique</GeoBndBox>
-	<geoBox condition="conditional"
-		consdesc="if hierarchy level equals 'dataset' and geoDesc is not documented"
-		help="minimum bounding rectangle within which data is available">Emprise géographique</geoBox>
-	<GeoDesc help="Description of the geographic area using identifiers">Description géographique</GeoDesc>
-	<geoDesc condition="conditional"
-		consdesc="if hierarchy level equals 'dataset' and geoBox is not documented"
-		help="description of the geographic area within which data is available">Description géographique</geoDesc>
-	<geoEle condition="conditional"
-		consdesc="description and temporalElement and verticalElement not documented"
-		help="provides geographic component of the extent of the referring object">Elément géographique</geoEle>
-	<geoId condition="mandatory" help="identifier used to represent a geographic area">Identifiant géographique</geoId>
-	<GeometObjs
-		help="number of objects, listed by geometric object type, used in the dataset">Objets géométriques</GeometObjs>
-	<geometObjs help="information about the geometric objects used in the dataset">Objets géométriques</geometObjs>
-	<geoObjCnt
-		help="total number of the point or vector object type occurring in the dataset">Nombre d'objet</geoObjCnt>
-	<geoObjTyp condition="mandatory"
-		help="name of point and vector spatial objects used to locate zero-, one-, and two-dimensional spatial locations in the dataset">Type d'objet géométrique</geoObjTyp>
+	<GeoBndBox help="Coordonnées des quatre points cardinaux constituant le rectangle englobant l’ensemble des données. Dans ce cas, les coordonnées s’expriment toujours en longitude / Latitude.">Rectangle englobant</GeoBndBox>
+	<geoBox help="Coordonnées des quatre points cardinaux constituant le rectangle englobant l’ensemble des données. Dans ce cas, les coordonnées s’expriment toujours en longitude / Latitude.">Rectangle englobant</geoBox>
+	<GeoDesc help="Liens vers un identifiant géographique. Par exemple, les codes INSEE des communes">Identifiant géographique</GeoDesc>
+	<geoDesc help="Liens vers un identifiant géographique. Par exemple, les codes INSEE des communes">Identifiant géographique</geoDesc>
+	<geoEle help="type de données pour la description d'une surface fermée, exprimée par un ensemble de paires de coordonnées (x, y), qui englobe le jeu de données. Le premier et le dernier point sont identiques">Choix d'un type d'étendue</geoEle>
+	<geoId help="identifiant utilisé pour représenter une surface géographique (ex France)">identifiant géographique</geoId>
+	<GeometObjs help="information sur les objets géométriques utilisés dans le jeu de données">objets géométriques</GeometObjs>
+	<geometObjs help="information sur les objets géométriques utilisés dans le jeu de données">objets géométriques</geometObjs>
+	<geoObjCnt help="nombre total d'objets de type point ou vecteur intervenant dans le jeu de données">nombre d'objets géométriques</geoObjCnt>
+	<geoObjTyp help="nom des types d’objets spatiaux utilisés pour localiser les  données : lignes, polygones,…">type d'objets géométriques</geoObjTyp>
 	<GeoObjTypCd>Code du type d'objet</GeoObjTypCd>
-	<Georect help="grid whose cells are regularly spaced in a geographic (i.e., lat / long) or map coordinate system defined in the Spatial Referencing System (SRS) so that any cell in the grid can be geolocated given its grid coordinate and the grid origin, cell spacing, and orientation">Géorectification</Georect>
-	<Georef help="grid with cells irregularly spaced in any given geographic/map projection coordinate system, whose individual cells can be geolocated using geolocation information supplied with the data but cannot be geolocated from the grid properties alone">Géoréférencable</Georef>
-	<georefPars condition="mandatory"
-		help="terms which support grid data georeferencing">Paramètres de géoréférencement</georefPars>
+	<Georect help="Description des paramètres d'un raster dont les cellules sont régulièrement espacées. Chaque cellule peut être géolocalisée à partir des coordonnées dans la grille, du point d'origine de la grille, de la taille d'une cellule et son orientation">Représentation spatiale d'un raster géorectifié</Georect>
+	<Georef help="Raster dont les cellules sont irrégulièrement réparties dans l'espace. Chaque cellule est géolocalisée mais indépendamment d'une grille">Représentation spatiale du raster géoréférencé</Georef>
+	<georefPars help="Ensemble des informations sur le géoréférencement  (sous forme d'un record)">Informations sur le géoréférencement</georefPars>
 	<GM_Point>GM_Point</GM_Point>
-	<GM_Polygon>GM_Polygon</GM_Polygon>
-	<graphOver
-		help="provides a graphic that illustrates the resource(s) (should include a legend for the graphic)">Aperçu</graphOver>
-	<GridSpatRep help="information about grid spatial objects in the dataset">Représentation spatial de type Grid</GridSpatRep>
-	<handDesc help="additional information about the restrictions on handling the resource">Description des opérations</handDesc>
-	<hgtProsPt help="height of viewpoint above the Earth, expressed in metres">Altitude</hgtProsPt>
+	<GM_Polygon>Polygone</GM_Polygon>
+	<graphOver help="description d'un graphique qui contient une illustration du jeu de données">Aperçu</graphOver>
+	<GridSpatRep help="classe contenant l'information sur les objets spatiaux de type raster du jeu de données">Représentation spatiale du raster</GridSpatRep>
+	<handDesc help="information complémentaire sur les restrictions relative à la manipulation des métadonnées">Description de manipulation</handDesc>
+	<hgtProsPt help="Altitude exprimée en mètre">Altitude</hgtProsPt>
 	<hours>Heures</hours>
-	<idAbs condition="mandatory" help="Bréve description du lot de données résumant le contenu du lot.">Résumé</idAbs>
-	<idCitation help="citation data for the resource(s)">Citation</idCitation>
+	<idAbs help="Court résumé explicatif du contenu de la donnée">Résumé</idAbs>
+	<idCitation help="informations de référence sur la ressource">Citation</idCitation>
 	<idCredit help="recognition of those who contributed to the resource(s)">Crédit</idCredit>
-	<identAuth help="person or party responsible for maintenance of the namespace">Autorité</identAuth>
-	<identCode condition="mandatory" help="alphanumeric value identifying an instance in the namespace">Code</identCode>
-	<idPoC
-		help="identification of, and means of communication with, person(s) and organizations(s) associated with the resource(s)">Contact</idPoC>
-	<idPurp help="Objectif pour lequel le lot de données a été produit par le fournisseur">Objectifs de la production</idPurp>
-	<idSpecUse
-		help="provides basic information about specific application(s) for which the resource(s) has/have been or is being used by different users">Usages de la resource</idSpecUse>
-	<illAziAng
-		help="illumination azimuth measured in degrees clockwise from true north at the time the image is taken. For images from a scanning device, refer to the centre pixel of the image">Illumination
-		azimuth angle</illAziAng>
-	<illElevAng
-		help="illumination elevation measured in degrees clockwise from the target plane at intersection of the optical line of sight with the Earth_s surface. For images from a scanning device, refer to the centre pixel of the image">Illumination
-		elevation angle</illElevAng>
-	<imagCond help="conditions affected the image">Condition de prise de vue</imagCond>
-	<imagQuCode help="specifies the image quality">Code de qualité</imagQuCode>
+	<identAuth help="personne ou groupe responsable de la maintenance d’un espace de nommage ">autorité</identAuth>
+	<identCode help="valeur alphanumérique qui identifie une instance d’un espace de nommage ">code</identCode>
+	<idPoC help="identification, et mode de communication avec, des personnes ou des organisations devant servir de point de contact pour la ressource">Point de contact</idPoC>
+	<idPurp help="résumé des intentions pour lesquelles la donnée a été créée">Objectifs</idPurp>
+	<idSpecUse help="brève description de la manière dont les ressources sont actuellement utilisées ou ont été utilisées">Usages de la resource</idSpecUse>
+	<illAziAng help="azimuth d’illumination, mesuré en degrés horaires depuis le nord vrai au moment de la prise d’image">azimuth d'illumination</illAziAng>
+	<illElevAng help="élévation d’illumination mesurée en degrés horaires à partir de l’avion à l’intersection de la ligne optique d’aperçu de la surface terrestre, (pour des images scannées, se rapporter au pixel central de l’image)">élévation d'illumination</illElevAng>
+	<imagCond help="code qui indique les conditions qui influent sur la qualité de l’image">conditions de l'image</imagCond>
+	<imagQuCode help="spécifie la qualité de l’image">Qualité de l'image</imagQuCode>
 	<ImgCondCd>Code des conditions de prise de vue</ImgCondCd>
-	<ImgDesc help="information about an image_s suitability for use">Image description</ImgDesc>
-	<incWithDS condition="mandatory"
-		help="indication of whether or not the feature catalogue is included with the dataset">Inclu avec les données</incWithDS>
+	<ImgDesc help="information sur la pertinence d’une image pour une application">Contenu du raster</ImgDesc>
+	<incWithDS help="indications si oui ou non le catalogue d'objets est inclus dans le jeu de données (booléen)">inclus dans le jeu de données</incWithDS>
 	<Integer>Integer</Integer>
-	<isbn help="international Standard Book Number">ISBN</isbn>
-	<issId help="information identifying the issue of the series">Problème d'identification</issId>
-	<issn help="international Standard Serial Number">ISSN</issn>
-	<keyTyp help="subject matter used to group similar keywords">Type</keyTyp>
+	<isbn help="numéro international normalisé  d'un livre (ISBN)">ISBN</isbn>
+	<issId help="information identifiant l'édition de la série">information d'édition</issId>
+	<issn help="numéro international normalisé d'une publication en série (ISSN)">ISSN</issn>
+	<keyTyp help="Thèmes utilisés pour grouper des mots clés similaires">Type de mot clé </keyTyp>
 	<KeyTypCd>Code du type de mot-clé</KeyTypCd>
-	<keyword help="commonly used word(s) or formalised word(s) or phrase(s) used to describe the subject">Mots-clés</keyword>
-	<Keywords help="keywords, their type and reference source">Mots-clés</Keywords>
+	<keyword help="mots ou notions courants utilisés pour décrire le sujet">Mots-clés</keyword>
+	<Keywords help="mots ou notions courants utilisés pour décrire le sujet">Mots-clés</Keywords>
 	<languageCode>Code de la langue</languageCode>
 	<latProjCnt help="latitude of the point of projection for azimuthal projections">Latitude du centre de la projection</latProjCnt>
-	<latProjOri
-		help="latitude chosen as the origin of rectangular coordinates for a map projection">Latitude
-		d'origine de la projection</latProjOri>
-	<LegConsts help="restrictions and legal prerequisites for accessing and using the resource">Contraintes légales</LegConsts>
-	<lensDistInAv
-		help="indication of whether or not lens aberration correction information is available">Lens
-		distortion information availability</lensDistInAv>
-	<Lineage help="information about the events or source data used in constructing the data specified by the scope or lack of knowledge about lineage">Généalogie</Lineage>
-	<linkage condition="mandatory" help="location (address) for on-line access using a Uniform Resource Locator address or similar addressing scheme such as http://www.statkart.no/isotc211">Liens</linkage>
+	<latProjOri help="latitude chosen as the origin of rectangular coordinates for a map projection">
+    Latitude
+    d'origine de la projection
+  </latProjOri>
+	<LegConsts help="classe pour les restrictions et conditions préalables légales pour accéder et utiliser les métadonnées ou la ressource">Contraintes légales</LegConsts>
+	<lensDistInAv help="indique si oui ou non l’information sur la correction d’aberration de la lentille est disponible">aberration de la lentille</lensDistInAv>
+	<Lineage help="Généalogie générale sur la ressource">Généalogie</Lineage>
+	<linkage help="URL ou indication semblable d'une adresse Internet pour un accès en ligne, par exemple http://www.isotc211.org">adresse Internet</linkage>
 	<LocalName>Nom local</LocalName>
-	<longCntMer
-		help="line of longitude at the centre of a map projection generally used as the basis for constructing the projection">Longitude
-		du méridien central</longCntMer>
-	<longProjCnt help="longitude of the point of projection for azimuthal projections">Longitude du centre de la projection</longProjCnt>
-	<maintFreq condition="mandatory"
-		help="frequency with which changes and additions are made to the resource after the initial resource is completed">Fréquence de mise à jour</maintFreq>
+	<longCntMer help="Line of longitude at the centre of a map projection generally used as the basis for constructing the projection">
+    Longitude
+    du méridien central
+  </longCntMer>
+	<longProjCnt help="Longitude of the point of projection for azimuthal projections">Longitude du centre de la projection</longProjCnt>
+	<maintFreq help="Fréquence avec laquelle des changements et des ajouts sont réalisés à la métadonnée ou la ressource après que la version initiale ait été complétée">Fréquence de mise à jour</maintFreq>
 	<MaintFreqCd>Code de fréquence de mise à jour</MaintFreqCd>
-	<MaintInfo help="information about the scope and frequency of updating">Information de maintenance</MaintInfo>
-	<maintNote
-		help="information regarding specific requirements for maintaining the resource">note sur la maintenance</maintNote>
-	<maintScp help="scope of data to which maintenance is applied">Sujet de la mise à jour</maintScp>
-	<maxVal
-		help="longest wavelength that the sensor is capable of collecting within a designated band">Valeur maximum</maxVal>
-	<mdChar condition="conditional" consdesc="ISO/IEC 10646-1 not used and not defined by encoding"
-		help="full name of the character coding standard used for the metadata set">Jeu de caractère</mdChar>
-	<mdConst help="provides restrictions on the access and use of data">Contraintes sur les métadonnées</mdConst>
-	<mdContact condition="mandatory" help="party responsible for the metadata information">Auteur</mdContact>
-	<MdCoRefSys
-		help="metadata about a coordinate system in which attributes have been derived from SC_CRS as defined in ISO 19111 _ Spatial referencing by coordinates">Système de coordonnées</MdCoRefSys>
-	<mdDateSt condition="mandatory"
-		help="date that the metadata was created (YYYY-MM-DDThh:mm:ss)">Date</mdDateSt>
-	<MdExtInfo help="information describing metadata extensions">Information sur les extensions des métadonnées</MdExtInfo>
-	<mdExtInfo help="information describing metadata extensions">Information sur les extensions des métadonnées</mdExtInfo>
-	<mdFileID help="unique identifier for this metadata file">Identifiant du fichier</mdFileID>
-	<mdHrLv
-		help="scope to which the metadata applies (see annex H for more information about metadata hierarchy levels)">Niveau de hiérarchie</mdHrLv>
-	<mdHrLvName help="name of the hierarchy levels for which the metadata is provided">Nom du niveau</mdHrLvName>
-	<MdIdent help="value uniquely identifying an object within a namespace">Identifiant</MdIdent>
+	<MaintInfo help="information supplémentaire sur le domaine ou l'étendue de la mise à jour">Information de maintenance</MaintInfo>
+	<maintNote help="informations ou remarques en ce qui concerne les besoins spécifiques concernant la maintenance des métadonnées">Remarque sur la mise à jour</maintNote>
+	<maintScp help="domaine des métadonnées sur lequel la mise à jour est appliquée">domaine de la mise à jour (liste de codes)</maintScp>
+	<maxVal help="plus grande longueur d’onde que le capteur est capable de détecter dans une bande donnée,">max longueur d'onde</maxVal>
+	<mdChar help="full name of the character coding standard used for the metadata set">Jeu de caractère</mdChar>
+	<mdConst help="Contraintes sur l'accès et l'utilisation des métadonnées">Contraintes sur les métadonnées</mdConst>
+	<mdContact help="personne/équipe responsable pour l’information sur la métadonnée. (Point de contact) (Ci-citation et adresse)">Contact</mdContact>
+	<MdCoRefSys help="Informations sur le Systéme de référence">Système de coordonnées</MdCoRefSys>
+	<mdDateSt help="date de création des métadonnées ou de mise à jour">Date de création</mdDateSt>
+	<MdExtInfo help="Informations sur Extension aux métadonnées">Information sur les extensions des métadonnées</MdExtInfo>
+	<mdExtInfo help="Informations sur Extension aux métadonnées">Information sur les extensions des métadonnées</mdExtInfo>
+	<mdFileID help="identifiant unique pour ce fichier de métadonnées">Identifiant du fichier</mdFileID>
+	<mdHrLv help="domaine auquel les métadonnées s'appliquent (voir l'annexe H pour plus d'information au sujet des niveaux de hiérarchie des métadonnées) (B.5.25)">Niveau hiérarchique</mdHrLv>
+	<mdHrLvName help="nom du niveau de hiérarchie pour lequel les métadonnées sont produites">Nom du niveau de hiérarchie</mdHrLvName>
+	<MdIdent help="Unique  identifiant">Identifiant</MdIdent>
 	<MdIdentTypes>Type d'identifiant</MdIdentTypes>
-	<mdLang condition="conditional" consdesc="not defined by encoding" help="language used for documenting metadata">Langue</mdLang>
-	<mdMaint
-		help="provides information about the frequency of metadata updates, and the scope of those updates">Maintenance des métadonnées</mdMaint>
-	<mdParentID
-		help="file identifier of the metadata to which this metadata is a subset (child)">Identifiant du parent</mdParentID>
+	<mdLang help="langue utilisée pour documenter les métadonnées (Français par exemple)">Langue</mdLang>
+	<mdMaint help="informations sur la fréquence de mise à jour des métadonnées, ainsi que de leur étendue">Mise à jour des métadonnées</mdMaint>
+	<mdParentID help="Identifiant du fichier de métadonnées dont cette métadonnée est un sous-ensemble (descendant, enfant),">Identifiant du parent</mdParentID>
 	<mdStanName help="name of the metadata standard (including profile name) used">Norme de métadonnées</mdStanName>
 	<mdStanVer help="version (profile) of the metadata standard used">Version de la norme</mdStanVer>
-	<measDateTm help="date or range of dates on which a data quality measure was applied (YYYY-MM-DDThh:mm:ss)">Date</measDateTm>
-	<measId help="code identifying a registered standard procedure">Identification de la procédure</measId>
-	<measName help="name of the test applied to the data">Nom</measName>
-	<measResult condition="mandatory" help="value (or set of values) obtained from applying a data quality measure or the out come of evaluating the obtained value (or set of values) against a specified acceptable conformance quality level">Résultat</measResult>
+	<measDateTm help="Date ou période à laquelle l'évaluation a été réalisée">Date de la mesure</measDateTm>
+	<measId help="Code de la mesure (identifiant une procédure standard répertoriée)">Code du test</measId>
+	<measName help="Nom du test appliqué">Nom de la mesure</measName>
+	<measResult help="valeur (ou jeu de valeurs) obtenue après application d’une mesure de la qualité de la donnée ou résultat de l’évaluation de la valeur obtenue (ou du jeu de valeurs) comparé à un niveau de qualité de conformité ">Résultat</measResult>
 	<Measure>Mesure</Measure>
-	<measureDescription>Description de la mesure</measureDescription>
-	<medDensity help="density at which the data is recorded">Densité</medDensity>
-	<medDenUnits condition="conditional" consdesc="density documented"
-		help="units of measure for the recording density">Unités de la densité</medDenUnits>
-	<medFormat help="Support utilisé pour la diffusion">Support de diffusion</medFormat>
+	<measureDescription help="Description de la mesure">Méthode de test</measureDescription>
+	<medDensity help="Densité d'écriture sur le médium">densité</medDensity>
+	<medDenUnits help="Unité de mesure pour la densité d'enregistrement">unité de densité</medDenUnits>
+	<medFormat help="Méthode utilisée pour écrire dans le média">format du média (liste de valeurs)</medFormat>
 	<MedFormCd>Format de diffusion</MedFormCd>
 	<Medium help="information sur le support sur lequel la données est diffusée">Support</Medium>
 	<medName help="nom du support utilisé">Nom</medName>
 	<MedNameCd>Code du nom du support</MedNameCd>
-	<medNote help="Description des limitations ou pré-requis pour l'usage du support">Note sur le support</medNote>
-	<medVol help="Nombre de volumes pour le support choisi">Volumes</medVol>
+	<medNote help="Description d'autres restrictions ou exigences pour l'utilisation du média">restriction média</medNote>
+	<medVol help="Nombre de sujets identifiés dans le média">nombre de sujets</medVol>
 	<MemberName>Nom de membre</MemberName>
-	<Metadata help="root entity which defines metadata about a resource or resources">Métadonnées</Metadata>
+	<Metadata help="Racine de l'arbre d'une métadonnée">Métadonnées</Metadata>
 	<minutes>Minutes</minutes>
-	<minVal
-		help="shortest wavelength that the sensor is capable of collecting within a designated band">Valeur minimale</minVal>
+	<minVal help="plus petite longueur d’onde que le capteur est capable de détecter dans une bande donnée,">min longueur d'onde</minVal>
 	<months>Mois</months>
-	<northBL condition="mandatory"
-		help="northern-most, coordinate of the limit of the dataset extent expressed in latitude in decimal degrees (positive north)">Limite nord</northBL>
+	<northBL help="coordonnée la plus au nord de la limite de l'étendue du jeu de données, exprimée en latitude avec des degrés décimaux (NORD positif)">Latitude nord</northBL>
 	<NumberTypes>Type de nombre</NumberTypes>
-	<numDims condition="mandatory" help="number of independent spatial-temporal axes">Nombre de dimensions</numDims>
+	<numDims help="nombre d'axes spatio-temporels indépendants (nombre de dimensions)">dimensions</numDims>
 	<ObCd>Code d'obligation</ObCd>
-	<ObLineAzi
-		help="method used to describe the line along which an oblique mercator map projection is centred using the map projection origin and an azimuth">Oblique
-		line azimuth</ObLineAzi>
-	<obLineLat condition="mandatory" help="latitude of a point defining the oblique line">Oblique
-		line latitude</obLineLat>
-	<obLineLong condition="mandatory" help="longitude of a point defining the oblique line">Oblique
-		line longitude</obLineLong>
-	<ObLinePt
-		help="method used to describe the line along which an oblique mercator map projection is centred using two points near the limits of the mapped region that define the centre line">Oblique
-		line point</ObLinePt>
+	<ObLineAzi help="longitude d’un point définissant la ligne oblique">longitude</ObLineAzi>
+	<obLineLat help="latitude d’un point définissant la ligne oblique">latitude</obLineLat>
+	<obLineLong help="longitude of a point defining the oblique line">
+    Oblique
+    line longitude
+  </obLineLong>
+	<ObLinePt help="Méthode utilisée pour décrire la ligne le long de laquelle une projection de carte en mercator oblique est centrée, en utilisant deux points proches des limites de la région cartographiée qui définissent la ligne centrale">mercator oblique</ObLinePt>
 	<obLnAziPars help="parameters describing the oblique line azimuth">Oblique line azimuth parameter</obLnAziPars>
 	<obLnPtPars help="parameters describing the oblique line point">Oblique line point parameter</obLnPtPars>
-	<offset help="the physical value corresponding to a cell value of zero">Décalage</offset>
+	<offset help="la valeur physique qui correspond à une valeur de pixel nulle">Valeur nulle</offset>
 	<OnFunctCd>Code de la fonction en ligne</OnFunctCd>
-	<onLineMed>Support en ligne</onLineMed>
-	<OnlineRes
-		help="information about on-line sources from which the dataset, specification, or community profile name and extended metadata elements can be obtained">Accès en ligne</OnlineRes>
-	<onLineSrc help="information about online sources from which the resource can be obtained">Accès en ligne</onLineSrc>
-	<orDesc help="detailed text description of what the online resource is/does">Description</orDesc>
-	<ordInstr help="Instructions, règles et services fournis par le diffuseur">Modalités de commande</ordInstr>
-	<ordTurn help="Durée de remplissage d'une formulaire de demande">Délais de remplissage</ordTurn>
-	<orFunct help="code for function performed by the online resource">Fonction</orFunct>
-	<orieParaAv condition="mandatory"
-		help="indication of whether or not orientation parameters are available">Disponibilité des paramètres d'orientation</orieParaAv>
-	<orName help="name of the online resource">Nom</orName>
-	<othConsts condition="conditional"
-		consdesc="accessConstraints or useConstraints equal otherRestrictions"
-		help="other restrictions and legal prerequisites for accessing and using the resource">Autres contraintes</othConsts>
-	<other condition="conditional"
-		consdesc="attributes, features, featureInstances, attributeInstances, and dataset not documented" help="class of information that does not fall into the other categories to which the information applies">Autre</other>
-	<otherCitDet
-		help="other information required to complete the citation that is not recorded elsewhere">Autre information concernant la citation</otherCitDet>
-	<paraCit help="reference providing description of the parameters">Paramètres</paraCit>
+	<onLineMed help="information sur les médias off-line depuis lesquels la ressource peut être obtenue">Sources off-line</onLineMed>
+	<OnlineRes help="information sur les sources en ligne depuis lesquelles la ressource peut être obtenue">Accès en ligne</OnlineRes>
+	<onLineSrc help="information sur les sources en ligne depuis lesquelles la ressource peut être obtenue">Sources on-line</onLineSrc>
+	<orDesc help="texte descriptif détaillé sur ce que la ressource en ligne est/fait">Description</orDesc>
+	<ordInstr help="instructions générales, conditions et services offerts par le distributeur">Instructions de commande</ordInstr>
+	<ordTurn help="Temps pour une commande">Temps pour une commande</ordTurn>
+	<orFunct help="Liste-code pour une fonction accomplie par la ressource en ligne (B.5.3)">Fonction</orFunct>
+	<orieParaAv help="Validation des paramètres d'orientation  (booléen)">Validité de l'orientation</orieParaAv>
+	<orieParaDesc help="Description des paramètres d'orientation du capteur">Description orientation</orieParaDesc>
+	<orName help="nom de la ressource en ligne">Nom</orName>
+	<othConsts help="autres restrictions et prérequis légaux pour accéder et utiliser les métadonnées ou la ressource">Autres contraintes</othConsts>
+	<other help="classe d’information qui ne rentre pas dans les autres catégories sur lesquels s’applique l’information">Autre classe</other>
+	<otherCitDet help="Autre information utilisée pour compléter les informations de référence qui ne sont pas prévues ailleurs">Autre information concernant la citation</otherCitDet>
+	<paraCit help="Référence sur la description des paramètres">Référence sur les paramètres</paraCit>
 	<PixOrientCd>Code de l'orientation du pixel</PixOrientCd>
-	<pkResp help="Longueur d'onde à laquelle la réponse est maximale">Réponse maximale</pkResp>
-	<planAvDtTm help="date and time when the dataset will be available (CCYY-MM-DDThh:mm:ss)">Date de mise à disposition</planAvDtTm>
-	<polygon condition="mandatory" help="sets of points defining the bounding polygon">polygone</polygon>
-	<porCatInfo
-		help="provides information about the catalogue of rules defined for the portrayal of a resource(s)">Information sur le catalogue</porCatInfo>
-	<portCatCit condition="mandatory"
-		help="bibliographic reference to the portrayal catalogue cited">Descriptio du catalogue</portCatCit>
+	<pkResp help="longueur d’onde pour laquelle la réponse est la plus élevée">Plus grande réponse</pkResp>
+	<planAvDtTm help="Date à laquelle les données sont disponibles">date de disponibilité</planAvDtTm>
+	<polygon help="liste de points définissant le polygone de délimitation">polygone</polygon>
+	<porCatInfo help="Information sur les modalités de restitution graphique de la ressource">Information sur les modalités de représentation graphique</porCatInfo>
+	<portCatCit help="information sur le catalogue de représentation utilisé">Représentation</portCatCit>
 	<PortCatRef help="information identifying the portrayal catalogue used">Référence du catalogue</PortCatRef>
-	<postCode help="ZIP or other postal code">Code postal</postCode>
-	<PrcessStep
-		help="information about an event in the creation process for the data specified by the scope">Etape de traitement</PrcessStep>
-	<prcStep condition="conditional" consdesc="mandatory if statement and source not provided"
-		help="information about an event in the creation process for the data specified by the scope">Etape de traitement</prcStep>
-	<prcTypCde
-		help="image distributor_s code that identifies the level of radiometric and geometric processing that has been applied">Code du niveau de traitement</prcTypCde>
+	<postCode help="Code postal">Code postal</postCode>
+	<PrcessStep help="information sur un événement du processus de création ou de transformation, y compris le processus de la maintenance des données">Evénement dans le processus</PrcessStep>
+	<prcStep help="information sur un événement du processus de création ou de transformation, y compris le processus de la maintenance des données">Evénement dans le processus</prcStep>
+	<prcTypCde help="code du distributeur de l’image qui identifie le niveau des méthodes radiométriques et géométriques appliqués à l’image">Code du niveau de traitement</prcTypCde>
 	<precision>Précision</precision>
-	<presForm help="mode in which the resource is represented">Formulaire de présentation</presForm>
-	<PresFormCd>Code du formulaire</PresFormCd>
+	<presForm help="mode dans lequel le document est représenté">Forme de la présentation </presForm>
+	<PresFormCd>Code de la forme de présentation</PresFormCd>
 	<ProgCd>Code d'avancement</ProgCd>
 	<projection help="identity of the projection used">Projection</projection>
 	<ProjParas help="set of parameters that describe the projection">Paramètres de projection</ProjParas>
 	<projParas help="set of parameters that describe the projection">Paramètres de projection</projParas>
-	<protocol help="connection protocol to be used">Protocole</protocol>
-	<ptInPixel condition="mandatory"
-		help="point in a pixel corresponding to the Earth location of the pixel">Point dans un pixel</ptInPixel>
-	<QuanResult
-		help="Information about the value (or set of values) obtained from applying a data quality measure">Résultat quantitatif</QuanResult>
-	<quanValType help="value type for reporting a data quality result">Type de valeur</quanValType>
-	<quanVal condition="mandatory">Valeur</quanVal>
-	<quanValUnit condition="mandatory" help="value unit for reporting a data quality result">Unité</quanValUnit>
-	<radCalDatAv
-		help="indication of whether or not the radiometric calibration information for generating the radiometrically calibrated standard data product is available">Radiometric
-		calibration data availability</radCalDatAv>
+	<protocol help="protocole de la connexion à utiliser">protocole</protocol>
+	<ptInPixel help="Orientation du point géoréférencé dans un pixel (liste de valeurs) (B.5.22)">Description des points de calage</ptInPixel>
+	<QuanResult help="Résultat quantitatif d'un test">Résultat d'un test quantitatif</QuanResult>
+	<quanValType help="Type de valeur">Type de valeur</quanValType>
+	<quanVal help="Ensemble des résultats">Valeur(s) résultat(s)</quanVal>
+	<quanValue help="Ensemble  des résultats">Valeur(s) résultat(s)</quanValue>
+	<quanValUnit help="Unité de valeurs utilisées">Unité de la valeur</quanValUnit>
+	<radCalDatAv help="code qui indique si oui ou non l’information de calibration radiométrique est disponible pour générer le produit standard calibré radiométriquement">calibration radiomètrique</radCalDatAv>
 	<RangeDim help="information on the range of each dimension of a cell measurement value">Range dimension</RangeDim>
 	<RangeDimTypes>Types de dimension</RangeDimTypes>
-	<Real>Real</Real>
-	<Record>Enregistrement</Record>
-	<refDate condition="mandatory" help="reference date for the cited resource (YYYY-MM-DD)">Date</refDate>
-	<refDateType condition="mandatory" help="event used for reference date">Type de date</refDateType>
-	<refSysID condition="conditional"
-		consdesc="MD_CRS.projection, MD_CRS.ellipsoid, and MD_CRS.datum not documented"
-		help="name of reference system">Identifiant du système de coordonnées</refSysID>
-	<refSysInfo
-		help="description of the spatial and temporal reference systems used in the dataset">Information sur le système de coordonnée</refSysInfo>
-	<refSysName condition="mandatory">Nom</refSysName>
-	<RefSystem help="information about the reference system.">Système de référence</RefSystem>
-	<RefSystemTypes>Type de système de référence</RefSystemTypes>
-	<RepFract
-		help="derived from Scale where MD_RepresentativeFraction.denominator = 1 / Scale.measure And Scale.targetUnits = Scale.sourceUnits">Fraction représentative</RepFract>
-	<resAltTitle
-		help="short name or other language name by which the cited information is known. Example: &quot;DCW&quot; as an alternative title for &quot;Digital Chart of the World">Autre titre</resAltTitle>
-	<resConst help="provides information about constraints which apply to the resource(s)">Contrainte sur la ressource</resConst>
-	<resEd help="version of the cited resource">Edition</resEd>
-	<resEdDate help="date of the edition (YYYY-MM-DD)">Date d'édition</resEdDate>
+	<Real help="Nombre réel">Real</Real>
+	<Record help="Enregistrement ">Enregistrement</Record>
+	<refDate help="Date de la ressource en fonction du type de date">Date</refDate>
+	<refDateType help="définit l'événement sur lequel porte la date .">Type de date</refDateType>
+	<refSysID help="Identifiant du système de projection">Identifiant du système de coordonnées</refSysID>
+	<refSysInfo help="Description du système de projection spatial et temporel utilisé par la ressource">Information sur le système de coordonnée</refSysInfo>
+	<refSysName help="Nom du système de projection">Nom</refSysName>
+	<RefSystem help="Informations sur le système de projection">Système de référence</RefSystem>
+	<RefSystemTypes help="Type de système de projection.">Type de système de référence</RefSystemTypes>
+	<RepFract help="derived from Scale where MD_RepresentativeFraction.denominator = 1 / Scale.measure And Scale.targetUnits = Scale.sourceUnits">Fraction représentative</RepFract>
+	<resAltTitle help="Nom raccourci ou autre façon d'écrire le nom, sous lequel l'information  de références est connue.">Autre titre</resAltTitle>
+	<resConst help="contraintes sur l'accès et l'utilisation des données">Contrainte sur la ressource</resConst>
+	<resEd help="version de la ressource">Edition</resEd>
+	<resEdDate help="Date de l'édition">Date d'édition</resEdDate>
 	<resFees help="Tarifs et règles pour l'obtention des données. Incluant la devise (tel que défini dans ISO 4217)">Tarif</resFees>
-	<resMaint
-		help="provides information about the frequency of resource updates, and the scope of those updates">Maintenance de la ressource</resMaint>
+	<resMaint help="Informations sur la fréquence de mise à jour des données">Maintenance de la ressource</resMaint>
 	<Resol help="level of detail expressed as a scale factor or a ground distance">Résolution</Resol>
-	<RespParty
-		help="identification of, and means of communication with, person(s) and organizations associated with the dataset">Responsabilité</RespParty>
-	<resRefDate condition="mandatory" help="reference date for the cited resource (YYYY-MM-DD)">Date</resRefDate>
-	<resTitle condition="mandatory" help="name by which the cited resource is known">Titre</resTitle>
+	<RespParty help="identification of, and means of communication with, person(s) and organizations associated with the dataset">Responsabilité</RespParty>
+	<resRefDate help="Date(s) de référence pour la ressource en question">Date sur la ressource</resRefDate>
+	<resTitle help="Nom de la ressource décrite par les métadonnées. ">Titre</resTitle>
 	<RestrictCd>Code sur la restriction</RestrictCd>
 	<Result help="generalization of more specific result classes">Résultat</Result>
-	<ResultTypes>Type de résultat</ResultTypes>
-	<rfDenom condition="mandatory" help="Dénominateur de l'échelle maximum recommandée pour l'utilisation de la donnée (ex : 25 000)">Echelle maximum</rfDenom>
-	<role condition="mandatory" help="Responsabilité du point de contact par rapport au lot de données">Responsabilité</role>
-	<RoleCd>Code du rôle</RoleCd>
-	<rpCntInfo help="address of the responsible party">Information sur le contact</rpCntInfo>
-	<rpIndName condition="conditional" consdesc="organisationName and positionName not documented"
-		help="Nom et/ou titre de la personne jouant le rôle de contact pour obtenir plus d'information sur le lot de données">Nom</rpIndName>
-	<rpOrgName condition="conditional" consdesc="individualName and positionName not documented"
-		help="name of the responsible organization">Nom de l'organisme</rpOrgName>
-	<rpPosName condition="conditional" consdesc="individualName and organisationName not documented"
-		help="role or position of the responsible person">Rôle dans l'organisme</rpPosName>
+	<ResultTypes help="Généralisation de classes de qualité spécifiques">Type de résultat qualité</ResultTypes>
+	<rfDenom help="Dénominateur de l’échelle">Dénominateur de l’échelle</rfDenom>
+	<role help="Fonction de la personne sur la ressource.">Fonction</role>
+	<RoleCd>Fonction</RoleCd>
+	<rpCntInfo help="Adresse de la personne responsable">Adresse</rpCntInfo>
+	<rpIndName help="Nom de la personne">Nom</rpIndName>
+	<rpOrgName help="Nom de l’organisme responsable">Nom de l'organisme</rpOrgName>
+	<rpPosName help="Rôle ou position de la personne responsable au sein de l’organisation.">Rôle dans l'organisme</rpPosName>
 	<RS_Identifier>Identifiant</RS_Identifier>
 	<SC_VerticalDatum>Datum vertical</SC_VerticalDatum>
-	<scaleDist condition="conditional" consdesc="equivalentScale not documented" help="ground sample distance">Distance</scaleDist>
-	<sclFac help="scale factor which has been applied to the cell value">Facteur d'échelle</sclFac>
-	<sclFacCnt
-		help="ratio between physical distance and corresponding map distance, along the centre line">Facteur d'échelle au centre</sclFacCnt>
-	<sclFacEqu
-		help="ratio between physical distance and corresponding map distance, along the equator">Facteur d'échelle au niveau de l'équateur</sclFacEqu>
-	<sclFacPrOr
-		help="multiplier for reducing a distance obtained from a map by computation or scaling to he actual distance at the projection origin">Facteur d'échelle à l'origine de la projection</sclFacPrOr>
+	<scaleDist help="précision globale de positionnement (ex métrique)">Précision de positionnement</scaleDist>
+	<sclFac help="facteur d’échelle qui a été appliqué à la valeur du pixel ">facteur d'échelle</sclFac>
+	<sclFacCnt help="ratio between physical distance and corresponding map distance, along the centre line">Facteur d'échelle au centre</sclFacCnt>
+	<sclFacEqu help="ratio between physical distance and corresponding map distance, along the equator">Facteur d'échelle au niveau de l'équateur</sclFacEqu>
+	<sclFacPrOr help="multiplier for reducing a distance obtained from a map by computation or scaling to he actual distance at the projection origin">Facteur d'échelle à l'origine de la projection</sclFacPrOr>
 	<scope>Sujet</scope>
 	<ScopeCd>Code du sujet</ScopeCd>
 	<ScopedName>Nom</ScopedName>
-	<ScpDesc help="description of the class of information covered by the information">Description</ScpDesc>
-	<scpExt condition="conditional" help="information about the spatial, vertical and temporal extent of the data specified by the scope">Etendue</scpExt>
-	<scpLvl condition="mandatory"
-		help="hierarchical level of the data specified by the scope">Niveau de hiérarchie</scpLvl>
-	<scpLvlDesc condition="conditional" consdesc="level not equal “dataset” or “series”"
-		help="detailed description about the level of the data specified by the scope">Description du niveau</scpLvlDesc>
-	<SecConsts
-		help="handling restrictions imposed on the resource for national security or similar security concerns">Contraintes de sécurité</SecConsts>
+	<ScpDesc help="description de la classe/catégorie d‘information couverte par l’information, ">classe couverte</ScpDesc>
+	<scpExt help="information sur l’étendue horizontale, verticale et temporelle des données spécifiées par l'attribut scope (79) du domaine d'applicabilité">étendue </scpExt>
+	<scpLvl help="niveau hiérarchique des données spécifiées par l'attribut scope (79) du domaine d'applicabilité (B.5.25)">Niveau</scpLvl>
+	<scpLvlDesc help="description détaillée sur le niveau des données spécifiées par l'attribut scope (79) sur lequel s’applique les informations sur la qualité des données. ">description du niveau (liste de codes)</scpLvlDesc>
+	<SecConsts help="classe avec les restrictions de manipulation imposées sur les métadonnées ou la ressource pour la sécurité nationale ou des situations de sécurité similaires ">Contraintes de sécurité</SecConsts>
 	<seconds>Seconds</seconds>
-	<semiMajAx condition="mandatory" help="radius of the equatorial axis of the ellipsoid">Semi major axis</semiMajAx>
-	<seqID
-		help="number that uniquely identifies instances of bands of wavelengths on which a sensor operates">Sequence identifier</seqID>
-	<seriesName help="name of the series, or aggregate dataset, of which the dataset is a part">Nom</seriesName>
+	<semiMajAx help="radius of the equatorial axis of the ellipsoid">Semi major axis</semiMajAx>
+	<seqID help="nombre qui identifie uniquement les types de bandes de longueurs d’ondes sur lequel opère un capteur">longueur d'onde</seqID>
+	<seriesName help="nom de la série dans laquelle le document est une partie (ex : revue SIG la Lettre)">Nom</seriesName>
 	<Source help="information about the source data used in creating the data specified by the scope">Source</Source>
-	<southBL condition="mandatory"
-		help="southern-most coordinate of the limit of the dataset extent, expressed in latitude in decimal degrees (positive north)">Limite sud</southBL>
+	<southBL help="coordonnée la plus au sud de la limite de l'étendue du jeu de données, exprimée en latitude avec des degrés décimaux (NORD positif)">Latitude sud</southBL>
 	<SpatAttSup help="spatial attributes in the application schema for the feature types">Attribut spatial</SpatAttSup>
 	<spatObj help="instance of a type defined in the spatial schema">Objet spatial</spatObj>
-	<spatRepInfo help="digital representation of spatial information in the dataset">Information sur la représentation spatial</spatRepInfo>
-	<SpatRepTypCd>Code du type de représentation</SpatRepTypCd>
-	<SpatRepTypes>Type de représentation</SpatRepTypes>
-	<spatRpType help="method used to spatially represent geographic information">Type de représentation spatial</spatRpType>
-	<spatSchName help="name of the spatial schema used">Nom du schéma</spatSchName>
-	<SpatTempEx help="extent with respect to date/time and spatial boundaries">Etendue temporelle</SpatTempEx>
-	<specUsage condition="mandatory"
-		help="Liste des applications pour lesquelles le lot de données peut être utilisé.">Utilisation potentielle</specUsage>
-	<srcCitatn help="recommended reference to be used for the source data">Source</srcCitatn>
-	<srcDesc condition="conditional" consdesc="sourceExtent not provided" help="detailed description of the level of the source data">Description</srcDesc>
-	<srcExt condition="conditional" consdesc="description not provided"
-		help="information about the spatial, vertical and temporal extent of the source data">Etendue des données sources</srcExt>
-	<srcRefSys help="spatial reference system used by the source data">Système de coordonnées des données sources</srcRefSys>
-	<srcScale help="denominator of the representative fraction on a source map">Echelle</srcScale>
-	<srcStep help="information about an event in the creation process for the source data">Etape</srcStep>
-	<StanOrdProc
-		help="common ways in which the resource may be obtained or received, and related instructions and fee information">Processus de commande</StanOrdProc>
+	<spatRepInfo help="Informations sur la représentation spatiale">Information sur la représentation spatiale</spatRepInfo>
+	<SpatRepTypCd help="Méthode utilisée pour représenter spatialement les informations ">Code du type de représentation</SpatRepTypCd>
+	<SpatRepTypes help="Méthode utilisée pour représenter spatialement les informations ">SpatRepTypes</SpatRepTypes>
+	<spatRpType help="Méthode utilisée pour représenter spatialement les informations ">Type de représentation spatiale</spatRpType>
+	<spatSchName help="Nom du schéma d'application">Nom du schéma</spatSchName>
+	<SpatTempEx help="Etendue spatiale du jeu de données pour la période temporelle indiquée dans Extent.">Etendue spatio-temporelle</SpatTempEx>
+	<specUsage help="Brève description de l'utilisation actuelle de la ressource et/ou de la série de ressource">Utilisation</specUsage>
+	<srcCitatn help="référence recommandée pour citer les données sources">référence des données sources</srcCitatn>
+	<srcDesc help="description détaillée de l'état des données sources">description</srcDesc>
+	<srcExt help="information sur les étendues spatiales, verticales et temporelles des données sources">étendues des données sources</srcExt>
+	<srcRefSys help="système de référence spatiale utilisé par les données sources">système de référence spatiale des données sources</srcRefSys>
+	<srcScale help="dénominateur de l'échelle de la carte source">Dénominateur de l'échelle</srcScale>
+	<srcStep help="informations sur une étape du processus de création des données">étape du processus</srcStep>
+	<StanOrdProc help="common ways in which the  resource may be obtained or received, and related instructions and fee information">Processus de commande</StanOrdProc>
 	<stanPara>Standard parallel</stanPara>
-	<statement condition="conditional"
-		consdesc="(DQ_DataQuality.scope. DQ_Scope.level = “dataset” or “series”)" help="general explanation of the data producer_s knowledge about the lineage of a dataset">Rapport</statement>
-	<status help="status of the resource(s)">Statut</status>
-	<stepDateTm
-		help="date and time or range of date and time on or over which the process step occurred (YYYY-MM-DDThh:mm:ss)">Date</stepDateTm>
-	<stepDesc condition="mandatory" help="description of the event, including related parameters or tolerances">Description</stepDesc>
-	<stepProc help="identification of, and means of communication with, person(s) and organization(s) associated with the process step">Opérateur</stepProc>
-	<stepRat help="requirement or purpose for the process step">Rationale</stepRat>
-	<stepSrc help="information about the source data used in creating the data specified by the scope">Source</stepSrc>
-	<stVrLongPl help="longitude to be oriented straight up from the North or South Pole">Straight
-		vertical longitude from pole</stVrLongPl>
-	<suppInfo help="Description complète ayant pour objet de préciser le résumé. Il est conseillé d'y indiquer en particulier l'ensemble des objets contenus dans le lot.">Description textuelle générale</suppInfo>
-	<Telephone help="telephone numbers for contacting the responsible individual or organization">Téléphone</Telephone>
-	<tempEle condition="conditional"
-		consdesc="description and geographicElement and verticalElement not documented"
-		help="provides temporal component of the extent of the referring object">Elément temporel</tempEle>
-	<TempExtent help="time period covered by the content of the dataset">Etendue temporelle</TempExtent>
-	<TempExtentTypes>Type d'étendue</TempExtentTypes>
-	<thesaName
-		help="name of the formally registered thesaurus or a similar authoritative source of keywords">Nom du thesaurus</thesaName>
+	<statement help="explication générale sur les connaissances du producteur de données sur la généalogie  du jeu de données">Généralités sur la provenance</statement>
+	<status help="état (statut) de la donnée (mises à jour, obsolète…),  (B.5.23)">Etat</status>
+	<stepDateTm help="date et heure, ou période, à laquelle l'étape de processus s'est réalisée">Période du processus</stepDateTm>
+	<stepDesc help="description de l'événement, incluant les paramètres liés à l’élaboration/processus et les approximations/tolérances/marge d’erreur">Description de l'événement</stepDesc>
+	<stepProc help="identification des personnes et organisations associées avec l'étape de processus, ainsi que des moyens de communications à utiliser pour entrer en contact avec elles">personnes responsables du processus</stepProc>
+	<stepRat help="Raisons / Finalités de l'évènement">Finalités</stepRat>
+	<stepSrc help="information sur la source de la donnée au regard de l'évènement">source</stepSrc>
+	<stVrLongPl help="longitude to be oriented straight up from the North or South Pole">
+    Straight
+    vertical longitude from pole
+  </stVrLongPl>
+	<suppInfo help="toute autre information descriptive sur le jeu de données">Compléments d'informations</suppInfo>
+	<Telephone help="Numéro de téléphone de la personne ">Téléphone</Telephone>
+	<tempEle help="Informations sur l'étendue temporelle du jeu de données.">Elément temporel</tempEle>
+	<TempExtent help="Etendue temporelle (période) du jeu de donnée">Etendue temporelle</TempExtent>
+	<TempExtentTypes>Type d'étendue temporelle</TempExtentTypes>
+	<thesaName help="Nom du thésaurus formellement enregistré ou d'une source d'autorité reconnue de mots clés. Cette information est décrite sous forme d’une citation.">Nom du thésaurus</thesaName>
 	<Time>Temps</Time>
 	<timeIndicator>Indicateur de temps</timeIndicator>
 	<TM_CalDate>Cal date</TM_CalDate>
 	<TM_ClockTime>Clock time</TM_ClockTime>
 	<TM_DateAndTime>Date and time</TM_DateAndTime>
-	<TM_GeometricPrimitive>Geometric primitive</TM_GeometricPrimitive>
-	<TM_Instant>Instant</TM_Instant>
-	<TM_Period>Period</TM_Period>
-	<TM_PeriodDuration>Period duration</TM_PeriodDuration>
-	<TM_PositionTypes>Position types</TM_PositionTypes>
+	<TM_GeometricPrimitive>Type de temps</TM_GeometricPrimitive>
+	<TM_Instant>Un instant précis</TM_Instant>
+	<TM_Period>Une période</TM_Period>
+	<TM_PeriodDuration>Durée</TM_PeriodDuration>
+	<TM_PositionTypes>Type de position</TM_PositionTypes>
 	<TM_Primitive>Primitive</TM_Primitive>
 	<tmPosition>Position</tmPosition>
-	<toneGrad help="number of discrete numerical values in the grid data">Tone gradation</toneGrad>
+
+
+	<toneGrad help="nombre de valeurs numériques discrètes dans la donnée raster ">Nombre de valeur</toneGrad>
 	<TopicCatCd>Code de la catégorie du sujet</TopicCatCd>
 	<TopLevCd>Code du niveau de topologie</TopLevCd>
-	<topLvl
-		help="code which identifies the degree of complexity of the spatial relationships">Niveau de topologie</topLvl>
-	<tpCat condition="mandatory" help="main theme(s) of the datset">Catégorie du sujet</tpCat>
-	<tranParaAv condition="mandatory"
-		help="indication of whether or not parameters for transformation exists">Disponibilité des paramètres de transformation</tranParaAv>
-	<transDimDesc
-		help="description of the information about which grid dimensions are the spatial dimensions">Description des transformations sur les dimensions</transDimDesc>
-	<transDimMap
-		help="information about which grid dimensions are the spatial dimensions">Correspondance des dimenstions</transDimMap>
-	<transSize
-		help="estimated size of a unit in the specified transfer format, expressed in megabytes. The transfer size is &gt; 0.0">Taille du transfert</transSize>
-	<trianInd
-		help="indication of whether or not triangulation has been performed upon the image">Triangulation indicator</trianInd>
+	<topLvl help="Information qui identifie le degré de complexité des relations spatiales : topologie, planaire, (B.5.28)">niveau topologique (liste de codes)</topLvl>
+	<tpCat help="thème(s) principal(aux) du jeu de données (voir liste fermée de la norme) (B.5.27)">Thématique</tpCat>
+	<TopicCatCd>Code de la catégorie du sujet</TopicCatCd>
+	<tranParaAv help="indication si oui ou non des paramètres de transformation existent (booléen)">disponibilité des paramètres de transformation</tranParaAv>
+	<transDimDesc help="Informations générales sur la transformation">Description de la transformation</transDimDesc>
+	<transDimMap help="Informations sur les axes et leurs transformations">description des transformations sur les axes</transDimMap>
+	<transSize help="Taille estimée d'une unité dans le format de transfert spécifié, exprimé en mégabits. La taille de transfert est &gt; 0.0">taille transfert</transSize>
+	<trianInd help="code qui indique si une triangulation a été oui ou non appliquée à l’image,">triangulation</trianInd>
 	<tupleSep>Tuple sep</tupleSep>
 	<TypeName>Nom du type</TypeName>
 	<UnitOfMeasureTypes>Type d'unité de mesure</UnitOfMeasureTypes>
-	<unitsODist help="tiles, layers, geographic areas, etc., in which data is available">Unité de distribution</unitsODist>
+	<unitsODist help="parties, surfaces géographiques, etc., dans lesquelles les données sont mises à disposition">unités de distribution</unitsODist>
 	<uom>Unité de mesure</uom>
 	<UomAngle>Angle</UomAngle>
 	<UomArea>Surface</UomArea>
+	<UomDistance>Distance</UomDistance>
 	<UomLength>Longueur</UomLength>
 	<uomName>Nom</uomName>
 	<UomScale>Echelle</UomScale>
 	<UomTime>Temps</UomTime>
 	<UomVelocity>Vélocité</UomVelocity>
 	<UomVolume>Volume</UomVolume>
-	<upScpDesc help="additional information about the range or extent of the resource">Description des sujets mis à jou</upScpDesc>
+	<upScpDesc help="information supplémentaire sur le domaine ou l'étendue de la mise à jour ">description du domaine de mise à jour</upScpDesc>
 	<URL>URL</URL>
 	<Usage help="brief description of ways in which the resource(s) is/are currently used">Utilisation</Usage>
-	<usageDate
-		help="date and time of the first use or range of uses of the resource and/or resource series (YYYY-MM-DDThh:mm:ss)">Date</usageDate>
-	<useConsts
-		help=". Organisation détenant le copyright du lot de données">Propriété intellectuelle</useConsts>
-	<useLimit
-		help="Contraintes autres que le copyright réglant l'accès au lot de données et son utilisation.">Restrictions d'utilisation</useLimit>
-	<userNote
-		help="explanation of the application of the legal constraints or other restrictions and legal prerequisites for obtaining and using the resource">Note utilisateur</userNote>
-	<usrCntInfo condition="mandatory"
-		help="identification of and means of communicating with person(s) and organization(s) using the resource(s)">Contact</usrCntInfo>
-	<usrDefFreq help="maintenance period other than those defined">Fréquence des mises à jour utilisateur</usrDefFreq>
-	<usrDetLim
-		help="applications, determined by the user for which the resource and/or resource series is not suitable">Limitations</usrDetLim>
+	<usageDate help="Date de la première utilisation de la ressource à cet usage">Date de l'usage</usageDate>
+	<useConsts help="contraintes appliquées pour assurer la protection des sphères privées et intellectuelles, et autres restrictions spéciales ou limitations ou mises en garde pour utiliser les métadonnées ou la ressource">Contraintes d'utilisation</useConsts>
+	<useLimit help="Limitation d'utilisation de métadonnées ou de la ressource. Exemple: &quot;ne pas utiliser pour la navigation&quot;">Limite d'utilisation</useLimit>
+	<userNote help="explications sur l'application des contraintes légales, ou d'autres restrictions et conditions préalables légales, pour obtenir et utiliser les métadonnées">explications sur les restrictions</userNote>
+	<usrCntInfo help="Identification des personnes et organisations, et des modes de communication avec celles-ci, utilisant la ressource à l’usage indiquée dans « Utilisation ». ">contact concernant la ressource</usrCntInfo>
+	<usrDefFreq help="Rythmes de mise à jour autres que ceux définis dans l’information « Fréquence de mise à jour ». Période à saisir">Autre fréquence de mise à jour</usrDefFreq>
+	<usrDetLim help="Limitation au regard de l'usage : les applications pour lesquelles la ressource ou la série de ressources n’est pas appropriée,">Limitations de l'usage</usrDetLim>
 	<value>Valeur</value>
-	<valUnit help="units in which sensor wavelengths are expressed">Unité</valUnit>
-	<VectSpatRep help="information about the vector spatial objects in the dataset">Représentation spatiale de type vecteur</VectSpatRep>
-	<vertDatum condition="mandatory"
-		help="provides information about the origin from which the maximum and minimum elevation values are measured">Vertical datum</vertDatum>
-	<vertEle condition="conditional"
-		consdesc="description and geographicElement and temporalElement not documented"
-		help="provides vertical component of the extent of the referring object">Vertical element</vertEle>
-	<VertExtent help="vertical domain of dataset">Vertical extent</VertExtent>
-	<vertMaxVal condition="mandatory" help="highest vertical extent contained in the dataset">Valeur maximale</vertMaxVal>
-	<vertMinVal condition="mandatory" help="lowest vertical extent contained in the dataset">Valeur minimale</vertMinVal>
-	<vertUoM condition="mandatory"
-		help="vertical units used for vertical extent information. Examples: metres, feet, millimetres, hectopascals">Unité de mesure</vertUoM>
-	<voiceNum help="telephone number by which individuals can speak to the responsible organization or individual">Téléphone</voiceNum>
-	<westBL condition="mandatory"
-		help="western-most coordinate of the limit of the dataset extent, expressed in longitude in decimal degrees (positive east)">Limite ouest</westBL>
+	<valUnit help="unités dans lesquelles les longueurs d’onde du capteur sont exprimées">unité</valUnit>
+	<VectSpatRep help="classe qui contient l'information sur les objets géographiques de type vecteur du jeu de données">Représentation spatiale du vecteur</VectSpatRep>
+	<vertDatum help="Information sur l'origine depuis laquelle les altitudes maximale et minimale ont été mesurées décrite selon la norme ISO 19111.">datum vertical</vertDatum>
+	<vertEle help="informations sur l'étendue verticale">élément vertical</vertEle>
+	<VertExtent help="Domaine vertical du jeu de données">Extension verticale</VertExtent>
+	<vertMaxVal help="indication de l'altitude maximale du jeu de données">valeur maximale</vertMaxVal>
+	<vertMinVal help="indication de l'altitude  minimale du jeu de données">valeur minimale</vertMinVal>
+	<vertUoM help="Unité de l'indication de l'étendue verticale. Exemple : mètre, pied, millimètre, hectopascal">unité de mesure</vertUoM>
+	<voiceNum help="Numéro de téléphone professionnel pour contacter la personne">Téléphone</voiceNum>
+	<westBL help="coordonnée la plus à l'ouest de la limite de l'étendue du jeu de données, exprimée en longitude avec des degrés décimaux (EST positif)">Longitude ouest</westBL>
 	<years>Années</years>
 	<zone help="unique identifier for 100,000 metre grid zone">Zone</zone>
+	<InDirectReferenceSystem help="Dérivé de ReferenceSystem / précise qu'il s'agit d'une référence directe">Système de projection indirect (pour les ressources non géographiques)</InDirectReferenceSystem>
+	<DirectReferenceSystem help="Dérivé de ReferenceSystem / précise qu'il s'agit d'une référence indirecte">Système de projection direct (pour les ressources géographiques)</DirectReferenceSystem>
+	<code help="Code. Par exemple, le code epsg.">Code du système</code>
+	<label help="Libellé">Libellé</label>
+	<codeSpace help="Autorité en charge de la codification. Par exemple, epsg">Autorité compétente</codeSpace>
+	<version help="Version de la codification">Version</version>
+
 
 	<codelist name="DateTypCd">
-		<value help="date identifies when the resource was brought into existence" value="creation">Creation</value>
-		<value help="date identifies when the resource was issued" value="publication">Publication</value>
-		<value help="date identifies when the resource was examined or re-examined and improved or amended" value="revision">Revision</value>
+		<value help="Date à laquelle la ressource est créée" value="creation">création</value>
+		<value help="Date à laquelle la ressource est publiée" value="publication">publication</value>
+		<value help="Date à laquelle la ressource est révisée" value="revision">révision</value>
 	</codelist>
 	<codelist name="OnFunctcd">
-		<value help="online instructions for transferring data from one storage device or system to another" value="download">Download</value>
-		<value help="online information about the resource" value="information">Information</value>
-		<value help="online instructions for requesting the resource from the provider" value="offlineAccess">Offline Access</value>
-		<value help="online order process for obtaining the resource" value="order">Order</value>
-		<value help="online search interface for seeking out information about the resource" value="search">Search</value>
+		<value help="Téléchargement de la ressource" value="download">Téléchargement</value>
+		<value help="Information concernant la  ressource" value="information">Information</value>
+		<value help="Instruction pour une commande auprès du distributeur" value="offlineAccess">Commande hors ligne</value>
+		<value help="Commande en ligne pour obtenir la ressource" value="order">Commande en ligne</value>
+		<value help="Interface de recherche pour trouver la ressource" value="search">Recherche</value>
 	</codelist>
 	<codelist name="PresFormCd">
-		<value help="digital representation of a primarily textual item (can contain illustrations also)" value="documentDigital">Document Digital</value>
-		<value help="representation of a primarily textual item (can contain illustrations also) on paper, photographic material, or other media" value="documentHardcopy">Document Hardcopy</value>
-		<value help="likeness of natural or man-made features, objects, and activities acquired through the sensing of visual or any other segment of the electromagnetic spectrum by sensors, such as thermal infrared, and high resolution radar and stored in digital format" value="imageDigital">Image Digital</value>
-		<value help="likeness of natural or man-made features, objects, and activities acquired through the sensing of visual or any other segment of the electromagnetic spectrum by sensors, such as thermal infrared, and high resolution radar and reproduced on paper, photographic material, or other media for use directly by the human user" value="imageHardcopy">Image Hardcopy</value>
-		<value help="map represented in raster or vector form" value="mapDigital">Map Digital</value>
-		<value help="map printed on paper, photographic material, or other media for use directly by the human user" value="mapHardcopy">Map Hardcopy</value>
-		<value help="multi-dimensional digital representation of a feature, process, etc." value="modelDigital">Model Digital</value>
-		<value help="3-dimensional, physical model" value="modelHardcopy">Model Hardcopy</value>
-		<value help="vertical cross-section in digital form" value="profileDigital">Profile Digital</value>
-		<value help="vertical cross-section printed on paper, etc." value="profileHardcopy">Profile Hardcopy</value>
-		<value help="digital representation of facts or figures systematically displayed, especially in columns" value="tableDigital">Table Digital</value>
-		<value help="representation of facts or figures systematically displayed, especially in columns, printed on paper, photographic material, or other media" value="tableHardcopy">Table Hardcopy</value>
-		<value help="digital video recording" value="videoDigital">Video Digital</value>
-		<value help="video recording on film" value="videoHardcopy">Video Hardcopy</value>
+		<value help="Document numérique contenant du texte et pouvant contenir des illustrations" value="documentDigital">document numérique</value>
+		<value help="Document papier contenant du texte et pouvant contenir des illustrations" value="documentHardcopy">document papier</value>
+		<value help="Aspects à travers la télédétection, stocké sous format numérique" value="imageDigital">image numérique</value>
+		<value help="Aspects à travers la télédétection, reproduit sur un support utilisable par l’homme" value="imageHardcopy">image papier</value>
+		<value help="Carte numérique au format raster ou vecteur" value="mapDigital">Carte numérique</value>
+		<value help="Carte imprimée sur papier ou autre support utilisable par l’homme" value="mapHardcopy">Carte papier</value>
+		<value help="Modèle numérique 3D sous forme digitale" value="modelDigital">Modèle numérique de terrain</value>
+		<value help="Modèle numérique 3D physique" value="modelHardcopy">Modèle numérique physique</value>
+		<value help="Profil vertical sous forme numérique" value="profileDigital">Profil numérique</value>
+		<value help="Profil vertical sous forme papier" value="profileHardcopy">Profil papier</value>
+		<value help="Représentation numérique d’informations sous forme de colonnes" value="tableDigital">Table numérique</value>
+		<value help="Représentation d’informations sous forme de colonnes sur papier ou autre support utilisable par l’homme" value="tableHardcopy">Table papier</value>
+		<value help="Vidéo numérique" value="videoDigital">Vidéo numérique</value>
+		<value help="Vidéo enregistré sur bande" value="videoHardcopy">Vidéo magnétique</value>
 	</codelist>
 	<codelist name="RoleCd">
-		<value help="party that supplies the resource" value="resourceProvider">Resource Provider</value>
-		<value help="party that accepts accountability and responsibility for the data and ensures appropriate care and maintenance of the resource" value="custodian">Custodian</value>
-		<value help="party that owns the resource" value="owner">Owner</value>
-		<value help="party who uses the resource" value="user">User</value>
-		<value help="party who distributes the resource" value="distributor">Distributor</value>
-		<value help="party who created the resource" value="originator">Originator</value>
-		<value help="party who can be contacted for acquiring knowledge about or acquisition of the resource" value="pointOfContact">Point Of Contact</value>
-		<value help="key party responsible for gathering information and conducting research." value="principalInvestigator">Principal Investigator</value>
-		<value help="party who has processed the data in a manner such that the resource has been modified" value="processor">Processor</value>
-		<value help="party who published the resource" value="publisher">Publisher</value>
+		<value help="Organisme qui fournit la ressource. Acteur qui délivre physiquement la ressource, soit de manière&#xA;directe au destinataire, soit par l’intermédiaire d’un diffuseur&#xA;" value="resourceProvider">Fournisseur</value>
+		<value help="Acteur responsable de la gestion et de la mise à jour de la&#xA;ressource&#xA;" value="custodian">Gestionnaire</value>
+		<value help="Organisme qui est propriétaire de la ressource / Acteur qui détient les droits patrimoniaux de la ressource" value="owner">Propriétaire</value>
+		<value help="Organisme qui utilise ou a utilisé la ressource" value="user">Utilisateur</value>
+		<value help="Organisme qui distribue la ressource. Diffuseur de second niveau de la ressource" value="distributor">Distributeur</value>
+		<value help="Organisme qui  a commandé la ressource. Acteur qui a été habilité à créer la ressource et qui a mis en&#xA;place les moyens pour la constituer&#xA;" value="originator">Commanditaire</value>
+		<value help="Organisme que l’on peut contacter pour avoir des renseignements détaillés sur la ressource. Acteur à contacter en premier lieu pour obtenir des informations&#xA;relatives à la ressource&#xA;" value="pointOfContact">Point de contact</value>
+		<value help="Personne clé pour obtenir des informations sur la ressource et les recherches conduites autour de la ressource&#xA;Acteur qui a assuré la réalisation de la ressource,&#xA;éventuellement en faisant appel à des co-traitants ou des sous traitants&#xA;" value="principalInvestigator">
+      Producteur / Maître d’oeuvre
+      principal ou d’ensemble
+    </value>
+		<value help="Organisme qui a réalisé des traitements sur la ressource. Acteur qui est intervenu lors de la réalisation de la ressource" value="processor">Intégrateur / Exécutant secondaire</value>
+		<value help="Organisme qui assure la publication de la ressource." value="publisher">Editeur</value>
+		<value help="Organisme  ou personne qui est auteur. Acteur qui dispose des droits moraux relatifs à la ressource" value="author">Auteur</value>
 	</codelist>
 	<codelist name="EvalMethTypeCd">
-		<value help="method of evaluating the quality of a dataset based on inspection of items within the dataset, where all data required is internal to the dataset being evaluated" value="directInternal">Direct Internal</value>
-		<value help="method of evaluating the quality of a dataset based on inspection of items within the dataset, where reference data external to the dataset being evaluated is required" value="directExternal">Direct External</value>
-		<value help="method of evaluating the quality of a dataset based on external knowledge" value="indirect">Indirect</value>
+		<value help="Méthode d’évaluation de la qualité d’un jeu de données basée sur l’analyse des données du jeu où toutes les données requises sont internes au jeu de données" value="directInternal">Directe interne</value>
+		<value help="Méthode d’évaluation de la qualité d’un jeu de données basée sur l’analyse des données du jeu où les références vers des données externes sont requises." value="directExternal">Directe externe</value>
+		<value help="Méthode d’évaluation de la qualité basée sur une connaissance externe." value="indirect">Indirecte</value>
 	</codelist>
 	<codelist name="AscTypeCd">
-		<value help="reference from one dataset to another" value="crossReference">Cross Reference</value>
-		<value help="reference to a master dataset of which this one is a part" value="largerWorkCitation">Larger Work Citation</value>
-		<value help="part of same structured set of data held in a computer" value="partOfSeamlessDatabase">Part Of Seamless Database</value>
-		<value help="mapping and charting information from which the dataset content originates" value="source">Source</value>
-		<value help="part of a set of imagery that when used together, provides three-dimensional images" value="stereomate">Stereomate</value>
+		<value help="Référence d’un jeu de données à un autre" value="crossReference">Référence croisée</value>
+		<value help="Référence à un jeu de données maître" value="largerWorkCitation">Référence Mère / Fille</value>
+		<value help="Référence à un jeu de données stocké dans une même base de données" value="partOfSeamlessDatabase">Partie d’une même base de données</value>
+		<value help="Références vers la source des données qui a permis de produire les cartes,…" value="source">Source</value>
+		<value help="Partie d’un ensemble d’images qui, utilisé ensemble, fournit une vision 3D de l’image." value="stereomate">Stéréo restitution</value>
 	</codelist>
 	<codelist name="InitTypCd">
-		<value help="series of organized planned actions" value="campaign">Campaign</value>
-		<value help="accumulation of datasets assembled for a specific purpose" value="collection">Collection</value>
-		<value help="specific performance of a function or group of functions" value="exercise">Exercise</value>
-		<value help="process designed to find if something is effective or valid" value="experiment">Experiment</value>
-		<value help="search or systematic inquiry" value="investigation">Investigation</value>
-		<value help="specific operation of a data collection system" value="mission">Mission</value>
-		<value help="device or piece of equipment which detects or records" value="nonImageSensor">Non Image Sensor</value>
-		<value help="action that is part of a series of actions" value="operation">Operation</value>
-		<value help="vehicle or other support base that holds a sensor" value="platform">Platform</value>
-		<value help="method of doing something involving a number of steps" value="process">Process</value>
-		<value help="specific planned activity" value="program">Program</value>
-		<value help="organized undertaking, research, or development" value="project">Project</value>
-		<value help="examination or investigation" value="study">Study</value>
-		<value help="piece of work" value="task">Task</value>
-		<value help="process of testing to discover or demonstrate something" value="trial">Trial</value>
+		<value help="Séries d’actions planifiées" value="campaign">Campagne</value>
+		<value help="Accumulation de données dans un but précis" value="collection">Collection</value>
+		<value help="Action spécifique répondant à une ou des fonctions" value="exercise">Exercice</value>
+		<value help="Recherche pour vérifier si une hypothèse est valide" value="experiment">Expérimentation</value>
+		<value help="Recherche systématique" value="investigation">Investigation</value>
+		<value help="Spécifique opération d’une collecte de données" value="mission">Mission</value>
+		<value help="Part d’un équipement qui détecte une information" value="nonImageSensor">Capteur</value>
+		<value help="Action qui est une partie d’une série d’action" value="operation">Opération</value>
+		<value help="Véhicule ou autre support supportant un capteur" value="platform">Plate-forme</value>
+		<value help="Méthode pour faire quelque chose" value="process">Processus</value>
+		<value help="Action spécifiquement planifiée" value="program">Programme</value>
+		<value help="Recherche ou développement organisé" value="project">Projet</value>
+		<value help="Investigation" value="study">Etude</value>
+		<value help="Partie d’un travail" value="task">Tache</value>
+		<value help="Processus visant à tester ou démontrer quelque chose" value="trial">Essai</value>
 	</codelist>
 	<codelist name="CellGeoCd">
-		<value help="each cell represents a point" value="point">Point</value>
-		<value help="each cell represents an area" value="area">Area</value>
+		<value help="Chaque cellule représente un point" value="point">Point</value>
+		<value help="Chaque cellule représente une surface" value="area">Pixel</value>
 	</codelist>
 	<codelist name="CharSetCd">
 		<value help="16-bit fixed size Universal Character Set, based on ISO 10646" value="ucs2">Ucs2</value>
@@ -763,201 +622,202 @@
 		<value help="taiwanese code set" value="big5">Big5</value>
 	</codelist>
 	<codelist name="ClasscationCd">
-		<value help="available for general disclosure" value="unclassified">Unclassified</value>
-		<value help="not for general disclosure" value="restricted">Restricted</value>
-		<value help="available for someone who can be entrusted with information" value="confidential">Confidential</value>
-		<value help="kept or meant to be kept private, unknown, or hidden from all but a select group of people" value="secret">Secret</value>
-		<value help="of the highest secrecy" value="topsecret">Topsecret</value>
+		<value help="La ressource ne revêt pas un caractère sensible" value="unclassified">Non classifié</value>
+		<value help="Le caractère sensible de la ressource restreint son utilisation ou sa diffusion" value="restricted">Restreint</value>
+		<value help="La ressource présente un caractère confidentiel." value="confidential">Confidentiel</value>
+		<value help="La confidentialité de la ressource implique des mesures de protection particulière" value="secret">Secret</value>
+		<value help="La confidentialité de la ressource implique des mesures de protection extrêmes" value="topSecret">Top secret</value>
 	</codelist>
 	<codelist name="ContentTypCd">
-		<value help="meaningful numerical representation of a physical parameter that is not the actual value of the physical parameter" value="image">Image</value>
-		<value help="code value with no quantitative meaning, used to represent a physical quantity" value="thematicClassification">Thematic Classification</value>
-		<value help="value in physical units of the quantity being measured" value="physicalMeasurement">Physical Measurement</value>
+		<value help="Représentation numérique d’un paramètre physique" value="image">Image</value>
+		<value help="Codification selon une classification" value="thematicClassification">Classification thématique</value>
+		<value help="Valeur physique mesurée" value="physicalMeasurement">Mesure physique</value>
 	</codelist>
 	<codelist name="DatatypeCd">
-		<value help="descriptor of a set of objects that share the same attributes, operations, methods, relationships, and behavior" value="class">Class</value>
-		<value help="flexible enumeration useful for expressing a long list of values, can be extended" value="codelist">Codelist</value>
-		<value help="data type whose instances form a list of named literal values, not extendable" value="enumeration">Enumeration</value>
-		<value help="permissible value for a codelist or enumeration" value="codelistElement">Codelist Element</value>
-		<value help="class that cannot be directly instantiated" value="abstractClass">Abstract Class</value>
-		<value help="class that is composed of classes it is connected to by an aggregate relationship" value="aggregateClass">Aggregate Class</value>
-		<value help="subclass that may be substituted for its superclass" value="specifiedClass">Specified Class</value>
-		<value help="class with few or no operations whose primary purpose is to hold the abstract state of another class for transmittal, storage, encoding or persistent storage" value="datatypeClass">Datatype Class</value>
-		<value help="named set of operations that characterize the behavior of an element" value="interfaceClass">Interface Class</value>
-		<value help="class describing a selection of one of the specified types" value="unionClass">Union Class</value>
-		<value help="class whose instances are classes" value="metaclass">Metaclass</value>
-		<value help="class used for specification of a domain of instances (objects), together with the operations applicable to the objects. A type may have attributes and associations" value="typeClass">Type Class</value>
-		<value help="free text field" value="characterString">Character String</value>
-		<value help="numerical field" value="integer">Integer</value>
-		<value help="semantic relationship between two classes that involves connections among their instances" value="association">Association</value>
+		<value help="Description d’un ensemble d’objet qui ont les mêmes attributs, méthodes …" value="class">Classe</value>
+		<value help="Enumération modifiable, utilisée pour exprimée une liste de valeur extensible" value="codelist">Liste de code</value>
+		<value help="Enumération, utilisée pour exprimée une liste de valeur non extensible" value="enumeration">Enumération</value>
+		<value help="Valeur possible pour une liste de code" value="codelistElement">Elément d’une liste de code</value>
+		<value help="Classe qui ne peut être directement instancée" value="abstractClass">Classe abstraite</value>
+		<value help="Classe qui est composé d’un ensemble de classes connecté par une relation de type Agrégation." value="aggregateClass">Classe agrégée</value>
+		<value help="Classe qui peut être substituée à une classe de  niveau supérieur" value="specifiedClass">Classe spécifique</value>
+		<value help="Classe avec peu ou aucune opération dont le rôle est de gérer l’état d’une autre classe pour les informations relevant de la transmission, le stockage, l’encodage ou la persistance." value="datatypeClass">Classe de type de donnée</value>
+		<value help="Noms des opérations qui caractérisent le comportement d’une ressource" value="interfaceClass">Classe d’interface</value>
+		<value help="Classe décrivant une sélection d’un type spécifique" value="unionClass">Classe d’union</value>
+		<value help="Classe dont les instances sont des classes" value="metaclass">Méta-classe</value>
+		<value help="Classe utilisée pour spécifier un domaine d’instance (objet) en relation avec les opérations applicables à ces objets. Un type peut avoir des attributs et des associations" value="typeClass">Type de classe</value>
+		<value help="Texte libre" value="characterString">Chaîne de caractère</value>
+		<value help=" Champ numérique" value="integer">Entier</value>
+		<value help="Relation entre deux classes ." value="association">Association</value>
 	</codelist>
 	<codelist name="DimNameTypCd">
-		<value help="ordinate (y) axis" value="row">Row</value>
-		<value help="abscissa (x) axis" value="column">Column</value>
-		<value help="vertical (z) axis" value="vertical">Vertical</value>
-		<value help="along the direction of motion of the scan point" value="track">Track</value>
-		<value help="perpendicular to the direction of motion of the scan point" value="crossTrack">Cross Track</value>
-		<value help="scan line of a sensor" value="line">Line</value>
-		<value help="element along a scan line" value="sample">Sample</value>
-		<value help="duration" value="time">Time</value>
+		<value help="axe des ordonnées (axe - Y)" value="row">Axe - Y</value>
+		<value help="axe des abscisses (axe X)" value="column"> Axe - X</value>
+		<value help="axe vertical (axe Z)" value="vertical"> Axe - Z</value>
+		<value help="Dans la direction du mouvement du point de scan " value="track"> piste</value>
+		<value help="Perpendiculaire au mouvement du point de scan" value="crossTrack"> profil de piste</value>
+		<value help="ligne de scannage d’un capteur" value="line"> ligne</value>
+		<value help=" élément le long d'une ligne de scannage" value="sample"> échantillon</value>
+		<value help="durée" value="time">temps</value>
 	</codelist>
 	<codelist name="GeoObjTypCd">
-		<value help="set of geometric primitives such that their boundaries can be represented as a union of other primitives" value="complexes">Complexes</value>
-		<value help="connected set of curves, solids or surfaces" value="composites">Composites</value>
-		<value help="bounded, 1-dimensional geometric primitive, representing the continuous image of a line" value="curve">Curve</value>
-		<value help="zero-dimensional geometric primitive, representing a position but not having an extent" value="point">Point</value>
-		<value help="bounded, connected 3-dimensional geometric primitive, representing the continuous image of a region of space" value="solid">Solid</value>
-		<value help="bounded, connected 2-dimensional geometric, representing the continuous image of a region of a plane" value="surface">Surface</value>
+		<value help=" ensemble de primitives géométriques représentées comme l'union d'autres primitives" value="complexes"> complexe</value>
+		<value help=" ensemble de lignes connectées entre elles" value="composites"> réseau</value>
+		<value help=" primitive géométrique à une dimension représentant une image continue d'une ligne" value="curve"> lignes</value>
+		<value help=" primitive géométrique à zéro dimension représentant une position sans étendue" value="point"> point</value>
+		<value help=" primitive géométrique à trois dimensions représentant un volume (définition à revoir)" value="solid"> volume</value>
+		<value help=" primitive géométrique à deux dimensions représentant une surface" value="surface"> polygone</value>
 	</codelist>
 	<codelist name="ImgCondCd">
-		<value help="portion of the image is blurred" value="blurredImage">Blurred Image</value>
-		<value help="portion of the image is partially obscured by cloud cover" value="cloud">Cloud</value>
-		<value help="acute angle between the plane of the ecliptic (the plane of the Earth's orbit) and the plane of the celestial equator" value="degradingObliquity">Degrading Obliquity</value>
-		<value help="portion of the image is partially obscured by fog" value="fog">Fog</value>
-		<value help="portion of the image is partially obscured by heavy smoke or dust" value="heavySmokeOrDust">Heavy Smoke Or Dust</value>
-		<value help="image was taken at night" value="night">Night</value>
-		<value help="image was taken during rainfall" value="rain">Rain</value>
-		<value help="image was taken during semi-dark conditions-twilight conditions" value="semiDarkness">Semi Darkness</value>
-		<value help="portion of the image is obscured by shadow" value="shadow">Shadow</value>
-		<value help="portion of the image is obscured by snow" value="snow">Snow</value>
-		<value help="the absence of collection data of a given point or area caused by the relative location of topographic features which obstruct the collection path between the collector(s) and the subject(s) of interest" value="terrainMasking">Terrain Masking</value>
+		<value help="Portion de l’image floue" value="blurredImage">Flou</value>
+		<value help="Portion de l’image partiellement occultée par des nuages" value="cloud">Nuage</value>
+		<value help="Due à l’angle entre le plan de l’écliptique et le plan équatorial" value="degradingObliquity">Dégradation oblique</value>
+		<value help="Portion de l’image partiellement occultée par du brouillard" value="fog">brouillard</value>
+		<value help="Portion de l’image partiellement occultée des fumées ou des poussières" value="heavySmokeOrDust">Fumée et poussière</value>
+		<value help="Image prise la nuit" value="night">Nuit</value>
+		<value help="Image prise durant la pluie" value="rain">Pluie</value>
+		<value help="Image prise pendant une semi obscurité" value="semiDarkness">Semi obscurité</value>
+		<value help="Image obscurcie par une ombre" value="shadow">Ombre</value>
+		<value help="Image obscurcie par la neige" value="snow">Neige</value>
+		<value help="Absence de données en raison des caractéristiques topographiques qui masquent les informations recherchées" value="terrainMasking">Terrain masqué</value>
 	</codelist>
 	<codelist name="KeyTypCd">
-		<value help="keyword identifies a branch of instruction or specialized learning" value="discipline">Discipline</value>
-		<value help="keyword identifies a location" value="place">Place</value>
-		<value help="keyword identifies the layer(s) of any deposited substance" value="stratum">Stratum</value>
-		<value help="keyword identifies a time period related to the dataset" value="temporal">Temporal</value>
-		<value help="keyword identifies a particular subject or topic" value="theme">Theme</value>
+		<value help="Mot clef en relation avec une branche de la connaissance" value="discipline">Discipline</value>
+		<value help="Mot clef identifiant un lieu" value="place">Localisation</value>
+		<value help="Couche géologique " value="stratum">Strate</value>
+		<value help="Mot clef identifiant une période de temps" value="temporal">Temps</value>
+		<value help="Mot clef identifiant un sujet particulier" value="theme">Thème</value>
 	</codelist>
 	<codelist name="MaintFreqCd">
-		<value help="data is repeatedly and frequently updated" value="continual">Continual</value>
-		<value help="data is updated each day" value="daily">Daily</value>
-		<value help="data is updated on a weekly basis" value="weekly">Weekly</value>
-		<value help="data is updated every two weeks" value="fortnightly">Fortnightly</value>
-		<value help="data is updated each month" value="monthly">Monthly</value>
-		<value help="data is updated every three months" value="quarterly">Quarterly</value>
-		<value help="data is updated twice each year" value="biannually">Biannually</value>
-		<value help="data is updated every year" value="annually">Annually</value>
-		<value help="data is updated as deemed necessary" value="asNeeded">As Needed</value>
-		<value help="data is updated in intervals that are uneven in duration" value="irregular">Irregular</value>
-		<value help="there are no plans to update the data" value="notPlanned">Not Planned</value>
-		<value help="frequency of maintenance for the data is not known" value="unknown">Unknown</value>
+		<value help="Mise à jour continue" value="continual">Continue</value>
+		<value help="Mise à jour quotidienne" value="daily">Journalière</value>
+		<value help="Mise à jour hebdomadaire" value="weekly">Hebdomadaire</value>
+		<value help="Mise à jour 2 fois par mois" value="fortnightly">Bi-mensuelle</value>
+		<value help="Mise à jour mensuelle" value="monthly">Mensuelle</value>
+		<value help="Mise à jour trimestrielle" value="quarterly">Trimestrielle</value>
+		<value help="Mise à jour bi-annuelle" value="biannually">Bi-annuelle</value>
+		<value help="Mise à jour annuelle" value="annually">Annuelle</value>
+		<value help="Mise à jour lorsque cela est jugé nécessaire" value="asNeeded">Lorsque nécessaire</value>
+		<value help="Mise à jour irrégulière" value="irregular">Irrégulière</value>
+		<value help="Mise à jour non planifiée" value="notPlanned">Non planifiée</value>
+		<value help="Mis à jour inconnue" value="unknown">inconnue</value>
 	</codelist>
 	<codelist name="MedFormCd">
-		<value help="CoPy In / Out (UNIX file format and command)" value="cpio">Cpio</value>
-		<value help="Tap ARchive" value="tar">Tar</value>
-		<value help="high sierra file system" value="highSierra">High Sierra</value>
-		<value help="information processing - volume and file structure of CD-ROM" value="iso9660">Iso9660</value>
-		<value help="rock ridge interchange protocol (UNIX)" value="iso9660RockRidge">Iso9660 Rock Ridge</value>
-		<value help="hierarchical file system (Macintosh)" value="iso9660AppleHFS">Iso9660 Apple HFS</value>
+		<value help="Copie en entrée /sortie (commande et fichier au format UNIX)" value="cpio">Cpio</value>
+		<value help="Format d’archivage sur bande" value="tar">Tar</value>
+		<value help="Système de fichiers High Sierra" value="highSierra">High Sierra</value>
+		<value help="Système de fichier CD – ROM" value="iso9660">Iso9660</value>
+		<value help="Protocole d’échange  Rock Ridge (UNIX)" value="iso9660RockRidge">Iso9660 Rock Ridge</value>
+		<value help="Système hiérarchique de fichiers (Macintosh)" value="iso9660AppleHFS">Iso9660 Apple HFS</value>
 	</codelist>
 	<codelist name="MedNameCd">
-		<value help="read-only optical disk" value="cdRom">Cd Rom</value>
-		<value help="digital versatile disk" value="dvd">Dvd</value>
-		<value help="digital versatile disk, read only" value="dvdRom">Dvd Rom</value>
-		<value help="3,5 inch magnetic disk" value="3halfInchFloppy">3 half Inch Floppy</value>
-		<value help="5,25 inch magnetic disk" value="5quarterInchFloppy">5 quarter Inch Floppy</value>
-		<value help="7 track magnetic tape" value="7trackTape">7 track Tape</value>
-		<value help="9 track magnetic tape" value="9trackTape">9 track Tape</value>
-		<value help="3480 cartridge tape drive" value="3480Cartridge">3480 Cartridge</value>
-		<value help="3490 cartridge tape drive" value="3490Cartridge">3490 Cartridge</value>
-		<value help="3580 cartridge tape drive" value="3580Cartridge">3580 Cartridge</value>
-		<value help="4 millimetre magnetic tape" value="4mmCartridgeTape">4mm Cartridge Tape</value>
-		<value help="8 millimetre magnetic tape" value="8mmCartridgeTape">8mm Cartridge Tape</value>
-		<value help="0,25 inch magnetic tape" value="1quarterInchCartridgeTape">1 quarter Inch Cartridge Tape</value>
-		<value help="half inch cartridge streaming tape drive" value="digitalLinearTape">Digital Linear Tape</value>
-		<value help="direct computer linkage" value="onLine">On Line</value>
-		<value help="linkage through a satellite communication system" value="satellite">Satellite</value>
-		<value help="communication through a telephone network" value="telephoneLink">Telephone Link</value>
-		<value help="pamphlet or leaflet giving descriptive information" value="hardcopy">Hardcopy</value>
+		<value help="Disque optique en lecture seule" value="cdRom">Cd-Rom</value>
+		<value help="Disque numérique universel" value="dvd">Dvd</value>
+		<value help="Disque numérique universel en lecture seule" value="dvdRom">Dvd- Rom</value>
+		<value help="Disquette magnétique de 3.5 pouces" value="3halfInchFloppy">Disquette 3.5 pouces</value>
+		<value help="Disquette magnétique de 5.25 pouces" value="5quarterInchFloppy">Disquette 5.25 pouces</value>
+		<value help="Bande magnétique" value="7trackTape">7tracktape</value>
+		<value help="Bande magnétique" value="9trackTape">9trackTape</value>
+		<value help="Cartouche à bande magnétique 3480" value="3480Cartridge">Cartouche 3480</value>
+		<value help="Cartouche à bande magnétique 3490" value="3490Cartridge">Cartouche 3490</value>
+		<value help="Cartouche à bande magnétique 3580" value="3580Cartridge">Cartouche 3580</value>
+		<value help="Bande magnétique 4 mm" value="4mmCartridgeTape">Bande magnétique 4 mm</value>
+		<value help="Bande magnétique 8 mm" value="8mmCartridgeTape">Bande magnétique 8 mm</value>
+		<value help="Bande magnétique 0.25 pouces" value="1quarterInchCartridgeTape">Bande magnétique 0.25 pouces</value>
+		<value help="Bande magnétique 0.5 pouces" value="digitalLinearTape">Bande magnétique 0.5 pouces</value>
+		<value help="En ligne" value="onLine">En ligne</value>
+		<value help="Communication par satellite" value="satellite">Satellite</value>
+		<value help="Liens via un réseau téléphonique" value="telephoneLink">Communication téléphonique</value>
+		<value help="Document papier" value="hardcopy">Papier</value>
 	</codelist>
 	<codelist name="ObCd">
-		<value help="element is always required" value="mandatory">Mandatory</value>
-		<value help="element is not required Name Domain code Definition" value="optional">Optional</value>
-		<value help="element is required when specific a specific condition is met" value="conditional">Conditional</value>
+		<value help="Obligatoire" value="mandatory">Obligatoire</value>
+		<value help="Optionnel" value="optional">Optionnel</value>
+		<value help="Conditionnel" value="conditional">Conditionnel</value>
 	</codelist>
 	<codelist name="PixOrientCd">
-		<value help="point halfway between the lower left and the upper right of the pixel" value="center">Center</value>
-		<value help="&quot;the corner in the pixel closest to the origin of the SRS; if two are at the same distance from the origin, the one with the smallest x-value&quot;" value="lowerLeft">Lower Left</value>
-		<value help="next corner counterclockwise from the lower left" value="lowerRight">Lower Right</value>
-		<value help="next corner counterclockwise from the lower right" value="upperRight">Upper Right</value>
-		<value help="next corner counterclockwise from the upper right" value="upperLeft">Upper Left</value>
+		<value help="Centre" value="center">Centre</value>
+		<value help="Haut gauche" value="lowerLeft">Haut gauche</value>
+		<value help="Haut droit" value="lowerRight">Haut droit</value>
+		<value help="Bas gauche" value="upperRight">Bas gauche</value>
+		<value help="Bas droit" value="upperLeft">Bas droit</value>
 	</codelist>
 	<codelist name="ProgCd">
-		<value help="production of the data has been completed" value="completed">Completed</value>
-		<value help="data has been stored in an offline storage facility" value="historicalArchive">Historical Archive</value>
-		<value help="data is no longer relevant" value="obsolete">Obsolete</value>
-		<value help="data is continually being updated" value="onGoing">On Going</value>
-		<value help="fixed date has been established upon or by which the data will be created or updated" value="planned">Planned</value>
-		<value help="data needs to be generated or updated" value="required">Required</value>
-		<value help="data is currently in the process of being created" value="underdevelopment">Under development</value>
+		<value help="La production du jeu de données est terminée" value="completed">Terminé</value>
+		<value help="Jeu de données historique" value="historicalArchive">Données historiques</value>
+		<value help="Jeu de données obsolète" value="obsolete">Obsolète</value>
+		<value help="Jeu de données ayant des mises à jour continues" value="onGoing">Mis à jour</value>
+		<value help="Jeu de données planifié" value="planned">Planifié</value>
+		<value help="Jeu de données devant être produit" value="required">Requis</value>
+		<value help="Jeu de données en cours d’élaboration" value="underDevelopment">En cours</value>
 	</codelist>
 	<codelist name="RestrictCd">
-		<value help="exclusive right to the publication, production, or sale of the rights to a literary, dramatic, musical, or artistic work, or to the use of a commercial print or label, granted by law for a specified period of time to an author, composer, artist, distributor" value="copyright">Copyright</value>
-		<value help="government has granted exclusive right to make, sell, use or license an invention or discovery" value="patent">Patent</value>
-		<value help="produced or sold information awaiting a patent" value="patentPending">Patent Pending</value>
-		<value help="a name, symbol, or other device identifying a product, officially registered and legally restricted to the use of the owner or manufacturer" value="trademark">Trademark</value>
-		<value help="formal permission to do something" value="license">License</value>
-		<value help="rights to financial benefit from and control of distribution of non-tangible property that is a result of creativity" value="intellectualPropertyRights">Intellectual Property Rights</value>
-		<value help="withheld from general circulation or disclosure" value="restricted">Restricted</value>
-		<value help="limitation not listed" value="otherRestictions">Other Restictions</value>
+		<value help="Restriction lié à l’exercice du droit moral" value="copyright">Droit d’auteur /  Droit moral (copyright)</value>
+		<value help="Restriction induite par l’existence d’un brevet" value="patent">Brevet</value>
+		<value help="Restriction induite par le dépôt d’un brevet en cours" value="patentPending">Brevet en instance</value>
+		<value help="Restriction lié à l’existence d’un dépôt de marque" value="trademark">Marque de commerce</value>
+		<value help="Restriction induite par l’existence d’une licence" value="license">Licence</value>
+		<value help="Restriction lié à l’exercice du droit patrimonial" value="intellectualPropertyRights">Droit de propriété intellectuelle / Droit patrimonial</value>
+		<value help="Cette valeur n’a pas d’application identifiée en France" value="Restricted">Restreint</value>
+		<value help="Restrictions  non prévues" value="Other Restictions">Autres restrictions</value>
 	</codelist>
 	<codelist name="ScopeCd">
-		<value help="information applies to the attribute class" value="attribute">Attribute</value>
-		<value help="information applies to the characteristic of a feature" value="attributeType">Attribute Type</value>
-		<value help="information applies to the collection hardware class" value="collectionHardware">Collection Hardware</value>
-		<value help="information applies to the collection session" value="collectionSession">Collection Session</value>
-		<value help="information applies to the dataset" value="dataset">Dataset</value>
-		<value help="information applies to the series" value="series">Series</value>
-		<value help="information applies to non-geographic data" value="nonGeographicDataset">Non Geographic Dataset</value>
-		<value help="information applies to a dimension group" value="dimensionGroup">Dimension Group</value>
-		<value help="information applies to a feature" value="feature">Feature</value>
-		<value help="information applies to a feature type" value="featureType">Feature Type</value>
-		<value help="information applies to a property type" value="propertyType">Property Type</value>
-		<value help="information applies to a field session" value="fieldSession">Field Session</value>
-		<value help="information applies to a computer program or routine" value="software">Software</value>
-		<value help="information applies to a capability which a service provider entity makes available to a service user entity through a set of interfaces that define a behaviour, such as a use case" value="service">Service</value>
-		<value help="information applies to a copy or imitation of an existing or hypothetical object" value="model">Model</value>
+		<value help="Informations appliquées aux caractéristiques de l’attribut" value="attribute">Attribut</value>
+		<value help="Informations appliquées aux caractéristiques de l’entité" value="attributeType">Type d’attribut</value>
+		<value help="Informations appliquées aux caractéristiques d’une collection matérielle" value="collectionHardware">Collection matérielle</value>
+		<value help="Informations appliquées aux caractéristiques d’une collection de session" value="collectionSession">Collection de session</value>
+		<value help="Informations appliquées aux caractéristiques de jeu de données" value="dataset">Jeu de données</value>
+		<value help="Informations appliquées aux caractéristiques de la collection de données" value="series">Collection de données</value>
+		<value help="Informations appliquées aux caractéristiques de jeux de données non géographiques" value="nonGeographicDataset">Jeu de données non géographique</value>
+		<value help="informations appliquées à un groupe" value="dimensionGroup">Dimension d’un groupe</value>
+		<value help="Informations appliquées à une entité" value="feature">Entité</value>
+		<value help="Informations appliquées à un type d’entité" value="featureType">Type d’entité</value>
+		<value help="Informations appliquées à un type de propriété" value="propertyType">Type de propriété</value>
+		<value help="Informations appliquées aux caractéristiques d’un champ de session" value="fieldSession">Champ de session</value>
+		<value help="Informations appliquées à programme ou à une routine" value="software">Logiciel</value>
+		<value help="Informations appliquées à un service Internet" value="service">Service</value>
+		<value help="Informations appliquées à modèle décrivant les objets ou un ensemble d'objets" value="model">Modèle</value>
+		<value help="tile" value="tile">Tile</value>
 	</codelist>
 	<codelist name="SpatRepTypCd">
-		<value help="vector data is used to represent geographic data" value="vector">Vector</value>
-		<value help="grid data is used to represent geographic data" value="grid">Grid</value>
-		<value help="textual or tabular data is used to represent geographic data" value="textTable">Text Table</value>
-		<value help="triangulated irregular network" value="tin">Tin</value>
-		<value help="three-dimensional view formed by the intersecting homologous rays of an overlapping pair of images" value="stereoModel">Stereo Model</value>
-		<value help="scene from a video recording" value="video">Video</value>
+		<value help="Donnée vecteur (point, ligne, polygone)" value="vector">Vecteur</value>
+		<value help="Donnée raster" value="grid">Raster</value>
+		<value help="Texte ou donnée tabulaire" value="textTable">Table texte</value>
+		<value help="Réseau de triangle irrégulier (Triangulated Irregular Network)" value="tin">Tin</value>
+		<value help="Vue en 3 dimensions" value="stereoModel">Vue 3D</value>
+		<value help="enregistrement vidéo" value="video">Vidéo</value>
 	</codelist>
 	<codelist name="TopicCatCd">
-		<value help="rearing of animals and/or cultivation of plants" value="farming">Farming</value>
-		<value help="flora and/or fauna in natural environment" value="biota">Biota</value>
-		<value help="legal land descriptions" value="boundaries">Boundaries</value>
-		<value help="processes and phenomena of the atmosphere" value="climatologyMeteorologyAtmosphere">Climatology Meteorology Atmosphere</value>
-		<value help="economic activities, conditions and employment" value="economy">Economy</value>
-		<value help="height above or below sea level" value="elevation">Elevation</value>
-		<value help="environmental resources, protection and conservation" value="environment">Environment</value>
-		<value help="information pertaining to earth sciences" value="geoscientificInformation">Geoscientific Information</value>
-		<value help="health, health services, human ecology, and safety" value="health">Health</value>
-		<value help="base maps" value="imageryBaseMapsEarthCover">Imagery Base Maps Earth Cover</value>
-		<value help="military bases, structures, activities" value="intelligenceMilitary">Intelligence Military</value>
-		<value help="inland water features, drainage systems and their characteristics" value="inlandWaters">Inland Waters</value>
-		<value help="positional information and services" value="location">Location</value>
-		<value help="features and characteristics of salt water bodies (excluding inland waters)" value="oceans">Oceans</value>
-		<value help="information used for appropriate actions for future use of the land" value="planningCadastre">Planning Cadastre</value>
-		<value help="characteristics of society and cultures" value="society">Society</value>
-		<value help="man-made construction" value="structure">Structure</value>
-		<value help="means and aids for conveying persons and/or goods" value="transportation">Transportation</value>
-		<value help="energy, water and waste systems and communications infrastructure and services" value="utilitiesCommunication">Utilities Communication</value>
+		<value help="Elevage et/ou cultures&#xA;Exemples : agriculture, irrigation, aquaculture, plantations&#xA;" value="farming">Agriculture</value>
+		<value help="Flore et faune dans un écosystème naturel&#xA;Exemples : habitat, écologie, faune sauvage, faune aquatique, sciences biologiques, zones humides, végétation, biodiversité&#xA;" value="biota">Flore et faune</value>
+		<value help="Exemples : limites de pays, de provinces, de départements, de communes" value="boundaries">Limites politiques et administratives</value>
+		<value help="Processus et phénomènes atmosphériques&#xA;Exemples : climat, météorologie, conditions atmosphériques, changements climatiques, couverture nuageuse&#xA;" value="climatologyMeteorologyAtmosphere">Climatologie, météorologie</value>
+		<value help="Activités économiques&#xA;Exemples : production, travail, revenu, commerce, industrie, tourisme et éco-tourisme, foresterie, pêche, chasse, exploration et exploitation des ressources minières, pétrole, gaz naturel&#xA;" value="economy">Economie</value>
+		<value help="Topographie au dessous et dessus du niveau de la mer&#xA;Exemples : altitude, bathymétrie, MNT, pentes et calculs dérivés de l’altitude&#xA;" value="elevation">Topographie</value>
+		<value help="Ressources naturelles, protection, conservation des ressources naturelles&#xA;Exemples : pollution, traitement et stockage des déchets, suivi de l’environnement, gestion du risque, réserves naturelles, paysage&#xA;" value="environment">Ressources et gestion de l’environnement</value>
+		<value help="Informations relatives aux sciences de la terre&#xA;Exemples : composants et processus géophysiques, géologie, minéralogie, tectonique, risque sismique&#xA;" value="geoscientificInformation">Géosciences</value>
+		<value help="Santé, services de santé, épidémiologie&#xA;Exemples : maladies et épidémie, facteurs affectant la santé, santé mentale et physique, services de santé&#xA;" value="health">Santé</value>
+		<value help="Carte de référence&#xA;Exemples : occupation des terres, imagerie aérienne et satellitale, carte thématiques, carte topographiques&#xA;" value="imageryBaseMapsEarthCover">Carte de référence de la couverture terrestre</value>
+		<value help="Bases militaires et infrastructures" value="intelligenceMilitary">Infrastructures militaires</value>
+		<value help="Exemples : fleuves, rivières, glaciers, lacs salés, systèmes hydrographiques, barrages, débits, qualité de l’eau" value="inlandWaters">Hydrographie</value>
+		<value help="Exemples : zones postales, adresses, points de contrôle, réseau géodésique" value="location">Localisation de réseaux</value>
+		<value help="Composants et caractéristiques du milieu maritime&#xA;Exemples : littoral, récifs, marée, etc.&#xA;" value="oceans">Océans</value>
+		<value help="Exemples : carte d’utilisation des terres, plan d’occupation des sols, planification pour la prévention des risques" value="planningCadastre">Planification et gestion du territoire</value>
+		<value help="Caractéristiques des sociétés et des cultures&#xA;Exemples :lois, anthropologie, éducation, données démographiques, archéologique, suivi des systèmes  sociaux, croyances, us et coutumes, crimes et justices&#xA;" value="society">Société</value>
+		<value help="aménagements urbains&#xA;Exemples : musée, église, usines, maisons, monuments, boutiques, immeubles&#xA;" value="structure">Aménagements urbains</value>
+		<value help="Moyens de transports des personnes et des biens&#xA;Exemples :  routes, aéroports, tunnels, viaducs, ponts, chemin de fer&#xA;" value="transportation">Infrastructures de transport</value>
+		<value help="Systèmes de distribution de gestion ou de stockage de l’énergie, de l’eau, des déchets. Infrastructures et services de communication.&#xA;Exemples : source d’énergie solaire, hydroélectrique, nucléaire, épuration et distribution des eaux, réseau de distribution électrique, de gaz, réseau de télécommunication, radio.&#xA;" value="utilitiesCommunication">Réseaux de télécommunication, d’énergie</value>
 	</codelist>
 	<codelist name="TopoLevCd">
-		<value help="geometry objects without any additional structure which describes topology" value="geometryOnly">Geometry Only</value>
-		<value help="1-dimensional topological complex" value="topology1D">Topology 1D</value>
-		<value help="1-dimensional topological complex which is planar" value="planarGraph">Planar Graph</value>
-		<value help="2-dimensional topological complex which is planar" value="fullPlanarGraph">Full Planar Graph</value>
-		<value help="1-dimensional topological complex which is isomorphic to a subset of a surface" value="surfaceGraph">Surface Graph</value>
-		<value help="2-dimensional topological complex which is isomorphic to a subset of a surface" value="fullSurfaceGraph">Full Surface Graph</value>
-		<value help="3-dimensional topological complex" value="topology3D">Topology 3D</value>
-		<value help="complete coverage of a 3D coordinate space" value="fullTopology3D">Full Topology 3D</value>
-		<value help="topological complex without any specified geometric realization" value="abstract">Abstract</value>
+		<value help="objets vecteurs sans aucune structure qui décrit la topologie" value="geometryOnly"> géométrie seulement</value>
+		<value help="Réseau sans surface (communément dénommée topologie réseau)" value="topology1D"> topologie de réseau</value>
+		<value help="Topologie 1D planaire" value="planarGraph"> graphe planaire</value>
+		<value help="Topologie 2D planaire" value="fullPlanarGraph"> topologie de réseau complète</value>
+		<value help="Topologie 1D avec surfaces" value="surfaceGraph"> topologie de surface</value>
+		<value help="Topologie 2D avec surfaces" value="fullSurfaceGraph"> topologie de surface complète</value>
+		<value help="Topologie 3D" value="topology3D"> topologie 3D</value>
+		<value help="Couverture complète d’un espace Euclidien 3D" value="fullTopology3D"> topologie 3D complète</value>
+		<value help="Objets géométriques sans description de la topologie" value="abstract"> spaghetti</value>
 	</codelist>
 	
 </root>
