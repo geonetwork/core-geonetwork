@@ -26,8 +26,10 @@ package org.fao.geonet.guiservices.util;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
 //=============================================================================
@@ -47,12 +49,13 @@ public class Env implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SettingManager sm =gc.getSettingManager();
 
-		Element root = new Element("a");
-		root.addContent(new Element(Geonet.Elem.SITE_ID).setText(gc.getSiteId()));
+		String  xslPath = context.getAppPath() + Geonet.Path.STYLESHEETS+ "/xml";
+		Element system  = gc.getSettingManager().get("system", -1);
 
-		return root;
+		return Xml.transform(system, xslPath +"/env.xsl");
 	}
 }
 
