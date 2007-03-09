@@ -144,7 +144,7 @@
 		<!-- When a user with access to the metadata.duplicate.form can see a template, he can use it.
 			  Also when not allowed to edit the template himself -->
 
-		<xsl:if test="string(geonet:info/isTemplate)!='s' and (geonet:info/isTemplate='y' or geonet:info/source=/root/gui/env/siteId) and /root/gui/services/service/@name='metadata.duplicate.form'">
+		<xsl:if test="string(geonet:info/isTemplate)!='s' and (geonet:info/isTemplate='y' or geonet:info/source=/root/gui/env/site/siteId) and /root/gui/services/service/@name='metadata.duplicate.form'">
 			<button class="content" onclick="load('{/root/gui/locService}/metadata.duplicate.form?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/create"/></button>
 		</xsl:if>
 		

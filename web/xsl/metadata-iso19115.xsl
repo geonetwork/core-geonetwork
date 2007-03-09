@@ -1746,7 +1746,7 @@
 			</xsl:if>
 		
 			<!--
-			<xsl:if test="not(geonet:info/server) and (string(geonet:info/source)=string(/root/gui/env/siteId))">
+			<xsl:if test="not(geonet:info/server) and (string(geonet:info/source)=string(/root/gui/env/site/siteId))">
 				<xsl:for-each select="dataIdInfo/graphOver">
 					<xsl:choose>
 						<xsl:when test="string(bgFileDesc)='thumbnail' and string(bgFileName)!=''">
@@ -1763,7 +1763,7 @@
 			<xsl:if test="not(geonet:info/server)">
 				<!-- //FIXME There's still a mismatch between sources information and metadata information-->
 				
-				<xsl:variable name="siteId" select="string(/root/gui/env/siteId)"/>
+				<xsl:variable name="siteId" select="string(/root/gui/env/site/siteId)"/>
 				<xsl:variable name="source" select="string(geonet:info/source)"/>
 				<xsl:variable name="uuid"   select="string(geonet:info/uuid)"/>
 			

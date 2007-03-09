@@ -12,7 +12,7 @@
 			<xsl:with-param name="content">
 				<table><tr><td>
 					<xsl:copy-of select="/root/gui/page/content/*"/>
-					<p align="right">siteID: <kbd><xsl:value-of select="/root/gui/env/siteId"/></kbd></p>
+					<p align="right">siteID: <kbd><xsl:value-of select="/root/gui/env/site/siteId"/></kbd></p>
 				</td></tr></table>
 			</xsl:with-param>
 		</xsl:call-template>

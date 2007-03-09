@@ -74,9 +74,9 @@
 															<img src="{/root/gui/url}/images/logos/{$source}.png" width="40"/>
 														</a>
 													</xsl:when>
-													<xsl:when test="/root/gui/env/server[string(siteId)=$source]">
+													<xsl:otherwise>
 														<img src="{/root/gui/url}/images/logos/{$source}.png" width="40"/>
-													</xsl:when>
+													</xsl:otherwise>
 												</xsl:choose>
 											</td>
 											<xsl:choose>

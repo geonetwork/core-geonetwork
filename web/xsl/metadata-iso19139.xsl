@@ -1541,7 +1541,7 @@
 
 			<xsl:if test="not(geonet:info/server)">
 				<!-- //FIXME There's still a mismatch between sources information and metadata information-->
-				<xsl:variable name="siteId" select="string(/root/gui/env/siteId)"/>
+				<xsl:variable name="siteId" select="string(/root/gui/env/site/siteId)"/>
 				<xsl:variable name="source" select="string(geonet:info/source)"/>
 				<xsl:variable name="uuid"   select="string(geonet:info/uuid)"/>
 				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic">
