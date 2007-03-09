@@ -97,6 +97,13 @@
 						<xsl:value-of select="$metadata/geoBox/eastBL"/>
 					</georss:box>
 				</xsl:when>
+			 	<xsl:when test="string(/root/response/georss)='simplepoint'">
+                        <georss:point>
+                                <xsl:value-of select="(($metadata/geoBox/northBL)+($metadata/geoBox/southBL))*.5"/>
+                                <xsl:text> </xsl:text>
+                                <xsl:value-of select="(($metadata/geoBox/westBL)+($metadata/geoBox/eastBL))*.5"/>
+                        </georss:point>
+                </xsl:when>
 			</xsl:choose>
 			
 		</item>
