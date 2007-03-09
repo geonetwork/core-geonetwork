@@ -64,14 +64,17 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.DbmsPool</provider>
 			<config>
-        <user>ipXCRwNF</user>
-        <password>lYpRL4ro</password>
+				<user>qbzZlRdy</user>
+				<password>Qp1PgFDy</password>
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>
 			</config>
-			
-		<activator class="org.fao.geonet.activators.McKoiActivator"><configFile>WEB-INF/db/db.conf</configFile></activator></resource>
+
+			<activator class="org.fao.geonet.activators.McKoiActivator">
+				<configFile>WEB-INF/db/db.conf</configFile>
+			</activator>
+		</resource>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- mysql -->
@@ -659,7 +662,7 @@
 	<include>config-harvesting.xml</include>
 	<include>config-portal.xml</include>
 	<include>config-export.xml</include>
-	
+
 	<!-- ====================================================================== -->
 
 </geonet>
