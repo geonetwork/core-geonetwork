@@ -334,8 +334,8 @@ public class DataManager
 
 	public String getSiteURL()
 	{
-		String host    = settingMan.getValue("system/usePublication/host");
-		String port    = settingMan.getValue("system/usePublication/port");
+		String host    = settingMan.getValue("system/server/host");
+		String port    = settingMan.getValue("system/server/port");
 		String locServ = baseURL +"/"+ Jeeves.Prefix.SERVICE +"/en";
 
 		return "http://" + host + (port == "80" ? "" : ":" + port) + locServ;
