@@ -24,7 +24,7 @@
 
 	<xsl:template name="content">
 		<xsl:call-template name="formLayout">
-			<xsl:with-param name="title" select="/root/gui/strings/config"/>
+			<xsl:with-param name="title" select="/root/gui/strings/systemConfig"/>
 
 			<xsl:with-param name="content">
 				<xsl:call-template name="panel"/>
