@@ -100,6 +100,20 @@
 
 	<!-- ============================================================================================= -->
 
+	<xsl:template match="harvestingNodes">
+		<xsl:copy>
+			<xsl:for-each select="record">
+				<node>
+					<name><xsl:value-of select="name"/></name>
+					<siteId><xsl:value-of select="source"/></siteId>
+					<metadata><xsl:value-of select="num"/></metadata>
+				</node>
+			</xsl:for-each>
+		</xsl:copy>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
 	<xsl:template match="env"/>
 
 	<!-- ============================================================================================= -->

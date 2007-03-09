@@ -70,7 +70,6 @@ public class Geonet
 		public static final String OPERATIONS = "operations";
 		public static final String OPER       = "oper";
 		public static final String SUMMARY    = "summary";
-		public static final String SITE_ID    = "siteId";
 		public static final String SITE_URL   = "siteURL";
 	}
 

@@ -95,6 +95,9 @@ public class Info implements Service
 			else if (type.equals("knownNodes"))
 				result.addContent(getKnownNodes(dbms));
 
+			else if (type.equals("harvestingNodes"))
+				result.addContent(getHarvestingNodes(dbms));
+
 			else
 				throw new BadParameterEx("type", type);
 		}
@@ -119,16 +122,22 @@ public class Info implements Service
 		while (i.hasNext())
 		{
 			Element record = (Element) i.next();
-			String  siteId = record.getChildText("siteid");
-
-			String  query = "SELECT COUNT(*) as result FROM Metadata WHERE source='"+ siteId +"'";
-			Element count = (Element) dbms.select(query).getChildren().get(0);
-
-			record.addContent(new Element("metadata").setText(count.getText()));
 			record.getChild("siteid").setName("siteId");
 		}
 
 		return result.setName("knownNodes");
+	}
+
+	//--------------------------------------------------------------------------
+
+	private Element getHarvestingNodes(Dbms dbms) throws SQLException
+	{
+		String query = "SELECT name, source, count(*) as num "+
+							"FROM   Metadata, KnownNodes "+
+							"WHERE  source=siteId "+
+							"GROUP BY source";
+
+		return dbms.select(query).setName("harvestingNodes");
 	}
 
 	//--------------------------------------------------------------------------
