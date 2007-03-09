@@ -381,8 +381,8 @@ Harvesting.prototype.retrieveSuccess = function(xml)
 	{
 		view.clearSiteId();
 		
-		var xmlSite  = xmlNode.getElementsByTagName('site')      [0];
-		var xmlNodes = xmlNode.getElementsByTagName('knownNodes')[0];
+		var xmlSite  = xmlNode.getElementsByTagName('site')           [0];
+		var xmlNodes = xmlNode.getElementsByTagName('harvestingNodes')[0];
 		
 		var name   = xmlSite.getElementsByTagName('name')  [0].textContent;
 		var siteId = xmlSite.getElementsByTagName('siteId')[0].textContent;
@@ -565,7 +565,7 @@ var retrieveTemplate =
 '   <params>'+
 '      <request>'+
 '         <type>site</type>'+
-'         <type>knownNodes</type>'+
+'         <type>harvestingNodes</type>'+
 '      </request>'+
 '   </params>'+
 '</request>';
