@@ -13,12 +13,18 @@
 		<xsl:variable name="z3950"    select="children/z3950/children"/>
 		<xsl:variable name="proxy"    select="children/proxy/children"/>
 		<xsl:variable name="feedback" select="children/feedback/children"/>
+		<xsl:variable name="platform" select="children/platform/children"/>
 
 		<env>
 			<site>
 				<name><xsl:value-of select="$site/name/value"/></name>
 				<organization><xsl:value-of select="$site/organization/value"/></organization>
 				<siteId><xsl:value-of select="$site/siteId/value"/></siteId>				
+				<platform>
+					<name>geonetwork</name>
+					<version><xsl:value-of select="$platform/version/value"/></version>
+					<subVersion><xsl:value-of select="$platform/subVersion/value"/></subVersion>
+				</platform>
 			</site>
 
 			<server>
