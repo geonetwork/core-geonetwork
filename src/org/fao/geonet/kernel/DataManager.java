@@ -953,7 +953,7 @@ public class DataManager
 
 	public void setThumbnail(Dbms dbms, String id, boolean small, String file) throws Exception
 	{
-		int pos = file.lastIndexOf(".");
+		int    pos = file.lastIndexOf(".");
 		String ext = (pos == -1) ? "???" : file.substring(pos +1);
 
 		Element env = new Element("env");
