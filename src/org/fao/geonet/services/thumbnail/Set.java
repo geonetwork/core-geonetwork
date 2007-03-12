@@ -67,7 +67,7 @@ public class Set implements Service
 	{
 		String  id            = Util.getParam    (params, Params.ID);
 		String  type          = Util.getParam    (params, Params.TYPE);
-		String  version       = Util.getParam(params, Params.VERSION);
+		String  version       = Util.getParam    (params, Params.VERSION);
 		String  file          = Util.getParam    (params, Params.FNAME);
 		String  scalingDir    = Util.getParam    (params, Params.SCALING_DIR);
 		int     scalingFactor = Util.getParamInt (params, Params.SCALING_FACTOR);
