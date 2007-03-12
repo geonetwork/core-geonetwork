@@ -66,11 +66,11 @@ public class Download implements Service
 	{
 		String id     = Util.getParam(params, Params.ID);
 		String fname  = Util.getParam(params, Params.FNAME);
-		String access = Util.getParam(params, Params.ACCESS);
+		String access = Util.getParam(params, Params.ACCESS, Params.Access.PUBLIC);
 
 		boolean doNotify = false;
 
-		if (access == null || access.equals(Params.Access.PRIVATE))
+		if (access.equals(Params.Access.PRIVATE))
 		{
 			Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
 			doNotify = true;
@@ -90,8 +90,8 @@ public class Download implements Service
 
 		if (doNotify)
 		{
-			String host = sm.getValue("system/feedback/smtpHost");
-			String port = sm.getValue("system/feedback/smtpPort");
+			String host = sm.getValue("system/feedback/mailServer/host");
+			String port = sm.getValue("system/feedback/mailServer/port");
 			String from = sm.getValue("system/feedback/email");
 
 			String fromDescr = "GeoNetwork administrator";
