@@ -24,6 +24,10 @@
 package org.fao.gast.lib;
 
 import jeeves.utils.Xml;
+import jeeves.utils.XmlRequest;
+import org.fao.gast.app.App;
+import org.fao.gast.app.Configuration;
+import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
 //=============================================================================
@@ -34,6 +38,29 @@ public class ServiceLib
 	//---
 	//--- API methods
 	//---
+	//---------------------------------------------------------------------------
+
+	public void login(XmlRequest req) throws Exception
+	{
+		Configuration cfg = App.config;
+
+		req.setAddress("/"+ cfg.getServlet() +"/srv/en/"+ Geonet.Service.XML_LOGIN);
+		req.clearParams();
+		req.addParam("username", cfg.getUsername());
+		req.addParam("password", cfg.getPassword());
+
+		Element response = req.execute();
+		Lib.service.checkError(response);
+	}
+
+	//---------------------------------------------------------------------------
+
+	public void logout(XmlRequest req)
+	{
+		req.clearParams();
+		req.setAddress("/"+ App.config.getServlet() +"/srv/en/"+ Geonet.Service.XML_LOGOUT);
+	}
+
 	//---------------------------------------------------------------------------
 
 	public void checkError(Element response) throws Exception

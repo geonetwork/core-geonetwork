@@ -28,8 +28,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
-import jeeves.exceptions.UserNotFoundEx;
+import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.utils.BinaryFile;
+import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import org.dlib.gui.ProgressDialog;
 import org.fao.gast.app.App;
@@ -130,31 +131,20 @@ public class Worker implements Runnable
 
 	private void login(XmlRequest req) throws Exception
 	{
-		Configuration cfg = App.config;
-
 		dlg.reset(1);
-		dlg.advance("Login into : "+ cfg.getHost());
+		dlg.advance("Login into : "+ App.config.getHost());
 
-		req.setAddress("/"+ cfg.getServlet() +"/srv/en/"+ Geonet.Service.XML_LOGIN);
-		req.clearParams();
-		req.addParam("username", cfg.getUsername());
-		req.addParam("password", cfg.getPassword());
-
-		Element response = req.execute();
-		Lib.service.checkError(response);
+		Lib.service.login(req);
 	}
 
 	//---------------------------------------------------------------------------
 
 	private void logout(XmlRequest req)
 	{
-		Configuration cfg = App.config;
-
 		dlg.reset(1);
-		dlg.advance("Logout from : "+ cfg.getHost());
+		dlg.advance("Logout from : "+ App.config.getHost());
 
-		req.clearParams();
-		req.setAddress("/"+ cfg.getServlet() +"/srv/en/"+ Geonet.Service.XML_LOGOUT);
+		Lib.service.logout(req);
 	}
 
 	//---------------------------------------------------------------------------
@@ -173,18 +163,31 @@ public class Worker implements Runnable
 
 	//---------------------------------------------------------------------------
 
-	private File retrieveMEF(XmlRequest req, String uuid) throws IOException
+	private File retrieveMEF(XmlRequest req, String uuid) throws Exception
 	{
 		dlg.advance("Exporting uuid : "+uuid);
 
 		req.clearParams();
-		req.addParam("uuid",   uuid);
-		req.addParam("format", format);
+		req.addParam("uuid",     uuid);
+		req.addParam("format",   format);
+		req.addParam("skipUuid", skipUuid);
 
 		req.setAddress("/"+ App.config.getServlet() +"/srv/en/"+ Geonet.Service.MEF_EXPORT);
 
 		File tempFile = File.createTempFile("temp-", ".dat");
 		req.executeLarge(tempFile);
+
+		Element root = loadMefFile(tempFile);
+
+		if (root != null)
+		{
+			String id = root.getAttributeValue("id");
+
+			if ("operation-not-allowed".equals(id))
+				throw new OperationNotAllowedEx();
+
+			throw new Exception("Error from server:\n"+Xml.getString(root));
+		}
 
 		return tempFile;
 	}
@@ -200,6 +203,23 @@ public class Worker implements Runnable
 		BinaryFile.copy(is, os, true, true);
 
 		mefFile.delete();
+	}
+
+	//---------------------------------------------------------------------------
+	/** Try to load a MEF file as an XML document. If the user does not have
+	  * privileges to download the MEF, an error in XML format is returned
+	  */
+
+	private Element loadMefFile(File file)
+	{
+		try
+		{
+			return Xml.loadFile(file);
+		}
+		catch (Exception e)
+		{
+			return null;
+		}
 	}
 
 	//---------------------------------------------------------------------------

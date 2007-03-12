@@ -23,6 +23,7 @@
 
 package org.fao.gast.gui.panels.manag.mefexport;
 
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import org.dlib.gui.FlexLayout;
@@ -44,12 +45,15 @@ public class SearchPanel extends TPanel
 	{
 		super("Search");
 
-		FlexLayout fl = new FlexLayout(2,1);
+		FlexLayout fl = new FlexLayout(2,2);
 		fl.setColProp(1, FlexLayout.EXPAND);
 		setLayout(fl);
 
 		add("0,0",   new JLabel("Free text"));
 		add("1,0,x", txtAny);
+
+		add("0,1", new JLabel("Templates"));
+		add("1,1", chbTemp);
 	}
 
 	//---------------------------------------------------------------------------
@@ -62,7 +66,8 @@ public class SearchPanel extends TPanel
 	{
 		Element req = new Element("request");
 
-		Lib.element.add(req, "any", txtAny.getText());
+		Lib.element.add(req, "any",      txtAny.getText());
+		Lib.element.add(req, "template", chbTemp.isSelected() ? "y" : "n");
 
 		return req;
 	}
@@ -73,7 +78,8 @@ public class SearchPanel extends TPanel
 	//---
 	//---------------------------------------------------------------------------
 
-	private JTextField txtAny = new JTextField(20);
+	private JTextField txtAny  = new JTextField(20);
+	private JCheckBox  chbTemp = new JCheckBox();
 }
 
 //==============================================================================

@@ -21,25 +21,24 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.gast.gui;
+package org.fao.gast.gui.panels.database.sample;
 
-import java.awt.BorderLayout;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JSplitPane;
-import javax.swing.KeyStroke;
-import org.fao.gast.app.App;
-import org.fao.gast.boot.Starter;
-import org.fao.gast.gui.dialogs.ConfigDialog;
-import org.fao.gast.lib.Lib;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import jeeves.utils.Util;
+import org.dlib.gui.FlexLayout;
+import org.dlib.gui.GuiUtil;
+import org.dlib.gui.ProgressDialog;
+import org.fao.gast.gui.panels.FormPanel;
 
 //==============================================================================
 
-public class MainFrame extends JFrame implements Starter, ActionListener
+public class MainPanel extends FormPanel
 {
 	//---------------------------------------------------------------------------
 	//---
@@ -47,45 +46,7 @@ public class MainFrame extends JFrame implements Starter, ActionListener
 	//---
 	//---------------------------------------------------------------------------
 
-	public MainFrame()
-	{
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("GAST : GeoNetwork's administrator survival tool");
-
-		JSplitPane sp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panView, panWork);
-		sp.setDividerLocation(150);
-		sp.setContinuousLayout(true);
-
-		getContentPane().add(sp, BorderLayout.CENTER);
-
-		panView.setActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				panWork.show(e.getActionCommand());
-			}
-		});
-
-		setJMenuBar(createMenuBar());
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- ActionListener
-	//---
-	//---------------------------------------------------------------------------
-
-	public void start(String appPath, String[] args) throws Exception
-	{
-		Lib.init(appPath);
-		App.init(appPath, dlgConfig.getConfig());
-
-		GuiBuilder builder = new GuiBuilder(appPath, panView, panWork);
-		builder.build("/gast/data/gui.xml");
-
-		setSize(700, 500);
-		setVisible(true);
-	}
+	public MainPanel() {}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -97,36 +58,61 @@ public class MainFrame extends JFrame implements Starter, ActionListener
 	{
 		String cmd = e.getActionCommand();
 
-		if (cmd.equals("config"))
-			handleConfig();
+		if (cmd.equals("import"))
+			doImport();
 	}
 
 	//---------------------------------------------------------------------------
 
-	private void handleConfig()
+	private void doImport()
 	{
-		dlgConfig.showDialog();
+		Frame          owner  = GuiUtil.getFrame(this);
+		ProgressDialog dialog = new ProgressDialog(owner, "Importing data");
+		Worker         worker = new Worker(dialog);
+
+		String runs = cmbRuns.getSelectedItem().toString();
+		runs = Util.replaceString(runs, ".", "");
+
+		worker.setImportMetadata (chbMetadata .isSelected());
+		worker.setImportTemplates(chbTemplates.isSelected());
+		worker.setImportRuns(Integer.parseInt(runs));
+
+		dialog.run(worker);
 	}
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- Private Methods
+	//--- Protected methods
 	//---
 	//---------------------------------------------------------------------------
 
-	private JMenuBar createMenuBar()
+	protected JComponent buildInnerPanel()
 	{
-		JMenuBar  menu    = new JMenuBar();
-		JMenu     options = new JMenu("Options");
-		JMenuItem config  = new JMenuItem("Config");
+		JPanel p = new JPanel();
 
-		menu   .add(options);
-		options.add(config);
+		FlexLayout fl = new FlexLayout(2,3);
+		fl.setColProp(1, FlexLayout.EXPAND);
+		p.setLayout(fl);
 
-		config.addActionListener(this);
-		config.setActionCommand("config");
-		config.setAccelerator(KeyStroke.getKeyStroke("alt C"));
-		return menu;
+		p.add("0,0", new JLabel("Metadata"));
+		p.add("1,0", chbMetadata);
+
+		p.add("0,1", new JLabel("Templates"));
+		p.add("1,1", chbTemplates);
+
+		p.add("0,2", new JLabel("Runs"));
+		p.add("1,2", cmbRuns);
+
+
+		cmbRuns.addItem("1");
+		cmbRuns.addItem("10");
+		cmbRuns.addItem("100");
+		cmbRuns.addItem("1.000");
+		cmbRuns.addItem("10.000");
+		cmbRuns.addItem("100.000");
+		cmbRuns.addItem("1.000.000");
+
+		return p;
 	}
 
 	//---------------------------------------------------------------------------
@@ -135,9 +121,9 @@ public class MainFrame extends JFrame implements Starter, ActionListener
 	//---
 	//---------------------------------------------------------------------------
 
-	private ViewPanel    panView   = new ViewPanel();
-	private WorkPanel    panWork   = new WorkPanel();
-	private ConfigDialog dlgConfig = new ConfigDialog(this);
+	private JCheckBox chbMetadata = new JCheckBox();
+	private JCheckBox chbTemplates= new JCheckBox();
+	private JComboBox cmbRuns     = new JComboBox();
 }
 
 //==============================================================================

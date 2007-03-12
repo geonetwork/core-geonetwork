@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.gast.gui.panels.manag.mefimport;
+package org.fao.gast.gui.panels.database.sample;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -57,7 +57,15 @@ public class Worker implements Runnable
 	//---
 	//---------------------------------------------------------------------------
 
-	public void setInputDir(String dir) { inputDir = dir; }
+	public void setImportMetadata (boolean yesno) { impMetadata  = yesno; }
+	public void setImportTemplates(boolean yesno) { impTemplates = yesno; }
+
+	//---------------------------------------------------------------------------
+
+	public void setImportRuns(int runs)
+	{
+		this.runs =runs;
+	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -96,14 +104,15 @@ public class Worker implements Runnable
 
 		//--- scan for mef files
 
-		List<File> files = scanFiles();
+		List<File> files = getFileList();
 
 		//--- export
 
-		dlg.reset(files.size());
+		dlg.reset((files.size() + runs));
 
-		for (File file : files)
-			send(req, file);
+		for (int i=0; i<runs; i++)
+			for (File file : files)
+				send(req, file);
 
 		//--- logout
 
@@ -133,12 +142,19 @@ public class Worker implements Runnable
 
 	//---------------------------------------------------------------------------
 
-	private List<File> scanFiles() throws Exception
+	private List<File> getFileList()
 	{
-		dlg.reset(1);
-		dlg.advance("Scanning folder : "+ inputDir);
+		ArrayList<File> files = new ArrayList<File>();
 
-		return Lib.io.scanDir(new File(inputDir), "mef");
+		File sampleDir = new File(App.path +"/gast/setup/sample-data");
+
+		if (impMetadata)
+			files.addAll(Lib.io.scanDir(new File(sampleDir, "maps"), "mef"));
+
+		if (impTemplates)
+			files.addAll(Lib.io.scanDir(new File(sampleDir, "templates"), "mef"));
+
+		return files;
 	}
 
 	//---------------------------------------------------------------------------
@@ -159,7 +175,10 @@ public class Worker implements Runnable
 	//---
 	//---------------------------------------------------------------------------
 
-	private String inputDir;
+	private boolean impMetadata;
+	private boolean impTemplates;
+
+	private int runs;
 
 	private ProgressDialog dlg;
 }

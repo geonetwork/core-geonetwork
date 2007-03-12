@@ -24,6 +24,8 @@
 package org.fao.gast.lib;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 //=============================================================================
 
@@ -47,6 +49,22 @@ public class IOLib
 			}
 			else if (!files[i].delete())
 				throw new Exception("Cannot delete file : "+files[i]);
+	}
+
+	//---------------------------------------------------------------------------
+
+	public List<File> scanDir(File folder, String extension)
+	{
+		List<File> alFiles = new ArrayList<File>();
+
+		File files[] = folder.listFiles();
+
+		if (files != null)
+			for (File file : files)
+				if (file.getName().endsWith("."+extension))
+					alFiles.add(file);
+
+		return alFiles;
 	}
 }
 

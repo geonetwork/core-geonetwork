@@ -27,6 +27,7 @@ package org.fao.gast.app;
 
 public class App
 {
+	public static String        path;
 	public static Configuration config;
 
 	//---------------------------------------------------------------------------
@@ -35,8 +36,9 @@ public class App
 	//---
 	//---------------------------------------------------------------------------
 
-	public static void init(Configuration c)
+	public static void init(String appPath, Configuration c)
 	{
+		path   = appPath;
 		config = c;
 	}
 }
