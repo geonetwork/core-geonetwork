@@ -224,14 +224,16 @@ class Exporter
 		Element general = new Element("general")
 			.addContent(new Element("createDate").setText(createDate))
 			.addContent(new Element("changeDate").setText(changeDate))
-			.addContent(new Element("siteId")    .setText(siteId))
 			.addContent(new Element("schema")    .setText(schema))
 			.addContent(new Element("isTemplate").setText(isTemplate))
 			.addContent(new Element("localId")   .setText(id))
 			.addContent(new Element("format")    .setText(format.toString()));
 
 		if (!skipUUID)
-			general.addContent(new Element("uuid").setText(uuid));
+		{
+			general.addContent(new Element("uuid")  .setText(uuid));
+			general.addContent(new Element("siteId").setText(siteId));
+		}
 
 		return general;
 	}

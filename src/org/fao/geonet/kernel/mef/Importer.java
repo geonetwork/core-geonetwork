@@ -90,7 +90,8 @@ class Importer
 
 				if (uuid == null)
 				{
-					uuid = UUID.randomUUID().toString();
+					uuid   = UUID.randomUUID().toString();
+					siteId = null;
 					//TODO: set the new uuid inside the metadata
 				}
 

@@ -404,23 +404,30 @@ public class DataManager
 	  */
 
 	public String insertMetadataExt(Dbms dbms, String schema, Element md, SerialFactory sf,
-											  String source, String createDate, String changeDate,
+											  String siteId, String createDate, String changeDate,
 											  String uuid, String sourceUri) throws Exception
 	{
 		//--- generate a new metadata id
 		int id = sf.getSerial(dbms, "Metadata");
 
-		return insertMetadataExt(dbms, schema, md, id, source, createDate, changeDate, uuid, sourceUri);
+		return insertMetadataExt(dbms, schema, md, id, siteId, createDate, changeDate, uuid, sourceUri);
 	}
+
 	//--------------------------------------------------------------------------
+	/** @param siteId the site creator of the metadata. If null, the local siteId will
+	  *        be used
+	  */
 
 	public String insertMetadataExt(Dbms dbms, String schema, Element md, int id,
-											  String source, String createDate, String changeDate,
+											  String siteId, String createDate, String changeDate,
 											  String uuid, String sourceUri) throws Exception
 	{
+		if (siteId == null)
+			siteId = getSiteID();
+
 		//--- Note: we cannot index metadata here. Indexing is done in the harvesting part
 
-		return XmlSerializer.insert(dbms, schema, md, id, source, uuid, createDate,
+		return XmlSerializer.insert(dbms, schema, md, id, siteId, uuid, createDate,
 											 changeDate, sourceUri);
 	}
 

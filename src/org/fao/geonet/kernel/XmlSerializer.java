@@ -78,25 +78,25 @@ public class XmlSerializer
 	//--------------------------------------------------------------------------
 
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
-										 String source, String uuid, String createDate,
+										 String siteId, String uuid, String createDate,
 										 String changeDate, String sourceUri) throws SQLException
 	{
-		return insert(dbms, schema, xml, serial, source, uuid, createDate, changeDate, sourceUri, "n", null);
+		return insert(dbms, schema, xml, serial, siteId, uuid, createDate, changeDate, sourceUri, "n", null);
 	}
-	
+
 	//--------------------------------------------------------------------------
 
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
-										 String source, String uuid,
+										 String siteId, String uuid,
 										 String template, String title) throws SQLException
 	{
-		return insert(dbms, schema, xml, serial, source, uuid, null, null, null, template, title);
+		return insert(dbms, schema, xml, serial, siteId, uuid, null, null, null, template, title);
 	}
 
 	//--------------------------------------------------------------------------
 
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
-										 String source, String uuid, String createDate,
+										 String siteId, String uuid, String createDate,
 										 String changeDate, String sourceUri,
 										 String isTemplate, String title) throws SQLException
 	{
@@ -107,7 +107,7 @@ public class XmlSerializer
 
 		if (changeDate == null)
 			changeDate = date;
-		
+
 		StringBuffer fields = new StringBuffer("id, schemaId, data, createDate, changeDate, source, uuid, isTemplate, root");
 		StringBuffer values = new StringBuffer("?, ?, ?, ?, ?, ?, ?, ?, ?");
 		Vector args = new Vector();
@@ -116,7 +116,7 @@ public class XmlSerializer
 		args.add(Xml.getString(new Document(xml)));
 		args.add(createDate);
 		args.add(changeDate);
-		args.add(source);
+		args.add(siteId);
 		args.add(uuid);
 		args.add(isTemplate);
 		args.add(xml.getQualifiedName());
