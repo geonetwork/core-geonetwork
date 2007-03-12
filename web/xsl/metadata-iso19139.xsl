@@ -1540,41 +1540,36 @@
 			</xsl:for-each>
 
 			<xsl:if test="not(geonet:info/server)">
-				<!-- //FIXME There's still a mismatch between sources information and metadata information-->
-				<xsl:variable name="siteId" select="string(/root/gui/env/site/siteId)"/>
-				<xsl:variable name="source" select="string(geonet:info/source)"/>
-				<xsl:variable name="uuid"   select="string(geonet:info/uuid)"/>
 				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic">
-					<xsl:variable name="fileName"        select="gmd:fileName/gco:CharacterString"/>
-					<xsl:variable name="fileDescription" select="gmd:fileDescription/gco:CharacterString"/>
-					<xsl:choose>
-						<xsl:when test="string($fileDescription)='thumbnail' and string($fileName)!='' and not(contains($fileName ,'://'))">
-							<xsl:choose>
-								<xsl:when test="$source=$siteId">
-									<image type="thumbnail"><xsl:value-of select="concat(/root/gui/locService,'/resources.get?id=',$id,'&amp;fname=',$fileName,'&amp;access=public')"/></image>
-								</xsl:when>
-<!--								<xsl:when test="/root/gui/sources/source[string(code)=$source]">
-									<image type="thumbnail"><xsl:value-of select="concat(/root/gui/sources/source[string(code)=$source]/baseURL,'/srv/en/resources.get2?uuid=',$uuid,'&amp;fname=',$fileName,'&amp;access=public')"/></image>
-								</xsl:when> -->
-								<xsl:otherwise>
-									<image type="thumbnail"><xsl:value-of select="concat(/root/gui/sources/source[string(code)=$source]/baseURL,'/srv/en/resources.get2?uuid=',$uuid,'&amp;fname=',$fileName,'&amp;access=public')"/></image>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:when>
-						<xsl:when test="string($fileDescription)='large_thumbnail' and string($fileName)!='' and not(contains($fileName ,'://'))">
-							<xsl:choose>
-								<xsl:when test="$source=$siteId">
-									<image type="overview"><xsl:value-of select="concat(/root/gui/locService,'/graphover.show?id=',$id,'&amp;fname=',$fileName,'&amp;access=public')"/></image>
-								</xsl:when>
-								<xsl:when test="/root/gui/sources/source[string(code)=$source]">
-									<image type="overview"><xsl:value-of select="concat(/root/gui/sources/source[string(code)=$source]/baseURL,'/srv/en/resources.get2?uuid=',$uuid,'&amp;fname=',$fileName,'&amp;access=public')"/></image>								
-								</xsl:when>
-							</xsl:choose>
-						</xsl:when>
-						<xsl:when test="string($fileName)!='' and contains($fileName ,'://')">
-							<image type="unknown"><xsl:value-of select="$fileName"/></image>								
-						</xsl:when>
-					</xsl:choose>
+					<xsl:variable name="fileName"  select="gmd:fileName/gco:CharacterString"/>
+					<xsl:if test="$fileName != ''">
+						<xsl:variable name="fileDescr" select="gmd:fileDescription/gco:CharacterString"/>
+						<xsl:choose>
+
+							<!-- the thumbnail is an url -->
+
+							<xsl:when test="contains($fileName ,'://')">
+								<image type="unknown"><xsl:value-of select="$fileName"/></image>								
+							</xsl:when>
+
+							<!-- small thumbnail -->
+
+							<xsl:when test="string($fileDescr)='thumbnail'">
+								<image type="thumbnail">
+									<xsl:value-of select="concat(/root/gui/locService,'/resources.get?id=',$id,'&amp;fname=',$fileName,'&amp;access=public')"/>
+								</image>
+							</xsl:when>
+
+							<!-- large thumbnail -->
+
+							<xsl:when test="string($fileDescr)='large_thumbnail'">
+								<image type="overview">
+									<xsl:value-of select="concat(/root/gui/locService,'/graphover.show?id=',$id,'&amp;fname=',$fileName,'&amp;access=public')"/>
+								</image>
+							</xsl:when>
+
+						</xsl:choose>
+					</xsl:if>
 				</xsl:for-each>
 			</xsl:if>
 
