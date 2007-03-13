@@ -23,18 +23,17 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.util.*;
-import org.jdom.*;
-
-import jeeves.interfaces.*;
-import jeeves.resources.dbms.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-import jeeves.utils.*;
-
-import org.fao.geonet.*;
-import org.fao.geonet.constants.*;
-import org.fao.geonet.kernel.*;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.lib.Lib;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -60,11 +59,13 @@ public class Show implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		EditUtils.preprocessUpdate(params, context, AccessManager.OPER_VIEW);
-		
+
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getDataManager();
 
 		String id = Util.getParam(params, Params.ID);
+
+		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
 
 		//-----------------------------------------------------------------------
 		//--- get metadata
