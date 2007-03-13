@@ -22,6 +22,7 @@
 //==============================================================================
 
 package org.fao.geonet.kernel.harvest.harvester.webfolder;
+
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,6 +59,19 @@ public class WAFHarvester extends AbstractHarvester
 	protected void doInit(Element node) throws BadInputEx
 	{
 		params.init(node);
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Destroy
+	//---
+	//---------------------------------------------------------------------------
+
+	protected void doDestroy(Dbms dbms) throws SQLException
+	{
+		String query = "DELETE FROM Metadata WHERE siteId = ?";
+
+		//TODO:
 	}
 
 	//---------------------------------------------------------------------------

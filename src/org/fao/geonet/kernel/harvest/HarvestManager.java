@@ -164,7 +164,7 @@ public class HarvestManager
 		if (ah == null)
 			return OperResult.NOT_FOUND;
 
-		ah.destroy();
+		ah.destroy(dbms);
 		hmHarvesters.remove(id);
 		settingMan.remove(dbms, "harvesting/id:"+id);
 

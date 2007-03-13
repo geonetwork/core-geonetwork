@@ -129,12 +129,13 @@ public abstract class AbstractHarvester
 
 	//--------------------------------------------------------------------------
 
-	public synchronized void destroy()
+	public synchronized void destroy(Dbms dbms) throws SQLException
 	{
 		if (executor != null)
 			executor.terminate();
 
 		executor = null;
+		doDestroy(dbms);
 	}
 
 	//--------------------------------------------------------------------------
@@ -302,6 +303,12 @@ public abstract class AbstractHarvester
 	//---------------------------------------------------------------------------
 
 	protected abstract void doInit(Element entry) throws BadInputEx;
+
+	/** Called when the harvesting entry is removed from the system.
+	  * It is used to remove harvested metadata.
+	  */
+
+	protected abstract void doDestroy(Dbms dbms) throws SQLException;
 
 	protected abstract String doAdd(Dbms dbms, Element node)
 											throws BadInputEx, SQLException;
