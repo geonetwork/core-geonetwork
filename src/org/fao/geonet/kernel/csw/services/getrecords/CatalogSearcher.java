@@ -193,7 +193,7 @@ class CatalogSearcher
 			if (mapped != null)
 				elem.setAttribute("fld", mapped);
 			else
-				System.out.println("Unknown queryable field : "+ field);
+				Log.info(Geonet.CSW_SEARCH, "Unknown queryable field : "+ field);
 		}
 
 		List children = elem.getChildren();
@@ -309,7 +309,7 @@ class CatalogSearcher
 				fields.add(sf);
 			}
 			else
-				System.out.println("Skipping unknown sortable field : "+ sf.field);
+				Log.info(Geonet.CSW_SEARCH, "Skipping unknown sortable field : "+ sf.field);
 		}
 
 		Collections.sort(results, new ItemComparator(fields));
