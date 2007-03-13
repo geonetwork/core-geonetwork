@@ -410,13 +410,19 @@ HarvestView.prototype.addSearch = function(xmlSearch)
 
 HarvestView.prototype.addSearchCallBack = function(xml)
 {
+	var siteId = xml.getAttribute('id');
+	var div    = gn.getElementById($('gn.searches'), siteId);
+
+	//--- we must avoid adding more searches on the same site-id
+
+	if (div != null)
+		return;
+
 	var html= gn.xmlToString(xml);
 	
 	//--- add the new search in list
 	new Insertion.Bottom('gn.searches', html);
 	
-	var siteId = xml.getAttribute('id');
-	 
 	this.gnValid.add(
 	[
 		{ id:'gn.text',     type:'length',   minSize :0,  maxSize :200 },
