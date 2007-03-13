@@ -112,7 +112,7 @@
 	<cannotStart>Cannot start the selected entry/ies</cannotStart>
 	<cannotStop>Cannot stop the selected entry/ies</cannotStop>
 	<cannotRun>Cannot run the selected entry/ies</cannotRun>
-	<confirmRemove>Remove the selected entries ?</confirmRemove>
+	<confirmRemove>Remove the selected entries ? The node and all harvested metadata will be removed.</confirmRemove>
 	<everyZero>The harvesting period cannot be 0:0:0</everyZero>
 	<pleaseRetrieve>Please retrieve some sites first</pleaseRetrieve>
 	<cannotRetrieve>Unable to retrieve information</cannotRetrieve>
