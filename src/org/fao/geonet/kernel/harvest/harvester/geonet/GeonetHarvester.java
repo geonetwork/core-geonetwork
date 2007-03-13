@@ -107,7 +107,7 @@ public class GeonetHarvester extends AbstractHarvester
 
 	protected void doDestroy(Dbms dbms) throws SQLException
 	{
-		String query = "DELETE FROM Metadata WHERE siteId = ?";
+		String query = "DELETE FROM Metadata WHERE source = ?";
 
 		for (Search s : params.getSearches())
 			dbms.execute(query, s.siteId);
