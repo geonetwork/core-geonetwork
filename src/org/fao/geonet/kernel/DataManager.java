@@ -1166,12 +1166,12 @@ public class DataManager
 
 	private Element updateFixedInfo(String schema, String id, Element md, Dbms dbms) throws Exception
 	{
-		System.out.println("#### id = " + id); // DEBUG
+//		System.out.println("#### id = " + id); // DEBUG
 
 		Element rec = dbms.select("SELECT uuid, source, isTemplate FROM Metadata WHERE id = " + id).getChild("record");
 		String isTemplate = rec.getChildText("istemplate");
 
-		System.out.println("#### - isTemplate = " + isTemplate); // DEBUG
+//		System.out.println("#### - isTemplate = " + isTemplate); // DEBUG
 
 		// don't process templates
 		if (isTemplate.equals("n"))

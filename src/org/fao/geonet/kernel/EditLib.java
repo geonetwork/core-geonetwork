@@ -223,19 +223,19 @@ public class EditLib
 
 	public Element addElement(String schema, Element el, String qname)
 	{
-		System.out.println("#### in addElement()"); // DEBUG
-		
-		System.out.println("#### - parent = " + el.getName()); // DEBUG
-		System.out.println("#### - child qname = " + qname); // DEBUG
-		
+//		System.out.println("#### in addElement()"); // DEBUG
+
+//		System.out.println("#### - parent = " + el.getName()); // DEBUG
+//		System.out.println("#### - child qname = " + qname); // DEBUG
+
 		String name   = getUnqualifiedName(qname);
 		String ns     = getNamespace(qname, el);
 		String prefix = getPrefix(qname);
-		
-		System.out.println("#### - child name = " + name); // DEBUG
-		System.out.println("#### - child namespace = " + ns); // DEBUG
-		System.out.println("#### - child prefix = " + prefix); // DEBUG
-		
+
+//		System.out.println("#### - child name = " + name); // DEBUG
+//		System.out.println("#### - child namespace = " + ns); // DEBUG
+//		System.out.println("#### - child prefix = " + prefix); // DEBUG
+
 		Element child = new Element(name, prefix, ns);
 
 		MetadataSchema    mdSchema = getSchema(schema);
@@ -243,12 +243,12 @@ public class EditLib
 
 		String typeName = mdSchema.getElementType(el.getQualifiedName());
 
-		System.out.println("#### - type name = " + typeName); // DEBUG
-		
+//		System.out.println("#### - type name = " + typeName); // DEBUG
+
  		MetadataType type = mdSchema.getTypeInfo(typeName);
 
-		System.out.println("#### - metadata tpe = " + type); // DEBUG
-		
+//		System.out.println("#### - metadata tpe = " + type); // DEBUG
+
 		//--- collect all children, adding the new one at the end of the others
 
 		Vector children = new Vector();
@@ -257,8 +257,8 @@ public class EditLib
 		{
 			List list = getChildren(el, type.getElementAt(i));
 
-			System.out.println("####   - children of type " + type.getElementAt(i) + " list size = " + list.size()); // DEBUG
-			
+//			System.out.println("####   - children of type " + type.getElementAt(i) + " list size = " + list.size()); // DEBUG
+
 			for(int j=0; j<list.size(); j++)
 				children.add(list.get(j));
 
@@ -325,24 +325,24 @@ public class EditLib
 
 	private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, Element md)
 	{
-		System.out.println("#### entering fillElement()"); // DEBUG
-		
+//		System.out.println("#### entering fillElement()"); // DEBUG
+
 		String elemName = md.getQualifiedName();
 
-		System.out.println("#### - elemName = " + elemName); // DEBUG
-		System.out.println("#### - isSimpleElement(" + elemName + ") = " + schema.isSimpleElement(elemName)); // DEBUG
-		
+//		System.out.println("#### - elemName = " + elemName); // DEBUG
+//		System.out.println("#### - isSimpleElement(" + elemName + ") = " + schema.isSimpleElement(elemName)); // DEBUG
+
 		if (schema.isSimpleElement(elemName))
 			return;
 
 		MetadataType type = schema.getTypeInfo(schema.getElementType(elemName));
 
-		System.out.println("#### - type:"); // DEBUG
-		System.out.println("####   - name = " + type.getName()); // DEBUG
-		System.out.println("####   - # attributes = " + type.getAttributeCount()); // DEBUG
-		System.out.println("####   - # elements = " + type.getElementCount()); // DEBUG
-		System.out.println("####   - # isOrType = " + type.isOrType()); // DEBUG
-		
+//		System.out.println("#### - type:"); // DEBUG
+//		System.out.println("####   - name = " + type.getName()); // DEBUG
+//		System.out.println("####   - # attributes = " + type.getAttributeCount()); // DEBUG
+//		System.out.println("####   - # elements = " + type.getElementCount()); // DEBUG
+//		System.out.println("####   - # isOrType = " + type.isOrType()); // DEBUG
+
 		//-----------------------------------------------------------------------
 		//--- handle attributes
 
@@ -350,9 +350,9 @@ public class EditLib
 		{
 			MetadataAttribute attr = type.getAttributeAt(i);
 
-			System.out.println("####   - " + i + " attribute = " + attr); // DEBUG
-			System.out.println("####     - required = " + attr.required); // DEBUG
-			
+//			System.out.println("####   - " + i + " attribute = " + attr); // DEBUG
+//			System.out.println("####     - required = " + attr.required); // DEBUG
+
 			if (attr.required)
 			{
 				String value = "";
@@ -388,7 +388,7 @@ public class EditLib
 						String name   = getUnqualifiedName(childName);
 						String ns     = getNamespace(childName, md);
 						String prefix = getPrefix(childName);
-						
+
 						Element child = new Element(name, prefix, ns);
 
 						md.addContent(child);
@@ -452,49 +452,49 @@ public class EditLib
 
 	private void expandElement(String schemaName, MetadataSchema schema, Element md) throws Exception
 	{
-		System.out.println("entering expandElement()"); // DEBUG
-		
+//		System.out.println("entering expandElement()"); // DEBUG
+
 		String elemName = md.getQualifiedName();
 		String elemType = schema.getElementType(elemName);
 
-		System.out.println("elemName = " + elemName); // DEBUG
-		System.out.println("elemType = " + elemType); // DEBUG
-		
+//		System.out.println("elemName = " + elemName); // DEBUG
+//		System.out.println("elemType = " + elemType); // DEBUG
+
 		Element elem = md.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
 		addValues(schema, elem, elemName);
-		
+
 		if (schema.isSimpleElement(elemName))
 		{
-			System.out.println("is simple element"); // DEBUG
+//			System.out.println("is simple element"); // DEBUG
 			return;
 		}
 		MetadataType type = schema.getTypeInfo(elemType);
-		
-		System.out.println("type is = " + type.getName()); // DEBUG
-		
+
+//		System.out.println("type is = " + type.getName()); // DEBUG
+
 		if (!type.isOrType())
 		{
 			for(int i=0; i<type.getElementCount(); i++)
 			{
 				String childQName = type.getElementAt(i);
-				
+
 				System.out.println("- childName = " + childQName); // DEBUG
-				
+
 				if (childQName == null) continue; // schema extensions cause null types; just skip
-				
+
 				String childName   = getUnqualifiedName(childQName);
 				String childPrefix = getPrefix(childQName);
 				String childNS     = getNamespace(childQName, md);
-				
-				System.out.println("- name      = " + childName); // DEBUG
-				System.out.println("- prefix    = " + childPrefix); // DEBUG
-				System.out.println("- namespace = " + childNS); // DEBUG
-				
+
+//				System.out.println("- name      = " + childName); // DEBUG
+//				System.out.println("- prefix    = " + childPrefix); // DEBUG
+//				System.out.println("- namespace = " + childNS); // DEBUG
+
 				List list = md.getChildren(childName, Namespace.getNamespace(childNS));
 				if (list.size() == 0)
 				{
-					System.out.println("- no children of this type already present"); // DEBUG
-				
+//					System.out.println("- no children of this type already present"); // DEBUG
+
 					Element newElem = createElement(schemaName, schema, childName, childPrefix, childNS);
 					if (i == 0)	insertFirst(md, newElem);
 					else
@@ -507,10 +507,10 @@ public class EditLib
 				}
 				else
 				{
-					System.out.println("- " + list.size() + " children of this type already present"); // DEBUG
-					System.out.println("- min cardinality = " + type.getMinCardinAt(i)); // DEBUG
-					System.out.println("- max cardinality = " + type.getMaxCardinAt(i)); // DEBUG
-				
+//					System.out.println("- " + list.size() + " children of this type already present"); // DEBUG
+//					System.out.println("- min cardinality = " + type.getMinCardinAt(i)); // DEBUG
+//					System.out.println("- max cardinality = " + type.getMaxCardinAt(i)); // DEBUG
+
 					for(int j=0; j<list.size(); j++)
 					{
 						Element listChild = (Element) list.get(j);
@@ -541,27 +541,27 @@ public class EditLib
 		if (pos < 0) return qname;
 		else         return qname.substring(pos + 1);
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	private String getPrefix(String qname)
 	{
 		int pos = qname.indexOf(":");
 		if (pos < 0) return "";
 		else         return qname.substring(0, pos);
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	private String getNamespace(String qname, Element md)
 	{
 		// find root element, where namespaces *must* be declared
 		Element root = md;
 		while (root.getParent() != null && root.getParent() instanceof Element) root = (Element)root.getParent();
-		
+
 		// get prefix
 		String prefix = getPrefix(qname);
-		
+
 		// loop on namespaces to fine the one corresponding to prefix
 		Namespace rns = root.getNamespace();
 		if (prefix.equals(rns.getPrefix())) return rns.getURI();
@@ -572,7 +572,7 @@ public class EditLib
 		}
 		return "UNKNOWN";
 	}
-	
+
 	//--------------------------------------------------------------------------
 
 	private void insertFirst(Element md, Element child)
@@ -675,7 +675,7 @@ public class EditLib
 
 				String ns1 = el1.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE);
 				String ns2 = el2.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE);
-				
+
 				return name1.equals(name2) && ns1.equals(ns2);
 			}
 			else
@@ -754,7 +754,7 @@ public class EditLib
 			{
 				Element text  = new Element(Edit.Element.Child.TEXT, Edit.NAMESPACE);
 				text.setAttribute(Edit.Attribute.Attr.VALUE, (String) values.get(i));
-	
+
 				elem.addContent(text);
 			}
 	}

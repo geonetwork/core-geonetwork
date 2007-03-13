@@ -48,7 +48,7 @@ class Logger
 
 	public static void log(String message)
 	{
-		System.out.println(message);
+//		System.out.println(message);
 		logSeparator();
 	}
 
@@ -58,9 +58,9 @@ class Logger
 	{
 		String file = new File(ei.file).getName();
 
-		System.out.println(message);
-		System.out.println("File is    : " + file);
-		System.out.println("Element is : \n" + Xml.getString(ei.element));
+//		System.out.println(message);
+//		System.out.println("File is    : " + file);
+//		System.out.println("Element is : \n" + Xml.getString(ei.element));
 		logSeparator();
 	}
 
@@ -72,7 +72,7 @@ class Logger
 
 	private static void logSeparator()
 	{
-		System.out.println("---------------------------------------------------------");
+//		System.out.println("---------------------------------------------------------");
 	}
 }
 
