@@ -48,7 +48,10 @@ public class Import implements Service
 		String mefFile   = Util.getParam(params, "mefFile");
 		String uploadDir = context.getUploadDir();
 
-		int id = MEFLib.doImport(context, new File(uploadDir, mefFile));
+		File file = new File(uploadDir, mefFile);
+		int  id   = MEFLib.doImport(context, file);
+
+		file.delete();
 
 		//--- return success with the metadata id
 
