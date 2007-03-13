@@ -119,11 +119,9 @@
 		<meta name="DC.creator" content="GeoNetwork Team"/>
 		<meta name="DC.subject" lang="English French" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
 		<meta name="DC.description" lang="English French" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
-<!--		<meta name="DC.publisher" content="$ORGANIZATION"/> -->
 		<meta name="DC.date" content="01-11-2005"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-<!--		<meta name="DC.identifier" content="http://$WEBSERVER_HOST/$SERVLET"/> -->
 		<meta name="DC.language" content="English French"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
@@ -164,7 +162,9 @@
 			<li>To enhance understanding of the benefits of geographic information</li>
 		</ul>
 	</mainpage1>
-	<mainpage2> GeoNetwork opensource allows to easily share geographically referenced thematic information between different organizations. For more information please contact: <a href="mailto:$ADMIN_MAIL">$ADMIN_MAIL</a> or send us <a href="/$SERVLET/srv/en/feedback">feedback</a>
+	<mainpage2> 
+		GeoNetwork opensource allows to easily share geographically referenced thematic 
+		information between different organizations. For more information please contact 		
 	</mainpage2>
 	<mainhelp1> How to search... </mainhelp1>
 	<mainhelp2> Hide help... </mainhelp2>
@@ -220,9 +220,6 @@
 	<newPassword>New Password</newPassword>
 	<newUser>Add a new User to the Database</newUser>
 	<none>none</none>
-	<nofilefound1>Sorry, the download file was not found. Please send us a </nofilefound1>
-	<nofilefound2>feedback message</nofilefound2>
-	<nofilefound3> or an email ($ADMIN_MAIL) with the title and the following Metadata id: </nofilefound3>
 	<noHelp>Sorry, no help available</noHelp>
 	<noInfo>Sorry, no info available</noInfo>
 	<noLogin>You are not logged in</noLogin>
@@ -301,8 +298,7 @@
 	<copyright2>
 		<p>All rights reserved.<br/> Your generic copyright statement </p>
 	</copyright2>
-	<moreinfo>For more information you can contact us via email at <a href="mailto:$ADMIN_MAIL">$ADMIN_MAIL</a>, or send us <a href="/$SERVLET/srv/en/feedback">feedback</a>
-	</moreinfo>
+	<moreinfo>For more information you can contact us via email at </moreinfo>
 	<message>The username or the password is wrong.<br/>Press the 'back' button and try again.</message>
 	<protocolChoice value="WWW:LINK-1.0-http--link">Web address (URL)</protocolChoice>
 	<protocolChoice value="WWW:DOWNLOAD-1.0-http--download">File for download</protocolChoice>

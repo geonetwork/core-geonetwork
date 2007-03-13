@@ -101,15 +101,13 @@
 		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
 		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
-		<meta name="DC.title" lang="French" content="$ORGANIZATION GeoNetwork portal to spatial data and information"/>
+		<meta name="DC.title" lang="French" content="GeoNetwork portal to spatial data and information"/>
 		<meta name="DC.creator" content="GeoNetwork Team"/>
 		<meta name="DC.subject" lang="French" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
-		<meta name="DC.description" lang="French" content="$ORGANIZATION GeoNetwork provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
-		<meta name="DC.publisher" content="$ORGANIZATION"/>
+		<meta name="DC.description" lang="French" content="GeoNetwork provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
 		<meta name="DC.date" content="01-11-2005"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.identifier" content="http://$WEBSERVER_HOST/$SERVLET"/>
 		<meta name="DC.language" content="English French Spanish"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
@@ -157,7 +155,7 @@
 	</mainpage1>
 	<mainpage2>
 		GeoNetwork opensource permet de partager des informations géographiques thématiques entre organisations.
-		Pour plus d'information, contacter : <a href="mailto:$ADMIN_MAIL">$ADMIN_MAIL</a> ou envoyer nous <a href="/$SERVLET/srv/fr/feedback"> vos commentaires </a>
+		Pour plus d'information, contacter 
 	</mainpage2>
 	<mainhelp1>
 			Comment chercher ...
@@ -233,9 +231,6 @@
 	<newPassword>Nouveau mot de passe</newPassword>
 	<newUser>Ajouter un utilisateur</newUser>
 	<none>Aucun</none>
-	<nofilefound1>Désolé, le fichier à télécharger n'a pas été trouvé. Envoyez nous </nofilefound1>
-	<nofilefound2>un message</nofilefound2>
-	<nofilefound3> ou un email ($ADMIN_MAIL) avec l'identifiant suivant : </nofilefound3>
 	<noHelp>Désolé, pas d'aide disponible</noHelp>
 	<noInfo>Désolé, pas d'information disponible</noInfo>
 	<noLogin>Vous n'étes pas connecté.</noLogin>
@@ -313,7 +308,7 @@
 		<p>Tout droit réservé.<br/>
 		</p>
 	</copyright2>
-	<moreinfo>Pour plus d'information, contacter :  <a href="mailto:$ADMIN_MAIL">$ADMIN_MAIL</a>, ou envoyer nous <a href="/$SERVLET/srv/fr/feedback"> vos commentaires </a></moreinfo>
+	<moreinfo>Pour plus d'information, contacter : </moreinfo>
 	<message>Le nom ou mot de passe est incorrect.<br/>Appuyer sur le bouton 'retour'.</message>
 	<protocolChoice value="WWW:LINK-1.0-http--link">Adresse Internet (URL)</protocolChoice>
 	<protocolChoice value="WWW:DOWNLOAD-1.0-http--download">Fichier à télécharger</protocolChoice>

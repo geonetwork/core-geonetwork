@@ -163,6 +163,7 @@
 							<td valign="top">
 								<xsl:copy-of select="/root/gui/strings/mainpage1"/>
 								<xsl:copy-of select="/root/gui/strings/mainpage2"/>
+								<a href="mailto:{/root/gui/env/feedback/email}"><xsl:value-of select="/root/gui/env/feedback/email"/></a>
 							</td>
 						</tr>
 					</table>

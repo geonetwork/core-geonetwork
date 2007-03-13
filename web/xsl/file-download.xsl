@@ -13,6 +13,7 @@
 				<h2><xsl:value-of select="/root/gui/strings/messageDownload"/></h2>
 				<p/>
 				<xsl:copy-of select="/root/gui/strings/moreinfo"/>
+				<a href="mailto:{/root/gui/env/feedback/email}"><xsl:value-of select="/root/gui/env/feedback/email"/></a>
 			</xsl:with-param>
 			<xsl:with-param name="buttons">
 				<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={/root/request/id}')"><xsl:value-of select="/root/gui/strings/back"/></button>

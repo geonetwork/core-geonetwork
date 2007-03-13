@@ -76,15 +76,13 @@
 		<meta name="keywords" content="GeoNetwork opensource metadatos ISO19115 ISO19139 ISO GIS teledetección datos shapefiles datos  espaciales imágenes de satélite mapa mapas interactivos opengis mapping 19115 19139 geographic z39.50 catalogo clearinghouse coberturas mallas raster data opensource open source network"/>
 		<meta name="description" content="GeoNetwork opensource proporciona a través de internet acceso a mapas interactivos, imágenes de satélite y bases de datos espaciales relacionadas. El propósito es mejorar el acceso a y la integración de datos espaciales e información. GeoNetwork opensource permite compartir fácilmente datos espaciales entre los usuarios"/>
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
-		<meta name="DC.title" lang="Spanish" content="$ORGANIZATION Portal GeoNetwork para datos espaciales e información"/>
+		<meta name="DC.title" lang="Spanish" content="Portal GeoNetwork para datos espaciales e información"/>
 		<meta name="DC.creator" content="Equipo GeoNetwork"/>
 		<meta name="DC.subject" lang="Spanish" content="GeoNetwork metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
-		<meta name="DC.description" lang="Spanish" content="$ORGANIZATION GeoNetwork provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
-		<meta name="DC.publisher" content="$ORGANIZATION"/>
+		<meta name="DC.description" lang="Spanish" content="GeoNetwork provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
 		<meta name="DC.date" content="01-11-2005"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.identifier" content="http://$WEBSERVER_HOST/$SERVLET"/>
 		<meta name="DC.language" content="English French Spanish"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
@@ -132,7 +130,9 @@
 			<li>Enfatizar los beneficios que proporcionan la comprensión de la Información Geográfica</li>
 		</ul>
 	</mainpage1>
-	<mainpage2> El proyecto GeoNetwork opensource promueve que se comparta la información temática y georeferenciada disponible entre las organizaciones. Si desea más información, puede enviar un mensaje: <a href="mailto:$ADMIN_MAIL">$ADMIN_MAIL</a> o bien enviar sus <a href="/$SERVLET/srv/es/feedback">sugerencias</a> a través de un formulario en la Web. <p/>
+	<mainpage2> 
+		El proyecto GeoNetwork opensource promueve que se comparta la información temática y georeferenciada 
+		disponible entre las organizaciones. Si desea más información, puede enviar un mensaje		
 	</mainpage2>
 	<mainhelp1> Como buscar... </mainhelp1>
 	<mainhelp2> Ocultar la ayuda... </mainhelp2>
@@ -184,9 +184,6 @@
 	<newMdDes>Añade un nuevo metadato</newMdDes>
 	<newMetadata>Nuevo Metadato</newMetadata>
 	<newUser>Añade un nuevo usuario a la Base de datos</newUser>
-	<nofilefound1>Disculpe las molestias, no se ha podido encontrar el fichero solicitado para su descarga. Envienos un </nofilefound1>
-	<nofilefound2>mensaje de comentarios</nofilefound2>
-	<nofilefound3> o un correo electrónico ($ADMIN_MAIL) con el título del metadatos y el id: </nofilefound3>
 	<noHelp>Disculpe las molestias, no hay ayuda disponible</noHelp>
 	<noInfo>Disculpe las molestias, no hay información disponible</noInfo>
 	<online>Mapa Interactivo</online>
@@ -252,7 +249,7 @@
 	<copyright2>
 		<p>Reservados todos los derechos.<br/> Escriba su propio copyright. </p>
 	</copyright2>
-	<moreinfo>Para mayor información usted puede contactar por correo electrónico en <a href="mailto:$ADMIN_MAIL">$ADMIN_MAIL</a>, o enviarnos un <a href="/$SERVLET/srv/es/feedback">comentario</a>
+	<moreinfo>Para mayor información usted puede contactar por correo electrónico en </a>
 	</moreinfo>
 	<message>El nombre de usuario o la contaseña son incorrectos.<br/>Presione el botón 'atrás' e intentelo de nuevo.</message>
 	<protocolChoice value="WWW:LINK-1.0-http--link">Dirección Web (URL)</protocolChoice>

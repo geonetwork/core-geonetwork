@@ -95,7 +95,6 @@
 		<meta name="DC.date" content="01-11-2005"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.identifier" content="http://$WEBSERVER_HOST/geonetwork"/>
 		<meta name="DC.language" content="Chinese English French Spanish"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
