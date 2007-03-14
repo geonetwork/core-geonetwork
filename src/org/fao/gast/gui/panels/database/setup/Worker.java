@@ -23,39 +23,97 @@
 
 package org.fao.gast.gui.panels.database.setup;
 
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import javax.swing.JComponent;
-import org.dlib.gui.GuiUtil;
+import java.util.List;
 import org.dlib.gui.ProgressDialog;
-import org.fao.gast.gui.panels.FormPanel;
+import org.fao.gast.lib.DatabaseLib;
+import org.fao.gast.lib.Lib;
+import org.fao.gast.lib.Resource;
 
 //==============================================================================
 
-public class MainPanel extends FormPanel
+public class Worker implements Runnable
 {
 	//---------------------------------------------------------------------------
 	//---
-	//--- Initialization
+	//--- Constructor
 	//---
 	//---------------------------------------------------------------------------
 
-	protected JComponent buildInnerPanel() { return null; }
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- ActionListener
-	//---
-	//---------------------------------------------------------------------------
-
-	public void actionPerformed(ActionEvent e)
+	public Worker(ProgressDialog dlg)
 	{
-		Frame          owner  = GuiUtil.getFrame(this);
-		ProgressDialog dialog = new ProgressDialog(owner, "Setup in progress");
-		Worker         worker = new Worker(dialog);
-
-		dialog.run(worker);
+		this.dlg = dlg;
 	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Runnable interface
+	//---
+	//---------------------------------------------------------------------------
+
+	public void run()
+	{
+		try
+		{
+			Resource resource = Lib.config.createResource();
+			Lib.database.setup(resource, callBack);
+		}
+		catch(Exception e)
+		{
+			Lib.gui.showError(dlg, e);
+		}
+		finally
+		{
+			dlg.stop();
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//---------------------------------------------------------------------------
+
+	private DatabaseLib.CallBack callBack = new DatabaseLib.CallBack()
+	{
+		public void schemaObjects(int count)
+		{
+			dlg.reset(count*3);
+		}
+
+		//------------------------------------------------------------------------
+
+		public void removed(String object, String type)
+		{
+			dlg.advance("Removing : "+ object);
+		}
+
+		//------------------------------------------------------------------------
+
+		public void cyclicRefs(List<String> objects)
+		{
+			Lib.gui.showError(dlg, "Cyclic reference found:\n"+objects);
+		}
+
+		//------------------------------------------------------------------------
+
+		public void creating(String object, String type)
+		{
+			dlg.advance("Creating : "+ object);
+		}
+
+		//------------------------------------------------------------------------
+		public void skipping(String table) {}
+		//------------------------------------------------------------------------
+
+		public void filling(String table, String file)
+		{
+			dlg.advance("Filling table : "+ table);
+		}
+	};
+
+	//---------------------------------------------------------------------------
+
+	private ProgressDialog dlg;
 }
 
 //==============================================================================
