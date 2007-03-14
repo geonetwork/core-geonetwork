@@ -95,21 +95,27 @@ public class Resource
 		catch (Exception e)
 		{
 			e.printStackTrace();
-
-			try
-			{
-				resMan.abort();
-			}
-			catch (Exception ex)
-			{
-				e.printStackTrace();
-			}
+			abort();
 		}
 
 		provMan.end();
 
 		if (activ != null)
 			activ.shutdown();
+	}
+
+	//--------------------------------------------------------------------------
+
+	public void abort()
+	{
+		try
+		{
+			resMan.abort();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	//--------------------------------------------------------------------------

@@ -23,13 +23,13 @@
 
 package org.fao.gast.lib;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 //=============================================================================
@@ -43,6 +43,13 @@ public class XMLLib
 	//---------------------------------------------------------------------------
 
 	public Document load(String file) throws JDOMException, IOException
+	{
+		return load(new File(file));
+	}
+
+	//---------------------------------------------------------------------------
+
+	public Document load(File file) throws JDOMException, IOException
 	{
 		SAXBuilder builder = new SAXBuilder();
 		Document   jdoc    = builder.build(file);

@@ -23,6 +23,7 @@
 
 package org.fao.gast.lib;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
 import jeeves.constants.Jeeves;
@@ -84,9 +85,11 @@ public class MetadataLib
 
 	//--------------------------------------------------------------------------
 
-	private Element updateFixedInfo(String id, Element md, String uuid, String date,
+	public Element updateFixedInfo(String id, Element md, String uuid, String date,
 											  String schema, String siteURL) throws Exception
 	{
+		md.detach();
+
 		//--- setup environment
 
 		Element env = new Element("env");
@@ -112,7 +115,7 @@ public class MetadataLib
 
 	//--------------------------------------------------------------------------
 
-	private String getSiteURL(Dbms dbms) throws SQLException
+	public String getSiteURL(Dbms dbms) throws SQLException
 	{
 		String host    = Lib.database.getSetting(dbms, "system/server/host");
 		String port    = Lib.database.getSetting(dbms, "system/server/port");
@@ -125,9 +128,18 @@ public class MetadataLib
 
 	//---------------------------------------------------------------------------
 
-	public void index(Dbms dbms, String id) throws Exception
+//	public void index(Dbms dbms, String id) throws Exception
+//	{
+//		DataManager.indexMetadata(dbms, id, searchMan);
+//	}
+
+	//---------------------------------------------------------------------------
+
+	public void clearIndexes() throws Exception
 	{
-		DataManager.indexMetadata(dbms, id, searchMan);
+		File dir = new File(appPath +"/web/"+ Lib.config.getLuceneDir());
+		System.out.println("dir:"+dir.getAbsolutePath());
+		Lib.io.cleanDir(dir);
 	}
 
 	//---------------------------------------------------------------------------

@@ -41,14 +41,24 @@ public class IOLib
 	{
 		File files[] = dir.listFiles();
 
-		for(int i=0; i<files.length; i++)
-			if (files[i].isDirectory())
+		if (files == null)
+			return;
+
+		for(File file : files)
+			if (file.isDirectory())
 			{
-				if (!files[i].getName().equals(".svn"))
-					cleanDir(files[i]);
+				if (!file.getName().equals(".svn"))
+					cleanDir(file);
 			}
-			else if (!files[i].delete())
-				throw new Exception("Cannot delete file : "+files[i]);
+			else if (!file.delete())
+				throw new Exception("Cannot delete file : "+ file);
+	}
+
+	//---------------------------------------------------------------------------
+
+	public List<File> scanDir(File folder)
+	{
+		return scanDir(folder, null);
 	}
 
 	//---------------------------------------------------------------------------
@@ -61,7 +71,7 @@ public class IOLib
 
 		if (files != null)
 			for (File file : files)
-				if (file.getName().endsWith("."+extension))
+				if (extension == null || file.getName().endsWith("."+extension))
 					alFiles.add(file);
 
 		return alFiles;

@@ -85,7 +85,7 @@ public class ConfigLib
 
 	public String getLuceneDir()
 	{
-		return appHandElem.getChildText(Geonet.Config.LUCENE_DIR);
+		return findInHandler(Geonet.Config.LUCENE_DIR);
 	}
 
 	//---------------------------------------------------------------------------
@@ -179,6 +179,24 @@ public class ConfigLib
 		}
 
 		//--- we should not arrive here
+
+		return null;
+	}
+
+	//---------------------------------------------------------------------------
+
+	private String findInHandler(String paramName)
+	{
+		for (Object o : appHandElem.getChildren("param"))
+		{
+			Element param = (Element) o;
+
+			String name = param.getAttributeValue("name");
+			String value= param.getAttributeValue("value");
+
+			if (paramName.equals(name))
+				return value;
+		}
 
 		return null;
 	}

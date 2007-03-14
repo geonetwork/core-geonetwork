@@ -25,7 +25,6 @@ package org.fao.gast.gui.panels.database.sample;
 
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -73,9 +72,7 @@ public class MainPanel extends FormPanel
 		String runs = cmbRuns.getSelectedItem().toString();
 		runs = Util.replaceString(runs, ".", "");
 
-		worker.setImportMetadata (chbMetadata .isSelected());
-		worker.setImportTemplates(chbTemplates.isSelected());
-		worker.setImportRuns(Integer.parseInt(runs));
+		worker.setRuns(Integer.parseInt(runs));
 
 		dialog.run(worker);
 	}
@@ -90,19 +87,12 @@ public class MainPanel extends FormPanel
 	{
 		JPanel p = new JPanel();
 
-		FlexLayout fl = new FlexLayout(2,3);
+		FlexLayout fl = new FlexLayout(2,1);
 		fl.setColProp(1, FlexLayout.EXPAND);
 		p.setLayout(fl);
 
-		p.add("0,0", new JLabel("Metadata"));
-		p.add("1,0", chbMetadata);
-
-		p.add("0,1", new JLabel("Templates"));
-		p.add("1,1", chbTemplates);
-
-		p.add("0,2", new JLabel("Runs"));
-		p.add("1,2", cmbRuns);
-
+		p.add("0,0", new JLabel("Runs"));
+		p.add("1,0", cmbRuns);
 
 		cmbRuns.addItem("1");
 		cmbRuns.addItem("10");
@@ -121,9 +111,7 @@ public class MainPanel extends FormPanel
 	//---
 	//---------------------------------------------------------------------------
 
-	private JCheckBox chbMetadata = new JCheckBox();
-	private JCheckBox chbTemplates= new JCheckBox();
-	private JComboBox cmbRuns     = new JComboBox();
+	private JComboBox cmbRuns = new JComboBox();
 }
 
 //==============================================================================

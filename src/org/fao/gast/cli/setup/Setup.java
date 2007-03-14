@@ -51,18 +51,8 @@ public class Setup
 
 		//--- proper setup: open a database connection and setup data
 
-		Resource resource = null;
-
-		try
-		{
-			resource  = Lib.config.createResource();
-			Lib.database.setup(resource, null);
-		}
-		finally
-		{
-			if (resource != null)
-				resource.close();
-		}
+		Resource resource  = Lib.config.createResource();
+		Lib.database.setup(resource, null);
 	}
 }
 

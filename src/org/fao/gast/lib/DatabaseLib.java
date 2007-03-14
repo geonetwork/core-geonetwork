@@ -37,6 +37,10 @@ import java.util.UUID;
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.BinaryFile;
 import org.fao.gast.lib.druid.Import;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.util.ISODate;
+import org.jdom.Document;
 import org.jdom.Element;
 
 //=============================================================================
@@ -51,6 +55,7 @@ public class DatabaseLib
 
 	public static interface CallBack
 	{
+		public void schemaObjects(int count);
 		public void removed(String object, String type);
 		public void cyclicRefs(List<String> objects);
 		public void creating(String object, String type);
@@ -75,20 +80,40 @@ public class DatabaseLib
 	//---
 	//---------------------------------------------------------------------------
 
+	/** Transactional */
+
 	public void setup(Resource resource, CallBack cb) throws Exception
 	{
 		Dbms dbms = (Dbms) resource.open();
 
-		removeObjects(dbms, cb);
-		createSchema (dbms, cb);
-		fillTables   (dbms, cb);
-		setupSite(dbms);
+		try
+		{
+			removeObjects(dbms, cb);
+			createSchema (dbms, cb);
+			fillTables   (dbms, cb);
+			setupSiteId  (dbms);
+			setupVersion (dbms);
+
+			//--- the commit is needed by subsequent addTemplates method
+			dbms.commit();
+
+			addTemplates(dbms);
+			Lib.metadata.clearIndexes();
+
+			resource.close();
+		}
+		catch(Exception e)
+		{
+			resource.abort();
+			throw e;
+		}
 	}
 
 	//---------------------------------------------------------------------------
+	/** Transactional */
 
 	public void removeObjects(Dbms dbms, CallBack cb)
-									 throws FileNotFoundException, IOException, SQLException
+									 throws FileNotFoundException, IOException
 	{
 		List<String> schema = loadSchemaFile(dbms.getURL());
 
@@ -103,10 +128,14 @@ public class DatabaseLib
 				oi.name = getObjectName(row);
 				oi.type = getObjectType(row);
 
-				objects.add(oi);
+				if (!oi.type.toLowerCase().equals("index"))
+					objects.add(oi);
 			}
 
 		//--- step 2 : remove objects
+
+		if (cb != null)
+			cb.schemaObjects(objects.size());
 
 		while(true)
 		{
@@ -150,63 +179,84 @@ public class DatabaseLib
 	}
 
 	//---------------------------------------------------------------------------
+	/** Transactional */
 
-	public void createSchema(Dbms dbms, CallBack cb)
-									 throws FileNotFoundException, IOException, SQLException
+	public void createSchema(Dbms dbms, CallBack cb) throws 	FileNotFoundException,
+																				IOException, SQLException
 	{
 		List<String> schema = loadSchemaFile(dbms.getURL());
 
 		StringBuffer sb = new StringBuffer();
 
-		for (String row : schema)
-			if (!row.toUpperCase().startsWith("REM") && !row.startsWith("--") && !row.trim().equals(""))
-			{
-				sb.append(" ");
-				sb.append(row);
-
-				if (row.endsWith(";"))
+		try
+		{
+			for (String row : schema)
+				if (!row.toUpperCase().startsWith("REM") && !row.startsWith("--") && !row.trim().equals(""))
 				{
-					String sql = sb.toString();
+					sb.append(" ");
+					sb.append(row);
 
-					sql = sql.substring(0, sql.length() -1);
+					if (row.endsWith(";"))
+					{
+						String sql = sb.toString();
 
-					if (cb != null)
-						cb.creating(getObjectName(sql), getObjectType(sql));
+						sql = sql.substring(0, sql.length() -1);
 
-					dbms.execute(sql);
-					sb = new StringBuffer();
+						if (cb != null)
+							cb.creating(getObjectName(sql), getObjectType(sql));
+
+						dbms.execute(sql);
+						dbms.commit();
+						sb = new StringBuffer();
+					}
 				}
-			}
+		}
+		catch(SQLException e)
+		{
+			dbms.abort();
+			throw e;
+		}
 	}
 
 	//---------------------------------------------------------------------------
+	/** Transactional */
 
-	public void fillTables(Dbms dbms, CallBack cb) throws FileNotFoundException, IOException, SQLException
+	public void fillTables(Dbms dbms, CallBack cb) throws Exception
 	{
 		List<String> schema = loadSchemaFile(dbms.getURL());
 
-		for(String row : schema)
-			if (row.toUpperCase().startsWith("CREATE TABLE "))
-			{
-				String table = getObjectName(row);
-				String file  = appPath +SETUP_DIR+ "/db/"+ table +".ddf";
-
-				if (!new File(file).exists())
+		try
+		{
+			for(String row : schema)
+				if (row.toUpperCase().startsWith("CREATE TABLE "))
 				{
-					if (cb != null)
-						cb.skipping(table);
-				}
-				else
-				{
-					if (cb != null)
-						cb.filling(table, file);
+					String table = getObjectName(row);
+					String file  = appPath +SETUP_DIR+ "/db/"+ table +".ddf";
 
-					Import.load(dbms.getConnection(), table, file);
+					if (!new File(file).exists())
+					{
+						if (cb != null)
+							cb.skipping(table);
+					}
+					else
+					{
+						if (cb != null)
+							cb.filling(table, file);
+
+						Import.load(dbms.getConnection(), table, file);
+						dbms.commit();
+					}
 				}
-			}
+		}
+		catch(Exception e)
+		{
+			dbms.abort();
+			throw e;
+		}
 	}
 
 	//---------------------------------------------------------------------------
+	/** NOT Transactional */
 
 	public String getSetting(Dbms dbms, String path) throws SQLException
 	{
@@ -232,6 +282,17 @@ public class DatabaseLib
 		}
 
 		return value;
+	}
+
+	//---------------------------------------------------------------------------
+
+	public String getSiteId(Dbms dbms) throws SQLException
+	{
+		String  query = "SELECT value FROM Settings WHERE name='siteId'";
+		List    list  = dbms.select(query).getChildren();
+		Element rec   = (Element) list.get(0);
+
+		return rec.getChildText("value");
 	}
 
 	//---------------------------------------------------------------------------
@@ -288,17 +349,62 @@ public class DatabaseLib
 		try
 		{
 			dbms.execute(query);
+			dbms.commit();
+
 			return true;
 		}
 		catch (SQLException e)
 		{
+			dbms.abort();
+
 			return false;
 		}
 	}
 
 	//---------------------------------------------------------------------------
 
-	private void setupSite(Dbms dbms) throws SQLException, IOException
+	private void addTemplates(Dbms dbms) throws Exception
+	{
+		String siteId = getSiteId(dbms);
+		String siteURL= Lib.metadata.getSiteURL(dbms);
+		String date   = new ISODate().toString();
+
+		int serial = 1;
+
+		File schemaDir = new File(appPath, "gast/setup/templates");
+
+		for (File schema : Lib.io.scanDir(schemaDir))
+			//--- skip '.svn' folders and other hidden files
+			if (!schema.getName().startsWith("."))
+				for (File temp : Lib.io.scanDir(schema, "xml"))
+				{
+					Document doc  = Lib.xml.load(temp);
+					String   uuid = UUID.randomUUID().toString();
+					Element  xml  = Lib.metadata.updateFixedInfo(serial+"", doc.getRootElement(),
+																			  uuid, date, schema.getName(), siteURL);
+
+					XmlSerializer.insert(dbms, schema.getName(), xml, serial,
+											   siteId, uuid, date, date, null, "y", null);
+
+					setupTemplatePriv(dbms, serial);
+					dbms.commit();
+					serial++;
+				}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void setupTemplatePriv(Dbms dbms, int id) throws SQLException
+	{
+		String query = "INSERT INTO OperationAllowed(groupId, metadataId, operationId) "+
+							"VALUES(?, ?, ?)";
+
+		dbms.execute(query, 1, id, AccessManager.OPER_VIEW);
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void setupSiteId(Dbms dbms) throws SQLException, IOException
 	{
 		String uuid = UUID.randomUUID().toString();
 
@@ -308,13 +414,18 @@ public class DatabaseLib
 		FileOutputStream os = new FileOutputStream(appPath +"/web/images/logos/"+ uuid +".png");
 		BinaryFile.copy(is, os, true, true);
 
+		dbms.execute("UPDATE Settings SET value=? WHERE name='siteId'", uuid);
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void setupVersion(Dbms dbms) throws SQLException
+	{
 		String version    = Lib.server.getVersion();
 		String subVersion = Lib.server.getSubVersion();
 
-		dbms.execute("UPDATE Settings SET value=? WHERE name='siteId'",     uuid);
 		dbms.execute("UPDATE Settings SET value=? WHERE name='version'",    version);
 		dbms.execute("UPDATE Settings SET value=? WHERE name='subVersion'", subVersion);
-		dbms.commit();
 	}
 
 	//---------------------------------------------------------------------------

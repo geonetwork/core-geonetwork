@@ -26,8 +26,6 @@ package org.fao.gast.gui.panels.database.sample;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import jeeves.exceptions.UserNotFoundEx;
-import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import org.dlib.gui.ProgressDialog;
 import org.fao.gast.app.App;
@@ -57,12 +55,7 @@ public class Worker implements Runnable
 	//---
 	//---------------------------------------------------------------------------
 
-	public void setImportMetadata (boolean yesno) { impMetadata  = yesno; }
-	public void setImportTemplates(boolean yesno) { impTemplates = yesno; }
-
-	//---------------------------------------------------------------------------
-
-	public void setImportRuns(int runs)
+	public void setRuns(int runs)
 	{
 		this.runs =runs;
 	}
@@ -104,11 +97,13 @@ public class Worker implements Runnable
 
 		//--- scan for mef files
 
-		List<File> files = getFileList();
+		File mapsDir = new File(App.path +"/gast/setup/sample-data");
+
+		List<File> files = Lib.io.scanDir(mapsDir, "mef");
 
 		//--- export
 
-		dlg.reset((files.size() + runs));
+		dlg.reset((files.size() * runs));
 
 		for (int i=0; i<runs; i++)
 			for (File file : files)
@@ -142,23 +137,6 @@ public class Worker implements Runnable
 
 	//---------------------------------------------------------------------------
 
-	private List<File> getFileList()
-	{
-		ArrayList<File> files = new ArrayList<File>();
-
-		File sampleDir = new File(App.path +"/gast/setup/sample-data");
-
-		if (impMetadata)
-			files.addAll(Lib.io.scanDir(new File(sampleDir, "maps"), "mef"));
-
-		if (impTemplates)
-			files.addAll(Lib.io.scanDir(new File(sampleDir, "templates"), "mef"));
-
-		return files;
-	}
-
-	//---------------------------------------------------------------------------
-
 	private void send(XmlRequest req, File mefFile) throws Exception
 	{
 		dlg.advance("Importing file : "+ mefFile.getName());
@@ -174,9 +152,6 @@ public class Worker implements Runnable
 	//--- Variables
 	//---
 	//---------------------------------------------------------------------------
-
-	private boolean impMetadata;
-	private boolean impTemplates;
 
 	private int runs;
 

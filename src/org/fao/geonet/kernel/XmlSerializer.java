@@ -70,9 +70,9 @@ public class XmlSerializer
 	//--------------------------------------------------------------------------
 
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
-										 String source, String uuid) throws SQLException
+										 String siteId, String uuid) throws SQLException
 	{
-		return insert(dbms, schema, xml, serial, source, uuid, null, null, null);
+		return insert(dbms, schema, xml, serial, siteId, uuid, null, null, null);
 	}
 
 	//--------------------------------------------------------------------------
@@ -88,9 +88,9 @@ public class XmlSerializer
 
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
 										 String siteId, String uuid,
-										 String template, String title) throws SQLException
+										 String isTemplate, String title) throws SQLException
 	{
-		return insert(dbms, schema, xml, serial, siteId, uuid, null, null, null, template, title);
+		return insert(dbms, schema, xml, serial, siteId, uuid, null, null, null, isTemplate, title);
 	}
 
 	//--------------------------------------------------------------------------
@@ -108,8 +108,9 @@ public class XmlSerializer
 		if (changeDate == null)
 			changeDate = date;
 
-		StringBuffer fields = new StringBuffer("id, schemaId, data, createDate, changeDate, source, uuid, isTemplate, root");
-		StringBuffer values = new StringBuffer("?, ?, ?, ?, ?, ?, ?, ?, ?");
+		StringBuffer fields = new StringBuffer("id, schemaId, data, createDate, changeDate, "+
+															"source, uuid, isTemplate, isHarvested, root");
+		StringBuffer values = new StringBuffer("?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
 		Vector args = new Vector();
 		args.add(new Integer(serial));
 		args.add(schema);
@@ -119,6 +120,7 @@ public class XmlSerializer
 		args.add(siteId);
 		args.add(uuid);
 		args.add(isTemplate);
+		args.add("n");
 		args.add(xml.getQualifiedName());
 
 		if (sourceUri != null)
