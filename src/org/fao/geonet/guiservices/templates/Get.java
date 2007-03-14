@@ -50,7 +50,7 @@ public class Get implements Service
 		"extended", "off",
 		"remote",   "off",
 		"attrset",  "geo",
-		"template", "on",
+		"template", "y",
 		"any",      "",
 	};
 
@@ -78,7 +78,7 @@ public class Get implements Service
 
 		root.addContent(result);
 
-		List list = Xml.transform(root, styleSheet).getChildren("metadata");
+		List list = Xml.transform(root, styleSheet).getChildren();
 
 		Element response = new Element("dummy");
 
@@ -86,6 +86,9 @@ public class Get implements Service
 		{
 			Element elem = (Element) list.get(i);
 			Element info = elem.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+
+			if (!elem.getName().equals("metadata"))
+				continue;
 
 			String id       = info.getChildText(Edit.Info.Elem.ID);
 			String template = info.getChildText(Edit.Info.Elem.IS_TEMPLATE);
@@ -105,8 +108,6 @@ public class Get implements Service
 
 	private Element search(ServiceContext context) throws Exception
 	{
-		//FIXME: use a faster search through templates
-
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		context.info("Creating searcher");
