@@ -9,7 +9,7 @@
 	<xsl:template mode="script" match="/">
 		<script type="text/javascript" language="JavaScript">
 			
-			function update()
+			function doUpdate()
 			{
 				var invalid = " "; // Invalid character is a space
 				var minLength = 6; // Minimum length
@@ -62,7 +62,7 @@
 			<xsl:with-param name="buttons">
 				<button class="content" onclick="goBack()"><xsl:value-of select="/root/gui/strings/back"/></button>
 				&#160;
-				<button class="content" onclick="update()"><xsl:value-of select="/root/gui/strings/save"/></button>
+				<button class="content" onclick="doUpdate()"><xsl:value-of select="/root/gui/strings/save"/></button>
 			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
