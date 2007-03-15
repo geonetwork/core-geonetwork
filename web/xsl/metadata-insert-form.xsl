@@ -61,18 +61,26 @@
 								</select>
 							</td>
 						</tr>
+
+						<!-- groups -->
+
+						<xsl:variable name="lang" select="/root/gui/language"/>
+
 						<tr>
 							<th class="padded"><xsl:value-of select="/root/gui/strings/group"/></th>
 							<td class="padded">
 								<select class="content" name="group" size="1">
 									<xsl:for-each select="/root/gui/groups/record">
 										<option value="{id}">
-											<xsl:value-of select="name"/>
+											<xsl:value-of select="label/child::*[name() = $lang]"/>
 										</option>
 									</xsl:for-each>
 								</select>
 							</td>
 						</tr>
+
+						<!-- categories -->
+
 						<tr>
 							<th class="padded"><xsl:value-of select="/root/gui/strings/category"/></th>
 							<td class="padded">
@@ -81,16 +89,9 @@
 										<xsl:value-of select="/root/gui/strings/none"/>
 									</option>
 									<xsl:for-each select="/root/gui/categories/record">
-										<xsl:variable name="category" select="name/text()"/>
-										<xsl:variable name="categoryName" select="/root/gui/categoryNames/*[name(.)=$category]/text()"/>
-										<xsl:variable name="categoryLabel">
-											<xsl:choose>
-												<xsl:when test="$categoryName"><xsl:value-of select="$categoryName"/></xsl:when>
-												<xsl:otherwise>[<xsl:value-of select="$category"/>]</xsl:otherwise>
-											</xsl:choose>
-										</xsl:variable>
+										<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
 										<option value="{id}">
-											<xsl:value-of select="$categoryLabel"/>
+											<xsl:value-of select="label/child::*[name() = $lang]"/>
 										</option>
 									</xsl:for-each>
 								</select>
