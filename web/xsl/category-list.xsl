@@ -35,7 +35,7 @@
 				<xsl:call-template name="form"/>
 			</xsl:with-param>
 			<xsl:with-param name="buttons">
-				<button class="content" onclick="goBack()"><xsl:value-of select="/root/gui/strings/back"/></button>
+				<button class="content" onclick="load('{/root/gui/locService}/admin')"><xsl:value-of select="/root/gui/strings/back"/></button>
 				&#160;
 				<button class="content" onclick="load('{/root/gui/locService}/category.get')"><xsl:value-of select="/root/gui/strings/newCategory"/></button>
 			</xsl:with-param>
