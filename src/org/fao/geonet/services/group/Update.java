@@ -54,7 +54,7 @@ public class Update implements Service
 	{
 		String id    = params.getChildText(Params.ID);
 		String name  = Util.getParam(params, Params.NAME);
-		String descr = Util.getParam(params, Params.DESCRIPTION);
+		String descr = Util.getParam(params, Params.DESCRIPTION, "");
 		String email = params.getChildText(Params.EMAIL);
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
