@@ -21,7 +21,8 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.gast.gui.panels.migration.oldinst;
+package org.fao.gast.gui.panels.manag.conversion;
+
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -98,6 +99,19 @@ public class GNSource
 //		}
 	}
 
+	//---------------------------------------------------------------------------
+
+	public Element getUnmappedFields(Element md) throws Exception
+	{
+//		try
+//		{
+			return Xml.transform(md, appPath +"/gast/xsl/unmapped.xsl");
+//		}
+//		catch (Exception e)
+//		{
+//			throw geoNetExc(e, "Cannot get unmapped fields");
+//		}
+	}
 
 	//---------------------------------------------------------------------------
 
@@ -130,10 +144,10 @@ public class GNSource
 
 	//---------------------------------------------------------------------------
 
-	public void addMetadata(List list) throws Exception
+	public void addMetadata(Dbms dbms, List list) throws Exception
 	{
 		String schema = "iso19115";
-		String source = "";//appHand.getValue("siteId");
+		String source = ""; //appHand.getValue("siteId");
 
 		for(int i=0; i<list.size(); i++)
 		{

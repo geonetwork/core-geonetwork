@@ -58,28 +58,38 @@ public class MetadataLib
 	//---
 	//---------------------------------------------------------------------------
 
+	/** Transactional */
+
 	public void sync(Dbms dbms) throws Exception
 	{
-		List list = dbms.select("SELECT * FROM Metadata").getChildren();
-		dbms.commit();
-
-		String siteURL = getSiteURL(dbms);
-
-		for(int i=0; i<list.size(); i++)
+		try
 		{
-			Element record = (Element) list.get(i);
-
-			String id     = record.getChildText("id");
-			String schema = record.getChildText("schemaid");
-			String data   = record.getChildText("data");
-			String uuid   = record.getChildText("uuid");
-			String date   = record.getChildText("createdate");
-
-			Element md = updateFixedInfo(id, Xml.loadString(data, false),
-												  uuid, date, schema, siteURL);
-
-			XmlSerializer.update(dbms, id, md, date);
+			List list = dbms.select("SELECT * FROM Metadata").getChildren();
 			dbms.commit();
+
+			String siteURL = getSiteURL(dbms);
+
+			for(int i=0; i<list.size(); i++)
+			{
+				Element record = (Element) list.get(i);
+
+				String id     = record.getChildText("id");
+				String schema = record.getChildText("schemaid");
+				String data   = record.getChildText("data");
+				String uuid   = record.getChildText("uuid");
+				String date   = record.getChildText("createdate");
+
+				Element md = updateFixedInfo(id, Xml.loadString(data, false),
+													  uuid, date, schema, siteURL);
+
+				XmlSerializer.update(dbms, id, md, date);
+				dbms.commit();
+			}
+		}
+		catch(Exception e)
+		{
+			dbms.abort();
+			throw e;
 		}
 	}
 
@@ -140,6 +150,22 @@ public class MetadataLib
 		File dir = new File(appPath +"/web/"+ Lib.config.getLuceneDir());
 		System.out.println("dir:"+dir.getAbsolutePath());
 		Lib.io.cleanDir(dir);
+	}
+
+	//--------------------------------------------------------------------------
+
+	public Element getThumbnails(Dbms dbms, String schema, String id) throws Exception
+	{
+		Element md = XmlSerializer.select(dbms, "Metadata", id);
+
+		if (md == null)
+			return null;
+
+		//--- do an XSL  transformation
+
+		String styleSheet = appPath +"/web/xml/schemas/"+ schema +"/"+ Geonet.File.EXTRACT_THUMBNAILS;
+
+		return Xml.transform(md, styleSheet);
 	}
 
 	//---------------------------------------------------------------------------

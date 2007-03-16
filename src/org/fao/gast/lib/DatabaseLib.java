@@ -64,6 +64,13 @@ public class DatabaseLib
 	}
 
 	//---------------------------------------------------------------------------
+
+	public static interface Mapper
+	{
+		public String map(String field, String value);
+	}
+
+	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
@@ -90,6 +97,10 @@ public class DatabaseLib
 		{
 			removeObjects(dbms, cb);
 			createSchema (dbms, cb);
+
+			//--- needed for PostgreSQL
+			dbms.commit();
+
 			fillTables   (dbms, cb);
 			setupSiteId  (dbms);
 			setupVersion (dbms);
@@ -110,9 +121,100 @@ public class DatabaseLib
 	}
 
 	//---------------------------------------------------------------------------
+	/** NOT Transactional */
+
+	public String getSetting(Dbms dbms, String path) throws SQLException
+	{
+		String query = "SELECT id, value FROM Settings WHERE parentId=? AND name=?";
+
+		StringTokenizer st = new StringTokenizer(path , "/");
+
+		int    parent = 0;
+		String value  = null;
+
+		while (st.hasMoreTokens())
+		{
+			String name = st.nextToken();
+			List   list  = dbms.select(query, parent, name).getChildren();
+
+			if (list.size() == 0)
+				return null;
+
+			Element sett = (Element) list.get(0);
+
+			parent = Integer.parseInt(sett.getChildText("id"));
+			value  = sett.getChildText("value");
+		}
+
+		return value;
+	}
+
+	//---------------------------------------------------------------------------
+	/** NOT Transactional */
+
+	public String getSiteId(Dbms dbms) throws SQLException
+	{
+		String  query = "SELECT value FROM Settings WHERE name='siteId'";
+		List    list  = dbms.select(query).getChildren();
+		Element rec   = (Element) list.get(0);
+
+		return rec.getChildText("value");
+	}
+
+	//---------------------------------------------------------------------------
+	/** NOT Transactional */
+
+	public void insert(Dbms dbms, String table, List records, String fields[],
+							 Mapper mapper) throws Exception
+	{
+		for(Object rec : records)
+			insert(dbms, table, (Element) rec, fields, mapper);
+	}
+
+	//---------------------------------------------------------------------------
+	/** NOT Transactional */
+
+	public void insert(Dbms dbms, String table, Element rec, String fields[],
+							 Mapper mapper) throws Exception
+	{
+		StringBuffer names = new StringBuffer();
+		StringBuffer marks = new StringBuffer();
+
+		ArrayList<String> values = new ArrayList<String>();
+
+		for(int i=0; i<fields.length; i++)
+		{
+			names.append(fields[i]);
+			marks.append("?");
+
+			String oldValue = rec.getChildText(fields[i].toLowerCase());
+			String newValue = (mapper == null)
+										? oldValue
+										: mapper.map(fields[i], oldValue);
+
+			values.add(newValue);
+
+			if (i <fields.length -1)
+			{
+				names.append(", ");
+				marks.append(", ");
+			}
+		}
+
+		String query = "INSERT INTO "+ table +"("+ names +") VALUES ("+ marks +")";
+
+		dbms.execute(query, values.toArray());
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Private setup methods
+	//---
+	//---------------------------------------------------------------------------
+
 	/** Transactional */
 
-	public void removeObjects(Dbms dbms, CallBack cb)
+	private void removeObjects(Dbms dbms, CallBack cb)
 									 throws FileNotFoundException, IOException
 	{
 		List<String> schema = loadSchemaFile(dbms.getURL());
@@ -179,7 +281,27 @@ public class DatabaseLib
 	}
 
 	//---------------------------------------------------------------------------
-	/** Transactional */
+
+	private boolean safeExecute(Dbms dbms, String query)
+	{
+		try
+		{
+			dbms.execute(query);
+
+			//--- as far as I remember, PostgreSQL needs a commit even for DDL
+			dbms.commit();
+
+			return true;
+		}
+		catch (SQLException e)
+		{
+			dbms.abort();
+
+			return false;
+		}
+	}
+
+	//---------------------------------------------------------------------------
 
 	public void createSchema(Dbms dbms, CallBack cb) throws 	FileNotFoundException,
 																				IOException, SQLException
@@ -188,111 +310,54 @@ public class DatabaseLib
 
 		StringBuffer sb = new StringBuffer();
 
-		try
-		{
-			for (String row : schema)
-				if (!row.toUpperCase().startsWith("REM") && !row.startsWith("--") && !row.trim().equals(""))
+		for (String row : schema)
+			if (!row.toUpperCase().startsWith("REM") && !row.startsWith("--") && !row.trim().equals(""))
+			{
+				sb.append(" ");
+				sb.append(row);
+
+				if (row.endsWith(";"))
 				{
-					sb.append(" ");
-					sb.append(row);
+					String sql = sb.toString();
 
-					if (row.endsWith(";"))
-					{
-						String sql = sb.toString();
+					sql = sql.substring(0, sql.length() -1);
 
-						sql = sql.substring(0, sql.length() -1);
+					if (cb != null)
+						cb.creating(getObjectName(sql), getObjectType(sql));
 
-						if (cb != null)
-							cb.creating(getObjectName(sql), getObjectType(sql));
-
-						dbms.execute(sql);
-						dbms.commit();
-						sb = new StringBuffer();
-					}
+					dbms.execute(sql);
+					sb = new StringBuffer();
 				}
-		}
-		catch(SQLException e)
-		{
-			dbms.abort();
-			throw e;
-		}
+			}
 	}
 
 	//---------------------------------------------------------------------------
-	/** Transactional */
+	/** Transaction must be aborted on error */
 
 	public void fillTables(Dbms dbms, CallBack cb) throws Exception
 	{
 		List<String> schema = loadSchemaFile(dbms.getURL());
 
-		try
-		{
-			for(String row : schema)
-				if (row.toUpperCase().startsWith("CREATE TABLE "))
+		for(String row : schema)
+			if (row.toUpperCase().startsWith("CREATE TABLE "))
+			{
+				String table = getObjectName(row);
+				String file  = appPath +SETUP_DIR+ "/db/"+ table +".ddf";
+
+				if (!new File(file).exists())
 				{
-					String table = getObjectName(row);
-					String file  = appPath +SETUP_DIR+ "/db/"+ table +".ddf";
-
-					if (!new File(file).exists())
-					{
-						if (cb != null)
-							cb.skipping(table);
-					}
-					else
-					{
-						if (cb != null)
-							cb.filling(table, file);
-
-						Import.load(dbms.getConnection(), table, file);
-						dbms.commit();
-					}
+					if (cb != null)
+						cb.skipping(table);
 				}
-		}
-		catch(Exception e)
-		{
-			dbms.abort();
-			throw e;
-		}
-	}
+				else
+				{
+					if (cb != null)
+						cb.filling(table, file);
 
-	//---------------------------------------------------------------------------
-	/** NOT Transactional */
-
-	public String getSetting(Dbms dbms, String path) throws SQLException
-	{
-		String query = "SELECT id, value FROM Settings WHERE parentId=? AND name=?";
-
-		StringTokenizer st = new StringTokenizer(path , "/");
-
-		int    parent = 0;
-		String value  = null;
-
-		while (st.hasMoreTokens())
-		{
-			String name = st.nextToken();
-			List   list  = dbms.select(query, parent, name).getChildren();
-
-			if (list.size() == 0)
-				return null;
-
-			Element sett = (Element) list.get(0);
-
-			parent = Integer.parseInt(sett.getChildText("id"));
-			value  = sett.getChildText("value");
-		}
-
-		return value;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public String getSiteId(Dbms dbms) throws SQLException
-	{
-		String  query = "SELECT value FROM Settings WHERE name='siteId'";
-		List    list  = dbms.select(query).getChildren();
-		Element rec   = (Element) list.get(0);
-
-		return rec.getChildText("value");
+					Import.load(dbms.getConnection(), table, file);
+					dbms.commit();
+				}
+			}
 	}
 
 	//---------------------------------------------------------------------------
@@ -340,25 +405,6 @@ public class DatabaseLib
 		st.nextToken();
 
 		return st.nextToken();
-	}
-
-	//---------------------------------------------------------------------------
-
-	private boolean safeExecute(Dbms dbms, String query)
-	{
-		try
-		{
-			dbms.execute(query);
-			dbms.commit();
-
-			return true;
-		}
-		catch (SQLException e)
-		{
-			dbms.abort();
-
-			return false;
-		}
 	}
 
 	//---------------------------------------------------------------------------

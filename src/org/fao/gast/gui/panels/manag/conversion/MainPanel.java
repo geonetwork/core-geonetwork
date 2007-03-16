@@ -21,7 +21,8 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.gast.gui.panels.migration.oldinst;
+package org.fao.gast.gui.panels.manag.conversion;
+
 
 import java.awt.Frame;
 import java.awt.event.ActionEvent;

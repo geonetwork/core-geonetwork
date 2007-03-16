@@ -21,11 +21,14 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.gast.gui.panels.migration.oldinst;
+package org.fao.gast.gui.panels.manag.conversion;
 
-import java.sql.SQLException;
+
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.List;
 import jeeves.resources.dbms.Dbms;
+import jeeves.utils.Xml;
 import org.dlib.gui.ProgressDialog;
 import org.fao.gast.lib.Lib;
 import org.fao.gast.lib.Resource;
@@ -117,52 +120,63 @@ public class Worker implements Runnable
 
 	private void executeJob(Dbms oldDbms, Dbms newDbms) throws Exception
 	{
-		migrateUsers     (oldDbms, newDbms);
-		migrateGroups    (oldDbms, newDbms);
-		migrateCategories(oldDbms, newDbms);
-		migrateMetadata  (oldDbms, newDbms);
+		String      log = Lib.server.getAppPath() +"/gast/log/unmapped.log";
+		PrintWriter out = new PrintWriter(new FileOutputStream(log));
+
+		//--- open GeoNetwork 2
+
+		dlg.reset(2);
+
+//		Set<String> ids = destin.getAllIsoMetadataId();
+
+//		destin.commit();
+
+//		dlg.reset(ids.size());
+
+//		for(String id : ids)
+//		{
+//			if (testOnly)	dlg.advance("Analyzing metadata with id : "+ id);
+//				else 			dlg.advance("Migrating metadata with id : "+ id);
+//
+//			Element metadata = destin.getMetadata(id);
+//			Element unmapped = destin.getUnmappedFields(metadata);
+
+//			destin.commit();
+//			saveUnmapped(out, id, unmapped);
+//
+//			if (!testOnly)
+//			{
+//				destin.upgradeMetadata(id, metadata);
+//				destin.commit();
+//			}
+//		}
+//
+//		if (!testOnly)
+//		{
+//			logger.logInfo("Cleaning lucene indexes");
+//			destin.removeLuceneFiles();
+//		}
+
+		out.close();
 	}
 
 	//---------------------------------------------------------------------------
 
-	private void migrateUsers(Dbms oldDbms, Dbms newDbms) throws SQLException
+	private void saveUnmapped(PrintWriter out, String id, Element unmapped)
 	{
-		String query = "SELECT * FROM Categories";
+		List list = unmapped.getChildren();
 
-		List oldCategs = oldDbms.select(query).getChildren();
-		List newCategs = newDbms.select(query).getChildren();
-
-		dlg.reset(oldCategs.size());
-
-		for (Object c : oldCategs)
+		for(Object e : list)
 		{
-			Element categ = (Element) c;
+			Element elem = (Element) e;
+			String  clas = elem.getAttributeValue("class");
+
+			out.println("Mapping warning for metadata with id "+ id +" : "+ clas);
+			out.println();
+			out.println(Xml.getString(elem));
+			out.println("-------------------------------------------------------");
 		}
 	}
-
-	//---------------------------------------------------------------------------
-
-	private void migrateGroups(Dbms oldDbms, Dbms newDbms)
-	{
-	}
-
-	//---------------------------------------------------------------------------
-
-	private void migrateCategories(Dbms oldDbms, Dbms newDbms)
-	{
-	}
-
-	//---------------------------------------------------------------------------
-
-	private void migrateMetadata(Dbms oldDbms, Dbms newDbms)
-	{
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- General private methods
-	//---
-	//---------------------------------------------------------------------------
 
 	//---------------------------------------------------------------------------
 	//---
