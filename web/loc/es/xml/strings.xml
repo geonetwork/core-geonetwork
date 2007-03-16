@@ -249,8 +249,7 @@
 	<copyright2>
 		<p>Reservados todos los derechos.<br/> Escriba su propio copyright. </p>
 	</copyright2>
-	<moreinfo>Para mayor información usted puede contactar por correo electrónico en </a>
-	</moreinfo>
+	<moreinfo>Para mayor información usted puede contactar por correo electrónico en</moreinfo>
 	<message>El nombre de usuario o la contaseña son incorrectos.<br/>Presione el botón 'atrás' e intentelo de nuevo.</message>
 	<protocolChoice value="WWW:LINK-1.0-http--link">Dirección Web (URL)</protocolChoice>
 	<protocolChoice value="WWW:DOWNLOAD-1.0-http--download">Fichero para la descarga</protocolChoice>
