@@ -8,7 +8,8 @@
 		
 		<!-- title -->
 		<title><xsl:value-of select="/root/gui/strings/title"/></title>
-		
+		<link href="{/root/gui/url}/favicon.ico" rel="SHORTCUT ICON" />
+
 		<!-- stylesheet -->
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork.css"/>
 		

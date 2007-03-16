@@ -72,7 +72,7 @@ tr.banner {
 td.banner {
 	font-size: 8pt;
 	color: #ffffff;
-	background-image: url('images/blue-stripes.jpg');
+	background-image: url('images/blue-background.gif');
 	border-bottom: 1px solid #ffffff; /* moved here from tr since IE accepts it only here */
 }
 
@@ -90,7 +90,7 @@ td.banner-login {
 	font-size: 8pt;
 	color: #ffffff;
 	/*
-	background-image: url('images/blue-stripes.jpg');
+	background-image: url('images/blue-background.gif');
 	*/
 	background: #266397;
 	padding-left: 8px;
@@ -182,16 +182,16 @@ td.blue-content {
 	color: #ffffff;
 	background: #266397;
 	/*
-	background-image: url('images/blue-stripes.jpg');
+	background-image: url('images/blue-background.gif');
 	*/
-	height: 30;
+	height: 30px;
 }
 
 input.content, select.content, textarea.content {
 	font-family: Verdana;
 	font-size: 9pt;
 	color: #064377;
-	max-width: 400;
+	max-width: 400px;
 	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
 }
 
@@ -199,7 +199,7 @@ button.content {
 	font-family: Verdana;
 	font-size: 9pt;
 	color: #064377;
-	max-width: 400;
+	max-width: 400px;
 	cursor: pointer;
 	cursor: hand;
 	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */

@@ -11,10 +11,10 @@
 			<!-- title -->
 			<tr class="banner">
 				<td class="banner">
-					<img src="{/root/gui/url}/images/header-left.gif" alt="GeoNetwork opensource" align="top" />
+					<img src="{/root/gui/url}/images/header-left.jpg" alt="World picture" align="top" />
 				</td>
 				<td align="right" class="banner">
-					<img src="{/root/gui/url}/images/header-right.gif" alt="World picture" align="top" />
+					<img src="{/root/gui/url}/images/header-right.gif" alt="GeoNetwork opensource logo" align="top" />
 				</td>
 			</tr>
 			
