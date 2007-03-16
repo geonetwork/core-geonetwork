@@ -23,22 +23,43 @@
 
 package org.fao.geonet.services.util.z3950;
 
-import org.fao.geonet.constants.*;
-import org.fao.geonet.kernel.search.*;
-import org.fao.geonet.GeonetContext;
-
-import jeeves.server.*;
-import jeeves.server.context.*;
+import com.k_int.IR.AsynchronousEnumeration;
+import com.k_int.IR.DefaultSourceEnumeration;
+import com.k_int.IR.IFSNotificationTarget;
+import com.k_int.IR.IREvent;
+import com.k_int.IR.IRQuery;
+import com.k_int.IR.IRStatusReport;
+import com.k_int.IR.InformationFragment;
+import com.k_int.IR.InformationFragmentSource;
+import com.k_int.IR.InvalidQueryException;
+import com.k_int.IR.QueryModel;
+import com.k_int.IR.RecordFormatSpecification;
+import com.k_int.IR.SearchTask;
+import com.k_int.IR.Syntaxes.DOMTree;
+import com.k_int.util.RPNQueryRep.AttrPlusTermNode;
+import com.k_int.util.RPNQueryRep.AttrTriple;
+import com.k_int.util.RPNQueryRep.ComplexNode;
+import com.k_int.util.RPNQueryRep.QueryNode;
+import com.k_int.util.RPNQueryRep.QueryNodeVisitor;
+import com.k_int.util.RPNQueryRep.RootNode;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Observer;
+import java.util.Properties;
+import java.util.Stack;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
-
-import com.k_int.IR.*;
-import com.k_int.IR.Syntaxes.*;
-import com.k_int.util.RPNQueryRep.*;
-
-import org.jdom.*;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.MetaSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.jdom.Attribute;
+import org.jdom.Document;
+import org.jdom.Element;
 import org.jdom.output.DOMOutputter;
-
-import java.util.*;
 
 //=============================================================================
 
@@ -55,7 +76,7 @@ public class GNSearchTask extends SearchTask implements InformationFragmentSourc
 	private Properties     _properties;
 
 	private MetaSearcher   _searcher;
-	
+
 	//--------------------------------------------------------------------------
 
 	public GNSearchTask(IRQuery query, GNSearchable source, Observer[] observers, Properties properties, ServiceContext srvContext)
@@ -114,7 +135,7 @@ public class GNSearchTask extends SearchTask implements InformationFragmentSourc
 		{
 			RemoteQueryDecoder queryDecoder = new RemoteQueryDecoder(_query.getQueryModel());
 			Element request = new Element("request");
-			
+
 			// System.out.println("QUERY:\n" + Xml.getString(queryDecoder.getQuery())); // DEBUG
 
 			request.addContent(queryDecoder.getQuery());
@@ -130,7 +151,7 @@ public class GNSearchTask extends SearchTask implements InformationFragmentSourc
 			MetaSearcher s = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_Z3950_SERVER);
 			s.search(_srvContext, request, config);
 			_searcher = s;
-			
+
 			// System.out.println("summary:\n" + Xml.getString(s.getSummary())); // DEBUG
 
 			// Random number of records.. Set up the result set
@@ -167,10 +188,11 @@ public class GNSearchTask extends SearchTask implements InformationFragmentSourc
 			request.addContent(new Element("to").setText(to+""));
 			ServiceConfig config = new ServiceConfig();
 
+			Log.debug(Geonet.Z3950_SERVER, "Search request:\n"+ Xml.getString(request));
 			// get result set
-			Element result  = _searcher.present(_srvContext, request, config);
+			Element result = _searcher.present(_srvContext, request, config);
 
-			// System.out.println("METASEARCHER RESULT:\n" + Xml.getString(result)); // DEBUG
+			Log.debug(Geonet.Z3950_SERVER, "Search result:\n"+ Xml.getString(result));
 
 			// remove summary
 			result.removeChildren("summary");
@@ -181,6 +203,9 @@ public class GNSearchTask extends SearchTask implements InformationFragmentSourc
 			{
 				Element md = (Element)list.get(0);
 				md.detach();
+				md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+
+				Log.debug(Geonet.Z3950_SERVER, "Returning fragment:\n"+ Xml.getString(md));
 
 				// add metadata
 				fragment[i] = new DOMTree("geonetwork",

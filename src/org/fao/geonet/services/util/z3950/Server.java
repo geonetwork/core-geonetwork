@@ -23,15 +23,15 @@
 
 package org.fao.geonet.services.util.z3950;
 
-import jeeves.interfaces.Logger;
+import com.k_int.z3950.server.ZServer;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Properties;
+import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
-
-import com.k_int.util.LoggingFacade.*;
-import com.k_int.z3950.server.*;
-
-import java.util.*;
-import java.net.*;
-import java.io.*;
+import jeeves.utils.Xml;
+import org.jdom.Document;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -46,9 +46,14 @@ public class Server
 
 	/** initializes the server
 	  */
-	public static void init(String port, String schemaMappings, ServiceContext srvContext)
-		throws Exception
+	public static void init(String port, String appPath, String schemaMappings,
+									ServiceContext srvContext) throws Exception
 	{
+		String tempSchema = appPath + Jeeves.Path.XML + schemaMappings +".tem";
+		String realSchema = appPath + Jeeves.Path.XML + schemaMappings;
+
+		fixSchemaFile(tempSchema, realSchema);
+
 		String evaluator    = "org.fao.geonet.services.util.z3950.GNSearchable";
 		String configurator = "com.k_int.IR.Syntaxes.Conversion.XMLConfigurator";
 
@@ -56,7 +61,7 @@ public class Server
 		props.setProperty("port",                              port);
 		props.setProperty("evaluator",                         evaluator);
 		props.setProperty("XSLConverterConfiguratorClassName", configurator);
-		props.setProperty("ConvertorConfigFile",               schemaMappings);
+		props.setProperty("ConvertorConfigFile",               realSchema);
 		props.put("srvContext", srvContext);
 
 		_server = new ZServer(props);
@@ -72,5 +77,27 @@ public class Server
 		if (_server != null)
 			_server.shutdown(0); // shutdown type is not used in current implementation
 	}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Private methods
+	//---
+	//--------------------------------------------------------------------------
+
+	private static void fixSchemaFile(String src, String des) throws Exception
+	{
+		Element root  = Xml.loadFile(src);
+		Element temSrc= root.getChild("templatesource");
+
+		String dir = new File(src).getParentFile().getAbsolutePath() +"/mappings";
+
+		temSrc.setAttribute("directory", dir);
+
+		FileOutputStream os = new FileOutputStream(des);
+		Xml.writeResponse(new Document(root), os);
+		os.close();
+	}
 }
+
+//=============================================================================
 
