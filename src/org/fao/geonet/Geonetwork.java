@@ -142,16 +142,16 @@ public class Geonetwork implements ApplicationHandler
 		String  schemaMappings = handlerConfig.getMandatoryValue(Geonet.Config.SCHEMA_MAPPINGS);
 
 		if (!z3950Enable)
-		logger.info("     disabled");
+			logger.info("     disabled");
 		else
 		{
-			logger.info("     schema mapping is : " + schemaMappings); // FIXME
+			logger.info("     Enabled. Schema mappings is : " + schemaMappings);
 
 			UserSession session = new UserSession();
 			session.authenticate(null, "z39.50", "", "", "Guest");
 			context.setUserSession(session);
 			context.setIpAddress("127.0.0.1");
-			Server.init(z3950port, path + Jeeves.Path.XML + schemaMappings, context);
+			Server.init(z3950port, path, schemaMappings, context);
 		}
 
 		//------------------------------------------------------------------------

@@ -199,6 +199,7 @@ public class Geonet
 	public static final String SETTINGS     = GEONETWORK + ".settings";
 	public static final String DATA_MANAGER = GEONETWORK + ".datamanager";
 	public static final String SEARCH_ENGINE= GEONETWORK + ".search";
+	public static final String Z3950_SERVER = GEONETWORK + ".z3950server";
 	public static final String INDEX_ENGINE = GEONETWORK + ".index";
 	public static final String MEF          = GEONETWORK + ".mef";
 	public static final String CSW          = GEONETWORK + ".csw";
