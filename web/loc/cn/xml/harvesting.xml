@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<select>Select</select>
+	<name>Name</name>
+	<type>Type</type>
+	<status>Status</status>
+	<errors>Errors</errors>
+	<every>Every</every>
+	<lastRun>Last run</lastRun>
+	<operation>Operation</operation>
+
+	<typeGN>Geonetwork remote node</typeGN>
+	<typeWF>Web Accessible Folder</typeWF>
+	
+	<typeGNShort>Geonetwork</typeGNShort>
+	<typeWFShort>Web Folder</typeWFShort>
+	
+	<!-- Editing form -->
+	
+	<site>Site</site>
+	
+	<name>Name</name>
+	<host>Host</host>
+	<port>Port</port>
+	<servlet>Servlet</servlet>
+	<useAccount>Use account</useAccount>
+	<username>Username</username>
+	<password>Password</password>
+	
+	<search>Search</search>
+	<siteName>Site name</siteName>
+	
+	<freeText>Free text</freeText>
+	<title>Title</title>
+	<abstract>Abstract</abstract>
+	<keywords>Keywords</keywords>
+	<digital>Digital</digital>
+	<hardcopy>Hardcopy</hardcopy>
+	<siteId>Site ID</siteId>
+
+	<retrieve>Retrieve</retrieve>
+	<warn>You can retrieve only after filling the site part</warn>
+	
+	<options>Options</options>
+	<every>Every</every>
+	<everySpec>(days : hours : minutes)</everySpec>
+	<oneRun>One run only</oneRun>
+	<createGroups>Create groups</createGroups>
+	<createCateg>Create categories</createCateg>
+	<status>Status</status>
+	<active>Active</active>
+	<inactive></inactive>
+	
+	<validate>Validate</validate>
+	<structure>Structure</structure>
+	<host>Host</host>
+	<privileges>Privileges</privileges>
+	<url>URL</url>
+	<group>Group</group>
+	<groups>Groups</groups>
+	
+	<!-- Buttons -->
+	
+	<add>Add</add>
+	<edit>Edit</edit>
+	<save>Save</save>
+	<start>Start</start>
+	<stop>Stop</stop>
+	<run>Run</run>
+	<remove>Remove</remove>
+	<refresh>Refresh</refresh>
+	
+	<days>days</days>
+	<hours>hours</hours>
+	<mins>minutes</mins>
+	
+	<!-- validator messages -->
+	
+	<validator>
+		<length>
+			<cannotBeEmpty>The field '{NAME}' cannot be empty</cannotBeEmpty>
+			<invalidMinSize>The field '{NAME}' must be at least {VALUE} character(s) long</invalidMinSize>
+			<invalidMaxSize>The field '{NAME}' must be maximum {VALUE} character(s) long</invalidMaxSize>
+		</length>
+		
+		<integer>
+			<notInt>The field '{NAME}' must be an integer</notInt>
+			<invalidMinValue>The field '{NAME}' must be &gt;= {VALUE}</invalidMinValue>
+			<invalidMaxValue>The field '{NAME}' must be &lt;= {VALUE}</invalidMaxValue>
+		</integer>		
+		
+		<alphanum>
+			<notAlphaNumeric>The field '{NAME}' must be alphanumeric (starting with a letter)</notAlphaNumeric>
+		</alphanum>
+		
+		<hostname>
+			<notHostName>The field '{NAME}' is not a valid host name</notHostName>
+		</hostname>
+		
+		<url>
+			<notURL>The field '{NAME}' is not a valid URL</notURL>
+		</url>
+	</validator>
+	
+	<!-- display messages -->
+	
+	<pleaseSelect>Please select at least one entry</pleaseSelect>
+	<pleaseSelectGroup>Please select at least one group</pleaseSelectGroup>
+	<cannotAdd>Unable to add a new entry</cannotAdd>
+	<cannotGet>Unable to get the entry/ies</cannotGet>
+	<cannotRemove>Cannot remove the selected entry/ies</cannotRemove>
+	<cannotStart>Cannot start the selected entry/ies</cannotStart>
+	<cannotStop>Cannot stop the selected entry/ies</cannotStop>
+	<cannotRun>Cannot run the selected entry/ies</cannotRun>
+	<confirmRemove>Remove the selected entries ? The nodes and all harvested metadata will be removed.</confirmRemove>
+	<everyZero>The harvesting period cannot be 0:0:0</everyZero>
+	<pleaseRetrieve>Please retrieve some sites first</pleaseRetrieve>
+	<cannotRetrieve>Unable to retrieve information</cannotRetrieve>
+	<supplyHost>Please, provide the 'host' parameter</supplyHost>
+	<supplyServlet>Please, provide the 'servlet' parameter</supplyServlet>
+	
+	<oper>
+		<op id="0">View</op>
+		<op id="1">Download</op>
+		<op id="2">Edit</op>
+		<op id="3">Notify</op>
+		<op id="4">Admin</op>
+		<op id="5">Dynamic</op>
+		<op id="6">Featured</op>
+	</oper>
+	
+	<!-- tooltips -->
+	
+	<statusTip type="inactive">Inactive</statusTip>
+	<statusTip type="active">Active</statusTip>
+	<statusTip type="running">Running</statusTip>
+	
+	<tipHeader>
+		<siteId>Site ID</siteId>
+		<total>Total</total>
+		<added>Added</added>
+		<updated>Updated</updated>
+		<unchanged>Unchanged</unchanged>
+		<skipped>Skipped</skipped>
+	</tipHeader>
+	
+	<notRun>Waiting for the first run</notRun>
+</strings>
+

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<countries>
+	<country iso2="af" id="1">Afghanistan</country>
+	<country iso2="al" id="2">Albania</country>
+	<country iso2="dz" id="3">Algeria</country>
+	<country iso2="as" id="4">American Samoa</country>
+	<country iso2="ad" id="5">Andorra</country>
+	<country iso2="ao" id="6">Angola</country>
+	<country iso2="ai" id="7">Anguilla</country>
+	<country iso2="aq" id="8">Antarctica</country>
+	<country iso2="ag" id="9">Antigua and Barbuda</country>
+	<country iso2="ar" id="10">Argentina</country>
+	<country iso2="am" id="11">Armenia</country>
+	<country iso2="aw" id="12">Aruba</country>
+	<country iso2="au" id="13">Australia</country>
+	<country iso2="at" id="14">Austria</country>
+	<country iso2="az" id="15">Azerbaijan</country>
+	<country iso2="bs" id="16">Bahamas</country>
+	<country iso2="bh" id="17">Bahrain</country>
+	<country iso2="bd" id="18">Bangladesh</country>
+	<country iso2="bb" id="19">Barbados</country>
+	<country iso2="by" id="20">Belarus</country>
+	<country iso2="be" id="21">Belgium</country>
+	<country iso2="bz" id="22">Belize</country>
+	<country iso2="bj" id="23">Benin</country>
+	<country iso2="bm" id="24">Bermuda</country>
+	<country iso2="bt" id="25">Bhutan</country>
+	<country iso2="bo" id="26">Bolivia</country>
+	<country iso2="ba" id="27">Bosnia and Herzegovina</country>
+	<country iso2="bw" id="28">Botswana</country>
+	<country iso2="bv" id="29">Bouvet Island</country>
+	<country iso2="br" id="30">Brazil</country>
+	<country iso2="io" id="31">British Indian Ocean Territory</country>
+	<country iso2="bn" id="32">Brunei Darussalam</country>
+	<country iso2="bg" id="33">Bulgaria</country>
+	<country iso2="bf" id="34">Burkina Faso</country>
+	<country iso2="bi" id="35">Burundi</country>
+	<country iso2="kh" id="36">Cambodia</country>
+	<country iso2="cm" id="37">Cameroon</country>
+	<country iso2="ca" id="38">Canada</country>
+	<country iso2="cv" id="39">Cape Verde</country>
+	<country iso2="ky" id="40">Cayman Islands</country>
+	<country iso2="cf" id="41">Central African Republic</country>
+	<country iso2="td" id="42">Chad</country>
+	<country iso2="cl" id="43">Chile</country>
+	<country iso2="cn" id="44">China</country>
+	<country iso2="cx" id="45">Christmas Island</country>
+	<country iso2="cc" id="46">Cocos (Keeling) Islands</country>
+	<country iso2="co" id="47">Colombia</country>
+	<country iso2="km" id="48">Comoros</country>
+	<country iso2="cg" id="49">Congo</country>
+	<country iso2="cd" id="50">Congo, The Democratic Republic of the</country>
+	<country iso2="ck" id="51">Cook Islands</country>
+	<country iso2="cr" id="52">Costa Rica</country>
+	<country iso2="ci" id="53">Cote D'ivoire</country>
+	<country iso2="hr" id="54">Croatia</country>
+	<country iso2="cu" id="55">Cuba</country>
+	<country iso2="cy" id="56">Cyprus</country>
+	<country iso2="cz" id="57">Czech Republic</country>
+	<country iso2="dk" id="58">Denmark</country>
+	<country iso2="dj" id="59">Djibouti</country>
+	<country iso2="dm" id="60">Dominica</country>
+	<country iso2="do" id="61">Dominican Republic</country>
+	<country iso2="tl" id="62">East Timor</country>
+	<country iso2="ec" id="63">Ecuador</country>
+	<country iso2="eg" id="64">Egypt</country>
+	<country iso2="sv" id="65">El Salvador</country>
+	<country iso2="gq" id="66">Equatorial Guinea</country>
+	<country iso2="er" id="67">Eritrea</country>
+	<country iso2="ee" id="68">Estonia</country>
+	<country iso2="et" id="69">Ethiopia</country>
+	<country iso2="fk" id="70">Falkland Islands (Malvinas)</country>
+	<country iso2="fo" id="71">Faroe Islands</country>
+	<country iso2="fj" id="72">Fiji</country>
+	<country iso2="fi" id="73">Finland</country>
+	<country iso2="fr" id="74">France</country>
+	<country iso2="gf" id="75">French Guiana</country>
+	<country iso2="pf" id="76">French Polynesia</country>
+	<country iso2="tf" id="77">French Southern Territories</country>
+	<country iso2="ga" id="78">Gabon</country>
+	<country iso2="gm" id="79">Gambia</country>
+	<country iso2="ge" id="80">Georgia</country>
+	<country iso2="de" id="81">Germany</country>
+	<country iso2="gh" id="82">Ghana</country>
+	<country iso2="gi" id="83">Gibraltar</country>
+	<country iso2="gr" id="84">Greece</country>
+	<country iso2="gl" id="85">Greenland</country>
+	<country iso2="gd" id="86">Grenada</country>
+	<country iso2="gp" id="87">Guadeloupe</country>
+	<country iso2="gu" id="88">Guam</country>
+	<country iso2="gt" id="89">Guatemala</country>
+	<country iso2="gn" id="90">Guinea</country>
+	<country iso2="gw" id="91">Guinea-Bissau</country>
+	<country iso2="gy" id="92">Guyana</country>
+	<country iso2="ht" id="93">Haiti</country>
+	<country iso2="hm" id="94">Heard Island and Mcdonald Islands</country>
+	<country iso2="va" id="95">Holy See (Vatican City State)</country>
+	<country iso2="hn" id="96">Honduras</country>
+	<country iso2="hk" id="97">Hong Kong</country>
+	<country iso2="hu" id="98">Hungary</country>
+	<country iso2="is" id="99">Iceland</country>
+	<country iso2="in" id="100">India</country>
+	<country iso2="id" id="101">Indonesia</country>
+	<country iso2="ir" id="102">Iran, Islamic Republic of</country>
+	<country iso2="iq" id="103">Iraq</country>
+	<country iso2="ie" id="104">Ireland</country>
+	<country iso2="il" id="105">Israel</country>
+	<country iso2="it" id="106">Italy</country>
+	<country iso2="jm" id="107">Jamaica</country>
+	<country iso2="jp" id="108">Japan</country>
+	<country iso2="jo" id="109">Jordan</country>
+	<country iso2="kz" id="110">Kazakhstan</country>
+	<country iso2="ke" id="111">Kenya</country>
+	<country iso2="ki" id="112">Kiribati</country>
+	<country iso2="kp" id="113">Korea, Democratic People's Republic of</country>
+	<country iso2="kr" id="114">Korea, Republic of</country>
+	<country iso2="kw" id="115">Kuwait</country>
+	<country iso2="kg" id="116">Kyrgyzstan</country>
+	<country iso2="la" id="117">Lao People's Democratic Republic</country>
+	<country iso2="lv" id="118">Latvia</country>
+	<country iso2="lb" id="119">Lebanon</country>
+	<country iso2="ls" id="120">Lesotho</country>
+	<country iso2="lr" id="121">Liberia</country>
+	<country iso2="ly" id="122">Libyan Arab Jamahiriya</country>
+	<country iso2="li" id="123">Liechtenstein</country>
+	<country iso2="lt" id="124">Lithuania</country>
+	<country iso2="lu" id="125">Luxembourg</country>
+	<country iso2="mo" id="126">Macao</country>
+	<country iso2="mk" id="127">Macedonia, The Former Yugoslav Republic of</country>
+	<country iso2="mg" id="128">Madagascar</country>
+	<country iso2="mw" id="129">Malawi</country>
+	<country iso2="my" id="130">Malaysia</country>
+	<country iso2="mv" id="131">Maldives</country>
+	<country iso2="ml" id="132">Mali</country>
+	<country iso2="mt" id="133">Malta</country>
+	<country iso2="mh" id="134">Marshall Islands</country>
+	<country iso2="mq" id="135">Martinique</country>
+	<country iso2="mr" id="136">Mauritania</country>
+	<country iso2="mu" id="137">Mauritius</country>
+	<country iso2="yt" id="138">Mayotte</country>
+	<country iso2="mx" id="139">Mexico</country>
+	<country iso2="fm" id="140">Micronesia, Federated States of</country>
+	<country iso2="md" id="141">Moldova, Republic of</country>
+	<country iso2="mc" id="142">Monaco</country>
+	<country iso2="mn" id="143">Mongolia</country>
+	<country iso2="ms" id="144">Montserrat</country>
+	<country iso2="ma" id="145">Morocco</country>
+	<country iso2="mz" id="146">Mozambique</country>
+	<country iso2="mm" id="147">Myanmar</country>
+	<country iso2="na" id="148">Namibia</country>
+	<country iso2="nr" id="149">Nauru</country>
+	<country iso2="np" id="150">Nepal</country>
+	<country iso2="nl" id="151">Netherlands</country>
+	<country iso2="an" id="152">Netherlands Antilles</country>
+	<country iso2="nc" id="153">New Caledonia</country>
+	<country iso2="nz" id="154">New Zealand</country>
+	<country iso2="ni" id="155">Nicaragua</country>
+	<country iso2="ne" id="156">Niger</country>
+	<country iso2="ng" id="157">Nigeria</country>
+	<country iso2="nu" id="158">Niue</country>
+	<country iso2="nf" id="159">Norfolk Island</country>
+	<country iso2="mp" id="160">Northern Mariana Islands</country>
+	<country iso2="no" id="161">Norway</country>
+	<country iso2="om" id="162">Oman</country>
+	<country iso2="pk" id="163">Pakistan</country>
+	<country iso2="pw" id="164">Palau</country>
+	<country iso2="ps" id="165">Palestinian Territory, Occupied</country>
+	<country iso2="pa" id="166">Panama</country>
+	<country iso2="pg" id="167">Papua New Guinea</country>
+	<country iso2="py" id="168">Paraguay</country>
+	<country iso2="pe" id="169">Peru</country>
+	<country iso2="ph" id="170">Philippines</country>
+	<country iso2="pn" id="171">Pitcairn</country>
+	<country iso2="pl" id="172">Poland</country>
+	<country iso2="pt" id="173">Portugal</country>
+	<country iso2="pr" id="174">Puerto Rico</country>
+	<country iso2="qa" id="175">Qatar</country>
+	<country iso2="re" id="176">Reunion</country>
+	<country iso2="ro" id="177">Romania</country>
+	<country iso2="ru" id="178">Russian Federation</country>
+	<country iso2="rw" id="179">Rwanda</country>
+	<country iso2="sh" id="180">Saint Helena</country>
+	<country iso2="kn" id="181">Saint Kitts and Nevis</country>
+	<country iso2="lc" id="182">Saint Lucia</country>
+	<country iso2="pm" id="183">Saint Pierre and Miquelon</country>
+	<country iso2="vc" id="184">Saint Vincent and the Grenadines</country>
+	<country iso2="ws" id="185">Samoa</country>
+	<country iso2="sm" id="186">San Marino</country>
+	<country iso2="st" id="187">Sao Tome and Principe</country>
+	<country iso2="sa" id="188">Saudi Arabia</country>
+	<country iso2="sn" id="189">Senegal</country>
+	<country iso2="sc" id="190">Seychelles</country>
+	<country iso2="sl" id="191">Sierra Leone</country>
+	<country iso2="sg" id="192">Singapore</country>
+	<country iso2="sk" id="193">Slovakia</country>
+	<country iso2="si" id="194">Slovenia</country>
+	<country iso2="sb" id="195">Solomon Islands</country>
+	<country iso2="so" id="196">Somalia</country>
+	<country iso2="za" id="197">South Africa</country>
+	<country iso2="gs" id="198">South Georgia and the South Sandwich Islands</country>
+	<country iso2="es" id="199">Spain</country>
+	<country iso2="lk" id="200">Sri Lanka</country>
+	<country iso2="sd" id="201">Sudan</country>
+	<country iso2="sr" id="202">Suriname</country>
+	<country iso2="sj" id="203">Svalbard and Jan Mayen</country>
+	<country iso2="sz" id="204">Swaziland</country>
+	<country iso2="se" id="205">Sweden</country>
+	<country iso2="ch" id="206">Switzerland</country>
+	<country iso2="sy" id="207">Syrian Arab Republic</country>
+	<country iso2="tw" id="208">Taiwan, Province of China</country>
+	<country iso2="tj" id="209">Tajikistan</country>
+	<country iso2="tz" id="210">Tanzania, United Republic of</country>
+	<country iso2="th" id="211">Thailand</country>
+	<country iso2="tg" id="212">Togo</country>
+	<country iso2="tk" id="213">Tokelau</country>
+	<country iso2="to" id="214">Tonga</country>
+	<country iso2="tt" id="215">Trinidad and Tobago</country>
+	<country iso2="tn" id="216">Tunisia</country>
+	<country iso2="tr" id="217">Turkey</country>
+	<country iso2="tm" id="218">Turkmenistan</country>
+	<country iso2="tc" id="219">Turks and Caicos Islands</country>
+	<country iso2="tv" id="220">Tuvalu</country>
+	<country iso2="ug" id="221">Uganda</country>
+	<country iso2="ua" id="222">Ukraine</country>
+	<country iso2="ae" id="223">United Arab Emirates</country>
+	<country iso2="gb" id="224">United Kingdom</country>
+	<country iso2="us" id="225">United States</country>
+	<country iso2="um" id="226">United States Minor Outlying Islands</country>
+	<country iso2="uy" id="227">Uruguay</country>
+	<country iso2="uz" id="228">Uzbekistan</country>
+	<country iso2="vu" id="229">Vanuatu</country>
+	<country iso2="ve" id="230">Venezuela</country>
+	<country iso2="vn" id="231">Viet Nam</country>
+	<country iso2="vg" id="232">Virgin Islands, British</country>
+	<country iso2="vi" id="233">Virgin Islands, U.S.</country>
+	<country iso2="wf" id="234">Wallis and Futuna</country>
+	<country iso2="eh" id="235">Western Sahara</country>
+	<country iso2="ye" id="236">Yemen</country>
+	<country iso2="yu" id="237">Yugoslavia</country>
+	<country iso2="zm" id="238">Zambia</country>
+	<country iso2="zw" id="239">Zimbabwe</country>
+</countries>
