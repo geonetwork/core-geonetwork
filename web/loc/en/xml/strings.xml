@@ -21,6 +21,52 @@
 	<userInfoDes>Allow current user to change user information</userInfoDes>
 	<subtemplate>Subtemplate</subtemplate>
 	<subtemplateTitle>subtemplate title</subtemplateTitle>
+	<edit>Edit</edit>
+	<view>View</view>
+	<Term>Term</Term>
+	<startsWith>Start with</startsWith>
+	<contains>Contains</contains>
+	<exactTerm>Exact term</exactTerm>
+	<foundWords>Number of terms found:</foundWords>
+	<selection>Selection</selection>
+	<label>Label</label>
+	<type>Type</type>
+	<sort>Sort</sort>
+	<definition>Definition</definition>
+	<close>Close</close>
+	<identifier>Identifier</identifier>
+	<keyword>keyword</keyword>
+
+	<thesaurus>
+		<category>Thesaurus category</category>
+		<management>Manage thesauri</management>
+		<manDes>Add/modify/delete and show thesauri</manDes>
+		<edition>Edit thesaurus</edition>
+		<consultation>View thesaurus</consultation>
+		<thesaurus>Thesaurus</thesaurus>
+		<admin>Manage thesaurus</admin>
+		<edit>Edit thesaurus</edit>
+		<update>Update thesaurus</update>
+		<upload>Upload thesaurus</upload>
+		<download>Download thesaurus</download>
+		<delete>Delete thesaurus</delete>	
+		<editelement>Edit element</editelement>
+		<addelement>Add element</addelement>			
+		<deleteelement>Delete element</deleteelement>
+		<updateelement>Update element</updateelement>
+		<keywordDescription>Keyword definition:</keywordDescription>
+		<keywordConfirm>Confirm keyword suppression</keywordConfirm>
+		<unknown>Unknown thesaurus</unknown>
+		<narrower>Narrower Term</narrower>
+		<broader>Broader Term</broader>
+		<related>Related Term</related>
+		<en>in</en>
+		<foundKeyWords>Number of terms found</foundKeyWords>
+		<foundKeyWordsLimit>Maximum number of terms found</foundKeyWordsLimit>
+	</thesaurus>
+
+
+
 	
 	<language>en</language>
 	<!-- ISO code -->
