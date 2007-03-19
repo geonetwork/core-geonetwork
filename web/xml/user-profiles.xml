@@ -53,6 +53,19 @@
 		<!-- MEF facilities -->
 		<allow service="mef.import"/>
 
+		<!-- Thesaurus facilities -->
+		<allow service="thesaurus.admin"/>
+		<allow service="thesaurus.edit"/>
+		<allow service="thesaurus.update"/>
+		<allow service="thesaurus.upload"/>
+		<allow service="thesaurus.download"/>
+		<allow service="thesaurus.delete"/>	
+		<allow service="thesaurus.editelement"/>
+		<allow service="thesaurus.addelement"/>		
+		<allow service="thesaurus.deleteelement"/>
+		<allow service="thesaurus.updateelement"/>
+		<allow service="thesaurus.add"/>
+
 		<allow service="config"/>
 		<allow service="xml.config.get"/>
 		<allow service="xml.config.set"/>
@@ -192,12 +205,14 @@
 		<allow service="xml.user.login"/>
 		<allow service="xml.user.logout"/>
 		<allow service="xml.search"/>
+		<allow service="xml.search.keywords"/>
 		<allow service="xml.metadata.get"/>
 		<allow service="xml.info"/>
 		<allow service="xml.forward"/>
 
 		<!-- Portal XML services -->
 		<allow service="portal.search"/>
+		<allow service="portal.search.keywords"/>
 		<allow service="portal.search.present"/>
 		<allow service="portal.present"/>
 		<allow service="portal.full"/>
@@ -225,6 +240,15 @@
 
 		<!-- MEF facilities -->
 		<allow service="mef.export"/>
+
+		<!-- Thesaurus services -->
+	 	<allow service="keywords.search"/>
+	 	<allow service="keywords.sort"/>
+	 	<allow service="keywords.select"/>
+	 	<allow service="keywords.editsearch"/>
+		<allow service="keywords.getselected"/>		
+	 	<allow service="thesaurus.list"/>
+		<allow service="thesaurus.view"/><!-- FIXME : Check if needed -->		
 	</profile>
 
 	<!-- ====================================================================== -->
