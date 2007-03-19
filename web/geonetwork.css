@@ -366,3 +366,101 @@ Ajax styles
 	padding: 15px;
 	background-color: #000000;
 }
+/*******************************************************************************
+Ajax Keyword list
+*******************************************************************************/
+div.keywordSelectorFrame {
+        background: #fff;
+		position: absolute;
+		margin: 2px;
+		padding: 2px;
+		left: 300px;
+		top: 225px;
+}
+
+div.keywordSelector {
+        background: #fff;
+        border: 4px solid #064377;
+		margin: 2px;
+		padding: 5px;
+        cursor: arrow;
+        overflow: auto;
+		max-height: 200px;
+		max-width: 300px;
+}
+
+div.keywordList {
+        background: #fff;
+        cursor: arrow;
+        overflow: auto;
+		max-height: 200px;
+}
+
+
+div.keywordList ul {
+        border: 1px solid #888;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        list-style-type: circle;
+        cursor: arrow;
+        overflow: hidden;
+}
+
+div.keywordList ul li {
+        margin: 0;
+        padding: 1px;
+        cursor: arrow;
+	 list-style-type:none;
+}
+
+div.keywordList ul li.selected {
+        background-color: #beb800;
+        cursor: arrow;
+}
+
+div.keywordList ul strong.highlight {
+        color: #800;
+        margin: 0;
+        padding: 0;
+        cursor: arrow;
+}
+
+div.keywordList ul li span {
+	display :none;
+}
+
+div.keywordResults ul {
+        margin: 3px;
+        padding: 0;
+		border-style:dashed;
+		border-width:1px 0px 0px 1px;
+		list-style-type:none;
+}
+
+div.keywordResults ul li {
+        margin: 4px;
+		list-style-type:none;
+}
+
+div.legend {
+        margin: 3px;
+        padding: 3px;
+		border-style:dashed;
+		border-width:1px 1px 1px 1px;
+		font-style: italic;
+}
+div.broader {
+        background-color: #8ba4c5;
+}
+div.related {
+        background-color: #d5dfec;
+}
+div.narrower {
+        background-color: #f7faff;
+}
+
+div.keywordResults ul li.selected {
+        background-color: #beb800;
+        cursor: arrow;
+}
