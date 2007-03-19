@@ -45,6 +45,16 @@
 								</td>
 							</tr>
 						</xsl:if>
+						<xsl:if test="/root/gui/services/service/@name='thesaurus.admin'">
+							<tr>
+								<td class="padded">
+									<a href="{/root/gui/locService}/thesaurus.admin">
+									<xsl:value-of select="/root/gui/strings/thesaurus/management"/>
+									</a>
+								</td>
+								<td class="padded"><xsl:value-of select="/root/gui/strings/thesaurus/manDes"/></td>
+							</tr>
+						</xsl:if>							
 					</xsl:variable>
 					<xsl:if test="$mdServices">
 						<tr>

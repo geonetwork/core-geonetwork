@@ -690,7 +690,33 @@
 				</select>
 			</xsl:when>
 			<xsl:when test="$edit=true() and $rows=1">
-				<input class="md" type="text" name="_{geonet:element/@ref}" value="{text()}" size="{$cols}" />
+				<xsl:choose>
+					<xsl:when test="($schema='dublin-core' and $name='dc:subject') or
+									($schema='fgdc' and $name='themekey') or
+									($schema='iso19115' and $name='keyword') or
+									($schema='iso19139' and name(..)='gmd:keyword')">
+						<input class="md" type="text" id="_{geonet:element/@ref}" name="_{geonet:element/@ref}" value="{text()}" size="{$cols}"/>
+
+						<div id='keywordList' class="keywordList" ></div>
+						
+						<script type="text/javascript">
+						  <xsl:text>var _</xsl:text>
+						  <xsl:value-of select="geonet:element/@ref"/>
+						  <xsl:text>_acurl = "xml.search.keywords?pNewSearch=true&amp;pTypeSearch=1";</xsl:text>
+						  
+						  <xsl:text>var _</xsl:text>
+						  <xsl:value-of select="geonet:element/@ref"/>
+						  <xsl:text>_ac = new Ajax.Autocompleter('_</xsl:text>
+						  <xsl:value-of select="geonet:element/@ref"/>
+						  <xsl:text>', 'keywordList', 'xml.search.keywords?pNewSearch=true&amp;pTypeSearch=1&amp;pMode=search',{method:'get', paramName: 'pKeyword'});</xsl:text>
+
+						</script>
+
+					</xsl:when>
+					<xsl:otherwise>
+						<input class="md" type="text" name="_{geonet:element/@ref}" value="{text()}" size="{$cols}" />
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$edit=true()">
 				<textarea class="md" name="_{geonet:element/@ref}" rows="{$rows}" cols="{$cols}">

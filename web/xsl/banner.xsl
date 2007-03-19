@@ -167,5 +167,37 @@
 		</table>
 	</xsl:template>
 
+	<!--
+	main html banner in a popup window
+	-->
+	<xsl:template name="bannerPopup">
+		
+		<table width="100%">
+		
+			<!-- title -->
+			<!-- TODO : Mutualize with main banner template -->
+			<tr class="banner">
+				<td class="banner">
+					<img src="{/root/gui/url}/images/header-left.jpg" alt="GeoNetwork opensource" align="top" />
+				</td>
+				<td align="right" class="banner">
+					<img src="{/root/gui/url}/images/header-right.gif" alt="World picture" align="top" />
+				</td>
+			</tr>
+			
+			<!-- buttons -->
+			<tr class="banner">
+				<td class="banner-menu" colspan="2">
+				</td>
+			</tr>
+
+			<tr class="banner">
+				<td class="banner-login" colspan="2">
+				</td>
+			</tr>
+		</table>
+	</xsl:template>
+
+
 </xsl:stylesheet>
 

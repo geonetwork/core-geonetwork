@@ -330,9 +330,60 @@
 			<xsl:if test="string(/root/gui/searchDefaults/extended)='on'">
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/keywords"/></th>
-					<td class="padded"><input class="content" name="themekey" size="30" value="{/root/gui/searchDefaults/themekey}"/></td>
+					<td class="padded"><input class="content" id="themekey" name="themekey" size="30" value="{/root/gui/searchDefaults/themekey}"/>
+
+					<a href="#" onclick="keywordSelector();">
+					<xsl:value-of select="/root/gui/strings/choose"/>
+					</a>
+
+					<div id='keywordSelectorFrame' class="keywordSelectorFrame" style="display:none;">
+						<div id='keywordSelector' class="keywordSelector"></div>
+					</div>
+
+					<div id='keywordList' class="keywordList" ></div>
+					<script type="text/javascript">
+					  var keyordsSelected = false;
+
+					  function addQuote (li){
+					  $("themekey").value = '"'+li.innerHTML+'"';
+					  }
+
+					  function keywordSelector(){
+						if ($("keywordSelectorFrame").style.display == 'none'){
+							if (!keyordsSelected){
+								new Ajax.Updater("keywordSelector","portal.search.keywords?mode=selector&amp;keyword="+$("themekey").value);
+								keyordsSelected = true;
+							}
+							$("keywordSelectorFrame").style.display = 'block';
+						}else{
+							$("keywordSelectorFrame").style.display = 'none';
+						}
+					  }
+
+					  function keywordCheck(k, check){
+						k = '"'+ k + '"';
+						//alert (k+"-"+check);
+						if (check){	// add the keyword to the list
+							if ($("themekey").value != '') // add the "or" keyword
+								$("themekey").value += ' or '+ k;
+							else
+								$("themekey").value = k;
+						}else{ // Remove that keyword
+							$("themekey").value = $("themekey").value.replace(' or '+ k, '');
+							$("themekey").value = $("themekey").value.replace(k, '');
+							pos = $("themekey").value.indexOf(" or ");
+							if (pos == 0){
+								$("themekey").value = $("themekey").value.substring (4, $("themekey").value.length);
+							}
+						}
+					  }
+
+					  new Ajax.Autocompleter('themekey', 'keywordList', 'portal.search.keywords?',{paramName: 'keyword', updateElement : addQuote});
+					</script>
+					</td>
 				</tr>
 			</xsl:if>
+
 			
 			<!-- Fuzzy search similarity for text field only (ie. Keywords, Any, Abstract, Title) set to 80% by default -->
 			<input class="content" id="similarity" name="similarity" type="hidden" value=".8"/>

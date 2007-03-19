@@ -23,7 +23,8 @@
 		<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/form_check.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=control,slider"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=control,slider,effects,controls"/>
+
 	
 		<script language="JavaScript" type="text/javascript">
 			var Env = new Object();
