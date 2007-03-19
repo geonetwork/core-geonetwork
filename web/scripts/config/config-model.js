@@ -15,7 +15,7 @@ ConfigModel.prototype.getConfig = function(callBack)
 {
 	this.getConfigCB = callBack;
 	
-	gn.send('xml.config.get', '<request/>', gn.wrap(this, this.getConfig_OK));
+	gn.send('xml.config.get', '<request/>', gn.wrap(this, this.getConfig_OK), true);
 }
 
 //-------------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ ConfigModel.prototype.setConfig = function(data, callBack)
 	
 	var request = gn.substitute(ConfigModel.updateTemp, data);
 	
-	gn.send('xml.config.set', request, gn.wrap(this, this.setConfig_OK));
+	gn.send('xml.config.set', request, gn.wrap(this, this.setConfig_OK), true);
 }
 
 //-------------------------------------------------------------------------------------
