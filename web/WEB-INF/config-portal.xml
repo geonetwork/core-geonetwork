@@ -15,6 +15,15 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="portal.search.keywords">
+			<class name=".services.main.Search">
+				<param name="maxSummaryKeys" value="1000" />
+			</class>
+			<output sheet="thesaurus-keywordlist.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="portal.present">
 			<class name=".services.main.Result"/>
 
