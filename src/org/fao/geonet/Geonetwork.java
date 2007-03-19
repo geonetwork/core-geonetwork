@@ -35,6 +35,7 @@ import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -49,8 +50,9 @@ import org.jdom.Element;
 
 public class Geonetwork implements ApplicationHandler
 {
-	private Logger        logger;
-	private SearchManager searchMan;
+	private Logger        		logger;
+	private SearchManager 		searchMan;
+	private ThesaurusManager 	thesaurusMan;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -88,6 +90,16 @@ public class Geonetwork implements ApplicationHandler
 		logger.info("  - Setting manager...");
 
 		SettingManager settingMan = new SettingManager(dbms, context.getProviderManager());
+
+		//------------------------------------------------------------------------
+		//--- Initialize thesaurus
+
+		logger.info("  - Thesaurus...");
+		
+		String thesauriDir = handlerConfig.getMandatoryValue(Geonet.Config.CODELIST_DIR);
+		
+		thesaurusMan = new ThesaurusManager(path, thesauriDir);
+
 
 		//------------------------------------------------------------------------
 		//--- initialize search and editing
@@ -180,6 +192,7 @@ public class Geonetwork implements ApplicationHandler
 		gnContext.catalogDis = catalogDis;
 		gnContext.settingMan = settingMan;
 		gnContext.harvestMan = harvestMan;
+		gnContext.thesaurusMan = thesaurusMan;
 
 		logger.info("Site ID is : " + gnContext.getSiteId());
 

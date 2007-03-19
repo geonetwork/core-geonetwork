@@ -31,6 +31,7 @@ import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.harvest.HarvestManager;
+import org.fao.geonet.kernel.ThesaurusManager;
 
 //=============================================================================
 
@@ -43,6 +44,7 @@ public class GeonetContext
 	/* package */ CatalogDispatcher catalogDis;
 	/* package */ SettingManager    settingMan;
 	/* package */ HarvestManager    harvestMan;
+	/* package */ ThesaurusManager  thesaurusMan;
 
 	//---------------------------------------------------------------------------
 	/*package*/ GeonetContext() {}
@@ -55,6 +57,7 @@ public class GeonetContext
 	public CatalogDispatcher getCatalogDispatcher() { return catalogDis; }
 	public SettingManager    getSettingManager()    { return settingMan; }
 	public HarvestManager    getHarvestManager()    { return harvestMan; }
+	public ThesaurusManager  getThesaurusManager()  { return thesaurusMan; }
 
 	//---------------------------------------------------------------------------
 
