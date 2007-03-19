@@ -20,7 +20,7 @@ Model.prototype.getEntityList = function(entity, callBack)
 		'	<type>'+entity+'</type>'+
 		'</info>';
 
-	gn.send('xml.info', request, gn.wrap(this, this.getEntityList_OK));		
+	gn.send('xml.info', request, gn.wrap(this, this.getEntityList_OK), true);		
 }
 
 //-------------------------------------------------------------------------------------
@@ -111,7 +111,7 @@ Model.prototype.update = function(data, callBack)
 	
 	var request = gn.substitute(Model.updateTemp, data);
 	
-	gn.send('xml.'+ entity +'.update', request, gn.wrap(this, this.update_OK));
+	gn.send('xml.'+ entity +'.update', request, gn.wrap(this, this.update_OK), true);
 }
 
 //-------------------------------------------------------------------------------------
