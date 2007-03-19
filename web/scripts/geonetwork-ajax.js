@@ -62,7 +62,11 @@ gn.send = function(service, request, onSuccessFnc)
 			gn.showAjaxWait(false);
 			
 			if (onSuccessFnc)
-				onSuccessFnc(t.responseXML);
+				if (xmlOrText)
+					onSuccessFnc(t.responseXML);
+				else
+					onSuccessFnc(t.responseText);
+
 		},
 		on404: function(t) 
 		{

@@ -31,7 +31,7 @@ Harvesting.prototype.edit = function(id)
 {
 	var req = gn.createRequest('id', id);
 	
-	gn.send('xml.harvesting.get', req, gn.wrap(this, this.editSuccess));
+	gn.send('xml.harvesting.get', req, gn.wrap(this, this.editSuccess), true);
 }
 
 //-------------------------------------------------------------------------------------
@@ -101,9 +101,9 @@ Harvesting.prototype.update = function()
 	//--- send add/update request
 	
 	if (view.isAdding())	
-		gn.send('xml.harvesting.add', request, gn.wrap(this, this.addSuccess));
+		gn.send('xml.harvesting.add', request, gn.wrap(this, this.addSuccess), true);
 	else
-		gn.send('xml.harvesting.update', request, gn.wrap(this, this.updateSuccess));
+		gn.send('xml.harvesting.update', request, gn.wrap(this, this.updateSuccess), true);
 }
 
 //-------------------------------------------------------------------------------------
@@ -152,7 +152,7 @@ Harvesting.prototype.remove = function()
 		if (confirm(xmlLoader.getText('confirmRemove')) == false)
 			return;
 		
-		gn.send('xml.harvesting.remove', request, gn.wrap(this, this.removeSuccess));
+		gn.send('xml.harvesting.remove', request, gn.wrap(this, this.removeSuccess), true);
 	}
 }
 
@@ -187,7 +187,7 @@ Harvesting.prototype.removeSuccess = function(xml)
 Harvesting.prototype.refresh = function()
 {
 	view.removeAll();
-	gn.send('xml.harvesting.get', '<request/>', gn.wrap(this, this.refreshSuccess));
+	gn.send('xml.harvesting.get', '<request/>', gn.wrap(this, this.refreshSuccess), true);
 }
 
 //-------------------------------------------------------------------------------------
@@ -218,7 +218,7 @@ Harvesting.prototype.start = function()
 	if (idList.length == 0)
 		alert(xmlLoader.getText('pleaseSelect'));
 	else
-		gn.send('xml.harvesting.start', request, gn.wrap(this, this.startSuccess));
+		gn.send('xml.harvesting.start', request, gn.wrap(this, this.startSuccess), true);
 }
 	
 //-------------------------------------------------------------------------------------
@@ -258,7 +258,7 @@ Harvesting.prototype.stop = function()
 	if (idList.length == 0)
 		alert(xmlLoader.getText('pleaseSelect'));
 	else
-		gn.send('xml.harvesting.stop', request, gn.wrap(this, this.stopSuccess));
+		gn.send('xml.harvesting.stop', request, gn.wrap(this, this.stopSuccess), true);
 }
 
 //-------------------------------------------------------------------------------------
@@ -298,7 +298,7 @@ Harvesting.prototype.run = function()
 	if (idList.length == 0)
 		alert(xmlLoader.getText('pleaseSelect'));
 	else
-		gn.send('xml.harvesting.run', request, gn.wrap(this, this.runSuccess));
+		gn.send('xml.harvesting.run', request, gn.wrap(this, this.runSuccess), true);
 }
 
 //-------------------------------------------------------------------------------------
@@ -364,7 +364,7 @@ Harvesting.prototype.retrieveSites = function()
 		
 		var request = gn.substitute(retrieveTemplate, { URL : url });
 	
-		gn.send('xml.forward', request, gn.wrap(this, this.retrieveSuccess));
+		gn.send('xml.forward', request, gn.wrap(this, this.retrieveSuccess), true);
 	}
 }
 
@@ -415,7 +415,7 @@ Harvesting.prototype.refreshGroups = function()
 {
 	var request = gn.createRequest('type', 'groups');
 	
-	gn.send('xml.info', request, gn.wrap(this, this.refreshGroupsSuccess));
+	gn.send('xml.info', request, gn.wrap(this, this.refreshGroupsSuccess), true);
 }
 
 //-------------------------------------------------------------------------------------
