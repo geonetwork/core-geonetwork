@@ -383,7 +383,7 @@ div.keywordSelector {
         border: 4px solid #064377;
 		margin: 2px;
 		padding: 5px;
-        cursor: arrow;
+        cursor: pointer;
         overflow: auto;
 		max-height: 200px;
 		max-width: 300px;
@@ -391,7 +391,7 @@ div.keywordSelector {
 
 div.keywordList {
         background: #fff;
-        cursor: arrow;
+        cursor: pointer;
         overflow: auto;
 		max-height: 200px;
 }
@@ -403,27 +403,27 @@ div.keywordList ul {
         padding: 0;
         width: 100%;
         list-style-type: circle;
-        cursor: arrow;
+        cursor: pointer;
         overflow: hidden;
 }
 
 div.keywordList ul li {
         margin: 0;
         padding: 1px;
-        cursor: arrow;
-	 list-style-type:none;
+        cursor: pointer;
+	 	list-style-type:none;
 }
 
 div.keywordList ul li.selected {
         background-color: #beb800;
-        cursor: arrow;
+        cursor: pointer;
 }
 
 div.keywordList ul strong.highlight {
         color: #800;
         margin: 0;
         padding: 0;
-        cursor: arrow;
+        cursor: pointer;
 }
 
 div.keywordList ul li span {
@@ -462,5 +462,5 @@ div.narrower {
 
 div.keywordResults ul li.selected {
         background-color: #beb800;
-        cursor: arrow;
+        cursor: pointer;
 }
