@@ -30,7 +30,7 @@
 		<xsl:choose>
 			<xsl:when test="string(geonet:info/schema)!=''"><xsl:value-of select="geonet:info/schema"/></xsl:when>
 			<xsl:when test="name(.)='Metadata'">iso19115</xsl:when>
-			<xsl:when test="local-name(.)='DS_DataSet'">iso19139</xsl:when>
+			<xsl:when test="local-name(.)='MD_Metadata'">iso19139</xsl:when>
 			<xsl:when test="name(.)='metadata'">fgdc-std</xsl:when>
 			<xsl:otherwise>UNKNOWN</xsl:otherwise>
 		</xsl:choose>
