@@ -92,7 +92,7 @@
 
 			<xsl:for-each select="gmd:descriptiveKeywords/gmd:MD_Keywords">
 				<xsl:for-each select="gmd:keyword/gco:CharacterString">
-					<Field name="keyword" string="{string(.)}" store="true" index="true" token="true"/>
+					<Field name="keyword" string="{string(.)}" store="true" index="true" token="false"/>
 				</xsl:for-each>
 
 				<xsl:for-each select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">

@@ -343,6 +343,11 @@ recursive compiler
 			</BooleanQuery>
 		</xsl:when>
 		
+		<!-- Keyword -->
+		<xsl:when test="$field='keyword' and $expr/@type='qstring'">
+			<TermQuery fld="{$field}" txt="{$expr/@text}"/>
+		</xsl:when>
+		
 		<!-- quoted string: build a phrase query -->
 		<xsl:when test="$expr/@type='qstring'">
 			<PhraseQuery>
@@ -352,7 +357,7 @@ recursive compiler
 				</xsl:call-template>
 			</PhraseQuery>
 		</xsl:when>
-		
+
 		<!-- prefix string: build a prefix query -->
 		<xsl:when test="$expr/@type='pstring'">
 			<PrefixQuery fld="{$field}" txt="{$expr/@text}"/>

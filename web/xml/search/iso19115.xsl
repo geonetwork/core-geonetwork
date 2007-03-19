@@ -21,7 +21,7 @@
 		
 		<xsl:apply-templates select="/Metadata/dataIdInfo/descKeys/keyword">
 			<xsl:with-param name="store" select="'true'"/>
-			<xsl:with-param name="token" select="'true'"/>
+			<xsl:with-param name="token" select="'false'"/>
 		</xsl:apply-templates>
 
 		<Field name="any" store="false" index="true" token="true">

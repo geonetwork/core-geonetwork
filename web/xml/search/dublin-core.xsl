@@ -71,7 +71,8 @@
 		<Field name="southBL" string="{$south + 360}" store="true" index="true" token="false"/>
 		<Field name="northBL" string="{$north + 360}" store="true" index="true" token="false"/>
 		
-		<Field name="keyword" string="{$place}" store="true" index="true" token="true"/>
+		<Field name="keyword" string="{$place}" store="true" index="true" token="false"/>
+
 		
 		<xsl:apply-templates select="/simpledc/dc:subject">
 			<xsl:with-param name="name" select="'keyword'"/>

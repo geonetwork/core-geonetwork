@@ -28,22 +28,22 @@
 		<xsl:apply-templates select="/metadata/idinfo/keywords/theme/themekey">
 			<xsl:with-param name="name" select="'keyword'"/>
 			<xsl:with-param name="store" select="'true'"/>
-			<xsl:with-param name="token" select="'true'"/>
+			<xsl:with-param name="token" select="'false'"/>
 		</xsl:apply-templates>
 		<xsl:apply-templates select="/metadata/idinfo/keywords/place/placekey">
 			<xsl:with-param name="name" select="'keyword'"/>
 			<xsl:with-param name="store" select="'true'"/>
-			<xsl:with-param name="token" select="'true'"/>
+			<xsl:with-param name="token" select="'false'"/>
 		</xsl:apply-templates>
 		<xsl:apply-templates select="/metadata/idinfo/keywords/stratum/stratkey">
 			<xsl:with-param name="name" select="'keyword'"/>
 			<xsl:with-param name="store" select="'true'"/>
-			<xsl:with-param name="token" select="'true'"/>
+			<xsl:with-param name="token" select="'false'"/>
 		</xsl:apply-templates>
 		<xsl:apply-templates select="/metadata/idinfo/keywords/temporal/tempkey">
 			<xsl:with-param name="name" select="'keyword'"/>
 			<xsl:with-param name="store" select="'true'"/>
-			<xsl:with-param name="token" select="'true'"/>
+			<xsl:with-param name="token" select="'false'"/>
 		</xsl:apply-templates>
 
 		<Field name="any" store="false" index="true" token="true">
