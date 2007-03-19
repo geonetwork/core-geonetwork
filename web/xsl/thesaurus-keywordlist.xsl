@@ -31,9 +31,7 @@
 			<ul>
 				<xsl:for-each select="/root/response/summary/keywords/keyword[contains(@name,$in)=1]">
 					<li>
-						<xsl:value-of select="@name"/> <span>(<xsl:value-of select="@count"/>
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="/root/gui/strings/results"/>(s))</span>
+						<xsl:value-of select="@name"/>
 					</li>
 				</xsl:for-each>
 			</ul>
