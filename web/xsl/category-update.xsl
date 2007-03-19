@@ -52,6 +52,7 @@
 	-->
 	<xsl:template name="form">
 		<form name="categoryUpdateForm" accept-charset="UTF-8" action="{/root/gui/locService}/category.update" method="post">
+			<input type="submit" style="display: none;" />
 			<xsl:if test="/root/response/record/id">
 				<input type="hidden" name="id" value="{/root/response/record/id}"/>
 			</xsl:if>

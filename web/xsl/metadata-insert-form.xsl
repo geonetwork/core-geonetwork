@@ -11,6 +11,7 @@
 			<xsl:with-param name="title" select="/root/gui/strings/xmlInsert"/>
 			<xsl:with-param name="content">
 				<form name="xmlinsert" accept-charset="UTF-8" method="post" action="{/root/gui/locService}/metadata.insert">
+					<input type="submit" style="display: none;" />
 					<table>
 						<tr>
 							<th class="padded" valign="top"><xsl:value-of select="/root/gui/strings/metadata"/></th>

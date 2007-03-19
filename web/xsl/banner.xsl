@@ -154,6 +154,7 @@
 					<xsl:otherwise>
 						<td align="right" class="banner-login">
 							<form name="login" action="{/root/gui/locService}/user.login" method="post">
+								<input type="submit" style="display: none;" />
 								<xsl:value-of select="/root/gui/strings/username"/>
 								<input class="banner" type="text" name="username" size="10" onkeypress="return entSub('login')"/>
 								<xsl:value-of select="/root/gui/strings/password"/>

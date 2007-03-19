@@ -52,6 +52,7 @@
 	-->
 	<xsl:template name="form">
 		<form name="groupUpdateForm" accept-charset="UTF-8" action="{/root/gui/locService}/group.update" method="post">
+			<input type="submit" style="display: none;" />
 			<xsl:if test="/root/response/record/id">
 				<input type="hidden" name="id" size="-1" value="{/root/response/record/id}"/>
 			</xsl:if>

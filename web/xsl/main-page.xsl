@@ -115,6 +115,7 @@
 									<input name="extended" type="hidden" value="{/root/gui/searchDefaults/extended}"/>
 									<input name="remote" type="hidden" value="{/root/gui/searchDefaults/remote}"/>
 									<input name="attrset" type="hidden" value="geo"/> <!-- FIXME: possibly replace with menu -->
+									<input type="submit" style="display: none;" />
 									<table width="100%" height="100%"><tr>
 										<td valign="top">
 											<xsl:call-template name="fields"/>
@@ -267,9 +268,9 @@
 		<h1 align="center">
 			<xsl:value-of select="/root/gui/strings/recentAdditions"/>
 			&#160;
-			<a href="{/root/gui/locService}/rss.latest"><img style="cursor:hand;cursor:pointer" src="{/root/gui/url}/images/rss.gif" alt="RSS" title="{/root/gui/strings/rss}" align="top"/></a>
+			<a href="{/root/gui/locService}/rss.latest"><img style="cursor:hand;cursor:pointer" src="{/root/gui/url}/images/rss.png" alt="RSS" title="{/root/gui/strings/rss}" align="top"/></a>
 			&#160;
-			<a href="{/root/gui/locService}/rss.latest?georss=gml"><img style="cursor:hand;cursor:pointer" src="{/root/gui/url}/images/georss.gif" alt="GeoRSS-GML" title="{/root/gui/strings/georss}" align="top"/></a>
+			<a href="{/root/gui/locService}/rss.latest?georss=gml"><img style="cursor:hand;cursor:pointer" src="{/root/gui/url}/images/georss.png" alt="GeoRSS-GML" title="{/root/gui/strings/georss}" align="top"/></a>
 		</h1>
 		<ul>
 			<xsl:for-each select="/root/gui/latestUpdated/*">
@@ -383,7 +384,6 @@
 					</td>
 				</tr>
 			</xsl:if>
-
 			
 			<!-- Fuzzy search similarity for text field only (ie. Keywords, Any, Abstract, Title) set to 80% by default -->
 			<input class="content" id="similarity" name="similarity" type="hidden" value=".8"/>

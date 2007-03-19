@@ -36,6 +36,7 @@
 				<xsl:copy-of select="/root/gui/strings/feedbackTopics"/>
 				<p/>
 				<form name="feedbackf" accept-charset="UTF-8" action="{/root/gui/locService}/feedback.insert" method="post">
+					<input type="submit" style="display: none;" />
 					<input type="hidden" name="id" value="{/root/response/id}"/>
 					<input type="hidden" name="fname" value="{/root/response/fname}"/>
 					<table>

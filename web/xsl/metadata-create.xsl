@@ -22,6 +22,7 @@
 
 	<xsl:template name="form">
 		<form name="create" accept-charset="UTF-8" action="{/root/gui/locService}/metadata.create" method="post">
+			<input type="submit" style="display: none;" />
 			<table>
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/template"/></th>

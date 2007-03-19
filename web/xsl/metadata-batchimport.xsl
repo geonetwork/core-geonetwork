@@ -22,6 +22,7 @@
 
 	<xsl:template name="form">
 		<form name="xmlbatch" accept-charset="UTF-8" action="{/root/gui/locService}/util.import" method="post">
+			<input type="submit" style="display: none;" />
 			<table>
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/directory"/></th>
