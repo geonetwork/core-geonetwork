@@ -49,7 +49,7 @@ gn.createRequest = function(elemName, params)
 	- onSuccessFnc : function to call on success
 */
 
-gn.send = function(service, request, onSuccessFnc)
+gn.send = function(service, request, onSuccessFnc, xmlResponse)
 {
 	var opt = 
 	{
@@ -62,7 +62,7 @@ gn.send = function(service, request, onSuccessFnc)
 			gn.showAjaxWait(false);
 			
 			if (onSuccessFnc)
-				if (xmlOrText)
+				if (xmlResponse)
 					onSuccessFnc(t.responseXML);
 				else
 					onSuccessFnc(t.responseText);
