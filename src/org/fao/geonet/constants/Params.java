@@ -44,12 +44,14 @@ public class Params
 	public static final String GROUP        = "group";
 	public static final String GROUPS       = "groups";
 	public static final String ID           = "id";
+	public static final String URI          = "uri";
 	public static final String NAME         = "name";
 	public static final String ORG          = "org";
 	public static final String PASSWORD     = "password";
 	public static final String NEW_PASSWORD = "newPassword";
 	public static final String PROFILE      = "profile";
 	public static final String REF          = "ref";
+	public static final String MODE         = "mode";
 	public static final String SCHEMA       = "schema";
 	public static final String SITE_ID      = "siteId";
 	public static final String STYLESHEET   = "styleSheet";
@@ -59,6 +61,7 @@ public class Params
 	public static final String USERNAME     = "username";
 	public static final String VERSION      = "version";
 	public static final String VALIDATE     = "validate";
+	public static final String SELECTED     = "selected";
 	public static final String TYPE         = "type";
 	public static final String ADDRESS      = "address";
 	public static final String STATE        = "state";

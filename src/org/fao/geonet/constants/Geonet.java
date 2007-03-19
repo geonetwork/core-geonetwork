@@ -98,9 +98,10 @@ public class Geonet
 
 	public class Session
 	{
-		public static final String MAIN_SEARCH   = "main.search";
-		public static final String SEARCH_RESULT = "search.result";
-		public static final String METADATA_SHOW = "metadata.show";
+		public static final String MAIN_SEARCH				= "main.search";
+		public static final String SEARCH_RESULT			= "search.result";
+		public static final String METADATA_SHOW			= "metadata.show";
+		public static final String SEARCH_KEYWORDS_RESULT	= "search.keywords.result";
 	}
 
 	//--------------------------------------------------------------------------
@@ -176,6 +177,7 @@ public class Geonet
 		public static final String MAX_SUMMARY_KEYS = "maxSummaryKeys";
 		public static final String SCHEMA_MAPPINGS  = "schemaMappings";
 		public static final String DATA_DIR         = "dataDir";
+		public static final String CODELIST_DIR  	= "codeListDir";		
 		public static final String DIR              = "dir";
 	}
 
@@ -191,6 +193,19 @@ public class Geonet
 	}
 
 	//--------------------------------------------------------------------------
+	//--- Codelist directories
+
+	public class CodeList
+	{
+		public static final String LOCAL              = "local";
+		public static final String EXTERNAL           = "external";
+		
+		public static final String THESAURUS          = "thesauri";
+		public static final String CONTACT            = "contactDirectories";
+		public static final String CRS                = "crs";
+	}
+
+	//--------------------------------------------------------------------------
 	//--- logging
 
 	public static final String GEONETWORK   = "geonetwork";
@@ -198,6 +213,7 @@ public class Geonet
 	public static final String HARVESTER    = GEONETWORK + ".harvester";
 	public static final String SETTINGS     = GEONETWORK + ".settings";
 	public static final String DATA_MANAGER = GEONETWORK + ".datamanager";
+	public static final String THESAURUS_MAN= GEONETWORK + ".thesaurus-man";
 	public static final String SEARCH_ENGINE= GEONETWORK + ".search";
 	public static final String Z3950_SERVER = GEONETWORK + ".z3950server";
 	public static final String INDEX_ENGINE = GEONETWORK + ".index";
