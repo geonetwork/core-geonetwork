@@ -47,7 +47,8 @@ public class EmbeddedSCLib
 	{
 		this.appPath = appPath;
 
-		jetty  = Lib.xml.load(appPath +"/bin/jetty.xml");
+		jetty  = Lib.xml.load(appPath + JETTY_FILE);
+		webXml = Lib.xml.load(appPath + WEBXML_FILE);
 
 		//--- retrieve 'host', 'port' and 'servlet' parameters from jetty
 
@@ -122,13 +123,27 @@ public class EmbeddedSCLib
 	{
 		if (servletElem != null)
 			servletElem.setText("/"+name);
+
+		for (Object e : webXml.getRootElement().getChildren())
+		{
+			Element elem = (Element) e;
+
+			if (elem.getName().equals("display-name"))
+			{
+				elem.setText(name);
+				return;
+			}
+		}
 	}
 
 	//---------------------------------------------------------------------------
 
 	public void save() throws FileNotFoundException, IOException
 	{
-		Lib.xml.save(appPath +"/bin/jetty.xml", jetty);
+		Lib.xml.save(appPath + JETTY_FILE,  jetty);
+		Lib.xml.save(appPath + WEBXML_FILE, webXml);
+
+		//--- create proper index.html file to point to correct servlet
 
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("$SERVLET", getServlet());
@@ -149,6 +164,10 @@ public class EmbeddedSCLib
 	private Element  hostElem;
 	private Element  portElem;
 	private Element  servletElem;
+	private Document webXml;
+
+	private static final String JETTY_FILE  = "/bin/jetty.xml";
+	private static final String WEBXML_FILE = "/web/WEB-INF/web.xml";
 
 	private static final String INDEX_SRC_FILE = "/gast/data/index.html";
 	private static final String INDEX_DES_FILE = "/web/index.html";
