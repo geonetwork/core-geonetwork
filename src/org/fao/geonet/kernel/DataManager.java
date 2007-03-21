@@ -259,7 +259,7 @@ public class DataManager
 
 	public void validate(String schema, Element md) throws Exception
 	{
-		Xml.validate(md, null, editLib.getSchemaDir(schema) + Geonet.File.SCHEMA);
+		Xml.validate(editLib.getSchemaDir(schema) + Geonet.File.SCHEMA, md);
 	}
 
 	//--------------------------------------------------------------------------
@@ -369,7 +369,7 @@ public class DataManager
 		//--- generate a new metadata id
 		int serial = sf.getSerial(dbms, "Metadata");
 
-		Element xml = updateFixedInfo(schema, Integer.toString(serial), Xml.loadString(data, false), uuid, source);
+		Element xml = updateFixedInfo(schema, Integer.toString(serial), Xml.loadString(data, false), uuid);
 
 		//--- store metadata
 
@@ -452,8 +452,7 @@ public class DataManager
 		int serial = sf.getSerial(dbms, "Metadata");
 
 		if (isTemplate.equals("n"))
-			xml = updateFixedInfo(schema, Integer.toString(serial), xml, uuid, source);
-		//System.out.println("AFTER:\n"+Xml.getString(xml));
+			xml = updateFixedInfo(schema, Integer.toString(serial), xml, uuid);
 
 		//--- store metadata
 
@@ -859,7 +858,7 @@ public class DataManager
 		md = updateFixedInfo(schema, id, md, dbms);
 
 		if (validate)
-			Xml.validate(md, null, editLib.getSchemaDir(schema) + Geonet.File.SCHEMA);
+			validate(schema, md);
 
 		XmlSerializer.update(dbms, id, md);
 
@@ -1166,37 +1165,33 @@ public class DataManager
 
 	private Element updateFixedInfo(String schema, String id, Element md, Dbms dbms) throws Exception
 	{
-//		System.out.println("#### id = " + id); // DEBUG
+		String query = "SELECT uuid, source, isTemplate FROM Metadata WHERE id = " + id;
 
-		Element rec = dbms.select("SELECT uuid, source, isTemplate FROM Metadata WHERE id = " + id).getChild("record");
+		Element rec = dbms.select(query).getChild("record");
 		String isTemplate = rec.getChildText("istemplate");
-
-//		System.out.println("#### - isTemplate = " + isTemplate); // DEBUG
 
 		// don't process templates
 		if (isTemplate.equals("n"))
 		{
-			String uuid     = rec.getChildText("uuid");
-			String source   = rec.getChildText("source");
-			return updateFixedInfo(schema, id, md,uuid, source);
+			String uuid = rec.getChildText("uuid");
+
+			return updateFixedInfo(schema, id, md, uuid);
 		}
 		else return md;
 	}
 
 	//--------------------------------------------------------------------------
 
-	public Element updateFixedInfo(String schema, String id, Element md, String uuid, String source) throws Exception
+	public Element updateFixedInfo(String schema, String id, Element md, String uuid) throws Exception
 	{
 		//--- setup environment
 
 		Element env = new Element("env");
 
-		env.addContent(new Element("id")      .setText(id));
-		env.addContent(new Element("uuid")    .setText(uuid));
-		env.addContent(new Element("currDate").setText(new ISODate().toString()));
-		env.addContent(new Element("siteURL") .setText(getSiteURL()));
-		env.addContent(new Element("siteID")  .setText(getSiteID()));
-		env.addContent(new Element("source")  .setText(source));
+		env.addContent(new Element("id")        .setText(id));
+		env.addContent(new Element("uuid")      .setText(uuid));
+		env.addContent(new Element("changeDate").setText(new ISODate().toString()));
+		env.addContent(new Element("siteURL")   .setText(getSiteURL()));
 
 		//--- setup root element
 
@@ -1206,8 +1201,8 @@ public class DataManager
 
 		//--- do an XSL  transformation
 
-//System.out.println("BEFORE:\n"+Xml.getString(root));
 		String styleSheet = editLib.getSchemaDir(schema) + Geonet.File.UPDATE_FIXED_INFO;
+
 		return Xml.transform(root, styleSheet);
 	}
 
@@ -1215,7 +1210,7 @@ public class DataManager
 
 	private Element buildInfoElem(ServiceContext srvContext, String id, String version) throws Exception
 	{
-		Dbms    dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
+		Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, title, "+
 									"uuid, isHarvested FROM Metadata WHERE id = " + id;

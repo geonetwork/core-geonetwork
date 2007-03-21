@@ -35,7 +35,7 @@
 	
 	<xsl:template match="gmd:dateStamp">
 		<xsl:copy>
-			<gco:DateTime><xsl:value-of select="/root/env/currDate"/></gco:DateTime>
+			<gco:DateTime><xsl:value-of select="/root/env/changeDate"/></gco:DateTime>
 		</xsl:copy>
 	</xsl:template>
 
@@ -81,21 +81,11 @@
 	<!-- ================================================================= -->
 
 	<xsl:template match="gmd:linkage[starts-with(following-sibling::gmd:protocol/gco:CharacterString,'WWW:DOWNLOAD-') and contains(following-sibling::gmd:protocol/gco:CharacterString,'http--download') and following-sibling::gmd:name]">
-
-		<xsl:choose>
-			<xsl:when test="string(/root/env/siteID)=string(/root/env/source)">
-				<gmd:linkage>
-					<gmd:URL>
-						<xsl:value-of select="concat(/root/env/siteURL,'/resources.get?id=',/root/env/id,'&amp;fname=',following-sibling::gmd:name/gco:CharacterString,'&amp;access=private')"/>
-					</gmd:URL>
-				</gmd:linkage>
-			</xsl:when>
-
-			<xsl:otherwise>
-				<xsl:copy-of select="."/>
-			</xsl:otherwise>
-		</xsl:choose>
-		
+		<gmd:linkage>
+			<gmd:URL>
+				<xsl:value-of select="concat(/root/env/siteURL,'/resources.get?id=',/root/env/id,'&amp;fname=',following-sibling::gmd:name/gco:CharacterString,'&amp;access=private')"/>
+			</gmd:URL>
+		</gmd:linkage>
 	</xsl:template>
 
 	<!-- ================================================================= -->

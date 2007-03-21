@@ -36,7 +36,7 @@
 	<!-- ================================================================= -->
 	
 	<xsl:template match="mdDateSt">
-		 <xsl:copy><xsl:value-of select="/root/env/currDate"/></xsl:copy>
+		 <xsl:copy><xsl:value-of select="/root/env/changeDate"/></xsl:copy>
 	</xsl:template>
 
 	<!-- ================================================================= -->
@@ -63,15 +63,9 @@
 	online resources: download
 	-->
 	<xsl:template match="linkage[parent::onLineSrc and starts-with(following-sibling::protocol,'WWW:DOWNLOAD-') and contains(following-sibling::protocol,'http--download') and following-sibling::orName]">
-		<xsl:choose>
-			<xsl:when test="string(/root/env/siteID)=string(/root/env/source)">
-				<linkage><xsl:value-of select="concat(/root/env/siteURL,'/resources.get?id=',/root/env/id,'&amp;fname=',following-sibling::orName,'&amp;access=private')"/></linkage>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:copy-of select="."/>
-			</xsl:otherwise>
-		</xsl:choose>
-		
+		<linkage>
+			<xsl:value-of select="concat(/root/env/siteURL,'/resources.get?id=',/root/env/id,'&amp;fname=',following-sibling::orName,'&amp;access=private')"/>
+		</linkage>
 	</xsl:template>
 
 </xsl:stylesheet>
