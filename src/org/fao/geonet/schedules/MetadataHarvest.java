@@ -22,6 +22,7 @@
 //==============================================================================
 
 package org.fao.geonet.schedules;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashSet;
@@ -182,7 +183,7 @@ public class MetadataHarvest implements Schedule
 				uuid = UUID.randomUUID().toString();
 
 			id = sf.getSerial(dbms, "Metadata") +"";
-			md = dataMan.updateFixedInfo(schema, id, md, uuid, source);
+			md = dataMan.updateFixedInfo(schema, id, md, uuid);
 
 			dataMan.insertMetadataExt(dbms, schema, md, Integer.parseInt(id), source, date, date, uuid, sourceUri);
 		}
@@ -190,7 +191,7 @@ public class MetadataHarvest implements Schedule
 		{
 			id   = info.getChildText("id");
 			uuid = info.getChildText("uuid");
-			md   = dataMan.updateFixedInfo(schema, id, md, uuid, source);
+			md   = dataMan.updateFixedInfo(schema, id, md, uuid);
 
 			dataMan.updateMetadataExt(dbms, id, md, date);
 		}
