@@ -49,7 +49,7 @@
 			<xsl:apply-templates select="dc:rights"/>
 
 			<xsl:apply-templates select="dct:abstract"/>
-			<xsl:apply-templates select="dct:modified"/>
+			<dct:modified><xsl:value-of select="/root/env/changeDate"/></dct:modified>
 			<xsl:apply-templates select="dct:spatial"/>
 		</xsl:copy>
 	</xsl:template>
