@@ -36,6 +36,8 @@
 	<close>Close</close>
 	<identifier>Identifier</identifier>
 	<keyword>keyword</keyword>
+	<res>results</res>
+	<ress>result</ress>
 
 	<thesaurus>
 		<category>Thesaurus category</category>

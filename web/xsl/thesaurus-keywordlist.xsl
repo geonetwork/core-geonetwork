@@ -23,7 +23,15 @@
 					</input>
 					<xsl:value-of select="@name"/> <span>(<xsl:value-of select="@count"/>
 					<xsl:text> </xsl:text>
-					<xsl:value-of select="/root/gui/strings/results"/>(s))</span>
+					<xsl:choose>
+						<xsl:when test="@count=2">
+							<xsl:value-of select="/root/gui/strings/res"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="/root/gui/strings/ress"/>
+						</xsl:otherwise>
+					</xsl:choose>)
+					</span>
 					<br/>
 				</xsl:for-each>
 		</xsl:when>
