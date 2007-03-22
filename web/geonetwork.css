@@ -387,6 +387,7 @@ div.keywordSelector {
         overflow: auto;
 		max-height: 200px;
 		max-width: 300px;
+		width: 300px;
 }
 
 div.keywordList {
