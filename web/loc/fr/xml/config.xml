@@ -2,23 +2,23 @@
 
 <strings>
 	<site>Site</site>
-		<name>Name</name>
-		<organ>Organization</organ>
+		<name>Nom</name>
+		<organ>Organisme</organ>
 	
-	<server>Server</server>
-		<host>Host</host>
+	<server>Serveur</server>
+		<host>Hôte</host>
 		<port>Port</port>
 	
 	<intranet>Intranet</intranet>
 		<network>Network</network>
-		<netmask>Netmask</netmask>
+		<netmask>Masque de sous-réseau</netmask>
 	
-	<z3950>Z39.50 Server</z3950>
-		<enable>Enable</enable>
+	<z3950>Z39.50 Serveur</z3950>
+		<enable>Activé</enable>
 		
-	<feedback>Feedback</feedback>
+	<feedback>Retour d'information</feedback>
 		<email>EMail</email>
-		<smtpHost>SMTP Host</smtpHost>
+		<smtpHost>SMTP Hôte</smtpHost>
 		<smtpPort>SMTP Port</smtpPort>
 	
 	<proxy>Proxy</proxy>
@@ -26,38 +26,38 @@
 	
 	<!-- Buttons -->
 	
-	<save>Save</save>
-	<refresh>Refresh</refresh>
+	<save>Sauvegarder</save>
+	<refresh>Rafraîchir</refresh>
 	
 	<!-- validator messages -->
 	
 	<validator>
 		<length>
-			<cannotBeEmpty>The field '{NAME}' cannot be empty</cannotBeEmpty>
-			<invalidMinSize>The field '{NAME}' must be at least {VALUE} character(s) long</invalidMinSize>
-			<invalidMaxSize>The field '{NAME}' must be maximum {VALUE} character(s) long</invalidMaxSize>
+			<cannotBeEmpty>Le champ '{NAME}' ne peut être vide</cannotBeEmpty>
+			<invalidMinSize>Le champ '{NAME}' must be at least {VALUE} character(s) long</invalidMinSize>
+			<invalidMaxSize>Le champ '{NAME}' must be maximum {VALUE} character(s) long</invalidMaxSize>
 		</length>
 		
 		<integer>
-			<notInt>The field '{NAME}' must be an integer</notInt>
-			<invalidMinValue>The field '{NAME}' must be &gt;= {VALUE}</invalidMinValue>
-			<invalidMaxValue>The field '{NAME}' must be &lt;= {VALUE}</invalidMaxValue>
+			<notInt>Le champ '{NAME}' must be an integer</notInt>
+			<invalidMinValue>Le champ '{NAME}' must be &gt;= {VALUE}</invalidMinValue>
+			<invalidMaxValue>Le champ '{NAME}' must be &lt;= {VALUE}</invalidMaxValue>
 		</integer>		
 		
 		<alphanum>
-			<notAlphaNumeric>The field '{NAME}' must be alphanumeric (starting with a letter)</notAlphaNumeric>
+			<notAlphaNumeric>Le champ '{NAME}' must be alphanumeric (starting with a letter)</notAlphaNumeric>
 		</alphanum>
 		
 		<hostname>
-			<notHostName>The field '{NAME}' is not a valid host name</notHostName>
+			<notHostName>Le champ '{NAME}' is not a valid host name</notHostName>
 		</hostname>
 		
 		<url>
-			<notURL>The field '{NAME}' is not a valid URL</notURL>
+			<notURL>Le champ '{NAME}' is not a valid URL</notURL>
 		</url>
 		
 		<ipaddress>
-			<notIP>The field '{NAME}' is not a valid IP address</notIP>
+			<notIP>Le champ '{NAME}' is not a valid IP address</notIP>
 		</ipaddress>
 	</validator>
 	
