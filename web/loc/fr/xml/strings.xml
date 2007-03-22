@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+
 	<!-- new strings -->
 	<fuzzy>Précision</fuzzy>
 	<fuzzySearch>Définir la précision de la recherche (recherche plus ou moins floue).</fuzzySearch>
@@ -16,6 +17,57 @@
 	<kindChoice value="company">Entreprise privée</kindChoice>
 	<kindChoice value="consultant">Consultant indépendant</kindChoice>
 	<kindChoice value="other">Autre</kindChoice>
+	<userInfo>Modifier les informations utilisateurs</userInfo>
+	<userInfoDes>Permet de mettre à jour les informations sur l'utilisateur</userInfoDes>
+	<subtemplate>Sous modèle</subtemplate>
+	<subtemplateTitle>Titre du sous modèle</subtemplateTitle>
+	<edit>Editer</edit>
+	<view>Voir</view>
+	<Term>Terme</Term>
+	<startsWith>Commence par</startsWith>
+	<contains>Contient</contains>
+	<exactTerm>Terme exact</exactTerm>
+	<foundWords>Nombre de mots trouvés :</foundWords>
+	<selection>Sélection</selection>
+	<label>Libellé</label>
+	<type>Type</type>
+	<sort>Trier</sort>
+	<definition>Définition</definition>
+	<close>Fermer</close>
+	<identifier>Identifiant</identifier>
+	<keyword>Mot-clé</keyword>
+	<res>résultats</res>
+	<ress>résultat</ress>
+
+	<thesaurus>
+		<category>Catégorie du thésaurus</category>
+		<management>Gestion des thesaurus</management>
+		<manDes>Ajouter/modifier/supprimer et consulter les thésaurus</manDes>
+		<edition>Editer le thésaurus</edition>
+		<consultation>Consulter le thésaurus</consultation>
+		<thesaurus>Thésaurus</thesaurus>
+		<admin>Gérer le thésaurus</admin>
+		<edit>Editer le thésaurus</edit>
+		<update>Mettre à jour le thésaurus</update>
+		<upload>Décharger un thésaurus</upload>
+		<download>Télécharger le thesaurus</download>
+		<delete>Supprimer le thésaurus</delete>	
+		<editelement>Editer l'élément</editelement>
+		<addelement>Ajouter un élément</addelement>			
+		<deleteelement>Supprimer l'élément</deleteelement>
+		<updateelement>Mettre à jour l'élément</updateelement>
+		<keywordDescription>Définition du mot clé:</keywordDescription>
+		<keywordConfirm>Confirmez la suppression du mot clé</keywordConfirm>
+		<unknown>Thésaurus inconnu</unknown>
+		<narrower>Narrower Term</narrower>
+		<broader>Broader Term</broader>
+		<related>Related Term</related>
+		<en>in</en>
+		<foundKeyWords>Nombre de mots trouvés</foundKeyWords>
+		<foundKeyWordsLimit>Nombre maximum de mots trouvés </foundKeyWordsLimit>
+	</thesaurus>
+
+
 	
 	<language>fr</language> 
 	<!-- ISO code -->
@@ -45,6 +97,12 @@
 	<category>Catégorie</category>
 	<categoryManagement>Gestion des catégories</categoryManagement>
 	<categoryManDes>Ajouter/Modifier/Supprimer et visualiser les catégories</categoryManDes>
+	<harvestingManagement>Gestion du moissonnage</harvestingManagement>
+	<harvestingManDes>Ajouter/modifier/supprimer/lancer/arrêter les moissons (récupération de métadonnées depuis un noeud distant)</harvestingManDes>
+	<systemConfig>Configuration du système</systemConfig>
+	<systemConfigDes>Permet de modifier quelques paramètres systèmes</systemConfigDes>
+	<localiz>Internationalisation</localiz>
+	<localizDes>Permet la modification des traductions des groupes, catégories, etc.</localizDes>
 	<choose>- Choisir -</choose>
 	<chooseFile>Choisir le fichier à décharger</chooseFile>
 	<chooseLargeThumbnail>Choisir le fichier d'aperçu (grand format)</chooseLargeThumbnail>
@@ -101,7 +159,7 @@
 		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
 		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
-		<meta name="DC.title" lang="French" content="GeoNetwork portal to spatial data and information"/>
+		<meta name="DC.title" lang="fr" content="GeoNetwork portal to spatial data and information"/>
 		<meta name="DC.creator" content="GeoNetwork Team"/>
 		<meta name="DC.subject" lang="French" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
 		<meta name="DC.description" lang="French" content="GeoNetwork provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
@@ -254,7 +312,7 @@
 	<reset>Réinitialiser</reset>
 	<resetSearch>Réinitialiser</resetSearch>
 	<resetFeedbackForm>Réinitialiser</resetFeedbackForm>
-	<result>Page de résultats</result>
+	<result>Derniers résultats</result>
 	<resultsCoordinate>Résultats correspondant aux critères de recherche géographiques</resultsCoordinate>
 	<resultsFreeText>Résultats correspondant à la recherche libre</resultsFreeText>
 	<resultsMatching>Nombre de résultats : </resultsMatching>
