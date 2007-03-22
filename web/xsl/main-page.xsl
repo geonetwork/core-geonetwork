@@ -333,8 +333,8 @@
 					<th class="padded"><xsl:value-of select="/root/gui/strings/keywords"/></th>
 					<td class="padded"><input class="content" id="themekey" name="themekey" size="30" value="{/root/gui/searchDefaults/themekey}"/>
 
-					<a href="#" onclick="keywordSelector();">
-					<xsl:value-of select="/root/gui/strings/choose"/>
+					<a href="#">
+					<img src="{/root/gui/url}/images/gdict.png" align="absmiddle" onclick="keywordSelector();"/>
 					</a>
 
 					<div id='keywordSelectorFrame' class="keywordSelectorFrame" style="display:none;">
