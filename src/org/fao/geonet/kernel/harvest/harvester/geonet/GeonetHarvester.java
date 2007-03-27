@@ -107,10 +107,25 @@ public class GeonetHarvester extends AbstractHarvester
 
 	protected void doDestroy(Dbms dbms) throws SQLException
 	{
-		String query = "DELETE FROM Metadata WHERE source = ?";
+		String getQuery   = "SELECT id FROM Metadata WHERE source = ?";
+
+		String opAllQuery = "DELETE FROM OperationAllowed WHERE metadataId = ?";
+		String mdCatQuery = "DELETE FROM MetadataCateg    WHERE metadataId = ?";
+		String mdQuery    = "DELETE FROM Metadata         WHERE source = ?";
 
 		for (Search s : params.getSearches())
-			dbms.execute(query, s.siteId);
+		{
+			for (Object o : dbms.select(getQuery, s.siteId).getChildren())
+			{
+				Element el = (Element) o;
+				int     id = Integer.parseInt(el.getChildText("id"));
+
+				dbms.execute(opAllQuery, id);
+				dbms.execute(mdCatQuery, id);
+			}
+
+			dbms.execute(mdQuery, s.siteId);
+		}
 	}
 
 	//---------------------------------------------------------------------------
