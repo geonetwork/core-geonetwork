@@ -23,9 +23,9 @@
 
 package org.fao.gast.gui.panels.manag.conversion;
 
-
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.List;
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Xml;
@@ -33,6 +33,7 @@ import org.dlib.gui.ProgressDialog;
 import org.fao.gast.lib.Lib;
 import org.fao.gast.lib.Resource;
 import org.jdom.Element;
+import org.jdom.Namespace;
 
 //==============================================================================
 
@@ -51,113 +52,103 @@ public class Worker implements Runnable
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
-
-	public void setOldDir(String dir)
-	{
-		appPath = dir;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Migration process
+	//--- Conversion process
 	//---
 	//---------------------------------------------------------------------------
 
 	public void run()
 	{
-		if (!openSource())
-			return;
-
-		Resource oldRes = null;
-		Resource newRes = null;
+		Resource res = null;
 
 		try
 		{
-			oldRes = source.config.createResource();
-			newRes = Lib.config.createResource();
-
-			executeJob((Dbms) oldRes.open(), (Dbms) newRes.open());
+			res = Lib.config.createResource();
+			executeJob((Dbms) res.open());
 		}
-		catch(Throwable t)
+		catch(Exception e)
 		{
-			Lib.gui.showError(dlg, t);
+			Lib.gui.showError(dlg, e);
 		}
 		finally
 		{
-			if (oldRes != null)
-				oldRes.close();
+			if (res != null)
+				res.close();
 
-			if (newRes != null)
-				newRes.close();
-
+			Lib.gui.showInfo(dlg, 	"Conversion terminated.\n"+
+								  			"Please, see gast/log/unmapped.log for more info");
 			dlg.stop();
 		}
 	}
 
 	//---------------------------------------------------------------------------
 
-	private boolean openSource()
-	{
-		try
-		{
-			source = new GNSource(appPath);
-
-			return true;
-		}
-		catch (Exception e)
-		{
-			Lib.gui.showError(dlg, 	"It seems that the specified folder does not \n"+
-											"contain an old GeoNetwork installation");
-
-			return false;
-		}
-	}
-
-	//---------------------------------------------------------------------------
-
-	private void executeJob(Dbms oldDbms, Dbms newDbms) throws Exception
+	private void executeJob(Dbms dbms) throws Exception
 	{
 		String      log = Lib.server.getAppPath() +"/gast/log/unmapped.log";
 		PrintWriter out = new PrintWriter(new FileOutputStream(log));
 
-		//--- open GeoNetwork 2
+		dlg.reset(1);
+		dlg.advance("Retrieving metadata ids");
 
-		dlg.reset(2);
+		List ids = getAllIsoMetadata(dbms);
+		dbms.commit();
 
-//		Set<String> ids = destin.getAllIsoMetadataId();
+		dlg.reset(ids.size());
 
-//		destin.commit();
+		for(Object o : ids)
+		{
+			Element el = (Element) o;
+			String  id = el.getChildText("id");
 
-//		dlg.reset(ids.size());
+			dlg.advance("Converting metadata with id : "+ id);
 
-//		for(String id : ids)
-//		{
-//			if (testOnly)	dlg.advance("Analyzing metadata with id : "+ id);
-//				else 			dlg.advance("Migrating metadata with id : "+ id);
-//
-//			Element metadata = destin.getMetadata(id);
-//			Element unmapped = destin.getUnmappedFields(metadata);
+			Element md    = Lib.metadata.getMetadata(dbms, id);
+			Element res   = Lib.metadata.convert(md, "iso19115", "iso19139");
 
-//			destin.commit();
-//			saveUnmapped(out, id, unmapped);
-//
-//			if (!testOnly)
-//			{
-//				destin.upgradeMetadata(id, metadata);
-//				destin.commit();
-//			}
-//		}
-//
-//		if (!testOnly)
-//		{
-//			logger.logInfo("Cleaning lucene indexes");
-//			destin.removeLuceneFiles();
-//		}
+			Element metadata = (Element) res.getChild("metadata").getChildren().get(0);
+			Element unmapped = res.getChild("unmapped");
+
+			updateMetadata(dbms, id, metadata);
+			dbms.commit();
+			saveUnmapped(out, id, unmapped);
+		}
+
+//		logger.logInfo("Cleaning lucene indexes");
+//		removeLuceneFiles();
 
 		out.close();
+	}
+
+	//---------------------------------------------------------------------------
+
+	private List getAllIsoMetadata(Dbms dbms) throws SQLException
+	{
+		String query = "SELECT id FROM Metadata WHERE schemaId = ?";
+
+		return dbms.select(query, "iso19115").getChildren();
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void updateMetadata(Dbms dbms, String id, Element md) throws Exception
+	{
+		Namespace ns = Namespace.getNamespace("gmd", md.getNamespace().getURI());
+		fixNamespace(md, ns);
+
+		String query = "UPDATE Metadata SET schemaId='iso19139', data=?, root=? WHERE id=?";
+
+		dbms.execute(query, Xml.getString(md), md.getName(), new Integer(id));
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void fixNamespace(Element md, Namespace ns)
+	{
+		if (md.getNamespaceURI().equals(ns.getURI()))
+			md.setNamespace(ns);
+
+		for (Object o : md.getChildren())
+			fixNamespace((Element) o, ns);
 	}
 
 	//---------------------------------------------------------------------------
@@ -183,9 +174,6 @@ public class Worker implements Runnable
 	//--- Variables
 	//---
 	//---------------------------------------------------------------------------
-
-	private String   appPath;
-	private GNSource source;
 
 	private ProgressDialog dlg;
 }

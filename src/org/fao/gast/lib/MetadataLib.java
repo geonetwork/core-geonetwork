@@ -58,6 +58,44 @@ public class MetadataLib
 	//---
 	//---------------------------------------------------------------------------
 
+	public Element getMetadata(Dbms dbms, String id) throws Exception
+	{
+		return XmlSerializer.select(dbms, "Metadata", id);
+	}
+
+	//---------------------------------------------------------------------------
+
+	public boolean canConvert(String fromSchema, String toSchema)
+	{
+		String format = fromSchema +"-to-"+ toSchema;
+		String path   = appPath +"/web/conversion/"+format+"/main.xsl";
+
+		return new File(path).exists();
+	}
+
+	//---------------------------------------------------------------------------
+
+	public Element convert(Element md, String fromSchema, String toSchema) throws Exception
+	{
+		if (!canConvert(fromSchema, toSchema))
+			throw new Exception("Cannot convert to schema :"+ toSchema);
+
+		String format = fromSchema +"-to-"+ toSchema;
+		String path   = appPath +"/web/conversion/"+format;
+
+		Element result   = Xml.transform(md, path +"/main.xsl");
+		Element unmapped = Xml.transform(md, path +"/unmapped.xsl");
+
+		Element metadata = new Element("metadata")
+			.addContent(result);
+
+		return new Element("result")
+			.addContent(metadata)
+			.addContent(unmapped);
+	}
+
+	//---------------------------------------------------------------------------
+
 	/** Transactional */
 
 	public void sync(Dbms dbms) throws Exception
@@ -135,7 +173,6 @@ public class MetadataLib
 	public void clearIndexes() throws Exception
 	{
 		File dir = new File(appPath +"/web/"+ Lib.config.getLuceneDir());
-		System.out.println("dir:"+dir.getAbsolutePath());
 		Lib.io.cleanDir(dir);
 	}
 
