@@ -30,8 +30,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.UUID;
 import jeeves.resources.dbms.Dbms;
@@ -67,7 +70,7 @@ public class DatabaseLib
 
 	public static interface Mapper
 	{
-		public String map(String field, String value);
+		public Object map(String field, Object value);
 	}
 
 	//---------------------------------------------------------------------------
@@ -165,7 +168,7 @@ public class DatabaseLib
 	/** NOT Transactional */
 
 	public void insert(Dbms dbms, String table, List records, String fields[],
-							 Mapper mapper) throws Exception
+							 Mapper mapper) throws SQLException
 	{
 		for(Object rec : records)
 			insert(dbms, table, (Element) rec, fields, mapper);
@@ -174,27 +177,61 @@ public class DatabaseLib
 	//---------------------------------------------------------------------------
 	/** NOT Transactional */
 
+	public void insert(Dbms dbms, String table, Element rec, Mapper mapper) throws SQLException
+	{
+		Map<String, Object> fields = new HashMap<String, Object>();
+
+		for(Object e : rec.getChildren())
+		{
+			Element elem = (Element) e;
+			String  name = elem.getName();
+			String  value= elem.getText();
+
+			fields.put(name, value);
+		}
+
+		insert(dbms, table, fields, mapper);
+	}
+
+	//---------------------------------------------------------------------------
+	/** NOT Transactional */
+
 	public void insert(Dbms dbms, String table, Element rec, String fields[],
-							 Mapper mapper) throws Exception
+							 Mapper mapper) throws SQLException
+	{
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		for(String field : fields)
+			map.put(field, rec.getChildText(field.toLowerCase()));
+
+		insert(dbms, table, map, mapper);
+	}
+
+	//---------------------------------------------------------------------------
+	/** NOT Transactional */
+
+	public void insert(Dbms dbms, String table, Map<String,Object> fields,
+							 Mapper mapper) throws SQLException
 	{
 		StringBuffer names = new StringBuffer();
 		StringBuffer marks = new StringBuffer();
 
-		ArrayList<String> values = new ArrayList<String>();
+		ArrayList<Object> values = new ArrayList<Object>();
 
-		for(int i=0; i<fields.length; i++)
+		for(Iterator<String> i=fields.keySet().iterator(); i.hasNext();)
 		{
-			names.append(fields[i]);
+			String name = i.next();
+			Object value= fields.get(name);
+
+			names.append(name);
 			marks.append("?");
 
-			String oldValue = rec.getChildText(fields[i].toLowerCase());
-			String newValue = (mapper == null)
-										? oldValue
-										: mapper.map(fields[i], oldValue);
+			if (mapper != null)
+				value = mapper.map(name, value);
 
-			values.add(newValue);
+			values.add(value);
 
-			if (i <fields.length -1)
+			if (i.hasNext())
 			{
 				names.append(", ");
 				marks.append(", ");
@@ -204,6 +241,24 @@ public class DatabaseLib
 		String query = "INSERT INTO "+ table +"("+ names +") VALUES ("+ marks +")";
 
 		dbms.execute(query, values.toArray());
+	}
+
+	//---------------------------------------------------------------------------
+
+	public void insert(Dbms dbms, String table, Set<String> langs, String id,
+							 String label) throws SQLException
+	{
+		Map<String, Object> hm = new HashMap<String, Object>();
+
+		hm.put("idDes", new Integer(id));
+		hm.put("label", label);
+
+		for (String lang : langs)
+		{
+			hm.put("langId", lang);
+
+			Lib.database.insert(dbms, table, hm, null);
+		}
 	}
 
 	//---------------------------------------------------------------------------
@@ -412,7 +467,7 @@ public class DatabaseLib
 	private void addTemplates(Dbms dbms) throws Exception
 	{
 		String siteId = getSiteId(dbms);
-		String siteURL= Lib.metadata.getSiteURL(dbms);
+		String siteURL= Lib.site.getSiteURL(dbms);
 		String date   = new ISODate().toString();
 
 		int serial = 1;

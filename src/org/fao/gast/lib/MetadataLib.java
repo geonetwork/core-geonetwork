@@ -67,7 +67,7 @@ public class MetadataLib
 			List list = dbms.select("SELECT * FROM Metadata").getChildren();
 			dbms.commit();
 
-			String siteURL = getSiteURL(dbms);
+			String siteURL = Lib.site.getSiteURL(dbms);
 
 			for(int i=0; i<list.size(); i++)
 			{
@@ -104,10 +104,10 @@ public class MetadataLib
 
 		Element env = new Element("env");
 
-		env.addContent(new Element("id")      .setText(id));
-		env.addContent(new Element("uuid")    .setText(uuid));
-		env.addContent(new Element("currDate").setText(date));
-		env.addContent(new Element("siteURL") .setText(siteURL));
+		env.addContent(new Element("id")        .setText(id));
+		env.addContent(new Element("uuid")      .setText(uuid));
+		env.addContent(new Element("changeDate").setText(date));
+		env.addContent(new Element("siteURL")   .setText(siteURL));
 
 		//--- setup root element
 
@@ -121,19 +121,6 @@ public class MetadataLib
 		String styleSheet = appPath +"/web/xml/schemas/"+schema+"/"+ Geonet.File.UPDATE_FIXED_INFO;
 
 		return Xml.transform(root, styleSheet);
-	}
-
-	//--------------------------------------------------------------------------
-
-	public String getSiteURL(Dbms dbms) throws SQLException
-	{
-		String host    = Lib.database.getSetting(dbms, "system/server/host");
-		String port    = Lib.database.getSetting(dbms, "system/server/port");
-		String servlet = Lib.embeddedSC.getServlet();
-
-		String locService = "/"+ servlet +"/"+ Jeeves.Prefix.SERVICE +"/en";
-
-		return "http://" + host + (port == "80" ? "" : ":" + port) + locService;
 	}
 
 	//---------------------------------------------------------------------------

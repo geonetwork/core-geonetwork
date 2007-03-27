@@ -24,16 +24,8 @@
 package org.fao.gast.gui.panels.migration.oldinst;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import jeeves.resources.dbms.Dbms;
-import jeeves.utils.Xml;
 import org.fao.gast.lib.ConfigLib;
 import org.fao.gast.lib.ProfileLib;
-import org.fao.geonet.kernel.XmlSerializer;
-import org.jdom.Element;
 import org.jdom.JDOMException;
 
 //==============================================================================
@@ -60,102 +52,12 @@ public class GNSource
 	//---
 	//---------------------------------------------------------------------------
 
-	public Set<String> getAllIsoMetadataId(Dbms dbms) throws Exception
-	{
-		String query = "SELECT id FROM Metadata WHERE schemaId='iso19115'";
-
-//		try
-//		{
-			List list = dbms.select(query).getChildren();
-
-			Set<String> ids = new HashSet<String>();
-
-			for(int i=0; i<list.size(); i++)
-			{
-				Element rec = (Element) list.get(i);
-				ids.add(rec.getChildText("id"));
-			}
-
-			return ids;
-//		}
-//		catch (SQLException e)
-//		{
-//			throw geoNetExc(e, "Cannot select query : "+ query);
-//		}
-	}
-
-	//---------------------------------------------------------------------------
-
-	public Element getMetadata(Dbms dbms, String id) throws Exception
-	{
-//		try
-//		{
-			return XmlSerializer.select(dbms, "Metadata", id);
-//		}
-//		catch (Exception e)
-//		{
-//			throw geoNetExc(e, "Cannot retrieve metadata with id : "+ id);
-//		}
-	}
-
-
-	//---------------------------------------------------------------------------
-
-	public void upgradeMetadata(Dbms dbms, String id, Element md) throws Exception
-	{
-		//--- step 1 : convert metadata from ISO19115 to ISO19139
-
-		try
-		{
-			md = Xml.transform(md, appPath +"/gast/xsl/19115-to-19139.xsl");
-		}
-		catch (Exception e)
-		{
-//			throw geoNetExc(e, "Cannot transform metadata to ISO19139");
-		}
-
-		//--- step 2 : save new metadata
-
-		try
-		{
-			String query = "UPDATE Metadata SET schemaId='iso19139', data=? WHERE id=?";
-
-			dbms.execute(query, Xml.getString(md), new Integer(id));
-		}
-		catch (Exception e)
-		{
-//			throw geoNetExc(e, "Cannot upgrade metadata with id : "+ id);
-		}
-	}
-
-	//---------------------------------------------------------------------------
-
-	public void addMetadata(List list) throws Exception
-	{
-		String schema = "iso19115";
-		String source = "";//appHand.getValue("siteId");
-
-		for(int i=0; i<list.size(); i++)
-		{
-			Element rec = (Element) list.get(i);
-
-			String id   = rec.getChildText("id");
-			String data = rec.getChildText("data");
-			String date = rec.getChildText("lastchangedate");
-			String uuid = UUID.randomUUID().toString();
-
-			try
-			{
-//				Element md = updateFixedInfo(schema, id, Xml.loadString(data, false), uuid, date);
-//
-//				XmlSerializer.insert(dbms, schema, md, Integer.parseInt(id), source, uuid, date, date, null);
-			}
-			catch (Exception e)
-			{
-//				throw geoNetExc(e, "Cannot migrate metadata with id : "+ id);
-			}
-		}
-	}
+	public String getSiteId()     { return config.getHandlerProp("siteId");     }
+	public String getNetwork()    { return config.getHandlerProp("network");    }
+	public String getNetmask()    { return config.getHandlerProp("netmask");    }
+	public String getPublicHost() { return config.getHandlerProp("publicHost"); }
+	public String getPublicPort() { return config.getHandlerProp("publicPort"); }
+	public String getZ3950Port()  { return config.getHandlerProp("z3950Port");  }
 
 	//--------------------------------------------------------------------------
 	//---

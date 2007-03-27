@@ -8,18 +8,16 @@
 
 package org.fao.gast.lib.druid;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.FileReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.List;
 import org.dlib.tools.FullTokenizer;
 import org.dlib.tools.TVector;
 
@@ -27,88 +25,66 @@ import org.dlib.tools.TVector;
 
 public class Import
 {
-	private static final int START  = 0;
-	private static final int FIELDS = 1;
-	private static final int DATA   = 2;
+	public static void load(Connection conn, String table, String fileName)
+							throws SQLException, FileNotFoundException, IOException, Exception
+	{
+		DdfLoader loader = new DdfLoader();
 
+		loader.setHandler(new ImportHandler(conn, table));
+		loader.load(fileName);
+	}
+}
+
+//==============================================================================
+
+class ImportHandler implements DdfLoader.Handler
+{
+	//---------------------------------------------------------------------------
+	//---
+	//--- Constructor
+	//---
 	//---------------------------------------------------------------------------
 
-	public static void load(Connection conn, String table, String fileName)
-							throws SQLException, IOException
+	public ImportHandler(Connection conn, String table)
 	{
-		BufferedReader	rdr = new BufferedReader(new FileReader(fileName));
+		this.conn  = conn;
+		this.table = table;
+	}
 
-		String line;
+	//---------------------------------------------------------------------------
+	//---
+	//--- Handler interface
+	//---
+	//---------------------------------------------------------------------------
 
-		int status = START;
+	public void handleFields(List<ImportField> fields) throws Exception
+	{
+		this.fields = fields;
 
-		TVector vsFields = new TVector();
-		TVector vsQMarks = new TVector();
+		TVector tvFields = new TVector();
+		TVector tvQMarks = new TVector();
 
-		PreparedStatement stmt = null;
-
-		while ((line = rdr.readLine()) != null)
+		for (ImportField field : fields)
 		{
-			//--- skip comments or blank lines
-			if (line.equals("") || line.startsWith("#")) continue;
-
-			//--- start [FIELDS] section
-			if (line.equals("[FIELDS]"))
-				status = FIELDS;
-
-			//--- start [DATA] section and build prepared statement
-			else if (line.equals("[DATA]"))
-			{
-				status = DATA;
-				String query = "INSERT INTO " + table + "(" + vsFields + ") " +
-									"VALUES (" + vsQMarks + ")";
-
-				stmt = conn.prepareStatement(query);
-			}
-			else
-			{
-				if (status == FIELDS)
-				{
-					vsFields.addElement(new ImportField(line));
-					vsQMarks.addElement("?");
-				}
-
-				else if (status == DATA)
-				{
-					insertRow(stmt, vsFields, line);
-				}
-
-				else
-					throw new IllegalArgumentException("Data not allowed before [FIELDS] section");
-			}
+			tvFields.add(field.name);
+			tvQMarks.add("?");
 		}
 
-		if (stmt != null) stmt.close();
+		String query = "INSERT INTO " + table + "(" + tvFields + ") VALUES (" + tvQMarks + ")";
 
-		rdr.close();
-
-		if (status != DATA)
-			throw new IllegalArgumentException("Unexpected EOF encountered");
+		stmt = conn.prepareStatement(query);
 	}
 
 	//---------------------------------------------------------------------------
 
-	private static void insertRow(PreparedStatement stmt, TVector vsFields, String line)
-											throws SQLException
+	public void handleRow(List<String> values) throws Exception
 	{
-		FullTokenizer ft = new FullTokenizer(line, "\t");
-
-		if (ft.countTokens() != vsFields.size())
-			throw new IllegalArgumentException("Field count differs from token count");
-
-		String token;
-
-		for(int i=0; i<ft.countTokens(); i++)
+		for(int i=0; i<fields.size(); i++)
 		{
-			ImportField impf    = (ImportField) vsFields.elementAt(i);
+			ImportField impf    = fields.get(i);
 			SqlType     sqlType = impf.sqlType;
 
-			token = ft.nextToken();
+			String token = values.get(i);
 
 			if (token.equals(""))
 				stmt.setNull(i+1, sqlType.iId);
@@ -142,10 +118,7 @@ public class Import
 					stmt.setString(i+1, Codec.decodeString(token));
 
 				else if (sqlType.isLongVarChar())
-				{
-					String s = Codec.decodeString(token);
-					stmt.setCharacterStream(i+1, new StringReader(s), s.length());
-				}
+					stmt.setCharacterStream(i+1, new StringReader(Codec.decodeString(token)), token.length());
 
 				else
 				{
@@ -157,36 +130,33 @@ public class Import
 
 		stmt.executeUpdate();
 	}
-}
-
-//==============================================================================
-
-class ImportField
-{
-	public String  sName;
-	public String  sType;
-	public SqlType sqlType;
 
 	//---------------------------------------------------------------------------
 
-	public ImportField(String line)
+	public void cleanUp()
 	{
-		int idx = line.indexOf(",");
-
-		if (idx == -1)
-			throw new IllegalArgumentException("Bad field format");
-
-		sName   = line.substring(0, idx).trim();
-		sType   = line.substring(idx+1).trim();
-		sqlType = SqlMapper.mapName(sType);
-
-		if (!sType.equals(sqlType.sName))
-			throw new IllegalArgumentException("Field types differ");
+		try
+		{
+			if (stmt != null)
+				stmt.close();
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	//---------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//---------------------------------------------------------------------------
 
-	public String toString() { return sName; }
+	private Connection conn;
+	private String     table;
+
+	private List<ImportField> fields;
+	private PreparedStatement stmt;
 }
 
 //==============================================================================

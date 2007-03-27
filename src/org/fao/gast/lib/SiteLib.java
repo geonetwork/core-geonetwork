@@ -23,41 +23,52 @@
 
 package org.fao.gast.lib;
 
-import org.fao.geonet.lib.TypeLib;
+import java.sql.SQLException;
+import jeeves.constants.Jeeves;
+import jeeves.resources.dbms.Dbms;
 
 //=============================================================================
 
-public class Lib
+public class SiteLib
 {
-	public static XMLLib        xml    = new XMLLib();
-	public static TextLib       text   = new TextLib();
-	public static TypeLib       type   = new TypeLib();
-	public static GuiLib        gui    = new GuiLib();
-	public static IOLib         io     = new IOLib();
-	public static ServiceLib    service= new ServiceLib();
-	public static SiteLib       site   = new SiteLib();
-	public static ConfigLib     config;
-	public static EmbeddedSCLib embeddedSC;
-	public static EmbeddedDBLib embeddedDB;
-	public static DatabaseLib   database;
-	public static MetadataLib   metadata;
-	public static ServerLib     server;
-
 	//---------------------------------------------------------------------------
 	//---
-	//--- Initialization
+	//--- Constructor
 	//---
 	//---------------------------------------------------------------------------
 
-	public static void init(String appPath) throws Exception
+	public SiteLib() {}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- API methods
+	//---
+	//---------------------------------------------------------------------------
+
+	public String getSiteId(Dbms dbms) throws SQLException
 	{
-		config     = new ConfigLib    (appPath);
-		embeddedSC = new EmbeddedSCLib(appPath);
-		embeddedDB = new EmbeddedDBLib(appPath);
-		database   = new DatabaseLib  (appPath);
-		metadata   = new MetadataLib  (appPath);
-		server     = new ServerLib    (appPath);
+		return Lib.database.getSetting(dbms, "system/site/siteId");
 	}
+
+	//--------------------------------------------------------------------------
+
+	public String getSiteURL(Dbms dbms) throws SQLException
+	{
+		String host    = Lib.database.getSetting(dbms, "system/server/host");
+		String port    = Lib.database.getSetting(dbms, "system/server/port");
+		String servlet = Lib.embeddedSC.getServlet();
+
+		String locService = "/"+ servlet +"/"+ Jeeves.Prefix.SERVICE +"/en";
+
+		return "http://" + host + (port == "80" ? "" : ":" + port) + locService;
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//---------------------------------------------------------------------------
+
 }
 
 //=============================================================================
