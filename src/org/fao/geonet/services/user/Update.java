@@ -114,7 +114,7 @@ public class Update implements Service
 
 			//--- add groups
 
-			dbms.execute("DELETE FROM UserGroups WHERE userId=", new Integer(id));
+			dbms.execute("DELETE FROM UserGroups WHERE userId=?", new Integer(id));
 
 			for(int i=0; i<listGroups.size(); i++)
 			{
