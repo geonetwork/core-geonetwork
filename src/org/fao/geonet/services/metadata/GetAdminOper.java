@@ -24,7 +24,7 @@
 package org.fao.geonet.services.metadata;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.Set;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -34,6 +34,7 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
@@ -63,7 +64,8 @@ public class GetAdminOper implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dataMan = gc.getDataManager();
+		DataManager   dm = gc.getDataManager();
+		AccessManager am = gc.getAccessManager();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
@@ -72,7 +74,7 @@ public class GetAdminOper implements Service
 		//-----------------------------------------------------------------------
 		//--- check access
 
-		if (!dataMan.existsMetadata(dbms, id))
+		if (!dm.existsMetadata(dbms, id))
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
 		//--- get all operations
@@ -81,6 +83,8 @@ public class GetAdminOper implements Service
 
 		//-----------------------------------------------------------------------
 		//--- retrieve groups operations
+
+		Set<String> userGroups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
 
 		Element elGroup = Lib.local.retrieve(dbms, "Groups");
 
@@ -94,7 +98,16 @@ public class GetAdminOper implements Service
 
 			//--- get all operations that this group can do on given metadata
 
-			int grpId = Integer.parseInt(el.getChildText("id"));
+			String sGrpId = el.getChildText("id");
+
+			if (!userGroups.contains(sGrpId))
+			{
+				el.detach();
+				i--;
+				continue;
+			}
+
+			int grpId = Integer.parseInt(sGrpId);
 
 			String query = "SELECT operationId FROM OperationAllowed WHERE metadataId=? AND groupId=?";
 
