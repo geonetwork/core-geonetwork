@@ -50,7 +50,21 @@
 				// all ok, proceed
 				document.userupdateform.submit();
 			}//update
+
+			function profileChanged()
+			{
+				var profile = $F('user.profile');
+
+				if (profile == 'Administrator')
+					Element.hide('group.list');
+				else
+					Element.show('group.list');
+			}
 			
+			function init()
+			{
+				profileChanged();
+			}
 </script>
 	</xsl:template>
 	
@@ -161,7 +175,7 @@
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/profile"/></th>
 					<td class="padded">
-						<select class="content" size="1" name="profile">
+						<select class="content" size="1" name="profile" onchange="profileChanged()" id="user.profile">
 							<!--  When adding a new user, make Editor the default selected profile -->
 							<!-- <xsl:for-each select="/root/gui/profiles/*">
 							<option value="{name(.)}">
@@ -212,7 +226,7 @@
 				
 				<!-- Add groups -->
 				
-				<tr>
+				<tr id="group.list">
 					<th class="padded"><xsl:value-of select="/root/gui/strings/groups"/></th>
 					<td class="padded">
 						<select class="content" size="7" name="groups" multiple="">
