@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.UUID;
@@ -102,7 +103,7 @@ public class ImportFromDir implements Service
 
 		context.info("Import time is :" + duration + " secs");
 
-		return new Element("Import-ok").setText("Records:" + result);
+		return new Element("ok").setText("records:" + result);
 	}
 
 	//--------------------------------------------------------------------------
@@ -114,6 +115,7 @@ public class ImportFromDir implements Service
 	private int standardImport(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager   dm = gc.getDataManager();
 
 		String dir      = Util.getParam(params, Params.DIR);
 		String schema   = Util.getParam(params, Params.SCHEMA);
@@ -129,6 +131,10 @@ public class ImportFromDir implements Service
 		if (files == null)
 			throw new Exception("Directory not found: " + dir);
 
+		ArrayList<Element> alMetadata = new ArrayList<Element>();
+
+		//--- first collect metadata
+
 		for(int i=0; i<files.length; i++)
 		{
 			context.debug("Importing : "+files[i]);
@@ -138,8 +144,17 @@ public class ImportFromDir implements Service
 			if (!style.equals("_none_"))
 				xml = Xml.transform(xml, stylePath +"/"+ style);
 
-			insert(schema, xml, group, context, validate, category, siteId);
+			if (validate)
+				dm.validate(schema, xml);
+
+			alMetadata.add(xml);
 		}
+
+		//--- then insert them. At this stage they are well formed and we should not
+		//--- get exceptions that invalidate the index
+
+		for (Element xml : alMetadata)
+			insert(schema, xml, group, context, category, siteId);
 
 		return files.length;
 	}
@@ -152,6 +167,9 @@ public class ImportFromDir implements Service
 
 	private int configImport(Element params, ServiceContext context, File configFile) throws Exception
 	{
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager   dm = gc.getDataManager();
+
 		ImportConfig config = new ImportConfig(configFile, context);
 
 		String dir   = Util.getParam(params, Params.DIR);
@@ -166,6 +184,8 @@ public class ImportFromDir implements Service
 			throw new Exception("Directory not found : " + dir);
 
 		int counter = 0;
+
+		ArrayList<ImportInfo> alImport = new ArrayList<ImportInfo>();
 
 		for(int i=0; i<sites.length; i++)
 		{
@@ -197,12 +217,20 @@ public class ImportFromDir implements Service
 					String category = config.mapCategory(catDir);
 					String schema   = config.mapSchema(catDir);
 
-					insert(schema, xml, group, context, validate, category, siteId);
+					if (validate)
+						dm.validate(schema, xml);
 
+					alImport.add(new ImportInfo(schema, category, siteId, xml));
 					counter++;
 				}
 			}
 		}
+
+		//--- step 2 : insert metadata
+
+		for (ImportInfo ii : alImport)
+			insert(ii.schema, ii.xml, group, context, ii.category, ii.siteId);
+
 		return counter;
 	}
 
@@ -212,21 +240,16 @@ public class ImportFromDir implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	private void insert(String schema, Element xml, String group,
-							  ServiceContext context, boolean validate, String category,
-							  String siteId) throws Exception
+	private void insert(String schema, Element xml, String group, ServiceContext context,
+							  String category, String siteId) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
-		DataManager dataMan = gc.getDataManager();
-
-		if (validate)
-			dataMan.validate(schema, xml);
+		DataManager   dm = gc.getDataManager();
 
 		//-----------------------------------------------------------------------
 		//--- if the uuid does not exist we generate it
 
-		String uuid = dataMan.extractUUID(schema, xml);
+		String uuid = dm.extractUUID(schema, xml);
 
 		if (uuid.length() == 0)
 			uuid = UUID.randomUUID().toString();
@@ -236,11 +259,31 @@ public class ImportFromDir implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		String id = dataMan.insertMetadata(dbms, schema, group, xml, context.getSerialFactory(), siteId, uuid);
+		String id = dm.insertMetadata(dbms, schema, group, xml, context.getSerialFactory(), siteId, uuid);
 
 		if (!"_none_".equals(category))
-			dataMan.setCategory(dbms, id, category);
+			dm.setCategory(dbms, id, category);
 	};
+}
+
+//=============================================================================
+
+class ImportInfo
+{
+	public String  schema;
+	public String  category;
+	public String  siteId;
+	public Element xml;
+
+	//--------------------------------------------------------------------------
+
+	public ImportInfo(String schema, String category, String siteId, Element xml)
+	{
+		this.schema   = schema;
+		this.category = category;
+		this.siteId   = siteId;
+		this.xml      = xml;
+	}
 }
 
 //=============================================================================
