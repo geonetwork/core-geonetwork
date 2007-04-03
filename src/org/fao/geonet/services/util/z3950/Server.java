@@ -28,8 +28,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Properties;
 import jeeves.constants.Jeeves;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -46,13 +50,24 @@ public class Server
 
 	/** initializes the server
 	  */
-	public static void init(String port, String appPath, String schemaMappings,
-									ServiceContext srvContext) throws Exception
+	public static void init(String host, String port, String appPath,
+									String schemaMappings, ServiceContext context) throws Exception
 	{
+		//--- fix schema-mappings.xml file
+
 		String tempSchema = appPath + Jeeves.Path.XML + schemaMappings +".tem";
 		String realSchema = appPath + Jeeves.Path.XML + schemaMappings;
 
 		fixSchemaFile(tempSchema, realSchema);
+
+		//--- fix repositories.xml file
+
+		String tempRepo = appPath + Jeeves.Path.XML + "repositories.xml" +".tem";
+		String realRepo = appPath + Jeeves.Path.XML + "repositories.xml";
+
+		fixRepositoriesFile(tempRepo, realRepo, host, port);
+
+		//--- normal processing
 
 		String evaluator    = "org.fao.geonet.services.util.z3950.GNSearchable";
 		String configurator = "com.k_int.IR.Syntaxes.Conversion.XMLConfigurator";
@@ -62,7 +77,7 @@ public class Server
 		props.setProperty("evaluator",                         evaluator);
 		props.setProperty("XSLConverterConfiguratorClassName", configurator);
 		props.setProperty("ConvertorConfigFile",               realSchema);
-		props.put("srvContext", srvContext);
+		props.put("srvContext", context);
 
 		_server = new ZServer(props);
 		_server.start();
@@ -92,6 +107,31 @@ public class Server
 		String dir = new File(src).getParentFile().getAbsolutePath() +"/mappings";
 
 		temSrc.setAttribute("directory", dir);
+
+		FileOutputStream os = new FileOutputStream(des);
+		Xml.writeResponse(new Document(root), os);
+		os.close();
+	}
+
+	//--------------------------------------------------------------------------
+
+	private static void fixRepositoriesFile(String src, String des, String host,
+														 String z3950port) throws Exception
+	{
+		Element root = Xml.loadFile(src);
+		Element repo = root.getChild("Repository");
+
+		for (Object o : repo.getChildren("RepositoryProperty"))
+		{
+			Element rp = (Element) o;
+			String  name = rp.getAttributeValue("name");
+
+			if ("ServiceHost".equals(name))
+				rp.setAttribute("value", host);
+
+			else if ("ServicePort".equals(name))
+				rp.setAttribute("value", z3950port);
+		}
 
 		FileOutputStream os = new FileOutputStream(des);
 		Xml.writeResponse(new Document(root), os);

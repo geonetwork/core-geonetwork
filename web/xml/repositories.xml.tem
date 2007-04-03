@@ -147,8 +147,8 @@
 	localhost
 	-->
 	<Repository repository_dn="localhost:2100/geonetwork" name="Local GeoNetwork" type="Z3950" can_multiplex_sessions="no" >
-		<RepositoryProperty name="ServiceHost" value="localhost" />
-		<RepositoryProperty name="ServicePort" value="2100" />
+		<RepositoryProperty name="ServiceHost" value="*** automatically changed on startup ***" />
+		<RepositoryProperty name="ServicePort" value="*** automatically changed on startup ***" />
 		<RepositoryProperty name="service_short_name" value="geonetwork" />
 		<RepositoryProperty name="default_record_syntax" value="xml" />
 		<RepositoryProperty name="default_element_set_name" value="s" />

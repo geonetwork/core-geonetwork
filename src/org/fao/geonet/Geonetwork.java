@@ -95,9 +95,9 @@ public class Geonetwork implements ApplicationHandler
 		//--- Initialize thesaurus
 
 		logger.info("  - Thesaurus...");
-		
+
 		String thesauriDir = handlerConfig.getMandatoryValue(Geonet.Config.CODELIST_DIR);
-		
+
 		thesaurusMan = new ThesaurusManager(path, thesauriDir);
 
 
@@ -151,6 +151,7 @@ public class Geonetwork implements ApplicationHandler
 
 		boolean z3950Enable    = settingMan.getValueAsBool("system/z3950/enable", false);
 		String  z3950port      = settingMan.getValue("system/z3950/port");
+		String  host           = settingMan.getValue("system/server/host");
 		String  schemaMappings = handlerConfig.getMandatoryValue(Geonet.Config.SCHEMA_MAPPINGS);
 
 		if (!z3950Enable)
@@ -163,7 +164,7 @@ public class Geonetwork implements ApplicationHandler
 			session.authenticate(null, "z39.50", "", "", "Guest");
 			context.setUserSession(session);
 			context.setIpAddress("127.0.0.1");
-			Server.init(z3950port, path, schemaMappings, context);
+			Server.init(host, z3950port, path, schemaMappings, context);
 		}
 
 		//------------------------------------------------------------------------
