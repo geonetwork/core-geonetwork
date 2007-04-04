@@ -66,9 +66,7 @@
 		<xsl:apply-templates mode="simpleElement" select=".">
 			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="edit"   select="$edit"/>
-			<xsl:with-param name="text">
-				<a href="{.}"><xsl:value-of select="."/></a>
-			</xsl:with-param>
+			<xsl:with-param name="text"><xsl:value-of select="."/></xsl:with-param>
 		</xsl:apply-templates>
 	</xsl:template>
 	
