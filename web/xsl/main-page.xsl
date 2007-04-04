@@ -111,7 +111,7 @@
 							<!-- search -->
 							<td>
 								<h1><xsl:value-of select="/root/gui/strings/mainpageTitle"/></h1>
-								<form name="search" action="{/root/gui/locService}/main.search" method="get" onsubmit="return checkSubmit()">
+								<form name="search" action="{/root/gui/locService}/main.search" method="post" onsubmit="return checkSubmit()">
 									<input name="extended" type="hidden" value="{/root/gui/searchDefaults/extended}"/>
 									<input name="remote" type="hidden" value="{/root/gui/searchDefaults/remote}"/>
 									<input name="attrset" type="hidden" value="geo"/> <!-- FIXME: possibly replace with menu -->
