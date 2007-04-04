@@ -115,7 +115,7 @@ public class Geonetwork implements ApplicationHandler
 
 		logger.info("  - Access manager...");
 
-		AccessManager accessMan = new AccessManager(settingMan);
+		AccessManager accessMan = new AccessManager(dbms, settingMan);
 
 		//------------------------------------------------------------------------
 		//--- get edit params and initialize DataManager

@@ -58,6 +58,7 @@ public class WAFHarvester extends AbstractHarvester
 
 	protected void doInit(Element node) throws BadInputEx
 	{
+		params = new WAFParams(dataMan);
 		params.init(node);
 	}
 
@@ -84,6 +85,7 @@ public class WAFHarvester extends AbstractHarvester
 	{
 		//--- retrieve/initialize information
 
+		params = new WAFParams(dataMan);
 		params.create(node);
 
 		//--- setup waf node
@@ -233,8 +235,8 @@ public class WAFHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	private WAFParams params = new WAFParams();
-	private WAFResult result = null;
+	private WAFParams params;
+	private WAFResult result;
 }
 
 //=============================================================================

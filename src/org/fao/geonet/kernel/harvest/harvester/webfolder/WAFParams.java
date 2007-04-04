@@ -28,7 +28,7 @@ import java.util.Iterator;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.MissingParameterEx;
-import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;
 
@@ -36,6 +36,17 @@ import org.jdom.Element;
 
 public class WAFParams extends AbstractParams
 {
+	//--------------------------------------------------------------------------
+	//---
+	//--- Constructor
+	//---
+	//--------------------------------------------------------------------------
+
+	public WAFParams(DataManager dm)
+	{
+		this.dm = dm;
+	}
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init : called when an entry is read from database. Vars are initialized
@@ -160,7 +171,7 @@ public class WAFParams extends AbstractParams
 
 	public WAFParams copy()
 	{
-		WAFParams copy = new WAFParams();
+		WAFParams copy = new WAFParams(dm);
 
 		copy.url = url;
 
@@ -228,7 +239,7 @@ public class WAFParams extends AbstractParams
 		if (operName == null)
 			throw new MissingParameterEx("attribute:name", oper);
 
-		int operID = AccessManager.getPrivilegeId(operName);
+		int operID = dm.getAccessManager().getPrivilegeId(operName);
 
 		if (operID == -1)
 			throw new BadParameterEx("attribute:name", operName);
@@ -257,6 +268,8 @@ public class WAFParams extends AbstractParams
 	public boolean structure;
 
 	private ArrayList<Privilege> alPrivileges = new ArrayList<Privilege>();
+
+	private DataManager dm;
 }
 
 //=============================================================================

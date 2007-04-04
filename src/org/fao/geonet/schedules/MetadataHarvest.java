@@ -234,7 +234,7 @@ public class MetadataHarvest implements Schedule
 			{
 				Element priv = (Element) privs.get(j);
 
-				int privId = AccessManager.getPrivilegeId(priv.getText());
+				int privId = dataMan.getAccessManager().getPrivilegeId(priv.getText());
 
 				if (privId == -1)
 					throw new Exception("Privilege not found : "+ priv.getText());

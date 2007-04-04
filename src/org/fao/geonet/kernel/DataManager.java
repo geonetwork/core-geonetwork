@@ -263,6 +263,13 @@ public class DataManager
 	}
 
 	//--------------------------------------------------------------------------
+
+	public AccessManager getAccessManager()
+	{
+		return accessMan;
+	}
+
+	//--------------------------------------------------------------------------
 	//---
 	//--- General purpose API
 	//---

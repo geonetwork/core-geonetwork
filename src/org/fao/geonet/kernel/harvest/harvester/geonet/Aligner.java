@@ -357,7 +357,7 @@ public class Aligner
 			Element oper   = (Element) opers.get(j);
 			String  opName = oper.getAttributeValue("name");
 
-			int opId = AccessManager.getPrivilegeId(opName);
+			int opId = dataMan.getAccessManager().getPrivilegeId(opName);
 
 			log.debug("       --> "+ opName);
 			dataMan.setOperation(dbms, id, grpId, opId +"");
@@ -602,7 +602,7 @@ public class Aligner
 		{
 			Element oper   = (Element) opers.get(j);
 			String  opName = oper.getAttributeValue("name");
-			String  opId   = AccessManager.getPrivilegeId(opName) +"";
+			String  opId   = dataMan.getAccessManager().getPrivilegeId(opName) +"";
 
 			if (!isOperationSet(locOper, grpId, opId))
 			{

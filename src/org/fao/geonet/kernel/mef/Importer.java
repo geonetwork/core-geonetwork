@@ -227,7 +227,7 @@ class Importer
 			Element oper   = (Element) opers.get(j);
 			String  opName = oper.getAttributeValue("name");
 
-			int opId = AccessManager.getPrivilegeId(opName);
+			int opId = dm.getAccessManager().getPrivilegeId(opName);
 
 			if (opId == -1)
 				Log.debug(Geonet.MEF, "   Skipping --> "+ opName);

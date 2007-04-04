@@ -23,6 +23,8 @@
 
 package org.fao.geonet.kernel;
 
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -64,18 +66,25 @@ public class AccessManager
 	/** Loads all permissions from database and caches them
 	 */
 
-	public AccessManager(SettingManager sm)
+	public AccessManager(Dbms dbms, SettingManager sm) throws SQLException
 	{
 		settMan = sm;
 
-		//--- build Hashtable of all operations
-		hsAllOps.add(OPER_VIEW);
-		hsAllOps.add(OPER_DOWNLOAD);
-		hsAllOps.add(OPER_EDIT);
-		hsAllOps.add(OPER_NOTIFY);
-		hsAllOps.add(OPER_ADMIN);
-		hsAllOps.add(OPER_DYNAMIC);
-		hsAllOps.add(OPER_FEATURED);
+		List operList = dbms.select("SELECT * FROM Operations").getChildren();
+
+		for (Object o : operList)
+		{
+			Element oper = (Element) o;
+
+			String id   = oper.getChildText("id");
+			String name = oper.getChildText("name");
+
+			//--- build Hashtable of all operations
+			hsAllOps.add(id);
+
+			hmIdToName.put(Integer.parseInt(id), name);
+			hmNameToId.put(name, Integer.parseInt(id));
+		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -196,20 +205,16 @@ public class AccessManager
 
 	//--------------------------------------------------------------------------
 
-	public static int getPrivilegeId(String descr)
+	public int getPrivilegeId(String descr)
 	{
-		for(int i=0; i<privDescr.length; i++)
-			if (descr.equals(privDescr[i]))
-				return i;
-
-		return -1;
+		return hmNameToId.containsKey(descr) ? hmNameToId.get(descr) : -1;
 	}
 
 	//--------------------------------------------------------------------------
 
-	public static String getPrivilegeName(int id)
+	public String getPrivilegeName(int id)
 	{
-		return privDescr[id];
+		return hmIdToName.get(id);
 	}
 
 	//--------------------------------------------------------------------------
@@ -259,16 +264,11 @@ public class AccessManager
 	//---
 	//--------------------------------------------------------------------------
 
-	private static final String privDescr[] =
-										{
-											"view",  "download", "edit", "notify",
-											"admin", "dynamic",  "featured"
-										};
-
-	//--------------------------------------------------------------------------
-
 	private SettingManager  settMan;
 	private HashSet<String> hsAllOps = new HashSet<String>();
+
+	private HashMap<Integer, String> hmIdToName = new HashMap<Integer, String>();
+	private HashMap<String, Integer> hmNameToId = new HashMap<String, Integer>();
 }
 
 //=============================================================================
