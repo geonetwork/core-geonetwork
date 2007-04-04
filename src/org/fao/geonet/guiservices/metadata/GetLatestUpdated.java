@@ -23,18 +23,16 @@
 
 package org.fao.geonet.guiservices.metadata;
 
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.XmlSerializer;
-import org.fao.geonet.GeonetContext;
-
+import java.util.Iterator;
+import java.util.Set;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.AccessManager;
 import org.jdom.Element;
-
-import java.util.Iterator;
 
 //=============================================================================
 
@@ -76,13 +74,24 @@ public class GetLatestUpdated implements Service
 		if (System.currentTimeMillis() > _lastUpdateTime + _timeBetweenUpdates)
 		{
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+			AccessManager am = gc.getAccessManager();
+
 			Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+			Set<String> groups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
 
 			// only get public metadata (group 1: internet) viewable (operation O: view)
 
-			String query = "SELECT id FROM Metadata m, OperationAllowed o "+
-								"WHERE m.id=o.metadataId AND o.groupId=1 AND o.operationId=0 "+
-								"ORDER BY changeDate DESC";
+			String query = "SELECT id FROM Metadata, OperationAllowed "+
+								"WHERE id=metadataId AND operationId=0 AND (";
+
+			String aux = "";
+
+			for (String grpId : groups)
+				aux += " OR groupId="+grpId;
+
+			query += aux.substring(4);
+			query += ") ORDER BY changeDate DESC";
 
 			Element result = dbms.select(query);
 
