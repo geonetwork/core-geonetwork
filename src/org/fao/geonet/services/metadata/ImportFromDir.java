@@ -63,6 +63,22 @@ public class ImportFromDir implements Service
 
 	//--------------------------------------------------------------------------
 
+	private FilenameFilter mdFilter = new FilenameFilter()
+	{
+		public boolean accept(File dir, String name)
+		{
+			if (name.equals(CONFIG_FILE))
+				return false;
+
+			if (name.startsWith("."))
+				return false;
+
+			return name.endsWith(".xml");
+		}
+	};
+
+	//--------------------------------------------------------------------------
+
 	private String stylePath;
 
 	private static final String CONFIG_FILE = "import-config.xml";
@@ -122,11 +138,10 @@ public class ImportFromDir implements Service
 		String group    = Util.getParam(params, Params.GROUP);
 		String category = Util.getParam(params, Params.CATEGORY);
 		String style    = Util.getParam(params, Params.STYLESHEET);
-		String siteId   = Util.getParam(params, Params.SITE_ID,  gc.getSiteId());
 
 		boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
 
-		File files[] = new File(dir).listFiles(filter);
+		File files[] = new File(dir).listFiles(mdFilter);
 
 		if (files == null)
 			throw new Exception("Directory not found: " + dir);
@@ -154,7 +169,7 @@ public class ImportFromDir implements Service
 		//--- get exceptions that invalidate the index
 
 		for (Element xml : alMetadata)
-			insert(schema, xml, group, context, category, siteId);
+			insert(schema, xml, group, context, category);
 
 		return files.length;
 	}
@@ -191,8 +206,7 @@ public class ImportFromDir implements Service
 		{
 			context.debug("Scanning site : "+sites[i]);
 
-			String siteId   = sites[i].getName();
-			File   categs[] = sites[i].listFiles(filter);
+			File categs[] = sites[i].listFiles(filter);
 
 			if (categs == null)
 				throw new Exception("Cannot scan categories in : " + sites[i].getPath());
@@ -202,7 +216,7 @@ public class ImportFromDir implements Service
 				context.debug("   Scanning category : "+categs[j]);
 
 				String catDir  = categs[j].getName();
-				File   files[] = categs[j].listFiles(filter);
+				File   files[] = categs[j].listFiles(mdFilter);
 
 				if (files == null)
 					throw new Exception("Cannot scan files in : " + categs[j].getPath());
@@ -220,7 +234,7 @@ public class ImportFromDir implements Service
 					if (validate)
 						dm.validate(schema, xml);
 
-					alImport.add(new ImportInfo(schema, category, siteId, xml));
+					alImport.add(new ImportInfo(schema, category, xml));
 					counter++;
 				}
 			}
@@ -229,7 +243,7 @@ public class ImportFromDir implements Service
 		//--- step 2 : insert metadata
 
 		for (ImportInfo ii : alImport)
-			insert(ii.schema, ii.xml, group, context, ii.category, ii.siteId);
+			insert(ii.schema, ii.xml, group, context, ii.category);
 
 		return counter;
 	}
@@ -241,7 +255,7 @@ public class ImportFromDir implements Service
 	//--------------------------------------------------------------------------
 
 	private void insert(String schema, Element xml, String group, ServiceContext context,
-							  String category, String siteId) throws Exception
+							  String category) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getDataManager();
@@ -259,7 +273,8 @@ public class ImportFromDir implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		String id = dm.insertMetadata(dbms, schema, group, xml, context.getSerialFactory(), siteId, uuid);
+		String id = dm.insertMetadata(dbms, schema, group, xml, context.getSerialFactory(),
+												gc.getSiteId(), uuid);
 
 		if (!"_none_".equals(category))
 			dm.setCategory(dbms, id, category);
@@ -272,16 +287,14 @@ class ImportInfo
 {
 	public String  schema;
 	public String  category;
-	public String  siteId;
 	public Element xml;
 
 	//--------------------------------------------------------------------------
 
-	public ImportInfo(String schema, String category, String siteId, Element xml)
+	public ImportInfo(String schema, String category, Element xml)
 	{
 		this.schema   = schema;
 		this.category = category;
-		this.siteId   = siteId;
 		this.xml      = xml;
 	}
 }
