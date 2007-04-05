@@ -14,12 +14,12 @@
 				var invalid = " "; // Invalid character is a space
 				var minLength = 6; // Minimum length
 	
-				if (document.userupdateform.username.value.length &lt; 1 || document.userupdateform.surname.value.length &lt; 1 ||
-				document.userupdateform.name.value.length &lt; 1 || document.userupdateform.profile.value.length &lt; 1 )
+				if (document.userupdateform.username.value.length == 0)
 				{
-					alert('All fields are mandatory and must be filled in. Please try again.');
+					alert('The username field is mandatory.');
 					return;
 				}
+
 				var pw1 = document.userupdateform.password.value;
 				var pw2 = document.userupdateform.password2.value;
 	
@@ -47,6 +47,14 @@
 					alert ("You did not enter the same new password twice. Please re-enter your password.");
 					return;
 				}
+
+				// check at least one group selected
+				if ($F('groups') == '')
+				{
+					alert('Please, select at least one group');
+					return;
+				}
+				
 				// all ok, proceed
 				document.userupdateform.submit();
 			}//update
@@ -100,15 +108,15 @@
 			</xsl:if>
 			<table>
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/username"/></th>
+					<th class="padded"><xsl:value-of select="/root/gui/strings/username"/> (*)</th>
 					<td class="padded"><input class="content" type="text" name="username" value="{/root/response/record/username}"/></td>
 				</tr>
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/password"/></th>
+					<th class="padded"><xsl:value-of select="/root/gui/strings/password"/> (*)</th>
 					<td class="padded"><input class="content" type="password" name="password" value="{/root/response/record/password}"/></td>
 				</tr>
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/confirmPassword"/></th>
+					<th class="padded"><xsl:value-of select="/root/gui/strings/confirmPassword"/> (*)</th>
 					<td class="padded"><input class="content" type="password" name="password2" value="{/root/response/record/password}"/></td>
 				</tr>
 				<tr>
@@ -229,7 +237,7 @@
 				<tr id="group.list">
 					<th class="padded"><xsl:value-of select="/root/gui/strings/groups"/></th>
 					<td class="padded">
-						<select class="content" size="7" name="groups" multiple="">
+						<select class="content" size="7" name="groups" multiple="" id="groups">
 							<xsl:for-each select="/root/gui/groups/record">
 								<option value="{id}">
 									<xsl:variable name="aGroup" select="id"/>
