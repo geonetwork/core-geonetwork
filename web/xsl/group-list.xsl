@@ -8,19 +8,10 @@
 	-->
 	<xsl:template mode="script" match="/">
 		<script type="text/javascript" language="JavaScript">
-			function edit(a)
-			{
-				document.groupEditForm.id.value=a;
-				document.groupEditForm.submit();
-			}
-		
-			function delete1(b)
+			function delete1(url)
 			{
 				if(confirm("Delete the group ?"))
-				{
-					document.groupDeleteForm.id.value=b;
-					document.groupDeleteForm.submit();
-				}
+					load(url);
 			}
 		</script>
 	</xsl:template>
@@ -61,7 +52,7 @@
 					<td class="padded">
 						<button class="content" onclick="load('{/root/gui/locService}/group.get?id={id}')"><xsl:value-of select="/root/gui/strings/edit"/></button>
 						&#160;
-						<button class="content" onclick="load('{/root/gui/locService}/group.remove?id={id}')"><xsl:value-of select="/root/gui/strings/delete"/></button>
+						<button class="content" onclick="delete1('{/root/gui/locService}/group.remove?id={id}')"><xsl:value-of select="/root/gui/strings/delete"/></button>
 					</td>
 				</tr>
 			</xsl:for-each>
