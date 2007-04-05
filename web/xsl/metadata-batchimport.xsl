@@ -98,10 +98,6 @@
 						</select>
 					</td>
 				</tr>
-				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/siteId"/></th>
-					<td class="padded"><input class="content" type="text" name="siteId"/></td>
-				</tr>
 			</table>
 		</form>
 	</xsl:template>
