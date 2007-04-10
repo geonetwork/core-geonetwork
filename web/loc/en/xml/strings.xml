@@ -420,4 +420,5 @@
 	<UserAdmin>User administrator</UserAdmin>
 	<Editor>Editor</Editor>
 	<RegisteredUser>Registered user</RegisteredUser>
+	<selectAll>Select All</selectAll>
 </strings>

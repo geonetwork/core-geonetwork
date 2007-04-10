@@ -3,6 +3,18 @@
 	
 	<xsl:include href="main.xsl"/>
 
+	<xsl:template mode="script" match="/">
+		<script type="text/javascript" language="JavaScript">			
+			function selectAll(id)
+			{
+				var list = $(id).getElementsByTagName('input');
+			
+				for (var i=0; i &lt; list.length; i++)
+					list[i].checked = true;
+			}
+		</script>
+	</xsl:template>
+
 	<!--
 	page content
 	-->
@@ -29,14 +41,14 @@
 									<th class="padded-center"><xsl:value-of select="label/child::*[name() = $lang]"/></th>
 								</xsl:if>
 							</xsl:for-each>
-							
+							<td/>
 						</tr>
 			
 						<!-- loop on 'All' and 'Internal' groups -->
 						<xsl:for-each select="/root/response/groups/group">
 							<xsl:if test="id='0' or id='1'">
 								<xsl:variable name="groupId" select="id"/>
-								<tr>
+								<tr id="row.{id}">
 									<td class="padded"><xsl:value-of select="label/child::*[name() = $lang]"/></td>
 									
 									<!-- loop on all operations,  edit, notify and admin privileges are hidden-->
@@ -51,6 +63,21 @@
 											</td>
 										</xsl:if>
 									</xsl:for-each>
+
+									<!-- fill empty slots -->
+									<xsl:for-each select="oper">
+										<xsl:if test="id='2' or id='4' or id='3'">
+											<td/>
+										</xsl:if>
+									</xsl:for-each>
+
+									<!-- 'select all' button -->
+
+									<td>
+										<button class="content" onclick="selectAll('row.{id}'); return false;">
+											<xsl:value-of select="/root/gui/strings/selectAll"/>
+										</button>
+									</td>
 								</tr>
 							</xsl:if>
 						</xsl:for-each>
@@ -65,7 +92,7 @@
 						<xsl:for-each select="/root/response/groups/group">
 							<xsl:if test="id!='0' and id!='1'">
 								<xsl:variable name="groupId" select="id"/>
-								<tr>
+								<tr id="row.{id}">
 									<td class="padded"><xsl:value-of select="label/child::*[name() = $lang]"/></td>
 									
 									<!-- loop on all operations, add edit, notify and admin privileges to the end -->
@@ -91,6 +118,14 @@
 											</td>
 										</xsl:if>
 									</xsl:for-each>
+
+									<!-- 'select all' button -->
+
+									<td>
+										<button class="content" onclick="selectAll('row.{id}'); return false;">
+											<xsl:value-of select="/root/gui/strings/selectAll"/>
+										</button>
+									</td>
 								</tr>
 							</xsl:if>
 						</xsl:for-each>
