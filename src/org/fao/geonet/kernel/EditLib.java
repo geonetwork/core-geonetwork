@@ -478,7 +478,7 @@ public class EditLib
 			{
 				String childQName = type.getElementAt(i);
 
-				System.out.println("- childName = " + childQName); // DEBUG
+//				System.out.println("- childName = " + childQName); // DEBUG
 
 				if (childQName == null) continue; // schema extensions cause null types; just skip
 
