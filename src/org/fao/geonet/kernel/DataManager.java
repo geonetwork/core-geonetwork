@@ -357,7 +357,7 @@ public class DataManager
 	/** Create a new metadata duplicating an existing template
 	  */
 
-	public String createMetadata(Dbms dbms, String templateId, String groupId,
+	public String createMetadata(Dbms dbms, String templateId, Set<String> groups,
 										  SerialFactory sf, String source) throws Exception
 	{
 		String query = "SELECT schemaId, data FROM Metadata WHERE id="+ templateId;
@@ -382,7 +382,8 @@ public class DataManager
 
 		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid);
 
-		copyDefaultPrivForGroup(dbms, id, groupId);
+		for (String groupId : groups)
+			copyDefaultPrivForGroup(dbms, id, groupId);
 
 		//--- store metadata categories copying them from the template
 

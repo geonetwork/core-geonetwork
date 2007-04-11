@@ -42,9 +42,9 @@
 				<xsl:variable name="lang" select="/root/gui/language"/>
 
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/group"/></th>
+					<th class="padded"><xsl:value-of select="/root/gui/strings/groups"/></th>
 					<td class="padded">
-						<select class="content" name="group" size="1">
+						<select class="content" name="group" size="10" multiple="">
 							<xsl:for-each select="/root/gui/groups/record">
 								<option value="{id}">
 									<xsl:value-of select="label/child::*[name() = $lang]"/>

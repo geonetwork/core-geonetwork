@@ -23,11 +23,11 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.util.HashSet;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
@@ -56,7 +56,14 @@ public class Create implements Service
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		String template = Util.getParam(params, Params.ID);
-		String group    = Util.getParam(params, Params.GROUP);
+
+		HashSet<String> groups = new HashSet<String>();
+
+		for (Object g : params.getChildren(Params.GROUP))
+		{
+			Element group = (Element) g;
+			groups.add(group.getText());
+		}
 
 		//--- query the data manager
 
@@ -64,7 +71,7 @@ public class Create implements Service
 
 		DataManager dm = gc.getDataManager();
 
-		String mdId = dm.createMetadata(dbms, template, group, context.getSerialFactory(), gc.getSiteId());
+		String mdId = dm.createMetadata(dbms, template, groups, context.getSerialFactory(), gc.getSiteId());
 
 		return new Element(Jeeves.Elem.RESPONSE)
 							.addContent(new Element(Geonet.Elem.ID).setText(mdId));
