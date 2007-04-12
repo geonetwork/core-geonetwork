@@ -222,7 +222,11 @@
 
 		<xsl:for-each select="catLang">
 			<language>
-				<gco:CharacterString><xsl:value-of select="languageCode/@value"/></gco:CharacterString>
+				<gco:CharacterString>
+					<xsl:call-template name="convertLanguage">
+						<xsl:with-param name="code" select="languageCode/@value"/>
+					</xsl:call-template>
+				</gco:CharacterString>
 			</language>
 		</xsl:for-each>
 

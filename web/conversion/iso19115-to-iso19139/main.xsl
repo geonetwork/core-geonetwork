@@ -28,6 +28,10 @@
 	
 	<!-- ============================================================================= -->
 
+	<xsl:variable name="mapping" select="document('iso-mapping.xml')/mapping"/>
+
+	<!-- ============================================================================= -->
+
 	<xsl:template match="/">
 		<xsl:apply-templates/>
 	</xsl:template>
@@ -49,7 +53,11 @@
 
 			<xsl:for-each select="mdLang">
 				<language>
-					<gco:CharacterString><xsl:value-of select="languageCode/@value"/></gco:CharacterString>
+					<gco:CharacterString>
+						<xsl:call-template name="convertLanguage">
+							<xsl:with-param name="code" select="languageCode/@value"/>
+						</xsl:call-template>
+					</gco:CharacterString>
 				</language>
 			</xsl:for-each>
 
@@ -222,6 +230,30 @@
 		</MD_Metadata>
 	</xsl:template>
 	
+	<!-- ============================================================================= -->
+
+	<xsl:template name="convertLanguage">
+		<xsl:param name="code"/>
+
+		<xsl:choose>
+			<xsl:when test="string-length($code) &lt; 3">
+				<xsl:variable name="mapped" select="$mapping/map[@shortCode=$code]/@longCode"/>
+
+				<xsl:choose>
+					<xsl:when test="$mapped">
+						<xsl:value-of select="$mapped"/>
+					</xsl:when>
+
+					<xsl:otherwise>eng</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+
+			<xsl:otherwise>
+				<xsl:value-of select="$code"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
 	<!-- ============================================================================= -->
 
 </xsl:stylesheet>
