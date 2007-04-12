@@ -9,9 +9,10 @@
 
 	<xsl:variable name="codelists" select="document('../xml/schemas/iso19139/schema/resources/Codelist/gmxCodelists.xml')"/>
 	
-	<!--
-	default: in simple mode just a flat list
-	-->
+	<!-- ============================================================================= -->
+	<!-- default: in simple mode just a flat list -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="*|@*">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -44,9 +45,10 @@
 			
 	</xsl:template>
 	
-	<!--
-	these elements should be boxed
-	-->
+	<!-- ============================================================================= -->
+	<!-- these elements should be boxed -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:contact|gmd:identificationInfo|gmd:distributionInfo|gmd:graphicOverview|gmd:descriptiveKeywords|gmd:spatialRepresentationInfo|gmd:pointOfContact|gmd:dataQualityInfo|gmd:referenceSystemInfo|gmd:equivalentScale|gmd:projection|gmd:ellipsoid|gmd:extent|gmd:geographicBox|gmd:MD_Distributor">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -57,9 +59,10 @@
 		</xsl:apply-templates>
 	</xsl:template>
 	
-	<!--
-	some gco: elements
-	-->
+	<!-- ============================================================================= -->
+	<!-- some gco: elements -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean]">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -70,6 +73,8 @@
 		</xsl:call-template>
 	</xsl:template>
 	
+	<!-- ============================================================================= -->
+
 	<xsl:template name="iso19139String">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -107,9 +112,10 @@
 		</xsl:apply-templates>
 	</xsl:template>
 	
-	<!--
-	codelists
-	-->
+	<!-- ============================================================================= -->
+	<!-- codelists -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:*[*/@codeList]">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -120,6 +126,8 @@
 		</xsl:call-template>
 	</xsl:template>
 	
+	<!-- ============================================================================= -->
+
 	<xsl:template name="iso19139Codelist">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -136,6 +144,8 @@
 		</xsl:apply-templates>
 	</xsl:template>
 	
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139GetAttributeText" match="@*">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -179,6 +189,7 @@
 		-->
 	</xsl:template>
 	
+	<!-- ============================================================================= -->
 	<!--
 	make the following fields always not editable:
 	dateStamp
@@ -187,6 +198,8 @@
 	fileIdentifier
 	characterSet
 	-->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:dateStamp|gmd:metadataStandardName|gmd:metadataStandardVersion|gmd:fileIdentifier" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -207,9 +220,10 @@
 		</xsl:call-template>
 	</xsl:template>
 	
-	<!--
-	electronicMailAddress
-	-->
+	<!-- ============================================================================= -->
+	<!-- electronicMailAddress -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:electronicMailAddress" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -232,9 +246,10 @@
 		</xsl:choose>
 	</xsl:template>
 	
-	<!--
-	descriptiveKeywords
-	-->
+	<!-- ============================================================================= -->
+	<!-- descriptiveKeywords -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:descriptiveKeywords">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -266,9 +281,10 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<!--
-	place keyword; only called in edit mode (see descriptiveKeywords template)
-	-->
+	<!-- ============================================================================= -->
+	<!-- place keyword; only called in edit mode (see descriptiveKeywords template) -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:keyword[following-sibling::gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='place']">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -303,9 +319,10 @@
 		</xsl:apply-templates>
 	</xsl:template>
 		
-	<!--
-	EX_GeographicBoundingBox
-	-->
+	<!-- ============================================================================= -->
+	<!-- EX_GeographicBoundingBox -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:EX_GeographicBoundingBox" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -375,6 +392,8 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139GeoBox" match="*">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -435,6 +454,8 @@
 		</table>
 	</xsl:template>
 	
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139VertElement" match="*">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -470,9 +491,10 @@
 		</xsl:call-template>
 	</xsl:template>
 
-	<!--
-	abstract
-	-->
+	<!-- ============================================================================= -->
+	<!-- abstract -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:abstract" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -484,10 +506,10 @@
 		</xsl:call-template>
 	</xsl:template>
 	
-	<!--
-	supplementalInformation
-	purpose
-	-->
+	<!-- ============================================================================= -->
+	<!-- supplementalInformation | purpose -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:supplementalInformation|gmd:purpose" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -499,11 +521,14 @@
 		</xsl:call-template>
 	</xsl:template>
 	
+	<!-- ============================================================================= -->
 	<!--
 	dateTime (format = %Y-%m-%dT%H:%M:00)
 	usageDateTime
 	plannedAvailableDateTime
 	-->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:dateTime|gmd:usageDateTime|gmd:plannedAvailableDateTime" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -567,12 +592,15 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<!-- ============================================================================= -->
 	<!--
 	date (format = %Y-%m-%d)
 	editionDate
 	dateOfNextUpdate
 	mdDateSt is not editable (!we use DateTime instead of only Date!)
 	-->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:date[gco:DateTime]|gmd:editionDate|gmd:dateOfNextUpdate" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -635,7 +663,10 @@
 		</xsl:choose>
 	</xsl:template>
 	
+	<!-- ============================================================================= -->
 	<!-- subtemplates -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="*[geonet:info/isTemplate='s']" priority="3">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -646,6 +677,7 @@
 		</xsl:apply-templates>
 	</xsl:template>
 	
+	<!-- ============================================================================= -->
 	<!--
 	placeholder
 	<xsl:template mode="iso19139" match="TAG">
@@ -655,10 +687,12 @@
 		BODY
 	</xsl:template>
 	-->
+	<!-- ============================================================================= -->
 
-	<!--
-	Metadata
-	-->
+	<!-- ============================================================================= -->
+	<!-- Metadata -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:MD_Metadata">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -798,6 +832,7 @@
 		</xsl:choose>
 	</xsl:template>
 	
+	<!-- ============================================================================= -->
 	<!--
 	simple mode; ISO order is:
 	- gmd:fileIdentifier
@@ -829,6 +864,8 @@
 	+ gmd:featureType
 	+ gmd:featureAttribute
 	-->
+	<!-- ============================================================================= -->
+
 	<xsl:template name="iso19139Simple">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -902,6 +939,57 @@
 		
 	</xsl:template>
 	
+	<!-- ============================================================================= -->
+
+	<xsl:template mode="iso19139" match="//gmd:language">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+
+		<xsl:apply-templates mode="simpleElement" select=".">
+			<xsl:with-param name="schema" select="$schema"/>
+			<xsl:with-param name="edit"   select="$edit"/>
+			<xsl:with-param name="text">
+				<xsl:apply-templates mode="iso19139GetIsoLanguage" select="gco:CharacterString">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
+				</xsl:apply-templates>
+			</xsl:with-param>
+		</xsl:apply-templates>
+	</xsl:template>
+	
+	<!-- ============================================================================= -->
+
+	<xsl:template mode="iso19139GetIsoLanguage" match="*">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+		
+		<xsl:variable name="lang"  select="/root/gui/language"/>
+		<xsl:variable name="value" select="string(.)"/>
+		
+		<xsl:choose>
+			<xsl:when test="$edit=true()">
+				<select class="md" name="_{geonet:element/@ref}" size="1">
+					<option name=""/>
+
+					<xsl:for-each select="/root/gui/isoLang/record">
+						<option value="{code}">
+							<xsl:if test="code = $value">
+								<xsl:attribute name="selected"/>
+							</xsl:if>							
+							<xsl:value-of select="label/child::*[name() = $lang]"/>
+						</option>
+					</xsl:for-each>
+				</select>
+			</xsl:when>
+
+			<xsl:otherwise>
+				<xsl:value-of select="/root/gui/isoLang/record[code=$value]/label/child::*[name() = $lang]"/>
+			</xsl:otherwise>
+		</xsl:choose>		
+	</xsl:template>
+
+	<!-- ============================================================================= -->
+
 	<xsl:template name="iso19139Simple2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -1023,6 +1111,7 @@
 		
 	</xsl:template>
 
+	<!-- ============================================================================= -->
 	<!--
 	FIXME
 	rpCntInfo: ISO order is:
@@ -1032,6 +1121,8 @@
 	- rpCntInfo
 	- role
 	-->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="mdContact|idPoC">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -1088,9 +1179,10 @@
 
 	</xsl:template>
 	
-	<!--
-	online resources
-	-->
+	<!-- ============================================================================= -->
+	<!-- online resources -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:CI_OnlineResource" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -1120,6 +1212,8 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+
+	<!-- ============================================================================= -->
 
 	<xsl:template mode="iso19139EditOnlineRes" match="*">
 		<xsl:param name="schema"/>
@@ -1177,9 +1271,10 @@
 		</xsl:apply-templates>
 	</xsl:template>
 	
-	<!--
-	online resources: WMS get map
-	-->
+	<!-- ============================================================================= -->
+	<!-- online resources: WMS get map -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-map') and gmd:name]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -1211,9 +1306,10 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<!--
-	online resources: WMS get capabilities
-	-->
+	<!-- ============================================================================= -->
+	<!-- online resources: WMS get capabilities -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-capabilities') and gmd:name]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -1245,9 +1341,10 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<!--
-	online resources: ARCIMS
-	-->
+	<!-- ============================================================================= -->
+	<!-- online resources: ARCIMS -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'ESRI:AIMS-') and contains(gmd:protocol/gco:CharacterString,'-get-image') and gmd:name]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -1279,9 +1376,10 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<!--
-	online resources: download
-	-->
+	<!-- ============================================================================= -->
+	<!-- online resources: download -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'WWW:DOWNLOAD-') and contains(gmd:protocol/gco:CharacterString,'http--download') and gmd:name]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -1313,9 +1411,10 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<!--
-	protocol
-	-->
+	<!-- ============================================================================= -->
+	<!-- protocol -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="gmd:protocol" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -1352,10 +1451,10 @@
 		</xsl:choose>
 	</xsl:template>
 	
-	<!--
-	FIXME
-	graphOver
-	-->
+	<!-- ============================================================================= -->
+	<!-- FIXME graphOver -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="graphOver">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -1367,9 +1466,10 @@
 		</xsl:if>
 	</xsl:template>
 	
-	<!--
-	FIXME
-	-->
+	<!-- ============================================================================= -->
+	<!-- FIXME 	-->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139EditGraphOver" match="*">
 		<xsl:param name="schema"/>
 		
@@ -1406,10 +1506,10 @@
 		</xsl:apply-templates>
 	</xsl:template>
 	
-	<!--
-	FIXME
-	bgFileDesc
-	-->
+	<!-- ============================================================================= -->
+	<!-- FIXME bgFileDesc -->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139" match="bgFileDesc">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -1445,9 +1545,10 @@
 		</xsl:choose>
 	</xsl:template>
 	
-	<!--
-	file upload/download utilities
-	-->
+	<!-- ============================================================================= -->
+	<!-- file upload/download utilities	-->
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139FileUpload" match="*">
 		<xsl:param name="access" select="'public'"/>
 	
@@ -1464,6 +1565,8 @@
 		</xsl:call-template>
 	</xsl:template>
 	
+	<!-- ============================================================================= -->
+
 	<xsl:template mode="iso19139FileRemove" match="*">
 		<xsl:param name="access" select="'public'"/>
 	
@@ -1578,10 +1681,9 @@
 	</xsl:template>
 	
 	<!-- ============================================================================= -->
-	
-	<!--
-	iso19139 complete tab template
-	-->
+	<!-- iso19139 complete tab template	-->
+	<!-- ============================================================================= -->
+
 	<xsl:template name="iso19139CompleteTab">
 		<xsl:param name="tabLink"/>
 		
@@ -1663,9 +1765,9 @@
 		
 	</xsl:template>
 	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- ============================================================================= -->
 	<!-- utilities -->
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- ============================================================================= -->
 	
 	<xsl:template mode="iso19139IsEmpty" match="*|@*|text()">
 		<xsl:choose>

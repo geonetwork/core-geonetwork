@@ -22,7 +22,7 @@
 				<call name="services" class="jeeves.guiservices.services.Get"/>
 				<call name="currTab"  class=".guiservices.util.GetCurrentMDTab"/>
 				<call name="sources"  class=".guiservices.util.Sources"/>
-				<xml name="isoLang" file="xml/iso-languages.xml" />
+				<call name="isoLang"  class=".guiservices.isolanguages.Get"/>
 			</output>
 
 			<error id="operation-not-allowed" sheet="error.xsl">
@@ -39,12 +39,12 @@
 				<call name="currTab"       class =".guiservices.util.GetCurrentMDTab"/>
 				<call name="groups"        class =".guiservices.groups.GetMine"/>
 				<call name="regions"       class =".guiservices.regions.Get"/>
-				<call name="sources"       class=".guiservices.util.Sources"/>
+				<call name="sources"       class =".guiservices.util.Sources"/>
+				<call name="isoLang"       class =".guiservices.isolanguages.Get"/>
 				<call name="subtemplates"  class ="jeeves.services.db.Select">
 					<param name="db"    value="main-db"/>
 					<param name="query" value="SELECT id, schemaId, root, title FROM Metadata WHERE isTemplate='s' ORDER BY root, title"/>
 				</call>
-				<xml  name="isoLang"  file  ="xml/iso-languages.xml" />
 			</output>
 		</service>
 

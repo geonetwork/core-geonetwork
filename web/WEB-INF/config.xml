@@ -172,10 +172,10 @@
 
 			<output sheet="search-results.xsl">
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="sources" class=".guiservices.util.Sources" />
-				<call name="services" class="jeeves.guiservices.services.Get" />
-				<xml name="repositories" file="xml/repositories.xml" localized="false" />
+				<call name="groups"         class=".guiservices.groups.GetMine" />
+				<call name="sources"        class=".guiservices.util.Sources" />
+				<call name="services"       class="jeeves.guiservices.services.Get" />
+				<xml  name="repositories"   file ="xml/repositories.xml" localized="false" />
 			</output>
 		</service>
 
@@ -187,10 +187,9 @@
 			</class>
 
 			<output sheet="remote-show.xsl">
-				<call name="services" class="jeeves.guiservices.services.Get" />
-				<call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
-				<xml name="isoLang" file="xml/iso-languages.xml" />
-				<xml name="repositories" file="xml/repositories.xml" localized="false" />
+				<call name="services"     class="jeeves.guiservices.services.Get" />
+				<call name="currTab"      class=".guiservices.util.GetCurrentMDTab" />
+				<xml  name="repositories" file ="xml/repositories.xml" localized="false" />
 			</output>
 		</service>
 
