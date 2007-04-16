@@ -11,7 +11,6 @@
 function ConfigView(strLoader)
 {
 	//--- setup validators
-	
 	this.strLoader = strLoader;
 	this.validator = new Validator(strLoader);
 
@@ -36,12 +35,12 @@ function ConfigView(strLoader)
 		
 		{ id:'proxy.host',   type:'length',   minSize :0,  maxSize :200 },
 		{ id:'proxy.host',   type:'hostname' },
-		{ id:'proxy.port',   type:'integer',  minValue:21, maxValue:65535, empty:true },
+		{ id:'proxy.port',   type:'integer',  minValue:21, maxValue:65535, empty:true }
 	]);
 	
 	this.z3950Shower = new Shower('z3950.enable', 'z3950.subpanel');	
 	this.proxyShower = new Shower('proxy.use',    'proxy.subpanel');
-	
+
 	strLoader.addListener(gn.wrap(this, this.constr_OK));
 }
 
@@ -109,9 +108,9 @@ ConfigView.prototype.getData = function()
 		
 		FEEDBACK_EMAIL     : $('feedback.email')    .value,
 		FEEDBACK_MAIL_HOST : $('feedback.mail.host').value,
-		FEEDBACK_MAIL_PORT : $('feedback.mail.port').value,
+		FEEDBACK_MAIL_PORT : $('feedback.mail.port').value		
 	}
-		
+	
 	return data;
 }
 

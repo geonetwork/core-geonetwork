@@ -30,11 +30,11 @@ gn.createRequest = function(elemName, params)
 	var request = '<request>\n';
 
 	if (typeof params == 'string')
-		request += '<'+ elemName +'>'+ params +'</'+ elemName +'>\n';
+		request += '<'+ elemName +'>'+ gn.escape(params) +'</'+ elemName +'>\n';
 	else
 	{ 
 		for (var i=0; i<params.length; i++)
-			request += '<'+ elemName +'>'+ params[i] +'</'+ elemName +'>\n';
+			request += '<'+ elemName +'>'+ gn.escape(params[i]) +'</'+ elemName +'>\n';
 	}
 
 	request += '</request>';
@@ -47,6 +47,7 @@ gn.createRequest = function(elemName, params)
 	- service : the geonetwork service to call
 	- request : the XML request in string form
 	- onSuccessFnc : function to call on success
+	- xmlResponse : 'true' if the response is XML. 'false' for text.
 */
 
 gn.send = function(service, request, onSuccessFnc, xmlResponse)
@@ -62,10 +63,8 @@ gn.send = function(service, request, onSuccessFnc, xmlResponse)
 			gn.showAjaxWait(false);
 			
 			if (onSuccessFnc)
-				if (xmlResponse)
-					onSuccessFnc(t.responseXML);
-				else
-					onSuccessFnc(t.responseText);
+				if (xmlResponse)	onSuccessFnc(gn.ieFix(t.responseXML.firstChild));
+					else				onSuccessFnc(t.responseText);
 
 		},
 		on404: function(t) 
@@ -80,7 +79,8 @@ gn.send = function(service, request, onSuccessFnc, xmlResponse)
 			if (t.status >= 400 && t.status <= 500)
 			{
 				if (onSuccessFnc)
-					onSuccessFnc(t.responseXML);
+					if (xmlResponse)	onSuccessFnc(gn.ieFix(t.responseXML.firstChild));
+						else				onSuccessFnc(t.responseText);
 			}
 			else		
 				alert('Error ' + t.status + ' -- ' + t.statusText);
@@ -109,15 +109,15 @@ gn.showAjaxWait = function(yesno)
 
 gn.xmlToString = function(xml, ident)
 {
+	if (xml == null)
+		throw 'gn.xmlToString: xml is null';
+	
 	if (!ident)
 		ident = '';
 		
-	if (xml == null)
-		throw 'gn.xmlToString: xml is null';
-		
 	//--- skip document node
 
-	if (xml.nodeType == Node.DOCUMENT_NODE)
+	if (xml.nodeType == 9) //--- DOCUMENT_NODE
 		xml = xml.firstChild;
 
 	var result = ident +'<'+ xml.nodeName;
@@ -132,7 +132,7 @@ gn.xmlToString = function(xml, ident)
 		result += ' '+ name +'="'+ gn.escape(value) +'"';
 	}
 
-	result += '>\n'
+	result += '>\n';
 
 	//--- handle children
 
@@ -145,15 +145,15 @@ gn.xmlToString = function(xml, ident)
 
 gn.xmlToStringCont = function(xml, ident)
 {
-	if (!ident)
-		ident = '';
-		
 	if (xml == null)
 		throw 'gn.xmlToStringCont: xml is null';
 		
+	if (!ident)
+		ident = '';
+		
 	//--- skip document node
 
-	if (xml.nodeType == Node.DOCUMENT_NODE)
+	if (xml.nodeType == 9) //--- DOCUMENT_NODE
 		xml = xml.firstChild;
 	
 	var result = '';
@@ -162,10 +162,10 @@ gn.xmlToStringCont = function(xml, ident)
 	{
 		var child = xml.childNodes[i];
 		
-		if (child.nodeType == Node.ELEMENT_NODE)
+		if (child.nodeType == 1) //--- ELEMENT_NODE
 			result += gn.xmlToString(child, ident +'   ');
 			
-		else if (child.nodeType == Node.TEXT_NODE)
+		else if (child.nodeType == 3) //--- TEXT_NODE
 			result += gn.escape(child.nodeValue);
 	}
 
@@ -176,7 +176,7 @@ gn.xmlToStringCont = function(xml, ident)
 
 gn.visit = function(node, callBack)
 {
-	if (node.nodeType == Node.DOCUMENT_NODE)
+	if (node.nodeType == 9) //--- DOCUMENT_NODE
 		node = node.firstChild;
 	
 	var array = [ node ];
@@ -192,7 +192,7 @@ gn.visit = function(node, callBack)
 		
 		while (node != null)
 		{
-			if (node.nodeType == Node.ELEMENT_NODE)
+			if (node.nodeType == 1) //--- ELEMENT_NODE
 				array.push(node);
 			
 			node = node.nextSibling;
@@ -211,7 +211,7 @@ gn.children = function(xml)
 		
 	while (xml != null)
 	{
-		if (xml.nodeType == Node.ELEMENT_NODE)
+		if (xml.nodeType == 1) //--- ELEMENT_NODE
 			result.push(xml);
 			
 		xml = xml.nextSibling;
@@ -222,37 +222,61 @@ gn.children = function(xml)
 
 //=====================================================================================
 
-gn.evalXPath = function(xmlNode, xpath)
+gn.evalXPath = function(xml, xpath)
 {
 	var names = xpath.split('/');
 			
 	for (var i=0; i<names.length; i++)
 	{	
-		xmlNode = xmlNode.firstChild;
+		xml = xml.firstChild;
 		
 		var found = false;
 		
-		while (xmlNode != null && !found)
+		while (xml != null && !found)
 		{
-			if (xmlNode.nodeType == Node.ELEMENT_NODE && xmlNode.nodeName == names[i])
+			if (xml.nodeType == 1 && xml.nodeName == names[i])
 				found = true;
 			else
-				xmlNode = xmlNode.nextSibling;
+				xml = xml.nextSibling;
 		}
 		
-		if (xmlNode == null)
+		if (xml == null)
 			return null;
 	
 	}
 	
-	return xmlNode.textContent;
+	return gn.textContent(xml);
+}
+
+//=====================================================================================
+
+gn.textContent = function(xml)
+{
+	//--- firefox uses this part
+	
+	if (xml.textContent)
+		return xml.textContent;
+		
+	//--- this is an hack for IE or other browsers
+		
+	var result = '';
+	
+	for (var i=0; i<xml.childNodes.length; i++)
+	{
+		var child = xml.childNodes[i];
+		
+		if (child.nodeType == 3) //--- TEXT_NODE
+			result += child.nodeValue;
+	}
+
+	return result;
 }
 
 //=====================================================================================
 
 gn.getElementById = function(node, id)
 {
-	var result = null
+	var result = null;
 	
 	gn.visit(node, function(node)
 	{
@@ -357,10 +381,10 @@ gn.showError = function(message, xmlResult)
 		text += 'Error : '+ errId +'\n';
 		
 	if (errMsg.length != 0)
-		text += 'Message : '+ errMsg[0].textContent +'\n';
+		text += 'Message : '+ gn.textContent(errMsg[0]) +'\n';
 	
 	if (object.length != 0)
-		text += 'Object : '+ object[0].textContent +'\n';
+		text += 'Object : '+ gn.textContent(object[0]) +'\n';
 	
 	alert(text);
 }
@@ -377,6 +401,20 @@ gn.wait = function(millis)
 		curDate = new Date(); 
 	} 
 	while (curDate-date < millis);
+}
+
+//=====================================================================================
+
+gn.ieFix = function(xml)
+{
+	//--- this is a fix for IE: the first node is a processing instruction 
+	//--- If we use Node.ELEMENT_NODE, it seems that IE raises errors on some
+	//--- pages (with the same code!!!).
+	
+	if (xml.nodeType != 1) //--- ELEMENT_NODE
+		return xml.nextSibling;
+		
+	return xml;
 }
 
 //=====================================================================================
@@ -406,7 +444,7 @@ gui.setupTooltips = function(xml)
 	
 	while (node != null)
 	{
-		if (node.nodeType == Node.ELEMENT_NODE)
+		if (node.nodeType == 1) //--- ELEMENT_NODE
 		{
 			var elem = $(node.getAttribute('id'));
 			var mesg = gn.xmlToStringCont(node);
@@ -455,17 +493,19 @@ function XMLLoader(file)
 {
 	this.listeners = [];
 
-	var _this = this;
+	new URLLoader(file, gn.wrap(this, this.constr_OK));
+}
+
+//-------------------------------------------------------------------------------------
+
+XMLLoader.prototype.constr_OK = function(t)
+{
+	this.strings = gn.ieFix(t.responseXML.firstChild);
 	
-	new URLLoader(file, gn.wrap(this, function(t) 
-	{
-		_this.strings = t.responseXML.firstChild;
+	var list = this.listeners;
 		
-		var list = _this.listeners;
-		
-		for (var i=0; i<list.length; i++)
-			list[i]();
-	}));
+	for (var i=0; i<list.length; i++)
+		list[i]();	
 }
 
 //=====================================================================================
@@ -486,7 +526,7 @@ XMLLoader.prototype.getText = function(name)
 	var list = node.getElementsByTagName(name);
 	
 	if (list.length == 0)	return '*not-found:'+ name +'*';
-		else						return list[0].textContent;
+		else						return gn.textContent(list[0]);
 }
 
 //=====================================================================================
@@ -495,7 +535,7 @@ XMLLoader.prototype.getNode = function(name)
 {
 	if (name)
 		return this.strings.getElementsByTagName(name)[0];
-		
+	
 	return this.strings;
 }
 
@@ -543,7 +583,7 @@ function Shower(sourceId, targetId)
 	this.source = $(sourceId);
 	this.target = $(targetId);
 	
-	$(sourceId).onchange = gn.wrap(this, this.update);
+	Event.observe(this.source, 'change', gn.wrap(this, this.update));
 	
 	this.update();
 }
@@ -563,7 +603,8 @@ Shower.prototype.update = function()
 //=== Shows a tooltip for an element.
 //=====================================================================================
 
-/* elem can be a DOM element or its id
+/* 'elem' can be a DOM element or its id. 
+   'message' is a string containing simple text or escaped HTML code
 */
 
 function Tooltip(elem, message)

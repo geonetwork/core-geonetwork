@@ -194,17 +194,17 @@
 
 			<tr>
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/createGroups"/></td>
-				<td class="padded"><input id="gn.createGroups" class="content" type="checkbox" value=""/></td>
+				<td class="padded"><input id="gn.createGroups" type="checkbox" value=""/></td>
 			</tr>
 
 			<tr>
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/createCateg"/></td>
-				<td class="padded"><input id="gn.createCateg" class="content" type="checkbox" value=""/></td>
+				<td class="padded"><input id="gn.createCateg" type="checkbox" value=""/></td>
 			</tr>
 			
 			<tr>
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/oneRun"/></td>
-				<td class="padded"><input id="gn.oneRunOnly" class="content" type="checkbox" value=""/></td>
+				<td class="padded"><input id="gn.oneRunOnly" type="checkbox" value=""/></td>
 			</tr>
 		</table>
 	</xsl:template>
@@ -270,17 +270,17 @@
 
 			<tr>
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/oneRun"/></td>
-				<td class="padded"><input id="waf.oneRunOnly" class="content" type="checkbox" value=""/></td>
+				<td class="padded"><input id="waf.oneRunOnly" type="checkbox" value=""/></td>
 			</tr>
 			
 			<tr>
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/validate"/></td>
-				<td class="padded"><input id="waf.validate" class="content" type="checkbox" value=""/></td>
+				<td class="padded"><input id="waf.validate" type="checkbox" value=""/></td>
 			</tr>
 
 			<tr>
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/structure"/></td>
-				<td class="padded"><input id="waf.structure" class="content" type="checkbox" value=""/></td>
+				<td class="padded"><input id="waf.structure" type="checkbox" value=""/></td>
 			</tr>
 
 		</table>

@@ -152,7 +152,7 @@ HarvestView.prototype.getSiteName = function()
 	if (ctrl.options.length == 0)
 		return null;
 		
-	return ctrl.options[ctrl.selectedIndex].textContent;
+	return gn.textContent(ctrl.options[ctrl.selectedIndex]);
 }
 
 //=====================================================================================
@@ -522,7 +522,7 @@ HarvestView.prototype.addGroupRow = function(xmlGroup)
 	for(var i=0; i<ctrl.options.length; i++)
 		if (ctrl.options[i].value == id)
 		{
-			name = ctrl.options[i].textContent;
+			name = gn.textContent(ctrl.options[i]);
 //			ctrl.options[i].style.background = '#D0D0D0';
 			break;
 		}

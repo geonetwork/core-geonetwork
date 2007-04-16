@@ -27,9 +27,6 @@ Model.prototype.getEntityList = function(entity, callBack)
 
 Model.prototype.getEntityList_OK = function(xml)
 {
-	//--- skip the document node
-	xml = xml.firstChild;
-
 	if (xml.nodeName == 'error')
 		gn.showError(this.strLoader.getText('cannotGetList'), xml);
 	else
@@ -56,20 +53,16 @@ Model.prototype.convertEntity = function(xml)
 		id : xml.getAttribute('id')
 	};
 	
-	var node = xml.firstChild;
+	var list = gn.children(xml);
 	
-	while (node != null)
+	for (var i=0; i<list.length; i++)
 	{
-		if (node.nodeType == Node.ELEMENT_NODE)
-		{
-			var name = node.nodeName;
-			var value= node.textContent;
+		var node = list[i];
+		var name = node.nodeName;
+		var value= gn.textContent(node);
 			
-			if (name == 'label')	data[name] = this.convertLabel(node);
-				else					data[name] = value;
-		}
-		
-		node = node.nextSibling;
+		if (name == 'label')	data[name] = this.convertLabel(node);
+			else					data[name] = value;
 	}
 	
 	return data;
@@ -80,19 +73,16 @@ Model.prototype.convertEntity = function(xml)
 Model.prototype.convertLabel = function(xml)
 {
 	var data = {};	
-	var node = xml.firstChild;
 	
-	while (node != null)
+	var list = gn.children(xml);
+	
+	for (var i=0; i<list.length; i++)
 	{
-		if (node.nodeType == Node.ELEMENT_NODE)
-		{
-			var name = node.nodeName;
-			var value= node.textContent;
+		var node = list[i];
+		var name = node.nodeName;
+		var value= gn.textContent(node);
 			
-			data[name] = value;
-		}
-		
-		node = node.nextSibling;
+		data[name] = value;
 	}
 	
 	return data;
@@ -118,9 +108,6 @@ Model.prototype.update = function(data, callBack)
 
 Model.prototype.update_OK = function(xml)
 {
-	//--- skip the document node
-	xml = xml.firstChild;
-	
 	if (xml.nodeName == 'error')
 		gn.showError(this.strLoader.getText('cannotSave'), xml);
 	else

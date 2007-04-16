@@ -38,9 +38,6 @@ Harvesting.prototype.edit = function(id)
 
 Harvesting.prototype.editSuccess = function(xml)
 {
-	//--- skip the document node
-	var xmlEntry = xml.firstChild;
-
 	if (xmlEntry.nodeName == 'error')
 		gn.showError(xmlLoader.getText('cannotGet'), xmlEntry);
 	else
@@ -110,9 +107,6 @@ Harvesting.prototype.update = function()
 
 Harvesting.prototype.addSuccess = function(xml)
 {
-	//--- skip the document node
-	var xmlNode = xml.firstChild;
-	
 	if (xmlNode.nodeName == 'error')
 		gn.showError(xmlLoader.getText('cannotAdd'), xmlNode);
 	else
@@ -126,9 +120,6 @@ Harvesting.prototype.addSuccess = function(xml)
 
 Harvesting.prototype.updateSuccess = function(xml)
 {
-	//--- skip the document node
-	var xmlNode = xml.firstChild;
-	
 	if (xmlNode.nodeName == 'error')
 		gn.showError(xmlLoader.getText('cannotUpdate'), xmlNode);
 	else
@@ -160,14 +151,11 @@ Harvesting.prototype.remove = function()
 
 Harvesting.prototype.removeSuccess = function(xml)
 {
-	//--- skip the document node
-	var xmlRoot = xml.firstChild;
-
-	if (xmlRoot.nodeName == 'error')
-		gn.showError(xmlLoader.getText('cannotRemove'), xmlRoot);
+	if (xml.nodeName == 'error')
+		gn.showError(xmlLoader.getText('cannotRemove'), xml);
 	else
 	{
-		var ids = xmlRoot.getElementsByTagName('id');
+		var ids = xml.getElementsByTagName('id');
 	
 		for (var i=0; i<ids.length; i++)
 		{
@@ -194,17 +182,16 @@ Harvesting.prototype.refresh = function()
 
 Harvesting.prototype.refreshSuccess = function(xml)
 {
-	var entries = xml.firstChild;
-	
-	if (entries.nodeName == 'error')
-		gn.showError(xmlLoader.getText('cannotGet'), entries);
+	if (xml.nodeName == 'error')
+		gn.showError(xmlLoader.getText('cannotGet'), xml);
 	else
 	{
+		var entries = gn.children(xml);
+		
 		//--- add all harvesting entries to list
-	
-		for (var i=0; i<entries.childNodes.length; i++)
-			if (entries.childNodes[i].nodeType == Node.ELEMENT_NODE)
-				view.append(entries.childNodes[i]);
+		
+		for (var i=0; i<entries.length; i++)
+			view.append(entries[i]);
 	}
 }
 
@@ -225,14 +212,11 @@ Harvesting.prototype.start = function()
 
 Harvesting.prototype.startSuccess = function(xml)
 {
-	//--- skip the document node
-	var xmlRoot = xml.firstChild;
-
-	if (xmlRoot.nodeName == 'error')
-		gn.showError(xmlLoader.getText('cannotStart'), xmlRoot);
+	if (xml.nodeName == 'error')
+		gn.showError(xmlLoader.getText('cannotStart'), xml);
 	else
 	{
-		var ids = xmlRoot.getElementsByTagName('id');
+		var ids = xml.getElementsByTagName('id');
 	
 		for (var i=0; i<ids.length; i++)
 		{
@@ -265,14 +249,11 @@ Harvesting.prototype.stop = function()
 
 Harvesting.prototype.stopSuccess = function(xml)
 {
-	//--- skip the document node
-	var xmlRoot = xml.firstChild;
-
-	if (xmlRoot.nodeName == 'error')
-		gn.showError(xmlLoader.getText('cannotStop'), xmlRoot);
+	if (xml.nodeName == 'error')
+		gn.showError(xmlLoader.getText('cannotStop'), xml);
 	else
 	{
-		var ids = xmlRoot.getElementsByTagName('id');
+		var ids = xml.getElementsByTagName('id');
 	
 		for (var i=0; i<ids.length; i++)
 		{
@@ -305,14 +286,11 @@ Harvesting.prototype.run = function()
 
 Harvesting.prototype.runSuccess = function(xml)
 {
-	//--- skip the document node
-	var xmlRoot = xml.firstChild;
-
-	if (xmlRoot.nodeName == 'error')
-		gn.showError(xmlLoader.getText('cannotRun'), xmlRoot);
+	if (xml.nodeName == 'error')
+		gn.showError(xmlLoader.getText('cannotRun'), xml);
 	else
 	{
-		var ids = xmlRoot.getElementsByTagName('id');
+		var ids = xml.getElementsByTagName('id');
 	
 		for (var i=0; i<ids.length; i++)
 		{
@@ -372,20 +350,17 @@ Harvesting.prototype.retrieveSites = function()
 
 Harvesting.prototype.retrieveSuccess = function(xml)
 {
-	//--- skip the document node
-	var xmlNode = xml.firstChild;
-	
-	if (xmlNode.nodeName == 'error')
-		gn.showError(xmlLoader.getText('cannotRetrieve'), xmlNode);
+	if (xml.nodeName == 'error')
+		gn.showError(xmlLoader.getText('cannotRetrieve'), xml);
 	else
 	{
 		view.clearSiteId();
 		
-		var xmlSite  = xmlNode.getElementsByTagName('site')           [0];
-		var xmlNodes = xmlNode.getElementsByTagName('harvestingNodes')[0];
+		var xmlSite  = xml.getElementsByTagName('site')           [0];
+		var xmlNodes = xml.getElementsByTagName('harvestingNodes')[0];
 		
-		var name   = xmlSite.getElementsByTagName('name')  [0].textContent;
-		var siteId = xmlSite.getElementsByTagName('siteId')[0].textContent;
+		var name   = gn.textContent(xmlSite.getElementsByTagName('name')  [0]);
+		var siteId = gn.textContent(xmlSite.getElementsByTagName('siteId')[0]);
 		
 		view.addSiteId(siteId, name);
 		
@@ -395,9 +370,9 @@ Harvesting.prototype.retrieveSuccess = function(xml)
 		{
 			xmlNode = nodeList[i];
 		
-			name   = xmlNode.getElementsByTagName('name')    [0].textContent;
-			siteId = xmlNode.getElementsByTagName('siteId')  [0].textContent;
-			count  = xmlNode.getElementsByTagName('metadata')[0].textContent;
+			name   = gn.textContent(xmlNode.getElementsByTagName('name')    [0]);
+			siteId = gn.textContent(xmlNode.getElementsByTagName('siteId')  [0]);
+			count  = gn.textContent(xmlNode.getElementsByTagName('metadata')[0]);
 			
 			if (count == '')
 				count = '0';
@@ -422,16 +397,13 @@ Harvesting.prototype.refreshGroups = function()
 
 Harvesting.prototype.refreshGroupsSuccess = function(xml)
 {
-	//--- skip the document node
-	var xmlNode = xml.firstChild;
-	
-	if (xmlNode.nodeName == 'error')
-		gn.showError(xmlLoader.getText('cannotRetrieve'), xmlNode);
+	if (xml.nodeName == 'error')
+		gn.showError(xmlLoader.getText('cannotRetrieve'), xml);
 	else
 	{
 		view.clearGroups();
 		
-		var groups = xmlNode.getElementsByTagName('group');
+		var groups = xml.getElementsByTagName('group');
 		
 		this.refreshGroupsAdd('0', groups);
 		this.refreshGroupsAdd('1', groups);
@@ -441,7 +413,7 @@ Harvesting.prototype.refreshGroupsSuccess = function(xml)
 			var group = groups[i];
 		
 			var id  = group.getAttribute('id');
-			var name= group.getElementsByTagName(Env.lang)[0].textContent;
+			var name= gn.textContent(group.getElementsByTagName(Env.lang)[0]);
 							
 			if (id != '0' && id != '1')
 				view.addGroup(id, name);				
@@ -458,7 +430,7 @@ Harvesting.prototype.refreshGroupsAdd = function(selId, groups)
 		var group = groups[i];
 		
 		var id  = group.getAttribute('id');
-		var name= group.getElementsByTagName(Env.lang)[0].textContent;
+		var name= gn.textContent(group.getElementsByTagName(Env.lang)[0]);
 							
 		if (id == selId)
 			view.addGroup(id, name);				

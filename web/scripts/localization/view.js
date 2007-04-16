@@ -189,7 +189,6 @@ View.prototype.textChange = function()
 
 View.prototype.colorUpdate = function()
 {
-	
 	var desLang  = $F('lang.destin');
 	var oldValue = this.currEntity.label[desLang];
 	var newValue = $F('editor.destin');

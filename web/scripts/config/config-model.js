@@ -22,9 +22,6 @@ ConfigModel.prototype.getConfig = function(callBack)
 
 ConfigModel.prototype.getConfig_OK = function(xml)
 {
-	//--- skip the document node
-	xml = xml.firstChild;
-
 	if (xml.nodeName == 'error')
 		gn.showError(this.strLoader.getText('cannotGet'), xml);
 	else
@@ -66,9 +63,6 @@ ConfigModel.prototype.setConfig = function(data, callBack)
 
 ConfigModel.prototype.setConfig_OK = function(xml)
 {
-	//--- skip the document node
-	xml = xml.firstChild;
-	
 	if (xml.nodeName == 'error')
 		gn.showError(this.strLoader.getText('cannotSave'), xml);
 	else
