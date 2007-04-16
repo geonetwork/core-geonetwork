@@ -82,7 +82,7 @@ public class GetLatestUpdated implements Service
 
 			// only get public metadata (group 1: internet) viewable (operation O: view)
 
-			String query = "SELECT id FROM Metadata, OperationAllowed "+
+			String query = "SELECT DISTINCT id FROM Metadata, OperationAllowed "+
 								"WHERE id=metadataId AND operationId=0 AND (";
 
 			String aux = "";
@@ -97,6 +97,7 @@ public class GetLatestUpdated implements Service
 
 			_response = new Element("response");
 			int numItems = 0;
+
 			for (Iterator iter = result.getChildren().iterator(); iter.hasNext() && numItems++ < _maxItems; )
 			{
 				Element rec = (Element)iter.next();
