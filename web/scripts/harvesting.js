@@ -38,10 +38,10 @@ Harvesting.prototype.edit = function(id)
 
 Harvesting.prototype.editSuccess = function(xml)
 {
-	if (xmlEntry.nodeName == 'error')
-		gn.showError(xmlLoader.getText('cannotGet'), xmlEntry);
+	if (xml.nodeName == 'error')
+		gn.showError(xmlLoader.getText('cannotGet'), xml);
 	else
-		view.edit(xmlEntry);
+		view.edit(xml);
 }
 
 //=====================================================================================
@@ -107,11 +107,11 @@ Harvesting.prototype.update = function()
 
 Harvesting.prototype.addSuccess = function(xml)
 {
-	if (xmlNode.nodeName == 'error')
-		gn.showError(xmlLoader.getText('cannotAdd'), xmlNode);
+	if (xml.nodeName == 'error')
+		gn.showError(xmlLoader.getText('cannotAdd'), xml);
 	else
 	{
-		view.append(xmlNode);
+		view.append(xml);
 		view.show(SHOW.LIST);
 	}
 }
@@ -120,11 +120,11 @@ Harvesting.prototype.addSuccess = function(xml)
 
 Harvesting.prototype.updateSuccess = function(xml)
 {
-	if (xmlNode.nodeName == 'error')
-		gn.showError(xmlLoader.getText('cannotUpdate'), xmlNode);
+	if (xml.nodeName == 'error')
+		gn.showError(xmlLoader.getText('cannotUpdate'), xml);
 	else
 	{
-		view.refresh(xmlNode);
+		view.refresh(xml);
 		view.show(SHOW.LIST);
 	}
 }

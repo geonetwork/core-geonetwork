@@ -213,9 +213,9 @@ HarvestView.prototype.add = function()
 
 //=====================================================================================
 
-HarvestView.prototype.append = function(xmlNode)
+HarvestView.prototype.append = function(xml)
 {
-	this.rowTransf.transform(xmlNode, this.appendCallBack);
+	this.rowTransf.transform(xml, this.appendCallBack);
 }
 
 //-------------------------------------------------------------------------------------
