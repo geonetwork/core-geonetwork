@@ -252,9 +252,17 @@
 	<moreinfo>Para mayor información usted puede contactar por correo electrónico en</moreinfo>
 	<message>El nombre de usuario o la contaseña son incorrectos.<br/>Presione el botón 'atrás' e intentelo de nuevo.</message>
 	<protocolChoice value="WWW:LINK-1.0-http--link">Dirección Web (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--samples">Showcase product (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--related">Related link (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--partners">Partner web address (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
 	<protocolChoice value="WWW:DOWNLOAD-1.0-http--download">Fichero para la descarga</protocolChoice>
-	<protocolChoice value="OGC:WMS-1.1.1-http-get-map">Sevicio de Mapas OpenGIS (ver 1.1.1)</protocolChoice>
-	<protocolChoice value="OGC:WMS-1.1.1-http-get-capabilities">Servicio Capabilities OpenGIS (ver 1.1.1)</protocolChoice>
+	<protocolChoice value="OGC:WMS-1.1.1-http-get-map">Sevicio de Mapas OGC-WMS (ver 1.1.1)</protocolChoice>
+	<protocolChoice value="OGC:WMS-1.1.1-http-get-capabilities">Servicio Capabilities OGC-WMS (ver 1.1.1)</protocolChoice>
+	<protocolChoice value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
+	<protocolChoice value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
+	<protocolChoice value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
 	<protocolChoice value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</protocolChoice>
 	<protocolChoice value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuration File (*.AXL)</protocolChoice>
 	<protocolChoice value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
