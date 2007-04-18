@@ -20,8 +20,7 @@ function XSLTransformer(stylesheet, xmlLoader)
 	{
 		_this.stylesheet = t.responseXML;
 		_this.processor  = new XSLTProcessor();
-		_this.processor.importStylesheet(t.responseXML);
-
+		_this.processor.importStylesheet(_this.stylesheet);
 		_this.flush();
 	});
 

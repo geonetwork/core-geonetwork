@@ -457,6 +457,29 @@ gui.setupTooltips = function(xml)
 }
 
 //=====================================================================================
+
+gui.dump = function(obj)
+{
+	if (obj == null)
+	{
+		alert('gui.dump error : object is null');
+		return;
+	}
+	
+	try
+	{
+		//--- is the object an xml one?
+		
+		if (obj.nodeType)	alert(new XMLSerializer().serializeToString(obj));
+			else				alert(Sarissa.xmlize(obj, "object"));
+	}
+	catch(e)
+	{
+		alert('gui.dump error : '+ e);
+	}
+}
+
+//=====================================================================================
 //===
 //=== URLLoader
 //===

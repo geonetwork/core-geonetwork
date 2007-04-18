@@ -229,7 +229,7 @@ HarvestView.prototype.appendCallBack = function(xml)
 	var htmlRow   = gn.xmlToString(elRow);
 	var htmlStatus= gn.xmlToString(elStatus);
 	var htmlError = gn.xmlToString(elError);
-	
+
 	//--- add the new entry in list
 	
 	new Insertion.Bottom('table', htmlRow);
