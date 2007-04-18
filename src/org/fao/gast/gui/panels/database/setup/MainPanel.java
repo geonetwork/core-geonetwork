@@ -29,6 +29,7 @@ import javax.swing.JComponent;
 import org.dlib.gui.GuiUtil;
 import org.dlib.gui.ProgressDialog;
 import org.fao.gast.gui.panels.FormPanel;
+import org.fao.gast.lib.Lib;
 
 //==============================================================================
 
@@ -50,12 +51,21 @@ public class MainPanel extends FormPanel
 
 	public void actionPerformed(ActionEvent e)
 	{
-		Frame          owner  = GuiUtil.getFrame(this);
+		Frame owner = GuiUtil.getFrame(this);
+
+		if (!Lib.gui.confirm(owner, WARNING))
+			return;
+
 		ProgressDialog dialog = new ProgressDialog(owner, "Setup in progress");
 		Worker         worker = new Worker(dialog);
 
 		dialog.run(worker);
 	}
+
+	//---------------------------------------------------------------------------
+
+	private static final String WARNING = 	"The current database will be erased.\n"+
+														"Do you want to continue ?";
 }
 
 //==============================================================================

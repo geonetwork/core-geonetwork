@@ -71,6 +71,15 @@ public class GuiLib
 	{
 		JOptionPane.showMessageDialog(c, message, "Information", JOptionPane.INFORMATION_MESSAGE);
 	}
+
+	//---------------------------------------------------------------------------
+
+	public boolean confirm(Component c, String message)
+	{
+		int res = JOptionPane.showConfirmDialog(c, message, "Confirmation", JOptionPane.YES_NO_OPTION);
+
+		return (res == JOptionPane.YES_OPTION);
+	}
 }
 
 //=============================================================================
