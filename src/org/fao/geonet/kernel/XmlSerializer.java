@@ -23,13 +23,15 @@
 
 package org.fao.geonet.kernel;
 
+import java.io.FileOutputStream;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Vector;
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
+import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.fao.geonet.util.ISODate;
-import org.jdom.Document;
 import org.jdom.Element;
 
 //=============================================================================
@@ -61,8 +63,8 @@ public class XmlSerializer
 
 		String xmlData = rec.getChildText("data");
 
-		if (!xmlData.startsWith("<?xml"))
-			xmlData  = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" + xmlData;
+//		if (!xmlData.startsWith("<?xml"))
+//			xmlData  = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" + xmlData;
 
 		rec = Xml.loadString(xmlData, false);
 
@@ -110,13 +112,15 @@ public class XmlSerializer
 		if (changeDate == null)
 			changeDate = date;
 
+		fixCR(xml);
+
 		StringBuffer fields = new StringBuffer("id, schemaId, data, createDate, changeDate, "+
 															"source, uuid, isTemplate, isHarvested, root");
 		StringBuffer values = new StringBuffer("?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
 		Vector args = new Vector();
 		args.add(new Integer(serial));
 		args.add(schema);
-		args.add(Xml.getString(new Document(xml)));
+		args.add(Xml.getString(xml));
 		args.add(createDate);
 		args.add(changeDate);
 		args.add(siteId);
@@ -160,7 +164,8 @@ public class XmlSerializer
 
 		Vector args = new Vector();
 
-		args.add(Xml.getString(new Document(xml)));
+		fixCR(xml);
+		args.add(Xml.getString(xml));
 
 		if (changeDate == null) args.add(new ISODate().toString());
 		else                    args.add(changeDate);
@@ -169,6 +174,18 @@ public class XmlSerializer
 		args.add(new Integer(id));
 
 		dbms.execute(query, args.toArray());
+
+		try
+		{
+			FileOutputStream os = new FileOutputStream("out.xml");
+			String s = Xml.getString(xml);
+			os.write(s.getBytes("UTF-8"));
+			os.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -181,6 +198,41 @@ public class XmlSerializer
 
 		dbms.execute(query);
 	}
+	//--------------------------------------------------------------------------
+
+	private static void fixCR(Element xml)
+	{
+		List list = xml.getChildren();
+
+		if (list.size() == 0)
+		{
+			String text = xml.getText();
+
+			xml.setText(Util.replaceString(text, "\r\n", "\n"));
+		}
+
+		else for (Object o : list)
+			fixCR((Element) o);
+	}
+
+	//---------------------------------------------------------------------------
+
+//	public static void dump(String name, String text)
+//	{
+//		System.out.print("name: "+name+", value:");
+//
+//		char[] chars = text.toCharArray();
+//
+//		for(char c: chars)
+//		{
+//			int i = c;
+//
+//			if (i>=32)	System.out.print(c);
+//				else		System.out.print("["+ i +"]");
+//		}
+//
+//		System.out.println("");
+//	}
 }
 
 //=============================================================================
