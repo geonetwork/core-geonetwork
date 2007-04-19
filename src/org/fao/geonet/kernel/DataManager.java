@@ -27,18 +27,30 @@
 
 package org.fao.geonet.kernel;
 
-import java.util.*;
-import jeeves.utils.*;
-import org.fao.geonet.constants.*;
-import org.jdom.*;
-
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.Vector;
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
+import jeeves.utils.SerialFactory;
+import jeeves.utils.Xml;
+import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
+import org.jdom.Attribute;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Text;
 
 //=============================================================================
 
