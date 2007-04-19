@@ -60,7 +60,6 @@ public class GetLatestUpdated implements Service
 
 		_maxItems           = Integer.parseInt(sMaxItems);
 		_timeBetweenUpdates = Integer.parseInt(sTimeBetweenUpdates) * 1000;
-
 	}
 
 	//--------------------------------------------------------------------------
@@ -83,7 +82,7 @@ public class GetLatestUpdated implements Service
 			// only get public metadata (group 1: internet) viewable (operation O: view)
 
 			String query = "SELECT DISTINCT id FROM Metadata, OperationAllowed "+
-								"WHERE id=metadataId AND operationId=0 AND (";
+								"WHERE id=metadataId AND isTemplate='n' AND operationId=0 AND (";
 
 			String aux = "";
 
