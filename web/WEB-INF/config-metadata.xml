@@ -175,7 +175,7 @@
 		<service name="metadata.duplicate.form">
 			<output sheet="metadata-duplicate.xsl">
 				<call name="groups" class=".guiservices.groups.GetMine"/>
-				<xml name="duplicate" file="xml/metadata-create.xml" />
+				<xml  name="create" file ="xml/metadata-create.xml" />
 			</output>
 		</service>
 
