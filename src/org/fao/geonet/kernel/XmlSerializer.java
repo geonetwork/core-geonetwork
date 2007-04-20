@@ -174,18 +174,6 @@ public class XmlSerializer
 		args.add(new Integer(id));
 
 		dbms.execute(query, args.toArray());
-
-		try
-		{
-			FileOutputStream os = new FileOutputStream("out.xml");
-			String s = Xml.getString(xml);
-			os.write(s.getBytes("UTF-8"));
-			os.close();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
 	}
 
 	//--------------------------------------------------------------------------
