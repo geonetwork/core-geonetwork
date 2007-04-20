@@ -5,12 +5,20 @@
 
 	<xsl:template mode="script" match="/">
 		<script type="text/javascript" language="JavaScript">			
-			function selectAll(id)
+			function setAll(id)
 			{
 				var list = $(id).getElementsByTagName('input');
 			
 				for (var i=0; i &lt; list.length; i++)
 					list[i].checked = true;
+			}
+
+			function clearAll(id)
+			{
+				var list = $(id).getElementsByTagName('input');
+			
+				for (var i=0; i &lt; list.length; i++)
+					list[i].checked = false;
 			}
 		</script>
 	</xsl:template>
@@ -41,7 +49,8 @@
 									<th class="padded-center"><xsl:value-of select="label/child::*[name() = $lang]"/></th>
 								</xsl:if>
 							</xsl:for-each>
-							<td/>
+							<th width="70"/>
+							<th/>
 						</tr>
 			
 						<!-- loop on 'All' and 'Internal' groups -->
@@ -71,11 +80,19 @@
 										</xsl:if>
 									</xsl:for-each>
 
-									<!-- 'select all' button -->
+									<!-- 'set all' button -->
 
 									<td>
-										<button class="content" onclick="selectAll('row.{id}'); return false;">
-											<xsl:value-of select="/root/gui/strings/selectAll"/>
+										<button class="content" onclick="setAll('row.{id}'); return false;">
+											<xsl:value-of select="/root/gui/strings/setAll"/>
+										</button>
+									</td>
+
+									<!-- 'clear all' button -->
+
+									<td>
+										<button class="content" onclick="clearAll('row.{id}'); return false;">
+											<xsl:value-of select="/root/gui/strings/clearAll"/>
 										</button>
 									</td>
 								</tr>
@@ -86,6 +103,8 @@
 							<xsl:for-each select="/root/response/operations/record">
 								<td class="dots"/>
 							</xsl:for-each>
+							<td class="dots"/>
+							<td class="dots"/>
 						</tr>
 			
 						<!-- loop on other groups except -->
@@ -119,11 +138,19 @@
 										</xsl:if>
 									</xsl:for-each>
 
-									<!-- 'select all' button -->
+									<!-- 'set all' button -->
 
 									<td>
-										<button class="content" onclick="selectAll('row.{id}'); return false;">
-											<xsl:value-of select="/root/gui/strings/selectAll"/>
+										<button class="content" onclick="setAll('row.{id}'); return false;">
+											<xsl:value-of select="/root/gui/strings/setAll"/>
+										</button>
+									</td>
+
+									<!-- 'clear all' button -->
+
+									<td>
+										<button class="content" onclick="clearAll('row.{id}'); return false;">
+											<xsl:value-of select="/root/gui/strings/clearAll"/>
 										</button>
 									</td>
 								</tr>
