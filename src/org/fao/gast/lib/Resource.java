@@ -95,7 +95,7 @@ public class Resource
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			abort();
+			doAbort();
 		}
 
 		provMan.end();
@@ -107,6 +107,22 @@ public class Resource
 	//--------------------------------------------------------------------------
 
 	public void abort()
+	{
+		doAbort();
+
+		provMan.end();
+
+		if (activ != null)
+			activ.shutdown();
+	}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Private methods
+	//---
+	//--------------------------------------------------------------------------
+
+	private void doAbort()
 	{
 		try
 		{

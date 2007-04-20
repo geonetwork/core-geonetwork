@@ -57,7 +57,7 @@ public class Worker implements Runnable
 			Resource res = Lib.config.createResource();
 			Lib.database.setup(res, callBack);
 		}
-		catch(Exception e)
+		catch(Throwable e)
 		{
 			Lib.gui.showError(dlg, e);
 		}
