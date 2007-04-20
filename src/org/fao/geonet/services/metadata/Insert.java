@@ -36,6 +36,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.jdom.Element;
+import org.jdom.Namespace;
 
 //=============================================================================
 
@@ -92,8 +93,17 @@ public class Insert implements Service
 			dataMan.validate(schema, xml);
 
 		//-----------------------------------------------------------------------
+		//--- we have to explicitly set the prefix of iso 19139 metadata
+
+		if (schema.equals("iso19139"))
+		{
+			Namespace ns = Namespace.getNamespace("gmd", xml.getNamespace().getURI());
+			fixNamespace(xml, ns);
+		}
+
+		//-----------------------------------------------------------------------
 		//--- if the uuid does not exist and is not a template we generate it
-		
+
 		String uuid;
 		if (isTemplate.equals("n"))
 		{
@@ -101,7 +111,7 @@ public class Insert implements Service
 			if (uuid.length() == 0) uuid = UUID.randomUUID().toString();
 		}
 		else uuid = UUID.randomUUID().toString();
-		
+
 		//-----------------------------------------------------------------------
 		//--- insert metadata into the system
 
@@ -119,6 +129,17 @@ public class Insert implements Service
 
 		return response;
 	};
+
+	//---------------------------------------------------------------------------
+
+	private void fixNamespace(Element md, Namespace ns)
+	{
+		if (md.getNamespaceURI().equals(ns.getURI()))
+			md.setNamespace(ns);
+
+		for (Object o : md.getChildren())
+			fixNamespace((Element) o, ns);
+	}
 }
 
 //=============================================================================
