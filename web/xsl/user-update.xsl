@@ -234,6 +234,8 @@
 				
 				<!-- Add groups -->
 				
+				<xsl:variable name="lang" select="/root/gui/language"/>
+
 				<tr id="group.list">
 					<th class="padded"><xsl:value-of select="/root/gui/strings/groups"/></th>
 					<td class="padded">
@@ -246,7 +248,7 @@
 											<xsl:attribute name="selected"/>
 										</xsl:if>
 									</xsl:for-each>
-									<xsl:value-of select="name"/>
+									<xsl:value-of select="label/child::*[name() = $lang]"/>
 								</option>
 							</xsl:for-each>
 						</select>
