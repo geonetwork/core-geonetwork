@@ -137,7 +137,7 @@ public class Worker implements Runnable
 
 		String query = "UPDATE Metadata SET schemaId='iso19139', data=?, root=? WHERE id=?";
 
-		dbms.execute(query, Xml.getString(md), md.getName(), new Integer(id));
+		dbms.execute(query, Xml.getString(md), "gmd:"+ md.getName(), new Integer(id));
 	}
 
 	//---------------------------------------------------------------------------
