@@ -428,5 +428,6 @@
 	<UserAdmin>User administrator</UserAdmin>
 	<Editor>Editor</Editor>
 	<RegisteredUser>Registered user</RegisteredUser>
-	<selectAll>Select All</selectAll>
+	<setAll>Set All</setAll>
+	<clearAll>Clear All</clearAll>
 </strings>
