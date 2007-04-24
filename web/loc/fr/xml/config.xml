@@ -22,7 +22,7 @@
 		<smtpPort>SMTP Port</smtpPort>
 	
 	<proxy>Proxy</proxy>
-		<use>Use</use>
+		<use>Activé</use>
 	
 	<!-- Buttons -->
 	
@@ -34,37 +34,37 @@
 	<validator>
 		<length>
 			<cannotBeEmpty>Le champ '{NAME}' ne peut être vide</cannotBeEmpty>
-			<invalidMinSize>Le champ '{NAME}' must be at least {VALUE} character(s) long</invalidMinSize>
-			<invalidMaxSize>Le champ '{NAME}' must be maximum {VALUE} character(s) long</invalidMaxSize>
+			<invalidMinSize>Le champ '{NAME}' doit avoir au moins {VALUE} caractère(s)</invalidMinSize>
+			<invalidMaxSize>Le champ '{NAME}' doit avoir au maximum {VALUE} caractère(s)</invalidMaxSize>
 		</length>
 		
 		<integer>
-			<notInt>Le champ '{NAME}' must be an integer</notInt>
-			<invalidMinValue>Le champ '{NAME}' must be &gt;= {VALUE}</invalidMinValue>
-			<invalidMaxValue>Le champ '{NAME}' must be &lt;= {VALUE}</invalidMaxValue>
+			<notInt>Le champ '{NAME}' doit être un entier</notInt>
+			<invalidMinValue>Le champ '{NAME}' doit être &gt;= {VALUE}</invalidMinValue>
+			<invalidMaxValue>Le champ '{NAME}' doit être &lt;= {VALUE}</invalidMaxValue>
 		</integer>		
 		
 		<alphanum>
-			<notAlphaNumeric>Le champ '{NAME}' must be alphanumeric (starting with a letter)</notAlphaNumeric>
+			<notAlphaNumeric>Le champ '{NAME}' doit être alphanumérique (commençant par une lettre)</notAlphaNumeric>
 		</alphanum>
 		
 		<hostname>
-			<notHostName>Le champ '{NAME}' is not a valid host name</notHostName>
+			<notHostName>Le champ '{NAME}' n'est pas un nom d&apos;hôte valide</notHostName>
 		</hostname>
 		
 		<url>
-			<notURL>Le champ '{NAME}' is not a valid URL</notURL>
+			<notURL>Le champ '{NAME}' n&apos;est pas une URL valide</notURL>
 		</url>
 		
 		<ipaddress>
-			<notIP>Le champ '{NAME}' is not a valid IP address</notIP>
+			<notIP>Le champ '{NAME}' n&apos;est pas une adresse IP valide</notIP>
 		</ipaddress>
 	</validator>
 	
 	<!-- display messages -->
 	
-	<cannotGet>Unable to get the system configuration</cannotGet>
-	<cannotSave>Unable to save the system configuration</cannotSave>
+	<cannotGet>Impossible d&apos;obtenir la configuration du système</cannotGet>
+	<cannotSave>Impossible de sauver la configuration du système</cannotSave>
 	<saveOk>System configuration saved.</saveOk>
 	
 	<!-- tooltips -->

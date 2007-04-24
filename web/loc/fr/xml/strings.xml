@@ -159,14 +159,14 @@
 		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
 		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
-		<meta name="DC.title" lang="fr" content="GeoNetwork portal to spatial data and information"/>
+		<meta name="DC.title" lang="fr" content="GeoNetwork : portail pour l'information géographique"/>
 		<meta name="DC.creator" content="GeoNetwork Team"/>
 		<meta name="DC.subject" lang="French" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
 		<meta name="DC.description" lang="French" content="GeoNetwork provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
 		<meta name="DC.date" content="01-11-2005"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.language" content="English French Spanish"/>
+		<meta name="DC.language" content="English French Spanish Chinese"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
 	<help>Aide</help>
@@ -353,7 +353,7 @@
 	<user>Utilisateur</user>
 	<userManagement>Gestion des utilisateurs</userManagement>
 	<userManDes>Ajouter/Modifier/Supprimer et visualiser les utilisateurs</userManDes>
-	<username>Nom</username>
+	<username>Nom d'utilisateur</username>
 	<userPw>Modifier le mot de passe</userPw>
 	<userPwDes>Autoriser l'utilisateur en cours de changer le mot de passe</userPwDes>
 	<validate>Valider</validate>
@@ -369,10 +369,10 @@
 	<moreinfo>Pour plus d'information, contacter : </moreinfo>
 	<message>Le nom ou mot de passe est incorrect.<br/>Appuyer sur le bouton 'retour'.</message>
 	<protocolChoice value="WWW:LINK-1.0-http--link">Adresse Internet (URL)</protocolChoice>
-	<protocolChoice value="WWW:LINK-1.0-http--samples">Showcase product (URL)</protocolChoice>
-	<protocolChoice value="WWW:LINK-1.0-http--related">Related link (URL)</protocolChoice>
-	<protocolChoice value="WWW:LINK-1.0-http--partners">Partner web address (URL)</protocolChoice>
-	<protocolChoice value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--samples">Produit vitrine (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--related">Adresse Internet associée (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--partners">Site web partenaire (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--rss">Fil RSS (URL)</protocolChoice>
 	<protocolChoice value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
 	<protocolChoice value="WWW:DOWNLOAD-1.0-http--download">Fichier à télécharger</protocolChoice>
 	<protocolChoice value="OGC:WMS-1.1.1-http-get-map">OGC-WMS Web Map Service (ver 1.1.1)</protocolChoice>
@@ -381,13 +381,11 @@
 	<protocolChoice value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
 	<protocolChoice value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
 	<protocolChoice value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</protocolChoice>
-	<protocolChoice value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuration File (*.AXL)</protocolChoice>
+	<protocolChoice value="ESRI:AIMS--http--configuration">ArcIMS Map Service : Fichier de configuration (*.AXL)</protocolChoice>
 	<protocolChoice value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
 	<protocolChoice value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
 	<bgFileDescChoice value="thumbnail">Aperçu</bgFileDescChoice>
 	<bgFileDescChoice value="large_thumbnail">Aperçu grand format</bgFileDescChoice>
-
-	<!-- New strings -->
 	<searchBox>Rechercher des données</searchBox>
 	<searchIndex>Index de recherche</searchIndex>
 	<contactUs>Contact</contactUs>
@@ -446,8 +444,6 @@
 	<timeoutChoice value="10">10 secondes</timeoutChoice>
 	<timeoutChoice value="20">20 secondes</timeoutChoice>
 	<timeoutChoice value="30">30 secondes</timeoutChoice>
-	
-	<!-- these strings have not been translated yet -->
 	<helpComplete>Aide complet</helpComplete>
 	<rss>Ouvrez flux RSS</rss>
 	<georss>Ouvrez flux GeoRSS</georss>

@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <strings>
-	<entity>Entity</entity>
+	<entity>Entités</entity>
 	
 	<entityType>
-		<type id="groups">Groups</type>
-		<type id="categories">Categories</type>
-		<type id="operations">Operations</type>
-		<type id="regions">Regions</type>
+		<type id="groups">Groupes</type>
+		<type id="categories">Catégories</type>
+		<type id="operations">Opérations</type>
+		<type id="regions">Régions</type>
 	</entityType>
 	
-	<srcLang>Source language</srcLang>
-	<desLang>Target language</desLang>
+	<srcLang>Langue source</srcLang>
+	<desLang>Langue destination</desLang>
 	
 			<!-- Buttons -->
 	
-	<save>Save</save>
-	<refresh>Refresh</refresh>
+	<save>Sauver</save>
+	<refresh>Rafraîchir</refresh>
 	
 	<!-- validator messages -->
 	
 	<validator>
 		<length>
-			<cannotBeEmpty>The localized text cannot be empty</cannotBeEmpty>
-			<invalidMaxSize>The localized text must be maximum {VALUE} character(s) long</invalidMaxSize>
+			<cannotBeEmpty>Le texte ne peut pas être une chaîne vide.</cannotBeEmpty>
+			<invalidMaxSize>Le texte doit avoir au moins {VALUE} caractère(s).</invalidMaxSize>
 		</length>		
 	</validator>
 	
 	<!-- display messages -->
 	
-	<cannotGetList>Cannot get the entity list</cannotGetList>
-	<cannotSave>An error raised while saving information</cannotSave>
+	<cannotGetList>Ne peut obtenir la liste des entités</cannotGetList>
+	<cannotSave>Une erreur s'est produite lors de la sauvegarde</cannotSave>
 	
 	<!-- tooltips -->
 	

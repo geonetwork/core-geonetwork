@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<select>Select</select>
-	<name>Name</name>
+	<select>Sélectionner</select>
+	<name>Nom</name>
 	<type>Type</type>
 	<status>Status</status>
-	<errors>Errors</errors>
-	<every>Every</every>
-	<lastRun>Last run</lastRun>
-	<operation>Operation</operation>
+	<errors>Erreurs</errors>
+	<every>Toutes</every>
+	<lastRun>Dernière exécution</lastRun>
+	<operation>Opération</operation>
 
-	<typeGN>Geonetwork remote node</typeGN>
+	<typeGN>Noeud Geonetwork distant</typeGN>
 	<typeWF>Web Accessible Folder</typeWF>
 	
 	<typeGNShort>Geonetwork</typeGNShort>
@@ -19,114 +19,114 @@
 	
 	<site>Site</site>
 	
-	<name>Name</name>
-	<host>Host</host>
+	<name>Nom</name>
+	<host>Hôte</host>
 	<port>Port</port>
 	<servlet>Servlet</servlet>
-	<useAccount>Use account</useAccount>
-	<username>Username</username>
-	<password>Password</password>
+	<useAccount>Compte utilisateur</useAccount>
+	<username>Nom d'utilisateur</username>
+	<password>Mot de passe</password>
 	
-	<search>Search</search>
-	<siteName>Site name</siteName>
+	<search>Recherche</search>
+	<siteName>Nom du site</siteName>
 	
-	<freeText>Free text</freeText>
-	<title>Title</title>
-	<abstract>Abstract</abstract>
-	<keywords>Keywords</keywords>
+	<freeText>Texte libre</freeText>
+	<title>Titre</title>
+	<abstract>Résumé</abstract>
+	<keywords>Mots clés</keywords>
 	<digital>Digital</digital>
 	<hardcopy>Hardcopy</hardcopy>
 	<siteId>Site ID</siteId>
 
-	<retrieve>Retrieve</retrieve>
-	<warn>You can retrieve only after filling the site part</warn>
+	<retrieve>Récupérer</retrieve>
+	<warn>Vous pouvez récupérer ces informations seulement après avoir saisie la section de description du site</warn>
 	
 	<options>Options</options>
-	<every>Every</every>
-	<everySpec>(days : hours : minutes)</everySpec>
-	<oneRun>One run only</oneRun>
-	<createGroups>Create groups</createGroups>
-	<createCateg>Create categories</createCateg>
+	<every>Touts les</every>
+	<everySpec>(jours : heures : minutes)</everySpec>
+	<oneRun>Une seule exécution</oneRun>
+	<createGroups>Créer les groupes</createGroups>
+	<createCateg>Créer les catégories</createCateg>
 	<status>Status</status>
 	<active>Active</active>
 	<inactive></inactive>
 	
-	<validate>Validate</validate>
+	<validate>Valider</validate>
 	<structure>Structure</structure>
-	<host>Host</host>
-	<privileges>Privileges</privileges>
+	<host>hôte</host>
+	<privileges>Privilèges</privileges>
 	<url>URL</url>
-	<group>Group</group>
-	<groups>Groups</groups>
+	<group>Groupe</group>
+	<groups>Groupes</groups>
 	
 	<!-- Buttons -->
 	
-	<add>Add</add>
-	<edit>Edit</edit>
-	<save>Save</save>
-	<start>Start</start>
-	<stop>Stop</stop>
-	<run>Run</run>
-	<remove>Remove</remove>
-	<refresh>Refresh</refresh>
+	<add>Ajouter</add>
+	<edit>Editer</edit>
+	<save>Sauver</save>
+	<start>Démarrer</start>
+	<stop>Arrêter</stop>
+	<run>Lancer</run>
+	<remove>Supprimer</remove>
+	<refresh>Rafraîchir</refresh>
 	
-	<days>days</days>
-	<hours>hours</hours>
+	<days>jours</days>
+	<hours>heures</hours>
 	<mins>minutes</mins>
 	
 	<!-- validator messages -->
 	
 	<validator>
 		<length>
-			<cannotBeEmpty>The field '{NAME}' cannot be empty</cannotBeEmpty>
-			<invalidMinSize>The field '{NAME}' must be at least {VALUE} character(s) long</invalidMinSize>
-			<invalidMaxSize>The field '{NAME}' must be maximum {VALUE} character(s) long</invalidMaxSize>
+			<cannotBeEmpty>Le champ '{NAME}' ne peut être vide</cannotBeEmpty>
+			<invalidMinSize>Le champ '{NAME}' doit avoir au moins {VALUE} caractère(s)</invalidMinSize>
+			<invalidMaxSize>Le champ '{NAME}' doit avoir au maximum {VALUE} caractère(s)</invalidMaxSize>
 		</length>
 		
 		<integer>
-			<notInt>The field '{NAME}' must be an integer</notInt>
-			<invalidMinValue>The field '{NAME}' must be &gt;= {VALUE}</invalidMinValue>
-			<invalidMaxValue>The field '{NAME}' must be &lt;= {VALUE}</invalidMaxValue>
+			<notInt>Le champ '{NAME}' doit être un entier</notInt>
+			<invalidMinValue>Le champ '{NAME}' doit être &gt;= {VALUE}</invalidMinValue>
+			<invalidMaxValue>Le champ '{NAME}' doit être &lt;= {VALUE}</invalidMaxValue>
 		</integer>		
 		
 		<alphanum>
-			<notAlphaNumeric>The field '{NAME}' must be alphanumeric (starting with a letter)</notAlphaNumeric>
+			<notAlphaNumeric>Le champ '{NAME}' doit être alphanumérique (commençant par une lettre)</notAlphaNumeric>
 		</alphanum>
 		
 		<hostname>
-			<notHostName>The field '{NAME}' is not a valid host name</notHostName>
+			<notHostName>Le champ '{NAME}' n&apos;est pas un nom d&apos;hôte valide</notHostName>
 		</hostname>
 		
 		<url>
-			<notURL>The field '{NAME}' is not a valid URL</notURL>
+			<notURL>Le champ '{NAME}' n&apos;est pas une URL valide</notURL>
 		</url>
 	</validator>
 	
 	<!-- display messages -->
 	
-	<pleaseSelect>Please select at least one entry</pleaseSelect>
-	<pleaseSelectGroup>Please select at least one group</pleaseSelectGroup>
-	<cannotAdd>Unable to add a new entry</cannotAdd>
-	<cannotGet>Unable to get the entry/ies</cannotGet>
-	<cannotRemove>Cannot remove the selected entry/ies</cannotRemove>
-	<cannotStart>Cannot start the selected entry/ies</cannotStart>
-	<cannotStop>Cannot stop the selected entry/ies</cannotStop>
-	<cannotRun>Cannot run the selected entry/ies</cannotRun>
-	<confirmRemove>Remove the selected entries ? The nodes and all harvested metadata will be removed.</confirmRemove>
-	<everyZero>The harvesting period cannot be 0:0:0</everyZero>
-	<pleaseRetrieve>Please retrieve some sites first</pleaseRetrieve>
-	<cannotRetrieve>Unable to retrieve information</cannotRetrieve>
-	<supplyHost>Please, provide the 'host' parameter</supplyHost>
-	<supplyServlet>Please, provide the 'servlet' parameter</supplyServlet>
+	<pleaseSelect>Sélectionner au moins une entrée</pleaseSelect>
+	<pleaseSelectGroup>Sélectionner au moins un groupe</pleaseSelectGroup>
+	<cannotAdd>Impossible d&apos;ajouter un élément</cannotAdd>
+	<cannotGet>Impossible de récupérer l&apos;(les) élement(s)</cannotGet>
+	<cannotRemove>Impossible de supprimer les élements sélectionnés</cannotRemove>
+	<cannotStart>Impossible de démarrer les élements sélectionnés</cannotStart>
+	<cannotStop>Impossible d'arrêter les élements sélectionnés</cannotStop>
+	<cannotRun>Impossible de lancer les élements sélectionnés</cannotRun>
+	<confirmRemove>Suppression des élements sélectionnés ? Le noeud et toutes les métadonnées associées seront supprimés.</confirmRemove>
+	<everyZero>La période du moissonnage ne peut être 0:0:0</everyZero>
+	<pleaseRetrieve>Récupérer quelques sites en premier lieu</pleaseRetrieve>
+	<cannotRetrieve>Impossible de récuper les informations</cannotRetrieve>
+	<supplyHost>SVP, fournir le paramètre 'hôte'</supplyHost>
+	<supplyServlet>SVP, fournir le paramètre 'servlet'</supplyServlet>
 	
 	<oper>
-		<op id="0">View</op>
-		<op id="1">Download</op>
-		<op id="2">Edit</op>
-		<op id="3">Notify</op>
+		<op id="0">Voir</op>
+		<op id="1">Télécharger</op>
+		<op id="2">Editer</op>
+		<op id="3">Notifier</op>
 		<op id="4">Admin</op>
-		<op id="5">Dynamic</op>
-		<op id="6">Featured</op>
+		<op id="5">Dynamique</op>
+		<op id="6">Epingler</op>
 	</oper>
 	
 	<!-- tooltips -->
@@ -138,12 +138,12 @@
 	<tipHeader>
 		<siteId>Site ID</siteId>
 		<total>Total</total>
-		<added>Added</added>
-		<updated>Updated</updated>
-		<unchanged>Unchanged</unchanged>
-		<skipped>Skipped</skipped>
+		<added>Ajouté</added>
+		<updated>Mis à jour</updated>
+		<unchanged>Inchangé</unchanged>
+		<skipped>Passé</skipped>
 	</tipHeader>
 	
-	<notRun>Waiting for the first run</notRun>
+	<notRun>En attente du premier lancement</notRun>
 </strings>
 
