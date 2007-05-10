@@ -627,7 +627,7 @@
 									Calendar.setup(
 										{
 											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
-											ifFormat    : "%Y-%m-%d",                                // the date format
+											ifFormat    : "%Y-%m-%dT%H:%M:00",                                // the date format
 											showsTime : false, // Do not show the time
 											button      : &quot;_<xsl:value-of select="$ref"/>_trigger&quot;  // ID of the button
 										}
@@ -635,7 +635,7 @@
 									Calendar.setup(
 										{
 											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
-											ifFormat    : "%Y-%m-%d",                                // the date format
+											ifFormat    : "%Y-%m-%dT%H:%M:00",                                // the date format
 											showsTime : false, // Do not show the time
 											button      : &quot;_<xsl:value-of select="$ref"/>_cal&quot;  // ID of the button
 										}
