@@ -40,6 +40,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.jdom.Element;
+import org.jdom.Namespace;
 
 // FIXME: this class could be moved to DataManager
 
@@ -269,6 +270,15 @@ public class ImportFromDir implements Service
 			uuid = UUID.randomUUID().toString();
 
 		//-----------------------------------------------------------------------
+		//--- we have to explicitly set the prefix of iso 19139 metadata
+
+		if (schema.equals("iso19139"))
+		{
+			Namespace ns = Namespace.getNamespace("gmd", xml.getNamespace().getURI());
+			fixNamespace(xml, ns);
+		}
+
+		//-----------------------------------------------------------------------
 		//--- insert metadata into the system
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
@@ -278,7 +288,18 @@ public class ImportFromDir implements Service
 
 		if (!"_none_".equals(category))
 			dm.setCategory(dbms, id, category);
-	};
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void fixNamespace(Element md, Namespace ns)
+	{
+		if (md.getNamespaceURI().equals(ns.getURI()))
+			md.setNamespace(ns);
+
+		for (Object o : md.getChildren())
+			fixNamespace((Element) o, ns);
+	}
 }
 
 //=============================================================================

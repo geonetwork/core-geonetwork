@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata;
 
 import java.util.UUID;
 import jeeves.constants.Jeeves;
+import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -74,11 +75,14 @@ public class Insert implements Service
 		String group      = Util.getParam(params, Params.GROUP);
 		String schema     = Util.getParam(params, Params.SCHEMA);
 		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
-		String title      = Util.getParam(params, Params.TITLE);
-		String category = Util.getParam(params, Params.CATEGORY);
-		String style    = Util.getParam(params, Params.STYLESHEET);
+		String title      = Util.getParam(params, Params.TITLE, "");
+		String category   = Util.getParam(params, Params.CATEGORY);
+		String style      = Util.getParam(params, Params.STYLESHEET);
 
 		boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
+
+		 if (isTemplate.equals("s") && title.length() == 0)
+			 throw new MissingParameterEx("title");
 
 		//-----------------------------------------------------------------------
 		//--- add the DTD to the input xml to perform validation
