@@ -140,9 +140,6 @@ class Exporter
 
 	private static void createDir(ZipOutputStream zos, String name) throws IOException
 	{
-		if (!name.endsWith(File.separator))
-			name += File.separator;
-
 		ZipEntry entry = new ZipEntry(name);
 		zos.putNextEntry(entry);
 		zos.closeEntry();

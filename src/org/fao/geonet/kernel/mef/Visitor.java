@@ -115,10 +115,13 @@ public class Visitor
 				String fullName   = entry.getName();
 				String simpleName = new File(fullName).getName();
 
-				if (fullName.startsWith(DIR_PUBLIC) && !fullName.equals(DIR_PUBLIC))
+				if (fullName.equals(DIR_PUBLIC) || fullName.equals(DIR_PRIVATE))
+					continue;
+
+				if (fullName.startsWith(DIR_PUBLIC))
 					v.handlePublicFile(simpleName, getChangeDate(pubFiles, simpleName), isb);
 
-				else if (fullName.equals(DIR_PRIVATE) && !fullName.equals(DIR_PRIVATE))
+				else if (fullName.equals(DIR_PRIVATE))
 					v.handlePrivateFile(simpleName, getChangeDate(prvFiles, simpleName), isb);
 
 				zis.closeEntry();
