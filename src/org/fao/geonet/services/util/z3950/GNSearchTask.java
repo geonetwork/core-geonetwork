@@ -198,12 +198,13 @@ public class GNSearchTask extends SearchTask implements InformationFragmentSourc
 			result.removeChildren("summary");
 			List list = result.getChildren();
 
+			Log.debug(Geonet.Z3950_SERVER, "Set name asked:"+ spec.getSetname());
+
 			// save other records to fragment
 			for(int i = 0; i < count; i++)
 			{
 				Element md = (Element)list.get(0);
 				md.detach();
-				md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
 
 				Log.debug(Geonet.Z3950_SERVER, "Returning fragment:\n"+ Xml.getString(md));
 
@@ -213,6 +214,7 @@ public class GNSearchTask extends SearchTask implements InformationFragmentSourc
 												  null,
 												  getRecord(md),
 												  new RecordFormatSpecification("xml", "meta", "f"));
+//												  new RecordFormatSpecification("xml", "meta", spec.getSetname().toString()));
 			}
 			_srvContext.getResourceManager().close();
 		}

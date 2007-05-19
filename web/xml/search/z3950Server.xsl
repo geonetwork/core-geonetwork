@@ -4,7 +4,7 @@ xmlns:xalan= "http://xml.apache.org/xalan" exclude-result-prefixes="xalan">
 
 <xsl:import href="parser.xsl"/>
 <xsl:import href="lucene-utils.xsl"/>
-	
+
 <xsl:variable name="opView"     select="'_op0'"/>
 
 <!--
@@ -24,19 +24,23 @@ compiles a request
 <xsl:template match="/">
 
 	<BooleanQuery>
-		
+
 		<BooleanClause required="true" prohibited="false">
 			<xsl:call-template name="compile">
 				<xsl:with-param name="expr" select="/request/query"/>
-			</xsl:call-template>	
+			</xsl:call-template>
 		</BooleanClause>
-		
+
 		<!-- view privileges -->
 		<xsl:call-template name="orFields">
 			<xsl:with-param name="expr" select="/request/group"/>
 			<xsl:with-param name="field" select="$opView"/>
 		</xsl:call-template>
-		
+
+		<BooleanClause required="true" prohibited="false">
+			<TermQuery fld="_isTemplate" txt="n"/>
+		</BooleanClause>
+
 	</BooleanQuery>
 </xsl:template>
 
@@ -45,7 +49,7 @@ compiles a parse tree into a class tree
 -->
 <xsl:template name="compile">
 	<xsl:param name="expr"/>
-	
+
 	<xsl:call-template name="doCompile">
 		<xsl:with-param name="expr" select="xalan:nodeset($expr)"/>
 	</xsl:call-template>
@@ -56,7 +60,7 @@ recursive compiler
 -->
 <xsl:template name="doCompile">
 	<xsl:param name="expr"/>
-	
+
 	<xsl:choose>
 		<!-- query: recurse -->
 		<xsl:when test="name($expr)='query'">
@@ -64,7 +68,7 @@ recursive compiler
 				<xsl:with-param name="expr" select="$expr/*"/>
 			</xsl:call-template>
 		</xsl:when>
-		
+
 		<!-- and: build a boolean query -->
 		<xsl:when test="name($expr)='and'">
 			<BooleanQuery>
@@ -77,7 +81,7 @@ recursive compiler
 				</xsl:for-each>
 			</BooleanQuery>
 		</xsl:when>
-		
+
 		<!-- or: build a boolean query -->
 		<xsl:when test="name($expr)='or'">
 			<BooleanQuery>
@@ -90,7 +94,7 @@ recursive compiler
 				</xsl:for-each>
 			</BooleanQuery>
 		</xsl:when>
-		
+
 		<!-- not: build a boolean query -->
 		<xsl:when test="name($expr)='not'">
 			<BooleanQuery>
@@ -110,7 +114,7 @@ recursive compiler
 				</xsl:for-each>
 			</BooleanQuery>
 		</xsl:when>
-		
+
 		<!-- title -->
 		<xsl:when test="name($expr)='term' and $expr/@use='4'">
 			<xsl:call-template name="wordListTerm">
@@ -118,7 +122,7 @@ recursive compiler
 				<xsl:with-param name="field" select="'title'"/>
 			</xsl:call-template>
 		</xsl:when>
-		
+
 		<!-- abstract -->
 		<xsl:when test="name($expr)='term' and $expr/@use='62'">
 			<xsl:call-template name="wordListTerm">
@@ -126,7 +130,7 @@ recursive compiler
 				<xsl:with-param name="field" select="'abstract'"/>
 			</xsl:call-template>
 		</xsl:when>
-		
+
 		<!-- any -->
 		<xsl:when test="name($expr)='term' and $expr/@use='1016'">
 			<xsl:call-template name="wordListTerm">
@@ -134,57 +138,57 @@ recursive compiler
 				<xsl:with-param name="field" select="'any'"/>
 			</xsl:call-template>
 		</xsl:when>
-		
+
 		<!-- keywords -->
 		<xsl:when test="name($expr)='term' and $expr/@use='2002'">
 			<TermQuery fld="keyword" txt="{$expr/text()}"/>
 		</xsl:when>
-		
+
 		<!-- bounding box -->
 		<xsl:when test="name($expr)='term' and $expr/@use='2060'">
-			
+
 			<!-- bounding box -->
 			<xsl:if test="$boundingBox">
 				<xsl:choose>
-					
+
 					<!-- equal -->
 					<xsl:when test="$expr/@relation=3">
 						<BooleanQuery>
 							<xsl:call-template name="equal"/>
 						</BooleanQuery>
 					</xsl:when>
-					
+
 					<!-- overlaps -->
 					<xsl:when test="$expr/@relation=7">
 						<BooleanQuery>
 							<xsl:call-template name="overlaps"/>
 						</BooleanQuery>
 					</xsl:when>
-					
+
 					<!-- fullyOutsideOf -->
 					<xsl:when test="$expr/@relation=10">
 						<BooleanQuery>
 							<xsl:call-template name="fullyOutsideOf"/>
 						</BooleanQuery>
 					</xsl:when>
-					
+
 					<!-- encloses -->
 					<xsl:when test="$expr/@relation=9">
 						<BooleanQuery>
 							<xsl:call-template name="encloses"/>
 						</BooleanQuery>
 					</xsl:when>
-					
+
 					<!-- fullyEnclosedWithin -->
 					<xsl:when test="$expr/@relation=8">
 						<BooleanQuery>
 							<xsl:call-template name="fullyEnclosedWithin"/>
 						</BooleanQuery>
 					</xsl:when>
-					
+
 				</xsl:choose>
 			</xsl:if>
-			
+
 		</xsl:when>
 
 	</xsl:choose>
@@ -193,7 +197,7 @@ recursive compiler
 <xsl:template name="wordListTerm">
 	<xsl:param name="expr"/>
 	<xsl:param name="field"/>
-	
+
 	<PhraseQuery>
 		<xsl:call-template name="phraseQueryArgs">
 			<xsl:with-param name="expr" select="$expr"/>
