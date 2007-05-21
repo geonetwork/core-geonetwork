@@ -64,17 +64,15 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.DbmsPool</provider>
 			<config>
-				<user>qbzZlRdy</user>
-				<password>Qp1PgFDy</password>
+				<user>o1Ra5kE3</user>
+				<password>HdAAC8lT</password>
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>
 			</config>
 
-			<activator class="org.fao.geonet.activators.McKoiActivator">
-				<configFile>WEB-INF/db/db.conf</configFile>
-			</activator>
-		</resource>
+			
+		<activator class="org.fao.geonet.activators.McKoiActivator"><configFile>WEB-INF/db/db.conf</configFile></activator></resource>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- mysql -->
@@ -168,14 +166,15 @@
 		<service name="main.present">
 			<class name=".services.main.Result">
 				<param name="maxRecords" value="10" />
+				<param name="syntax" value="f" />
 			</class>
 
 			<output sheet="search-results.xsl">
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
-				<call name="groups"         class=".guiservices.groups.GetMine" />
-				<call name="sources"        class=".guiservices.util.Sources" />
-				<call name="services"       class="jeeves.guiservices.services.Get" />
-				<xml  name="repositories"   file ="xml/repositories.xml" localized="false" />
+				<call name="groups" class=".guiservices.groups.GetMine" />
+				<call name="sources" class=".guiservices.util.Sources" />
+				<call name="services" class="jeeves.guiservices.services.Get" />
+				<xml name="repositories" file="xml/repositories.xml" localized="false" />
 			</output>
 		</service>
 
@@ -183,13 +182,13 @@
 
 		<service name="remote.show">
 			<class name=".services.main.RemoteShow">
-				<param name="syntax" value="s" />
+				<param name="syntax" value="f" />
 			</class>
 
 			<output sheet="remote-show.xsl">
-				<call name="services"     class="jeeves.guiservices.services.Get" />
-				<call name="currTab"      class=".guiservices.util.GetCurrentMDTab" />
-				<xml  name="repositories" file ="xml/repositories.xml" localized="false" />
+				<call name="services" class="jeeves.guiservices.services.Get" />
+				<call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
+				<xml name="repositories" file="xml/repositories.xml" localized="false" />
 			</output>
 		</service>
 
@@ -686,7 +685,7 @@
 		  <output sheet="thesaurus-autosearchlist.xsl" />
 		</service>
 		<service name="xml.search.keywordlink" type="xml">
-		  <class name=".services.thesaurus.GetNarrowerBroader"/>
+		  <class name=".services.thesaurus.GetNarrowerBroader" />
 		  <output sheet="thesaurus-autosearchlist.xsl" />
 		</service>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

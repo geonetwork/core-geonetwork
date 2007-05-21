@@ -78,13 +78,12 @@ class Z3950Searcher extends MetaSearcher
 		request.addContent(Lib.db.select(dbms, "Regions", "region"));
 
 		Element xmlQuery = _sm.transform(_styleSheetName, request);
-		Log.debug(Geonet.SEARCH_ENGINE, "XML QUERY:\n"+ Xml.getString(xmlQuery));
-
-		// System.out.println("XML QUERY:\n" + jeeves.utils.Xml.getString(xmlQuery)); // DEBUG
+		
+		Log.debug(Geonet.SEARCH_ENGINE, "OUTGOING XML QUERY:\n"+ Xml.getString(xmlQuery));
 
 		String query = newQuery(xmlQuery);
 
-		// System.out.println("QUERY: " + query); // DEBUG
+		Log.debug(Geonet.SEARCH_ENGINE, "OUTGOING QUERY: " + query);
 
 		// get request parameters
 		Vector servers = new Vector();

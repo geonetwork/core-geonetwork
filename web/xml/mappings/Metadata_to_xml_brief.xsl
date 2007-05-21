@@ -5,13 +5,15 @@
 	xmlns:xalan = "http://xml.apache.org/xalan">
 <xsl:output method="xml"/>
 
+<xsl:include href="../../xsl/metadata-utils.xsl"/>
+
 <xsl:template match="/">
-		
+
 	<xsl:variable name="md">
-		<xsl:apply-templates mode="brief" select="."/>
+		<xsl:apply-templates mode="brief" select="*"/>
 	</xsl:variable>
 	<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
-<xsl:message><xsl:copy-of select="."/></xsl:message>	
+	
 	<!--
 	B: includes the Title (title) element.
 	-->

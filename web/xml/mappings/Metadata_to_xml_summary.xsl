@@ -5,10 +5,12 @@
 	xmlns:xalan = "http://xml.apache.org/xalan">
 <xsl:output method="xml"/>
 
+<xsl:include href="../../xsl/metadata-utils.xsl"/>
+
 <xsl:template match="/">
 		
 	<xsl:variable name="md">
-		<xsl:apply-templates mode="brief" select="."/>
+		<xsl:apply-templates mode="brief" select="*"/>
 	</xsl:variable>
 	<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
 	
@@ -30,7 +32,7 @@
 	Browse Graphic File Description (browsed),
 	and Browse Graphic File Type (browset).
 	-->
-	<metadata xmlns:geonet="http://www.fao.org/geonetwork">
+	<metadata>
 	  <idinfo>
 		<citation>
 		  <citeinfo>
@@ -42,7 +44,7 @@
 		  </citeinfo>
 		</citation>
 		<descript>
-		  <abstract><xsl:value-of select="$metadata/abstract"/></abstract> <!-- not mandatory for summary format --/>
+		  <abstract><xsl:value-of select="$metadata/abstract"/></abstract> <!-- not mandatory for summary format -->
 		</descript>
 		<timeperd>
 		  <timeinfo>
@@ -61,13 +63,15 @@
 			<southbc><xsl:value-of select="$metadata/geoBox/southBL"/></southbc>
 		  </bounding>
 		</spdom>
+		<!--
 		<xsl:for-each select="$metadata/image">
 			<browse>
 				<browsen><xsl:value-of select="$metadata/image"/></browsen>
 				<browsed><xsl:value-of select="$metadata/image/@type"/></browsed>
-<!--				<browset></browset> -->
+				<browset></browset>
 			</browse>
 		</xsl:for-each>
+		-->
 	  </idinfo>
 	</metadata>
 

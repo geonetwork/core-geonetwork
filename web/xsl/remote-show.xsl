@@ -32,7 +32,7 @@
 	-->
 	<xsl:template name="content">
 	
-		<xsl:apply-templates mode="remoteHit" select="/root/*[name(.)!='gui']"/> <!-- just one -->
+		<xsl:apply-templates mode="remoteHit" select="/root/*[name(.)!='gui' and name(.)!='request']"/> <!-- just one -->
 		
 	</xsl:template>
 
@@ -40,7 +40,7 @@
 		<table  width="100%" height="100%">
 		
 			<tr height="100%">
-				<td class="blue-content" width="100" valign="top">
+				<td class="blue-content" width="150" valign="top">
 					<xsl:call-template name="tab">
 						<xsl:with-param name="tabLink" select="concat(/root/gui/locService,'/remote.show')"/>
 					</xsl:call-template>
@@ -50,14 +50,13 @@
 							<xsl:variable name="server" select="geonet:info/server"/>
 							<xsl:variable name="name" select="/root/gui/repositories/Collection[@collection_dn=$server]/@collection_name"/>
 							
-							<tr><td class="padded-content"><h1><xsl:value-of select="geonet:info/id"/><xsl:text> - </xsl:text><xsl:value-of select="$name"/></h1></td></tr>
+							<tr><td class="padded-content"><h1><xsl:value-of select="geonet:info[server]/id"/><xsl:text> - </xsl:text><xsl:value-of select="$name"/></h1></td></tr>
 							<tr><td class="dots"/></tr>
 							<tr><td class="padded-content">
-								<table class="md">
-								
+								<table class="md" width="100%">
 									
 									<form name="mainForm" accept-charset="UTF-8" method="POST" action="{/root/gui/locService}/remote.show">
-										<input type="hidden" name="id" value="{geonet:info/id}"/>
+										<input type="hidden" name="id" value="{geonet:info[server]/id}"/>
 										<input type="hidden" name="currTab" value="{/root/gui/currTab}"/>
 										
 										<xsl:choose>

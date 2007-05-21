@@ -133,10 +133,12 @@ public class GNSearchTask extends SearchTask implements InformationFragmentSourc
 	{
 		try
 		{
+			Log.debug(Geonet.Z3950_SERVER, "INCOMING QUERY:\n" + _query.getQueryModel());
+
 			RemoteQueryDecoder queryDecoder = new RemoteQueryDecoder(_query.getQueryModel());
 			Element request = new Element("request");
 
-			// System.out.println("QUERY:\n" + Xml.getString(queryDecoder.getQuery())); // DEBUG
+			Log.debug(Geonet.Z3950_SERVER, "INCOMING XML QUERY:\n" + Xml.getString(queryDecoder.getQuery()));
 
 			request.addContent(queryDecoder.getQuery());
 			ServiceConfig config = new ServiceConfig();

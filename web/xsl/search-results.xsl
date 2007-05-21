@@ -96,7 +96,7 @@
 									<xsl:variable name="port" select="substring-before($rest,'/')"/>
 									<xsl:variable name="db" select="substring-after($rest,'/')"/>
 									<td class="padded" colspan="2">
-										<h1 align="left"><a href="{/root/gui/locService}/remote.show?id={$metadata/geonet:info/id}&amp;currTab=simple"><xsl:value-of select="concat($metadata/geonet:info/id,' - ',$metadata/title)"/></a></h1>
+										<h1 align="left"><a href="{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple"><xsl:value-of select="concat($metadata/geonet:info/id,' - ',$metadata/title)"/></a></h1>
 										<xsl:variable name="server" select="$metadata/geonet:info/server"/>
 										<xsl:variable name="name" select="/root/gui/repositories/Collection[@collection_dn=$server]/@collection_name"/>
 										<font class="green-neg"><xsl:value-of select="$name"/></font>
@@ -170,7 +170,7 @@
 											<xsl:value-of select="substring ($metadata/abstract, 0, $maxAbstract)"/>
 											<xsl:choose>
 												<xsl:when test="$remote=true()">
-													<a href="{/root/gui/locService}/remote.show?id={$metadata/geonet:info/id}&amp;currTab=simple">
+													<a href="{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple">
 														...<xsl:value-of select="/root/gui/strings/more"/>...
 													</a>
 												</xsl:when>
@@ -227,7 +227,7 @@
 					<xsl:if test="$metadata/geonet:info/view='true'">
 						<xsl:choose>
 							<xsl:when test="$remote=true()">
-								<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info/id}&amp;currTab=simple')"><xsl:value-of select="/root/gui/strings/show"/></button>
+								<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple')"><xsl:value-of select="/root/gui/strings/show"/></button>
 							</xsl:when>
 							<xsl:otherwise>
 								<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple')"><xsl:value-of select="/root/gui/strings/show"/></button>
@@ -242,7 +242,7 @@
 							<xsl:when test="count($metadata/link[@type='download'])>1">
 								<xsl:choose>
 									<xsl:when test="$remote=true()">
-										<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info/id}&amp;currTab=distribution')"><xsl:value-of select="/root/gui/strings/download"/></button>
+										<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=distribution')"><xsl:value-of select="/root/gui/strings/download"/></button>
 									</xsl:when>
 									<xsl:otherwise>
 										<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=distribution')"><xsl:value-of select="/root/gui/strings/download"/></button>
@@ -263,7 +263,7 @@
 							<xsl:when test="$count>1">
 								<xsl:choose>
 									<xsl:when test="$remote=true()">
-										<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info/id}&amp;currTab=distribution')"><xsl:value-of select="/root/gui/strings/interactiveMap"/></button>
+										<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=distribution')"><xsl:value-of select="/root/gui/strings/interactiveMap"/></button>
 									</xsl:when>
 									<xsl:otherwise>
 										<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=distribution')"><xsl:value-of select="/root/gui/strings/interactiveMap"/></button>
