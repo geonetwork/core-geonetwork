@@ -64,8 +64,8 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.DbmsPool</provider>
 			<config>
-				<user>o1Ra5kE3</user>
-				<password>HdAAC8lT</password>
+				<user>qbzZlRdy</user>
+				<password>Qp1PgFDy</password>
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>
@@ -464,7 +464,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.region.Update">
+		<service name="xml.region.update">
 			<class name=".services.region.Update" />
 		</service>
 
