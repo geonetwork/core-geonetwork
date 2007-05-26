@@ -23,10 +23,14 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
+import java.lang.reflect.Method;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 import jeeves.exceptions.BadInputEx;
+import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.JeevesException;
+import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
@@ -36,9 +40,9 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
-import org.fao.geonet.kernel.harvest.Common.Type;
 import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester;
-import org.fao.geonet.kernel.harvest.harvester.webfolder.WAFHarvester;
+import org.fao.geonet.kernel.harvest.harvester.geonet20.Geonet20Harvester;
+import org.fao.geonet.kernel.harvest.harvester.webdav.WebDavHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
@@ -55,31 +59,60 @@ public abstract class AbstractHarvester
 
 	public static void staticInit(ServiceContext context) throws Exception
 	{
-		GeonetHarvester.init(context);
-		WAFHarvester   .init(context);
+		register(context, GeonetHarvester  .class);
+		register(context, WebDavHarvester  .class);
+		register(context, Geonet20Harvester.class);
 	}
 
 	//---------------------------------------------------------------------------
 
-	public static AbstractHarvester create(Type type, ServiceContext context,
-														SettingManager sm, DataManager dm)
+	private static void register(ServiceContext context, Class harvester) throws Exception
 	{
-		AbstractHarvester ah = null;
+		try
+		{
+			Method initMethod = harvester.getMethod("init", context.getClass());
+			initMethod.invoke(null, context);
 
-		if (type == Type.GEONETWORK)
-			ah = new GeonetHarvester();
+			AbstractHarvester ah = (AbstractHarvester) harvester.newInstance();
 
-		else if (type == Type.WEB_FOLDER)
-			ah = new WAFHarvester();
+			hsHarvesters.put(ah.getType(), harvester);
+		}
+		catch(Exception e)
+		{
+			throw new Exception("Cannot register harvester : "+harvester, e);
+		}
+	}
 
-		if (ah == null)
-			throw new IllegalArgumentException("Unknown type : "+ type);
+	//---------------------------------------------------------------------------
 
-		ah.context    = context;
-		ah.settingMan = sm;
-		ah.dataMan    = dm;
+	public static AbstractHarvester create(String type, ServiceContext context,
+														SettingManager sm, DataManager dm)
+														throws BadParameterEx, OperationAbortedEx
+	{
+		//--- raises an exception if type is null
 
-		return ah;
+		if (type == null)
+			throw new BadParameterEx("type", type);
+
+		Class c = hsHarvesters.get(type);
+
+		if (c == null)
+			throw new BadParameterEx("type", type);
+
+		try
+		{
+			AbstractHarvester ah = (AbstractHarvester) c.newInstance();
+
+			ah.context    = context;
+			ah.settingMan = sm;
+			ah.dataMan    = dm;
+
+			return ah;
+		}
+		catch(Exception e)
+		{
+			throw new OperationAbortedEx("Cannot instantiate harvester", e);
+		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -302,6 +335,8 @@ public abstract class AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
+	public abstract String getType();
+
 	protected abstract void doInit(Element entry) throws BadInputEx;
 
 	/** Called when the harvesting entry is removed from the system.
@@ -356,6 +391,8 @@ public abstract class AbstractHarvester
 	protected ServiceContext context;
 	protected SettingManager settingMan;
 	protected DataManager    dataMan;
+
+	private static Map<String, Class> hsHarvesters = new HashMap<String, Class>();
 }
 
 //=============================================================================

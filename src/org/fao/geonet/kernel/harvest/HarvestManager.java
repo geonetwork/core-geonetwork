@@ -27,17 +27,15 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import jeeves.exceptions.BadInputEx;
+import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.resources.ProviderManager;
 import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
-import org.fao.geonet.kernel.harvest.Common.Type;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
@@ -70,7 +68,7 @@ public class HarvestManager
 		while (i.hasNext())
 		{
 			Element entry = (Element) i.next();
-			Type    type  = Type.parse(entry.getAttributeValue("type"));
+			String  type  = entry.getAttributeValue("type");
 
 			AbstractHarvester ah = AbstractHarvester.create(type, context, sm, dm);
 			ah.init(entry);
@@ -110,20 +108,13 @@ public class HarvestManager
 
 	//---------------------------------------------------------------------------
 
-	public String add(Dbms dbms, Element node) throws BadInputEx, SQLException
+	public String add(Dbms dbms, Element node) throws JeevesException, SQLException
 	{
 		Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n"+ Xml.getString(node));
 
 		String type = node.getAttributeValue("type");
 
-		if (type == null)
-			throw new MissingParameterEx("attribute:type", node);
-
-		//--- raises an exception if type is unknown
-
-		Type nodeType = Type.parse(type);
-
-		AbstractHarvester ah = AbstractHarvester.create(nodeType, context, settingMan, dataMan);
+		AbstractHarvester ah = AbstractHarvester.create(type, context, settingMan, dataMan);
 
 		ah.add(dbms, node);
 		hmHarvesters.put(ah.getID(), ah);

@@ -61,37 +61,6 @@ public class Common
 	}
 
 	//---------------------------------------------------------------------------
-	//--- Type
-	//---------------------------------------------------------------------------
-
-	public enum Type
-	{
-		GEONETWORK("geonetwork"), WEB_FOLDER("webFolder");
-
-		//------------------------------------------------------------------------
-
-		private Type(String type) { this.type = type; }
-
-		//------------------------------------------------------------------------
-
-		public String toString() { return type; }
-
-		//------------------------------------------------------------------------
-
-		public static Type parse(String type) throws BadParameterEx
-		{
-			if ("geonetwork".equals(type))	return GEONETWORK;
-			if ("webFolder" .equals(type))	return WEB_FOLDER;
-
-			throw new BadParameterEx("type", type);
-		}
-
-		//------------------------------------------------------------------------
-
-		private String type;
-	}
-
-	//---------------------------------------------------------------------------
 	//--- Result
 	//---------------------------------------------------------------------------
 

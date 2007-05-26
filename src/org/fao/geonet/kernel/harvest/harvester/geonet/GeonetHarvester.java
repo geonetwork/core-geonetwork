@@ -44,7 +44,6 @@ import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.Common.Status;
-import org.fao.geonet.kernel.harvest.Common.Type;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
@@ -87,6 +86,14 @@ public class GeonetHarvester extends AbstractHarvester
 			throw e;
 		}
 	}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Harvesting type
+	//---
+	//--------------------------------------------------------------------------
+
+	public String getType() { return "geonetwork"; }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -142,7 +149,7 @@ public class GeonetHarvester extends AbstractHarvester
 
 		//--- setup geonetwork node
 
-		String id   = settingMan.add(dbms, "harvesting", "node", Type.GEONETWORK);
+		String id   = settingMan.add(dbms, "harvesting", "node", getType());
 		String path = "id:"+ id;
 
 		String siteID    = settingMan.add(dbms, path, "site",    "");
