@@ -20,22 +20,22 @@ Model.prototype.getEntityList = function(entity, callBack)
 		'	<type>'+entity+'</type>'+
 		'</info>';
 
-	gn.send('xml.info', request, gn.wrap(this, this.getEntityList_OK), true);		
+	ker.send('xml.info', request, ker.wrap(this, this.getEntityList_OK));		
 }
 
 //-------------------------------------------------------------------------------------
 
-Model.prototype.getEntityList_OK = function(xml)
+Model.prototype.getEntityList_OK = function(node)
 {
-	if (xml.nodeName == 'error')
-		gn.showError(this.strLoader.getText('cannotGetList'), xml);
+	if (node.nodeName == 'error')
+		ker.showError(this.strLoader.getText('cannotGetList'), node);
 	else
 	{
-		//--- now xml = container
-		xml = gn.children(xml)[0];
+		//--- now node = container
+		node = xml.children(node)[0];
 		             
 		var data = [];
-		var list = gn.children(xml);
+		var list = xml.children(node);
 		
 		for (var i=0; i<list.length; i++)
 			data.push(this.convertEntity(list[i]));
@@ -46,20 +46,20 @@ Model.prototype.getEntityList_OK = function(xml)
 
 //-------------------------------------------------------------------------------------
 
-Model.prototype.convertEntity = function(xml)
+Model.prototype.convertEntity = function(node)
 {
 	var data = 
 	{
-		id : xml.getAttribute('id')
+		id : node.getAttribute('id')
 	};
 	
-	var list = gn.children(xml);
+	var list = xml.children(node);
 	
 	for (var i=0; i<list.length; i++)
 	{
 		var node = list[i];
 		var name = node.nodeName;
-		var value= gn.textContent(node);
+		var value= xml.textContent(node);
 			
 		if (name == 'label')	data[name] = this.convertLabel(node);
 			else					data[name] = value;
@@ -70,17 +70,17 @@ Model.prototype.convertEntity = function(xml)
 
 //-------------------------------------------------------------------------------------
 
-Model.prototype.convertLabel = function(xml)
+Model.prototype.convertLabel = function(node)
 {
 	var data = {};	
 	
-	var list = gn.children(xml);
+	var list = xml.children(node);
 	
 	for (var i=0; i<list.length; i++)
 	{
 		var node = list[i];
 		var name = node.nodeName;
-		var value= gn.textContent(node);
+		var value= xml.textContent(node);
 			
 		data[name] = value;
 	}
@@ -99,17 +99,17 @@ Model.prototype.update = function(data, callBack)
 	
 	data['ENTITY'] = entity;
 	
-	var request = gn.substitute(Model.updateTemp, data);
+	var request = str.substitute(Model.updateTemp, data);
 	
-	gn.send('xml.'+ entity +'.update', request, gn.wrap(this, this.update_OK), true);
+	ker.send('xml.'+ entity +'.update', request, ker.wrap(this, this.update_OK));
 }
 
 //-------------------------------------------------------------------------------------
 
-Model.prototype.update_OK = function(xml)
+Model.prototype.update_OK = function(node)
 {
-	if (xml.nodeName == 'error')
-		gn.showError(this.strLoader.getText('cannotSave'), xml);
+	if (node.nodeName == 'error')
+		ker.showError(this.strLoader.getText('cannotSave'), node);
 	else
 	{
 		if (this.callBack)
@@ -126,7 +126,7 @@ Model.entities =
 	'groups'     : 'group',
 	'categories' : 'category',
 	'operations' : 'operation',
-	'regions'    : 'regions'
+	'regions'    : 'region'
 };
 
 //=====================================================================================

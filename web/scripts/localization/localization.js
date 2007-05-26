@@ -1,30 +1,39 @@
 //=====================================================================================
+//===
+//=== Localization controller class
+//===
+//=====================================================================================
+
+ker.include('localization/model.js');
+ker.include('localization/view.js');
+
+var localiz = null;
+
+//=====================================================================================
 
 Event.observe(window, 'load', function() 
 {
 	localiz = new Localiz();	
+	
+	//--- waits for all files to be loaded
+	ker.loadMan.wait(localiz);
 });
 
-//=====================================================================================
-//===
-//=== Localization controller class
-//===
 //=====================================================================================
 
 function Localiz() 
 {
 	try
 	{
-		Event.observe('btn.save',    'click',  gn.wrap(this, this.save));
-		Event.observe('btn.refresh', 'click',  gn.wrap(this, this.refresh));
-		Event.observe('entity.type', 'change', gn.wrap(this, this.entityTypeChange));
-		Event.observe('entity.list', 'change', gn.wrap(this, this.entityListChange));
+		Event.observe('btn.save',    'click',  ker.wrap(this, this.save));
+		Event.observe('btn.refresh', 'click',  ker.wrap(this, this.refresh));
+		Event.observe('entity.type', 'change', ker.wrap(this, this.entityTypeChange));
+		Event.observe('entity.list', 'change', ker.wrap(this, this.entityListChange));
 		
 		this.strLoader = new XMLLoader(Env.locUrl +'/xml/localization.xml');		
 		this.view      = new View (this.strLoader);
 		this.model     = new Model(this.strLoader);
 		this.cache     = {};
-		this.refresh();			
 	}
 	catch(e) 
 	{
@@ -34,12 +43,20 @@ function Localiz()
 
 //=====================================================================================
 
+Localiz.prototype.init = function()
+{
+	this.view.init();
+	this.refresh();			
+}
+
+//=====================================================================================
+
 Localiz.prototype.refresh = function()
 {
 	var type = this.view.getEntityType();
 	
 	this.view.clearEntityList();
-	this.model.getEntityList(type, gn.wrap(this, this.refresh_OK));
+	this.model.getEntityList(type, ker.wrap(this, this.refresh_OK));
 }
 
 //-------------------------------------------------------------------------------------
@@ -75,7 +92,7 @@ Localiz.prototype.save = function()
 		TYPE : this.view.getEntityType()
 	};
 	
-	this.model.update(data, gn.wrap(this, this.save_OK));
+	this.model.update(data, ker.wrap(this, this.save_OK));
 }
 
 //-------------------------------------------------------------------------------------

@@ -1,10 +1,6 @@
 //=====================================================================================
 //===
-//=== View
-//=== 
 //=== Handles all view related stuff in the MVC pattern
-//===
-//=== Needs : geonetwork-ajax.js
 //===
 //=====================================================================================
 
@@ -21,16 +17,14 @@ function View(strLoader)
 
 	$('editor.source').style.background = '#F0F0F0';
 
-	Event.observe('lang.source',   'change',   gn.wrap(this, this.langSrcChange));
-	Event.observe('lang.destin',   'change',   gn.wrap(this, this.langDesChange));
-	Event.observe('editor.destin', 'keypress', gn.wrap(this, this.textChange));
-	
-	strLoader.addListener(gn.wrap(this, this.constr_OK));
+	Event.observe('lang.source',   'change',   ker.wrap(this, this.langSrcChange));
+	Event.observe('lang.destin',   'change',   ker.wrap(this, this.langDesChange));
+	Event.observe('editor.destin', 'keypress', ker.wrap(this, this.textChange));
 }
 
-//-------------------------------------------------------------------------------------
+//=====================================================================================
 
-View.prototype.constr_OK = function()
+View.prototype.init = function()
 {
 	gui.setupTooltips(this.strLoader.getNode('tips'));
 }
@@ -105,7 +99,7 @@ View.prototype.addEntityToList = function(entity)
 	if (name == null)
 		name = entity['label']['en'];
 		
-	var html='<option value="'+ id +'">'+ gn.escape(name) +'</option>';
+	var html='<option value="'+ id +'">'+ xml.escape(name) +'</option>';
 	new Insertion.Bottom('entity.list', html);
 }
 
@@ -182,7 +176,7 @@ View.prototype.langDesChange = function()
 View.prototype.textChange = function()
 {
 	if (this.currEntity != null)
-		setTimeout(gn.wrap(this, this.colorUpdate), 10);
+		setTimeout(ker.wrap(this, this.colorUpdate), 10);
 }
 
 //-------------------------------------------------------------------------------------
