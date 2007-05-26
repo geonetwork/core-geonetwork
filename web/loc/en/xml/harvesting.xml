@@ -9,13 +9,19 @@
 	<lastRun>Last run</lastRun>
 	<operation>Operation</operation>
 
-	<typeGN>Geonetwork remote node</typeGN>
-	<typeWF>Web Accessible Folder</typeWF>
+	<!-- harvesting types - - - - - - - - - - - - - - - - - - - - -->
 	
-	<typeGNShort>Geonetwork</typeGNShort>
-	<typeWFShort>Web Folder</typeWFShort>
+	<info type="geonetwork">
+		<short>Geonetwork</short>
+		<long>Geonetwork remote node</long>
+	</info>
 	
-	<!-- Editing form -->
+	<info type="webdav">
+		<short>Web DAV</short>
+		<long>Web DAV server</long>
+	</info>
+	
+	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Site</site>
 	
@@ -129,11 +135,13 @@
 		<op id="6">Featured</op>
 	</oper>
 	
-	<!-- tooltips -->
+	<!-- tooltips - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
-	<statusTip type="inactive">Inactive</statusTip>
-	<statusTip type="active">Active</statusTip>
-	<statusTip type="running">Running</statusTip>
+	<statusTip>
+		<inactive>Inactive</inactive>
+		<active>Active</active>
+		<running>Running</running>
+	</statusTip>
 	
 	<tipHeader>
 		<siteId>Site ID</siteId>
