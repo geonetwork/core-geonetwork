@@ -1,10 +1,6 @@
 //=====================================================================================
 //===
-//=== ConfigView
-//=== 
 //=== Handles all view related stuff in the MVC pattern
-//===
-//=== Needs : geonetwork-ajax.js
 //===
 //=====================================================================================
 
@@ -40,13 +36,11 @@ function ConfigView(strLoader)
 	
 	this.z3950Shower = new Shower('z3950.enable', 'z3950.subpanel');	
 	this.proxyShower = new Shower('proxy.use',    'proxy.subpanel');
-
-	strLoader.addListener(gn.wrap(this, this.constr_OK));
 }
 
-//-------------------------------------------------------------------------------------
+//=====================================================================================
 
-ConfigView.prototype.constr_OK = function()
+ConfigView.prototype.init = function()
 {
 	gui.setupTooltips(this.strLoader.getNode('tips'));
 }

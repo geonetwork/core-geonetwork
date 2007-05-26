@@ -1,37 +1,46 @@
 //=====================================================================================
-
-function init()
-{
-	config = new Config();	
-}
-
-//=====================================================================================
 //===
 //=== Config controller class
 //===
 //=====================================================================================
 
+ker.include('config/model.js');
+ker.include('config/view.js');
+
+var config = null;
+
+//=====================================================================================
+
+function init()
+{
+	config = new Config();
+		
+	//--- waits for all files to be loaded
+	ker.loadMan.wait(config);
+}
+
+//=====================================================================================
+
 function Config() 
 {
-	try
-	{
-		this.strLoader = new XMLLoader(Env.locUrl +'/xml/config.xml');		
-		this.view      = new ConfigView (this.strLoader);
-		this.model     = new ConfigModel(this.strLoader);
-		
-		this.refresh();
-	}
-	catch(e) 
-	{
-		alert(e);
-	}
+	this.strLoader = new XMLLoader(Env.locUrl +'/xml/config.xml');		
+	this.view      = new ConfigView (this.strLoader);
+	this.model     = new ConfigModel(this.strLoader);
+}
+
+//=====================================================================================
+
+Config.prototype.init = function()
+{
+	this.view.init();
+	this.refresh();
 }
 
 //=====================================================================================
 
 Config.prototype.refresh = function()
 {
-	this.model.getConfig(gn.wrap(this.view, this.view.setData));
+	this.model.getConfig(ker.wrap(this.view, this.view.setData));
 }
 
 //=====================================================================================
@@ -43,7 +52,7 @@ Config.prototype.save = function()
 			
 	var data = this.view.getData();
 	
-	this.model.setConfig(data, gn.wrap(this, this.save_OK));
+	this.model.setConfig(data, ker.wrap(this, this.save_OK));
 }
 
 //-------------------------------------------------------------------------------------

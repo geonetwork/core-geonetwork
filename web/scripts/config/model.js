@@ -15,33 +15,33 @@ ConfigModel.prototype.getConfig = function(callBack)
 {
 	this.getConfigCB = callBack;
 	
-	gn.send('xml.config.get', '<request/>', gn.wrap(this, this.getConfig_OK), true);
+	ker.send('xml.config.get', '<request/>', ker.wrap(this, this.getConfig_OK), true);
 }
 
 //-------------------------------------------------------------------------------------
 
-ConfigModel.prototype.getConfig_OK = function(xml)
+ConfigModel.prototype.getConfig_OK = function(node)
 {
-	if (xml.nodeName == 'error')
-		gn.showError(this.strLoader.getText('cannotGet'), xml);
+	if (node.nodeName == 'error')
+		ker.showError(this.strLoader.getText('cannotGet'), node);
 	else
 	{
 		var data =
 		{
-			SITE_NAME         : gn.evalXPath(xml, 'site/name'),
-			SITE_ORGAN        : gn.evalXPath(xml, 'site/organization'),
-			SERVER_HOST       : gn.evalXPath(xml, 'server/host'),
-			SERVER_PORT       : gn.evalXPath(xml, 'server/port'),
-			INTRANET_NETWORK  : gn.evalXPath(xml, 'intranet/network'),
-			INTRANET_NETMASK  : gn.evalXPath(xml, 'intranet/netmask'),
-			Z3950_ENABLE      : gn.evalXPath(xml, 'z3950/enable'),
-			Z3950_PORT        : gn.evalXPath(xml, 'z3950/port'),
-			PROXY_USE         : gn.evalXPath(xml, 'proxy/use'),
-			PROXY_HOST        : gn.evalXPath(xml, 'proxy/host'),
-			PROXY_PORT        : gn.evalXPath(xml, 'proxy/port'),
-			FEEDBACK_EMAIL    : gn.evalXPath(xml, 'feedback/email'),
-			FEEDBACK_MAIL_HOST: gn.evalXPath(xml, 'feedback/mailServer/host'),
-			FEEDBACK_MAIL_PORT: gn.evalXPath(xml, 'feedback/mailServer/port')
+			SITE_NAME         : xml.evalXPath(node, 'site/name'),
+			SITE_ORGAN        : xml.evalXPath(node, 'site/organization'),
+			SERVER_HOST       : xml.evalXPath(node, 'server/host'),
+			SERVER_PORT       : xml.evalXPath(node, 'server/port'),
+			INTRANET_NETWORK  : xml.evalXPath(node, 'intranet/network'),
+			INTRANET_NETMASK  : xml.evalXPath(node, 'intranet/netmask'),
+			Z3950_ENABLE      : xml.evalXPath(node, 'z3950/enable'),
+			Z3950_PORT        : xml.evalXPath(node, 'z3950/port'),
+			PROXY_USE         : xml.evalXPath(node, 'proxy/use'),
+			PROXY_HOST        : xml.evalXPath(node, 'proxy/host'),
+			PROXY_PORT        : xml.evalXPath(node, 'proxy/port'),
+			FEEDBACK_EMAIL    : xml.evalXPath(node, 'feedback/email'),
+			FEEDBACK_MAIL_HOST: xml.evalXPath(node, 'feedback/mailServer/host'),
+			FEEDBACK_MAIL_PORT: xml.evalXPath(node, 'feedback/mailServer/port')
 		}
 		
 		this.getConfigCB(data);
@@ -54,17 +54,17 @@ ConfigModel.prototype.setConfig = function(data, callBack)
 {
 	this.updateCB = callBack;
 	
-	var request = gn.substitute(ConfigModel.updateTemp, data);
+	var request = str.substitute(ConfigModel.updateTemp, data);
 	
-	gn.send('xml.config.set', request, gn.wrap(this, this.setConfig_OK), true);
+	ker.send('xml.config.set', request, ker.wrap(this, this.setConfig_OK), true);
 }
 
 //-------------------------------------------------------------------------------------
 
-ConfigModel.prototype.setConfig_OK = function(xml)
+ConfigModel.prototype.setConfig_OK = function(node)
 {
-	if (xml.nodeName == 'error')
-		gn.showError(this.strLoader.getText('cannotSave'), xml);
+	if (node.nodeName == 'error')
+		ker.showError(this.strLoader.getText('cannotSave'), node);
 	else
 	{
 		if (this.updateCB)
