@@ -14,7 +14,7 @@
 	
 	<!-- ============================================================================================= -->
 	
-	<xsl:template match="node[value = 'geonetwork']">
+	<xsl:template match="node[starts-with(value, 'geonetwork')]">
 		<xsl:variable name="site" select="children/site/children"/>
 		<xsl:variable name="opt"  select="children/options/children"/>
 		<xsl:variable name="info" select="children/info/children"/>
@@ -61,7 +61,7 @@
 
 	<!-- ============================================================================================= -->
 
-	<xsl:template match="node[value = 'webFolder']">
+	<xsl:template match="node[value = 'webdav']">
 		<xsl:variable name="site"   select="children/site/children"/>
 		<xsl:variable name="opt"    select="children/options/children"/>
 		<xsl:variable name="info"   select="children/info/children"/>

@@ -28,7 +28,7 @@
 			<xsl:value-of select="/root/gui/strings/back"/>
 		</button>
 		&#160;
-		<button class="content" onclick="view.show(SHOW.ADD)">
+		<button class="content" onclick="harvesting.show(SHOW.ADD)">
 			<xsl:value-of select="/root/gui/harvesting/add"/>
 		</button>
 		&#160;
@@ -41,11 +41,11 @@
 	<!-- Add panel - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<xsl:template name="addButtons">
-		<button class="content" onclick="view.show(SHOW.LIST)">
+		<button class="content" onclick="harvesting.show(SHOW.LIST)">
 			<xsl:value-of select="/root/gui/strings/back"/>
 		</button>
 		&#160;
-		<button class="content" onclick="view.add()">
+		<button class="content" onclick="harvesting.newNode()">
 			<xsl:value-of select="/root/gui/harvesting/add"/>
 		</button>
 	</xsl:template>
@@ -54,7 +54,7 @@
 	<!-- Edit panel - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<xsl:template name="editButtons">
-		<button class="content" onclick="view.show(SHOW.LIST)">
+		<button class="content" onclick="harvesting.show(SHOW.LIST)">
 			<xsl:value-of select="/root/gui/strings/back"/>
 		</button>
 		&#160;

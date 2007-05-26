@@ -9,12 +9,8 @@
 	<!-- ============================================================================================= -->
 
 	<xsl:template mode="script" match="/">
-		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/sarissa.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork-ajax.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/validator.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/config/config-view.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/config/config-model.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/core/gui/gui.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/config/config.js"/>
 	</xsl:template>
 

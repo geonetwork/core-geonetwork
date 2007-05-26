@@ -60,7 +60,7 @@ KSearching.prototype.search = function(form)
 	}
 	req += '</request>';
 
-	gn.send('keywords.search', req, gn.wrap(this, this.searchSuccess), false);
+	ker.send('keywords.search', req, ker.wrap(this, this.searchSuccess), false);
 };
 
 KSearching.prototype.getPage = function(from, to)
@@ -75,7 +75,7 @@ KSearching.prototype.getPage = function(from, to)
 	req += '</request>';
 
 	// Send query
-	gn.send('keywords.search', req, gn.wrap(this, this.searchSuccess), false);
+	ker.send('keywords.search', req, ker.wrap(this, this.searchSuccess), false);
 };
 
 KSearching.prototype.sort = function(tri)
@@ -89,7 +89,7 @@ KSearching.prototype.sort = function(tri)
 	req += '</request>';
 
 	// Send query
-	gn.send('keywords.sort', req, gn.wrap(this, this.searchSuccess), false);
+	ker.send('keywords.sort', req, ker.wrap(this, this.searchSuccess), false);
 };
 
 
@@ -116,7 +116,7 @@ KSearching.prototype.select = function(id)
 	req += '<pNewSearch>false</pNewSearch>\n';
 	req += '</request>';
 
-	gn.send('keywords.select', req, gn.wrap(this, this.noOp), false);
+	ker.send('keywords.select', req, function(){}, false);
 };
 
 
@@ -137,10 +137,6 @@ KSearching.prototype.searchSuccess = function(xml)
 
 	$('divResults').innerHTML = html;
 	$('divResults').style.display = 'inline';
-};
-
-KSearching.prototype.noOp = function()
-{	
 };
 
 KSearching.prototype.deleteKeyword = function(form){

@@ -23,7 +23,7 @@
 		<table>
 			<tr>
 				<td>
-					<a onclick="view.removeSearch('{siteId}')">
+					<a onclick="harvesting.geonet.removeSearchRow('{siteId}')">
 						<img style="cursor:hand; cursor:pointer" src="{/root/env/url}/images/del.gif" alt="Remove"/>
 					</a>
 					

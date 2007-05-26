@@ -7,12 +7,12 @@
 	<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
 	<!-- ============================================================================================= -->
-	<!-- === Generate a table row for the harvesting's WAF privileges list -->
+	<!-- === Generate a table row for the harvesting's webdav privilege list -->
 	<!-- ============================================================================================= -->
 
 	<xsl:template match="/root/group">
 
-		<tr id="group_{@id}">
+		<tr id="wd.group.{@id}">
 			<td class="padded" align="center"><xsl:value-of select="@name"/></td>
 			
 			<!-- view - - - - - - - - - - - - - - - - - - - - - - -->
@@ -68,7 +68,7 @@
 			<!-- actions - - - - - - - - - - - - - - - - - - - - - - -->
 			
 			<td class="padded" align="center">
-				<button class="content" onclick="view.removeGroupRow('group_{@id}')">
+				<button class="content" onclick="harvesting.webdav.removeGroupRow('wd.group.{@id}')">
 					<xsl:value-of select="/root/strings/remove"/>
 				</button>
 			</td>
