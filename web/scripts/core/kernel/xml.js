@@ -11,7 +11,7 @@ var xml = new Object();
 
 xml.escape = function(text)
 {
-	if (text == '')
+	if (text == '' || text == null)
 		return text;
 		
 	return text	.replace(/&/g, "&amp;")
@@ -139,13 +139,14 @@ xml.evalXPath = function(node, xpath)
 			
 	for (var i=0; i<names.length; i++)
 	{	
+		var pathElem = xml.extractPathElem(names[i]);
+		var found    = false;
+				
 		node = node.firstChild;
-		
-		var found = false;
 		
 		while (node != null && !found)
 		{
-			if (node.nodeType == Node.ELEMENT_NODE && node.nodeName == names[i])
+			if (node.nodeType == Node.ELEMENT_NODE && xml.evalCond(node, pathElem))
 				found = true;
 			else
 				node = node.nextSibling;
@@ -157,6 +158,61 @@ xml.evalXPath = function(node, xpath)
 	}
 	
 	return xml.textContent(node);
+}
+
+//-------------------------------------------------------------------------------------
+
+xml.extractPathElem = function(name)
+{
+	var res = {};
+	
+	res.NAME      = name;
+	res.CONDITION = '';
+	
+	var startPos = name.indexOf('[');
+	var endPos   = name.indexOf(']');
+	
+	if (startPos != -1)
+	{
+		res.NAME      = name.substring(0, startPos);
+		res.CONDITION = name.substring(startPos+1, endPos);
+	}
+	
+	return res;
+}
+
+//-------------------------------------------------------------------------------------
+
+xml.evalCond = function(node, pathElem)
+{
+	var name = pathElem.NAME;
+	var cond = pathElem.CONDITION;
+	
+	if (node.nodeName != name)
+		return false;
+		
+	if (cond == '')
+		return true;
+		
+	//--- handle attribute condition
+	
+	if (cond.startsWith('@'))
+	{
+		var equPos = cond.indexOf('=');
+		var attr   = cond.substring(1, equPos);
+		var value  = cond.substring(equPos +1);
+		
+		return (node.getAttribute(attr) == xml.stripQuotes(value));
+	}
+	
+	return false;
+}
+
+//-------------------------------------------------------------------------------------
+
+xml.stripQuotes = function(text)
+{
+	return text.substring(1, text.length -1);
 }
 
 //=====================================================================================
