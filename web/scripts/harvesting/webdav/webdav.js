@@ -37,7 +37,7 @@ function WebDav(xmlLoader)
 //=====================================================================================
 
 this.getType      = function() { return "webdav"; }
-this.getLabel     = function() { return loader.getText("typeWD"); }
+this.getLabel     = function() { return loader.eval("info[@type='webdav']/long"); }
 this.getEditPanel = function() { return "wd.editPanel"; }
 
 //=====================================================================================

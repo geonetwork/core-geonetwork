@@ -37,7 +37,7 @@ function Geonetwork(xmlLoader)
 //=====================================================================================
 
 this.getType      = function() { return "geonetwork"; }
-this.getLabel     = function() { return loader.getText("typeGN"); }
+this.getLabel     = function() { return loader.eval("info[@type='geonetwork']/long"); }
 this.getEditPanel = function() { return "gn.editPanel"; }
 
 //=====================================================================================

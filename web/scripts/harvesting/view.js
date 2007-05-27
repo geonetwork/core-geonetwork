@@ -204,10 +204,10 @@ function setStatusTip(node)
 	var id   = node.getAttribute('id');	
 	var code = getStatusCode(node);
 	
-	var statusImg = xml.getElementById($(id), 'status');
-	var statusTip = loader.eval('statusTip/'+code);
+	var img = xml.getElementById($(id), 'status');
+	var tip = loader.eval('statusTip/'+code);
 	
-	new Tooltip(statusImg, statusTip);
+	new Tooltip(img, tip);
 }
 
 //=====================================================================================
@@ -250,11 +250,10 @@ function setErrorTip(node)
 		tip = xml.toString(errTransf.transform(node));		
 	}
 	
-	var id = node.getAttribute('id');
+	var id  = node.getAttribute('id');
+	var img = xml.getElementById($(id), 'error');
 	
-	var errorImg = xml.getElementById($(id), 'error');
-	
-	new Tooltip(errorImg, tip);
+	new Tooltip(img, tip);
 }
 
 //=====================================================================================
