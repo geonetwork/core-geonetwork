@@ -67,49 +67,63 @@
 		<foundKeyWordsLimit>Maximum number of terms found</foundKeyWordsLimit>
 	</thesaurus>
 
-
-
+	<searchBox>Search for Data and Information</searchBox>
+	<searchIndex>Search index</searchIndex>
+	<contactUs>Contact us</contactUs>
+	<highlights>Highlights</highlights>
+	<recentAdditions>Recent Additions</recentAdditions>
+	<feedbackCardTitle>Feedback and Comments</feedbackCardTitle>
+	<loginCardTitle>Login / Signup</loginCardTitle>
+	<organisation>Organisation / department</organisation>
+	<emailAddress>Email address</emailAddress>
+	<feedbackComments>Feedback / comments</feedbackComments>
+	<!-- End new strings -->
 	
 	<language>en</language>
 	<!-- ISO code -->
-	<from>Enter From Date: </from>
 	<about>About</about>
 	<abstract>Abstract</abstract>
 	<accept>Accept</accept>
 	<add>add</add>
 	<addNewMetadata>Add new metadata</addNewMetadata>
 	<admin>Administration</admin>
+	<Administrator>Administrator</Administrator>
 	<agrovocKeyword>Agrovoc Keywords</agrovocKeyword>
 	<any>- Any -</any>
-	<ar>Arabic</ar>
 	<appSchInfoTab>App. schema</appSchInfoTab>
+	<ar>Arabic</ar>
 	<assigned>Assigned</assigned>
+	<attrlabl>Attribute Label</attrlabl>
 	<availability>Availability</availability>
 	<back>Back</back>
 	<backToDescription>Back to the data description</backToDescription>
 	<backToPreviousPage>Back to previous page</backToPreviousPage>
 	<backToEditor>Back to editing metadata</backToEditor>
 	<batchImport>Import all XML formatted metadata from a local directory</batchImport>
-	<searchUnused>Search for unused or empty metadata</searchUnused>
-	<convert>Convert</convert>
-	<import>Import</import>
+	<begdate>Beginning Date</begdate>
+	<begtime>Beginning Date</begtime>
+	<bgFileDescChoice value="thumbnail">Thumbnail</bgFileDescChoice>
+	<bgFileDescChoice value="large_thumbnail">Large thumbnail</bgFileDescChoice>
+	<bounding>Bounding Coordinates</bounding>
+	<boundingRelation value="equal">is</boundingRelation>
+	<boundingRelation value="overlaps">overlaps</boundingRelation>
+	<boundingRelation value="encloses">encloses</boundingRelation>
+	<boundingRelation value="fullyOutsideOf">is fully outside of</boundingRelation>
+	<browse>Browse Graphic</browse>
+	<browsen>Browse Graphic File Name</browsen>
+	<browsed>Browse Graphic File Description</browsed>
+	<browset>Browse Graphic File Type</browset>
 	<cancel>Cancel</cancel>
 	<categories>Categories</categories>
 	<category>Category</category>
 	<categoryManagement>Category management</categoryManagement>
 	<categoryManDes>Add/modify/delete and show categories</categoryManDes>
-	<harvestingManagement>Harvesting management</harvestingManagement>
-	<harvestingManDes>Add/modify/delete/start/stop harvesting tasks</harvestingManDes>
-	<systemConfig>System configuration</systemConfig>
-	<systemConfigDes>Allows to change some system's parameters</systemConfigDes>
-	<localiz>Localization</localiz>
-	<localizDes>Allows to change localized entities, like groups, categories etc...</localizDes>
 	<choose>-Choose-</choose>
 	<chooseFile>Choose the location of the file to upload</chooseFile>
 	<chooseLargeThumbnail>Choose the location of the large thumbnail file</chooseLargeThumbnail>
-	<thumbnails>Thumbnails</thumbnails>
 	<chooseThumbnail>Choose the location of the small thumbnail file </chooseThumbnail>
 	<clear>Clear</clear>
+	<clearAll>Clear All</clearAll>
 	<cn>Chinese</cn>
 	<completeTab>Advanced view</completeTab>
 	<completeTabEditor>Advanced editor</completeTabEditor>
@@ -117,16 +131,26 @@
 	<confirmPassword>Confirm password</confirmPassword>
 	<confirmNewPassword>Confirm new password</confirmNewPassword>
 	<constraintsTab>Constraints</constraintsTab>
+	<convert>Convert</convert>
 	<copyright1>Copyright</copyright1>
+	<copyright2>
+		<p>All rights reserved.<br/> Your generic copyright statement </p>
+	</copyright2>
+	<create>Create</create>
+	<createTip>Create a new metadata from this template</createTip>
 	<dataQualityTab>Data quality</dataQualityTab>
 	<datasetTab>Dataset</datasetTab>
+	<dateRelChoice/>
+	<dateRelChoice value="14">before</dateRelChoice>
+	<dateRelChoice value="15">before or during</dateRelChoice>
+	<dateRelChoice value="16">during</dateRelChoice>
+	<dateRelChoice value="17">during or after</dateRelChoice>
+	<dateRelChoice value="18">after</dateRelChoice>
 	<decline>Decline</decline>
 	<del>del</del>
 	<delete>Delete</delete>
-	<create>Create</create>
-	<createTip>Create a new metadata from this template</createTip>
-	<digital>Digital</digital>
 	<descriptionTab>Description</descriptionTab>
+	<digital>Digital</digital>
 	<directory>Directory</directory>
 	<dirParameter>(Needs the 'dir' parameter)</dirParameter>
 	<disclaimer1>Your Disclaimer title</disclaimer1>
@@ -135,42 +159,51 @@
 	<down>down</down>
 	<download>Download</download>
 	<downloadData>Data for download</downloadData>
+	<dsgpoly>Data Set G-Polygon</dsgpoly>
+	<eastbc>East Bounding Coordinate</eastbc>
 	<edit>Edit</edit>
+	<Editor>Editor</Editor>
+	<!-- <emailAddress>Email address</emailAddress> -->
 	<en>English</en>
 	<!-- Do not translate! -->
 	<enclosing>Including</enclosing>
 	<enclosingCoordinate>Enclosing coordinates </enclosingCoordinate>
+	<enddate>Ending Date</enddate>
+	<enttypl>Entity Type Label</enttypl>
 	<es>Español</es>
 	<!-- Do not translate! -->
 	<exactCoordinate>Exact coordinates </exactCoordinate>
 	<extended>Advanced search</extended>
+	<extent>Extent</extent>
 	<featuredMap>Featured map</featuredMap>
 	<feedback>Feedback</feedback>
 	<feedbackRequest>Please provide your details before downloading</feedbackRequest>
 	<file>File</file>
 	<firstName>First Name</firstName>
-	<fr>Français</fr>
-	<!-- Do not translate! -->
+	<fr>Français</fr> <!-- Do not translate! -->
 	<freeKeyword>Free Keywords</freeKeyword>
-	<from>Enter From Date : </from>
+	<from>Enter From Date: </from>
 	<general>General</general>
 	<generalInfo>General information</generalInfo>
+	<georss>Open a GeoRSS feed</georss>
 	<group>Group</group>
 	<groupManagement>Group management</groupManagement>
 	<groupManDes>Add/modify/delete and show groups</groupManDes>
 	<groups>Groups</groups>
+	<harvestingManagement>Harvesting management</harvestingManagement>
+	<harvestingManDes>Add/modify/delete/start/stop harvesting tasks</harvestingManDes>
 	<header_meta>
-		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
+		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis geospatial CSW reference implementation mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
 		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
-		<meta name="DC.title" lang="English French" content="GeoNetwork opensource portal to spatial data and information"/>
+		<meta name="DC.title" lang="English" content="GeoNetwork opensource portal to spatial data and information"/>
 		<meta name="DC.creator" content="GeoNetwork Team"/>
-		<meta name="DC.subject" lang="English French" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
-		<meta name="DC.description" lang="English French" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
-		<meta name="DC.date" content="01-11-2005"/>
+		<meta name="DC.subject" lang="English" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
+		<meta name="DC.description" lang="English" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
+		<meta name="DC.date" content="02-07-2007"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.language" content="English French"/>
+		<meta name="DC.language" content="English French Spanish Chinese"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
 	<help>Help</help>
@@ -182,17 +215,20 @@
 	<hitsPerPageChoice value="100">100</hitsPerPageChoice>
 	<home>Home</home>
 	<identificationTab>Identification</identificationTab>
+	<import>Import</import>
 	<infoTitle>Info</infoTitle>
 	<insert>Insert</insert>
 	<interactiveMap>Interactive Map</interactiveMap>
 	<interMapInfo>
 		<h1>Info in interactive maps</h1> You can find interactive maps by searching in GeoNetwork for digital data with an interactive map, or directly connet to a pre-configured map server. <p/> Supported map servers are <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial® Consortium</a> compliant WMS Map Servers and <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>.</interMapInfo>
-	<javascriptInsert>Inserts metadata generated by the javascript form into GeoNetwork opensource</javascriptInsert>
 	<keywords>Keywords</keywords>
 	<keywordshelp>Select multiple keywords by holding the Ctrl-key when selecting with the mouse</keywordshelp>
 	<large_thumbnail>Click to see a large preview image</large_thumbnail>
 	<latitude>Latitude (between -90 and 90) in degrees</latitude>
 	<links>Links</links>
+	<local>Local search</local>
+	<localiz>Localization</localiz>
+	<localizDes>Allows to change localized entities, like groups, categories etc...</localizDes>
 	<location>Location</location>
 	<login>Login</login>
 	<loginwarning>Only required for site administration</loginwarning>
@@ -248,6 +284,7 @@
 	<mapType>Map type</mapType>
 	<max>Maximum</max>
 	<mdUpdateError>Update error</mdUpdateError>
+	<message>The username or the password is wrong.<br/>Press the 'back' button and try again.</message>
 	<messageMdUpdateError>Sorry, an error occurred while updating metadata.</messageMdUpdateError>
 	<messageChanged>The metadata has been changed by another user. Please retry.</messageChanged>
 	<messageDownload>Thanks for your interest. Click on the download button to retrieve the data</messageDownload>
@@ -260,6 +297,7 @@
 	<metadataJSForm>Metadata from JS Form</metadataJSForm>
 	<min>Minimum</min>
 	<more>more</more>
+	<moreinfo>For more information you can contact us via email at </moreinfo>
 	<name>Name</name>
 	<newGroup>Add a new group</newGroup>
 	<newCategory>Add a new category</newCategory>
@@ -271,7 +309,9 @@
 	<noHelp>Sorry, no help available</noHelp>
 	<noInfo>Sorry, no info available</noInfo>
 	<noLogin>You are not logged in</noLogin>
+	<northbc>North Bounding Coordinate</northbc>
 	<online>Interactive map</online>
+	<onlink>Online Linkage</onlink>
 	<operation>Operation</operation>
 	<paper>Hard copy</paper>
 	<partial>Partially overlapping</partial>
@@ -283,71 +323,11 @@
 	<poweredBy>Powered by </poweredBy>
 	<privileges>Privileges</privileges>
 	<profile>Profile</profile>
-	<purpose>Purpose</purpose>
-	<rawMetadata>Raw Metadata Insert</rawMetadata>
-	<refSysTab>Ref. system</refSysTab>
-	<region>Region</region>
-	<remove>remove</remove>
-	<reset>Reset</reset>
-	<resetSearch>Reset the search form</resetSearch>
-	<resetFeedbackForm>Reset the feedback form</resetFeedbackForm>
-	<result>Last results</result>
-	<resultsCoordinate>Results matching the coordinate search </resultsCoordinate>
-	<resultsFreeText>Results matching the Free Text Word </resultsFreeText>
-	<resultsMatching>Aggregate Results matching search criteria :</resultsMatching>
-	<rss>Open RSS feed</rss>
-	<georss>Open a GeoRSS feed</georss>
-	<save>Save</save>
-	<saveAndClose>Save and close</saveAndClose>
-	<saveAndValidate>Check</saveAndValidate>
-	<schema>Schema</schema>
-	<search>Start the search</search>
-	<searchPage>Search page</searchPage>
-	<searchPageDes>Jumps to the metadata search page</searchPageDes>
-	<searchTemplates>Search for templates</searchTemplates>
-	<searchText>Free Text</searchText>
-	<show>Metadata</show>
-	<simple>Simple search</simple>
-	<simpleTab>Default view</simpleTab>
-	<simpleTabEditor>Default editor</simpleTabEditor>
-	<siteId>Site ID</siteId>
-	<site>Site</site>
-	<spatial2Tab>Spat. Repr.</spatial2Tab>
-	<spatialTab>Spat. Info</spatialTab>
-	<styleSheet>StyleSheet</styleSheet>
-	<submit>Submit</submit>
-	<summaryTab>Summary</summaryTab>
-	<surName>Last Name</surName>
-	<template>Template</template>
-	<thanks>Thank you for your effort. The GeoNetwork</thanks>
-	<theme>ISO topic category</theme>
-	<title>GeoNetwork- The portal to spatial data and information</title>
-	<to>Enter To Date : </to>
-	<tools>Tools</tools>
-	<topic>Topic</topic>
-	<up>up</up>
-	<update>Update</update>
-	<updateGroup>Update group</updateGroup>
-	<updateCategory>Update category</updateCategory>
-	<updateUserAccount>Update User Account </updateUserAccount>
-	<upload>Upload </upload>
-	<user>User</user>
-	<userManagement>User management</userManagement>
-	<userManDes>Add/modify/delete and show users</userManDes>
-	<username>Username</username>
-	<userPw>Change password</userPw>
-	<userPwDes>Allow current user to change password</userPwDes>
-	<validate>Validate</validate>
-	<winInfo1>This window will show GeoNetwork resources. This window may be hidden at times depending on how your browser manages windows. In this case, you will have to manually bring the window to the foreground when necessary.</winInfo1>
-	<winInfo2>Throughout the Help (?) icon give you access to explanations. When you activate this icon, it's output will be displayed in this Resource Window.</winInfo2>
-	<wwwlink>Web link</wwwlink>
-	<xmlInsert>Import XML formatted metadata</xmlInsert>
-	<xmlTab>XML view</xmlTab>
-	<copyright2>
-		<p>All rights reserved.<br/> Your generic copyright statement </p>
-	</copyright2>
-	<moreinfo>For more information you can contact us via email at </moreinfo>
-	<message>The username or the password is wrong.<br/>Press the 'back' button and try again.</message>
+	<progress>Progress</progress>
+	<progressChoice/>
+	<progressChoice value="complete">complete</progressChoice>
+	<progressChoice value="in-work">in work</progressChoice>
+	<progressChoice value="planned">planned</progressChoice>
 	<protocolChoice value="WWW:LINK-1.0-http--link">Web address (URL)</protocolChoice>
 	<protocolChoice value="WWW:LINK-1.0-http--samples">Showcase product (URL)</protocolChoice>
 	<protocolChoice value="WWW:LINK-1.0-http--related">Related link (URL)</protocolChoice>
@@ -364,70 +344,85 @@
 	<protocolChoice value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuration File (*.AXL)</protocolChoice>
 	<protocolChoice value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
 	<protocolChoice value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
-	<bgFileDescChoice value="thumbnail">Thumbnail</bgFileDescChoice>
-	<bgFileDescChoice value="large_thumbnail">Large thumbnail</bgFileDescChoice>
-	<!-- New strings -->
-	<searchBox>Search for Data and Information</searchBox>
-	<searchIndex>Search index</searchIndex>
-	<contactUs>Contact us</contactUs>
-	<highlights>Highlights</highlights>
-	<recentAdditions>Recent Additions</recentAdditions>
-	<feedbackCardTitle>Feedback and Comments</feedbackCardTitle>
-	<loginCardTitle>Login / Signup</loginCardTitle>
-	<organisation>Organisation / department</organisation>
-	<emailAddress>Email address</emailAddress>
-	<feedbackComments>Feedback / comments</feedbackComments>
-	<!-- Z39.50 strings -->
-	<local>Local search</local>
-	<remote>Remote search</remote>
-	<publisher>Publisher</publisher>
-	<publicationDate>Publication date</publicationDate>
-	<validityBegins>Validity begins</validityBegins>
-	<validityEnds>and ends</validityEnds>
-	<dateRelChoice/>
-	<dateRelChoice value="14">before</dateRelChoice>
-	<dateRelChoice value="15">before or during</dateRelChoice>
-	<dateRelChoice value="16">during</dateRelChoice>
-	<dateRelChoice value="17">during or after</dateRelChoice>
-	<dateRelChoice value="18">after</dateRelChoice>
-	<progress>Progress</progress>
-	<progressChoice/>
-	<progressChoice value="complete">complete</progressChoice>
-	<progressChoice value="in-work">in work</progressChoice>
-	<progressChoice value="planned">planned</progressChoice>
-	<rtitle>Title</rtitle>
-	<onlink>Online Linkage</onlink>
-	<bounding>Bounding Coordinates</bounding>
-	<northbc>North Bounding Coordinate</northbc>
-	<southbc>South Bounding Coordinate</southbc>
-	<eastbc>East Bounding Coordinate</eastbc>
-	<westbc>West Bounding Coordinate</westbc>
-	<extent>Extent</extent>
 	<pubdate>Publication Date</pubdate>
-	<begtime>Beginning Date</begtime>
-	<!-- FIXME: check if only begdate is needed -->
-	<begdate>Beginning Date</begdate>
-	<enddate>Ending Date</enddate>
-	<browse>Browse Graphic</browse>
-	<browsen>Browse Graphic File Name</browsen>
-	<browsed>Browse Graphic File Description</browsed>
-	<browset>Browse Graphic File Type</browset>
-	<enttypl>Entity Type Label</enttypl>
-	<attrlabl>Attribute Label</attrlabl>
-	<dsgpoly>Data Set G-Polygon</dsgpoly>
-	<boundingRelation value="equal">is</boundingRelation>
-	<boundingRelation value="overlaps">overlaps</boundingRelation>
-	<boundingRelation value="encloses">encloses</boundingRelation>
-	<boundingRelation value="fullyOutsideOf">is fully outside of</boundingRelation>
+	<publicationDate>Publication date</publicationDate>
+	<publisher>Publisher</publisher>
+	<purpose>Purpose</purpose>
+	<rawMetadata>Raw Metadata Insert</rawMetadata>
+	<refSysTab>Ref. system</refSysTab>
+	<region>Region</region>
+	<RegisteredUser>Registered user</RegisteredUser>
+	<remote>Remote search</remote>
+	<remove>remove</remove>
+	<reset>Reset</reset>
+	<resetSearch>Reset the search form</resetSearch>
+	<resetFeedbackForm>Reset the feedback form</resetFeedbackForm>
+	<result>Last results</result>
+	<resultsCoordinate>Results matching the coordinate search </resultsCoordinate>
+	<resultsFreeText>Results matching the Free Text Word </resultsFreeText>
+	<resultsMatching>Aggregate Results matching search criteria :</resultsMatching>
+	<rss>Open RSS feed</rss>
+	<rtitle>Title</rtitle>
+	<save>Save</save>
+	<saveAndClose>Save and close</saveAndClose>
+	<saveAndValidate>Check</saveAndValidate>
+	<schema>Schema</schema>
+	<search>Start the search</search>
+	<searchPage>Search page</searchPage>
+	<searchPageDes>Jumps to the metadata search page</searchPageDes>
+	<searchTemplates>Search for templates</searchTemplates>
+	<searchText>Free Text</searchText>
+	<searchUnused>Search for unused or empty metadata</searchUnused>
 	<server>Server</server>
+	<setAll>Set All</setAll>
+	<show>Metadata</show>
+	<simple>Simple search</simple>
+	<simpleTab>Default view</simpleTab>
+	<simpleTabEditor>Default editor</simpleTabEditor>
+	<siteId>Site ID</siteId>
+	<site>Site</site>
+	<southbc>South Bounding Coordinate</southbc>
+	<spatial2Tab>Spat. Repr.</spatial2Tab>
+	<spatialTab>Spat. Info</spatialTab>
+	<styleSheet>StyleSheet</styleSheet>
+	<submit>Submit</submit>
+	<summaryTab>Summary</summaryTab>
+	<surName>Last Name</surName>
+	<systemConfig>System configuration</systemConfig>
+	<systemConfigDes>Allows to change some system's parameters</systemConfigDes>
+	<template>Template</template>
+	<thanks>Thank you for your effort. The GeoNetwork</thanks>
+	<theme>ISO topic category</theme>
+	<thumbnails>Thumbnails</thumbnails>
 	<timeout>Timeout</timeout>
 	<timeoutChoice value="10">after 10 seconds</timeoutChoice>
 	<timeoutChoice value="20">after 20 seconds</timeoutChoice>
 	<timeoutChoice value="30">after 30 seconds</timeoutChoice>
-	<Administrator>Administrator</Administrator>
+	<title>GeoNetwork- The portal to spatial data and information</title>
+	<to>Enter To Date: </to>
+	<tools>Tools</tools>
+	<topic>Topic</topic>
+	<up>up</up>
+	<update>Update</update>
+	<updateGroup>Update group</updateGroup>
+	<updateCategory>Update category</updateCategory>
+	<updateUserAccount>Update User Account </updateUserAccount>
+	<upload>Upload </upload>
+	<user>User</user>
 	<UserAdmin>User administrator</UserAdmin>
-	<Editor>Editor</Editor>
-	<RegisteredUser>Registered user</RegisteredUser>
-	<setAll>Set All</setAll>
-	<clearAll>Clear All</clearAll>
+	<userManagement>User management</userManagement>
+	<userManDes>Add/modify/delete and show users</userManDes>
+	<username>Username</username>
+	<userPw>Change password</userPw>
+	<userPwDes>Allow current user to change password</userPwDes>
+	<validate>Validate</validate>
+	<validityBegins>Validity begins</validityBegins>
+	<validityEnds>and ends</validityEnds>
+	<westbc>West Bounding Coordinate</westbc>
+	<winInfo1>This window will show GeoNetwork resources. This window may be hidden at times depending on how your browser manages windows. In this case, you will have to manually bring the window to the foreground when necessary.</winInfo1>
+	<winInfo2>Throughout the Help (?) icon give you access to explanations. When you activate this icon, it's output will be displayed in this Resource Window.</winInfo2>
+	<wwwlink>Web link</wwwlink>
+	<xmlInsert>Import XML formatted metadata</xmlInsert>
+	<xmlTab>XML view</xmlTab>
+
 </strings>
