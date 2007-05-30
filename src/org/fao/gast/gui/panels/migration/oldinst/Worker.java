@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import jeeves.resources.dbms.Dbms;
+import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.dlib.gui.ProgressDialog;
 import org.fao.gast.app.App;
@@ -216,7 +217,7 @@ public class Worker implements Runnable
 		//--- copy users
 
 		for (Object user : oldUsers)
-			Lib.database.insert(newDbms, "Users", (Element) user, idMapper);
+			Lib.database.insert(newDbms, "Users", (Element) user, userMapper);
 
 		oldDbms.commit();
 		newDbms.commit();
@@ -566,6 +567,22 @@ public class Worker implements Runnable
 		{
 			if (field.endsWith("id"))
 				return new Integer(value.toString());
+
+			return value;
+		}
+	};
+
+	//---------------------------------------------------------------------------
+
+	private DatabaseLib.Mapper userMapper = new DatabaseLib.Mapper()
+	{
+		public Object map(String field, Object value)
+		{
+			if (field.equals("id"))
+				return new Integer(value.toString());
+
+			if (field.equals("password"))
+				return Util.scramble(value.toString());
 
 			return value;
 		}

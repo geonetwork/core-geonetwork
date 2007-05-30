@@ -155,18 +155,6 @@ public class DatabaseLib
 	//---------------------------------------------------------------------------
 	/** NOT Transactional */
 
-	public String getSiteId(Dbms dbms) throws SQLException
-	{
-		String  query = "SELECT value FROM Settings WHERE name='siteId'";
-		List    list  = dbms.select(query).getChildren();
-		Element rec   = (Element) list.get(0);
-
-		return rec.getChildText("value");
-	}
-
-	//---------------------------------------------------------------------------
-	/** NOT Transactional */
-
 	public void insert(Dbms dbms, String table, List records, String fields[],
 							 Mapper mapper) throws SQLException
 	{
@@ -491,6 +479,20 @@ public class DatabaseLib
 					dbms.commit();
 					serial++;
 				}
+	}
+
+	//---------------------------------------------------------------------------
+	/** NOT Transactional */
+	/** This method should be called only during setup, when the database is empty
+	  * and there is only 1 siteId string into settings */
+
+	private String getSiteId(Dbms dbms) throws SQLException
+	{
+		String  query = "SELECT value FROM Settings WHERE name='siteId'";
+		List    list  = dbms.select(query).getChildren();
+		Element rec   = (Element) list.get(0);
+
+		return rec.getChildText("value");
 	}
 
 	//---------------------------------------------------------------------------

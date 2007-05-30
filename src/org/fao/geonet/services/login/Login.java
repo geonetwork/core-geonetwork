@@ -63,9 +63,10 @@ public class Login implements Service
 
 		//--- attempt to load user from db
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		Dbms   dbms  = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		String query = "SELECT * FROM Users WHERE username = ? AND password = ?";
 
-		Element elUser = dbms.select("SELECT * FROM Users WHERE username = ? AND password = ?", user, pass);
+		Element elUser = dbms.select(query, user,Util.scramble(pass));
 
 		List list = elUser.getChildren();
 
