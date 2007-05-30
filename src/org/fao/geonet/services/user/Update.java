@@ -108,7 +108,7 @@ public class Update implements Service
 								"profile=?, address=?, state=?, zip=?, country=?, email=?," +
 								"organisation=?, kind=? WHERE id=?";
 
-			dbms.execute (query, username, password, surname, name,
+			dbms.execute (query, username, Util.scramble(password), surname, name,
 							 			profile, address, state, zip, country, email,
 							 			organ, kind, new Integer(id));
 

@@ -7,6 +7,7 @@
 	additional scripts
 	-->
 	<xsl:template mode="script" match="/">
+<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/>
 <script type="text/javascript" language="JavaScript">
 			
 			function update1()
@@ -113,11 +114,11 @@
 				</tr>
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/password"/> (*)</th>
-					<td class="padded"><input class="content" type="password" name="password" value="{/root/response/record/password}"/></td>
+					<td class="padded"><input class="content" type="password" name="password" value=""/></td>
 				</tr>
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/confirmPassword"/> (*)</th>
-					<td class="padded"><input class="content" type="password" name="password2" value="{/root/response/record/password}"/></td>
+					<td class="padded"><input class="content" type="password" name="password2" value=""/></td>
 				</tr>
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/surName"/></th>

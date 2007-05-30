@@ -58,8 +58,8 @@ public class PwUpdate implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		String password    = Util.getParam(params, Params.PASSWORD);
-		String newPassword = Util.getParam(params, Params.NEW_PASSWORD);
+		String password    = Util.scramble(Util.getParam(params, Params.PASSWORD));
+		String newPassword = Util.scramble(Util.getParam(params, Params.NEW_PASSWORD));
 
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
