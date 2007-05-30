@@ -177,7 +177,7 @@ public class Geonet
 		public static final String MAX_SUMMARY_KEYS = "maxSummaryKeys";
 		public static final String SCHEMA_MAPPINGS  = "schemaMappings";
 		public static final String DATA_DIR         = "dataDir";
-		public static final String CODELIST_DIR  	= "codeListDir";		
+		public static final String CODELIST_DIR  	= "codeListDir";
 		public static final String DIR              = "dir";
 	}
 
@@ -199,7 +199,7 @@ public class Geonet
 	{
 		public static final String LOCAL              = "local";
 		public static final String EXTERNAL           = "external";
-		
+
 		public static final String THESAURUS          = "thesauri";
 		public static final String CONTACT            = "contactDirectories";
 		public static final String CRS                = "crs";
@@ -227,12 +227,13 @@ public class Geonet
 
 	public class Service
 	{
-		public static final String XML_LOGIN  = "xml.user.login";
-		public static final String XML_LOGOUT = "xml.user.logout";
-		public static final String XML_INFO   = "xml.info";
-		public static final String XML_SEARCH = "xml.search";
-		public static final String MEF_IMPORT = "mef.import";
-		public static final String MEF_EXPORT = "mef.export";
+		public static final String XML_LOGIN         = "xml.user.login";
+		public static final String XML_LOGOUT        = "xml.user.logout";
+		public static final String XML_INFO          = "xml.info";
+		public static final String XML_SEARCH        = "xml.search";
+		public static final String XML_METADATA_GET  = "xml.metadata.get";
+		public static final String MEF_IMPORT        = "mef.import";
+		public static final String MEF_EXPORT        = "mef.export";
 	}
 }
 
