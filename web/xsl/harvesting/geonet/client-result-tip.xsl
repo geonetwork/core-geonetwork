@@ -12,7 +12,7 @@
 
 	<xsl:template match="/root/node">
 		<xsl:choose>
-			<xsl:when test="count(search) != 0">
+			<xsl:when test="count(info/search) != 0">
 				<table>
 					<tr class="tipRow">
 						<td class="tipHeader"> <xsl:value-of select="/root/strings/tipHeader/siteId"/> </td>
@@ -22,9 +22,9 @@
 						<td class="tipHeader"> <xsl:value-of select="/root/strings/tipHeader/unchanged"/> </td>
 						<td class="tipHeader"> <xsl:value-of select="/root/strings/tipHeader/skipped"/> </td>
 					</tr>
-					<xsl:for-each select="search">
+					<xsl:for-each select="info/search">
 						<tr class="tipRow">
-							<td class="tipCell"><b><xsl:value-of select="@siteId"/></b></td>
+							<td class="tipCell"><b><xsl:value-of select="@siteName"/></b></td>
 							<td class="tipCell"><xsl:value-of select="total"/></td>
 							<td class="tipCell"><xsl:value-of select="added"/></td>
 							<td class="tipCell"><xsl:value-of select="updated"/></td>
