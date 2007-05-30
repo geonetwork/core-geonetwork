@@ -7,6 +7,7 @@
 	<xsl:include href="../main.xsl"/>
 	<xsl:include href="buttons.xsl"/>
 	<xsl:include href="geonet/geonetwork.xsl"/>
+	<xsl:include href="geonet20/geonetwork.xsl"/>
 	<xsl:include href="webdav/webdav.xsl"/>
 
 	<!-- ============================================================================================= -->
@@ -80,6 +81,7 @@
 	<xsl:template name="editPanel">
 		<xsl:call-template name="editPanel-GN"/>
 		<xsl:call-template name="editPanel-WD"/>
+		<xsl:call-template name="editPanel-GN20"/>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
