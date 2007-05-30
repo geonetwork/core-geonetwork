@@ -130,14 +130,18 @@ public class LuceneSearcher extends MetaSearcher
 					md = gc.getDataManager().getMetadata(srvContext, id, false);
 				}
 
-				// Calculate score and add it to info elem
-				Float score = _hits.score(i);
-				Element info = md.getChild (Edit.RootChild.INFO, Edit.NAMESPACE);
-				addElement(info, Edit.Info.Elem.SCORE, score.toString());
+				//--- the search result is buffered so a metadata could have been deleted
+				//--- just before showing search results
 
-				response.addContent(md);
+				if (md != null)
+				{
+					// Calculate score and add it to info elem
+					Float score = _hits.score(i);
+					Element info = md.getChild (Edit.RootChild.INFO, Edit.NAMESPACE);
+					addElement(info, Edit.Info.Elem.SCORE, score.toString());
 
-
+					response.addContent(md);
+				}
 			}
 		}
 		return response;
