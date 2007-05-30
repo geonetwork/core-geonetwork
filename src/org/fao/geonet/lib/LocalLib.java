@@ -79,7 +79,7 @@ public class LocalLib
 
 		for (String langId : langs)
 		{
-			String name = locNames.get(langId);
+			String name = (locNames == null) ? null : locNames.get(langId);
 
 			//--- check if the local language does not exist in locNames
 			//--- this will help to align languages with remote sites
