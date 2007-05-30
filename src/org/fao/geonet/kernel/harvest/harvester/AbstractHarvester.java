@@ -162,7 +162,7 @@ public abstract class AbstractHarvester
 
 	//--------------------------------------------------------------------------
 
-	public synchronized void destroy(Dbms dbms) throws SQLException
+	public synchronized void destroy(Dbms dbms) throws Exception
 	{
 		if (executor != null)
 			executor.terminate();
@@ -343,7 +343,7 @@ public abstract class AbstractHarvester
 	  * It is used to remove harvested metadata.
 	  */
 
-	protected abstract void doDestroy(Dbms dbms) throws SQLException;
+	protected abstract void doDestroy(Dbms dbms) throws Exception;
 
 	protected abstract String doAdd(Dbms dbms, Element node)
 											throws BadInputEx, SQLException;

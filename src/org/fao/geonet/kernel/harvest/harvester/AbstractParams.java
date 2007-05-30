@@ -73,7 +73,7 @@ public abstract class AbstractParams
 
 		String value = el.getChildText(name);
 
-		if (value == null)
+		if (value == null || value.length() == 0)
 			return defValue;
 
 		try

@@ -81,8 +81,7 @@ public class Delete implements Service
 		//-----------------------------------------------------------------------
 		//--- delete metadata and return status
 
-		if (!dataMan.deleteMetadata(dbms, id))
-			throw new ConcurrentUpdateEx(id);
+		dataMan.deleteMetadata(dbms, id);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));

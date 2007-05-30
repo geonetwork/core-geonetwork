@@ -54,7 +54,7 @@ public class Remove implements Service
 	{
 		return Util.exec(params, context, new Util.Job()
 		{
-			public OperResult execute(Dbms dbms, HarvestManager hm, String id) throws SQLException
+			public OperResult execute(Dbms dbms, HarvestManager hm, String id) throws Exception
 			{
 				return hm.remove(dbms, id);
 			}

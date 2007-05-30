@@ -6,6 +6,7 @@
 
 ker.include('harvesting/harvester.js');
 ker.include('harvesting/geonet/geonetwork.js');
+ker.include('harvesting/geonet20/geonetwork20.js');
 ker.include('harvesting/webdav/webdav.js');
 ker.include('harvesting/model.js');
 ker.include('harvesting/view.js');
@@ -33,13 +34,15 @@ function Harvesting()
 
 	//--- create subsystems and register them
 
-	var geonet = new Geonetwork(loader);
-	var webdav = new WebDav(loader);
+	var geonet   = new Geonetwork(loader);
+	var geonet20 = new Geonetwork20(loader);
+	var webdav   = new WebDav(loader);
 
 	//--- public objects
 
-	this.geonet = geonet;
-	this.webdav = webdav;
+	this.geonet   = geonet;
+	this.geonet20 = geonet20;
+	this.webdav   = webdav;
 
 	//--- public methods
 
@@ -63,6 +66,7 @@ function Harvesting()
 function init()
 {
 	view.register(geonet);
+	view.register(geonet20);
 	view.register(webdav);
 	view.show(SHOW.LIST);
 	

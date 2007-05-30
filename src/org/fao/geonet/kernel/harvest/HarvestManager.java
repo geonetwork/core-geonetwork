@@ -146,7 +146,7 @@ public class HarvestManager
 	//---------------------------------------------------------------------------
 	/** This method must be synchronized because it cannot run if we are updating some entries */
 
-	public synchronized OperResult remove(Dbms dbms, String id) throws SQLException
+	public synchronized OperResult remove(Dbms dbms, String id) throws Exception
 	{
 		Log.debug(Geonet.HARVEST_MAN, "Removing harvesting with id : "+ id);
 

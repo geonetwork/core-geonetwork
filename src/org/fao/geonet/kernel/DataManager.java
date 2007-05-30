@@ -906,11 +906,8 @@ public class DataManager
 	/** Removes a metadata
 	  */
 
-	public synchronized boolean deleteMetadata(Dbms dbms, String id) throws Exception
+	public synchronized void deleteMetadata(Dbms dbms, String id) throws Exception
 	{
-		if (!existsMetadata(dbms, id))
-			return false;
-
 		//--- remove operations
 		deleteAllMetadataOper(dbms, id);
 
@@ -922,8 +919,6 @@ public class DataManager
 
 		//--- update search criteria
 		searchMan.delete("_id", id+"");
-
-		return true;
 	}
 
 	//--------------------------------------------------------------------------
@@ -1084,11 +1079,7 @@ public class DataManager
 	{
 		Object args[] = { new Integer(mdId), new Integer(categId) };
 
-		String query = "SELECT metadataId FROM MetadataCateg WHERE metadataId=? AND categoryId=?";
-
-		Element elRes = dbms.select(query, args);
-
-		if (elRes.getChildren().size() == 0)
+		if (!isCategorySet(dbms, mdId, categId))
 			dbms.execute("INSERT INTO MetadataCateg(metadataId, categoryId) VALUES(?,?)", args);
 	}
 

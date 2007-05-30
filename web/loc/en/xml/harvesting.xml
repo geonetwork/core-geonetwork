@@ -12,8 +12,13 @@
 	<!-- harvesting types - - - - - - - - - - - - - - - - - - - - -->
 	
 	<info type="geonetwork">
-		<short>Geonetwork</short>
-		<long>Geonetwork remote node</long>
+		<short>GeoNetwork</short>
+		<long>GeoNetwork remote node</long>
+	</info>
+	
+	<info type="geonetwork20">
+		<short>GeoNetwork 2.0</short>
+		<long>Old GeoNetwork 2.0 remote node</long>
 	</info>
 	
 	<info type="webdav">
@@ -124,6 +129,7 @@
 	<cannotRetrieve>Unable to retrieve information</cannotRetrieve>
 	<supplyHost>Please, provide the 'host' parameter</supplyHost>
 	<supplyServlet>Please, provide the 'servlet' parameter</supplyServlet>
+	<pleaseSpecifySiteId>Please specify a non empty Site ID</pleaseSpecifySiteId>
 	
 	<oper>
 		<op id="0">View</op>

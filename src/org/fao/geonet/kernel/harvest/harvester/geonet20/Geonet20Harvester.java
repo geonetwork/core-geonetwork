@@ -84,26 +84,20 @@ public class Geonet20Harvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doDestroy(Dbms dbms) throws SQLException
+	protected void doDestroy(Dbms dbms) throws Exception
 	{
-		String getQuery   = "SELECT id FROM Metadata WHERE source = ?";
-
-		String opAllQuery = "DELETE FROM OperationAllowed WHERE metadataId = ?";
-		String mdCatQuery = "DELETE FROM MetadataCateg    WHERE metadataId = ?";
-		String mdQuery    = "DELETE FROM Metadata         WHERE source = ?";
+		String getQuery = "SELECT id FROM Metadata WHERE source = ?";
 
 		for (Search s : params.getSearches())
 		{
 			for (Object o : dbms.select(getQuery, s.siteId).getChildren())
 			{
 				Element el = (Element) o;
-				int     id = Integer.parseInt(el.getChildText("id"));
+				String  id = (String)  el.getChildText("id");
 
-				dbms.execute(opAllQuery, id);
-				dbms.execute(mdCatQuery, id);
+				dataMan.deleteMetadata(dbms, id);
+				dbms.commit();
 			}
-
-			dbms.execute(mdQuery, s.siteId);
 		}
 	}
 
@@ -147,8 +141,6 @@ public class Geonet20Harvester extends AbstractHarvester
 		//--- setup options node ---------------------------------------
 
 		settingMan.add(dbms, "id:"+optionsID, "every",        params.every);
-		settingMan.add(dbms, "id:"+optionsID, "createGroups", params.createGroups);
-		settingMan.add(dbms, "id:"+optionsID, "createCateg",  params.createCateg);
 		settingMan.add(dbms, "id:"+optionsID, "oneRunOnly",   params.oneRunOnly);
 		settingMan.add(dbms, "id:"+optionsID, "status",       Status.INACTIVE);
 
@@ -196,8 +188,6 @@ public class Geonet20Harvester extends AbstractHarvester
 		setValue(values, path +"/site/useAccount/password", account, "password");
 
 		setValue(values, path +"/options/every",            opt, "every");
-		setValue(values, path +"/options/createGroups",     opt, "createGroups");
-		setValue(values, path +"/options/createCateg",      opt, "createCateg");
 		setValue(values, path +"/options/oneRunOnly",       opt, "oneRunOnly");
 
 		settingMan.setValues(dbms, values);
@@ -333,28 +323,12 @@ public class Geonet20Harvester extends AbstractHarvester
 				throw new UserNotFoundEx(params.username);
 		}
 
-		//--- retrieve info on categories and groups
-
-		log.info("Retrieving info on categories and groups from : "+ getName());
-
-		req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_INFO);
-		req.clearParams();
-		req.addParam("type", "site");
-		req.addParam("type", "categories");
-		req.addParam("type", "groups");
-		req.addParam("type", "knownNodes");
-
-		Element remoteInfo = req.execute();
-
-		if (!remoteInfo.getName().equals("info"))
-			throw new BadServerResponseEx(remoteInfo);
-
 		//--- search
 
 		result = new GeonetResult();
 
 		Aligner aligner = new Aligner(log, req, params, dataMan, dbms, context,
-												localCateg, localGroups, remoteInfo);
+												localCateg, localGroups);
 
 		for(Search s : params.getSearches())
 		{

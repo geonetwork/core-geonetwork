@@ -112,26 +112,20 @@ public class GeonetHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doDestroy(Dbms dbms) throws SQLException
+	protected void doDestroy(Dbms dbms) throws Exception
 	{
-		String getQuery   = "SELECT id FROM Metadata WHERE source = ?";
-
-		String opAllQuery = "DELETE FROM OperationAllowed WHERE metadataId = ?";
-		String mdCatQuery = "DELETE FROM MetadataCateg    WHERE metadataId = ?";
-		String mdQuery    = "DELETE FROM Metadata         WHERE source = ?";
+		String getQuery = "SELECT id FROM Metadata WHERE source = ?";
 
 		for (Search s : params.getSearches())
 		{
 			for (Object o : dbms.select(getQuery, s.siteId).getChildren())
 			{
 				Element el = (Element) o;
-				int     id = Integer.parseInt(el.getChildText("id"));
+				String  id = (String)  el.getChildText("id");
 
-				dbms.execute(opAllQuery, id);
-				dbms.execute(mdCatQuery, id);
+				dataMan.deleteMetadata(dbms, id);
+				dbms.commit();
 			}
-
-			dbms.execute(mdQuery, s.siteId);
 		}
 	}
 
@@ -327,8 +321,14 @@ public class GeonetHarvester extends AbstractHarvester
 
 		for (AlignerResult ar : result.alResult)
 		{
+			String siteName = htSiteIdName.get(ar.siteId);
+
+			if (siteName != null)
+					siteName = "?"+ ar.siteId +"?";
+
 			Element site = new Element("search");
-			site.setAttribute("siteId", ar.siteId);
+			site.setAttribute("siteId",   ar.siteId);
+			site.setAttribute("siteName", siteName);
 
 			add(site, "total",     ar.totalMetadata);
 			add(site, "added",     ar.addedMetadata);
