@@ -130,7 +130,10 @@
 	<supplyHost>Please, provide the 'host' parameter</supplyHost>
 	<supplyServlet>Please, provide the 'servlet' parameter</supplyServlet>
 	<pleaseSpecifySiteId>Please specify a non empty Site ID</pleaseSpecifySiteId>
-	
+	<gn20Unsafe>Please notice that harvesting old GeoNetwork nodes is unsafe. 
+ 					The old nodes do not have unique site ids and this could cause
+					unpredictable results (like removing nodes from other harvestings).</gn20Unsafe>
+			
 	<oper>
 		<op id="0">View</op>
 		<op id="1">Download</op>

@@ -11,6 +11,8 @@
 			<xsl:call-template name="site-GN20"/>
 			<xsl:call-template name="search-GN20"/>
 			<xsl:call-template name="options-GN20"/>
+			<p/>
+			<span style="color:red"><xsl:value-of select="/root/gui/harvesting/gn20Unsafe"/></span>
 		</div>
 	</xsl:template>
 
