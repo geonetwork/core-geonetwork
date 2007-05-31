@@ -83,8 +83,36 @@ public class MainFrame extends JFrame implements Starter, ActionListener
 		GuiBuilder builder = new GuiBuilder(appPath, panView, panWork);
 		builder.build("/gast/data/gui.xml");
 
+		checkAndCreateDB();
+
 		setSize(700, 500);
 		setVisible(true);
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void checkAndCreateDB() throws Exception
+	{
+		String user = Lib.embeddedDB.getUser();
+		String pass = Lib.embeddedDB.getPassword();
+
+		if (user == null || pass == null)
+		{
+			//--- user & password can be null only if the data files of the
+			//--- embedded database are not there, so we create them
+
+			Lib.embeddedDB.createDB();
+
+			user = Lib.embeddedDB.getUser();
+			pass = Lib.embeddedDB.getPassword();
+
+			//--- then we store the generated account into the config.xml file
+			//--- and save it
+
+			Lib.config.setDbmsUser    (user);
+			Lib.config.setDbmsPassword(pass);
+			Lib.config.save();
+		}
 	}
 
 	//---------------------------------------------------------------------------

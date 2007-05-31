@@ -85,24 +85,6 @@ public class EmbeddedPanel extends DbmsPanel
 		if (!Lib.type.isInteger(port))
 			throw new Exception("The port must be an integer");
 
-		if (user == null || pass == null)
-		{
-			//--- user & password can be null only if the data files of the
-			//--- embedded database are not there, so we create them
-
-			Lib.embeddedDB.createDB();
-
-			user = Lib.embeddedDB.getUser();
-			pass = Lib.embeddedDB.getPassword();
-
-			//--- then we store the generated account into the config.xml file
-			//--- and save it
-
-			Lib.config.setDbmsUser    (user);
-			Lib.config.setDbmsPassword(pass);
-			Lib.config.save();
-		}
-
 		Lib.config.setDbmsDriver  ("com.mckoi.JDBCDriver");
 		Lib.config.setDbmsURL     ("jdbc:mckoi://localhost:"+port+"/");
 		Lib.config.setDbmsUser    (user);
