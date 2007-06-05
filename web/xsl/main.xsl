@@ -14,6 +14,7 @@ xmlns:xalan= "http://xml.apache.org/xalan" exclude-result-prefixes="xalan">
 			<head>
 				<xsl:call-template name="header"/>
 				<xsl:apply-templates mode="script" select="/"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/>
 			</head>
 			<body onload="init()">
 				<table width="100%" height="100%">
