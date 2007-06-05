@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 
+	<savexml>
+		<dc>Télécharger les métadonnées au format Dublin Core</dc>
+		<fgdc>Télécharger les métadonnées au format FGDC</fgdc>
+		<iso19115Esri>Télécharger les métadonnées au format ESRI ArcCatalog</iso19115Esri>
+		<iso19139>Télécharger les métadonnées au format ISO19115/19139</iso19139>
+		<iso19139fra>Télécharger les métadonnées au format ISO19115/19139 profil France</iso19139fra>
+	</savexml>
 	<!-- new strings -->
 	<fuzzy>Précision</fuzzy>
 	<fuzzySearch>Définir la précision de la recherche (recherche plus ou moins floue).</fuzzySearch>

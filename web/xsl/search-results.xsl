@@ -128,29 +128,29 @@
 									<td class="padded" align="middle" nowrap="nowrap" width="40">
 										<xsl:choose>
 											<xsl:when test="contains($metadata/geonet:info/schema,'dublin-core')">
-												<a href="{/root/gui/locService}/dc.xml?id={$metadata/geonet:info/id}" target="_blank" title="Download Dublin Core metadata in XML">
-													<img src="{/root/gui/url}/images/xml.png" alt="Dublin Core XML" title="Save Dublin Core metadata as XML" border="0"/>
+												<a href="{/root/gui/locService}/dc.xml?id={$metadata/geonet:info/id}" target="_blank" title="{/root/gui/strings/savexml/dc}">
+													<img src="{/root/gui/url}/images/xml.png" alt="{/root/gui/strings/savexml/dc}" title="{/root/gui/strings/savexml/dc}" border="0"/>
 												</a>
 											</xsl:when>
 											<xsl:when test="contains($metadata/geonet:info/schema,'fgdc-std')">
-												<a href="{/root/gui/locService}/fgdc.xml?id={$metadata/geonet:info/id}" target="_blank" title="Download FGDC metadata in XML">
-													<img src="{/root/gui/url}/images/xml.png" alt="FGDC XML" title="Save FGDC metadata as XML" border="0"/>
+												<a href="{/root/gui/locService}/fgdc.xml?id={$metadata/geonet:info/id}" target="_blank" title="{/root/gui/strings/savexml/fgdc}">
+													<img src="{/root/gui/url}/images/xml.png" alt="{/root/gui/strings/savexml/fgdc}" title="{/root/gui/strings/savexml/fgdc}" border="0"/>
 												</a>
 											</xsl:when>
 											<xsl:when test="contains($metadata/geonet:info/schema,'iso19115')">
 												<a href="{/root/gui/locService}/iso19115to19139.xml?id={$metadata/geonet:info/id}" target="_blank" title="Save ISO19115/19139 metadata as XML">
-													<img src="{/root/gui/url}/images/xml.png" alt="IISO19115/19139 XML" title="Save ISO19115/19139 metadata as XML" border="0"/>
+													<img src="{/root/gui/url}/images/xml.png" alt="{/root/gui/strings/savexml/iso19139}" title="{/root/gui/strings/savexml/iso19139}" border="0"/>
 												</a>
-												<a href="{/root/gui/locService}/iso_arccatalog8.xml?id={$metadata/geonet:info/id}" target="_blank" title="Download ISO19115 metadata in XML for ESRI ArcCatalog">
-													<img src="{/root/gui/url}/images/ac.png" alt="ISO19115 XML for ArcCatalog" title="Save ISO19115 metadata in XML for ESRI ArcCatalog" border="0"/>
+												<a href="{/root/gui/locService}/iso_arccatalog8.xml?id={$metadata/geonet:info/id}" target="_blank" title="{/root/gui/strings/savexml/iso19115Esri}">
+													<img src="{/root/gui/url}/images/ac.png" alt="{/root/gui/strings/savexml/iso19115Esri}" title="{/root/gui/strings/savexml/iso19115Esri}" border="0"/>
 												</a>
 											</xsl:when>
 											<xsl:when test="contains($metadata/geonet:info/schema,'iso19139')">
-												<a href="{/root/gui/locService}/iso19139.xml?id={$metadata/geonet:info/id}" target="_blank" title="Download ISO19115/19139 metadata in XML">
-													<img src="{/root/gui/url}/images/xml.png" alt="ISO19115/19139 XML" title="Save ISO19115/19139 metadata as XML" border="0"/>
+												<a href="{/root/gui/locService}/iso19139.xml?id={$metadata/geonet:info/id}" target="_blank" title="{/root/gui/strings/savexml/iso19139}">
+													<img src="{/root/gui/url}/images/xml.png" alt="{/root/gui/strings/savexml/iso19139}" title="{/root/gui/strings/savexml/iso19139}" border="0"/>
 												</a>
-<!-- //FIXME												<a href="{/root/gui/locService}/iso_arccatalog8.xml?id={$metadata/geonet:info/id}" target="_blank" title="Download ISO19115 metadata in XML for ESRI ArcCatalog">
-													<img src="{/root/gui/url}/images/ac.png" alt="ISO19115 XML for ArcCatalog" title="Save ISO19115 metadata in XML for ESRI ArcCatalog" border="0"/>
+<!-- //FIXME												<a href="{/root/gui/locService}/iso_arccatalog8.xml?id={$metadata/geonet:info/id}" target="_blank" title="{/root/gui/strings/savexml/iso19115Esri}">
+													<img src="{/root/gui/url}/images/ac.png" alt="{/root/gui/strings/savexml/iso19115Esri}" title="{/root/gui/strings/savexml/iso19115Esri}" border="0"/>
 												</a> -->
 											</xsl:when>
 											

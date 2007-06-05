@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	
+	<savexml>
+		<dc>Save Dublin Core metadata as XML</dc>
+		<fgdc>Save FGDC metadata as XML</fgdc>
+		<iso19115Esri>Save ISO19115 metadata in XML for ESRI ArcCatalog</iso19115Esri>
+		<iso19139>Save ISO19115/19139 metadata as XML</iso19139>
+		<iso19139fra>Save ISO19115/19139 Fra metadata as XML</iso19139fra>
+	</savexml>
 	<!-- new strings -->
 	<fuzzy>Precision</fuzzy>
 	<fuzzySearch>Set the precision of the search (from fuzzy search to exact term search).</fuzzySearch>
