@@ -37,7 +37,7 @@
 					<table>
 						<tr>
 							<th class="padded" valign="top"><xsl:value-of select="/root/gui/strings/metadata"/></th>
-							<td class="padded"><textarea class="content" name="data" cols="60" rows="15"/></td>
+							<td class="padded"><textarea class="content" name="data" cols="80" rows="20"/></td>
 						</tr>
 						<tr>
 							<th class="padded"><xsl:value-of select="/root/gui/strings/schema"/></th>
