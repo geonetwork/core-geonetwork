@@ -25,6 +25,7 @@
 					destdir =".build"
 					extdirs ="web/WEB-INF/lib"
 					includes="org/**"
+					encoding= "ISO8859-1"
 					debug   ="true" />
 
 		<copy			todir = ".build">
