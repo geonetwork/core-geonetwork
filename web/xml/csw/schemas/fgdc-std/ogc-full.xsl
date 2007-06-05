@@ -3,11 +3,12 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 										xmlns:csw="http://www.opengis.net/cat/csw"
 										xmlns:dc ="http://purl.org/dc/elements/1.1/"
-										xmlns:dct="http://purl.org/dc/terms/">
+										xmlns:dct="http://purl.org/dc/terms/"
+										xmlns:ows="http://www.opengis.net/ows">
 
 	<!-- ============================================================================= -->
 
-	<xsl:template match="gmd:metadata">
+	<xsl:template match="metadata">
 		<csw:Record>
 
 			<xsl:for-each select="idinfo/citation/citeinfo/title/@cat_id">
