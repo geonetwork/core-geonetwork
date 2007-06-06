@@ -12,6 +12,8 @@
 	additional scripts
 	-->
 	<xsl:template mode="script" match="/">
+		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=control,slider,effects,controls"/>
 		<script language="JavaScript1.2" type="text/javascript">
 
 			function doActionInWindow(action)
