@@ -6,6 +6,7 @@
 	<!-- ============================================================================= -->
 
 	<xsl:template mode="script" match="/">
+		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/>
 		<script type="text/javascript" language="JavaScript">			
 			function checkAndSubmit()
 			{
