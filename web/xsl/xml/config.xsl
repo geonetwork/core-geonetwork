@@ -7,12 +7,13 @@
 	<!-- ============================================================================================= -->
 
 	<xsl:template match="/system">
-		<xsl:variable name="site"     select="children/site/children"/>
-		<xsl:variable name="server"   select="children/server/children"/>
-		<xsl:variable name="intranet" select="children/intranet/children"/>
-		<xsl:variable name="z3950"    select="children/z3950/children"/>
-		<xsl:variable name="proxy"    select="children/proxy/children"/>
-		<xsl:variable name="feedback" select="children/feedback/children"/>
+		<xsl:variable name="site"      select="children/site/children"/>
+		<xsl:variable name="server"    select="children/server/children"/>
+		<xsl:variable name="intranet"  select="children/intranet/children"/>
+		<xsl:variable name="z3950"     select="children/z3950/children"/>
+		<xsl:variable name="proxy"     select="children/proxy/children"/>
+		<xsl:variable name="feedback"  select="children/feedback/children"/>
+		<xsl:variable name="removedMd" select="children/removedMetadata/children"/>
 
 		<config>
 			<site>
@@ -48,6 +49,10 @@
 					<port><xsl:value-of select="$feedback/mailServer/children/port/value"/></port>
 				</mailServer>
 			</feedback>
+
+			<removedMetadata>
+				<dir><xsl:value-of select="$removedMd/dir/value"/></dir>
+			</removedMetadata>
 		</config>
 	</xsl:template>
 

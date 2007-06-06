@@ -58,9 +58,7 @@ public class ResourceLib
 
 	public String getDir(ServiceContext context, String access, String id)
 	{
-		String dataDir = getDataDir(context);
-
-		return getDir(dataDir, access, id);
+		return getDir(getDataDir(context), access, id);
 	}
 
 	//-----------------------------------------------------------------------------
@@ -88,6 +86,40 @@ public class ResourceLib
 
 		if (!hsOper.contains(operation))
 			throw new OperationNotAllowedEx();
+	}
+
+	//-----------------------------------------------------------------------------
+
+	public String getRemovedDir(ServiceContext context, String id)
+	{
+		return getRemovedDir(getRemovedDir(context), id);
+	}
+
+	//-----------------------------------------------------------------------------
+	/** @return the absolute path of the folder choosen to store all deleted metadata */
+
+	public String getRemovedDir(ServiceContext context)
+	{
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+
+		String remDir = gc.getSettingManager().getValue("system/removedMetadata/dir");
+
+		if (!new File(remDir).isAbsolute())
+			remDir = context.getAppPath() + remDir;
+
+		return remDir;
+	}
+
+	//-----------------------------------------------------------------------------
+	/** @return the absolute path of the folder where the given metadata should be
+	  * stored when it is removed */
+
+	public String getRemovedDir(String removedDir, String id)
+	{
+		String group    = pad(Integer.parseInt(id) / 100, 3);
+		String groupDir = group +"00-"+ group +"99";
+
+		return removedDir +"/"+ groupDir +"/";
 	}
 
 	//-----------------------------------------------------------------------------

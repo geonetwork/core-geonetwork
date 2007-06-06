@@ -318,6 +318,22 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
+	public String getMetadataUuid(Dbms dbms, String id) throws Exception
+	{
+		String query = "SELECT uuid FROM Metadata WHERE id=?";
+
+		List list = dbms.select(query, new Integer(id)).getChildren();
+
+		if (list.size() == 0)
+			return null;
+
+		Element record = (Element) list.get(0);
+
+		return record.getChildText("uuid");
+	}
+
+	//--------------------------------------------------------------------------
+
 	public String getVersion(String id)
 	{
 		return editLib.getVersion(id);

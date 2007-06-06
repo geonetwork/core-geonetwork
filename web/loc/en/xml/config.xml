@@ -16,14 +16,17 @@
 	<z3950>Z39.50 Server</z3950>
 		<enable>Enable</enable>
 		
+	<proxy>Proxy</proxy>
+		<use>Use</use>
+	
 	<feedback>Feedback</feedback>
 		<email>EMail</email>
 		<smtpHost>SMTP Host</smtpHost>
 		<smtpPort>SMTP Port</smtpPort>
 	
-	<proxy>Proxy</proxy>
-		<use>Use</use>
-	
+	<removedMetadata>Removed metadata</removedMetadata>
+		<dir>Directory</dir>
+		
 	<!-- Buttons -->
 	
 	<save>Save</save>
@@ -125,6 +128,12 @@
 		<tip id="feedback.mail.host">
 			The SMTP <b>host</b> and <b>port</b> parameters are used to send emails
 			to GeoNetwork's users when a resource is downloaded.
+		</tip>
+		
+		<!-- removed metadata -->
+		
+		<tip id="removedMd.dir">
+			Directory used to store metadata (in MEF format) when they are deleted.
 		</tip>
 	</tips>
 	

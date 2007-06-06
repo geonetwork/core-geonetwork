@@ -41,7 +41,8 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			PROXY_PORT        : xml.evalXPath(node, 'proxy/port'),
 			FEEDBACK_EMAIL    : xml.evalXPath(node, 'feedback/email'),
 			FEEDBACK_MAIL_HOST: xml.evalXPath(node, 'feedback/mailServer/host'),
-			FEEDBACK_MAIL_PORT: xml.evalXPath(node, 'feedback/mailServer/port')
+			FEEDBACK_MAIL_PORT: xml.evalXPath(node, 'feedback/mailServer/port'),
+			REMOVEDMD_DIR     : xml.evalXPath(node, 'removedMetadata/dir')
 		}
 		
 		this.getConfigCB(data);
@@ -106,6 +107,9 @@ ConfigModel.updateTemp =
 '			<port>{FEEDBACK_MAIL_PORT}</port>'+
 '		</mailServer>'+
 '	</feedback>'+
+'	<removedMetadata>'+
+'		<dir>{REMOVEDMD_DIR}</dir>'+
+'	</removedMetadata>'+
 '</config>';
 
 //=====================================================================================

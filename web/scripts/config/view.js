@@ -31,7 +31,9 @@ function ConfigView(strLoader)
 		
 		{ id:'proxy.host',   type:'length',   minSize :0,  maxSize :200 },
 		{ id:'proxy.host',   type:'hostname' },
-		{ id:'proxy.port',   type:'integer',  minValue:21, maxValue:65535, empty:true }
+		{ id:'proxy.port',   type:'integer',  minValue:21, maxValue:65535, empty:true },
+
+		{ id:'removedMd.dir', type:'length', minSize :0,  maxSize :200 }	
 	]);
 	
 	this.z3950Shower = new Shower('z3950.enable', 'z3950.subpanel');	
@@ -68,6 +70,8 @@ ConfigView.prototype.setData = function(data)
 	$('feedback.mail.host').value = data['FEEDBACK_MAIL_HOST'];
 	$('feedback.mail.port').value = data['FEEDBACK_MAIL_PORT'];
 	
+	$('removedMd.dir').value = data['REMOVEDMD_DIR'];
+
 	this.z3950Shower.update();
 	this.proxyShower.update();
 }
@@ -102,7 +106,9 @@ ConfigView.prototype.getData = function()
 		
 		FEEDBACK_EMAIL     : $('feedback.email')    .value,
 		FEEDBACK_MAIL_HOST : $('feedback.mail.host').value,
-		FEEDBACK_MAIL_PORT : $('feedback.mail.port').value		
+		FEEDBACK_MAIL_PORT : $('feedback.mail.port').value,		
+
+		REMOVEDMD_DIR : $('removedMd.dir').value
 	}
 	
 	return data;

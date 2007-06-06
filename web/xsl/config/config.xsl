@@ -43,6 +43,7 @@
 		<xsl:call-template name="z3950"/>
 		<xsl:call-template name="proxy"/>
 		<xsl:call-template name="feedback"/>
+		<xsl:call-template name="removedMetadata"/>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
@@ -125,29 +126,6 @@
 
 	<!-- ============================================================================================= -->
 
-	<xsl:template name="feedback">
-		<h1 align="left"><xsl:value-of select="/root/gui/config/feedback"/></h1>
-
-		<table>
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/config/email"/></td>
-				<td class="padded"><input id="feedback.email" class="content" type="text" value=""/></td>
-			</tr>
-			
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/config/smtpHost"/></td>
-				<td class="padded"><input id="feedback.mail.host" class="content" type="text" value=""/></td>
-			</tr>
-			
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/config/smtpPort"/></td>
-				<td class="padded"><input id="feedback.mail.port" class="content" type="text" value=""/></td>
-			</tr>
-		</table>
-	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
 	<xsl:template name="proxy">
 		<h1 align="left"><xsl:value-of select="/root/gui/config/proxy"/></h1>
 
@@ -171,6 +149,42 @@
 						</tr>
 					</table>
 				</td>
+			</tr>			
+		</table>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template name="feedback">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/feedback"/></h1>
+
+		<table>
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/config/email"/></td>
+				<td class="padded"><input id="feedback.email" class="content" type="text" value=""/></td>
+			</tr>
+			
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/config/smtpHost"/></td>
+				<td class="padded"><input id="feedback.mail.host" class="content" type="text" value=""/></td>
+			</tr>
+			
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/config/smtpPort"/></td>
+				<td class="padded"><input id="feedback.mail.port" class="content" type="text" value=""/></td>
+			</tr>
+		</table>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template name="removedMetadata">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/removedMetadata"/></h1>
+
+		<table>
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/config/dir"/></td>
+				<td class="padded"><input id="removedMd.dir" class="content" type="text" value=""/></td>
 			</tr>			
 		</table>
 	</xsl:template>

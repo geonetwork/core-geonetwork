@@ -23,6 +23,9 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.HashSet;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.OperationNotAllowedEx;
@@ -31,14 +34,16 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.BinaryFile;
 import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.MetaSearcher;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
@@ -70,13 +75,20 @@ public class Delete implements Service
 		//-----------------------------------------------------------------------
 		//--- check access
 
-		if (!dataMan.existsMetadata(dbms, id))
+		String uuid = dataMan.getMetadataUuid(dbms, id);
+
+		if (uuid == null)
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
 		HashSet hsOper = accessMan.getOperations(context, id, context.getIpAddress());
 
 		if (!hsOper.contains(AccessManager.OPER_EDIT))
 			throw new OperationNotAllowedEx();
+
+		//-----------------------------------------------------------------------
+		//--- backup metadata in 'removed' folder
+
+		backupFile(context, id, uuid, MEFLib.doExport(context, uuid, "full", false));
 
 		//-----------------------------------------------------------------------
 		//--- delete metadata and return status
@@ -88,9 +100,40 @@ public class Delete implements Service
 
 		// invalidate current result set set
 		MetaSearcher searcher = (MetaSearcher)context.getUserSession().getProperty(Geonet.Session.SEARCH_RESULT);
-		if (searcher != null) searcher.setValid(false);
+
+		if (searcher != null)
+			searcher.setValid(false);
 
 		return elResp;
+	}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Private methods
+	//---
+	//--------------------------------------------------------------------------
+
+	private void backupFile(ServiceContext context, String id, String uuid, String file)
+	{
+		String outDir = Lib.resource.getRemovedDir(context, id);
+		String outFile= outDir + uuid +".mef";
+
+		new File(outDir).mkdirs();
+
+		try
+		{
+			FileInputStream  is = new FileInputStream(file);
+			FileOutputStream os = new FileOutputStream(outFile);
+
+			BinaryFile.copy(is, os, true, true);
+		}
+		catch(Exception e)
+		{
+			context.warning("Cannot backup mef file : "+e.getMessage());
+			e.printStackTrace();
+		}
+
+		new File(file).delete();
 	}
 }
 

@@ -62,9 +62,6 @@ public class List implements Service
 	{
 		UserSession session = context.getUserSession();
 
-		if (!session.isAuthenticated())
-			return new Element(Jeeves.Elem.RESPONSE);
-
 		//--- retrieve groups for myself
 
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
