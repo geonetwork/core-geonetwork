@@ -20,6 +20,7 @@
 		<xsl:copy-of select="/root/gui/strings/header_meta/meta"/>
 		
 		<!-- javascript -->
+		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/form_check.js"/>
 	
