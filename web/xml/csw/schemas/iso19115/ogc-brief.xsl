@@ -10,7 +10,7 @@
 	<xsl:template match="Metadata">
 		<csw:BriefRecord>
 
-			<xsl:for-each select="dataIdInfo/idCitation/citId">
+			<xsl:for-each select="mdFileID">
 				<dc:identifier><xsl:value-of select="."/></dc:identifier>
 			</xsl:for-each>
 						

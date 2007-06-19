@@ -13,15 +13,15 @@
 	<xsl:template match="gmd:MD_Metadata">
 		<csw:Record>
 
+			<xsl:for-each select="gmd:fileIdentifier">
+				<dc:identifier><xsl:value-of select="gco:CharacterString"/></dc:identifier>
+			</xsl:for-each>
+
 			<!-- DataIdentification - - - - - - - - - - - - - - - - - - - - - -->
 
 			<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification">
 
-				<xsl:for-each select="gmd:citation/gmd:CI_Citation">
-					<xsl:for-each select="gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString">
-						<dc:identifier><xsl:value-of select="."/></dc:identifier>
-					</xsl:for-each>
-	
+				<xsl:for-each select="gmd:citation/gmd:CI_Citation">	
 					<xsl:for-each select="gmd:title/gco:CharacterString">
 						<dc:title><xsl:value-of select="."/></dc:title>
 					</xsl:for-each>

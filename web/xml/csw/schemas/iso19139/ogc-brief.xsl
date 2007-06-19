@@ -11,8 +11,8 @@
 	<xsl:template match="gmd:MD_Metadata">
 		<csw:BriefRecord>
 
-			<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier">
-				<dc:identifier><xsl:value-of select="gmd:code/gco:CharacterString"/></dc:identifier>
+			<xsl:for-each select="gmd:fileIdentifier">
+				<dc:identifier><xsl:value-of select="gco:CharacterString"/></dc:identifier>
 			</xsl:for-each>
 
 			<xsl:for-each select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue">

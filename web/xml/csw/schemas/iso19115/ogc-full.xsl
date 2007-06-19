@@ -11,15 +11,15 @@
 	<xsl:template match="Metadata">
 		<csw:Record>
 
+			<xsl:for-each select="mdFileID">
+				<dc:identifier><xsl:value-of select="."/></dc:identifier>
+			</xsl:for-each>
+
 			<!-- DataIdentification - - - - - - - - - - - - - - - - - - - - - -->
 
 			<xsl:for-each select="dataIdInfo">
 
 				<xsl:for-each select="idCitation">
-					<xsl:for-each select="citId">
-						<dc:identifier><xsl:value-of select="."/></dc:identifier>
-					</xsl:for-each>
-
 					<xsl:for-each select="resTitle">
 						<dc:title><xsl:value-of select="."/></dc:title>
 					</xsl:for-each>
