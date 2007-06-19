@@ -39,30 +39,11 @@
 							<th class="padded" valign="top"><xsl:value-of select="/root/gui/strings/metadata"/></th>
 							<td class="padded"><textarea class="content" name="data" cols="80" rows="20"/></td>
 						</tr>
-						<tr>
-							<th class="padded"><xsl:value-of select="/root/gui/strings/schema"/></th>
-							<td class="padded">
-								<select class="content" name="schema" size="1">
-									<xsl:for-each select="/root/gui/schemas/name">
-										<option value="{.}">
-											<xsl:value-of select="."/>
-										</option>
-									</xsl:for-each>
-								</select>
-							</td>
-						</tr>
 
-						<!-- validate --> 
+						<!-- type -->
 
 						<tr>
-							<th class="padded"><xsl:value-of select="/root/gui/strings/validate"/></th>
-							<td><input class="content" type="checkbox" name="validate"/></td>
-						</tr>
-
-						<!-- kind -->
-
-						<tr>
-							<th class="padded" valign="top"><xsl:value-of select="/root/gui/strings/kind"/></th>
+							<th class="padded" valign="top"><xsl:value-of select="/root/gui/strings/type"/></th>
 							<td>
 								<select class="content" name="template" size="1" id="metadata.type" onchange="typeChanged()">
 									<option value="n"><xsl:value-of select="/root/gui/strings/metadata"/></option>
@@ -94,6 +75,28 @@
 									</xsl:for-each>
 								</select>
 							</td>
+						</tr>
+
+						<!-- destination schema -->
+
+						<tr>
+							<th class="padded"><xsl:value-of select="/root/gui/strings/desSchema"/></th>
+							<td class="padded">
+								<select class="content" name="schema" size="1">
+									<xsl:for-each select="/root/gui/schemas/name">
+										<option value="{.}">
+											<xsl:value-of select="."/>
+										</option>
+									</xsl:for-each>
+								</select>
+							</td>
+						</tr>
+
+						<!-- validate --> 
+
+						<tr>
+							<th class="padded"><xsl:value-of select="/root/gui/strings/validate"/></th>
+							<td><input class="content" type="checkbox" name="validate"/></td>
 						</tr>
 
 						<!-- groups -->
