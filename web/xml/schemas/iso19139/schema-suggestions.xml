@@ -32,4 +32,8 @@
 		<suggest name="gmd:country"/>
 		<suggest name="gmd:electronicMailAddress"/>
 	</field>
+	
+	<field name="gmd:MD_Keywords">
+		<suggest name="gmd:type"/>
+	</field>
 </fields>
