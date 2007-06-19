@@ -23,9 +23,10 @@
 		</script>
 	</xsl:template>
 
-	<!--
-	page content
-	-->
+	<!-- ================================================================================= -->
+	<!-- page content -->
+	<!-- ================================================================================= -->
+
 	<xsl:template name="content">
 		<xsl:call-template name="formLayout">
 			<xsl:with-param name="title" select="/root/gui/strings/privileges"/>
@@ -53,51 +54,16 @@
 							<th/>
 						</tr>
 			
-						<!-- loop on 'All' and 'Internal' groups -->
-						<xsl:for-each select="/root/response/groups/group">
-							<xsl:if test="id='0' or id='1'">
-								<xsl:variable name="groupId" select="id"/>
-								<tr id="row.{id}">
-									<td class="padded"><xsl:value-of select="label/child::*[name() = $lang]"/></td>
-									
-									<!-- loop on all operations,  edit, notify and admin privileges are hidden-->
-									<xsl:for-each select="oper">
-										<xsl:if test="id!=2 and id!=4 and id!='3'">
-											<td class="padded" align="center" width="80">
-												<input type="checkbox" name="_{$groupId}_{id}">
-													<xsl:if test="on">
-														<xsl:attribute name="checked"/>
-													</xsl:if>
-												</input>
-											</td>
-										</xsl:if>
-									</xsl:for-each>
+						<!-- 'All' and 'Internal' groups -->
 
-									<!-- fill empty slots -->
-									<xsl:for-each select="oper">
-										<xsl:if test="id='2' or id='4' or id='3'">
-											<td/>
-										</xsl:if>
-									</xsl:for-each>
+						<xsl:apply-templates select="/root/response/groups/group[id='1']" mode="group">
+							<xsl:with-param name="lang" select="$lang"/>
+						</xsl:apply-templates>
 
-									<!-- 'set all' button -->
+						<xsl:apply-templates select="/root/response/groups/group[id='0']" mode="group">
+							<xsl:with-param name="lang" select="$lang"/>
+						</xsl:apply-templates>
 
-									<td>
-										<button class="content" onclick="setAll('row.{id}'); return false;">
-											<xsl:value-of select="/root/gui/strings/setAll"/>
-										</button>
-									</td>
-
-									<!-- 'clear all' button -->
-
-									<td>
-										<button class="content" onclick="clearAll('row.{id}'); return false;">
-											<xsl:value-of select="/root/gui/strings/clearAll"/>
-										</button>
-									</td>
-								</tr>
-							</xsl:if>
-						</xsl:for-each>
 						<tr>
 							<td class="dots"/>
 							<xsl:for-each select="/root/response/operations/record">
@@ -166,4 +132,55 @@
 			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
+
+	<!-- ================================================================================= -->
+
+	<xsl:template match="*" mode="group">
+		<xsl:param name="lang"/>
+
+		<xsl:variable name="groupId" select="id"/>
+
+		<tr id="row.{id}">
+			<td class="padded"><xsl:value-of select="label/child::*[name() = $lang]"/></td>
+			
+			<!-- loop on all operations,  edit, notify and admin privileges are hidden-->
+			<xsl:for-each select="oper">
+				<xsl:if test="id!='2' and id!='3' and id!='4'">
+					<td class="padded" align="center" width="80">
+						<input type="checkbox" name="_{$groupId}_{id}">
+							<xsl:if test="on">
+								<xsl:attribute name="checked"/>
+							</xsl:if>
+						</input>
+					</td>
+				</xsl:if>
+			</xsl:for-each>
+
+			<!-- fill empty slots -->
+			<xsl:for-each select="oper">
+				<xsl:if test="id='2' or id='3' or id='4'">
+					<td/>
+				</xsl:if>
+			</xsl:for-each>
+
+			<!-- 'set all' button -->
+
+			<td>
+				<button class="content" onclick="setAll('row.{id}'); return false;">
+					<xsl:value-of select="/root/gui/strings/setAll"/>
+				</button>
+			</td>
+
+			<!-- 'clear all' button -->
+
+			<td>
+				<button class="content" onclick="clearAll('row.{id}'); return false;">
+					<xsl:value-of select="/root/gui/strings/clearAll"/>
+				</button>
+			</td>
+		</tr>
+	</xsl:template>
+
+	<!-- ================================================================================= -->
+
 </xsl:stylesheet>
