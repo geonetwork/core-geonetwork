@@ -18,10 +18,7 @@
 			var label = '<xsl:value-of select="/root/gui/strings/label"/>';
 			var definition = '<xsl:value-of select="/root/gui/strings/definition"/>';
 		</script>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js" language="JavaScript"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js" language="JavaScript"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/form_check.js" language="JavaScript"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js" language="JavaScript"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/keywordsearching.js" language="JavaScript"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=effects,controls"/>
 		<script language="JavaScript1.2" type="text/javascript">
