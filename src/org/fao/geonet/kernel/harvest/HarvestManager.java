@@ -54,26 +54,36 @@ public class HarvestManager
 	{
 		this.context = context;
 
-		xslPath    = context.getAppPath() + Geonet.Path.STYLESHEETS+ "/xml";
+		xslPath    = context.getAppPath() + Geonet.Path.STYLESHEETS+ "/xml/harvesting/";
 		settingMan = sm;
 		dataMan    = dm;
 
 		AbstractHarvester.staticInit(context);
 
 		Element entries = settingMan.get("harvesting", -1);
-		entries = Xml.transform(entries, xslPath +"/harvesting.xsl");
 
-		Iterator i = entries.getChildren().iterator();
+		Iterator i = entries.getChild("children").getChildren().iterator();
 
 		while (i.hasNext())
 		{
-			Element entry = (Element) i.next();
-			String  type  = entry.getAttributeValue("type");
+			Element node = transform((Element) i.next());
+			String  type = node.getAttributeValue("type");
 
 			AbstractHarvester ah = AbstractHarvester.create(type, context, sm, dm);
-			ah.init(entry);
+			ah.init(node);
 			hmHarvesters.put(ah.getID(), ah);
 		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private Element transform(Element node) throws Exception
+	{
+		String type = node.getChildText("value");
+
+		node = (Element) node.clone();
+
+		return Xml.transform(node, xslPath + type +".xsl");
 	}
 
 	//---------------------------------------------------------------------------
@@ -91,16 +101,24 @@ public class HarvestManager
 		if (result == null)
 			return null;
 
-		result = Xml.transform(result, xslPath +"/harvesting.xsl");
-
-		if (result.getName().equals("node"))
+		if (id != null)
+		{
+			result = transform(result);
 			addInfo(result);
+		}
+
 		else
 		{
-			Iterator nodes = result.getChildren().iterator();
+			Iterator nodes = result.getChild("children").getChildren().iterator();
+
+			result = new Element("nodes");
 
 			while (nodes.hasNext())
-				addInfo((Element) nodes.next());
+			{
+				Element node = transform((Element) nodes.next());
+				addInfo(node);
+				result.addContent(node);
+			}
 		}
 
 		return result;
