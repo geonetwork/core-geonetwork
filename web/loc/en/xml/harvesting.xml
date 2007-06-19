@@ -26,6 +26,11 @@
 		<long>Web DAV server</long>
 	</info>
 	
+	<info type="csw">
+		<short>CSW/2.0</short>
+		<long>Catalogue Services for the Web 2.0</long>
+	</info>
+	
 	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Site</site>
@@ -45,6 +50,7 @@
 	<title>Title</title>
 	<abstract>Abstract</abstract>
 	<keywords>Keywords</keywords>
+	<subject>Subject</subject>
 	<digital>Digital</digital>
 	<hardcopy>Hardcopy</hardcopy>
 	<siteId>Site ID</siteId>
@@ -66,7 +72,10 @@
 	<structure>Structure</structure>
 	<host>Host</host>
 	<privileges>Privileges</privileges>
+	<categories>Categories</categories>
 	<url>URL</url>
+	<capabUrl>Capabilities URL</capabUrl>
+	<icon>Icon</icon>
 	<group>Group</group>
 	<groups>Groups</groups>
 	
@@ -140,7 +149,7 @@
 		<op id="2">Edit</op>
 		<op id="3">Notify</op>
 		<op id="4">Admin</op>
-		<op id="5">Dynamic</op>
+		<op id="5">Interactive map</op>
 		<op id="6">Featured</op>
 	</oper>
 	

@@ -56,6 +56,12 @@
 			<class name=".services.harvesting.Run" />
 		</service>
 
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.harvesting.info">
+			<class name=".services.harvesting.Info" />
+		</service>
 	</services>
 </geonet>
 

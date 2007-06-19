@@ -14,7 +14,7 @@
 
 		<tr id="{@id}">
 			<td class="padded" align="center"><input type="checkbox"/></td>
-			<td class="padded" id="node.name"><xsl:value-of select="@name"/></td>
+			<td class="padded" id="node.name"><xsl:value-of select="site/name"/></td>
 
 			<!-- Type - - - - - - - - - - - - - - - - - - - - - -->
 

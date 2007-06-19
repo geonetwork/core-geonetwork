@@ -49,6 +49,7 @@
 		<allow service="xml.harvesting.start"/>
 		<allow service="xml.harvesting.stop"/>
 		<allow service="xml.harvesting.run"/>
+		<allow service="xml.harvesting.info"/>
 
 		<!-- MEF facilities -->
 		<allow service="mef.import"/>
