@@ -8,9 +8,6 @@
 	-->
 	<xsl:template mode="script" match="/">
 		<!-- javascript -->
-		<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js" language="JavaScript"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/form_check.js" language="JavaScript"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js" language="JavaScript"/>
 		<script language="JavaScript1.2" type="text/javascript">
 			var locService= '<xsl:value-of select="/root/gui/locService"/>';
 			var create = '<xsl:value-of select="/root/gui/strings/create"/>';
