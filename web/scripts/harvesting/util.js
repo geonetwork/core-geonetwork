@@ -86,3 +86,64 @@ Every.build = function(days, hours, mins)
 }
 
 //=====================================================================================
+//===
+//=== InfoService
+//===
+//=====================================================================================
+
+function InfoService(xmlLoader, type, callBack)
+{
+	var loader   = xmlLoader;
+	var callBackF= callBack;	
+
+	var request = ker.createRequest('type', type);
+	
+	ker.send('xml.info', request, ker.wrap(this, retrieve_OK));
+
+//=====================================================================================
+
+function retrieve_OK(xmlRes)
+{
+	if (xmlRes.nodeName == 'error')
+		ker.showError(loader.getText('cannotRetrieve'), xmlRes);
+	else
+	{
+		var data = [];
+		var list = xml.children(xml.children(xmlRes)[0]);
+		
+		for (var i=0; i<list.length; i++)
+			data.push(buildNode(list[i]));				
+		
+		callBackF(data);
+	}
+}
+
+//=====================================================================================
+
+function buildNode(node)
+{
+	var map = {}
+	var id  = node.getAttribute('id');
+
+	if (id != null)
+		map['id'] = id;
+
+	var list = xml.children(node);
+
+	for (var i=0; i<list.length; i++)
+	{
+		var child     = list[i];
+		var name      = child.nodeName;
+		var childList = xml.children(child);
+
+		if (childList.length == 0)
+			map[name] = xml.textContent(child);
+		else
+			map[name] = buildNode(child);
+	}
+
+	return map;							
+}
+
+//=====================================================================================
+}

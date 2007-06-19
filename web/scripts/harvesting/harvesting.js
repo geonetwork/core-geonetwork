@@ -5,9 +5,12 @@
 //=====================================================================================
 
 ker.include('harvesting/harvester.js');
+ker.include('harvesting/harvester-model.js');
+ker.include('harvesting/harvester-view.js');
 ker.include('harvesting/geonet/geonetwork.js');
 ker.include('harvesting/geonet20/geonetwork20.js');
 ker.include('harvesting/webdav/webdav.js');
+ker.include('harvesting/csw/csw.js');
 ker.include('harvesting/model.js');
 ker.include('harvesting/view.js');
 ker.include('harvesting/util.js');
@@ -37,12 +40,14 @@ function Harvesting()
 	var geonet   = new Geonetwork(loader);
 	var geonet20 = new Geonetwork20(loader);
 	var webdav   = new WebDav(loader);
+	var csw      = new Csw(loader);
 
 	//--- public objects
 
 	this.geonet   = geonet;
 	this.geonet20 = geonet20;
 	this.webdav   = webdav;
+	this.csw      = csw;
 
 	//--- public methods
 
@@ -66,8 +71,9 @@ function Harvesting()
 function init()
 {
 	view.register(geonet);
-	view.register(geonet20);
 	view.register(webdav);
+	view.register(csw);
+	view.register(geonet20);
 	view.show(SHOW.LIST);
 	
 	refresh();
@@ -216,7 +222,7 @@ function run_OK(idList)
 
 function edit(id)
 {
-	model.getNode(id, ker.wrap(this, view.edit));
+	model.getNode(id, ker.wrap(view, view.edit));
 }
 
 //=====================================================================================
