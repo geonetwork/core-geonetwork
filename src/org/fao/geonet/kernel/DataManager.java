@@ -28,6 +28,7 @@
 package org.fao.geonet.kernel;
 
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -330,6 +331,46 @@ public class DataManager
 		Element record = (Element) list.get(0);
 
 		return record.getChildText("uuid");
+	}
+
+	//--------------------------------------------------------------------------
+
+	public MdInfo getMetadataInfo(Dbms dbms, String id) throws Exception
+	{
+		String query = "SELECT id, uuid, schemaId, isTemplate, isHarvested, createDate, "+
+							"changeDate, source, title, root FROM Metadata WHERE id=?";
+
+		List list = dbms.select(query, new Integer(id)).getChildren();
+
+		if (list.size() == 0)
+			return null;
+
+		Element record = (Element) list.get(0);
+
+		MdInfo info = new MdInfo();
+
+		info.id          = id;
+		info.uuid        = record.getChildText("uuid");
+		info.schemaId    = record.getChildText("schemaid");
+		info.isHarvested = "y".equals(record.getChildText("isharvested"));
+		info.createDate  = record.getChildText("createdate");
+		info.changeDate  = record.getChildText("changedate");
+		info.source      = record.getChildText("source");
+		info.title       = record.getChildText("title");
+		info.root        = record.getChildText("root");
+
+		String temp = record.getChildText("istemplate");
+
+		if ("y".equals(temp))
+			info.template = MdInfo.Template.TEMPLATE;
+
+		else if ("s".equals(temp))
+			info.template = MdInfo.Template.SUBTEMPLATE;
+
+		else
+			info.template = MdInfo.Template.METADATA;
+
+		return info;
 	}
 
 	//--------------------------------------------------------------------------

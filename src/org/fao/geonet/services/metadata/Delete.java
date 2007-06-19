@@ -41,6 +41,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.lib.Lib;
@@ -75,9 +76,9 @@ public class Delete implements Service
 		//-----------------------------------------------------------------------
 		//--- check access
 
-		String uuid = dataMan.getMetadataUuid(dbms, id);
+		MdInfo info = dataMan.getMetadataInfo(dbms, id);
 
-		if (uuid == null)
+		if (info == null)
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
 		HashSet hsOper = accessMan.getOperations(context, id, context.getIpAddress());
@@ -88,7 +89,8 @@ public class Delete implements Service
 		//-----------------------------------------------------------------------
 		//--- backup metadata in 'removed' folder
 
-		backupFile(context, id, uuid, MEFLib.doExport(context, uuid, "full", false));
+		if (info.template != MdInfo.Template.SUBTEMPLATE)
+			backupFile(context, id, info.uuid, MEFLib.doExport(context, info.uuid, "full", false));
 
 		//-----------------------------------------------------------------------
 		//--- delete metadata and return status
