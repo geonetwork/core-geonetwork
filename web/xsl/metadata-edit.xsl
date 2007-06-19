@@ -12,7 +12,6 @@
 	additional scripts
 	-->
 	<xsl:template mode="script" match="/">
-		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=control,slider,effects,controls"/>
 		<script language="JavaScript1.2" type="text/javascript">
 
@@ -166,10 +165,10 @@
 									</table>
 								</td></tr>
 								<tr><td class="padded-content" height="100%" align="center" valign="top">
-									<xsl:call-template name="editButtons"/>
+									<xsl:call-template name="templateChoice"/>
 								</td></tr>
 								<tr><td class="padded-content" height="100%" align="center" valign="top">
-									<xsl:call-template name="templateChoice"/>
+									<xsl:call-template name="editButtons"/>
 								</td></tr>
 							</table>
 						</form>
@@ -229,7 +228,7 @@
 	
 	<xsl:template name="templateChoice" match="*">
 		
-		<b><xsl:value-of select="/root/gui/strings/kind"/></b>
+		<b><xsl:value-of select="/root/gui/strings/type"/></b>
 		<xsl:text>&#160;</xsl:text>
 		<select class="content" name="template" size="1">
 			<option value="n">
