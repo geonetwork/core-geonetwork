@@ -373,6 +373,7 @@
 	<saveAndClose>Save and close</saveAndClose>
 	<saveAndValidate>Check</saveAndValidate>
 	<schema>Schema</schema>
+	<desSchema>Destination schema</desSchema>
 	<search>Start the search</search>
 	<searchPage>Search page</searchPage>
 	<searchPageDes>Jumps to the metadata search page</searchPageDes>
