@@ -122,21 +122,28 @@ public class LocalLib
 
 	public Element retrieve(Dbms dbms, String table) throws SQLException
 	{
-		return retrieve(dbms, table, null, null);
+		return retrieve(dbms, table, null, null, null);
 	}
 
 	//-----------------------------------------------------------------------------
 
 	public Element retrieve(Dbms dbms, String table, String where) throws SQLException
 	{
-		return retrieve(dbms, table, null, where);
+		return retrieve(dbms, table, null, where, null);
+	}
+
+	//-----------------------------------------------------------------------------
+
+	public Element retrieve(Dbms dbms, String table, String where, String orderBy) throws SQLException
+	{
+		return retrieve(dbms, table, null, where, orderBy);
 	}
 
 	//-----------------------------------------------------------------------------
 
 	public Element retrieveById(Dbms dbms, String table, String id) throws SQLException
 	{
-		return retrieve(dbms, table, id, null);
+		return retrieve(dbms, table, id, null, null);
 	}
 
 	//-----------------------------------------------------------------------------
@@ -145,7 +152,7 @@ public class LocalLib
 	//---
 	//-----------------------------------------------------------------------------
 
-	private Element retrieve(Dbms dbms, String table, String id, String where)
+	private Element retrieve(Dbms dbms, String table, String id, String where, String orderBy)
 												throws SQLException
 	{
 		String query1 = "SELECT * FROM "+table;
@@ -161,6 +168,9 @@ public class LocalLib
 			query1 += " WHERE id="   +id;
 			query2 += " WHERE idDes="+id;
 		}
+
+		if (orderBy != null)
+			query1 += " ORDER BY "+ orderBy;
 
 		Element result = dbms.select(query1);
 
