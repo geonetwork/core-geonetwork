@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
@@ -37,51 +38,13 @@ public class GeonetParams extends AbstractParams
 {
 	//--------------------------------------------------------------------------
 	//---
-	//--- Init : called when an entry is read from database. Vars are initialized
-	//---        from the given entry
+	//--- Constructor
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(Element node)
+	public GeonetParams(DataManager dm)
 	{
-		Element site     = node.getChild("site");
-		Element opt      = node.getChild("options");
-		Element searches = node.getChild("searches");
-		Element account  = site.getChild("account");
-
-		host    = site.getChildText("host");
-		port    = Integer.parseInt(site.getChildText("port"));
-		servlet = site.getChildText("servlet");
-
-		useAccount = account.getChildText("use").equals("true");
-		username   = account.getChildText("username");
-		password   = account.getChildText("password");
-
-		every      = Integer.parseInt(opt.getChildText("every"));
-		oneRunOnly = opt.getChildText("oneRunOnly")  .equals("true");
-
-		//--- add searches
-
-		alSearches.clear();
-
-		Iterator i = searches.getChildren("search").iterator();
-
-		while (i.hasNext())
-		{
-			Element search = (Element) i.next();
-
-			Search s = new Search();
-
-			s.freeText = search.getChildText("freeText");
-			s.title    = search.getChildText("title");
-			s.abstrac  = search.getChildText("abstract");
-			s.keywords = search.getChildText("keywords");
-			s.digital  = search.getChildText("digital") .equals("true");
-			s.hardcopy = search.getChildText("hardcopy").equals("true");
-			s.siteId   = search.getChildText("siteId");
-
-			alSearches.add(s);
-		}
+		super(dm);
 	}
 
 	//---------------------------------------------------------------------------
@@ -93,23 +56,15 @@ public class GeonetParams extends AbstractParams
 
 	public void create(Element node) throws BadInputEx
 	{
+		super.create(node);
+
 		Element site     = node.getChild("site");
-		Element opt      = node.getChild("options");
 		Element searches = node.getChild("searches");
-		Element account  = (site == null) ? null : site.getChild("account");
 
 		host    = getValue(site, "host",    "");
 		port    = getValue(site, "port",    80);
 		servlet = getValue(site, "servlet", "geonetwork");
 
-		useAccount = getValue(account, "use",      false);
-		username   = getValue(account, "username", "");
-		password   = getValue(account, "password", "");
-
-		oneRunOnly   = getValue(opt, "oneRunOnly",   false);
-		every        = getValue(opt, "every",        90   );
-
-		checkEvery(every);
 		checkPort(port);
 		addSearches(searches);
 	}
@@ -122,23 +77,15 @@ public class GeonetParams extends AbstractParams
 
 	public void update(Element node) throws BadInputEx
 	{
+		super.update(node);
+
 		Element site     = node.getChild("site");
-		Element opt      = node.getChild("options");
 		Element searches = node.getChild("searches");
-		Element account  = (site == null) ? null : site.getChild("account");
 
 		host    = getValue(site, "host",    host);
 		port    = getValue(site, "port",    port);
 		servlet = getValue(site, "servlet", servlet);
 
-		useAccount = getValue(account, "use",      useAccount);
-		username   = getValue(account, "username", username);
-		password   = getValue(account, "password", password);
-
-		every      = getValue(opt, "every",        every);
-		oneRunOnly = getValue(opt, "oneRunOnly",   oneRunOnly);
-
-		checkEvery(every);
 		checkPort(port);
 
 		//--- if some search queries are given, we drop the previous ones and
@@ -160,18 +107,11 @@ public class GeonetParams extends AbstractParams
 
 	public GeonetParams copy()
 	{
-		GeonetParams copy = new GeonetParams();
+		GeonetParams copy = new GeonetParams(dm);
 
 		copy.host    = host;
 		copy.port    = port;
 		copy.servlet = servlet;
-
-		copy.useAccount = useAccount;
-		copy.username   = username;
-		copy.password   = password;
-
-		copy.every      = every;
-		copy.oneRunOnly = oneRunOnly;
 
 		for (Search s : alSearches)
 			copy.alSearches.add(s.copy());
@@ -224,13 +164,6 @@ public class GeonetParams extends AbstractParams
 	public String  host;
 	public int     port;
 	public String  servlet;
-
-	public boolean useAccount;
-	public String  username;
-	public String  password;
-
-	public int     every;
-	public boolean oneRunOnly;
 
 	private ArrayList<Search> alSearches = new ArrayList<Search>();
 }

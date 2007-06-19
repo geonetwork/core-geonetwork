@@ -21,81 +21,52 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.webdav;
+package org.fao.geonet.kernel.harvest.harvester;
 
-import jeeves.exceptions.BadInputEx;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
-import org.jdom.Element;
+import java.util.ArrayList;
 
 //=============================================================================
 
-public class WebDavParams extends AbstractParams
+public class Privileges
 {
-	//--------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
-	//--------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
 
-	public WebDavParams(DataManager dm)
+	public Privileges(String groupId)
 	{
-		super(dm);
+		this.groupId = groupId;
 	}
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- Create : called when a new entry must be added. Reads values from the
-	//---          provided entry, providing default values
+	//--- API methods
 	//---
 	//---------------------------------------------------------------------------
 
-	public void create(Element node) throws BadInputEx
+	public String getGroupId() { return groupId; }
+
+	//---------------------------------------------------------------------------
+
+	public void add(int operation)
 	{
-		super.create(node);
-
-		Element site = node.getChild("site");
-		Element opt  = node.getChild("options");
-
-		url       = getValue(site, "url", "");
-
-		validate  = getValue(opt, "validate",   false);
-		structure = getValue(opt, "structure",  false);
+		alOperations.add(operation);
 	}
 
 	//---------------------------------------------------------------------------
-	//---
-	//--- Update : called when an entry has changed and variables must be updated
-	//---
+
+	public Iterable<Integer> getOperations() { return alOperations; }
+
 	//---------------------------------------------------------------------------
 
-	public void update(Element node) throws BadInputEx
+	public Privileges copy()
 	{
-		super.update(node);
+		Privileges copy = new Privileges(groupId);
 
-		Element site = node.getChild("site");
-		Element opt  = node.getChild("options");
-
-		url       = getValue(site,    "url",      url);
-
-		validate  = getValue(opt, "validate",   validate);
-		structure = getValue(opt, "structure",  structure);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Other API methods
-	//---
-	//---------------------------------------------------------------------------
-
-	public WebDavParams copy()
-	{
-		WebDavParams copy = new WebDavParams(dm);
-
-		copy.url = url;
-
-		copy.validate  = validate;
-		copy.structure = structure;
+		for (int oper : alOperations)
+			copy.alOperations.add(oper);
 
 		return copy;
 	}
@@ -106,12 +77,10 @@ public class WebDavParams extends AbstractParams
 	//---
 	//---------------------------------------------------------------------------
 
-	public String  url;
+	private String groupId;
 
-	public boolean validate;
-	public boolean structure;
+	private ArrayList<Integer> alOperations = new ArrayList<Integer>();
 }
 
 //=============================================================================
-
 

@@ -21,20 +21,18 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.geonet;
+package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
-import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
 
-public class GeonetParams extends AbstractParams
+public class CswParams extends AbstractParams
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -42,7 +40,7 @@ public class GeonetParams extends AbstractParams
 	//---
 	//--------------------------------------------------------------------------
 
-	public GeonetParams(DataManager dm)
+	public CswParams(DataManager dm)
 	{
 		super(dm);
 	}
@@ -59,17 +57,11 @@ public class GeonetParams extends AbstractParams
 		super.create(node);
 
 		Element site     = node.getChild("site");
-		Element opt      = node.getChild("options");
 		Element searches = node.getChild("searches");
 
-		host    = getValue(site, "host",    "");
-		port    = getValue(site, "port",    80);
-		servlet = getValue(site, "servlet", "geonetwork");
+		capabUrl = getValue(site, "capabilitiesUrl", "");
+		icon     = getValue(site, "icon",            "default.gif");
 
-		createGroups = getValue(opt, "createGroups", true );
-		createCateg  = getValue(opt, "createCateg",  true );
-
-		checkPort(port);
 		addSearches(searches);
 	}
 
@@ -84,17 +76,10 @@ public class GeonetParams extends AbstractParams
 		super.update(node);
 
 		Element site     = node.getChild("site");
-		Element opt      = node.getChild("options");
 		Element searches = node.getChild("searches");
 
-		host    = getValue(site, "host",    host);
-		port    = getValue(site, "port",    port);
-		servlet = getValue(site, "servlet", servlet);
-
-		createGroups = getValue(opt, "createGroups", createGroups);
-		createCateg  = getValue(opt, "createCateg",  createCateg);
-
-		checkPort(port);
+		capabUrl = getValue(site, "capabilitiesUrl", capabUrl);
+		icon     = getValue(site, "icon",            icon);
 
 		//--- if some search queries are given, we drop the previous ones and
 		//--- set these new ones
@@ -113,17 +98,13 @@ public class GeonetParams extends AbstractParams
 
 	//---------------------------------------------------------------------------
 
-	public GeonetParams copy()
+	public CswParams copy()
 	{
-		GeonetParams copy = new GeonetParams(dm);
+		CswParams copy = new CswParams(dm);
 		copyTo(copy);
 
-		copy.host    = host;
-		copy.port    = port;
-		copy.servlet = servlet;
-
-		copy.createGroups = createGroups;
-		copy.createCateg  = createCateg;
+		copy.capabUrl = capabUrl;
+		copy.icon     = icon;
 
 		for (Search s : alSearches)
 			copy.alSearches.add(s.copy());
@@ -137,7 +118,7 @@ public class GeonetParams extends AbstractParams
 	//---
 	//---------------------------------------------------------------------------
 
-	private void addSearches(Element searches) throws BadInputEx
+	private void addSearches(Element searches)
 	{
 		alSearches.clear();
 
@@ -155,15 +136,9 @@ public class GeonetParams extends AbstractParams
 			s.freeText = getValue(search, "freeText", "");
 			s.title    = getValue(search, "title",    "");
 			s.abstrac  = getValue(search, "abstract", "");
-			s.keywords = getValue(search, "keywords", "");
-			s.digital  = getValue(search, "digital",  false);
-			s.hardcopy = getValue(search, "hardcopy", false);
-			s.siteId   = getValue(search, "siteId",   "");
+			s.subject  = getValue(search, "subject",  "");
 
 			alSearches.add(s);
-
-			if (s.siteId.equals(""))
-				throw new BadParameterEx("siteId", "");
 		}
 	}
 
@@ -173,12 +148,8 @@ public class GeonetParams extends AbstractParams
 	//---
 	//---------------------------------------------------------------------------
 
-	public String  host;
-	public int     port;
-	public String  servlet;
-
-	public boolean createGroups;
-	public boolean createCateg;
+	public String capabUrl;
+	public String icon;
 
 	private ArrayList<Search> alSearches = new ArrayList<Search>();
 }
@@ -200,34 +171,23 @@ class Search
 		s.freeText = freeText;
 		s.title    = title;
 		s.abstrac  = abstrac;
-		s.keywords = keywords;
-		s.digital  = digital;
-		s.hardcopy = hardcopy;
-		s.siteId   = siteId;
+		s.subject  = subject;
 
 		return s;
 	}
 
 	//---------------------------------------------------------------------------
 
-	public Element createRequest()
-	{
-		Element req = new Element("request");
-
-		Lib.element.add(req, "any",      freeText);
-		Lib.element.add(req, "title",    title);
-		Lib.element.add(req, "abstract", abstrac);
-		Lib.element.add(req, "themekey", keywords);
-		Lib.element.add(req, "siteId",   siteId);
-
-		if (digital)
-			Lib.element.add(req, "digital", "on");
-
-		if (hardcopy)
-			Lib.element.add(req, "paper", "on");
-
-		return req;
-	}
+//	public Element createRequest()
+//	{
+//		Element req = new Element("request");
+//
+//		Lib.element.add(req, "any",      freeText);
+//		Lib.element.add(req, "title",    title);
+//		Lib.element.add(req, "abstract", abstrac);
+//
+//		return req;
+//	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -235,13 +195,10 @@ class Search
 	//---
 	//---------------------------------------------------------------------------
 
-	public String  freeText;
-	public String  title;
-	public String  abstrac;
-	public String  keywords;
-	public boolean digital;
-	public boolean hardcopy;
-	public String  siteId;
+	public String freeText;
+	public String title;
+	public String abstrac;
+	public String subject;
 }
 
 //=============================================================================

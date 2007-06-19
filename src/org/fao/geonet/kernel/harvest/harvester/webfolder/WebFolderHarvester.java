@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.webdav;
+package org.fao.geonet.kernel.harvest.harvester.webfolder;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -39,7 +39,7 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class WebDavHarvester extends AbstractHarvester
+public class WebFolderHarvester extends AbstractHarvester
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -57,7 +57,7 @@ public class WebDavHarvester extends AbstractHarvester
 	//---
 	//--------------------------------------------------------------------------
 
-	public String getType() { return "webdav"; }
+	public String getType() { return "webfolder"; }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -67,7 +67,7 @@ public class WebDavHarvester extends AbstractHarvester
 
 	protected void doInit(Element node) throws BadInputEx
 	{
-		params = new WebDavParams(dataMan);
+		params = new WebFolderParams(dataMan);
 		params.create(node);
 	}
 
@@ -81,7 +81,7 @@ public class WebDavHarvester extends AbstractHarvester
 	{
 		//--- retrieve/initialize information
 
-		params = new WebDavParams(dataMan);
+		params = new WebFolderParams(dataMan);
 		params.create(node);
 
 		//--- setup waf node
@@ -134,7 +134,7 @@ public class WebDavHarvester extends AbstractHarvester
 	{
 		//--- update variables
 
-		WebDavParams copy = params.copy();
+		WebFolderParams copy = params.copy();
 		copy.update(node);
 
 		//--- update database
@@ -188,7 +188,7 @@ public class WebDavHarvester extends AbstractHarvester
 
 	//---------------------------------------------------------------------------
 
-	private void addPrivileges(Dbms dbms, String path, WebDavParams params) throws SQLException
+	private void addPrivileges(Dbms dbms, String path, WebFolderParams params) throws SQLException
 	{
 		for (Privileges p : params.getPrivileges())
 		{
@@ -229,7 +229,7 @@ public class WebDavHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	private WebDavParams params;
+	private WebFolderParams params;
 	private WebDavResult result;
 }
 

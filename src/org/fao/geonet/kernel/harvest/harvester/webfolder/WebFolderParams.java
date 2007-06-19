@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.webdav;
+package org.fao.geonet.kernel.harvest.harvester.webfolder;
 
 import jeeves.exceptions.BadInputEx;
 import org.fao.geonet.kernel.DataManager;
@@ -30,7 +30,7 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class WebDavParams extends AbstractParams
+public class WebFolderParams extends AbstractParams
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -38,7 +38,7 @@ public class WebDavParams extends AbstractParams
 	//---
 	//--------------------------------------------------------------------------
 
-	public WebDavParams(DataManager dm)
+	public WebFolderParams(DataManager dm)
 	{
 		super(dm);
 	}
@@ -59,8 +59,8 @@ public class WebDavParams extends AbstractParams
 
 		url       = getValue(site, "url", "");
 
-		validate  = getValue(opt, "validate",   false);
-		structure = getValue(opt, "structure",  false);
+		validate  = getValue(opt, "validate",  false);
+		structure = getValue(opt, "structure", false);
 	}
 
 	//---------------------------------------------------------------------------
@@ -76,10 +76,10 @@ public class WebDavParams extends AbstractParams
 		Element site = node.getChild("site");
 		Element opt  = node.getChild("options");
 
-		url       = getValue(site,    "url",      url);
+		url       = getValue(site, "url", url);
 
-		validate  = getValue(opt, "validate",   validate);
-		structure = getValue(opt, "structure",  structure);
+		validate  = getValue(opt, "validate",  validate);
+		structure = getValue(opt, "structure", structure);
 	}
 
 	//---------------------------------------------------------------------------
@@ -88,9 +88,9 @@ public class WebDavParams extends AbstractParams
 	//---
 	//---------------------------------------------------------------------------
 
-	public WebDavParams copy()
+	public WebFolderParams copy()
 	{
-		WebDavParams copy = new WebDavParams(dm);
+		WebFolderParams copy = new WebFolderParams(dm);
 
 		copy.url = url;
 

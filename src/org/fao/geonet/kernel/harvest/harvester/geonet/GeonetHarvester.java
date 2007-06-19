@@ -45,6 +45,7 @@ import jeeves.utils.XmlRequest;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
+import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.lib.Lib;
@@ -101,32 +102,10 @@ public class GeonetHarvester extends AbstractHarvester
 	//---
 	//--------------------------------------------------------------------------
 
-	protected void doInit(Element node)
+	protected void doInit(Element node) throws BadInputEx
 	{
-		params.init(node);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Destroy
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doDestroy(Dbms dbms) throws Exception
-	{
-		String getQuery = "SELECT id FROM Metadata WHERE source = ?";
-
-		for (Search s : params.getSearches())
-		{
-			for (Object o : dbms.select(getQuery, s.siteId).getChildren())
-			{
-				Element el = (Element) o;
-				String  id = (String)  el.getChildText("id");
-
-				dataMan.deleteMetadata(dbms, id);
-				dbms.commit();
-			}
-		}
+		params = new GeonetParams(dataMan);
+		params.create(node);
 	}
 
 	//---------------------------------------------------------------------------
@@ -275,15 +254,11 @@ public class GeonetHarvester extends AbstractHarvester
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- GetTimeout
+	//--- AbstractParameters
 	//---
 	//---------------------------------------------------------------------------
 
-	protected int doGetEvery() { return params.every; }
-
-	//---------------------------------------------------------------------------
-
-	protected boolean doIsOneRunOnly() { return params.oneRunOnly; }
+	protected AbstractParams getParams() { return params; }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -342,13 +317,6 @@ public class GeonetHarvester extends AbstractHarvester
 	}
 
 	//---------------------------------------------------------------------------
-
-	private void add(Element el, String name, int value)
-	{
-		el.addContent(new Element(name).setText(Integer.toString(value)));
-	}
-
-	//---------------------------------------------------------------------------
 	//---
 	//--- Harvest
 	//---
@@ -369,7 +337,7 @@ public class GeonetHarvester extends AbstractHarvester
 
 		if (params.useAccount)
 		{
-			log.info("Login into : "+ getName());
+			log.info("Login into : "+ params.name);
 
 			req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_LOGIN);
 			req.addParam("username", params.username);
@@ -383,7 +351,7 @@ public class GeonetHarvester extends AbstractHarvester
 
 		//--- retrieve info on categories and groups
 
-		log.info("Retrieving info on categories and groups from : "+ getName());
+		log.info("Retrieving info on categories and groups from : "+ params.name);
 
 		req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_INFO);
 		req.clearParams();
@@ -406,7 +374,7 @@ public class GeonetHarvester extends AbstractHarvester
 
 		for(Search s : params.getSearches())
 		{
-			log.info("Searching on : "+ getName() +"/"+ s.siteId);
+			log.info("Searching on : "+ params.name +"/"+ s.siteId);
 
 			req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_SEARCH);
 
@@ -425,7 +393,7 @@ public class GeonetHarvester extends AbstractHarvester
 
 		if (params.useAccount)
 		{
-			log.info("Logout from : "+ getName());
+			log.info("Logout from : "+ params.name);
 
 			req.clearParams();
 			req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_LOGOUT);
@@ -453,7 +421,7 @@ public class GeonetHarvester extends AbstractHarvester
 		req.addParam("type", "site");
 		req.addParam("type", "knownNodes");
 
-		log.info("Retrieving site info and known nodes from : "+ getName());
+		log.info("Retrieving site info and known nodes from : "+ getParams().name);
 
 		try
 		{
@@ -464,7 +432,7 @@ public class GeonetHarvester extends AbstractHarvester
 		}
 		catch (Exception e)
 		{
-			log.warning("Cannot retrieve info from : "+ getName());
+			log.warning("Cannot retrieve info from : "+ getParams().name);
 			log.warning("  (C) Excep : "+ e.getMessage());
 		}
 	}
@@ -565,8 +533,8 @@ public class GeonetHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	private GeonetParams params = new GeonetParams();
-	private GeonetResult result = null;
+	private GeonetParams params;
+	private GeonetResult result;
 
 	//--- better to have a synchronized hashtable here than a HashMap
 	private static Hashtable<String, String> htSiteIdName = new Hashtable<String, String>();

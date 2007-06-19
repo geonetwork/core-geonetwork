@@ -40,6 +40,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
+import org.fao.geonet.kernel.harvest.harvester.csw.CswHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet20.Geonet20Harvester;
 import org.fao.geonet.kernel.harvest.harvester.webdav.WebDavHarvester;
@@ -62,6 +63,7 @@ public abstract class AbstractHarvester
 		register(context, GeonetHarvester  .class);
 		register(context, WebDavHarvester  .class);
 		register(context, Geonet20Harvester.class);
+		register(context, CswHarvester     .class);
 	}
 
 	//---------------------------------------------------------------------------
@@ -123,16 +125,7 @@ public abstract class AbstractHarvester
 
 	public void add(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
-		name = node.getAttributeValue("name");
-
-		if (name == null)
-		{
-			name = "";
-			node.setAttribute("name", name);
-		}
-
 		id       = doAdd(dbms, node);
-		name     = node.getAttributeValue("name");
 		status   = Status.INACTIVE;
 		executor = null;
 		error    = null;
@@ -143,7 +136,6 @@ public abstract class AbstractHarvester
 	public void init(Element node) throws BadInputEx
 	{
 		id       = node.getAttributeValue("id");
-		name     = node.getAttributeValue("name");
 		status   = Status.parse(node.getChild("options").getChildText("status"));
 		executor = null;
 		error    = null;
@@ -155,12 +147,15 @@ public abstract class AbstractHarvester
 		if (status == Status.ACTIVE)
 		{
 			executor = new Executor(this);
-			executor.setTimeout(doGetEvery());
+			executor.setTimeout(getParams().every);
 			executor.start();
 		}
 	}
 
 	//--------------------------------------------------------------------------
+	/** Called when the harvesting entry is removed from the system.
+	  * It is used to remove harvested metadata.
+	  */
 
 	public synchronized void destroy(Dbms dbms) throws Exception
 	{
@@ -168,7 +163,19 @@ public abstract class AbstractHarvester
 			executor.terminate();
 
 		executor = null;
-		doDestroy(dbms);
+
+		//--- remove all harvested metadata
+
+		String getQuery = "SELECT id FROM Metadata WHERE source = ?";
+
+		for (Object o : dbms.select(getQuery, getParams().uuid).getChildren())
+		{
+			Element el = (Element) o;
+			String  id = (String)  el.getChildText("id");
+
+			dataMan.deleteMetadata(dbms, id);
+			dbms.commit();
+		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -183,7 +190,7 @@ public abstract class AbstractHarvester
 		status     = Status.ACTIVE;
 		error      = null;
 		executor   = new Executor(this);
-		executor.setTimeout(doGetEvery());
+		executor.setTimeout(getParams().every);
 		executor.start();
 
 		return OperResult.OK;
@@ -224,13 +231,6 @@ public abstract class AbstractHarvester
 
 	public synchronized void update(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
-		//--- update name
-
-		if (node.getAttributeValue("name") != null)
-			name = node.getAttributeValue("name");
-
-		//--- update other fields
-
 		doUpdate(dbms, id, node);
 
 		if (status == Status.ACTIVE)
@@ -241,15 +241,14 @@ public abstract class AbstractHarvester
 			//--- restart executor
 			error      = null;
 			executor   = new Executor(this);
-			executor.setTimeout(doGetEvery());
+			executor.setTimeout(getParams().every);
 			executor.start();
 		}
 	}
 
 	//--------------------------------------------------------------------------
 
-	public String getID()   { return id;   }
-	public String getName() { return name; }
+	public String getID() { return id; }
 
 	//--------------------------------------------------------------------------
 
@@ -259,8 +258,8 @@ public abstract class AbstractHarvester
 
 		//--- 'running'
 
-		if (status == Status.ACTIVE && executor.isRunning())
-			info.addContent(new Element("running").setText("true"));
+		boolean running = (status == Status.ACTIVE && executor.isRunning());
+		info.addContent(new Element("running").setText(running+""));
 
 		//--- harvester specific info
 
@@ -284,7 +283,7 @@ public abstract class AbstractHarvester
 
 		Logger logger = Log.createLogger(Geonet.HARVESTER);
 
-		String nodeName = name + " ("+ getClass().getSimpleName() +")";
+		String nodeName = getParams().name +" ("+ getClass().getSimpleName() +")";
 
 		error = null;
 
@@ -303,7 +302,7 @@ public abstract class AbstractHarvester
 			doHarvest(logger, rm);
 			logger.info("Ended harvesting from node : "+ nodeName);
 
-			if (doIsOneRunOnly())
+			if (getParams().oneRunOnly)
 				stop(dbms);
 
 			rm.close();
@@ -337,13 +336,9 @@ public abstract class AbstractHarvester
 
 	public abstract String getType();
 
+	protected abstract AbstractParams getParams();
+
 	protected abstract void doInit(Element entry) throws BadInputEx;
-
-	/** Called when the harvesting entry is removed from the system.
-	  * It is used to remove harvested metadata.
-	  */
-
-	protected abstract void doDestroy(Dbms dbms) throws Exception;
 
 	protected abstract String doAdd(Dbms dbms, Element node)
 											throws BadInputEx, SQLException;
@@ -351,17 +346,82 @@ public abstract class AbstractHarvester
 	protected abstract void doUpdate(Dbms dbms, String id, Element node)
 											throws BadInputEx, SQLException;
 
-	protected abstract int doGetEvery();
-
-	protected abstract boolean doIsOneRunOnly();
-
 	protected abstract void doAddInfo(Element node);
 	protected abstract void doHarvest(Logger l, ResourceManager rm) throws Exception;
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- Protected methods
+	//--- Protected storage methods
 	//---
+	//---------------------------------------------------------------------------
+
+	protected void storeNode(Dbms dbms, AbstractParams params, String path) throws SQLException
+	{
+		String siteId    = settingMan.add(dbms, path, "site",    "");
+		String optionsId = settingMan.add(dbms, path, "options", "");
+		String infoId    = settingMan.add(dbms, path, "info",    "");
+
+		//--- setup site node ----------------------------------------
+
+		settingMan.add(dbms, "id:"+siteId, "name",     params.name);
+		settingMan.add(dbms, "id:"+siteId, "uuid",     params.uuid);
+
+		String useAccId = settingMan.add(dbms, "id:"+siteId, "useAccount", params.useAccount);
+
+		settingMan.add(dbms, "id:"+useAccId, "username", params.username);
+		settingMan.add(dbms, "id:"+useAccId, "password", params.password);
+
+		//--- setup options node ---------------------------------------
+
+		settingMan.add(dbms, "id:"+optionsId, "every",      params.every);
+		settingMan.add(dbms, "id:"+optionsId, "oneRunOnly", params.oneRunOnly);
+		settingMan.add(dbms, "id:"+optionsId, "status",     Status.INACTIVE);
+
+		//--- setup stats node ----------------------------------------
+
+		settingMan.add(dbms, "id:"+infoId, "lastRun", "");
+
+		//--- store privileges and categories ------------------------
+
+		storePrivileges(dbms, params, path);
+		storeCategories(dbms, params, path);
+
+		storeNodeExtra(dbms, params, path, siteId, optionsId);
+	}
+
+	//---------------------------------------------------------------------------
+	/** Override this method with an empty body to avoid privileges storage */
+
+	protected void storePrivileges(Dbms dbms, AbstractParams params, String path) throws SQLException
+	{
+		String privId = settingMan.add(dbms, path, "privileges", "");
+
+		for (Privileges p : params.getPrivileges())
+		{
+			String groupId = settingMan.add(dbms, "id:"+ privId, "group", p.getGroupId());
+
+			for (int oper : p.getOperations())
+				settingMan.add(dbms, "id:"+ groupId, "operation", oper);
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	/** Override this method with an empty body to avoid categories storage */
+
+	protected void storeCategories(Dbms dbms, AbstractParams params, String path) throws SQLException
+	{
+		String categId = settingMan.add(dbms, path, "categories", "");
+
+		for (int id : params.getCategories())
+			settingMan.add(dbms, "id:"+ categId, "category", id);
+	}
+
+	//---------------------------------------------------------------------------
+	/** Override this method to store harvesting node's specific settings */
+
+	protected void storeNodeExtra(Dbms dbms, AbstractParams params, String path,
+											String siteId, String optionsId) throws SQLException {}
+
 	//---------------------------------------------------------------------------
 
 	protected void setValue(Map<String, Object> values, String path, Element el, String name)
@@ -375,6 +435,13 @@ public abstract class AbstractHarvester
 			values.put(path, value);
 	}
 
+	//---------------------------------------------------------------------------
+
+	protected void add(Element el, String name, int value)
+	{
+		el.addContent(new Element(name).setText(Integer.toString(value)));
+	}
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Variables
@@ -382,7 +449,6 @@ public abstract class AbstractHarvester
 	//--------------------------------------------------------------------------
 
 	private String id;
-	private String name;
 	private Status status;
 
 	private Executor  executor;
