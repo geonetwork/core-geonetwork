@@ -262,16 +262,6 @@ public class CswHarvester extends AbstractHarvester
 //			result.result.add(ar);
 		}
 
-		//--- logout
-
-		if (params.useAccount)
-		{
-			log.info("Logout from : "+ params.name);
-
-			req.clearParams();
-//			req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_LOGOUT);
-		}
-
 		dbms.commit();
 	}
 
