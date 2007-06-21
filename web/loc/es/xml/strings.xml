@@ -157,6 +157,7 @@
 	<del>borrar</del>
 	<delete>Borrar</delete>
 	<descriptionTab>Descripción</descriptionTab>
+	<desSchema>Destination schema</desSchema>
 	<digital>Datos digitales</digital>
 	<directory>Directorio</directory>
 	<dirParameter>('directorio' es un parámetro obligatorio)</dirParameter>
