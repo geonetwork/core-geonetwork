@@ -1,1 +1,432 @@
-<?xml version="1.0" encoding="UTF-8"?>ഀ਀<strings>ഀ਀ഀ਀	<!-- new strings -->ഀ਀	<fuzzy>Precision</fuzzy>ഀ਀	<fuzzySearch>Set the precision of the search (from fuzzy search to exact term search).</fuzzySearch>ഀ਀	<address>Address</address>ഀ਀	<state>State</state>ഀ਀	<zip>Zip</zip>ഀ਀	<country>Country</country>ഀ਀	<email>Email</email>ഀ਀	<kind>Kind</kind>ഀ਀	<kindChoice value="gov">Government</kindChoice>ഀ਀	<kindChoice value="int-org">International organisation</kindChoice>ഀ਀	<kindChoice value="ngo">NGO</kindChoice>ഀ਀	<kindChoice value="uni">University/research centre</kindChoice>ഀ਀	<kindChoice value="company">Private company</kindChoice>ഀ਀	<kindChoice value="consultant">Independent consultant</kindChoice>ഀ਀	<kindChoice value="other">Other</kindChoice>ഀ਀	<userInfo>Change user information</userInfo>ഀ਀	<userInfoDes>Allow current user to change user information</userInfoDes>ഀ਀	<subtemplate>Subtemplate</subtemplate>ഀ਀	<subtemplateTitle>subtemplate title</subtemplateTitle>ഀ਀	<edit>Edit</edit>ഀ਀	<view>View</view>ഀ਀	<Term>Term</Term>ഀ਀	<startsWith>Start with</startsWith>ഀ਀	<contains>Contains</contains>ഀ਀	<exactTerm>Exact term</exactTerm>ഀ਀	<foundWords>Number of terms found:</foundWords>ഀ਀	<selection>Selection</selection>ഀ਀	<label>Label</label>ഀ਀	<type>Type</type>ഀ਀	<sort>Sort</sort>ഀ਀	<definition>Definition</definition>ഀ਀	<close>Close</close>ഀ਀	<identifier>Identifier</identifier>ഀ਀	<keyword>keyword</keyword>ഀ਀	<res>results</res>ഀ਀	<ress>result</ress>ഀ਀ഀ਀	<thesaurus>ഀ਀		<category>Thesaurus category</category>ഀ਀		<management>Manage thesauri</management>ഀ਀		<manDes>Add/modify/delete and show thesauri</manDes>ഀ਀		<edition>Edit thesaurus</edition>ഀ਀		<consultation>View thesaurus</consultation>ഀ਀		<thesaurus>Thesaurus</thesaurus>ഀ਀		<admin>Manage thesaurus</admin>ഀ਀		<edit>Edit thesaurus</edit>ഀ਀		<update>Update thesaurus</update>ഀ਀		<upload>Upload thesaurus</upload>ഀ਀		<download>Download thesaurus</download>ഀ਀		<delete>Delete thesaurus</delete>	ഀ਀		<editelement>Edit element</editelement>ഀ਀		<addelement>Add element</addelement>			ഀ਀		<deleteelement>Delete element</deleteelement>ഀ਀		<updateelement>Update element</updateelement>ഀ਀		<keywordDescription>Keyword definition:</keywordDescription>ഀ਀		<keywordConfirm>Confirm keyword suppression</keywordConfirm>ഀ਀		<unknown>Unknown thesaurus</unknown>ഀ਀		<narrower>Narrower Term</narrower>ഀ਀		<broader>Broader Term</broader>ഀ਀		<related>Related Term</related>ഀ਀		<en>in</en>ഀ਀		<foundKeyWords>Number of terms found</foundKeyWords>ഀ਀		<foundKeyWordsLimit>Maximum number of terms found</foundKeyWordsLimit>ഀ਀	</thesaurus>ഀ਀ഀ਀	<searchBox>Search for Data and Information</searchBox>ഀ਀	<searchIndex>Search index</searchIndex>ഀ਀	<contactUs>Contact us</contactUs>ഀ਀	<highlights>Highlights</highlights>ഀ਀	<recentAdditions>Recent Additions</recentAdditions>ഀ਀	<feedbackCardTitle>Feedback and Comments</feedbackCardTitle>ഀ਀	<loginCardTitle>Login / Signup</loginCardTitle>ഀ਀	<organisation>Organisation / department</organisation>ഀ਀	<emailAddress>Email address</emailAddress>ഀ਀	<feedbackComments>Feedback / comments</feedbackComments>ഀ਀	<!-- End new strings -->ഀ਀	ഀ਀	<language>cn</language>ഀ਀	<!-- ISO code -->ഀ਀	<about>关于本站</about>ഀ਀	<abstract>摘要</abstract>ഀ਀	<accept>提交</accept>ഀ਀	<add>添加</add>ഀ਀	<addNewMetadata>增加新的元数据</addNewMetadata>ഀ਀	<admin>系统管理</admin>ഀ਀	<Administrator>管理员</Administrator>ഀ਀	<agrovocKeyword>关键词</agrovocKeyword>ഀ਀	<any>- 任意 -</any>ഀ਀	<appSchInfoTab>应用模式信息</appSchInfoTab>ഀ਀	<ar>阿拉伯语</ar>ഀ਀	<assigned>已赋值</assigned>ഀ਀	<attrlabl>属性标签</attrlabl>ഀ਀	<availability>可用性</availability>ഀ਀	<back>回退</back>ഀ਀	<backToDescription>回到数据说明</backToDescription>ഀ਀	<backToPreviousPage>回到前页</backToPreviousPage>ഀ਀	<backToEditor>回到元数据编辑</backToEditor>ഀ਀	<batchImport>从您的本地目录导入所有ISO19115 XML格式的元数据</batchImport>ഀ਀<!--	<batchImportLabel>批量导入</batchImportLabel> -->ഀ਀	<begdate>起始日期</begdate>ഀ਀	<begtime>起始时间</begtime>ഀ਀	<bgFileDescChoice value="thumbnail">缩略图</bgFileDescChoice>ഀ਀	<bgFileDescChoice value="large_thumbnail">大缩略图</bgFileDescChoice>ഀ਀	<bounding>覆盖范围坐标</bounding>ഀ਀	<boundingRelation value="equal">等于</boundingRelation>ഀ਀	<boundingRelation value="overlaps">交迭</boundingRelation>ഀ਀	<boundingRelation value="encloses">包含</boundingRelation>ഀ਀	<boundingRelation value="fullyOutsideOf">完全位于之外</boundingRelation>ഀ਀	<browse>快视图</browse>ഀ਀	<browsen>快视图文件名</browsen>ഀ਀	<browsed>快视图文件说明</browsed>ഀ਀	<browset>快视图文件类型</browset>ഀ਀	<cancel>取消</cancel>ഀ਀	<categories>资源类别</categories>ഀ਀	<category>所属类别</category>ഀ਀	<categoryManagement>分类管理</categoryManagement>ഀ਀	<categoryManDes>增加/修改/删除以及显示各个类别</categoryManDes>ഀ਀	<choose>-选择-</choose>ഀ਀	<chooseFile>选择上载文件的位置</chooseFile>ഀ਀	<chooseLargeThumbnail>选择较大缩略图文件的位置</chooseLargeThumbnail>ഀ਀	<chooseThumbnail>选择较小缩略图文件的位置 </chooseThumbnail>ഀ਀	<clear>清除</clear>ഀ਀	<clearAll>Clear All</clearAll>ഀ਀	<cn>中文</cn>ഀ਀	<completeTab>高级视图</completeTab>ഀ਀	<completeTabEditor>高级编辑器</completeTabEditor>ഀ਀	<confirmDelete>确认要从数据库中删除该元数据吗？</confirmDelete>ഀ਀	<confirmPassword>口令确认</confirmPassword>ഀ਀	<confirmNewPassword>新口令确认</confirmNewPassword>ഀ਀	<constraintsTab>限制信息</constraintsTab>ഀ਀<!--	<contactUs>联系我们</contactUs> -->ഀ਀	<convert>转换</convert>ഀ਀	<copyright1>版权</copyright1>ഀ਀	<copyright2>ഀ਀		<p>保留所有权利.<br/> 2005-2006</p>ഀ਀	</copyright2>ഀ਀	<create>新建</create>ഀ਀	<createTip>根据该模板新建元数据</createTip>ഀ਀	<dataQualityTab>数据质量信息</dataQualityTab>ഀ਀	<datasetTab>数据集</datasetTab>ഀ਀	<dateRelChoice/>ഀ਀	<dateRelChoice value="14">在此之前</dateRelChoice>ഀ਀	<dateRelChoice value="15">在此之前或此期间</dateRelChoice>ഀ਀	<dateRelChoice value="16">在此期间</dateRelChoice>ഀ਀	<dateRelChoice value="17">在此期间或之后</dateRelChoice>ഀ਀	<dateRelChoice value="18">在此之后</dateRelChoice>ഀ਀	<decline>拒绝</decline>ഀ਀	<del>删除</del>ഀ਀	<delete>删除</delete>ഀ਀	<descriptionTab>说明</descriptionTab>ഀ਀	<digital>数字</digital>ഀ਀	<directory>目录</directory>ഀ਀	<dirParameter>(需要‘目录dir’参数)</dirParameter>ഀ਀	<disclaimer1>您的免责标题</disclaimer1>ഀ਀	<disclaimer2>您的免责文本正文</disclaimer2>ഀ਀	<distributionTab>分发信息</distributionTab>ഀ਀	<down>下移</down>ഀ਀	<download>下载</download>ഀ਀	<downloadData>可下载的数据</downloadData>ഀ਀	<dsgpoly>数据集G-Polygon</dsgpoly>ഀ਀	<eastbc>覆盖范围东边坐标</eastbc>ഀ਀	<edit>编辑</edit>ഀ਀	<Editor>编辑器</Editor>ഀ਀	<en>English</en>ഀ਀	<!-- Do not translate! -->ഀ਀	<enclosing>包含</enclosing>ഀ਀	<enclosingCoordinate>包含坐标 </enclosingCoordinate>ഀ਀	<enddate>终止日期</enddate>ഀ਀	<enttypl>实体类型标签</enttypl>ഀ਀<!--	<emailAddress>电子邮件地址</emailAddress> -->ഀ਀	<es>Español</es>ഀ਀	<!-- Do not translate! -->ഀ਀	<exactCoordinate>坐标提取 </exactCoordinate>ഀ਀	<extended>复杂搜索</extended>ഀ਀	<extent>范围</extent>ഀ਀	<featuredMap>特色地图</featuredMap>ഀ਀	<feedback>信息反馈</feedback>ഀ਀<!--	<feedbackCardTitle>反馈与建议</feedbackCardTitle> -->ഀ਀	<feedbackComments>反馈/建议</feedbackComments>ഀ਀	<feedbackRequest>下在前请提供您的详细信息</feedbackRequest>ഀ਀	<file>文件</file>ഀ਀	<firstName>名</firstName>ഀ਀	<fr>Français</fr>ഀ਀	<!-- Do not translate! -->ഀ਀	<freeKeyword>关键词</freeKeyword>ഀ਀	<from>输入起始日期 : </from>ഀ਀	<general>常规</general>ഀ਀	<generalInfo>常规信息</generalInfo>ഀ਀	<georss>打开GeoRSS馈入</georss>ഀ਀	<group>用户组</group>ഀ਀	<groupManagement>用户组管理</groupManagement>ഀ਀	<groupManDes>新增/修改/删除以及显示用户组</groupManDes>ഀ਀	<groups>用户组</groups>ഀ਀	<harvestingManagement>Harvesting management</harvestingManagement>ഀ਀	<harvestingManDes>Add/modify/delete/start/stop harvesting tasks</harvestingManDes>ഀ਀	<header_meta>ഀ਀		<meta name="keywords" content="GeoNetwork opensource 元数据 ISO19115 ISO19139 ISO GIS 遥感数据 shapefiles 空间数据 卫星影像 地图 交互式制图 19115 19139 地理 z39.50 目录 交换网络 覆盖范围 格网 栅格数据 开源 open source 网络"/>ഀ਀		<meta name="description" content="GeoNetwork opensource 提供访问在线地图、卫星影像以及相关空间数据库的功能。其目的是促进对空间数据和信息的访问和集成利用，从而推动空间数据的惯犯共享。"/>ഀ਀		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>ഀ਀		<meta name="DC.title" lang="Chinese English French" content="访问空间数据与信息的门户"/>ഀ਀		<meta name="DC.creator" content="GeoNetwork开发组"/>ഀ਀		<meta name="DC.subject" lang="Chinese English French" content="GeoNetwork opensource 元数据 ISO19115 ISO19139 ISO GIS 遥感数据 shapefiles 空间数据 卫星影像 地图 交互式制图 19115 19139 地理 z39.50 目录 交换网络 覆盖范围 格网 栅格数据 开源 open source 网络"/>ഀ਀		<meta name="DC.description" lang="Chinese English French" content="GeoNetwork opensource 提供访问在线地图、卫星影像以及相关空间数据库的功能。其目的是促进对空间数据和信息的访问和集成利用，从而推动空间数据的惯犯共享。"/>ഀ਀		<meta name="DC.publisher" content="你的站点标识符"/>ഀ਀		<meta name="DC.date" content="01-11-2005"/>ഀ਀		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>ഀ਀		<meta name="DC.format" content="text/html; charset=UTF-8"/>ഀ਀		<meta name="DC.language" content="Chinese English French Spanish"/>ഀ਀		<meta name="DC.coverage" content="Global"/>ഀ਀	</header_meta>ഀ਀	<help>显示帮助信息</help>ഀ਀	<helpComplete>显示完整版帮助信息</helpComplete>ഀ਀<!--	<highlights>高亮显示</highlights> -->ഀ਀	<hitsPerPage>每页记录数</hitsPerPage>ഀ਀	<hitsPerPageChoice value="10">10</hitsPerPageChoice>ഀ਀	<hitsPerPageChoice value="20">20</hitsPerPageChoice>ഀ਀	<hitsPerPageChoice value="50">50</hitsPerPageChoice>ഀ਀	<hitsPerPageChoice value="100">100</hitsPerPageChoice>ഀ਀	<home>首页</home>ഀ਀	<identificationTab>标识信息</identificationTab>ഀ਀	<import>导入</import>ഀ਀	<infoTitle>信息</infoTitle>ഀ਀	<insert>插入</insert>ഀ਀	<interactiveMap>在线地图</interactiveMap>ഀ਀	<interMapInfo>ഀ਀		<h1>交互地图中的信息</h1> 可以在GeoNetwork中搜索带有交互地图的空间数据，也可直接连接到事先定义好的地图服务器，实现交互地图的访问。<p/> 支持的地图服务器包括与 <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial® Consortium</a> 规范一致的WMS服务器和 <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>服务器。</interMapInfo>ഀ਀	<keywords>关键词</keywords>ഀ਀	<keywordshelp>使用鼠标选择时，请按住Ctrl键可以选择多个关键词</keywordshelp>ഀ਀	<large_thumbnail>点击可查看较大的快视图</large_thumbnail>ഀ਀	<latitude>纬度(-90 至 90，单位：度)</latitude>ഀ਀	<links>相关链接</links>ഀ਀	<local>本地搜索</local>ഀ਀	<localiz>Localization</localiz>ഀ਀	<localizDes>Allows to change localized entities, like groups, categories etc...</localizDes>ഀ਀	<location>位置</location>ഀ਀	<login>登录</login>ഀ਀<!--	<loginCardTitle>登录/注册</loginCardTitle> -->ഀ਀	<loginwarning>只有站点管理才需要</loginwarning>ഀ਀	<logout>注销</logout>ഀ਀	<logoutDes>执行注销操作</logoutDes>ഀ਀	<longitude>经度(-180 至 180，单位：度)</longitude>ഀ਀	<mandatory>必填</mandatory>ഀ਀	<mandatoryIf>满足以下条件时必填：</mandatoryIf>ഀ਀	<mainpage1>ഀ਀		<h1>GeoNetwork的目的是: </h1>ഀ਀		<ul>ഀ਀			<li>促进空间数据和信息的访问与集成利用；</li>ഀ਀			<li>辅助决策支持；</li>ഀ਀			<li>促进可持续发展的跨领域研究</li>ഀ਀			<li>增强对地理信息的理解</li>ഀ਀		</ul>ഀ਀	</mainpage1>ഀ਀	<mainpage2> GeoNetwork opensource可以实现跨部门的地理空间专题信息共享， 要了解更多情况，请联系: <a href="mailto:apsdinode@nsdi.gov.cn">apsdinode@nsdi.gov.cn</a> 或给我们发送<a href="/geonetwork/srv/cn/feedback">反馈信息</a>ഀ਀	</mainpage2>ഀ਀	<mainhelp1> 如何搜索... </mainhelp1>ഀ਀	<mainhelp2> 隐藏帮助... </mainhelp2>ഀ਀	<mainhelp3>ഀ਀		<p>ഀ਀			<font size="-2"> 您可以使用任意一种或组合几种方式进行搜索。将显示满足所有条件的结果。 </font>ഀ਀		</p>ഀ਀		<p>ഀ਀			<font size="-2"> <b>全文</b> 搜索将对所有元数据项进行匹配。 <br/>ഀ਀				<i> 如果在<b>全文</b>搜索框中输入多个词语，系统将解析为这些词语必须同时都包含在元数据内容中 </i>ഀ਀			</font>ഀ਀		</p>ഀ਀		<p>ഀ਀			<font size="-2">  <b>主题</b> 搜索只查找匹配某一主题 的结果。 </font>ഀ਀		</p>ഀ਀		<p>ഀ਀			<font size="-2"> <b>区域</b> 搜索将查找与所选区域的范围匹配的结果。 </font>ഀ਀		</p>ഀ਀		<p>ഀ਀			<font size="-2"> 选择相互关系 "<b>ഀ਀					<input name="demo" type="checkbox" checked="checked"/> 包含</b> 所选<b>区域</b>"，将查找所有包含选择区域的结果。<br/>ഀ਀				<i>例如：区域或全球地图出包含其它国家外，也包含选择的国家，这样的地图也会出现在搜索结果中。</i>ഀ਀			</font>ഀ਀		</p>ഀ਀		<p>ഀ਀			<font size="-2"> 选择相互关系 "<b>ഀ਀					<input name="demo" type="checkbox" checked="checked"/> 部分叠盖</b> 选择 <b>区域</b>"，将查找部分覆盖选择区域的结果。 </font>ഀ਀		</p>ഀ਀	</mainhelp3>ഀ਀	<mainpageTitle>查找在线交互地图，GIS数据集，卫星影像以及相关应用系统</mainpageTitle>ഀ਀	<maintenanceTab>维护信息</maintenanceTab>ഀ਀	<management>管理</management>ഀ਀	<mapType>地图类型</mapType>ഀ਀	<max>最大值</max>ഀ਀	<mdUpdateError>更新错误</mdUpdateError>ഀ਀	<message>用户名或口令有误。<br/>点击“回退”按钮重试。</message>ഀ਀	<messageMdUpdateError>很遗憾，元数据更新时出现错误。</messageMdUpdateError>ഀ਀	<messageChanged>元数据已被其他用户修改，请重试。</messageChanged>ഀ਀	<messageDownload>欢迎访问，请点击下载按钮获取数据</messageDownload>ഀ਀	<messageLargeFile>文件太大</messageLargeFile>ഀ਀	<messageNoPrivileges>您没有权限执行该操作</messageNoPrivileges>ഀ਀	<messageNotPerformed>请求操作未能执行。</messageNotPerformed>ഀ਀	<metadata>元数据</metadata>ഀ਀	<metadataAdded>元数据已添加，其ID为：</metadataAdded>ഀ਀	<metadataDeleted>元数据已删除，其ID为：</metadataDeleted>ഀ਀	<metadataJSForm>来自javascript表单的元数据</metadataJSForm>ഀ਀	<min>最小值</min>ഀ਀	<more>更多</more>ഀ਀	<moreinfo>如许了解更多信息，</moreinfo>ഀ਀	<name>名称</name>ഀ਀	<newGroup>新增用户组</newGroup>ഀ਀	<newCategory>新增类型</newCategory>ഀ਀	<newMdDes>根据模板向系统新增元数据</newMdDes>ഀ਀	<newMetadata>新建元数据</newMetadata>ഀ਀	<newPassword>新口令</newPassword>ഀ਀	<newUser>新增用户</newUser>ഀ਀	<none>无</none>ഀ਀<!--	<nofilefound1>对不起，下载文件不存在，请向我们发送</nofilefound1>ഀ਀	<nofilefound2>反馈信息</nofilefound2>ഀ਀	<nofilefound3>或发送电子邮件到(your_account@your.organization) ，告知不能下载文件的名称和后面的ID号: </nofilefound3> -->ഀ਀	<noHelp>对不起，没有帮助信息</noHelp>ഀ਀	<noInfo>对不起，没有信息</noInfo>ഀ਀	<noLogin>您还未登录</noLogin>ഀ਀	<northbc>覆盖范围北边坐标</northbc>ഀ਀	<online>在线交互地图</online>ഀ਀	<onlink>在线链接</onlink>ഀ਀	<operation>操作</operation>ഀ਀<!--	<organisation>组织/部门</organisation> -->ഀ਀	<paper>硬拷贝</paper>ഀ਀	<partial>部分重叠</partial>ഀ਀	<partialCooordinate>局部坐标</partialCooordinate>ഀ਀	<password>口令</password>ഀ਀	<persInfo>个人信息</persInfo>ഀ਀	<placeKeyword>地名关键词</placeKeyword>ഀ਀	<porCatInfoTab>编目信息</porCatInfoTab>ഀ਀	<poweredBy>由以下软件提供支持： </poweredBy>ഀ਀	<privileges>权限管理</privileges>ഀ਀	<profile>组合Profile</profile>ഀ਀	<progress>进展情况</progress>ഀ਀	<progressChoice/>ഀ਀	<progressChoice value="complete">已完成</progressChoice>ഀ਀	<progressChoice value="in-work">进行中</progressChoice>ഀ਀	<progressChoice value="planned">计划中</progressChoice>ഀ਀	<protocolChoice value="WWW:LINK-1.0-http--link">网站地址(URL)</protocolChoice>ഀ਀	<protocolChoice value="WWW:LINK-1.0-http--samples">Showcase product (URL)</protocolChoice>ഀ਀	<protocolChoice value="WWW:LINK-1.0-http--related">Related link (URL)</protocolChoice>ഀ਀	<protocolChoice value="WWW:LINK-1.0-http--partners">Partner web address (URL)</protocolChoice>ഀ਀	<protocolChoice value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</protocolChoice>ഀ਀	<protocolChoice value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>ഀ਀	<protocolChoice value="WWW:DOWNLOAD-1.0-http--download">下载文件</protocolChoice>ഀ਀	<protocolChoice value="OGC:WMS-1.1.1-http-get-map">OGC-WMS地图服务(ver 1.1.1)</protocolChoice>ഀ਀	<protocolChoice value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities服务 (ver 1.1.1)</protocolChoice>ഀ਀	<protocolChoice value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>ഀ਀	<protocolChoice value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>ഀ਀	<protocolChoice value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>ഀ਀	<protocolChoice value="GLG:KML-2.0-http-get-map">Google Earth KML 服务 (ver 2.0)</protocolChoice>ഀ਀	<protocolChoice value="ESRI:AIMS--http--configuration">ArcIMS 地图服务配置文件 (*.AXL)</protocolChoice>ഀ਀	<protocolChoice value="ESRI:AIMS--http-get-image">ArcIMS 网络影像地图服务</protocolChoice>ഀ਀	<protocolChoice value="ESRI:AIMS--http-get-feature">ArcIMS 网络要素服务</protocolChoice>ഀ਀	<pubdate>出版日期</pubdate>ഀ਀	<publicationDate>出版日期</publicationDate>ഀ਀	<publisher>出版商</publisher>ഀ਀	<purpose>目的</purpose>ഀ਀	<rawMetadata>原始元数据插入</rawMetadata>ഀ਀<!--	<recentAdditions>最近新增</recentAdditions> -->ഀ਀	<refSysTab>参照系统信息</refSysTab>ഀ਀	<region>地区</region>ഀ਀	<RegisteredUser>注册用户</RegisteredUser>ഀ਀	<remote>远程搜索</remote>ഀ਀	<remove>删除</remove>ഀ਀	<reset>重设</reset>ഀ਀	<resetSearch>重设搜索表单</resetSearch>ഀ਀	<resetFeedbackForm>重设信息反馈表单</resetFeedbackForm>ഀ਀	<result>最后结果</result>ഀ਀	<resultsCoordinate>满足坐标搜索条件的结果</resultsCoordinate>ഀ਀	<resultsFreeText>满足全文检索条件的结果</resultsFreeText>ഀ਀	<resultsMatching>满足多个条件的结果：</resultsMatching>ഀ਀	<rss>开放的RSS馈入</rss>ഀ਀	<rtitle>题名</rtitle>ഀ਀	<save>保存</save>ഀ਀	<saveAndClose>保存并关闭</saveAndClose>ഀ਀	<saveAndValidate>检查</saveAndValidate>ഀ਀	<schema>模式</schema>ഀ਀	<search>开始搜索</search>ഀ਀<!--	<searchBox>数据与信息搜索</searchBox>ഀ਀	<searchForUnusedLabel>搜索未用的元数据</searchForUnusedLabel>ഀ਀	<searchIndex>搜索索引</searchIndex> -->ഀ਀	<searchPage>搜索页面</searchPage>ഀ਀	<searchPageDes>跳至元数据搜索页</searchPageDes>ഀ਀	<searchTemplates>查找模板</searchTemplates>ഀ਀	<searchText>全文</searchText>ഀ਀	<searchUnused>搜索未用或空的元数据</searchUnused>ഀ਀	<server>服务器</server>ഀ਀	<setAll>Set All</setAll>ഀ਀	<show>元数据</show>ഀ਀	<simple>简单搜索</simple>ഀ਀	<simpleTab>默认试图</simpleTab>ഀ਀	<simpleTabEditor>默认编辑器</simpleTabEditor>ഀ਀	<siteId>站点ID</siteId>ഀ਀	<site>网站</site>ഀ਀	<southbc>覆盖范围南边坐标</southbc>ഀ਀	<spatial2Tab>空间表示信息</spatial2Tab>ഀ਀	<spatialTab>空间范围信息</spatialTab>ഀ਀	<styleSheet>样式表</styleSheet>ഀ਀	<submit>提交</submit>ഀ਀	<summaryTab>摘要</summaryTab>ഀ਀	<surName>姓</surName>ഀ਀	<systemConfig>System configuration</systemConfig>ഀ਀	<systemConfigDes>Allows to change some system's parameters</systemConfigDes>ഀ਀	<template>模板</template>ഀ਀	<thanks>谢谢你们辛勤的努力。 GeoNetwork</thanks>ഀ਀	<theme>ISO 专题类别</theme>ഀ਀	<thumbnails>缩略图</thumbnails>ഀ਀	<timeout>有效时间</timeout>ഀ਀	<timeoutChoice value="10">10 秒</timeoutChoice>ഀ਀	<timeoutChoice value="20">20 秒</timeoutChoice>ഀ਀	<timeoutChoice value="30">30 秒</timeoutChoice>ഀ਀	<title>GeoNetwork - 通向空间数据与信息的门户</title>ഀ਀	<to>输入终止日期：</to>ഀ਀	<tools>工具</tools>ഀ਀	<topic>主题</topic>ഀ਀	<up>上移</up>ഀ਀	<update>更新</update>ഀ਀	<updateGroup>更新用户组</updateGroup>ഀ਀	<updateCategory>更新专题类别</updateCategory>ഀ਀	<updateUserAccount>更新用户帐号</updateUserAccount>ഀ਀	<upload>上载</upload>ഀ਀	<user>用户</user>ഀ਀	<UserAdmin>用户管理员</UserAdmin>ഀ਀	<userManagement>用户管理</userManagement>ഀ਀	<userManDes>新增/修改/删除以及显示用户</userManDes>ഀ਀	<username>用户名</username>ഀ਀	<userPw>修改口令</userPw>ഀ਀	<userPwDes>允许该用户修改口令</userPwDes>ഀ਀	<validate>有效性检查</validate>ഀ਀	<validityBegins>有效期自</validityBegins>ഀ਀	<validityEnds>有效期至</validityEnds>ഀ਀	<westbc>覆盖范围西边坐标</westbc>ഀ਀	<winInfo1>该窗口将显示GeoNetwork资源。由于某些浏览器管理窗口的方式不同，该窗口可能会被隐藏到其它窗口后面，这样，您只能手工把该窗口放到上层。</winInfo1>ഀ਀	<winInfo2>通过帮助(?)图标，可以查看解释。当激活该图标，其结果将在该资源窗口中显示。</winInfo2>ഀ਀	<wwwlink>网站链接</wwwlink>ഀ਀	<xmlInsert>导入ISO19115 XML格式的元数据</xmlInsert>ഀ਀<!--	<xmlMetadataInsertLabel>XML元数据插入</xmlMetadataInsertLabel> -->ഀ਀	<xmlTab>XML视图</xmlTab>ഀ਀	ഀ਀</strings>
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<savexml>
+		<dc>Save Dublin Core metadata as XML</dc>
+		<fgdc>Save FGDC metadata as XML</fgdc>
+		<iso19115Esri>Save ISO19115 metadata in XML for ESRI ArcCatalog</iso19115Esri>
+		<iso19139>Save ISO19115/19139 metadata as XML</iso19139>
+		<iso19139fra>Save ISO19115/19139 Fra metadata as XML</iso19139fra>
+	</savexml>
+	<!-- new strings -->
+	<fuzzy>Precision</fuzzy>
+	<fuzzySearch>Set the precision of the search (from fuzzy search to exact term search).</fuzzySearch>
+	<address>Address</address>
+	<state>State</state>
+	<zip>Zip</zip>
+	<country>Country</country>
+	<email>Email</email>
+	<kind>Kind</kind>
+	<kindChoice value="gov">Government</kindChoice>
+	<kindChoice value="int-org">International organisation</kindChoice>
+	<kindChoice value="ngo">NGO</kindChoice>
+	<kindChoice value="uni">University/research centre</kindChoice>
+	<kindChoice value="company">Private company</kindChoice>
+	<kindChoice value="consultant">Independent consultant</kindChoice>
+	<kindChoice value="other">Other</kindChoice>
+	<userInfo>Change user information</userInfo>
+	<userInfoDes>Allow current user to change user information</userInfoDes>
+	<subtemplate>Subtemplate</subtemplate>
+	<subtemplateTitle>subtemplate title</subtemplateTitle>
+	<edit>Edit</edit>
+	<view>View</view>
+	<Term>Term</Term>
+	<startsWith>Start with</startsWith>
+	<contains>Contains</contains>
+	<exactTerm>Exact term</exactTerm>
+	<foundWords>Number of terms found:</foundWords>
+	<selection>Selection</selection>
+	<label>Label</label>
+	<type>Type</type>
+	<sort>Sort</sort>
+	<definition>Definition</definition>
+	<close>Close</close>
+	<identifier>Identifier</identifier>
+	<keyword>keyword</keyword>
+	<res>results</res>
+	<ress>result</ress>
+
+	<thesaurus>
+		<category>Thesaurus category</category>
+		<management>Manage thesauri</management>
+		<manDes>Add/modify/delete and show thesauri</manDes>
+		<edition>Edit thesaurus</edition>
+		<consultation>View thesaurus</consultation>
+		<thesaurus>Thesaurus</thesaurus>
+		<admin>Manage thesaurus</admin>
+		<edit>Edit thesaurus</edit>
+		<update>Update thesaurus</update>
+		<upload>Upload thesaurus</upload>
+		<download>Download thesaurus</download>
+		<delete>Delete thesaurus</delete>	
+		<editelement>Edit element</editelement>
+		<addelement>Add element</addelement>			
+		<deleteelement>Delete element</deleteelement>
+		<updateelement>Update element</updateelement>
+		<keywordDescription>Keyword definition:</keywordDescription>
+		<keywordConfirm>Confirm keyword suppression</keywordConfirm>
+		<unknown>Unknown thesaurus</unknown>
+		<narrower>Narrower Term</narrower>
+		<broader>Broader Term</broader>
+		<related>Related Term</related>
+		<en>in</en>
+		<foundKeyWords>Number of terms found</foundKeyWords>
+		<foundKeyWordsLimit>Maximum number of terms found</foundKeyWordsLimit>
+	</thesaurus>
+
+	<!-- End new strings -->
+	
+	<language>cn</language>
+	<!-- ISO code -->
+	<about>关于本站</about>
+	<abstract>摘要</abstract>
+	<accept>提交</accept>
+	<add>添加</add>
+	<addNewMetadata>增加新的元数据</addNewMetadata>
+	<admin>系统管理</admin>
+	<Administrator>管理员</Administrator>
+	<agrovocKeyword>关键词</agrovocKeyword>
+	<any>- 任意 -</any>
+	<appSchInfoTab>应用模式信息</appSchInfoTab>
+	<ar>عربي</ar> <!-- Do not translate! -->
+	<assigned>已赋值</assigned>
+	<attrlabl>属性标签</attrlabl>
+	<availability>可用性</availability>
+	<back>回退</back>
+	<backToDescription>回到数据说明</backToDescription>
+	<backToPreviousPage>回到前页</backToPreviousPage>
+	<backToEditor>回到元数据编辑</backToEditor>
+	<batchImport>从您的本地目录导入所有ISO19115 XML格式的元数据</batchImport>
+	<begdate>起始日期</begdate>
+	<begtime>起始时间</begtime>
+	<bgFileDescChoice value="thumbnail">缩略图</bgFileDescChoice>
+	<bgFileDescChoice value="large_thumbnail">大缩略图</bgFileDescChoice>
+	<bounding>覆盖范围坐标</bounding>
+	<boundingRelation value="equal">等于</boundingRelation>
+	<boundingRelation value="overlaps">交迭</boundingRelation>
+	<boundingRelation value="encloses">包含</boundingRelation>
+	<boundingRelation value="fullyOutsideOf">完全位于之外</boundingRelation>
+	<browse>快视图</browse>
+	<browsen>快视图文件名</browsen>
+	<browsed>快视图文件说明</browsed>
+	<browset>快视图文件类型</browset>
+	<cancel>取消</cancel>
+	<categories>资源类别</categories>
+	<category>所属类别</category>
+	<categoryManagement>分类管理</categoryManagement>
+	<categoryManDes>增加/修改/删除以及显示各个类别</categoryManDes>
+	<choose>-选择-</choose>
+	<chooseFile>选择上载文件的位置</chooseFile>
+	<chooseLargeThumbnail>选择较大缩略图文件的位置</chooseLargeThumbnail>
+	<chooseThumbnail>选择较小缩略图文件的位置 </chooseThumbnail>
+	<clear>清除</clear>
+	<clearAll>Clear All</clearAll>
+	<cn>中文</cn> <!-- Do not translate! -->
+	<completeTab>高级视图</completeTab>
+	<completeTabEditor>高级编辑器</completeTabEditor>
+	<confirmDelete>确认要从数据库中删除该元数据吗？</confirmDelete>
+	<confirmPassword>口令确认</confirmPassword>
+	<confirmNewPassword>新口令确认</confirmNewPassword>
+	<constraintsTab>限制信息</constraintsTab>
+	<contactUs>联系我们</contactUs>
+	<convert>转换</convert>
+	<copyright1>版权</copyright1>
+	<copyright2>
+		<p>保留所有权利.<br/> 2005-2007</p>
+	</copyright2>
+	<create>新建</create>
+	<createTip>根据该模板新建元数据</createTip>
+	<dataQualityTab>数据质量信息</dataQualityTab>
+	<datasetTab>数据集</datasetTab>
+	<dateRelChoice/>
+	<dateRelChoice value="14">在此之前</dateRelChoice>
+	<dateRelChoice value="15">在此之前或此期间</dateRelChoice>
+	<dateRelChoice value="16">在此期间</dateRelChoice>
+	<dateRelChoice value="17">在此期间或之后</dateRelChoice>
+	<dateRelChoice value="18">在此之后</dateRelChoice>
+	<decline>拒绝</decline>
+	<del>删除</del>
+	<delete>删除</delete>
+	<descriptionTab>说明</descriptionTab>
+	<desSchema>Destination schema</desSchema>
+	<digital>数字</digital>
+	<directory>目录</directory>
+	<dirParameter>(需要‘目录dir’参数)</dirParameter>
+	<disclaimer1>您的免责标题</disclaimer1>
+	<disclaimer2>您的免责文本正文</disclaimer2>
+	<distributionTab>分发信息</distributionTab>
+	<down>下移</down>
+	<download>下载</download>
+	<downloadData>可下载的数据</downloadData>
+	<dsgpoly>数据集G-Polygon</dsgpoly>
+	<eastbc>覆盖范围东边坐标</eastbc>
+	<edit>编辑</edit>
+	<Editor>编辑器</Editor>
+	<emailAddress>电子邮件地址</emailAddress>
+	<en>English</en> <!-- Do not translate! -->
+	<enclosing>包含</enclosing>
+	<enclosingCoordinate>包含坐标 </enclosingCoordinate>
+	<enddate>终止日期</enddate>
+	<enttypl>实体类型标签</enttypl>
+	<es>Español</es> <!-- Do not translate! -->
+	<exactCoordinate>坐标提取 </exactCoordinate>
+	<extended>复杂搜索</extended>
+	<extent>范围</extent>
+	<featuredMap>特色地图</featuredMap>
+	<feedback>信息反馈</feedback>
+	<feedbackCardTitle>反馈与建议</feedbackCardTitle>
+	<feedbackComments>反馈/建议</feedbackComments>
+	<feedbackRequest>下在前请提供您的详细信息</feedbackRequest>
+	<file>文件</file>
+	<firstName>名</firstName>
+	<fr>Français</fr> <!-- Do not translate! -->
+	<freeKeyword>关键词</freeKeyword>
+	<from>输入起始日期 : </from>
+	<general>常规</general>
+	<generalInfo>常规信息</generalInfo>
+	<georss>打开GeoRSS馈入</georss>
+	<group>用户组</group>
+	<groupManagement>用户组管理</groupManagement>
+	<groupManDes>新增/修改/删除以及显示用户组</groupManDes>
+	<groups>用户组</groups>
+	<harvestingManagement>Harvesting management</harvestingManagement>
+	<harvestingManDes>Add/modify/delete/start/stop harvesting tasks</harvestingManDes>
+	<header_meta>
+		<meta name="keywords" content="GeoNetwork opensource 元数据 ISO19115 ISO19139 ISO GIS 遥感数据 shapefiles 空间数据 卫星影像 地图 交互式制图 19115 19139 地理 z39.50 目录 交换网络 覆盖范围 格网 栅格数据 开源 open source 网络"/>
+		<meta name="description" content="GeoNetwork opensource 提供访问在线地图、卫星影像以及相关空间数据库的功能。其目的是促进对空间数据和信息的访问和集成利用，从而推动空间数据的惯犯共享。"/>
+		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
+		<meta name="DC.title" lang="中文" content="访问空间数据与信息的门户"/>
+		<meta name="DC.creator" content="GeoNetwork开发组"/>
+		<meta name="DC.subject" lang="中文" content="GeoNetwork opensource 元数据 ISO19115 ISO19139 ISO GIS 遥感数据 shapefiles 空间数据 卫星影像 地图 交互式制图 19115 19139 地理 z39.50 目录 交换网络 覆盖范围 格网 栅格数据 开源 open source 网络"/>
+		<meta name="DC.description" lang="中文" content="GeoNetwork opensource 提供访问在线地图、卫星影像以及相关空间数据库的功能。其目的是促进对空间数据和信息的访问和集成利用，从而推动空间数据的惯犯共享。"/>
+		<meta name="DC.publisher" content=""/>
+		<meta name="DC.date" content="02-07-2007"/>
+		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
+		<meta name="DC.format" content="text/html; charset=UTF-8"/>
+		<meta name="DC.language" content="中文 English French Spanish"/>
+		<meta name="DC.coverage" content="Global"/>
+	</header_meta>
+	<help>显示帮助信息</help>
+	<helpComplete>显示完整版帮助信息</helpComplete>
+	<highlights>高亮显示</highlights>
+	<hitsPerPage>每页记录数</hitsPerPage>
+	<hitsPerPageChoice value="10">10</hitsPerPageChoice>
+	<hitsPerPageChoice value="20">20</hitsPerPageChoice>
+	<hitsPerPageChoice value="50">50</hitsPerPageChoice>
+	<hitsPerPageChoice value="100">100</hitsPerPageChoice>
+	<home>首页</home>
+	<identificationTab>标识信息</identificationTab>
+	<import>导入</import>
+	<infoTitle>信息</infoTitle>
+	<insert>插入</insert>
+	<interactiveMap>在线地图</interactiveMap>
+	<interMapInfo>
+		<h1>交互地图中的信息</h1> 可以在GeoNetwork中搜索带有交互地图的空间数据，也可直接连接到事先定义好的地图服务器，实现交互地图的访问。<p/> 支持的地图服务器包括与 <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial® Consortium</a> 规范一致的WMS服务器和 <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>服务器。</interMapInfo>
+	<keywords>关键词</keywords>
+	<keywordshelp>使用鼠标选择时，请按住Ctrl键可以选择多个关键词</keywordshelp>
+	<large_thumbnail>点击可查看较大的快视图</large_thumbnail>
+	<latitude>纬度(-90 至 90，单位：度)</latitude>
+	<links>相关链接</links>
+	<local>本地搜索</local>
+	<localiz>Localization</localiz>
+	<localizDes>Allows to change localized entities, like groups, categories etc...</localizDes>
+	<location>位置</location>
+	<login>登录</login>
+	<loginCardTitle>登录/注册</loginCardTitle>
+	<loginwarning>只有站点管理才需要</loginwarning>
+	<logout>注销</logout>
+	<logoutDes>执行注销操作</logoutDes>
+	<longitude>经度(-180 至 180，单位：度)</longitude>
+	<mandatory>必填</mandatory>
+	<mandatoryIf>满足以下条件时必填：</mandatoryIf>
+	<mainpage1>
+		<h1>GeoNetwork的目的是: </h1>
+		<ul>
+			<li>促进空间数据和信息的访问与集成利用；</li>
+			<li>辅助决策支持；</li>
+			<li>促进可持续发展的跨领域研究</li>
+			<li>增强对地理信息的理解</li>
+		</ul>
+	</mainpage1>
+	<mainpage2> GeoNetwork opensource可以实现跨部门的地理空间专题信息共享， 要了解更多情况，请联系 </a>
+	</mainpage2>
+	<mainhelp1> 如何搜索... </mainhelp1>
+	<mainhelp2> 隐藏帮助... </mainhelp2>
+	<mainhelp3>
+		<p>
+			<font size="-2"> 您可以使用任意一种或组合几种方式进行搜索。将显示满足所有条件的结果。 </font>
+		</p>
+		<p>
+			<font size="-2"> <b>全文</b> 搜索将对所有元数据项进行匹配。 <br/>
+				<i> 如果在<b>全文</b>搜索框中输入多个词语，系统将解析为这些词语必须同时都包含在元数据内容中 </i>
+			</font>
+		</p>
+		<p>
+			<font size="-2">  <b>主题</b> 搜索只查找匹配某一主题 的结果。 </font>
+		</p>
+		<p>
+			<font size="-2"> <b>区域</b> 搜索将查找与所选区域的范围匹配的结果。 </font>
+		</p>
+		<p>
+			<font size="-2"> 选择相互关系 "<b>
+					<input name="demo" type="checkbox" checked="checked"/> 包含</b> 所选<b>区域</b>"，将查找所有包含选择区域的结果。<br/>
+				<i>例如：区域或全球地图出包含其它国家外，也包含选择的国家，这样的地图也会出现在搜索结果中。</i>
+			</font>
+		</p>
+		<p>
+			<font size="-2"> 选择相互关系 "<b>
+					<input name="demo" type="checkbox" checked="checked"/> 部分叠盖</b> 选择 <b>区域</b>"，将查找部分覆盖选择区域的结果。 </font>
+		</p>
+	</mainhelp3>
+	<mainpageTitle>查找在线交互地图，GIS数据集，卫星影像以及相关应用系统</mainpageTitle>
+	<maintenanceTab>维护信息</maintenanceTab>
+	<management>管理</management>
+	<mapType>地图类型</mapType>
+	<max>最大值</max>
+	<mdUpdateError>更新错误</mdUpdateError>
+	<message>用户名或口令有误。<br/>点击“回退”按钮重试。</message>
+	<messageMdUpdateError>很遗憾，元数据更新时出现错误。</messageMdUpdateError>
+	<messageChanged>元数据已被其他用户修改，请重试。</messageChanged>
+	<messageDownload>欢迎访问，请点击下载按钮获取数据</messageDownload>
+	<messageLargeFile>文件太大</messageLargeFile>
+	<messageNoPrivileges>您没有权限执行该操作</messageNoPrivileges>
+	<messageNotPerformed>请求操作未能执行。</messageNotPerformed>
+	<metadata>元数据</metadata>
+	<metadataAdded>元数据已添加，其ID为：</metadataAdded>
+	<metadataDeleted>元数据已删除，其ID为：</metadataDeleted>
+	<metadataJSForm>来自javascript表单的元数据</metadataJSForm>
+	<min>最小值</min>
+	<more>更多</more>
+	<moreinfo>如许了解更多信息，请email至 </moreinfo>
+	<name>名称</name>
+	<newGroup>新增用户组</newGroup>
+	<newCategory>新增类型</newCategory>
+	<newMdDes>根据模板向系统新增元数据</newMdDes>
+	<newMetadata>新建元数据</newMetadata>
+	<newPassword>新口令</newPassword>
+	<newUser>新增用户</newUser>
+	<none>无</none>
+	<noHelp>对不起，没有帮助信息</noHelp>
+	<noInfo>对不起，没有信息</noInfo>
+	<noLogin>您还未登录</noLogin>
+	<northbc>覆盖范围北边坐标</northbc>
+	<online>在线交互地图</online>
+	<onlink>在线链接</onlink>
+	<operation>操作</operation>
+	<organisation>组织/部门</organisation>
+	<paper>硬拷贝</paper>
+	<partial>部分重叠</partial>
+	<partialCooordinate>局部坐标</partialCooordinate>
+	<password>口令</password>
+	<persInfo>个人信息</persInfo>
+	<placeKeyword>地名关键词</placeKeyword>
+	<porCatInfoTab>编目信息</porCatInfoTab>
+	<poweredBy>由以下软件提供支持： </poweredBy>
+	<privileges>权限管理</privileges>
+	<profile>组合Profile</profile>
+	<progress>进展情况</progress>
+	<progressChoice/>
+	<progressChoice value="complete">已完成</progressChoice>
+	<progressChoice value="in-work">进行中</progressChoice>
+	<progressChoice value="planned">计划中</progressChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--link">网站地址(URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--samples">Showcase product (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--related">Related link (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--partners">Partner web address (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
+	<protocolChoice value="WWW:DOWNLOAD-1.0-http--download">下载文件</protocolChoice>
+	<protocolChoice value="OGC:WMS-1.1.1-http-get-map">OGC-WMS地图服务(ver 1.1.1)</protocolChoice>
+	<protocolChoice value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities服务 (ver 1.1.1)</protocolChoice>
+	<protocolChoice value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
+	<protocolChoice value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
+	<protocolChoice value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
+	<protocolChoice value="GLG:KML-2.0-http-get-map">Google Earth KML 服务 (ver 2.0)</protocolChoice>
+	<protocolChoice value="ESRI:AIMS--http--configuration">ArcIMS 地图服务配置文件 (*.AXL)</protocolChoice>
+	<protocolChoice value="ESRI:AIMS--http-get-image">ArcIMS 网络影像地图服务</protocolChoice>
+	<protocolChoice value="ESRI:AIMS--http-get-feature">ArcIMS 网络要素服务</protocolChoice>
+	<pubdate>出版日期</pubdate>
+	<publicationDate>出版日期</publicationDate>
+	<publisher>出版商</publisher>
+	<purpose>目的</purpose>
+	<rawMetadata>原始元数据插入</rawMetadata>
+	<recentAdditions>最近新增</recentAdditions>
+	<refSysTab>参照系统信息</refSysTab>
+	<region>地区</region>
+	<RegisteredUser>注册用户</RegisteredUser>
+	<remote>远程搜索</remote>
+	<remove>删除</remove>
+	<reset>重设</reset>
+	<resetSearch>重设搜索表单</resetSearch>
+	<resetFeedbackForm>重设信息反馈表单</resetFeedbackForm>
+	<result>最后结果</result>
+	<resultsCoordinate>满足坐标搜索条件的结果</resultsCoordinate>
+	<resultsFreeText>满足全文检索条件的结果</resultsFreeText>
+	<resultsMatching>满足多个条件的结果：</resultsMatching>
+	<rss>开放的RSS馈入</rss>
+	<rtitle>题名</rtitle>
+	<save>保存</save>
+	<saveAndClose>保存并关闭</saveAndClose>
+	<saveAndValidate>检查</saveAndValidate>
+	<schema>模式</schema>
+	<search>开始搜索</search>
+	<searchBox>数据与信息搜索</searchBox>
+	<searchForUnusedLabel>搜索未用的元数据</searchForUnusedLabel>
+	<searchIndex>搜索索引</searchIndex>
+	<searchPage>搜索页面</searchPage>
+	<searchPageDes>跳至元数据搜索页</searchPageDes>
+	<searchTemplates>查找模板</searchTemplates>
+	<searchText>全文</searchText>
+	<searchUnused>搜索未用或空的元数据</searchUnused>
+	<server>服务器</server>
+	<show>元数据</show>
+	<simple>简单搜索</simple>
+	<simpleTab>默认试图</simpleTab>
+	<simpleTabEditor>默认编辑器</simpleTabEditor>
+	<siteId>站点ID</siteId>
+	<site>网站</site>
+	<southbc>覆盖范围南边坐标</southbc>
+	<spatial2Tab>空间表示信息</spatial2Tab>
+	<spatialTab>空间范围信息</spatialTab>
+	<styleSheet>样式表</styleSheet>
+	<submit>提交</submit>
+	<summaryTab>摘要</summaryTab>
+	<surName>姓</surName>
+	<systemConfig>System configuration</systemConfig>
+	<systemConfigDes>Allows to change some system's parameters</systemConfigDes>
+	<template>模板</template>
+	<thanks>谢谢你们辛勤的努力。 GeoNetwork</thanks>
+	<theme>ISO 专题类别</theme>
+	<thumbnails>缩略图</thumbnails>
+	<timeout>有效时间</timeout>
+	<timeoutChoice value="10">10 秒</timeoutChoice>
+	<timeoutChoice value="20">20 秒</timeoutChoice>
+	<timeoutChoice value="30">30 秒</timeoutChoice>
+	<title>GeoNetwork - 通向空间数据与信息的门户</title>
+	<to>输入终止日期：</to>
+	<tools>工具</tools>
+	<topic>主题</topic>
+	<up>上移</up>
+	<update>更新</update>
+	<updateGroup>更新用户组</updateGroup>
+	<updateCategory>更新专题类别</updateCategory>
+	<updateUserAccount>更新用户帐号</updateUserAccount>
+	<upload>上载</upload>
+	<user>用户</user>
+	<UserAdmin>用户管理员</UserAdmin>
+	<userManagement>用户管理</userManagement>
+	<userManDes>新增/修改/删除以及显示用户</userManDes>
+	<username>用户名</username>
+	<userPw>修改口令</userPw>
+	<userPwDes>允许该用户修改口令</userPwDes>
+	<validate>有效性检查</validate>
+	<validityBegins>有效期自</validityBegins>
+	<validityEnds>有效期至</validityEnds>
+	<westbc>覆盖范围西边坐标</westbc>
+	<winInfo1>该窗口将显示GeoNetwork资源。由于某些浏览器管理窗口的方式不同，该窗口可能会被隐藏到其它窗口后面，这样，您只能手工把该窗口放到上层。</winInfo1>
+	<winInfo2>通过帮助(?)图标，可以查看解释。当激活该图标，其结果将在该资源窗口中显示。</winInfo2>
+	<wwwlink>网站链接</wwwlink>
+	<xmlInsert>导入ISO19115 XML格式的元数据</xmlInsert>
+	<xmlTab>XML视图</xmlTab>
+	
+	
+</strings>
