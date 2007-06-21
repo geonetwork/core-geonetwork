@@ -13,12 +13,12 @@
 	
 	<info type="geonetwork">
 		<short>GeoNetwork</short>
-		<long>GeoNetwork remote node</long>
+		<long>GeoNetwork v2.1 remote node</long>
 	</info>
 	
 	<info type="geonetwork20">
 		<short>GeoNetwork 2.0</short>
-		<long>Old GeoNetwork 2.0 remote node</long>
+		<long>GeoNetwork v2.0 remote node</long>
 	</info>
 	
 	<info type="webdav">
