@@ -27,7 +27,6 @@
 	<userInfoDes>Allow current user to change user information</userInfoDes>
 	<subtemplate>Subtemplate</subtemplate>
 	<subtemplateTitle>subtemplate title</subtemplateTitle>
-	<edit>Edit</edit>
 	<view>View</view>
 	<Term>Term</Term>
 	<startsWith>Start with</startsWith>
@@ -72,17 +71,6 @@
 		<foundKeyWords>Number of terms found</foundKeyWords>
 		<foundKeyWordsLimit>Maximum number of terms found</foundKeyWordsLimit>
 	</thesaurus>
-
-	<searchBox>Search for Data and Information</searchBox>
-	<searchIndex>Search index</searchIndex>
-	<contactUs>Contact us</contactUs>
-	<highlights>Highlights</highlights>
-	<recentAdditions>Recent Additions</recentAdditions>
-	<feedbackCardTitle>Feedback and Comments</feedbackCardTitle>
-	<loginCardTitle>Login / Signup</loginCardTitle>
-	<organisation>Organisation / department</organisation>
-	<emailAddress>Email address</emailAddress>
-	<feedbackComments>Feedback / comments</feedbackComments>
 	<!-- End new strings -->
 	
 	<language>en</language>
@@ -97,7 +85,7 @@
 	<agrovocKeyword>Agrovoc Keywords</agrovocKeyword>
 	<any>- Any -</any>
 	<appSchInfoTab>App. schema</appSchInfoTab>
-	<ar>Arabic</ar>
+		<ar>عربي</ar> <!-- Do not translate! -->
 	<assigned>Assigned</assigned>
 	<attrlabl>Attribute Label</attrlabl>
 	<availability>Availability</availability>
@@ -130,13 +118,14 @@
 	<chooseThumbnail>Choose the location of the small thumbnail file </chooseThumbnail>
 	<clear>Clear</clear>
 	<clearAll>Clear All</clearAll>
-	<cn>Chinese</cn>
+	<cn>中文</cn> <!-- Do not translate! -->
 	<completeTab>Advanced view</completeTab>
 	<completeTabEditor>Advanced editor</completeTabEditor>
 	<confirmDelete>Are you sure you want to Delete the Metadata from the Database?</confirmDelete>
 	<confirmPassword>Confirm password</confirmPassword>
 	<confirmNewPassword>Confirm new password</confirmNewPassword>
 	<constraintsTab>Constraints</constraintsTab>
+	<contactUs>Contact us</contactUs>
 	<convert>Convert</convert>
 	<copyright1>Copyright</copyright1>
 	<copyright2>
@@ -156,6 +145,7 @@
 	<del>del</del>
 	<delete>Delete</delete>
 	<descriptionTab>Description</descriptionTab>
+	<desSchema>Destination schema</desSchema>
 	<digital>Digital</digital>
 	<directory>Directory</directory>
 	<dirParameter>(Needs the 'dir' parameter)</dirParameter>
@@ -170,19 +160,19 @@
 	<edit>Edit</edit>
 	<Editor>Editor</Editor>
 	<!-- <emailAddress>Email address</emailAddress> -->
-	<en>English</en>
-	<!-- Do not translate! -->
+	<en>English</en> <!-- Do not translate! -->
 	<enclosing>Including</enclosing>
 	<enclosingCoordinate>Enclosing coordinates </enclosingCoordinate>
 	<enddate>Ending Date</enddate>
 	<enttypl>Entity Type Label</enttypl>
-	<es>Español</es>
-	<!-- Do not translate! -->
+	<es>Español</es> <!-- Do not translate! -->
 	<exactCoordinate>Exact coordinates </exactCoordinate>
 	<extended>Advanced search</extended>
 	<extent>Extent</extent>
 	<featuredMap>Featured map</featuredMap>
 	<feedback>Feedback</feedback>
+	<feedbackCardTitle>Feedback and Comments</feedbackCardTitle>
+	<feedbackComments>Feedback / comments</feedbackComments>
 	<feedbackRequest>Please provide your details before downloading</feedbackRequest>
 	<file>File</file>
 	<firstName>First Name</firstName>
@@ -206,6 +196,7 @@
 		<meta name="DC.creator" content="GeoNetwork Team"/>
 		<meta name="DC.subject" lang="English" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
 		<meta name="DC.description" lang="English" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
+		<meta name="DC.publisher" content=""/>
 		<meta name="DC.date" content="02-07-2007"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=UTF-8"/>
@@ -214,6 +205,7 @@
 	</header_meta>
 	<help>Help</help>
 	<helpComplete>Complete help</helpComplete>
+	<highlights>Highlights</highlights>
 	<hitsPerPage>Hits per page</hitsPerPage>
 	<hitsPerPageChoice value="10">10</hitsPerPageChoice>
 	<hitsPerPageChoice value="20">20</hitsPerPageChoice>
@@ -237,6 +229,7 @@
 	<localizDes>Allows to change localized entities, like groups, categories etc...</localizDes>
 	<location>Location</location>
 	<login>Login</login>
+	<loginCardTitle>Login / Signup</loginCardTitle>
 	<loginwarning>Only required for site administration</loginwarning>
 	<logout>Logout</logout>
 	<logoutDes>Performs a logout</logoutDes>
@@ -319,6 +312,7 @@
 	<online>Interactive map</online>
 	<onlink>Online Linkage</onlink>
 	<operation>Operation</operation>
+	<organisation>Organisation / department</organisation>
 	<paper>Hard copy</paper>
 	<partial>Partially overlapping</partial>
 	<partialCooordinate>Partial coordinates </partialCooordinate>
@@ -355,6 +349,7 @@
 	<publisher>Publisher</publisher>
 	<purpose>Purpose</purpose>
 	<rawMetadata>Raw Metadata Insert</rawMetadata>
+	<recentAdditions>Recent Additions</recentAdditions>
 	<refSysTab>Ref. system</refSysTab>
 	<region>Region</region>
 	<RegisteredUser>Registered user</RegisteredUser>
@@ -373,8 +368,9 @@
 	<saveAndClose>Save and close</saveAndClose>
 	<saveAndValidate>Check</saveAndValidate>
 	<schema>Schema</schema>
-	<desSchema>Destination schema</desSchema>
 	<search>Start the search</search>
+	<searchBox>Search for Data and Information</searchBox>
+	<searchIndex>Search index</searchIndex>
 	<searchPage>Search page</searchPage>
 	<searchPageDes>Jumps to the metadata search page</searchPageDes>
 	<searchTemplates>Search for templates</searchTemplates>
