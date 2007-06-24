@@ -347,7 +347,7 @@ Validator.prototype.isURL = function(text)
 		if (this.isLetter(c) || this.isDigit(c))
 			continue;
 			
-		if ('.-:/_%'.indexOf(c) != -1)
+		if ('.-:/_%?&='.indexOf(c) != -1)
 			continue;
 			
 		return false;
