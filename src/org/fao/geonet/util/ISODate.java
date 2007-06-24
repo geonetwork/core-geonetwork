@@ -106,7 +106,15 @@ public class ISODate
 
 			hour  = Integer.parseInt(st2.nextToken());
 			min   = Integer.parseInt(st2.nextToken());
-			sec   = Integer.parseInt(st2.nextToken());
+
+			String sSec = st2.nextToken();
+
+			//--- skip timezone and other stuff
+
+			if (sSec.length() > 2)
+				sSec = sSec.substring(0, 2);
+
+			sec = Integer.parseInt(sSec);
 		}
 		catch(Exception e)
 		{

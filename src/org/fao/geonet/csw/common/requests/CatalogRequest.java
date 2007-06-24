@@ -50,6 +50,10 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.Header;
+import java.net.URL;
+import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
 
 //=============================================================================
 
@@ -118,6 +122,18 @@ public abstract class CatalogRequest
 
 	//---------------------------------------------------------------------------
 
+	public void setUrl(URL url)
+	{
+		this.host    = url.getHost();
+		this.port    = url.getPort();
+		this.address = url.getPath();
+
+		if (this.port == -1)
+			this.port = 80;
+	}
+
+	//---------------------------------------------------------------------------
+
 	public void setMethod(Method m)
 	{
 		method = m;
@@ -178,6 +194,15 @@ public abstract class CatalogRequest
 		CatalogException.unmarshal(response);
 
 		return response;
+	}
+
+	//---------------------------------------------------------------------------
+
+	public void setCredentials(String username, String password)
+	{
+		this.useAuthent = true;
+		this.username   = username;
+		this.password   = password;
 	}
 
 	//---------------------------------------------------------------------------
@@ -402,6 +427,15 @@ public abstract class CatalogRequest
 //		httpMethod.setFollowRedirects(true);
 		httpMethod.setPath(address);
 
+		if (useAuthent)
+		{
+			Credentials cred = new UsernamePasswordCredentials(username, password);
+			AuthScope   scope= new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM);
+
+			client.getState().setCredentials(scope, cred);
+			httpMethod.setDoAuthentication(true);
+		}
+
 		return httpMethod;
 	}
 
@@ -487,6 +521,9 @@ public abstract class CatalogRequest
 	private String  loginAddr;
 	private Method  method;
 	private boolean useSOAP;
+	private boolean useAuthent;
+	private String  username;
+	private String  password;
 
 	private HttpClient client = new HttpClient();
 	private HttpState  state  = new HttpState();

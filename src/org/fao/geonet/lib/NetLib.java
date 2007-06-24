@@ -23,12 +23,14 @@
 
 package org.fao.geonet.lib;
 
+import java.net.URL;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
+import java.net.MalformedURLException;
 
 //=============================================================================
 
@@ -70,6 +72,21 @@ public class NetLib
 				req.setProxyHost(host);
 				req.setProxyPort(Integer.parseInt(port));
 			}
+		}
+	}
+
+	//-----------------------------------------------------------------------------
+
+	public boolean isUrlValid(String url)
+	{
+		try
+		{
+			new URL(url);
+			return true;
+		}
+		catch (MalformedURLException e)
+		{
+			return false;
 		}
 	}
 }

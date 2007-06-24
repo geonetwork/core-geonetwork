@@ -23,26 +23,21 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
-import java.net.URL;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.UUID;
 import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadServerResponseEx;
-import jeeves.exceptions.UserNotFoundEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Xml;
-import jeeves.utils.XmlRequest;
+import jeeves.utils.BinaryFile;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
-import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
-import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
@@ -95,6 +90,7 @@ public class CswHarvester extends AbstractHarvester
 		String id = settingMan.add(dbms, "harvesting", "node", getType());
 
 		storeNode(dbms, params, "id:"+id);
+		updateIcon();
 
 		return id;
 	}
@@ -123,6 +119,7 @@ public class CswHarvester extends AbstractHarvester
 		//--- could be half updated and so it could be in an inconsistent state
 
 		params = copy;
+		updateIcon();
 	}
 
 	//---------------------------------------------------------------------------
@@ -173,20 +170,16 @@ public class CswHarvester extends AbstractHarvester
 
 		Element info = node.getChild("info");
 
-		for (AlignerResult ar : result.result)
-		{
-			Element site = new Element("search");
-			site.setAttribute("siteId",   ar.siteId);
+		Element site = new Element("search");
 
-			add(site, "total",     ar.totalMetadata);
-			add(site, "added",     ar.addedMetadata);
-			add(site, "updated",   ar.updatedMetadata);
-			add(site, "unchanged", ar.unchangedMetadata);
-			add(site, "skipped",   ar.schemaSkipped+ ar.uuidSkipped);
-			add(site, "removed",   ar.locallyRemoved);
+		add(site, "total",     result.totalMetadata);
+		add(site, "added",     result.addedMetadata);
+		add(site, "updated",   result.updatedMetadata);
+		add(site, "unchanged", result.unchangedMetadata);
+		add(site, "skipped",   result.schemaSkipped + result.uuidSkipped);
+		add(site, "removed",   result.locallyRemoved);
 
-			info.addContent(site);
-		}
+		info.addContent(site);
 	}
 
 	//---------------------------------------------------------------------------
@@ -199,70 +192,36 @@ public class CswHarvester extends AbstractHarvester
 	{
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
-		CategoryMapper localCateg = new CategoryMapper(dbms);
-		GroupMapper    localGroups= new GroupMapper(dbms);
+		Harvester h = new Harvester(log, context, dbms, params);
+		result = h.harvest();
+	}
 
-		XmlRequest req = new XmlRequest(new URL(params.capabUrl));
+	//---------------------------------------------------------------------------
+	//---
+	//--- Private methods
+	//---
+	//---------------------------------------------------------------------------
 
-		Lib.net.setupProxy(context, req);
+	private void updateIcon()
+	{
+		File src = new File(context.getAppPath() +"images/csw",   params.icon);
+		File des = new File(context.getAppPath() +"images/logos", params.uuid +".gif");
 
-		//--- login
-
-		if (params.useAccount)
+		try
 		{
-			log.info("Login into : "+ params.name);
+			FileInputStream  is = new FileInputStream (src);
+			FileOutputStream os = new FileOutputStream(des);
 
-//			req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_LOGIN);
-			req.addParam("username", params.username);
-			req.addParam("password", params.password);
-
-			Element response = req.execute();
-
-			if (!response.getName().equals("ok"))
-				throw new UserNotFoundEx(params.username);
+			BinaryFile.copy(is, os, true, true);
 		}
-
-		//--- retrieve info on categories and groups
-
-		log.info("Retrieving info on categories and groups from : "+ params.name);
-
-//		req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_INFO);
-		req.clearParams();
-		req.addParam("type", "site");
-		req.addParam("type", "categories");
-		req.addParam("type", "groups");
-		req.addParam("type", "knownNodes");
-
-		Element remoteInfo = req.execute();
-
-		if (!remoteInfo.getName().equals("info"))
-			throw new BadServerResponseEx(remoteInfo);
-
-		//--- search
-
-		result = new CswResult();
-
-		Aligner aligner = new Aligner(log, req, params, dataMan, dbms, context,
-												localCateg, localGroups, remoteInfo);
-
-		for(Search s : params.getSearches())
+		catch (IOException e)
 		{
-//			log.info("Searching on : "+ params.name +"/"+ s.siteId);
-//
-//			req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_SEARCH);
-//
-//			Element searchResult = req.execute(s.createRequest());
-//
-//			log.debug("Obtained:\n"+Xml.getString(searchResult));
-//
-//			//--- site alignment
-//			AlignerResult ar = aligner.align(searchResult, s.siteId);
+			//--- we ignore exceptions here, just log them
 
-			//--- collect some stats
-//			result.result.add(ar);
+			context.warning("Cannot copy CSW icon -> "+e.getMessage());
+			context.warning(" (C) Source : "+ src);
+			context.warning(" (C) Destin : "+ des);
 		}
-
-		dbms.commit();
 	}
 
 	//---------------------------------------------------------------------------
@@ -279,7 +238,13 @@ public class CswHarvester extends AbstractHarvester
 
 class CswResult
 {
-	public ArrayList<AlignerResult> result = new ArrayList<AlignerResult>();
+	public int totalMetadata;
+	public int addedMetadata;
+	public int updatedMetadata;
+	public int unchangedMetadata;
+	public int locallyRemoved;
+	public int schemaSkipped;
+	public int uuidSkipped;
 }
 
 //=============================================================================

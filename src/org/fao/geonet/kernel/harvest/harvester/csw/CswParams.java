@@ -133,10 +133,10 @@ public class CswParams extends AbstractParams
 
 			Search s = new Search();
 
-			s.freeText = getValue(search, "freeText", "");
-			s.title    = getValue(search, "title",    "");
-			s.abstrac  = getValue(search, "abstract", "");
-			s.subject  = getValue(search, "subject",  "");
+			s.freeText = getValue(search, "freeText", "").trim();
+			s.title    = getValue(search, "title",    "").trim();
+			s.abstrac  = getValue(search, "abstract", "").trim();
+			s.subject  = getValue(search, "subject",  "").trim();
 
 			alSearches.add(s);
 		}
