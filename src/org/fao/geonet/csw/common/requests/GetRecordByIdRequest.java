@@ -68,6 +68,13 @@ public class GetRecordByIdRequest extends CatalogRequest
 	}
 
 	//---------------------------------------------------------------------------
+
+	public void clearIds()
+	{
+		alIds.clear();
+	}
+
+	//---------------------------------------------------------------------------
 	//---
 	//--- Protected methods
 	//---
