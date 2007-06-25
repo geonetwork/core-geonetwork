@@ -69,10 +69,10 @@
 	
 	<xsl:template match="gmd:*[@codeListValue]">
 		<xsl:copy>
-			<xsl:apply-templates select="@*"/>
 			<xsl:attribute name="codeList">
 				<xsl:value-of select="concat('./resources/codeList.xml#',local-name(.))"/>
 			</xsl:attribute>
+			<xsl:apply-templates select="@*"/>
 		</xsl:copy>
 	</xsl:template>
 

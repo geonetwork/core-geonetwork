@@ -303,6 +303,28 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
+	public Element setUUID(String schema, String uuid, Element md) throws Exception
+	{
+		//--- setup environment
+
+		Element env = new Element("env");
+		env.addContent(new Element("uuid").setText(uuid));
+
+		//--- setup root element
+
+		Element root = new Element("root");
+		root.addContent(md);
+		root.addContent(env);
+
+		//--- do an XSL  transformation
+
+		String styleSheet = editLib.getSchemaDir(schema) + Geonet.File.SET_UUID;
+
+		return Xml.transform(root, styleSheet);
+	}
+
+	//--------------------------------------------------------------------------
+
 	public String getMetadataId(Dbms dbms, String uuid) throws Exception
 	{
 		String query = "SELECT id FROM Metadata WHERE uuid=?";
@@ -506,30 +528,29 @@ public class DataManager
 	  */
 
 	public String insertMetadataExt(Dbms dbms, String schema, Element md, SerialFactory sf,
-											  String siteId, String createDate, String changeDate,
+											  String source, String createDate, String changeDate,
 											  String uuid, String sourceUri) throws Exception
 	{
 		//--- generate a new metadata id
 		int id = sf.getSerial(dbms, "Metadata");
 
-		return insertMetadataExt(dbms, schema, md, id, siteId, createDate, changeDate, uuid, sourceUri);
+		return insertMetadataExt(dbms, schema, md, id, source, createDate, changeDate, uuid, sourceUri);
 	}
 
 	//--------------------------------------------------------------------------
-	/** @param siteId the site creator of the metadata. If null, the local siteId will
-	  *        be used
+	/** @param source the source of the metadata. If null, the local siteId will be used
 	  */
 
 	public String insertMetadataExt(Dbms dbms, String schema, Element md, int id,
-											  String siteId, String createDate, String changeDate,
+											  String source, String createDate, String changeDate,
 											  String uuid, String sourceUri) throws Exception
 	{
-		if (siteId == null)
-			siteId = getSiteID();
+		if (source == null)
+			source = getSiteID();
 
 		//--- Note: we cannot index metadata here. Indexing is done in the harvesting part
 
-		return XmlSerializer.insert(dbms, schema, md, id, siteId, uuid, createDate,
+		return XmlSerializer.insert(dbms, schema, md, id, source, uuid, createDate,
 											 changeDate, sourceUri);
 	}
 

@@ -84,16 +84,9 @@ class Importer
 				String uuid       = general.getChildText("uuid");
 				String createDate = general.getChildText("createDate");
 				String changeDate = general.getChildText("changeDate");
-				String siteId     = general.getChildText("siteId");
+				String source     = general.getChildText("siteId");
 				String schema     = general.getChildText("schema");
 				String isTemplate = general.getChildText("isTemplate").equals("true") ? "y" : "n";
-
-				if (uuid == null)
-				{
-					uuid   = UUID.randomUUID().toString();
-					siteId = null;
-					//TODO: set the new uuid inside the metadata
-				}
 
 				boolean dcore  = schema.equals("dublin-core");
 				boolean fgdc   = schema.equals("fgdc-std");
@@ -103,10 +96,19 @@ class Importer
 				if (!dcore && !fgdc && !iso115 && !iso139)
 					throw new Exception("Unknown schema format : "+schema);
 
+				if (uuid == null)
+				{
+					uuid   = UUID.randomUUID().toString();
+					source = null;
+
+					//--- set uuid inside metadata
+					md[0] = dm.setUUID(schema, uuid, md[0]);
+				}
+
 				Log.debug(Geonet.MEF, "Adding metadata with uuid="+ uuid);
 
 				id[0] = dm.insertMetadataExt(dbms, schema, md[0], context.getSerialFactory(),
-															 siteId, createDate, changeDate, uuid, null);
+															 source, createDate, changeDate, uuid, null);
 
 				int iId = Integer.parseInt(id[0]);
 
