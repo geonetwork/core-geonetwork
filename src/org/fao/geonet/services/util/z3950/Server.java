@@ -51,36 +51,44 @@ public class Server
 	/** initializes the server
 	  */
 	public static void init(String host, String port, String appPath,
-									String schemaMappings, ServiceContext context) throws Exception
+									String schemaMappings, ServiceContext context)
 	{
-		//--- fix schema-mappings.xml file
+		try
+		{
+			//--- fix schema-mappings.xml file
 
-		String tempSchema = appPath + Jeeves.Path.XML + schemaMappings +".tem";
-		String realSchema = appPath + Jeeves.Path.XML + schemaMappings;
+			String tempSchema = appPath + Jeeves.Path.XML + schemaMappings +".tem";
+			String realSchema = appPath + Jeeves.Path.XML + schemaMappings;
 
-		fixSchemaFile(tempSchema, realSchema);
+			fixSchemaFile(tempSchema, realSchema);
 
-		//--- fix repositories.xml file
+			//--- fix repositories.xml file
 
-		String tempRepo = appPath + Jeeves.Path.XML + "repositories.xml" +".tem";
-		String realRepo = appPath + Jeeves.Path.XML + "repositories.xml";
+			String tempRepo = appPath + Jeeves.Path.XML + "repositories.xml" +".tem";
+			String realRepo = appPath + Jeeves.Path.XML + "repositories.xml";
 
-		fixRepositoriesFile(tempRepo, realRepo, host, port);
+			fixRepositoriesFile(tempRepo, realRepo, host, port);
 
-		//--- normal processing
+			//--- normal processing
 
-		String evaluator    = "org.fao.geonet.services.util.z3950.GNSearchable";
-		String configurator = "com.k_int.IR.Syntaxes.Conversion.XMLConfigurator";
+			String evaluator    = "org.fao.geonet.services.util.z3950.GNSearchable";
+			String configurator = "com.k_int.IR.Syntaxes.Conversion.XMLConfigurator";
 
-		Properties props = new Properties();
-		props.setProperty("port",                              port);
-		props.setProperty("evaluator",                         evaluator);
-		props.setProperty("XSLConverterConfiguratorClassName", configurator);
-		props.setProperty("ConvertorConfigFile",               realSchema);
-		props.put("srvContext", context);
+			Properties props = new Properties();
+			props.setProperty("port",                              port);
+			props.setProperty("evaluator",                         evaluator);
+			props.setProperty("XSLConverterConfiguratorClassName", configurator);
+			props.setProperty("ConvertorConfigFile",               realSchema);
+			props.put("srvContext", context);
 
-		_server = new ZServer(props);
-		_server.start();
+			_server = new ZServer(props);
+			_server.start();
+		}
+		catch (Exception e)
+		{
+			//--- Z39.50 must start even if there are problems
+			context.warning("Cannot start Z39.50 server : "+ e.getMessage());
+		}
 	}
 
 	//--------------------------------------------------------------------------
