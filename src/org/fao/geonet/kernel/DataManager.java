@@ -28,7 +28,6 @@
 package org.fao.geonet.kernel;
 
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -51,6 +50,7 @@ import org.fao.geonet.util.ISODate;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Namespace;
 import org.jdom.Text;
 
 //=============================================================================
@@ -415,6 +415,31 @@ public class DataManager
 		String locServ = baseURL +"/"+ Jeeves.Prefix.SERVICE +"/en";
 
 		return "http://" + host + (port == "80" ? "" : ":" + port) + locServ;
+	}
+
+	//--------------------------------------------------------------------------
+
+	public String autodetectSchema(Element md)
+	{
+		Namespace nons= Namespace.NO_NAMESPACE;
+		Namespace gmd = Namespace.getNamespace("http://www.isotc211.org/2005/gmd");
+
+		if (md.getName().equals("MD_Metadata") && md.getNamespace().equals(gmd))
+			return "iso19139";
+
+		if (md.getNamespace().equals(nons))
+		{
+			if (md.getName().equals("Metadata"))
+				return "iso19115";
+
+			if (md.getName().equals("simpledc"))
+				return "dublin-core";
+
+			if (md.getName().equals("metadata"))
+				return "fgdc-std";
+		}
+
+		return null;
 	}
 
 	//--------------------------------------------------------------------------
