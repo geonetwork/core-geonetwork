@@ -133,18 +133,22 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
 			Element record = (Element) i.next();
 
-			String schema = record.getChildText("schemaid");
+//			String schema = record.getChildText("schemaid");
 			String data   = record.getChildText("data");
 
 			Element md = Xml.loadString(data, false);
 
 			//--- apply stylesheet according to setName and schema
 
-			String FS         = File.separator;
-			String schemaDir  = context.getAppPath() +"xml"+ FS +"csw"+ FS +"schemas"+ FS +schema+ FS;
-			String styleSheet = schemaDir + "ogc-"+setName+".xsl";
+			//--- we cannot use the element set name parameter here. If we use that, we
+			//--- should do an XSL transformation but the transformation would be profile
+			//--- specific and we don't have profiles for fgdc and dublin-core metadata
 
-			md = Xml.transform(md, styleSheet);
+//			String FS         = File.separator;
+//			String schemaDir  = context.getAppPath() +"xml"+ FS +"csw"+ FS +"schemas"+ FS +schema+ FS;
+//			String styleSheet = schemaDir + "ogc-"+setName+".xsl";
+//
+//			md = Xml.transform(md, styleSheet);
 
 			//--- needed to detach md from the document
 			md.detach();
