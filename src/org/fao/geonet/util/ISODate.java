@@ -92,29 +92,32 @@ public class ISODate
 
 	public void setDate(String isoDate)
 	{
+		if (isoDate == null)
+			throw new IllegalArgumentException("ISO date is null");
+
+		if (isoDate.length() < 10)
+			throw new IllegalArgumentException("Invalid ISO date : "+ isoDate);
+
 		try
 		{
-			String sep = (isoDate.indexOf(" ") != -1) ? " " : "T";
+			year  = Integer.parseInt(isoDate.substring(0,  4));
+			month = Integer.parseInt(isoDate.substring(5,  7));
+			day   = Integer.parseInt(isoDate.substring(8, 10));
 
-			StringTokenizer st  = new StringTokenizer(isoDate, sep);
-			StringTokenizer st1 = new StringTokenizer(st.nextToken(), "-");
-			StringTokenizer st2 = new StringTokenizer(st.nextToken(), ":");
+			hour = 0;
+			min  = 0;
+			sec  = 0;
 
-			year  = Integer.parseInt(st1.nextToken());
-			month = Integer.parseInt(st1.nextToken());
-			day   = Integer.parseInt(st1.nextToken());
+			//--- is the date in 'yyyy-mm-dd' or 'yyyy-mm-ddZ' format?
 
-			hour  = Integer.parseInt(st2.nextToken());
-			min   = Integer.parseInt(st2.nextToken());
+			if (isoDate.length() < 12)
+				return;
 
-			String sSec = st2.nextToken();
+			isoDate = isoDate.substring(11);
 
-			//--- skip timezone and other stuff
-
-			if (sSec.length() > 2)
-				sSec = sSec.substring(0, 2);
-
-			sec = Integer.parseInt(sSec);
+			hour  = Integer.parseInt(isoDate.substring(0,2));
+			min   = Integer.parseInt(isoDate.substring(3,5));
+			sec   = Integer.parseInt(isoDate.substring(6,8));
 		}
 		catch(Exception e)
 		{
