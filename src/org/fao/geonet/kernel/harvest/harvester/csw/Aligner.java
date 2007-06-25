@@ -23,29 +23,24 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
-import java.io.File;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.csw.common.Csw.ElementSetName;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordByIdRequest;
 import org.fao.geonet.csw.common.util.CswServer;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
-import org.fao.geonet.csw.common.Csw.ElementSetName;
 
 //=============================================================================
 
@@ -68,6 +63,27 @@ public class Aligner
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager();
 		result  = new CswResult();
+
+		//--- setup get-record-by-id request
+
+		request = new GetRecordByIdRequest();
+		request.setElementSetName(ElementSetName.FULL);
+
+		CswServer.Operation oper = server.getOperation(CswServer.GET_RECORD_BY_ID);
+
+		if (oper.postUrl != null)
+		{
+			request.setUrl(oper.postUrl);
+			request.setMethod(CatalogRequest.Method.POST);
+		}
+		else
+		{
+			request.setUrl(oper.getUrl);
+			request.setMethod(CatalogRequest.Method.GET);
+		}
+
+		if (params.useAccount)
+			request.setCredentials(params.username, params.password);
 	}
 
 	//--------------------------------------------------------------------------
@@ -97,7 +113,7 @@ public class Aligner
 			{
 				String id = localUuids.getID(uuid);
 
-				log.debug("  - Removing old metadata with id:"+ id);
+				log.debug("  - Removing old metadata with local id:"+ id);
 				dataMan.deleteMetadata(dbms, id);
 				dbms.commit();
 				result.locallyRemoved++;
@@ -110,15 +126,10 @@ public class Aligner
 		{
 			result.totalMetadata++;
 
-			log.debug("Obtained remote uuid:"+ ri.uuid +", changeDate:"+ ri.changeDate);
-
 			String id = dataMan.getMetadataId(dbms, ri.uuid);
 
-			if (id == null)	id = addMetadata(ri);
-				else				updateMetadata(ri);
-
-			dbms.commit();
-			dataMan.indexMetadata(dbms, id);
+			if (id == null)	addMetadata(ri);
+				else				updateMetadata(ri, id);
 		}
 
 		log.info("End of alignment for : "+ params.name);
@@ -132,50 +143,57 @@ public class Aligner
 	//---
 	//--------------------------------------------------------------------------
 
-	private String addMetadata(RecordInfo ri) throws Exception
+	private void addMetadata(RecordInfo ri) throws Exception
 	{
-		log.debug("  - Adding metadata with remote uuid="+ ri.uuid);
+		Element md = retrieveMetadata(ri.uuid);
 
-//		int id = dataMan.insertMetadataExt(dbms, schema, md, context.getSerialFactory(),
-//													 siteId, createDate, changeDate, remoteUuid, null);
+		if (md == null)
+			return;
 
-		int id =1;
+		String schema = dataMan.autodetectSchema(md);
 
-		dataMan.setTemplate(dbms, id, "n", null);
-		dataMan.setHarvestedBit(dbms, id, true);
+		if (schema == null)
+		{
+			log.debug("  - Metadata skipped due to unknown schema format. uuid:"+ri.uuid);
+			result.schemaSkipped++;
 
+			return;
+		}
+
+		log.debug("  - Adding metadata with remote uuid:"+ ri.uuid);
+
+		String id = dataMan.insertMetadataExt(dbms, schema, md, context.getSerialFactory(),
+													 params.uuid, ri.changeDate, ri.changeDate, ri.uuid, null);
+
+		int iId = Integer.parseInt(id);
+
+		dataMan.setTemplate(dbms, iId, "n", null);
+		dataMan.setHarvestedBit(dbms, iId, true);
+
+		addPrivileges(id);
+		addCategories(id);
+
+		dbms.commit();
+		dataMan.indexMetadata(dbms, id);
 		result.addedMetadata++;
-
-//		addPrivileges(id, info.getChild("privileges"));
-//		addCategories(id, info.getChild("categories"));
-
-		return id +"";
 	}
 
-//			if (!dataMan.existsSchema(schema))
-//			{
-//				log.debug("  - Skipping unsupported schema : "+ schema);
-//				result.schemaSkipped++;
-//			}
 	//--------------------------------------------------------------------------
 	//--- Categories
 	//--------------------------------------------------------------------------
 
-	private void addCategories(String id, Element categ) throws Exception
+	private void addCategories(String id) throws Exception
 	{
-		List list = categ.getChildren("category");
-
-		for(Iterator j=list.iterator(); j.hasNext();)
+		for(int catId : params.getCategories())
 		{
-			String catName = ((Element) j.next()).getAttributeValue("name");
-			String catId   = localCateg.getID(catName);
+			String name = localCateg.getName(catId +"");
 
-			if (catId != null)
+			if (name == null)
+				log.debug("    - Skipping removed category with id:"+ catId);
+			else
 			{
-				//--- remote category exists locally
-
-				log.debug("    - Setting category : "+ catName);
-				dataMan.setCategory(dbms, id, catId);
+				log.debug("    - Setting category : "+ name);
+				dataMan.setCategory(dbms, id, catId+"");
 			}
 		}
 	}
@@ -184,41 +202,26 @@ public class Aligner
 	//--- Privileges
 	//--------------------------------------------------------------------------
 
-	private void addPrivileges(String id, Element privil) throws Exception
+	private void addPrivileges(String id) throws Exception
 	{
-		List list = privil.getChildren("group");
-
-		for (int i=0; i<list.size(); i++)
+		for (Privileges priv : params.getPrivileges())
 		{
-			Element group   = (Element) list.get(i);
-			String  grpName = group.getAttributeValue("name");
-			String  grpId   = localGroups.getID(grpName);
+			String name = localGroups.getName(priv.getGroupId());
 
-			if (grpId != null)
+			if (name == null)
+				log.debug("    - Skipping removed group with id:"+ priv.getGroupId());
+			else
 			{
-				//--- remote group exists locally
+				log.debug("    - Setting privileges for group : "+ name);
 
-				log.debug("    - Setting privileges for group : "+ grpName);
-				addOperations(group, id, grpId);
+				for (int opId: priv.getOperations())
+				{
+					name = dataMan.getAccessManager().getPrivilegeName(opId);
+
+					log.debug("       --> "+ name);
+					dataMan.setOperation(dbms, id, priv.getGroupId(), opId +"");
+				}
 			}
-		}
-	}
-
-	//--------------------------------------------------------------------------
-
-	private void addOperations(Element group, String id, String grpId) throws Exception
-	{
-		List opers = group.getChildren("operation");
-
-		for (int j=0; j<opers.size(); j++)
-		{
-			Element oper   = (Element) opers.get(j);
-			String  opName = oper.getAttributeValue("name");
-
-			int opId = dataMan.getAccessManager().getPrivilegeId(opName);
-
-			log.debug("       --> "+ opName);
-			dataMan.setOperation(dbms, id, grpId, opId +"");
 		}
 	}
 
@@ -228,39 +231,36 @@ public class Aligner
 	//---
 	//--------------------------------------------------------------------------
 
-	private void updateMetadata(RecordInfo ri) throws Exception
+	private void updateMetadata(RecordInfo ri, String id) throws Exception
 	{
-		if (localUuids.getID(ri.uuid) == null)
-		{
-			log.info("  - Warning! The remote uuid '"+ ri.uuid +"' does not belong to harvest node '"+ params.name+"'");
-			log.info("     - The site id of this metadata has been changed.");
-			log.info("     - The metadata update will be skipped.");
+		String date = localUuids.getChangeDate(ri.uuid);
 
+		if (date == null)
+		{
+			log.info("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.name);
 			result.uuidSkipped++;
 		}
 		else
 		{
-			updateMetadata("", null, ri);
-		}
-	}
+			if (!ri.isMoreRecentThan(date))
+			{
+				log.debug("  - Metadata XML not changed for uuid:"+ ri.uuid);
+				result.unchangedMetadata++;
+			}
+			else
+			{
+				log.debug("  - Updating local metadata for uuid:"+ ri.uuid);
 
-	//--------------------------------------------------------------------------
+				Element md = retrieveMetadata(ri.uuid);
 
-	private void updateMetadata(String id, Element md, RecordInfo ri) throws Exception
-	{
-		String date = localUuids.getChangeDate(ri.uuid);
+				if (md == null)
+					return;
 
-		if (!updateCondition(date, ri.changeDate))
-		{
-			log.debug("  - XML not changed to local metadata with id="+ id);
-			result.unchangedMetadata++;
-		}
-		else
-		{
-			log.debug("  - Updating local metadata with id="+ id);
-			dataMan.updateMetadataExt(dbms, id, md, ri.changeDate);
-
-			result.updatedMetadata++;
+				dataMan.updateMetadataExt(dbms, id, md, ri.changeDate);
+				dbms.commit();
+				dataMan.indexMetadata(dbms, id);
+				result.updatedMetadata++;
+			}
 		}
 	}
 
@@ -283,52 +283,32 @@ public class Aligner
 
 	//--------------------------------------------------------------------------
 
-	private boolean updateCondition(String localDate, String remoteDate)
+	private Element retrieveMetadata(String uuid)
 	{
-		ISODate local = new ISODate(localDate);
-		ISODate remote= new ISODate(remoteDate);
-
-		//--- accept if remote date is greater than local date
-
-		return (remote.sub(local) > 0);
-	}
-
-	//--------------------------------------------------------------------------
-
-	private Element retrieveMetadata(String uuid) throws OperationAbortedEx
-	{
-		GetRecordByIdRequest request = new GetRecordByIdRequest();
-
-		request.setElementSetName(ElementSetName.FULL);
+		request.clearIds();
 		request.addId(uuid);
-
-		CswServer.Operation oper = server.getOperation(CswServer.GET_RECORD_BY_ID);
-
-		if (oper.postUrl != null)
-		{
-			request.setUrl(oper.postUrl);
-			request.setMethod(CatalogRequest.Method.POST);
-		}
-		else
-		{
-			request.setUrl(oper.getUrl);
-			request.setMethod(CatalogRequest.Method.GET);
-		}
-
-		if (params.useAccount)
-			request.setCredentials(params.username, params.password);
 
 		try
 		{
-			log.debug("Getting record from : "+ params.name +" ("+ uuid +")");
+			log.debug("Getting record from : "+ request.getHost() +" (uuid:"+ uuid +")");
 			Element response = request.execute();
 			log.debug("Record got:\n"+Xml.getString(response));
 
-			return response;
+			List list = response.getChildren();
+
+			//--- maybe the metadata has been removed
+
+			if (list.size() == 0)
+				return null;
+
+			response = (Element) list.get(0);
+
+			return (Element) response.detach();
 		}
 		catch(Exception e)
 		{
 			log.warning("Raised exception while getting record : "+ e);
+			result.unretrievable++;
 
 			//--- we don't raise any exception here. Just try to go on
 			return null;
@@ -344,7 +324,6 @@ public class Aligner
 	private Logger         log;
 	private ServiceContext context;
 	private Dbms           dbms;
-//	private XmlRequest     req;
 	private CswParams      params;
 	private DataManager    dataMan;
 	private CswServer      server;
@@ -352,6 +331,8 @@ public class Aligner
 	private GroupMapper    localGroups;
 	private UUIDMapper     localUuids;
 	private CswResult      result;
+
+	private GetRecordByIdRequest request;
 }
 
 //=============================================================================

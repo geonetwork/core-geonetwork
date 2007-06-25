@@ -45,6 +45,7 @@ import org.fao.geonet.csw.common.requests.GetRecordsRequest;
 import org.fao.geonet.csw.common.util.CswServer;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -377,12 +378,6 @@ class Harvester
 			return null;
 		}
 
-		if (modified == null)
-		{
-			log.warning("Skipped record with no 'dct:modified' element : "+ name);
-			return null;
-		}
-
 		return new RecordInfo(identif, modified);
 	}
 
@@ -411,7 +406,14 @@ class RecordInfo
 
 	public RecordInfo(String uuid, String changeDate)
 	{
-		this.uuid       = uuid;
+		this.uuid = uuid;
+
+		if (changeDate == null)
+		{
+			dateWasNull = true;
+			changeDate  = new ISODate().toString();
+		}
+
 		this.changeDate = changeDate;
 	}
 
@@ -422,6 +424,21 @@ class RecordInfo
 	//---------------------------------------------------------------------------
 
 	public int hashCode() { return uuid.hashCode(); }
+
+	//---------------------------------------------------------------------------
+
+	public boolean isMoreRecentThan(String localChangeDate)
+	{
+		if (dateWasNull)
+			return true;
+
+		ISODate remoteDate = new ISODate(changeDate);
+		ISODate localDate  = new ISODate(localChangeDate);
+
+		//--- accept if remote date is greater than local date
+
+		return (remoteDate.sub(localDate) > 0);
+	}
 
 	//---------------------------------------------------------------------------
 
@@ -445,6 +462,8 @@ class RecordInfo
 
 	public String uuid;
 	public String changeDate;
+
+	private boolean dateWasNull;
 }
 
 //=============================================================================

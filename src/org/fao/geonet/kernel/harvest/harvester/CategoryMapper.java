@@ -36,8 +36,6 @@ import org.jdom.Element;
 
 public class CategoryMapper
 {
-	private HashMap<String, String> hmNameId = new HashMap<String, String>();
-
 	//--------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -70,6 +68,7 @@ public class CategoryMapper
 	public void add(String name, String id)
 	{
 		hmNameId.put(name, id);
+		hmIdName.put(id, name);
 	}
 
 	//--------------------------------------------------------------------------
@@ -77,6 +76,17 @@ public class CategoryMapper
 	/** Given a category name returns its id */
 
 	public String getID(String name) { return hmNameId.get(name); }
+
+	public String getName(String id) { return hmIdName.get(id); }
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//--------------------------------------------------------------------------
+
+	private HashMap<String, String> hmNameId = new HashMap<String, String>();
+	private HashMap<String, String> hmIdName = new HashMap<String, String>();
 }
 
 //=============================================================================

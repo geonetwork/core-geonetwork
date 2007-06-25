@@ -74,6 +74,19 @@ public class CswHarvester extends AbstractHarvester
 
 	//---------------------------------------------------------------------------
 	//---
+	//--- doDestroy
+	//---
+	//---------------------------------------------------------------------------
+
+	protected void doDestroy()
+	{
+		File icon = new File(context.getAppPath() +"images/logos", params.uuid +".gif");
+
+		icon.delete();
+	}
+
+	//---------------------------------------------------------------------------
+	//---
 	//--- Add
 	//---
 	//---------------------------------------------------------------------------
@@ -172,12 +185,14 @@ public class CswHarvester extends AbstractHarvester
 
 		Element site = new Element("search");
 
-		add(site, "total",     result.totalMetadata);
-		add(site, "added",     result.addedMetadata);
-		add(site, "updated",   result.updatedMetadata);
-		add(site, "unchanged", result.unchangedMetadata);
-		add(site, "skipped",   result.schemaSkipped + result.uuidSkipped);
-		add(site, "removed",   result.locallyRemoved);
+		add(site, "total",        result.totalMetadata);
+		add(site, "added",        result.addedMetadata);
+		add(site, "updated",      result.updatedMetadata);
+		add(site, "unchanged",    result.unchangedMetadata);
+		add(site, "schemaSkipped",result.schemaSkipped);
+		add(site, "uuidSkipped",  result.uuidSkipped);
+		add(site, "removed",      result.locallyRemoved);
+		add(site, "unretrievable",result.unretrievable);
 
 		info.addContent(site);
 	}
@@ -245,6 +260,7 @@ class CswResult
 	public int locallyRemoved;
 	public int schemaSkipped;
 	public int uuidSkipped;
+	public int unretrievable;
 }
 
 //=============================================================================

@@ -60,19 +60,18 @@ public class HarvestManager
 
 		AbstractHarvester.staticInit(context);
 
-		Element entries = settingMan.get("harvesting", -1);
+		Element entries = settingMan.get("harvesting", -1).getChild("children");
 
-		Iterator i = entries.getChild("children").getChildren().iterator();
+		if (entries != null)
+			for (Object o : entries.getChildren())
+			{
+				Element node = transform((Element) o);
+				String  type = node.getAttributeValue("type");
 
-		while (i.hasNext())
-		{
-			Element node = transform((Element) i.next());
-			String  type = node.getAttributeValue("type");
-
-			AbstractHarvester ah = AbstractHarvester.create(type, context, sm, dm);
-			ah.init(node);
-			hmHarvesters.put(ah.getID(), ah);
-		}
+				AbstractHarvester ah = AbstractHarvester.create(type, context, sm, dm);
+				ah.init(node);
+				hmHarvesters.put(ah.getID(), ah);
+			}
 	}
 
 	//---------------------------------------------------------------------------
@@ -109,16 +108,17 @@ public class HarvestManager
 
 		else
 		{
-			Iterator nodes = result.getChild("children").getChildren().iterator();
+			Element nodes = result.getChild("children");
 
 			result = new Element("nodes");
 
-			while (nodes.hasNext())
-			{
-				Element node = transform((Element) nodes.next());
-				addInfo(node);
-				result.addContent(node);
-			}
+			if (nodes != null)
+				for (Object o : nodes.getChildren())
+				{
+					Element node = transform((Element) o);
+					addInfo(node);
+					result.addContent(node);
+				}
 		}
 
 		return result;

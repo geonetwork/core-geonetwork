@@ -125,10 +125,10 @@ public abstract class AbstractHarvester
 
 	public void add(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
-		id       = doAdd(dbms, node);
 		status   = Status.INACTIVE;
 		executor = null;
 		error    = null;
+		id       = doAdd(dbms, node);
 	}
 
 	//--------------------------------------------------------------------------
@@ -176,6 +176,8 @@ public abstract class AbstractHarvester
 			dataMan.deleteMetadata(dbms, id);
 			dbms.commit();
 		}
+
+		doDestroy();
 	}
 
 	//--------------------------------------------------------------------------
@@ -340,6 +342,8 @@ public abstract class AbstractHarvester
 
 	protected abstract void doInit(Element entry) throws BadInputEx;
 
+	protected abstract void doDestroy();
+
 	protected abstract String doAdd(Dbms dbms, Element node)
 											throws BadInputEx, SQLException;
 
@@ -375,7 +379,7 @@ public abstract class AbstractHarvester
 
 		settingMan.add(dbms, "id:"+optionsId, "every",      params.every);
 		settingMan.add(dbms, "id:"+optionsId, "oneRunOnly", params.oneRunOnly);
-		settingMan.add(dbms, "id:"+optionsId, "status",     Status.INACTIVE);
+		settingMan.add(dbms, "id:"+optionsId, "status",     status);
 
 		//--- setup stats node ----------------------------------------
 
