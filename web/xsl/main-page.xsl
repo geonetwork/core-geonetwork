@@ -487,7 +487,7 @@
 								<xsl:value-of select="/root/gui/strings/any"/>
 							</option>
 							<xsl:for-each select="/root/gui/groups/record">
-								<xsl:sort order="ascending" select="(.)"/>
+								<xsl:sort order="ascending" select="name"/>
 								<option>
 									<xsl:if test="id=/root/gui/searchDefaults/group">
 										<xsl:attribute name="selected"/>
