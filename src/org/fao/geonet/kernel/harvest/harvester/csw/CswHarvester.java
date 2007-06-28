@@ -189,8 +189,7 @@ public class CswHarvester extends AbstractHarvester
 		add(site, "added",        result.addedMetadata);
 		add(site, "updated",      result.updatedMetadata);
 		add(site, "unchanged",    result.unchangedMetadata);
-		add(site, "schemaSkipped",result.schemaSkipped);
-		add(site, "uuidSkipped",  result.uuidSkipped);
+		add(site, "unknownSchema",result.unknownSchema);
 		add(site, "removed",      result.locallyRemoved);
 		add(site, "unretrievable",result.unretrievable);
 
@@ -258,8 +257,7 @@ class CswResult
 	public int updatedMetadata;
 	public int unchangedMetadata;
 	public int locallyRemoved;
-	public int schemaSkipped;
-	public int uuidSkipped;
+	public int unknownSchema;
 	public int unretrievable;
 }
 

@@ -155,7 +155,7 @@ public class Aligner
 		if (schema == null)
 		{
 			log.debug("  - Metadata skipped due to unknown schema format. uuid:"+ri.uuid);
-			result.schemaSkipped++;
+			result.unknownSchema++;
 
 			return;
 		}
@@ -168,7 +168,7 @@ public class Aligner
 		int iId = Integer.parseInt(id);
 
 		dataMan.setTemplate(dbms, iId, "n", null);
-		dataMan.setHarvestedBit(dbms, iId, true);
+		dataMan.setHarvested(dbms, iId, params.uuid);
 
 		addPrivileges(id);
 		addCategories(id);
@@ -236,10 +236,7 @@ public class Aligner
 		String date = localUuids.getChangeDate(ri.uuid);
 
 		if (date == null)
-		{
-			log.info("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.name);
-			result.uuidSkipped++;
-		}
+			log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.name);
 		else
 		{
 			if (!ri.isMoreRecentThan(date))

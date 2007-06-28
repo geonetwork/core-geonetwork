@@ -214,8 +214,8 @@ class Harvester
 
 			int recCount = getRecordCount(results);
 
-			log.info("Records declared in response : "+ recCount);
-			log.info("Records found in response    : "+ counter);
+			log.debug("Records declared in response : "+ recCount);
+			log.debug("Records found in response    : "+ counter);
 
 			if (start+max > recCount)
 				break;
