@@ -113,7 +113,7 @@ class Importer
 				int iId = Integer.parseInt(id[0]);
 
 				dm.setTemplate(dbms, iId, isTemplate, null);
-				dm.setHarvestedBit(dbms, iId, false);
+				dm.setHarvested(dbms, iId, null);
 
 				String pubDir = Lib.resource.getDir(context, "public",  id[0]);
 				String priDir = Lib.resource.getDir(context, "private", id[0]);

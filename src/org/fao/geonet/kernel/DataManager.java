@@ -420,11 +420,12 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
-	public void setHarvestedBit(Dbms dbms, int id, boolean yesno) throws Exception
+	public void setHarvested(Dbms dbms, int id, String harvestUuid) throws Exception
 	{
-		String value = (yesno) ? "y" : "n";
+		String value = (harvestUuid != null) ? "y" : "n";
+		String query = "UPDATE Metadata SET isHarvested=?, harvestUuid=? WHERE id=?";
 
-		dbms.execute("UPDATE Metadata SET isHarvested=? WHERE id=?", value, id);
+		dbms.execute(query, value, harvestUuid, id);
 		indexMetadata(dbms, Integer.toString(id));
 	}
 

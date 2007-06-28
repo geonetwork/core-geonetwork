@@ -158,7 +158,7 @@ public class Aligner
 		int iId = Integer.parseInt(id);
 
 		dataMan.setTemplate(dbms, iId, "n", null);
-		dataMan.setHarvestedBit(dbms, iId, true);
+		dataMan.setHarvested(dbms, iId, siteId);
 
 		result.addedMetadata++;
 
