@@ -46,7 +46,7 @@ public class Info implements Service
 
 	public void init(String appPath, ServiceConfig config) throws Exception
 	{
-		cswIconPath = new File(appPath +"/images/csw");
+		cswIconPath = new File(appPath +"/images/harvesting");
 	}
 
 	//--------------------------------------------------------------------------
@@ -69,8 +69,8 @@ public class Info implements Service
 			if (!name.equals("type"))
 				throw new BadParameterEx(name, type);
 
-			if (type.equals("cswIcons"))
-				result.addContent(getCswIcons());
+			if (type.equals("icons"))
+				result.addContent(getIcons());
 
 			else
 				throw new BadParameterEx("type", type);
@@ -85,11 +85,11 @@ public class Info implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	private Element getCswIcons()
+	private Element getIcons()
 	{
 		File icons[] = cswIconPath.listFiles(iconFilter);
 
-		Element result = new Element("cswIcons");
+		Element result = new Element("icons");
 
 		if (icons != null)
 			for (File icon : icons)

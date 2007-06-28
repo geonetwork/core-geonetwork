@@ -186,7 +186,7 @@ function updateIcon()
 	var icon = $F('csw.icon');
 	var image= $('csw.icon.image');
 	
-	image.setAttribute('src', Env.url +'/images/csw/'+icon);
+	image.setAttribute('src', Env.url +'/images/harvesting/'+icon);
 }
 
 //=====================================================================================
@@ -197,8 +197,6 @@ function addEmptySearch()
 {
 	var doc    = Sarissa.getDomDocument();	
 	var search = doc.createElement('search');
-	
-//	doc.appendChild(search);	
 	
 	addSearch(search);
 }

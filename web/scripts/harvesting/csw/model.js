@@ -36,7 +36,7 @@ function retrieveIcons(callBack)
 {
 	callBackF = callBack;	
 
-	var request = ker.createRequest('type', 'cswIcons');
+	var request = ker.createRequest('type', 'icons');
 	
 	ker.send('xml.harvesting.info', request, ker.wrap(this, retrieveIcons_OK));
 }
