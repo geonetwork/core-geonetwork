@@ -9,9 +9,13 @@
 	<xsl:template name="editPanel-CSW">
 		<div id="csw.editPanel">
 			<xsl:call-template name="site-CSW"/>
+			<div class="dots"/>
 			<xsl:call-template name="search-CSW"/>
+			<div class="dots"/>
 			<xsl:call-template name="options-CSW"/>
+			<div class="dots"/>
 			<xsl:call-template name="privileges-CSW"/>
+			<div class="dots"/>
 			<xsl:call-template name="categories-CSW"/>
 		</div>
 	</xsl:template>
@@ -124,8 +128,8 @@
 			<tr>
 				<th class="padded"><xsl:value-of select="/root/gui/harvesting/group"/></th>
 				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='0']"/></th>
-				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='1']"/></th>
-				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='3']"/></th>
+				<!--th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='1']"/></th-->
+				<!--th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='3']"/></th-->
 				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='5']"/></th>
 				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='6']"/></th>
 				<th/>

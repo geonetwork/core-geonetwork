@@ -27,23 +27,23 @@
 		
 			<!-- download - - - - - - - - - - - - - - - - - - - - - - -->
 			
-			<td class="padded" align="center">
+			<!--td class="padded" align="center">
 				<input name="download" type="checkbox">
 					<xsl:if test="operation/@name = 'download'">
 						<xsl:attribute name="checked" select="'on'"/>
 					</xsl:if>
 				</input>
-			</td>
+			</td-->
 			
 			<!-- notify - - - - - - - - - - - - - - - - - - - - - - -->
 			
-			<td class="padded" align="center">
+			<!--td class="padded" align="center">
 				<input name="notify" type="checkbox">
 					<xsl:if test="operation/@name = 'notify'">
 						<xsl:attribute name="checked" select="'on'"/>
 					</xsl:if>
 				</input>
-			</td>
+			</td-->
 			
 			<!-- dynamic - - - - - - - - - - - - - - - - - - - - - - -->
 			
