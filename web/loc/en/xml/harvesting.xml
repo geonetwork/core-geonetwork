@@ -67,7 +67,10 @@
 	<status>Status</status>
 	<active>Active</active>
 	<inactive></inactive>
-	
+	<retrieveSources>Retrieve sources</retrieveSources>
+	<retrieveGroups>Retrieve groups</retrieveGroups>
+	<source>Source</source>
+	<criteria>Criteria</criteria>
 	<validate>Validate</validate>
 	<structure>Structure</structure>
 	<host>Host</host>
@@ -78,6 +81,16 @@
 	<icon>Icon</icon>
 	<group>Group</group>
 	<groups>Groups</groups>
+	<remoteGroup>Remote group</remoteGroup>
+	<copyPolicy>Copy policy</copyPolicy>
+	<allGroup>Group 'All'</allGroup>
+	
+	<policy>
+		<copy>Copy</copy>
+		<createAndCopy>Create and copy</createAndCopy>
+		<copyToIntranet>Copy to Intranet group</copyToIntranet>
+		<dontCopy>Don't copy</dontCopy>
+	</policy>
 	
 	<!-- Buttons -->
 	
@@ -162,12 +175,13 @@
 	</statusTip>
 	
 	<tipHeader>
-		<siteId>Site ID</siteId>
 		<total>Total</total>
 		<added>Added</added>
+		<removed>Removed</removed>
 		<updated>Updated</updated>
 		<unchanged>Unchanged</unchanged>
-		<skipped>Skipped</skipped>
+		<unknownSchema>Unknown schema</unknownSchema>
+		<unretrievable>Unretrievable</unretrievable>
 	</tipHeader>
 	
 	<notRun>Waiting for the first run</notRun>
