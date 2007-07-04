@@ -33,19 +33,14 @@ gui.removeAllButFirst = function(tableId)
 
 gui.setupTooltips = function(node)
 {
-	node = node.firstChild;
+	var list = xml.children(node);
 	
-	while (node != null)
+	for (var i=0; i<list.length; i++)
 	{
-		if (node.nodeType == Node.ELEMENT_NODE)
-		{
-			var elem = $(node.getAttribute('id'));
-			var mesg = xml.toStringCont(node);
+		var elem = $(list[i].getAttribute('id'));
+		var mesg = xml.toStringCont(list[i]);
 		
-			new Tooltip(elem, mesg);
-		}
-		
-		node = node.nextSibling;
+		new Tooltip(elem, mesg);
 	}
 }
 
