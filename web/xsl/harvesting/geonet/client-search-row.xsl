@@ -11,7 +11,7 @@
 	<!-- ============================================================================================= -->
 
 	<xsl:template match="/root/search">
-		<div id="{siteId}">
+		<div id="{@id}">
 			<p/>
 			<xsl:apply-templates select="." mode="data"/>
 		</div>
@@ -23,13 +23,12 @@
 		<table>
 			<tr>
 				<td>
-					<a onclick="harvesting.geonet.removeSearchRow('{siteId}')">
+					<a onclick="harvesting.geonet.removeSearchRow('{@id}')">
 						<img style="cursor:hand; cursor:pointer" src="{/root/env/url}/images/del.gif" alt="Remove"/>
 					</a>
 					
 				</td>
-				<td class="padded" bgcolor="#D0E0FF"><xsl:value-of select="/root/strings/siteName"/></td>
-				<td class="padded" bgcolor="#D0E0FF"><b><xsl:value-of select="siteName"/></b></td>
+				<td class="padded" bgcolor="#D0E0FF" colspan="2"><b><xsl:value-of select="/root/strings/criteria"/></b></td>
 			</tr>
 			
 			<tr>
@@ -77,6 +76,31 @@
 							<xsl:attribute name="checked"/>
 						</xsl:if>
 					</input>
+				</td>
+			</tr>
+			
+			<tr>
+				<td/>
+				<td class="padded"><xsl:value-of select="/root/strings/source"/></td>
+				<td class="padded">
+					<select id="gn.source" class="content" size="1">
+						<option value=""/>
+						<xsl:choose>
+							<xsl:when test="sources">
+								<xsl:for-each select="sources/source">
+									<option value="{@uuid}"><xsl:value-of select="@name"/></option>
+								</xsl:for-each>
+							</xsl:when>
+							
+							<xsl:otherwise>
+								<xsl:if test="string(source/uuid) != ''">
+									<option value="{source/uuid}" selected="on">
+										<xsl:value-of select="source/name"/>
+									</option>
+								</xsl:if>
+							</xsl:otherwise>
+						</xsl:choose>
+					</select>
 				</td>
 			</tr>
 		</table>

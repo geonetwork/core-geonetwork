@@ -7,13 +7,13 @@
 	<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
 	<!-- ============================================================================================= -->
-	<!-- === Generate the error tooltip for the harvesting entry list -->
+	<!-- === Generate the result tooltip for the harvesting entry list -->
 	<!-- ============================================================================================= -->
 
 	<xsl:template match="/root/node">
 		<xsl:choose>
-			<xsl:when test="info/search">
-				<xsl:apply-templates select="info/search"/>
+			<xsl:when test="info/result">
+				<xsl:apply-templates select="info/result"/>
 			</xsl:when>
 			
 			<xsl:otherwise>
@@ -24,7 +24,7 @@
 
 	<!-- ============================================================================================= -->
 
-	<xsl:template match="search">
+	<xsl:template match="result">
 		<table>
 			<tr class="tipRow">
 				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/total"/></td>

@@ -18,13 +18,6 @@
 
 	<!-- ============================================================================================= -->
 
-	<xsl:template match="*" mode="options">
-		<createGroups><xsl:value-of select="createGroups/value" /></createGroups>
-		<createCateg><xsl:value-of  select="createCateg/value" /></createCateg>
-	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
 	<xsl:template match="*" mode="searches">
 		<searches>
 			<xsl:for-each select="children/search">
@@ -35,12 +28,25 @@
 					<keywords><xsl:value-of select="children/keywords/value" /></keywords>
 					<digital><xsl:value-of  select="children/digital/value" /></digital>
 					<hardcopy><xsl:value-of select="children/hardcopy/value" /></hardcopy>
-					<siteId><xsl:value-of   select="children/siteId/value" /></siteId>
+					<source>
+						<uuid><xsl:value-of select="children/sourceUuid/value" /></uuid>
+						<name><xsl:value-of select="children/sourceName/value" /></name>
+					</source>
 				</search>
 			</xsl:for-each>
 		</searches>
 	</xsl:template>
 	
+	<!-- ============================================================================================= -->
+
+	<xsl:template match="*" mode="other">
+		<groupsCopyPolicy>
+			<xsl:for-each select="children/groupCopyPolicy">
+				<group name="{children/name/value}" policy="{children/policy/value}"/>
+			</xsl:for-each>
+		</groupsCopyPolicy>
+	</xsl:template>
+
 	<!-- ============================================================================================= -->
 
 </xsl:stylesheet>

@@ -107,7 +107,7 @@ ker.send = function(service, request, onSuccessFnc, xmlResponse)
 			if (t.status >= 400 && t.status <= 500)
 			{
 				if (onSuccessFnc)
-					if (xmlResponse)	onSuccessFnc(ker.ieFix(t.responseXML.firstChild));
+					if (xmlResponse)	onSuccessFnc(xml.ieFix(t.responseXML.firstChild));
 						else				onSuccessFnc(t.responseText);
 			}
 			else		
@@ -164,6 +164,7 @@ ker.showError = function(message, xmlResult)
 	var errId  = xmlResult.getAttribute('id');
 	var errMsg = xmlResult.getElementsByTagName('message');
 	var object = xmlResult.getElementsByTagName('object');
+	var clazz  = xmlResult.getElementsByTagName('class');
 	
 	var text = message +'\n';
 	
@@ -173,6 +174,9 @@ ker.showError = function(message, xmlResult)
 	if (errMsg.length != 0)
 		text += 'Message : '+ xml.textContent(errMsg[0]) +'\n';
 	
+	if (clazz.length != 0)
+		text += 'Class : '+ xml.textContent(clazz[0]) +'\n';
+
 	if (object.length != 0)
 		text += 'Object : '+ xml.textContent(object[0]) +'\n';
 	

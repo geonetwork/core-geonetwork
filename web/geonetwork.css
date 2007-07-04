@@ -331,6 +331,13 @@ div.handle {
 	cursor:move;
 }
 
+.dots 
+{
+	height: 4px;
+	width: 100%;
+	background-image: url('images/dot.gif');
+}
+
 /*******************************************************************************
 Ajax styles
 *******************************************************************************/
@@ -343,29 +350,32 @@ Ajax styles
 	padding: 4px;
 }
 
-.tipHeader
-{
-	background-color: #d0dfdf;
-	text-align:    center;
-	font-weight:   bold;
-	padding-left:  2px;
-	padding-right: 2px;
-	border-bottom: solid black 1px;
-}
-
-.tipCell
-{
-	background-color: #e0efef;
-	text-align: center;
-	border-bottom: solid #d0d0d0 1px;
-}
-
 .tipRow
 {
 	margin: 10px;
 	padding: 15px;
-	background-color: #000000;
 }
+
+.tipHeader
+{
+	text-align:    left;
+	font-weight:   bold;
+	padding-left:  2px;
+	padding-right: 2px;
+}
+
+.tipCell
+{
+	text-align: left;
+}
+
+.policyGroup 
+{
+	margin: 5px;
+	border-style:dashed;
+	border-width:0px 0px 1px 0px;
+}
+
 /*******************************************************************************
 Ajax Keyword list
 *******************************************************************************/

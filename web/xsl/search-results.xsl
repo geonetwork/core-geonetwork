@@ -9,7 +9,10 @@
 	<xsl:variable name="pageRange"   select="5"/>
 	<xsl:variable name="hitsPerPage">
 		<xsl:choose>
-			<xsl:when test="/root/gui/searchDefaults/hitsPerPage"><xsl:value-of select="string(/root/gui/searchDefaults/hitsPerPage)"/></xsl:when>
+			<xsl:when test="/root/gui/searchDefaults/hitsPerPage">
+				<xsl:value-of select="string(/root/gui/searchDefaults/hitsPerPage)"/>
+			</xsl:when>
+
 			<xsl:otherwise>10</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
@@ -107,13 +110,13 @@
 										<xsl:variable name="source" select="string($metadata/geonet:info/source)"/>
 										<xsl:choose>
 											<!-- //FIXME does not point to baseURL yet -->
-											<xsl:when test="/root/gui/sources/record[string(siteid)=$source]">
+											<xsl:when test="/root/gui/sources/record[string(siteid)=$source]/baseURL">
 												<a href="{/root/gui/sources/record[string(siteid)=$source]/baseURL}" target="_blank">
-													<img src="{/root/gui/url}/images/logos/{$source}.png" width="40"/>
+													<img src="{/root/gui/url}/images/logos/{$source}.gif" width="40"/>
 												</a>
 											</xsl:when>
 											<xsl:otherwise>
-												<img src="{/root/gui/url}/images/logos/{$source}.png" width="40"/>
+												<img src="{/root/gui/url}/images/logos/{$source}.gif" width="40"/>
 											</xsl:otherwise>
 										</xsl:choose>
 									</td>

@@ -37,6 +37,7 @@
 			<xsl:apply-templates select="."      mode="searches"/>			
 			<xsl:apply-templates select="$priv"  mode="privileges"/>
 			<xsl:apply-templates select="$categ" mode="categories"/>
+			<xsl:apply-templates select="."      mode="other"/>			
 			
 			<info>
 				<lastRun><xsl:value-of select="$info/lastRun/value" /></lastRun>
@@ -81,6 +82,7 @@
 	<xsl:template match="*" mode="site"/>
 	<xsl:template match="*" mode="options"/>
 	<xsl:template match="*" mode="searches"/>
+	<xsl:template match="*" mode="other"/>
 	
 	<!-- ============================================================================================= -->
 	
