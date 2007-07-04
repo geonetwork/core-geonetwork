@@ -185,7 +185,7 @@ public class MetadataHarvest implements Schedule
 			id = sf.getSerial(dbms, "Metadata") +"";
 			md = dataMan.updateFixedInfo(schema, id, md, uuid);
 
-			dataMan.insertMetadataExt(dbms, schema, md, Integer.parseInt(id), source, date, date, uuid, sourceUri);
+			dataMan.insertMetadataExt(dbms, schema, md, Integer.parseInt(id), source, date, date, uuid);
 		}
 		else
 		{

@@ -74,35 +74,25 @@ public class XmlSerializer
 	//--------------------------------------------------------------------------
 
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
-										 String siteId, String uuid) throws SQLException
+										 String source, String uuid) throws SQLException
 	{
-		return insert(dbms, schema, xml, serial, siteId, uuid, null, null, null);
+		return insert(dbms, schema, xml, serial, source, uuid, null, null, "n", null);
 	}
 
 	//--------------------------------------------------------------------------
 
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
-										 String siteId, String uuid, String createDate,
-										 String changeDate, String sourceUri) throws SQLException
+										 String source, String uuid, String isTemplate,
+										 String title) throws SQLException
 	{
-		return insert(dbms, schema, xml, serial, siteId, uuid, createDate, changeDate, sourceUri, "n", null);
+		return insert(dbms, schema, xml, serial, source, uuid, null, null, isTemplate, title);
 	}
 
 	//--------------------------------------------------------------------------
 
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
-										 String siteId, String uuid,
-										 String isTemplate, String title) throws SQLException
-	{
-		return insert(dbms, schema, xml, serial, siteId, uuid, null, null, null, isTemplate, title);
-	}
-
-	//--------------------------------------------------------------------------
-
-	public static String insert(Dbms dbms, String schema, Element xml, int serial,
-										 String siteId, String uuid, String createDate,
-										 String changeDate, String sourceUri,
-										 String isTemplate, String title) throws SQLException
+										 String source, String uuid, String createDate,
+										 String changeDate, String isTemplate, String title) throws SQLException
 	{
 		String date = new ISODate().toString();
 
@@ -117,30 +107,26 @@ public class XmlSerializer
 		StringBuffer fields = new StringBuffer("id, schemaId, data, createDate, changeDate, "+
 															"source, uuid, isTemplate, isHarvested, root");
 		StringBuffer values = new StringBuffer("?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
+
 		Vector args = new Vector();
 		args.add(new Integer(serial));
 		args.add(schema);
 		args.add(Xml.getString(xml));
 		args.add(createDate);
 		args.add(changeDate);
-		args.add(siteId);
+		args.add(source);
 		args.add(uuid);
 		args.add(isTemplate);
 		args.add("n");
 		args.add(xml.getQualifiedName());
 
-		if (sourceUri != null)
-		{
-			fields.append(", sourceUri");
-			values.append(", ?");
-			args.add(sourceUri);
-		}
 		if (title != null)
 		{
 			fields.append(", title");
 			values.append(", ?");
 			args.add(title);
 		}
+
 		String query = "INSERT INTO Metadata (" + fields + ") VALUES(" + values + ")";
 		dbms.execute(query, args.toArray());
 
@@ -167,8 +153,8 @@ public class XmlSerializer
 		fixCR(xml);
 		args.add(Xml.getString(xml));
 
-		if (changeDate == null) args.add(new ISODate().toString());
-		else                    args.add(changeDate);
+		if (changeDate == null)	args.add(new ISODate().toString());
+			else                 args.add(changeDate);
 
 		args.add(xml.getQualifiedName());
 		args.add(new Integer(id));

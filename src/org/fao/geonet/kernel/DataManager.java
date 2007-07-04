@@ -530,12 +530,12 @@ public class DataManager
 
 	public String insertMetadataExt(Dbms dbms, String schema, Element md, SerialFactory sf,
 											  String source, String createDate, String changeDate,
-											  String uuid, String sourceUri) throws Exception
+											  String uuid) throws Exception
 	{
 		//--- generate a new metadata id
 		int id = sf.getSerial(dbms, "Metadata");
 
-		return insertMetadataExt(dbms, schema, md, id, source, createDate, changeDate, uuid, sourceUri);
+		return insertMetadataExt(dbms, schema, md, id, source, createDate, changeDate, uuid);
 	}
 
 	//--------------------------------------------------------------------------
@@ -544,7 +544,7 @@ public class DataManager
 
 	public String insertMetadataExt(Dbms dbms, String schema, Element md, int id,
 											  String source, String createDate, String changeDate,
-											  String uuid, String sourceUri) throws Exception
+											  String uuid) throws Exception
 	{
 		if (source == null)
 			source = getSiteID();
@@ -552,7 +552,7 @@ public class DataManager
 		//--- Note: we cannot index metadata here. Indexing is done in the harvesting part
 
 		return XmlSerializer.insert(dbms, schema, md, id, source, uuid, createDate,
-											 changeDate, sourceUri);
+											 changeDate, "n", null);
 	}
 
 	//--------------------------------------------------------------------------
