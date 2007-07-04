@@ -67,7 +67,7 @@ public class GetMine implements Service
 								"AND userId=" + session.getUserId();
 
 			Set<String> ids = Lib.element.getIds(dbms.select(query));
-			Element groups = Lib.local.retrieve(dbms, "Groups");
+			Element groups = Lib.local.retrieve(dbms, "Groups", null, "id");
 
 			return Lib.element.pruneChildren(groups, ids);
 		}
