@@ -19,6 +19,9 @@
 		<!-- meta tags -->
 		<xsl:copy-of select="/root/gui/strings/header_meta/meta"/>
 		
+		<META HTTP-EQUIV="Pragma"  CONTENT="no-cache"/>
+		<META HTTP-EQUIV="Expires" CONTENT="-1"/>
+
 		<!-- javascript -->
 		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"/>
