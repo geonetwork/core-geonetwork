@@ -196,7 +196,7 @@ class Exporter
 		Element info = new Element("info");
 		info.setAttribute("version", VERSION);
 
-		info.addContent(buildInfoGeneral(md, format, skipUUID));
+		info.addContent(buildInfoGeneral(md, format, skipUUID, context));
 		info.addContent(buildInfoCategories(dbms, md));
 		info.addContent(buildInfoPrivileges(context, md));
 
@@ -208,7 +208,8 @@ class Exporter
 
 	//--------------------------------------------------------------------------
 
-	private static Element buildInfoGeneral(Element md, Format format, boolean skipUUID)
+	private static Element buildInfoGeneral(Element md, Format format, boolean skipUUID,
+														 ServiceContext context)
 	{
 		String id         = md.getChildText("id");
 		String uuid       = md.getChildText("uuid");
@@ -228,8 +229,11 @@ class Exporter
 
 		if (!skipUUID)
 		{
-			general.addContent(new Element("uuid")  .setText(uuid));
-			general.addContent(new Element("siteId").setText(siteId));
+			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+
+			general.addContent(new Element("uuid")    .setText(uuid));
+			general.addContent(new Element("siteId")  .setText(siteId));
+			general.addContent(new Element("siteName").setText(gc.getSiteName()));
 		}
 
 		return general;

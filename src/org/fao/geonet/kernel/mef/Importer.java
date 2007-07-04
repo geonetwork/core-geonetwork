@@ -85,6 +85,7 @@ class Importer
 				String createDate = general.getChildText("createDate");
 				String changeDate = general.getChildText("changeDate");
 				String source     = general.getChildText("siteId");
+				String sourceName = general.getChildText("siteName");
 				String schema     = general.getChildText("schema");
 				String isTemplate = general.getChildText("isTemplate").equals("true") ? "y" : "n";
 
@@ -104,11 +105,18 @@ class Importer
 					//--- set uuid inside metadata
 					md[0] = dm.setUUID(schema, uuid, md[0]);
 				}
+				else
+				{
+					if (sourceName == null)
+						sourceName = "???";
+
+					Lib.sources.update(dbms, source, sourceName, true);
+				}
 
 				Log.debug(Geonet.MEF, "Adding metadata with uuid="+ uuid);
 
 				id[0] = dm.insertMetadataExt(dbms, schema, md[0], context.getSerialFactory(),
-															 source, createDate, changeDate, uuid, null);
+															 source, createDate, changeDate, uuid);
 
 				int iId = Integer.parseInt(id[0]);
 
