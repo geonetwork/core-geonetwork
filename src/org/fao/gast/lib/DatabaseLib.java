@@ -473,7 +473,7 @@ public class DatabaseLib
 																			  uuid, date, schema.getName(), siteURL);
 
 					XmlSerializer.insert(dbms, schema.getName(), xml, serial,
-											   siteId, uuid, date, date, null, "y", null);
+											   siteId, uuid, date, date, "y", null);
 
 					setupTemplatePriv(dbms, serial);
 					dbms.commit();
@@ -513,8 +513,8 @@ public class DatabaseLib
 
 		//--- duplicate dummy logo to reflect the uuid
 
-		FileInputStream  is = new FileInputStream (appPath +"/gast/images/dummy.png");
-		FileOutputStream os = new FileOutputStream(appPath +"/web/images/logos/"+ uuid +".png");
+		FileInputStream  is = new FileInputStream (appPath +"/gast/images/dummy.gif");
+		FileOutputStream os = new FileOutputStream(appPath +"/web/images/logos/"+ uuid +".gif");
 		BinaryFile.copy(is, os, true, true);
 
 		dbms.execute("UPDATE Settings SET value=? WHERE name='siteId'", uuid);
