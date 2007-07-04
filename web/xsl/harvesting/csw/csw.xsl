@@ -76,7 +76,7 @@
 		
 		<div id="csw.searches"/>
 		
-		<button class="content" onclick="harvesting.csw.addSearchRow()">
+		<button id="csw.addSearch" class="content" onclick="harvesting.csw.addSearchRow()">
 			<xsl:value-of select="/root/gui/harvesting/add"/>
 		</button>
 	</xsl:template>
@@ -116,7 +116,7 @@
 				<td class="padded"><select id="csw.groups" class="content" size="8" multiple="on"/></td>					
 				<td class="padded" valign="top">
 					<div align="center">
-						<button class="content" onclick="harvesting.csw.addGroupRow()">
+						<button id="csw.addGroups" class="content" onclick="harvesting.csw.addGroupRow()">
 							<xsl:value-of select="/root/gui/harvesting/add"/>
 						</button>
 					</div>
@@ -128,8 +128,6 @@
 			<tr>
 				<th class="padded"><xsl:value-of select="/root/gui/harvesting/group"/></th>
 				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='0']"/></th>
-				<!--th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='1']"/></th-->
-				<!--th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='3']"/></th-->
 				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='5']"/></th>
 				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='6']"/></th>
 				<th/>

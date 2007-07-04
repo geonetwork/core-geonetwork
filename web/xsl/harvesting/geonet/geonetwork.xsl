@@ -78,11 +78,11 @@
 		<div id="gn.searches"/>
 		
 		<div style="margin:4px;">
-			<button class="content" onclick="harvesting.geonet.addSearchRow()">
+			<button id="gn.addSearch" class="content" onclick="harvesting.geonet.addSearchRow()">
 				<xsl:value-of select="/root/gui/harvesting/add"/>
 			</button>
 			&#160;
-			<button class="content" onclick="harvesting.geonet.retrieveSources()">
+			<button id="gn.retrieveSources" class="content" onclick="harvesting.geonet.retrieveSources()">
 				<xsl:value-of select="/root/gui/harvesting/retrieveSources"/>
 			</button>
 		</div>
@@ -125,7 +125,7 @@
 		</table>
 				
 		<div style="margin:4px;">
-			<button class="content" onclick="harvesting.geonet.retrieveGroups()">
+			<button  id="gn.retrieveGroups" class="content" onclick="harvesting.geonet.retrieveGroups()">
 				<xsl:value-of select="/root/gui/harvesting/retrieveGroups"/>
 			</button>
 		</div>

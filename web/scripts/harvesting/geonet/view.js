@@ -72,6 +72,8 @@ function init()
 	]);
 
 	shower = new Shower('gn.useAccount',  'gn.account');
+	
+	gui.setupTooltips(loader.getNode('tips'));
 }
 
 //=====================================================================================
