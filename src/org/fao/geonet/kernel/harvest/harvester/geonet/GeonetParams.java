@@ -24,12 +24,10 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
+import jeeves.utils.Util;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
-import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
@@ -59,18 +57,16 @@ public class GeonetParams extends AbstractParams
 		super.create(node);
 
 		Element site     = node.getChild("site");
-		Element opt      = node.getChild("options");
+		Element policy   = node.getChild("groupsCopyPolicy");
 		Element searches = node.getChild("searches");
 
-		host    = getValue(site, "host",    "");
-		port    = getValue(site, "port",    80);
-		servlet = getValue(site, "servlet", "geonetwork");
-
-		createGroups = getValue(opt, "createGroups", true );
-		createCateg  = getValue(opt, "createCateg",  true );
+		host    = Util.getParam(site, "host",    "");
+		port    = Util.getParam(site, "port",    80);
+		servlet = Util.getParam(site, "servlet", "geonetwork");
 
 		checkPort(port);
 		addSearches(searches);
+		addCopyPolicy(policy);
 	}
 
 	//---------------------------------------------------------------------------
@@ -84,15 +80,12 @@ public class GeonetParams extends AbstractParams
 		super.update(node);
 
 		Element site     = node.getChild("site");
-		Element opt      = node.getChild("options");
 		Element searches = node.getChild("searches");
+		Element policy   = node.getChild("groupsCopyPolicy");
 
-		host    = getValue(site, "host",    host);
-		port    = getValue(site, "port",    port);
-		servlet = getValue(site, "servlet", servlet);
-
-		createGroups = getValue(opt, "createGroups", createGroups);
-		createCateg  = getValue(opt, "createCateg",  createCateg);
+		host    = Util.getParam(site, "host",    host);
+		port    = Util.getParam(site, "port",    port);
+		servlet = Util.getParam(site, "servlet", servlet);
 
 		checkPort(port);
 
@@ -101,6 +94,9 @@ public class GeonetParams extends AbstractParams
 
 		if (searches != null)
 			addSearches(searches);
+
+		if (policy != null)
+			addCopyPolicy(policy);
 	}
 
 	//---------------------------------------------------------------------------
@@ -109,7 +105,8 @@ public class GeonetParams extends AbstractParams
 	//---
 	//---------------------------------------------------------------------------
 
-	public Iterable<Search> getSearches() { return alSearches; }
+	public Iterable<Search> getSearches()        { return alSearches;   }
+	public Iterable<Group>  getGroupCopyPolicy() { return alCopyPolicy; }
 
 	//---------------------------------------------------------------------------
 
@@ -122,11 +119,11 @@ public class GeonetParams extends AbstractParams
 		copy.port    = port;
 		copy.servlet = servlet;
 
-		copy.createGroups = createGroups;
-		copy.createCateg  = createCateg;
-
 		for (Search s : alSearches)
 			copy.alSearches.add(s.copy());
+
+		for (Group g : alCopyPolicy)
+			copy.alCopyPolicy.add(g.copy());
 
 		return copy;
 	}
@@ -144,26 +141,28 @@ public class GeonetParams extends AbstractParams
 		if (searches == null)
 			return;
 
-		Iterator searchList = searches.getChildren("search").iterator();
-
-		while (searchList.hasNext())
+		for (Object o : searches.getChildren("search"))
 		{
-			Element search = (Element) searchList.next();
+			Element search = (Element) o;
 
-			Search s = new Search();
+			alSearches.add(new Search(search));
+		}
+	}
 
-			s.freeText = getValue(search, "freeText", "");
-			s.title    = getValue(search, "title",    "");
-			s.abstrac  = getValue(search, "abstract", "");
-			s.keywords = getValue(search, "keywords", "");
-			s.digital  = getValue(search, "digital",  false);
-			s.hardcopy = getValue(search, "hardcopy", false);
-			s.siteId   = getValue(search, "siteId",   "");
+	//---------------------------------------------------------------------------
 
-			alSearches.add(s);
+	private void addCopyPolicy(Element policy) throws BadInputEx
+	{
+		alCopyPolicy.clear();
 
-			if (s.siteId.equals(""))
-				throw new BadParameterEx("siteId", "");
+		if (policy == null)
+			return;
+
+		for (Object o : policy.getChildren("group"))
+		{
+			Element group = (Element) o;
+
+			alCopyPolicy.add(new Group(group));
 		}
 	}
 
@@ -177,72 +176,10 @@ public class GeonetParams extends AbstractParams
 	public int     port;
 	public String  servlet;
 
-	public boolean createGroups;
-	public boolean createCateg;
-
-	private ArrayList<Search> alSearches = new ArrayList<Search>();
+	private ArrayList<Search> alSearches   = new ArrayList<Search>();
+	private ArrayList<Group>  alCopyPolicy = new ArrayList<Group>();
 }
 
 //=============================================================================
 
-class Search
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
-
-	public Search copy()
-	{
-		Search s = new Search();
-
-		s.freeText = freeText;
-		s.title    = title;
-		s.abstrac  = abstrac;
-		s.keywords = keywords;
-		s.digital  = digital;
-		s.hardcopy = hardcopy;
-		s.siteId   = siteId;
-
-		return s;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public Element createRequest()
-	{
-		Element req = new Element("request");
-
-		Lib.element.add(req, "any",      freeText);
-		Lib.element.add(req, "title",    title);
-		Lib.element.add(req, "abstract", abstrac);
-		Lib.element.add(req, "themekey", keywords);
-		Lib.element.add(req, "siteId",   siteId);
-
-		if (digital)
-			Lib.element.add(req, "digital", "on");
-
-		if (hardcopy)
-			Lib.element.add(req, "paper", "on");
-
-		return req;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	public String  freeText;
-	public String  title;
-	public String  abstrac;
-	public String  keywords;
-	public boolean digital;
-	public boolean hardcopy;
-	public String  siteId;
-}
-
-//=============================================================================
 

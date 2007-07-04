@@ -21,84 +21,76 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.webdav;
+package org.fao.geonet.kernel.harvest.harvester;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.utils.Util;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
-import org.jdom.Element;
+import org.fao.geonet.util.ISODate;
 
 //=============================================================================
 
-public class WebDavParams extends AbstractParams
+public class RecordInfo
 {
-	//--------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
-	//--------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
 
-	public WebDavParams(DataManager dm)
+	public RecordInfo(String uuid, String changeDate)
 	{
-		super(dm);
+		this(uuid, changeDate, null, null);
+	}
+
+	//---------------------------------------------------------------------------
+
+	public RecordInfo(String uuid, String changeDate, String schema, String source)
+	{
+		if (changeDate == null)
+		{
+			dateWasNull = true;
+			changeDate  = new ISODate().toString();
+		}
+
+		this.uuid       = uuid;
+		this.changeDate = changeDate;
+		this.schema     = schema;
+		this.source     = source;
 	}
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- Create : called when a new entry must be added. Reads values from the
-	//---          provided entry, providing default values
+	//--- API methods
 	//---
 	//---------------------------------------------------------------------------
 
-	public void create(Element node) throws BadInputEx
+	public int hashCode() { return uuid.hashCode(); }
+
+	//---------------------------------------------------------------------------
+
+	public boolean isMoreRecentThan(String localChangeDate)
 	{
-		super.create(node);
+		if (dateWasNull)
+			return true;
 
-		Element site = node.getChild("site");
-		Element opt  = node.getChild("options");
+		ISODate remoteDate = new ISODate(changeDate);
+		ISODate localDate  = new ISODate(localChangeDate);
 
-		url       = Util.getParam(site, "url", "");
+		//--- accept if remote date is greater than local date
 
-		validate  = Util.getParam(opt, "validate",   false);
-		structure = Util.getParam(opt, "structure",  false);
+		return (remoteDate.sub(localDate) > 0);
 	}
 
 	//---------------------------------------------------------------------------
-	//---
-	//--- Update : called when an entry has changed and variables must be updated
-	//---
-	//---------------------------------------------------------------------------
 
-	public void update(Element node) throws BadInputEx
+	public boolean equals(Object o)
 	{
-		super.update(node);
+		if (o instanceof RecordInfo)
+		{
+			RecordInfo ri = (RecordInfo) o;
 
-		Element site = node.getChild("site");
-		Element opt  = node.getChild("options");
+			return uuid.equals(ri.uuid);
+		}
 
-		url       = Util.getParam(site,    "url",      url);
-
-		validate  = Util.getParam(opt, "validate",   validate);
-		structure = Util.getParam(opt, "structure",  structure);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Other API methods
-	//---
-	//---------------------------------------------------------------------------
-
-	public WebDavParams copy()
-	{
-		WebDavParams copy = new WebDavParams(dm);
-
-		copy.url = url;
-
-		copy.validate  = validate;
-		copy.structure = structure;
-
-		return copy;
+		return false;
 	}
 
 	//---------------------------------------------------------------------------
@@ -107,12 +99,13 @@ public class WebDavParams extends AbstractParams
 	//---
 	//---------------------------------------------------------------------------
 
-	public String  url;
+	public String uuid;
+	public String changeDate;
+	public String schema;
+	public String source;
 
-	public boolean validate;
-	public boolean structure;
+	private boolean dateWasNull;
 }
 
 //=============================================================================
-
 

@@ -22,10 +22,11 @@ function Geonetwork(xmlLoader)
 	
 	//--- public methods
 	
-	this.addSearchRow    = addSearchRow;
+	this.addSearchRow    = view.addEmptySearch;
 	this.removeSearchRow = view.removeSearch;
 	this.getResultTip    = view.getResultTip;
-	this.retrieveSites   = retrieveSites;
+	this.retrieveSources = retrieveSources;
+	this.retrieveGroups  = retrieveGroups;
 	
 	this.model = model;
 	this.view  = view;
@@ -42,7 +43,26 @@ this.getEditPanel = function() { return "gn.editPanel"; }
 
 //=====================================================================================
 
-function retrieveSites()
+this.init = function()
+{
+	this.view.init();
+	
+	model.retrieveCategories(ker.wrap(this, init_categ_OK));
+}
+
+//-------------------------------------------------------------------------------------
+
+function init_categ_OK(data)
+{
+	view.clearCategories();
+		
+	for (var i=0; i<data.length; i++)
+		view.addCategory(data[i].id, data[i].label[Env.lang]);				
+}
+
+//=====================================================================================
+
+function retrieveSources()
 {
 	var data = view.getHostData();
 	
@@ -53,35 +73,69 @@ function retrieveSites()
 		alert(loader.getText('supplyServlet'));
 		
 	else
-		model.retrieveSites(data, ker.wrap(this, retrieveSites_OK));
-}
-
-//-------------------------------------------------------------------------------------
-
-function retrieveSites_OK(data)
-{
-	view.clearSiteId();
-	view.addSiteId(data.SITE_ID, data.SITE_NAME);
-	
-	for (var i=0; i<data.NODES.length; i++)
-	{
-		var node = data.NODES[i];
-	
-		view.addSiteId(node.SITE_ID, node.SITE_NAME +' ('+ node.MD_COUNT +')');				
-	}
+		model.retrieveSources(data, ker.wrap(view, view.setSources));
 }
 
 //=====================================================================================
 
-function addSearchRow()
+function retrieveGroups()
 {
-	var siteId   = view.getSiteId();
-	var siteName = view.getSiteName();
+	var data = view.getHostData();
 	
-	if (siteName == null)
-		alert(loader.getText('pleaseRetrieve'));
+	if (data.HOST == '')
+		alert(loader.getText('supplyHost'));
+		
+	else if (data.SERVLET == '')
+		alert(loader.getText('supplyServlet'));
+		
 	else
-		view.addEmptySearch(siteId, siteName);
+	{
+		var cb = ker.wrap(this, retrieveGroups_OK);
+	
+		if (data.USE_ACCOUNT)
+			model.retrieveGroups(data, cb, data.USERNAME, data.PASSWORD);
+		else
+			model.retrieveGroups(data, cb);
+	}
+}
+
+//-------------------------------------------------------------------------------------
+
+function retrieveGroups_OK(data)
+{
+	//--- add new groups
+	
+	for (var i=0; i<data.length; i++)
+	{	
+		var remoteGroup = data[i];
+		var policyGroup = view.findPolicyGroup(remoteGroup.name);
+		
+		//--- skip 'intranet' group
+		if (remoteGroup.id == '0')
+			continue;
+			
+		if (policyGroup == null)
+			view.addPolicyGroup(remoteGroup.name, 'dontCopy');
+	}
+	
+	//--- remove missing groups
+	
+	var list = view.getListedPolicyGroups();
+	
+	for (var i=0; i<list.length; i++)
+		if (!existsGroup(list[i], data))
+			view.removePolicyGroup(list[i]);
+}
+
+//-------------------------------------------------------------------------------------
+
+function existsGroup(name, data)
+{
+	for (var i=0; i<data.length; i++)
+		if (name == data[i].name)
+			return true;
+	
+	return false;
 }
 
 //=====================================================================================

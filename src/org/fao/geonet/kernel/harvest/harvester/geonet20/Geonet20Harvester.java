@@ -85,7 +85,7 @@ public class Geonet20Harvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doDestroy() {}
+	protected void doDestroy(Dbms dbms) {}
 
 	//---------------------------------------------------------------------------
 	//---

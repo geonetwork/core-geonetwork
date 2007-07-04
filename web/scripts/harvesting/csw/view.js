@@ -146,7 +146,7 @@ function getData()
 	
 	data.SEARCH_LIST = searchData;
 	
-	//--- retrieve privileges information
+	//--- retrieve privileges and categories information
 	
 	data.PRIVILEGES = this.getPrivileges();
 	data.CATEGORIES = this.getSelectedCategories();

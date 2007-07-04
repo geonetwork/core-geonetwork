@@ -25,11 +25,11 @@ package org.fao.geonet.kernel.harvest.harvester;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.UUID;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.MissingParameterEx;
+import jeeves.utils.Util;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.lib.Lib;
@@ -62,15 +62,15 @@ public abstract class AbstractParams
 		Element opt     = node.getChild("options");
 		Element account = (site == null) ? null : site.getChild("account");
 
-		name       = getValue(site, "name", "");
-		uuid       = getValue(site, "uuid", UUID.randomUUID().toString());
+		name       = Util.getParam(site, "name", "");
+		uuid       = Util.getParam(site, "uuid", UUID.randomUUID().toString());
 
-		useAccount = getValue(account, "use",      false);
-		username   = getValue(account, "username", "");
-		password   = getValue(account, "password", "");
+		useAccount = Util.getParam(account, "use",      false);
+		username   = Util.getParam(account, "username", "");
+		password   = Util.getParam(account, "password", "");
 
-		every      = getValue(opt, "every",      90   );
-		oneRunOnly = getValue(opt, "oneRunOnly", false);
+		every      = Util.getParam(opt, "every",      90   );
+		oneRunOnly = Util.getParam(opt, "oneRunOnly", false);
 
 		checkEvery(every);
 
@@ -88,14 +88,14 @@ public abstract class AbstractParams
 		Element privil  = node.getChild("privileges");
 		Element categ   = node.getChild("categories");
 
-		name       = getValue(site, "name", name);
+		name       = Util.getParam(site, "name", name);
 
-		useAccount = getValue(account, "use",      useAccount);
-		username   = getValue(account, "username", username);
-		password   = getValue(account, "password", password);
+		useAccount = Util.getParam(account, "use",      useAccount);
+		username   = Util.getParam(account, "username", username);
+		password   = Util.getParam(account, "password", password);
 
-		every      = getValue(opt, "every",      every);
-		oneRunOnly = getValue(opt, "oneRunOnly", oneRunOnly);
+		every      = Util.getParam(opt, "every",      every);
+		oneRunOnly = Util.getParam(opt, "oneRunOnly", oneRunOnly);
 
 		checkEvery(every);
 
@@ -109,7 +109,7 @@ public abstract class AbstractParams
 	//---------------------------------------------------------------------------
 
 	public Iterable<Privileges> getPrivileges() { return alPrivileges; }
-	public Iterable<Integer>    getCategories() { return alCategories; }
+	public Iterable<String>     getCategories() { return alCategories; }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -132,78 +132,8 @@ public abstract class AbstractParams
 		for (Privileges p : alPrivileges)
 			copy.alPrivileges.add(p.copy());
 
-		for (Integer i : alCategories)
-			copy.alCategories.add(i);
-	}
-
-	//---------------------------------------------------------------------------
-
-	protected String getValue(Element el, String name) throws MissingParameterEx, BadParameterEx
-	{
-		if (el == null)
-			throw new MissingParameterEx(name);
-
-		String value = el.getChildText(name);
-
-		if (value == null)
-			throw new MissingParameterEx(name);
-
-		if (value.trim().length() == 0)
-			throw new BadParameterEx(name, value);
-
-		return value;
-	}
-
-	//---------------------------------------------------------------------------
-
-	protected String getValue(Element el, String name, String defValue)
-	{
-		if (el == null)
-			return defValue;
-
-		String value = el.getChildText(name);
-
-		return (value != null) ? value : defValue;
-	}
-
-	//---------------------------------------------------------------------------
-
-	protected boolean getValue(Element el, String name, boolean defValue) throws BadParameterEx
-	{
-		if (el == null)
-			return defValue;
-
-		String value = el.getChildText(name);
-
-		if (value == null)
-			return defValue;
-
-		if (!value.equals("true") && !value.equals("false"))
-			throw new BadParameterEx(name, value);
-
-		return Boolean.parseBoolean(value);
-	}
-
-	//---------------------------------------------------------------------------
-
-	protected int getValue(Element el, String name, int defValue) throws BadParameterEx
-	{
-		if (el == null)
-			return defValue;
-
-		String value = el.getChildText(name);
-
-		if (value == null || value.length() == 0)
-			return defValue;
-
-		try
-		{
-			return Integer.parseInt(value);
-		}
-		catch(NumberFormatException e)
-		{
-			throw new BadParameterEx(name, value);
-		}
+		for (String s : alCategories)
+			copy.alCategories.add(s);
 	}
 
 	//---------------------------------------------------------------------------
@@ -326,7 +256,7 @@ public abstract class AbstractParams
 			if (!Lib.type.isInteger(categId))
 				throw new BadParameterEx("attribute:id", categElem);
 
-			alCategories.add(new Integer(categId));
+			alCategories.add(categId);
 		}
 	}
 
@@ -351,7 +281,7 @@ public abstract class AbstractParams
 	protected DataManager dm;
 
 	private ArrayList<Privileges> alPrivileges = new ArrayList<Privileges>();
-	private ArrayList<Integer>    alCategories = new ArrayList<Integer>();
+	private ArrayList<String>     alCategories = new ArrayList<String>();
 
 	//---------------------------------------------------------------------------
 

@@ -77,7 +77,7 @@ public class WebDavHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doDestroy() {}
+	protected void doDestroy(Dbms dbms) {}
 
 	//---------------------------------------------------------------------------
 	//---

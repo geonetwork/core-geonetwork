@@ -6,12 +6,21 @@
 
 gn.View = function(xmlLoader)
 {
+	HarvesterView.call(this);	
+
 	var searchTransf = new XSLTransformer('harvesting/geonet/client-search-row.xsl', xmlLoader);
+	var policyTransf = new XSLTransformer('harvesting/geonet/client-policy-row.xsl', xmlLoader);
 	var resultTransf = new XSLTransformer('harvesting/geonet/client-result-tip.xsl', xmlLoader);
 	
 	var loader = xmlLoader;
 	var valid  = new Validator(loader);
 	var shower = null;
+	var sources= null;
+	
+	var currSearchId = 0;
+		
+	this.setPrefix('gn');
+	this.setResultTransf(resultTransf);
 	
 	//--- public methods
 	
@@ -20,11 +29,7 @@ gn.View = function(xmlLoader)
 	this.setData    = setData;
 	this.getData    = getData;
 	this.isDataValid= isDataValid;
-
-	this.getSiteName = getSiteName;
-	this.getSiteId   = getSiteId;
-	this.clearSiteId = clearSiteId;
-	this.addSiteId   = addSiteId;
+	this.setSources = setSources;
 
 	this.addEmptySearch  = addEmptySearch;
 	this.addSearch       = addSearch;
@@ -32,8 +37,16 @@ gn.View = function(xmlLoader)
 	this.removeAllSearch = removeAllSearch;
 
 	this.getHostData = getHostData;
-	this.getResultTip= getResultTip;
-		
+
+	this.getPolicyGroups       = getPolicyGroups;
+	this.getListedPolicyGroups = getListedPolicyGroups;
+	this.addPolicyGroup        = addPolicyGroup;
+	this.removePolicyGroup     = removePolicyGroup;
+	this.removeAllPolicyGroups = removeAllPolicyGroups;
+	this.findPolicyGroup       = findPolicyGroup;
+	
+	this.removeAllGroupRows = function(){}
+        
 //=====================================================================================
 //===
 //=== API methods
@@ -65,25 +78,16 @@ function init()
 
 function setEmpty()
 {
-	removeAllSearch();
+	this.setEmptyCommon();
+	sources = null;
 	
-	$('gn.name')      .value = '';	
+	removeAllSearch();
+	removeAllPolicyGroups();
+	
 	$('gn.host')      .value = '';	
 	$('gn.port')      .value = '';
 	$('gn.servlet')   .value = '';
-	$('gn.useAccount').checked = true;
-	$('gn.username')  .value = '';
-	$('gn.password')  .value = '';
 		
-	$('gn.createGroups').checked = true;
-	$('gn.createCateg') .checked = true;
-	$('gn.oneRunOnly')  .checked = false;
-
-	$('gn.every.days') .value = '0';
-	$('gn.every.hours').value = '1';
-	$('gn.every.mins') .value = '30';
-	
-	clearSiteId();
 	shower.update();
 }
 
@@ -91,41 +95,45 @@ function setEmpty()
 
 function setData(node)
 {
-	var site     = node.getElementsByTagName('site')    [0];
-	var searches = node.getElementsByTagName('searches')[0];
-	var options  = node.getElementsByTagName('options') [0];
+	this.setDataCommon(node);
+	sources = null;
 
-	var searchesList = searches.getElementsByTagName('search');
-	
-	$('gn.name').value = node.getAttribute('name');
-	
-	hvutil.setOption(site, 'host',     'gn.host');
-	hvutil.setOption(site, 'port',     'gn.port');
-	hvutil.setOption(site, 'servlet',  'gn.servlet');
-	hvutil.setOption(site, 'use',      'gn.useAccount');
-	hvutil.setOption(site, 'username', 'gn.username');
-	hvutil.setOption(site, 'password', 'gn.password');
+	var site     = node.getElementsByTagName('site')            [0];
+	var searches = node.getElementsByTagName('searches')        [0];
+	var policies = node.getElementsByTagName('groupsCopyPolicy')[0];
+
+	hvutil.setOption(site, 'host',    'gn.host');
+	hvutil.setOption(site, 'port',    'gn.port');
+	hvutil.setOption(site, 'servlet', 'gn.servlet');
 	
 	//--- add search entries
 	
+	var list = searches.getElementsByTagName('search');
+	
 	removeAllSearch();
 	
-	for (var i=0; i<searchesList.length; i++)
-		addSearch(searchesList[i]);
+	for (var i=0; i<list.length; i++)
+		addSearch(list[i]);
 	
-	//--- setup other stuff
+	//--- add group mapping
 	
-	hvutil.setOption(options, 'createGroups','gn.createGroups');
-	hvutil.setOption(options, 'createCateg', 'gn.createCateg');
-	hvutil.setOption(options, 'oneRunOnly',  'gn.oneRunOnly');
+	var list = policies.getElementsByTagName('group');
+	
+	removeAllPolicyGroups();
+	
+	for (var i=0; i<list.length; i++)
+	{
+		var name  = list[i].getAttribute('name');
+		var policy= list[i].getAttribute('policy');
+		
+		addPolicyGroup(name, policy);
+	}
+	
+	//--- set categories
 
-	var every = new Every(hvutil.find(options, 'every'));
-	
-	$('gn.every.days') .value = every.days;
-	$('gn.every.hours').value = every.hours;
-	$('gn.every.mins') .value = every.mins;
-	
-	clearSiteId();
+	this.unselectCategories();
+	this.selectCategories(node);	
+		
 	shower.update();
 }
 
@@ -133,52 +141,44 @@ function setData(node)
 
 function getData()
 {
-	var days  = $('gn.every.days') .value;
-	var hours = $('gn.every.hours').value;
-	var mins  = $('gn.every.mins') .value;
+	var data = this.getDataCommon();
 	
-	var data =
-	{
-		//--- site
-		NAME    : $('gn.name')   .value,
-		HOST    : $('gn.host')   .value,
-		PORT    : $('gn.port')   .value,
-		SERVLET : $('gn.servlet').value,
-	
-		USE_ACCOUNT: $('gn.useAccount').checked,
-		USERNAME   : $('gn.username')  .value,
-		PASSWORD   : $('gn.password')  .value,
-	
-		//--- options		
-		EVERY         : Every.build(days, hours, mins),
-		CREATE_GROUPS : $('gn.createGroups').checked,
-		CREATE_CATEG  : $('gn.createCateg') .checked,
-		ONE_RUN_ONLY  : $('gn.oneRunOnly')  .checked
-	}
+	data.HOST    = $F('gn.host');
+	data.PORT    = $F('gn.port');
+	data.SERVLET = $F('gn.servlet');	
 	
 	//--- retrieve search information
 	
 	var searchData = [];
-	var searchList = $('gn.searches').childNodes;
+	var searchList = xml.children($('gn.searches'));
 	
 	for(var i=0; i<searchList.length; i++)
-		if (searchList[i].nodeType == Node.ELEMENT_NODE)
+	{
+		var divElem    = searchList[i];
+		var sourceElem = xml.getElementById(divElem, 'gn.source')
+	
+		searchData.push(
 		{
-			var divElem = searchList[i];
-			
-			searchData.push(
-			{
-				TEXT     : xml.getElementById(divElem, 'gn.text')    .value,
-				TITLE    : xml.getElementById(divElem, 'gn.title')   .value,
-				ABSTRACT : xml.getElementById(divElem, 'gn.abstract').value,
-				KEYWORDS : xml.getElementById(divElem, 'gn.keywords').value,		
-				DIGITAL  : xml.getElementById(divElem, 'gn.digital') .checked,
-				HARDCOPY : xml.getElementById(divElem, 'gn.hardcopy').checked,
-				SITE_ID  : divElem.getAttribute('id')
-			});
-		}
+			TEXT        : xml.getElementById(divElem, 'gn.text')    .value,
+			TITLE       : xml.getElementById(divElem, 'gn.title')   .value,
+			ABSTRACT    : xml.getElementById(divElem, 'gn.abstract').value,
+			KEYWORDS    : xml.getElementById(divElem, 'gn.keywords').value,
+			DIGITAL     : xml.getElementById(divElem, 'gn.digital') .checked,
+			HARDCOPY    : xml.getElementById(divElem, 'gn.hardcopy').checked,
+			SOURCE_UUID : $F(sourceElem),
+			SOURCE_NAME : xml.textContent(sourceElem.options[sourceElem.selectedIndex])
+		});
+	}
 	
 	data.SEARCH_LIST = searchData;
+	
+	//--- retrieve categories information
+	
+	data.CATEGORIES = this.getSelectedCategories();
+	
+	//--- add group mapping information
+		
+	data.GROUP_LIST = getPolicyGroups();
 	
 	return data;
 }
@@ -190,92 +190,101 @@ function isDataValid()
 	if (!valid.validate())
 		return false;
 		
-	var days  = $('gn.every.days') .value;
-	var hours = $('gn.every.hours').value;
-	var mins  = $('gn.every.mins') .value;
-	
-	if (Every.build(days, hours, mins) == 0)
-	{
-		alert(loader.getText('everyZero'));
-		return false;
-	}
-		
-	return true;
+	return this.isDataValidCommon();
 }
 
 //=====================================================================================
-//=== SiteId methods
+//=== Sources methods
 //=====================================================================================
 
-function getSiteName()
-{ 
-	var ctrl = $('gn.siteId');
-	
-	if (ctrl.options.length == 0)
-		return null;
-		
-	return xml.textContent(ctrl.options[ctrl.selectedIndex]);
-}
-
-//=====================================================================================
-
-function getSiteId() 
-{ 
-	var ctrl = $('gn.siteId');
-	
-	if (ctrl.options.length == 0)
-		return null;
-		
-	return ctrl.options[ctrl.selectedIndex].value;
-}
-
-//=====================================================================================
-
-function clearSiteId() { return $('gn.siteId').options.length = 0; }
-
-//=====================================================================================
-
-function addSiteId(id, label)
+function setSources(data)
 {
-	var html='<option value="'+ id +'">'+ xml.escape(label) +'</option>';
-	new Insertion.Bottom('gn.siteId', html);
+	sources = data;
+	
+	//--- update searches
+	
+	var searchData = [];
+	var list = xml.children($('gn.searches'));
+	
+	for(var i=0; i<list.length; i++)
+	{
+		var source  = xml.getElementById(list[i], 'gn.source');
+		var selUuid = $F(source);
+		
+		//--- remove old sources and add blank option
+		
+		clearSources(source);
+		addSource(source, '', '', selUuid);
+		
+		//--- add new sources
+		
+		for (var j=0; j<data.length; j++)
+		{
+			var uuid = data[j].uuid;
+			var name = data[j].name;
+			
+			addSource(source, uuid, name, selUuid);
+		}
+	}
+}
+
+//=====================================================================================
+//	return ctrl.options[ctrl.selectedIndex].value;
+//=====================================================================================
+
+function clearSources(elem) { elem.options.length = 0; }
+
+//=====================================================================================
+
+function addSource(elem, uuid, label, selUuid)
+{
+	var html='<option value="'+ uuid +'">'+ xml.escape(label) +'</option>';
+	
+	if (uuid == selUuid)
+		html='<option value="'+ uuid +'" selected="on">'+ xml.escape(label) +'</option>';
+	
+	new Insertion.Bottom(elem, html);
 }
 
 //=====================================================================================
 //=== Search methods
 //=====================================================================================
 
-function addEmptySearch(siteId, siteName)
+function addEmptySearch()
 {
-	var doc = Sarissa.getDomDocument();
+	var doc    = Sarissa.getDomDocument();
+	var search = doc.createElement('search');
 	
-	var xmlSearch = doc.createElement('search');
-	var xmlName   = doc.createElement('siteName');
-	var xmlSiteId = doc.createElement('siteId');
+	if (sources != null)
+	{
+		var src = doc.createElement('sources');
+		
+		for (var i=0; i<sources.length; i++)
+		{
+			var s = doc.createElement('source');
+			
+			s.setAttribute('name', sources[i].name);
+			s.setAttribute('uuid', sources[i].uuid);
+			
+			src.appendChild(s);
+		}
+		
+		search.appendChild(src);
+	}
 	
-	doc.appendChild(xmlSearch);	
-	xmlSearch.appendChild(xmlName);	
-	xmlSearch.appendChild(xmlSiteId);
-	
-	xmlName  .appendChild(doc.createTextNode(siteName));
-	xmlSiteId.appendChild(doc.createTextNode(siteId));
-	
-	addSearch(xmlSearch);
+	doc.appendChild(search);		
+	addSearch(search);
 }
 
 //=====================================================================================
 
-function addSearch(xmlSearch)
+function addSearch(search)
 {
-	var xslRes = searchTransf.transform(xmlSearch);
-	var siteId = xslRes.getAttribute('id');
-	var div    = xml.getElementById($('gn.searches'), siteId);
-
-	//--- we must avoid adding more searches on the same site-id
-
-	if (div != null)
-		return;
-
+	var id = ''+ currSearchId++;
+	search.setAttribute('id', id);
+	
+	var xslRes = searchTransf.transform(search);
+	
 	//--- add the new search in list
 	new Insertion.Bottom('gn.searches', xml.toString(xslRes));
 	
@@ -285,15 +294,15 @@ function addSearch(xmlSearch)
 		{ id:'gn.title',    type:'length',   minSize :0,  maxSize :200 },
 		{ id:'gn.abstract', type:'length',   minSize :0,  maxSize :200 },
 		{ id:'gn.keywords', type:'length',   minSize :0,  maxSize :200 }
-	], siteId);
+	], id);
 }
 
 //=====================================================================================
 
-function removeSearch(siteId)
+function removeSearch(id)
 {
-	valid.removeByParent(siteId);
-	Element.remove(siteId);
+	valid.removeByParent(id);
+	Element.remove(id);
 }
 
 //=====================================================================================
@@ -305,24 +314,131 @@ function removeAllSearch()
 }
 
 //=====================================================================================
+//=== Group copy policy methods
+//=====================================================================================
+
+function getPolicyGroups()
+{
+	var groupData = [];
+	var groupList = $('gn.groups').getElementsByTagName('TR');
+	
+	//--- i=1 : skip header
+	for(var i=1; i<groupList.length; i++)
+	{
+		var rowElem = groupList[i];
+		var id      = rowElem.getAttribute('id');
+		
+		//--- format is : gn.group.{@name}
+		var name = id.substring(9);
+		var list = rowElem.getElementsByTagName('INPUT');
+		
+		var policy = 'dontCopy';
+		
+		for (var j=0; j<list.length; j++)
+			if (list[j].checked)
+				policy = list[j].value;
+		
+		if (policy != 'dontCopy')
+			groupData.push(
+			{
+				NAME   : name, 
+				POLICY : policy
+			});
+	}
+	
+	return groupData;
+}
+
+//=====================================================================================
+
+function getListedPolicyGroups()
+{
+	var groupData = [];
+	var groupList = $('gn.groups').getElementsByTagName('TR');
+	
+	//--- i=1 : skip header
+	for(var i=1; i<groupList.length; i++)
+	{
+		var rowElem = groupList[i];
+		var id      = rowElem.getAttribute('id');
+		
+		//--- format is : gn.group.{@name}
+		var name = id.substring(9);
+		
+		groupData.push(name);
+	}
+	
+	return groupData;
+}
+
+//=====================================================================================
+
+function addPolicyGroup(name, policy)
+{
+	var doc  = Sarissa.getDomDocument();
+	var group= doc.createElement('group');
+	
+	group.setAttribute('name',   name);
+	group.setAttribute('policy', policy);
+	
+	var xslRes = policyTransf.transform(group);
+	
+	//--- add the new group policy row in list
+	new Insertion.Bottom('gn.groups', xml.toString(xslRes));	
+}
+
+//=====================================================================================
+
+function removePolicyGroup(name)
+{
+	Element.remove('gn.group.'+ name);
+}
+
+//=====================================================================================
+
+function removeAllPolicyGroups()
+{
+	var rows = $('gn.groups').getElementsByTagName('TR');
+	
+	for (var i=rows.length-1; i>0; i--)
+		Element.remove(rows[i]);		
+}
+
+//=====================================================================================
+
+function findPolicyGroup(name)
+{
+	var list = $('gn.groups').getElementsByTagName('TR');
+	
+	for (var i=1; i<list.length; i++)
+	{
+		var row  = list[i];
+		var gname= row.getAttribute('id');
+		
+		if ('gn.group.'+ name == gname)
+			return row;
+	}
+	
+	return null;
+}
+
+//=====================================================================================
+//=== Other methods
+//=====================================================================================
 
 function getHostData()
 {
 	var data = 
 	{
-		HOST :    $('gn.host')   .value,
-		PORT :    $('gn.port')   .value,
-		SERVLET : $('gn.servlet').value
+		HOST       : $F('gn.host'),
+		PORT       : $F('gn.port'),
+		SERVLET    : $F('gn.servlet'),
+		USERNAME   : $F('gn.username'),
+		PASSWORD   : $F('gn.password'),
+		USE_ACCOUNT: $('gn.useAccount').checked
 	};
 	
 	return data;
-}
-
-//=====================================================================================
-
-function getResultTip(node)
-{
-	return xml.toString(resultTransf.transform(node));
 }
 
 //=====================================================================================

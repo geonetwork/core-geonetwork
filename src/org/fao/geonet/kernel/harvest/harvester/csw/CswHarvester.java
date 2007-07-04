@@ -24,9 +24,6 @@
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.UUID;
 import jeeves.exceptions.BadInputEx;
@@ -34,10 +31,10 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
-import jeeves.utils.BinaryFile;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
@@ -78,11 +75,12 @@ public class CswHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doDestroy()
+	protected void doDestroy(Dbms dbms) throws SQLException
 	{
 		File icon = new File(context.getAppPath() +"images/logos", params.uuid +".gif");
 
 		icon.delete();
+		Lib.sources.delete(dbms, params.uuid);
 	}
 
 	//---------------------------------------------------------------------------
@@ -94,6 +92,7 @@ public class CswHarvester extends AbstractHarvester
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
 		params = new CswParams(dataMan);
+
 		//--- retrieve/initialize information
 		params.create(node);
 
@@ -103,7 +102,8 @@ public class CswHarvester extends AbstractHarvester
 		String id = settingMan.add(dbms, "harvesting", "node", getType());
 
 		storeNode(dbms, params, "id:"+id);
-		updateIcon();
+		Lib.sources.update(dbms, params.uuid, params.name, true);
+		Lib.sources.copyLogo(context, "/images/harvesting/"+ params.icon, params.uuid);
 
 		return id;
 	}
@@ -128,11 +128,13 @@ public class CswHarvester extends AbstractHarvester
 		//--- update database
 		storeNode(dbms, copy, path);
 
-		//--- we update a copy first because if there is an exception GeonetParams
+		//--- we update a copy first because if there is an exception CswParams
 		//--- could be half updated and so it could be in an inconsistent state
 
+		Lib.sources.update(dbms, copy.uuid, copy.name, true);
+		Lib.sources.copyLogo(context, "/images/harvesting/"+ copy.icon, copy.uuid);
+
 		params = copy;
-		updateIcon();
 	}
 
 	//---------------------------------------------------------------------------
@@ -182,18 +184,17 @@ public class CswHarvester extends AbstractHarvester
 		//--- ok, add proper info
 
 		Element info = node.getChild("info");
+		Element res  = new Element("result");
 
-		Element site = new Element("search");
+		add(res, "total",        result.totalMetadata);
+		add(res, "added",        result.addedMetadata);
+		add(res, "updated",      result.updatedMetadata);
+		add(res, "unchanged",    result.unchangedMetadata);
+		add(res, "unknownSchema",result.unknownSchema);
+		add(res, "removed",      result.locallyRemoved);
+		add(res, "unretrievable",result.unretrievable);
 
-		add(site, "total",        result.totalMetadata);
-		add(site, "added",        result.addedMetadata);
-		add(site, "updated",      result.updatedMetadata);
-		add(site, "unchanged",    result.unchangedMetadata);
-		add(site, "unknownSchema",result.unknownSchema);
-		add(site, "removed",      result.locallyRemoved);
-		add(site, "unretrievable",result.unretrievable);
-
-		info.addContent(site);
+		info.addContent(res);
 	}
 
 	//---------------------------------------------------------------------------
@@ -208,34 +209,6 @@ public class CswHarvester extends AbstractHarvester
 
 		Harvester h = new Harvester(log, context, dbms, params);
 		result = h.harvest();
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
-
-	private void updateIcon()
-	{
-		File src = new File(context.getAppPath() +"images/csw",   params.icon);
-		File des = new File(context.getAppPath() +"images/logos", params.uuid +".gif");
-
-		try
-		{
-			FileInputStream  is = new FileInputStream (src);
-			FileOutputStream os = new FileOutputStream(des);
-
-			BinaryFile.copy(is, os, true, true);
-		}
-		catch (IOException e)
-		{
-			//--- we ignore exceptions here, just log them
-
-			context.warning("Cannot copy CSW icon -> "+e.getMessage());
-			context.warning(" (C) Source : "+ src);
-			context.warning(" (C) Destin : "+ des);
-		}
 	}
 
 	//---------------------------------------------------------------------------

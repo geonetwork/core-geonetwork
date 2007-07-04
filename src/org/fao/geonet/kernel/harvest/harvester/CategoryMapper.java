@@ -79,6 +79,8 @@ public class CategoryMapper
 
 	public String getName(String id) { return hmIdName.get(id); }
 
+	public boolean exists(String id) { return hmIdName.containsKey(id); }
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Variables

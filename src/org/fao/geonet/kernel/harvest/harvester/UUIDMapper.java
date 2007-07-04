@@ -45,11 +45,11 @@ public class UUIDMapper
 	//---
 	//--------------------------------------------------------------------------
 
-	public UUIDMapper(Dbms dbms, String siteId) throws Exception
+	public UUIDMapper(Dbms dbms, String harvestUuid) throws Exception
 	{
-		String query = "SELECT id, uuid, changeDate FROM Metadata WHERE source=?";
+		String query = "SELECT id, uuid, changeDate FROM Metadata WHERE harvestUuid=?";
 
-		List idsList = dbms.select(query, siteId).getChildren();
+		List idsList = dbms.select(query, harvestUuid).getChildren();
 
 		for (int i=0; i<idsList.size(); i++)
 		{

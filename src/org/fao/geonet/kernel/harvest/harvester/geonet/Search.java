@@ -21,84 +21,95 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.webdav;
+package org.fao.geonet.kernel.harvest.harvester.geonet;
 
-import jeeves.exceptions.BadInputEx;
+import jeeves.exceptions.BadParameterEx;
 import jeeves.utils.Util;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
 
-public class WebDavParams extends AbstractParams
+class Search
 {
-	//--------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
-	//--------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
 
-	public WebDavParams(DataManager dm)
+	Search() {}
+
+	//---------------------------------------------------------------------------
+
+	public Search(Element search) throws BadParameterEx
 	{
-		super(dm);
+		freeText = Util.getParam(search, "freeText", "");
+		title    = Util.getParam(search, "title",    "");
+		abstrac  = Util.getParam(search, "abstract", "");
+		keywords = Util.getParam(search, "keywords", "");
+		digital  = Util.getParam(search, "digital",  false);
+		hardcopy = Util.getParam(search, "hardcopy", false);
+
+		Element source = search.getChild("source");
+
+		sourceUuid = Util.getParam(source, "uuid", "");
+		sourceName = Util.getParam(source, "name", "");
 	}
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- Create : called when a new entry must be added. Reads values from the
-	//---          provided entry, providing default values
+	//--- API methods
 	//---
 	//---------------------------------------------------------------------------
 
-	public void create(Element node) throws BadInputEx
+	public Search copy()
 	{
-		super.create(node);
+		Search s = new Search();
 
-		Element site = node.getChild("site");
-		Element opt  = node.getChild("options");
+		s.freeText  = freeText;
+		s.title     = title;
+		s.abstrac   = abstrac;
+		s.keywords  = keywords;
+		s.digital   = digital;
+		s.hardcopy  = hardcopy;
+		s.sourceUuid= sourceUuid;
+		s.sourceName= sourceName;
 
-		url       = Util.getParam(site, "url", "");
+		return s;
+	}
 
-		validate  = Util.getParam(opt, "validate",   false);
-		structure = Util.getParam(opt, "structure",  false);
+	//---------------------------------------------------------------------------
+
+	public Element createRequest()
+	{
+		Element req = new Element("request");
+
+		add(req, "any",      freeText);
+		add(req, "title",    title);
+		add(req, "abstract", abstrac);
+		add(req, "themekey", keywords);
+		add(req, "siteId",   sourceUuid);
+
+		if (digital)
+			Lib.element.add(req, "digital", "on");
+
+		if (hardcopy)
+			Lib.element.add(req, "paper", "on");
+
+		return req;
 	}
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- Update : called when an entry has changed and variables must be updated
+	//--- Private methods
 	//---
 	//---------------------------------------------------------------------------
 
-	public void update(Element node) throws BadInputEx
+	private void add(Element req, String name, String value)
 	{
-		super.update(node);
-
-		Element site = node.getChild("site");
-		Element opt  = node.getChild("options");
-
-		url       = Util.getParam(site,    "url",      url);
-
-		validate  = Util.getParam(opt, "validate",   validate);
-		structure = Util.getParam(opt, "structure",  structure);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Other API methods
-	//---
-	//---------------------------------------------------------------------------
-
-	public WebDavParams copy()
-	{
-		WebDavParams copy = new WebDavParams(dm);
-
-		copy.url = url;
-
-		copy.validate  = validate;
-		copy.structure = structure;
-
-		return copy;
+		if (value.length() != 0)
+			req.addContent(new Element(name).setText(value));
 	}
 
 	//---------------------------------------------------------------------------
@@ -107,10 +118,14 @@ public class WebDavParams extends AbstractParams
 	//---
 	//---------------------------------------------------------------------------
 
-	public String  url;
-
-	public boolean validate;
-	public boolean structure;
+	public String  freeText;
+	public String  title;
+	public String  abstrac;
+	public String  keywords;
+	public boolean digital;
+	public boolean hardcopy;
+	public String  sourceUuid;
+	public String  sourceName;
 }
 
 //=============================================================================

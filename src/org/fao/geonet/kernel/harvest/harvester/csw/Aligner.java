@@ -39,6 +39,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
+import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.jdom.Element;
 
@@ -154,7 +155,7 @@ public class Aligner
 
 		if (schema == null)
 		{
-			log.debug("  - Metadata skipped due to unknown schema format. uuid:"+ri.uuid);
+			log.debug("  - Metadata skipped due to unknown schema. uuid:"+ ri.uuid);
 			result.unknownSchema++;
 
 			return;
@@ -163,7 +164,7 @@ public class Aligner
 		log.debug("  - Adding metadata with remote uuid:"+ ri.uuid);
 
 		String id = dataMan.insertMetadataExt(dbms, schema, md, context.getSerialFactory(),
-													 params.uuid, ri.changeDate, ri.changeDate, ri.uuid, null);
+													 params.uuid, ri.changeDate, ri.changeDate, ri.uuid);
 
 		int iId = Integer.parseInt(id);
 
@@ -184,16 +185,16 @@ public class Aligner
 
 	private void addCategories(String id) throws Exception
 	{
-		for(int catId : params.getCategories())
+		for(String catId : params.getCategories())
 		{
-			String name = localCateg.getName(catId +"");
+			String name = localCateg.getName(catId);
 
 			if (name == null)
 				log.debug("    - Skipping removed category with id:"+ catId);
 			else
 			{
 				log.debug("    - Setting category : "+ name);
-				dataMan.setCategory(dbms, id, catId+"");
+				dataMan.setCategory(dbms, id, catId);
 			}
 		}
 	}
@@ -218,8 +219,14 @@ public class Aligner
 				{
 					name = dataMan.getAccessManager().getPrivilegeName(opId);
 
-					log.debug("       --> "+ name);
-					dataMan.setOperation(dbms, id, priv.getGroupId(), opId +"");
+					//--- allow only: view, dynamic, featured
+					if (opId == 0 || opId == 5 || opId == 6)
+					{
+						log.debug("       --> "+ name);
+						dataMan.setOperation(dbms, id, priv.getGroupId(), opId +"");
+					}
+					else
+						log.debug("       --> "+ name +" (skipped)");
 				}
 			}
 		}
@@ -254,6 +261,13 @@ public class Aligner
 					return;
 
 				dataMan.updateMetadataExt(dbms, id, md, ri.changeDate);
+
+				dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
+				addPrivileges(id);
+
+				dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
+				addCategories(id);
+
 				dbms.commit();
 				dataMan.indexMetadata(dbms, id);
 				result.updatedMetadata++;

@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.webfolder;
 
 import jeeves.exceptions.BadInputEx;
+import jeeves.utils.Util;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;
@@ -57,10 +58,10 @@ public class WebFolderParams extends AbstractParams
 		Element site = node.getChild("site");
 		Element opt  = node.getChild("options");
 
-		url       = getValue(site, "url", "");
+		url       = Util.getParam(site, "url", "");
 
-		validate  = getValue(opt, "validate",  false);
-		structure = getValue(opt, "structure", false);
+		validate  = Util.getParam(opt, "validate",  false);
+		structure = Util.getParam(opt, "structure", false);
 	}
 
 	//---------------------------------------------------------------------------
@@ -76,10 +77,10 @@ public class WebFolderParams extends AbstractParams
 		Element site = node.getChild("site");
 		Element opt  = node.getChild("options");
 
-		url       = getValue(site, "url", url);
+		url       = Util.getParam(site, "url", url);
 
-		validate  = getValue(opt, "validate",  validate);
-		structure = getValue(opt, "structure", structure);
+		validate  = Util.getParam(opt, "validate",  validate);
+		structure = Util.getParam(opt, "structure", structure);
 	}
 
 	//---------------------------------------------------------------------------

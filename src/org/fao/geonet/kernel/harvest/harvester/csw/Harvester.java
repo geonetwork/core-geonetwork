@@ -44,8 +44,8 @@ import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
 import org.fao.geonet.csw.common.util.CswServer;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -189,7 +189,7 @@ class Harvester
 		{
 			request.setStartPosition(start +"");
 
-			Element response = doSearch(log, request, start, max);
+			Element response = doSearch(request, start, max);
 			Element results  = response.getChild("SearchResults", Csw.NAMESPACE_CSW);
 
 			if (results == null)
@@ -321,8 +321,7 @@ class Harvester
 
 	//---------------------------------------------------------------------------
 
-	private Element doSearch(Logger log, CatalogRequest request, int start,
-									 int max) throws Exception
+	private Element doSearch(CatalogRequest request, int start, int max) throws Exception
 	{
 		try
 		{
@@ -396,75 +395,4 @@ class Harvester
 
 //=============================================================================
 
-class RecordInfo
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
-
-	public RecordInfo(String uuid, String changeDate)
-	{
-		this.uuid = uuid;
-
-		if (changeDate == null)
-		{
-			dateWasNull = true;
-			changeDate  = new ISODate().toString();
-		}
-
-		this.changeDate = changeDate;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
-
-	public int hashCode() { return uuid.hashCode(); }
-
-	//---------------------------------------------------------------------------
-
-	public boolean isMoreRecentThan(String localChangeDate)
-	{
-		if (dateWasNull)
-			return true;
-
-		ISODate remoteDate = new ISODate(changeDate);
-		ISODate localDate  = new ISODate(localChangeDate);
-
-		//--- accept if remote date is greater than local date
-
-		return (remoteDate.sub(localDate) > 0);
-	}
-
-	//---------------------------------------------------------------------------
-
-	public boolean equals(Object o)
-	{
-		if (o instanceof RecordInfo)
-		{
-			RecordInfo ri = (RecordInfo) o;
-
-			return uuid.equals(ri.uuid);
-		}
-
-		return false;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	public String uuid;
-	public String changeDate;
-
-	private boolean dateWasNull;
-}
-
-//=============================================================================
 

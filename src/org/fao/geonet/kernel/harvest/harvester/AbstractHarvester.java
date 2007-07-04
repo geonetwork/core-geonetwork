@@ -166,7 +166,7 @@ public abstract class AbstractHarvester
 
 		//--- remove all harvested metadata
 
-		String getQuery = "SELECT id FROM Metadata WHERE source = ?";
+		String getQuery = "SELECT id FROM Metadata WHERE harvestUuid=?";
 
 		for (Object o : dbms.select(getQuery, getParams().uuid).getChildren())
 		{
@@ -177,7 +177,7 @@ public abstract class AbstractHarvester
 			dbms.commit();
 		}
 
-		doDestroy();
+		doDestroy(dbms);
 	}
 
 	//--------------------------------------------------------------------------
@@ -342,7 +342,7 @@ public abstract class AbstractHarvester
 
 	protected abstract void doInit(Element entry) throws BadInputEx;
 
-	protected abstract void doDestroy();
+	protected abstract void doDestroy(Dbms dbms) throws SQLException;
 
 	protected abstract String doAdd(Dbms dbms, Element node)
 											throws BadInputEx, SQLException;
@@ -416,7 +416,7 @@ public abstract class AbstractHarvester
 	{
 		String categId = settingMan.add(dbms, path, "categories", "");
 
-		for (int id : params.getCategories())
+		for (String id : params.getCategories())
 			settingMan.add(dbms, "id:"+ categId, "category", id);
 	}
 

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
+import jeeves.utils.Util;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.lib.Lib;
@@ -61,9 +62,9 @@ public class GeonetParams extends AbstractParams
 		Element site     = node.getChild("site");
 		Element searches = node.getChild("searches");
 
-		host    = getValue(site, "host",    "");
-		port    = getValue(site, "port",    80);
-		servlet = getValue(site, "servlet", "geonetwork");
+		host    = Util.getParam(site, "host",    "");
+		port    = Util.getParam(site, "port",    80);
+		servlet = Util.getParam(site, "servlet", "geonetwork");
 
 		checkPort(port);
 		addSearches(searches);
@@ -82,9 +83,9 @@ public class GeonetParams extends AbstractParams
 		Element site     = node.getChild("site");
 		Element searches = node.getChild("searches");
 
-		host    = getValue(site, "host",    host);
-		port    = getValue(site, "port",    port);
-		servlet = getValue(site, "servlet", servlet);
+		host    = Util.getParam(site, "host",    host);
+		port    = Util.getParam(site, "port",    port);
+		servlet = Util.getParam(site, "servlet", servlet);
 
 		checkPort(port);
 
@@ -140,13 +141,13 @@ public class GeonetParams extends AbstractParams
 
 			Search s = new Search();
 
-			s.freeText = getValue(search, "freeText", "");
-			s.title    = getValue(search, "title",    "");
-			s.abstrac  = getValue(search, "abstract", "");
-			s.keywords = getValue(search, "keywords", "");
-			s.digital  = getValue(search, "digital",  false);
-			s.hardcopy = getValue(search, "hardcopy", false);
-			s.siteId   = getValue(search, "siteId",   "");
+			s.freeText = Util.getParam(search, "freeText", "");
+			s.title    = Util.getParam(search, "title",    "");
+			s.abstrac  = Util.getParam(search, "abstract", "");
+			s.keywords = Util.getParam(search, "keywords", "");
+			s.digital  = Util.getParam(search, "digital",  false);
+			s.hardcopy = Util.getParam(search, "hardcopy", false);
+			s.siteId   = Util.getParam(search, "siteId",   "");
 
 			alSearches.add(s);
 

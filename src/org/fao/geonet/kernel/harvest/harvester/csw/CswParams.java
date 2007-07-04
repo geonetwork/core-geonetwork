@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester.csw;
 import java.util.ArrayList;
 import java.util.Iterator;
 import jeeves.exceptions.BadInputEx;
+import jeeves.utils.Util;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;
@@ -59,8 +60,8 @@ public class CswParams extends AbstractParams
 		Element site     = node.getChild("site");
 		Element searches = node.getChild("searches");
 
-		capabUrl = getValue(site, "capabilitiesUrl", "");
-		icon     = getValue(site, "icon",            "default.gif");
+		capabUrl = Util.getParam(site, "capabilitiesUrl", "");
+		icon     = Util.getParam(site, "icon",            "default.gif");
 
 		addSearches(searches);
 	}
@@ -78,8 +79,8 @@ public class CswParams extends AbstractParams
 		Element site     = node.getChild("site");
 		Element searches = node.getChild("searches");
 
-		capabUrl = getValue(site, "capabilitiesUrl", capabUrl);
-		icon     = getValue(site, "icon",            icon);
+		capabUrl = Util.getParam(site, "capabilitiesUrl", capabUrl);
+		icon     = Util.getParam(site, "icon",            icon);
 
 		//--- if some search queries are given, we drop the previous ones and
 		//--- set these new ones
@@ -133,10 +134,10 @@ public class CswParams extends AbstractParams
 
 			Search s = new Search();
 
-			s.freeText = getValue(search, "freeText", "").trim();
-			s.title    = getValue(search, "title",    "").trim();
-			s.abstrac  = getValue(search, "abstract", "").trim();
-			s.subject  = getValue(search, "subject",  "").trim();
+			s.freeText = Util.getParam(search, "freeText", "").trim();
+			s.title    = Util.getParam(search, "title",    "").trim();
+			s.abstrac  = Util.getParam(search, "abstract", "").trim();
+			s.subject  = Util.getParam(search, "subject",  "").trim();
 
 			alSearches.add(s);
 		}

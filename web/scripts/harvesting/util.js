@@ -91,15 +91,49 @@ Every.build = function(days, hours, mins)
 //===
 //=====================================================================================
 
-function InfoService(xmlLoader, type, callBack)
+function InfoService(xmlLoader, type, callBack, forwardUrl, username, password)
 {
 	var loader   = xmlLoader;
 	var callBackF= callBack;	
 
-	var request = ker.createRequest('type', type);
+	if (forwardUrl == null)
+	{
+		var request = ker.createRequest('type', type);
 	
-	ker.send('xml.info', request, ker.wrap(this, retrieve_OK));
+		ker.send('xml.info', request, ker.wrap(this, retrieve_OK));
+	}
+	else
+	{
+		var accountTemp =
+			'<account>'+
+			'   <username>{USER}</username>'+
+			'   <password>{PASS}</password>'+
+			'</account>';
+		
+		var account = '';
+		
+		if (username != null)
+			account = str.substitute(accountTemp, { USER : username, PASS : password});
+			
+		var forwardTemp =
+			'<request>'+
+			'   <site>'+
+			'      <url>{URL}</url>'+
+			'      <type>geonetwork</type>'+
+					 account +
+			'   </site>'+
+			'   <params>'+
+			'      <request>'+
+			'         <type>{TYPE}</type>'+
+			'      </request>'+ 
+			'   </params>'+
+			'</request>';
 
+		var request = str.substitute(forwardTemp, { URL : forwardUrl, TYPE : type });
+
+		ker.send('xml.forward', request, ker.wrap(this, retrieve_OK));
+	}
+        
 //=====================================================================================
 
 function retrieve_OK(xmlRes)

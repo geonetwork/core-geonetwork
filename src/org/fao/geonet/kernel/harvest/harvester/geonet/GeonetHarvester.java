@@ -23,32 +23,16 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadServerResponseEx;
-import jeeves.exceptions.UserNotFoundEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
-import jeeves.utils.XmlRequest;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
-import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
-import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
@@ -61,32 +45,7 @@ public class GeonetHarvester extends AbstractHarvester
 	//---
 	//--------------------------------------------------------------------------
 
-	public static void init(ServiceContext context) throws Exception
-	{
-		//--- init caching structures
-
-		try
-		{
-			Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-			List sites = dbms.select("SELECT siteId, name FROM KnownNodes").getChildren();
-
-			for (Iterator i=sites.iterator(); i.hasNext();)
-			{
-				Element rec = (Element) i.next();
-
-				String siteId = rec.getChildText("siteid");
-				String name   = rec.getChildText("name");
-
-				htSiteIdName.put(siteId, name);
-			}
-		}
-		catch (Exception e)
-		{
-			context.warning("Cannot cache siteId -> name mapping : "+ e.getMessage());
-			throw e;
-		}
-	}
+	public static void init(ServiceContext context) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -114,7 +73,7 @@ public class GeonetHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doDestroy() {}
+	protected void doDestroy(Dbms dbms) {}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -124,48 +83,17 @@ public class GeonetHarvester extends AbstractHarvester
 
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
-		//--- retrieve/initialize information
+		params = new GeonetParams(dataMan);
 
+		//--- retrieve/initialize information
 		params.create(node);
 
-		//--- setup geonetwork node
+		//--- force the creation of a new uuid
+		params.uuid = UUID.randomUUID().toString();
 
-		String id   = settingMan.add(dbms, "harvesting", "node", getType());
-		String path = "id:"+ id;
+		String id = settingMan.add(dbms, "harvesting", "node", getType());
 
-		String siteID    = settingMan.add(dbms, path, "site",    "");
-		String optionsID = settingMan.add(dbms, path, "options", "");
-		String infoID    = settingMan.add(dbms, path, "info",    "");
-
-		//--- setup site node ----------------------------------------
-
-		settingMan.add(dbms, "id:"+siteID, "name",    node.getAttributeValue("name"));
-		settingMan.add(dbms, "id:"+siteID, "host",    params.host);
-		settingMan.add(dbms, "id:"+siteID, "port",    params.port);
-		settingMan.add(dbms, "id:"+siteID, "servlet", params.servlet);
-
-		String useAccID = settingMan.add(dbms, "id:"+siteID, "useAccount", params.useAccount);
-
-		settingMan.add(dbms, "id:"+useAccID, "username", params.username);
-		settingMan.add(dbms, "id:"+useAccID, "password", params.password);
-
-		//--- setup search nodes ---------------------------------------
-
-		addSearches(dbms, path, params);
-
-		//--- setup options node ---------------------------------------
-
-		settingMan.add(dbms, "id:"+optionsID, "every",        params.every);
-		settingMan.add(dbms, "id:"+optionsID, "createGroups", params.createGroups);
-		settingMan.add(dbms, "id:"+optionsID, "createCateg",  params.createCateg);
-		settingMan.add(dbms, "id:"+optionsID, "oneRunOnly",   params.oneRunOnly);
-		settingMan.add(dbms, "id:"+optionsID, "status",       Status.INACTIVE);
-
-		//--- setup stats node ----------------------------------------
-
-		settingMan.add(dbms, "id:"+infoID, "lastRun", "");
-
-		updateKnownNodes(dbms);
+		storeNode(dbms, params, "id:"+id);
 
 		return id;
 	}
@@ -181,82 +109,58 @@ public class GeonetHarvester extends AbstractHarvester
 		//--- update variables
 
 		GeonetParams copy = params.copy();
+
+		//--- update variables
 		copy.update(node);
 
-		//--- update database
-
-		Element site     = node.getChild("site");
-		Element opt      = node.getChild("options");
-		Element searches = node.getChild("searches");
-		Element account  = (site == null) ? null : site.getChild("account");
-
 		String path = "harvesting/id:"+ id;
-		String name = node.getAttributeValue("name");
 
-		Map<String, Object> values = new HashMap<String, Object>();
+		settingMan.removeChildren(dbms, path);
 
-		if (name != null)
-			values.put(path +"/site/name", name);
-
-		setValue(values, path +"/site/host",                site,    "host");
-		setValue(values, path +"/site/port",                site,    "port");
-		setValue(values, path +"/site/servlet",             site,    "servlet");
-
-		setValue(values, path +"/site/useAccount",          account, "use");
-		setValue(values, path +"/site/useAccount/username", account, "username");
-		setValue(values, path +"/site/useAccount/password", account, "password");
-
-		setValue(values, path +"/options/every",            opt, "every");
-		setValue(values, path +"/options/createGroups",     opt, "createGroups");
-		setValue(values, path +"/options/createCateg",      opt, "createCateg");
-		setValue(values, path +"/options/oneRunOnly",       opt, "oneRunOnly");
-
-		settingMan.setValues(dbms, values);
-
-		//--- update the search entry if some 'search' elements are provided
-
-		if (searches != null)
-		{
-			//--- remove all search entries
-
-			Iterator oldSearches = settingMan.get(path ,1).getChild("children").getChildren("search").iterator();
-
-			while (oldSearches.hasNext())
-			{
-				Element search   = (Element) oldSearches.next();
-				String  searchId = search.getAttributeValue("id");
-
-				settingMan.remove(dbms, path +"/id:"+ searchId);
-			}
-
-			//--- add new search entries
-
-			addSearches(dbms, path, copy);
-		}
+		//--- update database
+		storeNode(dbms, copy, path);
 
 		//--- we update a copy first because if there is an exception GeonetParams
 		//--- could be half updated and so it could be in an inconsistent state
 
 		params = copy;
-
-		updateKnownNodes(dbms);
 	}
 
 	//---------------------------------------------------------------------------
 
-	private void addSearches(Dbms dbms, String path, GeonetParams params) throws SQLException
+	protected void storeNodeExtra(Dbms dbms, AbstractParams p, String path,
+											String siteId, String optionsId) throws SQLException
 	{
+		GeonetParams params = (GeonetParams) p;
+
+		settingMan.add(dbms, "id:"+siteId, "host",    params.host);
+		settingMan.add(dbms, "id:"+siteId, "port",    params.port);
+		settingMan.add(dbms, "id:"+siteId, "servlet", params.servlet);
+
+		//--- store search nodes
+
 		for (Search s : params.getSearches())
 		{
 			String  searchID = settingMan.add(dbms, path, "search", "");
 
-			settingMan.add(dbms, "id:"+searchID, "freeText", s.freeText);
-			settingMan.add(dbms, "id:"+searchID, "title",    s.title);
-			settingMan.add(dbms, "id:"+searchID, "abstract", s.abstrac);
-			settingMan.add(dbms, "id:"+searchID, "keywords", s.keywords);
-			settingMan.add(dbms, "id:"+searchID, "digital",  s.digital);
-			settingMan.add(dbms, "id:"+searchID, "hardcopy", s.hardcopy);
-			settingMan.add(dbms, "id:"+searchID, "siteId",   s.siteId);
+			settingMan.add(dbms, "id:"+searchID, "freeText",   s.freeText);
+			settingMan.add(dbms, "id:"+searchID, "title",      s.title);
+			settingMan.add(dbms, "id:"+searchID, "abstract",   s.abstrac);
+			settingMan.add(dbms, "id:"+searchID, "keywords",   s.keywords);
+			settingMan.add(dbms, "id:"+searchID, "digital",    s.digital);
+			settingMan.add(dbms, "id:"+searchID, "hardcopy",   s.hardcopy);
+			settingMan.add(dbms, "id:"+searchID, "sourceUuid", s.sourceUuid);
+			settingMan.add(dbms, "id:"+searchID, "sourceName", s.sourceName);
+		}
+
+		//--- store group mapping
+
+		for (Group g : params.getGroupCopyPolicy())
+		{
+			String  groupID = settingMan.add(dbms, path, "groupCopyPolicy", "");
+
+			settingMan.add(dbms, "id:"+groupID, "name",   g.name);
+			settingMan.add(dbms, "id:"+groupID, "policy", g.policy);
 		}
 	}
 
@@ -276,25 +180,6 @@ public class GeonetHarvester extends AbstractHarvester
 
 	protected void doAddInfo(Element node)
 	{
-		Element info     = node.getChild("info");
-		Element searches = node.getChild("searches");
-
-		//--- add 'name' element for each siteId in searches
-
-		if (searches != null)
-			for (Iterator i=searches.getChildren().iterator(); i.hasNext();)
-			{
-				Element search = (Element) i.next();
-
-				String siteId   = search.getChildText("siteId");
-				String siteName = htSiteIdName.get(siteId);
-
-				//--- do we know about this siteId ?
-
-				if (siteName != null)
-					search.addContent(new Element("siteName").setText(siteName));
-			}
-
 		//--- if the harvesting is not started yet, we don't have any info
 
 		if (result == null)
@@ -302,26 +187,18 @@ public class GeonetHarvester extends AbstractHarvester
 
 		//--- ok, add proper info
 
-		for (AlignerResult ar : result.alResult)
-		{
-			String siteName = htSiteIdName.get(ar.siteId);
+		Element info = node.getChild("info");
+		Element res  = new Element("result");
 
-			if (siteName != null)
-					siteName = "?"+ ar.siteId +"?";
+		add(res, "total",         result.totalMetadata);
+		add(res, "added",         result.addedMetadata);
+		add(res, "updated",       result.updatedMetadata);
+		add(res, "unchanged",     result.unchangedMetadata);
+		add(res, "unknownSchema", result.unknownSchema);
+		add(res, "removed",       result.locallyRemoved);
+		add(res, "unretrievable", result.unretrievable);
 
-			Element site = new Element("search");
-			site.setAttribute("siteId",   ar.siteId);
-			site.setAttribute("siteName", siteName);
-
-			add(site, "total",     ar.totalMetadata);
-			add(site, "added",     ar.addedMetadata);
-			add(site, "updated",   ar.updatedMetadata);
-			add(site, "unchanged", ar.unchangedMetadata);
-			add(site, "skipped",   ar.schemaSkipped+ ar.uuidSkipped);
-			add(site, "removed",   ar.locallyRemoved);
-
-			info.addContent(site);
-		}
+		info.addContent(res);
 	}
 
 	//---------------------------------------------------------------------------
@@ -334,205 +211,8 @@ public class GeonetHarvester extends AbstractHarvester
 	{
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
-		CategoryMapper localCateg = new CategoryMapper(dbms);
-		GroupMapper    localGroups= new GroupMapper(dbms);
-
-		XmlRequest req = new XmlRequest(params.host, params.port);
-
-		Lib.net.setupProxy(context, req);
-
-		//--- login
-
-		if (params.useAccount)
-		{
-			log.info("Login into : "+ params.name);
-
-			req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_LOGIN);
-			req.addParam("username", params.username);
-			req.addParam("password", params.password);
-
-			Element response = req.execute();
-
-			if (!response.getName().equals("ok"))
-				throw new UserNotFoundEx(params.username);
-		}
-
-		//--- retrieve info on categories and groups
-
-		log.info("Retrieving info on categories and groups from : "+ params.name);
-
-		req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_INFO);
-		req.clearParams();
-		req.addParam("type", "site");
-		req.addParam("type", "categories");
-		req.addParam("type", "groups");
-		req.addParam("type", "knownNodes");
-
-		Element remoteInfo = req.execute();
-
-		if (!remoteInfo.getName().equals("info"))
-			throw new BadServerResponseEx(remoteInfo);
-
-		//--- search
-
-		result = new GeonetResult();
-
-		Aligner aligner = new Aligner(log, req, params, dataMan, dbms, context,
-												localCateg, localGroups, remoteInfo);
-
-		for(Search s : params.getSearches())
-		{
-			log.info("Searching on : "+ params.name +"/"+ s.siteId);
-
-			req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_SEARCH);
-
-			Element searchResult = req.execute(s.createRequest());
-
-			log.debug("Obtained:\n"+Xml.getString(searchResult));
-
-			//--- site alignment
-			AlignerResult ar = aligner.align(searchResult, s.siteId);
-
-			//--- collect some stats
-			result.alResult.add(ar);
-		}
-
-		//--- logout
-
-		if (params.useAccount)
-		{
-			log.info("Logout from : "+ params.name);
-
-			req.clearParams();
-			req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_LOGOUT);
-		}
-
-		updateKnownNodes(log, dbms, remoteInfo);
-		dbms.commit();
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- KnownNodes update
-	//---
-	//---------------------------------------------------------------------------
-
-	private void updateKnownNodes(Dbms dbms)
-	{
-		Logger log = Log.createLogger(Geonet.HARVEST_MAN);
-
-		XmlRequest req = new XmlRequest(params.host, params.port);
-		Lib.net.setupProxy(context, req);
-
-		req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_INFO);
-		req.clearParams();
-		req.addParam("type", "site");
-		req.addParam("type", "knownNodes");
-
-		log.info("Retrieving site info and known nodes from : "+ getParams().name);
-
-		try
-		{
-			Element remoteInfo = req.execute();
-
-			if (remoteInfo.getName().equals("info"))
-				updateKnownNodes(log, dbms, remoteInfo);
-		}
-		catch (Exception e)
-		{
-			log.warning("Cannot retrieve info from : "+ getParams().name);
-			log.warning("  (C) Excep : "+ e.getMessage());
-		}
-	}
-
-	//---------------------------------------------------------------------------
-
-	private void updateKnownNodes(Logger log, Dbms dbms, Element info)
-	{
-		log.info("Updating known nodes list");
-
-		Element site = info.getChild("site");
-
-		String name    = site.getChildText("name");
-		String siteId  = site.getChildText("siteId");
-		String host    = params.host;
-		int    port    = params.port;
-		String servlet = params.servlet;
-
-		updateNode(log, dbms, siteId, name, host, port, servlet);
-
-		Element nodes = site.getChild("knownNodes");
-
-		if (nodes != null)
-			for (Iterator i=nodes.getChildren().iterator(); i.hasNext();)
-			{
-				Element node = (Element) i.next();
-
-				name    = node.getChildText("name");
-				siteId  = node.getChildText("siteId");
-				host    = node.getChildText("host");
-				servlet = node.getChildText("servlet");
-				port    = Integer.parseInt(node.getChildText("port"));
-
-				updateNode(log, dbms, siteId, name, host, port, servlet);
-			}
-	}
-
-	//---------------------------------------------------------------------------
-
-	private void updateNode(Logger log, Dbms dbms, String siteId, String name,
-									String host, int port, String servlet)
-	{
-		retrieveNodeLogo(log, host, port, servlet, siteId);
-
-		String updQuery = "UPDATE KnownNodes SET name=?, host=?, port=?, servlet=? WHERE siteId=?";
-		String insQuery = "INSERT INTO KnownNodes(siteId, name, host, port, servlet) VALUES(?,?,?,?,?)";
-
-		try
-		{
-			int res = dbms.execute(updQuery, name, host, port, servlet, siteId);
-
-			if (res != 0)
-				log.debug("  - Updated node : "+ name +" ("+ siteId +")");
-			else
-			{
-				dbms.execute(insQuery, siteId, name, host, port, servlet);
-				log.debug("  - Inserted new node : "+ name +" ("+ siteId +")");
-			}
-
-			//--- save siteId -> name link for caching purposes
-			htSiteIdName.put(siteId, name);
-		}
-		catch(Exception e)
-		{
-			log.warning("Cannot update known nodes : "+ e.getMessage());
-		}
-	}
-
-	//---------------------------------------------------------------------------
-
-	private void retrieveNodeLogo(Logger log, String host, int port, String servlet, String siteId)
-	{
-		String logo = siteId +".png";
-
-		XmlRequest req = new XmlRequest(host, port);
-		Lib.net.setupProxy(context, req);
-		req.setAddress("/"+ servlet + Geonet.Path.LOGOS + logo);
-
-		File logoFile = new File(context.getAppPath() + Geonet.Path.LOGOS + logo);
-
-		try
-		{
-			req.executeLarge(logoFile);
-		}
-		catch (IOException e)
-		{
-			log.warning("Cannot retrieve logo file from : "+ host+":"+port);
-			log.warning("  (C) Logo  : "+ logo);
-			log.warning("  (C) Excep : "+ e.getMessage());
-
-			logoFile.delete();
-		}
+		Harvester h = new Harvester(log, context, dbms, params);
+		result = h.harvest();
 	}
 
 	//---------------------------------------------------------------------------
@@ -543,16 +223,19 @@ public class GeonetHarvester extends AbstractHarvester
 
 	private GeonetParams params;
 	private GeonetResult result;
-
-	//--- better to have a synchronized hashtable here than a HashMap
-	private static Hashtable<String, String> htSiteIdName = new Hashtable<String, String>();
 }
 
 //=============================================================================
 
 class GeonetResult
 {
-	public ArrayList<AlignerResult> alResult = new ArrayList<AlignerResult>();
+	public int totalMetadata;
+	public int addedMetadata;
+	public int updatedMetadata;
+	public int unchangedMetadata;
+	public int locallyRemoved;
+	public int unknownSchema;
+	public int unretrievable;
 }
 
 //=============================================================================
