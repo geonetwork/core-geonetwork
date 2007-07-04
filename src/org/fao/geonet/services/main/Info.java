@@ -25,14 +25,17 @@ package org.fao.geonet.services.main;
 
 import java.sql.SQLException;
 import java.util.Iterator;
+import java.util.Set;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
@@ -61,7 +64,8 @@ public class Info implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SettingManager sm = gc.getSettingManager();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
@@ -84,7 +88,7 @@ public class Info implements Service
 				result.addContent(Lib.local.retrieve(dbms, "Categories"));
 
 			else if (type.equals("groups"))
-				result.addContent(Lib.local.retrieve(dbms, "Groups", null, "id"));
+				result.addContent(getGroups(context, dbms));
 
 			else if (type.equals("operations"))
 				result.addContent(Lib.local.retrieve(dbms, "Operations"));
@@ -92,11 +96,8 @@ public class Info implements Service
 			else if (type.equals("regions"))
 				result.addContent(Lib.local.retrieve(dbms, "Regions"));
 
-			else if (type.equals("knownNodes"))
-				result.addContent(getKnownNodes(dbms));
-
-			else if (type.equals("harvestingNodes"))
-				result.addContent(getHarvestingNodes(dbms));
+			else if (type.equals("sources"))
+				result.addContent(getSources(dbms, sm));
 
 			else
 				throw new BadParameterEx("type", type);
@@ -113,31 +114,63 @@ public class Info implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	private Element getKnownNodes(Dbms dbms) throws SQLException
+	private Element getGroups(ServiceContext context, Dbms dbms) throws SQLException
 	{
-		Element result = dbms.select("SELECT * FROM KnownNodes ORDER BY name");
+		UserSession session = context.getUserSession();
 
-		Iterator i = result.getChildren().iterator();
+		if (!session.isAuthenticated())
+			return Lib.local.retrieve(dbms, "Groups", "id < 2", "id");
 
-		while (i.hasNext())
+		//--- retrieve user groups
+
+		if (Geonet.Profile.ADMINISTRATOR.equals(session.getProfile()))
+			return Lib.local.retrieve(dbms, "Groups", null, "id");
+		else
 		{
-			Element record = (Element) i.next();
-			record.getChild("siteid").setName("siteId");
-		}
+			String query = "SELECT groupId as id FROM UserGroups WHERE "+
+								"userId=" + session.getUserId();
 
-		return result.setName("knownNodes");
+			Set<String> ids = Lib.element.getIds(dbms.select(query));
+			Element groups = Lib.local.retrieve(dbms, "Groups", null, "id");
+
+			return Lib.element.pruneChildren(groups, ids);
+		}
 	}
 
 	//--------------------------------------------------------------------------
 
-	private Element getHarvestingNodes(Dbms dbms) throws SQLException
+	private Element getSources(Dbms dbms, SettingManager sm) throws SQLException
 	{
-		String query = "SELECT name, source, count(*) as num "+
-							"FROM   Metadata, KnownNodes "+
-							"WHERE  source=siteId "+
-							"GROUP BY source";
+		String  query   = "SELECT * FROM Sources ORDER BY name";
+		Element sources = new Element("sources");
 
-		return dbms.select(query).setName("harvestingNodes");
+		String siteId   = sm.getValue("system/site/siteId");
+		String siteName = sm.getValue("system/site/name");
+
+		add(sources, siteId, siteName);
+
+		for (Object o : dbms.select(query).getChildren())
+		{
+			Element rec = (Element) o;
+
+			String uuid = rec.getChildText("uuid");
+			String name = rec.getChildText("name");
+
+			add(sources, uuid, name);
+		}
+
+		return sources;
+	}
+
+	//--------------------------------------------------------------------------
+
+	private void add(Element sources, String uuid, String name)
+	{
+		Element source = new Element("source")
+					.addContent(new Element("uuid").setText(uuid))
+					.addContent(new Element("name").setText(name));
+
+		sources.addContent(source);
 	}
 
 	//--------------------------------------------------------------------------

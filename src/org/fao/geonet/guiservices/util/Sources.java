@@ -63,7 +63,7 @@ public class Sources implements Service
 
 		//--- retrieve known nodes
 
-		Element nodes = dbms.select("SELECT siteId, name FROM KnownNodes");
+		Element nodes = dbms.select("SELECT uuid as siteId, name FROM Sources");
 		nodes.addContent(local);
 
 		return nodes;
