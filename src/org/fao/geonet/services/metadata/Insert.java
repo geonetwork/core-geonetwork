@@ -97,15 +97,6 @@ public class Insert implements Service
 			dataMan.validate(schema, xml);
 
 		//-----------------------------------------------------------------------
-		//--- we have to explicitly set the prefix of iso 19139 metadata
-
-		if (schema.equals("iso19139"))
-		{
-			Namespace ns = Namespace.getNamespace("gmd", xml.getNamespace().getURI());
-			fixNamespace(xml, ns);
-		}
-
-		//-----------------------------------------------------------------------
 		//--- if the uuid does not exist and is not a template we generate it
 
 		String uuid;

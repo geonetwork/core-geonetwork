@@ -549,6 +549,9 @@ public class DataManager
 		if (source == null)
 			source = getSiteID();
 
+		//--- force namespace prefix for iso19139 metadata
+		setNamespacePrefix(md);
+
 		//--- Note: we cannot index metadata here. Indexing is done in the harvesting part
 
 		return XmlSerializer.insert(dbms, schema, md, id, source, uuid, createDate,
@@ -577,6 +580,9 @@ public class DataManager
 
 		if (isTemplate.equals("n"))
 			xml = updateFixedInfo(schema, Integer.toString(serial), xml, uuid);
+
+		//--- force namespace prefix for iso19139 metadata
+		setNamespacePrefix(xml);
 
 		//--- store metadata
 
@@ -1415,22 +1421,6 @@ public class DataManager
 		setOperation(dbms, id, groupId, AccessManager.OPER_NOTIFY);
 		setOperation(dbms, id, groupId, AccessManager.OPER_ADMIN);
 		setOperation(dbms, id, groupId, AccessManager.OPER_DYNAMIC);
-//		setOperation(dbms, id, groupId, AccessManager.OPER_FEATURED);
-
-		//--- store default operations
-
-//		List listDef = dbms.select("SELECT groupId, operationId FROM DefaultOper "+
-//											"WHERE groupId > 1 AND groupId <> "+groupId).getChildren();
-//
-//		for(int i=0; i<listDef.size(); i++)
-//		{
-//			Element elRec = (Element) listDef.get(i);
-//
-//			String sGrp  = elRec.getChildText("groupid");
-//			String sOper = elRec.getChildText("operationid");
-//
-//			setOperation(dbms, id, sGrp, sOper);
-//		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -1438,6 +1428,36 @@ public class DataManager
 	private String getSiteID()
 	{
 		return settingMan.getValue("system/site/siteId");
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Static methods
+	//---
+	//---------------------------------------------------------------------------
+
+	public static void setNamespacePrefix(Element md)
+	{
+		//--- if the metadata has no namespace, we must skip this phase
+
+		if (md.getNamespace() == Namespace.NO_NAMESPACE)
+			return;
+
+		//--- set prefix for iso19139 metadata
+
+		Namespace ns = Namespace.getNamespace("gmd", md.getNamespace().getURI());
+		setNamespacePrefix(md, ns);
+	}
+
+	//---------------------------------------------------------------------------
+
+	private static void setNamespacePrefix(Element md, Namespace ns)
+	{
+		if (md.getNamespaceURI().equals(ns.getURI()))
+			md.setNamespace(ns);
+
+		for (Object o : md.getChildren())
+			setNamespacePrefix((Element) o, ns);
 	}
 
 	//--------------------------------------------------------------------------

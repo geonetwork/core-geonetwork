@@ -41,6 +41,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.utils.BinaryFile;
 import org.fao.gast.lib.druid.Import;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Document;
@@ -472,6 +473,7 @@ public class DatabaseLib
 					Element  xml  = Lib.metadata.updateFixedInfo(serial+"", doc.getRootElement(),
 																			  uuid, date, schema.getName(), siteURL);
 
+					DataManager.setNamespacePrefix(xml);
 					XmlSerializer.insert(dbms, schema.getName(), xml, serial,
 											   siteId, uuid, date, date, "y", null);
 
