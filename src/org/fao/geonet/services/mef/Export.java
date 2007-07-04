@@ -60,7 +60,7 @@ public class Export implements Service
 		String uuid    = Util.getParam(params, "uuid");
 		String id      = dm.getMetadataId(dbms, uuid);
 		String format  = Util.getParam(params, "format");
-		String skipUUID= Util.getParam(params, "skipUuid", "true");
+		String skipUUID= Util.getParam(params, "skipUuid", "false");
 
 		if (id == null)
 			throw new MetadataNotFoundEx("uuid="+uuid);
