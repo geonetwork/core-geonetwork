@@ -65,17 +65,17 @@ public class Set implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		String  id            = Util.getParam    (params, Params.ID);
-		String  type          = Util.getParam    (params, Params.TYPE);
-		String  version       = Util.getParam    (params, Params.VERSION);
-		String  file          = Util.getParam    (params, Params.FNAME);
-		String  scalingDir    = Util.getParam    (params, Params.SCALING_DIR);
-		int     scalingFactor = Util.getParamInt (params, Params.SCALING_FACTOR);
-		boolean scaling       = Util.getParamBool(params, Params.SCALING, false);
+		String  id            = Util.getParam     (params, Params.ID);
+		String  type          = Util.getParam     (params, Params.TYPE);
+		String  version       = Util.getParam     (params, Params.VERSION);
+		String  file          = Util.getParam     (params, Params.FNAME);
+		String  scalingDir    = Util.getParam     (params, Params.SCALING_DIR);
+		boolean scaling       = Util.getParam     (params, Params.SCALING, false);
+		int     scalingFactor = Util.getParamAsInt(params, Params.SCALING_FACTOR);
 
-		boolean createSmall        = Util.getParamBool(params, Params.CREATE_SMALL, false);
-		String  smallScalingDir    = Util.getParam    (params, Params.SMALL_SCALING_DIR,   "");
-		int     smallScalingFactor = Util.getParamInt (params, Params.SMALL_SCALING_FACTOR, 0);
+		boolean createSmall        = Util.getParam(params, Params.CREATE_SMALL,        false);
+		String  smallScalingDir    = Util.getParam(params, Params.SMALL_SCALING_DIR,   "");
+		int     smallScalingFactor = Util.getParam(params, Params.SMALL_SCALING_FACTOR, 0);
 
 		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_EDIT);
 
