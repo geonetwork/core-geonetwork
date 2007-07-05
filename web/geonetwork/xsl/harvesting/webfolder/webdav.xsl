@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	
+	<!-- ============================================================================================= -->
+	<!-- === editPanel -->
+	<!-- ============================================================================================= -->
+
+	<xsl:template name="editPanel-WD">
+		<div id="wd.editPanel">
+			<xsl:call-template name="host-WD"/>
+			<xsl:call-template name="options-WD"/>
+			<xsl:call-template name="privileges-WD"/>
+		</div>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template name="host-WD">
+		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/site"/></h1>
+	
+		<table border="0">
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/name"/></td>
+				<td class="padded"><input id="wd.name" class="content" type="text" value="" size="30"/></td>
+			</tr>
+
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/url"/></td>
+				<td class="padded"><input id="wd.url" class="content" type="text" value="" size="30"/></td>
+			</tr>
+
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/useAccount"/></td>
+				<td class="padded"><input id="wd.useAccount" type="checkbox" checked="on"/></td>
+			</tr>
+
+			<tr>
+				<td/>
+				<td>
+					<table id="wd.account">
+						<tr>
+							<td class="padded"><xsl:value-of select="/root/gui/harvesting/username"/></td>
+							<td class="padded"><input id="wd.username" class="content" type="text" value="" size="20"/></td>
+						</tr>
+		
+						<tr>
+							<td class="padded"><xsl:value-of select="/root/gui/harvesting/password"/></td>
+							<td class="padded"><input id="wd.password" class="content" type="password" value="" size="20"/></td>
+						</tr>
+					</table>
+				</td>
+			</tr>			
+		</table>
+	</xsl:template>
+	
+	<!-- ============================================================================================= -->
+	
+	<xsl:template name="options-WD">
+		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/options"/></h1>
+
+		<table border="0">
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/every"/></td>
+				<td class="padded">
+					<input id="wd.every.days"  class="content" type="text" size="2"/> :
+					<input id="wd.every.hours" class="content" type="text" size="2"/> :
+					<input id="wd.every.mins"  class="content" type="text" size="2"/>
+					&#160;
+					<xsl:value-of select="/root/gui/harvesting/everySpec"/>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/oneRun"/></td>
+				<td class="padded"><input id="wd.oneRunOnly" type="checkbox" value=""/></td>
+			</tr>
+			
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/validate"/></td>
+				<td class="padded"><input id="wd.validate" type="checkbox" value=""/></td>
+			</tr>
+
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/structure"/></td>
+				<td class="padded"><input id="wd.structure" type="checkbox" value=""/></td>
+			</tr>
+
+		</table>
+	</xsl:template>
+	
+	<!-- ============================================================================================= -->
+
+	<xsl:template name="privileges-WD">
+		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/privileges"/></h1>
+		
+		<table>
+			<tr>
+				<td class="padded" valign="top"><xsl:value-of select="/root/gui/harvesting/groups"/></td>
+				<td class="padded"><select id="wd.groups" class="content" size="8" multiple="on"/></td>					
+				<td class="padded" valign="top">
+					<div align="center">
+						<button class="content" onclick="harvesting.webdav.addGroupRow()">
+							<xsl:value-of select="/root/gui/harvesting/add"/>
+						</button>
+						<p/>
+						<button class="content" onclick="harvesting.webdav.refreshGroups()">
+							<xsl:value-of select="/root/gui/harvesting/refresh"/>
+						</button>
+					</div>
+				</td>					
+			</tr>
+		</table>
+		
+		<table id="wd.privileges">
+			<tr>
+				<th class="padded"><xsl:value-of select="/root/gui/harvesting/group"/></th>
+				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='0']"/></th>
+				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='1']"/></th>
+				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='3']"/></th>
+				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='5']"/></th>
+				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='6']"/></th>
+				<th/>
+			</tr>
+		</table>
+		
+	</xsl:template>
+	
+	<!-- ============================================================================================= -->
+	
+</xsl:stylesheet>
