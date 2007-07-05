@@ -28,7 +28,14 @@
 	
 	<Call name="addWebApplication">
 		<Arg>/geonetwork</Arg>
-		<Arg>../web</Arg>
+		<Arg>../web/geonetwork</Arg>
+	</Call>
+	
+	<!-- =============================================================== -->
+	
+	<Call name="addWebApplication">
+		<Arg>/intermap</Arg>
+		<Arg>../web/intermap</Arg>
 	</Call>
 
 	<!-- =============================================================== -->
