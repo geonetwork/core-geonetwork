@@ -71,10 +71,22 @@ compiles a request
 			<xsl:with-param name="field" select="'any'"/>
 		</xsl:call-template>
 
-		<xsl:call-template name="textField">
-			<xsl:with-param name="expr" select="/request/themekey"/>
-			<xsl:with-param name="field" select="'keyword'"/>
-		</xsl:call-template>
+		<xsl:if test="string(/request/themekey) != ''">
+			<BooleanClause prohibited="false" required="true">
+				<BooleanQuery>
+					<xsl:for-each select="/request/themekey">
+						<xsl:if test="string(.) != '' ">
+							<BooleanClause required="false" prohibited="false">
+								<xsl:call-template name="compile">
+									<xsl:with-param name="expr" select="string(.)"/>
+									<xsl:with-param name="field" select="'keyword'"/>
+								</xsl:call-template>
+							</BooleanClause>
+						</xsl:if>
+					</xsl:for-each>
+				</BooleanQuery>
+			</BooleanClause>
+		</xsl:if>
 
 		<!-- digital and paper maps -->
 		
@@ -186,12 +198,23 @@ compiles a request
 		</xsl:choose>
 		
 		<!-- category -->
-		<xsl:if test="string(/request/category)!=''">
-			<BooleanClause required="true" prohibited="false">
-				<TermQuery fld="_cat" txt="{/request/category}"/>
+		<xsl:if test="string(/request/category) != ''">
+			<BooleanClause prohibited="false" required="true">
+				<BooleanQuery>
+					<xsl:for-each select="/request/category">
+						<xsl:if test="string(.) != '' ">
+							<BooleanClause required="false" prohibited="false">
+								<xsl:call-template name="compile">
+									<xsl:with-param name="expr" select="string(.)"/>
+									<xsl:with-param name="field" select="'_cat'"/>
+								</xsl:call-template>
+							</BooleanClause>
+						</xsl:if>
+					</xsl:for-each>
+				</BooleanQuery>
 			</BooleanClause>
 		</xsl:if>
-			
+
 		<!-- site id -->
 		<xsl:if test="string(/request/siteId)!=''">
 			<BooleanClause required="true" prohibited="false">
