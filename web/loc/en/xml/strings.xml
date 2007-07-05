@@ -216,9 +216,10 @@
 	<import>Import</import>
 	<infoTitle>Info</infoTitle>
 	<insert>Insert</insert>
-	<interactiveMap>Interactive Map</interactiveMap>
+	<interactiveMap>Interactive Map</interactiveMap>	
 	<interMapInfo>
 		<h1>Info in interactive maps</h1> You can find interactive maps by searching in GeoNetwork for digital data with an interactive map, or directly connet to a pre-configured map server. <p/> Supported map servers are <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial® Consortium</a> compliant WMS Map Servers and <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>.</interMapInfo>
+	<intermapSearch>Geographic search</intermapSearch>
 	<keywords>Keywords</keywords>
 	<keywordshelp>Select multiple keywords by holding the Ctrl-key when selecting with the mouse</keywordshelp>
 	<large_thumbnail>Click to see a large preview image</large_thumbnail>
