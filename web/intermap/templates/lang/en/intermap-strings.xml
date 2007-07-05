@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<abstract>Abstract</abstract>
+	<activate>Activate</activate>
+	<address>Address</address>
+	<addService>Add more maps</addService>
+	<bigger>Bigger map</bigger>
+	<cancel>Cancel</cancel>
+	<close>Close</close>
+	<choosemapfromlist>Please choose one or more map services from the list below</choosemapfromlist>
+	<choosemapserver>Please choose a map server from the list below or manually insert another map server</choosemapserver>
+	<choosepredefinedmap>Please choose a predefined map overlay from the list below or</choosepredefinedmap>
+	<connect>Connect</connect>
+	<contactInfo>Contact information:</contactInfo>
+	<contactPerson>Primary contact person:</contactPerson>
+	<contexts>Contexts</contexts>
+	<delete>[del]</delete>
+	<down>Move layer down</down>
+	<email>email:</email>
+	<error>[error]</error>
+	<errorText>Sorry, error connecting to the map server</errorText>
+	<extents>Change the selected time (temporal data)</extents>
+	<featuresfound>features found</featuresfound>
+	<findMapsGeoNetwork>Find more maps through GeoNetwork</findMapsGeoNetwork>
+	<findMapsMapServers>Add more maps by connecting to other Web Map Servers</findMapsMapServers>
+	<fullExtent>Zoom to the full map</fullExtent>
+	<gotoGeoNetwork>GeoNetwork</gotoGeoNetwork>
+	<gotoMapServers>Map Servers</gotoMapServers>
+	<homepage>Home page:</homepage>
+	<identify>Identify a feature on the map</identify>
+	<makeActive>Select to make this layer active (e.g. for Identify)</makeActive>
+	<info>info</info>
+	<keywords>Keywords:</keywords>
+	<layerinfo>Layer info</layerinfo>
+	<layers>Layers</layers>
+	<layersHide>Hide layer list</layersHide>
+	<layersShow>Show layer list</layersShow>
+	<legend>Show the legend</legend>
+	<listofmaps>List of maps</listofmaps>
+	<listofmapservers>List of map servers</listofmapservers>
+	<manually>create you own map</manually>
+	<map>Map</map>
+	<mapsfound>maps found</mapsfound>
+	<metadata>Metadata</metadata>
+	<newMap>Create a new map</newMap>
+	<noFeature>No features found</noFeature>
+	<noService>No maps found</noService>
+	<noStyle>Only the default style is available for this map</noStyle>
+	<oneService>One map found</oneService>
+	<ok>Ok</ok>
+	<oneFeature>One feature found</oneFeature>
+	<otherArcIMS>- Other ArcIMS server (specify below)</otherArcIMS>
+	<otherWMS>- Other WMS server (specify below)</otherWMS>
+	<position>Position:</position>
+	<print>Print the map</print>
+	<properties>Properties</properties>
+	<reCenter>Re-center the map</reCenter>
+	<refresh>Refresh</refresh>
+	<refreshNotification>Please click the "Refresh" button under the layer list to see this change.</refreshNotification>
+	<removeLayer>Remove layer</removeLayer>
+	<smaller>Smaller map</smaller>
+	<specify>Specify if other:</specify>
+	<style>Select the desired style</style>
+	<start>VAM Intermap</start>
+	<telephone>Telephone:</telephone>
+	<title>Intermap Open Source</title>
+	<transparency>Set transparency</transparency>
+	<up>Move layer up</up>
+	<wmsConfigForm>Layer properties</wmsConfigForm >
+	<zoomIn>Zoom in</zoomIn>
+	<zoomOut>Zoom out</zoomOut>
+	<getFeatures>GET FEATURES</getFeatures>
+</strings>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<profiles>
+	<!-- ====================================================================== -->
+
+	<profile name="Guest">
+		<allow service="map.getMain"/>
+		
+		<allow service="map.getMain.embedded"/>
+		<allow service="minimap.rebuild"/>		
+		
+		<allow service="banner"/>
+		<allow service="map.addServices"/>
+		<allow service="map.addServicesExt"/>
+		<allow service="map.getFrames"/>
+		<allow service="mapContexts.get"/>
+		<allow service="mapServers.listServers"/>
+		<allow service="mapServers.listServers.xml"/>
+		<allow service="mapServers.getServices"/>
+		<allow service="mapServers.getServices.embedded"/>
+		<allow service="mapServers.getServicesExt"/>
+		<allow service="mapServers.getServices.xml"/>
+		<allow service="map.get"/>
+		<allow service="map.getLayers"/>
+		<allow service="map.action"/>
+		<allow service="map.move"/>
+		<allow service="map.fullExtent"/>
+		<allow service="map.zoomToService"/>
+		<allow service="map.toggleImageSize"/>
+		<allow service="map.reset"/>
+		<allow service="map.identify"/>
+		<allow service="map.service.moveUp"/>
+		<allow service="map.service.moveDown"/>
+		<allow service="map.service.getLegend"/>
+		<allow service="map.service.wmsConfigForm"/>
+		<allow service="map.service.wmsConfig"/>
+		<allow service="map.service.showExtents"/>
+		<allow service="map.service.setExtents"/>
+		<allow service="map.service.showError"/>
+		<allow service="map.service.wmsLayerInfo"/>
+		<allow service="map.service.expand"/>
+		<allow service="map.service.collapse"/>
+		<allow service="map.refresh"/>
+		<allow service="map.getPrintImage"/>
+		<allow service="map.setContext"/>
+		<allow service="map.getFeatures"/>
+		<allow service="wmc.setContext"/>
+		<allow service="map.layers.deleteLayer"/>
+		<allow service="map.layers.getOrder"/>
+		<allow service="map.layers.setOrder"/>
+		<allow service="map.layers.setTransparency"/>
+		<allow service="map.layers.getInspectorData"/>
+		<allow service="map.layers.toggleVisibility"/>
+		<allow service="map.update"/>
+		<allow service="map.setAoi"/>
+		<allow service="map.unsetAoi"/>
+		<allow service="geonet.getGeonetRecords"/>
+		<allow service="map.layers.add"/>
+	</profile>
+
+	<!-- ====================================================================== -->
+</profiles>
+

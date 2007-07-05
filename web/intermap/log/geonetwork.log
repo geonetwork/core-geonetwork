@@ -1,0 +1,23 @@
+2005-07-05 00:53:45 | === Starting system ========================================
+2005-07-05 00:53:45 | Path    : /Users/sgiaccio/Documents/Work/VAM/intermap1.3/web/
+2005-07-05 00:53:45 | BaseURL : geonetwork
+2005-07-05 00:53:45 | Loading : /Users/sgiaccio/Documents/Work/VAM/intermap1.3/web/WEB-INF/config.xml
+2005-07-05 00:53:45 | Initializing general configuration...
+2005-07-05 00:53:45 | Raised exception during init
+2005-07-05 00:53:45 |    Exception : java.lang.IllegalArgumentException: The 'uploadDir' parameter is missing or empty
+2005-07-05 00:53:45 |    Message   : The 'uploadDir' parameter is missing or empty
+2005-07-05 00:53:45 |    Stack     : java.lang.IllegalArgumentException: The 'uploadDir' parameter is missing or empty
+	at jeeves.utils.Util.getParam(Util.java:54)
+	at jeeves.server.JeevesEngine.initGeneral(JeevesEngine.java:220)
+	at jeeves.server.JeevesEngine.loadConfigFile(JeevesEngine.java:154)
+	at jeeves.server.JeevesEngine.init(JeevesEngine.java:94)
+	at jeeves.server.sources.http.JeevesServlet.init(JeevesServlet.java:47)
+	at javax.servlet.GenericServlet.init(GenericServlet.java:212)
+	at org.apache.catalina.core.StandardWrapper.loadServlet(StandardWrapper.java:888)
+	at org.apache.catalina.core.StandardWrapper.load(StandardWrapper.java:776)
+	at org.apache.catalina.core.StandardContext.loadOnStartup(StandardContext.java:3363)
+	at org.apache.catalina.core.StandardContext.start(StandardContext.java:3586)
+	at org.apache.catalina.startup.HostConfig.checkWebXmlLastModified(HostConfig.java:567)
+	at org.apache.catalina.startup.HostConfig.run(HostConfig.java:807)
+	at java.lang.Thread.run(Thread.java:552)
+

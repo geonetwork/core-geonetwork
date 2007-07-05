@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<intermap>
+	<!-- ====================================================================== -->
+
+	<general>
+		<profiles>user-profiles.xml</profiles>
+		<debug>true</debug>
+		<uploadDir>WEB-INF/data/tmp</uploadDir>
+		<useProxy>false</useProxy>
+		<proxyHost>10.11.0.1</proxyHost>
+		<proxyPort>3128</proxyPort>
+	</general>
+
+	<!-- ====================================================================== -->
+
+	<default>
+		<service>mapContexts.get</service>
+		<language>en</language>
+		<localized>true</localized>
+		<contentType>text/html; charset=UTF-8</contentType>
+		
+		<gui>
+			<xml  name="strings" file ="xml/strings.xml" />
+			<call name="session" class="jeeves.guiservices.session.Get" />
+		</gui>
+
+		<!-- service not found -->
+
+		<error id="service-not-found" sheet="error.xsl">
+			<xml name="error" file="xml/service-not-found-error.xml" />
+		</error>
+
+		<!-- no privileges to access the service -->
+
+		<error id="privileges" sheet="error.xsl">
+			<xml name="error" file="xml/privileges-error.xml" />
+		</error>
+
+		<!-- general error -->
+
+		<error sheet="error.xsl">
+			<xml name="error" file="xml/error.xml" />
+		</error>
+		
+	</default>
+
+	<!-- ====================================================================== -->
+
+	<resources>
+	</resources>
+
+	<!-- ====================================================================== -->
+
+	<appHandler class="org.wfp.vam.intermap.Intermap">
+
+		<param name="mapServers" value="WEB-INF/mapServers.xml" />
+		<param name="axlRequests" value="WEB-INF/axl" />
+		<param name="wmsTransform" value="WEB-INF/wms" />
+		
+		<!-- proxy server -->
+
+		<param name="useProxy" value="$USE_PROXY" />
+		<param name="proxyHost" value="$PROXY_HOST" />
+		<param name="proxyPort" value="$PROXY_PORT" />
+
+		<!-- screen DPI -->
+		<param value="96" name="screenDpi" />
+		
+		<!-- image size -->
+		<param name="smallImageWidth" value="400" />
+		<param name="smallImageHeight" value="300" />
+		<param name="bigImageWidth" value="800" />
+		<param name="bigImageHeight" value="600" />
+		<param name="defaultImageSize" value="small" />
+		
+		<!--  MiniMap -->
+		<param name="miniMapWidth" value="260" />
+		<param name="miniMapHeight" value="120" />
+		
+		<!-- temp files -->		
+		<param name="tempDir"	value="/home/fao/project/gnim/svn/intermap/intermap/trunk/web/tmp/" />
+		<param name="tempDeleteMinutes" value="15" />
+		<param name="tempUrl" value="/intermap/tmp" />
+
+		<!-- http cache -->
+		<param name="httpCacheDir" value="/home/fao/project/gnim/svn/intermap/intermap/trunk/web/httpCache/" />
+		<param name="httpCacheDeleteEvery" value="60" />
+		<param name="useCache" value="true" />
+		
+	</appHandler>
+
+	<!-- ====================================================================== -->
+
+	<schedules package="org.fao.geonet">
+	</schedules>
+
+	<!-- ====================================================================== -->
+
+	<services package="org.wfp.vam.intermap">
+		
+		<service name="map.getMain">
+			<class name=".services.map.MainEmbedded" />
+<!--			<class name=".services.map.Main" />-->
+			
+			<output test="/response/status/@empty='false'" sheet="index.xsl" />
+			<output test="/response/status/@empty='true'" forward="mapContexts.get" />
+<!-- 
+			<output sheet="index.xsl" />
+ -->
+		</service>
+
+		<!-- ETj: return an XHTML to be embedded elsewhere -->
+		
+		<service name="map.getMain.embedded">
+			<class name=".services.map.MainEmbedded" />
+			
+			<output sheet="index-embedded.xsl" contentType="text/xml; charset=UTF-8" />
+		</service>
+
+		<service name="minimap.rebuild">
+			<class name=".services.minimap.Rebuild" >
+				<param name="width" value="100" />
+				<param name="height" value="80" />
+			</class>
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+<!-- 
+		<service name="map.getFrames">
+			<class name=".services.map.GetFrames" />
+			
+			<output test="/response/status/@empty='false'" sheet="im_frames.xsl" />
+			<output test="/response/status/@empty='true'" forward="mapContexts.get" />
+		</service>
+ -->
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
+		
+		<service name="mapServers.getServices">
+			<class name=".services.mapServers.GetServices" />
+			
+			<output sheet="im_get-services.xsl" />
+			<error id="connect" sheet="error.xsl">
+				<xml  name="error"   file="xml/connect-error.xml" />
+			</error>
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
+
+		<!-- ETj -->
+		<service name="mapServers.getServices.embedded">
+			<class name=".services.mapServers.GetServices" />
+			
+			<output sheet="im_get-services-embedded.xsl" />
+			<error sheet="error-embedded.xsl">
+				<xml name="error" file="xml/error.xml" />
+			</error>
+			
+<!--			<error id="connect" sheet="error.xsl">
+				<xml  name="error"   file="xml/connect-error.xml" />
+			</error>-->
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="mapServers.getServicesExt">
+			<output sheet="im_get-servicesExt.xsl" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<!-- ETj -->
+		<service name="mapServers.getServices.xml">
+			<class name=".services.mapServers.GetServices" />
+		</service>		
+			
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.addServices">
+			<class name=".services.map.AddServices" />
+			
+			<output forward="map.getMain" />
+		</service>
+
+		<!-- ETj -->
+		<service name="map.addServices.xml">
+			<class name=".services.map.AddServices" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.addServicesExt">
+			<class name=".services.map.AddServices" />
+			
+			<output test="/response/status/@services='true' or not(/response/status/@services)" forward="map.getMain"/>
+			<output  test="/response/status/@services='false'" forward="mapServers.getServicesExt" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="mapContexts.get">
+			<class name=".services.mapContexts.Get" />
+			
+			<output sheet="im_get-contexts.xsl" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="mapServers.listServers">
+			<class name=".services.mapServers.ListServers" />
+			
+			<output sheet="im_list-servers.xsl" />
+		</service>
+
+		<service name="mapServers.listServers.xml">
+			<class name=".services.mapServers.ListServers" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+<!-- 
+		<service name="map.get">
+			<class name=".services.map.Get" />
+			
+			<output sheet="im_get-map.xsl" />
+		</service>
+ -->
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+<!-- 
+		<service name="map.getLayers">
+			<class name=".services.map.GetLayers" />
+			
+			<output sheet="im_get-layers.xsl" />
+		</service>
+ -->
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.layers.getOrder">
+			<class name=".services.map.layers.GetOrder" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.layers.setOrder">
+			<class name=".services.map.layers.SetOrder" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.layers.setTransparency">
+			<class name=".services.map.layers.SetTransparency" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.layers.toggleVisibility">
+			<class name=".services.map.layers.ToggleVisibility" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.action">
+			<class name=".services.map.Action" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.move">
+			<class name=".services.map.Move" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.update">
+			<class name=".services.map.Update" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+<!-- 
+		<service name="map.get">
+			<class name=".services.map.Get" />
+			
+			<output sheet="im_get-map.xsl" />
+		</service>
+ -->
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.setAoi">
+			<class name=".services.map.SetAoi" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.unsetAoi">
+			<class name=".services.map.UnsetAoi" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.fullExtent">
+			<class name=".services.map.FullExtent" />
+			
+			<output forward="map.update" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.zoomToService">
+			<class name=".services.map.ZoomToService"/>
+			
+			<output forward="map.getMain"/>
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.toggleImageSize">
+			<class name=".services.map.ToggleImageSize" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.reset">
+			<class name=".services.map.Reset" />
+			
+			<output forward="mapContexts.get" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.identify">
+			<class name=".services.map.Identify" />
+			
+			<output sheet="im_identify.xsl" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+<!-- 
+		<service name="map.service.moveUp">
+			<class name=".services.map.MoveServiceUp" />
+			
+			<output forward="map.getMain" />
+		</service>
+ -->
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+<!-- 
+		<service name="map.service.moveDown">
+			<class name=".services.map.MoveServiceDown" />
+			
+			<output forward="map.getMain" />
+		</service>
+ -->
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.service.getLegend">
+			<class name=".services.map.GetLegend" />
+			
+			<output sheet="legend.xsl" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.service.wmsConfigForm">
+			<class name=".services.map.WmsConfigForm" />
+			
+			<output sheet="im_wms-service-conf.xsl" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.service.wmsConfig">
+			<class name=".services.map.WmsConfig" />
+			
+			<output sheet="im_close-on-load.xsl" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.service.showExtents">
+			<class name=".services.map.ShowExtents" />
+			
+			<output sheet="im_show-extents.xsl" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.service.setExtents">
+			<class name=".services.map.SetExtents" />
+			
+			<output sheet="im_close-on-load.xsl" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<service name="map.service.showError">
+			<class name=".services.map.ShowError" />
+			
+			<output sheet="im_show-error.xsl" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.service.wmsLayerInfo">
+			<class name=".services.map.WmsLayerInfo" />
+			
+			<output sheet="im_wms-layer-info.xsl" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.layers.deleteLayer">
+			<class name=".services.map.DelService" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+<!-- 
+		<service name="map.service.collapse">
+			<class name=".services.map.CollapseService"/>
+			
+			<output forward="map.getLayers"/>
+		</service>
+ -->
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+<!-- 
+		<service name="map.service.expand">
+			<class name=".services.map.ExpandService"/>
+			
+			<output forward="map.getLayers"/>
+		</service>
+ -->
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.refresh">
+			<class name=".services.map.Refresh" />
+			
+			<output forward="map.getMain" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.getPrintImage">
+			<class name=".services.map.GetPrintImage" />
+			
+			<output sheet="im_get-print-map.xsl" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.setContext">
+			<class name=".services.map.SetContext" />
+			
+			<output forward="map.getMain" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.getFeatures">
+			<class name=".services.map.GetFeatures" />
+			
+			<output sheet="im_get-features.xsl" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="wmc.setContext">
+			<class name=".services.wmc.SetWmcContext"/>
+			
+			<output forward="map.getMain"/>
+		</service>
+			
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+<!-- 
+		<service name="wmc.setContextFromURL">
+			<class name=".services.wmc.SetWmcFromURL"/>
+			
+			<output forward="map.getMain"/>
+		</service>
+ -->
+			
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.layers.getInspectorData">
+			<class name=".services.map.layers.GetInspectorData"/>
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="geonet.getGeonetRecords">
+			<class name=".services.geonet.GetGeonetRecords"/>
+			<output sheet="geonet-records.xsl" contentType="text/xml; charset=UTF-8" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.layers.add">
+			<class name=".services.map.layers.Add"/>
+			
+			<output forward="map.update" />
+		</service>
+		
+	</services>
+	
+	<!-- ====================================================================== -->
+
+</intermap>
