@@ -959,8 +959,11 @@
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
 					<xsl:with-param name="text">
+						<!-- ETJ 
 						<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={linkage}&amp;service={orName}&amp;type=2')" title="{/root/strings/interactiveMap}">
-							<xsl:choose>
+						-->
+						<a href="javascript:runIM_addService('{linkage}','{orName}',2)" title="{/root/strings/interactiveMap}"> 
+								<xsl:choose>
 								<xsl:when test="string(orDesc)!=''">
 									<xsl:value-of select="orDesc"/>
 								</xsl:when>
@@ -993,7 +996,11 @@
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
 					<xsl:with-param name="text">
+						<!-- ETj
 						<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={linkage}&amp;type=2')" title="{/root/strings/interactiveMap}">
+						-->
+						<a href="javascript:runIM_selectService('{linkage}',2)" title="{/root/strings/interactiveMap}"> 
+								
 							<xsl:choose>
 								<xsl:when test="string(orDesc)!=''">
 									<xsl:value-of select="orDesc"/>
@@ -1027,7 +1034,11 @@
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
 					<xsl:with-param name="text">
+						<!-- ETj
 						<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={linkage}&amp;service={orName}&amp;type=1')" title="{/root/strings/interactiveMap}">
+						-->
+							<a href="javascript:runIM_addService('{linkage}','{orName}',1)" title="{/root/strings/interactiveMap}"> 
+								
 							<xsl:choose>
 								<xsl:when test="string(orDesc)!=''">
 									<xsl:value-of select="orDesc"/>
@@ -1717,17 +1728,20 @@
 					</xsl:when>
 					<xsl:when test="starts-with(./protocol,'ESRI:AIMS-') and contains(./protocol,'-get-image') and ./orName">
 						<link type="arcims">
-							<xsl:value-of select="concat('javascript:popInterMap(&#34;',/root/gui/url,'/intermap/srv/',/root/gui/language,'/map.addServicesExt?url=',linkage,'&amp;service=',orName,'&amp;type=1&#34;)')"/>
+							<!-- ETj  <xsl:value-of select="concat('javascript:popInterMap(&#34;',/root/gui/url,'/intermap/srv/',/root/gui/language,'/map.addServicesExt?url=',linkage,'&amp;service=',orName,'&amp;type=1&#34;)')"/> -->							
+							<xsl:value-of select="concat('javascript:runIM_addService(&#34;',linkage,'&#34;,&#34;',orName,'&#34;,1);')"/>
 						</link>
 					</xsl:when>
 					<xsl:when test="starts-with(./protocol,'OGC:WMS-') and contains(./protocol,'-get-map') and ./orName">
 						<link type="wms">
-							<xsl:value-of select="concat('javascript:popInterMap(&#34;',/root/gui/url,'/intermap/srv/',/root/gui/language,'/map.addServicesExt?url=',linkage,'&amp;service=',orName,'&amp;type=2&#34;)')"/>
+							<!-- ETj -->
+							<xsl:value-of select="concat('javascript:runIM_addService(&#34;',linkage,'&#34;,&#34;',orName,'&#34;,2);')"/>
 						</link>
 					</xsl:when>
 					<xsl:when test="starts-with(./protocol,'OGC:WMS-') and contains(./protocol,'-get-capabilities') and ./orName">
 						<link type="wms">
-							<xsl:value-of select="concat('javascript:popInterMap(&#34;',/root/gui/url,'/intermap/srv/',/root/gui/language,'/map.addServicesExt?url=',linkage,'&amp;type=2&#34;)')"/>
+							<!-- ETj <xsl:value-of select="concat('javascript:popInterMap(&#34;',/root/gui/url,'/intermap/srv/',/root/gui/language,'/map.addServicesExt?url=',linkage,'&amp;type=2&#34;)')"/> -->
+							<xsl:value-of select="concat('javascript:runIM_selectService(&#34;',linkage,'&#34;,,2);')"/>
 						</link>
 					</xsl:when>
 					<xsl:when test="linkage[text()]">

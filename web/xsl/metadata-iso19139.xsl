@@ -1290,7 +1290,10 @@
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
 					<xsl:with-param name="text">
+						<!-- ETj
 						<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={gmd:linkage/gmd:URL}&amp;service={gmd:name/gco:CharacterString}&amp;type=2')" title="{/root/strings/interactiveMap}">
+						-->
+						<a href="javascript:runIM_addService('{gmd:linkage/gmd:URL}','{gmd:name/gco:CharacterString}',2)" title="{/root/strings/interactiveMap}">
 							<xsl:choose>
 								<xsl:when test="string(gmd:description/gco:CharacterString)!=''">
 									<xsl:value-of select="gmd:description/gco:CharacterString"/>
@@ -1325,7 +1328,10 @@
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
 					<xsl:with-param name="text">
+						<!-- ETj
 						<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={gmd:linkage/gmd:URL}&amp;type=2')" title="{/root/strings/interactiveMap}">
+						-->
+						<a href="javascript:runIM_selectService('{gmd:linkage/gmd:URL}',2)" title="{/root/strings/interactiveMap}">							
 							<xsl:choose>
 								<xsl:when test="string(gmd:description/gco:CharacterString)!=''">
 									<xsl:value-of select="gmd:description/gco:CharacterString"/>
@@ -1360,8 +1366,9 @@
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
 					<xsl:with-param name="text">
-						<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={gmd:linkage/gmd:URL}&amp;service={gmd:name/gco:CharacterString}&amp;type=1')" title="{/root/strings/interactiveMap}">
-							<xsl:choose>
+<!--	ETj					<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={gmd:linkage/gmd:URL}&amp;service={gmd:name/gco:CharacterString}&amp;type=1')" title="{/root/strings/interactiveMap}">
+-->						<a href="javascript:runIM_addService('{gmd:linkage/gmd:URL}','{gmd:name/gco:CharacterString}',1)" title="{/root/strings/interactiveMap}">
+								<xsl:choose>
 								<xsl:when test="string(gmd:description/gco:CharacterString)!=''">
 									<xsl:value-of select="gmd:description/gco:CharacterString"/>
 								</xsl:when>
