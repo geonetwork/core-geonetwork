@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:xalan= "http://xml.apache.org/xalan"
-	xmlns:geonet="http://www.fao.org/geonetwork"
+	xmlns:xalan="http://xml.apache.org/xalan" xmlns:geonet="http://www.fao.org/geonetwork"
 	exclude-result-prefixes="xsl xalan geonet">
-	
+
 	<xsl:include href="main.xsl"/>
 	<xsl:include href="metadata.xsl"/>
 
@@ -11,12 +10,45 @@
 	additional scripts
 	-->
 	<xsl:template mode="script" match="/">
-		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=control,slider,effects,controls"/>
-
+<!--		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls,dragdrop"/>		-->
+		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/slider.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/effects.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/controls.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/dragdrop.js"/>
+		
+		<script type="text/javascript" src="/intermap/scripts/etj.js?"/>
+		<script type="text/javascript" src="/intermap/scripts/im_minimap.js?"/>
+		<script type="text/javascript" src="/intermap/scripts/util.js" />
+		<!--		<script type="text/javascript" src="/intermap/scripts/gui.js?" />-->
+		<script type="text/javascript" src="/intermap/scripts/im_layers.js?" />
+		<script type="text/javascript" src="/intermap/scripts/im_bigmap.js?" />
+		<!--		<script type="text/javascript" src="/intermap/scripts/connectors/intermap.js?" />-->
+		<script type="text/javascript" src="/intermap/scripts/im_ajax.js?" />
+		
+		<!--  FIXME move this line elsewhere.  -->
+		<link rel="stylesheet" type="text/css" href="/intermap/intermap-embedded.css?" />
+		
 		<script type="text/javascript" language="JavaScript1.2">
+
+			<xsl:choose>
+				<xsl:when test="/root/gui/searchDefaults/intermap='on'">
+					//ETj
+					function init()
+					{
+						im_load();
+					}
+
+				</xsl:when>
+			</xsl:choose>
+			
+			function getWmsLayerInfo(name, url) {
+			window.open('/intermap/srv/en/map.service.wmsLayerInfo?url='+url+'&amp;name=' + name, 'dialog', 'HEIGHT=300,WIDTH=400,scrollbars=yes,toolbar=no,status=no,menubar=no,location=no,resizable=yes');
+			}
+			
 			
 			function goExtended(onoff, link)
 			{
+				document.search.intermap.value='off';			
 				document.search.extended.value=onoff;
 				document.search.action=link;
 				document.search.submit();
@@ -28,7 +60,14 @@
 				document.search.action=link;
 				document.search.submit();
 			}
-	
+
+			function goIntermap(onoff, link)
+			{
+				document.search.intermap.value=onoff;
+				document.search.action=link;
+				document.search.submit();
+			}
+
 			function deselect(select)
 			{
 				for (var i=0; i &lt; select.length; i++)
@@ -93,145 +132,447 @@
 				if (checkSubmit())
 					document.search.submit();
 			}
+			
+			/* ETj */
+			function doMetadataSearch()
+			{
+			
+				// Clear welcome message
+				//$('firsttimemessage').style.display = 'none';				
+
+
+
+				// Display results area								
+				clearNode('resultList');								
+				$('loadingMD').style.display = 'block';
+				
+				//$('resultList').style.display = 'block';
+								
+				// Load results via AJAX
+				gn_search($('any').value ); // FIXME add bb
+			
+			}
+			
+			function gn_search(text, bbn, bbe, bbs, bbw)
+			{
+				var url = '/geonetwork/srv/en/main.search.simpler'; 
+				var pars = 'any='+text ; 				// add bb
+				
+				var myAjax = new Ajax.Request (
+					url, 
+					{
+						method: 'get',
+						parameters: pars,
+						onSuccess: gn_search_complete,
+						onFailure: gn_search_error
+					}
+				);
+			}
+			
+			function clearNode(node)
+			{
+				var enode = $(node);
+				while (enode.firstChild) 
+				{
+					enode.removeChild(enode.firstChild);
+				}			
+			}
+			
+			function gn_search_complete(req)
+			{
+			
+				// Dinamically generate content
+				// it would be better to merge in an html piece returned by a GN service, but we're on hurry now
+
+				// remove all previous children
+				//clearResultList();
+				
+				//new Insertion.Top('resultList', req.responseXML.documentElement); // nn funge...
+				
+				var rlist = $('resultList');
+				copyTree(req.responseXML.documentElement, rlist);
+				
+				$('loadingMD').style.display = 'none';
+				
+			}
+			
+			//========================================
+			// Util: Copy a XML tree with HTML format into the current Document
+			//========================================
+			
+			function copyTree(src, parentDest)
+			{
+				if(src.nodeType==Node.TEXT_NODE) 
+				{
+					var newNode= document.createTextNode(src.nodeValue);
+					parentDest.appendChild(newNode);
+					return;				
+				}
+				
+				if(src.nodeType==Node.COMMENT_NODE) 
+				{
+					var newNode= document.createElement("COMMENT");
+					newNode.style.display = "none";
+					newNode.textContent= src.nodeValue;
+					parentDest.appendChild(newNode);
+					return;				
+				}
+				
+//				var li = document.createElement("li"); // DEBUG!!!
+//				li.textContent= src.tagName+ " ID:" +src.getAttribute('id');
+//				$('ETJ_DEBUG').appendChild(li);
+				
+				
+				var newNode= document.createElement(src.tagName);
+				if(src.className)
+					newNode.className = src.className;
+				newNode.nodeValue = src.nodeValue;
+				
+				if (src.hasAttributes()) 
+				{
+					var attrs = src.attributes;
+					for(var i=attrs.length-1; i>=0; i--) 
+					{
+						newNode.setAttribute(attrs[i].name, attrs[i].value);
+					}
+				};
+				
+				parentDest.appendChild(newNode);
+				
+				var child = src.firstChild;				
+				while(child)
+				{
+					copyTree(child, newNode);
+					child = child.nextSibling;
+				}
+			}
+			
+			
+			function gn_search_error()
+			{
+				$('loadingMD').style.display = 'none';
+				alert("ERROR)");
+			}
+
+
+			function openIntermap()
+			{
+				$('openIMBtn').style.display='none';
+				$('closeIMBtn').style.display='block';
+				
+				//Effect.BlindDown('im_mapContainer');
+				Effect.BlindDown('im_map');
+				Effect.BlindDown('im_mapImg');
+				Effect.BlindDown('intermap');
+				//$('intermap').style.display='block';
+				
+			}				 
+			
+			function closeIntermap()
+			{
+				$('closeIMBtn').style.display='none';
+				$('openIMBtn').style.display='block';
+				
+				//Effect.BlindUp('im_mapContainer');
+				Effect.BlindUp('im_map');
+				Effect.BlindUp('intermap');
+				//$('intermap').style.display='none';
+				
+			 }
+			
 		</script>
 	</xsl:template>
-	
+
+
 	<xsl:variable name="lang" select="/root/gui/language"/>
 
 	<!--
 	page content
 	-->
 	<xsl:template name="content">
+		<xsl:comment xml:space="preserve">
+			page content
+		</xsl:comment>
+		<xsl:choose>
+			<xsl:when test="/root/gui/searchDefaults/intermap='on'">
+				<xsl:call-template name="mapcontent"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name="normalcontent"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+
+	<xsl:template name="mapcontent">
+
+		<h1 class="padded-content" style="margin-bottom: 0px;">
+			<xsl:value-of select="/root/gui/strings/mainpageTitle"/>
+		</h1>
+
+		<xsl:comment>FORM FIELDS</xsl:comment>
+		<form name="search" action="{/root/gui/locService}/main.search" method="post"
+			onsubmit="return checkSubmit()">
+			<input name="extended" type="hidden" value="{/root/gui/searchDefaults/extended}"/>
+			<input name="intermap" type="hidden" value="{/root/gui/searchDefaults/intermap}"/>
+			<input name="remote" type="hidden" value="{/root/gui/searchDefaults/remote}"/>
+			<input name="attrset" type="hidden" value="geo"/>
+			<!-- FIXME: possibly replace with menu -->
+			<input type="submit" style="display: none;"/>
+		</form>
+
+		<xsl:comment>MAIN CONTENT TABLE</xsl:comment>
+		<table class="geosearchmain" width="100%">  <!--height="100%">-->
+			<tr>
+
+				<!-- search -->
+				<xsl:comment>LEFT: search, minimap and news</xsl:comment>
+
+				<td class="padded-content" width="200px">
+					<table class="geosearch" width="100%">
+						<!--  TODO: set a fixed width  -->
+						<xsl:comment>SEARCH</xsl:comment>
+						<tr>
+							<td valign="top">
+								<xsl:call-template name="geofields"/>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top">
+								<xsl:call-template name="latestUpdates"/>
+							</td>
+						</tr>
+<!--						<tr>
+							<td valign="top">
+								<xsl:call-template name="featured"/>
+							</td>
+						</tr>
+-->						
+					</table>
+				</td>
+
+				<xsl:comment>RIGHT: 1st time message, collapsable extended map, search results</xsl:comment>
+				<td class="padded-content" width="100%">
+					<table class="padded-content"  width="100%" height="100%" >
+						
+						<tr id="intermaprow"  width="100%" height="0">
+							<xsl:comment>COLLAPSABLE MAP</xsl:comment>
+							<td>
+								<div id="intermap" style="display: none;">
+									<!--  This DIV will be filled dynamically with intermap contents -->
+								</div>
+							</td>
+						</tr>
+						
+						<tr width="100%">
+							<td width="100%">
+								<h1 id="loadingMD" align="center" style="display: none;" width="100%">...Searching for Metadata...</h1>
+								
+								<!-- This DIV contains a first-time message that will be removed when the first search will be run -->
+								<div id="resultList">
+									<xsl:comment>MAINPAGE 1</xsl:comment>
+									<xsl:copy-of select="/root/gui/strings/mainpage1"/>
+									<xsl:comment>MAINPAGE 2</xsl:comment>
+									<xsl:copy-of select="/root/gui/strings/mainpage2"/>
+									<xsl:comment>END MAINPAGE</xsl:comment>
+									<a href="mailto:{/root/gui/env/feedback/email}">
+										<xsl:value-of select="/root/gui/env/feedback/email"/>
+									</a>
+								</div>
+
+							</td>
+						</tr>
+						
+<!--							<tr width="100%">
+								<td width="100%">
+
+									<UL id="ETJ_DEBUG" onclick="Effect.BlindUp('ETJ_DEBUG');">
+										< ! - -  $('ETJ_DEBUG').style.display='none';" - ->
+										<LI><h1>DEBUG</h1></LI>
+									</UL>
+									
+									
+								</td>
+							</tr>
+-->							
+					</table>
+				</td>
+
+			</tr>
+		</table>
+
+	</xsl:template>
+
+
+	<xsl:template name="normalcontent">
 		<table width="100%" height="100%">
 			<tr height="100%">
-			
+
 				<!-- search and purpose -->
 				<td class="padded-content" width="70%" height="100%">
 					<table width="100%" height="100%">
 						<tr>
-						
+
 							<!-- search -->
 							<td>
-								<h1><xsl:value-of select="/root/gui/strings/mainpageTitle"/></h1>
+								<h1>
+									<xsl:value-of select="/root/gui/strings/mainpageTitle"/>
+								</h1>
 								<form name="search" action="{/root/gui/locService}/main.search" method="post" onsubmit="return checkSubmit()">
 									<input name="extended" type="hidden" value="{/root/gui/searchDefaults/extended}"/>
+									<input name="intermap" type="hidden" value="{/root/gui/searchDefaults/intermap}"/>
 									<input name="remote" type="hidden" value="{/root/gui/searchDefaults/remote}"/>
-									<input name="attrset" type="hidden" value="geo"/> <!-- FIXME: possibly replace with menu -->
-									<input type="submit" style="display: none;" />
-									<table width="100%" height="100%"><tr>
-										<td valign="top">
-											<xsl:call-template name="fields"/>
-										</td>
-										<td width="200">
-											<table height="100%">
-												<tr>
-													<td class="padded" align="right">
-														<xsl:choose>
-															<xsl:when test="/root/gui/searchDefaults/extended='off'">
-																<button class="content-small" type="button" onclick="goExtended('on','{/root/gui/locService}/main.home')"><xsl:value-of select="/root/gui/strings/extended"/></button>
-															</xsl:when>
-															<xsl:otherwise>
-																<button class="content-small" type="button" onclick="goExtended('off','{/root/gui/locService}/main.home')"><xsl:value-of select="/root/gui/strings/simple"/></button>
-															</xsl:otherwise>
-														</xsl:choose>
-													</td>
-												</tr>
-												<tr>
-													<td class="padded" align="right">
-														<xsl:choose>
-															<xsl:when test="/root/gui/searchDefaults/remote='off'">
-																<button class="content-small" type="button" onclick="goRemote('on','{/root/gui/locService}/main.home')"><xsl:value-of select="/root/gui/strings/remote"/></button>
-															</xsl:when>
-															<xsl:otherwise>
-																<button class="content-small" type="button" onclick="goRemote('off','{/root/gui/locService}/main.home')"><xsl:value-of select="/root/gui/strings/local"/></button>
-															</xsl:otherwise>
-														</xsl:choose>
-													</td>
-												</tr>
-												<tr height="100%">
-													<td align="right" valign="baseline">
-														<a onclick="doSubmit()"><img onmouseover="this.src='{/root/gui/locUrl}/images/search-white.gif'" onmouseout="this.src='{/root/gui/locUrl}/images/search-blue.gif'" style="cursor:hand;cursor:pointer" src="{/root/gui/locUrl}/images/search-blue.gif" alt="Search" title="{/root/gui/strings/search}" align="top"/></a>
-													</td>
-												</tr>
-											</table>
-										</td>
-									</tr></table>
+									<input name="attrset" type="hidden" value="geo"/>
+									<!-- FIXME: possibly replace with menu -->
+									<input type="submit" style="display: none;"/>
+									<table width="100%" height="100%">
+										<tr>
+											<td valign="top">
+												<xsl:call-template name="fields"/>
+											</td>
+											<td width="200">
+												<table height="100%">
+													<tr>
+														<td class="padded" align="right">
+															<button class="content-small" type="button" onclick="goIntermap('on','{/root/gui/locService}/main.home')">
+																<xsl:value-of select="/root/gui/strings/intermapSearch"/>
+															</button>
+														</td>
+													</tr>
+													<tr>
+														<td class="padded" align="right">
+															<xsl:choose>
+																<xsl:when test="/root/gui/searchDefaults/extended='off'">
+																	<button class="content-small" type="button" onclick="goExtended('on','{/root/gui/locService}/main.home')">
+																		<xsl:value-of select="/root/gui/strings/extended"/>
+																	</button>
+																</xsl:when>
+																<xsl:otherwise>
+																	<button class="content-small" type="button" onclick="goExtended('off','{/root/gui/locService}/main.home')">
+																		<xsl:value-of select="/root/gui/strings/simple"/>
+																	</button>
+																</xsl:otherwise>
+															</xsl:choose>
+														</td>
+													</tr>
+													<tr>
+														<td class="padded" align="right">
+															<xsl:choose>
+																<xsl:when test="/root/gui/searchDefaults/remote='off'">
+																	<button class="content-small" type="button" onclick="goRemote('on','{/root/gui/locService}/main.home')">
+																		<xsl:value-of select="/root/gui/strings/remote"/>
+																	</button>
+																</xsl:when>
+																<xsl:otherwise>
+																	<button class="content-small" type="button" onclick="goRemote('off','{/root/gui/locService}/main.home')">
+																		<xsl:value-of select="/root/gui/strings/local"/>
+																	</button>
+																</xsl:otherwise>
+															</xsl:choose>
+														</td>
+													</tr>
+													<tr height="100%">
+														<td align="right" valign="baseline">
+															<a onclick="doSubmit()">
+																<img onmouseover="this.src='{/root/gui/locUrl}/images/search-white.gif'" onmouseout="this.src='{/root/gui/locUrl}/images/search-blue.gif'" style="cursor:hand;cursor:pointer" src="{/root/gui/locUrl}/images/search-blue.gif" alt="Search" title="{/root/gui/strings/search}" align="top"/>
+															</a>
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
 								</form>
 							</td>
 						</tr>
-						<tr><td class="dots"/></tr>
-						
+						<tr>
+							<td class="dots"/>
+						</tr>
+
 						<tr height="100%">
 							<!-- Info -->
 							<td valign="top">
 								<xsl:copy-of select="/root/gui/strings/mainpage1"/>
 								<xsl:copy-of select="/root/gui/strings/mainpage2"/>
-								<a href="mailto:{/root/gui/env/feedback/email}"><xsl:value-of select="/root/gui/env/feedback/email"/></a>
+								<a href="mailto:{/root/gui/env/feedback/email}">
+									<xsl:value-of select="/root/gui/env/feedback/email"/>
+								</a>
 							</td>
 						</tr>
 					</table>
 				</td>
-				
+
 				<td class="separator"/>
-				
+
 				<!-- right -->
 				<td class="padded-content" valign="top">
-					<center><a href="javascript:popInterMap('{/root/gui/url}/intermap')"><img src="{/root/gui/url}/images/intermap.gif" alt="InterMap" align="top" /></a></center>
+					<center>
+						<a href="javascript:popInterMap('{/root/gui/url}/intermap')">
+							<img src="{/root/gui/url}/images/intermap.gif" alt="InterMap"
+								align="top"/>
+						</a>
+					</center>
 					<xsl:copy-of select="/root/gui/strings/interMapInfo"/>
 				</td>
 			</tr>
-			
-			<tr><td class="separator"/></tr>
-						
+
+			<tr>
+				<td class="separator"/>
+			</tr>
+
 			<!-- types -->
-			<tr><td colspan="3">
-				<table width="100%">
-					<tr>
-						
-						<xsl:choose>
-							<xsl:when test="/root/gui/featured/*">
-							
-								<!-- featured map -->
-								<td class="footer" align="center" valign="top" width="33%">
-									<xsl:call-template name="featured"/>
-								</td>
-								
-								<td class="separator"/>
-								
-								<!-- latest updates -->
-								<td class="footer" align="left" valign="top" width="33%">
-									<xsl:call-template name="latestUpdates"/>
-								</td>
-								
-							</xsl:when>
-							<xsl:otherwise>
-							
-								<!-- latest updates -->
-								<td class="footer" align="left" valign="top" width="50%">
-									<xsl:call-template name="latestUpdates"/>
-								</td>
-								
-							</xsl:otherwise>
-						</xsl:choose>
-						
-						<td class="separator"/>
-						
-						<!-- categories -->
-						<td class="footer" align="left" valign="top">
-							<xsl:call-template name="categories"/>
-						</td>
-						
-					</tr>
-				</table>
-			</td></tr>
+			<tr>
+				<td colspan="3">
+					<table width="100%">
+						<tr>
+
+							<xsl:choose>
+								<xsl:when test="/root/gui/featured/*">
+
+									<!-- featured map -->
+									<td class="footer" align="center" valign="top" width="33%">
+										<xsl:call-template name="featured"/>
+									</td>
+
+									<td class="separator"/>
+
+									<!-- latest updates -->
+									<td class="footer" align="left" valign="top" width="33%">
+										<xsl:call-template name="latestUpdates"/>
+									</td>
+
+								</xsl:when>
+								<xsl:otherwise>
+
+									<!-- latest updates -->
+									<td class="footer" align="left" valign="top" width="50%">
+										<xsl:call-template name="latestUpdates"/>
+									</td>
+
+								</xsl:otherwise>
+							</xsl:choose>
+
+							<td class="separator"/>
+
+							<!-- categories -->
+							<td class="footer" align="left" valign="top">
+								<xsl:call-template name="categories"/>
+							</td>
+
+						</tr>
+					</table>
+				</td>
+			</tr>
 		</table>
 	</xsl:template>
-	
+
 	<!--
 	featured map
 	-->
 	<xsl:template name="featured">
-		<h1><xsl:value-of select="/root/gui/strings/featuredMap"/></h1>
+		<h1>
+			<xsl:value-of select="/root/gui/strings/featuredMap"/>
+		</h1>
 		<table>
 			<xsl:for-each select="/root/gui/featured/*">
 				<xsl:variable name="md">
@@ -245,13 +586,20 @@
 						</xsl:call-template>
 					</td>
 					<td class="footer">
-						<h2><a class="footer" href="{/root/gui/locService}/metadata.show?id={geonet:info/id}"><xsl:value-of select="$metadata/title"/></a></h2>
+						<h2>
+							<a class="footer"
+								href="{/root/gui/locService}/metadata.show?id={geonet:info/id}">
+								<xsl:value-of select="$metadata/title"/>
+							</a>
+						</h2>
 						<p/>
 						<xsl:variable name="abstract" select="$metadata/abstract"/>
 						<xsl:choose>
 							<xsl:when test="string-length($abstract) &gt; $maxAbstract">
 								<xsl:value-of select="substring($abstract, 0, $maxAbstract)"/>
-								<a href="{/root/gui/locService}/metadata.show?id={geonet:info/id}&amp;currTab=simple">...<xsl:value-of select="/root/gui/strings/more"/>...</a>
+								<a
+									href="{/root/gui/locService}/metadata.show?id={geonet:info/id}&amp;currTab=simple"
+										>...<xsl:value-of select="/root/gui/strings/more"/>...</a>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:value-of select="$abstract"/>
@@ -268,11 +616,14 @@
 	-->
 	<xsl:template name="latestUpdates">
 		<h1 align="center">
-			<xsl:value-of select="/root/gui/strings/recentAdditions"/>
-			&#160;
-			<a href="{/root/gui/locService}/rss.latest"><img style="cursor:hand;cursor:pointer" src="{/root/gui/url}/images/rss.png" alt="RSS" title="{/root/gui/strings/rss}" align="top"/></a>
-			&#160;
-			<a href="{/root/gui/locService}/rss.latest?georss=gml"><img style="cursor:hand;cursor:pointer" src="{/root/gui/url}/images/georss.png" alt="GeoRSS-GML" title="{/root/gui/strings/georss}" align="top"/></a>
+			<xsl:value-of select="/root/gui/strings/recentAdditions"/> &#160; <a
+				href="{/root/gui/locService}/rss.latest">
+				<img style="cursor:hand;cursor:pointer" src="{/root/gui/url}/images/rss.png"
+					alt="RSS" title="{/root/gui/strings/rss}" align="top"/>
+			</a> &#160; <a href="{/root/gui/locService}/rss.latest?georss=gml">
+				<img style="cursor:hand;cursor:pointer" src="{/root/gui/url}/images/georss.png"
+					alt="GeoRSS-GML" title="{/root/gui/strings/georss}" align="top"/>
+			</a>
 		</h1>
 		<ul>
 			<xsl:for-each select="/root/gui/latestUpdated/*">
@@ -280,8 +631,13 @@
 					<xsl:apply-templates mode="brief" select="."/>
 				</xsl:variable>
 				<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
-		
-				<li><a class="footer" href="{/root/gui/locService}/metadata.show?id={geonet:info/id}"><xsl:value-of select="$metadata/title"/></a></li>
+
+				<li>
+					<a class="footer"
+						href="{/root/gui/locService}/metadata.show?id={geonet:info/id}">
+						<xsl:value-of select="$metadata/title"/>
+					</a>
+				</li>
 			</xsl:for-each>
 		</ul>
 	</xsl:template>
@@ -290,17 +646,24 @@
 	categories
 	-->
 	<xsl:template name="categories">
-		<h1 align="center"><xsl:value-of select="/root/gui/strings/categories"/></h1>
+		<h1 align="center">
+			<xsl:value-of select="/root/gui/strings/categories"/>
+		</h1>
 		<ul>
 			<xsl:for-each select="/root/gui/categories/*">
 				<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
-				<xsl:variable name="categoryName"  select="name"/>
+				<xsl:variable name="categoryName" select="name"/>
 				<xsl:variable name="categoryLabel" select="label/child::*[name() = $lang]"/>
-				<li><a class="footer" href="{/root/gui/locService}/main.search?category={$categoryName}"><xsl:value-of select="$categoryLabel"/></a></li>
+				<li>
+					<a class="footer"
+						href="{/root/gui/locService}/main.search?category={$categoryName}">
+						<xsl:value-of select="$categoryLabel"/>
+					</a>
+				</li>
 			</xsl:for-each>
 		</ul>
 	</xsl:template>
-	
+
 	<!--
 	search fields
 	-->
@@ -309,42 +672,63 @@
 			<!-- Title -->
 			<xsl:if test="string(/root/gui/searchDefaults/extended)='on'">
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/rtitle"/></th>
-					<td class="padded"><input class="content" name="title" size="30" value="{/root/gui/searchDefaults/title}"/></td>
+					<th class="padded">
+						<xsl:value-of select="/root/gui/strings/rtitle"/>
+					</th>
+					<td class="padded">
+						<input class="content" name="title" size="30"
+							value="{/root/gui/searchDefaults/title}"/>
+					</td>
 				</tr>
 			</xsl:if>
-					
+
 			<!-- Abstract -->
 			<xsl:if test="string(/root/gui/searchDefaults/extended)='on'">
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/abstract"/></th>
-					<td class="padded"><input class="content" name="abstract" size="30" value="{/root/gui/searchDefaults/abstract}"/></td>
+					<th class="padded">
+						<xsl:value-of select="/root/gui/strings/abstract"/>
+					</th>
+					<td class="padded">
+						<input class="content" name="abstract" size="30"
+							value="{/root/gui/searchDefaults/abstract}"/>
+					</td>
 				</tr>
 			</xsl:if>
-					
+
 			<!-- Any (free text) -->
 			<tr>
-				<th class="padded"><xsl:value-of select="/root/gui/strings/searchText"/></th>
-				<td class="padded"><input class="content" name="any" size="30" value="{/root/gui/searchDefaults/any}"/><br/>
+				<th class="padded">
+					<xsl:value-of select="/root/gui/strings/searchText"/>
+				</th>
+				<td class="padded">
+					<input class="content" name="any" size="30"
+						value="{/root/gui/searchDefaults/any}"/>
+					<br/>
 				</td>
 			</tr>
-			
+
 			<!-- Keywords -->
 			<xsl:if test="string(/root/gui/searchDefaults/extended)='on'">
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/keywords"/></th>
-					<td class="padded"><input class="content" id="themekey" name="themekey" size="30" value="{/root/gui/searchDefaults/themekey}"/>
+					<th class="padded">
+						<xsl:value-of select="/root/gui/strings/keywords"/>
+					</th>
+					<td class="padded">
+						<input class="content" id="themekey" name="themekey" size="30"
+							value="{/root/gui/searchDefaults/themekey}"/>
 
-					<a href="#">
-					<img src="{/root/gui/url}/images/gdict.png" align="absmiddle" onclick="keywordSelector();"/>
-					</a>
+						<a href="#">
+							<img src="{/root/gui/url}/images/gdict.png" align="absmiddle"
+								onclick="keywordSelector();"/>
+						</a>
 
-					<div id='keywordSelectorFrame' class="keywordSelectorFrame" style="display:none;">
-						<div id='keywordSelector' class="keywordSelector"></div>
-					</div>
+						<div id="keywordSelectorFrame" class="keywordSelectorFrame"
+							style="display:none;">
+							<div id="keywordSelector" class="keywordSelector"/>
+						</div>
 
-					<div id='keywordList' class="keywordList" ></div>
-					<script type="text/javascript">
+						<div id="keywordList" class="keywordList"/>
+						<script type="text/javascript">
 					  var keyordsSelected = false;
 
 					  function addQuote (li){
@@ -386,23 +770,38 @@
 					</td>
 				</tr>
 			</xsl:if>
-			
+
 			<!-- Fuzzy search similarity for text field only (ie. Keywords, Any, Abstract, Title) set to 80% by default -->
 			<input class="content" id="similarity" name="similarity" type="hidden" value=".8"/>
 			<xsl:if test="string(/root/gui/searchDefaults/extended)='on'">
-				<tr><th><xsl:value-of select="/root/gui/strings/fuzzy"/></th><td>
-					<table>
-						<tr><td width="20px" align="center">-</td><td>
-							<div class="track" id="similarityTrack" style="width:100px;height:5px;">
-								<xsl:attribute name="alt"><xsl:value-of select="/root/gui/strings/fuzzySearch"/></xsl:attribute>
-								<xsl:attribute name="title"><xsl:value-of select="/root/gui/strings/fuzzySearch"/></xsl:attribute>
-								<div class="handle" id="similarityHandle" style="width:5px;height:10px;"> </div>
-							</div>
-						</td><td width="20px" align="center">+</td>
-						<td><div id="similarityDebug" style="display:none;"></div>
-						</td></tr>
-					</table>
-					<script type="text/javascript" language="JavaScript1.2">
+				<tr>
+					<th>
+						<xsl:value-of select="/root/gui/strings/fuzzy"/>
+					</th>
+					<td>
+						<table>
+							<tr>
+								<td width="20px" align="center">-</td>
+								<td>
+									<div class="track" id="similarityTrack"
+										style="width:100px;height:5px;">
+										<xsl:attribute name="alt">
+											<xsl:value-of select="/root/gui/strings/fuzzySearch"/>
+										</xsl:attribute>
+										<xsl:attribute name="title">
+											<xsl:value-of select="/root/gui/strings/fuzzySearch"/>
+										</xsl:attribute>
+										<div class="handle" id="similarityHandle"
+											style="width:5px;height:10px;"> </div>
+									</div>
+								</td>
+								<td width="20px" align="center">+</td>
+								<td>
+									<div id="similarityDebug" style="display:none;"/>
+								</td>
+							</tr>
+						</table>
+						<script type="text/javascript" language="JavaScript1.2">
 						var similaritySlider = new Control.Slider(
 													'similarityHandle',
 													'similarityTrack'
@@ -419,14 +818,17 @@
 					    };
 						similaritySlider.setValue($('similarity').value*10);
 					</script>
-				</td></tr>
+					</td>
+				</tr>
 			</xsl:if>
-			
+
 
 			<!-- Area -->
 			<xsl:if test="string(/root/gui/searchDefaults/extended)='on'">
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/location"/></th>
+					<th class="padded">
+						<xsl:value-of select="/root/gui/strings/location"/>
+					</th>
 					<td class="padded">
 						<table>
 							<tr>
@@ -434,16 +836,21 @@
 									<select class="content" name="relation">
 										<xsl:for-each select="/root/gui/strings/boundingRelation">
 											<option>
-												<xsl:if test="@value=/root/gui/searchDefaults/relation">
-													<xsl:attribute name="selected"/>
+												<xsl:if
+												test="@value=/root/gui/searchDefaults/relation">
+												<xsl:attribute name="selected"/>
 												</xsl:if>
-												<xsl:attribute name="value"><xsl:value-of select="@value"/></xsl:attribute>
+												<xsl:attribute name="value">
+												<xsl:value-of select="@value"/>
+												</xsl:attribute>
 												<xsl:value-of select="."/>
 											</option>
 										</xsl:for-each>
 									</select>
 								</td>
-								<td><xsl:text disable-output-escaping="yes">&amp;nbsp;&amp;nbsp;</xsl:text></td>
+								<td>
+									<xsl:text disable-output-escaping="yes">&amp;nbsp;&amp;nbsp;</xsl:text>
+								</td>
 								<td>
 
 									<!-- regions combobox -->
@@ -457,13 +864,17 @@
 										</option>
 
 										<xsl:for-each select="/root/gui/regions/record">
-											<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
+											<xsl:sort select="label/child::*[name() = $lang]"
+												order="ascending"/>
 											<option>
 												<xsl:if test="id=/root/gui/searchDefaults/region">
-													<xsl:attribute name="selected"/>
+												<xsl:attribute name="selected"/>
 												</xsl:if>
-												<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-												<xsl:value-of select="label/child::*[name() = $lang]"/>
+												<xsl:attribute name="value">
+												<xsl:value-of select="id"/>
+												</xsl:attribute>
+												<xsl:value-of
+												select="label/child::*[name() = $lang]"/>
 											</option>
 										</xsl:for-each>
 									</select>
@@ -473,11 +884,14 @@
 					</td>
 				</tr>
 			</xsl:if>
-					
+
 			<!-- Group -->
-			<xsl:if test="string(/root/gui/session/userId)!='' and string(/root/gui/searchDefaults/extended)='on' and string(/root/gui/searchDefaults/remote)='off'">
+			<xsl:if
+				test="string(/root/gui/session/userId)!='' and string(/root/gui/searchDefaults/extended)='on' and string(/root/gui/searchDefaults/remote)='off'">
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/group"/></th>
+					<th class="padded">
+						<xsl:value-of select="/root/gui/strings/group"/>
+					</th>
 					<td class="padded">
 						<select class="content" name="group">
 							<option value="">
@@ -492,7 +906,9 @@
 									<xsl:if test="id=/root/gui/searchDefaults/group">
 										<xsl:attribute name="selected"/>
 									</xsl:if>
-									<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+									<xsl:attribute name="value">
+										<xsl:value-of select="id"/>
+									</xsl:attribute>
 									<xsl:value-of select="name"/>
 								</option>
 							</xsl:for-each>
@@ -500,11 +916,14 @@
 					</td>
 				</tr>
 			</xsl:if>
-			
+
 			<!-- Category -->
-			<xsl:if test="string(/root/gui/searchDefaults/extended)='on' and string(/root/gui/searchDefaults/remote)='off'">
+			<xsl:if
+				test="string(/root/gui/searchDefaults/extended)='on' and string(/root/gui/searchDefaults/remote)='off'">
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/category"/></th>
+					<th class="padded">
+						<xsl:value-of select="/root/gui/strings/category"/>
+					</th>
 					<td class="padded">
 						<select class="content" name="category">
 							<option value="">
@@ -513,7 +932,7 @@
 								</xsl:if>
 								<xsl:value-of select="/root/gui/strings/any"/>
 							</option>
-							
+
 							<xsl:for-each select="/root/gui/categories/record">
 								<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
 
@@ -521,7 +940,9 @@
 									<xsl:if test="name = /root/gui/searchDefaults/category">
 										<xsl:attribute name="selected"/>
 									</xsl:if>
-									<xsl:attribute name="value"><xsl:value-of select="name"/></xsl:attribute>
+									<xsl:attribute name="value">
+										<xsl:value-of select="name"/>
+									</xsl:attribute>
 									<xsl:value-of select="label/child::*[name() = $lang]"/>
 								</option>
 							</xsl:for-each>
@@ -529,11 +950,14 @@
 					</td>
 				</tr>
 			</xsl:if>
-			
+
 			<!-- Source -->
-			<xsl:if test="string(/root/gui/searchDefaults/extended)='on' and string(/root/gui/searchDefaults/remote)='off'">
+			<xsl:if
+				test="string(/root/gui/searchDefaults/extended)='on' and string(/root/gui/searchDefaults/remote)='off'">
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/site"/></th>
+					<th class="padded">
+						<xsl:value-of select="/root/gui/strings/site"/>
+					</th>
 					<td class="padded">
 						<select class="content" name="siteId">
 							<option value="">
@@ -546,13 +970,15 @@
 								<!--
 								<xsl:sort order="ascending" select="name"/>
 								-->
-								<xsl:variable name="source"     select="siteid/text()"/>
+								<xsl:variable name="source" select="siteid/text()"/>
 								<xsl:variable name="sourceName" select="name/text()"/>
 								<option>
 									<xsl:if test="$source=/root/gui/searchDefaults/siteId">
 										<xsl:attribute name="selected"/>
 									</xsl:if>
-									<xsl:attribute name="value"><xsl:value-of select="$source"/></xsl:attribute>
+									<xsl:attribute name="value">
+										<xsl:value-of select="$source"/>
+									</xsl:attribute>
 									<xsl:value-of select="$sourceName"/>
 								</option>
 							</xsl:for-each>
@@ -560,11 +986,13 @@
 					</td>
 				</tr>
 			</xsl:if>
-			
+
 			<!-- Map type -->
 			<xsl:if test="string(/root/gui/searchDefaults/remote)='off'">
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/mapType"/></th>
+					<th class="padded">
+						<xsl:value-of select="/root/gui/strings/mapType"/>
+					</th>
 					<td>
 						<input name="digital" type="checkbox" value="on">
 							<xsl:if test="/root/gui/searchDefaults/digital='on'">
@@ -593,8 +1021,7 @@
 							&#xA0;&#xA0;
 						</xsl:if>
 						-->
-						&#xA0;&#xA0;
-						<input name="paper" type="checkbox" value="on">
+						&#xA0;&#xA0; <input name="paper" type="checkbox" value="on">
 							<xsl:if test="/root/gui/searchDefaults/paper='on'">
 								<xsl:attribute name="checked"/>
 							</xsl:if>
@@ -603,11 +1030,14 @@
 					</td>
 				</tr>
 			</xsl:if>
-			
+
 			<!-- Template -->
-			<xsl:if test="string(/root/gui/session/userId)!='' and /root/gui/services/service[@name='metadata.edit'] and string(/root/gui/searchDefaults/remote)='off'">
+			<xsl:if
+				test="string(/root/gui/session/userId)!='' and /root/gui/services/service[@name='metadata.edit'] and string(/root/gui/searchDefaults/remote)='off'">
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/kind"/></th>
+					<th class="padded">
+						<xsl:value-of select="/root/gui/strings/kind"/>
+					</th>
 					<td>
 						<select class="content" name="template" size="1">
 							<option value="n">
@@ -632,61 +1062,80 @@
 					</td>
 				</tr>
 			</xsl:if>
-			
+
 			<!-- remote search fields -->
 			<xsl:if test="string(/root/gui/searchDefaults/remote)='on'">
 
-				<tr><td class="dots" colspan="2"/></tr>
-				
+				<tr>
+					<td class="dots" colspan="2"/>
+				</tr>
+
 				<!-- Profiles and servers -->
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/profile"/></th>
+					<th class="padded">
+						<xsl:value-of select="/root/gui/strings/profile"/>
+					</th>
 					<td class="padded">
 						<select class="content" name="profile" onchange="profileSelected()">
 							<xsl:for-each select="/root/gui/searchProfiles/profile">
 								<option>
-									<xsl:if test="string(@value)=string(/root/gui/searchDefaults/profile)">
+									<xsl:if
+										test="string(@value)=string(/root/gui/searchDefaults/profile)">
 										<xsl:attribute name="selected"/>
 									</xsl:if>
-									<xsl:attribute name="value"><xsl:value-of select="@value"/></xsl:attribute>
+									<xsl:attribute name="value">
+										<xsl:value-of select="@value"/>
+									</xsl:attribute>
 									<xsl:value-of select="."/>
 								</option>
 							</xsl:for-each>
 						</select>
 					</td>
 				</tr>
-	
+
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/server"/></th>
+					<th class="padded">
+						<xsl:value-of select="/root/gui/strings/server"/>
+					</th>
 					<td class="padded">
-						<select class="content" name="servers" size="6" multiple="true" onchange="serverSelected()">
+						<select class="content" name="servers" size="6" multiple="true"
+							onchange="serverSelected()">
 							<xsl:for-each select="/root/gui/repositories/Instance">
 								<xsl:variable name="name" select="@instance_dn"/>
 								<xsl:variable name="collection" select="@collection_dn"/>
-								<xsl:variable name="description" select="/root/gui/repositories/Collection[@collection_dn=$collection]/@collection_name"/>
+								<xsl:variable name="description"
+									select="/root/gui/repositories/Collection[@collection_dn=$collection]/@collection_name"/>
 								<option>
-									<xsl:if test="/root/gui/searchDefaults/servers/server[string(.)=$name]">
+									<xsl:if
+										test="/root/gui/searchDefaults/servers/server[string(.)=$name]">
 										<xsl:attribute name="selected"/>
 									</xsl:if>
-									<xsl:attribute name="value"><xsl:value-of select="$name"/></xsl:attribute>
+									<xsl:attribute name="value">
+										<xsl:value-of select="$name"/>
+									</xsl:attribute>
 									<xsl:value-of select="$description"/>
 								</option>
 							</xsl:for-each>
 						</select>
 					</td>
 				</tr>
-				
+
 				<!-- timeout -->
 				<tr>
-					<th class="padded"><xsl:apply-templates select="/root/gui/strings/timeout" mode="caption"/></th>
+					<th class="padded">
+						<xsl:apply-templates select="/root/gui/strings/timeout" mode="caption"/>
+					</th>
 					<td class="padded">
 						<select class="content" name="timeout">
 							<xsl:for-each select="/root/gui/strings/timeoutChoice">
 								<option>
-									<xsl:if test="string(@value)=string(/root/gui/searchDefaults/timeout)">
+									<xsl:if
+										test="string(@value)=string(/root/gui/searchDefaults/timeout)">
 										<xsl:attribute name="selected"/>
 									</xsl:if>
-									<xsl:attribute name="value"><xsl:value-of select="@value"/></xsl:attribute>
+									<xsl:attribute name="value">
+										<xsl:value-of select="@value"/>
+									</xsl:attribute>
 									<xsl:value-of select="."/>
 								</option>
 							</xsl:for-each>
@@ -694,30 +1143,236 @@
 					</td>
 				</tr>
 			</xsl:if>
-			
+
 			<!-- other search options -->
 
-				<tr><td class="dots" colspan="2"/></tr>
-				
-				<!-- hits per page -->
-				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/hitsPerPage"/></th>
-					<td class="padded">
-						<select class="content" name="hitsPerPage" onchange="profileSelected()">
-							<xsl:for-each select="/root/gui/strings/hitsPerPageChoice">
-								<option>
-									<xsl:if test="string(@value)=string(/root/gui/searchDefaults/hitsPerPage)">
-										<xsl:attribute name="selected"/>
-									</xsl:if>
-									<xsl:attribute name="value"><xsl:value-of select="@value"/></xsl:attribute>
-									<xsl:value-of select="."/>
-								</option>
-							</xsl:for-each>
-						</select>
-					</td>
-				</tr>
-			
+			<tr>
+				<td class="dots" colspan="2"/>
+			</tr>
+
+			<!-- hits per page -->
+			<tr>
+				<th class="padded">
+					<xsl:value-of select="/root/gui/strings/hitsPerPage"/>
+				</th>
+				<td class="padded">
+					<select class="content" name="hitsPerPage" onchange="profileSelected()">
+						<xsl:for-each select="/root/gui/strings/hitsPerPageChoice">
+							<option>
+								<xsl:if
+									test="string(@value)=string(/root/gui/searchDefaults/hitsPerPage)">
+									<xsl:attribute name="selected"/>
+								</xsl:if>
+								<xsl:attribute name="value">
+									<xsl:value-of select="@value"/>
+								</xsl:attribute>
+								<xsl:value-of select="."/>
+							</option>
+						</xsl:for-each>
+					</select>
+				</td>
+			</tr>
+
 		</table>
 	</xsl:template>
+
+
+	<xsl:template name="geofields">
+		<table class="geosearchfields">
+			<!-- Any (free text) -->
+			<tr>
+				<th class="padded">
+					<xsl:value-of select="/root/gui/strings/searchText"/>
+				</th>
+				<td class="padded">
+					<input name="any" id="any" class="content"  size="30"
+						value="{/root/gui/searchDefaults/any}"/>
+					<br/>
+				</td>
+			</tr>
+
+
+			<!-- Area -->
+			<tr>
+				<th class="padded">
+					<xsl:value-of select="/root/gui/strings/location"/>
+				</th>
+				<td class="padded">
+					<!-- regions combobox -->
+
+					<select class="content" name="region">
+						<option value="">
+							<xsl:if test="/root/gui/searchDefaults/theme='_any_'">
+								<xsl:attribute name="selected"/>
+							</xsl:if>
+							<xsl:value-of select="/root/gui/strings/any"/>
+						</option>
+
+						<xsl:for-each select="/root/gui/regions/record">
+							<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
+							<option>
+								<xsl:if test="id=/root/gui/searchDefaults/region">
+									<xsl:attribute name="selected"/>
+								</xsl:if>
+								<xsl:attribute name="value">
+									<xsl:value-of select="id"/>
+								</xsl:attribute>
+								<xsl:value-of select="label/child::*[name() = $lang]"/>
+							</option>
+						</xsl:for-each>
+					</select>
+				</td>
+			</tr>
+
+			<xsl:comment>MINIMAP</xsl:comment>					
+			<tr style="margin-bottom:5px;">
+				<td colspan="2" width="100%" align="center" >
+					
+					<table id="minimap_root">
+						<xsl:comment>MINIMAP TOOLBAR</xsl:comment>						
+						<tr  id="im_mm_toolbar"> <!-- This element's class is set at runtime -->
+							<td class="im_mmtool" id="im_mmtool_fullextent"  	onClick="javascript:im_mm_fullExtent()"><img src="/intermap/images/im_zoomfull16x16.png" title="Zoom full extent"/></td>
+							<td class="im_mmtool" id="im_mmtool_zoomin"	onClick="javascript:im_mm_setTool('zoomin');" ><img src="/intermap/images/zoomin.png" title="Zoom in"/></td>
+							<td class="im_mmtool" id="im_mmtool_zoomout"   	onClick="javascript:im_mm_setTool('zoomout');"><img  src="/intermap/images/zoomout.png" title="Zoom out"/></td>
+							<td class="im_mmtool" id="im_mmtool_zoomsel"	onClick="javascript:im_mm_zoomToAoi()"><img src="/intermap/images/zoomsel.png" title="Zoom to selected"/></td>
+							<td class="im_mmtool" id="im_mmtool_pan"		onClick="javascript:im_mm_setTool('pan');"><img src="/intermap/images/im_pan16x16.png" title="Pan"/></td>
+							<td class="im_mmtool" id="im_mmtool_aoi"		onClick="javascript:im_mm_setTool('aoi')"><img src="/intermap/images/im_aoi16x16.png" title="Select area of interest"/></td> 
+						</tr>
+						<tr height="122px" style="position:relative;">
+							<td id="im_mm_mapContainer" style="position:relative;width:262px;height:122px;" colspan="6" align="center" >
+								<div id="im_mm_map" style="position: absolute;width:262px;height:122px;">
+									<img id="im_mm_image" width="260" height="120" style="left:1px;" align="center" src="/intermap/images/map0.gif"/>
+								</div>
+								<div id="im_mm_wait" style="position: relative; z-index:999; left:-41px; top:50px;">
+									<img id="im_mm_waitimage" style="position: absolute; z-index:1000;" src="/intermap/images/waiting.gif" />
+								</div>
+							</td>
+						</tr>						
+					</table>
+				</td>
+			</tr>
+
+			<xsl:comment>COORDS</xsl:comment>
+			<tr>
+				<td colspan="2">
+					<table id="coords" align="center">
+						<tr>
+							<td/>
+							<td>
+								<input class="content" id="northBL" name="northBL"  size="7"
+									value="{/root/gui/searchDefaults/northBL}"/>
+							</td>
+							<td/>
+						</tr>
+						<tr>
+							<td>
+								<input class="content" id="westBL" name="westBL" size="7"
+									value="{/root/gui/searchDefaults/westBL}"/>
+							</td>
+							<td/> 
+							<td>
+								<input class="content" id="eastBL" name="eastBL" size="7"
+									value="{/root/gui/searchDefaults/eastBL}"/>
+							</td>
+
+						</tr>
+						<tr>
+							<td/> 
+							<td>
+								<input class="content" id="southBL" name="southBL" size="7"
+									value="{/root/gui/searchDefaults/southBL}"/>
+							</td>
+							<td/> 
+						</tr>
+
+					</table>
+				</td>
+			</tr>
+
+
+			<!-- other search options -->
+
+			<tr>
+				<td class="dots" colspan="2"/>
+			</tr>
+
+			<!-- hits per page -->
+			<tr>
+				<th class="padded">
+					<xsl:value-of select="/root/gui/strings/hitsPerPage"/>
+				</th>
+				<td class="padded">
+					<select class="content" name="hitsPerPage" onchange="profileSelected()">
+						<xsl:for-each select="/root/gui/strings/hitsPerPageChoice">
+							<option>
+								<xsl:if
+									test="string(@value)=string(/root/gui/searchDefaults/hitsPerPage)">
+									<xsl:attribute name="selected"/>
+								</xsl:if>
+								<xsl:attribute name="value">
+									<xsl:value-of select="@value"/>
+								</xsl:attribute>
+								<xsl:value-of select="."/>
+							</option>
+						</xsl:for-each>
+					</select>
+				</td>
+			</tr>
+
+			<tr>
+				<td/>
+				<td align="right">
+					<button id="searchBtn" name=""  class="content-small" type="button"
+						style="cursor:hand;cursor:pointer" title="{/root/gui/strings/search}">
+					<xsl:value-of select="/root/gui/strings/search"/>
+					</button>
+				</td>
+			</tr>
+			<tr>
+				<td/>
+				<td align="right">
+					<button id="openIMBtn" class="imdisabled" type="button" title="Open InterMap &gt;&gt;&gt;" >
+						Loading intermap...
+					</button>
+				</td>
+			</tr>
+			<tr>
+				<td/>
+				<td align="right">
+					<button id="closeIMBtn" class="content-small" type="button" title="Close InterMap &lt;&lt;&lt;" style="display:none">
+						Close InterMap &lt;&lt;&lt;
+					</button>
+				</td>
+			</tr>
+			
+			<script language="JavaScript" type="text/javascript">
+				
+//				Event.observe('PIPPO1', 'mouseover', function(){ $('PIPPO2').style.display = 'none'; });
+//				Event.observe('PIPPO1', 'mouseout', function(){ $('PIPPO2').style.display = 'block'; });
+
+			Event.observe('searchBtn', 'click', function(){ doMetadataSearch(); });
+//			Event.observe('openIMBtn', 'click',  function(){openIntermap()} ); // issued only when IM is loaded
+			Event.observe('closeIMBtn', 'click',  function(){closeIntermap()} );
+			
+			</script>
+
+			
+			<tr>			
+				<td colspan="2" align="right">
+					<table>
+						<tr>
+							<td style="padding-left:10px;padding-top:5px;padding-bottom:5px;"><a href="/">Help</a></td>
+							<td style="padding-left:10px;padding-top:5px;"><a onClick="goExtended('off','{/root/gui/locService}/main.home')" style="cursor:pointer;">Simple search</a></td>
+							<td style="padding-left:10px;padding-top:5px;"><a onClick="goExtended('on','{/root/gui/locService}/main.home')" style="cursor:pointer;">Advanced search</a></td>							
+						</tr>
+					</table>
+				</td>
+			</tr>
+				
+				
+		</table>
+	</xsl:template>
+
+
 
 </xsl:stylesheet>
