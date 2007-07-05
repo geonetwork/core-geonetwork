@@ -6,6 +6,8 @@
 === to build the Geonetwork project.
 ===
 === Author : Andrea Carboni <acarboni@users.sourceforge.net>
+=== Author : Stefano Giaccio <sgiaccio@users.sourceforge.net>
+=== Author : Emanuele Tajariol <e_tajariol@users.sourceforge.net>
 ==============================================================================
 -->
 
@@ -13,8 +15,15 @@
 
 	<!-- =============================================================== -->
 
-	<target name="compile">
-		<delete	file="web/WEB-INF/lib/geonetwork.jar" />
+	<target name="all" depends="compile, javadoc"/>	
+
+	<!-- =============================================================== -->
+
+	<target name="compile" depends="gn, im" />
+
+	<!-- =============================================================== -->
+	<target name="gn">
+		<delete	file="web/geonetwork/WEB-INF/lib/geonetwork.jar" />
 		<delete	file="csw/lib/csw-client.jar" />
 		<delete	file="csw/lib/csw-common.jar" />
 		<delete	file="gast/gast.jar" />
@@ -23,8 +32,8 @@
 
 		<javac	srcdir  ="src"
 					destdir =".build"
-					extdirs ="web/WEB-INF/lib"
-					includes="org/**"
+					extdirs ="web/geonetwork/WEB-INF/lib"
+					includes="org/fao/**"
 					encoding= "ISO8859-1"
 					debug   ="true" />
 
@@ -32,9 +41,9 @@
 			<fileset dir   = "src" includes = "*.properties"/>
 		</copy>
 		
-		<jar		jarfile ="web/WEB-INF/lib/geonetwork.jar"
+		<jar		jarfile ="web/geonetwork/WEB-INF/lib/geonetwork.jar"
 					basedir =".build"
-					includes="**" />
+					includes="org/fao/**" />
 		
 		<jar		jarfile ="csw/lib/csw-client.jar"
 					basedir =".build"
@@ -55,21 +64,51 @@
 		<delete dir=".build"/>
 	</target>
 
-	<!-- =============================================================== -->
-
-    <target name="javadoc">
-        <delete   dir="docs/javadoc" />
-        <mkdir    dir="docs/javadoc" />
-        <javadoc	sourcepath  ="src" 
-						destdir     ="docs/javadoc" 
-						packagenames="org.fao.*"
-						windowtitle ="Geonetwork class documentation"/>
-    </target>
 
 	<!-- =============================================================== -->
+       <target name="im">
+                <delete file="web/intermap/WEB-INF/lib/intermap.jar" />
+                <delete dir =".build" />
+                <mkdir  dir =".build" />
 
-    <target name="all" depends="compile,javadoc"/>
+                <javac  srcdir  ="src"
+                                        destdir =".build"
+                                        extdirs ="web/intermap/WEB-INF/lib"
+                                        includes="org/wfp/**,jeeves.**"
+                                        debug   ="true"
+		/>
+
+                <jar            jarfile ="web/intermap/WEB-INF/lib/intermap.jar"
+                                        basedir =".build"
+                                        includes="org/wfp/**,jeeves.**" />
+
+                <delete dir=".build"/>
+        </target>
+
+
+	<!-- =============================================================== -->
+	<target name="javadoc" depends="javadoc-gn, javadoc-im" />
+
+	<target name="javadoc-gn">
+		<delete   dir="docs/javadoc-gn" />
+		<mkdir    dir="docs/javadoc-gn" />
+		<javadoc	sourcepath  ="src" 
+				destdir     ="docs/javadoc-gn" 
+				packagenames="org.fao.*"
+				windowtitle ="Geonetwork class documentation"/>
+	</target>
 	
+	<!-- =============================================================== -->
+	
+	<target name="javadoc-im">
+		<delete   dir="docs/javadoc-im" />
+		<mkdir    dir="docs/javadoc-im" />
+		<javadoc        sourcepath  ="src"
+				destdir     ="docs/javadoc-im"
+				packagenames="org.wfp.*"
+				windowtitle ="InterMap class documentation"/>
+	</target>
+
 	<!-- =============================================================== -->
 
 </project>
