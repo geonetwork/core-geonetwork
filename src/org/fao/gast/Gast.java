@@ -41,7 +41,7 @@ public class Gast
 	{
 		String jarFile = Util.getJarFile("org/fao/gast/Gast.class");
 		String appPath = getPath(jarFile);
-		URL[]  jars    = Util.getJarUrls(appPath +"/web/WEB-INF/lib");
+		URL[]  jars    = Util.getJarUrls(appPath +"/web/geonetwork/WEB-INF/lib");
 
 		String starter = (args.length == 0)
 									? "org.fao.gast.gui.MainFrame"

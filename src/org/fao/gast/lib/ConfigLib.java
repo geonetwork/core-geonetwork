@@ -45,7 +45,7 @@ public class ConfigLib
 	{
 		this.appPath = appPath;
 
-		config      = Lib.xml.load(appPath +"/web/WEB-INF/config.xml");
+		config      = Lib.xml.load(appPath +"/web/geonetwork/WEB-INF/config.xml");
 		dbmsElem    = retrieveDbms(config);
 		appHandElem = config.getRootElement().getChild(ConfigFile.Child.APP_HANDLER);
 	}
@@ -156,14 +156,14 @@ public class ConfigLib
 
 	public void save() throws FileNotFoundException, IOException
 	{
-		Lib.xml.save(appPath +"/web/WEB-INF/config.xml", config);
+		Lib.xml.save(appPath +"/web/geonetwork/WEB-INF/config.xml", config);
 	}
 
 	//---------------------------------------------------------------------------
 
 	public Resource createResource() throws Exception
 	{
-		return new Resource(appPath +"/web/", dbmsElem);
+		return new Resource(appPath +"/web/geonetwork/", dbmsElem);
 	}
 
 	//---------------------------------------------------------------------------

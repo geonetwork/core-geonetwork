@@ -516,7 +516,7 @@ public class DatabaseLib
 		//--- duplicate dummy logo to reflect the uuid
 
 		FileInputStream  is = new FileInputStream (appPath +"/gast/images/dummy.gif");
-		FileOutputStream os = new FileOutputStream(appPath +"/web/images/logos/"+ uuid +".gif");
+		FileOutputStream os = new FileOutputStream(appPath +"/web/geonetwork/images/logos/"+ uuid +".gif");
 		BinaryFile.copy(is, os, true, true);
 
 		dbms.execute("UPDATE Settings SET value=? WHERE name='siteId'", uuid);

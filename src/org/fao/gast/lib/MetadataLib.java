@@ -49,7 +49,7 @@ public class MetadataLib
 	{
 		this.appPath = appPath;
 
-//		searchMan = new SearchManager(appPath +"/web/", Lib.config.getLuceneDir());
+//		searchMan = new SearchManager(appPath +"/web/geonetwork/", Lib.config.getLuceneDir());
 	}
 
 	//---------------------------------------------------------------------------
@@ -68,7 +68,7 @@ public class MetadataLib
 	public boolean canConvert(String fromSchema, String toSchema)
 	{
 		String format = fromSchema +"-to-"+ toSchema;
-		String path   = appPath +"/web/conversion/"+format+"/main.xsl";
+		String path   = appPath +"/web/geonetwork/conversion/"+format+"/main.xsl";
 
 		return new File(path).exists();
 	}
@@ -81,7 +81,7 @@ public class MetadataLib
 			throw new Exception("Cannot convert to schema :"+ toSchema);
 
 		String format = fromSchema +"-to-"+ toSchema;
-		String path   = appPath +"/web/conversion/"+format;
+		String path   = appPath +"/web/geonetwork/conversion/"+format;
 
 		Element result   = Xml.transform(md, path +"/main.xsl");
 		Element unmapped = Xml.transform(md, path +"/unmapped.xsl");
@@ -156,7 +156,7 @@ public class MetadataLib
 
 		//--- do an XSL  transformation
 
-		String styleSheet = appPath +"/web/xml/schemas/"+schema+"/"+ Geonet.File.UPDATE_FIXED_INFO;
+		String styleSheet = appPath +"/web/geonetwork/xml/schemas/"+schema+"/"+ Geonet.File.UPDATE_FIXED_INFO;
 
 		return Xml.transform(root, styleSheet);
 	}
@@ -172,7 +172,7 @@ public class MetadataLib
 
 	public void clearIndexes() throws Exception
 	{
-		File dir = new File(appPath +"/web/"+ Lib.config.getLuceneDir());
+		File dir = new File(appPath +"/web/geonetwork/"+ Lib.config.getLuceneDir());
 		Lib.io.cleanDir(dir);
 	}
 
@@ -187,7 +187,7 @@ public class MetadataLib
 
 		//--- do an XSL  transformation
 
-		String styleSheet = appPath +"/web/xml/schemas/"+ schema +"/"+ Geonet.File.EXTRACT_THUMBNAILS;
+		String styleSheet = appPath +"/web/geonetwork/xml/schemas/"+ schema +"/"+ Geonet.File.EXTRACT_THUMBNAILS;
 
 		return Xml.transform(md, styleSheet);
 	}

@@ -43,7 +43,7 @@ public class ProfileLib
 	{
 		this.appPath = appPath;
 
-		profiles = Xml.loadFile(appPath +"/web/xml/user-profiles.xml");
+		profiles = Xml.loadFile(appPath +"/web/geonetwork/xml/user-profiles.xml");
 	}
 
 	//---------------------------------------------------------------------------

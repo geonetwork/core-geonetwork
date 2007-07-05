@@ -67,7 +67,7 @@ public class ServerLib
 	private String     appPath;
 	private Properties serverProps;
 
-	private static final String SERVER_PROPS = "/web/WEB-INF/server.prop";
+	private static final String SERVER_PROPS = "/web/geonetwork/WEB-INF/server.prop";
 }
 
 //=============================================================================

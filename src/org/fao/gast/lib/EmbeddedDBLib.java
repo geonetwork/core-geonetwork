@@ -145,9 +145,9 @@ public class EmbeddedDBLib
 	private String       appPath;
 	private List<String> lines;
 
-	private static final String MCKOI_CONFIG = "/web/WEB-INF/db/db.conf";
-	private static final String MCKOI_ACCOUNT= "/web/WEB-INF/db/account.prop";
-	private static final String MCKOI_DATA   = "/web/WEB-INF/db/data";
+	private static final String MCKOI_CONFIG = "/web/geonetwork/WEB-INF/db/db.conf";
+	private static final String MCKOI_ACCOUNT= "/web/geonetwork/WEB-INF/db/account.prop";
+	private static final String MCKOI_DATA   = "/web/geonetwork/WEB-INF/db/data";
 }
 
 //=============================================================================

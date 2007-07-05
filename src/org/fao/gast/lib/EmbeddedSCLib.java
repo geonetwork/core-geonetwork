@@ -167,10 +167,10 @@ public class EmbeddedSCLib
 	private Document webXml;
 
 	private static final String JETTY_FILE  = "/bin/jetty.xml";
-	private static final String WEBXML_FILE = "/web/WEB-INF/web.xml";
+	private static final String WEBXML_FILE = "/web/geonetwork/WEB-INF/web.xml";
 
 	private static final String INDEX_SRC_FILE = "/gast/data/index.html";
-	private static final String INDEX_DES_FILE = "/web/index.html";
+	private static final String INDEX_DES_FILE = "/web/geonetwork/index.html";
 }
 
 //=============================================================================
