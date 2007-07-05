@@ -1,0 +1,46 @@
+package org.wfp.vam.intermap.services.map;
+
+import org.jdom.*;
+
+import jeeves.interfaces.*;
+import jeeves.server.*;
+import jeeves.server.context.*;
+
+import org.wfp.vam.intermap.kernel.map.*;
+
+import org.wfp.vam.intermap.Constants;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.WmsService;
+
+//=============================================================================
+
+/** main.result service. shows search results
+  */
+
+public class WmsConfig implements Service
+{
+	public void init(String appPath, ServiceConfig config) throws Exception {}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Service
+	//---
+	//--------------------------------------------------------------------------
+
+	public Element exec(Element params, ServiceContext context) throws Exception
+	{
+		int id = Integer.parseInt(params.getChildText(Constants.MAP_SERVER_ID));
+		String style = params.getChildText("style");
+		
+		// Get the MapMerger object from the user session
+		MapMerger mm = MapUtil.getMapMerger(context);
+		
+		if (!style.equals(""))
+				((WmsService)mm.getService(id)).setStyle(style);
+				
+		return null;
+	}
+	
+}
+
+//=============================================================================
+
