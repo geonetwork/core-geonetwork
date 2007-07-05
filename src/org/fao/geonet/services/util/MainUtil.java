@@ -84,6 +84,7 @@ public class MainUtil
 						.addContent(new Element(Geonet.SearchResult.PAPER)        .setText(Geonet.Text.OFF))
 						.addContent(new Element(Geonet.SearchResult.TEMPLATE)     .setText("n"))
 						.addContent(new Element(Geonet.SearchResult.EXTENDED)     .setText(Geonet.Text.OFF))
+						.addContent(new Element(Geonet.SearchResult.INTERMAP)     .setText(Geonet.Text.OFF))
 						.addContent(new Element(Geonet.SearchResult.HELP)         .setText(Geonet.Text.OFF))
 						.addContent(new Element(Geonet.SearchResult.REMOTE)       .setText(Geonet.Text.OFF))
 						.addContent(new Element(Geonet.SearchResult.HITS_PER_PAGE).setText("10"));
@@ -116,6 +117,7 @@ public class MainUtil
 		Element  elTimeout     = elData.getChild(Geonet.SearchResult.TIMEOUT);
 
 		Element  elExtended    = elData.getChild(Geonet.SearchResult.EXTENDED);
+		Element  elIntermap 	  = elData.getChild(Geonet.SearchResult.INTERMAP);
 		Element  elHelp        = elData.getChild(Geonet.SearchResult.HELP);
 		Element  elRemote      = elData.getChild(Geonet.SearchResult.REMOTE);
 
@@ -148,6 +150,7 @@ public class MainUtil
 			String   sTimeout      = request.getChildText(Geonet.SearchResult.TIMEOUT);
 			String   sHitsPerPage  = request.getChildText(Geonet.SearchResult.HITS_PER_PAGE);
 			String   sExtended     = request.getChildText(Geonet.SearchResult.EXTENDED);
+			String   sIntermap 	  = request.getChildText(Geonet.SearchResult.INTERMAP);
 			String   sHelp         = request.getChildText(Geonet.SearchResult.HELP);
 			String   sRemote       = request.getChildText(Geonet.SearchResult.REMOTE);
 			Iterator iServer       = request.getChildren (Geonet.SearchResult.SERVERS).iterator();
@@ -167,6 +170,7 @@ public class MainUtil
 			if (sGroup       != null) elGroup.setText(sGroup);
 			if (sProfile     != null) elProfile.setText(sProfile);
 			if (sTimeout     != null) elTimeout.setText(sTimeout);
+			if (sIntermap    != null) elIntermap.setText(sIntermap);
 			if (sHelp        != null) elHelp.setText(sHelp);
 			if (sRemote      != null) elRemote.setText(sRemote);
 			if (sHitsPerPage != null) elHitsPerPage.setText(sHitsPerPage);

@@ -143,6 +143,7 @@ public class Geonet
 		public static final String SITE_ID       = "siteId";
 		public static final String TEMPLATE      = "template";
 		public static final String EXTENDED      = "extended";
+		public static final String INTERMAP      = "intermap";
 		public static final String HELP          = "help";
 		public static final String REMOTE        = "remote";
 		public static final String KEYWORD       = "keyword";
