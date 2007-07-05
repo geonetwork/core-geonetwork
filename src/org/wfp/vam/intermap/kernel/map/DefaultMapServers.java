@@ -42,7 +42,7 @@ public class DefaultMapServers {
 	private static Element getServersEl(Element config)
 	{
 		Element elServers = (Element)(config.getChild(Constants.MAP_SERVERS).detach());
-		List servers = elServers.getChildren();
+		List<Element> servers = elServers.getChildren();
 
 		// Set the id attribute for each server
 		int n = 1;
@@ -55,7 +55,7 @@ public class DefaultMapServers {
 	private static Element getContextsEl(Element config)
 	{
 		Element elContexts = (Element)config.getChild(Constants.MAP_CONTEXTS).clone();
-		List contextList = elContexts.getChildren(Constants.MAP_CONTEXT);
+		List<Element> contextList = elContexts.getChildren(Constants.MAP_CONTEXT);
 
 		// Set the id attribute for each server
 		int n = 1;
@@ -80,7 +80,7 @@ public class DefaultMapServers {
 	private static Hashtable getContextsHt(Element config)
 	{
 		Element elContexts = (Element)config.getChild(Constants.MAP_CONTEXTS).clone();
-		List lContexts = elContexts.getChildren();
+		List<Element> lContexts = elContexts.getChildren();
 
 		// Set the id attribute for each server
 		Hashtable htContexts = new Hashtable();

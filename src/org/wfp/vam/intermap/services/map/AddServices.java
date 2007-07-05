@@ -32,7 +32,7 @@ public class AddServices implements Service
 		// get some request parameters
 		String serverUrl = params.getChildText(Constants.MAP_SERVER_URL);
 		int serverType = Integer.parseInt(params.getChildText(Constants.MAP_SERVER_TYPE));
-		List lServices = params.getChildren(Constants.MAP_SERVICE);
+		List<Element> lServices = params.getChildren(Constants.MAP_SERVICE);
 
 
 		Element response = new Element("response");

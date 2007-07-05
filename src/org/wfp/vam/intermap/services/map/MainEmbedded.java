@@ -1,6 +1,7 @@
 //==============================================================================
 package org.wfp.vam.intermap.services.map;
 
+import java.util.List;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -134,12 +135,12 @@ public class MainEmbedded implements Service
 		Element mapContext = DefaultMapServers.getDefaultContext();
 
 		// Add each layer in the map context to the map
-		for (Element elServer: mapContext.getChildren("server"))
+		for (Element elServer: (List<Element>)mapContext.getChildren("server"))
 		{
 			String serverType = elServer.getAttributeValue(Constants.MAP_SERVER_TYPE);
 			String serverUrl  = elServer.getAttributeValue(Constants.MAP_SERVER_URL);
 
-			for (Element elLayer: elServer.getChildren(Constants.MAP_LAYER))
+			for (Element elLayer: (List<Element>)elServer.getChildren(Constants.MAP_LAYER))
 			{
 				try
 				{

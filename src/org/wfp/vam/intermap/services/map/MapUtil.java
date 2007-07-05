@@ -89,7 +89,7 @@ public class MapUtil
 
 	protected static void setVisibleLayers(Element request, MapMerger mm)
 	{
-		for(Element param : request.getChildren())
+		for(Element param : (List<Element>)request.getChildren())
 		{
 			String key   = param.getName();
 			String value = param.getText();
