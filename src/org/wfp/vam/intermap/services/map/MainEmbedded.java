@@ -33,6 +33,13 @@ public class MainEmbedded implements Service
 		// Get the MapMerger object from the user session
 		MapMerger mm = MapUtil.getMapMerger(context);
 
+		boolean doReset = params.getChildText("reset") != null;
+		if( doReset )
+		{
+			mm = new MapMerger();
+			context.getUserSession().setProperty(Constants.SESSION_MAP, mm);
+		}
+
 		// Add default context if none exists
 		if (mm.size() == 0) // No layers to merge
 		{
@@ -130,7 +137,7 @@ public class MainEmbedded implements Service
 			.addContent(new Element("height").setText(""+h));
 	}
 
-	public static Element setDefaultContext(MapMerger mm, ServiceContext context) throws Exception
+	public static void setDefaultContext(MapMerger mm, ServiceContext context) throws Exception
 	{
 		Element mapContext = DefaultMapServers.getDefaultContext();
 
@@ -161,7 +168,7 @@ public class MainEmbedded implements Service
 		// Update the user session
 		context.getUserSession().setProperty(Constants.SESSION_MAP, mm);
 
-		return null;
+//		return null;
 	}
 
 	public Element layers(Element params, ServiceContext context) throws Exception
