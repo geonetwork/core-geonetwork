@@ -75,7 +75,7 @@ ker.createRequest = function(elemName, params)
 
 ker.send = function(service, request, onSuccessFnc, xmlResponse)
 {
-	if (!xmlResponse)
+	if (xmlResponse != false)
 		xmlResponse = true;
 
 	var opt = 
