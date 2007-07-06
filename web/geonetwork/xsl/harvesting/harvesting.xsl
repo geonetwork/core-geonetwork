@@ -10,6 +10,7 @@
 	<xsl:include href="geonet20/geonetwork.xsl"/>
 	<xsl:include href="webdav/webdav.xsl"/>
 	<xsl:include href="csw/csw.xsl"/>
+	<xsl:include href="z3950/z3950.xsl"/>
 
 	<!-- ============================================================================================= -->
 
@@ -84,6 +85,7 @@
 		<xsl:call-template name="editPanel-WD"/>
 		<xsl:call-template name="editPanel-GN20"/>
 		<xsl:call-template name="editPanel-CSW"/>
+		<xsl:call-template name="editPanel-Z39"/>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->

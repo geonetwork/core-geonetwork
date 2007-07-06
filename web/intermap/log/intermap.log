@@ -1,695 +1,102 @@
-2007-07-05 15:12:01 | === Starting system ========================================
-2007-07-05 15:12:01 | Path    : /home/fao/project/gnim/svn/intermap/intermap/trunk/web/
-2007-07-05 15:12:01 | BaseURL : intermap
-2007-07-05 15:12:01 | Loading : /home/fao/project/gnim/svn/intermap/intermap/trunk/web/WEB-INF/config.xml
-2007-07-05 15:12:01 | Initializing general configuration...
-2007-07-05 15:12:01 | Initializing defaults...
-2007-07-05 15:12:01 |    Default local is :true
-2007-07-05 15:12:01 | Initializing resources...
-2007-07-05 15:12:01 | Found handler : org.wfp.vam.intermap.Intermap
-2007-07-05 15:12:01 | --- Starting handler --------------------------------------
-2007-07-05 15:12:01 | Initializing intermap...
-2007-07-05 15:12:01 | Map servers config...
-2007-07-05 15:12:01 | axlElementBuilder config...
-2007-07-05 15:12:01 | WmsService config...
-2007-07-05 15:12:01 | Proxy server config...
-2007-07-05 15:12:01 | The useproxy attribute is set to $USE_PROXY
-2007-07-05 15:12:01 | Temporary files config...
-2007-07-05 15:12:01 | HTTP Cache files config...
-2007-07-05 15:12:01 | Temporary URL config...
-2007-07-05 15:12:01 | Screen DPI config...
-2007-07-05 15:12:01 | setting default image size to small
-2007-07-05 15:12:01 | ...done
-2007-07-05 15:12:01 | --- Handler started ---------------------------------------
-2007-07-05 15:12:01 | Initializing services...
-2007-07-05 15:12:01 |    Adding service : map.getMain
-2007-07-05 15:12:01 |    Adding service : map.getMain.embedded
-2007-07-05 15:12:01 |    Adding service : minimap.rebuild
-2007-07-05 15:12:01 |    Adding service : mapServers.getServices
-2007-07-05 15:12:01 |    Adding service : mapServers.getServices.embedded
-2007-07-05 15:12:01 |    Adding service : mapServers.getServicesExt
-2007-07-05 15:12:01 |    Adding service : mapServers.getServices.xml
-2007-07-05 15:12:01 |    Adding service : map.addServices
-2007-07-05 15:12:01 |    Adding service : map.addServices.xml
-2007-07-05 15:12:01 |    Adding service : map.addServicesExt
-2007-07-05 15:12:01 |    Adding service : mapContexts.get
-2007-07-05 15:12:01 |    Adding service : mapServers.listServers
-2007-07-05 15:12:01 |    Adding service : mapServers.listServers.xml
-2007-07-05 15:12:01 |    Adding service : map.layers.getOrder
-2007-07-05 15:12:01 |    Adding service : map.layers.setOrder
-2007-07-05 15:12:01 |    Adding service : map.layers.setTransparency
-2007-07-05 15:12:01 |    Adding service : map.layers.toggleVisibility
-2007-07-05 15:12:01 |    Adding service : map.action
-2007-07-05 15:12:01 |    Adding service : map.move
-2007-07-05 15:12:01 |    Adding service : map.update
-2007-07-05 15:12:01 |    Adding service : map.setAoi
-2007-07-05 15:12:02 |    Adding service : map.unsetAoi
-2007-07-05 15:12:02 |    Adding service : map.fullExtent
-2007-07-05 15:12:02 |    Adding service : map.zoomToService
-2007-07-05 15:12:02 |    Adding service : map.toggleImageSize
-2007-07-05 15:12:02 |    Adding service : map.reset
-2007-07-05 15:12:02 |    Adding service : map.identify
-2007-07-05 15:12:02 |    Adding service : map.service.getLegend
-2007-07-05 15:12:02 |    Adding service : map.service.wmsConfigForm
-2007-07-05 15:12:02 |    Adding service : map.service.wmsConfig
-2007-07-05 15:12:02 |    Adding service : map.service.showExtents
-2007-07-05 15:12:02 |    Adding service : map.service.setExtents
-2007-07-05 15:12:02 |    Adding service : map.service.showError
-2007-07-05 15:12:02 |    Adding service : map.service.wmsLayerInfo
-2007-07-05 15:12:02 |    Adding service : map.layers.deleteLayer
-2007-07-05 15:12:02 |    Adding service : map.refresh
-2007-07-05 15:12:02 |    Adding service : map.getPrintImage
-2007-07-05 15:12:02 |    Adding service : map.setContext
-2007-07-05 15:12:02 |    Adding service : map.getFeatures
-2007-07-05 15:12:02 |    Adding service : wmc.setContext
-2007-07-05 15:12:02 |    Adding service : map.layers.getInspectorData
-2007-07-05 15:12:02 |    Adding service : geonet.getGeonetRecords
-2007-07-05 15:12:02 |    Adding service : map.layers.add
-2007-07-05 15:12:02 | Initializing schedules...
-2007-07-05 15:12:02 | Initializing profiles...
-2007-07-05 15:12:02 | Starting schedule manager...
-2007-07-05 15:12:02 | Memory used is  : 316 Kb
-2007-07-05 15:12:02 | Total memory is : 520256 Kb
-2007-07-05 15:12:02 | Startup time is : 1 (secs)
-2007-07-05 15:12:02 | === System working =========================================
-2007-07-05 15:12:45 | HTML Request (GET)
-2007-07-05 15:12:45 | Session created for client :10.10.100.2
-2007-07-05 15:12:45 | Dispatching : map.getMain.embedded
-2007-07-05 15:12:45 |  -> no input parameters
-2007-07-05 15:13:29 |    -> dispatching to output for : map.getMain.embedded
-2007-07-05 15:13:29 |      -> transforming with stylesheet : /home/fao/project/gnim/svn/intermap/intermap/trunk/web/xsl/index-embedded.xsl
-2007-07-05 15:13:30 |      -> end transformation for : map.getMain.embedded
-2007-07-05 15:13:30 |    -> output ended for : map.getMain.embedded
-2007-07-05 15:13:30 |  -> dispatch ended for : map.getMain.embedded
-2007-07-05 15:13:30 | HTML Request (GET)
-2007-07-05 15:13:30 | Dispatching : map.layers.getOrder
-2007-07-05 15:13:30 |  -> no input parameters
-2007-07-05 15:13:30 |    -> dispatching to output for : map.layers.getOrder
-2007-07-05 15:13:30 |      -> writing xml for : map.layers.getOrder
-2007-07-05 15:13:30 |    -> output ended for : map.layers.getOrder
-2007-07-05 15:13:30 |  -> dispatch ended for : map.layers.getOrder
-2007-07-05 15:13:30 | HTML Request (GET)
-2007-07-05 15:13:30 | Dispatching : map.layers.getInspectorData
-2007-07-05 15:13:30 |  -> parameters are : 
-2007-07-05 15:13:30 |       id = 3
-2007-07-05 15:13:30 |    -> dispatching to output for : map.layers.getInspectorData
-2007-07-05 15:13:30 |      -> writing xml for : map.layers.getInspectorData
-2007-07-05 15:13:30 |    -> output ended for : map.layers.getInspectorData
-2007-07-05 15:13:30 |  -> dispatch ended for : map.layers.getInspectorData
-2007-07-05 15:13:55 | HTML Request (GET)
-2007-07-05 15:13:55 | Dispatching : map.action
-2007-07-05 15:13:55 |  -> parameters are : 
-2007-07-05 15:13:55 |       bbnorth = 83.07693
-2007-07-05 15:13:55 |       width = 260
-2007-07-05 15:13:55 |       height = 120
-2007-07-05 15:13:55 |       bbwest = -180
-2007-07-05 15:13:55 |       mapimgy = 85
-2007-07-05 15:13:55 |       mapimgy2 = 24
-2007-07-05 15:13:55 |       maptool = zoomin
-2007-07-05 15:13:55 |       bbsouth = -83.07693
-2007-07-05 15:13:55 |       bbeast = 180
-2007-07-05 15:13:55 |       mapimgx2 = 177
-2007-07-05 15:13:55 |       mapimgx = 118
-2007-07-05 15:13:56 |    -> dispatching to output for : map.action
-2007-07-05 15:13:56 |      -> writing xml for : map.action
-2007-07-05 15:13:56 |    -> output ended for : map.action
-2007-07-05 15:13:56 |  -> dispatch ended for : map.action
-2007-07-05 15:14:07 | HTML Request (GET)
-2007-07-05 15:14:07 | Dispatching : map.action
-2007-07-05 15:14:07 |  -> parameters are : 
-2007-07-05 15:14:07 |       bbnorth = 135
-2007-07-05 15:14:07 |       width = 400
-2007-07-05 15:14:07 |       height = 300
-2007-07-05 15:14:07 |       bbwest = -180
-2007-07-05 15:14:07 |       mapimgy = 107
-2007-07-05 15:14:07 |       mapimgy2 = 55
-2007-07-05 15:14:07 |       maptool = zoomin
-2007-07-05 15:14:07 |       bbsouth = -135
-2007-07-05 15:14:07 |       bbeast = 180
-2007-07-05 15:14:07 |       mapimgx2 = 173
-2007-07-05 15:14:07 |       mapimgx = 86
-2007-07-05 15:14:08 |    -> dispatching to output for : map.action
-2007-07-05 15:14:08 |      -> writing xml for : map.action
-2007-07-05 15:14:08 |    -> output ended for : map.action
-2007-07-05 15:14:08 |  -> dispatch ended for : map.action
-2007-07-05 15:14:12 | HTML Request (GET)
-2007-07-05 15:14:12 | Dispatching : map.move
-2007-07-05 15:14:12 |  -> parameters are : 
-2007-07-05 15:14:12 |       deltax = 244
-2007-07-05 15:14:12 |       deltay = 0
-2007-07-05 15:14:16 |    -> dispatching to output for : map.move
-2007-07-05 15:14:16 |      -> writing xml for : map.move
-2007-07-05 15:14:16 |    -> output ended for : map.move
-2007-07-05 15:14:16 |  -> dispatch ended for : map.move
-2007-07-05 15:14:21 | HTML Request (GET)
-2007-07-05 15:14:21 | Dispatching : map.move
-2007-07-05 15:14:21 |  -> parameters are : 
-2007-07-05 15:14:21 |       deltax = 225
-2007-07-05 15:14:21 |       deltay = 11
-2007-07-05 15:14:22 |    -> dispatching to output for : map.move
-2007-07-05 15:14:22 |      -> writing xml for : map.move
-2007-07-05 15:14:22 |    -> output ended for : map.move
-2007-07-05 15:14:22 |  -> dispatch ended for : map.move
-2007-07-05 15:14:28 | HTML Request (GET)
-2007-07-05 15:14:28 | Dispatching : map.action
-2007-07-05 15:14:28 |  -> parameters are : 
-2007-07-05 15:14:28 |       bbnorth = 49.846157
-2007-07-05 15:14:28 |       width = 260
-2007-07-05 15:14:28 |       height = 120
-2007-07-05 15:14:28 |       bbwest = -67.269226
-2007-07-05 15:14:28 |       mapimgy = 22
-2007-07-05 15:14:28 |       mapimgy2 = 5
-2007-07-05 15:14:28 |       maptool = zoomin
-2007-07-05 15:14:28 |       bbsouth = -34.61538
-2007-07-05 15:14:28 |       bbeast = 115.73076
-2007-07-05 15:14:28 |       mapimgx2 = 138
-2007-07-05 15:14:28 |       mapimgx = 72
-2007-07-05 15:14:32 |    -> dispatching to output for : map.action
-2007-07-05 15:14:32 |      -> writing xml for : map.action
-2007-07-05 15:14:32 |    -> output ended for : map.action
-2007-07-05 15:14:32 |  -> dispatch ended for : map.action
-2007-07-05 15:14:36 | HTML Request (GET)
-2007-07-05 15:14:36 | Dispatching : map.layers.getInspectorData
-2007-07-05 15:14:36 |  -> parameters are : 
-2007-07-05 15:14:36 |       id = 1
-2007-07-05 15:14:36 |    -> dispatching to output for : map.layers.getInspectorData
-2007-07-05 15:14:36 |      -> writing xml for : map.layers.getInspectorData
-2007-07-05 15:14:36 |    -> output ended for : map.layers.getInspectorData
-2007-07-05 15:14:36 |  -> dispatch ended for : map.layers.getInspectorData
-2007-07-05 15:14:38 | HTML Request (GET)
-2007-07-05 15:14:38 | Dispatching : map.layers.setOrder
-2007-07-05 15:14:38 |  -> parameters are : 
-2007-07-05 15:14:38 |       im_layerList = 3
-2007-07-05 15:14:38 |       im_layerList = 1
-2007-07-05 15:14:38 |       im_layerList = 2
-2007-07-05 15:14:38 |    -> dispatching to output for : map.layers.setOrder
-2007-07-05 15:14:38 |      -> writing xml for : map.layers.setOrder
-2007-07-05 15:14:38 |    -> output ended for : map.layers.setOrder
-2007-07-05 15:14:38 |  -> dispatch ended for : map.layers.setOrder
-2007-07-05 15:14:38 | HTML Request (GET)
-2007-07-05 15:14:38 | Dispatching : map.update
-2007-07-05 15:14:38 |  -> no input parameters
-2007-07-05 15:14:40 |    -> dispatching to output for : map.update
-2007-07-05 15:14:40 |      -> writing xml for : map.update
-2007-07-05 15:14:40 |    -> output ended for : map.update
-2007-07-05 15:14:40 |  -> dispatch ended for : map.update
-2007-07-05 15:14:57 | HTML Request (GET)
-2007-07-05 15:14:57 | Dispatching : map.move
-2007-07-05 15:14:57 |  -> parameters are : 
-2007-07-05 15:14:57 |       deltax = 0
-2007-07-05 15:14:57 |       deltay = 0
-2007-07-05 15:14:57 |    -> dispatching to output for : map.move
-2007-07-05 15:14:57 |      -> writing xml for : map.move
-2007-07-05 15:14:57 |    -> output ended for : map.move
-2007-07-05 15:14:57 |  -> dispatch ended for : map.move
-2007-07-05 15:17:49 | HTML Request (GET)
-2007-07-05 15:17:49 | Dispatching : map.move
-2007-07-05 15:17:49 |  -> parameters are : 
-2007-07-05 15:17:49 |       deltax = 252
-2007-07-05 15:17:49 |       deltay = 57
-2007-07-05 15:17:59 |    -> dispatching to output for : map.move
-2007-07-05 15:17:59 |      -> writing xml for : map.move
-2007-07-05 15:17:59 |    -> output ended for : map.move
-2007-07-05 15:17:59 |  -> dispatch ended for : map.move
-2007-07-05 15:18:01 | HTML Request (GET)
-2007-07-05 15:18:01 | Dispatching : map.fullExtent
-2007-07-05 15:18:01 |  -> parameters are : 
-2007-07-05 15:18:01 |       width = 260
-2007-07-05 15:18:01 |       height = 120
-2007-07-05 15:18:01 |    -> dispatching to output for : map.fullExtent
-2007-07-05 15:18:01 |  -> forwarding to : map.update
-2007-07-05 15:18:01 | Dispatching : map.update
-2007-07-05 15:18:01 |  -> parameters are : 
-2007-07-05 15:18:01 |       width = 260
-2007-07-05 15:18:01 |       height = 120
-2007-07-05 15:18:01 |       forward = 
-2007-07-05 15:18:01 |    -> dispatching to output for : map.update
-2007-07-05 15:18:01 |      -> writing xml for : map.update
-2007-07-05 15:18:01 |    -> output ended for : map.update
-2007-07-05 15:18:01 |  -> dispatch ended for : map.update
-2007-07-05 15:18:04 | HTML Request (GET)
-2007-07-05 15:18:04 | Dispatching : map.action
-2007-07-05 15:18:04 |  -> parameters are : 
-2007-07-05 15:18:04 |       bbnorth = 83.07693
-2007-07-05 15:18:04 |       width = 260
-2007-07-05 15:18:04 |       height = 120
-2007-07-05 15:18:04 |       bbwest = -180
-2007-07-05 15:18:04 |       mapimgy = 93
-2007-07-05 15:18:04 |       mapimgy2 = 62
-2007-07-05 15:18:04 |       maptool = zoomin
-2007-07-05 15:18:04 |       bbsouth = -83.07693
-2007-07-05 15:18:04 |       bbeast = 180
-2007-07-05 15:18:04 |       mapimgx2 = 252
-2007-07-05 15:18:04 |       mapimgx = 202
-2007-07-05 15:18:08 |    -> dispatching to output for : map.action
-2007-07-05 15:18:08 |      -> writing xml for : map.action
-2007-07-05 15:18:08 |    -> output ended for : map.action
-2007-07-05 15:18:08 |  -> dispatch ended for : map.action
-2007-07-05 15:18:10 | HTML Request (GET)
-2007-07-05 15:18:10 | Dispatching : map.move
-2007-07-05 15:18:10 |  -> parameters are : 
-2007-07-05 15:18:10 |       deltax = -43
-2007-07-05 15:18:10 |       deltay = 2
-2007-07-05 15:18:14 |    -> dispatching to output for : map.move
-2007-07-05 15:18:14 |      -> writing xml for : map.move
-2007-07-05 15:18:14 |    -> output ended for : map.move
-2007-07-05 15:18:14 |  -> dispatch ended for : map.move
-2007-07-05 15:22:43 | HTML Request (GET)
-2007-07-05 15:22:43 | Dispatching : map.getMain.embedded
-2007-07-05 15:22:43 |  -> no input parameters
-2007-07-05 15:22:45 |    -> dispatching to output for : map.getMain.embedded
-2007-07-05 15:22:45 |      -> transforming with stylesheet : /home/fao/project/gnim/svn/intermap/intermap/trunk/web/xsl/index-embedded.xsl
-2007-07-05 15:22:45 |      -> end transformation for : map.getMain.embedded
-2007-07-05 15:22:45 |    -> output ended for : map.getMain.embedded
-2007-07-05 15:22:45 |  -> dispatch ended for : map.getMain.embedded
-2007-07-05 15:22:45 | HTML Request (GET)
-2007-07-05 15:22:45 | Dispatching : map.layers.getOrder
-2007-07-05 15:22:45 |  -> no input parameters
-2007-07-05 15:22:45 |    -> dispatching to output for : map.layers.getOrder
-2007-07-05 15:22:45 |      -> writing xml for : map.layers.getOrder
-2007-07-05 15:22:45 |    -> output ended for : map.layers.getOrder
-2007-07-05 15:22:45 |  -> dispatch ended for : map.layers.getOrder
-2007-07-05 15:22:45 | HTML Request (GET)
-2007-07-05 15:22:45 | Dispatching : map.layers.getInspectorData
-2007-07-05 15:22:45 |  -> parameters are : 
-2007-07-05 15:22:45 |       id = 3
-2007-07-05 15:22:45 |    -> dispatching to output for : map.layers.getInspectorData
-2007-07-05 15:22:45 |      -> writing xml for : map.layers.getInspectorData
-2007-07-05 15:22:45 |    -> output ended for : map.layers.getInspectorData
-2007-07-05 15:22:45 |  -> dispatch ended for : map.layers.getInspectorData
-2007-07-05 15:22:57 | HTML Request (GET)
-2007-07-05 15:22:57 | Dispatching : map.fullExtent
-2007-07-05 15:22:57 |  -> no input parameters
-2007-07-05 15:22:57 |    -> dispatching to output for : map.fullExtent
-2007-07-05 15:22:57 |  -> forwarding to : map.update
-2007-07-05 15:22:57 | Dispatching : map.update
-2007-07-05 15:22:57 |  -> parameters are : 
-2007-07-05 15:22:57 |       forward = 
-2007-07-05 15:22:57 |    -> dispatching to output for : map.update
-2007-07-05 15:22:57 |      -> writing xml for : map.update
-2007-07-05 15:22:57 |    -> output ended for : map.update
-2007-07-05 15:22:57 |  -> dispatch ended for : map.update
-2007-07-05 15:23:02 | HTML Request (GET)
-2007-07-05 15:23:02 | Dispatching : map.action
-2007-07-05 15:23:02 |  -> parameters are : 
-2007-07-05 15:23:02 |       bbnorth = 135
-2007-07-05 15:23:02 |       width = 400
-2007-07-05 15:23:02 |       height = 300
-2007-07-05 15:23:02 |       bbwest = -180
-2007-07-05 15:23:02 |       mapimgy = 118
-2007-07-05 15:23:02 |       mapimgy2 = 79
-2007-07-05 15:23:02 |       maptool = zoomin
-2007-07-05 15:23:02 |       bbsouth = -135
-2007-07-05 15:23:02 |       bbeast = 180
-2007-07-05 15:23:02 |       mapimgx2 = 236
-2007-07-05 15:23:02 |       mapimgx = 176
-2007-07-05 15:23:03 |    -> dispatching to output for : map.action
-2007-07-05 15:23:03 |      -> writing xml for : map.action
-2007-07-05 15:23:03 |    -> output ended for : map.action
-2007-07-05 15:23:03 |  -> dispatch ended for : map.action
-2007-07-05 15:23:08 | HTML Request (GET)
-2007-07-05 15:23:08 | Dispatching : map.move
-2007-07-05 15:23:08 |  -> parameters are : 
-2007-07-05 15:23:08 |       deltax = -24
-2007-07-05 15:23:08 |       bbnorth = 10.93038
-2007-07-05 15:23:08 |       width = 260
-2007-07-05 15:23:08 |       height = 120
-2007-07-05 15:23:08 |       bbwest = 48.747696
-2007-07-05 15:23:08 |       deltay = 25
-2007-07-05 15:23:08 |       bbsouth = -58.81962
-2007-07-05 15:23:08 |       bbeast = 199.8727
-2007-07-05 15:23:18 |    -> dispatching to output for : map.move
-2007-07-05 15:23:18 |      -> writing xml for : map.move
-2007-07-05 15:23:18 |    -> output ended for : map.move
-2007-07-05 15:23:18 |  -> dispatch ended for : map.move
-2007-07-05 15:23:26 | HTML Request (GET)
-2007-07-05 15:23:26 | Dispatching : map.move
-2007-07-05 15:23:26 |  -> parameters are : 
-2007-07-05 15:23:26 |       deltax = 77
-2007-07-05 15:23:26 |       deltay = -21
-2007-07-05 15:23:27 |    -> dispatching to output for : map.move
-2007-07-05 15:23:27 |      -> writing xml for : map.move
-2007-07-05 15:23:27 |    -> output ended for : map.move
-2007-07-05 15:23:27 |  -> dispatch ended for : map.move
-2007-07-05 15:24:28 | HTML Request (GET)
-2007-07-05 15:24:28 | Dispatching : map.getMain.embedded
-2007-07-05 15:24:28 |  -> no input parameters
-2007-07-05 15:24:42 |    -> dispatching to output for : map.getMain.embedded
-2007-07-05 15:24:42 |      -> transforming with stylesheet : /home/fao/project/gnim/svn/intermap/intermap/trunk/web/xsl/index-embedded.xsl
-2007-07-05 15:24:42 |      -> end transformation for : map.getMain.embedded
-2007-07-05 15:24:42 |    -> output ended for : map.getMain.embedded
-2007-07-05 15:24:42 |  -> dispatch ended for : map.getMain.embedded
-2007-07-05 15:24:42 | HTML Request (GET)
-2007-07-05 15:24:42 | Dispatching : map.layers.getOrder
-2007-07-05 15:24:42 |  -> no input parameters
-2007-07-05 15:24:42 |    -> dispatching to output for : map.layers.getOrder
-2007-07-05 15:24:42 |      -> writing xml for : map.layers.getOrder
-2007-07-05 15:24:42 |    -> output ended for : map.layers.getOrder
-2007-07-05 15:24:42 |  -> dispatch ended for : map.layers.getOrder
-2007-07-05 15:24:42 | HTML Request (GET)
-2007-07-05 15:24:42 | Dispatching : map.layers.getInspectorData
-2007-07-05 15:24:42 |  -> parameters are : 
-2007-07-05 15:24:42 |       id = 3
-2007-07-05 15:24:42 |    -> dispatching to output for : map.layers.getInspectorData
-2007-07-05 15:24:42 |      -> writing xml for : map.layers.getInspectorData
-2007-07-05 15:24:42 |    -> output ended for : map.layers.getInspectorData
-2007-07-05 15:24:42 |  -> dispatch ended for : map.layers.getInspectorData
-2007-07-05 15:24:51 | HTML Request (GET)
-2007-07-05 15:24:51 | Dispatching : map.move
-2007-07-05 15:24:51 |  -> parameters are : 
-2007-07-05 15:24:51 |       deltax = -126
-2007-07-05 15:24:51 |       bbnorth = 77.79594
-2007-07-05 15:24:51 |       width = 400
-2007-07-05 15:24:51 |       height = 300
-2007-07-05 15:24:51 |       bbwest = 16.662697
-2007-07-05 15:24:51 |       deltay = 34
-2007-07-05 15:24:51 |       bbsouth = -106.38767
-2007-07-05 15:24:51 |       bbeast = 262.24084
-2007-07-05 15:24:52 |    -> dispatching to output for : map.move
-2007-07-05 15:24:52 |      -> writing xml for : map.move
-2007-07-05 15:24:52 |    -> output ended for : map.move
-2007-07-05 15:24:52 |  -> dispatch ended for : map.move
-2007-07-05 15:25:00 | HTML Request (GET)
-2007-07-05 15:25:00 | Dispatching : map.action
-2007-07-05 15:25:00 |  -> parameters are : 
-2007-07-05 15:25:00 |       bbnorth = 98.670074
-2007-07-05 15:25:00 |       width = 400
-2007-07-05 15:25:00 |       height = 300
-2007-07-05 15:25:00 |       bbwest = -60.69442
-2007-07-05 15:25:00 |       mapimgy = 107
-2007-07-05 15:25:00 |       mapimgy2 = 46
-2007-07-05 15:25:00 |       maptool = zoomin
-2007-07-05 15:25:00 |       bbsouth = -85.513535
-2007-07-05 15:25:00 |       bbeast = 184.88373
-2007-07-05 15:25:00 |       mapimgx2 = 165
-2007-07-05 15:25:00 |       mapimgx = 64
-2007-07-05 15:25:04 |    -> dispatching to output for : map.action
-2007-07-05 15:25:04 |      -> writing xml for : map.action
-2007-07-05 15:25:04 |    -> output ended for : map.action
-2007-07-05 15:25:04 |  -> dispatch ended for : map.action
-2007-07-05 15:25:17 | HTML Request (GET)
-2007-07-05 15:25:17 | Dispatching : map.move
-2007-07-05 15:25:17 |  -> parameters are : 
-2007-07-05 15:25:17 |       deltax = -43
-2007-07-05 15:25:17 |       bbnorth = 42.376007
-2007-07-05 15:25:17 |       width = 260
-2007-07-05 15:25:17 |       height = 120
-2007-07-05 15:25:17 |       bbwest = 16.662697
-2007-07-05 15:25:17 |       deltay = 3
-2007-07-05 15:25:17 |       bbsouth = -70.96774
-2007-07-05 15:25:17 |       bbeast = 262.24084
-2007-07-05 15:25:18 |    -> dispatching to output for : map.move
-2007-07-05 15:25:18 |      -> writing xml for : map.move
-2007-07-05 15:25:18 |    -> output ended for : map.move
-2007-07-05 15:25:18 |  -> dispatch ended for : map.move
-2007-07-05 15:25:20 | HTML Request (GET)
-2007-07-05 15:25:20 | Dispatching : map.move
-2007-07-05 15:25:20 |  -> parameters are : 
-2007-07-05 15:25:20 |       deltax = -4
-2007-07-05 15:25:20 |       bbnorth = 45.209602
-2007-07-05 15:25:20 |       width = 260
-2007-07-05 15:25:20 |       height = 120
-2007-07-05 15:25:20 |       bbwest = -23.952152
-2007-07-05 15:25:20 |       deltay = 28
-2007-07-05 15:25:20 |       bbsouth = -68.13415
-2007-07-05 15:25:20 |       bbeast = 221.62599
-2007-07-05 15:25:24 |    -> dispatching to output for : map.move
-2007-07-05 15:25:24 |      -> writing xml for : map.move
-2007-07-05 15:25:24 |    -> output ended for : map.move
-2007-07-05 15:25:24 |  -> dispatch ended for : map.move
-2007-07-05 15:25:30 | HTML Request (GET)
-2007-07-05 15:25:30 | Dispatching : map.move
-2007-07-05 15:25:30 |  -> parameters are : 
-2007-07-05 15:25:30 |       deltax = 14
-2007-07-05 15:25:30 |       bbnorth = 74.956436
-2007-07-05 15:25:30 |       width = 400
-2007-07-05 15:25:30 |       height = 300
-2007-07-05 15:25:30 |       bbwest = -21.401917
-2007-07-05 15:25:30 |       deltay = -21
-2007-07-05 15:25:30 |       bbsouth = 28.450073
-2007-07-05 15:25:30 |       bbeast = 40.606567
-2007-07-05 15:25:37 |    -> dispatching to output for : map.move
-2007-07-05 15:25:37 |      -> writing xml for : map.move
-2007-07-05 15:25:37 |    -> output ended for : map.move
-2007-07-05 15:25:37 |  -> dispatch ended for : map.move
-2007-07-05 15:25:59 | HTML Request (GET)
-2007-07-05 15:25:59 | Dispatching : mapServers.listServers.xml
-2007-07-05 15:25:59 |  -> no input parameters
-2007-07-05 15:25:59 |    -> dispatching to output for : mapServers.listServers.xml
-2007-07-05 15:25:59 |      -> writing xml for : mapServers.listServers.xml
-2007-07-05 15:25:59 |    -> output ended for : mapServers.listServers.xml
-2007-07-05 15:25:59 |  -> dispatch ended for : mapServers.listServers.xml
-2007-07-05 15:26:08 | HTML Request (GET)
-2007-07-05 15:26:08 | Dispatching : mapServers.listServers.xml
-2007-07-05 15:26:08 |  -> no input parameters
-2007-07-05 15:26:08 |    -> dispatching to output for : mapServers.listServers.xml
-2007-07-05 15:26:08 |      -> writing xml for : mapServers.listServers.xml
-2007-07-05 15:26:08 |    -> output ended for : mapServers.listServers.xml
-2007-07-05 15:26:08 |  -> dispatch ended for : mapServers.listServers.xml
-2007-07-05 15:26:10 | HTML Request (GET)
-2007-07-05 15:26:10 | Dispatching : mapServers.listServers.xml
-2007-07-05 15:26:10 |  -> no input parameters
-2007-07-05 15:26:10 |    -> dispatching to output for : mapServers.listServers.xml
-2007-07-05 15:26:10 |      -> writing xml for : mapServers.listServers.xml
-2007-07-05 15:26:10 |    -> output ended for : mapServers.listServers.xml
-2007-07-05 15:26:10 |  -> dispatch ended for : mapServers.listServers.xml
-2007-07-05 15:26:33 | HTML Request (GET)
-2007-07-05 15:26:33 | Dispatching : map.action
-2007-07-05 15:26:33 |  -> parameters are : 
-2007-07-05 15:26:33 |       bbnorth = 71.70099
-2007-07-05 15:26:33 |       width = 400
-2007-07-05 15:26:33 |       height = 300
-2007-07-05 15:26:33 |       bbwest = -19.231619
-2007-07-05 15:26:33 |       mapimgy = 156
-2007-07-05 15:26:33 |       mapimgy2 = 63
-2007-07-05 15:26:33 |       maptool = zoomin
-2007-07-05 15:26:33 |       bbsouth = 25.194628
-2007-07-05 15:26:33 |       bbeast = 42.776863
-2007-07-05 15:26:33 |       mapimgx2 = 148
-2007-07-05 15:26:33 |       mapimgx = 45
-2007-07-05 15:26:35 |    -> dispatching to output for : map.action
-2007-07-05 15:26:35 |      -> writing xml for : map.action
-2007-07-05 15:26:35 |    -> output ended for : map.action
-2007-07-05 15:26:35 |  -> dispatch ended for : map.action
-2007-07-05 15:26:39 | HTML Request (GET)
-2007-07-05 15:26:39 | Dispatching : map.move
-2007-07-05 15:26:39 |  -> parameters are : 
-2007-07-05 15:26:39 |       deltax = 22
-2007-07-05 15:26:39 |       bbnorth = 71.65649
-2007-07-05 15:26:39 |       width = 260
-2007-07-05 15:26:39 |       height = 120
-2007-07-05 15:26:39 |       bbwest = -27.730278
-2007-07-05 15:26:39 |       deltay = -26
-2007-07-05 15:26:39 |       bbsouth = -41.68728
-2007-07-05 15:26:39 |       bbeast = 217.84787
-2007-07-05 15:26:46 |    -> dispatching to output for : map.move
-2007-07-05 15:26:46 |      -> writing xml for : map.move
-2007-07-05 15:26:46 |    -> output ended for : map.move
-2007-07-05 15:26:46 |  -> dispatch ended for : map.move
-2007-07-05 15:26:52 | HTML Request (GET)
-2007-07-05 15:26:52 | Dispatching : map.action
-2007-07-05 15:26:52 |  -> parameters are : 
-2007-07-05 15:26:52 |       bbnorth = 47.09867
-2007-07-05 15:26:52 |       width = 260
-2007-07-05 15:26:52 |       height = 120
-2007-07-05 15:26:52 |       bbwest = -6.950588
-2007-07-05 15:26:52 |       mapimgy = 107
-2007-07-05 15:26:52 |       mapimgy2 = 48
-2007-07-05 15:26:52 |       maptool = zoomin
-2007-07-05 15:26:52 |       bbsouth = -66.245094
-2007-07-05 15:26:52 |       bbeast = 238.62756
-2007-07-05 15:26:52 |       mapimgx2 = 200
-2007-07-05 15:26:52 |       mapimgx = 116
-2007-07-05 15:26:52 |    -> dispatching to output for : map.action
-2007-07-05 15:26:52 |      -> writing xml for : map.action
-2007-07-05 15:26:52 |    -> output ended for : map.action
-2007-07-05 15:26:52 |  -> dispatch ended for : map.action
-2007-07-05 15:27:02 | HTML Request (GET)
-2007-07-05 15:27:02 | Dispatching : map.action
-2007-07-05 15:27:02 |  -> parameters are : 
-2007-07-05 15:27:02 |       bbnorth = 1.7611618
-2007-07-05 15:27:02 |       width = 260
-2007-07-05 15:27:02 |       height = 120
-2007-07-05 15:27:02 |       bbwest = 81.91408
-2007-07-05 15:27:02 |       mapimgy = 118
-2007-07-05 15:27:02 |       mapimgy2 = 73
-2007-07-05 15:27:02 |       maptool = zoomin
-2007-07-05 15:27:02 |       bbsouth = -53.966187
-2007-07-05 15:27:02 |       bbeast = 202.65666
-2007-07-05 15:27:02 |       mapimgx2 = 214
-2007-07-05 15:27:02 |       mapimgx = 174
-2007-07-05 15:27:06 |    -> dispatching to output for : map.action
-2007-07-05 15:27:06 |      -> writing xml for : map.action
-2007-07-05 15:27:06 |    -> output ended for : map.action
-2007-07-05 15:27:06 |  -> dispatch ended for : map.action
-2007-07-05 15:27:12 | HTML Request (GET)
-2007-07-05 15:27:12 | Dispatching : map.action
-2007-07-05 15:27:12 |  -> parameters are : 
-2007-07-05 15:27:12 |       bbnorth = -32.13964
-2007-07-05 15:27:12 |       width = 260
-2007-07-05 15:27:12 |       height = 120
-2007-07-05 15:27:12 |       bbwest = 149.36737
-2007-07-05 15:27:12 |       mapimgy = 66
-2007-07-05 15:27:12 |       mapimgy2 = 6
-2007-07-05 15:27:12 |       maptool = zoomin
-2007-07-05 15:27:12 |       bbsouth = -53.0374
-2007-07-05 15:27:12 |       bbeast = 194.64586
-2007-07-05 15:27:12 |       mapimgx2 = 173
-2007-07-05 15:27:12 |       mapimgx = 118
-2007-07-05 15:27:15 |    -> dispatching to output for : map.action
-2007-07-05 15:27:15 |      -> writing xml for : map.action
-2007-07-05 15:27:15 |    -> output ended for : map.action
-2007-07-05 15:27:15 |  -> dispatch ended for : map.action
-2007-07-05 15:27:37 | HTML Request (GET)
-2007-07-05 15:27:37 | Dispatching : mapServers.listServers.xml
-2007-07-05 15:27:37 |  -> no input parameters
-2007-07-05 15:27:37 |    -> dispatching to output for : mapServers.listServers.xml
-2007-07-05 15:27:37 |      -> writing xml for : mapServers.listServers.xml
-2007-07-05 15:27:37 |    -> output ended for : mapServers.listServers.xml
-2007-07-05 15:27:37 |  -> dispatch ended for : mapServers.listServers.xml
-2007-07-05 15:27:42 | HTML Request (GET)
-2007-07-05 15:27:42 | Dispatching : mapServers.listServers.xml
-2007-07-05 15:27:42 |  -> no input parameters
-2007-07-05 15:27:42 |    -> dispatching to output for : mapServers.listServers.xml
-2007-07-05 15:27:42 |      -> writing xml for : mapServers.listServers.xml
-2007-07-05 15:27:42 |    -> output ended for : mapServers.listServers.xml
-2007-07-05 15:27:42 |  -> dispatch ended for : mapServers.listServers.xml
-2007-07-05 15:28:17 | HTML Request (GET)
-2007-07-05 15:28:17 | Dispatching : map.action
-2007-07-05 15:28:17 |  -> parameters are : 
-2007-07-05 15:28:17 |       bbnorth = 61.934654
-2007-07-05 15:28:17 |       width = 400
-2007-07-05 15:28:17 |       height = 300
-2007-07-05 15:28:17 |       bbwest = -13.88339
-2007-07-05 15:28:17 |       mapimgy = 236
-2007-07-05 15:28:17 |       mapimgy2 = 104
-2007-07-05 15:28:17 |       maptool = zoomin
-2007-07-05 15:28:17 |       bbsouth = 47.517677
-2007-07-05 15:28:17 |       bbeast = 5.3392467
-2007-07-05 15:28:17 |       mapimgx2 = 183
-2007-07-05 15:28:17 |       mapimgx = 46
-2007-07-05 15:28:26 |    -> dispatching to output for : map.action
-2007-07-05 15:28:26 |      -> writing xml for : map.action
-2007-07-05 15:28:26 |    -> output ended for : map.action
-2007-07-05 15:28:26 |  -> dispatch ended for : map.action
-2007-07-05 15:28:48 | HTML Request (GET)
-2007-07-05 15:28:48 | Dispatching : map.getMain.embedded
-2007-07-05 15:28:48 |  -> no input parameters
-2007-07-05 15:28:51 |    -> dispatching to output for : map.getMain.embedded
-2007-07-05 15:28:51 |      -> transforming with stylesheet : /home/fao/project/gnim/svn/intermap/intermap/trunk/web/xsl/index-embedded.xsl
-2007-07-05 15:28:51 |      -> end transformation for : map.getMain.embedded
-2007-07-05 15:28:51 |    -> output ended for : map.getMain.embedded
-2007-07-05 15:28:51 |  -> dispatch ended for : map.getMain.embedded
-2007-07-05 15:28:51 | HTML Request (GET)
-2007-07-05 15:28:51 | Dispatching : map.layers.getOrder
-2007-07-05 15:28:51 |  -> no input parameters
-2007-07-05 15:28:51 |    -> dispatching to output for : map.layers.getOrder
-2007-07-05 15:28:51 |      -> writing xml for : map.layers.getOrder
-2007-07-05 15:28:51 |    -> output ended for : map.layers.getOrder
-2007-07-05 15:28:51 |  -> dispatch ended for : map.layers.getOrder
-2007-07-05 15:28:52 | HTML Request (GET)
-2007-07-05 15:28:52 | Dispatching : map.layers.getInspectorData
-2007-07-05 15:28:52 |  -> parameters are : 
-2007-07-05 15:28:52 |       id = 3
-2007-07-05 15:28:52 |    -> dispatching to output for : map.layers.getInspectorData
-2007-07-05 15:28:52 |      -> writing xml for : map.layers.getInspectorData
-2007-07-05 15:28:52 |    -> output ended for : map.layers.getInspectorData
-2007-07-05 15:28:52 |  -> dispatch ended for : map.layers.getInspectorData
-2007-07-05 15:29:02 | HTML Request (GET)
-2007-07-05 15:29:02 | Dispatching : map.move
-2007-07-05 15:29:02 |  -> parameters are : 
-2007-07-05 15:29:02 |       deltax = 121
-2007-07-05 15:29:02 |       bbnorth = 58.9191
-2007-07-05 15:29:02 |       width = 400
-2007-07-05 15:29:02 |       height = 300
-2007-07-05 15:29:02 |       bbwest = -15.253
-2007-07-05 15:29:02 |       deltay = 17
-2007-07-05 15:29:02 |       bbsouth = 48.610966
-2007-07-05 15:29:02 |       bbeast = -1.50882
-2007-07-05 15:29:03 |    -> dispatching to output for : map.move
-2007-07-05 15:29:03 |      -> writing xml for : map.move
-2007-07-05 15:29:03 |    -> output ended for : map.move
-2007-07-05 15:29:03 |  -> dispatch ended for : map.move
-2007-07-05 15:29:08 | HTML Request (GET)
-2007-07-05 15:29:08 | Dispatching : map.layers.getInspectorData
-2007-07-05 15:29:08 |  -> parameters are : 
-2007-07-05 15:29:08 |       id = 1
-2007-07-05 15:29:08 |    -> dispatching to output for : map.layers.getInspectorData
-2007-07-05 15:29:08 |      -> writing xml for : map.layers.getInspectorData
-2007-07-05 15:29:08 |    -> output ended for : map.layers.getInspectorData
-2007-07-05 15:29:08 |  -> dispatch ended for : map.layers.getInspectorData
-2007-07-05 15:48:32 | HTML Request (GET)
-2007-07-05 15:48:32 | Dispatching : mapServers.listServers.xml
-2007-07-05 15:48:32 |  -> no input parameters
-2007-07-05 15:48:32 |    -> dispatching to output for : mapServers.listServers.xml
-2007-07-05 15:48:32 |      -> writing xml for : mapServers.listServers.xml
-2007-07-05 15:48:32 |    -> output ended for : mapServers.listServers.xml
-2007-07-05 15:48:32 |  -> dispatch ended for : mapServers.listServers.xml
-2007-07-05 15:51:42 | HTML Request (GET)
-2007-07-05 15:51:42 | Dispatching : map.fullExtent
-2007-07-05 15:51:42 |  -> no input parameters
-2007-07-05 15:51:42 |    -> dispatching to output for : map.fullExtent
-2007-07-05 15:51:42 |  -> forwarding to : map.update
-2007-07-05 15:51:42 | Dispatching : map.update
-2007-07-05 15:51:42 |  -> parameters are : 
-2007-07-05 15:51:42 |       forward = 
-2007-07-05 15:51:42 |    -> dispatching to output for : map.update
-2007-07-05 15:51:42 |      -> writing xml for : map.update
-2007-07-05 15:51:42 |    -> output ended for : map.update
-2007-07-05 15:51:42 |  -> dispatch ended for : map.update
-2007-07-05 15:51:50 | HTML Request (GET)
-2007-07-05 15:51:50 | Dispatching : map.action
-2007-07-05 15:51:50 |  -> parameters are : 
-2007-07-05 15:51:50 |       bbnorth = 135
-2007-07-05 15:51:50 |       width = 400
-2007-07-05 15:51:50 |       height = 300
-2007-07-05 15:51:50 |       bbwest = -180
-2007-07-05 15:51:50 |       mapimgy = 167
-2007-07-05 15:51:50 |       mapimgy2 = 120
-2007-07-05 15:51:50 |       maptool = zoomin
-2007-07-05 15:51:50 |       bbsouth = -135
-2007-07-05 15:51:50 |       bbeast = 180
-2007-07-05 15:51:50 |       mapimgx2 = 372
-2007-07-05 15:51:50 |       mapimgx = 309
-2007-07-05 15:51:54 |    -> dispatching to output for : map.action
-2007-07-05 15:51:54 |      -> writing xml for : map.action
-2007-07-05 15:51:54 |    -> output ended for : map.action
-2007-07-05 15:51:54 |  -> dispatch ended for : map.action
-2007-07-05 15:51:57 | HTML Request (GET)
-2007-07-05 15:51:57 | Dispatching : map.move
-2007-07-05 15:51:57 |  -> parameters are : 
-2007-07-05 15:51:57 |       deltax = 36
-2007-07-05 15:51:57 |       bbnorth = 56.936768
-2007-07-05 15:51:57 |       width = 260
-2007-07-05 15:51:57 |       height = 120
-2007-07-05 15:51:57 |       bbwest = -15.253
-2007-07-05 15:51:57 |       deltay = 5
-2007-07-05 15:51:57 |       bbsouth = 50.5933
-2007-07-05 15:51:57 |       bbeast = -1.50882
-2007-07-05 15:52:06 |    -> dispatching to output for : map.move
-2007-07-05 15:52:06 |      -> writing xml for : map.move
-2007-07-05 15:52:06 |    -> output ended for : map.move
-2007-07-05 15:52:06 |  -> dispatch ended for : map.move
-2007-07-05 15:53:19 | HTML Request (GET)
-2007-07-05 15:53:19 | Dispatching : map.getMain.embedded
-2007-07-05 15:53:19 |  -> no input parameters
-2007-07-05 15:53:20 |    -> dispatching to output for : map.getMain.embedded
-2007-07-05 15:53:20 |      -> transforming with stylesheet : /home/fao/project/gnim/svn/intermap/intermap/trunk/web/xsl/index-embedded.xsl
-2007-07-05 15:53:21 |      -> end transformation for : map.getMain.embedded
-2007-07-05 15:53:21 |    -> output ended for : map.getMain.embedded
-2007-07-05 15:53:21 |  -> dispatch ended for : map.getMain.embedded
-2007-07-05 15:53:21 | HTML Request (GET)
-2007-07-05 15:53:21 | Dispatching : map.layers.getOrder
-2007-07-05 15:53:21 |  -> no input parameters
-2007-07-05 15:53:21 |    -> dispatching to output for : map.layers.getOrder
-2007-07-05 15:53:21 |      -> writing xml for : map.layers.getOrder
-2007-07-05 15:53:21 |    -> output ended for : map.layers.getOrder
-2007-07-05 15:53:21 |  -> dispatch ended for : map.layers.getOrder
-2007-07-05 15:53:21 | HTML Request (GET)
-2007-07-05 15:53:21 | Dispatching : map.layers.getInspectorData
-2007-07-05 15:53:21 |  -> parameters are : 
-2007-07-05 15:53:21 |       id = 3
-2007-07-05 15:53:21 |    -> dispatching to output for : map.layers.getInspectorData
-2007-07-05 15:53:21 |      -> writing xml for : map.layers.getInspectorData
-2007-07-05 15:53:21 |    -> output ended for : map.layers.getInspectorData
-2007-07-05 15:53:21 |  -> dispatch ended for : map.layers.getInspectorData
+2007-07-06 15:10:48 | === Starting system ========================================
+2007-07-06 15:10:48 | Path    : /mnt/laptop/my/work/fao/geonetwork/cvs/geonetwork/trunk/web/intermap/
+2007-07-06 15:10:48 | BaseURL : intermap
+2007-07-06 15:10:48 | Loading : /mnt/laptop/my/work/fao/geonetwork/cvs/geonetwork/trunk/web/intermap/WEB-INF/config.xml
+2007-07-06 15:10:48 | Initializing general configuration...
+2007-07-06 15:10:48 | Initializing defaults...
+2007-07-06 15:10:48 |    Default local is :true
+2007-07-06 15:10:48 | Initializing resources...
+2007-07-06 15:10:48 | Found handler : org.wfp.vam.intermap.Intermap
+2007-07-06 15:10:48 | --- Starting handler --------------------------------------
+2007-07-06 15:10:48 | Initializing intermap...
+2007-07-06 15:10:48 | Map servers config...
+2007-07-06 15:10:48 | axlElementBuilder config...
+2007-07-06 15:10:48 | WmsService config...
+2007-07-06 15:10:48 | Proxy server config...
+2007-07-06 15:10:48 | The useproxy attribute is set to $USE_PROXY
+2007-07-06 15:10:48 | Temporary files config...
+2007-07-06 15:10:48 | Raised exception while starting appl handler. Skipped.
+2007-07-06 15:10:48 |    Handler   : org.wfp.vam.intermap.Intermap
+2007-07-06 15:10:48 |    Exception : java.lang.Exception: Invalid temp directory
+2007-07-06 15:10:48 |    Message   : Invalid temp directory
+2007-07-06 15:10:48 |    Stack     : java.lang.Exception: Invalid temp directory
+	at org.wfp.vam.intermap.kernel.TempFiles.<init>(TempFiles.java:33)
+	at org.wfp.vam.intermap.Intermap.start(Intermap.java:131)
+	at jeeves.server.JeevesEngine.initAppHandler(JeevesEngine.java:364)
+	at jeeves.server.JeevesEngine.loadConfigFile(JeevesEngine.java:178)
+	at jeeves.server.JeevesEngine.init(JeevesEngine.java:94)
+	at jeeves.server.sources.http.JeevesServlet.init(JeevesServlet.java:47)
+	at javax.servlet.GenericServlet.init(GenericServlet.java:168)
+	at org.mortbay.jetty.servlet.ServletHolder.initServlet(ServletHolder.java:383)
+	at org.mortbay.jetty.servlet.ServletHolder.start(ServletHolder.java:243)
+	at org.mortbay.jetty.servlet.ServletHandler.initializeServlets(ServletHandler.java:446)
+	at org.mortbay.jetty.servlet.WebApplicationHandler.initializeServlets(WebApplicationHandler.java:321)
+	at org.mortbay.jetty.servlet.WebApplicationContext.doStart(WebApplicationContext.java:511)
+	at org.mortbay.util.Container.start(Container.java:72)
+	at org.mortbay.http.HttpServer.doStart(HttpServer.java:753)
+	at org.mortbay.util.Container.start(Container.java:72)
+	at org.mortbay.jetty.Server.main(Server.java:439)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.mortbay.start.Main.invokeMain(Main.java:151)
+	at org.mortbay.start.Main.start(Main.java:476)
+	at org.mortbay.start.Main.main(Main.java:94)
+
+2007-07-06 15:10:48 | Initializing services...
+2007-07-06 15:10:48 |    Adding service : map.getMain
+2007-07-06 15:10:48 |    Adding service : map.getMain.embedded
+2007-07-06 15:10:48 |    Adding service : minimap.rebuild
+2007-07-06 15:10:48 |    Adding service : mapServers.getServices
+2007-07-06 15:10:48 |    Adding service : mapServers.getServices.embedded
+2007-07-06 15:10:48 |    Adding service : mapServers.getServicesExt
+2007-07-06 15:10:48 |    Adding service : mapServers.getServices.xml
+2007-07-06 15:10:48 |    Adding service : map.addServices
+2007-07-06 15:10:48 |    Adding service : map.addServices.xml
+2007-07-06 15:10:48 |    Adding service : map.addServicesExt
+2007-07-06 15:10:48 |    Adding service : mapContexts.get
+2007-07-06 15:10:48 |    Adding service : mapServers.listServers
+2007-07-06 15:10:48 |    Adding service : mapServers.listServers.xml
+2007-07-06 15:10:48 |    Adding service : map.layers.getOrder
+2007-07-06 15:10:48 |    Adding service : map.layers.setOrder
+2007-07-06 15:10:48 |    Adding service : map.layers.setTransparency
+2007-07-06 15:10:48 |    Adding service : map.layers.toggleVisibility
+2007-07-06 15:10:48 |    Adding service : map.action
+2007-07-06 15:10:48 |    Adding service : map.move
+2007-07-06 15:10:48 |    Adding service : map.update
+2007-07-06 15:10:48 |    Adding service : map.setAoi
+2007-07-06 15:10:48 |    Adding service : map.unsetAoi
+2007-07-06 15:10:48 |    Adding service : map.fullExtent
+2007-07-06 15:10:48 |    Adding service : map.zoomToService
+2007-07-06 15:10:48 |    Adding service : map.toggleImageSize
+2007-07-06 15:10:48 |    Adding service : map.reset
+2007-07-06 15:10:48 |    Adding service : map.identify
+2007-07-06 15:10:48 |    Adding service : map.service.getLegend
+2007-07-06 15:10:48 |    Adding service : map.service.wmsConfigForm
+2007-07-06 15:10:48 |    Adding service : map.service.wmsConfig
+2007-07-06 15:10:48 |    Adding service : map.service.showExtents
+2007-07-06 15:10:48 |    Adding service : map.service.setExtents
+2007-07-06 15:10:48 |    Adding service : map.service.showError
+2007-07-06 15:10:48 |    Adding service : map.service.wmsLayerInfo
+2007-07-06 15:10:48 |    Adding service : map.layers.deleteLayer
+2007-07-06 15:10:48 |    Adding service : map.refresh
+2007-07-06 15:10:48 |    Adding service : map.getPrintImage
+2007-07-06 15:10:48 |    Adding service : map.setContext
+2007-07-06 15:10:48 |    Adding service : map.getFeatures
+2007-07-06 15:10:48 |    Adding service : wmc.setContext
+2007-07-06 15:10:48 |    Adding service : map.layers.getInspectorData
+2007-07-06 15:10:48 |    Adding service : geonet.getGeonetRecords
+2007-07-06 15:10:48 |    Adding service : map.layers.add
+2007-07-06 15:10:48 | Initializing schedules...
+2007-07-06 15:10:48 | Initializing profiles...
+2007-07-06 15:10:48 | Starting schedule manager...
+2007-07-06 15:10:48 | Memory used is  : 287 Kb
+2007-07-06 15:10:48 | Total memory is : 520256 Kb
+2007-07-06 15:10:48 | Startup time is : 0 (secs)
+2007-07-06 15:10:48 | === System working =========================================
+2007-07-06 15:36:57 | === Stopping system ========================================
+2007-07-06 15:36:57 | Stopping schedule manager...
+2007-07-06 15:36:57 | Stopping handlers...
+2007-07-06 15:36:57 | Stopping resources...
+2007-07-06 15:36:57 | === System stopped ========================================

@@ -389,7 +389,6 @@ class Harvester
 	private Logger         log;
 	private Dbms           dbms;
 	private CswParams      params;
-	private DataManager    dataMan;
 	private ServiceContext context;
 }
 

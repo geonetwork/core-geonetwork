@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.harvest.harvester.csw.CswHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet20.Geonet20Harvester;
 import org.fao.geonet.kernel.harvest.harvester.webdav.WebDavHarvester;
+import org.fao.geonet.kernel.harvest.harvester.z3950.Z3950Harvester;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
@@ -64,6 +65,7 @@ public abstract class AbstractHarvester
 		register(context, WebDavHarvester  .class);
 		register(context, Geonet20Harvester.class);
 		register(context, CswHarvester     .class);
+		register(context, Z3950Harvester   .class);
 	}
 
 	//---------------------------------------------------------------------------
