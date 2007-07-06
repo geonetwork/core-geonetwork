@@ -167,7 +167,7 @@
 		<!-- Basic services to search and display the results -->
 		<allow service="main.home"/>
 		<allow service="main.search"/>
-		<allow service="main.search.simpler"/> <!--  ETj -->
+		<allow service="main.search.embedded"/> <!--  ETj -->
 		<allow service="main.present"/>
 		<allow service="metadata.show"/>
 		<allow service="remote.show"/>
