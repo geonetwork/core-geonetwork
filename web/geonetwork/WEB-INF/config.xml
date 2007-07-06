@@ -161,6 +161,29 @@
 			<output forward="main.present" />
 		</service>
 
+ 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+ 		<!-- ETj: this service provides a page similar to main.search, made simpler to be embedded elsewhere-->
+ 		
+ 		<service name="main.search.embedded">
+ 			<class name=".services.main.Search">
+ 				<param name="maxSummaryKeys" value="10" />
+ 			</class>
+ 			
+ 			<class name=".services.main.Result">
+ 				<param name="maxRecords" value="10" />
+ 				<param name="syntax" value="f" />
+ 			</class>
+ 				
+ 			<output sheet="search-results-xhtml.xsl" contentType="text/xml; charset=UTF-8">
+ 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
+ 				<call name="groups" class=".guiservices.groups.GetMine" />
+ 				<call name="sources" class=".guiservices.util.Sources" />
+ 				<call name="services" class="jeeves.guiservices.services.Get" />
+ 				<xml name="repositories" file="xml/repositories.xml" localized="false" />
+ 			</output>
+ 			
+ 		</service> 		
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="main.present">
