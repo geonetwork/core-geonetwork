@@ -1,14 +1,14 @@
 /*****************************************************************************
  *
- *                      MiniMap operations (zoom, pan, identify)
+ *                      MiniMap 
  *
  *
 External references:
 #im_mm_toolbar
 
 Need:
-	imc_minimapAction(
-	callback im_mm_updateMapImage
+	imc_mm_action(
+	callback im_mm_imageRebuilt
 
 
  *****************************************************************************/
@@ -100,7 +100,27 @@ function im_mm_getURLbbox()
                 "&bbwest="+im_mm_west;    
 }
 
+/* computes bb for mm from bm */
+function im_dezoom(n, e, s, w)
+{
+    var dx = (e - w) / 2;
+    var dy = (n - s) / 2;
+    return im_urlizebb( n-dy, e+dx, s+dy, w-dx );
+}
 
+function im_urlizebb(n, e, s, w)
+{
+    return   "bbnorth="+n+
+                "&bbeast="+e+
+                "&bbsouth="+s+
+                "&bbwest="+w;    
+}
+
+/*****************************************************************************
+ *
+ *                      MiniMap operations (zoom, pan, identify)
+ *
+ *****************************************************************************/
 
 //DOC public function im_mm_setTool(tool)
 function im_mm_setTool(tool) {
@@ -210,7 +230,7 @@ function im_mm_stopZoombox(e)
 
 	im_mm_setStatus('busy');
 
-	imc_minimapAction(im_mm_currentTool, // may be zoomin or zoomout
+	imc_mm_action(im_mm_currentTool, // may be zoomin or zoomout
 		Math.min(pX, im_mm_startX) - offsetX, // xmin
 		Math.max(pY, im_mm_startY) - offsetY, // ymax
 		Math.max(pX, im_mm_startX) - offsetX, // xmax
@@ -359,7 +379,7 @@ function im_mm_zoomToAoi()
 
 	im_mm_setStatus('busy');
 
-	imc_minimapAction('zoomin', 
+	imc_mm_action('zoomin', 
 		aoix- mapx, // xmin
 		aoiy - mapy + aoih, // ymax
 		aoix -mapx + aoiw, // xmax
@@ -446,8 +466,11 @@ function im_mm_stopDrag(e)
 
 
 
-// updates the map images
-function im_mm_updateMapImage(req)
+//==================================================
+//==================================================
+// updates the map image
+
+function im_mm_imageRebuilt(req)
 {
            im_mm_set(req.responseXML);
 
@@ -481,9 +504,15 @@ function im_mm_restartAoi(e)
 }
 
 
+function im_mm_refreshNeeded()
+{
+	imc_mm_update(im_mm_width, im_mm_height, im_mm_getURLbbox());
+}
+
+
 function im_mm_setStatus(status)
 {
-	var refreshButton = $('im_refreshButton');
+/*	var refreshButton = $('im_refreshButton');*/
 	
 	switch(status)
 	{
@@ -503,7 +532,7 @@ function im_mm_setStatus(status)
 			refreshButton.disabled = true;
 */			
 /*			$('im_pleaseWait').style.display = 'block';*/
-			$('im_mm_wait').style.display='block';
+			$('im_mm_wait').show(); //style.display='block';
 			
 			break;
 		case 'idle': // all operations allowed
@@ -517,7 +546,7 @@ function im_mm_setStatus(status)
 			refreshButton.disabled = true;
 */			
 /*			$('im_pleaseWait').style.display = 'none';*/
-			$('im_mm_wait').style.display='none';
+			$('im_mm_wait').hide(); //style.display='none';
 			
 			break;
 		case 'refresh': // refresh buton highlighted - means that refresh is needed after the user made some operations on layers

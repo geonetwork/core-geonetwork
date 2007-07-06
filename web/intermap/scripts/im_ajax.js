@@ -177,7 +177,7 @@ function imc_setLayerTransparency(id, transparency)
  *****************************************************************************/
 
 // Starts ajax transaction to perform a map action (zoomin, zoomout)
-function imc_mapAction(tool, xmin, ymin, xmax, ymax, w, h)
+function imc_bm_action(tool, xmin, ymin, xmax, ymax, w, h)
 {
 	var url = '/intermap/srv/en/map.action';
 	var pars = 'maptool=' + tool + 
@@ -197,7 +197,7 @@ function imc_mapAction(tool, xmin, ymin, xmax, ymax, w, h)
 	);
 }
 
-function imc_minimapAction(tool, xmin, ymin, xmax, ymax, w, h)
+function imc_mm_action(tool, xmin, ymin, xmax, ymax, w, h)
 {
 	var url = '/intermap/srv/en/map.action';
 	var pars = 'maptool=' + tool + 
@@ -211,7 +211,7 @@ function imc_minimapAction(tool, xmin, ymin, xmax, ymax, w, h)
 		{
 			method: 'get',
 			parameters: pars,
-			onComplete: im_mm_updateMapImage,
+			onComplete: im_mm_imageRebuilt,
 			onFailure: reportError
 		}
 	);
@@ -247,7 +247,7 @@ function imc_mm_move(deltax, deltay, width, height)
 		{
 			method: 'get',
 			parameters: pars,
-			onComplete: im_mm_updateMapImage,
+			onComplete: im_mm_imageRebuilt,
 			onFailure: reportError
 		}
 	);
@@ -309,7 +309,27 @@ function imc_updateBigMap(width, height, qbbox)
 		url, 
 		{
 			method: 'get',
+			parameters: pars,
 			onComplete: updateMapImage,
+			onFailure: reportError
+		}
+	);
+}
+
+function imc_mm_update(width, height, qbbox)
+{
+	im_mm_setStatus('busy');
+	
+	var url = '/intermap/srv/en/map.update';
+
+	var pars = "width=" + width + "&height=" + height + "&" + qbbox;                
+
+	var myAjax = new Ajax.Request (
+		url, 
+		{
+			method: 'get',
+			parameters: pars,
+			onComplete: im_mm_imageRebuilt,
 			onFailure: reportError
 		}
 	);
@@ -360,7 +380,7 @@ function imc_mm_fullExtent(w,h)
 		{
 			method: 'get',
 			parameters: pars,
-			onComplete: im_mm_updateMapImage,
+			onComplete: im_mm_imageRebuilt,
 			onFailure: reportError
 		}
 	);
@@ -443,7 +463,7 @@ function imc_addService(surl, service, type, callback)
 
 function imc_addServices(surl, serviceArray, type, callback)
 {
-	var url = '/intermap/srv/en/map.addServices';	
+	var url = '/intermap/srv/en/map.addServices.xml';	
 	var pars = 'url=' + surl + '&type=' + type;
 	
 	serviceArray.each(

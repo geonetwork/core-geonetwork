@@ -129,7 +129,11 @@ public class MapUtil
 		}
 	}
 
-	public static void addService(int serverType, String serverUrl, String serviceName, String vsp, MapMerger mm) throws Exception
+
+	/**
+	 * @return true if the service has been added
+	 */
+	public static boolean addService(int serverType, String serverUrl, String serviceName, String vsp, MapMerger mm) throws Exception
 	{
 		// Do not add the service if it is already there
 //		for (Enumeration e = mm.getServices(); e.hasMoreElements(); ) {
@@ -138,7 +142,8 @@ public class MapUtil
 		{
 			String url = service.getServerURL();
 			String name = service.getName();
-			if (url.equals(serverUrl) && name.equals(serviceName)) return;
+			if (url.equals(serverUrl) && name.equals(serviceName))
+				return false;
 		}
 
 		switch (serverType)
@@ -154,6 +159,8 @@ public class MapUtil
 
 				break;
 		}
+
+		return true;
 	}
 
 	private static void setVendorSpecificParams(WmsService service, String params) {

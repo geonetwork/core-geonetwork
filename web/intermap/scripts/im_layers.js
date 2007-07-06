@@ -227,11 +227,12 @@ function activateMapLayer(id)
 	disactivateAllMapLayers();
 	mapLayer.className = 'im_activeLayer';
 
-           $('layerControl_' + id).style.display = "table-row";
+           //$('layerControl_' + id).style.display = "table-row";
+           $('layerControl_' + id).show();
 
 	activeLayerId = id;
 	
-	updateInspector(id);
+	//updateInspector(id);
 }
 
 
@@ -261,7 +262,8 @@ function disactivateAllMapLayers()
 	                              function(tr)
 			       {
             			if( new String(tr.id).search('layerControl_') != -1)
-            			   tr.style.display="none";
+            			   //tr.style.display="none";
+            			   tr.hide();
             	                  }
             	           );
 		}

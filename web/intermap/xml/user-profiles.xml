@@ -11,6 +11,7 @@
 		<allow service="banner"/>
 		<allow service="map.addServices"/>
 		<allow service="map.addServicesExt"/>
+		<allow service="map.addServices.xml"/>		
 		<allow service="map.getFrames"/>
 		<allow service="mapContexts.get"/>
 		<allow service="mapServers.listServers"/>

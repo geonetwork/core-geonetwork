@@ -208,7 +208,7 @@ function stopZoombox(e)
 
 	setStatus('busy');
 	
-	imc_mapAction(currentTool,
+	imc_bm_action(currentTool,
 		Math.min(pX, startX) - offsetX, // xmin
 		Math.max(pY, startY) - offsetY, // ymax
 		Math.max(pX, startX) - offsetX, // xmax
@@ -466,7 +466,7 @@ function zoomToAoi() {
 		
 	setStatus('busy');
 	
-	imc_mapAction('zoomin',
+	imc_bm_action('zoomin',
 		left - offsetX,
 		top - offsetY + height,
 		left - offsetX + width,
@@ -871,7 +871,7 @@ function setStatus(status)
 			refreshButton.className = 'im_disabled';
 			refreshButton.disabled = true;
 			
-			$('im_pleaseWait').style.display = 'block';
+			$('im_pleaseWait').show(); //style.display = 'block';
 			break;
 		case 'idle': // all operations allowed
 			// enable zoom, pan...
@@ -883,7 +883,7 @@ function setStatus(status)
 			refreshButton.className = 'im_disabled';
 			refreshButton.disabled = true;
 			
-			$('im_pleaseWait').style.display = 'none';
+			$('im_pleaseWait').hide(); //style.display = 'none';
 			break;
 		case 'refresh': // refresh buton highlighted - means that refresh is needed after the user made some operations on layers
 			// change refresh button status
@@ -943,14 +943,18 @@ function updateMapImage(req)
 {
 	var vMapImg = $('im_mapImg');
 	var vGhostImg = $('im_ghostImg');
-	
+
+	// set inner vars
+            im_bm_set(req.responseXML);
+
 	// get the new values from response XML
 	var imageSrc = req.responseXML.getElementsByTagName('imgUrl')[0].firstChild.nodeValue;
 	var scale = req.responseXML.getElementsByTagName('scale')[0].firstChild.nodeValue;
 	
-	// update the map image
+/*	src is set by im_bm_set() 
+            // update the map image
 	vMapImg.src = imageSrc;
-	
+*/	
 	// set map image offset
 	vMapImg.style.left = '0';
 	vMapImg.style.top = '0';
@@ -965,10 +969,14 @@ function updateMapImage(req)
 	deleteChildNodes($('im_scale'));
 	$('im_scale').appendChild( document.createTextNode('1:' + scale));
 	
-	// set inner vars
-            im_bm_set(req.responseXML);
 	
 //	Event.observe(vMapImg, 'load', function(e) { setStatus('idle') }); // better behaviour but needs debugging on explorer (newer version of prototype?)
 	setStatus('idle');
+	
+	
+	// the minimap must follow the bigger map 
+	// !!! TODO check if this refresh is not due to a minimap action, or we'll get a refresh loop !!!
+	
+	imc_mm_update(im_mm_width, im_mm_height, im_dezoom(im_bm_north, im_bm_east, im_bm_south, im_bm_west));	
 }
 

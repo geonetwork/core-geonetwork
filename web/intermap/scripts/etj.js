@@ -3,39 +3,20 @@ var minLayersDivWidth = 236;
 
 function im_load()
 {
-	var url = '/intermap/srv/en/map.getMain.embedded'; 
-	var pars = '' ; 				
-	
+    imc_load();
+}
+
+function imc_load()
+{
 	var myAjax = new Ajax.Request (
-		url, 
+		'/intermap/srv/en/map.getMain.embedded', 
 		{
 			method: 'get',
-			parameters: pars,
+			parameters: '',
 			onSuccess: im_load_complete,
 			onFailure: im_load_error
 		}
 	);
-}
-
-function im_load_complete(req)
-{				
-	// Dinamically generate content
-	var im = $('intermap');
-	//copyTree(req.responseXML.documentElement, im);
-	//copyTree(req.responseXML.getElementById('intermap_root'), im);
-	copyTree(req.responseXML.documentElement.getElementsByTagName('html')[0].firstChild , im);
-	
-	$('im_mm_wait').style.display='none';
-	$('openIMBtn').textContent="Open Intermap >>>";
-	$('openIMBtn').className="imenabled";
-	Event.observe('openIMBtn', 'click',  function(){openIntermap()} );						
-	new Effect.Pulsate('openIMBtn');
-	
-	
-	//var mmurl = req.responseXML.documentElement.getElementsByTagName('minimap')[0].getElementsByTagName('imgUrl')[0].textContent;
-	var bm =req.responseXML.documentElement.getElementsByTagName('bigmap')[0];
-	var mm =req.responseXML.documentElement.getElementsByTagName('minimap')[0];
-	im_init(bm,mm);
 }
 
 function im_load_error()
@@ -43,20 +24,25 @@ function im_load_error()
 	alert("Loading error");
 }
 
-
-function im_init(bmr, mmr)
-{
+function im_load_complete(req)
+{				
+	// Dinamically generate content
+	var im = $('intermap');
+	copyTree(req.responseXML.documentElement.getElementsByTagName('html')[0].firstChild , im);
+	
+	$('im_mm_wait').hide(); //style.display='none';
+	$('openIMBtn').textContent="Open Intermap >>>";
+	$('openIMBtn').className="imenabled";
+	Event.observe('openIMBtn', 'click',  function(){openIntermap()} );						
+	new Effect.Pulsate('openIMBtn');
+	
+	var bm =req.responseXML.documentElement.getElementsByTagName('bigmap')[0];
+	var mm =req.responseXML.documentElement.getElementsByTagName('minimap')[0];
+	
            //im_setMapSize(400,300);
 //	var height = getWindowSize()[1]; // - Element.getHeight('banner');
 //	$('im_layers').style.height = height + 'px';
-	
-	
-	//window.name = "InterMap";
-	//window.focus();
-
-	//Event.observe(document, 'mousedown', resizeLayersDivStart);
-	//new Draggable('im_resizeBar', {constraint:'horizontal',change:resizeLayersDiv});
-	
+		
 	Event.observe('im_map', 'mousedown', mousedownEventListener);
 	Event.observe('im_mm_map', 'mousedown', im_mm_mousedownEventListener);
 	
@@ -64,20 +50,50 @@ function im_init(bmr, mmr)
 	im_mm_setTool('zoomin'); // set the default tool
 	
 	imc_reloadLayers(); // append layers to list
-	//setLayersDivWidth(minLayersDivWidth);
-	
-	//Event.observe('geonetRecords', 'mouseover', function(){ $('geonetRecords').className = 'opaque'; });
-	//Event.observe('geonetRecords', 'mouseout', function(){ $('geonetRecords').className = ''; });
-	
-	// keyboard events
-	//Event.observe(document, 'keypress', function(e) { keyPressed(e) });
 
 	im_mm_initTextControls($('northBL'), $('eastBL'), $('southBL'), $('westBL'))
 
-	im_mm_set(mmr);
-	im_bm_set(bmr);	
+	im_mm_set(mm);
+	im_bm_set(bm);	
 }
 
+function im_reset()
+{
+            setStatus('busy');
+            im_mm_setStatus('busy');
+            
+            imc_reset();
+}
+
+function imc_reset()
+{
+	var myAjax = new Ajax.Request (
+		'/intermap/srv/en/map.getMain.embedded', 
+		{
+			method: 'get',
+			parameters: 'reset=true',
+			onSuccess: im_reset_complete,
+			onFailure: im_load_error
+		}
+	);
+}
+
+function im_reset_complete(req)
+{				
+	setTool('zoomin'); // set the default tool
+	im_mm_setTool('zoomin'); // set the default tool
+	
+	imc_reloadLayers(); // append layers to list
+
+	var bm =req.responseXML.documentElement.getElementsByTagName('bigmap')[0];
+	var mm =req.responseXML.documentElement.getElementsByTagName('minimap')[0];
+
+	im_mm_set(mm);
+	im_bm_set(bm);
+	
+	setStatus('idle');
+	im_mm_setStatus('idle');
+}
 
 
 /********************************************************************
@@ -95,10 +111,12 @@ function runIM_addService(url, service, type)
 
 /* 
 ## Hook from GN xsl for dynamic data
+## A server url has been specified. A list of selectable services will be diplayed
 */
 function runIM_selectService(url, type)
 {
-
+    alert("TODO (runIM_selectService)");
+    // TODO
 }
 
 /*
@@ -171,15 +189,14 @@ function im_mapServersLoaded(req)
             input.id= "im_wmsservername";
             input.className = 'content';
             input.setAttribute("type", "text"); 
-            input.setAttribute("size", "50");             
+            input.setAttribute("size", "40");             
             li.appendChild(input);
-/*            <input class="content" type="text" name="url" size="60"/>*/
 
            var button  = document.createElement('button');
-           button.className = "content-small";
-           button.onClick =  "function() { im_mapServerURL($('im_wmsservername').value);}";
            button.textContent = "Connect"; // FIXME i18n
-           li.appendChild(button);           
+           li.appendChild(button);
+           
+           Event.observe(button, "click", function() { im_mapServerURL($('im_wmsservername').value);});
 }
 
 /*
@@ -238,11 +255,10 @@ function im_mapServerURL(url)
 
 function imc_loadURLServices(url, type, callback)
 {
-	var url = '/intermap/srv/en/mapServers.getServices.embedded';
 	var pars = 'mapserver='+type+"&url="+url ; 				
 	
 	var myAjax = new Ajax.Request (
-		url, 
+		'/intermap/srv/en/mapServers.getServices.embedded', 
 		{
 			method: 'get',
 			parameters: pars,
@@ -253,24 +269,10 @@ function imc_loadURLServices(url, type, callback)
 }
 
 function im_servicesLoaded(req)
-{				
-           //$('im_serverList').removeChild( $('im_serverList_title') );
-           //$('im_serverList').removeChild( $('im_serverList_list') );
-           
-           
-           
+{
 	// Dinamically generate content
 	var im = $('im_serverList');
 	im.innerHTML =req.responseText; 
-	//copyTree(req.responseXML.documentElement, im);
-	//copyTree(req.responseXML.getElementById('intermap_root'), im);
-//	copyTree(req.responseXML.documentElement.getElementsByTagName('div')[0].firstChild , im);
-	
-	
-	
-	//var mmurl = req.responseXML.documentElement.getElementsByTagName('minimap')[0].getElementsByTagName('imgUrl')[0].textContent;
-//	var mm =req.responseXML.documentElement.getElementsByTagName('minimap')[0];
-//	im_init(mm);
 }
 
 /*
@@ -306,6 +308,8 @@ function im_servicesSelected()
 	);
 	
 	//alert(query);
+	
+	setStatus('busy');
 	imc_addServices(url, services, type, im_servicesAdded);
 	
 }
@@ -319,9 +323,13 @@ function im_servicesAdded(req)
 	t1.textContent = "Selected layers have been added"; // fixme i18n
 	im.appendChild(t1);
 	
-	imc_reloadLayers(); // append layers to list
+	im_buildLayerList(req); // rebuild layers' list
 	
-	// TODO also reload maps
+	//imc_reloadLayers(); 
+			
+           // refreshes should be chained
+	refreshNeeded(); // refresh big map
+	// im_mm_refreshNeeded(); // refresh minimap	
 		
 }
 

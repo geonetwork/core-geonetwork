@@ -152,7 +152,7 @@ toolbar
 *******************************************************************************/
 
 #im_toolbar {
-	background: #064377;
+/*	background: #064377;*/
 	padding: 0;
 	border-bottom: 1px solid #ffffff;
 
@@ -193,22 +193,11 @@ margin-bottom: 0.5em;
 	background: #999;
 	font-size: 10px;
 	text-align: center;
+	vertical-align: middle;
 	color: white;
 	font-weight: bold;
 	text-decoration: none;
-}
-
-.im_tool {
-/*	display: block;*/
-/*	padding: 4px 4px 3px 4px;*/
-	padding: 0px 0px 0px 0px;
-	background: #999;
-	text-align: center;
-	vertical-align: middle;
-}
-
-.im_tool :hover {
-	background: #005D9F;
+	cursor: pointer;	
 }
 
 .im_tool img {
@@ -217,11 +206,13 @@ margin-bottom: 0.5em;
 	
 }
 
-.im_tool img:hover {
-	background: #005D9F;
+#im_toolbar #im_tool_reset  {
+	background: red;
+	border-right: 1px solid #fff;
+	padding: 0 3px 0 3px;
 }
 
-
+/* hilite when selected*/
 .aoi           #im_tool_aoi ,
 .zoomin     #im_tool_zoomin,
 .zoomout   #im_tool_zoomout,
@@ -233,16 +224,29 @@ margin-bottom: 0.5em;
 	cursor: default;
 }
 
-#im_tool_fullextent  {
-	color: white;
-	border-left: 0;
+/*hovering*/
+#im_tool_fullextent :hover, 
+#im_tool_zoomsel :hover,
+#im_tool_reset :hover, 
+#im_tool_fullextent img:hover, 
+#im_tool_zoomsel img:hover,
+#im_tool_reset img:hover
+{
+	background: #005D9F;
 }
 
-#im_tool_reset  {
-	background: red;
-	color: white;
-	border-right: 1px solid #fff;
+#im_tool_aoi :hover,
+#im_tool_zoomin :hover,
+#im_tool_zoomout :hover,
+#im_tool_pan :hover, 
+#im_tool_aoi img:hover,
+#im_tool_zoomin img:hover,
+#im_tool_zoomout img:hover,
+#im_tool_pan img:hover 
+{
+	background: yellow;
 }
+
 
 
 /*******************************************************************************
@@ -821,3 +825,13 @@ div.im_wbcontent {
      margin-left: 5px;
 
 }
+
+#im_serverList_list button {
+    border:1px solid #266397;
+    color:#064377;
+    cursor:pointer;
+    font-family:Verdana;
+    font-size:7pt;
+    margin-left: 5px;
+}
+

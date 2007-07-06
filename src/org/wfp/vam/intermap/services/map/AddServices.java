@@ -34,44 +34,51 @@ public class AddServices implements Service
 		int serverType = Integer.parseInt(params.getChildText(Constants.MAP_SERVER_TYPE));
 		List<Element> lServices = params.getChildren(Constants.MAP_SERVICE);
 
-
-		Element response = new Element("response");
-
 		// if no services are specified then forward to GetServices
-		if (lServices.size() == 0) {
+		if (lServices.size() == 0)
+		{
+			Element response = new Element("response");
 			response.addContent(new Element("status").setAttribute("services", "false"));
 			response.addContent(new Element("mapserver").setText("-" + serverType + ""));
 			response.addContent(new Element("url").setText(serverUrl));
 
 			return response;
 		}
-		else
-			response.addContent(new Element("status").setAttribute("services", "true"));
+//		else
+//			response.addContent(new Element("status").setAttribute("services", "true"));
 
 		// Get the other request parameters
 		String vsp = params.getChildText("vendor_spec_par"); // vendor specific parameters
 		String bbox = params.getChildText("BBOX");
 
-		if (lServices.size() > 0) {
+		MapMerger mm = MapUtil.getMapMerger(context);
+
+		Element added = new Element("added");
+
+		if (lServices.size() > 0)
+		{
 			// Get the MapMerger object from the user session
-			MapMerger mm = MapUtil.getMapMerger(context);
 
 			// Set a flag to indicate that no services were in the MapMerger
-			boolean flag = mm.size() == 0;
+			boolean mmWasEmpty = mm.size() == 0;
 
 			// Create the Service objects and attach them to the MapMerge object
-			for (Element eService : lServices) {
+			for (Element eService : lServices)
+			{
 				String serviceName = eService.getText();
-				MapUtil.addService(serverType, serverUrl, serviceName, vsp, mm);
+				if ( MapUtil.addService(serverType, serverUrl, serviceName, vsp, mm) )
+					added.addContent(new Element(serviceName));
 			}
 
 			// Set the bounding box as specified in the URL
-			if (bbox != null) {
+			if (bbox != null)
+			{
 				MapUtil.setBBoxFromUrl(bbox, mm);
 			}
 
 			// Calculate the starting BoundingBox if flag is set
-			else if (flag) {
+			else if (mmWasEmpty)
+			{
 				MapUtil.setDefBoundingBox(mm);
 			}
 
@@ -86,7 +93,8 @@ public class AddServices implements Service
 			context.getUserSession().setProperty(Constants.SESSION_SIZE, MapUtil.getDefaultImageSize());
 		}
 
-		return null;
+		return mm.toElementSimple()
+						.addContent(added);
 	}
 
 }
