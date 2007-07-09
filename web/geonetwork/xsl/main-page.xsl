@@ -10,6 +10,7 @@
 	additional scripts
 	-->
 	<xsl:template mode="script" match="/">
+		
 <!--		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls,dragdrop"/>		-->
 		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/slider.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/effects.js"/>
@@ -17,14 +18,19 @@
 		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/dragdrop.js"/>
 		
 		<script type="text/javascript" src="/intermap/scripts/etj.js?"/>
+		<script type="text/javascript" src="/intermap/scripts/im_ajax.js?" />
+		<script type="text/javascript" src="/intermap/scripts/im_minimap.js?"/>
+		<script type="text/javascript" src="/intermap/scripts/im_bigmap.js?" />
+		<script type="text/javascript" src="/intermap/scripts/im_layers.js?" />
+		<script type="text/javascript" src="/intermap/scripts/util.js" />
+		
+<!--		<script type="text/javascript" src="/intermap/scripts/etj.js?"/>
 		<script type="text/javascript" src="/intermap/scripts/im_minimap.js?"/>
 		<script type="text/javascript" src="/intermap/scripts/util.js" />
-		<!--		<script type="text/javascript" src="/intermap/scripts/gui.js?" />-->
 		<script type="text/javascript" src="/intermap/scripts/im_layers.js?" />
 		<script type="text/javascript" src="/intermap/scripts/im_bigmap.js?" />
-		<!--		<script type="text/javascript" src="/intermap/scripts/connectors/intermap.js?" />-->
 		<script type="text/javascript" src="/intermap/scripts/im_ajax.js?" />
-		
+-->		
 		<!--  FIXME move this line elsewhere.  -->
 		<link rel="stylesheet" type="text/css" href="/intermap/intermap-embedded.css?" />
 		
@@ -144,7 +150,7 @@
 
 				// Display results area								
 				clearNode('resultList');								
-				$('loadingMD').style.display = 'block';
+				$('loadingMD').show();   //style.display = 'block';
 				
 				//$('resultList').style.display = 'block';
 								
@@ -155,7 +161,7 @@
 			
 			function gn_search(text, bbn, bbe, bbs, bbw)
 			{
-				var url = '/geonetwork/srv/en/main.search.simpler'; 
+				var url = '/geonetwork/srv/en/main.search.embedded'; 
 				var pars = 'any='+text ; 				// add bb
 				
 				var myAjax = new Ajax.Request (
@@ -190,9 +196,10 @@
 				//new Insertion.Top('resultList', req.responseXML.documentElement); // nn funge...
 				
 				var rlist = $('resultList');
+				//rlist.innerHTML = req.responseXML.documentElement;
 				copyTree(req.responseXML.documentElement, rlist);
 				
-				$('loadingMD').style.display = 'none';
+				$('loadingMD').hide(); // style.display = 'none';
 				
 			}
 			
@@ -250,15 +257,15 @@
 			
 			function gn_search_error()
 			{
-				$('loadingMD').style.display = 'none';
+				$('loadingMD').hide(); // style.display = 'none';
 				alert("ERROR)");
 			}
 
 
 			function openIntermap()
 			{
-				$('openIMBtn').style.display='none';
-				$('closeIMBtn').style.display='block';
+				$('openIMBtn').hide(); //.style.display='none';
+				$('closeIMBtn').show(); //style.display='block';
 				
 				//Effect.BlindDown('im_mapContainer');
 				Effect.BlindDown('im_map');
@@ -270,8 +277,8 @@
 			
 			function closeIntermap()
 			{
-				$('closeIMBtn').style.display='none';
-				$('openIMBtn').style.display='block';
+				$('closeIMBtn').hide(); //style.display='none';
+				$('openIMBtn').show(); //style.display='block';
 				
 				//Effect.BlindUp('im_mapContainer');
 				Effect.BlindUp('im_map');
