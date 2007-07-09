@@ -73,7 +73,10 @@ public class EmbeddedSCLib
 			}
 
 			else if ("addWebApplication".equals(elCall.getAttributeValue("name")))
-				servletElem = elCall.getChild("Arg");
+			{
+				if (servletElem == null)
+					servletElem = elCall.getChild("Arg");
+			}
 		}
 	}
 
