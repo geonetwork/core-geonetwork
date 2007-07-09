@@ -24,12 +24,11 @@
 package org.fao.geonet.lib;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 import jeeves.resources.dbms.Dbms;
 import org.jdom.Element;
 
@@ -177,28 +176,45 @@ public class LocalLib
 		List base = result.getChildren();
 		List des  = dbms.select(query2).getChildren();
 
-		Iterator i = base.iterator();
+		//--- preprocess data for faster access
 
-		while (i.hasNext())
+		Map<String, List<String>> langData = new HashMap<String, List<String>>();
+
+		for (Object o : des)
 		{
-			Element record = (Element) i.next();
+			Element loc = (Element) o;
+
+			String iddes = loc.getChildText("iddes");
+			String lang  = loc.getChildText("langid");
+			String label = loc.getChildText("label");
+
+			List<String> list = langData.get(iddes);
+
+			if (list == null)
+			{
+				list = new ArrayList<String>();
+				langData.put(iddes, list);
+			}
+
+			list.add(lang);
+			list.add(label);
+		}
+
+		//--- fill results
+
+		for (Object o : base)
+		{
+			Element record = (Element) o;
 			Element labels = new Element("label");
 
 			record.addContent(labels);
 
 			id = record.getChildText("id");
 
-			for (int j=0;j<des.size(); j++)
-			{
-				Element loc = (Element) des.get(j);
+			List<String> list = langData.get(id);
 
-				String iddes = loc.getChildText("iddes");
-				String lang  = loc.getChildText("langid");
-				String label = loc.getChildText("label");
-
-				if (id.equals(iddes))
-					labels.addContent(new Element(lang).setText(label));
-			}
+			for (int j=0; j<list.size(); j+=2)
+				labels.addContent(new Element(list.get(j)).setText(list.get(j+1)));
 		}
 
 		return result.setName(table.toLowerCase());
