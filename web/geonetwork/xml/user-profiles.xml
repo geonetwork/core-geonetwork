@@ -243,6 +243,9 @@
 		<!-- MEF facilities -->
 		<allow service="mef.export"/>
 
+		<!-- Relation services -->
+		<allow service="xml.relation.get"/>
+		
 		<!-- Thesaurus services -->
 	 	<allow service="keywords.search"/>
 	 	<allow service="keywords.sort"/>
