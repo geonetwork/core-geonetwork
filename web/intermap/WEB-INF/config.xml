@@ -60,9 +60,9 @@
 		
 		<!-- proxy server -->
 
-		<param name="useProxy" value="$USE_PROXY" />
-		<param name="proxyHost" value="$PROXY_HOST" />
-		<param name="proxyPort" value="$PROXY_PORT" />
+		<param name="useProxy" value="false" />
+		<param name="proxyHost" value="10.10.10.10" />
+		<param name="proxyPort" value="80" />
 
 		<!-- screen DPI -->
 		<param value="96" name="screenDpi" />
@@ -79,12 +79,12 @@
 		<param name="miniMapHeight" value="120" />
 		
 		<!-- temp files -->		
-		<param name="tempDir"	value="/home/fao/project/gnim/svn/intermap/intermap/trunk/web/tmp/" />
+		<param name="tempDir"	value="../web/intermap/tmp/" />
 		<param name="tempDeleteMinutes" value="15" />
 		<param name="tempUrl" value="/intermap/tmp" />
 
 		<!-- http cache -->
-		<param name="httpCacheDir" value="/home/fao/project/gnim/svn/intermap/intermap/trunk/web/httpCache/" />
+		<param name="httpCacheDir" value="../web/intermap/httpCache/" />
 		<param name="httpCacheDeleteEvery" value="60" />
 		<param name="useCache" value="true" />
 		
