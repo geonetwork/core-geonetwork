@@ -35,10 +35,8 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="portal.search.present">
-			<class name=".services.main.Search">
+			<class name=".services.main.SearchResult">
 				<param name="maxSummaryKeys" value="10" />
-			</class>
-			<class name=".services.main.Result">
 				<param name="range" value="all" />
 			</class>
 
