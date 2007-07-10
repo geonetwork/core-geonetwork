@@ -54,6 +54,7 @@ public class Worker implements Runnable
 	{
 		try
 		{
+			dlg.reset(0);
 			Resource res = Lib.config.createResource();
 			Lib.database.setup(res, callBack);
 		}

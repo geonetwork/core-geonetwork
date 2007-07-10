@@ -163,7 +163,7 @@ public class DataManager
 		String  root = md.getName();
 
 		String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, title, uuid, "+
-									"isHarvested FROM Metadata WHERE id = " + id;
+									"isHarvested, owner FROM Metadata WHERE id = " + id;
 
 		Element rec = dbms.select(query).getChild("record");
 
@@ -175,6 +175,7 @@ public class DataManager
 		String  title      = rec.getChildText("title");
 		String  uuid       = rec.getChildText("uuid");
 		String  isHarvested= rec.getChildText("isharvested");
+		String  owner      = rec.getChildText("owner");
 
 		moreFields.add(makeField("_root",        root,        true, true, false));
 		moreFields.add(makeField("_schema",      schema,      true, true, false));
@@ -185,6 +186,7 @@ public class DataManager
 		moreFields.add(makeField("_title",       title,       true, true, false));
 		moreFields.add(makeField("_uuid",        uuid,        true, true, false));
 		moreFields.add(makeField("_isHarvested", isHarvested, true, true, false));
+		moreFields.add(makeField("_owner",       owner,       true, true, false));
 
 		// get privileges
 		List operations = dbms.select("SELECT groupId, operationId FROM OperationAllowed "+
@@ -475,7 +477,7 @@ public class DataManager
 	  */
 
 	public String createMetadata(Dbms dbms, String templateId, Set<String> groups,
-										  SerialFactory sf, String source) throws Exception
+										  SerialFactory sf, String source, String owner) throws Exception
 	{
 		String query = "SELECT schemaId, data FROM Metadata WHERE id="+ templateId;
 
@@ -497,7 +499,7 @@ public class DataManager
 
 		//--- store metadata
 
-		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid);
+		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid, owner);
 
 		for (String groupId : groups)
 			copyDefaultPrivForGroup(dbms, id, groupId);
@@ -530,12 +532,12 @@ public class DataManager
 
 	public String insertMetadataExt(Dbms dbms, String schema, Element md, SerialFactory sf,
 											  String source, String createDate, String changeDate,
-											  String uuid) throws Exception
+											  String uuid, String owner) throws Exception
 	{
 		//--- generate a new metadata id
 		int id = sf.getSerial(dbms, "Metadata");
 
-		return insertMetadataExt(dbms, schema, md, id, source, createDate, changeDate, uuid);
+		return insertMetadataExt(dbms, schema, md, id, source, createDate, changeDate, uuid, owner);
 	}
 
 	//--------------------------------------------------------------------------
@@ -544,7 +546,7 @@ public class DataManager
 
 	public String insertMetadataExt(Dbms dbms, String schema, Element md, int id,
 											  String source, String createDate, String changeDate,
-											  String uuid) throws Exception
+											  String uuid, String owner) throws Exception
 	{
 		if (source == null)
 			source = getSiteID();
@@ -555,7 +557,7 @@ public class DataManager
 		//--- Note: we cannot index metadata here. Indexing is done in the harvesting part
 
 		return XmlSerializer.insert(dbms, schema, md, id, source, uuid, createDate,
-											 changeDate, "n", null);
+											 changeDate, "n", null, owner);
 	}
 
 	//--------------------------------------------------------------------------
@@ -565,15 +567,16 @@ public class DataManager
 	  */
 
 	public String insertMetadata(Dbms dbms, String schema, String groupId, Element xml,
-										  SerialFactory sf, String source, String uuid) throws Exception
+										  SerialFactory sf, String source, String uuid, String owner) throws Exception
 	{
-		return insertMetadata(dbms, schema, groupId, xml, sf, source, uuid, "n", null);
+		return insertMetadata(dbms, schema, groupId, xml, sf, source, uuid, "n", null, owner);
 	}
 
 	//--------------------------------------------------------------------------
 
 	public String insertMetadata(Dbms dbms, String schema, String groupId, Element xml,
-										  SerialFactory sf, String source, String uuid, String isTemplate, String title) throws Exception
+										  SerialFactory sf, String source, String uuid, String isTemplate,
+										  String title, String owner) throws Exception
 	{
 		//--- generate a new metadata id
 		int serial = sf.getSerial(dbms, "Metadata");
@@ -586,7 +589,7 @@ public class DataManager
 
 		//--- store metadata
 
-		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid, isTemplate, title);
+		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid, isTemplate, title, owner);
 
 		copyDefaultPrivForGroup(dbms, id, groupId);
 		indexMetadata(dbms, id);

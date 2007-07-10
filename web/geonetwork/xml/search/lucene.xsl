@@ -189,10 +189,21 @@ compiles a request
 			
 			<!-- use all user's groups for view privileges -->
 			<xsl:otherwise>
-				<xsl:call-template name="orFields">
-					<xsl:with-param name="expr" select="/request/group"/>
-					<xsl:with-param name="field" select="$opView"/>
-				</xsl:call-template>
+				<BooleanClause required="true" prohibited="false">
+					<BooleanQuery>
+						<xsl:for-each select="/request/group">
+							<BooleanClause required="false" prohibited="false">
+								<TermQuery fld="{$opView}" txt="{string(.)}"/>
+							</BooleanClause>
+						</xsl:for-each>
+
+						<xsl:if test="/request/owner">
+							<BooleanClause required="false" prohibited="false">
+								<TermQuery fld="_owner" txt="{/request/owner}"/>
+							</BooleanClause>
+						</xsl:if>
+					</BooleanQuery>
+				</BooleanClause>
 			</xsl:otherwise>
 		
 		</xsl:choose>

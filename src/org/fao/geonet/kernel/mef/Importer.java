@@ -116,7 +116,8 @@ class Importer
 				Log.debug(Geonet.MEF, "Adding metadata with uuid="+ uuid);
 
 				id[0] = dm.insertMetadataExt(dbms, schema, md[0], context.getSerialFactory(),
-															 source, createDate, changeDate, uuid);
+													  source, createDate, changeDate, uuid,
+													  context.getUserSession().getUserId());
 
 				int iId = Integer.parseInt(id[0]);
 

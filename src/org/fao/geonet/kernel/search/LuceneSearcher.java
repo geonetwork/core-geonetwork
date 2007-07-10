@@ -186,6 +186,11 @@ public class LuceneSearcher extends MetaSearcher
 		for (String group : hs)
 			request.addContent(new Element("group").addContent(group));
 
+		String owner = srvContext.getUserSession().getUserId();
+
+		if (owner != null)
+			request.addContent(new Element("owner").addContent(owner));
+
 		Log.debug(Geonet.SEARCH_ENGINE, "CRITERIA:\n"+ Xml.getString(request));
 		request.addContent(Lib.db.select(dbms, "Regions", "region"));
 

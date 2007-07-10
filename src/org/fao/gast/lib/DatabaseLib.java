@@ -475,7 +475,7 @@ public class DatabaseLib
 
 					DataManager.setNamespacePrefix(xml);
 					XmlSerializer.insert(dbms, schema.getName(), xml, serial,
-											   siteId, uuid, date, date, "y", null);
+											   siteId, uuid, date, date, "y", null, "1");
 
 					setupTemplatePriv(dbms, serial);
 					dbms.commit();

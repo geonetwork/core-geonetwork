@@ -23,12 +23,12 @@
 
 package org.fao.geonet.kernel;
 
-import java.io.FileOutputStream;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.UserSession;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.fao.geonet.util.ISODate;
@@ -74,25 +74,26 @@ public class XmlSerializer
 	//--------------------------------------------------------------------------
 
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
-										 String source, String uuid) throws SQLException
+										 String source, String uuid, String owner) throws SQLException
 	{
-		return insert(dbms, schema, xml, serial, source, uuid, null, null, "n", null);
+		return insert(dbms, schema, xml, serial, source, uuid, null, null, "n", null, owner);
 	}
 
 	//--------------------------------------------------------------------------
 
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
 										 String source, String uuid, String isTemplate,
-										 String title) throws SQLException
+										 String title, String owner) throws SQLException
 	{
-		return insert(dbms, schema, xml, serial, source, uuid, null, null, isTemplate, title);
+		return insert(dbms, schema, xml, serial, source, uuid, null, null, isTemplate, title, owner);
 	}
 
 	//--------------------------------------------------------------------------
 
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
 										 String source, String uuid, String createDate,
-										 String changeDate, String isTemplate, String title) throws SQLException
+										 String changeDate, String isTemplate, String title,
+										 String owner) throws SQLException
 	{
 		String date = new ISODate().toString();
 
@@ -105,8 +106,8 @@ public class XmlSerializer
 		fixCR(xml);
 
 		StringBuffer fields = new StringBuffer("id, schemaId, data, createDate, changeDate, "+
-															"source, uuid, isTemplate, isHarvested, root");
-		StringBuffer values = new StringBuffer("?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
+															"source, uuid, isTemplate, isHarvested, root, owner");
+		StringBuffer values = new StringBuffer("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
 
 		Vector args = new Vector();
 		args.add(new Integer(serial));
@@ -119,6 +120,7 @@ public class XmlSerializer
 		args.add(isTemplate);
 		args.add("n");
 		args.add(xml.getQualifiedName());
+		args.add(new Integer(owner));
 
 		if (title != null)
 		{

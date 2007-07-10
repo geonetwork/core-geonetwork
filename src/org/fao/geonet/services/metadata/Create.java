@@ -71,7 +71,8 @@ public class Create implements Service
 
 		DataManager dm = gc.getDataManager();
 
-		String mdId = dm.createMetadata(dbms, template, groups, context.getSerialFactory(), gc.getSiteId());
+		String mdId = dm.createMetadata(dbms, template, groups, context.getSerialFactory(),
+												  gc.getSiteId(), context.getUserSession().getUserId());
 
 		return new Element(Jeeves.Elem.RESPONSE)
 							.addContent(new Element(Geonet.Elem.ID).setText(mdId));

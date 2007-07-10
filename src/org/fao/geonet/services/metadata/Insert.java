@@ -113,7 +113,9 @@ public class Insert implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String id = dataMan.insertMetadata(dbms, schema, group, xml,
-													  context.getSerialFactory(), gc.getSiteId(), uuid, isTemplate, title);
+													  context.getSerialFactory(), gc.getSiteId(),
+													  uuid, isTemplate, title,
+													  context.getUserSession().getUserId());
 
         //--- Insert category if requested
         if (!"_none_".equals(category))

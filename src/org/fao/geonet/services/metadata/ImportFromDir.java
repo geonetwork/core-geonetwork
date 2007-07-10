@@ -275,7 +275,7 @@ public class ImportFromDir implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String id = dm.insertMetadata(dbms, schema, group, xml, context.getSerialFactory(),
-												gc.getSiteId(), uuid);
+												gc.getSiteId(), uuid, context.getUserSession().getUserId());
 
 		if (!"_none_".equals(category))
 			dm.setCategory(dbms, id, category);
