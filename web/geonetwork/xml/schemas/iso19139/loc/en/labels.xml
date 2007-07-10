@@ -64,7 +64,6 @@
 	<gmd:cellGeometry condition="mandatory" help="identification of grid data as point or cell">Cell geometry</gmd:cellGeometry>
 	<gmd:centerPoint help="earth location in the coordinate system defined by the Spatial Reference System and the grid coordinate of the cell halfway between opposite ends of the grid in the spatial dimensions">Center point</gmd:centerPoint>
 	<gmd:characterSet condition="conditional" consdesc="ISO/IEC 10646-1 not used and not defined by encoding" help="full name of the character coding standard used for the metadata set">Character set</gmd:characterSet>
-	<gmd:characterSet condition="conditional" consdesc="ISO/IEC 10646-1 not used and not defined by encoding" help="full name of the character coding standard used for the metadata set">Character set</gmd:characterSet>
 	<gmd:checkPointAvailability condition="mandatory" help="indication of whether or not geographic position points are available to test the accuracy of the georeferenced grid data">Check point availability</gmd:checkPointAvailability>
 	<gmd:checkPointDescription condition="conditional" consdesc="checkPointAvailability equals “yes”" help="description of geographic position points used to test the accuracy of the georeferenced grid data">Check point description</gmd:checkPointDescription>
 	<gmd:CI_Address help="location of the responsible individual or organization">Address</gmd:CI_Address>
@@ -91,7 +90,6 @@
 	<gmd:condition help="condition under which the extended element is mandatory">Condition</gmd:condition>
 	<gmd:constraintLanguage condition="mandatory" help="formal language used in Application Schema">Constraint language</gmd:constraintLanguage>
 	<gmd:contact condition="mandatory" help="party responsible for the metadata information">Metadata author</gmd:contact>
-	<gmd:contact condition="mandatory" help="party responsible for the metadata information">Metadata author</gmd:contact>
 	<gmd:contactInfo help="address of the responsible party">Contact info</gmd:contactInfo>
 	<gmd:contactInstructions help="supplemental instructions on how or when to contact the individual or organization">Contact instructions</gmd:contactInstructions>
 	<gmd:contentInfo help="provides information about the feature catalogue and describes the coverage and image data characteristics">Content info</gmd:contentInfo>
@@ -99,17 +97,13 @@
 	<gmd:controlPointAvailability condition="mandatory" help="indication of whether or not control point(s) exists">Control point availability</gmd:controlPointAvailability>
 	<gmd:cornerPoints condition="mandatory" help="earth location in the coordinate system defined by the Spatial Reference System and the grid coordinate of the cells at opposite ends of grid coverage along two diagonals in the grid spatial dimensions. There are four corner points in a georectified grid; at least two corner points along one diagonal are required">Corner points</gmd:cornerPoints>
 	<gmd:country help="country of the physical address">Country</gmd:country>
-	<gmd:country help="country of the physical address">Country</gmd:country>
 	<gmd:credit help="recognition of those who contributed to the resource(s)">Credit</gmd:credit>
 	<gmd:dataQualityInfo help="provides overall assessment of quality of a resource(s)">Data quality info</gmd:dataQualityInfo>
 	<gmd:dataset condition="conditional" consdesc="attributes, features, featureInstances, attributeInstances, and other not documented" help="dataset to which the information applies">Dataset Set</gmd:dataset>
 	<gmd:dataType condition="mandatory" help="code which identifies the kind of valueprovidedeprovided in the extended element">Data type</gmd:dataType>
 	<gmd:date condition="mandatory" help="reference date for the cited resource (YYYY-MM-DD)">Date</gmd:date>
-	<gmd:date condition="mandatory" help="reference date for the cited resource (YYYY-MM-DD)">Date</gmd:date>
-	<gmd:date condition="mandatory" help="reference date for the cited resource (YYYY-MM-DD)">Date</gmd:date>
 	<gmd:dateOfNextUpdate help="scheduled revision date for resource (YYYY-MM-DD)">Date of next update</gmd:dateOfNextUpdate>
 	<gmd:dateStamp condition="mandatory" help="date that the metadata was created (YYYY-MM-DDThh:mm:ss)">Date stamp</gmd:dateStamp>
-	<gmd:dateTime help="date and time or range of date and time on or over which the process step occurred (YYYY-MM-DDThh:mm:ss)">DateTime</gmd:dateTime>
 	<gmd:dateTime help="date and time or range of date and time on or over which the process step occurred (YYYY-MM-DDThh:mm:ss)">DateTime</gmd:dateTime>
 	<gmd:dateType condition="mandatory" help="event used for reference date">Date type</gmd:dateType>
 	<gmd:definition condition="mandatory" help="definition of the extended element">Definition</gmd:definition>
@@ -117,10 +111,6 @@
 	<gmd:denominator condition="mandatory" help="the number below the line in a vulgar fraction">Denominator</gmd:denominator>
 	<gmd:density help="density at which the data is recorded">Density</gmd:density>
 	<gmd:densityUnits condition="conditional" consdesc="density documented" help="units of measure for the recording density">Density units</gmd:densityUnits>
-	<gmd:description condition="mandatory" consdesc="sourceExtent not provided" help="description of the event, including related parameters or tolerances">Description</gmd:description>
-	<gmd:description condition="mandatory" consdesc="sourceExtent not provided" help="description of the event, including related parameters or tolerances">Description</gmd:description>
-	<gmd:description condition="mandatory" consdesc="sourceExtent not provided" help="description of the event, including related parameters or tolerances">Description</gmd:description>
-	<gmd:description condition="mandatory" consdesc="sourceExtent not provided" help="description of the event, including related parameters or tolerances">Description</gmd:description>
 	<gmd:description condition="mandatory" consdesc="sourceExtent not provided" help="description of the event, including related parameters or tolerances">Description</gmd:description>
 	<gmd:descriptiveKeywords help="provides category keywords, their type, and reference source">Descriptive keywords</gmd:descriptiveKeywords>
 	<gmd:descriptor help="description of the range of a cell measurement value">Descriptor</gmd:descriptor>
@@ -158,7 +148,6 @@
 	<gmd:DQ_ThematicClassificationCorrectness help="comparison of the classes assigned to features or their attributes to a universe of discourse">Thematic classification correctness</gmd:DQ_ThematicClassificationCorrectness>
 	<gmd:DQ_TopologicalConsistency help="correctness of the explicitly encoded topological characteristics of the dataset as described by the scope">Topological consistency</gmd:DQ_TopologicalConsistency>
 	<gmd:DS_AssociationTypeCode help="justification for the correlation of two datasets">Association type code</gmd:DS_AssociationTypeCode>
-	<gmd:DS_AssociationTypeCode help="justification for the correlation of two datasets">Association type code</gmd:DS_AssociationTypeCode>
 	<gmd:DS_InitiativeTypeCode help="type of aggregation activity in which datasets are related">Initiative type code</gmd:DS_InitiativeTypeCode>
 	<gmd:eastBoundLongitude condition="mandatory" help="eastern-most coordinate of the limit of the dataset extent, expressed in longitude in decimal degrees (positive east)">East bound longitude</gmd:eastBoundLongitude>
 	<gmd:edition help="version of the cited resource">Edition</gmd:edition>
@@ -179,8 +168,6 @@
 	<gmd:explanation condition="mandatory" help="explanation of the meaning of conformance for this result">Explanation</gmd:explanation>
 	<gmd:extendedElementInformation help="provides information about a new metadata element, not found in ISO 19115, which is required to describe geographic data">Extended elemen information</gmd:extendedElementInformation>
 	<gmd:extensionOnLineResource help="information about on-line sources containing the community profile name and the extended metadata elements. Information for all new metadata elements">Extension Online resource</gmd:extensionOnLineResource>
-	<gmd:extent condition="conditional" consdesc="if hierarchyLevel equals “dataset” either extent.geographicElemen t.EX_GeographicBoundin gBox or extent.geographicElemen t.EX_GeographicDescript ion is  required" help="information about the spatial, vertical and temporal extent of the data specified by the scope">Extent</gmd:extent>
-	<gmd:extent condition="conditional" consdesc="if hierarchyLevel equals “dataset” either extent.geographicElemen t.EX_GeographicBoundin gBox or extent.geographicElemen t.EX_GeographicDescript ion is  required" help="information about the spatial, vertical and temporal extent of the data specified by the scope">Extent</gmd:extent>
 	<gmd:extent condition="conditional" consdesc="if hierarchyLevel equals “dataset” either extent.geographicElemen t.EX_GeographicBoundin gBox or extent.geographicElemen t.EX_GeographicDescript ion is  required" help="information about the spatial, vertical and temporal extent of the data specified by the scope">Extent</gmd:extent>
 	<gmd:extentTypeCode help="indication of whether the bounding polygon encompasses an area covered by the data or an area where data is not present">Extent type code</gmd:extentTypeCode>
 	<gmd:facsimile help="telephone number of a facsimile machine for the responsible organization or individual">Facsimile</gmd:facsimile>
@@ -220,8 +207,6 @@
 	<gmd:ISSN help="international Standard Serial Number">ISSN</gmd:ISSN>
 	<gmd:issueIdentification help="information identifying the issue of the series">Issue identification</gmd:issueIdentification>
 	<gmd:keyword help="commonly used word(s) or formalised word(s) or phrase(s) used to describe the subject">Keyword</gmd:keyword>
-	<gmd:language help="language used for documenting metadata" condition="conditional" consdesc="not defined by encoding">Language</gmd:language>
-	<gmd:language help="language used for documenting metadata" condition="conditional" consdesc="not defined by encoding">Language</gmd:language>
 	<gmd:language help="language used for documenting metadata" condition="conditional" consdesc="not defined by encoding">Language</gmd:language>
 	<gmd:languageCode help="language used for documenting a plain text">Language code</gmd:languageCode>
 	<gmd:lensDistortionInformationAvailability help="indication of whether or not lens aberration correction information is available">Lens distortion information availability</gmd:lensDistortionInformationAvailability>
@@ -287,7 +272,6 @@
 	<gmd:MD_ScopeDescription help="description of the class of information covered by the information">Scope description</gmd:MD_ScopeDescription>
 	<gmd:MD_SecurityConstraints help="handling restrictions imposed on the resource for national security or similar security concerns">Security constraints</gmd:MD_SecurityConstraints>
 	<gmd:MD_ServiceIdentification help="identification of capabilities which a service provider makes available to a service user through a set of interfaces that define a behaviour; See ISO 19119 – Services for furtherinformation">MD Service identification</gmd:MD_ServiceIdentification>
-	<gmd:MD_ServiceIdentification help="identification of capabilities which a serviceprovider makes available to a service user through a set of interfaces that define a behaviour - See ISO 19119 – Services for furtherinformation">Service identification</gmd:MD_ServiceIdentification>
 	<gmd:MD_SpatialRepresentationTypeCode help="method used to represent geographic information in the dataset">Spatial representation type code</gmd:MD_SpatialRepresentationTypeCode>
 	<gmd:MD_StandardOrderProcess help="common ways in which the resource may be obtained or received, and related instructions and fee information">Standard order process</gmd:MD_StandardOrderProcess>
 	<gmd:MD_TopicCategoryCode help="high-level geographic data thematic classification to assist in the grouping and search of available geographic data sets. Can be used to group keywords as well. Listed examples are not exhaustive. NOTE It is understood there are overlaps between general categories and the user is encouraged to select the one most appropriate.">Topic category code</gmd:MD_TopicCategoryCode>
@@ -305,12 +289,6 @@
 	<gmd:metadataStandardVersion help="version (profile) of the metadata standard used">Metadata standard version</gmd:metadataStandardVersion>
 	<gmd:minimumValue condition="mandatory" help="lowest vertical extent contained in the dataset">Minimum value</gmd:minimumValue>
 	<gmd:minValue help="shortest wavelength that the sensor is capable of collecting within a designated band">Minimum value</gmd:minValue>
-	<gmd:name condition="mandatory" help="name of the series, or aggregate dataset, of which the dataset is a part">Name</gmd:name>
-	<gmd:name condition="mandatory" help="name of the series, or aggregate dataset, of which the dataset is a part">Name</gmd:name>
-	<gmd:name condition="mandatory" help="name of the series, or aggregate dataset, of which the dataset is a part">Name</gmd:name>
-	<gmd:name condition="mandatory" help="name of the series, or aggregate dataset, of which the dataset is a part">Name</gmd:name>
-	<gmd:name condition="mandatory" help="name of the series, or aggregate dataset, of which the dataset is a part">Name</gmd:name>
-	<gmd:name condition="mandatory" help="name of the series, or aggregate dataset, of which the dataset is a part">Name</gmd:name>
 	<gmd:name condition="mandatory" help="name of the series, or aggregate dataset, of which the dataset is a part">Name</gmd:name>
 	<gmd:nameOfMeasure help="name of the test applied to the data">Name of measure</gmd:nameOfMeasure>
 	<gmd:northBoundLatitude condition="mandatory" help="northern-most, coordinate of the limit of the dataset extent expressed in latitude in decimal degrees (positive north)">North bound latitude</gmd:northBoundLatitude>
@@ -361,7 +339,6 @@
 	<gmd:resourceSpecificUsage help="provides basic information about specific application(s) for which the resource(s) has/have been or is being used by different users">Resource specific usage</gmd:resourceSpecificUsage>
 	<gmd:result condition="mandatory" help="value (or set of values) obtained from applying a data quality measure or the out come of evaluating the obtained value (or set of values) against a specified acceptable conformance quality level">Result</gmd:result>
 	<gmd:role condition="mandatory" help="function performed by the responsible party">Role</gmd:role>
-	<gmd:RS_Identifier help="identifier used for reference systems">RS identifier</gmd:RS_Identifier>
 	<gmd:RS_Identifier help="identifier used for reference systems">RS Identifier</gmd:RS_Identifier>
 	<gmd:rule condition="mandatory" help="specifies how the extended element relates to other existing elements and entities">Rule</gmd:rule>
 	<gmd:scaleDenominator help="denominator of the representative fraction on a source map">Scale</gmd:scaleDenominator>
@@ -371,12 +348,9 @@
 	<gmd:scope help="the specific data to which the data quality information applies">Scope</gmd:scope>
 	<gmd:sequenceIdentifier help="number that uniquely identifies instances of bands of wavelengths on which a sensor operates">Sequence identifier</gmd:sequenceIdentifier>
 	<gmd:series help="information about the series, or aggregate dataset, of which the dataset is a part">Series</gmd:series>
-	<gmd:series help="information about the series, or aggregate dataset, of which the dataset is a part">Series</gmd:series>
 	<gmd:shortName help="short form suitable for use in an implementation method such as XML or SGML. NOTE other methods may be used">Short name</gmd:shortName>
 	<gmd:softwareDevelopmentFile help="full application schema given as a software development file">Software development file</gmd:softwareDevelopmentFile>
 	<gmd:softwareDevelopmentFileFormat help="software dependent format used for the application schema software dependent file">Software development file format</gmd:softwareDevelopmentFileFormat>
-	<gmd:source condition="mandatory" consdesc="mandatory if statement and processStep not provided" help="information about the source data used in creating the data specified by the scope">Source</gmd:source>
-	<gmd:source condition="mandatory" consdesc="mandatory if statement and processStep not provided" help="information about the source data used in creating the data specified by the scope">Source</gmd:source>
 	<gmd:source condition="mandatory" consdesc="mandatory if statement and processStep not provided" help="information about the source data used in creating the data specified by the scope">Source</gmd:source>
 	<gmd:sourceCitation help="recommended reference to be used for the source data">Source citation</gmd:sourceCitation>
 	<gmd:sourceExtent condition="conditional" consdesc="description not provided" help="information about the spatial, vertical and temporal extent of the source data">Source extent</gmd:sourceExtent>
@@ -387,7 +361,6 @@
 	<gmd:spatialRepresentationInfo help="digital representation of spatial information in the dataset">Spatial representation info</gmd:spatialRepresentationInfo>
 	<gmd:spatialRepresentationType help="method used to spatially represent geographic information">Spatial representation type</gmd:spatialRepresentationType>
 	<gmd:spatialResolution help="factor which provides a general understanding of the density of spatial data in the dataset">Spatial resolution</gmd:spatialResolution>
-	<gmd:specification condition="mandatory" help="name of a subset, profile, or product specification of the format">Specification</gmd:specification>
 	<gmd:specification condition="mandatory" help="name of a subset, profile, or product specification of the format">Specification</gmd:specification>
 	<gmd:specificUsage condition="mandatory" help="brief description of the resource and/or resource series usage">Specific usage</gmd:specificUsage>
 	<gmd:statement condition="conditional" consdesc="(DQ_DataQuality.scope. DQ_Scope.level = “dataset” or “series”)" help="general explanation of the data producer_s knowledge about the lineage of a dataset">Statement</gmd:statement>
@@ -421,7 +394,6 @@
 	<gmd:value condition="mandatory">Value</gmd:value>
 	<gmd:valueType help="value type for reporting a data quality result">Value type</gmd:valueType>
 	<gmd:valueUnit condition="mandatory" help="value unit for reporting a data quality result">Value unit</gmd:valueUnit>
-	<gmd:version condition="mandatory" help="version of the format (date, number, etc.)">Version</gmd:version>
 	<gmd:version condition="mandatory" help="version of the format (date, number, etc.)">Version</gmd:version>
 	<gmd:verticalElement condition="conditional" consdesc="description and geographicElement and temporalElement not documented" help="provides vertical component of the extent of the referring object">Vertical element</gmd:verticalElement>
 	<gmd:voice help="telephone number by which individuals can speak to the responsible organization or individual">Voice</gmd:voice>

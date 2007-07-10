@@ -18,12 +18,14 @@
 
 		<gui>
 			<xml name="strings" file="xml/strings.xml" />
-			<xml name="iso19115" file="xml/iso19115.xml" />
-			<xml name="iso19139" file="xml/iso19139.xml" />
-		  	<xml name="fgdc-std" file="xml/fgdc-std.xml" />
-			<xml name="dublin-core" file="xml/dublin-core.xml" />
+
+			<xml name="iso19115"    base="xml/schemas/iso19115/loc"    file="labels.xml" />
+			<xml name="iso19139"    base="xml/schemas/iso19139/loc"    file="labels.xml" />
+		  	<xml name="fgdc-std"    base="xml/schemas/fgdc-std/loc"    file="labels.xml" />
+			<xml name="dublin-core" base="xml/schemas/dublin-core/loc" file="labels.xml" />
+
 			<call name="session" class="jeeves.guiservices.session.Get" />
-			<call name="env" class="org.fao.geonet.guiservices.util.Env" />
+			<call name="env"     class="org.fao.geonet.guiservices.util.Env" />
 			<call name="results" class="org.fao.geonet.guiservices.search.GetResultsInfo" />
 		</gui>
 
@@ -503,8 +505,8 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="help.metadata">
-			<output sheet="metadata-help.xsl" />
+		<service name="xml.metadata.help">
+			<class name=".services.metadata.Help" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
