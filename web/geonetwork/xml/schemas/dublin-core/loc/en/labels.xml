@@ -1,19 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<root xmlns:dc = "http://purl.org/dc/elements/1.1/">
-	<simpledc>Metadata</simpledc>
-	<dc:title>Title</dc:title>
-	<dc:creator>Creator</dc:creator>
-	<dc:subject>Subject and Keywords</dc:subject>
-	<dc:description>Description</dc:description>
-	<dc:publisher>Publisher</dc:publisher>
-	<dc:contributor>Contributor</dc:contributor>
-	<dc:date>Date</dc:date>
-	<dc:type>Resource Type</dc:type>
-	<dc:format>Format</dc:format>
-	<dc:identifier>Resource Identifier</dc:identifier>
-	<dc:source>Source</dc:source>
-	<dc:language>Language</dc:language>
-	<dc:relation>Relation</dc:relation>
-	<dc:coverage>Coverage</dc:coverage>
-	<dc:rights>Rights Management</dc:rights>
-</root>
+
+<labels xmlns:dc = "http://purl.org/dc/elements/1.1/">
+	<!-- ==================================================== -->
+	<element name="simpledc">
+		<label>Metadata</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:title">
+		<label>Title</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:creator">
+		<label>Creator</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:subject">
+		<label>Subject and Keywords</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:description">
+		<label>Description</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:publisher">
+		<label>Publisher</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:contributor">
+		<label>Contributor</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:date">
+		<label>Date</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:type">
+		<label>Resource Type</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:format">
+		<label>Format</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:identifier">
+		<label>Resource Identifier</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:source">
+		<label>Source</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:language">
+		<label>Language</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:relation">
+		<label>Relation</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:coverage">
+		<label>Coverage</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:rights">
+		<label>Rights Management</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+</labels>

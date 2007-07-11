@@ -20,7 +20,9 @@
 			<xml name="strings" file="xml/strings.xml" />
 
 			<xml name="iso19115"    base="xml/schemas/iso19115/loc"    file="labels.xml" />
+			<xml name="iso19115"    base="xml/schemas/iso19115/loc"    file="codelists.xml" />
 			<xml name="iso19139"    base="xml/schemas/iso19139/loc"    file="labels.xml" />
+			<xml name="iso19139"    base="xml/schemas/iso19139/loc"    file="codelists.xml" />
 		  	<xml name="fgdc-std"    base="xml/schemas/fgdc-std/loc"    file="labels.xml" />
 			<xml name="dublin-core" base="xml/schemas/dublin-core/loc" file="labels.xml" />
 

@@ -7,8 +7,6 @@
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:xalan = "http://xml.apache.org/xalan">
 
-	<xsl:variable name="codelists" select="document('../xml/schemas/iso19139/schema/resources/Codelist/gmxCodelists.xml')"/>
-	
 	<!-- ============================================================================= -->
 	<!-- default: in simple mode just a flat list -->
 	<!-- ============================================================================= -->
@@ -150,34 +148,30 @@
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
-		<xsl:variable name="name" select="local-name(..)"/>
-		<xsl:variable name="value" select="../@codeListValue"/>
-		<xsl:variable name="codelist" select="$codelists/gmx:CT_CodelistCatalogue/gmx:codelistItem/gmx:CodeListDictionary[gml:identifier=$name]"/>
-		
+		<xsl:variable name="name"     select="local-name(..)"/>
+		<xsl:variable name="qname"    select="name(..)"/>
+		<xsl:variable name="value"    select="../@codeListValue"/>
+		<xsl:variable name="codelist" select="/root/gui/*[name(.)=$schema]/codelist[@name = $qname]"/>
+
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
+				<!-- codelist in edit mode -->
 				<select class="md" name="_{../geonet:element/@ref}_{name(.)}" size="1">
 					<option name=""/>
-					<xsl:for-each select="$codelist/gmx:codeEntry">
+					<xsl:for-each select="$codelist/entry">
 						<option>
-							<xsl:if test="gmx:CodeDefinition/gml:identifier=$value">
+							<xsl:if test="code=$value">
 								<xsl:attribute name="selected"/>
 							</xsl:if>
-							<xsl:variable name="choiceValue" select="string(gmx:CodeDefinition/gml:identifier)"/>
-							<xsl:attribute name="value"><xsl:value-of select="$choiceValue"/></xsl:attribute>
-							
-							<xsl:variable name="label" select="gmx:CodeDefinition/gml:description"/>
-							<xsl:choose>
-								<xsl:when test="string-length($label)&gt;100"><xsl:value-of select="concat(substring($label, 0, 100),'...')"/></xsl:when>
-								<xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
-								<xsl:otherwise><xsl:value-of select="$choiceValue"/></xsl:otherwise>
-							</xsl:choose>
+							<xsl:attribute name="value"><xsl:value-of select="code"/></xsl:attribute>
+							<xsl:value-of select="label"/>
 						</option>
 					</xsl:for-each>
 				</select>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="$codelist/gmx:codeEntry[gmx:CodeDefinition/gml:identifier=$value]/gmx:CodeDefinition/gml:description"/>
+				<!-- codelist in view mode -->
+				<xsl:value-of select="$codelist/entry[code = $value]/label"/>
 			</xsl:otherwise>
 		</xsl:choose>
 		

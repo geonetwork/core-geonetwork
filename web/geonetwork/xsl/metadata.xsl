@@ -643,7 +643,7 @@
 		<xsl:param name="name"/>
 		<xsl:param name="schema"/>
 		
-		<xsl:variable name="title" select="string(/root/gui/*[name(.)=$schema]/*[name(.)=$name])"/>
+		<xsl:variable name="title" select="string(/root/gui/*[name(.)=$schema]/element[@name = $name]/label)"/>
 		<xsl:choose>
 			<xsl:when test="$title">
 				<xsl:value-of select="$title"/>
@@ -665,7 +665,6 @@
 		
 		<xsl:variable name="name"  select="name(.)"/>
 		<xsl:variable name="value" select="string(.)"/>
-		<xsl:variable name="label" select="string(/root/gui/*[name(.)=$schema]/codelist[string(@name)=$name]/*[@value=$value])"/>
 							
 		<xsl:choose>
 			<!-- list of values -->
@@ -680,7 +679,8 @@
 							<xsl:variable name="choiceValue" select="string(@value)"/>
 							<xsl:attribute name="value"><xsl:value-of select="$choiceValue"/></xsl:attribute>
 
-							<xsl:variable name="label" select="string(/root/gui/*[name(.)=$schema]/codelist[string(@name)=$name]/*[@value=$choiceValue])"/>
+							<!-- it seems that this code is run only under FGDC -->
+							<xsl:variable name="label" select="/root/gui/*[name(.)=$schema]/codelist[@name = $name]/entry[code = $choiceValue]/label"/>
 							<xsl:choose>
 								<xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
 								<xsl:otherwise><xsl:value-of select="$choiceValue"/></xsl:otherwise>
@@ -729,6 +729,8 @@
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:otherwise>
+				<!-- not editable text/codelists -->
+				<xsl:variable name="label" select="/root/gui/*[name(.)=$schema]/codelist[@name = $name]/entry[code=$value]/label"/>
 				<xsl:choose>
 					<xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
 					<xsl:otherwise><xsl:value-of select="$value"/></xsl:otherwise>
@@ -762,7 +764,8 @@
 							<xsl:variable name="choiceValue" select="string(@value)"/>
 							<xsl:attribute name="value"><xsl:value-of select="$choiceValue"/></xsl:attribute>
 
-							<xsl:variable name="label" select="string(/root/gui/*[name(.)=$schema]/codelist[string(@name)=$parent]/*[name()=$name and @value=$choiceValue])"/>
+							<!-- codelist in edit mode -->
+							<xsl:variable name="label" select="/root/gui/*[name(.)=$schema]/codelist[@name = $parent]/entry[code=$choiceValue]/label"/>
 							<xsl:choose>
 								<xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
 								<xsl:otherwise><xsl:value-of select="$choiceValue"/></xsl:otherwise>
@@ -780,7 +783,8 @@
 				</textarea>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:variable name="label" select="string(/root/gui/*[name(.)=$schema]/codelist[string(@name)=$parent]/*[name()=$name and @value=$value])"/>
+				<!-- codelist in view mode -->
+				<xsl:variable name="label" select="/root/gui/*[name(.)=$schema]/codelist[@name = $parent]/entry[code = $value]/label"/>
 				<xsl:choose>
 					<xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
 					<xsl:otherwise><xsl:value-of select="$value"/></xsl:otherwise>
@@ -827,7 +831,7 @@
 		<xsl:param name="name"/>
 		<xsl:param name="schema"/>
 		
-		<xsl:variable name="help" select="string(/root/gui/*[name(.)=$schema]/*[name(.)=$name]/@help)"/>
+?$		<xsl:variable name="help" select="string(/root/gui/*[name(.)=$schema]/*[name(.)=$name]/@help)"/>
 		
 		<xsl:if test="$help">
 			<xsl:value-of select="concat(/root/gui/locService,'/help.metadata?schema=',$schema,'&amp;name=',$name,'#',$name)"/>
