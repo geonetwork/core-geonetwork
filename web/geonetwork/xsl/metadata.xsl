@@ -541,7 +541,7 @@
 				<a name="{$anchor}"/>
 				<xsl:choose>
 					<xsl:when test="$helpLink!=''">
-						<a href="javascript:popNew('{$helpLink}')" style="cursor:help;"><xsl:value-of select="$title"/></a>
+						<span id="tip.{$helpLink}"><xsl:value-of select="$title"/></span>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="$title"/>
@@ -596,9 +596,7 @@
 									<a name="{$anchor}"/>
 									<xsl:choose>
 										<xsl:when test="$helpLink!=''">
-											<a class="green-content" href="javascript:popNew('{$helpLink}')" style="cursor:help;">
-												<xsl:value-of select="$title"/>
-											</a>
+											<span id="tip.{$helpLink}" class="green-content"><xsl:value-of select="$title"/></span>
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:value-of select="$title"/>
@@ -831,11 +829,7 @@
 		<xsl:param name="name"/>
 		<xsl:param name="schema"/>
 		
-?$		<xsl:variable name="help" select="string(/root/gui/*[name(.)=$schema]/*[name(.)=$name]/@help)"/>
-		
-		<xsl:if test="$help">
-			<xsl:value-of select="concat(/root/gui/locService,'/help.metadata?schema=',$schema,'&amp;name=',$name,'#',$name)"/>
-		</xsl:if>
+		<xsl:value-of select="concat($schema,'|', $name)"/>
 	</xsl:template>
 	
 	<xsl:template name="getButtons">

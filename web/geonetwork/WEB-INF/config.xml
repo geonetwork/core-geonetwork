@@ -507,8 +507,8 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.metadata.help">
-			<class name=".services.metadata.Help" />
+		<service name="xml.schema.info">
+			<class name=".services.schema.Info" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

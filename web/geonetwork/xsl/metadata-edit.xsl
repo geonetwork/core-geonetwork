@@ -119,6 +119,9 @@
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar.js"></script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/lang/calendar-en.js"></script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar-setup.js"></script>
+
+		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip-manager.js"></script>
 	</xsl:template>
 	
 	<!--

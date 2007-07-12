@@ -32,6 +32,9 @@
 				doAction(action);
 			}
 		</script>
+
+		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip-manager.js"></script>
 	</xsl:template>
 	
 	<!--

@@ -181,7 +181,6 @@
 
 		<!-- Get help -->
 		<allow service="help"/>
-		<allow service="help.metadata"/>
 		<allow service="links"/>
 		<allow service="about"/>
 
@@ -245,6 +244,9 @@
 
 		<!-- Relation services -->
 		<allow service="xml.relation.get"/>
+		
+		<!-- Metadata schema related -->
+		<allow service="xml.schema.info"/>
 		
 		<!-- Thesaurus services -->
 	 	<allow service="keywords.search"/>
