@@ -23,8 +23,11 @@
 		
 		<ows:Keywords>
 			<ows:Keyword>CSW</ows:Keyword>
+			<ows:Keyword>ISO19115:2003</ows:Keyword>
+			<ows:Keyword>ISO19139:2007</ows:Keyword>
 			<ows:Keyword>geospatial</ows:Keyword>
 			<ows:Keyword>catalogue</ows:Keyword>
+			<ows:Keyword>GeoNetwork opensource</ows:Keyword>
 		</ows:Keywords>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
@@ -38,24 +41,36 @@
 	<!-- ========================================================= -->
 	
 	<ows:ServiceProvider>
-		<ows:ProviderName>GeoNetwork FAO/WFP/UNEP</ows:ProviderName>
-		<ows:ProviderSite xlink:href="http://www.fao.org/geonetwork"/>
+		<ows:ProviderName>GeoNetwork opensource</ows:ProviderName>
+		<ows:ProviderSite xlink:href="http://$HOST:$PORT$SERVLET"/>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
 		
 		<ows:ServiceContact>
-			<ows:IndividualName>Jeroen Ticheler</ows:IndividualName>
-			<ows:PositionName>Remote sensing officier</ows:PositionName>
+			<ows:IndividualName>Name of the responsible person: surname, given name, title separated by a delimiter.</ows:IndividualName>
+			<ows:PositionName>Role or position of the responsible person.</ows:PositionName>
 			
 			<ows:ContactInfo>
 				<ows:Phone>
-					<ows:Voice>+39-06-57056041</ows:Voice>
+					<ows:Voice>Telephone number by which individuals can speak to the responsible organization or individual.</ows:Voice>
+					<ows:Facsimile>Telephone number of a facsimile machine for the responsible organization or individual.</ows:Facsimile>
 				</ows:Phone>
 			
 				<ows:Address>
-					<ows:ElectronicMailAddress>Jeroen.Ticheler@fao.org</ows:ElectronicMailAddress>
-				</ows:Address>			
-			</ows:ContactInfo>			
+					<ows:DeliveryPoint>Address line for the location.</ows:DeliveryPoint>
+					<ows:City>City of the location.</ows:City>
+					<ows:AdministrativeArea>State or province of the location.</ows:AdministrativeArea>
+					<ows:PostalCode>ZIP or other postal code.</ows:PostalCode>
+					<ows:Country>Country of the physical address.</ows:Country>
+					<ows:ElectronicMailAddress>admin@myorganization.org</ows:ElectronicMailAddress>
+				</ows:Address>	
+
+				<ows:HoursOfService>Time period (including time zone) when individuals can contact the organization or individual.</ows:HoursOfService>
+				<ows:ContactInstructions>Supplemental instructions on how or when to contact the individual or organization.</ows:ContactInstructions>
+			</ows:ContactInfo>		
+			
+<!--			<ows:Role></ows:Role> -->
+				
 		</ows:ServiceContact>
 	</ows:ServiceProvider>
 	
