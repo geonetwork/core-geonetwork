@@ -81,7 +81,7 @@ public class GetLatestUpdated implements Service
 
 			// only get public metadata (group 1: internet) viewable (operation O: view)
 
-			String query = "SELECT DISTINCT id FROM Metadata, OperationAllowed "+
+			String query = "SELECT DISTINCT id, changeDate FROM Metadata, OperationAllowed "+
 								"WHERE id=metadataId AND isTemplate='n' AND operationId=0 AND (";
 
 			String aux = "";
