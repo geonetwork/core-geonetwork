@@ -90,8 +90,8 @@ public class Update implements Service
 								"address, state, zip, country, email, organisation, kind) "+
 								"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-			dbms.execute(query, new Integer(id), username, password, surname, name, profile,
-									  address, state, zip, country, email, organ, kind);
+			dbms.execute(query, new Integer(id), username, Util.scramble(password), surname,
+							 name, profile, address, state, zip, country, email, organ, kind);
 
 			//--- add groups
 
