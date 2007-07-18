@@ -285,6 +285,21 @@
 			<output forward="metadata.thumbnail.form"/>
 		</service>
 
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Transfer ownership                                            -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="transfer.ownership">
+			<output sheet="ownership/transfer-ownership.xsl">
+				<xml name="ownership" file="xml/transfer-ownership.xml" />
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.ownership.groups">
+			<class name=".services.ownership.Groups"/>
+		</service>
 	</services>
 </geonet>
 

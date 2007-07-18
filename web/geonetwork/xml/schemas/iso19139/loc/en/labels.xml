@@ -51,6 +51,7 @@
 	<element name="gmd:Country">
 		<label>Country</label>
 		<description>Country</description>
+		<example>Italy</example>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dataSetURI">

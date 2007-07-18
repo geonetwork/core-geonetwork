@@ -6,15 +6,9 @@
 	<!-- ============================================================================= -->
 
 	<xsl:template mode="script" match="/">
-		<script type="text/javascript" language="JavaScript">			
+		<script type="text/javascript" language="JavaScript">
 			function checkAndSubmit()
 			{
-				if ($F('groups') == '')
-				{
-					alert('Please, select at least one group');
-					return;
-				}
-
 				document.createform.submit();
 			}
 		</script>
@@ -61,9 +55,9 @@
 				<xsl:variable name="lang" select="/root/gui/language"/>
 
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/groups"/></th>
+					<th class="padded"><xsl:value-of select="/root/gui/strings/group"/></th>
 					<td class="padded">
-						<select class="content" name="group" size="10" multiple="" id="groups">
+						<select class="content" name="group" size="1" id="group">
 							<xsl:for-each select="/root/gui/groups/record">
 								<option value="{id}">
 									<xsl:value-of select="label/child::*[name() = $lang]"/>

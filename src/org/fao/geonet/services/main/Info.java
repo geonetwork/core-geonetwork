@@ -24,7 +24,10 @@
 package org.fao.geonet.services.main;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
@@ -99,6 +102,9 @@ public class Info implements Service
 			else if (type.equals("sources"))
 				result.addContent(getSources(dbms, sm));
 
+			else if (type.equals("users"))
+				result.addContent(getUsers(context, dbms));
+
 			else
 				throw new BadParameterEx("type", type);
 		}
@@ -162,6 +168,107 @@ public class Info implements Service
 		return sources;
 	}
 
+	//--------------------------------------------------------------------------
+	//--- Users
+	//--------------------------------------------------------------------------
+
+	private Element getUsers(ServiceContext context, Dbms dbms) throws SQLException
+	{
+		UserSession us   = context.getUserSession();
+		List        list = getUsers(context, us, dbms);
+
+		Element users = new Element("users");
+
+		for (Object o : list)
+		{
+			Element user = (Element) o;
+
+			user = (Element) user.clone();
+			user.removeChild("password");
+			user.setName("user");
+
+			users.addContent(user);
+		}
+
+		return users;
+	}
+
+	//--------------------------------------------------------------------------
+
+	private List getUsers(ServiceContext context, UserSession us, Dbms dbms) throws SQLException
+	{
+		if (!us.isAuthenticated())
+			return new ArrayList<Element>();
+
+		int id = Integer.parseInt(us.getUserId());
+
+		if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR))
+			return dbms.select("SELECT * FROM Users").getChildren();
+
+		if (!us.getProfile().equals(Geonet.Profile.USER_ADMIN))
+			return dbms.select("SELECT * FROM Users WHERE id=?", id).getChildren();
+
+		//--- we have a user admin
+
+		Set<String> hsMyGroups = getUserGroups(dbms, id);
+
+		Set profileSet = context.getProfileManager().getProfilesSet(us.getProfile());
+
+		//--- retrieve all users
+
+		Element elUsers = dbms.select("SELECT * FROM Users ORDER BY username");
+
+		//--- now filter them
+
+		ArrayList<Element> alToRemove = new ArrayList<Element>();
+
+		for(Object o : elUsers.getChildren())
+		{
+			Element elRec = (Element) o;
+
+			String userId = elRec.getChildText("id");
+			String profile= elRec.getChildText("profile");
+
+			if (!profileSet.contains(profile))
+				alToRemove.add(elRec);
+
+			else if (!hsMyGroups.containsAll(getUserGroups(dbms, Integer.parseInt(userId))))
+				alToRemove.add(elRec);
+		}
+
+		//--- remove unwanted users
+
+		for(int i=0; i<alToRemove.size(); i++)
+			alToRemove.get(i).detach();
+
+		//--- return result
+
+		return elUsers.getChildren();
+	}
+
+	//--------------------------------------------------------------------------
+
+	private Set<String> getUserGroups(Dbms dbms, int id) throws SQLException
+	{
+		String query = "SELECT groupId AS id FROM UserGroups WHERE userId=?";
+
+		List list = dbms.select(query, id).getChildren();
+
+		HashSet<String> hs = new HashSet<String>();
+
+		for(int i=0; i<list.size(); i++)
+		{
+			Element el = (Element) list.get(i);
+			hs.add(el.getChildText("id"));
+		}
+
+		return hs;
+	}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- General purpose methods
+	//---
 	//--------------------------------------------------------------------------
 
 	private void add(Element sources, String uuid, String name)

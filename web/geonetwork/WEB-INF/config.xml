@@ -583,7 +583,7 @@
 		<service name="xml.search">
 			<class name=".services.main.XmlSearch" />
 
-			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8" />
+			<output sheet="portal-present.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

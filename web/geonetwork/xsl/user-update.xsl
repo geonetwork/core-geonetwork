@@ -212,6 +212,14 @@
 									<xsl:value-of select="/root/gui/strings/UserAdmin"/>
 								</option>
 							</xsl:for-each>
+							<xsl:for-each select="/root/gui/profiles/Reviewer">
+								<option value="{name(.)}">
+									<xsl:if test="/root/response/record/profile=name(.)">
+										<xsl:attribute name="selected"/>
+									</xsl:if>
+									<xsl:value-of select="/root/gui/strings/Reviewer"/>
+								</option>
+							</xsl:for-each>
 							<xsl:for-each select="/root/gui/profiles/Editor">
 								<option value="{name(.)}">
 									<xsl:if test="/root/response/record/profile=name(.) or (count(/root/response/record)=0 and name(.)='Editor')">

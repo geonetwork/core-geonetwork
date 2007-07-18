@@ -135,7 +135,7 @@
 	</xsl:template>
 
 	<!--
-	standard metadata buttons (edit/delete/admin/categories)
+	standard metadata buttons (edit/delete/privileges/categories)
 	-->
 	<xsl:template name="buttons" match="*">
 		<xsl:param name="metadata" select="."/>
@@ -148,27 +148,23 @@
 			<button class="content" onclick="load('{/root/gui/locService}/metadata.duplicate.form?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/create"/></button>
 		</xsl:if>
 		
-		<!-- Only local metadata can be edited, deleted and administered -->
-		<xsl:if test="geonet:info/isHarvested = 'n'">
-			<xsl:if test="geonet:info/edit='true'">
-				<!-- edit button -->
-				&#160;
-				<button class="content" onclick="load('{/root/gui/locService}/metadata.edit?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/edit"/></button>
+		<!-- it is the server that decides if a user can edit/delete/set privileges/set categories to a metadata -->
+		<xsl:if test="geonet:info/edit='true'">
+			<!-- edit button -->
+			&#160;
+			<button class="content" onclick="load('{/root/gui/locService}/metadata.edit?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/edit"/></button>
 
-				<!-- delete button -->
-				&#160;
-				<button class="content" onclick="return doConfirm('{/root/gui/locService}/metadata.delete?id={$metadata/geonet:info/id}', '{/root/gui/strings/confirmDelete}')"><xsl:value-of select="/root/gui/strings/delete"/></button>
-			</xsl:if>
-
-			<xsl:if test="geonet:info/admin='true'">
-				<!-- privileges button -->
-				&#160;
-				<button class="content" onclick="load('{/root/gui/locService}/metadata.admin.form?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/privileges"/></button>
-				
-				<!-- categories button -->
-				&#160;
-				<button class="content" onclick="load('{/root/gui/locService}/metadata.category.form?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/categories"/></button>
-			</xsl:if>
+			<!-- delete button -->
+			&#160;
+			<button class="content" onclick="return doConfirm('{/root/gui/locService}/metadata.delete?id={$metadata/geonet:info/id}', '{/root/gui/strings/confirmDelete}')"><xsl:value-of select="/root/gui/strings/delete"/></button>
+			
+			<!-- privileges button -->
+			&#160;
+			<button class="content" onclick="load('{/root/gui/locService}/metadata.admin.form?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/privileges"/></button>
+			
+			<!-- categories button -->
+			&#160;
+			<button class="content" onclick="load('{/root/gui/locService}/metadata.category.form?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/categories"/></button>
 		</xsl:if>
 
 	</xsl:template>

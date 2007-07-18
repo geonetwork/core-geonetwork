@@ -198,6 +198,10 @@
 			Generic name to identify the harvesting node
 		</tip>
 		
+		<tip id="gn.host">
+			The remote host you want to connect to
+		</tip>
+		
 		<tip id="gn.retrieveSources">
 			Specify <i>host</i>, <i>port</i> and <i>servlet</i> parameters and then press this button to 
 			retrieve all sources known to the remote node.

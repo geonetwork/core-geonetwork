@@ -188,6 +188,9 @@
 	<groups>Groups</groups>
 	<harvestingManagement>Harvesting management</harvestingManagement>
 	<harvestingManDes>Add/modify/delete/start/stop harvesting tasks</harvestingManDes>
+	<transferOwnership>Transfer ownership</transferOwnership>
+	<transferOwnershipDes>Transfer metadata ownership to another user</transferOwnershipDes>
+	
 	<header_meta>
 		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis geospatial CSW reference implementation mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
 		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
@@ -304,7 +307,7 @@
 	<newMdDes>Adds a new metadata into geonetwork copying it from a template</newMdDes>
 	<newMetadata>New metadata</newMetadata>
 	<newPassword>New Password</newPassword>
-	<newUser>Add a new User to the Database</newUser>
+	<newUser>Add a new user</newUser>
 	<none>none</none>
 	<noHelp>Sorry, no help available</noHelp>
 	<noInfo>Sorry, no info available</noInfo>
@@ -414,6 +417,7 @@
 	<upload>Upload </upload>
 	<user>User</user>
 	<UserAdmin>User administrator</UserAdmin>
+	<Reviewer>Content reviewer</Reviewer>
 	<userManagement>User management</userManagement>
 	<userManDes>Add/modify/delete and show users</userManDes>
 	<username>Username</username>

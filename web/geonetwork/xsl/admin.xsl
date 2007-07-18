@@ -45,6 +45,14 @@
 								</td>
 							</tr>
 						</xsl:if>
+
+						<xsl:if test="/root/gui/services/service/@name='transfer.ownership'">
+							<tr>
+								<td class="padded"><a href="{/root/gui/locService}/transfer.ownership"><xsl:value-of select="/root/gui/strings/transferOwnership"/></a></td>
+								<td class="padded"><xsl:value-of select="/root/gui/strings/transferOwnershipDes"/></td>
+							</tr>
+						</xsl:if>
+
 						<xsl:if test="/root/gui/services/service/@name='thesaurus.admin'">
 							<tr>
 								<td class="padded">

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<strings>
+	<sourceUser>Source user</sourceUser>
+	<targetUser>Target user</targetUser>
+	<sourceGroup>Source group</sourceGroup>
+	<targetGroup>Target group</targetGroup>
+	<operation>Operation</operation>
+	
+	<cannotRetrieve>Cannot retrieve information from server</cannotRetrieve>
+	<transfer>Transfer</transfer>
+</strings>
+

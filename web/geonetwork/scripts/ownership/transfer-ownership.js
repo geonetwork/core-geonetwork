@@ -1,0 +1,70 @@
+//=====================================================================================
+//===
+//=== Transfer ownership class
+//===
+//=====================================================================================
+
+ker.include('ownership/model.js');
+ker.include('ownership/view.js');
+
+var ownership = null;
+
+//=====================================================================================
+
+function init()
+{
+	ownership = new TransferOwnership();
+	
+	//--- waits for all files to be loaded
+	ker.loadMan.wait(ownership);
+}
+
+//=====================================================================================
+
+function TransferOwnership()
+{
+	var loader = new XMLLoader(Env.locUrl +'/xml/transfer-ownership.xml');
+	var model  = new Model(loader);
+	var view   = new View(loader);
+
+	Event.observe('source.user', 'change', ker.wrap(this, sourceUserChange));
+	
+	//--- public methods
+
+	this.init = init;
+	
+//=====================================================================================
+//===
+//=== API methods
+//===
+//=====================================================================================
+
+function init()
+{
+	view.clearGroupList();
+	model.getUsers(ker.wrap(this, init_OK));
+}
+
+//-------------------------------------------------------------------------------------
+
+function init_OK(data)
+{
+	for (var i=0; i<data.length; i++)
+		if (data[i].profile == 'Editor')
+			view.addSourceUser(data[i].id, data[i].surname +' '+ data[i].name);				
+}
+
+//=====================================================================================
+
+function sourceUserChange(event)
+{
+	view.clearGroupList();
+	
+	var userId = $F('source.user');
+	
+	if (userId != '')
+		model.getUserGroups(userId, ker.wrap(view, view.addGroupRows));	
+}
+
+//=====================================================================================
+}
