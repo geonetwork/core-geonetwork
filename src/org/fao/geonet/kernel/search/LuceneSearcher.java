@@ -25,13 +25,14 @@ package org.fao.geonet.kernel.search;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
@@ -52,6 +53,7 @@ import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
@@ -179,9 +181,10 @@ public class LuceneSearcher extends MetaSearcher
 		_maxSummaryKeys = Integer.parseInt(sMaxSummaryKeys);
 
 		GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
+		AccessManager am = gc.getAccessManager();
 
 		Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
-		HashSet<String> hs = gc.getAccessManager().getUserGroups(dbms, srvContext.getUserSession(), srvContext.getIpAddress());
+		Set<String> hs = gc.getAccessManager().getUserGroups(dbms, srvContext.getUserSession(), srvContext.getIpAddress());
 
 		for (String group : hs)
 			request.addContent(new Element("group").addContent(group));
@@ -190,6 +193,21 @@ public class LuceneSearcher extends MetaSearcher
 
 		if (owner != null)
 			request.addContent(new Element("owner").addContent(owner));
+
+		//--- in case of an admin we have to show all results
+
+		UserSession us = srvContext.getUserSession();
+
+		if (us.isAuthenticated())
+		{
+			if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR))
+				request.addContent(new Element("isAdmin").addContent("true"));
+
+			else if (us.getProfile().equals(Geonet.Profile.REVIEWER))
+				request.addContent(new Element("isReviewer").addContent("true"));
+		}
+
+		//--- some other stuff
 
 		Log.debug(Geonet.SEARCH_ENGINE, "CRITERIA:\n"+ Xml.getString(request));
 		request.addContent(Lib.db.select(dbms, "Regions", "region"));

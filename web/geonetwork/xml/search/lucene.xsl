@@ -197,11 +197,26 @@ compiles a request
 							</BooleanClause>
 						</xsl:for-each>
 
+						<xsl:if test="/request/isReviewer">
+							<xsl:for-each select="/request/group">
+								<BooleanClause required="false" prohibited="false">
+									<TermQuery fld="_groupOwner" txt="{string(.)}"/>
+								</BooleanClause>
+							</xsl:for-each>
+						</xsl:if>
+
 						<xsl:if test="/request/owner">
 							<BooleanClause required="false" prohibited="false">
 								<TermQuery fld="_owner" txt="{/request/owner}"/>
 							</BooleanClause>
 						</xsl:if>
+
+						<xsl:if test="/request/isAdmin">
+							<BooleanClause required="false" prohibited="false">
+								<TermQuery fld="_dummy" txt="0"/>
+							</BooleanClause>
+						</xsl:if>
+
 					</BooleanQuery>
 				</BooleanClause>
 			</xsl:otherwise>
