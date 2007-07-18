@@ -28,11 +28,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ProfileManager;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
@@ -46,16 +48,9 @@ public class AccessManager
 {
 	public static final String OPER_VIEW     = "0";
 	public static final String OPER_DOWNLOAD = "1";
-	public static final String OPER_EDIT     = "2";
 	public static final String OPER_NOTIFY   = "3";
-	public static final String OPER_ADMIN    = "4";
 	public static final String OPER_DYNAMIC  = "5";
 	public static final String OPER_FEATURED = "6";
-
-	public static final String VIEW_SERVICE     = "metadata.show";
-	public static final String EDIT_SERVICE     = "metadata.update";
-	public static final String MD_ADMIN_SERVICE = "metadata.admin";
-	public static final String DOWNLOAD_SERVICE = "resources.get";  // resources.get is public due to thumbnails
 
 	//--------------------------------------------------------------------------
 	//---
@@ -94,7 +89,7 @@ public class AccessManager
 	//--------------------------------------------------------------------------
 
 	/** Given a user(session) a list of groups and a metadata returns all operations that user
-	  * can perform on that metadata (an hashtable of OPER_XXX as keys)
+	  * can perform on that metadata (an set of OPER_XXX as keys)
 	  * If the user is authenticated the permissions are taken from the groups the user belong
 	  * If the user is not authenticated, a dynamic group is assigned depending on user location
 	  * (0 for internal and 1 for external)
@@ -113,8 +108,8 @@ public class AccessManager
 			return hsAllOps;
 
 		// build group list
-		HashSet<String> groups    = getUserGroups(dbms, usrSess, ip);
-		StringBuffer    groupList = new StringBuffer();
+		Set<String>  groups    = getUserGroups(dbms, usrSess, ip);
+		StringBuffer groupList = new StringBuffer();
 
 		for (Iterator i = groups.iterator(); i.hasNext(); )
 		{
@@ -146,13 +141,18 @@ public class AccessManager
 			String  operId = record.getChildText("operationid");
 
 			// no checking for OPER_NOTIFY, OPER_DYNAMIC and OPER_FEATURED
-			if (operId.equals(OPER_VIEW)     && !pm.hasAccessTo(profile, VIEW_SERVICE))     continue;
-			if (operId.equals(OPER_DOWNLOAD) && !pm.hasAccessTo(profile, DOWNLOAD_SERVICE)) continue;
-			if (operId.equals(OPER_EDIT)     && !pm.hasAccessTo(profile, EDIT_SERVICE))     continue;
-			if (operId.equals(OPER_ADMIN)    && !pm.hasAccessTo(profile, MD_ADMIN_SERVICE)) continue;
+//			if (operId.equals(OPER_VIEW) && !pm.hasAccessTo(profile, VIEW_SERVICE))
+//				continue;
+
+//			if (operId.equals(OPER_DOWNLOAD))
+//				continue;
 
 			result.add(operId);
 		}
+
+		if (canEdit(context, mdId))
+			result.add(OPER_VIEW);
+
 		return result;
 	}
 
@@ -160,14 +160,14 @@ public class AccessManager
 	/** Returns all groups accessible by the user (a set of ids)
 	  */
 
-	public HashSet<String> getUserGroups(Dbms dbms, UserSession usrSess, String ip) throws Exception
+	public Set<String> getUserGroups(Dbms dbms, UserSession usrSess, String ip) throws Exception
 	{
 		HashSet<String> hs = new HashSet<String>();
 
 		// add All (1) network group
 		hs.add("1");
 
-		if (isIntranet(ip))
+		if (ip != null && isIntranet(ip))
 			hs.add("0");
 
 		// get other groups
@@ -201,6 +201,94 @@ public class AccessManager
 			}
 		}
 		return hs;
+	}
+
+	//--------------------------------------------------------------------------
+
+	public Set<String> getVisibleGroups(Dbms dbms, int userId) throws Exception
+	{
+		HashSet<String> hs = new HashSet<String>();
+
+		String query= "SELECT * FROM Users WHERE id=?";
+		List   list = dbms.select(query, userId).getChildren();
+
+		//--- return an empty list if the user does not exist
+
+		if (list.size() == 0)
+			return hs;
+
+		Element user    = (Element) list.get(0);
+		String  profile = user.getChildText("profile");
+
+		query = profile.equals(Geonet.Profile.ADMINISTRATOR)
+					 ? "SELECT id AS grp FROM Groups"
+					 : "SELECT groupId AS grp FROM UserGroups WHERE userId=" + userId;
+
+		Element elUserGrp = dbms.select(query);
+
+		for(Object o : elUserGrp.getChildren())
+		{
+			Element el = (Element) o;
+			String groupId =el.getChildText("grp");
+			hs.add(groupId);
+		}
+
+		return hs;
+	}
+
+	//--------------------------------------------------------------------------
+	/** Returns true if, and only if, at least one of these conditions is satisfied
+	  *  - The user is the metadata owner
+	  *  - The user is an Administrator
+	  *  - The user is a Reviewer and the metadata groupOwner is one of his groups
+	  */
+
+	public boolean canEdit(ServiceContext context, String id) throws Exception
+	{
+		UserSession us = context.getUserSession();
+
+		if (!us.isAuthenticated())
+			return false;
+
+		//--- retrieve metadata info
+
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager   dm = gc.getDataManager();
+
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+		MdInfo info = dm.getMetadataInfo(dbms, id);
+
+		//--- harvested metadata cannot be edited
+
+		if (info == null || info.isHarvested)
+			return false;
+
+		//--- check if the user is an administrator
+
+		if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR))
+			return true;
+
+		//--- check if the user is the metadata owner
+
+		if (us.getUserId().equals(info.owner))
+			return true;
+
+		//--- check if the user is a reviewer
+
+		if (!us.getProfile().equals(Geonet.Profile.REVIEWER))
+			return false;
+
+		//--- if there is no group owner then the reviewer cannot review
+
+		if (info.groupOwner == null)
+			return false;
+
+		for (String userGroup : getUserGroups(dbms, us, null))
+			if (userGroup.equals(info.groupOwner))
+				return true;
+
+		return false;
 	}
 
 	//--------------------------------------------------------------------------

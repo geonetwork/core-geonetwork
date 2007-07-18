@@ -163,7 +163,7 @@ public class DataManager
 		String  root = md.getName();
 
 		String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, title, uuid, "+
-									"isHarvested, owner FROM Metadata WHERE id = " + id;
+									"isHarvested, owner, groupOwner FROM Metadata WHERE id = " + id;
 
 		Element rec = dbms.select(query).getChild("record");
 
@@ -176,6 +176,7 @@ public class DataManager
 		String  uuid       = rec.getChildText("uuid");
 		String  isHarvested= rec.getChildText("isharvested");
 		String  owner      = rec.getChildText("owner");
+		String  groupOwner = rec.getChildText("groupowner");
 
 		moreFields.add(makeField("_root",        root,        true, true, false));
 		moreFields.add(makeField("_schema",      schema,      true, true, false));
@@ -187,6 +188,10 @@ public class DataManager
 		moreFields.add(makeField("_uuid",        uuid,        true, true, false));
 		moreFields.add(makeField("_isHarvested", isHarvested, true, true, false));
 		moreFields.add(makeField("_owner",       owner,       true, true, false));
+		moreFields.add(makeField("_dummy",       "0",        false, true, false));
+
+		if (groupOwner != null)
+			moreFields.add(makeField("_groupOwner", groupOwner, true, true, false));
 
 		// get privileges
 		List operations = dbms.select("SELECT groupId, operationId FROM OperationAllowed "+
@@ -362,7 +367,9 @@ public class DataManager
 	public MdInfo getMetadataInfo(Dbms dbms, String id) throws Exception
 	{
 		String query = "SELECT id, uuid, schemaId, isTemplate, isHarvested, createDate, "+
-							"changeDate, source, title, root FROM Metadata WHERE id=?";
+							"       changeDate, source, title, root, owner, groupOwner "+
+							"FROM   Metadata "+
+							"WHERE id=?";
 
 		List list = dbms.select(query, new Integer(id)).getChildren();
 
@@ -382,6 +389,8 @@ public class DataManager
 		info.source      = record.getChildText("source");
 		info.title       = record.getChildText("title");
 		info.root        = record.getChildText("root");
+		info.owner       = record.getChildText("owner");
+		info.groupOwner  = record.getChildText("groupowner");
 
 		String temp = record.getChildText("istemplate");
 
@@ -476,7 +485,7 @@ public class DataManager
 	/** Create a new metadata duplicating an existing template
 	  */
 
-	public String createMetadata(Dbms dbms, String templateId, Set<String> groups,
+	public String createMetadata(Dbms dbms, String templateId, String groupOwner,
 										  SerialFactory sf, String source, String owner) throws Exception
 	{
 		String query = "SELECT schemaId, data FROM Metadata WHERE id="+ templateId;
@@ -499,10 +508,9 @@ public class DataManager
 
 		//--- store metadata
 
-		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid, owner);
+		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid, owner, groupOwner);
 
-		for (String groupId : groups)
-			copyDefaultPrivForGroup(dbms, id, groupId);
+		copyDefaultPrivForGroup(dbms, id, groupOwner);
 
 		//--- store metadata categories copying them from the template
 
@@ -532,12 +540,13 @@ public class DataManager
 
 	public String insertMetadataExt(Dbms dbms, String schema, Element md, SerialFactory sf,
 											  String source, String createDate, String changeDate,
-											  String uuid, String owner) throws Exception
+											  String uuid, String owner, String groupOwner) throws Exception
 	{
 		//--- generate a new metadata id
 		int id = sf.getSerial(dbms, "Metadata");
 
-		return insertMetadataExt(dbms, schema, md, id, source, createDate, changeDate, uuid, owner);
+		return insertMetadataExt(dbms, schema, md, id, source, createDate, changeDate, uuid,
+										 owner, groupOwner);
 	}
 
 	//--------------------------------------------------------------------------
@@ -546,7 +555,7 @@ public class DataManager
 
 	public String insertMetadataExt(Dbms dbms, String schema, Element md, int id,
 											  String source, String createDate, String changeDate,
-											  String uuid, String owner) throws Exception
+											  String uuid, String owner, String groupOwner) throws Exception
 	{
 		if (source == null)
 			source = getSiteID();
@@ -557,7 +566,7 @@ public class DataManager
 		//--- Note: we cannot index metadata here. Indexing is done in the harvesting part
 
 		return XmlSerializer.insert(dbms, schema, md, id, source, uuid, createDate,
-											 changeDate, "n", null, owner);
+											 changeDate, "n", null, owner, groupOwner);
 	}
 
 	//--------------------------------------------------------------------------
@@ -574,7 +583,7 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
-	public String insertMetadata(Dbms dbms, String schema, String groupId, Element xml,
+	public String insertMetadata(Dbms dbms, String schema, String groupOwner, Element xml,
 										  SerialFactory sf, String source, String uuid, String isTemplate,
 										  String title, String owner) throws Exception
 	{
@@ -589,9 +598,9 @@ public class DataManager
 
 		//--- store metadata
 
-		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid, isTemplate, title, owner);
+		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid, isTemplate, title, owner, groupOwner);
 
-		copyDefaultPrivForGroup(dbms, id, groupId);
+		copyDefaultPrivForGroup(dbms, id, groupOwner);
 		indexMetadata(dbms, id);
 
 		return id;
@@ -1022,7 +1031,7 @@ public class DataManager
 	public synchronized void deleteMetadata(Dbms dbms, String id) throws Exception
 	{
 		//--- remove operations
-		deleteAllMetadataOper(dbms, id);
+		deleteMetadataOper(dbms, id, false);
 
 		//--- remove categories
 		deleteAllMetadataCateg(dbms, id);
@@ -1038,9 +1047,12 @@ public class DataManager
 	/** Remove all operations stored for a metadata
 	  */
 
-	public void deleteAllMetadataOper(Dbms dbms, String id) throws Exception
+	public void deleteMetadataOper(Dbms dbms, String id, boolean skipAllIntranet) throws Exception
 	{
 		String query = "DELETE FROM OperationAllowed WHERE metadataId="+id;
+
+		if (skipAllIntranet)
+			query += " AND groupId>1";
 
 		dbms.execute(query);
 	}
@@ -1332,9 +1344,9 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
-	private Element buildInfoElem(ServiceContext srvContext, String id, String version) throws Exception
+	private Element buildInfoElem(ServiceContext context, String id, String version) throws Exception
 	{
-		Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, title, "+
 									"uuid, isHarvested FROM Metadata WHERE id = " + id;
@@ -1367,15 +1379,16 @@ public class DataManager
 			addElement(info, Edit.Info.Elem.VERSION, version);
 
 		// add operations
-		HashSet hsOper = accessMan.getOperations(srvContext, id, srvContext.getIpAddress());
+		HashSet hsOper = accessMan.getOperations(context, id, context.getIpAddress());
 
 		addElement(info, Edit.Info.Elem.VIEW,     String.valueOf(hsOper.contains(AccessManager.OPER_VIEW)));
-		addElement(info, Edit.Info.Elem.ADMIN,    String.valueOf(hsOper.contains(AccessManager.OPER_ADMIN)));
-		addElement(info, Edit.Info.Elem.EDIT,     String.valueOf(hsOper.contains(AccessManager.OPER_EDIT)));
 		addElement(info, Edit.Info.Elem.NOTIFY,   String.valueOf(hsOper.contains(AccessManager.OPER_NOTIFY)));
 		addElement(info, Edit.Info.Elem.DOWNLOAD, String.valueOf(hsOper.contains(AccessManager.OPER_DOWNLOAD)));
 		addElement(info, Edit.Info.Elem.DYNAMIC,  String.valueOf(hsOper.contains(AccessManager.OPER_DYNAMIC)));
 		addElement(info, Edit.Info.Elem.FEATURED, String.valueOf(hsOper.contains(AccessManager.OPER_FEATURED)));
+
+		if (accessMan.canEdit(context, id))
+			addElement(info, Edit.Info.Elem.EDIT, "true");
 
 		// add categories
 		List categories = dbms.select("SELECT id, name FROM MetadataCateg, Categories "+
@@ -1383,7 +1396,7 @@ public class DataManager
 
 		for (Iterator iter = categories.iterator(); iter.hasNext(); )
 		{
-			Element category     = (Element)iter.next();
+			Element category = (Element)iter.next();
 			addElement(info, Edit.Info.Elem.CATEGORY, category.getChildText("name"));
 		}
 		return info;
@@ -1420,9 +1433,7 @@ public class DataManager
 
 		setOperation(dbms, id, groupId, AccessManager.OPER_VIEW);
 		setOperation(dbms, id, groupId, AccessManager.OPER_DOWNLOAD);
-		setOperation(dbms, id, groupId, AccessManager.OPER_EDIT);
 		setOperation(dbms, id, groupId, AccessManager.OPER_NOTIFY);
-		setOperation(dbms, id, groupId, AccessManager.OPER_ADMIN);
 		setOperation(dbms, id, groupId, AccessManager.OPER_DYNAMIC);
 	}
 

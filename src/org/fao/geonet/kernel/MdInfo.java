@@ -37,6 +37,8 @@ public class MdInfo
 	public String   source;
 	public String   title;
 	public String   root;
+	public String   owner;
+	public String   groupOwner;
 
 	//--------------------------------------------------------------------------
 

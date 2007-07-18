@@ -34,7 +34,6 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
@@ -63,7 +62,7 @@ public class Unset implements Service
 		String type    = Util.getParam(params, Params.TYPE);
 		String version = Util.getParam(params, Params.VERSION);
 
-		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_EDIT);
+		Lib.resource.checkEditPrivilege(context, id);
 
 		//-----------------------------------------------------------------------
 		//--- extract thumbnail filename

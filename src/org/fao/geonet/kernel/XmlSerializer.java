@@ -74,18 +74,18 @@ public class XmlSerializer
 	//--------------------------------------------------------------------------
 
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
-										 String source, String uuid, String owner) throws SQLException
+										 String source, String uuid, String owner, String groupOwner) throws SQLException
 	{
-		return insert(dbms, schema, xml, serial, source, uuid, null, null, "n", null, owner);
+		return insert(dbms, schema, xml, serial, source, uuid, null, null, "n", null, owner, groupOwner);
 	}
 
 	//--------------------------------------------------------------------------
 
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
 										 String source, String uuid, String isTemplate,
-										 String title, String owner) throws SQLException
+										 String title, String owner, String groupOwner) throws SQLException
 	{
-		return insert(dbms, schema, xml, serial, source, uuid, null, null, isTemplate, title, owner);
+		return insert(dbms, schema, xml, serial, source, uuid, null, null, isTemplate, title, owner, groupOwner);
 	}
 
 	//--------------------------------------------------------------------------
@@ -93,7 +93,7 @@ public class XmlSerializer
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
 										 String source, String uuid, String createDate,
 										 String changeDate, String isTemplate, String title,
-										 String owner) throws SQLException
+										 String owner, String groupOwner) throws SQLException
 	{
 		String date = new ISODate().toString();
 
@@ -105,9 +105,9 @@ public class XmlSerializer
 
 		fixCR(xml);
 
-		StringBuffer fields = new StringBuffer("id, schemaId, data, createDate, changeDate, "+
-															"source, uuid, isTemplate, isHarvested, root, owner");
-		StringBuffer values = new StringBuffer("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
+		StringBuffer fields = new StringBuffer("id, schemaId, data, createDate, changeDate, source, "+
+															"uuid, isTemplate, isHarvested, root, owner, groupOwner");
+		StringBuffer values = new StringBuffer("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
 
 		Vector args = new Vector();
 		args.add(new Integer(serial));
@@ -121,6 +121,9 @@ public class XmlSerializer
 		args.add("n");
 		args.add(xml.getQualifiedName());
 		args.add(new Integer(owner));
+
+		if (groupOwner != null) 	args.add(new Integer(groupOwner));
+			else							args.add(null);
 
 		if (title != null)
 		{

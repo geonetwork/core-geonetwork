@@ -33,8 +33,8 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import jeeves.resources.dbms.Dbms;
@@ -286,7 +286,7 @@ class Exporter
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		AccessManager am = gc.getAccessManager();
 
-		HashSet<String> userGroups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
+		Set<String> userGroups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
 
 		//--- scan query result to collect info
 

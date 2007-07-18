@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -273,9 +272,9 @@ class CatalogSearcher
 	{
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		GeonetContext   gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		AccessManager   am = gc.getAccessManager();
-		HashSet<String> hs = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		AccessManager am = gc.getAccessManager();
+		Set<String>   hs = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
 
 		BooleanQuery query = new BooleanQuery();
 

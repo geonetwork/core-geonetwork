@@ -40,7 +40,6 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
@@ -77,7 +76,7 @@ public class Set implements Service
 		String  smallScalingDir    = Util.getParam(params, Params.SMALL_SCALING_DIR,   "");
 		int     smallScalingFactor = Util.getParam(params, Params.SMALL_SCALING_FACTOR, 0);
 
-		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_EDIT);
+		Lib.resource.checkEditPrivilege(context, id);
 
 		//-----------------------------------------------------------------------
 		//--- environment vars
