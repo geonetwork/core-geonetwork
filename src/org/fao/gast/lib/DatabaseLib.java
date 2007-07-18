@@ -474,8 +474,10 @@ public class DatabaseLib
 																			  uuid, date, schema.getName(), siteURL);
 
 					DataManager.setNamespacePrefix(xml);
+
+					//--- templates are by default assigned to administrator/intranet group
 					XmlSerializer.insert(dbms, schema.getName(), xml, serial,
-											   siteId, uuid, date, date, "y", null, "1");
+											   siteId, uuid, date, date, "y", null, "1", null);
 
 					setupTemplatePriv(dbms, serial);
 					dbms.commit();

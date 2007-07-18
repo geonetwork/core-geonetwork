@@ -113,7 +113,7 @@ xml.visit = function(node, callBack)
 
 //=====================================================================================
 
-xml.children = function(node)
+xml.children = function(node, name)
 {
 	var result = [];
 	
@@ -123,7 +123,8 @@ xml.children = function(node)
 	while (node != null)
 	{
 		if (node.nodeType == Node.ELEMENT_NODE)
-			result.push(node);
+			if (name == null || name == node.nodeName)
+				result.push(node);
 			
 		node = node.nextSibling;
 	}
@@ -258,6 +259,33 @@ xml.getElementById = function(node, id)
 	});
 	
 	return result;
+}
+
+//=====================================================================================
+
+xml.toObject = function(node)
+{
+	var map = {}
+	var id  = node.getAttribute('id');
+
+	if (id != null)
+		map['id'] = id;
+
+	var list = xml.children(node);
+
+	for (var i=0; i<list.length; i++)
+	{
+		var child     = list[i];
+		var name      = child.nodeName;
+		var childList = xml.children(child);
+
+		if (childList.length == 0)
+			map[name] = xml.textContent(child);
+		else
+			map[name] = xml.toObject(child);
+	}
+
+	return map;							
 }
 
 //=====================================================================================

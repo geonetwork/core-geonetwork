@@ -167,6 +167,8 @@ public class Geonet
 	public class Profile
 	{
 		public static final String ADMINISTRATOR = "Administrator";
+		public static final String USER_ADMIN    = "UserAdmin";
+		public static final String REVIEWER      = "Reviewer";
 		public static final String GUEST         = "Guest";
 	}
 

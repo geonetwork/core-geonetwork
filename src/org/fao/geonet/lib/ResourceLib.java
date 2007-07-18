@@ -90,6 +90,17 @@ public class ResourceLib
 
 	//-----------------------------------------------------------------------------
 
+	public void checkEditPrivilege(ServiceContext context, String id) throws Exception
+	{
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		AccessManager am = gc.getAccessManager();
+
+		if (!am.canEdit(context, id))
+			throw new OperationNotAllowedEx();
+	}
+
+	//-----------------------------------------------------------------------------
+
 	public String getRemovedDir(ServiceContext context, String id)
 	{
 		return getRemovedDir(getRemovedDir(context), id);

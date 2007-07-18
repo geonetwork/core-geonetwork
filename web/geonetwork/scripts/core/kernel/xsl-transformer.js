@@ -60,14 +60,17 @@ function createEnv(doc)
 	var elUrl    = doc.createElement('url');
 	var elLocUrl = doc.createElement('locUrl');
 	var elLocSer = doc.createElement('locService');
+	var elLang   = doc.createElement('language');
 	
 	env.appendChild(elUrl);
 	env.appendChild(elLocUrl);
 	env.appendChild(elLocSer);
+	env.appendChild(elLang);
 	
 	elUrl   .appendChild(doc.createTextNode(Env.url));
 	elLocUrl.appendChild(doc.createTextNode(Env.locUrl));
 	elLocSer.appendChild(doc.createTextNode(Env.locService));
+	elLang  .appendChild(doc.createTextNode(Env.lang));
 	
 	return env;
 }

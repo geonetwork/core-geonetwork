@@ -26,7 +26,6 @@ package org.fao.geonet.services.resources;
 import java.io.File;
 import jeeves.exceptions.ObjectNotFoundEx;
 import jeeves.exceptions.OperationAbortedEx;
-import jeeves.exceptions.ResourceNotFoundEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -34,7 +33,6 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.metadata.Update;
@@ -77,7 +75,7 @@ public class Remove implements Service
 		String ref    = Util.getParam(params, Params.REF);
 		String access = Util.getParam(params, Params.ACCESS);
 
-		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_EDIT);
+		Lib.resource.checkEditPrivilege(context, id);
 
 		// get online resource name
 		Element metadata = dataMan.getMetadata(context, id, true);

@@ -31,6 +31,7 @@ ker.include('core/kernel/xml.js');
 ker.include('core/kernel/string.js');
 ker.include('core/kernel/xml-loader.js');
 ker.include('core/kernel/xsl-transformer.js');
+ker.include('core/kernel/info-service.js');
 
 //=====================================================================================
 /*	Creates an XML request like <request>...</request>.

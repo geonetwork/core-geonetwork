@@ -312,6 +312,26 @@ public class Worker implements Runnable
 			if (!oldSiteId.equals(source))
 				continue;
 
+			//--- calculate owner and group owner
+
+			query = "SELECT groupId FROM OperationAllowed WHERE metadataId=? AND operationId=4";
+			List privil = oldDbms.select(query, new Integer(id)).getChildren();
+			oldDbms.commit();
+
+			if (privil.size() == 0)
+				throw new Exception("Metadata has no admin privilege --> id:"+id);
+
+			String groupOwner = ((Element) privil.get(0)).getChildText("groupid");
+
+			query = "SELECT DISTINCT id FROM Users, UserGroups WHERE id=userId AND profile='Editor' AND groupId=?";
+			List usrGrps = oldDbms.select(query, new Integer(groupOwner)).getChildren();
+			oldDbms.commit();
+
+			if (usrGrps.size() == 0)
+				throw new Exception("No editor for metadata --> id:"+id);
+
+			String owner = ((Element) privil.get(0)).getChildText("id");
+
 			//--- no, ok we can store it
 
 			md.getChild("source").setText(newSiteId);
@@ -322,6 +342,8 @@ public class Worker implements Runnable
 			md.addContent(new Element("root")       .setText(xml.getName()));
 			md.addContent(new Element("isHarvested").setText("n"));
 			md.addContent(new Element("data")       .setText(Xml.getString(xml)));
+			md.addContent(new Element("owner")      .setText(owner));
+			md.addContent(new Element("groupOwner") .setText(groupOwner));
 
 			Lib.database.insert(newDbms, "Metadata", md, idMapper);
 
@@ -341,7 +363,7 @@ public class Worker implements Runnable
 
 	private void migrateOperationAllowed(Dbms oldDbms, Dbms newDbms) throws SQLException
 	{
-		String query = "SELECT * FROM OperationAllowed";
+		String query = "SELECT * FROM OperationAllowed WHERE operationId<>2 AND operationId<>4";
 
 		//--- copy metadata categories
 

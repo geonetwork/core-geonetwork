@@ -74,7 +74,7 @@
 
 	<!-- ====================================================================== -->
 
-	<profile name="UserAdmin" extends="Editor">
+	<profile name="UserAdmin" extends="Reviewer">
 
 		<!-- User maintenance services -->
 		<allow service="user.get"/>
@@ -82,10 +82,18 @@
 		<allow service="user.remove"/>
 		<allow service="user.update"/>
 
+		<!-- Transfer ownership services -->
+		<allow service="transfer.ownership"/>
+		<allow service="xml.ownership.groups"/>
+	
 	</profile>
 
 	<!-- ====================================================================== -->
 
+	<profile name="Reviewer" extends="Editor"/>
+	
+	<!-- ====================================================================== -->
+	
 	<profile name="Editor" extends="RegisteredUser">
 
 		<!-- Allow to see the list of groups the user is member of -->
