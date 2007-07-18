@@ -26,7 +26,6 @@ package org.fao.geonet.services.metadata;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.HashSet;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.interfaces.Service;
@@ -81,9 +80,7 @@ public class Delete implements Service
 		if (info == null)
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
-		HashSet hsOper = accessMan.getOperations(context, id, context.getIpAddress());
-
-		if (!hsOper.contains(AccessManager.OPER_EDIT))
+		if (!accessMan.canEdit(context, id))
 			throw new OperationNotAllowedEx();
 
 		//-----------------------------------------------------------------------

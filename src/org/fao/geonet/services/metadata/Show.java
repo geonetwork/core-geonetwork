@@ -25,11 +25,13 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
@@ -58,10 +60,21 @@ public class Show implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		EditUtils.preprocessUpdate(params, context, AccessManager.OPER_VIEW);
+		UserSession session = context.getUserSession();
+
+		//-----------------------------------------------------------------------
+		//--- handle current tab
+
+		Element elCurrTab = params.getChild(Params.CURRTAB);
+
+		if (elCurrTab != null)
+			session.setProperty(Geonet.Session.METADATA_SHOW, elCurrTab.getText());
+
+		//-----------------------------------------------------------------------
+		//--- check access
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan   = gc.getDataManager();
+		DataManager   dm = gc.getDataManager();
 
 		String id = Util.getParam(params, Params.ID);
 
@@ -70,10 +83,10 @@ public class Show implements Service
 		//-----------------------------------------------------------------------
 		//--- get metadata
 
-		Element elMd = dataMan.getMetadata(context, id, false);
+		Element elMd = dm.getMetadata(context, id, false);
 
 		if (elMd == null)
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+			throw new MetadataNotFoundEx(id);
 
 		return elMd;
 	}

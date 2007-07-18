@@ -23,19 +23,22 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.util.*;
-import org.jdom.*;
-
-import jeeves.constants.*;
-import jeeves.interfaces.*;
-import jeeves.resources.dbms.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-import jeeves.utils.*;
-
-import org.fao.geonet.constants.*;
-import org.fao.geonet.kernel.*;
-import org.fao.geonet.*;
+import java.util.List;
+import java.util.StringTokenizer;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.MdInfo;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -61,8 +64,8 @@ public class UpdateAdminOper implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan   = gc.getDataManager();
-		AccessManager accessMan = gc.getAccessManager();
+		DataManager   dm = gc.getDataManager();
+		UserSession   us = context.getUserSession();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
@@ -71,13 +74,23 @@ public class UpdateAdminOper implements Service
 		//-----------------------------------------------------------------------
 		//--- check access
 
-		if (!dataMan.existsMetadata(dbms, id))
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+		MdInfo info = dm.getMetadataInfo(dbms, id);
+
+		if (info == null)
+			throw new MetadataNotFoundEx(id);
 
 		//-----------------------------------------------------------------------
 		//--- remove old operations
 
-		dataMan.deleteAllMetadataOper(dbms, id);
+		boolean skip = false;
+
+		//--- in case of owner, privileges for groups 0,1 are disabled and
+		//--- are not sent to the server. So we cannot remove them
+
+		if (us.isAuthenticated() && us.getUserId().equals(info.owner))
+			skip = true;
+
+		dm.deleteMetadataOper(dbms, id, skip);
 
 		//-----------------------------------------------------------------------
 		//--- set new ones
@@ -97,14 +110,14 @@ public class UpdateAdminOper implements Service
 				String groupId = st.nextToken();
 				String operId  = st.nextToken();
 
-				dataMan.setOperation(dbms, id, groupId, operId);
+				dm.setOperation(dbms, id, groupId, operId);
 			}
 		}
 
 		//-----------------------------------------------------------------------
 		//--- index metadata
 
-		dataMan.indexMetadata(dbms, id);
+		dm.indexMetadata(dbms, id);
 
 		//-----------------------------------------------------------------------
 		//--- return id for showing

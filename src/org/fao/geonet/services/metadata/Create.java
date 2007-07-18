@@ -55,15 +55,8 @@ public class Create implements Service
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		String template = Util.getParam(params, Params.ID);
-
-		HashSet<String> groups = new HashSet<String>();
-
-		for (Object g : params.getChildren(Params.GROUP))
-		{
-			Element group = (Element) g;
-			groups.add(group.getText());
-		}
+		String template  = Util.getParam(params, Params.ID);
+		String groupOwner= Util.getParam(params, Params.GROUP);
 
 		//--- query the data manager
 
@@ -71,11 +64,11 @@ public class Create implements Service
 
 		DataManager dm = gc.getDataManager();
 
-		String mdId = dm.createMetadata(dbms, template, groups, context.getSerialFactory(),
+		String id = dm.createMetadata(dbms, template, groupOwner, context.getSerialFactory(),
 												  gc.getSiteId(), context.getUserSession().getUserId());
 
 		return new Element(Jeeves.Elem.RESPONSE)
-							.addContent(new Element(Geonet.Elem.ID).setText(mdId));
+							.addContent(new Element(Geonet.Elem.ID).setText(id));
 	}
 }
 

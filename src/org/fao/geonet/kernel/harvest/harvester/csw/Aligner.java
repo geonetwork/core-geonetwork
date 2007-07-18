@@ -164,7 +164,7 @@ public class Aligner
 		log.debug("  - Adding metadata with remote uuid:"+ ri.uuid);
 
 		String id = dataMan.insertMetadataExt(dbms, schema, md, context.getSerialFactory(),
-													 params.uuid, ri.changeDate, ri.changeDate, ri.uuid, "1");
+													 params.uuid, ri.changeDate, ri.changeDate, ri.uuid, "1", null);
 
 		int iId = Integer.parseInt(id);
 

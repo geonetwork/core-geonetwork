@@ -34,8 +34,10 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
@@ -74,8 +76,12 @@ public class GetAdminOper implements Service
 		//-----------------------------------------------------------------------
 		//--- check access
 
-		if (!dm.existsMetadata(dbms, id))
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+		MdInfo info = dm.getMetadataInfo(dbms, id);
+
+		if (info == null)
+			throw new MetadataNotFoundEx(id);
+
+		Element owner = new Element("owner").setText(info.owner);
 
 		//--- get all operations
 
@@ -150,7 +156,8 @@ public class GetAdminOper implements Service
 		Element elRes = new Element(Jeeves.Elem.RESPONSE)
 										.addContent(new Element(Geonet.Elem.ID).setText(id))
 										.addContent(elOper)
-										.addContent(elGroup);
+										.addContent(elGroup)
+										.addContent(owner);
 
 		return elRes;
 	}

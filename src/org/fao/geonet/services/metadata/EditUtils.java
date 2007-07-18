@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import jeeves.exceptions.BadParameterEx;
@@ -56,7 +55,7 @@ class EditUtils
 	/** Perform common editor preprocessing tasks
 	  */
 
-	static void preprocessUpdate(Element params, ServiceContext context, String operation) throws Exception
+	public static void preprocessUpdate(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getDataManager();
@@ -80,9 +79,7 @@ class EditUtils
 		if (!dataMan.existsMetadata(dbms, id))
 			throw new BadParameterEx("id", id);
 
-		HashSet hsOper = accessMan.getOperations(context, id, context.getIpAddress());
-
-		if (!hsOper.contains(operation))
+		if (!accessMan.canEdit(context, id))
 			throw new OperationNotAllowedEx();
 	}
 
