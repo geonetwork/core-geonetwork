@@ -541,7 +541,11 @@
 				<a name="{$anchor}"/>
 				<xsl:choose>
 					<xsl:when test="$helpLink!=''">
-						<span id="tip.{$helpLink}"><xsl:value-of select="$title"/></span>
+						<span id="tip.{$helpLink}" style="cursor:help;"><xsl:value-of select="$title"/>
+							<xsl:call-template name="asterisk">
+								<xsl:with-param name="link" select="$helpLink"/>
+							</xsl:call-template>
+						</span>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="$title"/>
@@ -596,7 +600,11 @@
 									<a name="{$anchor}"/>
 									<xsl:choose>
 										<xsl:when test="$helpLink!=''">
-											<span id="tip.{$helpLink}" class="green-content"><xsl:value-of select="$title"/></span>
+											<span id="tip.{$helpLink}" class="green-content" style="cursor:help;"><xsl:value-of select="$title"/>
+												<xsl:call-template name="asterisk">
+													<xsl:with-param name="link" select="$helpLink"/>
+												</xsl:call-template>
+											</span>
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:value-of select="$title"/>
@@ -822,15 +830,31 @@
 		</xsl:choose>
 	</xsl:template>
 	
-	<!--
-	returns the help url
-	-->
+	<!-- ================================================================================ -->
+	<!-- returns the help url -->
+	<!-- ================================================================================ -->
+	
 	<xsl:template name="getHelpLink">
 		<xsl:param name="name"/>
 		<xsl:param name="schema"/>
 		
 		<xsl:value-of select="concat($schema,'|', $name)"/>
 	</xsl:template>
+	
+	<!-- ================================================================================ -->
+	
+	<xsl:template name="asterisk">
+		<xsl:param name="link"/>
+		
+		<xsl:variable name="schema" select="substring-before($link, '|')"/>
+		<xsl:variable name="name"   select="substring-after($link, '|')"/>
+		
+		<xsl:if test="/root/gui/*[name() = $schema]/element[@name=$name]/condition">
+			<font color="#FF0000">&#xA0;(*)</font>
+		</xsl:if>
+	</xsl:template>
+	
+	<!-- ================================================================================ -->
 	
 	<xsl:template name="getButtons">
 		<xsl:param name="addLink"/>
