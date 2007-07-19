@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -109,6 +110,9 @@ class Harvester
 
 		for(Search s : params.getSearches())
 			records.addAll(search(req, s));
+
+		if (params.isSearchEmpty())
+			records.addAll(search(req, Search.createEmptySearch()));
 
 		log.info("Total records processed in all searches :"+ records.size());
 

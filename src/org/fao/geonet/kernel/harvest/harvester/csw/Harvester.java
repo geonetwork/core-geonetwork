@@ -43,7 +43,6 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
 import org.fao.geonet.csw.common.util.CswServer;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
@@ -85,6 +84,9 @@ class Harvester
 
 		for(Search s : params.getSearches())
 			records.addAll(search(server, s));
+
+		if (params.isSearchEmpty())
+			records.addAll(search(server, Search.createEmptySearch()));
 
 		log.info("Total records processed in all searches :"+ records.size());
 

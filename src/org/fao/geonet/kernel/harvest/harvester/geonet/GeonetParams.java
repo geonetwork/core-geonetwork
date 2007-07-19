@@ -110,6 +110,10 @@ public class GeonetParams extends AbstractParams
 
 	//---------------------------------------------------------------------------
 
+	public boolean isSearchEmpty() { return alSearches.isEmpty(); }
+
+	//---------------------------------------------------------------------------
+
 	public GeonetParams copy()
 	{
 		GeonetParams copy = new GeonetParams(dm);

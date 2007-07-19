@@ -21,11 +21,9 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.geonet;
+package org.fao.geonet.kernel.harvest.harvester.csw;
 
-import jeeves.exceptions.BadParameterEx;
 import jeeves.utils.Util;
-import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
@@ -42,19 +40,12 @@ class Search
 
 	//---------------------------------------------------------------------------
 
-	public Search(Element search) throws BadParameterEx
+	public Search(Element search)
 	{
-		freeText = Util.getParam(search, "freeText", "");
-		title    = Util.getParam(search, "title",    "");
-		abstrac  = Util.getParam(search, "abstract", "");
-		keywords = Util.getParam(search, "keywords", "");
-		digital  = Util.getParam(search, "digital",  false);
-		hardcopy = Util.getParam(search, "hardcopy", false);
-
-		Element source = search.getChild("source");
-
-		sourceUuid = Util.getParam(source, "uuid", "");
-		sourceName = Util.getParam(source, "name", "");
+		freeText = Util.getParam(search, "freeText", "").trim();
+		title    = Util.getParam(search, "title",    "").trim();
+		abstrac  = Util.getParam(search, "abstract", "").trim();
+		subject  = Util.getParam(search, "subject",  "").trim();
 	}
 
 	//---------------------------------------------------------------------------
@@ -67,56 +58,19 @@ class Search
 	{
 		Search s = new Search();
 
-		s.freeText  = freeText;
-		s.title     = title;
-		s.abstrac   = abstrac;
-		s.keywords  = keywords;
-		s.digital   = digital;
-		s.hardcopy  = hardcopy;
-		s.sourceUuid= sourceUuid;
-		s.sourceName= sourceName;
+		s.freeText = freeText;
+		s.title    = title;
+		s.abstrac  = abstrac;
+		s.subject  = subject;
 
 		return s;
 	}
 
 	//---------------------------------------------------------------------------
 
-	public Element createRequest()
-	{
-		Element req = new Element("request");
-
-		add(req, "any",      freeText);
-		add(req, "title",    title);
-		add(req, "abstract", abstrac);
-		add(req, "themekey", keywords);
-		add(req, "siteId",   sourceUuid);
-
-		if (digital)
-			Lib.element.add(req, "digital", "on");
-
-		if (hardcopy)
-			Lib.element.add(req, "paper", "on");
-
-		return req;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public static Search createEmptySearch() throws BadParameterEx
+	public static Search createEmptySearch()
 	{
 		return new Search(new Element("search"));
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
-
-	private void add(Element req, String name, String value)
-	{
-		if (value.length() != 0)
-			req.addContent(new Element(name).setText(value));
 	}
 
 	//---------------------------------------------------------------------------
@@ -125,16 +79,11 @@ class Search
 	//---
 	//---------------------------------------------------------------------------
 
-	public String  freeText;
-	public String  title;
-	public String  abstrac;
-	public String  keywords;
-	public boolean digital;
-	public boolean hardcopy;
-	public String  sourceUuid;
-	public String  sourceName;
+	public String freeText;
+	public String title;
+	public String abstrac;
+	public String subject;
 }
 
 //=============================================================================
-
 

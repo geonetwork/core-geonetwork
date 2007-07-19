@@ -99,6 +99,10 @@ public class CswParams extends AbstractParams
 
 	//---------------------------------------------------------------------------
 
+	public boolean isSearchEmpty() { return alSearches.isEmpty(); }
+
+	//---------------------------------------------------------------------------
+
 	public CswParams copy()
 	{
 		CswParams copy = new CswParams(dm);
@@ -132,14 +136,7 @@ public class CswParams extends AbstractParams
 		{
 			Element search = (Element) searchList.next();
 
-			Search s = new Search();
-
-			s.freeText = Util.getParam(search, "freeText", "").trim();
-			s.title    = Util.getParam(search, "title",    "").trim();
-			s.abstrac  = Util.getParam(search, "abstract", "").trim();
-			s.subject  = Util.getParam(search, "subject",  "").trim();
-
-			alSearches.add(s);
+			alSearches.add(new Search(search));
 		}
 	}
 
@@ -157,50 +154,4 @@ public class CswParams extends AbstractParams
 
 //=============================================================================
 
-class Search
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
-
-	public Search copy()
-	{
-		Search s = new Search();
-
-		s.freeText = freeText;
-		s.title    = title;
-		s.abstrac  = abstrac;
-		s.subject  = subject;
-
-		return s;
-	}
-
-	//---------------------------------------------------------------------------
-
-//	public Element createRequest()
-//	{
-//		Element req = new Element("request");
-//
-//		Lib.element.add(req, "any",      freeText);
-//		Lib.element.add(req, "title",    title);
-//		Lib.element.add(req, "abstract", abstrac);
-//
-//		return req;
-//	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	public String freeText;
-	public String title;
-	public String abstrac;
-	public String subject;
-}
-
-//=============================================================================
 
