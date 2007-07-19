@@ -31,6 +31,23 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="metadata.show.embedded">
+			<class name=".services.metadata.Show"/>
+			
+			<output sheet="metadata-show-embedded.xsl">
+				<call name="services" class="jeeves.guiservices.services.Get"/>
+				<call name="currTab"  class=".guiservices.util.GetCurrentMDTab"/>
+				<call name="sources"  class=".guiservices.util.Sources"/>
+				<call name="isoLang"  class=".guiservices.isolanguages.Get"/>
+			</output>
+			
+			<error id="operation-not-allowed" sheet="error.xsl">
+				<xml name="privError" file="xml/privileges-error.xml" />
+			</error>
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="metadata.edit">
 			<class name=".services.metadata.GetEditableData"/>
