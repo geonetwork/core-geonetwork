@@ -29,7 +29,9 @@
 						</xsl:when>
 						
 						<xsl:otherwise>
-							<font color="#008000"><xsl:value-of select="/root/strings/optional"/></font>
+							<!-- if the condition is missing, the element could still be mandatory -->
+							<!-- so, we cannot say that it is optional -->
+							<!--font color="#008000"><xsl:value-of select="/root/strings/optional"/></font-->
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:otherwise>
