@@ -509,6 +509,7 @@ div.keywordResults ul li.selected {
 
 #coords{
     text-align:center;
+    margin-top: 5px;
 }
 
 
@@ -519,22 +520,29 @@ div.keywordResults ul li.selected {
 	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
 	color: #064377;
 	cursor: pointer;
-	cursor: hand;
 }
 
 imenabled {
 	color: #064377;
 	cursor: pointer;
-	cursor: hand;
 }
 
 imdisabled {
 	color: #434343;
-	cursor: progress;
+    	cursor: progress;
 }
 
+div#metadata_current {
+    padding: 3px;
+    border: 1px #266397 solid;    
+    background-color: #e0e0ff;
+}
 
-
+div#metadata_current table,
+div#metadata_current td
+{
+    background-color: #e0e0ff;
+}
 
 
 
