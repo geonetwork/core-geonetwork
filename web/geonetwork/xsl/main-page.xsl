@@ -24,6 +24,10 @@
 		<script type="text/javascript" src="/intermap/scripts/im_layers.js?" />
 		<script type="text/javascript" src="/intermap/scripts/util.js" />
 		
+		
+		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip-manager.js"></script>
+		
 <!--		<script type="text/javascript" src="/intermap/scripts/etj.js?"/>
 		<script type="text/javascript" src="/intermap/scripts/im_minimap.js?"/>
 		<script type="text/javascript" src="/intermap/scripts/util.js" />
@@ -202,6 +206,44 @@
 				$('loadingMD').hide(); // style.display = 'none';
 				
 			}
+			
+			function gn_showMetadata(id)
+			{
+				var url = '/geonetwork/srv/en/metadata.show.embedded'; 
+				var pars = 'id='+id;
+				
+				var myAjax = new Ajax.Request (
+					url, 
+					{
+						method: 'get',
+						parameters: pars,
+						onSuccess: function (req)
+						{
+							// remove previous open md				
+							var prev = document.getElementById('metadata_current');
+							if(prev)
+								prev.parentNode.removeChild($('metadata_current'));
+								
+							var parent = $('mdwhiteboard_' + id);
+								
+							// create new element
+							var div = document.createElement('div');
+							div.id = 'metadata_current';
+							parent.appendChild(div);
+							
+							div.innerHTML = req.responseText;
+							// copyTree(req.responseXML.documentElement, parent);
+							
+							//div.scrollIntoView();
+							div.scrollTo();
+							
+						},
+						onFailure: gn_search_error // FIXME
+					}
+				);
+			}
+
+			
 			
 			//========================================
 			// Util: Copy a XML tree with HTML format into the current Document
