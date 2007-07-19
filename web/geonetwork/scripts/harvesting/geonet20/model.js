@@ -28,8 +28,9 @@ function getUpdateRequest(data)
 //=====================================================================================
 
 var updateTemp = 
-' <node id="{ID}" name="{NAME}" type="{TYPE}">'+ 
+' <node id="{ID}" type="{TYPE}">'+ 
 '    <site>'+
+'      <name>{NAME}</name>'+
 '      <host>{HOST}</host>'+
 '      <port>{PORT}</port>'+
 '      <servlet>{SERVLET}</servlet>'+

@@ -25,9 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.geonet20;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.UUID;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.UserNotFoundEx;
 import jeeves.interfaces.Logger;
@@ -37,7 +35,6 @@ import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -55,9 +52,7 @@ public class Geonet20Harvester extends AbstractHarvester
 	//---
 	//--------------------------------------------------------------------------
 
-	public static void init(ServiceContext context) throws Exception
-	{
-	}
+	public static void init(ServiceContext context) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -95,44 +90,18 @@ public class Geonet20Harvester extends AbstractHarvester
 
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
-		//--- retrieve/initialize information
+		params = new GeonetParams(dataMan);
 
+		//--- retrieve/initialize information
 		params.create(node);
 
-		//--- setup geonetwork node
 
-		String id   = settingMan.add(dbms, "harvesting", "node", getType());
-		String path = "id:"+ id;
+		//--- force the creation of a new uuid
+		params.uuid = UUID.randomUUID().toString();
 
-		String siteID    = settingMan.add(dbms, path, "site",    "");
-		String optionsID = settingMan.add(dbms, path, "options", "");
-		String infoID    = settingMan.add(dbms, path, "info",    "");
+		String id = settingMan.add(dbms, "harvesting", "node", getType());
 
-		//--- setup site node ----------------------------------------
-
-		settingMan.add(dbms, "id:"+siteID, "name",    node.getAttributeValue("name"));
-		settingMan.add(dbms, "id:"+siteID, "host",    params.host);
-		settingMan.add(dbms, "id:"+siteID, "port",    params.port);
-		settingMan.add(dbms, "id:"+siteID, "servlet", params.servlet);
-
-		String useAccID = settingMan.add(dbms, "id:"+siteID, "useAccount", params.useAccount);
-
-		settingMan.add(dbms, "id:"+useAccID, "username", params.username);
-		settingMan.add(dbms, "id:"+useAccID, "password", params.password);
-
-		//--- setup search nodes ---------------------------------------
-
-		addSearches(dbms, path, params);
-
-		//--- setup options node ---------------------------------------
-
-		settingMan.add(dbms, "id:"+optionsID, "every",        params.every);
-		settingMan.add(dbms, "id:"+optionsID, "oneRunOnly",   params.oneRunOnly);
-		settingMan.add(dbms, "id:"+optionsID, "status",       Status.INACTIVE);
-
-		//--- setup stats node ----------------------------------------
-
-		settingMan.add(dbms, "id:"+infoID, "lastRun", "");
+		storeNode(dbms, params, "id:"+id);
 
 		return id;
 	}
@@ -150,54 +119,13 @@ public class Geonet20Harvester extends AbstractHarvester
 		GeonetParams copy = params.copy();
 		copy.update(node);
 
-		//--- update database
-
-		Element site     = node.getChild("site");
-		Element opt      = node.getChild("options");
-		Element searches = node.getChild("searches");
-		Element account  = (site == null) ? null : site.getChild("account");
 
 		String path = "harvesting/id:"+ id;
-		String name = node.getAttributeValue("name");
 
-		Map<String, Object> values = new HashMap<String, Object>();
+		settingMan.removeChildren(dbms, path);
 
-		if (name != null)
-			values.put(path +"/site/name", name);
-
-		setValue(values, path +"/site/host",                site,    "host");
-		setValue(values, path +"/site/port",                site,    "port");
-		setValue(values, path +"/site/servlet",             site,    "servlet");
-
-		setValue(values, path +"/site/useAccount",          account, "use");
-		setValue(values, path +"/site/useAccount/username", account, "username");
-		setValue(values, path +"/site/useAccount/password", account, "password");
-
-		setValue(values, path +"/options/every",            opt, "every");
-		setValue(values, path +"/options/oneRunOnly",       opt, "oneRunOnly");
-
-		settingMan.setValues(dbms, values);
-
-		//--- update the search entry if some 'search' elements are provided
-
-		if (searches != null)
-		{
-			//--- remove all search entries
-
-			Iterator oldSearches = settingMan.get(path ,1).getChild("children").getChildren("search").iterator();
-
-			while (oldSearches.hasNext())
-			{
-				Element search   = (Element) oldSearches.next();
-				String  searchId = search.getAttributeValue("id");
-
-				settingMan.remove(dbms, path +"/id:"+ searchId);
-			}
-
-			//--- add new search entries
-
-			addSearches(dbms, path, copy);
-		}
+		//--- update database
+		storeNode(dbms, copy, path);
 
 		//--- we update a copy first because if there is an exception GeonetParams
 		//--- could be half updated and so it could be in an inconsistent state
@@ -207,8 +135,17 @@ public class Geonet20Harvester extends AbstractHarvester
 
 	//---------------------------------------------------------------------------
 
-	private void addSearches(Dbms dbms, String path, GeonetParams params) throws SQLException
+	protected void storeNodeExtra(Dbms dbms, AbstractParams p, String path,
+											String siteId, String optionsId) throws SQLException
 	{
+		GeonetParams params = (GeonetParams) p;
+
+		settingMan.add(dbms, "id:"+siteId, "host",    params.host);
+		settingMan.add(dbms, "id:"+siteId, "port",    params.port);
+		settingMan.add(dbms, "id:"+siteId, "servlet", params.servlet);
+
+		//--- store search nodes
+
 		for (Search s : params.getSearches())
 		{
 			String  searchID = settingMan.add(dbms, path, "search", "");
@@ -239,15 +176,14 @@ public class Geonet20Harvester extends AbstractHarvester
 
 	protected void doAddInfo(Element node)
 	{
-		Element info     = node.getChild("info");
-		Element searches = node.getChild("searches");
-
 		//--- if the harvesting is not started yet, we don't have any info
 
 		if (result == null)
 			return;
 
 		//--- ok, add proper info
+
+		Element info = node.getChild("info");
 
 		for (AlignerResult ar : result.alResult)
 		{

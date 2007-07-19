@@ -109,8 +109,6 @@ public class GeonetHarvester extends AbstractHarvester
 		//--- update variables
 
 		GeonetParams copy = params.copy();
-
-		//--- update variables
 		copy.update(node);
 
 		String path = "harvesting/id:"+ id;

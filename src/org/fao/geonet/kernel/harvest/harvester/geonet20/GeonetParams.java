@@ -109,6 +109,7 @@ public class GeonetParams extends AbstractParams
 	public GeonetParams copy()
 	{
 		GeonetParams copy = new GeonetParams(dm);
+		copyTo(copy);
 
 		copy.host    = host;
 		copy.port    = port;
