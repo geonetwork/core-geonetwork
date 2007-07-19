@@ -77,7 +77,7 @@
 		<xsl:param name="content"/>
 		<xsl:param name="indent" select="100"/>
 		
-		<xsl:comment>FCONT BEGIN</xsl:comment>
+		<xsl:comment>formContent BEGIN</xsl:comment>
 		<tr>
 <!--			<td class="padded-content" width="{$indent}"/>
 -->			<td class="dots"/>
@@ -85,7 +85,7 @@
 				<xsl:copy-of select="$content"/>
 			</td>
 		</tr>
-		<xsl:comment>FCONT END</xsl:comment>
+		<xsl:comment>formContent END</xsl:comment>
 	</xsl:template>
 	
 	<!--
@@ -272,7 +272,8 @@
 								<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple')"><xsl:value-of select="/root/gui/strings/show"/></button>
 							</xsl:when>
 							<xsl:otherwise>
-								<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple')"><xsl:value-of select="/root/gui/strings/show"/></button>
+<!--								<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple')"><xsl:value-of select="/root/gui/strings/show"/></button>-->
+								<button class="content" onclick="gn_showMetadata({$metadata/geonet:info/id})"><xsl:value-of select="/root/gui/strings/show"/></button>
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:if>
@@ -332,6 +333,17 @@
 				</td>
 			</tr>
 		</table>
+		
+		<!-- spare room for metdata display via AJAX -->
+		<div id="mdwhiteboard_{$metadata/geonet:info/id}" width="100%">
+<!--			<a href="{$metadata/geonet:info/id}" >
+				<xsl:value-of select="concat($metadata/geonet:info/id,' - ',$metadata/title)"/>					
+			</a>
+-->			
+		</div>		
+					
+<!--		<h1 align="left"><a href="{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple"><xsl:value-of select="concat($metadata/geonet:info/id,' - ',$metadata/title)"/></a></h1>-->
+		
 	</xsl:template>
 
 	<!--
