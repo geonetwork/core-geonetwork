@@ -850,7 +850,7 @@
 		<xsl:variable name="name"   select="substring-after($link, '|')"/>
 		
 		<xsl:if test="/root/gui/*[name() = $schema]/element[@name=$name]/condition">
-			<font color="#FF0000">&#xA0;(*)</font>
+			<sup><font size="-1" color="#FF0000">&#xA0;*</font></sup>
 		</xsl:if>
 	</xsl:template>
 	

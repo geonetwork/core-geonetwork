@@ -47,7 +47,8 @@
 	<!-- these elements should be boxed -->
 	<!-- ============================================================================= -->
 
-	<xsl:template mode="iso19139" match="gmd:contact|gmd:identificationInfo|gmd:distributionInfo|gmd:graphicOverview|gmd:descriptiveKeywords|gmd:spatialRepresentationInfo|gmd:pointOfContact|gmd:dataQualityInfo|gmd:referenceSystemInfo|gmd:equivalentScale|gmd:projection|gmd:ellipsoid|gmd:extent|gmd:geographicBox|gmd:MD_Distributor">
+	<xsl:template mode="iso19139" match="gmd:graphicOverview"/>
+	<xsl:template mode="iso19139" match="gmd:contact|gmd:identificationInfo|gmd:distributionInfo|gmd:descriptiveKeywords|gmd:spatialRepresentationInfo|gmd:pointOfContact|gmd:dataQualityInfo|gmd:referenceSystemInfo|gmd:equivalentScale|gmd:projection|gmd:ellipsoid|gmd:extent|gmd:geographicBox|gmd:MD_Distributor">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
@@ -708,7 +709,7 @@
 						</xsl:call-template>
 					</td>
 				</tr>
-				<xsl:apply-templates mode="elementEP" select="*[name(.)!='identificationInfo' and name(.)!='metadataMaintenance' and name(.)!='metadataConstraints' and name(.)!='spatialRepresentationInfo' and name(.)!='referenceSystemInfo' and name(.)!='distributionInfo' and name(.)!='dataQualityInfo' and name(.)!='applicationSchemaInfo' and name(.)!='portrayalCatalogueInfo']">
+				<xsl:apply-templates mode="elementEP" select="*[name(.)!='gmd:identificationInfo' and name(.)!='gmdx:metadataMaintenance' and name(.)!='gmdx:metadataConstraints' and name(.)!='gmd:spatialRepresentationInfo' and name(.)!='gmd:referenceSystemInfo' and name(.)!='gmd:distributionInfo' and name(.)!='gmd:dataQualityInfo' and name(.)!='gmd:applicationSchemaInfo' and name(.)!='gmd:portrayalCatalogueInfo']">
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
 				</xsl:apply-templates>
@@ -1279,7 +1280,7 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="string(../../../../../../../../geonet:info/dynamic)='true'">
+			<xsl:when test="string(../../../../../../geonet:info/dynamic)='true'">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
@@ -1317,7 +1318,7 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="string(../../../../../../../../geonet:info/dynamic)='true'">
+			<xsl:when test="string(../../../../../../geonet:info/dynamic)='true'">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
@@ -1355,7 +1356,7 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="string(../../../../../../../../geonet:info/dynamic)='true'">
+			<xsl:when test="string(../../../../../../geonet:info/dynamic)='true'">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
@@ -1391,7 +1392,7 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="string(../../../../../../../../geonet:info/download)='true'">
+			<xsl:when test="string(../../../../../../geonet:info/download)='true'">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/downloadData"/>
