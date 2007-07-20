@@ -161,9 +161,9 @@
 									</td>
 									<td class="padded" width="90%">
 										<h1 align="left">
-											<a href="{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple">
+<!--											<a href="{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple">-->
 												<xsl:value-of select="$metadata/title"/>
-											</a>
+<!--											</a>-->
 										</h1>
 									</td>
 								<!-- Download XML for ISO and FGDC for use in applications like GeoNetwork or ESRI ArcCatalog -->
@@ -273,7 +273,9 @@
 							</xsl:when>
 							<xsl:otherwise>
 <!--								<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple')"><xsl:value-of select="/root/gui/strings/show"/></button>-->
-								<button class="content" onclick="gn_showMetadata({$metadata/geonet:info/id})"><xsl:value-of select="/root/gui/strings/show"/></button>
+								<button id="gn_showmd_{$metadata/geonet:info/id}"  class="content" onclick="gn_showMetadata({$metadata/geonet:info/id})"><img src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/show"/></button>
+								<button id="gn_hidemd_{$metadata/geonet:info/id}"  class="content" onclick="gn_hideMetadata({$metadata/geonet:info/id})" style="display:none;"><img src="{/root/gui/url}/images/minus.png" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/show"/></button>
+								<button id="gn_loadmd_{$metadata/geonet:info/id}"  class="content" style="display:none;">Loading...</button> <!-- FIXME i18n -->
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:if>
@@ -335,15 +337,7 @@
 		</table>
 		
 		<!-- spare room for metdata display via AJAX -->
-		<div id="mdwhiteboard_{$metadata/geonet:info/id}" width="100%">
-<!--			<a href="{$metadata/geonet:info/id}" >
-				<xsl:value-of select="concat($metadata/geonet:info/id,' - ',$metadata/title)"/>					
-			</a>
--->			
-		</div>		
-					
-<!--		<h1 align="left"><a href="{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple"><xsl:value-of select="concat($metadata/geonet:info/id,' - ',$metadata/title)"/></a></h1>-->
-		
+		<div id="mdwhiteboard_{$metadata/geonet:info/id}" width="100%"/>
 	</xsl:template>
 
 	<!--
