@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<labels xmlns:gmd="http://www.isotc211.org/2005/gmd">
+<labels xmlns:gmd="http://www.isotc211.org/2005/gmd" 
+		  xmlns:gts="http://www.isotc211.org/2005/gts" 
+		  xmlns:gml="http://www.opengis.net/gml">
+	
 	<!-- ==================================================== -->
 	<element name="gmd:CI_OnlineResource">
 		<label>OnLine resource</label>
@@ -2404,6 +2407,33 @@
 		<description>western-most coordinate of the limit of the dataset extent, expressed in
 			longitude in decimal degrees (positive east)</description>
 		<condition>mandatory</condition>
+	</element>
+	<!-- ==================================================== -->
+	<!-- === GTS namespace                                    -->
+	<!-- ==================================================== -->
+	
+	<element name="gts:TM_PeriodDuration">
+		<label>Period duration</label>
+		<description></description>
+	</element>
+	
+	<!-- ==================================================== -->
+	<!-- === GML namespace -->
+	<!-- ==================================================== -->
+	
+	<element name="gml:beginPosition">
+		<label>Begin position</label>
+		<description></description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:endPosition">
+		<label>End position</label>
+		<description></description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:relatedTime">
+		<label>Related time</label>
+		<description></description>
 	</element>
 	<!-- ==================================================== -->
 </labels>

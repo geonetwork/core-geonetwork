@@ -114,7 +114,10 @@ function setupTooltip(x, y)
 //=====================================================================================
 
 var requestTemp =
-'<request xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:dc = "http://purl.org/dc/elements/1.1/">'+
+'<request xmlns:gmd="http://www.isotc211.org/2005/gmd"'+
+'         xmlns:gts="http://www.isotc211.org/2005/gts"'+ 
+'         xmlns:gml="http://www.opengis.net/gml"'+
+'         xmlns:dc = "http://purl.org/dc/elements/1.1/">'+
 '   <element schema="{SCHEMA}" name="{NAME}"/>'+
 '</request>';
 
