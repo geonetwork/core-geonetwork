@@ -291,6 +291,15 @@ function deleteButtonListener()
 
 function im_deleteLayer(id)
 {
+	// won't remove last layer
+            var llist = $('im_layerList');
+            var nodes=llist.getElementsByTagName('li');
+            if( $A(nodes).length == 1)
+            {
+                alert("Can't remove last layer"); // fixme i18n!
+                return;
+            }
+            
 	imc_deleteLayer(id);
 	deleteLayerFromList(id);
 }
