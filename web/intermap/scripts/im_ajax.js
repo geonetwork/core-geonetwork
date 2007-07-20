@@ -414,7 +414,8 @@ function addLayer(baseUrl, serviceName) // DEBUG
 
 
 
-
+// improve me: this setting should be implemented client-side
+// this setting refers to big map only, while ajax calls should be independent from which map are they called on
 function imc_toggleImageSize()
 {
 	deleteAoi();
@@ -427,18 +428,25 @@ function imc_toggleImageSize()
 		url,
 		{
 			method: 'get',
-			onComplete: updateMapSize,
+			onComplete: im_imageSizeToggled,
 			onFailure: reportError
 		}
 	);
 }
 
-function updateMapSize(req)
+// improve me: this setting should be implemented client-side
+// this setting refers to big map only, while ajax calls should be independent from which map are they called on
+function im_imageSizeToggled(req)
 {
-	$('im_mapImg').style.width = req.responseXML.getElementsByTagName('width')[0].firstChild.nodeValue;
-	$('im_mapImg').style.height = req.responseXML.getElementsByTagName('height')[0].firstChild.nodeValue;
-	$('im_map').style.width = req.responseXML.getElementsByTagName('width')[0].firstChild.nodeValue;
-	$('im_map').style.height = req.responseXML.getElementsByTagName('height')[0].firstChild.nodeValue;
+            var w = req.responseXML.getElementsByTagName('width')[0].firstChild.nodeValue;
+            var h = req.responseXML.getElementsByTagName('height')[0].firstChild.nodeValue;
+
+            im_bm_setSize(w,h);
+            
+	//$('im_mapImg').style.width = w;
+	//$('im_mapImg').style.height = h;
+	//$('im_map').style.width = w;
+	//$('im_map').style.height = h;		
 	
 	imc_updateBigMap(im_bm_width, im_bm_height, im_bm_getURLbbox());
 }

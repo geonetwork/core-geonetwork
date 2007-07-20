@@ -41,25 +41,40 @@ function im_bm_set(bmResponse)
 	var w = bmResponse.getElementsByTagName('width')[0].textContent;
 	var h = bmResponse.getElementsByTagName('height')[0].textContent;
 
-         im_bm_setMapProp(maxy, maxx, miny, minx, w, h);
+         im_bm_setMapBB(maxy, maxx, miny, minx);
+         im_bm_setSize(w, h);
 }
 
 // Set width, height and bounding box
-function im_bm_setMapProp(n, e, s, w, width, height)
+function im_bm_setMapBB(n, e, s, w)
 {
     im_bm_north=new Number(n);
     im_bm_east = new Number(e);
     im_bm_south = new Number(s);
-    im_bm_west = new Number(w);
-    
-    im_bm_width=new Number(width);
-    im_bm_height=new Number(height);
-    
-    im_bm_setSize(width, height);
+    im_bm_west = new Number(w);    
+}
+
+// Set width, height and bounding box
+function im_bm_setMapBB(n, e, s, w)
+{
+    im_bm_north=new Number(n);
+    im_bm_east = new Number(e);
+    im_bm_south = new Number(s);
+    im_bm_west = new Number(w);    
 }
 
 function im_bm_setSize(w, h)
 {
+        im_bm_width=new Number(w);
+        im_bm_height=new Number(h);
+
+        // lines from resizeMap()
+	$('im_mapImg').style.width = w;
+	$('im_mapImg').style.height = h;
+//	$('im_map').style.width = w;
+//	$('im_map').style.height = h;
+        // end
+
 	$('im_mapContainer').style.width = new Number(w)+2; 
 	$('im_mapContainer').style.height = new Number(h)+2; 
 	
