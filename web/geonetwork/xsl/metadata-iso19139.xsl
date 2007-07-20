@@ -1246,7 +1246,7 @@
 					</xsl:when>
 					<xsl:when test="string(gmd:protocol/gco:CharacterString)='WWW:LINK-1.0-http--link'"/> <!-- hide orName for www links -->
 					<xsl:otherwise>
-						<xsl:apply-templates mode="elementEP" select="gmd:name/gco:CharacterString|geonet:child[string(@name)='name']">
+						<xsl:apply-templates mode="elementEP" select="gmd:name|geonet:child[string(@name)='name']">
 							<xsl:with-param name="schema" select="$schema"/>
 							<xsl:with-param name="edit"   select="true()"/>
 						</xsl:apply-templates>
