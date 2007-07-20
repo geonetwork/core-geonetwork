@@ -128,6 +128,7 @@
 				<xsl:with-param name="text" select="$text"/>
 				<xsl:with-param name="addLink"  select="$addLink"/>
 				<xsl:with-param name="helpLink" select="$helpLink"/>
+				<xsl:with-param name="edit"     select="$edit"/>
 			</xsl:call-template>
 		</xsl:if>
 	</xsl:template>
@@ -408,9 +409,10 @@
 			<xsl:with-param name="text" select="$text"/>
 			<xsl:with-param name="addLink" select="$addLink"/>
 			<xsl:with-param name="removeLink" select="$removeLink"/>
-			<xsl:with-param name="upLink" select="$upLink"/>
-			<xsl:with-param name="downLink" select="$downLink"/>
-			<xsl:with-param name="helpLink" select="$helpLink"/>
+			<xsl:with-param name="upLink"     select="$upLink"/>
+			<xsl:with-param name="downLink"   select="$downLink"/>
+			<xsl:with-param name="helpLink"   select="$helpLink"/>
+			<xsl:with-param name="edit"       select="true()"/>
 		</xsl:call-template>
 	</xsl:template>
 	
@@ -462,6 +464,7 @@
 			<xsl:with-param name="title" select="$title"/>
 			<xsl:with-param name="text" select="$text"/>
 			<xsl:with-param name="helpLink" select="$helpLink"/>
+			<xsl:with-param name="edit"     select="true()"/>
 		</xsl:call-template>
 	</xsl:template>
 	
@@ -504,6 +507,7 @@
 			<xsl:with-param name="downLink" select="$downLink"/>
 			<xsl:with-param name="helpLink" select="$helpLink"/>
 			<xsl:with-param name="schema" select="$schema"/>
+			<xsl:with-param name="edit"   select="true()"/>			
 		</xsl:call-template>
 	</xsl:template>
 	
@@ -523,6 +527,7 @@
 		<xsl:param name="upLink"/>
 		<xsl:param name="downLink"/>
 		<xsl:param name="schema"/>
+		<xsl:param name="edit" select="false()"/>
 		<!-- used as do*ElementAction url anchor to go back to the same position after editing operations -->
 		<xsl:param name="anchor">
 			<xsl:choose>
@@ -544,6 +549,7 @@
 						<span id="tip.{$helpLink}" style="cursor:help;"><xsl:value-of select="$title"/>
 							<xsl:call-template name="asterisk">
 								<xsl:with-param name="link" select="$helpLink"/>
+								<xsl:with-param name="edit" select="$edit"/>													
 							</xsl:call-template>
 						</span>
 					</xsl:when>
@@ -576,6 +582,8 @@
 		<xsl:param name="upLink"/>
 		<xsl:param name="downLink"/>
 		<xsl:param name="schema"/>
+		<xsl:param name="edit" select="false()"/>
+		
 		<!-- used as do*ElementAction url anchor to go back to the same position after editing operations -->
 		<xsl:param name="anchor">
 			<xsl:choose>
@@ -603,6 +611,7 @@
 											<span id="tip.{$helpLink}" class="green-content" style="cursor:help;"><xsl:value-of select="$title"/>
 												<xsl:call-template name="asterisk">
 													<xsl:with-param name="link" select="$helpLink"/>
+													<xsl:with-param name="edit" select="$edit"/>													
 												</xsl:call-template>
 											</span>
 										</xsl:when>
@@ -845,12 +854,15 @@
 	
 	<xsl:template name="asterisk">
 		<xsl:param name="link"/>
+		<xsl:param name="edit"/>
 		
 		<xsl:variable name="schema" select="substring-before($link, '|')"/>
 		<xsl:variable name="name"   select="substring-after($link, '|')"/>
 		
-		<xsl:if test="/root/gui/*[name() = $schema]/element[@name=$name]/condition">
-			<sup><font size="-1" color="#FF0000">&#xA0;*</font></sup>
+		<xsl:if test="$edit">
+			<xsl:if test="/root/gui/*[name() = $schema]/element[@name=$name]/condition">
+				<sup><font size="-1" color="#FF0000">&#xA0;*</font></sup>
+			</xsl:if>
 		</xsl:if>
 	</xsl:template>
 	
