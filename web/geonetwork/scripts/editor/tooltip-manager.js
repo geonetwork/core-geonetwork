@@ -22,8 +22,7 @@ function init()
 
 function TooltipManager() 
 {
-	var loader    = new XMLLoader(Env.locUrl +'/xml/editor.xml');
-	var tipTransf = new XSLTransformer('editor/tooltips.xsl', loader);
+	var loader = new XMLLoader(Env.locUrl +'/xml/editor.xml');
 
 	//--- public methods
 
@@ -44,7 +43,7 @@ function init()
 		var id = list[i].getAttribute('id');
 		
 		if (id.startsWith('tip.'))
-			new Tooltip(loader, tipTransf, list[i]);
+			new Tooltip(loader, list[i]);
 	}
 }
 

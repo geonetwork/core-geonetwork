@@ -6,11 +6,10 @@
 //===				kernel.js
 //=====================================================================================
 
-function Tooltip(ldr, transf, el)
+function Tooltip(ldr, el)
 {
-	var loader    = ldr;
-	var tipTransf = transf;
-	var elem      = el;
+	var loader = ldr;
+	var elem   = el;
 
 	var shown = false;
 	var exited= false;
@@ -92,8 +91,7 @@ function setupTooltip(x, y)
 			ker.showError(loader.getText('cannotGet'), xmlRes);
 		else
 		{
-			var xslRes = tipTransf.transform(xmlRes.getElementsByTagName('element')[0]);
-			var htmlTip= xml.toString(xslRes);
+			var htmlTip= getHtmlTip(xmlRes.getElementsByTagName('element')[0]);
 			
 			tip = document.createElement('div');
 			tip.className     = 'tooltip';
@@ -113,6 +111,36 @@ function setupTooltip(x, y)
 
 //=====================================================================================
 
+function getHtmlTip(node)
+{
+	var err = node.getAttribute('error');
+	
+	if (err != null)
+	{
+		var temp = errorTemp;
+		var msg  = loader.getText('error' +' : '+ err);
+		var data = { ERROR : msg };
+		
+		return str.substitute(errorTemp, data);
+	}
+	else
+	{
+		var temp = tooltipTemp;
+		var label= xml.evalXPath(node, 'label');
+		var descr= xml.evalXPath(node, 'description');
+		var cond = xml.evalXPath(node, 'condition');
+		
+		if (cond == null)
+			cond = '';
+			
+		var data = { LABEL: label, DESCRIPTION : descr, CONDITION : cond };
+		
+		return str.substitute(tooltipTemp, data);
+	}
+}
+
+//=====================================================================================
+
 var requestTemp =
 '<request xmlns:gmd="http://www.isotc211.org/2005/gmd"'+
 '         xmlns:gts="http://www.isotc211.org/2005/gts"'+ 
@@ -120,6 +148,20 @@ var requestTemp =
 '         xmlns:dc = "http://purl.org/dc/elements/1.1/">'+
 '   <element schema="{SCHEMA}" name="{NAME}"/>'+
 '</request>';
+
+//=====================================================================================
+
+var tooltipTemp=
+'   <b>{LABEL}</b>'+
+'   <br>'+
+'   {DESCRIPTION}'+
+'   <br>'+
+'   <font color="#C00000">{CONDITION}</font>';
+
+//=====================================================================================
+
+var errorTemp=
+'   <font color="#C00000">{ERROR}</font>';
 
 //=====================================================================================
 } 
