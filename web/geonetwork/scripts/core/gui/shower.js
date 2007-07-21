@@ -10,7 +10,7 @@ function Shower(sourceId, targetId)
 	var source = $(sourceId);
 	var target = $(targetId);
 	
-	Event.observe(source, 'change', update);
+	Event.observe(source, 'click', update);
 	
 	this.update = update;
 
