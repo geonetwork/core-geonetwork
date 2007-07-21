@@ -43,12 +43,25 @@ var _SARISSA_HAS_DOM_IMPLEMENTATION = document.implementation && true;
 var _SARISSA_HAS_DOM_CREATE_DOCUMENT = _SARISSA_HAS_DOM_IMPLEMENTATION && document.implementation.createDocument;
 var _SARISSA_HAS_DOM_FEATURE = _SARISSA_HAS_DOM_IMPLEMENTATION && document.implementation.hasFeature;
 var _SARISSA_IS_MOZ = _SARISSA_HAS_DOM_CREATE_DOCUMENT && _SARISSA_HAS_DOM_FEATURE;
-var _SARISSA_IS_SAFARI = (navigator.userAgent && navigator.vendor && (navigator.userAgent.toLowerCase().indexOf("applewebkit") != -1 || navigator.vendor.indexOf("Apple") != -1));
+var _SARISSA_IS_SAFARI = navigator.userAgent.toLowerCase().indexOf("safari") != -1 || navigator.userAgent.toLowerCase().indexOf("konqueror") != -1;
+var _SARISSA_IS_SAFARI_OLD = _SARISSA_IS_SAFARI && parseInt((navigator.userAgent.match(/AppleWebKit\/(\d+)/)||{})[1]) < 420;
 var _SARISSA_IS_IE = document.all && window.ActiveXObject && navigator.userAgent.toLowerCase().indexOf("msie") > -1  && navigator.userAgent.toLowerCase().indexOf("opera") == -1;
+var _SARISSA_IS_OPERA = navigator.userAgent.toLowerCase().indexOf("opera") != -1;
 if(!window.Node || !Node.ELEMENT_NODE){
     Node = {ELEMENT_NODE: 1, ATTRIBUTE_NODE: 2, TEXT_NODE: 3, CDATA_SECTION_NODE: 4, ENTITY_REFERENCE_NODE: 5,  ENTITY_NODE: 6, PROCESSING_INSTRUCTION_NODE: 7, COMMENT_NODE: 8, DOCUMENT_NODE: 9, DOCUMENT_TYPE_NODE: 10, DOCUMENT_FRAGMENT_NODE: 11, NOTATION_NODE: 12};
 };
 
+//This breaks for(x in o) loops in the old Safari
+if(_SARISSA_IS_SAFARI_OLD){
+    HTMLHtmlElement = document.createElement("html").constructor;
+    Node = HTMLElement = {};
+    HTMLElement.prototype = HTMLHtmlElement.__proto__.__proto__;
+    HTMLDocument = Document = document.constructor;
+    var x = new DOMParser();
+    XMLDocument = x.constructor;
+    Element = x.parseFromString("<Single />", "text/xml").documentElement.constructor;
+    x = null;
+}
 if(typeof XMLDocument == "undefined" && typeof Document !="undefined"){ XMLDocument = Document; } 
 
 // IE initialization
@@ -184,12 +197,12 @@ if(_SARISSA_IS_IE){
         // convert stylesheet to free threaded
         var converted = new ActiveXObject(_SARISSA_THREADEDDOM_PROGID);
         // make included/imported stylesheets work if exist and xsl was originally loaded from url
+        if (_SARISSA_THREADEDDOM_PROGID == "MSXML2.FreeThreadedDOMDocument.6.0") { 
+            converted.setProperty("AllowDocumentFunction", true); 
+            converted.resolveExternals = true; 
+        };
         if(xslDoc.url && xslDoc.selectSingleNode("//xsl:*[local-name() = 'import' or local-name() = 'include']") != null){
             converted.async = false;
-            if (_SARISSA_THREADEDDOM_PROGID == "MSXML2.FreeThreadedDOMDocument.6.0") { 
-                converted.setProperty("AllowDocumentFunction", true); 
-                converted.resolveExternals = true; 
-            }
             converted.load(xslDoc.url);
         } else {
             converted.loadXML(xslDoc.xml);
@@ -273,21 +286,22 @@ if(_SARISSA_IS_IE){
      * @argument name The parameter base name
      * @argument value The new parameter value
      */
-    XSLTProcessor.prototype.setParameter = function(nsURI, name, value){
-        // make value a zero length string if null to allow clearing
-        value = value ? value : "";
-        // nsURI is optional but cannot be null 
-        if(nsURI){
-            this.processor.addParameter(name, value, nsURI);
-        }else{
-            this.processor.addParameter(name, value);
-        };
-        // update updated params for getParameter 
-        if(!this.paramsSet[""+nsURI]){
-            this.paramsSet[""+nsURI] = new Array();
-        };
-        this.paramsSet[""+nsURI][name] = value;
-    };
+     XSLTProcessor.prototype.setParameter = function(nsURI, name, value){
+         // make value a zero length string if null to allow clearing
+         value = value ? value : "";
+         // nsURI is optional but cannot be null
+         if(nsURI){
+             this.processor.addParameter(name, value, nsURI);
+         }else{
+             this.processor.addParameter(name, value);
+         };
+         // update updated params for getParameter
+         nsURI = "" + (nsURI || "");
+         if(!this.paramsSet[nsURI]){
+             this.paramsSet[nsURI] = new Array();
+         };
+         this.paramsSet[nsURI][name] = value;
+     };
     /**
      * Gets a parameter if previously set by setParameter. Returns null
      * otherwise
@@ -296,7 +310,7 @@ if(_SARISSA_IS_IE){
      * @return The parameter value if reviously set by setParameter, null otherwise
      */
     XSLTProcessor.prototype.getParameter = function(nsURI, name){
-        nsURI = "" + nsURI;
+        nsURI = "" + (nsURI || "");
         if(this.paramsSet[nsURI] && this.paramsSet[nsURI][name]){
             return this.paramsSet[nsURI][name];
         }else{
@@ -309,7 +323,7 @@ if(_SARISSA_IS_IE){
     XSLTProcessor.prototype.clearParameters = function(){
         for(var nsURI in this.paramsSet){
             for(var name in this.paramsSet[nsURI]){
-                if(nsURI){
+                if(nsURI!=""){
                     this.processor.addParameter(name, "", nsURI);
                 }else{
                     this.processor.addParameter(name, "");
@@ -554,6 +568,10 @@ Sarissa.clearChildNodes = function(oNode) {
  * @argument bPreserveExisting whether to preserve the original content of nodeTo, default is false
  */
 Sarissa.copyChildNodes = function(nodeFrom, nodeTo, bPreserveExisting) {
+    if(_SARISSA_IS_SAFARI && nodeTo.nodeType == Node.DOCUMENT_NODE){ // SAFARI_OLD ??
+        nodeTo = nodeTo.documentElement; //Appearantly there's a bug in safari where you can't appendChild to a document node
+    }
+    
     if((!nodeFrom) || (!nodeTo)){
         throw "Both source and destination nodes must be provided";
     };
