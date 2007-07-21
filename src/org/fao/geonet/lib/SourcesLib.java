@@ -74,7 +74,7 @@ public class SourcesLib
 
 	public void delete(Dbms dbms, String uuid) throws SQLException
 	{
-		dbms.execute("DELETE FROM SourceNames WHERE uuid=?", uuid);
+		dbms.execute("DELETE FROM Sources WHERE uuid=?", uuid);
 	}
 
 	//---------------------------------------------------------------------------
