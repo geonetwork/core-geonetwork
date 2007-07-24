@@ -407,7 +407,7 @@
 				<!-- search -->
 				<xsl:comment>LEFT: search, minimap and news</xsl:comment>
 
-				<td class="padded-content" width="200px">
+				<td class="padded-content" width="200px" style="background-color:#dce1ea;">
 					<table class="geosearch" width="100%">
 						<!--  TODO: set a fixed width  -->
 						<xsl:comment>SEARCH</xsl:comment>
@@ -418,15 +418,26 @@
 						</tr>
 						<tr>
 							<td valign="top">
-								<xsl:call-template name="latestUpdates"/>
+								<table class="geosearchfields" width="100%">
+									<tr>
+										<td>
+											<xsl:call-template name="latestUpdates"/>
+										</td>
+									</tr>
+								</table>
 							</td>
 						</tr>
-<!--						<tr>
+						<tr>
 							<td valign="top">
-								<xsl:call-template name="featured"/>
+								<table class="geosearchfields" width="100%">
+									<tr>
+										<td>
+											<xsl:call-template name="categories"/>
+										</td>
+									</tr>
+								</table>
 							</td>
 						</tr>
--->						
 					</table>
 				</td>
 
@@ -449,16 +460,31 @@
 								
 								<!-- This DIV contains a first-time message that will be removed when the first search will be run -->
 								<div id="resultList">
-									<xsl:comment>MAINPAGE 1</xsl:comment>
-									<xsl:copy-of select="/root/gui/strings/mainpage1"/>
-									<xsl:comment>MAINPAGE 2</xsl:comment>
-									<xsl:copy-of select="/root/gui/strings/mainpage2"/>
-									<xsl:comment>END MAINPAGE</xsl:comment>
-									<a href="mailto:{/root/gui/env/feedback/email}">
-										<xsl:value-of select="/root/gui/env/feedback/email"/>
-									</a>
+									<table>
+										<tr>
+											<td>
+												<xsl:comment>MAINPAGE 1</xsl:comment>
+												<xsl:copy-of select="/root/gui/strings/mainpage1"/>
+												<xsl:comment>MAINPAGE 2</xsl:comment>
+												<xsl:copy-of select="/root/gui/strings/mainpage2"/>
+											</td>
+											<xsl:if test="/root/gui/featured/*">
+												<td>
+													<xsl:comment>Featured Map</xsl:comment>
+													<xsl:call-template name="featured"/>
+												</td>
+											</xsl:if>
+										</tr>
+										<tr>
+											<td colspan="2">
+												<xsl:comment>END MAINPAGE</xsl:comment>
+												<a href="mailto:{/root/gui/env/feedback/email}">
+													<xsl:value-of select="/root/gui/env/feedback/email"/>
+												</a>
+											</td>
+										</tr>
+									</table>
 								</div>
-
 							</td>
 						</tr>
 						
@@ -555,6 +581,7 @@
 															<a onclick="doSubmit()">
 																<img onmouseover="this.src='{/root/gui/locUrl}/images/search-white.gif'" onmouseout="this.src='{/root/gui/locUrl}/images/search-blue.gif'" style="cursor:hand;cursor:pointer" src="{/root/gui/locUrl}/images/search-blue.gif" alt="Search" title="{/root/gui/strings/search}" align="top"/>
 															</a>
+															
 														</td>
 													</tr>
 												</table>
@@ -694,8 +721,8 @@
 	latest updates
 	-->
 	<xsl:template name="latestUpdates">
-		<h1 align="center">
-			<xsl:value-of select="/root/gui/strings/recentAdditions"/> &#160; <a
+		<h1 align="left">
+			<xsl:value-of select="/root/gui/strings/recentAdditions"/> &#160;&#160;&#160; <a
 				href="{/root/gui/locService}/rss.latest">
 				<img style="cursor:hand;cursor:pointer" src="{/root/gui/url}/images/rss.png"
 					alt="RSS" title="{/root/gui/strings/rss}" align="top"/>
@@ -704,43 +731,40 @@
 					alt="GeoRSS-GML" title="{/root/gui/strings/georss}" align="top"/>
 			</a>
 		</h1>
-		<ul>
-			<xsl:for-each select="/root/gui/latestUpdated/*">
-				<xsl:variable name="md">
-					<xsl:apply-templates mode="brief" select="."/>
-				</xsl:variable>
-				<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
-
-				<li>
-					<a class="footer"
-						href="{/root/gui/locService}/metadata.show?id={geonet:info/id}">
-						<xsl:value-of select="$metadata/title"/>
-					</a>
-				</li>
-			</xsl:for-each>
-		</ul>
+		<xsl:for-each select="/root/gui/latestUpdated/*">
+			<xsl:variable name="md">
+				<xsl:apply-templates mode="brief" select="."/>
+			</xsl:variable>
+			<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
+			<div class="arrow">
+				<a class="footer"
+					href="{/root/gui/locService}/metadata.show?id={geonet:info/id}">
+					<xsl:value-of select="$metadata/title"/>
+				</a>
+				<br/>
+			</div>
+		</xsl:for-each>
 	</xsl:template>
 
 	<!--
 	categories
 	-->
 	<xsl:template name="categories">
-		<h1 align="center">
+		<h1 align="left">
 			<xsl:value-of select="/root/gui/strings/categories"/>
 		</h1>
-		<ul>
-			<xsl:for-each select="/root/gui/categories/*">
-				<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
-				<xsl:variable name="categoryName" select="name"/>
-				<xsl:variable name="categoryLabel" select="label/child::*[name() = $lang]"/>
-				<li>
-					<a class="footer"
-						href="{/root/gui/locService}/main.search?category={$categoryName}">
-						<xsl:value-of select="$categoryLabel"/>
-					</a>
-				</li>
-			</xsl:for-each>
-		</ul>
+		<xsl:for-each select="/root/gui/categories/*">
+			<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
+			<xsl:variable name="categoryName" select="name"/>
+			<xsl:variable name="categoryLabel" select="label/child::*[name() = $lang]"/>
+			<div class="arrow">
+				<a class="footer"
+					href="{/root/gui/locService}/main.search?category={$categoryName}">
+					<xsl:value-of select="$categoryLabel"/>
+				</a>
+				<br/>
+			</div>
+		</xsl:for-each>
 	</xsl:template>
 
 	<!--
@@ -1257,28 +1281,124 @@
 
 
 	<xsl:template name="geofields">
-		<table class="geosearchfields">
+		<table class="geosearchfields" width="210px">
+			<tr>
+				<td class="dots" colspan="2"/>
+			</tr>
+
 			<!-- Any (free text) -->
 			<tr>
-				<th class="padded">
+				<td>
 					<xsl:value-of select="/root/gui/strings/searchText"/>
-				</th>
-				<td class="padded">
-					<input name="any" id="any" class="content"  size="30"
+				</td>
+				<td class="padded" align="right">
+					<input name="any" id="any" class="content"  size="20"
 						value="{/root/gui/searchDefaults/any}"/>
 					<br/>
 				</td>
 			</tr>
+			
+			<tr>
+				<td colspan="2">
+					<p><xsl:value-of select="/root/gui/strings/location"/></p>
+				</td>
+			</tr>
+
+			<xsl:comment>MINIMAP</xsl:comment>					
+			<tr style="margin-bottom:5px;">
+				<td colspan="2" width="202px" align="center" >
+					<table id="minimap_root">
+						<xsl:comment>MINIMAP TOOLBAR</xsl:comment>						
+						<tr  id="im_mm_toolbar"> <!-- This element's class is set at runtime -->
+							<td class="im_mmtool" id="im_mmtool_fullextent"  	onClick="javascript:im_mm_fullExtent()"><img src="/intermap/images/im_zoomfull16x16.png" title="Zoom to full map extent"/></td>
+							<td class="im_mmtool" id="im_mmtool_zoomin"	onClick="javascript:im_mm_setTool('zoomin');" ><img src="/intermap/images/zoomin.png" title="Zoom in"/></td>
+							<td class="im_mmtool" id="im_mmtool_zoomout"   	onClick="javascript:im_mm_setTool('zoomout');"><img  src="/intermap/images/zoomout.png" title="Zoom out"/></td>
+							<td class="im_mmtool" id="im_mmtool_pan"		onClick="javascript:im_mm_setTool('pan');"><img src="/intermap/images/im_pan16x16.png" title="Pan"/></td>
+<!--							<td class="im_mmtool" id="im_mmtool_zoomsel"	onClick="javascript:im_mm_zoomToAoi()"><img src="/intermap/images/zoomsel.png" title="Zoom to selected layer extent"/></td> -->
+							<td class="im_mmtool" id="im_mmtool_aoi"		onClick="javascript:im_mm_setTool('aoi')"><img src="/intermap/images/im_aoi16x16.png" title="Select an Area Of Interest"/></td> 
+						</tr>
+						<tr height="102px" style="position:relative;">
+							<td id="im_mm_mapContainer" style="position:relative;width:202px;height:102px;" colspan="6" align="center" >
+								<div id="im_mm_map" style="position: absolute;width:202px;height:102px;">
+									<img id="im_mm_image" width="200px" height="100px" style="left:1px;" align="center" src="/intermap/images/map0.gif"/>
+								</div>
+								<div id="im_mm_wait" style="position: relative; z-index:999; left:-41px; top:50px;">
+									<img id="im_mm_waitimage" style="position: absolute; z-index:1000;" src="/intermap/images/waiting.gif" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td align="right" colspan="6">
+<!--								<button id="openIMBtn" class="imdisabled" type="button" title="Open InterMap &gt;&gt;" >
+									Loading InterMap...
+								</button>
+								<br/> -->
+								<div id="openIMBtn" title="View Map">Loading Map Viewer</div>
+							</td>
+						</tr>
+						<tr>
+							<td align="right" colspan="6">
+<!--								<button id="closeIMBtn" class="content-small" type="button" title="Close InterMap &lt;&lt;" style="display:none">
+									Close InterMap &lt;&lt;&lt;
+								</button> -->
+								<div id="closeIMBtn" title="Close Map Viewer" style="display:none">Close Map Viewer</div>
+							</td>
+						</tr>
+					</table>
+					<br/>
+				</td>
+			</tr>
+
+			<xsl:comment>COORDS</xsl:comment>
+<!--			<tr>
+				<td colspan="2">
+					<table id="coords" align="center">
+						<tr>
+							<td/>
+							<td>
+								<input type="hidden" class="content" id="northBL" name="northBL"  size="7"
+									value="{/root/gui/searchDefaults/northBL}"/>
+							</td>
+							<td/>
+						</tr>
+						<tr>
+							<td>
+								<input type="hidden" class="content" id="westBL" name="westBL" size="7"
+									value="{/root/gui/searchDefaults/westBL}"/>
+							</td>
+							<td/> 
+							<td>
+								<input type="hidden" class="content" id="eastBL" name="eastBL" size="7"
+									value="{/root/gui/searchDefaults/eastBL}"/>
+							</td>
+
+						</tr>
+						<tr>
+							<td/> 
+							<td>
+								<input type="hidden" class="content" id="southBL" name="southBL" size="7"
+									value="{/root/gui/searchDefaults/southBL}"/>
+							</td>
+							<td/> 
+						</tr>
+
+					</table>
+				</td>
+			</tr> -->
+			<input type="hidden" class="content" id="northBL" name="northBL"  size="7"
+				value="{/root/gui/searchDefaults/northBL}"/>
+			<input type="hidden" class="content" id="westBL" name="westBL" size="7"
+				value="{/root/gui/searchDefaults/westBL}"/>
+			<input type="hidden" class="content" id="eastBL" name="eastBL" size="7"
+				value="{/root/gui/searchDefaults/eastBL}"/>
+			<input type="hidden" class="content" id="southBL" name="southBL" size="7"
+				value="{/root/gui/searchDefaults/southBL}"/>
 
 
 			<!-- Area -->
 			<tr>
-				<th class="padded">
-					<xsl:value-of select="/root/gui/strings/location"/>
-				</th>
-				<td class="padded">
+				<td align="right" colspan="2">
 					<!-- regions combobox -->
-
 					<select class="content" name="region">
 						<option value="">
 							<xsl:if test="/root/gui/searchDefaults/theme='_any_'">
@@ -1303,84 +1423,15 @@
 				</td>
 			</tr>
 
-			<xsl:comment>MINIMAP</xsl:comment>					
-			<tr style="margin-bottom:5px;">
-				<td colspan="2" width="100%" align="center" >
-					
-					<table id="minimap_root">
-						<xsl:comment>MINIMAP TOOLBAR</xsl:comment>						
-						<tr  id="im_mm_toolbar"> <!-- This element's class is set at runtime -->
-							<td class="im_mmtool" id="im_mmtool_fullextent"  	onClick="javascript:im_mm_fullExtent()"><img src="/intermap/images/im_zoomfull16x16.png" title="Zoom full extent"/></td>
-							<td class="im_mmtool" id="im_mmtool_zoomin"	onClick="javascript:im_mm_setTool('zoomin');" ><img src="/intermap/images/zoomin.png" title="Zoom in"/></td>
-							<td class="im_mmtool" id="im_mmtool_zoomout"   	onClick="javascript:im_mm_setTool('zoomout');"><img  src="/intermap/images/zoomout.png" title="Zoom out"/></td>
-							<td class="im_mmtool" id="im_mmtool_zoomsel"	onClick="javascript:im_mm_zoomToAoi()"><img src="/intermap/images/zoomsel.png" title="Zoom to selected"/></td>
-							<td class="im_mmtool" id="im_mmtool_pan"		onClick="javascript:im_mm_setTool('pan');"><img src="/intermap/images/im_pan16x16.png" title="Pan"/></td>
-							<td class="im_mmtool" id="im_mmtool_aoi"		onClick="javascript:im_mm_setTool('aoi')"><img src="/intermap/images/im_aoi16x16.png" title="Select area of interest"/></td> 
-						</tr>
-						<tr height="122px" style="position:relative;">
-							<td id="im_mm_mapContainer" style="position:relative;width:262px;height:122px;" colspan="6" align="center" >
-								<div id="im_mm_map" style="position: absolute;width:262px;height:122px;">
-									<img id="im_mm_image" width="260" height="120" style="left:1px;" align="center" src="/intermap/images/map0.gif"/>
-								</div>
-								<div id="im_mm_wait" style="position: relative; z-index:999; left:-41px; top:50px;">
-									<img id="im_mm_waitimage" style="position: absolute; z-index:1000;" src="/intermap/images/waiting.gif" />
-								</div>
-							</td>
-						</tr>						
-					</table>
-				</td>
-			</tr>
-
-			<xsl:comment>COORDS</xsl:comment>
-			<tr>
-				<td colspan="2">
-					<table id="coords" align="center">
-						<tr>
-							<td/>
-							<td>
-								<input class="content" id="northBL" name="northBL"  size="7"
-									value="{/root/gui/searchDefaults/northBL}"/>
-							</td>
-							<td/>
-						</tr>
-						<tr>
-							<td>
-								<input class="content" id="westBL" name="westBL" size="7"
-									value="{/root/gui/searchDefaults/westBL}"/>
-							</td>
-							<td/> 
-							<td>
-								<input class="content" id="eastBL" name="eastBL" size="7"
-									value="{/root/gui/searchDefaults/eastBL}"/>
-							</td>
-
-						</tr>
-						<tr>
-							<td/> 
-							<td>
-								<input class="content" id="southBL" name="southBL" size="7"
-									value="{/root/gui/searchDefaults/southBL}"/>
-							</td>
-							<td/> 
-						</tr>
-
-					</table>
-				</td>
-			</tr>
-
 
 			<!-- other search options -->
 
-			<tr>
-				<td class="dots" colspan="2"/>
-			</tr>
-
 			<!-- hits per page -->
-			<tr>
-				<th class="padded">
-					<xsl:value-of select="/root/gui/strings/hitsPerPage"/>
-				</th>
+<!--			<tr>
 				<td class="padded">
+					<xsl:value-of select="/root/gui/strings/hitsPerPage"/>
+				</td>
+				<td class="padded" align="right">
 					<select class="content" name="hitsPerPage" onchange="profileSelected()">
 						<xsl:for-each select="/root/gui/strings/hitsPerPageChoice">
 							<option>
@@ -1397,29 +1448,14 @@
 					</select>
 				</td>
 			</tr>
-
+-->
 			<tr>
-				<td/>
-				<td align="right">
-					<button id="searchBtn" name=""  class="content-small" type="button"
+				<td colspan="2" align="center">
+<!--					<button id="searchBtn" name=""  class="content-small" type="submit"
+						style="cursor:hand;cursor:pointer" title="{/root/gui/strings/search}"> -->
+					<button id="searchBtn" name="" type="submit"
 						style="cursor:hand;cursor:pointer" title="{/root/gui/strings/search}">
 					<xsl:value-of select="/root/gui/strings/search"/>
-					</button>
-				</td>
-			</tr>
-			<tr>
-				<td/>
-				<td align="right">
-					<button id="openIMBtn" class="imdisabled" type="button" title="Open InterMap &gt;&gt;&gt;" >
-						Loading intermap...
-					</button>
-				</td>
-			</tr>
-			<tr>
-				<td/>
-				<td align="right">
-					<button id="closeIMBtn" class="content-small" type="button" title="Close InterMap &lt;&lt;&lt;" style="display:none">
-						Close InterMap &lt;&lt;&lt;
 					</button>
 				</td>
 			</tr>
@@ -1435,19 +1471,21 @@
 			
 			</script>
 
-			
+			<tr>
+				<td class="dots" colspan="2"/>
+			</tr>
+
 			<tr>			
-				<td colspan="2" align="right">
-					<table>
+				<td colspan="2">
+					<table width="100%">
 						<tr>
-							<td style="padding-left:10px;padding-top:5px;padding-bottom:5px;"><a href="/">Help</a></td>
-							<td style="padding-left:10px;padding-top:5px;"><a onClick="goExtended('off','{/root/gui/locService}/main.home')" style="cursor:pointer;">Simple search</a></td>
-							<td style="padding-left:10px;padding-top:5px;"><a onClick="goExtended('on','{/root/gui/locService}/main.home')" style="cursor:pointer;">Advanced search</a></td>							
+							<td style="padding-left:10px;padding-top:5px;padding-bottom:5px;" align="left"><a href="/">Help</a></td>
+<!--							<td style="padding-left:10px;padding-top:5px;"><a onClick="goExtended('off','{/root/gui/locService}/main.home')" style="cursor:pointer;">Simple search</a></td> -->
+							<td style="padding-left:10px;padding-top:5px;" align="right"><a onClick="goExtended('on','{/root/gui/locService}/main.home')" style="cursor:pointer;">Advanced search</a></td>							
 						</tr>
 					</table>
 				</td>
 			</tr>
-				
 				
 		</table>
 	</xsl:template>

@@ -29,13 +29,13 @@
 					<td>
 						<table id="im_toolbar" class="padded_content">
 							<tr id="im_toolSelector"> <!--class="im_tool"-->
-								<td class="im_tool" id="im_tool_fullextent"    	onClick="javascript:fullExtentButtonListener()"><img src="/intermap/images/zoomfull.png" title="Zoom full extent"/></td>
+								<td class="im_tool" id="im_tool_fullextent"    	onClick="javascript:fullExtentButtonListener()"><img src="/intermap/images/zoomfull.png" title="Zoom to full map extent"/></td>
 								<td class="im_tool" id="im_tool_zoomin"	onClick="javascript:setTool('zoomin');" ><img src="/intermap/images/zoomin.png" title="Zoom in"/></td>
 								<td class="im_tool" id="im_tool_zoomout" 	onClick="javascript:setTool('zoomout');"><img  src="/intermap/images/zoomout.png" title="Zoom out"/></td>
-								<td class="im_tool" id="im_tool_zoomsel"	onClick="javascript:imc_zoomToLayer(activeLayerId)"><img src="/intermap/images/zoomsel.png" title="Zoom to selected"/></td>
 								<td class="im_tool" id="im_tool_pan"		onClick="javascript:setTool('pan');"><img src="/intermap/images/pan.png" title="Pan"/></td>
-								<td class="im_tool" id="im_tool_aoi"		onClick="javascript:setTool('aoi')"><img src="/intermap/images/im_aoi16x16.png" title="Area of interest"/></td> 
-<!--								<td class="im_tool" id="im_tool_identify"	onClick="javascript:setTool('identify');">Identify</td>-->
+								<td class="im_tool" id="im_tool_zoomsel"	onClick="javascript:imc_zoomToLayer(activeLayerId)"><img src="/intermap/images/zoomsel.png" title="Zoom to selected layer extent"/></td>
+								<td class="im_tool" id="im_tool_aoi"		onClick="javascript:setTool('aoi')"><img src="/intermap/images/im_aoi16x16.png" title="Select an Area Of Interest"/></td> 
+<!--								<td class="im_tool" id="im_tool_identify"	onClick="javascript:setTool('identify');">Identify</td> -->
 								<td width="100%"/> <!-- spacer -->
 								<td class="im_tool"  				onClick="javascript:resizeImage()">+/- map</td>
 								<td class="im_tool" id="im_tool_reset"	onClick="javascript:im_reset();">Reset</td>
@@ -55,7 +55,7 @@
 				</tr>
 				
 				<tr>
-					<td id="im_mapContainer" style="position:relative;width:402px;height:302px;">
+					<td id="im_mapContainer" style="position:relative;width:370px;height:278px;">
 						<div id="im_map" style="position: absolute;">
 							<img id="im_mapImg" src="{//mapRoot/response/url}" />
 						</div>		

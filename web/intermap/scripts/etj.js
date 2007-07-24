@@ -1,5 +1,5 @@
 
-var minLayersDivWidth = 236;
+var minLayersDivWidth = 176;
 
 function im_load()
 {
@@ -31,7 +31,7 @@ function im_load_complete(req)
 	copyTree(req.responseXML.documentElement.getElementsByTagName('html')[0].firstChild , im);
 	
 	$('im_mm_wait').hide(); //style.display='none';
-	$('openIMBtn').textContent="Open Intermap >>>";
+	$('openIMBtn').textContent="Open Map Viewer";
 	$('openIMBtn').className="imenabled";
 	Event.observe('openIMBtn', 'click',  function(){openIntermap()} );						
 	new Effect.Pulsate('openIMBtn');
@@ -39,7 +39,7 @@ function im_load_complete(req)
 	var bm =req.responseXML.documentElement.getElementsByTagName('bigmap')[0];
 	var mm =req.responseXML.documentElement.getElementsByTagName('minimap')[0];
 	
-           //im_setMapSize(400,300);
+           //im_setMapSize(368,276);
 //	var height = getWindowSize()[1]; // - Element.getHeight('banner');
 //	$('im_layers').style.height = height + 'px';
 		

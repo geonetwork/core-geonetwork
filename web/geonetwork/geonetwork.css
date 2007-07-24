@@ -9,7 +9,7 @@ general
 }
 
 body {
-	font-family: Verdana;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 9pt;
 	margin: 0px;
 	color: #064377;
@@ -25,10 +25,11 @@ table, tr, td {
 
 th {
 	text-align: left;
-	font-weight: bold;
 	border-width: 0px;
 	border-spacing: 0px;
 	border-collapse: collapse; /* border-spacing should be enough, but added for IE compatibility */
+	font-weight: normal;
+	font-style: normal;
 }
 
 img {
@@ -36,13 +37,14 @@ img {
 }
 
 h1 {
-	font-size: 110%;
-	font-weight: bold;
+	text-transform: uppercase;
+	font: bold 10px Verdana, Arial, Geneva, Helvetica, sans-serif;
 }
 
 h2 {
-	font-size: 110%;
-	font-weight: normal;
+	font-size: 10px;
+	font-weight: bold;
+	text-transform: uppercase;
 }
 
 a {
@@ -51,13 +53,22 @@ a {
 	text-decoration: none;
 	*/
 	color: #064377;
-	text-decoration: underline;
+	font-size:11px;
+	text-decoration: none;
 }
 
 a:hover
 {
-	color: #ffffff;
-	background: #4683b7;
+	text-decoration: underline;
+}
+
+.arrow{
+	background-image: url('images/arrow.gif');
+
+	background-repeat:no-repeat;
+
+	padding:0 0 3px 7px;
+
 }
 
 /*******************************************************************************
@@ -108,7 +119,7 @@ a.banner {
 
 a.banner:hover
 {
-	background: #266397;
+	text-decoration: underline;
 }
 
 font.banner-active {
@@ -222,7 +233,7 @@ a.green-content {
 }
 
 a.green-content:hover {
-	background: #9e9800;
+	text-decoration: underline;
 }
 
 /*******************************************************************************
@@ -244,8 +255,7 @@ a.footer {
 
 a.footer:hover
 {
-	color: #ffffff;
-	background: #9e9800;
+	text-decoration: underline;
 }
 
 /*******************************************************************************
@@ -498,13 +508,11 @@ div.keywordResults ul li.selected {
     padding-bottom: 10px;
     border-bottom: 1px solid;
     margin-bottom: 10px;
-    
 }
 
 .geosearchfields a{
-    text-decoration: none;
+/*    text-decoration: none; */
     margin-top: 5px;
-
 }
 
 #coords{
@@ -512,14 +520,34 @@ div.keywordResults ul li.selected {
     margin-top: 5px;
 }
 
-
 #openIMBtn{
 	font-family: Verdana;
-	font-size: 7pt;
-	min-width: 150px;
-	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+	font-size: 9px;
+/*	min-width: 150px;
+	border: 1px solid #266397;  moved here from tr since IE accepts it only here */
 	color: #064377;
 	cursor: pointer;
+	padding: 2px 8px 2px 2px;
+	background: url(images/arrow.gif) no-repeat right;
+}
+
+#closeIMBtn{
+	font-family: Verdana;
+	font-size: 9px;
+/*	min-width: 150px;
+	border: 1px solid #266397;  moved here from tr since IE accepts it only here */
+	color: #064377;
+	cursor: pointer;
+	background: url(images/arrow_inv.gif) no-repeat right;
+	padding: 2px 8px 2px 2px;
+}
+
+#closeIMBtn:hover {
+	text-decoration: underline;
+}
+
+#openIMBtn:hover {
+	text-decoration: underline;
 }
 
 imenabled {
@@ -529,19 +557,19 @@ imenabled {
 
 imdisabled {
 	color: #434343;
-    	cursor: progress;
+    cursor: progress;
 }
 
 div#metadata_current {
     padding: 3px;
     border: 1px #266397 solid;    
-    background-color: #e0e0ff;
+    background-color: #dce1ea;
 }
 
 div#metadata_current table,
 div#metadata_current td
 {
-    background-color: #e0e0ff;
+    background-color: #dce1ea;
 }
 
 

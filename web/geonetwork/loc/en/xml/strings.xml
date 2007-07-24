@@ -231,7 +231,7 @@
 	<local>Local search</local>
 	<localiz>Localization</localiz>
 	<localizDes>Allows to change localized entities, like groups, categories etc...</localizDes>
-	<location>Location</location>
+	<location>Where?</location>
 	<login>Login</login>
 	<loginCardTitle>Login / Signup</loginCardTitle>
 	<loginwarning>Only required for site administration</loginwarning>
@@ -260,7 +260,7 @@
 			<font size="-2"> You can search using one of the provided options, or a combination of them.<br/> Only results matching all criteria will be displayed. </font>
 		</p>
 		<p>
-			<font size="-2"> The <b>Free text</b> search searches for matching text in all metadata fields in GeoNetwork's content. <br/>
+			<font size="-2"> The <b>What?</b> search searches for matching text in all metadata fields in GeoNetwork's content. <br/>
 				<i> When entering more than one word in the <b>Free text</b> textbox, they will be interpreted by the system as separated by AND. </i>
 			</font>
 		</p>
@@ -268,7 +268,7 @@
 			<font size="-2"> The <b>Topic</b> search will find maps matching a specific topic. </font>
 		</p>
 		<p>
-			<font size="-2"> The <b>Area</b> search will find maps matching the bounding box of the selected area. </font>
+			<font size="-2"> The <b>Where?</b> search will find maps matching the bounding box of the selected area. </font>
 		</p>
 		<p>
 			<font size="-2"> Selecting the option "<b>
@@ -353,7 +353,7 @@
 	<publisher>Publisher</publisher>
 	<purpose>Purpose</purpose>
 	<rawMetadata>Raw Metadata Insert</rawMetadata>
-	<recentAdditions>Recent Additions</recentAdditions>
+	<recentAdditions>Recent Changes</recentAdditions>
 	<refSysTab>Ref. system</refSysTab>
 	<region>Region</region>
 	<RegisteredUser>Registered user</RegisteredUser>
@@ -372,13 +372,13 @@
 	<saveAndClose>Save and close</saveAndClose>
 	<saveAndValidate>Check</saveAndValidate>
 	<schema>Schema</schema>
-	<search>Start the search</search>
+	<search>Search</search>
 	<searchBox>Search for Data and Information</searchBox>
 	<searchIndex>Search index</searchIndex>
 	<searchPage>Search page</searchPage>
 	<searchPageDes>Jumps to the metadata search page</searchPageDes>
 	<searchTemplates>Search for templates</searchTemplates>
-	<searchText>Free Text</searchText>
+	<searchText>What?</searchText>
 	<searchUnused>Search for unused or empty metadata</searchUnused>
 	<server>Server</server>
 	<setAll>Set All</setAll>

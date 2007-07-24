@@ -398,12 +398,12 @@
 	<saveAndClose>Sauver et fermer</saveAndClose>
 	<saveAndValidate>Sauver et valider</saveAndValidate>
 	<schema>Schéma</schema>
-	<search>Démarrer la recherche</search>
+	<search>Rechercher</search>
 <!--	<searchBox>Rechercher des données</searchBox>
 	<searchIndex>Index de recherche</searchIndex> -->
 	<searchPage>Page de recherche</searchPage>
 	<searchPageDes>Aller à la page de recherche</searchPageDes>
-	<searchTemplates>Search for templates</searchTemplates>
+	<searchTemplates>Rechercher les Modèles</searchTemplates>
 	<searchText>Recherche libre</searchText>
 	<searchUnused>Rechercher des métadonnées vides ou non utilisées</searchUnused>
 	<server>Serveur</server>

@@ -1,3 +1,5 @@
+/* @override http://localhost:8080/intermap/intermap-embedded.css? */
+
 /*******************************************************************************
 general
 *******************************************************************************/
@@ -8,7 +10,7 @@ general
 }
 
 body {
-	font-family: Verdana;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 9pt;
 	margin: 0pt;
 	color: #064377;
@@ -32,33 +34,15 @@ table, tr, td {
 
 th {
 	text-align: left;
-	font-weight: bold;
 	border-width: 0px;
 	border-spacing: 0px;
-	border-collapse: collapse; /* border-spacing should be enough, but added for IE compatibility */
+	border-collapse: collapse;
+	font-weight: normal;
+	font-style: normal;
 }
 
 img {
 	border-width: 0px;
-}
-
-h1 {
-	font-size: 110%;
-	font-weight: bold;
-}
-
-h2 {
-	font-size: 110%;
-	font-weight: normal;
-}
-
-a {
-	color: #064377;
-	text-decoration: underline;
-}
-
-.bold {
-	font-weight: bold;
 }
 
 .centered {
@@ -178,26 +162,22 @@ margin-bottom: 0.5em;
 }
 
 #im_toolbar td {
-    height: 20px;
-        /*padding: 3px 4px 3px 4px;*/
-        padding: 0;
         /*list-style-type: none;*/
         border-left: 1px solid #fff;
         /*display: inline;*/
         text-align: center;
+	padding-left: 2px;
+	padding-right: 2px;
+	border-top: 1px solid white;
 }
 
 .im_tool  {
-/*	display: block;*/
-	padding: 4px 4px 3px 4px;
-	background: #999;
 	font-size: 10px;
 	text-align: center;
 	vertical-align: middle;
-	color: white;
-	font-weight: bold;
 	text-decoration: none;
-	cursor: pointer;	
+	cursor: pointer;
+	padding: 1px 2px;
 }
 
 .im_tool img {
@@ -210,6 +190,7 @@ margin-bottom: 0.5em;
 	background: red;
 	border-right: 1px solid #fff;
 	padding: 0 3px 0 3px;
+	color: white;
 }
 
 /* hilite when selected*/
@@ -303,7 +284,7 @@ td.odd {
 
 
 #im_refresh {
-	width: 236px;
+	width: 176px;
 }
 
 #im_refresh tr td {
@@ -481,7 +462,7 @@ div#im_map {
 
 #im_resizeBar {
 	/*position: absolute;*/
-	left: 236px;
+	left: 176px;
 	top: 88px;
 	background-color: #888;
 	width: 5px;
@@ -499,7 +480,7 @@ div#im_map {
 	/*left: 0;*/
 	/*top: 88px;*/
 	background-color: #eee;
-	width: 236px;
+	width: 176px;
 	padding-left:6px;
 }
 
@@ -520,6 +501,8 @@ div#im_map {
 	background-color: #266397;
 	margin: 0px;
 	padding: 5px;
+	font-weight: normal;
+	font-style: normal;
 }
 
 
@@ -542,8 +525,7 @@ div#im_layers li.im_activeLayer{
 }
 
 div#im_layers li td {
-	font-weight: bold;
-	padding: 5px;
+	padding: 3px;
 /*	border-style: solid;*/
 	border-color: #aaa;
 	border-width: 1px 0 1px 0;
@@ -581,7 +563,7 @@ td.im_layerControl {
 div#im_inspector {
 	z-index: 1000;
 	position: absolute;
-	width: 236px;
+	width: 176px;
 	height: 150px;
 	bottom: 21px;
 	left: 0;
@@ -638,7 +620,7 @@ div#im_layersToolbar {
 	background-color: #ccc;
 	bottom: 0;
 	left: 0;
-	width: 236px;
+	width: 176px;
 	height: 20px;
 }
 
@@ -690,6 +672,10 @@ div#scale
 
 	z-index: 1000;
 	visibility: visible;
+	opacity: 1;
+	text-shadow: white 2px 2px 3px;
+	font: 11px mono, "Andale Mono", Monaco, "Courier New", Courier;
+	padding: 5px;
 }
 
 div#im_mm_aoi,
