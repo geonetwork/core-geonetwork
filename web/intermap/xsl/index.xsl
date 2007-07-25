@@ -20,7 +20,7 @@
 				<script language="javascript" src="../../scripts/connectors/intermap.js?" />
 				
 				<script language="JavaScript" type="text/javascript">
-					var minLayersDivWidth = 236;
+					var minLayersDivWidth = 176;
 				
 					// Initialize
 					function init()
