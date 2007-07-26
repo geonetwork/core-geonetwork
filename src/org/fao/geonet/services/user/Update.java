@@ -137,7 +137,8 @@ public class Update implements Service
 
 	private void addGroup(Dbms dbms, String user, String group) throws Exception
 	{
-		dbms.execute("INSERT INTO UserGroups(userId, groupId) VALUES (?, ?)", user, group);
+		dbms.execute("INSERT INTO UserGroups(userId, groupId) VALUES (?, ?)",
+						 new Integer(user), new Integer(group));
 	}
 }
 
