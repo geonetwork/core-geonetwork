@@ -11,14 +11,28 @@ function XSLTransformer(stylesheet, xmlLoader)
 {
 	var loader  = xmlLoader;
 	var xslProc = null
-
+	var xslDoc  = null;
+	var xslSheet= stylesheet;
+	
 	//--- load stylesheet
 
 	ker.loadMan.acquire();
 	ker.loadURL(Env.url +'/xsl/'+ stylesheet, ker.wrap(this, function(t)
 	{
-		xslProc = new XSLTProcessor();
-		xslProc.importStylesheet(t.responseXML);
+		try
+		{
+			xslDoc = t.responseXML;
+			
+			if (window.ActiveXObject == null)
+			{
+				xslProc = new XSLTProcessor();
+				xslProc.importStylesheet(xslDoc);
+			}
+		}
+		catch(e)
+		{
+			alert('error on : '+Env.url +'/xsl/'+ stylesheet+'\n'+t.responseText);
+		}
 		ker.loadMan.release();
 	}));
 
@@ -29,6 +43,61 @@ function XSLTransformer(stylesheet, xmlLoader)
 //=====================================================================================
 
 this.transform = function(node)
+{
+	var doc = buildDocument(node);
+	
+	if (window.ActiveXObject)
+	{
+		try
+		{
+			var text   = doc.transformNode(xslDoc);
+			var xmlDoc = new ActiveXObject('Microsoft.XMLDOM');
+			
+			xmlDoc.async = 'false';
+		
+			if (xmlDoc.loadXML(text) == false)
+				throw 'Parse error for:\n\n'+text;
+		
+			//--- convert XML result into a DOM result
+			return xml.convert(xmlDoc);
+		}
+		catch(e)
+		{
+			throw 'Cannot transform with stylesheet.\nFile : '+ xslSheet;
+		}
+	}
+	else
+		return xslProc.transformToDocument(doc);
+}
+
+//=====================================================================================
+
+this.transformToText = function(node)
+{
+	var doc = buildDocument(node);
+	
+	if (window.ActiveXObject)
+	{
+		try
+		{
+			return doc.transformNode(xslDoc);
+		}
+		catch(e)
+		{
+			throw 'Cannot transform with stylesheet.\nFile : '+ xslSheet;
+		}
+	}
+	else
+		return xml.toString(xslProc.transformToDocument(doc));
+}
+
+//=====================================================================================
+//===
+//=== Private methods
+//===
+//=====================================================================================
+
+function buildDocument(node)
 {
 	var strings = (!loader) 
 						? Sarissa.getDomDocument().createElement('strings')
@@ -42,15 +111,9 @@ this.transform = function(node)
 	root.appendChild(createEnv(doc));
 	root.appendChild(strings.cloneNode(true));
 	
-	var doc = xslProc.transformToDocument(doc);
-	
-	return doc.firstChild;
+	return doc;
 }
 
-//=====================================================================================
-//===
-//=== Private methods
-//===
 //=====================================================================================
 
 function createEnv(doc)

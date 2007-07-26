@@ -207,11 +207,16 @@ ker.wrap = function(oldThis, func)
 
 //=====================================================================================
 
-ker.dump = function(obj)
+ker.dump = function(obj, msg)
 {
+	if (msg == null)	msg = '';
+		else				msg = '('+ msg +')';
+		
+	var title = 'ker.dump '+ msg +'\n\n';
+	
 	if (obj == null)
 	{
-		alert('ker.dump : object is null');
+		alert(title +'Object is null');
 		return;
 	}
 	
@@ -219,12 +224,28 @@ ker.dump = function(obj)
 	{
 		//--- is the object an xml one?
 		
-		if (obj.nodeType)	alert(new XMLSerializer().serializeToString(obj));
-			else				alert(Sarissa.xmlize(obj, "object"));
+		if (typeof obj == 'string')
+			alert(title +'Object is a string:\n\n'+ obj);
+		
+		else if (typeof obj == 'boolean')
+			alert(title +'Object is a boolean:\n\n'+ obj);
+		
+		else if (obj.nodeType)	
+			alert(title +'Object is XML:\n\n'+ xml.toString(obj));
+			
+		else
+		{
+			var type = typeof obj;
+			var text = 	title +
+							'Object is generic (type is '+ type +'):\n\n'+
+							Sarissa.xmlize(obj, "object");
+			
+			alert(text);
+		}
 	}
 	catch(e)
 	{
-		alert('ker.dump error : '+ e);
+		alert(title +'Raised error : '+ e);
 	}
 }
 

@@ -19,7 +19,7 @@ function Csw(xmlLoader)
 	var loader= xmlLoader;
 	var model = new csw.Model(loader);
 	var view  = new csw.View(loader);
-	
+
 	//--- public methods
 	
 	this.addSearchRow   = view.addEmptySearch;

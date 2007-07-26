@@ -64,8 +64,7 @@ function register(harvester)
 	
 	//--- add entry to dropdown list
 	
-	var html='<option value="'+ type +'">'+ xml.escape(label) +'</option>';
-	new Insertion.Bottom('add.type', html);
+	gui.addToSelect('add.type', type, label);
 }
 
 //=====================================================================================
@@ -162,17 +161,10 @@ function removeAll()
  
 function refresh(node)
 {
-	var xslRes  = rowTransf.transform(node);
-	var htmlRow = xml.toString(xslRes);
+	var id    = node.getAttribute('id');
+	var xslRes= rowTransf.transform(node);
 	
-	var id = xslRes.getAttribute('id');
-	
-	//--- now we have to remove the <tr> </tr> root text
-	
-	var from = htmlRow.indexOf('>') +1;
-	var to   = htmlRow.indexOf('</tr>');
-	
-	$(id).innerHTML = htmlRow.substring(from, to);	
+	gui.replaceTableRow(id, xslRes);
 	
 	//--- add proper tooltips for both status and error columns
 	
@@ -185,11 +177,7 @@ function refresh(node)
 function append(node)
 {
 	var xslRes  = rowTransf.transform(node);
-	var htmlRow = xml.toString(xslRes);
-
-	//--- add the new entry in list
-	
-	new Insertion.Bottom('table', htmlRow);
+	gui.appendTableRow('table', xslRes);
 	
 	//--- add proper tooltips for both status and error columns
 	
@@ -239,7 +227,7 @@ function setErrorTip(node)
 		
 		var type = node.getAttribute('type');	
 		var harv = harvesters[type];
-		
+
 		if (harv == null)		alert('Harvesting module not found!');
 			else					tip = harv.getResultTip(node);
 	}
@@ -247,7 +235,7 @@ function setErrorTip(node)
 	{
 		//--- we got some errors
 
-		tip = xml.toString(errTransf.transform(node));		
+		tip = errTransf.transformToText(node);
 	}
 	
 	var id  = node.getAttribute('id');

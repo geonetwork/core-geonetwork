@@ -45,3 +45,41 @@ gui.setupTooltips = function(node)
 }
 
 //=====================================================================================
+
+gui.addToSelect = function(ctrl, value, content, selected)
+{
+	var node = xml.createElement('option', content);
+	node.setAttribute('value', value);
+	
+	if (selected == true)
+		node.setAttribute('selected', 'selected');
+		
+	$(ctrl).appendChild(node);
+}
+
+//=====================================================================================
+
+gui.appendTableRow = function(tableId, node)
+{
+	if (window.ActiveXObject)
+		$(tableId).getElementsByTagName('TBODY')[0].appendChild(node);
+	else
+	{
+		var htmlRow = xml.toString(node);
+		new Insertion.Bottom(tableId, htmlRow);
+	}
+}
+
+//=====================================================================================
+
+gui.replaceTableRow = function(rowId, newNode)
+{
+	var curr = $(rowId);
+	
+	if (window.ActiveXObject)
+		curr.parentNode.replaceChild(newNode, curr);
+	else
+		curr.replace(xml.toString(newNode));
+}
+
+//=====================================================================================

@@ -39,7 +39,7 @@ this.setResultTransf = function(transf)
 
 this.getResultTip = function(node)
 {
-	return xml.toString(resultTransf.transform(node));
+	return resultTransf.transformToText(node);
 }
 
 //=====================================================================================
@@ -139,8 +139,7 @@ this.clearGroups = function()
 
 this.addGroup = function(id, label)
 {
-	var html='<option value="'+ id +'">'+ xml.escape(label) +'</option>';
-	new Insertion.Bottom(prefix+'.groups', html);
+	gui.addToSelect(prefix+'.groups', id, label);
 }
 
 //=====================================================================================
@@ -212,10 +211,10 @@ this.addGroupRow = function(group)
 	
 	//--- add group's row
 	
-	var html = xml.toString(privilTransf.transform(group));
+	var xslRes = privilTransf.transform(group);
 	
 	//--- add the new privilege row to list
-	new Insertion.Bottom(prefix+'.privileges', html);
+	gui.appendTableRow(prefix+'.privileges', xslRes);
 }
 
 //=====================================================================================
@@ -291,8 +290,7 @@ this.clearCategories = function()
 
 this.addCategory = function(id, label)
 {
-	var html='<option value="'+ id +'">'+ xml.escape(label) +'</option>';
-	new Insertion.Bottom(prefix+'.categories', html);
+	gui.addToSelect(prefix+'.categories', id, label);
 }
 
 //=====================================================================================

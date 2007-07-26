@@ -6,12 +6,17 @@
 
 gn20.View = function(xmlLoader)
 {
+	HarvesterView.call(this);	
+	
 	var searchTransf = new XSLTransformer('harvesting/geonet20/client-search-row.xsl', xmlLoader);
 	var resultTransf = new XSLTransformer('harvesting/geonet20/client-result-tip.xsl', xmlLoader);
 	
 	var loader = xmlLoader;
 	var valid  = new Validator(loader);
 	var shower = null;
+	
+	this.setPrefix('gn20');
+	this.setResultTransf(resultTransf);
 	
 	//--- public methods
 	
@@ -22,7 +27,6 @@ gn20.View = function(xmlLoader)
 	this.isDataValid = isDataValid;
 	this.getSiteId   = getSiteId;
 	this.clearSiteId = clearSiteId;
-	this.getResultTip= getResultTip;
 
 	this.addEmptySearch  = addEmptySearch;
 	this.addSearch       = addSearch;
@@ -60,22 +64,14 @@ function init()
 
 function setEmpty()
 {
+	this.setEmptyCommon();
+	
 	removeAllSearch();
 	
-	$('gn20.name')      .value = '';	
 	$('gn20.host')      .value = '';	
 	$('gn20.port')      .value = '';
 	$('gn20.servlet')   .value = '';
-	$('gn20.useAccount').checked = true;
-	$('gn20.username')  .value = '';
-	$('gn20.password')  .value = '';
 		
-	$('gn20.oneRunOnly')  .checked = false;
-
-	$('gn20.every.days') .value = '0';
-	$('gn20.every.hours').value = '1';
-	$('gn20.every.mins') .value = '30';
-	
 	clearSiteId();
 	shower.update();
 }
@@ -84,37 +80,26 @@ function setEmpty()
 
 function setData(node)
 {
+
+	this.setDataCommon(node);
+
 	var site     = node.getElementsByTagName('site')    [0];
 	var searches = node.getElementsByTagName('searches')[0];
-	var options  = node.getElementsByTagName('options') [0];
 
-	var searchesList = searches.getElementsByTagName('search');
-	
-	$('gn20.name').value = node.getAttribute('name');
-	
-	hvutil.setOption(site, 'host',     'gn20.host');
-	hvutil.setOption(site, 'port',     'gn20.port');
-	hvutil.setOption(site, 'servlet',  'gn20.servlet');
-	hvutil.setOption(site, 'use',      'gn20.useAccount');
-	hvutil.setOption(site, 'username', 'gn20.username');
-	hvutil.setOption(site, 'password', 'gn20.password');
+	hvutil.setOption(site, 'host',    'gn20.host');
+	hvutil.setOption(site, 'port',    'gn20.port');
+	hvutil.setOption(site, 'servlet', 'gn20.servlet');
 	
 	//--- add search entries
-	
+
 	removeAllSearch();
 	
-	for (var i=0; i<searchesList.length; i++)
-		addSearch(searchesList[i]);
+	var list = searches.getElementsByTagName('search');
 	
-	//--- setup other stuff
-	
-	hvutil.setOption(options, 'oneRunOnly',  'gn20.oneRunOnly');
+	for (var i=0; i<list.length; i++)
+		addSearch(list[i]);
 
-	var every = new Every(hvutil.find(options, 'every'));
-	
-	$('gn20.every.days') .value = every.days;
-	$('gn20.every.hours').value = every.hours;
-	$('gn20.every.mins') .value = every.mins;
+	//--- setup other stuff	
 	
 	clearSiteId();
 	shower.update();
@@ -124,48 +109,32 @@ function setData(node)
 
 function getData()
 {
-	var days  = $('gn20.every.days') .value;
-	var hours = $('gn20.every.hours').value;
-	var mins  = $('gn20.every.mins') .value;
+	var data = this.getDataCommon();
 	
-	var data =
-	{
-		//--- site
-		NAME    : $('gn20.name')   .value,
-		HOST    : $('gn20.host')   .value,
-		PORT    : $('gn20.port')   .value,
-		SERVLET : $('gn20.servlet').value,
-	
-		USE_ACCOUNT: $('gn20.useAccount').checked,
-		USERNAME   : $('gn20.username')  .value,
-		PASSWORD   : $('gn20.password')  .value,
-	
-		//--- options		
-		EVERY         : Every.build(days, hours, mins),
-		ONE_RUN_ONLY  : $('gn20.oneRunOnly')  .checked
-	}
+	data.HOST    = $F('gn20.host');
+	data.PORT    = $F('gn20.port');
+	data.SERVLET = $F('gn20.servlet');
 	
 	//--- retrieve search information
 	
 	var searchData = [];
-	var searchList = $('gn20.searches').childNodes;
+	var searchList = xml.children($('gn20.searches'));
 	
 	for(var i=0; i<searchList.length; i++)
-		if (searchList[i].nodeType == Node.ELEMENT_NODE)
+	{
+		var divElem = searchList[i];
+		
+		searchData.push(
 		{
-			var divElem = searchList[i];
-			
-			searchData.push(
-			{
-				TEXT     : xml.getElementById(divElem, 'gn20.text')    .value,
-				TITLE    : xml.getElementById(divElem, 'gn20.title')   .value,
-				ABSTRACT : xml.getElementById(divElem, 'gn20.abstract').value,
-				KEYWORDS : xml.getElementById(divElem, 'gn20.keywords').value,		
-				DIGITAL  : xml.getElementById(divElem, 'gn20.digital') .checked,
-				HARDCOPY : xml.getElementById(divElem, 'gn20.hardcopy').checked,
-				SITE_ID  : divElem.getAttribute('id').substring(5) //---skip 'gn20.' prefix
-			});
-		}
+			TEXT     : xml.getElementById(divElem, 'gn20.text')    .value,
+			TITLE    : xml.getElementById(divElem, 'gn20.title')   .value,
+			ABSTRACT : xml.getElementById(divElem, 'gn20.abstract').value,
+			KEYWORDS : xml.getElementById(divElem, 'gn20.keywords').value,		
+			DIGITAL  : xml.getElementById(divElem, 'gn20.digital') .checked,
+			HARDCOPY : xml.getElementById(divElem, 'gn20.hardcopy').checked,
+			SITE_ID  : divElem.getAttribute('id').substring(5) //---skip 'gn20.' prefix
+		});
+	}
 	
 	data.SEARCH_LIST = searchData;
 	
@@ -179,17 +148,7 @@ function isDataValid()
 	if (!valid.validate())
 		return false;
 		
-	var days  = $('gn20.every.days') .value;
-	var hours = $('gn20.every.hours').value;
-	var mins  = $('gn20.every.mins') .value;
-	
-	if (Every.build(days, hours, mins) == 0)
-	{
-		alert(loader.getText('everyZero'));
-		return false;
-	}
-		
-	return true;
+	return this.isDataValidCommon();
 }
 
 //=====================================================================================
@@ -230,8 +189,9 @@ function addEmptySearch(siteId)
 
 function addSearch(xmlSearch)
 {
-	var xslRes = searchTransf.transform(xmlSearch);
-	var siteId = xslRes.getAttribute('id');
+
+	var siteId = xml.evalXPath(xmlSearch, 'siteId');
+	var html   = searchTransf.transformToText(xmlSearch);
 	var div    = xml.getElementById($('gn20.searches'), siteId);
 
 	//--- we must avoid adding more searches on the same site-id
@@ -240,8 +200,8 @@ function addSearch(xmlSearch)
 		return;
 
 	//--- add the new search in list
-	new Insertion.Bottom('gn20.searches', xml.toString(xslRes));
-	
+	new Insertion.Bottom('gn20.searches', html);
+	try{
 	valid.add(
 	[
 		{ id:'gn20.text',     type:'length',   minSize :0,  maxSize :200 },
@@ -249,6 +209,7 @@ function addSearch(xmlSearch)
 		{ id:'gn20.abstract', type:'length',   minSize :0,  maxSize :200 },
 		{ id:'gn20.keywords', type:'length',   minSize :0,  maxSize :200 }
 	], siteId);
+	}catch(e){alert('here:'+siteId);}
 }
 
 //=====================================================================================
@@ -265,13 +226,6 @@ function removeAllSearch()
 {
 	$('gn20.searches').innerHTML = '';
 	valid.removeByParent();	
-}
-
-//=====================================================================================
-
-function getResultTip(node)
-{
-	return xml.toString(resultTransf.transform(node));
 }
 
 //=====================================================================================

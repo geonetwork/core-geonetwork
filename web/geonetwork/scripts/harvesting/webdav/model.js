@@ -6,6 +6,8 @@
 
 wd.Model = function(xmlLoader)
 {
+	HarvesterModel.call(this);	
+	
 	var loader = xmlLoader;
 
 	this.retrieveGroups   = retrieveGroups;
@@ -74,23 +76,7 @@ function getUpdateRequest(data)
 {
 	var request = str.substitute(updateTemp, data);
 	
-	var list = data.PRIVILEGES;
-	var text = '';
-	
-	for (var i=0; i<list.length; i++)
-	{
-		var groupID = list[i].GROUP;
-		var operList= list[i].OPERATIONS;
-		
-		text += '<group id="'+ groupID +'">';
-		
-		for (var j=0; j<operList.length; j++)
-			text += '<operation name="'+operList[j]+'"/>';			
-		
-		text += '</group>';			
-	}
-
-	return str.replace(request, '{PRIVIL_LIST}', text);
+	return this.substituteCommon(data, request);
 }
 
 //=====================================================================================

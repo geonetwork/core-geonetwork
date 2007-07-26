@@ -14,11 +14,14 @@ xml.escape = function(text)
 	if (text == '' || text == null)
 		return text;
 		
-	return text	.replace(/&/g, "&amp;")
-					.replace(/</g, "&lt;")
-					.replace(/>/g, "&gt;")
-					.replace(/"/g, "&quot;")
-					.replace(/'/g, "&apos;");
+	if (typeof text != 'string')
+		return '***[not a string]***';
+		
+	return text	.replace(/&/g, '&amp;')
+					.replace(/</g, '&lt;')
+					.replace(/>/g, '&gt;')
+					.replace(/"/g, '&quot;')
+					.replace(/'/g, '&apos;');
 }
 
 //=====================================================================================
@@ -34,8 +37,13 @@ xml.toString = function(node, ident)
 	//--- skip document node
 
 	if (node.nodeType == Node.DOCUMENT_NODE)
-		node = node.firstChild;
-
+	{
+		node = node.documentElement;
+		
+		if (node == null)
+			throw 'Document node has no root element';
+	}
+	
 	var result = ident +'<'+ node.nodeName;
 
 	//--- handle attributes
@@ -53,7 +61,7 @@ xml.toString = function(node, ident)
 	//--- handle children
 
 	result += xml.toStringCont(node, ident);
-
+	
 	return result + ident +'</'+ node.nodeName +'>\n';
 }
 
@@ -70,9 +78,17 @@ xml.toStringCont = function(node, ident)
 	//--- skip document node
 
 	if (node.nodeType == Node.DOCUMENT_NODE)
-		node = node.firstChild;
+	{
+		node = node.documentElement;
+		
+		if (node == null)
+			throw 'Document node has no root element';
+	}
 	
 	var result = '';
+	
+	if (node.childNodes == null)
+		throw 'Document node has no child nodes';
 	
 	for (var i=0; i<node.childNodes.length; i++)
 	{
@@ -300,6 +316,59 @@ xml.ieFix = function(node)
 		return node.nextSibling;
 		
 	return node;
+}
+
+//=====================================================================================
+
+xml.createElement = function(name, content)
+{
+//--- it seems that the sarissa's method does not work with IE
+//	var doc  = Sarissa.getDomDocument();
+	var doc  = document;
+	var elem = doc.createElement(name);
+	
+	if (content != null)
+		elem.appendChild(doc.createTextNode(content));
+
+	return elem;
+}
+
+//=====================================================================================
+//=== this function is needed by IE to convert a general XML tree into another one
+//=== which is a real DOM tree
+//=====================================================================================
+
+xml.convert = function(node)
+{
+	if (node.nodeType == Node.DOCUMENT_NODE)
+		node = node.documentElement;
+
+	var elem = document.createElement(node.nodeName);
+	
+	//--- copy attributes
+			
+	for (var i=0; i<node.attributes.length; i++)
+	{
+		var name  = node.attributes[i].name;
+		var value = node.getAttribute(name);
+		
+		elem.setAttribute(name, value);
+	}
+	
+	//--- copy children
+	
+	for (var i=0; i<node.childNodes.length; i++)
+	{
+		var child = node.childNodes[i];
+		
+		if (child.nodeType == Node.ELEMENT_NODE)
+			elem.appendChild(xml.convert(child));
+			
+		else if (child.nodeType == Node.TEXT_NODE)
+			elem.appendChild(document.createTextNode(child.nodeValue));
+	}
+	
+	return elem;
 }
 
 //=====================================================================================

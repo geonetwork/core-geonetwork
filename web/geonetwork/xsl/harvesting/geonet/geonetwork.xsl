@@ -136,7 +136,7 @@
 	<xsl:template name="categories-GN">
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/categories"/></h1>
 		
-		<select id="gn.categories" class="content" size="8" multiple="on"/>
+		<select id="gn.categories" class="content" size="8" multiple="multiple"/>
 	</xsl:template>
 	
 	<!-- ============================================================================================= -->

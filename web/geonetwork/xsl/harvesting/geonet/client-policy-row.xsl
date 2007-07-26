@@ -22,7 +22,7 @@
 					<div>
 						<input name="gn.copyPolicy" type="radio" value="copy">
 							<xsl:if test="@policy = 'copy'">
-								<xsl:attribute name="checked" select="'on'"/>
+								<xsl:attribute name="checked"/>
 							</xsl:if>
 						</input>
 						<xsl:value-of select="/root/strings/policy/copy"/>
@@ -35,7 +35,7 @@
 							<xsl:when test="@name = 'all'">
 								<input name="gn.copyPolicy" type="radio" value="copyToIntranet">
 									<xsl:if test="@policy = 'copyToIntranet'">
-										<xsl:attribute name="checked" select="'on'"/>
+										<xsl:attribute name="checked"/>
 									</xsl:if>
 								</input>
 								<xsl:value-of select="/root/strings/policy/copyToIntranet"/>
@@ -44,7 +44,7 @@
 							<xsl:otherwise>
 								<input name="gn.copyPolicy" type="radio" value="createAndCopy">
 									<xsl:if test="@policy = 'createAndCopy'">
-										<xsl:attribute name="checked" select="'on'"/>
+										<xsl:attribute name="checked"/>
 									</xsl:if>
 								</input>
 								<xsl:value-of select="/root/strings/policy/createAndCopy"/>
@@ -57,7 +57,7 @@
 					<div>
 						<input name="gn.copyPolicy" type="radio" value="dontCopy">
 							<xsl:if test="@policy = 'dontCopy'">
-								<xsl:attribute name="checked" select="'on'"/>
+								<xsl:attribute name="checked"/>
 							</xsl:if>
 						</input>
 						<xsl:value-of select="/root/strings/policy/dontCopy"/>
@@ -69,6 +69,11 @@
 	</xsl:template>
 
 	
+	<!-- ============================================================================================= -->
+	
+	<xsl:template match="strings"/>
+	<xsl:template match="env"/>
+
 	<!-- ============================================================================================= -->
 
 </xsl:stylesheet>

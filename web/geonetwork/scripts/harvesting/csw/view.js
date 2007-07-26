@@ -7,7 +7,7 @@
 csw.View = function(xmlLoader)
 {
 	HarvesterView.call(this);	
-
+	
 	var searchTransf = new XSLTransformer('harvesting/csw/client-search-row.xsl', xmlLoader);
 	var privilTransf = new XSLTransformer('harvesting/csw/client-privil-row.xsl', xmlLoader);
 	var resultTransf = new XSLTransformer('harvesting/csw/client-result-tip.xsl', xmlLoader);
@@ -140,7 +140,7 @@ function getData()
 			ANY_TEXT : xml.getElementById(divElem, 'csw.anytext') .value,
 			TITLE    : xml.getElementById(divElem, 'csw.title')   .value,
 			ABSTRACT : xml.getElementById(divElem, 'csw.abstract').value,
-			SUBJECT  : xml.getElementById(divElem, 'csw.subject') .value,		
+			SUBJECT  : xml.getElementById(divElem, 'csw.subject') .value
 		});
 	}
 	
@@ -175,8 +175,7 @@ function clearIcons()
 
 function addIcon(file)
 {
-	var html='<option value="'+ file +'">'+ xml.escape(file) +'</option>';
-	new Insertion.Bottom('csw.icon', html);
+	gui.addToSelect('csw.icon', file, file);
 }
 
 //=====================================================================================
@@ -208,10 +207,10 @@ function addSearch(search)
 	var id = ''+ currSearchId++;
 	search.setAttribute('id', id);
 	
-	var xslRes = searchTransf.transform(search);
+	var html = searchTransf.transformToText(search);
 
 	//--- add the new search in list
-	new Insertion.Bottom('csw.searches', xml.toString(xslRes));
+	new Insertion.Bottom('csw.searches', html);
 	
 	valid.add(
 	[

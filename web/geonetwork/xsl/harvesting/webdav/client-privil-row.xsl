@@ -20,7 +20,7 @@
 			<td class="padded" align="center">
 				<input name="view" type="checkbox">
 					<xsl:if test="operation/@name = 'view'">
-						<xsl:attribute name="checked" select="'on'"/>
+						<xsl:attribute name="checked"/>
 					</xsl:if>
 				</input>
 			</td>
@@ -30,7 +30,7 @@
 			<td class="padded" align="center">
 				<input name="download" type="checkbox">
 					<xsl:if test="operation/@name = 'download'">
-						<xsl:attribute name="checked" select="'on'"/>
+						<xsl:attribute name="checked"/>
 					</xsl:if>
 				</input>
 			</td>
@@ -40,7 +40,7 @@
 			<td class="padded" align="center">
 				<input name="notify" type="checkbox">
 					<xsl:if test="operation/@name = 'notify'">
-						<xsl:attribute name="checked" select="'on'"/>
+						<xsl:attribute name="checked"/>
 					</xsl:if>
 				</input>
 			</td>
@@ -50,7 +50,7 @@
 			<td class="padded" align="center">
 				<input name="dynamic" type="checkbox">
 					<xsl:if test="operation/@name = 'dynamic'">
-						<xsl:attribute name="checked" select="'on'"/>
+						<xsl:attribute name="checked"/>
 					</xsl:if>
 				</input>
 			</td>
@@ -60,7 +60,7 @@
 			<td class="padded" align="center">
 				<input name="featured" type="checkbox">
 					<xsl:if test="operation/@name = 'featured'">
-						<xsl:attribute name="checked" select="'on'"/>
+						<xsl:attribute name="checked"/>
 					</xsl:if>
 				</input>
 			</td>

@@ -43,7 +43,7 @@ function Harvesting()
 	var webdav   = new WebDav(loader);
 	var csw      = new Csw(loader);
 	var z3950    = new Z3950(loader);
-
+	
 	//--- public objects
 
 	this.geonet   = geonet;
@@ -99,7 +99,7 @@ function refresh_OK(nodes)
 	var entries = xml.children(nodes);
 	
 	//--- add all harvesting entries to list
-	
+
 	for (var i=0; i<entries.length; i++)
 		view.append(entries[i]);
 }

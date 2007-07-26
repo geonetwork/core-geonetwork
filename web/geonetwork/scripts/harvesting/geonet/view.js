@@ -240,12 +240,7 @@ function clearSources(elem) { elem.options.length = 0; }
 
 function addSource(elem, uuid, label, selUuid)
 {
-	var html='<option value="'+ uuid +'">'+ xml.escape(label) +'</option>';
-	
-	if (uuid == selUuid)
-		html='<option value="'+ uuid +'" selected="on">'+ xml.escape(label) +'</option>';
-	
-	new Insertion.Bottom(elem, html);
+	gui.addToSelect(elem, uuid, label, uuid==selUuid);
 }
 
 //=====================================================================================
@@ -285,10 +280,10 @@ function addSearch(search)
 	var id = ''+ currSearchId++;
 	search.setAttribute('id', id);
 	
-	var xslRes = searchTransf.transform(search);
+	var html = searchTransf.transformToText(search);
 	
 	//--- add the new search in list
-	new Insertion.Bottom('gn.searches', xml.toString(xslRes));
+	new Insertion.Bottom('gn.searches', html);
 	
 	valid.add(
 	[
@@ -386,7 +381,7 @@ function addPolicyGroup(name, policy)
 	var xslRes = policyTransf.transform(group);
 	
 	//--- add the new group policy row in list
-	new Insertion.Bottom('gn.groups', xml.toString(xslRes));	
+	gui.appendTableRow('gn.groups', xslRes);
 }
 
 //=====================================================================================

@@ -77,13 +77,25 @@
 			<!-- Edit button - - - - - - - - - - - - - - - - - - - - - -->
 			
 			<td class="padded">
-				<button class="content" onclick="harvesting.edit('{@id}')">
+				<!-- That f....d IE does not support buttons inside table row -->
+				<!-- we have to use anchors instead -->
+				
+				<!--button class="content" onclick="harvesting.edit('{@id}')">
 					<xsl:value-of select="/root/strings/edit"/>
-				</button>
+				</button-->
+				
+				<a href="javascript:harvesting.edit('{@id}')">
+					<xsl:value-of select="/root/strings/edit"/>
+				</a>
 			</td>
 		</tr>
 
 	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template match="/root/strings"/>
+	<xsl:template match="/root/env"/>
 
 	<!-- ============================================================================================= -->
 

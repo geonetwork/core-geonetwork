@@ -98,9 +98,12 @@ View.prototype.addEntityToList = function(entity)
 	
 	if (name == null)
 		name = entity['label']['en'];
-		
-	var html='<option value="'+ id +'">'+ xml.escape(name) +'</option>';
-	new Insertion.Bottom('entity.list', html);
+
+	gui.addToSelect('entity.list', id, name);
+	
+//--- This does not work with IE
+// var html= '<option value="'+ id +'">'+ xml.escape(name) +'</option>';		
+// new Insertion.Bottom('entity.list', html);
 }
 
 //=====================================================================================
