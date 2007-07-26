@@ -74,7 +74,7 @@ public class XmlSerializer
 	//--------------------------------------------------------------------------
 
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
-										 String source, String uuid, String owner, String groupOwner) throws SQLException
+										 String source, String uuid, int owner, String groupOwner) throws SQLException
 	{
 		return insert(dbms, schema, xml, serial, source, uuid, null, null, "n", null, owner, groupOwner);
 	}
@@ -83,7 +83,7 @@ public class XmlSerializer
 
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
 										 String source, String uuid, String isTemplate,
-										 String title, String owner, String groupOwner) throws SQLException
+										 String title, int owner, String groupOwner) throws SQLException
 	{
 		return insert(dbms, schema, xml, serial, source, uuid, null, null, isTemplate, title, owner, groupOwner);
 	}
@@ -93,7 +93,7 @@ public class XmlSerializer
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
 										 String source, String uuid, String createDate,
 										 String changeDate, String isTemplate, String title,
-										 String owner, String groupOwner) throws SQLException
+										 int owner, String groupOwner) throws SQLException
 	{
 		String date = new ISODate().toString();
 
@@ -120,7 +120,7 @@ public class XmlSerializer
 		args.add(isTemplate);
 		args.add("n");
 		args.add(xml.getQualifiedName());
-		args.add(new Integer(owner));
+		args.add(owner);
 
 		if (groupOwner != null) 	args.add(new Integer(groupOwner));
 			else							args.add(null);

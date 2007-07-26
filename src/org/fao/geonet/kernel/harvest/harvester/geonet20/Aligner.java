@@ -153,7 +153,7 @@ public class Aligner
 		Element md = getRemoteMetadata(req, remoteId);
 
 		String id = dataMan.insertMetadataExt(dbms, schema, md, context.getSerialFactory(),
-														  siteId, createDate, changeDate, remoteUuid, "1", null);
+														  siteId, createDate, changeDate, remoteUuid, 1, null);
 
 		int iId = Integer.parseInt(id);
 

@@ -115,7 +115,7 @@ public class Insert implements Service
 		String id = dataMan.insertMetadata(dbms, schema, group, xml,
 													  context.getSerialFactory(), gc.getSiteId(),
 													  uuid, isTemplate, title,
-													  context.getUserSession().getUserId());
+													  context.getUserSession().getUserIdAsInt());
 
         //--- Insert category if requested
         if (!"_none_".equals(category))

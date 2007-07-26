@@ -477,7 +477,7 @@ public class DatabaseLib
 
 					//--- templates are by default assigned to administrator/intranet group
 					XmlSerializer.insert(dbms, schema.getName(), xml, serial,
-											   siteId, uuid, date, date, "y", null, "1", null);
+											   siteId, uuid, date, date, "y", null, 1, null);
 
 					setupTemplatePriv(dbms, serial);
 					dbms.commit();
@@ -506,7 +506,7 @@ public class DatabaseLib
 		String query = "INSERT INTO OperationAllowed(groupId, metadataId, operationId) "+
 							"VALUES(?, ?, ?)";
 
-		dbms.execute(query, 1, id, AccessManager.OPER_VIEW);
+		dbms.execute(query, 1, id, new Integer(AccessManager.OPER_VIEW));
 	}
 
 	//---------------------------------------------------------------------------

@@ -486,7 +486,7 @@ public class DataManager
 	  */
 
 	public String createMetadata(Dbms dbms, String templateId, String groupOwner,
-										  SerialFactory sf, String source, String owner) throws Exception
+										  SerialFactory sf, String source, int owner) throws Exception
 	{
 		String query = "SELECT schemaId, data FROM Metadata WHERE id="+ templateId;
 
@@ -540,7 +540,7 @@ public class DataManager
 
 	public String insertMetadataExt(Dbms dbms, String schema, Element md, SerialFactory sf,
 											  String source, String createDate, String changeDate,
-											  String uuid, String owner, String groupOwner) throws Exception
+											  String uuid, int owner, String groupOwner) throws Exception
 	{
 		//--- generate a new metadata id
 		int id = sf.getSerial(dbms, "Metadata");
@@ -555,7 +555,7 @@ public class DataManager
 
 	public String insertMetadataExt(Dbms dbms, String schema, Element md, int id,
 											  String source, String createDate, String changeDate,
-											  String uuid, String owner, String groupOwner) throws Exception
+											  String uuid, int owner, String groupOwner) throws Exception
 	{
 		if (source == null)
 			source = getSiteID();
@@ -576,7 +576,7 @@ public class DataManager
 	  */
 
 	public String insertMetadata(Dbms dbms, String schema, String groupId, Element xml,
-										  SerialFactory sf, String source, String uuid, String owner) throws Exception
+										  SerialFactory sf, String source, String uuid, int owner) throws Exception
 	{
 		return insertMetadata(dbms, schema, groupId, xml, sf, source, uuid, "n", null, owner);
 	}
@@ -585,7 +585,7 @@ public class DataManager
 
 	public String insertMetadata(Dbms dbms, String schema, String groupOwner, Element xml,
 										  SerialFactory sf, String source, String uuid, String isTemplate,
-										  String title, String owner) throws Exception
+										  String title, int owner) throws Exception
 	{
 		//--- generate a new metadata id
 		int serial = sf.getSerial(dbms, "Metadata");
