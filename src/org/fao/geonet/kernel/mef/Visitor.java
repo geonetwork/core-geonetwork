@@ -121,7 +121,7 @@ public class Visitor
 				if (fullName.startsWith(DIR_PUBLIC))
 					v.handlePublicFile(simpleName, getChangeDate(pubFiles, simpleName), isb);
 
-				else if (fullName.equals(DIR_PRIVATE))
+				else if (fullName.startsWith(DIR_PRIVATE))
 					v.handlePrivateFile(simpleName, getChangeDate(prvFiles, simpleName), isb);
 
 				zis.closeEntry();
