@@ -1,6 +1,6 @@
 //=====================================================================================
 //===
-//=== View (type:Geonetwork)
+//=== View (type:Geonetwork 2.0.X)
 //===
 //=====================================================================================
 
@@ -33,6 +33,9 @@ gn20.View = function(xmlLoader)
 	this.removeSearch    = removeSearch;
 	this.removeAllSearch = removeAllSearch;
 		
+	this.removeAllGroupRows = function(){}
+	this.unselectCategories = function(){};
+			
 //=====================================================================================
 //===
 //=== API methods
@@ -80,7 +83,6 @@ function setEmpty()
 
 function setData(node)
 {
-
 	this.setDataCommon(node);
 
 	var site     = node.getElementsByTagName('site')    [0];
@@ -95,7 +97,7 @@ function setData(node)
 	removeAllSearch();
 	
 	var list = searches.getElementsByTagName('search');
-	
+
 	for (var i=0; i<list.length; i++)
 		addSearch(list[i]);
 
@@ -132,7 +134,7 @@ function getData()
 			KEYWORDS : xml.getElementById(divElem, 'gn20.keywords').value,		
 			DIGITAL  : xml.getElementById(divElem, 'gn20.digital') .checked,
 			HARDCOPY : xml.getElementById(divElem, 'gn20.hardcopy').checked,
-			SITE_ID  : divElem.getAttribute('id').substring(5) //---skip 'gn20.' prefix
+			SITE_ID  : divElem.getAttribute('id')
 		});
 	}
 	
@@ -189,7 +191,6 @@ function addEmptySearch(siteId)
 
 function addSearch(xmlSearch)
 {
-
 	var siteId = xml.evalXPath(xmlSearch, 'siteId');
 	var html   = searchTransf.transformToText(xmlSearch);
 	var div    = xml.getElementById($('gn20.searches'), siteId);
@@ -198,10 +199,10 @@ function addSearch(xmlSearch)
 
 	if (div != null)
 		return;
-
+	
 	//--- add the new search in list
 	new Insertion.Bottom('gn20.searches', html);
-	try{
+	
 	valid.add(
 	[
 		{ id:'gn20.text',     type:'length',   minSize :0,  maxSize :200 },
@@ -209,7 +210,6 @@ function addSearch(xmlSearch)
 		{ id:'gn20.abstract', type:'length',   minSize :0,  maxSize :200 },
 		{ id:'gn20.keywords', type:'length',   minSize :0,  maxSize :200 }
 	], siteId);
-	}catch(e){alert('here:'+siteId);}
 }
 
 //=====================================================================================

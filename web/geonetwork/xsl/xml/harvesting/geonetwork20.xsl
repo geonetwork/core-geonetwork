@@ -18,13 +18,6 @@
 
 	<!-- ============================================================================================= -->
 
-	<xsl:template match="*" mode="options">
-		<createGroups><xsl:value-of select="createGroups/value" /></createGroups>
-		<createCateg><xsl:value-of  select="createCateg/value" /></createCateg>
-	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
 	<xsl:template match="*" mode="searches">
 		<searches>
 			<xsl:for-each select="children/search">

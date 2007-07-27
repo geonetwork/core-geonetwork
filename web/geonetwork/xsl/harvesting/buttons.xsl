@@ -7,11 +7,11 @@
 
 	<xsl:template name="listButtons">
 		<button class="content" onclick="harvesting.start()">
-			<xsl:value-of select="/root/gui/harvesting/start"/>
+			<xsl:value-of select="/root/gui/harvesting/activate"/>
 		</button>
 		&#160;
 		<button class="content" onclick="harvesting.stop()">
-			<xsl:value-of select="/root/gui/harvesting/stop"/>
+			<xsl:value-of select="/root/gui/harvesting/deactivate"/>
 		</button>
 		&#160;
 		<button class="content" onclick="harvesting.run()">

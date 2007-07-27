@@ -11,7 +11,7 @@
 	<!-- ============================================================================================= -->
 
 	<xsl:template match="/root/search">
-		<div id="gn20.{siteId}">
+		<div id="{siteId}">
 			<p/>
 			<xsl:apply-templates select="." mode="data"/>
 		</div>
@@ -23,7 +23,7 @@
 		<table>
 			<tr>
 				<td>
-					<a onclick="harvesting.geonet20.removeSearchRow('gn20.{siteId}')">
+					<a onclick="harvesting.geonet20.removeSearchRow('{siteId}')">
 						<img style="cursor:hand; cursor:pointer" src="{/root/env/url}/images/del.gif" alt="Remove"/>
 					</a>
 					
