@@ -47,13 +47,15 @@ class ElementEntry
 	public String  substGroupNS;
 	public String  ref;
 	public boolean abstrElem;
+	public boolean choiceElem;
+	public ArrayList alChoiceElems = new ArrayList();
 
 	public ComplexTypeEntry complexType;
 	public SimpleTypeEntry  simpleType;
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- Constructor
+	//--- Constructor - this class handles both <element> and <choice> entries 
 	//---
 	//---------------------------------------------------------------------------
 
@@ -70,9 +72,10 @@ class ElementEntry
 
 	public ElementEntry(ElementInfo ei)
 	{
-		ns = ei.targetNS;
+		ns = ei.targetNS;	
 		handleAttribs(ei);
-		handleChildren(ei);
+		if (choiceElem) handleChoiceChildren(ei);
+		else handleChildren(ei);
 	}
 
 	//---------------------------------------------------------------------------
@@ -86,7 +89,7 @@ class ElementEntry
 		ElementEntry ee = new ElementEntry();
 
 		ee.name        = name;
-		ee.ns          = ns;
+		ee.ns					 = ns;
 		ee.type        = type;
 		ee.min         = min;
 		ee.max         = max;
@@ -97,6 +100,8 @@ class ElementEntry
 
 		ee.complexType = complexType;
 		ee.simpleType  = simpleType;
+		ee.choiceElem	 = choiceElem;
+		ee.alChoiceElems = alChoiceElems;
 
 		return ee;
 	}
@@ -109,41 +114,53 @@ class ElementEntry
 
 	private void handleAttribs(ElementInfo ei)
 	{
+		if (ei.element.getName().equals("choice")) choiceElem = true;
+
 		List attrs = ei.element.getAttributes();
 
 		for(int i=0; i<attrs.size(); i++)
 		{
-			Attribute attr = (Attribute) attrs.get(i);
+			Attribute at = (Attribute) attrs.get(i);
 
-			String name = attr.getName();
-			String value= attr.getValue();
+			String attrName = at.getName();
+			String value= at.getValue();
 
-			if (name.equals("name"))
-				this.name = (ei.targetNSPrefix == null) ? value : ei.targetNSPrefix + ":" + value;
-			
-			else if (name.equals("type"))
+			if (attrName.equals("name")) {
+        name = at.getValue();
+        if ((name.indexOf(":") == -1) && (ei.targetNSPrefix != null))
+          name = ei.targetNSPrefix + ":" + at.getValue();
+					Logger.log("Doing Element "+name);
+			}
+			else if (attrName.equals("type"))
+			{
 				type = value;
+				Logger.log("element "+this.name+" has type "+type);
+			}
 
-			else if (name.equals("ref"))
+			else if (attrName.equals("ref"))
 				ref = value;
 
-			else if (name.equals("substitutionGroup"))
+			else if (attrName.equals("substitutionGroup"))
 				substGroup = value;
 
-			else if (name.equals("abstract"))
+			else if (attrName.equals("abstract")) {
 				abstrElem = "true".equals(value);
-
-			else if (name.equals("minOccurs"))
+				Logger.log(" -- is abstract");
+			}
+			else if (attrName.equals("minOccurs"))
 				min = Integer.parseInt(value);
 
-			else if (name.equals("maxOccurs"))
+			else if (attrName.equals("maxOccurs"))
 			{
 				if (value.equals("unbounded")) 	max = 10000;
 					else									max = Integer.parseInt(value);
 			}
 
-			else
-				Logger.log("Unknown attribute '" +attr.getName()+ "'in <element> element", ei);
+			else {
+				if (choiceElem) Logger.log("Unknown attribute '" +attrName+ "'in <choice> element", ei);
+				else Logger.log("Unknown attribute '" +attrName+ "'in <element> element", ei);
+
+			}
 		}
 	}
 
@@ -161,18 +178,62 @@ class ElementEntry
 			if (elName.equals("complexType"))
 				complexType = new ComplexTypeEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
 
-			else if (elName.equals("simpleType"))
-			{
+			else if (elName.equals("simpleType")) {
 				simpleType = new SimpleTypeEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
+				if (simpleType.name == null) simpleType.name = name+"#S";
 			}
+
 			else if (elName.equals("key"))
 				Logger.log("Skipping 'key' child in <element> element '"+ name +"'");
 
 			else if (elName.equals("annotation"))
-				;
+			        ;
 
 			else
 				Logger.log("Unknown child '" +elName+ "' in <element> element", ei);
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void handleChoiceChildren(ElementInfo ei)
+	{
+		List children = ei.element.getChildren();
+
+		for(int i=0; i<children.size(); i++)
+		{
+			Element elChild = (Element) children.get(i);
+			String  elName  = elChild.getName();
+
+			if (elName.equals("annotation")) {
+				List appinfo = elChild.getChildren();
+				for (int j=0;i < appinfo.size(); j++) {
+					Element elElem = (Element) appinfo.get(j);
+					if (elElem.getName().equals("appinfo")) {
+						name = (String) elElem.getText();
+					}
+				}
+			}
+
+			else if (elName.equals("element") || elName.equals("choice")) {
+				ArrayList alElems = new ArrayList();
+				alChoiceElems.add(alElems);
+				alElems.add(new ElementEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix));
+			}
+			else if (elName.equals("sequence")) {
+				ArrayList alElems = new ArrayList();
+				alChoiceElems.add(alElems);
+				List sequence = elChild.getChildren();
+				for (int j=0;i < sequence.size(); j++) {
+					Element elSeq = (Element) sequence.get(j);
+
+					if (elName.equals("element") || elName.equals("choice")) 
+						alElems.add(new ElementEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix));
+				}
+			}
+
+			else
+				Logger.log("Unknown child '" +elName+ "' in <choice> element", ei);
 		}
 	}
 }

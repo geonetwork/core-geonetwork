@@ -44,6 +44,7 @@ public class SchemaLoader
 	private HashMap   hmAbsElems = new HashMap();
 	private HashMap   hmSubsGrp  = new HashMap();
 	private HashMap   hmSubsLink = new HashMap();
+	private HashMap   hmSubsNames = new HashMap();
 	private HashMap   hmAttribs  = new HashMap();
 	private HashMap   hmGroups   = new HashMap();
 
@@ -90,6 +91,8 @@ public class SchemaLoader
 			String elem = (String) i.next();
 
 			ArrayList elements = (ArrayList) hmSubsGrp.get(elem);
+			ArrayList subsNames = new ArrayList();
+			hmSubsNames.put(elem,subsNames);
 			for(int j=0; j<elements.size(); j++)
 			{
 				ElementEntry ee = (ElementEntry) elements.get(j);
@@ -102,6 +105,7 @@ public class SchemaLoader
 				}
 
 				hmElements.put(ee.name, ee.type);
+				subsNames.add(ee.name);
 			}
 		}
 
@@ -122,7 +126,11 @@ public class SchemaLoader
 			if (typeRestr != null)
 				elemRestr.addAll(typeRestr);
 
-			mds.addElement(elem, type, elemRestr);
+			ArrayList elemSubs = (ArrayList) hmSubsNames.get(elem);
+			if (elemSubs == null) elemSubs = new ArrayList();
+			ArrayList elemSubsLink = (ArrayList) hmSubsLink.get(elem);
+			if (elemSubsLink == null) elemSubsLink = new ArrayList();
+			mds.addElement(elem, type, elemRestr, elemSubs, elemSubsLink);
 		}
 
 		//--- PHASE 4 : post-processing
@@ -133,7 +141,7 @@ public class SchemaLoader
 		for(Iterator i=hmTypes.values().iterator(); i.hasNext();)
 		{
 			ComplexTypeEntry cte = (ComplexTypeEntry) i.next();
-
+			Logger.log("Doing complexType "+cte.name);
 			MetadataType mdt = new MetadataType();
 
 			mdt.setOrType(cte.isOrType);
@@ -165,17 +173,21 @@ public class SchemaLoader
 
 			if (cte.complexContent != null)
 			{
-				if (cte.complexContent.base != null)
+
+				if (cte.complexContent.base != null) {
 					cte.alElements = resolveInheritance(cte);
+					ArrayList complexContentAttribs = resolveAttributeInheritance(cte);
 
-				//--- add attribs from complexContent (if any)
+				//--- add attribs from complexContent (if any) - this needs
+				//--- to be recursive because we might have some 
 
-				for(int j=0; j<cte.complexContent.alAttribs.size(); j++)
-				{
-					AttributeEntry ae = (AttributeEntry) cte.complexContent.alAttribs.get(j);
-
-					mdt.addAttribute(buildMetadataAttrib(ae));
+					Logger.log("Attributes resolved: "+complexContentAttribs.size());
+					for(int j=0; j<complexContentAttribs.size(); j++) {
+						AttributeEntry ae = (AttributeEntry) complexContentAttribs.get(j);
+						mdt.addAttribute(buildMetadataAttrib(ae));
+					}
 				}
+
 			}
 
 			//--- resolve inheritance & add attribs from simpleContent
@@ -202,12 +214,13 @@ public class SchemaLoader
 
 				if (ge.isChoice)
 				{
-					ElementEntry ee    = (ElementEntry) ge.alElements.get(0);
-					ElementEntry eeRef = (ElementEntry) hmElements.get(ee.ref);
+					ElementEntry ee  = (ElementEntry) ge.alElements.get(0);
+					String eeRefType = (String) hmElements.get(ee.ref);
 
-					//--- if the ref was not found then we have an abstract element
+					//--- if the ref type was not found and the element was in
+					//--- the abstract elements hm then we have an abstract element
 
-					if (eeRef == null)
+					if (eeRefType == null || hmAbsElems.containsKey(ee.ref))
 					{
 						ArrayList al = (ArrayList) hmSubsGrp.get(ee.ref);
 
@@ -218,11 +231,11 @@ public class SchemaLoader
 						{
 							ElementEntry eeDer = (ElementEntry) al.get(k);
 
-							mdt.addElement(eeDer.name, ee.min, ee.max);
+							mdt.addElementWithType(eeDer.name, cte.name, ee.min, ee.max);
 						}
 					}
 					else
-						throw new IllegalArgumentException("Found not abstract element in choice : " +eeRef.name);
+						throw new IllegalArgumentException("Found an element which is not abstract in choice type : " +ee.ref);
 				}
 			}
 
@@ -232,67 +245,162 @@ public class SchemaLoader
 			{
 				ElementEntry ee = (ElementEntry) cte.alElements.get(j);
 
-				//System.out.println("resolving element " + (ee.name == null ? (" --> " + ee.ref) : ee.name)); // DEBUG
+				Logger.log("resolving element " + (ee.name == null ? (" --> " + ee.ref) : ee.name)); // DEBUG
 
 				String type;
+				Boolean abstrElement = false;
+
+// Three situations:
+// 1. element is a reference to a global element so check if abstract
 				if (ee.ref != null)
 				{
 					type = (String) hmElements.get(ee.ref);
+					if (hmAbsElems.containsKey(ee.ref)) abstrElement = true;
 
-					//System.out.println("- type = " + type); // DEBUG
+					Logger.log("- ee.ref = "+ee.ref+" type = " + type + " abstract = "+abstrElement); // DEBUG
 				}
-				else
+// 2. element is a local element so get type 
+				else if (ee.name != null)
 				{
-					if (ee.name == null)
-						throw new IllegalArgumentException("Reference and name are null for element : " + ee.name);
-
-					// RGFIX type = "string";
 					type = ee.type == null ? "string" : ee.type;
+					
+					Logger.log("- type = " + type); // DEBUG
 
-					//System.out.println("- type = " + type); // DEBUG
+					mds.addElement(ee.name, type, new ArrayList(), new ArrayList(), new ArrayList());
 
-					mds.addElement(ee.name, type, new ArrayList());
+// 3. element is a choice element or an error 
+				} else {
+					if (!ee.choiceElem)
+						throw new IllegalArgumentException("Reference and name are null for element at position "+j+" in complexType "+cte.name);
+
+					// Create a base name derived from cte.name and element position
+					// because choice elements are anonymous - add CHOICEELEMENT and
+					// an identifier to make it unique
+
+					Integer baseChoiceNr = j;
+					String baseChoiceName = cte.name+"CHOICE_ELEMENT";
+					type = ee.name = baseChoiceName+baseChoiceNr;
+
+					// Traverse the list of elements in the choice element and 
+					// create an mdt with the chosen name and process any nested choices
+					createTypeAndResolveNestedChoices(mds,ee.alChoiceElems,
+																						baseChoiceName,baseChoiceNr);
+					mds.addElement(ee.name, type, new ArrayList(), new ArrayList(), new ArrayList());
+
 				}
 
-				//--- if type is null we have an abstract type
+				//--- if type is null or the element is a ref to an
+				//--- abstract element then we have an abstract type to
+				//--- process
 
-				if (type == null)
+				if (type == null || abstrElement)
 				{
 					ArrayList al = (ArrayList) hmSubsGrp.get(ee.ref);
 					if (al == null)
 					{
 						al = (ArrayList) hmSubsLink.get(ee.ref);
 
-						/* RGFIX: found singleton subst-group with only one abstract element
-						if (al == null)
-							throw new IllegalArgumentException("Reference not found inside subst-group : "+ee.ref);
-
-						mdt.addElement(ee.ref, ee.min, ee.max);
-						 */
-						if (al != null)
-							mdt.addElement(ee.ref, ee.min, ee.max);
+						if (al != null) {
+							Logger.log("WARNING: Adding abstract element "+ee.ref+" with substitution group "+al);
+							mdt.addRefElementWithNoType(ee.ref, ee.min, ee.max);
+						}
 					}
 					else
 					{
-						mdt.setOrType(al.size() > 1);
-
-						for(int k=0; k<al.size(); k++)
-						{
-							ee = (ElementEntry) al.get(k);
-							mdt.addElement(ee.name, ee.min, ee.max);
+						if (cte.alElements.size() == 1) {
+						// This type has only one abstract element so make this type the choice type 
+							Logger.log("MAKING "+cte.name+" the choice type for "+ee.ref+" with attribute count "+mdt.getAttributeCount());
+							Integer elementsAdded = recursivelyDealWithAbstractElements(mdt,al);
+							Logger.log("Added "+elementsAdded+" elements");
+							mdt.setOrType(elementsAdded > 1);
+						} else {
+						// This type has real elements and/or attributes so make a new choice type for this element only
+						  type = ee.ref+"CHOICE"+j;
+							Logger.log("CREATING new choice type "+type+" for "+ee.ref);
+							MetadataType mdtc = new MetadataType();
+							Integer elementsAdded = recursivelyDealWithAbstractElements(mdtc,al);
+							Logger.log("Added "+elementsAdded+" elements");
+							mdtc.setOrType(elementsAdded > 1);
+							mds.addType(type,mdtc);
+							mds.addElement(ee.ref,type,new ArrayList(),new ArrayList(), new ArrayList());
+							mdt.addElementWithType(ee.ref,type,ee.min,ee.max);
 						}
 					}
 				}
 				else
 				{
-					String elemName = (ee.ref == null) ? ee.name : ee.ref;
-					mdt.addElement(elemName, ee.min, ee.max);
+					if (ee.ref != null) mdt.addRefElementWithType(ee.ref,type,ee.min,ee.max);
+					else mdt.addElementWithType(ee.name, type, ee.min, ee.max);
 				}
 			}
+			Logger.log("Created mdt is "+mdt.toString());
 			mds.addType(cte.name, mdt);
 		}
 
 		return mds;
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Descend recursively to deal with nested choices (arggh)
+	//---
+	//---------------------------------------------------------------------------
+	private void createTypeAndResolveNestedChoices(MetadataSchema mds,
+														ArrayList al,String baseName,Integer baseNr) {
+
+		if (al == null) return;
+		MetadataType mdt = new MetadataType();
+		mdt.setOrType(true);
+		for(int k=0; k<al.size(); k++)
+		{
+			ArrayList alElems = (ArrayList) al.get(k);
+			for (int j=0;j<alElems.size();j++) {
+				ElementEntry ee = (ElementEntry) alElems.get(j);
+				if (ee.choiceElem) {
+					Integer newBaseNr = baseNr+1;
+					createTypeAndResolveNestedChoices(mds,ee.alChoiceElems,baseName,newBaseNr);
+					ee.name = ee.type = baseName+newBaseNr;
+					mds.addElement(ee.name,ee.type,new ArrayList(),new ArrayList(), new ArrayList());
+					mdt.addElementWithType(ee.name, ee.type, ee.min, ee.max);
+				} else {
+					if (ee.name != null) {
+				 		Logger.log("-- Adding "+ee.name);
+				 		mds.addElement(ee.name,ee.type,new ArrayList(),new ArrayList(), new ArrayList());
+				 		mdt.addElementWithType(ee.name, ee.type, ee.min, ee.max);
+					}
+					else {
+				 		Logger.log("-- Adding ref element "+ee.ref);
+				 		mdt.addRefElementWithNoType(ee.ref, ee.min, ee.max);
+					}
+				}
+			}
+		}
+		mds.addType(baseName+baseNr,mdt);
+		return;
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Descend recursively to deal with abstract elements
+	//---
+	//---------------------------------------------------------------------------
+	private Integer recursivelyDealWithAbstractElements(MetadataType mdt,ArrayList al) {
+
+		Integer number = 0;
+		if (al == null) return number;
+		for(int k=0; k<al.size(); k++)
+		{
+			ElementEntry ee = (ElementEntry) al.get(k);
+			if (ee.abstrElem) {
+				Integer numberRecursed = recursivelyDealWithAbstractElements(mdt,(ArrayList) hmSubsGrp.get(ee.name));
+				number = number + numberRecursed;
+			} else {
+				number++;
+				Logger.log("-- Adding "+ee.name);
+				mdt.addElementWithType(ee.name, ee.type, ee.min, ee.max);
+			}
+		}
+		return number;
 	}
 
 	//---------------------------------------------------------------------------
@@ -427,22 +535,29 @@ public class SchemaLoader
 	private void buildGlobalElement(ElementInfo ei)
 	{
 		ElementEntry ee = new ElementEntry(ei);
+
 		if (ee.name == null)
 			throw new IllegalArgumentException("Name is null for element : " + ee.name);
 
-		//System.out.println("building global element " + ee.name); // DEBUG
+		Logger.log("building global element " + ee.name); // DEBUG
 
 		if (ee.substGroup != null)
 		{
+			Logger.log(" -- sub group " + ee.substGroup); // DEBUG
 			ArrayList al = (ArrayList) hmSubsGrp.get(ee.substGroup);
 
-			if (al == null)
-			{
+			if (al == null) {
 				al = new ArrayList();
 				hmSubsGrp.put(ee.substGroup, al);
 			}
 			al.add(ee);
-			hmSubsLink.put(ee.name, al);
+
+			ArrayList alLink = (ArrayList) hmSubsLink.get(ee.name);
+			if (alLink == null) {
+				alLink = new ArrayList();
+				hmSubsLink.put(ee.name,alLink);
+			}
+			alLink.add(ee.substGroup);
 		}
 		if (ee.abstrElem)
 		{
@@ -450,7 +565,7 @@ public class SchemaLoader
 				throw new IllegalArgumentException("Namespace collision for : " + ee.name);
 			hmAbsElems.put(ee.name, ee.type);
 
-			//System.out.println("- abstract element"); // DEBUG
+			Logger.log("- abstract element"); // DEBUG
 
 			return;
 		}
@@ -465,7 +580,7 @@ public class SchemaLoader
 			hmElements.put(ee.name, type);
 			hmTypes.put(type, ee.complexType);
 
-			//System.out.println("- complex type"); // DEBUG
+			Logger.log("- complex type"); // DEBUG
 		}
 		else if (ee.simpleType != null)
 		{
@@ -478,13 +593,13 @@ public class SchemaLoader
 			hmElements .put(ee.name, ee.type);
 			hmElemRestr.put(ee.name, ee.simpleType.alEnum);
 
-			//System.out.println("- simple type"); // DEBUG
+			Logger.log("- simple type"); // DEBUG
 		}
 		else
 		{
 			hmElements.put(ee.name, ee.type);
 
-			//System.out.println("- element of : "+ee.type); // DEBUG
+			Logger.log("- element of : "+ee.type); // DEBUG
 		}
 	}
 
@@ -562,7 +677,35 @@ public class SchemaLoader
 
 	//---------------------------------------------------------------------------
 	//---
+	//--- Add in attributes from complexType that come from base type (if any)
 	//---
+	//---------------------------------------------------------------------------
+
+	private ArrayList resolveAttributeInheritance(ComplexTypeEntry cte)
+	{
+		Logger.log(" -- resolveAttributeInheritance: Doing cte "+cte.name);
+		if (cte.complexContent == null)
+			return cte.alAttribs;
+
+		String baseType = cte.complexContent.base;
+		ComplexTypeEntry baseCTE = (ComplexTypeEntry) hmTypes.get(baseType);
+		if (baseCTE == null)
+			throw new IllegalArgumentException("Base type not found for : " + baseType);
+
+		ArrayList result = new ArrayList(resolveAttributeInheritance(baseCTE));
+
+		ArrayList al = cte.complexContent.alAttribs;
+		Logger.log("Found "+al.size()+" attributes");
+
+		for(int i=0; i<al.size(); i++)
+			result.add(al.get(i));
+
+		return result;
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Add in elements to complexType that come from base type (if any)
 	//---
 	//---------------------------------------------------------------------------
 
@@ -592,6 +735,7 @@ public class SchemaLoader
 	{
 		String name = ae.name;
 		String ref  = ae.reference;
+		Boolean overRequired = ae.required;
 
 		if (ref != null)
 		{
@@ -605,7 +749,7 @@ public class SchemaLoader
 
 		ma.name     = ae.name;
 		ma.defValue = ae.defValue;
-		ma.required = ae.required;
+		ma.required = overRequired;
 
 		for(int k=0; k<ae.alValues.size(); k++)
 			ma.values.add(ae.alValues.get(k));

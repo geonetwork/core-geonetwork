@@ -766,6 +766,20 @@
 		<xsl:variable name="name"  select="name(.)"/>
 		<xsl:variable name="value" select="string(.)"/>
 		<xsl:variable name="parent"  select="name(..)"/>
+		<!-- the following variable is used in place of name as a work-around to
+         deal with qualified attribute names like gml:id
+		     which if not modified will cause JDOM errors on update because of the
+				 way in which changes to ref'd elements are parsed as XML -->
+		<xsl:variable name="updatename">
+      <xsl:choose>
+        <xsl:when test="contains($name,':')">
+          <xsl:value-of select="concat(substring-before($name,':'),'COLON',substring-after($name,':'))"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$name"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
 		<xsl:choose>
 			<!-- list of values -->
 			<xsl:when test="../geonet:attribute[string(@name)=$name]/geonet:text">
@@ -790,10 +804,10 @@
 				</select>
 			</xsl:when>
 			<xsl:when test="$edit=true() and $rows=1">
-				<input class="md" type="text" name="_{../geonet:element/@ref}_{name(.)}" value="{string()}" size="{$cols}" />
+				<input class="md" type="text" name="_{../geonet:element/@ref}_{$updatename}" value="{string()}" size="{$cols}" />
 			</xsl:when>
 			<xsl:when test="$edit=true()">
-				<textarea class="md" name="_{../geonet:element/@ref}_{name(.)}" rows="{$rows}" cols="{$cols}">
+				<textarea class="md" name="_{../geonet:element/@ref}_{$updatename}" rows="{$rows}" cols="{$cols}">
 					<xsl:value-of select="string()"/>
 				</textarea>
 			</xsl:when>

@@ -19,7 +19,7 @@
 //===
 //===	You should have received a copy of the GNU General Public License
 //===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//=== Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
 //===
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
 //===	Rome - Italy. email: geonetwork@osgeo.org
@@ -32,14 +32,12 @@ import java.util.List;
 
 import org.jdom.Attribute;
 import org.jdom.Element;
-import jeeves.utils.Xml;
 
 //==============================================================================
 
 class ComplexContentEntry
 {
 	public String base;
-
 	public ArrayList alElements = new ArrayList();
 	public ArrayList alAttribs  = new ArrayList();
 
@@ -112,7 +110,9 @@ class ComplexContentEntry
 	private void handleExtension(Element el, ElementInfo ei)
 	{
 		base = el.getAttributeValue("base");
+
 		List extension = el.getChildren();
+
 		for(int j=0; j<extension.size(); j++)
 		{
 			Element elExt = (Element) extension.get(j);
@@ -125,20 +125,15 @@ class ComplexContentEntry
 				{
 					Element elSeq = (Element) sequence.get(k);
 
-					if (elSeq.getName().equals("element"))
-					{
-						/* RGFIX
-						String ref = elSeq.getAttributeValue("ref");
-						if (ref == null)
-							throw new IllegalArgumentException("'ref' cannot be null in 'extension' : "+ base);
-						*/
+					if (elSeq.getName().equals("element") || elSeq.getName().equals("choice")) 
 						alElements.add(new ElementEntry(elSeq, ei.file, ei.targetNS, ei.targetNSPrefix));
-					}
 
 					else
 						Logger.log("Unknown child '"+ elSeq.getName() +"' in <sequence> element", ei);
 				}
 			}
+			else if (elExt.getName().equals("attribute"))
+				alAttribs.add(new AttributeEntry(elExt, ei.file, ei.targetNS, ei.targetNSPrefix));
 
 			else
 				Logger.log("Unknown child '"+ elExt.getName() +"' in <extension> element ", ei);
@@ -150,7 +145,7 @@ class ComplexContentEntry
 	private void handleRestriction(Element el, ElementInfo ei)
 	{
 		base = el.getAttributeValue("base");
-		
+
 		List attribs = el.getAttributes();
 
 		for(int i=0; i<attribs.size(); i++)
@@ -182,4 +177,5 @@ class ComplexContentEntry
 }
 
 //==============================================================================
+
 

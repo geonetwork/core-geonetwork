@@ -35,9 +35,11 @@ import org.jdom.Element;
 
 public class MetadataSchema
 {
-	private HashMap hmElements = new HashMap();
-	private HashMap hmRestric  = new HashMap();
+	private Map<String,List<String>> hmElements = new HashMap<String,List<String>>();
+	private Map<String,List<List>> hmRestric  = new HashMap<String,List<List>>();
 	private HashMap hmTypes    = new HashMap();
+	private HashMap hmSubs		 = new HashMap();
+	private HashMap hmSubsLink = new HashMap();
 
 	//---------------------------------------------------------------------------
 	//---
@@ -55,16 +57,58 @@ public class MetadataSchema
 
 	public MetadataType getTypeInfo(String type)
 	{
-		return (MetadataType) hmTypes.get(type);
+		Logger.log("metadataSchema: Asking for type "+type);
+		if (hmTypes.get(type) == null) return new MetadataType();
+		else return (MetadataType) hmTypes.get(type);
 	}
 
 	//---------------------------------------------------------------------------
 
-	public String getElementType(String elem)
+	public String getElementType(String elem,String parent) throws Exception
 	{
-		//System.out.println("in getElementType(" + elem + ")"); // DEBUG
+		// two cases here - if we have just one element (or a substitute) with 
+		// this name then return its type
 
-		return (String) hmElements.get(elem);
+	  Logger.log("metadataSchema: Asking for element "+elem+" parent "+parent);
+		List<String> childType = hmElements.get(elem);
+		if (childType == null) {
+			// Check and see whether we can substitute another element from the
+			// list of substitution links - just process the arrayList until 
+			// we find one that matches
+			ArrayList alSubsLink = (ArrayList) hmSubsLink.get(elem);
+	  	Logger.log("metadataSchema: checking subs for element "+elem+" parent "+parent);
+			if (alSubsLink != null) {
+				for (int i = 0;i< alSubsLink.size();i++) {
+					elem = (String) alSubsLink.get(i);
+	  			Logger.log(" -- substitute "+elem);
+					childType = hmElements.get(elem);
+					if (childType != null) continue;
+				}
+			}
+			if (childType == null) 
+				throw new IllegalArgumentException("Mismatch between schema and xml: No type for 'element' : "+elem+" with parent "+parent);
+		}
+		if (childType.size() == 1) return childType.get(0);
+
+		Logger.log("-- Multiple elements so moving to parent");
+		// OTHERWISE get the type by examining the parent:
+		// for each parent with that name parent
+		// 1. retrieve its mdt 
+		List<String> exType = hmElements.get(parent);
+		Iterator i = exType.iterator();
+		while (i.hasNext()) { 
+		// 2. search that mdt for the element names elem
+			String type = (String)i.next();
+			MetadataType mdt = getTypeInfo(type);
+			for (int k = 0;k < mdt.getElementCount();k++) {
+				String elemTest = mdt.getElementAt(k);
+		// 3. return the type name of that element
+				if (elem.equals(elemTest)) return mdt.getElementTypeAt(k);
+			}
+		}
+
+		Logger.log("ERROR: could not find type for element "+elem+" with parent "+parent);
+		return null;
 	}
 
 	//---------------------------------------------------------------------------
@@ -72,18 +116,39 @@ public class MetadataSchema
 	  * have restrictions on its value)
 	  */
 
-	public boolean isSimpleElement(String elem)
+	public boolean isSimpleElement(String elem,String parent) throws Exception
 	{
-		//System.out.println("in isSimpleElement(" + elem + ")"); // DEBUG
-
-		return !hmTypes.containsKey(getElementType(elem));
+		String type = getElementType(elem,parent);
+		if (type == null) return false;
+		else return !hmTypes.containsKey(type);
 	}
 
 	//---------------------------------------------------------------------------
 
-	public ArrayList getElementValues(String elem)
+	public ArrayList getElementSubs(String elem)
 	{
-		return (ArrayList) hmRestric.get(elem);
+		return((ArrayList)hmSubs.get(elem));
+	}
+
+	//---------------------------------------------------------------------------
+
+	public ArrayList getElementValues(String elem,String parent) throws Exception
+	{
+
+		String type = getElementType(elem,parent);
+		String restricName = elem;
+		if (type != null) restricName = restricName+"+"+type;
+
+		// two cases here - if we have just one element with this name 
+		// then return its values
+		List<List> childValues = hmRestric.get(restricName);
+		if (childValues == null) return null;
+		if (childValues.size() == 1) return (ArrayList)childValues.get(0);
+
+		// OTHERWISE we don't know what to do so return the first one anyway! This
+		// should not happen....
+		Logger.log("WARNING: returning first set of values for element "+elem+" this should not happen and it may not be correct.....check logs for VALUESCLASH statements and fix schema");
+		return (ArrayList)childValues.get(0);
 	}
 
 	//---------------------------------------------------------------------------
@@ -92,107 +157,53 @@ public class MetadataSchema
 	//---
 	//---------------------------------------------------------------------------
 
-	void addElement(String name, String type, ArrayList values)
+	void addElement(String name, String type, ArrayList alValues, ArrayList alSubs, ArrayList alSubsLink)
 	{
-		//System.out.println("#### adding element " + name); // DEBUG
+		// first just add the subs - because these are for global elements we 
+		// never have a clash because global elements are all in the same scope
+		// and are thus unique
+		if (alSubs != null && alSubs.size() > 0) hmSubs.put(name,alSubs);
+		if (alSubsLink != null && alSubsLink.size() > 0) hmSubsLink.put(name,alSubsLink);
 
-		hmElements.put(name, type);
-		hmRestric .put(name, values);
+		List<String> exType = hmElements.get(name);
+
+		// it's already there but the type has been added already
+		if (exType != null && exType.contains(type)) return; 
+
+		// it's already there but doesn't have this type 
+		if (exType != null && !(exType.contains(type))) { 
+			Logger.log("CLASH: trying to add "+name+" with type "+type+": already exists with type: "+exType+" - adding overflows and code to cope");
+
+
+		// it's not there so add a new list
+		} else {
+			hmElements.put(name, exType = new ArrayList<String>());
+		}
+		exType.add(type);
+
+		String restricName = name;
+		if (type != null) restricName = name+"+"+type;
+
+		// it's already there
+		List<List> exValues = hmRestric.get(restricName);
+		if (exValues != null) {
+			Logger.log("VALUESCLASH: trying to add "+restricName+" with values "+alValues+": already exists with values "+exValues+" - this should not happen");
+
+		// it's not there so add a new list of lists
+		} else {
+			hmRestric .put(restricName, exValues = new ArrayList<List>());
+		}
+		exValues.add(alValues);
 	}
 
 	//---------------------------------------------------------------------------
 
 	void addType(String name, MetadataType mdt)
 	{
-		//System.out.println("#### adding type " + name); // DEBUG
-
 		mdt.setName(name);
 		hmTypes.put(name, mdt);
 	}
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Debug methods
-	//---
-	//---------------------------------------------------------------------------
-
-	public String dump(String type)
-	{
-		return dump(type, new HashSet());
-	}
-
-	//---------------------------------------------------------------------------
-
-	private String dump(String type, HashSet hs)
-	{
-		StringBuffer sb = new StringBuffer("");
-
-		MetadataType mdt = getTypeInfo(type);
-
-		if (mdt == null)
-			throw new IllegalArgumentException("Unknown type : " + type);
-
-		hs.add(type);
-
-		sb.append(type);
-		sb.append(" (");
-
-		String sep = mdt.isOrType() ? " | " : ", ";
-
-		for(int i=0; i<mdt.getElementCount(); i++)
-		{
-			String elem = mdt.getElementAt(i);
-
-			int min = mdt.getMinCardinAt(i);
-			int max = mdt.getMaxCardinAt(i);
-
-			sb.append(elem);
-
-			if (min == 0)
-			{
-				if (max == 1)	sb.append("?");
-					else 			sb.append("*");
-			}
-			else
-			{
-				if (max == 1)	sb.append("");
-					else 			sb.append("+");
-			}
-
-			if (i < mdt.getElementCount() -1)
-				sb.append(sep);
-		}
-
-		sb.append(")\n\n");
-
-		ArrayList al = new ArrayList();
-
-		for(int i=0; i<mdt.getElementCount(); i++)
-		{
-			String elem = mdt.getElementAt(i);
-			type = getElementType(elem);
-
-			if (type == null)
-				throw new IllegalArgumentException("Unknown type for elem : " + elem);
-
-			sb.append(elem +" : "+type+"\n");
-
-			if (!isSimpleElement(type))
-				al.add(type);
-		}
-
-		sb.append("\n");
-
-		for(int i=0; i<al.size(); i++)
-		{
-			type = (String) al.get(i);
-
-			if (!hs.contains(type))
-				sb.append(dump(type, hs));
-		}
-
-		return sb.toString();
-	}
 }
 
 //==============================================================================

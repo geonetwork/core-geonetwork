@@ -62,7 +62,7 @@
 	<!-- some gco: elements -->
 	<!-- ============================================================================= -->
 
-	<xsl:template mode="iso19139" match="gmd:*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean]">
+	<xsl:template mode="iso19139" match="gmd:*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real]">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
@@ -418,7 +418,7 @@
 				<td class="box" width="100" height="100" align="center">
 				-->
 				<xsl:variable name="md">
-					<xsl:apply-templates mode="brief" select="../.."/>
+					<xsl:apply-templates mode="brief" select="//gmd:MD_Metadata"/>
 				</xsl:variable>
 				<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
 				<td width="100" height="100" align="center">
@@ -532,6 +532,7 @@
 			<xsl:when test="$edit=true()">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
 					<xsl:with-param name="text">
 						<xsl:variable name="ref" select="gco:DateTime/geonet:element/@ref"/>
 						
@@ -596,7 +597,7 @@
 	-->
 	<!-- ============================================================================= -->
 
-	<xsl:template mode="iso19139" match="gmd:date[gco:DateTime]|gmd:editionDate|gmd:dateOfNextUpdate" priority="2">
+	<xsl:template mode="iso19139" match="gmd:date[gco:DateTime|gco:Date]|gmd:editionDate|gmd:dateOfNextUpdate" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
@@ -604,12 +605,20 @@
 			<xsl:when test="$edit=true()">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
 					<xsl:with-param name="text">
-						<xsl:variable name="ref" select="gco:DateTime/geonet:element/@ref"/>
+						<xsl:variable name="ref" select="gco:DateTime/geonet:element/@ref|gco:Date/geonet:element/@ref"/>
 						
 						<table width="100%"><tr>
 							<td>
-								<input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{gco:DateTime/text()}" size="30" readonly="1"/>
+								<xsl:choose>
+                  <xsl:when test="gco:DateTime">
+                <input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{gco:DateTime/text()}" size="30" readonly="1"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                <input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{gco:Date/text()}" size="30" readonly="1"/>
+                  </xsl:otherwise>
+                </xsl:choose>
 							</td>
 							<td align="center" width="30" valign="middle">
 								<img src="{/root/gui/url}/scripts/calendar/img.gif"
@@ -622,16 +631,32 @@
 									Calendar.setup(
 										{
 											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
-											ifFormat    : "%Y-%m-%dT%H:%M:00",                                // the date format
-											showsTime : false, // Do not show the time
+								<xsl:choose>
+                  <xsl:when test="gco:DateTime">
+                      ifFormat    : "%Y-%m-%dT%H:%M:00", // the date format
+                      showsTime : false, // Do not show the time
+                  </xsl:when>
+                  <xsl:otherwise>
+                      ifFormat    : "%Y-%m-%d", // the date format
+                      showsTime : false, // Do not show the time
+                  </xsl:otherwise>
+                </xsl:choose>
 											button      : &quot;_<xsl:value-of select="$ref"/>_trigger&quot;  // ID of the button
 										}
 									);
 									Calendar.setup(
 										{
 											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
-											ifFormat    : "%Y-%m-%dT%H:%M:00",                                // the date format
-											showsTime : false, // Do not show the time
+								<xsl:choose>
+                  <xsl:when test="gco:DateTime">
+                      ifFormat    : "%Y-%m-%dT%H:%M:00", // the date format
+                      showsTime : false, // Do not show the time
+                  </xsl:when>
+                  <xsl:otherwise>
+                      ifFormat    : "%Y-%m-%d",  // the date format
+                      showsTime : false, // Do not show the time
+                  </xsl:otherwise>
+                </xsl:choose>
 											button      : &quot;_<xsl:value-of select="$ref"/>_cal&quot;  // ID of the button
 										}
 									);
@@ -1280,7 +1305,7 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="string(../../../../../../geonet:info/dynamic)='true'">
+			<xsl:when test="string(//geonet:info/dynamic)='true'">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
@@ -1318,7 +1343,7 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="string(../../../../../../geonet:info/dynamic)='true'">
+			<xsl:when test="string(//geonet:info/dynamic)='true'">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
@@ -1356,7 +1381,7 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="string(../../../../../../geonet:info/dynamic)='true'">
+			<xsl:when test="string(//geonet:info/dynamic)='true'">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
@@ -1392,7 +1417,7 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="string(../../../../../../geonet:info/download)='true'">
+			<xsl:when test="string(//geonet:info/download)='true'">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/downloadData"/>
@@ -1425,6 +1450,7 @@
 			<xsl:when test="$edit=true()">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit" select="$edit"/>
 					<xsl:with-param name="text">
 						<xsl:variable name="value" select="string(gco:CharacterString)"/>
 						<select name="_{gco:CharacterString/geonet:element/@ref}" size="1">

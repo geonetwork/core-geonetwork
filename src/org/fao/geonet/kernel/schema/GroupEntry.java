@@ -68,11 +68,12 @@ class GroupEntry
 		{
 			Attribute at = (Attribute) attribs.get(i);
 
-			String attrName = at.getName();
-
-			if (attrName.equals("name"))
-				name = (ei.targetNSPrefix == null) ? at.getValue() : ei.targetNSPrefix + ":" + at.getValue();
-
+			String attrName = at.getName(); 
+			if (attrName.equals("name")) {
+        name = at.getValue();
+        if ((name.indexOf(":") == -1) && (ei.targetNSPrefix != null))
+          name = ei.targetNSPrefix + ":" + at.getValue();
+      }
 			else
 				Logger.log("Unknown attribute '"+ attrName +"' in <group> element", ei);
 		}

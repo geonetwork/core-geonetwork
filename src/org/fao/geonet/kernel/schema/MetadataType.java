@@ -28,6 +28,10 @@
 package org.fao.geonet.kernel.schema;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import org.jdom.Attribute;
+import org.jdom.Element;
 
 //==============================================================================
 
@@ -36,10 +40,12 @@ public class MetadataType
 	private String  name;
 	private boolean isOrType;
 
-	private ArrayList alElements = new ArrayList();
-	private ArrayList alMinCard  = new ArrayList();
-	private ArrayList alMaxCard  = new ArrayList();
-	private ArrayList alAttribs  = new ArrayList();
+	private ArrayList alElements   = new ArrayList();
+	private ArrayList alTypes      = new ArrayList();
+	private ArrayList alMinCard    = new ArrayList();
+	private ArrayList alMaxCard    = new ArrayList();
+	private ArrayList alAttribs    = new ArrayList();
+	private ArrayList alExamineSubs  = new ArrayList();
 
 	//---------------------------------------------------------------------------
 	//---
@@ -57,12 +63,34 @@ public class MetadataType
 
 	public int getElementCount() { return alElements.size(); }
 
+	public void resetElementAt(int pos,String name,String type) {
+		alElements.set(pos,name);
+		alTypes.set(pos,type);
+	}
+
 	//--------------------------------------------------------------------------
 	/** Return the component in a given position */
 
 	public String getElementAt(int pos)
 	{
 		return (String) alElements.get(pos);
+	}
+
+	//--------------------------------------------------------------------------
+	/** Return the type of element in a given position */
+
+	public String getElementTypeAt(int pos)
+	{
+		return (String) alTypes.get(pos);
+	}
+
+	//--------------------------------------------------------------------------
+	/** Return true if subs for element in given position need to be examined, 
+	 *  false otherwise */
+
+	public Boolean examineSubs(int pos)
+	{
+		return (Boolean) alExamineSubs.get(pos);
 	}
 
 	//--------------------------------------------------------------------------
@@ -107,6 +135,9 @@ public class MetadataType
 	{
 		String res = "";
 
+		if (isOrType) res += "IsOrType = TRUE ";
+		else res += "IsOrType = FALSE ";
+
 		for(int i=0; i<alElements.size(); i++)
 		{
 			String comp = getElementAt(i);
@@ -119,6 +150,22 @@ public class MetadataType
 			res += comp + "/" + min+ "-" + sMax + " ";
 		}
 
+	
+		String attrs = "";
+		for(int i=0; i<alAttribs.size(); i++)
+		{
+			attrs += "Attribute ("+i+") "+getAttributeAt(i).name+": ";
+			ArrayList alAtts = getAttributeAt(i).values;
+			if (alAtts.size() > 0) {
+				attrs += getAttributeAt(i).values.toString();
+				attrs += " ";
+			}
+			attrs += "Default Value: "+getAttributeAt(i).defValue;
+			if (getAttributeAt(i).required) attrs += " REQUIRED ";
+		}
+		if (attrs.length() > 0)
+			res += " Attributes: "+attrs;
+
 		return res;
 	}
 
@@ -128,10 +175,39 @@ public class MetadataType
 	//---
 	//---------------------------------------------------------------------------
 
-	void addElement(String name, int minCard, int maxCard)
+	void addElementWithType(String name, String elementType, int minCard, int maxCard)
+	{
+		addElement(name,elementType,false,minCard,maxCard);
+	}
+
+	//---------------------------------------------------------------------------
+
+	void addElementWithNoType(String name, int minCard, int maxCard)
+	{
+		addElement(name,null,false,minCard,maxCard);
+	}
+
+	//---------------------------------------------------------------------------
+	
+	void addRefElementWithType(String name, String elementType, int minCard, int maxCard)
+	{
+		addElement(name,elementType,true,minCard,maxCard);
+	}
+
+	//---------------------------------------------------------------------------
+
+	void addRefElementWithNoType(String name, int minCard, int maxCard)
+	{
+		addElement(name,null,true,minCard,maxCard);
+	}
+
+	//---------------------------------------------------------------------------
+
+	void addElement(String name, String elementType, Boolean examineElementSubs, int minCard, int maxCard)
 	{
 		alElements.add(name);
-
+		alTypes.add(elementType);
+		alExamineSubs.add(examineElementSubs);
 		alMinCard.add(new Integer(minCard));
 		alMaxCard.add(new Integer(maxCard));
 	}

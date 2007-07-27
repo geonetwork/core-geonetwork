@@ -73,16 +73,17 @@ class SimpleTypeEntry
 	private void handleAttribs(ElementInfo ei)
 	{
 		List attribs = ei.element.getAttributes();
-
 		for(int i=0; i<attribs.size(); i++)
 		{
 			Attribute at = (Attribute) attribs.get(i);
 
 			String attrName = at.getName();
 
-			if (attrName.equals("name"))
-				name = (ei.targetNSPrefix == null) ? at.getValue() : ei.targetNSPrefix + ":" + at.getValue();
-
+			if (attrName.equals("name")) {
+        name = at.getValue();
+        if ((name.indexOf(":") == -1) && (ei.targetNSPrefix != null))
+          name = ei.targetNSPrefix + ":" + at.getValue();
+      }
 			else
 				Logger.log("Unknown attribute '"+ attrName +"' in <simpleType> element", ei);
 		}
@@ -126,7 +127,7 @@ class SimpleTypeEntry
 				Logger.log("Skipping 'union' child in <simpleType> element '"+ name +"'");
 
 			else if (elName.equals("annotation"))
-				;
+			        ;
 
 			else
 				Logger.log("Unknown child '"+ elName +"' in <simpleType> element ", ei);
@@ -135,4 +136,5 @@ class SimpleTypeEntry
 }
 
 //==============================================================================
+
 

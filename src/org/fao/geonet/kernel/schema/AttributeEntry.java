@@ -19,7 +19,7 @@
 //===
 //===	You should have received a copy of the GNU General Public License
 //===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//=== Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
 //===
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
 //===	Rome - Italy. email: geonetwork@osgeo.org
@@ -41,7 +41,7 @@ class AttributeEntry
 	public String  defValue;
 	public String  reference;
 	public String  referenceNS;
-	public boolean required;
+	public boolean required = false;
 
 	public ArrayList alValues = new ArrayList();
 
@@ -60,6 +60,7 @@ class AttributeEntry
 
 	public AttributeEntry(ElementInfo ei)
 	{
+		Logger.log("Doing attribute");
 		handleAttribs(ei);
 		handleChildren(ei);
 	}
@@ -79,18 +80,26 @@ class AttributeEntry
 			Attribute at = (Attribute) attribs.get(i);
 
 			String attrName = at.getName();
+			if (attrName.equals("name")) {
+				name = at.getValue();
+				if (ei.targetNSPrefix != null) {
+					name = ei.targetNSPrefix + ":" + name; 
+				}
 
-			if (attrName.equals("name"))
-				name = (ei.targetNSPrefix == null) ? at.getValue() : ei.targetNSPrefix + ":" + at.getValue();
-
+				Logger.log("-- name is "+name);
+			}
 			else if (attrName.equals("default"))
 				defValue = at.getValue();
 
-			else if (attrName.equals("ref"))
+			else if (attrName.equals("ref")) {
 				reference = at.getValue();
+				Logger.log("-- ref is "+reference);
+			}
 
-			else if (attrName.equals("use"))
+			else if (attrName.equals("use")) {
 				required = "required".equals(at.getValue());
+				Logger.log("-- Required is "+required);
+			}
 
 			else if (attrName.equals("type"))
 				Logger.log("Skipping 'type' attribute in <attribute> element '"+ name +"'");
@@ -129,4 +138,5 @@ class AttributeEntry
 }
 
 //==============================================================================
+
 

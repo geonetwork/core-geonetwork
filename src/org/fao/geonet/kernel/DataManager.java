@@ -727,11 +727,18 @@ public class DataManager
 			if (!childName.equals(""))
 			{
 				// or element
-				Element orChild = new Element(childName, el.getNamespace());
-				child.addContent(orChild);
+				String uChildName = editLib.getUnqualifiedName(childName);
+        String prefix     = editLib.getPrefix(childName);
+        String ns         = editLib.getNamespace(childName,md);
+        if (prefix.equals("")) {
+           prefix = editLib.getPrefix(el.getName());
+           ns = editLib.getNamespace(el.getName(),md);
+        }
+        Element orChild = new Element(uChildName,prefix,ns);
+        child.addContent(orChild);
 
-				//--- add mandatory sub-tags
-				editLib.fillElement(schema, orChild);
+        //--- add mandatory sub-tags
+        editLib.fillElement(schema, child, orChild);
 			}
 		}
 		md = updateFixedInfo(schema, id, md, dbms);
@@ -961,10 +968,26 @@ public class DataManager
 			if (el == null)
 				throw new IllegalStateException("Element not found at ref = " + ref);
 
-			if (attr != null)
-			{
-				if (el.getAttribute(attr) != null)
-					el.setAttribute(new Attribute(attr, val));
+			if (attr != null) {
+// The following work-around decodes any attribute name that has a COLON in it
+// The : is replaced by the word COLON in the xslt so that it can be processed
+// by the XML Serializer when an update is submitted - the only situation 
+// where this is known to occur is in the gml schema (eg. gml:id) - a better
+// solution may be required
+				Integer indexColon = attr.indexOf("COLON");
+        if (indexColon != -1) {	
+					String prefix = attr.substring(0,indexColon);
+          String localname = attr.substring(indexColon + 5);
+          String namespace = editLib.getNamespace(prefix+":"+localname,md);	
+					Namespace attrNS = Namespace.getNamespace(prefix,namespace);
+          if (el.getAttribute(localname,attrNS) != null) {
+            el.setAttribute(new Attribute(localname,val,attrNS));
+          }
+// End of work-around
+        } else {
+          if (el.getAttribute(attr) != null)
+            el.setAttribute(new Attribute(attr, val));
+        }
 			}
 			else
 			{
@@ -995,6 +1018,10 @@ public class DataManager
 		//--- check if the metadata has been modified from last time
 		if (version != null && !editLib.getVersion(id).equals(version))
 			return false;
+
+		//--- make sure that any lingering CHOICE_ELEMENTS are replaced with their
+		//--- children
+		editLib.replaceChoiceElements(md);
 
 		String schema = getMetadataSchema(dbms, id);
 		md = updateFixedInfo(schema, id, md, dbms);
@@ -1452,14 +1479,18 @@ public class DataManager
 
 	public static void setNamespacePrefix(Element md)
 	{
-		//--- if the metadata has no namespace, we must skip this phase
+		//--- if the metadata has no namespace or already has a namespace then
+		//--- we must skip this phase
 
-		if (md.getNamespace() == Namespace.NO_NAMESPACE)
-			return;
+		Namespace ns = md.getNamespace();
+    // System.out.println("DM: Namespace prefix is '"+md.getNamespacePrefix()+"'"); // DEBUG
+    if (ns == Namespace.NO_NAMESPACE || (!md.getNamespacePrefix().equals("")))
+      return;
+
 
 		//--- set prefix for iso19139 metadata
 
-		Namespace ns = Namespace.getNamespace("gmd", md.getNamespace().getURI());
+		ns = Namespace.getNamespace("gmd", md.getNamespace().getURI());
 		setNamespacePrefix(md, ns);
 	}
 

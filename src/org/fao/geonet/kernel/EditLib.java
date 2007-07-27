@@ -30,6 +30,7 @@ package org.fao.geonet.kernel;
 import java.util.*;
 import org.fao.geonet.kernel.schema.*;
 import org.jdom.*;
+import jeeves.utils.Xml;
 
 import java.io.File;
 import org.fao.geonet.constants.Edit;
@@ -127,6 +128,7 @@ public class EditLib
 
 		enumerateTree(md, 1);
 		expandTree(schema, getSchema(schema), md);
+		//System.out.println("MD after editing infomation:\n" + jeeves.utils.Xml.getString(md));
 
 		return version;
 	}
@@ -157,9 +159,9 @@ public class EditLib
 	  * should be empty.
 	  */
 
-	public void fillElement(String schema, Element md)
+	public void fillElement(String schema, Element parent, Element md) throws Exception
 	{
-		fillElement(getSchema(schema), getSchemaSuggestions(schema), md);
+		fillElement(getSchema(schema), getSchemaSuggestions(schema), parent, md);
 	}
 
 	//--------------------------------------------------------------------------
@@ -221,7 +223,7 @@ public class EditLib
 
 	//--------------------------------------------------------------------------
 
-	public Element addElement(String schema, Element el, String qname)
+	public Element addElement(String schema, Element el, String qname) throws Exception
 	{
 //		System.out.println("#### in addElement()"); // DEBUG
 
@@ -231,23 +233,32 @@ public class EditLib
 		String name   = getUnqualifiedName(qname);
 		String ns     = getNamespace(qname, el);
 		String prefix = getPrefix(qname);
+		String parentName = getParentNameFromChild(el); 
+		
 
-//		System.out.println("#### - child name = " + name); // DEBUG
-//		System.out.println("#### - child namespace = " + ns); // DEBUG
-//		System.out.println("#### - child prefix = " + prefix); // DEBUG
+		// System.out.println("#### - parent name = " + parentName); // DEBUG
+		// System.out.println("#### - child name = " + name); // DEBUG
+		// System.out.println("#### - child namespace = " + ns); // DEBUG
+		// System.out.println("#### - child prefix = " + prefix); // DEBUG
+		List childS = el.getChildren();
+		if (childS.size() > 0) {
+			Element elChildS = (Element)childS.get(0);
+			// System.out.println("#### - child text = " + elChildS.getName()); // DEBUG
+		}
+
 
 		Element child = new Element(name, prefix, ns);
 
 		MetadataSchema    mdSchema = getSchema(schema);
 		SchemaSuggestions mdSugg   = getSchemaSuggestions(schema);
 
-		String typeName = mdSchema.getElementType(el.getQualifiedName());
+		String typeName = mdSchema.getElementType(el.getQualifiedName(),parentName);
 
-//		System.out.println("#### - type name = " + typeName); // DEBUG
+		// System.out.println("#### - type name = " + typeName); // DEBUG
 
  		MetadataType type = mdSchema.getTypeInfo(typeName);
 
-//		System.out.println("#### - metadata tpe = " + type); // DEBUG
+		// System.out.println("#### - metadata tpe = " + type); // DEBUG
 
 		//--- collect all children, adding the new one at the end of the others
 
@@ -257,7 +268,7 @@ public class EditLib
 		{
 			List list = getChildren(el, type.getElementAt(i));
 
-//			System.out.println("####   - children of type " + type.getElementAt(i) + " list size = " + list.size()); // DEBUG
+			// System.out.println("####   - children of type " + type.getElementAt(i) + " list size = " + list.size()); // DEBUG
 
 			for(int j=0; j<list.size(); j++)
 				children.add(list.get(j));
@@ -274,7 +285,7 @@ public class EditLib
 			el.addContent((Element) children.get(i));
 
 		//--- add mandatory sub-tags
-		fillElement(mdSchema, mdSugg, child);
+		fillElement(mdSchema, mdSugg, el, child);
 
 		return child;
 	}
@@ -323,25 +334,27 @@ public class EditLib
 
 	//--------------------------------------------------------------------------
 
-	private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, Element md)
+	private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, 
+														Element parent, Element md) throws Exception
 	{
-//		System.out.println("#### entering fillElement()"); // DEBUG
+		//System.out.println("#### entering fillElement()"); // DEBUG
 
 		String elemName = md.getQualifiedName();
+		String parentName = parent.getQualifiedName();
 
-//		System.out.println("#### - elemName = " + elemName); // DEBUG
-//		System.out.println("#### - isSimpleElement(" + elemName + ") = " + schema.isSimpleElement(elemName)); // DEBUG
+		//System.out.println("#### - elemName = " + elemName); // DEBUG
+		//System.out.println("#### - isSimpleElement(" + elemName + ") = " + schema.isSimpleElement(elemName,parentName)); // DEBUG
 
-		if (schema.isSimpleElement(elemName))
+		if (schema.isSimpleElement(elemName,parentName))
 			return;
 
-		MetadataType type = schema.getTypeInfo(schema.getElementType(elemName));
+		MetadataType type = schema.getTypeInfo(schema.getElementType(elemName,parentName));
 
-//		System.out.println("#### - type:"); // DEBUG
-//		System.out.println("####   - name = " + type.getName()); // DEBUG
-//		System.out.println("####   - # attributes = " + type.getAttributeCount()); // DEBUG
-//		System.out.println("####   - # elements = " + type.getElementCount()); // DEBUG
-//		System.out.println("####   - # isOrType = " + type.isOrType()); // DEBUG
+		//System.out.println("#### - type:"); // DEBUG
+		//System.out.println("####   - name = " + type.getName()); // DEBUG
+		//System.out.println("####   - # attributes = " + type.getAttributeCount()); // DEBUG
+		//System.out.println("####   - # elements = " + type.getElementCount()); // DEBUG
+		//System.out.println("####   - # isOrType = " + type.isOrType()); // DEBUG
 
 		//-----------------------------------------------------------------------
 		//--- handle attributes
@@ -350,8 +363,8 @@ public class EditLib
 		{
 			MetadataAttribute attr = type.getAttributeAt(i);
 
-//			System.out.println("####   - " + i + " attribute = " + attr); // DEBUG
-//			System.out.println("####     - required = " + attr.required); // DEBUG
+			//System.out.println("####   - " + i + " attribute = " + attr.name); // DEBUG
+			//System.out.println("####     - required = " + attr.required); // DEBUG
 
 			if (attr.required)
 			{
@@ -360,8 +373,17 @@ public class EditLib
 				if (attr.defValue != null)
 					value = attr.defValue;
 
-				String uname = getUnqualifiedName(attr.name); // FIXME: only allow unqualified attributes
-				md.setAttribute(new Attribute(uname, value));
+				String uname = getUnqualifiedName(attr.name);
+				String ns     = getNamespace(attr.name, md);
+				String prefix = getPrefix(attr.name);
+				// if the prefix is gml then we create the attribute with the 
+				// appropriate namespace because gml types include ref'd attributes
+				// like gml:id - the others such as gmd etc don't include refs but
+				// define types that include attributes without namespace prefixes
+				if (prefix.equals("gml")) 
+					md.setAttribute(new Attribute(uname, value, Namespace.getNamespace(prefix,ns)));
+				else
+					md.setAttribute(new Attribute(uname, value));
 			}
 		}
 
@@ -375,15 +397,22 @@ public class EditLib
 				int    minCard   = type.getMinCardinAt(i);
 				String childName = type.getElementAt(i);
 
+				// Now if the element has subs examine them and substitute the
+				// correct element based on the namespace of the root element
+				if (type.examineSubs(i)) {
+					childName  = getSubstituteName(schema,childName,md);
+					//System.out.println("- childName has substituted = " + childName);
+				}
+
 				if (minCard > 0 || sugg.isSuggested(elemName, childName))
 				{
-					MetadataType elemType = schema.getTypeInfo(schema.getElementType(childName));
+					MetadataType elemType = schema.getTypeInfo(schema.getElementType(childName,elemName));
 
 					//--- There can be 'or' elements with other 'or' elements inside them.
 					//--- In this case we cannot expand the inner 'or' elements so the
 					//--- only way to solve the problem is to avoid the creation of them
 
-					if (schema.isSimpleElement(childName) || !elemType.isOrType())
+					if (schema.isSimpleElement(elemName, childName) || !elemType.isOrType())
 					{
 						String name   = getUnqualifiedName(childName);
 						String ns     = getNamespace(childName, md);
@@ -392,7 +421,7 @@ public class EditLib
 						Element child = new Element(name, prefix, ns);
 
 						md.addContent(child);
-						fillElement(schema, sugg, child);
+						fillElement(schema, sugg, md, child);
 					}
 				}
 			}
@@ -447,30 +476,79 @@ public class EditLib
 	}
 
 	//--------------------------------------------------------------------------
+
+	private String getParentNameFromChild(Element child) {
+	  String childName = child.getQualifiedName();
+		String parentName = "root";
+		Element parent = child.getParentElement();
+		if (parent != null) {
+			parentName = parent.getQualifiedName();
+		}
+		return parentName;
+	}
+
+	//--------------------------------------------------------------------------
+	/** Checks substitutions for element and returns substitute based on 
+	 *  namespace prefix of the root
+	 */
+	private String getSubstituteName(MetadataSchema schema, String childQName,
+																			Element md)
+	{
+		ArrayList subsNames = schema.getElementSubs(childQName);
+		if (subsNames == null) return childQName;
+
+		// find root element, where namespaces *must* be declared
+		Element root = md;
+		while (root.getParent() != null && root.getParent() instanceof Element) root = (Element)root.getParent();
+		String prefix = root.getNamespacePrefix();
+
+		for (int i = 0;i < subsNames.size();i++) {
+			 String sub = (String) subsNames.get(i);
+			if (getPrefix(sub).equals(prefix)) return sub;
+		}
+
+		return childQName;
+
+	}
+
+	//--------------------------------------------------------------------------
+	/** Replace CHOICE_ELEMENTs with their children by enumerating the tree
+	 */
+	public void replaceChoiceElements(Element md) throws Exception
+	{
+		enumerateTree(md);
+		removeEditingInfo(md);
+	}
+
+
+	//--------------------------------------------------------------------------
 	/** Adds editing information to a single element
 	  */
 
 	private void expandElement(String schemaName, MetadataSchema schema, Element md) throws Exception
 	{
-//		System.out.println("entering expandElement()"); // DEBUG
+		// System.out.println("entering expandElement()"); // DEBUG
 
 		String elemName = md.getQualifiedName();
-		String elemType = schema.getElementType(elemName);
+		String parentName = getParentNameFromChild(md);
 
-//		System.out.println("elemName = " + elemName); // DEBUG
-//		System.out.println("elemType = " + elemType); // DEBUG
+		// System.out.println("elemName = " + elemName); // DEBUG
+		// System.out.println("parentName = " + parentName); // DEBUG
+
+		String elemType = schema.getElementType(elemName,parentName);
+		// System.out.println("elemType = " + elemType); // DEBUG
 
 		Element elem = md.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
-		addValues(schema, elem, elemName);
+		addValues(schema, elem, elemName, parentName);
 
-		if (schema.isSimpleElement(elemName))
+		if (schema.isSimpleElement(elemName,parentName))
 		{
-//			System.out.println("is simple element"); // DEBUG
+			// System.out.println("is simple element"); // DEBUG
 			return;
 		}
 		MetadataType type = schema.getTypeInfo(elemType);
 
-//		System.out.println("type is = " + type.getName()); // DEBUG
+		Boolean postProcessChoiceElements = false;
 
 		if (!type.isOrType())
 		{
@@ -478,42 +556,52 @@ public class EditLib
 			{
 				String childQName = type.getElementAt(i);
 
-//				System.out.println("- childName = " + childQName); // DEBUG
-
+				// System.out.println("- childName = " + childQName); // DEBUG
 				if (childQName == null) continue; // schema extensions cause null types; just skip
+
+				// Now if the element has subs examine them and substitute the
+				// correct element based on the namespace of the root element
+				if (type.examineSubs(i)) {
+					childQName  = getSubstituteName(schema,childQName,md);
+					// System.out.println("- childName has substituted = " + childQName);
+				}
 
 				String childName   = getUnqualifiedName(childQName);
 				String childPrefix = getPrefix(childQName);
 				String childNS     = getNamespace(childQName, md);
 
-//				System.out.println("- name      = " + childName); // DEBUG
-//				System.out.println("- prefix    = " + childPrefix); // DEBUG
-//				System.out.println("- namespace = " + childNS); // DEBUG
+				// System.out.println("- name      = " + childName); // DEBUG
+				// System.out.println("- prefix    = " + childPrefix); // DEBUG
+				// System.out.println("- namespace = " + childNS); // DEBUG
 
 				List list = md.getChildren(childName, Namespace.getNamespace(childNS));
 				if (list.size() == 0)
 				{
-//					System.out.println("- no children of this type already present"); // DEBUG
+					// System.out.println("- no children of this type already present"); // DEBUG
 
-					Element newElem = createElement(schemaName, schema, childName, childPrefix, childNS);
-					if (i == 0)	insertFirst(md, newElem);
-					else
-					{
-						String prevQName = type.getElementAt(i-1);
-						String prevName = getUnqualifiedName(prevQName);
-						String prevNS   = getNamespace(prevQName, md);
-						insertLast(md, prevName, prevNS, newElem);
-					}
+					Element newElem = createElement(schemaName, schema, elemName, childQName, childPrefix, childNS);
+						if (i == 0)	insertFirst(md, newElem);
+						else
+						{
+							String prevQName = type.getElementAt(i-1);
+							String prevName = getUnqualifiedName(prevQName);
+							String prevNS   = getNamespace(prevQName, md);
+							insertLast(md, prevName, prevNS, newElem);
+						}
 				}
 				else
 				{
-//					System.out.println("- " + list.size() + " children of this type already present"); // DEBUG
-//					System.out.println("- min cardinality = " + type.getMinCardinAt(i)); // DEBUG
-//					System.out.println("- max cardinality = " + type.getMaxCardinAt(i)); // DEBUG
+					// System.out.println("- " + list.size() + " children of this type already present"); // DEBUG
+					// System.out.println("- min cardinality = " + type.getMinCardinAt(i)); // DEBUG
+					// System.out.println("- max cardinality = " + type.getMaxCardinAt(i)); // DEBUG
 
 					for(int j=0; j<list.size(); j++)
 					{
 						Element listChild = (Element) list.get(j);
+
+						// IF this is a CHOICE_ELEMENT then we will replace it afterwards
+						// with its children
+						postProcessChoiceElements = true;
 						Element listElem  = listChild.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
 
 						if (j>0)
@@ -526,7 +614,24 @@ public class EditLib
 							listElem.setAttribute(new Attribute(Edit.Element.Attr.DEL, Edit.Value.TRUE));
 					}
 					if (list.size() < type.getMaxCardinAt(i))
-						insertLast(md, childName, childNS, createElement(schemaName, schema, childName, childPrefix, childNS));
+						insertLast(md, childName, childNS, createElement(schemaName, schema, elemName, childQName, childPrefix, childNS));
+				}
+
+			}
+
+// Deals with CHOICE_ELEMENTs by replacing them with their children
+// FIXME: must also copy up the geonet:element child so that minOccurs/maxOccurs
+// are properly carried - this isn't a problem yet
+			if (postProcessChoiceElements) {
+				List list = md.getChildren();
+				for (int i = 0;i < list.size();i++) {
+					Element listChild = (Element) list.get(i);
+					if (listChild.getName().indexOf("CHOICE_ELEMENT") != -1) {
+						// System.out.println("###### Replacing "+listChild.getName());
+						List children = listChild.getChildren();
+						Element child = (Element)children.get(0);
+						list.set(i,child.detach());
+					}
 				}
 			}
 		}
@@ -535,7 +640,7 @@ public class EditLib
 
 	//--------------------------------------------------------------------------
 
-	private String getUnqualifiedName(String qname)
+	public String getUnqualifiedName(String qname)
 	{
 		int pos = qname.indexOf(":");
 		if (pos < 0) return qname;
@@ -544,7 +649,7 @@ public class EditLib
 
 	//--------------------------------------------------------------------------
 
-	private String getPrefix(String qname)
+	public String getPrefix(String qname)
 	{
 		int pos = qname.indexOf(":");
 		if (pos < 0) return "";
@@ -553,19 +658,32 @@ public class EditLib
 
 	//--------------------------------------------------------------------------
 
-	private String getNamespace(String qname, Element md)
+	public String getNamespace(String qname, Element md)
 	{
-		// find root element, where namespaces *must* be declared
-		Element root = md;
-		while (root.getParent() != null && root.getParent() instanceof Element) root = (Element)root.getParent();
+		// check the element first to see whether the namespace is
+		// declared locally
+		String result = checkNamespaces(qname,md);
+		if (result.equals("UNKNOWN")) {
 
+			// find root element, where namespaces *must* be declared
+			Element root = md;
+			while (root.getParent() != null && root.getParent() instanceof Element) root = (Element)root.getParent();
+			result = checkNamespaces(qname,root);
+		}
+		return result;
+	}
+
+	//--------------------------------------------------------------------------
+
+	public String checkNamespaces(String qname, Element md)
+	{
 		// get prefix
 		String prefix = getPrefix(qname);
 
 		// loop on namespaces to fine the one corresponding to prefix
-		Namespace rns = root.getNamespace();
+		Namespace rns = md.getNamespace();
 		if (prefix.equals(rns.getPrefix())) return rns.getURI();
-		for (Iterator i = root.getAdditionalNamespaces().iterator(); i.hasNext(); )
+		for (Iterator i = md.getAdditionalNamespaces().iterator(); i.hasNext(); )
 		{
 			Namespace ns = (Namespace)i.next();
 			if (prefix.equals(ns.getPrefix())) return ns.getURI();
@@ -718,16 +836,16 @@ public class EditLib
 	/** Create a new element for editing, adding all mandatory subtags
 	  */
 
-	private Element createElement(String schemaName, MetadataSchema schema, String name, String prefix, String ns) throws Exception
+	private Element createElement(String schemaName, MetadataSchema schema, String parent, String qname, String childPrefix, String childNS) throws Exception
 	{
 		Element child = new Element(Edit.RootChild.CHILD, Edit.NAMESPACE);
-		child.setAttribute(new Attribute(Edit.ChildElem.Attr.NAME, name));
-		child.setAttribute(new Attribute(Edit.ChildElem.Attr.PREFIX,    prefix));
-		child.setAttribute(new Attribute(Edit.ChildElem.Attr.NAMESPACE, ns));
+		child.setAttribute(new Attribute(Edit.ChildElem.Attr.NAME, getUnqualifiedName(qname)));
+		child.setAttribute(new Attribute(Edit.ChildElem.Attr.PREFIX,   getPrefix(qname)));
+		child.setAttribute(new Attribute(Edit.ChildElem.Attr.NAMESPACE, childNS));
 
-		if (!schema.isSimpleElement(name))
+		if (!schema.isSimpleElement(qname,parent))
 		{
-			String elemType = schema.getElementType(name);
+			String elemType = schema.getElementType(qname,parent);
 
 			MetadataType type = schema.getTypeInfo(elemType);
 
@@ -735,7 +853,12 @@ public class EditLib
 				for(int l=0; l<type.getElementCount(); l++)
 				{
 					Element choose = new Element(Edit.ChildElem.Child.CHOOSE, Edit.NAMESPACE);
-					choose.setAttribute(new Attribute(Edit.Choose.Attr.NAME, type.getElementAt(l)));
+					String chType = type.getElementAt(l);
+					//String prefix = getPrefix(chType);
+					//choose.setAttribute(new Attribute(Edit.Choose.Attr.NAME, getUnqualifiedName(chType)));
+					choose.setAttribute(new Attribute(Edit.Choose.Attr.NAME, chType));
+					//if (!prefix.equals("")) 
+					//	choose.setAttribute(new Attribute(Edit.Choose.Attr.PREFIX,prefix));
 
 					child.addContent(choose);
 				}
@@ -746,9 +869,9 @@ public class EditLib
 
 	//--------------------------------------------------------------------------
 
-	private void addValues(MetadataSchema schema, Element elem, String name)
+	private void addValues(MetadataSchema schema, Element elem, String name, String parent) throws Exception
 	{
-		List values = schema.getElementValues(name);
+		List values = schema.getElementValues(name,parent);
 		if (values != null)
 			for(int i=0; i<values.size(); i++)
 			{
@@ -769,7 +892,12 @@ public class EditLib
 
 			Element attribute = new Element(Edit.RootChild.ATTRIBUTE, Edit.NAMESPACE);
 
+			//String name = getUnqualifiedName(attr.name);
+			//String prefix = getPrefix(attr.name);
+
 			attribute.setAttribute(new Attribute(Edit.Attribute.Attr.NAME, attr.name));
+			//if (prefix != null && !prefix.equals("")) 
+			//	attribute.setAttribute(new Attribute(Edit.Attribute.Attr.PREFIX, prefix));
 
 			//--- add default value (if any)
 
