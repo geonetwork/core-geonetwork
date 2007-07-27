@@ -2436,4 +2436,24 @@
 		<description></description>
 	</element>
 	<!-- ==================================================== -->
+	<element name="gml:TimePeriodTypeCHOICE_ELEMENT1">
+		<label>Begin Time Element</label>
+		<description>Choose the begin time element</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:TimePeriodTypeCHOICE_ELEMENT2">
+		<label>End Time Element</label>
+		<description>Choose the end time element</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:LinearRingTypeCHOICE_ELEMENT0">
+		<label>Line Segment Element</label>
+		<description>Choose the Line Segment element: three points, position list or coordinate list</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:LinearRingTypeCHOICE_ELEMENT1">
+		<label>Three or more point elements</label>
+		<description></description>
+	</element>
+	<!-- ==================================================== -->
 </labels>
