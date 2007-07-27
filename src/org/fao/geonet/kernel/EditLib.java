@@ -128,7 +128,6 @@ public class EditLib
 
 		enumerateTree(md, 1);
 		expandTree(schema, getSchema(schema), md);
-		//System.out.println("MD after editing infomation:\n" + jeeves.utils.Xml.getString(md));
 
 		return version;
 	}

@@ -141,7 +141,6 @@ public class SchemaLoader
 		for(Iterator i=hmTypes.values().iterator(); i.hasNext();)
 		{
 			ComplexTypeEntry cte = (ComplexTypeEntry) i.next();
-			Logger.log("Doing complexType "+cte.name);
 			MetadataType mdt = new MetadataType();
 
 			mdt.setOrType(cte.isOrType);
@@ -178,10 +177,8 @@ public class SchemaLoader
 					cte.alElements = resolveInheritance(cte);
 					ArrayList complexContentAttribs = resolveAttributeInheritance(cte);
 
-				//--- add attribs from complexContent (if any) - this needs
-				//--- to be recursive because we might have some 
+				//--- add attribs from complexContent (if any) 
 
-					Logger.log("Attributes resolved: "+complexContentAttribs.size());
 					for(int j=0; j<complexContentAttribs.size(); j++) {
 						AttributeEntry ae = (AttributeEntry) complexContentAttribs.get(j);
 						mdt.addAttribute(buildMetadataAttrib(ae));
@@ -245,7 +242,6 @@ public class SchemaLoader
 			{
 				ElementEntry ee = (ElementEntry) cte.alElements.get(j);
 
-				Logger.log("resolving element " + (ee.name == null ? (" --> " + ee.ref) : ee.name)); // DEBUG
 
 				String type;
 				Boolean abstrElement = false;
@@ -257,15 +253,12 @@ public class SchemaLoader
 					type = (String) hmElements.get(ee.ref);
 					if (hmAbsElems.containsKey(ee.ref)) abstrElement = true;
 
-					Logger.log("- ee.ref = "+ee.ref+" type = " + type + " abstract = "+abstrElement); // DEBUG
 				}
 // 2. element is a local element so get type 
 				else if (ee.name != null)
 				{
 					type = ee.type == null ? "string" : ee.type;
 					
-					Logger.log("- type = " + type); // DEBUG
-
 					mds.addElement(ee.name, type, new ArrayList(), new ArrayList(), new ArrayList());
 
 // 3. element is a choice element or an error 
@@ -309,17 +302,13 @@ public class SchemaLoader
 					{
 						if (cte.alElements.size() == 1) {
 						// This type has only one abstract element so make this type the choice type 
-							Logger.log("MAKING "+cte.name+" the choice type for "+ee.ref+" with attribute count "+mdt.getAttributeCount());
 							Integer elementsAdded = recursivelyDealWithAbstractElements(mdt,al);
-							Logger.log("Added "+elementsAdded+" elements");
 							mdt.setOrType(elementsAdded > 1);
 						} else {
 						// This type has real elements and/or attributes so make a new choice type for this element only
 						  type = ee.ref+"CHOICE"+j;
-							Logger.log("CREATING new choice type "+type+" for "+ee.ref);
 							MetadataType mdtc = new MetadataType();
 							Integer elementsAdded = recursivelyDealWithAbstractElements(mdtc,al);
-							Logger.log("Added "+elementsAdded+" elements");
 							mdtc.setOrType(elementsAdded > 1);
 							mds.addType(type,mdtc);
 							mds.addElement(ee.ref,type,new ArrayList(),new ArrayList(), new ArrayList());
@@ -333,7 +322,6 @@ public class SchemaLoader
 					else mdt.addElementWithType(ee.name, type, ee.min, ee.max);
 				}
 			}
-			Logger.log("Created mdt is "+mdt.toString());
 			mds.addType(cte.name, mdt);
 		}
 
@@ -364,12 +352,10 @@ public class SchemaLoader
 					mdt.addElementWithType(ee.name, ee.type, ee.min, ee.max);
 				} else {
 					if (ee.name != null) {
-				 		Logger.log("-- Adding "+ee.name);
 				 		mds.addElement(ee.name,ee.type,new ArrayList(),new ArrayList(), new ArrayList());
 				 		mdt.addElementWithType(ee.name, ee.type, ee.min, ee.max);
 					}
 					else {
-				 		Logger.log("-- Adding ref element "+ee.ref);
 				 		mdt.addRefElementWithNoType(ee.ref, ee.min, ee.max);
 					}
 				}
@@ -396,7 +382,6 @@ public class SchemaLoader
 				number = number + numberRecursed;
 			} else {
 				number++;
-				Logger.log("-- Adding "+ee.name);
 				mdt.addElementWithType(ee.name, ee.type, ee.min, ee.max);
 			}
 		}
@@ -414,7 +399,6 @@ public class SchemaLoader
 	private ArrayList loadFile(String xmlSchemaFile, HashSet loadedFiles) throws Exception
 	{
 		loadedFiles.add(new File(xmlSchemaFile).getCanonicalPath());
-		Logger.log("Added : "+ new File(xmlSchemaFile).getCanonicalPath());
 
 		String path = new File(xmlSchemaFile).getParent() + "/";
 
@@ -539,11 +523,9 @@ public class SchemaLoader
 		if (ee.name == null)
 			throw new IllegalArgumentException("Name is null for element : " + ee.name);
 
-		Logger.log("building global element " + ee.name); // DEBUG
 
 		if (ee.substGroup != null)
 		{
-			Logger.log(" -- sub group " + ee.substGroup); // DEBUG
 			ArrayList al = (ArrayList) hmSubsGrp.get(ee.substGroup);
 
 			if (al == null) {
@@ -565,7 +547,6 @@ public class SchemaLoader
 				throw new IllegalArgumentException("Namespace collision for : " + ee.name);
 			hmAbsElems.put(ee.name, ee.type);
 
-			Logger.log("- abstract element"); // DEBUG
 
 			return;
 		}
@@ -580,7 +561,6 @@ public class SchemaLoader
 			hmElements.put(ee.name, type);
 			hmTypes.put(type, ee.complexType);
 
-			Logger.log("- complex type"); // DEBUG
 		}
 		else if (ee.simpleType != null)
 		{
@@ -593,13 +573,11 @@ public class SchemaLoader
 			hmElements .put(ee.name, ee.type);
 			hmElemRestr.put(ee.name, ee.simpleType.alEnum);
 
-			Logger.log("- simple type"); // DEBUG
 		}
 		else
 		{
 			hmElements.put(ee.name, ee.type);
 
-			Logger.log("- element of : "+ee.type); // DEBUG
 		}
 	}
 
@@ -683,7 +661,6 @@ public class SchemaLoader
 
 	private ArrayList resolveAttributeInheritance(ComplexTypeEntry cte)
 	{
-		Logger.log(" -- resolveAttributeInheritance: Doing cte "+cte.name);
 		if (cte.complexContent == null)
 			return cte.alAttribs;
 
@@ -695,7 +672,6 @@ public class SchemaLoader
 		ArrayList result = new ArrayList(resolveAttributeInheritance(baseCTE));
 
 		ArrayList al = cte.complexContent.alAttribs;
-		Logger.log("Found "+al.size()+" attributes");
 
 		for(int i=0; i<al.size(); i++)
 			result.add(al.get(i));
