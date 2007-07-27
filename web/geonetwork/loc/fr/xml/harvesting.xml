@@ -64,8 +64,8 @@
 	<add>Ajouter</add>
 	<edit>Editer</edit>
 	<save>Sauver</save>
-	<start>Démarrer</start>
-	<stop>Arrêter</stop>
+	<activate>Activate</activate>
+	<deactivate>Deactivate</deactivate>
 	<run>Lancer</run>
 	<remove>Supprimer</remove>
 	<refresh>Rafraîchir</refresh>

@@ -102,8 +102,8 @@
 	<add>Add</add>
 	<edit>Edit</edit>
 	<save>Save</save>
-	<start>Start</start>
-	<stop>Stop</stop>
+	<activate>Activate</activate>
+	<deactivate>Deactivate</deactivate>
 	<run>Run</run>
 	<remove>Remove</remove>
 	<refresh>Refresh</refresh>
