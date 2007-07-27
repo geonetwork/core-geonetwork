@@ -470,14 +470,23 @@ public class DatabaseLib
 				{
 					Document doc  = Lib.xml.load(temp);
 					String   uuid = UUID.randomUUID().toString();
-					Element  xml  = Lib.metadata.updateFixedInfo(serial+"", doc.getRootElement(),
-																			  uuid, date, schema.getName(), siteURL);
+					Element  xml  = doc.getRootElement();
 
 					DataManager.setNamespacePrefix(xml);
 
+					String file  = temp.getName();
+					String templ = "y";
+					String title = null;
+
+					if (file.startsWith("sub-"))
+					{
+						templ = "s";
+						title = file.substring(4, file.length() -4);
+					}
+
 					//--- templates are by default assigned to administrator/intranet group
 					XmlSerializer.insert(dbms, schema.getName(), xml, serial,
-											   siteId, uuid, date, date, "y", null, 1, null);
+											   siteId, uuid, date, date, templ, title, 1, null);
 
 					setupTemplatePriv(dbms, serial);
 					dbms.commit();
