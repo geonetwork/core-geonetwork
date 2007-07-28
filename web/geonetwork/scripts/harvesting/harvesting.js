@@ -74,10 +74,10 @@ function Harvesting()
 function init()
 {
 	view.register(geonet);
-	view.register(webdav);
+//	view.register(webdav);
 	view.register(csw);
 	view.register(geonet20);
-	view.register(z3950);
+//	view.register(z3950);
 	view.show(SHOW.LIST);
 	
 	refresh();
