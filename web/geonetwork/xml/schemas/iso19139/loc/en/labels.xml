@@ -2,6 +2,7 @@
 
 <labels xmlns:gmd="http://www.isotc211.org/2005/gmd" 
 		  xmlns:gts="http://www.isotc211.org/2005/gts" 
+		  xmlns:gco="http://www.isotc211.org/2005/gco"
 		  xmlns:gml="http://www.opengis.net/gml">
 	
 	<!-- ==================================================== -->
@@ -2408,6 +2409,23 @@
 			longitude in decimal degrees (positive east)</description>
 		<condition>mandatory</condition>
 	</element>
+	
+	<!-- ==================================================== -->
+	<!-- === GCO namespace                                    -->
+	<!-- ==================================================== -->
+	
+	<element name="gco:Date">
+		<label>Date</label>
+		<description></description>
+	</element>	
+	
+	<!-- ==================================================== -->
+	
+	<element name="gco:DateTime">
+		<label>Date and time</label>
+		<description></description>
+	</element>	
+	
 	<!-- ==================================================== -->
 	<!-- === GTS namespace                                    -->
 	<!-- ==================================================== -->
