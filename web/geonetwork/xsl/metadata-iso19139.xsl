@@ -400,7 +400,7 @@
 					<xsl:apply-templates mode="iso19139VertElement" select="gmd:northBoundLatitude/gco:Decimal">
 						<xsl:with-param name="schema" select="$schema"/>
 						<xsl:with-param name="edit"   select="$edit"/>
-						<xsl:with-param name="name"   select="'northBoundLatitude'"/>
+						<xsl:with-param name="name"   select="'gmd:northBoundLatitude'"/>
 					</xsl:apply-templates>
 				</td>
 				<td/>
@@ -410,7 +410,7 @@
 					<xsl:apply-templates mode="iso19139VertElement" select="gmd:westBoundLongitude/gco:Decimal">
 						<xsl:with-param name="schema" select="$schema"/>
 						<xsl:with-param name="edit"   select="$edit"/>
-						<xsl:with-param name="name"   select="'westBoundLongitude'"/>
+						<xsl:with-param name="name"   select="'gmd:westBoundLongitude'"/>
 					</xsl:apply-templates>
 				</td>
 				
@@ -431,7 +431,7 @@
 					<xsl:apply-templates mode="iso19139VertElement" select="gmd:eastBoundLongitude/gco:Decimal">
 						<xsl:with-param name="schema" select="$schema"/>
 						<xsl:with-param name="edit"   select="$edit"/>
-						<xsl:with-param name="name"   select="'eastBoundLongitude'"/>
+						<xsl:with-param name="name"   select="'gmd:eastBoundLongitude'"/>
 					</xsl:apply-templates>
 				</td>
 			</tr>
@@ -441,7 +441,7 @@
 					<xsl:apply-templates mode="iso19139VertElement" select="gmd:southBoundLatitude/gco:Decimal">
 						<xsl:with-param name="schema" select="$schema"/>
 						<xsl:with-param name="edit"   select="$edit"/>
-						<xsl:with-param name="name"   select="'southBoundLatitude'"/>
+						<xsl:with-param name="name"   select="'gmd:southBoundLatitude'"/>
 					</xsl:apply-templates>
 				</td>
 				<td/>
@@ -471,7 +471,12 @@
 		<b>
 			<xsl:choose>
 				<xsl:when test="$helpLink!=''">
-					<a href="javascript:popNew('{$helpLink}')"><xsl:value-of select="$title"/></a>
+					<span id="tip.{$helpLink}" style="cursor:help;"><xsl:value-of select="$title"/>
+						<xsl:call-template name="asterisk">
+							<xsl:with-param name="link" select="$helpLink"/>
+							<xsl:with-param name="edit" select="$edit"/>													
+						</xsl:call-template>
+					</span>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="$title"/>
