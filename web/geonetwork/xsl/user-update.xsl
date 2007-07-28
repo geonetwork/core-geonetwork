@@ -50,10 +50,11 @@
 
 				// check at least one group selected
 				if ($F('groups') == '')
-				{
-					alert('Please, select at least one group');
-					return;
-				}
+					if ($F('user.profile') != 'Administrator')
+					{
+						alert('Please, select at least one group');
+						return;
+					}
 				
 				// all ok, proceed
 				document.userupdateform.submit();
