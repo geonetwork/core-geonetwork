@@ -399,7 +399,7 @@ public class EditLib
 				// Now if the element has subs examine them and substitute the
 				// correct element based on the namespace of the root element
 				if (type.examineSubs(i)) {
-					childName  = getSubstituteName(schema,childName,md);
+					childName  = getProfileSubstituteName(schema,childName,md);
 					//System.out.println("- childName has substituted = " + childName);
 				}
 
@@ -488,10 +488,13 @@ public class EditLib
 
 	//--------------------------------------------------------------------------
 	/** Checks substitutions for element and returns substitute based on 
-	 *  namespace prefix of the root
+	 *  namespace prefix of the root - NOTE: this code is to support 
+   *  profiles of ISO19139 which should have a different root element 
+   *  namespace - so no subs are done if this is vanilla iso19139 ie. gmd 
+   *  root namespace.
 	 */
-	private String getSubstituteName(MetadataSchema schema, String childQName,
-																			Element md)
+	private String getProfileSubstituteName(MetadataSchema schema, 
+																String childQName, Element md)
 	{
 		ArrayList subsNames = schema.getElementSubs(childQName);
 		if (subsNames == null) return childQName;
@@ -500,6 +503,7 @@ public class EditLib
 		Element root = md;
 		while (root.getParent() != null && root.getParent() instanceof Element) root = (Element)root.getParent();
 		String prefix = root.getNamespacePrefix();
+		if (prefix.equals("gmd")) return childQName;
 
 		for (int i = 0;i < subsNames.size();i++) {
 			 String sub = (String) subsNames.get(i);
@@ -561,7 +565,7 @@ public class EditLib
 				// Now if the element has subs examine them and substitute the
 				// correct element based on the namespace of the root element
 				if (type.examineSubs(i)) {
-					childQName  = getSubstituteName(schema,childQName,md);
+					childQName  = getProfileSubstituteName(schema,childQName,md);
 					// System.out.println("- childName has substituted = " + childQName);
 				}
 
