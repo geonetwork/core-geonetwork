@@ -131,9 +131,9 @@ public class MapUtil
 
 
 	/**
-	 * @return true if the service has been added
+	 * @return the id of the service, or -1 if the service has not been added
 	 */
-	public static boolean addService(int serverType, String serverUrl, String serviceName, String vsp, MapMerger mm) throws Exception
+	public static int addService(int serverType, String serverUrl, String serviceName, String vsp, MapMerger mm) throws Exception
 	{
 		// Do not add the service if it is already there
 //		for (Enumeration e = mm.getServices(); e.hasMoreElements(); ) {
@@ -143,24 +143,30 @@ public class MapUtil
 			String url = service.getServerURL();
 			String name = service.getName();
 			if (url.equals(serverUrl) && name.equals(serviceName))
-				return false;
+				return -1;
 		}
 
+		int ret;
+		
 		switch (serverType)
 		{
 			case ArcIMSService.TYPE :
-				mm.addService(new ArcIMSService(serverUrl, serviceName));
+				ret = mm.addService(new ArcIMSService(serverUrl, serviceName));
 				break;
+				
 			case WmsService.TYPE :
 				Element capabilities = WmsGetCapClient.getCapabilities(serverUrl);
 				WmsService s = new WmsService(serverUrl, serviceName, capabilities);
-				mm.addService(s);
+				ret = mm.addService(s);
 				setVendorSpecificParams(s, vsp);
-
 				break;
+				
+			default:
+				throw new IllegalArgumentException("Unknown serverType " + serverType +
+												   " for service " + serviceName + " @ " + serverUrl);
 		}
 
-		return true;
+		return ret;
 	}
 
 	private static void setVendorSpecificParams(WmsService service, String params) {
@@ -187,6 +193,31 @@ public class MapUtil
 //		System.out.println("hmParams: " + hmParams);
 		service.setVendorSpecificParams(hmParams); //TEST
 	}
+	
+	public static void setDefaultContext(MapMerger mm) throws Exception
+	{
+		Element mapContext = DefaultMapServers.getDefaultContext();
+
+		// Add each layer in the map context to the map
+		for (Element elServer: (List<Element>)mapContext.getChildren("server"))
+		{
+			String serverType = elServer.getAttributeValue(Constants.MAP_SERVER_TYPE);
+			String serverUrl  = elServer.getAttributeValue(Constants.MAP_SERVER_URL);
+
+			for (Element elLayer: (List<Element>)elServer.getChildren(Constants.MAP_LAYER))
+			{
+				try
+				{
+					String serviceName = elLayer.getAttributeValue("name");
+					MapUtil.addService(Integer.parseInt(serverType), serverUrl, serviceName, "", mm);
+				}
+				catch (Exception e) { e.printStackTrace(); } // DEBUG: tell the user
+			}
+		}
+
+		MapUtil.setDefBoundingBox(mm);
+	}
+	
 
 	public static void setDefBoundingBox(MapMerger mm) throws Exception
 	{
