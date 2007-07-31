@@ -1,7 +1,15 @@
+/*****************************************************************************
+ *
+ *                 Functions related to layers handling
+ *
+ *****************************************************************************/
 
 // Builds the layer list
 function im_buildLayerList(req) 
 {
+           if( ! $('im_layersDiv') ) // map viewer not yet loaded
+               return;
+
 	var layers = req.responseXML.getElementsByTagName('layer');
 	
 	// delete all layers from the list
@@ -11,129 +19,148 @@ function im_buildLayerList(req)
 	// add each layer to the list
 	for (var i = 0; i < layers.length; i++)
 	{
-		var title = document.createTextNode(layers[i].getAttribute('title'));
+//	alert('Adding layer ' + layers[i].getAttribute('title'));
+	           var title = Builder.node('p',{},layers[i].getAttribute('title'));
+//		var title = document.createTextNode(layers[i].getAttribute('title'));
+                    
 		var id = layers[i].getAttribute('id');
 		var transp = layers[i].getAttribute('transparency');
 		
 		var addup = i>0;
 		var adddown = (i<layers.length-1)&&(layers.length>1);
-		
+
+//zalert('Appending layer ' + layers[i].getAttribute('title'));		
 		appendToLayerList(ul, title, id, transp,addup, adddown);
 	}
 	
+	createSortable();
+	
 	// activate the first layer if none active
 	if (!activeLayerId)
-		activateMapLayer(layers[0].getAttribute('id'));
+		activateMapLayer(layers[0].getAttribute('id'));		
 }
 
 // Appends a single layer to the layer list
 function appendToLayerList(list, title, id, transp, addup, adddown) // layer in a TABLEs layout
 {
-            var li = document.createElement('li');
-            li.setAttribute('id', 'layerList_' + id);
+            var li = Builder.node('li', {id: 'layerList_' + id});
             
-            var toggleLayer = document.createElement('img');
-            toggleLayer.id= 'layerButtonToggle';
-            toggleLayer.className = 'im_layerControl';
-            toggleLayer.setAttribute('src','/intermap/images/showLayer.png');
-            toggleLayer.setAttribute('title','Toggle layer visibility'); // FIXME: i18n this string
-            toggleLayer.setAttribute('id','visibility_' + id);
+            var toggleLayer = Builder.node('img' ,
+            {
+                id: 'visibility_' + id,
+                className: 'im_layerControl',
+                src: '/intermap/images/showLayer.png',
+                title:'Toggle layer visibility' // FIXME: i18n this string
+            });
             
-            var delLayer = document.createElement('img');
-            delLayer.id = 'layerButtonDelete';
-            delLayer.className = 'im_layerButton';
-            delLayer.setAttribute('src','/intermap/images/deleteLayer.png'); 
-            delLayer.setAttribute('title','Remove layer'); // FIXME: i18n this string
-            delLayer.setAttribute('id','deleteLayer_' + id);
+            var delLayer = Builder.node('img', 
+            {
+                id: 'deleteLayer_' + id,
+                className: 'im_layerButton',
+                src: '/intermap/images/deleteLayer.png', 
+                title: 'Remove layer' // FIXME: i18n this string
+            });
             
-            var showLayerMD = document.createElement('img');
-            showLayerMD.id = 'layerButtonShowMD';
-            showLayerMD.className = 'im_layerButton';
-            showLayerMD.setAttribute('src','/intermap/images/info.png');
-            showLayerMD.setAttribute('title','Show metadata'); // FIXME: i18n this string
-            showLayerMD.setAttribute('id','showLayerMD_' + id);
+            var showLayerMD = Builder.node('img', 
+            {
+                id: 'showLayerMD_' + id,
+                className: 'im_layerButton',
+                src: '/intermap/images/info.png',
+                title: 'Show metadata' // FIXME: i18n this string
+            });
             
-            var legend = document.createElement('img');
-            legend.id = 'layerLegend';
-            legend.className = 'im_layerButton';
-            legend.setAttribute('src','/intermap/images/legend.png');
-            legend.setAttribute('title','Show legend'); // FIXME: i18n this string
-            legend.setAttribute('id','legend_' + id);
-            
-            var trans = document.createElement('select');
-            trans.className = "layerSelectTransp";
-            trans.id="im_transp_"+id;
-            
-            var opt = document.createElement('OPTION');
-            opt.setAttribute("value", 100);
-            opt.innerHTML="opaque";
-            trans.appendChild(opt);
+            var legend = Builder.node('img', 
+            {
+                id: 'legend_' + id,
+                className: 'im_layerButton',
+                src: '/intermap/images/legend.png',
+                title: 'Show legend' // FIXME: i18n this string
+            });
 
-            for (var t = 90; t >= 0; t-=10) {
-               var opt = document.createElement('OPTION');
+/*            var trans = Builder.node('select',
+            {
+                id: "im_transp_"+id,
+                className: "layerSelectTransp"
+            });
+*/            
+            var trans = document.createElement('select');
+            trans.setAttribute("id", "im_transp_"+id);
+            trans.setAttribute("className", "layerSelectTransp");
+                        
+            for (var t = 100; t >= 0; t-=10) {
+               var opt = document.createElement('option');
                opt.setAttribute("value", t);
                if(transp==t)
-                   opt.setAttribute("selected", 'true');               
-               opt.innerHTML=t+"%";
+               {
+                   //alert ("Transp for " + title + " is set at " + t); 
+                   opt.setAttribute('selected', 'true');
+               }
+               var label = t+"%";
+               if(t==100)
+                   label = "opaque"; // FIXME i18n
+                   
+               opt.innerHTML=label;
                trans.appendChild(opt);
            }
 
             // do layout
             list.appendChild(li);
             
-	var table = document.createElement('table');
+	var table = Builder.node('table');
            li.appendChild(table);
+           
+           var tbody = Builder.node('tbody');
+           table.appendChild(tbody);
 	
-	var trmainicons = document.createElement('tr');
-	table.appendChild(trmainicons);
-	var tdmainicons = document.createElement('td');
-	tdmainicons.setAttribute("rowspan","2");
-	tdmainicons.setAttribute("height","35px");
-           tdmainicons.className = 'im_layerControl';                
+	var trmainicons = Builder.node('tr');
+	tbody.appendChild(trmainicons);
+	
+	var tdmainicons = Builder.node('td', 
+	{
+	    rowspan: "2",
+	    height: "35px",
+               className: 'im_layerControl'
+           });
+               
 	trmainicons.appendChild(tdmainicons);
 
 	tdmainicons.appendChild(toggleLayer);
 
-
 	if(addup)
 	{
-                var upbtn = document.createElement('img');
-                upbtn.id = 'im_layerControlUp';
-                upbtn.className = 'im_layerControl';
-                upbtn.setAttribute('src','/intermap/images/im_moveup.gif');
-                upbtn.setAttribute('title','Move layer up'); // FIXME: i18n this string
-                //upbtn.setAttribute('id','showLayerMD_' + id);
+                var upbtn = Builder.node('img',
+                {
+                    id: 'im_layerUp_'+id,
+                    className: 'im_layerControl',
+                    //style: 'position:absolute; bottom:3px;',
+                    src: '/intermap/images/im_moveup.gif',
+                    title: 'Move layer up' // FIXME: i18n this string                    
+                });                    
                 tdmainicons.appendChild(upbtn);                
 	}
 
 	if(adddown)
 	{
-                var downbtn = document.createElement('img');
-                downbtn.id = 'im_layerControlDown';
-                downbtn.className = 'im_layerControl';                
-                downbtn.setAttribute('src','/intermap/images/im_movedown.gif');
-                downbtn.setAttribute('title','Move layer down'); // FIXME: i18n this string
-                //upbtn.setAttribute('id','showLayerMD_' + id);
+                var downbtn = Builder.node('img',
+                {
+                    id: 'im_layerDown_'+id,
+                    className: 'im_layerControl',                
+                    src: '/intermap/images/im_movedown.gif',
+                    title: 'Move layer down' // FIXME: i18n this string
+                });
+                
                 tdmainicons.appendChild(downbtn);                
 	}
 	
-	
-/*	var trtitle = document.createElement('tr');
-	table.appendChild(trtitle);
-*/	var tdtitle = document.createElement('td');
-/*	trtitle.appendChild(tdtitle);*/
+	var tdtitle = Builder.node('td');
 	trmainicons.appendChild(tdtitle);
-	
 	tdtitle.appendChild(title);
 	
-
-	var trcontrols = document.createElement('tr');
-	trcontrols.id = 'layerControl_' + id;
+	var trcontrols = Builder.node('tr', {id: 'layerControl_' + id});
 /*	trcontrols.style.display = "none";	*/
-           trcontrols.hide();
-	table.appendChild(trcontrols);
+	tbody.appendChild(trcontrols);
 	
-           var tdcontrols = document.createElement('td');
+           var tdcontrols = Builder.node('td', { /*colspan:"2" */});
 	trcontrols.appendChild(tdcontrols);
 
 /*	tdcontrols.appendChild(toggleLayer);*/
@@ -141,8 +168,12 @@ function appendToLayerList(list, title, id, transp, addup, adddown) // layer in 
 	tdcontrols.appendChild(legend);
 	tdcontrols.appendChild(showLayerMD);
            tdcontrols.appendChild(trans);
+            
+           //ker.wrap(this, function() {
+               //$(trcontrols).hide();
+           //} )();
 
-	
+//alert("observers");	
 	// add event observers (mousedown to select layer and dblclick to zoom to layer)
 	Event.observe('layerList_' + id, 'mousedown', function(e){ activateMapLayer(id); });
 //	Event.observe('layerList_' + id, 'dblclick', function(e){ openInspector(id); });
@@ -152,10 +183,8 @@ function appendToLayerList(list, title, id, transp, addup, adddown) // layer in 
 	Event.observe('deleteLayer_' + id, 'click', function(e){ im_deleteLayer(id); });
 	Event.observe('im_transp_' + id, 'change', function(e){ im_layerTransparencyChanged(id); });  
 // TODO	Event.observe('showLayerMD_' + id, 'click', function(e){  });
-	
-	createSortable();
+           $(trcontrols).hide();
 }
-
 
 // Makes the layer list sortable
 function createSortable()
@@ -240,11 +269,11 @@ function updateInspectorControls(req)
 {
 	// transparency slider
 //	var offsetX = Position.cumulativeOffset($('transparencySlider'))[0];
-	var transparency = parseFloat(req.responseXML.getElementsByTagName('transparency')[0].firstChild.nodeValue);
-	$('im_transparencyHandle').style.left = Math.round(transparency / 100 * 95) + 'px'; // handler width is 5px
+//	var transparency = parseFloat(req.responseXML.getElementsByTagName('transparency')[0].firstChild.nodeValue);
+//	$('im_transparencyHandle').style.left = Math.round(transparency / 100 * 95) + 'px'; // handler width is 5px
 	
 	// transparency value
-	$('im_transparencyValue').innerHTML = transparency;
+//	$('im_transparencyValue').innerHTML = transparency;
 }
 
 function disactivateAllMapLayers()
@@ -257,18 +286,16 @@ function disactivateAllMapLayers()
 		{
 			mapLayer.className = 'im_inactiveLayer';
 			
-			var tr=mapLayer.getElementsByTagName('tr');
-			$A(tr).each(
+			var trList=mapLayer.getElementsByTagName('tr');
+			$A(trList).each(
 	                              function(tr)
 			       {
             			if( new String(tr.id).search('layerControl_') != -1)
-            			   //tr.style.display="none";
             			   tr.hide();
             	                  }
             	           );
 		}
-	);
-	 
+	);	 
 }
 
 

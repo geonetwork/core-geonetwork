@@ -53,3 +53,121 @@ function getWindowSize()
 	
 	return [width, weight];
 }
+
+
+function clearNode(node)
+{
+	var enode = $(node);
+	while (enode.firstChild) 
+	{
+		enode.removeChild(enode.firstChild);
+	}			
+}
+
+//========================================
+// Util: Copy a XML tree with HTML format into the current Document
+//========================================
+
+function copyTree(src, parentDest)
+{			
+	if(src.nodeType==Node.TEXT_NODE) 
+	{
+		var newNode= document.createTextNode(src.nodeValue);
+		parentDest.appendChild(newNode);
+		return;				
+	}
+	
+	if(src.nodeType==Node.COMMENT_NODE) 
+	{
+		var newNode= document.createElement("COMMENT");
+		newNode.style.display = "none";
+		newNode.textContent= src.nodeValue;
+		parentDest.appendChild(newNode);
+		return;				
+	}
+	
+//				var li = document.createElement("li"); // DEBUG!!!
+//				li.textContent= src.tagName+ " ID:" +src.getAttribute('id');
+//				$('ETJ_DEBUG').appendChild(li);
+	
+	var newNode= document.createElement(src.tagName);
+//				if(src.className)
+//					newNode.className = src.className;
+//				newNode.nodeValue = src.nodeValue;
+	
+	//a("R!!!!!");				
+	var tattr = " ";
+	//if (src.hasAttributes()) // this line won't work in IE
+	if (src.attributes) 
+	{				
+		var attrs = src.attributes;				
+		for(var i=attrs.length-1; i>=0; i--) 
+		{
+			newNode.setAttribute(attrs[i].name, attrs[i].value);
+			tattr += (attrs[i].name+'="'+attrs[i].value+'"');
+		}
+	};
+	
+	//a("ADDING  &lt;" + src.tagName + tattr  +'&gt;');	
+	//a("Adding to " + parentDest);
+	//a("Adding to " + $(parentDest));
+	$(parentDest).appendChild(newNode);
+	//a("ADDED");
+	var child = src.firstChild;				
+	while(child)
+	{
+		copyTree(child, newNode);
+		child = child.nextSibling;
+	}
+}
+
+//========================================
+// Util: Transform a XML tree into its related text form
+//========================================
+
+function xml2text(src)
+{
+	if(src.nodeType==Node.TEXT_NODE) 
+	{
+		return src.nodeValue;
+	}
+	
+	if(src.nodeType==Node.COMMENT_NODE) 
+	{
+		return "<!-- "+ src.nodeValue +" -->";
+	}
+	
+//	a("R!!!!!");				
+	var tattr = "";
+	//if (src.hasAttributes()) // this line won't work in IE
+	if (src.attributes) 
+	{				
+            	var attrs = src.attributes;				
+            	for(var i=attrs.length-1; i>=0; i--) 
+            	{                        	
+                        	tattr += (attrs[i].name+'="'+attrs[i].value+'" ');
+            	}
+	}
+	
+	var text = "<" + src.tagName +  " " + tattr  +'>\n';
+	
+	var wrapstart = "";
+	
+	if(src.tagName == "table")
+	{
+	    text+= "<tbody>";
+	    wrapend= "</tbody>";
+	}
+		
+//	a(text);
+	var child = src.firstChild;				
+	while(child)
+	{
+		text += xml2text(child) + "\n";
+		child = child.nextSibling;
+	}
+	
+	text += wrapend +  "</"+ src.tagName+ ">";
+	
+	return text;
+}

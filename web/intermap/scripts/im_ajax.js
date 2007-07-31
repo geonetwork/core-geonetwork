@@ -3,6 +3,8 @@
 
 var activeLayerId = null; // active layer
 
+im_load_error = function() {alert("Loading error")};
+
 function imc_reloadLayers()
 {
 	var url = '/intermap/srv/en/map.layers.getOrder';
@@ -297,23 +299,34 @@ function unsetAoi()
  *                                                                           *
  *****************************************************************************/
 
-function imc_updateBigMap(width, height, qbbox)
+
+function imc_updateBigMap(width, height, qbbox, doUpdateMM, callback)
 {
-	setStatus('busy');
-	
-	var url = '/intermap/srv/en/map.update';
+    if(doUpdateMM == null)
+        followmm = true;
+    
+    var pars = "width=" + width + "&height=" + height;
+    if(qbbox)
+        pars +=  "&" + qbbox;
+    
+    setStatus('busy');
 
-	var pars = "width=" + width + "&height=" + height + "&" + qbbox;                
-
-	var myAjax = new Ajax.Request (
-		url, 
-		{
-			method: 'get',
-			parameters: pars,
-			onComplete: updateMapImage,
-			onFailure: reportError
-		}
-	);
+    var myAjax = new Ajax.Request (
+    	'/intermap/srv/en/map.update', 
+    	{
+    		method: 'get',
+    		parameters: pars,
+    		onComplete: function(req) { 
+                            updateMapImage(req);
+                            if( doUpdateMM )
+                                // !!! check if this refresh is not due to a minimap action, or we'll get a refresh loop !!!
+                                imc_mm_update(im_mm_width, im_mm_height, im_dezoom(im_bm_north, im_bm_east, im_bm_south, im_bm_west));
+                            if(callback)
+                                callback();
+    		 },
+    		onFailure: reportError
+    	}
+    );
 }
 
 function imc_mm_update(width, height, qbbox)
@@ -322,7 +335,9 @@ function imc_mm_update(width, height, qbbox)
 	
 	var url = '/intermap/srv/en/map.update';
 
-	var pars = "width=" + width + "&height=" + height + "&" + qbbox;                
+	var pars = "width=" + width + "&height=" + height;
+	if(qbbox)
+	    pars += "&" + qbbox
 
 	var myAjax = new Ajax.Request (
 		url, 
@@ -342,20 +357,22 @@ function imc_mm_update(width, height, qbbox)
  *                                                                           *
  *****************************************************************************/
 
-function fullExtentButtonListener()
+function imc_bm_fullExtent(w,h)
 {
 	setStatus('busy');
 	
 	deleteAoi();
 	
-	if (currentTool == 'zoomout' || currentTool == 'pan') setTool('zoomin');
-	
-	var url = '/intermap/srv/en/map.fullExtent';
-	
+	if (currentTool == 'zoomout' || currentTool == 'pan') 
+	    setTool('zoomin');
+
+           var pars = "width=" + w + "&height="+h;
+
 	var myAjax = new Ajax.Request (
-		url, 
+		'/intermap/srv/en/map.fullExtent', 
 		{
 			method: 'get',
+			parameters: pars,
 			onComplete: updateMapImage,
 			onFailure: reportError
 		}
@@ -371,12 +388,10 @@ function imc_mm_fullExtent(w,h)
 	if (im_mm_currentTool == 'zoomout' || im_mm_currentTool == 'pan') 
 	    im_mm_setTool('zoomin');
 	
-	var url = '/intermap/srv/en/map.fullExtent';
-	var pars = "width=" + w + "&height="+h
-	
-	
+	var pars = "width=" + w + "&height="+h;
+		
 	var myAjax = new Ajax.Request (
-		url, 
+		'/intermap/srv/en/map.fullExtent', 
 		{
 			method: 'get',
 			parameters: pars,
@@ -391,8 +406,6 @@ function imc_mm_fullExtent(w,h)
 /*****************************************************************************
  *                                                                           *
  *****************************************************************************/
-
-
 
 function addLayer(baseUrl, serviceName) // DEBUG
 {
@@ -416,7 +429,7 @@ function addLayer(baseUrl, serviceName) // DEBUG
 
 // improve me: this setting should be implemented client-side
 // this setting refers to big map only, while ajax calls should be independent from which map are they called on
-function imc_toggleImageSize()
+/*function imc_toggleImageSize()
 {
 	deleteAoi();
 	unsetAoi();
@@ -433,24 +446,19 @@ function imc_toggleImageSize()
 		}
 	);
 }
-
+*/
 // improve me: this setting should be implemented client-side
 // this setting refers to big map only, while ajax calls should be independent from which map are they called on
-function im_imageSizeToggled(req)
+/*function im_imageSizeToggled(req)
 {
             var w = req.responseXML.getElementsByTagName('width')[0].firstChild.nodeValue;
             var h = req.responseXML.getElementsByTagName('height')[0].firstChild.nodeValue;
 
             im_bm_setSize(w,h);
-            
-	//$('im_mapImg').style.width = w;
-	//$('im_mapImg').style.height = h;
-	//$('im_map').style.width = w;
-	//$('im_map').style.height = h;		
-	
+            	
 	imc_updateBigMap(im_bm_width, im_bm_height, im_bm_getURLbbox());
 }
-
+*/
 function imc_addService(surl, service, type, callback)
 {
 	var url = '/intermap/srv/en/map.addServicesExt';
@@ -484,7 +492,7 @@ function imc_addServices(surl, serviceArray, type, callback)
 	var myAjax = new Ajax.Request (
 		url,
 		{
-			method: 'get',
+			method: 'post',
 			parameters: pars,
 
 			onComplete: callback,

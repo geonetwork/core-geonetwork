@@ -13,18 +13,33 @@ Need:
 
  *****************************************************************************/
 
+// these are the values of standard width and height.
+//var im_mm_wsize0 = 200;
+//var im_mm_hsize0 = 100;
+
+var im_mm_width = 200; 
+var im_mm_height = 100;
+
+
 var im_mm_currentTool;
 
 var im_mm_north, im_mm_east, im_mm_south, im_mm_west;
-var im_mm_width, im_mm_height;
 var im_mm_ctrl_n,im_mm_ctrl_e, im_mm_ctrl_s, im_mm_ctrl_w; 
+
+function trace(fname)
+{
+    alert("Entering function --> " + fname);
+}
 
 // Parse a response and set mm props accordingly
 function im_mm_set(minimapResponse)
 {
+//    trace("im_mm_set");
            // Image URL
-           var mmurl = minimapResponse.getElementsByTagName('imgUrl')[0].textContent;
+           var mmurl = minimapResponse.getElementsByTagName('imgUrl')[0].firstChild.nodeValue;
+//alert("setting src url " + mmurl);           
 	$('im_mm_image').src = mmurl;
+//alert("src url set");
 	
 	// BBox
 	var extent=minimapResponse.getElementsByTagName('extent')[0];
@@ -32,10 +47,11 @@ function im_mm_set(minimapResponse)
 	var maxx = extent.getAttribute('maxx');
 	var miny  = extent.getAttribute('miny');
 	var maxy = extent.getAttribute('maxy');
+//alert("extent set");
 
            // Image size
-	var w = minimapResponse.getElementsByTagName('width')[0].textContent;
-	var h = minimapResponse.getElementsByTagName('height')[0].textContent;
+	var w = minimapResponse.getElementsByTagName('width')[0].firstChild.nodeValue;
+	var h = minimapResponse.getElementsByTagName('height')[0].firstChild.nodeValue;
 
          im_mm_setMapProp(maxy, maxx, miny, minx, w, h);
 }
@@ -43,6 +59,8 @@ function im_mm_set(minimapResponse)
 // Set width, height and bounding box
 function im_mm_setMapProp(n, e, s, w, width, height)
 {
+/*    trace("im_mm_setMapProp");*/
+    
     im_mm_north=new Number(n);
     im_mm_east = new Number(e);
     im_mm_south = new Number(s);
@@ -94,10 +112,13 @@ function im_mm_getWE(x)
 
 function im_mm_getURLbbox()
 {
-    return   "bbnorth="+im_mm_north+
-                "&bbeast="+im_mm_east+
-                "&bbsouth="+im_mm_south+
-                "&bbwest="+im_mm_west;    
+    if(im_mm_north)
+        return   "bbnorth="+im_mm_north+
+                    "&bbeast="+im_mm_east+
+                    "&bbsouth="+im_mm_south+
+                    "&bbwest="+im_mm_west;    
+    else
+        return null;
 }
 
 /* computes bb for mm from bm */

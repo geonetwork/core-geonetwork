@@ -17,17 +17,27 @@ function print() {
  *                      Main vars and setup
  *
  *****************************************************************************/
+ 
+ // these are the values of standard width and height.
+ // It starts with Xsize0, and then toggles to 1 and back again at user request. 
+ 
+ var im_bm_wsize0 = 368;
+ var im_bm_hsize0 = 276;
+ var im_bm_wsize1 = 580;
+ var im_bm_hsize1 = 435;
+
+// Current image size
+var im_bm_width = im_bm_wsize0; 
+var im_bm_height = im_bm_hsize0; 
 
 // Current bounding box
 var im_bm_north, im_bm_east, im_bm_south, im_bm_west;
-// Current image size
-var im_bm_width, im_bm_height; 
 
 // Parse a response and set bm props accordingly
 function im_bm_set(bmResponse)
 {
            // Image URL
-           var url = bmResponse.getElementsByTagName('imgUrl')[0].textContent;
+           var url = bmResponse.getElementsByTagName('imgUrl')[0].firstChild.nodeValue;
 	$('im_mapImg').src = url;
 	
 	// BBox
@@ -38,8 +48,8 @@ function im_bm_set(bmResponse)
 	var maxy = extent.getAttribute('maxy');
 
            // Image size
-	var w = bmResponse.getElementsByTagName('width')[0].textContent;
-	var h = bmResponse.getElementsByTagName('height')[0].textContent;
+	var w = bmResponse.getElementsByTagName('width')[0].firstChild.nodeValue;
+	var h = bmResponse.getElementsByTagName('height')[0].firstChild.nodeValue;
 
          im_bm_setMapBB(maxy, maxx, miny, minx);
          im_bm_setSize(w, h);
@@ -78,12 +88,11 @@ function im_bm_setSize(w, h)
 	$('im_mapContainer').style.width = new Number(w)+2; 
 	$('im_mapContainer').style.height = new Number(h)+2; 
 	
-	$('im_map').style.width = w; //<xsl:value-of select="/root/response/mapRoot/response/imageWidth" /> + 'px';
-	$('im_map').style.height = h; //<xsl:value-of select="/root/response/mapRoot/response/imageHeight" /> + 'px';
+	$('im_map').style.width = w; 
+	$('im_map').style.height = h;
 	
 	$('im_pleaseWait').style.width = w; 
-/*	$('im_pleaseWait').style.height = h; 	
-	$('im_pleaseWait').style.top = h/2;*/	
+	
 }
 
 
@@ -114,7 +123,8 @@ function setTool(tool) {
 	deleteAoi();
 	currentTool = tool;
 	$('intermap_root').className = tool; //document.body.className = tool;
-	if (tool != 'aoi') $('im_geonetRecords').className = 'im_hidden';
+/*	if (tool != 'aoi') 
+	    $('im_geonetRecords').className = 'im_hidden';*/
 }
 
 
@@ -853,11 +863,11 @@ function deleteChildNodes(target)
 	while (target.childNodes.length > 0) {target.removeChild(target.childNodes[target.childNodes.length - 1]);}
 }
 
-function refreshNeeded()
+function refreshNeeded(refreshmm, callback)
 {
 	if (autoRefresh)
 	{
-		imc_updateBigMap(im_bm_width, im_bm_height, im_bm_getURLbbox());
+		imc_updateBigMap(im_bm_width, im_bm_height, im_bm_getURLbbox(), refreshmm, callback);
 	}
 	else
 	{
@@ -867,7 +877,7 @@ function refreshNeeded()
 
 function setStatus(status)
 {
-	var refreshButton = $('im_refreshButton');
+/*	var refreshButton = $('im_refreshButton');*/
 	
 	switch(status)
 	{
@@ -883,8 +893,8 @@ function setStatus(status)
 			$('im_map').style.cursor = 'wait'
 			
 			// change refresh button status
-			refreshButton.className = 'im_disabled';
-			refreshButton.disabled = true;
+/*			refreshButton.className = 'im_disabled';
+			refreshButton.disabled = true;*/
 			
 			$('im_pleaseWait').show(); //style.display = 'block';
 			break;
@@ -895,15 +905,15 @@ function setStatus(status)
 			
 			// change refresh button status
 			$('im_map').style.cursor = 'crosshair'
-			refreshButton.className = 'im_disabled';
-			refreshButton.disabled = true;
+/*			refreshButton.className = 'im_disabled';
+			refreshButton.disabled = true;*/
 			
 			$('im_pleaseWait').hide(); //style.display = 'none';
 			break;
 		case 'refresh': // refresh buton highlighted - means that refresh is needed after the user made some operations on layers
 			// change refresh button status
-			refreshButton.className = 'im_refresh';
-			refreshButton.disabled = false;
+/*			refreshButton.className = 'im_refresh';
+			refreshButton.disabled = false;*/
 			break;
 	}
 }
@@ -925,12 +935,32 @@ function layerAdded(req)
 	imc_reloadLayers();
 }
 
-function resizeImage()
+function im_bm_toggleImageSize()
 {
-	imc_toggleImageSize();
+    // Set width
+    if( im_bm_width == im_bm_wsize0 )
+        im_bm_width = im_bm_wsize1;
+    else
+        im_bm_width = im_bm_wsize0;
+    
+    // Set height
+    if( im_bm_height == im_bm_hsize0 )
+        im_bm_height = im_bm_hsize1;
+    else
+        im_bm_height = im_bm_hsize0;
+    
+    deleteAoi();
+    unsetAoi();
+    
+    // Reload image
+    imc_updateBigMap(im_bm_width, im_bm_height, im_bm_getURLbbox(), false);        
+//	imc_toggleImageSize();
 }
 
-
+function im_bm_fullExtent()
+{
+    imc_bm_fullExtent(im_bm_width, im_bm_height);
+}
 
 
 /*****************************************************************************
@@ -987,11 +1017,5 @@ function updateMapImage(req)
 	
 //	Event.observe(vMapImg, 'load', function(e) { setStatus('idle') }); // better behaviour but needs debugging on explorer (newer version of prototype?)
 	setStatus('idle');
-	
-	
-	// the minimap must follow the bigger map 
-	// !!! TODO check if this refresh is not due to a minimap action, or we'll get a refresh loop !!!
-	
-	imc_mm_update(im_mm_width, im_mm_height, im_dezoom(im_bm_north, im_bm_east, im_bm_south, im_bm_west));	
 }
 
