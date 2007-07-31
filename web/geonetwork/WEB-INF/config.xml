@@ -72,11 +72,13 @@
 				<password>Qp1PgFDy</password>
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
-				<poolSize>10</poolSize>
+				<poolSize>10</poolSize>	
 			</config>
-
-
-		<activator class="org.fao.geonet.activators.McKoiActivator"><configFile>WEB-INF/db/db.conf</configFile></activator></resource>
+			
+			<activator class="org.fao.geonet.activators.McKoiActivator">
+				<configFile>WEB-INF/db/db.conf</configFile>
+			</activator>
+		</resource>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- mysql -->
@@ -172,7 +174,11 @@
  			<class name=".services.main.Search">
  				<param name="maxSummaryKeys" value="10" />
  			</class>
-
+ 			
+ 			<output forward="main.present.embedded" />
+ 		</service>
+		
+		<service name="main.present.embedded">
  			<class name=".services.main.Result">
  				<param name="maxRecords" value="10" />
  				<param name="syntax" value="f" />
