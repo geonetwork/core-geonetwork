@@ -759,7 +759,8 @@ div#im_wbtitle {
     margin-top: 0px;
     margin-left: 5px;
     margin-bottom: 0px;
-
+    padding-bottom: 2px;
+    padding-top: 3px;
 }
 
 #im_wbcloser {
