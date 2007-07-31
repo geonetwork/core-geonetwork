@@ -11,30 +11,25 @@
 	-->
 	<xsl:template mode="script" match="/">
 		
-<!--		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls,dragdrop"/>		-->
 		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/slider.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/effects.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/controls.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/dragdrop.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/builder.js"/>
+		
+		<script type="text/javascript" src="{/root/gui/url}/scripts/gn_search.js?"/>
 		
 		<script type="text/javascript" src="/intermap/scripts/etj.js?"/>
+		<script type="text/javascript" src="/intermap/scripts/im_extras.js?"/>
 		<script type="text/javascript" src="/intermap/scripts/im_ajax.js?" />
 		<script type="text/javascript" src="/intermap/scripts/im_minimap.js?"/>
 		<script type="text/javascript" src="/intermap/scripts/im_bigmap.js?" />
 		<script type="text/javascript" src="/intermap/scripts/im_layers.js?" />
-		<script type="text/javascript" src="/intermap/scripts/util.js" />
+		<script type="text/javascript" src="/intermap/scripts/util.js?" />
+
+		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js?"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip-manager.js?"></script>
 		
-		
-		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip-manager.js"></script>
-		
-<!--		<script type="text/javascript" src="/intermap/scripts/etj.js?"/>
-		<script type="text/javascript" src="/intermap/scripts/im_minimap.js?"/>
-		<script type="text/javascript" src="/intermap/scripts/util.js" />
-		<script type="text/javascript" src="/intermap/scripts/im_layers.js?" />
-		<script type="text/javascript" src="/intermap/scripts/im_bigmap.js?" />
-		<script type="text/javascript" src="/intermap/scripts/im_ajax.js?" />
--->		
 		<!--  FIXME move this line elsewhere.  -->
 		<link rel="stylesheet" type="text/css" href="/intermap/intermap-embedded.css?" />
 		
@@ -45,14 +40,15 @@
 					//ETj
 					function init()
 					{
-						im_load();
+						im_init();
 					}
-
 				</xsl:when>
 			</xsl:choose>
+								
 			
-			function getWmsLayerInfo(name, url) {
-			window.open('/intermap/srv/en/map.service.wmsLayerInfo?url='+url+'&amp;name=' + name, 'dialog', 'HEIGHT=300,WIDTH=400,scrollbars=yes,toolbar=no,status=no,menubar=no,location=no,resizable=yes');
+			function getWmsLayerInfo(name, url) 
+			{
+				window.open('/intermap/srv/en/map.service.wmsLayerInfo?url='+url+'&amp;name=' + name, 'dialog', 'HEIGHT=300,WIDTH=400,scrollbars=yes,toolbar=no,status=no,menubar=no,location=no,resizable=yes');
 			}
 			
 			
@@ -143,222 +139,6 @@
 					document.search.submit();
 			}
 			
-			/* ETj */
-			function doMetadataSearch()
-			{
-			
-				// Clear welcome message
-				//$('firsttimemessage').style.display = 'none';				
-
-
-
-				// Display results area								
-				clearNode('resultList');								
-				$('loadingMD').show();   //style.display = 'block';
-				
-				//$('resultList').style.display = 'block';
-								
-				// Load results via AJAX
-				gn_search($('any').value ); // FIXME add bb
-			
-			}
-			
-			function gn_search(text, bbn, bbe, bbs, bbw)
-			{
-				var url = '/geonetwork/srv/en/main.search.embedded'; 
-				var pars = 'any='+text ; 				// add bb
-				
-				var myAjax = new Ajax.Request (
-					url, 
-					{
-						method: 'get',
-						parameters: pars,
-						onSuccess: gn_search_complete,
-						onFailure: gn_search_error
-					}
-				);
-			}
-			
-			function clearNode(node)
-			{
-				var enode = $(node);
-				while (enode.firstChild) 
-				{
-					enode.removeChild(enode.firstChild);
-				}			
-			}
-			
-			function gn_search_complete(req)
-			{
-			
-				// Dinamically generate content
-				// it would be better to merge in an html piece returned by a GN service, but we're on hurry now
-
-				// remove all previous children
-				//clearResultList();
-				
-				//new Insertion.Top('resultList', req.responseXML.documentElement); // nn funge...
-				
-				var rlist = $('resultList');
-				//rlist.innerHTML = req.responseXML.documentElement;
-				copyTree(req.responseXML.documentElement, rlist);
-				
-				$('loadingMD').hide(); // style.display = 'none';
-				
-			}
-			
-			function gn_toggleMetadata(id)
-			{
-				var parent = $('mdwhiteboard_' + id);
-				if(parent.firstChild)
-					gn_hideMetadata(id);
-				else
-					gn_showMetadata(id);
-			}
-			
-			function gn_showMetadata(id)
-			{
-				var url = '/geonetwork/srv/en/metadata.show.embedded'; 
-				var pars = 'id='+id;
-				
-				$('gn_showmd_'+id).hide();
-				$('gn_loadmd_'+id).show();
-				
-				var myAjax = new Ajax.Request (
-					url, 
-					{
-						method: 'get',
-						parameters: pars,
-						onSuccess: function (req)
-						{
-							// remove previous open md
-							//var prev = document.getElementById('metadata_current');
-							//if(prev)
-							//	prev.parentNode.removeChild($('metadata_current'));
-								
-							var parent = $('mdwhiteboard_' + id);
-							clearNode(parent);
-							
-							$('gn_loadmd_'+id).hide();
-							$('gn_hidemd_'+id).show();
-							
-							// create new element
-							var div = document.createElement('div');
-							div.id = 'metadata_current';
-							div.style.display = 'none';
-							parent.appendChild(div);
-							
-							div.innerHTML = req.responseText;							
-							
-							//div.scrollIntoView();
-							//div.scrollTo();
-							Effect.BlindDown(div);
-							
-							var tipman = new TooltipManager();
-							ker.loadMan.wait(tipman);
-						},
-						onFailure: gn_search_error // FIXME
-					}
-				);
-			}
-
-			function gn_hideMetadata(id)
-			{
-				var parent = $('mdwhiteboard_' + id);
-				var div = parent.firstChild;
-				Effect.BlindUp(div, 
-					{afterFinish: function(obj) { 
-						clearNode(parent); 
-						$('gn_showmd_'+id).show();
-						$('gn_hidemd_'+id).hide();						
-					}});
-			}
-
-			
-			//========================================
-			// Util: Copy a XML tree with HTML format into the current Document
-			//========================================
-			
-			function copyTree(src, parentDest)
-			{
-				if(src.nodeType==Node.TEXT_NODE) 
-				{
-					var newNode= document.createTextNode(src.nodeValue);
-					parentDest.appendChild(newNode);
-					return;				
-				}
-				
-				if(src.nodeType==Node.COMMENT_NODE) 
-				{
-					var newNode= document.createElement("COMMENT");
-					newNode.style.display = "none";
-					newNode.textContent= src.nodeValue;
-					parentDest.appendChild(newNode);
-					return;				
-				}
-				
-//				var li = document.createElement("li"); // DEBUG!!!
-//				li.textContent= src.tagName+ " ID:" +src.getAttribute('id');
-//				$('ETJ_DEBUG').appendChild(li);
-				
-				
-				var newNode= document.createElement(src.tagName);
-				if(src.className)
-					newNode.className = src.className;
-				newNode.nodeValue = src.nodeValue;
-				
-				if (src.hasAttributes()) 
-				{
-					var attrs = src.attributes;
-					for(var i=attrs.length-1; i>=0; i--) 
-					{
-						newNode.setAttribute(attrs[i].name, attrs[i].value);
-					}
-				};
-				
-				parentDest.appendChild(newNode);
-				
-				var child = src.firstChild;				
-				while(child)
-				{
-					copyTree(child, newNode);
-					child = child.nextSibling;
-				}
-			}
-			
-			
-			function gn_search_error()
-			{
-				$('loadingMD').hide(); // style.display = 'none';
-				alert("ERROR)");
-			}
-
-
-			function openIntermap()
-			{
-				$('openIMBtn').hide(); //.style.display='none';
-				$('closeIMBtn').show(); //style.display='block';
-				
-				//Effect.BlindDown('im_mapContainer');
-				Effect.BlindDown('im_map');
-				Effect.BlindDown('im_mapImg');
-				Effect.BlindDown('intermap');
-				//$('intermap').style.display='block';
-				
-			}				 
-			
-			function closeIntermap()
-			{
-				$('closeIMBtn').hide(); //style.display='none';
-				$('openIMBtn').show(); //style.display='block';
-				
-				//Effect.BlindUp('im_mapContainer');
-				Effect.BlindUp('im_map');
-				Effect.BlindUp('intermap');
-				//$('intermap').style.display='none';
-				
-			 }
-			
 		</script>
 	</xsl:template>
 
@@ -442,13 +222,14 @@
 				</td>
 
 				<xsl:comment>RIGHT: 1st time message, collapsable extended map, search results</xsl:comment>
+				
 				<td class="padded-content" width="100%">
 					<table class="padded-content"  width="100%" height="100%" >
 						
 						<tr id="intermaprow"  width="100%" height="0">
 							<xsl:comment>COLLAPSABLE MAP</xsl:comment>
 							<td>
-								<div id="intermap" style="display: none;">
+								<div id="fillMeWithIntermap" style="display: none;">
 									<!--  This DIV will be filled dynamically with intermap contents -->
 								</div>
 							</td>
@@ -460,6 +241,7 @@
 								
 								<!-- This DIV contains a first-time message that will be removed when the first search will be run -->
 								<div id="resultList">
+
 									<table>
 										<tr>
 											<td>
@@ -488,18 +270,6 @@
 							</td>
 						</tr>
 						
-<!--							<tr width="100%">
-								<td width="100%">
-
-									<UL id="ETJ_DEBUG" onclick="Effect.BlindUp('ETJ_DEBUG');">
-										< ! - -  $('ETJ_DEBUG').style.display='none';" - ->
-										<LI><h1>DEBUG</h1></LI>
-									</UL>
-									
-									
-								</td>
-							</tr>
--->							
 					</table>
 				</td>
 
@@ -1318,30 +1088,28 @@
 							<td class="im_mmtool" id="im_mmtool_aoi"		onClick="javascript:im_mm_setTool('aoi')"><img src="/intermap/images/im_aoi16x16.png" title="Select an Area Of Interest"/></td> 
 						</tr>
 						<tr height="102px" style="position:relative;">
-							<td id="im_mm_mapContainer" style="position:relative;width:202px;height:102px;" colspan="6" align="center" >
+							<td id="im_mm_mapContainer" style="position:relative;width:202px;height:102px;" colspan="6"  >
 								<div id="im_mm_map" style="position: absolute;width:202px;height:102px;">
-									<img id="im_mm_image" width="200px" height="100px" style="left:1px;" align="center" src="/intermap/images/map0.gif"/>
+									<img id="im_mm_image" width="200px" height="100px" style="left:1px;"  src="/intermap/images/map0.gif"/>
 								</div>
-								<div id="im_mm_wait" style="position: relative; z-index:999; left:-41px; top:50px;">
+								<div id="im_mm_wait" style="position: relative; z-index:999; left:59px; top:45px;">
 									<img id="im_mm_waitimage" style="position: absolute; z-index:1000;" src="/intermap/images/waiting.gif" />
 								</div>
 							</td>
 						</tr>
 						<tr>
 							<td align="right" colspan="6">
-<!--								<button id="openIMBtn" class="imdisabled" type="button" title="Open InterMap &gt;&gt;" >
-									Loading InterMap...
-								</button>
-								<br/> -->
-								<div id="openIMBtn" title="View Map">Loading Map Viewer</div>
+								<div id="openIMBtn" class="IMBtn" title="View Map">Open Map Viewer</div>
+							</td>
+						</tr>
+						<tr>
+							<td align="right" colspan="6" >
+								<div id="loadIMBtn" class="IMBtn" style="display:none">Loading Map Viewer...</div>
 							</td>
 						</tr>
 						<tr>
 							<td align="right" colspan="6">
-<!--								<button id="closeIMBtn" class="content-small" type="button" title="Close InterMap &lt;&lt;" style="display:none">
-									Close InterMap &lt;&lt;&lt;
-								</button> -->
-								<div id="closeIMBtn" title="Close Map Viewer" style="display:none">Close Map Viewer</div>
+								<div id="closeIMBtn" class="IMBtn" title="Close Map Viewer" style="display:none">Close Map Viewer</div>
 							</td>
 						</tr>
 					</table>
@@ -1462,12 +1230,9 @@
 			
 			<script language="JavaScript" type="text/javascript">
 				
-//				Event.observe('PIPPO1', 'mouseover', function(){ $('PIPPO2').style.display = 'none'; });
-//				Event.observe('PIPPO1', 'mouseout', function(){ $('PIPPO2').style.display = 'block'; });
-
-			Event.observe('searchBtn', 'click', function(){ doMetadataSearch(); });
-//			Event.observe('openIMBtn', 'click',  function(){openIntermap()} ); // issued only when IM is loaded
-			Event.observe('closeIMBtn', 'click',  function(){closeIntermap()} );
+				Event.observe('searchBtn', 'click', function(){ doMetadataSearch(); });
+	//			Event.observe('openIMBtn', 'click',  function(){openIntermap()} ); // issued only when IM is loaded
+				Event.observe('closeIMBtn', 'click',  function(){closeIntermap()} );
 			
 			</script>
 
