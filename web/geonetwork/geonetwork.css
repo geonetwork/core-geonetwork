@@ -520,26 +520,21 @@ div.keywordResults ul li.selected {
     margin-top: 5px;
 }
 
-#openIMBtn{
+.IMBtn{
 	font-family: Verdana;
 	font-size: 9px;
-/*	min-width: 150px;
-	border: 1px solid #266397;  moved here from tr since IE accepts it only here */
 	color: #064377;
 	cursor: pointer;
 	padding: 2px 8px 2px 2px;
+}
+
+
+#openIMBtn{
 	background: url(images/arrow.gif) no-repeat right;
 }
 
 #closeIMBtn{
-	font-family: Verdana;
-	font-size: 9px;
-/*	min-width: 150px;
-	border: 1px solid #266397;  moved here from tr since IE accepts it only here */
-	color: #064377;
-	cursor: pointer;
 	background: url(images/arrow_inv.gif) no-repeat right;
-	padding: 2px 8px 2px 2px;
 }
 
 #closeIMBtn:hover {
