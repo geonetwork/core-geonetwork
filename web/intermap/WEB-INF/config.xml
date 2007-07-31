@@ -73,15 +73,7 @@
 		<param name="bigImageWidth" value="580" />
 		<param name="bigImageHeight" value="435" />
 		<param name="defaultImageSize" value="small" />
-<<<<<<< .mine
-				
-=======
-		
-		<!--  MiniMap -->
-		<param name="miniMapWidth" value="200" />
-		<param name="miniMapHeight" value="100" />
-		
->>>>>>> .r685
+
 		<!-- temp files -->		
 		<param name="tempDir"	value="../web/intermap/tmp/" />
 		<param name="tempDeleteMinutes" value="15" />
