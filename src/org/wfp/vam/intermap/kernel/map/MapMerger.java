@@ -85,8 +85,11 @@ public class MapMerger
 		return getService(getActiveServiceId()).getActiveLayer();
 	}
 
-	/** Adds a service on the top */
-	public void addService(MapService service) {
+	/** Adds a service on the top
+	 *
+	 * @return the id given to the service
+	 * */
+	public int addService(MapService service) {
 //		System.out.println("service: " + service); // DEBUG
 //		if (htServices.size() == 0) activeServiceId = nextId;
 		if ( _layers.isEmpty() ) activeServiceId = nextId;
@@ -102,6 +105,7 @@ public class MapMerger
 //		htShow.put(id, new Boolean(true));
 		vRank.add(0, id);
 
+		return id.intValue();
 //		System.out.println("htServices: " + htServices); // DEBUG
 	}
 

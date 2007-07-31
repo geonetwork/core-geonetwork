@@ -1,16 +1,13 @@
 package org.wfp.vam.intermap.services.map;
 
-import org.jdom.*;
-
-import jeeves.interfaces.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-
-import org.wfp.vam.intermap.kernel.map.*;
-
-import org.wfp.vam.intermap.Constants;
 import java.util.List;
-import java.util.Iterator;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.csw.common.util.Xml;
+import org.jdom.Element;
+import org.wfp.vam.intermap.Constants;
+import org.wfp.vam.intermap.kernel.map.MapMerger;
 
 //=============================================================================
 
@@ -66,8 +63,15 @@ public class AddServices implements Service
 			for (Element eService : lServices)
 			{
 				String serviceName = eService.getText();
-				if ( MapUtil.addService(serverType, serverUrl, serviceName, vsp, mm) )
-					added.addContent(new Element(serviceName));
+				int servid = MapUtil.addService(serverType, serverUrl, serviceName, vsp, mm);
+				if ( servid != -1 )
+				{
+					//System.err.println("ADDING SERVICE " + serviceName + " @ " + servid);
+					added.addContent(new Element("newLayer")
+										 .setAttribute("name", serviceName)
+										 .setAttribute("id", ""+servid)
+									);
+				}
 			}
 
 			// Set the bounding box as specified in the URL
@@ -92,9 +96,9 @@ public class AddServices implements Service
 //			System.out.println("defaultImageSize = " + MapUtil.getDefaultImageSize()); // DEBUG
 			context.getUserSession().setProperty(Constants.SESSION_SIZE, MapUtil.getDefaultImageSize());
 		}
-
-		return mm.toElementSimple()
-						.addContent(added);
+		
+		//System.err.println(" --ADDED --> " + Xml.getString(added));
+		return mm.toElementSimple().addContent(added);
 	}
 
 }
