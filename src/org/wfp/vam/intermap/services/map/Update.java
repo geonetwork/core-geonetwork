@@ -4,13 +4,14 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.jdom.Element;
+import org.wfp.vam.intermap.Constants;
 import org.wfp.vam.intermap.kernel.map.MapMerger;
 import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
 import org.wfp.vam.intermap.util.Util;
 
 //=============================================================================
 
-/** main.result service. shows search results
+/**
   */
 
 public class Update implements Service
@@ -26,11 +27,24 @@ public class Update implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		// Get the current image size from the user session
-		int width  = Util.parseInt(params.getChildText("width"), MapUtil.getImageWidth(context));
-		int height = Util.parseInt(params.getChildText("height"), MapUtil.getImageHeight(context));
+		/*DEBUG*/if(params.getChildText("width") == null) System.out.println("\n\nNO WIDTH SPECIFIED IN Update()\n");
+		
+//		int width  = Util.parseInt(params.getChildText("width"), MapUtil.getImageWidth(context));
+//		int height = Util.parseInt(params.getChildText("height"), MapUtil.getImageHeight(context));
+		int width  = Integer.parseInt(params.getChildText("width"));
+		int height = Integer.parseInt(params.getChildText("height"));
 
 		MapMerger mm = MapUtil.getMapMerger(context);
 
+		// Add default context if none exists
+		if (mm.size() == 0) // No layers to merge
+		{
+			System.out.println("Update: SETTING DEFAULT CONTEXT");
+			MapUtil.setDefaultContext(mm);
+			// Update the user session
+			context.getUserSession().setProperty(Constants.SESSION_MAP, mm);
+		}
+				
 		BoundingBox bb = Util.parseBoundingBox(params); // search bb in params
 		if( bb != null)
 			mm.setBoundingBox(bb);

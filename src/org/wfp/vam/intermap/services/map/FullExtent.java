@@ -41,8 +41,11 @@ public class FullExtent implements Service
 
 		// Update the user session
 		context.getUserSession().setProperty(Constants.SESSION_MAP, mm);
-
-		return params; // ETJ ??? funge?
+		
+		return new Element("response")
+			.addContent(mm.getBoundingBox().toElement())
+			.addContent(new Element("width").setText(params.getChildText("width")))
+			.addContent(new Element("height").setText(params.getChildText("height")));
 	}
 
 }

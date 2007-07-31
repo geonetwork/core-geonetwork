@@ -29,9 +29,12 @@ public class Move implements Service
 		int deltay = Integer.parseInt(params.getChildText("deltay"));
 
 		// Get the current image size from request OR from the user session
-		int width  = Util.parseInt(params.getChildText("width"), MapUtil.getImageWidth(context));
-		int height = Util.parseInt(params.getChildText("height"), MapUtil.getImageHeight(context));
-
+//		int width  = Util.parseInt(params.getChildText("width"), MapUtil.getImageWidth(context));
+//		int height = Util.parseInt(params.getChildText("height"), MapUtil.getImageHeight(context));
+		// Get the current image size from request
+		int width  = Integer.parseInt(params.getChildText("width"));
+		int height = Integer.parseInt(params.getChildText("height"));
+		
 		MapMerger mm = MapUtil.getMapMerger(context);
 
 		BoundingBox bb = Util.parseBoundingBox(params);
