@@ -73,11 +73,15 @@
 		<param name="bigImageWidth" value="580" />
 		<param name="bigImageHeight" value="435" />
 		<param name="defaultImageSize" value="small" />
+<<<<<<< .mine
+				
+=======
 		
 		<!--  MiniMap -->
 		<param name="miniMapWidth" value="200" />
 		<param name="miniMapHeight" value="100" />
 		
+>>>>>>> .r685
 		<!-- temp files -->		
 		<param name="tempDir"	value="../web/intermap/tmp/" />
 		<param name="tempDeleteMinutes" value="15" />
@@ -112,17 +116,8 @@
 
 		<!-- ETj: return an XHTML to be embedded elsewhere -->
 		
-		<service name="map.getMain.embedded">
-			<class name=".services.map.MainEmbedded" />
-			
-			<output sheet="index-embedded.xsl" contentType="text/xml; charset=UTF-8" />
-		</service>
-
-		<service name="minimap.rebuild">
-			<class name=".services.minimap.Rebuild" >
-				<param name="width" value="100" />
-				<param name="height" value="80" />
-			</class>
+		<service name="map.getMain.embedded">			
+			<output sheet="index-embedded.xsl" contentType="text/html; charset=UTF-8" />
 		</service>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -319,11 +314,12 @@
 		</service>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<service name="map.toggleImageSize">
+
+		<!-- This feature has been completely moved on client side -->
+<!--		<service name="map.toggleImageSize">
 			<class name=".services.map.ToggleImageSize" />
 		</service>
-		
+-->		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="map.reset">
