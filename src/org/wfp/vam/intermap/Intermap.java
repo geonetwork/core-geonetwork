@@ -165,17 +165,12 @@ public class Intermap implements ApplicationHandler
 		String stMaxw = handlerConfig.getMandatoryValue("bigImageWidth");
 		String d = handlerConfig.getMandatoryValue("defaultImageSize");
 
-		String smmw = handlerConfig.getMandatoryValue("miniMapWidth");
-		String smmh = handlerConfig.getMandatoryValue("miniMapHeight");
-
 		int minh = Integer.parseInt(stMinh);
 		int minw = Integer.parseInt(stMinw);
 		int maxh = Integer.parseInt(stMaxh);
 		int maxw = Integer.parseInt(stMaxw);
-		int immw = Integer.parseInt(smmw);
-		int immh = Integer.parseInt(smmh);
 
-		MapUtil.setImageSizes(minh, minw, maxh, maxw, immw, immh);
+		MapUtil.setImageSizes(minh, minw, maxh, maxw);
 
 		log("setting default image size to " + d);
 		// set default image size

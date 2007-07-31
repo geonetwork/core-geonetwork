@@ -27,20 +27,16 @@ public class MapUtil
 	private static int _minw;
 	private static int _maxh;
 	private static int _maxw;
-	private static int _mmw;
-	private static int _mmh;
 
 	private static String defaultImageSize;
 
 	private static String url;
 
-	public static void setImageSizes(int minh, int minw, int maxh, int maxw, int mmw, int mmh) {
+	public static void setImageSizes(int minh, int minw, int maxh, int maxw) {
 		_minh = minh;
 		_minw = minw;
 		_maxh = maxh;
 		_maxw = maxw;
-		_mmw = mmw;
-		_mmh = mmh;
 	}
 
 	// Returns the MapMerger object for the user session
@@ -267,9 +263,6 @@ public class MapUtil
 
 		return height;
 	}
-
-	public static int getMiniMapWidth()  { return _mmw; }
-	public static int getMiniMapHeight() { return _mmh; }
 
 	// Returns the MapMerger object for the user session
 	 static String getTool(ServiceContext srvContext)
