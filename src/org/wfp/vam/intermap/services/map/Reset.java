@@ -12,7 +12,7 @@ import org.wfp.vam.intermap.Constants;
 
 //=============================================================================
 
-/** main.result service. shows search results
+/**
   */
 
 public class Reset implements Service
@@ -27,7 +27,10 @@ public class Reset implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		context.getUserSession().setProperty(Constants.SESSION_MAP, new MapMerger());
+		MapMerger mm = new MapMerger();
+		MapUtil.setDefaultContext(mm);
+		//MapUtil.setDefBoundingBox(mm);
+		context.getUserSession().setProperty(Constants.SESSION_MAP, mm);
 		return null;
 	}
 	
