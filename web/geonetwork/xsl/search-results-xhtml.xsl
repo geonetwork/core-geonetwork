@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <xsl:stylesheet version="1.0" xmlns:xsl   ="http://www.w3.org/1999/XSL/Transform"
 										xmlns:geonet="http://www.fao.org/geonetwork"
 										xmlns:xalan = "http://xml.apache.org/xalan">
@@ -22,21 +23,39 @@
 	<xsl:template match="/">
 		<xsl:comment>CONTENT</xsl:comment>
 		<table  width="100%" height="100%" id="search-results-content">
-		
+
+			<xsl:variable name="count" 	select="/root/response/summary/@count"/>
+			<xsl:variable name="from" 	select="/root/response/@from"/>
+			<xsl:variable name="to" 	select="/root/response/@to"/>			
+			<xsl:variable name="currPage" select="floor(($from - 1) div $hitsPerPage + 1)"/>
+			<xsl:variable name="pages" 	select="floor(($count - 1) div $hitsPerPage + 1)"/>
+			
 			<!-- title -->
 			<xsl:call-template name="formTitle">
 				<xsl:with-param name="title">
 					<xsl:value-of select="/root/gui/strings/resultsMatching"/>
 					&#160;
-					<xsl:value-of select="/root/response/summary/@count"/>
+					<xsl:value-of select="$from"/>-<xsl:value-of select="$to"/>/<xsl:value-of select="$count"/>
+					&#160;
+					(page <xsl:value-of select="$currPage"/>/<xsl:value-of select="$pages"/>)					
+<!--					<xsl:value-of select="/root/response/summary/@count"/>-->
 				</xsl:with-param>
 				<xsl:with-param name="indent" select="50"/>
 			</xsl:call-template>
-			
+
 			<!-- list of metadata -->
 			<xsl:call-template name="hits"/>
 			
 			<!-- page list -->
+			<xsl:call-template name="formSeparator"/>
+			<xsl:call-template name="formContent">
+				<xsl:with-param name="content">
+					<xsl:call-template name="pageList"/>
+				</xsl:with-param>
+				<xsl:with-param name="indent" select="50"/>
+			</xsl:call-template>
+			
+			
 			<tr><td class="blue-content" colspan="3"/></tr>
 		</table>
 	</xsl:template>
@@ -441,7 +460,8 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<a href="{/root/gui/locService}/main.present?from={$from}&amp;to={$to}"><xsl:value-of select="$label"/></a>
+<!--		<a href="{/root/gui/locService}/main.present?from={$from}&amp;to={$to}"><xsl:value-of select="$label"/></a>-->
+		<a href="javascript:gn_present({$from}, {$to});"><xsl:value-of select="$label"/></a>
 	</xsl:template>
 
 
