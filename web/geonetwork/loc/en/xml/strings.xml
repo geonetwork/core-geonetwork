@@ -249,9 +249,11 @@
 			<li>To enhance understanding of the benefits of geographic information</li>
 		</ul>
 	</mainpage1>
-	<mainpage2> 
+	<mainpage2>
+		<p>
 		GeoNetwork opensource allows to easily share geographically referenced thematic 
-		information between different organizations. For more information please contact 		
+		information between different organizations. For more information please contact
+		</p>
 	</mainpage2>
 	<mainhelp1> How to search... </mainhelp1>
 	<mainhelp2> Hide help... </mainhelp2>
