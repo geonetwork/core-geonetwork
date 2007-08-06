@@ -8,6 +8,9 @@
 	<operation>Operation</operation>
 	
 	<cannotRetrieve>Cannot retrieve information from server</cannotRetrieve>
+	<cannotTransfer>Cannot transfer ownership</cannotTransfer>
+	<noUser>No target user to transfer ownership to</noUser>
 	<transfer>Transfer</transfer>
+	<result>Transferred {PRIV} privileges of {MD} metadata</result>
 </strings>
 

@@ -31,7 +31,8 @@ function TransferOwnership()
 	
 	//--- public methods
 
-	this.init = init;
+	this.init     = init;
+	this.transfer = transfer;
 	
 //=====================================================================================
 //===
@@ -56,6 +57,39 @@ function init_OK(data)
 
 //=====================================================================================
 
+function transfer(groupId)
+{
+	var tr = $(groupId);
+	
+	var sourceGrp = tr.getAttribute('id');
+	var sourceUsr = $F('source.user');
+	var targetGrp = $F(xml.getElementById(tr, 'target.group'));
+	var targetUsr = $F(xml.getElementById(tr, 'target.user'));
+	
+	if (targetUsr == null)
+		alert(loader.getText('noUser'));
+	else
+		model.transfer(sourceUsr, sourceGrp, targetUsr, targetGrp, ker.wrap(this, function(xmlRes)
+		{
+			var data =
+			{
+				PRIV : xml.evalXPath(xmlRes, 'privileges'),
+				MD   : xml.evalXPath(xmlRes, 'metadata')
+			};
+			
+			var msg = str.substitute(loader.getText('result'), data);
+			
+			alert(msg);
+			
+			if (sourceGrp != targetGrp)
+				Element.remove(tr);
+		}));
+}
+
+//=====================================================================================
+//=== Listener
+//=====================================================================================
+
 function sourceUserChange(event)
 {
 	view.clearGroupList();
@@ -63,7 +97,7 @@ function sourceUserChange(event)
 	var userId = $F('source.user');
 	
 	if (userId != '')
-		model.getUserGroups(userId, ker.wrap(view, view.addGroupRows));	
+		model.getUserGroups(userId, ker.wrap(view, view.addGroupRows));
 }
 
 //=====================================================================================

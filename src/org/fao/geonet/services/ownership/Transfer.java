@@ -23,24 +23,24 @@
 
 package org.fao.geonet.services.ownership;
 
+import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
 
-public class Groups implements Service
+public class Transfer implements Service
 {
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
@@ -52,80 +52,84 @@ public class Groups implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		int id = Util.getParamAsInt(params, "id");
+		int sourceUsr = Util.getParamAsInt(params, "sourceUser");
+		int sourceGrp = Util.getParamAsInt(params, "sourceGroup");
+		int targetUsr = Util.getParamAsInt(params, "targetUser");
+		int targetGrp = Util.getParamAsInt(params, "targetGroup");
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getDataManager();
-		UserSession   us = context.getUserSession();
-		AccessManager am = gc.getAccessManager();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		Set<String> userGroups = am.getVisibleGroups(dbms, id);
-		Set<String> myGroups   = am.getUserGroups(dbms, us, null);
+		//--- transfer privileges (if case)
 
-		//--- remove 'Intranet' and 'All' groups
-		myGroups.remove("0");
-		myGroups.remove("1");
+		Set<String> sourcePriv = retrievePrivileges(dbms, sourceUsr, sourceGrp);
+		Set<String> targetPriv = retrievePrivileges(dbms, targetUsr, targetGrp);
 
-		Element response = new Element("response");
+		//--- a commit just to release some resources
 
-		for (String groupId : userGroups)
+		dbms.commit();
+
+		int privCount = 0;
+
+		Set<Integer> metadata = new HashSet<Integer>();
+
+		for (String priv : sourcePriv)
 		{
-			String query = "SELECT count(*) as cnt "+
-								"FROM OperationAllowed, Metadata "+
-								"WHERE metadataId = id AND groupId=? AND owner=?";
+			StringTokenizer st = new StringTokenizer(priv, "|");
 
-			List   list  = dbms.select(query, new Integer(groupId), id).getChildren();
-			String size  = ((Element)list.get(0)).getChildText("cnt");
+			int opId = Integer.parseInt(st.nextToken());
+			int mdId = Integer.parseInt(st.nextToken());
 
-			if (Integer.parseInt(size) != 0)
-			{
-				List records = Lib.local.retrieveById(dbms, "Groups", groupId).getChildren();
+			dm.unsetOperation(dbms, mdId, sourceGrp, opId);
 
-				if (records.size() != 0)
-				{
-					Element record  = (Element) records.get(0);
-					record.detach();
-					record.setName("group");
+			if (!targetPriv.contains(priv))
+				dbms.execute("INSERT INTO OperationAllowed(metadataId, groupId, operationId) " +
+								 "VALUES(?,?,?)", mdId, targetGrp, opId);
 
-					response.addContent(record);
-				}
-			}
+			dbms.execute("UPDATE Metadata SET owner=? WHERE id=?", targetUsr, mdId);
+
+			metadata.add(mdId);
+			privCount++;
 		}
 
 		dbms.commit();
 
-		for (String groupId : myGroups)
+		//--- reindex metadata
+
+		for (int mdId : metadata)
+			dm.indexMetadata(dbms, Integer.toString(mdId));
+
+		//--- return summary
+
+		return new Element("response")
+			.addContent(new Element("privileges").setText(privCount      +""))
+			.addContent(new Element("metadata")  .setText(metadata.size()+""));
+	}
+
+	//--------------------------------------------------------------------------
+
+	private Set<String> retrievePrivileges(Dbms dbms, int userId, int groupId) throws SQLException
+	{
+		String query = "SELECT * "+
+							"FROM OperationAllowed, Metadata "+
+							"WHERE metadataId=id AND owner=? AND groupId=?";
+
+		List list = dbms.select(query, userId, groupId).getChildren();
+
+		Set<String> result = new HashSet<String>();
+
+		for (Object o : list)
 		{
-			List records = Lib.local.retrieveById(dbms, "Groups", groupId).getChildren();
+			Element elem = (Element) o;
+			String  opId = elem.getChildText("operationid");
+			String  mdId = elem.getChildText("metadataid");
 
-			if (records.size() != 0)
-			{
-				Element record  = (Element) records.get(0);
-				record.detach();
-				record.setName("targetGroup");
-				response.addContent(record);
-
-				String query = "SELECT id, surname, name FROM Users, UserGroups "+
-									"WHERE id=userId AND profile='Editor' AND groupId=?";
-
-				Element editors = dbms.select(query, new Integer(groupId));
-				dbms.commit();
-
-				for (Object o : editors.getChildren())
-				{
-					Element editor = (Element) o;
-					editor = (Element) editor.clone();
-					editor.removeChild("password");
-					editor.setName("editor");
-
-					record.addContent(editor);
-				}
-			}
+			result.add(opId +"|"+ mdId);
 		}
 
-		return response;
+		return result;
 	}
 }
 

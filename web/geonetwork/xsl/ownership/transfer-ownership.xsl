@@ -57,10 +57,10 @@
 		
 			<table id="group.list">
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/ownership/sourceGroup"/></th>
-					<th class="padded"><xsl:value-of select="/root/gui/ownership/targetGroup"/></th>
-					<th class="padded"><xsl:value-of select="/root/gui/ownership/targetUser"/></th>
-					<th class="padded"><xsl:value-of select="/root/gui/ownership/operation"/></th>
+					<th class="padded"><b><xsl:value-of select="/root/gui/ownership/sourceGroup"/></b></th>
+					<th class="padded"><b><xsl:value-of select="/root/gui/ownership/targetGroup"/></b></th>
+					<th class="padded"><b><xsl:value-of select="/root/gui/ownership/targetUser"/></b></th>
+					<th class="padded"><b><xsl:value-of select="/root/gui/ownership/operation"/></b></th>
 				</tr>
 			</table>			
 		</div>

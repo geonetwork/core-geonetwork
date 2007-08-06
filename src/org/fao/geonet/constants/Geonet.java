@@ -223,6 +223,7 @@ public class Geonet
 	public static final String INDEX_ENGINE = GEONETWORK + ".index";
 	public static final String MEF          = GEONETWORK + ".mef";
 	public static final String CSW          = GEONETWORK + ".csw";
+	public static final String LDAP         = GEONETWORK + ".ldap";
 
 	public static final String CSW_SEARCH   = CSW + ".search";
 

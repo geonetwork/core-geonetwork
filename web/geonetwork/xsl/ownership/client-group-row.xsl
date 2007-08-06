@@ -12,12 +12,12 @@
 
 	<xsl:template match="/root/group">
 
-		<tr id="group.{id}">
+		<tr id="{id}">
 			
 			<!-- source group - - - - - - - - - - - - - - - - - - - - - - -->
 			
 			<td class="padded">
-				<span id="{id}">
+				<span>
 					<xsl:value-of select="label/*[name() = /root/env/language]"/>
 				</span>
 			</td>
@@ -25,19 +25,19 @@
 			<!-- target group - - - - - - - - - - - - - - - - - - - - - - -->
 			
 			<td class="padded">
-				<select id="source.user" class="content" name="type" size="1"/>
+				<select id="target.group" class="content" name="type" size="1"/>
 			</td>
 			
 			<!-- target user - - - - - - - - - - - - - - - - - - - - - - -->
 			
 			<td class="padded">
-				<select id="source.user" class="content" name="type" size="1"/>
+				<select id="target.user" class="content" name="type" size="1"/>
 			</td>
 			
 			<!-- operation - - - - - - - - - - - - - - - - - - - - - - -->
 			
 			<td class="padded">
-				<button class="content" onclick="ownership.transfer('group.{id}')">
+				<button class="content" onclick="ownership.transfer('{id}')">
 					<xsl:value-of select="/root/strings/transfer"/>
 				</button>
 			</td>
