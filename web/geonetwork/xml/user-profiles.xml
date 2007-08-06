@@ -85,6 +85,7 @@
 		<!-- Transfer ownership services -->
 		<allow service="transfer.ownership"/>
 		<allow service="xml.ownership.groups"/>
+		<allow service="xml.ownership.transfer"/>
 	
 	</profile>
 
