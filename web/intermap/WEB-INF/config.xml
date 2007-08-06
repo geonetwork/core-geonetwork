@@ -95,17 +95,16 @@
 
 	<services package="org.wfp.vam.intermap">
 		
-		<service name="map.getMain">
-			<class name=".services.map.MainEmbedded" />
-<!--			<class name=".services.map.Main" />-->
+		<!--<service name="map.getMain">
+			<class name=".services.map.Main" />
 			
 			<output test="/response/status/@empty='false'" sheet="index.xsl" />
 			<output test="/response/status/@empty='true'" forward="mapContexts.get" />
-<!-- 
-			<output sheet="index.xsl" />
- -->
-		</service>
 
+			<output sheet="index.xsl" />
+ 
+		</service>
+-->
 		<!-- ETj: return an XHTML to be embedded elsewhere -->
 		
 		<service name="map.getMain.embedded">			
