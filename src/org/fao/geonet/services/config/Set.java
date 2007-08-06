@@ -86,19 +86,37 @@ public class Set implements Service
 	{
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "site/name",                "system/site/name"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "site/organization",        "system/site/organization"),
+
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "server/host",              "system/server/host"),
 		new ConfigEntry(ConfigEntry.Type.INT,    false, "server/port",              "system/server/port"),
+
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "intranet/network",         "system/intranet/network"),
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "intranet/netmask",         "system/intranet/netmask"),
+
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "z3950/enable",             "system/z3950/enable"),
 		new ConfigEntry(ConfigEntry.Type.INT,    false, "z3950/port",               "system/z3950/port"),
+
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "proxy/use",                "system/proxy/use"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "proxy/host",               "system/proxy/host"),
 		new ConfigEntry(ConfigEntry.Type.INT,    false, "proxy/port",               "system/proxy/port"),
+
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "feedback/email",           "system/feedback/email"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "feedback/mailServer/host", "system/feedback/mailServer/host"),
 		new ConfigEntry(ConfigEntry.Type.INT,    false, "feedback/mailServer/port", "system/feedback/mailServer/port"),
-		new ConfigEntry(ConfigEntry.Type.STRING, true,  "removedMetadata/dir",      "system/removedMetadata/dir")
+
+		new ConfigEntry(ConfigEntry.Type.STRING, true,  "removedMetadata/dir",      "system/removedMetadata/dir"),
+
+		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "ldap/use",                     "system/ldap/use"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "ldap/host",                    "system/ldap/host"),
+		new ConfigEntry(ConfigEntry.Type.INT,    false, "ldap/port",                    "system/ldap/port"),
+		new ConfigEntry(ConfigEntry.Type.STRING, true,  "ldap/defaultProfile",          "system/ldap/defaultProfile"),
+		new ConfigEntry(ConfigEntry.Type.STRING, true,  "ldap/login/userDN",            "system/ldap/login/userDN"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "ldap/login/password",          "system/ldap/login/password"),
+		new ConfigEntry(ConfigEntry.Type.STRING, true,  "ldap/distinguishedNames/base", "system/ldap/distinguishedNames/base"),
+		new ConfigEntry(ConfigEntry.Type.STRING, true,  "ldap/distinguishedNames/users","system/ldap/distinguishedNames/users"),
+		new ConfigEntry(ConfigEntry.Type.STRING, true,  "ldap/userAttribs/name",        "system/ldap/userAttribs/name"),
+		new ConfigEntry(ConfigEntry.Type.STRING, true,  "ldap/userAttribs/password",    "system/ldap/userAttribs/password"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "ldap/userAttribs/profile",     "system/ldap/userAttribs/profile")
 	};
 }
 

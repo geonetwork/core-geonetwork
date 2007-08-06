@@ -314,6 +314,30 @@ public class SettingManager
 	}
 
 	//---------------------------------------------------------------------------
+
+	public boolean getValueAsBool(String path)
+	{
+		String value = getValue(path);
+
+		if (value == null)
+			return false;
+
+		return value.equals("true");
+	}
+
+	//---------------------------------------------------------------------------
+
+	public Integer getValueAsInt(String path)
+	{
+		String value = getValue(path);
+
+		if (value == null || value.trim().length() == 0)
+			return null;
+
+		return new Integer(value);
+	}
+
+	//---------------------------------------------------------------------------
 	//---
 	//--- Private methods
 	//---

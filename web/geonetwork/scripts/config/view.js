@@ -33,11 +33,21 @@ function ConfigView(strLoader)
 		{ id:'proxy.host',   type:'hostname' },
 		{ id:'proxy.port',   type:'integer',  minValue:21, maxValue:65535, empty:true },
 
-		{ id:'removedMd.dir', type:'length', minSize :0,  maxSize :200 }	
+		{ id:'removedMd.dir', type:'length', minSize :0,  maxSize :200 },
+		
+		{ id:'ldap.host',         type:'length',   minSize :1,  maxSize :200 },
+		{ id:'ldap.host',         type:'hostname' },
+		{ id:'ldap.port',         type:'integer',  minValue:80, maxValue:65535, empty:true },		
+		{ id:'ldap.userDN',       type:'length',  minSize :1,  maxSize :200 },
+		{ id:'ldap.baseDN',       type:'length',  minSize :1,  maxSize :200 },
+		{ id:'ldap.usersDN',      type:'length',  minSize :1,  maxSize :200 },
+		{ id:'ldap.nameAttr',     type:'length',  minSize :1,  maxSize :200 },
+		{ id:'ldap.passwordAttr', type:'length',  minSize :1,  maxSize :200 }
 	]);
 	
 	this.z3950Shower = new Shower('z3950.enable', 'z3950.subpanel');	
 	this.proxyShower = new Shower('proxy.use',    'proxy.subpanel');
+	this.ldapShower  = new Shower('ldap.use',     'ldap.subpanel');
 }
 
 //=====================================================================================
@@ -72,8 +82,21 @@ ConfigView.prototype.setData = function(data)
 	
 	$('removedMd.dir').value = data['REMOVEDMD_DIR'];
 
+	$('ldap.use')       .checked = data['LDAP_USE'] == 'true';
+	$('ldap.host')        .value = data['LDAP_HOST'];
+	$('ldap.port')        .value = data['LDAP_PORT'];
+	$('ldap.defProfile')  .value = data['LDAP_DEF_PROFILE'];
+	$('ldap.userDN')      .value = data['LDAP_USERDN'];
+	$('ldap.password')    .value = data['LDAP_PASSWORD'];
+	$('ldap.baseDN')      .value = data['LDAP_DN_BASE'];
+	$('ldap.usersDN')     .value = data['LDAP_DN_USERS'];
+	$('ldap.nameAttr')    .value = data['LDAP_ATTR_NAME'];
+	$('ldap.passwordAttr').value = data['LDAP_ATTR_PASSWORD'];
+	$('ldap.profileAttr') .value = data['LDAP_ATTR_PROFILE'];
+	
 	this.z3950Shower.update();
 	this.proxyShower.update();
+	this.ldapShower.update();
 }
 
 //=====================================================================================
@@ -108,7 +131,19 @@ ConfigView.prototype.getData = function()
 		FEEDBACK_MAIL_HOST : $('feedback.mail.host').value,
 		FEEDBACK_MAIL_PORT : $('feedback.mail.port').value,		
 
-		REMOVEDMD_DIR : $('removedMd.dir').value
+		REMOVEDMD_DIR : $('removedMd.dir').value,
+		
+		LDAP_USE           : $('ldap.use').checked,
+		LDAP_HOST          : $F('ldap.host'),
+		LDAP_PORT          : $F('ldap.port'),
+		LDAP_DEF_PROFILE   : $F('ldap.defProfile'),
+		LDAP_USERDN        : $F('ldap.userDN'),
+		LDAP_PASSWORD      : $F('ldap.password'),
+		LDAP_DN_BASE       : $F('ldap.baseDN'),
+		LDAP_DN_USERS      : $F('ldap.usersDN'),
+		LDAP_ATTR_NAME     : $F('ldap.nameAttr'),
+		LDAP_ATTR_PASSWORD : $F('ldap.passwordAttr'),
+		LDAP_ATTR_PROFILE  : $F('ldap.profileAttr')
 	}
 	
 	return data;
