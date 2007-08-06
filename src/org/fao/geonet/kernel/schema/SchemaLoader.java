@@ -177,7 +177,7 @@ public class SchemaLoader
 					cte.alElements = resolveInheritance(cte);
 					ArrayList complexContentAttribs = resolveAttributeInheritance(cte);
 
-				//--- add attribs from complexContent (if any) 
+				//--- add attribs from complexContent (if any)
 
 					for(int j=0; j<complexContentAttribs.size(); j++) {
 						AttributeEntry ae = (AttributeEntry) complexContentAttribs.get(j);
@@ -244,7 +244,7 @@ public class SchemaLoader
 
 
 				String type;
-				Boolean abstrElement = false;
+				boolean abstrElement = false;
 
 // Three situations:
 // 1. element is a reference to a global element so check if abstract
@@ -254,14 +254,14 @@ public class SchemaLoader
 					if (hmAbsElems.containsKey(ee.ref)) abstrElement = true;
 
 				}
-// 2. element is a local element so get type 
+// 2. element is a local element so get type
 				else if (ee.name != null)
 				{
 					type = ee.type == null ? "string" : ee.type;
-					
+
 					mds.addElement(ee.name, type, new ArrayList(), new ArrayList(), new ArrayList());
 
-// 3. element is a choice element or an error 
+// 3. element is a choice element or an error
 				} else {
 					if (!ee.choiceElem)
 						throw new IllegalArgumentException("Reference and name are null for element at position "+j+" in complexType "+cte.name);
@@ -274,7 +274,7 @@ public class SchemaLoader
 					String baseChoiceName = cte.name+"CHOICE_ELEMENT";
 					type = ee.name = baseChoiceName+baseChoiceNr;
 
-					// Traverse the list of elements in the choice element and 
+					// Traverse the list of elements in the choice element and
 					// create an mdt with the chosen name and process any nested choices
 					createTypeAndResolveNestedChoices(mds,ee.alChoiceElems,
 																						baseChoiceName,baseChoiceNr);
@@ -301,7 +301,7 @@ public class SchemaLoader
 					else
 					{
 						if (cte.alElements.size() == 1) {
-						// This type has only one abstract element so make this type the choice type 
+						// This type has only one abstract element so make this type the choice type
 							Integer elementsAdded = recursivelyDealWithAbstractElements(mdt,al);
 							mdt.setOrType(elementsAdded > 1);
 						} else {
@@ -370,9 +370,9 @@ public class SchemaLoader
 	//--- Descend recursively to deal with abstract elements
 	//---
 	//---------------------------------------------------------------------------
-	private Integer recursivelyDealWithAbstractElements(MetadataType mdt,ArrayList al) {
+	private int recursivelyDealWithAbstractElements(MetadataType mdt,ArrayList al) {
 
-		Integer number = 0;
+		int number = 0;
 		if (al == null) return number;
 		for(int k=0; k<al.size(); k++)
 		{

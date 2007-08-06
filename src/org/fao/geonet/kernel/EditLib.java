@@ -232,8 +232,8 @@ public class EditLib
 		String name   = getUnqualifiedName(qname);
 		String ns     = getNamespace(qname, el);
 		String prefix = getPrefix(qname);
-		String parentName = getParentNameFromChild(el); 
-		
+		String parentName = getParentNameFromChild(el);
+
 
 		// System.out.println("#### - parent name = " + parentName); // DEBUG
 		// System.out.println("#### - child name = " + name); // DEBUG
@@ -333,7 +333,7 @@ public class EditLib
 
 	//--------------------------------------------------------------------------
 
-	private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, 
+	private void fillElement(MetadataSchema schema, SchemaSuggestions sugg,
 														Element parent, Element md) throws Exception
 	{
 		//System.out.println("#### entering fillElement()"); // DEBUG
@@ -375,11 +375,11 @@ public class EditLib
 				String uname = getUnqualifiedName(attr.name);
 				String ns     = getNamespace(attr.name, md);
 				String prefix = getPrefix(attr.name);
-				// if the prefix is gml then we create the attribute with the 
+				// if the prefix is gml then we create the attribute with the
 				// appropriate namespace because gml types include ref'd attributes
 				// like gml:id - the others such as gmd etc don't include refs but
 				// define types that include attributes without namespace prefixes
-				if (prefix.equals("gml")) 
+				if (prefix.equals("gml"))
 					md.setAttribute(new Attribute(uname, value, Namespace.getNamespace(prefix,ns)));
 				else
 					md.setAttribute(new Attribute(uname, value));
@@ -487,7 +487,7 @@ public class EditLib
 	}
 
 	//--------------------------------------------------------------------------
-	/** Checks substitutions for element and returns substitute based on 
+	/** Checks substitutions for element and returns substitute based on
 	 *  namespace prefix of the root - NOTE: this code is to support 
    *  profiles of ISO19139 which should have a different root element 
    *  namespace - so no subs are done if this is vanilla iso19139 ie. gmd 
@@ -551,7 +551,7 @@ public class EditLib
 		}
 		MetadataType type = schema.getTypeInfo(elemType);
 
-		Boolean postProcessChoiceElements = false;
+		boolean postProcessChoiceElements = false;
 
 		if (!type.isOrType())
 		{
@@ -860,7 +860,7 @@ public class EditLib
 					//String prefix = getPrefix(chType);
 					//choose.setAttribute(new Attribute(Edit.Choose.Attr.NAME, getUnqualifiedName(chType)));
 					choose.setAttribute(new Attribute(Edit.Choose.Attr.NAME, chType));
-					//if (!prefix.equals("")) 
+					//if (!prefix.equals(""))
 					//	choose.setAttribute(new Attribute(Edit.Choose.Attr.PREFIX,prefix));
 
 					child.addContent(choose);
@@ -899,7 +899,7 @@ public class EditLib
 			//String prefix = getPrefix(attr.name);
 
 			attribute.setAttribute(new Attribute(Edit.Attribute.Attr.NAME, attr.name));
-			//if (prefix != null && !prefix.equals("")) 
+			//if (prefix != null && !prefix.equals(""))
 			//	attribute.setAttribute(new Attribute(Edit.Attribute.Attr.PREFIX, prefix));
 
 			//--- add default value (if any)

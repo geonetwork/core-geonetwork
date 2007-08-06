@@ -85,10 +85,10 @@ public class MetadataType
 	}
 
 	//--------------------------------------------------------------------------
-	/** Return true if subs for element in given position need to be examined, 
+	/** Return true if subs for element in given position need to be examined,
 	 *  false otherwise */
 
-	public Boolean examineSubs(int pos)
+	public boolean examineSubs(int pos)
 	{
 		return (Boolean) alExamineSubs.get(pos);
 	}
@@ -150,7 +150,7 @@ public class MetadataType
 			res += comp + "/" + min+ "-" + sMax + " ";
 		}
 
-	
+
 		String attrs = "";
 		for(int i=0; i<alAttribs.size(); i++)
 		{
@@ -188,7 +188,7 @@ public class MetadataType
 	}
 
 	//---------------------------------------------------------------------------
-	
+
 	void addRefElementWithType(String name, String elementType, int minCard, int maxCard)
 	{
 		addElement(name,elementType,true,minCard,maxCard);
