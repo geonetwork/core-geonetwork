@@ -461,7 +461,7 @@ function addLayer(baseUrl, serviceName) // DEBUG
 */
 function imc_addService(surl, service, type, callback)
 {
-	var url = '/intermap/srv/en/map.addServicesExt';
+	var url = '/intermap/srv/en/map.addServices.xml';
 	
 	var pars = 'url=' + surl + '&service=' + service + '&type=' + type;
 	var myAjax = new Ajax.Request (
