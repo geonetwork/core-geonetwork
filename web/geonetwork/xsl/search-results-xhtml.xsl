@@ -337,7 +337,13 @@
 										<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=distribution')"><xsl:value-of select="/root/gui/strings/interactiveMap"/></button>
 									</xsl:when>
 									<xsl:otherwise>
-										<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=distribution')"><xsl:value-of select="/root/gui/strings/interactiveMap"/></button>
+<!--										<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=distribution')"><xsl:value-of select="/root/gui/strings/interactiveMap"/></button>-->
+
+										<button id="gn_showinterlist_{$metadata/geonet:info/id}"  class="content" onclick="gn_showInterList({$metadata/geonet:info/id})"><img src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/interactiveMap"/></button>
+										<button id="gn_hideinterlist_{$metadata/geonet:info/id}"  class="content" onclick="gn_hideInterList({$metadata/geonet:info/id})" style="display:none;"><img src="{/root/gui/url}/images/minus.png" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/interactiveMap"/></button>
+										<button id="gn_loadinterlist_{$metadata/geonet:info/id}"  class="content" style="display:none;">Loading...</button> <!-- FIXME i18n -->
+										
+									
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:when>

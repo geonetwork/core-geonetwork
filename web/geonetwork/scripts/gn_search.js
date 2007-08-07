@@ -141,3 +141,56 @@ function gn_search_error() {
 // style.display = 'none';
     alert("ERROR)");
 }
+
+function gn_showInterList(id) 
+{
+    var pars = 'id=' + id + "&currTab=distribution";
+    
+    $('gn_showinterlist_' + id) .hide();
+    $('gn_loadinterlist_' + id) .show();
+    
+    var myAjax = new Ajax.Request(
+        '/geonetwork/srv/en/metadata.show.embedded', 
+        {
+            method: 'get',
+            parameters: pars,
+            onSuccess: function (req) {
+                // remove previous open md
+                //var prev = document.getElementById('metadata_current');
+                //if(prev)
+                //	prev.parentNode.removeChild($('metadata_current'));
+                
+                var parent = $('mdwhiteboard_' + id);
+                clearNode(parent);
+                
+                $('gn_loadinterlist_' + id) .hide();
+                $('gn_hideinterlist_' + id) .show();
+                
+                // create new element
+                var div = document.createElement('div');
+                div.id = 'metadata_current';
+                div.style.display = 'none';
+                parent.appendChild(div);
+                
+                div.innerHTML = req.responseText;
+                
+                Effect.BlindDown(div);
+                
+                var tipman = new TooltipManager();
+                ker.loadMan.wait(tipman);
+            },
+            onFailure: gn_search_error// FIXME
+        });
+}
+
+function gn_hideInterList(id) 
+{
+    var parent = $('mdwhiteboard_' + id);
+    var div = parent.firstChild;
+    Effect.BlindUp(div, { afterFinish: function (obj) {
+            clearNode(parent);
+            $('gn_showinterlist_' + id) .show();
+            $('gn_hideinterlist_' + id) .hide();
+        }
+    });
+}
