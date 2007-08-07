@@ -79,7 +79,7 @@ function gn_toggleMetadata(id)
 
 function gn_showMetadata(id) 
 {
-    var pars = 'id=' + id;
+    var pars = 'id=' + id + '&currTab=simple';
     
     $('gn_showmd_' + id) .hide();
     $('gn_loadmd_' + id) .show();
@@ -103,7 +103,7 @@ function gn_showMetadata(id)
                 
                 // create new element
                 var div = document.createElement('div');
-                div.id = 'metadata_current';
+                div.className = 'metadata_current';
                 div.style.display = 'none';
                 parent.appendChild(div);
                 
@@ -160,15 +160,17 @@ function gn_showInterList(id)
                 //if(prev)
                 //	prev.parentNode.removeChild($('metadata_current'));
                 
-                var parent = $('mdwhiteboard_' + id);
+                var parent = $('ilwhiteboard_' + id);
                 clearNode(parent);
+                
+                parent.show();
                 
                 $('gn_loadinterlist_' + id) .hide();
                 $('gn_hideinterlist_' + id) .show();
                 
                 // create new element
                 var div = document.createElement('div');
-                div.id = 'metadata_current';
+                div.className = 'metadata_current';
                 div.style.display = 'none';
                 parent.appendChild(div);
                 
@@ -185,7 +187,7 @@ function gn_showInterList(id)
 
 function gn_hideInterList(id) 
 {
-    var parent = $('mdwhiteboard_' + id);
+    var parent = $('ilwhiteboard_' + id);
     var div = parent.firstChild;
     Effect.BlindUp(div, { afterFinish: function (obj) {
             clearNode(parent);

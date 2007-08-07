@@ -362,7 +362,8 @@
 		</table>
 		
 		<!-- spare room for metdata display via AJAX -->
-		<div id="mdwhiteboard_{$metadata/geonet:info/id}" width="100%"/>
+		<div id="ilwhiteboard_{$metadata/geonet:info/id}" width="100%" style="display:none;">dummy string, or FF will nest next DIV into this one</div>
+		<div id="mdwhiteboard_{$metadata/geonet:info/id}" width="100%"></div>
 	</xsl:template>
 
 	<!--

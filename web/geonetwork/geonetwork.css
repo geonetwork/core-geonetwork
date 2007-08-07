@@ -555,14 +555,14 @@ imdisabled {
     cursor: progress;
 }
 
-div#metadata_current {
+div.metadata_current {
     padding: 3px;
     border: 1px #266397 solid;    
     background-color: #dce1ea;
 }
 
-div#metadata_current table,
-div#metadata_current td
+div.metadata_current table,
+div.metadata_current td
 {
     background-color: #dce1ea;
 }
