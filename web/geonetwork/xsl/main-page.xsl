@@ -383,10 +383,7 @@
 				<!-- right -->
 				<td class="padded-content" valign="top">
 					<center>
-						<a href="javascript:popInterMap('{/root/gui/url}/intermap')">
-							<img src="{/root/gui/url}/images/intermap.gif" alt="InterMap"
-								align="top"/>
-						</a>
+						<img src="{/root/gui/url}/images/intermap.gif" alt="InterMap" align="top"/>
 					</center>
 					<xsl:copy-of select="/root/gui/strings/interMapInfo"/>
 				</td>
@@ -1233,7 +1230,7 @@
 				Event.observe('searchBtn', 	'click', 		doMetadataSearch);
 				Event.observe('any', 		'keypress',	gn_anyKeyObserver);
 				//			Event.observe('openIMBtn', 'click',  function(){openIntermap()} ); // issued only when IM is loaded
-				Event.observe('closeIMBtn', 	'click',  		closeIntermap );
+				Event.observe('closeIMBtn', 	'click',  		closeIntermap	 );
 			
 			</script>
 
