@@ -159,7 +159,7 @@
 	<eastbc>East Bounding Coordinate</eastbc>
 	<edit>Edit</edit>
 	<Editor>Editor</Editor>
-	<!-- <emailAddress>Email address</emailAddress> -->
+	<downloadEmail>Download Email</downloadEmail>
 	<en>English</en> <!-- Do not translate! -->
 	<enclosing>Including</enclosing>
 	<enclosingCoordinate>Enclosing coordinates </enclosingCoordinate>

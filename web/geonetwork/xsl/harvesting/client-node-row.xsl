@@ -76,7 +76,7 @@
 
 			<!-- Edit button - - - - - - - - - - - - - - - - - - - - - -->
 			
-			<td class="padded">
+			<td class="padded" align="center">
 				<!-- That f....d IE does not support buttons inside table row -->
 				<!-- we have to use anchors instead -->
 				

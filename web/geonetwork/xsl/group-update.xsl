@@ -66,7 +66,7 @@
 					<td class="padded"><textarea class="content" name="description" cols="60" rows="6" wrap="soft"><xsl:value-of select="/root/response/record/description"/></textarea></td>
 				</tr>
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/emailAddress"/></th>
+					<th class="padded"><xsl:value-of select="/root/gui/strings/downloadEmail"/></th>
 					<td class="padded"><input class="content" type="text" name="email" value="{/root/response/record/email}"/></td>
 				</tr>
 			</table>

@@ -27,11 +27,11 @@
 	<xsl:template name="form">
 		<table border="0">
 			<tr>
-				<th class="padded"><xsl:value-of select="/root/gui/strings/username"/></th>
-				<th class="padded"><xsl:value-of select="/root/gui/strings/surName"/></th>
-				<th class="padded"><xsl:value-of select="/root/gui/strings/firstName"/></th>
-				<th class="padded"><xsl:value-of select="/root/gui/strings/profile"/></th>
-				<th class="padded"><xsl:value-of select="/root/gui/strings/operation"/></th>
+				<th class="padded" style="width:80px;"><b><xsl:value-of select="/root/gui/strings/username"/></b></th>
+				<th class="padded" style="width:80px;"><b><xsl:value-of select="/root/gui/strings/surName"/></b></th>
+				<th class="padded" style="width:80px;"><b><xsl:value-of select="/root/gui/strings/firstName"/></b></th>
+				<th class="padded" style="width:80px;"><b><xsl:value-of select="/root/gui/strings/profile"/></b></th>
+				<th class="padded" style="width:80px;"><b><xsl:value-of select="/root/gui/strings/operation"/></b></th>
 			</tr>
 			<xsl:for-each select="/root/response/record">
 				<tr>
