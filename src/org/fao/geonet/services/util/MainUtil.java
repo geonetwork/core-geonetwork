@@ -84,7 +84,7 @@ public class MainUtil
 						.addContent(new Element(Geonet.SearchResult.PAPER)        .setText(Geonet.Text.OFF))
 						.addContent(new Element(Geonet.SearchResult.TEMPLATE)     .setText("n"))
 						.addContent(new Element(Geonet.SearchResult.EXTENDED)     .setText(Geonet.Text.OFF))
-						.addContent(new Element(Geonet.SearchResult.INTERMAP)     .setText(Geonet.Text.OFF))
+						.addContent(new Element(Geonet.SearchResult.INTERMAP)     .setText(Geonet.Text.ON))
 						.addContent(new Element(Geonet.SearchResult.HELP)         .setText(Geonet.Text.OFF))
 						.addContent(new Element(Geonet.SearchResult.REMOTE)       .setText(Geonet.Text.OFF))
 						.addContent(new Element(Geonet.SearchResult.HITS_PER_PAGE).setText("10"));
