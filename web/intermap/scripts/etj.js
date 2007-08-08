@@ -135,7 +135,10 @@ function im_reset_complete(req)
 */
 function runIM_addService(url, service, type)
 {
-    imc_addService(url, service, type, function() {imc_reloadLayers();});    
+    imc_addService(url, service, type, function() {
+             imc_reloadLayers();
+             imc_mm_update(im_mm_width, im_mm_height, null);
+        });    
 }
 
 
