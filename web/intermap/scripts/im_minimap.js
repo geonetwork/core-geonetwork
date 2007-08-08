@@ -113,10 +113,7 @@ function im_mm_getWE(x)
 function im_mm_getURLbbox()
 {
     if(im_mm_north)
-        return   "bbnorth="+im_mm_north+
-                    "&bbeast="+im_mm_east+
-                    "&bbsouth="+im_mm_south+
-                    "&bbwest="+im_mm_west;    
+        return  im_urlizebb(im_mm_north, im_mm_east, im_mm_south, im_mm_west);    
     else
         return null;
 }
@@ -131,10 +128,19 @@ function im_dezoom(n, e, s, w)
 
 function im_urlizebb(n, e, s, w)
 {
-    return   "bbnorth="+n+
-                "&bbeast="+e+
-                "&bbsouth="+s+
-                "&bbwest="+w;    
+    return   "northBL="+n+
+                "&eastBL="+e+
+                "&southBL="+s+
+                "&westBL="+w;    
+}
+
+function im_mm_getURLselectedbbox()
+{
+        return  im_urlizebb(
+            im_mm_ctrl_n.value,
+            im_mm_ctrl_e.value,
+            im_mm_ctrl_s.value,
+            im_mm_ctrl_w.value);
 }
 
 /*****************************************************************************
@@ -367,6 +373,9 @@ function im_mm_deleteAoi()
         Element.remove(im_mm_aoibox);    
         im_mm_aoibox = null;    
     }
+    
+    // set back full mm bbox into input fields
+    im_mm_setTextCoords(im_mm_north, im_mm_east, im_mm_south, im_mm_west); 
 }
 
 

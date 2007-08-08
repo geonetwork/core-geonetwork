@@ -99,10 +99,10 @@ function im_bm_setSize(w, h)
 
 function im_bm_getURLbbox()
 {
-    return   "bbnorth="+im_bm_north+
-                "&bbeast="+im_bm_east+
-                "&bbsouth="+im_bm_south+
-                "&bbwest="+im_bm_west;    
+    return   "northBL="+im_bm_north+
+                "&eastBL="+im_bm_east+
+                "&southBL="+im_bm_south+
+                "&westBL="+im_bm_west;    
 }
 
 

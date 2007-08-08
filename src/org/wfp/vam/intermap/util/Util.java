@@ -26,10 +26,10 @@ public class Util
 	{
 		try
 		{
-			float n = Float.parseFloat(params.getChildText("bbnorth"));
-			float e = Float.parseFloat(params.getChildText("bbeast"));
-			float s = Float.parseFloat(params.getChildText("bbsouth"));
-			float w = Float.parseFloat(params.getChildText("bbwest"));
+			float n = Float.parseFloat(params.getChildText("northBL"));
+			float e = Float.parseFloat(params.getChildText("eastBL"));
+			float s = Float.parseFloat(params.getChildText("southBL"));
+			float w = Float.parseFloat(params.getChildText("westBL"));
 			return new BoundingBox(n, s, e, w);
 		}
 		catch (NullPointerException e) // child not found

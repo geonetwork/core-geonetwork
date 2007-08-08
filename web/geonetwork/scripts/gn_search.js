@@ -9,7 +9,7 @@
 
 
 /*  */
-function prepareSearch() 
+function preparePresent() 
 {
     // Display results area
     clearNode('resultList');
@@ -25,18 +25,24 @@ function gn_anyKeyObserver(e)
 /*  */
 function doMetadataSearch() 
 {
-    prepareSearch();
+    preparePresent();
+    
+    var region = $('region').value;
+    if(region=="") 
+        region=null;
     
     // Load results via AJAX
-    gn_search($('any') .value);
-    // FIXME add bb
+    gn_search($('any') .value, 
+                   im_mm_getURLselectedbbox(),
+                   region);    
 }
 
-function gn_search(text, bbn, bbe, bbs, bbw) 
+function gn_search(text, bb, region) 
 {
-    var pars = 'any=' + text;
-// add bb
-    
+    var pars = 'any=' + encodeURIComponent(text) + "&"+bb;
+    if(region)
+        pars += "&region="+region;
+        
     var myAjax = new Ajax.Request(
     '/geonetwork/srv/en/main.search.embedded', {
         method: 'get',
@@ -48,7 +54,7 @@ function gn_search(text, bbn, bbe, bbs, bbw)
 
 function gn_present(frompage, topage) 
 {
-    prepareSearch();
+    preparePresent();
     
     var pars = 'from=' + frompage + "&to=" + topage;
     
@@ -74,15 +80,15 @@ function gn_search_complete(req) {
     $('loadingMD').hide();
 }
 
-function gn_toggleMetadata(id) 
+/*function gn_toggleMetadata(id) 
 {
     var parent = $('mdwhiteboard_' + id);
     if (parent.firstChild)
-    gn_hideMetadata(id);
+        gn_hideMetadata(id);
     else
-    gn_showMetadata(id);
+        gn_showMetadata(id);
 }
-
+*/
 function gn_showMetadata(id) 
 {
     var pars = 'id=' + id + '&currTab=simple';

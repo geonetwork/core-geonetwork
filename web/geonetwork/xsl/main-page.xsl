@@ -725,7 +725,7 @@
 
 									<!-- regions combobox -->
 
-									<select class="content" name="region">
+									<select class="content" name="region" id="region">
 										<option value="">
 											<xsl:if test="/root/gui/searchDefaults/theme='_any_'">
 												<xsl:attribute name="selected"/>
@@ -1164,8 +1164,8 @@
 			<tr>
 				<td align="right" colspan="2">
 					<!-- regions combobox -->
-					<select class="content" name="region">
-						<option value="">
+					<select class="content" name="region" id="region">
+							<option value="">
 							<xsl:if test="/root/gui/searchDefaults/theme='_any_'">
 								<xsl:attribute name="selected"/>
 							</xsl:if>
