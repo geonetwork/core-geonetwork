@@ -421,12 +421,12 @@
 					<xsl:apply-templates mode="brief" select="//gmd:MD_Metadata"/>
 				</xsl:variable>
 				<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
-				<td width="100" height="100" align="center">
+				<!--td width="100" height="100" align="center">
 					<xsl:call-template name="thumbnail">
 						<xsl:with-param name="metadata" select="$metadata"/>
 					</xsl:call-template>
-				</td>
-				
+				</td-->
+				<td/>
 				<td class="padded" align="center">
 					<xsl:apply-templates mode="iso19139VertElement" select="gmd:eastBoundLongitude/gco:Decimal">
 						<xsl:with-param name="schema" select="$schema"/>
@@ -833,7 +833,7 @@
 			<!-- default -->
 			<xsl:otherwise>
 			
-				<!-- thumbnail
+				<!-- thumbnail -->
 				<tr>
 					<td class="padded" align="center" valign="center" colspan="2">
 						<xsl:variable name="md">
@@ -845,7 +845,7 @@
 						</xsl:call-template>
 					</td>
 				</tr>
-				-->
+				
 				
 				<xsl:call-template name="iso19139Simple">
 					<xsl:with-param name="schema" select="$schema"/>
