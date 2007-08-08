@@ -1230,9 +1230,10 @@
 			
 			<script language="JavaScript" type="text/javascript">
 				
-				Event.observe('searchBtn', 'click', function(){ doMetadataSearch(); });
-	//			Event.observe('openIMBtn', 'click',  function(){openIntermap()} ); // issued only when IM is loaded
-				Event.observe('closeIMBtn', 'click',  function(){closeIntermap()} );
+				Event.observe('searchBtn', 	'click', 		doMetadataSearch);
+				Event.observe('any', 		'keypress',	gn_anyKeyObserver);
+				//			Event.observe('openIMBtn', 'click',  function(){openIntermap()} ); // issued only when IM is loaded
+				Event.observe('closeIMBtn', 	'click',  		closeIntermap );
 			
 			</script>
 

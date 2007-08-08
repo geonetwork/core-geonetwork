@@ -16,6 +16,12 @@ function prepareSearch()
     $('loadingMD').show();
 }
 
+function gn_anyKeyObserver(e)
+{
+    if(e.keyCode == Event.KEY_RETURN)
+        doMetadataSearch();
+}
+
 /*  */
 function doMetadataSearch() 
 {
