@@ -97,6 +97,7 @@ function setupTooltip(x, y)
 			tip.className     = 'tooltip';
 			tip.innerHTML     = htmlTip;
 			tip.style.display = 'none';
+			tip.style.zIndex  = 32000;
 		
 			document.body.appendChild(tip);
 	

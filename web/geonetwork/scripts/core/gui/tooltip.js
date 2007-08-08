@@ -36,7 +36,8 @@ function mouseIn(event)
 		tip.className     = 'tooltip';
 		tip.innerHTML     = msg;
 		tip.style.display = 'none';
-		
+		tip.style.zIndex  = 32000;
+
 		document.body.appendChild(tip);	
 	}
 		
