@@ -37,13 +37,22 @@
 			<!-- operation - - - - - - - - - - - - - - - - - - - - - - -->
 			
 			<td class="padded">
-				<button class="content" onclick="ownership.transfer('{id}')">
+				<!--button class="content" onclick="ownership.transfer('{id}')">
 					<xsl:value-of select="/root/strings/transfer"/>
-				</button>
+				</button-->
+				
+				<a href="javascript:ownership.transfer('{id}')">
+					<xsl:value-of select="/root/strings/transfer"/>
+				</a>
 			</td>
 		</tr>
 			
 	</xsl:template>
+
+	<!-- ============================================================================================= -->
+	
+	<xsl:template match="/root/strings"/>
+	<xsl:template match="/root/env"/>
 
 	<!-- ============================================================================================= -->
 
