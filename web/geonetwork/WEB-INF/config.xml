@@ -19,15 +19,15 @@
 		<gui>
 			<xml name="strings" file="xml/strings.xml" />
 
-			<xml name="iso19115"    base="xml/schemas/iso19115/loc"    file="labels.xml" />
-			<xml name="iso19115"    base="xml/schemas/iso19115/loc"    file="codelists.xml" />
-			<xml name="iso19139"    base="xml/schemas/iso19139/loc"    file="labels.xml" />
-			<xml name="iso19139"    base="xml/schemas/iso19139/loc"    file="codelists.xml" />
-		  	<xml name="fgdc-std"    base="xml/schemas/fgdc-std/loc"    file="labels.xml" />
+			<xml name="iso19115" base="xml/schemas/iso19115/loc" file="labels.xml" />
+			<xml name="iso19115" base="xml/schemas/iso19115/loc" file="codelists.xml" />
+			<xml name="iso19139" base="xml/schemas/iso19139/loc" file="labels.xml" />
+			<xml name="iso19139" base="xml/schemas/iso19139/loc" file="codelists.xml" />
+		  	<xml name="fgdc-std" base="xml/schemas/fgdc-std/loc" file="labels.xml" />
 			<xml name="dublin-core" base="xml/schemas/dublin-core/loc" file="labels.xml" />
 
 			<call name="session" class="jeeves.guiservices.session.Get" />
-			<call name="env"     class="org.fao.geonet.guiservices.util.Env" />
+			<call name="env" class="org.fao.geonet.guiservices.util.Env" />
 			<call name="results" class="org.fao.geonet.guiservices.search.GetResultsInfo" />
 		</gui>
 
@@ -68,17 +68,15 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.DbmsPool</provider>
 			<config>
-				<user>qbzZlRdy</user>
-				<password>Qp1PgFDy</password>
+				<user>4haBeR9z</user>
+				<password>VV0fkdHx</password>
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>	
 			</config>
 			
-			<activator class="org.fao.geonet.activators.McKoiActivator">
-				<configFile>WEB-INF/db/db.conf</configFile>
-			</activator>
-		</resource>
+			
+		<activator class="org.fao.geonet.activators.McKoiActivator"><configFile>WEB-INF/db/db.conf</configFile></activator></resource>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- mysql -->
@@ -589,7 +587,7 @@
 		<service name="xml.search">
 			<class name=".services.main.XmlSearch" />
 
-			<output sheet="portal-present.xsl"/>
+			<output sheet="portal-present.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -692,10 +690,10 @@
 		<!-- relation services -->
 
 		<service name="xml.relation.get">
-			<class name=".services.relations.Get"/>
+			<class name=".services.relations.Get" />
 
 			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8">
-				<call name="sources" class=".guiservices.util.Sources"/>
+				<call name="sources" class=".guiservices.util.Sources" />
 			</output>
 		</service>
 
