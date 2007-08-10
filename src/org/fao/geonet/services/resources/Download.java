@@ -96,38 +96,48 @@ public class Download implements Service
 
 			String fromDescr = "GeoNetwork administrator";
 
-			// send emails about downloaded file to groups with notify privilege
-			Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-			StringBuffer query = new StringBuffer();
-			query.append("SELECT g.id, g.name, g.email ");
-			query.append("FROM   OperationAllowed oa, Groups g ");
-			query.append("WHERE  oa.operationId =" + AccessManager.OPER_NOTIFY + " ");
-			query.append("AND    oa.metadataId = " + id + " ");
-			query.append("AND    oa.groupId = g.id");
-
-			Element groups = dbms.select(query.toString());
-
-			for (Iterator i = groups.getChildren().iterator(); i.hasNext(); )
+			if (host.trim().length() == 0 || from.trim().length() == 0)
+				context.debug("Skipping email notification");
+			else
 			{
-				Element group = (Element)i.next();
-				String  name  = group.getChildText("name");
-				String  email = group.getChildText("email");
+				context.debug("Sending email notification for file : "+ file);
 
-				String subject = "File " + fname + " has been downloaded";
-				String message = "GeoNetwork notifies you, as supervisor of group "+ name
-					+ " that data file "+ fname
-					+ " belonging metadata "+ id
-					+ " has beed downloaded from address " + context.getIpAddress() + ".";
+				// send emails about downloaded file to groups with notify privilege
+				Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-				try
+				StringBuffer query = new StringBuffer();
+				query.append("SELECT g.id, g.name, g.email ");
+				query.append("FROM   OperationAllowed oa, Groups g ");
+				query.append("WHERE  oa.operationId =" + AccessManager.OPER_NOTIFY + " ");
+				query.append("AND    oa.metadataId = " + id + " ");
+				query.append("AND    oa.groupId = g.id");
+
+				Element groups = dbms.select(query.toString());
+
+				for (Iterator i = groups.getChildren().iterator(); i.hasNext(); )
 				{
-					MailSender sender = new MailSender(context);
-					sender.send(host, Integer.parseInt(port), from, fromDescr, email, null, subject, message);
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
+					Element group = (Element)i.next();
+					String  name  = group.getChildText("name");
+					String  email = group.getChildText("email");
+
+					if (email.trim().length() != 0)
+					{
+						String subject = "File " + fname + " has been downloaded";
+						String message = "GeoNetwork notifies you, as supervisor of group "+ name
+							+ " that data file "+ fname
+							+ " belonging metadata "+ id
+							+ " has beed downloaded from address " + context.getIpAddress() + ".";
+
+						try
+						{
+							MailSender sender = new MailSender(context);
+							sender.send(host, Integer.parseInt(port), from, fromDescr, email, null, subject, message);
+						}
+						catch (Exception e)
+						{
+							e.printStackTrace();
+						}
+					}
 				}
 			}
 		}
