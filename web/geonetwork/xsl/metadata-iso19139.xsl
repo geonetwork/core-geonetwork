@@ -62,7 +62,7 @@
 	<!-- some gco: elements -->
 	<!-- ============================================================================= -->
 
-	<xsl:template mode="iso19139" match="gmd:*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real]">
+	<xsl:template mode="iso19139" match="gmd:*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure]">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
