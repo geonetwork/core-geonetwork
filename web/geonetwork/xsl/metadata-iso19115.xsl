@@ -1414,9 +1414,9 @@
 				</xsl:variable>
 				<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
 				<td width="100" height="100" align="center">
-					<xsl:call-template name="thumbnail">
+					<!--xsl:call-template name="thumbnail">
 						<xsl:with-param name="metadata" select="$metadata"/>
-					</xsl:call-template>
+					</xsl:call-template-->
 				</td>
 				
 				<td class="padded" align="center">
