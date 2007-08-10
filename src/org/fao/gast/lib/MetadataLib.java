@@ -24,12 +24,11 @@
 package org.fao.gast.lib;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.List;
-import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -95,14 +94,13 @@ public class MetadataLib
 	}
 
 	//---------------------------------------------------------------------------
-
 	/** Transactional */
 
 	public void sync(Dbms dbms) throws Exception
 	{
 		try
 		{
-			List list = dbms.select("SELECT * FROM Metadata").getChildren();
+			List list = dbms.select("SELECT * FROM Metadata WHERE isTemplate='n'").getChildren();
 			dbms.commit();
 
 			String siteURL = Lib.site.getSiteURL(dbms);
@@ -190,6 +188,82 @@ public class MetadataLib
 		String styleSheet = appPath +"/web/geonetwork/xml/schemas/"+ schema +"/"+ Geonet.File.EXTRACT_THUMBNAILS;
 
 		return Xml.transform(md, styleSheet);
+	}
+
+	//--------------------------------------------------------------------------
+
+	public String getDataDir()
+	{
+		String dataDir = Lib.config.getHandlerProp(Geonet.Config.DATA_DIR);
+
+		if (!new File(dataDir).isAbsolute())
+			dataDir = appPath +"/web/geonetwork/"+ dataDir;
+
+		return dataDir;
+	}
+
+	//--------------------------------------------------------------------------
+
+	public String getDir(int id, String access)
+	{
+		String group    = pad(id / 100, 3);
+		String groupDir = group +"00-"+ group +"99";
+		String subDir   = (access != null && access.equals(Params.Access.PUBLIC))
+									? Params.Access.PUBLIC
+									: Params.Access.PRIVATE;
+
+		return getDataDir() +"/"+ groupDir +"/"+ id +"/"+ subDir +"/";
+	}
+
+	//--------------------------------------------------------------------------
+
+	public Element setUUID(String schema, String uuid, Element md) throws Exception
+	{
+		//--- setup environment
+
+		Element env = new Element("env");
+		env.addContent(new Element("uuid").setText(uuid));
+
+		//--- setup root element
+
+		Element root = new Element("root");
+		root.addContent(md);
+		root.addContent(env);
+
+		//--- do an XSL  transformation
+
+		String styleSheet = appPath +"/web/geonetwork/xml/schemas/"+ schema +"/"+ Geonet.File.SET_UUID;
+
+		return Xml.transform(root, styleSheet);
+	}
+
+	//-----------------------------------------------------------------------------
+
+	public void insertMetadata(Dbms dbms, String schema, Element md, int id, String source,
+										String createDate, String changeDate, String uuid, int owner,
+										String groupOwner, String template, String title) throws Exception
+	{
+		//--- force namespace prefix for iso19139 metadata
+		DataManager.setNamespacePrefix(md);
+
+		XmlSerializer.insert(dbms, schema, md, id, source, uuid, createDate,
+											 changeDate, template, title, owner, groupOwner);
+	}
+
+	//-----------------------------------------------------------------------------
+	//---
+	//--- Private methods
+	//---
+	//-----------------------------------------------------------------------------
+
+	private String pad(int group, int lenght)
+	{
+		String text = Integer.toString(group);
+
+		while(text.length() < lenght)
+			text = "0" + text;
+
+		return text;
 	}
 
 	//---------------------------------------------------------------------------

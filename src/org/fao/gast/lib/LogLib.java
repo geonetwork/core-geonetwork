@@ -23,72 +23,83 @@
 
 package org.fao.gast.lib;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import jeeves.utils.BinaryFile;
-import org.fao.geonet.util.ISODate;
+import java.util.Properties;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 //=============================================================================
 
-public class IOLib
+public class LogLib
 {
+	//---------------------------------------------------------------------------
+	//---
+	//--- Constructor
+	//---
+	//---------------------------------------------------------------------------
+
+	public LogLib(String appPath) throws IOException
+	{
+		Properties props = new Properties();
+
+		FileInputStream is = new FileInputStream(appPath + LOG4J_CFG);
+		props.load(is);
+		is.close();
+
+		props.setProperty("log4j.appender.gast.file", appPath + LOG4J_FILE);
+
+		PropertyConfigurator.configure(props);
+	}
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---
 	//---------------------------------------------------------------------------
 
-	public void cleanDir(File dir) throws Exception
+	public void debug(String message)
 	{
-		File files[] = dir.listFiles();
-
-		if (files == null)
-			return;
-
-		for(File file : files)
-			if (file.isDirectory())
-			{
-				if (!file.getName().equals(".svn"))
-					cleanDir(file);
-			}
-			else if (!file.delete())
-				throw new Exception("Cannot delete file : "+ file);
+		Logger.getLogger(MODULE).debug(message);
 	}
 
 	//---------------------------------------------------------------------------
 
-	public List<File> scanDir(File folder)
+	public void info(String message)
 	{
-		return scanDir(folder, null);
+		Logger.getLogger(MODULE).info(message);
 	}
 
 	//---------------------------------------------------------------------------
 
-	public List<File> scanDir(File folder, String extension)
+	public void warning(String message)
 	{
-		List<File> alFiles = new ArrayList<File>();
-
-		File files[] = folder.listFiles();
-
-		if (files != null)
-			for (File file : files)
-				if (extension == null || file.getName().endsWith("."+extension))
-					alFiles.add(file);
-
-		return alFiles;
+		Logger.getLogger(MODULE).warn(message);
 	}
 
-	//--------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
 
-	public void save(File file, InputStream is) throws IOException
+	public void error(String message)
 	{
-		FileOutputStream os = new FileOutputStream(file);
-		BinaryFile.copy(is, os, false, true);
+		Logger.getLogger(MODULE).error(message);
 	}
+
+	//---------------------------------------------------------------------------
+
+	public void fatal(String message)
+	{
+		Logger.getLogger(MODULE).fatal(message);
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//---------------------------------------------------------------------------
+
+	private static final String MODULE     = "gast";
+	private static final String LOG4J_CFG  = "/gast/log/log4j.cfg";
+	private static final String LOG4J_FILE = "/gast/log/gast.log";
 }
 
 //=============================================================================

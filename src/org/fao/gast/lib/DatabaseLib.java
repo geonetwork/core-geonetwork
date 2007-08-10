@@ -251,6 +251,21 @@ public class DatabaseLib
 	}
 
 	//---------------------------------------------------------------------------
+	/** NOT Transactional */
+
+	public int getNextSerial(Dbms dbms, String table) throws SQLException
+	{
+		List list = dbms.select("SELECT max(id) as maxid FROM "+table).getChildren();
+
+		if (list.size() == 0)
+			return 1;
+
+		Element rec = (Element) list.get(0);
+
+		return Integer.parseInt(rec.getChildText("maxid")) +1;
+	}
+
+	//---------------------------------------------------------------------------
 	//---
 	//--- Private setup methods
 	//---
@@ -261,6 +276,8 @@ public class DatabaseLib
 	private void removeObjects(Dbms dbms, CallBack cb)
 									 throws FileNotFoundException, IOException
 	{
+		Lib.log.info("Removing database objects");
+
 		List<String> schema = loadSchemaFile(dbms.getURL());
 
 		//--- step 1 : collect objects to remove
@@ -350,6 +367,8 @@ public class DatabaseLib
 	public void createSchema(Dbms dbms, CallBack cb) throws 	FileNotFoundException,
 																				IOException, SQLException
 	{
+		Lib.log.info("Creating database schema");
+
 		List<String> schema = loadSchemaFile(dbms.getURL());
 
 		StringBuffer sb = new StringBuffer();
@@ -380,6 +399,8 @@ public class DatabaseLib
 
 	public void fillTables(Dbms dbms, CallBack cb) throws Exception
 	{
+		Lib.log.info("Filling database tables");
+
 		List<String> schema = loadSchemaFile(dbms.getURL());
 
 		for(String row : schema)
@@ -397,6 +418,8 @@ public class DatabaseLib
 				{
 					if (cb != null)
 						cb.filling(table, file);
+
+					Lib.log.debug(" - Filling table : "+ table);
 
 					Import.load(dbms.getConnection(), table, file);
 					dbms.commit();
@@ -468,11 +491,11 @@ public class DatabaseLib
 			if (!schema.getName().startsWith("."))
 				for (File temp : Lib.io.scanDir(schema, "xml"))
 				{
+					Lib.log.debug(" - Adding template file : "+ temp.getName());
+
 					Document doc  = Lib.xml.load(temp);
 					String   uuid = UUID.randomUUID().toString();
 					Element  xml  = doc.getRootElement();
-
-					DataManager.setNamespacePrefix(xml);
 
 					String file  = temp.getName();
 					String templ = "y";
@@ -485,8 +508,9 @@ public class DatabaseLib
 					}
 
 					//--- templates are by default assigned to administrator/intranet group
-					XmlSerializer.insert(dbms, schema.getName(), xml, serial,
-											   siteId, uuid, date, date, templ, title, 1, null);
+
+					Lib.metadata.insertMetadata(dbms, schema.getName(), xml, serial, siteId,
+														 date, date, uuid, 1, null, templ, title);
 
 					setupTemplatePriv(dbms, serial);
 					dbms.commit();

@@ -23,7 +23,9 @@
 
 package org.fao.gast.cli.setup;
 
+import java.io.File;
 import java.util.List;
+import jeeves.resources.dbms.Dbms;
 import org.fao.gast.lib.Lib;
 import org.fao.gast.lib.Resource;
 
@@ -53,7 +55,63 @@ public class Setup
 
 		Resource resource  = Lib.config.createResource();
 		Lib.database.setup(resource, null);
+
+		//--- ask for and install sample metadata
+
+		if (Lib.gui.confirm(null, SAMPLE_MSG))
+			addSampleData(appPath);
 	}
+
+	//---------------------------------------------------------------------------
+
+	private void addSampleData(String appPath) throws Exception
+	{
+		Lib.log.info("Adding sample metadata");
+
+		Resource resource = Lib.config.createResource();
+		Dbms     dbms     = (Dbms) resource.open();
+
+		try
+		{
+			int serial = Lib.database.getNextSerial(dbms, "Metadata");
+			dbms.commit();
+
+			File   sampleDir = new File(appPath, SAMPLE_PATH);
+			File[] samples   = sampleDir.listFiles();
+
+			if (samples == null)
+				Lib.log.warning("Cannot scan directory : "+ sampleDir.getAbsolutePath());
+			else
+			{
+				for (File sample : samples)
+					if (sample.getName().endsWith(".mef"))
+					{
+						Lib.mef.doImport(dbms, serial++, sample);
+						dbms.commit();
+					}
+			}
+
+			Lib.log.info("Synchronizing metadata");
+			Lib.metadata.sync(dbms);
+			resource.close();
+			Lib.log.info("Done");
+		}
+		catch(Exception e)
+		{
+			Lib.log.fatal("Raised exception : "+ e.getMessage());
+			resource.abort();
+			throw e;
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//---------------------------------------------------------------------------
+
+	private static final String SAMPLE_MSG  = "Do you want to install sample metadata ?";
+	private static final String SAMPLE_PATH = "gast/setup/sample-data";
 }
 
 //==============================================================================

@@ -36,12 +36,14 @@ public class Lib
 	public static IOLib         io     = new IOLib();
 	public static ServiceLib    service= new ServiceLib();
 	public static SiteLib       site   = new SiteLib();
+	public static MefLib        mef    = new MefLib();
 	public static ConfigLib     config;
 	public static EmbeddedSCLib embeddedSC;
 	public static EmbeddedDBLib embeddedDB;
 	public static DatabaseLib   database;
 	public static MetadataLib   metadata;
 	public static ServerLib     server;
+	public static LogLib        log;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -57,6 +59,7 @@ public class Lib
 		database   = new DatabaseLib  (appPath);
 		metadata   = new MetadataLib  (appPath);
 		server     = new ServerLib    (appPath);
+		log        = new LogLib       (appPath);
 	}
 }
 
