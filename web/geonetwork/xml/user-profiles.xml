@@ -22,7 +22,7 @@
 		<allow service="xml.category.update"/>
 		<allow service="xml.operation.update"/>
 		<allow service="xml.region.update"/>
-		
+
 		<!-- Utilities  -->
 		<allow service="util.import"/>
 		<allow service="util.ping"/>
@@ -60,9 +60,9 @@
 		<allow service="thesaurus.update"/>
 		<allow service="thesaurus.upload"/>
 		<allow service="thesaurus.download"/>
-		<allow service="thesaurus.delete"/>	
+		<allow service="thesaurus.delete"/>
 		<allow service="thesaurus.editelement"/>
-		<allow service="thesaurus.addelement"/>		
+		<allow service="thesaurus.addelement"/>
 		<allow service="thesaurus.deleteelement"/>
 		<allow service="thesaurus.updateelement"/>
 		<allow service="thesaurus.add"/>
@@ -84,17 +84,18 @@
 
 		<!-- Transfer ownership services -->
 		<allow service="transfer.ownership"/>
+		<allow service="xml.ownership.editors"/>
 		<allow service="xml.ownership.groups"/>
 		<allow service="xml.ownership.transfer"/>
-	
+
 	</profile>
 
 	<!-- ====================================================================== -->
 
 	<profile name="Reviewer" extends="Editor"/>
-	
+
 	<!-- ====================================================================== -->
-	
+
 	<profile name="Editor" extends="RegisteredUser">
 
 		<!-- Allow to see the list of groups the user is member of -->
@@ -179,7 +180,7 @@
 		<allow service="main.search.embedded"/> <!--  ETj -->
 		<allow service="main.present"/>
 		<allow service="main.present.embedded"/> <!--  ETj -->
-		<allow service="metadata.show"/> 
+		<allow service="metadata.show"/>
 		<allow service="metadata.show.embedded"/> <!--  ETj -->
 		<allow service="remote.show"/>
 
@@ -231,14 +232,14 @@
 		<allow service="portal.latest.updated"/>
 		<allow service="portal.featured"/>
 		<allow service="portal.categories"/>
-		
+
 		<!-- Metadata export services -->
 		<allow service="dc.xml"/>
 		<allow service="fgdc.xml"/>
 		<allow service="iso19115to19139.xml"/>
 		<allow service="iso19139.xml"/>
 		<allow service="iso_arccatalog8.xml"/>
-		
+
 		<!-- RSS services -->
 		<allow service="rss.latest"/>
 		<allow service="rss.search"/>
@@ -255,18 +256,18 @@
 
 		<!-- Relation services -->
 		<allow service="xml.relation.get"/>
-		
+
 		<!-- Metadata schema related -->
 		<allow service="xml.schema.info"/>
-		
+
 		<!-- Thesaurus services -->
 	 	<allow service="keywords.search"/>
 	 	<allow service="keywords.sort"/>
 	 	<allow service="keywords.select"/>
 	 	<allow service="keywords.editsearch"/>
-		<allow service="keywords.getselected"/>		
+		<allow service="keywords.getselected"/>
 	 	<allow service="thesaurus.list"/>
-		<allow service="thesaurus.view"/><!-- FIXME : Check if needed -->		
+		<allow service="thesaurus.view"/><!-- FIXME : Check if needed -->
 	</profile>
 
 	<!-- ====================================================================== -->

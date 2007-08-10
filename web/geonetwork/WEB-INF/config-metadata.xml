@@ -314,6 +314,12 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="xml.ownership.editors">
+			<class name=".services.ownership.Editors"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="xml.ownership.groups">
 			<class name=".services.ownership.Groups"/>
 		</service>

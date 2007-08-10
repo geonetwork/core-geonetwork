@@ -11,7 +11,7 @@ function Model(xmlLoader)
 
 	//--- public methods
 	
-	this.getUsers      = getUsers;
+	this.getEditors    = getEditors;
 	this.getUserGroups = getUserGroups;
 	this.transfer      = transfer;
 	
@@ -21,9 +21,29 @@ function Model(xmlLoader)
 //===
 //=====================================================================================
 
-function getUsers(callBack)
+function getEditors(callBack)
 {
-	new InfoService(loader, 'users', callBack);
+	callBackF = callBack;	
+	
+	ker.send('xml.ownership.editors', '<request/>', ker.wrap(this, getEditors_OK));
+}
+
+//-------------------------------------------------------------------------------------
+
+function getEditors_OK(xmlRes)
+{
+	if (xmlRes.nodeName == 'error')
+		ker.showError(loader.getText('cannotRetrieve'), xmlRes);
+	else
+	{
+		var data = [];
+		var list = xml.children(xmlRes);
+		
+		for (var i=0; i<list.length; i++)
+			data.push(xml.toObject(list[i]));				
+		
+		callBackF(data);
+	}
 }
 
 //=====================================================================================

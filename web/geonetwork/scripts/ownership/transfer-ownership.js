@@ -43,15 +43,17 @@ function TransferOwnership()
 function init()
 {
 	view.clearGroupList();
-	model.getUsers(ker.wrap(this, init_OK));
+	model.getEditors(ker.wrap(this, init_OK));
 }
 
 //-------------------------------------------------------------------------------------
 
 function init_OK(data)
 {
-	for (var i=0; i<data.length; i++)
-		if (data[i].profile == 'Editor')
+	if (data.length == 0)
+		alert(loader.getText('noEditors'));
+	else
+		for (var i=0; i<data.length; i++)
 			view.addSourceUser(data[i].id, data[i].surname +' '+ data[i].name);				
 }
 
