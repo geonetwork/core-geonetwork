@@ -12,7 +12,7 @@
 
 	<xsl:template match="/root/group">
 
-		<tr id="wd.group.{@id}">
+		<tr id="csw.group.{@id}">
 			<td class="padded" align="center"><xsl:value-of select="@name"/></td>
 			
 			<!-- view - - - - - - - - - - - - - - - - - - - - - - -->
@@ -68,22 +68,19 @@
 			<!-- actions - - - - - - - - - - - - - - - - - - - - - - -->
 			
 			<td class="padded" align="center">
-				<!--button class="content" onclick="harvesting.webdav.removeGroupRow('wd.group.{@id}')">
+				<!--button class="content" onclick="harvesting.csw.removeGroupRow('csw.group.{@id}')">
 					<xsl:value-of select="/root/strings/remove"/>
 				</button-->
 
 				<!-- Yet another fix for IE -->
 
-				<a href="javascript:harvesting.webdav.removeGroupRow('wd.group.{@id}')">
+				<a href="javascript:harvesting.csw.removeGroupRow('csw.group.{@id}')">
 					<xsl:value-of select="/root/strings/remove"/>
-				</a>
-		
+				</a>		
 			</td>
-			
 		</tr>
 
 	</xsl:template>
-
 	
 	<!-- ============================================================================================= -->
 
