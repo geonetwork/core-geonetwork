@@ -77,7 +77,7 @@
 	<source>Source</source>
 	<criteria>Criteria</criteria>
 	<validate>Validate</validate>
-	<structure>Structure</structure>
+	<recurse>Recurse</recurse>
 	<host>Host</host>
 	<privileges>Privileges</privileges>
 	<categories>Categories</categories>
@@ -154,6 +154,7 @@
 	<everyZero>The harvesting period cannot be 0:0:0</everyZero>
 	<pleaseRetrieve>Please retrieve some sites first</pleaseRetrieve>
 	<cannotRetrieve>Unable to retrieve information</cannotRetrieve>
+	<cannotUpdate>Unable to update information on the server</cannotUpdate>
 	<supplyHost>Please, provide the 'host' parameter</supplyHost>
 	<supplyServlet>Please, provide the 'servlet' parameter</supplyServlet>
 	<pleaseSpecifySiteId>Please specify a non empty Site ID</pleaseSpecifySiteId>
@@ -187,6 +188,8 @@
 		<unchanged>Unchanged</unchanged>
 		<unknownSchema>Unknown schema</unknownSchema>
 		<unretrievable>Unretrievable</unretrievable>
+		<badFormat>Bad XML format</badFormat>
+		<doesNotValidate>Does not validate</doesNotValidate>
 	</tipHeader>
 	
 	<notRun>Waiting for the first run</notRun>

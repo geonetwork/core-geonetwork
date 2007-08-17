@@ -440,6 +440,17 @@ public class DataManager
 		indexMetadata(dbms, Integer.toString(id));
 	}
 
+	//--------------------------------------------------------------------------
+
+	public void setHarvested(Dbms dbms, int id, String harvestUuid, String harvestUri) throws Exception
+	{
+		String value = (harvestUuid != null) ? "y" : "n";
+		String query = "UPDATE Metadata SET isHarvested=?, harvestUuid=?, harvestUri=? WHERE id=?";
+
+		dbms.execute(query, value, harvestUuid, harvestUri, id);
+		indexMetadata(dbms, Integer.toString(id));
+	}
+
 	//---------------------------------------------------------------------------
 
 	public String getSiteURL()
@@ -971,14 +982,14 @@ public class DataManager
 			if (attr != null) {
 // The following work-around decodes any attribute name that has a COLON in it
 // The : is replaced by the word COLON in the xslt so that it can be processed
-// by the XML Serializer when an update is submitted - the only situation 
+// by the XML Serializer when an update is submitted - the only situation
 // where this is known to occur is in the gml schema (eg. gml:id) - a better
 // solution may be required
 				Integer indexColon = attr.indexOf("COLON");
-        if (indexColon != -1) {	
+        if (indexColon != -1) {
 					String prefix = attr.substring(0,indexColon);
           String localname = attr.substring(indexColon + 5);
-          String namespace = editLib.getNamespace(prefix+":"+localname,md);	
+          String namespace = editLib.getNamespace(prefix+":"+localname,md);
 					Namespace attrNS = Namespace.getNamespace(prefix,namespace);
           if (el.getAttribute(localname,attrNS) != null) {
             el.setAttribute(new Attribute(localname,val,attrNS));

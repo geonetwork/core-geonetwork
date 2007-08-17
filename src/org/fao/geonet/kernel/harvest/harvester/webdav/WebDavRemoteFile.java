@@ -23,86 +23,66 @@
 
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.utils.Util;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
+import java.io.IOException;
+import jeeves.utils.Xml;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.webdav.lib.WebdavResource;
+import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 
 //=============================================================================
 
-public class WebDavParams extends AbstractParams
+class WebDavRemoteFile implements RemoteFile
 {
-	//--------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
-	//--------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
 
-	public WebDavParams(DataManager dm)
+	public WebDavRemoteFile(WebdavResource wr)
 	{
-		super(dm);
+		this.wr = wr;
+
+		path       = wr.getPath();
+		changeDate = new ISODate(wr.getGetLastModified()).toString();
 	}
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- Create : called when a new entry must be added. Reads values from the
-	//---          provided entry, providing default values
+	//--- RemoteFile interface
 	//---
 	//---------------------------------------------------------------------------
 
-	public void create(Element node) throws BadInputEx
+	public String getPath()       { return path;       }
+	public String getChangeDate() { return changeDate; }
+
+	//---------------------------------------------------------------------------
+
+	public Element getMetadata() throws JDOMException, IOException, Exception
 	{
-		super.create(node);
-
-		Element site = node.getChild("site");
-		Element opt  = node.getChild("options");
-
-		url      = Util.getParam(site, "url",  "");
-		icon     = Util.getParam(site, "icon", "");
-
-		validate = Util.getParam(opt, "validate", false);
-		recurse  = Util.getParam(opt, "recurse",  false);
+		try
+		{
+			wr.setPath(path);
+			return Xml.loadStream(wr.getMethodData());
+		}
+		catch (HttpException e)
+		{
+			throw new Exception("WebDav exception : "+ e.getReason());
+		}
 	}
 
 	//---------------------------------------------------------------------------
-	//---
-	//--- Update : called when an entry has changed and variables must be updated
-	//---
-	//---------------------------------------------------------------------------
 
-	public void update(Element node) throws BadInputEx
+	public boolean isMoreRecentThan(String localChangeDate)
 	{
-		super.update(node);
+		ISODate remoteDate = new ISODate(changeDate);
+		ISODate localDate  = new ISODate(localChangeDate);
 
-		Element site = node.getChild("site");
-		Element opt  = node.getChild("options");
+		//--- accept if remote date is greater than local date
 
-		url      = Util.getParam(site,  "url",  url);
-		icon     = Util.getParam(site,  "icon", icon);
-
-		validate = Util.getParam(opt, "validate", validate);
-		recurse  = Util.getParam(opt, "recurse",  recurse);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Other API methods
-	//---
-	//---------------------------------------------------------------------------
-
-	public WebDavParams copy()
-	{
-		WebDavParams copy = new WebDavParams(dm);
-		copyTo(copy);
-
-		copy.url  = url;
-		copy.icon = icon;
-
-		copy.validate = validate;
-		copy.recurse  = recurse;
-
-		return copy;
+		return (remoteDate.sub(localDate) > 0);
 	}
 
 	//---------------------------------------------------------------------------
@@ -111,13 +91,11 @@ public class WebDavParams extends AbstractParams
 	//---
 	//---------------------------------------------------------------------------
 
-	public String url;
-	public String icon;
+	private String path;
+	private String changeDate;
 
-	public boolean validate;
-	public boolean recurse;
+	private WebdavResource wr;
 }
 
 //=============================================================================
-
 

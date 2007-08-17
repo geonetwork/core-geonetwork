@@ -9,64 +9,53 @@ wd.Model = function(xmlLoader)
 	HarvesterModel.call(this);	
 	
 	var loader = xmlLoader;
+	var callBackF = null;
 
-	this.retrieveGroups   = retrieveGroups;
-	this.getUpdateRequest = getUpdateRequest;
+	this.retrieveGroups    = retrieveGroups;
+	this.retrieveCategories= retrieveCategories;
+	this.retrieveIcons     = retrieveIcons;
+	this.getUpdateRequest  = getUpdateRequest;
 
 //=====================================================================================
 
-function retrieveGroups(langCode, callBack)
+function retrieveGroups(callBack)
 {
-	this.langCode         = langCode;
-	this.retrieveGroupsCB = callBack;
+	new InfoService(loader, 'groups', callBack);
+}
+
+//=====================================================================================
+
+function retrieveCategories(callBack)
+{
+	new InfoService(loader, 'categories', callBack);
+}
+
+//=====================================================================================
+
+function retrieveIcons(callBack)
+{
+	callBackF = callBack;	
+
+	var request = ker.createRequest('type', 'icons');
 	
-	var request = ker.createRequest('type', 'groups');
-	
-	ker.send('xml.info', request, ker.wrap(this, retrieveGroups_OK), true);
+	ker.send('xml.harvesting.info', request, ker.wrap(this, retrieveIcons_OK));
 }
 
 //-------------------------------------------------------------------------------------
 
-function retrieveGroups_OK(xmlRes)
+function retrieveIcons_OK(xmlRes)
 {
 	if (xmlRes.nodeName == 'error')
 		ker.showError(loader.getText('cannotRetrieve'), xmlRes);
 	else
 	{
-		var data   = [];
-		var groups = xmlRes.getElementsByTagName('group');
+		var data = [];
+		var list = xml.children(xml.children(xmlRes)[0]);
 		
-		retrieveGroupsAdd('0', groups, data, this.langCode);
-		retrieveGroupsAdd('1', groups, data, this.langCode);
+		for (var i=0; i<list.length; i++)
+			data.push(xml.textContent(list[i]));
 		
-		for (var i=0; i<groups.length; i++)
-		{
-			var group = groups[i];
-		
-			var id  = group.getAttribute('id');
-			var name= xml.textContent(group.getElementsByTagName(this.langCode)[0]);
-							
-			if (id != '0' && id != '1')
-				data.push({ ID:id, NAME:name });				
-		}
-		
-		this.retrieveGroupsCB(data);
-	}
-}
-
-//-------------------------------------------------------------------------------------
-
-function retrieveGroupsAdd(selId, groups, data, langCode)
-{
-	for (var i=0; i<groups.length; i++)
-	{
-		var group = groups[i];
-		
-		var id  = group.getAttribute('id');
-		var name= xml.textContent(group.getElementsByTagName(langCode)[0]);
-							
-		if (id == selId)
-			data.push({ ID:id, NAME:name });				
+		callBackF(data);
 	}
 }
 
@@ -82,9 +71,11 @@ function getUpdateRequest(data)
 //=====================================================================================
 
 var updateTemp = 
-' <node id="{ID}" name="{NAME}" type="{TYPE}">'+ 
+' <node id="{ID}" type="{TYPE}">'+ 
 '    <site>'+
+'      <name>{NAME}</name>'+
 '      <url>{URL}</url>'+
+'      <icon>{ICON}</icon>'+
 '      <account>'+
 '        <use>{USE_ACCOUNT}</use>'+
 '        <username>{USERNAME}</username>'+
@@ -95,13 +86,17 @@ var updateTemp =
 '    <options>'+
 '      <every>{EVERY}</every>'+
 '      <oneRunOnly>{ONE_RUN_ONLY}</oneRunOnly>'+
-'      <structure>{STRUCTURE}</structure>'+
+'      <recurse>{RECURSE}</recurse>'+
 '      <validate>{VALIDATE}</validate>'+
 '    </options>'+
 
 '    <privileges>'+
 '       {PRIVIL_LIST}'+
 '    </privileges>'+
+
+'    <categories>'+
+'       {CATEG_LIST}'+
+'    </categories>'+
 '  </node>';
 
 //=====================================================================================

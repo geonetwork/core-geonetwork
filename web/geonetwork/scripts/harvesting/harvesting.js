@@ -81,7 +81,6 @@ function init()
 	view.show(SHOW.LIST);
 	
 	refresh();
-	webdav.refreshGroups();
 }
 
 //=====================================================================================

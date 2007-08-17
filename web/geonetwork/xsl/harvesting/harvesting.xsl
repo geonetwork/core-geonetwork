@@ -49,14 +49,14 @@
 	<xsl:template name="listPanel">
 		<table id="table">
 			<tr>
-				<th class="padded" style="width:40px;"><xsl:value-of select="/root/gui/harvesting/select"/></th>
-				<th class="padded" style="width:80px;"><xsl:value-of select="/root/gui/harvesting/name"/></th>
-				<th class="padded" style="width:60px;"><xsl:value-of select="/root/gui/harvesting/type"/></th>
-				<th class="padded" style="width:40px;" align="center"><xsl:value-of select="/root/gui/harvesting/status"/></th>
-				<th class="padded" style="width:40px;" align="center"><xsl:value-of select="/root/gui/harvesting/errors"/></th>
-				<th class="padded" style="width:60px;"><xsl:value-of select="/root/gui/harvesting/every"/></th>
-				<th class="padded" style="width:80px;"><xsl:value-of select="/root/gui/harvesting/lastRun"/></th>
-				<th class="padded" style="width:60px;"><xsl:value-of select="/root/gui/harvesting/operation"/></th>
+				<th class="padded" style="width:40px;"><b><xsl:value-of select="/root/gui/harvesting/select"/></b></th>
+				<th class="padded" style="width:80px;"><b><xsl:value-of select="/root/gui/harvesting/name"/></b></th>
+				<th class="padded" style="width:60px;"><b><xsl:value-of select="/root/gui/harvesting/type"/></b></th>
+				<th class="padded" style="width:40px;" align="center"><b><xsl:value-of select="/root/gui/harvesting/status"/></b></th>
+				<th class="padded" style="width:40px;" align="center"><b><xsl:value-of select="/root/gui/harvesting/errors"/></b></th>
+				<th class="padded" style="width:60px;"><b><xsl:value-of select="/root/gui/harvesting/every"/></b></th>
+				<th class="padded" style="width:80px;"><b><xsl:value-of select="/root/gui/harvesting/lastRun"/></b></th>
+				<th class="padded" style="width:60px;"><b><xsl:value-of select="/root/gui/harvesting/operation"/></b></th>
 			</tr>
 		</table>
 	</xsl:template>

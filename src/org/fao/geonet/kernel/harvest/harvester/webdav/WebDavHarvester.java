@@ -23,18 +23,18 @@
 
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
+import java.io.File;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.UUID;
 import jeeves.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
-import org.fao.geonet.kernel.harvest.Common.Status;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
-import org.fao.geonet.kernel.harvest.harvester.Privileges;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
@@ -47,9 +47,7 @@ public class WebDavHarvester extends AbstractHarvester
 	//---
 	//--------------------------------------------------------------------------
 
-	public static void init(ServiceContext context) throws Exception
-	{
-	}
+	public static void init(ServiceContext context) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -77,7 +75,13 @@ public class WebDavHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doDestroy(Dbms dbms) {}
+	protected void doDestroy(Dbms dbms) throws SQLException
+	{
+		File icon = new File(context.getAppPath() +"images/logos", params.uuid +".gif");
+
+		icon.delete();
+		Lib.sources.delete(dbms, params.uuid);
+	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -87,46 +91,19 @@ public class WebDavHarvester extends AbstractHarvester
 
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
-		//--- retrieve/initialize information
-
 		params = new WebDavParams(dataMan);
+
+		//--- retrieve/initialize information
 		params.create(node);
 
-		//--- setup waf node
+		//--- force the creation of a new uuid
+		params.uuid = UUID.randomUUID().toString();
 
-		String id   = settingMan.add(dbms, "harvesting", "node", getType());
-		String path = "id:"+ id;
+		String id = settingMan.add(dbms, "harvesting", "node", getType());
 
-		String siteID    = settingMan.add(dbms, path, "site",       "");
-		String privID    = settingMan.add(dbms, path, "privileges", "");
-		String optionsID = settingMan.add(dbms, path, "options",    "");
-		String infoID    = settingMan.add(dbms, path, "info",       "");
-
-		//--- setup site node
-
-		settingMan.add(dbms, "id:"+siteID, "name", node.getAttributeValue("name"));
-		settingMan.add(dbms, "id:"+siteID, "url",  params.url);
-
-		String useAccID = settingMan.add(dbms, "id:"+siteID, "useAccount", params.useAccount);
-
-		settingMan.add(dbms, "id:"+useAccID, "username", params.username);
-		settingMan.add(dbms, "id:"+useAccID, "password", params.password);
-
-		//--- setup privileges   ---------------------------------------
-
-		addPrivileges(dbms, "id:"+ privID, params);
-
-		//--- setup options node ---------------------------------------
-
-		settingMan.add(dbms, "id:"+optionsID, "every",      params.every);
-		settingMan.add(dbms, "id:"+optionsID, "oneRunOnly", params.oneRunOnly);
-		settingMan.add(dbms, "id:"+optionsID, "validate",   params.validate);
-		settingMan.add(dbms, "id:"+optionsID, "structure",  params.structure);
-		settingMan.add(dbms, "id:"+optionsID, "status",     Status.INACTIVE);
-
-		//--- setup stats node ----------------------------------------
-
-		settingMan.add(dbms, "id:"+infoID, "lastRun", "");
+		storeNode(dbms, params, "id:"+id);
+		Lib.sources.update(dbms, params.uuid, params.name, true);
+		Lib.sources.copyLogo(context, "/images/harvesting/"+ params.icon, params.uuid);
 
 		return id;
 	}
@@ -140,71 +117,39 @@ public class WebDavHarvester extends AbstractHarvester
 	protected void doUpdate(Dbms dbms, String id, Element node)
 									throws BadInputEx, SQLException
 	{
-		//--- update variables
-
 		WebDavParams copy = params.copy();
+
+		//--- update variables
 		copy.update(node);
 
-		//--- update database
-
-		Element site   = node.getChild("site");
-		Element opt    = node.getChild("options");
-		Element privil = node.getChild("privileges");
-		Element account= (site == null) ? null : site.getChild("account");
-
 		String path = "harvesting/id:"+ id;
-		String name = node.getAttributeValue("name");
 
-		Map<String, Object> values = new HashMap<String, Object>();
+		settingMan.removeChildren(dbms, path);
 
-		if (name != null)
-			values.put(path +"/site/name", name);
+		//--- update database
+		storeNode(dbms, copy, path);
 
-		setValue(values, path +"/site/url",                 site,    "url");
-		setValue(values, path +"/site/useAccount",          account, "use");
-		setValue(values, path +"/site/useAccount/username", account, "username");
-		setValue(values, path +"/site/useAccount/password", account, "password");
-
-		setValue(values, path +"/options/every",            opt, "every");
-		setValue(values, path +"/options/oneRunOnly",       opt, "oneRunOnly");
-		setValue(values, path +"/options/validate",         opt, "validate");
-		setValue(values, path +"/options/structure",        opt, "structure");
-
-		settingMan.setValues(dbms, values);
-
-		//--- update privileges if the 'privileges' element is provided
-
-		if (privil != null)
-		{
-			//--- remove all previous privileges
-
-			Element setPrivil = settingMan.get(path ,1).getChild("children").getChild("privileges");
-			String  privID    = setPrivil.getAttributeValue("id");
-
-			settingMan.removeChildren(dbms, path +"/id:"+ privID);
-
-			//--- add new privileges entries
-
-			addPrivileges(dbms, path +"/id:"+ privID, copy);
-		}
-
-		//--- we update a copy first because if there is an exception GeonetParams
+		//--- we update a copy first because if there is an exception CswParams
 		//--- could be half updated and so it could be in an inconsistent state
+
+		Lib.sources.update(dbms, copy.uuid, copy.name, true);
+		Lib.sources.copyLogo(context, "/images/harvesting/"+ copy.icon, copy.uuid);
 
 		params = copy;
 	}
 
 	//---------------------------------------------------------------------------
 
-	private void addPrivileges(Dbms dbms, String path, WebDavParams params) throws SQLException
+	protected void storeNodeExtra(Dbms dbms, AbstractParams p, String path,
+											String siteId, String optionsId) throws SQLException
 	{
-		for (Privileges p : params.getPrivileges())
-		{
-			String groupID = settingMan.add(dbms, path, "group", p.getGroupId());
+		WebDavParams params = (WebDavParams) p;
 
-			for (int oper : p.getOperations())
-				settingMan.add(dbms, "id:"+ groupID, "operation", oper);
-		}
+		settingMan.add(dbms, "id:"+siteId, "url",  params.url);
+		settingMan.add(dbms, "id:"+siteId, "icon", params.icon);
+
+		settingMan.add(dbms, "id:"+optionsId, "validate", params.validate);
+		settingMan.add(dbms, "id:"+optionsId, "recurse",  params.recurse);
 	}
 
 	//---------------------------------------------------------------------------
@@ -221,7 +166,30 @@ public class WebDavHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doAddInfo(Element node) {}
+	protected void doAddInfo(Element node)
+	{
+		//--- if the harvesting is not started yet, we don't have any info
+
+		if (result == null)
+			return;
+
+		//--- ok, add proper info
+
+		Element info = node.getChild("info");
+		Element res  = new Element("result");
+
+		add(res, "total",          result.total);
+		add(res, "added",          result.added);
+		add(res, "updated",        result.updated);
+		add(res, "unchanged",      result.unchanged);
+		add(res, "unknownSchema",  result.unknownSchema);
+		add(res, "removed",        result.locallyRemoved);
+		add(res, "unretrievable",  result.unretrievable);
+		add(res, "badFormat",      result.badFormat);
+		add(res, "doesNotValidate",result.doesNotValidate);
+
+		info.addContent(res);
+	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -229,7 +197,13 @@ public class WebDavHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doHarvest(Logger l, ResourceManager rm) {}
+	protected void doHarvest(Logger log, ResourceManager rm) throws Exception
+	{
+		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
+
+		Harvester h = new Harvester(log, context, dbms, params);
+		result = h.harvest();
+	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -245,6 +219,15 @@ public class WebDavHarvester extends AbstractHarvester
 
 class WebDavResult
 {
+	public int total;
+	public int added;
+	public int updated;
+	public int unchanged;
+	public int locallyRemoved;
+	public int unknownSchema;
+	public int unretrievable;
+	public int badFormat;
+	public int doesNotValidate;
 }
 
 //=============================================================================

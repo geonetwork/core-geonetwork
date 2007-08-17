@@ -9,8 +9,12 @@
 	<xsl:template name="editPanel-WD">
 		<div id="wd.editPanel">
 			<xsl:call-template name="host-WD"/>
+			<div class="dots"/>
 			<xsl:call-template name="options-WD"/>
+			<div class="dots"/>
 			<xsl:call-template name="privileges-WD"/>
+			<div class="dots"/>
+			<xsl:call-template name="categories-WD"/>
 		</div>
 	</xsl:template>
 
@@ -30,6 +34,15 @@
 				<td class="padded"><input id="wd.url" class="content" type="text" value="" size="30"/></td>
 			</tr>
 
+			<tr>
+				<td class="padded" valign="bottom"><xsl:value-of select="/root/gui/harvesting/icon"/></td>
+				<td class="padded">
+					<select id="wd.icon" class="content" name="icon" size="1"/>
+					&#xA0;
+					<img id="wd.icon.image" src="" alt="" />
+				</td>
+			</tr>
+			
 			<tr>
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/useAccount"/></td>
 				<td class="padded"><input id="wd.useAccount" type="checkbox" checked="on"/></td>
@@ -82,8 +95,8 @@
 			</tr>
 
 			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/structure"/></td>
-				<td class="padded"><input id="wd.structure" type="checkbox" value=""/></td>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/recurse"/></td>
+				<td class="padded"><input id="wd.recurse" type="checkbox" value=""/></td>
 			</tr>
 
 		</table>
@@ -103,10 +116,6 @@
 						<button class="content" onclick="harvesting.webdav.addGroupRow()">
 							<xsl:value-of select="/root/gui/harvesting/add"/>
 						</button>
-						<p/>
-						<button class="content" onclick="harvesting.webdav.refreshGroups()">
-							<xsl:value-of select="/root/gui/harvesting/refresh"/>
-						</button>
 					</div>
 				</td>					
 			</tr>
@@ -116,14 +125,20 @@
 			<tr>
 				<th class="padded"><xsl:value-of select="/root/gui/harvesting/group"/></th>
 				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='0']"/></th>
-				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='1']"/></th>
-				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='3']"/></th>
 				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='5']"/></th>
 				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='6']"/></th>
 				<th/>
 			</tr>
 		</table>
 		
+	</xsl:template>
+	
+	<!-- ============================================================================================= -->
+
+	<xsl:template name="categories-WD">
+		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/categories"/></h1>
+		
+		<select id="wd.categories" class="content" size="8" multiple="on"/>
 	</xsl:template>
 	
 	<!-- ============================================================================================= -->

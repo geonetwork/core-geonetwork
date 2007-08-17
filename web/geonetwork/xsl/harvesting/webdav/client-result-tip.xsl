@@ -7,38 +7,70 @@
 	<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
 	<!-- ============================================================================================= -->
-	<!-- === Generate the error tooltip for the harvesting entry list -->
+	<!-- === Generate the result tooltip for the harvesting entry list -->
 	<!-- ============================================================================================= -->
 
 	<xsl:template match="/root/node">
 		<xsl:choose>
-			<xsl:when test="count(search) != 0">
-				<table>
-					<tr class="tipRow">
-						<td class="tipHeader"> <xsl:value-of select="/root/strings/tipHeader/siteId"/> </td>
-						<td class="tipHeader"> <xsl:value-of select="/root/strings/tipHeader/total"/> </td>
-						<td class="tipHeader"> <xsl:value-of select="/root/strings/tipHeader/added"/> </td>
-						<td class="tipHeader"> <xsl:value-of select="/root/strings/tipHeader/updated"/> </td>
-						<td class="tipHeader"> <xsl:value-of select="/root/strings/tipHeader/unchanged"/> </td>
-						<td class="tipHeader"> <xsl:value-of select="/root/strings/tipHeader/skipped"/> </td>
-					</tr>
-					<xsl:for-each select="search">
-						<tr class="tipRow">
-							<td class="tipCell"><b><xsl:value-of select="@siteId"/></b></td>
-							<td class="tipCell"><xsl:value-of select="total"/></td>
-							<td class="tipCell"><xsl:value-of select="added"/></td>
-							<td class="tipCell"><xsl:value-of select="updated"/></td>
-							<td class="tipCell"><xsl:value-of select="unchanged"/></td>
-							<td class="tipCell"><xsl:value-of select="skipped"/></td>					
-						</tr>
-					</xsl:for-each>
-				</table>
+			<xsl:when test="info/result">
+				<xsl:apply-templates select="info/result"/>
 			</xsl:when>
 			
 			<xsl:otherwise>
 				<span><xsl:value-of select="/root/strings/notRun"/></span>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template match="result">
+		<table>
+			<tr class="tipRow">
+				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/total"/></td>
+				<td class="tipCell"><xsl:value-of select="total"/></td>
+			</tr>
+
+			<tr class="tipRow">
+				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/added"/></td>
+				<td class="tipCell"><xsl:value-of select="added"/></td>
+			</tr>
+
+			<tr class="tipRow">
+				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/removed"/></td>
+				<td class="tipCell"><xsl:value-of select="removed"/></td>
+			</tr>
+
+			<tr class="tipRow">
+				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/updated"/></td>
+				<td class="tipCell"><xsl:value-of select="updated"/></td>
+			</tr>
+
+			<tr class="tipRow">
+				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/unchanged"/></td>
+				<td class="tipCell"><xsl:value-of select="unchanged"/></td>
+			</tr>
+
+			<tr class="tipRow">
+				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/unknownSchema"/></td>
+				<td class="tipCell"><xsl:value-of select="unknownSchema"/></td>					
+			</tr>
+
+			<tr class="tipRow">
+				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/unretrievable"/></td>
+				<td class="tipCell"><xsl:value-of select="unretrievable"/></td>					
+			</tr>
+			
+			<tr class="tipRow">
+				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/badFormat"/></td>
+				<td class="tipCell"><xsl:value-of select="badFormat"/></td>					
+			</tr>
+			
+			<tr class="tipRow">
+				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/doesNotValidate"/></td>
+				<td class="tipCell"><xsl:value-of select="doesNotValidate"/></td>					
+			</tr>
+		</table>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->

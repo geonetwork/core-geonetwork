@@ -20,37 +20,37 @@
 			<td class="padded" align="center">
 				<input name="view" type="checkbox">
 					<xsl:if test="operation/@name = 'view'">
-						<xsl:attribute name="checked"/>
+						<xsl:attribute name="checked">on</xsl:attribute>
 					</xsl:if>
 				</input>
 			</td>
 		
 			<!-- download - - - - - - - - - - - - - - - - - - - - - - -->
 			
-			<td class="padded" align="center">
+			<!--td class="padded" align="center">
 				<input name="download" type="checkbox">
 					<xsl:if test="operation/@name = 'download'">
 						<xsl:attribute name="checked"/>
 					</xsl:if>
 				</input>
-			</td>
+			</td-->
 			
 			<!-- notify - - - - - - - - - - - - - - - - - - - - - - -->
 			
-			<td class="padded" align="center">
+			<!--td class="padded" align="center">
 				<input name="notify" type="checkbox">
 					<xsl:if test="operation/@name = 'notify'">
 						<xsl:attribute name="checked"/>
 					</xsl:if>
 				</input>
-			</td>
+			</td-->
 			
 			<!-- dynamic - - - - - - - - - - - - - - - - - - - - - - -->
 			
 			<td class="padded" align="center">
 				<input name="dynamic" type="checkbox">
 					<xsl:if test="operation/@name = 'dynamic'">
-						<xsl:attribute name="checked"/>
+						<xsl:attribute name="checked">on</xsl:attribute>
 					</xsl:if>
 				</input>
 			</td>
@@ -60,7 +60,7 @@
 			<td class="padded" align="center">
 				<input name="featured" type="checkbox">
 					<xsl:if test="operation/@name = 'featured'">
-						<xsl:attribute name="checked"/>
+						<xsl:attribute name="checked">on</xsl:attribute>
 					</xsl:if>
 				</input>
 			</td>
@@ -68,16 +68,25 @@
 			<!-- actions - - - - - - - - - - - - - - - - - - - - - - -->
 			
 			<td class="padded" align="center">
-				<button class="content" onclick="harvesting.webdav.removeGroupRow('wd.group.{@id}')">
+				<!--button class="content" onclick="harvesting.webdav.removeGroupRow('wd.group.{@id}')">
 					<xsl:value-of select="/root/strings/remove"/>
-				</button>
-			</td>
-			
+				</button-->
+
+				<!-- Yet another fix for IE -->
+
+				<a href="javascript:harvesting.webdav.removeGroupRow('wd.group.{@id}')">
+					<xsl:value-of select="/root/strings/remove"/>
+				</a>
+			</td>			
 		</tr>
 
 	</xsl:template>
 
-	
+	<!-- ============================================================================================= -->
+
+	<xsl:template match="strings"/>
+	<xsl:template match="env"/>
+
 	<!-- ============================================================================================= -->
 
 </xsl:stylesheet>

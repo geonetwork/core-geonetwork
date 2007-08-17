@@ -12,13 +12,14 @@
 
 	<xsl:template match="*" mode="site">
 		<url><xsl:value-of select="url/value" /></url>
+		<icon><xsl:value-of select="icon/value" /></icon>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
 
 	<xsl:template match="*" mode="options">
-		<structure><xsl:value-of select="structure/value" /></structure>
 		<validate><xsl:value-of  select="validate/value" /></validate>
+		<recurse><xsl:value-of select="recurse/value" /></recurse>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
