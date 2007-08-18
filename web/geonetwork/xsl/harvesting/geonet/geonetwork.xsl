@@ -119,8 +119,8 @@
 			
 		<table id="gn.groups">
 			<tr class="policyGroup">
-				<th><xsl:value-of select="/root/gui/harvesting/remoteGroup"/></th>
-				<th><xsl:value-of select="/root/gui/harvesting/copyPolicy"/></th>
+				<th style="width:150px;"><b><xsl:value-of select="/root/gui/harvesting/remoteGroup"/></b></th>
+				<th><b><xsl:value-of select="/root/gui/harvesting/copyPolicy"/></b></th>
 			</tr>			
 		</table>
 				

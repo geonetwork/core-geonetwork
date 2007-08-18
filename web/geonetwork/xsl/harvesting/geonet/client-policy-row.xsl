@@ -16,53 +16,47 @@
 			<td class="padded"><xsl:value-of select="@name"/></td>
 			
 			<td class="padded">
-				<form>
+				<select id="gn.copyPolicy" class="content" size="1">
 					<!-- copy -->
 	
-					<div>
-						<input name="gn.copyPolicy" type="radio" value="copy">
+					<option value="copy">
 							<xsl:if test="@policy = 'copy'">
-								<xsl:attribute name="checked"/>
+								<xsl:attribute name="selected">on</xsl:attribute>
 							</xsl:if>
-						</input>
 						<xsl:value-of select="/root/strings/policy/copy"/>
-					</div>
+					</option>
 					
 					<!-- copy to intranet or create and copy -->
 	
-					<div>
 						<xsl:choose>
 							<xsl:when test="@name = 'all'">
-								<input name="gn.copyPolicy" type="radio" value="copyToIntranet">
+								<option value="copyToIntranet">
 									<xsl:if test="@policy = 'copyToIntranet'">
-										<xsl:attribute name="checked"/>
+										<xsl:attribute name="selected">on</xsl:attribute>
 									</xsl:if>
-								</input>
-								<xsl:value-of select="/root/strings/policy/copyToIntranet"/>
+									<xsl:value-of select="/root/strings/policy/copyToIntranet"/>
+								</option>
 							</xsl:when>
 		
 							<xsl:otherwise>
-								<input name="gn.copyPolicy" type="radio" value="createAndCopy">
+								<option value="createAndCopy">
 									<xsl:if test="@policy = 'createAndCopy'">
-										<xsl:attribute name="checked"/>
+										<xsl:attribute name="selected">on</xsl:attribute>
 									</xsl:if>
-								</input>
-								<xsl:value-of select="/root/strings/policy/createAndCopy"/>
+									<xsl:value-of select="/root/strings/policy/createAndCopy"/>
+								</option>
 							</xsl:otherwise>
 						</xsl:choose>
-					</div>
 					
 					<!-- don't copy -->
 	
-					<div>
-						<input name="gn.copyPolicy" type="radio" value="dontCopy">
-							<xsl:if test="@policy = 'dontCopy'">
-								<xsl:attribute name="checked"/>
-							</xsl:if>
-						</input>
+					<option value="dontCopy">
+						<xsl:if test="@policy = 'dontCopy'">
+							<xsl:attribute name="selected">on</xsl:attribute>
+						</xsl:if>
 						<xsl:value-of select="/root/strings/policy/dontCopy"/>
-					</div>
-				</form>
+					</option>
+				</select>
 			</td>			
 		</tr>
 

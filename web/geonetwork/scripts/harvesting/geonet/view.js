@@ -327,13 +327,9 @@ function getPolicyGroups()
 		
 		//--- format is : gn.group.{@name}
 		var name = id.substring(9);
-		var list = rowElem.getElementsByTagName('INPUT');
+		var list = rowElem.getElementsByTagName('SELECT');
 		
-		var policy = 'dontCopy';
-		
-		for (var j=0; j<list.length; j++)
-			if (list[j].checked)
-				policy = list[j].value;
+		var policy = $F(list[0]);
 		
 		if (policy != 'dontCopy')
 			groupData.push(
