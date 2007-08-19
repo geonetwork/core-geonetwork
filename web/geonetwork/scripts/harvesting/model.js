@@ -116,7 +116,7 @@ function stopNodes(idList, callBack)
 function stopNodes_OK(xmlRes)
 {
 	if (xmlRes.nodeName == 'error')
-		ker.showError(loader.getText('cannotStart'), xmlRes);
+		ker.showError(loader.getText('cannotStop'), xmlRes);
 	else
 		this.stopNodesCB(buildIdList(xmlRes));
 }
@@ -135,7 +135,7 @@ function runNodes(idList, callBack)
 
 function runNodes_OK(xmlRes)
 {
-	if (xml.nodeName == 'error')
+	if (xmlRes.nodeName == 'error')
 		ker.showError(loader.getText('cannotRun'), xmlRes);
 	else
 		this.runNodesCB(buildIdList(xmlRes));
