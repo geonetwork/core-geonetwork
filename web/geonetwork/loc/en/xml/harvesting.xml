@@ -147,8 +147,8 @@
 	<cannotAdd>Unable to add a new entry</cannotAdd>
 	<cannotGet>Unable to get the entry/ies</cannotGet>
 	<cannotRemove>Cannot remove the selected entry/ies</cannotRemove>
-	<cannotStart>Cannot start the selected entry/ies</cannotStart>
-	<cannotStop>Cannot stop the selected entry/ies</cannotStop>
+	<cannotStart>Cannot activate the selected entry/ies</cannotStart>
+	<cannotStop>Cannot deactivate the selected entry/ies</cannotStop>
 	<cannotRun>Cannot run the selected entry/ies</cannotRun>
 	<confirmRemove>Remove the selected entries ? The nodes and all harvested metadata will be removed.</confirmRemove>
 	<everyZero>The harvesting period cannot be 0:0:0</everyZero>
