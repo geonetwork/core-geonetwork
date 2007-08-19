@@ -1,8 +1,8 @@
 # geonetwork version
 
 ### this is used to build the jar filename
-release = 2.1.0-beta5
+release = 2.1.0-rc
 
 ### these are used by both gast and geonetwork at runtime
 version    = 2.1.0
-subVersion = beta5
+subVersion = rc
