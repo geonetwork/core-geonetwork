@@ -37,12 +37,18 @@ function openIntermap()
         $('openIMBtn').hide(); 
         $('loadIMBtn').hide(); 
         $('closeIMBtn').show(); 
-    	
-        //Effect.BlindDown('im_mapContainer');
+
+// These effects won't work on IE, so we're not going to use them
+/*        
         Effect.BlindDown('im_map');
         Effect.BlindDown('im_mapImg');
         Effect.BlindDown('fillMeWithIntermap');
-        //$('intermap').style.display='block';	
+*/        
+        $('im_map').show();
+        $('im_mapImg').show();
+        $('fillMeWithIntermap').show();
+        
+//	forceIErefresh();        
 }				 
 
 function closeIntermap()
@@ -50,10 +56,13 @@ function closeIntermap()
         $('closeIMBtn').hide(); 
         $('openIMBtn').show(); 
         
-        //Effect.BlindUp('im_mapContainer');
+// These effects won't work on IE, so we're not going to use them        
+/*        
         Effect.BlindUp('im_map');
         Effect.BlindUp('fillMeWithIntermap');
-        //$('intermap').style.display='none';	
+*/
+        $('im_map').hide();
+        $('fillMeWithIntermap').hide();
 }
 
 function imc_init_loadSkel()
