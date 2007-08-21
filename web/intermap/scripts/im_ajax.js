@@ -62,7 +62,7 @@ function imc_zoomToLayer(layerId)
 {
 	deleteAoi();
 	//unsetAoi();
-	$('im_geonetRecords').className = 'hidden';	
+	//$('im_geonetRecords').className = 'hidden';	
 	
 	setStatus('busy');
 	var url = '/intermap/srv/en/map.zoomToService';
