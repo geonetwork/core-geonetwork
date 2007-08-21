@@ -23,21 +23,21 @@
 
 package org.wfp.vam.intermap;
 
-import org.jdom.*;
-
-import jeeves.interfaces.*;
-import jeeves.server.resources.*;
-import jeeves.utils.*;
-
-import jeeves.server.*;
-
+import jeeves.interfaces.ApplicationHandler;
+import jeeves.interfaces.Logger;
+import jeeves.server.ServiceConfig;
+import jeeves.server.resources.ResourceManager;
+import jeeves.utils.Xml;
+import org.jdom.Element;
 import org.wfp.vam.intermap.http.ConcurrentHTTPTransactionHandler;
 import org.wfp.vam.intermap.http.cache.HttpGetFileCache;
-import org.wfp.vam.intermap.kernel.map.DefaultMapServers;
-import org.wfp.vam.intermap.kernel.map.mapServices.arcims.*;
-import org.wfp.vam.intermap.kernel.map.mapServices.wms.*;
-import org.wfp.vam.intermap.kernel.map.MapMerger;
+import org.wfp.vam.intermap.kernel.GlobalTempFiles;
 import org.wfp.vam.intermap.kernel.TempFiles;
+import org.wfp.vam.intermap.kernel.map.DefaultMapServers;
+import org.wfp.vam.intermap.kernel.map.MapMerger;
+import org.wfp.vam.intermap.kernel.map.mapServices.arcims.AxlRequestBuilder;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.WmsGetCapClient;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.WmsService;
 import org.wfp.vam.intermap.services.map.MapUtil;
 
 
@@ -128,7 +128,8 @@ public class Intermap implements ApplicationHandler
 		String tempDir = handlerConfig.getMandatoryValue(Constants.TEMP_DIR);
 		String tempDelete = handlerConfig.getMandatoryValue(Constants.TEMP_DELETE);
 		int delete = Integer.parseInt(tempDelete);
-		tempFiles = new TempFiles(tempDir, delete);
+		GlobalTempFiles.init(tempDir, delete);
+		tempFiles = GlobalTempFiles.getInstance();
 
 		//------------------------------------------------------------------------
 		//--- Start the cache files clean up thread

@@ -7,20 +7,25 @@
 package org.wfp.vam.intermap.http.cache;
 
 import java.io.*;
-import java.util.*;
 
-import org.wfp.vam.intermap.util.TempFiles;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.httpclient.Header;
+import org.wfp.vam.intermap.kernel.CachedFiles;
+import org.wfp.vam.intermap.kernel.TempFiles;
 
-public class HttpGetFileCache implements HttpCache {
-	private File directory;
-	private static HashMap uriHt = new HashMap();
-	private static HashMap headersHt = new HashMap();
+public class HttpGetFileCache implements HttpCache
+{
+//	private File directory;
+	private static Map uriHt = new HashMap();
+	private static Map headersHt = new HashMap();
 	private TempFiles tf;
 
 	// constructor
 	public HttpGetFileCache(String cacheDir, int expireTime) throws Exception {
-		tf = new TempFiles(cacheDir, expireTime + 5);
+		tf = new CachedFiles(cacheDir, expireTime + 5);
 	}
 
 	public void put(String uri, byte[] response, Header[] headers) throws IOException {
