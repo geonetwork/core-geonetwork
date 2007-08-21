@@ -28,8 +28,9 @@
 								<td class="im_tool" id="im_tool_aoi"		onClick="javascript:setTool('aoi')"><img src="{/root/gui/url}/images/im_aoi16x16.png" title="Select an Area Of Interest"/></td> 
 <!--								<td class="im_tool" id="im_tool_identify"	onClick="javascript:setTool('identify');">Identify</td> -->
 								<td width="100%" style="border-top:0px;"/> <!-- spacer -->
+								<td class="im_tool"  				onClick="javascript:refreshNeeded()"><img src="{/root/gui/url}/images/reload16x16.png" title="Refresh map"/></td>
 								<td class="im_tool"  				onClick="javascript:im_bm_toggleImageSize()">+/- map</td>
-								<td class="im_tool" id="im_tool_reset"	onClick="javascript:im_reset();">Reset</td>								
+								<td class="im_tool" id="im_tool_reset"	onClick="javascript:im_reset();">Reset</td>
 							</tr>							
 						</table>						
 					</td>
