@@ -536,7 +536,7 @@ function handleMouseupListener()
 	);
 	
 	repositionHandleDivs(left, top, width, height);
-	
+/*
 	getGeonetData(
 		left - offsetX,
 		top - offsetY + height,
@@ -545,6 +545,7 @@ function handleMouseupListener()
 		1,
 		10
 	); // DEBUG
+*/
 }
 
 // deletes the aoi
