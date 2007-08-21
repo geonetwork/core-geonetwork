@@ -501,20 +501,6 @@ function imc_addServices(surl, serviceArray, type, callback)
 	);
 }
 
-function imc_loadMapServers( callback )
-{
-	var myAjax = new Ajax.Request (
-		'/intermap/srv/en/mapServers.listServers.xml',
-		{
-			method: 'get',
-
-			onComplete: callback,
-			onFailure: reportError
-		}
-	);
-
-}
-
 function imc_loadServices( id, callback )
 {
 	var myAjax = new Ajax.Request (

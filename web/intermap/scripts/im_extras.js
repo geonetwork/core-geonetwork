@@ -14,14 +14,6 @@
 */
 function im_addLayer()
 {
-    imc_loadMapServers( im_mapServersLoaded );
-}
-
-/*
-## Display the map servers and allow to select one of them
-*/
-function im_mapServersLoaded(req)
-{
     // setup WB
     clearNode('im_whiteboard');    
     var WB = $('im_whiteboard');
@@ -34,60 +26,19 @@ function im_mapServersLoaded(req)
     Event.observe(closer, 'click', im_closeWhiteBoard);
 
     // fill contents
-
-    var servers = req.responseXML.documentElement.getElementsByTagName('mapServers')[0].getElementsByTagName('server');
-
     var div = document.createElement('div'); // main box
     div.id = "im_serverList";
     div.className = 'im_wbcontent';
     WB.appendChild(div);
-
-    var h1 = document.createElement('h1');
-    h1.innterHTML = "Server list " ; //FIXME i18n me!
-    h1.id = "im_serverList_title";
-    div.appendChild(h1);
-
-    var ul = document.createElement('ul');
-    ul.id = "im_serverList_list";
-    div.appendChild(ul);
-        
-    $A(servers).each(
-        function(server)
-        {
-            var id=server.getAttribute('id');
-            var name =server.getAttribute('name'); 
-        
-            var li = document.createElement('li');
-            ul.appendChild(li);
-            
-            var a = document.createElement('a');            
-            a.innerHTML = name;
-            a.id = "im_mapserver_" + id;
-            //a.setAttribute("onClick", "im_mapServerSelected("+id+",'"+name+"');");
-            li.appendChild(a);
-
-            Event.observe(li, 'click',  function(){ im_mapServerSelected(id, name )} );            
-        }
+   
+    var myAjax = new Ajax.Updater (
+           'im_serverList',    
+    	'/intermap/srv/en/mapServers.listServers.embedded', 
+    	{
+    		method: 'get',    		    	
+    		onFailure: im_load_error
+    	}
     );
-    
-    // add a textbox to enter a server directly
-    var li = document.createElement('li');
-    li.innerHTML = 'Other WMS server'; // FIXME i18n
-    ul.appendChild(li);
-    
-    var input = document.createElement('input');
-    input.id= "im_wmsservername";
-    input.className = 'content';
-    input.setAttribute("type", "text"); 
-    input.setAttribute("size", "40");             
-    li.appendChild(input);
-    
-    // connect button
-    var button  = document.createElement('button');
-    button.innerHTML = "Connect"; // FIXME i18n
-    div.appendChild(button);
-    
-    Event.observe(button, "click", function() { im_mapServerURL($('im_wmsservername').value);});
 }
 
 /*
@@ -332,15 +283,13 @@ function im_requestPDF()
 
 function im_openPDF(req)
 {
-    var url = req.responseXML.documentElement.getElementsByTagName('url')[0].firstChild.nodeValue;    
-/*    var url = req.responseXML.documentElement.getElementsByTagName('response')[0].getElementsByTagName('pdf')[0].getElementsByTagName('url')[0].textContent;*/
+    var url = req.responseXML.documentElement.getElementsByTagName('url')[0].firstChild.nodeValue;
 
     window.open(url);
 
     $('im_requestpdf').show();
     $('im_requestingpdf').hide();   
     $('im_builtpdf').show();
-
 }
 
 /********************************************************************

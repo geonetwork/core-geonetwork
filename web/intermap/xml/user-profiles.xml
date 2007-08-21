@@ -19,6 +19,7 @@
 		<allow service="mapContexts.get"/>
 		<allow service="mapServers.listServers"/>
 		<allow service="mapServers.listServers.xml"/>
+		<allow service="mapServers.listServers.embedded"/>
 		<allow service="mapServers.getServices"/>
 		<allow service="mapServers.getServices.embedded"/>
 		<allow service="mapServers.getServicesExt"/>

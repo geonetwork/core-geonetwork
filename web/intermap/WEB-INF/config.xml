@@ -200,6 +200,12 @@
 			<output sheet="im_list-servers.xsl" />
 		</service>
 
+		<service name="mapServers.listServers.embedded">
+			<class name=".services.mapServers.ListServers" />
+			
+			<output sheet="im_list-servers-embedded.xsl" />
+		</service>
+		
 		<service name="mapServers.listServers.xml">
 			<class name=".services.mapServers.ListServers" />
 		</service>
