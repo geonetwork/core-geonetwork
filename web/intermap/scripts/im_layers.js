@@ -37,8 +37,21 @@ function im_buildLayerList(req)
 	
 	// activate the first layer if none active
 	if (!activeLayerId)
-		activateMapLayer(layers[0].getAttribute('id'));		
+		activateMapLayer(layers[0].getAttribute('id'));
+		
+	forceIErefresh();
 }
+	
+
+function forceIErefresh()
+{
+            // Force IE to refresh the page (layers are not properly displayed without this workaround
+	var dummy = Builder.node('div');
+	document.appendChild(dummy);
+	document.removeChild(dummy);	
+}
+
+
 
 // Appends a single layer to the layer list
 function appendToLayerList(list, title, id, transp, addup, adddown) // layer in a TABLEs layout
