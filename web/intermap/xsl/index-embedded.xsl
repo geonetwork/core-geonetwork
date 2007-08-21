@@ -90,8 +90,8 @@
 							<tr>
 								<td style="padding:2px"><a onClick="im_addLayer();"><img src="{/root/gui/url}/images/im_addLayer.png" title="Add a layer to this map"/></a></td>
 								<td style="padding:2px" onClick="im_sendMail();" ><a><img src="{/root/gui/url}/images/im_mail.png" title="Send this map via e-mail"/></a></td>
-								<td style="padding:2px" onClick="im_createPDF();" ><a><img src="{/root/gui/url}/images/acroread.png" title="Export this map as a PDF"/></a></td>
-								<td style="padding:2px" onClick="im_createPic();" ><a><img src="{/root/gui/url}/images/im_exportPic.png" title="Export this map as an image"/></a></td>
+								<td style="padding:2px" onClick="im_openPDFform();" ><a><img src="{/root/gui/url}/images/acroread.png" title="Export this map as a PDF"/></a></td>
+								<td style="padding:2px" onClick="im_openPictureForm();" ><a><img src="{/root/gui/url}/images/im_exportPic.png" title="Export this map as an image"/></a></td>
 							</tr>
 						</table>						
 					</td>					
