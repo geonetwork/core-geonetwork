@@ -26,6 +26,11 @@
     <server type="2" name="NASA JPL OneEarth Web Mapping Server (WMS)">
             <url>http://wms.jpl.nasa.gov/wms.cgi</url>
     </server>
+		
+    <server type="2" name="NASA Earth Observations (NEO) WMS">
+        <url>http://neowms.sci.gsfc.nasa.gov/wms/wms</url>
+    </server>
+		
 <!-- 
     <server type="2" name="Digital Earth">
             <url>http://globe.digitalearth.gov/viz-bin/wmt.cgi</url>
