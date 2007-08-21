@@ -658,43 +658,73 @@ public class MapMerger
 		return df.format(distScale);
 	}
 
-	private BoundingBox reaspect(BoundingBox bb, int x, int y) {
+	private static BoundingBox reaspect(BoundingBox bb, int w, int h) {
 		// Get boundaries
 		float north = bb.getNorth();
 		float south = bb.getSouth();
 		float east = bb.getEast();
 		float west = bb.getWest();
 
-		float a = Math.abs(east - west);
-		float b = Math.abs(north - south);
+		float dx = Math.abs(east - west);
+		float dy = Math.abs(north - south);
 
-		// Adjust boudaries
-		if ((x / a) > (y / b)) {
-			float d = b * x / y - a;
+		// Reaspect
+		if ((w / dx) > (h / dy)) {
+			float d = dy * w / h - dx;
 			west -= d / 2;
 			east += d / 2;
 		}
 
-		if ((y / b) > (x / a)) {
-			float d = a * y / x - b;
+		if ((h / dy) > (w / dx)) {
+			float d = dx * h / w - dy;
 			south -= d / 2;
 			north += d / 2;
 		}
 
+		// Adjust boundaries
 		if ((Math.abs(east - west)) > 360) {
 			east = 180;
 			west = -180;
-			float d = (float)y / x * 180;
+			float d = (float)h / w * 180;
 			north = d;
 			south = -d;
 		}
 
-		if ((Math.abs(north - south)) > 360) {
-			north = 180;
-			south = -180;
-			float d = (float)x / y * 180;
+		if ((Math.abs(north - south)) > 180) {
+			north = 90;
+			south = -90;
+			float d = (float)w / h * 90;
 			east = d;
 			west = -d;
+		}
+
+		// check for pan overflows
+		// N-S: limit navigation
+		if(north > 90)
+		{
+			float off = north - 90;
+			north = 90;
+			south -= off;
+		}
+
+		if(south < -90)
+		{
+			float off = - 90 - south;
+			south = -90;
+			north += off;
+		}
+
+		// W-E: wrap navigation
+		if(west > 180)
+		{
+			east -= 180;
+			west -= 180;
+		}
+
+		if(east < -180)
+		{
+			east += 180;
+			west += 180;
 		}
 
 //		System.out.println("north = " + north + "; south = " + south + "; east = " + east + "; west = " + west);
