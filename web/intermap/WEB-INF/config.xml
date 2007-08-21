@@ -498,8 +498,22 @@
 			
 			<output forward="map.update" />
 		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
+		<service name="static.form.pdf">			
+			<output sheet="im_pdf_form.xsl" contentType="text/html; charset=UTF-8" />
+		</service>
+		
+		<service name="create.pdf">			
+			<class name=".services.export.ExportPDF"/>
+		</service>
+		
+		
+
 	</services>
+
+
 	
 	<!-- ====================================================================== -->
 

@@ -19,6 +19,7 @@ import java.text.DecimalFormat;
 import org.jdom.Element;
 import org.wfp.vam.intermap.http.ConcurrentHTTPTransactionHandler;
 import org.wfp.vam.intermap.http.cache.HttpGetFileCache;
+import org.wfp.vam.intermap.kernel.GlobalTempFiles;
 import org.wfp.vam.intermap.kernel.TempFiles;
 import org.wfp.vam.intermap.kernel.map.images.ImageMerger;
 import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
@@ -212,6 +213,26 @@ public class MapMerger
 		return elServices;
 	}
 
+//	public Iterable<Layer> getLayers()
+//	{
+//		return new Iterable<Layer>()
+//		{
+//			public Iterator<Layer> iterator()
+//			{
+//				return new Iterator<Layer>()
+//				{
+//					private int i = 0;
+//					private int last = vRank.size();
+//
+//					public boolean hasNext()	{ return i<last; }
+//					public Layer 	next()		{ return _layers.get(vRank.get(i++)); }
+//					public void 	remove()		{ throw new UnsupportedOperationException();}
+//				};
+//			}
+//		};
+//	}
+
+
 	/** Returns an Element containing the transparency value for each service */
 	public Element getStructTransparencies() {
 		Element elTransparency = new Element("transparency");
@@ -242,6 +263,9 @@ public class MapMerger
 //		return  (int)(((Float)htTransparency.get(serviceId)).floatValue() * 100);
 	public int getLayerTransparency(int id) {
 		return _layers.get(id).getIntTransparency();
+	}
+	public int getLayerTransparencyRanked(int id) {
+		return _layers.get(vRank.get(id)).getIntTransparency();
 	}
 
 	/** Sets the transparency value for a given service */
@@ -346,7 +370,10 @@ public class MapMerger
 
 	/** Returns the MapService element with the given id*/
 	public MapService getService(int id) { return _layers.get(id).getService(); }
+	public MapService getServiceRanked(int id) { return _layers.get(vRank.get(id)).getService(); }
 //	public MapService getService(int id) { return (MapService)htServices.get(new Integer(id)); }
+//	public boolean isVisible(int id) { return _layers.get(id).isVisible(); }
+	public boolean isVisibleRanked(int id) { return _layers.get(vRank.get(id)).isVisible(); }
 
 	/** Returns an element containing informations about the expanded or collapsed
 	 *  services
@@ -571,7 +598,7 @@ public class MapMerger
 
 		if (files.size() > 1) {
 			// Merge the images
-			File output = TempFiles.getFile();
+			File output = GlobalTempFiles.getInstance().getFile();
 			String path = output.getPath();
 //			System.out.println("vTransparency" + vTransparency); // DEBUG
 			ImageMerger.mergeAndSave(files, vTransparency, path, ImageMerger.GIF);
@@ -583,7 +610,7 @@ public class MapMerger
 		else if (files.size() == 1) {
 //			System.out.println("files.get(0) = " + files.get(0)); // DEBUG
 			File f = new File( files.get(0) );
-			File out = TempFiles.getFile();
+			File out = GlobalTempFiles.getInstance().getFile();
 //			System.out.println("out.getPath() = " + out.getPath()); // DEBUG
 
 			BufferedInputStream is = new BufferedInputStream(new FileInputStream(f));
@@ -609,7 +636,15 @@ public class MapMerger
 		return imageName;
 	}
 
-	public String getImageName() { return imageName; }
+	public String getImageName()
+	{
+		return imageName;
+	}
+
+	public File getImageLocalPath()
+	{
+		return GlobalTempFiles.getInstance().getDir();
+	}
 
 //	public String getImagePath() { return imagePath; }
 
@@ -734,7 +769,7 @@ public class MapMerger
 
 			try {
 				c = new HttpClient(stUrl);
-				File tf = TempFiles.getFile();
+				File tf = GlobalTempFiles.getInstance().getFile();
 				c.getFile(tf);
 				path = tf.getPath();
 			}

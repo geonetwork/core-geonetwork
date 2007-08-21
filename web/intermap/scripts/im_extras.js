@@ -1,10 +1,10 @@
-/*°********************************************************
+/********************************************************************
 * im_extras.js
 *
 * This file contains functions related to the intermap extra features
 * ie the ones the user can call via the buttons below the bigger map.
 * 
-*°********************************************************/
+********************************************************************/
 
 /********************************************************************
 *** LAYERS
@@ -71,22 +71,23 @@ function im_mapServersLoaded(req)
     );
     
     // add a textbox to enter a server directly
-            var li = document.createElement('li');
-            li.innerHTML = 'Other WMS server'; // FIXME i18n
-            ul.appendChild(li);
-
-            var input = document.createElement('input');
-            input.id= "im_wmsservername";
-            input.className = 'content';
-            input.setAttribute("type", "text"); 
-            input.setAttribute("size", "40");             
-            li.appendChild(input);
-
-           var button  = document.createElement('button');
-           button.innerHTML = "Connect"; // FIXME i18n
-           li.appendChild(button);
-           
-           Event.observe(button, "click", function() { im_mapServerURL($('im_wmsservername').value);});
+    var li = document.createElement('li');
+    li.innerHTML = 'Other WMS server'; // FIXME i18n
+    ul.appendChild(li);
+    
+    var input = document.createElement('input');
+    input.id= "im_wmsservername";
+    input.className = 'content';
+    input.setAttribute("type", "text"); 
+    input.setAttribute("size", "40");             
+    li.appendChild(input);
+    
+    // connect button
+    var button  = document.createElement('button');
+    button.innerHTML = "Connect"; // FIXME i18n
+    div.appendChild(button);
+    
+    Event.observe(button, "click", function() { im_mapServerURL($('im_wmsservername').value);});
 }
 
 /*
@@ -264,25 +265,81 @@ function im_sendMail()
 /*
 ## Called by the bottom toolbar
 */
-function im_createPDF()
+function im_openPDFform()
 {
-    clearNode('im_whiteboard');
-
-    var div = document.createElement('div');
-    div.id = "im_createPDF";
-    div.className = 'im_wbcontent';    
-    $('im_whiteboard').appendChild(div);
+    // setup WB
+    clearNode('im_whiteboard');    
+    var WB = $('im_whiteboard');
 
     var wbtitle = im_createWBTitle("Export this map as PDF"); //FIXME i18n
-    div.appendChild(wbtitle);
+    WB.appendChild(wbtitle);
 
     var closer = im_getWBCloser();
-    div.appendChild(closer);
+    WB.appendChild(closer);
     Event.observe(closer, 'click', im_closeWhiteBoard);
 
-    var h1 = document.createElement('h1');
-    h1.innerHTML = "TODO" ; //FIXME i18n 
-    div.appendChild(h1);
+    var div = document.createElement('div'); // main box
+    div.id = "im_createPDF";
+    div.className = 'im_wbcontent';
+    WB.appendChild(div);
+    
+    var myAjax = new Ajax.Updater (
+           'im_createPDF',    
+    	'/intermap/srv/en/static.form.pdf', 
+    	{
+    		method: 'get',    		    	
+    		onFailure: im_load_error
+    	}
+    );
+
+}
+
+function im_requestPDF()
+{
+    var orient = $('pdf_orientation').value;
+    var psize = $('pdf_pagesize').value;
+    var bllist = $('pdf_layerlist').checked;
+    var bdetails = $('pdf_details').checked;
+    var bbbox = $('pdf_boundingbox').checked;
+        
+    var pars = "orientation="+orient+
+                    "&pagesize="+psize+
+                    "&"+im_bm_getURLbbox();                    
+    if(bllist)
+        pars += "&layerlist=on";
+        
+    if(bdetails)
+        pars += "&details=on";
+
+    if(bbbox)
+        pars += "&boundingbox=on";
+            
+    $('im_requestingpdf').show();   
+    $('im_requestpdf').hide();
+    $('im_builtpdf').hide();
+            
+    var myAjax = new Ajax.Request (
+    	'/intermap/srv/en/create.pdf', 
+    	{
+    		method: 'get',
+    		parameters: pars,
+    		onSuccess: im_openPDF,
+    		onFailure: im_load_error
+    	}
+    );
+    
+}
+
+function im_openPDF(req)
+{
+    var url = req.responseXML.documentElement.getElementsByTagName('url')[0].firstChild.nodeValue;    
+/*    var url = req.responseXML.documentElement.getElementsByTagName('response')[0].getElementsByTagName('pdf')[0].getElementsByTagName('url')[0].textContent;*/
+
+    window.open(url);
+
+    $('im_requestpdf').show();
+    $('im_requestingpdf').hide();   
+    $('im_builtpdf').show();
 
 }
 
@@ -292,7 +349,7 @@ function im_createPDF()
 /*
 ## Called by the bottom toolbar
 */
-function im_createPic()
+function im_openPictureForm()
 {
     clearNode('im_whiteboard');
 
@@ -316,6 +373,7 @@ function im_createPic()
 /********************************************************************
 *** SUB TOOLBAR UTILITIES
 ********************************************************************/
+
 
 function im_createWBTitle(title)
 {
@@ -350,6 +408,3 @@ function im_closeWhiteBoard()
 //    Effect.BlindUp('im_whiteboard');
     clearNode('im_whiteboard');
 }
-
-
-

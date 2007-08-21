@@ -6,7 +6,10 @@
 		<allow service="map.getMain"/>
 		
 		<allow service="map.getMain.embedded"/>
-		<allow service="minimap.rebuild"/>		
+		<allow service="minimap.rebuild"/>
+		
+		<allow service="static.form.pdf"/>
+		<allow service="create.pdf"/>
 		
 		<allow service="banner"/>
 		<allow service="map.addServices"/>
