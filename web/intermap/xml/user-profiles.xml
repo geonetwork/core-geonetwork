@@ -14,7 +14,7 @@
 		<allow service="banner"/>
 		<allow service="map.addServices"/>
 		<allow service="map.addServicesExt"/>
-		<allow service="map.addServices.xml"/>		
+		<allow service="map.addServices.embedded"/>		
 		<allow service="map.getFrames"/>
 		<allow service="mapContexts.get"/>
 		<allow service="mapServers.listServers"/>
@@ -26,6 +26,7 @@
 		<allow service="mapServers.getServices.xml"/>
 		<allow service="map.get"/>
 		<allow service="map.getLayers"/>
+		<allow service="map.getLayers.embedded"/>
 		<allow service="map.action"/>
 		<allow service="map.move"/>
 		<allow service="map.fullExtent"/>
@@ -52,6 +53,8 @@
 		<allow service="map.layers.deleteLayer"/>
 		<allow service="map.layers.getOrder"/>
 		<allow service="map.layers.setOrder"/>
+		<allow service="map.layers.moveUp"/>
+		<allow service="map.layers.moveDown"/>		
 		<allow service="map.layers.setTransparency"/>
 		<allow service="map.layers.getInspectorData"/>
 		<allow service="map.layers.toggleVisibility"/>

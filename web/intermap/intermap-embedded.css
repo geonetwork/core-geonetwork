@@ -524,6 +524,10 @@ div#im_layers li.im_activeLayer{
 	background-color: #ccf;
 }
 
+div#im_layers li.im_newLayer{
+	background-color: #8ae38a;
+}
+
 div#im_layers li td {
 	padding: 3px;
 /*	border-style: solid;*/

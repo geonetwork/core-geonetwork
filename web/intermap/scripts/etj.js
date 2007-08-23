@@ -11,7 +11,7 @@ var minLayersDivWidth = 176;
 function im_init()
 {
     im_mm_initTextControls($('northBL'), $('eastBL'), $('southBL'), $('westBL'));
-    Event.observe('openIMBtn', 'click',  function(){openIntermap()} );						
+    Event.observe('openIMBtn', 'click',  function(){openIntermap()} );
 
     //imc_load();
     im_mm_refreshNeeded(); // load minimap
@@ -23,46 +23,52 @@ var im_1stTimeIntermap = true;
 
 function openIntermap()
 {
-        if(im_1stTimeIntermap)
-        {
-            im_1stTimeIntermap = false;
-    
-            $('openIMBtn').hide(); 
-            $('loadIMBtn').show(); 
-    
-            imc_init_loadSkel();
-            return;        // loadSkel should call us back
-        }
+    if(im_1stTimeIntermap)
+    {
+        im_1stTimeIntermap = false;
         
         $('openIMBtn').hide(); 
-        $('loadIMBtn').hide(); 
-        $('closeIMBtn').show(); 
-
-// These effects won't work on IE, so we're not going to use them
-/*        
+        $('loadIMBtn').show(); 
+        
+        imc_init_loadSkel();
+        return;        // loadSkel should call us back
+    }
+    
+    $('openIMBtn').hide(); 
+    $('loadIMBtn').hide(); 
+    $('closeIMBtn').show(); 
+    
+    if( ! Prototype.Browser.IE )
+    {
         Effect.BlindDown('im_map');
         Effect.BlindDown('im_mapImg');
         Effect.BlindDown('fillMeWithIntermap');
-*/        
+    }
+    else
+    {    
         $('im_map').show();
         $('im_mapImg').show();
         $('fillMeWithIntermap').show();
+    }
         
 //	forceIErefresh();        
 }				 
 
 function closeIntermap()
 {
-        $('closeIMBtn').hide(); 
-        $('openIMBtn').show(); 
-        
-// These effects won't work on IE, so we're not going to use them        
-/*        
+    $('closeIMBtn').hide(); 
+    $('openIMBtn').show(); 
+    
+    if( ! Prototype.Browser.IE )
+    {
         Effect.BlindUp('im_map');
         Effect.BlindUp('fillMeWithIntermap');
-*/
+    }
+    else
+    {
         $('im_map').hide();
         $('fillMeWithIntermap').hide();
+    }
 }
 
 function imc_init_loadSkel()
@@ -85,7 +91,7 @@ function im_init_loadCompleted(req)
 	// Dinamically generate content
 	var im = $('fillMeWithIntermap');          
     	im.innerHTML = req.responseText;
-	$('im_mm_wait').hide(); //style.display='none';
+	$('im_mm_wait').hide(); 
 	new Effect.Pulsate('openIMBtn');
 			
 	refreshNeeded(false, im_init_bmLoaded);
@@ -144,8 +150,9 @@ function im_reset_complete(req)
 */
 function runIM_addService(url, service, type)
 {
-    imc_addService(url, service, type, function() {
-             imc_reloadLayers();
+    imc_addService(url, service, type, function(req) {
+             im_buildLayerList(req);
+             //imc_reloadLayers();
              imc_mm_update(im_mm_width, im_mm_height, null);
         });    
 }

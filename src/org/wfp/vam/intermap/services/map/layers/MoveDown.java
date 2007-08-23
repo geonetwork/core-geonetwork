@@ -1,4 +1,5 @@
-package org.wfp.vam.intermap.services.map;
+package org.wfp.vam.intermap.services.map.layers;
+
 
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -6,11 +7,9 @@ import jeeves.server.context.ServiceContext;
 import org.jdom.Element;
 import org.wfp.vam.intermap.Constants;
 import org.wfp.vam.intermap.kernel.map.MapMerger;
+import org.wfp.vam.intermap.services.map.MapUtil;
 
-/**
-  */
-
-public class DelService implements Service
+public class MoveDown implements Service
 {
 	public void init(String appPath, ServiceConfig config) throws Exception {}
 
@@ -22,15 +21,9 @@ public class DelService implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		// Get request parameters
 		int id = Integer.parseInt(params.getChildText(Constants.MAP_SERVICE_ID));
-
-		// Get the MapMerger object from the user session
 		MapMerger mm = MapUtil.getMapMerger(context);
-
-		MapUtil.setVisibleLayers(params, mm); // ETj: ???
-		mm.delService(id);
-
+		mm.moveServiceDown(id);
 		return mm.toElementSimple();
 	}
 

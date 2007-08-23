@@ -7,8 +7,8 @@ im_load_error = function() {alert("Loading error")};
 
 function imc_reloadLayers()
 {
-	var url = '/intermap/srv/en/map.layers.getOrder';
-	
+/*	var url = '/intermap/srv/en/map.layers.getOrder';*/
+	var url = '/intermap/srv/en/map.getLayers.embedded';	
 	var myAjax = new Ajax.Request (
 		url, 
 		{
@@ -25,22 +25,6 @@ function imc_reloadLayers()
  *                                                                           *
  *****************************************************************************/
 
-function updateInspector(layerId)
-{
-	var url = '/intermap/srv/en/map.layers.getInspectorData';
-	var pars = 'id=' + layerId;
-	
-	var myAjax = new Ajax.Request (
-		url, 
-		{
-			method: 'get',
-			parameters: pars,
-			onComplete: updateInspectorControls,
-			onFailure: reportError
-		}
-	);
-}
-
 // start ajax transaction to set the layer order
 function imc_setLayersOrder(order)
 {
@@ -52,7 +36,11 @@ function imc_setLayersOrder(order)
 		{
 			method: 'get',
 			parameters: pars,
-			onComplete: refreshNeeded,
+			onComplete: function(req) 
+			{
+			    im_buildLayerList(req);			
+			    refreshNeeded();  
+			},
 			onFailure: reportError
 		}
 	);
@@ -73,7 +61,7 @@ function imc_zoomToLayer(layerId)
 		{
 			method: 'get',
 			parameters: pars,
-			onComplete: refreshNeeded,
+			onComplete: function(req) { refreshNeeded(true) },
 			onFailure: reportError
 		}
 	);
@@ -108,22 +96,6 @@ function showLegend(id) {
  *                                                                           *
  *****************************************************************************/
 
-// start ajax transaction to delete a layer
-function imc_deleteLayer(id)
-{
-	var url = '/intermap/srv/en/map.layers.deleteLayer';
-	var pars = 'id=' + id ;
-	
-	var myAjax = new Ajax.Request (
-		url, 
-		{
-			method: 'get',
-			parameters: pars,
-			onComplete: refreshNeeded,
-			onFailure: reportError
-		}
-	);
-}
 
 /*****************************************************************************
  *                                                                           *
@@ -316,7 +288,8 @@ function imc_updateBigMap(width, height, qbbox, doUpdateMM, callback)
     	{
     		method: 'get',
     		parameters: pars,
-    		onComplete: function(req) { 
+    		onComplete: function(req) 
+    		{ 
                             updateMapImage(req);
                             if( doUpdateMM )
                                 // !!! check if this refresh is not due to a minimap action, or we'll get a refresh loop !!!
@@ -461,7 +434,7 @@ function addLayer(baseUrl, serviceName) // DEBUG
 */
 function imc_addService(surl, service, type, callback)
 {
-	var url = '/intermap/srv/en/map.addServices.xml';
+	var url = '/intermap/srv/en/map.addServices.embedded';
 	
 	var pars = 'url=' + surl + '&service=' + service + '&type=' + type;
 	var myAjax = new Ajax.Request (
@@ -479,7 +452,7 @@ function imc_addService(surl, service, type, callback)
 
 function imc_addServices(surl, serviceArray, type, callback)
 {
-	var url = '/intermap/srv/en/map.addServices.xml';	
+	var url = '/intermap/srv/en/map.addServices.embedded';	
 	var pars = 'url=' + surl + '&type=' + type;
 	
 	serviceArray.each(

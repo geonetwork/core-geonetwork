@@ -171,8 +171,10 @@
 		</service>
 
 		<!-- ETj -->
-		<service name="map.addServices.xml">
+		<service name="map.addServices.embedded">
 			<class name=".services.map.AddServices" />
+
+			<output sheet="im_get-layers-embedded.xsl" />
 		</service>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -229,6 +231,20 @@
 			<output sheet="im_get-layers.xsl" />
 		</service>
  -->
+
+		<service name="map.getLayers.embedded">
+			<class name=".services.map.layers.GetOrder" />
+			
+			<output sheet="im_get-layers-embedded.xsl" />
+		</service>
+		
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.layers.deleteLayer">
+			<class name=".services.map.DelService" />
+			<output sheet="im_get-layers-embedded.xsl" />			
+		</service>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
@@ -240,7 +256,25 @@
 		
 		<service name="map.layers.setOrder">
 			<class name=".services.map.layers.SetOrder" />
+
+			<!-- ETJ -->
+			<output sheet="im_get-layers-embedded.xsl" />			
 		</service>
+
+
+		<service name="map.layers.moveUp">
+			<class name=".services.map.layers.MoveUp" />
+			
+			<output sheet="im_get-layers-embedded.xsl" />			
+		</service>
+		
+		
+		<service name="map.layers.moveDown">
+			<class name=".services.map.layers.MoveDown" />
+			
+			<output sheet="im_get-layers-embedded.xsl" />			
+		</service>
+		
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
@@ -333,26 +367,7 @@
 			<output sheet="im_identify.xsl" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-<!-- 
-		<service name="map.service.moveUp">
-			<class name=".services.map.MoveServiceUp" />
-			
-			<output forward="map.getMain" />
-		</service>
- -->
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-<!-- 
-		<service name="map.service.moveDown">
-			<class name=".services.map.MoveServiceDown" />
-			
-			<output forward="map.getMain" />
-		</service>
- -->
-
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="map.service.getLegend">
@@ -410,9 +425,6 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
-		<service name="map.layers.deleteLayer">
-			<class name=".services.map.DelService" />
-		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
