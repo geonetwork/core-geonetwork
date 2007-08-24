@@ -37,7 +37,7 @@
 					
 					<!--  LAYERS -->
 					<!-- This is only a placeholder structure: layers will be inserted dinamically. -->
-					<td rowspan="4">
+					<td rowspan="3">
 						<div id="im_layers" >
 							
 							<div id="im_layersHeader">
@@ -99,7 +99,7 @@
 				</tr>	
 				
 				<tr>
-					<td>
+					<td colspan="2">
 						<div id="im_whiteboard" style="position:relative;"/>
 					</td>
 				</tr>
