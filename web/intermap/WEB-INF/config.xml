@@ -488,13 +488,11 @@
 			
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
-<!-- 
 		<service name="wmc.setContextFromURL">
 			<class name=".services.wmc.SetWmcFromURL"/>
 			
 			<output forward="map.getMain"/>
 		</service>
- -->
 			
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		

@@ -50,6 +50,7 @@
 		<allow service="map.setContext"/>
 		<allow service="map.getFeatures"/>
 		<allow service="wmc.setContext"/>
+		<allow service="wmc.setContextFromURL"/>
 		<allow service="map.layers.deleteLayer"/>
 		<allow service="map.layers.getOrder"/>
 		<allow service="map.layers.setOrder"/>
