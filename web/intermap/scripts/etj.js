@@ -8,16 +8,6 @@ var minLayersDivWidth = 176;
 * - wait for the "Open Map Viewer" command, then 
 *    - load map viewer html skeleton 
 */
-function im_init()
-{
-    im_mm_initTextControls($('northBL'), $('eastBL'), $('southBL'), $('westBL'));
-    Event.observe('openIMBtn', 'click',  function(){openIntermap()} );
-
-    //imc_load();
-    im_mm_refreshNeeded(); // load minimap
-    im_mm_setTool('zoomin'); // set the default tool    
-}
-
 
 var im_1stTimeIntermap = true;
 
@@ -46,7 +36,7 @@ function openIntermap()
     }
     else
     {    
-        $('im_map').show();
+        $('im_map').show();	
         $('im_mapImg').show();
         $('fillMeWithIntermap').show();
     }
@@ -56,19 +46,25 @@ function openIntermap()
 
 function closeIntermap()
 {
-    $('closeIMBtn').hide(); 
-    $('openIMBtn').show(); 
-    
-    if( ! Prototype.Browser.IE )
-    {
-        Effect.BlindUp('im_map');
-        Effect.BlindUp('fillMeWithIntermap');
-    }
-    else
-    {
-        $('im_map').hide();
-        $('fillMeWithIntermap').hide();
-    }
+	if( ! $('im_map'))
+		return;
+
+	// These buttons may have been already removed from page if we're leaving simple search 
+	try {
+		$('closeIMBtn').hide();
+		$('openIMBtn').show();
+	} catch(e) { /*nothing to do*/} 
+	
+	if( ! Prototype.Browser.IE )
+	{
+		Effect.BlindUp('im_map');
+		Effect.BlindUp('fillMeWithIntermap');
+	}
+	else
+	{
+		$('im_map').hide();
+		$('fillMeWithIntermap').hide();
+	}
 }
 
 function imc_init_loadSkel()
@@ -78,7 +74,7 @@ function imc_init_loadSkel()
 		{
 			method: 'get',
 			parameters: '',
-			onSuccess: ker.wrap(this, im_init_loadCompleted),
+			onSuccess: im_init_loadCompleted,
 			onFailure: im_load_error
 		}
 	);

@@ -515,6 +515,24 @@ div.keywordResults ul li.selected {
     margin-top: 5px;
 }
 
+td.advsearchfields {
+    padding-bottom: 10px;
+    border-bottom: 1px solid;
+/*    margin-bottom: 10px;*/
+
+    border-left: 1px solid;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+/*.advsearchfields > tbody > tr > td {
+    padding-bottom: 10px;
+    border-left: 1px solid;
+    padding-left: 5px;
+
+}
+*/
+
 #coords{
     text-align:center;
     margin-top: 5px;
@@ -527,6 +545,7 @@ div.keywordResults ul li.selected {
 	cursor: pointer;
 	padding: 2px 8px 2px 2px;
 }
+
 
 
 #openIMBtn{
@@ -567,5 +586,10 @@ div.metadata_current td
     background-color: #dce1ea;
 }
 
-
+/* This will fix some redraw problems with gn setting */
+.calendar table ,
+.calendar tr ,
+.calendar td  {
+	border-collapse: separate;
+}
 

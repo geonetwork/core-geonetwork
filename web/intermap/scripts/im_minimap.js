@@ -2,15 +2,6 @@
  *
  *                      MiniMap 
  *
- *
-External references:
-#im_mm_toolbar
-
-Need:
-	imc_mm_action(
-	callback im_mm_imageRebuilt
-
-
  *****************************************************************************/
 
 // these are the values of standard width and height.
@@ -30,6 +21,15 @@ function trace(fname)
 {
     alert("Entering function --> " + fname);
 }
+
+function im_mm_init(callback)
+{
+    im_mm_initTextControls($('northBL'), $('eastBL'), $('southBL'), $('westBL'));
+
+    im_mm_refreshNeeded(callback); // load minimap
+    im_mm_setTool('zoomin'); // set the default tool    
+}
+
 
 // Parse a response and set mm props accordingly
 function im_mm_set(minimapResponse)
@@ -150,10 +150,13 @@ function im_mm_getURLselectedbbox()
  *****************************************************************************/
 
 //DOC public function im_mm_setTool(tool)
-function im_mm_setTool(tool) {
-/*	im_mm_deleteAoi();*/
+function im_mm_setTool(tool) 
+{
+	if(im_mm_currentTool=='aoi' && tool=='aoi')
+		im_mm_deleteAoi();	
+
 	im_mm_currentTool = tool;
-	$('minimap_root').className = tool; 
+	$('minimap_root').className = tool; 	
 }
 
 
@@ -534,15 +537,16 @@ function im_mm_restartAoi(e)
 }
 
 
-function im_mm_refreshNeeded()
+function im_mm_refreshNeeded(callback)
 {
-	imc_mm_update(im_mm_width, im_mm_height, im_mm_getURLbbox());
+	imc_mm_update(im_mm_width, im_mm_height, im_mm_getURLbbox(), callback);
 }
 
 
 function im_mm_setStatus(status)
 {
 /*	var refreshButton = $('im_refreshButton');*/
+	im_mm_deleteAoi();
 	
 	switch(status)
 	{
