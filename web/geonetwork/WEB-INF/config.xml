@@ -68,8 +68,8 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.DbmsPool</provider>
 			<config>
-				<user>4haBeR9z</user>
-				<password>VV0fkdHx</password>
+				<user>kOdmAtLo</user>
+				<password>mVTD1TZZ</password>
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>	
@@ -192,6 +192,38 @@
 
  		</service>
 
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="main.searchform.advanced.embedded">
+			<output sheet="searchform_advanced.xsl">
+				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
+				<call name="keywords" class=".guiservices.keywords.Get" />
+				<call name="groups" class=".guiservices.groups.GetMine" />
+				<call name="services" class="jeeves.guiservices.services.Get" />
+				<call name="categories" class=".services.category.List" />
+				<call name="regions" class=".guiservices.regions.Get" />
+				<call name="sources" class=".guiservices.util.Sources" />
+												
+				<xml name="repositories" file="xml/repositories.xml" localized="false" />
+				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
+			</output>
+		</service>
+
+		<service name="main.searchform.simple.embedded">
+			<output sheet="searchform_simple.xsl">
+				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
+				<call name="keywords" class=".guiservices.keywords.Get" />
+				<call name="groups" class=".guiservices.groups.GetMine" />
+				<call name="services" class="jeeves.guiservices.services.Get" />
+				<call name="categories" class=".services.category.List" />
+				<call name="regions" class=".guiservices.regions.Get" />
+				<call name="sources" class=".guiservices.util.Sources" />
+				
+				<xml name="repositories" file="xml/repositories.xml" localized="false" />
+				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
+			</output>
+		</service>
+		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="main.present">
