@@ -4,21 +4,25 @@
  *
  *****************************************************************************/
 
-// Builds the layer list
+//## Builds the layer list
 function im_buildLayerList(req) 
 {
-           if( ! $('im_layersDiv') ) // map viewer not yet loaded
-               return;
+	if( ! $('im_layersDiv') ) // map viewer not yet loaded
+		return;
+	
+	$('im_layersDiv').innerHTML = req.responseText;
 
-	oldid = activeLayerId;
-           $('im_layersDiv').innerHTML = req.responseText;           
-	activateMapLayer(oldid, true); 
+	if( ! $('layerList_'+activeLayerId)) // catches 1) activeLayerId null; 2) layerid totally changed (for instance after a map reset) 
+		activeLayerId = im_getFirstLayerId();		
+
+	activateMapLayer(activeLayerId, true); 
            
-           if( ! Prototype.Browser.IE )
-	    createSortable();
+	if( ! Prototype.Browser.IE )
+		createSortable();
 }
                       
-// Makes the layer list sortable
+           
+//## Makes the layer list sortable
 function createSortable()
 {
 	Sortable.create (
@@ -29,13 +33,6 @@ function createSortable()
 		}
 	);
 }
-
-// performs the operations needed when the user
-// has changed the layer order
-function layersOrderChanged(newOrder)
-{
-	imc_setLayersOrder(newOrder);
-}	
 
 
 /*****************************************************************************
@@ -49,7 +46,6 @@ function layerDblClickListener(id)
 	deleteAoi();
 	imc_zoomToLayer(id);
 }
-
 
 
 function setLayerVisibility(req, id) 
@@ -123,7 +119,11 @@ function im_layerMoveDown(id)
 		{
 		    parameters: 'id='+id,
 		    method: 'get',
-		    onComplete: im_buildLayerList
+			onComplete: function(req) 
+			{
+			    im_buildLayerList(req);			
+			    refreshNeeded();  
+			}
 		}
 	);
 }
@@ -136,7 +136,33 @@ function im_layerMoveUp(id)
 		{
 		    parameters: 'id='+id,
 		    method: 'get',
-		    onComplete: im_buildLayerList
+			onComplete: function(req) 
+			{
+			    im_buildLayerList(req);			
+			    refreshNeeded();  
+			}
+		}
+	);
+}
+
+// performs the operations needed when the user
+// has changed the layer order via drag'n'drop
+function layersOrderChanged(order)
+{
+	var url = '/intermap/srv/en/map.layers.setOrder';
+	var pars = order.replace(new RegExp("\\[\\]", "g"), ""); // remove all [ and ] - jeeves doesn't accept in parameter name otherwise
+	
+	var myAjax = new Ajax.Request (
+		url, 
+		{
+			method: 'get',
+			parameters: pars,
+			onComplete: function(req) 
+			{
+			    im_buildLayerList(req);			
+			    refreshNeeded();  
+			},
+			onFailure: reportError
 		}
 	);
 }
@@ -220,6 +246,20 @@ function im_getNextActivableLayer(id)
 				return nextActiveLayerId;				
 			}
 		}
+	}
+}
+
+function im_getFirstLayerId()
+{
+	var ul= $('im_layerList');
+	var li1 = ul.getElementsByTagName("li")[0];
+	
+	if (li1 == null)
+		return null;
+	else
+	{	    
+		var t = li1.getAttribute('id');
+		return t.substr(t.indexOf('_') + 1);						
 	}
 }
 
