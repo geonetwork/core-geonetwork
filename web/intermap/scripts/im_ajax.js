@@ -25,26 +25,6 @@ function imc_reloadLayers()
  *                                                                           *
  *****************************************************************************/
 
-// start ajax transaction to set the layer order
-function imc_setLayersOrder(order)
-{
-	var url = '/intermap/srv/en/map.layers.setOrder';
-	var pars = order.replace(new RegExp("\\[\\]", "g"), ""); // remove all [ and ] - jeeves doesn't accept in parameter name otherwise
-	
-	var myAjax = new Ajax.Request (
-		url, 
-		{
-			method: 'get',
-			parameters: pars,
-			onComplete: function(req) 
-			{
-			    im_buildLayerList(req);			
-			    refreshNeeded();  
-			},
-			onFailure: reportError
-		}
-	);
-}
 
 function imc_zoomToLayer(layerId)
 {
@@ -85,6 +65,7 @@ function toggleVisibility(id) {
 function showActiveLayerLegend(id) {
     showLegend(activeLayerId);
 }
+
 function showLegend(id) {
 	window.open('/intermap/srv/en/map.service.getLegend?id=' + id, 'dialog', 'HEIGHT=300,WIDTH=400,scrollbars=yes,toolbar=yes,status=yes,menubar=yes,location=yes,resizable=yes');
 }
@@ -102,23 +83,6 @@ function showLegend(id) {
  *                                 Add layer                                 *
  *                                                                           *
  *****************************************************************************/
-
-// start ajax transaction to delete a layer
-function setAddLayersWindowContent()
-{
-	var url = '/intermap/srv/en/mapServers.listServers';
-	
-	Position.clone('im_map', 'im_addLayers');
-	var myAjax = new Ajax.Updater
-	(
-		'im_addLayers',
-		url, 
-		{
-			method: 'get',
-			onFailure: reportError
-		}
-	);
-}
 
 
 /*****************************************************************************
@@ -165,7 +129,11 @@ function imc_bm_action(tool, xmin, ymin, xmax, ymax, w, h)
 		{
 			method: 'get',
 			parameters: pars,
-			onComplete: updateMapImage,
+			onComplete: function(req) 
+			{
+				updateMapImage(req);			
+			    	im_mm_followBM();  
+			},
 			onFailure: reportError
 		}
 	);
@@ -293,7 +261,7 @@ function imc_updateBigMap(width, height, qbbox, doUpdateMM, callback)
                             updateMapImage(req);
                             if( doUpdateMM )
                                 // !!! check if this refresh is not due to a minimap action, or we'll get a refresh loop !!!
-                                imc_mm_update(im_mm_width, im_mm_height, im_dezoom(im_bm_north, im_bm_east, im_bm_south, im_bm_west));
+                                im_mm_followBM();
                             if(callback)
                                 callback();
     		 },
@@ -302,7 +270,12 @@ function imc_updateBigMap(width, height, qbbox, doUpdateMM, callback)
     );
 }
 
-function imc_mm_update(width, height, qbbox)
+function im_mm_followBM()
+{
+	imc_mm_update(im_mm_width, im_mm_height, im_dezoom(im_bm_north, im_bm_east, im_bm_south, im_bm_west));
+}
+
+function imc_mm_update(width, height, qbbox, callback)
 {
 	im_mm_setStatus('busy');
 	
@@ -317,7 +290,11 @@ function imc_mm_update(width, height, qbbox)
 		{
 			method: 'get',
 			parameters: pars,
-			onComplete: im_mm_imageRebuilt,
+			onComplete: function(req)
+			{
+				im_mm_imageRebuilt(req);
+				if(callback) callback();
+			},
 			onFailure: reportError
 		}
 	);
