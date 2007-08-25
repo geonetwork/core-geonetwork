@@ -138,7 +138,7 @@
 				<br/>
 <!--				<xsl:text disable-output-escaping="yes">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</xsl:text>-->
 				<!-- Contact person -->
-				<xsl:if test="ContactInformation/ContactPersonPrimary/ContactPerson">
+				<xsl:if test="normalize-space(ContactInformation/ContactPersonPrimary/ContactPerson)">
 					<b>
 						<xsl:value-of select="/root/gui/strings/contactPerson"/>
 					</b>
@@ -146,11 +146,11 @@
 					<xsl:value-of select="ContactInformation/ContactPersonPrimary/ContactPerson"/>
 				</xsl:if>
 				<!-- Contact organization -->
-				<xsl:if test="ContactInformation/ContactPersonPrimary/ContactOrganization">
-				(<xsl:value-of select="ContactInformation/ContactPersonPrimary/ContactOrganization"/>)
+				<xsl:if test="normalize-space(ContactInformation/ContactPersonPrimary/ContactOrganization)">
+					(<xsl:value-of select="ContactInformation/ContactPersonPrimary/ContactOrganization"/>)
 			</xsl:if>
 				<!-- Contact position -->
-				<xsl:if test="ContactInformation/ContactPosition">
+				<xsl:if test="normalize-space(ContactInformation/ContactPosition)">
 					<br/>
 <!--					<xsl:text disable-output-escaping="yes">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</xsl:text>-->
 					<b>
@@ -196,15 +196,14 @@
 					<xsl:value-of select="ContactInformation/ContactFacsimileTelephone"/>
 				</xsl:if>
 				<!-- Contact email -->
-				<xsl:if test="ContactInformation/ContactElectronicMailAddress">
+				<xsl:if test="normalize-space(ContactInformation/ContactElectronicMailAddress)">
 					<br/>
 <!--					<xsl:text disable-output-escaping="yes">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</xsl:text>-->
 					<b>
 						<xsl:value-of select="/root/gui/strings/email"/>
 					</b>
 					<xsl:text> </xsl:text>
-					<a>
-						<xsl:attribute name="href"><xsl:text>mailto:</xsl:text><xsl:value-of select="ContactInformation/ContactElectronicMailAddress"/></xsl:attribute>
+					<a href="mailto:{ContactInformation/ContactElectronicMailAddress}">						
 						<xsl:value-of select="ContactInformation/ContactElectronicMailAddress"/>
 					</a>
 				</xsl:if>
