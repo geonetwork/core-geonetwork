@@ -2,6 +2,9 @@
 <strings>
 	
 	<!-- new strings -->
+	<searchUnusedTitle>Search for Unused</searchUnusedTitle>
+	<batchImportTitle>Batch Import</batchImportTitle>
+	<xmlInsertTitle>XML Metadata Insert</xmlInsertTitle>
 	<fuzzy>Precision</fuzzy>
 	<fuzzySearch>Set the precision of the search (from fuzzy search to exact term search).</fuzzySearch>
 	<address>Address</address>

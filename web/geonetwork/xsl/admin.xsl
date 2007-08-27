@@ -23,14 +23,14 @@
 						
 						<xsl:if test="/root/gui/services/service/@name='metadata.xmlinsert.form'">
 							<tr>
-								<td class="padded"><a href="{/root/gui/locService}/metadata.xmlinsert.form">XML Metadata Insert</a></td>
+								<td class="padded"><a href="{/root/gui/locService}/metadata.xmlinsert.form"><xsl:value-of select="/root/gui/strings/xmlInsertTitle"/></a></td>
 								<td class="padded"><xsl:value-of select="/root/gui/strings/xmlInsert"/></td>
 							</tr>
 						</xsl:if>
 						
 						<xsl:if test="/root/gui/services/service/@name='metadata.batchimport.form'">
 							<tr>
-								<td><a href="{/root/gui/locService}/metadata.batchimport.form">Batch Import</a></td>
+								<td><a href="{/root/gui/locService}/metadata.batchimport.form"><xsl:value-of select="/root/gui/strings/batchImportTitle"/></a></td>
 								<td>
 									<xsl:value-of select="/root/gui/strings/batchImport"/>
 								</td>
@@ -39,7 +39,7 @@
 						
 						<xsl:if test="/root/gui/services/service/@name='metadata.searchunused.form'">
 							<tr>
-								<td><a href="{/root/gui/locService}/metadata.searchunused.form">Search for Unused</a></td>
+								<td><a href="{/root/gui/locService}/metadata.searchunused.form"><xsl:value-of select="/root/gui/strings/searchUnusedTitle"/></a></td>
 								<td>
 									<xsl:value-of select="/root/gui/strings/searchUnused"/>
 								</td>

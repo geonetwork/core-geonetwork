@@ -8,6 +8,9 @@
 		<iso19139fra>Save ISO19115/19139 Fra metadata as XML</iso19139fra>
 	</savexml>
 	<!-- new strings -->
+	<searchUnusedTitle>Search for Unused</searchUnusedTitle>
+	<batchImportTitle>Batch Import</batchImportTitle>
+	<xmlInsertTitle>XML Metadata Insert</xmlInsertTitle>
 	<fuzzy>Precision</fuzzy>
 	<fuzzySearch>Set the precision of the search (from fuzzy search to exact term search).</fuzzySearch>
 	<address>Address</address>

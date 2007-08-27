@@ -94,6 +94,7 @@
 	<backToPreviousPage>Back to previous page</backToPreviousPage>
 	<backToEditor>Back to editing metadata</backToEditor>
 	<batchImport>Import all XML formatted metadata from a local directory</batchImport>
+	<batchImportTitle>Batch Import</batchImportTitle>
 	<begdate>Beginning Date</begdate>
 	<begtime>Beginning Date</begtime>
 	<bgFileDescChoice value="thumbnail">Thumbnail</bgFileDescChoice>
@@ -382,6 +383,7 @@
 	<searchTemplates>Search for templates</searchTemplates>
 	<searchText>What?</searchText>
 	<searchUnused>Search for unused or empty metadata</searchUnused>
+	<searchUnusedTitle>Search for Unused</searchUnusedTitle>
 	<server>Server</server>
 	<setAll>Set All</setAll>
 	<show>Metadata</show>
@@ -433,6 +435,6 @@
 	<winInfo2>Throughout the Help (?) icon give you access to explanations. When you activate this icon, it's output will be displayed in this Resource Window.</winInfo2>
 	<wwwlink>Web link</wwwlink>
 	<xmlInsert>Import XML formatted metadata</xmlInsert>
+	<xmlInsertTitle>XML Metadata Insert</xmlInsertTitle>
 	<xmlTab>XML view</xmlTab>
-
 </strings>
