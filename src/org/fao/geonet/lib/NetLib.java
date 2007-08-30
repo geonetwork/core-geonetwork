@@ -59,6 +59,8 @@ public class NetLib
 		boolean enabled = sm.getValueAsBool("system/proxy/use", false);
 		String  host    = sm.getValue("system/proxy/host");
 		String  port    = sm.getValue("system/proxy/port");
+		String  username= sm.getValue("system/proxy/username");
+		String  password= sm.getValue("system/proxy/password");
 
 		if (!enabled)
 			req.setUseProxy(false);
@@ -71,6 +73,7 @@ public class NetLib
 				req.setUseProxy(true);
 				req.setProxyHost(host);
 				req.setProxyPort(Integer.parseInt(port));
+				req.setProxyCredentials(username, password);
 			}
 		}
 	}

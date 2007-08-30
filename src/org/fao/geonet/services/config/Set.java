@@ -99,6 +99,8 @@ public class Set implements Service
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "proxy/use",                "system/proxy/use"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "proxy/host",               "system/proxy/host"),
 		new ConfigEntry(ConfigEntry.Type.INT,    false, "proxy/port",               "system/proxy/port"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "proxy/username",           "system/proxy/username"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "proxy/password",           "system/proxy/password"),
 
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "feedback/email",           "system/feedback/email"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "feedback/mailServer/host", "system/feedback/mailServer/host"),
