@@ -1627,6 +1627,7 @@
 			search of available geographic data sets. Can be used to group keywords as well. Listed
 			examples are not exhaustive. NOTE It is understood there are overlaps between general
 			categories and the user is encouraged to select the one most appropriate.</description>
+		<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_TopologyLevelCode">
