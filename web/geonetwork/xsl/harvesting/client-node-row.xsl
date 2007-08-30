@@ -69,9 +69,7 @@
 			<!-- Last run - - - - - - - - - - - - - - - - - - - - - -->
 			
 			<td class="padded" id="node.lastRun">
-				<xsl:value-of select="substring-before(info/lastRun, 'T')"/>
-				&#xA0;
-				<xsl:value-of select="substring-after(info/lastRun, 'T')"/>
+				<xsl:value-of select="substring-before(info/lastRun, 'T')"/>&#xA0;<xsl:value-of select="substring-after(info/lastRun, 'T')"/>
 			</td>
 
 			<!-- Edit button - - - - - - - - - - - - - - - - - - - - - -->
