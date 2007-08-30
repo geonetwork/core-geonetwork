@@ -29,13 +29,15 @@ function ConfigView(strLoader)
 		{ id:'feedback.mail.host', type:'hostname' },
 		{ id:'feedback.mail.port', type:'integer',  minValue:25, maxValue:65535, empty:true },
 		
-		{ id:'proxy.host',   type:'length',   minSize :0,  maxSize :200 },
-		{ id:'proxy.host',   type:'hostname' },
-		{ id:'proxy.port',   type:'integer',  minValue:21, maxValue:65535, empty:true },
+		{ id:'proxy.host',     type:'length',   minSize :0,  maxSize :200 },
+		{ id:'proxy.host',     type:'hostname' },
+		{ id:'proxy.port',     type:'integer',  minValue:21, maxValue:65535, empty:true },
+		{ id:'proxy.username', type:'length',  minSize :0,  maxSize :200 },
+		{ id:'proxy.password', type:'length',  minSize :0,  maxSize :200 },
 
 		{ id:'removedMd.dir', type:'length', minSize :0,  maxSize :200 },
 		
-		{ id:'ldap.host',         type:'length',   minSize :1,  maxSize :200 },
+		{ id:'ldap.host',         type:'length',   minSize :0, maxSize :200 },
 		{ id:'ldap.host',         type:'hostname' },
 		{ id:'ldap.port',         type:'integer',  minValue:80, maxValue:65535, empty:true },		
 		{ id:'ldap.userDN',       type:'length',  minSize :1,  maxSize :200 },
@@ -72,9 +74,11 @@ ConfigView.prototype.setData = function(data)
 	$('z3950.enable').checked = data['Z3950_ENABLE'] == 'true';
 	$('z3950.port')  .value   = data['Z3950_PORT'];
 	
-	$('proxy.use') .checked = data['PROXY_USE'] == 'true';
-	$('proxy.host').value   = data['PROXY_HOST'];
-	$('proxy.port').value   = data['PROXY_PORT'];
+	$('proxy.use') .checked   = data['PROXY_USE'] == 'true';
+	$('proxy.host').value     = data['PROXY_HOST'];
+	$('proxy.port').value     = data['PROXY_PORT'];
+	$('proxy.username').value = data['PROXY_USER'];
+	$('proxy.password').value = data['PROXY_PASS'];
 	
 	$('feedback.email')    .value = data['FEEDBACK_EMAIL'];
 	$('feedback.mail.host').value = data['FEEDBACK_MAIL_HOST'];
@@ -126,6 +130,8 @@ ConfigView.prototype.getData = function()
 		PROXY_USE  : $('proxy.use') .checked,
 		PROXY_HOST : $('proxy.host').value,
 		PROXY_PORT : $('proxy.port').value,
+		PROXY_USER : $('proxy.username').value,
+		PROXY_PASS : $('proxy.password').value,
 		
 		FEEDBACK_EMAIL     : $('feedback.email')    .value,
 		FEEDBACK_MAIL_HOST : $('feedback.mail.host').value,

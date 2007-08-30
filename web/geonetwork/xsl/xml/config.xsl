@@ -44,6 +44,8 @@
 				<use><xsl:value-of select="$proxy/use/value"/></use>
 				<host><xsl:value-of select="$proxy/host/value"/></host>
 				<port><xsl:value-of select="$proxy/port/value"/></port>
+				<username><xsl:value-of select="$proxy/username/value"/></username>
+				<password><xsl:value-of select="$proxy/password/value"/></password>
 			</proxy>
 
 			<feedback>

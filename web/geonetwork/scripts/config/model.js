@@ -39,11 +39,13 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			PROXY_USE         : xml.evalXPath(node, 'proxy/use'),
 			PROXY_HOST        : xml.evalXPath(node, 'proxy/host'),
 			PROXY_PORT        : xml.evalXPath(node, 'proxy/port'),
+			PROXY_USER        : xml.evalXPath(node, 'proxy/username'),
+			PROXY_PASS        : xml.evalXPath(node, 'proxy/password'),
 			FEEDBACK_EMAIL    : xml.evalXPath(node, 'feedback/email'),
 			FEEDBACK_MAIL_HOST: xml.evalXPath(node, 'feedback/mailServer/host'),
 			FEEDBACK_MAIL_PORT: xml.evalXPath(node, 'feedback/mailServer/port'),
 			REMOVEDMD_DIR     : xml.evalXPath(node, 'removedMetadata/dir'),
-			
+
 			LDAP_USE          : xml.evalXPath(node, 'ldap/use'),
 			LDAP_HOST         : xml.evalXPath(node, 'ldap/host'),
 			LDAP_PORT         : xml.evalXPath(node, 'ldap/port'),
@@ -111,6 +113,8 @@ ConfigModel.updateTemp =
 '		<use>{PROXY_USE}</use>'+
 '		<host>{PROXY_HOST}</host>'+
 '		<port>{PROXY_PORT}</port>'+
+'		<username>{PROXY_USER}</username>'+
+'		<password>{PROXY_PASS}</password>'+
 '	</proxy>'+
 '	<feedback>'+
 '		<email>{FEEDBACK_EMAIL}</email>'+

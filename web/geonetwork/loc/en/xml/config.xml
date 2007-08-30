@@ -18,6 +18,7 @@
 		
 	<proxy>Proxy</proxy>
 		<use>Use</use>
+		<username>Username</username>
 	
 	<feedback>Feedback</feedback>
 		<email>EMail</email>
