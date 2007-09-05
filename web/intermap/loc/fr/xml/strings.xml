@@ -1,78 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<abstract>Abstract</abstract>
-	<activate>Activate</activate>
-	<address>Address</address>
-	<addService>Add more maps</addService>
-	<bigger>Bigger map</bigger>
-	<cancel>Cancel</cancel>
-	<close>Close</close>
-	<choosemapfromlist>Please choose one or more map services from the list below</choosemapfromlist>
-	<choosemapserver>Please choose a map server from the list below or manually insert another map server</choosemapserver>
-	<mapServer>Map Server</mapServer>
-	<choosepredefinedmap>Please choose a predefined map overlay from the list below or</choosepredefinedmap>
-	<connect>Connect</connect>
-	<contactInfo>Contact information:</contactInfo>
-	<contactPerson>Primary contact person:</contactPerson>
+	<abstract>Résumé</abstract>
+	<activate>Activater</activate>
+	<address>Adresse</address>
+	<addService>Ajouter une carte</addService>
+	<bigger>Carte plus grande</bigger>
+	<cancel>Annuler</cancel>
+	<close>Fermer</close>
+	<choosemapfromlist>Choisissez un ou plusieurs géoservice à partir de la liste ci-dessous</choosemapfromlist>
+	<choosemapserver>Choisissez un géoservice à partir de la liste ou ajouter un autre géoservice manuellement</choosemapserver>
+	<mapServer>GéoService</mapServer>
+	<choosepredefinedmap>Choisissez une carte à partir de la liste ci-dessous</choosepredefinedmap>
+	<connect>Connection</connect>
+	<contactInfo>Information sur le contact :</contactInfo>
+	<contactPerson>Contact principal :</contactPerson>
 	<contexts>Contexts</contexts>
 	<delete>[del]</delete>
-	<down>Move layer down</down>
+	<down>Déplacer vers le bas</down>
 	<email>email:</email>
-	<error>[error]</error>
+	<error>[erreur]</error>
 <!-- 
 	<errorText>Sorry, error connecting to the map server</errorText>
  -->
-	<extents>Change the selected time (temporal data)</extents>
-	<extentSelected>Selected time: </extentSelected>
-	<featuresfound>features found</featuresfound>
-	<findMapsGeoNetwork>Find more maps through GeoNetwork</findMapsGeoNetwork>
-	<findMapsMapServers>Add more maps by connecting to other Web Map Servers</findMapsMapServers>
-	<fullExtent>Zoom to the full map</fullExtent>
+	<extents>Modifier la période sélectionnée (Donnée temporelle)</extents>
+	<extentSelected>Temps sélectionné: </extentSelected>
+	<featuresfound>Objet trouvé</featuresfound>
+	<findMapsGeoNetwork>Trouver plus de cartes via GeoNetwork</findMapsGeoNetwork>
+	<findMapsMapServers>Ajouter plus de cartes en se connectant à un autre Web Map Servers</findMapsMapServers>
+	<fullExtent>Zoom global</fullExtent>
 	<gotoGeoNetwork>GeoNetwork</gotoGeoNetwork>
 	<gotoMapServers>Map Servers</gotoMapServers>
-	<homepage>Home page:</homepage>
-	<identify>Identify a feature on the map</identify>
-	<makeActive>Select to make this layer active (e.g. for Identify)</makeActive>
+	<homepage>Accueil :</homepage>
+	<identify>Identifier un objet sur la carte</identify>
+	<makeActive>Cocher pour rendre ce calque actif (e.g. pour rechercher)</makeActive>
 	<info>info</info>
-	<keywords>Keywords:</keywords>
-	<layerinfo>Layer info</layerinfo>
-	<layers>Layers</layers>
-	<layersHide>Hide layer list</layersHide>
-	<layersShow>Show layer list</layersShow>
-	<legend>Show the legend</legend>
-	<listofmaps>List of maps</listofmaps>
-	<listofmapservers>List of map servers</listofmapservers>
-	<manually>create you own map</manually>
-	<map>Map</map>
-	<mapsfound>maps found</mapsfound>
-	<metadata>Metadata</metadata>
-	<newMap>Create a new map</newMap>
-	<noFeature>No features found</noFeature>
-	<noService>No maps found</noService>
-	<noStyle>Only the default style is available for this map</noStyle>
-	<oneService>One map found</oneService>
+	<keywords>Mots-clés:</keywords>
+	<layerinfo>Description du calque</layerinfo>
+	<layers>Calques</layers>
+	<layersHide>Cacher la liste de calques</layersHide>
+	<layersShow>Afficher la liste de calques</layersShow>
+	<legend>Afficher la légende</legend>
+	<listofmaps>Liste des cartes</listofmaps>
+	<listofmapservers>Liste des géoservices</listofmapservers>
+	<manually>Créer votre carte</manually>
+	<map>Carte</map>
+	<mapsfound>cartes trouvées</mapsfound>
+	<metadata>Métadonnées</metadata>
+	<newMap>Créer une nouvelle carte</newMap>
+	<noFeature>Aucun objet trouvé</noFeature>
+	<noService>Aucune carte trouvée</noService>
+	<noStyle>Seul le style par défaut est disponible</noStyle>
+	<oneService>Une carte trouvée</oneService>
 	<ok>Ok</ok>
-	<oneFeature>One feature found</oneFeature>
-	<otherArcIMS>- Other ArcIMS server (specify below)</otherArcIMS>
-	<otherWMS>- Other WMS server (specify below)</otherWMS>
-	<position>Position:</position>
-	<print>Print the map</print>
-	<properties>Properties</properties>
-	<reCenter>Re-center the map</reCenter>
-	<refresh>Refresh</refresh>
-	<refreshNotification>Please click the "Refresh" button under the layer list to see this change.</refreshNotification>
-	<removeLayer>Remove layer</removeLayer>
-	<smaller>Smaller map</smaller>
-	<specify>Specify if other:</specify>
-	<style>Select the desired style</style>
+	<oneFeature>Un objet trouvé</oneFeature>
+	<otherArcIMS>- Autres serveurs ArcIMS</otherArcIMS>
+	<otherWMS>- Autres serveurs WMS</otherWMS>
+	<position>Position :</position>
+	<print>Imprimer la carte</print>
+	<properties>Propriétés</properties>
+	<reCenter>Re-centrer la carte</reCenter>
+	<refresh>Rafraîchir</refresh>
+	<refreshNotification>Cliquer sur "Rafraîchir" pour voir les changements.</refreshNotification>
+	<removeLayer>Supprimer le calque</removeLayer>
+	<smaller>Petite carte</smaller>
+	<specify>Définir si autre :</specify>
+	<style>Choisir le style :</style>
 	<start>InterMap opensource</start>
-	<telephone>Telephone:</telephone>
+	<telephone>Téléphone :</telephone>
 	<title>InterMap opensource</title>
-	<transparency>Set transparency</transparency>
-	<up>Move layer up</up>
-	<wmsConfigForm>Layer properties</wmsConfigForm >
-	<zoomIn>Zoom in</zoomIn>
-	<zoomOut>Zoom out</zoomOut>
-	<zoomLayer>Zoom to layer</zoomLayer>
+	<transparency>Définir la transparence</transparency>
+	<up>Déplacer vers le haut</up>
+	<wmsConfigForm>Propriétés du calque</wmsConfigForm >
+	<zoomIn>Zoom avant</zoomIn>
+	<zoomOut>Zoom arrière</zoomOut>
+	<zoomLayer>Zoom vers le calque</zoomLayer>
 	<getFeatures>GET FEATURES</getFeatures>
 </strings>

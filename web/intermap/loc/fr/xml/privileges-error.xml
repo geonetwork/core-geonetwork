@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<errorText>You don't have the privileges to do this.</errorTextq>
+	<message>Vous n'avez pas le droit de réaliser cette action.</message>
 </strings>
