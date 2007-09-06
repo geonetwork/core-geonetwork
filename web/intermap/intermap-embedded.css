@@ -78,8 +78,8 @@ img#im_mm_image  {
 .zoomin #im_mm_image {    cursor: crosshair; }
 
 td.im_mmtool  {
-    width:30px;
-    height:30px;
+    width:18px;
+    height:18px;
 }
 
 .im_mmtool  {
@@ -93,7 +93,7 @@ td.im_mmtool  {
 /*	font-weight: bold;*/
 /*	text-decoration: none;*/
 	vertical-align: middle;
-	border: 2px black hidden;	
+	border: 1px black hidden;	
 }
 
 .aoi           #im_mmtool_aoi img,
@@ -108,20 +108,20 @@ td.im_mmtool  {
 
 #im_mmtool_fullextent img:hover,
 #im_mmtool_zoomsel img:hover {
-	border: 2px blue outset;
+	border: 1px blue outset;
 /*	border-style:*/
 }
 
 .im_mmtool img:hover {
 /*	background: #005D9F;*/
-	border: 2px blue solid;
+	border: 1px blue solid;
 
 }
 
 .im_mmtool img {
 	/*padding: 3px;*/
-	padding: 4px 4px 4px 4px;
-	border: 2px transparent solid;
+	padding: 2px 2px 2px 2px;
+	border: 1px transparent solid;
 	width: 16px;
 	height: 16px;
 	background-color: transparent; /*NEW*/
@@ -155,7 +155,7 @@ margin-bottom: 0.5em;
 
         /*background-color: silver;*/
 
-        padding:1px 0px 3px;        
+        padding:1px 0px 2px;        
         margin: 0px;
 
         border-bottom: 1px solid gray;        
@@ -182,14 +182,14 @@ margin-bottom: 0.5em;
 
 .im_tool img {
 	/*padding: 3px;*/
-	padding: 4px 4px 4px 4px;
+	padding: 2px 2px 2px 2px;
 	
 }
 
 #im_toolbar #im_tool_reset  {
 	background: red;
 	border-right: 1px solid #fff;
-	padding: 0 3px 0 3px;
+	padding: 0 2px 0 2px;
 	color: white;
 }
 

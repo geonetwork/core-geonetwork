@@ -201,8 +201,8 @@
 				<!-- search -->
 				<xsl:comment>LEFT: search, minimap and news</xsl:comment>
 
-				<td class="padded-content" width="200px" style="background-color:#dce1ea;">
-					<table class="geosearch" width="210px">
+				<td class="padded-content" width="224px" style="background-color:#dce1ea;">
+					<table class="geosearch" width="224px">
 						<!--  TODO: set a fixed width  -->
 						<xsl:comment>SEARCH</xsl:comment>
 						<tr>
@@ -264,21 +264,23 @@
 												<xsl:comment>MAINPAGE 1</xsl:comment>
 												<xsl:copy-of select="/root/gui/strings/mainpage1"/>
 												<xsl:comment>MAINPAGE 2</xsl:comment>
-												<xsl:copy-of select="/root/gui/strings/mainpage2"/>
-											</td>
-											<xsl:if test="/root/gui/featured/*">
-												<td>
-													<xsl:comment>Featured Map</xsl:comment>
-													<xsl:call-template name="featured"/>
-												</td>
-											</xsl:if>
-										</tr>
-										<tr>
-											<td colspan="2">
-												<xsl:comment>END MAINPAGE</xsl:comment>
-												<a href="mailto:{/root/gui/env/feedback/email}">
+												<xsl:copy-of select="/root/gui/strings/mainpage2"/> <a href="mailto:{/root/gui/env/feedback/email}">
 													<xsl:value-of select="/root/gui/env/feedback/email"/>
 												</a>
+											</td>
+										</tr>
+											<xsl:if test="/root/gui/featured/*">
+												<tr style="padding: 10px;">
+													<td>
+														<xsl:comment>Featured Map</xsl:comment>
+														<xsl:call-template name="featured"/>
+													</td>
+												</tr>
+											</xsl:if>
+										<tr>
+											<td>
+												<xsl:comment>END MAINPAGE</xsl:comment>
+												
 											</td>
 										</tr>
 									</table>
@@ -459,45 +461,44 @@
 	featured map
 	-->
 	<xsl:template name="featured">
-		<h1>
-			<xsl:value-of select="/root/gui/strings/featuredMap"/>
-		</h1>
-		<table>
-			<xsl:for-each select="/root/gui/featured/*">
-				<xsl:variable name="md">
-					<xsl:apply-templates mode="brief" select="."/>
-				</xsl:variable>
-				<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
-				<tr>
-					<td width="40%">
-						<xsl:call-template name="thumbnail">
-							<xsl:with-param name="metadata" select="$metadata"/>
-						</xsl:call-template>
-					</td>
-					<td class="footer">
-						<h2>
-							<a class="footer"
-								href="{/root/gui/locService}/metadata.show?id={geonet:info/id}">
-								<xsl:value-of select="$metadata/title"/>
-							</a>
-						</h2>
-						<p/>
-						<xsl:variable name="abstract" select="$metadata/abstract"/>
-						<xsl:choose>
-							<xsl:when test="string-length($abstract) &gt; $maxAbstract">
-								<xsl:value-of select="substring($abstract, 0, $maxAbstract)"/>
-								<a
-									href="{/root/gui/locService}/metadata.show?id={geonet:info/id}&amp;currTab=simple"
-										>...<xsl:value-of select="/root/gui/strings/more"/>...</a>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="$abstract"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</td>
-				</tr>
-			</xsl:for-each>
-		</table>
+		<fieldset style="margin: 20px; background-color: #dce1ea;">
+			<legend><xsl:value-of select="/root/gui/strings/featuredMap"/></legend>
+			<table>
+				<xsl:for-each select="/root/gui/featured/*">
+					<xsl:variable name="md">
+						<xsl:apply-templates mode="brief" select="."/>
+					</xsl:variable>
+					<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
+					<tr>
+						<td>
+							<h2>
+								<a href="{/root/gui/locService}/metadata.show?id={geonet:info/id}">
+									<xsl:value-of select="$metadata/title"/>
+								</a>
+							</h2>
+							<p/>
+							<xsl:variable name="abstract" select="$metadata/abstract"/>
+							<xsl:choose>
+								<xsl:when test="string-length($abstract) &gt; $maxAbstract">
+									<xsl:value-of select="substring($abstract, 0, $maxAbstract)"/>
+									<a
+										href="{/root/gui/locService}/metadata.show?id={geonet:info/id}&amp;currTab=simple"
+											>...<xsl:value-of select="/root/gui/strings/more"/>...</a>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="$abstract"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</td>
+						<td width="40%">
+							<xsl:call-template name="thumbnail">
+								<xsl:with-param name="metadata" select="$metadata"/>
+							</xsl:call-template>
+						</td>
+					</tr>
+				</xsl:for-each>
+			</table>
+		</fieldset>
 	</xsl:template>
 
 	<!--

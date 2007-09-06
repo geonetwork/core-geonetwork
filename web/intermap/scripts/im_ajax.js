@@ -311,7 +311,7 @@ function imc_bm_fullExtent(w,h)
 {
 	setStatus('busy');
 	
-	deleteAoi();
+//	deleteAoi();
 	
 	if (currentTool == 'zoomout' || currentTool == 'pan') 
 	    setTool('zoomin');
@@ -333,7 +333,7 @@ function imc_mm_fullExtent(w,h)
 {
 	im_mm_setStatus('busy');
 	
-	im_mm_deleteAoi();
+//	im_mm_deleteAoi();
 	
 	if (im_mm_currentTool == 'zoomout' || im_mm_currentTool == 'pan') 
 	    im_mm_setTool('zoomin');

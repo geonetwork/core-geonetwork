@@ -16,6 +16,7 @@ var im_mm_currentTool;
 
 var im_mm_north, im_mm_east, im_mm_south, im_mm_west;
 var im_mm_ctrl_n,im_mm_ctrl_e, im_mm_ctrl_s, im_mm_ctrl_w; 
+var im_mm_aoiBox;
 
 function trace(fname)
 {
@@ -24,8 +25,24 @@ function trace(fname)
 
 function im_mm_init(callback)
 {
-    im_mm_initTextControls($('northBL'), $('eastBL'), $('southBL'), $('westBL'));
-
+    im_mm_initTextControls($('northBL'), $('eastBL'), $('southBL'), $('westBL'), $('im_mm_aoibox'));
+    if (im_mm_ctrl_n.value == '')
+    {
+    im_mm_ctrl_n.value='90';
+    }
+    if (im_mm_ctrl_e.value == '')
+    {
+    im_mm_ctrl_e.value='180';
+    }
+    if (im_mm_ctrl_s.value == '')
+    {
+    im_mm_ctrl_s.value='-90';
+    }
+    if (im_mm_ctrl_w.value == '')
+    {
+    im_mm_ctrl_w.value='-180';
+    }
+    
     im_mm_refreshNeeded(callback); // load minimap
     im_mm_setTool('zoomin'); // set the default tool    
 }
@@ -69,15 +86,15 @@ function im_mm_setMapProp(n, e, s, w, width, height)
     im_mm_width=new Number(width);
     im_mm_height=new Number(height);
     
-    im_mm_setTextCoords(n, e, s, w)
 }
 
-function im_mm_initTextControls(n, e, s, w)
+function im_mm_initTextControls(n, e, s, w,a)
 {
     im_mm_ctrl_n = n;
     im_mm_ctrl_e = e;
     im_mm_ctrl_s = s;
     im_mm_ctrl_w = w;    
+    im_mm_aoiBox = a; // set Area of Interest layer
 }
 
 
@@ -99,12 +116,25 @@ function im_mm_setTextLenght(t,r,b,l) {
    im_mm_setTextCoords(north, east, south, west);
 }
 
+// Compute y given a latitude
+function im_mm_getNSpixel(lat)
+{
+	return Math.round(im_mm_height - (lat-im_mm_south) * im_mm_height / (im_mm_north - im_mm_south));
+}
 
+// Compute x given a longitude
+function im_mm_getWEpixel(lon)
+{
+	return Math.round((lon - im_mm_west) * im_mm_width / ( im_mm_east - im_mm_west));
+}
+
+//Compute a latitude given y
 function im_mm_getNS(y)
 {
     return im_mm_south +  (im_mm_height - y) * (im_mm_north - im_mm_south) / im_mm_height; 
 }
 
+//Compute a longitude given x
 function im_mm_getWE(x)
 {
     return im_mm_west +  x * (im_mm_east - im_mm_west) / im_mm_width; 
@@ -113,25 +143,38 @@ function im_mm_getWE(x)
 function im_mm_getURLbbox()
 {
     if(im_mm_north)
-        return  im_urlizebb(im_mm_north, im_mm_east, im_mm_south, im_mm_west);    
+		return im_urlizebb(im_mm_north, im_mm_east, im_mm_south, im_mm_west);    
     else
-        return null;
+		return im_mm_getURLselectedbbox();
 }
 
 /* computes bb for mm from bm */
 function im_dezoom(n, e, s, w)
-{
+{	
     var dx = (e - w) / 2;
     var dy = (n - s) / 2;
     return im_urlizebb( n-dy, e+dx, s+dy, w-dx );
 }
 
+// Test
+function im_dezoomDegrees(n, e, s, w)
+{	
+	var eAbs = parseFloat(e) + 180;
+	var nAbs = parseFloat(n) + 90;
+	var wAbs = parseFloat(w) + 180;
+	var sAbs = parseFloat(s) + 90;
+	
+    var dx = parseFloat((eAbs - wAbs) / 2);
+    var dy = parseFloat((nAbs - sAbs) / 2);
+    return im_urlizebb( Math.round(nAbs+dy-90), Math.round(eAbs+dx-180), Math.round(sAbs-dy-90), Math.round(wAbs-dx-180) );
+}
+
 function im_urlizebb(n, e, s, w)
 {
-    return   "northBL="+n+
-                "&eastBL="+e+
-                "&southBL="+s+
-                "&westBL="+w;    
+    return	"northBL="+n+
+			"&eastBL="+e+
+			"&southBL="+s+
+			"&westBL="+w;    
 }
 
 function im_mm_getURLselectedbbox()
@@ -143,6 +186,29 @@ function im_mm_getURLselectedbbox()
             im_mm_ctrl_w.value);
 }
 
+function im_mm_setAOIandZoom()
+{
+	// zoom to area first
+	imc_mm_action_mm();
+	im_mm_setAOIfromList();
+
+}
+
+function im_mm_setAOIfromList()
+{
+
+//	im_mm_followAoI();
+	
+	//draw AoI box
+	var l = im_mm_getWEpixel(im_mm_ctrl_e.value);
+	var t = im_mm_getNSpixel(im_mm_ctrl_n.value);
+	var w = Math.abs(l - im_mm_getWEpixel(im_mm_ctrl_w.value));
+	var h = Math.abs(im_mm_getNSpixel(im_mm_ctrl_s.value) - t);
+	
+	im_mm_drawBox (im_mm_aoiBox, l - w, t, w, h);
+	
+}
+
 /*****************************************************************************
  *
  *                      MiniMap operations (zoom, pan, identify)
@@ -152,13 +218,12 @@ function im_mm_getURLselectedbbox()
 //DOC public function im_mm_setTool(tool)
 function im_mm_setTool(tool) 
 {
-	if(im_mm_currentTool=='aoi' && tool=='aoi')
-		im_mm_deleteAoi();	
+//	if(im_mm_currentTool=='aoi' && tool=='aoi')
+//		im_mm_deleteAoi();	
 
 	im_mm_currentTool = tool;
 	$('minimap_root').className = tool; 	
 }
-
 
 var im_mm_startX, im_mm_startY; // start (mousedown) coordinates
 
@@ -241,6 +306,8 @@ function im_mm_resizeZoombox(e)
 		Math.abs(pX - im_mm_startX), // width
 		Math.abs(pY - im_mm_startY)  // height
 	);
+	
+	im_mm_setAOIandZoom();
 }
 
 // mouseup event listener
@@ -271,7 +338,7 @@ function im_mm_stopZoombox(e)
 	// remove listeners and div
 	Event.stopObserving(document, 'mousemove', im_mm_resizeZoombox);
 	Event.stopObserving(document, 'mouseup', im_mm_stopZoombox);
-	Element.remove($('im_mm_zoombox'));
+	this.Element.remove($('im_mm_zoombox'));
 }
 
 /* // Draws the zoombox
@@ -287,7 +354,7 @@ function im_mm_drawZoombox(left, top, width, height)
 // AOI
 //==================================================
 
-var im_mm_aoibox; 
+//var im_mm_aoibox; 
 
 function im_mm_startAoi(e)
 {
@@ -297,15 +364,23 @@ function im_mm_startAoi(e)
 	Event.observe(document, 'mousemove', im_mm_resizeAoi);
 	Event.observe(document, 'mouseup', im_mm_stopAoi);
 	
+	var offset = Position.cumulativeOffset($('im_mm_image'));
+	var offsetX = offset[0];
+	var offsetY = offset[1];
+
 	// store starting cursor position
-	im_mm_startX = Event.pointerX(e);
-	im_mm_startY = Event.pointerY(e);
+	im_mm_startX = Event.pointerX(e) - offsetX + 1;
+	im_mm_startY = Event.pointerY(e) - offsetY + 1;
 	
 	// dynamically create the zoombox div
-	im_mm_aoibox = document.createElement('div')
-	im_mm_aoibox.setAttribute('id', 'im_mm_aoibox');
-	im_mm_drawBox(im_mm_aoibox, im_mm_startX, im_mm_startY, 0, 0);
-	document.body.appendChild(im_mm_aoibox);
+//	im_mm_aoibox = document.createElement('div')
+//	im_mm_aoibox.setAttribute('id', 'im_mm_aoibox');
+//	var im_mm_aoibox = $('im_mm_aoibox');
+	im_mm_drawBox(im_mm_aoiBox, im_mm_startX, im_mm_startY, 0, 0);
+	
+	im_mm_setTextLenght(im_mm_startY, im_mm_startX, im_mm_startY, im_mm_startX);
+//	document.body.appendChild(im_mm_aoiBox);
+//	im_mm_aoibox.visibility='visible';
 }
 
 // mousemove event listener
@@ -313,33 +388,33 @@ function im_mm_resizeAoi(e)
 {
 	Event.stop(e); // prevents from dragging the map image (on Explorer)
 	
-	// get the current cursor position
-	var pX = Event.pointerX(e);
-	var pY = Event.pointerY(e);
-
 	// get map image offset
 	var offset = Position.cumulativeOffset($('im_mm_image'));
 	var offsetX = offset[0];
 	var offsetY = offset[1];
 
-            var w = $('im_mm_image').clientWidth;
-            var h = $('im_mm_image').clientHeight;
-            
-            pX = Math.max(pX, offsetX+2);
-            pY = Math.max(pY, offsetY+2);
-            
-            pX = Math.min(pX, offsetX + w - 2);
-            pY = Math.min(pY, offsetY + h - 2);
+	// get the current cursor position
+	var pX = Event.pointerX(e) - offsetX;
+	var pY = Event.pointerY(e) - offsetY;
+
+	var w = $('im_mm_image').clientWidth;
+	var h = $('im_mm_image').clientHeight;
+	
+	pX = Math.max(pX, 1);
+	pY = Math.max(pY, 1);
+	
+	pX = Math.min(pX, w - 1);
+	pY = Math.min(pY, h - 1);
 
 	im_mm_setTextLenght(
-		Math.min(pY, im_mm_startY) - offsetY,  // top
-		Math.max(pX, im_mm_startX) - offsetX,  // right
-		Math.max(pY, im_mm_startY) - offsetY,  // bottom
-		Math.min(pX, im_mm_startX) - offsetX // left
+		Math.min(pY, im_mm_startY),  // top
+		Math.max(pX, im_mm_startX),  // right
+		Math.max(pY, im_mm_startY),  // bottom
+		Math.min(pX, im_mm_startX) // left
             );
             
 	// set the zoom box position and size
-	im_mm_drawBox ($('im_mm_aoibox'),
+	im_mm_drawBox (im_mm_aoiBox,
 		Math.min(pX, im_mm_startX),  // left
 		Math.min(pY, im_mm_startY),  // top
 		Math.abs(pX - im_mm_startX), // width
@@ -350,14 +425,15 @@ function im_mm_resizeAoi(e)
 // mouseup event listener
 function im_mm_stopAoi(e)
 {
-	// get the current cursor position
-	var pX = Event.pointerX(e);
-	var pY = Event.pointerY(e);
 	
 	// get map image offset
-	var offset = Position.cumulativeOffset($('im_mm_image'));
-	var offsetX = offset[0];
-	var offsetY = offset[1];
+//	var offset = Position.cumulativeOffset($('im_mm_image'));
+//	var offsetX = offset[0];
+//	var offsetY = offset[1];
+
+	// get the current cursor position
+//	var pX = Event.pointerX(e) - offsetX;
+//	var pY = Event.pointerY(e) - offsetY;
 	
 	// remove listeners and div
 	Event.stopObserving(document, 'mousemove', im_mm_resizeAoi);
@@ -365,41 +441,52 @@ function im_mm_stopAoi(e)
 //	Element.remove($('im_mm_zoombox'));
 
             // We need this in case user starts drawing another AOI inside previous AOI: map wouldnt receive mouseclicks  
-	Event.observe(im_mm_aoibox, 'mousedown', im_mm_mousedownEventListener);
+	Event.observe(im_mm_aoiBox, 'mousedown', im_mm_mousedownEventListener);
 }
 
 function im_mm_deleteAoi()
 {
     if(im_mm_aoibox)
     {
-        Event.stopObserving(im_mm_aoibox, 'mousedown', im_mm_mousedownEventListener);
-        Element.remove(im_mm_aoibox);    
-        im_mm_aoibox = null;    
+        Event.stopObserving(im_mm_aoiBox, 'mousedown', im_mm_mousedownEventListener);
+       // im_mm_aoibox.visibility='hidden';
+//        Element.remove(im_mm_aoibox);    
+//       im_mm_aoibox = null;    
     }
     
     // set back full mm bbox into input fields
-    im_mm_setTextCoords(im_mm_north, im_mm_east, im_mm_south, im_mm_west); 
+    //im_mm_setTextCoords(im_mm_north, im_mm_east, im_mm_south, im_mm_west); 
 }
 
+function im_mm_reset()
+{
+	if(im_mm_aoibox)
+	{
+		Event.stopObserving(im_mm_aoiBox, 'mousedown', im_mm_mousedownEventListener);
+		$('region').value='';
+		im_mm_setTextCoords(90, 180, -90, -180);
+		imc_mm_fullExtent(w, h);
+	}
+}
 
 //==================================================
 function im_mm_zoomToAoi()
 {
-            if(! im_mm_aoibox)
+            if(! im_mm_aoiBox)
             {
                 alert("No AOI defined!");
                 return
             }
             
 	// get aoi coords
-	var aoipos = Position.cumulativeOffset($('im_mm_aoibox'));
+	var aoipos = Position.cumulativeOffset(im_mm_aoiBox);
 	var aoix = aoipos[0];
 	var aoiy = aoipos[1];
 	
-	var aoidim = Element.getDimensions($('im_mm_aoibox'));
+	var aoidim = Element.getDimensions(im_mm_aoiBox);
 	var aoiw = aoidim.width;
 	var aoih = aoidim.height;
-
+	
 	// get map image offset
 	var mappos = Position.cumulativeOffset($('im_mm_image'));
 	var mapx = mappos[0];
@@ -408,7 +495,7 @@ function im_mm_zoomToAoi()
             var mapw = $('im_mm_image').clientWidth;
             var maph = $('im_mm_image').clientHeight;
 
-	im_mm_deleteAoi();
+	//im_mm_deleteAoi();
 
 	im_mm_setStatus('busy');
 
@@ -422,7 +509,35 @@ function im_mm_zoomToAoi()
 		
 }
     
+//dezoom in relation to the AoI    
+function im_mm_followAoI()
+{
+	imc_mm_update(im_mm_width, im_mm_height, im_dezoom(parseFloat(im_mm_ctrl_n.value), parseFloat(im_mm_ctrl_e.value), parseFloat(im_mm_ctrl_s.value), parseFloat(im_mm_ctrl_w.value)));
+}
 
+function imc_mm_action_mm()
+{
+
+	im_mm_setStatus('busy');
+
+	var url = '/intermap/srv/en/map.update';
+	
+	var im_mm_bb=im_dezoomDegrees(im_mm_ctrl_n.value,im_mm_ctrl_e.value,im_mm_ctrl_s.value,im_mm_ctrl_w.value);
+
+	var pars = 'maptool=' + 'zoomin' + 
+	                "&width=" + '200' + "&height="+'100' +
+	                "&"+im_mm_bb; // FIXME: we should pass bb as param 
+	
+	var myAjax = new Ajax.Request (
+		url, 
+		{
+			method: 'get',
+			parameters: pars,
+			onComplete: im_mm_imageRebuilt,
+			onFailure: reportError
+		}
+	);
+}
 
 
 //==================================================
@@ -505,7 +620,7 @@ function im_mm_stopDrag(e)
 
 function im_mm_imageRebuilt(req)
 {
-           im_mm_set(req.responseXML);
+	im_mm_set(req.responseXML);
 
 	var vMapImg = $('im_mm_image');
 /*	
@@ -519,8 +634,13 @@ function im_mm_imageRebuilt(req)
 	vMapImg.style.left = '0';
 	vMapImg.style.top = '0';
 	
+	// put the AoI back where it should
+	im_mm_setAOIfromList();
+	
+	
 //	Event.observe(vMapImg, 'load', function(e) { setStatus('idle') }); // better behaviour but needs debugging on explorer (newer version of prototype?)
 	im_mm_setStatus('idle');
+	
 }
 
 
@@ -546,7 +666,7 @@ function im_mm_refreshNeeded(callback)
 function im_mm_setStatus(status)
 {
 /*	var refreshButton = $('im_refreshButton');*/
-	im_mm_deleteAoi();
+//	im_mm_deleteAoi();
 	
 	switch(status)
 	{
