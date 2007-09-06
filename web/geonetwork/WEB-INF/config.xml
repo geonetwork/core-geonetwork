@@ -697,6 +697,10 @@
 			<class name=".services.main.Search">
 				<param name="maxSummaryKeys" value="10" />
 			</class>
+			<output sheet="rss-search.xsl" contentType="text/xml; charset=UTF-8">
+				<call name="rssItems" class=".services.main.Result"/>
+				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
+			</output>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
