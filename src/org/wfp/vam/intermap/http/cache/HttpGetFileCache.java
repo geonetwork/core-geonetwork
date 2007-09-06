@@ -82,7 +82,7 @@ public class HttpGetFileCache implements HttpCache
 
 		for (Header loopheader: h) //int i = 0; i < h.length; i++) {
 		{
-			System.out.println("name: " + loopheader.getName() + " = " + loopheader.getValue());
+//			System.out.println("name: " + loopheader.getName() + " = " + loopheader.getValue());
 			if (header.equalsIgnoreCase(loopheader.getName()))
 				return loopheader.getValue();
 		}
