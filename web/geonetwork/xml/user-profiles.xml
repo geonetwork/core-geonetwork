@@ -224,6 +224,7 @@
 		<allow service="xml.metadata.get"/>
 		<allow service="xml.info"/>
 		<allow service="xml.forward"/>
+		<allow service="xml.region.get"/>
 
 		<!-- Portal XML services -->
 		<allow service="portal.search"/>
