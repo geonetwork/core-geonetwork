@@ -673,63 +673,98 @@ public class MapMerger
 		float dy = Math.abs(north - south);
 
 		// Reaspect
-		if ((w / dx) > (h / dy)) {
+		if ((w / dx) > (h / dy))
+		{
 			float d = dy * w / h - dx;
 			west -= d / 2;
 			east += d / 2;
+			System.out.println("REASPECTING - changing ratio WE += " + d);
 		}
-
-		if ((h / dy) > (w / dx)) {
+		else if ((h / dy) > (w / dx))
+		{
 			float d = dx * h / w - dy;
 			south -= d / 2;
 			north += d / 2;
+			System.out.println("REASPECTING - changing ratio NS += " + d);
 		}
 
-		// Adjust boundaries
-		if ((Math.abs(east - west)) > 360) {
-			east = 180;
-			west = -180;
-			float d = (float)h / w * 180;
-			north = d;
-			south = -d;
-		}
-
-		if ((Math.abs(north - south)) > 180) {
-			north = 90;
-			south = -90;
-			float d = (float)w / h * 90;
-			east = d;
-			west = -d;
-		}
-
-		// check for pan overflows
+		// Check for pan overflows: shift the map up or down if it can
 		// N-S: limit navigation
-		if(north > 90)
+		if(north > 90 && south>-90)
 		{
 			float off = north - 90;
 			north = 90;
 			south -= off;
+			System.out.println("REASPECTING - shifting NS -= " + off);
 		}
 
-		if(south < -90)
+		if(south < -90 && north < 90)
 		{
 			float off = - 90 - south;
 			south = -90;
 			north += off;
+			System.out.println("REASPECTING - shifting NS += " + off);
 		}
 
+		// If the map has scrolled enough sideways, then roll the view
 		// W-E: wrap navigation
 		if(west > 180)
 		{
 			east -= 180;
 			west -= 180;
+			System.out.println("REASPECTING - wrapping WE -= 180");
 		}
 
 		if(east < -180)
 		{
 			east += 180;
 			west += 180;
+			System.out.println("REASPECTING - wrapping WE += 180");
 		}
+
+		// If the map is too much reduced, zoom it to fit the view
+		if ((Math.abs(east - west)) > 360 && (Math.abs(north - south)) > 180)
+		{
+			// Which side can be fully extended?
+			if(w/360f > h/180f)
+			{
+				north = 90;
+				south = -90;
+
+				float we = 180.0f/h*w;
+				west = -we/2;
+				east = we/2;
+				System.out.println("REASPECTING - NS fit, WE = " + we);
+			}
+			else
+			{
+				west = -180;
+				east = 180;
+
+				float ns = 360.0f/w*h;
+				north = ns/2;
+				south = -ns/2;
+				System.out.println("REASPECTING - WE fit, NS = " + ns);
+			}
+		}
+
+//		if ((Math.abs(east - west)) > 360)
+//		{
+//			east = 180;
+//			west = -180;
+//			float d = (float)h / w * 180;
+//			north = d;
+//			south = -d;
+//		}
+//
+//		if ((Math.abs(north - south)) > 180) {
+//			north = 90;
+//			south = -90;
+//			float d = (float)w / h * 90;
+//			east = d;
+//			west = -d;
+//		}
+//
 
 //		System.out.println("north = " + north + "; south = " + south + "; east = " + east + "; west = " + west);
 
