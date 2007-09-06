@@ -12,7 +12,14 @@
 			</class>
 			<call name="sources" class=".guiservices.util.Sources"/>
 		</service>
-
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="portal.opensearch">
+			<class name=".services.config.Get"/>
+			<output sheet="opensearch.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="portal.search.keywords">

@@ -318,6 +318,7 @@
 	<northbc>North Bounding Coordinate</northbc>
 	<online>Interactive map</online>
 	<onlink>Online Linkage</onlink>
+	<opensearch>GeoNetwork opensearch service allow search to be made into the metadata catalog.</opensearch>
 	<operation>Operation</operation>
 	<organisation>Organisation / department</organisation>
 	<paper>Hard copy</paper>

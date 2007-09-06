@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-
+	<opensearch>Service de recherche OpenSearch de GeoNetwork permettant la recherche de métadonnées dans le catalogue.</opensearch>
 	<savexml>
 		<dc>Télécharger les métadonnées au format Dublin Core</dc>
 		<fgdc>Télécharger les métadonnées au format FGDC</fgdc>

@@ -228,6 +228,7 @@
 
 		<!-- Portal XML services -->
 		<allow service="portal.search"/>
+		<allow service="portal.opensearch"/>
 		<allow service="portal.search.keywords"/>
 		<allow service="portal.search.present"/>
 		<allow service="portal.present"/>
