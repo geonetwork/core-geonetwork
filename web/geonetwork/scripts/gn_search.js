@@ -80,6 +80,58 @@ function closeSearch(s)
 	}
 }
 
+/********************************************************************
+*** GET BOUNDINGBOX COORDINATES FOR A REGION
+********************************************************************/
+
+function doRegionSearch()
+{
+	var region = $('region').value
+	if(region=="")
+		region=null;
+		
+	getRegion(region);
+}
+
+function getRegion(region) 
+{
+    if(region)
+        var pars = "id="+region;
+        
+    var myAjax = new Ajax.Request(
+    '/geonetwork/srv/en/xml.region.get', {
+        method: 'get',
+        parameters: pars,
+        onSuccess: getRegion_complete,
+        onFailure: getRegion_error
+    });
+}
+
+function getRegion_complete(req) {
+    // remove all previous children
+    //clearResultList();
+    
+    var rlist = $('resultList');
+    
+    //Response received 
+    //rlist.innerHTML = req.responseText;
+    var node = req.responseXML;
+    var northcc = xml.evalXPath(node, 'response/record/north');
+    var southcc = xml.evalXPath(node, 'response/record/south');
+    var eastcc = xml.evalXPath(node, 'response/record/east');
+    var westcc = xml.evalXPath(node, 'response/record/west');
+    $('northBL').value=northcc;
+    $('southBL').value=southcc;
+    $('eastBL').value=eastcc;
+    $('westBL').value=westcc;
+
+	im_mm_setAOIandZoom();
+}
+
+function getRegion_error() {
+// style.display = 'none';
+    alert("ERROR)");
+}
 
 /********************************************************************
 *** DO THE SEARCH!
@@ -306,11 +358,13 @@ function runSimpleSearch()
 
 	var pars = "any=" + encodeURIComponent($('any') .value);
 	pars += "&"+im_mm_getURLselectedbbox();
+	pars += fetchParam('relation');
 	pars += "&attrset=geo";
+	pars += fetchParam('region');
 
-	var region = $('region').value;
-	if(region!="") 
-		pars += "&region="+region;
+	//var region = $('region').value;
+	//if(region!="") 
+	///	pars += "&region="+region;
 	
 	// Load results via AJAX
 	gn_search(pars);    
