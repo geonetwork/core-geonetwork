@@ -58,6 +58,8 @@ public class BoundingBox
 
 	public float getWest() { return westBound; }
 
+	public float getLongDiff() { return eastBound - westBound;}
+
 	/**
 	 * Centers the BoundingBox to the specified coordinates.
 	 * If the resulting coordinates are not valid, moves to the

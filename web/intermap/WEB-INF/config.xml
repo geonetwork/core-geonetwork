@@ -83,7 +83,7 @@
 		<param name="httpCacheDir" value="../web/intermap/httpCache/" />
 		<param name="httpCacheDeleteEvery" value="60" />
 		<param name="useCache" value="true" />
-		
+					
 	</appHandler>
 
 	<!-- ====================================================================== -->
@@ -522,7 +522,9 @@
 		</service>
 		
 		<service name="create.pdf">			
-			<class name=".services.export.ExportPDF"/>
+			<class name=".services.export.ExportPDF">
+				<param name="northArrowImage" value="../web/intermap/images/northarrow.png" />
+			</class>			
 		</service>
 		
 		

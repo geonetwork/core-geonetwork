@@ -40,25 +40,31 @@ public class ImageMerger {
 	 * Merge several images into one. The first file supplied will be put at top.
 	 * The destination image has the same size as the first input file.
 	 *
-	 * @param inputFileNames
-	 *          is a Vector of Strings denoting path+filename of the input images
+	 * @param images
+	 *          is a List of Images or Strings denoting the full path of the input image
 	 * @param outputFile
 	 *          is a String denoting path+filename of the output image
 	 * @param format
 	 *          is JPG or PNG as defined in the public constants.
 	 *
 	 */
-	public static void mergeAndSave(
-		List inputFileNames,
-		List transparency,
-		String outputFile,
-		int format) {
-		BufferedImage bi = merge(inputFileNames, transparency);
+	public static void mergeAndSave( List images,
+											   List<Float> transparency,
+												String outputFile,
+												int format)
+	{
+		BufferedImage bi = merge(images, transparency);
+		saveImage(bi, outputFile, format);
+	}
 
-		try {
+	public static void saveImage(BufferedImage bi, String outputFile, int format)
+	{
+		try
+		{
 			OutputStream os = new FileOutputStream(outputFile);
 			//format=2; // DEBUG
-			switch (format) {
+			switch (format)
+			{
 
 				case JPG :
 					encodeJPG(os, bi);
@@ -69,45 +75,50 @@ public class ImageMerger {
 					break;
 
 				case GIF :
+					encodeGIF(os, bi);
+					break;
 
 				default :
 					try
 					{
-						encodeGIF(os, bi);
+						encodePNG(os, bi);
 						break;
 					}
 					catch (IOException e)
 					{
-						if (e.getMessage() == "too many colors for a GIF")
-							System.out.println("too many colors for a GIF, will try to generate JPG");
-						else
-							System.out.println("error in encoding GIF file: " + e.getMessage() + "; will generate a JPG");
+//						if (e.getMessage() == "too many colors for a GIF")
+//							System.out.println("too many colors for a GIF, will try to generate JPG");
+//						else
+							System.out.println("error in encoding PNG file: " + e.getMessage() + "; will try to generate a JPG");
 
 						encodeJPG(os, bi);
 					}
 			}
 			os.close();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 		}
 	}
 
-	public static byte[] mergeB(Vector inputFileNames, Vector transparency) {
-		BufferedImage bi = merge(inputFileNames, transparency);
-
-		try {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			encodeGIF(bos, bi);
-			//			encodePNG(bos, bi);
-			//			encodeJPG(bos, bi);
-			byte[] out = bos.toByteArray();
-			bos.close();
-			return out;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+	/** UNUSED */
+//	public static byte[] mergeB(Vector inputFileNames, Vector transparency) {
+//		BufferedImage bi = merge(inputFileNames, transparency);
+//
+//		try {
+//			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//			encodeGIF(bos, bi);
+//			//			encodePNG(bos, bi);
+//			//			encodeJPG(bos, bi);
+//			byte[] out = bos.toByteArray();
+//			bos.close();
+//			return out;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
 
 	/**
 	 * Encodes the BufferedImage <I>bi</I> into the stream <I>os</I> as a JPG
@@ -204,45 +215,57 @@ public class ImageMerger {
 	}
 
 	/**
-	 * @param fileNames
-	 *          a Vector of String
+	 * Merges the image listed in <I>images</I>, each with the related <I>transparency</I>.
+	 * <I>images</I> items can be Images or String (representing the file path of the image).
+	 * Images and Strings can also be mixed in the List.
+	 * the higher in the image stack it will be printed.
 	 */
-	public static BufferedImage merge(List fileNames, List transparency) {
+	public static BufferedImage merge(List images, List<Float> transparency)
+	{
 		BufferedImage dest = null;
 		Graphics2D destG = null;
 		int rule; // This is SRC for the top image, and DST_OVER for the other ones
 		float alpha;
 		// This is 1.0 for the bottom image, and 0.9 for the other ones
 
-		for (int i = 0, size = fileNames.size(); i < size; i++) {
-			String filename = (String) fileNames.get(i);
-			Image image = new ImageIcon(filename).getImage();
+		for (int i = 0, size = images.size(); i < size; i++)
+		{
+			Object o = images.get(i);
+			Image image;
+			if(o instanceof String)
+			{
+				String filename = (String)o;
+				image = new ImageIcon(filename).getImage();
+			}
+			else if(o instanceof Image)
+			{
+				image = (Image)o;
+			}
+			else
+				throw new IllegalArgumentException(o + " is not an image");
 
-			rule = AlphaComposite.DST_OVER; // Default value
+			rule = AlphaComposite.SRC_OVER; // Default value
 
 			// Set alpha
-			alpha = ((Float) transparency.get(i)).floatValue();
-			//			alpha = 0.75F; // Boh?
-			//			alpha = 0.9F; // Default value for a light transparence effect
-			//			alpha = 1F; // Default value for solid colors
+			alpha = transparency.get(i).floatValue();
+			//			alpha = 0.9F; 	// Light transparence effect
+			//			alpha = 1F; 	// Solid colors
 
-			if (i == 0) {
+			if (i == 0)
+			{
 				//- init
-				dest =
-					new BufferedImage(
-					image.getWidth(null),
-					image.getHeight(null),
-					BufferedImage.TYPE_INT_ARGB);
+				dest = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 				destG = dest.createGraphics();
 
 				//- values for top image
 				rule = AlphaComposite.SRC; // Rule for 1st image
 			}
 
-			if (i == size - 1) {
-				//- value for bottom image
-				alpha = 1F;
-			}
+//			if (i == size - 1)
+//			{
+//				//- value for bottom image
+//				alpha = 1F;
+//			}
 
 //			System.out.println("i: " + i + "; alpha: " + alpha); // DEBUG
 			destG.setComposite(AlphaComposite.getInstance(rule, alpha));
@@ -251,6 +274,51 @@ public class ImageMerger {
 
 		return dest;
 	}
+
+	public static BufferedImage merge(String base, String over, int x, int y)
+	{
+		Image ibase = new ImageIcon(base).getImage();
+		Image iover = new ImageIcon(over).getImage();
+		return merge(ibase, iover, x, y);
+	}
+
+	public static BufferedImage merge(String base, Image over, int x, int y)
+	{
+		Image ibase = new ImageIcon(base).getImage();
+		return merge(ibase, over, x, y);
+	}
+
+	public static BufferedImage merge(Image base, Image over, int x, int y)
+	{
+		float alpha  = 1.0f;
+
+		int bw = base.getWidth(null);
+		int bh = base.getHeight(null);
+		int ow = over.getWidth(null);
+		int oh = over.getHeight(null);
+
+		BufferedImage dest = new BufferedImage(bw, bh, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D destG = dest.createGraphics();
+
+		destG.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC, alpha));
+		destG.drawImage(base, 0, 0, null);
+
+		System.out.println("Compositing images ("+ow+","+oh+") over ("+bw+","+bh+") @"+x+"+"+y);
+
+		// negative position starts from lower right corner
+		if(x<0)
+			x = bw - ow + x;
+
+		if(y<0)
+			y = bh - oh + y;
+
+		System.out.println("                   @"+x+"+"+y);
+		destG.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+		destG.drawImage(over, x, y, null);
+
+		return dest;
+	}
+
 
 	/**
 	 * You cannot convert to JPEG an image with an alpha channel.

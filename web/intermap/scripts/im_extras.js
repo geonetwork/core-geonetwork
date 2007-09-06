@@ -218,66 +218,85 @@ function im_sendMail()
 */
 function im_openPDFform()
 {
-    // setup WB
-    clearNode('im_whiteboard');    
-    var WB = $('im_whiteboard');
-
-    var wbtitle = im_createWBTitle("Export this map as PDF"); //FIXME i18n
-    WB.appendChild(wbtitle);
-
-    var closer = im_getWBCloser();
-    WB.appendChild(closer);
-    Event.observe(closer, 'click', im_closeWhiteBoard);
-
-    var div = document.createElement('div'); // main box
-    div.id = "im_createPDF";
-    div.className = 'im_wbcontent';
-    WB.appendChild(div);
-    
-    var myAjax = new Ajax.Updater (
-           'im_createPDF',    
-    	'/intermap/srv/en/static.form.pdf', 
-    	{
-    		method: 'get',    		    	
-    		onFailure: im_load_error
-    	}
-    );
+	// setup WB
+	clearNode('im_whiteboard');    
+	var WB = $('im_whiteboard');
+	
+	var wbtitle = im_createWBTitle("Export this map as PDF"); //FIXME i18n
+	WB.appendChild(wbtitle);
+	
+	var closer = im_getWBCloser();
+	WB.appendChild(closer);
+	Event.observe(closer, 'click', im_closeWhiteBoard);
+	
+	var div = document.createElement('div'); // main box
+	div.id = "im_createPDF";
+	div.className = 'im_wbcontent';
+	WB.appendChild(div);
+	
+	var myAjax = new Ajax.Updater (
+		'im_createPDF',    
+		'/intermap/srv/en/static.form.pdf', 
+		{
+			method: 'get',    		    	
+			onFailure: im_load_error
+		}
+	);
 
 }
 
 function im_requestPDF()
 {
-    var orient = $('pdf_orientation').value;
-    var psize = $('pdf_pagesize').value;
-    var bllist = $('pdf_layerlist').checked;
-    var bdetails = $('pdf_details').checked;
-    var bbbox = $('pdf_boundingbox').checked;
-        
-    var pars = "orientation="+orient+
-                    "&pagesize="+psize+
-                    "&"+im_bm_getURLbbox();                    
-    if(bllist)
-        pars += "&layerlist=on";
-        
-    if(bdetails)
-        pars += "&details=on";
+	var orient = $('pdf_orientation').value;
+	var psize = $('pdf_pagesize').value;
 
-    if(bbbox)
-        pars += "&boundingbox=on";
-            
-    $('im_requestingpdf').show();   
-    $('im_requestpdf').hide();
-    $('im_builtpdf').hide();
-            
-    var myAjax = new Ajax.Request (
-    	'/intermap/srv/en/create.pdf', 
-    	{
-    		method: 'get',
-    		parameters: pars,
-    		onSuccess: im_openPDF,
-    		onFailure: im_load_error
-    	}
-    );
+	var ptitle = $('pdf_title').value;
+	var pcopy = $('pdf_copyright').value;
+	
+	var bllist = $('pdf_layerlist').checked;
+	var bdetails = $('pdf_details').checked;
+	var bbbox = $('pdf_boundingbox').checked;
+	var bscale = $('pdf_scalebar').checked;
+	var barrow = $('pdf_arrow').checked;
+	
+	var pars = "orientation="+orient+
+		"&pagesize="+psize+
+		"&"+im_bm_getURLbbox();
+		
+	if(ptitle)
+		pars += "&title="+ encodeURIComponent(ptitle);
+	if(pcopy)
+		pars += "&copyright="+ encodeURIComponent(pcopy);
+
+
+	if(bllist)
+		pars += "&layerlist=on";
+	
+	if(bdetails)
+		pars += "&details=on";
+	
+	if(bbbox)
+		pars += "&boundingbox=on";
+
+	if(bscale)
+		pars += "&scalebar=on";
+
+	if(barrow)
+		pars += "&arrow=on";
+
+	$('im_requestingpdf').show();   
+	$('im_requestpdf').hide();
+	$('im_builtpdf').hide();
+	
+	var myAjax = new Ajax.Request (
+		'/intermap/srv/en/create.pdf', 
+		{
+			method: 'get',
+			parameters: pars,
+			onSuccess: im_openPDF,
+			onFailure: im_load_error
+		}
+	);
     
 }
 

@@ -123,11 +123,13 @@ public class MapMerger
 //		htExpanded.remove(t);
 
 		if (activeServiceId == id)
-			if (vRank.size() > 0) {
+			if (vRank.size() > 0)
+			{
 				activeServiceId = vRank.get(0).intValue();
 				getService(activeServiceId).setActiveLayer(1);
 			}
-			else {
+			else
+			{
 				activeServiceId = -1;
 			}
 	}
@@ -601,6 +603,8 @@ public class MapMerger
 			File output = GlobalTempFiles.getInstance().getFile();
 			String path = output.getPath();
 //			System.out.println("vTransparency" + vTransparency); // DEBUG
+			Collections.reverse(files);
+			Collections.reverse(vTransparency);
 			ImageMerger.mergeAndSave(files, vTransparency, path, ImageMerger.GIF);
 			imageName = output.getName();
 			imagePath = output.getPath();

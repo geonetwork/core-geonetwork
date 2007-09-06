@@ -5,6 +5,10 @@
 	<xsl:template match="/">
 
 		<div> 			
+			Title:
+			<input type="text" name="pdf_title" id="pdf_title" width="100%"></input>
+			<br/>
+
 			Page size: 
 			<select id="pdf_pagesize">
 				<option value="A4">A4</option>
@@ -19,19 +23,27 @@
 			</select>
 			<br/>
 						
-<!--			<input type="radio" name="orientation" value="portrait">Portrait</input>
-			<input type="radio" name="orientation" value="landscape">Landscape</input>
-			<br/>
--->
 			<input type="checkbox" name="pdf_layerlist" id="pdf_layerlist" checked="true">Print layerlist</input>
 			<br/>
 			
-			<input type="checkbox" name="pdf_details" id="pdf_details">Print details</input>
+			<input type="checkbox" name="pdf_details" id="pdf_details" >Print details</input>
+<!--			onselect="javascript: alert($('pdf_layerlist').checked);  if($('pdf_layerlist').checked ) $('pdf_details').show(); else $('pdf_details').hide();"			-->
 			<br/>
 
 			<input type="checkbox" name="pdf_boundingbox" id="pdf_boundingbox">Print bounding box</input>
 			<br/>
+
+			<input type="checkbox" name="pdf_arrow" id="pdf_arrow">North arrow</input>
+			<br/>
+
+			<input type="checkbox" name="pdf_scalebar" id="pdf_scalebar">Scale</input>
+			<br/>
+
+			Copyright info:
+			<input type="text" name="pdf_copyright" id="pdf_copyright"></input>
+			<br/>
 			
+			<br/>
 			<div id="im_requestpdf">
 				<button onClick="javascript:im_requestPDF();">Generate PDF</button>
 			</div>
