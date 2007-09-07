@@ -73,6 +73,7 @@
 						<div id="im_map" style="position: absolute;">
 							<img id="im_mapImg" src="{/root/gui/url}/images/default_bigmap.gif" />
 							<!--<img id="im_mapImg" src="{//mapRoot/response/url}" />-->
+							<div id="im_pleaseWait" style="position: absolute; display:none; ">Loading map...</div>							
 						</div>		
 						<div id="im_scale" style="position: absolute;" >
 							1:?
@@ -81,7 +82,6 @@
 							</xsl:variable>
 							1:<xsl:value-of select="format-number($scale, '###,###')" />
 -->						</div>
-						<div id="im_pleaseWait" style="position: absolute; display:none;">Loading map...</div>
 					</td>					
 				</tr>
 				

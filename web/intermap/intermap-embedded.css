@@ -637,9 +637,10 @@ div#im_pleaseWait
 	font-size: 20pt;
 	text-align: center;
 /*	position:  absolute;
-	top: 100px;
 	visibility: hidden; */
+	top: 50px;
 	z-index: 33000;
+	background-color: #E7EDF5;
 }
 
 /*
