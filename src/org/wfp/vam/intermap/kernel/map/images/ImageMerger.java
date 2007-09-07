@@ -75,7 +75,19 @@ public class ImageMerger {
 					break;
 
 				case GIF :
-					encodeGIF(os, bi);
+					try
+					{
+						encodeGIF(os, bi);
+					}
+					catch (IOException e)
+					{
+						if (e.getMessage() == "too many colors for a GIF")
+							System.out.println("too many colors for a GIF, will try to generate JPG");
+						else
+							System.out.println("error in encoding GIF file: " + e.getMessage() + "; will try to generate a JPG");
+
+						encodeJPG(os, bi);
+					}
 					break;
 
 				default :
@@ -86,11 +98,7 @@ public class ImageMerger {
 					}
 					catch (IOException e)
 					{
-//						if (e.getMessage() == "too many colors for a GIF")
-//							System.out.println("too many colors for a GIF, will try to generate JPG");
-//						else
-							System.out.println("error in encoding PNG file: " + e.getMessage() + "; will try to generate a JPG");
-
+						System.out.println("error in encoding PNG file: " + e.getMessage() + "; will try to generate a JPG");
 						encodeJPG(os, bi);
 					}
 			}
