@@ -193,7 +193,7 @@ function startZoombox(e)
 	// dynamically create the zoombox div
 	zoombox = document.createElement('div')
 	zoombox.setAttribute('id', 'im_zoombox');
-	drawZoombox(startX, startY, 0, 0);
+	im_drawBox(zoombox, startX, startY, 0, 0);
 	document.body.appendChild(zoombox);
 }
 
@@ -206,8 +206,23 @@ function resizeZoombox(e)
 	var pX = Event.pointerX(e);
 	var pY = Event.pointerY(e);
 	
+	// get map image offset
+	var offset = Position.cumulativeOffset($('im_mapImg'));
+	var offsetX = offset[0];
+	var offsetY = offset[1];
+
+            var w = $('im_mapImg').clientWidth;
+            var h = $('im_mapImg').clientHeight;
+
+            // Prevents zoombox exiting from map area
+            pX = Math.max(pX, offsetX+2);
+            pY = Math.max(pY, offsetY+2);
+            
+            pX = Math.min(pX, offsetX + w );
+            pY = Math.min(pY, offsetY + h );
+
 	// set the zoom box position and size
-	drawZoombox (
+	im_drawBox ( $('im_zoombox'),
 		Math.min(pX, startX),  // left
 		Math.min(pY, startY),  // top
 		Math.abs(pX - startX), // width
@@ -230,7 +245,6 @@ function stopZoombox(e)
             var w = $('im_mapImg').clientWidth;
             var h = $('im_mapImg').clientHeight;
 
-
 	setStatus('busy');
 	
 	imc_bm_action(currentTool,
@@ -247,7 +261,7 @@ function stopZoombox(e)
 	Element.remove($('im_zoombox'));
 }
 
-// Draws the zoombox
+/*// Draws the zoombox
 function drawZoombox(left, top, width, height)
 {
 	zoombox.style.left = left + 'px';
@@ -255,7 +269,7 @@ function drawZoombox(left, top, width, height)
 	zoombox.style.width = width + 'px';
 	zoombox.style.height = height + 'px';
 }
-
+*/
 //==================================================
 // MOVE
 //==================================================
@@ -840,6 +854,127 @@ function repositionHandleDivs(left, top, width, height)
 	divMR.style.top = divML.style.top;
 }
 
+//==================================================
+// RESIZE
+//==================================================
+
+function im_bm_resizeStart(e)
+{
+	Event.stop(e); // prevents from dragging the map image (on Firefox)
+	
+	// add mousemove and mouseup listeners
+	Event.observe(document, 'mousemove', im_bm_resizeMove);
+	Event.observe(document, 'mouseup', im_bm_resizeStop);
+
+	// get map image offset
+	var offset = Position.cumulativeOffset($('im_mapImg'));
+	var offsetX = offset[0];
+	var offsetY = offset[1];
+
+	// store starting cursor position
+	startX = offsetX + 1;
+	startY = offsetY + 1;
+	
+	// dynamically create the zoombox div
+	var resizebox = document.createElement('div');
+	resizebox.setAttribute('id', 'im_bm_resizebox');
+	im_drawBox(resizebox, startX, startY, 
+			$('im_mapImg').clientWidth, 
+			$('im_mapImg').clientHeight);
+	document.body.appendChild(resizebox);
+	
+	// ghost image
+	var resizeGhost = document.createElement('img');
+	resizeGhost.id = 'im_bm_resizeGhost';
+	resizeGhost.src = $('im_mapImg').src;
+	im_drawBox(resizeGhost, startX, startY, 
+			$('im_mapImg').clientWidth, 
+			$('im_mapImg').clientHeight);
+	document.body.appendChild(resizeGhost);			
+}
+
+// 
+function im_bm_resizeMove(e)
+{
+	Event.stop(e); // prevents from dragging the map image (on Explorer)
+	
+	// get the current cursor position
+	var pX = Event.pointerX(e);
+	var pY = Event.pointerY(e);
+	
+	// get map image offset
+	var offset = Position.cumulativeOffset($('im_mapImg'));
+	var offsetX = offset[0];
+	var offsetY = offset[1];
+
+            // Keeps map large enough
+            pX = Math.max(pX, offsetX+250);
+            pY = Math.max(pY, offsetY+200);
+
+	var windowsize = getWindowSize();
+	var winw = windowsize[0];
+	var winh = windowsize[1];
+
+            // Keeps map inside portview
+            pX = Math.min(pX,  winw - im_layer_width - 30); // 30 to stay comfortably within borders, padding and what else
+            pY = Math.min(pY,  800);
+
+	// set the zoom box position and size
+	im_drawBox ($('im_bm_resizebox'),
+		offsetX +1,  // left
+		offsetY +1,  // top
+		Math.abs(pX - startX), // width
+		Math.abs(pY - startY)  // height
+	);
+	
+	// ghost image
+	im_drawBox( $('im_bm_resizeGhost'), 
+		offsetX +1,  // left
+		offsetY +1,  // top
+		Math.abs(pX - startX), // width
+		Math.abs(pY - startY)  // height
+	);
+}
+
+// mouseup event listener
+function im_bm_resizeStop(e)
+{
+	// get the current cursor position
+	var pX = Event.pointerX(e);
+	var pY = Event.pointerY(e);
+	
+	// get map image offset
+	var offset = Position.cumulativeOffset($('im_mapImg'));
+	var offsetX = offset[0];
+	var offsetY = offset[1];
+	
+	var w = $('im_bm_resizebox').clientWidth;
+	var h = $('im_bm_resizebox').clientHeight;
+
+	// remove listeners and div
+	Event.stopObserving(document, 'mousemove', im_bm_resizeMove);
+	Event.stopObserving(document, 'mouseup', im_bm_resizeStop);
+	Element.remove($('im_bm_resizeGhost'));
+	Element.remove($('im_bm_resizebox'));
+
+	imc_updateBigMap( w, h,
+				im_bm_getURLbbox(),
+				false);
+			
+	// do a preventive resizing, so user will get the whole layout before the image gets loaded
+	im_bm_setSize(w, h); 
+
+}
+
+// Draws the zoombox
+function im_drawBox(box, left, top, width, height)
+{
+	box.style.left = left + 'px';
+	box.style.top = top + 'px';
+	box.style.width = width + 'px';
+	box.style.height = height + 'px';
+}
+
 /*****************************************************************************
  *
  *                          Generic utility functions
@@ -969,7 +1104,7 @@ function im_bm_fullExtent()
  *                             Keyboard events
  *
  *****************************************************************************/
-
+/*
 function keyPressed(e)
 {
 	
@@ -979,7 +1114,7 @@ function keyPressed(e)
 		Event.stop(e);
 	}
 }
-
+*/
 //==================================================
 // 
 //==================================================

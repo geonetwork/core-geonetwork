@@ -29,7 +29,7 @@
 <!--								<td class="im_tool" id="im_tool_identify"	onClick="javascript:setTool('identify');">Identify</td> -->
 								<td width="100%" style="border-top:0px;"/> <!-- spacer -->
 								<td class="im_tool"  				onClick="javascript:refreshNeeded()"><img src="{/root/gui/url}/images/reload16x16.png" title="Refresh map"/></td>
-								<td class="im_tool"  				onClick="javascript:im_bm_toggleImageSize()">+/- map</td>
+<!--								<td class="im_tool"  				onClick="javascript:im_bm_toggleImageSize()">+/- map</td>-->
 								<td class="im_tool" id="im_tool_reset"	onClick="javascript:im_reset();">Reset</td>
 							</tr>							
 						</table>						
@@ -73,6 +73,10 @@
 						<div id="im_map" style="position: absolute;">
 							<img id="im_mapImg" src="{/root/gui/url}/images/default_bigmap.gif" />
 							<!--<img id="im_mapImg" src="{//mapRoot/response/url}" />-->
+							<img id="im_resize"
+								src="{/root/gui/url}/images/transpcorner.png" 
+								style="z-index:1000; position:absolute; bottom:0px; right:0px; cursor:se-resize" 
+								alt="resize"/>
 							<div id="im_pleaseWait" style="position: absolute; display:none; ">Loading map...</div>							
 						</div>		
 						<div id="im_scale" style="position: absolute;" >

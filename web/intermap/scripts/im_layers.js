@@ -4,6 +4,8 @@
  *
  *****************************************************************************/
 
+var im_layer_width = 176;
+
 //## Builds the layer list
 function im_buildLayerList(req) 
 {

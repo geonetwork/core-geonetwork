@@ -616,6 +616,29 @@ div#im_zoombox {
 	font-size: 0px;
 }
 
+div#im_bm_resizebox {
+	position: absolute;
+	border-style: dotted;
+	border-color: black;
+	border-width: 1px;
+	z-index: 3000;
+	cursor: se-resize;
+	padding: 0px;
+	margin: 0px;
+	font-size: 0px;
+}
+
+img#im_bm_resizeGhost {
+	position: absolute;
+	z-index: 3000;
+	
+	filter:alpha (opacity=50); /* MS Internet Explorer */ 
+	filter:progid:DXImageTransform.Microsoft.Alpha (style=0, opacity=50); /* MS IE proprietory */ 
+	-moz-opacity: 0.5; /* Mozilla v1.6 and below */ 
+	opacity: 0.5; /* CSS-3 Standards */ 
+	-khtml-opacity:.5; /* Safari */
+}
+
 div#im_layersToolbar {
 	/*position: absolute;*/
 	border-width: 1px 0 0 0;

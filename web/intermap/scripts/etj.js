@@ -97,6 +97,7 @@ function im_init_bmLoaded()
 {		
 	Event.observe('im_map', 'mousedown', mousedownEventListener);
 	Event.observe('im_mm_map', 'mousedown', im_mm_mousedownEventListener);
+	Event.observe('im_resize', 'mousedown', im_bm_resizeStart);
 	
 	setTool('zoomin'); // set the default tool	
 	imc_reloadLayers(); // append layers to list
