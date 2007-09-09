@@ -307,7 +307,7 @@ function im_mm_resizeZoombox(e)
 		Math.abs(pY - im_mm_startY)  // height
 	);
 	
-	im_mm_setAOIandZoom();
+//	im_mm_setAOIandZoom();
 }
 
 // mouseup event listener
@@ -338,7 +338,9 @@ function im_mm_stopZoombox(e)
 	// remove listeners and div
 	Event.stopObserving(document, 'mousemove', im_mm_resizeZoombox);
 	Event.stopObserving(document, 'mouseup', im_mm_stopZoombox);
-	this.Element.remove($('im_mm_zoombox'));
+	Element.remove($('im_mm_zoombox'));
+	
+im_mm_setAOIandZoom();	
 }
 
 /* // Draws the zoombox
