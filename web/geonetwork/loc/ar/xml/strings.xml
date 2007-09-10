@@ -3,8 +3,11 @@
 	
 	<!-- new strings -->
 	<searchUnusedTitle>Search for Unused</searchUnusedTitle>
+
 	<batchImportTitle>Batch Import</batchImportTitle>
+
 	<xmlInsertTitle>XML Metadata Insert</xmlInsertTitle>
+
 	<fuzzy>Precision</fuzzy>
 	<fuzzySearch>Set the precision of the search (from fuzzy search to exact term search).</fuzzySearch>
 	<address>Address</address>
@@ -357,6 +360,7 @@
 	<protocolChoice value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</protocolChoice>
 	<protocolChoice value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
 	<protocolChoice value="WWW:DOWNLOAD-1.0-http--download">ملف للتحميل</protocolChoice>
+	<protocolChoice value="WWW:DOWNLOAD-1.0-ftp--download">ملف للتحميل (ftp)</protocolChoice>
 	<protocolChoice value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</protocolChoice>
 	<protocolChoice value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
 	<protocolChoice value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>

@@ -107,6 +107,7 @@
 	<backToPreviousPage>Retour page précédente</backToPreviousPage>
 	<backToEditor>Back to editing metadata</backToEditor>
 	<batchImport>Importer des fichiers XML à partir d'un répertoire local</batchImport>
+
 	<batchImportTitle>Import en série</batchImportTitle>
 	<begtime>Date de début</begtime> <!-- FIXME: check if only begdate is needed -->
 	<begdate>Date de début</begdate>
@@ -366,6 +367,7 @@
 	<protocolChoice value="WWW:LINK-1.0-http--rss">Fil RSS (URL)</protocolChoice>
 	<protocolChoice value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
 	<protocolChoice value="WWW:DOWNLOAD-1.0-http--download">Fichier à télécharger</protocolChoice>
+	<protocolChoice value="WWW:DOWNLOAD-1.0-ftp--download">Fichier à télécharger (FTP)</protocolChoice>
 	<protocolChoice value="OGC:WMS-1.1.1-http-get-map">OGC-WMS Web Map Service (ver 1.1.1)</protocolChoice>
 	<protocolChoice value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
 	<protocolChoice value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
@@ -407,7 +409,9 @@
 	<searchTemplates>Rechercher les Modèles</searchTemplates>
 	<searchText>Recherche libre</searchText>
 	<searchUnused>Rechercher des métadonnées vides ou non utilisées</searchUnused>
+
 	<searchUnusedTitle>Métadonnées inutilisées</searchUnusedTitle>
+
 	<server>Serveur</server>
 	<setAll>Set All</setAll>
 	<show>Métadonnées</show>
@@ -458,6 +462,7 @@
 	<winInfo2>L'icône Besoin d'aide (?) vous donne accès à l'aide.</winInfo2>
 	<wwwlink>Liens Internet</wwwlink>
 	<xmlInsert>Importer des fichiers ISO19115</xmlInsert>
+
 	<xmlInsertTitle>Import de fichiers XML</xmlInsertTitle>
 	<xmlTab>XML</xmlTab>	
 </strings>

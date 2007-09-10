@@ -278,13 +278,13 @@
 			<td align="left" nowrap="nowrap">
 				<input value="" name="radfrom" id="radfrom1" type="radio">
 					From
-					<input style="width: 90px;" readonly="1" id="datefrom" value="" name="datefrom" class="inpBnds" type="text" 
+					<input style="width: 90px;" readonly="1" id="datefrom" value="{/root/gui/searchDefaults/from}" name="from" class="inpBnds" type="text" 
 						onchange="document.getElementById('radfrom1').checked=true;"/>
 					<img title="FROM date selector" style="cursor: pointer; margin-bottom: 6px; margin-right:10px;" id="from_trigger_c" 
 						src="/geonetwork/scripts/calendar/img.gif" alt="select FROM date" align="middle" hspace="1"/>
 							
 					To
-					<input  style="width: 90px;" readonly="1" value="" id="dateto" name="dateto" class="inpBnds" type="text"
+					<input  style="width: 90px;" readonly="1" id="dateto" value="{/root/gui/searchDefaults/to}" name="to" class="inpBnds" type="text"
 						onchange="document.getElementById('radfrom1').checked=true;" />
 					<img title="TO date selector" style="cursor: pointer; margin-bottom: 6px;" id="to_trigger_c" 
 						src="/geonetwork/scripts/calendar/img.gif" alt="select TO date" align="middle" hspace="1"/>								

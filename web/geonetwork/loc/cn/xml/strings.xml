@@ -338,6 +338,7 @@
 	<protocolChoice value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</protocolChoice>
 	<protocolChoice value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
 	<protocolChoice value="WWW:DOWNLOAD-1.0-http--download">下载文件</protocolChoice>
+	<protocolChoice value="WWW:DOWNLOAD-1.0-ftp--download">下载文件 (FTP)</protocolChoice>
 	<protocolChoice value="OGC:WMS-1.1.1-http-get-map">OGC-WMS地图服务(ver 1.1.1)</protocolChoice>
 	<protocolChoice value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities服务 (ver 1.1.1)</protocolChoice>
 	<protocolChoice value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>

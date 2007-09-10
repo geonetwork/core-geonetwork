@@ -94,6 +94,7 @@
 	<backToPreviousPage>Back to previous page</backToPreviousPage>
 	<backToEditor>Back to editing metadata</backToEditor>
 	<batchImport>Import all XML formatted metadata from a local directory</batchImport>
+
 	<batchImportTitle>Batch Import</batchImportTitle>
 	<begdate>Beginning Date</begdate>
 	<begtime>Beginning Date</begtime>
@@ -318,6 +319,7 @@
 	<northbc>North Bounding Coordinate</northbc>
 	<online>Interactive map</online>
 	<onlink>Online Linkage</onlink>
+
 	<opensearch>GeoNetwork opensearch service allow search to be made into the metadata catalog.</opensearch>
 	<operation>Operation</operation>
 	<organisation>Organisation / department</organisation>
@@ -343,6 +345,7 @@
 	<protocolChoice value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</protocolChoice>
 	<protocolChoice value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
 	<protocolChoice value="WWW:DOWNLOAD-1.0-http--download">File for download</protocolChoice>
+	<protocolChoice value="WWW:DOWNLOAD-1.0-ftp--download">File for download through FTP</protocolChoice>
 	<protocolChoice value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</protocolChoice>
 	<protocolChoice value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
 	<protocolChoice value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
@@ -384,6 +387,7 @@
 	<searchTemplates>Search for templates</searchTemplates>
 	<searchText>What?</searchText>
 	<searchUnused>Search for unused or empty metadata</searchUnused>
+
 	<searchUnusedTitle>Search for Unused</searchUnusedTitle>
 	<server>Server</server>
 	<setAll>Set All</setAll>
@@ -436,6 +440,7 @@
 	<winInfo2>Throughout the Help (?) icon give you access to explanations. When you activate this icon, it's output will be displayed in this Resource Window.</winInfo2>
 	<wwwlink>Web link</wwwlink>
 	<xmlInsert>Import XML formatted metadata</xmlInsert>
+
 	<xmlInsertTitle>XML Metadata Insert</xmlInsertTitle>
 	<xmlTab>XML view</xmlTab>
 </strings>
