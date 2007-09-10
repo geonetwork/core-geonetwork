@@ -88,6 +88,16 @@ compiles a request
 			</BooleanClause>
 		</xsl:if>
 
+		<!-- from, to metadata change date -->
+		<xsl:if test="string(/request/from)!='' and string(/request/to)!=''">
+			<BooleanClause required="true" prohibited="false">
+				<RangeQuery fld="_changeDate"
+								lowerTxt="{/request/from}"
+								upperTxt="{/request/to}"
+								inclusive="true"/>
+			</BooleanClause>
+		</xsl:if>
+		
 		<!-- digital and paper maps -->
 		
 		<!-- if both are off or both are on then no clauses are added -->
@@ -271,7 +281,7 @@ compiles a request
 </xsl:template>
 
 <!--
-online
+online protocol
 -->
 <xsl:template name="online">
 	<BooleanClause required="true" prohibited="false">

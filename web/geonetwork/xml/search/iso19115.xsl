@@ -40,6 +40,13 @@
 			<Field name="paper" string="true" store="false" index="true" token="false"/>
 		</xsl:if>
 		
+		<xsl:apply-templates select="/Metadata/distInfo/distTranOps/onLineSrc/protocol">
+			<xsl:with-param name="name"  select="'protocol'"/>
+			<xsl:with-param name="store" select="'true'"/>
+			<xsl:with-param name="token" select="'true'"/>
+		</xsl:apply-templates>
+
+
 		<!-- FIXME: not handled anymore
 		<xsl:apply-templates select="/Metadata/mdFileID">
 			<xsl:with-param name="name"  select="'mdID'"/>
@@ -49,6 +56,7 @@
 		<xsl:apply-templates select="/Metadata/distInfo/distTranOps/onLineSrc/protocol"/>
 		<xsl:apply-templates select="/Metadata/dataIdInfo/tpCat"/>
 		-->
+		
 		
 	</Document>
 </xsl:template>
