@@ -149,6 +149,7 @@ public class Geonet
 		public static final String KEYWORD       = "keyword";
 		public static final String SERVER        = "server";
 		public static final String HITS_PER_PAGE = "hitsPerPage";
+        public static final String SIMILARITY    = "similarity";
 
 		//-----------------------------------------------------------------------
 
