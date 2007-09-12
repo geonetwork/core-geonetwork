@@ -689,6 +689,68 @@
 	</xsl:template>
 	
 	<!-- ============================================================================= -->
+	<!--
+	gml:TimePeriod (format = %Y-%m-%dThh:mm:ss)
+	-->
+	<!-- ============================================================================= -->
+
+	<xsl:template mode="iso19139" match="gml:TimePeriod[gml:beginPosition|gml:endPosition]" priority="2">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+		<xsl:for-each select="gml:beginPosition|gml:endPosition">
+		<xsl:choose>
+			<xsl:when test="$edit=true()">
+				<xsl:apply-templates mode="simpleElement" select=".">
+					<xsl:with-param name="schema"  select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
+					<xsl:with-param name="text">
+						<xsl:variable name="ref" select="geonet:element/@ref"/>
+						
+						<table width="100%"><tr>
+							<td>
+	                					<input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{text()}" size="30" readonly="1"/>
+							</td>
+							<td align="center" width="30" valign="middle">
+								<img src="{/root/gui/url}/scripts/calendar/img.gif"
+									 id="_{$ref}_trigger"
+									 style="cursor: pointer; border: 1px solid;"
+									 title="Date selector"
+									 onmouseover="this.style.background='red';"
+									 onmouseout="this.style.background=''" />
+								<script type="text/javascript">
+									Calendar.setup(
+										{
+											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
+						                    ifFormat    : "%Y-%m-%dT%H:%M:00", // the date format
+                    						showsTime : false, // Do not show the time
+											button      : &quot;_<xsl:value-of select="$ref"/>_trigger&quot;  // ID of the button
+										}
+									);
+								</script>
+							</td>
+							<td align="left" width="100%">
+								<xsl:text>  </xsl:text><a href="JavaScript:clear{$ref}();"> clear</a>
+								<script type="text/javascript">
+									function clear<xsl:value-of select="$ref"/>()	{
+										document.mainForm._<xsl:value-of select="$ref"/>.value = &quot;&quot;
+									}
+								</script>
+							</td>
+						</tr></table>
+					</xsl:with-param>
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name="iso19139String">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
+				</xsl:call-template>
+			</xsl:otherwise>
+		</xsl:choose>
+		</xsl:for-each>
+	</xsl:template>
+	
+	<!-- ============================================================================= -->
 	<!-- subtemplates -->
 	<!-- ============================================================================= -->
 
