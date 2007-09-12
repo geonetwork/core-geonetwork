@@ -2417,14 +2417,14 @@
 	
 	<element name="gco:Date">
 		<label>Date</label>
-		<description></description>
+		<description>Formatted as 2007-09-12 (YYYY-MM-DD)</description>
 	</element>	
 	
 	<!-- ==================================================== -->
 	
 	<element name="gco:DateTime">
 		<label>Date and time</label>
-		<description></description>
+		<description>Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
 	</element>	
 	
 	<!-- ==================================================== -->
@@ -2448,13 +2448,13 @@
 	<!-- ==================================================== -->
 	
 	<element name="gml:beginPosition">
-		<label>Begin position</label>
-		<description></description>
+		<label>Begin date</label>
+		<description>Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gml:endPosition">
-		<label>End position</label>
-		<description></description>
+		<label>End date</label>
+		<description>Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gml:relatedTime">
