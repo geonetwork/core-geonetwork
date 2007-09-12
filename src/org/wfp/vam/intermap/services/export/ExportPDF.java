@@ -62,9 +62,9 @@ public class ExportPDF implements Service
 		File pdfFile = GlobalTempFiles.getInstance().getFile(".pdf");
 		PdfWriter pw = PdfWriter.getInstance(document, new FileOutputStream(pdfFile));
 
-		document.addTitle(title!=null? title: "Geonetwork Map");
+		document.addTitle(title!=null? title: "GeoNetwork opensource Map");
 		document.addSubject("");
-		document.addCreator("Geonetwork Intermap");
+		document.addCreator("GeoNetwork opensource map viewer");
 		document.addCreationDate();
 		document.addAuthor("ETj");
 		document.addProducer();
@@ -175,7 +175,7 @@ public class ExportPDF implements Service
 
 	private String getKeywords(MapMerger mm)
 	{
-		StringBuffer sb = new StringBuffer("Geonetwork, Intermap");
+		StringBuffer sb = new StringBuffer("GeoNetwork opensource, OSGeo");
 
 		for (int layerRank = 0; layerRank < mm.size(); layerRank++)
 		{
@@ -295,6 +295,9 @@ public class ExportPDF implements Service
 
 		public void onEndPage(PdfWriter writer, Document document)
 		{
+			boolean showWaterMark = false;
+			if(showWaterMark)
+			{
 				// Draw watermark
 				PdfContentByte contentunder = writer.getDirectContent();
 				contentunder.saveState();
@@ -308,6 +311,7 @@ public class ExportPDF implements Service
 													  document.getPageSize().getHeight() / 2, 45);
 				contentunder.endText();
 				contentunder.restoreState();
+			}
 
 				// Draw footer
 				PdfContentByte cb = writer.getDirectContent();
