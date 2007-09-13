@@ -44,10 +44,14 @@
 
 			<xsl:choose>
 				<xsl:when test="/root/gui/searchDefaults/intermap='on'">
-					//ETj
 					function init()
 					{
-						initSimpleSearch();
+						var currentSearch = get_cookie('search');
+						if (currentSearch=='advanced') {
+							showAdvancedSearch();
+						} else {
+							initSimpleSearch();
+						}
 					}
 				</xsl:when>
 			</xsl:choose>
@@ -207,7 +211,7 @@
 						<xsl:comment>SEARCH</xsl:comment>
 						<tr>
 							<td valign="top">
-								<div id="simplesearch">									
+								<div id="simplesearch">
 									<xsl:call-template name="geofields"/>
 								</div>
 							</td>

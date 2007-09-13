@@ -28,7 +28,7 @@
 			<table>
 				<tbody>
 					<tr height="35px">
-						<td rowspan="2" height="35px" class="im_layerControl">
+						<td height="35px" class="im_layerControl">
 							<img id="visibility_{@id}"  class="im_layerControl" 
 								onclick="toggleVisibility({@id})" 
 								src="/intermap/images/showLayer.png" title="Toggle layer visibility"></img>
@@ -50,7 +50,7 @@
 					</tr>
 					
 					<tr id="layerControl_{@id}" style="display:none;">
-						<td>
+						<td style="white-space: nowrap;" colspan="2">
 							<xsl:if test="last()>1"> <!-- we need at least one layer, so last one is not removeable  -->
 								<img id="deleteLayer_{@id}" class="im_layerButton" 
 									onclick="im_deleteLayer({@id})" 
@@ -60,7 +60,7 @@
 								onclick="showLegend({@id})"
 								src="/intermap/images/legend.png" title="Show legend"/>
 							<img id="showLayerMD_{@id}" class="im_layerButton" 
-								src="/intermap/images/info.png" title="Show layer info"/>
+								src="/intermap/images/metadata.png" title="Show layer information"/>
 							<select id="im_transp_{@id}" class="layerSelectTransp"
 								onchange="im_layerTransparencyChanged({@id})" >
 								<xsl:call-template name="fillTransparencyOptions">
