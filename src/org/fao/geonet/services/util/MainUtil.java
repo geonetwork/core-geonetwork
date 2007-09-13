@@ -63,11 +63,11 @@ public class MainUtil
 						.addContent(new Element(Geonet.SearchResult.ABSTRACT)     .setText(""))
 						.addContent(new Element(Geonet.SearchResult.ANY)          .setText(""))
 						.addContent(new Element(Geonet.SearchResult.REGION)       .setText(""))
-						.addContent(new Element(Geonet.SearchResult.SOUTH_BL)     .setText(""))
-						.addContent(new Element(Geonet.SearchResult.NORTH_BL)     .setText(""))
-						.addContent(new Element(Geonet.SearchResult.EAST_BL)      .setText(""))
-						.addContent(new Element(Geonet.SearchResult.WEST_BL)      .setText(""))
-						.addContent(new Element(Geonet.SearchResult.RELATION)     .setText(Geonet.SearchResult.Relation.EQUAL))
+						.addContent(new Element(Geonet.SearchResult.SOUTH_BL)     .setText("-90"))
+						.addContent(new Element(Geonet.SearchResult.NORTH_BL)     .setText("90"))
+						.addContent(new Element(Geonet.SearchResult.EAST_BL)      .setText("180"))
+						.addContent(new Element(Geonet.SearchResult.WEST_BL)      .setText("-180"))
+						.addContent(new Element(Geonet.SearchResult.RELATION)     .setText(Geonet.SearchResult.Relation.OVERLAPS))
 						.addContent(new Element(Geonet.SearchResult.FROM)         .setText(""))
 						.addContent(new Element(Geonet.SearchResult.TO)           .setText(""))
 						.addContent(new Element(Geonet.SearchResult.GROUP)        .setText(""))
@@ -87,7 +87,8 @@ public class MainUtil
 						.addContent(new Element(Geonet.SearchResult.INTERMAP)     .setText(Geonet.Text.ON))
 						.addContent(new Element(Geonet.SearchResult.HELP)         .setText(Geonet.Text.OFF))
 						.addContent(new Element(Geonet.SearchResult.REMOTE)       .setText(Geonet.Text.OFF))
-						.addContent(new Element(Geonet.SearchResult.HITS_PER_PAGE).setText("10"));
+						.addContent(new Element(Geonet.SearchResult.HITS_PER_PAGE).setText("10"))
+						.addContent(new Element(Geonet.SearchResult.SIMILARITY)   .setText(".8"));
 			session.setProperty(Geonet.Session.MAIN_SEARCH, elData);
 		}
 		Element  elTitle       = elData.getChild(Geonet.SearchResult.TITLE);
@@ -117,11 +118,12 @@ public class MainUtil
 		Element  elTimeout     = elData.getChild(Geonet.SearchResult.TIMEOUT);
 
 		Element  elExtended    = elData.getChild(Geonet.SearchResult.EXTENDED);
-		Element  elIntermap 	  = elData.getChild(Geonet.SearchResult.INTERMAP);
+		Element  elIntermap    = elData.getChild(Geonet.SearchResult.INTERMAP);
 		Element  elHelp        = elData.getChild(Geonet.SearchResult.HELP);
 		Element  elRemote      = elData.getChild(Geonet.SearchResult.REMOTE);
 
 		Element  elHitsPerPage = elData.getChild(Geonet.SearchResult.HITS_PER_PAGE);
+		Element  elSimilarity = elData.getChild(Geonet.SearchResult.SIMILARITY);
 
 		// get params from request
 		if (request != null)
@@ -149,8 +151,9 @@ public class MainUtil
 			String   sProfile      = request.getChildText(Geonet.SearchResult.PROFILE);
 			String   sTimeout      = request.getChildText(Geonet.SearchResult.TIMEOUT);
 			String   sHitsPerPage  = request.getChildText(Geonet.SearchResult.HITS_PER_PAGE);
+			String   sSimilarity   = request.getChildText(Geonet.SearchResult.SIMILARITY);
 			String   sExtended     = request.getChildText(Geonet.SearchResult.EXTENDED);
-			String   sIntermap 	  = request.getChildText(Geonet.SearchResult.INTERMAP);
+			String   sIntermap 	   = request.getChildText(Geonet.SearchResult.INTERMAP);
 			String   sHelp         = request.getChildText(Geonet.SearchResult.HELP);
 			String   sRemote       = request.getChildText(Geonet.SearchResult.REMOTE);
 			Iterator iServer       = request.getChildren (Geonet.SearchResult.SERVERS).iterator();
@@ -174,6 +177,7 @@ public class MainUtil
 			if (sHelp        != null) elHelp.setText(sHelp);
 			if (sRemote      != null) elRemote.setText(sRemote);
 			if (sHitsPerPage != null) elHitsPerPage.setText(sHitsPerPage);
+			if (sSimilarity  != null) elSimilarity.setText(sSimilarity);
 			if (sCategory    != null) elCategory.setText(sCategory);
 			if (sSource      != null) elSource.setText(sSource);
 
@@ -184,8 +188,8 @@ public class MainUtil
 			else                      elPaper.setText(Geonet.Text.OFF);
 
 			// only save these checkbox values if mode is extended
-			if (elExtended.getText().equals(Geonet.Text.ON))
-			{
+//			if (elExtended.getText().equals(Geonet.Text.ON))
+//			{
 				if (sTemplate  != null) elTemplate.setText(sTemplate);
 
 				if (sDownload != null) elDownload.setText(sDownload);
@@ -193,7 +197,8 @@ public class MainUtil
 
 				if (sOnLine != null)   elOnLine.setText(sOnLine);
 				else                   elOnLine.setText(Geonet.Text.OFF);
-			}
+//			}
+
 			// now you can change sExtended
 			if (sExtended    != null) elExtended.setText(sExtended);
 

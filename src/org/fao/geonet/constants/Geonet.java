@@ -127,8 +127,8 @@ public class Geonet
 		public static final String EAST_BL       = "eastBL";
 		public static final String WEST_BL       = "westBL";
 		public static final String RELATION      = "relation";
-		public static final String FROM          = "from";
-		public static final String TO            = "to";
+		public static final String FROM          = "datefrom";
+		public static final String TO            = "dateto";
 		public static final String GROUP         = "group";
 		public static final String PROFILE       = "profile";
 		public static final String SERVERS       = "servers";
