@@ -63,24 +63,20 @@
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
-			<!-- === Abstract === -->	
 	
 			<xsl:for-each select="gmd:abstract/gco:CharacterString">
 				<Field name="abstract" string="{string(.)}" store="true" index="true" token="true"/>
 			</xsl:for-each>
 
-			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->	
-			<!-- === Extent === -->	
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 
 			<xsl:for-each select="gmd:extent/gmd:EX_Extent">
 				<xsl:apply-templates select="gmd:geographicElement/gmd:EX_GeographicBoundingBox" mode="latLon"/>
 
-				<!-- === Geographic description code === -->	
 				<xsl:for-each select="gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString">
 					<Field name="geoDescCode" string="{string(.)}" store="true" index="true" token="false"/>
 				</xsl:for-each>
 
-				<!-- === Temporal extent === -->	
 				<xsl:for-each select="gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent">
 					<xsl:for-each select="gml:TimePeriod/gml:beginPosition">
 						<Field name="tempExtentBegin" string="{string(.)}" store="true" index="true" token="false"/>
@@ -93,8 +89,7 @@
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
-			<!-- === Keywords === -->
-			
+
 			<xsl:for-each select="gmd:descriptiveKeywords/gmd:MD_Keywords">
 				<xsl:for-each select="gmd:keyword/gco:CharacterString">
 					<Field name="keyword" string="{string(.)}" store="true" index="true" token="false"/>
@@ -106,15 +101,13 @@
 			</xsl:for-each>
 	
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
-			<!-- === Responsible organization === -->	
-			
+	
 			<xsl:for-each select="gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString">
 				<Field name="orgName" string="{string(.)}" store="true" index="true" token="true"/>
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
-			<!-- === Security constraints (yes or no) === -->	
-			
+	
 			<xsl:choose>
 				<xsl:when test="gmd:resourceConstraints/gmd:MD_SecurityConstraints">
 					<Field name="secConstr" string="true" store="true" index="true" token="false"/>
@@ -125,21 +118,18 @@
 			</xsl:choose>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
-			<!-- === Topic category === -->	
-			
+	
 			<xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode/@codeListValue">
 				<Field name="topicCat" string="{string(.)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
-			<!-- === Dataset language === -->
-			
+	
 			<xsl:for-each select="gmd:language/gco:CharacterString">
 				<Field name="datasetLang" string="{string(.)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
-			<!-- === Resolution related === -->
 
 			<xsl:for-each select="gmd:spatialResolution/gmd:MD_Resolution">
 				<xsl:for-each select="gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer">
@@ -167,15 +157,6 @@
 		</xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
-		<!-- === Online Resources protocol === -->		
-
-		<xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions">
-			<xsl:for-each select="gmd:onLine/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString">
-				<Field name="protocol" string="{string(.)}" store="true" index="true" token="true"/>
-			</xsl:for-each>
-		</xsl:for-each>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 		<!-- === General stuff === -->		
 
 		<xsl:choose>
@@ -190,28 +171,24 @@
 		</xsl:choose>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
-		<!-- === Hierarchy level name === -->		
 
 		<xsl:for-each select="gmd:hierarchyLevelName/gco:CharacterString">
 			<Field name="levelName" string="{string(.)}" store="true" index="true" token="true"/>
 		</xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
-		<!-- === Language of metadata === -->		
 
 		<xsl:for-each select="gmd:language/gco:CharacterString">
 			<Field name="language" string="{string(.)}" store="true" index="true" token="false"/>
 		</xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
-		<!-- === File identifier === -->		
 
 		<xsl:for-each select="gmd:fileIdentifier/gco:CharacterString">
 			<Field name="fileId" string="{string(.)}" store="true" index="true" token="false"/>
 		</xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
-		<!-- === Parent identifier === -->		
 
 		<xsl:for-each select="gmd:parentIdentifier/gco:CharacterString">
 			<Field name="parentId" string="{string(.)}" store="true" index="true" token="false"/>

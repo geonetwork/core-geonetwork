@@ -48,7 +48,7 @@
 	<!-- ============================================================================= -->
 
 	<xsl:template mode="iso19139" match="gmd:graphicOverview"/>
-	<xsl:template mode="iso19139" match="gmd:contact|gmd:identificationInfo|gmd:distributionInfo|gmd:descriptiveKeywords|gmd:spatialRepresentationInfo|gmd:pointOfContact|gmd:dataQualityInfo|gmd:referenceSystemInfo|gmd:equivalentScale|gmd:projection|gmd:ellipsoid|gmd:extent|gmd:geographicBox|gmd:MD_Distributor">
+	<xsl:template mode="iso19139" match="gmd:contact|gmd:identificationInfo|gmd:distributionInfo|gmd:descriptiveKeywords|gmd:spatialRepresentationInfo|gmd:pointOfContact|gmd:dataQualityInfo|gmd:referenceSystemInfo|gmd:equivalentScale|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
@@ -59,7 +59,7 @@
 	</xsl:template>
 	
 	<!-- ============================================================================= -->
-	<!-- some gco: elements -->
+	<!-- some gco: elements and some gml elements-->
 	<!-- ============================================================================= -->
 
 	<xsl:template mode="iso19139" match="gmd:*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure]">
@@ -741,10 +741,12 @@
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:call-template name="iso19139String">
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="$edit"/>
-				</xsl:call-template>
+				<xsl:apply-templates mode="simpleElement" select=".">
+					<xsl:with-param name="schema"  select="$schema"/>
+					<xsl:with-param name="text">
+						<xsl:value-of select="text()"/>
+					</xsl:with-param>
+				</xsl:apply-templates>
 			</xsl:otherwise>
 		</xsl:choose>
 		</xsl:for-each>

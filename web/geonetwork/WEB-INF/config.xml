@@ -183,7 +183,7 @@
  			</class>
 
  			<output sheet="search-results-xhtml.xsl" contentType="text/xml; charset=UTF-8">
- 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
+ <!--				<call name="searchDefaults" class=".guiservices.search.GetDefaults" /> -->
  				<call name="groups" class=".guiservices.groups.GetMine" />
  				<call name="sources" class=".guiservices.util.Sources" />
  				<call name="services" class="jeeves.guiservices.services.Get" />

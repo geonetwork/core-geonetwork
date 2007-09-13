@@ -36,4 +36,31 @@
 	<field name="gmd:MD_Keywords">
 		<suggest name="gmd:type"/>
 	</field>
+	
+	<field name="gmd:EX_Extent">
+		<suggest name="gmd:temporalElement"/>
+		<suggest name="gmd:geographicElement"/>
+		<suggest name="gmd:verticalElement"/>
+	</field>
+
+	<field name="gmd:EX_TemporalExtent">
+		<suggest name="gmd:extent"/>
+	</field>
+	
+	<field name="gmd:extent">
+		<suggest name="gmd:EX_Extent"/>
+	</field>
+	
+	<field name="gml:TimePeriod">
+		<suggest name="gml:beginPosition"/>
+		<suggest name="gml:endPosition"/>	
+	</field>
+	
+	<field name="gmd:EX_GeographicBoundingBox">
+		<suggest name="gmd:westBoundLongitude"/>
+		<suggest name="gmd:eastBoundLongitude"/>	
+		<suggest name="gmd:southBoundLatitude"/>
+		<suggest name="gmd:northBoundLatitude"/>
+	</field>
+	
 </fields>

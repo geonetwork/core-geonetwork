@@ -121,11 +121,32 @@
 			<td colspan="2" style="padding-top:30px; white-space: nowrap;">
 				<fieldset style="margin: 10px 5px 10px;">
 					<legend>Search accuracy</legend>
-					Precise <input type="radio" id="precision_exact" name="similarity" value="1" />
-					<input type="radio" id="precision_fuzzy" name="similarity" value=".8" checked="checked" />
-					<input type="radio" id="precision_loose" name="similarity" value=".6" />
-					<input type="radio" id="precision_fuzzy" name="similarity" value=".4" /> 
-					<input type="radio" id="precision_fuzzy" name="similarity" value=".2" />Imprecise
+					Precise <input type="radio" id="precision_exact" name="similarity" value="1" >
+						<xsl:if test="/root/gui/searchDefaults/similarity='1'">
+								<xsl:attribute name="checked"/>
+						</xsl:if>
+					</input>
+					<input type="radio" id="precision_fuzzy" name="similarity" value=".8">
+						<xsl:if test="/root/gui/searchDefaults/similarity='.8'">
+								<xsl:attribute name="checked"/>
+						</xsl:if>
+					</input>
+					<input type="radio" id="precision_loose" name="similarity" value=".6" >
+						<xsl:if test="/root/gui/searchDefaults/similarity='.6'">
+								<xsl:attribute name="checked"/>
+						</xsl:if>
+					</input>
+
+					<input type="radio" id="precision_fuzzy" name="similarity" value=".4" >
+						<xsl:if test="/root/gui/searchDefaults/similarity='.4'">
+								<xsl:attribute name="checked"/>
+						</xsl:if>
+					</input> 
+					<input type="radio" id="precision_fuzzy" name="similarity" value=".2" >
+						<xsl:if test="/root/gui/searchDefaults/similarity='.2'">
+								<xsl:attribute name="checked"/>
+						</xsl:if>
+					</input>Imprecise
 				</fieldset>		
 			</td>	
 		</tr>
@@ -155,15 +176,15 @@
 					<tr>
 						<td colspan="4" align="center" style="padding: 3px;">
 							lat  (min) <input type="text" class="content" id="northBL" name="northBL"  size="5"
-								value="{/root/gui/searchDefaults/northBL}"/>
+								value="{/root/gui/searchDefaults/northBL}" onChange="javascript:AoIrefresh();"/>
 						</td>
 					</tr>
 					<tr height="102px" style="position:relative;">
 						<td width="52px" style="padding-top: 25px; align: center;">
-							<small>lon (min)</small>
+							<small>long (min)</small>
 							<br />
 							<input type="text" class="content" id="westBL" name="westBL" size="5"
-								value="{/root/gui/searchDefaults/westBL}"/>
+								value="{/root/gui/searchDefaults/westBL}" onChange="javascript:AoIrefresh();"/>
 						</td>
 						<td width="16px">
 							<table width="16px">
@@ -187,8 +208,9 @@
 							</table>
 						</td>
 						<td id="im_mm_mapContainer" style="position:relative;width:202px;height:102px;" >
-							<div id="im_mm_map" style="position: absolute;width:202px;height:102px;">
-								<img id="im_mm_image" width="200px" height="100px" style="left:1px;"  src="/intermap/images/map0.gif"/>
+							<div id="im_mm_map" style="position: absolute;width:202px;height:102px;overflow: hidden;">
+								<img id="im_mm_image" width="200px" height="100px" src="/intermap/images/map0.jpg"/>
+								<div id="im_mm_aoibox" style="left:0px;top:0px;width:200px;height:100px;position:absolute;border: 1px dashed #f00;visibility: visible;overflow: hidden;"/>
 							</div>
 							<div id="im_mm_wait" style="position: relative; z-index:999; left:59px; top:45px;">
 								<img id="im_mm_waitimage" style="position: absolute; z-index:1000;" src="/intermap/images/waiting.gif" />
@@ -198,13 +220,17 @@
 							<small>lon (max)</small>
 							<br />
 							<input type="text" class="content" id="eastBL" name="eastBL" size="5"
-								value="{/root/gui/searchDefaults/eastBL}"/>
+								value="{/root/gui/searchDefaults/eastBL}" onChange="javascript:AoIrefresh();"/>
 						</td>
 					</tr>
 					<tr>
-						<td colspan="4" align="center" style="padding: 3px;">
+						<td />
+						<td colspan="2" align="center" style="padding: 3px;">
 							<small>lat (max)</small> <input type="text" class="content" id="southBL" name="southBL" size="5"
-								value="{/root/gui/searchDefaults/southBL}"/>
+								value="{/root/gui/searchDefaults/southBL}" onChange="javascript:AoIrefresh();"/>
+						</td>
+						<td>
+							<img src="/intermap/images/update.png" id="updateBB" name="updateBB" style="visibility:hidden;border:2px solid red;" title="Update Area Of Interest" onClick="javascript:updateAoIFromForm();"/>
 						</td>
 					</tr>
 				</table>
@@ -234,7 +260,7 @@
 				<xsl:value-of select="/root/gui/strings/region"/>
 			</th>
 			<td class="padded" colspan="2" align="right">
-				<select class="content" name="region" id="region">
+				<select class="content" name="region" id="region" onchange="javascript:doRegionSearch();">
 					<option value="">
 						<xsl:if test="/root/gui/searchDefaults/theme='_any_'">
 							<xsl:attribute name="selected"/>
@@ -248,6 +274,9 @@
 							<xsl:if test="id=/root/gui/searchDefaults/region">
 								<xsl:attribute name="selected"/>
 							</xsl:if>
+							<xsl:attribute name="value">
+									<xsl:value-of select="id"/>
+							</xsl:attribute>
 							<xsl:value-of select="label/child::*[name() = $lang]"/>
 						</option>
 					</xsl:for-each>
@@ -270,38 +299,47 @@
 	<table border="0" cellpadding="0" cellspacing="0">
 		<tr>
 			<td colspan="2">
-				<input onclick="setDates(0);" checked="checked" value="" name="radfrom" id="radfrom0" type="radio">Anytime</input>
+				<input onclick="setDates(0);" value="" name="radfrom" id="radfrom0" type="radio">
+					<xsl:if test="string(/root/gui/searchDefaults/datefrom)='' and string(/root/gui/searchDefaults/dateto)=''"> 
+						<xsl:attribute name="checked" />
+ 					</xsl:if>
+					Anytime
+				</input>
 			</td>
 		</tr>
 		
 		<tr>		
 			<td align="left" nowrap="nowrap">
-				<input value="" name="radfrom" id="radfrom1" type="radio">
+				<input value="" name="radfrom" id="radfrom1" type="radio" disabled="disabled">
+					<xsl:if test="string(/root/gui/searchDefaults/datefrom)!='' and string(/root/gui/searchDefaults/dateto)!=''">
+						<xsl:attribute name="checked" />
+					</xsl:if>
 					From
-					<input style="width: 90px;" readonly="1" id="datefrom" value="{/root/gui/searchDefaults/from}" name="from" class="inpBnds" type="text" 
+					<input style="width: 90px;" readonly="1" id="datefrom" value="{/root/gui/searchDefaults/datefrom}" name="datefrom" class="inpBnds" type="text" 
 						onchange="document.getElementById('radfrom1').checked=true;"/>
 					<img title="FROM date selector" style="cursor: pointer; margin-bottom: 6px; margin-right:10px;" id="from_trigger_c" 
 						src="/geonetwork/scripts/calendar/img.gif" alt="select FROM date" align="middle" hspace="1"/>
 							
 					To
-					<input  style="width: 90px;" readonly="1" id="dateto" value="{/root/gui/searchDefaults/to}" name="to" class="inpBnds" type="text"
+					<input  style="width: 90px;" readonly="1" id="dateto" value="{/root/gui/searchDefaults/dateto}" name="dateto" class="inpBnds" type="text"
 						onchange="document.getElementById('radfrom1').checked=true;" />
 					<img title="TO date selector" style="cursor: pointer; margin-bottom: 6px;" id="to_trigger_c" 
 						src="/geonetwork/scripts/calendar/img.gif" alt="select TO date" align="middle" hspace="1"/>								
 				</input>
+<!--				<div onclick="JavaScript:$('datefrom').value ='';$('dateto').value ='';" style="cursor: pointer;"><xsl:value-of select="/root/gui/strings/clear"/></div> -->
+				<img title="{/root/gui/strings/clear}" style="cursor: pointer; margin-bottom: 6px;" id="clearDates" 
+					src="/geonetwork/images/clear_left.png" alt="{/root/gui/strings/clear}" align="middle" 
+					hspace="1" onclick="JavaScript:$('datefrom').value ='';$('dateto').value ='';$('radfrom0').checked=true;"/>
 			</td>
 		</tr>
 	</table>
 
-	<br/>
-	<fieldset style="margin: 15px 5px 10px;">
+	<fieldset style="margin: 10px 5px 10px;">
 		<legend>Restrict to</legend>
 
 	<table style="margin-left:10px;">
-		
-		
+
 		<!-- Source -->
-		
 		<tr>
 			<th class="padded">
 				<xsl:value-of select="/root/gui/strings/porCatInfoTab"/>
@@ -332,6 +370,7 @@
 		</tr>
 
 		<!-- Group -->		
+		<xsl:if	test="string(/root/gui/session/userId)!=''">
 		<tr>		
 			<th class="padded">
 				<xsl:value-of select="/root/gui/strings/group"/>
@@ -356,6 +395,38 @@
 				</select>
 			</td>		
 		</tr>
+		</xsl:if>
+		
+		<!-- Template -->
+		<xsl:if test="string(/root/gui/session/userId)!='' and /root/gui/services/service[@name='metadata.edit']">
+			<tr>
+				<th class="padded">
+					<xsl:value-of select="/root/gui/strings/kind"/>
+				</th>
+				<td>
+					<select class="content" id="template" name="template" size="1">
+						<option value="n">
+							<xsl:if test="/root/gui/searchDefaults/template='n'">
+								<xsl:attribute name="selected">true</xsl:attribute>
+							</xsl:if>
+							<xsl:value-of select="/root/gui/strings/metadata"/>
+						</option>
+						<option value="y">
+							<xsl:if test="/root/gui/searchDefaults/template='y'">
+								<xsl:attribute name="selected">true</xsl:attribute>
+							</xsl:if>
+							<xsl:value-of select="/root/gui/strings/template"/>
+						</option>
+						<option value="s">
+							<xsl:if test="/root/gui/searchDefaults/template='s'">
+								<xsl:attribute name="selected">true</xsl:attribute>
+							</xsl:if>
+							<xsl:value-of select="/root/gui/strings/subtemplate"/>
+						</option>
+					</select>
+				</td>
+			</tr>
+		</xsl:if>
 		
 		<!-- Category -->
 		
@@ -407,7 +478,30 @@
 				</input>
 			</td>
 		</tr>
-			
+		
+		<!-- hits per page -->
+		<tr>
+			<th class="padded">
+				<xsl:value-of select="/root/gui/strings/hitsPerPage"/>
+			</th>
+			<td class="padded">
+				<select class="content" id="hitsPerPage" name="hitsPerPage" onchange="profileSelected()">
+					<xsl:for-each select="/root/gui/strings/hitsPerPageChoice">
+						<option>
+							<xsl:if
+								test="string(@value)=string(/root/gui/searchDefaults/hitsPerPage)">
+								<xsl:attribute name="selected"/>
+							</xsl:if>
+							<xsl:attribute name="value">
+								<xsl:value-of select="@value"/>
+							</xsl:attribute>
+							<xsl:value-of select="."/>
+						</option>
+					</xsl:for-each>
+				</select>
+			</td>
+		</tr>
+					
 	</table>
 	</fieldset>
 

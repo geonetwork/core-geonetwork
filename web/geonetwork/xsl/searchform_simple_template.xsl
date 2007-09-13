@@ -48,7 +48,7 @@
 						<tr height="102px" style="position:relative;">
 							<td id="im_mm_mapContainer" style="position:relative;width:202px;height:102px;" colspan="6"  >
 								<div id="im_mm_map" style="position: absolute;width:202px;height:102px;overflow: hidden;">
-									<img id="im_mm_image" width="200px" height="100px" style="left:1px;"  src="/intermap/images/map0.gif"/>
+									<img id="im_mm_image" width="200px" height="100px" style="left:1px;"  src="/intermap/images/map0.jpg"/>
 									<div id="im_mm_aoibox" style="left:0px;top:0px;width:200px;height:100px;position:absolute;border: 1px dashed #f00;visibility: visible;overflow: hidden;"/>
 								</div>
 								<div id="im_mm_wait" style="position: relative; z-index:999; left:59px; top:45px;">

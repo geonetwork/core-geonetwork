@@ -21,14 +21,7 @@
 			<!-- buttons -->
 			<tr class="banner">
 				<td class="banner-menu">
-					<xsl:choose>
-						<xsl:when test="/root/gui/reqService='main.home'">
-							<font class="banner-active"><xsl:value-of select="/root/gui/strings/home"/></font>
-						</xsl:when>
-						<xsl:otherwise>
-							<a class="banner" href="{/root/gui/locService}/main.home"><xsl:value-of select="/root/gui/strings/home"/></a>
-						</xsl:otherwise>
-					</xsl:choose>
+					<a class="banner" href="{/root/gui/locService}/main.home"><xsl:value-of select="/root/gui/strings/home"/></a>
 					|
 					<xsl:if test="string(/root/gui/results)!=''">
 						<xsl:choose>

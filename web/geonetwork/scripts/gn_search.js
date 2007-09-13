@@ -18,7 +18,8 @@ function showAdvancedSearch()
 {
 	closeIntermap();
 	closeSearch('simplesearch');
-	
+	document.cookie = "search=advanced";
+
 	var myAjax = new Ajax.Updater (
 		'advancedsearch',    
 		'/geonetwork/srv/en/main.searchform.advanced.embedded', 
@@ -37,6 +38,7 @@ function showAdvancedSearch()
 function showSimpleSearch()
 {
 	closeSearch('advancedsearch');
+	document.cookie = "search=default";
 	
 	var myAjax = new Ajax.Updater (
 		'simplesearch',    
@@ -87,10 +89,19 @@ function closeSearch(s)
 function doRegionSearch()
 {
 	var region = $('region').value
-	if(region=="")
+	if(region=="") 
+	{
 		region=null;
-		
-	getRegion(region);
+    $('northBL').value='90';
+    $('southBL').value='-90';
+    $('eastBL').value='180';
+    $('westBL').value='-180';		
+   	im_mm_setAOIandZoom();
+	}
+	else
+	{
+   	getRegion(region);
+	}
 }
 
 function getRegion(region) 
@@ -131,6 +142,30 @@ function getRegion_complete(req) {
 function getRegion_error() {
 // style.display = 'none';
     alert("ERROR)");
+}
+
+function updateAoIFromForm() {
+  var nU = Number($('northBL').value);
+  var sU = Number($('southBL').value);
+  var eU = Number($('eastBL').value);
+  var wU = Number($('westBL').value);
+  
+  if (nU < sU) { alert("North < South"); } 
+  else if (nU > 90) { alert("North > 90 degrees"); }
+  else if (sU < -90) { alert("South < -90 degrees"); }
+  else if (eU < wU) { alert("East < West"); } 
+  else if (eU > 180) { alert("East > 180 degrees"); }
+  else if (wU < -180) { alert("West < -180 degrees"); }
+  else 
+  { 
+    im_mm_setAOIandZoom(); 
+    $('updateBB').style.visibility="hidden";
+  }
+}
+
+function AoIrefresh() {
+  $('region').value="";
+  $('updateBB').style.visibility="visible";
 }
 
 /********************************************************************
@@ -387,7 +422,7 @@ function initAdvancedSearch()
 		inputField     :    "datefrom",     // id of the input field
 		ifFormat       :    "%Y-%m-%dT00:00:00",      // format of the input field           
 		button         :    "from_trigger_c",  // trigger for the calendar (button ID)
-		showsTime 		 		: 				true,
+		showsTime 		 :		true,
 		align          :    "Tl",           // alignment (defaults to "Bl")
 		singleClick    :    true
 	});
@@ -430,6 +465,8 @@ function runAdvancedSearch()
 	
 	pars += fetchBoolParam('digital');
 	pars += fetchBoolParam('paper');
+	pars += fetchParam('template');
+	pars += fetchParam('hitsPerPage');
 
 	// Load results via AJAX
 	gn_search(pars);    
@@ -437,19 +474,29 @@ function runAdvancedSearch()
 
 function fetchParam(p)
 {
-	var t = $(p).value;
-	if(t)
-		return "&"+p+"="+encodeURIComponent(t);
-	else 
-		return "";
+  var pL = $(p);
+  if (!pL) 
+    return "";
+  else {
+  	var t = pL.value;
+  	if(t)
+  		return "&"+p+"="+encodeURIComponent(t);
+  	else 
+  		return "";
+	}
 }
 
 function fetchBoolParam(p)
 {
-	if($(p).checked )
-		return "&"+p+"=on";
-	else 
-		return "&"+p+"=off";
+  var pL = $(p);
+  if (!pL) 
+    return "";
+  else {
+  	if(pL.checked )
+  		return "&"+p+"=on";
+  	else 
+  		return "&"+p+"=off";
+  }
 }
 
 function fetchRadioParam(name)

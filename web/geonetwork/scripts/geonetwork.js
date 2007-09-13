@@ -2,6 +2,17 @@
 
 function init() {}
 
+// Read a cookie
+function get_cookie ( cookie_name )
+{
+  var results = document.cookie.match ( cookie_name + '=(.*?)(;|$)' );
+
+  if ( results )
+    return ( unescape ( results[1] ) );
+  else
+    return null;
+}
+
 // New browser windows
 	function popNew(a)
 	{
