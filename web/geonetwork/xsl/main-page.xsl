@@ -524,11 +524,9 @@
 				<xsl:apply-templates mode="brief" select="."/>
 			</xsl:variable>
 			<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
-			<div class="arrow">
-				<a class="footer"
-					href="{/root/gui/locService}/metadata.show?id={geonet:info/id}">
-					<xsl:value-of select="$metadata/title"/>
-				</a>
+			<div class="arrow" onClick="gn_showSingleMetadata('{geonet:info/id}');" 
+				style="cursor:hand;cursor:pointer">
+				<xsl:value-of select="$metadata/title"/>
 				<br/>
 			</div>
 		</xsl:for-each>
@@ -545,11 +543,8 @@
 			<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
 			<xsl:variable name="categoryName" select="name"/>
 			<xsl:variable name="categoryLabel" select="label/child::*[name() = $lang]"/>
-			<div class="arrow">
-				<a class="footer"
-					href="{/root/gui/locService}/main.search?category={$categoryName}">
-					<xsl:value-of select="$categoryLabel"/>
-				</a>
+			<div class="arrow" onClick="runCategorySearch('{$categoryName}');" style="cursor:hand;cursor:pointer">
+				<xsl:value-of select="$categoryLabel"/>
 				<br/>
 			</div>
 		</xsl:for-each>

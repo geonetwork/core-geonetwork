@@ -71,7 +71,13 @@
 	
 	<mapContexts>
 		<default name="World + Africa national boundaries -- DUMMY NAME:not used"> 
-			<server url="http://www2.demis.nl/mapserver/request.asp"  type="2" >
+			<server url="http://localhost:8080/geoserver/wms"  type="2" >
+				<layer name="gn:world"></layer>
+			</server>
+			<server url="http://localhost:8080/geoserver/wms"  type="2" >
+				<layer name="gn:gboundaries"></layer>
+			</server>
+<!--			<server url="http://www2.demis.nl/mapserver/request.asp"  type="2" >
 				<layer name="Topography"></layer>
 			</server>
 			<server url="http://www2.demis.nl/mapserver/request.asp"  type="2" >
@@ -79,7 +85,7 @@
 			</server>
 			<server url="http://www2.demis.nl/mapserver/request.asp"  type="2" >
 				<layer name="Coastlines"></layer>
-			</server>
+			</server> -->
 			
 			
 <!--			<server url="http://193.43.36.137/ows/12279" type="2">

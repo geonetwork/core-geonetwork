@@ -236,6 +236,44 @@ function gn_search_complete(req) {
 *  Show metadata content
 *
 ********************************************************************/
+function gn_showSingleMetadata(id)
+{
+   var pars = 'id=' + id + '&currTab=simple';
+
+   var myAjax = new Ajax.Request(
+        '/geonetwork/srv/en/metadata.show.embedded', 
+        {
+            method: 'get',
+            parameters: pars,
+            onSuccess: function (req) {
+                // remove previous open md
+                //var prev = document.getElementById('metadata_current');
+                //if(prev)
+                //	prev.parentNode.removeChild($('metadata_current'));
+                
+                var parent = $('resultList');
+                clearNode(parent);
+                
+/*                $('gn_loadmd_' + id) .hide();
+                $('gn_hidemd_' + id) .show();
+*/               
+                // create new element
+                var div = document.createElement('div');
+                div.className = 'metadata_current';
+                div.style.display = 'none';
+                parent.appendChild(div);
+                
+                div.innerHTML = req.responseText;
+                
+                Effect.BlindDown(div);
+                
+                var tipman = new TooltipManager();
+                ker.loadMan.wait(tipman);
+            },
+            onFailure: gn_search_error// FIXME
+        });
+
+}
 
 function gn_showMetadata(id) 
 {
@@ -405,6 +443,23 @@ function runSimpleSearch()
 	gn_search(pars);    
 }
 
+
+/**********************************************************
+***
+***		STUFF FOR CATEGORY SEARCH
+***
+**********************************************************/
+
+function runCategorySearch(category) 
+{
+	preparePresent();
+
+	var pars = "any=''";
+	pars += "&category="+category;
+	
+	// Load results via AJAX
+	gn_search(pars);    
+}
 
 /**********************************************************
 ***
