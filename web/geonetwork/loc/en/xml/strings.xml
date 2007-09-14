@@ -128,6 +128,7 @@
 	<confirmNewPassword>Confirm new password</confirmNewPassword>
 	<constraintsTab>Constraints</constraintsTab>
 	<contactUs>Contact us</contactUs>
+	<contentInfoTab>Content Info</contentInfoTab>
 	<convert>Convert</convert>
 	<copyright1>Copyright</copyright1>
 	<copyright2>
@@ -171,6 +172,7 @@
 	<exactCoordinate>Exact coordinates </exactCoordinate>
 	<extended>Advanced search</extended>
 	<extent>Extent</extent>
+	<extensionInfoTab>Ext. Info</extensionInfoTab>
 	<featuredMap>Featured map</featuredMap>
 	<feedback>Feedback</feedback>
 	<feedbackCardTitle>Feedback and Comments</feedbackCardTitle>
