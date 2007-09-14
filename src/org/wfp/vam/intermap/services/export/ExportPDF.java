@@ -146,7 +146,7 @@ public class ExportPDF implements Service
 		ListItem litem = new ListItem();
 
 		// Add layer name
-		String servicename = mm.getServiceRanked(layerRank).getName();
+		String servicename = mm.getServiceRanked(layerRank).getTitle();
 		Chunk name = new Chunk(servicename);
 
 		if( ! mm.isVisibleRanked(layerRank) )
