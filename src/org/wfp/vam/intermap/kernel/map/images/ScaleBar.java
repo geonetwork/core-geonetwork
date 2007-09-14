@@ -8,6 +8,8 @@ import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
 
 public class ScaleBar
 {
+	public static final float EARTH_RADIUS_KM = 6371;
+
 	/**
 	 * Build a scalebar image.
 	 *
@@ -22,7 +24,7 @@ public class ScaleBar
 	 */
 	static public BufferedImage getScaleBar(BoundingBox bb, int mapwidth, int initscalewidth)
 	{
-		double mapKMwidth = getMapLength(bb);
+		double mapKMwidth = getMapRad(bb) * EARTH_RADIUS_KM;
 		System.out.println("MAP LENGTH (" + bb + ") ---> " + mapKMwidth);
 		ScaleBarInfo sbw = getNormalizedScalebar(mapKMwidth, mapwidth, initscalewidth);
 		System.out.println("PREF SCALEBAR WDT " + initscalewidth + " --> " + sbw.px);
@@ -133,7 +135,8 @@ public class ScaleBar
 	 * given the latitudes and longitudes of the two points,
 	 * using the following formula from spherical trigonometry:
 	 *
-	 * cos D = ( sin a )(sin b) + (cos a)(cos b)(cos P)
+	 * [Law of Cosines for Spherical Trigonometry]
+	 *     cos D = ( sin a )(sin b) + (cos a)(cos b)(cos P)
 	 *
 	 * where:
 	 *
@@ -154,7 +157,7 @@ public class ScaleBar
 	 *
 	 * @return   the lenght between the two points in kilometers
 	 */
-	private static double getMapLength(BoundingBox bb)
+	private static double getMapLength_LawOfCosines(BoundingBox bb)
 	{
 		float lat;
 
@@ -162,6 +165,12 @@ public class ScaleBar
 			lat = 0; // take the equator when it is inside the map
 		else
 			lat = Math.min(Math.abs(bb.getNorth()), Math.abs(bb.getSouth())); // take the more meaningful one
+
+		// This method is mathematically bugged
+		// FIXME Furthermore, if W*E<0, we should compute
+		//  DIST(w,e) = DIST(W,0) + DIST(0,E)
+		// or we get the MINOR distance between the two points
+		// (think for instance w=-179,e=179)
 
 		double sina = Math.sin(Math.toRadians(lat));
 		double cosa = Math.cos(Math.toRadians(lat));
@@ -173,6 +182,69 @@ public class ScaleBar
 		return Math.toDegrees(d) *111;
 	}
 
+	/**
+	 * Presuming a spherical Earth with radius R (see below),
+	 * and the locations of the two points in spherical coordinates(longitude and latitude)
+	 * are lon1,lat1 and lon2,lat2
+	 * then the
+	 * Haversine Formula (from R.W. Sinnott, "Virtues of the Haversine", Sky and Telescope, vol. 68, no. 2, 1984, p. 159):
+	 * will give mathematically and computationally exact results.
+	 *
+	 * The intermediate result c is the great circle distance in radians.
+	 * The great circle distance d will be in the same units as R.
+	 *
+	 * dlon = lon2 - lon1
+	 * dlat = lat2 - lat1
+	 * a = sin^2(dlat/2) + cos(lat1) * cos(lat2) * sin^2(dlon/2)
+	 * c = 2 * arcsin(min(1,sqrt(a)))
+	 * d = R * c
+	 */
+	private static double getMapRad_Haversine(double nrad, double erad, double srad, double wrad)
+	{
+		double dlon = nrad-srad;
+		double dlat = wrad-erad;
+
+		double sindlat2 = Math.sin(dlat/2);
+		double sindlon2 = Math.sin(dlon/2);
+		double a = sindlat2*sindlat2 + Math.cos(srad) * Math.cos(nrad) * sindlon2 * sindlon2;
+		double c = 2 * Math.asin(Math.min(1, Math.sqrt(a)));
+
+		System.out.print(" --- SIN(DLAT="+dlat+"/2)="+sindlat2);
+		System.out.println(" --- COS(DLON="+dlon+"/2)="+sindlon2);
+		System.out.print(" --- A="+a);
+		System.out.println(" --- C="+c);
+
+		return c;
+	}
+
+
+	private static double getMapRad(BoundingBox bb)
+	{
+		double n,s;
+		double e = Math.toRadians(bb.getEast());
+		double w = Math.toRadians(bb.getWest());
+
+		if(bb.getNorth()*bb.getSouth() < 0)
+		{
+			// take the equator when it is inside the map
+			n=s=0;
+		}
+		else
+			n=s = Math.toRadians(Math.min(Math.abs(bb.getNorth()), Math.abs(bb.getSouth()))); // take the more meaningful one
+
+		if( e*w < 0)
+		{
+			// compute 2 semi-arcs
+			double rad1 = getMapRad_Haversine(n, 0, s, w);
+			double rad2 = getMapRad_Haversine(n, e, s, 0);
+
+			return rad1 + rad2;
+		}
+		else
+		{
+			return getMapRad_Haversine(n, e, s, w);
+		}
+	}
 
 	/**
 	 * Build the image
