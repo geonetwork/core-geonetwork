@@ -97,7 +97,7 @@
 								<!-- <td style="padding:2px" onClick="im_sendMail();" ><a><img src="{/root/gui/url}/images/im_mail.png" title="Send this map via e-mail"/></a></td> -->
 								<td style="padding:2px" onClick="im_openPDFform();" ><a><img src="{/root/gui/url}/images/acroread.png" title="Export this map as a PDF"/></a></td>
 								<!-- <td style="padding:2px" onClick="im_openPictureForm();" ><a><img src="{/root/gui/url}/images/im_exportPic.png" title="Export this map as an image"/></a></td> -->
-								<td style="padding:2px" onClick="im_openWMCform();" ><a><img src="{/root/gui/url}/images/im_exportPic.png" title="View context"/></a></td>
+<!--								<td style="padding:2px" onClick="im_openWMCform();" ><a><img src="{/root/gui/url}/images/im_exportPic.png" title="View context"/></a></td>-->
 								<td width="100%" style="border-top:0px;"/> <!-- spacer -->								
 								<td class="im_tool" id="im_tool_scale">
 									<select name="im_setscale" id="im_setscale" onchange="javascript:im_bm_setScale();">
