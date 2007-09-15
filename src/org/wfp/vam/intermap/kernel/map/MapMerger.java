@@ -30,7 +30,8 @@ import org.wfp.vam.intermap.kernel.map.mapServices.ServiceException;
 public class MapMerger
 {
 	private static HttpGetFileCache cache;
-	private static float dpi = 96;
+	private static float defaultDPI = 96f;
+	private float dpi = -1f;
 
 	private BoundingBox bBox = new BoundingBox();  // Image extent
 
@@ -50,12 +51,20 @@ public class MapMerger
 	public static void setCache(HttpGetFileCache cache) {
 		MapMerger.cache = cache;
 	}
-	public static void setDpi(int dpi) {
-		MapMerger.dpi = dpi;
-	}
-	public static float getDpi()
+
+	public static void setDefaultDPI(float dpi)
 	{
-		return dpi;
+		defaultDPI = dpi;
+	}
+
+	public void setDPI(float dpi)
+	{
+		this.dpi =	dpi;
+	}
+
+	public float getDPI()
+	{
+		return dpi==-1f ? defaultDPI : dpi;
 	}
 
 	public void reaspectWms(boolean reaspect) { this.reaspectWms = reaspect; };
@@ -484,7 +493,7 @@ public class MapMerger
 
 		// Set the scale
 		degScale = Math.abs(getBoundingBox().getEast() - getBoundingBox().getWest()) / width;
-		distScale = (long)(423307109.727 * degScale / 96.0 * dpi);
+		distScale = (long)(423307109.727 * degScale / 96.0 * getDPI());
 
 		return vImageUrls;
 	}

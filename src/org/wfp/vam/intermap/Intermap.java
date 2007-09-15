@@ -37,6 +37,7 @@ import org.wfp.vam.intermap.kernel.map.DefaultMapServers;
 import org.wfp.vam.intermap.kernel.map.MapMerger;
 import org.wfp.vam.intermap.kernel.map.mapServices.arcims.AxlRequestBuilder;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.WmsGetCapClient;
+//import org.wfp.vam.intermap.kernel.map.mapServices.wms.CapabilitiesStore;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.WmsService;
 import org.wfp.vam.intermap.services.map.MapUtil;
 
@@ -141,6 +142,7 @@ public class Intermap implements ApplicationHandler
 		MapMerger.setCache(new HttpGetFileCache(cacheDir, deleteCache));
 		String useCache = handlerConfig.getMandatoryValue(Constants.USE_CACHE);
 		WmsGetCapClient.useCache("true".equals(useCache) ? true : false);
+//		CapabilitiesStore.useCache("true".equals(useCache) ? true : false);
 
 		//------------------------------------------------------------------------
 		//--- Set the temporary files URL
@@ -152,9 +154,9 @@ public class Intermap implements ApplicationHandler
 		log("Screen DPI config...");
 		String dpi = handlerConfig.getMandatoryValue(Constants.DPI);
 		try {
-			MapMerger.setDpi(Integer.parseInt(dpi));
+			MapMerger.setDefaultDPI(Integer.parseInt(dpi));
 		} catch (NumberFormatException e) {
-			MapMerger.setDpi(96);
+			MapMerger.setDefaultDPI(96);
 		}
 
 		//------------------------------------------------------------------------

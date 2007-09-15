@@ -37,7 +37,7 @@ public class SetScale implements Service
 		if( bb == null)
 			bb = mm.getBoundingBox();
 
-		BoundingBox scaledBB = MapUtil.setScale(bb, width, height, scale, mm.getDpi());
+		BoundingBox scaledBB = MapUtil.setScale(bb, width, height, scale, mm.getDPI());
 		mm.setBoundingBox(scaledBB);
 
 		// Merge the images now
