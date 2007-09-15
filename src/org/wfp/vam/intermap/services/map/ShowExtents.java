@@ -53,11 +53,11 @@ public class ShowExtents implements Service
 		Element response = new Element("response")
 			.addContent(elService)
 			.addContent(new Element("id").setText(id + ""))
-			.addContent(MapUtil.getExtents(s));
-		
+			.addContent(s.getExtents());
+
 		return response;
 	}
-	
+
 }
 
 //=============================================================================
