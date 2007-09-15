@@ -23,7 +23,7 @@
 								<td class="im_tool" id="im_tool_fullextent"    	onClick="javascript:im_bm_fullExtent()"><img src="{/root/gui/url}/images/zoomfull.png" title="Zoom to full map extent"/></td>
 								<td class="im_tool" id="im_tool_zoomin"	onClick="javascript:setTool('zoomin');" ><img src="{/root/gui/url}/images/zoomin.png" title="Zoom in"/></td>
 								<td class="im_tool" id="im_tool_zoomout" 	onClick="javascript:setTool('zoomout');"><img  src="{/root/gui/url}/images/zoomout.png" title="Zoom out"/></td>
-								<td class="im_tool" id="im_tool_pan"		onClick="javascript:setTool('pan');"><img src="{/root/gui/url}/images/pan.png" title="Pan"/></td>
+								<td class="im_tool" id="im_tool_pan"		onClick="javascript:setTool('pan');"><img src="{/root/gui/url}/images/pan.png" title="Pan"/></td>															
 <!--								<td class="im_tool" id="im_tool_zoomsel"	onClick="javascript:imc_zoomToLayer(activeLayerId)"><img src="{/root/gui/url}/images/zoomsel.png" title="Zoom to selected layer extent"/></td> -->
 <!--								<td class="im_tool" id="im_tool_aoi"		onClick="javascript:setTool('aoi')"><img src="{/root/gui/url}/images/im_aoi16x16.png" title="Select an Area Of Interest"/></td> --> 
 <!--								<td class="im_tool" id="im_tool_identify"	onClick="javascript:setTool('identify');">Identify</td> -->
@@ -97,6 +97,24 @@
 								<!-- <td style="padding:2px" onClick="im_sendMail();" ><a><img src="{/root/gui/url}/images/im_mail.png" title="Send this map via e-mail"/></a></td> -->
 								<td style="padding:2px" onClick="im_openPDFform();" ><a><img src="{/root/gui/url}/images/acroread.png" title="Export this map as a PDF"/></a></td>
 								<!-- <td style="padding:2px" onClick="im_openPictureForm();" ><a><img src="{/root/gui/url}/images/im_exportPic.png" title="Export this map as an image"/></a></td> -->
+								<td style="padding:2px" onClick="im_openWMCform();" ><a><img src="{/root/gui/url}/images/im_exportPic.png" title="View context"/></a></td>
+								<td width="100%" style="border-top:0px;"/> <!-- spacer -->								
+								<td class="im_tool" id="im_tool_scale">
+									<select name="im_setscale" id="im_setscale" onchange="javascript:im_bm_setScale();">
+										<option id="im_currentscale" value="">1:?</option>										
+										<option value="50000000">1:50.000.000</option>
+										<option value="10000000">1:10.000.000</option>
+										<option value="5000000">1:5.000.000</option>
+										<option value="1000000">1:1.000.000</option>
+										<option value="500000">1:500.000</option>
+										<option value="100000">1:100.000</option>
+										<option value="50000">1:50.000</option>
+										<option value="10000">1:10.000</option>
+										<option value="5000">1:5.000</option>
+										<option value="1000">1:1.000</option>										
+									</select>
+								</td>
+								
 							</tr>
 						</table>						
 					</td>					

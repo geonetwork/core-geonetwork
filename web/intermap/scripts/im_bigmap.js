@@ -64,15 +64,6 @@ function im_bm_setMapBB(n, e, s, w)
     im_bm_west = new Number(w);    
 }
 
-// Set width, height and bounding box
-function im_bm_setMapBB(n, e, s, w)
-{
-    im_bm_north=new Number(n);
-    im_bm_east = new Number(e);
-    im_bm_south = new Number(s);
-    im_bm_west = new Number(w);    
-}
-
 function im_bm_setSize(w, h)
 {
         im_bm_width=new Number(w);
@@ -977,6 +968,21 @@ function im_drawBox(box, left, top, width, height)
 
 /*****************************************************************************
  *
+ *                          Scale
+ *
+ *****************************************************************************/
+
+
+function im_bm_setScale()
+{	
+	imc_bm_setScale(im_bm_width,  im_bm_height,
+			    im_bm_getURLbbox(),
+			    $('im_setscale').value);
+}
+
+
+/*****************************************************************************
+ *
  *                          Generic utility functions
  *
  *****************************************************************************/
@@ -1150,6 +1156,8 @@ function updateMapImage(req)
 	deleteChildNodes($('im_scale'));
 	$('im_scale').appendChild( document.createTextNode('1:' + scale));
 	
+	$('im_currentscale').innerHTML= '1:' + scale;
+	$('im_setscale').selectedIndex = 0;
 	
 //	Event.observe(vMapImg, 'load', function(e) { setStatus('idle') }); // better behaviour but needs debugging on explorer (newer version of prototype?)
 	setStatus('idle');

@@ -1,25 +1,25 @@
 /**
- * Common.java
- *
- * @author Created by Omnicore CodeGuide
  */
 
 package org.wfp.vam.intermap.services.map;
 
-import java.util.*;
-
-import org.jdom.*;
-
-import jeeves.server.context.*;
-
-import org.wfp.vam.intermap.kernel.map.mapServices.*;
-import org.wfp.vam.intermap.kernel.map.mapServices.arcims.*;
-import org.wfp.vam.intermap.kernel.map.mapServices.wms.*;
-
-import org.wfp.vam.intermap.Constants;
-import org.wfp.vam.intermap.kernel.map.*;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
 import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import org.jdom.Element;
+import org.wfp.vam.intermap.Constants;
+import org.wfp.vam.intermap.kernel.map.DefaultMapServers;
+import org.wfp.vam.intermap.kernel.map.MapMerger;
+import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
+import org.wfp.vam.intermap.kernel.map.mapServices.MapService;
+import org.wfp.vam.intermap.kernel.map.mapServices.arcims.ArcIMSService;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.WmsGetCapClient;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.WmsService;
 
 public class MapUtil
 {
@@ -132,8 +132,6 @@ public class MapUtil
 	public static int addService(int serverType, String serverUrl, String serviceName, String vsp, MapMerger mm) throws Exception
 	{
 		// Do not add the service if it is already there
-//		for (Enumeration e = mm.getServices(); e.hasMoreElements(); ) {
-//			MapService ms = (MapService)e.nextElement();
 		for(MapService service: mm.getServices())
 		{
 			String url = service.getServerURL();
@@ -143,20 +141,21 @@ public class MapUtil
 		}
 
 		int ret;
-		
+
 		switch (serverType)
 		{
 			case ArcIMSService.TYPE :
 				ret = mm.addService(new ArcIMSService(serverUrl, serviceName));
 				break;
-				
+
 			case WmsService.TYPE :
 				Element capabilities = WmsGetCapClient.getCapabilities(serverUrl);
+//				Element capabilities = CapabilitiesStore.getCapabilities(serverUrl); NEW VERSION: WORK IN PROGRESS
 				WmsService s = new WmsService(serverUrl, serviceName, capabilities);
 				ret = mm.addService(s);
 				setVendorSpecificParams(s, vsp);
 				break;
-				
+
 			default:
 				throw new IllegalArgumentException("Unknown serverType " + serverType +
 												   " for service " + serviceName + " @ " + serverUrl);
@@ -189,7 +188,7 @@ public class MapUtil
 //		System.out.println("hmParams: " + hmParams);
 		service.setVendorSpecificParams(hmParams); //TEST
 	}
-	
+
 	public static void setDefaultContext(MapMerger mm) throws Exception
 	{
 		Element mapContext = DefaultMapServers.getDefaultContext();
@@ -213,15 +212,10 @@ public class MapUtil
 
 		MapUtil.setDefBoundingBox(mm);
 	}
-	
+
 
 	public static void setDefBoundingBox(MapMerger mm) throws Exception
 	{
-//		Vector v = new Vector();
-//		for (Enumeration e = mm.getServices(); e.hasMoreElements(); )
-//			v.add( ((MapService)e.nextElement()).getDefBoundingBox() );
-//		mm.setBoundingBox(BoundingBox.union(v));
-
 		List<BoundingBox> lbb = new ArrayList<BoundingBox>();
 		for(MapService service: mm.getServices())
 			lbb.add( service.getDefBoundingBox() );
@@ -246,6 +240,9 @@ public class MapUtil
 		}
 	}
 
+	/**
+	 * @deprecated ETj: image dimensions are no longer handled server side
+	 */
 	public static int getImageWidth(ServiceContext srvContext) {
 		String size = (String)srvContext.getUserSession().getProperty(Constants.SESSION_SIZE);
 		int width;
@@ -255,6 +252,9 @@ public class MapUtil
 		return width;
 	}
 
+	/**
+	 * @deprecated ETj: image dimensions are no longer handled server side
+	 */
 	public static int getImageHeight(ServiceContext srvContext) {
 		String size = (String)srvContext.getUserSession().getProperty(Constants.SESSION_SIZE);
 		int height;
@@ -279,13 +279,8 @@ public class MapUtil
 		MapUtil.url = url;
 	}
 
-
 	public static String getTempUrl() {
 		return MapUtil.url;
-	}
-
-	protected static Element getExtents(WmsService service) throws Exception {
-		return service.getExtents();
 	}
 
 	protected static void moveTo(BoundingBox bb, int x, int y, int width, int height) throws Exception
@@ -328,6 +323,22 @@ public class MapUtil
 		return new BoundingBox(north, south, east, west);
 	}
 
+	public static BoundingBox setScale(BoundingBox bb, int imageWidth, int imageHeight, long scale, float dpi)
+		throws Exception
+	{
+		float cx = (bb.getEast()+bb.getWest())/2;
+		float cy = (bb.getNorth()+bb.getSouth())/2;
+
+		// Set the scale
+		double degScale = scale/423307109.727 * 96f/dpi;
+		float dx = (float)(imageWidth  * degScale);
+	 	float dy = (float)(imageHeight * degScale);
+
+		return new BoundingBox( cy+dy/2, cy-dy/2,
+									   cx+dx/2, cx-dx/2);
+	}
+
+
 	public static void setDefaultImageSize(String s) {
 		defaultImageSize = s;
 	}
@@ -337,4 +348,5 @@ public class MapUtil
 	}
 
 }
+
 

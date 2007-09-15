@@ -195,6 +195,25 @@ function imc_mm_move(deltax, deltay, width, height)
 	);
 }
 
+function imc_bm_setScale(w, h, bbox, scale )
+{
+	var url = '/intermap/srv/en/map.setScale';
+	var pars = "width=" + w + "&height="+h +
+	                "&"+bbox+
+	                "&scale=" + scale;
+
+	setStatus('busy');
+
+	var myAjax = new Ajax.Request (
+		url, 
+		{
+			method: 'get',
+			parameters: pars,
+			onComplete: updateMapImage,
+			onFailure: reportError
+		}
+	);
+}
 
 /*****************************************************************************
  *                                                                           *
@@ -376,39 +395,6 @@ function addLayer(baseUrl, serviceName) // DEBUG
 
 
 
-
-// improve me: this setting should be implemented client-side
-// this setting refers to big map only, while ajax calls should be independent from which map are they called on
-/*function imc_toggleImageSize()
-{
-	deleteAoi();
-	unsetAoi();
-	$('im_geonetRecords').className = 'hidden';	
-	
-	setStatus('busy');
-	var url = '/intermap/srv/en/map.toggleImageSize';
-	var myAjax = new Ajax.Request (
-		url,
-		{
-			method: 'get',
-			onComplete: im_imageSizeToggled,
-			onFailure: reportError
-		}
-	);
-}
-*/
-// improve me: this setting should be implemented client-side
-// this setting refers to big map only, while ajax calls should be independent from which map are they called on
-/*function im_imageSizeToggled(req)
-{
-            var w = req.responseXML.getElementsByTagName('width')[0].firstChild.nodeValue;
-            var h = req.responseXML.getElementsByTagName('height')[0].firstChild.nodeValue;
-
-            im_bm_setSize(w,h);
-            	
-	imc_updateBigMap(im_bm_width, im_bm_height, im_bm_getURLbbox());
-}
-*/
 function imc_addService(surl, service, type, callback)
 {
 	var url = '/intermap/srv/en/map.addServices.embedded';

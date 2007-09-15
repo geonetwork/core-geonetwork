@@ -3,7 +3,7 @@
  * to add / remove services, and to set and change the bounding box.
  *
  * @author Stefano Giaccio, Emanuele Tajariol
-
+ *
  */
 
 package org.wfp.vam.intermap.kernel.map;
@@ -20,7 +20,6 @@ import org.jdom.Element;
 import org.wfp.vam.intermap.http.ConcurrentHTTPTransactionHandler;
 import org.wfp.vam.intermap.http.cache.HttpGetFileCache;
 import org.wfp.vam.intermap.kernel.GlobalTempFiles;
-import org.wfp.vam.intermap.kernel.TempFiles;
 import org.wfp.vam.intermap.kernel.map.images.ImageMerger;
 import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
 import org.wfp.vam.intermap.kernel.map.mapServices.HttpClient;
@@ -31,7 +30,7 @@ import org.wfp.vam.intermap.kernel.map.mapServices.ServiceException;
 public class MapMerger
 {
 	private static HttpGetFileCache cache;
-	private static int dpi = 96;
+	private static float dpi = 96;
 
 	private BoundingBox bBox = new BoundingBox();  // Image extent
 
@@ -45,7 +44,7 @@ public class MapMerger
 	private String imagePath = null; // The path of the merge image file
 	private float degScale; // The map scale
 	private float distScale; // The map scale
-	private Hashtable htErrors = new Hashtable();
+	private Map<Integer,String> htErrors = new Hashtable<Integer,String>();
 	private boolean reaspectWms = true;
 
 	public static void setCache(HttpGetFileCache cache) {
@@ -53,6 +52,10 @@ public class MapMerger
 	}
 	public static void setDpi(int dpi) {
 		MapMerger.dpi = dpi;
+	}
+	public static float getDpi()
+	{
+		return dpi;
 	}
 
 	public void reaspectWms(boolean reaspect) { this.reaspectWms = reaspect; };
@@ -92,7 +95,6 @@ public class MapMerger
 	 * */
 	public int addService(MapService service) {
 //		System.out.println("service: " + service); // DEBUG
-//		if (htServices.size() == 0) activeServiceId = nextId;
 		if ( _layers.isEmpty() ) activeServiceId = nextId;
 
 		Integer id = new Integer(nextId++);
@@ -100,10 +102,6 @@ public class MapMerger
 		Layer layer = new Layer(service);
 		_layers.put(id, layer);
 
-//		htServices.put(id, service);
-//		htTransparency.put(id, new Float(1.0));
-//		htExpanded.put(id, new Boolean(true));
-//		htShow.put(id, new Boolean(true));
 		vRank.add(0, id);
 
 		return id.intValue();
@@ -116,11 +114,6 @@ public class MapMerger
 	{
 		_layers.remove(id);
 		vRank.remove(new Integer(id)); // be careful: we're removing the id object (Integer); an int would be used as index
-
-//		Integer t = new Integer(id);
-//		htServices.remove(t);
-//		htTransparency.remove(t);
-//		htExpanded.remove(t);
 
 		if (activeServiceId == id)
 			if (vRank.size() > 0)
@@ -135,7 +128,8 @@ public class MapMerger
 	}
 
 	/** Moves a service up */
-	public void moveServiceUp(int id) {
+	public void moveServiceUp(int id)
+	{
 		Integer t = new Integer(id);
 		int pos = vRank.indexOf(t);
 		if (pos > 0) {
@@ -145,7 +139,8 @@ public class MapMerger
 	}
 
 	/** Moves a service down */
-	public void moveServiceDown(int id) {
+	public void moveServiceDown(int id)
+	{
 		Integer t = new Integer(id);
 		int pos = vRank.indexOf(t);
 		if (pos < vRank.size() - 1) {
@@ -164,15 +159,12 @@ public class MapMerger
 		Element elServices = new Element("services");
 
 		// Add each contained service to the elServices, ordered by vRank
-//		for (int i = 0; i < vRank.size(); i++) {
-		for (int rank:  vRank) {
-//			MapService s = (MapService)htServices.get(vRank.get(i));
-			Layer layer = _layers.get(rank);
+		for (int idx:  vRank) {
+			Layer layer = _layers.get(idx);
 			MapService s = layer.getService();
 
 			elServices.addContent(new Element("layer")
-//									  .setAttribute("id", vRank.get(i) + "")
-									  .setAttribute("id", rank + "")
+									  .setAttribute("id", idx + "")
 								 	  .setAttribute("title", "" + s.getTitle())
 								 	  .setAttribute("type", "" + s.getType())
 								 	  .setAttribute("transparency", "" + layer.getIntTransparency())
@@ -193,11 +185,11 @@ public class MapMerger
 //			elServices.addContent(s.toElement()
 //									  .setAttribute("id", vRank.get(i) + ""));
 //		}
-		for (int rank:  vRank)
+		for (int id:  vRank)
 		{
-			MapService s = _layers.get(rank).getService();
+			MapService s = _layers.get(id).getService();
 			elServices.addContent(s.toElement()
-									  .setAttribute("id", rank + ""));
+									  .setAttribute("id", id + ""));
 		}
 
 
@@ -215,36 +207,31 @@ public class MapMerger
 		return elServices;
 	}
 
-//	public Iterable<Layer> getLayers()
-//	{
-//		return new Iterable<Layer>()
-//		{
-//			public Iterator<Layer> iterator()
-//			{
-//				return new Iterator<Layer>()
-//				{
-//					private int i = 0;
-//					private int last = vRank.size();
-//
-//					public boolean hasNext()	{ return i<last; }
-//					public Layer 	next()		{ return _layers.get(vRank.get(i++)); }
-//					public void 	remove()		{ throw new UnsupportedOperationException();}
-//				};
-//			}
-//		};
-//	}
+
+	public Iterable<Layer> getLayers()
+	{
+		return new Iterable<Layer>()
+		{
+			public Iterator<Layer> iterator()
+			{
+				return new Iterator<Layer>()
+				{
+					private int i = 0;
+					private int last = vRank.size();
+
+					public boolean hasNext()	{ return i<last; }
+					public Layer 	next()		{ return _layers.get(vRank.get(i++)); }
+					public void 	remove()		{ throw new UnsupportedOperationException();}
+				};
+			}
+		};
+	}
 
 
 	/** Returns an Element containing the transparency value for each service */
-	public Element getStructTransparencies() {
+	public Element getStructTransparencies()
+	{
 		Element elTransparency = new Element("transparency");
-//		for (Enumeration e = htServices.keys(); e.hasMoreElements(); ) {
-//			Integer serviceId = (Integer)e.nextElement();
-//			int f = (int)(((Float)htTransparency.get(serviceId)).floatValue() * 100);
-//			elTransparency.addContent( new Element("service").setAttribute("id", serviceId.toString())
-//										  .setAttribute("transparency", f + "")
-//										  .setAttribute("name", ((MapService)htServices.get(serviceId)).getName()) );
-//		}
 
 		for(Integer id: _layers.keySet())
 		{
@@ -260,22 +247,19 @@ public class MapMerger
 	}
 
 	/** Returns the transparency of a given layer */
-//	public float getLayerTransparency(int id) {
-//		Integer serviceId = new Integer(id);
-//		return  (int)(((Float)htTransparency.get(serviceId)).floatValue() * 100);
-	public int getLayerTransparency(int id) {
+	public int getLayerTransparency(int id)
+	{
 		return _layers.get(id).getIntTransparency();
 	}
-	public int getLayerTransparencyRanked(int id) {
+
+	public int getLayerTransparencyRanked(int id)
+	{
 		return _layers.get(vRank.get(id)).getIntTransparency();
 	}
 
 	/** Sets the transparency value for a given service */
-	public void setTransparency(int id, float transparency) throws Exception {
-//		if (htServices.get(new Integer(id)) == null)
-//			throw new Exception("Illegal service id");
-//
-//		htTransparency.put(new Integer(id), new Float(transparency));
+	public void setTransparency(int id, float transparency) throws Exception
+	{
 		if ( ! _layers.containsKey(id))
 			throw new Exception("Illegal service id");
 
@@ -283,8 +267,8 @@ public class MapMerger
 	}
 
 	/** Expands a service in the layer frame (used for ArcIMS services only) */
-	public void expandService(int id) throws Exception {
-//		htExpanded.put(new Integer(id), new Boolean(true));
+	public void expandService(int id) throws Exception
+	{
 		if ( ! _layers.containsKey(id))
 			throw new Exception("Illegal service id");
 
@@ -292,7 +276,8 @@ public class MapMerger
 	}
 
 	/** Collapses a service in the layer frame (used for ArcIMS services only) */
-	public void collapseService(int id) throws Exception {
+	public void collapseService(int id) throws Exception
+	{
 		if ( ! _layers.containsKey(id))
 			throw new Exception("Illegal service id");
 
@@ -301,46 +286,44 @@ public class MapMerger
 
 
 	/** ??? Expands a service in the layer frame (used for ArcIMS services only) */
-	public void showService(int id) throws Exception {
+	public void showService(int id) throws Exception
+	{
 		if ( ! _layers.containsKey(id))
 			throw new Exception("Illegal service id");
 
 		_layers.get(id).setVisible(true);
-//		htShow.put(new Integer(id), new Boolean(true));
 	}
 
 	/** ??? Collapses a service in the layer frame (used for ArcIMS services only) */
-	public void hideService(int id) throws Exception {
+	public void hideService(int id) throws Exception
+	{
 		if ( ! _layers.containsKey(id))
 			throw new Exception("Illegal service id");
 
 		_layers.get(id).setVisible(false);
-//		htShow.put(new Integer(id), new Boolean(false));
 	}
 
-	public boolean toggleVisibility(int id) throws Exception {
+	public boolean toggleVisibility(int id) throws Exception
+	{
 		if ( ! _layers.containsKey(id))
 			throw new Exception("Illegal service id");
 
 		boolean newVis = ! _layers.get(id).isVisible();
 		_layers.get(id).setVisible(newVis);
 		return newVis;
-
-//		Boolean bVisibility = (Boolean)htShow.get(new Integer(id));
-//
-//		boolean newVisibility = !bVisibility.booleanValue();
-//		htShow.put(new Integer(id), new Boolean(newVisibility));
-//		return newVisibility;
 	}
 
 	/** Get error messages from the remote servers */
-	public Element getErrors() {
+	public Element getErrors()
+	{
 		Element errors = new Element("errors");
-		for (Enumeration e = htErrors.keys(); e.hasMoreElements(); ) {
-			Integer id = (Integer)e.nextElement();
-			errors.addContent( new Element("layer")
-				.setAttribute("id", id.toString())
-				.setAttribute("message", (String)htErrors.get(id)) );
+
+		for(Integer id: htErrors.keySet() )
+		{
+			errors.addContent(
+				new Element("layer")
+					.setAttribute("id", id.toString())
+					.setAttribute("message", htErrors.get(id)) );
 		}
 
 		return errors;
@@ -364,32 +347,22 @@ public class MapMerger
 					public MapService next()	{ return _layerIterator.next().getService(); }
 					public void remove()			{ throw new UnsupportedOperationException();}
 				};
-
 			}
 		};
-//		return htServices.elements();
 	}
 
 	/** Returns the MapService element with the given id*/
 	public MapService getService(int id) { return _layers.get(id).getService(); }
-	public MapService getServiceRanked(int id) { return _layers.get(vRank.get(id)).getService(); }
+	public MapService getServiceRanked(int rank) { return _layers.get(vRank.get(rank)).getService(); }
 //	public MapService getService(int id) { return (MapService)htServices.get(new Integer(id)); }
 //	public boolean isVisible(int id) { return _layers.get(id).isVisible(); }
-	public boolean isVisibleRanked(int id) { return _layers.get(vRank.get(id)).isVisible(); }
+	public boolean isVisibleRanked(int rank) { return _layers.get(vRank.get(rank)).isVisible(); }
 
 	/** Returns an element containing informations about the expanded or collapsed
 	 *  services
 	 */
 	private Element getStructExpanded()
 	{
-//		Element expanded = new Element("expandedServices");
-//		for (Enumeration e = htExpanded.keys(); e.hasMoreElements(); ) {
-//			Integer serviceId = (Integer)e.nextElement();
-//			boolean ex = ((Boolean)htExpanded.get(serviceId)).booleanValue();
-//			expanded.addContent(new Element("service")
-//									.setAttribute("id", serviceId.toString())
-//									.setAttribute("expanded", ex ? "true" : "false"));
-//		}
 		Element expanded = new Element("expandedServices");
 
 		for(Integer id: _layers.keySet())
@@ -496,19 +469,9 @@ public class MapMerger
 			if (reaspectWms)
 				bBox = reaspect(bBox, width, height); // Reaspect the bounding box if no ArcIMS service did it
 
-//			for (int i = 0; i < vRank.size(); i++)
-//			{
-//				MapService ms = (MapService)htServices.get(vRank.get(i));
-//				if (htShow.get(vRank.get(i)).equals(new Boolean(true)))
-//				{
-//					try { vImageUrls.add(ms.getImageUrl(bBox, width, height)); }
-//					catch (Exception e) { e.printStackTrace(); /* DEBUG */ }
-//				}
-//				else vImageUrls.add(null);
-//			}
-			for (int rank: vRank)
+			for (int id: vRank) // takes ids sorted by their ranks
 			{
-				Layer layer = _layers.get(rank);
+				Layer layer = _layers.get(id);
 				MapService ms = layer.getService();
 				if (layer.isVisible())
 				{
@@ -554,10 +517,6 @@ public class MapMerger
 		c.setCache(cache); // DEBUG
 		c.checkIfModified(false); //DEBUG
 
-//		for (int i = 0; i < vImageUrls.size(); i++) {
-//			if ((String)vImageUrls.get(i) != null) { // null if some error encountered (never with WMS servers)
-//				c.register((String)vImageUrls.get(i));
-//			}
 		for (String url: vImageUrls)
 		{
 			if (url != null) { // null if some error encountered (never with WMS servers)
@@ -586,7 +545,6 @@ public class MapMerger
 					if (contentType.startsWith("image"))
 					{
 						files.add(path);
-//						vTransparency.add(htTransparency.get(vRank.get(i)));
 						vTransparency.add(_layers.get(vRank.get(i)).getTransparency());
 						//System.out.println("file: " + path + "; transparency: " + htTransparency.get(vRank.get(i))); // DEBUG
 					}
@@ -747,25 +705,6 @@ public class MapMerger
 				System.out.println("REASPECTING - WE fit, NS = " + ns);
 			}
 		}
-
-//		if ((Math.abs(east - west)) > 360)
-//		{
-//			east = 180;
-//			west = -180;
-//			float d = (float)h / w * 180;
-//			north = d;
-//			south = -d;
-//		}
-//
-//		if ((Math.abs(north - south)) > 180) {
-//			north = 90;
-//			south = -90;
-//			float d = (float)w / h * 90;
-//			east = d;
-//			west = -d;
-//		}
-//
-
 //		System.out.println("north = " + north + "; south = " + south + "; east = " + east + "; west = " + west);
 
 		return new BoundingBox(north, south, east, west);
@@ -856,29 +795,4 @@ public class MapMerger
 	}
 }
 
-class Layer
-{
-	private final MapService _service;
-	private float _transparency = 1.0F;
-	private boolean _expanded = true;
-	private boolean _visible = true;
-
-	public Layer(MapService service)
-	{
-		_service = service;
-	}
-
-//		public void setService(MapService service){_service = service;}
-	public MapService getService(){return _service;}
-
-	public void setTransparency(float transparency){_transparency = transparency;}
-	public float getTransparency(){return _transparency;}
-	public int getIntTransparency(){return  (int)(_transparency * 100);}
-
-	public void   setExpanded(boolean isExpanded){_expanded = isExpanded;}
-	public boolean isExpanded(){return _expanded;}
-
-	public void setVisible(boolean isVisibile){_visible = isVisibile;}
-	public boolean isVisible(){return _visible;}
-}
 

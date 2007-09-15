@@ -299,6 +299,12 @@
 		<service name="map.move">
 			<class name=".services.map.Move" />
 		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.setScale">
+			<class name=".services.map.SetScale" />
+		</service>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
@@ -485,7 +491,12 @@
 			
 			<output forward="map.getMain"/>
 		</service>
-			
+
+<!--		<service name="wmc.getContext">			
+			<class name=".services.wmc.GetWmcContext"/>
+			<!-- need dome trasnformation here -->
+		</service>
+-->		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="wmc.setContextFromURL">
@@ -527,6 +538,13 @@
 			</class>			
 		</service>
 		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+<!--		<service name="wmc.mailform">			
+			<class name=".services.wmc.GetWmcContext"/>
+			<output sheet="im_wmc_form.xsl" contentType="text/html; charset=UTF-8" />
+		</service>
+-->		
 		
 
 	</services>

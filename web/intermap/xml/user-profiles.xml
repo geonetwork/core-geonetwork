@@ -29,9 +29,9 @@
 		<allow service="map.getLayers.embedded"/>
 		<allow service="map.action"/>
 		<allow service="map.move"/>
+		<allow service="map.setScale"/>
 		<allow service="map.fullExtent"/>
 		<allow service="map.zoomToService"/>
-		<allow service="map.toggleImageSize"/>
 		<allow service="map.reset"/>
 		<allow service="map.identify"/>
 		<allow service="map.service.moveUp"/>
@@ -49,8 +49,12 @@
 		<allow service="map.getPrintImage"/>
 		<allow service="map.setContext"/>
 		<allow service="map.getFeatures"/>
+
 		<allow service="wmc.setContext"/>
+<!--		<allow service="wmc.getContext"/>-->
 		<allow service="wmc.setContextFromURL"/>
+<!--		<allow service="wmc.mailform"/>-->
+		
 		<allow service="map.layers.deleteLayer"/>
 		<allow service="map.layers.getOrder"/>
 		<allow service="map.layers.setOrder"/>
