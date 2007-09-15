@@ -494,9 +494,9 @@
 
 <!--		<service name="wmc.getContext">			
 			<class name=".services.wmc.GetWmcContext"/>
-			<!-- need dome trasnformation here -->
+
 		</service>
--->		
+-->			<!-- need some transformation here -->		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="wmc.setContextFromURL">
