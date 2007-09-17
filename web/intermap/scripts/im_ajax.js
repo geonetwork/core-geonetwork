@@ -1,5 +1,9 @@
+/*****************************************************************************
+ *
+ *       This file contains most of the Intermap's AJAX calls.
+ *
+ *****************************************************************************/
 
-/* TODO:  adding to every function the "imc_" (InterMap Connector) prefix */
 
 var activeLayerId = null; // active layer
 
@@ -399,7 +403,10 @@ function imc_addService(surl, service, type, callback)
 {
 	var url = '/intermap/srv/en/map.addServices.embedded';
 	
-	var pars = 'url=' + surl + '&service=' + service + '&type=' + type;
+	var pars = 'url=' + encodeURIComponent(surl) 
+			+ '&service=' + encodeURIComponent(service) 
+			+ '&type=' + type;
+			
 	var myAjax = new Ajax.Request (
 		url,
 		{
@@ -416,12 +423,12 @@ function imc_addService(surl, service, type, callback)
 function imc_addServices(surl, serviceArray, type, callback)
 {
 	var url = '/intermap/srv/en/map.addServices.embedded';	
-	var pars = 'url=' + surl + '&type=' + type;
+	var pars = 'url=' + encodeURIComponent(surl) + '&type=' + type;
 	
 	serviceArray.each(
 	    function(service)
 	    {
-	        pars += '&service=' + service;
+	        pars += '&service=' + encodeURIComponent(service);
 	    }
 	);
 	
