@@ -7,13 +7,13 @@
 						
 			<ul id = "im_serverList_list">
 				<xsl:apply-templates select="/root/response/mapServers/server" />
-				<li>Other WMS server
+				<li><xsl:value-of select="/root/gui/strings/otherWMS" />
 					<input type="text" size="40" id="im_wmsservername" class="content"></input>				
 				</li>
 			</ul>
 
 			<xsl:variable name="action">im_mapServerURL($('im_wmsservername').value);</xsl:variable>			
-			<button onclick="{$action}">Connect</button>
+			<button onclick="{$action}"><xsl:value-of select="/root/gui/strings/connect" /></button>
 
 		</div>
 	</xsl:template>

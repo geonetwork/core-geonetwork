@@ -30,10 +30,12 @@
     <server type="2" name="NASA Earth Observations (NEO) WMS">
         <url>http://neowms.sci.gsfc.nasa.gov/wms/wms</url>
     </server>
-    <server type="2" name="Landsat 7">
-            <url>http://hypercube.telascience.org/cgi-bin/landsat7</url>
+		
+<!-- 
+    <server type="2" name="Digital Earth">
+            <url>http://globe.digitalearth.gov/viz-bin/wmt.cgi</url>
     </server>
-<!--    <server type="2" name="Elevation data (SRTM) - USGS CEOS - OGC WMS">
+    <server type="2" name="Elevation data (SRTM) - USGS CEOS - OGC WMS">
            <url>http://gisdata.usgs.net/servlet/com.esri.wms.Esrimap/USGS_EDC_Elev_STM</url>
     </server>
     <server type="2" name="ESRI Geography Network - OGC WMS">
@@ -69,12 +71,12 @@
 	
 	<mapContexts>
 		<default name="World + Africa national boundaries -- DUMMY NAME:not used"> 
-<!--			<server url="http://localhost:8080/geoserver/wms"  type="2" >
+			<server url="http://localhost:8080/geoserver/wms"  type="2" >
 				<layer name="gn:world"></layer>
 			</server>
 			<server url="http://localhost:8080/geoserver/wms"  type="2" >
 				<layer name="gn:gboundaries"></layer>
-			</server> -->
+			</server>
 <!--			<server url="http://www2.demis.nl/mapserver/request.asp"  type="2" >
 				<layer name="Topography"></layer>
 			</server>
@@ -85,17 +87,14 @@
 				<layer name="Coastlines"></layer>
 			</server> -->
 			
-		<server url="http://wms.telascience.org/cgi-bin/bmng_wms_t" type="2">
-				<layer name="world_topo_bathy" />
+			
+<!--			<server url="http://193.43.36.137/ows/12279" type="2">
+				<layer name="world_country_boundary" />
 			</server>
-			<server url="http://www2.demis.nl/mapserver/request.asp"  type="2" >
-				<layer name="Borders"></layer>
-			</server>
-			<server url="http://www2.demis.nl/mapserver/request.asp"  type="2" >
-				<layer name="Coastlines"></layer>
-			</server>
-					
-		</default> 
+			<server url="http://193.43.36.137/ows/1" type="2">
+				<layer name="national_boundaries_africa" />
+			</server>			
+-->		</default> 
 		<context name="World - Landsat 7 Global Mosaic (pan sharpened) with simplified national boundaries">
 			<server url="http://onearth.jpl.nasa.gov/wms.cgi" type="2">
 				<layer name="global_mosaic" />

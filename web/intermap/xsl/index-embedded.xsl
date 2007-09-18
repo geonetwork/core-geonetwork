@@ -20,17 +20,17 @@
 					<td>
 						<table id="im_toolbar" class="padded_content">
 							<tr id="im_toolSelector"> <!--class="im_tool"-->
-								<td class="im_tool" id="im_tool_fullextent"    	onClick="javascript:im_bm_fullExtent()"><img src="{/root/gui/url}/images/zoomfull.png" title="Zoom to full map extent"/></td>
-								<td class="im_tool" id="im_tool_zoomin"	onClick="javascript:setTool('zoomin');" ><img src="{/root/gui/url}/images/zoomin.png" title="Zoom in"/></td>
-								<td class="im_tool" id="im_tool_zoomout" 	onClick="javascript:setTool('zoomout');"><img  src="{/root/gui/url}/images/zoomout.png" title="Zoom out"/></td>
-								<td class="im_tool" id="im_tool_pan"		onClick="javascript:setTool('pan');"><img src="{/root/gui/url}/images/pan.png" title="Pan"/></td>															
+								<td class="im_tool" id="im_tool_fullextent" onClick="javascript:im_bm_fullExtent()"><img src="{/root/gui/url}/images/zoomfull.png" title="{/root/gui/strings/fullExtent}"/></td>
+								<td class="im_tool" id="im_tool_zoomin" onClick="javascript:setTool('zoomin');" ><img src="{/root/gui/url}/images/zoomin.png" title="{/root/gui/strings/zoomIn}"/></td>
+								<td class="im_tool" id="im_tool_zoomout" onClick="javascript:setTool('zoomout');"><img  src="{/root/gui/url}/images/zoomout.png" title="{/root/gui/strings/zoomOut}"/></td>
+								<td class="im_tool" id="im_tool_pan" onClick="javascript:setTool('pan');"><img src="{/root/gui/url}/images/pan.png" title="{/root/gui/strings/pan}"/></td>															
 <!--								<td class="im_tool" id="im_tool_zoomsel"	onClick="javascript:imc_zoomToLayer(activeLayerId)"><img src="{/root/gui/url}/images/zoomsel.png" title="Zoom to selected layer extent"/></td> -->
 <!--								<td class="im_tool" id="im_tool_aoi"		onClick="javascript:setTool('aoi')"><img src="{/root/gui/url}/images/im_aoi16x16.png" title="Select an Area Of Interest"/></td> --> 
 <!--								<td class="im_tool" id="im_tool_identify"	onClick="javascript:setTool('identify');">Identify</td> -->
 								<td width="100%" style="border-top:0px;"/> <!-- spacer -->
-								<td class="im_tool" id="im_tool_refresh" onClick="javascript:refreshNeeded()"><img src="{/root/gui/url}/images/reload.png" title="Refresh map"/></td>
+								<td class="im_tool" id="im_tool_refresh" onClick="javascript:refreshNeeded()"><img src="{/root/gui/url}/images/reload.png" title="{/root/gui/strings/refresh}"/></td>
 <!--								<td class="im_tool"  				onClick="javascript:im_bm_toggleImageSize()">+/- map</td>-->
-								<td class="im_tool" id="im_tool_reset" onClick="javascript:im_reset();"><img src="{/root/gui/url}/images/reset.png" title="Reset map"/></td>
+								<td class="im_tool" id="im_tool_reset" onClick="javascript:im_reset();"><img src="{/root/gui/url}/images/reset.png" title="{/root/gui/strings/reset}"/></td>
 							</tr>							
 						</table>						
 					</td>
@@ -77,7 +77,7 @@
 								src="{/root/gui/url}/images/transpcorner.png" 
 								style="z-index:1000; position:absolute; bottom:0px; right:0px; cursor:se-resize" 
 								alt="resize"/>
-							<div id="im_pleaseWait" style="position: absolute; display:none; ">Loading map...</div>							
+							<div id="im_pleaseWait" style="position: absolute; display:none; "><xsl:value-of select="/root/gui/strings/loadingMap" /></div>							
 						</div>		
 						<div id="im_scale" style="position: absolute;" >
 							1:?
@@ -93,15 +93,15 @@
 					<td>
 						<table id="im_subtoolbar" class="padded_content">
 							<tr>
-								<td style="padding:2px"><a onClick="im_addLayer();"><img src="{/root/gui/url}/images/im_addLayer.png" title="Add a layer to this map"/></a></td>
-								<!-- <td style="padding:2px" onClick="im_sendMail();" ><a><img src="{/root/gui/url}/images/im_mail.png" title="Send this map via e-mail"/></a></td> -->
-								<td style="padding:2px" onClick="im_openPDFform();" ><a><img src="{/root/gui/url}/images/acroread.png" title="Export this map as a PDF"/></a></td>
-								<!-- <td style="padding:2px" onClick="im_openPictureForm();" ><a><img src="{/root/gui/url}/images/im_exportPic.png" title="Export this map as an image"/></a></td> -->
-<!--								<td style="padding:2px" onClick="im_openWMCform();" ><a><img src="{/root/gui/url}/images/im_exportPic.png" title="View context"/></a></td>-->
+								<td style="padding:2px"><a onClick="im_addLayer();"><img src="{/root/gui/url}/images/im_addLayer.png" title="{/root/gui/strings/findMapsMapServers}"/></a></td>
+								<!-- <td style="padding:2px" onClick="im_sendMail();" ><a><img src="{/root/gui/url}/images/im_mail.png" title="{/root/gui/strings/sendByEmail}"/></a></td> -->
+								<td style="padding:2px" onClick="im_openPDFform();" ><a><img src="{/root/gui/url}/images/acroread.png" title="{/root/gui/strings/exportAsPDF}"/></a></td>
+								<!-- <td style="padding:2px" onClick="im_openPictureForm();" ><a><img src="{/root/gui/url}/images/im_exportPic.png" title="{/root/gui/strings/exportAsImage}"/></a></td> -->
+<!--								<td style="padding:2px" onClick="im_openWMCform();" ><a><img src="{/root/gui/url}/images/im_exportPic.png" title="{/root/gui/strings/exportAsWMC}"/></a></td>-->
 								<td width="100%" style="border-top:0px;"/> <!-- spacer -->								
 								<td class="im_tool" id="im_tool_scale">
 									<select name="im_setscale" id="im_setscale" onchange="javascript:im_bm_setScale();">
-										<option id="im_currentscale" value="">1:?</option>										
+										<option id="im_currentscale" value=""><xsl:value-of select="/root/gui/strings/setScale" /></option>										
 										<option value="50000000">1:50.000.000</option>
 										<option value="10000000">1:10.000.000</option>
 										<option value="5000000">1:5.000.000</option>

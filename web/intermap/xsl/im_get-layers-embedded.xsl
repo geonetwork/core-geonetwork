@@ -31,16 +31,16 @@
 						<td height="35px" class="im_layerControl">
 							<img id="visibility_{@id}"  class="im_layerControl" 
 								onclick="toggleVisibility({@id})" 
-								src="/intermap/images/showLayer.png" title="Toggle layer visibility"></img>
+								src="/intermap/images/showLayer.png" title="{/root/gui/strings/layerShowHide}"></img>
 							<xsl:if test="position()>1">
 								<img id="im_layerUp_{@id}" class="im_layerControl" 
 									onclick="im_layerMoveUp({@id})"
-									src="/intermap/images/im_moveup.gif" title="Move layer up"/>								
+									src="/intermap/images/im_moveup.gif" title="{/root/gui/strings/up}"/>								
 							</xsl:if>
 							<xsl:if test="position() &lt; last()">
 								<img id="im_layerDown_{@id}" class="im_layerControl" 
 									onclick="im_layerMoveDown({@id})"
-									src="/intermap/images/im_movedown.gif" title="Move layer down"/>								
+									src="/intermap/images/im_movedown.gif" title="{/root/gui/strings/down}"/>								
 							</xsl:if>						
 						</td>
 						
@@ -54,15 +54,15 @@
 							<xsl:if test="last()>1"> <!-- we need at least one layer, so last one is not removeable  -->
 								<img id="deleteLayer_{@id}" class="im_layerButton" 
 									onclick="im_deleteLayer({@id})" 
-									src="/intermap/images/deleteLayer.png" title="Remove layer"/>
+									src="/intermap/images/deleteLayer.png" title="{/root/gui/strings/removeLayer}"/>
 							</xsl:if>
 							<img id="legend_{@id}"  class="im_layerButton" 
 								onclick="showLegend({@id})"
-								src="/intermap/images/legend.png" title="Show legend"/>
+								src="/intermap/images/legend.png" title="{/root/gui/strings/legend}"/>
 							<img id="showLayerMD_{@id}" class="im_layerButton" 
-								src="/intermap/images/metadata.png" title="Show layer information"/>
+								src="/intermap/images/metadata.png" title="{/root/gui/strings/metadata}"/>
 							<select id="im_transp_{@id}" class="layerSelectTransp"
-								onchange="im_layerTransparencyChanged({@id})" >
+								onchange="im_layerTransparencyChanged({@id})" title="{/root/gui/strings/transparency}">
 								<xsl:call-template name="fillTransparencyOptions">
 									<xsl:with-param name="transparency"><xsl:value-of select="@transparency" /></xsl:with-param>
 								</xsl:call-template>
