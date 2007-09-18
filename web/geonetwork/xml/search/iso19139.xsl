@@ -42,11 +42,15 @@
 				</xsl:for-each>
 
 				<xsl:for-each select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='revision']/gmd:date/gco:Date">
-					<Field name="changeDate" string="{string(.)}" store="true" index="true" token="false"/>
+					<Field name="revisionDate" string="{string(.)}" store="true" index="true" token="false"/>
 				</xsl:for-each>
 
 				<xsl:for-each select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='creation']/gmd:date/gco:Date">
 					<Field name="createDate" string="{string(.)}" store="true" index="true" token="false"/>
+				</xsl:for-each>
+
+				<xsl:for-each select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='publication']/gmd:date/gco:Date">
+					<Field name="publicationDate" string="{string(.)}" store="true" index="true" token="false"/>
 				</xsl:for-each>
 
 				<!-- fields used to search for metadata in paper or digital format -->
