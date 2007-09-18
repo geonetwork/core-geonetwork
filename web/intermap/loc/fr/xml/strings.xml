@@ -41,7 +41,7 @@
 	<layers>Calques</layers>
 	<layersHide>Cacher la liste de calques</layersHide>
 	<layersShow>Afficher la liste de calques</layersShow>
-	<layerShowHide>Affisher ou cacher la calque</layerShowHide>
+	<layerShowHide>Afficher ou cacher la calque</layerShowHide>
 	<legend>Afficher la légende</legend>
 	<listofmaps>Liste des cartes</listofmaps>
 	<listofmapservers>Liste des géoservices</listofmapservers>

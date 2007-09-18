@@ -76,16 +76,16 @@
 		<foundKeyWordsLimit>Nombre maximum de mots trouvés </foundKeyWordsLimit>
 	</thesaurus>
 
-	<searchBox>Search for Data and Information</searchBox>
-	<searchIndex>Search index</searchIndex>
-	<contactUs>Contact us</contactUs>
-	<highlights>Highlights</highlights>
-	<recentAdditions>Recent Additions</recentAdditions>
-	<feedbackCardTitle>Feedback and Comments</feedbackCardTitle>
-	<loginCardTitle>Login / Signup</loginCardTitle>
-	<organisation>Organisation / department</organisation>
-	<emailAddress>Email address</emailAddress>
-	<feedbackComments>Feedback / comments</feedbackComments>
+	<searchBox>Recherche de données et information</searchBox>
+	<searchIndex>Index</searchIndex>
+	<contactUs>Contact</contactUs>
+	<highlights>Epinglés</highlights>
+	<recentAdditions>Derniers ajouts</recentAdditions>
+	<feedbackCardTitle>Retour et Commentaire</feedbackCardTitle>
+	<loginCardTitle>Connexion / identification</loginCardTitle>
+	<organisation>Organisation / Service</organisation>
+	<emailAddress>Mel</emailAddress>
+	<feedbackComments>Retour / Commentaire</feedbackComments>
 	<!-- End new strings -->
 	
 	<language>fr</language> 
@@ -321,9 +321,9 @@
 	<maintenanceTab>Maintenance</maintenanceTab>
 	<management>Gestion</management>
 	<mapType>Type de carte</mapType>
-	<mapViewerClose>Close Map Viewer</mapViewerClose>
-	<mapViewerLoading>Loading Map Viewer...</mapViewerLoading>
-	<mapViewerOpen>Open Map Viewer</mapViewerOpen>
+	<mapViewerClose>Fermer la carte</mapViewerClose>
+	<mapViewerLoading>Chargement de la carte ...</mapViewerLoading>
+	<mapViewerOpen>Ouvrir la carte</mapViewerOpen>
 	<max>Maximum</max>
 	<mdUpdateError>Erreur de mise à jour</mdUpdateError>
 	<message>Le nom ou mot de passe est incorrect.<br/>Appuyer sur le bouton 'retour'.</message>
