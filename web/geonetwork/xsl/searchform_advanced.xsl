@@ -6,6 +6,7 @@
 	<xsl:variable name="lang" select="/root/gui/language"/>
 
 	<xsl:template match="/">
+	<form name="advsearch" id="advsearch" onsubmit="javascript:runAdvancedSearch();">
 		<table class="advsearchfields">
 			<xsl:comment>ADVANCED SEARCH</xsl:comment>					
 			<tr class="advsearchfields">
@@ -14,27 +15,21 @@
 					<img width="13px" height="233px" src="/geonetwork/images/arrow-down.gif"/>
 				</td>
 				<td style="margin-left:5px;">
-					<form name="advwhat" id="advwhat">
-						<xsl:call-template name="adv_what"></xsl:call-template>
-					</form>
+					<xsl:call-template name="adv_what"></xsl:call-template>
 				</td>
 				<xsl:comment>ADV SEARCH: WHERE?</xsl:comment>					
 				<td width="16px" height="236px" style="padding-right: 3px; padding-top:5px;">
 					<img width="13px" height="233px" src="/geonetwork/images/arrow-down.gif"/>
 				</td>
 				<td>
-					<form name="advwhere" id="advwhere">
-						<xsl:call-template name="adv_where"></xsl:call-template>
-					</form>
+					<xsl:call-template name="adv_where"></xsl:call-template>
 				</td>
 				<xsl:comment>ADV SEARCH: WHEN?</xsl:comment>					
 				<td width="16px" height="236px" style="padding-right: 3px; padding-top:5px;">
 					<img width="13px" height="233px" src="/geonetwork/images/arrow-down.gif"/>
 				</td>
 				<td>
-					<form name="advwhen" id="advwhen">						
-						<xsl:call-template name="adv_when"></xsl:call-template>
-					</form>
+					<xsl:call-template name="adv_when"></xsl:call-template>
 				</td>
 			</tr>
 			
@@ -58,13 +53,13 @@
 			</tr>
 			<tr>
 				<td colspan="6" align="right">
-<!--					<a onClick="alert('TODO');" style="padding-right:10px; padding-left:10px;">Help</a> -->
-					<a onClick="showSimpleSearch()" style="cursor:pointer; padding-right:10px; padding-left:10px;">Hide advanced options</a>		
+					<a onClick="resetAdvancedSearch();" style="cursor:pointer; padding-right:10px; padding-left:10px;" title="{/root/gui/strings/resetSearch}" alt="{/root/gui/strings/resetSearch}"><xsl:value-of select="/root/gui/strings/reset"/></a>
+					<a onClick="showSimpleSearch();" style="cursor:pointer; padding-right:10px; padding-left:10px;"><xsl:value-of select="/root/gui/strings/hideAdvancedOptions"/></a>		
 					
 				</td>
 			</tr>
 		</table>
-									
+	</form>					
 </xsl:template>
 	
 	<!-- ============================================================ 
@@ -72,7 +67,7 @@
 	======================================= ===================== -->
 	
 <xsl:template name="adv_what">
-	<h1>What?</h1>
+	<h1><xsl:value-of select="/root/gui/strings/what"/></h1>
 	<table heigth="100%	">
 		<tr>
 			<th class="padded">
@@ -119,34 +114,34 @@
 		</tr>
 		<tr >
 			<td colspan="2" style="padding-top:30px; white-space: nowrap;">
-				<fieldset style="margin: 10px 5px 10px;">
-					<legend>Search accuracy</legend>
-					Precise <input type="radio" id="precision_exact" name="similarity" value="1" >
+				<fieldset style="margin: 10px 5px 10px;" title="{/root/gui/strings/fuzzySearch}">
+					<legend><xsl:value-of select="/root/gui/strings/fuzzy"/></legend>
+					<xsl:value-of select="/root/gui/strings/fuzzyPrecise"/> <input type="radio" id="similarity" name="similarity" value="1" >
 						<xsl:if test="/root/gui/searchDefaults/similarity='1'">
 								<xsl:attribute name="checked"/>
 						</xsl:if>
 					</input>
-					<input type="radio" id="precision_fuzzy" name="similarity" value=".8">
+					<input type="radio" id="similarity" name="similarity" value=".8">
 						<xsl:if test="/root/gui/searchDefaults/similarity='.8'">
 								<xsl:attribute name="checked"/>
 						</xsl:if>
 					</input>
-					<input type="radio" id="precision_loose" name="similarity" value=".6" >
+					<input type="radio" id="similarity" name="similarity" value=".6" >
 						<xsl:if test="/root/gui/searchDefaults/similarity='.6'">
 								<xsl:attribute name="checked"/>
 						</xsl:if>
 					</input>
 
-					<input type="radio" id="precision_fuzzy" name="similarity" value=".4" >
+					<input type="radio" id="similarity" name="similarity" value=".4" >
 						<xsl:if test="/root/gui/searchDefaults/similarity='.4'">
 								<xsl:attribute name="checked"/>
 						</xsl:if>
 					</input> 
-					<input type="radio" id="precision_fuzzy" name="similarity" value=".2" >
+					<input type="radio" id="similarity" name="similarity" value=".2" >
 						<xsl:if test="/root/gui/searchDefaults/similarity='.2'">
 								<xsl:attribute name="checked"/>
 						</xsl:if>
-					</input>Imprecise
+					</input><xsl:value-of select="/root/gui/strings/fuzzyImprecise"/>
 				</fieldset>		
 			</td>	
 		</tr>
@@ -164,7 +159,7 @@
 	
 <xsl:template name="adv_where">
 
-	<h1>Where?</h1>
+	<h1><xsl:value-of select="/root/gui/strings/where"/></h1>
 	
 	<xsl:comment>MINIMAP</xsl:comment>
 	
@@ -175,13 +170,13 @@
 				<table id="minimap_root" width="340px">
 					<tr>
 						<td colspan="4" align="center" style="padding: 3px;">
-							lat  (min) <input type="text" class="content" id="northBL" name="northBL"  size="5"
+							<xsl:value-of select="/root/gui/strings/latMin"/> <input type="text" class="content" id="northBL" name="northBL"  size="5"
 								value="{/root/gui/searchDefaults/northBL}" onChange="javascript:AoIrefresh();"/>
 						</td>
 					</tr>
 					<tr height="102px" style="position:relative;">
 						<td width="52px" style="padding-top: 25px; align: center;">
-							<small>long (min)</small>
+							<small><xsl:value-of select="/root/gui/strings/longMin"/></small>
 							<br />
 							<input type="text" class="content" id="westBL" name="westBL" size="5"
 								value="{/root/gui/searchDefaults/westBL}" onChange="javascript:AoIrefresh();"/>
@@ -217,7 +212,7 @@
 							</div>
 						</td>
 						<td width="52px" style="padding-top: 25px; align: center;">
-							<small>lon (max)</small>
+							<small><xsl:value-of select="/root/gui/strings/longMax"/></small>
 							<br />
 							<input type="text" class="content" id="eastBL" name="eastBL" size="5"
 								value="{/root/gui/searchDefaults/eastBL}" onChange="javascript:AoIrefresh();"/>
@@ -226,7 +221,7 @@
 					<tr>
 						<td />
 						<td colspan="2" align="center" style="padding: 3px;">
-							<small>lat (max)</small> <input type="text" class="content" id="southBL" name="southBL" size="5"
+							<small><xsl:value-of select="/root/gui/strings/latMax"/></small> <input type="text" class="content" id="southBL" name="southBL" size="5"
 								value="{/root/gui/searchDefaults/southBL}" onChange="javascript:AoIrefresh();"/>
 						</td>
 						<td>
@@ -238,7 +233,7 @@
 		</tr>
 		<tr>
 			<th class="padded" colspan="2" nowrap="nowrap">
-				<!--<xsl:value-of select="/root/gui/strings/region"/> --> Spatial search type 
+				<xsl:value-of select="/root/gui/strings/type"/>
 			</th>
 			<td class="padded" align="right">
 				<select class="content" name="relation" id="relation">
@@ -293,7 +288,7 @@
 
 <xsl:template name="adv_when">
 
-	<h1>When?</h1>
+	<h1><xsl:value-of select="/root/gui/strings/when"/></h1>
 
 
 	<table border="0" cellpadding="0" cellspacing="0">
@@ -303,7 +298,7 @@
 					<xsl:if test="string(/root/gui/searchDefaults/datefrom)='' and string(/root/gui/searchDefaults/dateto)=''"> 
 						<xsl:attribute name="checked" />
  					</xsl:if>
-					Anytime
+					<xsl:value-of select="/root/gui/strings/anytime"/>
 				</input>
 			</td>
 		</tr>
@@ -314,28 +309,28 @@
 					<xsl:if test="string(/root/gui/searchDefaults/datefrom)!='' and string(/root/gui/searchDefaults/dateto)!=''">
 						<xsl:attribute name="checked" />
 					</xsl:if>
-					From
+					<xsl:value-of select="/root/gui/strings/from"/>
 					<input style="width: 90px;" readonly="1" id="datefrom" value="{/root/gui/searchDefaults/datefrom}" name="datefrom" class="inpBnds" type="text" 
-						onchange="document.getElementById('radfrom1').checked=true;"/>
+						onchange="$('radfrom1').checked=true;$('radfrom1').disabled='';"/>
 					<img title="FROM date selector" style="cursor: pointer; margin-bottom: 6px; margin-right:10px;" id="from_trigger_c" 
 						src="/geonetwork/scripts/calendar/img.gif" alt="select FROM date" align="middle" hspace="1"/>
 							
-					To
+					<xsl:value-of select="/root/gui/strings/to"/>
 					<input  style="width: 90px;" readonly="1" id="dateto" value="{/root/gui/searchDefaults/dateto}" name="dateto" class="inpBnds" type="text"
-						onchange="document.getElementById('radfrom1').checked=true;" />
+						onchange="$('radfrom1').checked=true;$('radfrom1').disabled='';" />
 					<img title="TO date selector" style="cursor: pointer; margin-bottom: 6px;" id="to_trigger_c" 
 						src="/geonetwork/scripts/calendar/img.gif" alt="select TO date" align="middle" hspace="1"/>								
 				</input>
 <!--				<div onclick="JavaScript:$('datefrom').value ='';$('dateto').value ='';" style="cursor: pointer;"><xsl:value-of select="/root/gui/strings/clear"/></div> -->
 				<img title="{/root/gui/strings/clear}" style="cursor: pointer; margin-bottom: 6px;" id="clearDates" 
 					src="/geonetwork/images/clear_left.png" alt="{/root/gui/strings/clear}" align="middle" 
-					hspace="1" onclick="JavaScript:$('datefrom').value ='';$('dateto').value ='';$('radfrom0').checked=true;"/>
+					hspace="1" onclick="JavaScript:$('datefrom').value ='';$('dateto').value ='';$('radfrom0').checked=true;$('radfrom1').disabled='disabled';"/>
 			</td>
 		</tr>
 	</table>
 
 	<fieldset style="margin: 10px 5px 10px;">
-		<legend>Restrict to</legend>
+		<legend><xsl:value-of select="/root/gui/strings/restrictTo"/></legend>
 
 	<table style="margin-left:10px;">
 

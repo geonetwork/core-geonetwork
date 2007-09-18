@@ -222,7 +222,7 @@
 								<table class="geosearchfields" width="100%">
 									<tr>
 										<td>
-											<xsl:call-template name="latestUpdates"/>
+											<xsl:call-template name="categories"/>
 										</td>
 									</tr>
 								</table>
@@ -233,7 +233,7 @@
 								<table class="geosearchfields" width="100%">
 									<tr>
 										<td>
-											<xsl:call-template name="categories"/>
+											<xsl:call-template name="latestUpdates"/>
 										</td>
 									</tr>
 								</table>
@@ -258,7 +258,7 @@
 						
 						<tr width="100%">
 							<td width="100%">
-								<h1 id="loadingMD" align="center" style="display: none;" width="100%">...Searching for Metadata...</h1>
+								<h1 id="loadingMD" align="center" style="display: none;" width="100%"><xsl:value-of select="/root/gui/strings/searching"/></h1>
 								
 								<!-- This DIV contains a first-time message that will be removed when the first search will be run -->
 								<div id="resultList">

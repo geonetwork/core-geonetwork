@@ -207,13 +207,13 @@
 					</table>
 				</td>
 				<td class="padded" align="center" valign="center" width="200">
-					<xsl:call-template name="score">
+<!--					<xsl:call-template name="score">
 						<xsl:with-param name="score" select="$metadata/geonet:info/score * 100"/>
 						<xsl:with-param name="class" select="5"/>
 						<xsl:with-param name="currentClass" select="0"/>
 					</xsl:call-template>
 					
-					<br/>
+					<br/> -->
 					<xsl:call-template name="thumbnail">
 						<xsl:with-param name="metadata" select="$metadata"/>
 					</xsl:call-template>

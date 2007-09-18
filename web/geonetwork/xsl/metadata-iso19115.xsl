@@ -996,11 +996,7 @@
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
 					<xsl:with-param name="text">
-						<!-- ETj
-						<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={linkage}&amp;type=2')" title="{/root/strings/interactiveMap}">
-						-->
 						<a href="javascript:runIM_selectService('{linkage}',2,{//geonet:info/id})" title="{/root/strings/interactiveMap}"> 
-								
 							<xsl:choose>
 								<xsl:when test="string(orDesc)!=''">
 									<xsl:value-of select="orDesc"/>
@@ -1740,7 +1736,6 @@
 					</xsl:when>
 					<xsl:when test="starts-with(./protocol,'OGC:WMS-') and contains(./protocol,'-get-capabilities') and ./orName">
 						<link type="wms">
-							<!-- ETj <xsl:value-of select="concat('javascript:popInterMap(&#34;',/root/gui/url,'/intermap/srv/',/root/gui/language,'/map.addServicesExt?url=',linkage,'&amp;type=2&#34;)')"/> -->
 							<xsl:value-of select="concat('javascript:runIM_selectService(&#34;',linkage,'&#34;,2,',$id,');')"/>
 						</link>
 					</xsl:when>

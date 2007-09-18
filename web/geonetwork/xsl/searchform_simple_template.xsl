@@ -5,6 +5,7 @@
 
 
 	<xsl:template name="geofields">
+		<form name="defsearch" id="defsearch" onsubmit="javascript:runSimpleSearch();">
 		<table class="geosearchfields" width="211px">
 			<tr>
 				<td rowspan="6" style="vertical-align: bottom;">
@@ -43,7 +44,7 @@
 							<td class="im_mmtool" id="im_mmtool_zoomout"   	onClick="javascript:im_mm_setTool('zoomout');"><img  src="/intermap/images/zoomout.png" title="Zoom out"/></td>
 							<td class="im_mmtool" id="im_mmtool_pan"		onClick="javascript:im_mm_setTool('pan');"><img src="/intermap/images/im_pan16x16.png" title="Pan"/></td>
 <!--							<td class="im_mmtool" id="im_mmtool_zoomsel"	onClick="javascript:im_mm_zoomToAoi()"><img src="/intermap/images/zoomsel.png" title="Zoom to selected layer extent"/></td> -->
-							<td class="im_mmtool" id="im_mmtool_aoi"		onClick="javascript:im_mm_setTool('aoi')"><img src="/intermap/images/im_aoi16x16.png" title="Select an Area Of Interest"/></td> 
+							<td class="im_mmtool" id="im_mmtool_aoi" onClick="javascript:im_mm_setTool('aoi')"><img src="/intermap/images/im_aoi16x16.png" title="Select an Area Of Interest"/></td> 
 						</tr>
 						<tr height="102px" style="position:relative;">
 							<td id="im_mm_mapContainer" style="position:relative;width:202px;height:102px;" colspan="6"  >
@@ -58,17 +59,17 @@
 						</tr>
 						<tr>
 							<td align="right" colspan="7">
-								<div id="openIMBtn" class="IMBtn" title="View Map" style="cursor:wait;">Open Map Viewer</div>
+								<div id="openIMBtn" class="IMBtn" title="View Map" style="cursor:wait;"><xsl:value-of select="/root/gui/strings/mapViewerOpen"/></div>
 							</td>
 						</tr>
 						<tr>
 							<td align="right" colspan="7" >
-								<div id="loadIMBtn" class="IMBtn" style="display:none; cursor:default;">Loading Map Viewer...</div>
+								<div id="loadIMBtn" class="IMBtn" style="display:none; cursor:default;"><xsl:value-of select="/root/gui/strings/mapViewerLoading"/></div>
 							</td>
 						</tr>
 						<tr>
 							<td align="right" colspan="7">
-								<div id="closeIMBtn" class="IMBtn" title="Close Map Viewer" style="display:none" onclick="closeIntermap();">Close Map Viewer</div>
+								<div id="closeIMBtn" class="IMBtn" title="Close Map Viewer" style="display:none" onclick="closeIntermap();"><xsl:value-of select="/root/gui/strings/mapViewerClose"/></div>
 							</td>
 						</tr>
 					</table>
@@ -115,41 +116,12 @@
 					</select>
 				</td>
 			</tr>
-
-
-			<!-- other search options -->
-
-			<!-- hits per page -->
-<!--			<tr>
-				<td class="padded">
-					<xsl:value-of select="/root/gui/strings/hitsPerPage"/>
-				</td>
-				<td class="padded" align="right">
-					<select class="content" name="hitsPerPage" onchange="profileSelected()">
-						<xsl:for-each select="/root/gui/strings/hitsPerPageChoice">
-							<option>
-								<xsl:if
-									test="string(@value)=string(/root/gui/searchDefaults/hitsPerPage)">
-									<xsl:attribute name="selected"/>
-								</xsl:if>
-								<xsl:attribute name="value">
-									<xsl:value-of select="@value"/>
-								</xsl:attribute>
-								<xsl:value-of select="."/>
-							</option>
-						</xsl:for-each>
-					</select>
-				</td>
-			</tr>
--->
 			<tr>
 				<td colspan="2" style="align: center; padding-top: 7px;">
 					<table class="advsearchfields" width="211px" border="0" cellspacing="0" cellpadding="0">
 						<tr >
 							<td style="background: url(/geonetwork/images/arrow-bg.gif) repeat-x;" height="29px" width="30%">
-								
 							</td>
-<!--							<td width="36px" style="background: url(/geonetwork/images/arrow-right.gif) no-repeat;" > -->
 							<td style="padding:0px; margin:0px;" width="36px">
 								<img width="36px" style="padding:0px; margin:0px;"  src="/geonetwork/images/arrow-right.gif"/>
 							</td>
@@ -168,9 +140,7 @@
 			</tr>
 			
 			<script language="JavaScript" type="text/javascript">
-				//Event.observe('searchBtn', 	'click', 		runSimpleSearch);
 				Event.observe('any', 		'keypress',	gn_anyKeyObserver);
-				//			Event.observe('openIMBtn', 'click',  function(){openIntermap()} ); // issued only when IM is loaded
 				Event.observe('closeIMBtn', 	'click',  		closeIntermap	 );
 			</script>
 
@@ -178,14 +148,15 @@
 				<td colspan="3">
 					<table width="100%">
 						<tr>
-							<td style="padding-left:10px;padding-top:5px;" align="right"><a onClick="showAdvancedSearch()" style="cursor:pointer;">Advanced</a></td>							
+							<td style="padding-left:10px;padding-top:5px;" align="right">
+												<a onClick="resetSimpleSearch();" style="cursor:pointer; padding-right:10px; padding-left:10px;" title="{/root/gui/strings/resetSearch}" alt="{/root/gui/strings/resetSearch}"><xsl:value-of select="/root/gui/strings/reset"/></a>
+							<a onClick="showAdvancedSearch()" style="cursor:pointer;"><xsl:value-of select="/root/gui/strings/extended"/></a></td>							
 						</tr>
 					</table>
 				</td>
 			</tr>
 		</table>
+		</form>
 	</xsl:template>
-
-
 
 </xsl:stylesheet>
