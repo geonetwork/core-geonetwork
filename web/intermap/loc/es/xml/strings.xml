@@ -22,6 +22,8 @@
 <!-- 
 	<errorText>Sorry, error connecting to the map server</errorText>
  -->
+  <exportAsPDF>Export this map as a PDF</exportAsPDF>
+	<exportAsImage>Export this map as an image</exportAsImage>
 	<extents>Change the selected time (temporal data)</extents>
 	<extentSelected>Selected time: </extentSelected>
 	<featuresfound>features found</featuresfound>
@@ -39,9 +41,11 @@
 	<layers>Layers</layers>
 	<layersHide>Hide layer list</layersHide>
 	<layersShow>Show layer list</layersShow>
+	<layerShowHide>Show or hide layer</layerShowHide>
 	<legend>Show the legend</legend>
 	<listofmaps>List of maps</listofmaps>
 	<listofmapservers>List of map servers</listofmapservers>
+	<loadingMap>...Loading map...</loadingMap>
 	<manually>create you own map</manually>
 	<map>Map</map>
 	<mapsfound>maps found</mapsfound>
@@ -55,6 +59,7 @@
 	<oneFeature>One feature found</oneFeature>
 	<otherArcIMS>- Other ArcIMS server (specify below)</otherArcIMS>
 	<otherWMS>- Other WMS server (specify below)</otherWMS>
+	<pan>Mover</pan>
 	<position>Position:</position>
 	<print>Print the map</print>
 	<properties>Properties</properties>
@@ -62,6 +67,9 @@
 	<refresh>Refresh</refresh>
 	<refreshNotification>Please click the "Refresh" button under the layer list to see this change.</refreshNotification>
 	<removeLayer>Remove layer</removeLayer>
+	<reset>Reset</reset>
+	<sendByEmail>Send this map via e-mail</sendByEmail>
+	<setScale>--Set Scale--</setScale>
 	<smaller>Smaller map</smaller>
 	<specify>Specify if other:</specify>
 	<style>Select the desired style</style>

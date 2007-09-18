@@ -22,6 +22,8 @@
 <!-- 
 	<errorText>Sorry, error connecting to the map server</errorText>
  -->
+  <exportAsPDF>Export votre carte vers PDF</exportAsPDF>
+	<exportAsImage>Export votre carte vers une image</exportAsImage>
 	<extents>Modifier la période sélectionnée (Donnée temporelle)</extents>
 	<extentSelected>Temps sélectionné: </extentSelected>
 	<featuresfound>Objet trouvé</featuresfound>
@@ -39,9 +41,11 @@
 	<layers>Calques</layers>
 	<layersHide>Cacher la liste de calques</layersHide>
 	<layersShow>Afficher la liste de calques</layersShow>
+	<layerShowHide>Affisher ou cacher la calque</layerShowHide>
 	<legend>Afficher la légende</legend>
 	<listofmaps>Liste des cartes</listofmaps>
 	<listofmapservers>Liste des géoservices</listofmapservers>
+	<loadingMap>...Loading map...</loadingMap>
 	<manually>Créer votre carte</manually>
 	<map>Carte</map>
 	<mapsfound>cartes trouvées</mapsfound>
@@ -55,6 +59,7 @@
 	<oneFeature>Un objet trouvé</oneFeature>
 	<otherArcIMS>- Autres serveurs ArcIMS</otherArcIMS>
 	<otherWMS>- Autres serveurs WMS</otherWMS>
+	<pan>Déplacement</pan>
 	<position>Position :</position>
 	<print>Imprimer la carte</print>
 	<properties>Propriétés</properties>
@@ -62,6 +67,9 @@
 	<refresh>Rafraîchir</refresh>
 	<refreshNotification>Cliquer sur "Rafraîchir" pour voir les changements.</refreshNotification>
 	<removeLayer>Supprimer le calque</removeLayer>
+	<reset>Réinitialiser</reset>
+	<sendByEmail>Envoyer par e-mail</sendByEmail>
+	<setScale>--Set Scale--</setScale>
 	<smaller>Petite carte</smaller>
 	<specify>Définir si autre :</specify>
 	<style>Choisir le style :</style>
