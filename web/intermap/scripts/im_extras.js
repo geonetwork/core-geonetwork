@@ -11,6 +11,7 @@
 ********************************************************************/
 /*
 ## Called by the bottom toolbar
+## Shows a list of configured map servers
 */
 function im_addLayer()
 {
@@ -57,13 +58,14 @@ function im_mapServerSelected(id, name)
 	t2.innerHTML = "Loading services from " +name;	
 	im.appendChild(t2);
 
-            imc_loadServerServices(id, im_servicesLoaded );
+            imc_loadServerServices(id, im_servicesLoaded, "im_servicesSelected();");
 }
 
-function imc_loadServerServices(id, callback)
+function imc_loadServerServices(id, callback, jscallback)
 {
 	var url = '/intermap/srv/en/mapServers.getServices.embedded';
-	var pars = 'mapserver='+id ; 				
+	var pars = 'mapserver='+id  				
+	                +"&jscallback="+encodeURIComponent(jscallback);
 
 	var myAjax = new Ajax.Request (
 		url, 
@@ -92,12 +94,14 @@ function im_mapServerURL(url)
 	t2.innerHTML = "Loading services from given WMS server";	
 	im.appendChild(t2);
 
-            imc_loadURLServices(url, -2, im_servicesLoaded );
+            imc_loadURLServices(url, -2, im_servicesLoaded, "im_servicesSelected();" );
 }
 
-function imc_loadURLServices(url, type, callback)
+function imc_loadURLServices(url, type, callback, jscallback)
 {
-	var pars = 'mapserver='+type+"&url="+url ; 				
+	var pars = 'mapserver='+type
+	                +"&url="+encodeURIComponent(url)
+	                +"&jscallback="+encodeURIComponent(jscallback);
 	
 	var myAjax = new Ajax.Request (
 		'/intermap/srv/en/mapServers.getServices.embedded', 
@@ -301,6 +305,112 @@ function im_requestPDF()
 }
 
 function im_openPDF(req)
+{
+    var url = req.responseXML.documentElement.getElementsByTagName('url')[0].firstChild.nodeValue;
+
+    window.open(url);
+
+    $('im_requestpdf').show();
+    $('im_requestingpdf').hide();   
+    $('im_builtpdf').show();
+}
+
+/********************************************************************
+*** WMC
+********************************************************************/
+/*
+## Called by the bottom toolbar
+*/
+function im_openWMCform()
+{
+	// setup WB
+	clearNode('im_whiteboard');    
+	var WB = $('im_whiteboard');
+	
+	var wbtitle = im_createWBTitle("Export this map's Web Map Context"); //FIXME i18n
+	WB.appendChild(wbtitle);
+	
+	var closer = im_getWBCloser();
+	WB.appendChild(closer);
+	Event.observe(closer, 'click', im_closeWhiteBoard);
+	
+	var div = document.createElement('div'); // main box
+	div.id = "im_createWMC";
+	div.className = 'im_wbcontent';
+	WB.appendChild(div);
+	
+	var pars="&width=" + im_bm_width + 
+		    "&height=" + im_bm_height;
+	
+	
+	var myAjax = new Ajax.Updater (
+		'im_createWMC',    
+		'/intermap/srv/en/wmc.mailform', 
+		{
+			method: 'get',    		    	
+			parameters: pars,
+			onFailure: im_load_error
+		}
+	);
+
+}
+
+function im_requestWMC()
+{
+	var orient = $('pdf_orientation').value;
+	var psize = $('pdf_pagesize').value;
+
+	var ptitle = $('pdf_title').value;
+	var pcopy = $('pdf_copyright').value;
+	
+	var bllist = $('pdf_layerlist').checked;
+	var bdetails = $('pdf_details').checked;
+	var bbbox = $('pdf_boundingbox').checked;
+	var bscale = $('pdf_scalebar').checked;
+	var barrow = $('pdf_arrow').checked;
+	
+	var pars = "orientation="+orient+
+		"&pagesize="+psize+
+		"&"+im_bm_getURLbbox();
+		
+	if(ptitle)
+		pars += "&title="+ encodeURIComponent(ptitle);
+	if(pcopy)
+		pars += "&copyright="+ encodeURIComponent(pcopy);
+
+
+	if(bllist)
+		pars += "&layerlist=on";
+	
+	if(bdetails)
+		pars += "&details=on";
+	
+	if(bbbox)
+		pars += "&boundingbox=on";
+
+	if(bscale)
+		pars += "&scalebar=on";
+
+	if(barrow)
+		pars += "&arrow=on";
+
+	$('im_requestingpdf').show();   
+	$('im_requestpdf').hide();
+	$('im_builtpdf').hide();
+	
+	var myAjax = new Ajax.Request (
+		'/intermap/srv/en/create.pdf', 
+		{
+			method: 'get',
+			parameters: pars,
+			onSuccess: im_openPDF,
+			onFailure: im_load_error
+		}
+	);
+    
+}
+
+function im_openWMC(req)
 {
     var url = req.responseXML.documentElement.getElementsByTagName('url')[0].firstChild.nodeValue;
 

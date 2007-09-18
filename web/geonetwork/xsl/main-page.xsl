@@ -25,6 +25,7 @@
 		
 
 		<script type="text/javascript" src="{/root/gui/url}/scripts/gn_search.js?"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/gn_intermap.js?"/>
 		
 		<script type="text/javascript" src="/intermap/scripts/etj.js?"/>
 		<script type="text/javascript" src="/intermap/scripts/im_extras.js?"/>

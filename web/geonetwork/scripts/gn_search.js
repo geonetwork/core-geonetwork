@@ -340,67 +340,6 @@ function gn_search_error() {
     alert("ERROR)");
 }
 
-/********************************************************************
-* 
-*  Show list of addable interactive maps
-*
-********************************************************************/
-
-function gn_showInterList(id) 
-{
-    var pars = 'id=' + id + "&currTab=distribution";
-    
-    $('gn_showinterlist_' + id) .hide();
-    $('gn_loadinterlist_' + id) .show();
-    
-    var myAjax = new Ajax.Request(
-        '/geonetwork/srv/en/metadata.show.embedded', 
-        {
-            method: 'get',
-            parameters: pars,
-            onSuccess: function (req) {
-                // remove previous open md
-                //var prev = document.getElementById('metadata_current');
-                //if(prev)
-                //	prev.parentNode.removeChild($('metadata_current'));
-                
-                var parent = $('ilwhiteboard_' + id);
-                clearNode(parent);
-                
-                parent.show();
-                
-                $('gn_loadinterlist_' + id) .hide();
-                $('gn_hideinterlist_' + id) .show();
-                
-                // create new element
-                var div = document.createElement('div');
-                div.className = 'metadata_current';
-                div.style.display = 'none';
-                parent.appendChild(div);
-                
-                div.innerHTML = req.responseText;
-                
-                Effect.BlindDown(div);
-                
-                var tipman = new TooltipManager();
-                ker.loadMan.wait(tipman);
-            },
-            onFailure: gn_search_error// FIXME
-        });
-}
-
-function gn_hideInterList(id) 
-{
-    var parent = $('ilwhiteboard_' + id);
-    var div = parent.firstChild;
-    Effect.BlindUp(div, { afterFinish: function (obj) {
-            clearNode(parent);
-            $('gn_showinterlist_' + id) .show();
-            $('gn_hideinterlist_' + id) .hide();
-        }
-    });
-}
-
 
 /**********************************************************
 ***

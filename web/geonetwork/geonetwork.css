@@ -578,6 +578,7 @@ div.metadata_current {
     padding: 3px;
     border: 1px #266397 solid;    
     background-color: #dce1ea;
+    position: relative;
 }
 
 div.metadata_current table,
@@ -593,3 +594,6 @@ div.metadata_current td
 	border-collapse: separate;
 }
 
+.ilwhiteboard {
+    position:relative;
+}

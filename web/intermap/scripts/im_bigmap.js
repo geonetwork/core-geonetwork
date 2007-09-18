@@ -1006,10 +1006,16 @@ function deleteChildNodes(target)
 }
 
 function refreshNeeded(refreshmm, callback)
-{
+{          
 	if (autoRefresh)
 	{
+	    if($('im_mapImg'))
 		imc_updateBigMap(im_bm_width, im_bm_height, im_bm_getURLbbox(), refreshmm, callback);
+	    else // big one is not there: must we refresh the minimap?
+	        if(refreshmm)
+	        {
+                        im_mm_refreshNeeded(callback);
+	        }
 	}
 	else
 	{

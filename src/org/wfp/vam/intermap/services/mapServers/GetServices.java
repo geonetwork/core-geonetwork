@@ -55,7 +55,8 @@ public class GetServices implements Service
 
 		Element response = new Element("response")
 			.addContent(new Element("url").setText(serverUrl))
-			.addContent(new Element("type").setText(serverType + ""));
+			.addContent(new Element("type").setText(serverType + ""))
+			.addContent(new Element("jscallback").setText(params.getChildText("jscallback")));
 
 		switch (serverType)
 		{
@@ -84,6 +85,7 @@ public class GetServices implements Service
 				try
 				{
 					Element capabilities = WmsGetCapClient.getCapabilities(serverUrl);
+//					Element capabilities = CapabilitiesStore.getCapabilities(serverUrl);
 					response.addContent(capabilities);
 				}
 				catch (Exception e) {
@@ -101,4 +103,5 @@ public class GetServices implements Service
 }
 
 //=============================================================================
+
 

@@ -142,26 +142,3 @@ function im_reset_complete(req)
 *** LAYERS
 ********************************************************************/
 
-/* 
-## Hook from GN xsl for dynamic data
-*/
-function runIM_addService(url, service, type)
-{
-    imc_addService(url, service, type, function(req) {
-             im_buildLayerList(req);
-             //imc_reloadLayers();
-             imc_mm_update(im_mm_width, im_mm_height, null);
-        });    
-}
-
-
-/* 
-## Hook from GN xsl for dynamic data
-## A server url has been specified. A list of selectable services will be diplayed
-*/
-function runIM_selectService(url, type)
-{
-    alert("TODO (runIM_selectService)");
-    // TODO
-}
-

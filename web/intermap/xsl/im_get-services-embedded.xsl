@@ -44,8 +44,9 @@
 	<!--					<xsl:with-param name="buttons">-->
 <!--			<button class="content" onclick="document.form.action='{/root/gui/locService}/map.getMain';document.form.submit();"><xsl:value-of select="/root/gui/strings/cancel"/></button>-->
 							&#160;
-			<button class="content" onclick="im_servicesSelected();"><xsl:value-of select="/root/gui/strings/ok"/></button>
-	<!--					</xsl:with-param>-->
+<!--			<button class="content" onclick="im_servicesSelected();"><xsl:value-of select="/root/gui/strings/ok"/></button>-->
+			<button class="content" onclick="{/root/response/jscallback}"><xsl:value-of select="/root/gui/strings/ok"/></button>
+			<!--					</xsl:with-param>-->
 	<!--				</xsl:call-template>-->
 		</div>
 
