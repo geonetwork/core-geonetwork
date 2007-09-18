@@ -11,13 +11,15 @@
 	<searchUnusedTitle>Search for Unused</searchUnusedTitle>
 	<batchImportTitle>Batch Import</batchImportTitle>
 	<xmlInsertTitle>XML Metadata Insert</xmlInsertTitle>
-	<fuzzy>Precision</fuzzy>
-	<fuzzySearch>Set the precision of the search (from fuzzy search to exact term search).</fuzzySearch>
-	<address>Address</address>
+	<fuzzy>精确度</fuzzy>
+	<fuzzySearch>Set the precision of the search (from exact term search to fuzzy search).</fuzzySearch>
+	<fuzzyImprecise>不精确</fuzzyImprecise>
+	<fuzzyPrecise>精确</fuzzyPrecise>
+	<address>地址</address>
 	<state>State</state>
 	<zip>Zip</zip>
-	<country>Country</country>
-	<email>Email</email>
+	<country>国家</country>
+	<email>电子邮件</email>
 	<kind>Kind</kind>
 	<kindChoice value="gov">Government</kindChoice>
 	<kindChoice value="int-org">International organisation</kindChoice>
@@ -89,8 +91,9 @@
 	<Administrator>管理员</Administrator>
 	<agrovocKeyword>关键词</agrovocKeyword>
 	<any>- 任意 -</any>
+	<anytime>Anytime</anytime>
 	<appSchInfoTab>应用模式信息</appSchInfoTab>
-	<ar>عربي</ar> <!-- Do not translate! -->
+	 <ar>عربي</ar> <!-- Do not translate! -->
 	<assigned>已赋值</assigned>
 	<attrlabl>属性标签</attrlabl>
 	<availability>可用性</availability>
@@ -210,6 +213,7 @@
 	</header_meta>
 	<help>显示帮助信息</help>
 	<helpComplete>显示完整版帮助信息</helpComplete>
+	<hideAdvancedOptions>简单搜索</hideAdvancedOptions>
 	<highlights>高亮显示</highlights>
 	<hitsPerPage>每页记录数</hitsPerPage>
 	<hitsPerPageChoice value="10">10</hitsPerPageChoice>
@@ -228,6 +232,8 @@
 	<keywordshelp>使用鼠标选择时，请按住Ctrl键可以选择多个关键词</keywordshelp>
 	<large_thumbnail>点击可查看较大的快视图</large_thumbnail>
 	<latitude>纬度(-90 至 90，单位：度)</latitude>
+	<latMax>lat (max)</latMax>
+	<latMin>lat (min)</latMin>
 	<links>相关链接</links>
 	<local>本地搜索</local>
 	<localiz>Localization</localiz>
@@ -239,6 +245,8 @@
 	<logout>注销</logout>
 	<logoutDes>执行注销操作</logoutDes>
 	<longitude>经度(-180 至 180，单位：度)</longitude>
+	<longMax>long (max)</longMax>
+	<longMin>long (min)</longMin>
 	<mandatory>必填</mandatory>
 	<mandatoryIf>满足以下条件时必填：</mandatoryIf>
 	<mainpage1>
@@ -284,6 +292,9 @@
 	<maintenanceTab>维护信息</maintenanceTab>
 	<management>管理</management>
 	<mapType>地图类型</mapType>
+	<mapViewerClose>Close Map Viewer</mapViewerClose>
+	<mapViewerLoading>Loading Map Viewer...</mapViewerLoading>
+	<mapViewerOpen>Open Map Viewer</mapViewerOpen>
 	<max>最大值</max>
 	<mdUpdateError>更新错误</mdUpdateError>
 	<message>用户名或口令有误。<br/>点击“回退”按钮重试。</message>
@@ -362,6 +373,7 @@
 	<reset>重设</reset>
 	<resetSearch>重设搜索表单</resetSearch>
 	<resetFeedbackForm>重设信息反馈表单</resetFeedbackForm>
+	<restrictTo>Restrict to</restrictTo>
 	<result>最后结果</result>
 	<resultsCoordinate>满足坐标搜索条件的结果</resultsCoordinate>
 	<resultsFreeText>满足全文检索条件的结果</resultsFreeText>
@@ -376,6 +388,7 @@
 	<searchBox>数据与信息搜索</searchBox>
 	<searchForUnusedLabel>搜索未用的元数据</searchForUnusedLabel>
 	<searchIndex>搜索索引</searchIndex>
+	<searching>...搜索进步...</searching>
 	<searchPage>搜索页面</searchPage>
 	<searchPageDes>跳至元数据搜索页</searchPageDes>
 	<searchTemplates>查找模板</searchTemplates>
@@ -426,6 +439,9 @@
 	<validityBegins>有效期自</validityBegins>
 	<validityEnds>有效期至</validityEnds>
 	<westbc>覆盖范围西边坐标</westbc>
+	<what>What?</what>
+	<where>Where?</where>
+	<when>When?</when>
 	<winInfo1>该窗口将显示GeoNetwork资源。由于某些浏览器管理窗口的方式不同，该窗口可能会被隐藏到其它窗口后面，这样，您只能手工把该窗口放到上层。</winInfo1>
 	<winInfo2>通过帮助(?)图标，可以查看解释。当激活该图标，其结果将在该资源窗口中显示。</winInfo2>
 	<wwwlink>网站链接</wwwlink>

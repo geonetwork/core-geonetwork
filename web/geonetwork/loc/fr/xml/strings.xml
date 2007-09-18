@@ -11,9 +11,11 @@
 	<!-- new strings -->
 	<fuzzy>Précision</fuzzy>
 	<fuzzySearch>Définir la précision de la recherche (recherche plus ou moins floue).</fuzzySearch>
+	<fuzzyImprecise>Imprécis</fuzzyImprecise>
+	<fuzzyPrecise>Précis</fuzzyPrecise>
 	<address>Adresse</address>
 	<state>Etat</state>
-	<zip>Zip</zip>
+	<zip>Code postal</zip>
 	<country>Pays</country>
 	<email>Mél.</email>
 	<kind>Type</kind>
@@ -97,8 +99,9 @@
 	<Administrator>Administrateur</Administrator>
 	<agrovocKeyword>Mots clés Agrovoc</agrovocKeyword>
 	<any>- Tous -</any>
+	<anytime>N'importe quand</anytime>
 	<appSchInfoTab>Schéma d'application</appSchInfoTab>
-	<ar>Arabe</ar>
+  <ar>عربي</ar> <!-- Do not translate! -->
 	<assigned>Attribué</assigned>
 	<attrlabl>Attribute Label</attrlabl>
 	<availability>Disponibilité</availability>
@@ -133,7 +136,7 @@
 	<chooseLargeThumbnail>Choisir le fichier d'aperçu (grand format)</chooseLargeThumbnail>
 	<chooseThumbnail>Choisir le fichier d'aperçu (petit format)</chooseThumbnail>
 	<clear>Effacer</clear>
-	<cn>Chinois</cn>
+	<cn>中文</cn> <!-- Do not translate! -->
 	<completeTab>Vue avancée</completeTab>
 	<completeTabEditor>Editeur avancé</completeTabEditor>
 	<confirmDelete>Etes-vous certain de vouloir supprimer cette fiche de métadonnées ?</confirmDelete>
@@ -181,7 +184,7 @@
 	<enttypl>Entity Type Label</enttypl>
 	<es>Español</es> <!-- Do not translate! -->
 	<exactCoordinate>Coordonnées exacts</exactCoordinate>
-	<extended>Recherche avancée</extended>
+	<extended>Avancée</extended>
 	<extent>Emprise</extent>
 	<featuredMap>Cartes</featuredMap>
 	<feedback>Retour d'information</feedback>
@@ -192,7 +195,7 @@
 	<firstName>Prénom</firstName>
 	<fr>Français</fr> <!-- Do not translate! -->
 	<freeKeyword>Mot-clés libres</freeKeyword>
-	<from>Date de début : </from>
+	<from>Debut</from>
 	<general>Général</general>
 	<generalInfo>Information générale</generalInfo>
 	<georss>Ouvrez flux GeoRSS</georss>
@@ -218,6 +221,7 @@
 	</header_meta>
 	<help>Aide</help>
 	<helpComplete>Aide complet</helpComplete>
+	<hideAdvancedOptions>Recherche simple</hideAdvancedOptions>
 <!--	<highlights>Mettre en évidence</highlights> -->
 	<hitsPerPage>Nombre de résultats par page</hitsPerPage>
 	<hitsPerPageChoice value="10">10</hitsPerPageChoice>
@@ -242,17 +246,21 @@
 	<keywordshelp>Sélectionner plusieurs mots-clés en utilisant la touche Ctrl</keywordshelp>
 	<large_thumbnail>Cliquer pour voir un aperçu (grand format)</large_thumbnail>
 	<latitude>Latitude (entre -90 et 90) en degrés</latitude>
+	<latMax>lat (max)</latMax>
+	<latMin>lat (min)</latMin>
 	<links>Liens</links>
 	<local>Recherche local</local>
 	<localiz>Internationalisation</localiz>
 	<localizDes>Permet la modification des traductions des groupes, catégories, etc.</localizDes>
-	<location>Situation</location>
+	<location>Situation?</location>
 	<login>Connecter</login>
 <!--	<loginCardTitle>Login / Signup</loginCardTitle>	-->
 	<loginwarning>Nécessaire uniquement pour l'administration du site</loginwarning>
 	<logout>Déconnecter</logout>
 	<logoutDes>Se déconnecter</logoutDes>
 	<longitude>Longitude (entre -180 et 180) en degrés</longitude>
+	<longMax>long (max)</longMax>
+	<longMin>long (min)</longMin>
 	<mandatory>Obligatoire</mandatory>
 	<mandatoryIf>Obligatoire si</mandatoryIf>
 	<mainpage1>
@@ -313,6 +321,9 @@
 	<maintenanceTab>Maintenance</maintenanceTab>
 	<management>Gestion</management>
 	<mapType>Type de carte</mapType>
+	<mapViewerClose>Close Map Viewer</mapViewerClose>
+	<mapViewerLoading>Loading Map Viewer...</mapViewerLoading>
+	<mapViewerOpen>Open Map Viewer</mapViewerOpen>
 	<max>Maximum</max>
 	<mdUpdateError>Erreur de mise à jour</mdUpdateError>
 	<message>Le nom ou mot de passe est incorrect.<br/>Appuyer sur le bouton 'retour'.</message>
@@ -391,6 +402,7 @@
 	<reset>Réinitialiser</reset>
 	<resetSearch>Réinitialiser</resetSearch>
 	<resetFeedbackForm>Réinitialiser</resetFeedbackForm>
+	<restrictTo>Limiter a</restrictTo>
 	<result>Derniers résultats</result>
 	<resultsCoordinate>Résultats correspondant aux critères de recherche géographiques</resultsCoordinate>
 	<resultsFreeText>Résultats correspondant à la recherche libre</resultsFreeText>
@@ -404,14 +416,13 @@
 	<search>Rechercher</search>
 <!--	<searchBox>Rechercher des données</searchBox>
 	<searchIndex>Index de recherche</searchIndex> -->
+	<searching>...Recherche en marche...</searching>
 	<searchPage>Page de recherche</searchPage>
 	<searchPageDes>Aller à la page de recherche</searchPageDes>
 	<searchTemplates>Rechercher les Modèles</searchTemplates>
 	<searchText>Recherche libre</searchText>
 	<searchUnused>Rechercher des métadonnées vides ou non utilisées</searchUnused>
-
 	<searchUnusedTitle>Métadonnées inutilisées</searchUnusedTitle>
-
 	<server>Serveur</server>
 	<setAll>Set All</setAll>
 	<show>Métadonnées</show>
@@ -438,7 +449,7 @@
 	<timeoutChoice value="20">20 secondes</timeoutChoice>
 	<timeoutChoice value="30">30 secondes</timeoutChoice>
 	<title>GeoNetwork - Portail pour l'information géo-spatiale</title>
-	<to>Date de fin : </to>
+	<to>Fin</to>
 	<tools>Outils</tools>
 	<topic>Sujet</topic>
 	<up>Monter</up>
@@ -457,6 +468,9 @@
 	<validate>Valider</validate>
 	<validityBegins>Date de début de validité</validityBegins>
 	<validityEnds> et fin </validityEnds>
+	<what>Quel?</what>
+	<where>Où?</where>
+	<when>Quand?</when>
 	<westbc>Coordonnée ouest de l'emprise</westbc>
 	<winInfo1>Cette fenêtre montre les ressources de GeoNetwork.</winInfo1>
 	<winInfo2>L'icône Besoin d'aide (?) vous donne accès à l'aide.</winInfo2>

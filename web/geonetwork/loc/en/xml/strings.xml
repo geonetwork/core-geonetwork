@@ -8,8 +8,10 @@
 		<iso19139fra>Save ISO19115/19139 Fra metadata as XML</iso19139fra>
 	</savexml>
 	<!-- new strings -->
-	<fuzzy>Precision</fuzzy>
-	<fuzzySearch>Set the precision of the search (from fuzzy search to exact term search).</fuzzySearch>
+	<fuzzy>Search accuracy</fuzzy>
+	<fuzzySearch>Set the precision of the search (from exact term search to fuzzy search).</fuzzySearch>
+	<fuzzyImprecise>Imprecise</fuzzyImprecise>
+	<fuzzyPrecise>Precise</fuzzyPrecise>
 	<address>Address</address>
 	<state>State</state>
 	<zip>Zip</zip>
@@ -84,8 +86,9 @@
 	<Administrator>Administrator</Administrator>
 	<agrovocKeyword>Agrovoc Keywords</agrovocKeyword>
 	<any>- Any -</any>
+	<anytime>Anytime</anytime>
 	<appSchInfoTab>App. schema</appSchInfoTab>
-		<ar>عربي</ar> <!-- Do not translate! -->
+    <ar>عربي</ar> <!-- Do not translate! -->
 	<assigned>Assigned</assigned>
 	<attrlabl>Attribute Label</attrlabl>
 	<availability>Availability</availability>
@@ -170,7 +173,7 @@
 	<enttypl>Entity Type Label</enttypl>
 	<es>Español</es> <!-- Do not translate! -->
 	<exactCoordinate>Exact coordinates </exactCoordinate>
-	<extended>Advanced search</extended>
+	<extended>Advanced</extended>
 	<extent>Extent</extent>
 	<extensionInfoTab>Ext. Info</extensionInfoTab>
 	<featuredMap>Featured map</featuredMap>
@@ -182,7 +185,7 @@
 	<firstName>First Name</firstName>
 	<fr>Français</fr> <!-- Do not translate! -->
 	<freeKeyword>Free Keywords</freeKeyword>
-	<from>Enter From Date: </from>
+	<from>From</from>
 	<general>General</general>
 	<generalInfo>General information</generalInfo>
 	<georss>Open a GeoRSS feed</georss>
@@ -212,6 +215,7 @@
 	</header_meta>
 	<help>Help</help>
 	<helpComplete>Complete help</helpComplete>
+	<hideAdvancedOptions>Hide advanced options</hideAdvancedOptions>
 	<highlights>Highlights</highlights>
 	<hitsPerPage>Hits per page</hitsPerPage>
 	<hitsPerPageChoice value="10">10</hitsPerPageChoice>
@@ -231,6 +235,8 @@
 	<keywordshelp>Select multiple keywords by holding the Ctrl-key when selecting with the mouse</keywordshelp>
 	<large_thumbnail>Click to see a large preview image</large_thumbnail>
 	<latitude>Latitude (between -90 and 90) in degrees</latitude>
+	<latMax>lat (max)</latMax>
+	<latMin>lat (min)</latMin>
 	<links>Links</links>
 	<local>Local search</local>
 	<localiz>Localization</localiz>
@@ -242,6 +248,8 @@
 	<logout>Logout</logout>
 	<logoutDes>Performs a logout</logoutDes>
 	<longitude>Longitude (between -180 and 180) in degrees</longitude>
+	<longMax>long (max)</longMax>
+	<longMin>long (min)</longMin>
 	<mandatory>Mandatory</mandatory>
 	<mandatoryIf>Mandatory if</mandatoryIf>
 	<mainpage1>
@@ -291,6 +299,9 @@
 	<maintenanceTab>Maintenance</maintenanceTab>
 	<management>Management</management>
 	<mapType>Map type</mapType>
+	<mapViewerClose>Close Map Viewer</mapViewerClose>
+	<mapViewerLoading>Loading Map Viewer...</mapViewerLoading>
+	<mapViewerOpen>Open Map Viewer</mapViewerOpen>
 	<max>Maximum</max>
 	<mdUpdateError>Update error</mdUpdateError>
 	<message>The username or the password is wrong.<br/>Press the 'back' button and try again.</message>
@@ -321,7 +332,6 @@
 	<northbc>North Bounding Coordinate</northbc>
 	<online>Interactive map</online>
 	<onlink>Online Linkage</onlink>
-
 	<opensearch>GeoNetwork opensearch service allow search to be made into the metadata catalog.</opensearch>
 	<operation>Operation</operation>
 	<organisation>Organisation / department</organisation>
@@ -371,6 +381,7 @@
 	<reset>Reset</reset>
 	<resetSearch>Reset the search form</resetSearch>
 	<resetFeedbackForm>Reset the feedback form</resetFeedbackForm>
+	<restrictTo>Restrict to</restrictTo>
 	<result>Last results</result>
 	<resultsCoordinate>Results matching the coordinate search </resultsCoordinate>
 	<resultsFreeText>Results matching the Free Text Word </resultsFreeText>
@@ -384,12 +395,12 @@
 	<search>Search</search>
 	<searchBox>Search for Data and Information</searchBox>
 	<searchIndex>Search index</searchIndex>
+	<searching>...Searching for Metadata...</searching>
 	<searchPage>Search page</searchPage>
 	<searchPageDes>Jumps to the metadata search page</searchPageDes>
 	<searchTemplates>Search for templates</searchTemplates>
 	<searchText>What?</searchText>
 	<searchUnused>Search for unused or empty metadata</searchUnused>
-
 	<searchUnusedTitle>Search for Unused</searchUnusedTitle>
 	<server>Server</server>
 	<setAll>Set All</setAll>
@@ -417,7 +428,7 @@
 	<timeoutChoice value="20">after 20 seconds</timeoutChoice>
 	<timeoutChoice value="30">after 30 seconds</timeoutChoice>
 	<title>GeoNetwork- The portal to spatial data and information</title>
-	<to>Enter To Date: </to>
+	<to>To</to>
 	<tools>Tools</tools>
 	<topic>Topic</topic>
 	<up>up</up>
@@ -438,6 +449,9 @@
 	<validityBegins>Validity begins</validityBegins>
 	<validityEnds>and ends</validityEnds>
 	<westbc>West Bounding Coordinate</westbc>
+	<what>What?</what>
+	<where>Where?</where>
+	<when>When?</when>
 	<winInfo1>This window will show GeoNetwork resources. This window may be hidden at times depending on how your browser manages windows. In this case, you will have to manually bring the window to the foreground when necessary.</winInfo1>
 	<winInfo2>Throughout the Help (?) icon give you access to explanations. When you activate this icon, it's output will be displayed in this Resource Window.</winInfo2>
 	<wwwlink>Web link</wwwlink>
