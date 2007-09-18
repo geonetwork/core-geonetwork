@@ -64,7 +64,7 @@ function gn_showInterList(id)
     $('gn_loadinterlist_' + id) .show();
     
     var myAjax = new Ajax.Request(
-        '/geonetwork/srv/en/metadata.show.embedded', 
+        '/geonetwork/srv/'+Env.lang+'/metadata.show.embedded', 
         {
             method: 'get',
             parameters: pars,

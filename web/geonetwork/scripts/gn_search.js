@@ -2,7 +2,8 @@
 * gn_search.js
 *
 * This file contains functions related to the dynamic behavior of geonetwork:
-* - metadata search
+* - Metadata search & reset
+* - Area of Interest Map behavior
 * - metadata present
 *
 ********************************************************************/
@@ -22,7 +23,7 @@ function showAdvancedSearch()
 
 	var myAjax = new Ajax.Updater (
 		'advancedsearch',    
-		'/geonetwork/srv/en/main.searchform.advanced.embedded', 
+		'/geonetwork/srv/'+Env.lang+'/main.searchform.advanced.embedded', 
 		{
 			method: 'get',    		    	
 			onComplete: function()
@@ -42,7 +43,7 @@ function showSimpleSearch()
 	
 	var myAjax = new Ajax.Updater (
 		'simplesearch',    
-		'/geonetwork/srv/en/main.searchform.simple.embedded', 
+		'/geonetwork/srv/'+Env.lang+'/main.searchform.simple.embedded', 
 		{
 			method: 'get',
 			onComplete: function()
@@ -110,7 +111,7 @@ function getRegion(region)
         var pars = "id="+region;
         
     var myAjax = new Ajax.Request(
-    '/geonetwork/srv/en/xml.region.get', {
+    '/geonetwork/srv/'+Env.lang+'/xml.region.get', {
         method: 'get',
         parameters: pars,
         onSuccess: getRegion_complete,
@@ -119,13 +120,9 @@ function getRegion(region)
 }
 
 function getRegion_complete(req) {
-    // remove all previous children
-    //clearResultList();
-    
     var rlist = $('resultList');
     
     //Response received 
-    //rlist.innerHTML = req.responseText;
     var node = req.responseXML;
     var northcc = xml.evalXPath(node, 'response/record/north');
     var southcc = xml.evalXPath(node, 'response/record/south');
@@ -140,7 +137,6 @@ function getRegion_complete(req) {
 }
 
 function getRegion_error() {
-// style.display = 'none';
     alert("ERROR)");
 }
 
@@ -182,7 +178,7 @@ function preparePresent()
 function gn_search(pars) 
 {
 	var myAjax = new Ajax.Request(
-		'/geonetwork/srv/en/main.search.embedded', 
+		'/geonetwork/srv/'+Env.lang+'/main.search.embedded', 
 		{
 			method: 'get',
 			parameters: pars,
@@ -199,7 +195,7 @@ function gn_present(frompage, topage)
 	var pars = 'from=' + frompage + "&to=" + topage;
 	
 	var myAjax = new Ajax.Request(
-		'/geonetwork/srv/en/main.present.embedded', 
+		'/geonetwork/srv/'+Env.lang+'/main.present.embedded', 
 		{
 			method: 'get',
 			parameters: pars,
@@ -209,27 +205,13 @@ function gn_present(frompage, topage)
 	);
 }
 
-
 function gn_search_complete(req) {
-    // remove all previous children
-    //clearResultList();
-    
     var rlist = $('resultList');
     
     rlist.innerHTML = req.responseText;
     
     $('loadingMD').hide();
 }
-
-/*function gn_toggleMetadata(id) 
-{
-    var parent = $('mdwhiteboard_' + id);
-    if (parent.firstChild)
-        gn_hideMetadata(id);
-    else
-        gn_showMetadata(id);
-}
-*/
 
 /********************************************************************
 * 
@@ -241,22 +223,13 @@ function gn_showSingleMetadata(id)
    var pars = 'id=' + id + '&currTab=simple';
 
    var myAjax = new Ajax.Request(
-        '/geonetwork/srv/en/metadata.show.embedded', 
+        '/geonetwork/srv/'+Env.lang+'/metadata.show.embedded', 
         {
             method: 'get',
             parameters: pars,
             onSuccess: function (req) {
-                // remove previous open md
-                //var prev = document.getElementById('metadata_current');
-                //if(prev)
-                //	prev.parentNode.removeChild($('metadata_current'));
-                
                 var parent = $('resultList');
                 clearNode(parent);
-                
-/*                $('gn_loadmd_' + id) .hide();
-                $('gn_hidemd_' + id) .show();
-*/               
                 // create new element
                 var div = document.createElement('div');
                 div.className = 'metadata_current';
@@ -272,7 +245,6 @@ function gn_showSingleMetadata(id)
             },
             onFailure: gn_search_error// FIXME
         });
-
 }
 
 function gn_showMetadata(id) 
@@ -283,16 +255,11 @@ function gn_showMetadata(id)
     $('gn_loadmd_' + id) .show();
     
     var myAjax = new Ajax.Request(
-        '/geonetwork/srv/en/metadata.show.embedded', 
+        '/geonetwork/srv/'+Env.lang+'/metadata.show.embedded', 
         {
             method: 'get',
             parameters: pars,
             onSuccess: function (req) {
-                // remove previous open md
-                //var prev = document.getElementById('metadata_current');
-                //if(prev)
-                //	prev.parentNode.removeChild($('metadata_current'));
-                
                 var parent = $('mdwhiteboard_' + id);
                 clearNode(parent);
                 
@@ -331,8 +298,6 @@ function gn_hideMetadata(id)
 function a(msg) {
     alert(msg);
 }
-
-
 
 function gn_search_error() {
     $('loadingMD') .hide();
@@ -373,15 +338,23 @@ function runSimpleSearch()
 	pars += fetchParam('relation');
 	pars += "&attrset=geo";
 	pars += fetchParam('region');
-
-	//var region = $('region').value;
-	//if(region!="") 
-	///	pars += "&region="+region;
-	
 	// Load results via AJAX
 	gn_search(pars);    
 }
 
+function resetSimpleSearch()
+{
+/* make sure all values are completely reset (instead of just using the default
+   form.reset that would only return to the values stored in the session */
+	setParam('any','');		
+	setParam('relation','overlaps');		
+	setParam('region',null);		
+	$('northBL').value='90';
+	$('southBL').value='-90';
+	$('eastBL').value='180';
+	$('westBL').value='-180';		
+ 	im_mm_setAOIandZoom();
+}
 
 /**********************************************************
 ***
@@ -466,6 +439,40 @@ function runAdvancedSearch()
 	gn_search(pars);    
 }
 
+function resetAdvancedSearch()
+{
+/* make sure all values are completely reset (instead of just using the default
+   form.reset that would only return to the values stored in the session */
+	setParam('any','');		
+	setParam('title','');		
+	setParam('abstract','');		
+	setParam('themekey','');		
+	var radioSimil = document.getElementsByName('similarity');
+	radioSimil[1].checked=true;
+	setParam('relation','overlaps');		
+	setParam('region',null);		
+	$('northBL').value='90';
+	$('southBL').value='-90';
+	$('eastBL').value='180';
+	$('westBL').value='-180';		
+ 	im_mm_setAOIandZoom();
+	setParam('datefrom','');		
+	setParam('dateto','');		
+	$('radfrom0').checked=true;
+	$('radfrom1').disabled='disabled';
+	setParam('group','');		
+	setParam('category','');		
+	setParam('siteId','');		
+	$('digital').checked=true;		
+	$('paper').checked=false;		
+	setParam('template','n');		
+	setParam('hitsPerPage','10');		
+}
+
+/**********************************************************
+*** Search helper functions
+**********************************************************/
+
 function fetchParam(p)
 {
   var pL = $(p);
@@ -517,6 +524,13 @@ function getCheckedValue(radioObj) {
 		}
 	}
 	return "";
+}
+
+
+function setParam(p, val)
+{
+  var pL = $(p);
+  if (pL) pL.value = val;
 }
 
 /**********************************************************

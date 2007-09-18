@@ -26,7 +26,7 @@ function retrieveSources(data, callBack)
 	if (data.PORT != '')
 		url += ':'+data.PORT;
 		
-	url += '/'+data.SERVLET+'/srv/en/xml.info';
+	url += '/'+data.SERVLET+'/srv/'+Env.lang+'/xml.info';
 	
 	new InfoService(loader, 'sources', callBack, url);
 }
@@ -42,7 +42,7 @@ function retrieveGroups(data, callBack, username, password)
 	if (data.PORT != '')
 		url += ':'+data.PORT;
 		
-	url += '/'+data.SERVLET+'/srv/en/xml.info';
+	url += '/'+data.SERVLET+'/srv/'+Env.lang+'/xml.info';
 	
 	new InfoService(loader, 'groups', callBack, url, username, password);
 }
