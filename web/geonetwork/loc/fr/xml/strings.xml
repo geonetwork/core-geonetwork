@@ -322,8 +322,8 @@
 	<management>Gestion</management>
 	<mapType>Type de carte</mapType>
 	<mapViewerClose>Fermer la carte</mapViewerClose>
-	<mapViewerLoading>Chargement de la carte ...</mapViewerLoading>
-	<mapViewerOpen>Ouvrir la carte</mapViewerOpen>
+	<mapViewerLoading>Chargement en cours ...</mapViewerLoading>
+	<mapViewerOpen>Afficher la carte</mapViewerOpen>
 	<max>Maximum</max>
 	<mdUpdateError>Erreur de mise à jour</mdUpdateError>
 	<message>Le nom ou mot de passe est incorrect.<br/>Appuyer sur le bouton 'retour'.</message>
@@ -416,7 +416,7 @@
 	<search>Rechercher</search>
 <!--	<searchBox>Rechercher des données</searchBox>
 	<searchIndex>Index de recherche</searchIndex> -->
-	<searching>...Recherche en marche...</searching>
+	<searching>... Recherche en cours ...</searching>
 	<searchPage>Page de recherche</searchPage>
 	<searchPageDes>Aller à la page de recherche</searchPageDes>
 	<searchTemplates>Rechercher les Modèles</searchTemplates>
@@ -468,9 +468,9 @@
 	<validate>Valider</validate>
 	<validityBegins>Date de début de validité</validityBegins>
 	<validityEnds> et fin </validityEnds>
-	<what>Quel?</what>
-	<where>Où?</where>
-	<when>Quand?</when>
+	<what>Quoi ?</what>
+	<where>Où ?</where>
+	<when>Quand ?</when>
 	<westbc>Coordonnée ouest de l'emprise</westbc>
 	<winInfo1>Cette fenêtre montre les ressources de GeoNetwork.</winInfo1>
 	<winInfo2>L'icône Besoin d'aide (?) vous donne accès à l'aide.</winInfo2>
