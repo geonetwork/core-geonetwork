@@ -11,8 +11,8 @@ im_load_error = function() {alert("Loading error")};
 
 function imc_reloadLayers()
 {
-/*	var url = '/intermap/srv/en/map.layers.getOrder';*/
-	var url = '/intermap/srv/en/map.getLayers.embedded';	
+/*	var url = '/intermap/srv/'+Env.lang+'/map.layers.getOrder';*/
+	var url = '/intermap/srv/'+Env.lang+'/map.getLayers.embedded';	
 	var myAjax = new Ajax.Request (
 		url, 
 		{
@@ -37,7 +37,7 @@ function imc_zoomToLayer(layerId)
 	//$('im_geonetRecords').className = 'hidden';	
 	
 	setStatus('busy');
-	var url = '/intermap/srv/en/map.zoomToService';
+	var url = '/intermap/srv/'+Env.lang+'/map.zoomToService';
 	var pars = 'id=' + layerId;
 	
 	var myAjax = new Ajax.Request (
@@ -52,7 +52,7 @@ function imc_zoomToLayer(layerId)
 }
 
 function toggleVisibility(id) {
-	var url = '/intermap/srv/en/map.layers.toggleVisibility';
+	var url = '/intermap/srv/'+Env.lang+'/map.layers.toggleVisibility';
 	var pars = 'id=' + id;
 	
 	var myAjax = new Ajax.Request (
@@ -71,7 +71,7 @@ function showActiveLayerLegend(id) {
 }
 
 function showLegend(id) {
-	window.open('/intermap/srv/en/map.service.getLegend?id=' + id, 'dialog', 'HEIGHT=300,WIDTH=400,scrollbars=yes,toolbar=yes,status=yes,menubar=yes,location=yes,resizable=yes');
+	window.open('/intermap/srv/'+Env.lang+'/map.service.getLegend?id=' + id, 'dialog', 'HEIGHT=300,WIDTH=400,scrollbars=yes,toolbar=yes,status=yes,menubar=yes,location=yes,resizable=yes');
 }
 
 
@@ -97,7 +97,7 @@ function showLegend(id) {
 
 function imc_setLayerTransparency(id, transparency)
 {
-	var url = '/intermap/srv/en/map.layers.setTransparency';
+	var url = '/intermap/srv/'+Env.lang+'/map.layers.setTransparency';
 	var pars = 'id=' + id + '&transparency=' + transparency / 100.0;
 	
 	var myAjax = new Ajax.Request (
@@ -121,7 +121,7 @@ function imc_setLayerTransparency(id, transparency)
 // Starts ajax transaction to perform a map action (zoomin, zoomout)
 function imc_bm_action(tool, xmin, ymin, xmax, ymax, w, h)
 {
-	var url = '/intermap/srv/en/map.action';
+	var url = '/intermap/srv/'+Env.lang+'/map.action';
 	var pars = 'maptool=' + tool + 
 	                '&mapimgx=' + xmin + '&mapimgy=' + ymin + 
 	                '&mapimgx2=' + xmax + '&mapimgy2=' + ymax + 
@@ -145,7 +145,7 @@ function imc_bm_action(tool, xmin, ymin, xmax, ymax, w, h)
 
 function imc_mm_action(tool, xmin, ymin, xmax, ymax, w, h)
 {
-	var url = '/intermap/srv/en/map.action';
+	var url = '/intermap/srv/'+Env.lang+'/map.action';
 	var pars = 'maptool=' + tool + 
 	                '&mapimgx=' + xmin + '&mapimgy=' + ymin + 
 	                '&mapimgx2=' + xmax + '&mapimgy2=' + ymax + 
@@ -165,7 +165,7 @@ function imc_mm_action(tool, xmin, ymin, xmax, ymax, w, h)
 
 function imc_bm_move(deltax, deltay, width, height, qbbox)
 {
-	var url = '/intermap/srv/en/map.move';
+	var url = '/intermap/srv/'+Env.lang+'/map.move';
 	var pars = 'deltax=' + deltax + '&deltay=' + deltay +
 	                "&width=" + width + "&height=" + height +
 	                "&" + qbbox;
@@ -183,7 +183,7 @@ function imc_bm_move(deltax, deltay, width, height, qbbox)
 
 function imc_mm_move(deltax, deltay, width, height)
 {
-	var url = '/intermap/srv/en/map.move';  
+	var url = '/intermap/srv/'+Env.lang+'/map.move';  
 	var pars = 'deltax=' + deltax + '&deltay=' + deltay + 
 	                "&width=" + width + "&height=" + height +
 	                "&" + im_mm_getURLbbox();	 // FIXME: we need it as func param                
@@ -201,7 +201,7 @@ function imc_mm_move(deltax, deltay, width, height)
 
 function imc_bm_setScale(w, h, bbox, scale )
 {
-	var url = '/intermap/srv/en/map.setScale';
+	var url = '/intermap/srv/'+Env.lang+'/map.setScale';
 	var pars = "width=" + w + "&height="+h +
 	                "&"+bbox+
 	                "&scale=" + scale;
@@ -227,7 +227,7 @@ function imc_bm_setScale(w, h, bbox, scale )
 
 function setAoi(xmin, ymin, xmax, ymax)
 {
-	var url = '/intermap/srv/en/map.setAoi';
+	var url = '/intermap/srv/'+Env.lang+'/map.setAoi';
 	var pars = 'minx=' + xmin + '&miny=' + ymin + '&maxx=' + xmax + '&maxy=' + ymax;
 	//alert(pars); // DEBUG
 	var myAjax = new Ajax.Request (
@@ -243,7 +243,7 @@ function setAoi(xmin, ymin, xmax, ymax)
 
 function unsetAoi()
 {
-	var url = '/intermap/srv/en/map.unsetAoi';
+	var url = '/intermap/srv/'+Env.lang+'/map.unsetAoi';
 	
 	var myAjax = new Ajax.Request (
 		url, 
@@ -275,7 +275,7 @@ function imc_updateBigMap(width, height, qbbox, doUpdateMM, callback)
     setStatus('busy');
 
     var myAjax = new Ajax.Request (
-    	'/intermap/srv/en/map.update', 
+    	'/intermap/srv/'+Env.lang+'/map.update', 
     	{
     		method: 'get',
     		parameters: pars,
@@ -302,7 +302,7 @@ function imc_mm_update(width, height, qbbox, callback)
 {
 	im_mm_setStatus('busy');
 	
-	var url = '/intermap/srv/en/map.update';
+	var url = '/intermap/srv/'+Env.lang+'/map.update';
 
 	var pars = "width=" + width + "&height=" + height;
 	if(qbbox)
@@ -342,7 +342,7 @@ function imc_bm_fullExtent(w,h)
            var pars = "width=" + w + "&height="+h;
 
 	var myAjax = new Ajax.Request (
-		'/intermap/srv/en/map.fullExtent', 
+		'/intermap/srv/'+Env.lang+'/map.fullExtent', 
 		{
 			method: 'get',
 			parameters: pars,
@@ -364,7 +364,7 @@ function imc_mm_fullExtent(w,h)
 	var pars = "width=" + w + "&height="+h;
 		
 	var myAjax = new Ajax.Request (
-		'/intermap/srv/en/map.fullExtent', 
+		'/intermap/srv/'+Env.lang+'/map.fullExtent', 
 		{
 			method: 'get',
 			parameters: pars,
@@ -401,7 +401,7 @@ function addLayer(baseUrl, serviceName) // DEBUG
 
 function imc_addService(surl, service, type, callback)
 {
-	var url = '/intermap/srv/en/map.addServices.embedded';
+	var url = '/intermap/srv/'+Env.lang+'/map.addServices.embedded';
 	
 	var pars = 'url=' + encodeURIComponent(surl) 
 			+ '&service=' + encodeURIComponent(service) 
@@ -422,7 +422,7 @@ function imc_addService(surl, service, type, callback)
 
 function imc_addServices(surl, serviceArray, type, callback)
 {
-	var url = '/intermap/srv/en/map.addServices.embedded';	
+	var url = '/intermap/srv/'+Env.lang+'/map.addServices.embedded';	
 	var pars = 'url=' + encodeURIComponent(surl) + '&type=' + type;
 	
 	serviceArray.each(
@@ -447,7 +447,7 @@ function imc_addServices(surl, serviceArray, type, callback)
 function imc_loadServices( id, callback )
 {
 	var myAjax = new Ajax.Request (
-		'/intermap/srv/en/mapServers.getServices.xml',
+		'/intermap/srv/'+Env.lang+'/mapServers.getServices.xml',
 		{
 		           parameters: "mapserver="+id,
 			method: 'get',

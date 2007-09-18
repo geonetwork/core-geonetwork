@@ -522,7 +522,7 @@ function imc_mm_action_mm()
 
 	im_mm_setStatus('busy');
 
-	var url = '/intermap/srv/en/map.update';
+	var url = '/intermap/srv/'+Env.lang+'/map.update';
 	
 	var im_mm_bb=im_dezoomDegrees(im_mm_ctrl_n.value,im_mm_ctrl_e.value,im_mm_ctrl_s.value,im_mm_ctrl_w.value);
 

@@ -115,7 +115,7 @@ function disactivateAllMapLayers(keepnew)
 
 function im_layerMoveDown(id)
 {
-	var url = '/intermap/srv/en/map.layers.moveDown';	
+	var url = '/intermap/srv/'+Env.lang+'/map.layers.moveDown';	
 	var myAjax = new Ajax.Request (
 		url,
 		{
@@ -132,7 +132,7 @@ function im_layerMoveDown(id)
 
 function im_layerMoveUp(id)
 {
-	var url = '/intermap/srv/en/map.layers.moveUp';	
+	var url = '/intermap/srv/'+Env.lang+'/map.layers.moveUp';	
 	var myAjax = new Ajax.Request (
 		url, 
 		{
@@ -151,7 +151,7 @@ function im_layerMoveUp(id)
 // has changed the layer order via drag'n'drop
 function layersOrderChanged(order)
 {
-	var url = '/intermap/srv/en/map.layers.setOrder';
+	var url = '/intermap/srv/'+Env.lang+'/map.layers.setOrder';
 	var pars = order.replace(new RegExp("\\[\\]", "g"), ""); // remove all [ and ] - jeeves doesn't accept in parameter name otherwise
 	
 	var myAjax = new Ajax.Request (
@@ -201,7 +201,7 @@ function im_deleteLayer(id)
 // start ajax transaction to delete a layer
 function imc_deleteLayer(id)
 {
-	var url = '/intermap/srv/en/map.layers.deleteLayer';
+	var url = '/intermap/srv/'+Env.lang+'/map.layers.deleteLayer';
 	var pars = 'id=' + id ;
 	
 	var myAjax = new Ajax.Request (

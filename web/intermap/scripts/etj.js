@@ -70,7 +70,7 @@ function closeIntermap()
 function imc_init_loadSkel()
 {
 	var myAjax = new Ajax.Request (
-		'/intermap/srv/en/map.getMain.embedded', 
+		'/intermap/srv/'+Env.lang+'/map.getMain.embedded', 
 		{
 			method: 'get',
 			parameters: '',
@@ -117,7 +117,7 @@ function im_reset()
 function imc_reset()
 {
 	var myAjax = new Ajax.Request (
-		'/intermap/srv/en/map.reset', //'/intermap/srv/en/map.getMain.embedded', 
+		'/intermap/srv/'+Env.lang+'/map.reset', //'/intermap/srv/'+Env.lang+'/map.getMain.embedded', 
 		{
 			method: 'get',
 			onSuccess: im_reset_complete,

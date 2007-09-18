@@ -155,7 +155,7 @@ function identify(e)
 	pointerX = Event.pointerX(e);
 	pointerY = Event.pointerY(e);
 	
-	var url = '/intermap/srv/en/map.identify';
+	var url = '/intermap/srv/'+Env.lang+'/map.identify';
 	var t1 = pointerX - offsetX;
 	var t2 = pointerY - offsetY;
 	var pars = 'mapimgx=' + t1 + '&mapimgy=' + t2 + '&activeLayer=' + activeLayerId + "&format=" + "text%2Fhtml";

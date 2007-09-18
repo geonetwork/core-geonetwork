@@ -34,7 +34,7 @@ function im_addLayer()
    
     var myAjax = new Ajax.Updater (
            'im_serverList',    
-    	'/intermap/srv/en/mapServers.listServers.embedded', 
+    	'/intermap/srv/'+Env.lang+'/mapServers.listServers.embedded', 
     	{
     		method: 'get',    		    	
     		onFailure: im_load_error
@@ -63,7 +63,7 @@ function im_mapServerSelected(id, name)
 
 function imc_loadServerServices(id, callback, jscallback)
 {
-	var url = '/intermap/srv/en/mapServers.getServices.embedded';
+	var url = '/intermap/srv/'+Env.lang+'/mapServers.getServices.embedded';
 	var pars = 'mapserver='+id  				
 	                +"&jscallback="+encodeURIComponent(jscallback);
 
@@ -104,7 +104,7 @@ function imc_loadURLServices(url, type, callback, jscallback)
 	                +"&jscallback="+encodeURIComponent(jscallback);
 	
 	var myAjax = new Ajax.Request (
-		'/intermap/srv/en/mapServers.getServices.embedded', 
+		'/intermap/srv/'+Env.lang+'/mapServers.getServices.embedded', 
 		{
 			method: 'get',
 			parameters: pars,
@@ -240,7 +240,7 @@ function im_openPDFform()
 	
 	var myAjax = new Ajax.Updater (
 		'im_createPDF',    
-		'/intermap/srv/en/static.form.pdf', 
+		'/intermap/srv/'+Env.lang+'/static.form.pdf', 
 		{
 			method: 'get',    		    	
 			onFailure: im_load_error
@@ -293,7 +293,7 @@ function im_requestPDF()
 	$('im_builtpdf').hide();
 	
 	var myAjax = new Ajax.Request (
-		'/intermap/srv/en/create.pdf', 
+		'/intermap/srv/'+Env.lang+'/create.pdf', 
 		{
 			method: 'get',
 			parameters: pars,
@@ -345,7 +345,7 @@ function im_openWMCform()
 	
 	var myAjax = new Ajax.Updater (
 		'im_createWMC',    
-		'/intermap/srv/en/wmc.mailform', 
+		'/intermap/srv/'+Env.lang+'/wmc.mailform', 
 		{
 			method: 'get',    		    	
 			parameters: pars,
@@ -399,7 +399,7 @@ function im_requestWMC()
 	$('im_builtpdf').hide();
 	
 	var myAjax = new Ajax.Request (
-		'/intermap/srv/en/create.pdf', 
+		'/intermap/srv/'+Env.lang+'/create.pdf', 
 		{
 			method: 'get',
 			parameters: pars,
