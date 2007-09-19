@@ -11,9 +11,10 @@
 			</info>
 			<html>
 -->
-
-		<div id="intermap_root"> <!-- class will be set to current tool -->
-						
+		<xsl:call-template name="localization"/>
+		
+		<div id="intermap_root"> <!-- class will be set to current tool -->		
+			
 			<table class="padded_content">
 				<tr height="30px">
 					<!-- TOOLBAR -->
@@ -97,7 +98,7 @@
 								<!-- <td style="padding:2px" onClick="im_sendMail();" ><a><img src="{/root/gui/url}/images/im_mail.png" title="{/root/gui/strings/sendByEmail}"/></a></td> -->
 								<td style="padding:2px" onClick="im_openPDFform();" ><a><img src="{/root/gui/url}/images/acroread.png" title="{/root/gui/strings/exportAsPDF}"/></a></td>
 								<!-- <td style="padding:2px" onClick="im_openPictureForm();" ><a><img src="{/root/gui/url}/images/im_exportPic.png" title="{/root/gui/strings/exportAsImage}"/></a></td> -->
-<!--								<td style="padding:2px" onClick="im_openWMCform();" ><a><img src="{/root/gui/url}/images/im_exportPic.png" title="{/root/gui/strings/exportAsWMC}"/></a></td>-->
+<!--								<td style="padding:2px" onClick="im_openWMCform();" ><a><img src="{/root/gui/url}/images/im_exportPic.png" title="View context"/></a></td>-->								
 								<td width="100%" style="border-top:0px;"/> <!-- spacer -->								
 								<td class="im_tool" id="im_tool_scale">
 									<select name="im_setscale" id="im_setscale" onchange="javascript:im_bm_setScale();">
@@ -148,5 +149,12 @@
 		</html>-->
 	</xsl:template>
 	
+	<xsl:template name="localization">
+		<xsl:comment>These fields are needed for js on-the-fly translations</xsl:comment>	
+		<xsl:for-each select="/root/gui/strings/*[@js='true']">			
+			<input type="hidden" id="i18n_{name(.)}" value="{.}" />
+		</xsl:for-each>				
+		<xsl:comment>End of i18n fields</xsl:comment>	
+	</xsl:template>	
 	
 </xsl:stylesheet>

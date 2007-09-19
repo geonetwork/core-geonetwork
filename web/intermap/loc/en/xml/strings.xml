@@ -4,6 +4,7 @@
 	<activate>Activate</activate>
 	<address>Address</address>
 	<addService>Add more maps</addService>
+	<addLayer js="true">Add a new layer</addLayer>
 	<bigger>Bigger map</bigger>
 	<cancel>Cancel</cancel>
 	<close>Close</close>
@@ -22,9 +23,9 @@
 <!-- 
 	<errorText>Sorry, error connecting to the map server</errorText>
  -->
-  <exportAsPDF>Export this map as a PDF</exportAsPDF>
-	<exportAsImage>Export this map as an image</exportAsImage>
-	<exportAsWMC>Save the Web Map Context</exportAsWMC>
+	<exportAsPDF js="true">Export this map as a PDF</exportAsPDF>
+	<exportAsImage js="true">Export this map as an image</exportAsImage>
+	<exportAsWMC js="true">Save the Web Map Context</exportAsWMC>
 	<extents>Change the selected time (temporal data)</extents>
 	<extentSelected>Selected time: </extentSelected>
 	<featuresfound>features found</featuresfound>
@@ -40,6 +41,7 @@
 	<keywords>Keywords:</keywords>
 	<layerinfo>Layer info</layerinfo>
 	<layers>Layers</layers>
+	<layersAdded js="true">Selected layers have been added</layersAdded>
 	<layersHide>Hide layer list</layersHide>
 	<layersShow>Show layer list</layersShow>
 	<layerShowHide>Show or hide layer</layerShowHide>
@@ -47,6 +49,8 @@
 	<listofmaps>List of maps</listofmaps>
 	<listofmapservers>List of map servers</listofmapservers>
 	<loadingMap>...Loading map...</loadingMap>
+	<loadingFrom js="true">Loading services from</loadingFrom>
+	<loadingFromWMS js="true">Loading services from given WMS server</loadingFromWMS>
 	<manually>Create you own map</manually>
 	<map>Map</map>
 	<mapsfound>maps found</mapsfound>
@@ -70,6 +74,7 @@
 	<removeLayer>Remove layer</removeLayer>
 	<reset>Reset</reset>
 	<sendByEmail>Send this map via e-mail</sendByEmail>
+	<sendMap js="true">Send this map context</sendMap>
 	<setScale>--Set Scale--</setScale>
 	<smaller>Smaller map</smaller>
 	<specify>Specify if other:</specify>
@@ -79,6 +84,7 @@
 	<title>InterMap opensource</title>
 	<transparency>Set transparency</transparency>
 	<up>Move layer up</up>
+	<wait js="true">Please wait...</wait>
 	<wmsConfigForm>Layer properties</wmsConfigForm >
 	<zoomIn>Zoom in</zoomIn>
 	<zoomOut>Zoom out</zoomOut>

@@ -139,6 +139,19 @@ function im_reset_complete(req)
 
 
 /********************************************************************
-*** LAYERS
+*** UTILS
 ********************************************************************/
 
+function i18n(key)
+{
+    var v = $('i18n_'+key);
+    if(v)
+    {
+        if(v.value=='')
+            return '{'+key+'}';
+        else 
+            return v.value;
+    }        
+    else
+        return '['+key+']';    
+}

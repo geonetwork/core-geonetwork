@@ -19,7 +19,7 @@ function im_addLayer()
     clearNode('im_whiteboard');    
     var WB = $('im_whiteboard');
 
-    var wbtitle = im_createWBTitle('Add a layer'); //FIXME i18n
+    var wbtitle = im_createWBTitle(i18n('addLayer')); //FIXME i18n
     WB.appendChild(wbtitle);
 
     var closer = im_getWBCloser();
@@ -51,11 +51,11 @@ function im_mapServerSelected(id, name)
 	clearNode(im);
 	
 	var t1 = Builder.node("p");
-	t1.innerHTML = "...please wait...";
+	t1.innerHTML = i18n("wait");
 	im.appendChild(t1);
 	
 	var t2 = document.createElement("p");
-	t2.innerHTML = "Loading services from " +name;	
+	t2.innerHTML = i18n("loadingFrom") + " " + name;	
 	im.appendChild(t2);
 
             imc_loadServerServices(id, im_servicesLoaded, "im_servicesSelected();");
@@ -91,7 +91,7 @@ function im_mapServerURL(url)
 	im.appendChild(t1);
 
 	var t2 = document.createElement("p");
-	t2.innerHTML = "Loading services from given WMS server";	
+	t2.innerHTML = i18n("loadingFromWMS");	
 	im.appendChild(t2);
 
             imc_loadURLServices(url, -2, im_servicesLoaded, "im_servicesSelected();" );
@@ -166,7 +166,7 @@ function im_servicesAdded(req)
 	clearNode(im);
 	
 	var t1 = document.createElement("p");
-	t1.innerHTML = "Selected layers have been added"; // fixme i18n
+	t1.innerHTML = i18n("layersAdded");
 	im.appendChild(t1);
 	
 	im_buildLayerList(req); // rebuild layers' list
@@ -194,7 +194,7 @@ function im_sendMail()
     div.className = 'im_wbcontent';
     $('im_whiteboard').appendChild(div);
 
-    var wbtitle = im_createWBTitle("Send this map's context"); //FIXME i18n
+    var wbtitle = im_createWBTitle(i18n("sendByEmail");
     div.appendChild(wbtitle);
 
     var closer = im_getWBCloser();
@@ -202,7 +202,7 @@ function im_sendMail()
     Event.observe(closer, 'click', im_closeWhiteBoard);
 
     var h1 = document.createElement('h1');
-    h1.innerHTML = "Send this map context" ; //FIXME i18n 
+    h1.innerHTML = i18n("sendMap"); 
     div.appendChild(h1);
 
 
@@ -226,7 +226,7 @@ function im_openPDFform()
 	clearNode('im_whiteboard');    
 	var WB = $('im_whiteboard');
 	
-	var wbtitle = im_createWBTitle("Export this map as PDF"); //FIXME i18n
+	var wbtitle = im_createWBTitle(i18n('exportAsPDF')); //FIXME i18n
 	WB.appendChild(wbtitle);
 	
 	var closer = im_getWBCloser();
@@ -327,7 +327,7 @@ function im_openWMCform()
 	clearNode('im_whiteboard');    
 	var WB = $('im_whiteboard');
 	
-	var wbtitle = im_createWBTitle("Export this map's Web Map Context"); //FIXME i18n
+	var wbtitle = im_createWBTitle(i18n("dummy")); 
 	WB.appendChild(wbtitle);
 	
 	var closer = im_getWBCloser();
