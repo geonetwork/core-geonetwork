@@ -194,7 +194,7 @@ function im_sendMail()
     div.className = 'im_wbcontent';
     $('im_whiteboard').appendChild(div);
 
-    var wbtitle = im_createWBTitle(i18n("sendByEmail");
+    var wbtitle = im_createWBTitle(i18n("sendByEmail"));
     div.appendChild(wbtitle);
 
     var closer = im_getWBCloser();
