@@ -22,9 +22,7 @@ import org.wfp.vam.intermap.http.cache.HttpGetFileCache;
 import org.wfp.vam.intermap.kernel.GlobalTempFiles;
 import org.wfp.vam.intermap.kernel.map.images.ImageMerger;
 import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
-import org.wfp.vam.intermap.kernel.map.mapServices.HttpClient;
 import org.wfp.vam.intermap.kernel.map.mapServices.MapService;
-import org.wfp.vam.intermap.kernel.map.mapServices.ServiceException;
 
 
 public class MapMerger
@@ -164,7 +162,8 @@ public class MapMerger
 			vRank.add(new Integer(order[i]));
 	}
 
-	public Element toElementSimple() {
+	public Element toElementSimple()
+	{
 		Element elServices = new Element("services");
 
 		// Add each contained service to the elServices, ordered by vRank
@@ -172,12 +171,22 @@ public class MapMerger
 			Layer layer = _layers.get(idx);
 			MapService s = layer.getService();
 
-			elServices.addContent(new Element("layer")
+			String legend = null;
+			try
+			{
+				legend = s.getLegendUrl();
+			}
+			catch (Exception e) {}
+
+			Element eLayer = new Element("layer")
 									  .setAttribute("id", idx + "")
 								 	  .setAttribute("title", "" + s.getTitle())
 								 	  .setAttribute("type", "" + s.getType())
-								 	  .setAttribute("transparency", "" + layer.getIntTransparency())
-								 );
+								 	  .setAttribute("transparency", "" + layer.getIntTransparency());
+			if(legend != null)
+				eLayer.setAttribute("legend", legend);
+
+			elServices.addContent(eLayer);
 		}
 
 		return elServices;
@@ -719,89 +728,88 @@ public class MapMerger
 		return new BoundingBox(north, south, east, west);
 	}
 
-	private class GetImageUrlThread extends Thread {
-		private MapService service;
-		private BoundingBox bb;
-		private int width, height;
-		private String url;
-		private boolean serviceError = false; // Flag used to detect if a serviceException was thrown by getImageUrl
-		private Element error;
-
-		public void run() { sendRequest(); }
-
-		private void sendRequest() {
-			try {
-				url = service.getImageUrl(bb, width, height);
-			}
-			catch (ServiceException e) {
-				// The service returned an error message (ArcIMS services only)
-				serviceError = true;
-			}
-			catch (Exception e) {
-				// Generic error
+//	private class GetImageUrlThread extends Thread {
+//		private MapService service;
+//		private BoundingBox bb;
+//		private int width, height;
+//		private String url;
+//		private boolean serviceError = false; // Flag used to detect if a serviceException was thrown by getImageUrl
+//		private Element error;
+//
+//		public void run() { sendRequest(); }
+//
+//		private void sendRequest() {
+//			try {
+//				url = service.getImageUrl(bb, width, height);
+//			}
+//			catch (ServiceException e) {
+//				// The service returned an error message (ArcIMS services only)
+//				serviceError = true;
+//			}
+//			catch (Exception e) {
+//				// Generic error
+////				e.printStackTrace(); // DEBUG
+//				serviceError = true;
+//				url = null;
+//			}
+//		}
+//
+//		public MapService getService() { return service; }
+//
+//		public void setParameters(MapService service, BoundingBox bb, int width, int height) {
+//			this.service = service;
+//			this.bb = bb;
+//			this.width = width;
+//			this.height = height;
+//		}
+//
+//		public String getUrl() throws ServiceException {
+//			if (serviceError) {
+//				throw new ServiceException();
+//			}
+//			return url;
+//		}
+//
+//		public Element getResponse() { return service.getLastResponse(); }
+//
+//	}
+//
+//	private class HttpThread extends Thread {
+//		private static final int BUF_LEN = 1024;
+//
+//		private String stUrl;
+//		private String path;
+//		private HttpClient c;
+//
+//		public void run() { connect(); }
+//
+//		public void setParameters(String url) { stUrl = url; }
+//
+//		public String getPath() { return path; }
+//
+//		public HttpClient getHttpClient() { return c; }
+//
+//		private void connect() {
+//			BufferedInputStream is = null;
+//			BufferedOutputStream os = null;
+//
+//			try {
+//				c = new HttpClient(stUrl);
+//				File tf = GlobalTempFiles.getInstance().getFile();
+//				c.getFile(tf);
+//				path = tf.getPath();
+//			}
+//			catch (Exception e) {
+//				path = null;
 //				e.printStackTrace(); // DEBUG
-				serviceError = true;
-				url = null;
-			}
-		}
-
-		public MapService getService() { return service; }
-
-		public void setParameters(MapService service, BoundingBox bb, int width, int height) {
-			this.service = service;
-			this.bb = bb;
-			this.width = width;
-			this.height = height;
-		}
-
-		public String getUrl() throws ServiceException {
-			if (serviceError) {
-				throw new ServiceException();
-			}
-			return url;
-		}
-
-		public Element getResponse() { return service.getLastResponse(); }
-
-	}
-
-	private class HttpThread extends Thread {
-		private static final int BUF_LEN = 1024;
-
-		private String stUrl;
-		private String path;
-		private HttpClient c;
-
-		public void run() { connect(); }
-
-		public void setParameters(String url) { stUrl = url; }
-
-		public String getPath() { return path; }
-
-		public HttpClient getHttpClient() { return c; }
-
-		private void connect() {
-			BufferedInputStream is = null;
-			BufferedOutputStream os = null;
-
-			try {
-				c = new HttpClient(stUrl);
-				File tf = GlobalTempFiles.getInstance().getFile();
-				c.getFile(tf);
-				path = tf.getPath();
-			}
-			catch (Exception e) {
-				path = null;
-				e.printStackTrace(); // DEBUG
-			}
-			finally {
-				// Close the streams
-				try { is.close(); } catch (Exception e) {}
-				try { os.close(); } catch (Exception e) {}
-			}
-		}
-
-	}
+//			}
+//			finally {
+//				// Close the streams
+//				try { is.close(); } catch (Exception e) {}
+//				try { os.close(); } catch (Exception e) {}
+//			}
+//		}
+//	}
 }
 
 

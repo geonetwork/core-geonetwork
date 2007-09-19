@@ -70,8 +70,50 @@ function showActiveLayerLegend(id) {
     showLegend(activeLayerId);
 }
 
-function showLegend(id) {
-	window.open('/intermap/srv/'+Env.lang+'/map.service.getLegend?id=' + id, 'dialog', 'HEIGHT=300,WIDTH=400,scrollbars=yes,toolbar=yes,status=yes,menubar=yes,location=yes,resizable=yes');
+function hideLegend()
+{
+    var div=$('im_legendPopup');
+    if(div)
+    {
+        Event.stopObserving(div, 'click', hideLegend);
+        document.body.removeChild(div);
+    }
+}
+
+function showLegend(url, btn) {
+//	window.open('/intermap/srv/'+Env.lang+'/map.service.getLegend?id=' + id, 'dialog', 'HEIGHT=300,WIDTH=400,scrollbars=yes,toolbar=yes,status=yes,menubar=yes,location=yes,resizable=yes');
+    hideLegend();
+
+    var div = document.createElement("div");
+    div.id="im_legendPopup";
+    div.style.position = "absolute";
+    document.body.appendChild(div);    
+
+    var offset = Position.cumulativeOffset($(btn));
+    var x = offset[0];
+    var y = offset[1];
+
+    div.style.left=x+"px";
+    div.style.top=y+"px";
+    div.style.width="100px";
+    div.style.height="50px";
+//    div.style.border="solid black 1px";
+//    div.style.background-color="064377";
+    
+    var img = document.createElement("img");
+//    img.src = "intermap/images/waiting.gif";
+    img.src = url;
+    img.alt = "Loading legend..."
+    img.style.position = "absolute";
+    img.style.border="solid black 1px";
+    div.appendChild(img);    
+
+    Event.observe(div, 'click', hideLegend);
+    
+
+    //window.open(url);
+	
+	
 }
 
 

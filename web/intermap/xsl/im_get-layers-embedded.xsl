@@ -56,9 +56,13 @@
 									onclick="im_deleteLayer({@id})" 
 									src="/intermap/images/deleteLayer.png" title="{/root/gui/strings/removeLayer}"/>
 							</xsl:if>
-							<img id="legend_{@id}"  class="im_layerButton" 
-								onclick="showLegend({@id})"
-								src="/intermap/images/legend.png" title="{/root/gui/strings/legend}"/>
+							
+							<xsl:if test="@legend">
+								<img id="legend_{@id}"  class="im_layerButton" 
+									onclick="showLegend('{@legend}', legend_{@id});"
+									src="/intermap/images/legend.png" title="{/root/gui/strings/legend}"/>
+							</xsl:if>
+							
 							<img id="showLayerMD_{@id}" class="im_layerButton" 
 								src="/intermap/images/metadata.png" title="{/root/gui/strings/metadata}"/>
 							<select id="im_transp_{@id}" class="layerSelectTransp"
