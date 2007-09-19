@@ -73,8 +73,7 @@
 	<refreshNotification>Please click the "Refresh" button under the layer list to see this change.</refreshNotification>
 	<removeLayer>Remove layer</removeLayer>
 	<reset>Reset</reset>
-	<sendByEmail>Send this map via e-mail</sendByEmail>
-	<sendMap js="true">Send this map context</sendMap>
+	<sendByEmail js="true">Send this map via e-mail</sendByEmail>
 	<setScale>--Set Scale--</setScale>
 	<smaller>Smaller map</smaller>
 	<specify>Specify if other:</specify>

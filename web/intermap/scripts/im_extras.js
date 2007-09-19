@@ -202,7 +202,7 @@ function im_sendMail()
     Event.observe(closer, 'click', im_closeWhiteBoard);
 
     var h1 = document.createElement('h1');
-    h1.innerHTML = i18n("sendMap"); 
+    h1.innerHTML = i18n("sendByEmail"); 
     div.appendChild(h1);
 
 

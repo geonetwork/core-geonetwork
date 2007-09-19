@@ -4,6 +4,7 @@
 	<activate>Activate</activate>
 	<address>Address</address>
 	<addService>Add more maps</addService>
+	<addLayer js="true">Add a new layer</addLayer>
 	<bigger>Bigger map</bigger>
 	<cancel>Cancel</cancel>
 	<close>Close</close>
@@ -22,15 +23,16 @@
 <!-- 
 	<errorText>Sorry, error connecting to the map server</errorText>
  -->
-  <exportAsPDF>Export this map as a PDF</exportAsPDF>
-	<exportAsImage>Export this map as an image</exportAsImage>
+	<exportAsPDF js="true">Export this map as a PDF</exportAsPDF>
+	<exportAsImage js="true">Export this map as an image</exportAsImage>
+	<exportAsWMC js="true">Save the Web Map Context</exportAsWMC>
 	<extents>Change the selected time (temporal data)</extents>
 	<extentSelected>Selected time: </extentSelected>
 	<featuresfound>features found</featuresfound>
-	<findMapsGeoNetwork>Find more maps through GeoNetwork</findMapsGeoNetwork>
-	<findMapsMapServers>Add more maps by connecting to other Web Map Servers</findMapsMapServers>
+	<findMapsGeoNetwork>Find more maps through GeoNetwork opensource</findMapsGeoNetwork>
+	<findMapsMapServers>Add more layers by connecting to other Web Map Servers</findMapsMapServers>
 	<fullExtent>Zoom to the full map</fullExtent>
-	<gotoGeoNetwork>GeoNetwork</gotoGeoNetwork>
+	<gotoGeoNetwork>GeoNetwork opensource</gotoGeoNetwork>
 	<gotoMapServers>Map Servers</gotoMapServers>
 	<homepage>Home page:</homepage>
 	<identify>Identify a feature on the map</identify>
@@ -39,6 +41,7 @@
 	<keywords>Keywords:</keywords>
 	<layerinfo>Layer info</layerinfo>
 	<layers>Layers</layers>
+	<layersAdded js="true">Selected layers have been added</layersAdded>
 	<layersHide>Hide layer list</layersHide>
 	<layersShow>Show layer list</layersShow>
 	<layerShowHide>Show or hide layer</layerShowHide>
@@ -46,7 +49,9 @@
 	<listofmaps>List of maps</listofmaps>
 	<listofmapservers>List of map servers</listofmapservers>
 	<loadingMap>...Loading map...</loadingMap>
-	<manually>create you own map</manually>
+	<loadingFrom js="true">Loading services from</loadingFrom>
+	<loadingFromWMS js="true">Loading services from given WMS server</loadingFromWMS>
+	<manually>Create you own map</manually>
 	<map>Map</map>
 	<mapsfound>maps found</mapsfound>
 	<metadata>Metadata</metadata>
@@ -57,9 +62,9 @@
 	<oneService>One map found</oneService>
 	<ok>Ok</ok>
 	<oneFeature>One feature found</oneFeature>
-	<otherArcIMS>- Other ArcIMS server (specify below)</otherArcIMS>
-	<otherWMS>- Other WMS server (specify below)</otherWMS>
-	<pan>Mover</pan>
+	<otherArcIMS>- Other ArcIMS server </otherArcIMS>
+	<otherWMS>- Other WMS server </otherWMS>
+	<pan>Pan</pan>
 	<position>Position:</position>
 	<print>Print the map</print>
 	<properties>Properties</properties>
@@ -68,7 +73,7 @@
 	<refreshNotification>Please click the "Refresh" button under the layer list to see this change.</refreshNotification>
 	<removeLayer>Remove layer</removeLayer>
 	<reset>Reset</reset>
-	<sendByEmail>Send this map via e-mail</sendByEmail>
+	<sendByEmail js="true">Send this map via e-mail</sendByEmail>
 	<setScale>--Set Scale--</setScale>
 	<smaller>Smaller map</smaller>
 	<specify>Specify if other:</specify>
@@ -78,6 +83,7 @@
 	<title>InterMap opensource</title>
 	<transparency>Set transparency</transparency>
 	<up>Move layer up</up>
+	<wait js="true">Please wait...</wait>
 	<wmsConfigForm>Layer properties</wmsConfigForm >
 	<zoomIn>Zoom in</zoomIn>
 	<zoomOut>Zoom out</zoomOut>
