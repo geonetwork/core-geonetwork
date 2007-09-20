@@ -12,15 +12,17 @@
 				</li>
 			</ul>
 
-			<xsl:variable name="action">im_mapServerURL($('im_wmsservername').value);</xsl:variable>			
+			<xsl:variable name="action">im_mapServerURL($('im_wmsservername').value, $('im_wmsRefreshCache').checked);</xsl:variable>			
 			<button onclick="{$action}"><xsl:value-of select="/root/gui/strings/connect" /></button>
+			<xsl:text> </xsl:text>
+			<input id="im_wmsRefreshCache" type="checkbox" name="im_wmsRefreshCache"> <xsl:value-of select="/root/gui/strings/refresh" /> </input>
 
 		</div>
 	</xsl:template>
 	
 	<!-- Servers  -->
 	<xsl:template match="/root/response/mapServers/server">
-		<xsl:variable name="action">im_mapServerSelected(<xsl:value-of select="@id" />,"<xsl:value-of select="@name" />");</xsl:variable>
+		<xsl:variable name="action">im_mapServerSelected(<xsl:value-of select="@id" />,"<xsl:value-of select="@name" />",$('im_wmsRefreshCache').checked);</xsl:variable>
 		<li id="im_mapserver_{@id}" onclick="{$action}"><a><xsl:value-of select="@name" /></a></li>
 	</xsl:template>
 
