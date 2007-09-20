@@ -45,7 +45,7 @@ function im_addLayer()
 /*
 ## Called when a known map server has been selected
 */
-function im_mapServerSelected(id, name)
+function im_mapServerSelected(id, name, refreshCache)
 {
 	var im = $('im_serverList');
 	clearNode(im);
@@ -58,14 +58,15 @@ function im_mapServerSelected(id, name)
 	t2.innerHTML = i18n("loadingFrom") + " " + name;	
 	im.appendChild(t2);
 
-            imc_loadServerServices(id, im_servicesLoaded, "im_servicesSelected();");
+            imc_loadServerServices(id, refreshCache, im_servicesLoaded, "im_servicesSelected();");
 }
 
-function imc_loadServerServices(id, callback, jscallback)
+function imc_loadServerServices(id, refreshCache, callback, jscallback)
 {
 	var url = '/intermap/srv/'+Env.lang+'/mapServers.getServices.embedded';
 	var pars = 'mapserver='+id  				
-	                +"&jscallback="+encodeURIComponent(jscallback);
+	                +"&jscallback="+encodeURIComponent(jscallback)
+	                +"&refreshCache="+refreshCache;
 
 	var myAjax = new Ajax.Request (
 		url, 
@@ -81,7 +82,7 @@ function imc_loadServerServices(id, callback, jscallback)
 /*
 ## Called when the URL of an unknown map server has been given
 */
-function im_mapServerURL(url)
+function im_mapServerURL(url, refreshCache)
 {
 	var im = $('im_serverList');
 	clearNode(im);
@@ -94,14 +95,15 @@ function im_mapServerURL(url)
 	t2.innerHTML = i18n("loadingFromWMS");	
 	im.appendChild(t2);
 
-            imc_loadURLServices(url, -2, im_servicesLoaded, "im_servicesSelected();" );
+            imc_loadURLServices(url, refreshCache, -2, im_servicesLoaded, "im_servicesSelected();" );
 }
 
-function imc_loadURLServices(url, type, callback, jscallback)
+function imc_loadURLServices(url, refreshCache, type, callback, jscallback)
 {
 	var pars = 'mapserver='+type
 	                +"&url="+encodeURIComponent(url)
-	                +"&jscallback="+encodeURIComponent(jscallback);
+	                +"&jscallback="+encodeURIComponent(jscallback)
+	                +"&refreshCache="+refreshCache;
 	
 	var myAjax = new Ajax.Request (
 		'/intermap/srv/'+Env.lang+'/mapServers.getServices.embedded', 
