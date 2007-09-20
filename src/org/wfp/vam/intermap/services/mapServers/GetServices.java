@@ -32,6 +32,7 @@ public class GetServices implements Service
 		String id = params.getChildText("mapserver");
 		String user = params.getChildText("user");
 		String pwd = params.getChildText("password");
+        Boolean forceCacheRefresh = "true".equals(params.getChildText("refreshCache"));
 
 		System.out.println("MAPSERVER  ---> " + id);
 
@@ -52,6 +53,7 @@ public class GetServices implements Service
 
 		System.out.println("URL  ---> " + serverUrl);
 		System.out.println("TYPE ---> " + serverType);
+        System.out.println("Force refreshCache ---> " + forceCacheRefresh);
 
 		Element response = new Element("response")
 			.addContent(new Element("url").setText(serverUrl))
@@ -84,7 +86,7 @@ public class GetServices implements Service
 //				Element capabilities = null;
 				try
 				{
-					Element capabilities = WmsGetCapClient.getCapabilities(serverUrl);
+					Element capabilities = WmsGetCapClient.getCapabilities(serverUrl, forceCacheRefresh);
 //					Element capabilities = CapabilitiesStore.getCapabilities(serverUrl);
 					response.addContent(capabilities);
 				}

@@ -20,7 +20,13 @@ public class WmsGetCapClient
 	private static Hashtable htDates = new Hashtable(); // Last request date
 	private static final int CACHE_TIME = 12;
 	private static boolean useCache;
-
+	
+    public static Element getCapabilities(String serverUrl)
+    throws Exception
+    {
+        return getCapabilities(serverUrl, false);
+    }
+    
 	/**
 	 * Get
 	 *
@@ -32,7 +38,7 @@ public class WmsGetCapClient
 	 * @throws   JDOMException if a xml parsing error occurs
 	 *
 	 */
-	public static Element getCapabilities(String serverUrl)
+	public static Element getCapabilities(String serverUrl, boolean forceCacheRefresh)
 		throws Exception
 	{
 		if (!useCache) {
@@ -46,7 +52,7 @@ public class WmsGetCapClient
 		c.add(Calendar.HOUR, -CACHE_TIME);
 		Calendar last = (Calendar)(htDates.get(serverUrl));
 
-		if (last == null || c.after(last)) {
+		if (last == null || c.after(last) || forceCacheRefresh) {
 			capabilities = sendGetCapRequest(serverUrl);
 			htCapabilities.put(serverUrl, capabilities);
 			htDates.put(serverUrl, Calendar.getInstance());
