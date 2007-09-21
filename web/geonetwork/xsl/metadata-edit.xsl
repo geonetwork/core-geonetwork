@@ -137,7 +137,7 @@
 						</xsl:call-template>
 					</td>
 					<td class="content" valign="top">
-						<form name="mainForm" accept-charset="UTF-8" method="POST" action="{/root/gui/locService}/metadata.update" enctype="multipart/form-data">
+						<form name="mainForm" accept-charset="UTF-8" method="POST" action="{/root/gui/locService}/metadata.update">
 							<input type="hidden" name="id" value="{geonet:info/id}"/>
 							<input type="hidden" name="version" value="{geonet:info/version}"/>
 							<input type="hidden" name="ref"/>
