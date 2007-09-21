@@ -6,6 +6,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
 
+/**
+ * @author ETj
+ */
 public class ScaleBar
 {
 	public static final float EARTH_RADIUS_KM = 6371;
@@ -256,7 +259,7 @@ public class ScaleBar
 	 */
 	private static BufferedImage buildScaleBarImage(int px, String text)
 	{
-		Font font = new Font("helvetica", Font.PLAIN, 15);
+		Font font = new Font("helvetica", Font.BOLD, 15);
 		Color bg = Color.WHITE;
 		Color fg = Color.BLACK;
 		int paddingleft   = 5;
@@ -277,16 +280,16 @@ public class ScaleBar
 		Graphics2D    g2d = img.createGraphics();
 
 		g2d.setFont(font);
-		g2d.setColor(bg);
-		// paddingleft + shadow + offset
-		g2d.drawString(text, paddingleft +1 +0, fm.getAscent() -1 );
-		g2d.drawString(text, paddingleft +1 +1, fm.getAscent() -1 );
-		g2d.drawString(text, paddingleft +1 +1, fm.getAscent() -0 );
-		g2d.drawString(text, paddingleft +1 +1, fm.getAscent() +1 );
-		g2d.drawString(text, paddingleft +1 +0, fm.getAscent() +1 );
-		g2d.drawString(text, paddingleft +1 -1, fm.getAscent() +1 );
-		g2d.drawString(text, paddingleft +1 -1, fm.getAscent() -0 );
-		g2d.drawString(text, paddingleft +1 -1, fm.getAscent() -1 );
+//		g2d.setColor(bg);
+//		// paddingleft + shadow + offset
+//		g2d.drawString(text, paddingleft +1 +0, fm.getAscent() -1 );
+//		g2d.drawString(text, paddingleft +1 +1, fm.getAscent() -1 );
+//		g2d.drawString(text, paddingleft +1 +1, fm.getAscent() -0 );
+//		g2d.drawString(text, paddingleft +1 +1, fm.getAscent() +1 );
+//		g2d.drawString(text, paddingleft +1 +0, fm.getAscent() +1 );
+//		g2d.drawString(text, paddingleft +1 -1, fm.getAscent() +1 );
+//		g2d.drawString(text, paddingleft +1 -1, fm.getAscent() -0 );
+//		g2d.drawString(text, paddingleft +1 -1, fm.getAscent() -1 );
 
 		g2d.setColor(fg);
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);

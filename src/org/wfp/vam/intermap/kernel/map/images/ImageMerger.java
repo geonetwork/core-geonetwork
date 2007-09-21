@@ -292,14 +292,22 @@ public class ImageMerger {
 
 	public static BufferedImage merge(String base, Image over, int x, int y)
 	{
+		return merge(base, over, x, y, 1.0f);
+	}
+
+	public static BufferedImage merge(String base, Image over, int x, int y, float alpha)
+	{
 		Image ibase = new ImageIcon(base).getImage();
-		return merge(ibase, over, x, y);
+		return merge(ibase, over, x, y, alpha);
 	}
 
 	public static BufferedImage merge(Image base, Image over, int x, int y)
 	{
-		float alpha  = 1.0f;
+		return merge(base, over, x, y, 1.0f);
+	}
 
+	public static BufferedImage merge(Image base, Image over, int x, int y, float alpha)
+	{
 		int bw = base.getWidth(null);
 		int bh = base.getHeight(null);
 		int ow = over.getWidth(null);
@@ -313,12 +321,12 @@ public class ImageMerger {
 
 		System.out.println("Compositing images ("+ow+","+oh+") over ("+bw+","+bh+") @"+x+"+"+y);
 
-		// negative position starts from lower right corner
+		// negative position starts from lower right corner, with -1 being aligned to the border
 		if(x<0)
-			x = bw - ow + x;
+			x = bw - ow + x+1;
 
 		if(y<0)
-			y = bh - oh + y;
+			y = bh - oh + y+1;
 
 		System.out.println("                   @"+x+"+"+y);
 		destG.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));

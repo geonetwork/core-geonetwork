@@ -19,6 +19,7 @@ import org.jdom.Element;
 import org.wfp.vam.intermap.kernel.GlobalTempFiles;
 import org.wfp.vam.intermap.kernel.map.MapMerger;
 import org.wfp.vam.intermap.kernel.map.images.ImageMerger;
+import org.wfp.vam.intermap.kernel.map.images.ImageUtils;
 import org.wfp.vam.intermap.kernel.map.images.ScaleBar;
 import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
 import org.wfp.vam.intermap.services.map.MapUtil;
@@ -92,7 +93,16 @@ public class ExportPDF implements Service
 
 		if(drawArrow)
 		{
-			BufferedImage merged = ImageMerger.merge(mapImageFullPath, _northarrowfile, -5, 5);
+			BufferedImage arrow = ImageUtils.load(_northarrowfile);
+			BufferedImage mapimage = ImageUtils.load(mapImageFullPath);
+			BufferedImage rect = ImageUtils.createRect(mapimage.getWidth() +arrow.getWidth() +10,
+													   mapimage.getHeight(),
+													   Color.WHITE);
+			BufferedImage merged;
+			merged = ImageMerger.merge(rect, mapimage, 0, 0);
+			merged = ImageMerger.merge(merged, arrow, -1, 5);
+
+//			BufferedImage merged = ImageMerger.merge(mapImageFullPath, _northarrowfile, -5, 5);
 			mapImageFullPath = GlobalTempFiles.getInstance().getFile().getPath(); // we need a new file: MapMerger could reuse its own file
 			ImageMerger.saveImage(merged, mapImageFullPath, ImageMerger.PNG);
 		}
@@ -100,7 +110,12 @@ public class ExportPDF implements Service
 		if(drawScale)
 		{
 			BufferedImage sb = ScaleBar.getScaleBar(mm.getBoundingBox(), MAP_WIDTH_PX, 150);
-			BufferedImage merged = ImageMerger.merge(mapImageFullPath, sb, 5, -5);
+			BufferedImage rect = ImageUtils.createRect(sb.getWidth()+10, sb.getHeight()+10, Color.WHITE);
+
+			BufferedImage merged;
+			merged = ImageMerger.merge(mapImageFullPath, rect, 1, -1, .5f);
+			merged = ImageMerger.merge(merged, sb, 5, -5);
+
 			mapImageFullPath = GlobalTempFiles.getInstance().getFile().getPath(); // we need a new file: drawArrow may be not requested
 			ImageMerger.saveImage(merged, mapImageFullPath, ImageMerger.PNG);
 		}
