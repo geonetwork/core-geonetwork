@@ -73,18 +73,10 @@ public class MetadataSchema
 		List<String> childType = hmElements.get(elem);
 		if (childType == null) {
 			// Check and see whether we can substitute another element from the
-			// list of substitution links - just process the arrayList until 
-			// we find one that matches
-			ArrayList alSubsLink = (ArrayList) hmSubsLink.get(elem);
-	  	Logger.log("metadataSchema: checking subs for element "+elem+" parent "+parent);
-			if (alSubsLink != null) {
-				for (int i = 0;i< alSubsLink.size();i++) {
-					elem = (String) alSubsLink.get(i);
-	  			Logger.log(" -- substitute "+elem);
-					childType = hmElements.get(elem);
-					if (childType != null) continue;
-				}
-			}
+			// substitution link 
+			elem = (String) hmSubsLink.get(elem);
+	  	Logger.log(" -- substitute "+elem);
+			childType = hmElements.get(elem);
 			if (childType == null) 
 				throw new IllegalArgumentException("Mismatch between schema and xml: No type for 'element' : "+elem+" with parent "+parent);
 		}
@@ -157,13 +149,13 @@ public class MetadataSchema
 	//---
 	//---------------------------------------------------------------------------
 
-	void addElement(String name, String type, ArrayList alValues, ArrayList alSubs, ArrayList alSubsLink)
+	void addElement(String name, String type, ArrayList alValues, ArrayList alSubs, String subLink)
 	{
 		// first just add the subs - because these are for global elements we 
 		// never have a clash because global elements are all in the same scope
 		// and are thus unique
 		if (alSubs != null && alSubs.size() > 0) hmSubs.put(name,alSubs);
-		if (alSubsLink != null && alSubsLink.size() > 0) hmSubsLink.put(name,alSubsLink);
+		if (subLink != null && subLink.length() > 0) hmSubsLink.put(name,subLink);
 
 		List<String> exType = hmElements.get(name);
 

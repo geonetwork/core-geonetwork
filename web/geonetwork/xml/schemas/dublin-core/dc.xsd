@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="http://purl.org/dc/elements/1.1/"
+           xmlns:dc="http://purl.org/dc/elements/1.1/"
            targetNamespace="http://purl.org/dc/elements/1.1/"
            elementFormDefault="qualified"
            attributeFormDefault="unqualified">
@@ -39,8 +39,11 @@
 
 
   <xs:import namespace="http://www.w3.org/XML/1998/namespace"
-             schemaLocation="xml.xsd">
-  </xs:import>
+             schemaLocation="xml.xsd"/>
+
+  <xs:import namespace="http://purl.org/dc/terms/"
+              schemaLocation="dcterms.xsd"/>
+
 
   <xs:complexType name="SimpleLiteral">
     <xs:annotation>
@@ -75,23 +78,23 @@
     
   </xs:complexType>
 
-  <xs:element name="any" type="SimpleLiteral" abstract="true"/>
+  <xs:element name="any" type="dc:SimpleLiteral" abstract="true"/>
 
-  <xs:element name="title" substitutionGroup="any"/>
-  <xs:element name="creator" substitutionGroup="any"/>
-  <xs:element name="subject" substitutionGroup="any"/>
-  <xs:element name="description" substitutionGroup="any"/>
-  <xs:element name="publisher" substitutionGroup="any"/>
-  <xs:element name="contributor" substitutionGroup="any"/>
-  <xs:element name="date" substitutionGroup="any"/>
-  <xs:element name="type" substitutionGroup="any"/>
-  <xs:element name="format" substitutionGroup="any"/>
-  <xs:element name="identifier" substitutionGroup="any"/>
-  <xs:element name="source" substitutionGroup="any"/>
-  <xs:element name="language" substitutionGroup="any"/>
-  <xs:element name="relation" substitutionGroup="any"/>
-  <xs:element name="coverage" substitutionGroup="any"/>
-  <xs:element name="rights" substitutionGroup="any"/>
+  <xs:element name="title" substitutionGroup="dc:any"/>
+  <xs:element name="creator" substitutionGroup="dc:any"/>
+  <xs:element name="subject" substitutionGroup="dc:any"/>
+  <xs:element name="description" substitutionGroup="dc:any"/>
+  <xs:element name="publisher" substitutionGroup="dc:any"/>
+  <xs:element name="contributor" substitutionGroup="dc:any"/>
+  <xs:element name="date" substitutionGroup="dc:any"/>
+  <xs:element name="type" substitutionGroup="dc:any"/>
+  <xs:element name="format" substitutionGroup="dc:any"/>
+  <xs:element name="identifier" substitutionGroup="dc:any"/>
+  <xs:element name="source" substitutionGroup="dc:any"/>
+  <xs:element name="language" substitutionGroup="dc:any"/>
+  <xs:element name="relation" substitutionGroup="dc:any"/>
+  <xs:element name="coverage" substitutionGroup="dc:any"/>
+  <xs:element name="rights" substitutionGroup="dc:any"/>
 
   <xs:group name="elementsGroup">
   	<xs:annotation>
@@ -104,7 +107,7 @@
 
   <xs:sequence>
     <xs:choice minOccurs="0" maxOccurs="unbounded">
-      <xs:element ref="any"/>
+      <xs:element ref="dc:any"/>
     </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -118,7 +121,7 @@
   	</xs:annotation>
 
     <xs:choice>
-      <xs:group ref="elementsGroup"/>
+      <xs:group ref="dc:elementsGroup"/>
     </xs:choice>
   </xs:complexType>
 

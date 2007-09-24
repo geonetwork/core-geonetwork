@@ -51,6 +51,13 @@
 			<xsl:apply-templates select="dct:abstract"/>
 			<dct:modified><xsl:value-of select="/root/env/changeDate"/></dct:modified>
 			<xsl:apply-templates select="dct:spatial"/>
+			<xsl:apply-templates select="dct:audience"/>
+			<xsl:apply-templates select="dct:accrualMethod"/>
+			<xsl:apply-templates select="dct:accrualPeriodicity"/>
+			<xsl:apply-templates select="dct:accrualPolicy"/>
+			<xsl:apply-templates select="dct:instructionalMethod"/>
+			<xsl:apply-templates select="dct:provenance"/>
+			<xsl:apply-templates select="dct:rightsHolder"/>
 		</xsl:copy>
 	</xsl:template>
 

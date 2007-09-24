@@ -100,8 +100,11 @@ public class SchemaLoader
 				{
 					ee.type = (String) hmAbsElems.get(elem);
 
-					if (ee.type == null)
-						throw new IllegalArgumentException("Type is null for 'element' : " + ee.name);
+					if (ee.type == null) {
+						// If we don't have a type then insert with null and fix
+						// when all elements have been added to hmElements
+						Logger.log("Type is null for 'element' : "+ee.name+" which is part of substitution group with head element "+elem);
+					}
 				}
 
 				hmElements.put(ee.name, ee.type);
@@ -117,6 +120,19 @@ public class SchemaLoader
 			String elem = (String) i.next();
 			String type = (String) hmElements.get(elem);
 
+			// fix any null types by back tracking through substitution links
+			// until we get a concrete type or die trying :-)
+			if (type == null) {
+				Logger.log("Searching for type for element "+elem);
+				type = recurseOnSubstitutionLinks(elem);
+				if (type == null) { 
+					System.out.println("WARNING: Cannot find type for " +elem+": assuming string");
+					type="xs:string";
+				} else {
+					Logger.log("-- Recursive search returned "+type+" for element "+elem);
+				}
+			}
+
 			ArrayList elemRestr = (ArrayList) hmElemRestr.get(elem);
 			ArrayList typeRestr = (ArrayList) hmTypeRestr.get(type);
 
@@ -128,8 +144,8 @@ public class SchemaLoader
 
 			ArrayList elemSubs = (ArrayList) hmSubsNames.get(elem);
 			if (elemSubs == null) elemSubs = new ArrayList();
-			ArrayList elemSubsLink = (ArrayList) hmSubsLink.get(elem);
-			if (elemSubsLink == null) elemSubsLink = new ArrayList();
+			String elemSubsLink = (String) hmSubsLink.get(elem);
+			if (elemSubsLink == null) elemSubsLink = "";
 			mds.addElement(elem, type, elemRestr, elemSubs, elemSubsLink);
 		}
 
@@ -259,7 +275,7 @@ public class SchemaLoader
 				{
 					type = ee.type == null ? "string" : ee.type;
 
-					mds.addElement(ee.name, type, new ArrayList(), new ArrayList(), new ArrayList());
+					mds.addElement(ee.name, type, new ArrayList(), new ArrayList(), "");
 
 // 3. element is a choice element or an error
 				} else {
@@ -278,7 +294,7 @@ public class SchemaLoader
 					// create an mdt with the chosen name and process any nested choices
 					createTypeAndResolveNestedChoices(mds,ee.alChoiceElems,
 																						baseChoiceName,baseChoiceNr);
-					mds.addElement(ee.name, type, new ArrayList(), new ArrayList(), new ArrayList());
+					mds.addElement(ee.name, type, new ArrayList(), new ArrayList(), "");
 
 				}
 
@@ -291,10 +307,10 @@ public class SchemaLoader
 					ArrayList al = (ArrayList) hmSubsGrp.get(ee.ref);
 					if (al == null)
 					{
-						al = (ArrayList) hmSubsLink.get(ee.ref);
+						String subLink = (String) hmSubsLink.get(ee.ref);
 
-						if (al != null) {
-							Logger.log("WARNING: Adding abstract element "+ee.ref+" with substitution group "+al);
+						if (subLink != null) {
+							Logger.log("WARNING: Adding abstract element "+ee.ref+" with substitution group "+subLink);
 							mdt.addRefElementWithNoType(ee.ref, ee.min, ee.max);
 						}
 					}
@@ -311,7 +327,7 @@ public class SchemaLoader
 							Integer elementsAdded = recursivelyDealWithAbstractElements(mdtc,al);
 							mdtc.setOrType(elementsAdded > 1);
 							mds.addType(type,mdtc);
-							mds.addElement(ee.ref,type,new ArrayList(),new ArrayList(), new ArrayList());
+							mds.addElement(ee.ref,type,new ArrayList(),new ArrayList(), "");
 							mdt.addElementWithType(ee.ref,type,ee.min,ee.max);
 						}
 					}
@@ -326,6 +342,21 @@ public class SchemaLoader
 		}
 
 		return mds;
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Recurse on substitution links until we get a type that we can use
+	//---
+	//---------------------------------------------------------------------------
+	private String recurseOnSubstitutionLinks(String elemName) {
+		String elemLinkName = (String) hmSubsLink.get(elemName);
+		if (elemLinkName != null) {
+			String elemLinkType = (String) hmElements.get(elemLinkName);
+			if (elemLinkType != null) return elemLinkType; // found concrete type!
+			else recurseOnSubstitutionLinks(elemLinkName); // keep trying
+		}
+		return null; // Cannot find a type so return null
 	}
 
 	//---------------------------------------------------------------------------
@@ -348,11 +379,11 @@ public class SchemaLoader
 					Integer newBaseNr = baseNr+1;
 					createTypeAndResolveNestedChoices(mds,ee.alChoiceElems,baseName,newBaseNr);
 					ee.name = ee.type = baseName+newBaseNr;
-					mds.addElement(ee.name,ee.type,new ArrayList(),new ArrayList(), new ArrayList());
+					mds.addElement(ee.name,ee.type,new ArrayList(),new ArrayList(), "");
 					mdt.addElementWithType(ee.name, ee.type, ee.min, ee.max);
 				} else {
 					if (ee.name != null) {
-				 		mds.addElement(ee.name,ee.type,new ArrayList(),new ArrayList(), new ArrayList());
+				 		mds.addElement(ee.name,ee.type,new ArrayList(),new ArrayList(),"");
 				 		mdt.addElementWithType(ee.name, ee.type, ee.min, ee.max);
 					}
 					else {
@@ -534,12 +565,11 @@ public class SchemaLoader
 			}
 			al.add(ee);
 
-			ArrayList alLink = (ArrayList) hmSubsLink.get(ee.name);
-			if (alLink == null) {
-				alLink = new ArrayList();
-				hmSubsLink.put(ee.name,alLink);
+			if (hmSubsLink.get(ee.name) != null) {
+				throw new IllegalArgumentException("Substitution link collision for : "+ee.name+" link to "+ee.substGroup);
+			} else {
+				hmSubsLink.put(ee.name,ee.substGroup);
 			}
-			alLink.add(ee.substGroup);
 		}
 		if (ee.abstrElem)
 		{
