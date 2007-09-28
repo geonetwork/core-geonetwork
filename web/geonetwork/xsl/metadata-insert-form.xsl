@@ -48,7 +48,7 @@
 								<select class="content" name="template" size="1" id="metadata.type" onchange="typeChanged()">
 									<option value="n"><xsl:value-of select="/root/gui/strings/metadata"/></option>
 									<option value="y"><xsl:value-of select="/root/gui/strings/template"/></option>
-									<option value="s"><xsl:value-of select="/root/gui/strings/subtemplate"/></option>
+									<!-- <option value="s"><xsl:value-of select="/root/gui/strings/subtemplate"/></option> -->
 								</select>
 								<div id="metadata.title">
 									<xsl:text>&#160;</xsl:text>
