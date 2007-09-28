@@ -15,6 +15,33 @@
 	<typeGNShort>Geonetwork</typeGNShort>
 	<typeWFShort>Web Folder</typeWFShort>
 	
+	<!-- harvesting types - - - - - - - - - - - - - - - - - - - - -->
+	
+	<info type="geonetwork">
+		<short>GeoNetwork</short>
+		<long>GeoNetwork v2.1 remote node</long>
+	</info>
+	
+	<info type="geonetwork20">
+		<short>GeoNetwork 2.0</short>
+		<long>GeoNetwork v2.0 remote node</long>
+	</info>
+	
+	<info type="webdav">
+		<short>Web DAV</short>
+		<long>Web DAV server</long>
+	</info>
+	
+	<info type="csw">
+		<short>CSW/2.0</short>
+		<long>Catalogue Services for the Web 2.0</long>
+	</info>
+	
+	<info type="z3950">
+		<short>Z3950</short>
+		<long>Z3950 Remote search</long>
+	</info>
+	
 	<!-- Editing form -->
 	
 	<site>Site</site>
