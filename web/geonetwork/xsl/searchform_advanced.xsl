@@ -412,12 +412,12 @@
 							</xsl:if>
 							<xsl:value-of select="/root/gui/strings/template"/>
 						</option>
-						<option value="s">
+						<!-- <option value="s">
 							<xsl:if test="/root/gui/searchDefaults/template='s'">
 								<xsl:attribute name="selected">true</xsl:attribute>
 							</xsl:if>
 							<xsl:value-of select="/root/gui/strings/subtemplate"/>
-						</option>
+						</option> -->
 					</select>
 				</td>
 			</tr>
