@@ -9,7 +9,7 @@
 		   <Url type="text/html">
 			<xsl:attribute name="template">
 			<xsl:value-of select="concat('http://',//server/host,':',//server/port,/root/gui/locService,'/rss.search?')"/>
-			<xsl:text>any={searchTerms}&amp;</xsl:text>
+			<xsl:text>any={searchTerms}&amp;bbox={geo:box?}&amp;</xsl:text>
 			</xsl:attribute>
 		    </Url>
 		    <Image height="16" width="16" type="image/vnd.microsoft.icon">
