@@ -2,8 +2,8 @@
 
 <xsl:stylesheet version="1.0" 
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-					 xmlns:dc ="http://purl.org/dc/elements/1.1/"
-  					 xmlns:dct="http://purl.org/dc/terms/">
+					 			xmlns:dc ="http://purl.org/dc/elements/1.1/"
+  					 		xmlns:dct="http://purl.org/dc/terms/">
 
 	<!-- ================================================================= -->
 	
@@ -22,7 +22,7 @@
 	<!-- ================================================================= -->
 	
 	<xsl:template match="simpledc">
-		<xsl:copy>
+		<simpledc xmlns:dc ="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/">
 			<xsl:apply-templates select="dc:title"/>
 			<xsl:apply-templates select="dc:creator"/>
 			<xsl:apply-templates select="dc:subject"/>
@@ -58,7 +58,7 @@
 			<xsl:apply-templates select="dct:instructionalMethod"/>
 			<xsl:apply-templates select="dct:provenance"/>
 			<xsl:apply-templates select="dct:rightsHolder"/>
-		</xsl:copy>
+		</simpledc>
 	</xsl:template>
 
 	<!-- ================================================================= -->
