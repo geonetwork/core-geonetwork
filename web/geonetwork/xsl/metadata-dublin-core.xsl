@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:dc = "http://purl.org/dc/elements/1.1/"
+	xmlns:dct = "http://purl.org/dc/terms/"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:geonet="http://www.fao.org/geonetwork">
 
@@ -24,61 +25,54 @@
 	<xsl:template mode="dublin-core" match="simpledc">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
-		
-		<xsl:apply-templates mode="complexElement" select=".">
-			<xsl:with-param name="schema" select="$schema"/>
-			<xsl:with-param name="edit"   select="$edit"/>
-		</xsl:apply-templates>
-	</xsl:template>
 	
-	<!--
-	keywords
-	<xsl:template mode="dublin-core" match="dc:subject">
-		<xsl:param name="schema"/>
-		<xsl:param name="edit"/>
-		
-		<xsl:apply-templates mode="simpleElement" select=".">
-			<xsl:with-param name="schema" select="$schema"/>
-			<xsl:with-param name="edit"   select="$edit"/>
-			<xsl:with-param name="text">
-				<xsl:for-each select="themekey|placekey|stratkey|tempkey">
-					<xsl:if test="position() &gt; 1">,	</xsl:if>
-					<xsl:value-of select="."/>
-				</xsl:for-each>
-				<xsl:if test="themekt|placekt|stratkt|tempkt">
-					<xsl:text> (</xsl:text>
-					<xsl:value-of select="themekt|placekt|stratkt|tempkt"/>
-					<xsl:text>)</xsl:text>
-				</xsl:if>
-			</xsl:with-param>
-		</xsl:apply-templates>
-	
-	</xsl:template>
-	-->
+		<xsl:choose>
+			<xsl:when test="$currTab='simple'">
+				<xsl:apply-templates mode="complexElement" select=".">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
+				</xsl:apply-templates>
+			</xsl:when>
 
+			<xsl:otherwise>
+
+			<!-- when in advanced mode layout the elements to stop re-ordering 
+			     because dc and dct XSDs do not use sequences -->
+
+      	<xsl:apply-templates mode="elementEP" select="dc:*|geonet:child[string(@prefix)='dc']">
+        	<xsl:with-param name="schema" select="$schema"/>
+        	<xsl:with-param name="edit"   select="$edit"/>
+      	</xsl:apply-templates>
+
+				<!-- place dct (terms) on another tab? -->
+
+      	<xsl:apply-templates mode="elementEP" select="dct:modified|geonet:child[string(@name)='modified']">
+        	<xsl:with-param name="schema" select="$schema"/>
+        	<xsl:with-param name="edit"   select="$edit"/>
+      	</xsl:apply-templates>
+	
+      	<xsl:apply-templates mode="elementEP" select="dct:*[name(.)!='dct:modified']|geonet:child[string(@prefix)='dct' and name(.)!='modified']">
+        	<xsl:with-param name="schema" select="$schema"/>
+        	<xsl:with-param name="edit"   select="$edit"/>
+      	</xsl:apply-templates>
+	
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
 	<!--
-	online link
+	identifier
 	-->
 	<xsl:template mode="dublin-core" match="dc:identifier">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
-		
+
 		<xsl:apply-templates mode="simpleElement" select=".">
 			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="edit"   select="$edit"/>
 			<xsl:with-param name="text"><xsl:value-of select="."/></xsl:with-param>
 		</xsl:apply-templates>
 	</xsl:template>
-	
-	<!--
-	placeholder
-	<xsl:template mode="dublin-core" match="TAG">
-		<xsl:param name="schema"/>
-		<xsl:param name="edit"/>
-
-		BODY
-	</xsl:template>
-	-->
 	
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<!-- dublin-core brief formatting -->
