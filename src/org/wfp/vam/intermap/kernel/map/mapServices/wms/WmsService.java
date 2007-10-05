@@ -139,6 +139,9 @@ public class WmsService extends MapService
 		if (style != null) {
 			request += "&STYLES=" + style;
 		}
+        else {
+            request += "&STYLES=";
+        }
 		
 		System.out.println("request: " + request);
 		
