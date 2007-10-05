@@ -477,18 +477,18 @@
 					<tr>
 						<td>
 							<h2>
-								<a href="{/root/gui/locService}/metadata.show?id={geonet:info/id}">
+								<div class="arrow" onClick="gn_showSingleMetadata('{geonet:info/id}');" 
+				style="cursor:hand;cursor:pointer">
 									<xsl:value-of select="$metadata/title"/>
-								</a>
+								</div>
 							</h2>
 							<p/>
 							<xsl:variable name="abstract" select="$metadata/abstract"/>
 							<xsl:choose>
 								<xsl:when test="string-length($abstract) &gt; $maxAbstract">
 									<xsl:value-of select="substring($abstract, 0, $maxAbstract)"/>
-									<a
-										href="{/root/gui/locService}/metadata.show?id={geonet:info/id}&amp;currTab=simple"
-											>...<xsl:value-of select="/root/gui/strings/more"/>...</a>
+										<div class="arrow" onClick="gn_showSingleMetadata('{geonet:info/id}');" 
+				style="cursor:hand;cursor:pointer">...<xsl:value-of select="/root/gui/strings/more"/>...</div>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="$abstract"/>
