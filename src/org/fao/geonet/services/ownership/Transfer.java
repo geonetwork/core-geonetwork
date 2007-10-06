@@ -88,7 +88,7 @@ public class Transfer implements Service
 				dbms.execute("INSERT INTO OperationAllowed(metadataId, groupId, operationId) " +
 								 "VALUES(?,?,?)", mdId, targetGrp, opId);
 
-			dbms.execute("UPDATE Metadata SET owner=? WHERE id=?", targetUsr, mdId);
+			dbms.execute("UPDATE Metadata SET owner=?, groupOwner=? WHERE id=?", targetUsr, targetGrp, mdId);
 
 			metadata.add(mdId);
 			privCount++;
