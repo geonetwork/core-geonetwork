@@ -12,83 +12,15 @@ xmlns:xalan= "http://xml.apache.org/xalan" exclude-result-prefixes="xalan">
 
 <xsl:variable name="similarity" select="/request/similarity"/>
 
-
 <!--
 computes bounding box values
 -->
 <xsl:variable name="region"     select="string(/request/region)"/>
 <xsl:variable name="regionData" select="/request/regions/*[string(id)=$region]"/>
 
-<!-- 
-GeoOpenSearch.org parameters
- - TODO : deals with radius parameters
--->
-<xsl:variable name="w">
-	<xsl:choose>
-		<xsl:when test="/request/bbox">
-			<xsl:value-of select="substring-before(string(/request/bbox), ',')"/>
-		</xsl:when>
-		<xsl:when test="/request/lat and /request/lon">
-			<xsl:value-of select="string(/request/lon) - 1"/>
-		</xsl:when>
-	</xsl:choose>
-</xsl:variable>
-
-<xsl:variable name="a">
-	<xsl:choose>
-		<xsl:when test="/request/bbox">
-			<xsl:value-of select="substring-after(string(/request/bbox), ',')"/>
-		</xsl:when>
-	</xsl:choose>
-</xsl:variable>
-
-<xsl:variable name="s">
-	<xsl:choose>
-		<xsl:when test="/request/bbox">
-			<xsl:value-of select="substring-before($a, ',')"/>
-		</xsl:when>
-		<xsl:when test="/request/lat and /request/lon">
-			<xsl:value-of select="string(/request/lat) - 1"/>
-		</xsl:when>
-	</xsl:choose>
-</xsl:variable>
-
-<xsl:variable name="b">
-	<xsl:choose>
-		<xsl:when test="/request/bbox">
-			<xsl:value-of select="substring-after($a, ',')"/>
-		</xsl:when>
-	</xsl:choose>
-</xsl:variable>
-
-<xsl:variable name="e">
-	<xsl:choose>
-		<xsl:when test="/request/bbox">
-			<xsl:value-of select="substring-before($b, ',')"/>
-		</xsl:when>
-		<xsl:when test="/request/lat and /request/lon">
-			<xsl:value-of select="string(/request/lon) + 1"/>
-		</xsl:when>
-	</xsl:choose>
-</xsl:variable>
-
-<xsl:variable name="n">
-	<xsl:choose>
-		<xsl:when test="/request/bbox">
-			<xsl:value-of select="substring-after($b, ',')"/>
-		</xsl:when>
-		<xsl:when test="/request/lat and /request/lon">
-			<xsl:value-of select="string(/request/lat) + 1"/>
-		</xsl:when>
-	</xsl:choose>
-</xsl:variable>
-
-
-<!---->
 <xsl:variable name="westBL">
 	<xsl:choose>
 		<xsl:when test="$region"><xsl:value-of select="$regionData/west + 360"/></xsl:when>
-		<xsl:when test="$e != ''"><xsl:value-of select="$e + 360"/></xsl:when>
 		<xsl:otherwise><xsl:value-of select="/request/westBL + 360"/></xsl:otherwise>
 	</xsl:choose>
 </xsl:variable>
@@ -96,7 +28,6 @@ GeoOpenSearch.org parameters
 <xsl:variable name="eastBL">
 	<xsl:choose>
 		<xsl:when test="$region"><xsl:value-of select="$regionData/east + 360"/></xsl:when>
-		<xsl:when test="$w != ''"><xsl:value-of select="$w + 360"/></xsl:when>
 		<xsl:otherwise><xsl:value-of select="/request/eastBL + 360"/></xsl:otherwise>
 	</xsl:choose>
 </xsl:variable>
@@ -104,7 +35,6 @@ GeoOpenSearch.org parameters
 <xsl:variable name="southBL">
 	<xsl:choose>
 		<xsl:when test="$region"><xsl:value-of select="$regionData/south + 360"/></xsl:when>
-		<xsl:when test="$s != ''"><xsl:value-of select="$s + 360"/></xsl:when>
 		<xsl:otherwise><xsl:value-of select="/request/southBL + 360"/></xsl:otherwise>
 	</xsl:choose>
 </xsl:variable>
@@ -112,23 +42,14 @@ GeoOpenSearch.org parameters
 <xsl:variable name="northBL">
 	<xsl:choose>
 		<xsl:when test="$region"><xsl:value-of select="$regionData/north + 360"/></xsl:when>
-		<xsl:when test="$n != ''"><xsl:value-of select="$n + 360"/></xsl:when>
 		<xsl:otherwise><xsl:value-of select="/request/northBL + 360"/></xsl:otherwise>
 	</xsl:choose>
 </xsl:variable>
-
-
 
 <!--
 compiles a request
 -->
 <xsl:template match="/">
-
-
-	<xsl:message>###<xsl:value-of select="$westBL"/></xsl:message>
-	<xsl:message>###<xsl:value-of select="$southBL"/></xsl:message>
-	<xsl:message>###<xsl:value-of select="$eastBL"/></xsl:message>
-	<xsl:message>###<xsl:value-of select="$northBL"/></xsl:message>
 
 	<BooleanQuery>
 		
@@ -246,10 +167,6 @@ compiles a request
 					<xsl:call-template name="fullyEnclosedWithin"/>
 				</xsl:when>
 
-				<xsl:otherwise>
-					<xsl:call-template name="overlaps"/>
-				</xsl:otherwise>
-
 			</xsl:choose>
 		</xsl:if>
 
@@ -349,6 +266,33 @@ compiles a request
 				</BooleanClause>
 			</xsl:otherwise>
 		</xsl:choose>
+
+		<!-- date range search -->
+
+		<xsl:if test="/request/dateFrom or /request/dateTo">
+			<BooleanClause required="true" prohibited="false">
+				<RangeQuery fld="_changeDate" inclusive="true">
+					<xsl:if test="/request/dateFrom">
+						<xsl:attribute name="lowerTxt">
+							<xsl:value-of select="/request/dateFrom"/>
+						</xsl:attribute>
+					</xsl:if>
+
+					<xsl:if test="/request/dateTo">
+						<xsl:attribute name="upperTxt">
+							<xsl:value-of select="/request/dateTo"/>
+	
+							<!-- while the 'from' parameter can be short (like yyyy-mm-dd)
+								  the 'until' parameter must be long to match -->
+
+							<xsl:if test="string-length(/request/dateTo) = 10">
+								<xsl:text>T23:59:59</xsl:text>
+							</xsl:if>
+						</xsl:attribute>
+					</xsl:if>
+				</RangeQuery>
+			</BooleanClause>
+		</xsl:if>
 
 	</BooleanQuery>
 </xsl:template>

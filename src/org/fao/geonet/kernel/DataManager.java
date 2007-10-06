@@ -256,7 +256,7 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
-	public Iterator getSchemas()
+	public Set<String> getSchemas()
 	{
 		return editLib.getSchemas();
 	}

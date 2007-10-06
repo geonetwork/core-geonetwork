@@ -35,7 +35,7 @@ import java.util.TimeZone;
 
 //==============================================================================
 
-public class ISODate
+public class ISODate implements Cloneable
 {
 	public int year;	//--- 4 digits
 	public int month;	//--- 1..12
@@ -43,6 +43,8 @@ public class ISODate
 	public int hour;	//--- 0..23
 	public int min;	//--- 0..59
 	public int sec;	//--- 0..59
+
+	public boolean isShort; //--- 'true' if the format is yyyy-mm-dd
 
 	//---------------------------------------------------------------------------
 
@@ -85,9 +87,28 @@ public class ISODate
 	}
 
 	//---------------------------------------------------------------------------
+
+	private ISODate(int y, int m, int d, int h, int mi, int s)
+	{
+		year  = y;
+		month = m;
+		day   = d;
+		hour  = h;
+		min   = mi;
+		sec   = s;
+	}
+
+	//---------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---
+	//---------------------------------------------------------------------------
+
+	public ISODate clone()
+	{
+		return new ISODate(year, month, day, hour, min, sec);
+	}
+
 	//---------------------------------------------------------------------------
 
 	public void setDate(String isoDate)
@@ -104,6 +125,8 @@ public class ISODate
 			month = Integer.parseInt(isoDate.substring(5,  7));
 			day   = Integer.parseInt(isoDate.substring(8, 10));
 
+			isShort = true;
+
 			hour = 0;
 			min  = 0;
 			sec  = 0;
@@ -118,6 +141,8 @@ public class ISODate
 			hour  = Integer.parseInt(isoDate.substring(0,2));
 			min   = Integer.parseInt(isoDate.substring(3,5));
 			sec   = Integer.parseInt(isoDate.substring(6,8));
+
+			isShort = false;
 		}
 		catch(Exception e)
 		{

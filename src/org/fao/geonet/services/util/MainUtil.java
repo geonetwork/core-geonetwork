@@ -68,8 +68,8 @@ public class MainUtil
 						.addContent(new Element(Geonet.SearchResult.EAST_BL)      .setText("180"))
 						.addContent(new Element(Geonet.SearchResult.WEST_BL)      .setText("-180"))
 						.addContent(new Element(Geonet.SearchResult.RELATION)     .setText(Geonet.SearchResult.Relation.OVERLAPS))
-						.addContent(new Element(Geonet.SearchResult.FROM)         .setText(""))
-						.addContent(new Element(Geonet.SearchResult.TO)           .setText(""))
+						.addContent(new Element(Geonet.SearchResult.DATE_FROM)    .setText(""))
+						.addContent(new Element(Geonet.SearchResult.DATE_TO)      .setText(""))
 						.addContent(new Element(Geonet.SearchResult.GROUP)        .setText(""))
 						.addContent(new Element(Geonet.SearchResult.PROFILE)      .setText(""))
 						.addContent(new Element(Geonet.SearchResult.SERVERS))
@@ -101,8 +101,8 @@ public class MainUtil
 		Element  elEastBL      = elData.getChild(Geonet.SearchResult.EAST_BL);
 		Element  elWestBL      = elData.getChild(Geonet.SearchResult.WEST_BL);
 		Element  elRelation    = elData.getChild(Geonet.SearchResult.RELATION);
-		Element  elFrom        = elData.getChild(Geonet.SearchResult.FROM);
-		Element  elTo          = elData.getChild(Geonet.SearchResult.TO);
+		Element  elDateFrom    = elData.getChild(Geonet.SearchResult.DATE_FROM);
+		Element  elDateTo      = elData.getChild(Geonet.SearchResult.DATE_TO);
 		Element  elDownload    = elData.getChild(Geonet.SearchResult.DOWNLOAD);
 		Element  elOnLine      = elData.getChild(Geonet.SearchResult.ONLINE);
 		Element  elDigital     = elData.getChild(Geonet.SearchResult.DIGITAL);
@@ -138,8 +138,8 @@ public class MainUtil
 			String   sEastBL       = request.getChildText(Geonet.SearchResult.EAST_BL);
 			String   sWestBL       = request.getChildText(Geonet.SearchResult.WEST_BL);
 			String   sRelation     = request.getChildText(Geonet.SearchResult.RELATION);
-			String   sFrom         = request.getChildText(Geonet.SearchResult.FROM);
-			String   sTo           = request.getChildText(Geonet.SearchResult.TO);
+			String   sDateFrom     = request.getChildText(Geonet.SearchResult.DATE_FROM);
+			String   sDateTo       = request.getChildText(Geonet.SearchResult.DATE_TO);
 			String   sDownload     = request.getChildText(Geonet.SearchResult.DOWNLOAD);
 			String   sOnLine       = request.getChildText(Geonet.SearchResult.ONLINE);
 			String   sDigital      = request.getChildText(Geonet.SearchResult.DIGITAL);
@@ -168,8 +168,8 @@ public class MainUtil
 			if (sEastBL      != null) elEastBL.setText(sEastBL);
 			if (sWestBL      != null) elWestBL.setText(sWestBL);
 			if (sRelation    != null) elRelation.setText(sRelation);
-			if (sFrom        != null) elFrom.setText(sFrom);
-			if (sTo          != null) elTo.setText(sTo);
+			if (sDateFrom    != null) elDateFrom.setText(sDateFrom);
+			if (sDateTo      != null) elDateTo.setText(sDateTo);
 			if (sGroup       != null) elGroup.setText(sGroup);
 			if (sProfile     != null) elProfile.setText(sProfile);
 			if (sTimeout     != null) elTimeout.setText(sTimeout);
