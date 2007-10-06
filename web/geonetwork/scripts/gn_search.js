@@ -386,8 +386,8 @@ function initAdvancedSearch()
 	new Ajax.Autocompleter('themekey', 'keywordList', 'portal.search.keywords?',{paramName: 'keyword', updateElement : addQuote});
 
 	Calendar.setup({
-		inputField     :    "datefrom",     // id of the input field
-		ifFormat       :    "%Y-%m-%dT00:00:00",      // format of the input field           
+		inputField     :    "dateFrom",     // id of the input field
+		ifFormat       :    "%Y-%m-%dT%H:%M:00",      // format of the input field
 		button         :    "from_trigger_c",  // trigger for the calendar (button ID)
 		showsTime 		 :		true,
 		align          :    "Tl",           // alignment (defaults to "Bl")
@@ -395,7 +395,7 @@ function initAdvancedSearch()
 	});
 	
 	Calendar.setup({
-		inputField	:    "dateto",     // id of the input field
+		inputField	:    "dateTo",     // id of the input field
 		ifFormat	:    "%Y-%m-%dT%H:%M:00",      // format of the input field           
 		button		:    "to_trigger_c",  // trigger for the calendar (button ID)
 		showsTime	:    true,
@@ -422,8 +422,8 @@ function runAdvancedSearch()
 
 	if($('radfrom1').checked)
 	{
-		pars += fetchParam('datefrom');
-		pars += fetchParam('dateto');
+		pars += fetchParam('dateFrom');
+		pars += fetchParam('dateTo');
 	}
 
 	pars += fetchParam('group');
@@ -456,8 +456,8 @@ function resetAdvancedSearch()
 	$('eastBL').value='180';
 	$('westBL').value='-180';		
  	im_mm_setAOIandZoom();
-	setParam('datefrom','');		
-	setParam('dateto','');		
+	setParam('dateFrom','');
+	setParam('dateTo','');
 	$('radfrom0').checked=true;
 	$('radfrom1').disabled='disabled';
 	setParam('group','');		
@@ -580,8 +580,8 @@ function setParam(p, val)
  */
 function setDates(what) 
 {
-	var xfrom = $('datefrom');
-	var xto = $('dateto');
+	var xfrom = $('dateFrom');
+	var xto = $('dateTo');
 	
 	if (what==0) //anytime 
 	{ 

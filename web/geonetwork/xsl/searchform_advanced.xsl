@@ -295,7 +295,7 @@
 		<tr>
 			<td colspan="2">
 				<input onclick="setDates(0);" value="" name="radfrom" id="radfrom0" type="radio">
-					<xsl:if test="string(/root/gui/searchDefaults/datefrom)='' and string(/root/gui/searchDefaults/dateto)=''"> 
+					<xsl:if test="string(/root/gui/searchDefaults/dateFrom)='' and string(/root/gui/searchDefaults/dateTo)=''">
 						<xsl:attribute name="checked" />
  					</xsl:if>
 					<xsl:value-of select="/root/gui/strings/anytime"/>
@@ -306,25 +306,25 @@
 		<tr>		
 			<td align="left" nowrap="nowrap">
 				<input value="" name="radfrom" id="radfrom1" type="radio" disabled="disabled">
-					<xsl:if test="string(/root/gui/searchDefaults/datefrom)!='' and string(/root/gui/searchDefaults/dateto)!=''">
+					<xsl:if test="string(/root/gui/searchDefaults/dateFrom)!='' and string(/root/gui/searchDefaults/dateTo)!=''">
 						<xsl:attribute name="checked" />
 					</xsl:if>
 					<xsl:value-of select="/root/gui/strings/from"/>
-					<input style="width: 90px;" readonly="1" id="datefrom" value="{/root/gui/searchDefaults/datefrom}" name="datefrom" class="inpBnds" type="text" 
+					<input style="width: 90px;" readonly="1" id="dateFrom" value="{/root/gui/searchDefaults/dateFrom}" name="dateFrom" class="inpBnds" type="text"
 						onchange="$('radfrom1').checked=true;$('radfrom1').disabled='';"/>
 					<img title="FROM date selector" style="cursor: pointer; margin-bottom: 6px; margin-right:10px;" id="from_trigger_c" 
 						src="/geonetwork/scripts/calendar/img.gif" alt="select FROM date" align="middle" hspace="1"/>
 							
 					<xsl:value-of select="/root/gui/strings/to"/>
-					<input  style="width: 90px;" readonly="1" id="dateto" value="{/root/gui/searchDefaults/dateto}" name="dateto" class="inpBnds" type="text"
+					<input  style="width: 90px;" readonly="1" id="dateTo" value="{/root/gui/searchDefaults/dateTo}" name="dateTo" class="inpBnds" type="text"
 						onchange="$('radfrom1').checked=true;$('radfrom1').disabled='';" />
 					<img title="TO date selector" style="cursor: pointer; margin-bottom: 6px;" id="to_trigger_c" 
 						src="/geonetwork/scripts/calendar/img.gif" alt="select TO date" align="middle" hspace="1"/>								
 				</input>
-<!--				<div onclick="JavaScript:$('datefrom').value ='';$('dateto').value ='';" style="cursor: pointer;"><xsl:value-of select="/root/gui/strings/clear"/></div> -->
+<!--				<div onclick="JavaScript:$('dateFrom').value ='';$('dateTo').value ='';" style="cursor: pointer;"><xsl:value-of select="/root/gui/strings/clear"/></div> -->
 				<img title="{/root/gui/strings/clear}" style="cursor: pointer; margin-bottom: 6px;" id="clearDates" 
 					src="/geonetwork/images/clear_left.png" alt="{/root/gui/strings/clear}" align="middle" 
-					hspace="1" onclick="JavaScript:$('datefrom').value ='';$('dateto').value ='';$('radfrom0').checked=true;$('radfrom1').disabled='disabled';"/>
+					hspace="1" onclick="JavaScript:$('dateFrom').value ='';$('dateTo').value ='';$('radfrom0').checked=true;$('radfrom1').disabled='disabled';"/>
 			</td>
 		</tr>
 	</table>
