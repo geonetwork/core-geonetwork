@@ -24,8 +24,6 @@
 package org.fao.gast.gui.panels.migration.oldinst;
 
 import java.io.IOException;
-import org.fao.gast.lib.ConfigLib;
-import org.fao.gast.lib.ProfileLib;
 import org.jdom.JDOMException;
 
 //==============================================================================
@@ -40,10 +38,7 @@ public class GNSource
 
 	public GNSource(String oldAppPath) throws JDOMException, IOException
 	{
-		appPath = oldAppPath;
-
-		config   = new ConfigLib (oldAppPath);
-		profiles = new ProfileLib(oldAppPath);
+		config  = new OldConfigLib(oldAppPath);
 	}
 
 	//---------------------------------------------------------------------------
@@ -65,9 +60,7 @@ public class GNSource
 	//---
 	//--------------------------------------------------------------------------
 
-	private String     appPath;
-	public  ConfigLib  config;
-	public  ProfileLib profiles;
+	public OldConfigLib config;
 }
 
 //==============================================================================
