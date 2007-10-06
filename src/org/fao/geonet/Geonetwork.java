@@ -24,7 +24,6 @@
 package org.fao.geonet;
 
 import java.io.File;
-import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
@@ -38,6 +37,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.harvest.HarvestManager;
+import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.util.z3950.Server;
@@ -182,18 +182,26 @@ public class Geonetwork implements ApplicationHandler
 		CatalogDispatcher catalogDis = new CatalogDispatcher();
 
 		//------------------------------------------------------------------------
+		//--- initialize catalogue services for the web
+
+		logger.info("  - Open Archive Initiative (OAI-PMH) server...");
+
+		OaiPmhDispatcher oaipmhDis = new OaiPmhDispatcher();
+
+		//------------------------------------------------------------------------
 		//--- return application context
 
 		GeonetContext gnContext = new GeonetContext();
 
-		gnContext.accessMan  = accessMan;
-		gnContext.dataMan    = dataMan;
-		gnContext.searchMan  = searchMan;
-		gnContext.config     = handlerConfig;
-		gnContext.catalogDis = catalogDis;
-		gnContext.settingMan = settingMan;
-		gnContext.harvestMan = harvestMan;
-		gnContext.thesaurusMan = thesaurusMan;
+		gnContext.accessMan   = accessMan;
+		gnContext.dataMan     = dataMan;
+		gnContext.searchMan   = searchMan;
+		gnContext.config      = handlerConfig;
+		gnContext.catalogDis  = catalogDis;
+		gnContext.settingMan  = settingMan;
+		gnContext.harvestMan  = harvestMan;
+		gnContext.thesaurusMan= thesaurusMan;
+		gnContext.oaipmhDis   = oaipmhDis;
 
 		logger.info("Site ID is : " + gnContext.getSiteId());
 

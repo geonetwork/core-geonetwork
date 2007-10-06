@@ -24,14 +24,14 @@
 package org.fao.geonet;
 
 import jeeves.server.ServiceConfig;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.csw.CatalogDispatcher;
+import org.fao.geonet.kernel.harvest.HarvestManager;
+import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.kernel.harvest.HarvestManager;
-import org.fao.geonet.kernel.ThesaurusManager;
 
 //=============================================================================
 
@@ -45,19 +45,21 @@ public class GeonetContext
 	/* package */ SettingManager    settingMan;
 	/* package */ HarvestManager    harvestMan;
 	/* package */ ThesaurusManager  thesaurusMan;
+	/* package */ OaiPmhDispatcher  oaipmhDis;
 
 	//---------------------------------------------------------------------------
 	/*package*/ GeonetContext() {}
 	//---------------------------------------------------------------------------
 
-	public DataManager       getDataManager()       { return dataMan;    }
-	public AccessManager     getAccessManager()     { return accessMan;  }
-	public SearchManager     getSearchmanager()     { return searchMan;  }
-	public ServiceConfig     getHandlerConfig()     { return config;     }
-	public CatalogDispatcher getCatalogDispatcher() { return catalogDis; }
-	public SettingManager    getSettingManager()    { return settingMan; }
-	public HarvestManager    getHarvestManager()    { return harvestMan; }
+	public DataManager       getDataManager()       { return dataMan;      }
+	public AccessManager     getAccessManager()     { return accessMan;    }
+	public SearchManager     getSearchmanager()     { return searchMan;    }
+	public ServiceConfig     getHandlerConfig()     { return config;       }
+	public CatalogDispatcher getCatalogDispatcher() { return catalogDis;   }
+	public SettingManager    getSettingManager()    { return settingMan;   }
+	public HarvestManager    getHarvestManager()    { return harvestMan;   }
 	public ThesaurusManager  getThesaurusManager()  { return thesaurusMan; }
+	public OaiPmhDispatcher  getOaipmhDispatcher()  { return oaipmhDis;    }
 
 	//---------------------------------------------------------------------------
 

@@ -51,6 +51,11 @@ public class Geonet
 		public static final String FILTER_TO_LUCENE    = "filter-to-lucene.xsl";
 	}
 
+	public class SchemaPath
+	{
+		public static final String OAI_PMH = "xml/validation/oai/OAI-PMH.xsd";
+	}
+
 	//--------------------------------------------------------------------------
 	//--- container for elements
 
@@ -127,8 +132,8 @@ public class Geonet
 		public static final String EAST_BL       = "eastBL";
 		public static final String WEST_BL       = "westBL";
 		public static final String RELATION      = "relation";
-		public static final String FROM          = "datefrom";
-		public static final String TO            = "dateto";
+		public static final String DATE_FROM     = "dateFrom";
+		public static final String DATE_TO       = "dateTo";
 		public static final String GROUP         = "group";
 		public static final String PROFILE       = "profile";
 		public static final String SERVERS       = "servers";
@@ -149,7 +154,7 @@ public class Geonet
 		public static final String KEYWORD       = "keyword";
 		public static final String SERVER        = "server";
 		public static final String HITS_PER_PAGE = "hitsPerPage";
-        public static final String SIMILARITY    = "similarity";
+		public static final String SIMILARITY    = "similarity";
 
 		//-----------------------------------------------------------------------
 
