@@ -11,6 +11,7 @@
 	<xsl:include href="webdav/webdav.xsl"/>
 	<xsl:include href="csw/csw.xsl"/>
 	<xsl:include href="z3950/z3950.xsl"/>
+	<xsl:include href="oaipmh/oaipmh.xsl"/>
 
 	<!-- ============================================================================================= -->
 
@@ -18,6 +19,7 @@
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/gui/gui.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/harvesting/harvesting.js"/>
+		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/calendar/calendar-blue2.css" />
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
@@ -86,6 +88,7 @@
 		<xsl:call-template name="editPanel-GN20"/>
 		<xsl:call-template name="editPanel-CSW"/>
 		<xsl:call-template name="editPanel-Z39"/>
+		<xsl:call-template name="editPanel-OAI"/>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->

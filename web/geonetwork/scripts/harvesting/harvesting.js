@@ -12,6 +12,7 @@ ker.include('harvesting/geonet20/geonetwork20.js');
 ker.include('harvesting/webdav/webdav.js');
 ker.include('harvesting/csw/csw.js');
 ker.include('harvesting/z3950/z3950.js');
+ker.include('harvesting/oaipmh/oaipmh.js');
 ker.include('harvesting/model.js');
 ker.include('harvesting/view.js');
 ker.include('harvesting/util.js');
@@ -43,6 +44,7 @@ function Harvesting()
 	var webdav   = new WebDav(loader);
 	var csw      = new Csw(loader);
 	var z3950    = new Z3950(loader);
+	var oaipmh   = new OaiPmh(loader);
 	
 	//--- public objects
 
@@ -51,6 +53,7 @@ function Harvesting()
 	this.webdav   = webdav;
 	this.csw      = csw;
 	this.z3950    = z3950;
+	this.oaipmh   = oaipmh;
 	
 	//--- public methods
 
@@ -78,6 +81,7 @@ function init()
 	view.register(csw);
 	view.register(geonet20);
 	view.register(z3950);
+	view.register(oaipmh);
 	view.show(SHOW.LIST);
 	
 	refresh();
