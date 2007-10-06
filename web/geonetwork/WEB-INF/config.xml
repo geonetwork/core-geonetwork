@@ -68,8 +68,8 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.DbmsPool</provider>
 			<config>
-				<user>kOdmAtLo</user>
-				<password>mVTD1TZZ</password>
+				<user>GiN6RGJk</user>
+				<password>AY1bdNLN</password>
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>	
@@ -625,7 +625,7 @@
 		<service name="xml.search">
 			<class name=".services.main.XmlSearch" />
 
-			<output sheet="portal-present.xsl" />
+			<output sheet="portal-present.xsl" contentType="application/xml; charset=UTF-8"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -676,6 +676,13 @@
 
 		<service name="csw">
 			<class name=".services.main.CswDispatcher" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Open Archive Initiative, Protocol for Metadata Harvesting -->
+
+		<service name="oaipmh">
+			<class name=".services.main.OaiPmhDispatcher" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
