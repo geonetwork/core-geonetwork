@@ -21,54 +21,78 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.guiservices.util;
+package org.fao.geonet.kernel.setting;
 
-import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.jdom.Element;
 
 //=============================================================================
 
-public class Sources implements Service
+public class SettingInfo
 {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
-
-	//--------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
 	//---
-	//--- Service
+	//--- Constructor
 	//---
-	//--------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public SettingInfo(ServiceContext context)
 	{
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager sm =gc.getSettingManager();
-
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
-		//--- create local node
-
-		String name   = sm.getValue("system/site/name");
-		String siteId = sm.getValue("system/site/siteId");
-
-		Element local = new Element("record");
-
-		local.addContent(new Element("name")  .setText(name));
-		local.addContent(new Element("siteid").setText(siteId));
-
-		//--- retrieve known nodes
-
-		Element nodes = dbms.select("SELECT uuid as siteId, name FROM Sources");
-		nodes.addContent(local);
-
-
-		return nodes;
+		sm = gc.getSettingManager();
 	}
+
+	//---------------------------------------------------------------------------
+
+	public SettingInfo(SettingManager sm)
+	{
+		this.sm = sm;
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- API methods
+	//---
+	//---------------------------------------------------------------------------
+
+	public String getSiteName()
+	{
+		return sm.getValue("system/site/name");
+	}
+
+	//---------------------------------------------------------------------------
+	/** Return a string like 'http://HOST[:PORT]' */
+
+	public String getSiteUrl()
+	{
+		String host = sm.getValue("system/server/host");
+		String port = sm.getValue("system/server/port");
+
+		StringBuffer sb = new StringBuffer("http://");
+
+		sb.append(host);
+
+		if (port.length() != 0)
+			sb.append(":"+ port);
+
+		return sb.toString();
+	}
+
+	//---------------------------------------------------------------------------
+
+	public String getFeedbackEmail()
+	{
+		return sm.getValue("system/feedback/email");
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Vars
+	//---
+	//---------------------------------------------------------------------------
+
+	private SettingManager sm;
 }
 
 //=============================================================================

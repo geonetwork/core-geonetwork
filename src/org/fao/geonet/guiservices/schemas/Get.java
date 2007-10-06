@@ -23,7 +23,6 @@
 
 package org.fao.geonet.guiservices.schemas;
 
-import java.util.Iterator;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -52,8 +51,8 @@ public class Get implements Service
 
 		Element schemas = new Element("schemas");
 
-		for(Iterator i=dataMan.getSchemas(); i.hasNext();)
-			schemas.addContent(new Element("name").setText((String) i.next()));
+		for(String schema : dataMan.getSchemas())
+			schemas.addContent(new Element("name").setText(schema));
 
 		return schemas;
 	}

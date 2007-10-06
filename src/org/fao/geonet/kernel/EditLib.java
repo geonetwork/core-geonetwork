@@ -106,9 +106,9 @@ public class EditLib
 
 	//--------------------------------------------------------------------------
 
-	public Iterator getSchemas()
+	public Set<String> getSchemas()
 	{
-		return htSchemas.keySet().iterator();
+		return htSchemas.keySet();
 	}
 
 	//--------------------------------------------------------------------------
@@ -488,12 +488,12 @@ public class EditLib
 
 	//--------------------------------------------------------------------------
 	/** Checks substitutions for element and returns substitute based on
-	 *  namespace prefix of the root - NOTE: this code is to support 
-   *  profiles of ISO19139 which should have a different root element 
-   *  namespace - so no subs are done if this is vanilla iso19139 ie. gmd 
+	 *  namespace prefix of the root - NOTE: this code is to support
+   *  profiles of ISO19139 which should have a different root element
+   *  namespace - so no subs are done if this is vanilla iso19139 ie. gmd
    *  root namespace.
 	 */
-	private String getProfileSubstituteName(MetadataSchema schema, 
+	private String getProfileSubstituteName(MetadataSchema schema,
 																String childQName, Element md)
 	{
 		ArrayList subsNames = schema.getElementSubs(childQName);
