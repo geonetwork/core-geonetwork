@@ -37,11 +37,25 @@ gui.setupTooltips = function(node)
 	
 	for (var i=0; i<list.length; i++)
 	{
-		var elem = $(list[i].getAttribute('id'));
-		var mesg = xml.toStringCont(list[i]);
+		var id = list[i].getAttribute('id');
 		
-		new Tooltip(elem, mesg);
+		gui.setupTooltip(id, list[i]);
 	}
+}
+
+//=====================================================================================
+/* Sets an element tooltip
+ *  - id   : the HTML element
+ *  - node : an XML node whose content is converted into HTML and taken as the tooltip text
+ */
+
+gui.setupTooltip = function(id, node)
+{
+	var elem = $(id);
+	var mesg = xml.toStringCont(node);
+			
+	if (elem != null)
+		new Tooltip(elem, mesg);
 }
 
 //=====================================================================================

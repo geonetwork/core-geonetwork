@@ -88,7 +88,14 @@ xml.toStringCont = function(node, ident)
 	var result = '';
 	
 	if (node.childNodes == null)
+	{
+		//--- maybe the given node is a simple text node
+		
+		if (node.nodeType == Node.TEXT_NODE)
+			return xml.escape(node.nodeValue);
+			
 		throw 'Document node has no child nodes';
+	}
 	
 	for (var i=0; i<node.childNodes.length; i++)
 	{
@@ -152,6 +159,15 @@ xml.children = function(node, name)
 
 xml.evalXPath = function(node, xpath)
 {
+	var result = xml.evalXPathNode(node, xpath);
+	
+	return (result == null) ? null : xml.textContent(result);
+}
+
+//=====================================================================================
+
+xml.evalXPathNode = function(node, xpath)
+{
 	var names = xpath.split('/');
 			
 	for (var i=0; i<names.length; i++)
@@ -171,10 +187,9 @@ xml.evalXPath = function(node, xpath)
 		
 		if (node == null)
 			return null;
-	
 	}
 	
-	return xml.textContent(node);
+	return node;
 }
 
 //-------------------------------------------------------------------------------------

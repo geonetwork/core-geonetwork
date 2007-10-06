@@ -25,6 +25,7 @@
 	
 	<target name="gn">
 		<delete	file="web/geonetwork/WEB-INF/lib/geonetwork.jar" />
+		<delete	file="web/geonetwork/WEB-INF/lib/oaipmh-lib.jar" />
 		<delete	file="csw/lib/csw-client.jar" />
 		<delete	file="csw/lib/csw-common.jar" />
 		<delete	file="gast/gast.jar" />
@@ -44,7 +45,11 @@
 		
 		<jar		jarfile ="web/geonetwork/WEB-INF/lib/geonetwork.jar"
 					basedir =".build"
-					includes="org/fao/**" />
+					includes="org/fao/geonet/**, org/fao/gast/**" />
+		
+		<jar		jarfile ="web/geonetwork/WEB-INF/lib/oaipmh-lib.jar"
+					basedir =".build"
+					includes="org/fao/oaipmh/**" />
 		
 		<jar		jarfile ="csw/lib/csw-client.jar"
 					basedir =".build"
