@@ -43,6 +43,7 @@ import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.harvest.harvester.csw.CswHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet20.Geonet20Harvester;
+import org.fao.geonet.kernel.harvest.harvester.oaipmh.OaiPmhHarvester;
 import org.fao.geonet.kernel.harvest.harvester.webdav.WebDavHarvester;
 import org.fao.geonet.kernel.harvest.harvester.z3950.Z3950Harvester;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -66,6 +67,7 @@ public abstract class AbstractHarvester
 		register(context, Geonet20Harvester.class);
 		register(context, CswHarvester     .class);
 		register(context, Z3950Harvester   .class);
+		register(context, OaiPmhHarvester  .class);
 	}
 
 	//---------------------------------------------------------------------------
@@ -274,6 +276,11 @@ public abstract class AbstractHarvester
 		if (error != null)
 			node.addContent(JeevesException.toElement(error));
 	}
+
+	//---------------------------------------------------------------------------
+	/** Some sites can generate a base url for thumbnails */
+
+	public String getThumbnailBaseUrl() { return null; }
 
 	//---------------------------------------------------------------------------
 	//---

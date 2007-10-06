@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet20;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -80,7 +81,13 @@ public class Geonet20Harvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doDestroy(Dbms dbms) {}
+	protected void doDestroy(Dbms dbms) throws SQLException
+	{
+		File icon = new File(context.getAppPath() +"images/logos", params.uuid +".gif");
+
+		icon.delete();
+		Lib.sources.delete(dbms, params.uuid);
+	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -102,6 +109,8 @@ public class Geonet20Harvester extends AbstractHarvester
 		String id = settingMan.add(dbms, "harvesting", "node", getType());
 
 		storeNode(dbms, params, "id:"+id);
+		Lib.sources.update(dbms, params.uuid, params.name, true);
+		Lib.sources.copyLogo(context, "/images/harvesting/default.gif", params.uuid);
 
 		return id;
 	}
@@ -129,6 +138,8 @@ public class Geonet20Harvester extends AbstractHarvester
 
 		//--- we update a copy first because if there is an exception GeonetParams
 		//--- could be half updated and so it could be in an inconsistent state
+
+		Lib.sources.update(dbms, params.uuid, params.name, true);
 
 		params = copy;
 	}
@@ -158,6 +169,17 @@ public class Geonet20Harvester extends AbstractHarvester
 			settingMan.add(dbms, "id:"+searchID, "hardcopy", s.hardcopy);
 			settingMan.add(dbms, "id:"+searchID, "siteId",   s.siteId);
 		}
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- getThumbnailBaseUrl
+	//---
+	//---------------------------------------------------------------------------
+
+	public String getThumbnailBaseUrl()
+	{
+		return "http://"+ params.host +":"+ params.port +"/"+params.servlet+"";
 	}
 
 	//---------------------------------------------------------------------------

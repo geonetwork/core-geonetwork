@@ -25,19 +25,33 @@ package org.fao.geonet.services.harvesting;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.net.URL;
 import java.util.Iterator;
+import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
+import jeeves.exceptions.BadXmlResponseEx;
+import jeeves.exceptions.JeevesException;
+import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.lib.Lib;
+import org.fao.oaipmh.exceptions.NoSetHierarchyException;
+import org.fao.oaipmh.exceptions.OaiPmhException;
+import org.fao.oaipmh.requests.ListMetadataFormatsRequest;
+import org.fao.oaipmh.requests.ListSetsRequest;
+import org.fao.oaipmh.responses.ListMetadataFormatsResponse;
+import org.fao.oaipmh.responses.ListSetsResponse;
+import org.fao.oaipmh.responses.MetadataFormat;
+import org.fao.oaipmh.responses.SetInfo;
 import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.xml.sax.SAXException;
 
 //=============================================================================
 
 public class Info implements Service
 {
-	private File cswIconPath;
-
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -46,7 +60,8 @@ public class Info implements Service
 
 	public void init(String appPath, ServiceConfig config) throws Exception
 	{
-		cswIconPath = new File(appPath +"/images/harvesting");
+		iconPath = new File(appPath +"/images/harvesting");
+		oaiSchema= new File(appPath +"/xml/validation/oai/OAI-PMH.xsd");
 	}
 
 	//--------------------------------------------------------------------------
@@ -72,6 +87,9 @@ public class Info implements Service
 			if (type.equals("icons"))
 				result.addContent(getIcons());
 
+			else if (type.equals("oaiPmhServer"))
+				result.addContent(getOaiPmhServer(el));
+
 			else
 				throw new BadParameterEx("type", type);
 		}
@@ -87,7 +105,7 @@ public class Info implements Service
 
 	private Element getIcons()
 	{
-		File icons[] = cswIconPath.listFiles(iconFilter);
+		File icons[] = iconPath.listFiles(iconFilter);
 
 		Element result = new Element("icons");
 
@@ -118,6 +136,109 @@ public class Info implements Service
 	};
 
 	//--------------------------------------------------------------------------
+	//--- OaiPmhServer
+	//--------------------------------------------------------------------------
+
+	private Element getOaiPmhServer(Element el) throws BadInputEx
+	{
+		String url = el.getAttributeValue("url");
+
+		if (url == null)
+			throw new MissingParameterEx("attribute:url", el);
+
+		if (!Lib.net.isUrlValid(url))
+			throw new BadParameterEx("attribute:url", el);
+
+		Element res = new Element("oaiPmhServer");
+
+		try
+		{
+			res.addContent(getMdFormats(url));
+			res.addContent(getSets(url));
+		}
+		catch(JDOMException e)
+		{
+			res.setContent(JeevesException.toElement(new BadXmlResponseEx(e.getMessage())));
+		}
+		catch(SAXException e)
+		{
+			res.setContent(JeevesException.toElement(new BadXmlResponseEx(e.getMessage())));
+		}
+		catch(OaiPmhException e)
+		{
+			res.setContent(org.fao.geonet.kernel.oaipmh.Lib.toJeevesException(e));
+		}
+		catch(Exception e)
+		{
+			res.setContent(JeevesException.toElement(e));
+		}
+
+		return res;
+	}
+
+	//--------------------------------------------------------------------------
+
+	private Element getMdFormats(String url) throws Exception
+	{
+		ListMetadataFormatsRequest req = new ListMetadataFormatsRequest();
+		req.setValidationSchema(oaiSchema);
+		req.getTransport().setUrl(new URL(url));
+		ListMetadataFormatsResponse res = req.execute();
+
+		//--- build response
+
+		Element root = new Element("formats");
+
+		for (MetadataFormat mf : res.getFormats())
+			root.addContent(new Element("format").setText(mf.prefix));
+
+		return root;
+	}
+
+	//--------------------------------------------------------------------------
+
+	private Element getSets(String url) throws Exception
+	{
+		Element root = new Element("sets");
+
+		try
+		{
+			ListSetsRequest req = new ListSetsRequest();
+			req.setValidationSchema(oaiSchema);
+			req.getTransport().setUrl(new URL(url));
+			ListSetsResponse res = req.execute();
+
+			//--- build response
+
+			while (res.hasNext())
+			{
+				SetInfo si = res.next();
+
+				Element el = new Element("set");
+
+				el.addContent(new Element("name") .setText(si.getSpec()));
+				el.addContent(new Element("label").setText(si.getName()));
+
+				root.addContent(el);
+			}
+		}
+		catch(NoSetHierarchyException e)
+		{
+			//--- if the server does not support sets, simply returns an empty set
+		}
+
+		return root;
+	}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//--------------------------------------------------------------------------
+
+	private File iconPath;
+	private File oaiSchema;
+
 
 	private static final String iconExt[] = { ".gif", ".png", ".jpg", ".jpeg" };
 }

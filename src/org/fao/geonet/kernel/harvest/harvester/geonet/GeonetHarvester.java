@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.UUID;
 import jeeves.exceptions.BadInputEx;
@@ -33,6 +34,7 @@ import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
@@ -73,7 +75,13 @@ public class GeonetHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doDestroy(Dbms dbms) {}
+	protected void doDestroy(Dbms dbms) throws SQLException
+	{
+		File icon = new File(context.getAppPath() +"images/logos", params.uuid +".gif");
+
+		icon.delete();
+		Lib.sources.delete(dbms, params.uuid);
+	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -94,6 +102,7 @@ public class GeonetHarvester extends AbstractHarvester
 		String id = settingMan.add(dbms, "harvesting", "node", getType());
 
 		storeNode(dbms, params, "id:"+id);
+		Lib.sources.update(dbms, params.uuid, params.name, false);
 
 		return id;
 	}
@@ -106,9 +115,9 @@ public class GeonetHarvester extends AbstractHarvester
 
 	protected void doUpdate(Dbms dbms, String id, Element node) throws BadInputEx, SQLException
 	{
-		//--- update variables
-
 		GeonetParams copy = params.copy();
+
+		//--- update variables
 		copy.update(node);
 
 		String path = "harvesting/id:"+ id;
@@ -120,6 +129,8 @@ public class GeonetHarvester extends AbstractHarvester
 
 		//--- we update a copy first because if there is an exception GeonetParams
 		//--- could be half updated and so it could be in an inconsistent state
+
+		Lib.sources.update(dbms, copy.uuid, copy.name, false);
 
 		params = copy;
 	}
