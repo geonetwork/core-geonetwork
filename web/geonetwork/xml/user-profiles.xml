@@ -233,9 +233,11 @@
 		<allow service="portal.search.present"/>
 		<allow service="portal.present"/>
 		<allow service="portal.full"/>
+		<allow service="portal.get"/>
 		<allow service="portal.latest.updated"/>
 		<allow service="portal.featured"/>
 		<allow service="portal.categories"/>
+		<allow service="portal.sources"/>
 
 		<!-- Metadata export services -->
 		<allow service="dc.xml"/>
@@ -255,6 +257,9 @@
 		<!-- Catalogue Services for the Web -->
 		<allow service="csw"/>
 
+		<!-- Open Archive Initiative, Protocol for Metadata Harvesting -->
+		<allow service="oaipmh"/>
+		
 		<!-- MEF facilities -->
 		<allow service="mef.export"/>
 
