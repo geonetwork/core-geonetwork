@@ -21,41 +21,22 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.gast.cli;
+package org.fao.gast.cli.createdb;
 
-import java.util.ArrayList;
 import java.util.List;
-import org.fao.gast.boot.Starter;
-import org.fao.gast.cli.createdb.CreateDB;
-import org.fao.gast.cli.setup.Setup;
 import org.fao.gast.lib.Lib;
+import org.fao.gast.lib.Resource;
 
 //==============================================================================
 
-public class Cli implements Starter
+public class CreateDB
 {
-	public void start(String appPath, String args[]) throws Exception
+	public void exec(String appPath, List<String> args) throws Exception
 	{
-		Lib.init(appPath);
+		//--- proper setup: open a database connection and setup data
 
-		//--- convert args into a list
-
-		List<String> al = new ArrayList<String>();
-
-		for (String arg : args)
-			al.add(arg);
-
-		String command = al.get(0);
-		al.remove(0);
-
-		if (command.equals("-setup"))
-			new Setup().exec(appPath, al);
-
-		if (command.equals("-createdb"))
-			new CreateDB().exec(appPath, al);
-
-		else
-			System.out.println("Unknown command : "+ command);
+		Resource resource  = Lib.config.createResource();
+		Lib.database.setup(resource, null);
 	}
 }
 
