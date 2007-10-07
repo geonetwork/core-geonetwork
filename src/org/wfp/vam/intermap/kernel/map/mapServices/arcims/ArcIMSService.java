@@ -6,36 +6,30 @@
 
 package org.wfp.vam.intermap.kernel.map.mapServices.arcims;
 
-import java.util.*;
-
-import org.jdom.*;
-
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 import jeeves.utils.Xml;
-
-import org.wfp.vam.intermap.kernel.map.mapServices.*;
+import org.jdom.Element;
+import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
 import org.wfp.vam.intermap.kernel.map.mapServices.MapService;
+import org.wfp.vam.intermap.kernel.map.mapServices.ServiceException;
 import org.wfp.vam.intermap.kernel.map.mapServices.constants.MapServices;
+import org.wfp.vam.intermap.util.XmlUtil;
 
 public class ArcIMSService extends MapService
 {
-	
+
 	/**
 	 * Method getGroupImageUrl
-	 *
-	 * @param    bBox                a  BoundingBox
-	 * @param    width               an int
-	 * @param    height              an int
-	 * @param    imageNames          a  Vector
-	 *
-	 * @return   a String
-	 *
 	 */
-	public String getGroupImageUrl(BoundingBox bBox, int width, int height, Vector imageNames)
+	public String getGroupImageUrl(BoundingBox bBox, int width, int height, List imageNames)
 	{
 		// TODO
 		return null;
 	}
-	
+
 	public static final int TYPE = 1;
 
 	private BoundingBox bb;
@@ -109,15 +103,15 @@ public class ArcIMSService extends MapService
 	 *
 	 */
 	public BoundingBox getDefBoundingBox() throws Exception {
-		Element elBb = Xml.getElement(info, "/info/ARCXML/RESPONSE/SERVICEINFO/PROPERTIES/ENVELOPE");
-		
+		Element elBb = XmlUtil.getElement(info, "/info/ARCXML/RESPONSE/SERVICEINFO/PROPERTIES/ENVELOPE");
+
 		float maxy = Float.parseFloat(elBb.getAttributeValue("maxy"));
 		float miny = Float.parseFloat(elBb.getAttributeValue("miny"));
 		float maxx = Float.parseFloat(elBb.getAttributeValue("maxx"));
 		float minx = Float.parseFloat(elBb.getAttributeValue("minx"));
 
 		// Convert map units
-		String units = Xml.getElement(info, "/info/ARCXML/RESPONSE/SERVICEINFO/PROPERTIES/MAPUNITS")
+		String units = XmlUtil.getElement(info, "/info/ARCXML/RESPONSE/SERVICEINFO/PROPERTIES/MAPUNITS")
 			.getAttributeValue("units");
 		if (units.equals("meters")) {
 			// Meters to decimal degrees
@@ -177,9 +171,9 @@ public class ArcIMSService extends MapService
 							   Float.parseFloat(elEnvelope.getAttributeValue("miny")),
 							   Float.parseFloat(elEnvelope.getAttributeValue("maxx")),
 							   Float.parseFloat(elEnvelope.getAttributeValue("minx")));
-		
+
 		// Get the image URL from the ArcXML response
-		return Xml.getElement(lastResponse, "/ARCXML/RESPONSE/IMAGE/OUTPUT")
+		return XmlUtil.getElement(lastResponse, "/ARCXML/RESPONSE/IMAGE/OUTPUT")
 			.getAttributeValue("url");
 	}
 
@@ -210,12 +204,12 @@ public class ArcIMSService extends MapService
 
 		// Check if an error was generated on the server
 		checkArcImsError();
-		
+
 		// Get the image URL from the ArcXML response
-		return Xml.getElement(lastResponse, "/ARCXML/RESPONSE/EXTRACT/OUTPUT")
+		return XmlUtil.getElement(lastResponse, "/ARCXML/RESPONSE/EXTRACT/OUTPUT")
 			.getAttributeValue("url");
 	}
-	
+
 	/**
 	 * Sends a GET_IMAGE request to the map server to get the legend.
 	 *
@@ -239,7 +233,7 @@ public class ArcIMSService extends MapService
 		checkArcImsError();
 
 		// Get the image URL from the ArcXML response
-		return Xml.getElement(lastResponse, "/ARCXML/RESPONSE/IMAGE/LEGEND")
+		return XmlUtil.getElement(lastResponse, "/ARCXML/RESPONSE/IMAGE/LEGEND")
 			.getAttributeValue("url");
 	}
 
@@ -259,7 +253,7 @@ public class ArcIMSService extends MapService
 		// Send the request and get the response as an Element
 		ArcIMSClient client = new ArcIMSClient(serverUrl, name, "Query", request);
 		lastResponse =  client.getElement();
-		
+
 		checkArcImsError();
 	}
 
@@ -348,7 +342,7 @@ public class ArcIMSService extends MapService
 	private void checkArcImsError()
 		throws Exception
 	{
-		Element error = Xml.getElement(lastResponse, "/ARCXML/RESPONSE/ERROR");
+		Element error = XmlUtil.getElement(lastResponse, "/ARCXML/RESPONSE/ERROR");
 		if (error != null) {
 			errorStr = error.getText();
 			throw new ServiceException();
