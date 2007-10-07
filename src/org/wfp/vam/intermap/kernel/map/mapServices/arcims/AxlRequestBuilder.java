@@ -6,11 +6,10 @@
 
 package org.wfp.vam.intermap.kernel.map.mapServices.arcims;
 
-import java.io.*;
-
-import org.jdom.*;
-
+import java.io.File;
 import jeeves.utils.Xml;
+import org.jdom.Element;
+import org.wfp.vam.intermap.util.XmlTransformer;
 
 public class AxlRequestBuilder
 {
@@ -45,7 +44,7 @@ public class AxlRequestBuilder
 		{
 			Element stylesheet = Xml.loadFile(directory + File.separator + fileName);
 			Element t = (Element)stylesheet.clone();
-			return Xml.transform(data, t);
+			return XmlTransformer.transform(data, t);
 		}
 		catch (Exception e) { e.printStackTrace(); }
 		return null; // DEBUG
@@ -63,6 +62,6 @@ public class AxlRequestBuilder
 		Element stylesheet = Xml.loadFile(directory + File.separator + fileName);
 		return stylesheet;
 	}
-	
+
 }
 
