@@ -18,14 +18,11 @@ function print() {
  *
  *****************************************************************************/
  
- // these are the values of standard width and height.
- // It starts with Xsize0, and then toggles to 1 and back again at user request. 
+ // these are the values of initial width and height.
  
  var im_bm_wsize0 = 368;
  var im_bm_hsize0 = 276;
- var im_bm_wsize1 = 580;
- var im_bm_hsize1 = 435;
-
+ 
 // Current image size
 var im_bm_width = im_bm_wsize0; 
 var im_bm_height = im_bm_hsize0; 
@@ -36,57 +33,65 @@ var im_bm_north, im_bm_east, im_bm_south, im_bm_west;
 // Parse a response and set bm props accordingly
 function im_bm_set(bmResponse)
 {
-           // Image URL
-           var url = bmResponse.getElementsByTagName('imgUrl')[0].firstChild.nodeValue;
-	$('im_mapImg').src = url;
-	
-	// BBox
-	var extent= bmResponse.getElementsByTagName('extent')[0];
-	var minx  = extent.getAttribute('minx');
-	var maxx = extent.getAttribute('maxx');
-	var miny  = extent.getAttribute('miny');
-	var maxy = extent.getAttribute('maxy');
-
-           // Image size
-	var w = bmResponse.getElementsByTagName('width')[0].firstChild.nodeValue;
-	var h = bmResponse.getElementsByTagName('height')[0].firstChild.nodeValue;
-
-         im_bm_setMapBB(maxy, maxx, miny, minx);
-         im_bm_setSize(w, h);
+    // Image URL
+    var url = bmResponse.getElementsByTagName('imgUrl')[0].firstChild.nodeValue;
+    $('im_mapImg').src = url;
+    
+    im_bm_setBBox_dom(bmResponse)
+    im_bm_setSize_dom(bmResponse);
 }
 
-// Set width, height and bounding box
-function im_bm_setMapBB(n, e, s, w)
+// Set bounding box
+function im_bm_setBBox_dom(bmResponse)
 {
-    im_bm_north=new Number(n);
-    im_bm_east = new Number(e);
-    im_bm_south = new Number(s);
-    im_bm_west = new Number(w);    
+    var extent= bmResponse.getElementsByTagName('extent')[0];
+    var minx  = extent.getAttribute('minx');
+    var maxx = extent.getAttribute('maxx');
+    var miny  = extent.getAttribute('miny');
+    var maxy = extent.getAttribute('maxy');
+    
+    im_bm_setBBox(maxy, maxx, miny, minx);
+}
+function im_bm_setBBox(n, e, s, w)
+{
+    im_bm_north   = parseFloat(n);
+    im_bm_east     = parseFloat(e);
+    im_bm_south   = parseFloat(s);
+    im_bm_west    = parseFloat(w);    
 }
 
+// Set width, height
+function im_bm_setSize_dom(node)
+{
+    // Image size
+    var w = node.getElementsByTagName('width')[0].firstChild.nodeValue;
+    var h = node.getElementsByTagName('height')[0].firstChild.nodeValue;
+    
+    im_bm_setSize(w, h);
+}
 function im_bm_setSize(w, h)
 {
-        im_bm_width=new Number(w);
-        im_bm_height=new Number(h);
+    im_bm_width  = parseInt(w);
+    im_bm_height = parseInt(h);
 
+    if($('im_mapImg'))
+    {
         // lines from resizeMap()
-	$('im_mapImg').style.width = w;
-	$('im_mapImg').style.height = h;
-//	$('im_map').style.width = w;
-//	$('im_map').style.height = h;
+        $('im_mapImg').style.width = w;
+        $('im_mapImg').style.height = h;
+        //$('im_map').style.width = w;
+        //$('im_map').style.height = h;
         // end
-
-	$('im_mapContainer').style.width = new Number(w)+2; 
-	$('im_mapContainer').style.height = new Number(h)+2; 
-	
-	$('im_map').style.width = w; 
-	$('im_map').style.height = h;
-	
-	$('im_pleaseWait').style.width = w; 
-	
+        
+        $('im_mapContainer').style.width = im_bm_width + 2; 
+        $('im_mapContainer').style.height = im_bm_height + 2; 
+        
+        $('im_map').style.width = w; 
+        $('im_map').style.height = h;
+        
+        $('im_pleaseWait').style.width = w;
+    }
 }
-
-
 
 function im_bm_getURLbbox()
 {

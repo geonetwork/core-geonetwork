@@ -799,6 +799,28 @@ div.im_wbcontent {
 
 }
 
+#im_wmcmenu a {
+    cursor: pointer;
+   text-decoration: none;
+}
+
+#im_wmcmenu li {
+    border-top: 1px solid #a0b0e0;
+}
+
+#im_showstyles table.style
+{
+    border: 1px solid #a0b0e0; 
+    margin-top: 5px; 
+    padding-left:5px;
+}
+
+#im_showstyles table.style td
+{
+    padding-right:5px;
+    padding-left:5px;
+}
+
 #im_whiteboard button {
     border:1px solid #266397;
     color:#064377;

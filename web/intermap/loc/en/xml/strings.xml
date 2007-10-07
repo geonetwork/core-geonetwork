@@ -26,6 +26,7 @@
 	<exportAsPDF js="true">Export this map as a PDF</exportAsPDF>
 	<exportAsImage js="true">Export this map as an image</exportAsImage>
 	<exportAsWMC js="true">Save the Web Map Context</exportAsWMC>
+	<wmcmenu js="true">WMC Context menu</wmcmenu>	
 	<extents>Change the selected time (temporal data)</extents>
 	<extentSelected>Selected time: </extentSelected>
 	<featuresfound>features found</featuresfound>
@@ -75,6 +76,7 @@
 	<reset>Reset</reset>
 	<sendByEmail js="true">Send this map via e-mail</sendByEmail>
 	<setScale>--Set Scale--</setScale>
+	<showLayerMD js="true">Layer information</showLayerMD>
 	<smaller>Smaller map</smaller>
 	<specify>Specify if other:</specify>
 	<style>Select the desired style</style>

@@ -6,69 +6,20 @@
 
 package org.wfp.vam.intermap.kernel.map.mapServices.wms;
 
-import java.net.*;
-import java.io.*;
-import java.util.*;
-
-import org.jdom.*;
-
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import jeeves.utils.Xml;
+import org.jdom.Element;
+import org.jdom.JDOMException;
 
 public class WmsGetCapClient
 {
-	private static Hashtable htCapabilities = new Hashtable(); // Capabilities repository
-	private static Hashtable htDates = new Hashtable(); // Last request date
-	private static final int CACHE_TIME = 12;
-	private static boolean useCache;
-	
-    public static Element getCapabilities(String serverUrl)
-    throws Exception
-    {
-        return getCapabilities(serverUrl, false);
-    }
-    
 	/**
-	 * Get
-	 *
-	 * @param    serverUrl           the url of the map server
-	 *
-	 * @return   the getCapabilities response from the map server as a Jdom element
-	 *
-	 * @throws   IOException if a connection failure occurs
-	 * @throws   JDOMException if a xml parsing error occurs
-	 *
-	 */
-	public static Element getCapabilities(String serverUrl, boolean forceCacheRefresh)
-		throws Exception
-	{
-		if (!useCache) {
-			return sendGetCapRequest(serverUrl);
-		}
-		
-		Element capabilities = null; // DEBUG
-
-		// Calculate expiration date for the server
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.HOUR, -CACHE_TIME);
-		Calendar last = (Calendar)(htDates.get(serverUrl));
-
-		if (last == null || c.after(last) || forceCacheRefresh) {
-			capabilities = sendGetCapRequest(serverUrl);
-			htCapabilities.put(serverUrl, capabilities);
-			htDates.put(serverUrl, Calendar.getInstance());
-		}
-		else
-			capabilities = (Element)htCapabilities.get(serverUrl);
-
-		return (Element)capabilities.clone();
-	}
-	
-	public static void useCache(boolean useCache) {
-		WmsGetCapClient.useCache = useCache;
-	}
-	
-	/**
-	 * Method sendGetCapRequest
+	 * Retrieves capabilities from a WMS server.
+	 * Capabilities are handled by CapabilitiesStore, which provides also
+	 * an optional caching mechanism.
 	 *
 	 * @param    serverUrl           the server URL
 	 *
@@ -76,13 +27,14 @@ public class WmsGetCapClient
 	 *
 	 * @throws   IOException if a connection failure occurs
 	 * @throws   JDOMException if a xml parsing error occurs
-	 *
 	 */
-	private static Element sendGetCapRequest(String serverUrl)
-		throws Exception
+
+	/* package private */ static Element sendGetCapRequest(String serverUrl) throws IOException, Exception
 	{
 		Element capabilities = null;
 		boolean jdomError = false;
+
+		System.out.println("Sending getCapabilities request to " + serverUrl);
 
 		if (serverUrl.indexOf("?") == -1) serverUrl += "?";
 		else if (!serverUrl.endsWith("?")) serverUrl += "&";
@@ -95,6 +47,7 @@ public class WmsGetCapClient
 			HttpURLConnection conn = (HttpURLConnection)u.openConnection();
 			BufferedInputStream is = new BufferedInputStream(conn.getInputStream());
 			capabilities = Xml.loadStream(is);
+//System.out.println("CAP111 --> " + capabilities);
 			conn.disconnect();
 		}
 		catch (JDOMException e) {
@@ -109,6 +62,7 @@ public class WmsGetCapClient
 			HttpURLConnection conn = (HttpURLConnection)u.openConnection();
 			BufferedInputStream is = new BufferedInputStream(conn.getInputStream());
 			capabilities = Xml.loadStream(is);
+//System.out.println("CAP100 --> " + capabilities);
 			conn.disconnect();
 		}
 

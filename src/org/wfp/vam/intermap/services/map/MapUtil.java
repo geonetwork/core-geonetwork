@@ -6,8 +6,8 @@ package org.wfp.vam.intermap.services.map;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 import java.util.StringTokenizer;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -18,7 +18,11 @@ import org.wfp.vam.intermap.kernel.map.MapMerger;
 import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
 import org.wfp.vam.intermap.kernel.map.mapServices.MapService;
 import org.wfp.vam.intermap.kernel.map.mapServices.arcims.ArcIMSService;
-import org.wfp.vam.intermap.kernel.map.mapServices.wms.WmsGetCapClient;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCLayer;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCLayerList;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCViewContext;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCWindow;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.CapabilitiesStore;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.WmsService;
 
 public class MapUtil
@@ -104,32 +108,7 @@ public class MapUtil
 		}
 	}
 
-	protected static void setTransparency(Element request, MapMerger mm) {
-		List layers = request.getChildren();
-		for (Iterator i = layers.iterator(); i.hasNext(); ) {
-			Element param = (Element)i.next();
-			String key = param.getName();
-			String value = param.getText();
-			StringTokenizer t = new StringTokenizer(key, "_");
-			if (t.hasMoreTokens()) {
-				if (t.nextToken().equals("t")) {
-					int serviceId = Integer.parseInt(t.nextToken());
-					try {
-						float tr = Float.parseFloat(value);
-						if (tr >= 0 && tr <= 100)
-							mm.setTransparency(serviceId, Float.parseFloat(value) / 100);
-					}
-					catch (Exception e) { }
-				}
-			}
-		}
-	}
-
-
-	/**
-	 * @return the id of the service, or -1 if the service has not been added
-	 */
-	public static int addService(int serverType, String serverUrl, String serviceName, String vsp, MapMerger mm) throws Exception
+	private static boolean existService(MapMerger mm, String serverUrl, String serviceName)
 	{
 		// Do not add the service if it is already there
 		for(MapService service: mm.getServices())
@@ -137,8 +116,40 @@ public class MapUtil
 			String url = service.getServerURL();
 			String name = service.getName();
 			if (url.equals(serverUrl) && name.equals(serviceName))
-				return -1;
+				return true;
 		}
+
+		return false;
+	}
+
+
+	/**
+	 * Add a WMCLayer ad a service.
+	 * WMCLayer decoding is processed here.
+	 */
+	public static int addService(MapMerger mm, WMCLayer layer) throws Exception
+	{
+		int id = addService(WmsService.TYPE,
+						   layer.getServer().getOnlineResource().getHref(),
+						   layer.getName(),
+						   "", // layer.getChildText("vendor_spec_par"); // DEBUG
+						   mm);
+
+		Element et = layer.getExtension().getChild("Transparency");
+		if(et != null)
+			mm.setTransparency(id, Float.parseFloat(et.getText()));
+
+		return id;
+	}
+
+	/**
+	 * @return the id of the service, or -1 if the service has not been added
+	 */
+	public static int addService(int serverType, String serverUrl, String serviceName, String vsp, MapMerger mm) throws Exception
+	{
+		// Do not add the service if it is already there
+		if(existService(mm, serverUrl, serviceName))
+			return -1;
 
 		int ret;
 
@@ -149,8 +160,8 @@ public class MapUtil
 				break;
 
 			case WmsService.TYPE :
-				Element capabilities = WmsGetCapClient.getCapabilities(serverUrl);
-//				Element capabilities = CapabilitiesStore.getCapabilities(serverUrl); NEW VERSION: WORK IN PROGRESS
+//				Element capabilities = WmsGetCapClient.getCapabilities(serverUrl);   // Old version: we may need it in snv commit
+				Element capabilities = CapabilitiesStore.getCapabilities(serverUrl); // NEW VERSION: WORK IN PROGRESS
 				WmsService s = new WmsService(serverUrl, serviceName, capabilities);
 				ret = mm.addService(s);
 				setVendorSpecificParams(s, vsp);
@@ -346,6 +357,39 @@ public class MapUtil
 	public static String getDefaultImageSize() {
 		return defaultImageSize;
 	}
+
+	public static String setContext(MapMerger mm, WMCViewContext vc) throws Exception
+	{
+		WMCLayerList ll = vc.getLayerList();
+
+		// Set layers -- layers are added on top, so we have to reverse the list order
+		Stack<WMCLayer> layerstack= new Stack<WMCLayer>();
+
+		for (WMCLayer layer: ll.getLayerIterator())
+			layerstack.push(layer);
+
+		while(! layerstack.isEmpty())
+		{
+			try
+			{
+				MapUtil.addService(mm, layerstack.pop());
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		// set bounding box
+		mm.setBoundingBox(new BoundingBox(vc.getGeneral().getBoundingBox()));
+
+		WMCWindow win = vc.getGeneral().getWindow();
+		String imagename = mm.merge(win.getWidth(), win.getHeight());
+		String url = MapUtil.getTempUrl() + "/" + imagename;
+
+		return url;
+	}
+
 
 }
 

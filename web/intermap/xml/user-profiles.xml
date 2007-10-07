@@ -45,29 +45,29 @@
 		<allow service="map.service.wmsLayerInfo"/>
 		<allow service="map.service.expand"/>
 		<allow service="map.service.collapse"/>
-		<allow service="map.refresh"/>
-		<allow service="map.getPrintImage"/>
 		<allow service="map.setContext"/>
 		<allow service="map.getFeatures"/>
 
 		<allow service="wmc.setContext"/>
-<!--		<allow service="wmc.getContext"/>-->
+		<allow service="wmc.uploadContext"/>
+		<allow service="wmc.getContext"/>
 		<allow service="wmc.setContextFromURL"/>
-<!--		<allow service="wmc.mailform"/>-->
+		<allow service="wmc.mailContext"/>
+		<allow service="wmc.form"/>
 		
+		<allow service="map.layers.add"/>
 		<allow service="map.layers.deleteLayer"/>
-		<allow service="map.layers.getOrder"/>
 		<allow service="map.layers.setOrder"/>
 		<allow service="map.layers.moveUp"/>
 		<allow service="map.layers.moveDown"/>		
 		<allow service="map.layers.setTransparency"/>
-		<allow service="map.layers.getInspectorData"/>
 		<allow service="map.layers.toggleVisibility"/>
+		<allow service="map.layers.getInfo"/>
+		<allow service="map.layers.getStyles"/>
+		<allow service="map.layers.setStyle"/>
+		
 		<allow service="map.update"/>
-		<allow service="map.setAoi"/>
-		<allow service="map.unsetAoi"/>
 		<allow service="geonet.getGeonetRecords"/>
-		<allow service="map.layers.add"/>
 	</profile>
 
 	<!-- ====================================================================== -->

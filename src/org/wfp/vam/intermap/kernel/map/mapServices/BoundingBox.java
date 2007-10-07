@@ -9,6 +9,7 @@ package org.wfp.vam.intermap.kernel.map.mapServices;
 import java.util.List;
 import org.jdom.Element;
 import org.wfp.vam.intermap.kernel.map.mapServices.constants.MapServices;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSBaseBoundingBox;
 
 public class BoundingBox
 {
@@ -22,6 +23,11 @@ public class BoundingBox
 		southBound = MapServices.DEFAULT_SOUTH;
 		eastBound = MapServices.DEFAULT_EAST;
 		westBound = MapServices.DEFAULT_WEST;
+	}
+
+	public BoundingBox(WMSBaseBoundingBox bbox)
+	{
+		this(bbox.getMaxy(), bbox.getMiny(), bbox.getMaxx(), bbox.getMinx());
 	}
 
 	public BoundingBox(float north, float south, float east, float west)

@@ -33,7 +33,7 @@ public class Constants {
 	public static final String AXL_CONFIG = "axlRequests";
 
 	// WmsService configuration
-	public static final String WMS_CONFIG = "wmsTransform";
+//	public static final String WMS_CONFIG = "wmsTransform";
 
 	// Proxy server configuration
 	public static final String USE_PROXY = "useProxy";

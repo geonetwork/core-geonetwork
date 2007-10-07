@@ -35,23 +35,23 @@ public class Add implements Service
 		String serverUrl = params.getChildText(Constants.MAP_SERVER_URL);
 		//int serverType = Integer.parseInt(params.getChildText(Constants.MAP_SERVER_TYPE));
 		String serviceName = params.getChildText(Constants.MAP_SERVICE);
-		
+
 		//Element response = new Element("response");
 		//response.addContent(new Element("status").setAttribute("services", "true"));
-				
+
 		MapMerger mm = MapUtil.getMapMerger(context);
 
 		// Set a flag to indicate that no services were in the MapMerger
-		boolean flag = false;
-		if (mm.size() == 0) flag = true;
-		
+		boolean mmWasEmpty = false;
+		if (mm.size() == 0)
+			mmWasEmpty = true;
+
 		MapUtil.addService(2, serverUrl, serviceName, null, mm);
-		
+
 		// Calculate the starting BoudingBox if flag is set
-		if (flag) {
+		if (mmWasEmpty)
 			MapUtil.setDefBoundingBox(mm);
-		}
-		
+
 		// Update the user session
 		context.getUserSession().setProperty(Constants.SESSION_MAP, mm);
 
@@ -61,12 +61,12 @@ public class Add implements Service
 //			System.out.println("defaultImageSize = " + MapUtil.getDefaultImageSize()); // DEBUG
 			context.getUserSession().setProperty(Constants.SESSION_SIZE, MapUtil.getDefaultImageSize());
 		}
-		
+
 //		System.out.println("mm" + Xml.getString(mm.toElement()));
-		
+
 		return null;
 	}
-	
+
 }
 
 //=============================================================================

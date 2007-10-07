@@ -365,6 +365,29 @@ function imc_mm_update(width, height, qbbox, callback)
 	);
 }
 
+/*
+function imc_mm_action_mm()
+{
+	im_mm_setStatus('busy');
+	var url = '/intermap/srv/'+Env.lang+'/map.update';
+	
+	var im_mm_bb=im_dezoomDegrees(im_mm_ctrl_n.value,im_mm_ctrl_e.value,im_mm_ctrl_s.value,im_mm_ctrl_w.value);
+
+	var pars = 'maptool=' + 'zoomin' + 
+	                "&width=" + '200' + "&height="+'100' +
+	                "&"+im_mm_bb; // FIXME: we should pass bb as param 
+	
+	var myAjax = new Ajax.Request (
+		url, 
+		{
+			method: 'get',
+			parameters: pars,
+			onComplete: im_mm_imageRebuilt,
+			onFailure: reportError
+		}
+	);
+}
+*/
 
 /*****************************************************************************
  *                                                                           *
@@ -422,6 +445,7 @@ function imc_mm_fullExtent(w,h)
  *                                                                           *
  *****************************************************************************/
 
+/* ETj:unused?
 function addLayer(baseUrl, serviceName) // DEBUG
 {
 	setStatus('busy');
@@ -438,7 +462,7 @@ function addLayer(baseUrl, serviceName) // DEBUG
 		}
 	);
 }
-
+*/
 
 
 function imc_addService(surl, service, type, callback)

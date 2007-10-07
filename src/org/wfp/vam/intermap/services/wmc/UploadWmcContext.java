@@ -1,11 +1,13 @@
 package org.wfp.vam.intermap.services.wmc;
 
-import java.net.URLDecoder;
+import java.io.File;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+import org.fao.geonet.constants.Params;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.wfp.vam.intermap.Constants;
 import org.wfp.vam.intermap.kernel.map.MapMerger;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.impl.WMCFactory;
@@ -15,11 +17,11 @@ import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.impl.Utils;
 import org.wfp.vam.intermap.services.map.MapUtil;
 
 /**
- * Set the WMC from an URL-encoded parameter.
+ * Set the WMC from a context file passed as file upload.
  *
  * @author Etj
  */
-public class SetWmcContext implements Service
+public class UploadWmcContext implements Service
 {
 	public void init(String appPath, ServiceConfig config) throws Exception {}
 
@@ -31,12 +33,22 @@ public class SetWmcContext implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		String wmc = params.getChildText("wmc");
-		String dec = URLDecoder.decode(wmc, "UTF-8");
+		String uploadDir = context.getUploadDir();
 
-//		System.out.println("DECODED\n" + dec);
+		String fname = params.getChildText(Params.FNAME);
+		if(fname == null)
+			throw new IllegalArgumentException("Invalid file");
 
-		Element mapContext = Xml.loadString(dec, false);
+		File   file  = new File(uploadDir, fname);
+		Element mapContext;
+		try
+		{
+			mapContext = Xml.loadFile(file);
+		}
+		catch (JDOMException e)
+		{
+			throw new IllegalArgumentException("Error in parsing the context file");
+		}
 
 //		XMLOutputter xo = new XMLOutputter(Format.getPrettyFormat());
 //		System.out.println(" ============= request wmc is:\n\n" +xo.outputString(mapContext));
@@ -64,6 +76,7 @@ public class SetWmcContext implements Service
 			.addContent(new Element("width").setText("" + win.getWidth()))
 			.addContent(new Element("height").setText("" + win.getHeight()));
 	}
+
 
 }
 

@@ -1,7 +1,6 @@
 /**
  * TempFiles.java
  *
- * @author Created by Omnicore CodeGuide
  */
 
 package org.wfp.vam.intermap.kernel;

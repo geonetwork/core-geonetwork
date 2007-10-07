@@ -222,7 +222,9 @@
 		</service>
  -->
 		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- ====================================
+			LAYERS
+		===================================== -->
 		
 <!-- 
 		<service name="map.getLayers">
@@ -233,12 +235,19 @@
  -->
 
 		<service name="map.getLayers.embedded">
-			<class name=".services.map.layers.GetOrder" />
+			<class name=".services.map.layers.Get" />
 			
 			<output sheet="im_get-layers-embedded.xsl" />
 		</service>
 		
-
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.layers.add">
+			<class name=".services.map.layers.Add"/>
+			
+			<output forward="map.update" />
+		</service>
+		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="map.layers.deleteLayer">
@@ -247,34 +256,53 @@
 		</service>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<service name="map.layers.getOrder">
-			<class name=".services.map.layers.GetOrder" />
-		</service>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
+				
 		<service name="map.layers.setOrder">
 			<class name=".services.map.layers.SetOrder" />
 
-			<!-- ETJ -->
 			<output sheet="im_get-layers-embedded.xsl" />			
 		</service>
 
-
-		<service name="map.layers.moveUp">
-			<class name=".services.map.layers.MoveUp" />
-			
-			<output sheet="im_get-layers-embedded.xsl" />			
-		</service>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
+		<service name="map.layers.moveUp">
+			<class name=".services.map.layers.MoveUp" />			
+			<output sheet="im_get-layers-embedded.xsl" />			
+		</service>
+	
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="map.layers.moveDown">
 			<class name=".services.map.layers.MoveDown" />
 			
 			<output sheet="im_get-layers-embedded.xsl" />			
 		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
+		<service name="map.layers.getInfo">
+			<class name=".services.map.layers.GetInfo" />
+			
+			<output sheet="im_get-layer-info.xsl" />			
+			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="map.layers.getStyles">
+			<class name=".services.map.layers.GetStyles" />
+			
+			<output sheet="im_get-layer-styles.xsl" />			
+			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="map.layers.setStyle">
+			<class name=".services.map.layers.SetStyle" />
+						
+			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
@@ -321,19 +349,7 @@
 			<output sheet="im_get-map.xsl" />
 		</service>
  -->
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<service name="map.setAoi">
-			<class name=".services.map.SetAoi" />
-		</service>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<service name="map.unsetAoi">
-			<class name=".services.map.UnsetAoi" />
-		</service>
-		
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="map.fullExtent">
@@ -350,13 +366,6 @@
 			<output forward="map.getMain"/>
 		</service>
 		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<!-- This feature has been completely moved on client side -->
-<!--		<service name="map.toggleImageSize">
-			<class name=".services.map.ToggleImageSize" />
-		</service>
--->		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="map.reset">
@@ -429,21 +438,15 @@
 			<output sheet="im_wms-layer-info.xsl" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->				
 <!-- 
 		<service name="map.service.collapse">
 			<class name=".services.map.CollapseService"/>
 			
 			<output forward="map.getLayers"/>
 		</service>
- -->
-		
+ -->		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
 <!-- 
 		<service name="map.service.expand">
 			<class name=".services.map.ExpandService"/>
@@ -451,26 +454,10 @@
 			<output forward="map.getLayers"/>
 		</service>
  -->
-		
+				
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
-		<service name="map.refresh">
-			<class name=".services.map.Refresh" />
-			
-			<output forward="map.getMain" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<service name="map.getPrintImage">
-			<class name=".services.map.GetPrintImage" />
-			
-			<output sheet="im_get-print-map.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<service name="map.setContext">
+		<service name="map.setContext"> <!-- ??? ETj -->
 			<class name=".services.map.SetContext" />
 			
 			<output forward="map.getMain" />
@@ -483,20 +470,62 @@
 			
 			<output sheet="im_get-features.xsl" />
 		</service>
-		
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
+		<service name="geonet.getGeonetRecords">
+			<class name=".services.geonet.GetGeonetRecords"/>
+			<output sheet="geonet-records.xsl" contentType="text/xml; charset=UTF-8" />
+		</service>
+				
+		<!-- ====================================
+			WMC
+		===================================== -->		
+
+		<service name="wmc.form">			
+<!--			<class name=".services.wmc.GetWmcContext"/>-->
+			<output sheet="im_wmc_form.xsl" contentType="text/html; charset=UTF-8" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="wmc.uploadContext">
+			<class name=".services.wmc.UploadWmcContext"/>
+			
+			<output sheet="copy.xsl" contentType="text/xml; charset=UTF-8"/>							
+			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="wmc.setContext">
 			<class name=".services.wmc.SetWmcContext"/>
 			
-			<output forward="map.getMain"/>
+			<output sheet="copy.xsl" contentType="text/xml; charset=UTF-8"/>							
+			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
 		</service>
 
-<!--		<service name="wmc.getContext">			
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+				
+		<service name="wmc.getContext" contentType="application/vnd.ogc.context+xml; charset=UTF-8">
 			<class name=".services.wmc.GetWmcContext"/>
-
+			<!-- contenttype is defined in 100 spec, but not in 110 -->
+			<output sheet="im_wmc.xsl" contentType="application/vnd.ogc.context+xml; charset=UTF-8" />			
 		</service>
--->			<!-- need some transformation here -->		
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<service name="wmc.mailContext">
+			
+			<class name=".services.wmc.MailWmcContext">
+				<param name="customstylesheet" value="../web/intermap/xsl/im_wmc_custom_mail.xsl"/>
+				<!--<param name="mailserver" value=""/>--> <!-- PLEASE  SET THIS PARAM TO A VALID MAIL SERVER -->				
+				<param name="gnurl" value="http://localhost:8080/geonetwork/srv/en/main.home"/> <!-- THIS PARAM HAS TO BE CONFIGURED BY THE INSTALLER -->				
+			</class>
+			
+			<output sheet="copy.xsl" contentType="text/xml; charset=UTF-8"/>							
+			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="wmc.setContextFromURL">
@@ -504,33 +533,16 @@
 			
 			<output forward="map.getMain"/>
 		</service>
-			
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<service name="map.layers.getInspectorData">
-			<class name=".services.map.layers.GetInspectorData"/>
-		</service>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<service name="geonet.getGeonetRecords">
-			<class name=".services.geonet.GetGeonetRecords"/>
-			<output sheet="geonet-records.xsl" contentType="text/xml; charset=UTF-8" />
-		</service>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<service name="map.layers.add">
-			<class name=".services.map.layers.Add"/>
-			
-			<output forward="map.update" />
-		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- ====================================
+			PDF
+		===================================== -->
 		
 		<service name="static.form.pdf">			
 			<output sheet="im_pdf_form.xsl" contentType="text/html; charset=UTF-8" />
 		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="create.pdf">			
 			<class name=".services.export.ExportPDF">
@@ -540,16 +552,7 @@
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
-<!--		<service name="wmc.mailform">			
-			<class name=".services.wmc.GetWmcContext"/>
-			<output sheet="im_wmc_form.xsl" contentType="text/html; charset=UTF-8" />
-		</service>
--->		
-		
-
 	</services>
-
-
 	
 	<!-- ====================================================================== -->
 

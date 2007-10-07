@@ -23,6 +23,8 @@ import org.wfp.vam.intermap.kernel.GlobalTempFiles;
 import org.wfp.vam.intermap.kernel.map.images.ImageMerger;
 import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
 import org.wfp.vam.intermap.kernel.map.mapServices.MapService;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.WmsService;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSLayer;
 
 
 public class MapMerger
@@ -100,7 +102,8 @@ public class MapMerger
 	 *
 	 * @return the id given to the service
 	 * */
-	public int addService(MapService service) {
+	public int addService(MapService service)
+	{
 //		System.out.println("service: " + service); // DEBUG
 		if ( _layers.isEmpty() ) activeServiceId = nextId;
 
@@ -185,6 +188,15 @@ public class MapMerger
 								 	  .setAttribute("transparency", "" + layer.getIntTransparency());
 			if(legend != null)
 				eLayer.setAttribute("legend", legend);
+
+			if(s instanceof WmsService)
+			{
+				WmsService wm = (WmsService)s;
+				WMSLayer wlayer = wm.getWmsLayer();
+
+				if(wlayer.getStyleSize() > 0)
+					eLayer.setAttribute("style", "true");
+			}
 
 			elServices.addContent(eLayer);
 		}
@@ -604,6 +616,7 @@ public class MapMerger
 			is.close();
 
 			imageName = out.getName();
+			imagePath = out.getPath();
 //			return imageName;
 		}
 		else

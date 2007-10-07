@@ -6,8 +6,10 @@
  */
 
 package org.wfp.vam.intermap.util;
-import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
+
 import org.jdom.Element;
+import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSEX_GeographicBoundingBox;
 
 
 
@@ -42,6 +44,14 @@ public class Util
 			System.err.println("Bad float value ("+e.getMessage()+")");
 			return null;
 		}
+	}
+
+	public static BoundingBox getBB(WMSEX_GeographicBoundingBox gbb)
+	{
+		return new BoundingBox( gbb.getNorth(),
+								gbb.getSouth(),
+								gbb.getEast(),
+								gbb.getWest());
 	}
 
 	/**

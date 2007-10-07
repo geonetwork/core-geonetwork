@@ -26,7 +26,7 @@ package org.wfp.vam.intermap;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
 import jeeves.server.ServiceConfig;
-import jeeves.server.resources.ResourceManager;
+import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.jdom.Element;
 import org.wfp.vam.intermap.http.ConcurrentHTTPTransactionHandler;
@@ -36,9 +36,7 @@ import org.wfp.vam.intermap.kernel.TempFiles;
 import org.wfp.vam.intermap.kernel.map.DefaultMapServers;
 import org.wfp.vam.intermap.kernel.map.MapMerger;
 import org.wfp.vam.intermap.kernel.map.mapServices.arcims.AxlRequestBuilder;
-import org.wfp.vam.intermap.kernel.map.mapServices.wms.WmsGetCapClient;
-//import org.wfp.vam.intermap.kernel.map.mapServices.wms.CapabilitiesStore;
-import org.wfp.vam.intermap.kernel.map.mapServices.wms.WmsService;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.CapabilitiesStore;
 import org.wfp.vam.intermap.services.map.MapUtil;
 
 
@@ -73,12 +71,14 @@ public class Intermap implements ApplicationHandler
 	/** Inits the engine, loading all needed data
 	  */
 
-	public Object start(String appPath, Logger l, Element config, ResourceManager resMan) throws Exception
+//	public Object start(String appPath, Logger l, Element config, ResourceManager resMan) throws Exception
+	public Object start(Element config, ServiceContext context) throws Exception
 	{
-		logger = l;
-		path   = appPath;
+		logger = context.getLogger();
+		String path    = context.getAppPath();
+		String baseURL = context.getBaseUrl();
 
-		log("Initializing intermap...");
+		logger.info("Initializing intermap...");
 
 
 		ServiceConfig handlerConfig = new ServiceConfig(config.getChildren());
@@ -86,7 +86,7 @@ public class Intermap implements ApplicationHandler
 		//------------------------------------------------------------------------
 		//--- initialize map servers informations
 
-		log("Map servers config...");
+		logger.info("Map servers config...");
 		String mapServersPath = handlerConfig.getMandatoryValue(Constants.MAP_SERVERS_CONFIG);
 		Element mapServersRoot = Xml.loadFile(path + mapServersPath);
 		DefaultMapServers.init(mapServersRoot);
@@ -94,24 +94,24 @@ public class Intermap implements ApplicationHandler
 		//------------------------------------------------------------------------
 		//--- initialize the AXL Element builder
 
-		log("axlElementBuilder config...");
+		logger.info("axlElementBuilder config...");
 		String axlPath = handlerConfig.getMandatoryValue(Constants.AXL_CONFIG);
 		AxlRequestBuilder.init(path + axlPath);
 
 
-		//------------------------------------------------------------------------
-		//--- initialize WmsService
-
-		log("WmsService config...");
-		String wmsPath = handlerConfig.getMandatoryValue(Constants.WMS_CONFIG);
-		WmsService.init(path + wmsPath);
+//		//------------------------------------------------------------------------
+//		//--- initialize WmsService
+//
+//		log("WmsService config...");
+//		String wmsPath = handlerConfig.getMandatoryValue(Constants.WMS_CONFIG);
+//		WmsService.init(path + wmsPath);
 
 		//------------------------------------------------------------------------
 		//--- set the proxy server System properties
 
-		log("Proxy server config...");
+		logger.info("Proxy server config...");
 		String useProxy = handlerConfig.getMandatoryValue(Constants.USE_PROXY);
-		log("The useproxy attribute is set to " + useProxy);
+		logger.info("The useproxy attribute is set to " + useProxy);
 		if ("true".equals(useProxy)) {
 			String proxyHost = handlerConfig.getMandatoryValue(Constants.PROXY_HOST);
 			String proxyPort = handlerConfig.getMandatoryValue(Constants.PROXY_PORT);
@@ -125,7 +125,7 @@ public class Intermap implements ApplicationHandler
 		//------------------------------------------------------------------------
 		//--- Start the temporary files clean up thread
 
-		log("Temporary files config...");
+		logger.info("Temporary files config...");
 		String tempDir = handlerConfig.getMandatoryValue(Constants.TEMP_DIR);
 		String tempDelete = handlerConfig.getMandatoryValue(Constants.TEMP_DELETE);
 		int delete = Integer.parseInt(tempDelete);
@@ -135,23 +135,23 @@ public class Intermap implements ApplicationHandler
 		//------------------------------------------------------------------------
 		//--- Start the cache files clean up thread
 
-		log("HTTP Cache files config...");
+		logger.info("HTTP Cache files config...");
 		String cacheDir = handlerConfig.getMandatoryValue(Constants.CACHE_DIR);
 		String cacheDelete = handlerConfig.getMandatoryValue(Constants.CACHE_DELETE);
 		int deleteCache = Integer.parseInt(cacheDelete);
 		MapMerger.setCache(new HttpGetFileCache(cacheDir, deleteCache));
 		String useCache = handlerConfig.getMandatoryValue(Constants.USE_CACHE);
-		WmsGetCapClient.useCache("true".equals(useCache) ? true : false);
-//		CapabilitiesStore.useCache("true".equals(useCache) ? true : false);
+//		WmsGetCapClient.useCache("true".equals(useCache) ? true : false);
+		CapabilitiesStore.useCache("true".equals(useCache) ? true : false);
 
 		//------------------------------------------------------------------------
 		//--- Set the temporary files URL
 
-		log("Temporary URL config...");
+		logger.info("Temporary URL config...");
 		String tempUrl = handlerConfig.getMandatoryValue(Constants.TEMP_URL);
 		org.wfp.vam.intermap.services.map.MapUtil.setTempUrl(tempUrl);
 
-		log("Screen DPI config...");
+		logger.info("Screen DPI config...");
 		String dpi = handlerConfig.getMandatoryValue(Constants.DPI);
 		try {
 			MapMerger.setDefaultDPI(Integer.parseInt(dpi));
@@ -175,14 +175,14 @@ public class Intermap implements ApplicationHandler
 
 		MapUtil.setImageSizes(minh, minw, maxh, maxw);
 
-		log("setting default image size to " + d);
+		logger.info("setting default image size to " + d);
 		// set default image size
 		if ("small".equals(d))
 			org.wfp.vam.intermap.services.map.MapUtil.setDefaultImageSize("small");
 		else
 			org.wfp.vam.intermap.services.map.MapUtil.setDefaultImageSize("big");
 
-		log("...done");
+		logger.info("...done");
 
 		return new Object(); // DEBUG
 	}
@@ -195,7 +195,7 @@ public class Intermap implements ApplicationHandler
 
 	public void stop()
 	{
-		log("Stopping intermap...");
+		logger.info("Stopping intermap...");
 
 		tempFiles.end();
 	}
@@ -206,13 +206,6 @@ public class Intermap implements ApplicationHandler
 	//---
 	//---------------------------------------------------------------------------
 
-	/** Logs a message
-	  */
-
-	private void log(String message)
-	{
-		logger.log(message);
-	}
 }
 
 //=============================================================================

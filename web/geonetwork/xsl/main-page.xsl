@@ -41,6 +41,8 @@
 		<!--  FIXME move this line elsewhere.  -->
 		<link rel="stylesheet" type="text/css" href="/intermap/intermap-embedded.css?" />
 		
+		<xsl:variable name="wmc"><xsl:copy-of select="/root/request/wmc"/></xsl:variable>
+		
 		<script type="text/javascript" language="JavaScript1.2">
 
 			<xsl:choose>
@@ -51,7 +53,7 @@
 						if (currentSearch=='advanced') {
 							showAdvancedSearch();
 						} else {
-							initSimpleSearch();
+							initSimpleSearch("<xsl:value-of select="$wmc"/>");
 						}
 					}
 				</xsl:when>
@@ -181,6 +183,8 @@
 			<xsl:value-of select="/root/gui/strings/mainpageTitle"/>
 		</h1>
 
+		<xsl:call-template name="localization"/>
+		
 		<xsl:comment>FORM FIELDS</xsl:comment>
 		<form name="search" action="{/root/gui/locService}/main.search" method="post"
 			onsubmit="return checkSubmit()">
@@ -1062,5 +1066,13 @@
 		</table>
 	</xsl:template>
 
+	<xsl:template name="localization">
+		<xsl:comment>These fields are needed for js on-the-fly translations</xsl:comment>	
+		<xsl:for-each select="/root/gui/strings/*[@js='true']">			
+			<input type="hidden" id="i18n_{name(.)}" value="{.}" />
+		</xsl:for-each>				
+		<xsl:comment>End of i18n fields</xsl:comment>	
+	</xsl:template>	
+	
 
 </xsl:stylesheet>

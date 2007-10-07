@@ -63,7 +63,14 @@
 									src="/intermap/images/legend.png" title="{/root/gui/strings/legend}"/>
 							</xsl:if>
 							
-							<img id="showLayerMD_{@id}" class="im_layerButton" 
+							<xsl:if test="@style">
+								<img id="styles_{@id}"  class="im_layerButton" 
+									onclick="im_showStyles({@id});"
+									src="/intermap/images/styles.png" title="{/root/gui/strings/legend}"/>
+							</xsl:if>
+							
+							<img id="showLayerMD_{@id}" class="im_layerButton"
+								onclick="im_showLayerMD({@id})" 								
 								src="/intermap/images/metadata.png" title="{/root/gui/strings/metadata}"/>
 							<select id="im_transp_{@id}" class="layerSelectTransp"
 								onchange="im_layerTransparencyChanged({@id})" title="{/root/gui/strings/transparency}">

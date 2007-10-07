@@ -35,7 +35,7 @@ public class WmsConfig implements Service
 		MapMerger mm = MapUtil.getMapMerger(context);
 		
 		if (!style.equals(""))
-				((WmsService)mm.getService(id)).setStyle(style);
+				((WmsService)mm.getService(id)).setStyleName(style);
 				
 		return null;
 	}

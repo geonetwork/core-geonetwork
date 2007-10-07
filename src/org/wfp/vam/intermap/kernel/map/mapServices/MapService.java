@@ -39,7 +39,7 @@ public abstract class MapService
 		serverUrl = mapServerUrl;
 		name = serviceName;
 	}
-	
+
 	/**
 	 * Method getTitle
 	 *
@@ -60,14 +60,12 @@ public abstract class MapService
 
 	public abstract String getImageUrl(BoundingBox bBox, int width, int height) throws ServiceException, Exception;
 
-	public abstract String getGroupImageUrl(BoundingBox bBox, int width, int height, Vector imageNames);
-	
 	public abstract String getLegendUrl() throws Exception;
 
 	public abstract void identify(int layer, int x, int y, int width, int height, int tolerance, String reqFormat) throws Exception;
 
 //	public abstract void getFieldValue(int layer, int x, int y, int width, int height, int tolerance, String fieldName) throws Exception;
-	
+
 	public Element getLastResponse()
 	{ return (Element)lastResponse.clone(); }
 

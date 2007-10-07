@@ -11,10 +11,18 @@
 var im_mm_width = 200; 
 var im_mm_height = 100;
 
-
 var im_mm_currentTool;
 
-var im_mm_north, im_mm_east, im_mm_south, im_mm_west;
+var im_mm_south_home=-90;
+var im_mm_north_home=90; 
+var im_mm_west_home=-180;
+var im_mm_east_home=180;
+
+var im_mm_north = im_mm_north_home; 
+var im_mm_east = im_mm_east_home;
+var im_mm_south = im_mm_south_home;
+var im_mm_west = im_mm_west_home;
+
 var im_mm_ctrl_n,im_mm_ctrl_e, im_mm_ctrl_s, im_mm_ctrl_w; 
 var im_mm_aoiBox;
 
@@ -23,28 +31,57 @@ function trace(fname)
     alert("Entering function --> " + fname);
 }
 
-function im_mm_init(callback)
+function im_mm_init(wmc, callback)
 {
     im_mm_initTextControls($('northBL'), $('eastBL'), $('southBL'), $('westBL'), $('im_mm_aoibox'));
-    if (im_mm_ctrl_n.value == '')
-    {
-    im_mm_ctrl_n.value='90';
-    }
-    if (im_mm_ctrl_e.value == '')
-    {
-    im_mm_ctrl_e.value='180';
-    }
-    if (im_mm_ctrl_s.value == '')
-    {
-    im_mm_ctrl_s.value='-90';
-    }
-    if (im_mm_ctrl_w.value == '')
-    {
-    im_mm_ctrl_w.value='-180';
-    }
+
+/*    if (im_mm_ctrl_n.value == '')*/
+        im_mm_ctrl_n.value=im_mm_north_home;
+        
+/*    if (im_mm_ctrl_e.value == '')*/
+        im_mm_ctrl_e.value=im_mm_east_home;
+        
+/*    if (im_mm_ctrl_s.value == '')*/
+        im_mm_ctrl_s.value=im_mm_south_home;
+        
+/*    if (im_mm_ctrl_w.value == '')*/
+        im_mm_ctrl_w.value=im_mm_west_home;
     
-    im_mm_refreshNeeded(callback); // load minimap
-    im_mm_setTool('zoomin'); // set the default tool    
+    if(wmc)
+    {
+        im_setWMC(wmc, function(req)
+                                    {
+                                        var resp = req.responseXML.documentElement;
+                                        //TODO: force loading of big map?
+                                        im_bm_setBBox_dom(resp)
+                                        im_bm_setSize_dom(resp);
+                                                                                
+                                        im_mm_setBBox_dom(resp);                                    
+                                        im_mm_refreshNeeded(callback); // load minimap
+                                        im_mm_setTool('zoomin'); // set the default tool                                        
+                                    });
+    }
+    else
+    {
+        im_mm_refreshNeeded(callback); // load minimap
+        im_mm_setTool('zoomin'); // set the default tool    
+    }
+}
+
+function im_setWMC(wmc, callback) // TODO move this function in an appropriate file
+{
+    var pars = 'wmc=' + wmc;               //encodeURIComponent(surl) 
+    		
+    var myAjax = new Ajax.Request (
+    	'/intermap/srv/'+Env.lang+'/wmc.setContext',
+    	{
+    		method: 'get',
+    		parameters: pars,
+    
+    		onComplete: callback,
+    		onFailure: reportError
+    	}
+    );    
 }
 
 
@@ -53,47 +90,56 @@ function im_mm_set(minimapResponse)
 {
 //    trace("im_mm_set");
            // Image URL
-           var mmurl = minimapResponse.getElementsByTagName('imgUrl')[0].firstChild.nodeValue;
-//alert("setting src url " + mmurl);           
+           var mmurl = minimapResponse.getElementsByTagName('imgUrl')[0].firstChild.nodeValue;           
 	$('im_mm_image').src = mmurl;
-//alert("src url set");
 	
-	// BBox
-	var extent=minimapResponse.getElementsByTagName('extent')[0];
-	var minx  = extent.getAttribute('minx');
-	var maxx = extent.getAttribute('maxx');
-	var miny  = extent.getAttribute('miny');
-	var maxy = extent.getAttribute('maxy');
-//alert("extent set");
-
-           // Image size
-	var w = minimapResponse.getElementsByTagName('width')[0].firstChild.nodeValue;
-	var h = minimapResponse.getElementsByTagName('height')[0].firstChild.nodeValue;
-
-         im_mm_setMapProp(maxy, maxx, miny, minx, w, h);
+	im_mm_setBBox_dom(minimapResponse);
+	im_mm_setSize_dom(minimapResponse);
 }
 
-// Set width, height and bounding box
-function im_mm_setMapProp(n, e, s, w, width, height)
+//## Set BoundingBox
+function im_mm_setBBox_dom(minimapResponse)
 {
-/*    trace("im_mm_setMapProp");*/
+    var extent=minimapResponse.getElementsByTagName('extent')[0];
     
-    im_mm_north=new Number(n);
-    im_mm_east = new Number(e);
-    im_mm_south = new Number(s);
-    im_mm_west = new Number(w);
-    
-    im_mm_width=new Number(width);
-    im_mm_height=new Number(height);
-    
+    var minx  = extent.getAttribute('minx');
+    var maxx = extent.getAttribute('maxx');
+    var miny  = extent.getAttribute('miny');
+    var maxy = extent.getAttribute('maxy');
+
+    im_mm_setBBox(maxy, maxx, miny, minx);    
 }
+function im_mm_setBBox(n, e, s, w)
+{
+    im_mm_north= parseFloat(n);
+    im_mm_east = parseFloat(e);
+    im_mm_south = parseFloat(s);
+    im_mm_west = parseFloat(w);
+}
+
+//## Set width, height
+function im_mm_setSize_dom(minimapResponse)
+{
+    // Image size
+    var w = minimapResponse.getElementsByTagName('width')[0].firstChild.nodeValue;
+    var h = minimapResponse.getElementsByTagName('height')[0].firstChild.nodeValue;
+
+    im_mm_setSize(w, h);
+}
+function im_mm_setSize(width, height)
+{
+    im_mm_width=parseInt(width);
+    im_mm_height=parseInt(height);    
+}
+
 
 function im_mm_initTextControls(n, e, s, w,a)
 {
     im_mm_ctrl_n = n;
     im_mm_ctrl_e = e;
     im_mm_ctrl_s = s;
-    im_mm_ctrl_w = w;    
+    im_mm_ctrl_w = w;
+    
     im_mm_aoiBox = a; // set Area of Interest layer
 }
 
@@ -184,29 +230,6 @@ function im_mm_getURLselectedbbox()
             im_mm_ctrl_e.value,
             im_mm_ctrl_s.value,
             im_mm_ctrl_w.value);
-}
-
-function im_mm_setAOIandZoom()
-{
-	// zoom to area first
-	imc_mm_action_mm();
-	im_mm_setAOIfromList();
-
-}
-
-function im_mm_setAOIfromList()
-{
-
-//	im_mm_followAoI();
-	
-	//draw AoI box
-	var l = im_mm_getWEpixel(im_mm_ctrl_e.value);
-	var t = im_mm_getNSpixel(im_mm_ctrl_n.value);
-	var w = Math.abs(l - im_mm_getWEpixel(im_mm_ctrl_w.value));
-	var h = Math.abs(im_mm_getNSpixel(im_mm_ctrl_s.value) - t);
-	
-	im_mm_drawBox (im_mm_aoiBox, l - w, t, w, h);
-	
 }
 
 /*****************************************************************************
@@ -517,9 +540,29 @@ function im_mm_followAoI()
 	imc_mm_update(im_mm_width, im_mm_height, im_dezoom(parseFloat(im_mm_ctrl_n.value), parseFloat(im_mm_ctrl_e.value), parseFloat(im_mm_ctrl_s.value), parseFloat(im_mm_ctrl_w.value)));
 }
 
+function im_mm_setAOIandZoom()
+{
+	// zoom to area first
+	imc_mm_action_mm();
+	im_mm_setAOIfromList();
+}
+
+function im_mm_setAOIfromList()
+{
+//	im_mm_followAoI();	
+	//draw AoI box
+	var l = im_mm_getWEpixel(parseFloat(im_mm_ctrl_e.value));
+	var t = im_mm_getNSpixel(parseFloat(im_mm_ctrl_n.value));
+	var w = Math.abs(l - im_mm_getWEpixel(parseFloat(im_mm_ctrl_w.value)));
+	var h = Math.abs(im_mm_getNSpixel(parseFloat(im_mm_ctrl_s.value)) - t);
+	
+	im_mm_drawBox (im_mm_aoiBox, l - w, t, w, h);	
+}
+
+
+
 function imc_mm_action_mm()
 {
-
 	im_mm_setStatus('busy');
 
 	var url = '/intermap/srv/'+Env.lang+'/map.update';
@@ -654,14 +697,14 @@ var im_mm_ghostImg = null;
 // called when the user clicks in the grayed area
 function im_mm_restartAoi(e)
 {
-	im_mm_deleteAoi();
-	im_mm_startAoi(e);
+    im_mm_deleteAoi();
+    im_mm_startAoi(e);
 }
 
 
 function im_mm_refreshNeeded(callback)
 {
-	imc_mm_update(im_mm_width, im_mm_height, im_mm_getURLbbox(), callback);
+    imc_mm_update(im_mm_width, im_mm_height, im_mm_getURLbbox(), callback);
 }
 
 

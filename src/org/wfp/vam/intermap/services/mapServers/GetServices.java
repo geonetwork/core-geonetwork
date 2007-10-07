@@ -1,16 +1,17 @@
 package org.wfp.vam.intermap.services.mapServers;
 
-import org.jdom.*;
-
-import jeeves.interfaces.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-
+import jeeves.exceptions.OperationAbortedEx;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import org.jdom.Element;
 import org.wfp.vam.intermap.Constants;
-
-import org.wfp.vam.intermap.kernel.map.*;
-import org.wfp.vam.intermap.kernel.map.mapServices.arcims.*;
-import org.wfp.vam.intermap.kernel.map.mapServices.wms.*;
+import org.wfp.vam.intermap.kernel.map.DefaultMapServers;
+import org.wfp.vam.intermap.kernel.map.mapServices.arcims.ArcIMSClient;
+import org.wfp.vam.intermap.kernel.map.mapServices.arcims.ArcIMSService;
+import org.wfp.vam.intermap.kernel.map.mapServices.arcims.AxlRequestBuilder;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.CapabilitiesStore;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.WmsService;
 
 //=============================================================================
 
@@ -62,7 +63,6 @@ public class GetServices implements Service
 
 		switch (serverType)
 		{
-			// ArcIMS Services
 			case ArcIMSService.TYPE:
 				// Build the request
 				ArcIMSClient client = new ArcIMSClient(
@@ -77,21 +77,20 @@ public class GetServices implements Service
 					response.addContent(client.getElement());
 				}
 				catch (Exception e) {
-					throw new JeevesException("connect"); // TODO
+					throw new OperationAbortedEx("connect"); // TODO
 //					response.setAttribute(new Attribute(Jeeves.ATTR_STATUS, Jeeves.STATUS_ERROR));
 				}
 				break;
-			// WMS Services
+
 			case WmsService.TYPE:
-//				Element capabilities = null;
 				try
 				{
-					Element capabilities = WmsGetCapClient.getCapabilities(serverUrl, forceCacheRefresh);
-//					Element capabilities = CapabilitiesStore.getCapabilities(serverUrl);
+//					Element capabilities = WmsGetCapClient.getCapabilities(serverUrl, forceCacheRefresh);
+					Element capabilities = CapabilitiesStore.getCapabilities(serverUrl, forceCacheRefresh);
 					response.addContent(capabilities);
 				}
 				catch (Exception e) {
-					throw new JeevesException("connect"); // TODO
+					throw new OperationAbortedEx("connect"); // TODO
 //					response.setAttribute(new Attribute(Jeeves.ATTR_STATUS, Jeeves.STATUS_ERROR));
 				}
 				break;
@@ -105,5 +104,4 @@ public class GetServices implements Service
 }
 
 //=============================================================================
-
 

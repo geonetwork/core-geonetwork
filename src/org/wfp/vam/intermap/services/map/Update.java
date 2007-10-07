@@ -28,9 +28,7 @@ public class Update implements Service
 	{
 		// Get the current image size from the user session
 		/*DEBUG*/if(params.getChildText("width") == null) System.out.println("\n\nNO WIDTH SPECIFIED IN Update()\n");
-		
-//		int width  = Util.parseInt(params.getChildText("width"), MapUtil.getImageWidth(context));
-//		int height = Util.parseInt(params.getChildText("height"), MapUtil.getImageHeight(context));
+
 		int width  = Integer.parseInt(params.getChildText("width"));
 		int height = Integer.parseInt(params.getChildText("height"));
 
@@ -44,7 +42,7 @@ public class Update implements Service
 			// Update the user session
 			context.getUserSession().setProperty(Constants.SESSION_MAP, mm);
 		}
-				
+
 		BoundingBox bb = Util.parseBoundingBox(params); // search bb in params
 		if( bb != null)
 			mm.setBoundingBox(bb);

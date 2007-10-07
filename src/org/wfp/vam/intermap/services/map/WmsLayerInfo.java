@@ -1,13 +1,11 @@
 package org.wfp.vam.intermap.services.map;
 
-import org.jdom.*;
-
-import jeeves.interfaces.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import org.jdom.Element;
 import org.wfp.vam.intermap.Constants;
-import org.wfp.vam.intermap.kernel.map.mapServices.wms.WmsGetCapClient;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.CapabilitiesStore;
 
 //=============================================================================
 
@@ -30,10 +28,10 @@ public class WmsLayerInfo implements Service
 		String serviceName = params.getChildText("name");
 
 		return new Element("response")
-			.addContent(WmsGetCapClient.getCapabilities(serverUrl))
+			.addContent(CapabilitiesStore.getCapabilities(serverUrl))
 			.addContent(new Element("serviceName").setText(serviceName));
 	}
-	
+
 }
 
 //=============================================================================

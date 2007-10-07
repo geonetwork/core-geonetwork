@@ -182,41 +182,6 @@ function im_servicesAdded(req)
 }
 
 /********************************************************************
-*** MAIL
-********************************************************************/
-/*
-## Called by the bottom toolbar
-*/
-function im_sendMail()
-{
-    clearNode('im_whiteboard');
-
-    var div = document.createElement('div');
-    div.id = "im_sendMail";
-    div.className = 'im_wbcontent';
-    $('im_whiteboard').appendChild(div);
-
-    var wbtitle = im_createWBTitle(i18n("sendByEmail"));
-    div.appendChild(wbtitle);
-
-    var closer = im_getWBCloser();
-    div.appendChild(closer);
-    Event.observe(closer, 'click', im_closeWhiteBoard);
-
-    var h1 = document.createElement('h1');
-    h1.innerHTML = i18n("sendByEmail"); 
-    div.appendChild(h1);
-
-
-    var input = document.createElement('input');
-    input.setAttribute('name', 'emailaddress');
-    input.setAttribute('size', '35');
-    input.setAttribute('value', 'user@domain');
-    div.appendChild(input);
-
-}
-
-/********************************************************************
 *** PDF
 ********************************************************************/
 /*
@@ -329,7 +294,7 @@ function im_openWMCform()
 	clearNode('im_whiteboard');    
 	var WB = $('im_whiteboard');
 	
-	var wbtitle = im_createWBTitle(i18n("dummy")); 
+	var wbtitle = im_createWBTitle(i18n("wmcmenu")); 
 	WB.appendChild(wbtitle);
 	
 	var closer = im_getWBCloser();
@@ -337,17 +302,16 @@ function im_openWMCform()
 	Event.observe(closer, 'click', im_closeWhiteBoard);
 	
 	var div = document.createElement('div'); // main box
-	div.id = "im_createWMC";
+	div.id = "im_wmcmenu";
 	div.className = 'im_wbcontent';
 	WB.appendChild(div);
 	
 	var pars="&width=" + im_bm_width + 
 		    "&height=" + im_bm_height;
-	
-	
+		
 	var myAjax = new Ajax.Updater (
-		'im_createWMC',    
-		'/intermap/srv/'+Env.lang+'/wmc.mailform', 
+		'im_wmcmenu',    
+		'/intermap/srv/'+Env.lang+'/wmc.form', 
 		{
 			method: 'get',    		    	
 			parameters: pars,
@@ -357,56 +321,99 @@ function im_openWMCform()
 
 }
 
-function im_requestWMC()
+/**
+## Download WMC context. This is  one-shot operation.
+*/
+function im_downloadWMC()
 {
-	var orient = $('pdf_orientation').value;
-	var psize = $('pdf_pagesize').value;
+    var pars= "width=" + im_bm_width + 
+                    "&height=" + im_bm_height;
 
-	var ptitle = $('pdf_title').value;
-	var pcopy = $('pdf_copyright').value;
+    window.open('/intermap/srv/en/wmc.getContext?'+pars);
+}
+
+/**
+## Upload a context saved in a local file
+## Context can be merged to current layers, or can completely replace them according to the parameter bClearLayers
+*/
+function im_uploadWMC(bClearLayers)
+{
+    var form = $('im_fuploadwmc');
+    form.action='/intermap/srv/en/wmc.uploadContext';
+    $('im_fup_clearLayers').value= bClearLayers? 'true' : 'false';
+    
+    return AIM.submit(form, 
+        {
+            'onStart' : function() 
+            {
+                setStatus('busy');
+                im_wmc_showMessage("upload", "start");
+                return true;
+            }, 
+            'onComplete' : function(domdoc) 
+            {
+                setStatus('idle');
+                var resp = domdoc.documentElement;
+                if(resp.tagName == "error")
+                {
+                    var msg = resp.getElementsByTagName('message')[0].firstChild.nodeValue;
+                    im_wmc_showMessage("upload", "error", msg);                
+                }
+                else
+                {                
+                    im_wmc_showMessage("upload", "ok");                
+                    im_bm_set(resp);
+                    imc_reloadLayers();
+                    im_mm_setBBox_dom(resp);
+                    im_mm_refreshNeeded(); // refresh minimap
+                }
+            }                    
+        });
+}
+
+// Send WMC as e-mail
+function im_sendWMC()
+{
+	var title = $('wmc_title').value;
+	var from = $('wmc_mailfrom').value;
+	var to = $('wmc_mailto').value;
+
+            if(!title || !from || !to)
+            {
+                alert("Please fill in information"); //FIXME i18n
+                return;
+            }
 	
-	var bllist = $('pdf_layerlist').checked;
-	var bdetails = $('pdf_details').checked;
-	var bbbox = $('pdf_boundingbox').checked;
-	var bscale = $('pdf_scalebar').checked;
-	var barrow = $('pdf_arrow').checked;
-	
-	var pars = "orientation="+orient+
-		"&pagesize="+psize+
-		"&"+im_bm_getURLbbox();
-		
-	if(ptitle)
-		pars += "&title="+ encodeURIComponent(ptitle);
-	if(pcopy)
-		pars += "&copyright="+ encodeURIComponent(pcopy);
+	pars="wmc_title=" + encodeURIComponent(title)
+	        +"&wmc_mailfrom=" + encodeURIComponent(from)
+	        +"&wmc_mailto=" + encodeURIComponent(to)
+                   +"&width=" + im_bm_width    // WMC stuff 
+                   +"&height=" + im_bm_height; // WMC stuff	        
 
+            im_wmc_showMessage("mail", "start");
 
-	if(bllist)
-		pars += "&layerlist=on";
-	
-	if(bdetails)
-		pars += "&details=on";
-	
-	if(bbbox)
-		pars += "&boundingbox=on";
-
-	if(bscale)
-		pars += "&scalebar=on";
-
-	if(barrow)
-		pars += "&arrow=on";
-
-	$('im_requestingpdf').show();   
-	$('im_requestpdf').hide();
-	$('im_builtpdf').hide();
-	
 	var myAjax = new Ajax.Request (
-		'/intermap/srv/'+Env.lang+'/create.pdf', 
+		'/intermap/srv/'+Env.lang+'/wmc.mailContext', 
 		{
-			method: 'get',
+			method: 'post',
 			parameters: pars,
-			onSuccess: im_openPDF,
-			onFailure: im_load_error
+			onSuccess: function(req)
+			{
+			    var resp = req.responseXML.documentElement;
+                                    if(resp.tagName == "error")
+                                    {
+                                        var msg = resp.getElementsByTagName('message')[0].firstChild.nodeValue;
+                                        im_wmc_showMessage("mail", "error", msg);                
+                                    }
+                                    else
+                                    {                
+                                        im_wmc_showMessage("mail", "ok");
+                                    }
+			},
+			onFailure: function(req)
+			{
+                                    im_wmc_showMessage("mail", "error");			
+			}
 		}
 	);
     
@@ -422,6 +429,26 @@ function im_openWMC(req)
     $('im_requestingpdf').hide();   
     $('im_builtpdf').show();
 }
+
+
+function im_wmc_showMessage(task, status, more)
+{
+    $('im_wmc_form').hide();
+    
+    $('im_wmc_msg_'+task+"_start").hide();
+    $('im_wmc_msg_'+task+"_ok").hide();
+    $('im_wmc_msg_'+task+"_error").hide();
+    
+    $('im_wmc_msg_'+task+"_"+status).show();
+    
+    if(more)
+    {
+        var div = document.createElement('div');
+        div.innerHTML = more;
+        $('im_wmc_msg_'+task+"_"+status).appendChild(div);        
+    }
+}
+
 
 /********************************************************************
 *** Export image
@@ -448,6 +475,134 @@ function im_openPictureForm()
     h1.innerHTML = "TODO" ; //FIXME i18n 
     div.appendChild(h1);
 
+}
+
+
+/********************************************************************
+*** Layer metadata
+***
+*** This feature is not triggered from the bottom toolsbar, but by the "show metadata" button on every layer.
+*** We'll use the sub-map area to display these info.
+***
+********************************************************************/
+
+function im_showLayerMD(id)
+{
+    // setup WB
+    clearNode('im_whiteboard');    
+    var WB = $('im_whiteboard');
+
+    var wbtitle = im_createWBTitle(i18n('showLayerMD')); 
+    WB.appendChild(wbtitle);
+
+    var closer = im_getWBCloser();
+    WB.appendChild(closer);
+    Event.observe(closer, 'click', im_closeWhiteBoard);
+
+    // fill contents
+    var div = document.createElement('div'); // main box
+    div.id = "im_showLayerMD";
+    div.className = 'im_wbcontent';
+    WB.appendChild(div);
+   
+    var myAjax = new Ajax.Request(    
+    	'/intermap/srv/'+Env.lang+'/map.layers.getInfo', 
+    	{
+    		method: 'get',    
+    		parameters: 'id='+id,
+    		onSuccess: function(req)
+    		{
+    		     if(req.responseXML && req.responseXML.documentElement.tagName == "error")
+    		     {
+    	                    var resp = req.responseXML.documentElement;
+                               var msg = resp.getElementsByTagName('message')[0].firstChild.nodeValue;
+                               div.innerHTML = msg;
+                               return;
+                           }
+                           else
+                           {
+                               div.innerHTML = req.responseText; 
+                           }
+    		},
+    		onFailure: function(req)
+    		{
+                               div.innerHTML = i18n('genericError');     		
+    		}
+    	}
+    );    
+}
+
+/********************************************************************
+*** Layer styles
+***
+*** This feature is not triggered from the bottom toolsbar, but by the "show styles" button on every layer which has selectable styles..
+*** We'll use the sub-map area to display these info.
+***
+********************************************************************/
+
+function im_showStyles(id)
+{
+    // setup WB
+    clearNode('im_whiteboard');    
+    var WB = $('im_whiteboard');
+
+    var wbtitle = im_createWBTitle(i18n('showStyles')); 
+    WB.appendChild(wbtitle);
+
+    var closer = im_getWBCloser();
+    WB.appendChild(closer);
+    Event.observe(closer, 'click', im_closeWhiteBoard);
+
+    // fill contents
+    var div = document.createElement('div'); // main box
+    div.id = "im_showstyles";
+    div.className = 'im_wbcontent';
+    WB.appendChild(div);
+   
+    var myAjax = new Ajax.Request(    
+    	'/intermap/srv/'+Env.lang+'/map.layers.getStyles', 
+    	{
+    		method: 'get',    
+    		parameters: 'id='+id,
+    		onSuccess: function(req)
+    		{
+    		     if(req.responseXML && req.responseXML.documentElement.tagName == "error")
+    		     {
+    	                    var resp = req.responseXML.documentElement;
+                               var msg = resp.getElementsByTagName('message')[0].firstChild.nodeValue;
+                               div.innerHTML = msg;
+                               return;
+                           }
+                           else
+                           {
+                               div.innerHTML = req.responseText; 
+                           }
+    		},
+    		onFailure: function(req)
+    		{
+                               div.innerHTML = i18n('genericError');     		
+    		}
+    	}
+    );    
+}
+
+/**
+## Called by a button in the layers.getStyles output
+*/
+function im_setStyle(layerid)
+{
+    // retrieve selected style
+    
+    // update user mesg
+    
+    // do ajax call
+    
+    // update user mesg
+    
+    // on success, 
+      // reload big map
+      // reload minimap
+      // reload layer list (legend link may have changed)
 }
 
 /********************************************************************

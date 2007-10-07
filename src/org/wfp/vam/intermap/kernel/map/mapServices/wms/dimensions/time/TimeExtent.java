@@ -23,9 +23,13 @@ public class TimeExtent
 		System.out.println("\n\n\n" + jeeves.utils.Xml.getString(te.getJdom())); // DEBUG
 	}
 
-	public TimeExtent(Element extent) {
-		String value = extent.getText();
+	public TimeExtent(Element extent)
+	{
+		this(extent.getText());
+	}
 
+	public TimeExtent(String value)
+	{
 //		Element values = new Element("values");
 
 		StringTokenizer s = new StringTokenizer(value, ",");
