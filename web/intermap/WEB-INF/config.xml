@@ -300,7 +300,8 @@
 
 		<service name="map.layers.setStyle">
 			<class name=".services.map.layers.SetStyle" />
-						
+
+			<output sheet="im_get-layers-embedded.xsl" />
 			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
 		</service>
 		

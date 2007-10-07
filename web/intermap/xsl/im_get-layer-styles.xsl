@@ -3,7 +3,19 @@
 	<xsl:output method="xml"/>
 
 	<xsl:template match="/">
-		<div>
+		<div id="im_style_msg">
+			<div id="im_style_msg_set_start" style="display:none;">
+				Setting the style... 
+			</div>
+			<div id="im_style_msg_set_ok" style="display:none;">
+				The style has been successfully set. 
+			</div>
+			<div id="im_style_msg_set_error" style="display:none;">
+				An unexpected error has been encountered:<br/>				
+			</div>			
+		</div>
+		
+		<div id="im_style_form">
 			<b>Layer Info:</b>
 			<xsl:apply-templates select="/root/response/layer"/>
 			<br/>

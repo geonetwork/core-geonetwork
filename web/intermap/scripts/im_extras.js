@@ -431,7 +431,7 @@ function im_openWMC(req)
 }
 
 
-function im_wmc_showMessage(task, status, more)
+/*function im_wmc_showMessage(task, status, more)
 {
     $('im_wmc_form').hide();
     
@@ -446,6 +446,30 @@ function im_wmc_showMessage(task, status, more)
         var div = document.createElement('div');
         div.innerHTML = more;
         $('im_wmc_msg_'+task+"_"+status).appendChild(div);        
+    }
+}
+*/
+
+function im_wmc_showMessage(task, status, more)
+{
+    im_showMessage('wmc', task, status, more);
+}
+
+function im_showMessage(context, task, status, more)
+{
+    $('im_'+context+'_form').hide();
+    
+    $('im_'+context+'_msg_'+task+"_start").hide();
+    $('im_'+context+'_msg_'+task+"_ok").hide();
+    $('im_'+context+'_msg_'+task+"_error").hide();
+    
+    $('im_'+context+'_msg_'+task+"_"+status).show();
+    
+    if(more)
+    {
+        var div = document.createElement('div');
+        div.innerHTML = more;
+        $('im_'+context+'_msg_'+task+"_"+status).appendChild(div);        
     }
 }
 
@@ -558,7 +582,7 @@ function im_showStyles(id)
     div.id = "im_showstyles";
     div.className = 'im_wbcontent';
     WB.appendChild(div);
-   
+      
     var myAjax = new Ajax.Request(    
     	'/intermap/srv/'+Env.lang+'/map.layers.getStyles', 
     	{
@@ -592,17 +616,44 @@ function im_showStyles(id)
 function im_setStyle(layerid)
 {
     // retrieve selected style
+    var style = getRadioValue('styleradio');
+    
+    var pars = "id="+layerid +
+                    "&style="+encodeURIComponent(style);
     
     // update user mesg
+    im_showMessage('style', 'set', 'start');
     
     // do ajax call
-    
-    // update user mesg
-    
-    // on success, 
-      // reload big map
-      // reload minimap
-      // reload layer list (legend link may have changed)
+	var myAjax = new Ajax.Request (
+		'/intermap/srv/'+Env.lang+'/map.layers.setStyle', 
+		{
+			method: 'get',
+			parameters: pars,
+			onSuccess: function(req)
+			{
+                                        if(req.responseXML && req.responseXML.documentElement.tagName == "error")
+                                        {
+                                            var resp = req.responseXML.documentElement;
+                                            var msg = resp.getElementsByTagName('message')[0].firstChild.nodeValue;			
+                                            im_showMessage("style", "set", "error", msg);                
+                                        }
+                                        else
+                                        {                
+                                            im_showMessage("style", "set", "ok");
+                                            
+                                            // reload layer list (legend link may have changed)
+                                            im_buildLayerList(req);
+                                            // reload big map + minimap
+                                            refreshNeeded(true);
+                                        }
+			},
+			onFailure: function(req)
+			{
+                                        im_showMessage("style", "set", "error");
+			}
+		}
+	);       
 }
 
 /********************************************************************

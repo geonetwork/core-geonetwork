@@ -50,7 +50,7 @@ public class SetStyle implements Service
 
 		ws.setStyleName(stylename);
 
-		return new Element("response");
+		return mm.toElementSimple();
 	}
 
 }

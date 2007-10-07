@@ -229,3 +229,16 @@ AIM = {
     }
 
 }
+
+
+
+function getRadioValue(name)
+{
+    var radioarr = $A(document.getElementsByName(name));
+    for(i = 0; i < radioarr.length; i++)
+    {
+        if(radioarr[i].checked)
+            return radioarr[i].value;
+    }
+    return null;
+}
