@@ -81,7 +81,7 @@ function gn_showInterList(id)
                 // create new element
                 var div = document.createElement('div');
                 div.className = 'metadata_current';
-                div.style.display = 'none';
+                div.hide();
                 parent.appendChild(div);
                 
                 div.innerHTML = req.responseText;
@@ -132,7 +132,7 @@ function gn_showGetCapabilities(url, type, id)
     div.className = 'metadata_current';
     parent.appendChild(div);
     var t1 = document.createElement("p");
-    t1.innerHTML = "Loading server layers, please wait..."; // fixme i18n
+    t1.innerHTML = i18n("waitGetCap");
     div.appendChild(t1);
             
     // Load and transform server's getCapabilities:
@@ -198,7 +198,7 @@ function gn_layersAdded(req, mdid)
     div.className = 'metadata_current';
     parent.appendChild(div);
     var t1 = document.createElement("p");
-    t1.innerHTML = "Selected layers have been added"; // fixme i18n
+    t1.innerHTML = i18n('layersAdded');
     div.appendChild(t1);
 
 
@@ -215,7 +215,7 @@ function gn_addCloser(domnode, callback)
     var closer = Builder.node('div', {class: "im_wbcloser"});
     var img = Builder.node('img',
     {
-        title: "Close", // FIXME i18N
+        title: i18n("close"), 
         src: "/intermap/images/close.png"
     });
     closer.appendChild(img);

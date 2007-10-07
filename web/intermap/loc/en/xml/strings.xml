@@ -6,6 +6,7 @@
 	<addService>Add more maps</addService>
 	<addLayer js="true">Add a new layer</addLayer>
 	<bigger>Bigger map</bigger>
+	<btnstyles>View and select styles</btnstyles>	
 	<cancel>Cancel</cancel>
 	<close>Close</close>
 	<choosemapfromlist>Please choose one or more map services from the list below</choosemapfromlist>
@@ -83,6 +84,7 @@
 	<start>InterMap opensource</start>
 	<telephone>Telephone:</telephone>
 	<title>InterMap opensource</title>
+	<titleShowStyles js="true">Available styles</titleShowStyles>
 	<transparency>Set transparency</transparency>
 	<up>Move layer up</up>
 	<wait js="true">Please wait...</wait>

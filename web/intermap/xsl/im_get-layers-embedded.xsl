@@ -66,7 +66,7 @@
 							<xsl:if test="@style">
 								<img id="styles_{@id}"  class="im_layerButton" 
 									onclick="im_showStyles({@id});"
-									src="/intermap/images/styles.png" title="{/root/gui/strings/legend}"/>
+									src="/intermap/images/im_btt-style.gif" title="{/root/gui/strings/btnstyles}"/>
 							</xsl:if>
 							
 							<img id="showLayerMD_{@id}" class="im_layerButton"

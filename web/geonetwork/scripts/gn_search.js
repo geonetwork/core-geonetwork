@@ -312,14 +312,14 @@ function gn_search_error() {
 ***
 **********************************************************/
 
-function initSimpleSearch()
+function initSimpleSearch(wmc)
 {
-	im_mm_init(function()
+	im_mm_init(wmc, function()
 			{
 				$('openIMBtn').style.cursor = 'pointer';
 				Event.observe('openIMBtn', 'click',  function(){openIntermap()} );
 			}
-		);
+		);		
 }
 
 function gn_anyKeyObserver(e)
@@ -349,10 +349,10 @@ function resetSimpleSearch()
 	setParam('any','');		
 	setParam('relation','overlaps');		
 	setParam('region',null);		
-	$('northBL').value='90';
-	$('southBL').value='-90';
-	$('eastBL').value='180';
-	$('westBL').value='-180';		
+	$('northBL').value='50'; // ETJ ??? what do these values mean ???
+	$('southBL').value='-50';
+	$('eastBL').value='100';
+	$('westBL').value='-100';		
  	im_mm_setAOIandZoom();
 }
 

@@ -546,7 +546,7 @@ function im_showStyles(id)
     clearNode('im_whiteboard');    
     var WB = $('im_whiteboard');
 
-    var wbtitle = im_createWBTitle(i18n('showStyles')); 
+    var wbtitle = im_createWBTitle(i18n('titleShowStyles')); 
     WB.appendChild(wbtitle);
 
     var closer = im_getWBCloser();

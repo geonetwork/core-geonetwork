@@ -448,6 +448,7 @@
 	<validate>Validate</validate>
 	<validityBegins>Validity begins</validityBegins>
 	<validityEnds>and ends</validityEnds>
+	<waitGetCap js="true">Loading server layers, please wait...</waitGetCap>
 	<westbc>West Bounding Coordinate</westbc>
 	<what>What?</what>
 	<where>Where?</where>
