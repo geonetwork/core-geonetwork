@@ -9,6 +9,10 @@
 
 	<xsl:output method="xml"/>
 
+
+	<xsl:strip-space elements="*"/>
+
+
 	<xsl:include href="metadata.xsl"/>
 	<xsl:include href="utils.xsl"/>
 
@@ -25,7 +29,7 @@
 				<language><xsl:value-of select="gui/language"/></language>
 				<copyright><xsl:value-of select="gui/strings/copyright2"/></copyright>
 				<category>Geographic metadata catalog</category>
-				<generator>GeoNetwork Open Source</generator>
+				<generator>GeoNetwork opensource</generator>
 				<ttl>30</ttl> <!-- FIXME -->
 	
 				<xsl:apply-templates mode="item" select="gui/latestUpdated/*"/>
@@ -69,43 +73,44 @@
 				</xsl:otherwise>
 			</xsl:choose>
 			
-			<xsl:choose>
-				<xsl:when test="string(/root/response/georss)='gml'">
-					<georss:where>
-						<gml:Envelope>
-							<gml:lowerCorner>
-								<xsl:value-of select="$metadata/geoBox/southBL"/>
-								<xsl:text> </xsl:text>
-								<xsl:value-of select="$metadata/geoBox/westBL"/>
-							</gml:lowerCorner>
-							<gml:upperCorner>
-								<xsl:value-of select="$metadata/geoBox/northBL"/>
-								<xsl:text> </xsl:text>
-								<xsl:value-of select="$metadata/geoBox/eastBL"/>
-							</gml:upperCorner>
-						</gml:Envelope>
-					</georss:where>
-				</xsl:when>
-				<xsl:when test="string(/root/response/georss)='simple'">
-					<georss:box>
-						<xsl:value-of select="$metadata/geoBox/southBL"/>
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="$metadata/geoBox/westBL"/>
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="$metadata/geoBox/northBL"/>
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="$metadata/geoBox/eastBL"/>
-					</georss:box>
-				</xsl:when>
-			 	<xsl:when test="string(/root/response/georss)='simplepoint'">
-                        <georss:point>
-                                <xsl:value-of select="(($metadata/geoBox/northBL)+($metadata/geoBox/southBL))*.5"/>
-                                <xsl:text> </xsl:text>
-                                <xsl:value-of select="(($metadata/geoBox/westBL)+($metadata/geoBox/eastBL))*.5"/>
-                        </georss:point>
-                </xsl:when>
-			</xsl:choose>
-			
+			<xsl:if test="$metadata/geoBox/southBL!='' and $metadata/geoBox/westBL!='' and $metadata/geoBox/northBL!='' and $metadata/geoBox/eastBL!=''">
+				<xsl:choose>
+					<xsl:when test="string(/root/request/georss)='simple'">
+						<georss:box>
+							<xsl:value-of select="$metadata/geoBox/southBL"/>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="$metadata/geoBox/westBL"/>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="$metadata/geoBox/northBL"/>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="$metadata/geoBox/eastBL"/>
+						</georss:box>
+					</xsl:when>
+					<xsl:when test="string(/root/request/georss)='simplepoint'">
+						<georss:point>
+							<xsl:value-of select="(($metadata/geoBox/northBL)+($metadata/geoBox/southBL))*.5"/>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="(($metadata/geoBox/westBL)+($metadata/geoBox/eastBL))*.5"/>
+						</georss:point>
+					</xsl:when>
+					<xsl:otherwise>
+						<georss:where>
+							<gml:Envelope>
+								<gml:lowerCorner>
+									<xsl:value-of select="$metadata/geoBox/southBL"/>
+									<xsl:text> </xsl:text>
+									<xsl:value-of select="$metadata/geoBox/westBL"/>
+								</gml:lowerCorner>
+								<gml:upperCorner>
+									<xsl:value-of select="$metadata/geoBox/northBL"/>
+									<xsl:text> </xsl:text>
+									<xsl:value-of select="$metadata/geoBox/eastBL"/>
+								</gml:upperCorner>
+							</gml:Envelope>
+						</georss:where>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>			
 		</item>
 	</xsl:template>
 	
