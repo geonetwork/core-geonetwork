@@ -121,7 +121,7 @@ public class Login implements Service
 
 		String query = "UPDATE Users SET password=?, name=?, profile=? WHERE username=?";
 
-		int res = dbms.execute(query, info.password, info.name, info.profile, info.username);
+		int res = dbms.execute(query, Util.scramble(info.password), info.name, info.profile, info.username);
 
 		//--- if the user was not found --> add it
 
@@ -132,7 +132,7 @@ public class Login implements Service
 			query = 	"INSERT INTO Users(id, username, password, surname, name, profile) "+
 						"VALUES(?,?,?,?,?,?)";
 
-			dbms.execute(query, id, info.username, info.password, "(LDAP)", info.name, info.profile);
+			dbms.execute(query, id, info.username, Util.scramble(info.password), "(LDAP)", info.name, info.profile);
 		}
 
 		dbms.commit();

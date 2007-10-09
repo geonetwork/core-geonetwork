@@ -50,12 +50,9 @@ class LDAPContext
 		host          = sm.getValue      (prefix +"/host");
 		port          = sm.getValueAsInt (prefix +"/port");
 		defProfile    = sm.getValue      (prefix +"/defaultProfile");
-		loginUserDN   = sm.getValue      (prefix +"/login/userDN");
-		loginPassword = sm.getValue      (prefix +"/login/password");
 		baseDN        = sm.getValue      (prefix +"/distinguishedNames/base");
 		usersDN       = sm.getValue      (prefix +"/distinguishedNames/users");
 		nameAttr      = sm.getValue      (prefix +"/userAttribs/name");
-		passwordAttr  = sm.getValue      (prefix +"/userAttribs/password");
 		profileAttr   = sm.getValue      (prefix +"/userAttribs/profile");
 
 		if (profileAttr.trim().length() == 0)
@@ -82,8 +79,8 @@ class LDAPContext
 	{
 		try
 		{
-			DirContext dc   = LDAPUtil.openContext(getUrl(), loginUserDN, loginPassword);
 			String     path = "uid="+ username +","+ usersDN +","+ baseDN;
+			DirContext dc   = LDAPUtil.openContext(getUrl(), path, password);
 
 			Map<String, ? extends List<Object>> attr = LDAPUtil.getNodeInfo(dc, path);
 			dc.close();
@@ -103,12 +100,6 @@ class LDAPContext
 				info.profile  = (profileAttr == null)
 										? defProfile
 										: get(attr, profileAttr);
-
-				if (!password.equals(get(attr, passwordAttr)))
-				{
-					Log.info(Geonet.LDAP, "Username found but bad password :"+ username);
-					return null;
-				}
 
 				if (!profiles.contains(info.profile))
 				{
@@ -172,12 +163,9 @@ class LDAPContext
 	private String  host;
 	private Integer port;
 	private String  defProfile;
-	private String  loginUserDN;
-	private String  loginPassword;
 	private String  baseDN;
 	private String  usersDN;
 	private String  nameAttr;
-	private String  passwordAttr;
 	private String  profileAttr;
 
 	private HashSet<String> profiles = new HashSet<String>();
