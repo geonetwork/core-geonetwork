@@ -79,7 +79,7 @@ public class MainUtil
 						.addContent(new Element(Geonet.SearchResult.CATEGORY)     .setText(""))
 						.addContent(new Element(Geonet.SearchResult.SITE_ID)      .setText(""))
 						.addContent(new Element(Geonet.SearchResult.DOWNLOAD)     .setText(Geonet.Text.OFF))
-						.addContent(new Element(Geonet.SearchResult.ONLINE)       .setText(Geonet.Text.OFF))
+						.addContent(new Element(Geonet.SearchResult.DYNAMIC)      .setText(Geonet.Text.OFF))
 						.addContent(new Element(Geonet.SearchResult.DIGITAL)      .setText(Geonet.Text.ON))
 						.addContent(new Element(Geonet.SearchResult.PAPER)        .setText(Geonet.Text.OFF))
 						.addContent(new Element(Geonet.SearchResult.TEMPLATE)     .setText("n"))
@@ -91,6 +91,7 @@ public class MainUtil
 						.addContent(new Element(Geonet.SearchResult.SIMILARITY)   .setText(".8"));
 			session.setProperty(Geonet.Session.MAIN_SEARCH, elData);
 		}
+
 		Element  elTitle       = elData.getChild(Geonet.SearchResult.TITLE);
 		Element  elAbstract    = elData.getChild(Geonet.SearchResult.ABSTRACT);
 		Element  elAny         = elData.getChild(Geonet.SearchResult.ANY);
@@ -104,7 +105,7 @@ public class MainUtil
 		Element  elDateFrom    = elData.getChild(Geonet.SearchResult.DATE_FROM);
 		Element  elDateTo      = elData.getChild(Geonet.SearchResult.DATE_TO);
 		Element  elDownload    = elData.getChild(Geonet.SearchResult.DOWNLOAD);
-		Element  elOnLine      = elData.getChild(Geonet.SearchResult.ONLINE);
+		Element  elDynamic     = elData.getChild(Geonet.SearchResult.DYNAMIC);
 		Element  elDigital     = elData.getChild(Geonet.SearchResult.DIGITAL);
 		Element  elPaper       = elData.getChild(Geonet.SearchResult.PAPER);
 		Element  elCategory    = elData.getChild(Geonet.SearchResult.CATEGORY);
@@ -141,7 +142,7 @@ public class MainUtil
 			String   sDateFrom     = request.getChildText(Geonet.SearchResult.DATE_FROM);
 			String   sDateTo       = request.getChildText(Geonet.SearchResult.DATE_TO);
 			String   sDownload     = request.getChildText(Geonet.SearchResult.DOWNLOAD);
-			String   sOnLine       = request.getChildText(Geonet.SearchResult.ONLINE);
+			String   sDynamic      = request.getChildText(Geonet.SearchResult.DYNAMIC);
 			String   sDigital      = request.getChildText(Geonet.SearchResult.DIGITAL);
 			String   sPaper        = request.getChildText(Geonet.SearchResult.PAPER);
 			String   sTemplate     = request.getChildText(Geonet.SearchResult.TEMPLATE);
@@ -153,7 +154,7 @@ public class MainUtil
 			String   sHitsPerPage  = request.getChildText(Geonet.SearchResult.HITS_PER_PAGE);
 			String   sSimilarity   = request.getChildText(Geonet.SearchResult.SIMILARITY);
 			String   sExtended     = request.getChildText(Geonet.SearchResult.EXTENDED);
-			String   sIntermap 	   = request.getChildText(Geonet.SearchResult.INTERMAP);
+			String   sIntermap     = request.getChildText(Geonet.SearchResult.INTERMAP);
 			String   sHelp         = request.getChildText(Geonet.SearchResult.HELP);
 			String   sRemote       = request.getChildText(Geonet.SearchResult.REMOTE);
 			Iterator iServer       = request.getChildren (Geonet.SearchResult.SERVERS).iterator();
@@ -180,24 +181,12 @@ public class MainUtil
 			if (sSimilarity  != null) elSimilarity.setText(sSimilarity);
 			if (sCategory    != null) elCategory.setText(sCategory);
 			if (sSource      != null) elSource.setText(sSource);
+			if (sTemplate    != null) elTemplate.setText(sTemplate);
 
-			if (sDigital     != null) elDigital.setText(sDigital);
-			else                      elDigital.setText(Geonet.Text.OFF);
-
-			if (sPaper       != null) elPaper.setText(sPaper);
-			else                      elPaper.setText(Geonet.Text.OFF);
-
-			// only save these checkbox values if mode is extended
-//			if (elExtended.getText().equals(Geonet.Text.ON))
-//			{
-				if (sTemplate  != null) elTemplate.setText(sTemplate);
-
-				if (sDownload != null) elDownload.setText(sDownload);
-				else                   elDownload.setText(Geonet.Text.OFF);
-
-				if (sOnLine != null)   elOnLine.setText(sOnLine);
-				else                   elOnLine.setText(Geonet.Text.OFF);
-//			}
+			elDigital .setText(sDigital  != null ? sDigital  : Geonet.Text.OFF);
+			elPaper   .setText(sPaper    != null ? sPaper    : Geonet.Text.OFF);
+			elDownload.setText(sDownload != null ? sDownload : Geonet.Text.OFF);
+			elDynamic .setText(sDynamic  != null ? sDynamic  : Geonet.Text.OFF);
 
 			// now you can change sExtended
 			if (sExtended    != null) elExtended.setText(sExtended);

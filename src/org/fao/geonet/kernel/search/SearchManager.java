@@ -324,8 +324,16 @@ public class SearchManager
 	Element transform(String styleSheetName, Element xml)
 		throws Exception
 	{
-		String styleSheetPath = new File(_stylesheetsDir, styleSheetName).getAbsolutePath();
-		return Xml.transform(xml, styleSheetPath);
+		try
+		{
+			String styleSheetPath = new File(_stylesheetsDir, styleSheetName).getAbsolutePath();
+			return Xml.transform(xml, styleSheetPath);
+		}
+		catch(Exception e)
+		{
+			Log.error(Geonet.SEARCH_ENGINE, "Search stylesheet contains errors : "+ e.getMessage());
+			throw e;
+		}
 	}
 
 	public File getLuceneDir() { return _luceneDir; }

@@ -91,7 +91,8 @@
 
 		<xsl:for-each select="/Metadata/distInfo/distTranOps">
 			<xsl:for-each select="onLineSrc/protocol">
-				<Field name="protocol" string="{string(.)}" store="true" index="true" token="true"/>
+				<!-- this field MUST NOT be tokenized, otherwise search fails -->
+				<Field name="protocol" string="{string(.)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
 		</xsl:for-each>
 

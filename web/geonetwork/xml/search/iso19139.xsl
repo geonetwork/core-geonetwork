@@ -158,6 +158,12 @@
 			<xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
 				<Field name="format" string="{string(.)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
+
+			<!-- index online protocol -->
+			
+			<xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString">
+				<Field name="protocol" string="{string(.)}" store="true" index="true" token="false"/>
+			</xsl:for-each>
 		</xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		

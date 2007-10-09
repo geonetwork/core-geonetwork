@@ -432,6 +432,8 @@ function runAdvancedSearch()
 	
 	pars += fetchBoolParam('digital');
 	pars += fetchBoolParam('paper');
+	pars += fetchBoolParam('dynamic');
+	pars += fetchBoolParam('download');
 	pars += fetchParam('template');
 	pars += fetchParam('hitsPerPage');
 
@@ -463,8 +465,10 @@ function resetAdvancedSearch()
 	setParam('group','');		
 	setParam('category','');		
 	setParam('siteId','');		
-	$('digital').checked=true;		
-	$('paper').checked=false;		
+	$('digital') .checked = true;		
+	$('paper')   .checked = false;		
+	$('dynamic') .checked = false;
+	$('download').checked = true;		
 	setParam('template','n');		
 	setParam('hitsPerPage','10');		
 }

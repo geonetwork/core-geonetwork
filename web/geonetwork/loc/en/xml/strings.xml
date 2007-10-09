@@ -160,6 +160,8 @@
 	<distributionTab>Distribution</distributionTab>
 	<down>down</down>
 	<download>Download</download>
+	<downloadable>Downloadable</downloadable>
+	<dynamic>Interactive</dynamic>
 	<downloadData>Data for download</downloadData>
 	<dsgpoly>Data Set G-Polygon</dsgpoly>
 	<eastbc>East Bounding Coordinate</eastbc>
@@ -217,7 +219,7 @@
 	<helpComplete>Complete help</helpComplete>
 	<hideAdvancedOptions>Hide advanced options</hideAdvancedOptions>
 	<highlights>Highlights</highlights>
-	<hitsPerPage>Hits per page</hitsPerPage>
+	<hitsPerPage>Hits&#xA0;per&#xA0;page</hitsPerPage>
 	<hitsPerPageChoice value="10">10</hitsPerPageChoice>
 	<hitsPerPageChoice value="20">20</hitsPerPageChoice>
 	<hitsPerPageChoice value="50">50</hitsPerPageChoice>

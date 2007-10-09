@@ -141,7 +141,7 @@ public class Geonet
 		public static final String KEYWORDS      = "keywords";
 		public static final String THEME_KEY     = "themekey";
 		public static final String DOWNLOAD      = "download";
-		public static final String ONLINE        = "online";
+		public static final String DYNAMIC       = "dynamic";
 		public static final String DIGITAL       = "digital";
 		public static final String PAPER         = "paper";
 		public static final String CATEGORY      = "category";

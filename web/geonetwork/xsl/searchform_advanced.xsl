@@ -112,9 +112,47 @@
 				
 			</td>
 		</tr>
-		<tr >
-			<td colspan="2" style="padding-top:30px; white-space: nowrap;">
-				<fieldset style="margin: 10px 5px 10px;" title="{/root/gui/strings/fuzzySearch}">
+		
+		<tr>
+			<td colspan="2" style="padding-top:3px; white-space: nowrap;">
+				<fieldset>
+					<legend><xsl:value-of select="/root/gui/strings/mapType"/></legend>
+					<input name="digital" id="digital" type="checkbox" value="on">
+						<xsl:if test="/root/gui/searchDefaults/digital='on'">
+							<xsl:attribute name="checked"/>
+						</xsl:if>
+						<xsl:value-of select="/root/gui/strings/digital"/>
+					</input>
+
+					<input name="paper" id="paper" type="checkbox" value="on">
+						<xsl:if test="/root/gui/searchDefaults/paper='on'">
+							<xsl:attribute name="checked"/>
+						</xsl:if>
+						<xsl:value-of select="/root/gui/strings/paper"/>
+					</input>
+
+					<input name="dynamic" id="dynamic" type="checkbox">
+						<xsl:if test="/root/gui/searchDefaults/dynamic='on'">
+							<xsl:attribute name="checked"/>
+						</xsl:if>
+						<xsl:value-of select="/root/gui/strings/dynamic"/>
+					</input>
+
+					<br/>
+	
+					<input name="download" id="download" type="checkbox">
+						<xsl:if test="/root/gui/searchDefaults/download='on'">
+							<xsl:attribute name="checked"/>
+						</xsl:if>
+						<xsl:value-of select="/root/gui/strings/downloadable"/>
+					</input>
+				</fieldset>		
+			</td>	
+		</tr>
+				
+		<tr>
+			<td colspan="2" style="padding-top:3px; white-space: nowrap;">
+				<fieldset>
 					<legend><xsl:value-of select="/root/gui/strings/fuzzy"/></legend>
 					<xsl:value-of select="/root/gui/strings/fuzzyPrecise"/> <input type="radio" id="similarity" name="similarity" value="1" >
 						<xsl:if test="/root/gui/searchDefaults/similarity='1'">
@@ -145,9 +183,6 @@
 				</fieldset>		
 			</td>	
 		</tr>
-		
-		
-				
 	</table>
 
 </xsl:template>
@@ -449,28 +484,6 @@
 						</option>
 					</xsl:for-each>
 				</select>
-			</td>
-		</tr>
-		
-		<!-- Map type -->
-
-		<tr>
-			<th class="padded">
-				<xsl:value-of select="/root/gui/strings/mapType"/>
-			</th>
-			<td>
-				<input name="digital" id="digital" type="checkbox" value="on">
-					<xsl:if test="/root/gui/searchDefaults/digital='on'">
-						<xsl:attribute name="checked"/>
-					</xsl:if>
-					<xsl:value-of select="/root/gui/strings/digital"/>
-				</input>
-				&#xA0;&#xA0; <input name="paper" id="paper" type="checkbox" value="on">
-					<xsl:if test="/root/gui/searchDefaults/paper='on'">
-						<xsl:attribute name="checked"/>
-					</xsl:if>
-					<xsl:value-of select="/root/gui/strings/paper"/>
-				</input>
 			</td>
 		</tr>
 		

@@ -102,42 +102,39 @@ compiles a request
 			</BooleanClause>
 		</xsl:if>
 		
-		<!-- online and download -->
-		<!-- disabled
-		<xsl:choose>
-			
-			<!- - online or download - ->
-			<xsl:when test="string(/request/online)='on' and string(/request/download)='on'">
-				<BooleanClause required="true" prohibited="false">
-					<BooleanQuery>
-						<BooleanClause required="false" prohibited="false">
-							<BooleanQuery>
-								<xsl:call-template name="online"/>
-							</BooleanQuery>
-						</BooleanClause>
-						<BooleanClause required="false" prohibited="false">
-							<BooleanQuery>
-								<xsl:call-template name="download"/>
-							</BooleanQuery>
-						</BooleanClause>
-					</BooleanQuery>
-				</BooleanClause>
-			</xsl:when>
+		<!-- download - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-			<!- - online - ->
-			<xsl:when test="string(/request/online)='on'">
-				<xsl:call-template name="online"/>
-			</xsl:when>
-			
-			<!- - download - ->
-			<xsl:when test="string(/request/download)='on'">
-				<xsl:call-template name="download"/>
-			</xsl:when>
-			
-		</xsl:choose>
-		-->
-		
-		<!-- bounding box -->
+		<xsl:if test="string(/request/download)='on'">
+			<BooleanClause required="true" prohibited="false">			
+				<BooleanQuery>
+					<BooleanClause required="false" prohibited="false">
+						<WildcardQuery fld="protocol" txt="www:download-*-http--download"/>
+					</BooleanClause>
+				</BooleanQuery>
+			</BooleanClause>
+		</xsl:if>
+
+		<!-- dynamic - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<xsl:if test="string(/request/dynamic)='on'">
+			<BooleanClause required="true" prohibited="false">
+				<BooleanQuery>
+					<BooleanClause required="false" prohibited="false">
+						<WildcardQuery fld="protocol" txt="ogc:wms-*-get-map"/>
+					</BooleanClause>
+
+					<BooleanClause required="false" prohibited="false">
+						<WildcardQuery fld="protocol" txt="ogc:wms-*-get-capabilities"/>
+					</BooleanClause>
+
+					<BooleanClause required="false" prohibited="false">
+						<WildcardQuery fld="protocol" txt="esri:aims-*-get-image"/>
+					</BooleanClause>
+				</BooleanQuery>
+			</BooleanClause>
+		</xsl:if>
+
+		<!-- bounding box - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<xsl:if test="$northBL != 'NaN' and $southBL != 'NaN' and $eastBL != 'NaN' and $westBL != 'NaN'">
 			<xsl:choose>
@@ -297,48 +294,7 @@ compiles a request
 	</BooleanQuery>
 </xsl:template>
 
-<!--
-online
--->
-<xsl:template name="online">
-	<BooleanClause required="true" prohibited="false">
-		<BooleanQuery>
-			<BooleanClause required="false" prohibited="false">
-				<TermQuery fld="protocol" txt="esri:aims-3.1-http-get-image"/>
-			</BooleanClause>
-			<BooleanClause required="false" prohibited="false">
-				<TermQuery fld="protocol" txt="esri:aims-4.0-http-get-image"/>
-			</BooleanClause>
-			<BooleanClause required="false" prohibited="false">
-				<TermQuery fld="protocol" txt="ogc:wms-1.0.0-http-get-capabilities"/>
-			</BooleanClause>
-			<BooleanClause required="false" prohibited="false">
-				<TermQuery fld="protocol" txt="ogc:wms-1.0.0-http-get-map"/>
-			</BooleanClause>
-		</BooleanQuery>
-	</BooleanClause>
-	
-	<!-- online privileges -->
-	<xsl:call-template name="orFields">
-		<xsl:with-param name="expr" select="/request/group"/>
-		<xsl:with-param name="field" select="$opDynamic"/>
-	</xsl:call-template>
-</xsl:template>
-
-<!--
-download
--->
-<xsl:template name="download">
-	<BooleanClause required="true" prohibited="false">
-		<TermQuery fld="protocol" txt="www:download-1.0-http--download"/>
-	</BooleanClause>
-
-	<!-- download privileges -->
-	<xsl:call-template name="orFields">
-		<xsl:with-param name="expr" select="/request/group"/>
-		<xsl:with-param name="field" select="$opDownload"/>
-	</xsl:call-template>
-</xsl:template>
+<!-- ================================================================================ -->
 
 <xsl:template name="textField">
 	<xsl:param name="expr"/>
@@ -354,6 +310,7 @@ download
 	</xsl:if>
 </xsl:template>
 
+<!-- ================================================================================ -->
 <!--
 compiles a parse tree into a class tree
 -->
@@ -372,6 +329,7 @@ compiles a parse tree into a class tree
 	</xsl:call-template>
 </xsl:template>
 
+<!-- ================================================================================ -->
 <!--
 recursive compiler
 -->
