@@ -50,12 +50,9 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			LDAP_HOST         : xml.evalXPath(node, 'ldap/host'),
 			LDAP_PORT         : xml.evalXPath(node, 'ldap/port'),
 			LDAP_DEF_PROFILE  : xml.evalXPath(node, 'ldap/defaultProfile'),
-			LDAP_USERDN       : xml.evalXPath(node, 'ldap/login/userDN'),
-			LDAP_PASSWORD     : xml.evalXPath(node, 'ldap/login/password'),
 			LDAP_DN_BASE      : xml.evalXPath(node, 'ldap/distinguishedNames/base'),
 			LDAP_DN_USERS     : xml.evalXPath(node, 'ldap/distinguishedNames/users'),
 			LDAP_ATTR_NAME    : xml.evalXPath(node, 'ldap/userAttribs/name'),
-			LDAP_ATTR_PASSWORD: xml.evalXPath(node, 'ldap/userAttribs/password'),
 			LDAP_ATTR_PROFILE : xml.evalXPath(node, 'ldap/userAttribs/profile')
 		}
 		
@@ -131,17 +128,12 @@ ConfigModel.updateTemp =
 '		<host>{LDAP_HOST}</host>'+
 '		<port>{LDAP_PORT}</port>'+
 '		<defaultProfile>{LDAP_DEF_PROFILE}</defaultProfile>'+
-'		<login>'+
-'			<userDN>{LDAP_USERDN}</userDN>'+
-'			<password>{LDAP_PASSWORD}</password>'+
-'		</login>'+
 '		<distinguishedNames>'+
 '			<base>{LDAP_DN_BASE}</base>'+
 '			<users>{LDAP_DN_USERS}</users>'+
 '		</distinguishedNames>'+
 '		<userAttribs>'+
 '			<name>{LDAP_ATTR_NAME}</name>'+
-'			<password>{LDAP_ATTR_PASSWORD}</password>'+
 '			<profile>{LDAP_ATTR_PROFILE}</profile>'+
 '		</userAttribs>'+
 '	</ldap>'+

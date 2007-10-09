@@ -251,17 +251,6 @@
 								<td class="padded"><xsl:call-template name="ldapDefProfile"/></td>
 							</tr>
 							
-							<!-- login account -->
-							
-							<tr>
-								<td class="padded"><xsl:value-of select="/root/gui/config/login"/></td>
-								<td/>
-							</tr>
-							<tr>
-								<td/>
-								<td class="padded"><xsl:call-template name="ldapLogin"/></td>
-							</tr>
-							
 							<!-- distinguished names -->
 							
 							<tr>
@@ -318,22 +307,6 @@
 	
 	<!-- ============================================================================================= -->
 	
-	<xsl:template name="ldapLogin">
-		<table>
-			<tr>
-				<td class="padded" width="60px"><xsl:value-of select="/root/gui/config/userDN"/></td>
-				<td class="padded"><input id="ldap.userDN" class="content" type="text" value="" size="20"/></td>
-			</tr>
-
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/config/password"/></td>
-				<td class="padded"><input id="ldap.password" class="content" type="password" value="" size="20"/></td>
-			</tr>
-		</table>
-	</xsl:template>
-	
-	<!-- ============================================================================================= -->
-	
 	<xsl:template name="ldapDistNames">
 		<table>
 			<tr>
@@ -355,11 +328,6 @@
 			<tr>
 				<td class="padded" width="60px"><xsl:value-of select="/root/gui/config/name"/></td>
 				<td class="padded"><input id="ldap.nameAttr" class="content" type="text" value="" size="20"/></td>
-			</tr>
-			
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/config/password"/></td>
-				<td class="padded"><input id="ldap.passwordAttr" class="content" type="text" value="" size="20"/></td>
 			</tr>
 			
 			<tr>

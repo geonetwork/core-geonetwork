@@ -65,17 +65,12 @@
 				<host><xsl:value-of select="$ldap/host/value"/></host>
 				<port><xsl:value-of select="$ldap/port/value"/></port>
 				<defaultProfile><xsl:value-of select="$ldap/defaultProfile/value"/></defaultProfile>				
-				<login>
-					<userDN><xsl:value-of select="$ldapLogin/userDN/value"/></userDN>
-					<password><xsl:value-of select="$ldapLogin/password/value"/></password>
-				</login>
 				<distinguishedNames>
 					<base><xsl:value-of select="$ldapDisNam/base/value"/></base>
 					<users><xsl:value-of select="$ldapDisNam/users/value"/></users>
 				</distinguishedNames>
 				<userAttribs>
 					<name><xsl:value-of select="$ldapUsrAtt/name/value"/></name>
-					<password><xsl:value-of select="$ldapUsrAtt/password/value"/></password>
 					<profile><xsl:value-of select="$ldapUsrAtt/profile/value"/></profile>
 				</userAttribs>
 			</ldap>
