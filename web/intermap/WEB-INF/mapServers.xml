@@ -68,7 +68,7 @@
 	</mapServers>
 	
 	<mapContexts>
-		<default name="World + Africa national boundaries -- DUMMY NAME:not used"> 
+		<default name="Layers for default map -- DUMMY NAME:not used"> 
 <!--			<server url="http://localhost:8080/geoserver/wms"  type="2" >
 				<layer name="gn:world"></layer>
 			</server>
