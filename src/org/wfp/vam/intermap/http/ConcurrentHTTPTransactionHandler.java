@@ -26,28 +26,28 @@ public class ConcurrentHTTPTransactionHandler {
 	private HashMap responses = new HashMap();
 	private HttpCache cache;
 
-	public static void main(String[] args) { // DEBUG
-		ConcurrentHTTPTransactionHandler c = new ConcurrentHTTPTransactionHandler();
-
-		try {
-			c.setCache(new HttpGetFileCache("/ecchice", 1000));
-		} catch (Exception e) { e.printStackTrace(); }
-
-		c.checkIfModified(false);
-
-		c.register("http://vam.wfp.org/main");
-		c.register("http://www.apple.com");
-
-		c.doTransactions();
-		System.out.println("header: " + c.getHeaderValue("http://vam.wfp.org/main", "content-type"));
-
-		try {
-			Thread.sleep(4000);
-		} catch (InterruptedException e) {}
-
-		c.doTransactions();
-		System.out.println("header: " + c.getHeaderValue("http://vam.wfp.org/main", "content-type"));
-	}
+//	public static void main(String[] args) { // DEBUG
+//		ConcurrentHTTPTransactionHandler c = new ConcurrentHTTPTransactionHandler();
+//
+//		try {
+//			c.setCache(new HttpGetFileCache("/ecchice", 1000));
+//		} catch (Exception e) { e.printStackTrace(); }
+//
+//		c.checkIfModified(false);
+//
+//		c.register("http://vam.wfp.org/main");
+//		c.register("http://www.apple.com");
+//
+//		c.doTransactions();
+//		System.out.println("header: " + c.getHeaderValue("http://vam.wfp.org/main", "content-type"));
+//
+//		try {
+//			Thread.sleep(4000);
+//		} catch (InterruptedException e) {}
+//
+//		c.doTransactions();
+//		System.out.println("header: " + c.getHeaderValue("http://vam.wfp.org/main", "content-type"));
+//	}
 
 	public static void setProxy(String proxyHost, int proxyPort) {
 		ConcurrentHTTPTransactionHandler.proxyHost = proxyHost;
@@ -178,19 +178,19 @@ public class ConcurrentHTTPTransactionHandler {
 		 * Executes the HttpMethod and prints some satus information.
 		 */
 		public void run() {
-			try {
+			try
+			{
 				String uri = method.getURI().toString();
-//				System.out.println("uri: " + uri); // DEBUG
-				Calendar whenCached = cache.getCachedTime(uri);
 
-//				System.out.println("cache = " + cache); // DEBUG
-//				System.out.println("whenCached = " + whenCached); // DEBUG
+				if (cache != null)
+				{
+					Calendar whenCached = cache.getCachedTime(uri);
 
-				if (cache != null) {
-					if (whenCached != null && !checkIfModified) {
-//						System.out.println(id + " - using cache");
-						return;
-					} else if (whenCached != null) {
+					if (whenCached != null)
+					{
+						if ( ! checkIfModified )
+							return;
+
 						// the response has been cached, check if the page has been modified
 						SimpleDateFormat f = new SimpleDateFormat("EE, d MMM yyyy HH:mm:ss z");
 						Date date = whenCached.getTime();
