@@ -87,7 +87,11 @@ public class UpdateAdminOper implements Service
 		//--- in case of owner, privileges for groups 0,1 are disabled and
 		//--- are not sent to the server. So we cannot remove them
 
-		if (us.isAuthenticated() && us.getUserId().equals(info.owner))
+		boolean isAdmin   = Geonet.Profile.ADMINISTRATOR.equals(us.getProfile());
+		boolean isReviewer= Geonet.Profile.REVIEWER     .equals(us.getProfile());
+
+
+		if (us.getUserId().equals(info.owner) && !isAdmin && !isReviewer)
 			skip = true;
 
 		dm.deleteMetadataOper(dbms, id, skip);
