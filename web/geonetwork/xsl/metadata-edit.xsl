@@ -81,9 +81,12 @@
 				else
 					fname = fname.substring(fname.lastIndexOf('\\') + 1, fname.length);
 				
-				document.mainForm.fname.value  = fname;
+				document.mainForm.fname .value = fname;
 				document.mainForm.access.value = access;
-				doElementAction(action, ref);
+				document.mainForm.ref   .value = ref;
+				document.mainForm.action = action;
+				document.mainForm.enctype="multipart/form-data";
+				goSubmit('mainForm');
 			}
 			
 			function doFileRemoveAction(action, ref, access)
