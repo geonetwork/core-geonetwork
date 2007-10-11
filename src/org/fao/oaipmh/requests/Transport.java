@@ -120,12 +120,12 @@ public class Transport
 
 	public void setUrl(URL url)
 	{
-		this.host    = url.getHost();
-		this.port    = url.getPort();
-		this.address = url.getPath();
+		host    = url.getHost();
+		port    = url.getPort();
+		address = url.getPath();
 
-		if (this.port == -1)
-			this.port = 80;
+		if (port == -1)
+			port = 80;
 	}
 
 	//---------------------------------------------------------------------------
@@ -174,10 +174,21 @@ public class Transport
 
 	private HttpMethodBase setupHttpMethod()
 	{
-		HttpMethodBase httpMethod = (method == Method.GET)
-												? new GetMethod() : new PostMethod();
+		HttpMethodBase httpMethod;
 
-		httpMethod.setQueryString(alParams.toArray(new NameValuePair[1]));
+		if (method == Method.GET)
+		{
+			httpMethod = new GetMethod();
+			httpMethod.setQueryString(alParams.toArray(new NameValuePair[1]));
+		}
+		else
+		{
+			PostMethod pm = new PostMethod();
+			pm.setRequestBody(alParams.toArray(new NameValuePair[1]));
+
+			httpMethod = pm;
+		}
+
 		httpMethod.setPath(address);
 		httpMethod.setDoAuthentication(useAuthent);
 
