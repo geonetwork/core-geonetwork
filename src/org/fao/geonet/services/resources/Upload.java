@@ -83,8 +83,11 @@ public class Upload implements Service
 
 		if (!oldFile.renameTo(newFile))
 		{
+			context.warning("Cannot move uploaded file");
+			context.warning(" (C) Source : "+oldFile.getAbsolutePath());
+			context.warning(" (C) Destin : "+newFile.getAbsolutePath());
 			oldFile.delete();
-			throw new Exception("unable to move uploaded file to destination directory");
+			throw new Exception("Unable to move uploaded file to destination directory");
 		}
 		// update the metadata
 		Element elem = new Element("_" + ref);
