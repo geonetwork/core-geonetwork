@@ -24,7 +24,7 @@
 			<tr>
 				<td>
 					<a onclick="harvesting.geonet.removeSearchRow('{@id}')">
-						<img style="cursor:hand; cursor:pointer" src="{/root/env/url}/images/del.gif" alt="Remove"/>
+						<img style="cursor:hand; cursor:pointer" src="{/root/env/url}/images/fileclose.png" alt="Remove"/>
 					</a>
 					
 				</td>
