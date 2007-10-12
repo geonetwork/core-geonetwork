@@ -2,8 +2,6 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:output method="html" />
 
-	<xsl:include href="prettyprint.xsl"/>
-	
 	<xsl:template match="/">
 		<div id="im_wmc_msg">
 			<div id="im_wmc_msg_upload_start" style="display:none;">
@@ -98,25 +96,8 @@
 							</tr>
 							
 						</table>
-					</div>
-					
-				</li>
-				
-				<!-- =========================================== -->
-				<!--   DISPLAY WMC -->
-				<!-- =========================================== -->
-<!--				<li>
-					<a onClick="$('im_showwmc').toggle();">Show WMC...</a>
-					<div id="im_showwmc" style="display:none;">							
-						<textarea rows="20" cols="70" readonly="true">
-						<xsl:apply-templates select="//ViewContext"/> <xsl:comment>will use prettyprint templates </xsl:comment>	
-						</textarea>
-						<br/>
-						<xsl:variable name="wmcurl"><xsl:copy-of select="//wmcurl"></xsl:copy-of></xsl:variable>												
-						<a href="/geonetwork/srv/en/main.home?wmc={//wmcurl}">Link to this context</a> <xsl:comment>FIXME: using geonetwork fixed path</xsl:comment>
-					</div>											
-				</li>
--->								
+					</div>					
+				</li>				
 			</ul>								
 		</div>
 
