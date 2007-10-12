@@ -158,7 +158,7 @@ public class WebDavHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected AbstractParams getParams() { return params; }
+	public AbstractParams getParams() { return params; }
 
 	//---------------------------------------------------------------------------
 	//---

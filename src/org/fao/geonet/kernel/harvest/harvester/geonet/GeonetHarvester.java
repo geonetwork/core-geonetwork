@@ -175,11 +175,29 @@ public class GeonetHarvester extends AbstractHarvester
 
 	//---------------------------------------------------------------------------
 	//---
+	//--- addHarvestInfo
+	//---
+	//---------------------------------------------------------------------------
+
+	public void addHarvestInfo(Element info, String id, String uuid)
+	{
+		String small = "/"+ context.getBaseUrl() +
+							"/srv/en/resources.get?access=public&id="+id+"&fname=";
+
+		String large = "/"+ context.getBaseUrl() +
+							"/srv/en/graphover.show?access=public&id="+id+"&fname=";
+
+		info.addContent(new Element("smallThumbnail").setText(small));
+		info.addContent(new Element("largeThumbnail").setText(large));
+	}
+
+	//---------------------------------------------------------------------------
+	//---
 	//--- AbstractParameters
 	//---
 	//---------------------------------------------------------------------------
 
-	protected AbstractParams getParams() { return params; }
+	public AbstractParams getParams() { return params; }
 
 	//---------------------------------------------------------------------------
 	//---

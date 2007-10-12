@@ -14,11 +14,10 @@
 			<xsl:otherwise>10</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-
 	
-	<!--
-	page content
-	-->
+	<!-- ================================================================================== -->
+	<!-- page content -->
+	<!-- ================================================================================== -->
 
 	<xsl:template match="/">
 		<xsl:comment>CONTENT</xsl:comment>
@@ -60,6 +59,8 @@
 		</table>
 	</xsl:template>
 
+	<!-- ================================================================================== -->
+
 	<xsl:template name="formTitle">
 		<xsl:param name="title"/>
 		<xsl:param name="indent" select="100"/>
@@ -73,12 +74,16 @@
 		</tr>
 	</xsl:template>
 	
+	<!-- ================================================================================== -->
+
 	<xsl:template name="formSeparator">
 		<xsl:comment>SEPARATOR</xsl:comment>
 		<tr><td class="dots" colspan="3"/></tr>
 		<xsl:comment>SEPARATOR END</xsl:comment>
 	</xsl:template>
 	
+	<!-- ================================================================================== -->
+
 	<xsl:template name="formFiller">
 		<xsl:param name="indent" select="100"/>
 		<xsl:comment>FILLER</xsl:comment>
@@ -92,6 +97,8 @@
 		<xsl:comment>FILLER END</xsl:comment>
 	</xsl:template>	
 	
+	<!-- ================================================================================== -->
+
 	<xsl:template name="formContent">
 		<xsl:param name="content"/>
 		<xsl:param name="indent" select="100"/>
@@ -107,9 +114,10 @@
 		<xsl:comment>formContent END</xsl:comment>
 	</xsl:template>
 	
-	<!--
-	all presented hits
-	-->
+	<!-- ================================================================================== -->
+	<!-- all presented hits -->
+	<!-- ================================================================================== -->
+
 	<xsl:template name="hits">
 		<xsl:comment>HITS</xsl:comment>		
 		<xsl:variable name="remote" select="/root/response/summary/@type='remote'"/>
@@ -133,9 +141,10 @@
 		</xsl:for-each>
 	</xsl:template>
 	
-	<!--
-	one hit
-	-->
+	<!-- ================================================================================== -->
+	<!-- one hit -->
+	<!-- ================================================================================== -->
+
 	<xsl:template name="hit">
 		<xsl:param name="metadata"/>
 		<xsl:param name="remote"/>
@@ -366,9 +375,10 @@
 		<div id="mdwhiteboard_{$metadata/geonet:info/id}" width="100%"></div>
 	</xsl:template>
 
-	<!--
-	list of pages
-	-->
+	<!-- ================================================================================== -->
+	<!-- list of pages -->
+	<!-- ================================================================================== -->
+
 	<xsl:template name="pageList">
 		<xsl:comment>PAGELIST</xsl:comment>
 		
@@ -423,6 +433,8 @@
 		
 	</xsl:template>
 	
+	<!-- ================================================================================== -->
+
 	<xsl:template name="pageLoop">
 		<xsl:param name="count"/>
 		<xsl:param name="minPage"/>
@@ -451,6 +463,8 @@
 		</xsl:if>
 	</xsl:template>
 
+	<!-- ================================================================================== -->
+
 	<xsl:template name="pageLink">
 		<xsl:param name="count"/>
 		<xsl:param name="page"/>
@@ -471,8 +485,9 @@
 		<a href="javascript:gn_present({$from}, {$to});"><xsl:value-of select="$label"/></a>
 	</xsl:template>
 
-
+	<!-- ================================================================================== -->
 	<!-- Display rating information -->
+
 	<xsl:template name="score">
 		<xsl:param name="score"/>
 		<xsl:param name="class"/>

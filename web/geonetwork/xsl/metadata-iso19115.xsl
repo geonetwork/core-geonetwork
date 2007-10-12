@@ -1755,6 +1755,8 @@
 			</xsl:if>
 		
 			<xsl:if test="not(geonet:info/server)">
+				<xsl:variable name="info" select="geonet:info"/>
+
 				<xsl:for-each select="dataIdInfo/graphOver">
 					<xsl:if test="bgFileName != ''">
 						<xsl:choose>
@@ -1768,17 +1770,41 @@
 							<!-- small thumbnail -->
 	
 							<xsl:when test="string(bgFileDesc)='thumbnail'">
-								<image type="thumbnail">
-									<xsl:value-of select="concat(/root/gui/locService,'/resources.get?id=',$id,'&amp;fname=',bgFileName,'&amp;access=public')"/>
-								</image>
+								<xsl:choose>
+									<xsl:when test="$info/isHarvested = 'y'">
+										[<xsl:if test="$info/harvestInfo/smallThumbnail">
+											<image type="thumbnail">
+												<xsl:value-of select="concat($info/harvestInfo/smallThumbnail, bgFileName)"/>
+											</image>
+										</xsl:if>]
+									</xsl:when>
+									
+									<xsl:otherwise>
+										<image type="thumbnail">
+											<xsl:value-of select="concat(/root/gui/locService,'/resources.get?id=',$id,'&amp;fname=',bgFileName,'&amp;access=public')"/>
+										</image>
+									</xsl:otherwise>
+								</xsl:choose>
 							</xsl:when>
 	
 							<!-- large thumbnail -->
 	
 							<xsl:when test="string(bgFileDesc)='large_thumbnail'">
-								<image type="overview">
-									<xsl:value-of select="concat(/root/gui/locService,'/graphover.show?id=',$id,'&amp;fname=',bgFileName,'&amp;access=public')"/>
-								</image>
+								<xsl:choose>
+									<xsl:when test="$info/isHarvested = 'y'">
+										<xsl:if test="$info/harvestInfo/largeThumbnail">
+											<image type="overview">
+												<xsl:value-of select="concat($info/harvestInfo/largeThumbnail, bgFileName)"/>
+											</image>
+										</xsl:if>
+									</xsl:when>
+									
+									<xsl:otherwise>
+										<image type="overview">
+											<xsl:value-of select="concat(/root/gui/locService,'/graphover.show?id=',$id,'&amp;fname=',bgFileName,'&amp;access=public')"/>
+										</image>
+									</xsl:otherwise>
+								</xsl:choose>
 							</xsl:when>
 	
 						</xsl:choose>

@@ -219,6 +219,8 @@ class Harvester
 		for (RecordInfo ri : records)
 			sources.add(ri.source);
 
+		//--- update local sources and retrieve logos (if the case)
+
 		for (String sourceUuid : sources)
 		{
 			String sourceName = remoteSources.get(sourceUuid);

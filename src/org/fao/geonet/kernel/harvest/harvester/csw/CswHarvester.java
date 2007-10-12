@@ -166,7 +166,7 @@ public class CswHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected AbstractParams getParams() { return params; }
+	public AbstractParams getParams() { return params; }
 
 	//---------------------------------------------------------------------------
 	//---

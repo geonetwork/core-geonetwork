@@ -25,7 +25,6 @@ package org.fao.geonet.kernel.harvest;
 
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Iterator;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.MissingParameterEx;
@@ -33,6 +32,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
@@ -71,6 +71,7 @@ public class HarvestManager
 				AbstractHarvester ah = AbstractHarvester.create(type, context, sm, dm);
 				ah.init(node);
 				hmHarvesters.put(ah.getID(), ah);
+				hmHarvestLookup.put(ah.getParams().uuid, ah);
 			}
 	}
 
@@ -136,6 +137,7 @@ public class HarvestManager
 
 		ah.add(dbms, node);
 		hmHarvesters.put(ah.getID(), ah);
+		hmHarvestLookup.put(ah.getParams().uuid, ah);
 		Log.debug(Geonet.HARVEST_MAN, "Added node with id : \n"+ ah.getID());
 
 		return ah.getID();
@@ -173,6 +175,7 @@ public class HarvestManager
 		if (ah == null)
 			return OperResult.NOT_FOUND;
 
+		hmHarvestLookup.remove(ah.getParams().uuid);
 		ah.destroy(dbms);
 		hmHarvesters.remove(id);
 		settingMan.remove(dbms, "harvesting/id:"+id);
@@ -223,6 +226,20 @@ public class HarvestManager
 	}
 
 	//---------------------------------------------------------------------------
+
+	public Element getHarvestInfo(String harvestUuid, String id, String uuid)
+	{
+		Element info = new Element(Edit.Info.Elem.HARVEST_INFO);
+
+		AbstractHarvester ah = hmHarvestLookup.get(harvestUuid);
+
+		if (ah != null)
+			ah.addHarvestInfo(info, id, uuid);
+
+		return info;
+	}
+
+	//---------------------------------------------------------------------------
 	//---
 	//--- Private methods
 	//---
@@ -245,7 +262,8 @@ public class HarvestManager
 	private DataManager    dataMan;
 	private ServiceContext context;
 
-	private HashMap<String, AbstractHarvester> hmHarvesters = new HashMap<String, AbstractHarvester>();
+	private HashMap<String, AbstractHarvester> hmHarvesters   = new HashMap<String, AbstractHarvester>();
+	private HashMap<String, AbstractHarvester> hmHarvestLookup= new HashMap<String, AbstractHarvester>();
 }
 
 //=============================================================================

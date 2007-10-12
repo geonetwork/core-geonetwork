@@ -166,7 +166,7 @@ public class Z3950Harvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected AbstractParams getParams() { return params; }
+	public AbstractParams getParams() { return params; }
 
 	//---------------------------------------------------------------------------
 	//---

@@ -257,6 +257,7 @@ public abstract class AbstractHarvester
 	public String getID() { return id; }
 
 	//--------------------------------------------------------------------------
+	/** Adds harvesting result information to each harvesting entry */
 
 	public void addInfo(Element node)
 	{
@@ -278,9 +279,10 @@ public abstract class AbstractHarvester
 	}
 
 	//---------------------------------------------------------------------------
-	/** Some sites can generate a base url for thumbnails */
+	/** Adds harvesting information to each metadata element. Some sites can generate
+	  * url for thumbnails */
 
-	public String getThumbnailBaseUrl() { return null; }
+	public void addHarvestInfo(Element info, String id, String uuid) {}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -347,7 +349,7 @@ public abstract class AbstractHarvester
 
 	public abstract String getType();
 
-	protected abstract AbstractParams getParams();
+	public abstract AbstractParams getParams();
 
 	protected abstract void doInit(Element entry) throws BadInputEx;
 

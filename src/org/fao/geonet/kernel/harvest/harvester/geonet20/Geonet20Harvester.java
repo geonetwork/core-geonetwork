@@ -102,7 +102,6 @@ public class Geonet20Harvester extends AbstractHarvester
 		//--- retrieve/initialize information
 		params.create(node);
 
-
 		//--- force the creation of a new uuid
 		params.uuid = UUID.randomUUID().toString();
 
@@ -110,7 +109,7 @@ public class Geonet20Harvester extends AbstractHarvester
 
 		storeNode(dbms, params, "id:"+id);
 		Lib.sources.update(dbms, params.uuid, params.name, true);
-		Lib.sources.copyLogo(context, "/images/harvesting/default.gif", params.uuid);
+		Lib.sources.copyLogo(context, "/images/harvesting/gn20.gif", params.uuid);
 
 		return id;
 	}
@@ -126,8 +125,9 @@ public class Geonet20Harvester extends AbstractHarvester
 		//--- update variables
 
 		GeonetParams copy = params.copy();
-		copy.update(node);
 
+		//--- update variables
+		copy.update(node);
 
 		String path = "harvesting/id:"+ id;
 
@@ -139,7 +139,7 @@ public class Geonet20Harvester extends AbstractHarvester
 		//--- we update a copy first because if there is an exception GeonetParams
 		//--- could be half updated and so it could be in an inconsistent state
 
-		Lib.sources.update(dbms, params.uuid, params.name, true);
+		Lib.sources.update(dbms, copy.uuid, copy.name, true);
 
 		params = copy;
 	}
@@ -173,13 +173,16 @@ public class Geonet20Harvester extends AbstractHarvester
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- getThumbnailBaseUrl
+	//--- addHarvestInfo
 	//---
 	//---------------------------------------------------------------------------
 
-	public String getThumbnailBaseUrl()
+	public void addHarvestInfo(Element info, String id, String uuid)
 	{
-		return "http://"+ params.host +":"+ params.port +"/"+params.servlet+"";
+		String small = "http://"+ params.host +":"+ params.port +"/"+ params.servlet +
+							"/srv/en/resources.get2?access=public&uuid="+uuid+"&fname=";
+
+		info.addContent(new Element("smallThumbnail").setText(small));
 	}
 
 	//---------------------------------------------------------------------------
@@ -188,7 +191,7 @@ public class Geonet20Harvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected AbstractParams getParams() { return params; }
+	public AbstractParams getParams() { return params; }
 
 	//---------------------------------------------------------------------------
 	//---

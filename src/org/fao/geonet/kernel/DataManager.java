@@ -43,6 +43,7 @@ import jeeves.utils.SerialFactory;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -240,6 +241,13 @@ public class DataManager
 	//---
 	//--- Schema management API
 	//---
+	//--------------------------------------------------------------------------
+
+	public void setHarvestManager(HarvestManager hm)
+	{
+		harvestMan = hm;
+	}
+
 	//--------------------------------------------------------------------------
 
 	public void addSchema(String id, String xmlSchemaFile, String xmlSuggestFile) throws Exception
@@ -1387,7 +1395,7 @@ public class DataManager
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, title, "+
-									"uuid, isHarvested FROM Metadata WHERE id = " + id;
+									"uuid, isHarvested, harvestUuid FROM Metadata WHERE id = " + id;
 
 		// add Metadata table infos: schemaId, createDate, changeDate, source,
 		Element rec = dbms.select(query).getChild("record");
@@ -1400,6 +1408,7 @@ public class DataManager
 		String  title      = rec.getChildText("title");
 		String  uuid       = rec.getChildText("uuid");
 		String  isHarvested= rec.getChildText("isharvested");
+		String  harvestUuid= rec.getChildText("harvestuuid");
 
 		Element info = new Element(Edit.RootChild.INFO, Edit.NAMESPACE);
 
@@ -1412,6 +1421,9 @@ public class DataManager
 		addElement(info, Edit.Info.Elem.SOURCE,      source);
 		addElement(info, Edit.Info.Elem.UUID,        uuid);
 		addElement(info, Edit.Info.Elem.IS_HARVESTED,isHarvested);
+
+		if (isHarvested.equals("y"))
+			info.addContent(harvestMan.getHarvestInfo(harvestUuid, id, uuid));
 
 		if (version != null)
 			addElement(info, Edit.Info.Elem.VERSION, version);
@@ -1437,6 +1449,7 @@ public class DataManager
 			Element category = (Element)iter.next();
 			addElement(info, Edit.Info.Elem.CATEGORY, category.getChildText("name"));
 		}
+
 		return info;
 	}
 
@@ -1529,7 +1542,7 @@ public class DataManager
 	private AccessManager  accessMan;
 	private SearchManager  searchMan;
 	private SettingManager settingMan;
-
+	private HarvestManager harvestMan;
 }
 
 //=============================================================================

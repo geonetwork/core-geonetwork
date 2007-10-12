@@ -170,7 +170,7 @@ public class OaiPmhHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected AbstractParams getParams() { return params; }
+	public AbstractParams getParams() { return params; }
 
 	//---------------------------------------------------------------------------
 	//---
