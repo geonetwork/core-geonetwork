@@ -125,7 +125,11 @@ public class Aligner
 					else				updateMetadata(siteId, info, id);
 
 				dbms.commit();
-				dataMan.indexMetadata(dbms, id);
+
+				//--- maybe the metadata was unretrievable
+
+				if (id != null)
+					dataMan.indexMetadata(dbms, id);
 			}
 		}
 
@@ -152,13 +156,19 @@ public class Aligner
 
 		Element md = getRemoteMetadata(req, remoteId);
 
+		if (md == null)
+		{
+			log.warning("  - Cannot get metadata (possibly bad XML) with remote id="+ remoteId);
+			return null;
+		}
+
 		String id = dataMan.insertMetadataExt(dbms, schema, md, context.getSerialFactory(),
-														  siteId, createDate, changeDate, remoteUuid, 1, null);
+														  params.uuid, createDate, changeDate, remoteUuid, 1, null);
 
 		int iId = Integer.parseInt(id);
 
 		dataMan.setTemplate(dbms, iId, "n", null);
-		dataMan.setHarvested(dbms, iId, siteId);
+		dataMan.setHarvested(dbms, iId, params.uuid);
 
 		result.addedMetadata++;
 
@@ -244,8 +254,13 @@ public class Aligner
 
 			Element md = getRemoteMetadata(req, remoteId);
 
-			dataMan.updateMetadataExt(dbms, id, md, changeDate);
-			result.updatedMetadata++;
+			if (md == null)
+				log.warning("  - Cannot get metadata (possibly bad XML) with remote id="+ remoteId);
+			else
+			{
+				dataMan.updateMetadataExt(dbms, id, md, changeDate);
+				result.updatedMetadata++;
+			}
 		}
 	}
 
@@ -319,13 +334,23 @@ public class Aligner
 		req.clearParams();
 		req.addParam("id", id);
 
-		Element md   = req.execute();
-		Element info = md.getChild("info", Edit.NAMESPACE);
+		try
+		{
+			Element md   = req.execute();
+			Element info = md.getChild("info", Edit.NAMESPACE);
 
-		if (info != null)
-			info.detach();
+			if (info != null)
+				info.detach();
 
-		return md;
+			return md;
+		}
+		catch(Exception e)
+		{
+			log.warning("Cannot retrieve remote metadata with id:"+id);
+			log.warning(" (C) Error is : "+e.getMessage());
+
+			return null;
+		}
 	}
 
 	//--------------------------------------------------------------------------
