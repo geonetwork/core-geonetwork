@@ -410,6 +410,49 @@ public class LuceneSearcher extends MetaSearcher
 			elCategories.addContent(elCategory);
 		}
 		_elSummary.addContent(elCategories);
+
+		// count sources frequencies
+		Element elSources = new Element("sources");
+		Hashtable htSources = new Hashtable();
+		for(int i = 0; i < count; i++)
+		{
+			Document doc = _hits.doc(i);
+			String source = doc.get("_source");
+			Integer sourceCount = (Integer)htSources.get(source);
+			if (sourceCount == null) sourceCount = new Integer(1);
+			else                     sourceCount = new Integer(sourceCount.intValue() + 1);
+			htSources.put(source, sourceCount);
+		}
+		// sort sources according to frequency
+		TreeSet setSources = new TreeSet(new Comparator()
+			  {
+					public int compare(Object p1, Object p2)
+					{
+						Map.Entry me1    = (Map.Entry)p1;
+						Map.Entry me2    = (Map.Entry)p2;
+						String    key1   = (String)me1.getKey();
+						String    key2   = (String)me2.getKey();
+						Integer   count1 = (Integer)me1.getValue();
+						Integer   count2 = (Integer)me2.getValue();
+						int cmp = count2.compareTo(count1);
+						if (cmp != 0) return cmp;
+						else          return key1.compareTo(key2);
+					}
+				});
+		setSources.addAll(htSources.entrySet());
+
+		for (Iterator iter = setSources.iterator(); iter.hasNext(); )
+		{
+			Map.Entry me = (Map.Entry)iter.next();
+			String  source   = (String)me.getKey();
+			Integer keyCount = (Integer)me.getValue();
+
+			Element elSource = new Element("source");
+			elSource.setAttribute("count", keyCount.toString());
+			elSource.setAttribute("name",  source);
+			elSources.addContent(elSource);
+		}
+		_elSummary.addContent(elSources);
 	}
 
 	private static Element getMetadataFromIndex(Document doc, String id)
