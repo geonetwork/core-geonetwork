@@ -234,6 +234,7 @@ function gn_showSingleMetadata(id)
                 var div = document.createElement('div');
                 div.className = 'metadata_current';
                 div.style.display = 'none';
+                div.style.width = '100%';
                 parent.appendChild(div);
                 
                 div.innerHTML = req.responseText;
@@ -270,6 +271,7 @@ function gn_showMetadata(id)
                 var div = document.createElement('div');
                 div.className = 'metadata_current';
                 div.style.display = 'none';
+                div.style.width = '100%';
                 parent.appendChild(div);
                 
                 div.innerHTML = req.responseText;
