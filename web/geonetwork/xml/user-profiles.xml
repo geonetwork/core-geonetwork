@@ -51,9 +51,6 @@
 		<allow service="xml.harvesting.run"/>
 		<allow service="xml.harvesting.info"/>
 
-		<!-- MEF facilities -->
-		<allow service="mef.import"/>
-
 		<!-- Thesaurus facilities -->
 		<allow service="thesaurus.admin"/>
 		<allow service="thesaurus.edit"/>
@@ -151,6 +148,9 @@
 		<allow service="xml.metadata.insert"/>
 		<allow service="xml.metadata.delete"/>
 		<allow service="xml.user.list"/>
+
+		<!-- MEF facilities -->
+		<allow service="mef.import"/>
 
 	</profile>
 
