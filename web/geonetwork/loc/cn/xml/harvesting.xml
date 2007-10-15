@@ -36,6 +36,11 @@
 		<long>Z3950 Remote search</long>
 	</info>
 	
+	<info type="oaipmh">
+		<short>OAIPMH</short>
+		<long>OAI Protocol for Metadata Harvesting 2.0</long>
+	</info>
+	
 	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Site</site>
@@ -74,10 +79,11 @@
 	<inactive></inactive>
 	<retrieveSources>Retrieve sources</retrieveSources>
 	<retrieveGroups>Retrieve groups</retrieveGroups>
+	<retrieveInfo>Retrieve info</retrieveInfo>
 	<source>Source</source>
 	<criteria>Criteria</criteria>
 	<validate>Validate</validate>
-	<structure>Structure</structure>
+	<recurse>Recurse</recurse>
 	<host>Host</host>
 	<privileges>Privileges</privileges>
 	<categories>Categories</categories>
@@ -96,6 +102,12 @@
 		<copyToIntranet>Copy to Intranet group</copyToIntranet>
 		<dontCopy>Don't copy</dontCopy>
 	</policy>
+	
+	<from>From</from>
+	<until>Until</until>
+	<set>Set</set>
+	<prefix>Prefix</prefix>
+	<stylesheet>Stylesheet</stylesheet>
 	
 	<!-- Buttons -->
 	
@@ -147,20 +159,24 @@
 	<cannotAdd>Unable to add a new entry</cannotAdd>
 	<cannotGet>Unable to get the entry/ies</cannotGet>
 	<cannotRemove>Cannot remove the selected entry/ies</cannotRemove>
-	<cannotStart>Cannot start the selected entry/ies</cannotStart>
-	<cannotStop>Cannot stop the selected entry/ies</cannotStop>
+	<cannotStart>Cannot activate the selected entry/ies</cannotStart>
+	<cannotStop>Cannot deactivate the selected entry/ies</cannotStop>
 	<cannotRun>Cannot run the selected entry/ies</cannotRun>
 	<confirmRemove>Remove the selected entries ? The nodes and all harvested metadata will be removed.</confirmRemove>
 	<everyZero>The harvesting period cannot be 0:0:0</everyZero>
 	<pleaseRetrieve>Please retrieve some sites first</pleaseRetrieve>
 	<cannotRetrieve>Unable to retrieve information</cannotRetrieve>
+	<cannotUpdate>Unable to update information on the server</cannotUpdate>
 	<supplyHost>Please, provide the 'host' parameter</supplyHost>
 	<supplyServlet>Please, provide the 'servlet' parameter</supplyServlet>
 	<pleaseSpecifySiteId>Please specify a non empty Site ID</pleaseSpecifySiteId>
+	<cannotQueryOai>Cannot query OAI-PMH server</cannotQueryOai>
 	<gn20Unsafe>Please notice that harvesting old GeoNetwork nodes is unsafe. 
  					The old nodes do not have unique site ids and this could cause
 					unpredictable results (like removing nodes from other harvestings).</gn20Unsafe>
 			
+	<supplyUrl>Please, provide a valid 'url' parameter</supplyUrl>
+	
 	<oper>
 		<op id="0">View</op>
 		<op id="1">Download</op>
@@ -187,6 +203,8 @@
 		<unchanged>Unchanged</unchanged>
 		<unknownSchema>Unknown schema</unknownSchema>
 		<unretrievable>Unretrievable</unretrievable>
+		<badFormat>Bad XML format</badFormat>
+		<doesNotValidate>Does not validate</doesNotValidate>
 	</tipHeader>
 	
 	<notRun>Waiting for the first run</notRun>
@@ -248,6 +266,71 @@
 			key to select more than one category.
 		</tip>
 	
+		<!-- OAI-PMH harvesting type - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="oai.url">
+			This URL must point to the OAI-PMH server
+		</tip>
+		
+		<tip id="oai.addSearch">
+			Add one search on the remote server. If you don't add any search, an unconstrained search
+			is performed using the 'oai_dc' metadata format
+		</tip>
+		
+		<tip id="oai.groups">
+			You can choose the privileges to associate to harvested metadata.
+		</tip>
+		
+		<tip id="oai.addGroups">
+			Select one or more groups (using the <b>&lt;CTRL&gt;</b> key) on the left panel and press this button.
+		</tip>
+		
+		<tip id="oai.categories">
+			You can assign one or more categories to harvested metadata. Use the <b>&lt;CTRL&gt;</b> 
+			key to select more than one category.
+		</tip>
+	
+		<tip id="oai.validate">
+			Harvests only metadata that validate against their schema.
+		</tip>
+		
+		<!-- OAI-PMH harvesting type : dynamic search part -->
+		
+		<tip id="oai.remove">
+			Remove this search criteria
+		</tip>
+		
+		<tip id="oai.from">
+			Optional date to start harvesting from.
+		</tip>
+		
+		<tip id="oai.from.set">
+			Open dialog to set FROM date
+		</tip>
+		
+		<tip id="oai.from.clear">
+			Clear FROM parameter
+		</tip>
+		
+		<tip id="oai.until">
+			Optional date to end harvesting to.
+		</tip>
+		
+		<tip id="oai.until.set">
+			Open dialog to set UNTIL date
+		</tip>
+		
+		<tip id="oai.until.clear">
+			Clear UNTIL parameter
+		</tip>
+	
+		<tip id="oai.set">
+			You can narrow the harvesting to specific metadata sets that exist remotely.
+		</tip>
+		
+		<tip id="oai.prefix">
+			Choose the metadata format you want to harvest.
+		</tip>
 	</tips>
 </strings>
 

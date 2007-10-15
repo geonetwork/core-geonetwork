@@ -9,12 +9,6 @@
 	<lastRun>Dernière exécution</lastRun>
 	<operation>Opération</operation>
 
-	<typeGN>Noeud Geonetwork distant</typeGN>
-	<typeWF>Web Accessible Folder</typeWF>
-	
-	<typeGNShort>Geonetwork</typeGNShort>
-	<typeWFShort>Web Folder</typeWFShort>
-
 	<!-- harvesting types - - - - - - - - - - - - - - - - - - - - -->
 	
 	<info type="geonetwork">
@@ -42,7 +36,12 @@
 		<long>Service distant Z3950</long>
 	</info>
 	
-	<!-- Editing form -->
+	<info type="oaipmh">
+		<short>OAIPMH</short>
+		<long>OAI Protocol for Metadata Harvesting 2.0</long>
+	</info>
+	
+	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Site</site>
 	
@@ -61,6 +60,7 @@
 	<title>Titre</title>
 	<abstract>Résumé</abstract>
 	<keywords>Mots clés</keywords>
+	<subject>Subject</subject>	
 	<digital>Digital</digital>
 	<hardcopy>Hardcopy</hardcopy>
 	<siteId>Site ID</siteId>
@@ -78,13 +78,37 @@
 	<active>Active</active>
 	<inactive></inactive>
 	
+	<retrieveSources>Retrieve sources</retrieveSources>
+	<retrieveGroups>Retrieve groups</retrieveGroups>
+	<retrieveInfo>Retrieve info</retrieveInfo>
+	<source>Source</source>
+	<criteria>Criteria</criteria>
 	<validate>Valider</validate>
-	<structure>Structure</structure>
+	<recurse>Recurse</recurse>
 	<host>hôte</host>
 	<privileges>Privilèges</privileges>
+	<categories>Categories</categories>
 	<url>URL</url>
+	<capabUrl>Capabilities URL</capabUrl>
+	<icon>Icon</icon>
 	<group>Groupe</group>
 	<groups>Groupes</groups>
+	<remoteGroup>Remote group</remoteGroup>
+	<copyPolicy>Copy policy</copyPolicy>
+	<allGroup>Group 'All'</allGroup>
+	
+	<policy>
+		<copy>Copy</copy>
+		<createAndCopy>Create and copy</createAndCopy>
+		<copyToIntranet>Copy to Intranet group</copyToIntranet>
+		<dontCopy>Don't copy</dontCopy>
+	</policy>
+	
+	<from>From</from>
+	<until>Until</until>
+	<set>Set</set>
+	<prefix>Prefix</prefix>
+	<stylesheet>Stylesheet</stylesheet>
 	
 	<!-- Buttons -->
 	
@@ -143,8 +167,16 @@
 	<everyZero>La période du moissonnage ne peut être 0:0:0</everyZero>
 	<pleaseRetrieve>Récupérer quelques sites en premier lieu</pleaseRetrieve>
 	<cannotRetrieve>Impossible de récuper les informations</cannotRetrieve>
+	<cannotUpdate>Unable to update information on the server</cannotUpdate>
 	<supplyHost>SVP, fournir le paramètre 'hôte'</supplyHost>
 	<supplyServlet>SVP, fournir le paramètre 'servlet'</supplyServlet>
+	<pleaseSpecifySiteId>Please specify a non empty Site ID</pleaseSpecifySiteId>
+	<cannotQueryOai>Cannot query OAI-PMH server</cannotQueryOai>
+	<gn20Unsafe>Please notice that harvesting old GeoNetwork nodes is unsafe. 
+ 					The old nodes do not have unique site ids and this could cause
+					unpredictable results (like removing nodes from other harvestings).</gn20Unsafe>
+			
+	<supplyUrl>Please, provide a valid 'url' parameter</supplyUrl>
 	
 	<oper>
 		<op id="0">Voir</op>
@@ -156,21 +188,150 @@
 		<op id="6">Epingler</op>
 	</oper>
 	
-	<!-- tooltips -->
+	<!-- tooltips - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
-	<statusTip type="inactive">Inactive</statusTip>
-	<statusTip type="active">Active</statusTip>
-	<statusTip type="running">Running</statusTip>
+	<statusTip>
+		<inactive>Inactive</inactive>
+		<active>Active</active>
+		<running>Running</running>
+	</statusTip>
 	
 	<tipHeader>
-		<siteId>Site ID</siteId>
 		<total>Total</total>
 		<added>Ajouté</added>
+		<removed>Removed</removed>
 		<updated>Mis à jour</updated>
 		<unchanged>Inchangé</unchanged>
-		<skipped>Passé</skipped>
+		<unknownSchema>Unknown schema</unknownSchema>
+		<unretrievable>Unretrievable</unretrievable>
+		<badFormat>Bad XML format</badFormat>
+		<doesNotValidate>Does not validate</doesNotValidate>
 	</tipHeader>
 	
 	<notRun>En attente du premier lancement</notRun>
+	
+	<tips>
+		<!-- geonetwork harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="gn.name">
+			Generic name to identify the harvesting node
+		</tip>
+		
+		<tip id="gn.host">
+			The remote host you want to connect to
+		</tip>
+		
+		<tip id="gn.retrieveSources">
+			Specify <i>host</i>, <i>port</i> and <i>servlet</i> parameters and then press this button to 
+			retrieve all sources known to the remote node.
+		</tip>
+		
+		<tip id="gn.retrieveGroups">
+			Specify <i>host</i>, <i>port</i> and <i>servlet</i> parameters and then press this button to 
+			retrieve all accessible groups from the remote node.
+		</tip>
+		
+		<tip id="gn.addSearch">
+			Add one search on the remote node. You have to specify at least one search in order to
+			retrieve some metadata.
+		</tip>
+		
+		<tip id="gn.categories">
+			You can assign one or more categories to harvested metadata. Use the <b>&lt;CTRL&gt;</b> 
+			key to select more than one category.
+		</tip>
+		
+		<!-- CSW harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="csw.capabUrl">
+			The given URL must point to a capabilities document. The format of a capabilities
+			URL is like this:<br/>
+			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1			
+		</tip>
+		
+		<tip id="csw.addSearch">
+			Add one search on the remote server. You have to specify at least one search in order to
+			retrieve some metadata.
+		</tip>
+		
+		<tip id="csw.groups">
+			You can choose the privileges to associate to harvested metadata.
+		</tip>
+		
+		<tip id="csw.addGroups">
+			Select one or more groups (using the <b>&lt;CTRL&gt;</b> key) on the left panel and press this button.
+		</tip>
+		
+		<tip id="csw.categories">
+			You can assign one or more categories to harvested metadata. Use the <b>&lt;CTRL&gt;</b> 
+			key to select more than one category.
+		</tip>
+	
+		<!-- OAI-PMH harvesting type - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="oai.url">
+			This URL must point to the OAI-PMH server
+		</tip>
+		
+		<tip id="oai.addSearch">
+			Add one search on the remote server. If you don't add any search, an unconstrained search
+			is performed using the 'oai_dc' metadata format
+		</tip>
+		
+		<tip id="oai.groups">
+			You can choose the privileges to associate to harvested metadata.
+		</tip>
+		
+		<tip id="oai.addGroups">
+			Select one or more groups (using the <b>&lt;CTRL&gt;</b> key) on the left panel and press this button.
+		</tip>
+		
+		<tip id="oai.categories">
+			You can assign one or more categories to harvested metadata. Use the <b>&lt;CTRL&gt;</b> 
+			key to select more than one category.
+		</tip>
+	
+		<tip id="oai.validate">
+			Harvests only metadata that validate against their schema.
+		</tip>
+		
+		<!-- OAI-PMH harvesting type : dynamic search part -->
+		
+		<tip id="oai.remove">
+			Remove this search criteria
+		</tip>
+		
+		<tip id="oai.from">
+			Optional date to start harvesting from.
+		</tip>
+		
+		<tip id="oai.from.set">
+			Open dialog to set FROM date
+		</tip>
+		
+		<tip id="oai.from.clear">
+			Clear FROM parameter
+		</tip>
+		
+		<tip id="oai.until">
+			Optional date to end harvesting to.
+		</tip>
+		
+		<tip id="oai.until.set">
+			Open dialog to set UNTIL date
+		</tip>
+		
+		<tip id="oai.until.clear">
+			Clear UNTIL parameter
+		</tip>
+	
+		<tip id="oai.set">
+			You can narrow the harvesting to specific metadata sets that exist remotely.
+		</tip>
+		
+		<tip id="oai.prefix">
+			Choose the metadata format you want to harvest.
+		</tip>
+	</tips>
 </strings>
 
