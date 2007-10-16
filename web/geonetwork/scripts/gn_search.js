@@ -8,6 +8,20 @@
 *
 ********************************************************************/
 
+function showOptions()
+{
+	var img = $('options.img');
+	var src = img.getAttribute('src');
+	var ndx = src.lastIndexOf('/');
+	var div = $('options.div');
+	
+	src = src.substring(0, ndx+1);
+	
+	if (div.visible())	img.setAttribute('src', src +'plus.gif');
+		else					img.setAttribute('src', src +'minus.png');
+	
+	div.toggle();
+}
 
 /********************************************************************
 * 
@@ -340,6 +354,10 @@ function runSimpleSearch()
 	pars += fetchParam('relation');
 	pars += "&attrset=geo";
 	pars += fetchParam('region');
+	pars += fetchParam('sortBy');
+	pars += fetchParam('hitsPerPage');
+	pars += fetchParam('output');
+	
 	// Load results via AJAX
 	gn_search(pars);    
 }
@@ -356,6 +374,9 @@ function resetSimpleSearch()
 	$('eastBL').value='100';
 	$('westBL').value='-100';		
  	im_mm_setAOIandZoom();
+ 	setParam('sortBy',      'relevance');
+ 	setParam('hitsPerPage', '10');
+ 	setParam('output',      'full');
 }
 
 /**********************************************************
@@ -436,8 +457,11 @@ function runAdvancedSearch()
 	pars += fetchBoolParam('paper');
 	pars += fetchBoolParam('dynamic');
 	pars += fetchBoolParam('download');
+	pars += fetchParam('protocol').toLowerCase();
 	pars += fetchParam('template');
+	pars += fetchParam('sortBy');
 	pars += fetchParam('hitsPerPage');
+	pars += fetchParam('output');
 
 	// Load results via AJAX
 	gn_search(pars);    
@@ -471,8 +495,11 @@ function resetAdvancedSearch()
 	$('paper')   .checked = false;		
 	$('dynamic') .checked = false;
 	$('download').checked = true;		
-	setParam('template','n');		
-	setParam('hitsPerPage','10');		
+	setParam('protocol',    '');
+	setParam('template',    'n');
+ 	setParam('sortBy',      'relevance');
+ 	setParam('hitsPerPage', '10');
+ 	setParam('output',      'full');
 }
 
 /**********************************************************

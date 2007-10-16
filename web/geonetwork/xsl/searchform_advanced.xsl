@@ -138,15 +138,34 @@
 						<xsl:value-of select="/root/gui/strings/dynamic"/>
 					</input>
 
-					<br/>
-	
 					<input name="download" id="download" type="checkbox">
 						<xsl:if test="/root/gui/searchDefaults/download='on'">
 							<xsl:attribute name="checked"/>
 						</xsl:if>
 						<xsl:value-of select="/root/gui/strings/downloadable"/>
 					</input>
-				</fieldset>		
+
+					<br/>
+						<xsl:value-of select="/root/gui/strings/protocol"/>&#xA0;
+						<select id="protocol" class="content" size="1">
+							<option value="">
+								<xsl:if test="/root/gui/searchDefaults/protocol = ''">
+									<xsl:attribute name="selected"/>
+								</xsl:if>
+							</option>
+							
+							<xsl:for-each select="/root/gui/strings/protocolChoice">
+								<xsl:if test="@show = 'y'">
+									<option value="{@value}">
+										<xsl:if test="@value=/root/gui/searchDefaults/protocol">
+											<xsl:attribute name="selected"/>
+										</xsl:if>
+										<xsl:value-of select="."/>
+									</option>
+								</xsl:if>
+							</xsl:for-each>
+						</select>
+				</fieldset>
 			</td>	
 		</tr>
 				
@@ -190,7 +209,7 @@
 	
 	<!-- ============================================================ 
 		WHERE
-	======================================= ===================== -->
+	============================================================= -->
 	
 <xsl:template name="adv_where">
 
@@ -319,12 +338,11 @@
 
 	<!-- ============================================================ 
 		WHEN
-	======================================= ===================== -->
+	============================================================= -->
 
 <xsl:template name="adv_when">
 
 	<h1><xsl:value-of select="/root/gui/strings/when"/></h1>
-
 
 	<table border="0" cellpadding="0" cellspacing="0">
 		<tr>
@@ -364,10 +382,12 @@
 		</tr>
 	</table>
 
-	<fieldset style="margin: 10px 5px 10px;">
+	<!-- restrict to - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<fieldset>
 		<legend><xsl:value-of select="/root/gui/strings/restrictTo"/></legend>
 
-	<table style="margin-left:10px;">
+	<table>
 
 		<!-- Source -->
 		<tr>
@@ -487,32 +507,79 @@
 			</td>
 		</tr>
 		
-		<!-- hits per page -->
-		<tr>
-			<th class="padded">
-				<xsl:value-of select="/root/gui/strings/hitsPerPage"/>
-			</th>
-			<td class="padded">
-				<select class="content" id="hitsPerPage" name="hitsPerPage" onchange="profileSelected()">
-					<xsl:for-each select="/root/gui/strings/hitsPerPageChoice">
-						<option>
-							<xsl:if
-								test="string(@value)=string(/root/gui/searchDefaults/hitsPerPage)">
-								<xsl:attribute name="selected"/>
-							</xsl:if>
-							<xsl:attribute name="value">
-								<xsl:value-of select="@value"/>
-							</xsl:attribute>
-							<xsl:value-of select="."/>
-						</option>
-					</xsl:for-each>
-				</select>
-			</td>
-		</tr>
-					
 	</table>
 	</fieldset>
 
+	<!-- options - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<fieldset>
+		<legend><xsl:value-of select="/root/gui/strings/options"/></legend>
+
+		<table>
+			<!-- sort by - - - - - - - - - - - - - - - - - - - - -->
+			
+			<tr>
+				<th class="padded">
+					<xsl:value-of select="/root/gui/strings/sortBy"/>
+				</th>
+				<td class="padded">
+					<select id="sortBy" size="1" class="content">
+						<xsl:for-each select="/root/gui/strings/sortByType">
+							<option value="{@id}">
+								<xsl:if test="@id = /root/gui/searchDefaults/sortBy">
+									<xsl:attribute name="selected"/>
+								</xsl:if>
+								<xsl:value-of select="."/>
+							</option>
+						</xsl:for-each>
+					</select>
+				</td>
+			</tr>
+							
+			<!-- hits per page - - - - - - - - - - - - - - - - - - -->
+			<tr>
+				<th class="padded">
+					<xsl:value-of select="/root/gui/strings/hitsPerPage"/>
+				</th>
+				<td class="padded">
+					<select class="content" id="hitsPerPage" name="hitsPerPage"> <!-- onchange="profileSelected()" -->
+						<xsl:for-each select="/root/gui/strings/hitsPerPageChoice">
+							<option>
+								<xsl:if
+									test="string(@value)=string(/root/gui/searchDefaults/hitsPerPage)">
+									<xsl:attribute name="selected"/>
+								</xsl:if>
+								<xsl:attribute name="value">
+									<xsl:value-of select="@value"/>
+								</xsl:attribute>
+								<xsl:value-of select="."/>
+							</option>
+						</xsl:for-each>
+					</select>
+				</td>
+			</tr>
+			
+			<!-- output - - - - - - - - - - - - - - - - - - - - - - -->
+			
+			<tr>
+				<th class="padded">
+					<xsl:value-of select="/root/gui/strings/output"/>
+				</th>
+				<td class="padded">
+					<select id="output" size="1" class="content">
+						<xsl:for-each select="/root/gui/strings/outputType">
+							<option value="{@id}">
+								<xsl:if test="@id = /root/gui/searchDefaults/output">
+									<xsl:attribute name="selected"/>
+								</xsl:if>
+								<xsl:value-of select="."/>
+							</option>
+						</xsl:for-each>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</fieldset>
 </xsl:template>
 	
 

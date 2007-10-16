@@ -273,7 +273,9 @@
 						</xsl:if>
 					</table>
 				</td>
-				<td class="padded" align="center" valign="center" width="200">
+					
+				<xsl:if test="/root/gui/searchDefaults/output = 'full'">
+					<td class="padded" align="center" valign="center" width="200">
 <!--					<xsl:call-template name="score">
 						<xsl:with-param name="score" select="$metadata/geonet:info/score * 100"/>
 						<xsl:with-param name="class" select="5"/>
@@ -281,10 +283,12 @@
 					</xsl:call-template>
 					
 					<br/> -->
-					<xsl:call-template name="thumbnail">
-						<xsl:with-param name="metadata" select="$metadata"/>
-					</xsl:call-template>
-				</td>
+					
+						<xsl:call-template name="thumbnail">
+							<xsl:with-param name="metadata" select="$metadata"/>
+						</xsl:call-template>
+					</td>
+				</xsl:if>
 			</tr>
 		</table>
 		

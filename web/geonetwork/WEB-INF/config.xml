@@ -72,10 +72,10 @@
 				<password>AY1bdNLN</password>
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
-				<poolSize>10</poolSize>	
+				<poolSize>10</poolSize>
 			</config>
-			
-			
+
+
 		<activator class="org.fao.geonet.activators.McKoiActivator"><configFile>WEB-INF/db/db.conf</configFile></activator></resource>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -172,10 +172,10 @@
  			<class name=".services.main.Search">
  				<param name="maxSummaryKeys" value="10" />
  			</class>
- 			
+
  			<output forward="main.present.embedded" />
  		</service>
-		
+
 		<service name="main.present.embedded">
  			<class name=".services.main.Result">
  				<param name="maxRecords" value="10" />
@@ -183,7 +183,7 @@
  			</class>
 
  			<output sheet="search-results-xhtml.xsl" contentType="text/xml; charset=UTF-8">
- <!--				<call name="searchDefaults" class=".guiservices.search.GetDefaults" /> -->
+				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
  				<call name="groups" class=".guiservices.groups.GetMine" />
  				<call name="sources" class=".guiservices.util.Sources" />
  				<call name="services" class="jeeves.guiservices.services.Get" />
@@ -193,7 +193,7 @@
  		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
+
 		<service name="main.searchform.advanced.embedded">
 			<output sheet="searchform_advanced.xsl">
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
@@ -203,7 +203,7 @@
 				<call name="categories" class=".services.category.List" />
 				<call name="regions" class=".guiservices.regions.Get" />
 				<call name="sources" class=".guiservices.util.Sources" />
-												
+
 				<xml name="repositories" file="xml/repositories.xml" localized="false" />
 				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
 			</output>
@@ -218,12 +218,12 @@
 				<call name="categories" class=".services.category.List" />
 				<call name="regions" class=".guiservices.regions.Get" />
 				<call name="sources" class=".guiservices.util.Sources" />
-				
+
 				<xml name="repositories" file="xml/repositories.xml" localized="false" />
 				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
 			</output>
 		</service>
-		
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="main.present">

@@ -146,13 +146,82 @@
 
 			<tr>			
 				<td colspan="3">
-					<table width="100%">
-						<tr>
-							<td style="padding-left:10px;padding-top:5px;" align="right">
-												<a onClick="resetSimpleSearch();" style="cursor:pointer; padding-right:10px; padding-left:10px;" title="{/root/gui/strings/resetSearch}" alt="{/root/gui/strings/resetSearch}"><xsl:value-of select="/root/gui/strings/reset"/></a>
-							<a onClick="showAdvancedSearch()" style="cursor:pointer;"><xsl:value-of select="/root/gui/strings/extended"/></a></td>							
-						</tr>
-					</table>
+					<div style="padding-left:10px;padding-top:5px;" align="right">
+						<a onClick="resetSimpleSearch();" style="cursor:pointer; padding-right:10px; padding-left:10px;">
+							<xsl:value-of select="/root/gui/strings/reset"/>
+						</a>
+						<a onClick="showAdvancedSearch()" style="cursor:pointer;">
+							<xsl:value-of select="/root/gui/strings/extended"/>
+						</a>
+						<a onClick="showOptions()" style="cursor:pointer; padding-left:10px;">
+							<img id="options.img" src="{/root/gui/url}/images/plus.gif"/>
+							<xsl:value-of select="/root/gui/strings/options"/>
+						</a>
+					</div>
+					<div id="options.div" style="display:none;"> 
+						<table width="100%">
+						
+							<!-- sort by - - - - - - - - - - - - - - - - - - - - -->
+							
+							<tr>
+								<td>
+									<xsl:value-of select="/root/gui/strings/sortBy"/>
+								</td>
+								<td>
+									<select id="sortBy" size="1" class="content">
+										<xsl:for-each select="/root/gui/strings/sortByType">
+											<option value="{@id}">
+												<xsl:if test="@id = /root/gui/searchDefaults/sortBy">
+													<xsl:attribute name="selected"/>
+												</xsl:if>
+												<xsl:value-of select="."/>
+											</option>
+										</xsl:for-each>
+									</select>
+								</td>
+							</tr>
+							
+							<!-- hits per page - - - - - - - - - - - - - - - - - - -->
+							
+							<tr>
+								<td>
+									<xsl:value-of select="/root/gui/strings/hitsPerPage"/>
+								</td>
+								<td>
+									<select id="hitsPerPage" size="1" class="content">
+										<xsl:for-each select="/root/gui/strings/hitsPerPageChoice">
+											<option value="{@value}">
+												<xsl:if test="@value = /root/gui/searchDefaults/hitsPerPage">
+													<xsl:attribute name="selected"/>
+												</xsl:if>
+												<xsl:value-of select="."/>
+											</option>
+										</xsl:for-each>
+									</select>
+								</td>
+							</tr>
+							
+							<!-- output - - - - - - - - - - - - - - - - - - - - - - -->
+							
+							<tr>
+								<td>
+									<xsl:value-of select="/root/gui/strings/output"/>
+								</td>
+								<td>
+									<select id="output" size="1" class="content">
+										<xsl:for-each select="/root/gui/strings/outputType">
+											<option value="{@id}">
+												<xsl:if test="@id = /root/gui/searchDefaults/output">
+													<xsl:attribute name="selected"/>
+												</xsl:if>
+												<xsl:value-of select="."/>
+											</option>
+										</xsl:for-each>
+									</select>
+								</td>
+							</tr>
+						</table>
+					</div>
 				</td>
 			</tr>
 		</table>

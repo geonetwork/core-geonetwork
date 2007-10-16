@@ -108,7 +108,7 @@ compiles a request
 			<BooleanClause required="true" prohibited="false">			
 				<BooleanQuery>
 					<BooleanClause required="false" prohibited="false">
-						<WildcardQuery fld="protocol" txt="www:download-*-http--download"/>
+						<WildcardQuery fld="protocol" txt="www:download-*--download"/>
 					</BooleanClause>
 				</BooleanQuery>
 			</BooleanClause>
@@ -134,6 +134,14 @@ compiles a request
 			</BooleanClause>
 		</xsl:if>
 
+		<!-- generic protocol searching - - - - - - - - - - - - - - - - - -->
+		
+		<xsl:if test="string(/request/protocol) !=''">
+			<BooleanClause required="true" prohibited="false">
+				<TermQuery fld="protocol" txt="{/request/protocol}"/>
+			</BooleanClause>
+		</xsl:if>
+		
 		<!-- bounding box - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<xsl:if test="$northBL != 'NaN' and $southBL != 'NaN' and $eastBL != 'NaN' and $westBL != 'NaN'">

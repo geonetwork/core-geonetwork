@@ -77,6 +77,7 @@ public class MainUtil
 						.addContent(new Element(Geonet.SearchResult.KEYWORDS))
 						.addContent(new Element(Geonet.SearchResult.THEME_KEY)    .setText(""))
 						.addContent(new Element(Geonet.SearchResult.CATEGORY)     .setText(""))
+						.addContent(new Element(Geonet.SearchResult.PROTOCOL)     .setText(""))
 						.addContent(new Element(Geonet.SearchResult.SITE_ID)      .setText(""))
 						.addContent(new Element(Geonet.SearchResult.DOWNLOAD)     .setText(Geonet.Text.OFF))
 						.addContent(new Element(Geonet.SearchResult.DYNAMIC)      .setText(Geonet.Text.OFF))
@@ -87,6 +88,8 @@ public class MainUtil
 						.addContent(new Element(Geonet.SearchResult.INTERMAP)     .setText(Geonet.Text.ON))
 						.addContent(new Element(Geonet.SearchResult.HELP)         .setText(Geonet.Text.OFF))
 						.addContent(new Element(Geonet.SearchResult.REMOTE)       .setText(Geonet.Text.OFF))
+						.addContent(new Element(Geonet.SearchResult.OUTPUT)       .setText(Geonet.SearchResult.Output.FULL))
+						.addContent(new Element(Geonet.SearchResult.SORT_BY)      .setText(Geonet.SearchResult.SortBy.RELEVANCE))
 						.addContent(new Element(Geonet.SearchResult.HITS_PER_PAGE).setText("10"))
 						.addContent(new Element(Geonet.SearchResult.SIMILARITY)   .setText(".8"));
 			session.setProperty(Geonet.Session.MAIN_SEARCH, elData);
@@ -106,6 +109,7 @@ public class MainUtil
 		Element  elDateTo      = elData.getChild(Geonet.SearchResult.DATE_TO);
 		Element  elDownload    = elData.getChild(Geonet.SearchResult.DOWNLOAD);
 		Element  elDynamic     = elData.getChild(Geonet.SearchResult.DYNAMIC);
+		Element  elProtocol    = elData.getChild(Geonet.SearchResult.PROTOCOL);
 		Element  elDigital     = elData.getChild(Geonet.SearchResult.DIGITAL);
 		Element  elPaper       = elData.getChild(Geonet.SearchResult.PAPER);
 		Element  elCategory    = elData.getChild(Geonet.SearchResult.CATEGORY);
@@ -123,8 +127,10 @@ public class MainUtil
 		Element  elHelp        = elData.getChild(Geonet.SearchResult.HELP);
 		Element  elRemote      = elData.getChild(Geonet.SearchResult.REMOTE);
 
+		Element  elOutput      = elData.getChild(Geonet.SearchResult.OUTPUT);
+		Element  elSortBy      = elData.getChild(Geonet.SearchResult.SORT_BY);
 		Element  elHitsPerPage = elData.getChild(Geonet.SearchResult.HITS_PER_PAGE);
-		Element  elSimilarity = elData.getChild(Geonet.SearchResult.SIMILARITY);
+		Element  elSimilarity  = elData.getChild(Geonet.SearchResult.SIMILARITY);
 
 		// get params from request
 		if (request != null)
@@ -143,6 +149,7 @@ public class MainUtil
 			String   sDateTo       = request.getChildText(Geonet.SearchResult.DATE_TO);
 			String   sDownload     = request.getChildText(Geonet.SearchResult.DOWNLOAD);
 			String   sDynamic      = request.getChildText(Geonet.SearchResult.DYNAMIC);
+			String   sProtocol     = request.getChildText(Geonet.SearchResult.PROTOCOL);
 			String   sDigital      = request.getChildText(Geonet.SearchResult.DIGITAL);
 			String   sPaper        = request.getChildText(Geonet.SearchResult.PAPER);
 			String   sTemplate     = request.getChildText(Geonet.SearchResult.TEMPLATE);
@@ -157,6 +164,8 @@ public class MainUtil
 			String   sIntermap     = request.getChildText(Geonet.SearchResult.INTERMAP);
 			String   sHelp         = request.getChildText(Geonet.SearchResult.HELP);
 			String   sRemote       = request.getChildText(Geonet.SearchResult.REMOTE);
+			String   sOutput       = request.getChildText(Geonet.SearchResult.OUTPUT);
+			String   sSortBy       = request.getChildText(Geonet.SearchResult.SORT_BY);
 			Iterator iServer       = request.getChildren (Geonet.SearchResult.SERVERS).iterator();
 
 			if (sTitle       != null) elTitle.setText(sTitle);
@@ -182,6 +191,29 @@ public class MainUtil
 			if (sCategory    != null) elCategory.setText(sCategory);
 			if (sSource      != null) elSource.setText(sSource);
 			if (sTemplate    != null) elTemplate.setText(sTemplate);
+			if (sProtocol    != null) elProtocol.setText(sProtocol);
+
+			if (sOutput != null)
+			{
+				if (sOutput.equals(Geonet.SearchResult.Output.TEXT))
+					elOutput.setText(sOutput);
+				else
+					elOutput.setText(Geonet.SearchResult.Output.FULL);
+			}
+
+			if (sSortBy != null)
+			{
+				if (sSortBy.equals(Geonet.SearchResult.SortBy.DATE))
+					elSortBy.setText(sOutput);
+
+				else if (sSortBy.equals(Geonet.SearchResult.SortBy.POPULARITY))
+					elSortBy.setText(sOutput);
+
+				else if (sSortBy.equals(Geonet.SearchResult.SortBy.RATING))
+					elSortBy.setText(sOutput);
+				else
+					elSortBy.setText(Geonet.SearchResult.SortBy.RELEVANCE);
+			}
 
 			elDigital .setText(sDigital  != null ? sDigital  : Geonet.Text.OFF);
 			elPaper   .setText(sPaper    != null ? sPaper    : Geonet.Text.OFF);
@@ -189,7 +221,8 @@ public class MainUtil
 			elDynamic .setText(sDynamic  != null ? sDynamic  : Geonet.Text.OFF);
 
 			// now you can change sExtended
-			if (sExtended    != null) elExtended.setText(sExtended);
+			if (sExtended != null)
+				elExtended.setText(sExtended);
 
 			elServer.removeContent();
 			while (iServer.hasNext())

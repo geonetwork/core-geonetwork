@@ -155,6 +155,9 @@ public class Geonet
 		public static final String SERVER        = "server";
 		public static final String HITS_PER_PAGE = "hitsPerPage";
 		public static final String SIMILARITY    = "similarity";
+		public static final String PROTOCOL      = "protocol";
+		public static final String OUTPUT        = "output";
+		public static final String SORT_BY       = "sortBy";
 
 		//-----------------------------------------------------------------------
 
@@ -164,6 +167,24 @@ public class Geonet
 			public static final String OVERLAPS  = "overlaps";
 			public static final String ENCLOSES  = "encloses";
 			public static final String OUTSIDEOF = "fullyOutsideOf";
+		}
+
+		//-----------------------------------------------------------------------
+
+		public class Output
+		{
+			public static final String FULL = "full";
+			public static final String TEXT = "text";
+		}
+
+		//-----------------------------------------------------------------------
+
+		public class SortBy
+		{
+			public static final String RELEVANCE = "relevance";
+			public static final String RATING    = "rating";
+			public static final String POPULARITY= "popularity";
+			public static final String DATE      = "date";
 		}
 	}
 
