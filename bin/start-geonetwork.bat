@@ -1,6 +1,5 @@
 cd ..\jetty
 del log\*request.log*
-del log\jetty.log
 move log\geonetwork.log.* log\archive
 move log\intermap.log.*   log\archive
 
