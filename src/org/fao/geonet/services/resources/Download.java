@@ -36,6 +36,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.MailSender;
@@ -87,6 +88,16 @@ public class Download implements Service
 
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getSettingManager();
+		DataManager    dm = gc.getDataManager();
+
+		//--- increase metadata popularity
+
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+		if (access.equals(Params.Access.PRIVATE))
+			dm.increasePopularity(dbms, id);
+
+		//--- send email notification
 
 		if (doNotify)
 		{
@@ -103,7 +114,6 @@ public class Download implements Service
 				context.debug("Sending email notification for file : "+ file);
 
 				// send emails about downloaded file to groups with notify privilege
-				Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 				StringBuffer query = new StringBuffer();
 				query.append("SELECT g.id, g.name, g.email ");

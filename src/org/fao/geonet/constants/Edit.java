@@ -77,6 +77,8 @@ public class Edit
 			public static final String TITLE       = "title";
 			public static final String IS_HARVESTED= "isHarvested";
 			public static final String HARVEST_INFO= "harvestInfo";
+			public static final String POPULARITY  = "popularity";
+			public static final String RATING      = "rating";
 
 			//--- privileges
 

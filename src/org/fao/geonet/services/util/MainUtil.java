@@ -204,13 +204,13 @@ public class MainUtil
 			if (sSortBy != null)
 			{
 				if (sSortBy.equals(Geonet.SearchResult.SortBy.DATE))
-					elSortBy.setText(sOutput);
+					elSortBy.setText(sSortBy);
 
 				else if (sSortBy.equals(Geonet.SearchResult.SortBy.POPULARITY))
-					elSortBy.setText(sOutput);
+					elSortBy.setText(sSortBy);
 
 				else if (sSortBy.equals(Geonet.SearchResult.SortBy.RATING))
-					elSortBy.setText(sOutput);
+					elSortBy.setText(sSortBy);
 				else
 					elSortBy.setText(Geonet.SearchResult.SortBy.RELEVANCE);
 			}

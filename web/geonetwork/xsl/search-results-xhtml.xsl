@@ -36,7 +36,7 @@
 					&#160;
 					<xsl:value-of select="$from"/>-<xsl:value-of select="$to"/>/<xsl:value-of select="$count"/>
 					&#160;
-					(page <xsl:value-of select="$currPage"/>/<xsl:value-of select="$pages"/>)					
+					(page <xsl:value-of select="$currPage"/>/<xsl:value-of select="$pages"/>),
 <!--					<xsl:value-of select="/root/response/summary/@count"/>-->
 				</xsl:with-param>
 				<xsl:with-param name="indent" select="50"/>
@@ -69,7 +69,23 @@
 <!--			<td class="padded-content" width="{$indent}"/>-->
 			<td class="dots"/>
 			<td class="padded-content">
-				<h1><xsl:value-of select="$title"/></h1>
+				<h1>
+					<xsl:value-of select="$title"/>
+					&#xA0;<xsl:value-of select="/root/gui/strings/sortBy"/>&#xA0;
+					
+					<!-- sort by - - - - - - - - - - - - - - - - - - - - -->
+								
+					<select id="sortBy.live" size="1" class="content" onChange="setSortAndSearch()">
+						<xsl:for-each select="/root/gui/strings/sortByType">
+							<option value="{@id}">
+								<xsl:if test="@id = /root/gui/searchDefaults/sortBy">
+									<xsl:attribute name="selected"/>
+								</xsl:if>
+								<xsl:value-of select="."/>
+							</option>
+						</xsl:for-each>
+					</select>
+				</h1>				
 			</td>
 		</tr>
 	</xsl:template>
@@ -276,13 +292,14 @@
 					
 				<xsl:if test="/root/gui/searchDefaults/output = 'full'">
 					<td class="padded" align="center" valign="center" width="200">
-<!--					<xsl:call-template name="score">
-						<xsl:with-param name="score" select="$metadata/geonet:info/score * 100"/>
-						<xsl:with-param name="class" select="5"/>
-						<xsl:with-param name="currentClass" select="0"/>
-					</xsl:call-template>
 					
-					<br/> -->
+						<!-- metadata rating -->
+						
+						<xsl:call-template name="rating">
+							<xsl:with-param name="info" select="$metadata/geonet:info"/>
+						</xsl:call-template>
+					
+						<br/> <!-- metadata thumbnail -->
 					
 						<xsl:call-template name="thumbnail">
 							<xsl:with-param name="metadata" select="$metadata"/>
@@ -492,31 +509,61 @@
 	<!-- ================================================================================== -->
 	<!-- Display rating information -->
 
-	<xsl:template name="score">
-		<xsl:param name="score"/>
-		<xsl:param name="class"/>
-		<xsl:param name="currentClass"/>
-		<xsl:param name="interval" select="100 div $class"/>
-		<xsl:param name="value" select="100 - $interval * $currentClass"/>
+	<xsl:template name="rating">
+		<xsl:param name="info"/>
 
+		<xsl:variable name="id"     select="$info/id"/>
+		<xsl:variable name="rating" select="$info/rating"/>
+		
+		<xsl:if test="$info/isHarvested = 'n' or $info/harvestInfo/type = 'geonetwork'">
+			<xsl:call-template name="showRating">
+				<xsl:with-param name="rating" select="$rating"/>
+			</xsl:call-template>
+		
+			<a id="rating.link.{$id}" style="cursor:pointer; padding-left:10px;" onClick="showRatingPopup({$id})">
+				<xsl:value-of select="/root/gui/strings/rateIt"/>
+			</a>
+		</xsl:if>
+	</xsl:template>
+	
+	<!-- ================================================================================== -->
+	
+	<xsl:template name="showRating">
+		<xsl:param name="rating"/>
+		<xsl:param name="currRating" select="$rating"/>
+		
 		<xsl:choose>
-			<xsl:when test="$score &gt;= $value">		
-				<img src="{/root/gui/url}/images/score.png" title="{floor($score)}%" alt="{floor($score)}%"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<img src="{/root/gui/url}/images/scoreno.png" title="{floor($score)}%" alt="{floor($score)}%"/>
-			</xsl:otherwise>
-		</xsl:choose>
-
-		<xsl:choose>
-			<xsl:when test="$currentClass &lt; $class - 1">			
-				<xsl:call-template name="score">
-					<xsl:with-param name="score" select="$score"/>
-					<xsl:with-param name="class" select="$class"/>
-					<xsl:with-param name="currentClass" select="$currentClass + 1"/>
+			<xsl:when test="$currRating &gt; 0">		
+				<img src="{/root/gui/url}/images/score.png" />
+				
+				<xsl:call-template name="showRating">
+					<xsl:with-param name="rating"     select="$rating"/>
+					<xsl:with-param name="currRating" select="$currRating -1"/>
 				</xsl:call-template>
 			</xsl:when>
-		</xsl:choose>
-	
+			
+			<xsl:otherwise>
+				<xsl:call-template name="showRatingDiff">
+					<xsl:with-param name="diff" select="5 - $rating"/>
+				</xsl:call-template>				
+			</xsl:otherwise>
+		</xsl:choose>		
 	</xsl:template>
+	
+	<!-- ================================================================================== -->
+	
+	<xsl:template name="showRatingDiff">
+		<xsl:param name="diff"/>
+							
+		<xsl:if test="$diff &gt; 0">
+			<img src="{/root/gui/url}/images/scoreno.png" />
+			
+			<xsl:call-template name="showRatingDiff">
+				<xsl:with-param name="diff" select="$diff -1"/>
+			</xsl:call-template>
+		</xsl:if>
+	</xsl:template>
+		
+	<!-- ================================================================================== -->
+
 </xsl:stylesheet>

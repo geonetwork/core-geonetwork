@@ -329,6 +329,14 @@
 		<service name="xml.ownership.transfer">
 			<class name=".services.ownership.Transfer"/>
 		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Rating                                                        -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.rate">
+			<class name=".services.metadata.Rate"/>
+		</service>
 	</services>
 </geonet>
 

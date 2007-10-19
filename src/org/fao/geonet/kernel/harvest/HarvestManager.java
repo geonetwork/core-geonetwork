@@ -240,6 +240,13 @@ public class HarvestManager
 	}
 
 	//---------------------------------------------------------------------------
+
+	public AbstractHarvester getHarvester(String harvestUuid)
+	{
+		return hmHarvestLookup.get(harvestUuid);
+	}
+
+	//---------------------------------------------------------------------------
 	//---
 	//--- Private methods
 	//---

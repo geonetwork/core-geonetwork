@@ -264,6 +264,7 @@ public class Geonet
 		public static final String XML_INFO          = "xml.info";
 		public static final String XML_SEARCH        = "xml.search";
 		public static final String XML_METADATA_GET  = "xml.metadata.get";
+		public static final String XML_METADATA_RATE = "xml.metadata.rate";
 		public static final String MEF_IMPORT        = "mef.import";
 		public static final String MEF_EXPORT        = "mef.export";
 	}

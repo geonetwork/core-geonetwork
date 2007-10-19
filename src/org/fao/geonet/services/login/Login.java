@@ -96,7 +96,7 @@ public class Login implements Service
 		String sSurname  = user.getChildText(Geonet.Elem.SURNAME);
 		String sProfile  = user.getChildText(Geonet.Elem.PROFILE);
 
-		context.info("User '" + user + "' logged in.");
+		context.info("User '"+ username +"' logged in as '"+ sProfile +"'");
 		context.getUserSession().authenticate(sId, username, sName, sSurname, sProfile);
 
 		return new Element("ok");

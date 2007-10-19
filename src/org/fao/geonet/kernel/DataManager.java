@@ -110,7 +110,7 @@ public class DataManager
 			{
 				docs.remove(id);
 
-				String lastChange = record.getChildText("changedate");
+				String lastChange    = record.getChildText("changedate");
 				String idxLastChange = (String)idxRec.get("_changeDate");
 
 				// System.out.println("  - lastChange: " + lastChange); // DEBUG
@@ -164,7 +164,7 @@ public class DataManager
 		String  root = md.getName();
 
 		String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, title, uuid, "+
-									"isHarvested, owner, groupOwner FROM Metadata WHERE id = " + id;
+									"isHarvested, owner, groupOwner, popularity, rating FROM Metadata WHERE id = " + id;
 
 		Element rec = dbms.select(query).getChild("record");
 
@@ -178,6 +178,8 @@ public class DataManager
 		String  isHarvested= rec.getChildText("isharvested");
 		String  owner      = rec.getChildText("owner");
 		String  groupOwner = rec.getChildText("groupowner");
+		String  popularity = rec.getChildText("popularity");
+		String  rating     = rec.getChildText("rating");
 
 		moreFields.add(makeField("_root",        root,        true, true, false));
 		moreFields.add(makeField("_schema",      schema,      true, true, false));
@@ -190,6 +192,8 @@ public class DataManager
 		moreFields.add(makeField("_isHarvested", isHarvested, true, true, false));
 		moreFields.add(makeField("_owner",       owner,       true, true, false));
 		moreFields.add(makeField("_dummy",       "0",        false, true, false));
+		moreFields.add(makeField("_popularity",  popularity,  true, true, false));
+		moreFields.add(makeField("_rating",      rating,      true, true, false));
 
 		if (groupOwner != null)
 			moreFields.add(makeField("_groupOwner", groupOwner, true, true, false));
@@ -493,6 +497,62 @@ public class DataManager
 		}
 
 		return null;
+	}
+
+	//--------------------------------------------------------------------------
+
+	public void increasePopularity(Dbms dbms, String id) throws Exception
+	{
+		String query = "UPDATE Metadata SET popularity = popularity +1 WHERE "+
+							"id = ? AND isHarvested='n'";
+
+		dbms.execute(query, new Integer(id));
+		indexMetadata(dbms, id);
+	}
+
+	//--------------------------------------------------------------------------
+	/** Allow to rate a metadata
+	  * @param ipAddress IP address of the submitting client
+	  * @param rating range should be 1..5
+	  */
+
+	public int rateMetadata(Dbms dbms, int id, String ipAddress, int rating) throws Exception
+	{
+		//--- first, update rating on the database
+
+		String query = "UPDATE MetadataRating SET rating=? WHERE metadataId=? AND ipAddress=?";
+
+		int res = dbms.execute(query, rating, id, ipAddress);
+
+		if (res == 0)
+		{
+			query = "INSERT INTO MetadataRating(metadataId, ipAddress, rating) VALUES(?,?,?)";
+			dbms.execute(query, id, ipAddress, rating);
+		}
+
+		//--- then, calculate new rating
+
+		query = "SELECT sum(rating) as total FROM MetadataRating WHERE metadataId=?";
+		List list = dbms.select(query, id).getChildren();
+
+		String sum = ((Element) list.get(0)).getChildText("total");
+
+		query = "SELECT count(*) as numr FROM MetadataRating WHERE metadataId=?";
+		list  = dbms.select(query, id).getChildren();
+
+		String count = ((Element) list.get(0)).getChildText("numr");
+
+		rating = (int)(Float.parseFloat(sum) / Float.parseFloat(count) + 0.5);
+
+		Log.debug(Geonet.DATA_MANAGER, "Setting rating for id:"+ id +" --> rating is:"+rating);
+
+		//--- finally, update metadata and reindex it
+
+		query = "UPDATE Metadata SET rating=? WHERE id=?";
+		dbms.execute(query, rating, id);
+		indexMetadata(dbms, Integer.toString(id));
+
+		return rating;
 	}
 
 	//--------------------------------------------------------------------------
@@ -1082,6 +1142,8 @@ public class DataManager
 		//--- remove categories
 		deleteAllMetadataCateg(dbms, id);
 
+		dbms.execute("DELETE FROM MetadataRating WHERE metadataId=?", new Integer(id));
+
 		//--- remove metadata
 		XmlSerializer.delete(dbms, "Metadata", id);
 
@@ -1395,7 +1457,7 @@ public class DataManager
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, title, "+
-									"uuid, isHarvested, harvestUuid FROM Metadata WHERE id = " + id;
+									"uuid, isHarvested, harvestUuid, popularity, rating FROM Metadata WHERE id = " + id;
 
 		// add Metadata table infos: schemaId, createDate, changeDate, source,
 		Element rec = dbms.select(query).getChild("record");
@@ -1409,6 +1471,8 @@ public class DataManager
 		String  uuid       = rec.getChildText("uuid");
 		String  isHarvested= rec.getChildText("isharvested");
 		String  harvestUuid= rec.getChildText("harvestuuid");
+		String  popularity = rec.getChildText("popularity");
+		String  rating     = rec.getChildText("rating");
 
 		Element info = new Element(Edit.RootChild.INFO, Edit.NAMESPACE);
 
@@ -1421,6 +1485,8 @@ public class DataManager
 		addElement(info, Edit.Info.Elem.SOURCE,      source);
 		addElement(info, Edit.Info.Elem.UUID,        uuid);
 		addElement(info, Edit.Info.Elem.IS_HARVESTED,isHarvested);
+		addElement(info, Edit.Info.Elem.POPULARITY,  popularity);
+		addElement(info, Edit.Info.Elem.RATING,      rating);
 
 		if (isHarvested.equals("y"))
 			info.addContent(harvestMan.getHarvestInfo(harvestUuid, id, uuid));

@@ -282,7 +282,10 @@ public abstract class AbstractHarvester
 	/** Adds harvesting information to each metadata element. Some sites can generate
 	  * url for thumbnails */
 
-	public void addHarvestInfo(Element info, String id, String uuid) {}
+	public void addHarvestInfo(Element info, String id, String uuid)
+	{
+		info.addContent(new Element("type").setText(getType()));
+	}
 
 	//---------------------------------------------------------------------------
 	//---

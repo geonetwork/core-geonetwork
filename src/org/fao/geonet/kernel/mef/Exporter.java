@@ -218,6 +218,8 @@ class Exporter
 		String createDate = md.getChildText("createdate");
 		String changeDate = md.getChildText("changedate");
 		String siteId     = md.getChildText("source");
+		String rating     = md.getChildText("rating");
+		String popularity = md.getChildText("popularity");
 
 		Element general = new Element("general")
 			.addContent(new Element("createDate").setText(createDate))
@@ -225,7 +227,9 @@ class Exporter
 			.addContent(new Element("schema")    .setText(schema))
 			.addContent(new Element("isTemplate").setText(isTemplate))
 			.addContent(new Element("localId")   .setText(id))
-			.addContent(new Element("format")    .setText(format.toString()));
+			.addContent(new Element("format")    .setText(format.toString()))
+			.addContent(new Element("rating")    .setText(rating))
+			.addContent(new Element("popularity").setText(popularity));
 
 		if (!skipUUID)
 		{

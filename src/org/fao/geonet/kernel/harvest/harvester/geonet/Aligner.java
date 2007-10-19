@@ -234,6 +234,8 @@ public class Aligner
 		String changeDate = general.getChildText("changeDate");
 		String isTemplate = general.getChildText("isTemplate");
 		String siteId     = general.getChildText("siteId");
+		String rating     = general.getChildText("rating");
+		String popularity = general.getChildText("popularity");
 
 		if ("true".equals(isTemplate))	isTemplate = "y";
 			else 									isTemplate = "n";
@@ -247,6 +249,12 @@ public class Aligner
 
 		dataMan.setTemplate(dbms, iId, isTemplate, null);
 		dataMan.setHarvested(dbms, iId, params.uuid);
+
+		if (rating != null)
+			dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", new Integer(rating), iId);
+
+		if (popularity != null)
+			dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", new Integer(popularity), iId);
 
 		String pubDir = Lib.resource.getDir(context, "public",  id);
 		String priDir = Lib.resource.getDir(context, "private", id);
@@ -480,6 +488,17 @@ public class Aligner
 			dataMan.updateMetadataExt(dbms, id, md, ri.changeDate);
 			result.updatedMetadata++;
 		}
+
+		Element general = info.getChild("general");
+
+		String rating     = general.getChildText("rating");
+		String popularity = general.getChildText("popularity");
+
+		if (rating != null)
+			dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", new Integer(rating), new Integer(id));
+
+		if (popularity != null)
+			dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", new Integer(popularity), new Integer(id));
 
 		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
 		addCategories(id);

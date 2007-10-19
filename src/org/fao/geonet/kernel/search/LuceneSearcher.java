@@ -1,3 +1,4 @@
+//==============================================================================
 //===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
@@ -35,6 +36,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
+import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -48,6 +50,8 @@ import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.RangeQuery;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.GeonetContext;
@@ -57,7 +61,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
-//--------------------------------------------------------------------------------
+//==============================================================================
 // search metadata locally using lucene
 //--------------------------------------------------------------------------------
 
@@ -89,14 +93,16 @@ public class LuceneSearcher extends MetaSearcher
 		throws Exception
 	{
 		computeQuery(srvContext, request, config);
-		performQuery();
+		performQuery(request);
 		initSearchRange(srvContext);
 	}
+
+	//--------------------------------------------------------------------------------
 
 	public Element present(ServiceContext srvContext, Element request, ServiceConfig config)
 		throws Exception
 	{
-		if (!isValid()) performQuery();
+		if (!isValid()) performQuery(request);
 
 		updateSearchRange(request);
 
@@ -149,10 +155,14 @@ public class LuceneSearcher extends MetaSearcher
 		return response;
 	}
 
+	//--------------------------------------------------------------------------------
+
 	public int getSize()
 	{
 		return _hits.length();
 	}
+
+	//--------------------------------------------------------------------------------
 
 	public Element getSummary() throws Exception
 	{
@@ -161,7 +171,9 @@ public class LuceneSearcher extends MetaSearcher
 		return response;
 	}
 
+	//--------------------------------------------------------------------------------
 	// RGFIX: check this
+
 	public void close()
 	{
 		try
@@ -218,22 +230,53 @@ public class LuceneSearcher extends MetaSearcher
 		_query = makeQuery(xmlQuery);
 	}
 
+	//--------------------------------------------------------------------------------
 	// perform the query
-	private void performQuery() throws Exception
+
+	private void performQuery(Element request) throws Exception
 	{
+		String sortBy = Util.getParam(request, Geonet.SearchResult.SORT_BY, Geonet.SearchResult.SortBy.RELEVANCE);
+
+		Log.debug(Geonet.SEARCH_ENGINE, "Sorting by : "+ sortBy);
+
+		Sort sort = null;
+
+		if (sortBy.equals(Geonet.SearchResult.SortBy.DATE))
+			sort = new Sort(new SortField[]
+								{
+									new SortField("_changeDate", SortField.STRING, true),
+									SortField.FIELD_SCORE
+								});
+
+		else if (sortBy.equals(Geonet.SearchResult.SortBy.POPULARITY))
+			sort = new Sort(new SortField[]
+								{
+									new SortField("_popularity", SortField.INT, true),
+									SortField.FIELD_SCORE
+								});
+
+		else if (sortBy.equals(Geonet.SearchResult.SortBy.RATING))
+			sort = new Sort(new SortField[]
+								{
+									new SortField("_rating", SortField.INT, true),
+									SortField.FIELD_SCORE
+								});
+
 		_reader = IndexReader.open(_sm.getLuceneDir());
 		_searcher = new IndexSearcher(_reader);
-		_hits = _searcher.search(_query);
+		_hits = _searcher.search(_query, sort);
 
-		// srvContext.log("METASEARCHER " + _styleSheetName + ": FOUND " + _hits.length() + " HITS"); // DEBUG
+		Log.debug(Geonet.SEARCH_ENGINE, "Hits found : "+ _hits.length());
 
 		makeSummary();
 
 		setValid(true);
 	}
 
+	//--------------------------------------------------------------------------------
 	// makes a new lucene query
 	// converts to lowercase if needed as the StandardAnalyzer
+
 	public static Query makeQuery(Element xmlQuery) throws Exception
 	{
 		String name = xmlQuery.getName();
@@ -306,6 +349,8 @@ public class LuceneSearcher extends MetaSearcher
 		else
 			throw new Exception("unknown lucene query type: " + name);
 	}
+
+	//--------------------------------------------------------------------------------
 
 	private void makeSummary() throws Exception
 	{
@@ -455,6 +500,8 @@ public class LuceneSearcher extends MetaSearcher
 		_elSummary.addContent(elSources);
 	}
 
+	//--------------------------------------------------------------------------------
+
 	private static Element getMetadataFromIndex(Document doc, String id)
 	{
 		String root       = doc.get("_root");
@@ -487,4 +534,6 @@ public class LuceneSearcher extends MetaSearcher
 		return md;
 	}
 }
+
+//==============================================================================
 

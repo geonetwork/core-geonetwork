@@ -88,6 +88,8 @@ class Importer
 				String sourceName = general.getChildText("siteName");
 				String schema     = general.getChildText("schema");
 				String isTemplate = general.getChildText("isTemplate").equals("true") ? "y" : "n";
+				String rating     = general.getChildText("rating");
+				String popularity = general.getChildText("popularity");
 
 				boolean dcore  = schema.equals("dublin-core");
 				boolean fgdc   = schema.equals("fgdc-std");
@@ -120,6 +122,12 @@ class Importer
 													  context.getUserSession().getUserIdAsInt(), null);
 
 				int iId = Integer.parseInt(id[0]);
+
+				if (rating != null)
+					dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", new Integer(rating), iId);
+
+				if (popularity != null)
+					dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", new Integer(popularity), iId);
 
 				dm.setTemplate(dbms, iId, isTemplate, null);
 				dm.setHarvested(dbms, iId, null);

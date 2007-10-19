@@ -179,6 +179,8 @@ public class Geonet20Harvester extends AbstractHarvester
 
 	public void addHarvestInfo(Element info, String id, String uuid)
 	{
+		super.addHarvestInfo(info, id, uuid);
+
 		String small = "http://"+ params.host +":"+ params.port +"/"+ params.servlet +
 							"/srv/en/resources.get2?access=public&uuid="+uuid+"&fname=";
 

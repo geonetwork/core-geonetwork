@@ -25,16 +25,8 @@ package org.fao.geonet.lib;
 
 //=============================================================================
 
-public class Lib
+public class MetadataLib
 {
-	public static LocalLib    local     = new LocalLib();
-	public static ElementLib  element   = new ElementLib();
-	public static DbLib       db        = new DbLib();
-	public static ResourceLib resource  = new ResourceLib();
-	public static TypeLib     type      = new TypeLib();
-	public static NetLib      net       = new NetLib();
-	public static SourcesLib  sources   = new SourcesLib();
-	public static MetadataLib metadata  = new MetadataLib();
 }
 
 //=============================================================================

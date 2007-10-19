@@ -23,6 +23,97 @@ function showOptions()
 	div.toggle();
 }
 
+//-------------------------------------------------------------------
+
+function setSortAndSearch()
+{
+	$('sortBy').value = $F('sortBy.live');
+	
+	if ($('protocol') == null)	runSimpleSearch();
+		else							runAdvancedSearch();
+}
+
+//-------------------------------------------------------------------
+
+var ratingPopup = null;
+
+//-------------------------------------------------------------------
+
+function showRatingPopup(id)
+{
+	if (ratingPopup == null)
+	{
+		ker.loadURL('rating.popup', ker.wrap(this, 
+			function(t)
+			{
+				var p = document.createElement('div');
+	
+				p.className     = 'ratingBox';
+				p.innerHTML     = t.responseText;
+				p.style.display = 'none';
+				p.style.zIndex  = 32000;
+				
+				p.setAttribute('id', 'rating.popup');				
+				document.body.appendChild(p);
+				
+				ratingPopup = p;
+				
+				setTimeout(ker.wrap(this, function(){ showRatingPopup(id); }), 10);	
+			}));
+		
+		return;
+	}
+			
+	var pos = Position.cumulativeOffset($('rating.link.'+ id));
+
+	ratingPopup.style.left = pos[0] -100;
+	ratingPopup.style.top  = pos[1] +16;
+	
+	ratingPopup.setAttribute('mdid', id);
+	
+	Element.show(ratingPopup);
+}
+
+//-------------------------------------------------------------------
+
+function hideRatingPopup()
+{
+	var popup = $('rating.popup');
+	
+	if (popup != null)
+	{
+		Element.hide(popup);
+		Element.hide('rating.image');	
+	}
+}
+
+//-------------------------------------------------------------------
+
+function rateMetadata(rating)
+{
+	var id = ratingPopup.getAttribute('mdid');
+	
+	Element.show('rating.image');	
+	
+	var request =
+		'<request>'+
+		'   <id>'+ id +'</id>'+
+		'   <rating>'+ rating +'</rating>'+
+		'</request>';
+	
+	ker.send('xml.metadata.rate', request, ker.wrap(this, rateMetadata_OK));	
+}
+
+//-------------------------------------------------------------------
+
+function rateMetadata_OK(xmlRes)
+{
+	if (xmlRes.nodeName == 'error')
+		ker.showError('Cannot rate metadata', xmlRes);
+	else
+		hideRatingPopup();
+}
+
 /********************************************************************
 * 
 *  Toggling between simple/advanced search

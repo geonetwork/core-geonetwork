@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -50,7 +51,12 @@ public class Show implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception
+	{
+		String skip = params.getValue("skipPopularity", "n");
+
+		skipPopularity = skip.equals("y");
+	}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -88,8 +94,23 @@ public class Show implements Service
 		if (elMd == null)
 			throw new MetadataNotFoundEx(id);
 
+		//--- increase metadata popularity
+
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+		if (!skipPopularity)
+			dm.increasePopularity(dbms, id);
+
 		return elMd;
 	}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//--------------------------------------------------------------------------
+
+	private boolean skipPopularity;
 }
 
 //=============================================================================

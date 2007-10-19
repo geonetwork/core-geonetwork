@@ -597,3 +597,39 @@ div.metadata_current td
 .ilwhiteboard {
     position:relative;
 }
+
+/* Rating popup */
+
+button.rating 
+{
+	font-family: Verdana;
+	font-size: 9pt;
+	color: #064377;
+	max-width: 400px;
+	width: 100px;
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+	margin-bottom: 4px;
+}
+
+.ratingBox
+{
+	position: absolute;
+	background-color: #E0E0FF;
+	border:  solid black 1px;
+	padding: 0px;
+	margin: 0px;
+}
+
+.ratingCloser 
+{
+    position: absolute;
+    top:     1px;
+    right:   3px;
+    width:  16px;
+    height: 16px;
+    cursor: pointer;
+    
+    z-index: 20;    
+}

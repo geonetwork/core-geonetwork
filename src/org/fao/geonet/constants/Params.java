@@ -44,6 +44,7 @@ public class Params
 	public static final String GROUP        = "group";
 	public static final String GROUPS       = "groups";
 	public static final String ID           = "id";
+	public static final String UUID         = "uuid";
 	public static final String URI          = "uri";
 	public static final String NAME         = "name";
 	public static final String ORG          = "org";
@@ -68,6 +69,7 @@ public class Params
 	public static final String ZIP          = "zip";
 	public static final String COUNTRY      = "country";
 	public static final String KIND         = "kind";
+	public static final String RATING       = "rating";
 
 	public static final String SCALING              = "scaling";
 	public static final String SCALING_DIR          = "scalingDir";

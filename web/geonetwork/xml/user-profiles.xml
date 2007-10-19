@@ -185,6 +185,7 @@
 		<allow service="metadata.show"/>
 		<allow service="metadata.show.embedded"/> <!--  ETj -->
 		<allow service="remote.show"/>
+		<allow service="rating.popup"/>
 
 		<!-- Login and logout services -->
 		<allow service="user.login"/>
@@ -269,6 +270,9 @@
 		<!-- Metadata schema related -->
 		<allow service="xml.schema.info"/>
 
+		<!-- Rating services -->
+		<allow service="xml.metadata.rate"/>
+		
 		<!-- Thesaurus services -->
 	 	<allow service="keywords.search"/>
 	 	<allow service="keywords.sort"/>

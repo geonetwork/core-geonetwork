@@ -68,8 +68,8 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.DbmsPool</provider>
 			<config>
-				<user>GiN6RGJk</user>
-				<password>AY1bdNLN</password>
+				<user>GCCC0tPe</user>
+				<password>GP2j4Z0a</password>
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>
@@ -209,6 +209,8 @@
 			</output>
 		</service>
 
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="main.searchform.simple.embedded">
 			<output sheet="searchform_simple.xsl">
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
@@ -222,6 +224,12 @@
 				<xml name="repositories" file="xml/repositories.xml" localized="false" />
 				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
 			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="rating.popup">
+			<output sheet="rating-popup.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -625,13 +633,15 @@
 		<service name="xml.search">
 			<class name=".services.main.XmlSearch" />
 
-			<output sheet="portal-present.xsl" contentType="application/xml; charset=UTF-8"/>
+			<output sheet="portal-present.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.metadata.get">
-			<class name=".services.metadata.Show" />
+			<class name=".services.metadata.Show">
+				<param name="skipPopularity" value="y" />
+			</class>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -705,7 +715,7 @@
 				<param name="maxSummaryKeys" value="10" />
 			</class>
 			<output sheet="rss-search.xsl" contentType="text/xml; charset=UTF-8">
-				<call name="rssItems" class=".services.main.Result"/>
+				<call name="rssItems" class=".services.main.Result" />
 				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
 			</output>
 		</service>

@@ -33,7 +33,7 @@ class MEFConstants
 	static final String DIR_PRIVATE   = "private/";
 	static final String FILE_METADATA = "metadata.xml";
 	static final String FILE_INFO     = "info.xml";
-	static final String VERSION       = "1.0";
+	static final String VERSION       = "1.1";
 }
 
 //=============================================================================

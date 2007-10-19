@@ -41,6 +41,8 @@ import org.jdom.Element;
 
 public class GeonetHarvester extends AbstractHarvester
 {
+	public static final String TYPE = "geonetwork";
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Static init
@@ -55,7 +57,7 @@ public class GeonetHarvester extends AbstractHarvester
 	//---
 	//--------------------------------------------------------------------------
 
-	public String getType() { return "geonetwork"; }
+	public String getType() { return TYPE; }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -181,10 +183,12 @@ public class GeonetHarvester extends AbstractHarvester
 
 	public void addHarvestInfo(Element info, String id, String uuid)
 	{
-		String small = "/"+ context.getBaseUrl() +
+		super.addHarvestInfo(info, id, uuid);
+
+		String small = context.getBaseUrl() +
 							"/srv/en/resources.get?access=public&id="+id+"&fname=";
 
-		String large = "/"+ context.getBaseUrl() +
+		String large = context.getBaseUrl() +
 							"/srv/en/graphover.show?access=public&id="+id+"&fname=";
 
 		info.addContent(new Element("smallThumbnail").setText(small));
