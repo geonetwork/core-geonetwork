@@ -65,14 +65,10 @@ public class Export implements Service
 		if (id == null)
 			throw new MetadataNotFoundEx("uuid="+uuid);
 
-		if (format.equals("partial"))
-			Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
+		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
 
-		else if (format.equals("full"))
-		{
-			Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
+		if (format.equals("full"))
 			Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
-		}
 
 		String file = MEFLib.doExport(context, uuid, format, skipUUID.equals("true"));
 
