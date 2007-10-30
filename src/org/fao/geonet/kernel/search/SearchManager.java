@@ -59,8 +59,10 @@ public class SearchManager
 	public static final int UNUSED = 3;
 
 	private static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";
+	private static final String SCHEMA_STYLESHEETS_DIR_PATH = "xml/schemas";
 
 	private File           _stylesheetsDir;
+	private File           _schemasDir;
 	private File           _luceneDir;
 	private LoggingContext _cat;
 	private Searchable     _hssSearchable;
@@ -70,6 +72,8 @@ public class SearchManager
 	public SearchManager(String appPath, String luceneDir) throws Exception
 	{
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
+		_schemasDir     = new File(appPath, SCHEMA_STYLESHEETS_DIR_PATH);
+
 		if (!_stylesheetsDir.isDirectory())
 			throw new Exception("directory " + _stylesheetsDir + " not found");
 
@@ -182,12 +186,9 @@ public class SearchManager
 		}
 		else
 		{
-			// get metadata fields
-			String stylesheetName = type + ".xsl";
-
 			Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n"+ Xml.getString(metadata));
 
-			xmlDoc = transform(stylesheetName, metadata);
+			xmlDoc = getIndexFields(type, metadata);
 
 			Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n"+ Xml.getString(xmlDoc));
 		}
@@ -316,6 +317,26 @@ public class SearchManager
 			reader.close();
 		}
 		return terms;
+	}
+
+	//-----------------------------------------------------------------------------
+	// utilities
+
+	Element getIndexFields(String schema, Element xml)
+		throws Exception
+	{
+		File schemaDir = new File(_schemasDir, schema);
+
+		try
+		{
+			String styleSheet = new File(schemaDir, "index-fields.xsl").getAbsolutePath();
+			return Xml.transform(xml, styleSheet);
+		}
+		catch(Exception e)
+		{
+			Log.error(Geonet.SEARCH_ENGINE, "Indexing stylesheet contains errors : "+ e.getMessage());
+			throw e;
+		}
 	}
 
 	//-----------------------------------------------------------------------------
