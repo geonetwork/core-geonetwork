@@ -51,11 +51,14 @@ public class Cli implements Starter
 		if (command.equals("-setup"))
 			new Setup().exec(appPath, al);
 
-		if (command.equals("-createdb"))
+		if (command.equals("-setupdb"))
 			new CreateDB().exec(appPath, al);
 
 		else
+		{
 			System.out.println("Unknown command : "+ command);
+			System.out.println("Can be one of : -setup, -setupdb");
+		}
 	}
 }
 
