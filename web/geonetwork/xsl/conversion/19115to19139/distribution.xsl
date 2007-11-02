@@ -54,11 +54,11 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<xsl:for-each select="distorFormat">
-			<distributionOrderProcess>
+			<distributorFormat>
 				<MD_Format>
 					<xsl:apply-templates select="." mode="Format"/>
 				</MD_Format>
-			</distributionOrderProcess>
+			</distributorFormat>
 		</xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
