@@ -5,8 +5,259 @@
 * - Metadata search & reset
 * - Area of Interest Map behavior
 * - metadata present
+* - metadata vote rating
 *
 ********************************************************************/
+
+/**********************************************************
+***
+***		SIMPLE SEARCH
+***
+**********************************************************/
+
+function initSimpleSearch(wmc)
+{
+	im_mm_init(wmc, function()
+			{
+				$('openIMBtn').style.cursor = 'pointer';
+				Event.observe('openIMBtn', 'click',  function(){openIntermap()} );
+			}
+		);		
+}
+
+function gn_anyKeyObserver(e)
+{
+	if(e.keyCode == Event.KEY_RETURN)
+		runSimpleSearch();
+}
+
+/*  */
+function runSimpleSearch() 
+{
+	preparePresent();
+
+	var pars = "any=" + encodeURIComponent($('any') .value);
+	pars += "&"+im_mm_getURLselectedbbox();
+	pars += fetchParam('relation');
+	pars += "&attrset=geo";
+	pars += fetchParam('region');
+	pars += fetchParam('sortBy');
+	pars += fetchParam('hitsPerPage');
+	pars += fetchParam('output');
+	
+	// Load results via AJAX
+	gn_search(pars);    
+}
+
+function resetSimpleSearch()
+{
+/* make sure all values are completely reset (instead of just using the default
+   form.reset that would only return to the values stored in the session */
+    setParam('any','');		
+    setParam('relation','overlaps');		
+    setParam('region',null);
+    
+    $('northBL').value='90'; 
+    $('southBL').value='-90';
+    $('eastBL').value='180';
+    $('westBL').value='-180';		
+    
+    // FIXME: maybe we should zoom back to a fullExtent (not to the whole world)  
+    im_mm_redrawAoI();
+    im_mm_zoomToAoI(); 	
+ 	setParam('sortBy',      'relevance');
+ 	setParam('hitsPerPage', '10');
+ 	setParam('output',      'full');
+}
+
+/********************************************************************
+* 
+*  Toggling between simple/advanced search
+*
+********************************************************************/
+
+function showAdvancedSearch()
+{
+	closeIntermap();
+	closeSearch('simplesearch');
+	document.cookie = "search=advanced";
+
+	var myAjax = new Ajax.Updater (
+		'advancedsearch',    
+		getGNServiceURL('main.searchform.advanced.embedded'), 
+		{
+			method: 'get',    		    	
+			onComplete: function()
+			{
+				openSearch('advancedsearch');
+				initAdvancedSearch();				
+			},
+			onFailure: im_load_error
+		}
+	);	
+ 
+}
+
+function showSimpleSearch()
+{
+	closeSearch('advancedsearch');
+	document.cookie = "search=default";
+	
+	var myAjax = new Ajax.Updater (
+		'simplesearch',    
+		getGNServiceURL('main.searchform.simple.embedded'), 
+		{
+			method: 'get',
+			onComplete: function()
+			{
+				openSearch('simplesearch');
+				initSimpleSearch();								
+			},
+			onFailure: im_load_error
+		}
+	);	
+}
+
+function openSearch(s)
+{
+	if( ! Prototype.Browser.IE )
+	{
+		Effect.BlindDown(s);
+	}
+	else
+	{    
+		$(s).show();		    
+	}
+}
+
+function closeSearch(s)
+{
+	clearNode('im_mm_map');
+
+	if( ! Prototype.Browser.IE )
+	{
+		Effect.BlindUp($(s), {afterFinish: function(){ clearNode($(s)); } });
+	}
+	else
+	{    
+		$(s).hide();	
+		clearNode($(s))	    
+	}
+}
+
+/**********************************************************
+***
+***		ADVANCED SEARCH
+***
+**********************************************************/
+
+function initAdvancedSearch()
+{
+	im_mm_init();
+
+	new Ajax.Autocompleter('themekey', 'keywordList', 'portal.search.keywords?',{paramName: 'keyword', updateElement : addQuote});
+
+	Calendar.setup({
+		inputField     :    "dateFrom",     // id of the input field
+		ifFormat       :    "%Y-%m-%dT%H:%M:00",      // format of the input field
+		button         :    "from_trigger_c",  // trigger for the calendar (button ID)
+		showsTime 		 :		true,
+		align          :    "Tl",           // alignment (defaults to "Bl")
+		singleClick    :    true
+	});
+	
+	Calendar.setup({
+		inputField	:    "dateTo",     // id of the input field
+		ifFormat	:    "%Y-%m-%dT%H:%M:00",      // format of the input field           
+		button		:    "to_trigger_c",  // trigger for the calendar (button ID)
+		showsTime	:    true,
+		align		:    "Tl",           // alignment (defaults to "Bl")
+		singleClick	:    true
+	});
+
+}
+
+function runAdvancedSearch() 
+{
+	preparePresent();
+
+	var pars = "any=" + encodeURIComponent($('any') .value);
+	pars += "&attrset=geo";
+	pars += fetchParam('title');
+	pars += fetchParam('abstract');
+	pars += fetchParam('themekey');
+	pars += fetchRadioParam('similarity');
+
+	pars += "&"+im_mm_getURLselectedbbox();
+	pars += fetchParam('relation');
+	pars += fetchParam('region');
+
+	if($('radfrom1').checked)
+	{
+		pars += fetchParam('dateFrom');
+		pars += fetchParam('dateTo');
+	}
+
+	pars += fetchParam('group');
+	pars += fetchParam('category');
+	pars += fetchParam('siteId');
+	
+	pars += fetchBoolParam('digital');
+	pars += fetchBoolParam('paper');
+	pars += fetchBoolParam('dynamic');
+	pars += fetchBoolParam('download');
+	pars += fetchParam('protocol').toLowerCase();
+	pars += fetchParam('template');
+	pars += fetchParam('sortBy');
+	pars += fetchParam('hitsPerPage');
+	pars += fetchParam('output');
+
+	// Load results via AJAX
+	gn_search(pars);    
+}
+
+function resetAdvancedSearch()
+{
+/* make sure all values are completely reset (instead of just using the default
+   form.reset that would only return to the values stored in the session */
+	setParam('any','');		
+	setParam('title','');		
+	setParam('abstract','');		
+	setParam('themekey','');		
+	var radioSimil = document.getElementsByName('similarity');
+	radioSimil[1].checked=true;
+	setParam('relation','overlaps');		
+	setParam('region',null);		
+	$('northBL').value='90';
+	$('southBL').value='-90';
+	$('eastBL').value='180';
+	$('westBL').value='-180';
+            im_mm_redrawAoI();
+            im_mm_zoomToAoI();	
+ 	
+	setParam('dateFrom','');
+	setParam('dateTo','');
+	$('radfrom0').checked=true;
+	$('radfrom1').disabled='disabled';
+	setParam('group','');		
+	setParam('category','');		
+	setParam('siteId','');		
+	$('digital') .checked = true;		
+	$('paper')   .checked = false;		
+	$('dynamic') .checked = false;
+	$('download').checked = true;		
+	setParam('protocol',    '');
+	setParam('template',    'n');
+ 	setParam('sortBy',      'relevance');
+ 	setParam('hitsPerPage', '10');
+ 	setParam('output',      'full');
+}
+
+/**********************************************************
+***
+***		RATING
+***
+**********************************************************/
 
 function showOptions()
 {
@@ -114,79 +365,6 @@ function rateMetadata_OK(xmlRes)
 		hideRatingPopup();
 }
 
-/********************************************************************
-* 
-*  Toggling between simple/advanced search
-*
-********************************************************************/
-
-function showAdvancedSearch()
-{
-	closeIntermap();
-	closeSearch('simplesearch');
-	document.cookie = "search=advanced";
-
-	var myAjax = new Ajax.Updater (
-		'advancedsearch',    
-		'/geonetwork/srv/'+Env.lang+'/main.searchform.advanced.embedded', 
-		{
-			method: 'get',    		    	
-			onComplete: function()
-			{
-				openSearch('advancedsearch');
-				initAdvancedSearch();				
-			},
-			onFailure: im_load_error
-		}
-	);	
-}
-
-function showSimpleSearch()
-{
-	closeSearch('advancedsearch');
-	document.cookie = "search=default";
-	
-	var myAjax = new Ajax.Updater (
-		'simplesearch',    
-		'/geonetwork/srv/'+Env.lang+'/main.searchform.simple.embedded', 
-		{
-			method: 'get',
-			onComplete: function()
-			{
-				openSearch('simplesearch');
-				initSimpleSearch();								
-			},
-			onFailure: im_load_error
-		}
-	);	
-}
-
-function openSearch(s)
-{
-	if( ! Prototype.Browser.IE )
-	{
-		Effect.BlindDown(s);
-	}
-	else
-	{    
-		$(s).show();		    
-	}
-}
-
-function closeSearch(s)
-{
-	clearNode('im_mm_map');
-
-	if( ! Prototype.Browser.IE )
-	{
-		Effect.BlindUp($(s), {afterFinish: function(){ clearNode($(s)); } });
-	}
-	else
-	{    
-		$(s).hide();	
-		clearNode($(s))	    
-	}
-}
 
 /********************************************************************
 *** GET BOUNDINGBOX COORDINATES FOR A REGION
@@ -194,51 +372,55 @@ function closeSearch(s)
 
 function doRegionSearch()
 {
-	var region = $('region').value
-	if(region=="") 
-	{
-		region=null;
-    $('northBL').value='90';
-    $('southBL').value='-90';
-    $('eastBL').value='180';
-    $('westBL').value='-180';		
-   	im_mm_setAOIandZoom();
-	}
-	else
-	{
-   	getRegion(region);
-	}
+    var region = $('region').value;
+    if(region=="") 
+    {
+        region=null;
+        $('northBL').value='90';
+        $('southBL').value='-90';
+        $('eastBL').value='180';
+        $('westBL').value='-180';
+        
+        im_mm_redrawAoI();
+        im_mm_zoomToAoI();        
+    }
+    else
+    {
+        getRegion(region);
+    }
 }
 
 function getRegion(region) 
 {
     if(region)
         var pars = "id="+region;
-        
+    
     var myAjax = new Ajax.Request(
-    '/geonetwork/srv/'+Env.lang+'/xml.region.get', {
-        method: 'get',
-        parameters: pars,
-        onSuccess: getRegion_complete,
-        onFailure: getRegion_error
-    });
+        getGNServiceURL('xml.region.get'), 
+        {
+            method: 'get',
+            parameters: pars,
+            onSuccess: getRegion_complete,
+            onFailure: getRegion_error
+        }
+    );
 }
 
 function getRegion_complete(req) {
-    var rlist = $('resultList');
-    
     //Response received 
     var node = req.responseXML;
     var northcc = xml.evalXPath(node, 'response/record/north');
     var southcc = xml.evalXPath(node, 'response/record/south');
     var eastcc = xml.evalXPath(node, 'response/record/east');
     var westcc = xml.evalXPath(node, 'response/record/west');
+
     $('northBL').value=northcc;
     $('southBL').value=southcc;
     $('eastBL').value=eastcc;
     $('westBL').value=westcc;
 
-	im_mm_setAOIandZoom();
+    im_mm_redrawAoI();
+    im_mm_zoomToAoI();
 }
 
 function getRegion_error() {
@@ -259,7 +441,8 @@ function updateAoIFromForm() {
   else if (wU < -180) { alert("West < -180 degrees"); }
   else 
   { 
-    im_mm_setAOIandZoom(); 
+    im_mm_redrawAoI();
+    im_mm_zoomToAoI(); 
     $('updateBB').style.visibility="hidden";
   }
 }
@@ -283,7 +466,7 @@ function preparePresent()
 function gn_search(pars) 
 {
 	var myAjax = new Ajax.Request(
-		'/geonetwork/srv/'+Env.lang+'/main.search.embedded', 
+		getGNServiceURL('main.search.embedded'), 
 		{
 			method: 'get',
 			parameters: pars,
@@ -300,7 +483,7 @@ function gn_present(frompage, topage)
 	var pars = 'from=' + frompage + "&to=" + topage;
 	
 	var myAjax = new Ajax.Request(
-		'/geonetwork/srv/'+Env.lang+'/main.present.embedded', 
+		getGNServiceURL('main.present.embedded'), 
 		{
 			method: 'get',
 			parameters: pars,
@@ -328,7 +511,7 @@ function gn_showSingleMetadata(id)
    var pars = 'id=' + id + '&currTab=simple';
 
    var myAjax = new Ajax.Request(
-        '/geonetwork/srv/'+Env.lang+'/metadata.show.embedded', 
+        getGNServiceURL('metadata.show.embedded'), 
         {
             method: 'get',
             parameters: pars,
@@ -361,7 +544,7 @@ function gn_showMetadata(id)
     $('gn_loadmd_' + id) .show();
     
     var myAjax = new Ajax.Request(
-        '/geonetwork/srv/'+Env.lang+'/metadata.show.embedded', 
+        getGNServiceURL('metadata.show.embedded'), 
         {
             method: 'get',
             parameters: pars,
@@ -413,62 +596,6 @@ function gn_search_error() {
 }
 
 
-/**********************************************************
-***
-***		STUFF FOR SIMPLE SEARCH
-***
-**********************************************************/
-
-function initSimpleSearch(wmc)
-{
-	im_mm_init(wmc, function()
-			{
-				$('openIMBtn').style.cursor = 'pointer';
-				Event.observe('openIMBtn', 'click',  function(){openIntermap()} );
-			}
-		);		
-}
-
-function gn_anyKeyObserver(e)
-{
-	if(e.keyCode == Event.KEY_RETURN)
-		runSimpleSearch();
-}
-
-/*  */
-function runSimpleSearch() 
-{
-	preparePresent();
-
-	var pars = "any=" + encodeURIComponent($('any') .value);
-	pars += "&"+im_mm_getURLselectedbbox();
-	pars += fetchParam('relation');
-	pars += "&attrset=geo";
-	pars += fetchParam('region');
-	pars += fetchParam('sortBy');
-	pars += fetchParam('hitsPerPage');
-	pars += fetchParam('output');
-	
-	// Load results via AJAX
-	gn_search(pars);    
-}
-
-function resetSimpleSearch()
-{
-/* make sure all values are completely reset (instead of just using the default
-   form.reset that would only return to the values stored in the session */
-	setParam('any','');		
-	setParam('relation','overlaps');		
-	setParam('region',null);		
-	$('northBL').value='50'; // ETJ ??? what do these values mean ???
-	$('southBL').value='-50';
-	$('eastBL').value='100';
-	$('westBL').value='-100';		
- 	im_mm_setAOIandZoom();
- 	setParam('sortBy',      'relevance');
- 	setParam('hitsPerPage', '10');
- 	setParam('output',      'full');
-}
 
 /**********************************************************
 ***
@@ -487,111 +614,6 @@ function runCategorySearch(category)
 	gn_search(pars);    
 }
 
-/**********************************************************
-***
-***		STUFF FOR ADVANCED SEARCH
-***
-**********************************************************/
-
-function initAdvancedSearch()
-{
-	im_mm_init();
-
-	new Ajax.Autocompleter('themekey', 'keywordList', 'portal.search.keywords?',{paramName: 'keyword', updateElement : addQuote});
-
-	Calendar.setup({
-		inputField     :    "dateFrom",     // id of the input field
-		ifFormat       :    "%Y-%m-%dT%H:%M:00",      // format of the input field
-		button         :    "from_trigger_c",  // trigger for the calendar (button ID)
-		showsTime 		 :		true,
-		align          :    "Tl",           // alignment (defaults to "Bl")
-		singleClick    :    true
-	});
-	
-	Calendar.setup({
-		inputField	:    "dateTo",     // id of the input field
-		ifFormat	:    "%Y-%m-%dT%H:%M:00",      // format of the input field           
-		button		:    "to_trigger_c",  // trigger for the calendar (button ID)
-		showsTime	:    true,
-		align		:    "Tl",           // alignment (defaults to "Bl")
-		singleClick	:    true
-	});
-
-}
-
-function runAdvancedSearch() 
-{
-	preparePresent();
-
-	var pars = "any=" + encodeURIComponent($('any') .value);
-	pars += "&attrset=geo";
-	pars += fetchParam('title');
-	pars += fetchParam('abstract');
-	pars += fetchParam('themekey');
-	pars += fetchRadioParam('similarity');
-
-	pars += "&"+im_mm_getURLselectedbbox();
-	pars += fetchParam('relation');
-	pars += fetchParam('region');
-
-	if($('radfrom1').checked)
-	{
-		pars += fetchParam('dateFrom');
-		pars += fetchParam('dateTo');
-	}
-
-	pars += fetchParam('group');
-	pars += fetchParam('category');
-	pars += fetchParam('siteId');
-	
-	pars += fetchBoolParam('digital');
-	pars += fetchBoolParam('paper');
-	pars += fetchBoolParam('dynamic');
-	pars += fetchBoolParam('download');
-	pars += fetchParam('protocol').toLowerCase();
-	pars += fetchParam('template');
-	pars += fetchParam('sortBy');
-	pars += fetchParam('hitsPerPage');
-	pars += fetchParam('output');
-
-	// Load results via AJAX
-	gn_search(pars);    
-}
-
-function resetAdvancedSearch()
-{
-/* make sure all values are completely reset (instead of just using the default
-   form.reset that would only return to the values stored in the session */
-	setParam('any','');		
-	setParam('title','');		
-	setParam('abstract','');		
-	setParam('themekey','');		
-	var radioSimil = document.getElementsByName('similarity');
-	radioSimil[1].checked=true;
-	setParam('relation','overlaps');		
-	setParam('region',null);		
-	$('northBL').value='90';
-	$('southBL').value='-90';
-	$('eastBL').value='180';
-	$('westBL').value='-180';		
- 	im_mm_setAOIandZoom();
-	setParam('dateFrom','');
-	setParam('dateTo','');
-	$('radfrom0').checked=true;
-	$('radfrom1').disabled='disabled';
-	setParam('group','');		
-	setParam('category','');		
-	setParam('siteId','');		
-	$('digital') .checked = true;		
-	$('paper')   .checked = false;		
-	$('dynamic') .checked = false;
-	$('download').checked = true;		
-	setParam('protocol',    '');
-	setParam('template',    'n');
- 	setParam('sortBy',      'relevance');
- 	setParam('hitsPerPage', '10');
- 	setParam('output',      'full');
-}
 
 /**********************************************************
 *** Search helper functions

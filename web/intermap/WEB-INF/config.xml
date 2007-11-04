@@ -15,7 +15,7 @@
 	<!-- ====================================================================== -->
 
 	<default>
-		<service>mapContexts.get</service>
+		<service>main</service>
 		<language>en</language>
 		<localized>true</localized>
 		<contentType>text/html; charset=UTF-8</contentType>
@@ -33,10 +33,10 @@
 
 		<!-- no privileges to access the service -->
 
-		<error id="privileges" sheet="error.xsl">
+<!--		<error id="privileges" sheet="error.xsl">
 			<xml name="error" file="xml/privileges-error.xml" />
 		</error>
-
+-->
 		<!-- general error -->
 
 		<error sheet="error.xsl">
@@ -56,7 +56,6 @@
 
 		<param name="mapServers" value="WEB-INF/mapServers.xml" />
 		<param name="axlRequests" value="WEB-INF/axl" />
-		<param name="wmsTransform" value="WEB-INF/wms" />
 		
 		<!-- proxy server -->
 
@@ -95,16 +94,17 @@
 
 	<services package="org.wfp.vam.intermap">
 		
-		<!--<service name="map.getMain">
-			<class name=".services.map.Main" />
+		<service name="main">
+			<class name=".services.map.Update" />
 			
-			<output test="/response/status/@empty='false'" sheet="index.xsl" />
+<!--			<output test="/response/status/@empty='false'" sheet="index.xsl" />
 			<output test="/response/status/@empty='true'" forward="mapContexts.get" />
-
-			<output sheet="index.xsl" />
- 
-		</service>
 -->
+			<output sheet="index.xsl" />
+			
+			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>			
+		</service>
+
 		<!-- ETj: return an XHTML to be embedded elsewhere -->
 		
 		<service name="map.getMain.embedded">			
@@ -370,9 +370,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="map.reset">
-			<class name=".services.map.Reset" />
-			
-			<output forward="mapContexts.get" />
+			<class name=".services.map.Reset" />			
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

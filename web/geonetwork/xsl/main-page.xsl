@@ -23,17 +23,20 @@
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/lang/calendar-en.js"/>
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/calendar/calendar-blue2.css" />
 		
-
+		
 		<script type="text/javascript" src="{/root/gui/url}/scripts/gn_search.js?"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/gn_intermap.js?"/>
-		
-		<script type="text/javascript" src="/intermap/scripts/etj.js?"/>
+
+		<script type="text/javascript" src="/intermap/scripts/util.js?" />
 		<script type="text/javascript" src="/intermap/scripts/im_extras.js?"/>
 		<script type="text/javascript" src="/intermap/scripts/im_ajax.js?" />
+		
+		<script type="text/javascript" src="/intermap/scripts/im_class.js?"/>
 		<script type="text/javascript" src="/intermap/scripts/im_minimap.js?"/>
 		<script type="text/javascript" src="/intermap/scripts/im_bigmap.js?" />
+		<script type="text/javascript" src="/intermap/scripts/im_integration.js?"/>
+		
 		<script type="text/javascript" src="/intermap/scripts/im_layers.js?" />
-		<script type="text/javascript" src="/intermap/scripts/util.js?" />
 
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js?"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip-manager.js?"></script>
@@ -45,22 +48,29 @@
 		
 		<script type="text/javascript" language="JavaScript1.2">
 
-			<xsl:choose>
-				<xsl:when test="/root/gui/searchDefaults/intermap='on'">
-					function init()
-					{
-						var currentSearch = get_cookie('search');
-						if (currentSearch=='advanced') {
-							showAdvancedSearch();
-						} else {
-							initSimpleSearch("<xsl:value-of select="$wmc"/>");
-						}
-					}
-				</xsl:when>
-			</xsl:choose>
-								
+			function init()
+			{
+				var currentSearch = get_cookie('search');
+				if (currentSearch=='advanced') {
+					showAdvancedSearch();
+				} else {
+					initSimpleSearch("<xsl:value-of select="$wmc"/>");
+				}
+			}
 			
-			function getWmsLayerInfo(name, url) 
+			var getGNServiceURL = function(service)
+			{				
+				return Env.locService+"/"+service;
+			};
+			
+			var getIMServiceURL = function(service)
+			{
+				// FIXME: the "/intermap/" context should be parametrized
+				return "/intermap/srv/"+Env.lang+"/"+service;
+			};
+					
+			
+<!--			function getWmsLayerInfo(name, url) 
 			{
 				window.open('/intermap/srv/en/map.service.wmsLayerInfo?url='+url+'&amp;name=' + name, 'dialog', 'HEIGHT=300,WIDTH=400,scrollbars=yes,toolbar=no,status=no,menubar=no,location=no,resizable=yes');
 			}
@@ -122,7 +132,7 @@
 					if (document.search.servers.options[i].value == server)
 						document.search.servers.options[i].selected = true;
 			}
-		
+-->		
 			function checkSubmit()
 			{
 				if (document.search.remote.value == 'on')

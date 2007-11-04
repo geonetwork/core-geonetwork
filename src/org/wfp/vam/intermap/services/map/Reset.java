@@ -54,9 +54,9 @@ public class Reset implements Service
 		MapUtil.setDefaultContext(mm);
 		//MapUtil.setDefBoundingBox(mm);
 		context.getUserSession().setProperty(Constants.SESSION_MAP, mm);
-		return null;
+		return mm.toElement();
 	}
-	
+
 }
 
 //=============================================================================

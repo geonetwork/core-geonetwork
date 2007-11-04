@@ -2,11 +2,29 @@
  *
  *                 Functions related to layers handling
  *
+ * Requires:
+ *    im_extra_afterLayerUpdated()
+ *    getIMServiceURL(servicename)
  *****************************************************************************/
 
 var im_layer_width = 176;
+//var minLayersDivWidth = 176;
 
-//## Builds the layer list
+
+var activeLayerId = null; // active layer
+
+function imc_reloadLayers()
+{
+	var myAjax = new Ajax.Request (
+		getIMServiceURL('map.getLayers.embedded'), 
+		{
+			method: 'get',
+			onComplete: im_buildLayerList
+		}
+	);
+}
+
+/** Builds the layer list */
 function im_buildLayerList(req) 
 {
 	if( ! $('im_layersDiv') ) // map viewer not yet loaded
@@ -24,7 +42,7 @@ function im_buildLayerList(req)
 }
                       
            
-//## Makes the layer list sortable
+/** Makes the layer list sortable */
 function createSortable()
 {
 	Sortable.create (
@@ -45,10 +63,23 @@ function createSortable()
 
 function layerDblClickListener(id)
 {
-	deleteAoi();
-	imc_zoomToLayer(id);
+//	deleteAoi(); // FIXME
+//	imc_zoomToLayer(id); // FIXME
 }
 
+function toggleVisibility(id) {
+	var pars = 'id=' + id;
+	
+	var myAjax = new Ajax.Request (
+		getIMServiceURL('map.layers.toggleVisibility'), 
+		{
+			method: 'get',
+			parameters: pars,
+			onComplete: function(request) { setLayerVisibility(request, id); },
+			onFailure: reportError
+		}
+	);
+}
 
 function setLayerVisibility(req, id) 
 {
@@ -58,11 +89,11 @@ function setLayerVisibility(req, id)
 	// get the image element and set the source according to visibility value
 	var img = $('visibility_' + id);
 	if (visibility == 'true')
-		img.src = '/intermap/images/showLayer.png';
+		img.src = '/intermap/images/showLayer.png'; // FIXME
 	else
-		img.src = '/intermap/images/hideLayer.png';
+		img.src = '/intermap/images/hideLayer.png'; // FIXME
 	
-	refreshNeeded();
+	im_extra_afterLayerUpdated();	
 }
 
 /*****************************************************************************
@@ -77,9 +108,9 @@ function activateMapLayer(id, keepnew)
 	
 	disactivateAllMapLayers(keepnew);
 	mapLayer.className = 'im_activeLayer';
-
-           $('layerControl_' + id).show();
-
+	
+	$('layerControl_' + id).show();
+	
 	activeLayerId = id;
 }
 
@@ -95,36 +126,35 @@ function disactivateAllMapLayers(keepnew)
 				mapLayer.className = 'im_inactiveLayer';
 			}
 			
-			var trList=mapLayer.getElementsByTagName('tr');
+			var trList = mapLayer.getElementsByTagName('tr');
 			$A(trList).each(
-	                              function(tr)
-			       {
-            			if( new String(tr.id).search('layerControl_') != -1)
-            			   $(tr).hide();
-            	                  }
-            	           );
+					function(tr)
+					{
+						if( new String(tr.id).search('layerControl_') != -1)
+						$(tr).hide();
+					}
+			);
 		}
 	);	 
 }
 
 /*****************************************************************************
  *
- *                               Layer position
+ *                               Layer ordering
  *
  *****************************************************************************/
 
 function im_layerMoveDown(id)
 {
-	var url = '/intermap/srv/'+Env.lang+'/map.layers.moveDown';	
 	var myAjax = new Ajax.Request (
-		url,
+		getIMServiceURL('map.layers.moveDown'),
 		{
 		    parameters: 'id='+id,
 		    method: 'get',
 			onComplete: function(req) 
 			{
-			    im_buildLayerList(req);			
-			    refreshNeeded();  
+			    im_buildLayerList(req);	
+				im_extra_afterLayerUpdated();
 			}
 		}
 	);
@@ -132,16 +162,15 @@ function im_layerMoveDown(id)
 
 function im_layerMoveUp(id)
 {
-	var url = '/intermap/srv/'+Env.lang+'/map.layers.moveUp';	
 	var myAjax = new Ajax.Request (
-		url, 
+		getIMServiceURL('map.layers.moveUp'), 
 		{
 		    parameters: 'id='+id,
 		    method: 'get',
 			onComplete: function(req) 
 			{
-			    im_buildLayerList(req);			
-			    refreshNeeded();  
+			    im_buildLayerList(req);		
+				im_extra_afterLayerUpdated();
 			}
 		}
 	);
@@ -151,24 +180,22 @@ function im_layerMoveUp(id)
 // has changed the layer order via drag'n'drop
 function layersOrderChanged(order)
 {
-	var url = '/intermap/srv/'+Env.lang+'/map.layers.setOrder';
 	var pars = order.replace(new RegExp("\\[\\]", "g"), ""); // remove all [ and ] - jeeves doesn't accept in parameter name otherwise
 	
 	var myAjax = new Ajax.Request (
-		url, 
+		getIMServiceURL('map.layers.setOrder'), 
 		{
 			method: 'get',
 			parameters: pars,
 			onComplete: function(req) 
 			{
 			    im_buildLayerList(req);			
-			    refreshNeeded();  
+				im_extra_afterLayerUpdated();  
 			},
 			onFailure: reportError
 		}
 	);
 }
-
 
 /*****************************************************************************
  *
@@ -201,18 +228,17 @@ function im_deleteLayer(id)
 // start ajax transaction to delete a layer
 function imc_deleteLayer(id)
 {
-	var url = '/intermap/srv/'+Env.lang+'/map.layers.deleteLayer';
 	var pars = 'id=' + id ;
 	
 	var myAjax = new Ajax.Request (
-		url, 
+		getIMServiceURL('map.layers.deleteLayer'), 
 		{
 			method: 'get',
 			parameters: pars,
 			onComplete: function(req) 
 			{
-				im_buildLayerList(req);	
-				refreshNeeded();
+				im_buildLayerList(req);
+				im_extra_afterLayerUpdated();
 			},
 			onFailure: reportError
 		}
@@ -226,7 +252,7 @@ function im_getNextActivableLayer(id)
 {
 	
 	var child = $('layerList_' + id);	
-	if (child == null)
+	if (child === null)
 		return null;
 	else
 	{	    
@@ -236,10 +262,10 @@ function im_getNextActivableLayer(id)
 		{	
 			// choose the layer to activate next
 			var nextActiveLayer = child.nextSibling;
-			if (nextActiveLayer == null)
+			if (nextActiveLayer === null)
 				nextActiveLayer = child.previousSibling; // may also be null: ok
 			
-			if(nextActiveLayer == null)
+			if(nextActiveLayer === null)
 				return null;
 			else
 			{	
@@ -256,7 +282,7 @@ function im_getFirstLayerId()
 	var ul= $('im_layerList');
 	var li1 = ul.getElementsByTagName("li")[0];
 	
-	if (li1 == null)
+	if (li1 === null)
 		return null;
 	else
 	{	    
@@ -276,6 +302,73 @@ function im_layerTransparencyChanged(id)
 {
         var transp = $('im_transp_' + id).value;
         imc_setLayerTransparency(id, transp);
+}
+
+function imc_setLayerTransparency(id, transparency)
+{
+	var pars = 'id=' + id + '&transparency=' + transparency / 100.0;
+	
+	var myAjax = new Ajax.Request (
+		getIMServiceURL('map.layers.setTransparency'), 
+		{
+			method: 'get',
+			parameters: pars,
+			onComplete: im_extra_afterLayerUpdated,  //FIXME
+			onFailure: reportError
+		}
+	);
+}
+
+
+
+//===================================================================
+//   LEGEND POPUP
+//===================================================================
+
+// TODO can we remove this function?
+function showActiveLayerLegend(id) {
+    showLegend(activeLayerId);
+}
+
+function hideLegend()
+{
+    var div=$('im_legendPopup');
+    if(div)
+    {
+        Event.stopObserving(div, 'click', hideLegend);
+        document.body.removeChild(div);
+    }
+}
+
+function showLegend(url, btn) {
+//	window.open('/intermap/srv/'+Env.lang+'/map.service.getLegend?id=' + id, 'dialog', 'HEIGHT=300,WIDTH=400,scrollbars=yes,toolbar=yes,status=yes,menubar=yes,location=yes,resizable=yes');
+    hideLegend();
+
+    var div = document.createElement("div");
+    div.id="im_legendPopup";
+    div.style.position = "absolute";
+    document.body.appendChild(div);    
+
+    var offset = Position.cumulativeOffset($(btn));
+    var x = offset[0];
+    var y = offset[1];
+
+    div.style.left=x+"px";
+    div.style.top=y+"px";
+    div.style.width="100px";
+    div.style.height="50px";
+//    div.style.border="solid black 1px";
+//    div.style.background-color="064377";
+    
+    var img = document.createElement("img");
+//    img.src = "intermap/images/waiting.gif";
+    img.src = url;
+    img.alt = "Loading legend..."; // fixme i18n
+    img.style.position = "absolute";
+    img.style.border="solid black 1px";
+    div.appendChild(img);    
+
+    Event.observe(div, 'click', hideLegend);	
 }
 	
 /*****************************************************************************

@@ -7,6 +7,9 @@
 			<xsl:when test="/root/response/service/response/html">
 				<xsl:apply-templates select="/root/response/service/response/html"/>
 			</xsl:when>
+			<xsl:when test="/root/response/service/response/url">
+				<xsl:apply-templates select="/root/response/service/response/url"/>
+			</xsl:when>
 			<xsl:when test="/root/response/service/response/gml or /root/response/service[@type='ArcIMS']/response/ARCXML">
 				<xsl:apply-templates select="/root/response/service[@type='WMS']/response/gml | /root/response/service[@type='ArcIMS']/response/ARCXML"/>
 			</xsl:when>
@@ -18,9 +21,27 @@
 	
 	<!-- html response -->
 	<xsl:template match="/root/response/service/response/html">
-		<xsl:value-of select="." disable-output-escaping="yes"/>
+		<xsl:copy-of select="."/>
 	</xsl:template>
 	
+	<!-- url response -->
+	<xsl:template match="/root/response/service/response/url">
+		<xsl:variable name="url"><xsl:value-of select="/root/response/service/response/url"/></xsl:variable>
+		
+		<html>
+			<head>
+				<title>Redirecting...</title>
+				<meta http-equiv="refresh" content="0; url='{$url}'"></meta>			
+			</head>
+			<body>
+				<font size="-1">
+					Redirecting to <a href="{$url}"><xsl:value-of select="$url"/></a>...
+				</font>
+			</body>
+		</html>
+		
+	</xsl:template>
+		
 	<!-- text response -->
 	<xsl:template match="/root/response/service/response/text">
 		<html>

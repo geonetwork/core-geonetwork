@@ -5,9 +5,9 @@
 	<xsl:template match="/root/response/mapRoot">
 		<div id="im_scale"><xsl:call-template name="scale" /></div>
 		<div>
-			<img id="im_mapImg" src="{response/url}" />
+			<img id="im_bm_image" src="{response/url}" />
 		</div>		
-		<div id="im_pleaseWait">Loading map...</div>
+		<div id="im_bm_image_waitdiv">Loading map...</div>
 	</xsl:template>
 	
 	<xsl:template name="scale">

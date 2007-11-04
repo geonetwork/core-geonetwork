@@ -72,15 +72,20 @@ img#im_mm_image  {
     	z-index: 10;	
 }
 
-.pan #im_mm_image {    cursor: move; }
-.zoomin #im_mm_image {    cursor: crosshair; }
+.pan #im_mm_image 
+{    cursor: move; }
+
+.zoomin #im_mm_image, 
+.zoomout #im_mm_image,
+.aoi #im_mm_image 
+{    cursor: crosshair; }
 
 td.im_mmtool  {
     width:18px;
     height:18px;
 }
 
-.im_mmtool  {
+.im_mmtool, .im_tool  {
 	padding: 0px 0px 0px 0px;	
 	color: white;
 	vertical-align: middle;
@@ -101,6 +106,7 @@ td.im_mmtool  {
 	cursor: pointer;
 }
 
+.im_tool img, 
 .im_mmtool img {
 	padding: 2px 2px 2px 2px;
 	border: 1px transparent solid;
@@ -157,18 +163,27 @@ toolbar
 .zoomin     #im_tool_zoomin,
 .zoomout   #im_tool_zoomout,
 .pan          #im_tool_pan,
+.mark        #im_tool_mark ,
 .identify     #im_tool_identify 
 {
 	background: yellow;
 	color: #266397;
 }
 
-/*hovering*/
+/***********
+hovering
+************/
+
+/* These buttons are one-shot actions */
 #im_tool_fullextent :hover, 
 #im_tool_zoomsel :hover,
+#im_tool_mark :hover, 
+#im_tool_refresh :hover,
 #im_tool_reset :hover, 
+
 #im_tool_fullextent img:hover, 
 #im_tool_zoomsel img:hover,
+#im_tool_mark img:hover, 
 #im_tool_refresh img:hover,
 #im_tool_reset img:hover
 {
@@ -176,14 +191,18 @@ toolbar
 	cursor: pointer;
 }
 
+/* These buttons are persistent tools */
 #im_tool_aoi :hover,
 #im_tool_zoomin :hover,
 #im_tool_zoomout :hover,
 #im_tool_pan :hover, 
+#im_tool_identify :hover, 
+
 #im_tool_aoi img:hover,
 #im_tool_zoomin img:hover,
 #im_tool_zoomout img:hover,
-#im_tool_pan img:hover 
+#im_tool_pan img:hover, 
+#im_tool_identify img:hover 
 {
 	border: 1px blue solid;
 	cursor: pointer;
@@ -362,11 +381,6 @@ table.im_identify a {
 /*******************************************************************************
 banner
 *******************************************************************************/
-
-
-
-
-
 
 td.im_padded-content {
 	background: #e7edf5;
@@ -549,8 +563,10 @@ div#im_addLayers.im_visible {
 	visibility: visible;
 }
 
-div#im_mm_zoombox,
-div#im_zoombox {
+div#im_mm_image_zoombox,
+div#im_zoombox,
+div#im_bm_image_zoombox
+{
 	position: absolute;
 	border-style: dashed;
 	border-color: red;
@@ -560,9 +576,16 @@ div#im_zoombox {
 	padding: 0px;
 	margin: 0px;
 	font-size: 0px;
+
+           background-color: white;
+	filter:alpha (opacity=30); /* MS Internet Explorer */ 
+	filter:progid:DXImageTransform.Microsoft.Alpha (style=0, opacity=30); /* MS IE proprietory */ 
+	-moz-opacity: 0.3; /* Mozilla v1.6 and below */ 
+	opacity: 0.3; /* CSS-3 Standards */ 
+	-khtml-opacity:.3; /* Safari */	
 }
 
-#im_mm_aoibox {
+/*#im_mm_aoibox {
 	position: absolute;
 	border-style: solid;
 	border-color: blue;
@@ -573,7 +596,7 @@ div#im_zoombox {
 	margin: 0px;
 	font-size: 0px;
 }
-
+*/
 div#im_bm_resizebox {
 	position: absolute;
 	border-style: dotted;
@@ -609,7 +632,7 @@ div#im_layersToolbar {
 	height: 20px;
 }
 
-div#im_pleaseWait
+div#im_bm_image_waitdiv
 {
 	width: 100%;
 /*	height: 400px;*/
@@ -638,16 +661,25 @@ div#scale
 */
 
 #im_mm_image,
-#im_mapImg {
-	position: absolute;
+#im_bm_image {
+/*	position: absolute;*/
 	left: 0;
 	top: 0px; 
 	z-index: 1;
 	visibility: visible;
 }
 
-.pan #im_mapImg {    cursor: move; }
-.zoomin #im_mapImg {    cursor: crosshair; }
+/* set the cursor on the bigmap according to the tool*/
+.pan #im_bm_image 
+{    cursor: move; }
+
+.zoomin #im_bm_image,
+.zoomout #im_bm_image
+{   cursor: crosshair; }
+
+.identify #im_bm_image
+{    cursor: help; }
+
 
 
 #im_scale {
@@ -839,4 +871,25 @@ div.im_wbcontent {
     cursor: pointer;
     
     z-index: 20;    
+}
+
+.im_marker
+{
+           position: absolute;
+           z-index: 100;
+}
+
+.im_markerbox
+{
+           position: absolute;
+           z-index: 100;
+           border: 1px solid #555555;
+           background-color: white;
+           
+	filter:alpha (opacity=50); /* MS Internet Explorer */ 
+	filter:progid:DXImageTransform.Microsoft.Alpha (style=0, opacity=50); /* MS IE proprietory */ 
+	-moz-opacity: 0.5; /* Mozilla v1.6 and below */ 
+	opacity: 0.5; /* CSS-3 Standards */ 
+	-khtml-opacity:.5; /* Safari */
+           
 }

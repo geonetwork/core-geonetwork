@@ -22,25 +22,41 @@
 ***    selecting getCapab resources, a list of the layers offered by the server will be shown, and the user shall select the wanted ones.
 *** 139/115 templates may call one two functions,  
 *** 
-*** 
+*** Requires:
+*** 	getGNServiceURL(service)
+*** 	im_extra_afterLayerUpdated()
+***		im_buildLayerList(req);
+***
 **********************************************************/
 
-/* 
-## Hook from GN xsl for dynamic data
-*/
+/** 
+ * Hook from GN xsl for dynamic data.
+ * Add a layer to the current context.
+ * 
+ * @param {string} url     The WMS server URL
+ * @param {string} service The WMS service name
+ * @param {int} type       The Intermap server type (refer to java source code)
+ */
 function runIM_addService(url, service, type)
 {
-    imc_addService(url, service, type, function(req) {
-             im_buildLayerList(req);
-             refreshNeeded(true);
-             //imc_mm_update(im_mm_width, im_mm_height);
-        });    
+    imc_addService(url, service, type, 
+					function(req) 
+					{
+			             im_buildLayerList(req);
+						 
+						 if(im_extra_afterLayerUpdated)
+						 	im_extra_afterLayerUpdated();
+			        });    
 }
 
-/* 
-## Hook from GN xsl for dynamic data
-## A server url has been specified. A list of selectable services will be displayed
-*/
+/**
+ * Hook from GN xsl for dynamic data.
+ * A server url has been specified. A list of selectable services will be displayed
+ * 
+ * @param {string} url 		The WMS server URL
+ * @param {int} type   		The Intermap server type (refer to java source code)
+ * @param {int} mdid   		The Geonetwork metadata id
+ */
 function runIM_selectService(url, type, mdid)
 {
     gn_showGetCapabilities(url, type, mdid);
@@ -51,10 +67,13 @@ function runIM_selectService(url, type, mdid)
 *  Show list of addable interactive maps
 *
 ********************************************************************/
-/*
-## This method is called by the "Interactive map [+]" button in a displayed metadata.  
-## It will display the metadata distribution info in a div .
-*/
+
+/**
+ * This method is called by the "Interactive map [+]" button in a displayed metadata.
+ * It will display the metadata distribution info in a div .
+ *  
+ * @param {int} id   		The Geonetwork metadata id
+ */
 function gn_showInterList(id) 
 {
     var pars = 'id=' + id + "&currTab=distribution";
@@ -64,7 +83,7 @@ function gn_showInterList(id)
     $('gn_loadinterlist_' + id) .show();
     
     var myAjax = new Ajax.Request(
-        '/geonetwork/srv/'+Env.lang+'/metadata.show.embedded', 
+        getGNServiceURL('metadata.show.embedded'), 
         {
             method: 'get',
             parameters: pars,
@@ -72,7 +91,6 @@ function gn_showInterList(id)
                 // This is a normally invisible DIV below every MD 
                 var parent = $('ilwhiteboard_' + id);
                 clearNode(parent);
-                
                 parent.show();
                 
                 $('gn_loadinterlist_' + id) .hide();
@@ -81,11 +99,11 @@ function gn_showInterList(id)
                 // create new element
                 var div = document.createElement('div');
                 div.className = 'metadata_current';
-                div.hide();
+				div.style.width = '100%'; 
+                $(div).hide();
                 parent.appendChild(div);
                 
                 div.innerHTML = req.responseText;
-                
                 Effect.BlindDown(div);
                 
                 var tipman = new TooltipManager();
@@ -95,6 +113,12 @@ function gn_showInterList(id)
         });
 }
 
+/**
+ * This method is called by the "Interactive map [-]" button in a displayed metadata.
+ * It will hide and delete the div displaying the metadata distribution info.
+ *  
+ * @param {int} id   		The Geonetwork metadata id
+ */
 function gn_hideInterList(id) 
 {
     var parent = $('ilwhiteboard_' + id);
@@ -137,9 +161,10 @@ function gn_showGetCapabilities(url, type, id)
             
     // Load and transform server's getCapabilities:
     imc_loadURLServices(url, // WMS server 
-                                    -2, // type = -2: free WMS server url 
-                                   function(req) {gn_getCapabLoaded(req,id);}, // callback: function called when ajax request completes 
-                                   "gn_layersRequested("+id+");" ); // jscallback: function called by the button in the HTML returned by the AJAX service (ugly hack)
+    					'0',
+                        -2, // type = -2: free WMS server url 
+                       function(req) {gn_getCapabLoaded(req,id);}, // callback: function called when ajax request completes 
+                       "gn_layersRequested("+id+");" ); // jscallback: function called by the button in the HTML returned by the AJAX service (ugly hack)
 }
 
 function gn_getCapabLoaded(req, mdid)
@@ -155,12 +180,13 @@ function gn_getCapabLoaded(req, mdid)
     div.innerHTML = req.responseText;    
 }
 
-/*
-## Called by the ok button generated by service mapServers.getServices.embedded
-*/
+/**
+ * Called by the ok button generated by service mapServers.getServices.embedded
+ * @param {int} mdid   		The Geonetwork metadata id
+ */
 function gn_layersRequested(mdid)
 {
-            var im = $('ilwhiteboard_' + mdid);
+	var im = $('ilwhiteboard_' + mdid);
 	//var im = $('im_serverList');
 	
 	// next two elements are created by the mapServers.getServices.embedded service
@@ -204,24 +230,24 @@ function gn_layersAdded(req, mdid)
 
     im_buildLayerList(req); // rebuild layers' list
     
-    // refreshes should be chained
-    refreshNeeded(true); // refresh big map 
-    im_mm_refreshNeeded(); // refresh minimap			
+	 if(im_extra_afterLayerUpdated)
+	 	im_extra_afterLayerUpdated();			
 }
 
 
 function gn_addCloser(domnode, callback)
 {
-    var closer = Builder.node('div', {class: "im_wbcloser"});
-    var img = Builder.node('img',
-    {
-        title: i18n("close"), 
-        src: "/intermap/images/close.png"
-    });
-    closer.appendChild(img);
-    
-    domnode.appendChild(closer);
-    Event.observe(closer, 'click', 
+	var closer = document.createElement('div');
+	closer.className = 'im_wbcloser';
+	
+	var img = document.createElement('img');
+	img.title = i18n("close");
+	img.src = "/intermap/images/close.png";
+	
+	closer.appendChild(img);
+	
+	domnode.appendChild(closer);
+	Event.observe(closer, 'click', 
         function()
         {  
             clearNode(domnode);
@@ -231,6 +257,5 @@ function gn_addCloser(domnode, callback)
         });
         
 }
-
 
 /* EOF ******************************************************* EOF */

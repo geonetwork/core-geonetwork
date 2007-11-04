@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >
 	<xsl:output method="html"/>
-	
-	<xsl:template match="/">
 
-<!--		<root>
-			<info>
-				<xsl:copy-of  select="//minimap" />	
-				<xsl:copy-of  select="//bigmap" />	
-			</info>
-			<html>
--->
+	<xsl:template match="/">
+		<xsl:call-template name="bigmap"/>
+	</xsl:template>
+		
+
+	<xsl:template name="bigmap">
+
 		<xsl:call-template name="localization"/>
 		
 		<div id="intermap_root"> <!-- class will be set to current tool -->		
 			
 			<table class="padded_content">
-				<tr height="30px">
+				<tr>
 					<!-- TOOLBAR -->
 					<td>
 						<table id="im_toolbar" class="padded_content">
@@ -25,11 +23,12 @@
 								<td class="im_tool" id="im_tool_zoomin" onClick="javascript:setTool('zoomin');" ><img src="{/root/gui/url}/images/zoomin.png" title="{/root/gui/strings/zoomIn}"/></td>
 								<td class="im_tool" id="im_tool_zoomout" onClick="javascript:setTool('zoomout');"><img  src="{/root/gui/url}/images/zoomout.png" title="{/root/gui/strings/zoomOut}"/></td>
 								<td class="im_tool" id="im_tool_pan" onClick="javascript:setTool('pan');"><img src="{/root/gui/url}/images/pan.png" title="{/root/gui/strings/pan}"/></td>															
+<!-- TODO							<td class="im_tool" id="im_tool_mark" onClick="javascript:setTool('mark');"><img src="{/root/gui/url}/images/marker.png" title="{/root/gui/strings/marker}"/></td>															-->
 <!--								<td class="im_tool" id="im_tool_zoomsel"	onClick="javascript:imc_zoomToLayer(activeLayerId)"><img src="{/root/gui/url}/images/zoomsel.png" title="Zoom to selected layer extent"/></td> -->
 <!--								<td class="im_tool" id="im_tool_aoi"		onClick="javascript:setTool('aoi')"><img src="{/root/gui/url}/images/im_aoi16x16.png" title="Select an Area Of Interest"/></td> --> 
-<!--								<td class="im_tool" id="im_tool_identify"	onClick="javascript:setTool('identify');">Identify</td> -->
+								<td class="im_tool" id="im_tool_identify"	onClick="javascript:setTool('identify');"><img src="{/root/gui/url}/images/info.png" title="{/root/gui/strings/identify}"/></td>
 								<td width="100%" style="border-top:0px;"/> <!-- spacer -->
-								<td class="im_tool" id="im_tool_refresh" onClick="javascript:refreshNeeded()"><img src="{/root/gui/url}/images/reload.png" title="{/root/gui/strings/refresh}"/></td>
+								<td class="im_tool" id="im_tool_refresh" onClick="javascript:im_bm_refresh()"><img src="{/root/gui/url}/images/reload.png" title="{/root/gui/strings/refresh}"/></td>
 <!--								<td class="im_tool"  				onClick="javascript:im_bm_toggleImageSize()">+/- map</td>-->
 								<td class="im_tool" id="im_tool_reset" onClick="javascript:im_reset();"><img src="{/root/gui/url}/images/reset.png" title="{/root/gui/strings/reset}"/></td>
 							</tr>							
@@ -38,7 +37,7 @@
 					
 					<!--  LAYERS -->
 					<!-- This is only a placeholder structure: layers will be inserted dinamically. -->
-					<td rowspan="3">
+					<td rowspan="3" valign="top">
 						<div id="im_layers" >
 							
 							<div id="im_layersHeader">
@@ -69,24 +68,46 @@
 					</td>					
 				</tr>
 				
+				
+				<xsl:variable name="mapwidth">
+					<xsl:choose>
+						<xsl:when test="/root/response/width"><xsl:value-of select="/root/response/width"/></xsl:when>
+						<xsl:otherwise>370</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				<xsl:variable name="mapheight">
+					<xsl:choose>
+						<xsl:when test="/root/response/width"><xsl:value-of select="/root/response/height"/></xsl:when>
+						<xsl:otherwise>278</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				<xsl:variable name="mapsrc">
+					<xsl:choose>
+						<xsl:when test="/root/response/imgUrl"><xsl:value-of select="/root/response/imgUrl"/></xsl:when>
+						<xsl:otherwise><xsl:value-of select="/root/gui/url"/>/images/default_bigmap.gif</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				<xsl:variable name="mapscale">
+					<xsl:choose>
+						<xsl:when test="/root/response/scale"><xsl:value-of select="/root/response/scale"/></xsl:when>
+						<xsl:otherwise>?</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				
 				<tr>
-					<td id="im_mapContainer" style="position:relative;width:370px;height:278px;">
-						<div id="im_map" style="position: absolute;">
-							<img id="im_mapImg" src="{/root/gui/url}/images/default_bigmap.gif" />
+					<td id="im_mapContainer" style="position:relative;width:{$mapwidth}px;height:{$mapheight}px;">
+						<div id="im_map" style="position: relative;">
+							<img id="im_bm_image" src="{$mapsrc}" />
 							<!--<img id="im_mapImg" src="{//mapRoot/response/url}" />-->
 							<img id="im_resize"
 								src="{/root/gui/url}/images/transpcorner.png" 
 								style="z-index:1000; position:absolute; bottom:0px; right:0px; cursor:se-resize" 
 								alt="resize"/>
-							<div id="im_pleaseWait" style="position: absolute; display:none; "><xsl:value-of select="/root/gui/strings/loadingMap" /></div>							
-						</div>		
-						<div id="im_scale" style="position: absolute;" >
-							1:?
-<!--							<xsl:variable name="scale">
-								<xsl:value-of select="round(//mapRoot/response/services/distScale)" />
-							</xsl:variable>
-							1:<xsl:value-of select="format-number($scale, '###,###')" />
--->						</div>
+							<div id="im_bm_image_waitdiv" style="position: absolute; display:none; "><xsl:value-of select="/root/gui/strings/loadingMap" /></div>							
+							<div id="im_scale" style="position: absolute; top:0px;" >
+								1:<xsl:value-of select="$mapscale"/>
+							</div>
+						</div>
 					</td>					
 				</tr>
 				

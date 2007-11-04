@@ -23,6 +23,7 @@
 
 package org.wfp.vam.intermap.services.map;
 
+import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -49,11 +50,12 @@ public class Update implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		// Get the current image size from the user session
-		/*DEBUG*/if(params.getChildText("width") == null) System.out.println("\n\nNO WIDTH SPECIFIED IN Update()\n");
+		String pwidth  = params.getChildText("width");
+		String pheight = params.getChildText("height");
 
-		int width  = Integer.parseInt(params.getChildText("width"));
-		int height = Integer.parseInt(params.getChildText("height"));
+		// Sanity check
+		if(pwidth == null || pheight == null)
+			throw new MissingParameterEx("Width and height parameters are required");
 
 		MapMerger mm = MapUtil.getMapMerger(context);
 
@@ -71,6 +73,9 @@ public class Update implements Service
 			mm.setBoundingBox(bb);
 
 		// Merge the images now
+		int width  = Integer.parseInt(pwidth);
+		int height = Integer.parseInt(pheight);
+
 		String imagename = mm.merge(width, height);
 		String url = MapUtil.getTempUrl() + "/" + imagename;
 

@@ -202,30 +202,31 @@ public class WmsService extends MapService
 				+ "&INFO_FORMAT=" + infoFormat;
 
 
-//		System.out.println("GetFeatureInfo request: " + url.toString()); // DEBUG
+		lastResponse = new Element("url").setText(url);
 
-		HttpClient h = new HttpClient(url);
+		// Use the following code if you need to proxy the WMS server response.
 
-		if(infoFormat == WMSFormat.APP_GML
-		   || infoFormat == WMSFormat.TEXT_XHTML  //.equals(Constants.FORMAT_GML) || infoFormat.equals(Constants.FORMAT_XHTML)) {
-		   || infoFormat == WMSFormat.v100_GML1  // TODO test me
-		   || infoFormat == WMSFormat.v100_GML2  // TODO test me
-		   || infoFormat == WMSFormat.v100_GML3) // TODO test me
-		{
-			lastResponse = new Element("gml").addContent(h.getElement());
-//			System.out.println("lastResponse element, " + infoFormat + ": " + Xml.getString(lastResponse)); // DEBUG
-		}
-		else if (infoFormat == WMSFormat.TEXT_HTML) // infoFormat.equals(Constants.FORMAT_HTML)) {
-		{
-			String strResult = h.getString();
-//			System.out.println("Server response: " + strResult); // DEBUG
-			lastResponse = new Element("html").addContent(new CDATA(strResult)); //Add the html as content to an <html> element
-		}
-		else {
-			lastResponse = new Element("text").addContent(new CDATA(h.getString()));
-		}
-//		System.out.println("lastResponse element, "+infoFormat+": " + Xml.getString(lastResponse)); // DEBUG
-
+//		HttpClient h = new HttpClient(url);
+//
+//		if(infoFormat == WMSFormat.APP_GML
+//		   || infoFormat == WMSFormat.TEXT_XHTML  //.equals(Constants.FORMAT_GML) || infoFormat.equals(Constants.FORMAT_XHTML)) {
+//		   || infoFormat == WMSFormat.v100_GML1  // TODO test me
+//		   || infoFormat == WMSFormat.v100_GML2  // TODO test me
+//		   || infoFormat == WMSFormat.v100_GML3) // TODO test me
+//		{
+//			lastResponse = new Element("gml").addContent(h.getElement());
+////			System.out.println("lastResponse element, " + infoFormat + ": " + Xml.getString(lastResponse)); // DEBUG
+//		}
+//		else if (infoFormat == WMSFormat.TEXT_HTML) // infoFormat.equals(Constants.FORMAT_HTML)) {
+//		{
+//			String strResult = h.getString();
+////			System.out.println("Server response: " + strResult); // DEBUG
+//			lastResponse = new Element("html").addContent(new CDATA(strResult)); //Add the html as content to an <html> element
+//		}
+//		else {
+//			lastResponse = new Element("text").addContent(new CDATA(h.getString()));
+//		}
+////		System.out.println("lastResponse element, "+infoFormat+": " + Xml.getString(lastResponse)); // DEBUG
 	}
 
 	/**

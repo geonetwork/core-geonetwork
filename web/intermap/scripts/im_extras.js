@@ -3,8 +3,31 @@
 *
 * This file contains functions related to the intermap extra features
 * ie the ones the user can call via the buttons below the bigger map.
-* 
+*
+
+
+ requires:
+    clearNode(node)
+    getIMServiceURL(service)
+    imc_addServices(url, services, type, im_servicesAdded);
+	im_buildLayerList(req); // rebuild layers' list
+	
+	im_extra_drivingMap : Intermap; must be set
+	
+    requires a div with id = "im_whiteboard"
+ 
 ********************************************************************/
+
+
+/** set this var as the main Intermap object */
+var im_extra_drivingMap;
+
+// set this object to a function that will be called whenever a style has been set. 
+//var im_extra_afterStyleSet = function() { alert("im_extra_afterStyleSet in file im_extras.js is not set");};
+
+var im_extra_afterWmcSet = function() { alert("im_extra_afterWmcSet in file im_extras.js is not set");};
+var im_extra_afterLayerUpdated = function() { alert("im_extra_afterLayerUpdated in file im_extras.js is not set");};
+
 
 /********************************************************************
 *** LAYERS
@@ -19,7 +42,7 @@ function im_addLayer()
     clearNode('im_whiteboard');    
     var WB = $('im_whiteboard');
 
-    var wbtitle = im_createWBTitle(i18n('addLayer')); //FIXME i18n
+    var wbtitle = im_createWBTitle(i18n('addLayer'));
     WB.appendChild(wbtitle);
 
     var closer = im_getWBCloser();
@@ -33,8 +56,8 @@ function im_addLayer()
     WB.appendChild(div);
    
     var myAjax = new Ajax.Updater (
-           'im_serverList',    
-    	'/intermap/srv/'+Env.lang+'/mapServers.listServers.embedded', 
+		'im_serverList',    
+    	getIMServiceURL('mapServers.listServers.embedded'), 
     	{
     		method: 'get',    		    	
     		onFailure: im_load_error
@@ -50,7 +73,7 @@ function im_mapServerSelected(id, name, refreshCache)
 	var im = $('im_serverList');
 	clearNode(im);
 	
-	var t1 = Builder.node("p");
+	var t1 = document.createElement("p");
 	t1.innerHTML = i18n("wait");
 	im.appendChild(t1);
 	
@@ -58,18 +81,17 @@ function im_mapServerSelected(id, name, refreshCache)
 	t2.innerHTML = i18n("loadingFrom") + " " + name;	
 	im.appendChild(t2);
 
-            imc_loadServerServices(id, refreshCache, im_servicesLoaded, "im_servicesSelected();");
+	imc_loadServerServices(id, refreshCache, im_servicesLoaded, "im_servicesSelected();");
 }
 
 function imc_loadServerServices(id, refreshCache, callback, jscallback)
 {
-	var url = '/intermap/srv/'+Env.lang+'/mapServers.getServices.embedded';
 	var pars = 'mapserver='+id  				
-	                +"&jscallback="+encodeURIComponent(jscallback)
-	                +"&refreshCache="+refreshCache;
+                +"&jscallback="+encodeURIComponent(jscallback)
+                +"&refreshCache="+refreshCache;
 
 	var myAjax = new Ajax.Request (
-		url, 
+		getIMServiceURL('mapServers.getServices.embedded'), 
 		{
 			method: 'get',
 			parameters: pars,
@@ -95,7 +117,7 @@ function im_mapServerURL(url, refreshCache)
 	t2.innerHTML = i18n("loadingFromWMS");	
 	im.appendChild(t2);
 
-            imc_loadURLServices(url, refreshCache, -2, im_servicesLoaded, "im_servicesSelected();" );
+	imc_loadURLServices(url, refreshCache, -2, im_servicesLoaded, "im_servicesSelected();" );
 }
 
 function imc_loadURLServices(url, refreshCache, type, callback, jscallback)
@@ -106,7 +128,7 @@ function imc_loadURLServices(url, refreshCache, type, callback, jscallback)
 	                +"&refreshCache="+refreshCache;
 	
 	var myAjax = new Ajax.Request (
-		'/intermap/srv/'+Env.lang+'/mapServers.getServices.embedded', 
+		getIMServiceURL('mapServers.getServices.embedded'), 
 		{
 			method: 'get',
 			parameters: pars,
@@ -151,15 +173,10 @@ function im_servicesSelected()
 	            //query += "&service="+value;	        
 	        }
 	    }
-	
-	
 	);
 	
-	//alert(query);
-	
-	setStatus('busy');
-	imc_addServices(url, services, type, im_servicesAdded);
-	
+	im_extra_drivingMap.setStatus('busy');
+	imc_addServices(url, services, type, im_servicesAdded);	
 }
 
 function im_servicesAdded(req)
@@ -173,12 +190,7 @@ function im_servicesAdded(req)
 	
 	im_buildLayerList(req); // rebuild layers' list
 	
-	//imc_reloadLayers(); 
-			
-           // refreshes should be chained
-	refreshNeeded(); // refresh big map
-	// im_mm_refreshNeeded(); // refresh minimap	
-		
+	im_extra_afterLayerUpdated();			
 }
 
 /********************************************************************
@@ -193,7 +205,7 @@ function im_openPDFform()
 	clearNode('im_whiteboard');    
 	var WB = $('im_whiteboard');
 	
-	var wbtitle = im_createWBTitle(i18n('exportAsPDF')); //FIXME i18n
+	var wbtitle = im_createWBTitle(i18n('exportAsPDF')); 
 	WB.appendChild(wbtitle);
 	
 	var closer = im_getWBCloser();
@@ -207,7 +219,7 @@ function im_openPDFform()
 	
 	var myAjax = new Ajax.Updater (
 		'im_createPDF',    
-		'/intermap/srv/'+Env.lang+'/static.form.pdf', 
+		getIMServiceURL('static.form.pdf'), 
 		{
 			method: 'get',    		    	
 			onFailure: im_load_error
@@ -232,7 +244,7 @@ function im_requestPDF()
 	
 	var pars = "orientation="+orient+
 		"&pagesize="+psize+
-		"&"+im_bm_getURLbbox();
+		"&"+ im_extra_drivingMap.getURLbbox();
 		
 	if(ptitle)
 		pars += "&title="+ encodeURIComponent(ptitle);
@@ -260,7 +272,7 @@ function im_requestPDF()
 	$('im_builtpdf').hide();
 	
 	var myAjax = new Ajax.Request (
-		'/intermap/srv/'+Env.lang+'/create.pdf', 
+		getIMServiceURL('create.pdf'), 
 		{
 			method: 'get',
 			parameters: pars,
@@ -306,12 +318,12 @@ function im_openWMCform()
 	div.className = 'im_wbcontent';
 	WB.appendChild(div);
 	
-	var pars="&width=" + im_bm_width + 
-		    "&height=" + im_bm_height;
+	var pars="&width=" + im_extra_drivingMap.width +         
+		    "&height=" + im_extra_drivingMap.height;         
 		
 	var myAjax = new Ajax.Updater (
 		'im_wmcmenu',    
-		'/intermap/srv/'+Env.lang+'/wmc.form', 
+		getIMServiceURL('wmc.form'), 
 		{
 			method: 'get',    		    	
 			parameters: pars,
@@ -326,10 +338,10 @@ function im_openWMCform()
 */
 function im_downloadWMC()
 {
-    var pars= "width=" + im_bm_width + 
-                    "&height=" + im_bm_height;
+    var pars= "width=" + im_extra_drivingMap.width +          
+                    "&height=" + im_extra_drivingMap.height;        
 
-    window.open('/intermap/srv/en/wmc.getContext?'+pars);
+    window.open(getIMServiceURL('wmc.getContext') + '?'+pars);
 }
 
 /**
@@ -339,20 +351,20 @@ function im_downloadWMC()
 function im_uploadWMC(bClearLayers)
 {
     var form = $('im_fuploadwmc');
-    form.action='/intermap/srv/en/wmc.uploadContext';
+    form.action=getIMServiceURL('wmc.uploadContext');
     $('im_fup_clearLayers').value= bClearLayers? 'true' : 'false';
     
     return AIM.submit(form, 
         {
             'onStart' : function() 
             {
-                setStatus('busy');
+                im_extra_drivingMap.setStatus('busy');
                 im_wmc_showMessage("upload", "start");
                 return true;
             }, 
             'onComplete' : function(domdoc) 
             {
-                setStatus('idle');
+                im_extra_drivingMap.setStatus('idle');
                 var resp = domdoc.documentElement;
                 if(resp.tagName == "error")
                 {
@@ -362,10 +374,10 @@ function im_uploadWMC(bClearLayers)
                 else
                 {                
                     im_wmc_showMessage("upload", "ok");                
-                    im_bm_set(resp);
                     imc_reloadLayers();
-                    im_mm_setBBox_dom(resp);
-                    im_mm_refreshNeeded(); // refresh minimap
+                    
+					var xml = resp.getElementsByTagName('response')[0];
+					im_extra_afterWmcSet(xml);
                 }
             }                    
         });
@@ -385,34 +397,34 @@ function im_sendWMC()
             }
 	
 	pars="wmc_title=" + encodeURIComponent(title)
-	        +"&wmc_mailfrom=" + encodeURIComponent(from)
-	        +"&wmc_mailto=" + encodeURIComponent(to)
-                   +"&width=" + im_bm_width    // WMC stuff 
-                   +"&height=" + im_bm_height; // WMC stuff	        
+		+"&wmc_mailfrom=" + encodeURIComponent(from)
+		+"&wmc_mailto=" + encodeURIComponent(to)
+		+"&width=" + im_extra_drivingMap.width    // WMC stuff     
+		+"&height=" + im_extra_drivingMap.height; // WMC stuff    
 
-            im_wmc_showMessage("mail", "start");
+	im_wmc_showMessage("mail", "start");
 
 	var myAjax = new Ajax.Request (
-		'/intermap/srv/'+Env.lang+'/wmc.mailContext', 
+		getIMServiceURL('wmc.mailContext'), 
 		{
 			method: 'post',
 			parameters: pars,
 			onSuccess: function(req)
 			{
 			    var resp = req.responseXML.documentElement;
-                                    if(resp.tagName == "error")
-                                    {
-                                        var msg = resp.getElementsByTagName('message')[0].firstChild.nodeValue;
-                                        im_wmc_showMessage("mail", "error", msg);                
-                                    }
-                                    else
-                                    {                
-                                        im_wmc_showMessage("mail", "ok");
-                                    }
+				if(resp.tagName == "error")
+				{
+					var msg = resp.getElementsByTagName('message')[0].firstChild.nodeValue;
+					im_wmc_showMessage("mail", "error", msg);                
+				}
+				else
+				{                
+					im_wmc_showMessage("mail", "ok");
+				}
 			},
 			onFailure: function(req)
 			{
-                                    im_wmc_showMessage("mail", "error");			
+				im_wmc_showMessage("mail", "error");			
 			}
 		}
 	);
@@ -530,27 +542,27 @@ function im_showLayerMD(id)
     WB.appendChild(div);
    
     var myAjax = new Ajax.Request(    
-    	'/intermap/srv/'+Env.lang+'/map.layers.getInfo', 
+    	getIMServiceURL('map.layers.getInfo'), 
     	{
     		method: 'get',    
     		parameters: 'id='+id,
     		onSuccess: function(req)
     		{
-    		     if(req.responseXML && req.responseXML.documentElement.tagName == "error")
-    		     {
-    	                    var resp = req.responseXML.documentElement;
-                               var msg = resp.getElementsByTagName('message')[0].firstChild.nodeValue;
-                               div.innerHTML = msg;
-                               return;
-                           }
-                           else
-                           {
-                               div.innerHTML = req.responseText; 
-                           }
+				if(req.responseXML && req.responseXML.documentElement.tagName == "error")
+				{
+					var resp = req.responseXML.documentElement;
+					var msg = resp.getElementsByTagName('message')[0].firstChild.nodeValue;
+					div.innerHTML = msg;
+					return;
+				}
+				else
+				{
+					div.innerHTML = req.responseText; 
+				}
     		},
     		onFailure: function(req)
     		{
-                               div.innerHTML = i18n('genericError');     		
+				div.innerHTML = i18n('genericError');     		
     		}
     	}
     );    
@@ -584,27 +596,27 @@ function im_showStyles(id)
     WB.appendChild(div);
       
     var myAjax = new Ajax.Request(    
-    	'/intermap/srv/'+Env.lang+'/map.layers.getStyles', 
+    	getIMServiceURL('map.layers.getStyles'), 
     	{
     		method: 'get',    
     		parameters: 'id='+id,
     		onSuccess: function(req)
     		{
-    		     if(req.responseXML && req.responseXML.documentElement.tagName == "error")
-    		     {
-    	                    var resp = req.responseXML.documentElement;
-                               var msg = resp.getElementsByTagName('message')[0].firstChild.nodeValue;
-                               div.innerHTML = msg;
-                               return;
-                           }
-                           else
-                           {
-                               div.innerHTML = req.responseText; 
-                           }
+				if(req.responseXML && req.responseXML.documentElement.tagName == "error")
+				{
+					var resp = req.responseXML.documentElement;
+					var msg = resp.getElementsByTagName('message')[0].firstChild.nodeValue;
+					div.innerHTML = msg;
+					return;
+				}
+				else
+				{
+					div.innerHTML = req.responseText; 
+				}
     		},
     		onFailure: function(req)
     		{
-                               div.innerHTML = i18n('genericError');     		
+    			div.innerHTML = i18n('genericError');     		
     		}
     	}
     );    
@@ -619,38 +631,40 @@ function im_setStyle(layerid)
     var style = getRadioValue('styleradio');
     
     var pars = "id="+layerid +
-                    "&style="+encodeURIComponent(style);
+				"&style="+encodeURIComponent(style);
     
     // update user mesg
     im_showMessage('style', 'set', 'start');
     
     // do ajax call
 	var myAjax = new Ajax.Request (
-		'/intermap/srv/'+Env.lang+'/map.layers.setStyle', 
+		getIMServiceURL('map.layers.setStyle'), 
 		{
 			method: 'get',
 			parameters: pars,
 			onSuccess: function(req)
 			{
-                                        if(req.responseXML && req.responseXML.documentElement.tagName == "error")
-                                        {
-                                            var resp = req.responseXML.documentElement;
-                                            var msg = resp.getElementsByTagName('message')[0].firstChild.nodeValue;			
-                                            im_showMessage("style", "set", "error", msg);                
-                                        }
-                                        else
-                                        {                
-                                            im_showMessage("style", "set", "ok");
-                                            
-                                            // reload layer list (legend link may have changed)
-                                            im_buildLayerList(req);
-                                            // reload big map + minimap
-                                            refreshNeeded(true);
-                                        }
+				if(req.responseXML && req.responseXML.documentElement.tagName == "error")
+				{
+					var resp = req.responseXML.documentElement;
+					var msg = resp.getElementsByTagName('message')[0].firstChild.nodeValue;			
+					im_showMessage("style", "set", "error", msg);                
+				}
+				else
+				{                
+					im_showMessage("style", "set", "ok");
+					
+					// reload layer list (legend link may have changed)
+					im_buildLayerList(req);
+					
+					// This function is defined at the start of this js file. 
+					// It should be overwritten by whoever want to refresh a map
+					im_extra_afterLayerUpdated();
+				}
 			},
 			onFailure: function(req)
 			{
-                                        im_showMessage("style", "set", "error");
+				im_showMessage("style", "set", "error");
 			}
 		}
 	);       
@@ -663,8 +677,10 @@ function im_setStyle(layerid)
 
 function im_createWBTitle(title)
 {
-    var div = Builder.node('div', {id: "im_wbtitle"});
-    var h1 = Builder.node('h1');
+    var div = document.createElement('div');
+	div.id = "im_wbtitle";
+	//var div = Builder.node('div', {id: "im_wbtitle"});
+    var h1 = document.createElement('h1');
     h1.innerHTML = title;
     div.appendChild(h1);       
 
@@ -676,16 +692,21 @@ function im_createWBTitle(title)
 
 function im_getWBCloser()
 {
-    var closer = Builder.node('div', {id: "im_wbcloser"});
-    var img = Builder.node('img',
-    {
-        title: "Close", // FIXME i18N
-        src: "/intermap/images/close.png"
-    });
+	var closer = document.createElement('div');
+	closer.id = "im_wbcloser";
+//    var closer = Builder.node('div', {id: "im_wbcloser"});
+	var img = document.createElement('img');
+	img.title = i18n("close");
+	img.src = "/intermap/images/close.png";
+//    var img = Builder.node('img',
+//    {
+//        title: "Close", // FIXME i18N
+//        src: "/intermap/images/close.png"
+//    });
     closer.appendChild(img);
     
     //Event.observe(closer, 'click', im_closeWhiteBoard);
-        return closer;
+	return closer;
 }
 
 function im_closeWhiteBoard()

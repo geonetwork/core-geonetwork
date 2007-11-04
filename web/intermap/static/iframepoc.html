@@ -1,0 +1,97 @@
+<html>
+	<head>
+		<title>IFrame PoC</title>
+		 <style TYPE="text/css"> 
+       <!-- 
+			body {
+                 background: black;
+                 color: #80c0c0;      		  	 
+				 font-family:Verdana,Arial,Helvetica,sans-serif;
+				 font-size: 9pt;
+				  }
+				 
+		-->
+		</style>
+		<script type="text/javascript">
+			function sample_loadWmcUrl()
+			{
+				var text = document.getElementById('wmcurl').value;
+				
+//				window.frames.intermapIframe.imep_loadLayer(url, layer); // FF OK
+			}
+			
+			function sample_loadWmsLayer()
+			{
+				var url = document.getElementById('wmsurl').value;
+				var layer = document.getElementById('layername').value;
+
+//			var d = document;
+//			var f = d.frames ? d.frames['intermapIframe'] : d.getElementById('intermapIframe');
+//			var p = f.document || f.contentWindow.document;
+//			p.imep_loadLayer(url, layer);
+			
+			window.frames.intermapIframe.imep_loadLayer(url, layer); // FF OK
+			}
+
+			function sample_gotoBBox()
+			{
+				var bbn = document.getElementById('bbn').value;
+				var bbe = document.getElementById('bbe').value;
+				var bbs = document.getElementById('bbs').value;
+				var bbw = document.getElementById('bbw').value;
+			
+				window.frames.intermapIframe.imep_setBBox(bbn, bbe, bbs, bbw); // FF OK
+			}
+
+		</script>
+				 
+	</head>
+	
+	<body>
+		<table>
+			<tbody>
+				<tr height="100px">
+					<td width="150px">row: 100px<br/>col: 150px</td>
+					<td width="600px">col: 600px</td>
+					<td>
+						WMC url 
+						<input type="text" id="wmcurl" value="http://devos.sapienzaconsulting.com/chameleon/geoportal/htdocs/contexts/esa_dis_cml_floods_india.xml"/> 
+						<a href="javascript:void(0);" onclick="sample_loadWmcUrl();">LOAD</a>
+						
+						<p/>WMS server url 
+						<input type="text" id="wmsurl" value="http://ssems1.esrin.esa.int/ionicweb/wfs/FLOODS_FREQ_UNEP"/> 
+						layer name 
+						<input type="text" id="layername" value="global_floods_unep"/> 
+						<a href="javascript:void(0);" onclick="sample_loadWmsLayer();">LOAD</a>
+						
+						<p/>BBox
+						<br/>N<input type="text" id="bbn" value="-21.781"/>
+						E<input type="text" id="bbe" value="-53.65"/>
+						<br/>S<input type="text" id="bbs" value="-55.052"/>
+						W<input type="text" id="bbw" value="-73.582"/>
+						<a href="javascript:void(0);" onclick="sample_gotoBBox();">GOTO</a>												
+					</td>
+				</tr>
+				
+				<tr height="200px">
+					<td>H: 200px</td>
+					<td>
+						<iframe width="600" height="200"
+							id="intermapIframe" name="intermapIframe"
+							src="/intermap/srv/en/main?width=200&height=100"/>						
+					</td>
+					<td></td>
+				</tr>				
+				<tr height="100px">
+					<td>H: 100px</td>
+					<td></td>
+					<td></td>
+				</tr>				
+			</tbody>
+			
+		</table>
+		
+		
+	</body>
+
+</html>

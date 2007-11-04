@@ -1,3 +1,4 @@
+
 function getMouseX(e)
 {
 	var posx = 0;
@@ -24,8 +25,8 @@ function getMouseY(e)
 
 function openGeoNetwork(what)
 {
-	gnWindow=window.open(what,"GeoNetwork")
-	gnWindow.focus()
+	gnWindow=window.open(what,"GeoNetwork");
+	gnWindow.focus();
 }
 
 // Didn't find a way to do it with prototype
@@ -69,17 +70,19 @@ function clearNode(node)
 //========================================
 
 function copyTree(src, parentDest)
-{			
+{		
+	var newNode;
+		
 	if(src.nodeType==Node.TEXT_NODE) 
 	{
-		var newNode= document.createTextNode(src.nodeValue);
+		newNode= document.createTextNode(src.nodeValue);
 		parentDest.appendChild(newNode);
 		return;				
 	}
 	
 	if(src.nodeType==Node.COMMENT_NODE) 
 	{
-		var newNode= document.createElement("COMMENT");
+		newNode= document.createElement("COMMENT");
 		newNode.style.display = "none";
 		newNode.textContent= src.nodeValue;
 		parentDest.appendChild(newNode);
@@ -90,7 +93,7 @@ function copyTree(src, parentDest)
 //				li.textContent= src.tagName+ " ID:" +src.getAttribute('id');
 //				$('ETJ_DEBUG').appendChild(li);
 	
-	var newNode= document.createElement(src.tagName);
+	newNode= document.createElement(src.tagName);
 //				if(src.className)
 //					newNode.className = src.className;
 //				newNode.nodeValue = src.nodeValue;
@@ -106,7 +109,7 @@ function copyTree(src, parentDest)
 			newNode.setAttribute(attrs[i].name, attrs[i].value);
 			tattr += (attrs[i].name+'="'+attrs[i].value+'"');
 		}
-	};
+	}
 	
 	//a("ADDING  &lt;" + src.tagName + tattr  +'&gt;');	
 	//a("Adding to " + parentDest);
@@ -228,7 +231,7 @@ AIM = {
         }
     }
 
-}
+};
 
 
 
@@ -242,3 +245,152 @@ function getRadioValue(name)
     }
     return null;
 }
+
+
+/*******************************************************************
+ * Some utility funcs for map handling
+ * 
+ */
+function MapUtils() {}
+
+/**
+ * Get the URLized version of the given bbox
+ * @param {int} n
+ * @param {int} e
+ * @param {int} s
+ * @param {int} w
+ * @return {String} URL 
+ */
+MapUtils.urlizebb = function (n, e, s, w)
+{
+	return	"northBL="+n+
+			"&eastBL="+e+
+			"&southBL="+s+
+			"&westBL="+w;    
+};
+
+/**
+ * Draws the box by setting its style position and size
+ * @param {Element} box the DOM Element to resize
+ * @param {int} left coord in pixel
+ * @param {int} top coord in pixel
+ * @param {int} width size in pixel
+ * @param {int} height size in pixel
+ */
+MapUtils.drawBox = function(box, left, top, width, height)
+{
+	box.style.left = left + 'px';
+	box.style.top = top + 'px';
+	box.style.width = width + 'px';
+	box.style.height = height + 'px';
+};
+
+/** 
+ * Returns the URLized dezoomed bbox 
+ * 
+ * @param {number} n
+ * @param {number} e
+ * @param {number} s
+ * @param {number} w
+ * @param {number} factor the dezooming factor (opt, default 2) 
+ * 
+ * @return {string} the URLized dezoomed bbox
+ */
+MapUtils.dezoom = function(n, e, s, w, factor)
+{	
+	if(factor===null)
+	{
+		factor = 2;		
+	}
+	var dx = (e - w) / factor;
+	var dy = (n - s) / factor;
+	return MapUtils.urlizebb( n-dy, e+dx, s+dy, w-dx );
+};
+
+//==================================================
+
+/**
+ * A FakeBox is formed by 4 divs with ids: 
+ * <i>name</i>_n, <i>name</i>_e, <i>name</i>_s, <i>name</i>_w.
+ * This linear divs are put in a square layout.
+ * Such fake box, even when displayed, does not steal mouse events.
+ * 
+ *  @constructor
+ *  
+ * @param {string} name The base id name
+ */
+function FakeBox(name)
+{
+	this.name = name;
+}
+
+FakeBox.prototype.name;
+
+/**
+ * Draws a box
+ *
+ * @param {int} left coord in pixel
+ * @param {int} top coord in pixel
+ * @param {int} width size in pixel
+ * @param {int} height size in pixel
+ */
+FakeBox.prototype.draw = function(left, top, width, height)
+{
+    var n = $(this.name + '_n');
+    var e = $(this.name + '_e');
+    var s = $(this.name + '_s');
+    var w = $(this.name + '_w');
+	
+	if( Prototype.Browser.IE )
+	{
+		if(width > 0) {width--;}
+		if(height>0) {height--;}
+	}
+		
+    n.style.left = left + 'px';
+    n.style.top = top + 'px';
+    n.style.width = width + 'px';
+    n.style.height = '0px';
+
+	// east is shifted 1px left because of 0-width border drawing 
+    e.style.left = (left + width - 1 ) + 'px';
+    e.style.top = top + 'px';
+    e.style.width = '0px';
+    e.style.height = height + 'px';
+    
+	// east is shifted 1px up to left because of 0-height border drawing
+    s.style.left = left + 'px';
+    s.style.top = (top+height-1) + 'px';
+    s.style.width = width + 'px';
+    s.style.height = '0px';
+    
+    w.style.left = left + 'px';
+    w.style.top = top + 'px';
+    w.style.width = '0px';
+    w.style.height = height + 'px';
+	
+	if( Prototype.Browser.IE )
+	{
+	    n.style.height = '1px';
+	    e.style.width  = '1px';
+	    s.style.height = '1px';
+	    w.style.width  = '1px';
+	}
+	
+};
+
+FakeBox.prototype.hide = function()
+{
+    $(this.name + '_n').hide();
+    $(this.name + '_e').hide();
+    $(this.name + '_s').hide();
+    $(this.name + '_w').hide();
+};
+
+FakeBox.prototype.show = function()
+{
+    $(this.name + '_n').show();
+    $(this.name + '_e').show();
+    $(this.name + '_s').show();
+    $(this.name + '_w').show();
+};
