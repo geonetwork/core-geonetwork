@@ -27,7 +27,6 @@
 	<exportAsPDF js="true">Export this map as a PDF</exportAsPDF>
 	<exportAsImage js="true">Export this map as an image</exportAsImage>
 	<exportAsWMC js="true">Save the Web Map Context</exportAsWMC>
-	<wmcmenu js="true">WMC Context menu</wmcmenu>	
 	<extents>Change the selected time (temporal data)</extents>
 	<extentSelected>Selected time: </extentSelected>
 	<featuresfound>features found</featuresfound>
@@ -88,6 +87,14 @@
 	<transparency>Set transparency</transparency>
 	<up>Move layer up</up>
 	<wait js="true">Please wait...</wait>
+	<wmctitle js="true">WMC Context menu</wmctitle>	
+	<wmctitlemail js="true">Send a WMC Context via e-mail</wmctitlemail>	
+	<wmctitleupload js="true">Upload and set a context</wmctitleupload>
+	<wmcbuttonmain js="true">View context menu</wmcbuttonmain>	
+	<wmcbuttonmail js="true">Send current context</wmcbuttonmail>	
+	<wmcbuttonupload js="true">Upload a context</wmcbuttonupload>	
+	<wmcbuttondownload js="true">Download current context</wmcbuttondownload>	
+	
 	<wmsConfigForm>Layer properties</wmsConfigForm >
 	<zoomIn>Zoom in</zoomIn>
 	<zoomOut>Zoom out</zoomOut>

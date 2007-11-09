@@ -297,16 +297,21 @@ function im_openPDF(req)
 /********************************************************************
 *** WMC
 ********************************************************************/
-/*
-## Called by the bottom toolbar
-*/
-function im_openWMCform()
+/**
+ * Called by the bottom toolbar
+ * @param {String} type optional - may be 'mail' or 'upload'
+ */
+function im_openWMCform(type)
 {
 	// setup WB
 	clearNode('im_whiteboard');    
 	var WB = $('im_whiteboard');
+
+	var i18nkey = "wmctitle";
+	if(type)
+		i18nkey += type;
 	
-	var wbtitle = im_createWBTitle(i18n("wmcmenu")); 
+	var wbtitle = im_createWBTitle(i18n(i18nkey)); 
 	WB.appendChild(wbtitle);
 	
 	var closer = im_getWBCloser();
@@ -319,7 +324,9 @@ function im_openWMCform()
 	WB.appendChild(div);
 	
 	var pars="&width=" + im_extra_drivingMap.width +         
-		    "&height=" + im_extra_drivingMap.height;         
+		    "&height=" + im_extra_drivingMap.height;
+	if(type)			         
+		pars += "&type="+type;
 		
 	var myAjax = new Ajax.Updater (
 		'im_wmcmenu',    
@@ -334,7 +341,7 @@ function im_openWMCform()
 }
 
 /**
-## Download WMC context. This is  one-shot operation.
+## Download WMC context. This is a one-shot operation.
 */
 function im_downloadWMC()
 {

@@ -118,7 +118,15 @@
 								<td style="padding:2px"><a onClick="im_addLayer();"><img src="{/root/gui/url}/images/im_addLayer.png" title="{/root/gui/strings/findMapsMapServers}"/></a></td>
 								<td style="padding:2px" onClick="im_openPDFform();" ><a><img src="{/root/gui/url}/images/acroread.png" title="{/root/gui/strings/exportAsPDF}"/></a></td>
 								<!-- <td style="padding:2px" onClick="im_openPictureForm();" ><a><img src="{/root/gui/url}/images/im_exportPic.png" title="{/root/gui/strings/exportAsImage}"/></a></td> -->
-								<td style="padding:2px" onClick="im_openWMCform();" ><a><img src="{/root/gui/url}/images/wmc.png" title="View context menu"/></a></td>								
+
+								<!-- WMC buttons: you can choose between the full WMC menu, or single buttons that address the single services in the menu  -->
+								<!-- This is the menu -->
+ 							   <!--<td style="padding:2px" onClick="im_openWMCform();" ><a><img src="{/root/gui/url}/images/wmc.png" title="{/root/gui/strings/wmcbuttonmain}"/></a></td>-->
+								<!-- Following are the standalone buttons  -->
+								<td style="padding:2px" onClick="im_openWMCform('mail');" ><a><img src="{/root/gui/url}/images/im_mail.png" title="{/root/gui/strings/wmcbuttonmail}"/></a></td>								
+								<td style="padding:2px" onClick="im_openWMCform('upload');" ><a><img src="{/root/gui/url}/images/fileopen.png" title="{/root/gui/strings/wmcbuttonupload}"/></a></td>								
+								<td style="padding:2px" onClick="im_downloadWMC();" ><a><img src="{/root/gui/url}/images/filesave.png" title="{/root/gui/strings/wmcbuttondownload}"/></a></td>
+								
 								<td width="100%" style="border-top:0px;"/> <!-- spacer -->								
 								<td class="im_tool" id="im_tool_scale">
 									<select name="im_setscale" id="im_setscale" onchange="javascript:im_bm_setScale();">
