@@ -17,7 +17,7 @@
 	<Collection collection_dn="localhost:2100/geonetwork"
 					collection_name="Local GeoNetwork"/>
 	
-	<Collection collection_dn="193.43.36.137:2100/geonetwork"
+	<Collection collection_dn="193.43.36.189:2100/geonetwork"
 					collection_name="Food and Agriculture Organization GeoNetwork (FAO-UN)"/>
 	
 	<Collection collection_dn="62.152.116.79:2100/geonetwork"
@@ -146,6 +146,7 @@
 	<!--
 	localhost
 	-->
+
 	<Repository repository_dn="localhost:2100/geonetwork" name="Local GeoNetwork" type="Z3950" can_multiplex_sessions="no" >
 		<RepositoryProperty name="ServiceHost" value="*** automatically changed on startup ***" />
 		<RepositoryProperty name="ServicePort" value="*** automatically changed on startup ***" />
@@ -156,8 +157,8 @@
 		<RepositoryProperty name="logo_src" value="http://www.k-int.com/collection_ico/sif.gif" />
 	</Repository>
 	
-	<Repository repository_dn="193.43.36.137:2100/geonetwork" name="Food and Agriculture Organization GeoNetwork (FAO-UN)" type="Z3950" can_multiplex_sessions="no" >
-		<RepositoryProperty name="ServiceHost" value="193.43.36.137" />
+	<Repository repository_dn="193.43.36.189:2100/geonetwork" name="Food and Agriculture Organization GeoNetwork (FAO-UN)" type="Z3950" can_multiplex_sessions="no" >
+		<RepositoryProperty name="ServiceHost" value="193.43.36.189" />
 		<RepositoryProperty name="ServicePort" value="2100" />
 		<RepositoryProperty name="service_short_name" value="geonetwork" />
 		<RepositoryProperty name="default_record_syntax" value="xml" />
@@ -565,20 +566,40 @@
 		<RepositoryProperty name="full_element_set_name" value="f" />
 		<RepositoryProperty name="logo_src" value="http://www.k-int.com/collection_ico/sif.gif" />
 	</Repository>
+
+	<!-- Archie's server -->
 	
+	<!--Collection collection_dn="archie" collection_name="archie's collection"/>
+
+	<Repository repository_dn="archie" name="archieaaaaa" type="Z3950" can_multiplex_sessions="no" >
+		<RepositoryProperty name="ServiceHost" value="192.168.1.104" />
+		<RepositoryProperty name="ServicePort" value="210" />
+		<RepositoryProperty name="service_short_name" value="fgdc" />
+		<RepositoryProperty name="default_record_syntax" value="xml" />
+		<RepositoryProperty name="default_element_set_name" value="s" />
+		<RepositoryProperty name="full_element_set_name" value="f" />
+		<RepositoryProperty name="logo_src" value="http://www.k-int.com/collection_ico/sif.gif" />
+	</Repository>
+
+	<Instance instance_dn="archie"
+				 collection_dn="archie"
+				 repository_dn="archie"
+				 local_name="fgdcddd" /--> <!-- this is the database -->
+
 	<!-- Map logical collection-dn strings on to physical instances of databases at targets (in z-speak) -->
 	
 	<!--
 	localhost
 	-->
+
 	<Instance instance_dn="localhost:2100/geonetwork"
 				 collection_dn="localhost:2100/geonetwork"
 				 repository_dn="localhost:2100/geonetwork"
 				 local_name="geonetwork" />
 	
-	<Instance instance_dn="193.43.36.137:2100/geonetwork"
-				 collection_dn="193.43.36.137:2100/geonetwork"
-				 repository_dn="193.43.36.137:2100/geonetwork"
+	<Instance instance_dn="193.43.36.189:2100/geonetwork"
+				 collection_dn="193.43.36.189:2100/geonetwork"
+				 repository_dn="193.43.36.189:2100/geonetwork"
 				 local_name="geonetwork" />
 				 
 	<Instance instance_dn="62.152.116.79:2100/geonetwork"
