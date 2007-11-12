@@ -82,11 +82,14 @@ public class GNSearchTask extends SearchTask implements InformationFragmentSourc
 	public GNSearchTask(IRQuery query, GNSearchable source, Observer[] observers, Properties properties, ServiceContext srvContext)
 	{
 		super(observers);
+		Log.debug(Geonet.Z3950_SERVER, "Creating search task");
+
 		_query      = query;
 		_source     = source;
 		_srvContext = srvContext;
 		_properties = properties;
 		setTaskStatusCode(TASK_IDLE);
+		Log.debug(Geonet.Z3950_SERVER, "Search task created");
 	}
 
 	//--------------------------------------------------------------------------
@@ -178,10 +181,12 @@ public class GNSearchTask extends SearchTask implements InformationFragmentSourc
 														  int count,
 														  RecordFormatSpecification spec)
 	{
+		Log.debug(Geonet.Z3950_SERVER, "Request for fragment start:"+startingFragment+", count:"+count);
+
 		InformationFragment fragment[] = new InformationFragment[count];
 		try
 		{
-			// build result data
+			// build fragment data
 			int from = startingFragment;
 			int to   = startingFragment + count - 1;
 
@@ -216,9 +221,9 @@ public class GNSearchTask extends SearchTask implements InformationFragmentSourc
 												  null,
 												  getRecord(md),
 												  new RecordFormatSpecification("xml", "meta", "f"));
-//												  new RecordFormatSpecification("xml", "meta", spec.getSetname().toString()));
 			}
 			_srvContext.getResourceManager().close();
+			Log.debug(Geonet.Z3950_SERVER, "Fragment returned");
 		}
 		catch (Throwable e)
 		{

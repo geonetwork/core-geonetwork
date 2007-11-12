@@ -102,6 +102,29 @@ public class Geonetwork implements ApplicationHandler
 
 
 		//------------------------------------------------------------------------
+		//--- initialize Z39.50
+
+		logger.info("  - Z39.50...");
+
+		boolean z3950Enable    = settingMan.getValueAsBool("system/z3950/enable", false);
+		String  z3950port      = settingMan.getValue("system/z3950/port");
+		String  host           = settingMan.getValue("system/server/host");
+		String  schemaMappings = handlerConfig.getMandatoryValue(Geonet.Config.SCHEMA_MAPPINGS);
+
+		if (!z3950Enable)
+			logger.info("     disabled");
+		else
+		{
+			logger.info("     Enabled. Schema mappings is : " + schemaMappings);
+
+			UserSession session = new UserSession();
+			session.authenticate(null, "z39.50", "", "", "Guest");
+			context.setUserSession(session);
+			context.setIpAddress("127.0.0.1");
+			Server.init(host, z3950port, path, schemaMappings, context);
+		}
+
+		//------------------------------------------------------------------------
 		//--- initialize search and editing
 
 		logger.info("  - Search...");
@@ -140,31 +163,6 @@ public class Geonetwork implements ApplicationHandler
 
 					dataMan.addSchema(saSchemas[i], schemaFile, suggestFile);
 				}
-		}
-
-		//------------------------------------------------------------------------
-		//--- initialize Z39.50
-
-		logger.info("  - Z39.50...");
-
-		// FIXME: should I move these to elSearch?
-
-		boolean z3950Enable    = settingMan.getValueAsBool("system/z3950/enable", false);
-		String  z3950port      = settingMan.getValue("system/z3950/port");
-		String  host           = settingMan.getValue("system/server/host");
-		String  schemaMappings = handlerConfig.getMandatoryValue(Geonet.Config.SCHEMA_MAPPINGS);
-
-		if (!z3950Enable)
-			logger.info("     disabled");
-		else
-		{
-			logger.info("     Enabled. Schema mappings is : " + schemaMappings);
-
-			UserSession session = new UserSession();
-			session.authenticate(null, "z39.50", "", "", "Guest");
-			context.setUserSession(session);
-			context.setIpAddress("127.0.0.1");
-			Server.init(host, z3950port, path, schemaMappings, context);
 		}
 
 		//------------------------------------------------------------------------

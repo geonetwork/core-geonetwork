@@ -35,6 +35,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
+import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -78,7 +79,7 @@ class Z3950Searcher extends MetaSearcher
 		request.addContent(Lib.db.select(dbms, "Regions", "region"));
 
 		Element xmlQuery = _sm.transform(_styleSheetName, request);
-		
+
 		Log.debug(Geonet.SEARCH_ENGINE, "OUTGOING XML QUERY:\n"+ Xml.getString(xmlQuery));
 
 		String query = newQuery(xmlQuery);
@@ -115,20 +116,27 @@ class Z3950Searcher extends MetaSearcher
 
 		// create the search task and perform search
 		_st = _sm.getSearchable().createTask(e,null);
+
 		try
 		{
-			_st.evaluate(timeout * 1000);
+			Log.debug(Geonet.SEARCH_ENGINE, "Starting remote search");
+			int status = _st.evaluate(timeout * 1000);
+			Log.debug(Geonet.SEARCH_ENGINE, "Remote search completed. Status is : "+ status);
 		}
 		catch ( TimeoutExceededException tee )
 		{
-			// tee.printStackTrace(); // DEBUG
+			Log.debug(Geonet.SEARCH_ENGINE, "Raised exception during search: " + tee.getMessage());
+			Log.debug(Geonet.SEARCH_ENGINE, "  (C) Stacktrace:" + Util.getStackTrace(tee));
 		}
 		initSearchRange(srvContext);
 	}
 
+	//-----------------------------------------------------------------------------
+
 	public Element present(ServiceContext srvContext, Element request, ServiceConfig config)
 		throws Exception
 	{
+		Log.debug(Geonet.SEARCH_ENGINE, "Presenting Z39.50 record for request:\n" + Xml.getString(request));
 		updateSearchRange(request);
 
 		// get request parameters
@@ -140,6 +148,8 @@ class Z3950Searcher extends MetaSearcher
 		Element response =  new Element("response");
 		response.setAttribute("from",  getFrom()+"");
 		response.setAttribute("to",    getTo()+"");
+
+		Log.debug(Geonet.SEARCH_ENGINE, "Range is from:"+ getFrom() +", to:"+getTo());
 
 		Element summary = makeSummary();
 		response.addContent(summary);
@@ -180,13 +190,19 @@ class Z3950Searcher extends MetaSearcher
 				}
 			}
 		}
+		Log.debug(Geonet.SEARCH_ENGINE, "Presented metadata is:\n" + Xml.getString(response));
+
 		return response;
 	}
+
+	//-----------------------------------------------------------------------------
 
 	public int getSize()
 	{
 		return _st.getTaskResultSet().getFragmentCount();
 	}
+
+	//-----------------------------------------------------------------------------
 
 	public Element getSummary()
 	{
@@ -195,6 +211,7 @@ class Z3950Searcher extends MetaSearcher
 		return response;
 	}
 
+	//-----------------------------------------------------------------------------
 	/** closes the connection(s)
 	  */
 	public void close()
@@ -250,12 +267,16 @@ class Z3950Searcher extends MetaSearcher
 		else throw new Exception("unknown Z39.50 query type: " + name);
 	}
 
+	//-----------------------------------------------------------------------------
+
 	private boolean isAlpha(String text)
 	{
 		for (int i = 0; i < text.length(); i++)
 			if (!Character.isLetter(text.charAt(i))) return false;
 		return true;
 	}
+
+	//-----------------------------------------------------------------------------
 
 	private Element makeSummary()
 	{
@@ -267,6 +288,7 @@ class Z3950Searcher extends MetaSearcher
 		return summary;
 	}
 
+	//-----------------------------------------------------------------------------
 	/** returns the current status
 	  */
 	private String getStatus()
