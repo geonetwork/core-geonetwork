@@ -62,7 +62,8 @@ im_extra_afterLayerUpdated = im_bm.rebuild.bindAsEventListener(im_bm);
 
 im_extra_afterWmcSet = function(resp)
 {
-	im_bm.set_dom(resp); // ??
+	im_bm.set_dom(resp); // ?? maybe we don't want to resize the map
+	im_bm.setBBox_dom(resp);	
 };
 
 
