@@ -38,6 +38,7 @@ import org.wfp.vam.intermap.kernel.map.MapMerger;
 import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
 import org.wfp.vam.intermap.kernel.map.mapServices.MapService;
 import org.wfp.vam.intermap.kernel.map.mapServices.arcims.ArcIMSService;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCExtension;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCLayer;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCLayerList;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCViewContext;
@@ -155,9 +156,13 @@ public class MapUtil
 						   "", // layer.getChildText("vendor_spec_par"); // DEBUG
 						   mm);
 
-		Element et = layer.getExtension().getChild("Transparency");
-		if(et != null)
-			mm.setTransparency(id, Float.parseFloat(et.getText()));
+		WMCExtension ext = layer.getExtension();
+		if(ext != null)
+		{
+			Element et = ext.getChild("Transparency");
+			if(et != null)
+				mm.setTransparency(id, Float.parseFloat(et.getText()));
+		}
 
 		return id;
 	}
