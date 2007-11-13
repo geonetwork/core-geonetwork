@@ -348,7 +348,7 @@ function im_downloadWMC()
     var pars= "width=" + im_extra_drivingMap.width +          
                     "&height=" + im_extra_drivingMap.height;        
 
-    window.open(getIMServiceURL('wmc.getContext') + '?'+pars);
+    window.open(getIMServiceURL('context.cml') + '?'+pars);
 }
 
 /**

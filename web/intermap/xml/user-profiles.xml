@@ -50,10 +50,11 @@
 
 		<allow service="wmc.setContext"/>
 		<allow service="wmc.uploadContext"/>
-		<allow service="wmc.getContext"/>
 		<allow service="wmc.setContextFromURL"/>
 		<allow service="wmc.mailContext"/>
 		<allow service="wmc.form"/>
+		<!--		<allow service="wmc.getContext"/>-->
+		<allow service="context.cml"/>
 		
 		<allow service="map.layers.add"/>
 		<allow service="map.layers.deleteLayer"/>

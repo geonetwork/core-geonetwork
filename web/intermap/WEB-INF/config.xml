@@ -506,7 +506,13 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 				
-		<service name="wmc.getContext" contentType="application/vnd.ogc.context+xml; charset=UTF-8">
+		<!--  This service returns the WMC view context as an XML file. 
+		         We are using a non-standard service name because at the moment jeeves provides no facilities 
+		         to set a suggested filename to the user agent. 
+		         The service name will be used as suggested filename to store the information sent. 
+		   -->
+<!--		<service name="wmc.getContext" contentType="application/vnd.ogc.context+xml; charset=UTF-8">-->
+		<service name="context.cml" contentType="application/vnd.ogc.context+xml; charset=UTF-8">
 			<class name=".services.wmc.GetWmcContext"/>
 			<!-- contenttype is defined in 100 spec, but not in 110 -->
 			<output sheet="im_wmc.xsl" contentType="application/vnd.ogc.context+xml; charset=UTF-8" />			
