@@ -112,10 +112,22 @@ Intermap.prototype.setSize_dom = function(response)
     this.setSize(w, h);
 };
 
+/**
+ * Set the image dimensions
+ * @param {int} width The image width
+ * @param {int} height The image height
+ */
 Intermap.prototype.setSize = function(width, height)
 {
     this.width  = parseInt(width);
-    this.height = parseInt(height);    
+    this.height = parseInt(height);   
+	
+	var img = $(this.imageId);
+	if(img)
+	{
+		 img.style.width  = width + 'px';
+		 img.style.height = height + 'px';
+	} 
 };
 
 
