@@ -199,8 +199,8 @@ public class WmsService extends MapService
 				+ "&WIDTH=" + width + "&HEIGHT=" + height
 				+ "&FORMAT=" + imageType
 				+ "&QUERY_LAYERS=" + name + "&X=" + x + "&Y=" + y
-				+ "&INFO_FORMAT=" + infoFormat;
-
+				+ "&INFO_FORMAT=" + infoFormat
+				+ "&STYLES=" + _styleName;
 
 		lastResponse = new Element("url").setText(url);
 
