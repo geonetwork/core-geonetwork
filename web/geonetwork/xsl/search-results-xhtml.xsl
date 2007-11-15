@@ -71,20 +71,22 @@
 			<td class="padded-content">
 				<h1>
 					<xsl:value-of select="$title"/>
-					&#xA0;<xsl:value-of select="/root/gui/strings/sortBy"/>&#xA0;
-					
-					<!-- sort by - - - - - - - - - - - - - - - - - - - - -->
-								
-					<select id="sortBy.live" size="1" class="content" onChange="setSortAndSearch()">
-						<xsl:for-each select="/root/gui/strings/sortByType">
-							<option value="{@id}">
-								<xsl:if test="@id = /root/gui/searchDefaults/sortBy">
-									<xsl:attribute name="selected"/>
-								</xsl:if>
-								<xsl:value-of select="."/>
-							</option>
-						</xsl:for-each>
-					</select>
+					<xsl:if test="/root/response/summary/@count > 1">
+						&#xA0;<xsl:value-of select="/root/gui/strings/sortBy"/>&#xA0;
+						
+						<!-- sort by - - - - - - - - - - - - - - - - - - - - -->
+									
+						<select id="sortBy.live" size="1" class="content" onChange="setSortAndSearch()">
+							<xsl:for-each select="/root/gui/strings/sortByType">
+								<option value="{@id}">
+									<xsl:if test="@id = /root/gui/searchDefaults/sortBy">
+										<xsl:attribute name="selected"/>
+									</xsl:if>
+									<xsl:value-of select="."/>
+								</option>
+							</xsl:for-each>
+						</select>
+					</xsl:if>
 				</h1>				
 			</td>
 		</tr>
