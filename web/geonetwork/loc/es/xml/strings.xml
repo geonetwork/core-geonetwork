@@ -392,6 +392,18 @@
 	<remote>Búsqueda remota</remote>
 	<remove>Eliminar</remove>
 	<reset>Vaciar</reset>
+	<options>Options</options>
+	<output>Output</output>
+	<outputType id="full">Full</outputType>
+	<outputType id="text">Text only</outputType>
+	<sortBy>Sort by</sortBy>
+	<sortByType id="relevance">Relevance</sortByType>
+	<sortByType id="rating">Rating</sortByType>
+	<sortByType id="popularity">Popularity</sortByType>
+	<sortByType id="date">Change date</sortByType>
+	<rateIt>Rate It</rateIt>
+	<mdRating>Metadata Rating</mdRating>
+	<ratingMsg>Press a button to rate. Note that for harvested metadata you have to wait the new run.</ratingMsg>
 	<resetSearch>Vaciar el formulario de búsquedas</resetSearch>
 	<resetFeedbackForm>Vaciar el formulario de Sugerencias</resetFeedbackForm>
 	<restrictTo>Limitar a</restrictTo>

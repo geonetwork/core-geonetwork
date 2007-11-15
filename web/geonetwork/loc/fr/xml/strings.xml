@@ -400,6 +400,17 @@
 	<remote>Recherche distante</remote>
 	<remove>Supprimer</remove>
 	<reset>Réinitialiser</reset>
+	<output>Output</output>
+	<outputType id="full">Complet</outputType>
+	<outputType id="text">Texte seulement</outputType>
+	<sortBy>Tri</sortBy>
+	<sortByType id="relevance">Pertinence</sortByType>
+	<sortByType id="rating">Note</sortByType>
+	<sortByType id="popularity">Popularité</sortByType>
+	<sortByType id="date">Date de mise à jour</sortByType>
+	<rateIt>Note</rateIt>
+	<mdRating>Note de la métadonnée</mdRating>
+	<ratingMsg>Cliquer sur le bouton pour noter. Pour les métadonnées moissonnées vous devez attendre la nouvelle synchronisation.</ratingMsg>
 	<resetSearch>Réinitialiser</resetSearch>
 	<resetFeedbackForm>Réinitialiser</resetFeedbackForm>
 	<restrictTo>Limiter a</restrictTo>
