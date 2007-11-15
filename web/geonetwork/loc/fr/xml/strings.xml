@@ -403,7 +403,7 @@
 	<output>Output</output>
 	<outputType id="full">Complet</outputType>
 	<outputType id="text">Texte seulement</outputType>
-	<sortBy>Tri</sortBy>
+	<sortBy>Trier par</sortBy>
 	<sortByType id="relevance">Pertinence</sortByType>
 	<sortByType id="rating">Note</sortByType>
 	<sortByType id="popularity">Popularité</sortByType>
