@@ -23,29 +23,34 @@
 
 package org.wfp.vam.intermap.services.wmc;
 
-import java.util.*;
-import java.net.*;
-import java.io.*;
-
-import org.jdom.*;
-
-import jeeves.interfaces.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-
-import org.wfp.vam.intermap.kernel.map.*;
+import java.io.BufferedInputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLDecoder;
+import java.util.Iterator;
+import java.util.List;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 import org.wfp.vam.intermap.Constants;
+import org.wfp.vam.intermap.kernel.map.MapMerger;
 import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.impl.WMCFactory;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCViewContext;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCWindow;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.impl.Utils;
 import org.wfp.vam.intermap.services.map.MapUtil;
-import org.wfp.vam.intermap.http.ConcurrentHTTPTransactionHandler;
 
-//=============================================================================
-
-/** main.result service. shows search results
-  */
-
+/**
+ * Set the WMC from an URL-retrieved document
+ *
+ * @author ETj
+ */
 public class SetWmcFromURL implements Service
 {
 	public void init(String appPath, ServiceConfig config) throws Exception {}
@@ -56,76 +61,136 @@ public class SetWmcFromURL implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	/**
-	 * Method exec
-	 *
-	 * @param    params              an Element
-	 * @param    context             a  ServiceContext
-	 *
-	 * @return   an Element
-	 *
-	 * @exception   Exception
-	 *
-	 */
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		String url = params.getChildText("url");
-		
+
 		URL u = new URL(url);
 		HttpURLConnection conn = (HttpURLConnection)u.openConnection();
 		BufferedInputStream is = new BufferedInputStream(conn.getInputStream());
 		Element mapContext = Xml.loadStream(is);
 		conn.disconnect();
-		
-		String stContext = mapContext.getText();
-		String decoded = URLDecoder.decode(stContext);
 
-		mapContext = Xml.loadString(decoded, false);
+//		XMLOutputter xo = new XMLOutputter(Format.getPrettyFormat());
+//		System.out.println(" ============= wmc is:\n\n" +xo.outputString(mapContext));
 
 		// Create a new MapMerger object
-		MapMerger mm = addContextLayers(mapContext); // DEBUG
+		String sreplace  = params.getChildText("clearLayers");
+		boolean breplace = Utils.getBooleanAttrib(sreplace, true);
 
-		// Set image size if not set
-		String size = (String)context.getUserSession().getProperty(Constants.SESSION_SIZE);
-		if (size == null)
-			context.getUserSession().setProperty(Constants.SESSION_SIZE, "small");
+		MapMerger mm = breplace?
+							new MapMerger():
+							MapUtil.getMapMerger(context);
+
+		WMCViewContext vc = WMCFactory.parseViewContext(mapContext);
+		WMCWindow win = vc.getGeneral().getWindow();
+
+		String imgurl = MapUtil.setContext(mm, vc);
 
 		// Update the user session
 		context.getUserSession().setProperty(Constants.SESSION_MAP, mm);
 
-		return new Element("response");
+		return new Element("response")
+			.addContent(new Element("imgUrl").setText(imgurl))
+			.addContent(new Element("scale").setText(mm.getDistScale()))
+			.addContent(mm.getBoundingBox().toElement())
+			.addContent(new Element("width").setText("" + win.getWidth()))
+			.addContent(new Element("height").setText("" + win.getHeight()));
 	}
-	
-	public static MapMerger addContextLayers(Element context) throws Exception
-	{
-		MapMerger mm = new MapMerger();
 
-		// Add each layer in the context to the map
-		Namespace ns = org.jdom.Namespace.getNamespace("http://www.opengeospatial.net/context");
-		List layers = context.getChild("LayerList", ns).getChildren("Layer", ns);
-
-		for (Iterator i = layers.iterator(); i.hasNext(); )
-		{
-			Element layer = (Element)i.next();
-
-			int serverType = 2;
-			Element olr = layer.getChild("Server", ns).getChild("OnlineResource", ns);
-
-			Namespace linkNs = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
-			String serverUrl = olr.getAttributeValue("href", linkNs);
-			String serviceName = layer.getChildText("Name", ns);
-			String vsp = layer.getChildText("vendor_spec_par"); // vendor specific parameters
-			
-			try {
-				MapUtil.addService(serverType, serverUrl, serviceName, vsp, mm);
-			} catch (Exception e) { e.printStackTrace(); } // DEBUG
-		}
-		
-		mm.setBoundingBox(new BoundingBox());
-		return mm;
-	}
-	
 }
+
+//
+// 2007 11 22 ETj : following there is the old version of this service.
+// It handles some non-standard elements, and is deprecated.
+// I leave it here in case we need to restore it in a hurry, but it has to be removed entirely.
+//
+
+//=============================================================================
+
+/** main.result service. shows search results
+  */
+
+//public class SetWmcFromURL implements Service
+//{
+//	public void init(String appPath, ServiceConfig config) throws Exception {}
+//
+//	//--------------------------------------------------------------------------
+//	//---
+//	//--- Service
+//	//---
+//	//--------------------------------------------------------------------------
+//
+//	/**
+//	 * Method exec
+//	 *
+//	 * @param    params              an Element
+//	 * @param    context             a  ServiceContext
+//	 *
+//	 * @return   an Element
+//	 *
+//	 * @exception   Exception
+//	 *
+//	 */
+//	public Element exec(Element params, ServiceContext context) throws Exception
+//	{
+//		String url = params.getChildText("url");
+//
+//		URL u = new URL(url);
+//		HttpURLConnection conn = (HttpURLConnection)u.openConnection();
+//		BufferedInputStream is = new BufferedInputStream(conn.getInputStream());
+//		Element mapContext = Xml.loadStream(is);
+//		conn.disconnect();
+//
+//		String stContext = mapContext.getText();
+//		String decoded = URLDecoder.decode(stContext);
+//
+//		mapContext = Xml.loadString(decoded, false);
+//
+//		// Create a new MapMerger object
+//		MapMerger mm = addContextLayers(mapContext); // DEBUG
+//
+//		// Set image size if not set
+//		String size = (String)context.getUserSession().getProperty(Constants.SESSION_SIZE);
+//		if (size == null)
+//			context.getUserSession().setProperty(Constants.SESSION_SIZE, "small");
+//
+//		// Update the user session
+//		context.getUserSession().setProperty(Constants.SESSION_MAP, mm);
+//
+//		return new Element("response");
+//	}
+//
+//	public static MapMerger addContextLayers(Element context) throws Exception
+//	{
+//		MapMerger mm = new MapMerger();
+//
+//		// Add each layer in the context to the map
+//		Namespace ns = org.jdom.Namespace.getNamespace("http://www.opengeospatial.net/context");
+//		List layers = context.getChild("LayerList", ns).getChildren("Layer", ns);
+//
+//		for (Iterator i = layers.iterator(); i.hasNext(); )
+//		{
+//			Element layer = (Element)i.next();
+//
+//			int serverType = 2;
+//			Element olr = layer.getChild("Server", ns).getChild("OnlineResource", ns);
+//
+//			Namespace linkNs = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
+//			String serverUrl = olr.getAttributeValue("href", linkNs);
+//			String serviceName = layer.getChildText("Name", ns);
+//			String vsp = layer.getChildText("vendor_spec_par"); // vendor specific parameters
+//
+//			try {
+//				MapUtil.addService(serverType, serverUrl, serviceName, vsp, mm);
+//			} catch (Exception e) { e.printStackTrace(); } // DEBUG
+//		}
+//
+//		mm.setBoundingBox(new BoundingBox());
+//		return mm;
+//	}
+//
+//}
 
 //=============================================================================
 
