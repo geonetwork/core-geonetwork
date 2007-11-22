@@ -38,10 +38,12 @@
 		</error>
 -->
 		<!-- general error -->
+		<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>			
+		
 
-		<error sheet="error.xsl">
+<!--		<error sheet="error.xsl">
 			<xml name="error" file="xml/error.xml" />
-		</error>
+		</error>-->
 		
 	</default>
 
@@ -491,7 +493,7 @@
 		<service name="wmc.uploadContext">
 			<class name=".services.wmc.UploadWmcContext"/>
 			
-			<output sheet="copy.xsl" contentType="text/xml; charset=UTF-8"/>							
+			<output sheet="copy_response.xsl" contentType="text/xml; charset=UTF-8"/>							
 			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
 		</service>
 
@@ -500,7 +502,7 @@
 		<service name="wmc.setContext">
 			<class name=".services.wmc.SetWmcContext"/>
 			
-			<output sheet="copy.xsl" contentType="text/xml; charset=UTF-8"/>							
+			<output sheet="copy_response.xsl" contentType="text/xml; charset=UTF-8"/>							
 			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
 		</service>
 
@@ -527,7 +529,7 @@
 				<param name="gnurl" value="http://localhost:8080/geonetwork/srv/en/main.home"/> <!-- THIS PARAM HAS TO BE CONFIGURED BY THE INSTALLER -->				
 			</class>
 			
-			<output sheet="copy.xsl" contentType="text/xml; charset=UTF-8"/>							
+			<output sheet="copy_response.xsl" contentType="text/xml; charset=UTF-8"/>							
 			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
 		</service>
 		
@@ -535,8 +537,9 @@
 		
 		<service name="wmc.setContextFromURL">
 			<class name=".services.wmc.SetWmcFromURL"/>
-			
-			<output forward="map.getMain"/>
+
+			<output sheet="copy_response.xsl" contentType="text/xml; charset=UTF-8"/>							
+			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
 		</service>
 
 		<!-- ====================================
