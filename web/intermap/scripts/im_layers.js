@@ -27,6 +27,12 @@ function imc_reloadLayers()
 /** Builds the layer list */
 function im_buildLayerList(req) 
 {
+	if(im_checkError(req))
+	{
+		im_showError(req);
+		return;
+	}
+	
 	if( ! $('im_layersDiv') ) // map viewer not yet loaded
 		return;
 	
@@ -36,9 +42,12 @@ function im_buildLayerList(req)
 		activeLayerId = im_getFirstLayerId();		
 
 	activateMapLayer(activeLayerId, true); 
-           
-	if( ! Prototype.Browser.IE )
-		createSortable();
+ 
+	if($('im_layerList'))
+	{
+		if( ! Prototype.Browser.IE )
+			createSortable();
+	} 	          
 }
                       
            
@@ -104,12 +113,15 @@ function setLayerVisibility(req, id)
 
 function activateMapLayer(id, keepnew)
 {
-	var mapLayer = $('layerList_' + id);
-	
 	disactivateAllMapLayers(keepnew);
-	mapLayer.className = 'im_activeLayer';
-	
-	$('layerControl_' + id).show();
+
+	if(id)
+	{
+		var mapLayer = $('layerList_' + id);	
+		mapLayer.className = 'im_activeLayer';
+		
+		$('layerControl_' + id).show();
+	}
 	
 	activeLayerId = id;
 }
@@ -280,6 +292,12 @@ function im_getNextActivableLayer(id)
 function im_getFirstLayerId()
 {
 	var ul= $('im_layerList');
+	
+	if( ! ul ) // error in loading layers
+	{
+		return null;		
+	}
+	
 	var li1 = ul.getElementsByTagName("li")[0];
 	
 	if (li1 === null)
