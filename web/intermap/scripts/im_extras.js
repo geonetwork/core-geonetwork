@@ -383,8 +383,7 @@ function im_uploadWMC(bClearLayers)
                     im_wmc_showMessage("upload", "ok");                
                     imc_reloadLayers();
                     
-					var xml = resp.getElementsByTagName('response')[0];
-					im_extra_afterWmcSet(xml);
+					im_extra_afterWmcSet(resp);
                 }
             }                    
         });
