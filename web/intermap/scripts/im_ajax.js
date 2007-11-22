@@ -10,6 +10,43 @@
 im_load_error = function() {alert("Loading error");};
 
 
+function im_checkError(req)
+{
+	var doc = req.responseXML;	
+	if(!doc) {return false;}
+	
+	doc.getElementByTagName
+	
+	if(doc.firstChild.tagName=="error")
+	{ 
+		return true;
+	}
+	
+	// TODO: refine check
+	
+	return false;	
+}
+
+function im_showError(req)
+{
+	var doc = req.responseXML;	
+	if(!doc) {return false;}
+	
+	if(doc.firstChild.tagName=="error")
+	{ 
+		var err = doc.firstChild;
+		var mess = err.getElementsByTagName('message')[0].textContent;
+		var clss = err.getElementsByTagName('class')[0].textContent;
+		
+		alert("Intermap error: " + mess + "\nException: "+ clss);		
+		return true;
+	}
+	
+	// TODO: refine check
+	
+	return false;	
+}
+
 /*****************************************************************************
  *                                                                           *
  *                                  Layers                                   *
@@ -58,6 +95,21 @@ function im_setWMC(wmc, callback)
     );    
 }
 
+function imc_setContextFromURL(url, callback) 
+{
+	var pars = 'url=' + encodeURIComponent(url) 
+    		
+    var myAjax = new Ajax.Request (
+    	getIMServiceURL('wmc.setContextFromURL'),
+    	{
+    		method: 'post',
+    		parameters: pars,
+    
+    		onComplete: callback,
+    		onFailure: reportError
+    	}
+    );    
+}
 
 /*****************************************************************************
  *                                                                           *
