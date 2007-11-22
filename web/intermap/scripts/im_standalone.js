@@ -7,8 +7,18 @@
 //
 //===================================================================
 
+//===================================================================
+//
+// InterMap Entry Points
+//
+// External scripts can call the imep_* functions to update
+// the intermap standalone map.  
+//
+//===================================================================
+
 function imep_loadLayer(url, service)
 {
+	im_bm.setStatus('busy');
     imc_addService(url, service, 2, 
 					function(req) 
 					{
@@ -25,6 +35,39 @@ function imep_setBBox(n,e,s,w)
 	im_bm.rebuild();		
 }
 
+function imep_loadWmcFromUrl(url)
+{
+	im_bm.setStatus('busy');
+	imc_setContextFromURL(url, 
+							function(req)
+							{
+								if(im_checkError(req))
+								{
+									im_bm.setStatus('idle');
+									im_showError(req);
+									return;
+								}
+
+ 			                     imc_reloadLayers();
+								 
+			 					var xml = req.responseXML;
+								 
+								 if(im_extra_afterWmcSet)
+								 	im_extra_afterWmcSet(xml);
+		
+								im_bm.setStatus('idle');
+							}
+	);	
+	
+}
+
+
+//===================================================================
+// DEBUG
+//
+// Next lines will popup an alert window 
+// whenever a prototype error happens.
+//===================================================================
 
 Ajax.Responders.register({
   onException: function(req, e){
@@ -39,6 +82,12 @@ Ajax.Responders.register({
   }
 });
 
+//===================================================================
+//
+// Next lines define the standalone map behaviour
+// according to the Intermap class in im_class.js
+//
+//===================================================================
 
 //var intermap = new Intermap(400, 200, 'im_bm_image');
 
@@ -58,12 +107,17 @@ function im_boot()
 
 			
 im_extra_drivingMap = im_bm;
-im_extra_afterLayerUpdated = im_bm.rebuild.bindAsEventListener(im_bm);
+
+im_extra_afterLayerUpdated = function()
+{
+	im_bm.rebuild();
+}.bindAsEventListener(im_bm);
 
 im_extra_afterWmcSet = function(resp)
 {
-	im_bm.set_dom(resp); // ?? maybe we don't want to resize the map
-	im_bm.setBBox_dom(resp);	
+	var xml = resp.responseXML;
+	im_bm.set_dom(xml); // ?? maybe we don't want to resize the map
+	im_bm.setBBox_dom(xml);	
 };
 
 

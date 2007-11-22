@@ -15,9 +15,9 @@
 		<script type="text/javascript">
 			function sample_loadWmcUrl()
 			{
-				var text = document.getElementById('wmcurl').value;
+				var wmcurl = document.getElementById('wmcurl').value;
 				
-//				window.frames.intermapIframe.imep_loadLayer(url, layer); // FF OK
+				window.frames.intermapIframe.imep_loadWmcFromUrl(wmcurl); 
 			}
 			
 			function sample_loadWmsLayer()
@@ -30,7 +30,7 @@
 //			var p = f.document || f.contentWindow.document;
 //			p.imep_loadLayer(url, layer);
 			
-			window.frames.intermapIframe.imep_loadLayer(url, layer); // FF OK
+				window.frames.intermapIframe.imep_loadLayer(url, layer); // FF OK
 			}
 
 			function sample_gotoBBox()
@@ -55,7 +55,7 @@
 					<td width="600px">col: 600px</td>
 					<td>
 						WMC url 
-						<input type="text" id="wmcurl" value="http://devos.sapienzaconsulting.com/chameleon/geoportal/htdocs/contexts/esa_dis_cml_floods_india.xml"/> 
+						<input type="text" id="wmcurl" value="http://localhost:8080/intermap/static/context_australia.xml"/> 
 						<a href="javascript:void(0);" onclick="sample_loadWmcUrl();">LOAD</a>
 						
 						<p/>WMS server url 
