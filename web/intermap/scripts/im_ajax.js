@@ -13,9 +13,10 @@ im_load_error = function() {alert("Loading error");};
 function im_checkError(req)
 {
 	var doc = req.responseXML;	
-	if(!doc) {return false;}
-	
-	doc.getElementByTagName
+	if(!doc) // It's not XML 
+	{
+		return false;
+	}	
 	
 	if(doc.firstChild.tagName=="error")
 	{ 
@@ -30,7 +31,10 @@ function im_checkError(req)
 function im_showError(req)
 {
 	var doc = req.responseXML;	
-	if(!doc) {return false;}
+	if(!doc) // It's not XML 
+	{
+		return false;
+	}	
 	
 	if(doc.firstChild.tagName=="error")
 	{ 
@@ -97,7 +101,7 @@ function im_setWMC(wmc, callback)
 
 function imc_setContextFromURL(url, callback) 
 {
-	var pars = 'url=' + encodeURIComponent(url) 
+	var pars = 'url=' + encodeURIComponent(url);
     		
     var myAjax = new Ajax.Request (
     	getIMServiceURL('wmc.setContextFromURL'),
@@ -115,11 +119,24 @@ function imc_setContextFromURL(url, callback)
  *                                                                           *
  *****************************************************************************/
 
-function imc_addService(surl, service, type, callback)
+/**
+ * 
+ * @param {String} surl
+ * @param {String} service
+ * @param {int} type
+ * @param {boolean} doClearContext
+ * @param {function} callback
+ */
+function imc_addService(surl, service, type, doClearContext, callback)
 {
 	var pars = 'url=' + encodeURIComponent(surl) 
 			+ '&service=' + encodeURIComponent(service) 
 			+ '&type=' + type;
+			
+	if(doClearContext===true)
+	{
+		pars += "&clear=true";		
+	}
 			
 	var myAjax = new Ajax.Request (
 		getIMServiceURL('map.addServices.embedded'),
@@ -134,9 +151,15 @@ function imc_addService(surl, service, type, callback)
 
 }
 
-function imc_addServices(surl, serviceArray, type, callback)
+function imc_addServices(surl, serviceArray, type, /*doClearContext,*/ callback)
 {
-	var pars = 'url=' + encodeURIComponent(surl) + '&type=' + type;
+	var pars = 'url=' + encodeURIComponent(surl) 
+			 + '&type=' + type;
+
+//	if(doClearContext===true)
+//	{
+//		pars += "&clear=true";		
+//	}
 	
 	serviceArray.each(
 	    function(service)
