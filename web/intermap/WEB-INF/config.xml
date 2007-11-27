@@ -95,6 +95,11 @@
 	<!-- ====================================================================== -->
 
 	<services package="org.wfp.vam.intermap">
+
+		<!--  Provides an HTML skeleton with no preloaded map image inside.  -->
+		<service name="skel">
+			<output sheet="index.xsl" />
+		</service>
 		
 		<service name="main">
 			<class name=".services.map.Update" />

@@ -4,6 +4,7 @@
 
 	<profile name="Guest">
 		<allow service="main"/>
+		<allow service="skel"/>
 		
 		<allow service="map.getMain.embedded"/>
 		<allow service="minimap.rebuild"/>
