@@ -16,10 +16,10 @@
 //
 //===================================================================
 
-function imep_loadLayer(url, service)
+function imep_loadLayer(url, service, doClearContext)
 {
 	im_bm.setStatus('busy');
-    imc_addService(url, service, 2, 
+    imc_addService(url, service, 2, doClearContext,
 					function(req) 
 					{
 			             im_buildLayerList(req);
@@ -82,42 +82,74 @@ Ajax.Responders.register({
   }
 });
 
+
+/**
+ * This function is called by the onload property in the Intermap frame 
+ */
+function im_boot()
+{	
+	setTool("zoomin");
+
+	var size = getWindowSize();
+	//alert("W:"+size[0]+" H:"+size[1]);	
+	im_bm.setSize( size[0] - im_layer_width - 35, size[1] - 50);
+	
+	var func = parent.imcb_getBootWmcUrl;
+	var wmcurl;
+
+	if(typeof func == 'function')
+	{
+		wmcurl = func();
+		
+		if(wmcurl)
+		{
+			imc_setContextFromURL(wmcurl,
+									function(req)
+									{
+										if(im_checkError(req))
+										{
+											im_bm.setStatus('idle');
+											im_showError(req);
+											return;
+										}
+		
+					                     imc_reloadLayers();
+										 
+					 					var xml = req.responseXML;
+										im_bm.set_dom(xml); 
+										im_bm.setBBox_dom(xml);								 
+				
+										im_bm.setStatus('idle');
+									}
+								);
+			return;
+		}			
+	}
+		
+			
+	im_bm.rebuild(imc_reloadLayers);		
+	im_bm.setStatus("idle");
+}
+
 //===================================================================
 //
 // Next lines define the standalone map behaviour
 // according to the Intermap class in im_class.js
 //
 //===================================================================
-
-//var intermap = new Intermap(400, 200, 'im_bm_image');
-
-function im_boot()
-{	
-	var size = getWindowSize();
-	//alert("W:"+size[0]+" H:"+size[1]);
-	
-	im_bm.setSize( size[0] - im_layer_width - 35, size[1] - 50);	
-	im_bm.rebuild();
-	
-	imc_reloadLayers(); // append layers to list
-	
-	setTool("zoomin");
-	im_bm.setStatus("idle");
-}
-
 			
 im_extra_drivingMap = im_bm;
 
 im_extra_afterLayerUpdated = function()
 {
 	im_bm.rebuild();
-}.bindAsEventListener(im_bm);
+}; //.bindAsEventListener(im_bm);
 
 im_extra_afterWmcSet = function(resp)
 {
-	var xml = resp.responseXML;
-	im_bm.set_dom(xml); // ?? maybe we don't want to resize the map
-	im_bm.setBBox_dom(xml);	
+	//var xml = resp.responseXML;
+	im_bm.set_dom(resp); // ?? maybe we don't want to resize the map
+	im_bm.setBBox_dom(resp);	
 };
 
 

@@ -68,11 +68,12 @@ Intermap.prototype.afterImageRebuilt; // (req)
  */
 Intermap.prototype.set_dom = function(response)
 {
+	this.setSize_dom(response);
+	
 	var mmurl = response.getElementsByTagName('imgUrl')[0].firstChild.nodeValue;           
 	$(this.imageId).src = mmurl;
 	
 	this.setBBox_dom(response);
-	this.setSize_dom(response);
 };
 
 /** 

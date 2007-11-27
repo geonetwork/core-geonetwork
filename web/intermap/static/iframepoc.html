@@ -6,13 +6,32 @@
 			body {
                  background: black;
                  color: #80c0c0;      		  	 
+			}
+				  
+			td {
 				 font-family:Verdana,Arial,Helvetica,sans-serif;
 				 font-size: 9pt;
-				  }
+			}
+			input {
+				 font-size: 9pt;
+			}
+			legend {
+				color: white;
+				font-family:Courier,sans-serif;								
+			}
+			a {
+				color: orange;
+				float: right;
+			}
+				  
 				 
 		-->
 		</style>
 		<script type="text/javascript">
+			
+			/**
+			 * Sample function to show how imep_loadWmcFromUrl() can be used.
+			 */
 			function sample_loadWmcUrl()
 			{
 				var wmcurl = document.getElementById('wmcurl').value;
@@ -20,19 +39,26 @@
 				window.frames.intermapIframe.imep_loadWmcFromUrl(wmcurl); 
 			}
 			
+			/**
+			 * Sample function to show how imep_loadLayer() can be used.
+			 */
 			function sample_loadWmsLayer()
 			{
 				var url = document.getElementById('wmsurl').value;
 				var layer = document.getElementById('layername').value;
+				var clear = document.getElementById('clearcontext').checked;
 
 //			var d = document;
 //			var f = d.frames ? d.frames['intermapIframe'] : d.getElementById('intermapIframe');
 //			var p = f.document || f.contentWindow.document;
 //			p.imep_loadLayer(url, layer);
 			
-				window.frames.intermapIframe.imep_loadLayer(url, layer); // FF OK
+				window.frames.intermapIframe.imep_loadLayer(url, layer, clear); // FF OK
 			}
 
+			/**
+			 * Sample function to show how imep_setBBox() can be used.
+			 */
 			function sample_gotoBBox()
 			{
 				var bbn = document.getElementById('bbn').value;
@@ -41,6 +67,20 @@
 				var bbw = document.getElementById('bbw').value;
 			
 				window.frames.intermapIframe.imep_setBBox(bbn, bbe, bbs, bbw); // FF OK
+			}
+		
+			/**
+			 * InterMap CallBack function <p>
+			 * 
+			 * If this function exists and returns a not null value,
+			 * the returned value must be an URL to a WMC context document.
+			 * This is the first context InterMap will load.
+			 * 
+			 * @return {String} the URL of the WMC context file
+			 */			
+			function imcb_getBootWmcUrl()
+			{				
+				return "http://localhost:8080/intermap/static/context_australia.xml";
 			}
 
 		</script>
@@ -53,23 +93,46 @@
 				<tr height="100px">
 					<td width="150px">row: 100px<br/>col: 150px</td>
 					<td width="600px">col: 600px</td>
-					<td>
-						WMC url 
-						<input type="text" id="wmcurl" value="http://localhost:8080/intermap/static/context_australia.xml"/> 
-						<a href="javascript:void(0);" onclick="sample_loadWmcUrl();">LOAD</a>
+					<td rowspan="3">
+						<fieldset>
+							<legend>imep_loadWmcFromUrl</legend>
+							WMC url 
+							<input type="text" id="wmcurl" value="http://localhost:8080/intermap/static/context_australia.xml"/> 
+							
+							<br/><a href="javascript:void(0);" onclick="sample_loadWmcUrl();">LOAD CONTEXT</a>							
+						</fieldset>
 						
-						<p/>WMS server url 
+						<p/>
+<!--
+						WMS server url 
 						<input type="text" id="wmsurl" value="http://ssems1.esrin.esa.int/ionicweb/wfs/FLOODS_FREQ_UNEP"/> 
 						layer name 
-						<input type="text" id="layername" value="global_floods_unep"/> 
-						<a href="javascript:void(0);" onclick="sample_loadWmsLayer();">LOAD</a>
+						<input type="text" id="layername" value="global_floods_unep"/>
+-->						
+						<fieldset>
+							<legend>imep_loadLayer</legend>
+							WMS server URL 
+							<input type="text" id="wmsurl" value="http://www2.demis.nl/wms/wms.asp?wms=WorldMap&"/> 
+							<br/>Layer name 
+							<input type="text" id="layername" value="Countries"/>
+							<br/>Clear context
+							<input type="checkbox" id="clearcontext" title="Clear context"/>
+							 
+							<br/><a href="javascript:void(0);" onclick="sample_loadWmsLayer();">ADD LAYER</a>
+						</fieldset>
+
+						<p/>
 						
-						<p/>BBox
-						<br/>N<input type="text" id="bbn" value="-21.781"/>
-						E<input type="text" id="bbe" value="-53.65"/>
-						<br/>S<input type="text" id="bbs" value="-55.052"/>
-						W<input type="text" id="bbw" value="-73.582"/>
-						<a href="javascript:void(0);" onclick="sample_gotoBBox();">GOTO</a>												
+						<fieldset>
+							<legend>imep_setBBox</legend>
+							N:<input type="text" id="bbn" value="-21.781"/>
+							E:<input type="text" id="bbe" value="-53.65"/>
+							<br/>
+							S:<input type="text" id="bbs" value="-55.052"/>
+							W:<input type="text" id="bbw" value="-73.582"/>
+							
+							<br/><a href="javascript:void(0);" onclick="sample_gotoBBox();">GOTO BBOX</a>												
+						</fieldset>
 					</td>
 				</tr>
 				
@@ -78,14 +141,14 @@
 					<td>
 						<iframe width="600" height="200"
 							id="intermapIframe" name="intermapIframe"
-							src="/intermap/srv/en/main?width=200&height=100"/>						
+							src="/intermap/srv/en/skel"/>						
 					</td>
-					<td></td>
+					
 				</tr>				
 				<tr height="100px">
 					<td>H: 100px</td>
 					<td></td>
-					<td></td>
+					
 				</tr>				
 			</tbody>
 			
