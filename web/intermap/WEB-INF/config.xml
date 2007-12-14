@@ -7,6 +7,7 @@
 		<profiles>user-profiles.xml</profiles>
 		<debug>true</debug>
 		<uploadDir>WEB-INF/data/tmp</uploadDir>
+		<maxUploadSize>50</maxUploadSize> <!-- Size must be in megabyte (integer) -->
 		<useProxy>false</useProxy>
 		<proxyHost>10.11.0.1</proxyHost>
 		<proxyPort>3128</proxyPort>
