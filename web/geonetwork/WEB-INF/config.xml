@@ -5,6 +5,7 @@
 	<general>
 		<profiles>user-profiles.xml</profiles>
 		<uploadDir>WEB-INF/data/tmp</uploadDir>
+		<maxUploadSize>100</maxUploadSize> <!-- Size must be in megabyte (integer) -->
 		<debug>true</debug>
 	</general>
 
@@ -23,7 +24,7 @@
 			<xml name="iso19115" base="xml/schemas/iso19115/loc" file="codelists.xml" />
 			<xml name="iso19139" base="xml/schemas/iso19139/loc" file="labels.xml" />
 			<xml name="iso19139" base="xml/schemas/iso19139/loc" file="codelists.xml" />
-		  	<xml name="fgdc-std" base="xml/schemas/fgdc-std/loc" file="labels.xml" />
+		  <xml name="fgdc-std" base="xml/schemas/fgdc-std/loc" file="labels.xml" />
 			<xml name="dublin-core" base="xml/schemas/dublin-core/loc" file="labels.xml" />
 
 			<call name="session" class="jeeves.guiservices.session.Get" />
@@ -68,8 +69,8 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.DbmsPool</provider>
 			<config>
-				<user>GCCC0tPe</user>
-				<password>GP2j4Z0a</password>
+				<user>zZlngCjy</user>
+				<password>i719dYGY</password>
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>
