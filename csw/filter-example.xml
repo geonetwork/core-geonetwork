@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Filter xmlns="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">
-	<And>
+<!--	<And> -->
 		<PropertyIsLike wildCard="%" singleChar="_" escape="\">
-			<PropertyName>any</PropertyName>
-			<Literal>africa%</Literal>
+			<PropertyName>AnyText</PropertyName>
+			<Literal>%africa%</Literal>
 		</PropertyIsLike>
-		
-		<Or>
+<!--		<Or>
 			<PropertyIsEqualTo>
 				<PropertyName>dc:title</PropertyName>
 				<Literal>asia</Literal>
@@ -30,5 +29,5 @@
 				</gml:Envelope>
 			</BBOX>
 		</Or>
-	</And>
+	</And> -->
 </Filter>
