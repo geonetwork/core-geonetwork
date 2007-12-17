@@ -79,7 +79,7 @@ public class GetRecordsPanel extends TPanel
 
 	//---------------------------------------------------------------------------
 
-	private static final String EXAMPLE_CQL = "AnyText = africa%";
+	private static final String EXAMPLE_CQL = "AnyText like %africa%";
 
 	//---------------------------------------------------------------------------
 	//---

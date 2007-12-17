@@ -481,6 +481,8 @@ public class DataManager
 		Namespace nons= Namespace.NO_NAMESPACE;
 		Namespace gmd = Namespace.getNamespace("http://www.isotc211.org/2005/gmd");
 
+		Log.debug(Geonet.DATA_MANAGER, "Autodetect schema for: '"+md.getText()+"'");
+		
 		if (md.getName().equals("MD_Metadata") && md.getNamespace().equals(gmd))
 			return "iso19139";
 

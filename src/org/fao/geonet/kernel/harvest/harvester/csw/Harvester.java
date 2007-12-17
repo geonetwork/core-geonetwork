@@ -238,7 +238,7 @@ class Harvester
 
 		ArrayList<Element> queriables = new ArrayList<Element>();
 
-		buildFilterQueryable(queriables, "",             s.freeText);
+		buildFilterQueryable(queriables, "AnyText",      s.freeText);
 		buildFilterQueryable(queriables, "dc:title",     s.title);
 		buildFilterQueryable(queriables, "dct:abstract", s.abstrac);
 		buildFilterQueryable(queriables, "dc:subject",   s.subject);
