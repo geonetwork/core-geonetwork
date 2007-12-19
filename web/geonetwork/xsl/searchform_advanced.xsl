@@ -12,21 +12,21 @@
 			<tr class="advsearchfields">
 				<xsl:comment>ADV SEARCH: WHAT?</xsl:comment>
 				<td width="16px" height="236px" style="padding-right: 3px; padding-top:5px;">
-					<img width="13px" height="233px" src="/geonetwork/images/arrow-down.gif"/>
+					<img width="13px" height="233px" src="{/root/gui/url}/images/arrow-down.gif"/>
 				</td>
 				<td style="margin-left:5px;">
 					<xsl:call-template name="adv_what"></xsl:call-template>
 				</td>
 				<xsl:comment>ADV SEARCH: WHERE?</xsl:comment>					
 				<td width="16px" height="236px" style="padding-right: 3px; padding-top:5px;">
-					<img width="13px" height="233px" src="/geonetwork/images/arrow-down.gif"/>
+					<img width="13px" height="233px" src="{/root/gui/url}/images/arrow-down.gif"/>
 				</td>
 				<td>
 					<xsl:call-template name="adv_where"></xsl:call-template>
 				</td>
 				<xsl:comment>ADV SEARCH: WHEN?</xsl:comment>					
 				<td width="16px" height="236px" style="padding-right: 3px; padding-top:5px;">
-					<img width="13px" height="233px" src="/geonetwork/images/arrow-down.gif"/>
+					<img width="13px" height="233px" src="{/root/gui/url}/images/arrow-down.gif"/>
 				</td>
 				<td>
 					<xsl:call-template name="adv_when"></xsl:call-template>
@@ -38,15 +38,15 @@
 					<table class="advsearchfields" width="100%" border="0" cellspacing="0" cellpadding="0">
 						<tr >
 							<td width="5px"></td>
-							<td style="background: url(/geonetwork/images/arrow-bg.gif) repeat-x;" height="29px" width="80%">
+							<td style="background: url({/root/gui/url}/images/arrow-bg.gif) repeat-x;" height="29px" width="80%">
 								
 							</td>
-							<td width="36px" style="background: url(/geonetwork/images/arrow-right.gif) no-repeat;" > </td>
-							<td width="13px" style="background: url(/geonetwork/images/search-left.gif) no-repeat;" > </td>
-							<td align="center" width="40px" style="background: url(/geonetwork/images/search-bg.gif) repeat-x; width: auto; white-space: nowrap; padding-bottom: 8px; vertical-align: bottom; cursor:hand;  cursor:pointer;" onclick="runAdvancedSearch()" >
+							<td width="36px" style="background: url({/root/gui/url}/images/arrow-right.gif) no-repeat;" > </td>
+							<td width="13px" style="background: url({/root/gui/url}/images/search-left.gif) no-repeat;" > </td>
+							<td align="center" width="40px" style="background: url({/root/gui/url}/images/search-bg.gif) repeat-x; width: auto; white-space: nowrap; padding-bottom: 8px; vertical-align: bottom; cursor:hand;  cursor:pointer;" onclick="runAdvancedSearch()" >
 								<font color="#FFFFFF"><strong><xsl:value-of select="/root/gui/strings/search"/></strong></font>
 							</td>
-							<td width="12px" style="background: url(/geonetwork/images/search-right.gif) no-repeat;" > </td>
+							<td width="12px" style="background: url({/root/gui/url}/images/search-right.gif) no-repeat;" > </td>
 						</tr>
 					</table>
 				</td>
@@ -370,17 +370,17 @@
 					<input style="width: 90px;" readonly="1" id="dateFrom" value="{/root/gui/searchDefaults/dateFrom}" name="dateFrom" class="inpBnds" type="text"
 						onchange="$('radfrom1').checked=true;$('radfrom1').disabled='';"/>
 					<img title="FROM date selector" style="cursor: pointer; margin-bottom: 6px; margin-right:10px;" id="from_trigger_c" 
-						src="/geonetwork/scripts/calendar/img.gif" alt="select FROM date" align="middle" hspace="1"/>
+						src="{/root/gui/url}/scripts/calendar/img.gif" alt="select FROM date" align="middle" hspace="1"/>
 							
 					<xsl:value-of select="/root/gui/strings/to"/>
 					<input  style="width: 90px;" readonly="1" id="dateTo" value="{/root/gui/searchDefaults/dateTo}" name="dateTo" class="inpBnds" type="text"
 						onchange="$('radfrom1').checked=true;$('radfrom1').disabled='';" />
 					<img title="TO date selector" style="cursor: pointer; margin-bottom: 6px;" id="to_trigger_c" 
-						src="/geonetwork/scripts/calendar/img.gif" alt="select TO date" align="middle" hspace="1"/>								
+						src="{/root/gui/url}/scripts/calendar/img.gif" alt="select TO date" align="middle" hspace="1"/>								
 				</input>
 <!--				<div onclick="JavaScript:$('dateFrom').value ='';$('dateTo').value ='';" style="cursor: pointer;"><xsl:value-of select="/root/gui/strings/clear"/></div> -->
 				<img title="{/root/gui/strings/clear}" style="cursor: pointer; margin-bottom: 6px;" id="clearDates" 
-					src="/geonetwork/images/clear_left.png" alt="{/root/gui/strings/clear}" align="middle" 
+					src="{/root/gui/url}/images/clear_left.png" alt="{/root/gui/strings/clear}" align="middle" 
 					hspace="1" onclick="JavaScript:$('dateFrom').value ='';$('dateTo').value ='';$('radfrom0').checked=true;$('radfrom1').disabled='disabled';"/>
 			</td>
 		</tr>

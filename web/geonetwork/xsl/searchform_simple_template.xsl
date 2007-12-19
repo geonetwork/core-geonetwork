@@ -9,7 +9,7 @@
 		<table class="geosearchfields" width="211px">
 			<tr>
 				<td rowspan="6" style="vertical-align: bottom;">
-					<img width="9px" height="246px" src="/geonetwork/images/arrow_down_simple.gif"/>
+					<img width="9px" height="246px" src="{/root/gui/url}/images/arrow_down_simple.gif"/>
 				</td>
 				<td colspan="2"/>
 			</tr>
@@ -49,7 +49,7 @@
 						<tr height="102px" style="position:relative;">
 							<td id="im_mm_mapContainer" style="position:relative;width:202px;height:102px;" colspan="6"  >
 								<div id="im_mm_map" style="position: absolute;width:200px;height:100px;overflow: hidden;">
-									<img id="im_mm_image" width="200px" height="100px" style="left:1px;"  src="/geonetwork/images/header-right.gif"/> <!-- "/intermap/images/map0.jpg"/>-->
+									<img id="im_mm_image" width="200px" height="100px" style="left:1px;"  src="{/root/gui/url}/images/header-right.gif"/> <!-- "/intermap/images/map0.jpg"/>-->
 
 									<div id="im_mm_aoibox_n" style="left:0px;top:0px;width:0px;height:0px;position:absolute;border-top: 1px dashed #f00;visibility: visible;overflow: hidden;z-index: 3000">.</div>
 									<div id="im_mm_aoibox_e" style="left:0px;top:0px;width:0px;height:0px;position:absolute;border-right: 1px dashed #f00;visibility: visible;overflow: hidden;z-index: 3000">.</div>
@@ -125,19 +125,19 @@
 				<td colspan="2" style="align: center; padding-top: 7px;">
 					<table class="advsearchfields" width="211px" border="0" cellspacing="0" cellpadding="0">
 						<tr >
-							<td style="background: url(/geonetwork/images/arrow-bg.gif) repeat-x;" height="29px" width="30%">
+							<td style="background: url({/root/gui/url}/images/arrow-bg.gif) repeat-x;" height="29px" width="30%">
 							</td>
 							<td style="padding:0px; margin:0px;" width="36px">
-								<img width="36px" style="padding:0px; margin:0px;"  src="/geonetwork/images/arrow-right.gif"/>
+								<img width="36px" style="padding:0px; margin:0px;"  src="{/root/gui/url}/images/arrow-right.gif"/>
 							</td>
 							<td style="padding:0px; margin:0px;" width="13px">
-								<img width="13px" style="padding:0px; margin:0px;"  src="/geonetwork/images/search-left.gif"/>
+								<img width="13px" style="padding:0px; margin:0px;"  src="{/root/gui/url}/images/search-left.gif"/>
 							</td>
-							<td align="center" style="background: url(/geonetwork/images/search-bg.gif) repeat-x; width: auto; white-space: nowrap; padding-bottom: 8px; vertical-align: bottom; cursor:hand;  cursor:pointer;" onclick="runSimpleSearch();" >
+							<td align="center" style="background: url({/root/gui/url}/images/search-bg.gif) repeat-x; width: auto; white-space: nowrap; padding-bottom: 8px; vertical-align: bottom; cursor:hand;  cursor:pointer;" onclick="runSimpleSearch();" >
 								<font color="#FFFFFF"><strong><xsl:value-of select="/root/gui/strings/search"/></strong></font>
 							</td>
 							<td style="padding:0px; margin:0px;" width="12px">
-								<img width="12px" style="padding:0px; margin:0px;"  src="/geonetwork/images/search-right.gif"/>
+								<img width="12px" style="padding:0px; margin:0px;"  src="{/root/gui/url}/images/search-right.gif"/>
 							</td>
 						</tr>
 					</table>
