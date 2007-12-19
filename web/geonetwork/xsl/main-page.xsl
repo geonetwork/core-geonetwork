@@ -20,7 +20,7 @@
 
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar-setup.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/lang/calendar-en.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/lang/calendar-{/root/gui/language}.js"/>
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/calendar/calendar-blue2.css" />
 		
 		
