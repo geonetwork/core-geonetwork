@@ -389,7 +389,7 @@ public class GetRecords extends AbstractOperation implements CatalogService
 		String  styleSheet = context.getAppPath() + Geonet.Path.CSW + Geonet.File.CQL_TO_FILTER;
 
 		Element filter = getFilter(xml, styleSheet, context);
-		context.debug("Trasformed CQL gives the following filter:\n"+Xml.getString(filter));
+		context.debug("Transformed CQL gives the following filter:\n"+Xml.getString(filter));
 
 		return filter;
 	}
