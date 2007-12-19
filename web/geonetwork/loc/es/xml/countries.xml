@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <countries>
-	<country iso2="af" id="1">Afghanistan</country>
+	<country iso2="af" id="1">Afganistan</country>
 	<country iso2="al" id="2">Albania</country>
 	<country iso2="dz" id="3">Algeria</country>
 	<country iso2="as" id="4">American Samoa</country>
@@ -20,8 +20,8 @@
 	<country iso2="bd" id="18">Bangladesh</country>
 	<country iso2="bb" id="19">Barbados</country>
 	<country iso2="by" id="20">Belarus</country>
-	<country iso2="be" id="21">Belgium</country>
-	<country iso2="bz" id="22">Belize</country>
+	<country iso2="be" id="21">Belgica</country>
+	<country iso2="bz" id="22">Belice</country>
 	<country iso2="bj" id="23">Benin</country>
 	<country iso2="bm" id="24">Bermuda</country>
 	<country iso2="bt" id="25">Bhutan</country>
@@ -138,7 +138,7 @@
 	<country iso2="mr" id="136">Mauritania</country>
 	<country iso2="mu" id="137">Mauritius</country>
 	<country iso2="yt" id="138">Mayotte</country>
-	<country iso2="mx" id="139">Mexico</country>
+	<country iso2="mx" id="139">México</country>
 	<country iso2="fm" id="140">Micronesia, Federated States of</country>
 	<country iso2="md" id="141">Moldova, Republic of</country>
 	<country iso2="mc" id="142">Monaco</country>

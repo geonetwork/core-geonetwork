@@ -2,101 +2,101 @@
 <strings>
 
 	<savexml>
-		<dc>Save Dublin Core metadata as XML</dc>
-		<fgdc>Save FGDC metadata as XML</fgdc>
-		<iso19115Esri>Save ISO19115 metadata in XML for ESRI ArcCatalog</iso19115Esri>
-		<iso19139>Save ISO19115/19139 metadata as XML</iso19139>
-		<iso19139fra>Save ISO19115/19139 Fra metadata as XML</iso19139fra>
+		<dc>Guardar metadatos de Dubli		<dc>Guardar metadatos de Dublin Core como XML</dc>
+		<fgdc>Guardar metadatos FGDC como XML</fgdc>
+		<iso19115Esri>Guardar metadatos ISO19115 en XML para ESRI ArcCatalog</iso19115Esri>
+		<iso19139>Guardar metadatos ISO19115/19139 como XML</iso19139>
+		<iso19139fra>Guardar metadatos Fra ISO19115/19139 como XML</iso19139fra>
 	</savexml>
 	<!-- new strings -->
-	<searchUnusedTitle>Search for Unused</searchUnusedTitle>
+	<searchUnusedTitle>Buscar no usados</searchUnusedTitle>
 
-	<batchImportTitle>Batch Import</batchImportTitle>
+	<batchImportTitle>Importación batch</batchImportTitle>
 
-	<xmlInsertTitle>XML Metadata Insert</xmlInsertTitle>
+	<xmlInsertTitle>Insertar metadatos XML</xmlInsertTitle>
 
 	<fuzzy>Precisión</fuzzy>
-	<fuzzySearch>Set the precision of the search (from exact term search to fuzzy search).</fuzzySearch>
+	<fuzzySearch>Establece la precisión de la búsqueda (desde búdqueda de términos exactos a búsquedas fuzzy).</fuzzySearch>
 	<fuzzyImprecise>Impreciso</fuzzyImprecise>
 	<fuzzyPrecise>Exacto</fuzzyPrecise>
 	<address>Direccionamiento</address>
-	<state>State</state>
+	<state>Estado</state>
 	<zip>Código postal</zip>
 	<country>País</country>
 	<email>Email</email>
-	<kind>Kind</kind>
-	<kindChoice value="gov">Government</kindChoice>
-	<kindChoice value="int-org">International organisation</kindChoice>
+	<kind>Tipo</kind>
+	<kindChoice value="gov">Gobierno</kindChoice>
+	<kindChoice value="int-org">Organización internacional</kindChoice>
 	<kindChoice value="ngo">NGO</kindChoice>
-	<kindChoice value="uni">University/research centre</kindChoice>
-	<kindChoice value="company">Private company</kindChoice>
-	<kindChoice value="consultant">Independent consultant</kindChoice>
-	<kindChoice value="other">Other</kindChoice>
-	<userInfo>Change user information</userInfo>
-	<userInfoDes>Allow current user to change user information</userInfoDes>
+	<kindChoice value="uni">Centro universitarios/investigación</kindChoice>
+	<kindChoice value="company">Compañia privada</kindChoice>
+	<kindChoice value="consultant">Consultor independiente</kindChoice>
+	<kindChoice value="other">Otros</kindChoice>
+	<userInfo>Cambiar la información de usuario</userInfo>
+	<userInfoDes>Permitir al usuario actual cmabiar la información de usuario</userInfoDes>
 	<subtemplate>Subtemplate</subtemplate>
-	<subtemplateTitle>subtemplate title</subtemplateTitle>
-	<edit>Edit</edit>
-	<view>View</view>
-	<Term>Term</Term>
-	<startsWith>Start with</startsWith>
-	<contains>Contains</contains>
-	<exactTerm>Exact term</exactTerm>
-	<foundWords>Number of terms found:</foundWords>
-	<selection>Selection</selection>
-	<label>Label</label>
-	<type>Type</type>
-	<sort>Sort</sort>
-	<definition>Definition</definition>
-	<close>Close</close>
-	<identifier>Identifier</identifier>
-	<keyword>keyword</keyword>
-	<res>results</res>
-	<ress>result</ress>
+	<subtemplateTitle>Título del subtemplate</subtemplateTitle>
+	<edit>Editar</edit>
+	<view>Ver</view>
+	<Term>Término</Term>
+	<startsWith>Inicia con</startsWith>
+	<contains>Contiene</contains>
+	<exactTerm>Término exacto</exactTerm>
+	<foundWords>Número de términos encontrados:</foundWords>
+	<selection>Selección</selection>
+	<label>Etiqueta</label>
+	<type>Tipo</type>
+	<sort>Ordenar</sort>
+	<definition>Definición</definition>
+	<close>Cerrar</close>
+	<identifier>Identificador</identifier>
+	<keyword>Palabra clave</keyword>
+	<res>resultados</res>
+	<ress>resultado</ress>
 
 	<thesaurus>
-		<category>Thesaurus category</category>
-		<management>Manage thesauri</management>
-		<manDes>Add/modify/delete and show thesauri</manDes>
-		<edition>Edit thesaurus</edition>
-		<consultation>View thesaurus</consultation>
-		<thesaurus>Thesaurus</thesaurus>
-		<admin>Manage thesaurus</admin>
-		<edit>Edit thesaurus</edit>
-		<update>Update thesaurus</update>
-		<upload>Upload thesaurus</upload>
-		<download>Download thesaurus</download>
-		<delete>Delete thesaurus</delete>	
-		<editelement>Edit element</editelement>
-		<addelement>Add element</addelement>			
-		<deleteelement>Delete element</deleteelement>
-		<updateelement>Update element</updateelement>
-		<keywordDescription>Keyword definition:</keywordDescription>
-		<keywordConfirm>Confirm keyword suppression</keywordConfirm>
-		<unknown>Unknown thesaurus</unknown>
-		<narrower>Narrower Term</narrower>
-		<broader>Broader Term</broader>
-		<related>Related Term</related>
-		<en>in</en>
-		<foundKeyWords>Number of terms found</foundKeyWords>
-		<foundKeyWordsLimit>Maximum number of terms found</foundKeyWordsLimit>
+		<category>Categoria del tesauro</category>
+		<management>Manejar tesauro</management>
+		<manDes>Agregar/modificar/eliminar y mostrar tesauro</manDes>
+		<edition>Editar tesauro</edition>
+		<consultation>Ver tesauro</consultation>
+		<thesaurus>Tesauro</thesaurus>
+		<admin>Administrar tesauro</admin>
+		<edit>Editar tesauro</edit>
+		<update>Actualizar tesauro</update>
+		<upload>Subir tesauro</upload>
+		<download>Bajar tesauro</download>
+		<delete>Eliminar tesauro</delete>	
+		<editelement>Editar elemento</editelement>
+		<addelement>Agregar elemento</addelement>			
+		<deleteelement>Eliminar elemento</deleteelement>
+		<updateelement>Actualizar elemento</updateelement>
+		<keywordDescription>Definición de la palabra clave:</keywordDescription>
+		<keywordConfirm>Confirmar eliminación de la palabra clave</keywordConfirm>
+		<unknown>Tesauro desconocido</unknown>
+		<narrower>Término mas acotado</narrower>
+		<broader>Término mas amplio</broader>
+		<related>Término relacionado</related>
+		<en>en</en>
+		<foundKeyWords>Número de términso encontrados</foundKeyWords>
+		<foundKeyWordsLimit>Número máximo de términos encontrados</foundKeyWordsLimit>
 	</thesaurus>
 
-	<searchBox>Search for Data and Information</searchBox>
-	<searchIndex>Search index</searchIndex>
-	<contactUs>Contact us</contactUs>
-	<highlights>Highlights</highlights>
-	<recentAdditions>Recent Additions</recentAdditions>
-	<feedbackCardTitle>Feedback and Comments</feedbackCardTitle>
-	<loginCardTitle>Login / Signup</loginCardTitle>
-	<organisation>Organisation / department</organisation>
-	<emailAddress>Email address</emailAddress>
-	<feedbackComments>Feedback / comments</feedbackComments>
+	<searchBox>Buscar datos e información</searchBox>
+	<searchIndex>Índice de búsqueda</searchIndex>
+	<contactUs>Contáctenos</contactUs>
+	<highlights>Destacados</highlights>
+	<recentAdditions>Agregados recientemente</recentAdditions>
+	<feedbackCardTitle>Retroalimentación y comentarios</feedbackCardTitle>
+	<loginCardTitle>Accesar / Autenticarse</loginCardTitle>
+	<organisation>Organización / departamento</organisation>
+	<emailAddress>Dirección de correo</emailAddress>
+	<feedbackComments>Retroalimentación / comentarios</feedbackComments>
 	<!-- End new strings -->
 
 	<language>es</language>
 	<!-- ISO code -->
-	<about>Acerca</about>
+	<about>Acerca de</about>
 	<abstract>Resumen</abstract>
 	<add>Añadir</add>
 	<addNewMetadata>Añadir Metadato</addNewMetadata>
@@ -166,7 +166,7 @@
 	<del>borrar</del>
 	<delete>Borrar</delete>
 	<descriptionTab>Descripción</descriptionTab>
-	<desSchema>Destination schema</desSchema>
+	<desSchema>Schema destino</desSchema>
 	<digital>Datos digitales</digital>
 	<directory>Directorio</directory>
 	<dirParameter>('directorio' es un parámetro obligatorio)</dirParameter>
@@ -208,20 +208,20 @@
 	<groupManagement>Gestión de grupos de usuarios</groupManagement>
 	<groupManDes>Añadir/modificar/borrar y mostrar grupos</groupManDes>
 	<groups>Grupos</groups>
-	<harvestingManagement>Harvesting management</harvestingManagement>
-	<harvestingManDes>Add/modify/delete/start/stop harvesting tasks</harvestingManDes>
+	<harvestingManagement>Manejo de harvesting</harvestingManagement>
+	<harvestingManDes>Agregar/modificar/borrar/iniciar/parar tareas de harvesting</harvestingManDes>
 	<header_meta>
 		<meta name="keywords" content="GeoNetwork opensource metadatos ISO19115 ISO19139 ISO GIS teledetección datos shapefiles datos  espaciales imágenes de satélite mapa mapas interactivos opengis geospatial CSW reference implementation mapping 19115 19139 geographic z39.50 catalogo clearinghouse coberturas mallas raster data opensource open source network"/>
 		<meta name="description" content="GeoNetwork opensource proporciona a través de internet acceso a mapas interactivos, imágenes de satélite y bases de datos espaciales relacionadas. El propósito es mejorar el acceso a y la integración de datos espaciales e información. GeoNetwork opensource permite compartir fácilmente datos espaciales entre los usuarios"/>
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
 		<meta name="DC.title" lang="Spanish" content="Portal GeoNetwork para datos espaciales e información"/>
 		<meta name="DC.creator" content="Equipo GeoNetwork"/>
-		<meta name="DC.subject" lang="Spanish" content="GeoNetwork metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
-		<meta name="DC.description" lang="Spanish" content="GeoNetwork provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
+		<meta name="DC.subject" lang="Spanish" content="GeoNetwork metadata ISO19115 ISO19139 ISO GIS sensores remotos datos shapefiles datos espaciales imágenes de satélite mapas mapas interactivos opengis 19115 19139 geographic z39.50 catálogo clearinghouse coberturas grid raster data opensource open source network"/>
+ 	      <meta name="DC.description" lang="Spanish" content="GeoNetwork provee acceso a través de Internet a mapas interactivos, imágenes de satelite ya bases de datos espaciales relacionadas. Su propósito es mejorar el acceso y hacer uso integrado de datos espaciales e información. GeoNetwork opensource permite compartir fácilmente datos espaciales entre diferentes usuarios"/>
 		<meta name="DC.date" content="02-07-2007"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
-		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.language" content="English French Spanish Chinese"/>
+		<meta name="DC.format" content="text/html; charset=ISO-8859-1"/>
+		<meta name="DC.language" content="Inglés Frances Español Chino"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
 	<help>Ayuda</help>
@@ -243,7 +243,7 @@
 		<h1>Información sobre servidores de mapas</h1>
 		Usted puede encontrar servidores de mapas buscando en GeoNetwork por datos digitales y servidores de mapas, o simplemente conectarse directamente con un conjunto de servidores de mapas predefinidos.
 		<p />
-		Los servidores de mapas disponibles son <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial® Consortium</a> Servidores de mapas compatibles OGC o Servidores de mapas <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>.
+		Los servidores de mapas disponibles son <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial Consortium</a> Servidores de mapas compatibles OGC o Servidores de mapas <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>.
 	</interMapInfo>
 	<keywords>Palabras clave</keywords>
 	<keywordshelp>Elija varias palabras clave manteniendo la tecla Ctrl pulsada y cuando pulsa el botón del ratón</keywordshelp>
@@ -253,9 +253,9 @@
 	<latMin>lat (min)</latMin>
 	<links>Enlaces</links>
 	<local>Búsqueda Local</local>
-	<localiz>Localization</localiz>
-	<localizDes>Allows to change localized entities, like groups, categories etc...</localizDes>
-	<location>País/Región</location>
+	<localiz>Localización</localiz>
+	<localizDes>Permite cambiar entidades localizadas, como grupos, categorias, etc...</localizDes>
+	<location>Paí­s/Región</location>
 	<login>Iniciar Sesión</login>
 <!--	<loginCardTitle>Entre, Identifíquese</loginCardTitle> -->
 	<loginwarning>Es necesario que se identifique como usuario para poder administrar el catálogo</loginwarning>
@@ -264,15 +264,15 @@
 	<longitude>Longitud (entre -180 y 180) en grados</longitude>
 	<longMax>long (max)</longMax>
 	<longMin>long (min)</longMin>
-	<mandatory>Mandatory</mandatory>
-	<mandatoryIf>Mandatory if</mandatoryIf>
+	<mandatory>Obligatorio</mandatory>
+	<mandatoryIf>Obligatorio si</mandatoryIf>
 	<mainpage1>
 		<h1>Las metas de GeoNetwork son:</h1>
 		<ul>
 			<li>Mejorar el acceso a los datos y facilitar la integración de los mismos (interoperabilidad)</li>
 			<li>Ayudar en la toma de decisiones</li>
-			<li>Promocionar soluciones multidisciplinares entorno al desarrollo sostenible</li>
-			<li>Enfatizar los beneficios que proporcionan la comprensión de la Información Geográfica</li>
+			<li>Promocionar soluciones multidisciplinarias (en torno) al desarrollo sostenible</li>
+			<li>Enfatizar los beneficios que proporciona la comprensión de la información Geográfica</li>
 		</ul>
 	</mainpage1>
 	<mainpage2> 
@@ -294,17 +294,17 @@
 			<font size="-2"> El <b>Tema</b> el buscador buscará registros de este tema. </font>
 		</p>
 		<p>
-			<font size="-2"> El <b>Area</b> el buscador buscará los mapas que satisfacen el ámbito geográfico seleccionado. </font>
+			<font size="-2"> El <b>área</b> el buscador buscará los mapas que satisfacen el ámbito geográfico seleccionado. </font>
 		</p>
 		<p>
 			<font size="-2"> Eligiendo una opción "<b>
-					<input name="demo" type="checkbox" checked="checked"/> Incluir</b> el <b>Area</b> seleccionado" podrá encontrar mapas que se extiendan más que el área seleccionada.<br/>
-				<i>Por ejemplo: Mapas globales o Regionales que además de cubrir el país seleccionado cubren otros más.</i>
+					<input name="demo" type="checkbox" checked="checked"/> Incluir</b> el <b>área</b> seleccionada" podrá encontrar mapas que se extiendan más que el área seleccionada.<br/>
+				<i>Por ejemplo: Mapas globales o Regionales que además de cubrir el paí­s seleccionado cubren otros más.</i>
 			</font>
 		</p>
 		<p>
 			<font size="-2"> Eligiendo una opción "<b>
-					<input name="demo" type="checkbox" checked="checked"/> Parcialmente contenido</b> en el <b>Area</b> seleccionada" podrá encontrar mapas parcialmente conenidos en el área seleccionada. </font>
+					<input name="demo" type="checkbox" checked="checked"/> Parcialmente contenido</b> en el <b>Area</b> seleccionada" podrá encontrar mapas parcialmente contenidos en el área seleccionada. </font>
 		</p>
 	</mainhelp3>
 	<mainpageTitle>Búsqueda de Servidores de mapas, Información Geográfica, imágenes de satélites y otros tipos de recursos.</mainpageTitle>
@@ -313,9 +313,9 @@
 <!--	<mandatory>Obligatorio</mandatory>
 	<mandatoryIf>Obligatorio Si </mandatoryIf> -->
 	<mapType>Tipo de mapa</mapType>
-	<mapViewerClose>Close Map Viewer</mapViewerClose>
-	<mapViewerLoading>Loading Map Viewer...</mapViewerLoading>
-	<mapViewerOpen>Open Map Viewer</mapViewerOpen>
+	<mapViewerClose>Cerrar visualizador de mapas</mapViewerClose>
+	<mapViewerLoading>Cargando visualizador de mapas...</mapViewerLoading>
+	<mapViewerOpen>Abrir el visualizador de mapas</mapViewerOpen>
 	<max>Máximo</max>
 	<mdUpdateError>Actualizar error</mdUpdateError>
 	<message>El nombre de usuario o la contaseña son incorrectos.<br/>Presione el botón 'atrás' e intentelo de nuevo.</message>
@@ -353,7 +353,7 @@
 	<partialCooordinate>Coordenadas parciales </partialCooordinate>
 	<password>Contraseña</password>
 	<persInfo>Información personal</persInfo>
-	<placeKeyword>Palabras clace de lugar</placeKeyword>
+	<placeKeyword>Palabras clave de lugar</placeKeyword>
 	<porCatInfoTab>Catálogo</porCatInfoTab>
 	<poweredBy>Software usado: </poweredBy>
 	<privileges>Privilegios</privileges>
@@ -388,22 +388,22 @@
 <!--	<recentAdditions>Incorporaciones recientes</recentAdditions> -->
 	<refSysTab>Sistema de Referencia</refSysTab>
 	<region>Región</region>
-	<RegisteredUser>Usuario registrador</RegisteredUser>
+	<RegisteredUser>Usuario registrado</RegisteredUser>
 	<remote>Búsqueda remota</remote>
 	<remove>Eliminar</remove>
 	<reset>Vaciar</reset>
-	<options>Options</options>
-	<output>Output</output>
-	<outputType id="full">Full</outputType>
-	<outputType id="text">Text only</outputType>
-	<sortBy>Sort by</sortBy>
-	<sortByType id="relevance">Relevance</sortByType>
+	<options>Opciones</options>
+	<output>Salida</output>
+	<outputType id="full">Completa</outputType>
+	<outputType id="text">Solo texto</outputType>
+	<sortBy>Ordenar por</sortBy>
+	<sortByType id="relevance">Relevancia</sortByType>
 	<sortByType id="rating">Rating</sortByType>
-	<sortByType id="popularity">Popularity</sortByType>
-	<sortByType id="date">Change date</sortByType>
-	<rateIt>Rate It</rateIt>
-	<mdRating>Metadata Rating</mdRating>
-	<ratingMsg>Press a button to rate. Note that for harvested metadata you have to wait the new run.</ratingMsg>
+	<sortByType id="popularity">Popularidad</sortByType>
+	<sortByType id="date">Fecha de modificación</sortByType>
+	<rateIt>Establecer rating</rateIt>
+	<mdRating>Rating de metadatos</mdRating>
+	<ratingMsg>Presione un botón para establecer el rating. Note que para metadatos harvested necesitas esperar a la siguiente ejecución.</ratingMsg>
 	<resetSearch>Vaciar el formulario de búsquedas</resetSearch>
 	<resetFeedbackForm>Vaciar el formulario de Sugerencias</resetFeedbackForm>
 	<restrictTo>Limitar a</restrictTo>
@@ -417,7 +417,7 @@
 	<saveAndClose>Salvar y Cerrar</saveAndClose>
 	<saveAndValidate>Salvar y comprobar</saveAndValidate>
 	<schema>Esquema</schema>
-	<search>Búsqar</search>
+	<search>Buscar</search>
 <!--	<searchBox>Búsqueda de información y datos</searchBox> -->
 <!--	<searchIndex>Índice de búsqueda</searchIndex> -->
 	<searching>...Búsqueda en marcha...</searching>
@@ -427,7 +427,7 @@
 	<searchText>¿Qué? (Texto)</searchText>
 	<searchUnused>Búsqueda de metadatos vacíos o que no han sido usados nunca</searchUnused>
 	<server>Servidor</server>
-	<setAll>Set All</setAll>
+	<setAll>Establecer todos</setAll>
 	<show>Página de Metadatos</show>
 	<simple>Búsqueda Simple</simple>
 	<simpleTab>Vista predefinida</simpleTab>
@@ -441,8 +441,8 @@
 	<submit>Enviar</submit>
 	<summaryTab>Resumen</summaryTab>
 	<surName>Apellidos</surName>
-	<systemConfig>System configuration</systemConfig>
-	<systemConfigDes>Allows to change some system's parameters</systemConfigDes>
+	<systemConfig>Configuración del sistema</systemConfig>
+	<systemConfigDes>Permite cambiar algunos parámetros del sistema</systemConfigDes>
 	<template>Plantilla de metadatos</template>
 	<thanks>Gracias por su trabajo, el equipo GeoNetwork</thanks>
 	<theme>Tema del recurso (Categoría ISO)</theme>
@@ -451,7 +451,7 @@
 	<timeoutChoice value="10">después de 10 seundos</timeoutChoice>
 	<timeoutChoice value="20">después de 20 segundos</timeoutChoice>
 	<timeoutChoice value="30">después de 30 segundos</timeoutChoice>
-	<title>GeoNetwork- Geoportal de búsqueda, visualización y descarga de informacón y datos espaciales</title>
+	<title>GeoNetwork- Geoportal de búsqueda, visualización y descarga de información y datos espaciales</title>
 	<to>A</to>
 	<tools>Herramientas</tools>
 	<topic>Tema</topic>
@@ -474,7 +474,7 @@
 	<westbc>Coordenadas Oeste</westbc>
 	<what>¿Qué?</what>
 	<where>¿País/Región?</where>
-	<when>¿Cuando?</when>
+	<when>¿Cuándo?</when>
 	<winInfo1>Esta ventana debe mostar recursos de GeoNetwork. Esta ventana puede ser ocultada a veces dependiendo de como gestione las ventanas su sistema. En este caso podrás tener abierta de forma manual la ventana y enviarla al fondo cuando lo necesite.</winInfo1>
 	<winInfo2>A través del icono (?) podrá disponer de información aclaratoria. Cuando active este icono los resultados se mostrarán en la ventana en la que estaba el recurso.</winInfo2>
 	<wwwlink>Enlaces web</wwwlink>
@@ -486,7 +486,7 @@
 	<buttonAccept>Aceptar</buttonAccept>
 	<buttonAdd>Añadir</buttonAdd>
 	<buttonAddNewGroup>Añadir Grupo</buttonAddNewGroup>
-	<buttonAddNewUser>Añadir Usario</buttonAddNewUser>
+	<buttonAddNewUser>Añadir Usuario</buttonAddNewUser>
 	<buttonAdvancedSearch>Búsqueda Avanzada</buttonAdvancedSearch>
 	<buttonBack>Atrás</buttonBack>
 	<buttonBatchImport>Importar Remesa</buttonBatchImport>
@@ -498,11 +498,11 @@
 	<buttonDefaultSearch>Búsqueda Simple</buttonDefaultSearch>
 	<buttonDelete>Borrar</buttonDelete>
 	<buttonDescription>Descripción</buttonDescription>
-	<buttonDownload>Bajar Info</buttonDownload>
+	<buttonDownload>Bajar información</buttonDownload>
 	<buttonEdit>Editar</buttonEdit>
-	<buttonGroupManagement>Gestionar de Grupos</buttonGroupManagement>
+	<buttonGroupManagement>Gestionar grupos</buttonGroupManagement>
 	<buttonImport>Importar</buttonImport>
-	<buttonInsertXMLMetadata>Insertar XML Metadata</buttonInsertXMLMetadata>
+	<buttonInsertXMLMetadata>Insertar metadato XML</buttonInsertXMLMetadata>
 	<buttonInteractiveMap>Mapa Interactivo</buttonInteractiveMap>
 	<buttonLogin>Entrar</buttonLogin>
 	<buttonMap>Mapa</buttonMap>
@@ -512,7 +512,7 @@
 	<buttonRemove>Suprimir</buttonRemove>
 	<buttonReset>Vaciar formulario</buttonReset>
 	<buttonSave>Salvar</buttonSave>
-	<buttonSaveAndClose>Salvar &amp; Cerrar</buttonSaveAndClose>
+	<buttonSaveAndClose>Salvar y Cerrar</buttonSaveAndClose>
 	<buttonSearch>Buscar</buttonSearch>
 	<buttonSubmit>Enviar</buttonSubmit>
 	<buttonTabbedView>Vista en forma de Tabla</buttonTabbedView>
@@ -529,5 +529,17 @@
 	<downloads>Número de descargas</downloads>
 	<lastChange>Fecha del último cambio</lastChange>
 	-->
+        <!--  intermap tooltips -->
+        <imZoomFull>Zoom a la extensión del mapa</imZoomFull>
+        <imZoomIn>Acercar</imZoomIn>
+        <imZoomOut>Alejar</imZoomOut>
+        <imPan>Mover</imPan>
+        <imZoomToLayer>Zoom a la capa</imZoomToLayer>
+        <imAreaInterest>Seleccionar área de interés</imAreaInterest>
+
+        <!-- date selector -->
+        <fromDateSelector>Selector de fecha de inicio</fromDateSelector> 
+        <toDateSelector>Selector de fecha de fin</toDateSelector> 
+
 
 </strings>

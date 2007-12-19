@@ -2,8 +2,8 @@
 <links>
 	<title>Página de enlaces</title>
 	<content>
-		<h3>GeoNetwork opensource Community website</h3>
-		<a target="_blank" href="http://geonetwork-opensource.org">The GeoNetwork opensource Community website contains documentation, tutorials, excersises etc..</a><br/>
+		<h3>Sitio de la comunidad de GeoNetwork opensource</h3>
+		<a target="_blank" href="http://geonetwork-opensource.org">El sitio de la comunidad de GeoNetwork opensource contiene documentación, tutoriales, ejercicios, etc..</a><br/>
 		<h3>GeoNetwork en la FAO-UN y en WFP-UN</h3>
 		<a target="_blank" href="http://www.fao.org/geonetwork">GeoNetwork en la Organización para los Alimentos y la Agricultura de las Naciones Unidas</a><br/>
 		<a target="_blank" href="http://vam.wfp.org/vamsie">GeoNetwork en el análisis de riesgos y Mapas (VAM), unidad que forma parte del programa para Alimentos en el Mundo (WFP)</a><br/>
@@ -26,7 +26,7 @@
 		<p/>
 		<h3>Otros recursos de información relacionados</h3>
 		<a target="_blank" href="http://www.ungiwg.org/">UNGIWG</a> Grupo de Trabajo de Información Geográfica de las Naciones Unidas<br/>
-		<a target="_blank" href="http://www.fgdc.gov/">Comité Federeal Norte Americano para los Datos Geográficos (FDGC)</a>
+		<a target="_blank" href="http://www.fgdc.gov/">Comité Federal Norte Americano para los Datos Geográficos (FGDC)</a>
 		<p/>
 		<h3>Fuentes de datos espaciales externas</h3>
 		<a target="_blank" href="http://earlywarning.usgs.gov/adds/">Servicio de diseminación de datos Africanos (ADDS)</a><br/>

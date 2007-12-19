@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <help>
-	<title>About GeoNetwork opensource page</title>
+	<title>Acerca de la página de GeoNetwork opensource</title>
 	<content>
-		<h1>About GeoNetwork opensource</h1>
-		<p>This site is powered by <a href="http://geonetwork-opensource.org" target="_blank">GeoNetwork opensource 2.1</a>
+		<h1>Acerca de GeoNetwork opensource</h1>
+		<p>Este sitio usa el software <a href="http://geonetwork-opensource.org" target="_blank">GeoNetwork opensource 2.1</a>
 		</p>
 		<p>
-			<strong>GeoNetwork opensource</strong> is a standardized and decentralized spatial information management environment, designed to enable access to geo-referenced databases, cartographic products and related metadata from a variety of sources, enhancing the spatial information exchange and sharing between organizations and their audience, using the capacities of the internet. This approach of geographic information management aims at facilitating a wide community of spatial information users to have easy and timely access to available spatial data and to existing thematic maps that might support informed decision making.
+			<strong>GeoNetwork opensource</strong> es un ambiente estandarizado y descentralizado de manejo de información espacial, diseñado para permitir el acceso a bases de datos geo-referenciadas, productos cartográficos y metadatos relacionados de una variedad de fuentes, mejorando el acceso, el intercambio y el compartir información espacial entre organizaciones y su audiencia, usando las capacidades de Internet. Esta técnica de manejo de información geográfica, ayuda a que una amplia comunidad de usuarios de información espacial tenga fácil acceso y a tiempo a los datos espaciales disponibles y a los mapas temáticos existentes que podrían ayudar en la toma de decisiones.
 		</p>
 		<p>
-			<span lang="EN-US">Maps, including those derived from satellite imagery,</span> are effective communicational tools and play an important role in the work of various<span lang="EN-US"> types of users:</span>
+			<span lang="es">Los mapas, incluyendo los derivados de imágenes de satélite,</span> son herramientas de comunicación efectivas que juegan un importante papel en el trabajo de varios<span lang="es"> tipos de usuarios:</span>
 		</p>
 		<ul type="disc" style="margin-top: 0cm;">
 			<li>
-				Decision Makers: e.g. Sustainable development planners and humanitarian and emergency managers in need of quick, reliable and up to date user-friendly <span lang="EN-US">cartographic </span>products as a basis for<span lang="EN-US"> action</span><span lang="EN-US"> </span><span lang="EN-US">and better plan and monitor their activities.</span>
+				Tomadores de decisiones: Ej.: Planeadores de desarrollo sustentable, supervisores de humanitarismo y emergencia, necesitando <span lang="ES">cartografía </span> rápida, confiable, actualizada y amigable con el usuario como la base para<span lang="ES"> action</span><span lang="ES"> </span><span lang="ES">and better plan and monitor their activities.</span>
 			</li>
 			<li>
-				GIS Experts in need of exchanging consistent and updated geographical data.
+				Expertos en SIG, necesitando intercambiar datos geográficos consistentes y actualizados.
 			</li>
 			<li>
-				Spatial Analysts in need of multidisciplinary data to perform preliminary geographical analysis and reliable forecasts to better set up appropriate interventions in vulnerable areas.
+				Analistas espaciales, necesitando de datos multidisciplinarios para realizar análisis geográfico preliminar y para pronosticar confiablemente  una intervención adecuada en áreas vulnerables.
 			</li>
 		</ul>
 		<p>
-			<span lang="EN-US">The main goal of the <b>GeoNetwork opensource </b> software is to improve the accessibility of a wide variety of data, together with the associated information, at different scale and from multidisciplinary sources, organized and documented in a standard and consistent way. </span>
+			<span lang="es">La meta principal de <b>GeoNetwork opensource </b> es mejorar la accesabilidad de una amplia variedad de datos, junto con su información asociada, a diferentes escalas y de fuentes multidisciplinarias, organizadas y documentadas en una forma estandarizada y consistente. </span>
 		</p>
 		<p>
-			<span lang="EN-US">The challenge is to enhance the data exchange and sharing between the organizations to avoid duplication, increase the cooperation and coordination of efforts in collecting data and make them available to benefit everybody, saving resources and at the same time preserving data and information ownership.</span>
+			<span lang="es">El reto es mejorar el intercambio de datos y el como son compartidos entre organizaciones, para eliminar la duplicación, incrementar la cooperación y esfuerzos de coordinación en la recolección de datos y hacerlos disponibles para el beneficio de todos, ahorrando recursos y  al mismo tiempo preservando los datos y la propiedad de los mismos.</span>
 		</p>
 		<p>
-			<span lang="EN-US"><a target="_blank" href="http://www.fao.org">FAO</a> and <a href="http://www.wfp.org" target="_blank">WFP</a>, and more recently <a href="http://www.unep.org" target="_blank">UNEP</a>, have combined their research and mapping expertise to develop <b>GeoNetwork opensource </b> as a common strategy to effectively share their spatial databases including digital maps, satellite images and related statistics. The three agencies make extensive use of computer-based data visualization tools, known as Geographic Information System (GIS) and Remote Sensing (RS) software, mostly to create maps that combine various layers of information. <b>GeoNetwork opensource </b> provides them with the capacity to access a wide selection of maps and other spatial information stored in different databases around the world through a single entry point.</span>
+			<span lang="es"><a target="_blank" href="http://www.fao.org">FAO</a> y <a href="http://www.wfp.org" target="_blank">WFP</a>, y más recientemente <a href="http://www.unep.org" target="_blank">UNEP</a>, han combinado sus investigaciones y sus conocimientos de mapeo para desarrollar <b>GeoNetwork opensource </b> como una estrategia común para compartir efectivamente sus bases de datos espaciales, incluyendo mapas digitales, imágenes de satélite y estadísticas relacionadas. Las tres agencias hacen uso extensivo de herramientas computacionales de datos y visualización, conocidos como software de Sistemas de Información Geográfica (SIG) y Sensores Remotos(SR), la mayoría para crear mapas que combinan varias capas de información. <b>GeoNetwork opensource </b> les provee la capacidad de acceso a una amplia selección de mapas y otras bases de datos espaciales alrededor del mundo, a través de un mismo punto de entrada.</span>
 		</p>
 		<p>
-			<b><span lang="EN-US">GeoNetwork opensource </span></b><span lang="EN-US"> has been developed to connect spatial information communities and their data </span>using <span lang="EN-US">a modern architecture, which is at the same time powerful and low cost, based on </span>the principles of Free and Open Source Software (FOSS) and International and Open Standards for services and protocols<span lang="EN-US"> (a.o. from <a href="http://www.isotc211.org" target="_blank">ISO/TC211</a> and <a href="http://www.opengeospatial.org" target="_blank">OGC</a>).</span>
+			<b><span lang="es">GeoNetwork opensource </span></b><span lang="es"> ha sido desarrollado para conectar comunidades de información espacial y sus datos </span>usando <span lang="es">una arquitectura moderna, la cual es al mismo tiempo poderosa y de bajo costo, basada en </span>los principios de Free and OpenSource Software  (FOSS) y estándares internacionales y abiertos para servicios y protocolos<span lang="es"> (de <a href="http://www.isotc211.org" target="_blank">ISO/TC211</a> y <a href="http://www.opengeospatial.org" target="_blank">OGC</a>).</span>
 		</p>
-		<p><a href="http://geonetwork-opensource.org" target="_blank">Read more ...</a></p>
+		<p><a href="http://geonetwork-opensource.org" target="_blank">Leer más ...</a></p>
 	</content>
 </help>

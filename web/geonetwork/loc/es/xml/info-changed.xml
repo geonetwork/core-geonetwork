@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<heading>User information changed</heading>
-	<message>Your personal information have been successfully changed</message>
+	<heading>La información del usuario cambio</heading>
+	<message>Su información personal ha sido cambiada exitosamente</message>
 	<text/>
 </strings>

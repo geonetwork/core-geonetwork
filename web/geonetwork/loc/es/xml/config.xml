@@ -1,130 +1,129 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <strings>
-	<site>Site</site>
-		<name>Name</name>
-		<organ>Organization</organ>
+	<site>Sitio</site>
+		<name>Nombre</name>
+		<organ>Organización</organ>
 	
-	<server>Server</server>
-		<host>Host</host>
-		<port>Port</port>
-	
-	<intranet>Intranet</intranet>
-		<network>Network</network>
-		<netmask>Netmask</netmask>
-	
-	<z3950>Z39.50 Server</z3950>
-		<enable>Enable</enable>
+	<server>Servidor</server>
+		<host>Servidor</host>
+		<port>Puerto</port>
 		
-	<feedback>Feedback</feedback>
-		<email>EMail</email>
-		<smtpHost>SMTP Host</smtpHost>
-		<smtpPort>SMTP Port</smtpPort>
+	<intranet>Intranet</intranet>
+		<network>Red</network>
+		<netmask>Mascara de red</netmask>
+	
+	<z3950>Servidor Z39.50</z3950>
+		<enable>Activar</enable>
+		
+	<feedback>Retroalimentación</feedback>
+		<email>Correo</email>
+		<smtpHost>Servidor SMTP</smtpHost>
+		<smtpPort>Puerto SMTP</smtpPort>
 	
 	<proxy>Proxy</proxy>
-		<use>Use</use>
+		<use>Uso</use>
 	
 	<!-- Buttons -->
 	
-	<save>Save</save>
-	<refresh>Refresh</refresh>
+	<save>Guardar</save>
+	<refresh>Refrescar</refresh>
 	
 	<!-- validator messages -->
 	
 	<validator>
 		<length>
-			<cannotBeEmpty>The field '{NAME}' cannot be empty</cannotBeEmpty>
-			<invalidMinSize>The field '{NAME}' must be at least {VALUE} character(s) long</invalidMinSize>
-			<invalidMaxSize>The field '{NAME}' must be maximum {VALUE} character(s) long</invalidMaxSize>
+			<cannotBeEmpty>El campo '{NAME}' no puede ser vacio</cannotBeEmpty>
+			<invalidMinSize>El campo '{NAME}' debe ser al menos de {VALUE} caracter(es) de longitud</invalidMinSize>
+			<invalidMaxSize>El campo '{NAME}' debe de ser de al máximo {VALUE} caracter(es) de longitud</invalidMaxSize>
 		</length>
 		
 		<integer>
-			<notInt>The field '{NAME}' must be an integer</notInt>
-			<invalidMinValue>The field '{NAME}' must be &gt;= {VALUE}</invalidMinValue>
-			<invalidMaxValue>The field '{NAME}' must be &lt;= {VALUE}</invalidMaxValue>
+			<notInt>El campo '{NAME}' debe ser un entero</notInt>
+			<invalidMinValue>El campo '{NAME}' debe ser &gt;= {VALUE}</invalidMinValue>
+			<invalidMaxValue>El campo '{NAME}' debe ser &lt;= {VALUE}</invalidMaxValue>
 		</integer>		
 		
 		<alphanum>
-			<notAlphaNumeric>The field '{NAME}' must be alphanumeric (starting with a letter)</notAlphaNumeric>
+			<notAlphaNumeric>El campo '{NAME}' debe ser alfanúmerico (comenzando con una letra)</notAlphaNumeric>
 		</alphanum>
 		
 		<hostname>
-			<notHostName>The field '{NAME}' is not a valid host name</notHostName>
+			<notHostName>El campo '{NAME}' no es un nombre de servidor válido</notHostName>
 		</hostname>
 		
 		<url>
-			<notURL>The field '{NAME}' is not a valid URL</notURL>
+			<notURL>El campo '{NAME}' no es una URL válida</notURL>
 		</url>
 		
 		<ipaddress>
-			<notIP>The field '{NAME}' is not a valid IP address</notIP>
+			<notIP>El campo '{NAME}' no es un dirección IP válida</notIP>
 		</ipaddress>
 	</validator>
 	
 	<!-- display messages -->
 	
-	<cannotGet>Unable to get the system configuration</cannotGet>
-	<cannotSave>Unable to save the system configuration</cannotSave>
-	<saveOk>System configuration saved.</saveOk>
-	
+	<cannotGet>No es posible obtener la configuración del sistema</cannotGet>
+	<cannotSave>No es posible guardar la configuración del sistema</cannotSave>
+	<saveOk>Configuración del sistema almacenada.</saveOk>
+
 	<!-- tooltips -->
 	
 	<tips>
 		<tip id="site.name">
-			Used to identify the installation.
+			Usado para identificar la instalación.
 		</tip>
 		
 		<!-- server -->
 		
 		<tip id="server.host">
-			The server's <b>host</b> and <b>port</b> are used to create URLs to
-			the GeoNetwork server. For example, they are used during metadata
-			editing to create resource links and when returning the server's
-			capabilities during a CS/W request.
+			El <b>servidor</b> y <b>puerto</b> son usados para crear URLs
+			al servidor GeoNetwork. Por ejemplo, son usados durante la edición
+		        de metadatos para crear ligas a los recursos y para regresar el 
+			capabilities del servidor durante un requerimiento CS/W.
 			<br/>
-			<b>Please note:</b> you should use the GAST tool to reflect this
-			change inside the metadata.
+			<b>Por favor note:</b> debería utilizar la herramienta GAST para reflejar este
+			cambio dentro de los metadatos.
 		</tip>
 		
 		<!-- intranet -->
 		
 		<tip id="intranet.network">
-			The <b>network</b> and <b>netmask</b> parameters are used to identify
-			internal connections to GeoNetwork, that is, to identify the intranet
-			group.
+			Los parámetros <b>red</b> y <b>máscara de red </b> son usados para identificar
+			conexiones internas a GeoNetwork, esto es, para identificar el grupo intranet.
 		</tip>
 		
 		<!-- Z39.50 -->
 		
 		<tip id="z3950.enable">
-			If set, during startup GeoNetwork will start the Z39.50 server component.
-			This component uses the ISO23950 protocol.
+			Si está establecido, durante la inicialización Geonetwork iniciará el componente de servidor Z39.50.
+			Este componente usa el protocolo ISO23950.
 			<br/>
-			<b>Please note:</b> restart GeoNetwork to make this change active.
+			<b>Por favor note:</b> debe reiniciar GeoNetwork para que este cambio tenga efecto.
 		</tip>
 		
 		<tip id="z3950.port">
-			Change the Z39.50 listening port.
+			Cambie el puerto de Z39.50.
 			<br/>
-			<b>Please note:</b> restart GeoNetwork to make this change active.
+			<b>Por favor note:</b> debe reiniciar GeoNetwork para que este cambio tenga efecto.
 		</tip>
 		
 		<!-- proxy -->
 		
 		<tip id="proxy.use">
-			If set, GeoNetwork will use the provided proxy parameters when accessing
-			remote nodes. For example, this is used during the harvesting.
+			Si está establecido, GeoNetwork usará los parámetros para accesar
+			nodos remotos. Por ejemplo, es usado durante el harvesting.
 		</tip>
 		
 		<!-- feedback -->
 		
 		<tip id="feedback.email">
-			This is the administrator's email address used to send feedback.
+			Este es el correo del administrador usado para retroalimentación.
 		</tip>
 		
 		<tip id="feedback.mail.host">
-			The SMTP <b>host</b> and <b>port</b> parameters are used to send emails
-			to GeoNetwork's users when a resource is downloaded.
+			Los parámetros SMTP <b>servidor</b> y <b>puerto</b> son usados para enviar correos
+			a los usuarios de GeoNetwork cuando un recurso es bajado.
 		</tip>
 	</tips>
 	

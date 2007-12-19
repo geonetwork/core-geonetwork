@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<delUserConf>Delete user from database ?</delUserConf>
+	<delUserConf>¿ Eliminar usuario de la base de datos ?</delUserConf>
 </strings>
