@@ -1,92 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<abstract>Abstract</abstract>
-	<activate>Activate</activate>
-	<address>Address</address>
-	<addService>Add more maps</addService>
-	<addLayer js="true">Add a new layer</addLayer>
-	<bigger>Bigger map</bigger>
-	<cancel>Cancel</cancel>
-	<close>Close</close>
-	<choosemapfromlist>Please choose one or more map services from the list below</choosemapfromlist>
-	<choosemapserver>Please choose a map server from the list below or manually insert another map server</choosemapserver>
-	<mapServer>Map Server</mapServer>
-	<choosepredefinedmap>Please choose a predefined map overlay from the list below or</choosepredefinedmap>
-	<connect>Connect</connect>
-	<contactInfo>Contact information:</contactInfo>
-	<contactPerson>Primary contact person:</contactPerson>
-	<contexts>Contexts</contexts>
-	<delete>[del]</delete>
-	<down>Move layer down</down>
-	<email>email:</email>
+	<abstract>Resumen</abstract>
+	<activate>Activar</activate>
+	<address>Domicilio</address>
+	<addService>Agregar mapas</addService>
+	<addLayer js="true">Agregar capa</addLayer>
+	<bigger>Mapa mas grande</bigger>
+	<btnstyles>Ver y seleccionar estilos</btnstyles>
+	<cancel>Cancelar</cancel>
+	<close>Cerrar</close>
+	<choosemapfromlist>Por favor elija uno o mas servicios de mapas de la lista</choosemapfromlist>
+	<choosemapserver>Por favor elija un servidor de mapas de la lista o inserte manualmente otro servidor</choosemapserver>
+	<mapServer>Servidor de mapas</mapServer>
+	<choosepredefinedmap>Por favor elija una sobreposición de mapas de la lista</choosepredefinedmap>
+	<connect>Connectar</connect>
+	<contactInfo>Información de contacto:</contactInfo>
+	<contactPerson>Persona para el contacto:</contactPerson>
+	<contexts>Contextos</contexts>
+	<delete>[borrar]</delete>
+	<down>Mueve la capa hacia abajo</down>
+	<email>Correo:</email>
 	<error>[error]</error>
 <!-- 
 	<errorText>Sorry, error connecting to the map server</errorText>
  -->
-	<exportAsPDF js="true">Export this map as a PDF</exportAsPDF>
-	<exportAsImage js="true">Export this map as an image</exportAsImage>
-	<exportAsWMC js="true">Save the Web Map Context</exportAsWMC>
-	<extents>Change the selected time (temporal data)</extents>
-	<extentSelected>Selected time: </extentSelected>
-	<featuresfound>features found</featuresfound>
-	<findMapsGeoNetwork>Find more maps through GeoNetwork opensource</findMapsGeoNetwork>
-	<findMapsMapServers>Add more layers by connecting to other Web Map Servers</findMapsMapServers>
-	<fullExtent>Zoom to the full map</fullExtent>
-	<gotoGeoNetwork>GeoNetwork opensource</gotoGeoNetwork>
-	<gotoMapServers>Map Servers</gotoMapServers>
-	<homepage>Home page:</homepage>
-	<identify>Identify a feature on the map</identify>
-	<makeActive>Select to make this layer active (e.g. for Identify)</makeActive>
-	<info>info</info>
-	<keywords>Keywords:</keywords>
-	<layerinfo>Layer info</layerinfo>
-	<layers>Layers</layers>
-	<layersAdded js="true">Selected layers have been added</layersAdded>
-	<layersHide>Hide layer list</layersHide>
-	<layersShow>Show layer list</layersShow>
-	<layerShowHide>Show or hide layer</layerShowHide>
-	<legend>Show the legend</legend>
-	<listofmaps>List of maps</listofmaps>
-	<listofmapservers>List of map servers</listofmapservers>
-	<loadingMap>...Loading map...</loadingMap>
-	<loadingFrom js="true">Loading services from</loadingFrom>
-	<loadingFromWMS js="true">Loading services from given WMS server</loadingFromWMS>
-	<manually>Create you own map</manually>
-	<map>Map</map>
-	<mapsfound>maps found</mapsfound>
-	<metadata>Metadata</metadata>
-	<newMap>Create a new map</newMap>
-	<noFeature>No features found</noFeature>
-	<noService>No maps found</noService>
-	<noStyle>Only the default style is available for this map</noStyle>
-	<oneService>One map found</oneService>
+	<exportAsPDF js="true">Exportar este mapa como PDF</exportAsPDF>
+	<exportAsImage js="true">Exportar este mapa como imagen</exportAsImage>
+	<exportAsWMC js="true">Guardar el Web Map Context</exportAsWMC>
+	<extents>Cambiar el tiempo seleccionado (datos temporales)</extents>
+	<extentSelected>Tiempo seleccionado: </extentSelected>	
+	<featuresfound>Características encontradas</featuresfound>	
+	<findMapsGeoNetwork>Encontrar mapas a través de GeoNetwork opensource</findMapsGeoNetwork>	
+	<findMapsMapServers>Agregar capas conectándose a otros Web Map Servers</findMapsMapServers>	
+	<fullExtent>Zoom a la extensión del mapa</fullExtent>
+	<gotoGeoNetwork>GeoNetwork opensource</gotoGeoNetwork>	
+	<gotoMapServers>Servidores de mapas</gotoMapServers>
+	<homepage>Página principal:</homepage>	
+	<identify>Identificar una característica en el mapa</identify>
+	<makeActive>Seleccionar para activar esta capa (ej. para identificar)</makeActive>	
+	<info>información</info>	
+	<keywords>Palabras clave:</keywords>	
+	<layerinfo>Información de la capa</layerinfo>
+	<layers>Capas</layers>	
+	<layersAdded js="true">Las capas seleccionadas han sido agregadas</layersAdded>
+	<layersHide>Ocultar lista de capas</layersHide>	
+	<layersShow>Mostrar lista de capas</layersShow>
+	<layerShowHide>Mostrar u ocultar capa</layerShowHide>	
+	<legend>Mostrar la leyenda</legend>
+	<listofmaps>Lista de mapas</listofmaps>	
+	<listofmapservers>Lista de servidores de mapas</listofmapservers>
+	<loadingMap>...Cargando mapa...</loadingMap>	
+	<loadingFrom js="true">Cargando servicios desde</loadingFrom>
+	<loadingFromWMS js="true">Cargando servicios desde el servidor WMS dado</loadingFromWMS>
+	<manually>Cree su propio mapa</manually>	
+	<map>Mapa</map>	
+	<mapsfound>mapas encontrados</mapsfound>
+	<metadata>Metadato</metadata>	
+	<newMap>Crear un nuevo mapa</newMap>
+	<noFeature>No se encontraron características</noFeature>	
+	<noService>No se encontraron mapas</noService>
+	<noStyle>Solo el estilo por defecto está disponible para este mapa</noStyle>
+	<oneService>Un mapa encontrado</oneService>	
 	<ok>Ok</ok>
-	<oneFeature>One feature found</oneFeature>
-	<otherArcIMS>- Other ArcIMS server </otherArcIMS>
-	<otherWMS>- Other WMS server </otherWMS>
-	<pan>Pan</pan>
-	<position>Position:</position>
-	<print>Print the map</print>
-	<properties>Properties</properties>
-	<reCenter>Re-center the map</reCenter>
-	<refresh>Refresh</refresh>
-	<refreshNotification>Please click the "Refresh" button under the layer list to see this change.</refreshNotification>
-	<removeLayer>Remove layer</removeLayer>
-	<reset>Reset</reset>
-	<sendByEmail js="true">Send this map via e-mail</sendByEmail>
-	<setScale>--Set Scale--</setScale>
-	<smaller>Smaller map</smaller>
-	<specify>Specify if other:</specify>
-	<style>Select the desired style</style>
-	<start>InterMap opensource</start>
-	<telephone>Telephone:</telephone>
+	<oneFeature>Una característica encontrada</oneFeature>	
+	<otherArcIMS>- Otros servidores ArcIMS</otherArcIMS>	
+	<otherWMS>- Otros servidores WMS</otherWMS>
+	<pan>Mover</pan>	
+	<position>Posición:</position>
+	<print>Imprimir el mapa</print>	
+	<properties>Propiedades</properties>
+	<reCenter>Centrar el mapa</reCenter>	
+	<refresh>Refrescar</refresh>
+	<refreshNotification>Por favor haga clic en el botón "Refrescar" bajo la lista de capas para ver este cambio.</refreshNotification>
+	<removeLayer>Eliminar capa</removeLayer>	
+	<reset>Restablecer</reset>
+	<sendByEmail js="true">Enviar este mapa por correo</sendByEmail>
+	<setScale>--Establecer escala--</setScale>
+	<showLayerMD js="true">Información de la capa</showLayerMD>
+	<smaller>Mapa mas pequeño</smaller>	
+	<specify>Especificar si otro:</specify>
+	<style>Seleccionar el estilo deseado</style>
+	<start>InterMap opensource</start>	
+	<telephone>Teléfono:</telephone>
 	<title>InterMap opensource</title>
-	<transparency>Set transparency</transparency>
-	<up>Move layer up</up>
-	<wait js="true">Please wait...</wait>
-	<wmsConfigForm>Layer properties</wmsConfigForm >
-	<zoomIn>Zoom in</zoomIn>
-	<zoomOut>Zoom out</zoomOut>
-	<zoomLayer>Zoom to layer</zoomLayer>
-	<getFeatures>GET FEATURES</getFeatures>
+	<titleShowStyles js="true">Estilos disponibles</titleShowStyles>	
+	<transparency>Establecer transparencia</transparency>
+	<up>Mover la capa hacia arriba</up>
+	<wait js="true">Por favor espere...</wait>
+	<wmctitle js="true">menú de contextos WMC</wmctitle>	
+	<wmctitlemail js="true">Enviar un contexto WMC por correo</wmctitlemail>	
+	<wmctitleupload js="true">Subir y establecer un contexto</wmctitleupload>
+	<wmcbuttonmain js="true">Ver menú de contexto</wmcbuttonmain>	
+	<wmcbuttonmail js="true">Enviar el contexto actual</wmcbuttonmail>	
+	<wmcbuttonupload js="true">Subir un contexto</wmcbuttonupload>	
+	<wmcbuttondownload js="true">Bajar el contexto actual</wmcbuttondownload>	
+	<wmsConfigForm>Propiedades de la capa</wmsConfigForm>
+	<zoomIn>Acercar</zoomIn>
+	<zoomOut>Alejar</zoomOut>
+	<zoomLayer>Zoom a la capa</zoomLayer>
+	<getFeatures>OBTENER CARACTERÍSTICAS</getFeatures>
 </strings>
