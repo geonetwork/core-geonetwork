@@ -145,6 +145,7 @@ function getHtmlTip(node)
 var requestTemp =
 '<request xmlns:gmd="http://www.isotc211.org/2005/gmd"'+
 '         xmlns:gts="http://www.isotc211.org/2005/gts"'+ 
+'         xmlns:srv="http://www.isotc211.org/2005/srv"'+ 
 '         xmlns:gml="http://www.opengis.net/gml"'+
 '         xmlns:gco="http://www.isotc211.org/2005/gco"'+
 '         xmlns:dct="http://purl.org/dc/terms/"'+
