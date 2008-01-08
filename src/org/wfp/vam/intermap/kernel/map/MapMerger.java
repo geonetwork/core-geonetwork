@@ -205,10 +205,12 @@ public class MapMerger
 			catch (Exception e) {}
 
 			Element eLayer = new Element("layer")
-									  .setAttribute("id", idx + "")
-								 	  .setAttribute("title", "" + s.getTitle())
+									  .setAttribute("id", "" + idx)
+								 	  .setAttribute("title", s.getTitle())
 								 	  .setAttribute("type", "" + s.getType())
-								 	  .setAttribute("transparency", "" + layer.getIntTransparency());
+								 	  .setAttribute("transparency", "" + layer.getIntTransparency())
+								 	  .setAttribute("visible", layer.isVisible()?"true":"false");
+
 			if(legend != null)
 				eLayer.setAttribute("legend", legend);
 

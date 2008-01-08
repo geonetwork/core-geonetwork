@@ -21,17 +21,24 @@
 			</xsl:if>
 			
 <!--
-	
 	<xsl:variable name="action">im_mapServerSelected(<xsl:value-of select="@id" />,"<xsl:value-of select="@name" />");</xsl:variable>
 	<li id="im_mapserver_{@id}" onclick="{$action}"><a><xsl:value-of select="@name" /></a></li>
 -->		
+			<xsl:variable name="toggleVisibilityIcon">
+				<xsl:choose>
+					<xsl:when test="@visible='true'">/intermap/images/showLayer.png</xsl:when>
+					<xsl:otherwise>/intermap/images/hideLayer.png</xsl:otherwise>
+				</xsl:choose>				
+			</xsl:variable>
+			
+			
 			<table>
 				<tbody>
 					<tr height="35px">
 						<td height="35px" class="im_layerControl">
 							<img id="visibility_{@id}"  class="im_layerControl" 
 								onclick="toggleVisibility({@id})" 
-								src="/intermap/images/showLayer.png" title="{/root/gui/strings/layerShowHide}"></img>
+								src="{$toggleVisibilityIcon}" title="{/root/gui/strings/layerShowHide}"></img>
 							<xsl:if test="position()>1">
 								<img id="im_layerUp_{@id}" class="im_layerControl" 
 									onclick="im_layerMoveUp({@id})"
