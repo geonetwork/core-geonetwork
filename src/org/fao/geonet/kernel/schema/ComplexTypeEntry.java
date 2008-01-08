@@ -3,7 +3,7 @@
 //===   ComplexTypeEntry
 //===
 //==============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -38,9 +38,7 @@ import org.jdom.Element;
 class ComplexTypeEntry
 {
 	public String  name;
-	public String  attribGroup;
-	public String  groupRef;
-	public boolean isOrType;
+	public boolean isOrType = false;
 	public boolean isAbstract;
 
 	public ComplexContentEntry complexContent;
@@ -48,6 +46,7 @@ class ComplexTypeEntry
 
 	public ArrayList alElements = new ArrayList();
 	public ArrayList alAttribs  = new ArrayList();
+	public ArrayList  alAttribGroups = new ArrayList();
 
 	//---------------------------------------------------------------------------
 	//---
@@ -114,10 +113,11 @@ class ComplexTypeEntry
 		{
 			Element elChild = (Element) children.get(i);
 			String  elName    = elChild.getName();
+			boolean first = true;
 
 			if (elName.equals("sequence") || elName.equals("choice"))
 			{
-				isOrType = elName.equals("choice");
+				isOrType = elName.equals("choice") && (first);
 
 				List sequence = elChild.getChildren();
 
@@ -125,42 +125,44 @@ class ComplexTypeEntry
 				{
 					Element elElem = (Element) sequence.get(j);
 
-					if (elElem.getName().equals("element")) 
+					if (elElem.getName().equals("element") || elElem.getName().equals("group") || elElem.getName().equals("choice") || elElem.getName().equals("sequence")) {
 						alElements.add(new ElementEntry(elElem, ei.file, ei.targetNS, ei.targetNSPrefix));
-
-					else if (elElem.getName().equals("group"))
-					{
-						isOrType = false;
-						groupRef = elElem.getAttributeValue("ref");
-
-						if (groupRef == null)
-							throw new IllegalArgumentException("Found 'group' element without 'ref' attrib in complexType : " +elName);
 					}
-
 					else
 						Logger.log("Unknown child '"+ elElem.getName() +"' in <sequence|choice> element", ei);
 				}
 			}
+			else if (elName.equals("group")) {
+				first = false;
+				isOrType = false;
+				alElements.add(new ElementEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix));
+			}
 
-			else if (elName.equals("attribute"))
-			  alAttribs.add(new AttributeEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix));
-
+			else if (elName.equals("attribute")) {
+				first = false;
+			  alAttribs.add(new AttributeEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix)); 
+			}
 
 			else if (elName.equals("attributeGroup"))
 			{
-				attribGroup = elChild.getAttributeValue("ref");
+				first = false;
+				String attribGroup = elChild.getAttributeValue("ref");
 
 				if (attribGroup == null)
 					throw new IllegalArgumentException("'ref' is null for <attributeGroup> in complexType : " + name);
+
+				alAttribGroups.add(attribGroup);
 			}
 
 			else if (elName.equals("complexContent")) {
-				Logger.log("Doing complexContent in <complexType> "+name);
+				first = false;
 				complexContent = new ComplexContentEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
 			}
 
-			else if (elName.equals("simpleContent"))
+			else if (elName.equals("simpleContent")) {
+				first = false;
 			  simpleContent = new SimpleContentEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
+			}
 			else if (elName.equals("annotation"))
 				;
 
@@ -168,6 +170,7 @@ class ComplexTypeEntry
 				Logger.log("Unknown child '"+ elName +"' in <complexType> element", ei);
 		}
 	}
+
 }
 
 //==============================================================================

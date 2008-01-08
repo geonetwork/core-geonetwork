@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xsl:stylesheet   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+						xmlns:gml="http://www.opengis.net/gml"
+						xmlns:srv="http://www.isotc211.org/2005/srv"
 						xmlns:gco="http://www.isotc211.org/2005/gco"
 						xmlns:gmd="http://www.isotc211.org/2005/gmd" exclude-result-prefixes="gmd">
 
@@ -25,7 +27,7 @@
 
 	<!-- ================================================================= -->
 	
-	<xsl:template match="gmd:fileIdentifier">
+	<xsl:template match="gmd:fileIdentifier" priority="10">
 		<xsl:copy>
 			<gco:CharacterString><xsl:value-of select="/root/env/uuid"/></gco:CharacterString>
 		</xsl:copy>
@@ -43,7 +45,7 @@
 	
 	<xsl:template match="gmd:MD_Metadata/gmd:characterSet">
 		<xsl:copy>
-			<gmd:MD_CharacterSetCode codeList="./resources/codeList.xml#MD_CharacterSetCode" codeListValue="utf8" />
+			<gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode" codeListValue="utf8" />
 		</xsl:copy>
 	</xsl:template>
 
@@ -64,15 +66,58 @@
 	</xsl:template>
 
 	<!-- ================================================================= -->
+	
+	<xsl:template match="*[@gml:id]">
+		<xsl:copy>
+			<xsl:choose>
+				<xsl:when test="normalize-space(@gml:id)=''">
+					<xsl:attribute name="gml:id">
+						<xsl:value-of select="generate-id(.)"/>
+					</xsl:attribute>
+					<xsl:apply-templates select="@*[name()!='gml:id']|node()"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="@*|node()"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:copy>
+	</xsl:template>
+
+	<!-- ================================================================= -->
+
+	<xsl:template match="*[gco:CharacterString]">
+		<xsl:copy>
+			<xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
+			<xsl:if test="normalize-space(gco:CharacterString)=''">
+				<xsl:attribute name="gco:nilReason">
+					<xsl:value-of select="'missing'"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:apply-templates select="gco:CharacterString"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<!-- ================================================================= -->
 	<!-- codelists: set @codeList path -->
 	<!-- ================================================================= -->
 	
 	<xsl:template match="gmd:*[@codeListValue]">
 		<xsl:copy>
-			<xsl:attribute name="codeList">
-				<xsl:value-of select="concat('./resources/codeList.xml#',local-name(.))"/>
-			</xsl:attribute>
 			<xsl:apply-templates select="@*"/>
+			<xsl:attribute name="codeList">
+				<xsl:value-of select="concat('http://www.isotc211.org/2005/resources/codeList.xml#',local-name(.))"/>
+			</xsl:attribute>
+		</xsl:copy>
+	</xsl:template>
+
+	<!-- can't find the location of the 19119 codelists - so we make one up -->
+
+	<xsl:template match="srv:*[@codeListValue]">
+		<xsl:copy>
+			<xsl:apply-templates select="@*"/>
+			<xsl:attribute name="codeList">
+				<xsl:value-of select="concat('http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#',local-name(.))"/>
+			</xsl:attribute>
 		</xsl:copy>
 	</xsl:template>
 

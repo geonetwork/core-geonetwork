@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:xalan= "http://xml.apache.org/xalan" exclude-result-prefixes="xalan"
+	xmlns:gco="http://www.isotc211.org/2005/gco"
 	xmlns:geonet="http://www.fao.org/geonetwork">
 
 	<xsl:include href="metadata-utils.xsl"/>
@@ -25,8 +26,8 @@
 				</xsl:apply-templates>
 			</xsl:when>
 			
-			<!-- ISO 19139 -->
-			<xsl:when test="$schema='iso19139'">
+			<!-- ISO 19139 and profiles -->
+			<xsl:when test="starts-with($schema,'iso19139')">
 				<xsl:apply-templates mode="iso19139" select="." >
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
@@ -329,9 +330,9 @@
 	<!--
 	prevent drawing of geonet:* elements
 	-->
-	<xsl:template mode="element" match="geonet:element|geonet:info|geonet:attribute"/>
-	<xsl:template mode="simpleElement" match="geonet:element|geonet:info|geonet:attribute"/>
-	<xsl:template mode="complexElement" match="geonet:element|geonet:info|geonet:attribute"/>
+	<xsl:template mode="element" match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors"/>
+	<xsl:template mode="simpleElement" match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors"/>
+	<xsl:template mode="complexElement" match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors"/>
 	
 	<!--
 	prevent drawing of attributes starting with "_", used in old GeoNetwork versions
@@ -404,6 +405,18 @@
 				<xsl:value-of select="concat('javascript:doElementAction(',$apos,/root/gui/locService,'/metadata.elem.down',$apos,',',geonet:element/@ref,');')"/>
 			</xsl:if>
 		</xsl:variable>
+<!-- schematron info if in advanced mode (all elements) -->
+		<xsl:variable name="schematronLink">
+			<xsl:if test="$currTab!='simple'">
+				<xsl:variable name="ref" select="concat('#_',geonet:element/@ref)"/>
+				<xsl:if test="//geonet:errorFound[@ref=$ref]">
+					<xsl:for-each select="//geonet:errorFound[@ref=$ref]">
+						<xsl:text> </xsl:text><xsl:value-of select="geonet:diagnostics"/>
+					</xsl:for-each>
+				</xsl:if>
+			</xsl:if>
+		</xsl:variable>
+
 		<xsl:call-template name="simpleElementGui">
 			<xsl:with-param name="title" select="$title"/>
 			<xsl:with-param name="text" select="$text"/>
@@ -412,6 +425,7 @@
 			<xsl:with-param name="upLink"     select="$upLink"/>
 			<xsl:with-param name="downLink"   select="$downLink"/>
 			<xsl:with-param name="helpLink"   select="$helpLink"/>
+			<xsl:with-param name="schematronLink" select="$schematronLink"/>
 			<xsl:with-param name="edit"       select="true()"/>
 		</xsl:call-template>
 	</xsl:template>
@@ -496,6 +510,17 @@
 				<xsl:value-of select="concat('javascript:doElementAction(',$apos,/root/gui/locService,'/metadata.elem.down',$apos,',',geonet:element/@ref,');')"/>
 			</xsl:if>
 		</xsl:variable>
+<!-- schematron info -->
+		<xsl:variable name="schematronLink">
+			<xsl:if test="$currTab!='simple'">
+				<xsl:variable name="ref" select="concat('#_',geonet:element/@ref)"/>
+				<xsl:if test="//geonet:errorFound[@ref=$ref]">
+					<xsl:for-each select="//geonet:errorFound[@ref=$ref]">
+						<xsl:text> </xsl:text><xsl:value-of select="geonet:diagnostics"/>
+					</xsl:for-each>
+				</xsl:if>
+			</xsl:if>
+		</xsl:variable>
 		
 		<xsl:call-template name="complexElementGui">
 			<xsl:with-param name="title" select="$title"/>
@@ -506,6 +531,7 @@
 			<xsl:with-param name="upLink" select="$upLink"/>
 			<xsl:with-param name="downLink" select="$downLink"/>
 			<xsl:with-param name="helpLink" select="$helpLink"/>
+			<xsl:with-param name="schematronLink" select="$schematronLink"/>
 			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="edit"   select="true()"/>			
 		</xsl:call-template>
@@ -526,6 +552,7 @@
 		<xsl:param name="removeLink"/>
 		<xsl:param name="upLink"/>
 		<xsl:param name="downLink"/>
+		<xsl:param name="schematronLink"/>
 		<xsl:param name="schema"/>
 		<xsl:param name="edit" select="false()"/>
 		<!-- used as do*ElementAction url anchor to go back to the same position after editing operations -->
@@ -554,7 +581,9 @@
 						</span>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="$title"/>
+						<xsl:call-template name="showTitleWithTag">
+							<xsl:with-param name="title" select="$title"/>
+						</xsl:call-template>
 					</xsl:otherwise>
 				</xsl:choose>
 				<xsl:text>&#160;</xsl:text>
@@ -563,12 +592,37 @@
 					<xsl:with-param name="removeLink" select="$removeLink"/>
 					<xsl:with-param name="upLink" select="$upLink"/>
 					<xsl:with-param name="downLink" select="$downLink"/>
+					<xsl:with-param name="schematronLink" select="$schematronLink"/>
 				</xsl:call-template>
 			</th>
 			<td class="padded" valign="top"><xsl:copy-of select="$text"/></td>
 		</tr>
 	</xsl:template>
-	
+	<!--
+	gui to show a title and do special mapping for container elements
+	-->
+	<xsl:template name="showTitleWithTag">
+		<xsl:param name="title"/>
+		<xsl:param name="class"/>
+		<xsl:variable name="shortTitle" select="normalize-space($title)"/>
+		<xsl:variable name="conthelp" select="concat('This is a container element name - you can give it a title and help by entering some help for ',$shortTitle,' in the help file')"/>
+		<xsl:variable name="nohelp" select="concat('This is an element/attribute name - you can give it a title and help by entering some help for ',$shortTitle,' in the help file')"/>
+
+		<xsl:choose>
+			<xsl:when test="contains($title,'CHOICE_ELEMENT')">
+				<a class="{$class}" title="{$conthelp}">Choice</a>
+			</xsl:when>
+			<xsl:when test="contains($title,'GROUP_ELEMENT')">
+				<a class="{$class}" title="{$conthelp}">Group</a>
+			</xsl:when>
+			<xsl:when test="contains($title,'SEQUENCE_ELEMENT')">
+				<a class="{$class}" title="{$conthelp}">Sequence</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<a class="{$class}" title="{$nohelp}"><xsl:value-of select="$title"/></a>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 	<!--
 	gui to show a complex element
 	-->
@@ -581,6 +635,7 @@
 		<xsl:param name="removeLink"/>
 		<xsl:param name="upLink"/>
 		<xsl:param name="downLink"/>
+		<xsl:param name="schematronLink"/>
 		<xsl:param name="schema"/>
 		<xsl:param name="edit" select="false()"/>
 		
@@ -616,7 +671,10 @@
 											</span>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:value-of select="$title"/>
+											<xsl:call-template name="showTitleWithTag">
+												<xsl:with-param name="title" select="$title"/>
+												<xsl:with-param name="class" select="'green-content'"/>
+											</xsl:call-template>
 										</xsl:otherwise>
 									</xsl:choose>
 									<xsl:call-template name="getButtons">
@@ -624,6 +682,7 @@
 										<xsl:with-param name="removeLink" select="$removeLink"/>
 										<xsl:with-param name="upLink" select="$upLink"/>
 										<xsl:with-param name="downLink" select="$downLink"/>
+										<xsl:with-param name="schematronLink" select="$schematronLink"/>
 									</xsl:call-template>
 								</td>
 								<td class="content" width="100%" valign="bottom">
@@ -709,7 +768,8 @@
 					<xsl:when test="($schema='dublin-core' and $name='dc:subject') or
 									($schema='fgdc' and $name='themekey') or
 									($schema='iso19115' and $name='keyword') or
-									($schema='iso19139' and name(..)='gmd:keyword')">
+									(starts-with($schema,'iso19139') and (name(..)='gmd:keyword' 
+										or ../@gco:isoType='gmd:keyword'))">
 						<input class="md" type="text" id="_{geonet:element/@ref}" name="_{geonet:element/@ref}" value="{text()}" size="{$cols}"/>
 
 						<div id='keywordList' class="keywordList" ></div>
@@ -860,8 +920,15 @@
 	<xsl:template name="getHelpLink">
 		<xsl:param name="name"/>
 		<xsl:param name="schema"/>
-		
-		<xsl:value-of select="concat($schema,'|', $name)"/>
+	
+		<xsl:choose>
+			<xsl:when test="contains($name,'_ELEMENT')">
+				<xsl:value-of select="''"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="concat($schema,'|', $name)"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	
 	<!-- ================================================================================ -->
@@ -887,6 +954,7 @@
 		<xsl:param name="removeLink"/>
 		<xsl:param name="upLink"/>
 		<xsl:param name="downLink"/>
+		<xsl:param name="schematronLink"/>
 		
 		<!-- add button -->
 		<xsl:if test="normalize-space($addLink)">
@@ -907,6 +975,11 @@
 		<xsl:if test="normalize-space($downLink)">
 			<xsl:text> </xsl:text>
 			<a href="{$downLink}"><img src="{/root/gui/url}/images/down.gif" alt="{/root/gui/strings/down}"/></a>
+		</xsl:if>
+		<!-- schematron button -->
+		<xsl:if test="normalize-space($schematronLink)">
+			<xsl:text> </xsl:text>
+			<a href="javascript:alert('schematron message: {$schematronLink}');"><img src="{/root/gui/url}/images/schematron.gif"/></a>
 		</xsl:if>
 	</xsl:template>
 
@@ -965,54 +1038,56 @@
 	-->
 	<xsl:template mode="editXMLElement" match="*">
 		<xsl:param name="indent"/>
-		
 		<xsl:choose>
-			
+
 			<!-- has children -->
 			<xsl:when test="*[not(starts-with(name(),'geonet:'))]">
-				<xsl:call-template name="editXMLStartTag">
-					<xsl:with-param name="indent" select="$indent"/>
-				</xsl:call-template>
-				<xsl:text>&#10;</xsl:text>
+				<xsl:if test="not(contains(name(.),'_ELEMENT'))">
+					<xsl:call-template name="editXMLStartTag">
+						<xsl:with-param name="indent" select="$indent"/>
+					</xsl:call-template>
+					<xsl:text>&#10;</xsl:text>
+				</xsl:if>
 				<xsl:for-each select="*">
 					<xsl:apply-templates select="." mode="editXMLElement">
 						<xsl:with-param name="indent" select="concat($indent, '&#09;')"/>
 					</xsl:apply-templates>
 				</xsl:for-each>
-				<xsl:call-template name="editEndTag">
-					<xsl:with-param name="indent" select="$indent"/>
-				</xsl:call-template>
-				<xsl:text>&#10;</xsl:text>
+				<xsl:if test="not(contains(name(.),'_ELEMENT'))">
+					<xsl:call-template name="editEndTag">
+						<xsl:with-param name="indent" select="$indent"/>
+					</xsl:call-template>
+					<xsl:text>&#10;</xsl:text>
+				</xsl:if>
 			</xsl:when>
 			
 			<!-- no children but text -->
 			<xsl:when test="text()">
-				<xsl:call-template name="editXMLStartTag">
-					<xsl:with-param name="indent" select="$indent"/>
-				</xsl:call-template>
+				<xsl:if test="not(contains(name(.),'_ELEMENT'))">
+					<xsl:call-template name="editXMLStartTag">
+						<xsl:with-param name="indent" select="$indent"/>
+					</xsl:call-template>
 				
-				<!-- xml entities should be doubly escaped -->
-				<xsl:apply-templates mode="escapeXMLEntities" select="text()"/>
+					<!-- xml entities should be doubly escaped -->
+					<xsl:apply-templates mode="escapeXMLEntities" select="text()"/>
 				
-				<!--
-				<xsl:value-of select="text()"/>
-				-->
-				
-				<xsl:call-template name="editEndTag"/>
-				<xsl:text>&#10;</xsl:text>
+					<xsl:call-template name="editEndTag"/>
+					<xsl:text>&#10;</xsl:text>
+				</xsl:if>
 			</xsl:when>
 			
 			<!-- empty element -->
 			<xsl:otherwise>
-				<xsl:call-template name="editXMLStartEndTag">
-					<xsl:with-param name="indent" select="$indent"/>
-				</xsl:call-template>
-				<xsl:text>&#10;</xsl:text>
+				<xsl:if test="not(contains(name(.),'_ELEMENT'))">
+					<xsl:call-template name="editXMLStartEndTag">
+						<xsl:with-param name="indent" select="$indent"/>
+					</xsl:call-template>
+					<xsl:text>&#10;</xsl:text>
+				</xsl:if>
 			</xsl:otherwise>
 			
 		</xsl:choose>
 	</xsl:template>
-	
 	<!--
 	draws the start tag of an editable element
 	-->

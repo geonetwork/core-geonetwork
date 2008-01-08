@@ -3,13 +3,14 @@
 	xmlns:gmd="http://www.isotc211.org/2005/gmd"
 	xmlns:gco="http://www.isotc211.org/2005/gco"
 	xmlns:gmx="http://www.isotc211.org/2005/gmx"
+	xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:gml="http://www.opengis.net/gml"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:xalan = "http://xml.apache.org/xalan">
 
-	<!-- ============================================================================= -->
+	<!-- =================================================================== -->
 	<!-- default: in simple mode just a flat list -->
-	<!-- ============================================================================= -->
+	<!-- =================================================================== -->
 
 	<xsl:template mode="iso19139" match="*|@*">
 		<xsl:param name="schema"/>
@@ -43,9 +44,9 @@
 			
 	</xsl:template>
 	
-	<!-- ============================================================================= -->
+	<!-- ===================================================================== -->
 	<!-- these elements should be boxed -->
-	<!-- ============================================================================= -->
+	<!-- ===================================================================== -->
 
 	<xsl:template mode="iso19139" match="gmd:graphicOverview"/>
 	<xsl:template mode="iso19139" match="gmd:contact|gmd:identificationInfo|gmd:distributionInfo|gmd:descriptiveKeywords|gmd:spatialRepresentationInfo|gmd:pointOfContact|gmd:dataQualityInfo|gmd:referenceSystemInfo|gmd:equivalentScale|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor">
@@ -58,11 +59,11 @@
 		</xsl:apply-templates>
 	</xsl:template>
 	
-	<!-- ============================================================================= -->
-	<!-- some gco: elements and some gml elements-->
-	<!-- ============================================================================= -->
+	<!-- ===================================================================== -->
+	<!-- some gco: elements -->
+	<!-- ===================================================================== -->
 
-	<xsl:template mode="iso19139" match="gmd:*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure|gco:RecordType]">
+	<xsl:template mode="iso19139" match="gmd:*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gco:Scale|gco:RecordType]|srv:*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gco:Scale|gco:RecordType]|gco:aName[gco:CharacterString]">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
@@ -72,7 +73,7 @@
 		</xsl:call-template>
 	</xsl:template>
 	
-	<!-- ============================================================================= -->
+	<!-- ==================================================================== -->
 
 	<xsl:template name="iso19139String">
 		<xsl:param name="schema"/>
@@ -102,18 +103,106 @@
 				</xsl:call-template>
 			</xsl:for-each>
 		</xsl:variable>
+		<xsl:variable name="attrs">
+			<xsl:for-each select="gco:*/@*">
+				<xsl:value-of select="name(.)"/>
+			</xsl:for-each>
+		</xsl:variable>
+
+
+		<xsl:choose>
+		<xsl:when test="normalize-space($attrs)!=''">
+			<xsl:apply-templates mode="complexElement" select=".">
+		  	<xsl:with-param name="schema"   select="$schema"/>
+				<xsl:with-param name="edit"     select="$edit"/>
+				<xsl:with-param name="title"    select="$title"/>
+				<xsl:with-param name="helpLink" select="$helpLink"/>
+				<xsl:with-param name="content">
+
+				<!-- existing attributes -->
+				<xsl:for-each select="gco:*/@*">
+					<xsl:apply-templates mode="simpleElement" select=".">
+						<xsl:with-param name="schema" select="$schema"/>
+						<xsl:with-param name="edit"   select="$edit"/>
+					</xsl:apply-templates>
+				</xsl:for-each>
+
+				<!-- existing content -->
+				<xsl:apply-templates mode="simpleElement" select=".">
+					<xsl:with-param name="schema"   select="$schema"/>
+					<xsl:with-param name="edit"     select="$edit"/>
+					<xsl:with-param name="title"    select="$title"/>
+					<xsl:with-param name="helpLink" select="$helpLink"/>
+					<xsl:with-param name="text"     select="$text"/>
+				</xsl:apply-templates>
+				</xsl:with-param>
+			</xsl:apply-templates>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:apply-templates mode="simpleElement" select=".">
+				<xsl:with-param name="schema"   select="$schema"/>
+				<xsl:with-param name="edit"     select="$edit"/>
+				<xsl:with-param name="title"    select="$title"/>
+				<xsl:with-param name="helpLink" select="$helpLink"/>
+				<xsl:with-param name="text"     select="$text"/>
+			</xsl:apply-templates>
+		</xsl:otherwise>
+		</xsl:choose>
+
+	</xsl:template>
+
+	<!-- ==================================================================== -->
+
+	<xsl:template mode="iso19139" match="gco:ScopedName|gco:LocalName">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+
+		<xsl:variable name="text">
+			<xsl:call-template name="getElementText">
+				<xsl:with-param name="edit"   select="$edit"/>
+				<xsl:with-param name="schema" select="$schema"/>
+			</xsl:call-template>
+		</xsl:variable>
 		<xsl:apply-templates mode="simpleElement" select=".">
 			<xsl:with-param name="schema"   select="$schema"/>
 			<xsl:with-param name="edit"     select="$edit"/>
-			<xsl:with-param name="title"    select="$title"/>
-			<xsl:with-param name="helpLink" select="$helpLink"/>
+			<xsl:with-param name="title"    select="'Name'"/>
 			<xsl:with-param name="text"     select="$text"/>
 		</xsl:apply-templates>
 	</xsl:template>
-	
-	<!-- ============================================================================= -->
+
+	<!-- ================================================================= -->
+	<!-- some elements that have both attributes and content               -->
+	<!-- ================================================================= -->
+
+	<xsl:template mode="iso19139" match="gml:coordinates|gml:identifier|gml:axisDirection|gml:descriptionReference">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+
+		<xsl:apply-templates mode="complexElement" select=".">
+			<xsl:with-param name="schema"   select="$schema"/>
+			<xsl:with-param name="edit"   	select="$edit"/>
+			<xsl:with-param name="content">
+		
+				<!-- existing attributes -->
+				<xsl:apply-templates mode="simpleElement" select="@*">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
+				</xsl:apply-templates>
+		
+				<!-- existing content -->
+				<xsl:apply-templates mode="simpleElement" select=".">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
+				</xsl:apply-templates>
+
+			</xsl:with-param>
+		</xsl:apply-templates>
+	</xsl:template>
+
+	<!-- ================================================================= -->
 	<!-- codelists -->
-	<!-- ============================================================================= -->
+	<!-- ================================================================= -->
 
 	<xsl:template mode="iso19139" match="gmd:*[*/@codeList]">
 		<xsl:param name="schema"/>
@@ -418,7 +507,7 @@
 				<td class="box" width="100" height="100" align="center">
 				-->
 				<xsl:variable name="md">
-					<xsl:apply-templates mode="brief" select="//gmd:MD_Metadata"/>
+					<xsl:apply-templates mode="brief" select="//gmd:MD_Metadata|//*[@gco:isoType='gmd:MD_Metadata']"/>
 				</xsl:variable>
 				<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
 				<!--td width="100" height="100" align="center">
@@ -687,17 +776,15 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
-	<!-- ============================================================================= -->
-	<!--
-	gml:TimePeriod (format = %Y-%m-%dThh:mm:ss)
-	-->
-	<!-- ============================================================================= -->
 
-	<xsl:template mode="iso19139" match="gml:TimePeriod[gml:beginPosition|gml:endPosition]" priority="2">
+	<!-- ===================================================================== -->
+	<!-- gml:TimePeriod (format = %Y-%m-%dThh:mm:ss) -->
+	<!-- ===================================================================== -->
+
+	<xsl:template mode="iso19139" match="gml:*[gml:beginPosition|gml:endPosition]|gml:TimeInstant[gml:timePosition]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
-		<xsl:for-each select="gml:beginPosition|gml:endPosition">
+		<xsl:for-each select="gml:beginPosition|gml:endPosition|gml:timePosition">
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
 				<xsl:apply-templates mode="simpleElement" select=".">
@@ -752,9 +839,9 @@
 		</xsl:for-each>
 	</xsl:template>
 	
-	<!-- ============================================================================= -->
+	<!-- =================================================================== -->
 	<!-- subtemplates -->
-	<!-- ============================================================================= -->
+	<!-- =================================================================== -->
 
 	<xsl:template mode="iso19139" match="*[geonet:info/isTemplate='s']" priority="3">
 		<xsl:param name="schema"/>
@@ -766,7 +853,7 @@
 		</xsl:apply-templates>
 	</xsl:template>
 	
-	<!-- ============================================================================= -->
+	<!-- =================================================================== -->
 	<!--
 	placeholder
 	<xsl:template mode="iso19139" match="TAG">
@@ -776,13 +863,15 @@
 		BODY
 	</xsl:template>
 	-->
-	<!-- ============================================================================= -->
+	<!-- ==================================================================== -->
 
-	<!-- ============================================================================= -->
+	<xsl:template mode="iso19139" match="@gco:isoType"/>
+
+	<!-- ==================================================================== -->
 	<!-- Metadata -->
-	<!-- ============================================================================= -->
+	<!-- ==================================================================== -->
 
-	<xsl:template mode="iso19139" match="gmd:MD_Metadata">
+	<xsl:template mode="iso19139" match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
@@ -1801,34 +1890,17 @@
 		</xsl:call-template>
 	</xsl:template>
 
-	<!-- ============================================================================= -->
+	<!-- ===================================================================== -->
 	<!-- === iso19139 brief formatting === -->
-	<!-- ============================================================================= -->
+	<!-- ===================================================================== -->
 	
 	<xsl:template name="iso19139Brief">
 		<metadata>
 			<xsl:variable name="id" select="geonet:info/id"/>
+			<xsl:apply-templates mode="briefster" select="gmd:identificationInfo/gmd:MD_DataIdentification|gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|gmd:identificationInfo/srv:SV_ServiceIdentification">
+				<xsl:with-param name="id" select="$id"/>
+			</xsl:apply-templates>
 
-			<xsl:if test="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title">
-				<title><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title"/></title>
-			</xsl:if>
-			
-			<xsl:if test="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract">
-				<abstract><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract"/></abstract>
-			</xsl:if>
-
-			<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[text()]">
-				<keyword><xsl:value-of select="."/></keyword>
-			</xsl:for-each>
-
-			<xsl:if test="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
-				<geoBox>
-					<westBL><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude"/></westBL>
-					<eastBL><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude"/></eastBL>
-					<southBL><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude"/></southBL>
-					<northBL><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude"/></northBL>
-				</geoBox>
-			</xsl:if>
 			
 			<xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource">
 				<xsl:variable name="protocol" select="gmd:protocol/gco:CharacterString"/>
@@ -1863,10 +1935,38 @@
 				</xsl:choose>
 			</xsl:for-each>
 
+			<xsl:copy-of select="geonet:info"/>
+		</metadata>
+	</xsl:template>
+
+	<xsl:template mode="briefster" match="*">
+		<xsl:param name="id"/>
+	
+			<xsl:if test="gmd:citation/gmd:CI_Citation/gmd:title">
+				<title><xsl:value-of select="gmd:citation/gmd:CI_Citation/gmd:title"/></title>
+			</xsl:if>
+			
+			<xsl:if test="gmd:abstract">
+				<abstract><xsl:value-of select="gmd:abstract"/></abstract>
+			</xsl:if>
+
+			<xsl:for-each select="//gmd:keyword/gco:CharacterString[text()]">
+				<keyword><xsl:value-of select="."/></keyword>
+			</xsl:for-each>
+
+			<xsl:if test="gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
+				<geoBox>
+					<westBL><xsl:value-of select="gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude"/></westBL>
+					<eastBL><xsl:value-of select="gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude"/></eastBL>
+					<southBL><xsl:value-of select="gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude"/></southBL>
+					<northBL><xsl:value-of select="gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude"/></northBL>
+				</geoBox>
+			</xsl:if>
+
 			<xsl:if test="not(geonet:info/server)">
 				<xsl:variable name="info" select="geonet:info"/>
 
-				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic">
+				<xsl:for-each select="gmd:graphicOverview/gmd:MD_BrowseGraphic">
 					<xsl:variable name="fileName"  select="gmd:fileName/gco:CharacterString"/>
 					<xsl:if test="$fileName != ''">
 						<xsl:variable name="fileDescr" select="gmd:fileDescription/gco:CharacterString"/>
@@ -1923,8 +2023,6 @@
 				</xsl:for-each>
 			</xsl:if>
 
-			<xsl:copy-of select="geonet:info"/>
-		</metadata>
 	</xsl:template>
 	
 	<!-- ============================================================================= -->
@@ -2040,11 +2138,10 @@
 			<xsl:when test="text()!=''">txt</xsl:when>
 			<!-- empty element -->
 			<xsl:otherwise>
-				<!-- codelist? -->
-				<xsl:variable name="name" select="name(.)"/>
-				<xsl:if test="@codeList">
-					<xsl:if test="@codeListValue!=''">cdl</xsl:if>
-				</xsl:if>
+				<!-- attributes? -->
+				<xsl:for-each select="@*">
+					<xsl:if test="string-length(.)!=0">att</xsl:if>
+				</xsl:for-each>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

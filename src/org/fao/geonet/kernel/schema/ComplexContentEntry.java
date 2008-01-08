@@ -3,7 +3,7 @@
 //===   ComplexContentEntry
 //===
 //==============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -19,7 +19,7 @@
 //===
 //===	You should have received a copy of the GNU General Public License
 //===	along with this program; if not, write to the Free Software
-//=== Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
 //===
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
 //===	Rome - Italy. email: geonetwork@osgeo.org
@@ -29,6 +29,7 @@ package org.fao.geonet.kernel.schema;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.*;
 
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -38,8 +39,10 @@ import org.jdom.Element;
 class ComplexContentEntry
 {
 	public String base;
+	public ArrayList alAttribGroups = new ArrayList();
 	public ArrayList alElements = new ArrayList();
 	public ArrayList alAttribs  = new ArrayList();
+	boolean restriction = false;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -97,8 +100,10 @@ class ComplexContentEntry
 			if (elChild.getName().equals("extension"))
 				handleExtension(elChild, ei);
 
-			else if (elChild.getName().equals("restriction"))
+			else if (elChild.getName().equals("restriction")) {
 				handleRestriction(elChild, ei);
+				restriction = true;
+			}
 
 			else
 				Logger.log("Unknown child '"+ elName +"' in <complexContent> element", ei);
@@ -117,26 +122,40 @@ class ComplexContentEntry
 		{
 			Element elExt = (Element) extension.get(j);
 
-			if (elExt.getName().equals("sequence"))
-			{
+			if (elExt.getName().equals("sequence")) {
 				List sequence = elExt.getChildren();
 
 				for(int k=0; k<sequence.size(); k++)
 				{
 					Element elSeq = (Element) sequence.get(k);
 
-					if (elSeq.getName().equals("element") || elSeq.getName().equals("choice")) 
+					if (elSeq.getName().equals("element") || elSeq.getName().equals("choice") || elSeq.getName().equals("group") || elSeq.getName().equals("sequence")) 
 						alElements.add(new ElementEntry(elSeq, ei.file, ei.targetNS, ei.targetNSPrefix));
-
+					
 					else
-						Logger.log("Unknown child '"+ elSeq.getName() +"' in <sequence> element", ei);
+						Logger.log("Unknown child '"+ elSeq.getName() +"' in <sequence> element"+ei);
 				}
+			}
+			else if (elExt.getName().equals("group")) {
+				alElements.add(new ElementEntry(elExt, ei.file, ei.targetNS, ei.targetNSPrefix));
+			}
+			else if (elExt.getName().equals("choice")) {
+				alElements.add(new ElementEntry(elExt, ei.file, ei.targetNS, ei.targetNSPrefix));
 			}
 			else if (elExt.getName().equals("attribute"))
 				alAttribs.add(new AttributeEntry(elExt, ei.file, ei.targetNS, ei.targetNSPrefix));
+			else if (elExt.getName().equals("attributeGroup"))
+      {
+				String attribGroup = elExt.getAttributeValue("ref");
+
+        if (attribGroup == null)
+          throw new IllegalArgumentException("'ref' is null for element in <attributeGroup> of ComplexContent with extension base "+base);
+				alAttribGroups.add(attribGroup);
+      }
+
 
 			else
-				Logger.log("Unknown child '"+ elExt.getName() +"' in <extension> element ", ei);
+				Logger.log("Unknown child '"+ elExt.getName() +"' in <extension> element "+ei);
 		}
 	}
 
@@ -146,31 +165,48 @@ class ComplexContentEntry
 	{
 		base = el.getAttributeValue("base");
 
-		List attribs = el.getAttributes();
-
-		for(int i=0; i<attribs.size(); i++)
-		{
-			Attribute at = (Attribute) attribs.get(i);
-
-			String attrName = at.getName();
-
-			Logger.log("Unknown attribute '"+ attrName +"' in <restriction> element", ei);
-		}
-
 		//--- handle children
 
-		List children = el.getChildren();
+		List restriction = el.getChildren();
 
-		for(int i=0; i<children.size(); i++)
+		for(int i=0; i<restriction.size(); i++)
 		{
-			Element elRes = (Element) children.get(i);
+			Element elRes = (Element) restriction.get(i);
 			String  elName= elRes.getName();
 
-			if (elName.equals("attribute"))
+			if (elRes.getName().equals("sequence"))
+			{
+				List sequence = elRes.getChildren();
+
+				for(int k=0; k<sequence.size(); k++)
+				{
+					Element elSeq = (Element) sequence.get(k);
+
+					if (elSeq.getName().equals("element") || elSeq.getName().equals("choice") || elSeq.getName().equals("group") || elSeq.getName().equals("sequence")) 
+						alElements.add(new ElementEntry(elSeq, ei.file, ei.targetNS, ei.targetNSPrefix));
+					else
+						Logger.log("Unknown child '"+ elSeq.getName() +"' in <sequence> element"+ei);
+				}
+			}
+
+			else if (elRes.getName().equals("group")) {
+				alElements.add(new ElementEntry(elRes, ei.file, ei.targetNS, ei.targetNSPrefix));
+			}
+
+			else if (elName.equals("attribute"))
 				alAttribs.add(new AttributeEntry(elRes, ei.file, ei.targetNS, ei.targetNSPrefix));
 
+			else if (elName.equals("attributeGroup"))
+      {
+				String attribGroup = elRes.getAttributeValue("ref");
+
+        if (attribGroup == null)
+          throw new IllegalArgumentException("'ref' is null for element in <attributeGroup> of ComplexContent with restriction base "+base);
+				alAttribGroups.add(attribGroup);
+      }
+
 			else
-				Logger.log("Unknown child '"+ elName +"' in <restriction> element", ei);
+				Logger.log("Unknown child '"+ elName +"' in <restriction> element",ei);
 
 		}
 	}

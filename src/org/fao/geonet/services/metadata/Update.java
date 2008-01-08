@@ -85,7 +85,7 @@ public class Update implements Service
 		{
 			Element md = Xml.loadString(data, false);
 
-			if (!dataMan.updateMetadata(dbms, id, md, validate, version))
+			if (!dataMan.updateMetadata(context.getUserSession(), dbms, id, md, validate, version))
 				throw new ConcurrentUpdateEx(id);
 		}
 		else
@@ -98,6 +98,12 @@ public class Update implements Service
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
+		if (validate) {
+			Element schemaTronErrors = (Element) context.getUserSession().getProperty("schematron_"+id);
+			if (schemaTronErrors != null) {
+				elResp.addContent(schemaTronErrors);
+			}
+		}
 
 		return elResp;
 	}

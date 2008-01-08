@@ -27,6 +27,7 @@
 
 package org.fao.geonet.kernel;
 
+import java.io.File;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -35,8 +36,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.Vector;
+import javax.xml.transform.Source;
+import javax.xml.transform.Result;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
@@ -48,11 +59,14 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
+import org.fao.geonet.util.FileCopyMgr;
 import org.jdom.Attribute;
+import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.Text;
+import org.jdom.output.DOMOutputter;
 
 //=============================================================================
 
@@ -70,14 +84,14 @@ public class DataManager
 	/** initializes the search manager and index not-indexed metadata
 	  */
 
-	public DataManager(SearchManager sm, AccessManager am, Dbms dbms, SettingManager ss,
-							 String baseURL) throws Exception
+	public DataManager(SearchManager sm, AccessManager am, Dbms dbms, SettingManager ss, String baseURL, String htmlCacheDir) throws Exception
 	{
 		searchMan = sm;
 		accessMan = am;
 		settingMan= ss;
 
 		this.baseURL = baseURL;
+		this.htmlCacheDir = htmlCacheDir;
 
 		// get all metadata from DB
 		Element result = dbms.select("SELECT id, changeDate FROM Metadata ORDER BY id ASC");
@@ -254,9 +268,9 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
-	public void addSchema(String id, String xmlSchemaFile, String xmlSuggestFile) throws Exception
+	public void addSchema(String id, String xmlSchemaFile, String xmlSuggestFile, String xmlSubstitutesFile) throws Exception
 	{
-		editLib.addSchema(id, xmlSchemaFile, xmlSuggestFile);
+		editLib.addSchema(id, xmlSchemaFile, xmlSuggestFile, xmlSubstitutesFile);
 	}
 
 	//--------------------------------------------------------------------------
@@ -292,6 +306,108 @@ public class DataManager
 	public void validate(String schema, Element md) throws Exception
 	{
 		Xml.validate(editLib.getSchemaDir(schema) + Geonet.File.SCHEMA, md);
+	}
+	
+	//--------------------------------------------------------------------------
+	
+	public Element schemaTron(String schemaPath, Element md, String id) throws Exception
+	{
+		String fileSchemaTronReport = doSchemaTronReport(schemaPath,md,id);
+		return doSchemaTronForEditor(schemaPath,md);
+	}
+
+	//--------------------------------------------------------------------------
+	
+	public String doSchemaTronReport(String schemaPath, Element md, String id) throws Exception
+	{
+
+		String dirId = "SchematronReport"+id;
+		String outDir = htmlCacheDir+File.separator+dirId;
+		String inDir  = htmlCacheDir+File.separator+"schematronscripts";
+
+		// copy the schematron templates for the output report
+		FileCopyMgr copier = new FileCopyMgr();
+		copier.copyFiles(inDir,outDir);
+
+		// convert the JDOM document to a DOM document
+		Document mdDoc = new Document(md);
+		DOMOutputter domOut = new DOMOutputter();
+		org.w3c.dom.Document mdDomDoc = domOut.output(mdDoc);
+
+		// set up the inputs to/output from the XSLT transformer and run it
+		// xslt transformer
+		String schemaTronReport = schemaPath+File.separator+Geonet.File.SCHEMATRON;
+		StreamSource xsltSource = new StreamSource(new File(schemaTronReport));
+
+		// output schematron-errors.html
+		String fileOut = outDir+File.separator+"schematron-errors.html";
+		File fileResult = new File(fileOut);
+		Source source = new DOMSource(mdDomDoc);
+
+		try {
+			Transformer xformer = TransformerFactory.newInstance().newTransformer(xsltSource);
+			Result result = new StreamResult(fileResult.toURI().getPath());
+			xformer.transform(source,result);
+		} catch (TransformerConfigurationException e) {
+			System.out.println(e);
+		} catch (TransformerException e) {
+			System.out.println(e);
+		}
+
+		// now place anchors in the metadata xml so that schematron-report can
+		// show the problems with the XML
+
+		String schemaTronAnchors = schemaPath+File.separator+Geonet.File.SCHEMATRON_VERBID;
+		StreamSource xsltAnchorSource = new StreamSource(new File(schemaTronAnchors));
+		// output schematron-out.html
+		String fileSchemaTronOut = outDir+File.separator+"schematron-out.html";
+		File schemaTronOut = new File(fileSchemaTronOut);
+		try {
+			Transformer xformer = TransformerFactory.newInstance().newTransformer(xsltAnchorSource);
+			Result result = new StreamResult(schemaTronOut.toURI().getPath());
+			xformer.transform(source,result);
+		} catch (TransformerConfigurationException e) {
+			System.out.println(e);
+		} catch (TransformerException e) {
+			System.out.println(e);
+		}
+
+		return fileSchemaTronOut;
+	}
+
+	//--------------------------------------------------------------------------
+
+	public Element doSchemaTronForEditor(String schemaPath,Element md) throws Exception
+	{
+
+		// enumerate the metadata xml so that we can report any problems found 
+		// by the schematron_xml script to the geonetwork editor
+		editLib.enumerateTree(md);
+
+		// get an xml version of the schematron errors and return for error display
+		Element schemaTronXmlReport = getSchemaTronXmlReport(schemaPath, md);
+
+		// remove editing info added by enumerateTree
+		editLib.removeEditingInfo(md);
+
+		return schemaTronXmlReport;
+	}
+
+	//--------------------------------------------------------------------------
+	
+	private Element getSchemaTronXmlReport(String schemaPath, Element md) throws Exception {
+		// NOTE: this method assumes that you've run enumerateTree on the 
+		// metadata
+		String schemaTronXmlXslt = schemaPath+File.separator+Geonet.File.SCHEMATRON_XML;
+		Element schemaTronXmlOut = null;
+		
+		try {
+			schemaTronXmlOut = Xml.transform(md, schemaTronXmlXslt);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return schemaTronXmlOut;
 	}
 
 	//--------------------------------------------------------------------------
@@ -710,7 +826,10 @@ public class DataManager
 		if (forEditing)
 		{
 			String schema = getMetadataSchema(dbms, id);
+			editLib.expandElements(schema,md);
 			version = editLib.addEditingInfo(schema, id, md);
+			Element elemChecks = getSchemaTronXmlReport(getSchemaDir(schema),md);
+			if (elemChecks != null) md.addContent(elemChecks);
 		}
 
 		md.addNamespaceDeclaration(Edit.NAMESPACE);
@@ -777,6 +896,8 @@ public class DataManager
 		if (md == null)
 			return false;
 
+		String  schema = getMetadataSchema(dbms, id);
+		editLib.expandElements(schema, md);
 		editLib.enumerateTree(md);
 
 		//--- check if the metadata has been modified from last time
@@ -792,7 +913,6 @@ public class DataManager
 		//--- remove editing info added by previous call
 
 		editLib.removeEditingInfo(md);
-		String  schema = getMetadataSchema(dbms, id);
 
 		if (childName.startsWith("_s"))
 		{
@@ -805,15 +925,16 @@ public class DataManager
 		{
 			// normal element
 			Element child  = editLib.addElement(schema, el, name);
+			MetadataSchema mds = editLib.getSchema(schema);
 			if (!childName.equals(""))
 			{
 				// or element
 				String uChildName = editLib.getUnqualifiedName(childName);
         String prefix     = editLib.getPrefix(childName);
-        String ns         = editLib.getNamespace(childName,md);
+        String ns         = editLib.getNamespace(childName,md,mds);
         if (prefix.equals("")) {
            prefix = editLib.getPrefix(el.getName());
-           ns = editLib.getNamespace(el.getName(),md);
+           ns = editLib.getNamespace(el.getName(),md,mds);
         }
         Element orChild = new Element(uChildName,prefix,ns);
         child.addContent(orChild);
@@ -822,6 +943,8 @@ public class DataManager
         editLib.fillElement(schema, child, orChild);
 			}
 		}
+
+		editLib.contractElements(md);
 		md = updateFixedInfo(schema, id, md, dbms);
 		XmlSerializer.update(dbms, id, md);
 
@@ -842,6 +965,8 @@ public class DataManager
 		if (md == null)
 			return false;
 
+		String schema = getMetadataSchema(dbms, id);
+		editLib.expandElements(schema, md);
 		editLib.enumerateTree(md);
 
 		//--- check if the metadata has been modified from last time
@@ -859,8 +984,7 @@ public class DataManager
 
 		el.setAttribute(new Attribute(name, ""));
 
-		String schema = getMetadataSchema(dbms, id);
-
+		editLib.contractElements(md);
 		md = updateFixedInfo(schema, id, md, dbms);
 		XmlSerializer.update(dbms, id, md);
 
@@ -883,6 +1007,8 @@ public class DataManager
 		if (md == null)
 			return false;
 
+		String schema = getMetadataSchema(dbms, id);
+		editLib.expandElements(schema, md);
 		editLib.enumerateTree(md);
 
 		//--- check if the metadata has been modified from last time
@@ -900,8 +1026,7 @@ public class DataManager
 		//--- remove editing info added by previous call
 		editLib.removeEditingInfo(md);
 
-		String schema = getMetadataSchema(dbms, id);
-
+		editLib.contractElements(md);
 		md = updateFixedInfo(schema, id, md, dbms);
 		XmlSerializer.update(dbms, id, md);
 
@@ -925,6 +1050,8 @@ public class DataManager
 		if (md == null)
 			return false;
 
+		String schema = getMetadataSchema(dbms, id);
+		editLib.expandElements(schema, md);
 		editLib.enumerateTree(md);
 
 		//--- check if the metadata has been modified from last time
@@ -942,8 +1069,7 @@ public class DataManager
 
 		el.removeAttribute(name);
 
-		String schema = getMetadataSchema(dbms, id);
-
+		editLib.contractElements(md);
 		md = updateFixedInfo(schema, id, md, dbms);
 		XmlSerializer.update(dbms, id, md);
 
@@ -967,6 +1093,8 @@ public class DataManager
 		if (md == null)
 			return false;
 
+		String schema = getMetadataSchema(dbms, id);
+		editLib.expandElements(schema,md);
 		editLib.enumerateTree(md);
 
 		//--- check if the metadata has been modified from last time
@@ -1003,8 +1131,7 @@ public class DataManager
 		if (down)	swapElements(elSwap, (Element) list.get(iSwapIndex +1));
 			else		swapElements(elSwap, (Element) list.get(iSwapIndex -1));
 
-		String schema = getMetadataSchema(dbms, id);
-
+		editLib.contractElements(md);
 		md = updateFixedInfo(schema, id, md, dbms);
 		XmlSerializer.update(dbms, id, md);
 
@@ -1015,7 +1142,7 @@ public class DataManager
 	/** For Editing : updates all leaves with new values
 	  */
 
-	public synchronized boolean updateMetadata(Dbms dbms, String id, String currVersion,
+	public synchronized boolean updateMetadata(UserSession session, Dbms dbms, String id, String currVersion,
 															 Hashtable changes, boolean validate) throws Exception
 	{
 		Element md = XmlSerializer.select(dbms, "Metadata", id);
@@ -1023,7 +1150,8 @@ public class DataManager
 		//--- check if the metadata has been deleted
 		if (md == null)
 			return false;
-
+		String schema = getMetadataSchema(dbms, id);
+		editLib.expandElements(schema, md);
 		editLib.enumerateTree(md);
 
 		//--- check if the metadata has been modified from last time
@@ -1052,14 +1180,14 @@ public class DataManager
 			if (attr != null) {
 // The following work-around decodes any attribute name that has a COLON in it
 // The : is replaced by the word COLON in the xslt so that it can be processed
-// by the XML Serializer when an update is submitted - the only situation
-// where this is known to occur is in the gml schema (eg. gml:id) - a better
-// solution may be required
+// by the XML Serializer when an update is submitted - a better solution is 
+// required based on the form being submitted as an XML tree as opposed to name
+// value pairs (XFORMS is being investigated)
 				Integer indexColon = attr.indexOf("COLON");
         if (indexColon != -1) {
 					String prefix = attr.substring(0,indexColon);
           String localname = attr.substring(indexColon + 5);
-          String namespace = editLib.getNamespace(prefix+":"+localname,md);
+          String namespace = editLib.getNamespace(prefix+":"+localname,md,getSchema(schema));
 					Namespace attrNS = Namespace.getNamespace(prefix,namespace);
           if (el.getAttribute(localname,attrNS) != null) {
             el.setAttribute(new Attribute(localname,val,attrNS));
@@ -1088,27 +1216,26 @@ public class DataManager
 		//--- remove editing info added by previous call
 		editLib.removeEditingInfo(md);
 
-		return updateMetadata(dbms, id, md, validate, currVersion);
+		return updateMetadata(session, dbms, id, md, validate, currVersion);
 	}
 
 	//--------------------------------------------------------------------------
 
-	public synchronized boolean updateMetadata(Dbms dbms, String id, Element md,
-														 boolean validate, String version) throws Exception
+	public synchronized boolean updateMetadata(UserSession session, Dbms dbms, String id, Element md, boolean validate, String version) throws Exception
 	{
 		//--- check if the metadata has been modified from last time
 		if (version != null && !editLib.getVersion(id).equals(version))
 			return false;
 
-		//--- make sure that any lingering CHOICE_ELEMENTS are replaced with their
-		//--- children
-		editLib.replaceChoiceElements(md);
-
+		editLib.contractElements(md);
 		String schema = getMetadataSchema(dbms, id);
 		md = updateFixedInfo(schema, id, md, dbms);
 
-		if (validate)
+		if (validate) {
 			validate(schema, md);
+			Element schemaTronXml = schemaTron(getSchemaDir(schema),md,id);
+			session.setProperty("schematron_"+id,schemaTronXml);
+		}
 
 		XmlSerializer.update(dbms, id, md);
 
@@ -1611,6 +1738,7 @@ public class DataManager
 	private SearchManager  searchMan;
 	private SettingManager settingMan;
 	private HarvestManager harvestMan;
+	private String htmlCacheDir;
 }
 
 //=============================================================================

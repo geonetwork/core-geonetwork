@@ -3,6 +3,7 @@
 <xsl:stylesheet version="1.0" xmlns:gmd="http://www.isotc211.org/2005/gmd"
 										xmlns:gco="http://www.isotc211.org/2005/gco"
 										xmlns:gml="http://www.opengis.net/gml"
+										xmlns:srv="http://www.isotc211.org/2005/srv"
 										xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 	<!-- ========================================================================================= -->
@@ -21,12 +22,12 @@
 
 	<xsl:template match="*" mode="metadata">
 
-		<!-- === Data Identification === -->		
+		<!-- === Data or Service Identification === -->		
 
 		<!-- the double // here seems needed to index MD_DataIdentification when
            it is nested in a SV_ServiceIdentification class -->
 
-		<xsl:for-each select="gmd:identificationInfo//gmd:MD_DataIdentification">
+		<xsl:for-each select="gmd:identificationInfo//gmd:MD_DataIdentification|gmd:identificationInfo/srv:SV_ServiceIdentification">
 
 			<xsl:for-each select="gmd:citation/gmd:CI_Citation">
 				<xsl:for-each select="gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString">
@@ -74,7 +75,7 @@
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 
-			<xsl:for-each select="gmd:extent/gmd:EX_Extent">
+			<xsl:for-each select="*/gmd:EX_Extent">
 				<xsl:apply-templates select="gmd:geographicElement/gmd:EX_GeographicBoundingBox" mode="latLon"/>
 
 				<xsl:for-each select="gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString">
@@ -89,12 +90,21 @@
 					<xsl:for-each select="gml:TimePeriod/gml:endPosition">
 						<Field name="tempExtentEnd" string="{string(.)}" store="true" index="true" token="false"/>
 					</xsl:for-each>
+
+					<xsl:for-each select="gml:TimePeriod/gml:begin/gml:TimeInstant/gml:timePosition">
+						<Field name="tempExtentBegin" string="{string(.)}" store="true" index="true" token="false"/>
+					</xsl:for-each>
+
+					<xsl:for-each select="gml:TimePeriod/gml:end/gml:TimeInstant/gml:timePosition">
+						<Field name="tempExtentEnd" string="{string(.)}" store="true" index="true" token="false"/>
+					</xsl:for-each>
+
 				</xsl:for-each>
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 
-			<xsl:for-each select="gmd:descriptiveKeywords/gmd:MD_Keywords">
+			<xsl:for-each select="*/gmd:MD_Keywords">
 				<xsl:for-each select="gmd:keyword/gco:CharacterString">
 					<Field name="keyword" string="{string(.)}" store="true" index="true" token="false"/>
 				</xsl:for-each>

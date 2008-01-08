@@ -42,6 +42,9 @@ class SimpleContentEntry
 
 	public ArrayList alElements = new ArrayList();
 	public ArrayList alAttribs  = new ArrayList();
+	public ArrayList alAttribGroups = new ArrayList();
+	public boolean restriction = false;
+
 
 	//---------------------------------------------------------------------------
 	//---
@@ -97,6 +100,8 @@ class SimpleContentEntry
 
 			if (elChild.getName().equals("extension"))
 				handleExtension(elChild, ei);
+			else if (elChild.getName().equals("restriction"))
+				handleExtension(elChild, ei);
 
 			else
 				Logger.log("Unknown child '"+ elName +"' in <simpleContent> element", ei);
@@ -107,6 +112,7 @@ class SimpleContentEntry
 
 	private void handleExtension(Element el, ElementInfo ei)
 	{
+		restriction = false;
 		base = el.getAttributeValue("base");
 		List extension = el.getChildren();
 		for(int j=0; j<extension.size(); j++)
@@ -116,6 +122,16 @@ class SimpleContentEntry
 
 			if (elName.equals("attribute"))
 				alAttribs.add(new AttributeEntry(elExt, ei.file, ei.targetNS, ei.targetNSPrefix));
+			else if (elName.equals("attributeGroup")) {
+				String attribGroup = elExt.getAttributeValue("ref");
+
+				if (attribGroup == null)
+					throw new IllegalArgumentException("'ref' is null for element in <attributeGroup> of SimpleContent with extension base "+base);
+					
+				alAttribGroups.add(attribGroup);
+
+			}
+
 
 			else
 				Logger.log("Unknown child '"+ elName +"' in <restriction> element", ei);
@@ -127,6 +143,7 @@ class SimpleContentEntry
 
 	private void handleRestriction(Element el, ElementInfo ei)
 	{
+		restriction = true;
 		base = el.getAttributeValue("base");
 		
 		List attribs = el.getAttributes();
@@ -151,6 +168,16 @@ class SimpleContentEntry
 
 			if (elName.equals("attribute"))
 				alAttribs.add(new AttributeEntry(elRes, ei.file, ei.targetNS, ei.targetNSPrefix));
+			else if (elName.equals("attributeGroup")) {
+				String attribGroup = elRes.getAttributeValue("ref");
+
+				if (attribGroup == null)
+					throw new IllegalArgumentException("'ref' is null for element in <attributeGroup> of SimpleContent with restriction base "+base);
+					
+				alAttribGroups.add(attribGroup);
+
+			}
+
 
 			else
 				Logger.log("Unknown child '"+ elName +"' in <restriction> element", ei);

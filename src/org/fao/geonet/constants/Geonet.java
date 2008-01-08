@@ -37,6 +37,9 @@ public class Geonet
 	public class File
 	{
 		public static final String SCHEMA              = "schema.xsd";
+		public static final String SCHEMATRON          = "schematron.xsl";
+		public static final String SCHEMATRON_XML      = "schematron_xml.xsl";
+		public static final String SCHEMATRON_VERBID   = "schematron_verbid.xsl";
 		public static final String SEARCH_LUCENE       = "lucene.xsl";
 		public static final String SEARCH_Z3950_CLIENT = "z3950Client.xsl";
 		public static final String SEARCH_Z3950_SERVER = "z3950Server.xsl";
@@ -47,6 +50,7 @@ public class Geonet
 		public static final String SET_THUMBNAIL       = "set-thumbnail.xsl";
 		public static final String UNSET_THUMBNAIL     = "unset-thumbnail.xsl";
 		public static final String SCHEMA_SUGGESTIONS  = "schema-suggestions.xml";
+		public static final String SCHEMA_SUBSTITUTES  = "schema-substitutes.xml";
 		public static final String CQL_TO_FILTER       = "cql-to-filter.xsl";
 		public static final String FILTER_TO_LUCENE    = "filter-to-lucene.xsl";
 	}
@@ -204,6 +208,7 @@ public class Geonet
 
 	public class Config
 	{
+		public static final String HTMLCACHE_DIR    = "htmlCacheDir";
 		public static final String LUCENE_DIR       = "luceneDir";
 		public static final String MAX_SUMMARY_KEYS = "maxSummaryKeys";
 		public static final String SCHEMA_MAPPINGS  = "schemaMappings";

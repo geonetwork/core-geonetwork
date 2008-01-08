@@ -55,6 +55,9 @@ public class Edit
 		public static final String ELEMENT   = "element";
 		public static final String ATTRIBUTE = "attribute";
 		public static final String CHILD     = "child";
+		public static final String CHOICE    = "CHOICE_ELEMENT";
+		public static final String SEQUENCE  = "SEQUENCE_ELEMENT";
+		public static final String GROUP     = "GROUP_ELEMENT";
 	}
 
 	//--------------------------------------------------------------------------

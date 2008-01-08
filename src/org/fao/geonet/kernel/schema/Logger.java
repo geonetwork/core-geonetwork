@@ -3,7 +3,7 @@
 //===   Logger
 //===
 //==============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -48,8 +48,8 @@ class Logger
 
 	public static void log(String message)
 	{
-	//	System.out.println(message);
-	//	logSeparator();
+		//System.out.println(message);
+		//logSeparator();
 	}
 
 	//---------------------------------------------------------------------------
@@ -58,10 +58,10 @@ class Logger
 	{
 		String file = new File(ei.file).getName();
 
-	//	System.out.println(message);
-	//	System.out.println("File is    : " + file);
-	//	System.out.println("Element is : \n" + Xml.getString(ei.element));
-	//	logSeparator();
+		//System.out.println(message);
+		//System.out.println("File is    : " + file);
+		//System.out.println("Element is : \n" + Xml.getString(ei.element));
+		//logSeparator();
 	}
 
 	//---------------------------------------------------------------------------
@@ -72,7 +72,7 @@ class Logger
 
 	private static void logSeparator()
 	{
-	//	System.out.println("---------------------------------------------------------");
+		System.out.println("---------------------------------------------------------");
 	}
 }
 

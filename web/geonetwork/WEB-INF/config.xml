@@ -117,6 +117,7 @@
 
 	<appHandler class="org.fao.geonet.Geonetwork">
 		<param name="luceneDir" value="WEB-INF/lucene" />
+		<param name="htmlCacheDir" value="schematronCache" />
 		<param name="schemaMappings" value="schema-mappings.xml" />
 		<param name="dataDir" value="WEB-INF/data" />
 		<param name="thesauriDir" value="WEB-INF/gsthesauri" />

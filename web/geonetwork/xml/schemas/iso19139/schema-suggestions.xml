@@ -62,5 +62,45 @@
 		<suggest name="gmd:southBoundLatitude"/>
 		<suggest name="gmd:northBoundLatitude"/>
 	</field>
-	
+
+	<field name="gmd:attributes">
+		<suggest name="uuidref"/>
+	</field>
+
+	<field name="gmd:features">
+		<suggest name="uuidref"/>
+	</field>
+
+	<field name="gmd:featureInstances">
+		<suggest name="uuidref"/>
+	</field>
+
+	<field name="gmd:attributeInstances">
+		<suggest name="uuidref"/>
+	</field>
+
+	<field name="gmd:propertyType">
+		<suggest name="uuidref"/>
+	</field>
+
+	<field name="gmd:featureType">
+		<suggest name="uuidref"/>
+	</field>
+
+	<field name="gmd:featureAttribute">
+		<suggest name="uuidref"/>
+	</field>
+
+	<field name="srv:operatesOn">
+		<suggest name="uuidref"/>
+	</field>
+
+	<field name="gml:polygon">
+		<suggest name="srsName"/>
+	</field>
+
+	<field name="gml:descriptionReference">
+		<suggest name="xlink:href"/>
+	</field>
+
 </fields>

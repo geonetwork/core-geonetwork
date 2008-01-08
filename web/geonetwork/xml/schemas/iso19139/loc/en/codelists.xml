@@ -1858,4 +1858,54 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
 	<!-- ==================================================== -->
+	<codelist name="srv:DCPList">
+			<entry>
+					<description>DCP is XML</description>
+					<code>XML</code>
+					<label>XML</label>
+			</entry>
+			<entry>
+					<description>DCP is CORBA</description>
+					<code>CORBA</code>
+					<label>CORBA</label>
+			</entry>
+			<entry>
+					<description>DCP is JAVA</description>
+					<code>JAVA</code>
+					<label>JAVA</label>
+			</entry>
+			<entry>
+					<description>DCP is COM</description>
+					<code>COM</code>
+					<label>COM</label>
+			</entry>
+			<entry>
+					<description>DCP is SQL</description>
+					<code>SQL</code>
+					<label>SQL</label>
+			</entry>
+			<entry>
+					<description>DCP is WebServices</description>
+					<code>WebServices</code>
+					<label>WebServices</label>
+			</entry>
+	</codelist>
+	<!--=== CouplingType from ISO19119 ===-->
+	<codelist name="srv:SV_CouplingType">
+			<entry>
+					<description>Tightly coupled: data associated</description>
+					<code>tight</code>
+					<label>tight</label>
+			</entry>
+			<entry>
+					<description>Mixed coupled: data associated; in addition, external data might be processed</description>
+					<code>mixed</code>
+					<label>mixed</label>
+			</entry>
+			<entry>
+					<description>Loosely coupled: no data associated</description>
+					<code>loose</code>
+					<label>loose</label>
+			</entry>
+	</codelist>
 </codelists>

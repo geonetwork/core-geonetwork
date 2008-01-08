@@ -3,7 +3,7 @@
 //===   MetadataType
 //===
 //==============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -32,6 +32,7 @@ import java.util.List;
 
 import org.jdom.Attribute;
 import org.jdom.Element;
+import org.fao.geonet.constants.Edit;
 
 //==============================================================================
 
@@ -39,6 +40,7 @@ public class MetadataType
 {
 	private String  name;
 	private boolean isOrType;
+	public boolean hasContainers = false;
 
 	private ArrayList alElements   = new ArrayList();
 	private ArrayList alTypes      = new ArrayList();
@@ -68,6 +70,10 @@ public class MetadataType
 		alTypes.set(pos,type);
 	}
 
+	public ArrayList getElementList() {
+		return (ArrayList) alElements.clone();
+	}
+
 	//--------------------------------------------------------------------------
 	/** Return the component in a given position */
 
@@ -85,10 +91,10 @@ public class MetadataType
 	}
 
 	//--------------------------------------------------------------------------
-	/** Return true if subs for element in given position need to be examined,
+	/** Return true if subs for element in given position need to be examined, 
 	 *  false otherwise */
 
-	public boolean examineSubs(int pos)
+	public Boolean examineSubs(int pos)
 	{
 		return (Boolean) alExamineSubs.get(pos);
 	}
@@ -150,7 +156,7 @@ public class MetadataType
 			res += comp + "/" + min+ "-" + sMax + " ";
 		}
 
-
+	
 		String attrs = "";
 		for(int i=0; i<alAttribs.size(); i++)
 		{
@@ -188,7 +194,7 @@ public class MetadataType
 	}
 
 	//---------------------------------------------------------------------------
-
+	
 	void addRefElementWithType(String name, String elementType, int minCard, int maxCard)
 	{
 		addElement(name,elementType,true,minCard,maxCard);
@@ -205,11 +211,21 @@ public class MetadataType
 
 	void addElement(String name, String elementType, Boolean examineElementSubs, int minCard, int maxCard)
 	{
+
+		// Don't add the same element to a type 
+		if (alElements.contains(name)) {
+			if (alElements.indexOf(name) == alTypes.indexOf(elementType)) {
+				return;
+			}
+		}
 		alElements.add(name);
 		alTypes.add(elementType);
 		alExamineSubs.add(examineElementSubs);
 		alMinCard.add(new Integer(minCard));
 		alMaxCard.add(new Integer(maxCard));
+		if (name.contains(Edit.RootChild.CHOICE)||
+				name.contains(Edit.RootChild.GROUP)||
+				name.contains(Edit.RootChild.SEQUENCE)) hasContainers = true;
 	}
 
 	//---------------------------------------------------------------------------

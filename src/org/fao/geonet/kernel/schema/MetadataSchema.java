@@ -40,6 +40,8 @@ public class MetadataSchema
 	private HashMap hmTypes    = new HashMap();
 	private HashMap hmSubs		 = new HashMap();
 	private HashMap hmSubsLink = new HashMap();
+	private HashMap hmNameSpaces = new HashMap();
+	private String	schemaName;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -47,7 +49,9 @@ public class MetadataSchema
 	//---
 	//---------------------------------------------------------------------------
 
-	MetadataSchema(Element root) {}
+	MetadataSchema(Element root) {
+		schemaName = "UNKNOWN";
+	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -55,6 +59,19 @@ public class MetadataSchema
 	//---
 	//---------------------------------------------------------------------------
 
+	public void setName(String inName)
+	{
+		schemaName = inName;
+		return;
+	}
+
+	public String getName()
+	{
+		return schemaName;
+	}
+
+	//---------------------------------------------------------------------------
+	
 	public MetadataType getTypeInfo(String type)
 	{
 		Logger.log("metadataSchema: Asking for type "+type);
@@ -74,11 +91,15 @@ public class MetadataSchema
 		if (childType == null) {
 			// Check and see whether we can substitute another element from the
 			// substitution link 
+			String oldelem = elem;
 			elem = (String) hmSubsLink.get(elem);
 	  	Logger.log(" -- substitute "+elem);
 			childType = hmElements.get(elem);
-			if (childType == null) 
-				throw new IllegalArgumentException("Mismatch between schema and xml: No type for 'element' : "+elem+" with parent "+parent);
+			if (childType == null) { 
+				System.out.println("ERROR: Mismatch between schema and xml: No type for 'element' : "+oldelem+" with parent "+parent);
+				System.out.println("Returning xs:string");
+			  return "xs:string";
+			}
 		}
 		if (childType.size() == 1) return childType.get(0);
 
@@ -87,6 +108,7 @@ public class MetadataSchema
 		// for each parent with that name parent
 		// 1. retrieve its mdt 
 		List<String> exType = hmElements.get(parent);
+		if (exType == null) return "xs:string";
 		Iterator i = exType.iterator();
 		while (i.hasNext()) { 
 		// 2. search that mdt for the element names elem
@@ -190,10 +212,24 @@ public class MetadataSchema
 
 	//---------------------------------------------------------------------------
 
-	void addType(String name, MetadataType mdt)
+	public void addType(String name, MetadataType mdt)
 	{
 		mdt.setName(name);
 		hmTypes.put(name, mdt);
+	}
+
+	//---------------------------------------------------------------------------
+
+	public void addNS(String targetNSPrefix, String targetNS)
+	{
+		hmNameSpaces.put(targetNSPrefix, targetNS);
+	}
+
+	//---------------------------------------------------------------------------
+
+	public String getNS(String targetNSPrefix)
+	{
+		return (String) hmNameSpaces.get(targetNSPrefix);
 	}
 
 }

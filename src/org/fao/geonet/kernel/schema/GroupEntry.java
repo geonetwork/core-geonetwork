@@ -3,7 +3,7 @@
 //===   GroupEntry
 //===
 //==============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -38,8 +38,7 @@ import org.jdom.Element;
 class GroupEntry
 {
 	public String  name;
-	public boolean isChoice;
-
+  boolean isChoice;
 	public ArrayList alElements = new ArrayList();
 
 	//---------------------------------------------------------------------------
@@ -48,6 +47,13 @@ class GroupEntry
 	//---
 	//---------------------------------------------------------------------------
 
+	public GroupEntry(Element el, String file, String targetNS, String targetNSPrefix)
+	{
+		this(new ElementInfo(el, file, targetNS, targetNSPrefix));
+	}
+
+	//---------------------------------------------------------------------------
+	
 	public GroupEntry(ElementInfo ei)
 	{
 		handleAttribs(ei);
@@ -90,21 +96,22 @@ class GroupEntry
 			Element elChild = (Element) children.get(i);
 			String  elName  = elChild.getName();
 
-			if (elName.equals("sequence"))
-			{
+			if (elName.equals("sequence")) {
 				List sequence = elChild.getChildren();
 
 				for(int j=0; j<sequence.size(); j++)
 				{
 					Element elElem = (Element) sequence.get(j);
 
-					if (elElem.getName().equals("choice"))
-						handleChoice(elElem, ei);
+					if (elElem.getName().equals("choice") || elElem.getName().equals("element") || elElem.getName().equals("group") || elElem.getName().equals("sequence"))
+					  alElements.add(new ElementEntry(elElem, ei.file, ei.targetNS, ei.targetNSPrefix));
 
 					else
 						Logger.log("Unknown child '"+ elElem.getName() +"' in <sequence> element", ei);
 				}
 			}
+			else if (elName.equals("choice"))
+				 alElements.add(new ElementEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix));
 
 			else if (elName.equals("annotation"))
 				;
@@ -114,63 +121,6 @@ class GroupEntry
 		}
 	}
 
-	//---------------------------------------------------------------------------
-
-	private void handleChoice(Element el, ElementInfo ei)
-	{
-		isChoice = true;
-
-		int min = 1;
-		int max = 1;
-
-		List attribs = el.getAttributes();
-
-		for(int i=0; i<attribs.size(); i++)
-		{
-			Attribute at = (Attribute) attribs.get(i);
-
-			String attrName = at.getName();
-
-			if (attrName.equals("minOccurs"))
-				min = Integer.parseInt(at.getValue());
-
-			else if (attrName.equals("maxOccurs"))
-			{
-				String value = at.getValue();
-
-				if (value.equals("unbounded")) 	max = 10000;
-					else									max = Integer.parseInt(value);
-			}
-
-			else
-				Logger.log("Unknown attribute '"+ attrName +"' in <sequence/choice> element", ei);
-		}
-
-		//--- handle choice's children
-
-		List children = el.getChildren();
-
-		for(int i=0; i<children.size(); i++)
-		{
-			Element elChild = (Element) children.get(i);
-			String  elName  = elChild.getName();
-
-			if (elName.equals("element"))
-			{
-				ElementEntry ee = new ElementEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
-				ee.min = min;
-				ee.max = max;
-
-				alElements.add(ee);
-			}
-
-			else if (elName.equals("annotation"))
-				;
-
-			else
-				Logger.log("Unknown child '"+ elName +"' in <sequence/choice> element", ei);
-		}
-	}
 }
 
 //==============================================================================

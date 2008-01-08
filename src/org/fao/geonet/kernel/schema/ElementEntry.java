@@ -3,7 +3,7 @@
 //===   ElementEntry
 //===
 //==============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -48,7 +48,9 @@ class ElementEntry
 	public String  ref;
 	public boolean abstrElem;
 	public boolean choiceElem;
-	public ArrayList alChoiceElems = new ArrayList();
+	public boolean groupElem;
+	public boolean sequenceElem;
+	public ArrayList alContainerElems = new ArrayList();
 
 	public ComplexTypeEntry complexType;
 	public SimpleTypeEntry  simpleType;
@@ -74,7 +76,10 @@ class ElementEntry
 	{
 		ns = ei.targetNS;	
 		handleAttribs(ei);
-		if (choiceElem) handleChoiceChildren(ei);
+		if (choiceElem) handleContainerChildren(ei,alContainerElems);
+		else if (groupElem) 
+			; // no need to do anything - read elements from group later
+		else if (sequenceElem) handleContainerChildren(ei,alContainerElems);
 		else handleChildren(ei);
 	}
 
@@ -101,9 +106,16 @@ class ElementEntry
 		ee.complexType = complexType;
 		ee.simpleType  = simpleType;
 		ee.choiceElem	 = choiceElem;
-		ee.alChoiceElems = alChoiceElems;
+		ee.groupElem	 = groupElem;
+		ee.sequenceElem	 = sequenceElem;
+		ee.alContainerElems = alContainerElems;
 
 		return ee;
+	}
+
+	public String toString()
+	{
+		return new String("ElementEntry name: "+name+" ref: "+ref+" type: "+type+" abstract: "+abstrElem+" choice: "+choiceElem+" group: "+groupElem+" sequence: "+sequenceElem);
 	}
 
 	//---------------------------------------------------------------------------
@@ -115,6 +127,8 @@ class ElementEntry
 	private void handleAttribs(ElementInfo ei)
 	{
 		if (ei.element.getName().equals("choice")) choiceElem = true;
+		else if (ei.element.getName().equals("group")) groupElem = true;
+		else if (ei.element.getName().equals("sequence")) sequenceElem = true;
 
 		List attrs = ei.element.getAttributes();
 
@@ -129,12 +143,11 @@ class ElementEntry
         name = at.getValue();
         if ((name.indexOf(":") == -1) && (ei.targetNSPrefix != null))
           name = ei.targetNSPrefix + ":" + at.getValue();
-					Logger.log("Doing Element "+name);
+					// System.out.println("Doing Element "+name);
 			}
 			else if (attrName.equals("type"))
 			{
 				type = value;
-				Logger.log("element "+this.name+" has type "+type);
 			}
 
 			else if (attrName.equals("ref"))
@@ -145,7 +158,6 @@ class ElementEntry
 
 			else if (attrName.equals("abstract")) {
 				abstrElem = "true".equals(value);
-				Logger.log(" -- is abstract");
 			}
 			else if (attrName.equals("minOccurs"))
 				min = Integer.parseInt(value);
@@ -153,11 +165,13 @@ class ElementEntry
 			else if (attrName.equals("maxOccurs"))
 			{
 				if (value.equals("unbounded")) 	max = 10000;
-					else									max = Integer.parseInt(value);
+				else max = Integer.parseInt(value);
 			}
 
 			else {
 				if (choiceElem) Logger.log("Unknown attribute '" +attrName+ "'in <choice> element", ei);
+				else if (groupElem) Logger.log("Unknown attribute '" +attrName+ "'in <group> element", ei);
+				else if (sequenceElem) Logger.log("Unknown attribute '" +attrName+ "'in <sequence> element", ei);
 				else Logger.log("Unknown attribute '" +attrName+ "'in <element> element", ei);
 
 			}
@@ -180,7 +194,7 @@ class ElementEntry
 
 			else if (elName.equals("simpleType")) {
 				simpleType = new SimpleTypeEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
-				if (simpleType.name == null) simpleType.name = name+"#S";
+				if (simpleType.name == null) simpleType.name = name+"HASHS";
 			}
 
 			else if (elName.equals("key"))
@@ -196,18 +210,19 @@ class ElementEntry
 
 	//---------------------------------------------------------------------------
 
-	private void handleChoiceChildren(ElementInfo ei)
+	private void handleContainerChildren(ElementInfo ei, ArrayList elements)
 	{
 		List children = ei.element.getChildren();
 
-		for(int i=0; i<children.size(); i++)
-		{
+		for(int i=0; i<children.size(); i++) {
+
+			if (groupElem) System.out.println("WARNING found element children for group in element "+name+" "+ref);
 			Element elChild = (Element) children.get(i);
 			String  elName  = elChild.getName();
 
 			if (elName.equals("annotation")) {
 				List appinfo = elChild.getChildren();
-				for (int j=0;i < appinfo.size(); j++) {
+				for (int j=0;j < appinfo.size(); j++) {
 					Element elElem = (Element) appinfo.get(j);
 					if (elElem.getName().equals("appinfo")) {
 						name = (String) elElem.getText();
@@ -215,25 +230,12 @@ class ElementEntry
 				}
 			}
 
-			else if (elName.equals("element") || elName.equals("choice")) {
-				ArrayList alElems = new ArrayList();
-				alChoiceElems.add(alElems);
-				alElems.add(new ElementEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix));
-			}
-			else if (elName.equals("sequence")) {
-				ArrayList alElems = new ArrayList();
-				alChoiceElems.add(alElems);
-				List sequence = elChild.getChildren();
-				for (int j=0;i < sequence.size(); j++) {
-					Element elSeq = (Element) sequence.get(j);
-
-					if (elName.equals("element") || elName.equals("choice")) 
-						alElems.add(new ElementEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix));
-				}
+			else if (elName.equals("element") || elName.equals("choice") || elName.equals("sequence") || elName.equals("group")) {
+				elements.add(new ElementEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix));
 			}
 
 			else
-				Logger.log("Unknown child '" +elName+ "' in <choice> element", ei);
+				Logger.log("handleContainerChildren: Unknown child '" +elName+ "' in <choice>|<group>|<sequence> element", ei);
 		}
 	}
 }

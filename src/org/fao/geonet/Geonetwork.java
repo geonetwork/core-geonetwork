@@ -145,7 +145,12 @@ public class Geonetwork implements ApplicationHandler
 
 		logger.info("  - Data manager...");
 
-		DataManager dataMan = new DataManager(searchMan, accessMan, dbms, settingMan, baseURL);
+		String htmlCacheDir = handlerConfig.getMandatoryValue(Geonet.Config.HTMLCACHE_DIR);
+		File _htmlCacheDir = new File(htmlCacheDir);
+		if (!_htmlCacheDir.isAbsolute()) {
+			htmlCacheDir = path + htmlCacheDir;
+		}
+		DataManager dataMan = new DataManager(searchMan, accessMan, dbms, settingMan, baseURL, htmlCacheDir);
 
 		String schemasDir = path + Geonet.Path.SCHEMAS;
 		String saSchemas[] = new File(schemasDir).list();
@@ -160,8 +165,9 @@ public class Geonetwork implements ApplicationHandler
 					logger.info("    Adding xml schema : " +saSchemas[i]);
 					String schemaFile  = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA;
 					String suggestFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_SUGGESTIONS;
+					String substitutesFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_SUBSTITUTES;
 
-					dataMan.addSchema(saSchemas[i], schemaFile, suggestFile);
+					dataMan.addSchema(saSchemas[i], schemaFile, suggestFile, substitutesFile);
 				}
 		}
 

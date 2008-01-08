@@ -118,7 +118,7 @@ class EditUtils
 		//-----------------------------------------------------------------------
 		//--- update element and return status
 
-		if (!dataMan.updateMetadata(dbms, id, version, htChanges, validate))
+		if (!dataMan.updateMetadata(context.getUserSession(), dbms, id, version, htChanges, validate))
 			throw new ConcurrentUpdateEx(id);
 	}
 
