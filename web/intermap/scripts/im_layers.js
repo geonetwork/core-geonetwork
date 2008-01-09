@@ -5,6 +5,8 @@
  * Requires:
  *    im_extra_afterLayerUpdated()
  *    getIMServiceURL(servicename)
+ *    im_extra_afterWmcSet(resp) -- this function's name has to be changed
+ *    im_extra_drivingMap
  *****************************************************************************/
 
 var im_layer_width = 176;
@@ -66,15 +68,47 @@ function createSortable()
 
 /*****************************************************************************
  *
- *                                   Layers
+ *                    Double click
  *
  *****************************************************************************/
 
 function layerDblClickListener(id)
 {
-//	deleteAoi(); // FIXME
-//	imc_zoomToLayer(id); // FIXME
+	imc_zoomToLayer(id);
 }
+
+// TODO: Should we move this functionality into buttons in each layer's tab?
+// TODO: what about the AOI?  (read also into im_extra_afterWmcSet)
+function imc_zoomToLayer(layerId)
+{
+	im_extra_drivingMap.setStatus('busy');
+	var pars = 'id=' + layerId + 
+				'&width='  + im_extra_drivingMap.width +
+				'&height=' + im_extra_drivingMap.height;
+	
+	var myAjax = new Ajax.Request (
+		getIMServiceURL('map.zoomToService'),
+		{
+			method: 'get',
+			parameters: pars,
+			onComplete: function(req) 
+			{ 
+				var resp = req.responseXML;
+				im_extra_afterWmcSet(resp); // function's name has to be changed 
+				im_extra_drivingMap.setStatus('idle');
+			}, 
+			onFailure: reportError
+		}
+	);
+}
+
+
+
+/*****************************************************************************
+ *
+ *                      Visibility toggling
+ *
+ *****************************************************************************/
 
 function toggleVisibility(id) {
 	var pars = 'id=' + id;

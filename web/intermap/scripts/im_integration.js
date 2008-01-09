@@ -86,10 +86,13 @@ im_extra_drivingMap = im_bm;
 
 im_extra_afterLayerUpdated = im_refreshBothMaps;
 
+// TODO: this function's name has to be changed: it is called: 
+//  - after wmc is set   
+//  - after a zoomtolayer 
 im_extra_afterWmcSet = function(resp)
 {
 	im_bm.set_dom(resp);
-	im_bm.setBBox_dom(resp);
+	im_bm.setBBox_dom(resp); // ? set_dom already calls this one. To be removed?
 	  
 	im_mm.setBBox_dom(resp);  
 	im_mm.rebuild(im_mm_fullAoI);

@@ -250,8 +250,9 @@
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
+		
 		<service name="map.layers.add">
-			<class name=".services.map.layers.Add"/>
+			<class name=".services.map.layers.Add"/> <!-- return null -->
 			
 			<output forward="map.update" />
 		</service>
@@ -326,6 +327,7 @@
 		</service>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- return a full image response -->
 		
 		<service name="map.action">
 			<class name=".services.map.Action" />
@@ -338,12 +340,14 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- return a full image response -->
 		
 		<service name="map.setScale">
 			<class name=".services.map.SetScale" />
 		</service>
 		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
+		<!-- return a full image response -->
 		
 		<service name="map.update">
 			<class name=".services.map.Update" />
@@ -360,6 +364,7 @@
  -->
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- return new images params (size+bbox) -->
 		
 		<service name="map.fullExtent">
 			<class name=".services.map.FullExtent" />
@@ -368,11 +373,10 @@
 		</service>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- return a full image response -->
 		
 		<service name="map.zoomToService">
 			<class name=".services.map.ZoomToService"/>
-			
-			<output forward="map.getMain"/>
 		</service>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

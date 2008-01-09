@@ -57,32 +57,6 @@ function im_showError(req)
  *                                                                           *
  *****************************************************************************/
 
-/*
-// Not used at the moment
-// TODO: Should we restore it adding a button in each layer's tab? 
-
-function imc_zoomToLayer(layerId)
-{
-	deleteAoi();
-	//unsetAoi();
-	//$('im_geonetRecords').className = 'hidden';	
-	
-	setStatus('busy');
-	var pars = 'id=' + layerId;
-	
-	var myAjax = new Ajax.Request (
-		getIMServiceURL('map.zoomToService'),
-		{
-			method: 'get',
-			parameters: pars,
-			onComplete: function(req) { im_bm_refreshNeeded(true);}, // FIXME
-			onFailure: reportError
-		}
-	);
-}
-
-*/
-
 function im_setWMC(wmc, callback) 
 {
     var pars = 'wmc=' + wmc;               //encodeURIComponent(surl) 
