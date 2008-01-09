@@ -25,41 +25,34 @@
 	<xsl:template mode="dublin-core" match="simpledc">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
-	
-		<xsl:choose>
-			<xsl:when test="$currTab='simple'">
-				<xsl:apply-templates mode="complexElement" select=".">
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="$edit"/>
-				</xsl:apply-templates>
-			</xsl:when>
 
-			<xsl:otherwise>
-
-			<!-- when in advanced mode layout the elements to stop re-ordering 
-			     because dc and dct XSDs do not use sequences -->
-
-      	<xsl:apply-templates mode="elementEP" select="dc:*|geonet:child[string(@prefix)='dc']">
-        	<xsl:with-param name="schema" select="$schema"/>
-        	<xsl:with-param name="edit"   select="$edit"/>
-      	</xsl:apply-templates>
-
-				<!-- place dct (terms) on another tab? -->
-
-      	<xsl:apply-templates mode="elementEP" select="dct:modified|geonet:child[string(@name)='modified']">
-        	<xsl:with-param name="schema" select="$schema"/>
-        	<xsl:with-param name="edit"   select="$edit"/>
-      	</xsl:apply-templates>
-	
-      	<xsl:apply-templates mode="elementEP" select="dct:*[name(.)!='dct:modified']|geonet:child[string(@prefix)='dct' and name(.)!='modified']">
-        	<xsl:with-param name="schema" select="$schema"/>
-        	<xsl:with-param name="edit"   select="$edit"/>
-      	</xsl:apply-templates>
-	
-			</xsl:otherwise>
-		</xsl:choose>
+    <xsl:apply-templates mode="elementEP" select="*">
+    	<xsl:with-param name="schema" select="$schema"/>
+    	<xsl:with-param name="edit"   select="$edit"/>
+    </xsl:apply-templates>
 	</xsl:template>
-	
+
+	<xsl:template mode="dublin-core" match="dc:anyCHOICE_ELEMENT0">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+
+		<xsl:apply-templates mode="elementEP" select="dc:*|geonet:child[string(@prefix)='dc']">
+      <xsl:with-param name="schema" select="$schema"/>
+      <xsl:with-param name="edit"   select="$edit"/>
+    </xsl:apply-templates>
+
+    <xsl:apply-templates mode="elementEP" select="dct:modified|geonet:child[string(@name)='modified']">
+      <xsl:with-param name="schema" select="$schema"/>
+      <xsl:with-param name="edit"   select="$edit"/>
+    </xsl:apply-templates>
+
+    <xsl:apply-templates mode="elementEP" select="dct:*[name(.)!='dct:modified']|geonet:child[string(@prefix)='dct' and name(.)!='modified']">
+      <xsl:with-param name="schema" select="$schema"/>
+      <xsl:with-param name="edit"   select="$edit"/>
+    </xsl:apply-templates>
+
+	</xsl:template>
+
 	<!--
 	identifier
 	-->

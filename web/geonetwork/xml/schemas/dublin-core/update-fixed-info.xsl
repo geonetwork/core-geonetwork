@@ -49,15 +49,45 @@
 			<xsl:apply-templates select="dc:rights"/>
 
 			<xsl:apply-templates select="dct:abstract"/>
-			<dct:modified><xsl:value-of select="/root/env/changeDate"/></dct:modified>
-			<xsl:apply-templates select="dct:spatial"/>
-			<xsl:apply-templates select="dct:audience"/>
+			<xsl:apply-templates select="dct:accessRights"/>
 			<xsl:apply-templates select="dct:accrualMethod"/>
 			<xsl:apply-templates select="dct:accrualPeriodicity"/>
 			<xsl:apply-templates select="dct:accrualPolicy"/>
+			<xsl:apply-templates select="dct:alternative"/>
+			<xsl:apply-templates select="dct:audience"/>
+			<xsl:apply-templates select="dct:available"/>
+			<xsl:apply-templates select="dct:bibliographicCitation"/>
+			<xsl:apply-templates select="dct:conformsTo"/>
+			<xsl:apply-templates select="dct:created"/>
+			<xsl:apply-templates select="dct:dateAccepted"/>
+			<xsl:apply-templates select="dct:dateCopyrighted"/>
+			<xsl:apply-templates select="dct:dateSubmitted"/>
+			<xsl:apply-templates select="dct:educationLevel"/>
+			<xsl:apply-templates select="dct:extent"/>
+			<xsl:apply-templates select="dct:hasFormat"/>
+			<xsl:apply-templates select="dct:hasPart"/>
+			<xsl:apply-templates select="dct:hasVersion"/>
 			<xsl:apply-templates select="dct:instructionalMethod"/>
+			<xsl:apply-templates select="dct:isFormatOf"/>
+			<xsl:apply-templates select="dct:isPartOf"/>
+			<xsl:apply-templates select="dct:isReferencedBy"/>
+			<xsl:apply-templates select="dct:isReplacedBy"/>
+			<xsl:apply-templates select="dct:isRequiredBy"/>
+			<xsl:apply-templates select="dct:issued"/>
+			<xsl:apply-templates select="dct:isVersionOf"/>
+			<xsl:apply-templates select="dct:license"/>
+			<xsl:apply-templates select="dct:mediator"/>
+			<xsl:apply-templates select="dct:medium"/>
+			<dct:modified><xsl:value-of select="/root/env/changeDate"/></dct:modified>
 			<xsl:apply-templates select="dct:provenance"/>
+			<xsl:apply-templates select="dct:references"/>
+			<xsl:apply-templates select="dct:replaces"/>
+			<xsl:apply-templates select="dct:requires"/>
 			<xsl:apply-templates select="dct:rightsHolder"/>
+			<xsl:apply-templates select="dct:spatial"/>
+			<xsl:apply-templates select="dct:tableOfContents"/>
+			<xsl:apply-templates select="dct:temporal"/>
+			<xsl:apply-templates select="dct:valid"/>
 		</simpledc>
 	</xsl:template>
 
