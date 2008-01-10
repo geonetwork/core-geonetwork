@@ -88,7 +88,6 @@ class AttributeEntry
 				if (ei.targetNSPrefix != null) {
 					name = ei.targetNSPrefix+":"+name;
 					namespacePrefix = ei.targetNSPrefix;
-					form = "qualified";
 				}
 		
 				//System.out.println("-- name is "+name);

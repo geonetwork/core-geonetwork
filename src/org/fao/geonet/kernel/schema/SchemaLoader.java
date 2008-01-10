@@ -1030,7 +1030,7 @@ public class SchemaLoader
 		String name = ae.name;
 		String ref  = ae.reference;
 		String value = ae.defValue;
-		Boolean overRequired = ae.required;
+		boolean overRequired = ae.required;
 
 		MetadataAttribute ma = new MetadataAttribute();
 
@@ -1040,19 +1040,16 @@ public class SchemaLoader
 				throw new IllegalArgumentException("Reference '"+ref+"' not found for attrib : " +name);
 		} 
 
-		if (ae.form != null && ae.form.equals("unqualified")) {
-			if (ref != null && ref.contains(":"))
-				ma.name = ref;
-			else
-				ma.name = ae.unqualifiedName;
-		} else {
-			ma.name = ae.name;
-		}
+		if (ref != null && ref.contains(":"))
+			ma.name = ref;
+		else
+			ma.name = ae.unqualifiedName;
 
 		if (value != null) 
 			ma.defValue = value;
 		else
 			ma.defValue = ae.defValue;
+
 		ma.required = overRequired;
 
 		for(int k=0; k<ae.alValues.size(); k++)
