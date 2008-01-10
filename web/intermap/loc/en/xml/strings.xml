@@ -55,6 +55,8 @@
 	<manually>Create you own map</manually>
 	<map>Map</map>
 	<mapsfound>maps found</mapsfound>
+	<markerlistbutton>Marker list</markerlistbutton>
+	<markerlisttitle js="true">Marker list</markerlisttitle>	
 	<metadata>Metadata</metadata>
 	<newMap>Create a new map</newMap>
 	<noFeature>No features found</noFeature>

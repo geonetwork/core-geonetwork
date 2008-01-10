@@ -491,6 +491,67 @@ function im_showMessage(context, task, status, more)
     }
 }
 
+/********************************************************************
+*** Markers
+********************************************************************/
+/*
+## Called by the bottom toolbar
+*/
+function im_markerList()
+{
+	// setup WB
+	clearNode('im_whiteboard');    
+	var WB = $('im_whiteboard');
+
+	var wbtitle = im_createWBTitle(i18n("markerlisttitle")); 
+	WB.appendChild(wbtitle);
+	
+	var closer = im_getWBCloser();
+	WB.appendChild(closer);
+	Event.observe(closer, 'click', im_closeWhiteBoard);
+	
+	var div = document.createElement('div'); // main box
+	div.id = "im_markerlist";
+	div.className = 'im_wbcontent';
+	WB.appendChild(div);
+	
+	var ul = document.createElement('ul');
+	div.appendChild(ul);
+	im_markers.each(
+		function(marker)
+		{
+			var li = document.createElement('li');
+			ul.appendChild(li);
+			li.innerHTML="Title: " + marker.title;
+			var ull = document.createElement('ul');
+			li.appendChild(ull);
+			var lilat = document.createElement('li');
+			lilat.innerHTML = "Lat: " + marker.lat;
+			ull.appendChild(lilat);
+			var lilon = document.createElement('li');			
+			lilon.innerHTML = "Lon: " + marker.lon;
+			ull.appendChild(lilon);			
+		}	
+	);
+	
+/*	
+	var pars="&width=" + im_extra_drivingMap.width +         
+		    "&height=" + im_extra_drivingMap.height;
+	if(type)			         
+		pars += "&type="+type;
+		
+	var myAjax = new Ajax.Updater (
+		'im_wmcmenu',    
+		getIMServiceURL('wmc.form'), 
+		{
+			method: 'get',    		    	
+			parameters: pars,
+			onFailure: im_load_error
+		}
+	);
+*/
+	
+}
 
 /********************************************************************
 *** Export image
