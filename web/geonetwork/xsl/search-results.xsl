@@ -278,6 +278,27 @@
 							</xsl:when>
 						</xsl:choose>
 					</xsl:if>
+					
+					<!-- Google Earth map button -->
+					<xsl:if test="$metadata/geonet:info/dynamic='true'">
+						&#160;
+						<xsl:variable name="count" select="count($metadata/link[@type='googleearth'])"/>
+						<xsl:choose>
+							<xsl:when test="$count>1">
+								<xsl:choose>
+									<xsl:when test="$remote=true()">
+										<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info/id}&amp;currTab=distribution')"><xsl:value-of select="/root/gui/strings/viewInGE"/></button>
+									</xsl:when>
+									<xsl:otherwise>
+										<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=distribution')"><xsl:value-of select="/root/gui/strings/viewInGE"/></button>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
+							<xsl:when test="$count=1">
+								<button class="content" onclick="load('{$metadata/link[@type='googleearth']}')"><xsl:value-of select="/root/gui/strings/viewInGE"/></button>
+							</xsl:when>
+						</xsl:choose>
+					</xsl:if>
 				</td>
 				<td align="right">
 					<xsl:call-template name="buttons">

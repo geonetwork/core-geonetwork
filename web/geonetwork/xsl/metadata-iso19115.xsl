@@ -955,6 +955,7 @@
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:when test="string(../../../geonet:info/dynamic)='true'">
+			<!-- Create a link for a WMS service that will open in InterMap opensource -->
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
@@ -971,6 +972,25 @@
 									<xsl:value-of select="orName"/>
 								</xsl:otherwise>
 							</xsl:choose>
+						</a>   (OGC-WMS Service: <xsl:value-of select="linkage"/>)
+					</xsl:with-param>
+				</xsl:apply-templates>
+				<!-- Create a link for a WMS service that will open in Google Earth through the reflector -->
+				<xsl:apply-templates mode="simpleElement" select=".">
+					<xsl:with-param name="schema"  select="$schema"/>
+					<xsl:with-param name="title"  select="/root/gui/strings/viewInGE"/>
+					<xsl:with-param name="text">
+						<a href="{/root/gui/locService}/google.kml?id={../../../geonet:info/id}&amp;layers={orName}" title="{/root/strings/interactiveMap}">
+							<xsl:choose>
+								<xsl:when test="string(orDesc)!=''">
+									<xsl:value-of select="orDesc"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="orName"/>
+								</xsl:otherwise>
+							</xsl:choose>
+							&#160;
+							<img src="{/root/gui/url}/images/google_earth_link.gif" alt="{/root/gui/strings/viewInGE}" style="border: 0px solid;"/>
 						</a>
 					</xsl:with-param>
 				</xsl:apply-templates>
@@ -1718,6 +1738,67 @@
 			</xsl:for-each>
 
 			<xsl:for-each select="distInfo/distTranOps/onLineSrc">
+				
+				<xsl:comment>The links here are meant to replace the custom links as created in the next section</xsl:comment>
+				
+				<xsl:variable name="protocol" select="protocol"/>
+				<xsl:variable name="linkage"  select="linkage"/>
+				<xsl:variable name="name"     select="orName"/>
+				<xsl:variable name="desc"     select="orDesc"/>
+				
+				<xsl:if test="string($linkage)!=''">
+					
+					<xsl:element name="link">
+						<xsl:attribute name="title"><xsl:value-of select="$desc"/></xsl:attribute>
+						<xsl:attribute name="href"><xsl:value-of select="$linkage"/></xsl:attribute>
+						<xsl:attribute name="name"><xsl:value-of select="$name"/></xsl:attribute>
+						<xsl:choose>
+							<xsl:when test="starts-with($protocol,'WWW:LINK-')">
+								<xsl:attribute name="type">text/html</xsl:attribute>
+							</xsl:when>
+							<xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($linkage,'.jpg')">
+								<xsl:attribute name="type">image/jpeg</xsl:attribute>
+							</xsl:when>
+							<xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($linkage,'.png')">
+								<xsl:attribute name="type">image/png</xsl:attribute>
+							</xsl:when>
+							<xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($linkage,'.gif')">
+								<xsl:attribute name="type">image/gif</xsl:attribute>
+							</xsl:when>
+							<xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($linkage,'.doc')">
+								<xsl:attribute name="type">application/word</xsl:attribute>
+							</xsl:when>
+							<xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($linkage,'.zip')">
+								<xsl:attribute name="type">application/zip</xsl:attribute>
+							</xsl:when>
+							<xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($linkage,'.pdf')">
+								<xsl:attribute name="type">application/pdf</xsl:attribute>
+							</xsl:when>
+							<xsl:when test="starts-with($protocol,'GLG:KML-') and contains($linkage,'.kml')">
+								<xsl:attribute name="type">application/vnd.google-earth.kml+xml</xsl:attribute>
+							</xsl:when>
+							<xsl:when test="starts-with($protocol,'GLG:KML-') and contains($linkage,'.kmz')">
+								<xsl:attribute name="type">application/vnd.google-earth.kmz</xsl:attribute>
+							</xsl:when>
+							<xsl:when test="starts-with($protocol,'OGC:WMS-')">
+								<xsl:attribute name="type">application/vnd.ogc.wms_xml</xsl:attribute>
+							</xsl:when>
+							<xsl:when test="$protocol='ESRI:AIMS-'">
+								<xsl:attribute name="type">application/vnd.esri.arcims_axl</xsl:attribute>
+							</xsl:when>
+							<xsl:when test="$protocol!=''">
+								<xsl:attribute name="type"><xsl:value-of select="$protocol"/></xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<!-- fall back to the default content type -->
+								<xsl:attribute name="type">text/plain</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:element>
+					
+				</xsl:if>
+				
+				<xsl:comment>The use of these links should be a</xsl:comment>
 				<xsl:choose>
 					<xsl:when test="starts-with(./protocol,'WWW:DOWNLOAD-') and contains(./protocol,'http--download') and ./orName"> <!-- FIXME -->
 						<link type="download"><xsl:value-of select="linkage"/></link>

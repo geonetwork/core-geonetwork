@@ -2,7 +2,7 @@
 <strings>
 
 	<savexml>
-		<dc>Guardar metadatos de Dubli		<dc>Guardar metadatos de Dublin Core como XML</dc>
+		<dc>Guardar metadatos de Dublin Core como XML</dc>
 		<fgdc>Guardar metadatos FGDC como XML</fgdc>
 		<iso19115Esri>Guardar metadatos ISO19115 en XML para ESRI ArcCatalog</iso19115Esri>
 		<iso19139>Guardar metadatos ISO19115/19139 como XML</iso19139>
@@ -19,7 +19,7 @@
 	<fuzzySearch>Establece la precisión de la búsqueda (desde búdqueda de términos exactos a búsquedas fuzzy).</fuzzySearch>
 	<fuzzyImprecise>Impreciso</fuzzyImprecise>
 	<fuzzyPrecise>Exacto</fuzzyPrecise>
-	<address>Direccionamiento</address>
+	<address>Dirección</address>
 	<state>Estado</state>
 	<zip>Código postal</zip>
 	<country>País</country>
@@ -115,7 +115,7 @@
 	<backToDescription>Volver a la descripción de los datos</backToDescription>
 	<backToEditor>Atrás</backToEditor>
 	<backToPreviousPage>Volver a la página anterior</backToPreviousPage>
-	<batchImport>Importación de los ficheros XML de metadatos (estándar ISO19115) almacenados en un directorio local</batchImport>
+	<batchImport>Importación de los ficheros XML de metadatos almacenados en un directorio local</batchImport>
 	<begdate>Fecha de inicio</begdate>
 	<begtime>Hora de inicio</begtime>
 	<bgFileDescChoice value="thumbnail">Vista previa</bgFileDescChoice>
@@ -136,8 +136,8 @@
 	<categoryManDes>añade/modifica/borra y muestra las categorías</categoryManDes>
 	<choose>-Elegir-</choose>
 	<chooseFile>Seleccionar la ubicación del fichero a enviar</chooseFile>
-	<chooseLargeThumbnail>Elegir la ubicación del fichero thumbnail largo</chooseLargeThumbnail>
-	<chooseThumbnail>Elegir la ubicación del fichero thumbnail corto</chooseThumbnail>
+	<chooseLargeThumbnail>Elegir la ubicación del fichero thumbnail grande</chooseLargeThumbnail>
+	<chooseThumbnail>Elegir la ubicación del fichero thumbnail pequeño</chooseThumbnail>
 	<clear>Borrar</clear>
 	<cn>中文</cn> <!-- Do not translate! -->
 	<completeTab>Vista en bloques</completeTab>
@@ -251,11 +251,13 @@
 	<latitude>Latitud (entre -90 y 90) en grados</latitude>
 	<latMax>lat (max)</latMax>
 	<latMin>lat (min)</latMin>
+	<legend>Leyenda</legend>
 	<links>Enlaces</links>
+	<loading>Cargando...</loading>
 	<local>Búsqueda Local</local>
 	<localiz>Localización</localiz>
 	<localizDes>Permite cambiar entidades localizadas, como grupos, categorias, etc...</localizDes>
-	<location>Paí­s/Región</location>
+	<location>País/Región</location>
 	<login>Iniciar Sesión</login>
 <!--	<loginCardTitle>Entre, Identifíquese</loginCardTitle> -->
 	<loginwarning>Es necesario que se identifique como usuario para poder administrar el catálogo</loginwarning>
@@ -407,7 +409,7 @@
 	<resetSearch>Vaciar el formulario de búsquedas</resetSearch>
 	<resetFeedbackForm>Vaciar el formulario de Sugerencias</resetFeedbackForm>
 	<restrictTo>Limitar a</restrictTo>
-	<result>Página de resulados</result>
+	<result>Página de resultados</result>
 	<resultsCoordinate>Resultados de la búsqueda por coordenadas </resultsCoordinate>
 	<resultsFreeText>Resultados de la búsqueda por palabras libres </resultsFreeText>
 	<resultsMatching>Los resultados de la búsqueda son:</resultsMatching>
@@ -471,6 +473,7 @@
 	<validate>Validar</validate>
 	<validityBegins>Comienzo</validityBegins>
 	<validityEnds>y fin válidos</validityEnds>
+	<viewInGE>Google Earth</viewInGE>
 	<westbc>Coordenadas Oeste</westbc>
 	<what>¿Qué?</what>
 	<where>¿País/Región?</where>
@@ -478,7 +481,7 @@
 	<winInfo1>Esta ventana debe mostar recursos de GeoNetwork. Esta ventana puede ser ocultada a veces dependiendo de como gestione las ventanas su sistema. En este caso podrás tener abierta de forma manual la ventana y enviarla al fondo cuando lo necesite.</winInfo1>
 	<winInfo2>A través del icono (?) podrá disponer de información aclaratoria. Cuando active este icono los resultados se mostrarán en la ventana en la que estaba el recurso.</winInfo2>
 	<wwwlink>Enlaces web</wwwlink>
-	<xmlInsert>Importación de un fichero XML de Metadatos ISO-19115</xmlInsert>
+	<xmlInsert>Importación de un fichero XML de Metadatos</xmlInsert>
 	<xmlTab>Árbol XML</xmlTab>
 
 	<!-- these strings are not defined in the main language

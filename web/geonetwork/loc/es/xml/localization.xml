@@ -29,7 +29,7 @@
 	
 	<!-- display messages -->
 	
-	<cannotGetList>No s	<cannotGetList>No se pudo obtener la lista de entidades</cannotGetList>
+	<cannotGetList>No se pudo obtener la lista de entidades</cannotGetList>
 	<cannotSave>Ha ocurrido un error al guardar la información</cannotSave>
 	
 	<!-- tooltips -->

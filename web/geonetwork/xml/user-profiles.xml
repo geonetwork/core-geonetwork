@@ -252,6 +252,11 @@
 		<allow service="rss.search"/>
 		<allow service="rss.present"/>
 
+		<!-- KML services -->
+		<allow service="google.kml"/>
+<!--		<allow service="search.kml"/>
+		<allow service="search.present.kml"/> -->
+
 		<!-- Allow GeoNetwork Mapping services -->
 		<allow service="xml.group.list"/>
 

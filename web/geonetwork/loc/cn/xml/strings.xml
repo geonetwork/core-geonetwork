@@ -234,7 +234,9 @@
 	<latitude>纬度(-90 至 90，单位：度)</latitude>
 	<latMax>lat (max)</latMax>
 	<latMin>lat (min)</latMin>
+	<legend>Legend</legend>
 	<links>相关链接</links>
+	<loading>Loading ...</loading>
 	<local>本地搜索</local>
 	<localiz>Localization</localiz>
 	<localizDes>Allows to change localized entities, like groups, categories etc...</localizDes>
@@ -438,6 +440,7 @@
 	<validate>有效性检查</validate>
 	<validityBegins>有效期自</validityBegins>
 	<validityEnds>有效期至</validityEnds>
+	<viewInGE>「Google 地球」</viewInGE>
 	<westbc>覆盖范围西边坐标</westbc>
 	<what>What?</what>
 	<where>Where?</where>

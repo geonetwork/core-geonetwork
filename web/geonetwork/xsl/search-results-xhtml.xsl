@@ -312,6 +312,12 @@
 		</table>
 		
 		<!-- buttons -->
+		<xsl:comment>Here's where the buttons are creaated that are shown in the search results. The buttons are:
+		View metadata
+		Download resources
+		View interactive map in InterMap
+		View interactive map in Google Earth
+		</xsl:comment>
 		<table width="100%">
 			<tr>
 				<td>
@@ -326,7 +332,7 @@
 <!--								<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple')"><xsl:value-of select="/root/gui/strings/show"/></button>-->
 								<button id="gn_showmd_{$metadata/geonet:info/id}"  class="content" onclick="gn_showMetadata({$metadata/geonet:info/id})"><img src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/show"/></button>
 								<button id="gn_hidemd_{$metadata/geonet:info/id}"  class="content" onclick="gn_hideMetadata({$metadata/geonet:info/id})" style="display:none;"><img src="{/root/gui/url}/images/minus.png" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/show"/></button>
-								<button id="gn_loadmd_{$metadata/geonet:info/id}"  class="content" style="display:none;">Loading...</button> <!-- FIXME i18n -->
+								<button id="gn_loadmd_{$metadata/geonet:info/id}"  class="content" style="display:none;"><xsl:value-of select="/root/gui/strings/loading"/></button>
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:if>
@@ -373,17 +379,23 @@
 
 										<button id="gn_showinterlist_{$metadata/geonet:info/id}"  class="content" onclick="gn_showInterList({$metadata/geonet:info/id})"><img src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/interactiveMap"/></button>
 										<button id="gn_hideinterlist_{$metadata/geonet:info/id}"  class="content" onclick="gn_hideInterList({$metadata/geonet:info/id})" style="display:none;"><img src="{/root/gui/url}/images/minus.png" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/interactiveMap"/></button>
-										<button id="gn_loadinterlist_{$metadata/geonet:info/id}"  class="content" style="display:none;">Loading...</button> <!-- FIXME i18n -->
-										
-									
+										<button id="gn_loadinterlist_{$metadata/geonet:info/id}"  class="content" style="display:none;"><xsl:value-of select="/root/gui/strings/loading"/></button> <!-- FIXME i18n -->
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:when>
 							<xsl:when test="$count=1">
 								<button class="content" onclick="{$metadata/link[@type='arcims' or @type='wms']}"><xsl:value-of select="/root/gui/strings/interactiveMap"/></button>
+								<!-- Google Earth map button -->
+								<xsl:if test="$metadata/link[@type='googleearth']">
+									&#160;
+									<button class="content" onclick="load('{$metadata/link[@type='googleearth']}')">
+										<img src="{/root/gui/url}/images/google_earth_link.gif" style="padding-left:3px;" alt="{/root/gui/strings/viewInGE}"/>
+									</button>
+								</xsl:if>
 							</xsl:when>
 						</xsl:choose>
 					</xsl:if>
+
 				</td>
 				<td align="right">
 					<xsl:call-template name="buttons">

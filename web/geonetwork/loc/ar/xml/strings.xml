@@ -247,7 +247,9 @@
 	<latitude>خط طول بين 90 و 90- درجة</latitude>
  <latMax>lat (max)</latMax>
  <latMin>lat (min)</latMin>
+	<legend>Legend</legend>
 	<links>ارتباطات</links>
+	<loading>Loading ...</loading>
 	<local>بحث محلي</local>
  <localiz>Localization</localiz>
  <localizDes>Allows to change localized entities, like groups, categories etc...</localizDes>
@@ -460,6 +462,7 @@
 	<validate>تفيير</validate>
 	<validityBegins>التقييم يبدأ</validityBegins>
 	<validityEnds>وينتهي</validityEnds>
+	<viewInGE>Google Earth</viewInGE>
 	<westbc>الاحداثيات الغربية</westbc>
 	<what>What?</what>
 	<where>Where?</where>

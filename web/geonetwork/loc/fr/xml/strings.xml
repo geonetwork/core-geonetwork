@@ -249,6 +249,8 @@
 	<latMax>lat (max)</latMax>
 	<latMin>lat (min)</latMin>
 	<links>Liens</links>
+	<legend>Légende</legend>
+	<loading>Loading ...</loading>
 	<local>Recherche local</local>
 	<localiz>Internationalisation</localiz>
 	<localizDes>Permet la modification des traductions des groupes, catégories, etc.</localizDes>
@@ -479,6 +481,7 @@
 	<validate>Valider</validate>
 	<validityBegins>Date de début de validité</validityBegins>
 	<validityEnds> et fin </validityEnds>
+	<viewInGE>Google Earth</viewInGE>
 	<what>Quoi ?</what>
 	<where>Où ?</where>
 	<when>Quand ?</when>

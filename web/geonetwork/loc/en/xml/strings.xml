@@ -238,7 +238,9 @@
 	<latitude>Latitude (between -90 and 90) in degrees</latitude>
 	<latMax>lat (max)</latMax>
 	<latMin>lat (min)</latMin>
+	<legend>Legend</legend>
 	<links>Links</links>
+	<loading>Loading ...</loading>
 	<local>Local search</local>
 	<localiz>Localization</localiz>
 	<localizDes>Allows to change localized entities, like groups, categories etc...</localizDes>
@@ -462,6 +464,7 @@
 	<validate>Validate</validate>
 	<validityBegins>Validity begins</validityBegins>
 	<validityEnds>and ends</validityEnds>
+	<viewInGE>View in Google Earth</viewInGE>
 	<waitGetCap js="true">Loading server layers, please wait...</waitGetCap>
 	<westbc>West Bounding Coordinate</westbc>
 	<what>What?</what>

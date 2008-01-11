@@ -1588,6 +1588,7 @@
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:when test="string(//geonet:info/dynamic)='true'">
+			<!-- Create a link for a WMS service that will open in InterMap opensource -->
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
@@ -1604,6 +1605,25 @@
 									<xsl:value-of select="gmd:name/gco:CharacterString"/>
 								</xsl:otherwise>
 							</xsl:choose>
+						</a>   (OGC-WMS Service: <xsl:value-of select="gmd:linkage/gmd:URL"/> )
+					</xsl:with-param>
+				</xsl:apply-templates>
+				<!-- Create a link for a WMS service that will open in Google Earth through the reflector -->
+				<xsl:apply-templates mode="simpleElement" select=".">
+					<xsl:with-param name="schema"  select="$schema"/>
+					<xsl:with-param name="title"  select="/root/gui/strings/viewInGE"/>
+					<xsl:with-param name="text">
+						<a href="{/root/gui/locService}/google.kml?id={//geonet:info/id}&amp;layers={gmd:name/gco:CharacterString}" title="{/root/strings/interactiveMap}">
+							<xsl:choose>
+								<xsl:when test="string(gmd:description/gco:CharacterString)!=''">
+									<xsl:value-of select="gmd:description/gco:CharacterString"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="gmd:name/gco:CharacterString"/>
+								</xsl:otherwise>
+							</xsl:choose>
+							&#160;
+							<img src="{/root/gui/url}/images/google_earth_link.gif" alt="{/root/gui/strings/viewInGE}" title="{/root/gui/strings/viewInGE}" style="border: 0px solid;"/>
 						</a>
 					</xsl:with-param>
 				</xsl:apply-templates>
@@ -1901,11 +1921,64 @@
 				<xsl:with-param name="id" select="$id"/>
 			</xsl:apply-templates>
 
-			
 			<xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource">
 				<xsl:variable name="protocol" select="gmd:protocol/gco:CharacterString"/>
 				<xsl:variable name="linkage"  select="gmd:linkage/gmd:URL"/>
 				<xsl:variable name="name"     select="gmd:name/gco:CharacterString"/>
+				<xsl:variable name="desc"     select="gmd:description/gco:CharacterString"/>
+				
+				<xsl:if test="string($linkage)!=''">
+				
+						<xsl:element name="link">
+							<xsl:attribute name="title"><xsl:value-of select="$desc"/></xsl:attribute>
+							<xsl:attribute name="href"><xsl:value-of select="$linkage"/></xsl:attribute>
+							<xsl:attribute name="name"><xsl:value-of select="$name"/></xsl:attribute>
+							<xsl:choose>
+								<xsl:when test="starts-with($protocol,'WWW:LINK-')">
+									<xsl:attribute name="type">text/html</xsl:attribute>
+								</xsl:when>
+								<xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($linkage,'.jpg')">
+									<xsl:attribute name="type">image/jpeg</xsl:attribute>
+								</xsl:when>
+								<xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($linkage,'.png')">
+									<xsl:attribute name="type">image/png</xsl:attribute>
+								</xsl:when>
+								<xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($linkage,'.gif')">
+									<xsl:attribute name="type">image/gif</xsl:attribute>
+								</xsl:when>
+								<xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($linkage,'.doc')">
+									<xsl:attribute name="type">application/word</xsl:attribute>
+								</xsl:when>
+								<xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($linkage,'.zip')">
+									<xsl:attribute name="type">application/zip</xsl:attribute>
+								</xsl:when>
+								<xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($linkage,'.pdf')">
+									<xsl:attribute name="type">application/pdf</xsl:attribute>
+								</xsl:when>
+								<xsl:when test="starts-with($protocol,'GLG:KML-') and contains($linkage,'.kml')">
+									<xsl:attribute name="type">application/vnd.google-earth.kml+xml</xsl:attribute>
+								</xsl:when>
+								<xsl:when test="starts-with($protocol,'GLG:KML-') and contains($linkage,'.kmz')">
+									<xsl:attribute name="type">application/vnd.google-earth.kmz</xsl:attribute>
+								</xsl:when>
+								<xsl:when test="starts-with($protocol,'OGC:WMS-')">
+									<xsl:attribute name="type">application/vnd.ogc.wms_xml</xsl:attribute>
+								</xsl:when>
+								<xsl:when test="$protocol='ESRI:AIMS-'">
+									<xsl:attribute name="type">application/vnd.esri.arcims_axl</xsl:attribute>
+								</xsl:when>
+								<xsl:when test="$protocol!=''">
+									<xsl:attribute name="type"><xsl:value-of select="$protocol"/></xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise>
+									<!-- fall back to the default content type -->
+									<xsl:attribute name="type">text/plain</xsl:attribute>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:element>
+
+				</xsl:if>
+				
 				<xsl:choose>
 					<xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($protocol,'http--download') and $name">
 						<link type="download"><xsl:value-of select="$linkage"/></link>
@@ -1921,6 +1994,10 @@
 <!--							<xsl:value-of select="concat('javascript:popInterMap(&#34;',/root/gui/url,'/intermap/srv/',/root/gui/language,'/map.addServicesExt?url=',$linkage,'&amp;service=',$name,'&amp;type=2&#34;)')"/>-->
 							<xsl:value-of select="concat('javascript:runIM_addService(&#34;'  ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;, 2)' )"/>
 							
+						</link>
+
+						<link type="googleearth">
+							<xsl:value-of select="concat(/root/gui/locService,'/google.kml?id=',$id,'&amp;layers=',$name)"/>
 						</link>
 					</xsl:when>
 					<xsl:when test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-capabilities') and $name">

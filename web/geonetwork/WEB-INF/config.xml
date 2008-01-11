@@ -733,6 +733,21 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- KML services -->
+		
+		<!-- Show WMS service in GE -->
+		<service name="google.kml">
+			<class name=".services.metadata.Show" />
+			<output sheet="kml.xsl" contentType="application/kml; charset=UTF-8">
+				<call name="services" class="jeeves.guiservices.services.Get" />
+				<xml name="sources" file="xml/sources.xml" localized="false" />
+			</output>
+			<error id="access" sheet="error-form.xsl">
+				<xml name="privError" file="xml/privileges-error.xml" />
+			</error>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- MEF services -->
 
 		<service name="mef.import">
