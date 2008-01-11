@@ -20,7 +20,23 @@
 				if (type == 's')	Element.show('metadata.title');
 					else				Element.hide('metadata.title');
 			}
-
+            var schema = new Array (
+            <xsl:for-each select="/root/gui/schemas/name">
+               <xsl:sort select="."/>
+                "<xsl:value-of select="."/>"<xsl:if test="position()!=last()">,</xsl:if>
+            </xsl:for-each>);
+            
+            // Update schema according to stylesheet selected (ie. styleSheet MUST end with schemaName.xsl)
+            function updateSchema() {
+                var xsl = $('styleSheet').options[$('styleSheet').selectedIndex].value;
+                for (i = 0; i &lt; schema.length; i ++) { 
+                    if (xsl.toLowerCase().lastIndexOf(schema[i]+'.xsl') != -1) {
+                        $('schema').selectedIndex = i;
+                        return;
+                    }
+                 }
+                 $('schema').selectedIndex = 0;      
+            }
 		</script>
 	</xsl:template>
 
@@ -64,12 +80,13 @@
 						<tr>
 							<th class="padded"><xsl:value-of select="/root/gui/strings/styleSheet"/></th>
 							<td class="padded">
-								<select class="content" name="styleSheet" size="1">
+								<select class="content" id="styleSheet" name="styleSheet" size="1" onchange="updateSchema();">
 									<option value="_none_">
 										<xsl:value-of select="/root/gui/strings/none"/>
 									</option>
 									<xsl:for-each select="/root/gui/importStyleSheets/record">
-										<option value="{id}">
+										<xsl:sort select="name"></xsl:sort>
+                                        <option value="{id}">
 											<xsl:value-of select="name"/>
 										</option>
 									</xsl:for-each>
@@ -82,9 +99,10 @@
 						<tr>
 							<th class="padded"><xsl:value-of select="/root/gui/strings/desSchema"/></th>
 							<td class="padded">
-								<select class="content" name="schema" size="1">
+								<select class="content" id="schema" name="schema" size="1">
 									<xsl:for-each select="/root/gui/schemas/name">
-										<option value="{.}">
+										<xsl:sort select="."></xsl:sort>
+                                        <option value="{.}">
 											<xsl:value-of select="."/>
 										</option>
 									</xsl:for-each>
