@@ -250,7 +250,7 @@
 	<latMin>lat (min)</latMin>
 	<links>Liens</links>
 	<legend>Légende</legend>
-	<loading>Loading ...</loading>
+	<loading>Chargement en cours ...</loading>
 	<local>Recherche local</local>
 	<localiz>Internationalisation</localiz>
 	<localizDes>Permet la modification des traductions des groupes, catégories, etc.</localizDes>
