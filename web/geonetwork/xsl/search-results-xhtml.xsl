@@ -174,8 +174,6 @@
 			<tr>
 				<td valign="top">
 					<table>
-					
-						<!-- title -->
 						<tr>
 							<xsl:choose>
 								<xsl:when test="$remote=true()">
@@ -183,14 +181,20 @@
 									<xsl:variable name="rest" select="substring-after($metadata/geonet:info/server,':')"/>
 									<xsl:variable name="port" select="substring-before($rest,'/')"/>
 									<xsl:variable name="db" select="substring-after($rest,'/')"/>
+									<!-- Title -->
 									<td class="padded" colspan="2">
-										<h1 align="left"><a href="{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple"><xsl:value-of select="concat($metadata/geonet:info/id,' - ',$metadata/title)"/></a></h1>
+										<h1 align="left">
+											<a href="{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple">
+												<xsl:value-of select="concat($metadata/geonet:info/id,' - ',$metadata/title)"/>
+											</a>
+										</h1>
 										<xsl:variable name="server" select="$metadata/geonet:info/server"/>
 										<xsl:variable name="name" select="/root/gui/repositories/Collection[@collection_dn=$server]/@collection_name"/>
 										<font class="green-neg"><xsl:value-of select="$name"/></font>
 									</td>
 								</xsl:when>
 								<xsl:otherwise>
+									<!-- Attribution logo -->
 									<td align="center" valign="middle">
 										<xsl:variable name="source" select="string($metadata/geonet:info/source)"/>
 										<xsl:choose>
@@ -205,40 +209,40 @@
 											</xsl:otherwise>
 										</xsl:choose>
 									</td>
+									<!-- Title -->
 									<td class="padded" width="90%">
 										<h1 align="left">
-<!--											<a href="{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple">-->
-												<xsl:value-of select="$metadata/title"/>
-<!--											</a>-->
+											<xsl:value-of select="$metadata/title"/>
 										</h1>
 									</td>
-								<!-- Download XML for ISO and FGDC for use in applications like GeoNetwork or ESRI ArcCatalog -->
-									<td class="padded" align="middle" nowrap="nowrap" width="40">
+
+									<!-- Download XML for ISO and FGDC for use in applications like GeoNetwork or ESRI ArcCatalog -->
+									<td class="padded" align="middle" nowrap="nowrap" width="80">
 										<xsl:choose>
 											<xsl:when test="contains($metadata/geonet:info/schema,'dublin-core')">
 												<a href="{/root/gui/locService}/dc.xml?id={$metadata/geonet:info/id}" target="_blank" title="Download Dublin Core metadata in XML">
-													<img src="{/root/gui/url}/images/xml.png" alt="Dublin Core XML" title="Save Dublin Core metadata as XML" border="0"/>
+													<img src="{/root/gui/url}/images/xml.png" height="20px" width="20px" alt="Dublin Core XML" title="Save Dublin Core metadata as XML" border="0"/>
 												</a>
 											</xsl:when>
 											<xsl:when test="contains($metadata/geonet:info/schema,'fgdc-std')">
 												<a href="{/root/gui/locService}/fgdc.xml?id={$metadata/geonet:info/id}" target="_blank" title="Download FGDC metadata in XML">
-													<img src="{/root/gui/url}/images/xml.png" alt="FGDC XML" title="Save FGDC metadata as XML" border="0"/>
+													<img src="{/root/gui/url}/images/xml.png" height="20px" width="20px" alt="FGDC XML" title="Save FGDC metadata as XML" border="0"/>
 												</a>
 											</xsl:when>
 											<xsl:when test="contains($metadata/geonet:info/schema,'iso19115')">
 												<a href="{/root/gui/locService}/iso19115to19139.xml?id={$metadata/geonet:info/id}" target="_blank" title="Save ISO19115/19139 metadata as XML">
-													<img src="{/root/gui/url}/images/xml.png" alt="IISO19115/19139 XML" title="Save ISO19115/19139 metadata as XML" border="0"/>
+													<img src="{/root/gui/url}/images/xml.png" height="20px" width="20px" alt="IISO19115/19139 XML" title="Save ISO19115/19139 metadata as XML" border="0"/>
 												</a>
 												<a href="{/root/gui/locService}/iso_arccatalog8.xml?id={$metadata/geonet:info/id}" target="_blank" title="Download ISO19115 metadata in XML for ESRI ArcCatalog">
-													<img src="{/root/gui/url}/images/ac.png" alt="ISO19115 XML for ArcCatalog" title="Save ISO19115 metadata in XML for ESRI ArcCatalog" border="0"/>
+													<img src="{/root/gui/url}/images/ac.png" height="20px" width="20px" alt="ISO19115 XML for ArcCatalog" title="Save ISO19115 metadata in XML for ESRI ArcCatalog" border="0"/>
 												</a>
 											</xsl:when>
 											<xsl:when test="contains($metadata/geonet:info/schema,'iso19139')">
 												<a href="{/root/gui/locService}/iso19139.xml?id={$metadata/geonet:info/id}" target="_blank" title="Download ISO19115/19139 metadata in XML">
-													<img src="{/root/gui/url}/images/xml.png" alt="ISO19115/19139 XML" title="Save ISO19115/19139 metadata as XML" border="0"/>
+													<img src="{/root/gui/url}/images/xml.png" height="20px" width="20px" alt="ISO19115/19139 XML" title="Save ISO19115/19139 metadata as XML" border="0"/>
 												</a>
 <!-- //FIXME												<a href="{/root/gui/locService}/iso_arccatalog8.xml?id={$metadata/geonet:info/id}" target="_blank" title="Download ISO19115 metadata in XML for ESRI ArcCatalog">
-													<img src="{/root/gui/url}/images/ac.png" alt="ISO19115 XML for ArcCatalog" title="Save ISO19115 metadata in XML for ESRI ArcCatalog" border="0"/>
+	<img src="{/root/gui/url}/images/ac.png" height="20px" width="20px" alt="ISO19115 XML for ArcCatalog" title="Save ISO19115 metadata in XML for ESRI ArcCatalog" border="0"/>
 												</a> -->
 											</xsl:when>
 											
@@ -254,20 +258,9 @@
 								<th class="padded" valign="top"><xsl:value-of select="/root/gui/strings/abstract"/></th>
 								<td class="padded" valign="top" colspan="2">
 									<xsl:choose>
+										<!-- show a maximum of $maxAbstract characters in the abstract -->
 										<xsl:when test="string-length ($metadata/abstract) &gt; $maxAbstract">
-											<xsl:value-of select="substring ($metadata/abstract, 0, $maxAbstract)"/>
-											<xsl:choose>
-												<xsl:when test="$remote=true()">
-													<a href="{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple">
-														...<xsl:value-of select="/root/gui/strings/more"/>...
-													</a>
-												</xsl:when>
-												<xsl:otherwise>
-													<a href="{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple">
-														...<xsl:value-of select="/root/gui/strings/more"/>...
-													</a>
-												</xsl:otherwise>
-											</xsl:choose>
+											<xsl:value-of select="substring ($metadata/abstract, 0, $maxAbstract)"/>...
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:value-of select="$metadata/abstract"/>
@@ -312,58 +305,63 @@
 		</table>
 		
 		<!-- buttons -->
-		<xsl:comment>Here's where the buttons are creaated that are shown in the search results. The buttons are:
+		<!-- Here's where the buttons are created that are shown in the search results. The buttons are:
 		View metadata
 		Download resources
 		View interactive map in InterMap
 		View interactive map in Google Earth
-		</xsl:comment>
+		-->
 		<table width="100%">
 			<tr>
 				<td>
-					
-					<!-- view button -->
+					<!-- view metadata button -->
 					<xsl:if test="$metadata/geonet:info/view='true'">
 						<xsl:choose>
 							<xsl:when test="$remote=true()">
-								<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple')"><xsl:value-of select="/root/gui/strings/show"/></button>
+								<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple')" title="{/root/gui/strings/show}">
+									<xsl:value-of select="/root/gui/strings/show"/>
+								</button>
 							</xsl:when>
 							<xsl:otherwise>
-<!--								<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple')"><xsl:value-of select="/root/gui/strings/show"/></button>-->
-								<button id="gn_showmd_{$metadata/geonet:info/id}"  class="content" onclick="gn_showMetadata({$metadata/geonet:info/id})"><img src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/show"/></button>
-								<button id="gn_hidemd_{$metadata/geonet:info/id}"  class="content" onclick="gn_hideMetadata({$metadata/geonet:info/id})" style="display:none;"><img src="{/root/gui/url}/images/minus.png" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/show"/></button>
-								<button id="gn_loadmd_{$metadata/geonet:info/id}"  class="content" style="display:none;"><xsl:value-of select="/root/gui/strings/loading"/></button>
+								<button id="gn_showmd_{$metadata/geonet:info/id}"  class="content" onclick="gn_showMetadata({$metadata/geonet:info/id})" title="{/root/gui/strings/show}">
+									<img src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/show"/>
+								</button>
+								<button id="gn_hidemd_{$metadata/geonet:info/id}"  class="content" onclick="gn_hideMetadata({$metadata/geonet:info/id})" style="display:none;" title="{/root/gui/strings/show}">
+									<img src="{/root/gui/url}/images/minus.png" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/show"/>
+								</button>
+								<button id="gn_loadmd_{$metadata/geonet:info/id}"  class="content" style="display:none;" title="{/root/gui/strings/show}">
+									<xsl:value-of select="/root/gui/strings/loading"/>
+								</button>
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:if>
 		
-					<!-- download button -->
+					<!-- download data button -->
 					<xsl:if test="$metadata/geonet:info/download='true'">
 						&#160;
 						<xsl:choose>
 							<xsl:when test="count($metadata/link[@type='download'])>1">
 								<xsl:choose>
 									<xsl:when test="$remote=true()">
-										<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=distribution')"><xsl:value-of select="/root/gui/strings/download"/></button>
+										<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=distribution')" title="{/root/gui/strings/download}">
+											<xsl:value-of select="/root/gui/strings/download"/>
+										</button>
 									</xsl:when>
 									<xsl:otherwise>
-										<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=distribution')"><xsl:value-of select="/root/gui/strings/download"/></button>
+										<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=distribution')" title="{/root/gui/strings/download}">
+											<xsl:value-of select="/root/gui/strings/download"/>
+										</button>
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:when>
 							<xsl:when test="count($metadata/link[@type='download'])=1">
-								<button class="content" onclick="load('{$metadata/link[@type='download']}')"><xsl:value-of select="/root/gui/strings/download"/></button>
+								<button class="content" onclick="load('{$metadata/link[@type='download']}')" title="{/root/gui/strings/download}">
+									<xsl:value-of select="/root/gui/strings/download"/>
+								</button>
 							</xsl:when>
 						</xsl:choose>
 					</xsl:if>
-					
-					<!-- intermap button -->
-<!--					<xsl:if  test="boolean($metadata/distInfo/distTranOps/onLineSrc/protocol='OGC:WMS-1.1.1-http-get-map')">
-						&#160;
-						<xsl:variable name="onlinesrc" select="$metadata/distInfo/distTranOps/onLineSrc[protocol='OGC:WMS-1.1.1-http-get-map']"/>					
-						<button class="content" onclick="addLayer({$onlinesrc/linkage},{$onlinesrc/orName})"><xsl:value-of select="/root/gui/strings/interactiveMap"/>PIPPO</button>
-					</xsl:if>
--->					
+
 					<!-- dynamic map button -->
 					<xsl:if test="$metadata/geonet:info/dynamic='true'">
 						&#160;
@@ -372,25 +370,32 @@
 							<xsl:when test="$count>1">
 								<xsl:choose>
 									<xsl:when test="$remote=true()">
-										<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=distribution')"><xsl:value-of select="/root/gui/strings/interactiveMap"/></button>
+										<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=distribution')" title="{/root/gui/strings/interactiveMap}"><xsl:value-of select="/root/gui/strings/interactiveMap"/></button>
 									</xsl:when>
 									<xsl:otherwise>
-<!--										<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=distribution')"><xsl:value-of select="/root/gui/strings/interactiveMap"/></button>-->
-
-										<button id="gn_showinterlist_{$metadata/geonet:info/id}"  class="content" onclick="gn_showInterList({$metadata/geonet:info/id})"><img src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/interactiveMap"/></button>
-										<button id="gn_hideinterlist_{$metadata/geonet:info/id}"  class="content" onclick="gn_hideInterList({$metadata/geonet:info/id})" style="display:none;"><img src="{/root/gui/url}/images/minus.png" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/interactiveMap"/></button>
-										<button id="gn_loadinterlist_{$metadata/geonet:info/id}"  class="content" style="display:none;"><xsl:value-of select="/root/gui/strings/loading"/></button> <!-- FIXME i18n -->
+										<button id="gn_showinterlist_{$metadata/geonet:info/id}"  class="content" onclick="gn_showInterList({$metadata/geonet:info/id})" title="{/root/gui/strings/interactiveMap}">
+											<img src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/interactiveMap"/>
+										</button>
+										<button id="gn_hideinterlist_{$metadata/geonet:info/id}"  class="content" onclick="gn_hideInterList({$metadata/geonet:info/id})" style="display:none;" title="{/root/gui/strings/interactiveMap}">
+											<img src="{/root/gui/url}/images/minus.png" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/interactiveMap"/>
+										</button>
+										<button id="gn_loadinterlist_{$metadata/geonet:info/id}"  class="content" style="display:none;" title="{/root/gui/strings/interactiveMap}">
+											<xsl:value-of select="/root/gui/strings/loading"/>
+										</button>
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:when>
 							<xsl:when test="$count=1">
-								<button class="content" onclick="{$metadata/link[@type='arcims' or @type='wms']}"><xsl:value-of select="/root/gui/strings/interactiveMap"/></button>
-								<!-- Google Earth map button -->
+								<button class="content" onclick="{$metadata/link[@type='arcims' or @type='wms']}" title="{/root/gui/strings/interactiveMap}">
+									<xsl:value-of select="/root/gui/strings/interactiveMap"/>
+								</button>
+
+								<!-- View WMS in Google Earth map button -->
 								<xsl:if test="$metadata/link[@type='googleearth']">
 									&#160;
-									<button class="content" onclick="load('{$metadata/link[@type='googleearth']}')">
-										<img src="{/root/gui/url}/images/google_earth_link.gif" style="padding-left:3px;" alt="{/root/gui/strings/viewInGE}"/>
-									</button>
+									<a onclick="load('{$metadata/link[@type='googleearth']}')" style="vertical-align: sub;cursor: pointer;">
+										<img src="{/root/gui/url}/images/google_earth_link.gif" height="20px" width="20px" style="padding-left:3px;" alt="{/root/gui/strings/viewInGE}" title="{/root/gui/strings/viewInGE}"/>
+									</a>
 								</xsl:if>
 							</xsl:when>
 						</xsl:choose>

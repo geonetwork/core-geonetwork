@@ -1605,7 +1605,7 @@
 									<xsl:value-of select="gmd:name/gco:CharacterString"/>
 								</xsl:otherwise>
 							</xsl:choose>
-						</a>   (OGC-WMS Service: <xsl:value-of select="gmd:linkage/gmd:URL"/> )
+						</a><br/>(OGC-WMS Server: <xsl:value-of select="gmd:linkage/gmd:URL"/> )
 					</xsl:with-param>
 				</xsl:apply-templates>
 				<!-- Create a link for a WMS service that will open in Google Earth through the reflector -->
@@ -1623,7 +1623,7 @@
 								</xsl:otherwise>
 							</xsl:choose>
 							&#160;
-							<img src="{/root/gui/url}/images/google_earth_link.gif" alt="{/root/gui/strings/viewInGE}" title="{/root/gui/strings/viewInGE}" style="border: 0px solid;"/>
+							<img src="{/root/gui/url}/images/google_earth_link.gif" height="20px" width="20px" alt="{/root/gui/strings/viewInGE}" title="{/root/gui/strings/viewInGE}" style="border: 0px solid;"/>
 						</a>
 					</xsl:with-param>
 				</xsl:apply-templates>
