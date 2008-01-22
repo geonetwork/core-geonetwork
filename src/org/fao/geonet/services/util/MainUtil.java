@@ -81,7 +81,7 @@ public class MainUtil
 						.addContent(new Element(Geonet.SearchResult.SITE_ID)      .setText(""))
 						.addContent(new Element(Geonet.SearchResult.DOWNLOAD)     .setText(Geonet.Text.OFF))
 						.addContent(new Element(Geonet.SearchResult.DYNAMIC)      .setText(Geonet.Text.OFF))
-						.addContent(new Element(Geonet.SearchResult.DIGITAL)      .setText(Geonet.Text.ON))
+						.addContent(new Element(Geonet.SearchResult.DIGITAL)      .setText(Geonet.Text.OFF))
 						.addContent(new Element(Geonet.SearchResult.PAPER)        .setText(Geonet.Text.OFF))
 						.addContent(new Element(Geonet.SearchResult.TEMPLATE)     .setText("n"))
 						.addContent(new Element(Geonet.SearchResult.EXTENDED)     .setText(Geonet.Text.OFF))
