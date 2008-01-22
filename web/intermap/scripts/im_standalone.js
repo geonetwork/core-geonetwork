@@ -5,6 +5,13 @@
 // This file contains the initialization, callback and eventhandler functions 
 // to make a bigmap live on its own.
 //
+// Requires:
+//		im_bm as an Intermap object
+//		imc_addService()
+//		imc_setContextFromURL()
+//		imc_reloadLayers()
+//
+//
 //===================================================================
 
 //===================================================================
@@ -16,10 +23,18 @@
 //
 //===================================================================
 
-function imep_loadLayer(url, service, doClearContext)
+/**
+ * Loads a layer into the map.
+ * The map image and the layerlist will be updated.
+ * 
+ * @param {String} url: the WMS server URL.
+ * @param {String} layer: the name of the layer as reported by the WMS server.
+ * @param {boolean} doClearContext: set it to true if the existing context has to be cleared. 
+ */
+function imep_loadLayer(url, layer, doClearContext)
 {
 	im_bm.setStatus('busy');
-    imc_addService(url, service, 2, doClearContext,
+    imc_addService(url, layer, 2, doClearContext,
 					function(req) 
 					{
 			             im_buildLayerList(req);
@@ -29,16 +44,32 @@ function imep_loadLayer(url, service, doClearContext)
 			        });		
 }
 
+/**
+ * Set a new bounding box for the map.
+ * The map image will be updated.
+ * 
+ * @param {Float} n: north latitude
+ * @param {Float} e: east longitude
+ * @param {Float} s: south latitude
+ * @param {Float} w: west longitude
+ */
 function imep_setBBox(n,e,s,w)
 {
 	im_bm.setBBox(n,e,s,w);
 	im_bm.rebuild();		
 }
 
-function imep_loadWmcFromUrl(url)
+/**
+ * Loads a new WMC context into the map.
+ * The map image and the layerlist will be updated.
+ * 
+ * @param {String} url: the WMC URL.
+ * @param {boolean} doClearContext: set it to true if the existing context has to be cleared. 
+ */
+function imep_loadWmcFromUrl(url, doClearContext)
 {
 	im_bm.setStatus('busy');
-	imc_setContextFromURL(url, 
+	imc_setContextFromURL(url, doClearContext,
 							function(req)
 							{
 								if(im_checkError(req))
@@ -82,6 +113,11 @@ Ajax.Responders.register({
   }
 });
 
+//===================================================================
+// BOOT
+// 
+// Functions related to the map bootstrap
+//===================================================================
 
 /**
  * This function is called by the onload property in the Intermap frame 
@@ -94,16 +130,36 @@ function im_boot()
 	//alert("W:"+size[0]+" H:"+size[1]);	
 	im_bm.setSize( size[0] - im_layer_width - 35, size[1] - 50);
 	
+	if( im_tryWMCBoot()) 
+		return;
+
+	if( im_tryLayerBoot()) 
+		return;
+			
+	// These calls are skipped if the tryXXX functions load anything
+	//    and these actions will be performed asynch'ly
+	im_bm.rebuild(imc_reloadLayers);		
+	im_bm.setStatus("idle");
+}
+
+/**
+ * Try using an external defined function imcb_getBootWmcUrl.
+ * If it exists, and returns a valid WMC context, the function will return true. 
+ */
+function im_tryWMCBoot()
+{
 	var func = parent.imcb_getBootWmcUrl;
-	var wmcurl;
 
 	if(typeof func == 'function')
 	{
-		wmcurl = func();
+		var arr = func();
 		
-		if(wmcurl)
+		if(arr)
 		{
-			imc_setContextFromURL(wmcurl,
+			var wmcurl = arr[0];
+			var clr    = arr[1];
+			
+			imc_setContextFromURL(wmcurl, clr,
 									function(req)
 									{
 										if(im_checkError(req))
@@ -122,13 +178,52 @@ function im_boot()
 										im_bm.setStatus('idle');
 									}
 								);
-			return;
+			return true;
 		}			
 	}
+	
+	return false;
+}
+
+/**
+ * Try using an external defined function imcb_getBootWmcUrl.
+ * If it exists, and returns a valid WMC context, the function will return true. 
+ */
+function im_tryLayerBoot()
+{
+	var func = parent.imcb_getBootLayer;
+
+	if(typeof func == 'function')
+	{
+		var arr = func();
 		
+		if(arr)
+		{
+			var url   = arr[0];
+			var layer = arr[1];
+			var clr   = arr[2];
 			
-	im_bm.rebuild(imc_reloadLayers);		
-	im_bm.setStatus("idle");
+			imc_addService(url, layer, 2, clr,
+									function(req)
+									{
+										if(im_checkError(req))
+										{
+											im_bm.setStatus('idle');
+											im_showError(req);
+											return;
+										}
+										
+										im_buildLayerList(req);
+
+										im_bm.rebuild(function(){
+											im_bm.setStatus('idle');});
+									}
+								);
+			return true;
+		}			
+	}
+	
+	return false;
 }
 
 //===================================================================

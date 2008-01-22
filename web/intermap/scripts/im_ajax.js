@@ -73,9 +73,10 @@ function im_setWMC(wmc, callback)
     );    
 }
 
-function imc_setContextFromURL(url, callback) 
+function imc_setContextFromURL(url, doClearContext, callback) 
 {
 	var pars = 'url=' + encodeURIComponent(url);
+	pars += "&clear=" + (doClearContext===true ? "true" : "false");		
     		
     var myAjax = new Ajax.Request (
     	getIMServiceURL('wmc.setContextFromURL'),
@@ -107,10 +108,7 @@ function imc_addService(surl, service, type, doClearContext, callback)
 			+ '&service=' + encodeURIComponent(service) 
 			+ '&type=' + type;
 			
-	if(doClearContext===true)
-	{
-		pars += "&clear=true";		
-	}
+	pars += "&clear=" + (doClearContext===true ? "true" : "false");		
 			
 	var myAjax = new Ajax.Request (
 		getIMServiceURL('map.addServices.embedded'),
@@ -130,10 +128,8 @@ function imc_addServices(surl, serviceArray, type, /*doClearContext,*/ callback)
 	var pars = 'url=' + encodeURIComponent(surl) 
 			 + '&type=' + type;
 
-//	if(doClearContext===true)
-//	{
-//		pars += "&clear=true";		
-//	}
+	//pars += "&clear=" + (doClearContext===true ? "true" : "false");		
+
 	
 	serviceArray.each(
 	    function(service)

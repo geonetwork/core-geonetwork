@@ -40,7 +40,7 @@ import org.wfp.vam.intermap.services.map.MapUtil;
 /**
  * Set the WMC from an URL-encoded parameter.
  *
- * @author Etj
+ * @author ETj
  */
 public class SetWmcContext implements Service
 {
@@ -65,7 +65,7 @@ public class SetWmcContext implements Service
 //		System.out.println(" ============= request wmc is:\n\n" +xo.outputString(mapContext));
 
 		// Create a new MapMerger object
-		String sreplace  = params.getChildText("clearLayers");
+		String sreplace  = params.getChildText("clearLayers"); // TODO: let's set the same param in all services supporting it. "clear" is simpler.
 		boolean breplace = Utils.getBooleanAttrib(sreplace, true);
 
 		MapMerger mm = breplace?

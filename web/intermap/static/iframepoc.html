@@ -35,8 +35,9 @@
 			function sample_loadWmcUrl()
 			{
 				var wmcurl = document.getElementById('wmcurl').value;
+				var clear = document.getElementById('lwclearcontext').checked;
 				
-				window.frames.intermapIframe.imep_loadWmcFromUrl(wmcurl); 
+				window.frames.intermapIframe.imep_loadWmcFromUrl(wmcurl, clear); 
 			}
 			
 			/**
@@ -46,7 +47,7 @@
 			{
 				var url = document.getElementById('wmsurl').value;
 				var layer = document.getElementById('layername').value;
-				var clear = document.getElementById('clearcontext').checked;
+				var clear = document.getElementById('llclearcontext').checked;
 
 //			var d = document;
 //			var f = d.frames ? d.frames['intermapIframe'] : d.getElementById('intermapIframe');
@@ -70,17 +71,64 @@
 			}
 		
 			/**
-			 * InterMap CallBack function <p>
+			 * InterMap CallBack function <b>imcb_getBootWmcUrl()</b> <p>
+			 * 
+			 * Sets the WMC that intermap must show when loading.
 			 * 
 			 * If this function exists and returns a not null value,
-			 * the returned value must be an URL to a WMC context document.
-			 * This is the first context InterMap will load.
+			 * the returned value must be an array containing:
+			 *  - [0]: the URL to a WMC context document; 
+			 *  		The given WMC is the context InterMap will show as soon as it is loaded.
+			 *  - [1]: true if the existing layer list has to be cleared, 
+			 * 			or false if the context's layers have to be added to the existing ones.
 			 * 
-			 * @return {String} the URL of the WMC context file
+			 *  Note that if the user session is not open yet (i.e. the user is loading intermap 
+			 *  for the first time in a while), there is no existing layer list and the map 
+			 *  will be build only with the loaded WMC, in the same way as the param [1] was set to true.  
+			 * 
+			 *  When both imcb_getBootLayer() and imcb_getBootWmcUrl() are defined, 
+			 *  only imcb_getBootWmcUrl() will be considered.
+			 * 
+			 * @return {Array} [0]: the URL of the WMC context file ; [1]: true if context has to be cleared
 			 */			
 			function imcb_getBootWmcUrl()
-			{				
-				return "http://localhost:8080/intermap/static/context_australia.xml";
+			{	
+				var ret = new Array();
+				ret[0] = "http://localhost:8080/intermap/static/context_australia.xml";
+				ret[1] = true; 			
+				return ret;
+			}
+
+			/**
+			 * InterMap CallBack function <b>imcb_getBootLayer()</b><p>
+			 * 
+			 * Sets the layer that intermap must show when loading.
+			 * 
+			 * If this function exists and returns a not null value,
+			 * the returned value must be an array containing:
+			 *  - [0]: the URL to a WMS; 
+			 *  - [1]: the name of the layer to load;
+			 *  - [2]: true if the existing layer list has to be cleared, 
+			 *      or false if the given layer has to be added to the existing ones.
+			 *        
+			 *  The given layer will be loaded in InterMap as soon as IM is loaded.
+			 *  
+			 *  Note that if the user session is not open yet (i.e. the user is loading intermap 
+			 *  for the first time in a while), there is no existing layer list and the map 
+			 *  will be build only with the loaded layer, in the same way as the param [2] was set to true.
+			 * 
+			 * When both imcb_getBootLayer() and imcb_getBootWmcUrl() are defined, 
+			 * only imcb_getBootWmcUrl() will be considered.
+			 * 
+			 * @return {Array} [0]: the WMS URL; [1]: the layer's name; [2]: true if context has to be cleared
+			 */			
+			function imcb_getBootLayer()
+			{	
+				var ret = new Array();
+				ret[0] = "http://www2.demis.nl/wms/wms.asp?wms=WorldMap&";
+				ret[1] = "Countries";				
+				ret[2] = true; 			
+				return ret;
 			}
 
 		</script>
@@ -98,6 +146,8 @@
 							<legend>imep_loadWmcFromUrl</legend>
 							WMC url 
 							<input type="text" id="wmcurl" value="http://localhost:8080/intermap/static/context_australia.xml"/> 
+							<br/>Clear context
+							<input type="checkbox" id="lwclearcontext" title="Clear context"/>
 							
 							<br/><a href="javascript:void(0);" onclick="sample_loadWmcUrl();">LOAD CONTEXT</a>							
 						</fieldset>
@@ -116,7 +166,7 @@
 							<br/>Layer name 
 							<input type="text" id="layername" value="Countries"/>
 							<br/>Clear context
-							<input type="checkbox" id="clearcontext" title="Clear context"/>
+							<input type="checkbox" id="llclearcontext" title="Clear context"/>
 							 
 							<br/><a href="javascript:void(0);" onclick="sample_loadWmsLayer();">ADD LAYER</a>
 						</fieldset>

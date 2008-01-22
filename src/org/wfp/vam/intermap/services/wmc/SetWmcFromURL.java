@@ -75,7 +75,7 @@ public class SetWmcFromURL implements Service
 //		System.out.println(" ============= wmc is:\n\n" +xo.outputString(mapContext));
 
 		// Create a new MapMerger object
-		String sreplace  = params.getChildText("clearLayers");
+		String sreplace  = params.getChildText("clear");
 		boolean breplace = Utils.getBooleanAttrib(sreplace, true);
 
 		MapMerger mm = breplace?
