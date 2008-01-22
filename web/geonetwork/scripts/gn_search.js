@@ -37,10 +37,15 @@ function runSimpleSearch()
 	preparePresent();
 
 	var pars = "any=" + encodeURIComponent($('any') .value);
-	pars += "&"+im_mm_getURLselectedbbox();
-	pars += fetchParam('relation');
-	pars += "&attrset=geo";
-	pars += fetchParam('region');
+
+	var region = $('region').value;
+	if(region!="") 
+  {
+		pars += "&"+im_mm_getURLselectedbbox();
+		pars += fetchParam('relation');
+		pars += "&attrset=geo";
+		pars += fetchParam('region');
+	}
 	pars += fetchParam('sortBy');
 	pars += fetchParam('hitsPerPage');
 	pars += fetchParam('output');
@@ -182,15 +187,19 @@ function runAdvancedSearch()
 	preparePresent();
 
 	var pars = "any=" + encodeURIComponent($('any') .value);
-	pars += "&attrset=geo";
 	pars += fetchParam('title');
 	pars += fetchParam('abstract');
 	pars += fetchParam('themekey');
 	pars += fetchRadioParam('similarity');
 
-	pars += "&"+im_mm_getURLselectedbbox();
-	pars += fetchParam('relation');
-	pars += fetchParam('region');
+	var region = $('region').value;
+	if(region!="") 
+  {
+		pars += "&attrset=geo";
+		pars += "&"+im_mm_getURLselectedbbox();
+		pars += fetchParam('relation');
+		pars += fetchParam('region');
+	}
 
 	if($('radfrom1').checked)
 	{
