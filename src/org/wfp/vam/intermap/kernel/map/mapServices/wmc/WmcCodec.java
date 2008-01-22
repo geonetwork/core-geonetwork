@@ -124,9 +124,15 @@ public class WmcCodec
 		wmcLayer.setTitle(wmsLayer.getTitle()); // mandatory
 		wmcLayer.setAbstract(wmsLayer.getAbstract());
 		// Extra info
-		WMCExtension layerExt = wmcLayer.addNewExtension();
-		Element etransp = new Element("Transparency").setText(""+mmLayer.getTransparency());
-		layerExt.add(etransp);
+
+		float transparency = mmLayer.getTransparency();
+		// add transparency only if it holds a non-default value
+		if(transparency < 1.0f)
+		{
+			WMCExtension layerExt = wmcLayer.addNewExtension();
+			Element etransp = new Element("Transparency").setText(""+transparency);
+			layerExt.add(etransp);
+		}
 
 		// Server
 		WMCServer server = wmcLayer.addNewServer();
