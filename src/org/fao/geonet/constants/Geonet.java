@@ -122,46 +122,172 @@ public class Geonet
 		public static final String MAIN_DB = "main-db";
 	}
 
-	//--------------------------------------------------------------------------
-	//--- container for search elements
-
+	/**
+	 * Parameters that can be used in searches. 
+	 * See the parameters for a more complete description.
+	 * @see ../services.util.MainUtil.getDefaultSearch for
+	 * default values.
+	 */
 	public class SearchResult
 	{
+        /** Parameter name: {@value #TITLE} - Free text field that searches
+         * in the title */
 		public static final String TITLE         = "title";
+		
+		/** Parameter name: {@value #ABSTRACT} - Free text field that searches
+		 * in the abstract */
 		public static final String ABSTRACT      = "abstract";
+        
+		/** Parameter name: {@value #ANY} - Free text field that searches
+         * in all the text fields of a metadata record */
 		public static final String ANY           = "any";
-		public static final String REGION        = "region";
+		
+		/** Parameter name: {@value #REGION} - Index value of a region. 
+		 * Used to retrieve the name and bounding box of the selected region */
+        public static final String REGION        = "region";
+        
+        /** Parameter name: {@value #SOUTH_BL} - Lowest Latitude value in 
+         * floating point format (geographic coordinate) 
+         * Default value is {@code -90} */
 		public static final String SOUTH_BL      = "southBL";
+        
+		/** Parameter name: {@value #NORTH_BL} - Highest Latitude value in 
+         * floating point format (geographic coordinate) 
+         * Default value is {@code 90} */
 		public static final String NORTH_BL      = "northBL";
+        
+		/** Parameter name: {@value #EAST_BL} - Highest Longitude value in 
+         * floating point format (geographic coordinate) 
+         * Default value is {@code 180} */
 		public static final String EAST_BL       = "eastBL";
+        
+		/** Parameter name: {@value #WEST_BL} - Lowest Longitude value in 
+         * floating point format (geographic coordinate) 
+         * Default value is {@code -180} */
 		public static final String WEST_BL       = "westBL";
+		
+        /** Parameter name: {@value #RELATION} - Defines the type of spatial
+         * query matching used
+         * See {@link Relation} for possible values 
+         * Default value is {@code {@value Relation#OVERLAPS}} */
 		public static final String RELATION      = "relation";
+		
+        /** Parameter name: {@value #DATE_FROM} - Start date from when the 
+         * referenced resource was updated. 
+         * Formatted as <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a>.
+         * For example 1970-08-19T06:01:00 or 1970-08-19 */
 		public static final String DATE_FROM     = "dateFrom";
+
+        /** Parameter name: {@value #DATE_TO} - End date until when the 
+         * referenced resource was updated. 
+         * Formatted as <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a>.
+         * For example 2008-01-23T10:05:00 or 2008-01-23 */
 		public static final String DATE_TO       = "dateTo";
-		public static final String GROUP         = "group";
-		public static final String PROFILE       = "profile";
-		public static final String SERVERS       = "servers";
-		public static final String TIMEOUT       = "timeout";
+
+        public static final String KEYWORD       = "keyword";
 		public static final String KEYWORDS      = "keywords";
 		public static final String THEME_KEY     = "themekey";
-		public static final String DOWNLOAD      = "download";
+        public static final String CATEGORY      = "category";
+
+        /** Parameter name: {@value #TOPIC_CAT} - Restrict search to resources
+         * that have the requested Topic Category set (ISO19115) */
+        public static final String TOPIC_CAT     = "topicCat";
+        
+        /** Parameter name: {@value #PROTOCOL} - Searches the protocol field 
+         * that's part of the online resources in ISO19115. Suggested values
+         * are those listed in the localized strings.xml files at
+         * /strings/protocolChoice/@value */
+        public static final String PROTOCOL      = "protocol";
+        
+        /** Parameter name: {@value #DOWNLOAD} - Boolean that restricts results 
+         * to those resources that have a files for download based on 
+         * protocol values as defined in the Lucene indexing stylesheets. 
+         * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} or 
+         * {@value org.fao.geonet.constants.Geonet.Text#OFF} (default) */
+        public static final String DOWNLOAD      = "download";
+
+        /** Parameter name: {@value #DYNAMIC} - Boolean that restricts results 
+         * to those resources that have an interactive resource associated based
+         * on protocol values as defined in the Lucene indexing stylesheets. 
+         * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} or 
+         * {@value org.fao.geonet.constants.Geonet.Text#OFF} (default) */
 		public static final String DYNAMIC       = "dynamic";
+		
+        /** Parameter name: {@value #DIGITAL} - Boolean that restricts results 
+         * to those resources that describe digital data based on ISO19115
+         * CI_PresentationFormCode codes
+         * Exact values indexed are defined in the Lucene indexing stylesheets. 
+         * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} or 
+         * {@value org.fao.geonet.constants.Geonet.Text#OFF} (default) */
 		public static final String DIGITAL       = "digital";
+		
+        /** Parameter name: {@value #PAPER} - Boolean that restricts results 
+         * to those resources that describe Hardcopy data based on ISO19115
+         * CI_PresentationFormCode codes
+         * Exact values indexed are defined in the Lucene indexing stylesheets. 
+         * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} or 
+         * {@value org.fao.geonet.constants.Geonet.Text#OFF} (default) */
 		public static final String PAPER         = "paper";
-		public static final String CATEGORY      = "category";
+		
+        /** Parameter name: {@value #SITE_ID} - Limit search results to resources 
+         * that originate from the selected catalog. The Site's short name 
+         * should be used as value */
 		public static final String SITE_ID       = "siteId";
-		public static final String TEMPLATE      = "template";
-		public static final String EXTENDED      = "extended";
-		public static final String INTERMAP      = "intermap";
-		public static final String HELP          = "help";
-		public static final String REMOTE        = "remote";
-		public static final String KEYWORD       = "keyword";
-		public static final String SERVER        = "server";
+        
+		/** Parameter name: {@value #GROUP} - Limit search results to resources 
+		 * that are administered by the selected group. The group ID should be 
+		 * used as value */
+        public static final String GROUP         = "group";
+        
+        public static final String PROFILE       = "profile";
+        public static final String SERVER        = "server";
+        public static final String SERVERS       = "servers";
+		
+        /** Parameter name: {@value #TEMPLATE} - Boolean that defines if 
+         * normal resources are searched or templates are searched
+         * Values are {@code y} or {@code n} */
+        public static final String TEMPLATE      = "template";
+        
+        /** Parameter name: {@value #EXTENDED} - Boolean that indicates if 
+         * search is done in simple or Advanced mode.
+         * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} or 
+         * {@value org.fao.geonet.constants.Geonet.Text#OFF} (default) */
+        public static final String EXTENDED      = "extended";
+
+        /** Parameter name: {@value #REMOTE} - Boolean that indicates if 
+         * search is done on the local repository or using Z39.50 for on the 
+         * fly searches in remote catalogs. Values are 
+         * {@value org.fao.geonet.constants.Geonet.Text#ON} or 
+         * {@value org.fao.geonet.constants.Geonet.Text#OFF} (default) */
+        public static final String REMOTE        = "remote";
+        
+        /** Parameter name: {@value #TIMEOUT} - Time in seconds the Z39.50
+         * search waits for responses from remote servers before timing out.
+         * Default is 20 seconds */
+        public static final String TIMEOUT       = "timeout";
+
+	    /** Parameter name: {@value #HITS_PER_PAGE} - Number of results
+	     * returned by the search engine. Default is 10 results */
 		public static final String HITS_PER_PAGE = "hitsPerPage";
-		public static final String SIMILARITY    = "similarity";
-		public static final String PROTOCOL      = "protocol";
-		public static final String OUTPUT        = "output";
-		public static final String SORT_BY       = "sortBy";
+		
+		/** Parameter name: {@value #SIMILARITY} - Use the Lucene FuzzyQuery.
+		 * Values range from 0.0 to 1.0 and defaults to 0.8 */
+        public static final String SIMILARITY    = "similarity";
+		
+		/** Parameter name: {@value #OUTPUT} - Display results as text only 
+		 * {@value #TEXT} or with graphic overviews {@value #FULL} (default) */
+        public static final String OUTPUT        = "output";
+
+        /** Parameter name: {@value #SORT_BY} - Order results by 
+         * {@value SortBy#RELEVANCE} (default), {@value SortBy#RATING}, 
+         * {@value SortBy#POPULARITY} or by {@value SortBy#DATE} */
+        public static final String SORT_BY       = "sortBy";
+
+		/** Parameter name: {@value #INTERMAP} - Boolean that indicates if 
+         * GUI shows the embedded InterMap (on) or defaults to the old GUI (off).
+         * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} (default)
+         * or {@value org.fao.geonet.constants.Geonet.Text#OFF} */
+        public static final String INTERMAP      = "intermap";
 
 		//-----------------------------------------------------------------------
 
