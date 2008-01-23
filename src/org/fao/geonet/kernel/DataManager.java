@@ -97,12 +97,12 @@ public class DataManager
 		Element result = dbms.select("SELECT id, changeDate FROM Metadata ORDER BY id ASC");
 		List list = result.getChildren();
 
-		// System.out.println("DB CONTENT:\n" + Xml.getString(result)); // DEBUG
+		Log.debug(Geonet.DATA_MANAGER, "DB CONTENT:\n'"+ Xml.getString(result) +"'"); //DEBUG
 
 		// get all metadata from index
 		Hashtable docs = searchMan.getDocs();
 
-		// System.out.println("INDEX CONTENT:"); // DEBUG
+        Log.debug(Geonet.DATA_MANAGER, "INDEX CONTENT:"); //DEBUG
 
 		// index all metadata in DBMS if needed
 		for(int i = 0; i < list.size(); i++)
@@ -111,7 +111,7 @@ public class DataManager
 			Element record = (Element) list.get(i);
 			String  id     = record.getChildText("id");
 
-			// System.out.println("- record (" + id + ")"); // DEBUG
+			Log.debug(Geonet.DATA_MANAGER, "- record ("+ id +")"); //DEBUG
 
 			Hashtable idxRec = (Hashtable)docs.get(id);
 
@@ -127,14 +127,15 @@ public class DataManager
 				String lastChange    = record.getChildText("changedate");
 				String idxLastChange = (String)idxRec.get("_changeDate");
 
-				// System.out.println("  - lastChange: " + lastChange); // DEBUG
-				// System.out.println("  - idxLastChange: " + idxLastChange); // DEBUG
+	            Log.debug(Geonet.DATA_MANAGER, "- lastChange: " + lastChange); //DEBUG
+                Log.debug(Geonet.DATA_MANAGER, "- idxLastChange: " + idxLastChange); //DEBUG
 
 				if (!idxLastChange.equalsIgnoreCase(lastChange)) // date in index contains 't', date in DBMS contains 'T'
 					indexMetadata(dbms, id);
 			}
 		}
-		// System.out.println("INDEX SURPLUS:"); // DEBUG
+
+		Log.debug(Geonet.DATA_MANAGER, "INDEX SURPLUS:"); //DEBUG
 
 		// remove from index metadata not in DBMS
 		for (Enumeration i = docs.keys(); i.hasMoreElements(); )
@@ -142,7 +143,7 @@ public class DataManager
 			String id = (String)i.nextElement();
 			searchMan.delete("_id", id);
 
-			// System.out.println("- record (" + id + ")"); // DEBUG
+            Log.debug(Geonet.DATA_MANAGER, "- record (" + id + ")"); //DEBUG
 		}
 	}
 
@@ -150,7 +151,10 @@ public class DataManager
 
 	public void indexMetadata(Dbms dbms, String id) throws Exception
 	{
-		indexMetadata(dbms, id, searchMan);
+
+	    Log.debug(Geonet.DATA_MANAGER, "Indexing record (" + id + ")"); //DEBUG
+
+	    indexMetadata(dbms, id, searchMan);
 	}
 
 	//--------------------------------------------------------------------------
@@ -194,6 +198,9 @@ public class DataManager
 		String  groupOwner = rec.getChildText("groupowner");
 		String  popularity = rec.getChildText("popularity");
 		String  rating     = rec.getChildText("rating");
+
+        Log.debug(Geonet.DATA_MANAGER, "record schema (" + schema + ")"); //DEBUG
+        Log.debug(Geonet.DATA_MANAGER, "record createDate (" + createDate + ")"); //DEBUG
 
 		moreFields.add(makeField("_root",        root,        true, true, false));
 		moreFields.add(makeField("_schema",      schema,      true, true, false));
@@ -607,6 +614,10 @@ public class DataManager
 			if (md.getName().equals("Metadata"))
 				return "iso19115";
 
+			/* there are some other suggested container names, 
+			 * like <dc>, <dublinCore>, <resource>, <record> and <metadata>
+			 * We may need to also check for those on import and export
+			 */ 
 			if (md.getName().equals("simpledc"))
 				return "dublin-core";
 

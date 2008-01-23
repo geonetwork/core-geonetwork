@@ -48,10 +48,9 @@ import org.apache.lucene.index.TermEnum;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
-//==============================================================================
-//=== index metadata using lucene
-//==============================================================================
-
+/**
+ * Indexes metadata using Lucene
+ */
 public class SearchManager
 {
 	public static final int LUCENE = 1;
@@ -69,6 +68,11 @@ public class SearchManager
 
 	//-----------------------------------------------------------------------------
 
+	/**
+	 * @param appPath
+	 * @param luceneDir
+	 * @throws Exception
+	 */
 	public SearchManager(String appPath, String luceneDir) throws Exception
 	{
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
@@ -103,9 +107,12 @@ public class SearchManager
 		}
 	}
 
-	//-----------------------------------------------------------------------------
-	// lucene init/end methods
-
+	/**
+	 * Lucene init/end methods. Creates the Lucene index directory
+	 * @param appPath
+	 * @param luceneDir
+	 * @throws Exception
+	 */
 	private void initLucene(String appPath, String luceneDir)
 		throws Exception
 	{
@@ -124,7 +131,9 @@ public class SearchManager
 	//-----------------------------------------------------------------------------
 	// Z39.50 init/end methods
 
-	/** initializes the Z3950 client searcher
+	/** Initializes the Z3950 client searcher
+	 * @param appPath
+	 * @throws Exception
 	 */
 	private void initZ3950(String appPath)
 		throws Exception
@@ -167,6 +176,16 @@ public class SearchManager
 	//--------------------------------------------------------------------------------
 	// indexing methods
 
+	/**
+	 * Indexes a metadata record
+	 * @param type
+	 * @param metadata
+	 * @param id
+	 * @param moreFields
+	 * @param isTemplate
+	 * @param title
+	 * @throws Exception
+	 */
 	public synchronized void index(String type, Element metadata, String id, List moreFields, String isTemplate, String title) throws Exception
 	{
 		delete("_id", id);
@@ -217,7 +236,15 @@ public class SearchManager
 		}
 	}
 
-	// creates a new field
+	/**
+	 * Creates a new field for the Lucene index
+	 * @param xmlDoc
+	 * @param name
+	 * @param value
+	 * @param store
+	 * @param index
+	 * @param token
+	 */
 	private void addField(Element xmlDoc, String name, String value, boolean store, boolean index, boolean token)
 	{
 		Element field = new Element("Field");
@@ -229,7 +256,12 @@ public class SearchManager
 		xmlDoc.addContent(field);
 	}
 
-	// perform a preorder visit and returns all text in metadata elements
+	/**
+	 * Extracts text from metadata record.
+	 * @param metadata
+	 * @param sb
+	 * @return all text in the metadata elements for indexing
+	 */
 	private void allText(Element metadata, StringBuffer sb)
 	{
 		String text = metadata.getText().trim();
@@ -417,10 +449,6 @@ public class SearchManager
 	}
 
 	//--------------------------------------------------------------------------------
-	// lazy optimization: optimize index if
-	// at least TIME_BETWEEN_OPTS time passed or
-	// at least UPDTATES_BETWEEN_OPTS updates were performed
-	// since last optimization
 
 	private static final long TIME_BETWEEN_OPTS     = 1000; // time between two optimizations in ms
 	private static final int  UPDTATES_BETWEEN_OPTS = 10;   // number of updates between two optimizations
@@ -429,6 +457,14 @@ public class SearchManager
 	private int     updateCount = UPDTATES_BETWEEN_OPTS - 1; // number of updates since last uptimization
 	private boolean optimizing = false; // true iff optimization is in progress
 	private Object  mutex = new Object(); // RGFIX: check concurrent access from multiple servlets
+	/**
+	 * lazy optimization: optimize index if
+     * at least TIME_BETWEEN_OPTS time passed or
+     * at least UPDTATES_BETWEEN_OPTS updates were performed
+     * since last optimization
+	 * @param writer
+	 * @throws Exception
+	 */
 	private void lazyOptimize(IndexWriter writer)
 		throws Exception
 	{
