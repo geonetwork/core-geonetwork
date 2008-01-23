@@ -74,7 +74,7 @@
 	<!-- ==================================================== -->
 	<element name="dc:coverage">
 		<label>Coverage</label>
-		<description/>
+		<description>For example: "North 90, South -90, East 180, West -180. Global"</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dc:rights">
