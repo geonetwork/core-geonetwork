@@ -32,19 +32,8 @@
 			<xml name="error" file="xml/service-not-found-error.xml" />
 		</error>
 
-		<!-- no privileges to access the service -->
-
-<!--		<error id="privileges" sheet="error.xsl">
-			<xml name="error" file="xml/privileges-error.xml" />
-		</error>
--->
 		<!-- general error -->
 		<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>			
-		
-
-<!--		<error sheet="error.xsl">
-			<xml name="error" file="xml/error.xml" />
-		</error>-->
 		
 	</default>
 
@@ -76,13 +65,17 @@
 		<param name="bigImageHeight" value="435" />
 		<param name="defaultImageSize" value="small" />
 
-		<!-- temp files -->		
-		<param name="tempDir"	value="../web/intermap/tmp/" />
+		<!-- temp files -->
+		<!-- Use a path relative to the intermap servlet directory
+		     or an absolute path to the file system-->
+		<param name="tempDir"	value="tmp/" />
 		<param name="tempDeleteMinutes" value="15" />
 		<param name="tempUrl" value="/intermap/tmp" />
 
 		<!-- http cache -->
-		<param name="httpCacheDir" value="../web/intermap/httpCache/" />
+		<!-- Use a path relative to the intermap servlet directory
+			or an absolute path to the file system-->
+		<param name="httpCacheDir" value="httpCache/" />
 		<param name="httpCacheDeleteEvery" value="60" />
 		<param name="useCache" value="true" />
 					
