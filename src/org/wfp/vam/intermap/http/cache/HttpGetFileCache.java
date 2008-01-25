@@ -30,7 +30,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.httpclient.Header;
-import org.wfp.vam.intermap.kernel.CachedFiles;
 import org.wfp.vam.intermap.kernel.TempFiles;
 
 public class HttpGetFileCache implements HttpCache
