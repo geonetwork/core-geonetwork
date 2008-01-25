@@ -51,7 +51,7 @@ function init()
 		{ id:'gn20.host',     type:'hostname' },
 		{ id:'gn20.port',     type:'integer',  minValue:80, maxValue:65535, empty:true },
 		{ id:'gn20.servlet',  type:'length',   minSize :1,  maxSize :200 },
-		{ id:'gn20.servlet',  type:'alphanum' },
+		// { id:'gn20.servlet',  type:'alphanum' }, // Does not work when servlet is mapped to root or subdirectory
 		{ id:'gn20.username', type:'length',   minSize :0,  maxSize :200 },
 		{ id:'gn20.password', type:'length',   minSize :0,  maxSize :200 },
 		
