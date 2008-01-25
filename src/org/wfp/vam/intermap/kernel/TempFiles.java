@@ -26,9 +26,9 @@ package org.wfp.vam.intermap.kernel;
 import java.io.*;
 import java.util.*;
 
-public abstract class TempFiles
+public class TempFiles
 {
-//	private static File dir;
+	protected File _dir;
 	private int minutes;
 	private Timer timer;
 
@@ -37,32 +37,41 @@ public abstract class TempFiles
 	 * every n minutes
 	 *
 	 */
-	protected TempFiles(int minutes) throws Exception
-	{
-//		dir = new File(tempDir);
-//		if (!dir.isDirectory())
-//			throw new Exception("Invalid temp directory '"+tempDir+"'");
+	
+    public TempFiles(String servletEnginePath, String path, int minutes) throws Exception
+    {
+        File p = new File(path);
+        
+        String finalPath;
+        if (p.isAbsolute())
+            finalPath = path;
+        else
+            finalPath = servletEnginePath + path;
+        
+        _dir = new File(finalPath);
+        if (!_dir.isDirectory())
+            throw new Exception("Invalid temp directory '" + finalPath + "'");
 
-		timer = new Timer();
-		timer.schedule(new RemindTask(),
-					   0,
-					   minutes * 60 * 1000);
-	}
-
+        timer = new Timer();
+        timer.schedule(new RemindTask(),
+                       0,
+                       minutes * 60 * 1000);
+   }
+    
 	public void end()
 	{
 		timer.cancel();
 	}
 
-	abstract public File getDir();
-//	{
-//		return dir;
-//	}
+	public File getDir()
+	{
+		return _dir;
+	}
 
 	/**
 	 * Creates a temporary File
 	 *
-	 * @return   a tempoarary File
+	 * @return   a temporary File
 	 *
 	 * @throws   If a file could not be created
 	 *

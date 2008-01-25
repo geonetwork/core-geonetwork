@@ -41,8 +41,8 @@ public class HttpGetFileCache implements HttpCache
 	private TempFiles tf;
 
 	// constructor
-	public HttpGetFileCache(String cacheDir, int expireTime) throws Exception {
-		tf = new CachedFiles(cacheDir, expireTime + 5);
+	public HttpGetFileCache(String servletEnginePath, String cacheDir, int expireTime) throws Exception {
+		tf = new TempFiles(servletEnginePath, cacheDir, expireTime + 5);
 	}
 
 	public void put(String uri, byte[] response, Header[] headers) throws IOException {
