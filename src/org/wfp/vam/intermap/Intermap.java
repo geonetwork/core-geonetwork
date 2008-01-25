@@ -129,7 +129,7 @@ public class Intermap implements ApplicationHandler
 		String tempDir = handlerConfig.getMandatoryValue(Constants.TEMP_DIR);
 		String tempDelete = handlerConfig.getMandatoryValue(Constants.TEMP_DELETE);
 		int delete = Integer.parseInt(tempDelete);
-		GlobalTempFiles.init(tempDir, delete);
+		GlobalTempFiles.init(path, tempDir, delete);
 		tempFiles = GlobalTempFiles.getInstance();
 
 		//------------------------------------------------------------------------
@@ -139,9 +139,8 @@ public class Intermap implements ApplicationHandler
 		String cacheDir = handlerConfig.getMandatoryValue(Constants.CACHE_DIR);
 		String cacheDelete = handlerConfig.getMandatoryValue(Constants.CACHE_DELETE);
 		int deleteCache = Integer.parseInt(cacheDelete);
-		MapMerger.setCache(new HttpGetFileCache(cacheDir, deleteCache));
+		MapMerger.setCache(new HttpGetFileCache(path, cacheDir, deleteCache));
 		String useCache = handlerConfig.getMandatoryValue(Constants.USE_CACHE);
-//		WmsGetCapClient.useCache("true".equals(useCache) ? true : false);
 		CapabilitiesStore.useCache("true".equals(useCache) ? true : false);
 
 		//------------------------------------------------------------------------
