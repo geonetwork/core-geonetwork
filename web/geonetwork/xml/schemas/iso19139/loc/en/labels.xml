@@ -1011,8 +1011,8 @@
 	<!-- ==================================================== -->
 	<element name="gmd:extentTypeCode">
 		<label>Extent type code</label>
-		<description>indication of whether the bounding polygon encompasses an area covered by the
-			data or an area where data is not present</description>
+		<description>Indication of whether the bounding polygon encompasses an area covered by the
+			data or an area where data is not present. Possible values: '1' for inclusion or '0' for exclusion</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:facsimile">
@@ -2382,12 +2382,6 @@
 		<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:version">
-		<label>Version</label>
-		<description>version of the format (date, number, etc.)</description>
-		<condition>mandatory</condition>
-	</element>
-	<!-- ==================================================== -->
 	<element name="gmd:verticalElement">
 		<label>Vertical element</label>
 		<description>provides vertical component of the extent of the referring object</description>
@@ -2460,8 +2454,61 @@
 	<!-- ==================================================== -->
 	<element name="gml:relatedTime">
 		<label>Related time</label>
+		<description>Defines the relation of a given time to the object.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:coordinates">
+		<label>Coordinates</label>
+		<description>Used to record an array of tuples or coordinates.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:Polygon">
+		<label>Polygon</label>
+		<description>A gml:Polygon is a special surface that is defined by a single surface patch. The boundary of this 
+		patch is coplanar and the polygon uses planar interpolation in its interior.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:Point">
+		<label>Point</label>
+		<description>A gml:Point is defined by a single coordinate tuple.</description>
+		<example>74. -37.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:LineString">
+		<label>Line</label>
+		<description>A gml:LineString is a special curve that consists of a single segment with linear interpolation. It is 
+			defined by two or more coordinate tuples, with linear interpolation between them.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:LinearRing">
+		<label>Linear ring</label>
+		<description>A gml:LinearRing is defined by four or more coordinate tuples, with linear interpolation between them; the first 
+			and last coordinates shall be coincident.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:exterior">
+		<label>Outer boundary</label>
+		<description>The outer boundary of a solid.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:interior">
+		<label>Inner boundary</label>
+		<description>The inner boundary of a solid</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:id">
+		<label>Identifier</label>
 		<description></description>
 	</element>
+	<!-- ==================================================== -->
+	<!-- All XML attributes declared in the GML schema are defined without namespace, the only exception is the gml:id 
+		XML attribute. -->
+	<element name="srsName">
+		<label>Spatial Reference System Name</label>
+		<description>Name of the Spatial Reference System. By default set to geographic (epsg:4326)</description>
+		<example>urn:x-ogc:def:crs:EPSG:6.6:4326</example>
+	</element>
+	
 	<!-- ==================================================== -->
 
 	<!-- ==================================================== -->
@@ -2584,4 +2631,45 @@
 		<label>Keywords</label>
 		<description>Keywords describing service</description>
 	</element>
+	
+	<!-- ==================================================== -->
+	<!-- === Other labels //FIXME --> 
+	<!-- ==================================================== -->
+	<element name="years">
+		<label>Années</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="zone">
+		<label>Zone</label>
+		<description>unique identifier for 100,000 metre grid zone</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="InDirectReferenceSystem">
+		<label>Système de projection indirect (pour les ressources non géographiques)</label>
+		<description>Dérivé de ReferenceSystem / précise qu'il s'agit d'une référence
+			directe</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="DirectReferenceSystem">
+		<label>Système de projection direct (pour les ressources géographiques)</label>
+		<description>Dérivé de ReferenceSystem / précise qu'il s'agit d'une référence
+			indirecte</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="code">
+		<label>Code du système</label>
+		<description>Code. Par exemple, le code epsg.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="label">
+		<label>Libellé</label>
+		<description>Libellé</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="codeSpace">
+		<label>Autorité compétente</label>
+		<description>Autorité en charge de la codification. Par exemple, epsg</description>
+	</element>
+	
 </labels>

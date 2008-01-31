@@ -2404,5 +2404,269 @@
 			longitude in decimal degrees (positive east)</description>
 		<condition>mandatory</condition>
 	</element>
+
 	<!-- ==================================================== -->
+	<!-- === GCO namespace                                    -->
+	<!-- ==================================================== -->
+	
+	<element name="gco:Date">
+		<label>Date</label>
+		<description>Formatted as 2007-09-12 (YYYY-MM-DD)</description>
+	</element>	
+	
+	<!-- ==================================================== -->
+	
+	<element name="gco:DateTime">
+		<label>Date and time</label>
+		<description>Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
+	</element>	
+	
+	<!-- ==================================================== -->
+	
+	<element name="gco:Measure">
+		<label>Measure</label>
+		<description></description>
+	</element>	
+	
+	<!-- ==================================================== -->
+	<!-- === GTS namespace                                    -->
+	<!-- ==================================================== -->
+	
+	<element name="gts:TM_PeriodDuration">
+		<label>Period duration</label>
+		<description></description>
+	</element>
+	
+	<!-- ==================================================== -->
+	<!-- === GML namespace -->
+	<!-- ==================================================== -->
+	
+	<element name="gml:beginPosition">
+		<label>Begin date</label>
+		<description>Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:endPosition">
+		<label>End date</label>
+		<description>Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:relatedTime">
+		<label>Related time</label>
+		<description>Defines the relation of a given time to the object.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:coordinates">
+		<label>Coordinates</label>
+		<description>Used to record an array of tuples or coordinates.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:Polygon">
+		<label>Polygon</label>
+		<description>A gml:Polygon is a special surface that is defined by a single surface patch. The boundary of this 
+			patch is coplanar and the polygon uses planar interpolation in its interior.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:Point">
+		<label>Point</label>
+		<description>A gml:Point is defined by a single coordinate tuple.</description>
+		<example>74. -37.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:LineString">
+		<label>Line</label>
+		<description>A gml:LineString is a special curve that consists of a single segment with linear interpolation. It is 
+			defined by two or more coordinate tuples, with linear interpolation between them.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:LinearRing">
+		<label>Linear ring</label>
+		<description>A gml:LinearRing is defined by four or more coordinate tuples, with linear interpolation between them; the first 
+			and last coordinates shall be coincident.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:exterior">
+		<label>Outer boundary</label>
+		<description>The outer boundary of a solid.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:interior">
+		<label>Inner boundary</label>
+		<description>The inner boundary of a solid</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gml:id">
+		<label>Identifier</label>
+		<description></description>
+	</element>
+	<!-- ==================================================== -->
+	<!-- All XML attributes declared in the GML schema are defined without namespace, the only exception is the gml:id 
+		XML attribute. -->
+	<element name="srsName">
+		<label>Spatial Reference System Name</label>
+		<description>Name of the Spatial Reference System. By default set to geographic (epsg:4326)</description>
+		<example>urn:x-ogc:def:crs:EPSG:6.6:4326</example>
+	</element>
+	
+	<!-- ==================================================== -->
+	<!-- === SRV namespace for 19119 service metadata -->
+	<!-- ==================================================== -->
+	
+	<element name="srv:SV_ServiceIdentification">
+		<label>Service Identification (19119)</label>
+		<description>ISO 19119-2005 Service Identification</description>
+	</element>
+	<element name="srv:serviceType">
+		<label>Service Type</label>
+		<description>service type name from a registry of services. For example, the values of the nameSpace and name attributes of GeneralName may be 'OGC' and 'catalogue'</description>
+	</element>
+	<element name="srv:serviceTypeVersion">
+		<label>Service Version</label>
+		<description>provides for searching based on the version of serviceType. For example, we may only be interested in OGC Catalogue V1.1 services. If version is maintained as a separate attribute, users can easily search for all services of a type regardless of the version</description>
+	</element>
+	<element name="srv:accessProperties">
+		<label>Access Properties</label>
+		<description>information about the availability of the service eg. fees, availability, oredering instructions</description>
+	</element>
+	<element name="srv:restrictions">
+		<label>Restrictions</label>
+		<description>legal and security constraints on accessing the service and distributing data generated by the service</description>
+	</element>
+	<element name="srv:containsOperations">
+		<label>Contains Operations</label>
+		<description>provides information about the operations that comprise the service</description>
+	</element>
+	<element name="srv:operatesOn">
+		<label>Operates On</label>
+		<description>provides information on the datasets that the service operates on</description>
+	</element>
+	<element name="srv:operationName">
+		<label>Operation Name</label>
+		<description>a unique identifier for this interface</description>
+	</element>
+	<element name="srv:SV_OperationMetadata">
+		<label>Operation</label>
+		<description>Operation Metadata</description>
+	</element>
+	<element name="srv:DCP">
+		<label>Distributed Computing Platforms</label>
+		<description>distributed computing platforms on which the operation has been implemented</description>
+	</element>
+	<element name="srv:DCPList">
+		<label>Distributed Computing Platforms List</label>
+		<description>list of distributed computing platforms on which the operation has been implemented</description>
+	</element>
+	<element name="srv:operationDescription">
+		<label>Operation Description</label>
+		<description>free text description of the intent of the operation and the results of the operation</description>
+	</element>
+	<element name="srv:invocationName">
+		<label>Invocation Name</label>
+		<description>the name used to invoke this interface within the context of the DCP. The name is identical for all DCPs</description>
+	</element>
+	<element name="srv:parameters">
+		<label>Parameters</label>
+		<description>the parameters that are required for this interface</description>
+	</element>
+	<element name="srv:connectPoint">
+		<label>Connect Point</label>
+		<description>handle for accessing the service interface</description>
+	</element>
+	<element name="srv:dependsOn">
+		<label>Depends On</label>
+		<description>list of operations that must be completed immediately before current operation is invoked, structured as a list for capturing alternate predecessor paths and sets for capturing parallel predecessor paths</description>
+	</element>
+	<element name="srv:providerName">
+		<label>Provider Name</label>
+		<description>a unique identifier for this organization</description>
+	</element>
+	<element name="srv:serviceContact">
+		<label>Service Contact</label>
+		<description>information for contacting the service provider</description>
+	</element>
+	<element name="srv:name">
+		<label>Name</label>
+		<description>the name, as used by the service for this chain or paramater</description>
+	</element>
+	<element name="srv:description">
+		<label>Description</label>
+		<description>narrative explanation of the services in the chain and resulting output or role of the parameter</description>
+	</element>
+	<element name="srv:optionality">
+		<label>Optionality</label>
+		<description>indication if the parameter is required</description>
+	</element>
+	<element name="srv:repeatability">
+		<label>Repeatability</label>
+		<description>indication if more than one value of the parameter may be provided</description>
+	</element>
+	<element name="srv:coupledResource">
+		<label>Coupled Resource</label>
+		<description>details of services coupled with this one</description>
+	</element>
+	<element name="srv:SV_CoupledResource">
+		<label>Coupled Resource</label>
+		<description>details of services coupled with this one</description>
+	</element>
+	<element name="srv:identifier">
+		<label>Identifier</label>
+		<description>Identifier of resource to which the operation applies</description>
+	</element>
+	<element name="srv:couplingType">
+		<label>Coupling Type</label>
+		<description>Type of Coupling</description>
+	</element>
+	<element name="srv:SV_CouplingType">
+		<label>Coupling Type</label>
+		<description>Type of Coupling</description>
+	</element>
+	<element name="srv:extent">
+		<label>Extent</label>
+		<description>Geographic/Temporal Extent of Service</description>
+	</element>
+	<element name="srv:keywords">
+		<label>Keywords</label>
+		<description>Keywords describing service</description>
+	</element>
+	
+	<!-- ==================================================== -->
+	<!-- === Other labels //FIXME -->
+	<!-- ==================================================== -->
+	<element name="years">
+		<label>Années</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="zone">
+		<label>Zone</label>
+		<description>unique identifier for 100,000 metre grid zone</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="InDirectReferenceSystem">
+		<label>Système de projection indirect (pour les ressources non géographiques)</label>
+		<description>Dérivé de ReferenceSystem / précise qu'il s'agit d'une référence
+			directe</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="DirectReferenceSystem">
+		<label>Système de projection direct (pour les ressources géographiques)</label>
+		<description>Dérivé de ReferenceSystem / précise qu'il s'agit d'une référence
+			indirecte</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="code">
+		<label>Code du système</label>
+		<description>Code. Par exemple, le code epsg.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="label">
+		<label>Libellé</label>
+		<description>Libellé</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="codeSpace">
+		<label>Autorité compétente</label>
+		<description>Autorité en charge de la codification. Par exemple, epsg</description>
+	</element>
+	
 </labels>
