@@ -84,7 +84,26 @@
 	</xsl:template>
 
 	<!-- ================================================================= -->
+	<!-- Fix srsName attribute and generate epsg:4326 entry by default -->
 
+	<xsl:template match="*[@gml:srsName]">
+		<xsl:copy>
+			<xsl:choose>
+				<xsl:when test="normalize-space(@gml:srsName)=''">
+					<xsl:attribute name="gml:srsName">
+						<xsl:text>urn:x-ogc:def:crs:EPSG:6.6:4326</xsl:text>
+					</xsl:attribute>
+					<xsl:apply-templates select="@*[name()!='gml:srsName']|node()"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="@*|node()"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:copy>
+	</xsl:template>
+	
+	<!-- ================================================================= -->
+	
 	<xsl:template match="*[gco:CharacterString]">
 		<xsl:copy>
 			<xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
