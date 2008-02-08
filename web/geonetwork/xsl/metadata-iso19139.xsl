@@ -204,7 +204,7 @@
 	<!-- codelists -->
 	<!-- ================================================================= -->
 
-	<xsl:template mode="iso19139" match="gmd:*[*/@codeList]">
+	<xsl:template mode="iso19139" match="gmd:*[*/@codeList]|srv:*[*/@codeList]">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
