@@ -257,14 +257,14 @@ page content
                                         </td>
                                      </tr>
                                      <tr>
-										<td><xsl:value-of select="/root/gui/strings/eastbc"/><input size="5" value="" name="east" class="md" type="text">
+										<td><xsl:value-of select="/root/gui/strings/westbc"/><input size="5" value="" name="west" class="md" type="text">
+                                                <xsl:attribute name="value"><xsl:value-of select="/root/response/west"/></xsl:attribute>
+                                            </input>
+                                        </td><td></td>
+                                        <td><xsl:value-of select="/root/gui/strings/eastbc"/><input size="5" value="" name="east" class="md" type="text">
 											<xsl:attribute name="value"><xsl:value-of select="/root/response/east"/></xsl:attribute>
 											</input></td>
-										<td></td>
-                                        <td><xsl:value-of select="/root/gui/strings/westbc"/><input size="5" value="" name="west" class="md" type="text">
-												<xsl:attribute name="value"><xsl:value-of select="/root/response/west"/></xsl:attribute>
-											</input>
-                                        </td>
+										
                                      </tr>
                                      <tr>
 										<td></td>
