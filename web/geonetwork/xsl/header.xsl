@@ -41,6 +41,33 @@
 			Env.locUrl    = "<xsl:value-of select="/root/gui/locUrl"/>";
 			Env.url       = "<xsl:value-of select="/root/gui/url"/>";
 			Env.lang      = "<xsl:value-of select="/root/gui/language"/>";
+			
+			<xsl:if test="//service/@name = 'main.home'">
+            document.onkeyup = alertkey;
+            
+            function alertkey(e) {
+             if (!e) {
+                 if (window.event) {
+                     e = window.event;
+                 } else {
+                     return;
+                 }
+             }
+             
+             if (e.keyCode == 13) {
+                  <xsl:if test="string(/root/gui/session/userId)=''">
+                  if ($('username').value != '') { // login action
+                    goSubmit('login')
+                    return;
+                  }
+                  </xsl:if>
+                  if (document.cookie.indexOf("search=advanced")!=-1)
+                    runAdvancedSearch();
+                  else
+                    runSimpleSearch();
+             }
+            };
+            </xsl:if>
 		</script>
 
 	</xsl:template>
