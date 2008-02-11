@@ -149,9 +149,9 @@
 							<form name="login" action="{/root/gui/locService}/user.login" method="post">
 								<input type="submit" style="display: none;" />
 								<xsl:value-of select="/root/gui/strings/username"/>
-								<input class="banner" type="text" name="username" size="10" onkeypress="return entSub('login')"/>
+								<input class="banner" type="text" id="username" name="username" size="10" onkeypress="return entSub('login')"/>
 								<xsl:value-of select="/root/gui/strings/password"/>
-								<input class="banner" type="password" name="password" size="10" onkeypress="return entSub('login')"/>
+								<input class="banner" type="password" id="password" name="password" size="10" onkeypress="return entSub('login')"/>
 								<button class="banner" onclick="goSubmit('login')"><xsl:value-of select="/root/gui/strings/login"/></button>
 							</form>
 						</td>
