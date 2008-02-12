@@ -47,7 +47,10 @@ public class KeywordBean {
 	 * @param thesaurus
 	 * @param selected
 	 */
-	public KeywordBean(int id, String value, String definition, String code, String coordEast, String coordWest, String coordSouth, String coordNorth, String thesaurus, boolean selected, String lang) {
+	public KeywordBean(int id, String value, String definition, String code, 
+				String coordEast, String coordWest, 
+				String coordSouth, String coordNorth, 
+				String thesaurus, boolean selected, String lang) {
 		super();
 		this.id = id;
 		this.value = value;

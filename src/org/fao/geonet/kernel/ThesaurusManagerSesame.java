@@ -72,7 +72,7 @@ public class ThesaurusManagerSesame {
 	 */
 	public ThesaurusManagerSesame(String appPath, String thesauriRepository)
 			throws Exception {
-		// Reccuperation de l'interface Sesame
+		// Get Sesame interface
 		service = Sesame.getService();
 
 		File thesauriDir = new File(thesauriRepository);
@@ -238,7 +238,7 @@ public class ThesaurusManagerSesame {
 	}
 
 	/**
-	 * TODO IMPACT SUR LA SUPPRESSION DU REPOSITORY SESAME ?
+	 * TODO What happen if SESAME repository destoyed ?
 	 * 
 	 * @param name
 	 */
@@ -467,7 +467,6 @@ public class ThesaurusManagerSesame {
 
 			System.out.println();
 		}
-		System.out.println("Fin");
 	}
 
 	/**
@@ -523,9 +522,6 @@ public class ThesaurusManagerSesame {
 	}
 
 	/**
-	 * TODO ETAPE 3 VOIR SI UTILE par rapport aux updateElement, addElement,
-	 * deleteElement ?
-	 * 
 	 * @param name
 	 * @return
 	 */
@@ -534,8 +530,6 @@ public class ThesaurusManagerSesame {
 	}
 
 	/**
-	 * TODO TEST ETAPE 3
-	 * 
 	 * @param args
 	 * @throws GraphException
 	 * @throws Exception
@@ -549,23 +543,20 @@ public class ThesaurusManagerSesame {
 
 		ValueFactory myFactory = myGraph.getValueFactory();
 
-		// definition des namesspaces
+		// Define namespace
 		String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
 		String namespaceGml = "http://www.opengis.net/gml#";
-		// String namespace = "http://geonetwork-opensource.org/regions#";
 		String namespace = "http://geosource.org/keyword#";
 
-		// creation du sujet
+		// Subject
 		URI mySubject = myFactory.createURI(namespace, Long
 				.toString((new Date()).getTime()));
 
-		// creation des predicats
 		URI skosClass = myFactory.createURI(namespaceSkos, "Concept");
 		URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);
 		URI predicatePrefLabel = myFactory.createURI(namespaceSkos, "prefLabel");
 		URI predicateScopeNote = myFactory.createURI(namespaceSkos, "scopeNote");
 		
-		// pour le sous graphe de l'enveloppe gml
 		URI predicateBoundedBy = myFactory.createURI(namespaceGml, "BoundedBy");
 		URI predicateEnvelope = myFactory.createURI(namespaceGml, "Envelope");	
 		URI predicateSrsName = myFactory.createURI(namespaceGml, "srsName");
@@ -619,22 +610,15 @@ public class ThesaurusManagerSesame {
 	public boolean updateElement(String thesaurusName, String prefLab,
 			String altLab, String note) throws MalformedQueryException,
 			QueryEvaluationException, AccessDeniedException {
-		// Recuperation du graph du thesaurus
 		LocalRepository lr = repositoryTable.get(thesaurusName);
 		Graph myGraph = lr.getGraph();
 
 		ValueFactory myFactory = myGraph.getValueFactory();
 		String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
 
-		// Recuperation du sujet (URI du mot clé)
-//		URI subject = myFactory
-//				.createURI("http://geonetwork-opensource.org/regions#249");
 		URI subject = myFactory
 		.createURI("http://geosource.org/keyword#1165509663312");
 		
-		// URI mySubject = myFactory.createURI(id);
-
-		// Preparation des nouveaux statements
 		URI predicatePrefLabel = myFactory
 				.createURI(namespaceSkos, "prefLabel");
 		Literal myObject1 = myFactory.createLiteral(prefLab, "fr");
@@ -643,8 +627,6 @@ public class ThesaurusManagerSesame {
 				.createURI(namespaceSkos, "scopeNote");
 		Literal myObject2 = myFactory.createLiteral(note,"fr");
 
-		// Suppression des anciens statements
-		// prefLabel
 		 StatementIterator iter = myGraph.getStatements(subject,
 		 predicateScopeNote, null);
 		while (iter.hasNext()) {
@@ -662,25 +644,6 @@ public class ThesaurusManagerSesame {
 				}
 			}
 		}
-		// iter = myGraph.getStatements(subject, predicatePrefLabel,
-		// myFactory.createLiteral("*","fr"));
-		// while (iter.hasNext()) {
-		// Statement st = (Statement) iter.next();
-		// Literal litt = (Literal) st.getObject();
-		// System.out.println(st.getSubject().toString() + " : "
-		// + st.getPredicate().getLocalName() + " : "
-		// + st.getObject().toString() + " : " + litt.getLanguage());
-		// if (litt.getLanguage().equals("fr")){
-		// myGraph.remove(st);
-		// break;
-		// }
-		// }
-
-		// ajout des nouveaux statements
-		// myGraph.add(subject, predicatePrefLabel, myObject1);
-		// myGraph.add(subject, predicateScopeNote, myObject2);
-
-		System.out.println("fin!");
 		return false;
 	}
 
@@ -699,7 +662,6 @@ public class ThesaurusManagerSesame {
 
 		ValueFactory myFactory = myGraph.getValueFactory();
 		String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
-		// String namespace = "http://geonetwork-opensource.org/regions#";
 		String namespace = "http://geosource.org/keyword#";
 
 		URI mySubject = myFactory.createURI(namespace, Long
@@ -707,10 +669,9 @@ public class ThesaurusManagerSesame {
 
 		URI skosClass = myFactory.createURI(namespaceSkos, "Concept");
 		URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);
-		mySubject.addProperty(rdfType, skosClass); // equivalent à :
-													// myGraph.add(mySubject,
-													// rdfType, skosClass);
-
+		mySubject.addProperty(rdfType, skosClass); 
+		
+		
 		URI myPredicate1 = myFactory.createURI(namespaceSkos, "prefLabel");
 		Literal myObject1 = myFactory.createLiteral(prefLab, "fr");
 		myGraph.add(mySubject, myPredicate1, myObject1);

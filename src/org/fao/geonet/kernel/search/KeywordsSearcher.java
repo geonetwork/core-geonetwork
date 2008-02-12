@@ -185,13 +185,13 @@ public class KeywordsSearcher {
 				+ " AND prefLab LIKE ";
 
 			switch (pTypeSearch) {
-			case 0: // commence par
+			case 0: // Start with
 				_query += "\""+ sKeyword+ "*\" ";
 				break;
-			case 1: // contient
+			case 1: // contains
 				_query += "\"*"+ sKeyword+ "*\" ";
 				break;
-			case 2: // terme exact
+			case 2: // exact match
 				_query += "\""+ sKeyword+ "\" ";
 				break;
 			default:
@@ -237,26 +237,30 @@ public class KeywordsSearcher {
 				if (uri != null) {
 					sUri = uri.toString();
 				}
-				// lowcorner
-				Value lowCorner = resultsTable.getValue(row, 4);
+				
+				
+				Value lowCorner = resultsTable.getValue(row, 3);
+				Value upperCorner = resultsTable.getValue(row, 4);
+				
+				String sUpperCorner = "";
 				String sLowCorner = "";
+				
 				String sEast = "";
 				String sSouth = "";
-				if (lowCorner != null) {
-					sLowCorner = lowCorner.toString();
-					sEast = sLowCorner.substring(0, sLowCorner.indexOf(' '))
-							.trim();
-					sSouth = sLowCorner.substring(sLowCorner.indexOf(' ')).trim();
-				}
-				// uppercorner
-				Value upperCorner = resultsTable.getValue(row, 3);
-				String sUpperCorner = "";
 				String sWest = "";
 				String sNorth = "";
+				
+				// lowcorner
+				if (lowCorner != null) {
+					sLowCorner = lowCorner.toString();
+					sWest = sLowCorner.substring(0, sLowCorner.indexOf(' ')).trim();
+					sSouth = sLowCorner.substring(sLowCorner.indexOf(' ')).trim();
+				}
+				
+				// uppercorner
 				if (upperCorner != null) {
 					sUpperCorner = upperCorner.toString();
-					sWest = sUpperCorner.substring(0,
-							sUpperCorner.indexOf(' ')).trim();
+					sEast = sUpperCorner.substring(0,sUpperCorner.indexOf(' ')).trim();
 					sNorth = sUpperCorner.substring(sUpperCorner.indexOf(' '))
 							.trim();
 				}
@@ -352,9 +356,8 @@ public class KeywordsSearcher {
 	public void sortResults(String tri) {
 		_sortBy = tri;
 		if ("label".equals(tri)) {
-			// on tri la collection par code libelle
+			// sort by label
 			Collections.sort((List) _results, new Comparator() {
-				// Méthode de comparaison
 				public int compare(final Object o1, final Object o2) {
 					final KeywordBean kw1 = (KeywordBean) o1;
 					final KeywordBean kw2 = (KeywordBean) o2;
@@ -363,9 +366,8 @@ public class KeywordsSearcher {
 			});
 		}
 		if ("definition".equals(tri)) {
-			// on tri la collection par code libelle
+			// sort by def
 			Collections.sort((List) _results, new Comparator() {
-				// Méthode de comparaison
 				public int compare(final Object o1, final Object o2) {
 					final KeywordBean kw1 = (KeywordBean) o1;
 					final KeywordBean kw2 = (KeywordBean) o2;
@@ -493,7 +495,7 @@ public class KeywordsSearcher {
 		ArrayList listSelectedKeywords = new ArrayList();
 		ArrayList listElDescKeys = new ArrayList();
 
-		// Reccuperer tous les mots clé selectionné
+		// Get all selected keywords
 		for (int i=0; i<this.getNbResults(); i++){
 			KeywordBean kb = (KeywordBean) _results.get(i);
 			if (kb.isSelected()) {
@@ -501,9 +503,9 @@ public class KeywordsSearcher {
 			}
 		}
 
-		// Classer les mots clés sélectionnés en fonction du thesaurus
+		// Sort keywords
 		Collections.sort((List) listSelectedKeywords, new Comparator() {
-			// Méthode de comparaison
+			// Compare
 			public int compare(final Object o1, final Object o2) {
 				final KeywordBean kw1 = (KeywordBean) o1;
 				final KeywordBean kw2 = (KeywordBean) o2;
@@ -511,7 +513,6 @@ public class KeywordsSearcher {
 			}
 		});
 
-		// Pour chaque mot clé selectionné
 		String thesaurusName ="";
 		Element elDescKeys = null;
 		Element elKeyTyp = null;
@@ -559,7 +560,7 @@ public class KeywordsSearcher {
 			elKeyword.addContent(kb.getValue());
 			elDescKeys.addContent(elKeyword);
 		}
-		// ajouter le dernier elDescKey construit
+		// add last item
 		if (elDescKeys!=null){
 			elKeyTyp.addContent(elKeyTypCd);
 			elDescKeys.addContent(elKeyTyp);

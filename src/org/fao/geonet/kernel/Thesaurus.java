@@ -53,7 +53,6 @@ public class Thesaurus {
 
 	private LocalRepository repository;
 
-	// Informations lues dans le fichier
 	@SuppressWarnings("unused")
 	private String name;
 
@@ -161,7 +160,6 @@ public class Thesaurus {
 			}
 			System.out.println();
 		}
-		System.out.println("End");
 	}
 
 	public URI addElement(String code, String prefLab, String note, String lang)
@@ -174,16 +172,11 @@ public class Thesaurus {
 		//String namespace = "http://geosource.org/keyword#";
 		String namespace = "#";
 
-//		URI mySubject = myFactory.createURI(namespace, Long
-//				.toString((new Date()).getTime()));
-		
 		URI mySubject = myFactory.createURI(namespace, code);
 
 		URI skosClass = myFactory.createURI(namespaceSkos, "Concept");
 		URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);
-		mySubject.addProperty(rdfType, skosClass); // equivalent à :
-		// myGraph.add(mySubject,
-		// rdfType, skosClass);
+		mySubject.addProperty(rdfType, skosClass); 
 
 		URI myPredicate1 = myFactory.createURI(namespaceSkos, "prefLabel");
 		Literal myObject1 = myFactory.createLiteral(prefLab, lang);
@@ -207,19 +200,14 @@ public class Thesaurus {
 
 		ValueFactory myFactory = myGraph.getValueFactory();
 
-		// definition des namesspaces
+		// Define namespace
 		String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
 		String namespaceGml = "http://www.opengis.net/gml#";
-		//String namespace = "http://geosource.org/keyword#";
 		String namespace = "#";
 
-		// creation du sujet
-//		URI mySubject = myFactory.createURI(namespace, Long
-//				.toString((new Date()).getTime()));
+		// Create subject
 		URI mySubject = myFactory.createURI(namespace, code);
 
-		
-		// creation des predicats
 		URI skosClass = myFactory.createURI(namespaceSkos, "Concept");
 		URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);
 		URI predicatePrefLabel = myFactory
@@ -227,7 +215,6 @@ public class Thesaurus {
 		URI predicateScopeNote = myFactory
 				.createURI(namespaceSkos, "scopeNote");
 
-		// pour le sous graphe de l'enveloppe gml
 		URI predicateBoundedBy = myFactory.createURI(namespaceGml, "BoundedBy");
 		URI predicateEnvelope = myFactory.createURI(namespaceGml, "Envelope");
 		URI predicateSrsName = myFactory.createURI(namespaceGml, "srsName");
@@ -239,19 +226,17 @@ public class Thesaurus {
 		URI predicateUpperCorner = myFactory.createURI(namespaceGml,
 				"upperCorner");
 
-		// creation des objets
 		Literal myObject1 = myFactory.createLiteral(prefLab, lang);
 		Literal myObject2 = myFactory.createLiteral(note, lang);
 
-		Literal lowerCorner = myFactory.createLiteral(south + " " + east);
-		Literal upperCorner = myFactory.createLiteral(north + " " + west);
+		Literal lowerCorner = myFactory.createLiteral(west + " " + south);
+		Literal upperCorner = myFactory.createLiteral(east + " " + north);
 
-		// preparation du graph
 		mySubject.addProperty(rdfType, skosClass);
 		myGraph.add(mySubject, predicatePrefLabel, myObject1);
 		myGraph.add(mySubject, predicateScopeNote, myObject2);
 		myGraph.add(mySubject, predicateBoundedBy, gmlNode);
-		// graph gml
+
 		gmlNode.addProperty(rdfType, predicateEnvelope);
 		myGraph.add(gmlNode, predicateLowerCorner, lowerCorner);
 		myGraph.add(gmlNode, predicateUpperCorner, upperCorner);
@@ -264,7 +249,6 @@ public class Thesaurus {
 	public void removeElement(KeywordBean keyword)
 			throws MalformedQueryException, QueryEvaluationException,
 			IOException, AccessDeniedException {		
-		// Recuperation du graph du thesaurus
 		Graph myGraph = repository.getGraph();
 		ValueFactory myFactory = myGraph.getValueFactory();
 		
@@ -310,7 +294,7 @@ public class Thesaurus {
 				Literal litt = (Literal) st.getObject();
 				if (litt.getLanguage() != null
 						&& litt.getLanguage().equals(lang)) {
-					// suppression
+					// remove
 					myGraph.remove(st);
 					break;
 				}
@@ -331,11 +315,9 @@ public class Thesaurus {
 			}
 		}
 
-		// Preparation des nouveaux statements
 		Literal litPrefLab = myFactory.createLiteral(prefLab, lang);
 		Literal litNote = myFactory.createLiteral(note, lang);
 
-		// ajout des nouveaux statements
 		myGraph.add(subject, predicatePrefLabel, litPrefLab);
 		myGraph.add(subject, predicateScopeNote, litNote);
 
@@ -352,10 +334,8 @@ public class Thesaurus {
 
 		// update bbox
 
-		// Recuperation du graph du thesaurus
 		Graph myGraph = repository.getGraph();
 
-		// Definition du namespace gml et des predicats qui nous interesse
 		ValueFactory myFactory = myGraph.getValueFactory();
 		String namespaceGml = "http://www.opengis.net/gml#";
 		URI predicateBoundedBy = myFactory.createURI(namespaceGml, "BoundedBy");
@@ -364,7 +344,6 @@ public class Thesaurus {
 		URI predicateUpperCorner = myFactory.createURI(namespaceGml,
 				"upperCorner");
 
-		// Recuperation du noeud de l'enveloppe
 		BNode subjectGml = null;
 		StatementIterator iter = myGraph.getStatements(subject,
 				predicateBoundedBy, null);
@@ -375,7 +354,6 @@ public class Thesaurus {
 			}
 		}
 		if (subjectGml != null) {
-			// suppression des anciens statements
 			// lowerCorner
 			iter = myGraph.getStatements(subjectGml, predicateLowerCorner, null);
 			while (iter.hasNext()) {
@@ -391,8 +369,8 @@ public class Thesaurus {
 				break;
 			}
 			// Preparation des nouveaux statements
-			Literal lowerCorner = myFactory.createLiteral(west + " " + north);
-			Literal upperCorner = myFactory.createLiteral(east + " " + south);
+			Literal lowerCorner = myFactory.createLiteral(west + " " + south);
+			Literal upperCorner = myFactory.createLiteral(east + " " + north);
 
 			// ajout des nouveaux statements
 			myGraph.add(subjectGml, predicateLowerCorner, lowerCorner);
