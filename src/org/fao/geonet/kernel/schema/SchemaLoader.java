@@ -975,8 +975,18 @@ public class SchemaLoader
 		}
 		// otherwise base type was an extension so add the attributes we got
 		// from the extension to these
-		else 
+		else { 
 			result.addAll((ArrayList)cte.complexContent.alAttribs);
+			if (cte.complexContent.alAttribGroups != null) {
+				for (int k=0;k<cte.complexContent.alAttribGroups.size();k++) {
+					String attribGroup = (String)cte.complexContent.alAttribGroups.get(k);					ArrayList al = (ArrayList) hmAttrGrp.get(attribGroup);
+					if (al == null) 
+						throw new IllegalArgumentException("Attribute group not found : " + attribGroup);
+					for(int j=0; j<al.size(); j++)
+						result.add(al.get(j));
+				}
+			}
+		}
 
 		// No one seems clear on what to do with attributeGroups so treat them
 		// as an extension
