@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <downloadable>Téléchargeable</downloadable>
+    <dynamic>Interactive</dynamic>
 	<opensearch>Service de recherche OpenSearch de GeoNetwork permettant la recherche de métadonnées dans le catalogue.</opensearch>
 	<savexml>
 		<dc>Télécharger les métadonnées au format Dublin Core</dc>
@@ -373,23 +375,23 @@
 	<progressChoice value="complete">terminé</progressChoice>
 	<progressChoice value="in-work">en cours</progressChoice>
 	<progressChoice value="planned">prévu</progressChoice>
-	<protocolChoice value="WWW:LINK-1.0-http--link">Adresse Internet (URL)</protocolChoice>
-	<protocolChoice value="WWW:LINK-1.0-http--samples">Produit vitrine (URL)</protocolChoice>
-	<protocolChoice value="WWW:LINK-1.0-http--related">Adresse Internet associée (URL)</protocolChoice>
-	<protocolChoice value="WWW:LINK-1.0-http--partners">Site web partenaire (URL)</protocolChoice>
-	<protocolChoice value="WWW:LINK-1.0-http--rss">Fil RSS (URL)</protocolChoice>
-	<protocolChoice value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
-	<protocolChoice value="WWW:DOWNLOAD-1.0-http--download">Fichier à télécharger</protocolChoice>
-	<protocolChoice value="WWW:DOWNLOAD-1.0-ftp--download">Fichier à télécharger (FTP)</protocolChoice>
-	<protocolChoice value="OGC:WMS-1.1.1-http-get-map">OGC-WMS Web Map Service (ver 1.1.1)</protocolChoice>
-	<protocolChoice value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
-	<protocolChoice value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
-	<protocolChoice value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
-	<protocolChoice value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
-	<protocolChoice value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</protocolChoice>
-	<protocolChoice value="ESRI:AIMS--http--configuration">ArcIMS Map Service : Fichier de configuration (*.AXL)</protocolChoice>
-	<protocolChoice value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
-	<protocolChoice value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Adresse Internet (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Produit vitrine (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--related">Adresse Internet associée (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Site web partenaire (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--rss">Fil RSS (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
+	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Fichier à télécharger</protocolChoice>
+	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Fichier à télécharger (FTP)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC-WMS Web Map Service (ver 1.1.1)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
+	<protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
+	<protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
+	<protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
+	<protocolChoice show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</protocolChoice>
+	<protocolChoice show="-" value="ESRI:AIMS--http--configuration">ArcIMS Map Service : Fichier de configuration (*.AXL)</protocolChoice>
+	<protocolChoice show="y" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
+	<protocolChoice show="-" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
 	<pubdate>Date de publication</pubdate>
 	<publicationDate>Date de diffusion</publicationDate>
 	<publisher>Diffuseur</publisher>
@@ -402,7 +404,7 @@
 	<remote>Recherche distante</remote>
 	<remove>Supprimer</remove>
 	<reset>Réinitialiser</reset>
-	<output>Output</output>
+	<output>Type de présentation</output>
 	<outputType id="full">Complet</outputType>
 	<outputType id="text">Texte seulement</outputType>
 	<sortBy>Trier par</sortBy>
