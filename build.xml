@@ -15,7 +15,7 @@
 
 	<!-- =============================================================== -->
 
-	<target name="all" depends="compile, javadoc"/>	
+	<target name="all" depends="compile"/>	
 
 	<!-- =============================================================== -->
 
@@ -88,32 +88,6 @@
 					includes="org/wfp/**,jeeves.**" />
 
 		<delete dir=".build"/>
-	</target>
-
-	<!-- =============================================================== -->
-	
-	<target name="javadoc" depends="javadoc-gn, javadoc-im" />
-
-	<!-- =============================================================== -->
-	
-	<target name="javadoc-gn">
-		<delete   dir="docs/javadoc-gn" />
-		<mkdir    dir="docs/javadoc-gn" />
-		<javadoc	sourcepath  ="src" 
-				destdir     ="docs/javadoc-gn" 
-				packagenames="org.fao.*"
-				windowtitle ="Geonetwork class documentation"/>
-	</target>
-	
-	<!-- =============================================================== -->
-	
-	<target name="javadoc-im">
-		<delete   dir="docs/javadoc-im" />
-		<mkdir    dir="docs/javadoc-im" />
-		<javadoc        sourcepath  ="src"
-				destdir     ="docs/javadoc-im"
-				packagenames="org.wfp.*"
-				windowtitle ="InterMap class documentation"/>
 	</target>
 
 	<!-- =============================================================== -->
