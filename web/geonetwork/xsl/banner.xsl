@@ -72,14 +72,17 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					|
-					<xsl:choose>
+<!--					<xsl:choose>
 						<xsl:when test="/root/gui/reqService='help'">
 							<font class="banner-active"><xsl:value-of select="/root/gui/strings/help"/></font>
 						</xsl:when>
 						<xsl:otherwise>
 							<a class="banner" href="{/root/gui/locService}/help"><xsl:value-of select="/root/gui/strings/help"/></a>
 						</xsl:otherwise>
-					</xsl:choose>
+					</xsl:choose> -->
+
+					<a class="banner" href="{/root/gui/url}/docs/index.html" target="_blank"><xsl:value-of select="/root/gui/strings/help"/></a>
+					
 				</td>
 				<td align="right" class="banner-menu">
 					<xsl:choose>
