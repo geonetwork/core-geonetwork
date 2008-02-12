@@ -63,7 +63,7 @@
 						<dc:rights><xsl:value-of select="."/></dc:rights>
 					</xsl:for-each>
 
-					<xsl:for-each select="otherConstraints/gco:CharacterString">
+					<xsl:for-each select="gmd:otherConstraints/gco:CharacterString">
 						<dc:rights><xsl:value-of select="."/></dc:rights>
 					</xsl:for-each>
 				</xsl:for-each>

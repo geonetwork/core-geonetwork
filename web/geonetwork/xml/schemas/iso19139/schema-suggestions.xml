@@ -95,7 +95,7 @@
 		<suggest name="uuidref"/>
 	</field>
 
-	<field name="gml:polygon">
+	<field name="gml:Polygon">
 		<suggest name="srsName"/>
 	</field>
 

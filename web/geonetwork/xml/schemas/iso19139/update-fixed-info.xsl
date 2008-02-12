@@ -43,15 +43,7 @@
 
 	<!-- ================================================================= -->
 	
-	<xsl:template match="gmd:MD_Metadata/gmd:characterSet">
-		<xsl:copy>
-			<gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode" codeListValue="utf8" />
-		</xsl:copy>
-	</xsl:template>
-
-	<!-- ================================================================= -->
-	
-	<xsl:template match="gmd:metadataStandardName">
+	<xsl:template match="gmd:metadataStandardName" priority="10">
 		<xsl:copy>
 			<gco:CharacterString>ISO 19115:2003/19139</gco:CharacterString>
 		</xsl:copy>
@@ -59,7 +51,7 @@
 
 	<!-- ================================================================= -->
 	
-	<xsl:template match="gmd:metadataStandardVersion">
+	<xsl:template match="gmd:metadataStandardVersion" priority="10">
 		<xsl:copy>
 			<gco:CharacterString>1.0</gco:CharacterString>
 		</xsl:copy>
@@ -67,39 +59,33 @@
 
 	<!-- ================================================================= -->
 	
-	<xsl:template match="*[@gml:id]">
-		<xsl:copy>
-			<xsl:choose>
-				<xsl:when test="normalize-space(@gml:id)=''">
-					<xsl:attribute name="gml:id">
-						<xsl:value-of select="generate-id(.)"/>
-					</xsl:attribute>
-					<xsl:apply-templates select="@*[name()!='gml:id']|node()"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="@*|node()"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:copy>
+	<xsl:template match="@gml:id">
+		<xsl:choose>
+			<xsl:when test="normalize-space(.)=''">
+				<xsl:attribute name="gml:id">
+					<xsl:value-of select="generate-id(.)"/>
+				</xsl:attribute>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:copy-of select="."/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- ================================================================= -->
 	<!-- Fix srsName attribute and generate epsg:4326 entry by default -->
 
-	<xsl:template match="*[@gml:srsName]">
-		<xsl:copy>
-			<xsl:choose>
-				<xsl:when test="normalize-space(@gml:srsName)=''">
-					<xsl:attribute name="gml:srsName">
-						<xsl:text>urn:x-ogc:def:crs:EPSG:6.6:4326</xsl:text>
-					</xsl:attribute>
-					<xsl:apply-templates select="@*[name()!='gml:srsName']|node()"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="@*|node()"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:copy>
+	<xsl:template match="@srsName">
+		<xsl:choose>
+			<xsl:when test="normalize-space(.)=''">
+				<xsl:attribute name="srsName">
+					<xsl:text>urn:x-ogc:def:crs:EPSG:6.6:4326</xsl:text>
+				</xsl:attribute>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:copy-of select="."/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	
 	<!-- ================================================================= -->
