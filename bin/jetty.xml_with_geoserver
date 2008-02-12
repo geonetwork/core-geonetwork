@@ -31,6 +31,13 @@
 		<Arg>../web/geonetwork</Arg>
 	</Call>
 	
+	<!-- ============================================================ -->
+	
+	<Call name="addWebApplication">
+		<Arg>/geonetwork/docs</Arg>
+		<Arg>../docs</Arg>
+	</Call>
+	
 	<!-- =============================================================== -->
 	
 	<Call name="addWebApplication">
