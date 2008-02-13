@@ -15,7 +15,7 @@
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork.css"/>
 		
 		<!-- Recent updates newsfeed -->
-		<link href="{/root/gui/locService}/rss.latest" rel="alternate" type="application/rss+xml" title="GeoNetwork opensource | {/root/gui/strings/recentAdditions}" />
+		<link href="{/root/gui/locService}/rss.latest?georss=gml" rel="alternate" type="application/rss+xml" title="GeoNetwork opensource GeoRSS | {/root/gui/strings/recentAdditions}" />
 		<link href="{/root/gui/locService}/portal.opensearch" rel="search" type="application/opensearchdescription+xml">
 
 		<xsl:attribute name="title">GeoNetwork|<xsl:value-of select="//site/organization"/>|<xsl:value-of select="//site/name"/></xsl:attribute>
