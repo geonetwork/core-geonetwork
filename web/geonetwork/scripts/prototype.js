@@ -102,7 +102,8 @@ Object.extend(Object, {
 Function.prototype.bind = function() {
   var __method = this, args = $A(arguments), object = args.shift();
   return function() {
-    return __method.apply(object, args.concat($A(arguments)));
+    if(typeof $A === 'function')
+      return __method.apply(object, args.concat($A(arguments)));
   }
 }
 
