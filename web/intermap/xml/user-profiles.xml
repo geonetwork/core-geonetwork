@@ -67,9 +67,16 @@
 		<allow service="map.layers.getInfo"/>
 		<allow service="map.layers.getStyles"/>
 		<allow service="map.layers.setStyle"/>
-		
+
 		<allow service="map.update"/>
 		<allow service="geonet.getGeonetRecords"/>
+		
+		<allow service="marker.add"/>
+		<allow service="marker.get"/>
+		<allow service="marker.delete"/>
+		<allow service="marker.update"/>
+		<allow service="marker.present"/>
+		
 	</profile>
 
 	<!-- ====================================================================== -->

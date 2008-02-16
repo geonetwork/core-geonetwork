@@ -563,6 +563,46 @@
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
+		<!-- ====================================
+			MARKERS
+		===================================== -->
+
+		<service name="marker.add">
+			<class name=".services.marker.Add"/>
+			
+			<output sheet="copy_response.xsl" contentType="text/xml; charset=UTF-8"/>							
+			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+
+		<service name="marker.delete">
+			<class name=".services.marker.Delete"/>
+			
+			<output sheet="copy_response.xsl" contentType="text/xml; charset=UTF-8"/>							
+			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+		
+		<service name="marker.get">
+			<class name=".services.marker.Get"/>
+			
+			<output sheet="copy_response.xsl" contentType="text/xml; charset=UTF-8"/>							
+			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+
+		<service name="marker.present">
+			<class name=".services.marker.Get"/>
+			
+			<output sheet="im_get-markers.xsl"/>							
+			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+		
+		<service name="marker.update">
+			<class name=".services.marker.Update"/>
+			
+			<output sheet="copy_response.xsl" contentType="text/xml; charset=UTF-8"/>							
+			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+		
+		
 	</services>
 	
 	<!-- ====================================================================== -->
