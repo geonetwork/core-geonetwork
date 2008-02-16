@@ -75,6 +75,7 @@
 	<refresh>Refresh</refresh>
 	<refreshNotification>Please click the "Refresh" button under the layer list to see this change.</refreshNotification>
 	<removeLayer>Remove layer</removeLayer>
+	<removeMarker>Remove marker</removeMarker>
 	<reset>Reset</reset>
 	<sendByEmail js="true">Send this map via e-mail</sendByEmail>
 	<setScale>--Set Scale--</setScale>
@@ -88,6 +89,8 @@
 	<titleShowStyles js="true">Available styles</titleShowStyles>
 	<transparency>Set transparency</transparency>
 	<up>Move layer up</up>
+	<update>Update</update>
+	<updateMarker>Update marker info</updateMarker>
 	<wait js="true">Please wait...</wait>
 	<wmctitle js="true">WMC Context menu</wmctitle>	
 	<wmctitlemail js="true">Send a WMC Context via e-mail</wmctitlemail>	

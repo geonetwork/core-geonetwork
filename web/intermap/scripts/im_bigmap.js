@@ -124,213 +124,6 @@ function identify(e)
 				"width=600,height=400,scrollbars=yes,toolbar=no,status=yes,menubar=no,location=yes,resizable=yes");
 }
 
-function im_setMark(e)
-{
-	Event.stop(e); // prevents from dragging the map image (on Firefox)
-	
-	// get map image offset
-	var offset = Position.cumulativeOffset($(im_bm.imageId));
-	var offsetX = offset[0];
-	var offsetY = offset[1];
-	
-	// store starting cursor position
-	pointerX = Event.pointerX(e);
-	pointerY = Event.pointerY(e);
-	
-	var x = pointerX - offsetX;
-	var y = pointerY - offsetY;
-	
-	var lat  = im_bm.y2lat(y);
-	var lon = im_bm.x2lon(x);
-	
-	if(lat<-90||lat>90||lon <-180||lon >180)
-	{
-		return;		
-	}
-
-	im_tmpMarker = new IMMarker(lat, lon, "unknown");
-	
-	var img = document.createElement("img");
-	img.id='im_marker_img_tmp';
-	img.className = 'im_marker';
-	img.src = '/intermap/images/marker.png'; // FIXME context
-	// FIXME the image should be centered on the mouse click
-	img.style.left = pointerX;
-	img.style.top = pointerY;           
-	document.body.appendChild(img);    
-	
-	
-            var div = document.createElement("div");
-            div.id="im_marker_box_tmp";
-            div.className = "im_markerbox";
-/*            div.style.position = "absolute";
-            div.style.z-index = "10";*/
-            document.body.appendChild(div);    
-
-/*    var offset = Position.cumulativeOffset($(btn));
-    var x = offset[0];
-    var y = offset[1];
-*/
-
-	var wbox = 200; // the width of the marker info box
-	var hbox =  50; // the height of the marker info box
-	
-	var horEdge = 10; // the horizontal distance the info box must have with the image borders 
-	
-	var dybox = 20; // the y offset of the info box with respect to the marker
-	var dxbox = wbox/2; // the negative x offset of the info box with respect to the marker
-		 
-
-	// if the box runs out of lower border, draw it above the mark
-	if(y+dybox+hbox > im_bm.height)
-	{
-		dybox = -dybox-hbox;		
-	}	
-
-	// if the box runs out of the right border, shift it to left 
-	if(x - dxbox + wbox > im_bm.width - horEdge)
-	{
-		dxbox = x + wbox + horEdge - im_bm.width;  
-	}
-	 // if the box runs out of the right border, shift it to left
-	else if(x - dxbox < horEdge)
-	{
-		dxbox = x - horEdge;  
-	}
-
-    div.style.left = (pointerX-dxbox)+"px";
-    div.style.top = (pointerY+dybox)+"px";
-    div.style.width = wbox+"px";
-    div.style.height = hbox+"px";
-	
-	var rlat = Math.round(lat*10000)/10000;
-	var rlon = Math.round(lon*10000)/10000;
-	
-	div.innerHTML="Lat:"+rlat +" Lon:"+rlon; 
-	
-	
-	// add text field
-	var text = document.createElement("input");
-	text.id="im_marker_input_tmp";
-	text.type = "text";
-	div.appendChild(text);
-	text.focus();
-	
-	// add closer button
-	var closer = document.createElement('div');
-	closer.className = "upperright";
-	//closer.id = "im_wbcloser";
-	var img = document.createElement('img');
-	img.title = i18n("close");
-	img.src = "/intermap/images/close.png";
-    closer.appendChild(img);    
-    Event.observe(img, 'click', im_closeMarkerBox);
-	div.appendChild(closer);
-	
-	// add save button
-	var saver = document.createElement('div');
-	saver.className = "lowerright";
-	//closer.id = "im_wbcloser";
-	var simg = document.createElement('img');
-	simg.title = i18n("save");
-	simg.src = "/intermap/images/filesave.png";
-    saver.appendChild(simg);    
-    Event.observe(simg, 'click', im_saveMarker);
-	div.appendChild(saver);
-        
-}
-
-function im_closeMarkerBox(e)
-{
-	removeMarkerBox();
-}
-
-function im_saveMarker(e)
-{
-    var tmpmarker = $('im_marker_img_tmp');
-	
-	// fill in more values for marker
-	im_tmpMarker.title = $('im_marker_input_tmp').value;
-	var seq = im_markers.length;
-	im_tmpMarker.seq = seq;
-	im_markers[seq] = im_tmpMarker; 
-	
-	im_drawMarkerImage(im_tmpMarker);
-
-	removeMarkerBox();
-}
-
-function removeMarkerBox()
-{
-    if($('im_marker_img_tmp'))
-        $('im_marker_img_tmp').remove();
-    if($('im_marker_box_tmp'))
-        $('im_marker_box_tmp').remove();
-}
-
-var im_markers = new Array();
-var im_tmpMarker;
-
-function IMMarker(lat, lon, title)
-{
-	this.lat = parseFloat(lat);
-	this.lon = parseFloat(lon);
-	this.title = title;	
-}
-
-IMMarker.prototype.lat;
-IMMarker.prototype.lon;
-IMMarker.prototype.title;
-IMMarker.prototype.seq;
-
-function im_deleteAllMarkersImages()
-{
-	im_markers.each(
-		function(marker)
-		{
-			var seq = marker.seq;
-			var img = $("im_marker_"+seq);
-			if(img)
-			{
-				img.remove();
-			}			
-		}	
-	);
-}
-
-function im_drawAllMarkersImages()
-{
-	im_markers.each(im_drawMarkerImage);
-}
-
-function im_drawMarkerImage(marker)
-{
-	// get map image offset
-	var offset = Position.cumulativeOffset($(im_bm.imageId));
-	var offsetX = offset[0];
-	var offsetY = offset[1];
-	
-	var y = im_bm.lat2y(marker.lat);
-	var x = im_bm.lon2x(marker.lon);
-	
-	if(y<0 || x<0 || y>$(im_bm.imageId).height || x>$(im_bm.imageId).width)
-	{
-		return;
-	}
-	
-	var img = document.createElement("img");
-	img.id='im_marker_' + marker.seq;
-	img.className = 'im_marker';
-	img.src = '/intermap/images/marker2.gif'; // FIXME 
-	img.title = marker.title;
-	
-	// FIXME the image should be centered on the coords	
-	img.style.left = x + offsetX;
-	img.style.top  = y + offsetY;
-	
-	document.body.appendChild(img);
-}
-
 //==================================================
 // RESIZE
 //==================================================
@@ -521,7 +314,7 @@ function deleteChildNodes(target)
 
 im_bm.afterImageRebuilt = function(req)
 {
-	// update the scale text
+	//--- update the scale text
 	var scale = req.responseXML.getElementsByTagName('scale')[0].firstChild.nodeValue;
 	deleteChildNodes($('im_scale'));
 	$('im_scale').appendChild( document.createTextNode('1:' + scale));
@@ -529,7 +322,13 @@ im_bm.afterImageRebuilt = function(req)
 	$('im_currentscale').innerHTML= '1:' + scale;
 	$('im_setscale').selectedIndex = 0;
 	
-	im_deleteAllMarkersImages();
-	im_drawAllMarkersImages();
+	//--- update markers
+//	im_deleteAllMarkersImages(); // obsolete
+//	im_drawAllMarkersImages();
+
+	im_deleteClientMarkers();
+
+	var markerlist = req.responseXML.getElementsByTagName('markers')[0];
+	im_createMarkersDom(markerlist);	
 };
 
