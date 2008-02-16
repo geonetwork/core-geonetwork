@@ -34,6 +34,7 @@
 		<script type="text/javascript" src="/intermap/scripts/im_class.js?"/>
 		<script type="text/javascript" src="/intermap/scripts/im_minimap.js?"/>
 		<script type="text/javascript" src="/intermap/scripts/im_bigmap.js?" />
+		<script type="text/javascript" src="/intermap/scripts/im_markers.js?" />
 		<script type="text/javascript" src="/intermap/scripts/im_integration.js?"/>
 		
 		<script type="text/javascript" src="/intermap/scripts/im_layers.js?" />
