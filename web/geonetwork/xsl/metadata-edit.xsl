@@ -249,18 +249,18 @@
 				</xsl:if>
 				<xsl:value-of select="/root/gui/strings/template"/>
 			</option>
-			<option value="s">
+			<!-- <option value="s">
 				<xsl:if test="string(geonet:info/isTemplate)='s'">
 					<xsl:attribute name="selected">true</xsl:attribute>
 				</xsl:if>
 				<xsl:value-of select="/root/gui/strings/subtemplate"/>
-			</option>
+			</option> -->
 		</select>
-		<xsl:text>&#160;</xsl:text>
+		<!--<xsl:text>&#160;</xsl:text>
 		<xsl:value-of select="/root/gui/strings/subtemplateTitle"/>
 		<xsl:text>&#160;</xsl:text>
 		<input class="content" type="text" name="title" value="{geonet:info/title}"/>
-		<!--
+		
 		<input class="content" type="checkbox" name="template">
 			<xsl:if test="geonet:info/isTemplate='y'">
 				<xsl:attribute name="checked"/>

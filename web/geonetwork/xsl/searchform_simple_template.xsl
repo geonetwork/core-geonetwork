@@ -5,7 +5,6 @@
 
 
 	<xsl:template name="geofields">
-		<form name="defsearch" id="defsearch" onsubmit="javascript:runSimpleSearch();">
 		<table class="geosearchfields" width="211px">
 			<tr>
 				<td rowspan="6" style="vertical-align: bottom;">
@@ -230,7 +229,7 @@
 				</td>
 			</tr>
 		</table>
-		</form>
+		
 	</xsl:template>
 
 </xsl:stylesheet>

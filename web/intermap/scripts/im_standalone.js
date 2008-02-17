@@ -14,6 +14,34 @@
 //
 //===================================================================
 
+
+//===================================================================
+// DEBUG
+//
+// Next lines will popup an alert window 
+// whenever a prototype error happens.
+// Set debug to true to enable full alert messages
+//
+//===================================================================
+
+Ajax.Responders.register({
+  onException: function(req, e){
+
+  	var debug = false;
+
+	var qqq = document.createElement('div');
+	qqq.innerHTML = "Exception '" + e.message + "'";
+	document.body.appendChild(qqq);
+	
+	if (debug) {
+		alert("Exception: " + e.message + 
+			  "\nFile "+e.fileName+ 
+			  "\nLine " +e.lineNumber+
+			  "\nStack " +e.stack);
+	}
+  }
+});
+
 //===================================================================
 //
 // InterMap Entry Points
@@ -91,27 +119,6 @@ function imep_loadWmcFromUrl(url, doClearContext)
 	);	
 	
 }
-
-
-//===================================================================
-// DEBUG
-//
-// Next lines will popup an alert window 
-// whenever a prototype error happens.
-//===================================================================
-
-Ajax.Responders.register({
-  onException: function(req, e){
-	var qqq = document.createElement('div');
-	qqq.innerHTML = "Exception '" + e.message + "'";
-	document.body.appendChild(qqq);
-	
-	alert("Exception: " + e.message + 
-		  "\nFile "+e.fileName+ 
-		  "\nLine " +e.lineNumber+
-		  "\nStack " +e.stack);
-  }
-});
 
 //===================================================================
 // BOOT

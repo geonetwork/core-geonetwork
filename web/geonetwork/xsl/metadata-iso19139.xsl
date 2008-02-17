@@ -1978,7 +1978,21 @@
 						</xsl:element>
 
 				</xsl:if>
-				
+
+				<!-- Generate a KML output link for a WMS service -->
+				<xsl:if test="string($linkage)!='' and starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and $name">
+					
+					<xsl:element name="link">
+						<xsl:attribute name="title"><xsl:value-of select="$desc"/></xsl:attribute>
+						<xsl:attribute name="href">
+							<xsl:value-of select="concat('http://',/root/gui/env/server/host,':',/root/gui/env/server/port,/root/gui/locService,'/google.kml?id=',$id,'&amp;layers=',$name)"/>
+						</xsl:attribute>
+						<xsl:attribute name="name"><xsl:value-of select="$name"/></xsl:attribute>
+						<xsl:attribute name="type">application/vnd.google-earth.kml+xml</xsl:attribute>
+					</xsl:element>
+				</xsl:if>
+
+				<!-- The old links still in use by some systems. Deprecated -->
 				<xsl:choose>
 					<xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($protocol,'http--download') and $name">
 						<link type="download"><xsl:value-of select="$linkage"/></link>
@@ -1993,9 +2007,7 @@
 						<link type="wms">
 <!--							<xsl:value-of select="concat('javascript:popInterMap(&#34;',/root/gui/url,'/intermap/srv/',/root/gui/language,'/map.addServicesExt?url=',$linkage,'&amp;service=',$name,'&amp;type=2&#34;)')"/>-->
 							<xsl:value-of select="concat('javascript:runIM_addService(&#34;'  ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;, 2)' )"/>
-							
 						</link>
-
 						<link type="googleearth">
 							<xsl:value-of select="concat(/root/gui/locService,'/google.kml?id=',$id,'&amp;layers=',$name)"/>
 						</link>

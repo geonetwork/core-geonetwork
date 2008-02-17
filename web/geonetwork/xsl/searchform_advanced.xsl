@@ -120,35 +120,35 @@
 					<table width="100%">
 						<tr>
 							<td>
-								<input name="digital" id="digital" type="checkbox" value="on">
-									<xsl:if test="/root/gui/searchDefaults/digital='on'">
-										<xsl:attribute name="checked"/>
-									</xsl:if>
-									<xsl:value-of select="/root/gui/strings/digital"/>
-								</input>
-								<br/>
-								<input name="paper" id="paper" type="checkbox" value="on">
-									<xsl:if test="/root/gui/searchDefaults/paper='on'">
-										<xsl:attribute name="checked"/>
-									</xsl:if>
-									<xsl:value-of select="/root/gui/strings/paper"/>
-								</input>
-							</td>
-							<td>
-								<input name="dynamic" id="dynamic" type="checkbox">
-									<xsl:if test="/root/gui/searchDefaults/dynamic='on'">
-										<xsl:attribute name="checked"/>
-									</xsl:if>
-									<xsl:value-of select="/root/gui/strings/dynamic"/>
-								</input>
-								<br/>
-								<input name="download" id="download" type="checkbox">
-									<xsl:if test="/root/gui/searchDefaults/download='on'">
-										<xsl:attribute name="checked"/>
-									</xsl:if>
-									<xsl:value-of select="/root/gui/strings/downloadable"/>
-								</input>
-							</td>
+							<input name="digital" id="digital" type="checkbox" value="on">
+                        		<xsl:if test="/root/gui/searchDefaults/digital='on'">
+		                            <xsl:attribute name="checked"/>
+		                        </xsl:if>
+		                        <label for="digital"><xsl:value-of select="/root/gui/strings/digital"/></label>
+		                    </input>
+							<br/>
+		                    <input name="paper" id="paper" type="checkbox" value="on">
+		                        <xsl:if test="/root/gui/searchDefaults/paper='on'">
+		                            <xsl:attribute name="checked"/>
+		                        </xsl:if>
+		                        <label for="paper"><xsl:value-of select="/root/gui/strings/paper"/></label>
+		                    </input>
+						</td>
+						<td>
+	    	                <input name="dynamic" id="dynamic" type="checkbox">
+    	    	                <xsl:if test="/root/gui/searchDefaults/dynamic='on'">
+                	            <xsl:attribute name="checked"/>
+                    	    </xsl:if>
+		                        <label for="dynamic"><xsl:value-of select="/root/gui/strings/dynamic"/></label>
+		                    </input>
+							<br/>
+		                    <input name="download" id="download" type="checkbox">
+		                        <xsl:if test="/root/gui/searchDefaults/download='on'">
+	    	                        <xsl:attribute name="checked"/>
+            	    	        </xsl:if>
+                	    	    <label for="download"><xsl:value-of select="/root/gui/strings/downloadable"/></label>
+		                    </input>
+        	           		</td>
 						</tr>
 					</table>
 <!--					<br/>
@@ -361,7 +361,7 @@
 					<xsl:if test="string(/root/gui/searchDefaults/dateFrom)='' and string(/root/gui/searchDefaults/dateTo)=''">
 						<xsl:attribute name="checked" />
  					</xsl:if>
-					<xsl:value-of select="/root/gui/strings/anytime"/>
+					<label for="radfrom0"><xsl:value-of select="/root/gui/strings/anytime"/></label>
 				</input>
 			</td>
 		</tr>

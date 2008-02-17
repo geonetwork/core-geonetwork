@@ -52,6 +52,7 @@ public class MailWmcContext implements Service
 {
 	static private File   _xslfile;
 	static private String _mailserver;
+	static private int _smtpport;
 	static private String _gnURL;
 
 	public void init(String appPath, ServiceConfig config) throws Exception
@@ -62,6 +63,16 @@ public class MailWmcContext implements Service
 		if(_mailserver == null)
 		{
 			Logger.getLogger("MailWmcContext").warning("*** The mailserver config property has not been set. WMC mail will not be available.");
+		}
+		
+		try 
+		{
+			_smtpport =Integer.parseInt(config.getValue("smtpport"));
+		}
+		catch (NumberFormatException e)
+		{
+			Logger.getLogger("MailWmcContect").warning("*** The mail server smtpport property has not been set. Using default port 25");
+			_smtpport = 25;
 		}
 	}
 
@@ -96,10 +107,12 @@ public class MailWmcContext implements Service
 		System.out.println("   from: " + mailfrom);
 		System.out.println("   to:   " + mailto);
 		System.out.println("   by: "   + _mailserver);
+		System.out.println("   on port: "   + _smtpport);
 
 		 // Create the email message
 		HtmlEmail email = new HtmlEmail();
 		email.setHostName(_mailserver);
+		email.setSmtpPort(_smtpport);
 		email.addTo(mailto);
 		email.setFrom(mailfrom);
 		email.setSubject(title);

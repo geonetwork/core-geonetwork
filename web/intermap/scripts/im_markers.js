@@ -9,6 +9,10 @@
 
 var im_mark_tmp_id = 0;
 
+//The marker offset ensures the point of the marker image is presented on the point clicked with the mouse
+var marker_offset_x = 6;
+var marker_offset_y = 22;
+
  function im_setMark(e)
 {
 	Event.stop(e); // prevents from dragging the map image (on Firefox)
@@ -38,10 +42,11 @@ var im_mark_tmp_id = 0;
 	var img = document.createElement("img");
 	img.id='im_marker_img_tmp';
 	img.className = 'im_marker';
-	img.src = '/intermap/images/marker.png'; // FIXME context
+	img.src = '/intermap/images/marker.gif'; // FIXME context
 	// FIXME the image should be centered on the mouse click
-	img.style.left = pointerX;
-	img.style.top = pointerY;           
+
+	img.style.left = pointerX - 6;
+	img.style.top = pointerY - 21;           
 	document.body.appendChild(img);    
 	
 	
@@ -302,12 +307,12 @@ function im_createMarker(id, lat, lon, title, btemp)
 	var img = document.createElement("img");
 	img.id='im_marker_' + (btemp?"tmp_":"") + id;
 	img.className = 'im_marker';
-	img.src = '/intermap/images/marker2.gif'; // FIXME 
+	img.src = '/intermap/images/marker.gif'; // FIXME 
 	img.title = title;
 
 	// FIXME the image should be centered on the coords	
-	img.style.left = x + offsetX - img.width/2;
-	img.style.top  = y + offsetY - img.height/2;
+	img.style.left = x + offsetX - 6;
+	img.style.top  = y + offsetY - 21;
 	
 	document.body.appendChild(img);
 
