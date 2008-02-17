@@ -23,7 +23,7 @@
 								<td class="im_tool" id="im_tool_zoomin" onClick="javascript:setTool('zoomin');" ><img src="{/root/gui/url}/images/zoomin.png" title="{/root/gui/strings/zoomIn}"/></td>
 								<td class="im_tool" id="im_tool_zoomout" onClick="javascript:setTool('zoomout');"><img  src="{/root/gui/url}/images/zoomout.png" title="{/root/gui/strings/zoomOut}"/></td>
 								<td class="im_tool" id="im_tool_pan" onClick="javascript:setTool('pan');"><img src="{/root/gui/url}/images/pan.png" title="{/root/gui/strings/pan}"/></td>															
-								<td class="im_tool" id="im_tool_mark" onClick="javascript:setTool('mark');"><img src="{/root/gui/url}/images/marker.png" title="{/root/gui/strings/marker}"/></td>
+								<td class="im_tool" id="im_tool_mark" onClick="javascript:setTool('mark');"><img src="{/root/gui/url}/images/marker.gif" title="{/root/gui/strings/marker}"/></td>
 <!--								<td class="im_tool" id="im_tool_zoomsel"	onClick="javascript:imc_zoomToLayer(activeLayerId)"><img src="{/root/gui/url}/images/zoomsel.png" title="Zoom to selected layer extent"/></td> -->
 <!--								<td class="im_tool" id="im_tool_aoi"		onClick="javascript:setTool('aoi')"><img src="{/root/gui/url}/images/im_aoi16x16.png" title="Select an Area Of Interest"/></td> --> 
 								<td class="im_tool" id="im_tool_identify"	onClick="javascript:setTool('identify');"><img src="{/root/gui/url}/images/info.png" title="{/root/gui/strings/identify}"/></td>
@@ -125,7 +125,7 @@
 								<td style="padding:2px" onClick="im_openWMCform('mail');" ><a><img src="{/root/gui/url}/images/im_mail.png" title="{/root/gui/strings/wmcbuttonmail}"/></a></td>								
 								<td style="padding:2px" onClick="im_openWMCform('upload');" ><a><img src="{/root/gui/url}/images/fileopen.png" title="{/root/gui/strings/wmcbuttonupload}"/></a></td>								
 								<td style="padding:2px" onClick="im_downloadWMC();" ><a><img src="{/root/gui/url}/images/filesave.png" title="{/root/gui/strings/wmcbuttondownload}"/></a></td>
-								<td style="padding:2px" onClick="im_markerList();" ><a><img src="{/root/gui/url}/images/markerlist.png" title="{/root/gui/strings/markerlistbutton}"/></a></td>
+								<td style="padding:2px" onClick="im_markerList();" ><a><img src="{/root/gui/url}/images/markerlist.gif" title="{/root/gui/strings/markerlistbutton}" width="16px"/></a></td>
 								
 								<td width="100%" style="border-top:0px;"/> <!-- spacer -->								
 								<td class="im_tool" id="im_tool_scale">

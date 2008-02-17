@@ -12,6 +12,9 @@
     imc_addServices(url, services, type, im_servicesAdded);
 	im_buildLayerList(req); // rebuild layers' list
 	
+	im_deleteClientMarker(markerid);
+	im_retitleClientMarker(markerid, title)
+		
 	im_extra_drivingMap : Intermap; must be set
 	
     requires a div with id = "im_whiteboard"
@@ -494,10 +497,11 @@ function im_showMessage(context, task, status, more)
 /********************************************************************
 *** Markers
 ********************************************************************/
-/*
-## Called by the bottom toolbar
+/**
+ * Called by the bottom toolbar (id not set).
+*  Called from user interaction, clicking on a marker on the map (id set).
 */
-function im_markerList()
+function im_markerList(id)
 {
 	// setup WB
 	clearNode('im_whiteboard');    
@@ -514,44 +518,120 @@ function im_markerList()
 	div.id = "im_markerlist";
 	div.className = 'im_wbcontent';
 	WB.appendChild(div);
-	
-	var ul = document.createElement('ul');
-	div.appendChild(ul);
-	im_markers.each(
-		function(marker)
-		{
-			var li = document.createElement('li');
-			ul.appendChild(li);
-			li.innerHTML="Title: " + marker.title;
-			var ull = document.createElement('ul');
-			li.appendChild(ull);
-			var lilat = document.createElement('li');
-			lilat.innerHTML = "Lat: " + marker.lat;
-			ull.appendChild(lilat);
-			var lilon = document.createElement('li');			
-			lilon.innerHTML = "Lon: " + marker.lon;
-			ull.appendChild(lilon);			
-		}	
-	);
-	
-/*	
-	var pars="&width=" + im_extra_drivingMap.width +         
-		    "&height=" + im_extra_drivingMap.height;
-	if(type)			         
-		pars += "&type="+type;
-		
+			
+	var par="";
+	if(id)
+	{
+		par = "id=" + id; 		
+	}
+			
 	var myAjax = new Ajax.Updater (
-		'im_wmcmenu',    
-		getIMServiceURL('wmc.form'), 
+		'im_markerlist',    
+		getIMServiceURL('marker.present'), 
 		{
-			method: 'get',    		    	
-			parameters: pars,
+			method: 'get',
+			parameters: par,    		    	
 			onFailure: im_load_error
 		}
 	);
-*/
 	
 }
+
+/**
+ * Called from user interaction in markers' list. 
+ * See im_get-markers.xsl
+ * 
+ * @param {Object} id The marker's id
+ */
+function im_selectMarkerFromList(id) 
+{
+	var myAjax = new Ajax.Updater (
+		'im_markerlist',    
+		getIMServiceURL('marker.present'), 
+		{
+			method: 'get',
+			parameters: 'id='+id,    		    	
+			onFailure: im_load_error
+		}
+	);
+}
+
+function im_updateMarker(id)
+{
+	var title = $('marker_title_'+id).value;
+	var desc  = $('marker_desc_'+id).value;
+	
+	var pars = "id=" + id
+				+"&title=" + encodeURIComponent(title)
+	 			+ "&desc=" + encodeURIComponent(desc);
+
+	im_marker_showMessage("update", "start");                
+
+	var myAjax = new Ajax.Request (
+		getIMServiceURL('marker.update'), 
+		{
+			method: 'post',
+			parameters: pars,
+			onSuccess: function(req)
+			{
+			    var resp = req.responseXML.documentElement;
+				if(resp.tagName == "error")
+				{
+					var msg = resp.getElementsByTagName('message')[0].firstChild.nodeValue;
+					im_marker_showMessage("update", "error", msg);                
+				}
+				else
+				{                
+					im_marker_showMessage("update", "ok");
+					im_retitleClientMarker(id, title)
+				}
+			},
+			onFailure: function(req)
+			{
+				im_marker_showMessage("update", "error");			
+			}
+		}
+	);
+	
+}
+
+function im_deleteMarker(id)
+{
+	im_marker_showMessage("delete", "start");                
+
+	var myAjax = new Ajax.Request (
+		getIMServiceURL('marker.delete'), 
+		{
+			method: 'post',
+			parameters: {id: id},
+			onSuccess: function(req)
+			{
+			    var resp = req.responseXML.documentElement;
+				if(resp.tagName == "error")
+				{
+					var msg = resp.getElementsByTagName('message')[0].firstChild.nodeValue;
+					im_marker_showMessage("delete", "error", msg);                
+				}
+				else
+				{                
+					im_marker_showMessage("delete", "ok");
+					im_deleteClientMarker(id);
+				}
+			},
+			onFailure: function(req)
+			{
+				im_marker_showMessage("delete", "error");			
+			}
+		}
+	);
+	
+}
+
+function im_marker_showMessage(task, status, more)
+{
+    im_showMessage('marker', task, status, more);
+}
+
 
 /********************************************************************
 *** Export image

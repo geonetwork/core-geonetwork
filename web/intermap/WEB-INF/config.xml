@@ -528,7 +528,8 @@
 			
 			<class name=".services.wmc.MailWmcContext">
 				<param name="customstylesheet" value="../web/intermap/xsl/im_wmc_custom_mail.xsl"/>
-				<!--<param name="mailserver" value=""/>--> <!-- PLEASE  SET THIS PARAM TO A VALID MAIL SERVER -->				
+				<!--<param name="mailserver" value=""/>--> <!-- PLEASE  SET THIS PARAM TO A VALID MAIL SERVER -->	
+				<param name="smtpport" value="25"/>	 <!-- port 25 is the default value -->	
 				<param name="gnurl" value="http://localhost:8080/geonetwork/srv/en/main.home"/> <!-- THIS PARAM HAS TO BE CONFIGURED BY THE INSTALLER -->				
 			</class>
 			
@@ -562,6 +563,46 @@
 		</service>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<!-- ====================================
+			MARKERS
+		===================================== -->
+
+		<service name="marker.add">
+			<class name=".services.marker.Add"/>
+			
+			<output sheet="copy_response.xsl" contentType="text/xml; charset=UTF-8"/>							
+			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+
+		<service name="marker.delete">
+			<class name=".services.marker.Delete"/>
+			
+			<output sheet="copy_response.xsl" contentType="text/xml; charset=UTF-8"/>							
+			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+		
+		<service name="marker.get">
+			<class name=".services.marker.Get"/>
+			
+			<output sheet="copy_response.xsl" contentType="text/xml; charset=UTF-8"/>							
+			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+
+		<service name="marker.present">
+			<class name=".services.marker.Get"/>
+			
+			<output sheet="im_get-markers.xsl"/>							
+			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+		
+		<service name="marker.update">
+			<class name=".services.marker.Update"/>
+			
+			<output sheet="copy_response.xsl" contentType="text/xml; charset=UTF-8"/>							
+			<error sheet="copy_error.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
+		
 		
 	</services>
 	

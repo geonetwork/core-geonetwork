@@ -895,6 +895,20 @@ div.im_wbcontent {
            
 }
 
+.im_markerEntry
+{
+           /*border: 1px none;*/
+           padding: 1px;
+           background-color: #e7edf5;           
+}
+
+.im_markerEntrySel
+{
+           border: 1px solid #555555;
+           background-color: #CCCCFF;    
+	cursor: pointer;
+}
+
 .upperright {
     position: absolute;
     top:1px;
