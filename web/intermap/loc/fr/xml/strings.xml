@@ -72,6 +72,7 @@
 	<refresh>Rafraîchir</refresh>
 	<refreshNotification>Cliquer sur "Rafraîchir" pour voir les changements.</refreshNotification>
 	<removeLayer>Supprimer le calque</removeLayer>
+	<removeMarker>Remove marker</removeMarker>	
 	<reset>Réinitialiser</reset>
 	<sendByEmail js="true">Envoyer par e-mail</sendByEmail>
 	<setScale>--Set Scale--</setScale>
@@ -83,6 +84,8 @@
 	<title>InterMap opensource</title>
 	<transparency>Définir la transparence</transparency>
 	<up>Déplacer vers le haut</up>
+	<update>Update</update>
+	<updateMarker>Update marker info</updateMarker>
 	<wait js="true">Please wait...</wait>
 	<wmsConfigForm>Propriétés du calque</wmsConfigForm >
 	<zoomIn>Zoom avant</zoomIn>
