@@ -33,10 +33,13 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.wfp.vam.intermap.Constants;
 import org.wfp.vam.intermap.kernel.map.MapMerger;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.GeoRSSCodec;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.impl.WMCFactory;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCExtension;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCViewContext;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCWindow;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.impl.Utils;
+import org.wfp.vam.intermap.kernel.marker.MarkerSet;
 import org.wfp.vam.intermap.services.map.MapUtil;
 
 /**
@@ -92,12 +95,32 @@ public class UploadWmcContext implements Service
 		// Update the user session
 		context.getUserSession().setProperty(Constants.SESSION_MAP, mm);
 
-		return new Element("response")
+		// load markerset, if any, from context
+		WMCExtension ext = vc.getGeneral().getExtension();
+		if(ext != null)
+		{
+			Element georss = ext.getChild("georss");
+			if(georss != null)
+			{
+				Element feed = (Element)georss.getChildren().get(0);
+				MarkerSet ms = GeoRSSCodec.parseGeoRSS(feed);
+				context.getUserSession().setProperty(Constants.SESSION_MARKERSET, ms);
+			}
+		}
+
+		// Prepare response
+		Element response = new Element("response")
 			.addContent(new Element("imgUrl").setText(url))
 			.addContent(new Element("scale").setText(mm.getDistScale()))
 			.addContent(mm.getBoundingBox().toElement())
 			.addContent(new Element("width").setText("" + win.getWidth()))
 			.addContent(new Element("height").setText("" + win.getHeight()));
+
+		MarkerSet ms = (MarkerSet)context.getUserSession().getProperty(Constants.SESSION_MARKERSET);
+		if(ms != null)
+			response.addContent(ms.select(mm.getBoundingBox()).toElement());
+
+		return response;
 	}
 
 

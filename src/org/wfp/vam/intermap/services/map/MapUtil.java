@@ -25,9 +25,9 @@ package org.wfp.vam.intermap.services.map;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Stack;
 import java.util.StringTokenizer;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -40,7 +40,6 @@ import org.wfp.vam.intermap.kernel.map.mapServices.MapService;
 import org.wfp.vam.intermap.kernel.map.mapServices.arcims.ArcIMSService;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCExtension;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCLayer;
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCLayerList;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCViewContext;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCWindow;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.CapabilitiesStore;
@@ -385,19 +384,11 @@ public class MapUtil
 
 	public static String setContext(MapMerger mm, WMCViewContext vc) throws Exception
 	{
-		WMCLayerList ll = vc.getLayerList();
-
-		// Set layers -- layers are added on top, so we have to reverse the list order
-		Stack<WMCLayer> layerstack= new Stack<WMCLayer>();
-
-		for (WMCLayer layer: ll.getLayerIterator())
-			layerstack.push(layer);
-
-		while(! layerstack.isEmpty())
+		for (WMCLayer layer: vc.getLayerList())
 		{
 			try
 			{
-				MapUtil.addService(mm, layerstack.pop());
+				MapUtil.addService(mm, layer);
 			}
 			catch (Exception e)
 			{
@@ -414,8 +405,6 @@ public class MapUtil
 
 		return url;
 	}
-
-
 }
 
 

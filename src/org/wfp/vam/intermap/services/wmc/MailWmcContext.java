@@ -38,10 +38,12 @@ import org.apache.commons.mail.HtmlEmail;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.wfp.vam.intermap.Constants;
 import org.wfp.vam.intermap.kernel.GlobalTempFiles;
 import org.wfp.vam.intermap.kernel.map.MapMerger;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.WmcCodec;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCViewContext;
+import org.wfp.vam.intermap.kernel.marker.MarkerSet;
 import org.wfp.vam.intermap.services.map.MapUtil;
 import org.wfp.vam.intermap.util.XmlTransformer;
 
@@ -94,8 +96,9 @@ public class MailWmcContext implements Service
 		int height = Integer.parseInt(params.getChildText("height"));
 
 		MapMerger mm = MapUtil.getMapMerger(context);
+		MarkerSet ms = (MarkerSet)context.getUserSession().getProperty(Constants.SESSION_MARKERSET);
 
-		WMCViewContext viewContext = WmcCodec.createViewContext(mm, title, width, height);
+		WMCViewContext viewContext = WmcCodec.createViewContext(mm, ms, title, width, height);
 		Element eViewContext = viewContext.toElement();
 
 		XMLOutputter xcomp = new XMLOutputter(Format.getCompactFormat());
