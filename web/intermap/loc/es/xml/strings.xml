@@ -73,6 +73,7 @@
 	<refresh>Refrescar</refresh>
 	<refreshNotification>Por favor haga clic en el botón "Refrescar" bajo la lista de capas para ver este cambio.</refreshNotification>
 	<removeLayer>Eliminar capa</removeLayer>	
+	<removeMarker>Remove marker</removeMarker>	
 	<reset>Restablecer</reset>
 	<sendByEmail js="true">Enviar este mapa por correo</sendByEmail>
 	<setScale>--Establecer escala--</setScale>
@@ -86,6 +87,8 @@
 	<titleShowStyles js="true">Estilos disponibles</titleShowStyles>	
 	<transparency>Establecer transparencia</transparency>
 	<up>Mover la capa hacia arriba</up>
+	<update>Update</update>
+	<updateMarker>Update marker info</updateMarker>
 	<wait js="true">Por favor espere...</wait>
 	<wmctitle js="true">menú de contextos WMC</wmctitle>	
 	<wmctitlemail js="true">Enviar un contexto WMC por correo</wmctitlemail>	
