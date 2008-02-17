@@ -89,6 +89,7 @@ public class Constants {
 	public static final String SESSION_MAP = "map";
 	public static final String SESSION_TOOL = "tool";
 	public static final String SESSION_SIZE = "size";
+	public static final String SESSION_MARKERSET = "markerset";
 
 	// Temporary files
 	public static final String TMP_DIR = "tempDir";

@@ -23,15 +23,13 @@
 
 package org.wfp.vam.intermap.services.map;
 
-import org.jdom.*;
-
-import jeeves.interfaces.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-
-import org.wfp.vam.intermap.kernel.map.*;
-
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import org.jdom.Element;
 import org.wfp.vam.intermap.Constants;
+import org.wfp.vam.intermap.kernel.map.MapMerger;
+import org.wfp.vam.intermap.kernel.marker.MarkerSet;
 
 //=============================================================================
 
@@ -54,6 +52,9 @@ public class Reset implements Service
 		MapUtil.setDefaultContext(mm);
 		//MapUtil.setDefBoundingBox(mm);
 		context.getUserSession().setProperty(Constants.SESSION_MAP, mm);
+
+		context.getUserSession().setProperty(Constants.SESSION_MARKERSET, null);
+
 		return mm.toElement();
 	}
 

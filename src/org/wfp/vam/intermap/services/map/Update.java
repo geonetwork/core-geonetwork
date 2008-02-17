@@ -31,6 +31,7 @@ import org.jdom.Element;
 import org.wfp.vam.intermap.Constants;
 import org.wfp.vam.intermap.kernel.map.MapMerger;
 import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
+import org.wfp.vam.intermap.kernel.marker.MarkerSet;
 import org.wfp.vam.intermap.util.Util;
 
 //=============================================================================
@@ -79,12 +80,19 @@ public class Update implements Service
 		String imagename = mm.merge(width, height);
 		String url = MapUtil.getTempUrl() + "/" + imagename;
 
-		return new Element("response")
+		// Prepare response
+		Element response = new Element("response")
 			.addContent(new Element("imgUrl").setText(url))
 			.addContent(new Element("scale").setText(mm.getDistScale()))
 			.addContent(mm.getBoundingBox().toElement())
 			.addContent(new Element("width").setText(""+width))
 			.addContent(new Element("height").setText(""+height));
+
+		MarkerSet ms = (MarkerSet)context.getUserSession().getProperty(Constants.SESSION_MARKERSET);
+		if(ms != null)
+			response.addContent(ms.select(mm.getBoundingBox()).toElement());
+
+		return response;
 	}
 
 }
