@@ -105,7 +105,8 @@ im_extra_afterWmcSet = function(resp)
 {
 	im_bm.set_dom(resp);
 	im_bm.setBBox_dom(resp); // ? set_dom already calls this one. To be removed?
-	  
+	im_redrawMarkers(resp);	
+		  
 	im_mm.setBBox_dom(resp);  
 	im_mm.rebuild(im_mm_fullAoI);
 	// TODO? extend the AoI to the whole current view
@@ -150,6 +151,8 @@ function openIntermap()
         $('im_bm_image').show();
         $('fillMeWithIntermap').show();
     }
+	
+	im_showClientMarkers(true);	// TODO: markers should appear only after the map has completely blind down
         
 //	forceIErefresh();        
 }				 
@@ -158,6 +161,8 @@ function closeIntermap()
 {
 	if( ! $('im_map'))
 		return;
+
+	im_showClientMarkers(false);
 
 	// These buttons may have been already removed from page if we're leaving simple search 
 	try {
@@ -174,7 +179,7 @@ function closeIntermap()
 	{
 		$('im_map').hide();
 		$('fillMeWithIntermap').hide();
-	}
+	}	
 }
 
 function imc_init_loadSkel()

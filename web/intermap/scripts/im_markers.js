@@ -7,7 +7,17 @@
  *  
  *******************************************************************/
 
-var im_mark_tmp_id = 0;
+/** Client side id for temporary markers -- there may be more than one
+ * in a given moment (one is updating on server, another one is under editing)
+ */ 
+var im_mark_tmp_id = 1;
+
+/** holds the markers' id */
+var im_markarr = new Array();
+
+/** the current temporary marker */
+var im_tmpMarker;
+//var im_markers = new Array();
 
 //The marker offset ensures the point of the marker image is presented on the point clicked with the mouse
 var marker_offset_x = 6;
@@ -213,11 +223,6 @@ function imc_saveMarker(tmp_id, lat, lon, title)
 }	
 
 
-/** holds the markers' id */
-var im_markarr = new Array();
-
-var im_markers = new Array();
-var im_tmpMarker;
 
 function IMMarker(lat, lon, title)
 {
@@ -356,6 +361,34 @@ function im_deleteClientMarker(markerid)
 			img.remove();
 		}											
 	}
+}
+
+
+function im_redrawMarkers(dom)
+{
+	im_deleteClientMarkers();
+
+	var markerlist = dom.getElementsByTagName('markers')[0];
+	im_createMarkersDom(markerlist);		
+}
+
+
+function im_showClientMarkers(doShow)
+{
+	im_markarr.each(function (markerid)
+	{
+		if(markerid) // may have been deleted
+		{
+			var img = $("im_marker_" + markerid);
+			if(img)
+			{
+				if(doShow)
+					img.show();
+				else
+					img.hide();
+			}											
+		}
+	});
 }
 
 function im_retitleClientMarker(markerid, title)
