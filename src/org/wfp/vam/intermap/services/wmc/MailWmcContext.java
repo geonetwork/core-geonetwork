@@ -165,8 +165,8 @@ public class MailWmcContext implements Service
 		EmailAttachment attachment = new EmailAttachment();
 		attachment.setPath(tempContextFile.getAbsolutePath());
 		attachment.setDisposition(EmailAttachment.ATTACHMENT);
-		attachment.setDescription("WMC context");
-		attachment.setName("WMContext.cml");
+		attachment.setDescription("Interactive map");
+		attachment.setName("Interactive_map.cml");
 
 		email.attach(attachment);
 
