@@ -133,7 +133,7 @@ public class Download implements Service
 					if (email.trim().length() != 0)
 					{
 						String subject = "File " + fname + " has been downloaded";
-						String message = "GeoNetwork notifies you, as supervisor of group "+ name
+						String message = "GeoNetwork notifies you, as contact person of group "+ name
 							+ " that data file "+ fname
 							+ " belonging metadata "+ id
 							+ " has beed downloaded from address " + context.getIpAddress() + ".";
