@@ -527,7 +527,7 @@
 	<xsl:template name="latestUpdates">
 		<h1 align="left">
 			<xsl:value-of select="/root/gui/strings/recentAdditions"/> &#160;&#160;&#160; 
-			<a href="{/root/gui/locService}/rss.latest?georss=gml">
+			<a href="{/root/gui/locService}/rss.latest?georss=gml" target="_blank">
 				<img style="cursor:hand;cursor:pointer" src="{/root/gui/url}/images/georss.png"
 					alt="GeoRSS-GML" title="{/root/gui/strings/georss}" align="top"/>
 			</a>
