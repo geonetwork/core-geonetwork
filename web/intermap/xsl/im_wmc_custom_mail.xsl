@@ -12,10 +12,6 @@
 				<a href="{//url}" title="Click to view the interactive map"><img src="{//imgsrc}"/></a>
 				<p>
 				This map is stored as a Web Map Context file, attached to this email. You can also use that file to open the map on the <a href="{//gnurl}" title="GeoNetwork portal">GeoNetwork portal</a></p>
-				<xsl:if test="//url/">
-					
-				</xsl:if>
-				<p>
 				<br/>
 				<i>
 				Kind regards,<br/>
