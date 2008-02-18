@@ -9,7 +9,7 @@
 	<xsl:template name="content">
 		<font class="error"><xsl:value-of select="/root/gui/error/message"/></font>
 		<p/>
-		<xsl:value-of select="/root/error/exception/message"/>
+		<xsl:value-of select="/root/error/message"/>
 	</xsl:template>
 	
 	<!--

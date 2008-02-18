@@ -2,4 +2,8 @@
 <strings>
 	<heading>Validation des métadonnées</heading>
 	<message>Validation réussie</message>
+	<schemaValid>Validation réussie au regard du schéma</schemaValid>
+	<schemaTronError>Erreur dans la validation des règles</schemaTronError>
+	<schemaTronValid>Validation des règles</schemaTronValid>
+	<schemaTronReport>Accéder au rapport sur les règles</schemaTronReport>
 </strings>
