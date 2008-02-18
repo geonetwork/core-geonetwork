@@ -6,36 +6,41 @@
 	<xsl:template match="/">
 		
 		<wmcmail>
-			<html>A Geonetwork user sent you this context, i.e. a set of geographical maps.
-				The map set looks like the image below.
-				<br/>
-				You can click on the map to get to the Geonetwork site and get more details about it. 
-				<br/>
-				<a href="{//url}"><img src="{//imgsrc}"/></a>
-				<br/>
-				This is the explicit URL <a href="{//url}"><xsl:value-of select="//url"/></a>
-				<br/>
-				You can also find as attachment an XML document that describes in a machine readable form the whole context.<br/> 
-				Please use it if you experience any problem with the above links, or if you want to view the context on another client.
-				<br/>
+			<html><p>A GeoNetwork user, <xsl:value-of select="//mailfrom"/> sent you this interative map.</p>
+				<p>To see it, click <a href="{//url}" title="Click to view the interactive map">here</a> or on the image below.
+				</p>
+				<a href="{//url}" title="Click to view the interactive map"><img src="{//imgsrc}"/></a>
+				<p>
+				This map is stored as a Web Map Context file, attached to this email. You can also use that file to open the map on the <a href="{//gnurl}" title="GeoNetwork portal">GeoNetwork portal</a></p>
 				<br/>
 				<i>
 				Kind regards,<br/>
-				The Geonetwork Team
-				</i>							
+				The GeoNetwork Team
+				</i>
+				<p/>
+				<hr/>
+				<sub>For more information about this email and about Web Map Context files, please read the documentation on <a href="http://geonetwork-opensource.org" alt="GeoNetwork opensource" title="GeoNetwork opensource">GeoNetwork opensource</a></sub>
 			</html>			
 			
 			<text>
-A Geonetwork user sent you this context, i.e. a set of geographical maps.
+A GeoNetwork user, <xsl:value-of select="//mailfrom"/> sent you this email
+with a link to an interactive map.
 
-This is the URL to view it on the Geonetwork portal:
-<xsl:value-of select="//url"/>
+At the bottom of this message, you can find the URL to view the map on the
+GeoNetwork portal.
 
-You can also find as attachment an XML document that describes in a machine readable form the whole context. 
-Please use it if you experience any problem with the above link, or if you want to view the context on another client.
-
+The map is stored as a Web Map Context file, also attached to this email. 
+You can also use that file to open the map at 
+<xsl:value-of select="//gnurl"/>
+				
 	Kind regards,
-	The Geonetwork Team												
+	The GeoNetwork Team		
+	
+	ps. For more information about this email and about Web Map Context files, 
+	please read the documentation on http://geonetwork-opensource.org
+	
+URL: <xsl:value-of select="//url"/>
+	
 			</text>
 		</wmcmail>
 		

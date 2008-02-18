@@ -18,7 +18,7 @@
 			</div>
 			
 			<div id="im_wmc_msg_mail_start" style="display:none;">
-				The mail is being built...
+				The mail is being build...
 			</div>
 			<div id="im_wmc_msg_mail_ok" style="display:none;">
 				The mail has been successfully sent
@@ -63,9 +63,9 @@
 				</div>
 			</li>
 			
-			<!--   SEND WMS AS E-MAIL  -->
+			<!--   SEND WMC AS E-MAIL  -->
 			<li>
-				<a onClick="$('im_mailwmc').toggle();">Send WMC as mail...</a>
+				<a onClick="$('im_mailwmc').toggle();">Send WMC as email...</a>
 				<div id="im_mailwmc" style="display:none;">
 					<xsl:call-template name="mail"/>
 				</div>
@@ -104,23 +104,30 @@
 	<xsl:template name="mail">
 		<table width="100%">
 			<tr>
-				<td>Title:</td>
-				<td width="100%">
-					<input type="text" name="wmc_title" id="wmc_title" width="100%" size="70"></input>									
-				</td>
-			</tr>
-			<tr>
-				<td>to:</td>
+				<td>To:</td>
 				<td>
 					<input type="text" name="wmc_mailto" id="wmc_mailto" width="100%" size="40"></input>									
 				</td>
 			</tr>
 			<tr>
-				<td>from:</td>
+				<td>From:</td>
 				<td>
 					<input type="text" name="wmc_mailfrom" id="wmc_mailfrom" width="100%" size="40"></input>									
 				</td>
 			</tr>
+			<tr>
+				<td>Title:</td>
+				<td width="100%">
+					<input type="text" name="wmc_title" id="wmc_title" width="100%" size="70"></input>									
+				</td>
+			</tr>
+			<!-- This requires a captcha to be implemented first to prevent spamming -->
+<!--			<tr>
+				<td>Comment:</td>
+				<td>
+					<textarea name="wmc_comment" id="wmc_comment" rows="5" cols="40"></textarea>									
+				</td>
+			</tr> -->
 			<tr style="padding-bottom:5px;">
 				<td colspan="2" align="center">
 					<button onClick="im_sendWMC();" style="margin-bottom:5px;margin-top:5px;">Send e-mail</button>											

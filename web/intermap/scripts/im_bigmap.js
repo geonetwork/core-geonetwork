@@ -326,9 +326,6 @@ im_bm.afterImageRebuilt = function(req)
 //	im_deleteAllMarkersImages(); // obsolete
 //	im_drawAllMarkersImages();
 
-	im_deleteClientMarkers();
-
-	var markerlist = req.responseXML.getElementsByTagName('markers')[0];
-	im_createMarkersDom(markerlist);	
+	im_redrawMarkers(req.responseXML);	
 };
 
