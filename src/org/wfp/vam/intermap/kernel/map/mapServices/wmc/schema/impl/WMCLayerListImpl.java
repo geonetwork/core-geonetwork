@@ -74,6 +74,9 @@ public class WMCLayerListImpl implements WMCLayerList
 		_list.add(layer);
 	}
 
+	/**
+	 * @deprecated use iterator() directly
+	 */
 	public Iterable<WMCLayer> getLayerIterator()
 	{
 		return new Iterable<WMCLayer>()
@@ -83,6 +86,11 @@ public class WMCLayerListImpl implements WMCLayerList
 				return _list.iterator();
 			}
 		};
+	}
+
+	public Iterator<WMCLayer> iterator()
+	{
+		return _list.iterator();
 	}
 
 	public Element toElement(String name)

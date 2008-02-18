@@ -25,6 +25,9 @@ package org.wfp.vam.intermap.kernel.map.mapServices.wmc;
 
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 import org.jdom.Element;
 import org.wfp.vam.intermap.kernel.map.Layer;
@@ -36,6 +39,7 @@ import org.wfp.vam.intermap.kernel.map.mapServices.wms.CapabilitiesStore;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.WmsService;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSCapabilities;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSLayer;
+import org.wfp.vam.intermap.kernel.marker.MarkerSet;
 
 /**
  * @author Emanuele Tajariol
@@ -52,7 +56,7 @@ public class WmcCodec
 	 *
 	 * @return   the WMCViewContext
 	 */
-	public static WMCViewContext createViewContext(MapMerger mm, String title, int width, int height)
+	public static WMCViewContext createViewContext(MapMerger mm, MarkerSet ms, String title, int width, int height)
 		throws Exception
 	{
 		UUID uuid = UUID.randomUUID();
@@ -77,7 +81,7 @@ public class WmcCodec
 		win.setWidth(width);
 		win.setHeight(height);
 
-		WMCLayerList llist = vc.addNewLayerList();
+		List<WMCLayer> invertedList = new ArrayList<WMCLayer>();
 
 		for(Layer mmLayer: mm.getLayers())
 		{
@@ -89,7 +93,7 @@ public class WmcCodec
 				case WmsService.TYPE:
 					WMCLayer wmcLayer = buildLayer(mmLayer);
 					System.out.println("ADDING WMS SERVICE: " + mmService.getTitle());
-					llist.addLayer(wmcLayer);
+					invertedList.add(wmcLayer);
 					break;
 
 				case ArcIMSService.TYPE:
@@ -97,6 +101,20 @@ public class WmcCodec
 					System.out.println("Service '"+mmLayer.getService().getName()+"' is not OGC compliant and will not be addeded in the WMC");
 					continue;
 			}
+		}
+
+		WMCLayerList llist = vc.addNewLayerList();
+
+		Collections.reverse(invertedList); // intermap order is reversed with respect to WMC
+		for (WMCLayer layer : invertedList)
+		{
+			llist.addLayer(layer);
+		}
+
+		if(ms != null && ! ms.isEmpty())
+		{
+			WMCExtension ext = vcg.addNewExtension();
+			ext.add(new Element("georss").addContent(GeoRSSCodec.getGeoRSS(ms)));
 		}
 
 		return vc;

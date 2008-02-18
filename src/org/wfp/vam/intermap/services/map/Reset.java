@@ -53,7 +53,9 @@ public class Reset implements Service
 		//MapUtil.setDefBoundingBox(mm);
 		context.getUserSession().setProperty(Constants.SESSION_MAP, mm);
 
-		context.getUserSession().setProperty(Constants.SESSION_MARKERSET, null);
+
+		if(context.getUserSession().getProperty(Constants.SESSION_MARKERSET) != null)
+			context.getUserSession().setProperty(Constants.SESSION_MARKERSET, new MarkerSet()); // todo: dunno how to set it to null
 
 		return mm.toElement();
 	}

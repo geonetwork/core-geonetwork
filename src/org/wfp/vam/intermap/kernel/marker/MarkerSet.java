@@ -17,7 +17,7 @@ import org.wfp.vam.intermap.kernel.marker.Marker;
  *
  * @author ETj
  */
-public class MarkerSet
+public class MarkerSet implements Iterable<Marker>
 {
 	private List<Marker> _list = new ArrayList<Marker>();
 
@@ -38,6 +38,11 @@ public class MarkerSet
 		}
 
 		return null;
+	}
+
+	public boolean isEmpty()
+	{
+		return _list.isEmpty();
 	}
 
 	public boolean remove(long id)
@@ -79,6 +84,16 @@ public class MarkerSet
 				ret.add(m);
 
 		return ret;
+	}
+
+	/**
+	 * Returns an iterator over a set of elements of type T.
+	 *
+	 * @return an Iterator.
+	 */
+	public Iterator<Marker> iterator()
+	{
+		return _list.iterator();
 	}
 
 }

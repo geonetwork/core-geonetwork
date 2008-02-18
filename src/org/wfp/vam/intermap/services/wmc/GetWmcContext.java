@@ -30,9 +30,11 @@ import jeeves.server.context.ServiceContext;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.wfp.vam.intermap.Constants;
 import org.wfp.vam.intermap.kernel.map.MapMerger;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.WmcCodec;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCViewContext;
+import org.wfp.vam.intermap.kernel.marker.MarkerSet;
 import org.wfp.vam.intermap.services.map.MapUtil;
 
 public class GetWmcContext implements Service
@@ -53,7 +55,9 @@ public class GetWmcContext implements Service
 		String title = params.getChildText("title"); // may be null, no probs
 
 		MapMerger mm = MapUtil.getMapMerger(context);
-		WMCViewContext vcd = WmcCodec.createViewContext(mm, title, width, height);
+		MarkerSet ms = (MarkerSet)context.getUserSession().getProperty(Constants.SESSION_MARKERSET);
+
+		WMCViewContext vcd = WmcCodec.createViewContext(mm, ms, title, width, height);
 
 		Element xvcd = vcd.toElement();
 

@@ -16,15 +16,15 @@ public class Marker
 	private static long counter = 0;
 
 	private final long id;
-	private float _lat;
-	private float _lon;
+	private double _lat;
+	private double _lon;
 	private String _title;
 	private String _desc;
 
 	/**
 	 * Constructor
 	 */
-	public Marker(float lat, float lon, String title, String desc)
+	public Marker(double lat, double lon, String title, String desc)
 	{
 		synchronized(getClass())
 		{
@@ -47,7 +47,7 @@ public class Marker
 		return id;
 	}
 
-	public boolean isIn(float minlat, float maxlat, float minlon, float maxlon)
+	public boolean isIn(double minlat, double maxlat, double minlon, double maxlon)
 	{
 		if(_lat < minlat) return false;
 		if(maxlat < _lat) return false;
@@ -60,7 +60,7 @@ public class Marker
 	/**
 	 * Sets Lat
 	 */
-	public void setLat(float lat)
+	public void setLat(double lat)
 	{
 		_lat = lat;
 	}
@@ -68,7 +68,7 @@ public class Marker
 	/**
 	 * Returns Lat
 	 */
-	public float getLat()
+	public double getLat()
 	{
 		return _lat;
 	}
@@ -76,7 +76,7 @@ public class Marker
 	/**
 	 * Sets Lon
 	 */
-	public void setLon(float lon)
+	public void setLon(double lon)
 	{
 		_lon = lon;
 	}
@@ -84,7 +84,7 @@ public class Marker
 	/**
 	 * Returns Lon
 	 */
-	public float getLon()
+	public double getLon()
 	{
 		return _lon;
 	}
