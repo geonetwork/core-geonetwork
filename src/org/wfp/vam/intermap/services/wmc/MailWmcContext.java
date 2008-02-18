@@ -52,7 +52,7 @@ import org.wfp.vam.intermap.util.XmlTransformer;
  */
 public class MailWmcContext implements Service
 {
-	static private File   _xslfile;
+	static private File _xslfile;
 	static private String _mailserver;
 	static private int _smtpport;
 	static private String _gnURL;
@@ -90,6 +90,7 @@ public class MailWmcContext implements Service
 			throw new ResourceNotFoundEx("'mailserver' property is missing from configuration file.");
 
 		String title = params.getChildText("wmc_title");
+		String comment = params.getChildText("wmc_comment");
 		String mailfrom = params.getChildText("wmc_mailfrom");
 		String mailto = params.getChildText("wmc_mailto");
 		int width  = Integer.parseInt(params.getChildText("width"));
@@ -109,6 +110,8 @@ public class MailWmcContext implements Service
 		System.out.println("Sending WMC context mail");
 		System.out.println("   from: " + mailfrom);
 		System.out.println("   to:   " + mailto);
+		System.out.println("   title:   " + title);
+		System.out.println("   comment: " + comment);
 		System.out.println("   by: "   + _mailserver);
 		System.out.println("   on port: "   + _smtpport);
 
@@ -131,7 +134,11 @@ public class MailWmcContext implements Service
 		String fullurl = _gnURL+"?wmc="+enc2;
 
 		Element maildata = new Element("maildata")
+			.addContent(new Element("gnurl").setText(_gnURL))
 			.addContent(new Element("url").setText(fullurl))
+			.addContent(new Element("title").setText(title))
+			.addContent(new Element("mailfrom").setText(mailfrom))
+			.addContent(new Element("comment").setText(comment))
 			.addContent(new Element("imgsrc").setText("cid:"+cid));
 
 		Element stylesheet = (Element)Xml.loadFile(_xslfile).clone();
