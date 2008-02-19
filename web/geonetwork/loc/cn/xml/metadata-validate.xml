@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<heading>元数据有效性检查</heading>
-	<message>元数据有效性检查成功</message>
+	<message>Validation against schema definitions succeeded</message>
+  <schemaTronError>but there were Error(s) in validating against schematron rules</schemaTronError>
+  <schemaTronValid>Validation against schematron rules succeeded</schemaTronValid>
+  <schemaTronReport>Schematron report available here</schemaTronReport>
 </strings>
