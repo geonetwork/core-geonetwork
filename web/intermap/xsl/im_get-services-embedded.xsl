@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- requires unescapeHTML() from prototype.js  -->
+<!-- only the first script tag will be evaluated by im_servicesLoaded() -->
+
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink">
 		
 	<!-- Main template -->
@@ -10,7 +13,7 @@
 			<script language="javascript">
 				//function getWmsLayerInfo(name) {
 				getWmsLayerInfo = function(name) {
-					window.open('<xsl:value-of select="/root/gui/locService" />/map.service.wmsLayerInfo?url=<xsl:value-of select="/root/response/url"/>&amp;name=' + name, 'dialog', 'HEIGHT=300,WIDTH=400,scrollbars=yes,toolbar=no,status=no,menubar=no,location=no,resizable=yes');
+				window.open(('<xsl:value-of select="/root/gui/locService" />/map.service.wmsLayerInfo?url=<xsl:value-of select="/root/response/url"/>&amp;name=' + name).unescapeHTML(), 'dialog', 'HEIGHT=300,WIDTH=400,scrollbars=yes,toolbar=no,status=no,menubar=no,location=no,resizable=yes').focus();
 				}
 			</script>
 			

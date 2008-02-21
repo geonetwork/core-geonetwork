@@ -8,6 +8,7 @@
 
  requires:
     clearNode(node)
+    extractScripts() // from prototype.js
     getIMServiceURL(service)
     imc_addServices(url, services, type, im_servicesAdded);
 	im_buildLayerList(req); // rebuild layers' list
@@ -143,9 +144,13 @@ function imc_loadURLServices(url, refreshCache, type, callback, jscallback)
 
 function im_servicesLoaded(req)
 {
-	// Dinamically generate content
+	// Dynamically generate content
 	var im = $('im_serverList');
-	im.innerHTML =req.responseText; 
+	im.innerHTML =req.responseText;
+	var reqScripts = req.responseText.extractScripts();
+	// Only evaluate the first script
+	if (reqScripts.length > 0)
+		eval(reqScripts[0]);  
 }
 
 /*
