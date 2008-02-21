@@ -773,6 +773,20 @@
 			</output>
 		</service>
 
+		<service name="xml.relation.insert">
+			<class name=".services.relations.Insert" />
+			<error id="insert" sheet="error.xsl">
+				<xml  name="error"   file="xml/error.xml" />
+			</error>
+		</service>
+		
+		<service name="xml.relation.delete">
+			<class name=".services.relations.Remove" />
+			<error id="delete" sheet="error.xsl">
+				<xml  name="error"   file="xml/error.xml" />
+			</error>
+		</service>
+		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Thesaurus services                                             -->
 		<!-- Search Keywords services -->
