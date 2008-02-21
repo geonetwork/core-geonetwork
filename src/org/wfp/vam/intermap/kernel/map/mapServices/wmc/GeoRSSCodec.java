@@ -53,8 +53,13 @@ public class GeoRSSCodec
 
 	public static Element getGeoRSS(MarkerSet ms)
 	{
+		return getGeoRSS(ms, "intermap markerset");
+	}
+
+	public static Element getGeoRSS(MarkerSet ms, String title)
+	{
 		Element feed = new Element("feed", NS_ATOM);
-		feed.addContent(new Element("title", NS_ATOM).setText("intermap markerset"));
+		feed.addContent(new Element("title", NS_ATOM).setText(title));
 
 		for (Marker marker : ms)
 		{

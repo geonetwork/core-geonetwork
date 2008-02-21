@@ -35,12 +35,14 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.HtmlEmail;
+import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.wfp.vam.intermap.Constants;
 import org.wfp.vam.intermap.kernel.GlobalTempFiles;
 import org.wfp.vam.intermap.kernel.map.MapMerger;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.GeoRSSCodec;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.WmcCodec;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCViewContext;
 import org.wfp.vam.intermap.kernel.marker.MarkerSet;
@@ -66,8 +68,8 @@ public class MailWmcContext implements Service
 		{
 			Logger.getLogger("MailWmcContext").warning("*** The mailserver config property has not been set. WMC mail will not be available.");
 		}
-		
-		try 
+
+		try
 		{
 			_smtpport =Integer.parseInt(config.getValue("smtpport"));
 		}
@@ -161,14 +163,34 @@ public class MailWmcContext implements Service
 		fw.flush();
 		fw.close();
 
-		// Attach it
-		EmailAttachment attachment = new EmailAttachment();
-		attachment.setPath(tempContextFile.getAbsolutePath());
-		attachment.setDisposition(EmailAttachment.ATTACHMENT);
-		attachment.setDescription("Interactive map");
-		attachment.setName("Interactive_map.cml");
+		// Attach the context
+		EmailAttachment cmlAttachment = new EmailAttachment();
+		cmlAttachment.setPath(tempContextFile.getAbsolutePath());
+		cmlAttachment.setDisposition(EmailAttachment.ATTACHMENT);
+		cmlAttachment.setDescription("Interactive map");
+		cmlAttachment.setName("InteractiveMap.cml");
+		email.attach(cmlAttachment);
 
-		email.attach(attachment);
+		if( ms != null && ! ms.isEmpty())
+		{
+			Element erss = GeoRSSCodec.getGeoRSS(ms, title);
+			Document drss = new Document(erss);
+
+			// Create the rss file as attachment
+			File tempRssFile = GlobalTempFiles.getInstance().getFile("rss");
+			fw = new FileWriter(tempRssFile);
+			xo.output(drss, fw);
+			fw.flush();
+			fw.close();
+
+			// Attach the rss
+			EmailAttachment rssAttachment = new EmailAttachment();
+			rssAttachment.setPath(tempRssFile.getAbsolutePath());
+			rssAttachment.setDisposition(EmailAttachment.ATTACHMENT);
+			rssAttachment.setDescription("MarkerSet");
+			rssAttachment.setName("AtomMarkerSet.rss");
+			email.attach(rssAttachment);
+		}
 
 		// send the email
 		email.send();
@@ -181,3 +203,4 @@ public class MailWmcContext implements Service
 
 
 //=============================================================================
+
