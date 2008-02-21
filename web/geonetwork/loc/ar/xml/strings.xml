@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	
+    <savexml>
+        <dc>Save Dublin Core metadata as XML</dc>
+        <fgdc>Save FGDC metadata as XML</fgdc>
+        <iso19115Esri>Save ISO19115 metadata in XML for ESRI ArcCatalog</iso19115Esri>
+        <iso19139>Save ISO19115/19139 metadata as XML</iso19139>
+        <iso19139fra>Save ISO19115/19139 Fra metadata as XML</iso19139fra>
+    </savexml>
+	<clearAll>Clear All</clearAll>
+	<contactUs>Contact us</contactUs>
+	<contentInfoTab>Content Info</contentInfoTab>
+	<dateRelChoice/>
+	<downloadable>Downloadable</downloadable>
+	<dynamic>Interactive</dynamic>
+	<downloadEmail>Download Email</downloadEmail>
+	<extensionInfoTab>Ext. Info</extensionInfoTab>
+	<transferOwnership>Transfer ownership</transferOwnership>
+	<transferOwnershipDes>Transfer metadata ownership to another user</transferOwnershipDes>
+	<intermapSearch>Geographic search</intermapSearch>
+	<opensearch>
+	GeoNetwork opensearch service allow search to be made into the metadata catalog.
+	</opensearch>
+	<organisation>Organisation / department</organisation>
+	<progressChoice/>
+	<protocol>Protocol</protocol>
+	<options>Options</options>
+	<output>Output</output>
+	<outputType id="full">Full</outputType>
+	<outputType id="text">Text only</outputType>
+	<sortBy>Sort by</sortBy>
+	<sortByType id="relevance">Relevance</sortByType>
+	<sortByType id="rating">Rating</sortByType>
+	<sortByType id="popularity">Popularity</sortByType>
+	<sortByType id="date">Change date</sortByType>
+	<rateIt>Rate It</rateIt>
+	<mdRating>Metadata Rating</mdRating>
+	<ratingMsg>
+	Press a button to rate. Note that for harvested metadata you have to wait the new run.
+	</ratingMsg>
+	<searchBox>Search for Data and Information</searchBox>
+	<searchIndex>Search index</searchIndex>
+	<Reviewer>Content reviewer</Reviewer>
+	<waitGetCap>Loading server layers, please wait...</waitGetCap>
 	<!-- new strings -->
 	<searchUnusedTitle>Search for Unused</searchUnusedTitle>
 

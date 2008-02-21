@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<clearAll>Clear All</clearAll>
+	<contentInfoTab>Content Info</contentInfoTab>
+	<convert>Conversion</convert>
+	<dateRelChoice/>
+	<downloadEmail>Email Téléchargement</downloadEmail>
+	<extensionInfoTab>Ext. Info</extensionInfoTab>
+	<feedbackCardTitle>Commentaire</feedbackCardTitle>
+	<feedbackComments>Retour/Commentaires</feedbackComments>
+	<transferOwnership>Transfert de privilèges</transferOwnership>
+	<transferOwnershipDes>Transfert des privilèges de métadonnées pour un autre utilisateur</transferOwnershipDes>
+	<intermapSearch>Recherche géographique</intermapSearch>
+	<Reviewer>Content reviewer</Reviewer>
+	<waitGetCap>Chargement en cours ...</waitGetCap>
     <downloadable>Téléchargeable</downloadable>
     <dynamic>Interactive</dynamic>
 	<opensearch>Service de recherche OpenSearch de GeoNetwork permettant la recherche de métadonnées dans le catalogue.</opensearch>

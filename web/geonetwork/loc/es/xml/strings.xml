@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-
+	<clearAll>Clear All</clearAll>
+	<contactUs>Contact us</contactUs>
+	<contentInfoTab>Content Info</contentInfoTab>
+	<dateRelChoice/>
+	<downloadable>Downloadable</downloadable>
+	<dynamic>Interactive</dynamic>
+	<downloadEmail>Download Email</downloadEmail>
+	<extensionInfoTab>Ext. Info</extensionInfoTab>
+	<transferOwnership>Transfer ownership</transferOwnership>
+	<transferOwnershipDes>Transfer metadata ownership to another user</transferOwnershipDes>
+	<highlights>Highlights</highlights>
+	<intermapSearch>Geographic search</intermapSearch>
+	   <opensearch>
+	GeoNetwork opensearch service allow search to be made into the metadata catalog.
+	</opensearch>
+	<progressChoice/>
+	<protocol>Protocol</protocol>
+	<Reviewer>Content reviewer</Reviewer>
+	<waitGetCap>Loading server layers, please wait...</waitGetCap>
 	<savexml>
 		<dc>Guardar metadatos de Dublin Core como XML</dc>
 		<fgdc>Guardar metadatos FGDC como XML</fgdc>
