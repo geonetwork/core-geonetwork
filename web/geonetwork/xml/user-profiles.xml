@@ -152,6 +152,10 @@
 		<!-- MEF facilities -->
 		<allow service="mef.import"/>
 
+		<!-- Relation services -->
+		<allow service="xml.relation.insert"/>
+		<allow service="xml.relation.delete"/>
+		
 	</profile>
 
 	<!-- ====================================================================== -->
