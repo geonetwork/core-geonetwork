@@ -406,6 +406,6 @@ function im_retitleClientMarker(markerid, title)
 
 function im_markerClicked(e, id)
 {
-	Event.stop(e); // prevents from dragging the map image (on Firefox)	
+	//Event.stop(e); // prevents from dragging the map image (on Firefox)	
 	im_markerList(id);	
 }
