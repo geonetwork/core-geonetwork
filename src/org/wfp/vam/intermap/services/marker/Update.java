@@ -103,7 +103,7 @@ public class Update implements Service
 		if(desc != null)
 			marker.setDesc(desc);
 
-		return ms.toElement();
+		return new Element("response").addContent(ms.toElement());
 	}
 
 }
