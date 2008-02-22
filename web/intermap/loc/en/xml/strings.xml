@@ -56,7 +56,12 @@
 	<map>Map</map>
 	<mapsfound>maps found</mapsfound>
 	<markerlistbutton>Marker list</markerlistbutton>
-	<markerlisttitle js="true">Marker list</markerlisttitle>	
+	<markerlisttitle js="true">Marker list</markerlisttitle>
+	<markerUpdating>Updating marker...</markerUpdating> 
+	<markerUpdated>The marker has been updated</markerUpdated> 
+	<markerDeleting>Deleting marker...</markerDeleting> 
+	<markerDeleted>The marker has been deleted</markerDeleted> 
+	<markerNone>There are no markers defined.</markerNone>	
 	<metadata>Metadata</metadata>
 	<newMap>Create a new map</newMap>
 	<noFeature>No features found</noFeature>
@@ -88,6 +93,7 @@
 	<title>InterMap opensource</title>
 	<titleShowStyles js="true">Available styles</titleShowStyles>
 	<transparency>Set transparency</transparency>
+	<unexpectedError>An unexpected error has been encountered while performing the operation:</unexpectedError>				
 	<up>Move layer up</up>
 	<update>Update</update>
 	<updateMarker>Update marker info</updateMarker>
@@ -99,10 +105,28 @@
 	<wmcbuttonmail js="true">Send current context</wmcbuttonmail>	
 	<wmcbuttonupload js="true">Upload a context</wmcbuttonupload>	
 	<wmcbuttondownload js="true">Download current context</wmcbuttondownload>	
+
+	<wmcUploading>The context file is uploading...</wmcUploading> 
+	<wmcUploaded>The context has been uploaded </wmcUploaded>
+	<wmcUploadingError>An unexpected error has been encountered while uploading the context:</wmcUploadingError>				
+	<wmcMailBuilding>The mail is being built...</wmcMailBuilding>
+	<wmcMailSent>The mail has been successfully sent</wmcMailSent>
+	<wmcMailError>An unexpected error has been encountered while processing the mail:</wmcMailError>
+	<wmcUploadReplace>Replace current layers</wmcUploadReplace>
+	<wmcUploadAdd>Add to current layers</wmcUploadAdd>
+	<wmcMailSend>Send e-mail</wmcMailSend>
 	
 	<wmsConfigForm>Layer properties</wmsConfigForm >
 	<zoomIn>Zoom in</zoomIn>
 	<zoomOut>Zoom out</zoomOut>
 	<zoomLayer>Zoom to layer</zoomLayer>
 	<getFeatures>GET FEATURES</getFeatures>
+	
+	<styleSetting>Setting the style...</styleSetting> 
+	<styleSet>The style has been successfully set.</styleSet> 
+	<styleSetError>An unexpected error has been encountered:</styleSetError>				
+	<layerInfo>Layer Info:</layerInfo>
+	<associatedStyles>Associated styles:</associatedStyles>				
+	<setStyle>Set styles</setStyle>				
+	
 </strings>

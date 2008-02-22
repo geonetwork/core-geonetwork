@@ -5,25 +5,26 @@
 	<xsl:template match="/">
 		<div id="im_style_msg">
 			<div id="im_style_msg_set_start" style="display:none;">
-				Setting the style... 
+				<xsl:copy-of select="/root/gui/strings/styleSetting"/>
+				
 			</div>
 			<div id="im_style_msg_set_ok" style="display:none;">
-				The style has been successfully set. 
+				<xsl:copy-of select="/root/gui/strings/styleSet"/>
 			</div>
 			<div id="im_style_msg_set_error" style="display:none;">
-				An unexpected error has been encountered:<br/>				
+				<xsl:copy-of select="/root/gui/strings/styleSetError"/><br/>
 			</div>			
 		</div>
 		
 		<div id="im_style_form">
-			<b>Layer Info:</b>
+			<b><xsl:copy-of select="/root/gui/strings/layerInfo"/></b>
 			<xsl:apply-templates select="/root/response/layer"/>
 			<br/>
-			<b>Associated styles:</b>
+			<b><xsl:copy-of select="/root/gui/strings/associatedStyles"/></b>
 			<xsl:apply-templates select="/root/response/style"/>		
 			
 			<xsl:if test="count(/root/response/style)>1">				
-				<button onClick="im_setStyle({/root/response/layer/id});" style="margin-bottom:5px;margin-top:5px;">Set style</button>
+				<button onClick="im_setStyle({/root/response/layer/id});" style="margin-bottom:5px;margin-top:5px;"><xsl:copy-of select="/root/gui/strings/setStyle"/></button>
 			</xsl:if>
 			
 		</div>
