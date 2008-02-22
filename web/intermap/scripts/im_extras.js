@@ -586,7 +586,7 @@ function im_updateMarker(id)
 					im_marker_showMessage("update", "error", msg);                
 				}
 				else
-				{                
+				{   
 					im_marker_showMessage("update", "ok");
 					im_retitleClientMarker(id, title)
 				}
@@ -754,7 +754,7 @@ function im_showStyles(id)
     		parameters: 'id='+id,
     		onSuccess: function(req)
     		{
-				if(req.responseXML && req.responseXML.documentElement.tagName == "error")
+				if(req.responseXML && req.responseXML.documentElement && req.responseXML.documentElement.tagName == "error")
 				{
 					var resp = req.responseXML.documentElement;
 					var msg = resp.getElementsByTagName('message')[0].firstChild.nodeValue;
@@ -796,7 +796,7 @@ function im_setStyle(layerid)
 			parameters: pars,
 			onSuccess: function(req)
 			{
-				if(req.responseXML && req.responseXML.documentElement.tagName == "error")
+				if(req.responseXML && req.responseXML.documentElement && req.responseXML.documentElement.tagName == "error")
 				{
 					var resp = req.responseXML.documentElement;
 					var msg = resp.getElementsByTagName('message')[0].firstChild.nodeValue;			
