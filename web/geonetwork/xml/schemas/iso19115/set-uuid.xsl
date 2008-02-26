@@ -12,8 +12,9 @@
 	
 	<xsl:template match="Metadata">
 		 <xsl:copy>
+		 		<xsl:copy-of select="@*"/>
 	 			<mdFileID><xsl:value-of select="/root/env/uuid"/></mdFileID>
-			  <xsl:apply-templates select="@*|node()"/>
+			  <xsl:apply-templates select="node()"/>
 		 </xsl:copy>
 	</xsl:template>
 
