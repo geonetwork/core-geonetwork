@@ -5,7 +5,7 @@
 //===================================================================
 
 var im_mm = new Intermap(200, 100, 'im_mm_image');
-im_mm.setBBox(90, 180, -90, -180);
+// im_mm.setBBox(90, 180, -90, -180);
 
 /** The AoI FakeBox */
 var im_aoi = new FakeBox('im_mm_aoibox');
