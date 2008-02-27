@@ -114,7 +114,7 @@ function im_mapServerURL(url, refreshCache)
 	clearNode(im);
 
 	var t1 = document.createElement("p");
-	t1.innerHTML = "...please wait...";
+	t1.innerHTML = i18n("wait");
 	im.appendChild(t1);
 
 	var t2 = document.createElement("p");
