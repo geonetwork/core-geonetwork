@@ -481,6 +481,17 @@
 	<wwwlink>网站链接</wwwlink>
 	<xmlInsert>导入ISO19115 XML格式的元数据</xmlInsert>
 	<xmlTab>XML视图</xmlTab>
+
+	<!--  intermap tooltips -->
+	<imZoomFull>Zoom to full map extent</imZoomFull>
+	<imZoomIn>Zoom in</imZoomIn>
+	<imZoomOut>Zoom out</imZoomOut>
+	<imPan>Pan</imPan>
+	<imZoomToLayer>Zoom to selected layer extent</imZoomToLayer>
+	<imAreaInterest>Select an Area Of Interest</imAreaInterest>
 	
-	
+	<!-- date selector -->
+	<fromDateSelector>Select FROM date</fromDateSelector> 
+	<toDateSelector>Select TO date</toDateSelector> 
+
 </strings>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<clearAll>Clear All</clearAll>
-	<contactUs>Contact us</contactUs>
 	<contentInfoTab>Content Info</contentInfoTab>
 	<dateRelChoice/>
 	<downloadable>Downloadable</downloadable>
@@ -502,55 +501,7 @@
 	<xmlInsert>Importación de un fichero XML de Metadatos</xmlInsert>
 	<xmlTab>Árbol XML</xmlTab>
 
-	<!-- these strings are not defined in the main language
-	<batchImportDesc>Importación por lotes</batchImportDesc>
-	<buttonAccept>Aceptar</buttonAccept>
-	<buttonAdd>Añadir</buttonAdd>
-	<buttonAddNewGroup>Añadir Grupo</buttonAddNewGroup>
-	<buttonAddNewUser>Añadir Usuario</buttonAddNewUser>
-	<buttonAdvancedSearch>Búsqueda Avanzada</buttonAdvancedSearch>
-	<buttonBack>Atrás</buttonBack>
-	<buttonBatchImport>Importar Remesa</buttonBatchImport>
-	<buttonBrowse>Ojear</buttonBrowse>
-	<buttonCancel>Cancelar</buttonCancel>
-	<buttonClear>Limpiar</buttonClear>
-	<buttonCreate>Crear</buttonCreate>
-	<buttonDecline>Rechazar</buttonDecline>
-	<buttonDefaultSearch>Búsqueda Simple</buttonDefaultSearch>
-	<buttonDelete>Borrar</buttonDelete>
-	<buttonDescription>Descripción</buttonDescription>
-	<buttonDownload>Bajar información</buttonDownload>
-	<buttonEdit>Editar</buttonEdit>
-	<buttonGroupManagement>Gestionar grupos</buttonGroupManagement>
-	<buttonImport>Importar</buttonImport>
-	<buttonInsertXMLMetadata>Insertar metadato XML</buttonInsertXMLMetadata>
-	<buttonInteractiveMap>Mapa Interactivo</buttonInteractiveMap>
-	<buttonLogin>Entrar</buttonLogin>
-	<buttonMap>Mapa</buttonMap>
-	<buttonNewMetadata>Nuevo Metadato</buttonNewMetadata>
-	<buttonPrint>Imprimir</buttonPrint>
-	<buttonPrivileges>Privilegios</buttonPrivileges>
-	<buttonRemove>Suprimir</buttonRemove>
-	<buttonReset>Vaciar formulario</buttonReset>
-	<buttonSave>Salvar</buttonSave>
-	<buttonSaveAndClose>Salvar y Cerrar</buttonSaveAndClose>
-	<buttonSearch>Buscar</buttonSearch>
-	<buttonSubmit>Enviar</buttonSubmit>
-	<buttonTabbedView>Vista en forma de Tabla</buttonTabbedView>
-	<buttonUpload>Subir Información</buttonUpload>
-	<buttonUserManagement>Gestionar Usuarios</buttonUserManagement>
-	<copyright3>© ......</copyright3>
-	<count>Número</count>
-	<mapServer>Conexión con el servidor de mapas</mapServer>
-	<metadataPerRegion>Metadatos para una región</metadataPerRegion>
-	<xmlMetadataInsert>Insertar Metadato en base a un fichero XML</xmlMetadataInsert>
-	<xmlInsertDesc>Insertar Metadato desde un fichero XML</xmlInsertDesc>
-	<orderBy>Ordenar por</orderBy>
-	<rank>Los mejores resultados</rank>
-	<downloads>Número de descargas</downloads>
-	<lastChange>Fecha del último cambio</lastChange>
-	-->
-        <!--  intermap tooltips -->
+	<!--  intermap tooltips -->
         <imZoomFull>Zoom a la extensión del mapa</imZoomFull>
         <imZoomIn>Acercar</imZoomIn>
         <imZoomOut>Alejar</imZoomOut>
@@ -561,6 +512,5 @@
         <!-- date selector -->
         <fromDateSelector>Selector de fecha de inicio</fromDateSelector> 
         <toDateSelector>Selector de fecha de fin</toDateSelector> 
-
 
 </strings>

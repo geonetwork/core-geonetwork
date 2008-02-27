@@ -245,20 +245,20 @@
 							<table width="16px">
 								<xsl:comment>MINIMAP TOOLBAR</xsl:comment>						
 								<tr  id="im_mm_toolbar"> <!-- This element's class is set at runtime -->
-									<td class="im_mmtool" id="im_mmtool_fullextent"  	onClick="javascript:im_mm_fullExtent()"><img src="/intermap/images/im_zoomfull16x16.png" title="Zoom to full map extent"/></td>
+									<td class="im_mmtool" id="im_mmtool_fullextent"  	onClick="javascript:im_mm_fullExtent()"><img src="/intermap/images/im_zoomfull16x16.png" title="{/root/gui/strings/imZoomFull}"/></td>
 								</tr>
 								<tr  id="im_mm_toolbar"> <!-- This element's class is set at runtime -->
-									<td class="im_mmtool" id="im_mmtool_zoomin"	onClick="javascript:im_mm_setTool('zoomin');" ><img src="/intermap/images/zoomin.png" title="Zoom in"/></td>
+									<td class="im_mmtool" id="im_mmtool_zoomin"	onClick="javascript:im_mm_setTool('zoomin');" ><img src="/intermap/images/zoomin.png" title="{/root/gui/strings/imZoomIn}"/></td>
 								</tr>
 								<tr  id="im_mm_toolbar"> <!-- This element's class is set at runtime -->
-									<td class="im_mmtool" id="im_mmtool_zoomout"   	onClick="javascript:im_mm_setTool('zoomout');"><img  src="/intermap/images/zoomout.png" title="Zoom out"/></td>
+									<td class="im_mmtool" id="im_mmtool_zoomout"   	onClick="javascript:im_mm_setTool('zoomout');"><img  src="/intermap/images/zoomout.png" title="{/root/gui/strings/imZoomOut}"/></td>
 								</tr>
 								<tr  id="im_mm_toolbar"> <!-- This element's class is set at runtime -->
-									<td class="im_mmtool" id="im_mmtool_pan"		onClick="javascript:im_mm_setTool('pan');"><img src="/intermap/images/im_pan16x16.png" title="Pan"/></td>
+									<td class="im_mmtool" id="im_mmtool_pan"		onClick="javascript:im_mm_setTool('pan');"><img src="/intermap/images/im_pan16x16.png" title="{/root/gui/strings/imPan}"/></td>
 								</tr>
 								<tr  id="im_mm_toolbar"> <!-- This element's class is set at runtime -->
-									<!--							<td class="im_mmtool" id="im_mmtool_zoomsel"	onClick="javascript:im_mm_zoomToAoi()"><img src="/intermap/images/zoomsel.png" title="Zoom to selected layer extent"/></td> -->
-									<td class="im_mmtool" id="im_mmtool_aoi"		onClick="javascript:im_mm_setTool('aoi')"><img src="/intermap/images/im_aoi16x16.png" title="Select an Area Of Interest"/></td> 
+									<!--							<td class="im_mmtool" id="im_mmtool_zoomsel"	onClick="javascript:im_mm_zoomToAoi()"><img src="/intermap/images/zoomsel.png" title="{/root/gui/strings/imZoomToLayer}"/></td> -->
+									<td class="im_mmtool" id="im_mmtool_aoi"		onClick="javascript:im_mm_setTool('aoi')"><img src="/intermap/images/im_aoi16x16.png" title="{/root/gui/strings/imAreaInterest}"/></td> 
 								</tr>
 							</table>
 						</td>
@@ -375,14 +375,14 @@
 					<xsl:value-of select="/root/gui/strings/from"/>
 					<input style="width: 90px;" readonly="1" id="dateFrom" value="{/root/gui/searchDefaults/dateFrom}" name="dateFrom" class="inpBnds" type="text"
 						onchange="$('radfrom1').checked=true;$('radfrom1').disabled='';"/>
-					<img title="FROM date selector" style="cursor: pointer; margin-bottom: 6px; margin-right:10px;" id="from_trigger_c" 
-						src="{/root/gui/url}/scripts/calendar/img.gif" alt="select FROM date" align="middle" hspace="1"/>
+					<img title="{/root/gui/strings/fromDateSelector}" style="cursor: pointer; margin-bottom: 6px; margin-right:10px;" id="from_trigger_c" 
+						src="{/root/gui/url}/scripts/calendar/img.gif" alt="{/root/gui/strings/fromDateSelector}" align="middle" hspace="1"/>
 							
 					<xsl:value-of select="/root/gui/strings/to"/>
 					<input  style="width: 90px;" readonly="1" id="dateTo" value="{/root/gui/searchDefaults/dateTo}" name="dateTo" class="inpBnds" type="text"
 						onchange="$('radfrom1').checked=true;$('radfrom1').disabled='';" />
-					<img title="TO date selector" style="cursor: pointer; margin-bottom: 6px;" id="to_trigger_c" 
-						src="{/root/gui/url}/scripts/calendar/img.gif" alt="select TO date" align="middle" hspace="1"/>								
+					<img title="{/root/gui/strings/toDateSelector}" style="cursor: pointer; margin-bottom: 6px;" id="to_trigger_c" 
+						src="{/root/gui/url}/scripts/calendar/img.gif" alt="{/root/gui/strings/toDateSelector}" align="middle" hspace="1"/>								
 				</input>
 <!--				<div onclick="JavaScript:$('dateFrom').value ='';$('dateTo').value ='';" style="cursor: pointer;"><xsl:value-of select="/root/gui/strings/clear"/></div> -->
 				<img title="{/root/gui/strings/clear}" style="cursor: pointer; margin-bottom: 6px;" id="clearDates" 

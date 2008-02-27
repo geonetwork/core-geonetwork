@@ -14,10 +14,11 @@
 	
 	<xsl:template match="gmd:MD_Metadata">
 		 <xsl:copy>
+		 		<xsl:copy-of select="@*"/>
 	 			<gmd:fileIdentifier>
 					<gco:CharacterString><xsl:value-of select="/root/env/uuid"/></gco:CharacterString>
 				</gmd:fileIdentifier>
-			  <xsl:apply-templates select="@*|node()"/>
+			  <xsl:apply-templates select="node()"/>
 		 </xsl:copy>
 	</xsl:template>
 

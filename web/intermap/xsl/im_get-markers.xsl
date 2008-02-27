@@ -40,27 +40,26 @@
 	<xsl:template match="//marker" mode="single">		
 		<!-- =========================================== -->
 		<!--   USER MESSAGES --> 
-		<!--  TODO i18n all messages -->
 		<!-- =========================================== -->
 		<div id="im_marker_msg">
 			<div id="im_marker_msg_update_start" style="display:none;">
-				Updating marker... 
+				<xsl:copy-of select="/root/gui/strings/markerUpdating"/>
 			</div>
 			<div id="im_marker_msg_update_ok" style="display:none;">
-				The marker has been updated 
+				<xsl:copy-of select="/root/gui/strings/markerUpdated"/>
 			</div>
 			<div id="im_marker_msg_update_error" style="display:none;">
-				An unexpected error has been encountered while performing the operation:<br/>				
+				<xsl:copy-of select="/root/gui/strings/unexpectedError"/><br/>
 			</div>
 			
 			<div id="im_marker_msg_delete_start" style="display:none;">
-				Deleting marker... 
+				<xsl:copy-of select="/root/gui/strings/markerDeleting"/>
 			</div>
 			<div id="im_marker_msg_delete_ok" style="display:none;">
-				The marker has been deleted 
+				<xsl:copy-of select="/root/gui/strings/markerDeleted"/>
 			</div>
 			<div id="im_marker_msg_delete_error" style="display:none;">
-				An unexpected error has been encountered while performing the operation:<br/>				
+				<xsl:copy-of select="/root/gui/strings/unexpectedError"/><br/>
 			</div>			
 		</div>
 		
@@ -99,7 +98,7 @@
 	
 	<xsl:template name="empty">
 		<div>
-			<b>There are no markers defined.</b>
+			<b><xsl:copy-of select="/root/gui/strings/markerNone"/></b>
 		</div>
 		
 	</xsl:template>

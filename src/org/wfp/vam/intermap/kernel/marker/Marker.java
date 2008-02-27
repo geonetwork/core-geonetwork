@@ -13,7 +13,7 @@ import org.jdom.Element;
 
 public class Marker
 {
-	private static long counter = 0;
+	private static long counter = 1;
 
 	private final long id;
 	private double _lat;

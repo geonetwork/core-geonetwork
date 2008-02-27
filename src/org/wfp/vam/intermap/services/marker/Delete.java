@@ -59,7 +59,7 @@ public class Delete implements Service
 		if( ! ms.remove(id))
 			throw new ObjectNotFoundEx(""+id);
 
-		return ms.toElement();
+		return new Element("response").addContent(ms.toElement());
 	}
 
 }

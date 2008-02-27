@@ -8,23 +8,23 @@
 		<!-- =========================================== -->
 		<div id="im_wmc_msg">
 			<div id="im_wmc_msg_upload_start" style="display:none;">
-				The context file is uploading... 
+				<xsl:copy-of select="/root/gui/strings/wmcUploading"/>
 			</div>
 			<div id="im_wmc_msg_upload_ok" style="display:none;">
-				The context has been uploaded 
+				<xsl:copy-of select="/root/gui/strings/wmcUploading"/>
 			</div>
 			<div id="im_wmc_msg_upload_error" style="display:none;">
-				An unexpected error has been encountered while uploading the context:<br/>				
+				<xsl:copy-of select="/root/gui/strings/wmcUploadingError"/><br/>
 			</div>
 			
 			<div id="im_wmc_msg_mail_start" style="display:none;">
-				The mail is being build...
+				<xsl:copy-of select="/root/gui/strings/wmcMailBuilding"/>
 			</div>
 			<div id="im_wmc_msg_mail_ok" style="display:none;">
-				The mail has been successfully sent
+				<xsl:copy-of select="/root/gui/strings/wmcMailSent"/>
 			</div>
 			<div id="im_wmc_msg_mail_error" style="display:none;">
-				An unexpected error has been encountered while processing the mail:<br/>
+				<xsl:copy-of select="/root/gui/strings/wmcMailError"/><br/>
 			</div>						
 		</div>
 
@@ -88,10 +88,14 @@
 				
 				<tr>
 					<td align="center">
-						<button onClick="im_uploadWMC(true);" style="margin-bottom:5px;margin-top:5px;">Replace current layers</button>
+						<button onClick="im_uploadWMC(true);" style="margin-bottom:5px;margin-top:5px;">
+							<xsl:copy-of select="/root/gui/strings/wmcUploadReplace"/>
+						</button>
 					</td>
 					<td align="center">
-						<button onClick="im_uploadWMC(false);" style="margin-bottom:5px;margin-top:5px;">Add to current layers</button>
+						<button onClick="im_uploadWMC(false);" style="margin-bottom:5px;margin-top:5px;">
+							<xsl:copy-of select="/root/gui/strings/wmcUploadAdd"/>
+						</button>
 					</td>
 				</tr>						
 			</table>
@@ -130,7 +134,9 @@
 			</tr> -->
 			<tr style="padding-bottom:5px;">
 				<td colspan="2" align="center">
-					<button onClick="im_sendWMC();" style="margin-bottom:5px;margin-top:5px;">Send e-mail</button>											
+					<button onClick="im_sendWMC();" style="margin-bottom:5px;margin-top:5px;">
+						<xsl:copy-of select="/root/gui/strings/wmcMailSend"/>						
+					</button>											
 				</td>
 			</tr>
 			

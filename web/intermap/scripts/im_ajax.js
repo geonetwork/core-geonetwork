@@ -11,12 +11,18 @@ im_load_error = function() {alert("Loading error");};
 
 
 function im_checkError(req)
-{
+{	
 	var doc = req.responseXML;	
+	
 	if(!doc) // It's not XML 
 	{
 		return false;
 	}	
+
+	if(doc.firstChild === null) // added for IE
+	{ 
+		return false;
+	}
 	
 	if(doc.firstChild.tagName=="error")
 	{ 
@@ -35,6 +41,11 @@ function im_showError(req)
 	{
 		return false;
 	}	
+
+	if(doc.firstChild === null) // added for IE
+	{ 
+		return false;
+	}
 	
 	if(doc.firstChild.tagName=="error")
 	{ 
