@@ -116,7 +116,7 @@ public class XmlSerializer
 		args.add(createDate);
 		args.add(changeDate);
 		args.add(source);
-		args.add(uuid);
+		args.add(uuid.toLowerCase());
 		args.add(isTemplate);
 		args.add("n");
 		args.add(xml.getQualifiedName());
