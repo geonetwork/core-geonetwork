@@ -1044,7 +1044,7 @@
 			<codeEntry>
 				<CodeDefinition gml:id="MD_MaintenanceFrequencyCode_unknown">
 					<gml:description>frequency of maintenance for the data is not known</gml:description>
-					<gml:identifier codeSpace="ISOTC211/19115">unknwon</gml:identifier>
+					<gml:identifier codeSpace="ISOTC211/19115">unknown</gml:identifier>
 				</CodeDefinition>
 			</codeEntry>
 		</CodeListDictionary>
