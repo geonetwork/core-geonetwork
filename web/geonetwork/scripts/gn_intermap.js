@@ -27,6 +27,8 @@
 *** 	im_extra_afterLayerUpdated()
 ***		im_buildLayerList(req);
 ***
+*** file im_markers.js
+***
 **********************************************************/
 
 /** 
@@ -39,7 +41,7 @@
  */
 function runIM_addService(url, service, type)
 {
-    imc_addService(url, service, type, 
+    imc_addService(url, service, type, false,
 					function(req) 
 					{
 			             im_buildLayerList(req);
