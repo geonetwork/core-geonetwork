@@ -88,6 +88,10 @@ td.banner {
 	border-bottom: 1px solid #ffffff; /* moved here from tr since IE accepts it only here */
 }
 
+.bottom_border {
+	border-bottom: 1px dotted gray;
+}
+
 td.banner-menu {
 	font-size: 8pt;
 	color: #ffffff;
@@ -480,6 +484,15 @@ div.related {
 }
 div.narrower {
         background-color: #f7faff;
+}
+
+div.important {
+	width: 70%;
+	border-style: inset;
+	border-width: 1px;
+	text-align: justify;
+	margin: 15px;
+	padding: 10px;
 }
 
 div.keywordResults ul li.selected {
