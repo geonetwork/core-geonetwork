@@ -37,15 +37,16 @@
 	form
 	-->
 	<xsl:template name="form">
-		<table>
+		<div class="important"><xsl:value-of select="/root/gui/strings/localizationHelp"/></div>
+		<table width="70%">
 			<tr>
-				<th class="padded"><xsl:value-of select="/root/gui/strings/name"/></th>
+				<th class="padded, bottom_border"><xsl:value-of select="/root/gui/strings/name"/></th>
 				<th class="padded"><xsl:value-of select="/root/gui/strings/operation"/></th>
 			</tr>
 			<xsl:for-each select="/root/response/record">
 				<tr>
-					<td class="padded"><xsl:value-of select="name"/></td>
-					<td class="padded">
+					<td class="padded, bottom_border"><xsl:value-of select="name"/></td>
+					<td class="padded" width="150px">
 						<button class="content" onclick="load('{/root/gui/locService}/category.get?id={id}')"><xsl:value-of select="/root/gui/strings/edit"/></button>
 						&#160;
 						<button class="content" onclick="delete1('{/root/gui/locService}/category.remove?id={id}')"><xsl:value-of select="/root/gui/strings/delete"/></button>

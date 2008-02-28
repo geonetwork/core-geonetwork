@@ -1488,6 +1488,9 @@
 	<xsl:template mode="iso19139" match="gmd:CI_OnlineResource" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
+		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
+		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString)" />
+		<xsl:variable name="description" select="normalize-space(gmd:description/gco:CharacterString)" />
 		
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
@@ -1495,23 +1498,26 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:otherwise>
+			<xsl:when test="string($linkage)!=''">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="text">
-						<a href="{gmd:linkage/gmd:URL}" target="_new">
+						<a href="{$linkage}" target="_new">
 							<xsl:choose>
-								<xsl:when test="string(gmd:description/gco:CharacterString)!=''">
-									<xsl:value-of select="gmd:description/gco:CharacterString"/>
+								<xsl:when test="string($description)!=''">
+									<xsl:value-of select="$description"/>
+								</xsl:when>
+								<xsl:when test="string($name)!=''">
+									<xsl:value-of select="$name"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="gmd:linkage/gmd:URL"/>
+									<xsl:value-of select="$linkage"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</a>
 					</xsl:with-param>
 				</xsl:apply-templates>
-			</xsl:otherwise>
+			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
 
@@ -1580,6 +1586,9 @@
 	<xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-map') and gmd:name]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
+		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
+		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString)" />
+		<xsl:variable name="description" select="normalize-space(gmd:description/gco:CharacterString)" />
 		
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
@@ -1587,7 +1596,7 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="string(//geonet:info/dynamic)='true'">
+			<xsl:when test="string(//geonet:info/dynamic)='true' and string($name)!='' and string($linkage)!=''">
 			<!-- Create a link for a WMS service that will open in InterMap opensource -->
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
@@ -1596,16 +1605,16 @@
 						<!-- ETj
 						<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={gmd:linkage/gmd:URL}&amp;service={gmd:name/gco:CharacterString}&amp;type=2')" title="{/root/strings/interactiveMap}">
 						-->
-						<a href="javascript:runIM_addService('{gmd:linkage/gmd:URL}','{gmd:name/gco:CharacterString}',2)" title="{/root/strings/interactiveMap}">
+						<a href="javascript:runIM_addService('{$linkage}','{$name}',2)" title="{/root/strings/interactiveMap}">
 							<xsl:choose>
-								<xsl:when test="string(gmd:description/gco:CharacterString)!=''">
-									<xsl:value-of select="gmd:description/gco:CharacterString"/>
+								<xsl:when test="string($description)!=''">
+									<xsl:value-of select="$description"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="gmd:name/gco:CharacterString"/>
+									<xsl:value-of select="$name"/>
 								</xsl:otherwise>
 							</xsl:choose>
-						</a><br/>(OGC-WMS Server: <xsl:value-of select="gmd:linkage/gmd:URL"/> )
+						</a><br/>(OGC-WMS Server: <xsl:value-of select="$linkage"/> )
 					</xsl:with-param>
 				</xsl:apply-templates>
 				<!-- Create a link for a WMS service that will open in Google Earth through the reflector -->
@@ -1613,13 +1622,13 @@
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/viewInGE"/>
 					<xsl:with-param name="text">
-						<a href="{/root/gui/locService}/google.kml?id={//geonet:info/id}&amp;layers={gmd:name/gco:CharacterString}" title="{/root/strings/interactiveMap}">
+						<a href="{/root/gui/locService}/google.kml?id={//geonet:info/id}&amp;layers={$name}" title="{/root/strings/interactiveMap}">
 							<xsl:choose>
-								<xsl:when test="string(gmd:description/gco:CharacterString)!=''">
-									<xsl:value-of select="gmd:description/gco:CharacterString"/>
+								<xsl:when test="string($description)!=''">
+									<xsl:value-of select="$description"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="gmd:name/gco:CharacterString"/>
+									<xsl:value-of select="$name"/>
 								</xsl:otherwise>
 							</xsl:choose>
 							&#160;
@@ -1638,6 +1647,9 @@
 	<xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-capabilities') and gmd:name]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
+		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
+		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString)" />
+		<xsl:variable name="description" select="normalize-space(gmd:description/gco:CharacterString)" />
 		
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
@@ -1645,18 +1657,18 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="string(//geonet:info/dynamic)='true'">
+			<xsl:when test="string(//geonet:info/dynamic)='true' and string($linkage)!=''">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
 					<xsl:with-param name="text">
-						<a href="javascript:runIM_selectService('{gmd:linkage/gmd:URL}',2,{//geonet:info/id})" title="{/root/strings/interactiveMap}">							
+						<a href="javascript:runIM_selectService('{$linkage}',2,{//geonet:info/id})" title="{/root/strings/interactiveMap}">							
 							<xsl:choose>
-								<xsl:when test="string(gmd:description/gco:CharacterString)!=''">
-									<xsl:value-of select="gmd:description/gco:CharacterString"/>
+								<xsl:when test="string($description)!=''">
+									<xsl:value-of select="$description"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="gmd:name/gco:CharacterString"/>
+									<xsl:value-of select="$name"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</a>
@@ -1673,6 +1685,9 @@
 	<xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'ESRI:AIMS-') and contains(gmd:protocol/gco:CharacterString,'-get-image') and gmd:name]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
+		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
+		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString)" />
+		<xsl:variable name="description" select="normalize-space(gmd:description/gco:CharacterString)" />
 		
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
@@ -1680,19 +1695,19 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="string(//geonet:info/dynamic)='true'">
+			<xsl:when test="string(//geonet:info/dynamic)='true' and string($linkage)!='' and string($name)!=''">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
 					<xsl:with-param name="text">
 <!--	ETj					<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={gmd:linkage/gmd:URL}&amp;service={gmd:name/gco:CharacterString}&amp;type=1')" title="{/root/strings/interactiveMap}">
--->						<a href="javascript:runIM_addService('{gmd:linkage/gmd:URL}','{gmd:name/gco:CharacterString}',1)" title="{/root/strings/interactiveMap}">
+-->						<a href="javascript:runIM_addService('{$linkage}','{$name}',1)" title="{/root/strings/interactiveMap}">
 								<xsl:choose>
-								<xsl:when test="string(gmd:description/gco:CharacterString)!=''">
-									<xsl:value-of select="gmd:description/gco:CharacterString"/>
+								<xsl:when test="string($description)!=''">
+									<xsl:value-of select="$description"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="gmd:name/gco:CharacterString"/>
+									<xsl:value-of select="$name"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</a>
@@ -1709,6 +1724,10 @@
 	<xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'WWW:DOWNLOAD-') and contains(gmd:protocol/gco:CharacterString,'http--download') and gmd:name]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
+		<xsl:variable name="download_check"><xsl:text>&amp;fname=&amp;access</xsl:text></xsl:variable>
+		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
+		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString)" />
+		<xsl:variable name="description" select="normalize-space(gmd:description/gco:CharacterString)" />
 		
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
@@ -1716,18 +1735,18 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="string(//geonet:info/download)='true'">
+			<xsl:when test="string(//geonet:info/download)='true' and string($linkage)!='' and not(contains($linkage,$download_check))">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/downloadData"/>
 					<xsl:with-param name="text">
-						<a href="{gmd:linkage/gmd:URL}" target="_blank">
+						<a href="{$linkage}" target="_blank">
 							<xsl:choose>
-								<xsl:when test="string(gmd:description/gco:CharacterString)!=''">
-									<xsl:value-of select="gmd:description/gco:CharacterString"/>
+								<xsl:when test="string($description)!=''">
+									<xsl:value-of select="$description"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="gmd:name/gco:CharacterString"/>
+									<xsl:value-of select="$name"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</a>
@@ -1916,6 +1935,7 @@
 	
 	<xsl:template name="iso19139Brief">
 		<metadata>
+			<xsl:variable name="download_check"><xsl:text>&amp;fname=&amp;access</xsl:text></xsl:variable>
 			<xsl:variable name="id" select="geonet:info/id"/>
 			<xsl:apply-templates mode="briefster" select="gmd:identificationInfo/gmd:MD_DataIdentification|gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|gmd:identificationInfo/srv:SV_ServiceIdentification">
 				<xsl:with-param name="id" select="$id"/>
@@ -1923,9 +1943,9 @@
 
 			<xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource">
 				<xsl:variable name="protocol" select="gmd:protocol/gco:CharacterString"/>
-				<xsl:variable name="linkage"  select="gmd:linkage/gmd:URL"/>
-				<xsl:variable name="name"     select="gmd:name/gco:CharacterString"/>
-				<xsl:variable name="desc"     select="gmd:description/gco:CharacterString"/>
+				<xsl:variable name="linkage"  select="normalize-space(gmd:linkage/gmd:URL)"/>
+				<xsl:variable name="name"     select="normalize-space(gmd:name/gco:CharacterString)"/>
+				<xsl:variable name="desc"     select="normalize-space(gmd:description/gco:CharacterString)"/>
 				
 				<xsl:if test="string($linkage)!=''">
 				
@@ -1980,7 +2000,7 @@
 				</xsl:if>
 
 				<!-- Generate a KML output link for a WMS service -->
-				<xsl:if test="string($linkage)!='' and starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and $name">
+				<xsl:if test="string($linkage)!='' and starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($name)!=''">
 					
 					<xsl:element name="link">
 						<xsl:attribute name="title"><xsl:value-of select="$desc"/></xsl:attribute>
@@ -1994,16 +2014,16 @@
 
 				<!-- The old links still in use by some systems. Deprecated -->
 				<xsl:choose>
-					<xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($protocol,'http--download') and $name">
+					<xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($protocol,'http--download') and not(contains($linkage,$download_check))">
 						<link type="download"><xsl:value-of select="$linkage"/></link>
 					</xsl:when>
-					<xsl:when test="starts-with($protocol,'ESRI:AIMS-') and contains($protocol,'-get-image') and $name">
+					<xsl:when test="starts-with($protocol,'ESRI:AIMS-') and contains($protocol,'-get-image') and string($linkage)!='' and string($name)!=''">
 						<link type="arcims">
 <!--							<xsl:value-of select="concat('javascript:popInterMap(&#34;',/root/gui/url,'/intermap/srv/',/root/gui/language,'/map.addServicesExt?url=',$linkage,'&amp;service=',$name,'&amp;type=1&#34;)')"/>-->
 							<xsl:value-of select="concat('javascript:runIM_addService(&#34;'  ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;, 1)' )"/>
 						</link>
 					</xsl:when>
-					<xsl:when test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and $name">
+					<xsl:when test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($name)!=''">
 						<link type="wms">
 <!--							<xsl:value-of select="concat('javascript:popInterMap(&#34;',/root/gui/url,'/intermap/srv/',/root/gui/language,'/map.addServicesExt?url=',$linkage,'&amp;service=',$name,'&amp;type=2&#34;)')"/>-->
 							<xsl:value-of select="concat('javascript:runIM_addService(&#34;'  ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;, 2)' )"/>
@@ -2012,7 +2032,7 @@
 							<xsl:value-of select="concat(/root/gui/locService,'/google.kml?id=',$id,'&amp;layers=',$name)"/>
 						</link>
 					</xsl:when>
-					<xsl:when test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-capabilities') and $name">
+					<xsl:when test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-capabilities') and string($linkage)!=''">
 						<link type="wms">
 							<xsl:value-of select="concat('javascript:runIM_selectService(&#34;'  ,  $linkage  ,  '&#34;, 2,',$id,')' )"/>
 						</link>

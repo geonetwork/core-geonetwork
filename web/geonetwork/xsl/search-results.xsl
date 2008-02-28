@@ -278,7 +278,7 @@
 							</xsl:when>
 						</xsl:choose>
 					</xsl:if>
-					
+
 					<!-- Google Earth map button -->
 					<xsl:if test="$metadata/geonet:info/dynamic='true'">
 						&#160;
@@ -287,15 +287,21 @@
 							<xsl:when test="$count>1">
 								<xsl:choose>
 									<xsl:when test="$remote=true()">
-										<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info/id}&amp;currTab=distribution')"><xsl:value-of select="/root/gui/strings/viewInGE"/></button>
+										<a onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info/id}&amp;currTab=distribution')" style="vertical-align: sub;cursor: pointer;">
+											<img src="{/root/gui/url}/images/google_earth_link.gif" height="20px" width="20px" style="padding-left:3px;" alt="{/root/gui/strings/viewInGE}" title="{/root/gui/strings/viewInGE}"/>
+										</a>
 									</xsl:when>
 									<xsl:otherwise>
-										<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=distribution')"><xsl:value-of select="/root/gui/strings/viewInGE"/></button>
+										<a onclick="load('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=distribution')" style="vertical-align: sub;cursor: pointer;">
+											<img src="{/root/gui/url}/images/google_earth_link.gif" height="20px" width="20px" style="padding-left:3px;" alt="{/root/gui/strings/viewInGE}" title="{/root/gui/strings/viewInGE}"/>
+										</a>
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:when>
 							<xsl:when test="$count=1">
-								<button class="content" onclick="load('{$metadata/link[@type='googleearth']}')"><xsl:value-of select="/root/gui/strings/viewInGE"/></button>
+								<a onclick="load('{$metadata/link[@type='googleearth']}')" style="vertical-align: sub;cursor: pointer;">
+									<img src="{/root/gui/url}/images/google_earth_link.gif" height="20px" width="20px" style="padding-left:3px;" alt="{/root/gui/strings/viewInGE}" title="{/root/gui/strings/viewInGE}"/>
+								</a>
 							</xsl:when>
 						</xsl:choose>
 					</xsl:if>
