@@ -2039,7 +2039,7 @@
 				<abstract><xsl:value-of select="gmd:abstract"/></abstract>
 			</xsl:if>
 
-			<xsl:for-each select="//gmd:keyword/gco:CharacterString[text()]">
+			<xsl:for-each select=".//gmd:keyword/gco:CharacterString[text()]">
 				<keyword><xsl:value-of select="."/></keyword>
 			</xsl:for-each>
 
