@@ -5,7 +5,7 @@
 	<type>Type</type>
 	<status>Status</status>
 	<errors>Erreurs</errors>
-	<every>Toutes</every>
+	<every>Fréquence (j:h:m)</every>
 	<lastRun>Dernière exécution</lastRun>
 	<operation>Opération</operation>
 
