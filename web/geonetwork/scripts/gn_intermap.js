@@ -39,7 +39,7 @@
  */
 function runIM_addService(url, service, type)
 {
-    imc_addService(url, service, type, 
+    imc_addService(url, service, type, false,  
 					function(req) 
 					{
 			             im_buildLayerList(req);
