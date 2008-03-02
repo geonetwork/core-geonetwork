@@ -294,12 +294,16 @@ function im_createMarker(id, lat, lon, title, btemp)
 {
 	if (btemp === null)
 		btemp = false;
-				
-	// get map image offset
-	var offset = Position.cumulativeOffset($(im_bm.imageId));
-	var offsetX = offset[0];
-	var offsetY = offset[1];
+
+	// markers are created as siblings of the map image.
+	// This way, we dont have to worry if the map image has been already loaded,
+	// and position is relative to parent div.
 		
+	var parent = $(im_bm.imageId); 		
+	if(parent===null)
+	   return;
+	parent = parent.parentNode;
+
 	var y = im_bm.lat2y(lat);
 	var x = im_bm.lon2x(lon);
 	
@@ -308,7 +312,7 @@ function im_createMarker(id, lat, lon, title, btemp)
 		// should not happen: markers are filtered server-side
 		return;
 	}
-	
+
 	var img = document.createElement("img");
 	img.id='im_marker_' + (btemp?"tmp_":"") + id;
 	img.className = 'im_marker';
@@ -316,10 +320,10 @@ function im_createMarker(id, lat, lon, title, btemp)
 	img.title = title;
 
 	// FIXME the image should be centered on the coords	
-	img.style.left = x + offsetX - 6;
-	img.style.top  = y + offsetY - 21;
+	img.style.left = x - 6;
+	img.style.top  = y - 21;
 	
-	document.body.appendChild(img);
+    parent.appendChild(img);
 
 	if(! btemp)	
 	{
