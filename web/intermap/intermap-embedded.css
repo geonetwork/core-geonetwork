@@ -878,6 +878,7 @@ div.im_wbcontent {
 {
            position: absolute;
            z-index: 100;
+           cursor: pointer;
 }
 
 .im_markerbox
