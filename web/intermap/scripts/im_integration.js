@@ -58,6 +58,17 @@ function im_mm_init(wmc, callback)
 		im_mm_fullAoI();		
 	};
     
+	if( wmc && Prototype.Browser.IE )
+	{
+		// FIXME i18n
+		alert("Sorry, but your browser can't handle long URLs.\n\n"+
+			  "If you arrived on this page following a link for viewing a map someone sent you,\n"+
+			  "please be advised that you can't use that feature with your current browser.\n"+
+			  "You are going to see a default map, and not the one you were looking for.\n\n" + 
+			  "Please use the 'Upload a context' button in the Map Viewer and provide a valid context document.");
+		wmc = null;
+	}
+	
 	if(wmc)
 	{
 		im_setWMC(wmc, function(req)
