@@ -66,6 +66,7 @@ function im_mm_init(wmc, callback)
 							//TODO: force loading of big map?
 							im_bm.setBBox_dom(resp);
 							im_bm.setSize_dom(resp);
+							openIntermap();							
 							
 							im_mm.setBBox_dom(resp);                                    
 							im_mm.rebuild(newCallback); // load minimap
