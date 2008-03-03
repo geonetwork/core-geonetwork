@@ -126,24 +126,6 @@ compiles a request
 			<xsl:with-param name="field" select="'any'"/>
 		</xsl:call-template>
 
-		<!-- ISO topic categories -->
-		<xsl:if test="string(/request/topic-category) != ''">
-			<BooleanClause prohibited="false" required="true">
-				<BooleanQuery>
-					<xsl:for-each select="/request/topic-category">
-						<xsl:if test="string(.) != '' ">
-							<BooleanClause required="false" prohibited="false">
-								<xsl:call-template name="compile">
-									<xsl:with-param name="expr" select="string(.)"/>
-									<xsl:with-param name="field" select="'gmd:topicCategory'"/>
-								</xsl:call-template>
-							</BooleanClause>
-						</xsl:if>
-					</xsl:for-each>
-				</BooleanQuery>
-			</BooleanClause>		
-		</xsl:if>
-
 		<!-- download - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<xsl:if test="string(/request/download)='on'">
