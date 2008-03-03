@@ -67,6 +67,9 @@ public class MainUtil
 						.addContent(new Element(Geonet.SearchResult.ABSTRACT)     .setText(""))
 						.addContent(new Element(Geonet.SearchResult.ANY)          .setText(""))
 						.addContent(new Element(Geonet.SearchResult.REGION)       .setText(""))
+						.addContent(new Element(Geonet.SearchResult.PHRASE)       .setText(""))
+						.addContent(new Element(Geonet.SearchResult.OR)           .setText(""))
+						.addContent(new Element(Geonet.SearchResult.WITHOUT)      .setText(""))
 						.addContent(new Element(Geonet.SearchResult.SOUTH_BL)     .setText("-90"))
 						.addContent(new Element(Geonet.SearchResult.NORTH_BL)     .setText("90"))
 						.addContent(new Element(Geonet.SearchResult.EAST_BL)      .setText("180"))
@@ -103,6 +106,9 @@ public class MainUtil
 		Element  elAbstract    = elData.getChild(Geonet.SearchResult.ABSTRACT);
 		Element  elAny         = elData.getChild(Geonet.SearchResult.ANY);
 		Element  elRegion      = elData.getChild(Geonet.SearchResult.REGION);
+		Element  elPhrase      = elData.getChild(Geonet.SearchResult.PHRASE);
+		Element  elOr          = elData.getChild(Geonet.SearchResult.OR);
+		Element  elWithout     = elData.getChild(Geonet.SearchResult.WITHOUT);
 		Element  elSouthBL     = elData.getChild(Geonet.SearchResult.SOUTH_BL);
 		Element  elNorthBL     = elData.getChild(Geonet.SearchResult.NORTH_BL);
 		Element  elEastBL      = elData.getChild(Geonet.SearchResult.EAST_BL);
@@ -139,6 +145,9 @@ public class MainUtil
 			String   sAbstract     = request.getChildText(Geonet.SearchResult.ABSTRACT);
 			String   sAny          = request.getChildText(Geonet.SearchResult.ANY);
 			String   sRegion       = request.getChildText(Geonet.SearchResult.REGION);
+			String   sPhrase       = request.getChildText(Geonet.SearchResult.PHRASE);
+			String   sOr           = request.getChildText(Geonet.SearchResult.OR);
+			String   sWithout      = request.getChildText(Geonet.SearchResult.WITHOUT);
 			String   sSouthBL      = request.getChildText(Geonet.SearchResult.SOUTH_BL);
 			String   sNorthBL      = request.getChildText(Geonet.SearchResult.NORTH_BL);
 			String   sEastBL       = request.getChildText(Geonet.SearchResult.EAST_BL);
@@ -172,6 +181,9 @@ public class MainUtil
 			if (sAbstract    != null) elAbstract.setText(sAbstract);
 			if (sAny         != null) elAny.setText(sAny);
 			if (sRegion      != null) elRegion.setText(sRegion);
+			if (sPhrase      != null) elPhrase.setText(sPhrase);	
+			if (sOr          != null) elOr.setText(sOr);
+			if (sWithout     != null) elWithout.setText(sWithout);
 			if (sSouthBL     != null) elSouthBL.setText(sSouthBL);
 			if (sNorthBL     != null) elNorthBL.setText(sNorthBL);
 			if (sEastBL      != null) elEastBL.setText(sEastBL);
