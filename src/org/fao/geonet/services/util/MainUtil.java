@@ -48,7 +48,7 @@ public class MainUtil
 
 	/**
 	 * Returns default values for the search parameters. If parameters have
-	 * changed in the user session, they are read out here
+	 * changed in the user session, they are read out here.
 	 * @param srvContext
 	 * @param request
 	 * @return
@@ -239,7 +239,7 @@ public class MainUtil
 	//--------------------------------------------------------------------------
 
 	/**
-	 * Split a text in tokens
+	 * Splits a text in tokens.
 	 * @param requestStr
 	 * @return
 	 */
@@ -249,7 +249,7 @@ public class MainUtil
 //    Analyzer a = new CJKAnalyzer();
 
 		StringReader sr = new StringReader(requestStr);
-		TokenStream  ts = a.tokenStream(sr);
+		TokenStream  ts = a.tokenStream(null, sr);
 
 		String result=new String("");
 

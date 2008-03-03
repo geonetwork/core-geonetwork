@@ -42,10 +42,12 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
@@ -58,6 +60,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
@@ -280,42 +283,48 @@ public class LuceneSearcher extends MetaSearcher
 	public static Query makeQuery(Element xmlQuery) throws Exception
 	{
 		String name = xmlQuery.getName();
+		Query returnValue = null;
+		
 		if (name.equals("TermQuery"))
 		{
 			String fld = xmlQuery.getAttributeValue("fld");
 			String txt = xmlQuery.getAttributeValue("txt").toLowerCase();
-			return new TermQuery(new Term(fld, txt));
+			returnValue = new TermQuery(new Term(fld, txt));
 		}
 		else if (name.equals("FuzzyQuery"))
 		{
 			String fld = xmlQuery.getAttributeValue("fld");
 			Float sim = Float.valueOf(xmlQuery.getAttributeValue("sim"));
 			String txt = xmlQuery.getAttributeValue("txt").toLowerCase();
-			return new FuzzyQuery(new Term(fld, txt), sim.floatValue());
+			returnValue = new FuzzyQuery(new Term(fld, txt), sim.floatValue());
 		}
 		else if (name.equals("PrefixQuery"))
 		{
 			String fld = xmlQuery.getAttributeValue("fld");
 			String txt = xmlQuery.getAttributeValue("txt").toLowerCase();
-			return new PrefixQuery(new Term(fld, txt));
+			returnValue = new PrefixQuery(new Term(fld, txt));
+		}
+		else if (name.equals("MatchAllDocsQuery"))
+		{
+			MatchAllDocsQuery query = new MatchAllDocsQuery();
+			return query;
 		}
 		else if (name.equals("WildcardQuery"))
 		{
 			String fld = xmlQuery.getAttributeValue("fld");
 			String txt = xmlQuery.getAttributeValue("txt").toLowerCase();
-			return new WildcardQuery(new Term(fld, txt));
+			returnValue = new WildcardQuery(new Term(fld, txt));
 		}
 		else if (name.equals("PhraseQuery"))
 		{
 			PhraseQuery query = new PhraseQuery();
-			for (Iterator iter = xmlQuery.getChildren().iterator(); iter.hasNext(); )
-			{
-				Element xmlTerm = (Element)iter.next();
+			for(Iterator i = xmlQuery.getChildren().iterator(); i.hasNext();) {
+				Element xmlTerm = (Element) i.next();
 				String fld = xmlTerm.getAttributeValue("fld");
 				String txt = xmlTerm.getAttributeValue("txt").toLowerCase();
 				query.add(new Term(fld, txt));
 			}
-			return query;
+			returnValue = query;
 		}
 		else if (name.equals("RangeQuery"))
 		{
@@ -328,7 +337,7 @@ public class LuceneSearcher extends MetaSearcher
 			Term lowerTerm = (lowerTxt == null ? null : new Term(fld, lowerTxt.toLowerCase()));
 			Term upperTerm = (upperTxt == null ? null : new Term(fld, upperTxt.toLowerCase()));
 
-			return new RangeQuery(lowerTerm, upperTerm, inclusive);
+			returnValue = new RangeQuery(lowerTerm, upperTerm, inclusive);
 		}
 		else if (name.equals("BooleanQuery"))
 		{
@@ -340,14 +349,18 @@ public class LuceneSearcher extends MetaSearcher
 				String  sProhibited = xmlBooleanClause.getAttributeValue("prohibited");
 				boolean required    = sRequired   != null && sRequired.equals("true");
 				boolean prohibited  = sProhibited != null && sProhibited.equals("true");
+				BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(required, prohibited);
 				Element xmlSubQuery = (Element)xmlBooleanClause.getChildren().get(0);
-				query.add(makeQuery(xmlSubQuery), required, prohibited);
+				query.add(makeQuery(xmlSubQuery), occur);
 			}
 			query.setMaxClauseCount(16384); // FIXME: quick fix; using Filters should be better
-			return query;
+			
+			returnValue = query;
 		}
-		else
-			throw new Exception("unknown lucene query type: " + name);
+		else throw new Exception("unknown lucene query type: " + name);
+		
+		Log.debug(Geonet.SEARCH_ENGINE, "Lucene Query: " + returnValue.toString());
+		return returnValue;
 	}
 
 	//--------------------------------------------------------------------------------

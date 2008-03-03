@@ -49,7 +49,7 @@ import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
 /**
- * Indexes metadata using Lucene
+ * Indexes metadata using Lucene.
  */
 public class SearchManager
 {
@@ -108,7 +108,7 @@ public class SearchManager
 	}
 
 	/**
-	 * Lucene init/end methods. Creates the Lucene index directory
+	 * Lucene init/end methods. Creates the Lucene index directory.
 	 * @param appPath
 	 * @param luceneDir
 	 * @throws Exception
@@ -131,7 +131,8 @@ public class SearchManager
 	//-----------------------------------------------------------------------------
 	// Z39.50 init/end methods
 
-	/** Initializes the Z3950 client searcher
+	/** 
+         * Initializes the Z3950 client searcher.
 	 * @param appPath
 	 * @throws Exception
 	 */
@@ -177,7 +178,7 @@ public class SearchManager
 	// indexing methods
 
 	/**
-	 * Indexes a metadata record
+	 * Indexes a metadata record.
 	 * @param type
 	 * @param metadata
 	 * @param id
@@ -237,7 +238,7 @@ public class SearchManager
 	}
 
 	/**
-	 * Creates a new field for the Lucene index
+	 * Creates a new field for the Lucene index.
 	 * @param xmlDoc
 	 * @param name
 	 * @param value
@@ -287,7 +288,7 @@ public class SearchManager
 		IndexReader reader = IndexReader.open(_luceneDir);
 		try
 		{
-			reader.delete(new Term(fld, txt));
+			reader.deleteDocuments(new Term(fld, txt));
 
 			// RGFIX: should I optimize here, or at least increase updateCount?
 		}
@@ -439,10 +440,27 @@ public class SearchManager
 				String sStore = field.getAttributeValue("store");
 				String sIndex = field.getAttributeValue("index");
 				String sToken = field.getAttributeValue("token");
-				boolean store = sStore != null && sStore.equals("true");
-				boolean index = sIndex != null && sIndex.equals("true");
+				boolean bStore = sStore != null && sStore.equals("true");
+				boolean bIndex = sIndex != null && sIndex.equals("true");
 				boolean token = sToken != null && sToken.equals("true");
-				doc.add(new Field(name, string, store, index, token));
+				Field.Store store = null;
+				if(bStore) {
+					store = Field.Store.YES;
+				}
+				else {
+					store = Field.Store.NO;
+				}
+				Field.Index index = null;
+				if(bIndex && token) {
+					index = Field.Index.TOKENIZED;
+				}
+				if(bIndex && !token) {
+					index = Field.Index.UN_TOKENIZED;
+				}
+				if(!bIndex) {
+					index = Field.Index.NO;					
+				}
+				doc.add(new Field(name, string, store, index));
 			}
 		}
 		return doc;

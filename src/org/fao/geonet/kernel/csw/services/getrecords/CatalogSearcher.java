@@ -38,6 +38,7 @@ import jeeves.utils.Xml;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
@@ -52,6 +53,7 @@ import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.LuceneUtils;
 import org.jdom.Element;
 
 //=============================================================================
@@ -219,11 +221,12 @@ class CatalogSearcher
 
 		BooleanQuery query  = new BooleanQuery();
 
+		BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);					
 		if (data != null)
-			query.add(data,   true, false);
+			query.add(data,   occur);
 
-		query.add(groups, true, false);
-		query.add(templ,  true, false);
+		query.add(groups, occur);
+		query.add(templ,  occur);
 
 		//--- proper search
 
@@ -280,10 +283,11 @@ class CatalogSearcher
 
 		String operView = "_op0";
 
+		BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);							
 		for(Object group: hs)
 		{
 			TermQuery tq = new TermQuery(new Term(operView, group.toString()));
-			query.add(tq, false, false);
+			query.add(tq, occur);
 		}
 
 		return query;
