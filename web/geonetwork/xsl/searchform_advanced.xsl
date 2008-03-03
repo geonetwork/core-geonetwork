@@ -77,6 +77,38 @@
 				<input name="any" id="any" class="content"  size="20" value="{/root/gui/searchDefaults/any}"/>
 			</td>
 		</tr>
+		
+		<!-- enable for PHRASE search -->
+		<tr style="display:none;">
+			<th class="padded">
+				<!-- TODO localization -->
+				<xsl:text>Exact phrase</xsl:text>
+			</th>			
+			<td style="padding-bottom:10px;">
+				<input name="phrase" id="phrase" class="content" size="20" value=""/>
+			</td>
+		</tr>
+		<!-- enable for OR search -->
+		<tr style="display:none;">
+			<th class="padded">
+				<!-- TODO localization -->
+				<xsl:text>Either of the words</xsl:text>
+			</th>			
+			<td style="padding-bottom:10px;">
+				<input name="or" id="or" class="content" size="20" value=""/>
+			</td>
+		</tr>
+		<!-- enable for WITHOUT search -->		
+		<tr style="display:none;">
+			<th class="padded">
+				<!-- TODO localization -->
+				<xsl:text>Without the words</xsl:text>
+			</th>			
+			<td style="padding-bottom:10px;">
+				<input name="without" id="without" class="content" size="20" value=""/>
+			</td>
+		</tr>	
+		
 		<tr>
 			<th class="padded">
 				<xsl:value-of select="/root/gui/strings/rtitle"/>
