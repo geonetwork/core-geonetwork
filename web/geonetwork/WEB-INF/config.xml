@@ -727,7 +727,7 @@
 		<service name="rss.present">
 			<class name=".services.main.Result" />
 
-			<output sheet="rss-search.xsl" contentType="text/xml; charset=UTF-8">
+			<output sheet="rss-search.xsl" contentType="application/rss+xml; charset=UTF-8">
 				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
 			</output>
 		</service>
