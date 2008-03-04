@@ -119,7 +119,7 @@ function getHtmlTip(node)
 	if (err != null)
 	{
 		var temp = errorTemp;
-		var msg  = loader.getText('error' +' : '+ err);
+		var msg  = loader.getText('error') +' : '+ err;
 		var data = { ERROR : msg };
 		
 		return str.substitute(errorTemp, data);
