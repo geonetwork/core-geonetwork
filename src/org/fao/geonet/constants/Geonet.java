@@ -144,6 +144,9 @@ public class Geonet
 		public static final String PHRASE        = "phrase";
 		public static final String OR            = "or";
 		public static final String WITHOUT       = "without";
+        
+		/** Parameter name: {@value #REGION} - Index value of a region. 
+		 * Used to retrieve the name and bounding box of the selected region */
         public static final String REGION        = "region";
         
         /** Parameter name: {@value #SOUTH_BL} - Lowest Latitude value in 
