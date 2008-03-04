@@ -115,8 +115,8 @@
 	<add>Ajouter</add>
 	<edit>Editer</edit>
 	<save>Sauver</save>
-	<activate>Activate</activate>
-	<deactivate>Deactivate</deactivate>
+	<activate>Activer</activate>
+	<deactivate>Désactiver</deactivate>
 	<run>Lancer</run>
 	<remove>Supprimer</remove>
 	<refresh>Rafraîchir</refresh>
@@ -170,13 +170,13 @@
 	<cannotUpdate>Unable to update information on the server</cannotUpdate>
 	<supplyHost>SVP, fournir le paramètre 'hôte'</supplyHost>
 	<supplyServlet>SVP, fournir le paramètre 'servlet'</supplyServlet>
-	<pleaseSpecifySiteId>Please specify a non empty Site ID</pleaseSpecifySiteId>
-	<cannotQueryOai>Cannot query OAI-PMH server</cannotQueryOai>
-	<gn20Unsafe>Please notice that harvesting old GeoNetwork nodes is unsafe. 
- 					The old nodes do not have unique site ids and this could cause
-					unpredictable results (like removing nodes from other harvestings).</gn20Unsafe>
+	<pleaseSpecifySiteId>Définir un identifiant de site non vide</pleaseSpecifySiteId>
+	<cannotQueryOai>Impossible de faire une requête sur le serveur OAI-PMH</cannotQueryOai>
+	<gn20Unsafe>Attention, noter que le moissonnage d'un ancien noeud GeoNetwork n'est pas sur. 
+ 					Les anciens noeuds n'ont pas un identifiant unique et ceci peut conduire
+					à des résultats inatendus (par exemple supprimer des noeuds d'autres moissonnages).</gn20Unsafe>
 			
-	<supplyUrl>Please, provide a valid 'url' parameter</supplyUrl>
+	<supplyUrl>SVP, fournir une url valide</supplyUrl>
 	
 	<oper>
 		<op id="0">Voir</op>
@@ -191,21 +191,21 @@
 	<!-- tooltips - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<statusTip>
-		<inactive>Inactive</inactive>
-		<active>Active</active>
-		<running>Running</running>
+		<inactive>Inactif</inactive>
+		<active>Actif</active>
+		<running>En cours</running>
 	</statusTip>
 	
 	<tipHeader>
 		<total>Total</total>
 		<added>Ajouté</added>
-		<removed>Removed</removed>
+		<removed>Supprimé</removed>
 		<updated>Mis à jour</updated>
 		<unchanged>Inchangé</unchanged>
-		<unknownSchema>Unknown schema</unknownSchema>
-		<unretrievable>Unretrievable</unretrievable>
-		<badFormat>Bad XML format</badFormat>
-		<doesNotValidate>Does not validate</doesNotValidate>
+		<unknownSchema>Schema inconnu</unknownSchema>
+		<unretrievable>Inrécupérable</unretrievable>
+		<badFormat>Mauvais format XML</badFormat>
+		<doesNotValidate>Non valide</doesNotValidate>
 	</tipHeader>
 	
 	<notRun>En attente du premier lancement</notRun>
