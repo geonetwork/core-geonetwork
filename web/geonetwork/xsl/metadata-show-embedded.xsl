@@ -12,6 +12,10 @@
 	<xsl:include href="main.xsl"/>
 	<xsl:include href="metadata.xsl"/>
 	
+	<xsl:variable name="host" select="/root/gui/env/server/host" />
+	<xsl:variable name="port" select="/root/gui/env/server/port" />
+	<xsl:variable name="serverUrl" select="concat('http://',$host,':',$port,/root/gui/locService)" />
+	
 	<xsl:template match="/">
 		<table width="100%" height="100%">
 			
@@ -30,7 +34,7 @@
 		<xsl:param name="schema">
 			<xsl:apply-templates mode="schema" select="."/>
 		</xsl:param>
-
+		
 		<table  width="100%" height="100%">
 			<xsl:for-each select="/root/*[name(.)!='gui' and name(.)!='request']"> <!-- just one -->
 				<tr height="100%">
@@ -40,6 +44,35 @@
 						</xsl:call-template>
 					</td>-->
 					<td class="content" valign="top">
+						
+						<xsl:variable name="mdURL" select="normalize-space(concat($serverUrl, '/metadata.show?id=', geonet:info/id))"/>
+						<xsl:variable name="mdTitle" select="geonet:info/title" /> <!-- FIXME info is not available by default -->
+						
+						<xsl:if test="not(contains($mdURL,'localhost')) and not(contains($mdURL,'127.0.0.1'))">
+							<p align="right">
+								<a href="http://del.icio.us/post?url={$mdURL}&amp;title={$mdTitle}">
+									<img src="{/root/gui/url}/images/delicious.gif" 
+										alt="Bookmark on Delicious" title="Bookmark on Delicious" 
+										style="border: 0px solid;padding:2px;"/>
+								</a>
+								<a href="http://digg.com/submit?url={$mdURL}&amp;title={$mdTitle}">
+									<img src="{/root/gui/url}/images/digg.gif" 
+										alt="Bookmark on Digg" title="Bookmark on Digg" 
+										style="border: 0px solid;padding:2px;"/>
+								</a>
+								<a href="http://www.facebook.com/sharer.php?u={$mdURL}">
+									<img src="{/root/gui/url}/images/facebook.gif" 
+										alt="Bookmark on Facebook" title="Bookmark on Facebook" 
+										style="border: 0px solid;padding:2px;"/>
+								</a>
+								<a href="http://www.stumbleupon.com/submit?url={$mdURL}&amp;title={$mdTitle}">
+									<img src="{/root/gui/url}/images/stumbleupon.gif" 
+										alt="Bookmark on StumbleUpon" title="Bookmark on StumbleUpon" 
+										style="border: 0px solid;padding:2px;"/>
+								</a> 
+							</p>
+						</xsl:if>
+						
 						<table width="100%">
 						
 							<xsl:variable name="buttons">
