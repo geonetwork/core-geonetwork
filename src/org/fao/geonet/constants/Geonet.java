@@ -141,7 +141,10 @@ public class Geonet
 		/** Parameter name: {@value #ANY} - Free text field that searches
          * in all the text fields of a metadata record */
 		public static final String ANY           = "any";
-		
+		public static final String PHRASE        = "phrase";
+		public static final String OR            = "or";
+		public static final String WITHOUT       = "without";
+        
 		/** Parameter name: {@value #REGION} - Index value of a region. 
 		 * Used to retrieve the name and bounding box of the selected region */
         public static final String REGION        = "region";

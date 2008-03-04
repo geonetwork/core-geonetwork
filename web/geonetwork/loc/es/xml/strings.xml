@@ -272,6 +272,11 @@
 	<links>Enlaces</links>
 	<loading>Cargando...</loading>
 	<local>Búsqueda Local</local>
+	<localizationHelp>Important! This form allows you to add a Key value to the database. 
+		The key can not have spaces.<br/>
+		After adding your key values, use the "Localization" form in the Administration panel to provide 
+		the actual name you want to be displayed on the website for the different languages.
+	</localizationHelp>
 	<localiz>Localización</localiz>
 	<localizDes>Permite cambiar entidades localizadas, como grupos, categorias, etc...</localizDes>
 	<location>País/Región</location>

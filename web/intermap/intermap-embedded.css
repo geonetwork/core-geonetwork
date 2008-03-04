@@ -878,6 +878,7 @@ div.im_wbcontent {
 {
            position: absolute;
            z-index: 100;
+           cursor: pointer;
 }
 
 .im_markerbox
@@ -899,7 +900,8 @@ div.im_wbcontent {
 {
            /*border: 1px none;*/
            padding: 1px;
-           background-color: #e7edf5;           
+           background-color: #e7edf5;
+           width: 100%;
 }
 
 .im_markerEntrySel
@@ -907,6 +909,7 @@ div.im_wbcontent {
            border: 1px solid #555555;
            background-color: #CCCCFF;    
 	cursor: pointer;
+           width: 100%;
 }
 
 .upperright {

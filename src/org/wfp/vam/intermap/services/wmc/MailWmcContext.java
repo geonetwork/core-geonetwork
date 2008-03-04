@@ -143,7 +143,14 @@ public class MailWmcContext implements Service
 			.addContent(new Element("comment").setText(comment))
 			.addContent(new Element("imgsrc").setText("cid:"+cid));
 
-		Element stylesheet = (Element)Xml.loadFile(_xslfile).clone();
+		// Add the atom feed to the mail data for further parsing
+		// Element name is "feed"
+        if( ms != null && ! ms.isEmpty())
+          {
+            maildata.addContent(GeoRSSCodec.getGeoRSS(ms, title));
+          }
+
+        Element stylesheet = (Element)Xml.loadFile(_xslfile).clone();
 		Element tmail = XmlTransformer.transform(maildata, stylesheet);
 
 		Element ehtml = tmail.getChild("html");
@@ -167,7 +174,7 @@ public class MailWmcContext implements Service
 		EmailAttachment cmlAttachment = new EmailAttachment();
 		cmlAttachment.setPath(tempContextFile.getAbsolutePath());
 		cmlAttachment.setDisposition(EmailAttachment.ATTACHMENT);
-		cmlAttachment.setDescription("Interactive map");
+		cmlAttachment.setDescription("Interactive Map");
 		cmlAttachment.setName("InteractiveMap.cml");
 		email.attach(cmlAttachment);
 

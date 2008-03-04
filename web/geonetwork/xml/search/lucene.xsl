@@ -102,6 +102,30 @@ compiles a request
 			</BooleanClause>
 		</xsl:if>
 		
+		<!-- phrase  -->
+		<xsl:if test="string(/request/phrase) != ''">
+			<xsl:if test="string(.) != '' ">
+				<BooleanClause prohibited="false" required="true">
+					<xsl:call-template name="phraseQuery">
+						<xsl:with-param name="expr" select="/request/phrase"/>
+						<xsl:with-param name="field" select="'any'"/>
+					</xsl:call-template>
+				</BooleanClause>	
+			</xsl:if>
+		</xsl:if>
+
+		<!-- or -->
+		<xsl:call-template name="notRequiredTextField">
+			<xsl:with-param name="expr" select="/request/or"/>
+			<xsl:with-param name="field" select="'any'"/>
+		</xsl:call-template>
+		
+		<!-- without -->
+		<xsl:call-template name="notAllowedTextField">
+			<xsl:with-param name="expr" select="/request/without"/>
+			<xsl:with-param name="field" select="'any'"/>
+		</xsl:call-template>
+
 		<!-- download - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<xsl:if test="string(/request/download)='on'">
@@ -318,6 +342,100 @@ compiles a request
 	</xsl:if>
 </xsl:template>
 
+<xsl:template name="phraseQuery">
+	<xsl:param name="expr"/>
+	<xsl:param name="field"/>
+	<PhraseQuery>
+		<xsl:call-template name="phraseQueryArgs">
+			<xsl:with-param name="expr" select="$expr"/>
+			<xsl:with-param name="field" select="$field"/>
+		</xsl:call-template>
+	</PhraseQuery>
+</xsl:template>
+
+
+<!-- ================================================================================ -->
+<xsl:template name="notRequiredTextFieldArgs">
+	<xsl:param name="expr"/>
+	<xsl:param name="field"/>
+		<xsl:variable name="nExpr" select="normalize-space($expr)"/>
+		<xsl:variable name="first" select="substring-before($nExpr,' ')"/>
+		<xsl:choose>
+			<xsl:when test="$first">
+				<BooleanClause required="false" prohibited="false">
+					<TermQuery fld="{$field}" txt="{$first}"/>
+				</BooleanClause>
+				<xsl:call-template name="notRequiredTextFieldArgs">
+					<xsl:with-param name="expr" select="substring-after($nExpr,' ')"/>
+					<xsl:with-param name="field" select="$field"/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:when test="$expr">
+				<BooleanClause required="false" prohibited="false">
+					<TermQuery fld="{$field}" txt="{$nExpr}"/>
+				</BooleanClause>
+			</xsl:when>
+		</xsl:choose>
+</xsl:template>
+
+<xsl:template name="notRequiredTextField">
+	<xsl:param name="expr"/>
+	<xsl:param name="field"/>
+	
+	<xsl:if test="$expr!=''">
+		<BooleanClause required="true" prohibited="false">
+			<BooleanQuery>
+				<xsl:call-template name="notRequiredTextFieldArgs">
+					<xsl:with-param name="expr" select="$expr"/>
+					<xsl:with-param name="field" select="$field"/>
+				</xsl:call-template>			
+			</BooleanQuery>
+		</BooleanClause>
+	</xsl:if>
+</xsl:template>
+<xsl:template name="notAllowedTextFieldArgs">
+	<xsl:param name="expr"/>
+	<xsl:param name="field"/>
+		<xsl:variable name="nExpr" select="normalize-space($expr)"/>
+		<xsl:variable name="first" select="substring-before($nExpr,' ')"/>
+		<xsl:choose>
+			<xsl:when test="$first">
+				<BooleanClause required="false" prohibited="true">
+					<TermQuery fld="{$field}" txt="{$first}"/>
+				</BooleanClause>
+				<xsl:call-template name="notAllowedTextFieldArgs">
+					<xsl:with-param name="expr" select="substring-after($nExpr,' ')"/>
+					<xsl:with-param name="field" select="$field"/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:when test="$expr">
+				<BooleanClause required="false" prohibited="true">
+					<TermQuery fld="{$field}" txt="{$nExpr}"/>
+				</BooleanClause>
+			</xsl:when>
+		</xsl:choose>
+</xsl:template>
+
+<xsl:template name="notAllowedTextField">
+	<xsl:param name="expr"/>
+	<xsl:param name="field"/>
+	
+	<xsl:if test="$expr!=''">
+		<BooleanClause required="true" prohibited="false">
+			<BooleanQuery>
+				<BooleanClause required="true" prohibited="false">
+					<MatchAllDocsQuery required="true" prohibited="false"> 
+				</MatchAllDocsQuery>				
+				</BooleanClause>
+				<xsl:call-template name="notAllowedTextFieldArgs">
+					<xsl:with-param name="expr" select="$expr"/>
+					<xsl:with-param name="field" select="$field"/>
+				</xsl:call-template>	
+
+			</BooleanQuery>
+		</BooleanClause>
+	</xsl:if>
+</xsl:template>
 <!-- ================================================================================ -->
 <!--
 compiles a parse tree into a class tree

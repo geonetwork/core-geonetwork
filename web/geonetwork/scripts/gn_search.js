@@ -187,6 +187,9 @@ function runAdvancedSearch()
 	preparePresent();
 
 	var pars = "any=" + encodeURIComponent($('any') .value);
+	pars += fetchParam('phrase');
+	pars += fetchParam('or');
+	pars += fetchParam('without');
 	pars += fetchParam('title');
 	pars += fetchParam('abstract');
 	pars += fetchParam('themekey');
@@ -229,7 +232,10 @@ function resetAdvancedSearch()
 {
 /* make sure all values are completely reset (instead of just using the default
    form.reset that would only return to the values stored in the session */
-	setParam('any','');		
+	setParam('any','');
+	setParam('phrase', '');
+	setParam('or', '');
+	setParam('without', '');				
 	setParam('title','');		
 	setParam('abstract','');		
 	setParam('themekey','');		

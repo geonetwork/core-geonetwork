@@ -49,7 +49,7 @@
 							<td class="padded"><input class="content" type="text" name="org" size="60"/></td>
 						</tr>
 						<tr>
-							<th class="padded"><xsl:value-of select="/root/gui/strings/emailAddress"/></th>
+							<th class="padded"><xsl:value-of select="/root/gui/strings/email"/></th>
 							<td class="padded"><input class="content" type="text" name="email" size="60"/></td>
 						</tr>
 						<tr>
