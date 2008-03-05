@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.metadata;
 
+import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -82,13 +83,32 @@ public class Show implements Service
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getDataManager();
 
-		String id = Util.getParam(params, Params.ID);
-
+		// the metadata ID
+		String id;
+		
+		// does the request contain a UUID ?
+		try {
+			String uuid = Util.getParam(params, Params.UUID);
+			// lookup ID by UUID
+			id = dm.getMetadataId(context, uuid);	
+		}
+		catch(MissingParameterEx x) {
+			// request does not contain UUID; use ID from request
+			try {
+				id = Util.getParam(params, Params.ID);
+			}
+			// request does not contain ID
+			catch(MissingParameterEx xx) {
+				// give up
+				throw new Exception("Request must contain a UUID or an ID");
+			}			
+		}
+		
 		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
 
 		//-----------------------------------------------------------------------
 		//--- get metadata
-
+		
 		Element elMd = dm.getMetadata(context, id, false);
 
 		if (elMd == null)
