@@ -480,6 +480,18 @@ public class DataManager
 
 		return record.getChildText("id");
 	}
+	
+	//--------------------------------------------------------------------------
+
+	public String getMetadataId(ServiceContext srvContext, String uuid) throws Exception {
+		Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
+		String query = "SELECT id FROM Metadata WHERE uuid=?";
+		List list = dbms.select(query, uuid).getChildren();
+		if (list.size() == 0)
+			return null;
+		Element record = (Element) list.get(0);
+		return record.getChildText("id");
+	}
 
 	//--------------------------------------------------------------------------
 
