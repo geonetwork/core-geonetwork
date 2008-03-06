@@ -46,6 +46,7 @@
 		<link rel="stylesheet" type="text/css" href="/intermap/intermap-embedded.css?" />
 		
 		<xsl:variable name="wmc"><xsl:copy-of select="/root/request/wmc"/></xsl:variable>
+		<xsl:variable name="uuid"><xsl:copy-of select="/root/request/uuid"/></xsl:variable>
 		
 		<script type="text/javascript" language="JavaScript1.2">
 
@@ -57,6 +58,12 @@
 				} else {
 					initSimpleSearch("<xsl:value-of select="$wmc"/>");
 				}
+				
+				var uuid="<xsl:value-of select="$uuid"/>";
+				if (uuid!='') {
+					gn_showSingleMetadataUUID(uuid);
+				}
+
 			}
 			
 			var getGNServiceURL = function(service)

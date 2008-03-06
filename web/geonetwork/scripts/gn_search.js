@@ -521,9 +521,20 @@ function gn_search_complete(req) {
 *  Show metadata content
 *
 ********************************************************************/
+function gn_showSingleMetadataUUID(uuid)
+{
+   var pars = 'uuid=' + uuid + '&currTab=simple';
+   gn_showSingleMet(pars);
+}
+
 function gn_showSingleMetadata(id)
 {
    var pars = 'id=' + id + '&currTab=simple';
+   gn_showSingleMet(pars);  
+}
+
+function gn_showSingleMet(pars)
+{
 
    var myAjax = new Ajax.Request(
         getGNServiceURL('metadata.show.embedded'), 
