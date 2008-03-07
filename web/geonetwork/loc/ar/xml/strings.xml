@@ -479,6 +479,7 @@
 	<upload>تحميل</upload>
 	<user>مستخدم</user>
 	<UserAdmin>مستعمل أدارة موقع</UserAdmin>
+	<userDefined>- User defined -</userDefined>
 	<userInfo>Change user information</userInfo>
 	<userInfoDes>Allow current user to change user information</userInfoDes>
 	<userManagement>أدارة بيانات أعضاء</userManagement>

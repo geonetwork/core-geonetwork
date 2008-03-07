@@ -104,7 +104,13 @@
 							</xsl:if>
 							<xsl:value-of select="/root/gui/strings/any"/>
 						</option>
-
+						<option value="userdefined">
+							<xsl:if test="/root/gui/searchDefaults/theme='_userdefined_'">
+								<xsl:attribute name="selected"/>
+							</xsl:if>
+							<xsl:value-of select="/root/gui/strings/userDefined"/>
+						</option>
+						
 						<xsl:for-each select="/root/gui/regions/record">
 							<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
 							<option>

@@ -40,12 +40,11 @@
 			
 			<description>
 				<xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
-				<xsl:if test="string($thumbnailLink)!=''">
-					<p>
-						<a href="{$mdURL}"><img src="{$thumbnailLink}" align="left" alt="" border="0" width="100"/></a>
-					</p>
-				</xsl:if>
+				
 				<p>
+					<xsl:if test="string($thumbnailLink)!=''">
+						<a href="{$mdURL}"><img src="{$thumbnailLink}" align="left" alt="" border="0" width="100" style="padding:15px;"/></a>
+					</xsl:if>
 					<xsl:value-of select="$metadata/abstract"/>
 					<br />
 					<xsl:call-template name="socialBookmarks">
@@ -97,7 +96,7 @@
 					</georss:box>
 				</xsl:when>
 				<xsl:when test="string($rssFormat)='simplepoint'">
-					<xsl:comment>Bounding box in georss simplepoint format (http://georss.org)</xsl:comment>
+					<xsl:comment>Bounding box in georss simplepoint format (default) (http://georss.org)</xsl:comment>
 					<georss:point>
 						<xsl:value-of select="((northBL)+(southBL))*.5"/>
 						<xsl:text> </xsl:text>
@@ -134,28 +133,30 @@
 		<xsl:param name="bDynamic" />
 		<xsl:param name="bDownload" />
 		
-		<xsl:variable name="nameL" select="@name" />
+		<xsl:variable name="nameL" select="normalize-space(@name)" />
 		
 		<xsl:if test="string(@href)!=''">
 			<xsl:choose>
 				<xsl:when test="@type='application/vnd.ogc.wms_xml' and $bDynamic">
 					<xsl:choose>
 						<xsl:when test="number($west) and number($south) and number($east) 
-							and number($north) and string(normalize-space($nameL))!='' and not(contains(@href,'?'))">
-							<!-- The following link is a web map service with variable parameters encoded following 
-								so-called URI Templates (http://bitworking.org/projects/URI-Templates/) 
-								also used in OpenSearch -->
+							and number($north) and string($nameL)!='' and not(contains(@href,'?'))">
+							<!-- The following link is a web map service. 
+								There's a hint providing the possible layers available in the service -->
 							<xsl:variable name="xyRatio" select="string(number($north - $south) div number($east - $west))" />
-							<link href="{concat(@href,'?SERVICE=wms$amp;VERSION=1.1.1&amp;REQUEST=GetMap&amp;BBOX={geo:box='
-								,$west,',',$south,',',$east,',',$north
-								,'}&amp;LAYERS={ogc:layer=',$nameL
-								,'}&amp;SRS=EPSG:4326&amp;WIDTH=200&amp;HEIGHT='
+							<!-- This is a full GetMap request resulting in a PNG image of 200px wide-->
+							<link href="{@href}" type="{@type}" rel="alternate" title="{@title}" geonet:layers="{$nameL}" />
+							<link href="{concat(@href,'?SERVICE=wms$amp;VERSION=1.1.1&amp;REQUEST=GetMap&amp;BBOX=',
+								concat($west,',',$south,',',$east,',',$north),
+								'&amp;LAYERS=',$nameL,
+								'&amp;SRS=EPSG:4326&amp;WIDTH=200&amp;HEIGHT='
 								,string(round(200 * number($xyRatio)))
 								,'&amp;FORMAT=image/png'
 								,'&amp;TRANSPARENT=TRUE&amp;STYLES=default')}"
-								type="{@type}" rel="alternate" title="{@title}"/>
+								type="image/png" rel="alternate" title="{@title}"
+							/>
 						</xsl:when>
-						<xsl:when test="string(normalize-space($nameL))!='' and not(contains(@href,'?'))">
+						<xsl:when test="string($nameL)!='' and not(contains(@href,'?'))">
 							<!-- The following link is a GetCapabilities request to an OGC Web Map Server 
 								(http://opengeospatial.org) -->
 							<link href="{concat(@href,'?SERVICE=wms&amp;VERSION=1.1.1&amp;REQUEST=GetCapabilities')}"

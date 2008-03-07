@@ -201,7 +201,10 @@ function runAdvancedSearch()
 		pars += "&attrset=geo";
 		pars += "&"+im_mm_getURLselectedbbox();
 		pars += fetchParam('relation');
-		pars += fetchParam('region');
+		if(region!="userdefined")
+		{
+			pars += fetchParam('region');
+		}
 	}
 
 	if($('radfrom1').checked)
@@ -398,8 +401,9 @@ function doRegionSearch()
         
         im_mm_redrawAoI();
         im_mm_zoomToAoI();        
-    }
-    else
+    }  else if (region=="userdefined") {
+		// Do nothing. AoI is set by the user
+    } else 
     {
         getRegion(region);
     }
@@ -463,8 +467,13 @@ function updateAoIFromForm() {
 }
 
 function AoIrefresh() {
-  $('region').value="";
+  $('region').value="userdefined";
   $('updateBB').style.visibility="visible";
+}
+
+// Update the dropdown list
+function im_mm_aoiUpdated(bUpdate) {
+	$('region').value="userdefined";
 }
 
 /********************************************************************

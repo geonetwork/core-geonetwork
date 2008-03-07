@@ -440,6 +440,7 @@
 	<resultsCoordinate>Résultats correspondant aux critères de recherche géographiques</resultsCoordinate>
 	<resultsFreeText>Résultats correspondant à la recherche libre</resultsFreeText>
 	<resultsMatching>Nombre de résultats : </resultsMatching>
+
 	<rss>Ouvrez flux RSS</rss>
 	<rtitle>Titre</rtitle>
 	<save>Sauver</save>
@@ -493,6 +494,7 @@
 	<upload>Déchargement </upload>
 	<user>Utilisateur</user>
 	<UserAdmin>Administrateur d'utilisateur</UserAdmin>
+	<userDefined>- User defined -</userDefined>
 	<userManagement>Gestion des utilisateurs</userManagement>
 	<userManDes>Ajouter/Modifier/Supprimer et visualiser les utilisateurs</userManDes>
 	<username>Nom d'utilisateur</username>

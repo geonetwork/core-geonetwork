@@ -88,7 +88,8 @@
 					style="border: 0px solid;padding:2px;padding-right:10px;"/>
 			</a>
 				
-<!--			<a href="javascript:window.external.AddFavorite('{$mdURL}', '{$t}')">
+				<!-- Not browser independent, thus commented out -->
+<!--			<a href="javascript:window.external.AddFavorite('{$mdURL}', '{$t}');">
 				<img src="{$baseURL}/images/bookmark.png" 
 					alt="Bookmark" title="Bookmark" 
 					style="border: 0px solid;padding:2px;"/>
