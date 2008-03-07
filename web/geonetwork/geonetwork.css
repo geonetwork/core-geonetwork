@@ -646,3 +646,12 @@ button.rating
     
     z-index: 20;    
 }
+
+div#error {
+	margin: 2em;
+}
+
+#stacktrace {
+	font-size: 0.75em;
+}
+

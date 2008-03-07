@@ -26,7 +26,7 @@
 			</output>
 
 			<error id="operation-not-allowed" sheet="error.xsl">
-				<xml name="privError" file="xml/privileges-error.xml" />
+				<xml name="error" file="xml/metadata-show-error.xml" />
 			</error>
 		</service>
 
@@ -42,8 +42,8 @@
 				<call name="isoLang"  class=".guiservices.isolanguages.Get"/>
 			</output>
 
-			<error id="operation-not-allowed" sheet="error.xsl">
-				<xml name="privError" file="xml/privileges-error.xml" />
+			<error id="operation-not-allowed" sheet="error-embedded.xsl">
+				<xml name="error" file="xml/metadata-show-error.xml" />
 			</error>
 		</service>
 
