@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<strings>
-	<title>新建元数据</title>
-	<message>请指定新建元数据所属的组。 Please, specify the group to assign to the duplicated metadata</message>
-
-	<button>新建</button>
-</strings>

@@ -1,7 +1,0 @@
-InterMap is an Internet mapping application that fully integrates with the GeoNetwork Metadata portal for Geographic data and information (registered under http://SourceForge.net/projects/geonetwork).
-InterMap allows the user to combine interactive maps from distributed Internet Map Servers into one browser window. The supported Map Servers should follow the OpenGIS protocol for Web Map Services (WMS) or be ESRI-ArcIMS based. Support for other COTS Map Servers will hopefully be added through the OpenSource project.
-InterMap is server based and therefore light and easy on the client side, therefore it should run on most Internet Browsers and in areas with limited Internet connectivity.
-The first prototype of the application has been developed by the World Food Programme of the United nations (WFP-UN) and the Agriculture Organization of the United Nations (FAO-UN). A running version can be found at http://vam.wfp.org/mapping.html
-
-
-InterMap is an Internet mapping application that allows the user to combine interactive maps from distributed Internet Map Servers in a browser. InterMap supports OpenGIS WMS and ESRI-ArcIMS and can be fully integrated with the GeoNetwork Metadata portal
