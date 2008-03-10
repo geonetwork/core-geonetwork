@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<abstract>Résumé</abstract>
+	<activate>Activater</activate>
+	<address>Adresse</address>
+	<addService>Ajouter une carte</addService>
+	<addLayer js="true">Add a new layer</addLayer>
+	<bigger>Carte plus grande</bigger>
+	<cancel>Annuler</cancel>
+	<close>Fermer</close>
+	<choosemapfromlist>Choisissez un ou plusieurs géoservice à partir de la liste ci-dessous</choosemapfromlist>
+	<choosemapserver>Choisissez un géoservice à partir de la liste ou ajouter un autre géoservice manuellement</choosemapserver>
+	<mapServer>GéoService</mapServer>
+	<choosepredefinedmap>Choisissez une carte à partir de la liste ci-dessous</choosepredefinedmap>
+	<connect>Connection</connect>
+	<contactInfo>Information sur le contact :</contactInfo>
+	<contactPerson>Contact principal :</contactPerson>
+	<contexts>Contexts</contexts>
+	<delete>[del]</delete>
+	<down>Déplacer vers le bas</down>
+	<email>email:</email>
+	<error>[erreur]</error>
+<!-- 
+	<errorText>Sorry, error connecting to the map server</errorText>
+ -->
+	<exportAsPDF js="true">Export votre carte vers PDF</exportAsPDF>
+	<exportAsImage js="true">Export votre carte vers une image</exportAsImage>
+	<exportAsWMC js="true">Save the Web Map Context</exportAsWMC>
+	<extents>Modifier la période sélectionnée (Donnée temporelle)</extents>
+	<extentSelected>Temps sélectionné: </extentSelected>
+	<featuresfound>Objet trouvé</featuresfound>
+	<findMapsGeoNetwork>Trouver plus de cartes via GeoNetwork</findMapsGeoNetwork>
+	<findMapsMapServers>Ajouter plus de cartes en se connectant à un autre Web Map Servers</findMapsMapServers>
+	<fullExtent>Zoom global</fullExtent>
+	<gotoGeoNetwork>GeoNetwork</gotoGeoNetwork>
+	<gotoMapServers>Map Servers</gotoMapServers>
+	<homepage>Accueil :</homepage>
+	<identify>Identifier un objet sur la carte</identify>
+	<makeActive>Cocher pour rendre ce calque actif (e.g. pour rechercher)</makeActive>
+	<info>info</info>
+	<keywords>Mots-clés:</keywords>
+	<layerinfo>Description du calque</layerinfo>
+	<layers>Calques</layers>
+	<layersAdded js="true">Selected layers have been added</layersAdded>
+	<layersHide>Cacher la liste de calques</layersHide>
+	<layersShow>Afficher la liste de calques</layersShow>
+	<layerShowHide>Afficher ou cacher la calque</layerShowHide>
+	<legend>Afficher la légende</legend>
+	<listofmaps>Liste des cartes</listofmaps>
+	<listofmapservers>Liste des géoservices</listofmapservers>
+	<loadingMap>...Loading map...</loadingMap>
+	<loadingFrom js="true">Loading services from</loadingFrom>
+	<loadingFromWMS js="true">Loading services from given WMS server</loadingFromWMS>
+	<manually>Créer votre carte</manually>
+	<map>Carte</map>
+	<mapsfound>cartes trouvées</mapsfound>
+	<metadata>Métadonnées</metadata>
+	<newMap>Créer une nouvelle carte</newMap>
+	<noFeature>Aucun objet trouvé</noFeature>
+	<noService>Aucune carte trouvée</noService>
+	<noStyle>Seul le style par défaut est disponible</noStyle>
+	<oneService>Une carte trouvée</oneService>
+	<ok>Ok</ok>
+	<oneFeature>Un objet trouvé</oneFeature>
+	<otherArcIMS>- Autres serveurs ArcIMS</otherArcIMS>
+	<otherWMS>- Autres serveurs WMS</otherWMS>
+	<pan>Déplacement</pan>
+	<position>Position :</position>
+	<print>Imprimer la carte</print>
+	<properties>Propriétés</properties>
+	<reCenter>Re-centrer la carte</reCenter>
+	<refresh>Rafraîchir</refresh>
+	<refreshNotification>Cliquer sur "Rafraîchir" pour voir les changements.</refreshNotification>
+	<removeLayer>Supprimer le calque</removeLayer>
+	<removeMarker>Remove marker</removeMarker>	
+	<reset>Réinitialiser</reset>
+	<sendByEmail js="true">Envoyer par e-mail</sendByEmail>
+	<setScale>--Set Scale--</setScale>
+	<smaller>Petite carte</smaller>
+	<specify>Définir si autre :</specify>
+	<style>Choisir le style :</style>
+	<start>InterMap opensource</start>
+	<telephone>Téléphone :</telephone>
+	<title>InterMap opensource</title>
+	<transparency>Définir la transparence</transparency>
+	<up>Déplacer vers le haut</up>
+	<update>Update</update>
+	<updateMarker>Update marker info</updateMarker>
+	<wait js="true">Please wait...</wait>
+	<wmsConfigForm>Propriétés du calque</wmsConfigForm >
+	<zoomIn>Zoom avant</zoomIn>
+	<zoomOut>Zoom arrière</zoomOut>
+	<zoomLayer>Zoom vers le calque</zoomLayer>
+	<getFeatures>GET FEATURES</getFeatures>
+</strings>

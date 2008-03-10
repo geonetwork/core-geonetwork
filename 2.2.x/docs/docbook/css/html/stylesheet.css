@@ -1,0 +1,269 @@
+/* @override file:///Users/ticheler/Workspace/geonetwork-docbook/docs/target/gn_manual/html/css/stylesheet.css */
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+<!--
+ Copyright 2006 The Apache Software Foundation.
+
+ Licensed under the Apache License, Version 2.0 (the "License")
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+html {
+    padding:        0pt;
+    margin:         0pt;
+}
+
+code.literal {
+	white-space: nowrap;
+	margin-left: 0.2em;
+	margin-right: 0.2em;
+	font: 12px Courier, mono, "Courier New";
+}
+
+body {
+    margin-top:     1em;
+    margin-bottom:  1em;
+    margin-left:    10%;
+    margin-right:   10%;
+	font: 12px Verdana, 'trebuchet ms', Helvetica, Arial, sans-serif;
+}
+
+div {
+    margin:         0pt;
+}
+
+div.figure-contents {
+	text-align: center;
+}
+
+p {
+    margin-bottom:  .6em;
+    line-height: 1.3;
+}
+
+hr {
+    margin-top:     .6em;
+    margin-bottom:  .6em;
+    margin-left:    0pt;
+    margin-right:   0pt;
+    border:         1px solid gray;
+    background:     gray;
+}
+
+h1,h2,h3,h4,h5 {
+    color:          #525D76;
+}
+
+a {
+   color: black;
+   font: 12px Verdana, 'trebuchet ms', Helvetica, Arial, sans-serif;
+}
+
+a:hover {
+   color: black;
+	text-decoration: underline;
+}
+
+h1,h2,h3,h4,h5 {
+    line-height:    1.3;
+    margin-top:     1.5em;
+    font-family:    Arial, Sans-serif;
+}
+
+h1.title {
+    text-align:     left;
+
+    margin-top:     2em;
+    margin-bottom:  2em;
+    margin-left:    0pt;
+    margin-right:   0pt;
+}
+
+h2.subtitle, h3.subtitle {
+    text-align:     left;
+    margin-top:     2em;
+    margin-bottom:  2em;
+    text-transform: uppercase;
+}
+
+h3.author, p.othercredit {
+    font-size:      0.9em;
+    font-weight:    normal;
+    font-style:     oblique;
+    text-align:     left;
+    color:          #525D76;
+}
+
+div.titlepage {
+}
+
+div.section {
+}
+
+
+div.authorgroup
+{
+    text-align:     left;
+    margin-bottom:  3em;
+    display:        block;
+}
+
+div.toc, div.list-of-examples, div.list-of-figures {
+    font-size:      0.8em;
+    margin-bottom:  3em;
+}
+
+
+div.itemizedlist {
+    margin-top:     0.5em;
+    margin-bottom:  0.5em;
+}
+
+ol,ul {
+}
+
+li {
+}
+
+pre {
+    margin:         .75em 0;
+    line-height:    1.0;
+    color:          black;
+}
+
+pre.programlisting {
+    font-size:      9pt;
+    padding:        5pt 2pt;
+    border:         1pt solid black;
+    background:     #eeeeee;
+	text-align: left;
+}
+
+div.table {
+    margin:         1em;
+    padding:        0.5em;
+    text-align:     center;
+}
+
+div.table table {
+    display:        block;
+}
+
+div.table td, th {
+    padding-right:  5px;
+    padding-left:   5px;
+	border: 1pt solid silver;
+}
+
+div.navheader th {
+	border-style: none;
+}
+
+div.table p.title {
+    text-align:     center;
+    margin-left:    5%;
+    margin-right:   5%;
+}
+
+p.releaseinfo, .copyright {
+    text-align:     left;
+    margin:         0px;
+    padding:        0px;
+	font-size: 0.8em;
+}
+
+div.note, div.important, div.example, div.informalexample, div.tip, div.caution {
+    margin:         1em;
+    padding:        0.5em;
+    border:         1px solid gray;
+    background-color: #f8f8e0;
+}
+
+div.important th, div.note th, div.tip th {
+    text-align:     left;
+    border-bottom:  solid 1px gray;
+}
+
+div.navheader, div.navheader table {
+    font-family:    sans-serif;
+    font-size:      12px;
+}
+
+div.navfooter, div.navfooter table {
+    font-family:    sans-serif;
+    font-size:      12px;
+}
+
+div.figure {
+    text-align: center;
+    margin-top:     1em;
+    margin-bottom:  1em;
+}
+
+div.figure p.title {
+    text-align:     center;
+    margin-left:    15%;
+    margin-right:   15%;
+}
+
+div.example p.title {
+    margin-top:     0em;
+    margin-bottom:  0.6em;
+    text-align:     left;
+    padding-bottom: 0.4em;
+    border-bottom:  solid 1px gray;
+}
+
+div.figure img {
+    border:         1px solid gray;
+    padding:        0.5em;
+    margin:         0.5em;
+}
+
+div.revhistory {
+    font-size:      0.8em;
+    width:          90%;
+    margin-left:    5%;
+    margin-top:     3em;
+    margin-bottom:  3em;
+}
+
+div.revhistory table {
+    font-family:    sans-serif;
+    font-size:      12px;
+	border-collapse: collapse;
+}
+
+div.revhistory table tr {
+	border:         solid 1px gray;
+}
+
+div.revhistory table th {
+	border: none;
+}

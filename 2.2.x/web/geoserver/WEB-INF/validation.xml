@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE form-validation PUBLIC
+          "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.0//EN"
+          "http://jakarta.apache.org/commons/dtds/validator_1_0.dtd">
+
+<form-validation>
+
+<!--
+     This is a blank Validator form file with a commented examples.
+-->
+
+    <!-- An example global constant -->
+    <!--global>
+
+        <constant>
+            <constant-name>postalCode</constant-name>
+            <constant-value>^\d{5}\d*$</constant-value>
+        </constant>
+
+    </global-->
+
+	
+    <!-- An example form -->
+    <!--formset>
+
+        <form name="logonForm">
+            <field
+                property="username"
+                depends="required">
+                    <arg0 key="logonForm.username"/>
+             </field>
+         <field
+            property="password"
+            depends="required,mask">
+            <arg0 key="logonForm.password"/>
+            <var>
+                <var-name>mask</var-name>
+                <var-value>^[0-9a-zA-Z]*$</var-value>
+            </var>
+         </field>
+        </form>
+
+    </formset -->
+
+    <!-- An example formset for another locale
+    <formset language="fr">
+
+        <constant>
+            <constant-name>postalCode</constant-name>
+            <constant-value>^[0-9a-zA-Z]*$</constant-value>
+        </constant>
+
+   </formset>
+   -->
+
+</form-validation>

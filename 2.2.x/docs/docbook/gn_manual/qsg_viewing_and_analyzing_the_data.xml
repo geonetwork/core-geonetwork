@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                      "http://www.docbook.org/xml/4.4/docbookx.dtd">
+<book id="vaatd">
+    <chapter id="viewing_and_analyzing_the_data">
+        <title>Viewing and Analyzing the Data</title>
+
+        <para>Once you have completed your search, you view details of a particular record by
+            clicking on the <emphasis role="bold">Metadata</emphasis> button.</para>
+
+        <para>The metadata profiles used by GNos to present and describe geographic data and general
+            documents stored in the catalogue are based on the<emphasis role="bold"> International
+                Standard</emphasis>
+            <emphasis role="bold">ISO 19115</emphasis><emphasis role="bold">:2003</emphasis>,
+            encoded according to the <emphasis role="bold">implementation schema</emphasis>
+            <emphasis role="bold">19139:2007</emphasis>, the <emphasis role="bold">FGDC</emphasis>
+            and the international standard <emphasis role="bold">Dublin Core</emphasis>.</para>
+
+        <para>In this guide the <emphasis role="bold">ISO 19139</emphasis> metadata implementation
+            will be described in details since it is also suggested as profile for the creation of
+            new metadata records.</para>
+
+        <section>
+            <title>Meta Data Description</title>
+
+            <para>The metadata ISO 19139 profile used by GeoNetwork opensource to describe the
+                geographic data and services is based on the ISO standard 19115:2003 and provides
+                information related to the identification, the maintenance and constraints, the
+                spatial and temporal extent, the spatial representation and reference, the quality
+                and distribution of a geographic dataset.</para>
+
+            <para>The metadata profile is organized in sections and the most important, illustrated
+                in <xref linkend="main_sections"/>, are the: <emphasis role="bold">Identification Section,
+                    Distribution Section, Reference System Section, Data Quality Section and
+                    Metadata Section</emphasis>. These sections are described here in details.</para>
+
+            <figure id="main_sections">
+                <title>Main metadata sections</title>
+
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/mainSections.png" width="10cm" align="center"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+
+            <section>
+                <title>Identification Section</title>
+
+                <para>This section includes information on the citation of the resource (<emphasis
+                        role="bold">title, date of creation or publication, edition, presentation
+                        form</emphasis>), the <emphasis role="bold">abstract</emphasis>, the
+                        <emphasis role="bold">purpose</emphasis> and the present<emphasis
+                        role="bold"> status</emphasis> of the resource that can be defined among the
+                    options: completed, historical archive, obsolete, ongoing, planned, required or
+                    under development. (<xref linkend="identification_info"/>).</para>
+
+                <para>
+                    <figure id="identification_info">
+                        <title>Identification information</title>
+
+                        <mediaobject>
+                            <imageobject>
+                                <imagedata fileref="images/Ident_Info_1.png" width="10cm" align="center"/>
+                            </imageobject>
+                        </mediaobject>
+                    </figure>
+                </para>
+
+                <para>This section also contains information about the person or organization
+                    responsible for the data and who is considered to be a <emphasis role="bold"
+                        >point of contact</emphasis> for the resource i.e. the dataset owner,
+                    originator, distributor, publisher, etc. and it provides information on
+                        <emphasis role="bold">data maintenance</emphasis> i.e. annually, monthly,
+                    daily, not planned, as needed, etc. (<xref linkend="point_of_contact"/>)</para>
+
+                <figure id="point_of_contact">
+                    <title>Point of Contact</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/PoC_Maint.png" width="10cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+
+                <para>Elements for <emphasis role="bold">keywords</emphasis> and for describing
+                    restrictions on <emphasis role="bold">data</emphasis>
+                    <emphasis role="bold">access</emphasis> and <emphasis role="bold">use</emphasis>
+                    are also included in this section in addition to <emphasis role="bold">spatial
+                            <emphasis role="bold">representation</emphasis>
+                    </emphasis>info like data type (vector, raster, text table, etc.) (<xref linkend="descriptive_keywords"/>).</para>
+
+                <figure id="descriptive_keywords">
+                    <title>Descriptive keywords</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/Key_Const_Spatype.png" width="10cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+
+                <para>The identification section provides information about the <emphasis
+                        role="bold">scale</emphasis>, the <emphasis role="bold">language</emphasis>
+                    and <emphasis role="bold">character set</emphasis> used within the resource and
+                    the list of <emphasis role="bold">ISO categories</emphasis> through which your
+                    map could be classified (<xref linkend="scale"/>).</para>
+
+                <figure id="scale">
+                    <title>Scale and other data properties</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/scale.png" width="10cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+
+                <para>Finally, the temporal and spatial extent are also defined in this section. The
+                    temporal extent is defined through the starting and ending date of data
+                    validation (<xref linkend="temporal_extent"/>);</para>
+
+                <figure id="temporal_extent">
+                    <title>
+                        <emphasis role="bold">Temporal extent</emphasis>
+                    </title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/temp_extent.png" width="10cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+
+                <para>The spatial extent of the interested area is defined through geographic
+                    coordinates or through the selection of a country or region from a predefined
+                    list (<xref linkend="geographic_bounding_box"/>). Free text <emphasis role="bold">supplemental
+                    information</emphasis> can be added to complete the data identification section.</para>
+
+                <figure id="geographic_bounding_box">
+                    <title>
+                        <emphasis role="bold">Geographic bounding box</emphasis>
+                    </title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/geobox.png" width="12cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+
+            </section>
+
+            <section>
+                <title>Distribution Section</title>
+
+                <para>This section provides metadata elements for <emphasis role="bold"
+                    >accessing</emphasis> other useful <emphasis role="bold">on-line
+                    resources</emphasis> available <emphasis role="bold">through the web</emphasis>.
+                    The distribution elements allow for on-line access using an URL address or
+                    similar addressing scheme and provide the protocol for the proper connection
+                        <emphasis role="bold">for accessing geographic data</emphasis> or any other
+                    types of digital documents <emphasis role="bold">using the download</emphasis>
+                    <emphasis role="bold">function</emphasis>. Furthermore, it is possible <emphasis
+                        role="bold">to link</emphasis> a metadata with a <emphasis role="bold"
+                        >predefined map service</emphasis> through the <emphasis role="bold">on line
+                        resource</emphasis> and see the map interactively (<xref linkend="distribution_info"/>).</para>
+
+                <figure id="distribution_info">
+                    <title>Distribution information</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/distrInfo.png" width="12cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+            </section>
+
+            <section>
+                <title>Reference System Section</title>
+
+                <para>The Spatial Reference System section <emphasis role="bold">defines</emphasis>
+                    <emphasis role="bold">metadata</emphasis> required <emphasis role="bold">to
+                        describe</emphasis> the <emphasis role="bold">spatial reference
+                    system</emphasis> of a dataset. It contains one element to identify the name of
+                    the reference system used (<xref linkend="reference_system"/>). Using elements <emphasis role="bold"
+                        >from the advanced form</emphasis>, this section may be modified to provide
+                    more <emphasis role="bold">details</emphasis> on <emphasis role="bold">data
+                        projection</emphasis>, <emphasis role="bold">ellipsoid</emphasis> and
+                        <emphasis role="bold">datum</emphasis>. Note that if this information is
+                    provided, a reference system identifier is not mandatory.</para>
+
+                <figure id="reference_system">
+                    <title>Reference system</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/RefSystem.png" width="10cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+            </section>
+
+            <section>
+                <title>Data Quality Section</title>
+
+                <para>The Data Quality section provides a <emphasis role="bold">general
+                    assessment</emphasis> of the <emphasis role="bold">quality of the
+                    data</emphasis>. It describes the<emphasis role="bold"> different hierarchical
+                        levels of data quality</emphasis>, namely a <emphasis role="bold">dataset
+                        series</emphasis>, <emphasis role="bold">dataset</emphasis>, <emphasis
+                        role="bold">features</emphasis>, <emphasis role="bold"
+                    >attributes</emphasis>, etc. This section also contains information about
+                        <emphasis role="bold">sources of the input data</emphasis>, and a<emphasis
+                        role="bold"> general explanation of the production processes</emphasis>
+                    (lineage) used for creating the data (<xref linkend="data_quality"/>).</para>
+
+                <figure id="data_quality">
+                    <title>Data quality</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/dataQuality.png" width="10cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+            </section>
+
+            <section>
+                <title>Metadata Information Section</title>
+
+                <para>This section contains information about the metadata itself: the <emphasis
+                        role="bold">Global Unique Identifier</emphasis> (GUID) assigned to the
+                    record (this is the ‘File identifier’), <emphasis role="bold"
+                    >language</emphasis> and <emphasis role="bold">character</emphasis>
+                    <emphasis role="bold">set</emphasis> used, <emphasis role="bold">date</emphasis>
+                    of <emphasis role="bold">la</emphasis><emphasis role="bold">st edit</emphasis>
+                    (‘Date stamp’) and the <emphasis role="bold">metadata standard</emphasis> and
+                        <emphasis role="bold">version name</emphasis> of the record. It also
+                    contains information on the <emphasis role="bold">metadata author</emphasis>
+                    responsible for the metadata record; this person can also be a point of contact
+                    for the resource described. Information on the Metadata author is mandatory
+                    (<xref linkend="metadata_properties"/>).</para>
+
+                <figure id="metadata_properties">
+                    <title>Metadata properties</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/metadata.png" width="10cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+
+            </section>
+        </section>
+    </chapter>
+</book>

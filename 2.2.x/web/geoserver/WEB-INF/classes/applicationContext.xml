@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<!--  application state module -->
+	<bean id="applicationState"
+		class="org.vfny.geoserver.global.ApplicationState">
+		<constructor-arg ref="data"/>
+		<constructor-arg ref="validation"/>
+		<constructor-arg ref="config"/>
+	</bean>
+	
+	<bean id="applicationStateRegisterar"
+		class="org.vfny.geoserver.global.GeoServerServletContextInitializer">
+		
+		<constructor-arg type="java.lang.String" value="GeoServer.ApplicationState"/>
+ 		<constructor-arg ref="applicationState"/>
+ 	</bean>
+ 	
+</beans>

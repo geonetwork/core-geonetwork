@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<strings>
+	<site>Site</site>
+		<name>Nom</name>
+		<organ>Organisme</organ>
+	
+	<server>Serveur</server>
+		<host>Hôte</host>
+		<port>Port</port>
+	
+	<intranet>Intranet</intranet>
+		<network>Network</network>
+		<netmask>Masque de sous-réseau</netmask>
+	
+	<z3950>Z39.50 Serveur</z3950>
+		<enable>Activé</enable>
+		
+	<feedback>Retour d'information</feedback>
+		<email>EMail</email>
+		<smtpHost>SMTP Hôte</smtpHost>
+		<smtpPort>SMTP Port</smtpPort>
+	
+	<proxy>Proxy</proxy>
+		<use>Activé</use>
+	
+	<!-- Buttons -->
+	
+	<save>Sauvegarder</save>
+	<refresh>Rafraîchir</refresh>
+	
+	<!-- validator messages -->
+	
+	<validator>
+		<length>
+			<cannotBeEmpty>Le champ '{NAME}' ne peut être vide</cannotBeEmpty>
+			<invalidMinSize>Le champ '{NAME}' doit avoir au moins {VALUE} caractère(s)</invalidMinSize>
+			<invalidMaxSize>Le champ '{NAME}' doit avoir au maximum {VALUE} caractère(s)</invalidMaxSize>
+		</length>
+		
+		<integer>
+			<notInt>Le champ '{NAME}' doit être un entier</notInt>
+			<invalidMinValue>Le champ '{NAME}' doit être &gt;= {VALUE}</invalidMinValue>
+			<invalidMaxValue>Le champ '{NAME}' doit être &lt;= {VALUE}</invalidMaxValue>
+		</integer>		
+		
+		<alphanum>
+			<notAlphaNumeric>Le champ '{NAME}' doit être alphanumérique (commençant par une lettre)</notAlphaNumeric>
+		</alphanum>
+		
+		<hostname>
+			<notHostName>Le champ '{NAME}' n'est pas un nom d&apos;hôte valide</notHostName>
+		</hostname>
+		
+		<url>
+			<notURL>Le champ '{NAME}' n&apos;est pas une URL valide</notURL>
+		</url>
+		
+		<ipaddress>
+			<notIP>Le champ '{NAME}' n&apos;est pas une adresse IP valide</notIP>
+		</ipaddress>
+	</validator>
+	
+	<!-- display messages -->
+	
+	<cannotGet>Impossible d&apos;obtenir la configuration du système</cannotGet>
+	<cannotSave>Impossible de sauver la configuration du système</cannotSave>
+	<saveOk>System configuration saved.</saveOk>
+	
+	<!-- tooltips -->
+	
+	<tips>
+		<tip id="site.name">
+			Used to identify the installation.
+		</tip>
+		
+		<!-- server -->
+		
+		<tip id="server.host">
+			The server's <b>host</b> and <b>port</b> are used to create URLs to
+			the GeoNetwork server. For example, they are used during metadata
+			editing to create resource links and when returning the server's
+			capabilities during a CS/W request.
+			<br/>
+			<b>Please note:</b> you should use the GAST tool to reflect this
+			change inside the metadata.
+		</tip>
+		
+		<!-- intranet -->
+		
+		<tip id="intranet.network">
+			The <b>network</b> and <b>netmask</b> parameters are used to identify
+			internal connections to GeoNetwork, that is, to identify the intranet
+			group.
+		</tip>
+		
+		<!-- Z39.50 -->
+		
+		<tip id="z3950.enable">
+			If set, during startup GeoNetwork will start the Z39.50 server component.
+			This component uses the ISO23950 protocol.
+			<br/>
+			<b>Please note:</b> restart GeoNetwork to make this change active.
+		</tip>
+		
+		<tip id="z3950.port">
+			Change the Z39.50 listening port.
+			<br/>
+			<b>Please note:</b> restart GeoNetwork to make this change active.
+		</tip>
+		
+		<!-- proxy -->
+		
+		<tip id="proxy.use">
+			If set, GeoNetwork will use the provided proxy parameters when accessing
+			remote nodes. For example, this is used during the harvesting.
+		</tip>
+		
+		<!-- feedback -->
+		
+		<tip id="feedback.email">
+			This is the administrator's email address used to send feedback.
+		</tip>
+		
+		<tip id="feedback.mail.host">
+			The SMTP <b>host</b> and <b>port</b> parameters are used to send emails
+			to GeoNetwork's users when a resource is downloaded.
+		</tip>
+	</tips>
+	
+</strings>
+

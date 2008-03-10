@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>错误信息</heading>
+	<message>请求操作未能执行.</message>
+	<button>回退</button>
+</strings>

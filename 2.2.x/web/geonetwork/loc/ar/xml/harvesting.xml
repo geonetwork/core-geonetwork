@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<select>Select</select>
+	<name>Name</name>
+	<type>Type</type>
+	<status>Status</status>
+	<errors>Errors</errors>
+	<every>Every</every>
+	<lastRun>Last run</lastRun>
+	<operation>Operation</operation>
+
+	<!-- harvesting types - - - - - - - - - - - - - - - - - - - - -->
+	
+	<info type="geonetwork">
+		<short>GeoNetwork</short>
+		<long>GeoNetwork v2.1 remote node</long>
+	</info>
+	
+	<info type="geonetwork20">
+		<short>GeoNetwork 2.0</short>
+		<long>GeoNetwork v2.0 remote node</long>
+	</info>
+	
+	<info type="webdav">
+		<short>Web DAV</short>
+		<long>Web DAV server</long>
+	</info>
+	
+	<info type="csw">
+		<short>CSW/2.0</short>
+		<long>Catalogue Services for the Web 2.0</long>
+	</info>
+	
+	<info type="z3950">
+		<short>Z3950</short>
+		<long>Z3950 Remote search</long>
+	</info>
+	
+	<info type="oaipmh">
+		<short>OAIPMH</short>
+		<long>OAI Protocol for Metadata Harvesting 2.0</long>
+	</info>
+	
+	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<site>Site</site>
+	
+	<name>Name</name>
+	<host>Host</host>
+	<port>Port</port>
+	<servlet>Servlet</servlet>
+	<useAccount>Use account</useAccount>
+	<username>Username</username>
+	<password>Password</password>
+	
+	<search>Search criteria</search>
+	<siteName>Site name</siteName>
+	
+	<freeText>Free text</freeText>
+	<title>Title</title>
+	<abstract>Abstract</abstract>
+	<keywords>Keywords</keywords>
+	<subject>Subject</subject>
+	<digital>Digital</digital>
+	<hardcopy>Hardcopy</hardcopy>
+	<siteId>Site ID</siteId>
+
+	<retrieve>Retrieve</retrieve>
+	<warn>You can retrieve only after filling the site part</warn>
+	
+	<options>Options</options>
+	<every>Every</every>
+	<everySpec>(days : hours : minutes)</everySpec>
+	<oneRun>One run only</oneRun>
+	<createGroups>Create groups</createGroups>
+	<createCateg>Create categories</createCateg>
+	<status>Status</status>
+	<active>Active</active>
+	<inactive></inactive>
+	<retrieveSources>Retrieve sources</retrieveSources>
+	<retrieveGroups>Retrieve groups</retrieveGroups>
+	<retrieveInfo>Retrieve info</retrieveInfo>
+	<source>Source</source>
+	<criteria>Criteria</criteria>
+	<validate>Validate</validate>
+	<recurse>Recurse</recurse>
+	<host>Host</host>
+	<privileges>Privileges</privileges>
+	<categories>Categories</categories>
+	<url>URL</url>
+	<capabUrl>Capabilities URL</capabUrl>
+	<icon>Icon</icon>
+	<group>Group</group>
+	<groups>Groups</groups>
+	<remoteGroup>Remote group</remoteGroup>
+	<copyPolicy>Copy policy</copyPolicy>
+	<allGroup>Group 'All'</allGroup>
+	
+	<policy>
+		<copy>Copy</copy>
+		<createAndCopy>Create and copy</createAndCopy>
+		<copyToIntranet>Copy to Intranet group</copyToIntranet>
+		<dontCopy>Don't copy</dontCopy>
+	</policy>
+	
+	<from>From</from>
+	<until>Until</until>
+	<set>Set</set>
+	<prefix>Prefix</prefix>
+	<stylesheet>Stylesheet</stylesheet>
+	
+	<!-- Buttons -->
+	
+	<add>Add</add>
+	<edit>Edit</edit>
+	<save>Save</save>
+	<activate>Activate</activate>
+	<deactivate>Deactivate</deactivate>
+	<run>Run</run>
+	<remove>Remove</remove>
+	<refresh>Refresh</refresh>
+	
+	<days>days</days>
+	<hours>hours</hours>
+	<mins>minutes</mins>
+	
+	<!-- validator messages -->
+	
+	<validator>
+		<length>
+			<cannotBeEmpty>The field '{NAME}' cannot be empty</cannotBeEmpty>
+			<invalidMinSize>The field '{NAME}' must be at least {VALUE} character(s) long</invalidMinSize>
+			<invalidMaxSize>The field '{NAME}' must be maximum {VALUE} character(s) long</invalidMaxSize>
+		</length>
+		
+		<integer>
+			<notInt>The field '{NAME}' must be an integer</notInt>
+			<invalidMinValue>The field '{NAME}' must be &gt;= {VALUE}</invalidMinValue>
+			<invalidMaxValue>The field '{NAME}' must be &lt;= {VALUE}</invalidMaxValue>
+		</integer>		
+		
+		<alphanum>
+			<notAlphaNumeric>The field '{NAME}' must be alphanumeric (starting with a letter)</notAlphaNumeric>
+		</alphanum>
+		
+		<hostname>
+			<notHostName>The field '{NAME}' is not a valid host name</notHostName>
+		</hostname>
+		
+		<url>
+			<notURL>The field '{NAME}' is not a valid URL</notURL>
+		</url>
+	</validator>
+	
+	<!-- display messages -->
+	
+	<pleaseSelect>Please select at least one entry</pleaseSelect>
+	<pleaseSelectGroup>Please select at least one group</pleaseSelectGroup>
+	<cannotAdd>Unable to add a new entry</cannotAdd>
+	<cannotGet>Unable to get the entry/ies</cannotGet>
+	<cannotRemove>Cannot remove the selected entry/ies</cannotRemove>
+	<cannotStart>Cannot activate the selected entry/ies</cannotStart>
+	<cannotStop>Cannot deactivate the selected entry/ies</cannotStop>
+	<cannotRun>Cannot run the selected entry/ies</cannotRun>
+	<confirmRemove>Remove the selected entries ? The nodes and all harvested metadata will be removed.</confirmRemove>
+	<everyZero>The harvesting period cannot be 0:0:0</everyZero>
+	<pleaseRetrieve>Please retrieve some sites first</pleaseRetrieve>
+	<cannotRetrieve>Unable to retrieve information</cannotRetrieve>
+	<cannotUpdate>Unable to update information on the server</cannotUpdate>
+	<supplyHost>Please, provide the 'host' parameter</supplyHost>
+	<supplyServlet>Please, provide the 'servlet' parameter</supplyServlet>
+	<pleaseSpecifySiteId>Please specify a non empty Site ID</pleaseSpecifySiteId>
+	<cannotQueryOai>Cannot query OAI-PMH server</cannotQueryOai>
+	<gn20Unsafe>Please notice that harvesting old GeoNetwork nodes is unsafe. 
+ 					The old nodes do not have unique site ids and this could cause
+					unpredictable results (like removing nodes from other harvestings).</gn20Unsafe>
+			
+	<supplyUrl>Please, provide a valid 'url' parameter</supplyUrl>
+	
+	<oper>
+		<op id="0">View</op>
+		<op id="1">Download</op>
+		<op id="2">Edit</op>
+		<op id="3">Notify</op>
+		<op id="4">Admin</op>
+		<op id="5">Interactive map</op>
+		<op id="6">Featured</op>
+	</oper>
+	
+	<!-- tooltips - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<statusTip>
+		<inactive>Inactive</inactive>
+		<active>Active</active>
+		<running>Running</running>
+	</statusTip>
+	
+	<tipHeader>
+		<total>Total</total>
+		<added>Added</added>
+		<removed>Removed</removed>
+		<updated>Updated</updated>
+		<unchanged>Unchanged</unchanged>
+		<unknownSchema>Unknown schema</unknownSchema>
+		<unretrievable>Unretrievable</unretrievable>
+		<badFormat>Bad XML format</badFormat>
+		<doesNotValidate>Does not validate</doesNotValidate>
+	</tipHeader>
+	
+	<notRun>Waiting for the first run</notRun>
+	
+	<tips>
+		<!-- geonetwork harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="gn.name">
+			Generic name to identify the harvesting node
+		</tip>
+		
+		<tip id="gn.host">
+			The remote host you want to connect to
+		</tip>
+		
+		<tip id="gn.retrieveSources">
+			Specify <i>host</i>, <i>port</i> and <i>servlet</i> parameters and then press this button to 
+			retrieve all sources known to the remote node.
+		</tip>
+		
+		<tip id="gn.retrieveGroups">
+			Specify <i>host</i>, <i>port</i> and <i>servlet</i> parameters and then press this button to 
+			retrieve all accessible groups from the remote node.
+		</tip>
+		
+		<tip id="gn.addSearch">
+			Add one search on the remote node. You have to specify at least one search in order to
+			retrieve some metadata.
+		</tip>
+		
+		<tip id="gn.categories">
+			You can assign one or more categories to harvested metadata. Use the <b>&lt;CTRL&gt;</b> 
+			key to select more than one category.
+		</tip>
+		
+		<!-- CSW harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="csw.capabUrl">
+			The given URL must point to a capabilities document. The format of a capabilities
+			URL is like this:<br/>
+			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1			
+		</tip>
+		
+		<tip id="csw.addSearch">
+			Add one search on the remote server. You have to specify at least one search in order to
+			retrieve some metadata.
+		</tip>
+		
+		<tip id="csw.groups">
+			You can choose the privileges to associate to harvested metadata.
+		</tip>
+		
+		<tip id="csw.addGroups">
+			Select one or more groups (using the <b>&lt;CTRL&gt;</b> key) on the left panel and press this button.
+		</tip>
+		
+		<tip id="csw.categories">
+			You can assign one or more categories to harvested metadata. Use the <b>&lt;CTRL&gt;</b> 
+			key to select more than one category.
+		</tip>
+	
+		<!-- OAI-PMH harvesting type - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="oai.url">
+			This URL must point to the OAI-PMH server
+		</tip>
+		
+		<tip id="oai.addSearch">
+			Add one search on the remote server. If you don't add any search, an unconstrained search
+			is performed using the 'oai_dc' metadata format
+		</tip>
+		
+		<tip id="oai.groups">
+			You can choose the privileges to associate to harvested metadata.
+		</tip>
+		
+		<tip id="oai.addGroups">
+			Select one or more groups (using the <b>&lt;CTRL&gt;</b> key) on the left panel and press this button.
+		</tip>
+		
+		<tip id="oai.categories">
+			You can assign one or more categories to harvested metadata. Use the <b>&lt;CTRL&gt;</b> 
+			key to select more than one category.
+		</tip>
+	
+		<tip id="oai.validate">
+			Harvests only metadata that validate against their schema.
+		</tip>
+		
+		<!-- OAI-PMH harvesting type : dynamic search part -->
+		
+		<tip id="oai.remove">
+			Remove this search criteria
+		</tip>
+		
+		<tip id="oai.from">
+			Optional date to start harvesting from.
+		</tip>
+		
+		<tip id="oai.from.set">
+			Open dialog to set FROM date
+		</tip>
+		
+		<tip id="oai.from.clear">
+			Clear FROM parameter
+		</tip>
+		
+		<tip id="oai.until">
+			Optional date to end harvesting to.
+		</tip>
+		
+		<tip id="oai.until.set">
+			Open dialog to set UNTIL date
+		</tip>
+		
+		<tip id="oai.until.clear">
+			Clear UNTIL parameter
+		</tip>
+	
+		<tip id="oai.set">
+			You can narrow the harvesting to specific metadata sets that exist remotely.
+		</tip>
+		
+		<tip id="oai.prefix">
+			Choose the metadata format you want to harvest.
+		</tip>
+	</tips>
+</strings>
+

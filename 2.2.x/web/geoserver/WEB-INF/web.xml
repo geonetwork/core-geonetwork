@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+  <display-name>GeoServer</display-name>
+  <description>Web Mapping, Feature and Coverage Services</description>
+
+  <context-param>
+    <param-name>serviceStrategy</param-name>
+    <!-- Meaning of the different values :
+    	 
+         PARTIAL-BUFFER2
+         - Partially buffers the first xKb to disk. Once that has buffered, the the 
+           result is streamed to the user. This will allow for most errors to be caught
+           early. 
+    	   
+         BUFFER
+         - stores the entire response in memory first, before sending it off to
+           the user (may run out of memory)
+
+         SPEED
+         - outputs directly to the response (and cannot recover in the case of an
+           error)
+
+         FILE
+         - outputs to the local filesystem first, before sending it off to the user
+      -->
+    <param-value>PARTIAL-BUFFER2</param-value>
+  </context-param>
+  
+  <context-param>
+	<!-- see comments on the PARTIAL-BUFFER strategy -->
+	<!-- this sets the size of the buffer.  default is "50" = 50kb -->
+
+	<param-name>PARTIAL_BUFFER_STRATEGY_SIZE</param-name>
+	<param-value>50</param-value>
+  </context-param>
+  
+	<!-- pick up all spring application contexts -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath*:/applicationContext.xml</param-value>
+	</context-param>
+	
+	<!-- 
+	<context-param>
+	  <param-name>PROXY_BASE_URL</param-name>
+	  <param-value>http://82.58.146.45/</param-value>
+	</context-param>
+	 -->
+	
+
+   <!--
+	  <context-param>
+		   <param-name>GEOSERVER_DATA_DIR</param-name>
+		    <param-value>C:\eclipse\workspace\geoserver_trunk\cite\confCiteWFSPostGIS</param-value>
+	  </context-param> 
+   -->
+   
+  <filter>
+    <filter-name>Set Character Encoding</filter-name>
+    <filter-class>org.vfny.geoserver.filters.SetCharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>Set Character Encoding</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <!-- Temporarily disable this until we have a UI to set logging levels 
+  <listener>
+    <listener-class>org.geoserver.logging.LoggingStartupContextListener</listener-class>
+  </listener>
+  -->
+
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+	
+  <!-- spring dispatcher servlet, dispatches incoming requests to controllers -->
+  <servlet>
+    <servlet-name>dispatcher</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>	
+  </servlet>
+  
+  <!-- configuration files hider -->
+  <servlet>
+    <servlet-name>hider</servlet-name>
+    <servlet-class>org.vfny.geoserver.servlets.FileHiderServlet</servlet-class>  
+  </servlet>
+	
+   <!-- Struts config needs to load before all the other servlets. -->
+   <servlet>
+    <servlet-name>action</servlet-name>
+    <servlet-class>org.vfny.geoserver.config.web.MultipleActionServlet</servlet-class>
+    <init-param>
+      <param-name>config</param-name>
+      <param-value>/WEB-INF/struts-config.xml,classpath*:/WEB-INF/struts-config.xml</param-value>
+    </init-param>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>2</param-value>
+    </init-param>
+    <init-param>
+      <param-name>detail</param-name>
+      <param-value>2</param-value>
+    </init-param>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+  <servlet>
+   <servlet-name>TestWfsPost</servlet-name>
+   <servlet-class>org.vfny.geoserver.wfs.servlets.TestWfsPost</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>action</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>dispatcher</servlet-name>
+	<url-pattern>/wms/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>dispatcher</servlet-name>
+	<url-pattern>/wcs/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>dispatcher</servlet-name>
+	<url-pattern>/wfs/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>dispatcher</servlet-name>
+  	<url-pattern>/ows/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>dispatcher</servlet-name>
+  	<url-pattern>/styles/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>dispatcher</servlet-name>
+    <url-pattern>/www/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>hider</servlet-name>
+    <url-pattern>/data/services.xml</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>hider</servlet-name>
+    <url-pattern>/data/catalog.xml</url-pattern>
+  </servlet-mapping>
+    
+  <mime-mapping>
+   <extension>xsl</extension>
+   <mime-type>text/xml</mime-type>
+  </mime-mapping>
+		      
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+ 
+  <error-page>
+  	<exception-type>java.lang.Exception</exception-type>
+		<location>/WEB-INF/pages/errors/Exception.jsp</location>
+  </error-page>
+  <error-page>
+  	<exception-type>javax.servlet.ServletException</exception-type>
+		<location>/WEB-INF/pages/errors/Exception.jsp</location>
+  </error-page>
+  <error-page>
+  	<exception-type>org.vfny.geoserver.global.ConfigurationException</exception-type>
+		<location>/WEB-INF/pages/errors/Exception.jsp</location>
+  </error-page>
+
+  <taglib>
+    <taglib-uri>/tags/struts-bean</taglib-uri>
+    <taglib-location>/WEB-INF/struts-bean.tld</taglib-location>
+  </taglib>
+
+  <taglib>
+    <taglib-uri>/tags/struts-html</taglib-uri>
+    <taglib-location>/WEB-INF/struts-html.tld</taglib-location>
+  </taglib>
+
+  <taglib>
+    <taglib-uri>/tags/struts-logic</taglib-uri>
+    <taglib-location>/WEB-INF/struts-logic.tld</taglib-location>
+  </taglib>
+
+  <taglib>
+    <taglib-uri>/tags/struts-nested</taglib-uri>
+    <taglib-location>/WEB-INF/struts-nested.tld</taglib-location>
+  </taglib>
+
+  <taglib>
+    <taglib-uri>/tags/struts-tiles</taglib-uri>
+    <taglib-location>/WEB-INF/struts-tiles.tld</taglib-location>
+  </taglib>  
+  
+  <!-- spring taglib -->
+  <taglib>
+  	<taglib-uri>/tags/spring</taglib-uri>
+  	<taglib-location>/WEB-INF/tld/spring.tld</taglib-location>
+  </taglib>
+</web-app>

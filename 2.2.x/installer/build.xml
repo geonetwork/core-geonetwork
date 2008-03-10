@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+==============================================================================
+=== This Ant build file is used to build the GeoNetwork opensource installers
+===
+=== Authors : Jeroen Ticheler <ticheler@users.sourceforge.net>
+===           Andrea Carboni <acarboni@users.sourceforge.net>
+==============================================================================
+-->
+
+<project name="geonetwork" default="installer" basedir=".">
+
+	<!-- =================================================================================== -->
+
+	<condition property="osys" value="macosx">
+		<os family="mac"/>
+	</condition>
+	<condition property="osys" value="win">
+			<os family="windows"/>
+	</condition>
+	<condition property="osys" value="unix">
+			<os family="unix"/>
+	</condition>
+		
+	<!-- =================================================================================== -->
+
+	<property name="version" value="2.2.0" />
+	<property name="subVersion" value="RC2" />
+	<property name="javaVersion" value="1.5.0" /> <!-- Minimum version required -->
+	<property name="jre_url" value="http://java.sun.com/javase/downloads/index_jdk5.jsp" />
+	<property name="OS" value="Compiled on ${os.name} (${osys})" />
+	<property name="propsdir" value="../.props" />
+
+	<!-- =================================================================================== -->
+	
+	<taskdef name="izpack" 
+				classpath="lib/standalone-compiler.jar" 
+				classname="com.izforge.izpack.ant.IzPackTask"/>
+	
+	<taskdef name="launch4j"
+	        classname="net.sf.launch4j.ant.Launch4jTask"
+	        classpath="launch4j/${osys}/launch4j.jar:launch4j/${osys}/lib/xstream.jar"/>
+
+	<!-- =================================================================================== -->
+
+	<target name="setProperties">
+	
+		<delete	dir ="${propsdir}" />
+		<mkdir	dir ="${propsdir}" />
+
+		<!-- Update the properties file -->
+		<propertyfile
+		    file="../web/geonetwork/WEB-INF/server.prop"
+		    comment="GeoNetwork opensource properties. These are also used by both gast and geonetwork at runtime">
+			<!-- These are used by both gast and geonetwork at runtime -->
+			<!-- Do not remove !! -->
+			<entry  key="version" value="${version}"/>
+			<entry  key="subVersion" value="${subVersion}"/>
+			<entry  key="release" value="${version}"/>
+			
+			<entry  key="javaVersion" value="${javaVersion}"/>
+			<entry	key="jre_url" value="${jre_url}"/>
+
+			<entry  key="date" type="date" value="now" pattern="yymmddHHmm"/>
+			<entry  key="day" type="date" value="now" pattern="dd-M-yyyy"/>
+			<entry  key="OS" value="${OS}"/>
+		  
+		</propertyfile>
+		
+		<!-- make sure all files that need have version numbers etc updated -->
+
+	    <!-- Windows installer build -->
+	    <copy 	file="../installer/installer-config.xml" 
+	    		tofile="${propsdir}/installer-config.xml" 
+	    		filtering="on" overwrite="yes"/>
+
+		<replace 	file="${propsdir}/installer-config.xml" 
+					propertyFile="../web/geonetwork/WEB-INF/server.prop">
+			<replacefilter token="@version@" property="version"/>
+			<replacefilter token="@subVersion@" property="subVersion"/>
+			<replacefilter token="@javaVersion@" property="javaVersion"/>
+		</replace>
+
+	    <!-- Windows with JRE installer build -->
+	    <copy 	file="../installer/installer-config-win-jre.xml" 
+	    		tofile="${propsdir}/installer-config-win-jre.xml" 
+	    		filtering="on" overwrite="yes"/>
+
+		<replace 	file="${propsdir}/installer-config-win-jre.xml"
+					propertyFile="../web/geonetwork/WEB-INF/server.prop">
+			<replacefilter token="@version@" property="version"/>
+			<replacefilter token="@subVersion@" property="subVersion"/>
+			<replacefilter token="@javaVersion@" property="javaVersion"/>
+		</replace>
+
+		<!-- help file -->
+	    <copy 	file="../docs/readme.html" 
+	    		tofile="${propsdir}/readme.html" 
+	    		filtering="on" overwrite="yes"/>
+
+		<replace 	file="${propsdir}/readme.html"
+					propertyFile="../web/geonetwork/WEB-INF/server.prop">
+			<replacefilter token="@version@" property="version"/>
+			<replacefilter token="@subVersion@" property="subVersion"/>
+			<replacefilter token="@day@" property="day"/>
+			<replacefilter token="@javaVersion@" property="javaVersion"/>
+			<replacefilter token="@jre_url@" property="jre_url"/>
+		</replace>
+
+	</target>
+
+	<!-- =================================================================================== -->
+
+	<target name="installer" depends="setProperties">
+		
+		<property file="../web/geonetwork/WEB-INF/server.prop"/>
+		
+		<ant dir=".." target="all"  />
+
+		<ant dir="../docs" target="all"  />
+		
+		<delete dir="../geonetwork-${release}"/>
+		<mkdir  dir="../geonetwork-${release}"/>
+
+		<echo message="Building platform independent installer on ${osys} using IzPack"/>
+
+		<izpack	input="${propsdir}/installer-config.xml" 
+			output="../geonetwork-${release}/geonetwork-install-${release}-${subVersion}.jar" 
+					installerType="standard" 
+					basedir="${basedir}"/>
+
+		<ant dir="." target="wininstall"  />	
+	
+	</target>
+	
+	<!-- =================================================================================== -->
+
+	<target name="wininstall">
+		<!-- create a Windows installer using launch4j -->
+
+		<property file="../web/geonetwork/WEB-INF/server.prop"/>
+
+		<echo message="Building Windows installer on ${osys} using launch4j"/>
+
+		<launch4j configFile="${basedir}/launch4j/launch4jConfig.xml"
+			jar="../geonetwork-${release}/geonetwork-install-${release}-${subVersion}.jar"
+			outfile="../geonetwork-${release}/geonetwork-install-${release}-${subVersion}.exe"
+			txtFileVersion="${version}-${subVersion}-${date}" 
+			txtProductVersion="${version}-${subVersion}" 
+			fileVersion="${version}.0" 
+			productVersion="${version}.0"/>
+
+	</target>
+
+	<!-- =================================================================================== -->
+
+	<target name="wininstall-jre">
+		<!-- create a Windows installer using launch4j -->
+
+		<property file="../web/geonetwork/WEB-INF/server.prop"/>
+
+		<izpack	input="${propsdir}/installer-config-win-jre.xml" 
+			output="../geonetwork-${release}/geonetwork-install-win-jre-${release}-${subVersion}.jar" 
+					installerType="standard" 
+					basedir="${basedir}"/> 
+
+		<echo message="Building Windows installer with JRE on ${osys} using launch4j"/>
+
+		<launch4j configFile="${basedir}/launch4j/launch4jConfig-jre.xml"
+			jar="../geonetwork-${release}/geonetwork-install-win-jre-${release}-${subVersion}.jar"
+			outfile="../geonetwork-${release}/geonetwork-install-with-jre-${release}-${subVersion}.exe"
+			txtFileVersion="${version}-${subVersion}-${date}" 
+			txtProductVersion="${version}-${subVersion}" 
+			fileVersion="${version}.0" 
+			productVersion="${version}.0"/>
+
+	</target>
+
+	<!-- =================================================================================== -->
+
+</project>

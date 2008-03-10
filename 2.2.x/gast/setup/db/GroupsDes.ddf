@@ -1,0 +1,24 @@
+#---------------------------------------------------------
+#--- File exported in DDF format on 2007-01-02 16:14:13
+#---
+#--- SELECT idDes,langId,label FROM APP.GroupsDes
+#---------------------------------------------------------
+
+[FIELDS]
+idDes,         INTEGER
+langId,        VARCHAR
+label,         VARCHAR
+
+[DATA]
+0	en	Intranet
+0	fr	Intranet
+0	es	Intranet
+0	cn	Intranet
+1	en	All
+1	fr	Tous
+1	es	All
+1	cn	All
+2	en	Sample group
+2	fr	Sample group
+2	es	Sample group
+2	cn	Sample group

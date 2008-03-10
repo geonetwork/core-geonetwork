@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profiles>
+	<profile/>
+	<profile value="193.43.36.100:210/geonetwork 193.220.24.180:2100/geonetwork 196.36.132.196:2100/geonetwork 193.108.214.8:2100/geonetwork">GeoNetwork nodes</profile>
+	<profile value="152.61.128.5:210/adds 152.61.128.18:2210/emis 63.81.137.19:210/Water">Africa</profile>
+	<profile value="130.118.181.36:210/AGDC 204.89.222.35:5210/asgdc 209.193.41.78:210/MoaMeta">Alaska</profile>
+</profiles>

@@ -1,0 +1,55 @@
+package org.wfp.vam.intermap.services.map;
+
+import java.util.*;
+
+import org.jdom.*;
+
+import jeeves.interfaces.*;
+import jeeves.server.*;
+import jeeves.server.context.*;
+
+import org.wfp.vam.intermap.kernel.map.*;
+
+//=============================================================================
+
+/** main.result service. shows search results
+  */
+
+public class SetTransparency implements Service
+{
+	public void init(String appPath, ServiceConfig config) throws Exception {}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Service
+	//---
+	//--------------------------------------------------------------------------
+
+	public Element exec(Element params, ServiceContext context) throws Exception
+	{
+		List layers = params.getChildren(); // get all children (all layers)
+
+		// Get the MapMerger object from the user session
+		MapMerger mm = MapUtil.getMapMerger(context);
+
+		for (Iterator i = layers.iterator(); i.hasNext(); ) {
+			Element layer = (Element)i.next();
+		
+			int id = Integer.parseInt(layer.getName().substring(1));
+			float transparency;
+			try {
+				transparency = Float.parseFloat(layer.getText());
+				mm.setTransparency(id, transparency);
+			}
+			catch (NumberFormatException e) {
+				// do nothing
+			}
+		}
+
+		return new Element("response").addContent(mm.getTransparency());
+	}
+	
+}
+
+//=============================================================================
+

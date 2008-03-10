@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<csw:Capabilities version="2.0.1"
+						xmlns:ows  ="http://www.opengis.net/ows"
+						xmlns:ogc  ="http://www.opengis.net/ogc"
+						xmlns:csw  ="http://www.opengis.net/cat/csw"
+						xmlns:gml  ="http://www.opengis.net/gml"
+						xmlns:xlink="http://www.w3.org/1999/xlink">
+
+	<!-- ========================================================= -->
+	
+	<ows:ServiceIdentification>
+		<ows:Title>GeoNetwork</ows:Title>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
+		
+		<ows:Abstract>
+			GeoNetwork catalog service conform to the HTTP protocol binding 
+ of the OpenGIS Catalogue Service specification version 2.0.1
+		</ows:Abstract>
+	
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
+		
+		<ows:Keywords>
+			<ows:Keyword>CSW</ows:Keyword>
+			<ows:Keyword>ISO19115:2003</ows:Keyword>
+			<ows:Keyword>ISO19139:2007</ows:Keyword>
+			<ows:Keyword>geospatial</ows:Keyword>
+			<ows:Keyword>catalogue</ows:Keyword>
+			<ows:Keyword>GeoNetwork opensource</ows:Keyword>
+		</ows:Keywords>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
+		
+		<ows:ServiceType>CSW</ows:ServiceType>
+		<ows:ServiceTypeVersion>2.0.1</ows:ServiceTypeVersion>
+		<ows:Fees>NONE</ows:Fees>
+		<ows:AccessConstraints>NONE</ows:AccessConstraints>
+	</ows:ServiceIdentification>
+	
+	<!-- ========================================================= -->
+	
+	<ows:ServiceProvider>
+		<ows:ProviderName>GeoNetwork opensource</ows:ProviderName>
+		<ows:ProviderSite xlink:href="http://$HOST:$PORT$SERVLET"/>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
+		
+		<ows:ServiceContact>
+			<ows:IndividualName>Name of the responsible person: surname, given name, title separated by a delimiter.</ows:IndividualName>
+			<ows:PositionName>Role or position of the responsible person.</ows:PositionName>
+			
+			<ows:ContactInfo>
+				<ows:Phone>
+					<ows:Voice>Telephone number by which individuals can speak to the responsible organization or individual.</ows:Voice>
+					<ows:Facsimile>Telephone number of a facsimile machine for the responsible organization or individual.</ows:Facsimile>
+				</ows:Phone>
+			
+				<ows:Address>
+					<ows:DeliveryPoint>Address line for the location.</ows:DeliveryPoint>
+					<ows:City>City of the location.</ows:City>
+					<ows:AdministrativeArea>State or province of the location.</ows:AdministrativeArea>
+					<ows:PostalCode>ZIP or other postal code.</ows:PostalCode>
+					<ows:Country>Country of the physical address.</ows:Country>
+					<ows:ElectronicMailAddress>admin@myorganization.org</ows:ElectronicMailAddress>
+				</ows:Address>	
+
+				<ows:HoursOfService>Time period (including time zone) when individuals can contact the organization or individual.</ows:HoursOfService>
+				<ows:ContactInstructions>Supplemental instructions on how or when to contact the individual or organization.</ows:ContactInstructions>
+			</ows:ContactInfo>		
+			
+<!--			<ows:Role></ows:Role> -->
+				
+		</ows:ServiceContact>
+	</ows:ServiceProvider>
+	
+	<!-- ========================================================= -->
+	
+	<ows:OperationsMetadata>
+		<ows:Operation name="GetCapabilities">
+			<ows:DCP>
+				<ows:HTTP>
+					<ows:Get  xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw" />
+					<ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw"  />
+				</ows:HTTP>
+			</ows:DCP>
+			
+			<ows:Parameter name="sections">
+				<ows:Value>ServiceIdentification</ows:Value>
+				<ows:Value>ServiceProvider</ows:Value>
+				<ows:Value>OperationsMetadata</ows:Value>
+				<ows:Value>Filter_Capabilities</ows:Value>
+			</ows:Parameter>
+			
+		</ows:Operation>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
+	
+		<ows:Operation name="DescribeRecord">
+			<ows:DCP>
+				<ows:HTTP>
+					<ows:Get  xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw" />
+					<ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw"  />
+				</ows:HTTP>
+			</ows:DCP>
+						
+			<ows:Parameter name="typeName">
+				<ows:Value>csw:application</ows:Value>
+				<ows:Value>csw:service</ows:Value>
+				<ows:Value>csw:dataset</ows:Value>
+				<ows:Value>csw:datasetcollection</ows:Value>
+			</ows:Parameter>
+			
+			<ows:Parameter name="outputFormat">
+				<ows:Value>application/xml</ows:Value>
+			</ows:Parameter>
+			
+			<ows:Parameter name="schemaLanguage">
+				<ows:Value>http://www.w3.org/XML/Schema</ows:Value>
+			</ows:Parameter>
+		</ows:Operation>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
+<!--	
+		<ows:Operation name="GetDomain">
+			<ows:DCP>
+				<ows:HTTP>
+					<ows:Get  xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw" />
+					<ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw"  />
+				</ows:HTTP>
+			</ows:DCP>
+		</ows:Operation>
+-->		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
+		
+		<ows:Operation name="GetRecords">
+			<ows:DCP>
+				<ows:HTTP>
+					<ows:Get  xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw" />
+					<ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw"  />
+				</ows:HTTP>
+			</ows:DCP>
+		</ows:Operation>
+	
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
+		
+		<ows:Operation name="GetRecordById">
+			<ows:DCP>
+				<ows:HTTP>
+					<ows:Get  xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw" />
+					<ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw"  />
+				</ows:HTTP>
+			</ows:DCP>
+		</ows:Operation>
+	
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
+<!--		
+		<ows:Operation name="Transaction">
+			<ows:DCP>
+				<ows:HTTP>
+					<ows:Get  xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw" />
+					<ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw"  />
+				</ows:HTTP>
+			</ows:DCP>
+		</ows:Operation>
+-->	
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
+<!--		
+		<ows:Operation name="Harvest">
+			<ows:DCP>
+				<ows:HTTP>
+					<ows:Get  xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw" />
+					<ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw"  />
+				</ows:HTTP>
+			</ows:DCP>
+		</ows:Operation>
+-->	
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
+		<!-- Parameters -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
+		
+		<ows:Parameter name="service">
+			<ows:Value>http://www.opengis.net/cat/csw</ows:Value>
+		</ows:Parameter>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
+		
+		<ows:Parameter name="version">
+			<ows:Value>2.0.1</ows:Value>
+		</ows:Parameter>		
+	</ows:OperationsMetadata>
+
+	<!-- ========================================================= -->
+	
+	<ogc:Filter_Capabilities>
+		<ogc:Spatial_Capabilities>
+			<ogc:GeometryOperands>
+				<ogc:GeometryOperand>gml:Envelope</ogc:GeometryOperand>
+				<!--
+				<ogc:GeometryOperand>gml:Point</ogc:GeometryOperand>
+				<ogc:GeometryOperand>gml:LineString</ogc:GeometryOperand>
+				<ogc:GeometryOperand>gml:Polygon</ogc:GeometryOperand>
+				<ogc:GeometryOperand>gml:ArcByCenterPoint</ogc:GeometryOperand>
+				<ogc:GeometryOperand>gml:CircleByCenterPoint</ogc:GeometryOperand>
+				<ogc:GeometryOperand>gml:Arc</ogc:GeometryOperand>
+				<ogc:GeometryOperand>gml:Circle</ogc:GeometryOperand>
+				<ogc:GeometryOperand>gml:ArcByBulge</ogc:GeometryOperand>
+				<ogc:GeometryOperand>gml:Bezier</ogc:GeometryOperand>
+				<ogc:GeometryOperand>gml:Clothoid</ogc:GeometryOperand>
+				<ogc:GeometryOperand>gml:CubicSpline</ogc:GeometryOperand>
+				<ogc:GeometryOperand>gml:Geodesic</ogc:GeometryOperand>
+				<ogc:GeometryOperand>gml:OffsetCurve</ogc:GeometryOperand>
+				<ogc:GeometryOperand>gml:Triangle</ogc:GeometryOperand>
+				<ogc:GeometryOperand>gml:PolyhedralSurface</ogc:GeometryOperand>
+				<ogc:GeometryOperand>gml:TriangulatedSurface</ogc:GeometryOperand>
+				<ogc:GeometryOperand>gml:Tin</ogc:GeometryOperand>
+				<ogc:GeometryOperand>gml:Solid</ogc:GeometryOperand>
+				-->
+			</ogc:GeometryOperands>
+			
+			<ogc:SpatialOperators>
+				<ogc:SpatialOperator name="BBOX"/>
+				<!--
+				<ogc:SpatialOperator name="Equals"/>
+				<ogc:SpatialOperator name="Overlaps"/>
+				<ogc:SpatialOperator name="Disjoint"/>
+				<ogc:SpatialOperator name="Intersects"/>
+				<ogc:SpatialOperator name="Touches"/>
+				<ogc:SpatialOperator name="Crosses"/>
+				<ogc:SpatialOperator name="Within"/>
+				<ogc:SpatialOperator name="Contains"/>
+				<ogc:SpatialOperator name="Beyond"/>
+				<ogc:SpatialOperator name="DWithin"/>
+				-->
+				<!-- The 'SpatialOperator' element can have a GeometryOperands child -->
+			</ogc:SpatialOperators>
+		</ogc:Spatial_Capabilities>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
+		
+		<ogc:Scalar_Capabilities>
+			<ogc:LogicalOperators/>
+			
+			<ogc:ComparisonOperators>
+				<ogc:ComparisonOperator>EqualTo</ogc:ComparisonOperator>
+				<ogc:ComparisonOperator>Like</ogc:ComparisonOperator>
+				<ogc:ComparisonOperator>LessThan</ogc:ComparisonOperator>
+				<ogc:ComparisonOperator>GreaterThan</ogc:ComparisonOperator>
+				<ogc:ComparisonOperator>LessThanEqualTo</ogc:ComparisonOperator>
+				<ogc:ComparisonOperator>GreaterThanEqualTo</ogc:ComparisonOperator>
+				<ogc:ComparisonOperator>NotEqualTo</ogc:ComparisonOperator>
+				<ogc:ComparisonOperator>Between</ogc:ComparisonOperator>
+				<!--
+				<ogc:ComparisonOperator>NullCheck</ogc:ComparisonOperator>
+				-->
+			</ogc:ComparisonOperators>
+			
+			<!--
+			<ogc:ArithmeticOperators>
+				<ogc:SimpleArithmetic>
+				<ogc:Functions>
+					<ogc:FunctionNames>
+						<ogc:FunctionName nArgs="1">MIN</ogc:FunctionName>
+					</ogc:FunctionNames>
+				</ogc:Functions>
+			</ogc:ArithmeticOperators>
+			-->
+		</ogc:Scalar_Capabilities>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
+		
+		<ogc:Id_Capabilities>
+			<ogc:EID/>
+			<ogc:FID/>
+		</ogc:Id_Capabilities>
+	</ogc:Filter_Capabilities>
+	
+	<!-- ========================================================= -->
+
+</csw:Capabilities> 

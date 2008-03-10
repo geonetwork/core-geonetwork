@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Filter xmlns="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">
+<!--	<And> -->
+		<PropertyIsLike wildCard="%" singleChar="_" escape="\">
+			<PropertyName>AnyText</PropertyName>
+			<Literal>%africa%</Literal>
+		</PropertyIsLike>
+<!--		<Or>
+			<PropertyIsEqualTo>
+				<PropertyName>dc:title</PropertyName>
+				<Literal>asia</Literal>
+			</PropertyIsEqualTo>
+			
+			<Not>
+				<Disjoint>
+					<gml:Envelope srsName="http://www.opengis.net/gml/srs/epsg.xml#63266405">
+						<gml:lowerCorner>100 100</gml:lowerCorner>
+						<gml:upperCorner>200 200</gml:upperCorner>
+					</gml:Envelope>
+				</Disjoint>
+			</Not>
+			
+			<BBOX>
+				<PropertyName>ows:BoundingBox</PropertyName>
+				<gml:Envelope srsName="http://www.opengis.net/gml/srs/epsg.xml#63266405">
+					<gml:lowerCorner>100 100</gml:lowerCorner>
+					<gml:upperCorner>200 200</gml:upperCorner>
+				</gml:Envelope>
+			</BBOX>
+		</Or>
+	</And> -->
+</Filter>

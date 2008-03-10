@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                      "http://www.docbook.org/xml/4.4/docbookx.dtd">
+<book>
+    <chapter id="import_facilities">
+        <title>Import facilities</title>
+        <section>
+            <title>Batch import</title>
+            <para>The batch import facility allows you to import a set of metadata into the
+                system all at once. In order to use this facility, you have to be logged in as
+                an administrator. After the login step, go to the administration page and select
+                the batch import’s link (<xref linkend="admin_batchimport_where"/>. The link is surrounded with a red
+                rectangle). </para>
+
+             <figure id="admin_batchimport_where">
+                <title>
+                    How to reach the batch import page
+                </title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/admin/web-batchimport-where.png" width="11cm" align="center" />
+                    </imageobject>
+                </mediaobject>
+            </figure>
+                
+            <para>Clicking the link, you will reach the batch import’s page as illustrated in
+                <xref linkend="admin_batchimport_options"/>. You have to specify a set of parameters to make the import working.
+                They are: </para>
+            <para>Directory This is the full path on the server’s file system of the directory
+                to scan. GeoNetwork will look for and try to import all XML files present into
+                this directory. It is important to notice that this is the directory on the
+                <emphasis>server</emphasis> machine and <emphasis>not</emphasis> on the
+                client of the user that is doing the import. All metadata files present into the
+                import directory <emphasis>must</emphasis> have the same schema format. Schema
+                GeoNetwork supports only some metadata formats so you have to specify the schema
+                of the metadata you want to import. If a metadata does not belong to the
+                selected schema, the entire operation will be aborted. Validate This is a simple
+                validation step that you can choose to perform. The metadata is validated
+                against its schema. Group You have to select a group to associate to the
+                imported metadata. Usually the group is the creator of the metadata set.
+                Category You can specify one category to associate to your metadata in order to
+                simplify the search. Stylesheet This is a powerfull option because allows you to
+                specify a stylesheet for an XSL transformation. The drop down control is filled
+                with files taken from the web/xsl/conversion/import folder : all XSL files you
+                put there will be made available. This is a dymanic process so you don’t have to
+                restart GeoNetwork. The purpose of this option is to allow the conversion of a
+                metadata into a suitable format that is supported by GeoNetwork. Therefore, it
+                is important that the result of the transformation matches the schema format
+                selected above. </para>
+            <para>Below the page, there are the following buttons: </para>
+            <para>Back Goes back to the administration form. Upload Starts the import process.
+                When the process ends, the total count of imported metadata will be shown.
+                Please notice that the import is transactional: the metadata set will be fully
+                imported or fully discarded (there are no partial imports). Files that starts
+                with ’.’ or that do not end with ’.xml’ are ignored. </para>
+            
+             <figure id="admin_batchimport_options">
+                <title>
+                    The batch import options
+                </title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/admin/web-batchimport-options.png" width="10cm" align="center" />
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            <section>
+                <title>Structured import</title>
+                <para>An hidden feature of the batch import is the possibility to specify some
+                    import parameters in more detail. This feature is triggered when the
+                    specified folder contains the import-config.xml file. When this happen, this
+                    file is read and the standard import switches to the structured one. </para>
+                <para>The import-config.xml file has a config root element with the following
+                    children: </para>
+                
+                <orderedlist>
+                    <listitem>
+                        <para>categoryMapping [1] : this element specifies the mapping of
+                            directories to categories. </para>
+                        
+                        <orderedlist>
+                            <listitem>
+                                <para>mapping [0..n] : This element can appear 0 or more times
+                                    and maps one directory name to a category name. It must have
+                                    a dir attribute that indicates the directory and a to
+                                    attribute that indicates the category name. </para>
+                            </listitem>
+                            <listitem>
+                                <para>default [1] : This element specifies a default mapping of
+                                    categories for all directories that do not match the other
+                                    mapping elements. It must have only the to attribute.</para>
+                            </listitem>
+                        </orderedlist>
+                    </listitem>
+                    <listitem>
+                        <para>schemaMapping [1] : this element specifies the mapping of
+                            directories to metadata schemas. </para>
+                        
+                        <orderedlist>
+                            <listitem>
+                                <para>mapping [0..n] : This element can appear 0 or more times
+                                    and maps one directory to the schema name that must be used
+                                    when importing. The provided schema must match the one used
+                                    by the metadata contained into the specified directory,
+                                    which must all have the same schema. It must have a dir
+                                    attribute that indicates the directory and a to attribute
+                                    that indicates the schema name. </para>
+                            </listitem>
+                            <listitem>
+                                <para>default [1] : default behaviour to use when all other
+                                    mapping elements do not match. It must have only the to
+                                    attribute.</para>
+                            </listitem>
+                        </orderedlist>
+                    </listitem>
+                </orderedlist>
+                <para>Here is an example of the <literal>import-config.xml</literal> file: </para>
+<programlisting><![CDATA[<config>
+    <categoryMapping>
+        <mapping dir="1" to="maps" />
+        <mapping dir="3" to="datasets" />
+        <mapping dir="6" to="interactiveResources" />
+        <mapping dir="30" to="photo" />
+        <default to="maps" />
+    </categoryMapping>
+    <schemaMapping>
+        <mapping dir="3" to="fgdc-std" />
+        <default to="dublin-core" />
+    </schemaMapping>
+</config>]]></programlisting>
+                <para>The import procedure starts by scanning the provided directory. This can
+                    contain, beside the import-config.xml file, only subdirectories which name
+                    will be ignored but used only as a container. Inside each directory, there
+                    is another level made only by directories that represent a metadata grouping
+                    for categories. Each directory name will be used as the dir attribute in the
+                    mapping scheme previously described. </para>
+            </section>
+        </section>
+    </chapter>
+</book>

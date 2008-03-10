@@ -1,0 +1,23 @@
+#---------------------------------------------------------
+#--- File exported in DDF format on 2006-10-08 21:20:03
+#---
+#--- SELECT id,username,password,surname,name,profile,address,state,zip,country,email,organisation,kind FROM APP.Users
+#---------------------------------------------------------
+
+[FIELDS]
+id,            INTEGER
+username,      VARCHAR
+password,      VARCHAR
+surname,       VARCHAR
+name,          VARCHAR
+profile,       VARCHAR
+address,       VARCHAR
+state,         VARCHAR
+zip,           VARCHAR
+country,       VARCHAR
+email,         VARCHAR
+organisation,  VARCHAR
+kind,          VARCHAR
+
+[DATA]
+1	admin	d033e22ae348aeb566fc214aec3585c4da997	admin	admin	Administrator							

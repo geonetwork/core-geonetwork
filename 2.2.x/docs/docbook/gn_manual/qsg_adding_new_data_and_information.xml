@@ -1,0 +1,936 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                      "http://www.docbook.org/xml/4.4/docbookx.dtd">
+<book>
+    <chapter id="adding_new_data_and_information">
+        <title>Adding new Data and Information</title>
+
+        <para>This section guides you through the process of adding new records (new data with
+            information) into the GeoNetwork catalogue using either the online metadata editor or
+            the advanced metadata insert tool, based on XML documents. In both cases you will use
+            the template system, add thumbnails, upload data, link to services and set access
+            privileges to the metadata and data.</para>
+
+        <para>To add or edit data and metadata, you must be <emphasis role="bold"
+            >registered</emphasis> as an <emphasis role="bold">Editor</emphasis> into the work group
+            you want to add records to. Contact your administrator if you are not a registered
+            editor for your work group.</para>
+
+        <para>For the metadata creation using the online editor, GNos provides a set of simplified
+            metadata templates based on the cited standards: ISO, FGDC and DC. The templates for
+            vector and raster based on the ISO 19139 are the preferred ones since they are devised
+            in a way that hides the complexity of the ISO19115 standard in the default view. At the
+            same time those templates are extensible with new elements to fit specialized needs
+            through the advanced view.</para>
+
+        <para>To produce a good metadata record, always try to gather as much details as possible on
+            the resource that you want to describe taking into account the metadata elements that
+            have been presented in the previous chapter. The next step is to fill out properly the
+            fields provided by the metadata templates, while at the same time avoiding duplication
+            of information throughout the form.</para>
+
+        <para>The most important fields that may not be waived while compiling a standard based
+            metadata record are the following: <emphasis role="bold">Title, Date of Creation o
+                Publication, Abstract, Language used for documenting data, Topic Category, Scale,
+                Maintenance and Update Frequency, Metadata Author, Language Used for Documenting
+                Metadata</emphasis>.</para>
+
+        <para>In addition to the main mandatory fields, we recommend you to fill out these optional
+            but critical fields (if information is available): <emphasis role="bold">Purpose -
+                Keywords - Presentation Form - Status - Spatial Representation Type - Geographic
+                Location - Reference System Info - Temporal Extent - Data Quality Info - Access and
+                Use Constraints - Point of Contact - Distribution Info: Online Resources.</emphasis></para>
+
+        <para>
+            <emphasis>
+                <emphasis>You should also prepare an image of your data that is required to be
+                    displayed in search results as thumbnail.</emphasis>
+            </emphasis>
+        </para>
+
+        <para>
+            <emphasis>
+                <emphasis>Next section will guide you through the process of metadata creation using
+                    the online editor.</emphasis>
+            </emphasis>
+        </para>
+
+        <section>
+            <title>Creating a New Record using the Metadata Editor on line</title>
+
+            <orderedlist>
+                <listitem>
+                    <para>In the home page, click on the <emphasis role="bold">Administration
+                        Tab</emphasis>.</para>
+                </listitem>
+
+                <listitem>
+                    <para>Select <emphasis role="bold">New Metadata</emphasis> from the List of the
+                        admin page.</para>
+                </listitem>
+
+                <listitem>
+                    <para>Select the metadata standard <emphasis role="bold">Template</emphasis>, if
+                        possible, using the preferred ones (<xref linkend="metadata_creation"/>).
+                        GeoNetwork opensource comes by default with support for three metadata
+                        standards, ISO19139, FGDC and Dublin core. For the ISO standard, two
+                        templates have been developed; one for vector and one for raster data. Both
+                        contain a relevant set of elements to describe the respective types of data.
+                        More templates can be developed online.</para>
+                </listitem>
+
+                <listitem>
+                    <para>Select the <emphasis role="bold">Group</emphasis> the metadata will belong
+                        to. These are the groups authorized to add metadata to by your
+                        administrator.</para>
+                </listitem>
+
+                <listitem>
+                    <para>Click on <emphasis role="bold">Create</emphasis>.</para>
+                </listitem>
+            </orderedlist>
+
+            <section>
+                <title>The steps in more details</title>
+
+                <orderedlist>
+                    <listitem>
+                        <para>Enter your username and password and click on the login button (<xref
+                                linkend="login_adding"/>). The system will identify you and assign
+                            the correct privileges to work with.</para>
+
+                        <figure id="login_adding">
+                            <title>Login</title>
+
+                            <mediaobject>
+                                <imageobject>
+                                    <imagedata fileref="images/login.png" width="6cm" align="center"/>
+                                </imageobject>
+                                <textobject>
+                                    <phrase>Login</phrase>
+                                </textobject>
+                            </mediaobject>
+                        </figure>
+                    </listitem>
+
+                    <listitem>
+                        <para>Open the Administration page by clicking the Administration button in
+                            the banner and then click on the New metadata link (<xref
+                                linkend="admin_panel"/>).</para>
+
+                        <figure id="admin_panel">
+                            <title>Administration panel</title>
+
+                            <mediaobject>
+                                <imageobject>
+                                    <imagedata fileref="images/Admin.png" width="12cm" align="center"/>
+                                </imageobject>
+                            </mediaobject>
+                        </figure>
+                    </listitem>
+
+                    <listitem>
+                        <para>From the metadata creation page, select the metadata standard to use
+                            from the dropdown list (<xref linkend="metadata_creation"/>)</para>
+
+                        <para>
+                            <figure id="metadata_creation">
+                                <title>Template selection</title>
+
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata fileref="images/metadataCreation.png"
+                                            width="10cm" align="center"/>
+                                    </imageobject>
+                                </mediaobject>
+                            </figure>
+                        </para>
+
+                    </listitem>
+
+                    <listitem>
+                        <para>After selecting the correct template, you should identify which group
+                            of users the metadata will belong to (<xref linkend="select_group"/>)
+                            and finally click on <emphasis role="bold">Create</emphasis>.</para>
+
+                        <figure id="select_group">
+                            <title>Group selection</title>
+
+                            <mediaobject>
+                                <imageobject>
+                                    <imagedata fileref="images/selectGroup.png" width="10cm" align="center"/>
+                                </imageobject>
+                            </mediaobject>
+                        </figure>
+
+                        <para>A new metadata form based on the selected template will be displayed
+                            for you to fill out.</para>
+
+                    </listitem>
+                </orderedlist>
+            </section>
+
+            <section>
+                <title>Switching Editing Views from Default to Advanced to XML View</title>
+
+                <para>Once you create a new record, you can choose between <emphasis role="bold"
+                        >Default</emphasis>, <emphasis role="bold">Advanced</emphasis> or <emphasis
+                        role="bold">XML View</emphasis>. To switch view, simply click on the view
+                    you want to switch to on the left column of the page. The view in <emphasis
+                        role="bold">bold</emphasis> is the view you are currently using (<xref
+                        linkend="switch_views"/>).</para>
+
+                <figure id="switch_views">
+                    <title>Metadata view options</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/switchViews.png" width="11cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+
+                <para>In the previous chapter you have analyzed the metadata structure as it is
+                    presented in the <emphasis role="bold">Default View</emphasis>. A selection of
+                    the main fields from different categories of information is shown in one single
+                    view. The minimum set of metadata required to serve the full range of metadata
+                    applications (data discovery, determination of data fitness for use, data
+                    access, data transfer and use of digital data) is defined here, along with
+                    optional metadata elements to allow for a more extensive standard description of
+                    geographic data, if required. However, if should be there a need to add more
+                    metadata elements, you can switch to the advanced view at any time while
+                    editing.</para>
+
+                <para>In the <emphasis role="bold">Advanced View</emphasis>, the ISO profile offers
+                    the possibility to visualize and edit the entire metadata structure organized in
+                    sections accessible through tabs from the left column. You can use this view to
+                    write more advanced metadata descriptions or templates to fit specialized needs.
+                        (<xref linkend="advanced_view"/>)</para>
+
+                <figure id="advanced_view">
+                    <title>Advanced view</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/advancedView.png" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+
+                <para>The <emphasis role="bold">XML View</emphasis> shows the entire content of the
+                    metadata in the original hierarchical structure; different colors allow to
+                    distinguish between an element's name and its value. The XML structure is
+                    composed of tags and to every tag must correspond a closing tag (<xref
+                        linkend="xml_view"/>). The content is entirely contained withing the two,
+                    i.e.</para>
+<programlisting><![CDATA[<gmd:language>
+    <gco:CharacterString>eng</gco:CharacterString>
+</gmd:language>]]></programlisting>
+                <figure id="xml_view">
+                    <title>XML view</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/xmlView1.png" width="11cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+
+                <para>Nevertheless, the use of the XML view requires some knowledge of the XML
+                    language.</para>
+
+                <para>Both the <emphasis role="bold">Default</emphasis> and the <emphasis
+                        role="bold">Advanced Views</emphasis> are composed of
+                    <literal>mandatory</literal>, <literal>conditional</literal> and
+                        <literal>optional</literal> metadata fields. The meaning of mandatory and
+                    optional is fairly intuitive; the mandatory fields are required, like
+                        <literal>Title</literal> and <literal>Abstract</literal> for instance,
+                    whereas the optional fields can be provided but are not fundamental, depending
+                    on the metadata author. The conditional fields may be considered mandatory under
+                    certain circumstances: essentially a conditional requirement indicates that the
+                    presence of a specified data element is dependent on the value or presence of
+                    other data elements in the same section. For instance, the <literal>Individual
+                        name</literal> metadata element of the <literal>Point of Contact</literal>,
+                    which is a conditional element of the Identification section, becomes mandatory
+                    if another element of the same section, <literal>Organization name</literal> or
+                        <literal>Position name</literal> is not already defined (<xref
+                        linkend="point_of_contact2"/>).</para>
+                <figure id="point_of_contact2">
+                    <title>Point of Contact</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/PoC_Maint.png" width="11cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+
+                <para>The <emphasis role="bold">mandatory fields</emphasis> as well as those
+                        <emphasis role="bold">highly recommended</emphasis> are flagged with
+                        <emphasis role="bold">red asterisk</emphasis>
+                    <emphasis role="bold">[*]</emphasis>. The standard definition for each field can
+                    be read by passing the mouse on the element name.</para>
+
+                <para>The <emphasis role="bold">Default View</emphasis> is the preferred view as it
+                    provides a selection of the available metadata elements, facilitating both the
+                    user and the editor in reading and editing a metadata record, and at the same
+                    time it ensures that a geospatial data can be properly described, through :</para>
+
+                <itemizedlist>
+                    <listitem>
+                        <para>the minimum set of metadata required to serve the full range of
+                            metadata applications (data discovery, determination of data fitness for
+                            use, data access, data transfer, and use of digital data);</para>
+                    </listitem>
+                    <listitem>
+                        <para>optional metadata elements - to allow for a more extensive standard
+                            description of geographic data, if required;</para>
+                    </listitem>
+                    <listitem>
+                        <para>a method for extending metadata to fit specialized needs.</para>
+                    </listitem>
+                </itemizedlist>
+
+            </section>
+
+            <section>
+                <title>Using basic commands of the editor</title>
+
+                <para>Fields are either <emphasis role="bold">free text fields</emphasis> or
+                        <emphasis role="bold">drop down lists</emphasis>. Free text means you can
+                    type any text into that field. Drop down lists allow you to select only one
+                    option from the list. You can add multiple fields of the same kind by clicking
+                    on the <emphasis role="bold">[+]</emphasis> symbol next to the element. Every
+                    new field that you will add in the advanced view will then be visible in the
+                    default view. You can also delete existing fields by clicking on the <emphasis
+                        role="bold">[x]</emphasis> symbol next to the element. Clearly, mandatory
+                    fields cannot be deleted. One example of the need to add multiple fields can
+                    arise if the content of your dataset has some text written in two different
+                    languages (<xref linkend="multilingual_data"/>).</para>
+
+                <figure id="multilingual_data">
+                    <title>Describing multilingual data</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/multipleElement.png" width="11cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+
+            </section>
+        </section>
+
+        <section>
+            <title>Entering Metadata for your Map</title>
+
+            <para>As we mentioned in the introduction to this guide, GNos provides tools to describe
+                any type of geographic data (verctor layers, raster, tables, map services, etc.) as
+                well as general document like reports, projects, papers, etc. For the purpose of
+                this Quick Start Guide, an example of required and useful metadata elements to
+                properly describe a thematic map will be provided hereafter. You should gather as
+                much information as possible to identify and understand the map’s resource and
+                characteristics you want to describe. Use the default view to start. If necessary,
+                you can always switch to advanced view or come back later and edit the record with
+                the additonal information collected.</para>
+
+            <section>
+                <title>Entering Metadata For Your Map</title>
+
+                <para>Please follow these steps to enter your map's metadata. Note that we will only
+                    go through the fields that have been identified as compulsory (i.e. those fields
+                    marked with the asterix <emphasis role="bold">[*],</emphasis> mandatory or
+                    highly recommended).</para>
+
+                <para><indexterm>
+                        <primary>title</primary>
+                    </indexterm>
+                    <emphasis role="bold">Title *</emphasis> : Under the <emphasis role="bold"
+                        >Identification Info</emphasis> field, give your map a <emphasis role="bold"
+                        >name</emphasis>. There will be a default name of your data. Use free text
+                    to describe your map here.</para>
+
+                <para><indexterm>
+                        <primary>date</primary>
+                    </indexterm>
+                    <emphasis role="bold">Date *</emphasis> : Indicate the exact <emphasis
+                        role="bold">date</emphasis> of <emphasis role="bold">creation</emphasis>,
+                        <emphasis role="bold">publication</emphasis> or <emphasis role="bold"
+                        >revision</emphasis> on your map.</para>
+
+                <para><indexterm>
+                        <primary>presentation form</primary>
+                    </indexterm>
+                    <emphasis role="bold">Presentation Form</emphasis>: Specify the type of
+                    presentation, i.e. <emphasis role="bold">digital</emphasis>, <emphasis
+                        role="bold">hard copy</emphasis>, <emphasis role="bold">table</emphasis>,
+                    etc.</para>
+
+                <para><indexterm>
+                        <primary>abstract</primary>
+                    </indexterm>
+                    <emphasis role="bold">Abstract *</emphasis> : Enter some description of the map.</para>
+
+                <para><indexterm>
+                        <primary>purpose</primary>
+                    </indexterm>
+                    <emphasis role="bold">Purpose</emphasis>: Enter a short summary of the purposes
+                    for your map to be developed.</para>
+
+                <para><indexterm>
+                        <primary>status</primary>
+                    </indexterm>
+                    <emphasis role="bold">Status</emphasis>: Specify the status of your map within
+                    the following options: completed, historical archive, obsolete, ongoing,
+                    planned, required, under development.</para>
+
+                <para><indexterm>
+                        <primary>point of contact</primary>
+                    </indexterm>
+                    <emphasis role="bold">Point of Contact</emphasis>: Enter all mandatory
+                    information and others you have at hand for the contact of the person(s)
+                    associated with this resources of the map. Note that some fields are only
+                    conditionally mandatory, such as Organization Name if Individual Name and
+                    Position are not entered.</para>
+
+                <para><indexterm>
+                        <primary>maintenance and update frequency</primary>
+                    </indexterm>
+                    <emphasis role="bold">Maintenance and update frequency *</emphasis> : Specify
+                    the frequency with which you expect to make changes and additions to your map
+                    after the initial version is completed. If any changes are scheduled you can
+                    leave <literal>As Needed</literal> selected from the drop-down list.</para>
+
+                <para><indexterm>
+                        <primary>descriptive keywords</primary>
+                    </indexterm>
+                    <emphasis role="bold">Descriptive Keywords</emphasis>: Enter keywords that
+                    describe your map. Also specify the type of keyword you are entering, i.e.
+                    place, theme, etc. Remember that you can add another keyword field if you need
+                    to add different types of keywords.</para>
+
+                <para><indexterm>
+                        <primary>access constraints</primary>
+                    </indexterm>
+                    <emphasis role="bold">Access Constraints</emphasis>: Enter an access constraint
+                    here, such as a copyright, trademark, etc. to assure the protection of privacy
+                    and intellectual property.</para>
+
+                <para><indexterm>
+                        <primary>user constraints</primary>
+                    </indexterm>
+                    <emphasis role="bold">User Constraints</emphasis>: Enter a user constraint here
+                    to assure the protection of privacy and intellectual property.</para>
+
+                <para><indexterm>
+                        <primary>other constraints</primary>
+                    </indexterm>
+                    <emphasis role="bold">Other Constraints *</emphasis> : Enter other constraint
+                    here to assure the protection of privacy and intellectual property. Note that
+                    this field is conditionally mandatory if Access and Use constraints are not
+                    entered.</para>
+
+                <para><indexterm>
+                        <primary>spatial representation type</primary>
+                    </indexterm>
+                    <emphasis role="bold">Spatial representation type</emphasis>: Select, from the
+                    drop-down list the method used to spatially represent your data. The options
+                    are: vector, grid, text table, stereo model, video.</para>
+
+                <para><indexterm>
+                        <primary>scale denominator</primary>
+                    </indexterm>
+                    <emphasis role="bold">Scale Denominator *</emphasis> : Enter the denominator for
+                    an equivalent scale of a hard copy of the map.</para>
+
+                <para><indexterm>
+                        <primary>language</primary>
+                    </indexterm>
+                    <emphasis role="bold">Language *</emphasis> : Select the language used within
+                    your map</para>
+
+                <para><indexterm>
+                        <primary>topic category</primary>
+                    </indexterm>
+                    <emphasis role="bold">Topic category *</emphasis> : Specify the main ISO
+                    category/ies through which your map could be classified (see Annex for the
+                    complete list of ISO topic categories).</para>
+
+                <para><indexterm>
+                        <primary>temporal extent</primary>
+                    </indexterm>
+                    <emphasis role="bold">Temporal Extent *</emphasis> : Enter the starting and
+                    ending date of the validity period.</para>
+
+                <para><indexterm>
+                        <primary>geographic bounding box</primary>
+                    </indexterm>
+                    <emphasis role="bold">Geographic Bounding Box *</emphasis> : Enter the longitude
+                    and latitude for the map or select a region from the predefined drop-down list.
+                    Make sure you use degrees for the unit of the geographic coordinates as they are
+                    the basis for the geographic searches.</para>
+
+                <para><indexterm>
+                        <primary>supplemental information</primary>
+                    </indexterm>
+                    <emphasis role="bold">Supplemental Information</emphasis>: Enter any other
+                    descriptive information about your map that can help the user to better
+                    understand its content.</para>
+
+                <para><indexterm>
+                        <primary>distribution info</primary>
+                    </indexterm>
+                    <emphasis role="bold">Distribution Info</emphasis>: Enter information about the
+                    distributor and about options for obtaining your map.</para>
+
+                <para><indexterm>
+                        <primary>online resource</primary>
+                    </indexterm>
+                    <emphasis role="bold">Online Resource</emphasis>: Enter information about online
+                    resources for the map, such as where a user may download it, etc. This
+                    information should include a link, the link type (protocol) and a description of
+                    the resource.</para>
+
+                <para><indexterm>
+                        <primary>reference system info</primary>
+                    </indexterm>
+                    <emphasis role="bold">Reference System Info</emphasis>: Enter information about
+                    the spatial reference system of your map. The <emphasis role="bold">default view
+                        contains</emphasis> one element to provide the <emphasis role="bold"
+                        >alphanumeric value</emphasis> identifying the reference system used. GNos
+                    uses the <emphasis role="bold">EPSG codes</emphasis> which are numeric codes
+                    associated with coordinate system definitions. For instance, EPSG:4326 is
+                    Geographic lat-long WGS84, and EPSG:32611 is "UTM zone 11 North, WGS84". Using
+                    elements <emphasis role="bold">from the advanced view</emphasis>, you may add
+                        <emphasis role="bold">more details</emphasis> on <emphasis role="bold">data
+                        projection,</emphasis>
+                    <emphasis role="bold">ellipsoid</emphasis> and <emphasis role="bold"
+                    >datum</emphasis>. Note that if this information is provided, a reference system
+                    identifier is not mandatory.</para>
+
+                <para><indexterm>
+                        <primary>data quality</primary>
+                    </indexterm>
+                    <emphasis role="bold">Data Quality</emphasis>: Specify the hierarchal level of
+                    the data (<emphasis role="bold">dataset series</emphasis>, <emphasis role="bold"
+                        >dataset</emphasis>, <emphasis role="bold">features</emphasis>, <emphasis
+                        role="bold">attributes</emphasis>, etc.) and provide a <emphasis role="bold"
+                        >general explanation on the production processes</emphasis> (lineage) used
+                    for creating the data. The statement element is mandatory if the hierarchical
+                    level element is equal to <literal>dataset</literal> or
+                    <literal>series</literal>. Detailed information on <emphasis role="bold"
+                        >completeness, logical consistency</emphasis> and <emphasis role="bold"
+                        >positional</emphasis>, <emphasis role="bold">thematic</emphasis> and
+                        <emphasis role="bold">temporal accuracy</emphasis> can be directly added
+                        <emphasis role="bold">into the advanced form</emphasis>.</para>
+
+                <para><indexterm>
+                        <primary>metadata author</primary>
+                    </indexterm>
+                    <emphasis role="bold">Metadata Author *</emphasis> : Provide information about
+                    the author of the map, including the person’s name, organization, position, role
+                    and any other contact information available.</para>
+
+                <para>After completion of this section, you may select the <emphasis role="bold"
+                        >Type</emphasis> of document that you are going to save in the catalogue.
+                    You have three options: <emphasis role="bold">Metadata</emphasis>, <emphasis
+                        role="bold">Template</emphasis>, <emphasis role="bold"
+                    >Sub-template</emphasis>. By default <emphasis role="bold">Metadata</emphasis>
+                    is set up.</para>
+
+                <para>When done, you may click <literal>Save</literal> or <literal>Save and
+                    Close</literal> to close the editing session.</para>
+
+            </section>
+
+            <section>
+                <title>Creating a Thumbnail</title>
+
+                <para>Next, you need to create a graphic overview of your map which will be for a
+                    double purpose; as small thumbnail will be displayed in search results and as
+                    large thumbnail with much more details, to allow users to properly evaluate the
+                    data usefulness. As for the latest, the image that you will use as source should
+                    be a significant reproduction of the real dataset, possibly inclusive of the
+                    legend.</para>
+
+                <para>To create a thumbnail, go to the editing menu for your map. If you are no
+                    longer in editing mode, retrieve the map from one of the search options then
+                    click on <literal>Edit</literal>. Then follow these simple steps:</para>
+
+                <itemizedlist>
+                    <listitem>
+                        <para>From the editing menu, click on the <literal>Thumbnails</literal>
+                            button on the top or bottom of the page. (<xref
+                                linkend="thumbnail_toolbar"/>)</para>
+                    </listitem>
+                </itemizedlist>
+
+                <figure id="thumbnail_toolbar">
+                    <title>The thumbnail wizard button</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/thumButton.png" width="11cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+
+                <itemizedlist>
+                    <listitem>
+                        <para>You will be taken to the <literal>Thumbnail Management</literal>
+                            wizard (<xref linkend="thumbnail_wizard"/>).</para>
+                    </listitem>
+                    <listitem>
+                        <para>To create a small or large thumbnail, click on the
+                            <literal>Browse</literal> button next to either one. It is recommended
+                            that you use 180 pixels for small thumbnails and 800x600 for large
+                            thumbnails. Using the ‘Large thumbnail’ option allows you to create both
+                            a small and large thumbnail in one go.</para>
+                    </listitem>
+                    <listitem>
+                        <para>You can use GIF, PNG and JPEG images as input for the
+                        thumbnails.</para>
+                    </listitem>
+                    <listitem>
+                        <para>A pop up window will appear allowing you to browse your files on your
+                            computer. <literal>Select</literal> the file you wish to create a
+                            thumbnail with by double-clicking on it.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Click on <literal>Add</literal>.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Your thumbnail will be added and displayed on the following
+                        page.</para>
+                    </listitem>
+                    <listitem>
+                        <para>You can then click on <literal>Back to Editing</literal> and save your
+                            record (<xref linkend="completed_thumbnail_wizard"/>).</para>
+                    </listitem>
+                </itemizedlist>
+
+                <figure id="thumbnail_wizard">
+                    <title>Thumbnail wizard</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/thumbManag.png" width="10cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+
+                <figure id="completed_thumbnail_wizard">
+                    <title>Completed thumbnail wizard</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/thumbManag2.png" width="10cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+
+            </section>
+
+            <section>
+                <title>Linking data for download</title>
+
+                <para>Finally, you can upload the dataset stored on your local computer and then
+                    create a link between data and related description. Files in whatever format can
+                    be uploaded: doc, PDF, images, vector layers, etc. For the latter the
+                    distribution in a compressed file is recommended. You can include the verctor
+                    data, the legend, any documentation that can help the interpretation of the
+                    data, related reports, detailed descriptions of the data processing, base data
+                    used to create the dataset specified and/or other relevant information. Follow
+                    these guidelines for uploading datasets:</para>
+
+                <itemizedlist>
+                    <listitem>
+                        <para>Make sure the total size of the compressed file is reasonable (less
+                            than 50 MB). Should your data be bigger than 50MB, consider a different
+                            mechanism to serve this data, e.g. through an FTP or HTTP server and
+                            than link the resource through an online resource ‘Web address
+                        (URL)’.</para>
+                    </listitem>
+                    <listitem>
+                        <para>You can create several smaller files when appropriate and upload them
+                            sequentially.</para>
+                    </listitem>
+                    <listitem>
+                        <para>You add the size of the file at the end of the description
+                        field.</para>
+                    </listitem>
+                </itemizedlist>
+
+                <para>To Upload a Dataset, follow these steps (<xref linkend="online_resource"/>):</para>
+
+                <orderedlist>
+                    <listitem>
+                        <para>The <emphasis role="bold">URL</emphasis> field can be left empty when
+                            uploading a file. The system will automatically fill this field
+                        out;</para>
+                    </listitem>
+
+                    <listitem>
+                        <para>Select the correct <emphasis role="bold">protocol</emphasis> to be
+                            used. If you do not see the buttons to browse and upload when File for
+                            download is selected, save the metadata and return to the upload
+                            section. Both buttons should appear;</para>
+                    </listitem>
+
+                    <listitem>
+                        <para>Provide a short <emphasis role="bold">description</emphasis> of the
+                            data;</para>
+                    </listitem>
+
+                    <listitem>
+                        <para>Click the <literal>Browse</literal> button and navigate to the folder
+                            where the file to be released is stored. Consider if you want to upload
+                            multiple files as one unique zip file or as multiple separate downloads.
+                            It is a good idea to add additional documentation with the datasets that
+                            provide the user with information related to the data described. Remind:
+                            the size of a single file to upload can't exceed 50 Mbytes;</para>
+                    </listitem>
+
+                    <listitem>
+                        <para>Click <literal>Upload</literal> and then
+                        <literal>Save</literal>.</para>
+                    </listitem>
+                </orderedlist>
+
+                <figure id="online_resource">
+                    <title>An online resource</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/uploadData.png" width="11cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+            </section>
+
+            <section>
+                <title>Assigning Privileges for a Map</title>
+
+                <para>As an important step of entering metadata to your map, you need to assign
+                    privileges for each map. This means that you will identify which work groups
+                    have which privileges, i.e. view, download, etc. for your particular map.</para>
+
+                <para>For instance, you can fdefine if the information and related services is
+                    visible to all (Internet users) or just to internal users only (Intranet).
+                    Privileges are assigned on a per group basis. Depending on the user profile
+                    (Guest, Registered User, Editor, Admin etc.) access to these functions may
+                    differ on a per user basis.</para>
+
+                <para>To assign privileges for your map, follow these steps:</para>
+
+                <itemizedlist>
+                    <listitem>
+                        <para>Find your map by using the search option. Whether you have multiple or
+                            single results from the search, on top of the individual record or next
+                            to the record you will always see a row of buttons including a
+                            Privileges button (<xref linkend="privileges_button"/>).</para>
+                    </listitem>
+                </itemizedlist>
+
+                <figure id="privileges_button">
+                    <title>The editing toolbar with <literal>Privileges</literal> button</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/privilegesButton.png" width="11cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+
+                <itemizedlist>
+                    <listitem>
+                        <para>Click on the Privileges button. This will take you to a new page. You
+                            can assign certain privileges to specific groups by selecting or
+                            deselecting them from this page. Simply click on the small box next to
+                            the privilege to place or remove a checkmark. <emphasis role="bold"
+                                    ><emphasis role="bold">Set Al</emphasis>l</emphasis> and
+                                <emphasis role="bold">Clear All</emphasis> buttons allow you to
+                            place and remove the checkmarks all at once (<xref
+                                linkend="privileges_settings"/>).</para>
+                    </listitem>
+                </itemizedlist>
+
+                <figure id="privileges_settings">
+                    <title>Privileges settings</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/privilegesSetting1.png" width="11cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+
+                <para>Below is a brief description for each privilege to help you identify which
+                    ones you should assign to which group(s).</para>
+
+                <para><emphasis role="bold">Publish</emphasis>: Users in the specified group/s are
+                    able to see the map, i.e. if searching with matching criteria.</para>
+
+                <para><emphasis role="bold">Download</emphasis>: Users in the specified group/s are
+                    able to download the map.</para>
+
+                <para><emphasis role="bold">Interactive Map</emphasis>: Users in the specified
+                    group/s are able to get an interactive map. <emphasis role="bold">The
+                        interactive map</emphasis> has to be created separately using a Web Map
+                    Server, which is part of the GeoNetwork opensource application.</para>
+
+                <para><emphasis role="bold">Featured</emphasis>: When selected, the map is placed in
+                    the Features Maps of the home page and it appears there randomly.</para>
+
+                <para><emphasis role="bold">Notify</emphasis>: Users in that work group receive
+                    notification that the map has been uploaded.</para>
+            </section>
+
+            <section>
+                <title>Assigning Categories for a Map</title>
+
+                <para>As a final step to entering metadata for a map, you should assign categories
+                    for it. The assigned categories will determine the categories the map will
+                    display under on the home page. To assign categories for a map, follow these
+                    steps:</para>
+
+                <itemizedlist>
+                    <listitem>
+                        <para>Find your map by using the search option. Whether you have multiple or
+                            single results from your search, on top of the individual record or next
+                            to the record, you will always see a row of buttons including a
+                                <emphasis role="bold">Categories</emphasis> button.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Click on the <emphasis role="bold">Categories</emphasis> button. This
+                            will take you to a new page. You can assign one or multiple categories
+                            selecting or deselecting them from this page. Simply click on the small
+                            box next to the category to place or remove a checkmark. (<xref
+                                linkend="categories_management"/>)</para>
+                    </listitem>
+                </itemizedlist>
+
+                <figure id="categories_management">
+                    <title>Category management</title>
+
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/categoriesManag.png" width="6cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+
+            </section>
+        </section>
+
+        <section>
+            <title>Uploading a New Record using the XML Metadata Insert Tool</title>
+
+            <para>A more advanced procedure to upload a new metadata record in the GeoNetwork system
+                is using an XML document. This procedure is particularly useful for users who
+                already have metadata in XML format, for instance created by some GIS application.
+                To this regard, it has to be noted that the metadata must be in one of the standards
+                used by GeoNetwork: ISO19115, FGDC and Dublin Core.</para>
+
+            <para>To start the metadata uploading process through the <emphasis role="bold">XML
+                    Metadata Insert</emphasis> tool, you should log in (see Step. 1. in paragraph
+                7.1.1) and select the appropriate option from the Administration page (<xref
+                    linkend="administration_panel"/>).</para>
+
+            <figure id="administration_panel">
+                <title>Administration panel</title>
+
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/administration_panel.png" width="11cm" align="center"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+
+            <para>The main part of the page <emphasis role="bold">Import XML Formatted
+                Metadata</emphasis> that is displayed (<xref linkend="xml_import"/>) is the
+                    <emphasis role="bold">Metadata</emphasis> text area, where the user can paste
+                the XML metadata to import. Below this, there is the <emphasis role="bold"
+                >Type</emphasis> choise, which allows you select the type of record that you are
+                going to create (Metadata, Template and Subtemplate). Then you can apply a
+                stylesheet to convert your metadata input from ArcCatalog8 to ISO1915 or from
+                ISO19115 to ISO19139, if required. Otherwise you can just leave
+                <replaceable>none</replaceable> selected. The <emphasis role="bold">Destination
+                    schema</emphasis> list provides you with four options to choose the final
+                standard layout for your metadata (ISO19115, ISO19139, FDGDC and Dublin Core).
+                Finally you should select the <emphasis role="bold">Group</emphasis> as main group
+                in charge of the metadata and the <emphasis role="bold">Category</emphasis> that you
+                want to assign to your metadata. By clicking the <emphasis role="bold"
+                >Insert</emphasis> button the metadata is imported into the system; please note that
+                all links to external files, for istance to thumbnails or data for download, have to
+                be removed from the metadata input, to avoid any conflict within the data
+                repository.</para>
+
+            <figure id="xml_import">
+                <title>XML metadata import tool</title>
+
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/xmlImporTool.png" width="11cm" align="center"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+
+            <para>
+                <emphasis role="bold">
+                    <emphasis/>
+                </emphasis>
+            </para>
+
+            <para>If your metadata is already in ISO19115 format, the main actions to be performed
+                are the following (<xref linkend="xml_import_2"/>):</para>
+
+            <orderedlist>
+                <listitem>
+                    <para>Paste the XML file that contains the metadata information in the <emphasis
+                            role="bold">Metadata</emphasis> text area;</para>
+                </listitem>
+
+                <listitem>
+                    <para>Select Metadata as <emphasis role="bold">type</emphasis> of record that
+                        you are going to create</para>
+                </listitem>
+
+                <listitem>
+                    <para>Select the metadata schema ISO19139 that will be the final <emphasis
+                            role="bold">destination schema</emphasis>;</para>
+                </listitem>
+
+                <listitem>
+                    <para>Select the <emphasis role="bold">validate</emphasis> check box if you want
+                        your metadata to be validated according to the related schema.</para>
+                </listitem>
+
+                <listitem>
+                    <para>Select the <emphasis role="bold">group</emphasis> in charge of the
+                        metadata from the drop down list;</para>
+                </listitem>
+
+                <listitem>
+                    <para>Select <emphasis role="bold">Maps and Graphics</emphasis> from the list of
+                        categories;</para>
+                </listitem>
+
+                <listitem>
+                    <para>Click the <emphasis role="bold">Insert</emphasis> button and the metadata
+                        will be imported into the system.</para>
+                </listitem>
+            </orderedlist>
+
+            <figure id="xml_import_2">
+                <title>XML metadata import 2</title>
+
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/xmlImporTool2.png" width="11cm" align="center"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </section>
+    </chapter>
+</book>

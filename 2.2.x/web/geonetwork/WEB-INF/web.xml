@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" 
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+			xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" 
+			version="2.4">
+			
+	<display-name>geonetwork</display-name>
+	
+	<servlet>
+		<servlet-name>gn-servlet</servlet-name>
+		<servlet-class>jeeves.server.sources.http.JeevesServlet</servlet-class>
+
+		<load-on-startup>1</load-on-startup>
+ 	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>gn-servlet</servlet-name>
+		<url-pattern>/srv/*</url-pattern>
+	</servlet-mapping>
+
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+	
+	<session-config>
+		<!-- 3 hours -->
+		<session-timeout>180</session-timeout>
+	</session-config>
+</web-app>

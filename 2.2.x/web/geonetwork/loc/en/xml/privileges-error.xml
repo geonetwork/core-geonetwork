@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Privileges Error</heading>
+	<message>You may not have the privileges to do this operation.</message>
+	<button>Back</button>
+</strings>

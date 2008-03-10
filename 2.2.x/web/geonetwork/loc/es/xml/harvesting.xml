@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<select>Seleccionar</select>
+	<name>Nombre</name>
+	<type>Tipo</type>
+	<status>Estado</status>
+	<errors>Errores</errors>
+	<every>Cada</every>
+	<lastRun>Última ejecución</lastRun>
+	<operation>Operación</operation>
+
+	<!-- harvesting types - - - - - - - - - - - - - - - - - - - - -->
+	
+	<info type="geonetwork">
+		<short>GeoNetwork</short>
+		<long>Nodo remoto GeoNetwork v2.1</long>
+	</info>
+	
+	<info type="geonetwork20">
+		<short>GeoNetwork 2.0</short>
+		<long>Nodo remoto GeoNetwork v2.0 remote node</long>
+	</info>
+	
+	<info type="webdav">
+		<short>Web DAV</short>
+		<long>Servidor Web DAV server</long>
+	</info>
+	
+	<info type="csw">
+		<short>CSW/2.0</short>
+		<long>Catalogue Services para el Web 2.0</long>
+	</info>
+	
+	<info type="z3950">
+		<short>Z3950</short>
+		<long>Búsqueda remota Z3950</long>
+	</info>
+	
+	<info type="oaipmh">
+		<short>OAIPMH</short>
+		<long>Protocolo OAI para Metadata Harvesting 2.0</long>
+	</info>
+	
+	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<site>Site</site>
+	
+	<name>Nombre</name>
+	<host>Servidor</host>
+	<port>Puerto</port>
+	<servlet>Servlet</servlet>
+	<useAccount>Usar cuenta</useAccount>
+	<username>Nombre de usuario</username>
+	<password>Contraseña</password>
+	
+	<search>Criterio de búsqueda</search>
+	<siteName>Nombre del sitio</siteName>
+	
+	<freeText>Texto libre</freeText>
+	<title>Título</title>
+	<abstract>Resumen</abstract>
+	<keywords>Palabras clave</keywords>
+	<subject>Asunto</subject>
+	<digital>Digital</digital>
+	<hardcopy>Copia impresa</hardcopy>
+	<siteId>ID del sitio</siteId>
+
+	<retrieve>Recuperar</retrieve>
+	<warn>Solo puedes recuperar despues de haber llenado la parte del sitio</warn>
+	
+	<options>Opciones</options>
+	<every>Cada</every>
+	<everySpec>(dias : horas : minutos)</everySpec>
+	<oneRun>Solo una ejecución</oneRun>
+	<createGroups>Crear grupos</createGroups>
+	<createCateg>Crear categorias</createCateg>
+	<status>Estado</status>
+	<active>Activo</active>
+	<inactive></inactive>
+	<retrieveSources>Recuperar fuentes</retrieveSources>
+	<retrieveGroups>Recuperar grupos</retrieveGroups>
+	<retrieveInfo>Recuperar información</retrieveInfo>
+	<source>Fuente</source>
+	<criteria>Criterios</criteria>
+	<validate>Validar</validate>
+	<recurse>Recurso</recurse>
+	<host>Servidor</host>
+	<privileges>Privilegios</privileges>
+	<categories>Categorias</categories>
+	<url>URL</url>
+	<capabUrl>URL del Capabilities</capabUrl>
+	<icon>Ícono</icon>
+	<group>GrupO</group>
+	<groups>GrupOs</groups>
+	<remoteGroup>Grupo remote</remoteGroup>
+	<copyPolicy>Poliza de copiado</copyPolicy>
+	<allGroup>Grupo 'all'</allGroup>
+	
+	<policy>
+		<copy>Copiar</copy>
+		<createAndCopy>Crear y copiar</createAndCopy>
+		<copyToIntranet>Copiar a grupo de intranet</copyToIntranet>
+		<dontCopy>No copiar</dontCopy>
+	</policy>
+	
+	<from>De</from>
+	<until>hasta</until>
+	<set>Conjunto</set>
+	<prefix>Prefijo</prefix>
+	<stylesheet>Hoja de estilos</stylesheet>
+	
+	<!-- Buttons -->
+	
+	<add>Agregar</add>
+	<edit>Editar</edit>
+	<save>Guardar</save>
+	<activate>Activar</activate>
+	<deactivate>Desactivar</deactivate>
+	<run>Ejecutar</run>
+	<remove>Remover</remove>
+	<refresh>Refrescar</refresh>
+	
+	<days>días</days>
+	<hours>horas</hours>
+	<mins>minutos</mins>
+	
+	<!-- validator messages -->
+	
+	<validator>
+		<length>
+			<cannotBeEmpty>El campo '{NAME}' no puede ser vacio</cannotBeEmpty>
+			<invalidMinSize>El campo '{NAME}' debe ser de al menos {VALUE} caracter(es) de longitud</invalidMinSize>
+			<invalidMaxSize>El campo '{NAME}' debe ser de un máximo de {VALUE} caracter(es) de longitud</invalidMaxSize>
+		</length>
+		
+		<integer>
+			<notInt>El campo '{NAME}' debe ser un entero</notInt>
+			<invalidMinValue>El campo '{NAME}' debe ser &gt;= {VALUE}</invalidMinValue>
+			<invalidMaxValue>El campo '{NAME}' debe ser &lt;= {VALUE}</invalidMaxValue>
+		</integer>		
+		
+		<alphanum>
+			<notAlphaNumeric>El campo '{NAME}' debe ser alfanúmerico (comenzando con una letra)</notAlphaNumeric>
+		</alphanum>
+		
+		<hostname>
+			<notHostName>El campo '{NAME}' no es un nombre de servidor válido</notHostName>
+		</hostname>
+		
+		<url>
+			<notURL>El campo '{NAME}' no es una URL válida</notURL>
+		</url>
+	</validator>
+	
+	<!-- display messages -->
+	
+	<pleaseSelect>Por favor seleccione al menos un elemento</pleaseSelect>
+	<pleaseSelectGroup>Por favor seleccione al menos un grupo</pleaseSelectGroup>
+	<cannotAdd>Imposible agregar nuevo elemento</cannotAdd>
+	<cannotGet>Imposible obtener elemento(s)</cannotGet>
+	<cannotRemove>Imposible remover el elemento(s) seleccionado</cannotRemove>
+	<cannotStart>No es posible activar el elemento(s) seleccionado</cannotStart>
+	<cannotStop>No es posible desactivar el elemento(s) seleccionado</cannotStop>
+	<cannotRun>No es posible ejecutar el elemento(s) seleccionado</cannotRun>
+	<confirmRemove>Eliminar los elementos seleccionados ? los nodos y todos los metadatos harvested serán eliminados.</confirmRemove>
+	<everyZero>El periodo de harvesting no puede ser 0:0:0</everyZero>
+	<pleaseRetrieve>Por favor primero recupere algunos sitios</pleaseRetrieve>
+	<cannotRetrieve>No es posible recuperar información</cannotRetrieve>
+	<cannotUpdate>No es posible actualizar la información en el servidor</cannotUpdate>
+	<supplyHost>Por favor, proporcione el  parametro 'servidor'</supplyHost>
+	<supplyServlet>Por favor proporcione el parámetro 'servlet'</supplyServlet>
+	<pleaseSpecifySiteId>Por favor especifique un ID de sitio no vacio</pleaseSpecifySiteId>
+	<cannotQueryOai>No es posible consultar el servidor OAI-PMH</cannotQueryOai>
+	<gn20Unsafe>Por favor recuerde que el hacer harvesting a nodos viejos de GeoNetwork no es seguro. 
+ 					los nodos antiguos no tienen ids de sitio único y esto puede causar
+					resultados impredecibles (como remover nodos de otros harvestings).</gn20Unsafe>
+			
+	<supplyUrl>Por favor proporcione un parámetro 'url' válido</supplyUrl>
+	
+	<oper>
+		<op id="0">Vista</op>
+		<op id="1">Bajar</op>
+		<op id="2">Editar</op>
+		<op id="3">Notificar</op>
+		<op id="4">Administrar</op>
+		<op id="5">Mapa interactivo</op>
+		<op id="6">Destacado</op>
+	</oper>
+	
+	<!-- tooltips - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<statusTip>
+		<inactive>Inactivo</inactive>
+		<active>Activo</active>
+		<running>Ejecutando</running>
+	</statusTip>
+	
+	<tipHeader>
+		<total>Total</total>
+		<added>Agregados</added>
+		<removed>Eliminados</removed>
+		<updated>Actualizados</updated>
+		<unchanged>No cambiados</unchanged>
+		<unknownSchema>schema desconocido</unknownSchema>
+		<unretrievable>No recuperable</unretrievable>
+		<badFormat>Mal formato XML</badFormat>
+		<doesNotValidate>No validar</doesNotValidate>
+	</tipHeader>
+	
+	<notRun>Esperando por la primera ejecución</notRun>
+	
+	<tips>
+		<!-- geonetwork harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="gn.name">
+			Nombre genérico para identificar el nodo de harvesting
+		</tip>
+		
+		<tip id="gn.host">
+			El servidor remoto al que desea conectarse
+		</tip>
+		
+		<tip id="gn.retrieveSources">
+			Especifique los parámetros <i>servidor</i>, <i>puerto</i> y <i>servlet</i> y luego presione este botón para 
+			recuperar todas las fuentes conocidas a el nodo remoto.
+		</tip>
+		
+		<tip id="gn.retrieveGroups">
+			Especifique los parámetros <i>servidor</i>, <i>puerto</i> y <i>servlet</i> y luego presione este botón para 
+			recuperar todos los grupos accesibles desde el nodo remoto.
+		</tip>
+		
+		<tip id="gn.addSearch">
+			Agregar una búsqueda en el nodo remoto. Tiene que especificar al menos una consulta para poder
+			recuperar algunos metadatos.
+		</tip>
+		
+		<tip id="gn.categories">
+			Puede asignar una o mas categorias a los metadatos harvested. Use la tecla <b>&lt;CTRL&gt;</b> 
+			para seleccionar mas de una categoría.
+		</tip>
+		
+		<!-- CSW harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="csw.capabUrl">
+			Esta URL debe apuntar al documento capabilities. El formato de la URL del documento capabilities
+			es como esta:<br/>
+			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1			
+		</tip>
+		
+		<tip id="csw.addSearch">
+			Agregue una búsqueda en el servidor remoto. Debe especificar al menos una búsqueda para poder 
+			recuperar algunos metadatos.
+		</tip>
+		
+		<tip id="csw.groups">
+			Puede elegir los privilegios asociados a los metadatos harvested.
+		</tip>
+		
+		<tip id="csw.addGroups">
+			Seleccione uno o mas grupos (usando la tecla <b>&lt;CTRL&gt;</b>) en el panel de la izquierda y presione este botón.
+		</tip>
+		
+		<tip id="csw.categories">
+			Puede asignar una o mas categorías a los metadatos harvested. Use la tecla <b>&lt;CTRL&gt;</b> 
+			para seleccionar mas de una cateogoría.
+		</tip>
+	
+		<!-- OAI-PMH harvesting type - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="oai.url">
+			Esta URL debe apuntar al servidor OAI-PMH
+		</tip>
+		
+		<tip id="oai.addSearch">
+			Agregue una búsqueda en el servidor remoto. Si no agrega ninguna consulta, se realiza una
+			búsqueda sin restricciones usando el formato de metadatos 'oai_dc'
+		</tip>
+		
+		<tip id="oai.groups">
+			Puede elegir los privilegios asociados a los metadatos harvested.
+		</tip>
+		
+		<tip id="oai.addGroups">
+			Seleccione uno o mas grupos (usando la tecla <b>&lt;CTRL&gt;</b>) en el panel de la izquierda y presione este botón.
+		</tip>
+		
+		<tip id="oai.categories">
+			Puede asignar una o mas categorías a los metadatos harvested. Use la tecla <b>&lt;CTRL&gt;</b> 
+			para seleccionar mas de una categoría.
+		</tip>
+	
+		<tip id="oai.validate">
+			Harvest solo metadatos validados contra su esquema.
+		</tip>
+		
+		<!-- OAI-PMH harvesting type : dynamic search part -->
+		
+		<tip id="oai.remove">
+			Remover este criterio de búsqueda
+		</tip>
+		
+		<tip id="oai.from">
+			Fecha opcional para empezar el harvesting desde.
+		</tip>
+		
+		<tip id="oai.from.set">
+			Abre el diálogo para establecer la fecha DESDE
+		</tip>
+		
+		<tip id="oai.from.clear">
+			Limpia el parámetro DESDE
+		</tip>
+		
+		<tip id="oai.until">
+			Fecha opcional para finalizar el harvesting.
+		</tip>
+		
+		<tip id="oai.until.set">
+			Abre el diálogo para establecer la fecha HASTA
+		</tip>
+		
+		<tip id="oai.until.clear">
+			Parámetro limpiar HASTA
+		</tip>
+	
+		<tip id="oai.set">
+			Puede limitar el harvesting a conjuntos de metadatos que existen remotamente.
+		</tip>
+		
+		<tip id="oai.prefix">
+			Elija el formato de metadato al cual desea hacer harvesting.
+		</tip>
+	</tips>
+</strings>
+

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Error</heading>
+	<message>La operación solicitada no pudo realizarse, pulse Volver.</message>
+	<button>Volver</button>
+</strings>

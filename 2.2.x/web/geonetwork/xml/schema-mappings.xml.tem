@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SchemaMappings>
+	<templatesource directory="*** path fixed at runtime ***"/>
+
+	<!--
+	why the jzkit library sends me this horrible source-target pair?
+	-->
+	<mapping from="meta:f" to="null:b" sheet="Metadata_to_xml_brief.xsl"/>
+	<mapping from="meta:f" to="null:s" sheet="Metadata_to_xml_summary.xsl"/>
+	<mapping from="meta:f" to="null:f" sheet="Metadata_to_xml_full.xsl"/>
+
+</SchemaMappings>

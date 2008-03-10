@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                      "http://www.docbook.org/xml/4.4/docbookx.dtd">
+<book>
+    <chapter id="basic_configuration">
+        <title>Basic configuration</title>
+        <section>
+            <title>System configuration</title>
+            <para>Most of the GeoNetwork’s configuration parameters can be changed using the web
+                interface. Those parameters that cannot be changed through the web interface can
+                be usually changed using the GAST application. To reach this web interface, you
+                must be logged in as an Administrator. The page’s link is located into the
+                administration page (<xref linkend="admin_config_where"/>. The link is surrounded with a red
+                rectangle). </para>
+
+            <figure id="admin_config_where">
+                <title>How to reach the configuration page</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/admin/web-config-where.png" width="12cm" align="center"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+
+            <para>Clicking the page’s link you will get the set of parameters that you can
+                change (<xref linkend="admin_config_options"/>). Here follows a detailed description of them: </para>
+            <para>Site General site parameters. </para>
+            <para>name The name of the GeoNetwork’s installation. This name will be used to
+                identify the node in operations like the harvesting. organization The
+                organization the node belongs to. Just for informative reasons. Server Here you
+                have to enter the address of your GeoNetwork’s node. This address is important
+                because it will be used to access the node. </para>
+            <para>host The node’s address or IP number. If your node is publicly accessible from
+                the Internet, you have to use the machine’s domain/address. If your node is
+                hidden into your private network and you have a firewall or web server that
+                redirects incoming calls to the node, you have to enter the public address of
+                the firewall or web server. A typical configuration is to have an Apache web
+                server on address A that is publicly accessible and redirects the requests to a
+                Tomcat server on a private address B. In this case you have to enter A in the
+                host parameter. port The node’s port (usually 80 or 8080). If the node is
+                hidden, you have to enter the port on the public firewall or web server.
+                Intranet A common need for an organization is to discriminate between internal
+                anonymous users (users that access the node from within the organization) and
+                external ones (users from the Internet). Node’s administrators can specify
+                different privileges for internal and external anonymous users and, in order to
+                do so, they have to specify the parameters of the internal network. </para>
+            <para>network The internal network’s address in IP form. netmask The network’s mask.
+                Z39.50 GeoNetwork can act as a Z39.50 server, which is an OGC communication
+                protocol to query and retrieve metadata. </para>
+            <para>enable check this option to start the Z39.50 submodule. Please, notice that
+                GeoNetwork must be restarted in order to make this change active. port This is
+                the port on which GeoNetwork will be listening for incoming Z39.50 requests.
+                Usually, the value of 2100 is a standard one, but to have multiple GeoNetwork
+                nodes on the same machine you have to change this value in order to avoid port
+                conflicts between the different nodes. Proxy In some occasions (like harvesting)
+                GeoNetwork must be able to connect to remote sites and this may be denied if an
+                organization uses proxy servers. In this cases, GeoNetwork must be configured to
+                use the proxy server in order to route outgoing requests. </para>
+            <para>host The proxy’s name or address to use (usually an IP address). port The
+                proxy’s port to use. Feedback GeoNetwork can provide some feedback to the
+                administrator if some events happen, for example a metadata is downloaded or
+                some feedback is provided using the online form. You have to configure
+                GeoNetwork with proper parameters to send an email. </para>
+            <para>email This is the email address that will be used to send feedback to the
+                administrator. SMTP host Organization’s mail server to use when sending emails
+                SMTP port Mail server’s SMTP port (usually 25). </para>
+                
+			 <figure id="admin_config_options">
+                <title>The configuration options</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/admin/web-config-options.png" width="11cm" align="center" />
+                    </imageobject>
+                </mediaobject>
+            </figure>
+
+            <para>At the bottom of the page there are some buttons with the following purpose: </para>
+            <para>Back Simply returns to the main administration page. Save Saves the current
+                options. If some options are invalid, the system will show a dialog with the
+                wrong parameter and will focus its textfield on the page. Once the configuration
+                is saved a success dialog will be shown. Refresh This button simply refreshes
+                the displayed options taking the new values from the server. This can be usefull
+                if some options get changed dynamically (for example by another user). </para>
+            
+            <para>Public host and port usage </para>
+            <para>Up to now, the server’s host and port are used in these cases: </para>
+            
+            <orderedlist>
+                <listitem>
+                    <para>During an editing session, when adding data links to a metadata. The
+                        host and port will be used to build download links to store inside the
+                        metadata. </para>
+                </listitem>
+                <listitem>
+                    <para>During CSW requests. The GetCapabilities operation returns an XML
+                        document with HTTP links to the CSW services. These links are
+                        dynamically built using the host and port values.</para>
+                </listitem>
+            </orderedlist>
+            
+        </section>
+        <section>
+            <title>Localization of dynamic user interface elements</title>
+            <para>The user interface of GeoNetwork can be localized into several languages
+                through XML language files. But beside static text, there
+                is also more dynamic text that can be added and changed interactively.
+                This text is stored in the database and is translated 
+                using the localization form that is part of the administrative functions
+                (<xref linkend="admin_localization_where"/>). </para>
+                
+			 <figure id="admin_localization_where">
+                <title>How to open the localization form</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/admin/web-localization-where.png" width="11cm" align="center" />
+                    </imageobject>
+                </mediaobject>
+            </figure>
+
+            <para>The form allows you to localize the following entities:
+                <emphasis>Groups</emphasis>, <emphasis>Categories</emphasis>,
+                <emphasis>Operations</emphasis> and <emphasis>Regions</emphasis>. The form
+                (<xref linkend="admin_localization_form"/>) subdivided in a left and a right panel. </para>
+            <para>The left panel allows you to choose which elements you want to edit. On the top,
+                a dropdown let you choose which entity to edit. All elements of the selected
+                type are shown in a list. </para>
+            <para>When you select an element from the list, the right panel will show the text as 
+                it will be displayed in the user interface. The text in the source
+                language is read only while you can update the text in the target language field.
+                </para>
+            <note><para>You can change the source and target languages to best suit your needs. 
+                Some users may for instance prefer to translate from French to Spanish, 
+                others prefer to work with English as the source language.</para></note>
+            <para>Use the Save button to store the updated
+                label and move to the next element.</para>
+            <important><para>If the user
+                changes a label and chooses another target language without saving,
+                the label change is lost.</para></important>
+			 <figure id="admin_localization_form">
+                <title>The localization form</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/admin/web-localization.png" width="11cm" align="center" />
+                    </imageobject>
+                </mediaobject>
+            </figure>
+                
+        </section>
+    </chapter>
+</book>

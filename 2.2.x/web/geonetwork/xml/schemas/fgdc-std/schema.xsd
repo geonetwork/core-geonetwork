@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+<!--
+	======================================================================
+	 FGDC Metadata XML Schema 1.0.0 20030801
+
+	 This is the XML Schema for formal metadata, metadata conforming to
+	 the Content Standards for Digital Geospatial Metadata of the Federal
+	 Geographic Data Committee.  This schema corresponds to the June,
+	 1998 version of the standard, FGDC-STD-001-1998.
+
+	 This file is the primary XML Schema and loads the definitions for
+	 sections 1-10 of the standard from separate schema modules.
+
+	 Element names:
+	     Element names are a maximum of 8-characters long, to coincide
+	     with the Reference Concrete Syntax.
+
+	 Element ordering:
+	     Generally the order of elements is now significant.  XML makes
+	     it difficult to write a DTD that allows elements to be in any
+	     order.  Although XML Schemas do not have this restriction, it
+	     was decided to keep the significance of element order in order
+	     not to break the DTD validity of XML-encoded metadata files.
+
+	 Authors:
+	     Richard E. Rathmann (PSGS/NOAA Coastal Services Center,
+	     Charleston, SC) with assistance from Mike Moeller (PSGS/NOAA
+	     CSC) and Doug Nebert (Federal Geographic Data Committee).
+
+	 Revisions:
+	     20020826 (RER) Locally scoped the definition of "onlink" in
+	                      Section 7 (7.11.1) within "metextns" (7.11)
+	                      rather than referencing "onlink" definition in
+	                      Section 8 (8.10).
+	     20030801 (RER) Removed 'xml:space="preserve"' from all
+	                      'xsd:documentation' elements.  I originally put
+	                      this in to say "whitespace is significant", but
+	                      both XML Spy and IBM's  Schema Quality Checker
+	                      complain about them.
+	     20030801 (RER) Corrected the second regular expression pattern
+	                      for the "FGDCtime" simple type in this schema
+	                      module.  The "-" in the "[+-]" character class
+	                      for the sign character needed to be escaped, as
+	                      in "[+\-]".
+	     20030801 (RER) Changed types of "srcused" (2.5.2.2) and "srcprod"
+	                      (2.5.2.5) in Section 2 to reference the type
+	                      defined for "srccitea" (2.5.1.5) to comply with
+	                      XML Schema constraint that key/keyref field
+	                      value pairs be of the same type.
+
+
+	======================================================================
+-->
+
+<xsd:include schemaLocation="fgdc-std-001-1998-sect01.xsd"/>
+<xsd:include schemaLocation="fgdc-std-001-1998-sect02.xsd"/>
+<xsd:include schemaLocation="fgdc-std-001-1998-sect03.xsd"/>
+<xsd:include schemaLocation="fgdc-std-001-1998-sect04.xsd"/>
+<xsd:include schemaLocation="fgdc-std-001-1998-sect05.xsd"/>
+<xsd:include schemaLocation="fgdc-std-001-1998-sect06.xsd"/>
+<xsd:include schemaLocation="fgdc-std-001-1998-sect07.xsd"/>
+<xsd:include schemaLocation="fgdc-std-001-1998-sect08.xsd"/>
+<xsd:include schemaLocation="fgdc-std-001-1998-sect09.xsd"/>
+<xsd:include schemaLocation="fgdc-std-001-1998-sect10.xsd"/>
+
+<xsd:element name="metadata" type="metadataType"/>
+<xsd:complexType name="metadataType">
+	<xsd:sequence>
+		<xsd:element ref="idinfo"/>
+		<xsd:element ref="dataqual" minOccurs="0"/>
+		<xsd:element ref="spdoinfo" minOccurs="0"/>
+		<xsd:element ref="spref" minOccurs="0"/>
+		<xsd:element ref="eainfo" minOccurs="0"/>
+		<xsd:element ref="distinfo" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="metainfo"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:simpleType name="FGDCdate">
+	<xsd:restriction base="xsd:token">
+		<xsd:pattern value="\d{4}(\d{2}(\d{2})?)?"/>
+		<xsd:pattern value="bc\d{4}(\d{2}(\d{2})?)?"/>
+		<xsd:pattern value="cc\d{5,}"/>
+		<xsd:pattern value="cd\d{5,}"/>
+	</xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="FGDCtime">
+	<xsd:restriction base="xsd:token">
+		<xsd:pattern value="\d{2}(\d{2}(\d{2,})?)?"/>
+		<xsd:pattern value="\d{2}(\d{2}(\d{2,})?)?[+\-]\d{4}"/>
+		<xsd:pattern value="\d{2}(\d{2}(\d{2,})?)?Z"/>
+	</xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="FGDCstring">
+	<xsd:restriction base="xsd:string">
+		<xsd:pattern value="\s*\S(.|\n|\r)*"/>
+	</xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="FGDClatitude">
+	<xsd:restriction base="xsd:double">
+		<xsd:minInclusive value="-90.0"/>
+		<xsd:maxInclusive value="90.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="FGDClongitude">
+	<xsd:restriction base="xsd:double">
+		<xsd:minInclusive value="-180.0"/>
+		<xsd:maxInclusive value="180.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+</xsd:schema>

@@ -1,0 +1,40 @@
+package org.wfp.vam.intermap.services.map;
+
+import org.jdom.*;
+
+import jeeves.interfaces.*;
+import jeeves.server.*;
+import jeeves.server.context.*;
+
+import org.wfp.vam.intermap.kernel.map.*;
+
+//=============================================================================
+
+/** main.result service. shows search results
+  */
+
+public class GetLayers implements Service
+{
+	public void init(String appPath, ServiceConfig config) throws Exception {}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Service
+	//---
+	//--------------------------------------------------------------------------
+
+	public Element exec(Element params, ServiceContext context) throws Exception
+	{
+		// Get the MapMerger object from the user session
+		MapMerger mm = MapUtil.getMapMerger(context);
+		
+		if (mm.size() > 0)
+			return new Element("response").setContent(mm.toElement());
+		else
+			return null;
+	}
+	
+}
+
+//=============================================================================
+

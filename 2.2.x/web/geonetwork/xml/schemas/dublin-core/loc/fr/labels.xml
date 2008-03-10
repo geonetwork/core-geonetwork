@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<labels xmlns:dc = "http://purl.org/dc/elements/1.1/">
+	<!-- ==================================================== -->
+	<element name="simpledc">
+		<label>Métadonnées</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:title">
+		<label>Titre</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:creator">
+		<label>Créateur</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:subject">
+		<label>Sujet et mots-clés</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:description">
+		<label>Description</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:publisher">
+		<label>Editeur</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:contributor">
+		<label>Contributeur</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:date">
+		<label>Date</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:type">
+		<label>Type</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:format">
+		<label>Format</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:identifier">
+		<label>Identifiant</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:source">
+		<label>Source</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:language">
+		<label>Langue</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:relation">
+		<label>Relation</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:coverage">
+		<label>Couvertures</label>
+		<description>For example: "North 90, South -90, East 180, West -180. Global"</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:rights">
+		<label>Droits</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+</labels>

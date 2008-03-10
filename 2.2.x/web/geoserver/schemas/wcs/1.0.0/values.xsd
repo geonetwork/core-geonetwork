@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Steven Keens (PCI Geomatics Inc.) -->
+<xs:schema targetNamespace="http://www.opengis.net/wcs" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.opengis.net/wcs" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0.0" xml:lang="en">
+	<xs:annotation>
+		<xs:appinfo>values.xsd v1.0.0 2003-07-30</xs:appinfo>
+		<xs:documentation> This schema defines the values and enumeration elements and types used by the OGC Web Coverage Service (WCS). </xs:documentation>
+		<xs:documentation>JDE 2003-07-30 Removed empty "sequence" from valueEnumType</xs:documentation>
+	</xs:annotation>
+	<!-- ==============================================================
+		elements and types 		
+	============================================================== -->
+	<xs:complexType name="valueEnumType">
+		<xs:annotation>
+			<xs:documentation>Enumeration of TBD values which consists of a sequence of intervals and/or single values. The type and semantic attributes are inherited by children elements, but can be overwritten by them. </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="valueEnumBaseType">
+				<xs:attribute ref="type" use="optional"/>
+				<xs:attribute ref="semantic" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ========================================================== -->
+	<xs:complexType name="valueEnumBaseType">
+		<xs:annotation>
+			<xs:documentation>Enumeration of TBD values which consists of a sequence of intervals and/or single values. The type and semantic attributes are inherited by children elements, but can be overwritten by them. </xs:documentation>
+		</xs:annotation>
+		<xs:choice maxOccurs="unbounded">
+			<xs:element ref="interval"/>
+			<xs:element ref="singleValue"/>
+		</xs:choice>
+	</xs:complexType>
+	<!-- ========================================================== -->
+	<xs:element name="singleValue" type="TypedLiteralType">
+		<xs:annotation>
+			<xs:documentation>Single value for a variable. A single value has a data type (default is a string), indicated by a URI which consists typically to XSD simple types. The semantic URI points typically to the semantic definition of the value (typically RDF resource).(TBR) </xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<!-- ========================================================== -->
+	<xs:element name="interval">
+		<xs:annotation>
+			<xs:documentation>Element used to describe an continuous interval or discrete interval (using atomic or resolution attribute) TBR.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="intervalType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<!-- ========================================================== -->
+	<xs:complexType name="intervalType">
+		<xs:annotation>
+			<xs:documentation>Defines an interval along an axis with a specific resolution. An interval can be continuous or discrete (defined by a fixed resolution (interval distance) TBR). The interval can be bounded or semi-bounded with different closures. Note that the type and semantic for min/max and res may be different (timeInstant and duration). </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="valueRangeType">
+				<xs:sequence>
+					<xs:element name="res" type="TypedLiteralType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>TBD. Resolution is included for intervals with discrete values spaced at regular distance.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ========================================================== -->
+	<xs:complexType name="valueRangeType">
+		<xs:annotation>
+			<xs:documentation>The range of an interval. Inclusion of the min and max values are defined by the closure. The data type and the semantic of the values are inherited by children and may be overwritten by them (ex: min dateTime, max String for NOW.) (TBR). If interval is unbounded on min or max, these elements are omitted.  Note that )-inf,max],)-inf,+inf(,[min,max],[min,+inf( are close. Range may be qualitative i.e nominal (age range) or qualitative (percentage) i.e value between min/max can be queried. </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="min" type="TypedLiteralType" minOccurs="0"/>
+			<xs:element name="max" type="TypedLiteralType" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute ref="type" use="optional"/>
+		<xs:attribute ref="semantic" use="optional"/>
+		<xs:attribute name="atomic" type="xs:boolean" use="optional" default="false">
+			<xs:annotation>
+				<xs:documentation>TBD. </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="closure" use="optional"/>
+	</xs:complexType>
+	<!-- ========================================================== -->
+	<xs:attribute name="closure" default="closed">
+		<xs:annotation>
+			<xs:documentation>The closure attribute determines which of the end points lie in the interval, and can have the values "open", "closed", "open-closed" and "closed-open". Note that +Inf and -Inf are considered closed bounds.The default is closed. </xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:NMTOKENS">
+				<xs:enumeration value="closed">
+					<xs:annotation>
+						<xs:documentation>TBD. What is the meaning of this value? </xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="open">
+					<xs:annotation>
+						<xs:documentation>TBD. What is the meaning of this value? </xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="open-closed">
+					<xs:annotation>
+						<xs:documentation>TBD. What is the meaning of this value? </xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="closed-open">
+					<xs:annotation>
+						<xs:documentation>TBD. What is the meaning of this value? </xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:attribute>
+	<!-- ============================================================ -->
+	<xs:complexType name="TypedLiteralType">
+		<xs:annotation>
+			<xs:documentation>ComplexType used for typed literals, which are used to identify values such as numbers and dates by means of a lexical representation.The type attribute indicates the datatype  of the literal.The value associated with a typed literal is found by applying the datatype mapping associated with the datatype URI to the lexical form. The predefined XML Schema datatypes [XML-SCHEMA2] are expected to be widely used for this purpose. </xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute ref="type" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<xs:attribute name="type" type="xs:anyURI">
+		<xs:annotation>
+			<xs:documentation>Attribute used to indicate the datatype  of a typed literal.The value associated with a typed literal is found by applying the datatype mapping associated with the datatype URI to the lexical form. The predefined XML Schema datatypes [XML-SCHEMA2] are expected to be widely used for this purpose. It has the same semantic than rdf:datatype</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<!-- =========================================================== -->
+	<xs:attribute name="semantic" type="xs:anyURI">
+		<xs:annotation>
+			<xs:documentation>The value of the semantic attribute is typically a RDF Property or Class of a taxonomy or ontology. This attribute is used to indicate the meaning of the XML element it belongs to. </xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+</xs:schema>

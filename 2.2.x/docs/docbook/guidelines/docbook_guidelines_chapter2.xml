@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                      "http://www.docbook.org/xml/4.4/docbookx.dtd">
+<book>
+    <chapter id="docbook_guidelines_chapter2">
+        <title>Chapter Title</title>
+        <sect1>
+            <title>Section 1 Title</title>
+            <para>
+                This document illustrates what elements are used in the 
+                <productname>GeoNetwork opensource</productname> 
+                documentation. It can be used as a reference to understand what 
+                elements to use and what not. This is done to keep writing the 
+                guidelines a simple process
+            </para>
+            <para>Text goes in <literal>para</literal> elements</para>
+            <formalpara>
+                <title>Formal paragraph</title>
+                <para>Sometimes you don't want a section to highlight something. 
+                    Use a <literal>formalpara</literal> instead.</para>
+            </formalpara>
+            <para>This is the file name of this chapter: 
+                <filename>docbook_guidelines_chapter2.xml</filename></para>
+            <para>And here's some user input: 
+                <userinput>/home/geonetwork/docs/ant guidelines</userinput></para>
+            <sect2>
+                <title>Section 2 title</title>
+                <para>
+                    Important things that have to end up in the Index use the 
+                    <indexterm><primary>indexterm</primary></indexterm>
+                    <literal>indexterm</literal>. You can find more options 
+                    (for sorting and hierarchy for example)
+                    <ulink url="http://www.sagehill.net/docbookxsl/GenerateIndex.html">
+                        here
+                    </ulink>.
+                </para>
+                <para>Buttons in the <acronym>GUI</acronym> are surrounded by the 
+                    literal element: <literal>Save</literal>
+                </para>
+                <para>To highlight text, use (with care!) the <emphasis role="bold"
+                    >emphasis</emphasis> element. </para>
+                <para>If you want to add a footnote, add a <literal>footnote</literal>
+                    element.
+                    <footnote>
+                        <para>This footnote was added in the text.</para>
+                    </footnote>
+                </para>
+                <para>
+                    If you want to make references between text and figures for 
+                    instance, use the <literal>xref</literal> element pointing to the 
+                    id of the element you want to link to: (<xref linkend="logo_id"/>).
+                </para>
+                <figure id="logo_id">
+                    <title>Use a figure to add an image to the document</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/GeoNetwork_opensource_logo.jpg" 
+                                width="4cm" align="center"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>Use the <literal>programlisting</literal> to show code or XML:</para>
+                <programlisting>
+                    <![CDATA[<gmd:language>
+                        <gco:CharacterString>eng</gco:CharacterString>
+                    </gmd:language>]]>
+                </programlisting>
+                <important>
+                    <para>Important stuff here!</para>
+                </important>
+                <warning>
+                    <para>This is a warning :-)</para>
+                </warning>
+            </sect2>
+        </sect1>
+    </chapter>
+</book>

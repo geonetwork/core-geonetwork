@@ -1,0 +1,32 @@
+#---------------------------------------------------------
+#--- File exported in DDF format on 2007-03-27 19:11:59
+#---
+#--- SELECT idDes,langId,label FROM APP.OperationsDes
+#---------------------------------------------------------
+
+[FIELDS]
+idDes,         INTEGER
+langId,        VARCHAR
+label,         VARCHAR
+
+[DATA]
+0	en	Publish
+1	en	Download
+3	en	Notify
+5	en	Interactive Map
+6	en	Featured
+0	es	Publish
+1	es	Download
+3	es	Notify
+5	es	Interactive Map
+6	es	Featured
+0	cn	Publish
+1	cn	Download
+3	cn	Notify
+5	cn	Interactive Map
+6	cn	Featured
+0	fr	Publish
+1	fr	T~00E9l~00E9charger
+3	fr	Notifier
+5	fr	Interactive Map
+6	fr	Epingler

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<strings>
+	<site>Sitio</site>
+		<name>Nombre</name>
+		<organ>Organización</organ>
+	
+	<server>Servidor</server>
+		<host>Servidor</host>
+		<port>Puerto</port>
+		
+	<intranet>Intranet</intranet>
+		<network>Red</network>
+		<netmask>Mascara de red</netmask>
+	
+	<z3950>Servidor Z39.50</z3950>
+		<enable>Activar</enable>
+		
+	<feedback>Retroalimentación</feedback>
+		<email>Correo</email>
+		<smtpHost>Servidor SMTP</smtpHost>
+		<smtpPort>Puerto SMTP</smtpPort>
+	
+	<proxy>Proxy</proxy>
+		<use>Uso</use>
+	<username>Username</username>
+	<removedMetadata>Removed metadata</removedMetadata>
+	<dir>Directory</dir>
+	<ldap>LDAP Authentication</ldap>
+	<defProfile>Default profile</defProfile>
+	<login>Login</login>
+	<userDN>User DN</userDN>
+	<distNames>Distinguished names</distNames>
+	<baseDN>Base</baseDN>
+	<usersDN>Users</usersDN>
+	<userAttribs>User's attributes</userAttribs>
+	<password>Password</password>
+	<profile>Profile</profile>
+	<!-- Buttons -->
+	
+	<save>Guardar</save>
+	<refresh>Refrescar</refresh>
+	
+	<!-- validator messages -->
+	
+	<validator>
+		<length>
+			<cannotBeEmpty>El campo '{NAME}' no puede ser vacio</cannotBeEmpty>
+			<invalidMinSize>El campo '{NAME}' debe ser al menos de {VALUE} caracter(es) de longitud</invalidMinSize>
+			<invalidMaxSize>El campo '{NAME}' debe de ser de al máximo {VALUE} caracter(es) de longitud</invalidMaxSize>
+		</length>
+		
+		<integer>
+			<notInt>El campo '{NAME}' debe ser un entero</notInt>
+			<invalidMinValue>El campo '{NAME}' debe ser &gt;= {VALUE}</invalidMinValue>
+			<invalidMaxValue>El campo '{NAME}' debe ser &lt;= {VALUE}</invalidMaxValue>
+		</integer>		
+		
+		<alphanum>
+			<notAlphaNumeric>El campo '{NAME}' debe ser alfanúmerico (comenzando con una letra)</notAlphaNumeric>
+		</alphanum>
+		
+		<hostname>
+			<notHostName>El campo '{NAME}' no es un nombre de servidor válido</notHostName>
+		</hostname>
+		
+		<url>
+			<notURL>El campo '{NAME}' no es una URL válida</notURL>
+		</url>
+		
+		<ipaddress>
+			<notIP>El campo '{NAME}' no es un dirección IP válida</notIP>
+		</ipaddress>
+	</validator>
+	
+	<!-- display messages -->
+	
+	<cannotGet>No es posible obtener la configuración del sistema</cannotGet>
+	<cannotSave>No es posible guardar la configuración del sistema</cannotSave>
+	<saveOk>Configuración del sistema almacenada.</saveOk>
+
+	<!-- tooltips -->
+	
+	<tips>
+		<tip id="site.name">
+			Usado para identificar la instalación.
+		</tip>
+		
+		<!-- server -->
+		
+		<tip id="server.host">
+			El <b>servidor</b> y <b>puerto</b> son usados para crear URLs
+			al servidor GeoNetwork. Por ejemplo, son usados durante la edición
+		        de metadatos para crear ligas a los recursos y para regresar el 
+			capabilities del servidor durante un requerimiento CS/W.
+			<br/>
+			<b>Por favor note:</b> debería utilizar la herramienta GAST para reflejar este
+			cambio dentro de los metadatos.
+		</tip>
+		
+		<!-- intranet -->
+		
+		<tip id="intranet.network">
+			Los parámetros <b>red</b> y <b>máscara de red </b> son usados para identificar
+			conexiones internas a GeoNetwork, esto es, para identificar el grupo intranet.
+		</tip>
+		
+		<!-- Z39.50 -->
+		
+		<tip id="z3950.enable">
+			Si está establecido, durante la inicialización Geonetwork iniciará el componente de servidor Z39.50.
+			Este componente usa el protocolo ISO23950.
+			<br/>
+			<b>Por favor note:</b> debe reiniciar GeoNetwork para que este cambio tenga efecto.
+		</tip>
+		
+		<tip id="z3950.port">
+			Cambie el puerto de Z39.50.
+			<br/>
+			<b>Por favor note:</b> debe reiniciar GeoNetwork para que este cambio tenga efecto.
+		</tip>
+		
+		<!-- proxy -->
+		
+		<tip id="proxy.use">
+			Si está establecido, GeoNetwork usará los parámetros para accesar
+			nodos remotos. Por ejemplo, es usado durante el harvesting.
+		</tip>
+		
+		<!-- feedback -->
+		
+		<tip id="feedback.email">
+			Este es el correo del administrador usado para retroalimentación.
+		</tip>
+		
+		<tip id="feedback.mail.host">
+			Los parámetros SMTP <b>servidor</b> y <b>puerto</b> son usados para enviar correos
+			a los usuarios de GeoNetwork cuando un recurso es bajado.
+		</tip>
+	</tips>
+	
+</strings>
+

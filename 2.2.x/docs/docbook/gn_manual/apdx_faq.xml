@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                      "http://www.docbook.org/xml/4.4/docbookx.dtd">
+<book>
+    <appendix id="faq">
+        <title>Frequently Asked Questions</title>
+        <qandaset>
+            <qandadiv>
+                <title>Users FAQ</title>
+                <qandaentry>
+                    <question>
+                        <para>Where do I learn more about the use and functionality of the
+                            GeoNetwork opensource catalog?</para>
+                    </question>
+                    <answer>
+                        <para>The Quick Start Guide will provide you with an excellent first
+                            introduction. The Guide can be downloaded from the <ulink
+                                url="http://geonetwork-opensource.org">GeoNetwork Community
+                            website</ulink>
+                       </para>
+                    </answer>
+                </qandaentry>
+            </qandadiv>
+            <qandadiv>
+                <title>Administrators FAQ</title>
+                <qandaentry>
+                    <question>
+                        <para>I am having difficulty installing multiple instances of GeoNetwork on
+                            the same server</para>
+                    </question>
+                    <answer>
+                        <para>To run multiple installation you have to change the ports that
+                            GeoNetwork uses in order to avoid conflicts. The port are:</para>
+                        <itemizedlist>
+                            <listitem>
+                                <formalpara>
+                                    <title>Z39.50 listening port</title>
+                                    <para>This is the most probable source of conflicts. You have to
+                                        entedit the <literal>web/WEB-INF/config.xml</literal> file of the second
+                                        installation and choose a value other than the default one,
+                                        which is 2100. Use for example 2101 but keep in mind that
+                                        remote nodes usually use 2100 so your second node will not
+                                        be reachable. You cannot use the system configuration web
+                                        form the first time because if the port conflicts, the
+                                        server won't start.</para>
+                                </formalpara>
+                            </listitem>
+                            <listitem>
+                                <formalpara>
+                                    <title>If you are using Jetty</title>
+                                    <para>
+                                        <itemizedlist>
+                                            <listitem>
+                                                <formalpara>
+                                                  <title>Jetty's listening port</title>
+                                                  <para>This can be modified using GAST and its
+                                                  default value is usually 8080. To run a
+                                                  second installation use a different value,
+                                                  like 8081. The affected file is
+                                                  bin/jetty.xml.</para>
+                                                </formalpara>
+                                            </listitem>
+                                            <listitem>
+                                                <formalpara>
+                                                  <title>Jetty's stop port</title>
+                                                  <para>This is defined into the scripts
+                                                  <literal>bin/start-geonetwork.*</literal> and
+                                                  <literal>bin/stop-geonetwork.*</literal> (for both Windows and
+                                                  Linux). The provided value is 8079 as the
+                                                  value of the STOP.PORT parameter. Use
+                                                  another value for the second installation,
+                                                  like 8078. If you don't change this value,
+                                                  the stop script will stop all
+                                                  instances.</para>
+                                                </formalpara>
+                                            </listitem>
+                                        </itemizedlist>
+                                   </para>
+                                </formalpara>
+                            </listitem>
+                            <listitem>
+                                <formalpara>
+                                    <title>If you are using the embedded McKoi DBMS</title>
+                                    <para>
+                                        <itemizedlist>
+                                            <listitem>
+                                                <formalpara>
+                                                  <title>McKoi listening port</title>
+                                                  <para>This can be easily modified using GAST.
+                                                  The default value is 9157. For other
+                                                  installations you can use 9158, 9159 and so
+                                                  on. The affected files are
+                                                  <literal>web/WEB-INF/config.xml</literal> and
+                                                  <literal>web/WEB-INF/db/db.conf</literal>.</para>
+                                                </formalpara>
+                                            </listitem>
+                                        </itemizedlist>
+                                   </para>
+                                </formalpara>
+                            </listitem>
+                        </itemizedlist>
+                    </answer>
+                </qandaentry>
+                <qandaentry>
+                    <question>
+                        <para>What is normally logged when running GeoNetwork opensource?</para>
+                    </question>
+                    <answer>
+                        <para>GeoNetwork has its own internal logging based on
+                            <ulink url="http://logging.apache.org/log4j">log4j Logging services</ulink> (written to the
+                            file jeeves.log). Additionaly there are log files generated by the web
+                            server (<ulink url="http://jetty.mortbay.org/jetty">Jetty</ulink> ,
+                            <ulink url="http://tomcat.apache.org/">Apache Tomcat</ulink> etc..) and by the DBMS used
+                            (for example by the internal <ulink url="http://www.mckoi.com/database/">McKoi SQL</ulink>
+                            ).</para>
+                    </answer>
+                </qandaentry>
+                <qandaentry>
+                    <question>
+                        <para>How do I control what is written to the GeoNetwork internal log file?
+                       </para>
+                    </question>
+                    <answer>
+                        <para>The logging is configured in the file <literal>../web/WEB-INF/log4j.cfg</literal> . You
+                            can change the settings by editing the file in a text editor. For
+                            operational systems it is suggested to put all log options to OFF or
+                            FATAL. The log options are, with increasing log intensity:</para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>OFF - The OFF Level has the highest possible rank and is
+                                    intended to turn off logging.</para>
+                            </listitem>
+                            <listitem>
+                                <para>FATAL - The FATAL level designates very severe error events
+                                    that will presumably lead the application to abort.</para>
+                            </listitem>
+                            <listitem>
+                                <para>ERROR - The ERROR level designates error events that might
+                                    still allow the application to continue running.</para>
+                            </listitem>
+                            <listitem>
+                                <para>WARN - The WARN level designates potentially harmful
+                                    situations.</para>
+                            </listitem>
+                            <listitem>
+                                <para>INFO - The INFO level designates informational messages that
+                                    highlight the progress of the application at coarse-grained
+                                    level.</para>
+                            </listitem>
+                            <listitem>
+                                <para>DEBUG - The DEBUG Level designates fine-grained informational
+                                    events that are most useful to debug an application.</para>
+                            </listitem>
+                            <listitem>
+                                <para>ALL - The ALL Level has the lowest possible rank and is
+                                    intended to turn on all logging.</para>
+                            </listitem>
+                        </itemizedlist>
+                    </answer>
+                </qandaentry>
+
+            </qandadiv>
+            <qandadiv>
+                <title>Developers FAQ</title>
+                <qandaentry>
+                    <question>
+                        <para>What is Free and Open Source Software (FOSS) and how can I use,
+                            participate and contribute to the GeoNetwork opensource project?</para>
+                    </question>
+                    <answer>
+                        <para>The book "Producing Open Source Software" (shown in <xref
+                                linkend="producingoss"/>) is a highly recommended book for anyone
+                            working on open source software projects. It provides insight in all
+                            aspects of FOSS development and on how to make a project succesful. If
+                            you are interested in participating in the GeoNetwork opensource
+                            project, please spend some time reading through this book. It's
+                            definitely worth the time and money (so buy the hardcopy if you can
+                            afford it!).</para>
+
+                        <para>Producing Open Source Software is a book about the human side of open
+                            source development. It describes how successful projects operate, the
+                            expectations of users and developers, and the culture of free software.</para>
+
+                        <para>The book is available in bookstores and from the publisher (<ulink
+                                url="http://www.oreilly.com/catalog/producingoss/">O'Reilly
+                            Media</ulink>), or you can browse or download it from
+                            <ulink url="http://producingoss.com/"/>. Producing Open Source Software is released
+                            under an open copyright that allows everyone to share and modify the
+                            book freely. The latest version is always available on the website. The
+                            online version is the same as the commercially available print version ?
+                            in other words, you can buy a printed copy and know that it's
+                            up-to-date.</para>
+                        <figure id="producingoss">
+                            <title>Producing Open Source Software</title>
+                            <mediaobject>
+                                <imageobject>
+                                    <imagedata fileref="images/producingoss-cover-small.png" align="center"/>
+                                </imageobject>
+                            </mediaobject>
+                        </figure>
+                    </answer>
+                </qandaentry>
+            </qandadiv>
+        </qandaset>
+     </appendix>
+
+    <!-- 
+        Introduction
+        
+        This document collects most of the FAQs about GeoNetwork 
+        opensource, both from a user, an administrator and a developer's 
+        point of view.
+        -->
+</book>

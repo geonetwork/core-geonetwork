@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                      "http://www.docbook.org/xml/4.4/docbookx.dtd">
+<!-- This document illustrates what elements are used in the GeoNetwork documentation
+   It can be used as a reference to understand what elements to use and what not. 
+   This is done to keep writing the guidelines a simple process -->
+<book>
+    <subtitle>Reference Guide for writing GeoNetwork documentation</subtitle>
+    <bookinfo>
+        <copyright>
+            <year>2008</year>
+            <holder>The Open Source Geospatial Foundation</holder>
+        </copyright>
+        <releaseinfo>V 0.1</releaseinfo>
+        <productname>GeoNetwork opensource</productname>
+        <authorgroup>
+            <corpauthor>By the developers</corpauthor>
+        </authorgroup>
+        <mediaobject id="geonetwork_logo">
+            <imageobject>
+                <imagedata fileref="images/GeoNetwork_opensource_logo.jpg" width="12cm"
+                    contentwidth="12cm"/>
+            </imageobject>
+        </mediaobject>
+    </bookinfo>
+    <toc/>
+    <part>
+        <title>First Part</title>
+        <!-- Chapters explaining how to write documentation for GeoNetwork opensource -->
+        <xi:include href="docbook_guidelines_chapter1.xml" xpointer="docbook_guidelines_chapter1"
+            xmlns:xi="http://www.w3.org/2001/XInclude">
+            <xi:fallback>
+                <para>
+                    <emphasis>FIXME: MISSING XINCLUDE CONTENT - DocBook Guidelines Chapter
+                    1</emphasis>
+                </para>
+            </xi:fallback>
+        </xi:include>
+        <!-- Chapters are written in separate documents that are glued together in the main document -->
+        <xi:include href="docbook_guidelines_chapter2.xml" xpointer="docbook_guidelines_chapter2"
+            xmlns:xi="http://www.w3.org/2001/XInclude">
+            <xi:fallback>
+                <para>
+                    <emphasis>FIXME: MISSING XINCLUDE CONTENT - DocBook Guidelines Chapter
+                    2</emphasis>
+                </para>
+            </xi:fallback>
+        </xi:include>
+    </part>
+    <part>
+        <title>Second Part</title>
+        <chapter>
+            <title>The DocBook XML of Chapter 2</title>
+            <para>This is the XML (source) representation of the previous chapter 2.</para>
+            <informalexample>
+                <programlisting><?db-font-size 75% ?>
+<xi:include href="docbook_guidelines_chapter2.xml" xpointer="docbook_guidelines_chapter2" xmlns:xi="http://www.w3.org/2001/XInclude" parse="text">
+    <xi:fallback>
+        <para><emphasis>FIXME: MISSING XINCLUDE CONTENT - DocBook Guidelines Chapter 2 XML print</emphasis></para>
+    </xi:fallback>
+</xi:include>
+                </programlisting>
+            </informalexample>
+        </chapter>
+    </part>
+    <index/>
+</book>

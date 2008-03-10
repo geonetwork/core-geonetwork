@@ -1,0 +1,657 @@
+
+/*******************************************************************************
+general
+*******************************************************************************/
+
+
+* {
+	font-size: 100%; /* without this font sizes are not inherited correctly */
+}
+
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9pt;
+	margin: 0px;
+	color: #064377;
+}
+
+table, tr, td {
+	border-width: 0px;
+	border-spacing: 0px;
+	border-collapse: collapse; /* border-spacing should be enough, but added for IE compatibility */
+	padding: 0px;
+	vertical-align: top; /*ETJ*/
+}
+
+th {
+	text-align: left;
+	border-width: 0px;
+	border-spacing: 0px;
+	border-collapse: collapse; /* border-spacing should be enough, but added for IE compatibility */
+	font-weight: normal;
+	font-style: normal;
+}
+
+img {
+	border-width: 0px;
+}
+
+h1 {
+	text-transform: uppercase;
+	font: bold 10px Verdana, Arial, Geneva, Helvetica, sans-serif;
+}
+
+h2 {
+	font-size: 10px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+a {
+	/*
+	color: #266377;
+	text-decoration: none;
+	*/
+	color: #064377;
+	font-size:11px;
+	text-decoration: none;
+}
+
+a:hover
+{
+	text-decoration: underline;
+}
+
+.arrow{
+	background-image: url('images/arrow.gif');
+
+	background-repeat:no-repeat;
+
+	padding:0 0 3px 7px;
+
+}
+
+/*******************************************************************************
+banner
+*******************************************************************************/
+
+tr.banner {
+	/* moved to td, since IE does not accept it
+	border-bottom: 1px solid #ffffff;
+	*/
+}
+
+td.banner {
+	font-size: 8pt;
+	color: #ffffff;
+	background-image: url('images/blue-background.gif');
+	border-bottom: 1px solid #ffffff; /* moved here from tr since IE accepts it only here */
+}
+
+.bottom_border {
+	border-bottom: 1px dotted gray;
+}
+
+td.banner-menu {
+	font-size: 8pt;
+	color: #ffffff;
+	background: #064377;
+	padding-left: 8px;
+	padding-right: 8px;
+	border-bottom: 1px solid #ffffff; /* moved here from tr since IE accepts it only here */
+	height: 16px;
+}
+
+td.banner-login {
+	font-size: 8pt;
+	color: #ffffff;
+	/*
+	background-image: url('images/blue-background.gif');
+	*/
+	background: #266397;
+	padding-left: 8px;
+	padding-right: 8px;
+	border-bottom: 1px solid #ffffff; /* moved here from tr since IE accepts it only here */
+	height: 16px;
+	vertical-align: middle
+}
+
+a.banner {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+a.banner:hover
+{
+	text-decoration: underline;
+}
+
+font.banner-active {
+	color: #ffffff;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+font.banner-passive {
+	color: #a0a0a0;
+	text-decoration: none;
+}
+
+input.banner {
+	font-family: Verdana;
+	font-size: 7pt;
+	color: #064377;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+button.banner {
+	font-family: Verdana;
+	font-size: 7pt;
+	color: #064377;
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+a.palette {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+a.palette:hover
+{
+	background: #064377;
+}
+
+/* added since the browser adds some margin for the form */
+form {
+	margin: 0px;
+}
+
+/*******************************************************************************
+content
+*******************************************************************************/
+
+td.content {
+	background: #e7edf5;
+}
+
+.padded-content {
+	background: #e7edf5;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+td.green-content {
+	color: #ffffff;
+	background: #beb800;
+	font-weight: bold;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+td.blue-content {
+	color: #ffffff;
+	background: #266397;
+	/*
+	background-image: url('images/blue-background.gif');
+	*/
+	height: 30px;
+}
+
+input.content, select.content, textarea.content {
+	font-family: Verdana;
+	font-size: 9pt;
+	color: #064377;
+	max-width: 400px;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+button.content {
+	font-family: Verdana;
+	font-size: 9pt;
+	color: #064377;
+	max-width: 400px;
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+input.content-small, button.content-small {
+	font-family: Verdana;
+	font-size: 7pt;
+	color: #064377;
+	min-width: 150px;
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+a.green-content {
+	background: #beb800;
+	color: #ffffff;
+}
+
+a.green-content:hover {
+	text-decoration: underline;
+}
+
+/*******************************************************************************
+footer
+*******************************************************************************/
+
+td.footer {
+	font-size: 8pt;
+	background: #beb800;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+a.footer {
+	color: #064377;
+}
+
+a.footer:hover
+{
+	text-decoration: underline;
+}
+
+/*******************************************************************************
+metadata
+*******************************************************************************/
+
+table.md {
+	font-size: 8pt;
+}
+
+th.md {
+	text-align: left;
+	font-weight: bold;
+}
+
+input.md, select.md, textarea.md {
+	font-family: Verdana;
+	font-size: 8pt;
+	color: #064377;
+	/* max-width: 400; */
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+button.md {
+	font-family: Verdana;
+	font-size: 8pt;
+	color: #064377;
+	/* max-width: 400; */
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+/*******************************************************************************
+utilities
+*******************************************************************************/
+
+font.error, font.warning {
+	color: #ff4040;
+}
+
+td.box {
+	border: 2px solid #266397;
+	background: #4683b7;
+}
+
+td.separator {
+	background: #ffffff;
+	height: 4px;
+	width: 4px;
+}
+
+td.dots {
+	height: 4px;
+	width: 4px;
+	background-image: url('images/dot.gif');
+}
+
+th.padded, td.padded {
+	padding: 2px;
+}
+
+th.padded-center {
+	text-align:  center;
+	padding: 2px;
+}
+
+a.image:hover
+{
+	background: transparent;
+}
+
+td.spacer {
+	height: 16px;
+}
+
+div.track  {
+	background: #064377;
+	margin-top:2px;
+}
+
+div.handle {
+	background: #beb800;
+	cursor:move;
+}
+
+.dots 
+{
+	height: 4px;
+	width: 100%;
+	background-image: url('images/dot.gif');
+}
+
+/*******************************************************************************
+Ajax styles
+*******************************************************************************/
+
+.tooltip
+{
+	position: absolute;
+	background-color: #f0f0ff;
+	border:  solid black 1px;
+	padding: 4px;
+}
+
+.tipRow
+{
+	margin: 10px;
+	padding: 15px;
+}
+
+.tipHeader
+{
+	text-align:    left;
+	font-weight:   bold;
+	padding-left:  2px;
+	padding-right: 2px;
+}
+
+.tipCell
+{
+	text-align: left;
+}
+
+.policyGroup 
+{
+	margin: 5px;
+	border-style:dashed;
+	border-width:0px 0px 1px 0px;
+}
+
+/*******************************************************************************
+Ajax Keyword list
+*******************************************************************************/
+div.keywordSelectorFrame {
+        background: #fff;
+		position: absolute;
+		margin: 2px;
+		padding: 2px;
+		left: 300px;
+		top: 225px;
+}
+
+div.keywordSelector {
+        background: #fff;
+        border: 4px solid #064377;
+		margin: 2px;
+		padding: 5px;
+        cursor: pointer;
+        overflow: auto;
+		max-height: 200px;
+		max-width: 300px;
+		width: 300px;
+}
+
+div.keywordList {
+        background: #fff;
+        cursor: pointer;
+        overflow: auto;
+		max-height: 200px;
+}
+
+
+div.keywordList ul {
+        border: 1px solid #888;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        list-style-type: circle;
+        cursor: pointer;
+        overflow: hidden;
+}
+
+div.keywordList ul li {
+        margin: 0;
+        padding: 1px;
+        cursor: pointer;
+	 	list-style-type:none;
+}
+
+div.keywordList ul li.selected {
+        background-color: #beb800;
+        cursor: pointer;
+}
+
+div.keywordList ul strong.highlight {
+        color: #800;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+}
+
+div.keywordList ul li span {
+	display :none;
+}
+
+div.keywordResults ul {
+        margin: 3px;
+        padding: 0;
+		border-style:dashed;
+		border-width:1px 0px 0px 1px;
+		list-style-type:none;
+}
+
+div.keywordResults ul li {
+        margin: 4px;
+		list-style-type:none;
+}
+
+div.legend {
+        margin: 3px;
+        padding: 3px;
+		border-style:dashed;
+		border-width:1px 1px 1px 1px;
+		font-style: italic;
+}
+div.broader {
+        background-color: #8ba4c5;
+}
+div.related {
+        background-color: #d5dfec;
+}
+div.narrower {
+        background-color: #f7faff;
+}
+
+div.important {
+	width: 70%;
+	border-style: inset;
+	border-width: 1px;
+	text-align: justify;
+	margin: 15px;
+	padding: 10px;
+}
+
+div.keywordResults ul li.selected {
+        background-color: #beb800;
+        cursor: pointer;
+}
+
+
+/* GEOGRAPHIC SEARCH */
+
+
+.geosearchmain{
+    border-bottom: 2px;
+    margin-bottom: 1px;
+
+    vertical-align: top;
+    
+}
+
+.geosearch{
+    border-bottom: 2px;
+    margin-bottom: 1px;
+}
+
+.geosearchfields{
+    padding-bottom: 10px;
+    border-bottom: 1px solid;
+    margin-bottom: 10px;
+}
+
+.geosearchfields a{
+/*    text-decoration: none; */
+    margin-top: 5px;
+}
+
+td.advsearchfields {
+    padding-bottom: 10px;
+    border-bottom: 1px solid;
+/*    margin-bottom: 10px;*/
+
+    border-left: 1px solid;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+/*.advsearchfields > tbody > tr > td {
+    padding-bottom: 10px;
+    border-left: 1px solid;
+    padding-left: 5px;
+
+}
+*/
+
+#coords{
+    text-align:center;
+    margin-top: 5px;
+}
+
+.IMBtn{
+	font-family: Verdana;
+	font-size: 9px;
+	color: #064377;
+	cursor: pointer;
+	padding: 2px 8px 2px 2px;
+}
+
+
+
+#openIMBtn{
+	background: url(images/arrow.gif) no-repeat right;
+}
+
+#closeIMBtn{
+	background: url(images/arrow_inv.gif) no-repeat right;
+}
+
+#closeIMBtn:hover {
+	text-decoration: underline;
+}
+
+#openIMBtn:hover {
+	text-decoration: underline;
+}
+
+imenabled {
+	color: #064377;
+	cursor: pointer;
+}
+
+imdisabled {
+	color: #434343;
+    cursor: progress;
+}
+
+div.metadata_current {
+    padding: 3px;
+    border: 1px #266397 solid;    
+    background-color: #dce1ea;
+    position: relative;
+}
+
+div.metadata_current table,
+div.metadata_current td
+{
+    background-color: #dce1ea;
+}
+
+/* This will fix some redraw problems with gn setting */
+.calendar table ,
+.calendar tr ,
+.calendar td  {
+	border-collapse: separate;
+}
+
+.ilwhiteboard {
+    position:relative;
+}
+
+/* Rating popup */
+
+button.rating 
+{
+	font-family: Verdana;
+	font-size: 9pt;
+	color: #064377;
+	max-width: 400px;
+	width: 100px;
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+	margin-bottom: 4px;
+}
+
+.ratingBox
+{
+	position: absolute;
+	background-color: #E0E0FF;
+	border:  solid black 1px;
+	padding: 0px;
+	margin: 0px;
+}
+
+.ratingCloser 
+{
+    position: absolute;
+    top:     1px;
+    right:   3px;
+    width:  16px;
+    height: 16px;
+    cursor: pointer;
+    
+    z-index: 20;    
+}
+
+div#error {
+	margin: 2em;
+}
+
+#stacktrace {
+	font-size: 0.75em;
+}
+

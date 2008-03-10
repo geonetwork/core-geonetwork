@@ -1,0 +1,35 @@
+List of bugs, issues to be resolved & todo list
+
+==================================================================
+Bugs:
+==================================================================
+
+- Some metadata element strings are not found in the editor
+
+==================================================================
+Issues:
+==================================================================
+
+- (RESOLVED for version 2.1.0) A big issue is the backward compatibility of the harvesting. v2.1 does not harvest
+  nodes of v2.0. This can not be. Even if less optimal harvesting, this should remain 
+  possible when upgrading.
+  
+- (RESOLVED for version 2.1.0) Sample metadata does not have:
+	- online resources (requires InterMap integration too)
+	- code list issues with ISO19139 metadata
+	
+==================================================================
+To do:
+==================================================================
+
+- in metadata.show.xsl & search-results.xsl the href does not point to baseURL yet of
+  the resource yet.
+  
+- Revisit the help.xml, links.xml and about.xml to verify and update (a.o. links & 
+  some of the translations))
+ 
+- (Done for version 2.1.0) Further improve help through the use of DHTML tooltips and AJAX request to server
+ 
+- (Done for version 2.1.0) Integrated version with InterMap opensource
+
+==================================================================

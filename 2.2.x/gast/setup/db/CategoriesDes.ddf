@@ -1,0 +1,52 @@
+#---------------------------------------------------------
+#--- File exported in DDF format on 2007-03-13 15:49:33
+#---
+#--- SELECT idDes,langId,label FROM APP.CategoriesDes
+#---------------------------------------------------------
+
+[FIELDS]
+idDes,         INTEGER
+langId,        VARCHAR
+label,         VARCHAR
+
+[DATA]
+1	en	Maps & graphics
+2	en	Datasets
+3	en	Interactive resources
+4	en	Applications
+5	en	Case studies, best practices
+6	en	Conference proceedings
+7	en	Photo
+8	en	Audio/Video
+9	en	Directories
+10	en	Other information resources
+2	es	Conjuntos de datos
+3	es	Recursos interactivos
+5	es	Casos de Uso, buenas pr~00E1cticas
+4	es	Applications
+6	es	Res~00FAmenes de conferencias
+7	es	Photograf~00EDas
+9	es	Directorios
+8	es	Audio/V~00EDdeo
+10	es	Otros recursos de informaci~00F3n
+1	cn	Maps & graphics
+2	cn	Datasets
+3	cn	Interactive resources
+4	cn	Applications
+5	cn	Case studies, best practices
+6	cn	Conference proceedings
+7	cn	Photo
+8	cn	Audio/Video
+9	cn	Directories
+10	cn	Other information resources
+2	fr	Jeux de donn~00E9es
+1	fr	Cartes & graphiques
+7	fr	Photographies
+10	fr	Autres ressources
+5	fr	Etude de cas, meilleurs pratiques
+1	es	Mapas & gr~00E1ficos
+8	fr	Vid~00E9o/Audio
+9	fr	R~00E9pertoires
+4	fr	Applications
+3	fr	Ressources interactives
+6	fr	Conf~00E9rences

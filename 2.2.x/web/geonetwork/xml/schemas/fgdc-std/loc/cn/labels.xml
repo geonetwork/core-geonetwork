@@ -1,0 +1,1685 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<labels>
+	<!-- ==================================================== -->
+	<element name="any">
+		<label>地点不限</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="absres">
+		<label>横向分辨率</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="abstract">
+		<label>摘要</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="accconst">
+		<label>访问限制</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="accsinst">
+		<label>访问说明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="address">
+		<label>地址</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="addrtype">
+		<label>地址类型</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="albers">
+		<label>Albers圆锥等积投影</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="altdatum">
+		<label>高程基准名称</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="altenc">
+		<label>高程编码方法</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="altres">
+		<label>高程精度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="altsys">
+		<label>高程系统定义</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="altunits">
+		<label>高程距离单位</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="arcsys">
+		<label>ARC坐标系统</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="arczone">
+		<label>ARC坐标系统分区标识</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attr">
+		<label>属性</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attracc">
+		<label>属性精度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attracce">
+		<label>属性精度解释</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attraccr">
+		<label>属性精度报告</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attraccv">
+		<label>属性精度值</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrdef">
+		<label>属性定义</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrdefs">
+		<label>属性定义出处</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrdomv">
+		<label>属性值域</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrlabl">
+		<label>属性标签A</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrmfrq">
+		<label>属性量测频度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrmres">
+		<label>属性量测分辨率</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrunit">
+		<label>属性量测单位</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrva">
+		<label>属性值精度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrvae">
+		<label>属性值精度解释</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrvai">
+		<label>属性值精度信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="availabl">
+		<label>有效时间段</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="azimangl">
+		<label>方位角</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="azimequi">
+		<label>等距方位角</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="azimptl">
+		<label>方位角测量点精度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="bearrefd">
+		<label>方位参照方向</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="bearrefm">
+		<label>方位参照子午线</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="bearres">
+		<label>方位分辨率</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="bearunit">
+		<label>方位单位</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="begdate">
+		<label>起始日期</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="begdatea">
+		<label>属性值起始日期</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="begtime">
+		<label>起始时间</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="bounding">
+		<label>范围框坐标</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="browse">
+		<label>快视图</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="browsed">
+		<label>快视图文件说明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="browsen">
+		<label>快视图文件名</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="browset">
+		<label>快视图文件类型</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="caldate">
+		<label>日历日期</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="citation">
+		<label>引用</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="citeinfo">
+		<label>引用信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="city">
+		<label>城市</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cloud">
+		<label>云层覆盖</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntaddr">
+		<label>联系地址</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntemail">
+		<label>电子邮件地址</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntfax">
+		<label>传真</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntinfo">
+		<label>联系信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntinst">
+		<label>联系说明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntorg">
+		<label>联系单位</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntorgp">
+		<label>第一联系单位</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntper">
+		<label>联系人</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntperp">
+		<label>第一联系人</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntpos">
+		<label>联系职位</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cnttdd">
+		<label>联系国际直播电话</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntvoice">
+		<label>联系音讯电话</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="codesetd">
+		<label>编码集的域</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="codesetn">
+		<label>编码集名称</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="codesets">
+		<label>编码集出处</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="colcount">
+		<label>列数</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="compat">
+		<label>兼容性信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="complete">
+		<label>完整性报告</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="compress">
+		<label>支持压缩</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="computer">
+		<label>计算机联系信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="coordrep">
+		<label>坐标表示法</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="country">
+		<label>国家</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="crossref">
+		<label>对照</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="current">
+		<label>现势性参照</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="custom">
+		<label>客户订单处理</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="datacred">
+		<label>数据集信用？Data Set Credit</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dataqual">
+		<label>数据质量信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="denflat">
+		<label>扁率分母</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="depthdn">
+		<label>深度基准名称</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="depthdu">
+		<label>深度距离单位</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="depthem">
+		<label>深度编码方法</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="depthres">
+		<label>深度分辨率</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="depthsys">
+		<label>深度系统定义</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="descript">
+		<label>说明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="detailed">
+		<label>详细说明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dialfile">
+		<label>拨号文件名称</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dialinst">
+		<label>拨号说明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dialtel">
+		<label>拨号电话</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="digform">
+		<label>数字表格</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="digtinfo">
+		<label>数字传输信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="digtopt">
+		<label>数字传输方式</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="direct">
+		<label>直接空间参照方法</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="distbrep">
+		<label>距离与方位表示</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="distinfo">
+		<label>分发信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="distliab">
+		<label>分发责任</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="distres">
+		<label>距离分辨率</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="distrib">
+		<label>分发者</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dsgpoly">
+		<label>数据集G-Polygon</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dsgpolyo">
+		<label>数据集G-Polygon Outer G-Ring</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dsgpolyx">
+		<label>数据集G-Polygon Exclusion G-Ring</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="eadetcit">
+		<label>实体与属性详细引用</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="eainfo">
+		<label>实体与属性信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="eaover">
+		<label>实体与属性概况</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="eastbc">
+		<label>范围框东侧坐标</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="edition">
+		<label>版本</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="edom">
+		<label>枚举的域</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="edomv">
+		<label>枚举域值</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="edomvd">
+		<label>枚举域值定义</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="edomvds">
+		<label>枚举域值定义出处</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="ellips">
+		<label>椭球体名称</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="enddate">
+		<label>终止日期</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="enddatea">
+		<label>属性值终止日期</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="endtime">
+		<label>终止时间</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="enttyp">
+		<label>实体类型</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="enttypd">
+		<label>实体类型定义</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="enttypds">
+		<label>实体类型定义出处</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="enttypl">
+		<label>实体类型标签</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="equicon">
+		<label>等距圆锥投影</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="equirect">
+		<label>等角</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="extent">
+		<label>范围</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="feast">
+		<label>东移</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="fees">
+		<label>费用</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="filedec">
+		<label>文件解压说明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="fnorth">
+		<label>北移</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="formcont">
+		<label>格式信息内容</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="formname">
+		<label>格式名称</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="formspec">
+		<label>格式说明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="formverd">
+		<label>格式版本日期</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="formvern">
+		<label>格式版本号</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="geodetic">
+		<label>大地测量模型</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="geoform">
+		<label>地理空间数据表示表格</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="geograph">
+		<label>经纬度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="geogunit">
+		<label>地理坐标单位</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gnomonic">
+		<label>日晷测时术</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gridsys">
+		<label>格网坐标系统</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gridsysn">
+		<label>格网坐标系统名称</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gringlat">
+		<label>G-Ring纬度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gringlon">
+		<label>G-Ring经度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gvnsp">
+		<label>General Vertical Near-sided Projection</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="heightpt">
+		<label>观测点高度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="highbps">
+		<label>最高传输速率(Bps)</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="horizdn">
+		<label>水平基准名称</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="horizpa">
+		<label>水平位置精度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="horizpae">
+		<label>水平位置精度解释</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="horizpar">
+		<label>水平位置精度报告</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="horizpav">
+		<label>水平位置精度值</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="horizsys">
+		<label>水平坐标系统定义</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="hours">
+		<label>服务时间</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="idinfo">
+		<label>标志信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="indspref">
+		<label>间接空间参照</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="issue">
+		<label>发行证明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="keywords">
+		<label>关键词</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="lamberta">
+		<label>Lambert方位等积</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="lambertc">
+		<label>Lambert等角圆锥</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="landsat">
+		<label>Landsat号</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="latprjc">
+		<label>投影中心纬度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="latprjo">
+		<label>投影原点纬度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="latres">
+		<label>纬度分辨率</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="lineage">
+		<label>数据志信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="local">
+		<label>区域信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="localdes">
+		<label>区域说明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="localgeo">
+		<label>区域地理参照</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="localp">
+		<label>区域平面</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="localpd">
+		<label>区域平面说明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="localpgi">
+		<label>区域平面空间参照信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="logic">
+		<label>逻辑一致性报告</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="longcm">
+		<label>中央子午线经度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="longpc">
+		<label>投影中心经度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="longres">
+		<label>经度分辨率</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="lowbps">
+		<label>最低传输速率(Bps)</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="lworkcit">
+		<label>Larger Work Citation</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="mapproj">
+		<label>地图投影</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="mapprojn">
+		<label>地图投影名称</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="mdattim">
+		<label>多个日期/时间</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="mercator">
+		<label>Mercator</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metac">
+		<label>元数据访问限制</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metadata">
+		<label>元数据</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metainfo">
+		<label>元数据参考信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metc">
+		<label>元数据联系信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metd">
+		<label>元数据日期</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metfrd">
+		<label>元数据将来复查日期</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metrd">
+		<label>元数据复查日期</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metsc">
+		<label>元数据安全分类</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metscs">
+		<label>元数据安全分类系统</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metshd">
+		<label>元数据安全处理说明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metsi">
+		<label>元数据安全信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metstdn">
+		<label>元数据标准名称</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metstdv">
+		<label>元数据标准版本</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="mettc">
+		<label>元数据时间约定</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metuc">
+		<label>元数据使用限制</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="miller">
+		<label>Miller圆柱</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="modsak">
+		<label>阿拉斯加修改画法</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="native">
+		<label>数据集本地环境</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="networka">
+		<label>网络地址</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="networkr">
+		<label>网络资源名称</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="nondig">
+		<label>非数字表格</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="northbc">
+		<label>范围框北侧坐标</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="numdata">
+		<label>数值数据位</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="numstop">
+		<label>数值终止位</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="obqlazim">
+		<label>倾斜线方位</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="obqllat">
+		<label>O倾斜线纬度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="obqllong">
+		<label>倾斜线经度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="obqlpt">
+		<label>倾斜线点</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="obqmerc">
+		<label>斜轴Mercator</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="offmedia">
+		<label>离线介质</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="offoptn">
+		<label>离线方式</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="oncomp">
+		<label>在线计算机与操作系统</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="onlink">
+		<label>在线链接</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="onlinopt">
+		<label>在线方式</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="ordering">
+		<label>订购说明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="ordres">
+		<label>坐标分辨率</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="origin">
+		<label>创作者</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="orthogr">
+		<label>拼写正确</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="othercit">
+		<label>其他引用详细信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="othergrd">
+		<label>其他格网系统定义</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="otherprj">
+		<label>其他投影定义</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="overview">
+		<label>概述</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="parity">
+		<label>奇偶校验</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="pathnum">
+		<label>路径号</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="place">
+		<label>地点</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="placekey">
+		<label>地点关键词</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="placekt">
+		<label>地点关键词词典</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="planar">
+		<label>平面</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="plance">
+		<label>平面坐标编码方法</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="planci">
+		<label>平面坐标信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="plandu">
+		<label>平面距离单位</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="polarst">
+		<label>Polar Stereographic</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="polycon">
+		<label>多圆锥</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="posacc">
+		<label>位置精度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="postal">
+		<label>邮政编码</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="proccont">
+		<label>处理联系</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="procdate">
+		<label>处理日期</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="procdesc">
+		<label>处理说明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="procstep">
+		<label>处理步骤</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="proctime">
+		<label>处理时间</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="progress">
+		<label>进展</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="ptcontac">
+		<label>联系人</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="ptvctcnt">
+		<label>点与矢量对象数量</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="ptvctinf">
+		<label>点与矢量对象信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="pubdate">
+		<label>出版日期</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="pubinfo">
+		<label>出版信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="publish">
+		<label>出版商</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="pubplace">
+		<label>出版地点</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="pubtime">
+		<label>出版时间</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="purpose">
+		<label>目的</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="qattracc">
+		<label>定量属性精度估计</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="qhorizpa">
+		<label>定量水平位置精度估计</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="qvertpa">
+		<label>定量垂直位置精度估计</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="rastinfo">
+		<label>栅格对象信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="rasttype">
+		<label>&gt;栅格对象类型</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="rdom">
+		<label>范围值域</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="rdommax">
+		<label>范围值域最大值</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="rdommin">
+		<label>范围值域最小值</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="reccap">
+		<label>记录容量</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="recden">
+		<label>记录密度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="recdenu">
+		<label>记录密度单位</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="recfmt">
+		<label>记录格式</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="resdesc">
+		<label>资源说明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="rngdates">
+		<label>日期/时间范围</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="robinson">
+		<label>Robinson</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="rowcount">
+		<label>行数</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sdtsterm">
+		<label>SDTS术语说明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sdtstype">
+		<label>SDTS点与矢量对象类型</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="secclass">
+		<label>安全分类</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sechandl">
+		<label>安全处理说明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="secinfo">
+		<label>安全信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="secsys">
+		<label>安全分类系统</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="semiaxis">
+		<label>半长径</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="serinfo">
+		<label>系列信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sername">
+		<label>系列名称</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sfctrlin">
+		<label>中心线比例尺因子</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sfctrmer">
+		<label>中央子午线比例因子</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sfequat">
+		<label>赤道处比例因子</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sfprjorg">
+		<label>投影原点比例因子</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sinusoid">
+		<label>Sinusoidal</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sngdate">
+		<label>单一日期/时间</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="southbc">
+		<label>范围框南侧坐标</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="spaceobq">
+		<label>空间斜轴Mercator (Landsat)</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="spcs">
+		<label>州平面坐标系统</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="spcszone">
+		<label>SPCS带标识</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="spdoinfo">
+		<label>空间数据组织信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="spdom">
+		<label>空间域</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="spref">
+		<label>空间参照系信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="srccite">
+		<label>出处引用</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="srccitea">
+		<label>出处引用简写</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="srccontr">
+		<label>出处提供者</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="srccurr">
+		<label>出处现势性参照</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="srcinfo">
+		<label>出处信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="srcprod">
+		<label>产生出处引用简写</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="srcscale">
+		<label>出处比例尺分母</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="srctime">
+		<label>出处内容的时间段</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="srcused">
+		<label>出处使用的引用简写</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="state">
+		<label>州或省</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="status">
+		<label>状况</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="stdorder">
+		<label>标准订购程序</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="stdparll">
+		<label>标准纬线</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="stereo">
+		<label>立体照相</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="stratkey">
+		<label>地层关键词</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="stratkt">
+		<label>地层关键词词典</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="stratum">
+		<label>地层</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="supplinf">
+		<label>补充信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="svlong">
+		<label>离开极点的直接垂向经度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="techpreq">
+		<label>技术要求</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="tempkey">
+		<label>时间关键词</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="tempkeyt">
+		<label>时间关键词词典</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="temporal">
+		<label>时态信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="theme">
+		<label>专题</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="themekey">
+		<label>专题关键词</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="themekt">
+		<label>专题关键词词典</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="time">
+		<label>一天中的时间</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="timeinfo">
+		<label>时间段信息</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="timeperd">
+		<label>内容的时间段</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="title">
+		<label>题名</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="transize">
+		<label>传输数据量</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="transmer">
+		<label>横轴墨卡托</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="turnarnd">
+		<label>Turnaround</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="typesrc">
+		<label>数据源介质</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="udom">
+		<label>难以表达的域</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="update">
+		<label>维护与更新频度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="ups">
+		<label>通用极照（UPS） Universal Polar Stereographic</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="upszone">
+		<label>UPS带号</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="useconst">
+		<label>使用限制</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="utm">
+		<label>通用横轴墨卡托(UTM)</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="utmzone">
+		<label>UTM带号</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vdgrin">
+		<label>van der Grinten</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vertacc">
+		<label>垂直位置精度</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vertacce">
+		<label>垂直位置精度解释</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vertaccr">
+		<label>垂直位置精度报告</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vertaccv">
+		<label>垂直位置精度值</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vertdef">
+		<label>垂直坐标系统定义</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vpflevel">
+		<label>VPF拓扑级别</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vpfterm">
+		<label>VPF术语说明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vpftype">
+		<label>VPF点与矢量对象类型</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vrtcount">
+		<label>节点数</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="westbc">
+		<label>范围框西侧坐标</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+</labels>

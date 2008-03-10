@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<gui>
+	<class package="org.fao.gast.gui.panels"/>
+	
+	<precon type="stopped">
+		<image>22x22/stop.png</image>
+		<tip>GeoNetwork must be stopped in order to execute this operation</tip>
+	</precon>
+	
+	<precon type="restart">
+		<image>22x22/reload.png</image>
+		<tip>GeoNetwork must be restarted in order to make changes effective</tip>
+	</precon>
+	
+	<precon type="running">
+		<image>22x22/launch.png</image>
+		<tip>GeoNetwork must be running in order to execute this operation</tip>
+	</precon>
+	
+	<!-- ========================================================== -->
+	<!-- Configuration -->
+	<!-- ========================================================== -->
+	
+	<container>
+		<image>22x22/configure.png</image>
+		<label>Configuration</label>
+		
+		<!-- Site ID - - - - - - - - - - - - - - - - - - - - - - - - 
+		
+		<form>
+			<id>siteid</id>
+			<image>16x16/package_settings.png</image>
+			<label>Site ID</label>
+			<title>Site ID change</title>
+			<class>config.siteid.MainPanel</class>
+			<description>
+				Here you can change your installation's site ID. Because a site ID
+				must be unique, you are not allowed to enter a value but it will be
+				automatically generated.
+			</description>
+			
+			<button>
+				<image>16x16/reload.png</image>
+				<label>Generate</label>
+				<action>generate</action>
+			</button>
+			
+			<precon type="stopped">
+				GeoNetwork must be stopped because the SettingManager caches data.
+				There are also some other operations that it is better to do with
+				GeoNetwork stopped.
+			</precon>
+		</form>
+		-->
+		<!-- Jetty - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<form>
+			<id>jetty</id>
+			<image>16x16/package_settings.png</image>
+			<label>Jetty</label>
+			<title>Jetty parameters</title>
+			<class>config.jetty.MainPanel</class>
+			<description>
+				If you are running GeoNetwork with the integrated Jetty server
+				then you can use this panel to change some parameters, mainly
+				the servlet name and port used to access GeoNetwork.
+			</description>
+			
+			<button>
+				<image>16x16/filesave.png</image>
+				<label>Save</label>
+				<action>save</action>
+			</button>
+			
+			<precon type="restart">
+				Jetty must be restarted in order to make the changes effective.
+			</precon>
+		</form>
+		
+		<!-- DBMS - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<form>
+			<id>dbms</id>
+			<image>16x16/package_settings.png</image>
+			<label>DBMS</label>
+			<title>DBMS configuration</title>
+			<class>config.dbms.MainPanel</class>
+			<description>
+				This panel allows you to change the DBMS you want to connect to.
+				Here you can change only the configuration. You have also to create
+				the schema and populate the database. You can do that through
+				the 'database/setup' panel. If you select the embedded database
+				and its data files are not there (for example because you just
+				checked out from the subversion repository), the 'save' button 
+				will also create them and generate a new random account.
+			</description>
+			
+			<button>
+				<image>16x16/filesave.png</image>
+				<label>Save</label>
+				<action>save</action>
+			</button>
+			
+			<precon type="restart">
+				GeoNetwork must be restarted in order to make the changes effective.
+			</precon>
+		</form>
+	</container>
+	
+	<!-- ========================================================== -->
+	<!-- Management -->
+	<!-- ========================================================== -->
+	
+	<container>
+		<image>22x22/gear.png</image>
+		<label>Management</label>
+		
+		<!-- Import - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<form>
+			<id>mefimport</id>
+			<image>16x16/run.png</image>
+			<label>Import</label>
+			<title>Metadata import</title>
+			<class>manag.mefimport.MainPanel</class>
+			<description>
+				This panel lets you reimport a previouly exported set
+				of metadata/data. The import is not destructive, in the
+				sense that new records will be created. So, make sure
+				to have an empty database if you don't want metadata
+				overlap.
+			</description>
+			
+			<button>
+				<image>16x16/down.png</image>
+				<label>Import</label>
+				<action>import</action>
+			</button>
+			
+			<precon type="running">
+				Uses MEF facilities so GeoNetwork must be running.
+			</precon>
+		</form>
+		
+		<!-- Export - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<form>
+			<id>mefexportc</id>
+			<image>16x16/run.png</image>
+			<label>Export</label>
+			<title>Metadata export</title>
+			<class>manag.mefexport.MainPanel</class>
+			<description>
+				This panel lets you export your metadata/data from GeoNetwork 
+				into a folder of your file system. There will be one file
+				for each metadata/data in MEF format.
+			</description>
+			
+			<button>
+				<image>16x16/up.png</image>
+				<label>Export</label>
+				<action>export</action>
+			</button>
+			
+			<precon type="running">
+				Uses MEF facilities so GeoNetwork must be running.
+			</precon>
+		</form>
+		
+		<!-- Metadata Sync - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<form>
+			<id>mdsync</id>
+			<image>16x16/run.png</image>
+			<label>Metadata Sync</label>
+			<title>Metadata synchronization</title>
+			<class>manag.mdsync.MainPanel</class>
+			<description>
+				Each metadata contains links to the GeoNetwork's server in 
+				order to allow resource retrieval. If you change the server's
+				address and port from the web interface, these links will break.
+				This panel simply scans all metadata and fixes these links.
+			</description>
+			
+			<button>
+				<image>16x16/run.png</image>
+				<label>Synchronize</label>
+				<action>sync</action>
+			</button>
+			
+			<precon type="stopped">
+				All local metadata must be scanned and changed so there must not
+				be records under editing.
+			</precon>
+		</form>
+		
+		<!-- 115 to 139 - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<form>
+			<id>115to139</id>
+			<image>16x16/run.png</image>
+			<label>115 to 139</label>
+			<title>ISO 19115 to 19139 conversion</title>
+			<class>manag.conversion.MainPanel</class>
+			<description>
+				Prior to version 2.1, GeoNetwork managed only the old ISO 19115
+				metadata format (the one with short names). Starting from
+				version 2.1 you can use the new ISO 19139 format, which is
+				the XML encoding of the ISO 19115:2003 spec.
+				This panel lets you convert your old metadata in ISO 19115
+				format to the new one.
+			</description>
+			
+			<button>
+				<image>16x16/run.png</image>
+				<label>Convert</label>
+				<action>convert</action>
+			</button>
+			
+			<precon type="stopped">
+				GeoNetwork could even be running but maybe it is better
+				if it is stopped.
+			</precon>
+		</form>
+		
+	</container>
+		
+	<!-- ========================================================== -->
+	<!-- Database -->
+	<!-- ========================================================== -->
+	
+	<container>
+		<image>22x22/hdd_unmount.png</image>
+		<label>Database</label>
+		
+		<!-- Setup - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<form>
+			<id>setup</id>
+			<image>16x16/hdd_unmount.png</image>
+			<label>Setup</label>
+			<title>Database setup</title>
+			<class>database.setup.MainPanel</class>
+			<description>
+				Once you have configured your DBMS in the 'configuration/dbms' 
+				panel, you have to use this panel to create tables and fill
+				them with initial data.
+			</description>
+			
+			<button>
+				<image>16x16/run.png</image>
+				<label>Setup</label>
+				<action>setup</action>
+			</button>
+			
+			<precon type="stopped">
+				Obviously GeoNetwork cannot be running while the database
+				gets built.
+			</precon>
+		</form>
+		
+		<!-- Sample data - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<form>
+			<id>sampleData</id>
+			<image>16x16/hdd_unmount.png</image>
+			<label>Sample data</label>
+			<title>Sample data and metadata</title>
+			<class>database.sample.MainPanel</class>
+			<description>
+				There are some sample metadata that you can import into your
+				GeoNetwork after setup. These are provided just to experiment
+				the features and the user interface.
+				You can even import the same metadata several times in order to
+				fill your database for stress tests.
+			</description>
+			
+			<button>
+				<image>16x16/run.png</image>
+				<label>Import</label>
+				<action>import</action>
+			</button>
+			
+			<precon type="running">
+				Uses MEF facilities so GeoNetwork must be running.
+			</precon>
+		</form>
+	</container>
+	
+	<!-- ========================================================== -->
+	<!-- Migration -->
+	<!-- ========================================================== -->
+	
+	<container>
+		<image>22x22/vcs_update.png</image>
+		<label>Migration</label>
+		
+		<!-- Old GeoNetwork - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<form>
+			<id>fromOld</id>
+			<image>16x16/kget.png</image>
+			<label>Old installation</label>
+			<title>Migrate an old GeoNetwork</title>
+			<class>migration.oldinst.MainPanel</class>
+			<description>
+				This panel allows you to migrate metadata from an old GeoNetwork 2.0.x
+				installation. This procedure migrates the database content. After 
+				this stage, you will probably need to setup some parameters into 
+				the config.xml file (like dataDir). Other parameters (like proxy
+				settings) must be changed using the web interface. Harvested
+				metadata are not migrated. When migrating, both old and new nodes MUST NOT 
+				be started. If you use Tomcat and you have used only the geonetwork's 
+				'web' folder you have to select the GeoNetwork's web app folder inside Tomcat.
+			</description>
+			
+			<button>
+				<image>16x16/kget.png</image>
+				<label>Migrate</label>
+				<action>migrate</action>
+			</button>
+			
+			<precon type="stopped">
+				GeoNetwork must be stopped when the database is being migrated.
+			</precon>
+		</form>
+	</container>
+</gui>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<simpledc xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <dc:title>Template for Dublin Core</dc:title>
+  <dc:creator />
+  <dc:subject />
+  <dc:description />
+  <dc:publisher />
+  <dc:contributor />
+  <dc:date />
+  <dc:type />
+  <dc:format />
+  <dc:identifier/>
+  <dc:source />
+  <dc:language />
+  <dc:relation />
+  <dc:coverage>North 90, South -90, East 180, West -180. Global</dc:coverage>
+  <dc:rights />
+</simpledc>

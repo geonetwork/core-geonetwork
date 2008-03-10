@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<labels xmlns:dc = "http://purl.org/dc/elements/1.1/">
+	<!-- ==================================================== -->
+	<element name="simpledc">
+		<label>元数据</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:title">
+		<label>题名</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:creator">
+		<label>作者</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:subject">
+		<label>主题与关键词</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:description">
+		<label>说明</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:publisher">
+		<label>出版商</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:contributor">
+		<label>投稿人</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:date">
+		<label>日期</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:type">
+		<label>资源类型</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:format">
+		<label>格式</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:identifier">
+		<label>资源标识</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:source">
+		<label>来源</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:language">
+		<label>语言</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:relation">
+		<label>关系</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:coverage">
+		<label>覆盖范围</label>
+		<description>For example: "North 90, South -90, East 180, West -180. Global"</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:rights">
+		<label>知识产权管理</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+</labels>

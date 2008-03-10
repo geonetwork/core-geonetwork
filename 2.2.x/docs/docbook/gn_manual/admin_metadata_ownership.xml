@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                      "http://www.docbook.org/xml/4.4/docbookx.dtd">
+<book>
+    <chapter id="metadata_ownership">
+        <title>Metadata ownership</title>
+        <section>
+            <title>Introduction</title>
+            <para>Starting from release 2.1.0, GeoNetwork has a new metadata access policy. The
+                old edit and admin privileges have been removed and the concept of reviewer has
+                been introduced. The purpose of this new profile is to control when a metadata
+                can be published outside or not. In previous releases, all users belonging to a
+                group with edit privileges could edit the same metadata. Now, a metadata is only
+                visible to its creator, to a reviewer which has access to the group owner and to
+                an administrator.</para>
+            
+        </section>
+        <section>
+            <title>Access policy</title>
+            
+            <para>A public metadata is a metadata that has the view privilege for the group
+                named all.</para>
+            <section>
+                <title>Visualization</title>
+                <para>An administrator can view any metadata.</para>
+                <para>A reviewer can view a metadata if:</para>
+                
+                <orderedlist>
+                    <listitem>
+                        <para>The group owner is one of the groups assigned to the reviewer.
+                       </para>
+                    </listitem>
+                    <listitem>
+                        <para>He is the metadata owner.</para>
+                    </listitem>
+                </orderedlist>
+                <para>A user administrator or an editor can view:</para>
+                
+                <orderedlist>
+                    <listitem>
+                        <para>All metadata that have the view privilege in one of the groups
+                            visible to them.</para>
+                    </listitem>
+                    <listitem>
+                        <para>All metadata created by theirself.</para>
+                    </listitem>
+                </orderedlist>
+                <para>A registered user can view:</para>
+                
+                <orderedlist>
+                    <listitem>
+                        <para>All metadata that have the view privilege in one of the groups
+                            visible to them.</para>
+                    </listitem>
+                </orderedlist>
+                <para>Public metadata can be viewed by any user (logged in or not).</para>
+                
+            </section>
+            <section>
+                <title>Editing</title>
+                <para>An administrator can edit any metadata.</para>
+                <para>A reviewer can edit a metadata if:</para>
+                
+                <orderedlist>
+                    <listitem>
+                        <para>The group owner is one of the groups assigned to the reviewer.
+                       </para>
+                    </listitem>
+                    <listitem>
+                        <para>He is the metadata owner.</para>
+                    </listitem>
+                </orderedlist>
+                <para>A user administrator or an editor can edit only metadata created by
+                    theirself.</para>
+                
+            </section>
+        </section>
+        <section>
+            <title>Privileges</title>
+            <para>The privileges administration page is accessible only by:</para>
+            
+            <orderedlist>
+                <listitem>
+                    <para>All administrators</para>
+                </listitem>
+                <listitem>
+                    <para>All reviewers that have access to the metadata’s group owner.</para>
+                </listitem>
+                <listitem>
+                    <para>The owner of the metadata</para>
+                </listitem>
+            </orderedlist>
+            <para>Regarding privileges for the all and intranet groups, only administrators and
+                reviewers can edit them.</para>
+            
+        </section>
+        <section>
+            <title>Ownership transfer</title>
+            <para>A typical need that arises when a user is dismissed is to transfer all their
+                metadata to another user into another group. To fill this need, the transfer
+                ownership functionality has been introduced. This is located in the
+                administration page (<xref linkend="admin_ownership_where"/>) and once selected, leads to the page shown
+                in <xref linkend="admin_ownership_options"/>.</para>
+            
+			 <figure id="admin_ownership_where">
+                <title>
+                    How to reach the transfer ownership page
+                </title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/admin/web-ownership-where.png" width="11cm" align="center" />
+                    </imageobject>
+                </mediaobject>
+            </figure>
+
+            <para>Initially, the page shows only a drop down for a Source editor. The drop down
+                is filled with all GeoNetwork’s users which are editors and own some metadata.
+                Selecting an editor means selecting all metadata that belong to that editor. An
+                empty drop down means that there are no editors with metadata associated and
+                hence no transfer is possible.</para>
+            <para>Note The drop down will be filled with all editors visible to you. If you are
+                not an administrator, you will view only a subset of all editors.</para>
+            
+             <figure id="admin_ownership_options">
+                <title>
+                    The transfer ownership page
+                </title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/admin/web-ownership-options.png" width="9cm" align="center" />
+                    </imageobject>
+                </mediaobject>
+            </figure>
+
+            <para>Once a source editor has been selected, a set of rows is displayed. Each row
+                refers to an editor’s group for which there are privileges. The meaning of each
+                column is the following:</para>
+            <para>Source group This is a group that has privileges in the metadata that belong
+                to the source editor. Put in another way, if one of the editor’s metadata has
+                privileges for one group, that group is listed here. Target group This is the
+                destination group of the transfering process. All privileges relative to the
+                source group are transferred to the target group. The target group drop down is
+                filled with all groups visible to the logged user (tipically an administrator or
+                a user administrator). By default, the source group is selected in the target
+                drop down. Privileges to groups All and Intranet are not transferrable. Target
+                editor Once a target group is selected, this drop down is filled with all
+                editors that belong to that target group. Operation Actually only the Transfer
+                operation is possible.</para>
+            <para>By selecting the Transfer operation, if the source group is different than the
+                target group, the system performs the ownership transfer, shows a brief summary
+                and removes the current row because now there are no privileges to transfer
+                anymore.</para>
+        </section>
+    </chapter>
+</book>

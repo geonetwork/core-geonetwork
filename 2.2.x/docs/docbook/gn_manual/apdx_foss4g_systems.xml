@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                      "http://www.docbook.org/xml/4.4/docbookx.dtd">
+<book>
+    <appendix id="foss4g_systems">
+        <title>Free and Open Source Software for Geospatial Information
+            Systems</title>
+        
+        <para>A range of related software packages can be used
+            in addition to GeoNetwork opensource to deploy a full Spatial Data
+            Infrastructure. These include Web Map Server software, GIS desktop
+            applications and Web Map Viewers.</para>
+        
+        <para>Below you will find some examples of open source software available
+        for each categories.</para>
+        
+        <section>
+            <title>Web Map Server software</title>
+            <itemizedlist>
+                <listitem><para>GeoServer (All)<footnote id="os_support"><para>All = Windows, Linux and Mac OS X</para></footnote> <ulink url="http://www.geoserver.org"/></para></listitem>
+                <listitem><para>MapServer (All) <ulink url="http://www.osgeo.org/mapserver"/></para></listitem>
+                <listitem><para>MapGuide Open Source (Windows &amp; Linux) <ulink url="http://www.osgeo.org/mapguide"/></para></listitem>
+            </itemizedlist>
+        </section>
+
+        <section>
+            <title>GIS Desktop software</title>
+            <itemizedlist>
+                <listitem><para>GRASS (All) <ulink url="http://www.osgeo.org/grass"/></para></listitem>
+                <listitem><para>gvSIG (All) <ulink url="http://www.gvsig.gva.es/"/></para></listitem>
+                <listitem><para>uDig (All) <ulink url="http://udig.refractions.net"/></para></listitem>
+                <listitem><para>Quantum GIS (All) <ulink url="http://www.osgeo.org/qgis"/></para></listitem>
+                <listitem><para>OSSIM (Windows &amp; OSX) <ulink url="http://www.osgeo.org/ossim"/></para></listitem>
+            </itemizedlist>
+        </section>        
+
+        <section>
+            <title>Web Map Viewers</title>
+            <itemizedlist>
+                <listitem><para>OpenLayers (All) <ulink url="http://www.osgeo.org/openlayers"/></para></listitem>
+                <listitem><para>MapBender (All) <ulink url="http://www.osgeo.org/mapbender"/></para></listitem>
+                <listitem><para>MapBuilder (All) <ulink url="http://www.osgeo.org/mapbuilder"/></para></listitem>
+            </itemizedlist>
+        </section>
+    </appendix>
+</book>

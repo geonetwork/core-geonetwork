@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<abstract>Abstract</abstract>
+	<activate>Activate</activate>
+	<address>Address</address>
+	<addService>Add more maps</addService>
+	<addLayer js="true">Add a new layer</addLayer>
+	<bigger>Bigger map</bigger>
+	<btnstyles>View and select styles</btnstyles>	
+	<cancel>Cancel</cancel>
+	<close>Close</close>
+	<choosemapfromlist>Please choose one or more map services from the list below</choosemapfromlist>
+	<choosemapserver>Please choose a map server from the list below or manually insert another map server</choosemapserver>
+	<mapServer>Map Server</mapServer>
+	<choosepredefinedmap>Please choose a predefined map overlay from the list below or</choosepredefinedmap>
+	<connect>Connect</connect>
+	<contactInfo>Contact information:</contactInfo>
+	<contactPerson>Primary contact person:</contactPerson>
+	<contexts>Contexts</contexts>
+	<delete>[del]</delete>
+	<down>Move layer down</down>
+	<email>email:</email>
+	<error>[error]</error>
+<!-- 
+	<errorText>Sorry, error connecting to the map server</errorText>
+ -->
+	<exportAsPDF js="true">Export this map as a PDF</exportAsPDF>
+	<exportAsImage js="true">Export this map as an image</exportAsImage>
+	<exportAsWMC js="true">Save the Web Map Context</exportAsWMC>
+	<extents>Change the selected time (temporal data)</extents>
+	<extentSelected>Selected time: </extentSelected>
+	<featuresfound>features found</featuresfound>
+	<findMapsGeoNetwork>Find more maps through GeoNetwork opensource</findMapsGeoNetwork>
+	<findMapsMapServers>Add more layers by connecting to other Web Map Servers</findMapsMapServers>
+	<fullExtent>Zoom to the full map</fullExtent>
+	<gotoGeoNetwork>GeoNetwork opensource</gotoGeoNetwork>
+	<gotoMapServers>Map Servers</gotoMapServers>
+	<homepage>Home page:</homepage>
+	<identify>Identify a feature on the map</identify>
+	<makeActive>Select to make this layer active (e.g. for Identify)</makeActive>
+	<info>info</info>
+	<keywords>Keywords:</keywords>
+	<layerinfo>Layer info</layerinfo>
+	<layers>Layers</layers>
+	<layersAdded js="true">Selected layers have been added</layersAdded>
+	<layersHide>Hide layer list</layersHide>
+	<layersShow>Show layer list</layersShow>
+	<layerShowHide>Show or hide layer</layerShowHide>
+	<legend>Show the legend</legend>
+	<listofmaps>List of maps</listofmaps>
+	<listofmapservers>List of map servers</listofmapservers>
+	<loadingMap>...Loading map...</loadingMap>
+	<loadingFrom js="true">Loading services from</loadingFrom>
+	<loadingFromWMS js="true">Loading services from given WMS server</loadingFromWMS>
+	<manually>Create you own map</manually>
+	<map>Map</map>
+	<mapsfound>maps found</mapsfound>
+	<markerlistbutton>Marker list</markerlistbutton>
+	<markerlisttitle js="true">Marker list</markerlisttitle>
+	<markerUpdating>Updating marker...</markerUpdating> 
+	<markerUpdated>The marker has been updated</markerUpdated> 
+	<markerDeleting>Deleting marker...</markerDeleting> 
+	<markerDeleted>The marker has been deleted</markerDeleted> 
+	<markerNone>There are no markers defined.</markerNone>	
+	<metadata>Metadata</metadata>
+	<newMap>Create a new map</newMap>
+	<noFeature>No features found</noFeature>
+	<noService>No maps found</noService>
+	<noStyle>Only the default style is available for this map</noStyle>
+	<oneService>One map found</oneService>
+	<ok>Ok</ok>
+	<oneFeature>One feature found</oneFeature>
+	<otherArcIMS>- Other ArcIMS server </otherArcIMS>
+	<otherWMS>- Other WMS server </otherWMS>
+	<pan>Pan</pan>
+	<position>Position:</position>
+	<print>Print the map</print>
+	<properties>Properties</properties>
+	<reCenter>Re-center the map</reCenter>
+	<refresh>Refresh</refresh>
+	<refreshNotification>Please click the "Refresh" button under the layer list to see this change.</refreshNotification>
+	<removeLayer>Remove layer</removeLayer>
+	<removeMarker>Remove marker</removeMarker>
+	<reset>Reset</reset>
+	<sendByEmail js="true">Send this map via e-mail</sendByEmail>
+	<setScale>--Set Scale--</setScale>
+	<showLayerMD js="true">Layer information</showLayerMD>
+	<smaller>Smaller map</smaller>
+	<specify>Specify if other:</specify>
+	<style>Select the desired style</style>
+	<start>InterMap opensource</start>
+	<telephone>Telephone:</telephone>
+	<title>InterMap opensource</title>
+	<titleShowStyles js="true">Available styles</titleShowStyles>
+	<transparency>Set transparency</transparency>
+	<unexpectedError>An unexpected error has been encountered while performing the operation:</unexpectedError>				
+	<up>Move layer up</up>
+	<update>Update</update>
+	<updateMarker>Update marker info</updateMarker>
+	<wait js="true">Please wait...</wait>
+	<wmctitle js="true">WMC Context menu</wmctitle>	
+	<wmctitlemail js="true">Send a WMC Context via e-mail</wmctitlemail>	
+	<wmctitleupload js="true">Upload and set a context</wmctitleupload>
+	<wmcbuttonmain js="true">View context menu</wmcbuttonmain>	
+	<wmcbuttonmail js="true">Send current context</wmcbuttonmail>	
+	<wmcbuttonupload js="true">Upload a context</wmcbuttonupload>	
+	<wmcbuttondownload js="true">Download current context</wmcbuttondownload>	
+
+	<wmcUploading>The context file is uploading...</wmcUploading> 
+	<wmcUploaded>The context has been uploaded </wmcUploaded>
+	<wmcUploadingError>An unexpected error has been encountered while uploading the context:</wmcUploadingError>				
+	<wmcMailBuilding>The mail is being built...</wmcMailBuilding>
+	<wmcMailSent>The mail has been successfully sent</wmcMailSent>
+	<wmcMailError>An unexpected error has been encountered while processing the mail:</wmcMailError>
+	<wmcUploadReplace>Replace current layers</wmcUploadReplace>
+	<wmcUploadAdd>Add to current layers</wmcUploadAdd>
+	<wmcMailSend>Send e-mail</wmcMailSend>
+	
+	<wmsConfigForm>Layer properties</wmsConfigForm >
+	<zoomIn>Zoom in</zoomIn>
+	<zoomOut>Zoom out</zoomOut>
+	<zoomLayer>Zoom to layer</zoomLayer>
+	<getFeatures>GET FEATURES</getFeatures>
+	
+	<styleSetting>Setting the style...</styleSetting> 
+	<styleSet>The style has been successfully set.</styleSet> 
+	<styleSetError>An unexpected error has been encountered:</styleSetError>				
+	<layerInfo>Layer Info:</layerInfo>
+	<associatedStyles>Associated styles:</associatedStyles>				
+	<setStyle>Set styles</setStyle>				
+	
+</strings>

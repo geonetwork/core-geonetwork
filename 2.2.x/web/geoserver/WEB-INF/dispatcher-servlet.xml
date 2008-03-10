@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+  <!-- controller for handling all incoming requests -->
+  <bean id="requestDispatcher"
+    class="org.geoserver.request.Dispatcher">
+    <constructor-arg ref="geoServer"/>
+  </bean>
+
+  <!-- publisher for files -->
+  <bean id="filePublisher" class="org.geoserver.request.FilePublisher"/>
+  
+  <!-- url mappings -->
+  <bean id="urlMapping"
+    class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	<property name="alwaysUseFullPath" value="true"/>
+    <property name="mappings">
+      <props>
+        <prop key="/wfs">requestDispatcher</prop>
+        <prop key="/wfs/*">requestDispatcher</prop>
+        <prop key="/wms">requestDispatcher</prop>
+        <prop key="/wms/*">requestDispatcher</prop>
+        <prop key="/wcs">requestDispatcher</prop>
+        <prop key="/wcs/*">requestDispatcher</prop>
+        <prop key="/ows">requestDispatcher</prop>
+        <prop key="/ows/*">requestDispatcher</prop>
+        <prop key="/styles/*">filePublisher</prop>
+        <prop key="/www/**">filePublisher</prop>
+      </props>
+    </property>
+  </bean>
+
+ 
+</beans>
+ 

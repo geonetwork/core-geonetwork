@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewContext version="1.1.0" id="14ee7f98-43a9-4d1b-876f-9f47105fbdfd">
+   <General>
+      <Title>Intermap context 14ee7f98-43a9-4d1b-876f-9f47105fbdfd</Title>
+      <BoundingBox SRS="EPSG:4326" minx="96.10347" miny="-45.33496" maxx="169.47308" maxy="-8.650154"/>
+      <Window width="368" height="276"/>
+   </General>
+
+   <LayerList>
+      <Layer queryable="true" hidden="false">
+         <Name>BUILTUPA_1M:Foundation</Name>
+         <Title>Built-Up Areas</Title>
+
+         <Server service="OGC:WMS" version="1.1.1" title="CubeSERV">
+            <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://demo.cubewerx.com/demo/cubeserv/cubeserv.cgi?"/>
+         </Server>
+
+         <Abstract>VRF Narrative Table for "Built-Up Areas":&#xA;&#xA;&lt;P&gt;This feature class, which contains built-up area area features (AL020), is&#xA;comprised of features that were classified as 'built-up areas' in Digital Chart&#xA;of the World, edition 1, July 1992.&#xA;</Abstract>
+
+         <Extension>
+            <Transparency>0.4</Transparency>
+         </Extension>
+      </Layer>
+
+      <Layer queryable="true" hidden="false">
+         <Name>ETOPO2:Foundation</Name>
+         <Title>Global 2 Minute Elevations</Title>
+
+         <Server service="OGC:WMS" version="1.1.1" title="CubeSERV">
+            <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://demo.cubewerx.com/demo/cubeserv/cubeserv.cgi?"/>
+         </Server>
+
+         <Abstract>ETOPO2 was generated from a digital data base of land and sea-floor elevations on a 2-minute latitude/longitude grid. The data sources used to create the ETOPO2 data set were: Smith/Sandwell, GLOBE, DBDBV, IBCAO, and DBDB5</Abstract>
+
+         <Extension>
+            <Transparency>0.4</Transparency>
+         </Extension>
+      </Layer>
+
+      <Layer queryable="true" hidden="false">
+         <Name>Bathymetry</Name>
+         <Title>Bathymetry</Title>
+
+         <Server service="OGC:WMS" version="1.1.1" title="Demis World Map">
+            <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www2.demis.nl/wms/wms.asp?wms=WorldMap&amp;"/>
+         </Server>
+      </Layer>
+   </LayerList>
+</ViewContext>
