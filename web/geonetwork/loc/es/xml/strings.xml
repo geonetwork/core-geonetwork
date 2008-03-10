@@ -487,6 +487,7 @@
 	<upload>Actualización </upload>
 	<user>Usuario </user>
 	<UserAdmin>Usuario administrador</UserAdmin>
+	<userDefined>- User defined -</userDefined>
 	<userManagement>Gestionar Usuarios</userManagement>
 	<userManDes>Añadir/modificar/borrar y mostrar usuarios</userManDes>
 	<username>Usuario</username>

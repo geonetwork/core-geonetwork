@@ -7,17 +7,16 @@
 	page content
 	-->
 	<xsl:template name="content">
-		<xsl:call-template name="formLayout">
-			<xsl:with-param name="title" select="/root/gui/strings/mdUpdateError"/>
-			<xsl:with-param name="content">
-				<font class="error"><xsl:value-of select="/root/gui/strings/messageMdUpdateError"/></font>
-				<p/>
-				<xsl:value-of select="/root/error/exception/message"/>
-			</xsl:with-param>
-			<xsl:with-param name="buttons">
-				<button class="content" onclick="load('{/root/gui/locService}/metadata.edit?id={/root/error/id}')"><xsl:value-of select="/root/gui/strings/backToEditor"/></button>
-			</xsl:with-param>
-		</xsl:call-template>
+		<div id="error">
+			<h2><xsl:value-of select="/root/gui/strings/mdUpdateError"/></h2>
+			<p id="error"><xsl:value-of select="/root/gui/strings/messageMdUpdateError"/></p>
+			<p id="stacktrace"><xsl:value-of select="/root/error/class"/> : <xsl:value-of select="/root/error/exception/message"/></p>
+			<p>
+				<button class="content" onclick="load('{/root/gui/locService}/metadata.edit?id={/root/error/id}')">
+					<xsl:value-of select="/root/gui/strings/backToEditor"/>
+				</button>
+			</p>
+		</div>
 	</xsl:template>
 	
 </xsl:stylesheet>

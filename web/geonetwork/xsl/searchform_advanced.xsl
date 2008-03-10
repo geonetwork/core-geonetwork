@@ -301,7 +301,6 @@
 								<div id="im_mm_aoibox_e" style="left:0px;top:0px;width:0px;height:0px;position:absolute;border-right: 1px dashed #f00;visibility: visible;overflow: hidden;z-index: 3000">.</div>
 								<div id="im_mm_aoibox_s" style="left:0px;top:0px;width:0px;height:0px;position:absolute;border-bottom: 1px dashed #f00;visibility: visible;overflow: hidden;z-index: 3000">.</div>
 								<div id="im_mm_aoibox_w" style="left:0px;top:0px;width: 0px;height:0px;position:absolute;border-left: 1px dashed #f00;visibility: visible;overflow: hidden;z-index: 3000">.</div>
-								<!--<div id="im_mm_aoibox" style="left:0px;top:0px;width:200px;height:100px;position:absolute;border: 1px dashed #f00;visibility: visible;overflow: hidden;"/>-->
 							</div>
 							<div id="im_mm_image_waitdiv" style="position: relative; z-index:999; left:59px; top:45px;">
 								<img id="im_mm_waitimage" style="position: absolute; z-index:1000;" src="/intermap/images/waiting.gif" />
@@ -357,6 +356,12 @@
 							<xsl:attribute name="selected"/>
 						</xsl:if>
 						<xsl:value-of select="/root/gui/strings/any"/>
+					</option>
+					<option value="userdefined">
+						<xsl:if test="/root/gui/searchDefaults/theme='_userdefined_'">
+							<xsl:attribute name="selected"/>
+						</xsl:if>
+						<xsl:value-of select="/root/gui/strings/userDefined"/>
 					</option>
 					
 					<xsl:for-each select="/root/gui/regions/record">

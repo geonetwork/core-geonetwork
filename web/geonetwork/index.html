@@ -1,14 +1,17 @@
-<HTML>
-	<HEAD>
-		<META http-equiv="refresh" content="0; URL=/geonetwork/srv/en/main.home">
-		<META http-equiv="Pragma" content="no-cache">
-		<META http-equiv="Cache-Control" content="no-cache,no-store">
-	
+<!-- This file will be substituted by the installer with the index.html template 
+     Located at gast\data\index.html -->
+<html>
+	<head>
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache,no-store">
+		<link rel="stylesheet" type="text/css" href="geonetwork.css">
 		<script language="Javascript1.5" type="text/javascript">
-			window.location="/geonetwork/srv/en/main.home"
+			var search = window.location.search;
+			window.location="/geonetwork/srv/en/main.home" + search;
 		</script>
-	</HEAD>
-	<BODY BGCOLOR="#FFFFFF">
-		<FONT size=-5><A HREF="/geonetwork/srv/en/main.home">GeoNetwork</A></FONT>
-	</BODY>
-</HTML>
+	</head>
+	<body>
+		<h2>JavaScript warning</h2>
+		<p>To use GeoNetwork you need to enable JavaScript in your browser</p>
+	</body>
+</html>

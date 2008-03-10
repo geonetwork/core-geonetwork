@@ -493,6 +493,7 @@
 	<upload>Déchargement </upload>
 	<user>Utilisateur</user>
 	<UserAdmin>Administrateur d'utilisateur</UserAdmin>
+	<userDefined>- User defined -</userDefined>
 	<userManagement>Gestion des utilisateurs</userManagement>
 	<userManDes>Ajouter/Modifier/Supprimer et visualiser les utilisateurs</userManDes>
 	<username>Nom d'utilisateur</username>

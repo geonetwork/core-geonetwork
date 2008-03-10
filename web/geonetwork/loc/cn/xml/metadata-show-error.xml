@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Error accessing the resource</heading>
+	<message>The resource requested could not be found or accessed. It may have been removed or you may not have the privileges to access it.</message>
+	<button>Back</button>
+</strings>

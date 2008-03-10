@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:geonet="http://www.fao.org/geonetwork" 
+	xmlns:xalan= "http://xml.apache.org/xalan"
 	xmlns:dc = "http://purl.org/dc/elements/1.1/" 
 	xmlns:gmd="http://www.isotc211.org/2005/gmd" 
 	xmlns:gco="http://www.isotc211.org/2005/gco">
@@ -14,6 +15,7 @@
 	
 	<xsl:variable name="host" select="/root/gui/env/server/host" />
 	<xsl:variable name="port" select="/root/gui/env/server/port" />
+	<xsl:variable name="baseURL" select="concat('http://',$host,':',$port,/root/gui/url)" />
 	<xsl:variable name="serverUrl" select="concat('http://',$host,':',$port,/root/gui/locService)" />
 	
 	<xsl:template match="/">
@@ -45,33 +47,18 @@
 					</td>-->
 					<td class="content" valign="top">
 						
-						<xsl:variable name="mdURL" select="normalize-space(concat($serverUrl, '/metadata.show?id=', geonet:info/id))"/>
-						<xsl:variable name="mdTitle" select="geonet:info/title" /> <!-- FIXME info is not available by default -->
+						<xsl:variable name="md">
+							<xsl:apply-templates mode="brief" select="."/>
+						</xsl:variable>
+						<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
+						<xsl:variable name="mdURL" select="normalize-space(concat($baseURL, '?uuid=', geonet:info/uuid))"/>
 						
-						<xsl:if test="not(contains($mdURL,'localhost')) and not(contains($mdURL,'127.0.0.1'))">
-							<p align="right">
-								<a href="http://del.icio.us/post?url={$mdURL}&amp;title={$mdTitle}">
-									<img src="{/root/gui/url}/images/delicious.gif" 
-										alt="Bookmark on Delicious" title="Bookmark on Delicious" 
-										style="border: 0px solid;padding:2px;"/>
-								</a>
-								<a href="http://digg.com/submit?url={$mdURL}&amp;title={$mdTitle}">
-									<img src="{/root/gui/url}/images/digg.gif" 
-										alt="Bookmark on Digg" title="Bookmark on Digg" 
-										style="border: 0px solid;padding:2px;"/>
-								</a>
-								<a href="http://www.facebook.com/sharer.php?u={$mdURL}">
-									<img src="{/root/gui/url}/images/facebook.gif" 
-										alt="Bookmark on Facebook" title="Bookmark on Facebook" 
-										style="border: 0px solid;padding:2px;"/>
-								</a>
-								<a href="http://www.stumbleupon.com/submit?url={$mdURL}&amp;title={$mdTitle}">
-									<img src="{/root/gui/url}/images/stumbleupon.gif" 
-										alt="Bookmark on StumbleUpon" title="Bookmark on StumbleUpon" 
-										style="border: 0px solid;padding:2px;"/>
-								</a> 
-							</p>
-						</xsl:if>
+						<xsl:call-template name="socialBookmarks">
+							<xsl:with-param name="baseURL" select="$baseURL" /> <!-- The base URL of the local GeoNetwork site -->
+							<xsl:with-param name="mdURL" select="$mdURL" /> <!-- The URL of the metadata using the UUID -->
+							<xsl:with-param name="title" select="$metadata/title" />
+							<xsl:with-param name="abstract" select="$metadata/abstract" />
+						</xsl:call-template>
 						
 						<table width="100%">
 						

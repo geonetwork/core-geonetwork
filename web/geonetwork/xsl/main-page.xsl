@@ -46,6 +46,7 @@
 		<link rel="stylesheet" type="text/css" href="/intermap/intermap-embedded.css?" />
 		
 		<xsl:variable name="wmc"><xsl:copy-of select="/root/request/wmc"/></xsl:variable>
+		<xsl:variable name="uuid"><xsl:copy-of select="/root/request/uuid"/></xsl:variable>
 		
 		<script type="text/javascript" language="JavaScript1.2">
 
@@ -57,6 +58,12 @@
 				} else {
 					initSimpleSearch("<xsl:value-of select="$wmc"/>");
 				}
+				<!-- If a UUID is passed, it will be opened within the AJAX page -->
+				var uuid="<xsl:value-of select="$uuid"/>";
+				if (uuid!='') {
+					gn_showSingleMetadataUUID(uuid);
+			}
+			
 			}
 			
 			var getGNServiceURL = function(service)
@@ -527,7 +534,7 @@
 	<xsl:template name="latestUpdates">
 		<h1 align="left">
 			<xsl:value-of select="/root/gui/strings/recentAdditions"/> &#160;&#160;&#160; 
-			<a href="{/root/gui/locService}/rss.latest?georss=gml" target="_blank">
+			<a href="{/root/gui/locService}/rss.latest?georss=simplepoint" target="_blank">
 				<img style="cursor:hand;cursor:pointer" src="{/root/gui/url}/images/georss.png"
 					alt="GeoRSS-GML" title="{/root/gui/strings/georss}" align="top"/>
 			</a>
@@ -537,7 +544,7 @@
 				<xsl:apply-templates mode="brief" select="."/>
 			</xsl:variable>
 			<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
-			<div class="arrow" onClick="gn_showSingleMetadata('{geonet:info/id}');" 
+			<div class="arrow" onClick="gn_showSingleMetadataUUID('{geonet:info/uuid}');" 
 				style="cursor:hand;cursor:pointer">
 				<xsl:value-of select="$metadata/title"/>
 				<br/>

@@ -1622,7 +1622,7 @@
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/viewInGE"/>
 					<xsl:with-param name="text">
-						<a href="{/root/gui/locService}/google.kml?id={//geonet:info/id}&amp;layers={$name}" title="{/root/strings/interactiveMap}">
+						<a href="{/root/gui/locService}/google.kml?uuid={//geonet:info/uuid}&amp;layers={$name}" title="{/root/strings/interactiveMap}">
 							<xsl:choose>
 								<xsl:when test="string($description)!=''">
 									<xsl:value-of select="$description"/>
@@ -1937,6 +1937,7 @@
 		<metadata>
 			<xsl:variable name="download_check"><xsl:text>&amp;fname=&amp;access</xsl:text></xsl:variable>
 			<xsl:variable name="id" select="geonet:info/id"/>
+			<xsl:variable name="uuid" select="geonet:info/uuid"/>
 			<xsl:apply-templates mode="briefster" select="gmd:identificationInfo/gmd:MD_DataIdentification|gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|gmd:identificationInfo/srv:SV_ServiceIdentification">
 				<xsl:with-param name="id" select="$id"/>
 			</xsl:apply-templates>
@@ -2005,7 +2006,7 @@
 					<xsl:element name="link">
 						<xsl:attribute name="title"><xsl:value-of select="$desc"/></xsl:attribute>
 						<xsl:attribute name="href">
-							<xsl:value-of select="concat('http://',/root/gui/env/server/host,':',/root/gui/env/server/port,/root/gui/locService,'/google.kml?id=',$id,'&amp;layers=',$name)"/>
+							<xsl:value-of select="concat('http://',/root/gui/env/server/host,':',/root/gui/env/server/port,/root/gui/locService,'/google.kml?uuid=',$uuid,'&amp;layers=',$name)"/>
 						</xsl:attribute>
 						<xsl:attribute name="name"><xsl:value-of select="$name"/></xsl:attribute>
 						<xsl:attribute name="type">application/vnd.google-earth.kml+xml</xsl:attribute>
@@ -2029,7 +2030,7 @@
 							<xsl:value-of select="concat('javascript:runIM_addService(&#34;'  ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;, 2)' )"/>
 						</link>
 						<link type="googleearth">
-							<xsl:value-of select="concat(/root/gui/locService,'/google.kml?id=',$id,'&amp;layers=',$name)"/>
+							<xsl:value-of select="concat(/root/gui/locService,'/google.kml?uuid=',$uuid,'&amp;layers=',$name)"/>
 						</link>
 					</xsl:when>
 					<xsl:when test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-capabilities') and string($linkage)!=''">

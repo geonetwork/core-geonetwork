@@ -13,12 +13,13 @@
 	<!-- Template that generates an item for every metadata record -->
 	<xsl:template match="*" mode="item">
 		<xsl:param name="siteURL" />
+		<xsl:variable name="baseURL" select="substring-before($siteURL,'/srv/')" />
 		<item>
 			<xsl:variable name="md">
 				<xsl:apply-templates mode="brief" select="."/>
 			</xsl:variable>
 			<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
-			<xsl:variable name="mdURL" select="normalize-space(concat($siteURL, '/metadata.show?id=', geonet:info/id))"/>
+			<xsl:variable name="mdURL" select="normalize-space(concat($baseURL, '?uuid=', geonet:info/uuid))"/>
 			<xsl:variable name="thumbnailLink" select="normalize-space($metadata/image[@type='thumbnail'])"/>
 			<xsl:variable name="bDynamic" select="geonet:info/dynamic" />
 			<xsl:variable name="bDownload" select="geonet:info/download" />
@@ -40,39 +41,23 @@
 			
 			<description>
 				<xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
-				<xsl:if test="string($thumbnailLink)!=''">
-					<p>
-						<a href="{$mdURL}"><img src="{$thumbnailLink}" align="left" alt="" border="0" width="100"/></a>
-					</p>
-				</xsl:if>
+				
 				<p>
+				<xsl:if test="string($thumbnailLink)!=''">
+						<a href="{$mdURL}"><img src="{$thumbnailLink}" align="left" alt="" border="0" width="100" style="padding:15px;"/></a>
+				</xsl:if>
 					<xsl:value-of select="$metadata/abstract"/>
 					<br />
-					<xsl:if test="not(contains($mdURL,'localhost')) and not(contains($mdURL,'127.0.0.1'))">
-						<a href="http://del.icio.us/post?url={$mdURL}&amp;title={$metadata/title}">
-							<img src="{/root/gui/url}/images/delicious.gif" 
-								alt="Bookmark on Delicious" title="Bookmark on Delicious" 
-								style="border: 0px solid;padding:2px;"/>
-						</a> 
-						<a href="http://digg.com/submit?url={$mdURL}&amp;title={$metadata/title}">
-							<img src="{/root/gui/url}/images/digg.gif" 
-								alt="Bookmark on Digg" title="Bookmark on Digg" 
-								style="border: 0px solid;padding:2px;"/>
-						</a> 
-						<a href="http://www.facebook.com/sharer.php?u={$mdURL}">
-							<img src="{/root/gui/url}/images/facebook.gif" 
-								alt="Bookmark on Facebook" title="Bookmark on Facebook" 
-								style="border: 0px solid;padding:2px;"/>
-						</a> 
-						<a href="http://www.stumbleupon.com/submit?url={$mdURL}&amp;title={$metadata/title}">
-							<img src="{/root/gui/url}/images/stumbleupon.gif" 
-								alt="Bookmark on StumbleUpon" title="Bookmark on StumbleUpon" 
-								style="border: 0px solid;padding:2px;"/>
-						</a> 
-					</xsl:if>
+					<xsl:call-template name="socialBookmarks">
+						<xsl:with-param name="baseURL" select="$baseURL" /> <!-- The base URL of the local GeoNetwork site -->
+						<xsl:with-param name="mdURL" select="$mdURL" /> <!-- The URL of the metadata using the UUID -->
+						<xsl:with-param name="title" select="$metadata/title" />
+						<xsl:with-param name="abstract" select="$metadata/abstract" />
+					</xsl:call-template>
+
 					<xsl:if test="$bDynamic">
 						<xsl:apply-templates select="$metadata/link[contains(@type,'vnd.google-earth.km')][1]" mode="GoogleEarthWMS" >
-							<xsl:with-param name="url" select="/root/gui/url" />
+							<xsl:with-param name="url" select="$baseURL" />
 							<xsl:with-param name="viewInGE" select="/root/gui/strings/viewInGE" />
 						</xsl:apply-templates>
 					</xsl:if>
@@ -81,6 +66,8 @@
 				<br clear="all"/>
 				<xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
 			</description>
+			<pubDate><xsl:value-of select="geonet:info/changeDate"/></pubDate>
+			<guid><xsl:value-of select="$mdURL"/></guid>
 			<xsl:if test="string($thumbnailLink)!=''">
 				<media:content url="{$thumbnailLink}" type="image/gif" width="100"/>
 			</xsl:if>
@@ -110,7 +97,7 @@
 					</georss:box>
 				</xsl:when>
 				<xsl:when test="string($rssFormat)='simplepoint'">
-					<xsl:comment>Bounding box in georss simplepoint format (http://georss.org)</xsl:comment>
+					<xsl:comment>Bounding box in georss simplepoint format (default) (http://georss.org)</xsl:comment>
 					<georss:point>
 						<xsl:value-of select="((northBL)+(southBL))*.5"/>
 						<xsl:text> </xsl:text>
@@ -147,28 +134,30 @@
 		<xsl:param name="bDynamic" />
 		<xsl:param name="bDownload" />
 		
-		<xsl:variable name="nameL" select="@name" />
+		<xsl:variable name="nameL" select="normalize-space(@name)" />
 		
 		<xsl:if test="string(@href)!=''">
 			<xsl:choose>
 				<xsl:when test="@type='application/vnd.ogc.wms_xml' and $bDynamic">
 					<xsl:choose>
 						<xsl:when test="number($west) and number($south) and number($east) 
-							and number($north) and string(normalize-space($nameL))!='' and not(contains(@href,'?'))">
-							<!-- The following link is a web map service with variable parameters encoded following 
-								so-called URI Templates (http://bitworking.org/projects/URI-Templates/) 
-								also used in OpenSearch -->
+							and number($north) and string($nameL)!='' and not(contains(@href,'?'))">
+							<!-- The following link is a web map service. 
+								There's a hint providing the possible layers available in the service -->
 							<xsl:variable name="xyRatio" select="string(number($north - $south) div number($east - $west))" />
-							<link href="{concat(@href,'?SERVICE=wms$amp;VERSION=1.1.1&amp;REQUEST=GetMap&amp;BBOX={geo:box='
-								,$west,',',$south,',',$east,',',$north
-								,'}&amp;LAYERS={ogc:layer=',$nameL
-								,'}&amp;SRS=EPSG:4326&amp;WIDTH=200&amp;HEIGHT='
+							<!-- This is a full GetMap request resulting in a PNG image of 200px wide-->
+							<link href="{@href}" type="{@type}" rel="alternate" title="{@title}" geonet:layers="{$nameL}" />
+							<link href="{concat(@href,'?SERVICE=wms$amp;VERSION=1.1.1&amp;REQUEST=GetMap&amp;BBOX=',
+								concat($west,',',$south,',',$east,',',$north),
+								'&amp;LAYERS=',$nameL,
+								'&amp;SRS=EPSG:4326&amp;WIDTH=200&amp;HEIGHT='
 								,string(round(200 * number($xyRatio)))
 								,'&amp;FORMAT=image/png'
 								,'&amp;TRANSPARENT=TRUE&amp;STYLES=default')}"
-								type="{@type}" rel="alternate" title="{@title}"/>
+								type="image/png" rel="alternate" title="{@title}"
+							/>
 						</xsl:when>
-						<xsl:when test="string(normalize-space($nameL))!='' and not(contains(@href,'?'))">
+						<xsl:when test="string($nameL)!='' and not(contains(@href,'?'))">
 							<!-- The following link is a GetCapabilities request to an OGC Web Map Server 
 								(http://opengeospatial.org) -->
 							<link href="{concat(@href,'?SERVICE=wms&amp;VERSION=1.1.1&amp;REQUEST=GetCapabilities')}"
@@ -195,10 +184,9 @@
 	<xsl:template match="*" mode="GoogleEarthWMS">
 		<xsl:param name="url" />
 		<xsl:param name="viewInGE" />
-			Open with: 
 			<a href="{@href}" title="{@title}">
 				<img src="{$url}/images/google_earth_link_s.png" alt="{$viewInGE}" title="{$viewInGE}" 
-				style="border: 0px solid;"/>
+					style="border: 0px solid;padding:2px;"/>
 			</a>
 	</xsl:template>
 	

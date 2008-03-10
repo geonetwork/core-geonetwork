@@ -460,6 +460,7 @@
 	<upload>Upload </upload>
 	<user>User</user>
 	<UserAdmin>User administrator</UserAdmin>
+	<userDefined>- User defined -</userDefined>
 	<Reviewer>Content reviewer</Reviewer>
 	<userManagement>User management</userManagement>
 	<userManDes>Add/modify/delete and show users</userManDes>

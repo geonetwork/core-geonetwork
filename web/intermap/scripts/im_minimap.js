@@ -153,15 +153,6 @@ function im_mm_resizeAoi(e)
 	pX = Math.min(pX, im_mm.width - 1);
 	pY = Math.min(pY, im_mm.height - 1);
 
-	// Setting this text here will slow down the system terribly.
-	// We don't want this to execute unless the bbox coords are displayed on screen
-//	im_mm_setTextLenght(
-//		Math.min(pY, im_mm_startY),  // top
-//		Math.max(pX, im_mm_startX),  // right
-//		Math.max(pY, im_mm_startY),  // bottom
-//		Math.min(pX, im_mm_startX) // left
-//	);
-            
 	// set the zoom box position and size
 	im_aoi.draw(Math.min(pX, im_mm_startX),  // left
 				Math.min(pY, im_mm_startY),  // top
@@ -199,6 +190,11 @@ function im_mm_stopAoi(e)
 		Math.min(pX, im_mm_startX) // left
 	);
             	
+	var func = im_mm_aoiUpdated;
+	if(typeof func == 'function')
+	{
+		func();
+	}
 	// AoI has not an area (see drawFakeBox), so no need to redefine observers.	
 }
 

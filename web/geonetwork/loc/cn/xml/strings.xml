@@ -468,6 +468,7 @@
 	<upload>上载</upload>
 	<user>用户</user>
 	<UserAdmin>用户管理员</UserAdmin>
+	<userDefined>- User defined -</userDefined>
 	<userManagement>用户管理</userManagement>
 	<userManDes>新增/修改/删除以及显示用户</userManDes>
 	<username>用户名</username>

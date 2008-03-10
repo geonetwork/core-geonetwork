@@ -14,6 +14,7 @@
 	<xsl:include href="rss-utils.xsl"/>
 	
 	<xsl:variable name="siteURL" select="/root/gui/siteURL"/>
+	<xsl:variable name="baseURL" select="substring-before($siteURL,'/srv/')" />
 	
 	<xsl:template match="/root">
 		
@@ -21,7 +22,7 @@
 			<channel>
 			
 				<title><xsl:value-of select="gui/strings/header_meta/meta[@name='DC.title']/@content"/></title>
-				<link><xsl:value-of select="$siteURL"/>/main.home</link>
+				<link><xsl:value-of select="$baseURL"/></link>
 				<description><xsl:value-of select="gui/strings/header_meta/meta[@name='DC.description']/@content"/></description>
 				<language><xsl:value-of select="gui/language"/></language>
 				<copyright><xsl:value-of select="gui/strings/copyright2"/></copyright>

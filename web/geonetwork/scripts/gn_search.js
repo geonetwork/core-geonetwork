@@ -44,7 +44,10 @@ function runSimpleSearch()
 		pars += "&"+im_mm_getURLselectedbbox();
 		pars += fetchParam('relation');
 		pars += "&attrset=geo";
+		if(region!="userdefined")
+		{
 		pars += fetchParam('region');
+	}
 	}
 	pars += fetchParam('sortBy');
 	pars += fetchParam('hitsPerPage');
@@ -201,7 +204,10 @@ function runAdvancedSearch()
 		pars += "&attrset=geo";
 		pars += "&"+im_mm_getURLselectedbbox();
 		pars += fetchParam('relation');
+		if(region!="userdefined")
+		{
 		pars += fetchParam('region');
+	}
 	}
 
 	if($('radfrom1').checked)
@@ -257,10 +263,10 @@ function resetAdvancedSearch()
 	setParam('group','');		
 	setParam('category','');		
 	setParam('siteId','');		
-	$('digital') .checked = true;		
+	$('digital') .checked = false;		
 	$('paper')   .checked = false;		
 	$('dynamic') .checked = false;
-	$('download').checked = true;		
+	$('download').checked = false;		
 	setParam('protocol',    '');
 	setParam('template',    'n');
  	setParam('sortBy',      'relevance');
@@ -398,8 +404,9 @@ function doRegionSearch()
         
         im_mm_redrawAoI();
         im_mm_zoomToAoI();        
-    }
-    else
+    }  else if (region=="userdefined") {
+		// Do nothing. AoI is set by the user
+    } else 
     {
         getRegion(region);
     }
@@ -463,8 +470,13 @@ function updateAoIFromForm() {
 }
 
 function AoIrefresh() {
-  $('region').value="";
+  $('region').value="userdefined";
   $('updateBB').style.visibility="visible";
+}
+
+// Update the dropdown list
+function im_mm_aoiUpdated(bUpdate) {
+	$('region').value="userdefined";
 }
 
 /********************************************************************
@@ -521,9 +533,20 @@ function gn_search_complete(req) {
 *  Show metadata content
 *
 ********************************************************************/
+function gn_showSingleMetadataUUID(uuid)
+{
+   var pars = 'uuid=' + uuid + '&currTab=simple';
+   gn_showSingleMet(pars);
+}
+
 function gn_showSingleMetadata(id)
 {
    var pars = 'id=' + id + '&currTab=simple';
+   gn_showSingleMet(pars);  
+}
+
+function gn_showSingleMet(pars)
+{
 
    var myAjax = new Ajax.Request(
         getGNServiceURL('metadata.show.embedded'), 

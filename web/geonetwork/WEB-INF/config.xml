@@ -590,7 +590,7 @@
 		<service name="resources.get">
 			<class name=".services.resources.Download" />
 
-			<error id="file-not-found" sheet="error.xsl">
+			<error id="file-not-found" sheet="error-embedded.xsl">
 				<xml name="error" file="xml/file-not-found-error.xml" />
 			</error>
 
@@ -742,8 +742,8 @@
 				<call name="services" class="jeeves.guiservices.services.Get" />
 				<xml name="sources" file="xml/sources.xml" localized="false" />
 			</output>
-			<error id="access" sheet="error-form.xsl">
-				<xml name="privError" file="xml/privileges-error.xml" />
+			<error id="operation-not-allowed" sheet="error.xsl">
+				<xml name="error" file="xml/privileges-error.xml" />
 			</error>
 		</service>
 
@@ -775,16 +775,10 @@
 
 		<service name="xml.relation.insert">
 			<class name=".services.relations.Insert" />
-			<error id="insert" sheet="error.xsl">
-				<xml  name="error"   file="xml/error.xml" />
-			</error>
 		</service>
 		
 		<service name="xml.relation.delete">
 			<class name=".services.relations.Remove" />
-			<error id="delete" sheet="error.xsl">
-				<xml  name="error"   file="xml/error.xml" />
-			</error>
 		</service>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
