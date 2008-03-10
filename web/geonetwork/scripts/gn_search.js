@@ -44,7 +44,10 @@ function runSimpleSearch()
 		pars += "&"+im_mm_getURLselectedbbox();
 		pars += fetchParam('relation');
 		pars += "&attrset=geo";
-		pars += fetchParam('region');
+		if(region!="userdefined")
+		{
+			pars += fetchParam('region');
+		}
 	}
 	pars += fetchParam('sortBy');
 	pars += fetchParam('hitsPerPage');
