@@ -253,9 +253,8 @@ function resetAdvancedSearch()
 	$('southBL').value='-90';
 	$('eastBL').value='180';
 	$('westBL').value='-180';
-            im_mm_redrawAoI();
-            im_mm_zoomToAoI();	
- 	
+  im_mm_redrawAoI();
+  im_mm_zoomToAoI();	
 	setParam('dateFrom','');
 	setParam('dateTo','');
 	$('radfrom0').checked=true;
@@ -263,10 +262,10 @@ function resetAdvancedSearch()
 	setParam('group','');		
 	setParam('category','');		
 	setParam('siteId','');		
-	$('digital') .checked = true;		
+	$('digital') .checked = false;		
 	$('paper')   .checked = false;		
 	$('dynamic') .checked = false;
-	$('download').checked = true;		
+	$('download').checked = false;		
 	setParam('protocol',    '');
 	setParam('template',    'n');
  	setParam('sortBy',      'relevance');
