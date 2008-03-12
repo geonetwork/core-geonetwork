@@ -743,8 +743,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributionInfo">
-			<label>Distribution</label>
-			<description>Informations sur la distribution de la ressource</description>
+		<label>Distribution</label>
+		<description>Informations sur la distribution de la ressource</description>
 		</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributor">
@@ -1650,7 +1650,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:presentationForm">
-		<label>Forme de la présentation</label>
+		<label>Type de présentation</label>
 		<description>Mode dans lequel le document est représenté</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1997,8 +1997,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_TopicCategoryCode">
-		<label>Code de la catégorie du sujet</label>
-		<description/>
+		<label>Catégorie du sujet</label>
+		<description>Code de la catégorie du sujet</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_TopologyLevelCode">
