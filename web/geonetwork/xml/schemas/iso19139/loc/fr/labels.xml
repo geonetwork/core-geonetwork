@@ -650,9 +650,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:denominator">
-		<label> Denominator of flattening ratio </label>
-		<description>ratio of the difference between the equatorial and polar radii of the ellipsoid
-			to the equatorial radius when the numerator is set to 1</description>
+		<label> Dénominateur</label>
+		<description/>
 		<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1149,13 +1148,13 @@
 	<element name="gmd:geometricObjectType">
 		<label>type d’objets géométriques</label>
 		<description>nom des types d’objets spatiaux utilisés pour localiser les données : lignes,
-			polygones,…</description>
+			polygones,</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_GeometricObjectTypeCode">
 		<label>type d’objets géométriques</label>
 		<description>nom des types d’objets spatiaux utilisés pour localiser les données : lignes,
-			polygones,…</description>
+			polygones,</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Georectified">
@@ -1918,7 +1917,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:description">
 		<label>description</label>
-		<description>description détaillée de l’état des données sources</description>
+		<description>Description de la resource en ligne</description>
 		<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1953,7 +1952,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:status">
 		<label>État</label>
-		<description>État (statut) des données (mises à jour, obsolète…), (B.5.23)</description>
+		<description>État (statut) des données (mises à jour, obsolète), (B.5.23)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:processStep">
@@ -2006,9 +2005,9 @@
 		<description/>
 	</element>
 	<!-- ==================================================== -->
-	<element name="topLvl">
-		<label>niveau topologique (liste de codes)</label>
-		<description>Information qui identifie le degré de complexité des relations spatiales :
+	<element name="gmd:topologyLevel">
+			<label>Niveau de topologie</label>
+			<description>Information qui identifie le degré de complexité des relations spatiales :
 			topologie, planaire, (B.5.28)</description>
 	</element>
 	<!-- ==================================================== -->
