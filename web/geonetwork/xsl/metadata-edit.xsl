@@ -86,7 +86,7 @@
 				document.mainForm.ref   .value = ref;
 				document.mainForm.action = action;
 				document.mainForm.enctype="multipart/form-data";
-				document.mainForm.encoding="multipart/form-data"
+				document.mainForm.encoding="multipart/form-data";
 				goSubmit('mainForm');
 			}
 			
