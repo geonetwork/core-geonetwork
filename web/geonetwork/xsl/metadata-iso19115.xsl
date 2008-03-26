@@ -57,6 +57,7 @@
 	<xsl:template mode="iso19115" match="Metadata">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
+		<xsl:param name="embedded" select="false()"/>
 		
 		<xsl:choose>
 		
@@ -124,6 +125,14 @@
 				</xsl:apply-templates>
 			</xsl:when>
 
+			<!-- embedded distribution tab -->
+			<xsl:when test="$currTab='distribution2'">
+				<xsl:apply-templates mode="elementEP" select="distInfo/distTranOps">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
+				</xsl:apply-templates>
+			</xsl:when>
+			
 			<!-- dataQuality tab -->
 			<xsl:when test="$currTab='dataQuality'">
 				<xsl:apply-templates mode="elementEP" select="dqInfo|geonet:child[string(@name)='dqInfo']">
@@ -154,6 +163,7 @@
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
 					<xsl:with-param name="flat"   select="$currTab='simple'"/>
+					<xsl:with-param name="embedded" select="$embedded"/>
 				</xsl:call-template>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -187,11 +197,13 @@
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		<xsl:param name="flat"/>
+		<xsl:param name="embedded" />
 
 		<xsl:apply-templates mode="elementEP" select="dataIdInfo|geonet:child[string(@name)='dataIdInfo']">
 			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="edit"   select="$edit"/>
 			<xsl:with-param name="flat"   select="$flat"/>
+			<xsl:with-param name="embedded" select="$embedded"/>
 		</xsl:apply-templates>
 		
 		<xsl:apply-templates mode="elementEP" select="distInfo|geonet:child[string(@name)='distInfo']">
@@ -585,6 +597,7 @@
 	<xsl:template mode="iso19115" match="dataIdInfo">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
+		<xsl:param name="embedded" select="false()"/>
 
 		<xsl:variable name="content">
 		
@@ -595,9 +608,11 @@
 						<xsl:apply-templates mode="brief" select=".."/>
 					</xsl:variable>
 					<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
-					<xsl:call-template name="thumbnail">
-						<xsl:with-param name="metadata" select="$metadata"/>
-					</xsl:call-template>
+					<xsl:if test="$embedded = false()">
+						<xsl:call-template name="thumbnail">
+							<xsl:with-param name="metadata" select="$metadata"/>
+						</xsl:call-template>
+					</xsl:if>
 				</td>
 			</tr>
 			

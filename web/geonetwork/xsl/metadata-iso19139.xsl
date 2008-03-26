@@ -874,6 +874,7 @@
 	<xsl:template mode="iso19139" match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
+		<xsl:param name="embedded"/>
 		
 		<xsl:choose>
 		
@@ -960,6 +961,14 @@
 				</xsl:apply-templates>
 			</xsl:when>
 
+			<!-- embedded distribution tab -->
+			<xsl:when test="$currTab='distribution2'">
+				<xsl:apply-templates mode="elementEP" select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
+				</xsl:apply-templates>
+			</xsl:when>
+			
 			<!-- dataQuality tab -->
 			<xsl:when test="$currTab='dataQuality'">
 				<xsl:apply-templates mode="elementEP" select="gmd:dataQualityInfo|geonet:child[string(@name)='dataQualityInfo']">
@@ -985,21 +994,21 @@
 			</xsl:when>
 
 			<!-- contentInfo tab -->
-      <xsl:when test="$currTab='contentInfo'">
-        <xsl:apply-templates mode="elementEP" select="gmd:contentInfo|geonet:child[string(@name)='contentInfo']">
-          <xsl:with-param name="schema" select="$schema"/>
-          <xsl:with-param name="edit"   select="$edit"/>
-        </xsl:apply-templates>
-      </xsl:when>
-
-      <!-- extensionInfo tab -->
-      <xsl:when test="$currTab='extensionInfo'">
-        <xsl:apply-templates mode="elementEP" select="gmd:metadataExtensionInfo|geonet:child[string(@name)='metadataExtensionInfo']">
-          <xsl:with-param name="schema" select="$schema"/>
-          <xsl:with-param name="edit"   select="$edit"/>
-        </xsl:apply-templates>
-      </xsl:when>
-
+			<xsl:when test="$currTab='contentInfo'">
+			<xsl:apply-templates mode="elementEP" select="gmd:contentInfo|geonet:child[string(@name)='contentInfo']">
+				<xsl:with-param name="schema" select="$schema"/>
+				<xsl:with-param name="edit"   select="$edit"/>
+			</xsl:apply-templates>
+			</xsl:when>
+			
+			<!-- extensionInfo tab -->
+			<xsl:when test="$currTab='extensionInfo'">
+			<xsl:apply-templates mode="elementEP" select="gmd:metadataExtensionInfo|geonet:child[string(@name)='metadataExtensionInfo']">
+				<xsl:with-param name="schema" select="$schema"/>
+				<xsl:with-param name="edit"   select="$edit"/>
+			</xsl:apply-templates>
+			</xsl:when>
+			
 			<!-- default -->
 			<xsl:otherwise>
 			
@@ -1010,9 +1019,11 @@
 							<xsl:apply-templates mode="brief" select="."/>
 						</xsl:variable>
 						<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
-						<xsl:call-template name="thumbnail">
-							<xsl:with-param name="metadata" select="$metadata"/>
-						</xsl:call-template>
+						<xsl:if test="$embedded = false()">
+							<xsl:call-template name="thumbnail">
+								<xsl:with-param name="metadata" select="$metadata"/>
+							</xsl:call-template>
+						</xsl:if>
 					</td>
 				</tr>
 				

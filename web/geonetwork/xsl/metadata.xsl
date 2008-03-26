@@ -15,6 +15,7 @@
 			<xsl:apply-templates mode="schema" select="."/>
 		</xsl:param>
 		<xsl:param name="edit" select="false()"/>
+		<xsl:param name="embedded" />
 		
 		<xsl:choose>
 		
@@ -23,6 +24,7 @@
 				<xsl:apply-templates mode="iso19115" select="." >
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
+				<xsl:with-param name="embedded" select="$embedded" />
 				</xsl:apply-templates>
 			</xsl:when>
 			
@@ -31,6 +33,7 @@
 				<xsl:apply-templates mode="iso19139" select="." >
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
+				<xsl:with-param name="embedded" select="$embedded" />
 				</xsl:apply-templates>
 			</xsl:when>
 			
@@ -39,6 +42,7 @@
 				<xsl:apply-templates mode="fgdc-std" select="." >
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
+				<xsl:with-param name="embedded" select="$embedded" />
 				</xsl:apply-templates>
 			</xsl:when>
 			
@@ -47,6 +51,7 @@
 				<xsl:apply-templates mode="dublin-core" select="." >
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
+				<xsl:with-param name="embedded" select="$embedded" />
 				</xsl:apply-templates>
 			</xsl:when>
 			
@@ -55,6 +60,7 @@
 				<xsl:apply-templates mode="element" select=".">
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
+				<xsl:with-param name="embedded" select="$embedded" />
 				</xsl:apply-templates>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -67,6 +73,7 @@
 	<xsl:template mode="elementEP" match="geonet:child">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit" select="false()"/>
+		<xsl:param name="embedded" />
 		
 		<!-- draw new children if
 		- it is not simple mode and
@@ -142,7 +149,7 @@
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"   select="false()"/>
 		<xsl:param name="flat"   select="false()"/>
-		
+		<xsl:param name="embedded" />		
 		<xsl:choose>
 			
 			<!-- has children or attributes, existing or potential -->
@@ -654,54 +661,37 @@
 		
 		<tr>
 			<td class="padded-content" width="100%" colspan="2">
-				<table width="100%">
-					<tr>
-						<td class="content" valign="bottom" colspan="3">
-							<table width="100%"><tr>
-								<td class="green-content" width="20%">
-									<xsl:text>::</xsl:text>
-									<a name="{$anchor}"/>
-									<xsl:choose>
-										<xsl:when test="$helpLink!=''">
-											<span id="tip.{$helpLink}" class="green-content" style="cursor:help;"><xsl:value-of select="$title"/>
-												<xsl:call-template name="asterisk">
-													<xsl:with-param name="link" select="$helpLink"/>
-													<xsl:with-param name="edit" select="$edit"/>													
-												</xsl:call-template>
-											</span>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:call-template name="showTitleWithTag">
-												<xsl:with-param name="title" select="$title"/>
-												<xsl:with-param name="class" select="'green-content'"/>
-											</xsl:call-template>
-										</xsl:otherwise>
-									</xsl:choose>
-									<xsl:call-template name="getButtons">
-										<xsl:with-param name="addLink" select="$addLink"/>
-										<xsl:with-param name="removeLink" select="$removeLink"/>
-										<xsl:with-param name="upLink" select="$upLink"/>
-										<xsl:with-param name="downLink" select="$downLink"/>
-										<xsl:with-param name="schematronLink" select="$schematronLink"/>
+				<fieldset class="metadata-block">
+					<legend class="block-legend">
+						<a name="{$anchor}"/>
+						<xsl:choose>
+							<xsl:when test="$helpLink!=''">
+								<span id="tip.{$helpLink}" class="help-content" style="cursor:help;"><xsl:value-of select="$title"/>
+									<xsl:call-template name="asterisk">
+										<xsl:with-param name="link" select="$helpLink"/>
+										<xsl:with-param name="edit" select="$edit"/>													
 									</xsl:call-template>
-								</td>
-								<td class="content" width="100%" valign="bottom">
-									<table width="100%"><tr><td class="dots"/></tr></table>
-								</td>
-							</tr></table>
-						</td>
-					</tr>
-					<tr>
-						<td class="dots">&#xA0;</td>
-						<td class="padded-content" align="center">
-							<table width="100%">
-								<xsl:copy-of select="$content"/>
-							</table>
-						</td>
-						<td class="dots">&#xA0;</td>
-					</tr>
-					<tr><td class="dots" colspan="3"/></tr>
-				</table>
+								</span>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:call-template name="showTitleWithTag">
+									<xsl:with-param name="title" select="$title"/>
+									<xsl:with-param name="class" select="'no-help'"/>
+								</xsl:call-template>
+							</xsl:otherwise>
+						</xsl:choose>
+						<xsl:call-template name="getButtons">
+							<xsl:with-param name="addLink" select="$addLink"/>
+							<xsl:with-param name="removeLink" select="$removeLink"/>
+							<xsl:with-param name="upLink" select="$upLink"/>
+							<xsl:with-param name="downLink" select="$downLink"/>
+							<xsl:with-param name="schematronLink" select="$schematronLink"/>
+						</xsl:call-template>
+					</legend>
+					<table width="100%">
+						<xsl:copy-of select="$content"/>
+					</table>
+				</fieldset>
 			</td>
 		</tr>
 	</xsl:template>

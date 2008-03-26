@@ -114,7 +114,7 @@ public class Show implements Service
 		if (elMd == null)
 			throw new MetadataNotFoundEx(id);
 
-		//--- increase metadata popularity
+		//--- increase metadata popularity on every access
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
