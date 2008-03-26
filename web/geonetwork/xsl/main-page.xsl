@@ -289,9 +289,9 @@
 										<tr>
 											<td>
 												<xsl:comment>MAINPAGE 1</xsl:comment>
-												<xsl:copy-of select="/root/gui/strings/mainpage1"/>
+												<xsl:copy-of select="/root/gui/strings/mainpage1/node()"/>
 												<xsl:comment>MAINPAGE 2</xsl:comment>
-												<xsl:copy-of select="/root/gui/strings/mainpage2"/> <a href="mailto:{/root/gui/env/feedback/email}">
+												<xsl:copy-of select="/root/gui/strings/mainpage2/node()"/> <a href="mailto:{/root/gui/env/feedback/email}">
 													<xsl:value-of select="/root/gui/env/feedback/email"/>
 												</a>
 											</td>
