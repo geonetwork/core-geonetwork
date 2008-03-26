@@ -2636,7 +2636,7 @@
 	<!-- === Other labels //FIXME --> 
 	<!-- ==================================================== -->
 	<element name="years">
-		<label>Années</label>
+		<label>Years</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
@@ -2646,30 +2646,28 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="InDirectReferenceSystem">
-		<label>Système de projection indirect (pour les ressources non géographiques)</label>
-		<description>Dérivé de ReferenceSystem / précise qu'il s'agit d'une référence
-			directe</description>
+		<label>Indirect projection system (for non geographical resources)</label>
+		<description>ReferenceSystem derived / specify that it is an indirect reference</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DirectReferenceSystem">
-		<label>Système de projection direct (pour les ressources géographiques)</label>
-		<description>Dérivé de ReferenceSystem / précise qu'il s'agit d'une référence
-			indirecte</description>
+		<label>Direct projection system (for geographical resources)</label>
+		<description>ReferenceSystem derived / specify that it is a direct reference</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="code">
-		<label>Code du système</label>
-		<description>Code. Par exemple, le code epsg.</description>
+		<label>System code</label>
+		<description>Code. i.e. EPSG code.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="label">
-		<label>Libellé</label>
-		<description>Libellé</description>
+		<label>Content</label>
+		<description>Content</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="codeSpace">
-		<label>Autorité compétente</label>
-		<description>Autorité en charge de la codification. Par exemple, epsg</description>
+		<label>Reference Authority</label>
+		<description>Authority responsible for codification. i.e. EPSG</description>
 	</element>
 	
 </labels>
