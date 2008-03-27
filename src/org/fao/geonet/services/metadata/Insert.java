@@ -110,16 +110,13 @@ public class Insert implements Service
 		//-----------------------------------------------------------------------
 		//--- insert metadata into the system
 
+		if (category.equals("_none_")) category = null;
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		String id = dataMan.insertMetadata(dbms, schema, group, xml,
+		String id = dataMan.insertMetadata(dbms, schema, category, group, xml,
 													  context.getSerialFactory(), gc.getSiteId(),
 													  uuid, isTemplate, title,
 													  context.getUserSession().getUserIdAsInt());
-
-        //--- Insert category if requested
-        if (!"_none_".equals(category))
-            dataMan.setCategory(dbms, id, category);
 
 		Element response = new Element(Jeeves.Elem.RESPONSE);
 		response.addContent(new Element(Params.ID).setText(id));

@@ -87,7 +87,7 @@ public class Worker implements Runnable
 			oldRes = source.config.createResource();
 			newRes = Lib.config.createResource();
 
-			executeJob((Dbms) oldRes.open(), (Dbms) newRes.open());
+			executeJob(oldRes, newRes);
 		}
 		catch(Throwable t)
 		{
@@ -126,12 +126,20 @@ public class Worker implements Runnable
 
 	//---------------------------------------------------------------------------
 
-	private void executeJob(Dbms oldDbms, Dbms newDbms) throws Exception
+	private void executeJob(Resource oldRes, Resource newRes) throws Exception
 	{
-		dlg.reset(9);
-		dlg.advance("Removing data in new installation");
+		Dbms newDbms = (Dbms) newRes.open();
+		Dbms oldDbms = (Dbms) oldRes.open();
 
-		removeAll(newDbms);
+		dlg.reset(9);
+		dlg.advance("Setting up new installation");
+
+		String tables[] = { "OperationAllowed", "UserGroups", "MetadataCateg", "Users", "Metadata", "GroupsDes", "Groups", "Categories", "CategoriesDes" };
+		HashSet notTables = new HashSet();
+		for (int i = 0;i < tables.length;i++)
+			notTables.add(tables[i]);
+
+		Lib.database.setupNoFill(newRes,notTables,callBack);
 
 		Set<String> langs = getLanguages(newDbms);
 
@@ -160,31 +168,6 @@ public class Worker implements Runnable
 		restoreLocalizedRecords(newDbms);
 
 		Lib.metadata.clearIndexes();
-	}
-
-	//---------------------------------------------------------------------------
-
-	private void removeAll(Dbms newDbms) throws SQLException
-	{
-		//--- we commit at each step because an old migration could have failed and
-		//--- we could have plenty of records
-
-		newDbms.execute("DELETE FROM OperationAllowed");
-		newDbms.commit();
-		newDbms.execute("DELETE FROM UserGroups");
-		newDbms.commit();
-		newDbms.execute("DELETE FROM MetadataCateg");
-		newDbms.commit();
-		newDbms.execute("DELETE FROM Users");
-		newDbms.commit();
-		newDbms.execute("DELETE FROM Metadata");
-		newDbms.commit();
-		newDbms.execute("DELETE FROM GroupsDes");
-		newDbms.execute("DELETE FROM Groups");
-		newDbms.commit();
-		newDbms.execute("DELETE FROM CategoriesDes");
-		newDbms.execute("DELETE FROM Categories");
-		newDbms.commit();
 	}
 
 	//---------------------------------------------------------------------------
@@ -330,7 +313,7 @@ public class Worker implements Runnable
 			if (usrGrps.size() == 0)
 				throw new Exception("No editor for metadata --> id:"+id);
 
-			String owner = ((Element) privil.get(0)).getChildText("id");
+			String owner = ((Element) usrGrps.get(0)).getChildText("id");
 
 			//--- no, ok we can store it
 
@@ -547,6 +530,26 @@ public class Worker implements Runnable
 	private Set<String> mdIds = new HashSet<String>();
 
 	private ProgressDialog dlg;
+
+	//---------------------------------------------------------------------------
+	
+	private DatabaseLib.CallBack callBack = new DatabaseLib.CallBack () 
+	{
+		public void schemaObjects(int count) {} 
+		public void removed(String object, String type) {
+			System.out.println("Removing : "+ object);
+		}
+		public void cyclicRefs(List<String> objects) {
+			System.out.println("Cyclic reference found: "+objects);
+		}
+		public void creating(String object, String type) {
+			System.out.println("Creating : "+ object);
+		}
+		public void skipping(String table) {
+			System.out.println("Skipping : "+ table);
+		}
+		public void filling (String table, String file) {}
+	};
 
 	//---------------------------------------------------------------------------
 

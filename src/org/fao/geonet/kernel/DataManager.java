@@ -581,9 +581,11 @@ public class DataManager
 	public void setHarvested(Dbms dbms, int id, String harvestUuid) throws Exception
 	{
 		String value = (harvestUuid != null) ? "y" : "n";
-		String query = "UPDATE Metadata SET isHarvested=?, harvestUuid=? WHERE id=?";
-
-		dbms.execute(query, value, harvestUuid, id);
+		if (harvestUuid == null) {
+			dbms.execute("UPDATE Metadata SET isHarvested=? WHERE id=?", value,id );
+		} else {
+			dbms.execute("UPDATE Metadata SET isHarvested=?, harvestUuid=? WHERE id=?",value, harvestUuid, id);
+		}
 		indexMetadata(dbms, Integer.toString(id));
 	}
 
@@ -795,16 +797,19 @@ public class DataManager
 	  * operations are set.
 	  */
 
-	public String insertMetadata(Dbms dbms, String schema, String groupId, Element xml,
-										  SerialFactory sf, String source, String uuid, int owner) throws Exception
+	public String insertMetadata(Dbms dbms, String schema, String category, 
+											String groupId, Element xml, SerialFactory sf, 
+											String source, String uuid, int owner) throws Exception
 	{
-		return insertMetadata(dbms, schema, groupId, xml, sf, source, uuid, "n", null, owner);
+		return insertMetadata(dbms, schema, category, groupId, xml, sf, source, 
+													uuid, "n", null, owner);
 	}
 
 	//--------------------------------------------------------------------------
 
-	public String insertMetadata(Dbms dbms, String schema, String groupOwner, Element xml,
-										  SerialFactory sf, String source, String uuid, String isTemplate,
+	public String insertMetadata(Dbms dbms, String schema, String category, 
+											String groupOwner, Element xml, SerialFactory sf, 
+											String source, String uuid, String isTemplate,
 										  String title, int owner) throws Exception
 	{
 		//--- generate a new metadata id
@@ -821,6 +826,8 @@ public class DataManager
 		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid, isTemplate, title, owner, groupOwner);
 
 		copyDefaultPrivForGroup(dbms, id, groupOwner);
+		if (category != null)
+			setCategory(dbms, id, category);
 		indexMetadata(dbms, id);
 
 		return id;

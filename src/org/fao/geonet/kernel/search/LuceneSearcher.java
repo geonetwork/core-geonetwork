@@ -199,27 +199,31 @@ public class LuceneSearcher extends MetaSearcher
 		AccessManager am = gc.getAccessManager();
 
 		Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
-		Set<String> hs = gc.getAccessManager().getUserGroups(dbms, srvContext.getUserSession(), srvContext.getIpAddress());
 
-		for (String group : hs)
-			request.addContent(new Element("group").addContent(group));
+		// if 'restrict to' is set then don't add any other user/group info
+		if (request.getChild("group") == null) {
+			Set<String> hs = gc.getAccessManager().getUserGroups(dbms, srvContext.getUserSession(), srvContext.getIpAddress());
 
-		String owner = srvContext.getUserSession().getUserId();
+			for (String group : hs)
+				request.addContent(new Element("group").addContent(group));
 
-		if (owner != null)
-			request.addContent(new Element("owner").addContent(owner));
+			String owner = srvContext.getUserSession().getUserId();
+
+			if (owner != null)
+				request.addContent(new Element("owner").addContent(owner));
 
 		//--- in case of an admin we have to show all results
 
-		UserSession us = srvContext.getUserSession();
+			UserSession us = srvContext.getUserSession();
 
-		if (us.isAuthenticated())
-		{
-			if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR))
-				request.addContent(new Element("isAdmin").addContent("true"));
-
-			else if (us.getProfile().equals(Geonet.Profile.REVIEWER))
-				request.addContent(new Element("isReviewer").addContent("true"));
+			if (us.isAuthenticated())
+			{
+				if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR))
+					request.addContent(new Element("isAdmin").addContent("true"));
+	
+				else if (us.getProfile().equals(Geonet.Profile.REVIEWER))
+					request.addContent(new Element("isReviewer").addContent("true"));
+			}
 		}
 
 		//--- some other stuff

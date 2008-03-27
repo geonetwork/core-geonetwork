@@ -269,16 +269,17 @@ public class ImportFromDir implements Service
 		if (uuid.length() == 0)
 			uuid = UUID.randomUUID().toString();
 
+
 		//-----------------------------------------------------------------------
 		//--- insert metadata into the system
 
+		if (category.equals("_none_")) category = null;
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		String id = dm.insertMetadata(dbms, schema, group, xml, context.getSerialFactory(),
-												gc.getSiteId(), uuid, context.getUserSession().getUserIdAsInt());
+		String id = dm.insertMetadata(dbms, schema, category, group, xml, 
+								context.getSerialFactory(), gc.getSiteId(), uuid, 
+								context.getUserSession().getUserIdAsInt());
 
-		if (!"_none_".equals(category))
-			dm.setCategory(dbms, id, category);
 	}
 }
 

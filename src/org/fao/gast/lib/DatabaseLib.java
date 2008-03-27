@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -122,6 +123,30 @@ public class DatabaseLib
 			resource.abort();
 			throw e;
 		}
+	}
+
+	//---------------------------------------------------------------------------
+	/** Transactional */
+
+	public void setupNoFill(Resource resource, HashSet notTables, CallBack cb) throws Exception
+	{
+	
+		Dbms dbms = (Dbms) resource.open();
+
+		try
+		{
+			removeObjects(dbms, cb);
+			createSchema (dbms, cb);
+			dbms.commit();
+			fillTables(dbms, notTables, cb);
+			setupSiteId  (dbms);
+			setupVersion (dbms);
+			dbms.commit();
+		} catch(Exception e) {
+			resource.abort();
+			throw e;
+		}
+
 	}
 
 	//---------------------------------------------------------------------------
@@ -399,6 +424,12 @@ public class DatabaseLib
 
 	public void fillTables(Dbms dbms, CallBack cb) throws Exception
 	{
+		HashSet notTables = new HashSet();
+		fillTables(dbms,notTables,cb);
+	}
+
+	public void fillTables(Dbms dbms, HashSet notTables, CallBack cb) throws Exception
+	{
 		Lib.log.info("Filling database tables");
 
 		List<String> schema = loadSchemaFile(dbms.getURL());
@@ -407,22 +438,26 @@ public class DatabaseLib
 			if (row.toUpperCase().startsWith("CREATE TABLE "))
 			{
 				String table = getObjectName(row);
-				String file  = appPath +SETUP_DIR+ "/db/"+ table +".ddf";
+				if (!notTables.contains(table)) {
+					String file  = appPath +SETUP_DIR+ "/db/"+ table +".ddf";
 
-				if (!new File(file).exists())
-				{
-					if (cb != null)
-						cb.skipping(table);
-				}
-				else
-				{
-					if (cb != null)
-						cb.filling(table, file);
-
-					Lib.log.debug(" - Filling table : "+ table);
-
-					Import.load(dbms.getConnection(), table, file);
-					dbms.commit();
+					if (!new File(file).exists())
+					{
+						if (cb != null)
+							cb.skipping(table);
+					}
+					else
+					{
+						if (cb != null)
+							cb.filling(table, file);
+	
+						Lib.log.debug(" - Filling table : "+ table);
+	
+						Import.load(dbms.getConnection(), table, file);
+						dbms.commit();
+					}
+				} else {
+					cb.skipping(table);
 				}
 			}
 	}

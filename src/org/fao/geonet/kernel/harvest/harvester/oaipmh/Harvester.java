@@ -249,7 +249,7 @@ class Harvester
 		int iId = Integer.parseInt(id);
 
 		dataMan.setTemplate(dbms, iId, "n", null);
-		dataMan.setHarvested(dbms, iId, params.uuid, null);
+		dataMan.setHarvested(dbms, iId, params.uuid);
 
 		addPrivileges(id);
 		addCategories(id);
