@@ -23,11 +23,18 @@ table, tr, td {
 	vertical-align: top; /*ETJ*/
 }
 
+td.padded-content-box {
+	border-style: solid;
+	border-width: 1px;
+	padding: 4px;
+}
+
 th {
 	text-align: left;
 	border-width: 0px;
 	border-spacing: 0px;
 	border-collapse: collapse; /* border-spacing should be enough, but added for IE compatibility */
+	font-size: 0.9em;
 	font-weight: normal;
 	font-style: normal;
 }
@@ -53,13 +60,15 @@ a {
 	text-decoration: none;
 	*/
 	color: #064377;
-	font-size:11px;
-	text-decoration: none;
 }
 
 a:hover
 {
 	text-decoration: underline;
+}
+
+a.no-help:hover {
+	text-decoration: none;
 }
 
 .arrow{
@@ -138,8 +147,9 @@ font.banner-passive {
 }
 
 input.banner {
-	font-family: Verdana;
-	font-size: 7pt;
+	margin-right: 4px;
+	margin-left: 4px;
+	font: 7pt Verdana;
 	color: #064377;
 	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
 }
@@ -178,10 +188,12 @@ td.content {
 
 .padded-content {
 	background: #e7edf5;
-	padding-top: 4px;
-	padding-bottom: 4px;
-	padding-left: 8px;
-	padding-right: 8px;
+	padding: 5px;
+}
+
+.hit {
+	border-top: 1px solid silver;
+	padding-top: 5px;
 }
 
 td.green-content {
@@ -219,6 +231,8 @@ button.content {
 	cursor: pointer;
 	cursor: hand;
 	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+	background-color: #e7e7e7;
+	text-shadow: gray 2px 2px 3px;
 }
 
 input.content-small, button.content-small {
@@ -231,13 +245,8 @@ input.content-small, button.content-small {
 	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
 }
 
-a.green-content {
-	background: #beb800;
-	color: #ffffff;
-}
-
-a.green-content:hover {
-	text-decoration: underline;
+legend.block-legend {
+	font-weight: bold;
 }
 
 /*******************************************************************************
@@ -272,7 +281,7 @@ table.md {
 
 th.md {
 	text-align: left;
-	font-weight: bold;
+	text-transform: capitalize;
 }
 
 input.md, select.md, textarea.md {
@@ -313,9 +322,9 @@ td.separator {
 }
 
 td.dots {
-	height: 4px;
-	width: 4px;
-	background-image: url('images/dot.gif');
+	width: 0;
+	height: 0;
+	border-top: 1px inset #266397;
 }
 
 th.padded, td.padded {
@@ -348,9 +357,9 @@ div.handle {
 
 .dots 
 {
-	height: 4px;
-	width: 100%;
-	background-image: url('images/dot.gif');
+	height: 1px;
+	width: 1px;
+	border-left: 1px solid #266397;
 }
 
 /*******************************************************************************
@@ -589,15 +598,12 @@ imdisabled {
 
 div.metadata_current {
     padding: 3px;
-    border: 1px #266397 solid;    
-    background-color: #dce1ea;
     position: relative;
 }
 
 div.metadata_current table,
 div.metadata_current td
 {
-    background-color: #dce1ea;
 }
 
 /* This will fix some redraw problems with gn setting */
@@ -609,6 +615,8 @@ div.metadata_current td
 
 .ilwhiteboard {
     position:relative;
+	border: 1px solid #266397;
+	margin: 4px;
 }
 
 /* Rating popup */
@@ -653,5 +661,34 @@ div#error {
 
 #stacktrace {
 	font-size: 0.75em;
+}
+
+#featured {
+	background-color: #f6fcff;
+	width: 400px;
+	margin: 2%;
+	padding: 1%;
+	border-width: 1px;
+	border-style: inset;
+}
+
+#advancedsearch {
+	margin: 20px;
+}
+
+#resultList {
+	border-top: 1px solid #2a628f;
+	padding-top: 10px;
+}
+
+#leftcolumn {
+	margin: 20px;
+	border-right: 1px solid #2a628f;
+}
+
+#sortBy.live {
+	font-weight: normal;
+	font-style: normal;
+	font-size: 0.9em;
 }
 

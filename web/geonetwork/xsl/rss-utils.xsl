@@ -24,7 +24,6 @@
 			<xsl:variable name="bDynamic" select="geonet:info/dynamic" />
 			<xsl:variable name="bDownload" select="geonet:info/download" />
 <!--			<code><xsl:copy-of select="$metadata"/></code> -->
-			
 			<title><xsl:value-of select="$metadata/title"/></title>
 			<link><xsl:value-of select="$mdURL"/></link>
 			
@@ -43,9 +42,9 @@
 				<xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
 				
 				<p>
-				<xsl:if test="string($thumbnailLink)!=''">
+					<xsl:if test="string($thumbnailLink)!=''">
 						<a href="{$mdURL}"><img src="{$thumbnailLink}" align="left" alt="" border="0" width="100" style="padding:15px;"/></a>
-				</xsl:if>
+					</xsl:if>
 					<xsl:value-of select="$metadata/abstract"/>
 					<br />
 					<xsl:call-template name="socialBookmarks">

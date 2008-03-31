@@ -42,7 +42,11 @@ th {
 }
 
 img {
-	border-width: 0px;
+	border-width: 0;
+}
+
+#fillMeWithIntermap {
+	margin: 7px;
 }
 
 .centered {
@@ -468,13 +472,17 @@ div#im_map {
 }
 
 #im_layersHeader h3 {
+	text-transform: uppercase;
+	font: bold 10px Verdana, Arial, Geneva, Helvetica, sans-serif;
 	text-align: center;
 	color: #fff;
 	background-color: #266397;
 	margin: 0px;
 	padding: 5px;
-	font-weight: normal;
-	font-style: normal;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-top-width: 1px;
 }
 
 

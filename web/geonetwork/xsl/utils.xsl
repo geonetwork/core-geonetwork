@@ -72,7 +72,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
+	
 	<xsl:template name="socialBookmarks">
 		<xsl:param name="baseURL" />
 		<xsl:param name="mdURL" />

@@ -62,8 +62,8 @@
 				var uuid="<xsl:value-of select="$uuid"/>";
 				if (uuid!='') {
 					gn_showSingleMetadataUUID(uuid);
-			}
-			
+				}
+
 			}
 			
 			var getGNServiceURL = function(service)
@@ -219,16 +219,14 @@
 
 			<tr>
 				<td colspan="2" height="0" style="height: 0px;" >
-					<div id="advancedsearch" style="background-color: rgb(220, 225, 234);"/>															
+					<div id="advancedsearch"  style="display:none;"/>															
 				</td>
 			</tr>
-			
 			<tr>
-
 				<!-- search -->
 				<xsl:comment>LEFT: search, minimap and news</xsl:comment>
 
-				<td class="padded-content" width="224px" style="background-color:#dce1ea;">
+				<td class="padded-content" id="leftcolumn" width="224px">
 					<table class="geosearch" width="224px">
 						<!--  TODO: set a fixed width  -->
 						<xsl:comment>SEARCH</xsl:comment>
@@ -488,7 +486,7 @@
 	featured map
 	-->
 	<xsl:template name="featured">
-		<fieldset style="margin: 20px; background-color: #dce1ea;">
+		<fieldset id="featured">
 			<legend><xsl:value-of select="/root/gui/strings/featuredMap"/></legend>
 			<table>
 				<xsl:for-each select="/root/gui/featured/*">
