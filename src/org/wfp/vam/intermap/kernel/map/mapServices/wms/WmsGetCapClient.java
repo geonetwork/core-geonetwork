@@ -27,6 +27,8 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import org.wfp.vam.intermap.Constants;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -51,8 +53,8 @@ public class WmsGetCapClient
 		Element capabilities = null;
 		boolean jdomError = false;
 
-		System.out.println("Sending getCapabilities request to " + serverUrl);
-
+		Log.debug(Constants.WMS,"Sending getCapabilities request to" + serverUrl);
+		
 		if (serverUrl.indexOf("?") == -1) serverUrl += "?";
 		else if (!serverUrl.endsWith("?")) serverUrl += "&";
 
@@ -64,7 +66,9 @@ public class WmsGetCapClient
 			HttpURLConnection conn = (HttpURLConnection)u.openConnection();
 			BufferedInputStream is = new BufferedInputStream(conn.getInputStream());
 			capabilities = Xml.loadStream(is);
-//System.out.println("CAP111 --> " + capabilities);
+
+			Log.debug(Constants.WMS," - GetCapabilities request : "+ capabilities);
+			
 			conn.disconnect();
 		}
 		catch (JDOMException e) {
@@ -79,8 +83,10 @@ public class WmsGetCapClient
 			HttpURLConnection conn = (HttpURLConnection)u.openConnection();
 			BufferedInputStream is = new BufferedInputStream(conn.getInputStream());
 			capabilities = Xml.loadStream(is);
-//System.out.println("CAP100 --> " + capabilities);
-			conn.disconnect();
+
+            Log.debug(Constants.WMS," - GetCapabilities request : "+ capabilities);
+
+            conn.disconnect();
 		}
 
 		return capabilities;
