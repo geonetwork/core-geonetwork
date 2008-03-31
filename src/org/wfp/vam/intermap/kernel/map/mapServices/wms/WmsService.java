@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
+
 import org.jdom.CDATA;
 import org.jdom.Element;
 import org.jdom.Text;
@@ -40,6 +41,8 @@ import org.wfp.vam.intermap.kernel.map.mapServices.constants.MapServices;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.dimensions.Extents;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.impl.WMSFactory;
 import org.wfp.vam.intermap.util.Util;
+import org.wfp.vam.intermap.Constants;
+import jeeves.utils.Log;
 
 public class WmsService extends MapService
 {
@@ -92,7 +95,6 @@ public class WmsService extends MapService
 	 */
 	public void setExtent(String name, String value) {
 		htExtents.put(name, value);
-//		System.out.println(htExtents); // TEST
 	}
 
 	// Sets the vendor specific parameters
@@ -147,15 +149,13 @@ public class WmsService extends MapService
 			request += "&" + key + "=" + value;
 		}
 
-//		System.out.println("\n\n\nrequest\n\n\n" + request); // TEST
-
 		// Set style
 		if (_styleName != null)
 			request += "&STYLES=" + _styleName;
         else
             request += "&STYLES=";
 
-		System.out.println("request: " + request);
+        Log.debug(Constants.INTERMAP," - GetMap request : "+ request);
 
 		return request;
 	}
@@ -201,7 +201,9 @@ public class WmsService extends MapService
 				+ "&QUERY_LAYERS=" + name + "&X=" + x + "&Y=" + y
 				+ "&INFO_FORMAT=" + infoFormat
 				+ "&STYLES=" + _styleName;
-
+		
+		Log.debug(Constants.INTERMAP," - GetFeatureInfo request : "+ url);
+		
 		lastResponse = new Element("url").setText(url);
 
 		// Use the following code if you need to proxy the WMS server response.

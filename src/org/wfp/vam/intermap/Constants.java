@@ -115,4 +115,10 @@ public class Constants {
 	public static final String BANNER_URL_LINKS    = "links.html";
 	public static final String BANNER_URL_FEEDBACK = "feedback.html";
 	public static final String BANNER_URL_HELP     = "help.html";
+	
+	//--------------------------------------------------------------------------
+    //--- logging
+
+    public static final String INTERMAP   = "intermap";
+    public static final String WMS        = INTERMAP + ".wms";
 }
