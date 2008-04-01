@@ -330,7 +330,7 @@ public class Worker implements Runnable
 			if (usrGrps.size() == 0)
 				throw new Exception("No editor for metadata --> id:"+id);
 
-			String owner = ((Element) privil.get(0)).getChildText("id");
+			String owner = ((Element) usrGrps.get(0)).getChildText("id");
 
 			//--- no, ok we can store it
 
