@@ -171,16 +171,16 @@ public class Worker implements Runnable
 
 		newDbms.execute("DELETE FROM OperationAllowed");
 		newDbms.commit();
-		newDbms.execute("DELETE FROM UserGroups");
-		newDbms.commit();
 		newDbms.execute("DELETE FROM MetadataCateg");
 		newDbms.commit();
-		newDbms.execute("DELETE FROM Users");
+		newDbms.execute("DELETE FROM UserGroups");
 		newDbms.commit();
 		newDbms.execute("DELETE FROM Metadata");
 		newDbms.commit();
 		newDbms.execute("DELETE FROM GroupsDes");
 		newDbms.execute("DELETE FROM Groups");
+		newDbms.commit();
+		newDbms.execute("DELETE FROM Users");
 		newDbms.commit();
 		newDbms.execute("DELETE FROM CategoriesDes");
 		newDbms.execute("DELETE FROM Categories");
