@@ -57,7 +57,7 @@ public class Cli implements Starter
 		else
 		{
 			System.out.println("Unknown command : "+ command);
-			System.out.println("Can be one of : -setup, -setupdb");
+			System.out.println("Can be one of : -setup, -setupdb, -setupWithMetadata");
 		}
 	}
 }

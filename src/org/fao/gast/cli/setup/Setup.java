@@ -57,9 +57,14 @@ public class Setup
 		Lib.database.setup(resource, null);
 
 		//--- ask for and install sample metadata
-
-		if (Lib.gui.confirm(null, SAMPLE_MSG))
-			addSampleData(appPath);
+		
+		if (!args.isEmpty()) {
+		    String command = args.get(0);
+    		if (command.equals("-sampleMetadata"))
+    		    addSampleData(appPath);
+		}
+//		if (Lib.gui.confirm(null, SAMPLE_MSG))
+			
 	}
 
 	//---------------------------------------------------------------------------
