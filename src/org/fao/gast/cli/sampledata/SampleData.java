@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.gast.cli.setup;
+package org.fao.gast.cli.sampledata;
 
 import java.io.File;
 import java.util.List;
@@ -31,33 +31,63 @@ import org.fao.gast.lib.Resource;
 
 //==============================================================================
 
-public class Setup
+public class SampleData
 {
 	public void exec(String appPath, List<String> args) throws Exception
 	{
-		//--- this line saves the 'gast/data/index.html' file into 'web'
-		//--- substituting the $SERVLET variable
-
-		Lib.embeddedSC.save();
-
-		//--- now we create the embedded database...
-
-		Lib.embeddedDB.createDB();
-
-		//--- ... and save the account into the config.xml file
-
-		Lib.config.setDbmsUser    (Lib.embeddedDB.getUser());
-		Lib.config.setDbmsPassword(Lib.embeddedDB.getPassword());
-		Lib.config.addActivator();
-		Lib.config.save();
-
-		//--- proper setup: open a database connection and setup data
-
-		Resource resource  = Lib.config.createResource();
-		Lib.database.setup(resource, null);
-			
+		//--- install sample data
+	    addSampleData(appPath);			
 	}
 
+	//---------------------------------------------------------------------------
+
+	private void addSampleData(String appPath) throws Exception
+	{
+		Lib.log.info("Adding sample metadata");
+
+		Resource resource = Lib.config.createResource();
+		Dbms     dbms     = (Dbms) resource.open();
+
+		try
+		{
+			int serial = Lib.database.getNextSerial(dbms, "Metadata");
+			dbms.commit();
+
+			File   sampleDir = new File(appPath, SAMPLE_PATH);
+			File[] samples   = sampleDir.listFiles();
+
+			if (samples == null)
+				Lib.log.warning("Cannot scan directory : "+ sampleDir.getAbsolutePath());
+			else
+			{
+				for (File sample : samples)
+					if (sample.getName().endsWith(".mef"))
+					{
+						Lib.mef.doImport(dbms, serial++, sample);
+						dbms.commit();
+					}
+			}
+
+			Lib.log.info("Synchronizing metadata");
+			Lib.metadata.sync(dbms);
+			resource.close();
+			Lib.log.info("Done");
+		}
+		catch(Exception e)
+		{
+			Lib.log.fatal("Raised exception : "+ e.getMessage());
+			resource.abort();
+			throw e;
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//---------------------------------------------------------------------------
+
+	private static final String SAMPLE_PATH = "gast/setup/sample-data";
 }
 
 //==============================================================================
