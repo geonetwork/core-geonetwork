@@ -254,7 +254,15 @@
 					<xsl:otherwise>
 						<!-- It's a layer group -->
 						<li class="layer_group">
-							<b><xsl:value-of select="Title" /></b>
+							<xsl:choose>
+								<xsl:when test="./Name">
+									<b><xsl:apply-templates select="." mode="title"/></b>
+								</xsl:when>
+								<xsl:otherwise>
+									<b><xsl:value-of select="Title" /></b>
+								</xsl:otherwise>
+							</xsl:choose>
+							
 						</li>
 						<ul>
 							<xsl:apply-templates select="Layer">
