@@ -155,7 +155,7 @@ public class WmsService extends MapService
         else
             request += "&STYLES=";
 
-        Log.debug(Constants.INTERMAP," - GetMap request : "+ request);
+        Log.debug(Constants.WMS," - GetMap request : "+ request);
 
 		return request;
 	}
@@ -202,7 +202,7 @@ public class WmsService extends MapService
 				+ "&INFO_FORMAT=" + infoFormat
 				+ "&STYLES=" + _styleName;
 		
-		Log.debug(Constants.INTERMAP," - GetFeatureInfo request : "+ url);
+		Log.debug(Constants.WMS," - GetFeatureInfo request : "+ url);
 		
 		lastResponse = new Element("url").setText(url);
 

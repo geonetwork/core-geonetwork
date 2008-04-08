@@ -49,6 +49,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.ImageIcon;
+import org.wfp.vam.intermap.Constants;
+import jeeves.utils.Log;
 
 public class ImageMerger {
 	static public final int JPG = 0;
@@ -101,9 +103,9 @@ public class ImageMerger {
 					catch (IOException e)
 					{
 						if (e.getMessage() == "too many colors for a GIF")
-							System.out.println("too many colors for a GIF, will try to generate JPG");
+						    Log.debug(Constants.INTERMAP,"too many colors for a GIF, will try to generate JPG");
 						else
-							System.out.println("error in encoding GIF file: " + e.getMessage() + "; will try to generate a JPG");
+						    Log.debug(Constants.INTERMAP,"error in encoding GIF file: " + e.getMessage() + "; will try to generate a JPG");
 
 						encodeJPG(os, bi);
 					}
@@ -117,7 +119,7 @@ public class ImageMerger {
 					}
 					catch (IOException e)
 					{
-						System.out.println("error in encoding PNG file: " + e.getMessage() + "; will try to generate a JPG");
+					    Log.debug(Constants.INTERMAP,"error in encoding PNG file: " + e.getMessage() + "; will try to generate a JPG");
 						encodeJPG(os, bi);
 					}
 			}
@@ -294,7 +296,7 @@ public class ImageMerger {
 //				alpha = 1F;
 //			}
 
-//			System.out.println("i: " + i + "; alpha: " + alpha); // DEBUG
+//			Log.debug(Constants.INTERMAP,"i: " + i + "; alpha: " + alpha); // DEBUG
 			destG.setComposite(AlphaComposite.getInstance(rule, alpha));
 			destG.drawImage(image, 0, 0, null);
 		}
@@ -338,7 +340,7 @@ public class ImageMerger {
 		destG.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC, alpha));
 		destG.drawImage(base, 0, 0, null);
 
-		System.out.println("Compositing images ("+ow+","+oh+") over ("+bw+","+bh+") @"+x+"+"+y);
+		Log.debug(Constants.INTERMAP,"Compositing images ("+ow+","+oh+") over ("+bw+","+bh+") @"+x+"+"+y);
 
 		// negative position starts from lower right corner, with -1 being aligned to the border
 		if(x<0)
@@ -347,7 +349,7 @@ public class ImageMerger {
 		if(y<0)
 			y = bh - oh + y+1;
 
-		System.out.println("                   @"+x+"+"+y);
+		Log.debug(Constants.INTERMAP,"                   @"+x+"+"+y);
 		destG.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 		destG.drawImage(over, x, y, null);
 
@@ -389,7 +391,7 @@ public class ImageMerger {
 
 	public static void main(String args[]) {
 		if (args.length < 2) {
-			System.out.println("Usage: ImageMerger destFile srcFile1 ...\n");
+		    Log.debug(Constants.INTERMAP,"Usage: ImageMerger destFile srcFile1 ...\n");
 			System.exit(1);
 		}
 

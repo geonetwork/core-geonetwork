@@ -26,6 +26,8 @@ package org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type;
 import java.util.ArrayList;
 import java.util.List;
 import org.jdom.Element;
+import org.wfp.vam.intermap.Constants;
+import jeeves.utils.Log;
 
 /**
  * @author ETj
@@ -50,7 +52,6 @@ public enum WMSFormat
 	,APP_GML("application/vnd.ogc.gml")
 	,APP_WMS("application/vnd.ogc.wms_xml")
 	,APP_WMSERR("application/vnd.ogc.se_xml")
-
 
 	,v100_GIF("GIF")
 	,v100_JPEG("JPEG")
@@ -87,7 +88,7 @@ public enum WMSFormat
 		for(WMSFormat format: WMSFormat.values())
 			if(format.toString().equals(type))
 				return format;
-		System.out.println("WARNING: WMSFormat: type '"+type+"' is not defined internally. Please update the internal mimetype list.");
+		Log.debug(Constants.WMS,"WARNING: WMSFormat: type '"+type+"' is not defined internally. Please update the internal mimetype list.");
 		return null;
 	}
 

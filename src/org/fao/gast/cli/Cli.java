@@ -28,6 +28,7 @@ import java.util.List;
 import org.fao.gast.boot.Starter;
 import org.fao.gast.cli.createdb.CreateDB;
 import org.fao.gast.cli.setup.Setup;
+import org.fao.gast.cli.sampledata.SampleData;
 import org.fao.gast.lib.Lib;
 
 //==============================================================================
@@ -51,13 +52,16 @@ public class Cli implements Starter
 		if (command.equals("-setup"))
 			new Setup().exec(appPath, al);
 
-		if (command.equals("-setupdb"))
+		else if (command.equals("-sampleData"))
+            new SampleData().exec(appPath, al);
+
+        else if (command.equals("-setupdb"))
 			new CreateDB().exec(appPath, al);
 
-		else
+        else
 		{
-			System.out.println("Unknown command : "+ command);
-			System.out.println("Can be one of : -setup, -setupdb");
+			Lib.log.warning("Unknown command : "+ command);
+			Lib.log.warning("Can be one of : -setup, -setupdb, -sampleData");
 		}
 	}
 }
