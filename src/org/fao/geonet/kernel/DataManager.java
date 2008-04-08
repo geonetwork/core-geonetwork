@@ -480,7 +480,7 @@ public class DataManager
 
 		return record.getChildText("id");
 	}
-	
+
 	//--------------------------------------------------------------------------
 
 	public String getMetadataId(ServiceContext srvContext, String uuid) throws Exception {
@@ -492,7 +492,6 @@ public class DataManager
 		Element record = (Element) list.get(0);
 		return record.getChildText("id");
 	}
-
 	//--------------------------------------------------------------------------
 
 	public String getMetadataUuid(Dbms dbms, String id) throws Exception
@@ -889,6 +888,17 @@ public class DataManager
 		//FIXME : should use lucene
 
 		List list = dbms.select("SELECT id FROM Metadata WHERE id="+ id).getChildren();
+		return list.size() != 0;
+	}
+
+	/** Returns true if the metadata uuid exists in the database
+	  */
+
+	public boolean existsMetadataUuid(Dbms dbms, String uuid) throws Exception
+	{
+		//FIXME : should use lucene
+
+		List list = dbms.select("SELECT uuid FROM Metadata WHERE uuid='" + uuid + "'").getChildren();
 		return list.size() != 0;
 	}
 
