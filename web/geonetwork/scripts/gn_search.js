@@ -32,9 +32,17 @@ function gn_anyKeyObserver(e)
 }
 
 /*  */
-function runSimpleSearch() 
+function runPdfSearch() {
+    if (document.cookie.indexOf("search=advanced")!=-1)
+        runAdvancedSearch("pdf");
+    else
+        runSimpleSearch("pdf");
+}
+
+function runSimpleSearch(type) 
 {
-	preparePresent();
+    if (type != "pdf")
+        preparePresent();
 
 	var pars = "any=" + encodeURIComponent($('any') .value);
 
@@ -53,8 +61,11 @@ function runSimpleSearch()
 	pars += fetchParam('hitsPerPage');
 	pars += fetchParam('output');
 	
-	// Load results via AJAX
-	gn_search(pars);    
+	if (type == "pdf")
+       gn_searchpdf(pars);
+    else
+	   // Load results via AJAX
+	   gn_search(pars);    
 }
 
 function resetSimpleSearch()
@@ -185,9 +196,10 @@ function initAdvancedSearch()
 
 }
 
-function runAdvancedSearch() 
+function runAdvancedSearch(type) 
 {
-	preparePresent();
+    if (type != "pdf")
+	   preparePresent();
 
 	var pars = "any=" + encodeURIComponent($('any') .value);
 	pars += fetchParam('phrase');
@@ -230,8 +242,12 @@ function runAdvancedSearch()
 	pars += fetchParam('hitsPerPage');
 	pars += fetchParam('output');
 
-	// Load results via AJAX
-	gn_search(pars);    
+
+    if (type == "pdf")
+       gn_searchpdf(pars);
+    else
+	   // Load results via AJAX
+	   gn_search(pars);    
 }
 
 function resetAdvancedSearch()
@@ -501,6 +517,16 @@ function gn_search(pars)
 			onFailure: gn_search_error
 		}
 	);
+}
+
+function gn_searchpdf(pars) 
+{
+    pars = pars.replace(/hitsPerPage=\d{2,3}/, 'hitsPerPage=9999'); 
+    // Update this value if more document required in PDF output
+    // FIXME : Should be defined in service config.
+    location.replace (
+        getGNServiceURL('pdf.search') + "?" + pars
+    );
 }
 
 function gn_present(frompage, topage) 
