@@ -69,7 +69,7 @@
 <!--			<td class="padded-content" width="{$indent}"/>-->
 			<td/>
 			<td class="padded-content">
-				<div class="results_title">
+				<div class="results_title" style="float:left;">
 					<xsl:value-of select="$title"/>
 					<xsl:if test="/root/response/summary/@count > 1">
 						&#xA0;<xsl:value-of select="/root/gui/strings/sortBy"/>&#xA0;
