@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+	<services package="org.fao.geonet">
+		<!-- Test services - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<service name="test.i18n">
+			<output sheet="test-i18n.xsl">
+				<!-- strings.xml -->
+				<xml name="strings.en" file="loc/en/xml/strings.xml"
+					localized="false" />
+				<xml name="strings.fr" file="loc/fr/xml/strings.xml"
+					localized="false" />
+				<xml name="strings.es" file="loc/es/xml/strings.xml"
+					localized="false" />
+				<xml name="strings.cn" file="loc/cn/xml/strings.xml"
+					localized="false" />
+				<xml name="strings.ar" file="loc/ar/xml/strings.xml"
+					localized="false" />
+				<!-- about.xml -->
+				<xml name="about.en" file="loc/en/xml/about.xml"
+					localized="false" />
+				<xml name="about.fr" file="loc/fr/xml/about.xml"
+					localized="false" />
+				<xml name="about.es" file="loc/es/xml/about.xml"
+					localized="false" />
+				<xml name="about.cn" file="loc/cn/xml/about.xml"
+					localized="false" />
+				<xml name="about.ar" file="loc/ar/xml/about.xml"
+					localized="false" />
+				<!-- config.xml -->
+				<xml name="config.en" file="loc/en/xml/config.xml"
+					localized="false" />
+				<xml name="config.fr" file="loc/fr/xml/config.xml"
+					localized="false" />
+				<xml name="config.es" file="loc/es/xml/config.xml"
+					localized="false" />
+				<xml name="config.cn" file="loc/cn/xml/config.xml"
+					localized="false" />
+				<xml name="config.ar" file="loc/ar/xml/config.xml"
+					localized="false" />
+				<!-- harvesting.xml -->
+				<xml name="harvesting.en"
+					file="loc/en/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.fr"
+					file="loc/fr/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.es"
+					file="loc/es/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.cn"
+					file="loc/cn/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.ar"
+					file="loc/ar/xml/harvesting.xml" localized="false" />
+				<!-- TODO : add other loc files -->
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<service name="test.i18n.xml">
+			<output sheet="test-i18n-xml.xsl"
+				contentType="text/xml; charset=UTF-8">
+				<!-- strings.xml -->
+				<xml name="strings.en" file="loc/en/xml/strings.xml"
+					localized="false" />
+				<xml name="strings.fr" file="loc/fr/xml/strings.xml"
+					localized="false" />
+				<xml name="strings.es" file="loc/es/xml/strings.xml"
+					localized="false" />
+				<xml name="strings.cn" file="loc/cn/xml/strings.xml"
+					localized="false" />
+				<xml name="strings.ar" file="loc/ar/xml/strings.xml"
+					localized="false" />
+				<!-- about.xml -->
+				<xml name="about.en" file="loc/en/xml/about.xml"
+					localized="false" />
+				<xml name="about.fr" file="loc/fr/xml/about.xml"
+					localized="false" />
+				<xml name="about.es" file="loc/es/xml/about.xml"
+					localized="false" />
+				<xml name="about.cn" file="loc/cn/xml/about.xml"
+					localized="false" />
+				<xml name="about.ar" file="loc/ar/xml/about.xml"
+					localized="false" />
+				<!-- config.xml -->
+				<xml name="config.en" file="loc/en/xml/config.xml"
+					localized="false" />
+				<xml name="config.fr" file="loc/fr/xml/config.xml"
+					localized="false" />
+				<xml name="config.es" file="loc/es/xml/config.xml"
+					localized="false" />
+				<xml name="config.cn" file="loc/cn/xml/config.xml"
+					localized="false" />
+				<xml name="config.ar" file="loc/ar/xml/config.xml"
+					localized="false" />
+				<!-- harvesting.xml -->
+				<xml name="harvesting.en"
+					file="loc/en/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.fr"
+					file="loc/fr/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.es"
+					file="loc/es/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.cn"
+					file="loc/cn/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.ar"
+					file="loc/ar/xml/harvesting.xml" localized="false" />
+				<!-- TODO : add other loc files -->
+			</output>
+		</service>
+	</services>
+</geonet>
