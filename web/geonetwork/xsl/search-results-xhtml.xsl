@@ -87,7 +87,14 @@
 							</xsl:for-each>
 						</select>
 					</xsl:if>
-				</div>				
+				</div>		
+							
+				<xsl:if test="/root/response/summary/@count > 0">
+                   <!-- print pdf - - - - - - - - - - - - - - - - - - - - -->
+                   <div style="float:right;">
+                    <a href="#" onclick="runPdfSearch();"><img align="absmiddle" src="{/root/gui/url}/images/pdf.gif" alt="{/root/gui/strings/savepdf}" title="{/root/gui/strings/savepdf}"/></a>
+                   </div>
+                </xsl:if>			
 			</td>
 		</tr>
 	</xsl:template>
