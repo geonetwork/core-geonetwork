@@ -53,29 +53,23 @@ public class Delete implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	/*
-	 * TODO 
-	 * SPEC : PAS DE SUPPRESSION DE NOMENCLATURE !
-	 */
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		ThesaurusManager manager = gc.getThesaurusManager();
 		
-		// Paramètres : thesaurus
+		// Get parameters
 		String name = Util.getParam(params, Params.REF);
 		
-//		String dir = Util.getParam(params, Params.DIR).replace('.', '/');		
-//		String fname = Util.getParam(params, Params.FNAME);
 
-		// Récupération du fichier
+		// Load file
 		Thesaurus thesaurus = manager.getThesaurusByName(name);
 		File item = thesaurus.getFile();
 		
-		// Retrait du manager
+		// Remove old file from thesaurus manager
 		manager.remove(name);
 		
-		// Suppression du fichier
+		// Remove file
 		if (item.exists())
 			item.delete();
 		else throw new IllegalArgumentException("Thesaurus not found --> " + name);

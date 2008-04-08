@@ -59,18 +59,9 @@ class EditUtils
 
 		UserSession   session   = context.getUserSession();
 
-		// Paramètres : thesaurus
 		String name  = Util.getParam(params, Params.NAME);
 		String dir   = Util.getParam(params, Params.DIR).replace('.', '/');		
 		String fname = Util.getParam(params, Params.FNAME);
-
-//		//-----------------------------------------------------------------------
-//		//--- handle current tab
-//
-//		Element elCurrTab = params.getChild(Params.CURRTAB);
-//
-//		if (elCurrTab != null)
-//			session.setProperty(Geonet.Session.METADATA_SHOW, elCurrTab.getText());
 
 		//-----------------------------------------------------------------------
 		//--- check access

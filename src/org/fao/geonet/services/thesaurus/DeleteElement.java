@@ -82,13 +82,7 @@ public class DeleteElement implements Service
 		}
 		
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		// ajout des parametres necessaires pour le service thesaurus.edit
-//		elResp.addContent(new Element("pTypeSearch").setText("0"));
-//		elResp.addContent(new Element("pKeyword").setText("*"));
-//		elResp.addContent(new Element("pNewSearch").setText("true"));
-//		elResp.addContent(new Element("pThesauri").setText(sThesaurusName));		
-//		elResp.addContent(new Element("pNbResPerPage").setText("10"));
-//		elResp.addContent(new Element("mode").setText("edit"));
+
 		return elResp;
 	}
 }

@@ -69,7 +69,6 @@ public class Download implements Service
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		ThesaurusManager manager = gc.getThesaurusManager();
 		
-		// Paramètres : thesaurus
 		String name  = Util.getParam(params, Params.REF);
 		
 		Thesaurus directory = manager.getThesaurusByName(name);

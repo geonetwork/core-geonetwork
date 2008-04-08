@@ -58,7 +58,6 @@ public class Add implements Service {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		// Recuperation des parametres
 		String fname = Util.getParam(params, "fname");
 		String dname = Util.getParam(params, "dname");
 		String type = Util.getParam(params, "type");

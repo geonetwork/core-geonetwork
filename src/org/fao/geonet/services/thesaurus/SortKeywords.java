@@ -51,7 +51,6 @@ public class SortKeywords implements Service {
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
 
-		// Recupération du thesaurus manager
 		Element response = new Element(Jeeves.Elem.RESPONSE);
 		UserSession session = context.getUserSession();
 		KeywordsSearcher searcher = (KeywordsSearcher)session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
@@ -62,7 +61,7 @@ public class SortKeywords implements Service {
 		response.addContent(searcher.getResults(params));
 
 		
-		// Dans le cas de l'edition ou de la consultation d'un thesaurus
+		// If editing or consult thesaurus 
 		if (params.getChild("pMode") != null) {
 			String mode = Util.getParam(params, "pMode");
 			if (mode.equals("edit") || mode.equals("consult")) {

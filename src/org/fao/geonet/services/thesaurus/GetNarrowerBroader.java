@@ -60,8 +60,6 @@ public class GetNarrowerBroader implements Service {
 		
 			
 		// perform the search and save search result into session
-		// Creation d'un nouveau Keyword searcher
-		// Recupération du thesaurus manager
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		ThesaurusManager thesaurusMan = gc.getThesaurusManager();

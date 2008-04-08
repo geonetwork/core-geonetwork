@@ -53,8 +53,6 @@ public class Upload implements Service
 	static String FS = System.getProperty("file.separator", "/");
 	static int inc = 0;
 	
-	// XSL - IMPORT NOMENCLATURE - FR
-	public static final String STYLESHEET_SKOS_FR = "lang-fr.xsl";
 	private String stylePath;
 
 	//--------------------------------------------------------------------------
@@ -91,8 +89,6 @@ public class Upload implements Service
 			response.addContent(uploadResult);
 		return response; 
 		
-// 		chaîner sur le service d'update/view de la nomenclature ?
-//		return update.exec(params, context);
 	}
 
 
@@ -108,26 +104,23 @@ public class Upload implements Service
 		String uploadDir = context.getUploadDir();
 		Element uploadResult = null; 
 		
-		// Le fichier particulier format rdf
+		// RDF file
 		String fname = null;
 		Element param = params.getChild(Params.FNAME);
 		if (!(param == null || param.getTextTrim().length() == 0)) {
 			fname = param.getTextTrim();
 		}
 
-		// Type de thesaurus (local, external)
+		// Thesaurus Type (local, external)
 		String type = Util.getParam(params, Params.TYPE, "external");
 		
-		// Répertoire de thesaurus (Discipline, Place, Stratum, Temporal, Theme)
+		// Thesaurus directory - one of the ISO theme (Discipline, Place, Stratum, Temporal, Theme)
 		String dir = Util.getParam(params, Params.DIR);
 
-		// Le schéma cible par rapport auquel effectuer la validation éventuelle
+		// no XSL to be applied
 		String style    = Util.getParam(params, Params.STYLESHEET, "_none_");
 		
-		// ?
-		// String siteId   = Util.getParam(params, Params.SITE_ID,  gc.getSiteId());
-
-		// Valider par rapport au schéma cible ?
+		// Validation or not
 		boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
 
 		if ((fname != null) && !fname.equals("")) {
@@ -137,7 +130,6 @@ public class Upload implements Service
 			File oldFile = new File(uploadDir, fname);
 			String extension = fname.substring(fname.lastIndexOf('.')).toLowerCase();
 
-			// -> UN FICHIER XML
 			if (extension.equals(".rdf")) {
 
 					Log.debug("Thesaurus","Uploading thesaurus: "+fname);
@@ -181,14 +173,13 @@ public class Upload implements Service
 		}
 		else TS_xml = xml;
 		
-		// Analyse du fichier
+		// Load document and check namespace
 		if (TS_xml.getNamespacePrefix().equals("rdf") && TS_xml.getName().equals("RDF")) {
 				
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 			ThesaurusManager thesaurusMan = gc.getThesaurusManager();
 
-			// Copie du fichier dans l'espace adéquat			
-			// Position dans l'arborescence déterminée par la categorie
+			// copy to directory according to type			
 			String path = thesaurusMan.buildThesaurusFilePath( fname, type, dir);
 			File newFile = new File(path);
 			Xml.writeResponse(new Document(TS_xml), new FileOutputStream(newFile));
@@ -200,8 +191,7 @@ public class Upload implements Service
 		{
 			oldFile.delete();
 			
-			// CE N'EST PAS UN FICHIER SKOS !
-			throw new Exception("Format de fichier inconnu");
+			throw new Exception("Unknown format (Must be in SKOS format).");
 			
 		}
 

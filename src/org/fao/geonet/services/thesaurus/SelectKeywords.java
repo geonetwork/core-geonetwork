@@ -51,7 +51,6 @@ public class SelectKeywords implements Service {
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
 
-		// Recupération du thesaurus manager
 		Element response = new Element(Jeeves.Elem.RESPONSE);
 		UserSession session = context.getUserSession();
 		KeywordsSearcher searcher = (KeywordsSearcher)session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);

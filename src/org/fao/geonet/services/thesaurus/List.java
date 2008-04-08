@@ -65,7 +65,7 @@ public class List implements Service
 		init_type = params.getValue( Params.TYPE, "_none_" );
 	}
 	
-	/** Filtre sur les répertoires */
+	/** Filter on directory */
 	private FilenameFilter directoryFilter = new FilenameFilter()
 	{
 		public boolean accept(File dir, String name)
@@ -77,7 +77,7 @@ public class List implements Service
 		}
 	};
 	
-	/** Filtre sur les répertoires */
+	/** Filter on directory */
 	private FilenameFilter thesauriFilter = new FilenameFilter()
 	{
 		public boolean accept(File dir, String name)
@@ -152,7 +152,8 @@ public class List implements Service
 
 
 	/**
-	 * Parcours l'arborescence des thesaurus et retourne les éléments en fonction du filtre et du mode
+	 * Browse directory tree and return thesaurus in xml and rdf format
+	 * 
 	 * @param params
 	 * @param context
 	 * @return
@@ -167,20 +168,20 @@ public class List implements Service
 			for (int i=0; i<rdfDataDirectory.length; i++){
 				
 
-				if(rdfDataDirectory[i].isDirectory()) { 	// Répertoire
+				if(rdfDataDirectory[i].isDirectory()) { 	
 					
-					if (mode==1) { // ARBORESCENCE SIMPLE 
+					if (mode==1) { // Simple tree 
 						Element dirE = new Element("directory").setAttribute("label", rdfDataDirectory[i].getName());
 						dirE.setAttribute("type", rootName);
 						list.addContent(dirE);
 						listThesauri(dirE, rdfDataDirectory[i].getAbsolutePath(), mode, filter, rootName);
 					}
 					
-					else if (mode==2) { // ARBORESCENCE FUSIONNEE LOCAL + EXTERNAL 
+					else if (mode==2) { // Complex tree local + external 
 						Element dirE = new Element("directory").setAttribute("label", rdfDataDirectory[i].getName());
 						dirE.setAttribute("type", rootName);
 						
-						// Recherche d'un élément directory de même nom
+						// Search directory with same name
 						java.util.List children = list.getChildren("directory");
 						Element element = null;
 						for (Iterator iter = children.iterator(); iter.hasNext();) {
@@ -198,10 +199,10 @@ public class List implements Service
 						}
 					}
 					
-					else // TOUT A PLAT : PAS D'ARBORESCENCE
+					else // Flat tree
 						 listThesauri(list, rdfDataDirectory[i].getAbsolutePath(), mode, filter, rootName);
 					
-				} else if (mode!=1) { 	// Fichier
+				} else if (mode!=1) { 	// File
 					String thesaurusName = rootName+'.'+thesauriDirectory.getName()+'.'+rdfDataDirectory[i].getName().substring(0, rdfDataDirectory[i].getName().indexOf(".rdf"));
 					
 					Element thesaurusE = new Element("thesaurus").setAttribute("value",thesaurusName);
