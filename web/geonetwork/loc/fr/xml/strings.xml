@@ -6,8 +6,6 @@
 	<dateRelChoice/>
 	<downloadEmail>Email Téléchargement</downloadEmail>
 	<extensionInfoTab>Ext. Info</extensionInfoTab>
-	<feedbackCardTitle>Commentaire</feedbackCardTitle>
-	<feedbackComments>Retour/Commentaires</feedbackComments>
 	<transferOwnership>Transfert de privilèges</transferOwnership>
 	<transferOwnershipDes>Transfert des privilèges de métadonnées pour un autre utilisateur</transferOwnershipDes>
 	<intermapSearch>Recherche géographique</intermapSearch>
@@ -16,7 +14,8 @@
     <downloadable>Téléchargeable</downloadable>
     <dynamic>Interactive</dynamic>
 	<opensearch>Service de recherche OpenSearch de GeoNetwork permettant la recherche de métadonnées dans le catalogue.</opensearch>
-	<savexml>
+	<savepdf>Visualiser les résultats de la recherche au format pdf</savepdf>
+    <savexml>
 		<dc>Télécharger les métadonnées au format Dublin Core</dc>
 		<fgdc>Télécharger les métadonnées au format FGDC</fgdc>
 		<iso19115Esri>Télécharger les métadonnées au format ESRI ArcCatalog</iso19115Esri>
@@ -96,11 +95,9 @@
 	<contactUs>Contact</contactUs>
 	<highlights>Epinglés</highlights>
 	<recentAdditions>Derniers ajouts</recentAdditions>
-	<feedbackCardTitle>Retour et Commentaire</feedbackCardTitle>
 	<loginCardTitle>Connexion / identification</loginCardTitle>
 	<organisation>Organisation / Service</organisation>
 	<emailAddress>Mel</emailAddress>
-	<feedbackComments>Retour / Commentaire</feedbackComments>
 	<!-- End new strings -->
 	
 	<language>fr</language> 
@@ -378,6 +375,7 @@
 	<onlink>Liens</onlink>
 	<operation>Opération</operation>
 <!--	<organisation>Organisation / départment</organisation> -->
+    <options>Options</options>
 	<paper>Copie papier</paper>
 	<partial>Recouvert partiellement</partial>
 	<partialCooordinate>Coordonnées partielles</partialCooordinate>
@@ -393,6 +391,7 @@
 	<progressChoice value="complete">terminé</progressChoice>
 	<progressChoice value="in-work">en cours</progressChoice>
 	<progressChoice value="planned">prévu</progressChoice>
+	<protocol>Protocol</protocol>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Adresse Internet (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Produit vitrine (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--related">Adresse Internet associée (URL)</protocolChoice>

@@ -9,7 +9,6 @@
 	<extensionInfoTab>Ext. Info</extensionInfoTab>
 	<transferOwnership>Transfer ownership</transferOwnership>
 	<transferOwnershipDes>Transfer metadata ownership to another user</transferOwnershipDes>
-	<highlights>Highlights</highlights>
 	<intermapSearch>Geographic search</intermapSearch>
 	   <opensearch>
 	GeoNetwork opensearch service allow search to be made into the metadata catalog.
@@ -18,7 +17,8 @@
 	<protocol>Protocol</protocol>
 	<Reviewer>Content reviewer</Reviewer>
 	<waitGetCap>Loading server layers, please wait...</waitGetCap>
-	<savexml>
+	<savepdf>Save search results as pdf</savepdf>
+    <savexml>
 		<dc>Guardar metadatos de Dublin Core como XML</dc>
 		<fgdc>Guardar metadatos FGDC como XML</fgdc>
 		<iso19115Esri>Guardar metadatos ISO19115 en XML para ESRI ArcCatalog</iso19115Esri>
@@ -163,7 +163,6 @@
 	<confirmNewPassword>Confirmar nueva contraseña</confirmNewPassword>
 	<confirmPassword>Confirmar la Contraseña</confirmPassword>
 	<constraintsTab>Restricciones</constraintsTab>
-	<contactUs>Inf. Contacto</contactUs>
 	<convert>Convertir</convert>
 	<copyright1>Copyright</copyright1>
 	<copyright2>
@@ -244,7 +243,6 @@
 	<help>Ayuda</help>
 	<helpComplete>Ayuda Completa</helpComplete>
 	<hideAdvancedOptions>Búsqueda Simple</hideAdvancedOptions>
-	<highlights>Destacados</highlights>
 	<hitsPerPage>Resultados por página</hitsPerPage>
 	<hitsPerPageChoice value="10">10</hitsPerPageChoice>
 	<hitsPerPageChoice value="20">20</hitsPerPageChoice>

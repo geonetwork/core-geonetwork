@@ -41,11 +41,35 @@
 		<long>OAI Protocol for Metadata Harvesting 2.0</long>
 	</info>
 	
+	<info type="ogcwxs">
+        <short>OGC WxS</short>
+        <long>OGC Web services (ie. WMS, WFS and WCS)</long>
+    </info>
+    
+    <wxstype>Type of OGC webservice</wxstype>
+    <wxstypes>
+        <type value="WMS1.0.0">OGC Web Map Service (WMS) Version 1.0.0</type>
+        <type value="WMS1.1.1">OGC Web Map Service (WMS) Version 1.1.1 - preferred</type>
+        <!-- <type value="WMS1.3.0">OGC Web Map Service (WMS) Version 1.3.0</type> -->
+        <type value="WFS1.0.0">OGC Web Feature Service (WFS) Version 1.0.0</type>
+        <type value="WFS1.1.0">OGC Web Feature Service (WFS) Version 1.1.0 - preferred</type>
+        <type value="WCS1.0.0">OGC Web Coverage Service (WCS) Version 1.0.0</type>
+    </wxstypes>
+    
+    <wxslang>Metadata language</wxslang>
+    <wxsImp>Type of import</wxsImp>
+    <wxs119Only>By default GetCapabilities harvester will create<br/> only metadata for services in ISO19119.</wxs119Only>
+    <wxs139>Create metadata for layer elements using GetCapabilities information.</wxs139>
+    <wxs139Layer>Create metadata for layer elements using metadataURL attributs (if existing, if not use GetCapabilities).</wxs139Layer>
+    <createThumbnails>Create thumbnails for WMS layers.</createThumbnails>
+    
+    <serviceCategory>Category for service</serviceCategory>
+    <datasetCategory>Category for datasets</datasetCategory>
+    
+	
 	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Site</site>
-	
-	<name>Name</name>
 	<host>Host</host>
 	<port>Port</port>
 	<servlet>Servlet</servlet>
@@ -69,12 +93,10 @@
 	<warn>You can retrieve only after filling the site part</warn>
 	
 	<options>Options</options>
-	<every>Every</every>
 	<everySpec>(days : hours : minutes)</everySpec>
 	<oneRun>One run only</oneRun>
 	<createGroups>Create groups</createGroups>
 	<createCateg>Create categories</createCateg>
-	<status>Status</status>
 	<active>Active</active>
 	<inactive></inactive>
 	<retrieveSources>Retrieve sources</retrieveSources>
@@ -84,7 +106,6 @@
 	<criteria>Criteria</criteria>
 	<validate>Validate</validate>
 	<recurse>Recurse</recurse>
-	<host>Host</host>
 	<privileges>Privileges</privileges>
 	<categories>Categories</categories>
 	<url>URL</url>
@@ -205,6 +226,11 @@
 		<unretrievable>Unretrievable</unretrievable>
 		<badFormat>Bad XML format</badFormat>
 		<doesNotValidate>Does not validate</doesNotValidate>
+		<datasetAdded>Datasets</datasetAdded>
+        <datasetExist>Existing datasets</datasetExist>
+        <datasetMdUrl>Metadata Url used</datasetMdUrl>
+        <thumbnails>Thumbnails</thumbnails>
+        <thumbnailsFailed>Thumbnails failed</thumbnailsFailed>
 	</tipHeader>
 	
 	<notRun>Waiting for the first run</notRun>
@@ -331,6 +357,47 @@
 		<tip id="oai.prefix">
 			Choose the metadata format you want to harvest.
 		</tip>
+		<!-- OGCWXS harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+        
+        <tip id="ogcwxs.wxstype">
+            The type of the OGC web services.   
+        </tip>
+        
+        <tip id="ogcwxs.version">
+            The version of the OGC web services.    
+        </tip>
+        
+        <tip id="ogcwxs.lang">
+            The language of the produced metadata.  
+        </tip>
+        
+        <tip id="ogcwxs.capabUrl">
+            The given URL must point to a web service entry point. The format of a
+            URL is like this:<br/>
+            http://HOST/PATH            
+        </tip>
+        
+        
+        
+        <tip id="ogcwxs.addSearch">
+            Add one search on the remote server. You have to specify at least one search in order to
+            retrieve some metadata.
+        </tip>
+        
+        <tip id="ogcwxs.groups">
+            You can choose the privileges to associate to harvested metadata.
+        </tip>
+        
+        <tip id="ogcwxs.addGroups">
+            Select one or more groups (using the <b>&lt;CTRL&gt;</b> key) on the left panel and press this button.
+        </tip>
+        
+        <tip id="ogcwxs.categories">
+            You can assign one or more categories to harvested metadata. Use the <b>&lt;CTRL&gt;</b> 
+            key to select more than one category.
+        </tip>
+    
+    
 	</tips>
 </strings>
 

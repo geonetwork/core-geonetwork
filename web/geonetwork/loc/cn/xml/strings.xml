@@ -31,6 +31,7 @@
 	<setAll>Set All</setAll>
 	<Reviewer>Content reviewer</Reviewer>
 	<waitGetCap>Loading server layers, please wait...</waitGetCap>
+	<savepdf>Save search results as pdf</savepdf>
     <savexml>
 		<dc>Save Dublin Core metadata as XML</dc>
 		<fgdc>Save FGDC metadata as XML</fgdc>
