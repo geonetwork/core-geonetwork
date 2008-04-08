@@ -101,6 +101,20 @@
 				<call name="sources"  class=".guiservices.util.Sources"/>
 			</output>
 		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        
+        <service name="pdf.search">
+            <class name=".services.main.Search">
+                <param name="maxSummaryKeys" value="1000" />
+            </class>
+
+            <output sheet="portal-present-fop.xsl" file="true" contentType="application/pdf">
+                <call name="mdresults" class=".services.main.Result" />
+                <call name="siteURL" class=".guiservices.util.GetSiteURL" />
+            </output>
+        </service>
+        
 	</services>
 </geonet>
 

@@ -245,6 +245,8 @@
 		<allow service="portal.sources"/>
 
 		<!-- Metadata export services -->
+		<allow service="pdf.search"/>
+		<allow service="iso19115.pdf"/>
 		<allow service="dc.xml"/>
 		<allow service="fgdc.xml"/>
 		<allow service="iso19115to19139.xml"/>
@@ -290,6 +292,10 @@
 		<allow service="keywords.getselected"/>
 	 	<allow service="thesaurus.list"/>
 		<allow service="thesaurus.view"/><!-- FIXME : Check if needed -->
+		
+		<!-- Test i18n -->
+		<allow service="test.i18n"/>
+        <allow service="test.i18n.xml"/>
 	</profile>
 
 	<!-- ====================================================================== -->
