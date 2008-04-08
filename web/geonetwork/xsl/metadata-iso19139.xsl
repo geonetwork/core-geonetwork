@@ -5,6 +5,7 @@
 	xmlns:gmx="http://www.isotc211.org/2005/gmx"
 	xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:gml="http://www.opengis.net/gml"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:xalan = "http://xml.apache.org/xalan">
 
@@ -74,6 +75,43 @@
 	</xsl:template>
 	
 	<!-- ==================================================================== -->
+
+    <!-- ===================================================================== -->
+    <!-- xLink : transform xlink to hyperlink with href -->
+    <!-- ===================================================================== -->
+    <xsl:template mode="iso19139" match="srv:operatesOn[@xlink:href]">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+        
+        <xsl:variable name="title">
+            <xsl:call-template name="getTitle">
+                <xsl:with-param name="name"   select="name(.)"/>
+                <xsl:with-param name="schema" select="$schema"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="helpLink">
+            <xsl:call-template name="getHelpLink">
+                <xsl:with-param name="name"   select="name(.)"/>
+                <xsl:with-param name="schema" select="$schema"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="text">
+        <a>
+           <xsl:attribute name="href"><xsl:value-of select="@xlink:href"/></xsl:attribute>
+           <xsl:value-of select="@xlink:title"/>
+        </a>
+        </xsl:variable>
+        <xsl:apply-templates mode="simpleElement" select=".">
+             <xsl:with-param name="schema"   select="$schema"/>
+             <xsl:with-param name="edit"     select="$edit"/>
+             <xsl:with-param name="title"    select="$title"/>
+             <xsl:with-param name="helpLink" select="$helpLink"/>
+             <xsl:with-param name="text"     select="$text"/>
+        </xsl:apply-templates>
+       
+    </xsl:template>
+
+    <!-- ==================================================================== -->
 
 	<xsl:template name="iso19139String">
 		<xsl:param name="schema"/>
