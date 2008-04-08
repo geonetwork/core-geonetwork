@@ -30,6 +30,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -106,6 +107,49 @@ public class Unset implements Service
 
 		return response;
 	}
+
+	/*
+	 * Remove thumbnail images. 
+	 * (Useful for harvester which can not edit metadata but could have
+	 * set up a thumbnail on harvesting
+	 * )
+	 */
+	public void removeThumbnailFile (String id,  String type, ServiceContext context) throws Exception {
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+
+		DataManager dataMan = gc.getDataManager();
+
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		
+		Element result = dataMan.getThumbnails(dbms, id);
+		
+		if (result == null)
+			throw new OperationAbortedEx("Metadata not found", id);
+		
+		if (type == null) {
+			remove (result, "thumbnail", id, context);
+			remove (result, "large_thumbnail", id, context);
+		} else {
+			remove (result, type, id, context);
+		}
+		
+	}
+	
+	private void remove (Element result, String type, String id, ServiceContext context) throws Exception {
+		
+		result = result.getChild(type);
+		
+		if (result == null)
+			throw new OperationAbortedEx("Metadata has no thumbnail", id);
+
+		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + result.getText();
+		
+		if (!new File(file).delete())
+			context.error("Error while deleting thumbnail : "+file);
+		
+		
+	} 
+
 }
 
 //=============================================================================

@@ -99,7 +99,8 @@ public class Geonet
 		public static final String CSW                = Jeeves.Path.XML + "csw/";
 		public static final String VALIDATION         = Jeeves.Path.XML + "validation/";
 		public static final String STYLESHEETS        = "/xsl";
-		public static final String IMPORT_STYLESHEETS = "/xsl/conversion/import";
+		public static final String CONV_STYLESHEETS   = STYLESHEETS + "/conversion";
+		public static final String IMPORT_STYLESHEETS = CONV_STYLESHEETS + "/import";
 		public static final String LOGOS              = "/images/logos/";
 	}
 

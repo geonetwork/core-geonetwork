@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.harvest.harvester.csw.CswHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet20.Geonet20Harvester;
 import org.fao.geonet.kernel.harvest.harvester.oaipmh.OaiPmhHarvester;
+import org.fao.geonet.kernel.harvest.harvester.ogcwxs.OgcWxSHarvester;
 import org.fao.geonet.kernel.harvest.harvester.webdav.WebDavHarvester;
 import org.fao.geonet.kernel.harvest.harvester.z3950.Z3950Harvester;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -63,11 +64,12 @@ public abstract class AbstractHarvester
 	public static void staticInit(ServiceContext context) throws Exception
 	{
 		register(context, GeonetHarvester  .class);
-		register(context, WebDavHarvester  .class);
 		register(context, Geonet20Harvester.class);
+		register(context, WebDavHarvester  .class);
 		register(context, CswHarvester     .class);
 		register(context, Z3950Harvester   .class);
 		register(context, OaiPmhHarvester  .class);
+		register(context, OgcWxSHarvester  .class);		
 	}
 
 	//---------------------------------------------------------------------------

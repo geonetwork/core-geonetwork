@@ -156,6 +156,85 @@ public class Set implements Service
 		return response;
 	}
 
+	// FIXME : not elegant
+	public Element execOnHarvest(
+							Element params, 
+							ServiceContext context, 
+							Dbms dbms, 
+							DataManager dataMan) throws Exception
+	{
+		String  id            = Util.getParam     (params, Params.ID);
+		String  type          = Util.getParam     (params, Params.TYPE);
+		String  version       = Util.getParam     (params, Params.VERSION);
+		String  file          = Util.getParam     (params, Params.FNAME);
+		String  scalingDir    = Util.getParam     (params, Params.SCALING_DIR);
+		boolean scaling       = Util.getParam     (params, Params.SCALING, false);
+		int     scalingFactor = Util.getParamAsInt(params, Params.SCALING_FACTOR);
+		
+		boolean createSmall        = Util.getParam(params, Params.CREATE_SMALL,        false);
+		String  smallScalingDir    = Util.getParam(params, Params.SMALL_SCALING_DIR,   "");
+		int     smallScalingFactor = Util.getParam(params, Params.SMALL_SCALING_FACTOR, 0);
+		
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+
+		String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
+
+		new File(dataDir).mkdirs();
+		//-----------------------------------------------------------------------
+		//--- create the small thumbnail, removing the old one
+
+		if (createSmall)
+		{
+			String smallFile = getFileName(file, true);
+			String inFile    = context.getUploadDir() + file;
+			String outFile   = dataDir + smallFile;
+			// FIXME should be done before removeOldThumbnail(context, id, "small");
+			createThumbnail(inFile, outFile, smallScalingFactor, smallScalingDir);
+			dataMan.setThumbnail(dbms, id, true, smallFile);
+		}
+
+		//-----------------------------------------------------------------------
+		//--- create the requested thumbnail, removing the old one
+		// FIXME removeOldThumbnail(context, id, type);
+
+		if (scaling)
+		{
+			String newFile = getFileName(file, type.equals("small"));
+			String inFile  = context.getUploadDir() + file;
+			String outFile = dataDir + newFile;
+
+			createThumbnail(inFile, outFile, scalingFactor, scalingDir);
+
+			if (!new File(inFile).delete())
+				context.error("Error while deleting thumbnail : "+inFile);
+
+			dataMan.setThumbnail(dbms, id, type.equals("small"), newFile);
+		}
+		else
+		{
+			//--- move uploaded file to destination directory
+
+			File inFile  = new File(context.getUploadDir(), file);
+			File outFile = new File(dataDir,                file);
+
+			if (!inFile.renameTo(outFile))
+			{
+				inFile.delete();
+				throw new Exception("unable to move uploaded thumbnail to destination directory");
+			}
+
+			dataMan.setThumbnail(dbms, id, type.equals("small"), file);
+		}
+
+		//-----------------------------------------------------------------------
+
+		Element response = new Element("Response");
+		response.addContent(new Element("id").setText(id));
+		// NOT NEEDEDresponse.addContent(new Element("version").setText(dataMan.getNewVersion(id)));
+
+		return response;
+	}
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Private methods
