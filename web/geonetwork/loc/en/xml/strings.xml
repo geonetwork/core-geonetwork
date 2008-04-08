@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <savepdf>Save search results as pdf</savepdf>
 	<savexml>
 		<dc>Save Dublin Core metadata as XML</dc>
 		<fgdc>Save FGDC metadata as XML</fgdc>
