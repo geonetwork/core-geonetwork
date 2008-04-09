@@ -68,6 +68,16 @@ public class Worker implements Runnable
 		appPath = dir;
 	}
 
+	public void setOldUser(String user)
+	{
+		oldUserName = user;
+	}
+	
+	public void setOldGroup(String group)
+	{
+		oldGroupName = group;
+	}
+	
 	//---------------------------------------------------------------------------
 	//---
 	//--- Migration process
@@ -77,7 +87,10 @@ public class Worker implements Runnable
 	public void run()
 	{
 		if (!openSource())
+		{
+			dlg.stop();
 			return;
+		}
 
 		Resource oldRes = null;
 		Resource newRes = null;
@@ -126,11 +139,54 @@ public class Worker implements Runnable
 
 	//---------------------------------------------------------------------------
 
+	private void checkOldUser(Dbms oldDbms) throws Exception
+	{
+		String query = "SELECT id, profile FROM users WHERE username = ?";
+		List oldUserIds = oldDbms.select(query, oldUserName).getChildren();
+		oldDbms.commit();
+		
+		// Get the user id and profile from the db
+		if (oldUserIds.size() == 0)
+			throw new Exception("Can't find user \"" + oldUserName + "\" in the old GeoNetwork");
+		
+		// Chcek if the user is an Editor
+		String profile = ((Element)oldUserIds.get(0)).getChildText("profile");
+		if (!"Editor".equals(profile))
+			throw new Exception("User \"" + oldUserName + "\" is not an Editor");
+		
+		// Check if the group exists
+		oldUserId = Integer.parseInt(((Element)oldUserIds.get(0)).getChildText("id"));
+		
+		query = "SELECT id FROM groups WHERE name = ?";
+		List oldGroupIds = oldDbms.select(query, oldGroupName).getChildren();
+		oldDbms.commit();
+		if (oldGroupIds.size() == 0)
+			throw new Exception("Can't find group \"" + oldGroupName + "\" in the old GeoNetwork");
+		
+		// Check if the user belongs to the given group
+		oldGroupId = Integer.parseInt(((Element)oldGroupIds.get(0)).getChildText("id"));
+		
+		query = "SELECT groupId FROM userGroups WHERE groupId = ? AND userId = ?";
+		List userGroups = oldDbms.select(query, new Integer(oldGroupId), new Integer(oldUserId)).getChildren();
+		oldDbms.commit();
+		if (userGroups.size() == 0)
+			throw new Exception("User \"" + oldUserName + "\" doesn't belong to group \"" + oldGroupName + "\"");
+	}
+	
+	//---------------------------------------------------------------------------
+
 	private void executeJob(Dbms oldDbms, Dbms newDbms) throws Exception
 	{
-		dlg.reset(9);
+		if (oldUserName == null)
+			dlg.reset(9);
+		else
+		{
+			dlg.reset(10);
+			dlg.advance("Checking old user and group");
+			checkOldUser(oldDbms);
+		}
+		
 		dlg.advance("Removing data in new installation");
-
 		removeAll(newDbms);
 
 		Set<String> langs = getLanguages(newDbms);
@@ -160,6 +216,11 @@ public class Worker implements Runnable
 		restoreLocalizedRecords(newDbms);
 
 		Lib.metadata.clearIndexes();
+		
+		String message = "Migrated metadata : "+ mdIds.size() + "\n";
+		message += nNoEditor + " metadata had no editor and were assigned to " + oldUserName + ":" + oldGroupName + "\n";
+		message += nNoPriv + " metadata had no admin privileges and were assigned to " + oldUserName + ":" + oldGroupName + "\n";
+		Lib.gui.showInfo(dlg, message);
 	}
 
 	//---------------------------------------------------------------------------
@@ -312,26 +373,55 @@ public class Worker implements Runnable
 			if (!oldSiteId.equals(source))
 				continue;
 
-			//--- calculate owner and group owner
+			//--- calculate owner
 
 			query = "SELECT groupId FROM OperationAllowed WHERE metadataId=? AND operationId=4";
 			List privil = oldDbms.select(query, new Integer(id)).getChildren();
 			oldDbms.commit();
 
+			String owner = null;
+			String groupOwner = null;
+			
 			if (privil.size() == 0)
-				throw new Exception("Metadata has no admin privilege --> id:"+id);
+				if (oldUserName == null)
+					// throw an Exception if default user and group were not given
+					throw new Exception("Metadata has no admin privilege --> id: " + id);
+				else
+				{
+					// assign default user and group if metadata is not owned
+//					System.out.println("Metadata has no admin privilege --> id: " + id + " - assigned to default user and group"); // DEBUG
+					owner = "" + oldUserId;
+					groupOwner = "" + oldGroupId;
+					nNoPriv++;
+				}
+			else
+			{
+				//--- calculate group owner
+				groupOwner = ((Element) privil.get(0)).getChildText("groupid");
 
-			String groupOwner = ((Element) privil.get(0)).getChildText("groupid");
-
-			query = "SELECT DISTINCT id FROM Users, UserGroups WHERE id=userId AND profile='Editor' AND groupId=?";
-			List usrGrps = oldDbms.select(query, new Integer(groupOwner)).getChildren();
-			oldDbms.commit();
-
-			if (usrGrps.size() == 0)
-				throw new Exception("No editor for metadata --> id:"+id);
-
-			String owner = ((Element) usrGrps.get(0)).getChildText("id");
-
+				query = "SELECT DISTINCT id FROM Users, UserGroups, OperationAllowed" +
+				" WHERE Users.id=UserGroups.userId AND Users.profile='Editor'" +
+				" AND userGroups.groupId = OperationAllowed.groupId AND OperationAllowed.operationId = 4" +
+				" AND OperationAllowed.metadataId = ?";
+				List usrGrps = oldDbms.select(query, new Integer(id)).getChildren();
+				oldDbms.commit();
+				
+				if (usrGrps.size() == 0)
+					if (oldUserName == null)
+						// throw an Exception if default user and group were not given
+						throw new Exception("No editor for metadata --> id: " + id);
+					else
+					{
+						// assign default user and group if metadata is not owned
+//						System.out.println("No editor for metadata --> id: " + id + " - assigned to default user and group"); // DEBUG
+						owner = "" + oldUserId;
+						groupOwner = "" + oldGroupId;
+						nNoEditor++;
+					}
+				else
+					owner = ((Element) usrGrps.get(0)).getChildText("id");
+			}
+			
 			//--- no, ok we can store it
 
 			md.getChild("source").setText(newSiteId);
@@ -345,6 +435,8 @@ public class Worker implements Runnable
 			md.addContent(new Element("owner")      .setText(owner));
 			md.addContent(new Element("groupOwner") .setText(groupOwner));
 
+			System.out.println("metadata: " + id + " - owner: " + owner + " - group owner: " + groupOwner);
+			
 			Lib.database.insert(newDbms, "Metadata", md, idMapper);
 
 			//--- we can have even milions of records so it is convenient to commit
@@ -354,8 +446,6 @@ public class Worker implements Runnable
 
 			mdIds.add(id);
 		}
-
-		System.out.println("Migrated metadata : "+ mdIds.size());
 	}
 
 	//---------------------------------------------------------------------------
@@ -546,6 +636,14 @@ public class Worker implements Runnable
 	private GNSource    source;
 	private Set<String> mdIds = new HashSet<String>();
 
+	private String oldUserName;
+	private String oldGroupName;
+	private int oldUserId;
+	private int oldGroupId;
+	
+	private int nNoPriv;
+	private int nNoEditor;
+	
 	private ProgressDialog dlg;
 
 	//---------------------------------------------------------------------------
