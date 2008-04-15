@@ -902,7 +902,9 @@
 
 	<xsl:template mode="iso19115EditOnlineRes" match="*">
 		<xsl:param name="schema"/>
-		
+	
+		<xsl:variable name="id" select="generate-id(.)"/>
+		<div id="{$id}"/>
 		<xsl:apply-templates mode="complexElement" select=".">
 			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="edit"   select="true()"/>
@@ -927,11 +929,13 @@
 					<xsl:when test="protocol='WWW:DOWNLOAD-1.0-http--download' and string(orName)!=''">
 						<xsl:apply-templates mode="iso19115FileRemove" select="orName">
 							<xsl:with-param name="access" select="'private'"/>
+							<xsl:with-param name="id" select="$id"/>
 						</xsl:apply-templates>
 					</xsl:when>
 					<xsl:when test="protocol='WWW:DOWNLOAD-1.0-http--download' and orName">
 						<xsl:apply-templates mode="iso19115FileUpload" select="orName">
 							<xsl:with-param name="access" select="'private'"/>
+							<xsl:with-param name="id" select="$id"/>
 						</xsl:apply-templates>
 					</xsl:when>
 					<xsl:when test="protocol='WWW:LINK-1.0-http--link'"/> <!-- hide orName for www links -->
@@ -1187,18 +1191,24 @@
 	
 	<xsl:template mode="iso19115EditGraphOver" match="*">
 		<xsl:param name="schema"/>
-		
+	
+		<xsl:variable name="id" select="generate-id(.)"/>
+		<div id="{$id}"/>
 		<xsl:apply-templates mode="complexElement" select=".">
 			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="edit"   select="true()"/>
 			<xsl:with-param name="content">
-				
+			
 				<xsl:choose>
 					<xsl:when test="(string(bgFileDesc)='thumbnail' or string(bgFileDesc)='large_thumbnail') and string(bgFileName)!=''">
-						<xsl:apply-templates mode="iso19115FileRemove" select="bgFileName"/>
+						<xsl:apply-templates mode="iso19115FileRemove" select="bgFileName">
+							<xsl:with-param name="id" select="$id"/>
+						</xsl:apply-templates>
 					</xsl:when>
 					<xsl:when test="string(bgFileDesc)='thumbnail' or string(bgFileDesc)='large_thumbnail'">
-						<xsl:apply-templates mode="iso19115FileUpload" select="bgFileName"/>
+						<xsl:apply-templates mode="iso19115FileUpload" select="bgFileName">
+							<xsl:with-param name="id" select="$id"/>
+						</xsl:apply-templates>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:apply-templates mode="elementEP" select="bgFileName|geonet:child[string(@name)='bgFileName']">
@@ -1716,6 +1726,7 @@
 	
 	<xsl:template mode="iso19115FileUpload" match="*">
 		<xsl:param name="access" select="'public'"/>
+		<xsl:param name="id"/>
 	
 		<xsl:call-template name="simpleElementGui">
 			<xsl:with-param name="title" select="/root/gui/strings/file"/>
@@ -1723,7 +1734,7 @@
 				<table width="100%"><tr>
 					<xsl:variable name="ref" select="geonet:element/@ref"/>
 					<td width="70%"><input type="file" class="content" name="f_{$ref}" value="{string(.)}"/>&#160;</td>
-					<td align="right"><button class="content" onclick="javascript:doFileUploadAction('{/root/gui/locService}/resources.upload','{$ref}',document.mainForm.f_{$ref}.value,'{$access}')"><xsl:value-of select="/root/gui/strings/upload"/></button></td>
+					<td align="right"><button class="content" onclick="javascript:doFileUploadAction('{/root/gui/locService}/resources.upload','{$ref}',document.mainForm.f_{$ref}.value,'{$access}','{$id}')"><xsl:value-of select="/root/gui/strings/upload"/></button></td>
 				</tr></table>
 			</xsl:with-param>
 			<xsl:with-param name="schema"/>
@@ -1732,6 +1743,7 @@
 	
 	<xsl:template mode="iso19115FileRemove" match="*">
 		<xsl:param name="access" select="'public'"/>
+		<xsl:param name="id"/>
 	
 		<xsl:call-template name="simpleElementGui">
 			<xsl:with-param name="title" select="/root/gui/strings/file"/>
@@ -1739,7 +1751,7 @@
 				<table width="100%"><tr>
 					<xsl:variable name="ref" select="geonet:element/@ref"/>
 					<td width="70%"><xsl:value-of select="string(.)"/></td>
-					<td align="right"><button class="content" onclick="javascript:doFileRemoveAction('{/root/gui/locService}/resources.del','{$ref}','{$access}')"><xsl:value-of select="/root/gui/strings/remove"/></button></td>
+					<td align="right"><button class="content" onclick="javascript:doFileRemoveAction('{/root/gui/locService}/resources.del','{$ref}','{$access}','{$id}')"><xsl:value-of select="/root/gui/strings/remove"/></button></td>
 				</tr></table>
 			</xsl:with-param>
 			<xsl:with-param name="schema"/>

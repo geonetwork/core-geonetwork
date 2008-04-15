@@ -51,6 +51,7 @@ public class Params
 	public static final String NAME         = "name";
 	public static final String ORG          = "org";
 	public static final String PASSWORD     = "password";
+	public static final String POSITION     = "position";
 	public static final String NEW_PASSWORD = "newPassword";
 	public static final String PROFILE      = "profile";
 	public static final String REF          = "ref";

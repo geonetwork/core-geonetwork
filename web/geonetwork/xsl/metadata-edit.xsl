@@ -13,7 +13,19 @@
 	-->
 	<xsl:template mode="script" match="/">
 		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=control,slider,effects,controls"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"></script>
 		<script language="JavaScript1.2" type="text/javascript">
+
+			// prototype 1.6 will make findPos redundant
+			function findPos(obj) {
+				var curtop = 0;
+				if (obj.offsetParent) {
+					do {
+								curtop += obj.offsetTop;
+					} while (obj = obj.offsetParent);
+				}
+				return curtop;
+			}
 
 			function doActionInWindow(action)
 			{
@@ -40,25 +52,51 @@
 				doAction(action);
 			}
 
-			function doElementAction(action, ref)
+			function doElementAction(action, ref, id, offset)
 			{
-				// alert("In doElementAction(" + action + ", " + ref + ")"); // DEBUG
+				var top = findPos($(id));	
+				//alert("In doElementAction(" + action + ", " + ref + ", " + offset + ")"); // DEBUG
 				document.mainForm.ref.value = ref;
-				doAction(action + '#_' + ref);
+				document.mainForm.position.value = top + offset;
+				doAction(action);
 			}
 
-			function doNewElementAction(action, ref, name)
+			function doMoveElementAction(action, ref, id)
 			{
-				// alert("In doNewElementAction(" + action + ", " + ref + ", " + name + ")"); // DEBUG
+				var top = findPos($(id));	
+				// position at top of both elements -
+				// ie. if up then subtract height of previous sibling - if down then
+				// do nothing 
+				if (action.include('elem.up')) { 
+					var prev = $(id).previous();
+					top = top - prev.getHeight();
+					// alert("in doMoveElementAction " + prev.inspect() + ")");
+				} 
+				document.mainForm.ref.value = ref;
+				document.mainForm.position.value = top;
+				doAction(action);
+			}
+
+			function doNewElementAction(action, ref, name, id)
+			{
 				document.mainForm.name.value = name;
-				doElementAction(action, ref);
+				var offset = 0;
+				var buttons = $(id).getElementsBySelector('a#button'+id);
+				var blocks = $(id).getElementsBySelector('fieldset');
+				// calculate offset to scroll screen down so added element is at top
+				if (buttons.length > 1 || blocks.length > 0) {
+					offset = $(id).getHeight();
+				}
+				//alert("In doNewElementAction ( " + $(id).inspect() + ", " + buttons.inspect() + ", " + blocks.inspect() + ", " + offset + ")");
+				doElementAction(action, ref, id, offset);
 			}
 
-			function doNewORElementAction(action, ref, name, child)
+			function doNewORElementAction(action, ref, name, child, id)
 			{
-				// alert("In doNewORElementAction(" + action + ", " + ref + ", " + name + ", " + child + ")"); // DEBUG
+				// alert("In doNewORElementAction(" + action + ", " + ref + ", " + name + ", " + child + ", " + id + ")"); // DEBUG
 				document.mainForm.child.value = child;
-				doNewElementAction(action, ref, name);
+				document.mainForm.name.value = name;
+				doElementAction(action, ref, id, 0);
 			}
 
 			function doConfirm(action, message)
@@ -72,8 +110,9 @@
 				return false;
 			}
 
-			function doFileUploadAction(action, ref, fname, access)
+			function doFileUploadAction(action, ref, fname, access, id)
 			{
+				var top = findPos($(id));	
 				// alert("In doFileUploadAction(" + action + ", " + ref + ", " + fname + ")"); // DEBUG
 
 				if (fname.indexOf('/') > -1)
@@ -84,17 +123,18 @@
 				document.mainForm.fname .value = fname;
 				document.mainForm.access.value = access;
 				document.mainForm.ref   .value = ref;
+				document.mainForm.position.value = top;
 				document.mainForm.action = action;
 				document.mainForm.enctype="multipart/form-data";
 				document.mainForm.encoding="multipart/form-data";
 				goSubmit('mainForm');
 			}
 			
-			function doFileRemoveAction(action, ref, access)
+			function doFileRemoveAction(action, ref, access, id)
 			{
 				// alert("In doFileRemoveAction(" + action + ", " + ref + ")"); // DEBUG
 				document.mainForm.access.value = access;
-				doElementAction(action, ref);
+				doElementAction(action, ref, id, 0);
 			}
 
 			function setRegion(westField, eastField, southField, northField, choice)
@@ -103,7 +143,7 @@
 				
 				if (choice != "")
 				{
-					coords = choice.split(";")
+					coords = choice.split(";");
 					westField.value  = coords[0];
 					eastField.value  = coords[1];
 					southField.value = coords[2];
@@ -117,7 +157,20 @@
 					northField.value = "";
 				}
 			}
-			
+
+			function scrollIt()
+			{
+				window.scroll(0,<xsl:value-of select="/root/gui/position"/>);
+			}
+
+			// override the body onLoad init() function in geonetwork.js
+			function onloadinit()
+			{
+				timeId = setTimeout('scrollIt()',1000);
+				<!-- <xsl:message>POSITION: <xsl:value-of select="/root/gui/position"/></xsl:message> -->
+			}
+		
+			Event.observe(window,'load',onloadinit);
 		</script>
 		<style type="text/css">@import url(<xsl:value-of select="/root/gui/url"/>/scripts/calendar/calendar-blue2.css);</style>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar.js"></script>
@@ -149,6 +202,7 @@
 							<input type="hidden" name="child"/>
 							<input type="hidden" name="fname"/>
 							<input type="hidden" name="access"/>
+							<input type="hidden" name="position"/>
 							<input type="hidden" name="currTab" value="{/root/gui/currTab}"/>
 
 							<table width="100%">
@@ -210,7 +264,7 @@
 		</button>
 		
 		<!-- thumbnails -->
-		<xsl:if test="string(geonet:info/schema)='iso19115' or string(geonet:info/schema)='iso19139'"> <!-- FIXME: should be more general -->
+		<xsl:if test="string(geonet:info/schema)='iso19115' or starts-with(string(geonet:info/schema),'iso19139')"> <!-- FIXME: should be more general -->
 			&#160;
 			<button class="content" onclick="doAction('{/root/gui/locService}/metadata.thumbnail.form')">
 				<xsl:value-of select="/root/gui/strings/thumbnails"/>

@@ -112,6 +112,7 @@ public class Geonet
 		public static final String MAIN_SEARCH				= "main.search";
 		public static final String SEARCH_RESULT			= "search.result";
 		public static final String METADATA_SHOW			= "metadata.show";
+		public static final String METADATA_POSITION  = "metadata.position";
 		public static final String SEARCH_KEYWORDS_RESULT	= "search.keywords.result";
 	}
 
