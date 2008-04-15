@@ -16,6 +16,7 @@
 		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"></script>
 		<script language="JavaScript1.2" type="text/javascript">
 
+			// findPos comes from http://www.quirksmode.org
 			// prototype 1.6 will make findPos redundant
 			function findPos(obj) {
 				var curtop = 0;
