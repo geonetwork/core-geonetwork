@@ -666,8 +666,8 @@ div#error {
 #featured {
 	background-color: #f6fcff;
 	width: 400px;
-	margin: 2%;
-	padding: 1%;
+	margin: 10px;
+	padding: 5px;
 	border-width: 1px;
 	border-style: inset;
 }
