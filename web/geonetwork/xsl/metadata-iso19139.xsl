@@ -5,6 +5,7 @@
 	xmlns:gmx="http://www.isotc211.org/2005/gmx"
 	xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:gml="http://www.opengis.net/gml"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:xalan = "http://xml.apache.org/xalan">
 
@@ -628,11 +629,18 @@
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
 					<xsl:with-param name="text">
-						<xsl:variable name="ref" select="gco:DateTime/geonet:element/@ref"/>
+						<xsl:variable name="ref" select="gco:Date/geonet:element/@ref|gco:DateTime/geonet:element/@ref"/>
 						
 						<table width="100%"><tr>
 							<td>
+								<xsl:choose>
+									<xsl:when test="gco:DateTime">
 								<input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{gco:DateTime/text()}" size="30" readonly="1"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{gco:Date/text()}" size="30" readonly="1"/>
+									</xsl:otherwise>
+								</xsl:choose>
 							</td>
 							<td align="center" width="30" valign="middle">
 								<img src="{/root/gui/url}/scripts/calendar/img.gif"
@@ -645,16 +653,32 @@
 									Calendar.setup(
 										{
 											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
+											<xsl:choose>
+												<xsl:when test="gco:Date">
+											ifFormat    : "%Y-%m-%d",
+											showsTime   : false,
+												</xsl:when>
+												<xsl:otherwise>
 											ifFormat    : "%Y-%m-%dT%H:%M:00",                                // the date format
-											showsTime   : true, // Show the time
+											showsTime   : true,                  // show the time
+												</xsl:otherwise>
+											</xsl:choose>
 											button      : &quot;_<xsl:value-of select="$ref"/>_trigger&quot;  // ID of the button
 										}
 									);
 									Calendar.setup(
 										{
 											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
+											<xsl:choose>
+												<xsl:when test="gco:Date">
+											ifFormat    : "%Y-%m-%d",
+											showsTime   : false,
+												</xsl:when>
+												<xsl:otherwise>
 											ifFormat    : "%Y-%m-%dT%H:%M:00",                                // the date format
-											showsTime   : true, // Show the time
+											showsTime   : true,                 // show the time
+												</xsl:otherwise>
+											</xsl:choose>
 											button      : &quot;_<xsl:value-of select="$ref"/>_cal&quot;  // ID of the button
 										}
 									);
@@ -728,7 +752,7 @@
 								<xsl:choose>
                   <xsl:when test="gco:DateTime">
                       ifFormat    : "%Y-%m-%dT%H:%M:00", // the date format
-                      showsTime : false, // Do not show the time
+                      showsTime : true, // Show the time
                   </xsl:when>
                   <xsl:otherwise>
                       ifFormat    : "%Y-%m-%d", // the date format
@@ -744,7 +768,7 @@
 								<xsl:choose>
                   <xsl:when test="gco:DateTime">
                       ifFormat    : "%Y-%m-%dT%H:%M:00", // the date format
-                      showsTime : false, // Do not show the time
+                      showsTime : true, // Show the time
                   </xsl:when>
                   <xsl:otherwise>
                       ifFormat    : "%Y-%m-%d",  // the date format
@@ -809,7 +833,7 @@
 										{
 											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
 						                    ifFormat    : "%Y-%m-%dT%H:%M:00", // the date format
-                    						showsTime : false, // Do not show the time
+                    						showsTime : true, // Do not show the time
 											button      : &quot;_<xsl:value-of select="$ref"/>_trigger&quot;  // ID of the button
 										}
 									);
@@ -1537,6 +1561,8 @@
 	<xsl:template mode="iso19139EditOnlineRes" match="*">
 		<xsl:param name="schema"/>
 		
+		<xsl:variable name="id" select="generate-id(.)"/>
+		<div id="{$id}"/>
 		<xsl:apply-templates mode="complexElement" select=".">
 			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="edit"   select="true()"/>
@@ -1561,11 +1587,13 @@
 					<xsl:when test="string(gmd:protocol/gco:CharacterString)='WWW:DOWNLOAD-1.0-http--download' and string(gmd:name/gco:CharacterString)!=''">
 						<xsl:apply-templates mode="iso19139FileRemove" select="gmd:name/gco:CharacterString">
 							<xsl:with-param name="access" select="'private'"/>
+							<xsl:with-param name="id" select="$id"/>
 						</xsl:apply-templates>
 					</xsl:when>
 					<xsl:when test="string(gmd:protocol/gco:CharacterString)='WWW:DOWNLOAD-1.0-http--download' and gmd:name">
 						<xsl:apply-templates mode="iso19139FileUpload" select="gmd:name/gco:CharacterString">
 							<xsl:with-param name="access" select="'private'"/>
+							<xsl:with-param name="id" select="$id"/>
 						</xsl:apply-templates>
 					</xsl:when>
 					<xsl:when test="string(gmd:protocol/gco:CharacterString)='WWW:LINK-1.0-http--link'"/> <!-- hide orName for www links -->
@@ -1908,6 +1936,7 @@
 
 	<xsl:template mode="iso19139FileUpload" match="*">
 		<xsl:param name="access" select="'public'"/>
+		<xsl:param name="id"/>
 	
 		<xsl:call-template name="simpleElementGui">
 			<xsl:with-param name="title" select="/root/gui/strings/file"/>
@@ -1915,7 +1944,7 @@
 				<table width="100%"><tr>
 					<xsl:variable name="ref" select="geonet:element/@ref"/>
 					<td width="70%"><input type="file" class="content" name="f_{$ref}" value="{string(.)}"/>&#160;</td>
-					<td align="right"><button class="content" onclick="javascript:doFileUploadAction('{/root/gui/locService}/resources.upload','{$ref}',document.mainForm.f_{$ref}.value,'{$access}')"><xsl:value-of select="/root/gui/strings/upload"/></button></td>
+					<td align="right"><button class="content" onclick="javascript:doFileUploadAction('{/root/gui/locService}/resources.upload','{$ref}',document.mainForm.f_{$ref}.value,'{$access}','{$id}')"><xsl:value-of select="/root/gui/strings/upload"/></button></td>
 				</tr></table>
 			</xsl:with-param>
 			<xsl:with-param name="schema"/>
@@ -1926,6 +1955,7 @@
 
 	<xsl:template mode="iso19139FileRemove" match="*">
 		<xsl:param name="access" select="'public'"/>
+		<xsl:param name="id"/>
 	
 		<xsl:call-template name="simpleElementGui">
 			<xsl:with-param name="title" select="/root/gui/strings/file"/>
@@ -1933,7 +1963,7 @@
 				<table width="100%"><tr>
 					<xsl:variable name="ref" select="geonet:element/@ref"/>
 					<td width="70%"><xsl:value-of select="string(.)"/></td>
-					<td align="right"><button class="content" onclick="javascript:doFileRemoveAction('{/root/gui/locService}/resources.del','{$ref}','{$access}')"><xsl:value-of select="/root/gui/strings/remove"/></button></td>
+					<td align="right"><button class="content" onclick="javascript:doFileRemoveAction('{/root/gui/locService}/resources.del','{$ref}','{$access}',{$id})"><xsl:value-of select="/root/gui/strings/remove"/></button></td>
 				</tr></table>
 			</xsl:with-param>
 			<xsl:with-param name="schema"/>

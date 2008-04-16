@@ -69,9 +69,12 @@ class EditUtils
 		//--- handle current tab
 
 		Element elCurrTab = params.getChild(Params.CURRTAB);
+		Element elCurrPos = params.getChild(Params.POSITION);
 
 		if (elCurrTab != null)
 			session.setProperty(Geonet.Session.METADATA_SHOW, elCurrTab.getText());
+		if (elCurrPos != null)
+			session.setProperty(Geonet.Session.METADATA_POSITION, elCurrPos.getText());
 
 		//-----------------------------------------------------------------------
 		//--- check access
