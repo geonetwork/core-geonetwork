@@ -351,9 +351,9 @@ class Harvester
      */
 	 private Element addOperatesOnUuid (Element md, List<WxSLayerRegistry> layersRegistry) {
 				
-		Namespace gmd 	= Namespace.getNamespace("http://www.isotc211.org/2005/gmd");
-		Namespace gco 	= Namespace.getNamespace("http://www.isotc211.org/2005/gco");
-		Namespace srv 	= Namespace.getNamespace("http://www.isotc211.org/2005/srv");
+		Namespace gmd 	= Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
+		Namespace gco 	= Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
+		Namespace srv 	= Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
 		Namespace xlink = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
 		
 		
