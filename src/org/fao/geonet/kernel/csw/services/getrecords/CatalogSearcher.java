@@ -95,7 +95,7 @@ class CatalogSearcher
 			context.error("Error while searching metadata ");
 			context.error("  (C) StackTrace:\n"+ Util.getStackTrace(e));
 
-			throw new NoApplicableCodeEx("Rised exception while searching metadata : "+ e);
+			throw new NoApplicableCodeEx("Raised exception while searching metadata : "+ e);
 		}
 	}
 

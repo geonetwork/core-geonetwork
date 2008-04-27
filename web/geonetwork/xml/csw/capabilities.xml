@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<csw:Capabilities version="2.0.1"
+<csw:Capabilities version="2.0.2"
 						xmlns:ows  ="http://www.opengis.net/ows"
 						xmlns:ogc  ="http://www.opengis.net/ogc"
-						xmlns:csw  ="http://www.opengis.net/cat/csw"
+						xmlns:csw  ="http://www.opengis.net/cat/csw/2.0.2"
 						xmlns:gml  ="http://www.opengis.net/gml"
 						xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -16,7 +16,7 @@
 		
 		<ows:Abstract>
 			GeoNetwork catalog service conform to the HTTP protocol binding 
- of the OpenGIS Catalogue Service specification version 2.0.1
+ of the OpenGIS Catalogue Service specification version 2.0.2
 		</ows:Abstract>
 	
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
@@ -33,7 +33,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
 		
 		<ows:ServiceType>CSW</ows:ServiceType>
-		<ows:ServiceTypeVersion>2.0.1</ows:ServiceTypeVersion>
+		<ows:ServiceTypeVersion>2.0.2</ows:ServiceTypeVersion>
 		<ows:Fees>NONE</ows:Fees>
 		<ows:AccessConstraints>NONE</ows:AccessConstraints>
 	</ows:ServiceIdentification>
@@ -92,6 +92,10 @@
 				<ows:Value>Filter_Capabilities</ows:Value>
 			</ows:Parameter>
 			
+			<ows:Constraint name="PostEncoding">
+				<ows:Value>XML</ows:Value>
+			</ows:Constraint>
+			
 		</ows:Operation>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
@@ -104,20 +108,27 @@
 				</ows:HTTP>
 			</ows:DCP>
 						
-			<ows:Parameter name="typeName">
+			<ows:Parameter name="TypeName">
+				<ows:Value>csw:Record</ows:Value>
 				<ows:Value>csw:application</ows:Value>
 				<ows:Value>csw:service</ows:Value>
 				<ows:Value>csw:dataset</ows:Value>
 				<ows:Value>csw:datasetcollection</ows:Value>
 			</ows:Parameter>
 			
-			<ows:Parameter name="outputFormat">
+			<ows:Parameter name="OutputFormat">
 				<ows:Value>application/xml</ows:Value>
 			</ows:Parameter>
 			
-			<ows:Parameter name="schemaLanguage">
-				<ows:Value>http://www.w3.org/XML/Schema</ows:Value>
+			<ows:Parameter name="SchemaLanguage">
+				<ows:Value>http://www.w3.org/TR/xmlschema-1/</ows:Value>
+			<!--
+				<ows:Value>http://www.w3.org/XML/Schema</ows:Value>-->
 			</ows:Parameter>
+			
+			<ows:Constraint name="PostEncoding">
+				<ows:Value>XML</ows:Value>
+			</ows:Constraint>
 		</ows:Operation>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
@@ -140,6 +151,28 @@
 					<ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw"  />
 				</ows:HTTP>
 			</ows:DCP>
+			
+			<ows:Parameter name="ResultType">
+				 <ows:Value>hits</ows:Value>
+				 <ows:Value>results</ows:Value>
+				 <ows:Value>validate</ows:Value>
+			</ows:Parameter>
+
+			<ows:Parameter name="OutputFormat">
+			        <ows:Value>application/xml</ows:Value>
+			</ows:Parameter>
+
+			<ows:Parameter name="OutputSchema">
+				<ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+			</ows:Parameter>
+
+			<ows:Parameter name="TypeNames">
+				<ows:Value>csw:Record</ows:Value>
+			</ows:Parameter>
+
+			<ows:Constraint name="PostEncoding">
+				<ows:Value>XML</ows:Value>
+			</ows:Constraint>
 		</ows:Operation>
 	
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
@@ -151,6 +184,30 @@
 					<ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw"  />
 				</ows:HTTP>
 			</ows:DCP>
+			
+			<ows:Parameter name="OutputSchema">
+				<ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+			</ows:Parameter>
+
+			<ows:Parameter name="OutputFormat">
+				<ows:Value>application/xml</ows:Value>
+			</ows:Parameter>
+
+			<ows:Parameter name="ResultType">
+				 <ows:Value>hits</ows:Value>
+				 <ows:Value>results</ows:Value>
+				 <ows:Value>validate</ows:Value>
+			</ows:Parameter>
+
+			<ows:Parameter name="ElementSetName">
+				 <ows:Value>brief</ows:Value>
+				 <ows:Value>summary</ows:Value>
+				 <ows:Value>full</ows:Value>
+			</ows:Parameter>
+
+			<ows:Constraint name="PostEncoding">
+				<ows:Value>XML</ows:Value>
+			</ows:Constraint>
 		</ows:Operation>
 	
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
@@ -180,13 +237,13 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
 		
 		<ows:Parameter name="service">
-			<ows:Value>http://www.opengis.net/cat/csw</ows:Value>
+			<ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
 		</ows:Parameter>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->	
 		
 		<ows:Parameter name="version">
-			<ows:Value>2.0.1</ows:Value>
+			<ows:Value>2.0.2</ows:Value>
 		</ows:Parameter>		
 	</ows:OperationsMetadata>
 

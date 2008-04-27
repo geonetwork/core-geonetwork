@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- Purpose: used to import OGC CITE test metadata in the catalog -->
-
-<!-- Change date: 24-01-2008 - JT
-     Changed the csw namespace URL to ensure validation against current CITE
-     tests still works (from http://www.opengis.net/cat/csw
-     to http://www.opengis.net/cat/csw/2.0.2 -->
-
 <xsl:stylesheet		version="1.0" 
 					xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 					xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"

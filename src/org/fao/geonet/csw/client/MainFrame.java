@@ -88,7 +88,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener
 	public MainFrame()
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("GeoNetwork CSW 2.0.1 test application");
+		setTitle("GeoNetwork CSW 2.0.2 test application");
 
 		//------------------------------------------------------------------------
 

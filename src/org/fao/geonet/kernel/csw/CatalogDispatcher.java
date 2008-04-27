@@ -253,7 +253,7 @@ public class CatalogDispatcher
 
 	//---------------------------------------------------------------------------
 
-	private final static String VALIDATE_PATH = "web/xml/validation/csw/2.0.1/CSW-discovery.xsd";
+	private final static String VALIDATE_PATH = "web/xml/validation/csw/2.0.2/CSW-discovery.xsd";
 }
 
 //=============================================================================

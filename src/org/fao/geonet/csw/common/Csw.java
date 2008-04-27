@@ -40,7 +40,7 @@ public class Csw
 	//---
 	//---------------------------------------------------------------------------
 
-	public static final Namespace NAMESPACE_CSW = Namespace.getNamespace("csw", "http://www.opengis.net/cat/csw");
+	public static final Namespace NAMESPACE_CSW = Namespace.getNamespace("csw", "http://www.opengis.net/cat/csw/2.0.2");
 	public static final Namespace NAMESPACE_OGC = Namespace.getNamespace("ogc", "http://www.opengis.net/ogc");
 	public static final Namespace NAMESPACE_OWS = Namespace.getNamespace("ows", "http://www.opengis.net/ows");
 	public static final Namespace NAMESPACE_ENV = Namespace.getNamespace("env", "http://www.w3.org/2003/05/soap-envelope");
@@ -54,7 +54,7 @@ public class Csw
 	public static final String SCHEMA_LANGUAGE = "http://www.w3.org/XML/Schema";
 	public static final String SERVICE         = "CSW";
 
-	public static final String CSW_VERSION    = "2.0.1";
+	public static final String CSW_VERSION    = "2.0.2";
 	public static final String OWS_VERSION    = "1.0.0";
 	public static final String FILTER_VERSION = "1.1.0";
 
@@ -110,8 +110,14 @@ public class Csw
 					else if (typeName.equals(APPLICATION.toString()))
 						hs.add(APPLICATION);
 
-					//--- avoid exception because the typeName is too ambiguous and not used now
-//FIXME			else throw new InvalidParameterValueEx("typeName", typeName);
+			    // These two are explicitly not allowed as search targets in CSW 2.0.2,
+			    // so we throw an exception if the client asks for them
+			    else if (typeName.equals("csw:BriefRecord"))
+				throw new InvalidParameterValueEx("typeName", typeName);
+
+			    else if (typeName.equals("csw:SummaryRecord"))
+				throw new InvalidParameterValueEx("typeName", typeName);
+
 				}
 			}
 
@@ -145,7 +151,8 @@ public class Csw
 
 		public static ElementSetName parse(String setName) throws InvalidParameterValueEx
 		{
-			if (setName == null)								return FULL;
+			if (setName == null)
+			    return SUMMARY; // required by CSW 2.0.2
 			if (setName.equals(BRIEF  .toString()))	return BRIEF;
 			if (setName.equals(SUMMARY.toString())) 	return SUMMARY;
 			if (setName.equals(FULL   .toString()))	return FULL;

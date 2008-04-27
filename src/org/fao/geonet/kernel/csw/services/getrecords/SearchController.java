@@ -45,121 +45,131 @@ import org.jdom.Element;
 
 public class SearchController
 {
-	//---------------------------------------------------------------------------
-	//---
-	//--- Single public method to perform the general search tasks
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Single public method to perform the general search tasks
+    //---
+    //---------------------------------------------------------------------------
 
-	public Element search(ServiceContext context, int startPos, int maxRecords, int hopCount,
-								 ResultType resultType, OutputSchema outSchema, ElementSetName setName,
-								 Set<TypeName> typeNames, Element filterExpr, List<SortField> sortFields,
-								 Set<String> elemNames) throws CatalogException
-	{
-		Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
+    public Element search(ServiceContext context, int startPos, int maxRecords, int hopCount,
+			  ResultType resultType, OutputSchema outSchema, ElementSetName setName,
+			  Set<TypeName> typeNames, Element filterExpr, List<SortField> sortFields,
+			  Set<String> elemNames) throws CatalogException
+    {
+	Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
 
-		CatalogSearcher searcher = new CatalogSearcher();
+	CatalogSearcher searcher = new CatalogSearcher();
 
-		List<ResultItem> searchResults = searcher.search(context, filterExpr, typeNames, sortFields);
+	List<ResultItem> searchResults = searcher.search(context, filterExpr, typeNames, sortFields);
 
-		int counter = 0;
+	int counter = 0;
 
-		if (resultType == ResultType.RESULTS)
-			for (int i=startPos; (i<startPos+maxRecords) && (i<=searchResults.size()); i++)
-			{
-				counter++;
-
-				String  id = searchResults.get(i -1).getID();
-				Element md = retrieveMetadata(context, id, setName, outSchema, elemNames);
-
-				if (md == null)
-					context.warning("SearchController : Metadata not found or invalid schema : "+ id);
-				else
-					results.addContent(md);
-			}
-
-		results.setAttribute("numberOfRecordsMatched",  searchResults.size() +"");
-		results.setAttribute("numberOfRecordsReturned", counter +"");
-		results.setAttribute("elementSet",              setName.toString());
-
-		return results;
-	}
-
-	//---------------------------------------------------------------------------
-
-	private Element retrieveMetadata(ServiceContext context, String id, ElementSetName setName,
-												OutputSchema outSchema, Set<String> elemNames) throws CatalogException
-	{
-		try
+	if (resultType == ResultType.RESULTS)
+	    for (int i=startPos; (i<startPos+maxRecords) && (i<=searchResults.size()); i++)
 		{
-			Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		    counter++;
 
-			//--- get metadata from DB
+		    String  id = searchResults.get(i -1).getID();
+		    Element md = retrieveMetadata(context, id, setName, outSchema, elemNames);
 
-			Element  res = dbms.select("SELECT schemaId, data FROM Metadata WHERE id="+id);
-			Iterator i   = res.getChildren().iterator();
-
-			dbms.commit();
-
-			if (!i.hasNext())
-				return null;
-
-			Element record = (Element) i.next();
-
-			String schema = record.getChildText("schemaid");
-			String data   = record.getChildText("data");
-
-			//--- skip metadata with wrong schemas
-
-			if (schema.equals("fgdc-std") || schema.equals("dublin-core") || schema.equals("iso19115"))
-				if (outSchema != OutputSchema.OGC_CORE)
-					return null;
-
-			Element md = Xml.loadString(data, false);
-
-			//--- apply stylesheet according to setName and schema
-
-			String FS         = File.separator;
-			String schemaDir  = context.getAppPath() +"xml"+ FS +"csw"+ FS +"schemas"+ FS +schema+ FS;
-			String prefix     = (outSchema == OutputSchema.OGC_CORE) ? "ogc" : "iso";
-			String styleSheet = schemaDir + prefix +"-"+ setName +".xsl";
-
-			md = Xml.transform(md, styleSheet);
-
-			//--- needed to detach md from the document
-
-			md.detach();
-
-			//--- if the client has specified some ElementNames, then we remove the unwanted children
-
-			if (elemNames != null)
-				removeElements(md, elemNames);
-
-			return md;
+		    if (md == null)
+			context.warning("SearchController : Metadata not found or invalid schema : "+ id);
+		    else
+			results.addContent(md);
 		}
-		catch (Exception e)
-		{
-			context.error("Error while getting metadata with id : "+ id);
-			context.error("  (C) StackTrace:\n"+ Util.getStackTrace(e));
 
-			throw new NoApplicableCodeEx("Rised exception while getting metadata :"+ e);
-		}
-	}
+	results.setAttribute("numberOfRecordsMatched",  searchResults.size() +"");
+	results.setAttribute("numberOfRecordsReturned", counter +"");
+	results.setAttribute("elementSet",              setName.toString());
 
-	//---------------------------------------------------------------------------
+	if (searchResults.size() > counter)
+	    {
+		results.setAttribute("nextRecord", counter + startPos + "");
+	    } 
+	else 
+	    {
+		results.setAttribute("nextRecord","0");
+	    }
 
-	private void removeElements(Element md, Set<String> elemNames)
-	{
-		Iterator i=md.getChildren().iterator();
+	return results;
+    }
 
-		while (i.hasNext())
-		{
-			Element elem = (Element) i.next();
+    //---------------------------------------------------------------------------
 
-			if (!FieldMapper.match(elem, elemNames))
-				i.remove();
-		}
-	}
+    private Element retrieveMetadata(ServiceContext context, String id,  ElementSetName setName,
+				     OutputSchema outSchema, Set<String> elemNames)
+	throws CatalogException
+    {
+	try
+	    {
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+		//--- get metadata from DB
+
+		Element  res = dbms.select("SELECT schemaId, data FROM Metadata WHERE id="+id);
+		Iterator i   = res.getChildren().iterator();
+
+		dbms.commit();
+
+		if (!i.hasNext())
+		    return null;
+
+		Element record = (Element) i.next();
+
+		String schema = record.getChildText("schemaid");
+		String data   = record.getChildText("data");
+
+		//--- skip metadata with wrong schemas
+
+		if (schema.equals("fgdc-std") || schema.equals("dublin-core") || schema.equals("iso19115"))
+		    if (outSchema != OutputSchema.OGC_CORE)
+			return null;
+
+		Element md = Xml.loadString(data, false);
+
+		//--- apply stylesheet according to setName and schema
+
+		String FS         = File.separator;
+		String schemaDir  = context.getAppPath() +"xml"+ FS +"csw"+ FS +"schemas"+ FS +schema+ FS;
+		String prefix     = (outSchema == OutputSchema.OGC_CORE) ? "ogc" : "iso";
+		String styleSheet = schemaDir + prefix +"-"+ setName +".xsl";
+
+		md = Xml.transform(md, styleSheet);
+
+		//--- needed to detach md from the document
+
+		md.detach();
+
+		//--- if the client has specified some ElementNames, then we remove the unwanted children
+
+		if (elemNames != null)
+		    removeElements(md, elemNames);
+
+		return md;
+	    }
+	catch (Exception e)
+	    {
+		context.error("Error while getting metadata with id : "+ id);
+		context.error("  (C) StackTrace:\n"+ Util.getStackTrace(e));
+
+		throw new NoApplicableCodeEx("Raised exception while getting metadata :"+ e);
+	    }
+    }
+
+    //---------------------------------------------------------------------------
+
+    private void removeElements(Element md, Set<String> elemNames)
+    {
+	Iterator i=md.getChildren().iterator();
+
+	while (i.hasNext())
+	    {
+		Element elem = (Element) i.next();
+
+		if (!FieldMapper.match(elem, elemNames))
+		    i.remove();
+	    }
+    }
 }
 
 //=============================================================================

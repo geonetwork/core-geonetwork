@@ -33,7 +33,9 @@ import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.Csw.ElementSetName;
+import org.fao.geonet.csw.common.Csw.OutputSchema;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
+import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.csw.CatalogService;
@@ -65,6 +67,10 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 	{
 		checkService(request);
 		checkVersion(request);
+		//-- Added for CSW 2.0.2 compliance by warnock@awcubed.com
+		checkOutputFormat(request);
+		OutputSchema    outSchema   = OutputSchema.parse(request.getAttributeValue("outputSchema"));
+		//--------------------------------------------------------
 
 		ElementSetName setName = getElementSetName(request, ElementSetName.SUMMARY);
 
@@ -96,10 +102,20 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 		String elemSetName = params.get("elementsetname");
 		String ids         = params.get("id");
 
+		//-- Added for CSW 2.0.2 compliance by warnock@awcubed.com
+		String outputFormat = params.get("outputformat");
+		String outputSchema = params.get("outputschema");
+		//--------------------------------------------------------
+
 		Element request = new Element(getName(), Csw.NAMESPACE_CSW);
 
 		setAttrib(request, "service", service);
 		setAttrib(request, "version", version);
+
+		//-- Added for CSW 2.0.2 compliance by warnock@awcubed.com
+		setAttrib(request, "outputFormat",  outputFormat);
+		setAttrib(request, "outputSchema",  outputSchema);
+		//--------------------------------------------------------
 
 		fill(request, "Id", ids);
 
@@ -114,6 +130,20 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 	//---
 	//---------------------------------------------------------------------------
 
+    //-- Added for CSW 2.0.2 compliance by warnock@awcubed.com
+	private void checkOutputFormat(Element request) throws InvalidParameterValueEx
+	{
+		String format = request.getAttributeValue("outputFormat");
+
+		if (format == null)
+			return;
+
+		if (!format.equals("application/xml"))
+			throw new InvalidParameterValueEx("outputFormat", format);
+	}
+
+
+	//---------------------------------------------------------------------------
 	private Element retrieveMetadata(ServiceContext context, String uuid,
 												ElementSetName setName) throws CatalogException
 	{
@@ -133,7 +163,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
 			Element record = (Element) i.next();
 
-//			String schema = record.getChildText("schemaid");
+			String schema = record.getChildText("schemaid");
 			String data   = record.getChildText("data");
 
 			Element md = Xml.loadString(data, false);
@@ -144,11 +174,14 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 			//--- should do an XSL transformation but the transformation would be profile
 			//--- specific and we don't have profiles for fgdc and dublin-core metadata
 
-//			String FS         = File.separator;
-//			String schemaDir  = context.getAppPath() +"xml"+ FS +"csw"+ FS +"schemas"+ FS +schema+ FS;
-//			String styleSheet = schemaDir + "ogc-"+setName+".xsl";
-//
-//			md = Xml.transform(md, styleSheet);
+			String FS         = File.separator;
+			String schemaDir  = context.getAppPath() +"xml"+ FS +"csw"+ FS +"schemas"+ FS +schema+ FS;
+			String styleSheet = schemaDir + "ogc-"+setName+".xsl";
+			//			System.out.println("CSW::GetRecordById::RetrieveMetadata - Using stylesheet: "+ styleSheet);
+
+			//			System.out.println("CSW::GetRecordById::RetrieveMetadata - Stored metadata: "+ md.getText());
+			md = Xml.transform(md, styleSheet);
+			//			System.out.println("CSW::GetRecordById::RetrieveMetadata - Transformed metadata: "+ md.getText());
 
 			//--- needed to detach md from the document
 			md.detach();

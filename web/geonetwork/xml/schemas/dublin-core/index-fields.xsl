@@ -42,6 +42,11 @@
 			<xsl:for-each select="/simpledc/dct:abstract">
 				<Field name="abstract" string="{string(.)}" store="true" index="true" token="true"/>
 			</xsl:for-each>
+
+			<xsl:for-each select="/simpledc/dc:date">
+			  <Field name="createDate" string="{string(.)}" store="true" index="true" token="false"/>
+			</xsl:for-each>
+
 			
 			<xsl:for-each select="/simpledc/dct:modified">
 				<Field name="changeDate" string="{string(.)}" store="true" index="true" token="false"/>

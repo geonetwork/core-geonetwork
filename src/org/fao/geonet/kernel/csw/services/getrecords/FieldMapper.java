@@ -32,115 +32,117 @@ import org.jdom.Element;
 
 class FieldMapper
 {
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public static String map(String field)
-	{
-		return hmMapping.get(getAbsolute(field));
-	}
+    public static String map(String field)
+    {
+	return hmMapping.get(getAbsolute(field));
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public static Iterable<String> getMappedFields()
-	{
-		ArrayList<String> al = new ArrayList<String>();
+    public static Iterable<String> getMappedFields()
+    {
+	ArrayList<String> al = new ArrayList<String>();
 
-		for(String[] couple : mapping)
-			al.add(couple[1]);
+	for(String[] couple : mapping)
+	    al.add(couple[1]);
 
-		return al;
-	}
+	return al;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public static boolean match(Element elem, Set<String> elemNames)
-	{
-		String name = elem.getQualifiedName();
+    public static boolean match(Element elem, Set<String> elemNames)
+    {
+	String name = elem.getQualifiedName();
 
-		for (String field : elemNames)
-			if (getAbsolute(field).equals(name))
-				return true;
+	for (String field : elemNames)
+	    if (getAbsolute(field).equals(name))
+		return true;
 
-		return false;
-	}
+	return false;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-	private static String getAbsolute(String field)
-	{
-		if (field.startsWith("./"))
-			return field.substring(2);
+    private static String getAbsolute(String field)
+    {
+	if (field.startsWith("./"))
+	    return field.substring(2);
 
-		return field;
-	}
+	return field;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	private static String[][] mapping =
-	{
-		{ "dc:identifier", "identifier" },
-		{ "dc:title",      "title"      },
-		{ "dct:abstract",  "abstract"   },
-		{ "dct:modified",  "changeDate" },
-		{ "dc:subject",    "keyword"    },
-		{ "dc:type",       "type"       },
-		{ "dct:spatial",   "crs"        },
-		{ "any",           "any"        },
-		{ "dc:format",     "format"     },
-		{ "dc:relation",   "relation"   },
-		{ "dct:spatial",   "spatial"    },
+    private static String[][] mapping =
+    {
+	{ "dc:identifier", "identifier" },
+	{ "dc:title",      "title"      },
+	{ "dct:abstract",  "abstract"   },
+	{ "dct:modified",  "changeDate" },
+	{ "dc:subject",    "keyword"    },
+	{ "dc:type",       "type"       },
+	{ "dct:spatial",   "crs"        },
+	{ "csw:AnyText",   "any"        },
+	{ "any",           "any"        },
+	{ "dc:format",     "format"     },
+	{ "dc:relation",   "relation"   },
+	{ "dct:spatial",   "spatial"    },
+	{ "dc:date",       "createDate" },
 
-		{ "FileIdentifier",        "fileId"      },
-		{ "Language",              "language"    },
-		{ "AlternateTitle",        "altTitle"    },
-		{ "CreationDate",          "createDate"  },
-		{ "OrganisationName",      "orgName"     },
-		{ "HasSecurityConstraints","secConstr"   },
-		{ "HierarchyLevelName",    "levelName"   },
-		{ "ParentIdentifier",      "parentId"    },
-		{ "KeywordType",           "keywordType" },
+	{ "FileIdentifier",        "fileId"      },
+	{ "Language",              "language"    },
+	{ "AlternateTitle",        "altTitle"    },
+	{ "CreationDate",          "createDate"  },
+	{ "OrganisationName",      "orgName"     },
+	{ "HasSecurityConstraints","secConstr"   },
+	{ "HierarchyLevelName",    "levelName"   },
+	{ "ParentIdentifier",      "parentId"    },
+	{ "KeywordType",           "keywordType" },
 
-		{ "TopicCategory",            "topicCat"        },
-		{ "DatasetLanguage",          "datasetLang"     },
-		{ "GeographicDescriptionCode","geoDescCode"     },
-		{ "TempExtent_begin",         "tempExtentBegin" },
-		{ "TempExtent_end",           "tempExtentEnd"   },
-		{ "Denominator",              "denominator"     },
-		{ "DistanceValue",            "distanceVal"     },
-		{ "DistanceUOM",              "distanceUom"     },
+	{ "TopicCategory",            "topicCat"        },
+	{ "DatasetLanguage",          "datasetLang"     },
+	{ "GeographicDescriptionCode","geoDescCode"     },
+	{ "TempExtent_begin",         "tempExtentBegin" },
+	{ "TempExtent_end",           "tempExtentEnd"   },
+	{ "Denominator",              "denominator"     },
+	{ "DistanceValue",            "distanceVal"     },
+	{ "DistanceUOM",              "distanceUom"     },
 
-		//--- these are needed just to avoid a warning when converting field names
-		//--- from CSW names -> lucene names
+	//--- these are needed just to avoid a warning when converting field names
+	//--- from CSW names -> lucene names
 
-		{ "northBL", "northBL" },
-		{ "southBL", "southBL" },
-		{ "eastBL",  "eastBL"  },
-		{ "westBL",  "westBL"  }
-	};
+	{ "northBL", "northBL" },
+	{ "southBL", "southBL" },
+	{ "eastBL",  "eastBL"  },
+	{ "westBL",  "westBL"  }
+    };
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private static HashMap<String, String> hmMapping = new HashMap<String, String>();
+    private static HashMap<String, String> hmMapping = new HashMap<String, String>();
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	static
-	{
-		for(String[] couple : mapping)
-			hmMapping.put(couple[0], couple[1]);
-	}
+    static
+    {
+	for(String[] couple : mapping)
+	    hmMapping.put(couple[0], couple[1]);
+    }
 }
 
 //==============================================================================
