@@ -221,6 +221,7 @@ public class Worker implements Runnable
 		message += nNoEditor + " metadata had no editor and were assigned to " + oldUserName + ":" + oldGroupName + "\n";
 		message += nNoPriv + " metadata had no admin privileges and were assigned to " + oldUserName + ":" + oldGroupName + "\n";
 		Lib.gui.showInfo(dlg, message);
+		Lib.log.info(message);
 	}
 
 	//---------------------------------------------------------------------------
@@ -389,7 +390,7 @@ public class Worker implements Runnable
 				else
 				{
 					// assign default user and group if metadata is not owned
-//					System.out.println("Metadata has no admin privilege --> id: " + id + " - assigned to default user and group"); // DEBUG
+				    Lib.log.info("Metadata has no admin privilege --> id: " + id + " - assigned to default user and group");
 					owner = "" + oldUserId;
 					groupOwner = "" + oldGroupId;
 					nNoPriv++;
@@ -435,11 +436,11 @@ public class Worker implements Runnable
 			md.addContent(new Element("owner")      .setText(owner));
 			md.addContent(new Element("groupOwner") .setText(groupOwner));
 
-			System.out.println("metadata: " + id + " - owner: " + owner + " - group owner: " + groupOwner);
-			
+			Lib.log.info("metadata: " + id + " - owner: " + owner + " - group owner: " + groupOwner);
+
 			Lib.database.insert(newDbms, "Metadata", md, idMapper);
 
-			//--- we can have even milions of records so it is convenient to commit
+			//--- we can have even millions of records so it is convenient to commit
 			//--- at each insert
 
 			newDbms.commit();
@@ -469,7 +470,7 @@ public class Worker implements Runnable
 
 			Lib.database.insert(newDbms, "OperationAllowed", opAll, relationMapper);
 
-			//--- we can have even milions of records so it is convenient to commit
+			//--- we can have even millions of records so it is convenient to commit
 			//--- at each insert
 
 			newDbms.commit();
