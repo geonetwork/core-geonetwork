@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -72,12 +73,12 @@ public class Worker implements Runnable
 	{
 		oldUserName = user;
 	}
-	
+
 	public void setOldGroup(String group)
 	{
 		oldGroupName = group;
 	}
-	
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Migration process
@@ -144,35 +145,35 @@ public class Worker implements Runnable
 		String query = "SELECT id, profile FROM users WHERE username = ?";
 		List oldUserIds = oldDbms.select(query, oldUserName).getChildren();
 		oldDbms.commit();
-		
+
 		// Get the user id and profile from the db
 		if (oldUserIds.size() == 0)
 			throw new Exception("Can't find user \"" + oldUserName + "\" in the old GeoNetwork");
-		
+
 		// Chcek if the user is an Editor
 		String profile = ((Element)oldUserIds.get(0)).getChildText("profile");
 		if (!"Editor".equals(profile))
 			throw new Exception("User \"" + oldUserName + "\" is not an Editor");
-		
+
 		// Check if the group exists
 		oldUserId = Integer.parseInt(((Element)oldUserIds.get(0)).getChildText("id"));
-		
+
 		query = "SELECT id FROM groups WHERE name = ?";
 		List oldGroupIds = oldDbms.select(query, oldGroupName).getChildren();
 		oldDbms.commit();
 		if (oldGroupIds.size() == 0)
 			throw new Exception("Can't find group \"" + oldGroupName + "\" in the old GeoNetwork");
-		
+
 		// Check if the user belongs to the given group
 		oldGroupId = Integer.parseInt(((Element)oldGroupIds.get(0)).getChildText("id"));
-		
+
 		query = "SELECT groupId FROM userGroups WHERE groupId = ? AND userId = ?";
 		List userGroups = oldDbms.select(query, new Integer(oldGroupId), new Integer(oldUserId)).getChildren();
 		oldDbms.commit();
 		if (userGroups.size() == 0)
 			throw new Exception("User \"" + oldUserName + "\" doesn't belong to group \"" + oldGroupName + "\"");
 	}
-	
+
 	//---------------------------------------------------------------------------
 
 	private void executeJob(Dbms oldDbms, Dbms newDbms) throws Exception
@@ -185,7 +186,7 @@ public class Worker implements Runnable
 			dlg.advance("Checking old user and group");
 			checkOldUser(oldDbms);
 		}
-		
+
 		dlg.advance("Removing data in new installation");
 		removeAll(newDbms);
 
@@ -216,10 +217,12 @@ public class Worker implements Runnable
 		restoreLocalizedRecords(newDbms);
 
 		Lib.metadata.clearIndexes();
-		
-		String message = "Migrated metadata : "+ mdIds.size() + "\n";
-		message += nNoEditor + " metadata had no editor and were assigned to " + oldUserName + ":" + oldGroupName + "\n";
-		message += nNoPriv + " metadata had no admin privileges and were assigned to " + oldUserName + ":" + oldGroupName + "\n";
+
+		String message = "Migrated metadata : "+ mdIds.size() + "\n"+
+								nNoEditor + " metadata had no editor and were assigned to " + oldUserName + ":" + oldGroupName + "\n"+
+								nNoPriv + " metadata had no admin privileges and were assigned to " + oldUserName + ":" + oldGroupName + "\n"+
+								nMatchedUsers + " users were successfully assigned from their surname\n";
+
 		Lib.gui.showInfo(dlg, message);
 		Lib.log.info(message);
 	}
@@ -347,6 +350,10 @@ public class Worker implements Runnable
 
 	private void migrateMetadata(Dbms oldDbms, Dbms newDbms) throws Exception
 	{
+		nNoPriv       = 0;
+		nNoEditor     = 0;
+		nMatchedUsers = 0;
+
 		String query = "SELECT id, uuid, schemaId, isTemplate, createDate, "+
 							"       lastChangeDate as changeDate, source "+
 							"FROM   Metadata";
@@ -380,55 +387,157 @@ public class Worker implements Runnable
 			List privil = oldDbms.select(query, new Integer(id)).getChildren();
 			oldDbms.commit();
 
-			String owner = null;
+			String owner      = null;
 			String groupOwner = null;
-			
-			if (privil.size() == 0)
-				if (oldUserName == null)
-					// throw an Exception if default user and group were not given
-					throw new Exception("Metadata has no admin privilege --> id: " + id);
-				else
-				{
-					// assign default user and group if metadata is not owned
-				    Lib.log.info("Metadata has no admin privilege --> id: " + id + " - assigned to default user and group");
-					owner = "" + oldUserId;
-					groupOwner = "" + oldGroupId;
-					nNoPriv++;
-				}
-			else
-			{
-				//--- calculate group owner
-				groupOwner = ((Element) privil.get(0)).getChildText("groupid");
 
-				query = "SELECT DISTINCT id FROM Users, UserGroups, OperationAllowed" +
-				" WHERE Users.id=UserGroups.userId AND Users.profile='Editor'" +
-				" AND userGroups.groupId = OperationAllowed.groupId AND OperationAllowed.operationId = 4" +
-				" AND OperationAllowed.metadataId = ?";
-				List usrGrps = oldDbms.select(query, new Integer(id)).getChildren();
-				oldDbms.commit();
-				
-				if (usrGrps.size() == 0)
-					if (oldUserName == null)
-						// throw an Exception if default user and group were not given
-						throw new Exception("No editor for metadata --> id: " + id);
-					else
-					{
-						// assign default user and group if metadata is not owned
-//						System.out.println("No editor for metadata --> id: " + id + " - assigned to default user and group"); // DEBUG
-						owner = "" + oldUserId;
-						groupOwner = "" + oldGroupId;
-						nNoEditor++;
-					}
-				else
-					owner = ((Element) usrGrps.get(0)).getChildText("id");
-			}
-			
-			//--- no, ok we can store it
+			//--- retrieve metadata
 
 			md.getChild("source").setText(newSiteId);
 
 			Element xml = XmlSerializer.select(oldDbms, "Metadata", id);
 			oldDbms.commit();
+
+			//--- find out group with admin privilege
+
+			if (privil.size() == 0)
+			{
+//				Lib.log.debug("Metadata with id:"+id+" has no group with 'admin' privilege. Trying with the 'edit' one");
+
+				//--- re-execute the query, now looking for the 'edit' privilege
+				query  = "SELECT groupId FROM OperationAllowed WHERE metadataId=? AND operationId=2";
+				privil = oldDbms.select(query, new Integer(id)).getChildren();
+				oldDbms.commit();
+
+				if (privil.size() == 0)
+				{
+					if (oldUserName == null)
+						// throw an Exception if default user and group were not given
+						throw new Exception("Metadata has no 'admin' and 'edit' privileges --> id: " + id);
+					else
+					{
+						// assign default user and group if metadata is not owned
+						Lib.log.info("Metadata has no admin privilege --> id: " + id + " - assigned to default user and group");
+						owner      = "" + oldUserId;
+						groupOwner = "" + oldGroupId;
+						nNoPriv++;
+					}
+				}
+			}
+
+			if (privil.size() != 0)
+			{
+				//--- scan all admin (or editor) groups looking for the first editor
+
+				List<String> possibleOwners = new ArrayList<String>();
+
+				for (int i=0; i<privil.size(); i++)
+				{
+					//--- calculate group owner (the one with 'admin' or 'edit' privilege)
+					groupOwner = ((Element) privil.get(i)).getChildText("groupid");
+
+					query = "SELECT DISTINCT id FROM Users, UserGroups WHERE id=userId AND profile='Editor' AND groupId=?";
+
+					List usrGrps = oldDbms.select(query, new Integer(groupOwner)).getChildren();
+					oldDbms.commit();
+
+					if (usrGrps.size() != 0)
+						possibleOwners.add(((Element) usrGrps.get(0)).getChildText("id"));
+				}
+
+				//--- only 1 possible editor -> assign it
+
+				if (possibleOwners.size() == 1)
+					owner = possibleOwners.get(0);
+
+				//--- more possible editors -> try to match the best one
+
+				else if (possibleOwners.size() > 1)
+				{
+					Lib.log.debug("Found "+ possibleOwners.size() +" owners for metadata with : " + id);
+
+					//--- extract metadata author's surname
+					String surname = getSurname(xml);
+
+					if (surname == null)
+					{
+						Lib.log.debug("   No surname found in metadata, assigning first possible owner : "+ possibleOwners.get(0));
+						owner = possibleOwners.get(0);
+					}
+					else
+					{
+						query = "SELECT id FROM Users WHERE surname=? AND profile='Editor'";
+
+						List users = oldDbms.select(query, surname).getChildren();
+						oldDbms.commit();
+
+						if (users.size() == 0)
+						{
+							Lib.log.debug("   No surname '"+ surname +"' found in users table, assigning first possible owner : "+ possibleOwners.get(0));
+							owner = possibleOwners.get(0);
+						}
+
+						else if (users.size() == 1)
+						{
+							for (Object o : users)
+							{
+								String userId = ((Element) o).getChildText("id");
+
+								if (possibleOwners.contains(userId))
+								{
+									Lib.log.info("   -> User successfully assigned with id : "+userId +" for surname : "+surname);
+									nMatchedUsers++;
+									owner = userId;
+									break;
+								}
+
+								if (owner == null)
+								{
+									Lib.log.debug("List of possible users does not contain user with surname : "+ surname);
+									Lib.log.debug("   -> Assigning first possible owner : "+ possibleOwners.get(0));
+									owner = possibleOwners.get(0);
+								}
+							}
+						}
+
+						else
+						{
+							Lib.log.debug("Several users found with the same surname, assigning first possible owner : "+ possibleOwners.get(0));
+
+							for (Object o : users)
+								Lib.log.info("   -> Found user with id : "+ ((Element)o).getChildText("id"));
+
+							owner = possibleOwners.get(0);
+						}
+					}
+				}
+
+				//--- no candidates -> use a default
+
+				else
+				{
+					if (oldUserName == null)
+					{
+						// throw an Exception if default user and group were not given
+						//throw new Exception("No editor for metadata --> id: " + id);
+						Lib.log.info("Skipping metadata with no editors id:"+id+ " (assigned to administrator)");
+
+						for (Object rec : privil)
+							Lib.log.info("   -> Found group with admin/edit privilege was : "+ ((Element) rec).getChildText("groupid"));
+
+						owner="1";
+					}
+					else
+					{
+						// assign default user and group if metadata is not owned
+//						System.out.println("No editor for metadata --> id: " + id + " - assigned to default user and group"); // DEBUG
+						owner      = "" + oldUserId;
+						groupOwner = "" + oldGroupId;
+						nNoEditor++;
+					}
+				}
+			}
+
+			//--- no, ok we can store it
 
 			md.addContent(new Element("root")       .setText(xml.getName()));
 			md.addContent(new Element("isHarvested").setText("n"));
@@ -436,7 +545,7 @@ public class Worker implements Runnable
 			md.addContent(new Element("owner")      .setText(owner));
 			md.addContent(new Element("groupOwner") .setText(groupOwner));
 
-			Lib.log.info("metadata: " + id + " - owner: " + owner + " - group owner: " + groupOwner);
+//			Lib.log.debug("metadata: " + id + " - owner: " + owner + " - group owner: " + groupOwner);
 
 			Lib.database.insert(newDbms, "Metadata", md, idMapper);
 
@@ -447,6 +556,33 @@ public class Worker implements Runnable
 
 			mdIds.add(id);
 		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private String getSurname(Element md)
+	{
+		md = md.getChild("mdContact");
+
+		if (md == null)
+			return null;
+
+		String author = md.getChildText("rpIndName");
+
+		if (author == null)
+			return null;
+
+		if (author.trim().length() == 0)
+			return null;
+
+		StringTokenizer st = new StringTokenizer(author.trim(), " ");
+
+		String surname = st.nextToken();
+
+		if (st.hasMoreTokens())
+			surname = st.nextToken();
+
+		return surname;
 	}
 
 	//---------------------------------------------------------------------------
@@ -641,10 +777,11 @@ public class Worker implements Runnable
 	private String oldGroupName;
 	private int oldUserId;
 	private int oldGroupId;
-	
+
 	private int nNoPriv;
 	private int nNoEditor;
-	
+	private int nMatchedUsers;
+
 	private ProgressDialog dlg;
 
 	//---------------------------------------------------------------------------
