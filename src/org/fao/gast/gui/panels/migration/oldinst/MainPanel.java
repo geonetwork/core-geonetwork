@@ -71,7 +71,7 @@ public class MainPanel extends FormPanel
 
 		else if (cmd.equals("migrate"))
 			migrate();
-		
+
 		else if (source.equals(jcbCreateUser))
 		{
 			boolean enable = jcbCreateUser.isSelected();
@@ -105,7 +105,7 @@ public class MainPanel extends FormPanel
 			Lib.gui.showError(this, "Please choose a directory");
 			return;
 		}
-		
+
 		if (jcbCreateUser.isSelected())
 		{
 			if ("".equals(txtUser.getText()))
@@ -118,10 +118,11 @@ public class MainPanel extends FormPanel
 				Lib.gui.showError(this, "Please enter a group name");
 				return;
 			}
-			worker.setOldUser(txtUser.getText());
-			worker.setOldGroup(txtGroup.getText());
+			worker.setOldUser   (txtUser.getText());
+			worker.setOldGroup  (txtGroup.getText());
 		}
-		
+
+		worker.setUserDialog(jcbUserDialog.isSelected());
 		worker.setOldDir(txtOldDir.getText());
 		dialog.run(worker);
 	}
@@ -136,23 +137,25 @@ public class MainPanel extends FormPanel
 	{
 		JPanel p = new JPanel();
 
-		FlexLayout fl = new FlexLayout(3,4);
+		FlexLayout fl = new FlexLayout(3,5);
 		fl.setColProp(1, FlexLayout.EXPAND);
 		p.setLayout(fl);
 
 		p.add("0,0",   new JLabel("Old GeoNetwork"));
 		p.add("1,0,x", txtOldDir);
 		p.add("2,0",   btnBrowse);
-		
+
 		p.add("0,1,1,1,3", jcbCreateUser);
 		p.add("0,2", new JLabel("User"));
 		p.add("1,2", txtUser);
 		p.add("0,3", new JLabel("Group"));
 		p.add("1,3", txtGroup);
 
+		p.add("0,4,x,c,3", jcbUserDialog);
+
 		txtUser.setEnabled(false);
 		txtGroup.setEnabled(false);
-		
+
 		btnBrowse.addActionListener(this);
 		btnBrowse.setActionCommand("browse");
 
@@ -170,10 +173,12 @@ public class MainPanel extends FormPanel
 	private JTextField   txtOldDir  = new JTextField(20);
 	private JButton      btnBrowse  = new JButton("Browse");
 	private JFileChooser jfcBrowser = new JFileChooser();
-	
-	private JCheckBox jcbCreateUser = new JCheckBox("Assign unowned metadata to this user:");
-	private JTextField txtUser  = new JTextField(20);
-	private JTextField txtGroup  = new JTextField(20);
+
+	private JCheckBox  jcbCreateUser = new JCheckBox("Assign unowned metadata to this user:");
+	private JTextField txtUser       = new JTextField(20);
+	private JTextField txtGroup      = new JTextField(20);
+
+	private JCheckBox  jcbUserDialog = new JCheckBox("Popup dialog to choose users");
 }
 
 //==============================================================================
