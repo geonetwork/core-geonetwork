@@ -70,6 +70,8 @@ public class NetLib
 				Log.error(Geonet.GEONETWORK, "Proxy port is not an integer : "+ port);
 			else
 			{
+	            Log.debug(Geonet.GEONETWORK, "Proxy in use with host " + host + 
+	                    " port " + port + " and username : "+ username);
 				req.setUseProxy(true);
 				req.setProxyHost(host);
 				req.setProxyPort(Integer.parseInt(port));
