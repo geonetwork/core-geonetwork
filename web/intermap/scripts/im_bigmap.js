@@ -13,8 +13,9 @@ var im_bm_wsize0 = 368;
 var im_bm_hsize0 = 276;
 																					
 var im_bm = new Intermap(im_bm_wsize0, im_bm_hsize0, 'im_bm_image');
-	
-im_bm.setBBox(90, 180, -90, -180);
+
+// heikki: do not resize to world-size for every map
+//im_bm.setBBox(90, 180, -90, -180);
  
 im_bm.setSize = function (w, h) // override
 {
