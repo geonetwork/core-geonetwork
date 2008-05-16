@@ -190,15 +190,24 @@ class Harvester
 		while (true)
 		{
 			request.setStartPosition(start +"");
-
-			Element response = doSearch(request, start, max);
+			log.debug("Request: " + request.toString());			 
+			Element response = doSearch(request, start, max);			
+			log.debug("Number of child elements in response: " + response.getChildren().size());
+			
 			Element results  = response.getChild("SearchResults", Csw.NAMESPACE_CSW);
-
-			if (results == null)
-				throw new OperationAbortedEx("Missing 'SearchResults'", response);
+			// heikki: some providers forget to update their CSW namespace to the CSW 2.0.2 specification
+			if(results == null) {
+				// in that case, try to accommodate them anyway:
+				results = response.getChild("SearchResults", Csw.NAMESPACE_CSW_OLD);
+				if (results == null) {
+					throw new OperationAbortedEx("Missing 'SearchResults'", response);
+				}
+				else {
+					log.warning("Received GetRecords response with incorrect namespace: " + Csw.NAMESPACE_CSW_OLD);
+				}
+			}
 
 			List list = results.getChildren();
-
 			int counter = 0;
 
 			for (Object e :list)
