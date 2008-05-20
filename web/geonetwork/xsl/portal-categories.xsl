@@ -6,7 +6,7 @@
 		<xsl:variable name="lang" select="/root/gui/language"/>
 
 		<response>
-			<xsl:for-each select="categories/*">
+			<xsl:for-each select="response/*">
 				<category>
 					<xsl:variable name="code" select="name"/>
 					<code><xsl:value-of select="$code"/></code>
