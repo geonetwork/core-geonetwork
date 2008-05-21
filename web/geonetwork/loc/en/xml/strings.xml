@@ -398,8 +398,8 @@
 	<sortByType id="popularity">Popularity</sortByType>
 	<sortByType id="date">Change date</sortByType>
 	<rateIt>Rate It</rateIt>
-	<mdRating>Metadata Rating</mdRating>
-	<ratingMsg>Press a button to rate. Note that for harvested metadata you have to wait the new run.</ratingMsg>
+	<mdRating>Data Rating</mdRating>
+	<ratingMsg>Press a button to rate. It may take some time for new ratings to become visible.</ratingMsg>
 	<resetSearch>Reset the search form</resetSearch>
 	<resetFeedbackForm>Reset the feedback form</resetFeedbackForm>
 	<restrictTo>Restrict to</restrictTo>
