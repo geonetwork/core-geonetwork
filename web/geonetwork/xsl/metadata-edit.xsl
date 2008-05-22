@@ -12,8 +12,8 @@
 	additional scripts
 	-->
 	<xsl:template mode="script" match="/">
-		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=control,slider,effects,controls"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"></script>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"/>
 		<script language="JavaScript1.2" type="text/javascript">
 
 			// findPos comes from http://www.quirksmode.org

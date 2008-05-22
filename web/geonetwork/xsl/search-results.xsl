@@ -128,7 +128,7 @@
 										</h1>
 									</td>
 								<!-- Download XML for ISO and FGDC for use in applications like GeoNetwork or ESRI ArcCatalog -->
-									<td class="padded" align="middle" nowrap="nowrap" width="40">
+									<td class="padded" align="center" nowrap="nowrap" width="40">
 										<xsl:choose>
 											<xsl:when test="contains($metadata/geonet:info/schema,'dublin-core')">
 												<a href="{/root/gui/locService}/dc.xml?id={$metadata/geonet:info/id}" target="_blank" title="{/root/gui/strings/savexml/dc}">
@@ -206,7 +206,7 @@
 						</xsl:if>
 					</table>
 				</td>
-				<td class="padded" align="center" valign="center" width="200">
+				<td class="padded" align="center" valign="middle" width="200">
 <!--					<xsl:call-template name="score">
 						<xsl:with-param name="score" select="$metadata/geonet:info/score * 100"/>
 						<xsl:with-param name="class" select="5"/>
