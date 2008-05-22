@@ -944,7 +944,7 @@
 			
 				<!-- thumbnail -->
 				<tr>
-					<td class="padded" align="center" valign="center" colspan="2">
+					<td class="padded" align="center" valign="middle" colspan="2">
 						<xsl:variable name="md">
 							<xsl:apply-templates mode="brief" select="."/>
 						</xsl:variable>
@@ -966,7 +966,7 @@
 			
 				<!-- thumbnail -->
 				<tr>
-					<td class="padded" align="center" valign="center" colspan="2">
+					<td class="padded" align="center" valign="middle" colspan="2">
 						<xsl:variable name="md">
 							<xsl:apply-templates mode="brief" select="."/>
 						</xsl:variable>
@@ -1075,7 +1075,7 @@
 			
 				<!-- thumbnail -->
 				<tr>
-					<td class="padded" align="center" valign="center" colspan="2">
+					<td class="padded" align="center" valign="middle" colspan="2">
 						<xsl:variable name="md">
 							<xsl:apply-templates mode="brief" select="."/>
 						</xsl:variable>

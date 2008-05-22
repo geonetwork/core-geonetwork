@@ -57,7 +57,7 @@
 					<table width="100%" border="0">
 						<tr>
 <!--							<xsl:if test="/root/gui/searchDefaults/output = 'full'"> -->
-								<td class="padded" align="left" valign="center" width="200">
+								<td class="padded" align="left" valign="middle" width="200">
 									
 									<!-- metadata thumbnail -->
 									<xsl:choose>

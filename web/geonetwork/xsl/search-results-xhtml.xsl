@@ -225,7 +225,7 @@
 										</td>
 	
 										<!-- Download XML for ISO and FGDC for use in applications like GeoNetwork or ESRI ArcCatalog -->
-										<td class="padded" align="middle" nowrap="nowrap" width="80">
+										<td class="padded" align="center" nowrap="nowrap" width="80">
 											<xsl:choose>
 												<xsl:when test="contains($metadata/geonet:info/schema,'dublin-core')">
 													<a href="{/root/gui/locService}/dc.xml?id={$metadata/geonet:info/id}" target="_blank" title="Download Dublin Core metadata in XML">
@@ -294,7 +294,7 @@
 					</td>
 						
 					<xsl:if test="/root/gui/searchDefaults/output = 'full'">
-						<td class="padded" align="center" valign="center" width="200">
+						<td class="padded" align="center" valign="middle" width="200">
 						
 							<!-- metadata rating -->
 							
