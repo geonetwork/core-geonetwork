@@ -23,12 +23,16 @@
 
 package org.fao.gast.gui.panels.config.siteid;
 
+import java.awt.event.ActionEvent;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import jeeves.resources.dbms.Dbms;
 import org.dlib.gui.FlexLayout;
 import org.fao.gast.gui.panels.FormPanel;
+import org.fao.gast.lib.Lib;
+import org.fao.gast.lib.Resource;
 
 //==============================================================================
 
@@ -48,7 +52,7 @@ public class MainPanel extends FormPanel
 		fl.setColProp(1, FlexLayout.EXPAND);
 		p.setLayout(fl);
 
-		p.add("0,0",   new JLabel("Current"));
+		p.add("0,0",   new JLabel("Site ID"));
 		p.add("1,0,x", txtSiteID);
 
 		return p;
@@ -56,12 +60,39 @@ public class MainPanel extends FormPanel
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- API methods
+	//--- ActionListener
 	//---
 	//---------------------------------------------------------------------------
 
-	public void refresh()
+	public void actionPerformed(ActionEvent ae)
 	{
+		String siteId = txtSiteID.getText().trim();
+
+		Resource resource = null;
+		Dbms     dbms     = null;
+
+		try
+		{
+			resource = Lib.config.createResource();
+			dbms     = (Dbms) resource.open();
+
+			Lib.site.setSiteId(dbms, siteId);
+			dbms.commit();
+
+			Lib.gui.showInfo(this, "Site ID changed");
+		}
+		catch (Exception e)
+		{
+			Lib.gui.showError(this, e);
+
+			if (dbms != null)
+				dbms.abort();
+		}
+		finally
+		{
+			if (resource != null)
+				resource.close();
+		}
 	}
 
 	//---------------------------------------------------------------------------
