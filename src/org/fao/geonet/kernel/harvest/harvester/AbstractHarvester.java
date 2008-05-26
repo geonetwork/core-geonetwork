@@ -69,7 +69,7 @@ public abstract class AbstractHarvester
 		register(context, CswHarvester     .class);
 		register(context, Z3950Harvester   .class);
 		register(context, OaiPmhHarvester  .class);
-		register(context, OgcWxSHarvester  .class);		
+		register(context, OgcWxSHarvester  .class);
 	}
 
 	//---------------------------------------------------------------------------
@@ -156,6 +156,15 @@ public abstract class AbstractHarvester
 			executor.setTimeout(getParams().every);
 			executor.start();
 		}
+	}
+
+	//--------------------------------------------------------------------------
+	/** Called when the application is shutdown */
+
+	public void shutdown()
+	{
+		if (executor != null)
+			executor.terminate();
 	}
 
 	//--------------------------------------------------------------------------

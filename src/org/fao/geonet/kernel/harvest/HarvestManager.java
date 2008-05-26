@@ -87,6 +87,14 @@ public class HarvestManager
 	}
 
 	//---------------------------------------------------------------------------
+
+	protected void finalize()
+	{
+		for (AbstractHarvester ah : hmHarvesters.values())
+			ah.shutdown();
+	}
+
+	//---------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---
