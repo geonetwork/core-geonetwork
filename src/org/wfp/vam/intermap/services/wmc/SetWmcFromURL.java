@@ -101,7 +101,7 @@ public class SetWmcFromURL implements Service
 
 		// Prepare response
 		Element response = new Element("response")
-			.addContent(new Element("imgUrl").setText(url))
+			.addContent(new Element("imgUrl").setText(imgurl))
 			.addContent(new Element("scale").setText(mm.getDistScale()))
 			.addContent(mm.getBoundingBox().toElement())
 			.addContent(new Element("width").setText("" + win.getWidth()))
