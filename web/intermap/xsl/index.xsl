@@ -41,6 +41,7 @@
 				<script type="text/javascript" src="../../scripts/im_class.js?"/>
 <!--				<script type="text/javascript" src="/intermap/scripts/im_minimap.js?"/>-->
 				<script type="text/javascript" src="../../scripts/im_bigmap.js?" />
+				<script type="text/javascript" src="../../scripts/im_markers.js?"/>
 				<script type="text/javascript" src="../../scripts/im_standalone.js?"/>				
 				
 <!--				<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js?"/>
