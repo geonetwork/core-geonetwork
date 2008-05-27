@@ -34,10 +34,10 @@ import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSBoundingBo
 public class WMSBoundingBoxImpl implements WMSBoundingBox
 {
 	private String _srs = null;
-	private float _minx = Float.NaN;
-	private float _miny = Float.NaN;
-	private float _maxx = Float.NaN;
-	private float _maxy = Float.NaN;
+	private double _minx = Float.NaN;
+	private double _miny = Float.NaN;
+	private double _maxx = Float.NaN;
+	private double _maxy = Float.NaN;
 	private float _resx = Float.NaN; // opt
 	private float _resy = Float.NaN; // opt
 
@@ -90,7 +90,7 @@ public class WMSBoundingBoxImpl implements WMSBoundingBox
 	/**
 	 * Sets Minx
 	 */
-	public void setMinx(float minx)
+	public void setMinx(double minx)
 	{
 		_minx = minx;
 	}
@@ -98,7 +98,7 @@ public class WMSBoundingBoxImpl implements WMSBoundingBox
 	/**
 	 * Returns Minx
 	 */
-	public float getMinx()
+	public double getMinx()
 	{
 		return _minx;
 	}
@@ -106,7 +106,7 @@ public class WMSBoundingBoxImpl implements WMSBoundingBox
 	/**
 	 * Sets Miny
 	 */
-	public void setMiny(float miny)
+	public void setMiny(double miny)
 	{
 		_miny = miny;
 	}
@@ -114,7 +114,7 @@ public class WMSBoundingBoxImpl implements WMSBoundingBox
 	/**
 	 * Returns Miny
 	 */
-	public float getMiny()
+	public double getMiny()
 	{
 		return _miny;
 	}
@@ -122,7 +122,7 @@ public class WMSBoundingBoxImpl implements WMSBoundingBox
 	/**
 	 * Sets Maxx
 	 */
-	public void setMaxx(float maxx)
+	public void setMaxx(double maxx)
 	{
 		_maxx = maxx;
 	}
@@ -130,7 +130,7 @@ public class WMSBoundingBoxImpl implements WMSBoundingBox
 	/**
 	 * Returns Maxx
 	 */
-	public float getMaxx()
+	public double getMaxx()
 	{
 		return _maxx;
 	}
@@ -138,7 +138,7 @@ public class WMSBoundingBoxImpl implements WMSBoundingBox
 	/**
 	 * Sets Maxy
 	 */
-	public void setMaxy(float maxy)
+	public void setMaxy(double maxy)
 	{
 		_maxy = maxy;
 	}
@@ -146,7 +146,7 @@ public class WMSBoundingBoxImpl implements WMSBoundingBox
 	/**
 	 * Returns Maxy
 	 */
-	public float getMaxy()
+	public double getMaxy()
 	{
 		return _maxy;
 	}

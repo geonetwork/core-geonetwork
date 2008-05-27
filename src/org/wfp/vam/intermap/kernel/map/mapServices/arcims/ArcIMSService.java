@@ -257,10 +257,10 @@ public class ArcIMSService extends MapService
 	public void identify(int layer, int x, int y, int width, int height, int tolerance, String reqFormat)
 		throws Exception, ServiceException
 	{
-		float mapX = bb.getWest() + (bb.getEast() - bb.getWest()) * x / width;
-		float mapY = bb.getNorth() - (bb.getNorth() - bb.getSouth()) * y /  height;
-		float deltax = (bb.getEast() - bb.getWest()) / width * tolerance / 2;
-		float deltay = (bb.getNorth() - bb.getSouth()) / height * tolerance / 2;
+		double mapX = bb.getWest() + (bb.getEast() - bb.getWest()) * x / width;
+		double mapY = bb.getNorth() - (bb.getNorth() - bb.getSouth()) * y /  height;
+		double deltax = (bb.getEast() - bb.getWest()) / width * tolerance / 2;
+		double deltay = (bb.getNorth() - bb.getSouth()) / height * tolerance / 2;
 
 		// Build the request for the map server
 		Element request = AxlRequestBuilder.getRequest(this.toElement()

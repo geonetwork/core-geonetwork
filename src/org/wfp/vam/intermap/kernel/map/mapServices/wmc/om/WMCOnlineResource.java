@@ -16,21 +16,38 @@
 //===	You should have received a copy of the GNU General Public License
 //===	along with this program; if not, write to the Free Software
 //===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type;
-
+package org.wfp.vam.intermap.kernel.map.mapServices.wmc.om;
 
 /**
  * @author ETj
  */
-public interface WMCLayerList extends Elementable, Iterable<WMCLayer>
+public class WMCOnlineResource 
 {
-	public void addLayer(WMCLayer wmcLayer);
-	public WMCLayer addNewLayer();
-	public Iterable<WMCLayer> getLayerIterator();
-}
+	private String _type = "simple"; // fixed
+	private String _href = null;
 
+	private WMCOnlineResource()
+	{}
+
+	public static WMCOnlineResource newInstance()
+	{
+		return new WMCOnlineResource();
+	}
+
+	public void setHref(String href)
+	{
+		_href = href;
+	}
+
+	public String getHref()
+	{
+		return _href;
+	}
+
+	public String getType() {
+		return _type;
+	}	
+
+}

@@ -16,19 +16,61 @@
 //===	You should have received a copy of the GNU General Public License
 //===	along with this program; if not, write to the Free Software
 //===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type;
+package org.wfp.vam.intermap.kernel.map.mapServices.wmc.om;
 
-import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSBaseBoundingBox;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author ETj
  */
-public interface WMCBoundingBox extends WMSBaseBoundingBox, Elementable
+public class WMCLayerList implements Iterable<WMCLayer>
 {
+	private List<WMCLayer> _list = new ArrayList<WMCLayer>();
+
+	private WMCLayerList()
+	{}
+
+	/**
+	 * Method newInstance
+	 */
+	public static WMCLayerList newInstance()
+	{
+		return new WMCLayerList();
+	}
+
+	public void addLayer(WMCLayer layer)
+	{
+		_list.add(layer);
+	}
+
+	public boolean isEmpty()
+	{
+		return _list.isEmpty();
+	}
+
+	public Iterator<WMCLayer> iterator()
+	{
+		return _list.iterator();
+	}
+
+	/**
+	 * @deprecated use iterator()
+	 */
+	public Iterable<WMCLayer> getLayerIterator()
+	{
+		return new Iterable<WMCLayer>()
+		{
+			public Iterator<WMCLayer> iterator()
+			{
+				return _list.iterator();
+			}
+		};
+	}
+
+
 }
 

@@ -16,35 +16,59 @@
 //===	You should have received a copy of the GNU General Public License
 //===	along with this program; if not, write to the Free Software
 //===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type;
+package org.wfp.vam.intermap.kernel.map.mapServices.wmc.om;
 
-import org.jdom.Document;
-import org.jdom.Element;
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCLayerList;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author ETj
  */
-public interface WMCViewContext
+public class WMCStyleList 
 {
-	public void setId(String toString);
-	public void setVersion(String p0);
+	private List<WMCStyle> _list = new ArrayList<WMCStyle>();
 
-	public WMCGeneral addNewGeneral();
-	public void setGeneral(WMCGeneral general);
-	public WMCGeneral getGeneral();
+	private WMCStyleList()
+	{}
 
-	public WMCLayerList addNewLayerList();
-	public void setLayerList(WMCLayerList layerList);
-	public WMCLayerList getLayerList();
+	/**
+	 * Method newInstance
+	 */
+	public static WMCStyleList newInstance()
+	{
+		return new WMCStyleList();
+	}
 
-	public Document getContextDocument();
-	public Element toElement();
+	public void addStyle(WMCStyle style)
+	{
+		_list.add(style);
+	}
 
+	public Iterable<WMCStyle> getStyleIterator()
+	{
+		return new Iterable<WMCStyle>()
+		{
+			public Iterator<WMCStyle> iterator()
+			{
+				return _list.iterator();
+			}
+		};
+	}
+	
+	public WMCStyle getCurrentStyle()
+	{
+		for (WMCStyle wmsStyle : _list) {
+			if(wmsStyle.isCurrent())
+				return wmsStyle;
+		}
+		
+		return _list.isEmpty() ? null : _list.get(0);
+	}
+
+	public boolean isEmpty() {
+		return _list.isEmpty();
+	}
 }
-

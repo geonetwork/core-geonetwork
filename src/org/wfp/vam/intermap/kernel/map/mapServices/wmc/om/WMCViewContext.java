@@ -16,85 +16,81 @@
 //===	You should have received a copy of the GNU General Public License
 //===	along with this program; if not, write to the Free Software
 //===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.impl;
-
-import org.jdom.Element;
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCWindow;
+package org.wfp.vam.intermap.kernel.map.mapServices.wmc.om;
 
 /**
  * @author ETj
  */
-public class WMCWindowImpl implements WMCWindow
+public class WMCViewContext 
 {
-	private int _width  = -1;
-	private int _height = -1;
+	// Attributes
+	private String _version = "1.1.0";
+	private String _id = null;
 
-	private WMCWindowImpl()
-	{}
+	// Child nodes
+	private WMCGeneral 	_general = null;
+	private WMCLayerList _layerList = null;
 
-	public static WMCWindow newInstance()
+	private WMCViewContext()
 	{
-		return new WMCWindowImpl();
 	}
 
-	/**
-	 * Method parse
-	 */
-	public static WMCWindow parse(Element ewin)
+	public static WMCViewContext newInstance()
 	{
-		WMCWindowImpl win = new WMCWindowImpl();
-
-		win.setWidth(Integer.parseInt(ewin.getAttributeValue("width")));
-		win.setHeight(Integer.parseInt(ewin.getAttributeValue("height")));
-
-		return win;
+		return new WMCViewContext();
 	}
 
 	/***************************************************************************
-	 * Method setHeight
+	 * LayerList
 	 */
-	public void setHeight(int height)
+	public void setLayerList(WMCLayerList layerList)
 	{
-		_height = height;
+		_layerList = layerList;
 	}
 
-	public int getHeight()
+	public WMCLayerList getLayerList()
 	{
-		return _height;
+		return _layerList;
 	}
 
 	/***************************************************************************
-	 * Method setWidth
+	 * General
 	 */
-	public void setWidth(int width)
+	public void setGeneral(WMCGeneral general)
 	{
-		_width = width;
+		_general = general;
 	}
 
-	public int getWidth()
+	public WMCGeneral getGeneral()
 	{
-		return _width;
+		return _general;
 	}
 
 	/***************************************************************************
+	 * Version
 	 */
-	public Element toElement(String name)
+	public void setVersion(String version)
 	{
-		if( _width == -1 )
-			throw new IllegalStateException(name + "/@Width is missing");
-
-		if( _height == -1 )
-			throw new IllegalStateException(name + "/@Height is missing");
-
-		return new Element(name)
-			.setAttribute("width", ""+_width)
-			.setAttribute("height", ""+_height);
+		_version = version;
+	}
+	
+	public String getVersion()
+	{
+		return _version;
 	}
 
+	/***************************************************************************
+	 * Id
+	 */
+	public void setId(String id)
+	{
+		_id = id;
+	}
+
+	public String getId()
+	{
+		return _id;
+	}
 }
-

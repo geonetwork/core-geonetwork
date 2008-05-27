@@ -16,42 +16,59 @@
 //===	You should have received a copy of the GNU General Public License
 //===	along with this program; if not, write to the Free Software
 //===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type;
+package org.wfp.vam.intermap.kernel.map.mapServices.wmc.om;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author ETj
  */
-public interface WMCLayer extends Elementable
+public class WMCFormatList 
 {
-	public void setServer(WMCServer server);
-	public WMCServer getServer();
-	public WMCServer addNewServer();
+	private List<WMCFormat> _list = new ArrayList<WMCFormat>();
 
-	public void setName(String name);
-	public String getName();
+	private WMCFormatList()
+	{}
 
-	public void setTitle(String title);
-	public String getTitle();
+	/**
+	 * Method newInstance
+	 */
+	public static WMCFormatList newInstance()
+	{
+		return new WMCFormatList();
+	}
 
-	public void setAbstract(String abs);
-	public String getAbstract();
+	public void addFormat(WMCFormat format)
+	{
+		_list.add(format);
+	}
 
-	public void setSRS(String sRS);
-	public String getSRS();
+	public Iterable<WMCFormat> getFormatIterator()
+	{
+		return new Iterable<WMCFormat>()
+		{
+			public Iterator<WMCFormat> iterator()
+			{
+				return _list.iterator();
+			}
+		};
+	}
+	
+	public String getCurrentFormat()
+	{
+		for (WMCFormat wmcFormat : _list) {
+			if(wmcFormat.isCurrent())
+				return wmcFormat.getFormat();
+		}
+		
+		return _list.isEmpty() ? null : _list.get(0).getFormat();
+	}
 
-	public void setQueryable(boolean queryable);
-	public boolean isQueryable();
-
-	public void setHidden(boolean hidden);
-	public boolean isHidden();
-
-	public WMCExtension addNewExtension();
-	public void setExtension(WMCExtension extension);
-	public WMCExtension getExtension();
+	public boolean isEmpty() {
+		return _list.isEmpty();
+	}
 }
-

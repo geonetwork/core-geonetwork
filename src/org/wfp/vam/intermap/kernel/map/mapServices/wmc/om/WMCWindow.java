@@ -16,22 +16,49 @@
 //===	You should have received a copy of the GNU General Public License
 //===	along with this program; if not, write to the Free Software
 //===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type;
+package org.wfp.vam.intermap.kernel.map.mapServices.wmc.om;
 
 /**
  * @author ETj
  */
-public interface WMCWindow extends Elementable
+public class WMCWindow
 {
-	public void setHeight(int height);
-	public int getHeight();
+	private int _width  = -1;
+	private int _height = -1;
 
-	public void setWidth(int width);
-	public int getWidth();
+	private WMCWindow()
+	{}
+
+	public static WMCWindow newInstance()
+	{
+		return new WMCWindow();
+	}
+
+	/***************************************************************************
+	 * Height
+	 */
+	public void setHeight(int height)
+	{
+		_height = height;
+	}
+
+	public int getHeight()
+	{
+		return _height;
+	}
+
+	/***************************************************************************
+	 * Width
+	 */
+	public void setWidth(int width)
+	{
+		_width = width;
+	}
+
+	public int getWidth()
+	{
+		return _width;
+	}
 }
-

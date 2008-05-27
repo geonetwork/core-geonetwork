@@ -75,7 +75,7 @@ public class MarkerSet implements Iterable<Marker>
 		return select(bb.getSouth(), bb.getNorth(), bb.getWest(), bb.getEast());
 	}
 
-	public MarkerSet select(float minlat, float maxlat, float minlon, float maxlon)
+	public MarkerSet select(double minlat, double maxlat, double minlon, double maxlon)
 	{
 		MarkerSet ret = new MarkerSet();
 

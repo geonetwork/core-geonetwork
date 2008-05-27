@@ -34,10 +34,11 @@ import org.jdom.Element;
 import org.wfp.vam.intermap.Constants;
 import org.wfp.vam.intermap.kernel.map.MapMerger;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.GeoRSSCodec;
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.impl.WMCFactory;
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCExtension;
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCViewContext;
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCWindow;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.om.WMCExtension;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.om.WMCViewContext;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.om.WMCWindow;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.util.WMCParser;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.util.WMCUtil;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.impl.Utils;
 import org.wfp.vam.intermap.kernel.marker.MarkerSet;
 import org.wfp.vam.intermap.services.map.MapUtil;
@@ -78,7 +79,9 @@ public class SetWmcFromURL implements Service
 							new MapMerger():
 							MapUtil.getMapMerger(context);
 
-		WMCViewContext vc = WMCFactory.parseViewContext(mapContext);
+		WMCParser parser = new WMCParser();
+		parser.setLenientParsing(true);
+		WMCViewContext vc = parser.parseViewContext(mapContext);
 		WMCWindow win = vc.getGeneral().getWindow();
 
 		String imgurl = MapUtil.setContext(mm, vc);
@@ -90,7 +93,7 @@ public class SetWmcFromURL implements Service
 		WMCExtension ext = vc.getGeneral().getExtension();
 		if(ext != null)
 		{
-			Element georss = ext.getChild("georss");
+			Element georss = WMCUtil.getExtensionChild(ext, "georss");
 			if(georss != null)
 			{
 				Element feed = (Element)georss.getChildren().get(0);

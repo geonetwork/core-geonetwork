@@ -16,34 +16,75 @@
 //===	You should have received a copy of the GNU General Public License
 //===	along with this program; if not, write to the Free Software
 //===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type;
+package org.wfp.vam.intermap.kernel.map.mapServices.wmc.om;
 
 /**
  * @author ETj
  */
-public interface WMCGeneral extends Elementable
+public class WMCSLD
 {
-	public WMCWindow addNewWindow();
-	public void setWindow(WMCWindow window);
-	public WMCWindow getWindow();
+	private String name = null; // 0..1
+	private String title = null; // 0..1
+	
+	private Choice0 choice0 = null;
+	
+	public static class Choice0
+	{
+		WMCOnlineResource onlineResource;
 
-	public WMCBoundingBox addNewBoundingBox();
-	public void setBoundingBox(WMCBoundingBox boundingBox);
-	public WMCBoundingBox getBoundingBox();
+		public WMCOnlineResource getOnlineResource() {
+			return onlineResource;
+		}
 
-	public void setTitle(String title);
-	public String getTitle();
+		public void setOnlineResource(WMCOnlineResource onlineResource) {
+			this.onlineResource = onlineResource;
+		}
+				
+	}
 
-	public void setAbstract(String abs);
-	public String getAbstract();
+	class Choice1
+	{
+//		SLDStyledLayerDescriptor sld = null; // TODO
+	}
+	
+	class Choice2
+	{
+//		SLDFeatureTypeStyle fts = null; // TODO
+	}
+	
+	private WMCSLD()
+	{}
 
-	public WMCExtension addNewExtension();
-	public void setExtension(WMCExtension extension);
-	public WMCExtension getExtension();
+	public static WMCSLD newInstance()
+	{
+		return new WMCSLD();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	
+	public Choice0 getChoice0() {
+		return choice0;
+	}
+
+	public void setChoice0(Choice0 choice0) {
+		this.choice0 = choice0;
+	}
+	
 }
-

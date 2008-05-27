@@ -58,20 +58,20 @@ public class GetGeonetRecords implements Service
 		int maxy = Integer.parseInt(params.getChildText("maxy"));
 		String sFrom = params.getChildText("from");
 		String sTo   = params.getChildText("to");
-		
+
 		int from = (sFrom == null) ? -1 : Integer.parseInt(sFrom);
 		int to   = (sTo == null) ? -1 : Integer.parseInt(sTo);
-		
+
 		BoundingBox bb = MapUtil.getMapMerger(context).getBoundingBox();
-		
+
 		int imageWidth = MapUtil.getImageWidth(context);
 		int imageHeight = MapUtil.getImageHeight(context);
-		
-		float mapx  = bb.getWest() + (bb.getEast() - bb.getWest()) * minx / imageWidth;
-		float mapy  = bb.getNorth() - (bb.getNorth() - bb.getSouth()) * miny / imageHeight;
-		float mapx2 = bb.getWest() + (bb.getEast() - bb.getWest()) * maxx / imageWidth;
-		float mapy2 = bb.getNorth() - (bb.getNorth() - bb.getSouth()) * maxy / imageHeight;
-		
+
+		double mapx  = bb.getWest() + (bb.getEast() - bb.getWest()) * minx / imageWidth;
+		double mapy  = bb.getNorth() - (bb.getNorth() - bb.getSouth()) * miny / imageHeight;
+		double mapx2 = bb.getWest() + (bb.getEast() - bb.getWest()) * maxx / imageWidth;
+		double mapy2 = bb.getNorth() - (bb.getNorth() - bb.getSouth()) * maxy / imageHeight;
+
 		//System.out.println(Xml.getString(Geonet.getGeonetRecords(mapx, mapy, mapx2, mapy2))); // DEBUG
 		return Geonet.getGeonetRecords(mapx, mapy, mapx2, mapy2, from, to);
 	}

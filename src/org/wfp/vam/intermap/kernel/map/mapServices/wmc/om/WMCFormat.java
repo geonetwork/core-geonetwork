@@ -16,19 +16,42 @@
 //===	You should have received a copy of the GNU General Public License
 //===	along with this program; if not, write to the Free Software
 //===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type;
+package org.wfp.vam.intermap.kernel.map.mapServices.wmc.om;
 
 /**
  * @author ETj
  */
-public interface WMCService
+public class WMCFormat
 {
-	public String OGC_WMS = "OGC:WMS";
+	private String _format = null;
+	private boolean _current = false;
 
+	private WMCFormat()
+	{}
+
+	public static WMCFormat newInstance()
+	{
+		return new WMCFormat();
+	}
+
+
+	public boolean isCurrent() {
+		return _current;
+	}
+
+	public void setCurrent(boolean current) {
+		this._current = current;
+	}
+
+	public String getFormat() {
+		return _format;
+	}
+
+	public void setFormat(String format) {
+		this._format = format;
+	}
+	
 }
 

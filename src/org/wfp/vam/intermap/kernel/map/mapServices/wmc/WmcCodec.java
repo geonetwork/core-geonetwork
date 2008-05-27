@@ -23,7 +23,7 @@
 
 package org.wfp.vam.intermap.kernel.map.mapServices.wmc;
 
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.*;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.om.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,9 +32,10 @@ import java.util.UUID;
 import org.jdom.Element;
 import org.wfp.vam.intermap.kernel.map.Layer;
 import org.wfp.vam.intermap.kernel.map.MapMerger;
+import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
 import org.wfp.vam.intermap.kernel.map.mapServices.MapService;
 import org.wfp.vam.intermap.kernel.map.mapServices.arcims.ArcIMSService;
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.impl.WMCFactory;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.util.WMCUtil;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.CapabilitiesStore;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.WmsService;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSCapabilities;
@@ -56,26 +57,27 @@ public class WmcCodec
 	 *
 	 * @return   the WMCViewContext
 	 */
-	public static WMCViewContext createViewContext(MapMerger mm, MarkerSet ms, String title, int width, int height)
+	public static WMCViewContext createViewContext(MapMerger mm, MarkerSet ms, BoundingBox bb, String title, int width, int height)
 		throws Exception
 	{
 		UUID uuid = UUID.randomUUID();
 
-		WMCViewContext vc = WMCFactory.createWMCViewContext();
-		//ViewContextType vc = ViewContextType.Factory.newInstance();
+		WMCViewContext vc = WMCViewContext.newInstance();
 		vc.setVersion("1.1.0"); // mandatory
 		vc.setId(uuid.toString()); // mandatory
 
-		WMCGeneral vcg = vc.addNewGeneral();
+		WMCGeneral vcg = WMCGeneral.newInstance();
+		vc.setGeneral(vcg);
 
 		vcg.setTitle(title!=null ? title: ("Intermap context " + uuid)); // mandatory
 
-		WMCBoundingBox bbt = vcg.addNewBoundingBox(); // mandatory
+		WMCBoundingBox bbt = WMCBoundingBox.newInstance();
+		vcg.setBoundingBox(bbt); // mandatory
 		bbt.setSRS("EPSG:4326");
-		bbt.setMaxx(mm.getBoundingBox().getEast());
-		bbt.setMaxy(mm.getBoundingBox().getNorth());
-		bbt.setMinx(mm.getBoundingBox().getWest());
-		bbt.setMiny(mm.getBoundingBox().getSouth());
+		bbt.setMaxx(bb.getEast());
+		bbt.setMaxy(bb.getNorth());
+		bbt.setMinx(bb.getWest());
+		bbt.setMiny(bb.getSouth());
 
 		WMCWindow win = vcg.addNewWindow(); // not mandatory
 		win.setWidth(width);
@@ -103,7 +105,8 @@ public class WmcCodec
 			}
 		}
 
-		WMCLayerList llist = vc.addNewLayerList();
+		WMCLayerList llist = WMCLayerList.newInstance();
+		vc.setLayerList(llist);
 
 		Collections.reverse(invertedList); // intermap order is reversed with respect to WMC
 		for (WMCLayer layer : invertedList)
@@ -113,8 +116,9 @@ public class WmcCodec
 
 		if(ms != null && ! ms.isEmpty())
 		{
-			WMCExtension ext = vcg.addNewExtension();
-			ext.add(new Element("georss").addContent(GeoRSSCodec.getGeoRSS(ms)));
+			WMCExtension ext = WMCExtension.newInstance();
+			vcg.setExtension(ext);
+			WMCUtil.addExtensionChild(ext, new Element("georss").addContent(GeoRSSCodec.getGeoRSS(ms)));
 		}
 
 		return vc;
@@ -132,7 +136,7 @@ public class WmcCodec
 		WMSCapabilities wmsCapa =
 			CapabilitiesStore.getCapabilityDocument(wmsService.getServerURL());
 
-		WMCLayer wmcLayer = WMCFactory.createWMCLayer();
+		WMCLayer wmcLayer = WMCLayer.newInstance();
 
 		// Mandatory attributes
 		wmcLayer.setQueryable(wmsLayer.isQueryable()); // mandatory
@@ -147,19 +151,21 @@ public class WmcCodec
 		// add transparency only if it holds a non-default value
 		if(transparency < 1.0f)
 		{
-			WMCExtension layerExt = wmcLayer.addNewExtension();
-			Element etransp = new Element("Transparency").setText(""+transparency);
-			layerExt.add(etransp);
+			WMCExtension ext = WMCExtension.newInstance();
+			wmcLayer.setExtension(ext);
+			WMCUtil.addExtensionChild(ext, new Element("Transparency").setText(""+transparency));
 		}
 
 		// Server
-		WMCServer server = wmcLayer.addNewServer();
-		server.setService(WMCService.OGC_WMS); // mandatory
+		WMCServer server = WMCServer.newInstance();
+		wmcLayer.setServer(server);
+		server.setService(WMCServer.SERVICE_OGC_WMS); // mandatory
 		server.setVersion(wmsCapa.getVersion().toString());// mandatory
 		server.setTitle(wmsCapa.getService().getTitle()); // optional
 
 		// ????? Specs are quite ambiguous on which onlineResource should be set.
-		WMCOnlineResource ort = server.addNewOnlineResource();
+		WMCOnlineResource ort = WMCOnlineResource.newInstance();
+		server.setOnlineResource(ort);
 //		ort.setHref(wmsCapa.getService().getOnlineResource().getHref()); // this is unreliable
 		ort.setHref(wmsCapa.getCapability().getRequest().getGetCapabilities().getDCPType(0).getHttpGetHref());
 

@@ -184,7 +184,7 @@ public class ScaleBar
 	 */
 	private static double getMapLength_LawOfCosines(BoundingBox bb)
 	{
-		float lat;
+		double lat;
 
 		if(bb.getNorth()*bb.getSouth() < 0)
 			lat = 0; // take the equator when it is inside the map

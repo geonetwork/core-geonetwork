@@ -31,7 +31,7 @@ import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSBaseBoundi
 public class BoundingBox
 {
 	// Bounding Box coordinates
-	private float northBound, southBound, eastBound, westBound;
+	private double northBound, southBound, eastBound, westBound;
 
 	public BoundingBox() { setDefault(); }
 
@@ -47,7 +47,7 @@ public class BoundingBox
 		this(bbox.getMaxy(), bbox.getMiny(), bbox.getMaxx(), bbox.getMinx());
 	}
 
-	public BoundingBox(float north, float south, float east, float west)
+	public BoundingBox(double north, double south, double east, double west)
 //		throws Exception
 	{
 		// Throw an exception if not valid coordinates
@@ -73,15 +73,15 @@ public class BoundingBox
 		return("N: " + northBound + " S: " + southBound + " E: " + eastBound + " W: " + westBound);
 	}
 
-	public float getNorth() { return northBound; }
+	public double getNorth() { return northBound; }
 
-	public float getSouth() { return southBound; }
+	public double getSouth() { return southBound; }
 
-	public float getEast() { return eastBound; }
+	public double getEast() { return eastBound; }
 
-	public float getWest() { return westBound; }
+	public double getWest() { return westBound; }
 
-	public float getLongDiff() { return eastBound - westBound;}
+	public double getLongDiff() { return eastBound - westBound;}
 
 	/**
 	 * Centers the BoundingBox to the specified coordinates.
@@ -95,21 +95,21 @@ public class BoundingBox
 	 * @throws   Exception
 	 *
 	 */
-	public BoundingBox moveTo(float x, float y)
+	public BoundingBox moveTo(double x, double y)
 //		throws Exception
 	{
 		// Throw an exception if not valid coordinates
 //		if (Math.abs(latitude) > 90 || Math.abs(longitude) > 180)
 //			throw new Exception();
 
-		float semiNS = (northBound - southBound) / 2;
-		float semiEW = Math.abs(eastBound - westBound) / 2;
+		double semiNS = (northBound - southBound) / 2;
+		double semiEW = Math.abs(eastBound - westBound) / 2;
 
 		// Calculate the temporary coordinates (maybe not valid)
-		float tNorth = y + semiNS;
-		float tSouth = y - semiNS;
-		float tEast = x + semiEW;
-		float tWest = x - semiEW;
+		double tNorth = y + semiNS;
+		double tSouth = y - semiNS;
+		double tEast = x + semiEW;
+		double tWest = x - semiEW;
 
 		// Fix if not valid coordinates
 //		if (tNorth > Constants.MAX_LATITUDE) {
@@ -136,7 +136,7 @@ public class BoundingBox
 		// IMPORTANT: Calculate the module of east and west
 	}
 
-	public BoundingBox move(float x, float y)
+	public BoundingBox move(double x, double y)
 	{
 		northBound = northBound + y;
 		southBound = southBound + y;
@@ -182,8 +182,8 @@ public class BoundingBox
 	{
 		if (factor == 0)
 			throw new Exception("Illegal zoom factor");
-		float deltaNS = Math.abs(northBound - southBound) * (1 - (1 / factor));
-		float deltaEW = Math.abs(eastBound - westBound) * (1 - (1 / factor));
+		double deltaNS = Math.abs(northBound - southBound) * (1 - (1 / factor));
+		double deltaEW = Math.abs(eastBound - westBound) * (1 - (1 / factor));
 
 		northBound = northBound - deltaNS / 2;
 		southBound = southBound + deltaNS / 2;

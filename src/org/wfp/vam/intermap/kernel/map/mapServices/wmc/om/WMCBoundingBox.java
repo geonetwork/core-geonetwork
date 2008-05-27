@@ -16,30 +16,85 @@
 //===	You should have received a copy of the GNU General Public License
 //===	along with this program; if not, write to the Free Software
 //===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type;
+package org.wfp.vam.intermap.kernel.map.mapServices.wmc.om;
+
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSBaseBoundingBox;
 
 /**
  * @author ETj
  */
-public interface WMCServer extends Elementable
+public class WMCBoundingBox implements WMSBaseBoundingBox
 {
-	public WMCOnlineResource addNewOnlineResource();
-	public void setOnlineResource(WMCOnlineResource onlineResource);
-	public WMCOnlineResource getOnlineResource();
+	private String _srs = null;
+	private double _minx = Double.NaN;
+	private double _miny = Double.NaN;
+	private double _maxx = Double.NaN;
+	private double _maxy = Double.NaN;
 
-	public void setService(String service);
-	public String getService();
+	private WMCBoundingBox()
+	{
+	}
 
-	public void setVersion(String version);
-	public String getVersion();
+	public static WMCBoundingBox newInstance()
+	{
+		return new WMCBoundingBox();
+	}
 
-	public void setTitle(String title);
-	public String getTitle();
+
+	public void setSRS(String srs)
+	{
+		_srs = srs;
+	}
+
+	public String getSRS()
+	{
+		return _srs;
+	}
+
+
+	public void setMinx(double minx)
+	{
+		_minx = minx;
+	}
+
+	public double getMinx()
+	{
+		return _minx;
+	}
+
+
+	public void setMiny(double miny)
+	{
+		_miny = miny;
+	}
+
+	public double getMiny()
+	{
+		return _miny;
+	}
+
+
+	public void setMaxx(double maxx)
+	{
+		_maxx = maxx;
+	}
+
+	public double getMaxx()
+	{
+		return _maxx;
+	}
+
+
+	public void setMaxy(double maxy)
+	{
+		_maxy = maxy;
+	}
+
+	public double getMaxy()
+	{
+		return _maxy;
+	}
 
 }
-

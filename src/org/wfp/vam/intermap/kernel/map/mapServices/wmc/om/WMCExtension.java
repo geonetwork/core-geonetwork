@@ -16,58 +16,78 @@
 //===	You should have received a copy of the GNU General Public License
 //===	along with this program; if not, write to the Free Software
 //===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.impl;
+package org.wfp.vam.intermap.kernel.map.mapServices.wmc.om;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import org.jdom.Element;
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCExtension;
-
 
 /**
  * @author ETj
  */
-public class WMCExtensionImpl implements WMCExtension
+public class WMCExtension
 {
-	private Element _root = new Element("root");;
+	private List<Entry> children = new ArrayList(); 
 
-	private WMCExtensionImpl()
+	private WMCExtension()
 	{}
 
 	public static WMCExtension newInstance()
 	{
-		return new WMCExtensionImpl();
+		return new WMCExtension();
 	}
 
-	public static WMCExtension parse(Element eext)
+	public void add(String name, String xmlElement)
 	{
-		WMCExtension ext = new WMCExtensionImpl();
-
-		for(Element e: (List<Element>)eext.getChildren())
-			ext.add((Element)e.clone());
-
-		return ext;
+		children.add(new Entry(name, xmlElement));
 	}
 
-	public void add(Element e)
+	public String get(String name)
 	{
-		_root.addContent(e);
+		for(WMCExtension.Entry entry : children) {
+			if(name.equalsIgnoreCase(entry.name))
+				return entry.xml;
+		}
+		return null;
 	}
-
-	public Element getChild(String name)
+	
+	public Iterable<String> getExtensionsIterator()
 	{
-		return _root.getChild(name);
-	}
+		return new Iterable<String>()
+		{
+			public Iterator<String> iterator() {
+				return new Iterator<String>()
+				{
+					Iterator<Entry> entit = children.iterator();
 
-	public Element toElement(String name)
-	{
-		Element ret = (Element)_root.clone();
-		ret.setName(name);
-		return ret;
+					public boolean hasNext() {
+						return entit.hasNext();
+					}
+
+					public String next() {
+						return entit.next().xml;
+					}
+
+					public void remove() {
+						entit.remove();
+					}
+					
+				};
+			}
+		};
 	}
+	
+	class Entry
+	{
+		String name;
+		String xml; // strings are well-formed XML elements
+
+		public Entry(String name, String xml) {
+			this.name = name;
+			this.xml = xml;
+		}
+	}
+		
 }
-

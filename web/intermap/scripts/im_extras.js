@@ -354,7 +354,9 @@ function im_openWMCform(type)
 function im_downloadWMC()
 {
     var pars= "width=" + im_extra_drivingMap.width +          
-                    "&height=" + im_extra_drivingMap.height;        
+              "&height=" + im_extra_drivingMap.height +
+			  "&" + im_extra_drivingMap.getURLbbox()
+			  ;        
 
     window.open(getIMServiceURL('context.cml') + '?'+pars);
 }
@@ -414,7 +416,9 @@ function im_sendWMC()
 		+"&wmc_mailfrom=" + encodeURIComponent(from)
 		+"&wmc_mailto=" + encodeURIComponent(to)
 		+"&width=" + im_extra_drivingMap.width    // WMC stuff     
-		+"&height=" + im_extra_drivingMap.height; // WMC stuff    
+		+"&height=" + im_extra_drivingMap.height  // WMC stuff
+		+ "&" + im_extra_drivingMap.getURLbbox()  // WMC stuff
+		; 
 
 	im_wmc_showMessage("mail", "start");
 

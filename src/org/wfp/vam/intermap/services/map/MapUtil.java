@@ -25,7 +25,6 @@ package org.wfp.vam.intermap.services.map;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -38,10 +37,12 @@ import org.wfp.vam.intermap.kernel.map.MapMerger;
 import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
 import org.wfp.vam.intermap.kernel.map.mapServices.MapService;
 import org.wfp.vam.intermap.kernel.map.mapServices.arcims.ArcIMSService;
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCExtension;
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCLayer;
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCViewContext;
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCWindow;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.om.WMCExtension;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.om.WMCLayer;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.om.WMCViewContext;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.om.WMCWindow;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.util.WMC2jdom;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.util.WMCUtil;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.CapabilitiesStore;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.WmsService;
 
@@ -158,7 +159,7 @@ public class MapUtil
 		WMCExtension ext = layer.getExtension();
 		if(ext != null)
 		{
-			Element et = ext.getChild("Transparency");
+			Element et = WMCUtil.getExtensionChild(ext, "Transparency");
 			if(et != null)
 				mm.setTransparency(id, Float.parseFloat(et.getText()));
 		}
@@ -320,15 +321,15 @@ public class MapUtil
 
 	protected static void moveTo(BoundingBox bb, int x, int y, int width, int height) throws Exception
 	{
-		float mapX = bb.getWest() + (bb.getEast() - bb.getWest()) * x / width;
-		float mapY = bb.getNorth() - (bb.getNorth() - bb.getSouth()) * y / height;
+		double mapX = bb.getWest() + (bb.getEast() - bb.getWest()) * x / width;
+		double mapY = bb.getNorth() - (bb.getNorth() - bb.getSouth()) * y / height;
 		bb.moveTo(mapX, mapY);
 	}
 
 	protected static BoundingBox move(BoundingBox bb, int deltaX, int deltaY, int width, int height) throws Exception
 	{
-		float mapX = (bb.getEast() - bb.getWest()) * (float)deltaX / width;
-		float mapY = (bb.getNorth() - bb.getSouth()) * (float)deltaY / height;
+		double mapX = (bb.getEast() - bb.getWest()) * (float)deltaX / width;
+		double mapY = (bb.getNorth() - bb.getSouth()) * (float)deltaY / height;
 		return bb.move(mapX, mapY);
 	}
 
@@ -336,10 +337,10 @@ public class MapUtil
 		throws Exception {
 
 		// Move and zoom
-		float mapX = bb.getWest() + (bb.getEast() - bb.getWest()) * mapimgx / imageWidth;
-		float mapY = bb.getNorth() - (bb.getNorth() - bb.getSouth()) * mapimgy / imageHeigth;
-		float mapX2 = bb.getWest() + (bb.getEast() - bb.getWest()) * mapimgx2 / imageWidth;
-		float mapY2 = bb.getNorth() - (bb.getNorth() - bb.getSouth()) * mapimgy2 / imageHeigth;
+		double mapX = bb.getWest() + (bb.getEast() - bb.getWest()) * mapimgx / imageWidth;
+		double mapY = bb.getNorth() - (bb.getNorth() - bb.getSouth()) * mapimgy / imageHeigth;
+		double mapX2 = bb.getWest() + (bb.getEast() - bb.getWest()) * mapimgx2 / imageWidth;
+		double mapY2 = bb.getNorth() - (bb.getNorth() - bb.getSouth()) * mapimgy2 / imageHeigth;
 
 		return new BoundingBox(mapY2, mapY, mapX2, mapX);
 	}
@@ -348,10 +349,10 @@ public class MapUtil
 		throws Exception {
 
 		// Move and zoom
-		float north = bb.getNorth() + (bb.getNorth() - bb.getSouth()) * imageHeight / (mapimgy - mapimgy2);
-		float south = bb.getSouth() - (bb.getNorth() - bb.getSouth()) * imageHeight / (mapimgy - mapimgy2);
-		float east = bb.getEast() + (bb.getEast() - bb.getWest()) * imageWidth / (mapimgx2 - mapimgx);
-		float west = bb.getWest() - (bb.getEast() - bb.getWest()) * imageWidth / (mapimgx2 - mapimgx);
+		double north = bb.getNorth() + (bb.getNorth() - bb.getSouth()) * imageHeight / (mapimgy - mapimgy2);
+		double south = bb.getSouth() - (bb.getNorth() - bb.getSouth()) * imageHeight / (mapimgy - mapimgy2);
+		double east = bb.getEast() + (bb.getEast() - bb.getWest()) * imageWidth / (mapimgx2 - mapimgx);
+		double west = bb.getWest() - (bb.getEast() - bb.getWest()) * imageWidth / (mapimgx2 - mapimgx);
 
 //		System.out.println("north : " + north + "; south = " + south + "; east = " + east + "; west = " + west);
 
@@ -361,13 +362,13 @@ public class MapUtil
 	public static BoundingBox setScale(BoundingBox bb, int imageWidth, int imageHeight, long scale, float dpi)
 		throws Exception
 	{
-		float cx = (bb.getEast()+bb.getWest())/2;
-		float cy = (bb.getNorth()+bb.getSouth())/2;
+		double cx = (bb.getEast()+bb.getWest())/2;
+		double cy = (bb.getNorth()+bb.getSouth())/2;
 
 		// Set the scale
 		double degScale = scale/423307109.727 * 96f/dpi;
-		float dx = (float)(imageWidth  * degScale);
-	 	float dy = (float)(imageHeight * degScale);
+		double dx = (float)(imageWidth  * degScale);
+	 	double dy = (float)(imageHeight * degScale);
 
 		return new BoundingBox( cy+dy/2, cy-dy/2,
 									   cx+dx/2, cx-dx/2);

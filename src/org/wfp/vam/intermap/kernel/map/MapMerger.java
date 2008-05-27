@@ -66,8 +66,8 @@ public class MapMerger
 	private int activeServiceId;
 	private String imageName = null; // The name of the merge image file
 	private String imagePath = null; // The path of the merge image file
-	private float degScale; // The map scale
-	private float distScale; // The map scale
+	private double degScale; // The map scale
+	private double distScale; // The map scale
 	private Map<Integer,String> htErrors = new Hashtable<Integer,String>();
 	private boolean reaspectWms = true;
 
@@ -678,25 +678,25 @@ public class MapMerger
 
 	private static BoundingBox reaspect(BoundingBox bb, int w, int h) {
 		// Get boundaries
-		float north = bb.getNorth();
-		float south = bb.getSouth();
-		float east = bb.getEast();
-		float west = bb.getWest();
+		double north = bb.getNorth();
+		double south = bb.getSouth();
+		double east = bb.getEast();
+		double west = bb.getWest();
 
-		float dx = Math.abs(east - west);
-		float dy = Math.abs(north - south);
+		double dx = Math.abs(east - west);
+		double dy = Math.abs(north - south);
 
 		// Reaspect
 		if ((w / dx) > (h / dy))
 		{
-			float d = dy * w / h - dx;
+			double d = dy * w / h - dx;
 			west -= d / 2;
 			east += d / 2;
 			System.out.println("REASPECTING - changing ratio WE += " + d);
 		}
 		else if ((h / dy) > (w / dx))
 		{
-			float d = dx * h / w - dy;
+			double d = dx * h / w - dy;
 			south -= d / 2;
 			north += d / 2;
 			System.out.println("REASPECTING - changing ratio NS += " + d);
@@ -706,7 +706,7 @@ public class MapMerger
 		// N-S: limit navigation
 		if(north > 90 && south>-90)
 		{
-			float off = north - 90;
+			double off = north - 90;
 			north = 90;
 			south -= off;
 			System.out.println("REASPECTING - shifting NS -= " + off);
@@ -714,7 +714,7 @@ public class MapMerger
 
 		if(south < -90 && north < 90)
 		{
-			float off = - 90 - south;
+			double off = - 90 - south;
 			south = -90;
 			north += off;
 			System.out.println("REASPECTING - shifting NS += " + off);

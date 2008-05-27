@@ -16,19 +16,24 @@
 //===	You should have received a copy of the GNU General Public License
 //===	along with this program; if not, write to the Free Software
 //===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type;
+package org.wfp.vam.intermap.kernel.map.mapServices.wmc.om;
+
+import org.jdom.Namespace;
 
 /**
- * @author ETj
+ *
+ * @author etj
  */
-public interface WMCOnlineResource extends Elementable
-{
-	public void setHref(String href);
-	public String getHref();
-}
+public class WMC {
+	
+	public final static Namespace XLINKNS = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
 
+	/** Standard OGC namespace for WMC documents */
+	public final static Namespace WMCNS   = Namespace.getNamespace("http://www.opengeospatial.net/context");
+	
+	/** Alternate namespace for WMC docs used sometime by non-compliant servers. */
+	public final static Namespace OGWMCNS = Namespace.getNamespace("http://www.opengis.net/context");
+
+}

@@ -16,21 +16,58 @@
 //===	You should have received a copy of the GNU General Public License
 //===	along with this program; if not, write to the Free Software
 //===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type;
-
-import org.jdom.Element;
+package org.wfp.vam.intermap.kernel.map.mapServices.wmc.om;
 
 /**
  * @author ETj
  */
-public interface WMCExtension extends Elementable
-{
-	public void add(Element etransp);
-	public Element getChild(String name);
+public class WMCURL {
+
+	private int width = -1; // opt
+	private int height = -1; // opt	
+	private String format = null; // opt
+	
+	private WMCOnlineResource onlineResource;  // 1..1
+
+	private WMCURL() {
+	}
+
+	public static WMCURL newInstance() {
+		return new WMCURL();
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
+
+	public WMCOnlineResource getOnlineResource() {
+		return onlineResource;
+	}
+
+	public void setOnlineResource(WMCOnlineResource onlineResource) {
+		this.onlineResource = onlineResource;
+	}
 }
 

@@ -30,19 +30,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
-
-import org.jdom.CDATA;
+import jeeves.utils.Log;
 import org.jdom.Element;
 import org.jdom.Text;
+import org.wfp.vam.intermap.Constants;
 import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
-import org.wfp.vam.intermap.kernel.map.mapServices.HttpClient;
 import org.wfp.vam.intermap.kernel.map.mapServices.MapService;
 import org.wfp.vam.intermap.kernel.map.mapServices.constants.MapServices;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.dimensions.Extents;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.impl.WMSFactory;
 import org.wfp.vam.intermap.util.Util;
-import org.wfp.vam.intermap.Constants;
-import jeeves.utils.Log;
 
 public class WmsService extends MapService
 {
@@ -201,9 +198,9 @@ public class WmsService extends MapService
 				+ "&QUERY_LAYERS=" + name + "&X=" + x + "&Y=" + y
 				+ "&INFO_FORMAT=" + infoFormat
 				+ "&STYLES=" + _styleName;
-		
+
 		Log.debug(Constants.WMS," - GetFeatureInfo request : "+ url);
-		
+
 		lastResponse = new Element("url").setText(url);
 
 		// Use the following code if you need to proxy the WMS server response.

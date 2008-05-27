@@ -32,10 +32,13 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.wfp.vam.intermap.Constants;
 import org.wfp.vam.intermap.kernel.map.MapMerger;
+import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.WmcCodec;
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCViewContext;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.om.WMCViewContext;
+import org.wfp.vam.intermap.kernel.map.mapServices.wmc.util.WMC2jdom;
 import org.wfp.vam.intermap.kernel.marker.MarkerSet;
 import org.wfp.vam.intermap.services.map.MapUtil;
+import org.wfp.vam.intermap.util.Util;
 
 public class GetWmcContext implements Service
 {
@@ -56,10 +59,13 @@ public class GetWmcContext implements Service
 
 		MapMerger mm = MapUtil.getMapMerger(context);
 		MarkerSet ms = (MarkerSet)context.getUserSession().getProperty(Constants.SESSION_MARKERSET);
+		BoundingBox bb = Util.parseBoundingBox(params); // search bb in params
+		if(bb == null)
+			throw new IllegalArgumentException("Bad or missing boundingbox.");
 
-		WMCViewContext vcd = WmcCodec.createViewContext(mm, ms, title, width, height);
+		WMCViewContext vcd = WmcCodec.createViewContext(mm, ms, bb, title, width, height);
 
-		Element xvcd = vcd.toElement();
+		Element xvcd = new WMC2jdom().toElement(vcd);
 
 		XMLOutputter xcomp = new XMLOutputter(Format.getCompactFormat());
 		String comp = xcomp.outputString(xvcd);

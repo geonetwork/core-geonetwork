@@ -16,24 +16,14 @@
 //===	You should have received a copy of the GNU General Public License
 //===	along with this program; if not, write to the Free Software
 //===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.impl;
-
-
-import org.jdom.Element;
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCBoundingBox;
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCExtension;
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCGeneral;
-import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCWindow;
+package org.wfp.vam.intermap.kernel.map.mapServices.wmc.om;
 
 /**
  * @author ETj
  */
-public class WMCGeneralImpl implements WMCGeneral
+public class WMCGeneral 
 {
 	private WMCWindow _window = null; // 0..1
 	private WMCBoundingBox _boundingBox = null; // 1..1
@@ -46,7 +36,7 @@ public class WMCGeneralImpl implements WMCGeneral
 	private WMCExtension _extension = null;
 
 
-	private WMCGeneralImpl()
+	private WMCGeneral()
 	{
 	}
 
@@ -55,27 +45,9 @@ public class WMCGeneralImpl implements WMCGeneral
 	 */
 	public static WMCGeneral newInstance()
 	{
-		return new WMCGeneralImpl();
+		return new WMCGeneral();
 	}
 
-	/**
-	 * Method parse
-	 */
-	public static WMCGeneral parse(Element eg)
-	{
-		WMCGeneralImpl general = new WMCGeneralImpl();
-
-		general.setWindow(WMCFactory.parseWindow(eg.getChild("Window")));
-		general.setBoundingBox(WMCFactory.parseBoundingBox(eg.getChild("BoundingBox")));
-		general.setTitle(eg.getChildText("Title"));
-		general.setAbstract(eg.getChildText("Abstract"));
-
-		Element eext = eg.getChild("Extension");
-		if(eext != null)
-			general.setExtension(WMCFactory.parseExtension(eext));
-
-		return general;
-	}
 
 	/***************************************************************************
 	 * Window
@@ -85,7 +57,7 @@ public class WMCGeneralImpl implements WMCGeneral
 		if(_window != null)
 			throw new IllegalStateException("A Window element already exists");
 
-		_window = WMCWindowImpl.newInstance();
+		_window = WMCWindow.newInstance();
 
 		return _window;
 	}
@@ -106,17 +78,6 @@ public class WMCGeneralImpl implements WMCGeneral
 		return _window;
 	}
 
-	/***************************************************************************
-	 * BoundingBox
-	 */
-	public WMCBoundingBox addNewBoundingBox()
-	{
-		if(_boundingBox != null)
-			throw new IllegalStateException("A BoundingBox element already exists");
-
-		_boundingBox = WMCBoundingBoxImpl.newInstance();
-		return _boundingBox;
-	}
 
 	/**
 	 * Sets BoundingBox
@@ -170,19 +131,6 @@ public class WMCGeneralImpl implements WMCGeneral
 		return _abstract;
 	}
 
-	/***************************************************************************
-	 * Extension
-	 */
-	public WMCExtension addNewExtension()
-	{
-		if(_extension != null)
-			throw new IllegalStateException("An Extension element already exists");
-
-		_extension = WMCExtensionImpl.newInstance();
-
-		return _extension;
-	}
-
 	/**
 	 * Sets Extension
 	 */
@@ -197,40 +145,6 @@ public class WMCGeneralImpl implements WMCGeneral
 	public WMCExtension getExtension()
 	{
 		return _extension;
-	}
-
-
-	/***************************************************************************
-	 * Method toElement
-	 */
-	public Element toElement(String name)
-	{
-		if(_title == null)
-			throw new IllegalStateException(name + "/Title is missing");
-
-		if(_boundingBox == null)
-			throw new IllegalStateException(name + "/BoundingBox is missing");
-
-		Element ret = new Element(name)
-			.addContent(new Element("Title").setText(_title))
-			.addContent(_boundingBox.toElement("BoundingBox"));
-
-		if( _window != null)
-			ret.addContent(_window.toElement("Window"));
-
-		// TODO add keywordlist
-
-		if(_abstract != null )
-			ret.addContent(new Element("Abstract").setText(_abstract));
-
-		// TODO add logourl
-		// TODO add descriptionurl
-		// TODO add contactinformation
-
-		if(_extension != null )
-			ret.addContent(_extension.toElement("Extension"));
-
-		return ret;
 	}
 
 }

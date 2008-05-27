@@ -27,11 +27,11 @@
 Ajax.Responders.register({
   onException: function(req, e){
 
-  	var debug = false;
+  	var debug = true;
 
-	var qqq = document.createElement('div');
-	qqq.innerHTML = "Exception '" + e.message + "'";
-	document.body.appendChild(qqq);
+	var errmsg = document.createElement('div');
+	errmsg.innerHTML = "Exception '" + e.message + "'";
+	document.body.appendChild(errmsg);
 	
 	if (debug) {
 		alert("Exception: " + e.message + 
@@ -107,7 +107,7 @@ function imep_loadWmcFromUrl(url, doClearContext)
 									return;
 								}
 
- 			                     imc_reloadLayers();
+								imc_reloadLayers();
 								 
 			 					var xml = req.responseXML;
 								 
@@ -176,11 +176,12 @@ function im_tryWMCBoot()
 											return;
 										}
 		
-					                     imc_reloadLayers();
+										imc_reloadLayers();
 										 
 					 					var xml = req.responseXML;
 										im_bm.set_dom(xml); 
-										im_bm.setBBox_dom(xml);								 
+										im_bm.setBBox_dom(xml);
+										im_redrawMarkers(xml);																		 
 				
 										im_bm.setStatus('idle');
 									}
