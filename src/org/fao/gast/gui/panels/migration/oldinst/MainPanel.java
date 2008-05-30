@@ -27,6 +27,7 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -36,6 +37,7 @@ import org.dlib.gui.FlexLayout;
 import org.dlib.gui.GuiUtil;
 import org.dlib.gui.ProgressDialog;
 import org.fao.gast.gui.panels.FormPanel;
+import org.fao.gast.lib.Lib;
 
 //==============================================================================
 
@@ -62,12 +64,20 @@ public class MainPanel extends FormPanel
 	public void actionPerformed(ActionEvent e)
 	{
 		String cmd = e.getActionCommand();
+		Object source = e.getSource();
 
 		if (cmd.equals("browse"))
 			browse();
 
 		else if (cmd.equals("migrate"))
 			migrate();
+
+		else if (source.equals(jcbCreateUser))
+		{
+			boolean enable = jcbCreateUser.isSelected();
+			txtUser.setEnabled(enable);
+			txtGroup.setEnabled(enable);
+		}
 	}
 
 	//---------------------------------------------------------------------------
@@ -90,6 +100,29 @@ public class MainPanel extends FormPanel
 		ProgressDialog dialog = new ProgressDialog(owner, "Migrating data");
 		Worker         worker = new Worker(dialog);
 
+		if ("".equals(txtOldDir.getText()))
+		{
+			Lib.gui.showError(this, "Please choose a directory");
+			return;
+		}
+
+		if (jcbCreateUser.isSelected())
+		{
+			if ("".equals(txtUser.getText()))
+			{
+				Lib.gui.showError(this, "Please enter a user name");
+				return;
+			}
+			else if ("".equals(txtGroup.getText()))
+			{
+				Lib.gui.showError(this, "Please enter a group name");
+				return;
+			}
+			worker.setOldUser   (txtUser.getText());
+			worker.setOldGroup  (txtGroup.getText());
+		}
+
+		worker.setUserDialog(jcbUserDialog.isSelected());
 		worker.setOldDir(txtOldDir.getText());
 		dialog.run(worker);
 	}
@@ -104,7 +137,7 @@ public class MainPanel extends FormPanel
 	{
 		JPanel p = new JPanel();
 
-		FlexLayout fl = new FlexLayout(3,1);
+		FlexLayout fl = new FlexLayout(3,5);
 		fl.setColProp(1, FlexLayout.EXPAND);
 		p.setLayout(fl);
 
@@ -112,8 +145,21 @@ public class MainPanel extends FormPanel
 		p.add("1,0,x", txtOldDir);
 		p.add("2,0",   btnBrowse);
 
+		p.add("0,1,1,1,3", jcbCreateUser);
+		p.add("0,2", new JLabel("User"));
+		p.add("1,2", txtUser);
+		p.add("0,3", new JLabel("Group"));
+		p.add("1,3", txtGroup);
+
+		p.add("0,4,x,c,3", jcbUserDialog);
+
+		txtUser.setEnabled(false);
+		txtGroup.setEnabled(false);
+
 		btnBrowse.addActionListener(this);
 		btnBrowse.setActionCommand("browse");
+
+		jcbCreateUser.addActionListener(this);
 
 		return p;
 	}
@@ -127,6 +173,12 @@ public class MainPanel extends FormPanel
 	private JTextField   txtOldDir  = new JTextField(20);
 	private JButton      btnBrowse  = new JButton("Browse");
 	private JFileChooser jfcBrowser = new JFileChooser();
+
+	private JCheckBox  jcbCreateUser = new JCheckBox("Assign unowned metadata to this user:");
+	private JTextField txtUser       = new JTextField(20);
+	private JTextField txtGroup      = new JTextField(20);
+
+	private JCheckBox  jcbUserDialog = new JCheckBox("Popup dialog to choose users");
 }
 
 //==============================================================================
