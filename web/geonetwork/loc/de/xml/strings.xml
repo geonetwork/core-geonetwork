@@ -88,7 +88,7 @@
 	<any>- Alle -</any>
 	<anytime>zu jeder Zeit</anytime>
 	<appSchInfoTab>App. Schema</appSchInfoTab>
-    <ar>Ø¹Ø±Ø¨Ù</ar> <!-- Do not translate! -->
+    <ar>عربي</ar> <!-- Do not translate! -->
 	<assigned>Zugeteilt</assigned>
 	<attrlabl>Attribut Beschriftung</attrlabl>
 	<availability>Verfügbarkeit</availability>
@@ -123,7 +123,7 @@
 	<chooseThumbnail>Auswahl des Verzeinisses der hochgeladenen Minaturansicht </chooseThumbnail>
 	<clear>leeren</clear>
 	<clearAll>Alles leeren</clearAll>
-	<cn>ä¸­æ</cn> <!-- Do not translate! -->
+    <cn>中文</cn> <!-- Do not translate! -->    
 	<completeTab>Erweiterte Ansicht</completeTab>
 	<completeTabEditor>Erweiterter Editor</completeTabEditor>
 	<confirmDelete>Wollen Sie die Metadaten wirklich aus der Datenbank löschen?</confirmDelete>
@@ -173,7 +173,7 @@
 	<enclosingCoordinate>inklusive Koordinaten </enclosingCoordinate>
 	<enddate>Enddatum</enddate>
 	<enttypl>Entity Typ Label</enttypl>
-	<es>EspaÃ±ol</es> <!-- Do not translate! -->
+	<es>Español</es> <!-- Do not translate! -->
 	<exactCoordinate>Exakte Koordinaten </exactCoordinate>
 	<extended>Erweitert</extended>
 	<extent>Ausdehung</extent>
