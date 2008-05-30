@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<savexml>
+		<dc>Speicher Dublin Core Metadaten als XML</dc>
+		<fgdc>Speicher FGDC Metadaten als XML</fgdc>
+		<iso19115Esri>Speicher ISO19115 Metadaten in XML für ESRI ArcCatalog</iso19115Esri>
+		<iso19139>Speicher ISO19115/19139 Metadaten als XML</iso19139>
+		<iso19139fra>Speicher ISO19115/19139 Fra Metadata als XML</iso19139fra>
+	</savexml>
+	<!-- new strings -->
+	<fuzzy>Suchgenauigkeit</fuzzy>
+	<fuzzySearch>Setzen der Suchgenauigkeit.</fuzzySearch>
+	<fuzzyImprecise>ungenau</fuzzyImprecise>
+	<fuzzyPrecise>genau</fuzzyPrecise>
+	<address>Adresse</address>
+	<state>Land</state>
+	<zip>Postleitzahl</zip>
+	<country>Staat</country>
+	<email>E-Mail</email>
+	<kind>Art</kind>
+	<kindChoice value="gov">Regierung</kindChoice>
+	<kindChoice value="int-org">International Organisation</kindChoice>
+	<kindChoice value="ngo">NGO</kindChoice>
+	<kindChoice value="uni">Universität</kindChoice>
+	<kindChoice value="company">Private Firma</kindChoice>
+	<kindChoice value="consultant">Unabhängiger Berater</kindChoice>
+	<kindChoice value="other">Andere</kindChoice>
+	<userInfo>Ändern der Kontaktdaten</userInfo>
+	<userInfoDes>Ändern der persönlichen Daten (z.B. Kontaktdaten)</userInfoDes>
+	<subtemplate>Untervorlage</subtemplate>
+	<subtemplateTitle>Titel der Untervorlage</subtemplateTitle>
+	<view>Ansicht</view>
+	<Term>Ausdruck</Term>
+	<startsWith>Starten mit</startsWith>
+	<contains>Enthält</contains>
+	<exactTerm>exakter Ausdruck</exactTerm>
+	<foundWords>Anzahl der gefundenen Ausdrücke:</foundWords>
+	<selection>Auswahl</selection>
+	<label>Beschriftung</label>
+	<type>Typ</type>
+	<sort>Art</sort>
+	<definition>Definition</definition>
+	<close>Schließen</close>
+	<identifier>Identifikator</identifier>
+	<keyword>Schlüsselwort</keyword>
+	<res>Ergebnisse</res>
+	<ress>Ergebnis</ress>
+
+	<thesaurus>
+		<category>Thesaurus Kategorie</category>
+		<management>Thesaurus Management</management>
+		<manDes>Hinzufügen/Bearbeiten/Löschen und Anzeige von Thesauri</manDes>
+		<edition>Thesaurus bearbeiten</edition>
+		<consultation>Thesaurus ansehen</consultation>
+		<thesaurus>Thesaurus</thesaurus>
+		<admin>Thesaurus Management</admin>
+		<edit>Thesaurus bearbeiten</edit>
+		<update>Update Thesaurus</update>
+		<upload>Thesaurus hochladen</upload>
+		<download>Download Thesaurus</download>
+		<delete>Thesaurus löschen</delete>	
+		<editelement>Element bearbeiten</editelement>
+		<addelement>Element hinzufügen</addelement>			
+		<deleteelement>Element löschen</deleteelement>
+		<updateelement>Element updaten</updateelement>
+		<keywordDescription>Schlüsselwort Definition:</keywordDescription>
+		<keywordConfirm>Schlüsselwort Unterdrückung bestätigen</keywordConfirm>
+		<unknown>Unbekannter Thesaurus</unknown>
+		<narrower>näherer Ausdruck</narrower>
+		<broader>weiterer Ausdruck</broader>
+		<related>ähnlicher Ausdruck</related>
+		<en>in</en>
+		<foundKeyWords>Anzahl der gefundenen Ausdrücke</foundKeyWords>
+		<foundKeyWordsLimit>Maximale Anzahl der gefundenen Ausdrücke</foundKeyWordsLimit>
+	</thesaurus>
+	<!-- End new strings -->
+	
+	<language>de</language>
+	<!-- ISO code -->
+	<about>Über</about>
+	<abstract>Kurzübersicht</abstract>
+	<accept>Abschicken</accept>
+	<add>hinzufügen</add>
+	<addNewMetadata>Neue Metadaten</addNewMetadata>
+	<admin>Administration</admin>
+	<Administrator>Administrator</Administrator>
+	<agrovocKeyword>Agrovoc Schlüsselwörter</agrovocKeyword>
+	<any>- Alle -</any>
+	<anytime>zu jeder Zeit</anytime>
+	<appSchInfoTab>App. Schema</appSchInfoTab>
+    <ar>Ø¹Ø±Ø¨Ù</ar> <!-- Do not translate! -->
+	<assigned>Zugeteilt</assigned>
+	<attrlabl>Attribut Beschriftung</attrlabl>
+	<availability>Verfügbarkeit</availability>
+	<back>Zurück</back>
+	<backToDescription>Zurück zur Datenbeschreibung</backToDescription>
+	<backToPreviousPage>Zurück zur letzten Seite</backToPreviousPage>
+	<backToEditor>Zurück zum bearbeiten der Metadaten</backToEditor>
+	<batchImport>Importieren aller XML formatierter Metadaten von einem lokalen Verzeichnis</batchImport>
+
+	<batchImportTitle>Batch Import</batchImportTitle>
+	<begdate>Anfangsdatum</begdate>
+	<begtime>Anfangszeit</begtime>
+	<bgFileDescChoice value="thumbnail">Miniaturansicht</bgFileDescChoice>
+	<bgFileDescChoice value="large_thumbnail">Große Miniaturansicht</bgFileDescChoice>
+	<bounding>Begrenzungskoordinaten</bounding>
+	<boundingRelation value="equal">ist genau</boundingRelation>
+	<boundingRelation value="overlaps">ist enthalten</boundingRelation>
+	<boundingRelation value="encloses">anfügen</boundingRelation>
+	<boundingRelation value="fullyOutsideOf">ist komplett ausserhalb von</boundingRelation>
+	<browse>Grafik durchsuchen</browse>
+	<browsen>Grafik Namen durchsuchen</browsen>
+	<browsed>Grafik Beschreibung durchsuchen</browsed>
+	<browset>Grafik Typ durchsuchen</browset>
+	<cancel>Abbrechen</cancel>
+	<categories>Kategorien</categories>
+	<category>Kategorie</category>
+	<categoryManagement>Kategorie Management</categoryManagement>
+	<categoryManDes>Hinzufügen/Bearbeiten/Löschen und Ansehen von Kategorien</categoryManDes>
+	<choose>-Auswählen-</choose>
+	<chooseFile>Auswahl des Verzeinisses der hochgeladenen Datei </chooseFile>
+	<chooseLargeThumbnail>Auswahl des Verzeinisses der hochgeladenen großen Minaturansicht </chooseLargeThumbnail>
+	<chooseThumbnail>Auswahl des Verzeinisses der hochgeladenen Minaturansicht </chooseThumbnail>
+	<clear>leeren</clear>
+	<clearAll>Alles leeren</clearAll>
+	<cn>ä¸­æ</cn> <!-- Do not translate! -->
+	<completeTab>Erweiterte Ansicht</completeTab>
+	<completeTabEditor>Erweiterter Editor</completeTabEditor>
+	<confirmDelete>Wollen Sie die Metadaten wirklich aus der Datenbank löschen?</confirmDelete>
+	<confirmPassword>Passwort bestätigen</confirmPassword>
+	<confirmNewPassword>Neues Passwort bestätigen</confirmNewPassword>
+	<constraintsTab>Grenzen</constraintsTab>
+	<contactUs>Kontakt</contactUs>
+	<contentInfoTab>Inhaltsinformationen</contentInfoTab>
+	<convert>Konvertieren</convert>
+	<copyright1>Copyright</copyright1>
+	<copyright2>
+		<p>Alle Rechte vorbehalten.<br/></p>
+	</copyright2>
+	<create>Erstellen</create>
+	<createTip>Neue Metadaten mit dieser Vorlage erstellen</createTip>
+	<dataQualityTab>Daten Qualität</dataQualityTab>
+	<datasetTab>Datenbestand</datasetTab>
+	<dateRelChoice/>
+	<dateRelChoice value="14">vor</dateRelChoice>
+	<dateRelChoice value="15">vor oder während</dateRelChoice>
+	<dateRelChoice value="16">während</dateRelChoice>
+	<dateRelChoice value="17">während oder nach</dateRelChoice>
+	<dateRelChoice value="18">nach</dateRelChoice>
+	<decline>Ablehnen</decline>
+	<del>del</del>
+	<delete>Löschen</delete>
+	<descriptionTab>Beschreibung</descriptionTab>
+	<desSchema>Zielschema</desSchema>
+	<digital>Digital</digital>
+	<directory>Verzeichnis</directory>
+	<dirParameter>('dir' Parameter werden erwartet)</dirParameter>
+	<disclaimer1>Haftungsausschlußtitel hier</disclaimer1>
+	<disclaimer2>Haftungsausschluptext hier</disclaimer2>
+	<distributionTab>Vertrieb</distributionTab>
+	<down>runter</down>
+	<download>Download</download>
+	<downloadable>Herunterladbar</downloadable>
+	<dynamic>Interaktiv</dynamic>
+	<downloadData>Daten zum Download</downloadData>
+	<dsgpoly>Datenbestand G-Polygon</dsgpoly>
+	<eastbc>östliche Grenzkoordinate</eastbc>
+	<edit>Bearbeiten</edit>
+	<Editor>Editor</Editor>
+	<downloadEmail>Download Email</downloadEmail>
+	<en>English</en> <!-- Do not translate! -->
+	<enclosing>inklusive</enclosing>
+	<enclosingCoordinate>inklusive Koordinaten </enclosingCoordinate>
+	<enddate>Enddatum</enddate>
+	<enttypl>Entity Typ Label</enttypl>
+	<es>EspaÃ±ol</es> <!-- Do not translate! -->
+	<exactCoordinate>Exakte Koordinaten </exactCoordinate>
+	<extended>Erweitert</extended>
+	<extent>Ausdehung</extent>
+	<extensionInfoTab>Ext. Info</extensionInfoTab>
+	<featuredMap>besonderer Datensatz</featuredMap>
+	<feedback>Feedback</feedback>
+	<feedbackCardTitle>Feedback und Kommentare</feedbackCardTitle>
+	<feedbackComments>Feedback / Kommentare</feedbackComments>
+	<feedbackRequest>Bitte geben Sie Ihre Kontaktdaten vor dem Download ein</feedbackRequest>
+	<file>Datei</file>
+	<firstName>Vorname</firstName>
+	<fr>Français</fr> <!-- Do not translate! -->
+	<de>Deutsch</de>
+	<freeKeyword>Freie Schlüsselwörter</freeKeyword>
+	<from>Von</from>
+	<general>Generell</general>
+	<generalInfo>Generelle Information</generalInfo>
+	<georss>Öffnen eines GeoRSS feed</georss>
+	<group>Gruppe</group>
+	<groupManagement>Gruppen Management</groupManagement>
+	<groupManDes>Hinzufügen/Bearbeiten/Löschen und Ansehen von Gruppen</groupManDes>
+	<groups>Gruppen</groups>
+	<harvestingManagement>Harvesting Management</harvestingManagement>
+	<harvestingManDes>Hinzufügen/Bearbeiten/Löschen und Ansehen von Harvesting Aufgaben</harvestingManDes>
+	<transferOwnership>Besitzer wechseln</transferOwnership>
+	<transferOwnershipDes>Wechseln der Metadaten Besitzrechte zu einem anderen Nutzer</transferOwnershipDes>
+	
+	<header_meta>
+		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis geospatial CSW reference implementation mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
+		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
+		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
+		<meta name="DC.title" lang="English" content="GeoNetwork opensource portal to spatial data and information"/>
+		<meta name="DC.creator" content="GeoNetwork Team"/>
+		<meta name="DC.subject" lang="English" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
+		<meta name="DC.description" lang="English" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
+		<meta name="DC.publisher" content=""/>
+		<meta name="DC.date" content="02-07-2007"/>
+		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
+		<meta name="DC.format" content="text/html; charset=UTF-8"/>
+		<meta name="DC.language" content="Deutsch Englisch Französich"/>
+		<meta name="DC.coverage" content="Global"/>
+	</header_meta>
+	<help>Hilfe</help>
+	<helpComplete>Komplette Hilfe</helpComplete>
+	<hideAdvancedOptions>Verstecke erweiterte Optionen</hideAdvancedOptions>
+	<highlights>Highlights</highlights>
+	<hitsPerPage>Ergebnisse pro Seite</hitsPerPage>
+	<hitsPerPageChoice value="10">10</hitsPerPageChoice>
+	<hitsPerPageChoice value="20">20</hitsPerPageChoice>
+	<hitsPerPageChoice value="50">50</hitsPerPageChoice>
+	<hitsPerPageChoice value="100">100</hitsPerPageChoice>
+	<home>Home</home>
+	<identificationTab>Identifikation</identificationTab>
+	<import>Import</import>
+	<infoTitle>Info</infoTitle>
+	<insert>Einfügen</insert>
+	<interactiveMap>Interaktive Karte</interactiveMap>
+	<simpleMap>einfacher Viewer</simpleMap>
+	<advancedMap>erweiterter Viewer</advancedMap>
+	<interMapInfo>
+		<h1>Info in interactive maps</h1> You can find interactive maps by searching in GeoNetwork for digital data with an interactive map, or directly connet to a pre-configured map server. <p/> Supported map servers are <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatialÂ® Consortium</a> compliant WMS Map Servers and <a href="http://www.esri.com" class="sm" target="_blank">ESRIÂ® ArcIMS</a>.</interMapInfo>
+	<intermapSearch>Geographische Suche</intermapSearch>
+	<keywords>Schlüsselwörter</keywords>
+	<keywordshelp>Selektieren Sie mehrere Schlüsselwörter in dem Sie die Strg-Taste während der Selektion mit der Maus drücken</keywordshelp>
+	<large_thumbnail>Klicken Sie hier um eine große Vorschau zu sehen</large_thumbnail>
+	<latitude>Breitengrad (zwischen -90 und 90)</latitude>
+	<latMax>lat (max)</latMax>
+	<latMin>lat (min)</latMin>
+	<links>Links</links>
+	<loading>Laden ...</loading>
+	<local>Lokale Suche</local>
+	<localiz>Lokalisation</localiz>
+	<localizDes>Allows to change localized entities, like groups, categories etc...</localizDes>
+	<location>Wo?</location>
+	<login>Login</login>
+	<loginCardTitle>Login / Anmelden</loginCardTitle>
+	<loginwarning>Nur für Seitenadministration benötigt</loginwarning>
+	<logout>Abmelden</logout>
+	<logoutDes>Abmeldung durchführen</logoutDes>
+	<longitude>geographische Länge (zwischen -180 und 180) in Grad</longitude>
+	<longMax>long (max)</longMax>
+	<longMin>long (min)</longMin>
+	<mandatory>verbindlich</mandatory>
+	<mandatoryIf>verbindlich wenn</mandatoryIf>
+	<mainpage1>
+		<h1>Finden Sie Geometadaten mit GeoNetwork.</h1>
+	
+	</mainpage1>
+	<mainpage2>
+		<p>Hier den Text für die Startseite</p>		
+	</mainpage2>
+	<mainhelp1> Wie suchen Sie... </mainhelp1>
+	<mainhelp2> Hilfe verstecken... </mainhelp2>
+	<mainhelp3>
+		<p>
+			<font size="-2"> Sie können Metadaten suchen, indem Sie eine oder eine Kombination der unterstützen Suchmöglichkeiten wählen.<br/> Nur Ergebnisse, die alle Kriterien erfüllen, werden angezeigt. </font>
+		</p>
+		<p>
+			<font size="-2"> Die <b>Was?</b> Suche, sucht nach entsprechenden Text in <b>allen</b> Metadatenfeldern. <br/>
+				<i> Wenn Sie mehrere Wörter in die <b>Freitextsuche</b> eingeben, werden diese als eine Kombination mit UND interpretiert. </i>
+			</font>
+		</p>
+		<p>
+			<font size="-2"> Die <b>thematische</b> Suche, sucht Metadaten zu speziellen Themen. </font>
+		</p>
+		<p>
+			<font size="-2"> Die <b>Wo?</b> Suche, sucht Metadaten innerhalb eines zeitlichen oder räumenlichen Umgebungsrechtecks. </font>
+		</p>
+		<p>
+			<font size="-2"> Selektieren der Option "<b>
+					<input name="demo" type="checkbox" checked="checked"/> Eingeschlossen</b> the selected <b>Area</b>" will find maps that cover more than just the selected area.<br/>
+				<i>For example: Regional or Global maps that, among other countries, also cover the selected country</i>
+			</font>
+		</p>
+		<p>
+			<font size="-2"> Selecting the option "<b>
+					<input name="demo" type="checkbox" checked="checked"/> Partially overlapping</b> the selected <b>Area</b>" will also find maps that partially cover the selected area. </font>
+		</p>
+	</mainhelp3>
+	<mainpageTitle>Finden Sie Interaktive Karten, GIS Datensätze und weitere räumliche Daten aus dem D A CH +-Raum</mainpageTitle>
+	<maintenanceTab>Maintenance</maintenanceTab>
+	<management>Management</management>
+	<mapType>Kartentyp</mapType>
+	<mapViewerClose>Kartenviewer schließen</mapViewerClose>
+	<mapViewerLoading>Kartenviewer wird geladen...</mapViewerLoading>
+	<mapViewerOpen>Kartenviewer öffnen</mapViewerOpen>
+	<max>Maximum</max>
+	<mdUpdateError>Updatefehler</mdUpdateError>
+	<message>Benutzername oder Passwort ist falsch.<br/>Drücken Sie den 'zurück' Button und versuchen Sie es erneut.</message>
+	<messageMdUpdateError>Sorry, an error occurred while updating metadata.</messageMdUpdateError>
+	<messageChanged>The metadata has been changed by another user. Please retry.</messageChanged>
+	<messageDownload>Thanks for your interest. Click on the download button to retrieve the data</messageDownload>
+	<messageLargeFile>The file is too large</messageLargeFile>
+	<messageNoPrivileges>Sie haben keine Berechtigung diese Aktion durchzuführen.</messageNoPrivileges>
+	<messageNotPerformed>Die angefragte Aufgabe konnte nicht ausgeführt werden.</messageNotPerformed>
+	<metadata>Metadaten</metadata>
+	<metadataAdded>Metadaten mit folgender ID hinzugefügt:</metadataAdded>
+	<metadataDeleted>Metadatamit folgender ID gelöscht:</metadataDeleted>
+	<metadataJSForm>Metadaten von einem JS Formular</metadataJSForm>
+	<min>Minimum</min>
+	<more>mehr</more>
+	<moreinfo>Für mehr Informationen kontaktieren Sie uns per E-Mail </moreinfo>
+	<name>Name</name>
+	<newGroup>Neue Gruppe hinzufügen</newGroup>
+	<newCategory>Neue Kategorie Hinzufügen</newCategory>
+	<newMdDes>Neue Metadaten hinzufügen</newMdDes>
+	<newMetadata>Neue Metadaten</newMetadata>
+	<newPassword>Neues Passwort</newPassword>
+	<newUser>Benutzer hinzufügen</newUser>
+	<none>nichts</none>
+	<noHelp>Entschuldigung, keine Hilfe verfügbar</noHelp>
+	<noInfo>Entschuldigung, keine Informationen verfügbar</noInfo>
+	<noLogin>Sie sind nicht angemeldet</noLogin>
+	<northbc>nördliche Grenzkoordinate</northbc>
+	<online>Interaktive Karte</online>
+	<onlink>Online Linkage</onlink>
+	<opensearch>GeoNetwork opensearch service allow search to be made into the metadata catalog.</opensearch>
+	<operation>Operation</operation>
+	<organisation>Organisation / Abteilung</organisation>
+	<paper>Analog</paper>
+	<partial>teilweise Überschneidung</partial>
+	<partialCooordinate>Partial coordinates </partialCooordinate>
+	<password>Passwort </password>
+	<persInfo>Persönliche Daten</persInfo>
+	<placeKeyword>örtliches Schlüsselwort</placeKeyword>
+	<porCatInfoTab>Katalog</porCatInfoTab>
+	<poweredBy>Powered by </poweredBy>
+	<privileges>Privilegien</privileges>
+	<profile>Profile</profile>
+	<progress>Ablauf</progress>
+	<progressChoice/>
+	<progressChoice value="complete">vollständig</progressChoice>
+	<progressChoice value="in-work">in arbeit</progressChoice>
+	<progressChoice value="planned">geplannt</progressChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--link">Webaddresse (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--samples">Modellprodukt (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--related">Related link (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--partners">Partner Webaddresse (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--rss">RSS Newsfeed (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
+	<protocolChoice value="WWW:DOWNLOAD-1.0-http--download">Datei zum download</protocolChoice>
+	<protocolChoice value="WWW:DOWNLOAD-1.0-ftp--download">Datei via FTP zum download</protocolChoice>
+	<protocolChoice value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</protocolChoice>
+	<protocolChoice value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities Service (ver 1.1.1)</protocolChoice>
+	<protocolChoice value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
+	<protocolChoice value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
+	<protocolChoice value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
+	<protocolChoice value="GLG:KML-2.0-http-get-map">Google Earth KML Service (ver 2.0)</protocolChoice>
+	<protocolChoice value="ESRI:AIMS--http--configuration">ArcIMS Map Service Konfigurationsdatei (*.AXL)</protocolChoice>
+	<protocolChoice value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
+	<protocolChoice value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
+	<pubdate>Veröffentlichungsdatum</pubdate>
+	<publicationDate>Veröffentlichungsdatum</publicationDate>
+	<publisher>Veröffentlicher</publisher>
+	<purpose>Zweck</purpose>
+	<rawMetadata>originaler Metadateneintrag</rawMetadata>
+	<recentAdditions>Letzte Änderungen</recentAdditions>
+	<refSysTab>Ref.-System</refSysTab>
+	<region>Region</region>
+	<RegisteredUser>Registrierte Benutzer</RegisteredUser>
+	<remote>enfernte Suche</remote>
+	<remove>entfernen</remove>
+	<reset>Zurücksetzen</reset>
+	<options>Optionen</options>
+	<output>Ausgabe</output>
+	<outputType id="full">Komplett</outputType>
+	<outputType id="text">Nur Text</outputType>
+	<sortBy>Geordnet nach</sortBy>
+	<sortByType id="relevance">Relevanz</sortByType>
+	<sortByType id="rating">Bewertung</sortByType>
+	<sortByType id="popularity">Popularität</sortByType>
+	<sortByType id="date">Änderungsdatum</sortByType>
+	<rateIt>Bewerten</rateIt>
+	<mdRating>Metadaten Bewertung</mdRating>
+	<ratingMsg>Press a button to rate. Note that for harvested metadata you have to wait the new run.</ratingMsg>
+	<resetSearch>Suchformular zurücksetzen</resetSearch>
+	<resetFeedbackForm>Feedbackformular zurücksetzen</resetFeedbackForm>
+	<restrictTo>Beschränken auf</restrictTo>
+	<result>Letzte Ergebnisse</result>
+	<resultsCoordinate>Ergebnisse, die auf Koordinatensuche zu treffen </resultsCoordinate>
+	<resultsFreeText>Ergebnisse, die auf Freitextsuche zu treffen </resultsFreeText>
+	<resultsMatching>Suchergebnisse :</resultsMatching>
+	<rss>RSS feed öffnen</rss>
+	<rtitle>Titel</rtitle>
+	<save>Speichern</save>
+	<saveAndClose>Speichern und Schließen</saveAndClose>
+	<saveAndValidate>Überprüfen</saveAndValidate>
+	<schema>Schema</schema>
+	<search>Suche</search>
+	<searchBox>Suche nach Daten und Informationen</searchBox>
+	<searchIndex>Suchindex</searchIndex>
+	<searching>...Suche nach Metadaten...</searching>
+	<searchPage>Suchseite</searchPage>
+	<page>Seite</page>
+	<searchPageDes>Zur Metadatensuchseite springen</searchPageDes>
+	<searchTemplates>Suche nach Vorlagen</searchTemplates>
+	<searchText>Was?</searchText>
+	<searchUnused>Suche nach nicht benutzen oder leeren Metadaten</searchUnused>
+	<searchUnusedTitle>Suche nach unbenutzten</searchUnusedTitle>
+	<server>Server</server>
+	<setAll>Alle setzen</setAll>
+	<show>Metadaten</show>
+	<simple>einfache Suche</simple>
+	<simpleTab>Default Ansicht</simpleTab>
+	<simpleTabEditor>Default Editor</simpleTabEditor>
+	<siteId>Seiten ID</siteId>
+	<site>Seite</site>
+	<southbc>südliche Grenzkoordinate</southbc>
+	<spatial2Tab>Spat. Repr.</spatial2Tab>
+	<spatialTab>Spat. Info</spatialTab>
+	<styleSheet>StyleSheet</styleSheet>
+	<submit>Abschicken</submit>
+	<summaryTab>Zusammenfassung</summaryTab>
+	<surName>Nachname</surName>
+	<systemConfig>Systemkonfiguration</systemConfig>
+	<systemConfigDes>Änderung von Systemeinstellungen</systemConfigDes>
+	<template>Vorlage</template>
+	<thanks>Thank you for your effort. The GeoNetwork</thanks>
+	<theme>ISO Thema Kategorie</theme>
+	<thumbnails>Vorschau</thumbnails>
+	<timeout>Timeout</timeout>
+	<timeoutChoice value="10">nach 10 Sekunden</timeoutChoice>
+	<timeoutChoice value="20">nach 20 Sekunden</timeoutChoice>
+	<timeoutChoice value="30">nach 30 Sekunden</timeoutChoice>
+	<title>D A CH + - GeoPortal</title>
+	<to>Nach</to>
+	<tools>Werkzeuge</tools>
+	<topic>Thema</topic>
+	<up>hoch</up>
+	<update>Update</update>
+	<updateGroup>Update Gruppep</updateGroup>
+	<updateCategory>Update Kategorie</updateCategory>
+	<updateUserAccount>Update Benutzer Account </updateUserAccount>
+	<upload>Upload </upload>
+	<user>Benutzer</user>
+	<UserAdmin>Benutzer Administrator</UserAdmin>
+	<userDefined>- benutzerdefiniert -</userDefined>
+	<Reviewer>Inhaltkritiker</Reviewer>
+	<userManagement>Benutzer Management</userManagement>
+	<userManDes>Hinzufügen/Bearbeiten/Löschen und Ansehen von Benutzern</userManDes>
+	<username>Benutzername </username>
+	<userPw>Passwort ändern</userPw>
+	<userPwDes>Benutzerpasswort für Metadatenkatalog ändern</userPwDes>
+	<validate>Validieren</validate>
+	<validityBegins>Gültigkeit ab</validityBegins>
+	<validityEnds>und endet</validityEnds>
+	<westbc>westliche Grenzkoordinate</westbc>
+	<what>Was?</what>
+	<where>Wo?</where>
+	<when>Wann?</when>
+	<winInfo1>Dieses Fenster zeigt GeoNetwork Ressourcen. Dieses Fenster kann in den Hintergrund gelangen, je nach dem welchen Browser Sie nutzen. Sie müssen das Fenster dann manuell wiedcer in den Vordergrund bringen.</winInfo1>
+	<winInfo2>Über den Hilfebutton bekommen Sie jederzeit Hilfe. Wenn Sie den Hilfebutton drücken bekommen Sie in diesem Fenster Hilfe.</winInfo2>
+	<wwwlink>Weblink</wwwlink>
+	<xmlInsert>Import von XML formatierten Metadaten</xmlInsert>
+
+	<xmlInsertTitle>XML Metadaten einfügen</xmlInsertTitle>
+	<xmlTab>XML Sicht</xmlTab>
+	<imZoomIn>reinzoomen</imZoomIn>
+	<imZoomOut>rauszoomen</imZoomOut>
+	<imZoomFull>Auf komplette Ausdehnung zoomen</imZoomFull>
+	<imPan>Kartenausschnitt verschieben</imPan>
+	<imAreaInterest>Fläche auswählen</imAreaInterest>
+	
+	<SendAFriend>Link auf diesen Metadatensatz per E-Mail versenden</SendAFriend>
+</strings>

@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<select>Ausgewählt</select>
+	<name>Name</name>
+	<type>Typ</type>
+	<status>Status</status>
+	<errors>Fehler</errors>
+	<every>Alle</every>
+	<lastRun>Letztes Update</lastRun>
+	<operation>Operation</operation>
+
+	<!-- harvesting types - - - - - - - - - - - - - - - - - - - - -->
+	
+	<info type="geonetwork">
+		<short>GeoNetwork</short>
+		<long>GeoNetwork v2.1 entfernter Knoten</long>
+	</info>
+	
+	<info type="geonetwork20">
+		<short>GeoNetwork 2.0</short>
+		<long>GeoNetwork v2.0 entfernter Knoten</long>
+	</info>
+	
+	<info type="webdav">
+		<short>Web DAV</short>
+		<long>Web DAV Server</long>
+	</info>
+	
+	<info type="csw">
+		<short>CSW/2.0</short>
+		<long>Katalogservice für Web 2.0</long>
+	</info>
+	
+	<info type="z3950">
+		<short>Z3950</short>
+		<long>Z3950 entfernte Suche</long>
+	</info>
+	
+	<info type="oaipmh">
+		<short>OAIPMH</short>
+		<long>OAI Protokol für Metadaten Harvesting 2.0</long>
+	</info>
+	
+	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<site>Site</site>
+	
+	<name>Name</name>
+	<host>Host</host>
+	<port>Port</port>
+	<servlet>Servlet</servlet>
+	<useAccount>Benutzerzugang</useAccount>
+	<username>Benutzername</username>
+	<password>Passwort</password>
+	
+	<search>Suchkriterium</search>
+	<siteName>Seitenname</siteName>
+	
+	<freeText>Freitext</freeText>
+	<title>Titel</title>
+	<abstract>Kurzzusammenfassung</abstract>
+	<keywords>Schlüsselwörter</keywords>
+	<subject>Betreff</subject>
+	<digital>Digital</digital>
+	<hardcopy>Ausdruck</hardcopy>
+	<siteId>Seiten ID</siteId>
+
+	<retrieve>Abfrage</retrieve>
+	<warn>Nur nach Ausfüllen der Felder können Abfragen ausgeführt werden.</warn>
+	
+	<options>Optionen</options>
+	<every>Alle</every>
+	<everySpec>(Tage : Stunden : Minuten)</everySpec>
+	<oneRun>Nur einmalig</oneRun>
+	<createGroups>Erstelle Gruppe</createGroups>
+	<createCateg>Erstelle Kategorie</createCateg>
+	<status>Status</status>
+	<active>aktiv</active>
+	<inactive>inaktiv</inactive>
+	<retrieveSources>Quelle abfragen</retrieveSources>
+	<retrieveGroups>Gruppe abfragen</retrieveGroups>
+	<source>Quelle</source>
+	<criteria>Kriterium</criteria>
+	<validate>Validieren</validate>
+	<recurse>Rekursiv</recurse>
+	<host>Host</host>
+	<privileges>Privilegien</privileges>
+	<categories>Kategorien</categories>
+	<url>URL</url>
+	<capabUrl>Capabilities URL</capabUrl>
+	<icon>Icon</icon>
+	<group>Gruppe</group>
+	<groups>Gruppen</groups>
+	<remoteGroup>entfernte Gruppe</remoteGroup>
+	<copyPolicy>Kopiere Berechtigungen</copyPolicy>
+	<allGroup>Gruppe 'Alle'</allGroup>
+	
+	<policy>
+		<copy>Kopieren</copy>
+		<createAndCopy>Erstelle und kopiere</createAndCopy>
+		<copyToIntranet>Kopiere zu Intranetgruppe</copyToIntranet>
+		<dontCopy>Nicht kopieren</dontCopy>
+	</policy>
+	
+	<!-- Buttons -->
+	
+	<add>Hinzufügen</add>
+	<edit>Bearbeiten</edit>
+	<save>Speichern</save>
+	<activate>Aktivieren</activate>
+	<deactivate>Deaktivieren</deactivate>
+	<run>Starten</run>
+	<remove>Entfernen</remove>
+	<refresh>Neuladen</refresh>
+	
+	<days>Tage</days>
+	<hours>Studen</hours>
+	<mins>Minuten</mins>
+	
+	<!-- validator messages -->
+	
+	<validator>
+		<length>
+			<cannotBeEmpty>Das Feld '{NAME}' darf nicht leer sein.</cannotBeEmpty>
+			<invalidMinSize>Das Feld '{NAME}' darf mindestens {VALUE} Zeichen lang sein</invalidMinSize>
+			<invalidMaxSize>Das Feld '{NAME}' darf höchstens  {VALUE} Zeichen lang sein</invalidMaxSize>
+		</length>
+		
+		<integer>
+			<notInt>Das Feld '{NAME}' muss eine Ganzzahl enthalten</notInt>
+			<invalidMinValue>Das Feld '{NAME}' muss &gt;= {VALUE} sein</invalidMinValue>
+			<invalidMaxValue>Das Feld '{NAME}' muss &lt;= {VALUE} sein</invalidMaxValue>
+		</integer>		
+		
+		<alphanum>
+			<notAlphaNumeric>Das Feld '{NAME}' muss einen alphanummerischen Wert enthalten (erstes Zeichen muss ein Buchstabe sein)</notAlphaNumeric>
+		</alphanum>
+		
+		<hostname>
+			<notHostName>Das Feld '{NAME}' enthält keinen validen Hostnamen</notHostName>
+		</hostname>
+		
+		<url>
+			<notURL>Das Feld '{NAME}' enthält keine valide URL</notURL>
+		</url>
+	</validator>
+	
+	<!-- display messages -->
+	
+	<pleaseSelect>Bitte wählen Sie mindestens einen Eintrag</pleaseSelect>
+	<pleaseSelectGroup>Bitte wählen Sie mindestens eine Gruppe</pleaseSelectGroup>
+	<cannotAdd>Eintrag konnte nicht erstellt werden</cannotAdd>
+	<cannotGet>Eintrag konnte nicht geholt werden</cannotGet>
+	<cannotRemove>Ausgewählte(r) Eintrag/Einträge konnte nicht entfernt werden</cannotRemove>
+	<cannotStart>Ausgewählte(r) Eintrag/Einträge konnte nicht aktiviert werden</cannotStart>
+	<cannotStop>Ausgewählte(r) Eintrag/Einträge konnte nicht gestoppt werden</cannotStop>
+	<cannotRun>Ausgewählte(r) Eintrag/Einträge konnten nicht ablaufen</cannotRun>
+	<confirmRemove>Löschen der ausgewählten Einträge ? Die Knoten und alle lokalen Kopien der Datensätze dwer Knoten werden gelöscht.</confirmRemove>
+	<everyZero>Die Harvesting Periode darf nicht 0:0:0</everyZero>
+	<pleaseRetrieve>Bitte fragen Sie erst ein paar Seiten ab</pleaseRetrieve>
+	<cannotRetrieve>Kann keine Informationen abrufen</cannotRetrieve>
+	<cannotUpdate>Kann keine Informationen vom dem Server updaten</cannotUpdate>
+	<supplyHost>Bitte geben Sie den 'host' Parameter an</supplyHost>
+	<supplyServlet>Bitte geben Sie den 'servlet' Parameter an</supplyServlet>
+	<pleaseSpecifySiteId>Bitte geben Sie eine Seiten ID ungleich 0 an.</pleaseSpecifySiteId>
+	<gn20Unsafe>Bitte beachten Sie das harvesting von alten GeoNetwork Knoten unsicher ist. 
+ 					Die alten Knoten haben keine einmalige Seiten ID
+					dies kann unberechnbare Folgen haben.</gn20Unsafe>
+			
+	<oper>
+		<op id="0">Ansehen</op>
+		<op id="1">Download</op>
+		<op id="2">Bearbeiten</op>
+		<op id="3">Benachrichtigen</op>
+		<op id="4">Admin</op>
+		<op id="5">Interaktive Karte</op>
+		<op id="6">Featured</op>
+	</oper>
+	
+	<!-- tooltips - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<statusTip>
+		<inactive>Inaktiv</inactive>
+		<active>Aktiv</active>
+		<running>Läuft ab</running>
+	</statusTip>
+	
+	<tipHeader>
+		<total>Total</total>
+		<added>Hinzugefügt</added>
+		<removed>Gelöscht</removed>
+		<updated>Geupdated</updated>
+		<unchanged>Nicht verändert</unchanged>
+		<unknownSchema>Unbekanntes Schema</unknownSchema>
+		<unretrievable>Unretrievable</unretrievable>
+		<badFormat>Falsches XML Format</badFormat>
+		<doesNotValidate>Does not validate</doesNotValidate>
+	</tipHeader>
+	
+	<notRun>Warten auf das erste Update</notRun>
+	
+	<tips>
+		<!-- geonetwork harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="gn.name">
+			Allgemeiner Name, um diesen Knoten zu identifizieren
+		</tip>
+		
+		<tip id="gn.host">
+			Der entfernte Knoten, mit dem Sie verbinden wollen
+		</tip>
+		
+		<tip id="gn.retrieveSources">
+			Geben Sie bitte den <i>host</i>, <i>port</i> und <i>servlet</i> Parameter an und drücken
+			dann diesen Button, um alle Quellen von diesem entfernten Knoten zu empfangen.
+		</tip>
+		
+		<tip id="gn.retrieveGroups">
+			Geben Sie bitte den <i>host</i>, <i>port</i> und <i>servlet</i> Parameter an und drücken
+			Sie diesen Button, um alle zugänglichen Gruppen von diesem entfernten Knoten zu empfangen.
+		</tip>
+		
+		<tip id="gn.addSearch">
+			Fügen Sie eine Suche hinzu. Um Informationen von dem entfernten Knoten zu empfangen muss
+			mindestens eine Suche spezifiziert werden.
+		</tip>
+		
+		<tip id="gn.categories">
+			Sie können einem Knoten eine oder mehrere Kategorien zuordnen. Benutzen Sie 
+			die <b>&lt;STRGL&gt;</b>-Taste, wenn Sie mehrere Kategorien auswählen wollen.
+		</tip>
+		
+		<!-- CSW harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="csw.capabUrl">
+			Die URL muss auf ein Capabilities-Dokument verweisen. Das Format ist:<br/>
+			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1			
+		</tip>
+		
+		<tip id="csw.addSearch">
+			Fügen Sie eine Suche auf dem entfernten Server hinzu. Sie müssen
+			mindestens eine Suche hinzufügen, um Metadaten zu empfangen.
+		</tip>
+		
+		<tip id="csw.groups">
+			Sie können die Privelegien für die harvesting Metadaten wählen.
+		</tip>
+		
+		<tip id="csw.addGroups">
+			Selektieren Sie eine oder mehrere Gruppen (benutzen Sie die <b>&lt;Strg&gt;</b>-Taste) auf
+			der linken Seite und drücken Sie den Button.
+		</tip>
+		
+		<tip id="csw.categories">
+			Sie können eine	oder mehrere Kategorien für die harvesting Metadaten zuweisen.
+			Benutzen Sie die <b>&lt;Strg&gt;</b>-Taste zur Auswahl mehrere Kategorien.
+		</tip>
+	
+	</tips>
+</strings>
+

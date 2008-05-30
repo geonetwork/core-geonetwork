@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<strings>
+	<site>Seite</site>
+		<name>Name</name>
+		<organ>Organisation</organ>
+	
+	<server>Server</server>
+		<host>Host</host>
+		<port>Port</port>
+	
+	<intranet>Intranet</intranet>
+		<network>Netzwerk</network>
+		<netmask>Netzwerkmaske</netmask>
+	
+	<z3950>Z39.50 Server</z3950>
+		<enable>Aktiv</enable>
+		
+	<proxy>Proxy</proxy>
+		<use>Use</use>
+		<username>Username</username>
+	
+	<feedback>Feedback</feedback>
+		<email>EMail</email>
+		<smtpHost>SMTP Host</smtpHost>
+		<smtpPort>SMTP Port</smtpPort>
+	
+	<removedMetadata>Gelöschte Metadaten</removedMetadata>
+		<dir>Verzeichnis</dir>
+		
+	<ldap>LDAP Authentifikation</ldap>
+		<defProfile>Voreingestelltes Profil</defProfile>
+		<login>Login</login>
+			<userDN>User DN</userDN>
+		<distNames>Distinguished names</distNames>
+			<baseDN>Base</baseDN>
+			<usersDN>Users</usersDN>
+		<userAttribs>User's attributes</userAttribs>
+			<name>Name</name>
+			<password>Password</password>
+			<profile>Profile</profile>
+		
+	<!-- Buttons -->
+	
+	<save>Speichern</save>
+	<refresh>Neuladen</refresh>
+	
+	<!-- validator messages -->
+	
+	<validator>
+		<length>
+			<cannotBeEmpty>The field '{NAME}' cannot be empty</cannotBeEmpty>
+			<invalidMinSize>The field '{NAME}' must be at least {VALUE} character(s) long</invalidMinSize>
+			<invalidMaxSize>The field '{NAME}' must be maximum {VALUE} character(s) long</invalidMaxSize>
+		</length>
+		
+		<integer>
+			<notInt>The field '{NAME}' must be an integer</notInt>
+			<invalidMinValue>The field '{NAME}' must be &gt;= {VALUE}</invalidMinValue>
+			<invalidMaxValue>The field '{NAME}' must be &lt;= {VALUE}</invalidMaxValue>
+		</integer>		
+		
+		<alphanum>
+			<notAlphaNumeric>The field '{NAME}' must be alphanumeric (starting with a letter)</notAlphaNumeric>
+		</alphanum>
+		
+		<hostname>
+			<notHostName>The field '{NAME}' is not a valid host name</notHostName>
+		</hostname>
+		
+		<url>
+			<notURL>The field '{NAME}' is not a valid URL</notURL>
+		</url>
+		
+		<ipaddress>
+			<notIP>The field '{NAME}' is not a valid IP address</notIP>
+		</ipaddress>
+	</validator>
+	
+	<!-- display messages -->
+	
+	<cannotGet>Unable to get the system configuration</cannotGet>
+	<cannotSave>Unable to save the system configuration</cannotSave>
+	<saveOk>System configuration saved.</saveOk>
+	
+	<!-- tooltips -->
+	
+	<tips>
+		<tip id="site.name">
+			Used to identify the installation.
+		</tip>
+		
+		<!-- server -->
+		
+		<tip id="server.host">
+			The server's <b>host</b> and <b>port</b> are used to create URLs to
+			the GeoNetwork server. For example, they are used during metadata
+			editing to create resource links and when returning the server's
+			capabilities during a CS/W request.
+			<br/>
+			<b>Please note:</b> you should use the GAST tool to reflect this
+			change inside the metadata.
+		</tip>
+		
+		<!-- intranet -->
+		
+		<tip id="intranet.network">
+			The <b>network</b> and <b>netmask</b> parameters are used to identify
+			internal connections to GeoNetwork, that is, to identify the intranet
+			group.
+		</tip>
+		
+		<!-- Z39.50 -->
+		
+		<tip id="z3950.enable">
+			If set, during startup GeoNetwork will start the Z39.50 server component.
+			This component uses the ISO23950 protocol.
+			<br/>
+			<b>Please note:</b> restart GeoNetwork to make this change active.
+		</tip>
+		
+		<tip id="z3950.port">
+			Change the Z39.50 listening port.
+			<br/>
+			<b>Please note:</b> restart GeoNetwork to make this change active.
+		</tip>
+		
+		<!-- proxy -->
+		
+		<tip id="proxy.use">
+			If set, GeoNetwork will use the provided proxy parameters when accessing
+			remote nodes. For example, this is used during the harvesting.
+		</tip>
+		
+		<!-- feedback -->
+		
+		<tip id="feedback.email">
+			This is the administrator's email address used to send feedback.
+		</tip>
+		
+		<tip id="feedback.mail.host">
+			The SMTP <b>host</b> and <b>port</b> parameters are used to send emails
+			to GeoNetwork's users when a resource is downloaded.
+		</tip>
+		
+		<!-- removed metadata -->
+		
+		<tip id="removedMd.dir">
+			Directory used to store metadata (in MEF format) when they are deleted.
+		</tip>
+	</tips>
+	
+</strings>
+

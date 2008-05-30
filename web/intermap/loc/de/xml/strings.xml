@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<abstract>Kurzübersicht</abstract>
+	<activate>Aktiviert</activate>
+	<address>Adresse</address>
+	<addService>Karte hinzufügen</addService>
+	<addLayer js="true">Layer hinzufügen</addLayer>
+	<bigger>Größere Karte</bigger>
+	<cancel>Abbrechen</cancel>
+	<close>Schließen</close>
+	<choosemapfromlist>Bitte wählen Sie einen oder mehere Kartendienst(e) aus der untenstehenden Liste</choosemapfromlist>
+	<choosemapserver>Bitte wählen Sie einen Kartenserver aus der untenstehenden Liste oder geben Sie einen manuell ein</choosemapserver>
+	<mapServer>Kartenserver</mapServer>
+	<choosepredefinedmap>Bitte wählen Sie eine vordefinierte Karte von der untenstehenden Liste oder</choosepredefinedmap>
+	<connect>Verbinden</connect>
+	<contactInfo>Kontakt Information:</contactInfo>
+	<contactPerson>Primäre Kontaktperson:</contactPerson>
+	<contexts>Kontext</contexts>
+	<delete>[löschen]</delete>
+	<down>Layer nach unten schieben</down>
+	<email>E-Mail:</email>
+	<error>[Fehler]</error>
+<!-- 
+	<errorText>Sorry, error connecting to the map server</errorText>
+ -->
+	<exportAsPDF js="true">Karte als PDF exportieren</exportAsPDF>
+	<exportAsImage js="true">Karte als Bilddatei exportieren</exportAsImage>
+	<exportAsWMC js="true">Als Web Map Context (WMC) speichern</exportAsWMC>
+	<extents>Ausgewählte Zeit ändern</extents>
+	<extentSelected>Ausgwählte Zeit: </extentSelected>
+	<featuresfound>features found</featuresfound>
+	<findMapsGeoNetwork>Finden Sie mehr Karten über GeoNetzwork opensource</findMapsGeoNetwork>
+	<findMapsMapServers>Fügen Sie mehr Layer durch verbinden mit anderen Kartenservern hinzu</findMapsMapServers>
+	<fullExtent>Auf komplette Ausdehnung zoomen</fullExtent>
+	<gotoGeoNetwork>GeoNetwork opensource</gotoGeoNetwork>
+	<gotoMapServers>Kartenserver</gotoMapServers>
+	<homepage>Homepage:</homepage>
+	<identify>Identify a feature on the map</identify>
+	<makeActive>Auswählen um diesen Layer sichtbar zu machen</makeActive>
+	<info>FeatureInfo Abfrage</info>
+	<keywords>Schlüsselwörter:</keywords>
+	<layerinfo>Layerinfo</layerinfo>
+	<layers>Layer</layers>
+	<layersAdded js="true">Ausgwählte Layer wurden hinzugefügt</layersAdded>
+	<layersHide>Layerliste verstecken</layersHide>
+	<layersShow>Layerliste zeigen</layersShow>
+	<layerShowHide>Layer zeigen oder verstecken</layerShowHide>
+	<legend>Legende zeigen</legend>
+	<listofmaps>Liste der Karten</listofmaps>
+	<listofmapservers>Liste der Kartenserver</listofmapservers>
+	<loadingMap>...Karte wird geladen...</loadingMap>
+	<loadingFrom js="true">Services laden von</loadingFrom>
+	<loadingFromWMS js="true">Services von WMS server laden</loadingFromWMS>
+	<manually>Erstellen einer eigenen Karte</manually>
+	<map>Karte</map>
+	<mapsfound>Karte gefunden</mapsfound>
+	<metadata>Metadaten</metadata>
+	<newMap>Eine neue Karte erstellen</newMap>
+	<noFeature>Keine features gefunden</noFeature>
+	<noService>Keine Karte gefunden</noService>
+	<noStyle>Nur der Vorgabestyle ist für diese Karte verfügbar</noStyle>
+	<oneService>Eine Karte gefunden</oneService>
+	<ok>Ok</ok>
+	<oneFeature>Ein feature gefunden</oneFeature>
+	<otherArcIMS>- Anderer ArcIMS Server </otherArcIMS>
+	<otherWMS>- Anderer WMS Server </otherWMS>
+	<pan>Kartenausschnitt verschieben</pan>
+	<position>Position:</position>
+	<print>Karte drucken</print>
+	<properties>Einstellungen</properties>
+	<reCenter>Zentrieren der Karte</reCenter>
+	<refresh>Neuladen</refresh>
+	<refreshNotification>Bitte drücken Sie den "Neuladen"-Button unter der Liste um die Änderungen zu sehen.</refreshNotification>
+	<removeLayer>Layer entfernen</removeLayer>
+	<reset>Zurücksetzen</reset>
+	<sendByEmail js="true">Diese Karte per E-Mai senden</sendByEmail>
+	<setScale>--Mapstab setzen--</setScale>
+	<showLayerMD js="true">Layer Information</showLayerMD>
+	<smaller>Kleinere Karte</smaller>
+	<specify>Specify if other:</specify>
+	<style>Select the desired style</style>
+	<start>InterMap opensource</start>
+	<telephone>Telefone:</telephone>
+	<title>InterMap opensource</title>
+	<titleShowStyles js="true">Verfügbare Styles</titleShowStyles>
+	<transparency>Transparenz einstellen</transparency>
+	<up>Layer nach oben schieben</up>
+	<wait js="true">Bitte warten...</wait>
+	<wmctitle js="true">WMC Menu</wmctitle>	
+	<wmctitlemail js="true">WMC per E-Mail verschicken</wmctitlemail>	
+	<wmctitleupload js="true">WMC hochladen und setzen</wmctitleupload>
+	<wmcbuttonmain js="true">Context Menu anschauen</wmcbuttonmain>	
+	<wmcbuttonmail js="true">Versenden des geladenen Inhalt</wmcbuttonmail>	
+	<wmcbuttonupload js="true">Inhalt hochladen</wmcbuttonupload>	
+	<wmcbuttondownload js="true">geladenen Inhalt herunterladen</wmcbuttondownload>	
+	
+	<wmcUploading>WMC wird geladen...</wmcUploading> 
+	<wmcUploaded>WMC wurde hochgeladen </wmcUploaded>
+	<wmcUploadingError>Ein unerwarteter Felher ist beim hochladen aufgetreten:</wmcUploadingError>				
+	<wmcMailBuilding>Die E-Mail wird generiert...</wmcMailBuilding>
+	<wmcMailSent>Die E-Mail wurde erfolgreich verschickt</wmcMailSent>
+	<wmcMailError>Ein unerwarteter Fehler ist beim verschicken der E-Mail aufgetreten:</wmcMailError>
+	<wmcUploadReplace>geladene Layer ersetzen</wmcUploadReplace>
+	<wmcUploadAdd>Zu geladenen Layern hinzufügen</wmcUploadAdd>
+	<wmcMailSend>E-Mail senden</wmcMailSend>
+	
+	<wmsConfigForm>Layer Einstellungen</wmsConfigForm >
+	<zoomIn>reinzoomen</zoomIn>
+	<zoomOut>rauszoomen</zoomOut>
+	<zoomLayer>Zoom auf Layer</zoomLayer>
+	<getFeatures>GET FEATURES</getFeatures>
+	
+<!-- erweiterte Übersetzung -->	
+	<markerlistbutton>Marker Liste</markerlistbutton>
+	<markerlisttitle js="true">Marker Liste</markerlisttitle>
+	
+	<PDFtitle>Titel</PDFtitle>
+	<PageSize>Seitenformat</PageSize>
+	<A4>A4</A4>
+	<Letter>Letter</Letter>
+	<Legal>Legal</Legal>
+	<PDForientation>Orientierung</PDForientation>
+	<Portrait>Hochformat</Portrait>
+	<Landscape>Querformat</Landscape>
+	<Printlayerlist>Layerliste drucken</Printlayerlist>
+	<Printdetails>Details drucken</Printdetails>
+	<Printboundingbox>Umgebungsrechteck drucken</Printboundingbox>
+	<Northarrow>Nordpfeil</Northarrow>
+	<PDFScale>Maßstab</PDFScale>
+	<Copyrightinfo>Copyright Info</Copyrightinfo>
+	<GeneratePDF>PDF erstellen</GeneratePDF>
+	<BuildingPDF>PDF wird erstellt ...bitte warten...</BuildingPDF>
+	<PDFsuccessfullybuilt>PDF erfolgreich erstellt</PDFsuccessfullybuilt>
+	
+	<WMCTo>An</WMCTo>
+	<WMCFrom>Von</WMCFrom>
+	
+	<showlegend>Legende</showlegend>
+</strings>
