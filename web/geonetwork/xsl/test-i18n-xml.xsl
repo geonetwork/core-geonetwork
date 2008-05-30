@@ -12,6 +12,7 @@
 			<es />
 			<cn />
 			<ar />
+            <de />
 		</langs>
 	</xsl:variable>
 
