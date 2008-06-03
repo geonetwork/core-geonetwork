@@ -112,6 +112,9 @@ class Importer
 					if (sourceName == null)
 						sourceName = "???";
 
+					if (source == null || source.trim().length() == 0)
+						throw new Exception("Missing siteId parameter from info.xml file");
+
 					Lib.sources.update(dbms, source, sourceName, true);
 				}
 
