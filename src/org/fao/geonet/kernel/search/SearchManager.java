@@ -131,7 +131,7 @@ public class SearchManager
 	//-----------------------------------------------------------------------------
 	// Z39.50 init/end methods
 
-	/** 
+	/**
          * Initializes the Z3950 client searcher.
 	 * @param appPath
 	 * @throws Exception
@@ -139,28 +139,35 @@ public class SearchManager
 	private void initZ3950(String appPath)
 		throws Exception
 	{
-		_cat = LogContextFactory.getContext("GeoNetwork"); // FIXME: maybe it should use the webapp path
+		try
+		{
+			_cat = LogContextFactory.getContext("GeoNetwork"); // FIXME: maybe it should use the webapp path
 
-		String configClass = "com.k_int.util.Repository.XMLDataSource";
-		String configUrl   = "file:///" + appPath + jeeves.constants.Jeeves.Path.XML + "/repositories.xml";
-		String directoryNamingLocation = "/Services/IR/Directory"; // RGFIX: change to use servlet context
+			String configClass = "com.k_int.util.Repository.XMLDataSource";
+			String configUrl   = "file:///" + appPath + jeeves.constants.Jeeves.Path.XML + "/repositories.xml";
+			String directoryNamingLocation = "/Services/IR/Directory"; // RGFIX: change to use servlet context
 
-		Properties props = new Properties();
-		props.setProperty("CollectionDataSourceClassName", configClass);
-		props.setProperty("RepositoryDataSourceURL",       configUrl);
-		props.setProperty("DirectoryServiceName",          directoryNamingLocation); // RGFIX: check this
-		// set up the collection directory and register it with the naming service in the
-		// default way
-		// RGFIX: this could not work for different servlet instances, should be changed to use servlet context
-		CollectionDirectory cd = new CollectionDirectory(configClass, configUrl);
-		Context context = new InitialContext();
-		Context services_context = context.createSubcontext("Services");
-		Context ir_context = services_context.createSubcontext("IR");
-		ir_context.bind("Directory", cd);
+			Properties props = new Properties();
+			props.setProperty("CollectionDataSourceClassName", configClass);
+			props.setProperty("RepositoryDataSourceURL",       configUrl);
+			props.setProperty("DirectoryServiceName",          directoryNamingLocation); // RGFIX: check this
+			// set up the collection directory and register it with the naming service in the
+			// default way
+			// RGFIX: this could not work for different servlet instances, should be changed to use servlet context
+			CollectionDirectory cd = new CollectionDirectory(configClass, configUrl);
+			Context context = new InitialContext();
+			Context services_context = context.createSubcontext("Services");
+			Context ir_context = services_context.createSubcontext("IR");
+			ir_context.bind("Directory", cd);
 
-		// pull in the repository
-		_hssSearchable = new HeterogeneousSetOfSearchable();
-		_hssSearchable.init(props);
+			// pull in the repository
+			_hssSearchable = new HeterogeneousSetOfSearchable();
+			_hssSearchable.init(props);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/** deinitializes the Z3950 client searcher
@@ -458,7 +465,7 @@ public class SearchManager
 					index = Field.Index.UN_TOKENIZED;
 				}
 				if(!bIndex) {
-					index = Field.Index.NO;					
+					index = Field.Index.NO;
 				}
 				doc.add(new Field(name, string, store, index));
 			}
