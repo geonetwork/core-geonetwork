@@ -86,3 +86,26 @@ function get_cookie ( cookie_name )
 		return false;
 	}
 
+	function massiveDelete(message)
+	{
+		var list = $('search-results-content').getElementsByTagName('INPUT');
+		var ids  = '';
+
+		for (var i=0; i<list.length; i++)
+		{
+			if (list[i].getAttribute('id') == 'selId')
+				if (list[i].checked)
+				{
+					var name = list[i].getAttribute('name');
+					ids = ids +'&id='+name;
+				}
+		}
+
+		if (ids == '')
+			return;
+			
+		if(!confirm(message))
+			return;
+
+		document.location.href = Env.locService +'/metadata.massiveDelete?'+ids.substring(1);
+	}

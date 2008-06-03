@@ -45,7 +45,8 @@
 	<keyword>keyword</keyword>
 	<res>results</res>
 	<ress>result</ress>
-
+	<massiveActions>Massive actions : </massiveActions>
+	
 	<thesaurus>
 		<category>Thesaurus category</category>
 		<management>Manage thesauri</management>
@@ -127,6 +128,7 @@
 	<completeTab>Advanced view</completeTab>
 	<completeTabEditor>Advanced editor</completeTabEditor>
 	<confirmDelete>Are you sure you want to Delete the Metadata from the Database?</confirmDelete>
+	<confirmMassiveDelete>Are you sure you want to Delete all selected Metadata from the Database?</confirmMassiveDelete>
 	<confirmPassword>Confirm password</confirmPassword>
 	<confirmNewPassword>Confirm new password</confirmNewPassword>
 	<constraintsTab>Constraints</constraintsTab>

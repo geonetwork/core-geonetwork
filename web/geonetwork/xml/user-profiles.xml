@@ -115,6 +115,7 @@
 
 		<!-- Allow to delete a metadata record -->
 		<allow service="metadata.delete"/>
+		<allow service="metadata.massiveDelete"/>
 
 		<allow service="metadata.duplicate.form"/>
 		<allow service="metadata.create.form"/>

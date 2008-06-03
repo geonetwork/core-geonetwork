@@ -24,11 +24,11 @@
 		<table  width="100%" height="100%" id="search-results-content">
 
 			<xsl:variable name="count" 	select="/root/response/summary/@count"/>
-			<xsl:variable name="from" 	select="/root/response/@from"/>
-			<xsl:variable name="to" 	select="/root/response/@to"/>			
+			<xsl:variable name="from" 		select="/root/response/@from"/>
+			<xsl:variable name="to" 		select="/root/response/@to"/>
 			<xsl:variable name="currPage" select="floor(($from - 1) div $hitsPerPage + 1)"/>
 			<xsl:variable name="pages" 	select="floor(($count - 1) div $hitsPerPage + 1)"/>
-			
+
 			<!-- title -->
 			<xsl:call-template name="formTitle">
 				<xsl:with-param name="title">
@@ -44,7 +44,7 @@
 
 			<!-- list of metadata -->
 			<xsl:call-template name="hits"/>
-			
+
 			<!-- page list -->
 			<!--			<xsl:call-template name="formSeparator"/> -->
 			<xsl:call-template name="formContent">
@@ -53,8 +53,10 @@
 				</xsl:with-param>
 				<xsl:with-param name="indent" select="50"/>
 			</xsl:call-template>
-			
-			
+
+			<!-- massive actions -->
+			<xsl:call-template name="massiveActions"/>
+
 			<tr><td class="blue-content" colspan="3"/></tr>
 		</table>
 	</xsl:template>
@@ -220,6 +222,7 @@
 										<!-- Title -->
 										<td class="padded" width="90%">
 											<h1 align="left">
+												<input id="selId" name="{$metadata/geonet:info/id}" type="checkbox" />
 												<xsl:value-of select="$metadata/title"/>
 											</h1>
 										</td>
@@ -592,6 +595,23 @@
 		</xsl:if>
 	</xsl:template>
 		
+	<!-- ================================================================================== -->
+	<!-- massive actions -->
+	<!-- ================================================================================== -->
+
+	<xsl:template name="massiveActions">
+		<xsl:if test="/root/gui/services/service/@name='metadata.massiveDelete'">
+			<tr>
+				<td align="center" colspan="3" style="padding-bottom:4px;">
+					<xsl:value-of select="/root/gui/strings/massiveActions"/>
+					<button class="content" onclick="massiveDelete('{/root/gui/strings/confirmMassiveDelete}')">
+						<xsl:value-of select="/root/gui/strings/delete"/>
+					</button>
+				</td>
+			</tr>
+		</xsl:if>
+	</xsl:template>
+	
 	<!-- ================================================================================== -->
 
 </xsl:stylesheet>

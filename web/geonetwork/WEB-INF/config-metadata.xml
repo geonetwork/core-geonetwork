@@ -182,6 +182,16 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="metadata.massiveDelete">
+			<class name=".services.metadata.MassiveDelete"/>
+
+			<output sheet="info.xsl">
+				<xml name="info" file="xml/metadata-massiveDelete.xml" />
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="metadata.create.form">
 			<output sheet="metadata-create.xsl">
 				<call name="groups"    class=".guiservices.groups.GetMine"/>
