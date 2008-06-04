@@ -189,9 +189,7 @@ public class Geonet
          * For example 2008-01-23T10:05:00 or 2008-01-23 */
 		public static final String DATE_TO       = "dateTo";
 
-        public static final String KEYWORD       = "keyword";
-		public static final String KEYWORDS      = "keywords";
-		public static final String THEME_KEY     = "themekey";
+        public static final String THEME_KEY     = "themekey";
         public static final String CATEGORY      = "category";
 
         /** Parameter name: {@value #TOPIC_CAT} - Restrict search to resources
