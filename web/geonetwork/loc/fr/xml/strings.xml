@@ -369,6 +369,7 @@
 	<newMetadata>Nouvelle métadonnée</newMetadata>
 	<newPassword>Nouveau mot de passe</newPassword>
 	<newUser>Ajouter un utilisateur</newUser>
+	<next>Next</next>
 	<none>Aucun</none>
 	<noHelp>Désolé, pas d'aide disponible</noHelp>
 	<noInfo>Désolé, pas d'information disponible</noInfo>
@@ -386,6 +387,7 @@
 	<placeKeyword>Mot-clé géographique</placeKeyword>
 	<porCatInfoTab>Catalogue</porCatInfoTab>
 	<poweredBy>Fonctionne avec </poweredBy>
+	<previous>Previous</previous>
 	<privileges>Privilèges</privileges>
 	<profile>Profile</profile>
 	<progress>Avancement</progress>

@@ -333,6 +333,7 @@
 	<newMetadata>New metadata</newMetadata>
 	<newPassword>New Password</newPassword>
 	<newUser>Add a new user</newUser>
+	<next>Next</next>
 	<none>none</none>
 	<noHelp>Sorry, no help available</noHelp>
 	<noInfo>Sorry, no info available</noInfo>
@@ -351,6 +352,7 @@
 	<placeKeyword>Place Keywords</placeKeyword>
 	<porCatInfoTab>Catalog</porCatInfoTab>
 	<poweredBy>Powered by </poweredBy>
+	<previous>Previous</previous>
 	<privileges>Privileges</privileges>
 	<profile>Profile</profile>
 	<progress>Progress</progress>
