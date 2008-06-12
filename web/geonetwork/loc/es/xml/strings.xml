@@ -361,6 +361,7 @@
 	<newMetadata>Nuevo Metadato</newMetadata>
 	<newPassword>Nueva contraseña</newPassword>
 	<newUser>Añade un nuevo usuario a la Base de datos</newUser>
+	<next>Next</next>
 	<noHelp>Disculpe las molestias, no hay ayuda disponible</noHelp>
 	<noInfo>Disculpe las molestias, no hay información disponible</noInfo>
 	<noLogin>No está identificado como usuario</noLogin>
@@ -378,6 +379,7 @@
 	<placeKeyword>Palabras clave de lugar</placeKeyword>
 	<porCatInfoTab>Catálogo</porCatInfoTab>
 	<poweredBy>Software usado: </poweredBy>
+	<previous>Previous</previous>
 	<privileges>Privilegios</privileges>
 	<profile>Perfíl</profile>
 	<progress>Progreso</progress>

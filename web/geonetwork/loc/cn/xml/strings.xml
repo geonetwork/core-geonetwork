@@ -357,6 +357,7 @@
 	<newMetadata>新建元数据</newMetadata>
 	<newPassword>新口令</newPassword>
 	<newUser>新增用户</newUser>
+	<next>Next</next>
 	<none>无</none>
 	<noHelp>对不起，没有帮助信息</noHelp>
 	<noInfo>对不起，没有信息</noInfo>
@@ -374,6 +375,7 @@
 	<placeKeyword>地名关键词</placeKeyword>
 	<porCatInfoTab>编目信息</porCatInfoTab>
 	<poweredBy>由以下软件提供支持： </poweredBy>
+	<previous>Previous</previous>
 	<privileges>权限管理</privileges>
 	<profile>组合Profile</profile>
 	<progress>进展情况</progress>

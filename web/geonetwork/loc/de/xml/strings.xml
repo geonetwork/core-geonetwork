@@ -323,6 +323,7 @@
 	<newMetadata>Neue Metadaten</newMetadata>
 	<newPassword>Neues Passwort</newPassword>
 	<newUser>Benutzer hinzufügen</newUser>
+	<next>Next</next>
 	<none>nichts</none>
 	<noHelp>Entschuldigung, keine Hilfe verfügbar</noHelp>
 	<noInfo>Entschuldigung, keine Informationen verfügbar</noInfo>
@@ -341,6 +342,7 @@
 	<placeKeyword>örtliches Schlüsselwort</placeKeyword>
 	<porCatInfoTab>Katalog</porCatInfoTab>
 	<poweredBy>Powered by </poweredBy>
+	<previous>Previous</previous>
 	<privileges>Privilegien</privileges>
 	<profile>Profile</profile>
 	<progress>Ablauf</progress>

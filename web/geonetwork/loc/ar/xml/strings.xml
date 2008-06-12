@@ -299,6 +299,7 @@
 	<newMetadata>بيانات اساسية Metadata جديدة</newMetadata>
 	<newPassword>كلمة سر جديدة</newPassword>
 	<newUser>اضافة مستخدم جديد لقاعدة البيانات</newUser>
+	<next>Next</next>
 	<none>بلا</none>
 <!--  <nofilefound1>عفواً، لم يتم العثور على الملف المراد تحميله الرجاء إرسال</nofilefound1>
 	<nofilefound2>رسالة تعيلق</nofilefound2>
@@ -325,6 +326,7 @@
 	<placeKeyword>كلمة موقع</placeKeyword>
 	<porCatInfoTab>مجلد</porCatInfoTab>
 	<poweredBy>برعاية</poweredBy>
+	<previous>Previous</previous>
 	<privileges>تفويض</privileges>
 	<profile>ملف شخصي</profile>
 	<progress>تقدم</progress>
