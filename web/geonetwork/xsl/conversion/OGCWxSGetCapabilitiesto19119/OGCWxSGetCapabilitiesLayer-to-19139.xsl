@@ -70,6 +70,12 @@
 
 			<!-- parentIdentifier -->
 			<!-- mdHrLv -->
+            <hierarchyLevel>
+                <MD_ScopeCode
+                    codeList="./resources/codeList.xml#MD_ScopeCode"
+                    codeListValue="dataset" />
+            </hierarchyLevel>
+      
 			<!-- mdHrLvName -->
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

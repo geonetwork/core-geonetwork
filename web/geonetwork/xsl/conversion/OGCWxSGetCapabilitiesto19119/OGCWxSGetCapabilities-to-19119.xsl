@@ -97,7 +97,13 @@ Mapping between :
 
 			<!-- parentIdentifier : service have no parent -->
 			<!-- mdHrLv -->
-			<!-- mdHrLvName -->
+            <hierarchyLevel>
+                <MD_ScopeCode
+                    codeList="./resources/codeList.xml#MD_ScopeCode"
+                    codeListValue="service" />
+            </hierarchyLevel>
+			
+            <!-- mdHrLvName -->
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
