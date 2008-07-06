@@ -24,7 +24,6 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -37,10 +36,12 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
@@ -221,20 +222,33 @@ class Harvester
 
 		//--- update local sources and retrieve logos (if the case)
 
+		String siteId = getSiteId();
+
 		for (String sourceUuid : sources)
-		{
-			String sourceName = remoteSources.get(sourceUuid);
-
-			if (sourceName != null)
-				Lib.sources.retrieveLogo(context, params.host, params.port, params.servlet, sourceUuid);
-			else
+			if (!siteId.equals(sourceUuid))
 			{
-				sourceName = "(unknown)";
-				Lib.sources.copyUnknownLogo(context, sourceUuid);
-			}
+				String sourceName = remoteSources.get(sourceUuid);
 
-			Lib.sources.update(dbms, sourceUuid, sourceName, false);
-		}
+				if (sourceName != null)
+					Lib.sources.retrieveLogo(context, params.host, params.port, params.servlet, sourceUuid);
+				else
+				{
+					sourceName = "(unknown)";
+					Lib.sources.copyUnknownLogo(context, sourceUuid);
+				}
+
+				Lib.sources.update(dbms, sourceUuid, sourceName, false);
+			}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private String getSiteId()
+	{
+		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SettingManager sm =gc.getSettingManager();
+
+		return sm.getValue("system/site/siteId");
 	}
 
 	//---------------------------------------------------------------------------
