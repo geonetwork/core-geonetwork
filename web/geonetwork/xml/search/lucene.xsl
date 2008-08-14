@@ -252,6 +252,13 @@ compiles a request
 		
 		</xsl:choose>
 		
+        <!-- topic category / only iso records -->
+        <xsl:call-template name="textField">
+            <xsl:with-param name="expr" select="/request/topicCat"/>
+            <xsl:with-param name="field" select="'topicCat'"/>
+        </xsl:call-template>
+        
+    
 		<!-- category -->
 		<xsl:if test="string(/request/category) != ''">
 			<BooleanClause prohibited="false" required="true">

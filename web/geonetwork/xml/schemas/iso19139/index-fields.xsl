@@ -140,7 +140,7 @@
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 	
-			<xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode/@codeListValue">
+			<xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
 				<Field name="topicCat" string="{string(.)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
 
