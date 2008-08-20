@@ -115,7 +115,7 @@ public class HttpGetFileCache implements HttpCache
 
 		Date t = new Date(f.lastModified());
 		Calendar c = Calendar.getInstance();
-		c.set(t.getYear(), t.getMonth(), t.getDate(), t.getHours(), t.getMinutes(), t.getSeconds());
+		c.setTime(t);
 
 		return c;
 	}
