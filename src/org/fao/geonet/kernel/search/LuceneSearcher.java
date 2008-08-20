@@ -25,12 +25,13 @@ package org.fao.geonet.kernel.search;
 
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -38,6 +39,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexReader;
@@ -60,7 +62,6 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
@@ -538,13 +539,12 @@ public class LuceneSearcher extends MetaSearcher
 		addElement(info, Edit.Info.Elem.CREATE_DATE, createDate);
 		addElement(info, Edit.Info.Elem.CHANGE_DATE, changeDate);
 		addElement(info, Edit.Info.Elem.SOURCE,      source);
-
-		for (Enumeration enu = doc.fields(); enu.hasMoreElements(); )
-		{
-			Field field = (Field) enu.nextElement();
+		
+		List<Field> fields = doc.getFields();
+		for (Iterator<Field> i = fields.iterator(); i.hasNext(); ) {
+			Field field = i.next();
 			String name  = field.name();
 			String value = field.stringValue();
-
 			if (name.equals("_cat")) addElement(info, Edit.Info.Elem.CATEGORY, value);
 		}
 		md.addContent(info);

@@ -22,22 +22,19 @@
 
 package org.fao.geonet.kernel.search;
 
-import com.k_int.IR.Searchable;
-import com.k_int.hss.HeterogeneousSetOfSearchable;
-import com.k_int.util.LoggingFacade.LogContextFactory;
-import com.k_int.util.LoggingFacade.LoggingContext;
-import com.k_int.util.Repository.CollectionDirectory;
 import java.io.File;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
+
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -47,6 +44,12 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermEnum;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
+
+import com.k_int.IR.Searchable;
+import com.k_int.hss.HeterogeneousSetOfSearchable;
+import com.k_int.util.LoggingFacade.LogContextFactory;
+import com.k_int.util.LoggingFacade.LoggingContext;
+import com.k_int.util.Repository.CollectionDirectory;
 
 /**
  * Indexes metadata using Lucene.
@@ -310,19 +313,16 @@ public class SearchManager
 	public Hashtable getDocs() throws Exception
 	{
 		IndexReader reader = IndexReader.open(_luceneDir);
-		try
-		{
+		try {
 			Hashtable docs = new Hashtable();
-			for (int i = 0; i < reader.numDocs(); i++)
-			{
+			for (int i = 0; i < reader.numDocs(); i++) {
 				if (reader.isDeleted(i)) continue; // FIXME: strange lucene hack: sometimes it tries to load a deleted document
-
 				Hashtable record = new Hashtable();
 				Document doc = reader.document(i);
 				String id = doc.get("_id");
-				for (Enumeration j = doc.fields(); j.hasMoreElements(); )
-				{
-					Field field = (Field)j.nextElement();
+				List<Field> fields = doc.getFields();
+				for (Iterator<Field> j = fields.iterator(); j.hasNext(); ) {
+					Field field = j.next();
 					record.put(field.name(), field.stringValue());
 				}
 				docs.put(id, record);
