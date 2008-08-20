@@ -23,6 +23,26 @@
 
 package org.fao.geonet.services.util.z3950;
 
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Observer;
+import java.util.Properties;
+import java.util.Stack;
+
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
+import jeeves.utils.Xml;
+
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.MetaSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.jdom.Attribute;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.output.DOMOutputter;
+
 import com.k_int.IR.AsynchronousEnumeration;
 import com.k_int.IR.DefaultSourceEnumeration;
 import com.k_int.IR.IFSNotificationTarget;
@@ -42,24 +62,6 @@ import com.k_int.util.RPNQueryRep.ComplexNode;
 import com.k_int.util.RPNQueryRep.QueryNode;
 import com.k_int.util.RPNQueryRep.QueryNodeVisitor;
 import com.k_int.util.RPNQueryRep.RootNode;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Observer;
-import java.util.Properties;
-import java.util.Stack;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.jdom.Attribute;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.output.DOMOutputter;
 
 //=============================================================================
 

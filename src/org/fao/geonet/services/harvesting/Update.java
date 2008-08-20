@@ -28,10 +28,10 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.HarvestManager;
-import org.jdom.Attribute;
 import org.jdom.Element;
 
 //=============================================================================

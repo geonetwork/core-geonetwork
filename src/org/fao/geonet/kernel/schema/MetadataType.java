@@ -28,10 +28,7 @@
 package org.fao.geonet.kernel.schema;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import org.jdom.Attribute;
-import org.jdom.Element;
 import org.fao.geonet.constants.Edit;
 
 //==============================================================================

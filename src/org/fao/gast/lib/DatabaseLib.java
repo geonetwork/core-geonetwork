@@ -38,12 +38,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.UUID;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.BinaryFile;
+
 import org.fao.gast.lib.druid.Import;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Document;
 import org.jdom.Element;

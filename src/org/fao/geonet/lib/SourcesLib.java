@@ -29,11 +29,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import jeeves.interfaces.Logger;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.XmlRequest;
+
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 

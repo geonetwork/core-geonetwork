@@ -28,7 +28,6 @@
 package org.fao.geonet.kernel.schema;
 
 import java.io.File;
-import jeeves.utils.Xml;
 
 //==============================================================================
 

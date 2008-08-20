@@ -18,7 +18,7 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
-import org.dlib.tools.FullTokenizer;
+
 import org.dlib.tools.TVector;
 
 //==============================================================================

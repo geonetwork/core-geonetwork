@@ -23,15 +23,21 @@
 
 package org.fao.geonet.services.util.z3950;
 
+import java.util.Observer;
+import java.util.Properties;
+
+import javax.naming.Context;
+
 import jeeves.server.context.ServiceContext;
-import jeeves.server.UserSession;
-import jeeves.interfaces.Logger;
 
-import java.util.*;
-import javax.naming.*;
-
-import com.k_int.IR.*;
-import com.k_int.util.LoggingFacade.*;
+import com.k_int.IR.IRQuery;
+import com.k_int.IR.ScanInformation;
+import com.k_int.IR.ScanRequestInfo;
+import com.k_int.IR.Scanable;
+import com.k_int.IR.SearchTask;
+import com.k_int.IR.Searchable;
+import com.k_int.util.LoggingFacade.LogContextFactory;
+import com.k_int.util.LoggingFacade.LoggingContext;
 
 //=============================================================================
 

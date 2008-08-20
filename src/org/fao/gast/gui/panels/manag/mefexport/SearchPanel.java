@@ -25,13 +25,15 @@ package org.fao.gast.gui.panels.manag.mefexport;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
+
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
 import jeeves.utils.XmlRequest;
+
 import org.dlib.gui.FlexLayout;
 import org.dlib.gui.TPanel;
 import org.fao.gast.app.App;

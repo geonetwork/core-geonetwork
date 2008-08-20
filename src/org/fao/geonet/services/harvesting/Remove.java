@@ -23,13 +23,13 @@
 
 package org.fao.geonet.services.harvesting;
 
-import java.sql.SQLException;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.kernel.harvest.Common.OperResult;
+
 import org.fao.geonet.kernel.harvest.HarvestManager;
+import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.jdom.Element;
 
 //=============================================================================

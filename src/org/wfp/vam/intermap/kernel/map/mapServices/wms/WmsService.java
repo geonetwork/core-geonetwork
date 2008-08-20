@@ -23,26 +23,30 @@
 
 package org.wfp.vam.intermap.kernel.map.mapServices.wms;
 
-import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.*;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import org.jdom.CDATA;
+import jeeves.utils.Log;
+
 import org.jdom.Element;
 import org.jdom.Text;
+import org.wfp.vam.intermap.Constants;
 import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
-import org.wfp.vam.intermap.kernel.map.mapServices.HttpClient;
 import org.wfp.vam.intermap.kernel.map.mapServices.MapService;
 import org.wfp.vam.intermap.kernel.map.mapServices.constants.MapServices;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.dimensions.Extents;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.impl.WMSFactory;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSCapabilities;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSEX_GeographicBoundingBox;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSFormat;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSLayer;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSLegendURL;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSOperationType;
+import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSStyle;
 import org.wfp.vam.intermap.util.Util;
-import org.wfp.vam.intermap.Constants;
-import jeeves.utils.Log;
 
 public class WmsService extends MapService
 {

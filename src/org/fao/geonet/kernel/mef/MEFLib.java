@@ -24,13 +24,11 @@
 package org.fao.geonet.kernel.mef;
 
 import java.io.File;
+
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.server.context.ServiceContext;
-import java.io.IOException;
-import org.jdom.JDOMException;
-import jeeves.exceptions.BadFormatEx;
 
 //=============================================================================
 

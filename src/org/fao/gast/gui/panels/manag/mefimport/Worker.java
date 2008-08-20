@@ -24,11 +24,10 @@
 package org.fao.gast.gui.panels.manag.mefimport;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import jeeves.exceptions.UserNotFoundEx;
-import jeeves.utils.Xml;
+
 import jeeves.utils.XmlRequest;
+
 import org.dlib.gui.ProgressDialog;
 import org.fao.gast.app.App;
 import org.fao.gast.app.Configuration;

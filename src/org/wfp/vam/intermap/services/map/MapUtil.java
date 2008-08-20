@@ -25,12 +25,13 @@ package org.wfp.vam.intermap.services.map;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.jdom.Element;
 import org.wfp.vam.intermap.Constants;
 import org.wfp.vam.intermap.kernel.map.DefaultMapServers;

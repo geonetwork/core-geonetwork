@@ -23,7 +23,6 @@
 
 package org.fao.gast.boot;
 
-import java.awt.Component;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -31,6 +30,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
 
 //==============================================================================

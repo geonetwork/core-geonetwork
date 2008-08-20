@@ -27,7 +27,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
-import jeeves.utils.Xml;
+
 import org.jdom.Element;
 import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
 import org.wfp.vam.intermap.kernel.map.mapServices.MapService;

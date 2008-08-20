@@ -26,8 +26,7 @@ package org.fao.geonet.services.metadata;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.HashSet;
-import java.util.Set;
+
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.interfaces.Service;
@@ -36,10 +35,9 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
-import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;

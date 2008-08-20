@@ -25,18 +25,17 @@
 
 package org.wfp.vam.intermap.kernel;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
-import org.jdom.*;
-
-import org.wfp.vam.intermap.http.ConcurrentHTTPTransactionHandler;
-import org.wfp.vam.intermap.http.cache.HttpGetFileCache;
 import jeeves.utils.Xml;
-import java.util.Hashtable;
-import org.apache.commons.httpclient.*;
-import org.apache.commons.httpclient.methods.*;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.jdom.Element;
 
 public class Geonet {
 	

@@ -28,10 +28,6 @@
 package org.fao.geonet.util;
 
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.StringTokenizer;
-import java.util.TimeZone;
 
 //==============================================================================
 

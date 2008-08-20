@@ -23,16 +23,16 @@
 
 package org.wfp.vam.intermap.services.map.layers;
 
-import org.jdom.*;
+import java.util.Iterator;
+import java.util.List;
 
-import jeeves.interfaces.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
-import org.wfp.vam.intermap.kernel.map.*;
+import org.jdom.Element;
+import org.wfp.vam.intermap.kernel.map.MapMerger;
 import org.wfp.vam.intermap.services.map.MapUtil;
-import jeeves.utils.Xml;
-import java.util.*;
 
 public class SetOrder implements Service
 {

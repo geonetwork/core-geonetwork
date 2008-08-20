@@ -29,28 +29,32 @@
 
 package org.wfp.vam.intermap.kernel.map.images;
 
-import Acme.JPM.Encoders.GifEncoder;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
-import com.sun.media.jai.codec.ImageCodec;
-import com.sun.media.jai.codec.PNGEncodeParam;
-import com.sun.media.jai.codecimpl.PNGCodec;
-import com.sun.media.jai.codecimpl.PNGImageEncoder;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
+
 import javax.swing.ImageIcon;
-import org.wfp.vam.intermap.Constants;
+
 import jeeves.utils.Log;
+
+import org.wfp.vam.intermap.Constants;
+
+import Acme.JPM.Encoders.GifEncoder;
+
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import com.sun.media.jai.codec.ImageCodec;
+import com.sun.media.jai.codec.PNGEncodeParam;
+import com.sun.media.jai.codecimpl.PNGCodec;
+import com.sun.media.jai.codecimpl.PNGImageEncoder;
 
 public class ImageMerger {
 	static public final int JPG = 0;

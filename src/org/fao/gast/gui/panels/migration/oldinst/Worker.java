@@ -25,16 +25,15 @@ package org.fao.gast.gui.panels.migration.oldinst;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-import javax.swing.JOptionPane;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.dlib.gui.ProgressDialog;
 import org.fao.gast.app.App;
 import org.fao.gast.lib.DatabaseLib;
@@ -45,7 +44,6 @@ import org.fao.gast.lib.druid.DdfLoader;
 import org.fao.gast.lib.druid.ImportField;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.jdom.Element;
-import org.jdom.output.*;
 
 //==============================================================================
 

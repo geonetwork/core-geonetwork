@@ -24,14 +24,15 @@
 package org.fao.geonet.kernel.oaipmh.services;
 
 import java.io.IOException;
+
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
-import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.oaipmh.requests.AbstractRequest;
 import org.fao.oaipmh.requests.ListMetadataFormatsRequest;
 import org.fao.oaipmh.responses.AbstractResponse;

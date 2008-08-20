@@ -32,7 +32,6 @@ import java.util.List;
 
 import org.jdom.Attribute;
 import org.jdom.Element;
-import jeeves.utils.Xml;
 
 //==============================================================================
 

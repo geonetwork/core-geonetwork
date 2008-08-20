@@ -25,8 +25,8 @@ package org.fao.geonet.kernel.csw.services;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
+
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.Csw.ElementSetName;
 import org.fao.geonet.csw.common.exceptions.CatalogException;

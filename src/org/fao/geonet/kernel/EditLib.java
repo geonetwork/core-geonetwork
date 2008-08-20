@@ -27,14 +27,22 @@
 
 package org.fao.geonet.kernel;
 
-import java.util.*;
-import org.fao.geonet.kernel.schema.*;
-import org.jdom.*;
-import org.jdom.filter.*;
-import jeeves.utils.Xml;
-
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
+
 import org.fao.geonet.constants.Edit;
+import org.fao.geonet.kernel.schema.MetadataAttribute;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.MetadataType;
+import org.fao.geonet.kernel.schema.SchemaLoader;
+import org.jdom.Attribute;
+import org.jdom.Element;
+import org.jdom.Namespace;
 
 //=============================================================================
 

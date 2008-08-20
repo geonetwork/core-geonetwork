@@ -23,9 +23,8 @@
 
 package org.fao.gast.cli.setup;
 
-import java.io.File;
 import java.util.List;
-import jeeves.resources.dbms.Dbms;
+
 import org.fao.gast.lib.Lib;
 import org.fao.gast.lib.Resource;
 

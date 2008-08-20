@@ -23,19 +23,14 @@
 
 package org.wfp.vam.intermap.services.map.layers;
 
-import org.jdom.*;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
-import jeeves.interfaces.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-
-import org.wfp.vam.intermap.kernel.map.*;
-
+import org.jdom.Element;
 import org.wfp.vam.intermap.Constants;
-import java.util.List;
-import java.util.Iterator;
+import org.wfp.vam.intermap.kernel.map.MapMerger;
 import org.wfp.vam.intermap.services.map.MapUtil;
-import jeeves.utils.Xml;
 
 //=============================================================================
 

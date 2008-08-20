@@ -24,7 +24,6 @@
 package org.wfp.vam.intermap.kernel;
 
 
-import java.io.File;
 
 public class GlobalTempFiles extends TempFiles
 {

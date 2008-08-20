@@ -23,27 +23,17 @@
 
 package org.fao.geonet.kernel.csw;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
+
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.utils.SOAPUtil;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
@@ -56,10 +46,6 @@ import org.fao.geonet.kernel.csw.services.GetRecords;
 import org.fao.geonet.kernel.csw.services.Harvest;
 import org.fao.geonet.kernel.csw.services.Transaction;
 import org.jdom.Element;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
-import static org.fao.geonet.csw.common.Csw.*;
 
 //=============================================================================
 

@@ -22,7 +22,6 @@
 //==============================================================================
 
 package org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type;
-import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.impl.WMSLayerImpl;
 
 
 /**

@@ -23,14 +23,13 @@
 
 package org.fao.geonet.services.banner;
 
-import org.jdom.*;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
-import jeeves.interfaces.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-import jeeves.constants.*;
-
-import org.fao.geonet.constants.*;
+import org.jdom.Element;
 
 //=============================================================================
 

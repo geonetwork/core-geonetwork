@@ -26,11 +26,12 @@ package org.fao.geonet.kernel;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
+
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.UserSession;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 

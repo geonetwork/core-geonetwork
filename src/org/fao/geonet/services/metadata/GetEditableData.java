@@ -23,18 +23,16 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.util.*;
-import org.jdom.*;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
 
-import jeeves.interfaces.*;
-import jeeves.resources.dbms.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-import jeeves.utils.*;
-
-import org.fao.geonet.constants.*;
-import org.fao.geonet.kernel.*;
-import org.fao.geonet.*;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.DataManager;
+import org.jdom.Element;
 
 //=============================================================================
 

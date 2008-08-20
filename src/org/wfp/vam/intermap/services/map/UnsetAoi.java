@@ -23,13 +23,11 @@
 
 package org.wfp.vam.intermap.services.map;
 
-import org.jdom.*;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
-import jeeves.interfaces.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-
-import org.wfp.vam.intermap.kernel.map.mapServices.BoundingBox;
+import org.jdom.Element;
 
 
 //=============================================================================

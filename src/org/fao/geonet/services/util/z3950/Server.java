@@ -23,19 +23,18 @@
 
 package org.fao.geonet.services.util.z3950;
 
-import com.k_int.z3950.server.ZServer;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Properties;
+
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.setting.SettingManager;
+
 import org.jdom.Document;
 import org.jdom.Element;
+
+import com.k_int.z3950.server.ZServer;
 
 //=============================================================================
 

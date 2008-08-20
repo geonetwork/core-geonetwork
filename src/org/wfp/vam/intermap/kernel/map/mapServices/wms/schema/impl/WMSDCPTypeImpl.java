@@ -25,7 +25,6 @@ package org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.impl;
 
 import org.jdom.Element;
 import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSDCPType;
-import org.wfp.vam.intermap.kernel.map.mapServices.wms.schema.type.WMSOnlineResource;
 
 /**
  * @author ETj

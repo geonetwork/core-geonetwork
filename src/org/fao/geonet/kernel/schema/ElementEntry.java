@@ -29,7 +29,6 @@ package org.fao.geonet.kernel.schema;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.jdom.Attribute;
 import org.jdom.Element;
