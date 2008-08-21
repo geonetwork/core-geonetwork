@@ -54,6 +54,7 @@ import jeeves.utils.SerialFactory;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -612,30 +613,36 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
-	public String autodetectSchema(Element md)
-	{
+	public String autodetectSchema(Element md) {
 		Namespace nons= Namespace.NO_NAMESPACE;
-		Namespace gmd = Namespace.getNamespace("http://www.isotc211.org/2005/gmd");
+		Namespace gmd = Csw.NAMESPACE_GMD;
+		Namespace csw = Csw.NAMESPACE_CSW;
 
-		Log.debug(Geonet.DATA_MANAGER, "Autodetect schema for: '"+md.getText()+"'");
+		Log.debug(Geonet.DATA_MANAGER, "Autodetect schema for: '" + md.getName() + "'");
 		
-		if (md.getName().equals("MD_Metadata") && md.getNamespace().equals(gmd))
+		if (md.getName().equals("MD_Metadata") && md.getNamespace().equals(gmd)) {
 			return "iso19139";
+		}
 
-		if (md.getNamespace().equals(nons))
-		{
-			if (md.getName().equals("Metadata"))
+		if (md.getName().equals("Record") && md.getNamespace().equals(csw)) {
+			return "dublin-core";
+		}
+
+		if (md.getNamespace().equals(nons)) {
+			if (md.getName().equals("Metadata")) {
 				return "iso19115";
+			}
 
 			/* there are some other suggested container names, 
 			 * like <dc>, <dublinCore>, <resource>, <record> and <metadata>
 			 * We may need to also check for those on import and export
-			 */ 
-			if (md.getName().equals("simpledc"))
+			 */
+			if (md.getName().equals("simpledc")) {
 				return "dublin-core";
-
-			if (md.getName().equals("metadata"))
+			}
+			if (md.getName().equals("metadata")) {
 				return "fgdc-std";
+			}
 		}
 
 		return null;
