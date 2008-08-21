@@ -35,6 +35,11 @@ public class ConcurrentUpdateEx extends JeevesClientEx
 	//---
 	//--------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1882150865337871343L;
+
 	public ConcurrentUpdateEx(String id)
 	{
 		super("Concurrent update", id);

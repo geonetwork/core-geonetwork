@@ -61,7 +61,6 @@ import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
@@ -197,7 +196,6 @@ public class LuceneSearcher extends MetaSearcher
 		_maxSummaryKeys = Integer.parseInt(sMaxSummaryKeys);
 
 		GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
-		AccessManager am = gc.getAccessManager();
 
 		Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
 
@@ -358,7 +356,7 @@ public class LuceneSearcher extends MetaSearcher
 				Element xmlSubQuery = (Element)xmlBooleanClause.getChildren().get(0);
 				query.add(makeQuery(xmlSubQuery), occur);
 			}
-			query.setMaxClauseCount(16384); // FIXME: quick fix; using Filters should be better
+			BooleanQuery.setMaxClauseCount(16384); // FIXME: quick fix; using Filters should be better
 			
 			returnValue = query;
 		}

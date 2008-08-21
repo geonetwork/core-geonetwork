@@ -57,8 +57,6 @@ public class MakeISO
 
 		String line;
 
-		int id =1;
-
 //		DbmsPool pool = Util.getDbmsPool("../config.xml");
 //		Dbms     dbms = (Dbms)pool.open();
 
@@ -120,17 +118,6 @@ public class MakeISO
 		ow.close();
 	}
 
-	//-------------------------------------------------------------------------------
-
-	private static String up(String s)
-	{
-		char c = s.charAt(0);
-
-		if (Character.isLowerCase(c))
-			return Character.toUpperCase(c) + s.substring(1);
-
-		return s;
-	}
 }
 
 //==============================================================================
