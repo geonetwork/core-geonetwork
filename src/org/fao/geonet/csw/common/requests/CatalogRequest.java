@@ -98,6 +98,14 @@ public abstract class CatalogRequest
 
 	//---------------------------------------------------------------------------
 
+	public String getOutputSchema() {
+		return outputSchema;
+	}
+
+	public void setOutputSchema(String outputSchema) {
+		this.outputSchema = outputSchema;
+	}
+
 	public void setHost(String host)
 	{
 		this.host = host;
@@ -521,6 +529,7 @@ public abstract class CatalogRequest
 	private boolean useAuthent;
 	private String  username;
 	private String  password;
+	protected String outputSchema;
 
 	private HttpClient client = new HttpClient();
 	private HttpState  state  = new HttpState();

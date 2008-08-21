@@ -25,6 +25,8 @@ package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
 import jeeves.exceptions.BadInputEx;
 import jeeves.utils.Util;
 import org.fao.geonet.kernel.DataManager;
@@ -149,7 +151,7 @@ public class CswParams extends AbstractParams
 	public String capabUrl;
 	public String icon;
 
-	private ArrayList<Search> alSearches = new ArrayList<Search>();
+	private List<Search> alSearches = new ArrayList<Search>();
 }
 
 //=============================================================================

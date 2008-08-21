@@ -25,6 +25,9 @@ package org.fao.geonet.csw.common.requests;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.Csw.Section;
 import org.jdom.Element;
@@ -42,9 +45,9 @@ public class GetCapabilitiesRequest extends CatalogRequest
 {
 	private String sequence;
 
-	private ArrayList<String> alVersions = new ArrayList<String>();
-	private ArrayList<String> alFormats  = new ArrayList<String>();
-	private HashSet<Section>  hsSections = new HashSet<Section>();
+	private List<String> alVersions = new ArrayList<String>();
+	private List<String> alFormats  = new ArrayList<String>();
+	private Set<Section>  hsSections = new HashSet<Section>();
 
 	//---------------------------------------------------------------------------
 	//---

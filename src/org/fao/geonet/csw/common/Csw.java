@@ -45,6 +45,7 @@ public class Csw
 	public static final Namespace NAMESPACE_OGC = Namespace.getNamespace("ogc", "http://www.opengis.net/ogc");
 	public static final Namespace NAMESPACE_OWS = Namespace.getNamespace("ows", "http://www.opengis.net/ows");
 	public static final Namespace NAMESPACE_ENV = Namespace.getNamespace("env", "http://www.w3.org/2003/05/soap-envelope");
+	public static final Namespace NAMESPACE_GMD = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
 
 	//---------------------------------------------------------------------------
 	//---

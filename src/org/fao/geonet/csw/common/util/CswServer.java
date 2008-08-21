@@ -23,14 +23,18 @@
 
 package org.fao.geonet.csw.common.util;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+
 import org.fao.geonet.csw.common.Csw;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import java.util.Map;
-import java.util.HashMap;
-import java.net.MalformedURLException;
 
 //=============================================================================
 
@@ -66,7 +70,7 @@ public class CswServer
 
 	//---------------------------------------------------------------------------
 
-	public Operation getOperation(String name) { return operations.get(name); }
+	public CswOperation getOperation(String name) { return operations.get(name); }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -88,7 +92,7 @@ public class CswServer
 
 				if ("Operation".equals(elem.getName()))
 				{
-					Operation oper = extractOperation(elem);
+					CswOperation oper = extractOperation(elem);
 
 					if (oper != null)
 						operations.put(oper.name, oper);
@@ -98,7 +102,7 @@ public class CswServer
 
 	//---------------------------------------------------------------------------
 
-	private Operation extractOperation(Element oper)
+	private CswOperation extractOperation(Element oper)
 	{
 		String name = oper.getAttributeValue("name");
 
@@ -127,16 +131,42 @@ public class CswServer
 		Element get  = http.getChild("Get",  Csw.NAMESPACE_OWS);
 		Element post = http.getChild("Post", Csw.NAMESPACE_OWS);
 
-		Operation op = new Operation();
+		List<Element> parameters = oper.getChildren("Parameter", Csw.NAMESPACE_OWS);
+		log("Found " + parameters.size() + " parameters for operation: " + name);
+		List<Element> outputSchemas = null ;
+		for(Iterator<Element> i = parameters.iterator();i.hasNext();) {
+			Element parameter = i.next();
+			String parameterName = parameter.getAttributeValue("name"); 
+			log("Processing parameter: " + parameterName);
+			if(parameterName != null && parameterName.equals("OutputSchema")) {
+				Element outputSchemaListing = parameter;
+				outputSchemas = outputSchemaListing.getChildren("Value", Csw.NAMESPACE_OWS);
+				log("Found " + outputSchemas.size() + " OutputSchemas for operation: " + name);
+			}
+		}
+		
+		CswOperation op = new CswOperation();
 		op.name   = name;
 		op.getUrl = evaluateUrl(get);
 		op.postUrl= evaluateUrl(post);
+		if(outputSchemas != null) {
+			for(Iterator<Element> i = outputSchemas.iterator(); i.hasNext();) {
+				Element outputSchema = i.next();
+				String outputSchemaValue = outputSchema.getValue(); 
+				log("Adding OutputSchema: " + outputSchemaValue + " to operation: "+ name);
+				op.outputSchemaList.add(outputSchemaValue);				
+			}
+			op.choosePreferredOutputSchema();
+		}
+		else {
+			log("No OutputSchema for operation: " + name);
+		}
 
 		return op;
 	}
 
 	//---------------------------------------------------------------------------
-
+	
 	private URL evaluateUrl(Element method)
 	{
 		if (method == null)
@@ -176,18 +206,11 @@ public class CswServer
 	//---
 	//---------------------------------------------------------------------------
 
-	private Map<String, Operation> operations = new HashMap<String, Operation>();
+	private Map<String, CswOperation> operations = new HashMap<String, CswOperation>();
 
-	private ArrayList<String> logs = new ArrayList<String>();
+	private List<String> logs = new ArrayList<String>();
 
 	//---------------------------------------------------------------------------
-
-	public static class Operation
-	{
-		public String name;
-		public URL    getUrl;
-		public URL    postUrl;
-	}
 }
 
 //=============================================================================

@@ -25,15 +25,18 @@ package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import java.util.List;
 import java.util.Set;
+
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw.ElementSetName;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordByIdRequest;
+import org.fao.geonet.csw.common.util.CswOperation;
 import org.fao.geonet.csw.common.util.CswServer;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -70,7 +73,7 @@ public class Aligner
 		request = new GetRecordByIdRequest();
 		request.setElementSetName(ElementSetName.FULL);
 
-		CswServer.Operation oper = server.getOperation(CswServer.GET_RECORD_BY_ID);
+		CswOperation oper = server.getOperation(CswServer.GET_RECORD_BY_ID);
 
 		if (oper.postUrl != null)
 		{
@@ -83,8 +86,15 @@ public class Aligner
 			request.setMethod(CatalogRequest.Method.GET);
 		}
 
-		if (params.useAccount)
+		if(oper.preferredOutputSchema != null) {
+			request.setOutputSchema(oper.preferredOutputSchema);
+			System.out.println("set outputschema to: " + request.getOutputSchema());
+		}
+		
+		if (params.useAccount) {
 			request.setCredentials(params.username, params.password);
+		}	
+		
 	}
 
 	//--------------------------------------------------------------------------
@@ -294,6 +304,9 @@ public class Aligner
 
 	//--------------------------------------------------------------------------
 
+	/**
+	 * Does CSW GetRecordById request.
+	 */
 	private Element retrieveMetadata(String uuid)
 	{
 		request.clearIds();

@@ -24,6 +24,8 @@
 package org.fao.geonet.csw.common.requests;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.Csw.ElementSetName;
 import org.jdom.Element;
@@ -39,7 +41,7 @@ public class GetRecordByIdRequest extends CatalogRequest
 {
 	private ElementSetName setName;
 
-	private ArrayList<String> alIds = new ArrayList<String>();
+	private List<String> alIds = new ArrayList<String>();
 
 	//---------------------------------------------------------------------------
 	//---
@@ -84,38 +86,42 @@ public class GetRecordByIdRequest extends CatalogRequest
 
 	//---------------------------------------------------------------------------
 
-	protected void setupGetParams()
-	{
+	protected void setupGetParams() {
 		addParam("request", getRequestName());
 		addParam("service", Csw.SERVICE);
 		addParam("version", Csw.CSW_VERSION);
-
-		if (setName != null)
+		// heikki doeleman: set outputSchema as per CSW 2.0.2 specification 07-45 section 7.4:
+		if(outputSchema != null) {
+			addParam("outputSchema", outputSchema);
+		}
+		if (setName != null) {
 			addParam("elementSetName", setName);
-
+		}
 		fill("id", alIds);
 	}
 
 	//---------------------------------------------------------------------------
 
-	protected Element getPostParams()
-	{
+	protected Element getPostParams() {
 		Element params = new Element(getRequestName(), Csw.NAMESPACE_CSW);
 
 		//--- 'service' and 'version' are common mandatory attributes
 		params.setAttribute("service", Csw.SERVICE);
 		params.setAttribute("version", Csw.CSW_VERSION);
 
+		// heikki doeleman: set outputSchema as per CSW 2.0.2 specification 07-45 section 7.4:
+		if(outputSchema != null) {
+			params.setAttribute("outputSchema", outputSchema);
+		}
+		
 		fill(params, "Id", alIds);
 
-		if (setName != null)
-		{
+		if (setName != null) {
 			Element elem = new Element("ElementSetName", Csw.NAMESPACE_CSW);
 			elem.setText(setName.toString());
 
 			params.addContent(elem);
 		}
-
 		return params;
 	}
 }

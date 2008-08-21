@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
@@ -35,6 +36,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
+
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.Csw.ConstraintLanguage;
 import org.fao.geonet.csw.common.Csw.ElementSetName;
@@ -42,6 +44,7 @@ import org.fao.geonet.csw.common.Csw.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
+import org.fao.geonet.csw.common.util.CswOperation;
 import org.fao.geonet.csw.common.util.CswServer;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.lib.Lib;
@@ -99,8 +102,10 @@ class Harvester
 
 	//---------------------------------------------------------------------------
 
-	private CswServer retrieveCapabilities(Logger log) throws Exception
-	{
+	/**
+	 * Does CSW GetCapabilities request.
+	 */
+	private CswServer retrieveCapabilities(Logger log) throws Exception {		
 		if (!Lib.net.isUrlValid(params.capabUrl))
 			throw new BadParameterEx("Capabilities URL", params.capabUrl);
 
@@ -110,7 +115,7 @@ class Harvester
 
 		if (params.useAccount)
 			req.setCredentials(params.username, params.password);
-
+		
 		Element capabil = req.execute();
 
 		log.debug("Capabilities:\n"+Xml.getString(capabil));
@@ -133,7 +138,7 @@ class Harvester
 
 	private boolean checkOperation(Logger log, CswServer server, String name)
 	{
-		CswServer.Operation oper = server.getOperation(name);
+		CswOperation oper = server.getOperation(name);
 
 		if (oper == null)
 		{
@@ -152,6 +157,9 @@ class Harvester
 
 	//---------------------------------------------------------------------------
 
+	/**
+	 * Does CSW GetRecordsRequest.
+	 */
 	private Set<RecordInfo> search(CswServer server, Search s) throws Exception
 	{
 		int start =  1;
@@ -163,7 +171,7 @@ class Harvester
 		request.setElementSetName(ElementSetName.SUMMARY);
 		request.setMaxRecords(max +"");
 
-		CswServer.Operation oper = server.getOperation(CswServer.GET_RECORDS);
+		CswOperation oper = server.getOperation(CswServer.GET_RECORDS);
 
 		if (oper.postUrl != null)
 		{
