@@ -47,6 +47,10 @@ public class MainFrame extends JFrame implements Starter, ActionListener
 	//---
 	//---------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7767959548558710229L;
 	public MainFrame()
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -35,6 +35,11 @@ public class NoRecordsMatchException extends OaiPmhException
 	//---
 	//---------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1757822658759041986L;
+
 	public NoRecordsMatchException(String message)
 	{
 		this(message, null);

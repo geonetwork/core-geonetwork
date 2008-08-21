@@ -33,6 +33,11 @@ public class OperationNotSupportedEx extends CatalogException
 	//---
 	//---------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8791720423104623497L;
+
 	public OperationNotSupportedEx(String name)
 	{
 		super(OPERATION_NOT_SUPPORTED, null, name);

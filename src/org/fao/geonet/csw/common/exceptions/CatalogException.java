@@ -31,8 +31,12 @@ import org.jdom.Namespace;
 
 //=============================================================================
 
-public abstract class CatalogException extends Exception
-{
+public abstract class CatalogException extends Exception {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2483411203445474288L;
 	protected static final String INVALID_PARAMETER_VALUE    = "InvalidParameterValue";
 	protected static final String INVALID_UPDATE_SEQUENCE    = "InvalidUpdateSequence";
 	protected static final String MISSING_PARAMETER_VALUE    = "MissingParameterValue";

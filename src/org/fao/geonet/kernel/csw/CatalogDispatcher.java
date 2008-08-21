@@ -51,7 +51,7 @@ import org.jdom.Element;
 
 public class CatalogDispatcher
 {
-	private HashMap<String, CatalogService> hmServices = new HashMap<String, CatalogService>();
+	private Map<String, CatalogService> hmServices = new HashMap<String, CatalogService>();
 
 	//---------------------------------------------------------------------------
 	//---

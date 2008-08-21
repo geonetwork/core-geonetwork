@@ -41,8 +41,12 @@ import org.fao.gast.lib.Lib;
 
 //==============================================================================
 
-public class MainPanel extends FormPanel
-{
+public class MainPanel extends FormPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6138884263046015312L;
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor

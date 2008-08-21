@@ -43,8 +43,13 @@ import org.dlib.tools.Util;
 
 //==============================================================================
 
-public abstract class FormPanel extends JPanel implements ActionListener
-{
+public abstract class FormPanel extends JPanel implements ActionListener {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5573195698425201432L;
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor

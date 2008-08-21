@@ -36,8 +36,12 @@ import org.fao.geonet.csw.common.requests.GetCapabilitiesRequest;
 
 //=============================================================================
 
-public class GetCapabilitiesPanel extends TPanel
-{
+public class GetCapabilitiesPanel extends TPanel {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6650474700252810376L;
 	private JTextField txtUpdateSeq   = new JTextField();
 	private JTextField txtAccFormats  = new JTextField("application/xml");
 	private JTextField txtAccVersions = new JTextField(Csw.CSW_VERSION);

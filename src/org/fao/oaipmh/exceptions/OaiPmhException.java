@@ -38,6 +38,10 @@ public class OaiPmhException extends Exception
 	//---
 	//---------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -370658366099038395L;
 	public OaiPmhException(String code, String message)
 	{
 		this(code, message, null);

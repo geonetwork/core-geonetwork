@@ -43,6 +43,10 @@ public class MainPanel extends FormPanel
 	//---
 	//---------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8316470016718942777L;
 	public MainPanel()
 	{
 		txtServlet.setText(Lib.embeddedSC.getServlet());

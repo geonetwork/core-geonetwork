@@ -48,8 +48,12 @@ import org.fao.geonet.csw.common.requests.GetRecordsRequest;
 
 //=============================================================================
 
-public class GetRecordsPanel extends TPanel
-{
+public class GetRecordsPanel extends TPanel {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -11040004204369075L;
 	//--- general panel
 
 	private JTextField txtHopCount    = new JTextField();

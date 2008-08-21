@@ -35,6 +35,11 @@ public class NoMetadataFormatsException extends OaiPmhException
 	//---
 	//---------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -459132471591744812L;
+
 	public NoMetadataFormatsException(String message)
 	{
 		this(message, null);

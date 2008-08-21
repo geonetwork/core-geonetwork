@@ -52,6 +52,10 @@ public class SearchPanel extends TPanel implements ActionListener
 	//---
 	//---------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9161193939072633779L;
 	public SearchPanel()
 	{
 		super("Search");

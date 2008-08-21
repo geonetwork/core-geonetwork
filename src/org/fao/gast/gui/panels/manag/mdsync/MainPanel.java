@@ -47,6 +47,11 @@ public class MainPanel extends FormPanel
 	//---
 	//---------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7003324019406249707L;
+
 	public void actionPerformed(ActionEvent e)
 	{
 		sync();

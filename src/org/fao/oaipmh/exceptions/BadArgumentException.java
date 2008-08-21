@@ -27,14 +27,17 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class BadArgumentException extends OaiPmhException
-{
+public class BadArgumentException extends OaiPmhException {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8359758323565369788L;
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//---------------------------------------------------------------------------
-
 	public BadArgumentException(String message)
 	{
 		this(message, null);

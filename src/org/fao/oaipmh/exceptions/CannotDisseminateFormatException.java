@@ -27,8 +27,13 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class CannotDisseminateFormatException extends OaiPmhException
-{
+public class CannotDisseminateFormatException extends OaiPmhException {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2553103551296680741L;
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor

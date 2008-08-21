@@ -44,6 +44,11 @@ public class MainPanel extends FormPanel
 	//---
 	//---------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2228055662051529082L;
+
 	protected JComponent buildInnerPanel()
 	{
 		JPanel p = new JPanel();

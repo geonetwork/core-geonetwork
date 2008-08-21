@@ -38,6 +38,11 @@ public class EmbeddedPanel extends DbmsPanel
 	//---
 	//---------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7290449012011589464L;
+
 	public EmbeddedPanel()
 	{
 		FlexLayout fl = new FlexLayout(3,1);

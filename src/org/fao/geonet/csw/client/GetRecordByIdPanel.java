@@ -35,8 +35,12 @@ import org.fao.geonet.csw.common.requests.GetRecordByIdRequest;
 
 //=============================================================================
 
-public class GetRecordByIdPanel extends TPanel
-{
+public class GetRecordByIdPanel extends TPanel {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9180478969902538378L;
 	private JComboBox  cmbElemSet = new JComboBox();
 	private JTextField txtIds     = new JTextField();
 

@@ -27,8 +27,12 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class BadVerbException extends OaiPmhException
-{
+public class BadVerbException extends OaiPmhException {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 216677937166834039L;
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor

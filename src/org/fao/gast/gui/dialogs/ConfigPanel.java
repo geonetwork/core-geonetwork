@@ -28,8 +28,12 @@ import org.dlib.gui.FlexLayout;
 
 //==============================================================================
 
-public class ConfigPanel extends JPanel
-{
+public class ConfigPanel extends JPanel {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 527520582356145940L;
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor

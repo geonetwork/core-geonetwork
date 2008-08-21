@@ -27,8 +27,13 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class IdDoesNotExistException extends OaiPmhException
-{
+public class IdDoesNotExistException extends OaiPmhException {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8543869963297296662L;
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor

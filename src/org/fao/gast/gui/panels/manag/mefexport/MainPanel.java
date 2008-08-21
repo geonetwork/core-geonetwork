@@ -49,6 +49,10 @@ public class MainPanel extends FormPanel
 	//---
 	//---------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9135636429150144267L;
 	public MainPanel()
 	{
 		txtOutDir.setText(System.getProperty("user.home", ""));

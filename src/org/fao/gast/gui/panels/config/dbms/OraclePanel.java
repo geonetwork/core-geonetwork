@@ -39,6 +39,11 @@ public class OraclePanel extends DbmsPanel
 	//---
 	//---------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 676417193492019459L;
+
 	public OraclePanel()
 	{
 		FlexLayout fl = new FlexLayout(3,5);

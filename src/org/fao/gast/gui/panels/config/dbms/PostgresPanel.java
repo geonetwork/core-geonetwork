@@ -39,6 +39,11 @@ public class PostgresPanel extends DbmsPanel
 	//---
 	//---------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9039785892791080773L;
+
 	public PostgresPanel()
 	{
 		FlexLayout fl = new FlexLayout(3,5);

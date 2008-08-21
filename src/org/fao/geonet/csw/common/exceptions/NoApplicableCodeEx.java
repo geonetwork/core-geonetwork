@@ -33,6 +33,11 @@ public class NoApplicableCodeEx extends CatalogException
 	//---
 	//---------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2651752961299461115L;
+
 	public NoApplicableCodeEx(String message)
 	{
 		super(NO_APPLICABLE_CODE, message, null);

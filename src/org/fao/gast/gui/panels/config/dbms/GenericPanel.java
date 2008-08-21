@@ -30,8 +30,12 @@ import org.fao.gast.lib.Lib;
 
 //==============================================================================
 
-public class GenericPanel extends DbmsPanel
-{
+public class GenericPanel extends DbmsPanel {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6566776767912014673L;
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor

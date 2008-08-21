@@ -33,8 +33,12 @@ import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.DescribeRecordRequest;
 //=============================================================================
 
-public class DescribeRecordPanel extends TPanel
-{
+public class DescribeRecordPanel extends TPanel {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5788319394312789631L;
 	private JTextField txtOutputFormat = new JTextField("application/xml");
 	private JTextField txtSchemaLang   = new JTextField("http://www.w3.org/XML/Schema");
 

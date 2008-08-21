@@ -25,8 +25,13 @@ package org.fao.geonet.csw.common.exceptions;
 
 //=============================================================================
 
-public class InvalidUpdateSequenceEx extends CatalogException
-{
+public class InvalidUpdateSequenceEx extends CatalogException{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8899240805483632480L;
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor

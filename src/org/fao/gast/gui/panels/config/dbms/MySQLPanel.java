@@ -39,6 +39,11 @@ public class MySQLPanel extends DbmsPanel
 	//---
 	//---------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1702859833329424934L;
+
 	public MySQLPanel()
 	{
 		FlexLayout fl = new FlexLayout(3,5);

@@ -27,8 +27,13 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class BadResumptionTokenException extends OaiPmhException
-{
+public class BadResumptionTokenException extends OaiPmhException {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4190920293383092381L;
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor

@@ -33,8 +33,12 @@ import org.dlib.gui.TPanel;
 
 //==============================================================================
 
-public class AccountPanel extends TPanel
-{
+public class AccountPanel extends TPanel {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4995520020414212659L;
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor

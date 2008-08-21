@@ -35,8 +35,12 @@ import org.fao.gast.app.Configuration;
 
 //==============================================================================
 
-public class ConfigDialog extends TDialog
-{
+public class ConfigDialog extends TDialog {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3014136660541158677L;
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor

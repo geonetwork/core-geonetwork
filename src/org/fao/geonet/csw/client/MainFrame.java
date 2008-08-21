@@ -57,6 +57,10 @@ import org.jdom.Element;
 
 public class MainFrame extends JFrame implements ActionListener, ItemListener
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 82026864646598547L;
 	private JTextField     txtHost    = new JTextField("localhost", 15);
 	private JTextField     txtPort    = new JTextField("8080");
 	private JTextField     txtSrvAddr = new JTextField("/geonetwork/srv/en/csw");

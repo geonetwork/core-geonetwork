@@ -46,6 +46,11 @@ public class MainPanel extends FormPanel
 	//---
 	//---------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2764938018735318934L;
+
 	public MainPanel()
 	{
 		for (DbmsPanel p : panels)

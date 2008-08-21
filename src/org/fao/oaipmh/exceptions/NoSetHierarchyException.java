@@ -35,6 +35,11 @@ public class NoSetHierarchyException extends OaiPmhException
 	//---
 	//---------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -681831707621319991L;
+
 	public NoSetHierarchyException(String message)
 	{
 		this(message, null);
