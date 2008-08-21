@@ -334,8 +334,7 @@ public class DataManager
 		String inDir  = htmlCacheDir+File.separator+"schematronscripts";
 
 		// copy the schematron templates for the output report
-		FileCopyMgr copier = new FileCopyMgr();
-		copier.copyFiles(inDir,outDir);
+		FileCopyMgr.copyFiles(inDir,outDir);
 
 		// convert the JDOM document to a DOM document
 		Document mdDoc = new Document(md);
