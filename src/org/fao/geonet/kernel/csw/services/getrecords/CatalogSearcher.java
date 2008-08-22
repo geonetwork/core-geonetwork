@@ -30,11 +30,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
@@ -46,14 +48,14 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.csw.common.Csw.TypeName;
+import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.LuceneUtils;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
 
 //=============================================================================

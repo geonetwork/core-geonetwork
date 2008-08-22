@@ -247,8 +247,10 @@ public class AccessManager
 	{
 		UserSession us = context.getUserSession();
 
-		if (!us.isAuthenticated())
+		if (!us.isAuthenticated()) {
+			System.out.println("user not authenticated");
 			return false;
+		}
 
 		//--- retrieve metadata info
 
@@ -261,7 +263,8 @@ public class AccessManager
 
 		//--- harvested metadata cannot be edited
 
-		if (info == null || info.isHarvested)
+//		if (info == null || info.isHarvested)
+		if (info == null)
 			return false;
 
 		//--- check if the user is an administrator

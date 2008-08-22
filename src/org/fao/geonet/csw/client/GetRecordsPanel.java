@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.StringTokenizer;
+
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -36,13 +37,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
 import org.dlib.gui.FlexLayout;
 import org.dlib.gui.TPanel;
-import org.fao.geonet.csw.common.Csw.ConstraintLanguage;
-import org.fao.geonet.csw.common.Csw.ElementSetName;
-import org.fao.geonet.csw.common.Csw.OutputSchema;
-import org.fao.geonet.csw.common.Csw.ResultType;
-import org.fao.geonet.csw.common.Csw.TypeName;
+import org.fao.geonet.csw.common.ConstraintLanguage;
+import org.fao.geonet.csw.common.ElementSetName;
+import org.fao.geonet.csw.common.OutputSchema;
+import org.fao.geonet.csw.common.ResultType;
+import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
 

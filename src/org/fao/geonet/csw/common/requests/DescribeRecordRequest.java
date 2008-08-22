@@ -24,8 +24,10 @@
 package org.fao.geonet.csw.common.requests;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.csw.common.Csw.TypeName;
+import org.fao.geonet.csw.common.TypeName;
 import org.jdom.Element;
 
 //=============================================================================
@@ -41,7 +43,7 @@ public class DescribeRecordRequest extends CatalogRequest
 	private String outputFormat;
 	private String schemaLang;
 
-	private ArrayList<TypeName> alTypeNames = new ArrayList<TypeName>();
+	private List<TypeName> alTypeNames = new ArrayList<TypeName>();
 
 	//---------------------------------------------------------------------------
 	//---

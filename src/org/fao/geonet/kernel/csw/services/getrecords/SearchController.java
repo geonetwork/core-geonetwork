@@ -27,16 +27,18 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.csw.common.Csw.ElementSetName;
-import org.fao.geonet.csw.common.Csw.OutputSchema;
-import org.fao.geonet.csw.common.Csw.ResultType;
-import org.fao.geonet.csw.common.Csw.TypeName;
+import org.fao.geonet.csw.common.ElementSetName;
+import org.fao.geonet.csw.common.OutputSchema;
+import org.fao.geonet.csw.common.ResultType;
+import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.jdom.Element;

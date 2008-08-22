@@ -25,12 +25,15 @@ package org.fao.geonet.csw.common.requests;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.fao.geonet.csw.common.ConstraintLanguage;
 import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.csw.common.Csw.ConstraintLanguage;
-import org.fao.geonet.csw.common.Csw.ElementSetName;
-import org.fao.geonet.csw.common.Csw.OutputSchema;
-import org.fao.geonet.csw.common.Csw.ResultType;
-import org.fao.geonet.csw.common.Csw.TypeName;
+import org.fao.geonet.csw.common.ElementSetName;
+import org.fao.geonet.csw.common.OutputSchema;
+import org.fao.geonet.csw.common.ResultType;
+import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.util.Xml;
 import org.jdom.Element;
 
@@ -68,8 +71,8 @@ public class GetRecordsRequest extends CatalogRequest
 	private ElementSetName     elemSetName;
 	private ConstraintLanguage constrLang;
 
-	private HashSet<TypeName> hsTypeNames = new HashSet<TypeName>();
-	private ArrayList<String> alSortBy    = new ArrayList<String>();
+	private Set<TypeName> hsTypeNames = new HashSet<TypeName>();
+	private List<String> alSortBy    = new ArrayList<String>();
 
 	//---------------------------------------------------------------------------
 	//---
@@ -309,4 +312,3 @@ public class GetRecordsRequest extends CatalogRequest
 }
 
 //=============================================================================
-

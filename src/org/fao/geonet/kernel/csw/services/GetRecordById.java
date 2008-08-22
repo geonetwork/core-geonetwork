@@ -26,14 +26,16 @@ package org.fao.geonet.kernel.csw.services;
 import java.io.File;
 import java.util.Iterator;
 import java.util.Map;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.csw.common.Csw.ElementSetName;
-import org.fao.geonet.csw.common.Csw.OutputSchema;
+import org.fao.geonet.csw.common.ElementSetName;
+import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
@@ -63,13 +65,12 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
 	//---------------------------------------------------------------------------
 
-	public Element execute(Element request, ServiceContext context) throws CatalogException
-	{
+	public Element execute(Element request, ServiceContext context) throws CatalogException {
 		checkService(request);
 		checkVersion(request);
 		//-- Added for CSW 2.0.2 compliance by warnock@awcubed.com
 		checkOutputFormat(request);
-		OutputSchema    outSchema   = OutputSchema.parse(request.getAttributeValue("outputSchema"));
+		OutputSchema outSchema = OutputSchema.parse(request.getAttributeValue("outputSchema"));
 		//--------------------------------------------------------
 
 		ElementSetName setName = getElementSetName(request, ElementSetName.SUMMARY);
@@ -84,7 +85,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 		while(ids.hasNext())
 		{
 			String  id = ((Element) ids.next()).getText();
-			Element md = retrieveMetadata(context, id, setName);
+			Element md = retrieveMetadata(context, id, setName, outSchema);
 
 			if (md != null)
 				response.addContent(md);
@@ -144,11 +145,8 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
 
 	//---------------------------------------------------------------------------
-	private Element retrieveMetadata(ServiceContext context, String uuid,
-												ElementSetName setName) throws CatalogException
-	{
-		try
-		{
+	private Element retrieveMetadata(ServiceContext context, String uuid, ElementSetName setName, OutputSchema outSchema) throws CatalogException {
+		try {
 			Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 			//--- get metadata from DB
@@ -158,15 +156,28 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
 			dbms.commit();
 
-			if (!i.hasNext())
+			if (!i.hasNext()) {
+				//System.out.println("no metadata found with uuid: " + uuid);
 				return null;
+			}
 
 			Element record = (Element) i.next();
-
 			String schema = record.getChildText("schemaid");
+
+			//--- skip metadata with wrong schemas
+			if (schema.equals("fgdc-std") || schema.equals("dublin-core") || schema.equals("iso19115")) {
+			    if (outSchema != OutputSchema.OGC_CORE) {
+					//System.out.println("metadata has wrong schema for outputschema: " + schema);
+					return null;			
+			    }
+			}
+			
 			String data   = record.getChildText("data");
+			//System.out.println("found metadata with uuid: " + uuid + "\nmetadata is:\n" + data);
 
 			Element md = Xml.loadString(data, false);
+			//System.out.println("after xml loadstring : found: " + Xml.getString(md));
+
 
 			//--- apply stylesheet according to setName and schema
 
@@ -176,27 +187,23 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
 			String FS         = File.separator;
 			String schemaDir  = context.getAppPath() +"xml"+ FS +"csw"+ FS +"schemas"+ FS +schema+ FS;
-			String styleSheet = schemaDir + "ogc-"+setName+".xsl";
-			//			System.out.println("CSW::GetRecordById::RetrieveMetadata - Using stylesheet: "+ styleSheet);
+			String prefix     = (outSchema == OutputSchema.OGC_CORE) ? "ogc" : "iso";
 
-			//			System.out.println("CSW::GetRecordById::RetrieveMetadata - Stored metadata: "+ md.getText());
+			String styleSheet = schemaDir + prefix + "-"+setName+".xsl";
+			//System.out.println("Using stylesheet: "+ styleSheet);
+
 			md = Xml.transform(md, styleSheet);
-			//			System.out.println("CSW::GetRecordById::RetrieveMetadata - Transformed metadata: "+ md.getText());
+			//System.out.println("Transformed metadata: "+ Xml.getString(md));
 
 			//--- needed to detach md from the document
 			md.detach();
 
 			return md;
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			context.error("Raised : "+ e);
 			context.error(" (C) Stacktrace is\n"+Util.getStackTrace(e));
-
 			throw new NoApplicableCodeEx(e.toString());
 		}
 	}
 }
-
-//=============================================================================
-

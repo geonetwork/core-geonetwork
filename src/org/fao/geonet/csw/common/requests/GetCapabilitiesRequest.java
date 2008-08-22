@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.csw.common.Csw.Section;
+import org.fao.geonet.csw.common.Section;
 import org.jdom.Element;
 
 //=============================================================================

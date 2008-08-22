@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.csw.common.Csw.ElementSetName;
+import org.fao.geonet.csw.common.ElementSetName;
 import org.jdom.Element;
 
 //=============================================================================

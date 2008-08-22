@@ -26,12 +26,12 @@ package org.fao.geonet.csw.client;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
 import org.dlib.gui.FlexLayout;
 import org.dlib.gui.TPanel;
-import org.fao.geonet.csw.common.Csw.TypeName;
+import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.DescribeRecordRequest;
-//=============================================================================
 
 public class DescribeRecordPanel extends TPanel {
 	

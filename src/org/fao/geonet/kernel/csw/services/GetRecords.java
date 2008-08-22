@@ -30,16 +30,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.csw.common.ConstraintLanguage;
 import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.csw.common.Csw.ConstraintLanguage;
-import org.fao.geonet.csw.common.Csw.ElementSetName;
-import org.fao.geonet.csw.common.Csw.OutputSchema;
-import org.fao.geonet.csw.common.Csw.ResultType;
-import org.fao.geonet.csw.common.Csw.TypeName;
+import org.fao.geonet.csw.common.ElementSetName;
+import org.fao.geonet.csw.common.OutputSchema;
+import org.fao.geonet.csw.common.ResultType;
+import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;

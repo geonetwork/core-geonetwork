@@ -24,12 +24,14 @@
 package org.fao.geonet.csw.client;
 
 import java.util.StringTokenizer;
+
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
 import org.dlib.gui.FlexLayout;
 import org.dlib.gui.TPanel;
-import org.fao.geonet.csw.common.Csw.ElementSetName;
+import org.fao.geonet.csw.common.ElementSetName;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordByIdRequest;
 

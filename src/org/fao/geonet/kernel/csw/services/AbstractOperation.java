@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.csw.common.Csw.ElementSetName;
+import org.fao.geonet.csw.common.ElementSetName;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.jdom.Element;

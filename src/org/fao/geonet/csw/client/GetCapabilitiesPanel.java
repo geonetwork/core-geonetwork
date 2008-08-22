@@ -24,13 +24,15 @@
 package org.fao.geonet.csw.client;
 
 import java.util.StringTokenizer;
+
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
 import org.dlib.gui.FlexLayout;
 import org.dlib.gui.TPanel;
 import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.csw.common.Csw.Section;
+import org.fao.geonet.csw.common.Section;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetCapabilitiesRequest;
 

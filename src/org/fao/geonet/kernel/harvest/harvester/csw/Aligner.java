@@ -33,11 +33,11 @@ import jeeves.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.csw.common.Csw.ElementSetName;
+import org.fao.geonet.csw.common.CswOperation;
+import org.fao.geonet.csw.common.CswServer;
+import org.fao.geonet.csw.common.ElementSetName;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordByIdRequest;
-import org.fao.geonet.csw.common.util.CswOperation;
-import org.fao.geonet.csw.common.util.CswServer;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
@@ -332,6 +332,7 @@ public class Aligner
 		catch(Exception e)
 		{
 			log.warning("Raised exception while getting record : "+ e);
+			e.printStackTrace();
 			result.unretrievable++;
 
 			//--- we don't raise any exception here. Just try to go on
