@@ -164,6 +164,7 @@
 
 			<ows:Parameter name="OutputSchema">
 				<ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+				<ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>				
 			</ows:Parameter>
 
 			<ows:Parameter name="TypeNames">
@@ -187,6 +188,7 @@
 			
 			<ows:Parameter name="OutputSchema">
 				<ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+				<ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
 			</ows:Parameter>
 
 			<ows:Parameter name="OutputFormat">
