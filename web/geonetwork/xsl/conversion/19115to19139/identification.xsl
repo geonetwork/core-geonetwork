@@ -152,7 +152,7 @@
 
 		<xsl:for-each select="tpCat">
 			<topicCategory>
-				<MD_TopicCategoryCode codeList="./resources/codeList.xml#MD_TopicCategoryCode" codeListValue="{TopicCatCd/@value}" />
+				<MD_TopicCategoryCode><xsl:value-of select="TopicCatCd/@value"/></MD_TopicCategoryCode>
 			</topicCategory>
 		</xsl:for-each>
 
