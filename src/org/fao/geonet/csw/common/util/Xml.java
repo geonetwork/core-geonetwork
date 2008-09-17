@@ -53,6 +53,9 @@ public class Xml
 												throws IOException, JDOMException
 	{
 		SAXBuilder builder = new SAXBuilder(validate);
+		builder.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
+			
+		
 		Document   jdoc    = builder.build(new StringReader(data));
 
 		return (Element) jdoc.getRootElement().detach();
@@ -64,6 +67,7 @@ public class Xml
 	public static Element loadStream(InputStream input) throws IOException, JDOMException
 	{
 		SAXBuilder builder = new SAXBuilder();
+		builder.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
 		Document   jdoc    = builder.build(input);
 
 		return (Element) jdoc.getRootElement().detach();
