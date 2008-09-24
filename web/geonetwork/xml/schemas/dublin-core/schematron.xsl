@@ -18,15 +18,12 @@
    </xsl:template>
    <xsl:template match="/">
       <html>
-         <style>
-         a:link    { color: black}
-         a:visited { color: gray}
-         a:active  { color: #FF0088}
-         h3        { background-color:black; color:white;
-                     font-family:Arial Black; font-size:12pt; }
-         h3.linked { background-color:black; color:white;
-                     font-family:Arial Black; font-size:12pt; }
-      </style>
+      	<head>
+			<link type="image/x-icon" rel="shortcut icon" href="/geonetwork/favicon.ico" />
+			<link type="image/x-icon" rel="icon" href="/geonetwork/favicon.ico" />
+			<link href="/geonetwork/geonetwork.css" type="text/css" rel="stylesheet" />
+		</head>
+		<body>
          <h2 title="Schematron contact-information is at the end of                   this page">
             <font color="#FF0080">Schematron</font> Report
       </h2>
@@ -46,6 +43,7 @@
       <a href="http://www.sinica.edu.tw" title="Link to home page of Academia Sinica">Academia Sinica Computing Centre</a>.
       </font>
          </p>
+         </body>
       </html>
    </xsl:template>
    <xsl:template match="text()" priority="-1"/>
