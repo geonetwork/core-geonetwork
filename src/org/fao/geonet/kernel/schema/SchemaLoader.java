@@ -353,7 +353,7 @@ public class SchemaLoader
 			} else if (ee.simpleType != null) {
 				ee.type = "string";
 				if (ee.simpleType.alEnum != null) // add enumerations if any
-					elemRestr.add(ee.simpleType.alEnum);
+					elemRestr.addAll(ee.simpleType.alEnum);
 			} else {
 				System.out.println("WARNING: Could not find type for "+ee.name+" - assuming string");
 				ee.type = "string";

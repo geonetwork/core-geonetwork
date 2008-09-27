@@ -70,7 +70,9 @@
 	<xsl:template mode="fgdc-std" match="onlink">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
-		
+	
+		<xsl:choose>
+		<xsl:when test="$edit=false()">
 		<xsl:apply-templates mode="simpleElement" select=".">
 			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="edit"   select="$edit"/>
@@ -78,6 +80,16 @@
 				<a href="{.}"><xsl:value-of select="."/></a>
 			</xsl:with-param>
 		</xsl:apply-templates>
+		</xsl:when>
+		<xsl:otherwise>
+		<xsl:apply-templates mode="simpleElement" select=".">
+			<xsl:with-param name="schema" select="$schema"/>
+			<xsl:with-param name="edit"   select="$edit"/>
+		</xsl:apply-templates>
+		</xsl:otherwise>
+		</xsl:choose>
+	
+
 	</xsl:template>
 	
 	<!--
