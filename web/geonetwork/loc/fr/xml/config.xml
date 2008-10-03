@@ -29,10 +29,10 @@
 	<z3950>Z39.50 Serveur</z3950>
 	<enable>Activé</enable>
 
-	<feedback>Retour d'information</feedback>
-	<email>EMail</email>
-	<smtpHost>SMTP Hôte</smtpHost>
-	<smtpPort>SMTP Port</smtpPort>
+	<feedback>Alerte par email</feedback>
+	<email>Email</email>
+	<smtpHost>Serveur SMTP</smtpHost>
+	<smtpPort>Port SMTP</smtpPort>
 
 	<proxy>Proxy</proxy>
 	<use>Activé</use>
