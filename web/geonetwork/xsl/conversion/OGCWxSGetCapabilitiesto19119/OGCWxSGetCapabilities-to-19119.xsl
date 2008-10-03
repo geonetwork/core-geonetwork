@@ -6,6 +6,8 @@ Mapping between :
 - WCS 1.0.0
 - WFS 1.0.0
 - WFS 1.1.0
+- WPS 0.4.0
+- WPS 1.0.0
 ... to ISO19119. 
  -->
 <xsl:stylesheet version="2.0" xmlns    ="http://www.isotc211.org/2005/gmd"
@@ -18,12 +20,17 @@ Mapping between :
 										xmlns:xlink="http://www.w3.org/1999/xlink"
 										xmlns:date="http://exslt.org/dates-and-times"
 										xmlns:wfs="http://www.opengis.net/wfs"
-										xmlns:ows="http://www.opengis.net/ows"
 										xmlns:wcs="http://www.opengis.net/wcs"
-										extension-element-prefixes="date wcs ows wfs">
+                                        xmlns:ows="http://www.opengis.net/ows"
+										xmlns:owsg="http://www.opengeospatial.net/ows"
+                                        xmlns:ows11="http://www.opengis.net/ows/1.1"
+                                        xmlns:wps="http://www.opengeospatial.net/wps"
+                                        xmlns:wps1="http://www.opengis.net/wps/1.0.0"
+										extension-element-prefixes="date wcs ows wfs ows11 wps wps1 owsg">
 
 	<!-- ============================================================================= -->
 	
+    <xsl:param name="uuid">uuid</xsl:param>
 	<xsl:param name="lang">eng</xsl:param>
 	<xsl:param name="topic"></xsl:param>
 	
@@ -45,11 +52,11 @@ Mapping between :
 
 	<!-- ============================================================================= -->
 
-	<xsl:template match="WMT_MS_Capabilities|wfs:WFS_Capabilities|wcs:WCS_Capabilities">
+	<xsl:template match="WMT_MS_Capabilities|wfs:WFS_Capabilities|wcs:WCS_Capabilities|wps:Capabilities|wps1:Capabilities">
 	
 		<xsl:variable name="ows">
 			<xsl:choose>
-				<xsl:when test="name(.)='wfs:WFS_Capabilities'">true</xsl:when>
+				<xsl:when test="name(.)='wfs:WFS_Capabilities' or name(.)='wps:Capabilities'">true</xsl:when>
 				<xsl:otherwise>false</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -61,24 +68,7 @@ Mapping between :
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 			<fileIdentifier>
-				<gco:CharacterString>
-					<xsl:choose>
-						<xsl:when test="$ows='true'">
-							<xsl:value-of select="//ows:Operation[@name='GetCapabilities']/ows:DCP/ows:HTTP/ows:Get/@xlink:href"/>
-						</xsl:when>
-						<xsl:when test="name(.)='WFS_Capabilities'">
-							<xsl:value-of select="//wfs:GetCapabilities/wfs:DCPType/wfs:HTTP/wfs:Get/@onlineResource"/>
-						</xsl:when>
-						<xsl:when test="name(.)='WMT_MS_Capabilities'">
-							<xsl:value-of select="//GetCapabilities//OnlineResource[1]/@xlink:href"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="//wcs:GetCapabilities//wcs:OnlineResource[1]/@xlink:href"/>
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:text>:</xsl:text>
-					<xsl:value-of select='@version'/>
-				</gco:CharacterString>
+				<gco:CharacterString><xsl:value-of select="$uuid"/></gco:CharacterString>
 			</fileIdentifier>
 		
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -102,12 +92,15 @@ Mapping between :
                     codeList="./resources/codeList.xml#MD_ScopeCode"
                     codeListValue="service" />
             </hierarchyLevel>
-			
-            <!-- mdHrLvName -->
+            
+			<!-- mdHrLvName -->
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-			<xsl:for-each select="Service/ContactInformation|wfs:Service/wfs:ContactInformation">
+			<xsl:for-each select="  Service/ContactInformation|
+                                    wfs:Service/wfs:ContactInformation|
+                                    owsg:ServiceIdentification/owsg:ServiceProvider|
+                                    ows11:ServiceIdentification/ows11:ServiceProvider">
 				<contact>
 					<CI_ResponsibleParty>
 						<xsl:apply-templates select="." mode="RespParty"/>
@@ -166,7 +159,8 @@ Mapping between :
                                         <URL>
                                         <xsl:choose>
                                             <xsl:when test="$ows='true'">
-                                                <xsl:value-of select="//ows:Operation[@name='GetCapabilities']/ows:DCP/ows:HTTP/ows:Get/@xlink:href"/>
+                                                <xsl:value-of select="//ows:Operation[@name='GetCapabilities']/ows:DCP/ows:HTTP/ows:Get/@xlink:href|
+                                                	//ows11:Operation[@name='GetCapabilities']/ows11:DCP/ows11:HTTP/ows11:Get/@xlink:href"/>
                                             </xsl:when>
                                             <xsl:when test="name(.)='WFS_Capabilities'">
                                                 <xsl:value-of select="//wfs:GetCapabilities/wfs:DCPType/wfs:HTTP/wfs:Get/@onlineResource"/>

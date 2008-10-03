@@ -23,30 +23,33 @@
 
 package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.UUID;
+import java.net.URL;
 
+import jeeves.constants.Jeeves;
+import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
 import jeeves.utils.Xml;
+import jeeves.utils.Util;
+import jeeves.utils.BinaryFile;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -58,11 +61,17 @@ import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.thumbnail.Set;
+import org.fao.geonet.services.thumbnail.Unset;
+
 import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
+import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
+import org.jdom.JDOMException;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.methods.GetMethod;
 
 
 //=============================================================================
@@ -78,6 +87,7 @@ import org.jdom.xpath.XPath;
  * 	<li>WMS</li>
  * 	<li>WFS</li>
  * 	<li>WCS</li>
+ * 	<li>WPS</li>
  * </ul>
  * 
  * Metadata produced are :
@@ -247,8 +257,8 @@ class Harvester
 		localCateg 	= new CategoryMapper (dbms);
 		localGroups = new GroupMapper (dbms);
 
-		String uuid   = params.url; // is the service identifier
-		// FIXME : a better approach could be to md5 the full capabilities URL
+		// md5 the full capabilities URL
+		String uuid = Util.scramble (params.url); // is the service identifier
 		
 		//--- Loading stylesheet
 		String styleSheet = context.getAppPath() + 
@@ -260,6 +270,7 @@ class Harvester
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("lang", params.lang);
 		param.put("topic", params.topic);
+		param.put("uuid", uuid);
 		
 		Element md = Xml.transform (capa, styleSheet, param);
 		

@@ -41,10 +41,46 @@
 		<long>OAI Protokol für Metadaten Harvesting 2.0</long>
 	</info>
 	
+	<info type="ogcwxs">
+		<short>OGC WxS</short>
+		<long>OGC Web services (ie. WMS, WFS, WCS, WPS)</long>
+	</info>
+	
 	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Site</site>
+
+	<info type="ogcwxs">
+		<short>OGC WxS</short>
+		<long>OGC Web services (ie. WMS, WFS, WCS, WPS)</long>
+	</info>
 	
+	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<site>Site</site>
+		
+	<wxstype>Type of OGC webservice</wxstype>
+	<wxstypes>
+		<type value="WMS1.0.0">OGC Web Map Service (WMS) Version 1.0.0</type>
+		<type value="WMS1.1.1">OGC Web Map Service (WMS) Version 1.1.1 - preferred</type>
+		<!-- <type value="WMS1.3.0">OGC Web Map Service (WMS) Version 1.3.0</type> -->
+		<type value="WFS1.0.0">OGC Web Feature Service (WFS) Version 1.0.0</type>
+		<type value="WFS1.1.0">OGC Web Feature Service (WFS) Version 1.1.0 - preferred</type>
+		<type value="WCS1.0.0">OGC Web Coverage Service (WCS) Version 1.0.0</type>
+        <type value="WPS0.4.0">OGC Web Processing Service (WPS) Version 0.4.0</type>
+        <type value="WPS1.0.0">OGC Web Processing Service (WPS) Version 1.0.0</type>        
+	</wxstypes>
+	
+	<wxslang>Metadata language</wxslang>
+	<wxsImp>Type of import</wxsImp>
+	<wxs119Only>By default GetCapabilities harvester will create<br/> only metadata for services in ISO19119.</wxs119Only>
+	<wxs139>Create metadata for layer elements using GetCapabilities information.</wxs139>
+	<wxs139Layer>Create metadata for layer elements using metadataURL attributs (if existing, if not use GetCapabilities).</wxs139Layer>
+	<createThumbnails>Create thumbnails for WMS layers.</createThumbnails>
+	
+	<serviceCategory>Category for service</serviceCategory>
+	<datasetCategory>Category for datasets</datasetCategory>
+		
 	<name>Name</name>
 	<host>Host</host>
 	<port>Port</port>
@@ -256,6 +292,115 @@
 			Benutzen Sie die <b>&lt;Strg&gt;</b>-Taste zur Auswahl mehrere Kategorien.
 		</tip>
 	
+	</tips>
+	
+	
+	<!-- OGCWXS harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="ogcwxs.wxstype">
+			The type of the OGC web services.	
+		</tip>
+		
+		<tip id="ogcwxs.version">
+			The version of the OGC web services.	
+		</tip>
+		
+		<tip id="ogcwxs.lang">
+			The language of the produced metadata.	
+		</tip>
+		
+		<tip id="ogcwxs.capabUrl">
+			The given URL must point to a web service entry point. The format of a
+			URL is like this:<br/>
+			http://HOST/PATH			
+		</tip>
+		
+		
+		
+		<tip id="ogcwxs.addSearch">
+			Add one search on the remote server. You have to specify at least one search in order to
+			retrieve some metadata.
+		</tip>
+		
+		<tip id="ogcwxs.groups">
+			You can choose the privileges to associate to harvested metadata.
+		</tip>
+		
+		<tip id="ogcwxs.addGroups">
+			Select one or more groups (using the <b>&lt;CTRL&gt;</b> key) on the left panel and press this button.
+		</tip>
+		
+		<tip id="ogcwxs.categories">
+			You can assign one or more categories to harvested metadata. Use the <b>&lt;CTRL&gt;</b> 
+			key to select more than one category.
+		</tip>
+	
+	
+		<!-- OAI-PMH harvesting type - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="oai.url">
+			This URL must point to the OAI-PMH server
+		</tip>
+		
+		<tip id="oai.addSearch">
+			Add one search on the remote server. If you don't add any search, an unconstrained search
+			is performed using the 'oai_dc' metadata format
+		</tip>
+		
+		<tip id="oai.groups">
+			You can choose the privileges to associate to harvested metadata.
+		</tip>
+		
+		<tip id="oai.addGroups">
+			Select one or more groups (using the <b>&lt;CTRL&gt;</b> key) on the left panel and press this button.
+		</tip>
+		
+		<tip id="oai.categories">
+			You can assign one or more categories to harvested metadata. Use the <b>&lt;CTRL&gt;</b> 
+			key to select more than one category.
+		</tip>
+	
+		<tip id="oai.validate">
+			Harvests only metadata that validate against their schema.
+		</tip>
+		
+		<!-- OAI-PMH harvesting type : dynamic search part -->
+		
+		<tip id="oai.remove">
+			Remove this search criteria
+		</tip>
+		
+		<tip id="oai.from">
+			Optional date to start harvesting from.
+		</tip>
+		
+		<tip id="oai.from.set">
+			Open dialog to set FROM date
+		</tip>
+		
+		<tip id="oai.from.clear">
+			Clear FROM parameter
+		</tip>
+		
+		<tip id="oai.until">
+			Optional date to end harvesting to.
+		</tip>
+		
+		<tip id="oai.until.set">
+			Open dialog to set UNTIL date
+		</tip>
+		
+		<tip id="oai.until.clear">
+			Clear UNTIL parameter
+		</tip>
+	
+		<tip id="oai.set">
+			You can narrow the harvesting to specific metadata sets that exist remotely.
+		</tip>
+		
+		<tip id="oai.prefix">
+			Choose the metadata format you want to harvest.
+		</tip>
 	</tips>
 </strings>
 
