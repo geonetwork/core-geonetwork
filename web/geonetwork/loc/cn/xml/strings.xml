@@ -434,6 +434,7 @@
 	<searchPageDes>跳至元数据搜索页</searchPageDes>
 	<searchTemplates>查找模板</searchTemplates>
 	<searchText>全文</searchText>
+	<searchAllText>全文</searchAllText>
 	<searchUnused>搜索未用或空的元数据</searchUnused>
 	<server>服务器</server>
 	<show>元数据</show>

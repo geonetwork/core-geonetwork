@@ -180,7 +180,7 @@
 	<delete>Supprimer</delete>
 	<descriptionTab>Description</descriptionTab>
 	<desSchema>Destination schema</desSchema>
-	<digital>Digital</digital>
+	<digital>Numérique</digital>
 	<directory>Répertoire</directory>
 	<dirParameter>(le paramètre 'dir' est nécessaire)</dirParameter>
 	<disclaimer1></disclaimer1>
@@ -212,7 +212,7 @@
 	<firstName>Prénom</firstName>
 	<fr>Français</fr> <!-- Do not translate! -->
 	<freeKeyword>Mot-clés libres</freeKeyword>
-	<from>Debut</from>
+	<from>Début</from>
 	<general>Général</general>
 	<generalInfo>Information générale</generalInfo>
 	<georss>Ouvrez flux GeoRSS</georss>
@@ -341,7 +341,7 @@
 			</font>
 		</p>
 	</mainhelp3>
-	<mainpageTitle>Trouver des cartes interactives, des jeux de données, des cartes, des images satellites ...</mainpageTitle>
+	<mainpageTitle>Trouvez des cartes interactives, des jeux de données, des cartes, des images satellites ...</mainpageTitle>
 	<maintenanceTab>Maintenance</maintenanceTab>
 	<management>Gestion</management>
 	<mapType>Type de carte</mapType>
@@ -460,6 +460,7 @@
 	<searchPageDes>Aller à la page de recherche</searchPageDes>
 	<searchTemplates>Rechercher les Modèles</searchTemplates>
 	<searchText>Recherche</searchText>
+	<searchAllText>Partout</searchAllText>
 	<searchUnused>Rechercher des métadonnées vides ou non utilisées</searchUnused>
 	<searchUnusedTitle>Métadonnées inutilisées</searchUnusedTitle>
 	<server>Serveur</server>

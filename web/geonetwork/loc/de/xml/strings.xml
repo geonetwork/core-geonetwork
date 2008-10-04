@@ -413,6 +413,7 @@
 	<searchPageDes>Zur Metadatensuchseite springen</searchPageDes>
 	<searchTemplates>Suche nach Vorlagen</searchTemplates>
 	<searchText>Was?</searchText>
+	<searchAllText>Was?</searchAllText>
 	<searchUnused>Suche nach nicht benutzen oder leeren Metadaten</searchUnused>
 	<searchUnusedTitle>Suche nach unbenutzten</searchUnusedTitle>
 	<server>Server</server>

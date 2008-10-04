@@ -449,6 +449,7 @@
 	<searchPageDes>Ir a búscar Metadatos</searchPageDes>
 	<searchTemplates>Buscar plantillas</searchTemplates>
 	<searchText>¿Qué? (Texto)</searchText>
+	<searchAllText>¿Qué? (Texto)</searchAllText>
 	<searchUnused>Búsqueda de metadatos vacíos o que no han sido usados nunca</searchUnused>
 	<server>Servidor</server>
 	<setAll>Establecer todos</setAll>

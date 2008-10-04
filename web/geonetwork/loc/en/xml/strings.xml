@@ -431,6 +431,7 @@
 	<searchPageDes>Jumps to the metadata search page</searchPageDes>
 	<searchTemplates>Search for templates</searchTemplates>
 	<searchText>What?</searchText>
+	<searchAllText>What?</searchAllText>
 	<searchUnused>Search for unused or empty metadata</searchUnused>
 	<searchUnusedTitle>Search for Unused</searchUnusedTitle>
 	<server>Server</server>

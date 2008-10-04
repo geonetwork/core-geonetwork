@@ -400,6 +400,7 @@
 	<searchPageDes>القفز إلى صفحة بحث البيانات الاساسية</searchPageDes>
 	<searchTemplates>بحث عن قوالب</searchTemplates>
 	<searchText>كتابة حرة</searchText>
+	<searchAllText>كتابة حرة</searchAllText>
 	<searchUnused>بحث عن بيانات اساسية Metadata خالية</searchUnused>
 	<searchUnusedTitle>Search for Unused</searchUnusedTitle>
 	<selection>Selection</selection>

@@ -71,7 +71,7 @@
 	<table heigth="100%	">
 		<tr>
 			<th class="padded">
-				<xsl:value-of select="/root/gui/strings/searchText"/>
+				<xsl:value-of select="/root/gui/strings/searchAllText"/>
 			</th>
 			<td style="padding-bottom:10px;">
 				<input name="any" id="any" class="content"  size="20" value="{/root/gui/searchDefaults/any}"/>
