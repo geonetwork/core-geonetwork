@@ -29,10 +29,12 @@ package org.fao.geonet.kernel;
 
 import java.io.File;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.Vector;
@@ -336,15 +338,15 @@ public class DataManager
 	
 	//--------------------------------------------------------------------------
 	
-	public Element schemaTron(String schemaPath, Element md, String id) throws Exception
+	public Element schemaTron(String schemaPath, Element md, String id, String lang) throws Exception
 	{
-		String fileSchemaTronReport = doSchemaTronReport(schemaPath,md,id);
-		return doSchemaTronForEditor(schemaPath,md);
+		String fileSchemaTronReport = doSchemaTronReport(schemaPath, md, id, lang);
+		return doSchemaTronForEditor(schemaPath, md, lang);
 	}
 
 	//--------------------------------------------------------------------------
 	
-	public String doSchemaTronReport(String schemaPath, Element md, String id) throws Exception
+	public String doSchemaTronReport(String schemaPath, Element md, String id, String lang) throws Exception
 	{
 
 		String dirId = "SchematronReport"+id;
@@ -371,6 +373,7 @@ public class DataManager
 
 		try {
 			Transformer xformer = TransformerFactory.newInstance().newTransformer(xsltSource);
+			xformer.setParameter("lang", lang);
 			Result result = new StreamResult(fileResult.toURI().getPath());
 			xformer.transform(source,result);
 		} catch (TransformerConfigurationException e) {
@@ -389,6 +392,7 @@ public class DataManager
 		File schemaTronOut = new File(fileSchemaTronOut);
 		try {
 			Transformer xformer = TransformerFactory.newInstance().newTransformer(xsltAnchorSource);
+			xformer.setParameter("lang", lang);
 			Result result = new StreamResult(schemaTronOut.toURI().getPath());
 			xformer.transform(source,result);
 		} catch (TransformerConfigurationException e) {
@@ -402,7 +406,7 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
-	public Element doSchemaTronForEditor(String schemaPath,Element md) throws Exception
+	public Element doSchemaTronForEditor(String schemaPath, Element md, String lang) throws Exception
 	{
 
 		// enumerate the metadata xml so that we can report any problems found 
@@ -410,7 +414,7 @@ public class DataManager
 		editLib.enumerateTree(md);
 
 		// get an xml version of the schematron errors and return for error display
-		Element schemaTronXmlReport = getSchemaTronXmlReport(schemaPath, md);
+		Element schemaTronXmlReport = getSchemaTronXmlReport(schemaPath, md, lang);
 
 		// remove editing info added by enumerateTree
 		editLib.removeEditingInfo(md);
@@ -420,14 +424,17 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 	
-	private Element getSchemaTronXmlReport(String schemaPath, Element md) throws Exception {
+	private Element getSchemaTronXmlReport(String schemaPath, Element md, String lang) throws Exception {
 		// NOTE: this method assumes that you've run enumerateTree on the 
 		// metadata
 		String schemaTronXmlXslt = schemaPath+File.separator+Geonet.File.SCHEMATRON_XML;
 		Element schemaTronXmlOut = null;
 		
 		try {
-			schemaTronXmlOut = Xml.transform(md, schemaTronXmlXslt);
+			Map<String, String> param = new HashMap<String, String>();
+			param.put("lang", lang);
+			
+			schemaTronXmlOut = Xml.transform(md, schemaTronXmlXslt, param);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -881,7 +888,7 @@ public class DataManager
 			String schema = getMetadataSchema(dbms, id);
 			editLib.expandElements(schema,md);
 			version = editLib.addEditingInfo(schema, id, md);
-			Element elemChecks = getSchemaTronXmlReport(getSchemaDir(schema),md);
+			Element elemChecks = getSchemaTronXmlReport(getSchemaDir(schema), md, srvContext.getLanguage());
 			if (elemChecks != null) md.addContent(elemChecks);
 		}
 
@@ -1206,9 +1213,10 @@ public class DataManager
 	/** For Editing : updates all leaves with new values
 	  */
 
-	public synchronized boolean updateMetadata(UserSession session, Dbms dbms, String id, String currVersion,
+	public synchronized boolean updateMetadata(ServiceContext context, Dbms dbms, String id, String currVersion,
 															 Hashtable changes, boolean validate) throws Exception
 	{
+		UserSession session = context.getUserSession();
 		Element md = XmlSerializer.select(dbms, "Metadata", id);
 
 		//--- check if the metadata has been deleted
@@ -1280,13 +1288,15 @@ public class DataManager
 		//--- remove editing info added by previous call
 		editLib.removeEditingInfo(md);
 
-		return updateMetadata(session, dbms, id, md, validate, currVersion);
+		return updateMetadata(context, dbms, id, md, validate, currVersion);
 	}
 
 	//--------------------------------------------------------------------------
 
-	public synchronized boolean updateMetadata(UserSession session, Dbms dbms, String id, Element md, boolean validate, String version) throws Exception
+	public synchronized boolean updateMetadata(ServiceContext context, Dbms dbms, String id, Element md, boolean validate, String version) throws Exception
 	{
+		UserSession session = context.getUserSession();
+		
 		//--- check if the metadata has been modified from last time
 		if (version != null && !editLib.getVersion(id).equals(version))
 			return false;
@@ -1297,7 +1307,7 @@ public class DataManager
 
 		if (validate) {
 			validate(schema, md);
-			Element schemaTronXml = schemaTron(getSchemaDir(schema),md,id);
+			Element schemaTronXml = schemaTron(getSchemaDir(schema), md, id, context.getLanguage());
 			session.setProperty("schematron_"+id,schemaTronXml);
 		}
 

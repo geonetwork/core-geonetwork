@@ -85,7 +85,7 @@ public class Update implements Service
 		{
 			Element md = Xml.loadString(data, false);
 
-			if (!dataMan.updateMetadata(context.getUserSession(), dbms, id, md, validate, version))
+			if (!dataMan.updateMetadata(context, dbms, id, md, validate, version))
 				throw new ConcurrentUpdateEx(id);
 		}
 		else

@@ -46,6 +46,11 @@
 
 <xsl:template name="process-prolog">
    <axsl:output method="xml" />
+
+   <axsl:param name="lang" />
+
+   <axsl:variable name="loc"
+      select="document(concat('loc/', $lang, '/schematron.xml'))" />
 </xsl:template>
 
 <xsl:template name="process-root">
@@ -80,7 +85,11 @@
    <geonet:errorFound ref="#_{{geonet:element/@ref}}">
 	 	<geonet:pattern name="{{name(.)}}"/>
 		<geonet:diagnostics>
-	 		<xsl:apply-templates mode="text"/>
+		<xsl:element name="xsl:value-of">
+          <xsl:attribute name="select">
+                    <xsl:apply-templates mode="text" />
+                </xsl:attribute>
+        </xsl:element>
 		</geonet:diagnostics>
 	</geonet:errorFound>
 </xsl:template>
@@ -95,7 +104,11 @@
    <geonet:errorFound ref="#_{{geonet:element/@ref}}">
 	 	<geonet:pattern name="{{name(.)}}"/>
 		<geonet:diagnostics>
-	 		<xsl:apply-templates mode="text"/>
+        <xsl:element name="xsl:value-of">
+          <xsl:attribute name="select">
+                    <xsl:apply-templates mode="text" />
+                </xsl:attribute>
+        </xsl:element>
 		</geonet:diagnostics>
 	</geonet:errorFound>
 </xsl:template>

@@ -3,16 +3,21 @@
                 xmlns:sch="http://www.ascc.net/xml/schematron"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 version="1.0"
                 gml:dummy-for-xmlns=""
                 gmd:dummy-for-xmlns=""
+                srv:dummy-for-xmlns=""
                 gco:dummy-for-xmlns=""
                 geonet:dummy-for-xmlns=""
                 xlink:dummy-for-xmlns="">
    <xsl:output method="html"/>
+   <xsl:param name="lang"/>
+   <xsl:variable name="loc" select="document(concat('loc/', $lang, '/schematron.xml'))"/>
+   <xsl:include href="../../../xsl/main.xsl"/>
    <xsl:template match="*|@*" mode="schematron-get-full-path">
       <xsl:apply-templates select="parent::*" mode="schematron-get-full-path"/>
       <xsl:text>/</xsl:text>
@@ -24,103 +29,157 @@
    </xsl:template>
    <xsl:template match="/">
       <html>
-      	<head>
-			<link type="image/x-icon" rel="shortcut icon" href="/geonetwork/favicon.ico" />
-			<link type="image/x-icon" rel="icon" href="/geonetwork/favicon.ico" />
-			<link href="/geonetwork/geonetwork.css" type="text/css" rel="stylesheet" />
-		</head>
-		<body>
-         <h2 title="Schematron contact-information is at the end of this page">
-            <font color="#FF0080">Schematron</font> Report
-      </h2>
-         <h1 title=" ">Schematron validation for ISO 19115(19139)</h1>
-         <div class="errors">
-            <ul>
-               <h3>CharacterString must have content or it's parent must have a valid nilReason attribute.</h3>
-               <xsl:apply-templates select="/" mode="M6"/>
-               <h3>CRS attributes constraints</h3>
-               <xsl:apply-templates select="/" mode="M7"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row24 - name required</h3>
-               <xsl:apply-templates select="/" mode="M8"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row07 - otherConstraints required if otherRestrictions</h3>
-               <xsl:apply-templates select="/" mode="M9"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row16 - units required for values</h3>
-               <xsl:apply-templates select="/" mode="M10"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row13 - description required if no sourceExtent</h3>
-               <xsl:apply-templates select="/" mode="M11"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row14 - sourceExtent required if no description</h3>
-               <xsl:apply-templates select="/" mode="M12"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row10 - content mandatory for dataset or series</h3>
-               <xsl:apply-templates select="/" mode="M13"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row11 - source required if no statement or processStep</h3>
-               <xsl:apply-templates select="/" mode="M14"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row12 - processStep required if no statement or source</h3>
-               <xsl:apply-templates select="/" mode="M15"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row08 - dataset must have report or lineage</h3>
-               <xsl:apply-templates select="/" mode="M16"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row09 - levelDescription needed unless dataset or series</h3>
-               <xsl:apply-templates select="/" mode="M17"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row17 - units required for density values</h3>
-               <xsl:apply-templates select="/" mode="M18"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row18 - MD_Format required</h3>
-               <xsl:apply-templates select="/" mode="M19"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row23 - element required</h3>
-               <xsl:apply-templates select="/" mode="M20"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row04 - dataset must have extent</h3>
-               <xsl:apply-templates select="/" mode="M21"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row05 - dataset or series must have topicCategory</h3>
-               <xsl:apply-templates select="/" mode="M22"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row06 - either aggregateDataSetName or aggregateDataSetIdentifier must be documented</h3>
-               <xsl:apply-templates select="/" mode="M23"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row01 - language indication</h3>
-               <xsl:apply-templates select="/" mode="M24"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row02 - character set indication</h3>
-               <xsl:apply-templates select="/" mode="M25"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row19 - detail required unless simple term</h3>
-               <xsl:apply-templates select="/" mode="M26"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row20 - condition</h3>
-               <xsl:apply-templates select="/" mode="M27"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row21 - domainCode</h3>
-               <xsl:apply-templates select="/" mode="M28"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row22 - shortName</h3>
-               <xsl:apply-templates select="/" mode="M29"/>
-               <h3>ISOFTDS19139:2005-TableA1-Row15 - checkPointDescription required if available</h3>
-               <xsl:apply-templates select="/" mode="M30"/>
-            </ul>
-         </div>
-         <hr color="#FF0080"/>
-         <p>
-            <font size="2">Schematron Report by David Carlisle.
-      <a href="http://www.ascc.net/xml/resource/schematron/schematron.html"
-                  title="Link to the home page of the Schematron, a tree-pattern schema language">
-                  <font color="#FF0080">The Schematron</font>
-               </a> by
-      <a href="mailto:ricko@gate.sinica.edu.tw"
-                  title="Email to Rick Jelliffe (pronounced RIK JELIF)">Rick Jelliffe</a>,
-      <a href="http://www.sinica.edu.tw" title="Link to home page of Academia Sinica">Academia Sinica Computing Centre</a>.
-      </font>
-         </p>
+         <head>
+            <title/>
+            <link rel="stylesheet" type="text/css" href="../../geonetwork.css"/>
+         </head>
+         <body>
+            <table width="100%" height="100%">
+               <tr class="banner">
+                  <td class="banner">
+                     <img alt="GeoNetwork opensource" align="top" src="../../images/header-left.jpg"/>
+                  </td>
+                  <td align="right" class="banner">
+                     <img alt="World picture" align="top" src="../../images/header-right.gif"/>
+                  </td>
+               </tr>
+               <tr height="100%">
+                  <td class="content" colspan="3">
+                     <h1>
+                        <xsl:value-of select="$loc/strings/title"/>
+                     </h1>
+                     <h2>
+                        <xsl:attribute name="title">
+                           <xsl:value-of select="$loc/strings/report.alt"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="$loc/strings/report"/>
+                     </h2>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M6"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M7"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M7"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M8"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M8"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M9"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M9"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M10"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M10"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M11"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M11"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M12"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M12"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M13"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M13"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M14"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M14"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M15"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M15"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M16"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M16"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M17"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M17"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M18"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M18"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M19"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M19"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M20"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M20"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M21"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M21"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M22"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M22"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M23"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M23"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M24"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M24"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M25"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M25"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M26"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M26"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M27"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M27"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M28"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M28"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M29"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M29"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M30"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M30"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M31"/>
+                  </td>
+               </tr>
+            </table>
          </body>
       </html>
    </xsl:template>
-   <xsl:template match="*[gco:CharacterString]" priority="4000" mode="M6">
+   <xsl:template match="*[gco:CharacterString]" priority="4000" mode="M7">
       <xsl:if test="(normalize-space(gco:CharacterString) = '') and (not(@gco:nilReason) or not(contains('inapplicable missing template unknown withheld',@gco:nilReason)))">
          <li>
             <a href="schematron-out.html#{generate-id(.)}" target="out"
                title="Link to where this pattern was found">
-               <i/>CharacterString must have content or parent's nilReason attribute must be legitimate.<b/>
+               <xsl:value-of select="$loc/strings/alert.M6.characterString"/>
+               <b/>
             </a>
          </li>
       </xsl:if>
-      <xsl:apply-templates mode="M6"/>
+      <xsl:apply-templates mode="M7"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M6"/>
-   <xsl:template match="//gml:DirectPositionType" priority="4000" mode="M7">
+   <xsl:template match="text()" priority="-1" mode="M7"/>
+   <xsl:template match="//gml:DirectPositionType" priority="4000" mode="M8">
       <xsl:if test="not(@srsDimension) or @srsName">
          <li>
             <a href="schematron-out.html#{generate-id(.)}" target="out"
                title="Link to where this pattern was found">
-               <i/>The presence of a dimension attribute implies the presence of the srsName attribute.<b/>
+               <xsl:value-of select="$loc/strings/alert.M6.directPosition"/>
+               <b/>
             </a>
          </li>
       </xsl:if>
@@ -128,7 +187,8 @@
          <li>
             <a href="schematron-out.html#{generate-id(.)}" target="out"
                title="Link to where this pattern was found">
-               <i/>The presence of an axisLabels attribute implies the presence of the srsName attribute.<b/>
+               <xsl:value-of select="$loc/strings/alert.M7.axisAndSrs"/>
+               <b/>
             </a>
          </li>
       </xsl:if>
@@ -136,7 +196,8 @@
          <li>
             <a href="schematron-out.html#{generate-id(.)}" target="out"
                title="Link to where this pattern was found">
-               <i/>The presence of an uomLabels attribute implies the presence of the srsName attribute.<b/>
+               <xsl:value-of select="$loc/strings/alert.M7.uomAndSrs"/>
+               <b/>
             </a>
          </li>
       </xsl:if>
@@ -144,34 +205,37 @@
          <li>
             <a href="schematron-out.html#{generate-id(.)}" target="out"
                title="Link to where this pattern was found">
-               <i/>The presence of an uomLabels attribute implies the presence of the axisLabels attribute and vice versa.<b/>
+               <xsl:value-of select="$loc/strings/alert.M7.uomAndAxis"/>
+               <b/>
             </a>
          </li>
       </xsl:if>
-      <xsl:apply-templates mode="M7"/>
+      <xsl:apply-templates mode="M8"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M7"/>
-   <xsl:template match="//gmd:CI_ResponsibleParty" priority="4000" mode="M8">
+   <xsl:template match="text()" priority="-1" mode="M8"/>
+   <xsl:template match="//gmd:CI_ResponsibleParty" priority="4000" mode="M9">
       <xsl:choose>
          <xsl:when test="(count(gmd:individualName) + count(gmd:organisationName) + count(gmd:positionName)) &gt; 0"/>
          <xsl:otherwise>
             <li>
                <a href="schematron-out.html#{generate-id(.)}" target="out"
                   title="Link to where this pattern was expected">
-                  <i/>You must specify one or more of individualName, organisationName or positionName.<b/>
+                  <xsl:value-of select="$loc/strings/alert.M8"/>
+                  <b/>
                </a>
             </li>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates mode="M8"/>
+      <xsl:apply-templates mode="M9"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M8"/>
-   <xsl:template match="//gmd:MD_LegalConstraints" priority="4000" mode="M9">
+   <xsl:template match="text()" priority="-1" mode="M9"/>
+   <xsl:template match="//gmd:MD_LegalConstraints" priority="4000" mode="M10">
       <xsl:if test="gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue='otherRestrictions' and not(gmd:otherConstraints)">
          <li>
             <a href="schematron-out.html#{generate-id(.)}" target="out"
                title="Link to where this pattern was found">
-               <i/>otherConstraints: documented if accessConstraints or useConstraints = "otherRestrictions."<b/>
+               <xsl:value-of select="$loc/strings/alert.M8.access"/>
+               <b/>
             </a>
          </li>
       </xsl:if>
@@ -179,37 +243,24 @@
          <li>
             <a href="schematron-out.html#{generate-id(.)}" target="out"
                title="Link to where this pattern was found">
-               <i/>otherConstraints: documented if accessConstraints or useConstraints = "otherRestrictions."<b/>
-            </a>
-         </li>
-      </xsl:if>
-      <xsl:apply-templates mode="M9"/>
-   </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M9"/>
-   <xsl:template match="//gmd:MD_Band" priority="4000" mode="M10">
-      <xsl:if test="(gmd:maxValue or gmd:minValue) and not(gmd:units)">
-         <li>
-            <a href="schematron-out.html#{generate-id(.)}" target="out"
-               title="Link to where this pattern was found">
-               <i/>"units" is mandatory if "maxValue" or "minValue" are provided.<b/>
+               <xsl:value-of select="$loc/strings/alert.M8.use"/>
+               <b/>
             </a>
          </li>
       </xsl:if>
       <xsl:apply-templates mode="M10"/>
    </xsl:template>
    <xsl:template match="text()" priority="-1" mode="M10"/>
-   <xsl:template match="//gmd:LI_Source" priority="4000" mode="M11">
-      <xsl:choose>
-         <xsl:when test="gmd:description or gmd:sourceExtent"/>
-         <xsl:otherwise>
-            <li>
-               <a href="schematron-out.html#{generate-id(.)}" target="out"
-                  title="Link to where this pattern was expected">
-                  <i/>"description" is mandatory if "sourceExtent" is not documented.<b/>
-               </a>
-            </li>
-         </xsl:otherwise>
-      </xsl:choose>
+   <xsl:template match="//gmd:MD_Band" priority="4000" mode="M11">
+      <xsl:if test="(gmd:maxValue or gmd:minValue) and not(gmd:units)">
+         <li>
+            <a href="schematron-out.html#{generate-id(.)}" target="out"
+               title="Link to where this pattern was found">
+               <xsl:value-of select="$loc/strings/alert.M9"/>
+               <b/>
+            </a>
+         </li>
+      </xsl:if>
       <xsl:apply-templates mode="M11"/>
    </xsl:template>
    <xsl:template match="text()" priority="-1" mode="M11"/>
@@ -220,7 +271,8 @@
             <li>
                <a href="schematron-out.html#{generate-id(.)}" target="out"
                   title="Link to where this pattern was expected">
-                  <i/>"description" is mandatory if "sourceExtent" is not documented.<b/>
+                  <xsl:value-of select="$loc/strings/alert.M11"/>
+                  <b/>
                </a>
             </li>
          </xsl:otherwise>
@@ -228,24 +280,29 @@
       <xsl:apply-templates mode="M12"/>
    </xsl:template>
    <xsl:template match="text()" priority="-1" mode="M12"/>
-   <xsl:template match="//gmd:DQ_DataQuality" priority="4000" mode="M13">
+   <xsl:template match="//gmd:LI_Source" priority="4000" mode="M13">
+      <xsl:choose>
+         <xsl:when test="gmd:description or gmd:sourceExtent"/>
+         <xsl:otherwise>
+            <li>
+               <a href="schematron-out.html#{generate-id(.)}" target="out"
+                  title="Link to where this pattern was expected">
+                  <xsl:value-of select="$loc/strings/alert.M12"/>
+                  <b/>
+               </a>
+            </li>
+         </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates mode="M13"/>
+   </xsl:template>
+   <xsl:template match="text()" priority="-1" mode="M13"/>
+   <xsl:template match="//gmd:DQ_DataQuality" priority="4000" mode="M14">
       <xsl:if test="(((count(*/gmd:LI_Lineage/gmd:source) + count(*/gmd:LI_Lineage/gmd:processStep)) = 0) and (gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='dataset' or gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='series')) and not(gmd:lineage/gmd:LI_Lineage/gmd:statement) and (gmd:lineage)">
          <li>
             <a href="schematron-out.html#{generate-id(.)}" target="out"
                title="Link to where this pattern was found">
-               <i/>If(count(source) + count(processStep) =0) and (DQ_DataQuality.scope.level = 'dataset' or 'series') then statement is mandatory.<b/>
-            </a>
-         </li>
-      </xsl:if>
-      <xsl:apply-templates mode="M13"/>
-   </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M13"/>
-   <xsl:template match="//gmd:LI_Lineage" priority="4000" mode="M14">
-      <xsl:if test="not(gmd:source) and not(gmd:statement) and not(gmd:processStep)">
-         <li>
-            <a href="schematron-out.html#{generate-id(.)}" target="out"
-               title="Link to where this pattern was found">
-               <i/>"source" role is mandatory if LI_Lineage.statement and "processStep" role are not documented.<b/>
+               <xsl:value-of select="$loc/strings/alert.M13"/>
+               <b/>
             </a>
          </li>
       </xsl:if>
@@ -253,79 +310,82 @@
    </xsl:template>
    <xsl:template match="text()" priority="-1" mode="M14"/>
    <xsl:template match="//gmd:LI_Lineage" priority="4000" mode="M15">
-      <xsl:if test="not(gmd:processStep) and not(gmd:statement) and not(gmd:source)">
+      <xsl:if test="not(gmd:source) and not(gmd:statement) and not(gmd:processStep)">
          <li>
             <a href="schematron-out.html#{generate-id(.)}" target="out"
                title="Link to where this pattern was found">
-               <i/>"processStep" role is mandatory if LI_Lineage.statement and "source" role are not documented.<b/>
+               <xsl:value-of select="$loc/strings/alert.M14"/>
+               <b/>
             </a>
          </li>
       </xsl:if>
       <xsl:apply-templates mode="M15"/>
    </xsl:template>
    <xsl:template match="text()" priority="-1" mode="M15"/>
-   <xsl:template match="//gmd:DQ_DataQuality" priority="4000" mode="M16">
-      <xsl:if test="gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='dataset' and not(gmd:report) and not(gmd:lineage)">
+   <xsl:template match="//gmd:LI_Lineage" priority="4000" mode="M16">
+      <xsl:if test="not(gmd:processStep) and not(gmd:statement) and not(gmd:source)">
          <li>
             <a href="schematron-out.html#{generate-id(.)}" target="out"
                title="Link to where this pattern was found">
-               <i/>"report" or "lineage" role is mandatory if scope.DQ_Scope.level = 'dataset'.<b/>
+               <xsl:value-of select="$loc/strings/alert.M15"/>
+               <b/>
             </a>
          </li>
       </xsl:if>
       <xsl:apply-templates mode="M16"/>
    </xsl:template>
    <xsl:template match="text()" priority="-1" mode="M16"/>
-   <xsl:template match="//gmd:DQ_Scope" priority="4000" mode="M17">
+   <xsl:template match="//gmd:DQ_DataQuality" priority="4000" mode="M17">
+      <xsl:if test="gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='dataset' and not(gmd:report) and not(gmd:lineage)">
+         <li>
+            <a href="schematron-out.html#{generate-id(.)}" target="out"
+               title="Link to where this pattern was found">
+               <xsl:value-of select="$loc/strings/alert.M16"/>
+               <b/>
+            </a>
+         </li>
+      </xsl:if>
+      <xsl:apply-templates mode="M17"/>
+   </xsl:template>
+   <xsl:template match="text()" priority="-1" mode="M17"/>
+   <xsl:template match="//gmd:DQ_Scope" priority="4000" mode="M18">
       <xsl:choose>
          <xsl:when test="gmd:level/gmd:MD_ScopeCode/@codeListValue='dataset' or gmd:level/gmd:MD_ScopeCode/@codeListValue='series' or (gmd:levelDescription and ((normalize-space(gmd:levelDescription) != '') or (gmd:levelDescription/gmd:MD_ScopeDescription) or (gmd:levelDescription/@gco:nilReason and contains('inapplicable missing template unknown withheld',gmd:levelDescription/@gco:nilReason))))"/>
          <xsl:otherwise>
             <li>
                <a href="schematron-out.html#{generate-id(.)}" target="out"
                   title="Link to where this pattern was expected">
-                  <i/>"levelDescription" is mandatory if "level" notEqual 'dataset' or 'series'.<b/>
+                  <xsl:value-of select="$loc/strings/alert.M17"/>
+                  <b/>
                </a>
             </li>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates mode="M17"/>
+      <xsl:apply-templates mode="M18"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M17"/>
-   <xsl:template match="//gmd:MD_Medium" priority="4000" mode="M18">
+   <xsl:template match="text()" priority="-1" mode="M18"/>
+   <xsl:template match="//gmd:MD_Medium" priority="4000" mode="M19">
       <xsl:if test="gmd:density and not(gmd:densityUnits)">
          <li>
             <a href="schematron-out.html#{generate-id(.)}" target="out"
                title="Link to where this pattern was found">
-               <i/>"densityUnits" is mandatory if "density" is provided.<b/>
+               <xsl:value-of select="$loc/strings/alert.M18"/>
+               <b/>
             </a>
          </li>
       </xsl:if>
-      <xsl:apply-templates mode="M18"/>
+      <xsl:apply-templates mode="M19"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M18"/>
-   <xsl:template match="//gmd:MD_Distribution" priority="4000" mode="M19">
+   <xsl:template match="text()" priority="-1" mode="M19"/>
+   <xsl:template match="//gmd:MD_Distribution" priority="4000" mode="M20">
       <xsl:choose>
          <xsl:when test="count(gmd:distributionFormat)&gt;0 or count(gmd:distributor/gmd:MD_Distributor/gmd:distributorFormat)&gt;0"/>
          <xsl:otherwise>
             <li>
                <a href="schematron-out.html#{generate-id(.)}" target="out"
                   title="Link to where this pattern was expected">
-                  <i/>count (distributionFormat + distributor/MD_Distributor/distributorFormat) &gt; 0.<b/>
-               </a>
-            </li>
-         </xsl:otherwise>
-      </xsl:choose>
-      <xsl:apply-templates mode="M19"/>
-   </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M19"/>
-   <xsl:template match="//gmd:EX_Extent" priority="4000" mode="M20">
-      <xsl:choose>
-         <xsl:when test="count(gmd:description)&gt;0 or count(gmd:geographicElement)&gt;0 or count(gmd:temporalElement)&gt;0 or count(gmd:verticalElement)&gt;0"/>
-         <xsl:otherwise>
-            <li>
-               <a href="schematron-out.html#{generate-id(.)}" target="out"
-                  title="Link to where this pattern was expected">
-                  <i/>count(description + geographicElement + temporalElement + verticalElement) &gt; 0.<b/>
+                  <xsl:value-of select="$loc/strings/alert.M19"/>
+                  <b/>
                </a>
             </li>
          </xsl:otherwise>
@@ -333,55 +393,58 @@
       <xsl:apply-templates mode="M20"/>
    </xsl:template>
    <xsl:template match="text()" priority="-1" mode="M20"/>
+   <xsl:template match="//gmd:EX_Extent" priority="4000" mode="M21">
+      <xsl:choose>
+         <xsl:when test="count(gmd:description)&gt;0 or count(gmd:geographicElement)&gt;0 or count(gmd:temporalElement)&gt;0 or count(gmd:verticalElement)&gt;0"/>
+         <xsl:otherwise>
+            <li>
+               <a href="schematron-out.html#{generate-id(.)}" target="out"
+                  title="Link to where this pattern was expected">
+                  <xsl:value-of select="$loc/strings/alert.M20"/>
+                  <b/>
+               </a>
+            </li>
+         </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates mode="M21"/>
+   </xsl:template>
+   <xsl:template match="text()" priority="-1" mode="M21"/>
    <xsl:template match="//*[gmd:identificationInfo/gmd:MD_DataIdentification]" priority="4000"
-                 mode="M21">
+                 mode="M22">
       <xsl:if test="(not(gmd:hierarchyLevel) or gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='dataset') and (count(//gmd:MD_DataIdentification/gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox) + count (//gmd:MD_DataIdentification/gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicDescription)) =0 ">
          <li>
             <a href="schematron-out.html#{generate-id(.)}" target="out"
                title="Link to where this pattern was found">
-               <i/>MD_Metadata.hierarchyLevel = "dataset" (i.e. the default value of this property on the parent) implies count (extent.geographicElement.EX_GeographicBoundingBox) + count (extent.geographicElement.EX_GeographicDescription) &gt;=1.<b/>
-            </a>
-         </li>
-      </xsl:if>
-      <xsl:apply-templates mode="M21"/>
-   </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M21"/>
-   <xsl:template match="//gmd:MD_DataIdentification" priority="4000" mode="M22">
-      <xsl:if test="(not(../../gmd:hierarchyLevel) or (../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='dataset') or (../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='series')) and (not(gmd:topicCategory))">
-         <li>
-            <a href="schematron-out.html#{generate-id(.)}" target="out"
-               title="Link to where this pattern was found">
-               <i/>topicCategory is mandatory if MD_Metadata.hierarchyLevel equal "dataset" or "series" or doesn't exist.<b/>
+               <xsl:value-of select="$loc/strings/alert.M21"/>
+               <b/>
             </a>
          </li>
       </xsl:if>
       <xsl:apply-templates mode="M22"/>
    </xsl:template>
    <xsl:template match="text()" priority="-1" mode="M22"/>
-   <xsl:template match="//gmd:MD_AggregateInformation" priority="4000" mode="M23">
+   <xsl:template match="//gmd:MD_DataIdentification" priority="4000" mode="M23">
+      <xsl:if test="(not(../../gmd:hierarchyLevel) or (../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='dataset') or (../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='series')) and (not(gmd:topicCategory))">
+         <li>
+            <a href="schematron-out.html#{generate-id(.)}" target="out"
+               title="Link to where this pattern was found">
+               <xsl:value-of select="$loc/strings/alert.M6"/>
+               <b/>
+            </a>
+         </li>
+      </xsl:if>
+      <xsl:apply-templates mode="M23"/>
+   </xsl:template>
+   <xsl:template match="text()" priority="-1" mode="M23"/>
+   <xsl:template match="//gmd:MD_AggregateInformation" priority="4000" mode="M24">
       <xsl:choose>
          <xsl:when test="gmd:aggregateDataSetName or gmd:aggregateDataSetIdentifier"/>
          <xsl:otherwise>
             <li>
                <a href="schematron-out.html#{generate-id(.)}" target="out"
                   title="Link to where this pattern was expected">
-                  <i/>Either "aggregateDataSetName" or "aggregateDataSetIdentifier" must be documented.<b/>
-               </a>
-            </li>
-         </xsl:otherwise>
-      </xsl:choose>
-      <xsl:apply-templates mode="M23"/>
-   </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M23"/>
-   <xsl:template match="//gmd:MD_Metadata|//*[@gco:isoType='gmd:MD_Metadata']" priority="4000"
-                 mode="M24">
-      <xsl:choose>
-         <xsl:when test="gmd:language and ((normalize-space(gmd:language) != '')  or (normalize-space(gmd:language/gco:CharacterString) != '') or (gmd:language/gmd:LanguageCode) or (gmd:language/@gco:nilReason and contains('inapplicable missing template unknown withheld',gmd:language/@gco:nilReason)))"/>
-         <xsl:otherwise>
-            <li>
-               <a href="schematron-out.html#{generate-id(.)}" target="out"
-                  title="Link to where this pattern was expected">
-                  <i/>language not present.<b/>
+                  <xsl:value-of select="$loc/strings/alert.M22"/>
+                  <b/>
                </a>
             </li>
          </xsl:otherwise>
@@ -391,17 +454,35 @@
    <xsl:template match="text()" priority="-1" mode="M24"/>
    <xsl:template match="//gmd:MD_Metadata|//*[@gco:isoType='gmd:MD_Metadata']" priority="4000"
                  mode="M25">
+      <xsl:choose>
+         <xsl:when test="gmd:language and ((normalize-space(gmd:language) != '')  or (normalize-space(gmd:language/gco:CharacterString) != '') or (gmd:language/gmd:LanguageCode) or (gmd:language/@gco:nilReason and contains('inapplicable missing template unknown withheld',gmd:language/@gco:nilReason)))"/>
+         <xsl:otherwise>
+            <li>
+               <a href="schematron-out.html#{generate-id(.)}" target="out"
+                  title="Link to where this pattern was expected">
+                  <xsl:value-of select="$loc/strings/alert.M23"/>
+                  <b/>
+               </a>
+            </li>
+         </xsl:otherwise>
+      </xsl:choose>
       <xsl:apply-templates mode="M25"/>
    </xsl:template>
    <xsl:template match="text()" priority="-1" mode="M25"/>
-   <xsl:template match="//gmd:MD_ExtendedElementInformation" priority="4000" mode="M26">
+   <xsl:template match="//gmd:MD_Metadata|//*[@gco:isoType='gmd:MD_Metadata']" priority="4000"
+                 mode="M26">
+      <xsl:apply-templates mode="M26"/>
+   </xsl:template>
+   <xsl:template match="text()" priority="-1" mode="M26"/>
+   <xsl:template match="//gmd:MD_ExtendedElementInformation" priority="4000" mode="M27">
       <xsl:choose>
          <xsl:when test="(gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelist' or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='enumeration' or gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelistElement') or (gmd:obligation and ((normalize-space(gmd:obligation) != '')  or (gmd:obligation/gmd:MD_ObligationCode) or (gmd:obligation/@gco:nilReason and contains('inapplicable missing template unknown withheld',gmd:obligation/@gco:nilReason))))"/>
          <xsl:otherwise>
             <li>
                <a href="schematron-out.html#{generate-id(.)}" target="out"
                   title="Link to where this pattern was expected">
-                  <i/>if "dataType" notEqual 'codelist', 'enumeration' or 'codelistElement' then "obligation" is mandatory.<b/>
+                  <xsl:value-of select="$loc/strings/alert.M26.obligation"/>
+                  <b/>
                </a>
             </li>
          </xsl:otherwise>
@@ -412,7 +493,8 @@
             <li>
                <a href="schematron-out.html#{generate-id(.)}" target="out"
                   title="Link to where this pattern was expected">
-                  <i/>if "dataType" notEqual 'codelist', 'enumeration' or 'codelistElement' then "maximumOccurence" is mandatory.<b/>
+                  <xsl:value-of select="$loc/strings/alert.M26.minimumOccurence"/>
+                  <b/>
                </a>
             </li>
          </xsl:otherwise>
@@ -423,32 +505,22 @@
             <li>
                <a href="schematron-out.html#{generate-id(.)}" target="out"
                   title="Link to where this pattern was expected">
-                  <i/>if "dataType" notEqual 'codelist', 'enumeration' or 'codelistElement' then "domainValue" is mandatory.<b/>
+                  <xsl:value-of select="$loc/strings/alert.M26.domainValue"/>
+                  <b/>
                </a>
             </li>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates mode="M26"/>
-   </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M26"/>
-   <xsl:template match="//gmd:MD_ExtendedElementInformation" priority="4000" mode="M27">
-      <xsl:if test="gmd:obligation/gmd:MD_ObligationCode='conditional' and not(gmd:condition)">
-         <li>
-            <a href="schematron-out.html#{generate-id(.)}" target="out"
-               title="Link to where this pattern was found">
-               <i/>if "obligation" = 'conditional' then "condition" is mandatory.<b/>
-            </a>
-         </li>
-      </xsl:if>
       <xsl:apply-templates mode="M27"/>
    </xsl:template>
    <xsl:template match="text()" priority="-1" mode="M27"/>
    <xsl:template match="//gmd:MD_ExtendedElementInformation" priority="4000" mode="M28">
-      <xsl:if test="gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelistElement' and not(gmd:domainCode)">
+      <xsl:if test="gmd:obligation/gmd:MD_ObligationCode='conditional' and not(gmd:condition)">
          <li>
             <a href="schematron-out.html#{generate-id(.)}" target="out"
                title="Link to where this pattern was found">
-               <i/>if "dataType" = 'codelistElement' then "domainCode" is mandatory.<b/>
+               <xsl:value-of select="$loc/strings/alert.M27"/>
+               <b/>
             </a>
          </li>
       </xsl:if>
@@ -456,28 +528,43 @@
    </xsl:template>
    <xsl:template match="text()" priority="-1" mode="M28"/>
    <xsl:template match="//gmd:MD_ExtendedElementInformation" priority="4000" mode="M29">
-      <xsl:if test="gmd:dataType/gmd:MD_DatatypeCode/@codeListValue!='codelistElement' and not(gmd:shortName)">
+      <xsl:if test="gmd:dataType/gmd:MD_DatatypeCode/@codeListValue='codelistElement' and not(gmd:domainCode)">
          <li>
             <a href="schematron-out.html#{generate-id(.)}" target="out"
                title="Link to where this pattern was found">
-               <i/>if "dataType" not equal to 'codelistElement' then "shortName" is mandatory.<b/>
+               <xsl:value-of select="$loc/strings/alert.M28"/>
+               <b/>
             </a>
          </li>
       </xsl:if>
       <xsl:apply-templates mode="M29"/>
    </xsl:template>
    <xsl:template match="text()" priority="-1" mode="M29"/>
-   <xsl:template match="//gmd:MD_Georectified" priority="4000" mode="M30">
-      <xsl:if test="(gmd:checkPointAvailability/gco:Boolean='1' or gmd:checkPointAvailability/gco:Boolean='true') and not(gmd:checkPointDescription)">
+   <xsl:template match="//gmd:MD_ExtendedElementInformation" priority="4000" mode="M30">
+      <xsl:if test="gmd:dataType/gmd:MD_DatatypeCode/@codeListValue!='codelistElement' and not(gmd:shortName)">
          <li>
             <a href="schematron-out.html#{generate-id(.)}" target="out"
                title="Link to where this pattern was found">
-               <i/>"checkPointDescription" is mandatory if "checkPointAvailability" = 1 or true.<b/>
+               <xsl:value-of select="$loc/strings/alert.M29"/>
+               <b/>
             </a>
          </li>
       </xsl:if>
       <xsl:apply-templates mode="M30"/>
    </xsl:template>
    <xsl:template match="text()" priority="-1" mode="M30"/>
+   <xsl:template match="//gmd:MD_Georectified" priority="4000" mode="M31">
+      <xsl:if test="(gmd:checkPointAvailability/gco:Boolean='1' or gmd:checkPointAvailability/gco:Boolean='true') and not(gmd:checkPointDescription)">
+         <li>
+            <a href="schematron-out.html#{generate-id(.)}" target="out"
+               title="Link to where this pattern was found">
+               <xsl:value-of select="$loc/strings/alert.M30"/>
+               <b/>
+            </a>
+         </li>
+      </xsl:if>
+      <xsl:apply-templates mode="M31"/>
+   </xsl:template>
+   <xsl:template match="text()" priority="-1" mode="M31"/>
    <xsl:template match="text()" priority="-1"/>
 </xsl:stylesheet>

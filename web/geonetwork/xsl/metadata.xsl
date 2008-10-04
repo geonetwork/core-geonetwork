@@ -984,7 +984,7 @@
 		<!-- schematron button -->
 		<xsl:if test="normalize-space($schematronLink)">
 			<xsl:text> </xsl:text>
-			<a href="javascript:alert('schematron message: {$schematronLink}');"><img src="{/root/gui/url}/images/schematron.gif"/></a>
+			<a href="javascript:alert('Message : {$schematronLink}');"><img src="{/root/gui/url}/images/schematron.gif"/></a>
 		</xsl:if>
 	</xsl:template>
 

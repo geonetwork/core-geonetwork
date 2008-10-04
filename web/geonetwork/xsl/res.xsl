@@ -16,7 +16,7 @@
 				<table width="100%" height="100%">
 					<tr class="banner">
 						<td class="banner">
-							<img src="{/root/gui/url}/images/header-left.gif" alt="GeoNetwork opensource" align="top" />
+							<img src="{/root/gui/url}/images/header-left.jpg" alt="GeoNetwork opensource" align="top" />
 						</td>
 						<td align="right" class="banner">
 							<img src="{/root/gui/url}/images/header-right.gif" alt="World picture" align="top" />

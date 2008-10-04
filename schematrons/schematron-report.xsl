@@ -49,6 +49,12 @@ ALTERED by Simon Pigot to remove escaping of quotes necessary for javascript
 
 <xsl:template name="process-prolog">
    <axsl:output method="html" />
+
+   <axsl:param name="lang"/>
+   
+   <axsl:variable name="loc" select="document(concat('loc/', $lang, '/schematron.xml'))"/>
+   
+   <axsl:include href="../../../xsl/main.xsl"/>
 </xsl:template>
 
 <xsl:template name="process-root">
@@ -56,43 +62,39 @@ ALTERED by Simon Pigot to remove escaping of quotes necessary for javascript
    <xsl:param name="icon" />
    <xsl:param name="contents" />
    <html>
-      <style>
-         a:link    { color: black}
-         a:visited { color: gray}
-         a:active  { color: #FF0088}
-         h3        { background-color:black; color:white;
-                     font-family:Arial Black; font-size:12pt; }
-         h3.linked { background-color:black; color:white;
-                     font-family:Arial Black; font-size:12pt; }
-      </style>
-      <h2 title="Schematron contact-information is at the end of 
-                 this page">
-         <xsl:if test="$icon"><img src="{$icon}" /></xsl:if>
-         <font color="#FF0080" >Schematron</font> Report
-      </h2>
-      <h1 title="{@ns} {@fpi}">
-					<!-- modified to remove javascript escapes -->
-         <xsl:value-of select="$title" />
-      </h1>
-      <div class="errors">
-         <ul>
-            <xsl:copy-of select="$contents" />
-         </ul>
-      </div>
-      <hr color="#FF0080" />
-      <p><font size="2">Schematron Report by David Carlisle.
-      <a href="http://www.ascc.net/xml/resource/schematron/schematron.html"
-         title="Link to the home page of the Schematron, 
-                a tree-pattern schema language">
-         <font color="#FF0080" >The Schematron</font>
-      </a> by
-      <a href="mailto:ricko@gate.sinica.edu.tw"
-         title="Email to Rick Jelliffe (pronounced RIK JELIF)"
-      >Rick Jelliffe</a>,
-      <a href="http://www.sinica.edu.tw"
-         title="Link to home page of Academia Sinica"
-      >Academia Sinica Computing Centre</a>.
-      </font></p>
+      <head>
+            <title></title>
+            <link rel="stylesheet" type="text/css" href="../../geonetwork.css"/>
+      </head>
+      <body>
+       	   <table width="100%" height="100%">
+                <tr class="banner">
+                    <td class="banner">
+                        <img alt="GeoNetwork opensource" align="top" src="../../images/header-left.jpg"/>
+                    </td>
+                    <td align="right" class="banner">
+                        <img alt="World picture" align="top" src="../../images/header-right.gif"/>
+                    </td>
+                </tr>
+                <tr height="100%">
+                    <td class="content" colspan="3">
+                     <h1>
+                       <axsl:value-of select="$loc/strings/title" />
+                     </h1>
+
+                     <h2>
+                       <axsl:attribute name="title">
+                         <axsl:value-of
+                           select="$loc/strings/report.alt" />
+                       </axsl:attribute>
+                       <axsl:value-of select="$loc/strings/report" />
+                     </h2>
+                     <xsl:copy-of select="$contents" />
+
+                    </td>
+                </tr>
+            </table>
+      </body>
    </html>
 </xsl:template>
 
@@ -111,12 +113,22 @@ ALTERED by Simon Pigot to remove escaping of quotes necessary for javascript
          <a href="{$see}" target="SRDOCO" 
             title="Link to User Documentation:">
             <h3 class="linked">
-               <xsl:value-of select="$name" />
+                <xsl:element name="xsl:value-of">
+                  <xsl:attribute name="select">
+                      <xsl:value-of select="$name" />
+                  </xsl:attribute>
+                </xsl:element>
             </h3>
          </a>
       </xsl:when>
       <xsl:otherwise>
-         <h3><xsl:value-of select="$name" /></h3>
+         <h3>
+            <xsl:element name="xsl:value-of">
+              <xsl:attribute name="select">
+                  <xsl:value-of select="$name" />
+              </xsl:attribute>
+            </xsl:element>
+        </h3>
       </xsl:otherwise>
    </xsl:choose>
    <xsl:if test="$icon"><img src="{$icon}" /> </xsl:if>
@@ -135,15 +147,17 @@ ALTERED by Simon Pigot to remove escaping of quotes necessary for javascript
    <xsl:if test="$icon"><img src="{$icon}" /> </xsl:if>
       <a href="schematron-out.html#{{generate-id(.)}}" target="out"
          title="Link to where this pattern was expected">
-         <i><xsl:value-of select="$role"/></i>
-				 <xsl:variable name="textLink">
-         <xsl:apply-templates mode="text"/>
-				 </xsl:variable>
-				 <xsl:value-of select="translate($textLink,'\','')"/>
+		 <xsl:element name="xsl:value-of">
+            <xsl:attribute name="select">
+                  <xsl:apply-templates mode="text"/>
+            </xsl:attribute>
+          </xsl:element>
          <xsl:if test="$diagnose = 'yes'">
-          <b><xsl:call-template name="diagnosticsSplit">
-               <xsl:with-param name="str" select="$diagnostics" />
-           </xsl:call-template></b>
+            <b>
+                <xsl:call-template name="diagnosticsSplit">
+                    <xsl:with-param name="str" select="$diagnostics" />
+                </xsl:call-template>
+            </b>
          </xsl:if>
       </a>
    </li>                    
@@ -160,14 +174,16 @@ ALTERED by Simon Pigot to remove escaping of quotes necessary for javascript
    <xsl:if test="$icon"><img src="{$icon}" /> </xsl:if>
       <a href="schematron-out.html#{{generate-id(.)}}" target="out"
          title="Link to where this pattern was found">
-         <i><xsl:value-of select="$role"/></i>
-				 <xsl:variable name="textLink">
-         <xsl:apply-templates mode="text"/>
-				 </xsl:variable>
-				 <xsl:value-of select="translate($textLink,'\','')"/>
-          <b><xsl:call-template name="diagnosticsSplit">
+ 	     <xsl:element name="xsl:value-of">
+            <xsl:attribute name="select">
+                  <xsl:apply-templates mode="text"/>
+            </xsl:attribute>
+          </xsl:element>
+         <b>
+            <xsl:call-template name="diagnosticsSplit">
                <xsl:with-param name="str" select="$diagnostics" />
-           </xsl:call-template></b>
+            </xsl:call-template>
+         </b>
       </a>
    </li>
 </xsl:template>
