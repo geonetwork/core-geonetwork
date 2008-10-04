@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<metadata.admin.index>Gestion de l&apos;index</metadata.admin.index>
+	<metadata.admin.index.desc>Regénérer l&apos;index du catalogue</metadata.admin.index.desc>
+	<metadata.admin.index.success>L'index a été reconstruit avec succès...</metadata.admin.index.success>
+	<metadata.admin.index.failed>Echec lors de la reconstruction de l'index</metadata.admin.index.failed>
+	<rebuild>Regénérer</rebuild>
 	<clearAll>Clear All</clearAll>
 	<contentInfoTab>Content Info</contentInfoTab>
 	<convert>Conversion</convert>
@@ -303,10 +308,10 @@
 				Seuls les résultats correspondant à votre recherche seront affichés.</font>
 		</p>
 		<p>
-			<font size="-2"> La <b>Recherche libre</b> recherche le texte saisi dans tous les champs des métadonnées.
+			<font size="-2"> La <b>Recherche en texte intégrale</b> recherche le texte saisi dans tous les champs des métadonnées.
 				<br/>
 				<i>
-					Lorsque plusieurs mots sont saisie dans la <b>recherche libre</b>, le système recherche l'ensemble des mots (comme si ils étaient séparés par AND).
+					Lorsque plusieurs mots sont saisie dans la <b>recherche en texte intégrale</b>, le système recherche l'ensemble des mots (comme si ils étaient séparés par AND).
 				</i>
 			</font>
 		</p>
@@ -439,7 +444,7 @@
 	<restrictTo>Limiter a</restrictTo>
 	<result>Derniers résultats</result>
 	<resultsCoordinate>Résultats correspondant aux critères de recherche géographiques</resultsCoordinate>
-	<resultsFreeText>Résultats correspondant à la recherche libre</resultsFreeText>
+	<resultsFreeText>Résultats de la recherche</resultsFreeText>
 	<resultsMatching>Nombre de résultats : </resultsMatching>
 	<rss>Ouvrez flux RSS</rss>
 	<rtitle>Titre</rtitle>
@@ -454,7 +459,7 @@
 	<searchPage>Page de recherche</searchPage>
 	<searchPageDes>Aller à la page de recherche</searchPageDes>
 	<searchTemplates>Rechercher les Modèles</searchTemplates>
-	<searchText>Recherche libre</searchText>
+	<searchText>Recherche</searchText>
 	<searchUnused>Rechercher des métadonnées vides ou non utilisées</searchUnused>
 	<searchUnusedTitle>Métadonnées inutilisées</searchUnusedTitle>
 	<server>Serveur</server>

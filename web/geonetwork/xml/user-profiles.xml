@@ -67,6 +67,7 @@
 		<allow service="config"/>
 		<allow service="xml.config.get"/>
 		<allow service="xml.config.set"/>
+		<allow service="metadata.admin.index.rebuild"/>
 	</profile>
 
 	<!-- ====================================================================== -->

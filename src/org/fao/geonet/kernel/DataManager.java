@@ -94,6 +94,21 @@ public class DataManager
 		this.baseURL = baseURL;
 		this.htmlCacheDir = htmlCacheDir;
 
+		init (dbms, false);
+	}
+
+	
+	/*
+	 * Init Data manager and refresh index if needed. 
+	 * Could be called after GeoNetwork startup in order to 
+	 * rebuild the lucene index
+	 * 
+	 * @param dbms 
+	 * @param force 	Force reindexing all from scratch
+	 * 
+	 */
+	public void init(Dbms dbms, Boolean force) throws Exception {
+
 		// get all metadata from DB
 		Element result = dbms.select("SELECT id, changeDate FROM Metadata ORDER BY id ASC");
 		List list = result.getChildren();
@@ -131,7 +146,8 @@ public class DataManager
 	            Log.debug(Geonet.DATA_MANAGER, "- lastChange: " + lastChange); //DEBUG
                 Log.debug(Geonet.DATA_MANAGER, "- idxLastChange: " + idxLastChange); //DEBUG
 
-				if (!idxLastChange.equalsIgnoreCase(lastChange)) // date in index contains 't', date in DBMS contains 'T'
+				if (force || !idxLastChange.equalsIgnoreCase(lastChange)) 
+					// date in index contains 't', date in DBMS contains 'T'
 					indexMetadata(dbms, id);
 			}
 		}
@@ -146,8 +162,10 @@ public class DataManager
 
             Log.debug(Geonet.DATA_MANAGER, "- record (" + id + ")"); //DEBUG
 		}
-	}
 
+		
+	}	
+	
 	//--------------------------------------------------------------------------
 
 	public void indexMetadata(Dbms dbms, String id) throws Exception

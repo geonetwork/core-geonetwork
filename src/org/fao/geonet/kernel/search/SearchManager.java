@@ -32,6 +32,7 @@ import java.util.Vector;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
+import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
@@ -43,6 +44,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermEnum;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.DataManager;
 import org.jdom.Element;
 
 import com.k_int.IR.Searchable;
@@ -420,19 +422,39 @@ public class SearchManager
 			}
 			catch (Exception e)
 			{
-				System.err.println("exception while opening lucene index, going to rebuild it: " + e.getMessage());
+				Log.error(Geonet.SEARCH_ENGINE, "Exception while opening lucene index, going to rebuild it: " + e.getMessage());
 			}
 		}
 		// if rebuild forced or bad index then rebuild index
 		if (rebuild || badIndex)
 		{
-			System.err.println("rebuilding lucene index");
+			Log.error(Geonet.SEARCH_ENGINE, "Rebuilding lucene index");
 
 			IndexWriter writer = new IndexWriter(_luceneDir, new StandardAnalyzer(new String[] {}), true);
 			writer.close();
 		}
 	}
 
+	/*
+	 *  Rebuild the Lucene index
+	 *  
+	 *  @param dataMan
+	 *  @param dbms
+	 *  
+	 */
+	public boolean rebuildIndex(DataManager dataMan, Dbms dbms){
+		try {
+			setupIndex(true);
+			dataMan.init(dbms, true);
+			return true;
+		}catch(Exception e){
+			Log.error(Geonet.SEARCH_ENGINE, "Exception while rebuilding lucene index, going to rebuild it: " + e.getMessage());
+			return false;
+		}
+	}
+	
+	
+	
 	// creates a new document
 	private Document newDocument(Element xml)
 	{

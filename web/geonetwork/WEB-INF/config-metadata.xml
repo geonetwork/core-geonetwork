@@ -326,6 +326,16 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		 
+        <service name="metadata.admin.index.rebuild">
+        	<documentation>
+				<para>Service to force a complete rebuild of Lucene index. 
+				</para>
+			</documentation>
+            <class name=".services.metadata.IndexRebuild" />
+        </service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.ownership.editors">
 			<class name=".services.ownership.Editors"/>

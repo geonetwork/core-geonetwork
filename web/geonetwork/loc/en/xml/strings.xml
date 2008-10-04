@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<metadata.admin.index>Index manager</metadata.admin.index>
+	<metadata.admin.index.desc>Rebuild Lucene index</metadata.admin.index.desc>
+	<metadata.admin.index.success>Rebuild index operation was successful.</metadata.admin.index.success>
+	<metadata.admin.index.failed>Failed to rebuild index.</metadata.admin.index.failed>
+	<rebuild>Rebuild</rebuild>
     <savepdf>Save search results as pdf</savepdf>
 	<savexml>
 		<dc>Save Dublin Core metadata as XML</dc>
