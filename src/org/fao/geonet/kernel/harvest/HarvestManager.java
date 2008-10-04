@@ -23,8 +23,6 @@
 
 package org.fao.geonet.kernel.harvest;
 
-import java.sql.SQLException;
-import java.util.HashMap;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.MissingParameterEx;
@@ -39,6 +37,9 @@ import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
+
+import java.sql.SQLException;
+import java.util.HashMap;
 
 //=============================================================================
 
@@ -221,8 +222,7 @@ public class HarvestManager
 
 	//---------------------------------------------------------------------------
 
-	public OperResult run(String id)
-	{
+	public OperResult run(Dbms dbms, String id) throws SQLException {
 		Log.debug(Geonet.HARVEST_MAN, "Running harvesting with id : "+ id);
 
 		AbstractHarvester ah = hmHarvesters.get(id);
@@ -230,7 +230,7 @@ public class HarvestManager
 		if (ah == null)
 			return OperResult.NOT_FOUND;
 
-		return ah.run();
+		return ah.run(dbms);
 	}
 
 	//---------------------------------------------------------------------------

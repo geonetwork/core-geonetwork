@@ -23,10 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import java.lang.reflect.Method;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.JeevesException;
@@ -50,6 +46,11 @@ import org.fao.geonet.kernel.harvest.harvester.z3950.Z3950Harvester;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
+
+import java.lang.reflect.Method;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 //=============================================================================
 
@@ -231,10 +232,9 @@ public abstract class AbstractHarvester
 
 	//--------------------------------------------------------------------------
 
-	public synchronized OperResult run()
-	{
+	public synchronized OperResult run(Dbms dbms) throws SQLException {
 		if (status == Status.INACTIVE)
-			return OperResult.INACTIVE;
+			start(dbms);
 
 		if (executor.isRunning())
 			return OperResult.ALREADY_RUNNING;
