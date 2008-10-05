@@ -23,6 +23,7 @@
 	<sortByType id="rating">Rating</sortByType>
 	<sortByType id="popularity">Popularity</sortByType>
 	<sortByType id="date">Change date</sortByType>
+    <sortByType id="title">Title</sortByType>
 	<rateIt>Rate It</rateIt>
 	<mdRating>Metadata Rating</mdRating>
 	<ratingMsg>

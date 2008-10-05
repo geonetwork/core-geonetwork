@@ -70,7 +70,10 @@
 			<!-- digital data format defaults to true. Even if that doesn't make a lot of sense -->
 			<Field name="digital" string="true" store="false" index="true" token="false"/>
 				
-		</Document>
+            <!-- not tokenized title for sorting -->
+            <Field name="_title" string="{string(/metadata/idinfo/citation/citeinfo/title)}" 
+                    store="true" index="true" token="false"/>
+        </Document>
 	</xsl:template>
 	
 	<!-- ========================================================================================= -->

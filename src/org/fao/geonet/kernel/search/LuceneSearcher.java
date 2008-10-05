@@ -242,31 +242,32 @@ public class LuceneSearcher extends MetaSearcher
 	private void performQuery(Element request) throws Exception
 	{
 		String sortBy = Util.getParam(request, Geonet.SearchResult.SORT_BY, Geonet.SearchResult.SortBy.RELEVANCE);
+		boolean sortOrder = (Util.getParam(request, Geonet.SearchResult.SORT_ORDER, "").equals("")?true:false);
 
 		Log.debug(Geonet.SEARCH_ENGINE, "Sorting by : "+ sortBy);
 
 		Sort sort = null;
+		int sortType = SortField.INT;
 
-		if (sortBy.equals(Geonet.SearchResult.SortBy.DATE))
-			sort = new Sort(new SortField[]
-								{
-									new SortField("_changeDate", SortField.STRING, true),
-									SortField.FIELD_SCORE
-								});
-
-		else if (sortBy.equals(Geonet.SearchResult.SortBy.POPULARITY))
-			sort = new Sort(new SortField[]
-								{
-									new SortField("_popularity", SortField.INT, true),
-									SortField.FIELD_SCORE
-								});
-
-		else if (sortBy.equals(Geonet.SearchResult.SortBy.RATING))
-			sort = new Sort(new SortField[]
-								{
-									new SortField("_rating", SortField.INT, true),
-									SortField.FIELD_SCORE
-								});
+		if (!(
+				sortBy.equals(Geonet.SearchResult.SortBy.DATE)
+				|| sortBy.equals(Geonet.SearchResult.SortBy.TITLE)
+				|| sortBy.equals(Geonet.SearchResult.SortBy.RATING)
+				|| sortBy.equals(Geonet.SearchResult.SortBy.POPULARITY)
+			)) {
+			Log.debug(Geonet.SEARCH_ENGINE, "Unknow sort by option: " + sortBy + ", " + Geonet.SearchResult.SortBy.RELEVANCE + " used.");
+			sortBy = Geonet.SearchResult.SortBy.RELEVANCE;
+		}
+		
+		if (sortBy.equals(Geonet.SearchResult.SortBy.DATE)
+				|| sortBy.equals(Geonet.SearchResult.SortBy.TITLE))
+			sortType = SortField.STRING;
+				
+		sort = new Sort(new SortField[]
+						{
+							new SortField("_" + sortBy, sortType, sortOrder),
+							SortField.FIELD_SCORE
+						});
 
 		_reader = IndexReader.open(_sm.getLuceneDir());
 		_searcher = new IndexSearcher(_reader);

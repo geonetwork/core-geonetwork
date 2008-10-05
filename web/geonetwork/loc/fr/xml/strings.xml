@@ -436,6 +436,7 @@
 	<sortByType id="rating">Note</sortByType>
 	<sortByType id="popularity">Popularité</sortByType>
 	<sortByType id="date">Date de mise à jour</sortByType>
+    <sortByType id="title">Titre</sortByType>
 	<rateIt>Note</rateIt>
 	<mdRating>Note de la métadonnée</mdRating>
 	<ratingMsg>Cliquer sur le bouton pour noter. Pour les métadonnées moissonnées vous devez attendre la nouvelle synchronisation.</ratingMsg>

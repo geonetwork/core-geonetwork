@@ -286,6 +286,10 @@ public class Geonet
          * {@value SortBy#POPULARITY} or by {@value SortBy#DATE} */
         public static final String SORT_BY       = "sortBy";
 
+        /** Parameter name: {@value #SORT_ORDER} - Order results in reverse order or not 
+         * false (default) */
+        public static final String SORT_ORDER       = "sortOrder";
+
 		/** Parameter name: {@value #INTERMAP} - Boolean that indicates if 
          * GUI shows the embedded InterMap (on) or defaults to the old GUI (off).
          * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} (default)
@@ -318,6 +322,10 @@ public class Geonet
 			public static final String RATING    = "rating";
 			public static final String POPULARITY= "popularity";
 			public static final String DATE      = "date";
+
+			/** Parameter name: {@value #_TITLE} - Title not tokenized mainly
+			 * used for sorting purpose */
+			public static final String TITLE     = "title";
 		}
 	}
 

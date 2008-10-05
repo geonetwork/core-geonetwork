@@ -388,6 +388,7 @@
 	<sortByType id="rating">Bewertung</sortByType>
 	<sortByType id="popularity">Popularität</sortByType>
 	<sortByType id="date">Änderungsdatum</sortByType>
+    <sortByType id="title">Title</sortByType>
 	<rateIt>Bewerten</rateIt>
 	<mdRating>Metadaten Bewertung</mdRating>
 	<ratingMsg>Press a button to rate. Note that for harvested metadata you have to wait the new run.</ratingMsg>

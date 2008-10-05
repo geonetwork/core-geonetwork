@@ -23,7 +23,11 @@
 				<xsl:with-param name="name"  select="'title'"/>
 				<xsl:with-param name="token" select="'true'"/>
 			</xsl:apply-templates>
-			
+      
+        	<!-- not tokenized title for sorting -->
+            <Field name="_title" string="{string(/Metadata/dataIdInfo/idCitation/resTitle)}" 
+                    store="true" index="true" token="false"/>
+      			
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 			<!-- === Abstract === -->	
 			<xsl:apply-templates select="/Metadata/dataIdInfo/idAbs">

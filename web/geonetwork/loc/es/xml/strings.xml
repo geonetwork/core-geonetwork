@@ -425,6 +425,7 @@
 	<sortByType id="rating">Rating</sortByType>
 	<sortByType id="popularity">Popularidad</sortByType>
 	<sortByType id="date">Fecha de modificación</sortByType>
+    <sortByType id="title">Title</sortByType>
 	<rateIt>Establecer rating</rateIt>
 	<mdRating>Rating de metadatos</mdRating>
 	<ratingMsg>Presione un botón para establecer el rating. Note que para metadatos harvested necesitas esperar a la siguiente ejecución.</ratingMsg>

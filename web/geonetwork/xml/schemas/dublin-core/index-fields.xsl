@@ -73,6 +73,8 @@
 	
 			<xsl:for-each select="/simpledc/dc:title">
 				<Field name="title" string="{string(.)}" store="false" index="true" token="false"/>
+                <!-- not tokenized title for sorting -->
+                <Field name="_title" string="{string(.)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
 	
 			<xsl:apply-templates select="/simpledc/dc:title">

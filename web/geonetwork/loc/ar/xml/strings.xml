@@ -418,6 +418,7 @@
 	<sortByType id="rating">Rating</sortByType>
 	<sortByType id="popularity">Popularity</sortByType>
 	<sortByType id="date">Change date</sortByType>
+    <sortByType id="title">Title</sortByType>
 	<southbc>الاحداثيات الجنوبية</southbc>
 	<spatial2Tab>Spat. Repr.</spatial2Tab>
 	<spatialTab>Spat. Info</spatialTab>

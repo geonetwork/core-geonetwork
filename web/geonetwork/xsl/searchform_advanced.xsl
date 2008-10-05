@@ -570,8 +570,9 @@
 					<xsl:value-of select="/root/gui/strings/sortBy"/>
 				</th>
 				<td class="padded">
-					<select id="sortBy" size="1" class="content">
-						<xsl:for-each select="/root/gui/strings/sortByType">
+                    <select id="sortBy" size="1" class="content" 
+                     onChange="if (this.options[this.selectedIndex].value=='title') $('sortOrder').value = 'reverse'; else $('sortOrder').value = ''">
+       				    <xsl:for-each select="/root/gui/strings/sortByType">
 							<option value="{@id}">
 								<xsl:if test="@id = /root/gui/searchDefaults/sortBy">
 									<xsl:attribute name="selected"/>
@@ -580,6 +581,7 @@
 							</option>
 						</xsl:for-each>
 					</select>
+                    <input type="hidden" name="sortOrder" id="sortOrder"/>
 				</td>
 			</tr>
 							

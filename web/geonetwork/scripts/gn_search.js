@@ -58,6 +58,7 @@ function runSimpleSearch(type)
 	}
 	}
 	pars += fetchParam('sortBy');
+	pars += fetchParam('sortOrder');
 	pars += fetchParam('hitsPerPage');
 	pars += fetchParam('output');
 	
@@ -85,6 +86,7 @@ function resetSimpleSearch()
     im_mm_redrawAoI();
     im_mm_zoomToAoI(); 	
  	setParam('sortBy',      'relevance');
+ 	setParam('sortOrder',   '');
  	setParam('hitsPerPage', '10');
  	setParam('output',      'full');
 }
@@ -239,6 +241,7 @@ function runAdvancedSearch(type)
 	pars += fetchParam('protocol').toLowerCase();
 	pars += fetchParam('template');
 	pars += fetchParam('sortBy');
+	pars += fetchParam('sortOrder');
 	pars += fetchParam('hitsPerPage');
 	pars += fetchParam('output');
 
@@ -286,6 +289,7 @@ function resetAdvancedSearch()
 	setParam('protocol',    '');
 	setParam('template',    'n');
  	setParam('sortBy',      'relevance');
+ 	setParam('sortOrder',   '');
  	setParam('hitsPerPage', '10');
  	setParam('output',      'full');
 }
@@ -316,6 +320,10 @@ function showOptions()
 function setSortAndSearch()
 {
 	$('sortBy').value = $F('sortBy.live');
+	if ($('sortBy').value=='title') 
+	   $('sortOrder').value = 'reverse'; 
+	else 
+	   $('sortOrder').value = '';
 	
 	if ($('protocol') == null)	runSimpleSearch();
 		else							runAdvancedSearch();
