@@ -24,6 +24,7 @@
 package org.fao.gast.gui.panels.manag.mefimport;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.List;
 
 import jeeves.utils.XmlRequest;
@@ -32,6 +33,7 @@ import org.dlib.gui.ProgressDialog;
 import org.fao.gast.app.App;
 import org.fao.gast.app.Configuration;
 import org.fao.gast.lib.Lib;
+import org.fao.gast.localization.Messages;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
@@ -115,7 +117,7 @@ public class Worker implements Runnable
 	private void login(XmlRequest req) throws Exception
 	{
 		dlg.reset(1);
-		dlg.advance("Login into : "+ App.config.getHost());
+		dlg.advance(MessageFormat.format(Messages.getString("Worker.loginto"), App.config.getHost()));
 
 		Lib.service.login(req);
 	}
@@ -125,7 +127,7 @@ public class Worker implements Runnable
 	private void logout(XmlRequest req)
 	{
 		dlg.reset(1);
-		dlg.advance("Logout from : "+ App.config.getHost());
+		dlg.advance(MessageFormat.format(Messages.getString("Worker.logoutFrom"), App.config.getHost()));
 
 		Lib.service.logout(req);
 	}
@@ -135,7 +137,7 @@ public class Worker implements Runnable
 	private List<File> scanFiles() throws Exception
 	{
 		dlg.reset(1);
-		dlg.advance("Scanning folder : "+ inputDir);
+		dlg.advance(MessageFormat.format(Messages.getString("Worker.scanFolder"), inputDir));
 
 		return Lib.io.scanDir(new File(inputDir), "mef");
 	}
@@ -144,7 +146,7 @@ public class Worker implements Runnable
 
 	private void send(XmlRequest req, File mefFile) throws Exception
 	{
-		dlg.advance("Importing file : "+ mefFile.getName());
+		dlg.advance(Messages.getString("Worker.importFile")+ mefFile.getName());
 
 		req.setAddress("/"+ App.config.getServlet() +"/srv/en/"+ Geonet.Service.MEF_IMPORT);
 

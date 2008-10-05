@@ -27,6 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import org.dlib.gui.FlexLayout;
 import org.fao.gast.lib.Lib;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -49,12 +50,12 @@ public class EmbeddedPanel extends DbmsPanel
 		fl.setColProp(1, FlexLayout.EXPAND);
 		setLayout(fl);
 
-		add("0,0", new JLabel("Port"));
+		add("0,0", new JLabel(Messages.getString("port")));
 		add("1,0", txtPort);
 		add("2,0", new JLabel("<html><font color='red'>(REQ)</font>"));
 
 		txtPort.setText("9157");
-		txtPort.setToolTipText("The default port is 9157");
+		txtPort.setToolTipText(Messages.getString("mckoi.defaultPort"));
 	}
 
 	//---------------------------------------------------------------------------
@@ -63,7 +64,7 @@ public class EmbeddedPanel extends DbmsPanel
 	//---
 	//---------------------------------------------------------------------------
 
-	public String getLabel() { return "Embedded"; }
+	public String getLabel() { return Messages.getString("embedded"); }
 
 	//---------------------------------------------------------------------------
 
@@ -88,7 +89,7 @@ public class EmbeddedPanel extends DbmsPanel
 		String pass = Lib.embeddedDB.getPassword();
 
 		if (!Lib.type.isInteger(port))
-			throw new Exception("The port must be an integer");
+			throw new Exception(Messages.getString("portInt"));
 
 		Lib.config.setDbmsDriver  ("com.mckoi.JDBCDriver");
 		Lib.config.setDbmsURL     ("jdbc:mckoi://localhost:"+port+"/");

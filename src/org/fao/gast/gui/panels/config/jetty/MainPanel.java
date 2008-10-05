@@ -32,6 +32,7 @@ import javax.swing.JTextField;
 import org.dlib.gui.FlexLayout;
 import org.fao.gast.gui.panels.FormPanel;
 import org.fao.gast.lib.Lib;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -69,7 +70,7 @@ public class MainPanel extends FormPanel
 	private void save()
 	{
 		if (!Lib.type.isInteger(txtPort.getText()))
-			Lib.gui.showError(this, "The port must be an integer");
+			Lib.gui.showError(this, Messages.getString("portInt"));
 		else
 		{
 			Lib.embeddedSC.setServlet(txtServlet.getText());
@@ -78,7 +79,7 @@ public class MainPanel extends FormPanel
 			try
 			{
 				Lib.embeddedSC.save();
-				Lib.gui.showInfo(this, "Configuration saved");
+				Lib.gui.showInfo(this, Messages.getString("configSaved"));
 			}
 			catch (IOException e)
 			{
@@ -101,8 +102,8 @@ public class MainPanel extends FormPanel
 		fl.setColProp(1, FlexLayout.EXPAND);
 		p.setLayout(fl);
 
-		p.add("0,0",   new JLabel("Servlet"));
-		p.add("0,1",   new JLabel("Port"));
+		p.add("0,0",   new JLabel(Messages.getString("servlet")));
+		p.add("0,1",   new JLabel(Messages.getString("port")));
 		p.add("1,0,x", txtServlet);
 		p.add("1,1,x", txtPort);
 

@@ -30,6 +30,7 @@ import javax.swing.JTextField;
 import org.dlib.gui.FlexLayout;
 import org.dlib.gui.TPanel;
 import org.fao.gast.lib.Lib;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -43,7 +44,7 @@ public class ServerPanel extends TPanel
 
 	public ServerPanel()
 	{
-		super("Server");
+		super(Messages.getString("ServerPanel.title"));
 
 		FlexLayout fl = new FlexLayout(3,5);
 		fl.setColProp(2, FlexLayout.EXPAND);
@@ -52,13 +53,13 @@ public class ServerPanel extends TPanel
 		add("0,0,x,c,3", jrbEmbed);
 		add("0,1,x,c,3", jrbExter);
 
-		add("1,2",   new JLabel("Host"));
+		add("1,2",   new JLabel(Messages.getString("host")));
 		add("2,2,x", txtHost);
 
-		add("1,3",   new JLabel("Port"));
+		add("1,3",   new JLabel(Messages.getString("port")));
 		add("2,3,x", txtPort);
 
-		add("1,4",   new JLabel("Servlet"));
+		add("1,4",   new JLabel(Messages.getString("servlet")));
 		add("2,4,x", txtServlet);
 
 		btgServer.add(jrbEmbed);
@@ -122,8 +123,8 @@ public class ServerPanel extends TPanel
 	//---------------------------------------------------------------------------
 
 	private ButtonGroup    btgServer = new ButtonGroup();
-	private JRadioButton   jrbEmbed  = new JRadioButton("Embedded");
-	private JRadioButton   jrbExter  = new JRadioButton("External");
+	private JRadioButton   jrbEmbed  = new JRadioButton(Messages.getString("embedded"));
+	private JRadioButton   jrbExter  = new JRadioButton(Messages.getString("external"));
 	private JTextField     txtHost   = new JTextField(20);
 	private JTextField     txtPort   = new JTextField(20);
 	private JTextField     txtServlet= new JTextField(20);

@@ -36,6 +36,7 @@ import org.dlib.gui.FlexLayout;
 import org.dlib.gui.GuiUtil;
 import org.dlib.gui.ProgressDialog;
 import org.fao.gast.gui.panels.FormPanel;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -54,7 +55,7 @@ public class MainPanel extends FormPanel
 	public MainPanel()
 	{
 		txtInputDir.setText(System.getProperty("user.home", ""));
-		jfcBrowser .setDialogTitle("Choose input folder");
+		jfcBrowser .setDialogTitle(Messages.getString("chooseInputFolder"));
 		jfcBrowser .setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 	}
 
@@ -81,7 +82,7 @@ public class MainPanel extends FormPanel
 	{
 		jfcBrowser.setSelectedFile(new File(txtInputDir.getText()));
 
-		int res = jfcBrowser.showDialog(this, "Choose");
+		int res = jfcBrowser.showDialog(this, Messages.getString("choose"));
 
 		if (res == JFileChooser.APPROVE_OPTION)
 			txtInputDir.setText(jfcBrowser.getSelectedFile().getAbsolutePath());
@@ -92,7 +93,7 @@ public class MainPanel extends FormPanel
 	private void doImport()
 	{
 		Frame          owner  = GuiUtil.getFrame(this);
-		ProgressDialog dialog = new ProgressDialog(owner, "Importing data");
+		ProgressDialog dialog = new ProgressDialog(owner, Messages.getString("importData"));
 		Worker         worker = new Worker(dialog);
 
 		worker.setInputDir(txtInputDir.getText());
@@ -113,7 +114,7 @@ public class MainPanel extends FormPanel
 		fl.setColProp(1, FlexLayout.EXPAND);
 		p.setLayout(fl);
 
-		p.add("0,0",   new JLabel("Input folder"));
+		p.add("0,0",   new JLabel(Messages.getString("inputFolder")));
 		p.add("1,0,x", txtInputDir);
 		p.add("2,0",   btnBrowse);
 
@@ -130,7 +131,7 @@ public class MainPanel extends FormPanel
 	//---------------------------------------------------------------------------
 
 	private JTextField   txtInputDir= new JTextField(20);
-	private JButton      btnBrowse  = new JButton("Browse");
+	private JButton      btnBrowse  = new JButton(Messages.getString("browse"));
 	private JFileChooser jfcBrowser = new JFileChooser();
 }
 

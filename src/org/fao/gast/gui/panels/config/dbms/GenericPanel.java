@@ -27,6 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import org.dlib.gui.FlexLayout;
 import org.fao.gast.lib.Lib;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -48,10 +49,10 @@ public class GenericPanel extends DbmsPanel {
 		fl.setColProp(1, FlexLayout.EXPAND);
 		setLayout(fl);
 
-		add("0,0", new JLabel("JDBC Driver"));
+		add("0,0", new JLabel(Messages.getString("jdbcDriver")));
 		add("0,1", new JLabel("URL"));
-		add("0,2", new JLabel("Username"));
-		add("0,3", new JLabel("Password"));
+		add("0,2", new JLabel(Messages.getString("username")));
+		add("0,3", new JLabel(Messages.getString("password")));
 
 		add("1,0,x", txtDriver);
 		add("1,1,x", txtURL);
@@ -68,7 +69,7 @@ public class GenericPanel extends DbmsPanel {
 	//---
 	//---------------------------------------------------------------------------
 
-	public String getLabel() { return "Generic JDBC connection"; }
+	public String getLabel() { return Messages.getString("genericJDBCConnection"); }
 
 	//---------------------------------------------------------------------------
 

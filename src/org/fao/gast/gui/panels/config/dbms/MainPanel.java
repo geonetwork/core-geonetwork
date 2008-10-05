@@ -35,6 +35,7 @@ import org.dlib.gui.FlexLayout;
 import org.dlib.gui.MultiPanel;
 import org.fao.gast.gui.panels.FormPanel;
 import org.fao.gast.lib.Lib;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -92,13 +93,13 @@ public class MainPanel extends FormPanel
 		try
 		{
 			p.save();
-			Lib.gui.showInfo(this, "Configuration saved");
+			Lib.gui.showInfo(this, Messages.getString("configSaved"));
 		}
 
 		catch (IOException ex)
 		{
-			Lib.gui.showError(this, "Raised an exception while saving the configuration:\n"+
-									ex.getMessage());
+			Lib.gui.showError(this, Messages.getString("configException")+
+										ex.getMessage());
 
 			ex.printStackTrace();
 		}

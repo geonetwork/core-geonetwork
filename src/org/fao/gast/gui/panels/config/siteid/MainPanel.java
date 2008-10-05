@@ -33,6 +33,7 @@ import org.dlib.gui.FlexLayout;
 import org.fao.gast.gui.panels.FormPanel;
 import org.fao.gast.lib.Lib;
 import org.fao.gast.lib.Resource;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -57,7 +58,7 @@ public class MainPanel extends FormPanel
 		fl.setColProp(1, FlexLayout.EXPAND);
 		p.setLayout(fl);
 
-		p.add("0,0",   new JLabel("Site ID"));
+		p.add("0,0",   new JLabel(Messages.getString("siteId")));
 		p.add("1,0,x", txtSiteID);
 
 		return p;
@@ -84,7 +85,7 @@ public class MainPanel extends FormPanel
 			Lib.site.setSiteId(dbms, siteId);
 			dbms.commit();
 
-			Lib.gui.showInfo(this, "Site ID changed");
+			Lib.gui.showInfo(this, Messages.getString("siteIdChanged"));
 		}
 		catch (Exception e)
 		{

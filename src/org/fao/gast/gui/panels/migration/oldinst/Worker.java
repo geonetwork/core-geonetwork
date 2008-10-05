@@ -24,6 +24,7 @@
 package org.fao.gast.gui.panels.migration.oldinst;
 
 import java.sql.SQLException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -42,6 +43,7 @@ import org.fao.gast.lib.Resource;
 import org.fao.gast.lib.druid.Codec;
 import org.fao.gast.lib.druid.DdfLoader;
 import org.fao.gast.lib.druid.ImportField;
+import org.fao.gast.localization.Messages;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.jdom.Element;
 
@@ -144,9 +146,7 @@ public class Worker implements Runnable
 		}
 		catch (Exception e)
 		{
-			Lib.gui.showError(dlg, 	"It seems that the specified folder does not \n"+
-											"contain an old GeoNetwork installation");
-
+			Lib.gui.showError(dlg, 	Messages.getString("Worker.0"));
 			return false;
 		}
 	}
@@ -161,12 +161,12 @@ public class Worker implements Runnable
 
 		// Get the user id and profile from the db
 		if (oldUserIds.size() == 0)
-			throw new Exception("Can't find user \"" + oldUserName + "\" in the old GeoNetwork");
+			throw new Exception(MessageFormat.format(Messages.getString("Worker.2"),oldUserName ));
 
 		// Check if the user is an Editor
 		String profile = ((Element)oldUserIds.get(0)).getChildText("profile");
 		if (!"Editor".equals(profile))
-			throw new Exception("User \"" + oldUserName + "\" is not an Editor");
+			throw new Exception(MessageFormat.format(Messages.getString("Worker.5"),oldUserName));
 
 		// Check if the group exists
 		oldUserId = Integer.parseInt(((Element)oldUserIds.get(0)).getChildText("id"));
@@ -175,7 +175,7 @@ public class Worker implements Runnable
 		List oldGroupIds = oldDbms.select(query, oldGroupName).getChildren();
 		oldDbms.commit();
 		if (oldGroupIds.size() == 0)
-			throw new Exception("Can't find group \"" + oldGroupName + "\" in the old GeoNetwork");
+			throw new Exception(MessageFormat.format(Messages.getString("Worker.8"),oldGroupName ));
 
 		// Check if the user belongs to the given group
 		oldGroupId = Integer.parseInt(((Element)oldGroupIds.get(0)).getChildText("id"));
@@ -184,7 +184,7 @@ public class Worker implements Runnable
 		List userGroups = oldDbms.select(query, new Integer(oldGroupId), new Integer(oldUserId)).getChildren();
 		oldDbms.commit();
 		if (userGroups.size() == 0)
-			throw new Exception("User \"" + oldUserName + "\" doesn't belong to group \"" + oldGroupName + "\"");
+			throw new Exception(MessageFormat.format(Messages.getString("Worker.11"),oldUserName,oldGroupName));
 	}
 
 	//---------------------------------------------------------------------------
@@ -196,37 +196,37 @@ public class Worker implements Runnable
 		else
 		{
 			dlg.reset(10);
-			dlg.advance("Checking old user and group");
+			dlg.advance(Messages.getString("Worker.12"));
 			checkOldUser(oldDbms);
 		}
 
-		dlg.advance("Removing data in new installation");
+		dlg.advance(Messages.getString("Worker.13"));
 		removeAll(newDbms);
 
 		Set<String> langs = getLanguages(newDbms);
 
-		dlg.advance("Migrating users");
+		dlg.advance(Messages.getString("Worker.14"));
 		migrateUsers(oldDbms, newDbms);
 
-		dlg.advance("Migrating groups");
+		dlg.advance(Messages.getString("Worker.15"));
 		migrateGroups(oldDbms, newDbms, langs);
 
-		dlg.advance("Migrating categories");
+		dlg.advance(Messages.getString("Worker.16"));
 		migrateCategories(oldDbms, newDbms, langs);
 
-		dlg.advance("Migrating metadata");
+		dlg.advance(Messages.getString("Worker.17"));
 		migrateMetadata(oldDbms, newDbms);
 
-		dlg.advance("Migrating privileges");
+		dlg.advance(Messages.getString("Worker.18"));
 		migrateOperationAllowed(oldDbms, newDbms);
 
-		dlg.advance("Migrating metadata categories");
+		dlg.advance(Messages.getString("Worker.19"));
 		migrateMetadataCateg(oldDbms, newDbms);
 
-		dlg.advance("Migrating settings");
+		dlg.advance(Messages.getString("Worker.20"));
 		migrateSettings(newDbms);
 
-		dlg.advance("Restoring localized labels");
+		dlg.advance(Messages.getString("Worker.21"));
 		restoreLocalizedRecords(newDbms);
 
 		Lib.metadata.clearIndexes();
@@ -636,7 +636,7 @@ public class Worker implements Runnable
         if (oldUserName == null)
         {
             // throw an Exception if default user and group were not given
-             throw new Exception("No candidate owner found for metadata with id: "+id);
+             throw new Exception(MessageFormat.format(Messages.getString("Worker.3"),id));
         } else {
             // Assign default user and group if metadata is not owned
             Lib.log.debug("Metadata with id ("+ id +") has no group with admin or edit privileges. Using user/group provided by GAST)");

@@ -41,6 +41,7 @@
 
 		<copy			todir = ".build">
 			<fileset dir   = "src" includes = "*.properties"/>
+		    <fileset dir   = "src" includes = "**/*.properties"/>
 		</copy>
 		
 		<jar		jarfile ="web/geonetwork/WEB-INF/lib/geonetwork.jar"
@@ -61,7 +62,7 @@
 		
 		<jar		jarfile ="gast/gast.jar"
 					basedir =".build"
-					includes="org/fao/gast/Gast.class, org/fao/gast/boot/**">
+					includes="org/fao/gast/Gast.class, org/fao/gast/boot/**, org/fao/gast/localization/**">
 			<manifest>
 				<attribute name="Main-Class" value="org.fao.gast.Gast"/>
 			</manifest>

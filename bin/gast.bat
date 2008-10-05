@@ -1,2 +1,2 @@
 cd ..\gast
-start javaw -jar gast.jar
+start javaw %1 -jar gast.jar

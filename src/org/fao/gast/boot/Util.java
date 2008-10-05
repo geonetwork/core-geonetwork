@@ -30,8 +30,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-
 import javax.swing.JOptionPane;
+
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -162,21 +163,21 @@ public class Util
 	{
 		String message = t.getClass().getSimpleName() +"\n"+ t.getMessage();
 
-		JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(null, message, Messages.getString("error"), JOptionPane.ERROR_MESSAGE);
 	}
 
 	//---------------------------------------------------------------------------
 
 	public static void showError(String message)
 	{
-		JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(null, message, Messages.getString("error"), JOptionPane.ERROR_MESSAGE);
 	}
 
 	//---------------------------------------------------------------------------
 
 	public static void showInfo(String message)
 	{
-		JOptionPane.showMessageDialog(null, message, "Information", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(null, message, Messages.getString("info"), JOptionPane.INFORMATION_MESSAGE);
 	}
 }
 

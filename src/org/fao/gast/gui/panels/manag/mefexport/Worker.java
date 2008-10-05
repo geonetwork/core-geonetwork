@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.List;
 import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.utils.BinaryFile;
@@ -36,6 +37,7 @@ import org.dlib.gui.ProgressDialog;
 import org.fao.gast.app.App;
 import org.fao.gast.app.Configuration;
 import org.fao.gast.lib.Lib;
+import org.fao.gast.localization.Messages;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
@@ -132,7 +134,7 @@ public class Worker implements Runnable
 	private void login(XmlRequest req) throws Exception
 	{
 		dlg.reset(1);
-		dlg.advance("Login into : "+ App.config.getHost());
+		dlg.advance(MessageFormat.format(Messages.getString("Worker.loginto"), App.config.getHost()));
 
 		Lib.service.login(req);
 	}
@@ -142,7 +144,7 @@ public class Worker implements Runnable
 	private void logout(XmlRequest req)
 	{
 		dlg.reset(1);
-		dlg.advance("Logout from : "+ App.config.getHost());
+		dlg.advance(MessageFormat.format(Messages.getString("Worker.logoutFrom"), App.config.getHost()));
 
 		Lib.service.logout(req);
 	}
@@ -154,7 +156,7 @@ public class Worker implements Runnable
 		Configuration cfg = App.config;
 
 		dlg.reset(1);
-		dlg.advance("Searching on : "+ cfg.getHost());
+		dlg.advance(MessageFormat.format(Messages.getString("Worker.search"), cfg.getHost()));
 
 		req.setAddress("/"+ cfg.getServlet() +"/srv/en/"+ Geonet.Service.XML_SEARCH);
 
@@ -165,7 +167,7 @@ public class Worker implements Runnable
 
 	private File retrieveMEF(XmlRequest req, String uuid) throws Exception
 	{
-		dlg.advance("Exporting uuid : "+uuid);
+		dlg.advance(MessageFormat.format(Messages.getString("Worker.exportUUID"),uuid));
 
 		req.clearParams();
 		req.addParam("uuid",     uuid);
@@ -186,7 +188,7 @@ public class Worker implements Runnable
 			if ("operation-not-allowed".equals(id))
 				throw new OperationNotAllowedEx();
 
-			throw new Exception("Error from server:\n"+Xml.getString(root));
+			throw new Exception(MessageFormat.format(Messages.getString("Worker.errorServer"),Xml.getString(root)));
 		}
 
 		return tempFile;

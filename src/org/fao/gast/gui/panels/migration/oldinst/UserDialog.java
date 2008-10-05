@@ -19,6 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataListener;
 import org.dlib.gui.FlexLayout;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -32,7 +33,7 @@ public class UserDialog extends JDialog implements ActionListener
 
 	public UserDialog(Dialog d, List<Owner> candid, List<Owner> admins, List<Owner> groups)
 	{
-		super(d, "Choose user", true);
+		super(d, Messages.getString("chooseUser"), true);
 
 		this.candid = candid;
 
@@ -52,12 +53,12 @@ public class UserDialog extends JDialog implements ActionListener
 		fl.setRowProp(1, FlexLayout.EXPAND);
 
 		p.setLayout(fl);
-		p.add("0,0,x,c,2", new JLabel("Candidates found"));
+		p.add("0,0,x,c,2", new JLabel(Messages.getString("candidatesFounds")));
 		p.add("0,1,x,x,2", new JScrollPane(jlCandid));
 		p.add("0,2,x,c,2", chUseAdm);
-		p.add("0,3",       new JLabel("User"));
+		p.add("0,3",       new JLabel(Messages.getString("user")));
 		p.add("1,3,x",     cbAdmins);
-		p.add("0,4",       new JLabel("Group"));
+		p.add("0,4",       new JLabel(Messages.getString("group")));
 		p.add("1,4,x",     cbGroups);
 		p.add("1,5,c",     btOk);
 
@@ -165,8 +166,8 @@ public class UserDialog extends JDialog implements ActionListener
 	private JList     jlCandid = new JList();
 	private JComboBox cbAdmins = new JComboBox();
 	private JComboBox cbGroups = new JComboBox();
-	private JCheckBox chUseAdm = new JCheckBox("Use one of the following user/group");
-	private JButton   btOk     = new JButton("Ok");
+	private JCheckBox chUseAdm = new JCheckBox(Messages.getString("userOneOfFollowing"));
+	private JButton   btOk     = new JButton(Messages.getString("ok"));
 }
 
 //==============================================================================

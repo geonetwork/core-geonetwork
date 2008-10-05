@@ -39,6 +39,7 @@ import org.dlib.gui.TPanel;
 import org.fao.gast.app.App;
 import org.fao.gast.app.Configuration;
 import org.fao.gast.lib.Lib;
+import org.fao.gast.localization.Messages;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
@@ -58,23 +59,23 @@ public class SearchPanel extends TPanel implements ActionListener
 	private static final long serialVersionUID = -9161193939072633779L;
 	public SearchPanel()
 	{
-		super("Search");
+		super(Messages.getString("search"));
 
 		FlexLayout fl = new FlexLayout(3,4);
 		fl.setColProp(1, FlexLayout.EXPAND);
 		setLayout(fl);
 
-		add("0,0",   new JLabel("Free text"));
+		add("0,0",   new JLabel(Messages.getString("freeText")));
 		add("1,0,x", txtAny);
 
-		add("0,1",   new JLabel("Site ID"));
+		add("0,1",   new JLabel(Messages.getString("siteId")));
 		add("1,1,x", cmbSiteId);
 		add("2,1",   btnRetrieve);
 
-		add("0,2",   new JLabel("Group owner"));
+		add("0,2",   new JLabel(Messages.getString("groupOwner")));
 		add("1,2,x", cmbGroup);
 
-		add("0,3", new JLabel("Templates"));
+		add("0,3", new JLabel(Messages.getString("templates")));
 		add("1,3", chbTemp);
 
 		btnRetrieve.addActionListener(this);
@@ -201,7 +202,7 @@ public class SearchPanel extends TPanel implements ActionListener
 	private JComboBox  cmbSiteId  = new JComboBox();
 	private JComboBox  cmbGroup   = new JComboBox();
 	private JCheckBox  chbTemp    = new JCheckBox();
-	private JButton    btnRetrieve= new JButton("Retrieve");
+	private JButton    btnRetrieve= new JButton(Messages.getString("retrieve"));
 }
 
 //==============================================================================

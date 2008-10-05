@@ -38,6 +38,7 @@ import org.dlib.gui.FlexLayout;
 import org.dlib.gui.GuiUtil;
 import org.dlib.gui.ProgressDialog;
 import org.fao.gast.gui.panels.FormPanel;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -56,7 +57,7 @@ public class MainPanel extends FormPanel
 	public MainPanel()
 	{
 		txtOutDir.setText(System.getProperty("user.home", ""));
-		jfcBrowser.setDialogTitle("Choose output folder");
+		jfcBrowser.setDialogTitle(Messages.getString("chooseOutputFolder"));
 		jfcBrowser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 	}
 
@@ -83,7 +84,7 @@ public class MainPanel extends FormPanel
 	{
 		jfcBrowser.setSelectedFile(new File(txtOutDir.getText()));
 
-		int res = jfcBrowser.showDialog(this, "Choose");
+		int res = jfcBrowser.showDialog(this, Messages.getString("choose"));
 
 		if (res == JFileChooser.APPROVE_OPTION)
 			txtOutDir.setText(jfcBrowser.getSelectedFile().getAbsolutePath());
@@ -94,7 +95,7 @@ public class MainPanel extends FormPanel
 	private void export()
 	{
 		Frame          owner  = GuiUtil.getFrame(this);
-		ProgressDialog dialog = new ProgressDialog(owner, "Exporting data");
+		ProgressDialog dialog = new ProgressDialog(owner, Messages.getString("exportingData"));
 		Worker         worker = new Worker(dialog, panSearch);
 
 		worker.setOutDir(txtOutDir.getText());
@@ -118,14 +119,14 @@ public class MainPanel extends FormPanel
 		fl.setColProp(1, FlexLayout.EXPAND);
 		p.setLayout(fl);
 
-		p.add("0,0",   new JLabel("Output folder"));
+		p.add("0,0",   new JLabel(Messages.getString("outputFolder")));
 		p.add("1,0,x", txtOutDir);
 		p.add("2,0",   btnBrowse);
 
-		p.add("0,1", new JLabel("Format"));
+		p.add("0,1", new JLabel(Messages.getString("format")));
 		p.add("1,1", cmbFormat);
 
-		p.add("0,2", new JLabel("Skip UUID"));
+		p.add("0,2", new JLabel(Messages.getString("skipUUID")));
 		p.add("1,2", chbSkipUuid);
 
 		p.add("0,3,x,c,3,1", panSearch);
@@ -133,9 +134,10 @@ public class MainPanel extends FormPanel
 		btnBrowse.addActionListener(this);
 		btnBrowse.setActionCommand("browse");
 
-		cmbFormat.addItem("Simple");
-		cmbFormat.addItem("Partial");
-		cmbFormat.addItem("Full");
+		cmbFormat.addItem(Messages.getString("simple"));
+		cmbFormat.addItem(Messages.getString("partial"));
+		cmbFormat.addItem(Messages.getString("full"));
+
 
 		return p;
 	}
@@ -147,7 +149,7 @@ public class MainPanel extends FormPanel
 	//---------------------------------------------------------------------------
 
 	private JTextField   txtOutDir  = new JTextField(20);
-	private JButton      btnBrowse  = new JButton("Browse");
+	private JButton      btnBrowse  = new JButton(Messages.getString("browse"));
 	private JComboBox    cmbFormat  = new JComboBox();
 	private JCheckBox    chbSkipUuid= new JCheckBox();
 	private JFileChooser jfcBrowser = new JFileChooser();

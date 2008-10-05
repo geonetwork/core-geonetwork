@@ -24,14 +24,25 @@
 package org.fao.gast.gui;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import jeeves.utils.Xml;
 import org.fao.gast.gui.panels.FormPanel;
+import org.jdom.Attribute;
+import org.jdom.Content;
 import org.jdom.Element;
 
 //==============================================================================
@@ -58,9 +69,14 @@ public class GuiBuilder
 	//---
 	//---------------------------------------------------------------------------
 
-	public void build(String guiFile) throws Exception
+	public void build(String guiFile, Locale locale) throws Exception 
 	{
 		Element root = Xml.loadFile(appPath + File.separator + guiFile);
+
+		ResourceBundle resourceBundle = lookupResourceBundle(appPath
+				+ File.separator + guiFile, locale);
+
+		localize(root, resourceBundle);
 
 		packag = root.getChild("class").getAttributeValue("package");
 
@@ -76,6 +92,85 @@ public class GuiBuilder
 	//--- Private methods
 	//---
 	//---------------------------------------------------------------------------
+
+	private ResourceBundle lookupResourceBundle(String guiFile, Locale locale) throws IOException 
+	{
+
+		String[] parts = { locale.getLanguage(), locale.getCountry(),
+				locale.getVariant() };
+		String baseString = guiFile;
+		if (guiFile.indexOf('.') > 0) {
+			baseString = guiFile.substring(0, guiFile.lastIndexOf("."));
+		}
+
+		for (int i = parts.length; i >= 0; i--) {
+			ResourceBundle bundle = locateResourceBundleFile(baseString, parts,
+					i);
+			if (bundle != null) {
+				return bundle;
+			}
+		}
+		throw new IllegalStateException("Unable to find gui.xml file");
+	}
+
+	public ResourceBundle locateResourceBundleFile(String appPath,
+			String[] args, int toUse) throws IOException 
+	{
+		StringBuilder builder = new StringBuilder(appPath);
+
+		for (int i = 0; i < toUse; i++) {
+			if (args[i] != null) {
+				builder.append('_');
+				builder.append(args[i]);
+			}
+		}
+
+		builder.append(".properties");
+		if (new java.io.File(builder.toString()).exists()) {
+			return new PropertyResourceBundle(
+					new FileInputStream(builder.toString()));
+		}
+		return null;
+	}
+	
+	private void localize(Element elem, ResourceBundle resourceBundle) 
+	{
+		List attributes = elem.getAttributes();
+		for (Iterator iterator = attributes.iterator(); iterator.hasNext();) {
+			Attribute attribute = (Attribute) iterator.next();
+			attribute.setValue(localize(attribute.getValue(), resourceBundle));
+		}
+		if (elem.getText() != null && elem.getTextTrim().length() > 0)
+			elem.setText(localize(elem.getText(), resourceBundle));
+
+		List children = elem.getChildren();
+		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
+			Content child = (Content) iterator.next();
+			if (child instanceof Element) {
+				localize((Element) child, resourceBundle);
+			}
+		}
+	}
+
+	private String localize(String string, ResourceBundle resourceBundle) 
+	{
+		if (string == null) {
+			return null;
+		}
+		String localized = string;
+		while (true) {
+			Matcher matcher = LOCALIZATION_KEY.matcher(localized);
+
+			if (!matcher.find()) {
+				return localized;
+			}
+
+			String group = matcher.group(1);
+			String replacement = resourceBundle.getString(group);
+			localized = localized.replaceAll("\\$\\{" + group + "\\}",
+					replacement);
+		}
+	}
 
 	private void addPrecon(Element precon)
 	{
@@ -111,8 +206,12 @@ public class GuiBuilder
 		String title = form.getChildText("title");
 		String clazz = form.getChildText("class");
 		String descr = form.getChildText("description");
+		
+		String param = form.getChildText("param");
 
-		FormPanel     formPanel= buildForm(clazz);
+		FormPanel     formPanel= buildForm(clazz, param);
+		System.out.println(" Form Panel : " + id + " type is : " + formPanel.getClass().getName());
+		
 		List<JButton> buttons  = buildButtons(form.getChildren("button"), formPanel);
 		Precon        precon   = getPrecon(form.getChild("precon"));
 
@@ -123,11 +222,18 @@ public class GuiBuilder
 
 	//---------------------------------------------------------------------------
 
-	private FormPanel buildForm(String className) throws Exception
+	private FormPanel buildForm(String className, String param) throws Exception
 	{
 		Class clazz = Class.forName(packag +"."+className);
+		
+		FormPanel fp = null;
+		
+		if (param != null)
+			fp = ((Constructor<FormPanel>) clazz.getConstructor(String.class)).newInstance(param);
+		else 
+			fp = (FormPanel) clazz.newInstance();
 
-		return (FormPanel) clazz.newInstance();
+		return fp; 
 	}
 
 	//---------------------------------------------------------------------------
@@ -197,6 +303,17 @@ public class GuiBuilder
 
 	private HashMap<String, Icon>   hmImages  = new HashMap<String, Icon>();
 	private HashMap<String, Precon> hmPrecons = new HashMap<String, Precon>();
+
+	//--------------------------------------------------------------------------
+	// -
+	// ---
+	// --- Constants
+	// ---
+	//--------------------------------------------------------------------------
+	// -
+
+	private static final Pattern LOCALIZATION_KEY = Pattern
+			.compile("\\$\\{([\\S&&[^\\$\\{\\}]]+)\\}");
 }
 
 //==============================================================================

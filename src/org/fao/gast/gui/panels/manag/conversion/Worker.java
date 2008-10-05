@@ -26,12 +26,14 @@ package org.fao.gast.gui.panels.manag.conversion;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.MessageFormat;
 import java.util.List;
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Xml;
 import org.dlib.gui.ProgressDialog;
 import org.fao.gast.lib.Lib;
 import org.fao.gast.lib.Resource;
+import org.fao.gast.localization.Messages;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -74,8 +76,7 @@ public class Worker implements Runnable
 			if (res != null)
 				res.close();
 
-			Lib.gui.showInfo(dlg, 	"Conversion terminated.\n"+
-								  			"Please, see gast/log/unmapped.log for more info");
+			Lib.gui.showInfo(dlg, 	Messages.getString("Worker.conversionTerm"));
 			dlg.stop();
 		}
 	}
@@ -88,7 +89,7 @@ public class Worker implements Runnable
 		PrintWriter out = new PrintWriter(new FileOutputStream(log));
 
 		dlg.reset(1);
-		dlg.advance("Retrieving metadata ids");
+		dlg.advance(Messages.getString("Worker.retrieveIds"));
 
 		List ids = getAllIsoMetadata(dbms);
 		dbms.commit();
@@ -100,7 +101,7 @@ public class Worker implements Runnable
 			Element el = (Element) o;
 			String  id = el.getChildText("id");
 
-			dlg.advance("Converting metadata with id : "+ id);
+			dlg.advance(MessageFormat.format(Messages.getString("Worker.convertMetadata"), id));
 
 			Element md    = Lib.metadata.getMetadata(dbms, id);
 			Element res   = Lib.metadata.convert(md, "iso19115", "iso19139");
@@ -162,7 +163,7 @@ public class Worker implements Runnable
 			Element elem = (Element) e;
 			String  clas = elem.getAttributeValue("class");
 
-			out.println("Mapping warning for metadata with id "+ id +" : "+ clas);
+			out.println(MessageFormat.format(Messages.getString("Worker.mapWarning"),id, clas));
 			out.println();
 			out.println(Xml.getString(elem));
 			out.println("-------------------------------------------------------");

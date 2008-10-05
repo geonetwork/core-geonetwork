@@ -29,6 +29,7 @@ import jeeves.resources.dbms.Dbms;
 import org.fao.gast.gui.panels.FormPanel;
 import org.fao.gast.lib.Lib;
 import org.fao.gast.lib.Resource;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -67,7 +68,7 @@ public class MainPanel extends FormPanel
 		{
 			resource  = Lib.config.createResource();
 			Lib.metadata.sync((Dbms) resource.open());
-			Lib.gui.showInfo(this, "Metadata synchronized");
+			Lib.gui.showInfo(this, Messages.getString("MainPanel.metadataSync"));
 		}
 		catch (Exception e)
 		{

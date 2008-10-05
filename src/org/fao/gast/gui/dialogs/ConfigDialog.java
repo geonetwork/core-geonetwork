@@ -32,6 +32,7 @@ import javax.swing.JPanel;
 import org.dlib.gui.FlexLayout;
 import org.dlib.gui.TDialog;
 import org.fao.gast.app.Configuration;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -49,7 +50,7 @@ public class ConfigDialog extends TDialog {
 
 	public ConfigDialog(Frame owner)
 	{
-		super(owner, "Configuration", true);
+		super(owner, Messages.getString("config"), true);
 
 		JPanel p = new JPanel();
 
@@ -103,7 +104,7 @@ public class ConfigDialog extends TDialog {
 	//---------------------------------------------------------------------------
 
 	private ConfigPanel panConfig = new ConfigPanel();
-	private JButton     btnOk     = new JButton("Ok");
+	private JButton     btnOk     = new JButton(Messages.getString("ok"));
 }
 
 //==============================================================================

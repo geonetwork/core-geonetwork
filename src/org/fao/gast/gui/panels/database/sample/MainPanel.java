@@ -34,6 +34,7 @@ import org.dlib.gui.FlexLayout;
 import org.dlib.gui.GuiUtil;
 import org.dlib.gui.ProgressDialog;
 import org.fao.gast.gui.panels.FormPanel;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -71,7 +72,7 @@ public class MainPanel extends FormPanel
 	private void doImport()
 	{
 		Frame          owner  = GuiUtil.getFrame(this);
-		ProgressDialog dialog = new ProgressDialog(owner, "Importing data");
+		ProgressDialog dialog = new ProgressDialog(owner, Messages.getString("importData"));
 		Worker         worker = new Worker(dialog);
 
 		String runs = cmbRuns.getSelectedItem().toString();
@@ -96,7 +97,7 @@ public class MainPanel extends FormPanel
 		fl.setColProp(1, FlexLayout.EXPAND);
 		p.setLayout(fl);
 
-		p.add("0,0", new JLabel("Runs"));
+		p.add("0,0", new JLabel(Messages.getString("runs")));
 		p.add("1,0", cmbRuns);
 
 		cmbRuns.addItem("1");

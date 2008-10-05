@@ -29,6 +29,7 @@ import javax.swing.JComponent;
 import org.dlib.gui.GuiUtil;
 import org.dlib.gui.ProgressDialog;
 import org.fao.gast.gui.panels.FormPanel;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -66,7 +67,7 @@ public class MainPanel extends FormPanel
 	private void convert()
 	{
 		Frame          owner  = GuiUtil.getFrame(this);
-		ProgressDialog dialog = new ProgressDialog(owner, "Converting data");
+		ProgressDialog dialog = new ProgressDialog(owner, Messages.getString("MainPanel.convertingData"));
 		Worker         worker = new Worker(dialog);
 
 		dialog.run(worker);

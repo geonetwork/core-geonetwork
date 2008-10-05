@@ -28,6 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import org.dlib.gui.FlexLayout;
 import org.fao.gast.lib.Lib;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -50,11 +51,11 @@ public class MySQLPanel extends DbmsPanel
 		fl.setColProp(1, FlexLayout.EXPAND);
 		setLayout(fl);
 
-		add("0,0", new JLabel("Server"));
-		add("0,1", new JLabel("Port"));
-		add("0,2", new JLabel("Database"));
-		add("0,3", new JLabel("Username"));
-		add("0,4", new JLabel("Password"));
+		add("0,0", new JLabel(Messages.getString("server")));
+		add("0,1", new JLabel(Messages.getString("port")));
+		add("0,2", new JLabel(Messages.getString("database")));
+		add("0,3", new JLabel(Messages.getString("username")));
+		add("0,4", new JLabel(Messages.getString("password")));
 
 		add("1,0", txtServer);
 		add("1,1", txtPort);
@@ -65,7 +66,7 @@ public class MySQLPanel extends DbmsPanel
 		add("2,0", new JLabel("<html><font color='red'>(REQ)</font>"));
 		add("2,2", new JLabel("<html><font color='red'>(REQ)</font>"));
 
-		txtPort.setToolTipText("The default port is 3306");
+		txtPort.setToolTipText(Messages.getString("MySQLPan.defaultPort"));
 	}
 
 	//---------------------------------------------------------------------------
@@ -129,13 +130,13 @@ public class MySQLPanel extends DbmsPanel
 		String database= txtDatabase.getText();
 
 		if (server.equals(""))
-			throw new Exception("The server cannot be empty");
+			throw new Exception(Messages.getString("serverNotEmpty"));
 
 		if (!port.equals("") &&!Lib.type.isInteger(port))
-			throw new Exception("The port must be an integer");
+			throw new Exception(Messages.getString("portInt"));
 
 		if (database.equals(""))
-			throw new Exception("The database cannot be empty");
+			throw new Exception(Messages.getString("dbNotEmpty"));
 
 		String url = port.equals("")
 							? PREFIX +"//"+ server            +"/"+ database

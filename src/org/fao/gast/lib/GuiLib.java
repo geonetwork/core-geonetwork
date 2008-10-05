@@ -25,6 +25,7 @@ package org.fao.gast.lib;
 
 import java.awt.Component;
 import javax.swing.JOptionPane;
+import org.fao.gast.localization.Messages;
 import jeeves.exceptions.JeevesException;
 
 //=============================================================================
@@ -43,7 +44,8 @@ public class GuiLib
 		String message = t.getMessage();
 
 		if (message == null || message.length() == 0)
-			message = "<no message>";
+			message = Messages.getString("noMessage");
+
 
 		if (t instanceof JeevesException)
 		{

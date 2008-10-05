@@ -23,11 +23,13 @@
 
 package org.fao.gast.gui.panels.database.setup;
 
+import java.text.MessageFormat;
 import java.util.List;
 import org.dlib.gui.ProgressDialog;
 import org.fao.gast.lib.DatabaseLib;
 import org.fao.gast.lib.Lib;
 import org.fao.gast.lib.Resource;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -85,21 +87,21 @@ public class Worker implements Runnable
 
 		public void removed(String object, String type)
 		{
-			dlg.advance("Removing : "+ object);
+			dlg.advance(MessageFormat.format(Messages.getString("Worker.removing"), object));
 		}
 
 		//------------------------------------------------------------------------
 
 		public void cyclicRefs(List<String> objects)
 		{
-			Lib.gui.showError(dlg, "Cyclic reference found:\n"+objects);
+			Lib.gui.showError(dlg, MessageFormat.format(Messages.getString("Worker.cyclicReference"),objects));
 		}
 
 		//------------------------------------------------------------------------
 
 		public void creating(String object, String type)
 		{
-			dlg.advance("Creating : "+ object);
+			dlg.advance(MessageFormat.format(Messages.getString("Worker.creating"), object));
 		}
 
 		//------------------------------------------------------------------------
@@ -108,7 +110,7 @@ public class Worker implements Runnable
 
 		public void filling(String table, String file)
 		{
-			dlg.advance("Filling table : "+ table);
+			dlg.advance(MessageFormat.format(Messages.getString("Worker.fillingTable"), table));
 		}
 	};
 

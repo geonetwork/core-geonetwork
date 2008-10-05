@@ -28,6 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import org.dlib.gui.FlexLayout;
 import org.fao.gast.lib.Lib;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -50,11 +51,11 @@ public class OraclePanel extends DbmsPanel
 		fl.setColProp(1, FlexLayout.EXPAND);
 		setLayout(fl);
 
-		add("0,0", new JLabel("Server"));
-		add("0,1", new JLabel("Port"));
+		add("0,0", new JLabel(Messages.getString("server")));
+		add("0,1", new JLabel(Messages.getString("port")));
 		add("0,2", new JLabel("SID"));
-		add("0,3", new JLabel("Username"));
-		add("0,4", new JLabel("Password"));
+		add("0,3", new JLabel(Messages.getString("username")));
+		add("0,4", new JLabel(Messages.getString("password")));
 
 		add("1,0", txtServer);
 		add("1,1", txtPort);
@@ -67,7 +68,7 @@ public class OraclePanel extends DbmsPanel
 		add("2,2", new JLabel("<html><font color='red'>(REQ)</font>"));
 
 		txtPort.setText("1521");
-		txtPort.setToolTipText("The default port is 1521");
+		txtPort.setToolTipText(Messages.getString("OraclePanel.defaultPort"));
 	}
 
 	//---------------------------------------------------------------------------
@@ -117,13 +118,13 @@ public class OraclePanel extends DbmsPanel
 		String sid   = txtSid   .getText();
 
 		if (server.equals(""))
-			throw new Exception("The server cannot be empty");
+			throw new Exception(Messages.getString("serverNotEmpty"));
 
 		if (!Lib.type.isInteger(port))
-			throw new Exception("The port must be an integer");
+			throw new Exception(Messages.getString("portInt"));
 
 		if (sid.equals(""))
-			throw new Exception("The sid cannot be empty");
+			throw new Exception(Messages.getString("sidNotEmpty"));
 
 		String url = PREFIX +"@"+ server +":"+ port +":"+ sid;
 

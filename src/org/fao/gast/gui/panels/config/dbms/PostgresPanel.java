@@ -28,6 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import org.dlib.gui.FlexLayout;
 import org.fao.gast.lib.Lib;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -50,11 +51,11 @@ public class PostgresPanel extends DbmsPanel
 		fl.setColProp(1, FlexLayout.EXPAND);
 		setLayout(fl);
 
-		add("0,0", new JLabel("Server"));
-		add("0,1", new JLabel("Port"));
-		add("0,2", new JLabel("Database"));
-		add("0,3", new JLabel("Username"));
-		add("0,4", new JLabel("Password"));
+		add("0,0", new JLabel(Messages.getString("server")));
+		add("0,1", new JLabel(Messages.getString("port")));
+		add("0,2", new JLabel(Messages.getString("database")));
+		add("0,3", new JLabel(Messages.getString("username")));
+		add("0,4", new JLabel(Messages.getString("password")));
 
 		add("1,0", txtServer);
 		add("1,1", txtPort);
@@ -64,7 +65,7 @@ public class PostgresPanel extends DbmsPanel
 
 		add("2,2", new JLabel("<html><font color='red'>(REQ)</font>"));
 
-		txtPort.setToolTipText("The default port is 5432");
+		txtPort.setToolTipText(Messages.getString("postgres.defaultPort"));
 	}
 
 	//---------------------------------------------------------------------------
@@ -129,10 +130,10 @@ public class PostgresPanel extends DbmsPanel
 		String database= txtDatabase.getText();
 
 		if (database.equals(""))
-			throw new Exception("The database cannot be empty");
+			throw new Exception(Messages.getString("databaseNotEmpty"));
 
 		if (!server.equals("") && !port.equals("") && !Lib.type.isInteger(port))
-			throw new Exception("The port must be an integer");
+			throw new Exception(Messages.getString("portInt"));
 
 		String url = server.equals("")
 							? PREFIX + database

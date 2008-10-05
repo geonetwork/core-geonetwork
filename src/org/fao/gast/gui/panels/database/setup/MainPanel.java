@@ -30,6 +30,7 @@ import org.dlib.gui.GuiUtil;
 import org.dlib.gui.ProgressDialog;
 import org.fao.gast.gui.panels.FormPanel;
 import org.fao.gast.lib.Lib;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -61,7 +62,7 @@ public class MainPanel extends FormPanel
 		if (!Lib.gui.confirm(owner, WARNING))
 			return;
 
-		ProgressDialog dialog = new ProgressDialog(owner, "Setup in progress");
+		ProgressDialog dialog = new ProgressDialog(owner, Messages.getString("setInProgress"));
 		Worker         worker = new Worker(dialog);
 
 		dialog.run(worker);
@@ -69,8 +70,8 @@ public class MainPanel extends FormPanel
 
 	//---------------------------------------------------------------------------
 
-	private static final String WARNING = 	"The current database will be erased.\n"+
-														"Do you want to continue ?";
+	private static final String WARNING = 	Messages.getString("currentDbErased")+
+														Messages.getString("wantContinue");
 }
 
 //==============================================================================

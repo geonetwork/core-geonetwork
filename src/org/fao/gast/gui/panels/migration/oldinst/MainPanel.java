@@ -38,6 +38,7 @@ import org.dlib.gui.GuiUtil;
 import org.dlib.gui.ProgressDialog;
 import org.fao.gast.gui.panels.FormPanel;
 import org.fao.gast.lib.Lib;
+import org.fao.gast.localization.Messages;
 
 //==============================================================================
 
@@ -55,7 +56,7 @@ public class MainPanel extends FormPanel {
 
 	public MainPanel()
 	{
-		jfcBrowser.setDialogTitle("Choose input folder");
+		jfcBrowser.setDialogTitle(Messages.getString("chooseInputFolder"));
 		jfcBrowser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 	}
 
@@ -90,7 +91,7 @@ public class MainPanel extends FormPanel {
 	{
 		jfcBrowser.setSelectedFile(new File(txtOldDir.getText()));
 
-		int res = jfcBrowser.showDialog(this, "Choose");
+		int res = jfcBrowser.showDialog(this, Messages.getString("choose"));
 
 		if (res == JFileChooser.APPROVE_OPTION)
 			txtOldDir.setText(jfcBrowser.getSelectedFile().getAbsolutePath());
@@ -101,12 +102,12 @@ public class MainPanel extends FormPanel {
 	private void migrate()
 	{
 		Frame          owner  = GuiUtil.getFrame(this);
-		ProgressDialog dialog = new ProgressDialog(owner, "Migrating data");
+		ProgressDialog dialog = new ProgressDialog(owner, Messages.getString("migrateData"));
 		Worker         worker = new Worker(dialog);
 
 		if ("".equals(txtOldDir.getText()))
 		{
-			Lib.gui.showError(this, "Please choose a directory");
+			Lib.gui.showError(this, Messages.getString("pleaaseChooseDirectory"));
 			return;
 		}
 
@@ -114,12 +115,12 @@ public class MainPanel extends FormPanel {
 		{
 			if ("".equals(txtUser.getText()))
 			{
-				Lib.gui.showError(this, "Please enter a user name");
+				Lib.gui.showError(this, Messages.getString("pleaseEnterUsername"));
 				return;
 			}
 			else if ("".equals(txtGroup.getText()))
 			{
-				Lib.gui.showError(this, "Please enter a group name");
+				Lib.gui.showError(this, Messages.getString("pleaseEnterGroupName"));
 				return;
 			}
 			worker.setOldUser   (txtUser.getText());
@@ -145,14 +146,14 @@ public class MainPanel extends FormPanel {
 		fl.setColProp(1, FlexLayout.EXPAND);
 		p.setLayout(fl);
 
-		p.add("0,0",   new JLabel("Old GeoNetwork"));
+		p.add("0,0",   new JLabel(Messages.getString("oldGeoNetwork")));
 		p.add("1,0,x", txtOldDir);
 		p.add("2,0",   btnBrowse);
 
 		p.add("0,1,1,1,3", jcbCreateUser);
-		p.add("0,2", new JLabel("User"));
+		p.add("0,2", new JLabel(Messages.getString("user")));
 		p.add("1,2", txtUser);
-		p.add("0,3", new JLabel("Group"));
+		p.add("0,3", new JLabel(Messages.getString("group")));
 		p.add("1,3", txtGroup);
 
 		p.add("0,4,x,c,3", jcbUserDialog);
@@ -175,14 +176,14 @@ public class MainPanel extends FormPanel {
 	//---------------------------------------------------------------------------
 
 	private JTextField   txtOldDir  = new JTextField(20);
-	private JButton      btnBrowse  = new JButton("Browse");
+	private JButton      btnBrowse  = new JButton(Messages.getString("browse"));
 	private JFileChooser jfcBrowser = new JFileChooser();
 
-	private JCheckBox  jcbCreateUser = new JCheckBox("Assign unowned metadata to this user:");
+	private JCheckBox  jcbCreateUser = new JCheckBox(Messages.getString("assignMetadata"));
 	private JTextField txtUser       = new JTextField(20);
 	private JTextField txtGroup      = new JTextField(20);
 
-	private JCheckBox  jcbUserDialog = new JCheckBox("Popup dialog to choose users");
+	private JCheckBox  jcbUserDialog = new JCheckBox(Messages.getString("chooseUsersDialogTitle"));
 }
 
 //==============================================================================

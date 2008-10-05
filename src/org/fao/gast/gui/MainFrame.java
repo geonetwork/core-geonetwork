@@ -85,7 +85,7 @@ public class MainFrame extends JFrame implements Starter, ActionListener
 		App.init(appPath, dlgConfig.getConfig());
 
 		GuiBuilder builder = new GuiBuilder(appPath, panView, panWork);
-		builder.build("/gast/data/gui.xml");
+		builder.build("/gast/data/gui.xml", getLocale());
 
 		checkAndCreateDB();
 

@@ -1,2 +1,2 @@
 cd ../gast
-java -jar gast.jar
+java $1 -jar gast.jar $2
