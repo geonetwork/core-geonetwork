@@ -52,7 +52,7 @@ public class TempFiles
         if (!_dir.isDirectory())
             throw new Exception("Invalid temp directory '" + finalPath + "'");
 
-        timer = new Timer();
+        timer = new Timer(true);
         timer.schedule(new RemindTask(),
                        0,
                        minutes * 60 * 1000);
