@@ -332,7 +332,7 @@
 		</xsl:apply-templates>
 	</xsl:template>
 
-	<xsl:template mode="iso19139" match="gmd:characterSet" priority="2">
+	<xsl:template mode="iso19139" match="//gmd:MD_Metadata/gmd:characterSet|//*[@gco:isoType='gmd:MD_Metadata']/gmd:characterSet" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
