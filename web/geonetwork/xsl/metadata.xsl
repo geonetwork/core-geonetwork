@@ -1142,7 +1142,9 @@
 			<xsl:value-of select="name(.)"/>
 			<xsl:text>=</xsl:text>
 				<xsl:text>"</xsl:text>
-				<xsl:value-of select="string()"/>
+				<xsl:call-template name="escapeXMLEntities">
+					<xsl:with-param name="expr" select="string()"/>
+				</xsl:call-template>
 				<xsl:text>"</xsl:text>
 		</xsl:for-each>
 	</xsl:template>

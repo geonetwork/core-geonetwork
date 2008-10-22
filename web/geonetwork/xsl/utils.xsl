@@ -12,9 +12,8 @@
 		</xsl:copy>
 	</xsl:template>
 
-	<xsl:template mode="escapeXMLEntities" match="text()">
-	
-		<xsl:variable name="expr" select="."/>
+	<xsl:template name="escapeXMLEntities">
+		<xsl:param name="expr"/>
 		
 		<xsl:variable name="e1">
 			<xsl:call-template name="replaceString">
@@ -51,6 +50,13 @@
 		</xsl:call-template>
 	</xsl:template>
 
+	<xsl:template mode="escapeXMLEntities" match="text()">
+		<xsl:variable name="expr" select="."/>
+		<xsl:call-template name="escapeXMLEntities">
+			<xsl:with-param name="expr" select="$expr"/>
+		</xsl:call-template>
+	</xsl:template>
+	
 	<xsl:template name="replaceString">
 		<xsl:param name="expr"/>
 		<xsl:param name="pattern"/>
