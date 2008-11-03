@@ -328,6 +328,12 @@
 		<condition>bedingt</condition>
 	</element>
 	<!-- ==================================================== -->
+	<element name="gmd:characterSet">
+		<label>Zeichensatz</label>
+		<description>Zeichensatz in der dieser Datensatz vorliegt</description>
+		<condition>bedingt</condition>
+	</element>
+	<!-- ==================================================== -->
 	<element name="gmd:checkPointAvailability">
 		<label>Kontrollpunktverfügbarkeit</label>
 		<description>Aussage, ob Kontrollpunkte vorhanden sind, um die Genauigkeit der Georeferenzierung des Rasters zu überprüfen</description>
@@ -459,7 +465,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:contact">
-		<label>Kontakt für die Datenpflege</label>
+		<label>Kontakt für die Metadatenpflege</label>
 		<description>Kontaktinformation zu Personen und Organisationen, welche für die Pflege der Ressource verantwortlich sind</description>
 		<condition>verbindlich</condition>
 	</element>
@@ -501,6 +507,11 @@
 		<label>Eckpunkte</label>
 		<description>Bezug des Rasterkoordinatensystems zur Erde, der durch die vier Eckpunkt-Zellen des Rasters und die entsprechenden Koordinaten im räumlichen Bezugssystems definiert ist. Von den vier Eckpunkten des Rasters werden mindestens zwei diagonal gegenüberliegende</description>
 		<condition>verbindlich</condition>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gmd:country">
+		<label>Staat</label>
+		<description>Staat</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:country">

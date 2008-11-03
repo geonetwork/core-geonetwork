@@ -74,7 +74,7 @@
 		<entry>
 			<code>imageDigital</code>
 			<label>digitales Bild</label>
-			<description></description>
+			<description>Abbild eines natürlichen oder künstlichen Objekts oder einer Tätigkeit, welches durch Sensorabtastung im sichtbaren oder einem anderen Bereich des elektromagnetischen Spektrums (z.B. Infrarot, hochauflösendes Radar) erstellt und in digitaler Form gespeichert wurde</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -88,7 +88,7 @@
 			<code>imageHardcopy</code>
 			<label>analoges Bild</label>
 
-			<description></description>
+			<description>Abbild eines natürlichen oder künstlichen Objekts oder einer Tätigkeit, welches durch Sensorabtastung im sichtbaren oder einem anderen Bereich des elektromagnetischen Spektrums (z.B. Infrarot, hochauflösendes Radar) erstellt und auf Papier, Fotofilm oder einem anderen Medium reproduziert wurde</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -412,7 +412,7 @@
 		<entry>
 			<code>point</code>
 			<label>Punkt</label>
-			<description>nulldimensionales geometrisches Basiselement (Primitive), das eine Position darstellt, aber keine Ausdehnung hat</description>
+			<description>jede Zelle repräsentiert einen Punkt</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -631,7 +631,7 @@
 		<entry>
 			<code>restricted</code>
 			<label>beschränkter Zugang</label>
-			<description>von allgemeiner Offenlegung und Verbreitung ausgeschlossen</description>
+			<description>nicht zur Veröffentlichung</description>
 
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1045,8 +1045,8 @@
 		<entry>
 			<code>quartely</code>
 
-			<label>quartely</label>
-			<description>data is updated every three months</description>
+			<label>vierteljährlich</label>
+			<description>Daten werden vierteljährlich aktualisiert</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1474,9 +1474,7 @@
 
 			<code>series</code>
 			<label>Serie</label>
-			<description>Information gilt für eine Serie
-
-Anmerkung: Der Begriff Serie bezieht sich auf jeglichen Zusammenschluss über DS_Aggregate</description>
+			<description>Information gilt für eine Serie. Anmerkung: Der Begriff Serie bezieht sich auf jeglichen Zusammenschluss über DS_Aggregate</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
