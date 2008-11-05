@@ -337,7 +337,7 @@ Validator.prototype.isURL = function(text)
 	var ftp   = (text.indexOf('ftp://'  ) == 0);
 	var ftps  = (text.indexOf('ftps://' ) == 0);
 	
-	if (!http && !https && !ftp && !ftps)
+	if (!(http || https || ftp || ftps))
 		return false;
 		
 	for (var i=0; i<text.length; i++)
@@ -347,7 +347,7 @@ Validator.prototype.isURL = function(text)
 		if (this.isLetter(c) || this.isDigit(c))
 			continue;
 			
-		if ('.-:/_%?&='.indexOf(c) != -1)
+		if ('.-:/_%?&=$'.indexOf(c) != -1)
 			continue;
 			
 		return false;
