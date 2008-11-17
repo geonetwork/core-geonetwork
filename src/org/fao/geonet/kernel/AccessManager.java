@@ -248,7 +248,6 @@ public class AccessManager
 		UserSession us = context.getUserSession();
 
 		if (!us.isAuthenticated()) {
-			System.out.println("user not authenticated");
 			return false;
 		}
 
