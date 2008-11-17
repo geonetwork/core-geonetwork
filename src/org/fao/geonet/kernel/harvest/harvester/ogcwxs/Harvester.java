@@ -564,9 +564,13 @@ class Harvester
 		
 		// Insert in db
 		try {
+
 			reg.id = dataMan.insertMetadataExt(dbms, schema, xml, context.getSerialFactory(),
 														 params.uuid, date, date, 
 														 reg.uuid, 1, null);
+			
+			xml = dataMan.updateFixedInfo(schema, reg.id, xml, params.uuid);
+			
 			int iId = Integer.parseInt(reg.id);
 			log.debug("    - Layer loaded in DB.");
 			
@@ -581,25 +585,27 @@ class Harvester
 			
 			//dataMan.indexMetadata(dbms, reg.id); setHarvested update the index
 			
-			
-			// Load bbox info for later use (eg. WMS thumbnails creation)
-			Namespace gmd 	= Namespace.getNamespace("http://www.isotc211.org/2005/gmd");
-			Namespace gco 	= Namespace.getNamespace("http://www.isotc211.org/2005/gco");
-			
-			Iterator<Element> bboxes = xml.getDescendants(
-					new ElementFilter ("EX_GeographicBoundingBox", gmd)
-					);
-			
-			while (bboxes.hasNext()) {
-				Element box = (Element) bboxes.next();
-				// FIXME : Could be null. Default bbox if from root layer
-				reg.minx = Double.valueOf(box.getChild("westBoundLongitude", gmd).getChild("Decimal", gco).getText());
-				reg.miny = Double.valueOf(box.getChild("southBoundLatitude", gmd).getChild("Decimal", gco).getText());
-				reg.maxx = Double.valueOf(box.getChild("eastBoundLongitude", gmd).getChild("Decimal", gco).getText());
-				reg.maxy = Double.valueOf(box.getChild("northBoundLatitude", gmd).getChild("Decimal", gco).getText());
-				
-			}
-			
+			try {
+    			// Load bbox info for later use (eg. WMS thumbnails creation)
+    			Namespace gmd 	= Namespace.getNamespace("http://www.isotc211.org/2005/gmd");
+    			Namespace gco 	= Namespace.getNamespace("http://www.isotc211.org/2005/gco");
+    			
+    			Iterator<Element> bboxes = xml.getDescendants(
+    					new ElementFilter ("EX_GeographicBoundingBox", gmd)
+    					);
+    			
+    			while (bboxes.hasNext()) {
+    				Element box = (Element) bboxes.next();
+    				// FIXME : Could be null. Default bbox if from root layer
+    				reg.minx = Double.valueOf(box.getChild("westBoundLongitude", gmd).getChild("Decimal", gco).getText());
+    				reg.miny = Double.valueOf(box.getChild("southBoundLatitude", gmd).getChild("Decimal", gco).getText());
+    				reg.maxx = Double.valueOf(box.getChild("eastBoundLongitude", gmd).getChild("Decimal", gco).getText());
+    				reg.maxy = Double.valueOf(box.getChild("northBoundLatitude", gmd).getChild("Decimal", gco).getText());
+    				
+    			}
+			}  catch (Exception e) {
+	            log.warning("  - Failed to extract layer bbox from metadata : " + e.getMessage());
+	        }
 
 			result.layer ++;
 			log.info("  - metadata loaded with uuid: " + reg.uuid + "/internal id: " + reg.id);

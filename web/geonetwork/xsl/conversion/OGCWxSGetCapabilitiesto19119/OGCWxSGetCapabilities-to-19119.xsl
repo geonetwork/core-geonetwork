@@ -97,7 +97,7 @@ Mapping between :
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-			<xsl:for-each select="  Service/ContactInformation|
+			<xsl:for-each select="Service/ContactInformation|
                                     wfs:Service/wfs:ContactInformation|
                                     owsg:ServiceIdentification/owsg:ServiceProvider|
                                     ows11:ServiceIdentification/ows11:ServiceProvider">
@@ -151,6 +151,16 @@ Mapping between :
 			<!--distInfo -->
 			 <distributionInfo>
                 <MD_Distribution>
+                	<distributionFormat>
+                		<MD_Format>
+                			<name gco:nilReason="missing">
+                				<gco:CharacterString/>
+                			</name>
+                			<version gco:nilReason="missing">
+                				<gco:CharacterString/>
+                			</version>
+                		</MD_Format>
+                	</distributionFormat>
                     <transferOptions>
                         <MD_DigitalTransferOptions>
                             <onLine>
@@ -210,12 +220,17 @@ Mapping between :
 								<MD_ScopeCode codeListValue="service"
 									codeList="./resources/codeList.xml#MD_ScopeCode" />
 							</level>
+							<levelDescription>
+								<MD_ScopeDescription>
+									<attributes/>
+								</MD_ScopeDescription>
+							</levelDescription>
 						</DQ_Scope>
 					</scope>
 					<lineage>
 						<LI_Lineage>
-							<statement>
-								<gco:CharacterString />
+							<statement gco:nilReason="missing">
+								<gco:CharacterString/>
 							</statement>
 						</LI_Lineage>
 					</lineage>

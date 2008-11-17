@@ -15,8 +15,9 @@
                                         xmlns:wps1="http://www.opengis.net/wps/1.0.0"
                                         xmlns:gml="http://www.opengis.net/gml"
 										xmlns:math="http://exslt.org/math"
-										xmlns:xalan= "http://xml.apache.org/xalan"
-										extension-element-prefixes="math xalan wcs ows wfs gml">
+										xmlns:date="http://exslt.org/dates-and-times"
+										xmlns:exslt="http://exslt.org/common"
+										extension-element-prefixes="math exslt wcs ows wps wps1 ows11 wfs gml date">
 
 	<!-- ============================================================================= -->
 
@@ -48,6 +49,17 @@
 						</xsl:choose>
 					</gco:CharacterString>
 				</title>
+				<date>
+					<CI_Date>
+						<xsl:variable name="df">yyyy-MM-dd'T'HH:mm:ss</xsl:variable>
+						<date>
+							<gco:DateTime><xsl:value-of select="date:format-date(date:date-time(),$df)"/></gco:DateTime>
+						</date>
+						<dateType>
+							<CI_DateTypeCode codeList="./resources/codeList.xml#CI_DateTypeCode" codeListValue="revision"/>
+						</dateType>
+					</CI_Date>
+				</date>
 			</CI_Citation>
 		</citation>
 
@@ -95,8 +107,7 @@
 				</CI_ResponsibleParty>
 			</pointOfContact>
 		</xsl:for-each>
-
-
+		
 		<!-- resMaint -->
 		<!-- graphOver -->
 		<!-- dsFormat-->
@@ -108,9 +119,31 @@
 			</descriptiveKeywords>
 		</xsl:for-each>
 		
-		<topicCategory>
-			<MD_TopicCategoryCode><xsl:value-of select="$topic"/></MD_TopicCategoryCode>
-		</topicCategory>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
+		
+		<srv:serviceType>
+			<gco:LocalName codeSpace="www.w3c.org">
+				<xsl:choose>
+					<xsl:when test="name(.)='WMT_MS_Capabilities'">OGC:WMS</xsl:when>
+					<xsl:when test="name(.)='WCS_Capabilities'">OGC:WCS</xsl:when>
+					<xsl:when test="name(.)='wps:Capabilities'">OGC:WPS</xsl:when>
+					<xsl:otherwise>OGC:WFS</xsl:otherwise>
+				</xsl:choose>
+			</gco:LocalName>
+		</srv:serviceType>
+		<srv:serviceTypeVersion>
+			<gco:CharacterString><xsl:value-of select='@version'/></gco:CharacterString>
+		</srv:serviceTypeVersion>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<srv:accessProperties>
+			<MD_StandardOrderProcess>
+				<fees>
+					<gco:CharacterString><xsl:value-of select="$s/Fees|$s/wfs:Fees|$s/ows:Fees|$s/ows11:Fees|$s/wcs:fees"/></gco:CharacterString>
+				</fees>
+			</MD_StandardOrderProcess>
+		</srv:accessProperties>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		Extent in OGC spec are somehow differents !
@@ -168,16 +201,16 @@
 									</xsl:variable>
 											
 									<westBoundLongitude>
-										<gco:Decimal><xsl:copy-of select="math:min(xalan:nodeset($boxes)/*[name(.)='xmin'])"/></gco:Decimal>
+										<gco:Decimal><xsl:copy-of select="math:min(exslt:node-set($boxes)/*[name(.)='xmin'])"/></gco:Decimal>
 									</westBoundLongitude>
 									<eastBoundLongitude>
-										<gco:Decimal><xsl:value-of select="math:max(xalan:nodeset($boxes)/*[name(.)='xmax'])"/></gco:Decimal>
+										<gco:Decimal><xsl:value-of select="math:max(exslt:node-set($boxes)/*[name(.)='xmax'])"/></gco:Decimal>
 									</eastBoundLongitude>
 									<southBoundLatitude>
-										<gco:Decimal><xsl:value-of select="math:min(xalan:nodeset($boxes)/*[name(.)='ymin'])"/></gco:Decimal>
+										<gco:Decimal><xsl:value-of select="math:min(exslt:node-set($boxes)/*[name(.)='ymin'])"/></gco:Decimal>
 									</southBoundLatitude>
 									<northBoundLatitude>
-										<gco:Decimal><xsl:value-of select="math:max(xalan:nodeset($boxes)/*[name(.)='ymax'])"/></gco:Decimal>
+										<gco:Decimal><xsl:value-of select="math:max(exslt:node-set($boxes)/*[name(.)='ymax'])"/></gco:Decimal>
 									</northBoundLatitude> 
 								</xsl:when>
 								<xsl:otherwise>
@@ -202,33 +235,6 @@
         </xsl:if>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			
-			
-		<srv:serviceType>
-			<gco:LocalName codeSpace="www.w3c.org">
-			<xsl:choose>
-				<xsl:when test="name(.)='WMT_MS_Capabilities'">OGC:WMS</xsl:when>
-				<xsl:when test="name(.)='WCS_Capabilities'">OGC:WCS</xsl:when>
-                <xsl:when test="name(.)='wps:Capabilities'">OGC:WPS</xsl:when>
-				<xsl:otherwise>OGC:WFS</xsl:otherwise>
-			</xsl:choose>
-			</gco:LocalName>
-		</srv:serviceType>
-		<srv:serviceTypeVersion>
-			<gco:CharacterString><xsl:value-of select='@version'/></gco:CharacterString>
-		</srv:serviceTypeVersion>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<srv:accessProperties>
-			<MD_StandardOrderProcess>
-				<fees>
-					<gco:CharacterString><xsl:value-of select="$s/Fees|$s/wfs:Fees|$s/ows:Fees|$s/ows11:Fees|$s/wcs:fees"/></gco:CharacterString>
-				</fees>
-			</MD_StandardOrderProcess>
-		</srv:accessProperties>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
 		<srv:couplingType>
 			<srv:SV_CouplingType codeList="#SV_CouplingType" codeListValue="tight">
 				<xsl:choose>
@@ -289,8 +295,8 @@
                       </srv:invocationName> 
                     </xsl:if>
                     
-					<srv:connectPoint>
-						<xsl:for-each select="Format|ows:Parameter[@name='AcceptFormats' or @name='outputFormat']">
+					<xsl:for-each select="Format|ows:Parameter[@name='AcceptFormats' or @name='outputFormat']">
+						<srv:connectPoint>
 							<CI_OnlineResource>
 								<linkage>
 									<URL>
@@ -325,11 +331,15 @@
 									<CI_OnLineFunctionCode codeList="./resources/codeList.xml#CI_OnLineFunctionCode" codeListValue="information"/>
 								</function>
 							</CI_OnlineResource>
-						</xsl:for-each>
-						<!-- Some Operations in WFS 1.0.0 have no ResultFormat no CI_OnlineResource created 
-								WCS has no output format
-						-->
-						<xsl:for-each select="wfs:ResultFormat/*">
+						</srv:connectPoint>
+					</xsl:for-each>
+					
+							
+					<!-- Some Operations in WFS 1.0.0 have no ResultFormat no CI_OnlineResource created 
+							WCS has no output format
+					-->
+					<xsl:for-each select="wfs:ResultFormat/*">
+						<srv:connectPoint>
 							<CI_OnlineResource>
 								<linkage>
 									<URL><xsl:value-of select="../..//wfs:Get[1]/@onlineResource"/></URL>
@@ -341,8 +351,8 @@
 									<CI_OnLineFunctionCode codeList="./resources/codeList.xml#CI_OnLineFunctionCode" codeListValue="information"/>
 								</function>
 							</CI_OnlineResource>
-						</xsl:for-each>
-					</srv:connectPoint>
+						</srv:connectPoint>
+					</xsl:for-each>
 				</srv:SV_OperationMetadata>
 			</srv:containsOperations>
 		</xsl:for-each>
@@ -387,6 +397,17 @@
 						</xsl:choose>
 					</gco:CharacterString>
 				</title>
+				<date>
+					<CI_Date>
+						<xsl:variable name="df">yyyy-MM-dd'T'HH:mm:ss</xsl:variable>
+						<date>
+							<gco:DateTime><xsl:value-of select="date:format-date(date:date-time(),$df)"/></gco:DateTime>
+						</date>
+						<dateType>
+							<CI_DateTypeCode codeList="./resources/codeList.xml#CI_DateTypeCode" codeListValue="revision"/>
+						</dateType>
+					</CI_Date>
+				</date>
 			</CI_Citation>
 		</citation>
 
@@ -496,6 +517,14 @@
 			</spatialResolution>
 		</xsl:if>
 		
+		<language gco:nilReason="missing">
+			<gco:CharacterString/>
+		</language>
+		
+		<characterSet>
+			<MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode" codeListValue=""/>
+		</characterSet>
+		
 		<topicCategory>
 			<MD_TopicCategoryCode><xsl:value-of select="$topic"/></MD_TopicCategoryCode>
 		</topicCategory>
@@ -533,16 +562,16 @@
 									</xsl:variable>
 											
 									<westBoundLongitude>
-										<gco:Decimal><xsl:copy-of select="xalan:nodeset($boxes)/*[name(.)='xmin']"/></gco:Decimal>
+										<gco:Decimal><xsl:copy-of select="exslt:node-set($boxes)/*[name(.)='xmin']"/></gco:Decimal>
 									</westBoundLongitude>
 									<eastBoundLongitude>
-										<gco:Decimal><xsl:value-of select="xalan:nodeset($boxes)/*[name(.)='xmax']"/></gco:Decimal>
+										<gco:Decimal><xsl:value-of select="exslt:node-set($boxes)/*[name(.)='xmax']"/></gco:Decimal>
 									</eastBoundLongitude>
 									<southBoundLatitude>
-										<gco:Decimal><xsl:value-of select="xalan:nodeset($boxes)/*[name(.)='ymin']"/></gco:Decimal>
+										<gco:Decimal><xsl:value-of select="exslt:node-set($boxes)/*[name(.)='ymin']"/></gco:Decimal>
 									</southBoundLatitude>
 									<northBoundLatitude>
-										<gco:Decimal><xsl:value-of select="xalan:nodeset($boxes)/*[name(.)='ymax']"/></gco:Decimal>
+										<gco:Decimal><xsl:value-of select="exslt:node-set($boxes)/*[name(.)='ymax']"/></gco:Decimal>
 									</northBoundLatitude> 
 								</xsl:when>
 								<xsl:when test="name(.)='WFS_Capabilities'">

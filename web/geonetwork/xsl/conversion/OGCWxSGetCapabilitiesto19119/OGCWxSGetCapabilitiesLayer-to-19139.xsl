@@ -140,6 +140,16 @@
 			<!--distInfo -->
 			<distributionInfo>
 				<MD_Distribution>
+					<distributionFormat>
+						<MD_Format>
+							<name gco:nilReason="missing">
+								<gco:CharacterString/>
+							</name>
+							<version gco:nilReason="missing">
+								<gco:CharacterString/>
+							</version>
+						</MD_Format>
+					</distributionFormat>
 					<transferOptions>
 						<MD_DigitalTransferOptions>
 							<onLine>
@@ -216,8 +226,8 @@
 					</scope>
 					<lineage>
 						<LI_Lineage>
-							<statement>
-								<gco:CharacterString />
+							<statement gco:nilReason="missing">
+								<gco:CharacterString/>
 							</statement>
 						</LI_Lineage>
 					</lineage>

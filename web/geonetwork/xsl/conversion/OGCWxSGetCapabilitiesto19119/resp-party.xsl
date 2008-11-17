@@ -10,7 +10,7 @@
                                         xmlns:ows11="http://www.opengis.net/ows/1.1"
 										xmlns:wcs="http://www.opengis.net/wcs"
 										xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-										extension-element-prefixes="wcs ows wfs">
+										extension-element-prefixes="wcs ows wfs owsg ows11">
 
 	<!-- ============================================================================= -->
 
@@ -152,7 +152,7 @@
 
 		<!-- TODO - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<xsl:for-each select="eMailAdd|wcs:address/wcs:electronicMailAddress|ows:ElectronicMailAddress|ows11:ElectronicMailAddress">
+		<xsl:for-each select="ContactElectronicMailAddress|wcs:address/wcs:electronicMailAddress|ows:ElectronicMailAddress|ows11:ElectronicMailAddress">
 			<electronicMailAddress>
 				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
 			</electronicMailAddress>
