@@ -3,6 +3,7 @@
 				xmlns="http://www.isotc211.org/2005/gmd" 
                 xmlns:geonet="http://www.fao.org/geonetwork" 
 				xmlns:wmc="http://www.opengis.net/context"
+				xmlns:wmc11="http://www.opengeospatial.net/context"
 				xmlns:gts="http://www.isotc211.org/2005/gts"
 				xmlns:gco="http://www.isotc211.org/2005/gco"
 				xmlns:gml="http://www.opengis.net/gml"
@@ -33,7 +34,7 @@
 	
 	<!-- ============================================================================= -->	
 	
-	<xsl:template match="wmc:ViewContext">
+	<xsl:template match="wmc:ViewContext|wmc11:ViewContext">
 		<MD_Metadata>
 			
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -62,7 +63,7 @@
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-			<xsl:for-each select="/wmc:ViewContext/wmc:General/wmc:ContactInformation">
+			<xsl:for-each select="/wmc:ViewContext/wmc:General/wmc:ContactInformation|/wmc11:ViewContext/wmc11:General/wmc11:ContactInformation">
 				<contact>
 					<CI_ResponsibleParty>
 						<xsl:apply-templates select="." mode="RespParty"/>
@@ -93,7 +94,8 @@
 					<referenceSystemIdentifier>
 						<RS_Identifier>
 							<code>
-								<gco:CharacterString><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:BoundingBox/@SRS"/></gco:CharacterString>
+								<gco:CharacterString><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:BoundingBox/@SRS
+									|/wmc11:ViewContext/wmc11:General/wmc11:BoundingBox/@SRS"/></gco:CharacterString>
 							</code>
 						</RS_Identifier>
 					</referenceSystemIdentifier>
@@ -124,10 +126,12 @@
 										<gco:CharacterString>OGC:WMC</gco:CharacterString>
 									</protocol>
 									<name>
-										<gco:CharacterString><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:Title"/></gco:CharacterString>
+										<gco:CharacterString><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:Title
+											|/wmc11:ViewContext/wmc11:General/wmc11:Title"/></gco:CharacterString>
 									</name>
 									<description>
-										<gco:CharacterString><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:Title"/></gco:CharacterString>
+										<gco:CharacterString><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:Title
+											|/wmc11:ViewContext/wmc11:General/wmc11:Title"/></gco:CharacterString>
 									</description>
 								</CI_OnlineResource>
 							</onLine>

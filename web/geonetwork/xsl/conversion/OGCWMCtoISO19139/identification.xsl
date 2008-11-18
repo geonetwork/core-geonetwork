@@ -2,6 +2,7 @@
 
 <xsl:stylesheet version="1.0" xmlns ="http://www.isotc211.org/2005/gmd"
 							  xmlns:wmc="http://www.opengis.net/context"
+							  xmlns:wmc11="http://www.opengeospatial.net/context"							  
 							  xmlns:gco="http://www.isotc211.org/2005/gco"
 							  xmlns:gts="http://www.isotc211.org/2005/gts"
 							  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -17,7 +18,8 @@
 		<citation>
 			<CI_Citation>
 				<title>
-					<gco:CharacterString><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:Title"/></gco:CharacterString>
+					<gco:CharacterString><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:Title
+						|/wmc11:ViewContext/wmc11:General/wmc11:Title"/></gco:CharacterString>
 				</title>
 			</CI_Citation>
 		</citation>
@@ -25,7 +27,8 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<abstract>
-			<gco:CharacterString><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:Abstract"/></gco:CharacterString>
+			<gco:CharacterString><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:Abstract
+				|/wmc11:ViewContext/wmc11:General/wmc11:Abstract"/></gco:CharacterString>
 		</abstract>
 
 		<!--idPurp-->
@@ -37,7 +40,8 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<xsl:for-each select="/wmc:ViewContext/wmc:General/wmc:ContactInformation">
+		<xsl:for-each select="/wmc:ViewContext/wmc:General/wmc:ContactInformation
+			|/wmc11:ViewContext/wmc11:General/wmc11:ContactInformation">
 			<pointOfContact>
 				<CI_ResponsibleParty>
 					<xsl:apply-templates select="." mode="RespParty"/>
@@ -49,7 +53,8 @@
 		<!-- graphOver -->
 		<!-- dsFormat-->
 		
-		<xsl:for-each select="/wmc:ViewContext/wmc:General/wmc:KeywordList">
+		<xsl:for-each select="/wmc:ViewContext/wmc:General/wmc:KeywordList
+			|/wmc11:ViewContext/wmc11:General/wmc11:KeywordList">
 			<descriptiveKeywords>
 				<MD_Keywords>
 					<xsl:apply-templates select="." mode="Keywords"/>
@@ -66,22 +71,27 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<xsl:choose>
-			<xsl:when test="/wmc:ViewContext/wmc:General/wmc:BoundingBox/@SRS='EPSG:4326'">
+			<xsl:when test="/wmc:ViewContext/wmc:General/wmc:BoundingBox/@SRS='EPSG:4326'
+				|/wmc11:ViewContext/wmc11:General/wmc11:BoundingBox/@SRS='EPSG:4326'">
 				<extent>
 				<EX_Extent>
 					<geographicElement>
 						<EX_GeographicBoundingBox>
 							<westBoundLongitude>
-								<gco:Decimal><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:BoundingBox/@minx"/></gco:Decimal>
+								<gco:Decimal><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:BoundingBox/@minx
+									|/wmc11:ViewContext/wmc11:General/wmc11:BoundingBox/@minx"/></gco:Decimal>
 							</westBoundLongitude>
 							<eastBoundLongitude>
-								<gco:Decimal><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:BoundingBox/@maxx"/></gco:Decimal>
+								<gco:Decimal><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:BoundingBox/@maxx
+									|/wmc11:ViewContext/wmc11:General/wmc11:BoundingBox/@maxx"/></gco:Decimal>
 							</eastBoundLongitude>
 							<southBoundLatitude>
-								<gco:Decimal><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:BoundingBox/@miny"/></gco:Decimal>
+								<gco:Decimal><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:BoundingBox/@miny
+									|/wmc11:ViewContext/wmc11:General/wmc11:BoundingBox/@miny"/></gco:Decimal>
 							</southBoundLatitude>
 							<northBoundLatitude>
-								<gco:Decimal><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:BoundingBox/@maxy"/></gco:Decimal>
+								<gco:Decimal><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:BoundingBox/@maxy
+									|/wmc11:ViewContext/wmc11:General/wmc11:BoundingBox/@maxy"/></gco:Decimal>
 							</northBoundLatitude>
 						</EX_GeographicBoundingBox>
 					</geographicElement>
