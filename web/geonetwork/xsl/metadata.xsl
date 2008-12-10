@@ -989,7 +989,7 @@
 	</xsl:template>
 
 	<!--
-	translates CR-LF sequences into HTML newlines <p/>
+	translates CR-LF sequences and LF character into HTML newlines <p/>
 	-->
 	<xsl:template name="preformatted">
 		<xsl:param name="text"/>
@@ -1000,6 +1000,13 @@
 				<br/>
 				<xsl:call-template name="preformatted">
 					<xsl:with-param name="text"  select="substring-after($text,'&#13;&#10;')"/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:when test="contains($text,'&#10;')">
+				<xsl:value-of select="substring-before($text,'&#10;')"/>
+				<br/>
+				<xsl:call-template name="preformatted">
+					<xsl:with-param name="text"  select="substring-after($text,'&#10;')"/>
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:otherwise>
