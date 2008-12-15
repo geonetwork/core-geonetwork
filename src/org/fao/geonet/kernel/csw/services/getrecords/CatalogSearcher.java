@@ -186,10 +186,14 @@ class CatalogSearcher
 	{
 		String field = elem.getAttributeValue("fld");
 
-		if (field != null)
-		{
+		if (field != null) {
+			
 			if (field.equals(""))
 				field = "any";
+			
+			if(field.equalsIgnoreCase("anytext")) {
+				field = "any";
+			}
 
 			String mapped = FieldMapper.map(field);
 
@@ -417,4 +421,3 @@ class ItemComparator implements Comparator<ResultItem>
 }
 
 //=============================================================================
-
