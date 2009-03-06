@@ -1,2 +1,2 @@
 cd ..\gast
-start javaw -jar gast.jar
+start javaw -Xms48m -Xmx512m -jar gast.jar

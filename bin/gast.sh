@@ -1,2 +1,2 @@
 cd ../gast
-java -jar gast.jar
+java -Xms48m -Xmx512m -jar gast.jar

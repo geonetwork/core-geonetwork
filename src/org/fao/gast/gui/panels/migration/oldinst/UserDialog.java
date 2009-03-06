@@ -83,7 +83,7 @@ public class UserDialog extends JDialog implements ActionListener
 		setVisible(true);
 
 		if (chUseAdm.isSelected())
-			return new Owner(selAdmin.id, selGroup.id);
+			return new Owner(selAdmin.id, selGroup.id, "");
 
 		return (Owner) jlCandid.getSelectedValue();
 	}
