@@ -53,7 +53,16 @@
 					<CI_Date>
 						<xsl:variable name="df">yyyy-MM-dd'T'HH:mm:ss</xsl:variable>
 						<date>
-							<gco:DateTime><xsl:value-of select="date:format-date(date:date-time(),$df)"/></gco:DateTime>
+							<xsl:choose> <!-- //FIXME function date-format is not always available -->
+								<xsl:when test="function-available('date:date-format')">
+									<gco:DateTime><xsl:value-of select="date:format-date(date:date-time(),$df)"/></gco:DateTime>
+								</xsl:when>
+								<xsl:otherwise>
+									<gco:DateTime>
+										<xsl:value-of select="date:date-time()"/>
+									</gco:DateTime>
+								</xsl:otherwise>
+							</xsl:choose>
 						</date>
 						<dateType>
 							<CI_DateTypeCode codeList="./resources/codeList.xml#CI_DateTypeCode" codeListValue="revision"/>
@@ -401,7 +410,16 @@
 					<CI_Date>
 						<xsl:variable name="df">yyyy-MM-dd'T'HH:mm:ss</xsl:variable>
 						<date>
-							<gco:DateTime><xsl:value-of select="date:format-date(date:date-time(),$df)"/></gco:DateTime>
+							<xsl:choose> <!-- //FIXME function date-format is not always available -->
+								<xsl:when test="function-available('date:date-format')">
+									<gco:DateTime><xsl:value-of select="date:format-date(date:date-time(),$df)"/></gco:DateTime>
+								</xsl:when>
+								<xsl:otherwise>
+									<gco:DateTime>
+										<xsl:value-of select="date:date-time()"/>
+									</gco:DateTime>
+								</xsl:otherwise>
+							</xsl:choose>
 						</date>
 						<dateType>
 							<CI_DateTypeCode codeList="./resources/codeList.xml#CI_DateTypeCode" codeListValue="revision"/>
