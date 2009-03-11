@@ -94,7 +94,7 @@ class WebDavRetriever implements RemoteRetriever
 
 		try
 		{
-			log.info("Connecting to webdav url for node : "+ params.name);
+			log.info("Connecting to webdav url for node : "+ params.name + " URL: " + params.url);
 
 			WebdavResource wr = createResource(params.url);
 
@@ -123,8 +123,16 @@ class WebDavRetriever implements RemoteRetriever
 
 			if (code == HttpStatus.SC_UNAUTHORIZED)
 				throw new Exception("Unauthorized to access resource");
+			
+			if (code == HttpStatus.SC_MOVED_PERMANENTLY)
+				throw new Exception("Error 301 - Resource moved permanently");
 
-			throw new Exception("Received unknown response from server : "+ e.getReason());
+			if (code == HttpStatus.SC_MULTI_STATUS)
+				throw new Exception("Error 207 - Multi status response");
+
+			log.debug("HTTP Status code: " + code);
+
+			throw new Exception("Received unknown response from server : "+ e.toString());
 		}
 	}
 
@@ -132,7 +140,11 @@ class WebDavRetriever implements RemoteRetriever
 
 	private WebdavResource createResource(String url) throws Exception
 	{
+		log.debug("Creating WebdavResource");
+
 		HttpURL http = url.startsWith("https") ? new HttpsURL(url) : new HttpURL(url);
+		
+		log.debug("Setting user account");
 
 		if (params.useAccount)
 			http.setUserinfo(params.username, params.password);
@@ -142,13 +154,19 @@ class WebDavRetriever implements RemoteRetriever
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getSettingManager();
 
+		log.debug("checking for local proxy settings");
+		
 		boolean enabled = sm.getValueAsBool("system/proxy/use", false);
 		String  host    = sm.getValue("system/proxy/host");
 		String  port    = sm.getValue("system/proxy/port");
-
+		
 		if (!enabled)
+		{
+			log.debug("Ga nu WebdavResource teruggeven");
+			log.debug("http eigenschappen: " + http.getPort() + " " + http.getURI());
 			return new WebdavResource(http);
-
+		}
+		
 		if (!Lib.type.isInteger(port))
 			throw new Exception("Proxy port is not an integer : "+ port);
 
