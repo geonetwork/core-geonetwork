@@ -116,7 +116,7 @@
 							<GroundOverlay>
 								<name><xsl:value-of select="@title"/></name>
 								<Icon>
-									<href><xsl:value-of select="@href"/><xsl:value-of select="$qm"/>VERSION=1.1.1&#0038;REQUEST=GetMap&#0038;SRS=EPSG:4326&#0038;WIDTH=512&#0038;HEIGHT=512&#0038;LAYERS=<xsl:value-of select="@name"/>&#0038;TRANSPARENT=TRUE&#0038;STYLES=default&#0038;FORMAT=image/png&#0038;</href>
+									<href><xsl:value-of select="@href"/><xsl:value-of select="$qm"/>VERSION=1.1.1&#0038;REQUEST=GetMap&#0038;SERVICE=WMS&#0038;SRS=EPSG:4326&#0038;WIDTH=512&#0038;HEIGHT=512&#0038;LAYERS=<xsl:value-of select="@name"/>&#0038;TRANSPARENT=TRUE&#0038;STYLES=default&#0038;FORMAT=image/png&#0038;</href>
 									<viewRefreshMode>onStop</viewRefreshMode>
 									<viewRefreshTime>3</viewRefreshTime>
 									<viewBoundScale>1.0</viewBoundScale>
