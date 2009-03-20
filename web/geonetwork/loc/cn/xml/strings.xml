@@ -118,11 +118,13 @@
 	<about>关于本站</about>
 	<abstract>摘要</abstract>
 	<accept>提交</accept>
+	<actionOnSelect>Actions on selected metadata</actionOnSelect>
 	<add>添加</add>
 	<addNewMetadata>增加新的元数据</addNewMetadata>
 	<admin>系统管理</admin>
 	<Administrator>管理员</Administrator>
 	<agrovocKeyword>关键词</agrovocKeyword>
+	<all>all</all>
 	<any>- 任意 -</any>
 	<anytime>Anytime</anytime>
 	<appSchInfoTab>应用模式信息</appSchInfoTab>
@@ -364,6 +366,7 @@
 	<noInfo>对不起，没有信息</noInfo>
 	<noLogin>您还未登录</noLogin>
 	<northbc>覆盖范围北边坐标</northbc>
+	<noSelectedMd>No metadata selected! Please at least select one before select an action.</noSelectedMd>
 	<online>在线交互地图</online>
 	<onlink>在线链接</onlink>
 	<operation>操作</operation>
@@ -437,6 +440,11 @@
 	<searchText>全文</searchText>
 	<searchAllText>全文</searchAllText>
 	<searchUnused>搜索未用或空的元数据</searchUnused>
+	<select>Select : </select>
+	<selectAll>Select all metadata</selectAll>
+	<selected> selected</selected>
+	<selectedOnly>Display selected only</selectedOnly>
+	<selectNone>Unselect metadata selected</selectNone>
 	<server>服务器</server>
 	<show>元数据</show>
 	<simple>简单搜索</simple>

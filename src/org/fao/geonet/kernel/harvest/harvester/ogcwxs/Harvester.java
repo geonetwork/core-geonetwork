@@ -23,33 +23,31 @@
 
 package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
-import java.net.URL;
 
-import jeeves.constants.Jeeves;
-import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
-import jeeves.utils.Util;
 import jeeves.utils.BinaryFile;
+import jeeves.utils.Util;
+import jeeves.utils.Xml;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -61,17 +59,11 @@ import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.thumbnail.Set;
-import org.fao.geonet.services.thumbnail.Unset;
-
 import org.jdom.Element;
-import org.jdom.filter.ElementFilter;
-import org.jdom.Namespace;
-import org.jdom.xpath.XPath;
 import org.jdom.JDOMException;
-
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.methods.GetMethod;
+import org.jdom.Namespace;
+import org.jdom.filter.ElementFilter;
+import org.jdom.xpath.XPath;
 
 
 //=============================================================================
@@ -194,14 +186,14 @@ class Harvester
 
 
         // Try to load capabilities document
-		String url = 
+		this.capabilitiesUrl = 
         		params.url + (params.url.contains("?")?"":"?") +
         		"&SERVICE=" + params.ogctype.substring(0,3) +
         		"&VERSION=" + params.ogctype.substring(3) +
         		"&REQUEST=" + GETCAPABILITIES
         		;
 		
-		xml = Xml.loadFile (new URL(url));
+		xml = Xml.loadFile (new URL(this.capabilitiesUrl));
 		
 		//-----------------------------------------------------------------------
 		//--- remove old metadata
@@ -258,7 +250,7 @@ class Harvester
 		localGroups = new GroupMapper (dbms);
 
 		// md5 the full capabilities URL
-		String uuid = Util.scramble (params.url); // is the service identifier
+		String uuid = Util.scramble (this.capabilitiesUrl); // is the service identifier
 		
 		//--- Loading stylesheet
 		String styleSheet = context.getAppPath() + 
@@ -316,7 +308,7 @@ class Harvester
 		Date date = new Date();
 		
 		String id = dataMan.insertMetadataExt(dbms, schema, md, context.getSerialFactory(),
-													 params.uuid, df.format(date), df.format(date), 
+													 uuid, df.format(date), df.format(date), 
 													 uuid, 1, null);
 		
 		int iId = Integer.parseInt(id);
@@ -860,7 +852,16 @@ class Harvester
 	private UriMapper      localUris;
 	private OgcWxSResult   result;
 	private UUIDMapper     localUuids;
-	private String		   crs = "epsg:4326";
+	
+	/**
+	 * Store the GetCapabilities operation URL. This URL is scrambled
+	 * and used to uniquelly identified the service. The idea of generating
+	 * a uuid based on the URL instead of a randomuuid is to be able later
+	 * to do an update of the service metadata (which could have been updated
+	 * in the catalogue) instead of a delete/insert operation.
+	 */
+	private String capabilitiesUrl;
+	private String crs = "epsg:4326";
 	private static final int WIDTH = 300;
 	private static final String GETCAPABILITIES = "GetCapabilities";
 	private static final String GETMAP = "GetMap";

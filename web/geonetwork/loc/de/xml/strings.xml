@@ -80,11 +80,13 @@
 	<about>Über</about>
 	<abstract>Kurzübersicht</abstract>
 	<accept>Abschicken</accept>
+	<actionOnSelect>Actions on selected metadata</actionOnSelect>
 	<add>hinzufügen</add>
 	<addNewMetadata>Neue Metadaten</addNewMetadata>
 	<admin>Administration</admin>
 	<Administrator>Administrator</Administrator>
 	<agrovocKeyword>Agrovoc Schlüsselwörter</agrovocKeyword>
+	<all>all</all>
 	<any>- Alle -</any>
 	<anytime>zu jeder Zeit</anytime>
 	<appSchInfoTab>App. Schema</appSchInfoTab>
@@ -329,6 +331,7 @@
 	<noInfo>Entschuldigung, keine Informationen verfügbar</noInfo>
 	<noLogin>Sie sind nicht angemeldet</noLogin>
 	<northbc>nördliche Grenzkoordinate</northbc>
+	<noSelectedMd>No metadata selected! Please at least select one before select an action.</noSelectedMd>
 	<online>Interaktive Karte</online>
 	<onlink>Online Linkage</onlink>
 	<opensearch>GeoNetwork opensearch service allow search to be made into the metadata catalog.</opensearch>
@@ -417,6 +420,11 @@
 	<searchAllText>Was?</searchAllText>
 	<searchUnused>Suche nach nicht benutzen oder leeren Metadaten</searchUnused>
 	<searchUnusedTitle>Suche nach unbenutzten</searchUnusedTitle>
+	<select>Select : </select>
+	<selectAll>Select all metadata</selectAll>
+	<selected> selected</selected>
+	<selectedOnly>Display selected only</selectedOnly>
+	<selectNone>Unselect metadata selected</selectNone>
 	<server>Server</server>
 	<setAll>Alle setzen</setAll>
 	<show>Metadaten</show>

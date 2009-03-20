@@ -30,6 +30,7 @@ import jeeves.server.*;
 import jeeves.server.context.*;
 
 import org.fao.geonet.constants.*;
+import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.*;
 
 //=============================================================================
@@ -72,7 +73,12 @@ public class Result implements Service
 				params.addContent(new Element("to").setText(searcher.getSize() +""));
 			}
 
-		return searcher.present(context, params, _config);
+		Element result = searcher.present(context, params, _config);
+		
+		// Update result elements to present
+		SelectionManager.updateMDResult(context.getUserSession(), result);
+		
+		return result; 
 	}
 }
 

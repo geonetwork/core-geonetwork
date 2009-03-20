@@ -17,6 +17,12 @@
 		</xsl:choose>
 	</xsl:variable>
 
+	<!--
+	additional scripts
+	-->
+	<xsl:template mode="script" match="/">
+		<script type="text/javascript" src="{/root/gui/url}/scripts/gn_search.js?"/>
+	</xsl:template>
 	
 	<!--
 	page content
@@ -30,6 +36,17 @@
 					<xsl:value-of select="/root/gui/strings/resultsMatching"/>
 					&#160;
 					<xsl:value-of select="/root/response/summary/@count"/>
+					&#160;&#160;
+					<span id="nbselected">
+						<xsl:choose>
+							<xsl:when test="/root/response/@selected" >
+								<xsl:value-of select="/root/response/@selected"/> 
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="count(//geonet:info[selected='true'])"/>
+							</xsl:otherwise>							
+						</xsl:choose>
+					</span><xsl:value-of select="/root/gui/strings/selected"/>
 				</xsl:with-param>
 				<xsl:with-param name="indent" select="50"/>
 			</xsl:call-template>
@@ -99,7 +116,18 @@
 									<xsl:variable name="port" select="substring-before($rest,'/')"/>
 									<xsl:variable name="db" select="substring-after($rest,'/')"/>
 									<td class="padded" colspan="2">
-										<h1 align="left"><a href="{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple"><xsl:value-of select="concat($metadata/geonet:info/id,' - ',$metadata/title)"/></a></h1>
+										<h1 align="left">
+											<xsl:variable name="isSelected" select="geonet:info/selected" />
+											<xsl:if test="$isSelected='true'">	
+								  				<input class="content"  type="checkbox" id="chk{geonet:info/id}" name="chk{geonet:info/id}" onclick="javascript:metadataselect('{geonet:info/uuid}', this.checked)"  checked="true"/>
+											</xsl:if>
+											<xsl:if test="$isSelected='false'">
+												<input class="content" type="checkbox" onclick="javascript:metadataselect('{geonet:info/uuid}', this.checked)"/>				
+											</xsl:if>
+											<a href="{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple">
+												<xsl:value-of select="concat($metadata/geonet:info/id,' - ',$metadata/title)"/>
+											</a> 
+										</h1>
 										<xsl:variable name="server" select="$metadata/geonet:info/server"/>
 										<xsl:variable name="name" select="/root/gui/repositories/Collection[@collection_dn=$server]/@collection_name"/>
 										<font class="green-neg"><xsl:value-of select="$name"/></font>
@@ -122,9 +150,16 @@
 									</td>
 									<td class="padded" width="90%">
 										<h1 align="left">
+											<xsl:variable name="isSelected" select="geonet:info/selected" />
+											<xsl:if test="$isSelected='true'">	
+								  				<input class="content"  type="checkbox" id="chk{geonet:info/id}" name="chk{geonet:info/id}" onclick="javascript:metadataselect('{geonet:info/uuid}', this.checked)"  checked="true"/>
+											</xsl:if>
+											<xsl:if test="$isSelected='false'">
+												<input class="content" type="checkbox" onclick="javascript:metadataselect('{geonet:info/uuid}', this.checked)"/>				
+											</xsl:if>
 											<a href="{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple">
 												<xsl:value-of select="$metadata/title"/>
-											</a>
+											</a> 
 										</h1>
 									</td>
 								<!-- Download XML for ISO and FGDC for use in applications like GeoNetwork or ESRI ArcCatalog -->

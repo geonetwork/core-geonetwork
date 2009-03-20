@@ -297,7 +297,10 @@ public class GetRecordsRequest extends CatalogRequest
 	}
 
 	//---------------------------------------------------------------------------
-
+	/**
+	 * Load the filter passed by the operation parameter
+	 * 
+	 */
 	private void addFilter(Element constr)
 	{
 		try

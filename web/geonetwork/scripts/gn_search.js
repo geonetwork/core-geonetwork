@@ -667,7 +667,17 @@ function gn_search_error() {
     alert("ERROR)");
 }
 
-
+function gn_filteredSearch() {
+	var myAjax = new Ajax.Request(
+		getGNServiceURL('selection.search'), 
+		{
+			method: 'get',
+			parameters: '',
+			onSuccess: gn_search_complete,
+			onFailure: gn_search_error
+		}
+	);
+}
 
 /**********************************************************
 ***
@@ -825,4 +835,56 @@ function setDates(what)
 	xfrom.value = fromdate;
 }
 
+
+
+
+/*
+ *Check and uncheck selected metadata
+ */
+function check(status) {
+	var checks = $('search-results-content').getElementsByTagName('INPUT');
+	var checksLength = checks.length;				
+	for (var i = 0; i < checksLength; i++) {
+		checks[i].checked = status;
+	}
+}
+function metadataselect(id, selected){
+	if (selected===true)
+		selected='add';
+	else if (selected===false)
+		selected='remove';
+	var param = 'id='+id+'&selected='+selected;
+	var http = new Ajax.Request(
+		Env.locService +'/'+ 'metadata.select',
+		{
+			method: 'get',
+			parameters: param,
+			onComplete: function(originalRequest){
+				// console.log('onComplete');
+			},
+			onLoaded: function(originalRequest){
+				// console.log('onLoaded');
+			},
+			onSuccess: function(originalRequest){
+				var xmlString = originalRequest.responseText;
+				
+				// convert the string to an XML object
+				var xmlobject = (new DOMParser()).parseFromString(xmlString, "text/xml");
+				// get the XML root item
+				var root = xmlobject.getElementsByTagName('response')[0];
+				var nbSelected = root.getElementsByTagName('Selected')[0].firstChild.nodeValue;
+				var item = document.getElementById('nbselected');
+				item.innerHTML = nbSelected;
+		},
+		onFailure: function(originalRequest){
+			alert('Error on metadata selection.'); // TODO : translate
+		}
+	});
+	if (selected=='remove-all') {
+		check(false);
+	};
+	if (selected=='add-all') {
+		check(true);
+	};
+}
 /*** EOF ***********************************************************/

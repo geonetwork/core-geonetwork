@@ -47,12 +47,9 @@ import org.jdom.Element;
 
 public class SearchController
 {
-    //---------------------------------------------------------------------------
-    //---
-    //--- Single public method to perform the general search tasks
-    //---
-    //---------------------------------------------------------------------------
-
+	/**
+	 * Perform the general search tasks
+	 */
     public Element search(ServiceContext context, int startPos, int maxRecords, int hopCount,
 			  ResultType resultType, OutputSchema outSchema, ElementSetName setName,
 			  Set<TypeName> typeNames, Element filterExpr, List<SortField> sortFields,
@@ -97,7 +94,9 @@ public class SearchController
     }
 
     //---------------------------------------------------------------------------
-
+    /**
+     * Retrieve metadata from the database
+     */
     private Element retrieveMetadata(ServiceContext context, String id,  ElementSetName setName,
 				     OutputSchema outSchema, Set<String> elemNames)
 	throws CatalogException
@@ -120,7 +119,9 @@ public class SearchController
 
 		String schema = record.getChildText("schemaid");
 		String data   = record.getChildText("data");
-
+		
+		// TODO : convert iso19115 metadata to iso19139
+		
 		//--- skip metadata with wrong schemas
 
 		if (schema.equals("fgdc-std") || schema.equals("dublin-core") || schema.equals("iso19115"))

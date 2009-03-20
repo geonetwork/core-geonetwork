@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<fileType>File type:</fileType>
+	<generateUUID>Generate UUID for inserted metadata</generateUUID>
+	<insertFileMode>File Upload</insertFileMode>
+	<insertMode>Insert mode:</insertMode>
+	<insertPasteMode>Copy/Paste</insertPasteMode>
+	<mefFile>MEF file</mefFile>
+	<newMdInsert>New metadata inserted:</newMdInsert>
+	<nothing>No action on import</nothing>
+	<overwrite>Overwrite metadata with same UUID</overwrite>
+	<singleFile>Single File (XML, SLD, WMC...)</singleFile>
+	<uuidAction>Import actions:</uuidAction>
+	
 	<metadata.admin.index>Index manager</metadata.admin.index>
 	<metadata.admin.index.desc>Rebuild Lucene index</metadata.admin.index.desc>
 	<metadata.admin.index.success>Rebuild index operation was successful.</metadata.admin.index.success>
@@ -50,7 +62,7 @@
 	<keyword>keyword</keyword>
 	<res>results</res>
 	<ress>result</ress>
-	<massiveActions>Massive actions : </massiveActions>
+	<massiveActions>Massive actions:</massiveActions>
 	
 	<thesaurus>
 		<category>Thesaurus category</category>
@@ -86,11 +98,13 @@
 	<about>About</about>
 	<abstract>Abstract</abstract>
 	<accept>Accept</accept>
+	<actionOnSelect>actions on selection</actionOnSelect>
 	<add>add</add>
 	<addNewMetadata>Add new metadata</addNewMetadata>
 	<admin>Administration</admin>
 	<Administrator>Administrator</Administrator>
 	<agrovocKeyword>Agrovoc Keywords</agrovocKeyword>
+	<all>all</all>
 	<any>- Any -</any>
 	<anytime>Anytime</anytime>
 	<appSchInfoTab>App. schema</appSchInfoTab>
@@ -132,8 +146,8 @@
 	<cn>中文</cn> <!-- Do not translate! -->
 	<completeTab>Advanced view</completeTab>
 	<completeTabEditor>Advanced editor</completeTabEditor>
-	<confirmDelete>Are you sure you want to Delete the Metadata from the Database?</confirmDelete>
-	<confirmMassiveDelete>Are you sure you want to Delete all selected Metadata from the Database?</confirmMassiveDelete>
+	<confirmDelete>Are you sure you want to delete the metadata from the database?</confirmDelete>
+	<confirmMassiveDelete>Are you sure you want to delete all selected metadata from the database?</confirmMassiveDelete>
 	<confirmPassword>Confirm password</confirmPassword>
 	<confirmNewPassword>Confirm new password</confirmNewPassword>
 	<constraintsTab>Constraints</constraintsTab>
@@ -347,6 +361,7 @@
 	<noInfo>Sorry, no info available</noInfo>
 	<noLogin>You are not logged in</noLogin>
 	<northbc>North Bounding Coordinate</northbc>
+	<noSelectedMd>No selection, select one metadata first.</noSelectedMd>
 	<online>Interactive map</online>
 	<onlink>Online Linkage</onlink>
 	<opensearch>GeoNetwork opensearch service allow search to be made into the metadata catalog.</opensearch>
@@ -435,6 +450,11 @@
 	<searchAllText>What?</searchAllText>
 	<searchUnused>Search for unused or empty metadata</searchUnused>
 	<searchUnusedTitle>Search for Unused</searchUnusedTitle>
+	<select>Select : </select>
+	<selectAll>Select all metadata</selectAll>
+	<selected> selected</selected>
+	<selectedOnly>Display selected only</selectedOnly>
+	<selectNone>Unselect metadata selected</selectNone>
 	<server>Server</server>
 	<setAll>Set All</setAll>
 	<show>Metadata</show>
@@ -491,9 +511,9 @@
 	<winInfo1>This window will show GeoNetwork resources. This window may be hidden at times depending on how your browser manages windows. In this case, you will have to manually bring the window to the foreground when necessary.</winInfo1>
 	<winInfo2>Throughout the Help (?) icon give you access to explanations. When you activate this icon, it's output will be displayed in this Resource Window.</winInfo2>
 	<wwwlink>Web link</wwwlink>
-	<xmlInsert>Import XML formatted metadata</xmlInsert>
+	<xmlInsert>Import metadata record in XML or MEF format</xmlInsert>
 
-	<xmlInsertTitle>XML Metadata Insert</xmlInsertTitle>
+	<xmlInsertTitle>Metadata insert</xmlInsertTitle>
 	<xmlTab>XML view</xmlTab>
         
         <!--  intermap tooltips -->

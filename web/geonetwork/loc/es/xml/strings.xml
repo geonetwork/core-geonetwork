@@ -120,7 +120,9 @@
 	<admin>Administrador</admin>
 	<Administrator>Administrador</Administrator>
 	<accept>Aceptar </accept>
+	<actionOnSelect>Actions on selected metadata</actionOnSelect>
 	<agrovocKeyword>Palabras del Diccionario de Agrovoc</agrovocKeyword>
+	<all>all</all>
 	<any>- Cualquiera -</any>
 	<anytime>Cualquier momento</anytime>
 	<appSchInfoTab>Perfil de aplicación</appSchInfoTab>
@@ -367,6 +369,7 @@
 	<noLogin>No está identificado como usuario</noLogin>
 	<none>nada</none>
 	<northbc>Coordenada Norte</northbc>
+	<noSelectedMd>No metadata selected! Please at least select one before select an action.</noSelectedMd>
 	<online>Mapa Interactivo</online>
 	<onlink>Recurso en línea</onlink>
 	<operation>Opciones</operation>
@@ -452,6 +455,11 @@
 	<searchText>¿Qué? (Texto)</searchText>
 	<searchAllText>¿Qué? (Texto)</searchAllText>
 	<searchUnused>Búsqueda de metadatos vacíos o que no han sido usados nunca</searchUnused>
+	<select>Select : </select>
+	<selectAll>Select all metadata</selectAll>
+	<selected> selected</selected>
+	<selectedOnly>Display selected only</selectedOnly>
+	<selectNone>Unselect metadata selected</selectNone>
 	<server>Servidor</server>
 	<setAll>Establecer todos</setAll>
 	<show>Página de Metadatos</show>

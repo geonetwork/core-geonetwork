@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.mef.MEFFileVisitor;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFVisitor;
 import org.fao.geonet.lib.Lib;
@@ -179,7 +180,7 @@ public class Aligner
 
 		try
 		{
-			MEFLib.visit(mefFile, new MEFVisitor()
+			MEFLib.visit(mefFile, new MEFFileVisitor(), new MEFVisitor()
 			{
 				public void handleMetadata(Element mdata) throws Exception
 				{
@@ -432,7 +433,7 @@ public class Aligner
 
 			try
 			{
-				MEFLib.visit(mefFile, new MEFVisitor()
+				MEFLib.visit(mefFile, new MEFFileVisitor(), new MEFVisitor()
 				{
 					public void handleMetadata(Element mdata) throws Exception
 					{

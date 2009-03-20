@@ -31,6 +31,7 @@ import jeeves.server.*;
 import jeeves.server.context.*;
 
 import org.fao.geonet.constants.*;
+import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.*;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.services.util.MainUtil;
@@ -90,6 +91,14 @@ public class Search implements Service
 
 		if (oldSearcher != null)
 			oldSearcher.close();
+		
+		// possibly close old selection
+		SelectionManager oldSelection = (SelectionManager)session.getProperty(Geonet.Session.SELECTED_RESULT);
+		
+		if (oldSelection != null){
+			oldSelection.close();
+			oldSelection = null;
+		}
 
 		// perform the search and save search result into session
 		MetaSearcher searcher;

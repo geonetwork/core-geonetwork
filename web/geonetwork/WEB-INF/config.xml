@@ -69,8 +69,8 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.DbmsPool</provider>
 			<config>
-				<user>zZlngCjy</user>
-				<password>i719dYGY</password>
+				<user>zuWRjZC6</user>
+				<password>GMGmk13z</password>
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>
@@ -231,7 +231,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="rating.popup">
-			<output sheet="rating-popup.xsl"/>
+			<output sheet="rating-popup.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -291,6 +291,14 @@
 
 		<service name="xml.region.get">
 			<class name=".services.region.Get" />
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Selection search services for filtering -->
+
+		<service name="selection.search">
+			<class name=".services.main.SelectionSearch" />
+			<output forward="main.present.embedded" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -826,7 +834,6 @@
 			<param name="type" value="all-thesauri" />
 		  </class>
 		  <output sheet="thesaurus-admin.xsl">
-			<call name="importStyleSheets" class=".guiservices.util.GetImportXSLs" />
 			<call name="thesaurusCategory" class=".services.thesaurus.List">
 			  <param name="type" value="upload-directories" />
 			</call>

@@ -42,6 +42,7 @@ import jeeves.utils.Xml;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
@@ -519,7 +520,7 @@ public class LuceneSearcher extends MetaSearcher
 
 	//--------------------------------------------------------------------------------
 
-	private static Element getMetadataFromIndex(Document doc, String id)
+	public static Element getMetadataFromIndex(Document doc, String id)
 	{
 		String root       = doc.get("_root");
 		String schema     = doc.get("_schema");
@@ -549,6 +550,40 @@ public class LuceneSearcher extends MetaSearcher
 		md.addContent(info);
 		return md;
 	}
+
+	/**
+	 * <p>
+	 * Gets results in current searcher
+	 * </p>
+	 * 
+	 * @return current searcher result in "fast" mode
+	 * 
+	 * @throws IOException 
+	 * @throws CorruptIndexException 
+	 */
+	public Element getAll() throws CorruptIndexException, IOException {
+		Element response = new Element("response");
+        if (_hits.length() == 0) {
+            response.setAttribute("from", 0 + "");
+            response.setAttribute("to", 0 + "");
+            return response;
+        }
+
+        response.setAttribute("from", 1 + "");
+        response.setAttribute("to", _hits.length() + "");
+
+        for (int i = 0; i < _hits.length(); i++) {
+            Document doc = _hits.doc(i);
+            String id = doc.get("_id");
+
+            // FAST mode
+            Element md = getMetadataFromIndex(doc, id);
+            response.addContent(md);
+        }
+        
+        return response;
+	}
+	
 }
 
 //==============================================================================

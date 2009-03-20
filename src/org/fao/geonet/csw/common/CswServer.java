@@ -37,6 +37,9 @@ import org.jdom.Namespace;
 
 //=============================================================================
 
+/**
+ * Class to parse GetCapabilities document.
+ */
 public class CswServer
 {
 	public static final String GET_RECORDS      = "GetRecords";
@@ -76,7 +79,9 @@ public class CswServer
 	//--- Private methods
 	//---
 	//---------------------------------------------------------------------------
-
+	/**
+	 * Get available operations in the GetCapabilities document 
+	 */
 	private void parseOperations(Element capabil)
 	{
 		Element operMd = capabil.getChild("OperationsMetadata", Csw.NAMESPACE_OWS);
@@ -101,6 +106,9 @@ public class CswServer
 
 	//---------------------------------------------------------------------------
 
+	/**
+	 * Get operations name and properties needed for futur operation calls. 
+	 */
 	private CswOperation extractOperation(Element oper)
 	{
 		String name = oper.getAttributeValue("name");
@@ -137,6 +145,11 @@ public class CswServer
 			Element parameter = i.next();
 			String parameterName = parameter.getAttributeValue("name"); 
 			log("Processing parameter: " + parameterName);
+			
+			/**
+			 * outputSchema corresponds to namespace URI with at least CSW DC based format
+			 * and iso19139.
+			 */
 			if(parameterName != null && parameterName.equals("OutputSchema")) {
 				Element outputSchemaListing = parameter;
 				outputSchemas = outputSchemaListing.getChildren("Value", Csw.NAMESPACE_OWS);
@@ -165,7 +178,9 @@ public class CswServer
 	}
 
 	//---------------------------------------------------------------------------
-	
+	/**
+	 * Check that an xlink:href attribute is present to call the operation.
+	 */
 	private URL evaluateUrl(Element method)
 	{
 		if (method == null)

@@ -38,6 +38,17 @@
 					&#160;
 					(page <xsl:value-of select="$currPage"/>/<xsl:value-of select="$pages"/>),
 <!--					<xsl:value-of select="/root/response/summary/@count"/>-->
+					&#160;
+                    <span id="nbselected">
+                        <xsl:choose>
+                            <xsl:when test="/root/response/@selected">
+                            	<xsl:value-of select="/root/response/@selected"/> 
+                            </xsl:when>
+                            <xsl:otherwise>
+                            	<xsl:value-of select="count(//geonet:info[selected='true'])"/> 
+                            </xsl:otherwise>                            
+                        </xsl:choose>
+                    </span> <xsl:value-of select="/root/gui/strings/selected"/> 
 				</xsl:with-param>
 				<xsl:with-param name="indent" select="50"/>
 			</xsl:call-template>
@@ -54,9 +65,6 @@
 				<xsl:with-param name="indent" select="50"/>
 			</xsl:call-template>
 
-			<!-- massive actions -->
-			<xsl:call-template name="massiveActions"/>
-
 			<tr><td class="blue-content" colspan="3"/></tr>
 		</table>
 	</xsl:template>
@@ -72,7 +80,7 @@
 			<td/>
 			<td class="padded-content">
 				<div class="results_title" style="float:left;">
-					<xsl:value-of select="$title"/>
+					<xsl:copy-of select="$title"/>
 					<xsl:if test="/root/response/summary/@count > 1">
 						&#xA0;<xsl:value-of select="/root/gui/strings/sortBy"/>&#xA0;
 						
@@ -94,6 +102,32 @@
 				<xsl:if test="/root/response/summary/@count > 0">
                    <!-- print pdf - - - - - - - - - - - - - - - - - - - - -->
                    <div style="float:right;">
+                    <xsl:value-of select="/root/gui/strings/select" />
+                    <a href="javascript:metadataselect(0, 'add-all')" title="{/root/gui/strings/selectAll}" alt="{/root/gui/strings/selectAll}">
+                    	<xsl:value-of select="/root/gui/strings/all"/>
+                    </a>
+					,
+					<a href="javascript:metadataselect(0, 'remove-all')" title="{/root/gui/strings/selectNone}" alt="{/root/gui/strings/selectNone}">
+                    	<xsl:value-of select="/root/gui/strings/none"/>
+                    </a>
+                    &#160;
+                    <!-- ==============================================  -->
+		            <!-- Add other actions list on selected metadata     -->
+		            <button id="oAcOs" name="oAcOs" class="content" onclick="actionOnSelect('{/root/gui/strings/noSelectedMd}')" style="width:220px;" title="{/root/gui/strings/otherActions}">
+		                <img id="oAcOsImg" name="oAcOsImg" src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/>
+		                <xsl:value-of select="/root/gui/strings/actionOnSelect"/>
+		            </button>
+		
+		            <div id="oAcOsEle" name="oAcOsEle" class="oAcEle" style="display:none;" onClick="oActions('oAcOs');">
+                        <xsl:if test="/root/gui/services/service/@name='metadata.massiveDelete'">
+						  <button onclick="massiveDelete('{/root/gui/strings/confirmMassiveDelete}')">
+						  	<xsl:value-of select="/root/gui/strings/delete"/>
+						  </button>
+                        </xsl:if>
+						<button onclick="gn_filteredSearch()"><xsl:value-of select="/root/gui/strings/selectedOnly"/></button>
+		            </div>
+		            <!-- ==============================================  -->
+					&#160;
                     <a href="#" onclick="runPdfSearch();"><img align="absmiddle" src="{/root/gui/url}/images/pdf.gif" alt="{/root/gui/strings/savepdf}" title="{/root/gui/strings/savepdf}"/></a>
                    </div>
                 </xsl:if>			
@@ -194,6 +228,15 @@
 										<!-- Title -->
 										<td class="padded" colspan="2">
 											<h1 align="left">
+												<xsl:variable name="isSelected" select="$metadata/geonet:info/selected" />
+												<xsl:choose>
+													<xsl:when test="$isSelected='true'">	
+														<input class="content"  type="checkbox" id="chk{geonet:info/id}" name="chk{geonet:info/id}" onclick="javascript:metadataselect('{geonet:info/uuid}', this.checked)"  checked="true"/>
+													</xsl:when>
+													<xsl:otherwise>
+														<input class="content" type="checkbox" onclick="javascript:metadataselect('{geonet:info/uuid}', this.checked)"/>				
+													</xsl:otherwise>
+												</xsl:choose>
 												<a href="{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple">
 													<xsl:value-of select="concat($metadata/geonet:info/id,' - ',$metadata/title)"/>
 												</a>
@@ -222,7 +265,16 @@
 										<!-- Title -->
 										<td class="padded" width="90%">
 											<h1 align="left">
-												<input id="selId" name="{$metadata/geonet:info/id}" type="checkbox" />
+												<xsl:variable name="isSelected" select="$metadata/geonet:info/selected" />
+												<xsl:choose>
+													<xsl:when test="$isSelected='true'">	
+														<input class="content"  type="checkbox" id="chk{geonet:info/id}" name="chk{geonet:info/id}" onclick="javascript:metadataselect('{geonet:info/uuid}', this.checked)"  checked="true"/>
+													</xsl:when>
+													<xsl:otherwise>
+														<input class="content" type="checkbox" onclick="javascript:metadataselect('{geonet:info/uuid}', this.checked)"/>				
+													</xsl:otherwise>
+												</xsl:choose>
+												<!-- <input id="selId" name="{$metadata/geonet:info/id}" type="checkbox" /> -->
 												<xsl:value-of select="$metadata/title"/>
 											</h1>
 										</td>
@@ -592,23 +644,6 @@
 			<xsl:call-template name="showRatingDiff">
 				<xsl:with-param name="diff" select="$diff -1"/>
 			</xsl:call-template>
-		</xsl:if>
-	</xsl:template>
-		
-	<!-- ================================================================================== -->
-	<!-- massive actions -->
-	<!-- ================================================================================== -->
-
-	<xsl:template name="massiveActions">
-		<xsl:if test="/root/gui/services/service/@name='metadata.massiveDelete'">
-			<tr>
-				<td align="center" colspan="3" style="padding-bottom:4px;">
-					<xsl:value-of select="/root/gui/strings/massiveActions"/>
-					<button class="content" onclick="massiveDelete('{/root/gui/strings/confirmMassiveDelete}')">
-						<xsl:value-of select="/root/gui/strings/delete"/>
-					</button>
-				</td>
-			</tr>
 		</xsl:if>
 	</xsl:template>
 	

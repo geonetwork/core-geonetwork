@@ -3,6 +3,11 @@ package org.fao.geonet.csw.common;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 
+/**
+ * Check that constraint language is one of CQL or FILTER
+ * 
+ *
+ */
 public enum ConstraintLanguage
 {
 	CQL("CQL_TEXT"), FILTER("FILTER");

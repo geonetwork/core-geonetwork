@@ -286,6 +286,14 @@
 
 			<output forward="main.present"/>
 		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="metadata.select">
+			<class name=".services.main.Select">
+				<param name="type" value="metadata" />
+			</class>
+		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Thumbnail services                                            -->

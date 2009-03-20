@@ -35,13 +35,16 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Log;
+import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.ISODate;
+import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.jdom.Element;
 
 //=============================================================================
@@ -54,7 +57,10 @@ class Importer
 	//---
 	//--------------------------------------------------------------------------
 
-	public static int doImport(final ServiceContext context, File mefFile) throws Exception
+	private static final String SingleFileType = "single";
+	private static final String MefFileType    = "mef";
+	
+	public static int doImport(final Element params, final ServiceContext context, File mefFile, final String stylePath) throws Exception
 	{
 		final GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		final DataManager   dm = gc.getDataManager();
@@ -63,10 +69,21 @@ class Importer
 
 		final String  id[] = { ""   };
 		final Element md[] = { null };
+		
+		String fileType = Util.getParam(params,Params.FILE_TYPE, MefFileType);
+		
+		FileVisitor visitor = null;
+		
+		if (fileType.equals(SingleFileType))
+			visitor = new XMLFileVisitor();
+		else if (fileType.equals(MefFileType))
+			visitor = new MEFFileVisitor();
+		else
+			throw new BadArgumentException("Missing file type parameter!!");
 
 		//--- import metadata from MEF file
 
-		MEFLib.visit(mefFile, new MEFVisitor()
+		MEFLib.visit(mefFile, visitor, new MEFVisitor()
 		{
 			public void handleMetadata(Element metadata) throws Exception
 			{
@@ -78,27 +95,85 @@ class Importer
 
 			public void handleInfo(Element info) throws Exception
 			{
-				Element general = info.getChild("general");
+				String uuid = null;
+				String createDate = null;
+				String changeDate = null;
+				String source = null;
+				String sourceName = null;
+				String schema = null;
+				String isTemplate = null;
+				String rating = null;
+				String popularity = null;
+				String groupId = null;
+				Element categs = null;
+				Element privileges = null;
+				// Element group = null;
 
-				String uuid       = general.getChildText("uuid");
-				String createDate = general.getChildText("createDate");
-				String changeDate = general.getChildText("changeDate");
-				String source     = general.getChildText("siteId");
-				String sourceName = general.getChildText("siteName");
-				String schema     = general.getChildText("schema");
-				String isTemplate = general.getChildText("isTemplate").equals("true") ? "y" : "n";
-				String rating     = general.getChildText("rating");
-				String popularity = general.getChildText("popularity");
+				boolean dcore = false;
+				boolean fgdc = false;
+				boolean iso115 = false;
+				boolean iso139 = false;
+				
+				// Handle non MEF files insertion
+				if (info.getChildren().size() == 0) {
+					
+					schema = Util.getParam(params, Params.SCHEMA);
+					source = Util.getParam(params, Params.SITE_ID, gc
+							.getSiteId());
+					isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
 
-				boolean dcore  = schema.equals("dublin-core");
-				boolean fgdc   = schema.equals("fgdc-std");
-				boolean iso115 = schema.equals("iso19115");
-				boolean iso139 = schema.equals("iso19139");
+					categs = new Element("categories");
+					categs.addContent((new Element("category")).setAttribute(
+							"name", Util.getParam(params, Params.CATEGORY)));
+					
+					groupId = Util.getParam(params, Params.GROUP);
+					privileges =  new Element("group");
+					privileges.addContent(new Element("operation").setAttribute("name", "view"));
+					privileges.addContent(new Element("operation").setAttribute("name", "download"));
+					privileges.addContent(new Element("operation").setAttribute("name", "notify"));
+					privileges.addContent(new Element("operation").setAttribute("name", "dynamic"));
+					privileges.addContent(new Element("operation").setAttribute("name", "featured"));
+					
+					String style = Util.getParam(params, Params.STYLESHEET);
+					
+					// Apply a stylesheet transformation if requested
+					if (!style.equals("_none_"))
+			        	md[0] = Xml.transform(md[0],stylePath+"/"+style);
+					
+					// Get the Metadata uuid
+					if (isTemplate.equals("n"))
+						uuid = dm.extractUUID(schema, md[0]);
+					
+				} else {
 
+					categs = info.getChild("categories");
+					privileges = info.getChild("privileges");
+
+					Element general = info.getChild("general");
+	
+					uuid       = general.getChildText("uuid");
+					createDate = general.getChildText("createDate");
+					changeDate = general.getChildText("changeDate");
+					source     = general.getChildText("siteId");
+					sourceName = general.getChildText("siteName");
+					schema     = general.getChildText("schema");
+					isTemplate = general.getChildText("isTemplate").equals("true") ? "y" : "n";
+					rating     = general.getChildText("rating");
+					popularity = general.getChildText("popularity");
+	
+				}
+
+				dcore  = schema.equals("dublin-core");
+				fgdc   = schema.equals("fgdc-std");
+				iso115 = schema.equals("iso19115");
+				iso139 = schema.equals("iso19139");
+				
 				if (!dcore && !fgdc && !iso115 && !iso139)
 					throw new Exception("Unknown schema format : "+schema);
 
-				if (uuid == null)
+				String uuidAction = Util.getParam(params, Params.UUID_ACTION);
+				
+				if (uuid == null || uuid.equals("") || uuidAction.equals(Params.GENERATE_UUID))
 				{
 					uuid   = UUID.randomUUID().toString();
 					source = null;
@@ -117,7 +192,17 @@ class Importer
 					Lib.sources.update(dbms, source, sourceName, true);
 				}
 
-				Log.debug(Geonet.MEF, "Adding metadata with uuid="+ uuid);
+				try {
+					if (dm.existsMetadataUuid(dbms, uuid) && !uuidAction.equals(Params.NOTHING)) { 
+						dm.deleteMetadata(dbms, dm.getMetadataId(dbms, uuid)) ;
+						context.debug("Deleting existing metadata with UUID : " + uuid );
+					}
+				}
+				catch (Exception e) {
+					throw new Exception(" Existing metadata with same UUID could not be deleted.");
+				}
+				
+				context.debug("Adding metadata with uuid="+ uuid);
 
 				id[0] = dm.insertMetadataExt(dbms, schema, md[0], context.getSerialFactory(),
 													  source, createDate, changeDate, uuid,
@@ -140,8 +225,13 @@ class Importer
 				new File(pubDir).mkdirs();
 				new File(priDir).mkdirs();
 
-				addCategories(dm, dbms, id[0], info.getChild("categories"));
-				addPrivileges(dm, dbms, id[0], info.getChild("privileges"));
+				addCategories(dm, dbms, id[0], categs);
+				
+				if (groupId == null)
+					addPrivileges(dm, dbms, id[0], privileges);
+				else 
+					addOperations(dm, dbms, privileges, id[0], groupId);
+				
 				dm.indexMetadata(dbms, id[0]);
 			}
 
@@ -274,7 +364,7 @@ class Importer
 		{
 			Element entity = (Element) e;
 
-			if (entity.getChildText("name").equals(name))
+			if (entity.getChildText("name").equals(name) || entity.getChildText("id").equals(name))
 				return entity.getChildText("id");
 		}
 

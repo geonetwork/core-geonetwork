@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -38,6 +39,7 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
@@ -45,6 +47,7 @@ import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TermQuery;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -60,16 +63,20 @@ import org.jdom.Element;
 
 //=============================================================================
 
-class CatalogSearcher
+public class CatalogSearcher
 {
 	//---------------------------------------------------------------------------
 	//---
 	//--- Main search method
 	//---
 	//---------------------------------------------------------------------------
+    private Hits _hits;
 
-	//--- should return a list of id that match the given filter, ordered by sortFields
-
+	/**
+	 * Convert a filter to a lucene search and run the search.
+	 * 
+	 * @return a list of id that match the given filter, ordered by sortFields
+	 */
 	public List<ResultItem> search(ServiceContext context, Element filterExpr, Set<TypeName> typeNames,
 										List<SortField> sortFields) throws CatalogException
 	{
@@ -107,6 +114,12 @@ class CatalogSearcher
 	//---
 	//---------------------------------------------------------------------------
 
+	/**
+	 * Use filter-to-lucene stylesheet to create a Lucene search query 
+	 * to be used by LuceneSearcher.
+	 * 
+	 * @return XML representation of Lucene query 
+	 */
 	private Element filterToLucene(ServiceContext context, Element filterExpr) throws NoApplicableCodeEx
 	{
 		if (filterExpr == null)
@@ -180,15 +193,19 @@ class CatalogSearcher
 		}
 	}
 
-	//---------------------------------------------------------------------------
-
+	/**
+	 * Map OGC CSW search field names to Lucene field names
+	 * using {@link FieldMapper}. If a field name is not defined
+	 * then the any (ie. full text) criteria is used.
+	 *  
+	 */
 	private void remapFields(Element elem)
 	{
 		String field = elem.getAttributeValue("fld");
 
 		if (field != null) {
 			
-			if (field.equals(""))
+			if (field.equals("")) 
 				field = "any";
 			
 			if(field.equalsIgnoreCase("anytext")) {
@@ -211,6 +228,9 @@ class CatalogSearcher
 
 	//---------------------------------------------------------------------------
 
+	/**
+	 * Call {@link LuceneSearcher} to do the CSW query and return results
+	 */
 	private List<ResultItem> search(ServiceContext context, Element luceneExpr) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -222,7 +242,7 @@ class CatalogSearcher
 		Query data   = (luceneExpr == null) ? null : LuceneSearcher.makeQuery(luceneExpr);
 		Query groups = getGroupsQuery(context);
 		Query templ  = new TermQuery(new Term("_isTemplate", "n"));
-
+		// TODO : could we query only iso based record here instead of filtering afterwards ?
 		//--- put query on groups in AND with lucene query
 
 		BooleanQuery query  = new BooleanQuery();
@@ -241,17 +261,17 @@ class CatalogSearcher
 
 		try
 		{
-			Hits hits = searcher.search(query);
+			_hits = searcher.search(query);
 
-			Log.debug(Geonet.CSW_SEARCH, "Records matched : "+ hits.length());
+			Log.debug(Geonet.CSW_SEARCH, "Records matched : "+ _hits.length());
 
 			//--- retrieve results
 
 			ArrayList<ResultItem> results = new ArrayList<ResultItem>();
 
-			for(int i=0; i<hits.length(); i++)
+			for(int i=0; i<_hits.length(); i++)
 			{
-				Document doc = hits.doc(i);
+				Document doc = _hits.doc(i);
 				String   id  = doc.get("_id");
 
 				ResultItem ri = new ResultItem(id);
@@ -275,8 +295,10 @@ class CatalogSearcher
 		}
 	}
 
-	//---------------------------------------------------------------------------
-
+	/**
+	 * Allow search on current user's groups only adding a 
+	 * BooleanClause to the search.
+	 */
 	private Query getGroupsQuery(ServiceContext context) throws Exception
 	{
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
@@ -323,14 +345,59 @@ class CatalogSearcher
 
 		Collections.sort(results, new ItemComparator(fields));
 	}
+	
+    /**
+     * <p>
+     * Gets results in current searcher
+     * </p>
+     * 
+     * @return current searcher result in "fast" mode
+     * 
+     * @throws IOException
+     * @throws CorruptIndexException
+     */
+    public Element getAll() throws CorruptIndexException, IOException
+    {
+        Element response = new Element("response");
+
+        if (_hits.length() == 0) {
+            response.setAttribute("from", 0 + "");
+            response.setAttribute("to", 0 + "");
+            return response;
+        }
+
+        response.setAttribute("from", 1 + "");
+        response.setAttribute("to", _hits.length() + "");
+        for (int i = 0; i < _hits.length(); i++) {
+            Document doc = _hits.doc(i);
+            String id = doc.get("_id");
+
+            // FAST mode
+            Element md = LuceneSearcher.getMetadataFromIndex(doc, id);
+            response.addContent(md);
+        }
+
+        return response;
+    }
+	
 }
 
 //=============================================================================
 
+/**
+ * Class containing result items with information
+ * retrieved from Lucene index.
+ */
 class ResultItem
 {
+	/**
+	 * Metadata identifier
+	 */
 	private String id;
 
+	/**
+	 * Other Lucene index information declared in {@link FieldMapper}
+	 */
 	private HashMap<String, String> hmFields = new HashMap<String, String>();
 
 	//---------------------------------------------------------------------------
@@ -366,6 +433,11 @@ class ResultItem
 
 //=============================================================================
 
+/**
+ * Used to sort search results
+ * 
+ * comment francois : could we use {@link Sort} instead ?
+ */
 class ItemComparator implements Comparator<ResultItem>
 {
 	private List<SortField> sortFields;

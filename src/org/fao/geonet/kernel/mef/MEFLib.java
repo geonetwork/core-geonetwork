@@ -25,6 +25,8 @@ package org.fao.geonet.kernel.mef;
 
 import java.io.File;
 
+import org.jdom.Element;
+
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.MissingParameterEx;
@@ -40,9 +42,9 @@ public class MEFLib
 	//---
 	//--------------------------------------------------------------------------
 
-	public static int doImport(ServiceContext context, File mefFile) throws Exception
+	public static int doImport(Element params, ServiceContext context, File mefFile, String stylePath) throws Exception
 	{
-		return Importer.doImport(context, mefFile);
+		return Importer.doImport(params, context, mefFile, stylePath);
 	}
 
 	//--------------------------------------------------------------------------
@@ -55,9 +57,9 @@ public class MEFLib
 
 	//--------------------------------------------------------------------------
 
-	public static void visit(File mefFile, MEFVisitor v) throws Exception
+	public static void visit(File mefFile, FileVisitor fvisitor, MEFVisitor v) throws Exception
 	{
-		Visitor.visit(mefFile, v);
+		fvisitor.visit(mefFile, v);
 	}
 
 	//--------------------------------------------------------------------------

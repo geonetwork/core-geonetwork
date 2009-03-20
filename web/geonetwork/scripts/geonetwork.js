@@ -88,24 +88,42 @@ function get_cookie ( cookie_name )
 
 	function massiveDelete(message)
 	{
-		var list = $('search-results-content').getElementsByTagName('INPUT');
-		var ids  = '';
-
-		for (var i=0; i<list.length; i++)
-		{
-			if (list[i].getAttribute('id') == 'selId')
-				if (list[i].checked)
-				{
-					var name = list[i].getAttribute('name');
-					ids = ids +'&id='+name;
-				}
-		}
-
-		if (ids == '')
-			return;
-			
 		if(!confirm(message))
 			return;
 
-		document.location.href = Env.locService +'/metadata.massiveDelete?'+ids.substring(1);
+		document.location.href = Env.locService +'/metadata.massiveDelete';
+	}
+	
+	// Other actions javascript functions
+	function oActionsInit(name,id) {
+		if (id === undefined) {
+			id = "";
+        }
+		$(name+'Ele'+id).style.width = $(name+id).getWidth(); 
+	    $(name+'Ele'+id).style.top = $(name+id).positionedOffset().top + $(name+id).getHeight();
+	    $(name+'Ele'+id).style.left = $(name+id).positionedOffset().left;
+	}
+
+	function oActions(name,id) {
+		if (id === undefined) {
+			id = "";
+        }
+		if (!$(name+'Ele'+id).style.top)
+	        oActionsInit (name, id);
+	        
+	    if ($(name+'Ele'+id).style.display == 'none') {
+	        $(name+'Ele'+id).style.display = 'block';
+	        $(name+'Img'+id).src = off;
+	    } else { 
+	        $(name+'Ele'+id).style.display = 'none';
+	        $(name+'Img'+id).src = on;
+	    }
+
+	}
+
+	function actionOnSelect(msg) {
+		if ($('nbselected').innerHTML == 0 && $('oAcOsEle').style.display == 'none') {
+			a(msg);
+		} else
+			oActions('oAcOs');
 	}

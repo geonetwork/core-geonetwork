@@ -361,7 +361,12 @@ public class GetRecords extends AbstractOperation implements CatalogService
     }
 
     //---------------------------------------------------------------------------
-
+    /**
+     * Load filter and query information
+     * Convert CQL
+     * 
+     * @return Filter to be used for the search
+     */
     private Element getFilterExpression(Element request, ServiceContext context) throws CatalogException
     {
 	Element query  = request.getChild("Query",      Csw.NAMESPACE_CSW);
@@ -418,7 +423,11 @@ public class GetRecords extends AbstractOperation implements CatalogService
     }
 
     //---------------------------------------------------------------------------
-
+    /**
+     * Convert a CQL query to a Filter query using XSL stylesheet.
+     * 
+     * @return Filter
+     */
     private Element convertCQL(String cql, ServiceContext context) throws CatalogException
     {
 	String xmlCql = getCqlXmlString(cql, context);
@@ -434,7 +443,10 @@ public class GetRecords extends AbstractOperation implements CatalogService
     }
 
     //---------------------------------------------------------------------------
-
+    /**
+     * Parse CQL text representation using org.z3950.zing.cql.CQLParser
+     * 
+     */
     private String getCqlXmlString(String cql, ServiceContext context) throws InvalidParameterValueEx
     {
 	try

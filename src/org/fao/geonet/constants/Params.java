@@ -73,6 +73,10 @@ public class Params
 	public static final String COUNTRY      = "country";
 	public static final String KIND         = "kind";
 	public static final String RATING       = "rating";
+	public static final String FILE_TYPE    = "file_type";
+	public static final String GENERATE_UUID= "generateUUID";
+	public static final String UUID_ACTION  = "uuidAction";
+	public static final String NOTHING      = "nothing";
 
 	public static final String SCALING              = "scaling";
 	public static final String SCALING_DIR          = "scalingDir";

@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<fileType>Type de fichier :</fileType>
+	<generateUUID>Générer un nouvel identifiant pour les métadonnées insérées</generateUUID>
+	<insertFileMode>Import de fichiers</insertFileMode>
+	<insertMode>Mode d'insertion :</insertMode>
+	<insertPasteMode>Copier/Coller</insertPasteMode>
+	<mefFile>Fichier MEF</mefFile>
+	<newMdInsert>Nouvelle métadonnée inserée :</newMdInsert>
+	<nothing>Aucune action à l'import</nothing>
+	<overwrite>Ecraser les métadonnées de même identifiant</overwrite>
+	<singleFile>Fichier simple (XML, SLD, WMC...)</singleFile>
+	<uuidAction>Actions à l'import :</uuidAction>
+	
 	<metadata.admin.index>Gestion de l&apos;index</metadata.admin.index>
 	<metadata.admin.index.desc>Regénérer l&apos;index du catalogue</metadata.admin.index.desc>
 	<metadata.admin.index.success>L'index a été reconstruit avec succès...</metadata.admin.index.success>
@@ -110,11 +122,13 @@
 	<about>A propos</about>
 	<abstract>Résumé</abstract>
 	<accept>Accepter</accept>
+	<actionOnSelect>Actions sur la sélection</actionOnSelect>
 	<add>Ajouter</add>
 	<addNewMetadata>Créer une nouvelle fiche de métadonnées</addNewMetadata>
 	<admin>Administration</admin>
 	<Administrator>Administrateur</Administrator>
 	<agrovocKeyword>Mots clés Agrovoc</agrovocKeyword>
+	<all>Tout</all>
 	<any>- Tous -</any>
 	<anytime>N'importe quand</anytime>
 	<appSchInfoTab>Schéma d'application</appSchInfoTab>
@@ -377,6 +391,7 @@
 	<noInfo>Désolé, pas d'information disponible</noInfo>
 	<noLogin>Vous n'étes pas connecté.</noLogin>
 	<northbc>Coordonnée nord de l'emprise</northbc>
+	<noSelectedMd>Sélectionner au moins une métadonnée avant d\'utiliser une action.</noSelectedMd>
 	<online>Carte interactive</online>
 	<onlink>Liens</onlink>
 	<operation>Opération</operation>
@@ -464,6 +479,11 @@
 	<searchAllText>Partout</searchAllText>
 	<searchUnused>Rechercher des métadonnées vides ou non utilisées</searchUnused>
 	<searchUnusedTitle>Métadonnées inutilisées</searchUnusedTitle>
+	<select>Sélectionner : </select>
+	<selectAll>Select all metadata</selectAll>
+	<selected> selectionné(s)</selected>
+	<selectedOnly>Afficher la sélection</selectedOnly>
+	<selectNone>Unselect metadata selected</selectNone>
 	<server>Serveur</server>
 	<setAll>Set All</setAll>
 	<show>Métadonnées</show>

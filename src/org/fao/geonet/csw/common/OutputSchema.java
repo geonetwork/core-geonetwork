@@ -15,7 +15,11 @@ public enum OutputSchema
 	public String toString() { return schema; }
 
 	//------------------------------------------------------------------------
-
+	/**
+	 * Check that outputSchema is known by local catalogue instance.
+	 * 
+	 * TODO : register new outputSchema when profile are loaded.
+	 */
 	public static OutputSchema parse(String schema) throws InvalidParameterValueEx
 	{
 		if (schema == null)						return OGC_CORE;

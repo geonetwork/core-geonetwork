@@ -41,6 +41,8 @@
 			Env.locUrl    = "<xsl:value-of select="/root/gui/locUrl"/>";
 			Env.url       = "<xsl:value-of select="/root/gui/url"/>";
 			Env.lang      = "<xsl:value-of select="/root/gui/language"/>";
+            var on        = "<xsl:value-of select="/root/gui/url"/>/images/plus.gif";
+            var off       = "<xsl:value-of select="/root/gui/url"/>/images/minus.png";
 			
 			<xsl:if test="//service/@name = 'main.home'">
             document.onkeyup = alertkey;

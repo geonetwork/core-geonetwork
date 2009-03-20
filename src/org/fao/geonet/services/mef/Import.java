@@ -28,6 +28,8 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.jdom.Element;
 
@@ -35,7 +37,11 @@ import org.jdom.Element;
 
 public class Import implements Service
 {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	private String stylePath;
+	
+	public void init(String appPath, ServiceConfig params) throws Exception {
+		this.stylePath = appPath + Geonet.Path.IMPORT_STYLESHEETS;
+	}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -49,7 +55,7 @@ public class Import implements Service
 		String uploadDir = context.getUploadDir();
 
 		File file = new File(uploadDir, mefFile);
-		int  id   = MEFLib.doImport(context, file);
+		int  id   = MEFLib.doImport(params, context, file, stylePath);
 
 		file.delete();
 

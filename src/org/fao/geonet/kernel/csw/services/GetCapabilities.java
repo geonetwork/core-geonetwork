@@ -81,6 +81,9 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		try
 		{
 			Element capabilities = Xml.loadFile(file);
+			// TODO : add IsoProfiles
+			// TODO : SupportedISOQueryables
+			// TODO : AdditionalQueryables
 			substitute(context, capabilities);
 			handleSections(request, capabilities);
 
@@ -197,14 +200,16 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 	}
 
 	//---------------------------------------------------------------------------
-
+	/**
+	 * Substitute value from the GetCapabilities document template
+	 * with {@link SettingManager} properties.
+	 */
 	private void substitute(ServiceContext context, Element capab) throws Exception
 	{
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getSettingManager();
 
 		HashMap<String, String> vars = new HashMap<String, String>();
-
 		vars.put("$HOST",    sm.getValue("system/server/host"));
 		vars.put("$PORT",    sm.getValue("system/server/port"));
 		vars.put("$SERVLET", context.getBaseUrl());

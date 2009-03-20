@@ -30,6 +30,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import jeeves.resources.dbms.Dbms;
+
+import org.fao.geonet.kernel.mef.MEFFileVisitor;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFVisitor;
 import org.fao.geonet.util.ISODate;
@@ -53,7 +55,7 @@ public class MefLib
 
 		Lib.log.info("Adding MEF file : "+ mefFile.getAbsolutePath());
 
-		MEFLib.visit(mefFile, new MEFVisitor()
+		MEFLib.visit(mefFile, new MEFFileVisitor(), new MEFVisitor()
 		{
 			public void handleMetadata(Element mdata) throws Exception
 			{
@@ -103,14 +105,6 @@ public class MefLib
 		String source     = general.getChildText("siteId");
 		String schema     = general.getChildText("schema");
 		String isTemplate = general.getChildText("isTemplate").equals("true") ? "y" : "n";
-
-		boolean dcore  = schema.equals("dublin-core");
-		boolean fgdc   = schema.equals("fgdc-std");
-		boolean iso115 = schema.equals("iso19115");
-		boolean iso139 = schema.equals("iso19139");
-
-		if (!dcore && !fgdc && !iso115 && !iso139)
-			throw new Exception("Unknown schema format : "+schema);
 
 		if (uuid == null)
 		{

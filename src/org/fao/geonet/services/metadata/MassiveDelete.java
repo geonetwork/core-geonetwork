@@ -26,6 +26,7 @@ package org.fao.geonet.services.metadata;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.Iterator;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.OperationNotAllowedEx;
@@ -41,6 +42,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.lib.Lib;
@@ -69,12 +71,13 @@ public class MassiveDelete implements Service
 		UserSession   session   = context.getUserSession();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-		for (Object o : params.getChildren("id"))
-		{
-			String id = ((Element) o).getText();
-
-			context.info("Deleting metadata with id:"+ id);
+		
+		SelectionManager sm = SelectionManager.getManager(session) ;
+		
+		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
+			String uuid = (String) iter.next();
+			String id   = dataMan.getMetadataId(dbms, uuid);
+			context.info("Deleting metadata with id:" + id);
 
 			//-----------------------------------------------------------------------
 			//--- check access
@@ -130,7 +133,7 @@ public class MassiveDelete implements Service
 		}
 		catch(Exception e)
 		{
-			context.warning("Cannot backup mef file : "+e.getMessage());
+			context.warning("Cannot backup mef file: "+e.getMessage());
 			e.printStackTrace();
 		}
 

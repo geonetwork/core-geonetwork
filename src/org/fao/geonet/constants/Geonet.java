@@ -51,6 +51,10 @@ public class Geonet
 		public static final String UNSET_THUMBNAIL     = "unset-thumbnail.xsl";
 		public static final String SCHEMA_SUGGESTIONS  = "schema-suggestions.xml";
 		public static final String SCHEMA_SUBSTITUTES  = "schema-substitutes.xml";
+		
+		/**
+		 * Stylesheet to convert a CQL parameter to a filter.
+		 */
 		public static final String CQL_TO_FILTER       = "cql-to-filter.xsl";
 		public static final String FILTER_TO_LUCENE    = "filter-to-lucene.xsl";
 	}
@@ -114,6 +118,7 @@ public class Geonet
 		public static final String METADATA_SHOW			= "metadata.show";
 		public static final String METADATA_POSITION  = "metadata.position";
 		public static final String SEARCH_KEYWORDS_RESULT	= "search.keywords.result";
+		public static final String SELECTED_RESULT          = "selected.result";
 	}
 
 	//--------------------------------------------------------------------------
@@ -295,6 +300,10 @@ public class Geonet
          * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} (default)
          * or {@value org.fao.geonet.constants.Geonet.Text#OFF} */
         public static final String INTERMAP      = "intermap";
+
+        /** Parameter name: {@value #UUID} - Text field that search 
+         * for specific uuid given */
+        public static final String UUID = "uuid";
 
 		//-----------------------------------------------------------------------
 

@@ -219,6 +219,10 @@
 		<allow service="external.getmetadata"/>
 		<allow service="resources.getgraphover"/>
 		<allow service="graphover.show"/>
+		
+		<!-- Select metadata -->
+		<allow service="metadata.select"/>
+		<allow service="selection.search"/>
 
 		<!-- WMC -->
 		<allow service="intermap.wmc.setWmcContext"/>

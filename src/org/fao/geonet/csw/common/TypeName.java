@@ -43,13 +43,13 @@ public enum TypeName {
 				else if (typeName.equals(APPLICATION.toString()))
 					hs.add(APPLICATION);
 
-		    // These two are explicitly not allowed as search targets in CSW 2.0.2,
-		    // so we throw an exception if the client asks for them
-		    else if (typeName.equals("csw:BriefRecord"))
-			throw new InvalidParameterValueEx("typeName", typeName);
-
-		    else if (typeName.equals("csw:SummaryRecord"))
-			throw new InvalidParameterValueEx("typeName", typeName);
+			    // These two are explicitly not allowed as search targets in CSW 2.0.2,
+			    // so we throw an exception if the client asks for them
+			    else if (typeName.equals("csw:BriefRecord"))
+			    	throw new InvalidParameterValueEx("typeName", typeName);
+	
+			    else if (typeName.equals("csw:SummaryRecord"))
+			    	throw new InvalidParameterValueEx("typeName", typeName);
 
 			}
 		}

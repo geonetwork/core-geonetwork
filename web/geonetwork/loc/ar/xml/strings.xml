@@ -6,12 +6,14 @@
 	<about>عن البرنامج</about>
 	<abstract>مقدمة</abstract>
 	<accept>قبول</accept>
+	<actionOnSelect>Actions on selected metadata</actionOnSelect>
 	<add>إضافة</add>
 	<addNewMetadata>بيانات أساسية Metadata جديدة</addNewMetadata>
 	<address>Address</address>
 	<admin>إدارة موقع</admin>
 	<Administrator>مدير موقع</Administrator>
 	<agrovocKeyword>دوال أجروفوك</agrovocKeyword>
+	<all>all</all>
 	<any>- أي من -</any>
  <anytime>Anytime</anytime>
 	<ar>عربي</ar> <!-- Do not translate! -->
@@ -308,6 +310,7 @@
 	<noInfo>عفواً، لا توجد معلومات متوفرة</noInfo>
 	<noLogin>لم تتمكن من الدخول</noLogin>
 	<northbc>الاحداثيات الشمالية</northbc>
+	<noSelectedMd>No metadata selected! Please at least select one before select an action.</noSelectedMd>
 <!--  <nteaphome>موقع مشروع البيئة الاقليمي</nteaphome> -->
 	<online>خريطة تفاعلية</online>
 	<onlink>روابط حية</onlink>
@@ -403,6 +406,11 @@
 	<searchAllText>كتابة حرة</searchAllText>
 	<searchUnused>بحث عن بيانات اساسية Metadata خالية</searchUnused>
 	<searchUnusedTitle>Search for Unused</searchUnusedTitle>
+	<select>Select : </select>
+	<selectAll>Select all metadata</selectAll>
+	<selected> selected</selected>
+	<selectedOnly>Display selected only</selectedOnly>
+	<selectNone>Unselect metadata selected</selectNone>
 	<selection>Selection</selection>
 	<server>مخدم</server>
 	<setAll>Set All</setAll>

@@ -210,7 +210,6 @@ public class GuiBuilder
 		String param = form.getChildText("param");
 
 		FormPanel     formPanel= buildForm(clazz, param);
-		System.out.println(" Form Panel : " + id + " type is : " + formPanel.getClass().getName());
 		
 		List<JButton> buttons  = buildButtons(form.getChildren("button"), formPanel);
 		Precon        precon   = getPrecon(form.getChild("precon"));
