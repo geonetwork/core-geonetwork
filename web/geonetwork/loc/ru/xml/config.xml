@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<site>Сайт</site>
+		<name>Название</name>
+		<organ>Организация</organ>
+
+	<server>Сервер</server>
+		<host>Хост</host>
+		<port>Порт</port>
+
+	<intranet>Локальная сеть</intranet>
+		<network>Адрес</network>
+		<netmask>Маска</netmask>
+
+	<z3950>Сервер Z39.50</z3950>
+		<enable>Включить</enable>
+
+	<proxy>Прокси</proxy>
+		<use>Использовать</use>
+		<username>Пользователь</username>
+
+	<feedback>Обратная связь</feedback>
+		<email>Электронная почта</email>
+		<smtpHost>SMTP-хост</smtpHost>
+		<smtpPort>SMTP-порт</smtpPort>
+
+	<removedMetadata>Удаленные метаданные</removedMetadata>
+		<dir>Каталог</dir>
+
+	<ldap>Аутентификация LDAP</ldap>
+		<defProfile>Профиль по умолчанию</defProfile>
+		<login>Логин</login>
+			<userDN>Пользовательский DN</userDN>
+		<distNames>Distinguished names</distNames>
+			<baseDN>Base</baseDN>
+			<usersDN>Users</usersDN>
+		<userAttribs>Атрибуты пользователя</userAttribs>
+			<name>Имя</name>
+			<password>Пароль</password>
+			<profile>Профиль</profile>
+
+	<!-- Buttons -->
+
+	<save>Сохранить</save>
+	<refresh>Обновить</refresh>
+
+	<!-- validator messages -->
+
+	<validator>
+		<length>
+			<cannotBeEmpty>Поле '{NAME}' не может быть пустым</cannotBeEmpty>
+			<invalidMinSize>Поле '{NAME}' должно содержать хотя бы {VALUE} символов</invalidMinSize>
+			<invalidMaxSize>Поле '{NAME}' должно содержать не более {VALUE} символов</invalidMaxSize>
+		</length>
+
+		<integer>
+			<notInt>Поле '{NAME}' должно быть числом</notInt>
+			<invalidMinValue>Поле '{NAME}' должно быть не меньше {VALUE}</invalidMinValue>
+			<invalidMaxValue>Поле '{NAME}' должно быть не больше {VALUE}</invalidMaxValue>
+		</integer>
+
+		<alphanum>
+			<notAlphaNumeric>Поле '{NAME}' должно содержать только буквы и цифры (и начинаться с буквы)</notAlphaNumeric>
+		</alphanum>
+
+		<hostname>
+			<notHostName>Поле '{NAME}' не является допустимым именем хоста</notHostName>
+		</hostname>
+
+		<url>
+			<notURL>Поле '{NAME}' не является допустимым адресом URL</notURL>
+		</url>
+
+		<ipaddress>
+			<notIP>Поле '{NAME}' не является допустимым IP-адресом</notIP>
+		</ipaddress>
+	</validator>
+
+	<!-- display messages -->
+
+	<cannotGet>Конфигурация системы не может быть получена</cannotGet>
+	<cannotSave>Конфигурация системы не может быть сохранена</cannotSave>
+	<saveOk>Конфигурация системы сохранена.</saveOk>
+
+	<!-- tooltips -->
+
+	<tips>
+		<tip id="site.name">
+			Используется для идентификации установки.
+		</tip>
+
+		<!-- server -->
+
+		<tip id="server.host">
+			<b>Хост</b> и <b>Порт</b> используются для создания ссылок на сервер
+			GeoNetwork. Например, они применяются при редактировании метаданных для
+			создания ссылок на ресурсы, возвращаемых при поиске.<br/>
+			<b>Примечание:</b> Для изменения данных параметров <i>внутри</i>
+			метаданных необходимо использовать GAST.
+		</tip>
+
+		<!-- intranet -->
+
+		<tip id="intranet.network">
+			Параметры <b>Адрес</b> и <b>Маска</b> используются для идентификации
+			внутренних соединений с GeoNetwork из локальной сети.
+		</tip>
+
+		<!-- Z39.50 -->
+
+		<tip id="z3950.enable">
+			Если установлено, во время запуска GeoNetwork инициализирует
+			сервис Z39.50, использующий протокол ISO23950.<br/>
+			<b>Примечание:</b> Для вступления изменений в силу необходимо
+			перезапустить GeoNetwork.
+		</tip>
+
+		<tip id="z3950.port">
+			Порт для обмена информацией по протоколу Z39.50.<br/>
+			<b>Примечание:</b> Для вступления изменений в силу необходимо
+			перезапустить GeoNetwork.
+		</tip>
+
+		<!-- proxy -->
+
+		<tip id="proxy.use">
+			Если установлено, GeoNetwork будет использовать установленные параметры
+			прокси-сервера для соединения с удаленными узлами, например, при поиске.
+		</tip>
+
+		<!-- feedback -->
+
+		<tip id="feedback.email">
+			Адрес электронной почты администратора для обратной связи.
+		</tip>
+
+		<tip id="feedback.mail.host">
+			<b>SMTP-host</b> и <b>SMTP-порт</b> используются для отправки электронной
+			почты с уведомлениями пользователям системы.
+		</tip>
+
+		<!-- removed metadata -->
+
+		<tip id="removedMd.dir">
+			Каталог для хранения метаданных (в формате MEF) после их удаления.
+		</tip>
+	</tips>
+
+</strings>

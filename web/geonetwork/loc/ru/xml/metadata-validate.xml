@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Проверка метаданных</heading>
+	<message>Проверка корректности формата метаданных успешно завершена</message>
+	<schemaTronError>однако были обнаружены несоответствия правилам выбранного
+    формата</schemaTronError>
+	<schemaTronValid>Несоответствий выбранному формату не найдено</schemaTronValid>
+	<schemaTronReport>Отчет о проверке доступен здесь</schemaTronReport>
+</strings>

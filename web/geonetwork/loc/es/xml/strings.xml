@@ -83,9 +83,9 @@
 		<update>Actualizar tesauro</update>
 		<upload>Subir tesauro</upload>
 		<download>Bajar tesauro</download>
-		<delete>Eliminar tesauro</delete>	
+		<delete>Eliminar tesauro</delete>
 		<editelement>Editar elemento</editelement>
-		<addelement>Agregar elemento</addelement>			
+		<addelement>Agregar elemento</addelement>
 		<deleteelement>Eliminar elemento</deleteelement>
 		<updateelement>Actualizar elemento</updateelement>
 		<keywordDescription>Definición de la palabra clave:</keywordDescription>
@@ -239,7 +239,7 @@
 		<meta name="DC.date" content="02-07-2007"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=ISO-8859-1"/>
-		<meta name="DC.language" content="Inglés Frances Español Chino"/>
+		<meta name="DC.language" content="Inglés Frances Español Russian Chino"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
 	<help>Ayuda</help>
@@ -272,9 +272,9 @@
 	<links>Enlaces</links>
 	<loading>Cargando...</loading>
 	<local>Búsqueda Local</local>
-	<localizationHelp>Important! This form allows you to add a Key value to the database. 
+	<localizationHelp>Important! This form allows you to add a Key value to the database.
 		The key can not have spaces.<br/>
-		After adding your key values, use the "Localization" form in the Administration panel to provide 
+		After adding your key values, use the "Localization" form in the Administration panel to provide
 		the actual name you want to be displayed on the website for the different languages.
 	</localizationHelp>
 	<localiz>Localización</localiz>
@@ -299,9 +299,9 @@
 			<li>Enfatizar los beneficios que proporciona la comprensión de la información Geográfica</li>
 		</ul>
 	</mainpage1>
-	<mainpage2> 
-		El proyecto GeoNetwork opensource promueve que se comparta la información temática y georeferenciada 
-		disponible entre las organizaciones. Si desea más información, puede enviar un mensaje		
+	<mainpage2>
+		El proyecto GeoNetwork opensource promueve que se comparta la información temática y georeferenciada
+		disponible entre las organizaciones. Si desea más información, puede enviar un mensaje
 	</mainpage2>
 	<mainhelp1> Como buscar... </mainhelp1>
 	<mainhelp2> Ocultar la ayuda... </mainhelp2>
@@ -441,6 +441,7 @@
 	<resultsMatching>Los resultados de la búsqueda son:</resultsMatching>
 	<rss>Abrir alimentación RSS</rss>
 	<rtitle>Título</rtitle>
+	<ru>Русский</ru> <!-- Do not translate! -->
 	<save>Salvar</save>
 	<saveAndClose>Salvar y Cerrar</saveAndClose>
 	<saveAndValidate>Salvar y comprobar</saveAndValidate>
@@ -526,7 +527,7 @@
         <imAreaInterest>Seleccionar área de interés</imAreaInterest>
 
         <!-- date selector -->
-        <fromDateSelector>Selector de fecha de inicio</fromDateSelector> 
-        <toDateSelector>Selector de fecha de fin</toDateSelector> 
+        <fromDateSelector>Selector de fecha de inicio</fromDateSelector>
+        <toDateSelector>Selector de fecha de fin</toDateSelector>
 
 </strings>

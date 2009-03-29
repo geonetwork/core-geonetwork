@@ -58,9 +58,9 @@
 		<update>Update Thesaurus</update>
 		<upload>Thesaurus hochladen</upload>
 		<download>Download Thesaurus</download>
-		<delete>Thesaurus löschen</delete>	
+		<delete>Thesaurus löschen</delete>
 		<editelement>Element bearbeiten</editelement>
-		<addelement>Element hinzufügen</addelement>			
+		<addelement>Element hinzufügen</addelement>
 		<deleteelement>Element löschen</deleteelement>
 		<updateelement>Element updaten</updateelement>
 		<keywordDescription>Schlüsselwort Definition:</keywordDescription>
@@ -74,7 +74,7 @@
 		<foundKeyWordsLimit>Maximale Anzahl der gefundenen Ausdrücke</foundKeyWordsLimit>
 	</thesaurus>
 	<!-- End new strings -->
-	
+
 	<language>de</language>
 	<!-- ISO code -->
 	<about>Über</about>
@@ -125,7 +125,7 @@
 	<chooseThumbnail>Auswahl des Verzeinisses der hochgeladenen Minaturansicht </chooseThumbnail>
 	<clear>leeren</clear>
 	<clearAll>Alles leeren</clearAll>
-    <cn>中文</cn> <!-- Do not translate! -->    
+    <cn>中文</cn> <!-- Do not translate! -->
 	<completeTab>Erweiterte Ansicht</completeTab>
 	<completeTabEditor>Erweiterter Editor</completeTabEditor>
 	<confirmDelete>Wollen Sie die Metadaten wirklich aus der Datenbank löschen?</confirmDelete>
@@ -202,7 +202,7 @@
 	<harvestingManDes>Hinzufügen/Bearbeiten/Löschen und Ansehen von Harvesting Aufgaben</harvestingManDes>
 	<transferOwnership>Besitzer wechseln</transferOwnership>
 	<transferOwnershipDes>Wechseln der Metadaten Besitzrechte zu einem anderen Nutzer</transferOwnershipDes>
-	
+
 	<header_meta>
 		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis geospatial CSW reference implementation mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
 		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
@@ -215,7 +215,7 @@
 		<meta name="DC.date" content="02-07-2007"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.language" content="Deutsch Englisch Französich"/>
+		<meta name="DC.language" content="Deutsch Englisch Französich Russian"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
 	<help>Hilfe</help>
@@ -262,10 +262,10 @@
 	<mandatoryIf>verbindlich wenn</mandatoryIf>
 	<mainpage1>
 		<h1>Finden Sie Geometadaten mit GeoNetwork.</h1>
-	
+
 	</mainpage1>
 	<mainpage2>
-		<p>Hier den Text für die Startseite</p>		
+		<p>Hier den Text für die Startseite</p>
 	</mainpage2>
 	<mainhelp1> Wie suchen Sie... </mainhelp1>
 	<mainhelp2> Hilfe verstecken... </mainhelp2>
@@ -404,6 +404,7 @@
 	<resultsMatching>Suchergebnisse :</resultsMatching>
 	<rss>RSS feed öffnen</rss>
 	<rtitle>Titel</rtitle>
+	<ru>Русский</ru> <!-- Do not translate! -->
 	<save>Speichern</save>
 	<saveAndClose>Speichern und Schließen</saveAndClose>
 	<saveAndValidate>Überprüfen</saveAndValidate>
@@ -488,6 +489,6 @@
 	<imZoomFull>Auf komplette Ausdehnung zoomen</imZoomFull>
 	<imPan>Kartenausschnitt verschieben</imPan>
 	<imAreaInterest>Fläche auswählen</imAreaInterest>
-	
+
 	<SendAFriend>Link auf diesen Metadatensatz per E-Mail versenden</SendAFriend>
 </strings>

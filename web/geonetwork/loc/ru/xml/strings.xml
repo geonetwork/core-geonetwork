@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<fileType>Тип файла:</fileType>
+	<generateUUID>Сгенерировать UUID-идентификатор для вставленных метаданных</generateUUID>
+	<insertFileMode>Выгрузить файл</insertFileMode>
+	<insertMode>Режим добавления:</insertMode>
+	<insertPasteMode>Копировать/Вставить</insertPasteMode>
+	<mefFile>MEF-файл</mefFile>
+	<newMdInsert>Добавлены новые метаданные:</newMdInsert>
+	<nothing>Нет действий</nothing>
+	<overwrite>Переписать метаданные с одинаковым UUID-идентификатором</overwrite>
+	<singleFile>Одиночный файл (XML, SLD, WMC...)</singleFile>
+	<uuidAction>Действия:</uuidAction>
+
+	<metadata.admin.index>Управление индексом поиска</metadata.admin.index>
+	<metadata.admin.index.desc>Перестроить индекс Lucene</metadata.admin.index.desc>
+	<metadata.admin.index.success>Индекс успешно перестроен.</metadata.admin.index.success>
+	<metadata.admin.index.failed>Индекс не может быть перестроен.</metadata.admin.index.failed>
+	<rebuild>Перестроить</rebuild>
+		<savepdf>Сохранить результаты поиска в формате PDF</savepdf>
+	<savexml>
+		<dc>Сохранить метаданные Dublin Core в формате XML</dc>
+		<fgdc>Сохранить метаданные FGDC в формате XML</fgdc>
+		<iso19115Esri>Сохранить метаданные ISO19115 в формате XML для ESRI ArcCatalog</iso19115Esri>
+		<iso19139>Сохранить метаданные ISO19115/19139 в формате XML</iso19139>
+		<iso19139fra>Сохранить метаданные ISO19115/19139 Fra в формате XML</iso19139fra>
+	</savexml>
+	<!-- new strings -->
+	<fuzzy>Точность поиска</fuzzy>
+	<fuzzySearch>Указать точность поиска (от точного совпадения до размытого поиска).</fuzzySearch>
+	<fuzzyImprecise>Неточный</fuzzyImprecise>
+	<fuzzyPrecise>Точный</fuzzyPrecise>
+	<address>Адрес</address>
+	<state>Регион</state>
+	<zip>Индекс</zip>
+	<country>Страна</country>
+	<email>Электронная почта</email>
+	<kind>Тип</kind>
+	<kindChoice value="gov">Правительственная организация</kindChoice>
+	<kindChoice value="int-org">Международная организация</kindChoice>
+	<kindChoice value="ngo">Неправительственная организация</kindChoice>
+	<kindChoice value="uni">Университет/Исследовательский центр</kindChoice>
+	<kindChoice value="company">Частная компания</kindChoice>
+	<kindChoice value="consultant">Независимый консультант</kindChoice>
+	<kindChoice value="other">Другая</kindChoice>
+	<userInfo>Информация о пользователе</userInfo>
+	<userInfoDes>Позволяет текущему пользователю изменить информацию о себе</userInfoDes>
+	<subtemplate>Подшаблон</subtemplate>
+	<subtemplateTitle>заголовок подшаблона</subtemplateTitle>
+	<view>Вид</view>
+	<Term>Term</Term>
+	<startsWith>Начинается с</startsWith>
+	<contains>Содержит</contains>
+	<exactTerm>Точное совпадение</exactTerm>
+	<foundWords>Число найденных слов:</foundWords>
+	<selection>Выделение</selection>
+	<label>Подпись</label>
+	<type>Тип</type>
+	<definition>Определение</definition>
+	<close>Закрыть</close>
+	<identifier>Идентификатор</identifier>
+	<keyword>ключевое слово</keyword>
+	<res>результатов</res>
+	<ress>результат</ress>
+	<massiveActions>Групповые действия:</massiveActions>
+
+	<thesaurus>
+		<category>Категория тезауруса</category>
+		<management>Тезаурус</management>
+		<manDes>Добавить/изменить/удалить/просмотреть тезаурус</manDes>
+		<edition>Редактирование тезауруса</edition>
+		<consultation>Просмотр тезауруса</consultation>
+		<thesaurus>Тезаурус</thesaurus>
+		<admin>Управлять тезаурусом</admin>
+		<edit>Редактировать тезаурус</edit>
+		<update>Обновить тезаурус</update>
+		<upload>Выгрузить тезаурус</upload>
+		<download>Загрузить тезаурус</download>
+		<delete>Удалить тезаурус</delete>
+		<editelement>Редактировать элемент</editelement>
+		<addelement>Добавить элемент</addelement>
+		<deleteelement>Удалить элемент</deleteelement>
+		<updateelement>Обновить элемент</updateelement>
+		<keywordDescription>Определение ключевого слова:</keywordDescription>
+		<keywordConfirm>Подтверждение запрета ключевого слова</keywordConfirm>
+		<unknown>Неизвестный тезаурус</unknown>
+		<narrower>Более узкое понятие</narrower>
+		<broader>Более широкое понятие</broader>
+		<related>Связанное понятие</related>
+		<en>в</en>
+		<foundKeyWords>Число найденных слов</foundKeyWords>
+		<foundKeyWordsLimit>Максимальное число найденных слов</foundKeyWordsLimit>
+	</thesaurus>
+	<!-- End new strings -->
+
+	<language>en</language>
+	<!-- ISO code -->
+	<about>О системе</about>
+	<abstract>Резюме</abstract>
+	<accept>Принять</accept>
+	<actionOnSelect>действия над выделением</actionOnSelect>
+	<add>добавить</add>
+	<addNewMetadata>Добавить новые метаданные</addNewMetadata>
+	<admin>Управление</admin>
+	<Administrator>Администратор</Administrator>
+	<agrovocKeyword>Ключевые слова Agrovoc</agrovocKeyword>
+	<all>все</all>
+	<any>- Не фильтровать -</any>
+	<anytime>Любое время</anytime>
+	<appSchInfoTab>Прикладная схема</appSchInfoTab>
+		<ar>عربي</ar> <!-- Do not translate! -->
+	<assigned>Назначенный</assigned>
+	<attrlabl>Метка атрибута</attrlabl>
+	<availability>Доступность</availability>
+	<back>Назад</back>
+	<backToDescription>Назад к описанию данных</backToDescription>
+	<backToPreviousPage>Назад к предыдущей странице</backToPreviousPage>
+	<backToEditor>Назад к редактированию метаданных</backToEditor>
+	<batchImport>Импортировать все метаданные в формате XML из локального каталога</batchImport>
+
+	<batchImportTitle>Массовый импорт из XML</batchImportTitle>
+	<begdate>Дата начала</begdate>
+	<begtime>Дата начала</begtime>
+	<bgFileDescChoice value="thumbnail">Эскиз</bgFileDescChoice>
+	<bgFileDescChoice value="large_thumbnail">Большой эскиз</bgFileDescChoice>
+	<bounding>Ограничивающий прямоугольник</bounding>
+	<boundingRelation value="equal">совпадает с</boundingRelation>
+	<boundingRelation value="overlaps">перекрывается с</boundingRelation>
+	<boundingRelation value="encloses">заключено в</boundingRelation>
+	<boundingRelation value="fullyOutsideOf">целиком снаружи</boundingRelation>
+	<browse>Обзор изображений</browse>
+	<browsen>Обзор имени файла</browsen>
+	<browsed>Обзор описания файла</browsed>
+	<browset>Обзор типа файла</browset>
+	<cancel>Отменить</cancel>
+	<categories>Категории</categories>
+	<category>Категория</category>
+	<categoryManagement>Категории данных</categoryManagement>
+	<categoryManDes>Добавить/изменить/удалить информацию о категориях</categoryManDes>
+	<choose>- Выбрать -</choose>
+	<chooseFile>Укажите местоположение файла для загрузки</chooseFile>
+	<chooseLargeThumbnail>Укажите местоположение файла большого эскиза</chooseLargeThumbnail>
+	<chooseThumbnail>Укажите местоположение файла маленького эскиза</chooseThumbnail>
+	<clear>Очистить</clear>
+	<clearAll>Очистить все</clearAll>
+	<cn>中文</cn> <!-- Do not translate! -->
+	<completeTab>Улучшенный вид</completeTab>
+	<completeTabEditor>Улучшенный редактор</completeTabEditor>
+	<confirmDelete>Вы уверены, что хотите удалить метаданные из базы данных?</confirmDelete>
+	<confirmMassiveDelete>Вы уверены, что хотите удалить все выбранные метаданные из базы данных?</confirmMassiveDelete>
+	<confirmPassword>Подтверждение пароля</confirmPassword>
+	<confirmNewPassword>Подтверждение нового пароля</confirmNewPassword>
+	<constraintsTab>Ограничения</constraintsTab>
+	<contactUs>Обратная связь</contactUs>
+	<contentInfoTab>Информация о содержимом</contentInfoTab>
+	<convert>Конвертировать</convert>
+	<copyright1>Авторское право</copyright1>
+	<copyright2>
+		<p>Все права защищены.<br/><!-- TODO: Include copyright statements here. --></p>
+	</copyright2>
+	<create>Создать</create>
+	<createTip>Создать новые метаданные, используя данный шаблон</createTip>
+	<dataQualityTab>Качество данных</dataQualityTab>
+	<datasetTab>Набор данных</datasetTab>
+	<dateRelChoice/>
+	<dateRelChoice value="14">до</dateRelChoice>
+	<dateRelChoice value="15">до или в течение</dateRelChoice>
+	<dateRelChoice value="16">в течение</dateRelChoice>
+	<dateRelChoice value="17">в течение или после</dateRelChoice>
+	<dateRelChoice value="18">после</dateRelChoice>
+	<decline>Отклонить</decline>
+	<del>удалить</del>
+	<delete>Удалить</delete>
+	<descriptionTab>Описание</descriptionTab>
+	<desSchema>Целевая схема</desSchema>
+	<digital>Цифровая</digital>
+	<directory>Каталог</directory>
+	<dirParameter>(Необходим параметр 'dir')</dirParameter>
+	<disclaimer1>Отказ от прав</disclaimer1>
+	<disclaimer2><!-- TODO: Include disclaimer text here --></disclaimer2>
+	<distributionTab>Дистрибуция</distributionTab>
+	<down>вниз</down>
+	<download>Загрузить</download>
+	<downloadable>Загружаемая</downloadable><!-- имеется в виду карта -->
+	<dynamic>Интерактивная</dynamic><!-- имеется в виду карта -->
+	<downloadData>Данные для загрузки</downloadData>
+	<dsgpoly>G-Полигон набора данных</dsgpoly>
+	<eastbc>Восточная координата</eastbc>
+	<edit>Редактировать</edit>
+	<Editor>Редактор</Editor>
+	<downloadEmail>Электронная почта</downloadEmail>
+	<en>English</en> <!-- Do not translate! -->
+	<enclosing>Including</enclosing>
+	<enclosingCoordinate>Ограничивающие координаты </enclosingCoordinate>
+	<enddate>Дата окончания</enddate>
+	<enttypl>Entity Type Label</enttypl>
+	<es>Español</es> <!-- Do not translate! -->
+	<exactCoordinate>Точные координаты </exactCoordinate>
+	<extended>Улучшенный поиск</extended><!-- ! -->
+	<extent>Extent</extent>
+	<extensionInfoTab>Ext. Info</extensionInfoTab>
+	<featuredMap>Предлагаемая карта</featuredMap>
+	<feedback>Обратная связь</feedback>
+	<feedbackCardTitle>Обратная связь и комментарии</feedbackCardTitle>
+	<feedbackComments>Сообщение/Комментарий</feedbackComments>
+	<feedbackRequest>Пожалуйста, сообщите информацию о себе перед загрузкой</feedbackRequest>
+	<file>Файл</file>
+	<firstName>Имя</firstName>
+	<fr>Français</fr> <!-- Do not translate! -->
+	<freeKeyword>Любые ключевые слова</freeKeyword>
+	<from>От </from>
+	<general>General</general>
+	<generalInfo>Общая информация</generalInfo>
+	<georss>Открыть ленту GeoRSS</georss>
+	<group>Группа</group>
+	<groupManagement>Группы пользователей</groupManagement>
+	<groupManDes>Добавить/изменить/удалить информацию о группах</groupManDes>
+	<groups>Группы</groups>
+	<harvestingManagement>Управление сбором метаданных</harvestingManagement>
+	<harvestingManDes>Добавить/изменить/удалить/запустить/остановить сбор метаданных</harvestingManDes>
+	<transferOwnership>Передача права владения</transferOwnership>
+	<transferOwnershipDes>Передать право владения метаданными другому пользователю</transferOwnershipDes>
+
+	<header_meta>
+		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis geospatial CSW reference implementation mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
+		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
+		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
+		<meta name="DC.title" lang="English" content="GeoNetwork opensource portal to spatial data and information"/>
+		<meta name="DC.creator" content="GeoNetwork Team"/>
+		<meta name="DC.subject" lang="English" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
+		<meta name="DC.description" lang="English" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
+		<meta name="DC.publisher" content=""/>
+		<meta name="DC.date" content="02-07-2007"/>
+		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
+		<meta name="DC.format" content="text/html; charset=UTF-8"/>
+		<meta name="DC.language" content="English French Spanish Russian Chinese"/>
+		<meta name="DC.coverage" content="Global"/>
+	</header_meta>
+	<help>Помощь</help>
+	<helpComplete>Полная помощь</helpComplete>
+	<hideAdvancedOptions>Простой поиск</hideAdvancedOptions>
+	<highlights>Highlights</highlights>
+	<hitsPerPage>На&#xA0;странице&#xA0;по</hitsPerPage>
+	<hitsPerPageChoice value="10">10 результатов</hitsPerPageChoice>
+	<hitsPerPageChoice value="20">20 результатов</hitsPerPageChoice>
+	<hitsPerPageChoice value="50">50 результатов</hitsPerPageChoice>
+	<hitsPerPageChoice value="100">100 результатов</hitsPerPageChoice>
+	<home>Старт</home>
+	<identificationTab>Идентификация</identificationTab>
+	<import>Импорт</import>
+	<infoTitle>Информация</infoTitle>
+	<insert>Вставить</insert>
+	<interactiveMap>Интерактивная карта</interactiveMap>
+	<interMapInfo>
+		<h1>Информация об интерактивных картах</h1> Вы можете найти интерактивные карты, осуществив поиск в базе данных GeoNetwork или соединившись с одним из серверов карт напрямую.<p/> Виды поддерживаемых серверов: <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial® Consortium</a> и <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>.</interMapInfo>
+	<intermapSearch>Географический поиск</intermapSearch>
+	<keywords>Ключевые слова</keywords>
+	<keywordshelp>Для выбора нескольких ключевых слов держите нажатым Ctrl во время выделения мышью</keywordshelp>
+	<large_thumbnail>Щелкните для просмотра большого изображения</large_thumbnail>
+	<latitude>Широта (от -90 до 90) в градусах</latitude>
+	<latMax>Широта (max)</latMax>
+	<latMin>Широта (min)</latMin>
+	<legend>Легенда</legend>
+	<links>Ссылки</links>
+	<loading>Загрузка...</loading>
+	<local>Локальный поиск</local>
+	<localizationHelp>Обратите внимание! Данная форма позволяет добавить новое ключевое
+		значение в базу данных, которое не должно содержать пробелов.<br/> После добавления
+		ключевых значений используйте страницу "Локализация" в меню "Управление", чтобы
+		присвоить название, видимое в интерфейсе на различных языках.
+	</localizationHelp>
+	<localiz>Локализация</localiz>
+	<localizDes>Позволяет изменить названия групп, категорий и т.п. на доступных в системе языках</localizDes>
+	<location>Где?</location>
+	<login>Вход</login>
+	<loginCardTitle>Пользователь/Запись</loginCardTitle>
+	<loginwarning>Необходимо только для администрирования сайта</loginwarning>
+	<logout>Выход</logout>
+	<logoutDes>Выйти из системы</logoutDes>
+	<longitude>Долгота (от -180 до 180) в градусах</longitude>
+	<longMax>Долгота (max)</longMax>
+	<longMin>Долгота (min)</longMin>
+	<mandatory>Обязательно</mandatory>
+	<mandatoryIf>Обязательно, если</mandatoryIf>
+	<mainpage1>
+		<h1>Цели GeoNetwork:</h1>
+		<ul>
+			<li>Усовершенствовать доступ и интеграцию пространственных данных и информации</li>
+			<li>Поддержать принятие решений</li>
+			<li>Способствовать многопрофильным подходам для обоснованной разработки</li>
+			<li>Улучшить понимание преимуществ географической информации</li>
+		</ul>
+	</mainpage1>
+	<mainpage2>
+		<p>
+			GeoNetwork opensource позволяет облегчить совместное использование
+			географической тематической информации разными организациями.
+			За дополнительной информацией обращайтесь по адресу:
+		</p>
+	</mainpage2>
+	<mainhelp1>Как выполнять поиск...</mainhelp1>
+	<mainhelp2>Скрыть помощь...</mainhelp2>
+	<mainhelp3>
+		<p><font size="-2">
+			Вы можете выполнять поиск, используя одну из предлагаемых опций или их комбинацию.<br/>
+			Будут отображены только результаты, удовлетворяющие всем критериям.
+		</font></p>
+		<p><font size="-2">
+			Результатами <b>Что?</b>-поиска являются метаданные, в любом поле которых	присутствует введенный текст.
+			<i>Если в поле поиска введено более одного слова, они интерпретируются системой как разделенные ключевым словом AND.</i>
+		</font></p>
+		<p><font size="-2">
+			Результатами поиска по <b>Теме</b> являются карты на заданную тему.
+		</font></p>
+		<p><font size="-2">
+			Результатами <b>Где?</b>-поиска являются карты, ограничивающий прямоугольник которых попадает в заданную область.
+		</font></p>
+		<p><font size="-2">
+			Включенная опция "<b><input name="demo" type="checkbox" checked="checked"/>Включая</b> выбранную <b>Область</b>"
+			позволяет найти карты, которые покрывают область, большую заданной.
+			<i>Например, региональные или глобальные карты помимо остальных стран покрывают также выделенную страну</i>
+		</font></p>
+		<p><font size="-2">
+			Включенная опция "<b><input name="demo" type="checkbox" checked="checked"/>Перекрывается</b> с выбранной <b>Областью</b>"
+			позволяет найти карты, которые частично покрывают заданную область.
+		</font></p>
+	</mainhelp3>
+	<mainpageTitle>Поиск интерактивных карт, GIS-данных, спутниковых снимков и связанных программ</mainpageTitle>
+	<maintenanceTab>Сопровождение</maintenanceTab>
+	<management>Управление</management>
+	<mapType>Тип карты</mapType>
+	<mapViewerClose>Закрыть просмотр карт</mapViewerClose>
+	<mapViewerLoading>Загрузка просмотра...</mapViewerLoading>
+	<mapViewerOpen>Открыть просмотр карт</mapViewerOpen>
+	<max>Максимум</max>
+	<mdUpdateError>Ошибка обновления</mdUpdateError>
+	<message>Неверное имя пользователя или пароль.<br/>Используйте кнопку 'Назад', чтобы повторить попытку.</message>
+	<messageMdUpdateError>Извините, во время обновления метаданных произошла ошибка.</messageMdUpdateError>
+	<messageChanged>Метаданные были изменены другим пользователем. Пожалуйста, попробуйте еще раз.</messageChanged>
+	<messageDownload>Спасибо за проявленный интерес. Щелкните на кнопке загрузки, чтобы получить данные</messageDownload>
+	<messageLargeFile>Файл слишком большой</messageLargeFile>
+	<messageNoPrivileges>Недостаточно привилегий для выполнения данной операции.</messageNoPrivileges>
+	<messageNotPerformed>Операция не может быть выполнена.</messageNotPerformed>
+	<metadata>Метаданные</metadata>
+	<metadataAdded>Идентификатор добавленных метаданных:</metadataAdded>
+	<metadataDeleted>Идентификатор удаленных метаданных:</metadataDeleted>
+	<metadataJSForm>Метаданные из JavaScript-формы</metadataJSForm>
+	<min>Минимум</min>
+	<more>больше</more>
+	<moreinfo>Для получения дополнительной информации используйте электронную почту </moreinfo>
+	<name>Имя</name>
+	<newGroup>Добавить новую группу</newGroup>
+	<newCategory>Добавить новую категорию</newCategory>
+	<newMdDes>Добавить новые метаданные из шаблона</newMdDes>
+	<newMetadata>Новые метаданные</newMetadata>
+	<newPassword>Новый пароль</newPassword>
+	<newUser>Добавить нового пользователя</newUser>
+	<next>Следующие</next>
+	<none>- Нет -</none>
+	<noHelp>Извините, нет доступной помощи</noHelp>
+	<noInfo>Извините, нет доступной информации</noInfo>
+	<noLogin>Вы не вошли в систему</noLogin>
+	<northbc>Северная координата</northbc>
+	<noSelectedMd>Метаданные не выделены.</noSelectedMd>
+	<online>Интерактивная карта</online>
+	<onlink>Интернет-ссылки</onlink>
+	<opensearch>Сервис GeoNetwork opensearch позволяет проводить поиск в каталоге метаданных.</opensearch>
+	<operation>Операция</operation>
+	<organisation>Организация/Отдел</organisation>
+	<paper>Бумажная копия</paper>
+	<partial>Частичное перекрытие</partial>
+	<partialCooordinate>Частичные координаты</partialCooordinate>
+	<password>Пароль</password>
+	<persInfo>Персональная информация</persInfo>
+	<placeKeyword>Ключевые слова местоположения</placeKeyword>
+	<porCatInfoTab>Каталог</porCatInfoTab>
+	<poweredBy>Основано на </poweredBy>
+	<previous>Предыдущие</previous>
+	<privileges>Привилегии</privileges>
+	<profile>Профиль</profile>
+	<progress>Прогресс</progress>
+	<progressChoice/>
+	<progressChoice value="complete">завершено</progressChoice>
+	<progressChoice value="in-work">в разработке</progressChoice>
+	<progressChoice value="planned">планируется</progressChoice>
+	<protocol>Protocol</protocol>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Интернет-адрес (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Демонстрация (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--related">Родственная ссылка (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Интернет-адрес партнера (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--rss">Новостная лента RSS (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
+	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Файл для загрузки</protocolChoice>
+	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Файл для загрузки по FTP</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">Интернет-сервис карт OGC (версия 1.1.1)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">Сервис OGC-WMS Capabilities (версия 1.1.1)</protocolChoice>
+	<protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">Сервис OGC-WFS Web Feature (версия 1.0.0)</protocolChoice>
+	<protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">Сервис OGC-WCS Web Coverage (версия 1.1.0)</protocolChoice>
+	<protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">Сервис OGC-WMC Web Map Context (версия 1.1)</protocolChoice>
+	<protocolChoice show="y" value="GLG:KML-2.0-http-get-map">Сервис Google Earth KML (версия 2.0)</protocolChoice>
+	<protocolChoice show="y" value="ESRI:AIMS--http--configuration">Конфигурационный файл сервиса ArcIMS (*.AXL)</protocolChoice>
+	<protocolChoice show="-" value="ESRI:AIMS--http-get-image">Интернет-сервис ArcIMS Image Map</protocolChoice>
+	<protocolChoice show="y" value="ESRI:AIMS--http-get-feature">Интернет-сервис ArcIMS Feature Map</protocolChoice>
+	<pubdate>Дата публикации</pubdate>
+	<publicationDate>Дата публикации</publicationDate>
+	<publisher>Издатель</publisher>
+	<purpose>Цель</purpose>
+	<rawMetadata>Raw Metadata Insert</rawMetadata>
+	<recentAdditions>Последние изменения</recentAdditions>
+	<refSysTab>Система ссылки</refSysTab>
+	<region>Область</region>
+	<RegisteredUser>Зарегистрированный пользователь</RegisteredUser>
+	<remote>Удаленный поиск</remote>
+	<remove>Очистить</remove>
+	<reset>Сбросить</reset>
+	<options>Настройки</options>
+	<output>Результаты</output>
+	<outputType id="full">Полные</outputType>
+	<outputType id="text">Только текст</outputType>
+	<sortBy>Сортировать по</sortBy>
+	<sortByType id="relevance">Значимости</sortByType>
+	<sortByType id="rating">Рейтингу</sortByType>
+	<sortByType id="popularity">Популярности</sortByType>
+	<sortByType id="date">Дате изменения</sortByType>
+	<rateIt>Оценить</rateIt>
+	<mdRating>Рейтинг метаданных</mdRating>
+	<ratingMsg>Для оценки нажмите кнопку. Для нелокальных метаданных изменения вступят в силу после следующего сбора.</ratingMsg>
+	<resetSearch>Очистить форму поиска</resetSearch>
+	<resetFeedbackForm>Очистить форму обратной связи</resetFeedbackForm>
+	<restrictTo>В пределах</restrictTo>
+	<result>Последние результаты</result>
+	<resultsCoordinate>Результаты, удовлетворяющие координатному критерию</resultsCoordinate>
+	<resultsFreeText>Результаты, удовлетворяющие текстовому критерию</resultsFreeText>
+	<resultsMatching>Суммарное число результатов, удовлетворяющих критерию поиска:</resultsMatching>
+	<rss>Открыть ленту RSS</rss>
+	<rtitle>Заголовок</rtitle>
+	<ru>Русский</ru> <!-- Do not translate! -->
+	<save>Сохранить</save>
+	<saveAndClose>Сохранить и закрыть</saveAndClose>
+	<saveAndValidate>Проверить</saveAndValidate>
+	<schema>Схема</schema>
+	<search>Поиск</search>
+	<searchBox>Поиск данных и информации</searchBox>
+	<searchIndex>Поисковый индекс</searchIndex>
+	<searching>...Поиск метаданных...</searching>
+	<searchPage>Страница поиска</searchPage>
+	<searchPageDes>Переход на страницу поиска метаданных</searchPageDes>
+	<searchTemplates>Искать шаблоны</searchTemplates>
+	<searchText>Что?</searchText>
+	<searchAllText>Что?</searchAllText>
+	<searchUnused>Найти неиспользуемые или пустые метаданные</searchUnused>
+	<searchUnusedTitle>Поиск неиспользуемых</searchUnusedTitle>
+	<select>Выделение: </select>
+	<selectAll>Выделить все метаданные</selectAll>
+	<selected> выделено</selected>
+	<selectedOnly>Отображать только выделенные</selectedOnly>
+	<selectNone>Снять выделение</selectNone>
+	<server>Сервер</server>
+	<setAll>Установить все</setAll>
+	<show>Метаданные</show>
+	<simple>Простой поиск</simple>
+	<simpleTab>Вид по умолчанию</simpleTab>
+	<simpleTabEditor>Редактор по умолчанию</simpleTabEditor>
+	<siteId>Идентификатор сайта</siteId>
+	<site>Сайт</site>
+	<southbc>Южная координата</southbc>
+	<spatial2Tab>Простр. предст.</spatial2Tab>
+	<spatialTab>Простр. информ.</spatialTab>
+	<styleSheet>Стилевая таблица</styleSheet>
+	<submit>Применить</submit>
+	<summaryTab>Сводка</summaryTab>
+	<surName>Фамилия</surName>
+	<systemConfig>Конфигурация системы</systemConfig>
+	<systemConfigDes>Позволяет изменить основные параметры системы</systemConfigDes>
+	<template>Шаблон</template>
+	<thanks>Спасибо за Ваши усилия. GeoNetwork</thanks>
+	<theme>Тематическая категория ISO</theme>
+	<thumbnails>Эскизы</thumbnails>
+	<timeout>Лимит времени</timeout>
+	<timeoutChoice value="10">10 секунд</timeoutChoice>
+	<timeoutChoice value="20">20 секунд</timeoutChoice>
+	<timeoutChoice value="30">30 секунд</timeoutChoice>
+	<title>ТИНРО GeoNetwork - Портал пространственных данных и информации</title>
+	<to>До </to>
+	<tools>Tools</tools><!-- ! -->
+	<topic>Тема</topic>
+	<up>вверх</up>
+	<update>Обновить</update>
+	<updateGroup>Обновить группу</updateGroup>
+	<updateCategory>Обновить категорию</updateCategory>
+	<updateUserAccount>Обновить учетную запись</updateUserAccount>
+	<upload>Выгрузить</upload>
+	<user>Пользователь</user>
+	<UserAdmin>Администратор пользователей</UserAdmin>
+	<userDefined>- Свободный выбор -</userDefined>
+	<Reviewer>Обозреватель содержимого</Reviewer>
+	<userManagement>Пользователи</userManagement>
+	<userManDes>Добавить/изменить/удалить информацию о пользователях</userManDes>
+	<username>Пользователь</username>
+	<userPw>Изменить пароль</userPw>
+	<userPwDes>Позволяет текущему пользователю изменить пароль</userPwDes>
+	<validate>Проверить</validate>
+	<validityBegins>Validity begins</validityBegins>
+	<validityEnds>and ends</validityEnds>
+	<viewInGE>Просмотр в Google Earth</viewInGE>
+	<waitGetCap js="true">Загрузка слоев с сервера, пожалуйста, подождите...</waitGetCap>
+	<westbc>Западная координата</westbc>
+	<what>Что?</what>
+	<where>Где?</where>
+	<when>Когда?</when>
+	<winInfo1>Это окно отображает ресурсы GeoNetwork. Оно может быть скрыто из-за настроек управления окнами Вашего браузера. В таком случае Вы будете вынуждены выводить это окно на передний план вручную по мере необходимости.</winInfo1>
+	<winInfo2>Через иконку Помощи (?) Вы можете получить доступ к пояснениям. Когда Вы используете эту иконку, информация отображается в Окне Ресурсов.</winInfo2>
+	<wwwlink>Интернет-ссылка</wwwlink>
+	<xmlInsert>Импортировать метаданные в формате XML</xmlInsert>
+
+	<xmlInsertTitle>Импорт из XML</xmlInsertTitle>
+	<xmlTab>XML-вид</xmlTab>
+
+	<!--  intermap tooltips -->
+	<imZoomFull>Вся карта</imZoomFull>
+	<imZoomIn>Увеличить</imZoomIn>
+	<imZoomOut>Уменьшить</imZoomOut>
+	<imPan>Переместить</imPan>
+	<imZoomToLayer>Увеличить/уменьшить до размеров выбранного слоя</imZoomToLayer>
+	<imAreaInterest>Указать область интересов</imAreaInterest>
+
+	<!-- date selector -->
+	<fromDateSelector>Выбрать дату начала</fromDateSelector>
+	<toDateSelector>Выбрать дату окончания</toDateSelector>
+</strings>

@@ -11,7 +11,7 @@
 	<overwrite>Ecraser les métadonnées de même identifiant</overwrite>
 	<singleFile>Fichier simple (XML, SLD, WMC...)</singleFile>
 	<uuidAction>Actions à l'import :</uuidAction>
-	
+
 	<metadata.admin.index>Gestion de l&apos;index</metadata.admin.index>
 	<metadata.admin.index.desc>Regénérer l&apos;index du catalogue</metadata.admin.index.desc>
 	<metadata.admin.index.success>L'index a été reconstruit avec succès...</metadata.admin.index.success>
@@ -91,9 +91,9 @@
 		<update>Mettre à jour le thésaurus</update>
 		<upload>Décharger un thésaurus</upload>
 		<download>Télécharger le thesaurus</download>
-		<delete>Supprimer le thésaurus</delete>	
+		<delete>Supprimer le thésaurus</delete>
 		<editelement>Editer l'élément</editelement>
-		<addelement>Ajouter un élément</addelement>			
+		<addelement>Ajouter un élément</addelement>
 		<deleteelement>Supprimer l'élément</deleteelement>
 		<updateelement>Mettre à jour l'élément</updateelement>
 		<keywordDescription>Définition du mot clé:</keywordDescription>
@@ -116,8 +116,8 @@
 	<organisation>Organisation / Service</organisation>
 	<emailAddress>Mel</emailAddress>
 	<!-- End new strings -->
-	
-	<language>fr</language> 
+
+	<language>fr</language>
 	<!-- ISO code -->
 	<about>A propos</about>
 	<abstract>Résumé</abstract>
@@ -247,7 +247,7 @@
 		<meta name="DC.date" content="02-07-2007"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.language" content="English French Spanish Chinese"/>
+		<meta name="DC.language" content="English French Spanish Russian Chinese"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
 	<help>Aide</help>
@@ -283,9 +283,9 @@
 	<legend>Légende</legend>
 	<loading>Chargement en cours ...</loading>
 	<local>Recherche local</local>
-	<localizationHelp>Important! This form allows you to add a Key value to the database. 
+	<localizationHelp>Important! This form allows you to add a Key value to the database.
 		The key can not have spaces.<br/>
-		After adding your key values, use the "Localization" form in the Administration panel to provide 
+		After adding your key values, use the "Localization" form in the Administration panel to provide
 		the actual name you want to be displayed on the website for the different languages.
 	</localizationHelp>
 	<localiz>Internationalisation</localiz>
@@ -312,7 +312,7 @@
 	</mainpage1>
 	<mainpage2>
 		GeoNetwork opensource permet de partager des informations géographiques thématiques entre organisations.
-		Pour plus d'information, contacter 
+		Pour plus d'information, contacter
 	</mainpage2>
 	<mainhelp1> Comment chercher... </mainhelp1>
 	<mainhelp2> Cacher l'aide... </mainhelp2>
@@ -464,6 +464,7 @@
 	<resultsMatching>Nombre de résultats : </resultsMatching>
 	<rss>Ouvrez flux RSS</rss>
 	<rtitle>Titre</rtitle>
+	<ru>Русский</ru> <!-- Do not translate! -->
 	<save>Sauver</save>
 	<saveAndClose>Sauver et fermer</saveAndClose>
 	<saveAndValidate>Sauver et valider</saveAndValidate>
@@ -541,7 +542,7 @@
 	<xmlInsert>Importer des fichiers ISO19115</xmlInsert>
 
 	<xmlInsertTitle>Import de fichiers XML</xmlInsertTitle>
-	<xmlTab>XML</xmlTab>	
+	<xmlTab>XML</xmlTab>
 
 	<!--  intermap tooltips -->
 	<imZoomFull>Zoom to full map extent</imZoomFull>
@@ -550,8 +551,8 @@
 	<imPan>Pan</imPan>
 	<imZoomToLayer>Zoom to selected layer extent</imZoomToLayer>
 	<imAreaInterest>Select an Area Of Interest</imAreaInterest>
-	
+
 	<!-- date selector -->
-	<fromDateSelector>Select FROM date</fromDateSelector> 
-	<toDateSelector>Select TO date</toDateSelector> 
+	<fromDateSelector>Select FROM date</fromDateSelector>
+	<toDateSelector>Select TO date</toDateSelector>
 </strings>

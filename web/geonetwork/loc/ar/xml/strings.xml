@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	
+
 	<language>ar</language>
 	<!-- ISO code -->
 	<about>عن البرنامج</about>
@@ -125,7 +125,7 @@
 	<fr>Français</fr> <!-- Do not translate! -->
 	<freeKeyword>كاتبة حرة</freeKeyword>
 	<from>تاريخ من:</from>
-	<fromDateSelector>Select FROM date</fromDateSelector> 
+	<fromDateSelector>Select FROM date</fromDateSelector>
 	<fuzzy>Search accuracy</fuzzy>
 	<fuzzySearch>Set the precision of the search (from exact term search to fuzzy search).</fuzzySearch>
 	<fuzzyImprecise>Imprecise</fuzzyImprecise>
@@ -151,7 +151,7 @@
 		<meta name="DC.date" content="02-07-2007"/>
 		<meta name="DC.type" content="InteractiveResource" scheme="DCMIType"/>
 		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.language" content="English French Spanish Chinese Arabic"/>
+		<meta name="DC.language" content="English French Spanish Russian Chinese Arabic"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
 	<help>تعليمات</help>
@@ -208,9 +208,9 @@
 	<links>ارتباطات</links>
 	<loading>Loading ...</loading>
 	<local>بحث محلي</local>
-	<localizationHelp>Important! This form allows you to add a Key value to the database. 
+	<localizationHelp>Important! This form allows you to add a Key value to the database.
 		The key can not have spaces.<br/>
-		After adding your key values, use the "Localization" form in the Administration panel to provide 
+		After adding your key values, use the "Localization" form in the Administration panel to provide
 		the actual name you want to be displayed on the website for the different languages.
 	</localizationHelp>
 	<localiz>Localization</localiz>
@@ -383,6 +383,7 @@
 	<Reviewer>Content reviewer</Reviewer>
 	<rss>فتح RSS</rss>
 	<rtitle>عنوان</rtitle>
+	<ru>Русский</ru> <!-- Do not translate! -->
 	<save>حفظ</save>
 	<savepdf>Save search results as pdf</savepdf>
 	<saveAndClose>حفظ وإغلاق</saveAndClose>
@@ -456,9 +457,9 @@
 		<update>Update thesaurus</update>
 		<upload>Upload thesaurus</upload>
 		<download>Download thesaurus</download>
-		<delete>Delete thesaurus</delete>	
+		<delete>Delete thesaurus</delete>
 		<editelement>Edit element</editelement>
-		<addelement>Add element</addelement>			
+		<addelement>Add element</addelement>
 		<deleteelement>Delete element</deleteelement>
 		<updateelement>Update element</updateelement>
 		<keywordDescription>Keyword definition:</keywordDescription>
@@ -478,7 +479,7 @@
 	<timeoutChoice value="30">بعد 30 ثانية</timeoutChoice>
 	<title>GeoNetwork- The portal to spatial data and information</title>
 	<to>أدخل تاريخ إلى:</to>
-	<toDateSelector>Select TO date</toDateSelector> 
+	<toDateSelector>Select TO date</toDateSelector>
 	<tools>أدوات</tools>
 	<topic>عنوان</topic>
 	<transferOwnership>Transfer ownership</transferOwnership>

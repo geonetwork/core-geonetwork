@@ -11,7 +11,7 @@
 	<overwrite>Overwrite metadata with same UUID</overwrite>
 	<singleFile>Single File (XML, SLD, WMC...)</singleFile>
 	<uuidAction>Import actions:</uuidAction>
-	
+
 	<metadata.admin.index>Index manager</metadata.admin.index>
 	<metadata.admin.index.desc>Rebuild Lucene index</metadata.admin.index.desc>
 	<metadata.admin.index.success>Rebuild index operation was successful.</metadata.admin.index.success>
@@ -63,7 +63,7 @@
 	<res>results</res>
 	<ress>result</ress>
 	<massiveActions>Massive actions:</massiveActions>
-	
+
 	<thesaurus>
 		<category>Thesaurus category</category>
 		<management>Manage thesauri</management>
@@ -76,9 +76,9 @@
 		<update>Update thesaurus</update>
 		<upload>Upload thesaurus</upload>
 		<download>Download thesaurus</download>
-		<delete>Delete thesaurus</delete>	
+		<delete>Delete thesaurus</delete>
 		<editelement>Edit element</editelement>
-		<addelement>Add element</addelement>			
+		<addelement>Add element</addelement>
 		<deleteelement>Delete element</deleteelement>
 		<updateelement>Update element</updateelement>
 		<keywordDescription>Keyword definition:</keywordDescription>
@@ -92,7 +92,7 @@
 		<foundKeyWordsLimit>Maximum number of terms found</foundKeyWordsLimit>
 	</thesaurus>
 	<!-- End new strings -->
-	
+
 	<language>en</language>
 	<!-- ISO code -->
 	<about>About</about>
@@ -224,7 +224,7 @@
 	<harvestingManDes>Add/modify/delete/start/stop harvesting tasks</harvestingManDes>
 	<transferOwnership>Transfer ownership</transferOwnership>
 	<transferOwnershipDes>Transfer metadata ownership to another user</transferOwnershipDes>
-	
+
 	<header_meta>
 		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis geospatial CSW reference implementation mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
 		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
@@ -237,7 +237,7 @@
 		<meta name="DC.date" content="02-07-2007"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.language" content="English French Spanish Chinese"/>
+		<meta name="DC.language" content="English French Spanish Russian Chinese"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
 	<help>Help</help>
@@ -254,7 +254,7 @@
 	<import>Import</import>
 	<infoTitle>Info</infoTitle>
 	<insert>Insert</insert>
-	<interactiveMap>Interactive Map</interactiveMap>	
+	<interactiveMap>Interactive Map</interactiveMap>
 	<interMapInfo>
 		<h1>Info in interactive maps</h1> You can find interactive maps by searching in GeoNetwork for digital data with an interactive map, or directly connet to a pre-configured map server. <p/> Supported map servers are <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial® Consortium</a> compliant WMS Map Servers and <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>.</interMapInfo>
 	<intermapSearch>Geographic search</intermapSearch>
@@ -268,9 +268,9 @@
 	<links>Links</links>
 	<loading>Loading ...</loading>
 	<local>Local search</local>
-	<localizationHelp>Important! This form allows you to add a Key value to the database. 
+	<localizationHelp>Important! This form allows you to add a Key value to the database.
 		The key can not have spaces.<br/>
-		After adding your key values, use the "Localization" form in the Administration panel to provide 
+		After adding your key values, use the "Localization" form in the Administration panel to provide
 		the actual name you want to be displayed on the website for the different languages.
 	</localizationHelp>
 	<localiz>Localization</localiz>
@@ -297,7 +297,7 @@
 	</mainpage1>
 	<mainpage2>
 		<p>
-		GeoNetwork opensource allows to easily share geographically referenced thematic 
+		GeoNetwork opensource allows to easily share geographically referenced thematic
 		information between different organizations. For more information please contact
 		</p>
 	</mainpage2>
@@ -442,6 +442,7 @@
 	<resultsMatching>Aggregate Results matching search criteria :</resultsMatching>
 	<rss>Open RSS feed</rss>
 	<rtitle>Title</rtitle>
+	<ru>Русский</ru> <!-- Do not translate! -->
 	<save>Save</save>
 	<saveAndClose>Save and close</saveAndClose>
 	<saveAndValidate>Check</saveAndValidate>
@@ -534,6 +535,6 @@
         <imAreaInterest>Select an Area Of Interest</imAreaInterest>
 
         <!-- date selector -->
-        <fromDateSelector>Select FROM date</fromDateSelector> 
-        <toDateSelector>Select TO date</toDateSelector> 
+        <fromDateSelector>Select FROM date</fromDateSelector>
+        <toDateSelector>Select TO date</toDateSelector>
 </strings>

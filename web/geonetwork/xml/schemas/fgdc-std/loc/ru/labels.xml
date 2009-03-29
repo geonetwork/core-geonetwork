@@ -1,0 +1,1479 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<labels>
+  <element name="any">
+    <label>Где угодно</label>
+    <description/>
+  </element>
+  <element name="absres">
+    <label>Разрешение по абсциссе</label>
+    <description/>
+  </element>
+  <element name="abstract">
+    <label>Реферат</label>
+    <description/>
+  </element>
+  <element name="accconst">
+    <label>Ограничения доступа</label>
+    <description/>
+  </element>
+  <element name="accsinst">
+    <label>Инструкции по доступу</label>
+    <description/>
+  </element>
+  <element name="address">
+    <label>Адрес</label>
+    <description/>
+  </element>
+  <element name="addrtype">
+    <label>Тип адреса</label>
+    <description/>
+  </element>
+  <element name="albers">
+    <label>Коническая равноплощадная Альберса</label>
+    <description/>
+  </element>
+  <element name="altdatum">
+    <label>Наименование высоты над уровнем моря</label>
+    <description/>
+  </element>
+  <element name="altenc">
+    <label>Метод кодирования высоты</label>
+    <description/>
+  </element>
+  <element name="altres">
+    <label>Разрешение высоты</label>
+    <description/>
+  </element>
+  <element name="altsys">
+    <label>Системное описание высоты</label>
+    <description/>
+  </element>
+  <element name="altunits">
+    <label>Единица измерения расстояния до высоты</label>
+    <description/>
+  </element>
+  <element name="arcsys">
+    <label>Координатная система ARC</label>
+    <description/>
+  </element>
+  <element name="arczone">
+    <label>Идентификатор зоны по системе ARC</label>
+    <description/>
+  </element>
+  <element name="attr">
+    <label>Атрибут</label>
+    <description/>
+  </element>
+  <element name="attracc">
+    <label>Атрибут точности</label>
+    <description/>
+  </element>
+  <element name="attracce">
+    <label>Интерпретация атрибута точности</label>
+    <description/>
+  </element>
+  <element name="attraccr">
+    <label>Описание атрибута точности</label>
+    <description/>
+  </element>
+  <element name="attraccv">
+    <label>Значение атрибута точности</label>
+    <description/>
+  </element>
+  <element name="attrdef">
+    <label>Определение атрибута</label>
+    <description/>
+  </element>
+  <element name="attrdefs">
+    <label>Источник определения атрибута</label>
+    <description/>
+  </element>
+  <element name="attrdomv">
+    <label>Область значений атрибута</label>
+    <description/>
+  </element>
+  <element name="attrlabl">
+    <label>Обозначение атрибута</label>
+    <description/>
+  </element>
+  <element name="attrmfrq">
+    <label>Частота измерения атрибута</label>
+    <description/>
+  </element>
+  <element name="attrmres">
+    <label>Разрешение измерения атрибута</label>
+    <description/>
+  </element>
+  <element name="attrunit">
+    <label>Единица измерения атрибута</label>
+    <description/>
+  </element>
+  <element name="attrva">
+    <label>Точность значения атрибута</label>
+    <description/>
+  </element>
+  <element name="attrvae">
+    <label>Пояснение точности значения атрибута</label>
+    <description/>
+  </element>
+  <element name="attrvai">
+    <label>Информация о точности значения атрибута</label>
+    <description/>
+  </element>
+  <element name="availabl">
+    <label>Доступный период времени</label>
+    <description/>
+  </element>
+  <element name="azimangl">
+    <label>Азимутальный угол</label>
+    <description/>
+  </element>
+  <element name="azimequi">
+    <label>Равнопромежуточные азимутальные точки</label>
+    <description/>
+  </element>
+  <element name="azimptl">
+    <label>Точка измерения долготы азимута</label>
+    <description/>
+  </element>
+  <element name="bearrefd">
+    <label>Азимут основного направления</label>
+    <description/>
+  </element>
+  <element name="bearrefm">
+    <label>Азимут основного меридиана</label>
+    <description/>
+  </element>
+  <element name="bearres">
+    <label>Разрешающая способность по азимуту</label>
+    <description/>
+  </element>
+  <element name="bearunit">
+    <label>Блок азимута</label>
+    <description/>
+  </element>
+  <element name="begdate">
+    <label>Дата начала</label>
+    <description/>
+  </element>
+  <element name="begdatea">
+    <label>Дата начала значений атрибута</label>
+    <description/>
+  </element>
+  <element name="begtime">
+    <label>Время начала</label>
+    <description/>
+  </element>
+  <element name="bounding">
+    <label>Ограничивающие координаты</label>
+    <description/>
+  </element>
+  <element name="browse">
+    <label>Графический просмотр</label>
+    <description/>
+  </element>
+  <element name="browsed">
+    <label>Описание файла с графическим просмотром</label>
+    <description/>
+  </element>
+  <element name="browsen">
+    <label>Имя файла с графическим просмотром</label>
+    <description/>
+  </element>
+  <element name="browset">
+    <label>Тип файла с графическим просмотром</label>
+    <description/>
+  </element>
+  <element name="caldate">
+    <label>Календарная дата</label>
+    <description/>
+  </element>
+  <element name="citation">
+    <label>Цитирование</label>
+    <description/>
+  </element>
+  <element name="citeinfo">
+    <label>Информация о цитировании</label>
+    <description/>
+  </element>
+  <element name="city">
+    <label>Город</label>
+    <description/>
+  </element>
+  <element name="cloud">
+    <label>Облачность</label>
+    <description/>
+  </element>
+  <element name="cntaddr">
+    <label>Контактный адрес</label>
+    <description/>
+  </element>
+  <element name="cntemail">
+    <label>Контактный адрес электронной почты</label>
+    <description/>
+  </element>
+  <element name="cntfax">
+    <label>Контактный факсимильный телефон</label>
+    <description/>
+  </element>
+  <element name="cntinfo">
+    <label>Контактная информация</label>
+    <description/>
+  </element>
+  <element name="cntinst">
+    <label>Инструкции по контакту</label>
+    <description/>
+  </element>
+  <element name="cntorg">
+    <label>Контактная организация</label>
+    <description/>
+  </element>
+  <element name="cntorgp">
+    <label>Первичная контактная организация</label>
+    <description/>
+  </element>
+  <element name="cntper">
+    <label>Контактное лицо</label>
+    <description/>
+  </element>
+  <element name="cntperp">
+    <label>Первичное контактное лицо</label>
+    <description/>
+  </element>
+  <element name="cntpos">
+    <label>Должность</label>
+    <description/>
+  </element>
+  <element name="cnttdd">
+    <label>
+      Контактный текстовый/стартстопный
+      телеграфный телефон
+    </label>
+    <description/>
+  </element>
+  <element name="cntvoice">
+    <label>Контактный телефон</label>
+    <description/>
+  </element>
+  <element name="codesetd">
+    <label>Домен кодового набора</label>
+    <description/>
+  </element>
+  <element name="codesetn">
+    <label>Имя кодового набора</label>
+    <description/>
+  </element>
+  <element name="codesets">
+    <label>Источник кодового набора</label>
+    <description/>
+  </element>
+  <element name="colcount">
+    <label>Количество столбцов</label>
+    <description/>
+  </element>
+  <element name="compat">
+    <label>Информация о совместимости</label>
+    <description/>
+  </element>
+  <element name="complete">
+    <label>Сообщение о законченности</label>
+    <description/>
+  </element>
+  <element name="compress">
+    <label>Поддержка сжатия</label>
+    <description/>
+  </element>
+  <element name="computer">
+    <label>Компьютерная информация контакта</label>
+    <description/>
+  </element>
+  <element name="coordrep">
+    <label>Представление координат</label>
+    <description/>
+  </element>
+  <element name="country">
+    <label>Страна</label>
+    <description/>
+  </element>
+  <element name="crossref">
+    <label>Перекрестная ссылка</label>
+    <description/>
+  </element>
+  <element name="current">
+    <label>Актуальность ссылки</label>
+    <description/>
+  </element>
+  <element name="custom">
+    <label>Процесс заказа</label>
+    <description/>
+  </element>
+  <element name="datacred">
+    <label>Набор полученных данных</label>
+    <description/>
+  </element>
+  <element name="dataqual">
+    <label>Информация о качестве данных</label>
+    <description/>
+  </element>
+  <element name="denflat">
+    <label>Знаменатель уплощающего коэффициента</label>
+    <description/>
+  </element>
+  <element name="depthdn">
+    <label>Название точки отсчета глубины</label>
+    <description/>
+  </element>
+  <element name="depthdu">
+    <label>Единица измерения глубины</label>
+    <description/>
+  </element>
+  <element name="depthem">
+    <label>Метод кодирования глубины</label>
+    <description/>
+  </element>
+  <element name="depthres">
+    <label>Разрешение по глубине</label>
+    <description/>
+  </element>
+  <element name="depthsys">
+    <label>Описание системы измерения глубины</label>
+    <description/>
+  </element>
+  <element name="descript">
+    <label>Описание</label>
+    <description/>
+  </element>
+  <element name="detailed">
+    <label>Детальное описание</label>
+    <description/>
+  </element>
+  <element name="dialfile">
+    <label>Название телефонного вызова</label>
+    <description/>
+  </element>
+  <element name="dialinst">
+    <label>Инструкции к телефонному вызову</label>
+    <description/>
+  </element>
+  <element name="dialtel">
+    <label>Телефон вызова</label>
+    <description/>
+  </element>
+  <element name="digform">
+    <label>Цифровая форма</label>
+    <description/>
+  </element>
+  <element name="digtinfo">
+    <label>Цифровая передача информации</label>
+    <description/>
+  </element>
+  <element name="digtopt">
+    <label>Возможность цифровой передачи</label>
+    <description/>
+  </element>
+  <element name="direct">
+    <label>Метод пространственного ориентирования</label>
+    <description/>
+  </element>
+  <element name="distbrep">
+    <label>
+      Дистанционный и азимутальный
+      представления
+    </label>
+    <description/>
+  </element>
+  <element name="distinfo">
+    <label>Информация о распространении</label>
+    <description/>
+  </element>
+  <element name="distliab">
+    <label>Необходимость распространения</label>
+    <description/>
+  </element>
+  <element name="distres">
+    <label>Разрешение расстояния</label>
+    <description/>
+  </element>
+  <element name="distrib">
+    <label>Дистрибьютор</label>
+    <description/>
+  </element>
+  <element name="dsgpoly">
+    <label>Набор данных G-полигон</label>
+    <description/>
+  </element>
+  <element name="dsgpolyo">
+    <label>Набор данных G-полигон внешнее G-кольцо</label>
+    <description/>
+  </element>
+  <element name="dsgpolyx">
+    <label>Набор данных G-полигон исключающее G-кольцо</label>
+    <description/>
+  </element>
+  <element name="eadetcit">
+    <label>Суть и атрибут детальной ссылки</label>
+    <description/>
+  </element>
+  <element name="eainfo">
+    <label>Суть и атрибут информации</label>
+    <description/>
+  </element>
+  <element name="eaover">
+    <label>Суть и атрибут общего представления</label>
+    <description/>
+  </element>
+  <element name="eastbc">
+    <label>Восточная</label>
+    <description/>
+  </element>
+  <element name="edition">
+    <label>Редакция</label>
+    <description/>
+  </element>
+  <element name="edom">
+    <label>Зарегистрированный домен</label>
+    <description/>
+  </element>
+  <element name="edomv">
+    <label>Значение зарегистрированного домена</label>
+    <description/>
+  </element>
+  <element name="edomvd">
+    <label>
+      Определение значения
+      зарегистрированного домена
+    </label>
+    <description/>
+  </element>
+  <element name="edomvds">
+    <label>
+      Источник определения значения
+      зарегистрированного домена
+    </label>
+    <description/>
+  </element>
+  <element name="ellips">
+    <label>Имя эллипсоида</label>
+    <description/>
+  </element>
+  <element name="enddate">
+    <label>Дата окончания</label>
+    <description/>
+  </element>
+  <element name="enddatea">
+    <label>Дата окончания значения атрибута</label>
+    <description/>
+  </element>
+  <element name="endtime">
+    <label>Время окончания</label>
+    <description/>
+  </element>
+  <element name="enttyp">
+    <label>Тип сущности</label>
+    <description/>
+  </element>
+  <element name="enttypd">
+    <label>Определение типа сущности</label>
+    <description/>
+  </element>
+  <element name="enttypds">
+    <label>Источник определения типа сущности</label>
+    <description/>
+  </element>
+  <element name="enttypl">
+    <label>Метка типа сущности</label>
+    <description/>
+  </element>
+  <element name="equicon">
+    <label>Коническая эквидистантная</label>
+    <description/>
+  </element>
+  <element name="equirect">
+    <label>Эквидистантная цилиндрическая</label>
+    <description/>
+  </element>
+  <element name="extent">
+    <label>Экстент (мера)</label>
+    <description/>
+  </element>
+  <element name="feast">
+    <label>Смещение по долготе</label>
+    <description/>
+  </element>
+  <element name="fees">
+    <label>Взносы</label>
+    <description/>
+  </element>
+  <element name="filedec">
+    <label>Метод разархивирования файла</label>
+    <description/>
+  </element>
+  <element name="fnorth">
+    <label>Смещение по широте</label>
+    <description/>
+  </element>
+  <element name="formcont">
+    <label>Информация о формате содержимого</label>
+    <description/>
+  </element>
+  <element name="formname">
+    <label>Название формата</label>
+    <description/>
+  </element>
+  <element name="formspec">
+    <label>Спецификация формата</label>
+    <description/>
+  </element>
+  <element name="formverd">
+    <label>Дата версии формата</label>
+    <description/>
+  </element>
+  <element name="formvern">
+    <label>Номер версии формата</label>
+    <description/>
+  </element>
+  <element name="geodetic">
+    <label>Геодезическая модель</label>
+    <description/>
+  </element>
+  <element name="geoform">
+    <label>
+      Форма представления пространственных
+      данных
+    </label>
+    <description/>
+  </element>
+  <element name="geograph">
+    <label>Географическая модель</label>
+    <description/>
+  </element>
+  <element name="geogunit">
+    <label>
+      Единица измерения географических
+      координат
+    </label>
+    <description/>
+  </element>
+  <element name="gnomonic">
+    <label>Гномоническая модель</label>
+    <description/>
+  </element>
+  <element name="gridsys">
+    <label>Координатная система сетки</label>
+    <description/>
+  </element>
+  <element name="gridsysn">
+    <label>Название координатной системы сетки</label>
+    <description/>
+  </element>
+  <element name="gring">
+    <label>G-кольцо</label>
+    <description/>
+  </element>
+  <element name="grngpoin">
+    <label>Точка G-кольца</label>
+    <description/>
+  </element>
+  <element name="gringlat">
+    <label>Географическая широта G-кольца</label>
+    <description/>
+  </element>
+  <element name="gringlon">
+    <label>Географическая долготаG-кольца</label>
+    <description/>
+  </element>
+  <element name="gvnsp">
+    <label>Общая вертикальная прилегающая проекция</label>
+    <description/>
+  </element>
+  <element name="heightpt">
+    <label>
+      Высота перспективной точки над
+      поверхностью
+    </label>
+    <description/>
+  </element>
+  <element name="highbps">
+    <label>Высочайшие базисные пункты</label>
+    <description/>
+  </element>
+  <element name="horizdn">
+    <label>Название горизонтальной линии отсчета</label>
+    <description/>
+  </element>
+  <element name="horizpa">
+    <label>
+      Точность горизонтального
+      позиционирования
+    </label>
+    <description/>
+  </element>
+  <element name="horizpae">
+    <label>
+      Пояснение точности горизонтального
+      позиционирования
+    </label>
+    <description/>
+  </element>
+  <element name="horizpar">
+    <label>
+      Отчет о точности горизонтального
+      позиционирования
+    </label>
+    <description/>
+  </element>
+  <element name="horizpav">
+    <label>
+      Значение точности горизонтального
+      позиционирования
+    </label>
+    <description/>
+  </element>
+  <element name="horizsys">
+    <label>Абсцисса системного описания</label>
+    <description/>
+  </element>
+  <element name="hours">
+    <label>Рабочее время</label>
+    <description/>
+  </element>
+  <element name="idinfo">
+    <label>Идентификационная информация</label>
+    <description/>
+  </element>
+  <element name="indspref">
+    <label>Побочный пространственный ориентир</label>
+    <description/>
+  </element>
+  <element name="issue">
+    <label>Идентификация выпуска</label>
+    <description/>
+  </element>
+  <element name="keywords">
+    <label>Ключевые слова</label>
+    <description/>
+  </element>
+  <element name="lamberta">
+    <label>Азимутальная равноплощадная Ламберта</label>
+    <description/>
+  </element>
+  <element name="lambertc">
+    <label>Коническая конформная Ламберта</label>
+    <description/>
+  </element>
+  <element name="landsat">
+    <label>Номер Ландсата</label>
+    <description/>
+  </element>
+  <element name="latprjc">
+    <label>Широта центра проекции</label>
+    <description/>
+  </element>
+  <element name="latprjo">
+    <label>Широта исходной точки проекции</label>
+    <description/>
+  </element>
+  <element name="latres">
+    <label>Широта разрешения</label>
+    <description/>
+  </element>
+  <element name="lineage">
+    <label>Происхождение</label>
+    <description/>
+  </element>
+  <element name="local">
+    <label>Местная привязка</label>
+    <description/>
+  </element>
+  <element name="localdes">
+    <label>Описание местной привязки</label>
+    <description/>
+  </element>
+  <element name="localgeo">
+    <label>
+      Информация о местной географической
+      привязке
+    </label>
+    <description/>
+  </element>
+  <element name="localp">
+    <label>Местная планарная привязка</label>
+    <description/>
+  </element>
+  <element name="localpd">
+    <label>Описание местной планарной привязки</label>
+    <description/>
+  </element>
+  <element name="localpgi">
+    <label>
+      Информация о местной планарной
+      географической привязке
+    </label>
+    <description/>
+  </element>
+  <element name="logic">
+    <label>Отчет о логической последовательности</label>
+    <description/>
+  </element>
+  <element name="longcm">
+    <label>Долгота центрального меридиана</label>
+    <description/>
+  </element>
+  <element name="longpc">
+    <label>Долгота центра проекции</label>
+    <description/>
+  </element>
+  <element name="longres">
+    <label>Долгота разрешения</label>
+    <description/>
+  </element>
+  <element name="lowbps">
+    <label>Низшие базисные пункты</label>
+    <description/>
+  </element>
+  <element name="lworkcit">
+    <label>Большая рабочая ссылка</label>
+    <description/>
+  </element>
+  <element name="mapproj">
+    <label>Проекция карты</label>
+    <description/>
+  </element>
+  <element name="mapprojn">
+    <label>Название проекции карты</label>
+    <description/>
+  </element>
+  <element name="mdattim">
+    <label>Многократные даты/время</label>
+    <description/>
+  </element>
+  <element name="mercator">
+    <label>Меркатора</label>
+    <description/>
+  </element>
+  <element name="metac">
+    <label>Ограничения доступа метаданных</label>
+    <description/>
+  </element>
+  <element name="metadata">
+    <label>Метаданные</label>
+    <description/>
+  </element>
+  <element name="metainfo">
+    <label>Ссылочная информация о метаданных</label>
+    <description/>
+  </element>
+  <element name="metc">
+    <label>Контакт по метаданным</label>
+    <description/>
+  </element>
+  <element name="metd">
+    <label>Дата метаданных</label>
+    <description/>
+  </element>
+  <element name="metfrd">
+    <label>Дата следующего пересмотра метаданных</label>
+    <description/>
+  </element>
+  <element name="metrd">
+    <label>Дата последнего пересмотра метаданных</label>
+    <description/>
+  </element>
+  <element name="metsc">
+    <label>Категория защиты метаданных</label>
+    <description/>
+  </element>
+  <element name="metscs">
+    <label>
+      Классификационная система защиты
+      метаданных
+    </label>
+    <description/>
+  </element>
+  <element name="metshd">
+    <label>
+      Техническое описание категории защиты
+      метаданных
+    </label>
+    <description/>
+  </element>
+  <element name="metsi">
+    <label>Информация о категории защиты метаданных</label>
+    <description/>
+  </element>
+  <element name="metstdn">
+    <label>Название стандарта метаданных</label>
+    <description/>
+  </element>
+  <element name="metstdv">
+    <label>Версия стандарта метаданных</label>
+    <description/>
+  </element>
+  <element name="mettc">
+    <label>Время соглашения метаданных</label>
+    <description/>
+  </element>
+  <element name="metuc">
+    <label>Ограничения использования метаданных</label>
+    <description/>
+  </element>
+  <element name="miller">
+    <label>Цилиндрическая Миллера</label>
+    <description/>
+  </element>
+  <element name="modsak">
+    <label>
+      Модифицированная стереографическая для
+      Аляски
+    </label>
+    <description/>
+  </element>
+  <element name="native">
+    <label>
+      Внутренний набор данных об окружающей
+      обстановке
+    </label>
+    <description/>
+  </element>
+  <element name="networka">
+    <label>Адрес в сети</label>
+    <description/>
+  </element>
+  <element name="networkr">
+    <label>Имя сетевого ресурса</label>
+    <description/>
+  </element>
+  <element name="nondig">
+    <label>Не цифровая форма</label>
+    <description/>
+  </element>
+  <element name="northbc">
+    <label>Северная</label>
+    <description/>
+  </element>
+  <element name="numdata">
+    <label>Число битов данных</label>
+    <description/>
+  </element>
+  <element name="numstop">
+    <label>Число битов остановки</label>
+    <description/>
+  </element>
+  <element name="obqlazim">
+    <label>Наклонная линия азимута</label>
+    <description/>
+  </element>
+  <element name="obqllat">
+    <label>Наклонная линия широты</label>
+    <description/>
+  </element>
+  <element name="obqllong">
+    <label>Наклонная линия долготы</label>
+    <description/>
+  </element>
+  <element name="obqlpt">
+    <label>Точка наклонной линии</label>
+    <description/>
+  </element>
+  <element name="obqmerc">
+    <label>Наклонный Меркатор</label>
+    <description/>
+  </element>
+  <element name="offmedia">
+    <label>Офлайновый путь</label>
+    <description/>
+  </element>
+  <element name="offoptn">
+    <label>Офлайн</label>
+    <description/>
+  </element>
+  <element name="oncomp">
+    <label>
+      Подключенный компьютер и операционная
+      система
+    </label>
+    <description/>
+  </element>
+  <element name="onlink">
+    <label>Интернет-ссылка</label>
+    <description/>
+  </element>
+  <element name="onlinopt">
+    <label>Онлайн</label>
+    <description/>
+  </element>
+  <element name="ordering">
+    <label>Распорядительные инструкции</label>
+    <description/>
+  </element>
+  <element name="ordres">
+    <label>Разрешение ординат</label>
+    <description/>
+  </element>
+  <element name="origin">
+    <label>Инициатор</label>
+    <description/>
+  </element>
+  <element name="orthogr">
+    <label>Ортографическая модель</label>
+    <description/>
+  </element>
+  <element name="othercit">
+    <label>Другие подробности о ссылке</label>
+    <description/>
+  </element>
+  <element name="othergrd">
+    <label>Другое описание системы сетей</label>
+    <description/>
+  </element>
+  <element name="otherprj">
+    <label>Другое описание проекций</label>
+    <description/>
+  </element>
+  <element name="overview">
+    <label>Общее описание</label>
+    <description/>
+  </element>
+  <element name="parity">
+    <label>Соотношение</label>
+    <description/>
+  </element>
+  <element name="pathnum">
+    <label>Маршрутный номер</label>
+    <description/>
+  </element>
+  <element name="place">
+    <label>Местоположение</label>
+    <description/>
+  </element>
+  <element name="placekey">
+    <label>Ключевое слово</label>
+    <description/>
+  </element>
+  <element name="placekt">
+    <label>Тезаурус</label>
+    <description/>
+  </element>
+  <element name="planar">
+    <label>Планарная модель</label>
+    <description/>
+  </element>
+  <element name="plance">
+    <label>
+      Метод координации и кодирования
+      планарной модели
+    </label>
+    <description/>
+  </element>
+  <element name="planci">
+    <label>
+      Информация о координировании планарной
+      модели
+    </label>
+    <description/>
+  </element>
+  <element name="plandu">
+    <label>
+      Единицы измерения расстояния в
+      планарной модели
+    </label>
+    <description/>
+  </element>
+  <element name="polarst">
+    <label>Полярная стереографическая проекция</label>
+    <description/>
+  </element>
+  <element name="polycon">
+    <label>Поликоническая модель</label>
+    <description/>
+  </element>
+  <element name="posacc">
+    <label>Точность позиционирования</label>
+    <description/>
+  </element>
+  <element name="postal">
+    <label>Почтовый индекс</label>
+    <description/>
+  </element>
+  <element name="proccont">
+    <label>Контактная информация</label>
+    <description/>
+  </element>
+  <element name="procdate">
+    <label>Дата процесса</label>
+    <description/>
+  </element>
+  <element name="procdesc">
+    <label>Описание процесса</label>
+    <description/>
+  </element>
+  <element name="procstep">
+    <label>Стадия процесса</label>
+    <description/>
+  </element>
+  <element name="proctime">
+    <label>Время процесса</label>
+    <description/>
+  </element>
+  <element name="progress">
+    <label>Прогресс</label>
+    <description/>
+  </element>
+  <element name="ptcontac">
+    <label>Контактная информация</label>
+    <description/>
+  </element>
+  <element name="ptvctcnt">
+    <label>Отсчет точки и вектора объекта</label>
+    <description/>
+  </element>
+  <element name="ptvctinf">
+    <label>Информация о счете и векторе объекта</label>
+    <description/>
+  </element>
+  <element name="pubdate">
+    <label>Дата публикации</label>
+    <description/>
+  </element>
+  <element name="pubinfo">
+    <label>Информация о публикации</label>
+    <description/>
+  </element>
+  <element name="publish">
+    <label>Издатель</label>
+    <description/>
+  </element>
+  <element name="pubplace">
+    <label>Место публикации</label>
+    <description/>
+  </element>
+  <element name="pubtime">
+    <label>Время публикации</label>
+    <description/>
+  </element>
+  <element name="purpose">
+    <label>Цель</label>
+    <description/>
+  </element>
+  <element name="qattracc">
+    <label>Количественная оценка точности признака</label>
+    <description/>
+  </element>
+  <element name="qhorizpa">
+    <label>
+      Количественная горизонтальная
+      позиционная оценка точности
+    </label>
+    <description/>
+  </element>
+  <element name="qvertpa">
+    <label>
+      Количественная вертикальная
+      позиционная оценка точности
+    </label>
+    <description/>
+  </element>
+  <element name="rastinfo">
+    <label>Информация о растровом объекте</label>
+    <description/>
+  </element>
+  <element name="rasttype">
+    <label>Тип растрового объекта</label>
+    <description/>
+  </element>
+  <element name="rdom">
+    <label>Область диапазона</label>
+    <description/>
+  </element>
+  <element name="rdommax">
+    <label>Максимум области диапазона</label>
+    <description/>
+  </element>
+  <element name="rdommin">
+    <label>Минимум области диапазона</label>
+    <description/>
+  </element>
+  <element name="reccap">
+    <label>Регистрация вместимости</label>
+    <description/>
+  </element>
+  <element name="recden">
+    <label>Регистрация плотности</label>
+    <description/>
+  </element>
+  <element name="recdenu">
+    <label>Регистрация единиц плотности</label>
+    <description/>
+  </element>
+  <element name="recfmt">
+    <label>Регистрация формата</label>
+    <description/>
+  </element>
+  <element name="resdesc">
+    <label>Описание ресурса</label>
+    <description/>
+  </element>
+  <element name="rngdates">
+    <label>Временной диапазон</label>
+    <description/>
+  </element>
+  <element name="robinson">
+    <label>Робинсона</label>
+    <description/>
+  </element>
+  <element name="rowcount">
+    <label>Количество строк</label>
+    <description/>
+  </element>
+  <element name="sdtsterm">
+    <label>
+      Описание системы передачи информации с
+      помощью искусственных спутников
+    </label>
+    <description/>
+  </element>
+  <element name="sdtstype">
+    <label>
+      Объектовый тип точки и вектора системы
+      передачи информации с помощью
+      искусственных спутников
+    </label>
+    <description/>
+  </element>
+  <element name="secclass">
+    <label>Категория защиты</label>
+    <description/>
+  </element>
+  <element name="sechandl">
+    <label>Техническое описание защиты</label>
+    <description/>
+  </element>
+  <element name="secinfo">
+    <label>Информация о защите</label>
+    <description/>
+  </element>
+  <element name="secsys">
+    <label>Классификационная система защиты</label>
+    <description/>
+  </element>
+  <element name="semiaxis">
+    <label>Большая полуось</label>
+    <description/>
+  </element>
+  <element name="serinfo">
+    <label>Информация о серии</label>
+    <description/>
+  </element>
+  <element name="sername">
+    <label>Имя серии</label>
+    <description/>
+  </element>
+  <element name="sfctrlin">
+    <label>
+      Коэффициент масштабирования на осевой
+      линии
+    </label>
+    <description/>
+  </element>
+  <element name="sfctrmer">
+    <label>
+      Коэффициент масштабирования на осевой
+      меридиане
+    </label>
+    <description/>
+  </element>
+  <element name="sfequat">
+    <label>Коэффициент масштабирования на экваторе</label>
+    <description/>
+  </element>
+  <element name="sfprjorg">
+    <label>
+      Коэффициент масштабирования в начале
+      проекции
+    </label>
+    <description/>
+  </element>
+  <element name="sinusoid">
+    <label>Синусоидальная</label>
+    <description/>
+  </element>
+  <element name="sngdate">
+    <label>Дата/время</label>
+    <description/>
+  </element>
+  <element name="southbc">
+    <label>Южная</label>
+    <description/>
+  </element>
+  <element name="spaceobq">
+    <label>
+      Протяженность наклонного Меркатора
+      (Ландсат)
+    </label>
+    <description/>
+  </element>
+  <element name="spcs">
+    <label>Система плановых координат</label>
+    <description/>
+  </element>
+  <element name="spcszone">
+    <label>Идентификатор Зоны SPCS</label>
+    <description/>
+  </element>
+  <element name="spdoinfo">
+    <label>
+      Пространственная информация
+      организации данных
+    </label>
+    <description/>
+  </element>
+  <element name="spdom">
+    <label>Пространственный домен</label>
+    <description/>
+  </element>
+  <element name="spref">
+    <label>Информация о пространственном ориентире</label>
+    <description/>
+  </element>
+  <element name="srccite">
+    <label>Источник ссылки</label>
+    <description/>
+  </element>
+  <element name="srccitea">
+    <label>Исходное сокращение цитаты</label>
+    <description/>
+  </element>
+  <element name="srccontr">
+    <label>Источник взноса</label>
+    <description/>
+  </element>
+  <element name="srccurr">
+    <label>Источник актуальности ссылки</label>
+    <description/>
+  </element>
+  <element name="srcinfo">
+    <label>Источник информации</label>
+    <description/>
+  </element>
+  <element name="srcprod">
+    <label>
+      Источник представленной аббревиатуры
+      ссылки
+    </label>
+    <description/>
+  </element>
+  <element name="srcscale">
+    <label>Источник показателя масштаба</label>
+    <description/>
+  </element>
+  <element name="srctime">
+    <label>Источник временного растра содержимого</label>
+    <description/>
+  </element>
+  <element name="srcused">
+    <label>
+      Источник использованной аббревиатуры
+      ссылки
+    </label>
+    <description/>
+  </element>
+  <element name="state">
+    <label>Административно-территориальная единица</label>
+    <description/>
+  </element>
+  <element name="status">
+    <label>Статус</label>
+    <description/>
+  </element>
+  <element name="stdorder">
+    <label>Процесс стандартного заказа</label>
+    <description/>
+  </element>
+  <element name="stdparll">
+    <label>Стандартная параллель</label>
+    <description/>
+  </element>
+  <element name="stereo">
+    <label>Стереографическая</label>
+    <description/>
+  </element>
+  <element name="stratum">
+    <label>Стратум</label>
+    <description/>
+  </element>
+  <element name="stratkey">
+    <label>Ключевое слово</label>
+    <description/>
+  </element>
+  <element name="stratkt">
+    <label>Тезаурус</label>
+    <description/>
+  </element>
+  <element name="supplinf">
+    <label>Дополнительная информация</label>
+    <description/>
+  </element>
+  <element name="svlong">
+    <label>Прямая вертикальная долгота от полюса</label>
+    <description/>
+  </element>
+  <element name="techpreq">
+    <label>Технические предпосылки</label>
+    <description/>
+  </element>
+  <element name="temporal">
+    <label>Время</label>
+    <description/>
+  </element>
+  <element name="tempkey">
+    <label>Ключевое слово</label>
+    <description/>
+  </element>
+  <element name="tempkt">
+    <label>Тезаурус</label>
+    <description/>
+  </element>
+  <element name="theme">
+    <label>Тема</label>
+    <description/>
+  </element>
+  <element name="themekey">
+    <label>Ключевое слово</label>
+    <description/>
+  </element>
+  <element name="themekt">
+    <label>Тезаурус</label>
+    <description/>
+  </element>
+  <element name="time">
+    <label>Время дня</label>
+    <description/>
+  </element>
+  <element name="timeinfo">
+    <label>Информация о периоде времени</label>
+    <description/>
+  </element>
+  <element name="timeperd">
+    <label>Период времени</label>
+    <description/>
+  </element>
+  <element name="title">
+    <label>Заголовок</label>
+    <description/>
+  </element>
+  <element name="transize">
+    <label>Передача размера</label>
+    <description/>
+  </element>
+  <element name="transmer">
+    <label>Поперечная Меркатора</label>
+    <description/>
+  </element>
+  <element name="turnarnd">
+    <label>Оборот</label>
+    <description/>
+  </element>
+  <element name="typesrc">
+    <label>Тип источника информации</label>
+    <description/>
+  </element>
+  <element name="udom">
+    <label>Не представимый домен</label>
+    <description/>
+  </element>
+  <element name="update">
+    <label>Поддержка и частота обновления</label>
+    <description/>
+  </element>
+  <element name="ups">
+    <label>
+      Универсальная полярная
+      стереографическая проекция
+    </label>
+    <description/>
+  </element>
+  <element name="upszone">
+    <label>
+      Идентификатор зоны источника
+      бесперебойного питания
+    </label>
+    <description/>
+  </element>
+  <element name="useconst">
+    <label>Ограничения использования</label>
+    <description/>
+  </element>
+  <element name="utm">
+    <label>Универсальная поперечная Меркатора</label>
+    <description/>
+  </element>
+  <element name="utmzone">
+    <label>
+      Номер зоны прямоугольной системы
+      координат
+    </label>
+    <description/>
+  </element>
+  <element name="vdgrin">
+    <label>Проекция Ван дер Гринтена</label>
+    <description/>
+  </element>
+  <element name="vertacc">
+    <label>Точность вертикального позиционирования</label>
+    <description/>
+  </element>
+  <element name="vertacce">
+    <label>
+      Пояснение точности вертикального
+      позиционирования
+    </label>
+    <description/>
+  </element>
+  <element name="vertaccr">
+    <label>
+      Отчет о точности вертикального
+      позиционирования
+    </label>
+    <description/>
+  </element>
+  <element name="vertaccv">
+    <label>
+      Значение точности вертикального
+      позиционирования
+    </label>
+    <description/>
+  </element>
+  <element name="vertdef">
+    <label>
+      Определение вертикальной координатной
+      системы
+    </label>
+    <description/>
+  </element>
+  <element name="vpflevel">
+    <label>VPF Топографический уровень</label>
+    <description/>
+  </element>
+  <element name="vpfterm">
+    <label>
+      Описание терминов формата векторной
+      информации
+    </label>
+    <description/>
+  </element>
+  <element name="vpftype">
+    <label>
+      Точка формата векторной информации и
+      векторный тип объекта
+    </label>
+    <description/>
+  </element>
+  <element name="vrtcount">
+    <label>Вертикальный отсчет</label>
+    <description/>
+  </element>
+  <element name="westbc">
+    <label>Западная</label>
+    <description/>
+  </element>
+</labels>

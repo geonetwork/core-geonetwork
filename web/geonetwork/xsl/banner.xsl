@@ -5,9 +5,9 @@
 	main html banner
 	-->
 	<xsl:template name="banner">
-		
+
 		<table width="100%">
-		
+
 			<!-- title -->
 			<tr class="banner">
 				<td class="banner">
@@ -17,7 +17,7 @@
 					<img src="{/root/gui/url}/images/header-right.gif" alt="GeoNetwork opensource logo" align="top" />
 				</td>
 			</tr>
-			
+
 			<!-- buttons -->
 			<tr class="banner">
 				<td class="banner-menu">
@@ -80,7 +80,7 @@
 							<a class="banner" href="{/root/gui/locService}/help"><xsl:value-of select="/root/gui/strings/help"/></a>
 						</xsl:otherwise>
 					</xsl:choose> -->
-					
+
 					<!-- Help section to be displayed according to GUI language -->
 					<xsl:choose>
 						<xsl:when test="/root/gui/language='fr'">
@@ -94,20 +94,20 @@
 				</td>
 				<td align="right" class="banner-menu">
 					<xsl:choose>
+						<xsl:when test="/root/gui/language='cn'">
+							<font class="banner-active"><xsl:value-of select="/root/gui/strings/cn"/></font>
+						</xsl:when>
+						<xsl:otherwise>
+							<a class="banner" href="{/root/gui/service}/cn/main.home"><xsl:value-of select="/root/gui/strings/cn"/></a>
+						</xsl:otherwise>
+					</xsl:choose>
+					|
+					<xsl:choose>
 						<xsl:when test="/root/gui/language='en'">
 							<font class="banner-active"><xsl:value-of select="/root/gui/strings/en"/></font>
 						</xsl:when>
 						<xsl:otherwise>
 							<a class="banner" href="{/root/gui/service}/en/main.home"><xsl:value-of select="/root/gui/strings/en"/></a>
-						</xsl:otherwise>
-					</xsl:choose>
-					|
-					<xsl:choose>
-						<xsl:when test="/root/gui/language='fr'">
-							<font class="banner-active"><xsl:value-of select="/root/gui/strings/fr"/></font>
-						</xsl:when>
-						<xsl:otherwise>
-							<a class="banner" href="{/root/gui/service}/fr/main.home"><xsl:value-of select="/root/gui/strings/fr"/></a>
 						</xsl:otherwise>
 					</xsl:choose>
 					|
@@ -121,18 +121,27 @@
 					</xsl:choose>
 					|
 					<xsl:choose>
-						<xsl:when test="/root/gui/language='cn'">
-							<font class="banner-active"><xsl:value-of select="/root/gui/strings/cn"/></font>
+						<xsl:when test="/root/gui/language='fr'">
+							<font class="banner-active"><xsl:value-of select="/root/gui/strings/fr"/></font>
 						</xsl:when>
 						<xsl:otherwise>
-							<a class="banner" href="{/root/gui/service}/cn/main.home"><xsl:value-of select="/root/gui/strings/cn"/></a>
+							<a class="banner" href="{/root/gui/service}/fr/main.home"><xsl:value-of select="/root/gui/strings/fr"/></a>
+						</xsl:otherwise>
+					</xsl:choose>
+					|
+					<xsl:choose>
+						<xsl:when test="/root/gui/language='ru'">
+							<font class="banner-active"><xsl:value-of select="/root/gui/strings/ru"/></font>
+						</xsl:when>
+						<xsl:otherwise>
+							<a class="banner" href="{/root/gui/service}/ru/main.home"><xsl:value-of select="/root/gui/strings/ru"/></a>
 						</xsl:otherwise>
 					</xsl:choose>
 				</td>
 			</tr>
-			
+
 			<!-- FIXME: should also contain links to last results and metadata -->
-			
+
 			<!-- login -->
 			<tr class="banner">
 				<td class="banner-login">
@@ -176,9 +185,9 @@
 	main html banner in a popup window
 	-->
 	<xsl:template name="bannerPopup">
-		
+
 		<table width="100%">
-		
+
 			<!-- title -->
 			<!-- TODO : Mutualize with main banner template -->
 			<tr class="banner">
@@ -189,7 +198,7 @@
 					<img src="{/root/gui/url}/images/header-right.gif" alt="World picture" align="top" />
 				</td>
 			</tr>
-			
+
 			<!-- buttons -->
 			<tr class="banner">
 				<td class="banner-menu" colspan="2">

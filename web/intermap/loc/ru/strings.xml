@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<abstract>Реферат</abstract>
+	<activate>Активировать</activate>
+	<address>Адрес</address>
+	<addService>Добавить карты</addService>
+	<addLayer js="true">Добавить новый слой</addLayer>
+	<bigger>Увеличенная карта</bigger>
+	<btnstyles>Просмотр и выбор стилей</btnstyles>
+	<cancel>Отменить</cancel>
+	<close>Закрыть</close>
+	<choosemapfromlist>Выберите одну или несколько сервисов карт из следующего списка</choosemapfromlist>
+	<choosemapserver>Выберите сервер карт из следующего списка или добавьте новый сервер карт вручную</choosemapserver>
+	<mapServer>Сервер карт</mapServer>
+	<choosepredefinedmap>Выберите одну из предопределенных карт из следующего списка или</choosepredefinedmap>
+	<connect>Соединить</connect>
+	<contactInfo>Контактная информация:</contactInfo>
+	<contactPerson>Первичное контактное лицо:</contactPerson>
+	<contexts>Contexts</contexts>
+	<delete>удалить</delete>
+	<down>Передвинуть слой вниз</down>
+	<email>email:</email>
+	<error>ошибка</error>
+<!--
+	<errorText>Sorry, error connecting to the map server</errorText>
+-->
+	<exportAsPDF js="true">Экспорт карты в формате PDF</exportAsPDF>
+	<exportAsImage js="true">Экспорт карты как изображения</exportAsImage>
+	<exportAsWMC js="true">Экспорт карты в формате Web Map Context</exportAsWMC>
+	<extents>Change the selected time (temporal data)</extents>
+	<extentSelected>Selected time: </extentSelected>
+	<featuresfound>объектов найдено</featuresfound>
+	<findMapsGeoNetwork>Найти другие карты с помощью GeoNetwork opensource</findMapsGeoNetwork>
+	<findMapsMapServers>Добавить слои, подключившись к другим серверам карт</findMapsMapServers>
+	<fullExtent>Вся карта</fullExtent>
+	<gotoGeoNetwork>GeoNetwork opensource</gotoGeoNetwork>
+	<gotoMapServers>Серверы карт</gotoMapServers>
+	<homepage>Домашняя страница:</homepage>
+	<identify>Идентифицировать объект на карте</identify>
+	<makeActive>Выберите, чтобы сделать данный слой активным</makeActive>
+	<info>информация</info>
+	<keywords>Ключевые слова:</keywords>
+	<layerinfo>Информация о слое</layerinfo>
+	<layers>Слои</layers>
+	<layersAdded js="true">Выбранные слои добавлены</layersAdded>
+	<layersHide>Скрыть список слоев</layersHide>
+	<layersShow>Показать список слоев</layersShow>
+	<layerShowHide>Показать или скрыть слой</layerShowHide>
+	<legend>Показать легенду</legend>
+	<listofmaps>Список карт</listofmaps>
+	<listofmapservers>Список серверов карт</listofmapservers>
+	<loadingMap>...Загрузка карты...</loadingMap>
+	<loadingFrom js="true">Загрузка сервисов с</loadingFrom>
+	<loadingFromWMS js="true">Загрузка сервисов с указанного WMS-сервера</loadingFromWMS>
+	<newMap>Создать новую карту</newMap>
+	<map>Карта</map>
+	<mapsfound>карт найдено</mapsfound>
+	<markerlistbutton>Маркеры</markerlistbutton>
+	<markerlisttitle js="true">Список маркеров</markerlisttitle>
+	<markerUpdating>Обновление маркера...</markerUpdating>
+	<markerUpdated>Маркер обновлен</markerUpdated>
+	<markerDeleting>Удаление маркера...</markerDeleting>
+	<markerDeleted>Маркер удален</markerDeleted>
+	<markerNone>Не определено ни одного маркера.</markerNone>
+	<metadata>Метаданные</metadata>
+	<newMap>Создать новую карту</newMap>
+	<noFeature>Не найдено ни одного объекта</noFeature>
+	<noService>Не найдено ни одной карты</noService>
+	<noStyle>Для данной карты доступен только стиль по умолчанию</noStyle>
+	<oneService>Найдена одна карта</oneService>
+	<ok>Ok</ok>
+	<oneFeature>Найден один объект</oneFeature>
+	<otherArcIMS>- Другой ArcIMS-сервер </otherArcIMS>
+	<otherWMS>- Другой WMS-сервер </otherWMS>
+	<pan>Переместить</pan>
+	<position>Позиция:</position>
+	<print>Печать карты</print>
+	<properties>Свойства</properties>
+	<reCenter>Центрировать карту</reCenter>
+	<refresh>Обновить</refresh>
+	<refreshNotification>Пожалйста, нажмите кнопку "Обновить", чтобы увидеть изменения.</refreshNotification>
+	<removeLayer>Удалить слой</removeLayer>
+	<removeMarker>Удалить маркер</removeMarker>
+	<reset>Сбросить</reset>
+	<sendByEmail js="true">Отправить карту по e-mail</sendByEmail>
+	<setScale>- Установить масштаб -</setScale>
+	<showLayerMD js="true">Информация о слое</showLayerMD>
+	<smaller>Уменьшенная карта</smaller>
+	<specify>Укажите другой:</specify>
+	<style>Выберите желаемый стиль</style>
+	<start>InterMap opensource</start>
+	<telephone>Телефон:</telephone>
+	<title>InterMap opensource</title>
+	<titleShowStyles js="true">Доступные стили</titleShowStyles>
+	<transparency>Установить прозрачность</transparency>
+	<unexpectedError>Во время выполнения операции возникла ошибка:</unexpectedError>
+	<up>Передвинуть слой вверх</up>
+	<update>Обновить</update>
+	<updateMarker>Обновить информацию о маркере</updateMarker>
+	<wait js="true">Пожалуйста, подождите...</wait>
+	<wmctitle js="true">Меню фона</wmctitle>
+	<wmctitlemail js="true">Отправить фон по e-mail</wmctitlemail>
+	<wmctitleupload js="true">Выгрузить и установить фон</wmctitleupload>
+	<wmcbuttonmain js="true">Открыть меню фона</wmcbuttonmain>
+	<wmcbuttonmail js="true">Отправить текущий фон</wmcbuttonmail>
+	<wmcbuttonupload js="true">Выгрузить текущий фон</wmcbuttonupload>
+	<wmcbuttondownload js="true">Загрузить текущий фон</wmcbuttondownload>
+
+	<wmcUploading>Загрузка файла фонового изображения...</wmcUploading>
+	<wmcUploaded>Фоновое изображение успешно загружено </wmcUploaded>
+	<wmcUploadingError>Непредвиденная ошибка загрузки фона:</wmcUploadingError>
+	<wmcMailBuilding>Составление электронного сообщения для отправки...</wmcMailBuilding>
+	<wmcMailSent>Сообщение было успешно отправлено</wmcMailSent>
+	<wmcMailError>Непредвиденная ошибка обработки электронной почты:</wmcMailError>
+	<wmcUploadReplace>Заменить текущие слои</wmcUploadReplace>
+	<wmcUploadAdd>Добавить к текущим слоям</wmcUploadAdd>
+	<wmcMailSend>Отправить e-mail</wmcMailSend>
+
+	<wmsConfigForm>Свойства слоя</wmsConfigForm>
+	<zoomIn>Увеличить</zoomIn>
+	<zoomOut>Уменьшить</zoomOut>
+	<zoomLayer>Увеличить/уменьшить до размеров слоя</zoomLayer>
+	<getFeatures>GET FEATURES</getFeatures>
+
+	<styleSetting>Стиль применяется...</styleSetting>
+	<styleSet>Стиль был успешно применен.</styleSet>
+	<styleSetError>Произошла ошибка:</styleSetError>
+	<layerInfo>Информация о слое:</layerInfo>
+	<associatedStyles>Ассоциированные стили:</associatedStyles>
+	<setStyle>Установить стили</setStyle>
+</strings>

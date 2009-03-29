@@ -95,9 +95,9 @@
 		<update>Update thesaurus</update>
 		<upload>Upload thesaurus</upload>
 		<download>Download thesaurus</download>
-		<delete>Delete thesaurus</delete>	
+		<delete>Delete thesaurus</delete>
 		<editelement>Edit element</editelement>
-		<addelement>Add element</addelement>			
+		<addelement>Add element</addelement>
 		<deleteelement>Delete element</deleteelement>
 		<updateelement>Update element</updateelement>
 		<keywordDescription>Keyword definition:</keywordDescription>
@@ -112,7 +112,7 @@
 	</thesaurus>
 
 	<!-- End new strings -->
-	
+
 	<language>cn</language>
 	<!-- ISO code -->
 	<about>关于本站</about>
@@ -243,7 +243,7 @@
 		<meta name="DC.date" content="02-07-2007"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.language" content="中文 English French Spanish"/>
+		<meta name="DC.language" content="中文 English French Spanish Russian"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
 	<help>显示帮助信息</help>
@@ -273,9 +273,9 @@
 	<links>相关链接</links>
 	<loading>Loading ...</loading>
 	<local>本地搜索</local>
-	<localizationHelp>Important! This form allows you to add a Key value to the database. 
+	<localizationHelp>Important! This form allows you to add a Key value to the database.
 		The key can not have spaces.<br/>
-		After adding your key values, use the "Localization" form in the Administration panel to provide 
+		After adding your key values, use the "Localization" form in the Administration panel to provide
 		the actual name you want to be displayed on the website for the different languages.
 	</localizationHelp>
 	<localiz>Localization</localiz>
@@ -300,7 +300,7 @@
 			<li>增强对地理信息的理解</li>
 		</ul>
 	</mainpage1>
-	<mainpage2> GeoNetwork opensource可以实现跨部门的地理空间专题信息共享， 要了解更多情况，请联系 
+	<mainpage2> GeoNetwork opensource可以实现跨部门的地理空间专题信息共享， 要了解更多情况，请联系
 	</mainpage2>
 	<mainhelp1> 如何搜索... </mainhelp1>
 	<mainhelp2> 隐藏帮助... </mainhelp2>
@@ -425,6 +425,7 @@
 	<resultsMatching>满足多个条件的结果：</resultsMatching>
 	<rss>开放的RSS馈入</rss>
 	<rtitle>题名</rtitle>
+	<ru>Русский</ru> <!-- Do not translate! -->
 	<save>保存</save>
 	<saveAndClose>保存并关闭</saveAndClose>
 	<saveAndValidate>检查</saveAndValidate>
@@ -508,9 +509,9 @@
 	<imPan>Pan</imPan>
 	<imZoomToLayer>Zoom to selected layer extent</imZoomToLayer>
 	<imAreaInterest>Select an Area Of Interest</imAreaInterest>
-	
+
 	<!-- date selector -->
-	<fromDateSelector>Select FROM date</fromDateSelector> 
-	<toDateSelector>Select TO date</toDateSelector> 
+	<fromDateSelector>Select FROM date</fromDateSelector>
+	<toDateSelector>Select TO date</toDateSelector>
 
 </strings>
