@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:gml="http://www.opengis.net/gml"
+        targetNamespace="http://www.opengis.net/gml"
+        version="3.1.1" elementFormDefault="qualified">
+
+  <include schemaLocation="measures.xsd"/>
+
+  <element name="_Geometry" type="gml:AbstractGeometryType"
+           abstract="true" substitutionGroup="gml:_GML"/>
+  <complexType name="GeometryPropertyType">
+    <sequence>
+      <element ref="gml:_Geometry"/>
+    </sequence>
+  </complexType>
+
+  <complexType name="GeometryArrayPropertyType">
+    <sequence>
+      <element ref="gml:_Geometry"
+               minOccurs="0" maxOccurs="unbounded"/>
+    </sequence>
+  </complexType>
+
+  <complexType name="AbstractGeometryType" abstract="true">
+    <complexContent>
+      <extension base="gml:AbstractGMLType">
+        <attribute name="gid" type="string" use="optional">
+        </attribute>
+        <attributeGroup ref="gml:SRSReferenceGroup"/>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <attributeGroup name="SRSReferenceGroup">
+    <attribute name="srsName" type="anyURI" use="optional"/>
+    <attribute name="srsDimension" type="positiveInteger"
+               use="optional"/>
+    <attributeGroup ref="gml:SRSInformationGroup"/>
+  </attributeGroup>
+
+  <attributeGroup name="SRSInformationGroup">
+    <attribute name="axisLabels" type="gml:NCNameList"
+               use="optional"/>
+    <attribute name="uomLabels" type="gml:NCNameList"
+               use="optional">
+    </attribute>
+  </attributeGroup>
+
+  <element name="_GeometricPrimitive"
+           type="gml:AbstractGeometricPrimitiveType" abstract="true"
+           substitutionGroup="gml:_Geometry"/>
+  <complexType name="AbstractGeometricPrimitiveType" abstract="true">
+    <complexContent>
+      <extension base="gml:AbstractGeometryType"/>
+    </complexContent>
+  </complexType>
+
+  <element name="Point" type="gml:PointType"
+           substitutionGroup="gml:_GeometricPrimitive"/>
+  <complexType name="PointType">
+    <complexContent>
+      <extension base="gml:AbstractGeometricPrimitiveType">
+        <sequence>
+          <element ref="gml:pos"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <element name="pointProperty" type="gml:PointPropertyType"/>
+  <complexType name="PointPropertyType">
+    <sequence>
+      <element ref="gml:Point"/>
+    </sequence>
+  </complexType>
+
+  <element name="_Curve" type="gml:AbstractCurveType" abstract="true"
+           substitutionGroup="gml:_GeometricPrimitive"/>
+  <complexType name="AbstractCurveType" abstract="true">
+    <complexContent>
+      <extension base="gml:AbstractGeometricPrimitiveType"/>
+    </complexContent>
+  </complexType>
+
+  <element name="curveProperty" type="gml:CurvePropertyType"/>
+  <complexType name="CurvePropertyType">
+    <sequence>
+      <element ref="gml:_Curve"/>
+    </sequence>
+  </complexType>
+
+  <element name="LineString" type="gml:LineStringType"
+           substitutionGroup="gml:_Curve"/>
+  <complexType name="LineStringType">
+    <complexContent>
+      <extension base="gml:AbstractCurveType">
+        <sequence>
+          <choice>
+            <choice minOccurs="2" maxOccurs="unbounded">
+              <element ref="gml:pos"/>
+              <element ref="gml:pointProperty"/>
+            </choice>
+            <element ref="gml:posList"/>
+          </choice>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <element name="pos" type="gml:DirectPositionType"/>
+  <complexType name="DirectPositionType">
+    <simpleContent>
+      <extension base="gml:doubleList"/>
+    </simpleContent>
+  </complexType>
+
+  <element name="posList" type="gml:DirectPositionListType"/>
+  <complexType name="DirectPositionListType">
+    <simpleContent>
+      <extension base="gml:doubleList">
+        <attribute name="count" type="positiveInteger"
+                   use="optional"/>
+      </extension>
+    </simpleContent>
+  </complexType>
+
+  <element name="Envelope" type="gml:EnvelopeType"/>
+
+  <complexType name="EnvelopeType">
+    <choice>
+      <sequence>
+        <element name="lowerCorner" type="gml:DirectPositionType"/>
+        <element name="upperCorner" type="gml:DirectPositionType"/>
+      </sequence>
+      <element ref="gml:pos" minOccurs="2" maxOccurs="2"/>
+    </choice>
+    <attributeGroup ref="gml:SRSReferenceGroup"/>
+  </complexType>
+
+</schema>

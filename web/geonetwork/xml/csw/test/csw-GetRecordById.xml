@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2.0.2">
+    <csw:Id>5ac8844e-0989-4a4c-b76b-38cc1e999722</csw:Id>
+</csw:GetRecordById>

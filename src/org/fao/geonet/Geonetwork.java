@@ -31,10 +31,13 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
@@ -131,7 +134,9 @@ public class Geonetwork implements ApplicationHandler
 
 		String luceneDir = handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_DIR);
 
-		searchMan = new SearchManager(path, luceneDir);
+		String summaryConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.SUMMARY_CONFIG);
+		
+		searchMan = new SearchManager(path, luceneDir, summaryConfigXmlFile);
 
 		//------------------------------------------------------------------------
 		//--- extract intranet ip/mask and initialize AccessManager
@@ -184,7 +189,8 @@ public class Geonetwork implements ApplicationHandler
 
 		logger.info("  - Catalogue services for the web...");
 
-		CatalogDispatcher catalogDis = new CatalogDispatcher();
+		CatalogConfiguration.loadCatalogConfig(path, Csw.CONFIG_FILE);
+		CatalogDispatcher catalogDis = new CatalogDispatcher(new File(path,summaryConfigXmlFile));
 
 		//------------------------------------------------------------------------
 		//--- initialize catalogue services for the web

@@ -23,24 +23,25 @@
 
 package org.fao.geonet.kernel.csw.services;
 
-import java.io.File;
 import java.util.Iterator;
 import java.util.Map;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-import jeeves.utils.Xml;
 
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
 import org.fao.geonet.csw.common.OutputSchema;
+import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.csw.CatalogService;
+import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.jdom.Element;
 
 //=============================================================================
@@ -77,20 +78,35 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
 		Element response = new Element(getName() +"Response", Csw.NAMESPACE_CSW);
 
-		Iterator ids = request.getChildren("Id", Csw.NAMESPACE_CSW).iterator();
-
-		if (!ids.hasNext())
-			throw new MissingParameterValueEx("id");
-
-		while(ids.hasNext())
-		{
-			String  id = ((Element) ids.next()).getText();
-			Element md = retrieveMetadata(context, id, setName, outSchema);
-
-			if (md != null)
-				response.addContent(md);
+		try {
+		
+			Iterator ids = request.getChildren("Id", Csw.NAMESPACE_CSW).iterator();
+	
+			if (!ids.hasNext())
+				throw new MissingParameterValueEx("id");
+	
+			while(ids.hasNext())
+			{
+				String  uuid = ((Element) ids.next()).getText();
+				Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+				String id = gc.getDataManager().getMetadataId(dbms, uuid);
+				
+				// Metadata not found
+				if (id == null)
+					return response;
+					//throw new InvalidParameterValueEx("uuid", "Can't find metadata with uuid "+uuid);
+				
+				Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, ResultType.RESULTS);
+	
+				if (md != null)
+					response.addContent(md);
+			}
+		} catch (Exception e) {
+			context.error("Raised : "+ e);
+			context.error(" (C) Stacktrace is\n"+Util.getStackTrace(e));
+			throw new NoApplicableCodeEx(e.toString());
 		}
-
 		return response;
 	}
 
@@ -124,6 +140,13 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
 		return request;
 	}
+	
+	//---------------------------------------------------------------------------
+	
+	public Element retrieveValues(String parameterName) throws CatalogException {
+		// TODO 
+		return null;
+	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -141,69 +164,5 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
 		if (!format.equals("application/xml"))
 			throw new InvalidParameterValueEx("outputFormat", format);
-	}
-
-
-	//---------------------------------------------------------------------------
-	private Element retrieveMetadata(ServiceContext context, String uuid, ElementSetName setName, OutputSchema outSchema) throws CatalogException {
-		try {
-			Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-			//--- get metadata from DB
-
-			Element  res = dbms.select("SELECT schemaId, data FROM Metadata WHERE uuid='"+uuid+"'");
-			Iterator i   = res.getChildren().iterator();
-
-			dbms.commit();
-
-			if (!i.hasNext()) {
-				//System.out.println("no metadata found with uuid: " + uuid);
-				return null;
-			}
-
-			Element record = (Element) i.next();
-			String schema = record.getChildText("schemaid");
-
-			//--- skip metadata with wrong schemas
-			if (schema.equals("fgdc-std") || schema.equals("dublin-core") || schema.equals("iso19115")) {
-			    if (outSchema != OutputSchema.OGC_CORE) {
-					//System.out.println("metadata has wrong schema for outputschema: " + schema);
-					return null;			
-			    }
-			}
-			
-			String data   = record.getChildText("data");
-			//System.out.println("found metadata with uuid: " + uuid + "\nmetadata is:\n" + data);
-
-			Element md = Xml.loadString(data, false);
-			//System.out.println("after xml loadstring : found: " + Xml.getString(md));
-
-
-			//--- apply stylesheet according to setName and schema
-
-			//--- we cannot use the element set name parameter here. If we use that, we
-			//--- should do an XSL transformation but the transformation would be profile
-			//--- specific and we don't have profiles for fgdc and dublin-core metadata
-
-			String FS         = File.separator;
-			String schemaDir  = context.getAppPath() +"xml"+ FS +"csw"+ FS +"schemas"+ FS +schema+ FS;
-			String prefix     = (outSchema == OutputSchema.OGC_CORE) ? "ogc" : "iso";
-
-			String styleSheet = schemaDir + prefix + "-"+setName+".xsl";
-			//System.out.println("Using stylesheet: "+ styleSheet);
-
-			md = Xml.transform(md, styleSheet);
-			//System.out.println("Transformed metadata: "+ Xml.getString(md));
-
-			//--- needed to detach md from the document
-			md.detach();
-
-			return md;
-		}
-		catch (Exception e) {
-			context.error("Raised : "+ e);
-			context.error(" (C) Stacktrace is\n"+Util.getStackTrace(e));
-			throw new NoApplicableCodeEx(e.toString());
-		}
 	}
 }

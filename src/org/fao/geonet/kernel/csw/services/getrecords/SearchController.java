@@ -24,15 +24,18 @@
 package org.fao.geonet.kernel.csw.services.getrecords;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
+import org.apache.lucene.search.Sort;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
@@ -40,36 +43,50 @@ import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
+import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.kernel.search.spatial.Pair;
 import org.jdom.Element;
 
 //=============================================================================
 
 public class SearchController
 {
-	/**
+    
+	private final CatalogSearcher _searcher;
+    public SearchController(File summaryConfig)
+    {
+        _searcher = new CatalogSearcher(summaryConfig);
+    }
+	
+	//---------------------------------------------------------------------------
+    //---
+    //--- Single public method to perform the general search tasks
+    //---
+    //---------------------------------------------------------------------------
+
+    /**
 	 * Perform the general search tasks
 	 */
-    public Element search(ServiceContext context, int startPos, int maxRecords, int hopCount,
+    public Pair<Element, Element> search(ServiceContext context, int startPos, int maxRecords, int hopCount,
 			  ResultType resultType, OutputSchema outSchema, ElementSetName setName,
-			  Set<TypeName> typeNames, Element filterExpr, List<SortField> sortFields,
+			  Set<TypeName> typeNames, Element filterExpr, String filterVersion, Sort sort,
 			  Set<String> elemNames) throws CatalogException
     {
 	Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
 
-	CatalogSearcher searcher = new CatalogSearcher();
-
-	List<ResultItem> searchResults = searcher.search(context, filterExpr, typeNames, sortFields);
+	Pair<Element, List<ResultItem>> summaryAndSearchResults = _searcher.search(context, filterExpr, filterVersion, typeNames, sort, resultType, maxRecords);
 
 	int counter = 0;
 
-	if (resultType == ResultType.RESULTS)
-	    for (int i=startPos; (i<startPos+maxRecords) && (i<=searchResults.size()); i++)
+	List<ResultItem> resultsList = summaryAndSearchResults.two();
+	if (resultType == ResultType.RESULTS || resultType == ResultType.RESULTS_WITH_SUMMARY)
+	    for (int i=startPos; (i<startPos+maxRecords) && (i<=resultsList.size()); i++)
 		{
 		    counter++;
 
-		    String  id = searchResults.get(i -1).getID();
-		    Element md = retrieveMetadata(context, id, setName, outSchema, elemNames);
+		    String  id = resultsList.get(i -1).getID();
+		    Element md = retrieveMetadata(context, id, setName, outSchema, elemNames, resultType);
 
 		    if (md == null)
 			context.warning("SearchController : Metadata not found or invalid schema : "+ id);
@@ -77,11 +94,11 @@ public class SearchController
 			results.addContent(md);
 		}
 
-	results.setAttribute("numberOfRecordsMatched",  searchResults.size() +"");
+	results.setAttribute("numberOfRecordsMatched",  resultsList.size() +"");
 	results.setAttribute("numberOfRecordsReturned", counter +"");
 	results.setAttribute("elementSet",              setName.toString());
 
-	if (searchResults.size() > counter)
+	if (resultsList.size() > counter)
 	    {
 		results.setAttribute("nextRecord", counter + startPos + "");
 	    } 
@@ -89,66 +106,83 @@ public class SearchController
 	    {
 		results.setAttribute("nextRecord","0");
 	    }
-
-	return results;
+	
+	Element summary = summaryAndSearchResults.one();
+	return Pair.read(summary, results);
     }
 
     //---------------------------------------------------------------------------
     /**
      * Retrieve metadata from the database
      */
-    private Element retrieveMetadata(ServiceContext context, String id,  ElementSetName setName,
-				     OutputSchema outSchema, Set<String> elemNames)
+    public static Element retrieveMetadata(ServiceContext context, String id,  ElementSetName setName,
+				     OutputSchema outSchema, Set<String> elemNames, ResultType resultType)
 	throws CatalogException
     {
 	try
 	    {
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		//--- get metadata from DB
-
-		Element  res = dbms.select("SELECT schemaId, data FROM Metadata WHERE id="+id);
-		Iterator i   = res.getChildren().iterator();
-
-		dbms.commit();
-
-		if (!i.hasNext())
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		Element  res = gc.getDataManager().getMetadata(context, id, false); 
+		
+		if (res==null)
 		    return null;
 
-		Element record = (Element) i.next();
+		String schema = res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE)
+					.getChildText(Edit.Info.Elem.SCHEMA);
 
-		String schema = record.getChildText("schemaid");
-		String data   = record.getChildText("data");
+		String FS         = File.separator;
 		
-		// TODO : convert iso19115 metadata to iso19139
+		// --- transform iso19115 record to iso19139
+		// --- If this occur user should probably migrate the catalogue from iso19115 to iso19139.
+		// --- But sometimes you could harvest remote node in iso19115 and make them available through CSW
+		if (schema.equals("iso19115")) {
+			res = Xml.transform(res, context.getAppPath() + "xsl" + FS
+					+ "conversion" + FS + "import" + FS + "ISO19115-to-ISO19139.xsl");
+			schema = "iso19139";
+		}
 		
 		//--- skip metadata with wrong schemas
 
-		if (schema.equals("fgdc-std") || schema.equals("dublin-core") || schema.equals("iso19115"))
+		if (schema.equals("fgdc-std") || schema.equals("dublin-core"))
 		    if (outSchema != OutputSchema.OGC_CORE)
 			return null;
 
-		Element md = Xml.loadString(data, false);
-
 		//--- apply stylesheet according to setName and schema
 
-		String FS         = File.separator;
+		String prefix ; 
+		if (outSchema == OutputSchema.OGC_CORE)
+			prefix = "ogc";
+		else if (outSchema == OutputSchema.ISO_PROFILE)
+			prefix = "iso";
+		else {
+			// FIXME ISO PROFIL : Use declared primeNS in current node.
+			prefix = "fra";
+			if (!schema.contains("iso19139")){
+				// FIXME : should we return null or an exception in that case and which exception
+				throw new InvalidParameterValueEx("outputSchema not supported for metadata " + 
+						id + " schema.", schema);
+			}
+		}
+		
+		if (schema.contains("iso19139"))
+			schema = "iso19139";
+		
 		String schemaDir  = context.getAppPath() +"xml"+ FS +"csw"+ FS +"schemas"+ FS +schema+ FS;
-		String prefix     = (outSchema == OutputSchema.OGC_CORE) ? "ogc" : "iso";
 		String styleSheet = schemaDir + prefix +"-"+ setName +".xsl";
 
-		md = Xml.transform(md, styleSheet);
-
-		//--- needed to detach md from the document
-
-		md.detach();
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("displayInfo", 
+				resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
+		
+		res = Xml.transform(res, styleSheet, params);
 
 		//--- if the client has specified some ElementNames, then we remove the unwanted children
 
 		if (elemNames != null)
-		    removeElements(md, elemNames);
+		    removeElements(res, elemNames);
 
-		return md;
+		return res;
 	    }
 	catch (Exception e)
 	    {
@@ -161,7 +195,7 @@ public class SearchController
 
     //---------------------------------------------------------------------------
 
-    private void removeElements(Element md, Set<String> elemNames)
+    private static void removeElements(Element md, Set<String> elemNames)
     {
 	Iterator i=md.getChildren().iterator();
 

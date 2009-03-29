@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.csw;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,10 +31,12 @@ import java.util.Map;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
+import jeeves.utils.Log;
 import jeeves.utils.SOAPUtil;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
@@ -51,7 +54,7 @@ import org.jdom.Element;
 
 public class CatalogDispatcher
 {
-	private Map<String, CatalogService> hmServices = new HashMap<String, CatalogService>();
+	public static Map<String, CatalogService> hmServices = new HashMap<String, CatalogService>();
 
 	//---------------------------------------------------------------------------
 	//---
@@ -59,13 +62,13 @@ public class CatalogDispatcher
 	//---
 	//---------------------------------------------------------------------------
 
-	public CatalogDispatcher()
+	public CatalogDispatcher(File summaryConfig)
 	{
 		register(new DescribeRecord());
 		register(new GetCapabilities());
 		register(new GetDomain());
 		register(new GetRecordById());
-		register(new GetRecords());
+		register(new GetRecords(summaryConfig));
 		register(new Harvest());
 		register(new Transaction());
 	}
@@ -151,7 +154,7 @@ public class CatalogDispatcher
 			if (cs == null)
 				throw new OperationNotSupportedEx(operation);
 
-			context.info("Dispatching operation : "+ operation);
+			Log.info(Geonet.CSW, "Dispatching operation : "+ operation);
 
 			return cs.execute(request, context);
 		}

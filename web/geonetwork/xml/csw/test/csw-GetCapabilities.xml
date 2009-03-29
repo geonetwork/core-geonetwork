@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<csw:GetCapabilities xmlns:csw="http: // www.opengis.net/cat/csw/2.0.2" service="CSW">
+    <ows:AcceptVersions xmlns:ows="http://www.opengis.net/ows">
+        <ows:Version>2.0.2</ows:Version>
+    </ows:AcceptVersions>
+    <ows:AcceptFormats xmlns:ows="http://www.opengis.net/ows">
+        <ows:OutputFormat>application/xml</ows:OutputFormat>
+    </ows:AcceptFormats>
+</csw:GetCapabilities>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2.0.2"
+    resultType="results">
+    <csw:Query typeNames="csw:Record">
+        <csw:ElementSetName>summary</csw:ElementSetName>
+        <csw:Constraint version="1.1.0">
+            <Filter xmlns="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"/>
+        </csw:Constraint>
+        <ogc:SortBy xmlns:ogc="http://www.opengis.net/ogc">
+            <ogc:SortProperty>
+                <ogc:PropertyName>title</ogc:PropertyName>
+                <!--                
+                    <ogc:PropertyName>popularity</ogc:PropertyName>
+                    <ogc:PropertyName>rating</ogc:PropertyName>
+                    <ogc:PropertyName>date</ogc:PropertyName>
+                CHECKME
+                -->
+                <ogc:SortOrder>ASC</ogc:SortOrder>
+            </ogc:SortProperty>
+        </ogc:SortBy>
+    </csw:Query>
+</csw:GetRecords>

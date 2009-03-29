@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<xs:schema
+    targetNamespace="urn:ietf:params:xml:ns:pidf:geopriv10:geoShape"
+    xmlns:gs="urn:ietf:params:xml:ns:pidf:geopriv10:geoShape"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:gml="http://www.opengis.net/gml"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+
+  <xs:annotation>
+    <xs:appinfo
+        source="urn:ietf:params:xml:schema:pidf:geopriv10:geoShape">
+      GEOPRIV Geodetic Shapes
+    </xs:appinfo>
+    <xs:documentation source="http://www.ietf.org/rfc/rfcXXXX.txt">
+<!-- [[NOTE TO RFC-EDITOR: Please replace above URL with URL of
+                       published RFC and remove this note.]] -->
+      This document defines geodetic shape types for PIDF-LO.
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:import namespace="http://www.opengis.net/gml"
+             schemaLocation="geometryPrimitives.xsd"/>
+
+  <xs:element name="Circle" type="gs:CircleType"
+              substitutionGroup="gml:_Surface"/>
+  <xs:complexType name="CircleType">
+    <xs:complexContent>
+      <xs:extension base="gml:AbstractSurfaceType">
+        <xs:sequence>
+          <xs:group ref="gs:centerGroup"/>
+          <xs:element name="radius" type="gml:LengthType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="Ellipse" type="gs:EllipseType"
+              substitutionGroup="gml:_Surface"/>
+  <xs:complexType name="EllipseType">
+    <xs:complexContent>
+      <xs:extension base="gml:AbstractSurfaceType">
+        <xs:sequence>
+          <xs:group ref="gs:centerGroup"/>
+          <xs:element name="semiMajorAxis" type="gml:LengthType"/>
+          <xs:element name="semiMinorAxis" type="gml:LengthType"/>
+          <xs:element name="orientation" type="gml:AngleType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="ArcBand" type="gs:ArcBandType"
+              substitutionGroup="gml:_Surface"/>
+  <xs:complexType name="ArcBandType">
+    <xs:complexContent>
+      <xs:extension base="gml:AbstractSurfaceType">
+        <xs:sequence>
+          <xs:group ref="gs:centerGroup"/>
+          <xs:element name="innerRadius" type="gml:LengthType"/>
+          <xs:element name="outerRadius" type="gml:LengthType"/>
+          <xs:element name="startAngle" type="gml:AngleType"/>
+          <xs:element name="openingAngle" type="gml:AngleType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="Prism" type="gs:PrismType"
+              substitutionGroup="gml:_Solid"/>
+  <xs:complexType name="PrismType">
+    <xs:complexContent>
+      <xs:extension base="gml:AbstractSolidType">
+        <xs:sequence>
+          <xs:element name="base" type="gml:SurfacePropertyType"/>
+          <xs:element name="height" type="gml:LengthType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="Sphere" type="gs:SphereType"
+              substitutionGroup="gml:_Solid"/>
+  <xs:complexType name="SphereType">
+    <xs:complexContent>
+      <xs:extension base="gml:AbstractSolidType">
+        <xs:sequence>
+          <xs:group ref="gs:centerGroup"/>
+          <xs:element name="radius" type="gml:LengthType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="Ellipsoid" type="gs:EllipsoidType"
+              substitutionGroup="gml:_Solid"/>
+  <xs:complexType name="EllipsoidType">
+    <xs:complexContent>
+      <xs:extension base="gml:AbstractSolidType">
+        <xs:sequence>
+          <xs:group ref="gs:centerGroup"/>
+          <xs:element name="semiMajorAxis" type="gml:LengthType"/>
+          <xs:element name="semiMinorAxis" type="gml:LengthType"/>
+          <xs:element name="verticalAxis" type="gml:LengthType"/>
+          <xs:element name="orientation" type="gml:AngleType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:group name="centerGroup">
+    <xs:choice>
+      <xs:element ref="gml:pos"/>
+      <xs:element ref="gml:pointProperty"/>
+    </xs:choice>
+  </xs:group>
+
+</xs:schema>

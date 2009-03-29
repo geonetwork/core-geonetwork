@@ -18,6 +18,10 @@
 		<xsl:variable name="ldapLogin"  select="$ldap/login/children"/>
 		<xsl:variable name="ldapDisNam" select="$ldap/distinguishedNames/children"/>
 		<xsl:variable name="ldapUsrAtt" select="$ldap/userAttribs/children"/>
+		<xsl:variable name="csw"        select="children/csw/children"/>
+		<xsl:variable name="cswInfo"    select="$csw/contactInfo/children"/>
+		<xsl:variable name="cswPhone"   select="$cswInfo/phone/children"/>
+		<xsl:variable name="cswAddress" select="$cswInfo/address/children"/>
 
 		<config>
 			<site>
@@ -39,7 +43,35 @@
 				<enable><xsl:value-of select="$z3950/enable/value"/></enable>
 				<port><xsl:value-of select="$z3950/port/value"/></port>
 			</z3950>
-
+			
+			<csw>
+				<enable><xsl:value-of select="$csw/enable/value"/></enable>
+				<contactId><xsl:value-of select="$csw/contactId/value"/></contactId>
+				<individualName><xsl:value-of select="$csw/individualName/value"/></individualName>
+				<positionName><xsl:value-of select="$csw/positionName/value"/></positionName>
+				<contactInfo>
+					<phone>
+						<voice><xsl:value-of select="$cswPhone/voice/value"/></voice>
+						<facsimile><xsl:value-of select="$cswPhone/facsimile/value"/></facsimile>
+					</phone>
+					<address>
+						<deliveryPoint><xsl:value-of select="$cswAddress/deliveryPoint/value"/></deliveryPoint>
+						<city><xsl:value-of select="$cswAddress/city/value"/></city>
+						<administrativeArea><xsl:value-of select="$cswAddress/administrativeArea/value"/></administrativeArea>
+						<postalCode><xsl:value-of select="$cswAddress/postalCode/value"/></postalCode>
+						<country><xsl:value-of select="$cswAddress/country/value"/></country>
+						<email><xsl:value-of select="$cswAddress/email/value"/></email>
+					</address>
+					<hoursOfService><xsl:value-of select="$cswInfo/hoursOfService/value"/></hoursOfService>
+					<contactInstructions><xsl:value-of select="$cswInfo/contactInstructions/value"/></contactInstructions>
+				</contactInfo>
+				<role><xsl:value-of select="$csw/role/value"/></role>
+				<title><xsl:value-of select="$csw/title/value"/></title>
+				<abstract><xsl:value-of select="$csw/abstract/value"/></abstract>
+				<fees><xsl:value-of select="$csw/fees/value"/></fees>
+				<accessConstraints><xsl:value-of select="$csw/accessConstraints/value"/></accessConstraints>
+			</csw>
+			
 			<proxy>
 				<use><xsl:value-of select="$proxy/use/value"/></use>
 				<host><xsl:value-of select="$proxy/host/value"/></host>

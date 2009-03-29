@@ -15,7 +15,14 @@
 	
 	<z3950>Z39.50 Server</z3950>
 		<enable>Enable</enable>
-		
+	
+	<csw>CSW</csw>
+		<contactId>Contact</contactId>
+		<title>Title</title>
+		<abstract>Abstract</abstract>
+		<fees>Fees</fees>
+		<accessConstraints>Access Constraints</accessConstraints>
+	
 	<proxy>Proxy</proxy>
 		<use>Use</use>
 		<username>Username</username>
@@ -124,6 +131,20 @@
 			<br/>
 			<b>Please note:</b> restart GeoNetwork to make this change active.
 		</tip>
+		
+		<!-- CSW -->
+		<tip id="csw.enable">
+			If set, this will enable the CSW server functionnality. It will allow other catalogs to harvest it.
+			<br/>
+			<b>Please note:</b> restart GeoNetwork to make this change active.
+		</tip>
+		<tip id="csw.contactId">
+			Configure CSW contact for GetCapabilities operation.
+		</tip>
+		<tip id="csw.title">Title</tip>
+		<tip id="csw.abstract">Abstract</tip>
+		<tip id="csw.fees">Fees</tip>
+		<tip id="csw.accessConstraints">Access constraints</tip>
 		
 		<!-- proxy -->
 		

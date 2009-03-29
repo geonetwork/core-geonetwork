@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gml:FeatureCollection xmlns="http://www.opengis.net/app" xmlns:gml="http://www.opengis.net/gml" xmlns:xima="http://www.opengis.net/xima" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/gml ../gmlJP2Profile.xsd http://www.opengis.net/app landsat7Coverage.xsd">
+    <gml:boundedBy>
+        <gml:Envelope>
+            <gml:lowerCorner>270379.500 3942462.000</gml:lowerCorner>
+            <gml:upperCorner>518842.500 3942462.000</gml:upperCorner>
+        </gml:Envelope>
+    </gml:boundedBy>
+    <gml:featureMember>
+        <gml:FeatureCollection>
+            <gml:boundedBy>
+                <gml:Envelope>
+                    <gml:lowerCorner>270379.500 3942462.000</gml:lowerCorner>
+                    <gml:upperCorner>518842.500 3942462.000</gml:upperCorner>
+                </gml:Envelope>
+            </gml:boundedBy>
+            <gml:featureMember>
+                <Landsat7Coverage dimension="2">
+                    <gml:metaDataProperty>
+                        <ImageMetadata>
+                            <SUN_AZIMUTH uom="urn:x-IHSDM:v2.05a:uom:angle">114.4699122</SUN_AZIMUTH>
+                            <SUN_ELEVATION uom="urn:x-IHSDM:v2.05a:uom:angle">66.6625502</SUN_ELEVATION>
+                            <QA_PERCENT_MISSING_DATA uom="urn:x-IHSDM:v2.05a:uom:percent">66</QA_PERCENT_MISSING_DATA>
+                            <CLOUD_COVER uom="urn:x-IHSDM:v2.05a:uom:percent">80</CLOUD_COVER>
+                        </ImageMetadata>
+                    </gml:metaDataProperty>
+                    <gml:rectifiedGridDomain>
+                        <gml:RectifiedGrid dimension="2" srsName="urn:ogc:def:crs:EPSG:6.6:32612">
+                            <gml:limits>
+                                <gml:GridEnvelope>
+                                    <gml:low>0 0</gml:low>
+                                    <gml:high>17436 15624</gml:high>
+                                </gml:GridEnvelope>
+                            </gml:limits>
+                            <gml:axisName>x</gml:axisName>
+                            <gml:axisName>y</gml:axisName>
+                            <gml:origin>
+                                <gml:Point gml:id="Pt0001" srsName="urn:ogc:def:crs:EPSG:6.6:32612">
+                                    <gml:pos>270372.375 270372.375</gml:pos>
+                                </gml:Point>
+                            </gml:origin>
+                            <gml:offsetVector srsName="urn:ogc:def:crs:EPSG:6.6:32612">1 0</gml:offsetVector>
+                            <gml:offsetVector srsName="urn:ogc:def:crs:EPSG:6.6:32612">0 -1</gml:offsetVector>
+                        </gml:RectifiedGrid>
+                    </gml:rectifiedGridDomain>
+                    <rangeSet>
+                        <File>
+                            <gml:rangeParameters>
+                                <PixelValue8bit>template</PixelValue8bit>
+                                <!-- PixelValue11bit=template indicates that the values are not stored here but elsewhere, ie fileName property-->
+                            </gml:rangeParameters>
+                            <gml:fileName>p037r036_7t20000606_z12_nn10-50.tif</gml:fileName>
+                            <gml:fileStructure>Record Interleaved</gml:fileStructure>
+                            <fileDate>2000-06-06</fileDate>
+                            <fileFormat>geoTIFF</fileFormat>
+                            <spatialResolution uom="urn:x-si::uom:meter">5</spatialResolution>
+                            <spectrum>Multispectral</spectrum>
+                            <bandRange uom="urn:x-si::uom:micrometer">0.45 0.515</bandRange>
+                            <bandRange uom="urn:x-si::uom:micrometer">0.525 0.605</bandRange>
+                            <bandRange uom="urn:x-si::uom:micrometer">0.630 0.690</bandRange>
+                            <bandRange uom="urn:x-si::uom:micrometer">0.760 0.900</bandRange>
+                            <bandRange uom="urn:x-si::uom:micrometer">1.550 1.750</bandRange>
+                        </File>
+                    </rangeSet>
+                </Landsat7Coverage>
+            </gml:featureMember>
+        </gml:FeatureCollection>
+    </gml:featureMember>
+    <gml:featureMember>
+        <xima:Annotation gml:id="AN001">
+            <gml:metaDataProperty>
+                <xima:AnnotationMetaData>
+                    <xima:title>One region of interest</xima:title>
+                    <xima:author>Trent Hare</xima:author>
+                    <xima:dateTime>2005-05-01T01:01:01</xima:dateTime>
+                    <xima:certainty>medium</xima:certainty>
+                    <xima:rationale>Text labels for feature</xima:rationale>
+                </xima:AnnotationMetaData>
+            </gml:metaDataProperty>
+            <gml:defaultStyle>
+                <!--Style will overlay some arrow or line symbol on top of Annotation/pointer value-->
+            </gml:defaultStyle>
+            <xima:pointer>
+                <gml:LineString gml:id="L001">
+                    <gml:pos>442998.260667344 3894606.5069172</gml:pos>
+                    <gml:pos>442998.260667344 3894606.5069172</gml:pos>
+                </gml:LineString>
+            </xima:pointer>
+            <xima:content>
+                <xima:Label>
+                    <gml:defaultStyle>
+                        <!--Style will place textContent value at anchorPoint at some angle-->
+                    </gml:defaultStyle>
+                    <xima:textContent>Flagstaff Labael</xima:textContent>
+                    <xima:anchorPoint>
+                        <gml:Point gml:id="FLagstaff" srsName="urn:jp2k:label002:xml:crs:6.6:32612">
+                            <gml:pos>442998.260667344 3894606.5069172</gml:pos>
+                        </gml:Point>
+                    </xima:anchorPoint>
+                </xima:Label>
+            </xima:content>
+            <xima:annotates>
+                <gml:MultiSurface gml:id="MP001" srsName="urn:jp2k:label002:xml:crs:6.6:32612">
+                    <gml:surfaceMember>
+                        <gml:Polygon gml:id="Pl001">
+                            <gml:exterior>
+                                <gml:LinearRing>
+                                    <gml:pos>442998.260667344 3894606.5069172</gml:pos>
+                                    <gml:pos>442998.360667344 3894606.5069172</gml:pos>
+                                    <gml:pos>442998.360667344 3894606.6069172</gml:pos>
+                                    <gml:pos>442998.260667344 3894606.6069172</gml:pos>
+                                    <gml:pos>442998.260667344 3894606.5069172</gml:pos>
+                                </gml:LinearRing>
+                            </gml:exterior>
+                        </gml:Polygon>
+                    </gml:surfaceMember>
+                </gml:MultiSurface>
+            </xima:annotates>
+        </xima:Annotation>
+    </gml:featureMember>
+    <gml:featureMember>
+        <xima:RegionOfInterest gml:id="ROI001">
+            <gml:metaDataProperty>
+                <xima:AnnotationMetaData>
+                    <xima:title>A single region of interest surrounding Flagstaff</xima:title>
+                    <xima:author>Trent Hare</xima:author>
+                    <xima:dateTime>2005-05-01T01:01:01</xima:dateTime>
+                    <xima:certainty>medium</xima:certainty>
+                    <xima:rationale>shape of polygon is a close match to that of known region of interest</xima:rationale>
+                </xima:AnnotationMetaData>
+            </gml:metaDataProperty>
+            <gml:defaultStyle>
+                <!--Style will overlay some arrow or line symbol on top of Annotation/pointer value-->
+            </gml:defaultStyle>
+            <gml:defaultStyle>
+                <!--Style will fill in Polygon in annotates property value-->
+            </gml:defaultStyle>
+            <xima:content>
+                <xima:Label>
+                    <gml:defaultStyle>
+                        <!--Style will place textContent value at anchorPoint at some angle-->
+                    </gml:defaultStyle>
+                    <xima:textContent>Flagstaff Region of Interest</xima:textContent>
+                    <xima:anchorPoint>
+                        <gml:Point gml:id="FlagstaffROI" srsName="urn:jp2k:label002:xml:crs:6.6:32612">
+                            <gml:pos>436844.466922572 3900673.34724654</gml:pos>
+                        </gml:Point>
+                    </xima:anchorPoint>
+                </xima:Label>
+            </xima:content>
+            <xima:annotates>
+                <gml:Polygon gml:id="Flag001">
+                    <gml:exterior>
+                        <gml:LinearRing>
+                            <gml:pos>439044.081300382 3895104.11084315</gml:pos>
+                            <gml:pos>439683.685481163 3897475.32634264</gml:pos>
+                            <gml:pos>439418.483747669 3898972.93613178</gml:pos>
+                            <gml:pos>441852.099655033 3898130.53062539</gml:pos>
+                            <gml:pos>445767.725249575 3898614.13378647</gml:pos>
+                            <gml:pos>448232.541360881 3900673.34724654</gml:pos>
+                            <gml:pos>449589.750232294 3897927.72929977</gml:pos>
+                            <gml:pos>446750.531673702 3892935.69666928</gml:pos>
+                            <gml:pos>444394.916276189 3894464.50666237</gml:pos>
+                            <gml:pos>438357.676813689 3889909.27688705</gml:pos>
+                            <gml:pos>436844.466922572 3894199.30492888</gml:pos>
+                            <gml:pos>439044.081300382 3895104.11084315</gml:pos>
+                        </gml:LinearRing>
+                    </gml:exterior>
+                </gml:Polygon>
+            </xima:annotates>
+        </xima:RegionOfInterest>
+    </gml:featureMember>
+</gml:FeatureCollection>

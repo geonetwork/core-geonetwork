@@ -320,6 +320,7 @@
 		<!-- Test i18n -->
 		<allow service="test.i18n"/>
 		<allow service="test.i18n.xml"/>
+		<allow service="test.csw"/>
 
 		<!-- User self registration -->
 		<allow service="user.register.get"/>

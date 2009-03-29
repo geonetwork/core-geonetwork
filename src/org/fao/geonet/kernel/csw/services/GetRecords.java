@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.csw.services;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,10 +32,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import javax.xml.transform.TransformerException;
+
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
+import org.apache.lucene.search.Sort;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.ConstraintLanguage;
 import org.fao.geonet.csw.common.Csw;
@@ -42,17 +46,23 @@ import org.fao.geonet.csw.common.ElementSetName;
 import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.TypeName;
+import org.fao.geonet.csw.common.Csw.ConfigFile.OutputFormat;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
-import org.fao.geonet.kernel.csw.services.getrecords.SortField;
+import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.util.ISODate;
+import org.geotools.filter.FilterTransformer;
+import org.geotools.filter.text.cql2.CQL;
+import org.geotools.filter.text.cql2.CQLException;
 import org.jdom.Element;
-import org.z3950.zing.cql.CQLNode;
-import org.z3950.zing.cql.CQLParser;
+import org.jdom.Namespace;
+import org.opengis.filter.Filter;
 
 //=============================================================================
 
@@ -64,7 +74,11 @@ public class GetRecords extends AbstractOperation implements CatalogService
     //---
     //---------------------------------------------------------------------------
 
-    public GetRecords() {}
+	private SearchController _searchController;
+	
+	public GetRecords(File summaryConfig) {
+    	_searchController = new SearchController(summaryConfig);
+    }
 
     //---------------------------------------------------------------------------
     //---
@@ -81,7 +95,8 @@ public class GetRecords extends AbstractOperation implements CatalogService
 	checkService(request);
 	checkVersion(request);
 	checkOutputFormat(request);
-
+	checkTypenames(request);
+	
 	String timeStamp = new ISODate().toString();
 
 	int startPos   = getStartPosition(request);
@@ -102,16 +117,22 @@ public class GetRecords extends AbstractOperation implements CatalogService
 	if ((elemNames == null) || (elemNames.size() == 0))
 	    setName = getElementSetName(query , ElementSetName.SUMMARY);
 
-	Set<TypeName>   typeNames   = getTypeNames(request);
-	Element         filterExpr  = getFilterExpression(request, context);
-	List<SortField> sortFields  = getSortFields(request);
+	Set<TypeName> typeNames = getTypeNames(request);
+
+	Element constr = query.getChild("Constraint", Csw.NAMESPACE_CSW);
+	Element filterExpr = getFilterExpression(constr, context);
+	String filterVersion = getFilterVersion(constr);
+
+	Sort sort = getSortFields(request);
 
 	Element response;
 
 	if (resultType == ResultType.VALIDATE)
 	    {
-		String schema = context.getAppPath() + Geonet.Path.VALIDATION + "csw/2.0.2/csw-2.0.2.xsd";
-		System.out.println("Validating against " + schema);
+		//String schema = context.getAppPath() + Geonet.Path.VALIDATION + "csw/2.0.2/csw-2.0.2.xsd";
+		String schema = context.getAppPath() + Geonet.Path.VALIDATION + "csw202_apiso100/csw/2.0.2/CSW-discovery.xsd";
+
+		Log.debug(Geonet.CSW, "Validating request against " + schema);
 
 		try
 		    {
@@ -120,7 +141,6 @@ public class GetRecords extends AbstractOperation implements CatalogService
 
 		catch (Exception e)
 		    {
-			System.out.println("Request validation failed");
 			throw new NoApplicableCodeEx("Request failed validation:" + e.toString());
 		    }
 
@@ -135,23 +155,28 @@ public class GetRecords extends AbstractOperation implements CatalogService
 	else
 	    {
 
-		SearchController sc = new SearchController();
-		
 		response = new Element(getName() +"Response", Csw.NAMESPACE_CSW);
 
 		Element status = new Element("SearchStatus", Csw.NAMESPACE_CSW);
 		status.setAttribute("timestamp",timeStamp);
 
 		response.addContent(status);
-		response.addContent(sc.search(context, startPos, maxRecords, hopCount, resultType,
-					      outSchema, setName, typeNames, filterExpr, sortFields,
-					      elemNames));
+		Pair<Element, Element> search = _searchController.search(context,
+					startPos, maxRecords, hopCount, resultType, outSchema,
+					setName, typeNames, filterExpr, filterVersion, sort,
+					elemNames);
+		
+		// Only add GeoNetwork summary on results_with_summary option 
+		if (resultType == ResultType.RESULTS_WITH_SUMMARY)
+			response.addContent(search.one());
+		
+		response.addContent(search.two());
 	    }
 
 	return response;
     }
 
-    //---------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
 
     public Element adaptGetRequest(Map<String, String> params) throws CatalogException
     {
@@ -264,6 +289,67 @@ public class GetRecords extends AbstractOperation implements CatalogService
 
 	return request;
     }
+    
+    //---------------------------------------------------------------------------
+    
+    public Element retrieveValues(String parameterName) throws CatalogException {
+		
+    	Element listOfValues = null;
+    	if (parameterName.equalsIgnoreCase("resultType")
+				|| parameterName.equalsIgnoreCase("outputFormat")
+				|| parameterName.equalsIgnoreCase("elementSetName")
+				|| parameterName.equalsIgnoreCase("outputSchema")
+				|| parameterName.equalsIgnoreCase("typenames"))
+			listOfValues = new Element("ListOfValues", Csw.NAMESPACE_CSW);
+    	
+    	// Handle resultType parameter
+    	if (parameterName.equalsIgnoreCase("resultType")) {
+    		List<Element> values = new ArrayList<Element>();
+    		ResultType[] resultType = ResultType.values();
+    		for (int i=0; i<resultType.length; i++) {
+    			String value = resultType[i].toString();
+    			values.add(new Element("Value", Csw.NAMESPACE_CSW).setText(value));
+    		}
+    		listOfValues.addContent(values);
+    	}
+    	
+    	// Handle elementSetName parameter
+    	if (parameterName.equalsIgnoreCase("elementSetName")) {
+    		List<Element> values = new ArrayList<Element>();
+    		ElementSetName[] esn = ElementSetName.values();
+    		for (int i=0; i<esn.length; i++) {
+    			String value = esn[i].toString();
+    			values.add(new Element("Value", Csw.NAMESPACE_CSW).setText(value));
+    		}
+    		listOfValues.addContent(values);
+    	}
+    	
+    	// Handle outputFormat parameter
+		if (parameterName.equalsIgnoreCase("outputformat")) {
+			Set<String> formats = CatalogConfiguration
+					.getGetRecordsOutputFormat();
+			List<Element> values = createValuesElement(formats);
+			listOfValues.addContent(values);
+		}
+    	
+		// Handle outputSchema parameter
+		if (parameterName.equalsIgnoreCase("outputSchema")) {
+			Set<String> namespacesUri = CatalogConfiguration
+					.getGetRecordsOutputSchema();
+			List<Element> values = createValuesElement(namespacesUri);
+			listOfValues.addContent(values);
+		}
+
+		// Handle typenames parameter
+		if (parameterName.equalsIgnoreCase("typenames")) {
+			Set<String> typenames = CatalogConfiguration
+					.getGetRecordsTypenames();
+			List<Element> values = createValuesElement(typenames);
+			listOfValues.addContent(values);
+		}
+		
+    	return listOfValues;
+	}
 
     //---------------------------------------------------------------------------
     //---
@@ -284,6 +370,21 @@ public class GetRecords extends AbstractOperation implements CatalogService
 
     //---------------------------------------------------------------------------
 
+    private void checkTypenames(Element request) throws MissingParameterValueEx
+    {
+	Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
+	
+	
+
+	if (query == null)
+	    return;
+
+	if (query.getAttributeValue("typeNames") == null)
+	    throw new  MissingParameterValueEx("typeNames");
+    }
+
+    //---------------------------------------------------------------------------
+    
     private int getStartPosition(Element request) throws InvalidParameterValueEx
     {
 	String start = request.getAttributeValue("startPosition");
@@ -361,143 +462,35 @@ public class GetRecords extends AbstractOperation implements CatalogService
     }
 
     //---------------------------------------------------------------------------
-    /**
-     * Load filter and query information
-     * Convert CQL
-     * 
-     * @return Filter to be used for the search
-     */
-    private Element getFilterExpression(Element request, ServiceContext context) throws CatalogException
+
+    private Sort getSortFields(Element request) 
     {
-	Element query  = request.getChild("Query",      Csw.NAMESPACE_CSW);
-	Element constr = query  .getChild("Constraint", Csw.NAMESPACE_CSW);
+		Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
 
-	if (constr == null)
-	    return null;
-	Element filter = constr.getChild("Filter",  Csw.NAMESPACE_OGC);
-	Element cql    = constr.getChild("CqlText", Csw.NAMESPACE_CSW);
+		if (query == null)
+			return null;
 
-	if (filter == null && cql == null)
-	    throw new NoApplicableCodeEx("Missing filter expression or cql query");
+		Element sortBy = query.getChild("SortBy", Csw.NAMESPACE_OGC);
 
-	String version = constr.getAttributeValue("version");
+		if (sortBy == null)
+			return null;
 
-	if (version == null)
-	    throw new MissingParameterValueEx("version");
+		List list = sortBy.getChildren();
+		ArrayList<Pair<String, Boolean>> al = new ArrayList<Pair<String, Boolean>>();
 
-	if (filter != null && !version.equals(Csw.FILTER_VERSION))
-	    throw new InvalidParameterValueEx("version", version);
+		for (int i = 0; i < list.size(); i++) {
+			Element el = (Element) list.get(i);
 
-	return (filter != null) ? filter : convertCQL(cql.getText(), context);
-    }
+			String field = el.getChildText("PropertyName", Csw.NAMESPACE_OGC);
+			String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
 
-    //---------------------------------------------------------------------------
+			al.add(Pair.read(field, "DESC".equals(order)));
+		}
 
-    private List<SortField> getSortFields(Element request)
-    {
-	ArrayList<SortField> al = new ArrayList<SortField>();
-
-	Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
-
-	if (query == null)
-	    return al;
-
-	Element sortBy = query.getChild("SortBy", Csw.NAMESPACE_OGC);
-
-	if (sortBy == null)
-	    return al;
-
-	List list = sortBy.getChildren();
-
-	for(int i=0; i<list.size(); i++)
-	    {
-		Element el = (Element) list.get(i);
-
-		String field = el.getChildText("PropertyName", Csw.NAMESPACE_OGC);
-		String order = el.getChildText("SortOrder",    Csw.NAMESPACE_OGC);
-
-		al.add(new SortField(field, "DESC".equals(order)));
-	    }
-
-	return al;
-    }
-
-    //---------------------------------------------------------------------------
-    /**
-     * Convert a CQL query to a Filter query using XSL stylesheet.
-     * 
-     * @return Filter
-     */
-    private Element convertCQL(String cql, ServiceContext context) throws CatalogException
-    {
-	String xmlCql = getCqlXmlString(cql, context);
-	context.debug("Received CQL:\n"+ xmlCql);
-
-	Element xml        = getCqlXmlElement(xmlCql, context);
-	String  styleSheet = context.getAppPath() + Geonet.Path.CSW + Geonet.File.CQL_TO_FILTER;
-
-	Element filter = getFilter(xml, styleSheet, context);
-	context.debug("Transformed CQL gives the following filter:\n"+Xml.getString(filter));
-
-	return filter;
-    }
-
-    //---------------------------------------------------------------------------
-    /**
-     * Parse CQL text representation using org.z3950.zing.cql.CQLParser
-     * 
-     */
-    private String getCqlXmlString(String cql, ServiceContext context) throws InvalidParameterValueEx
-    {
-	try
-	    {
-		CQLParser parser = new CQLParser();
-		CQLNode   root   = parser.parse(cql);
-
-		return root.toXCQL(0);
-	    }
-	catch (Exception e)
-	    {
-		context.error("Error parsing CQL : "+ e);
-		context.error("  (C) CQL is :\n"+ cql);
-
-		throw new InvalidParameterValueEx("CqlText", cql);
-	    }
-    }
-
-    //---------------------------------------------------------------------------
-
-    private Element getCqlXmlElement(String cqlXml, ServiceContext context) throws NoApplicableCodeEx
-    {
-	try
-	    {
-		return Xml.loadString(cqlXml, false);
-	    }
-	catch (Exception e)
-	    {
-		context.error("Bad CQL XML : "+ e);
-		context.error("  (C) CQL XML is :\n"+ cqlXml);
-
-		throw new NoApplicableCodeEx("Bad CQL XML : "+ cqlXml);
-	    }
-    }
-
-    //---------------------------------------------------------------------------
-
-    private Element getFilter(Element cql, String styleSheet, ServiceContext context) throws NoApplicableCodeEx
-    {
-	try
-	    {
-		return Xml.transform(cql, styleSheet);
-	    }
-	catch (Exception e)
-	    {
-		context.error("Error during CQL to Filter conversion : "+ e);
-		context.error("  (C) StackTrace\n"+ Util.getStackTrace(e));
-
-		throw new NoApplicableCodeEx("Error during CQL to Filter conversion : "+ e);
-	    }
-    }
+		// we always want to keep the relevancy as part of the sorting mechanism
+		
+		return LuceneSearcher.makeSort(al);
+	}
 
     //---------------------------------------------------------------------------
 
@@ -522,6 +515,7 @@ public class GetRecords extends AbstractOperation implements CatalogService
 
 	return hs;
     }
+
 }
 
 //=============================================================================

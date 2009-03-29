@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:app="http://www.opengis.net/app" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.opengis.net/app" elementFormDefault="qualified" version="2.06">
+    <!-- When packaged in jpx file the import statements will be replaced by the following
+	<import namespace="http://www.opengis.net/gml" schemaLocation="gmljp2://xml/gmlJP2Profile.xsd"/>
+	<import namespace="http://www.opengis.net/xima" schemaLocation="gmljp2://xml/landsat7Annotation.xsd"/>
+-->
+    <import namespace="http://www.opengis.net/gml" schemaLocation="../gmlJP2Profile.xsd"/>
+    <import namespace="http://www.opengis.net/xima" schemaLocation="landsat7Annotation.xsd"/>
+    <!-- ==============================================================
+      global declarations
+ 	=================================================================== -->
+    <element name="Landsat7Coverage" type="app:Landsat7CoverageType" substitutionGroup="gml:_Coverage"/>
+    <!-- ==============================================================-->
+    <complexType name="Landsat7CoverageType">
+        <annotation>
+            <documentation>Landsat7 was launched in 1999. It contains seven spectral bands andpanchromatic band wide swath width (185 km) with 15-meter, 30-meter, 60-meter, and 80-meter . It has a 705km sun-synchronous orbit with a 16 day repeat cycle and contains a nadir-pointing instrument (ETM+ sensor). 
+                ETM+ data were compiled through NASA's Commercial Remote Sensing Program; this program is cooperative effort between NASA and the commercial remote sensing community to provide with access to quality-screened, high-resolution satellite images with global over the Earth's land masses. The resulting Landsat Enhanced Thematic Mapper (ETM+) data set contains orthorectified ETM+ sensor data from the Landsat-7 satellite. the ETM+ images most closely meeting a specific set of criteria, including acquisition , cloud percentage, data quality parameters, and best available phenology, were for the collection. The Landsat ETM+ data were provided by the USGS and through a NASA contract with Earth Satellite Corporation, Rockville, , and are part of NASA's Scientific Data Purchase program, developed in response the President's Space Policy.
+            </documentation>
+        </annotation>
+        <complexContent>
+            <restriction base="gml:RectifiedGridCoverageType">
+                <sequence>
+                    <group ref="gml:StandardObjectProperties"/>
+                    <element ref="gml:boundedBy" minOccurs="0"/>
+                    <element ref="gml:rectifiedGridDomain"/>
+                    <element ref="app:rangeSet"/>
+                    <element ref="gml:coverageFunction" minOccurs="0"/>
+                </sequence>
+            </restriction>
+        </complexContent>
+    </complexType>
+    <!-- =========================================================== -->
+    <element name="rangeSet" type="app:FileRangeSetType" substitutionGroup="gml:rangeSet"/>
+    <!-- =========================================================== -->
+    <complexType name="FileRangeSetType">
+        <complexContent>
+            <restriction base="gml:RangeSetType">
+                <sequence>
+                    <element ref="app:File"/>
+                </sequence>
+            </restriction>
+        </complexContent>
+    </complexType>
+    <!-- =========================================================== -->
+    <element name="File" substitutionGroup="gml:File">
+        <complexType>
+            <complexContent>
+                <extension base="gml:FileType">
+                    <sequence>
+                        <element name="fileDate" type="date" minOccurs="0"/>
+                        <element name="fileFormat" type="string" fixed="geoTIFF" minOccurs="0"/>
+                        <element name="spatialResolution" type="gml:MeasureType"/>
+                        <element name="spectrum" type="app:SpectralResolutionEnumeration"/>
+                        <element name="bandRange" type="gml:MeasureListType" maxOccurs="5"/>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+    <!-- ==============================================================-->
+    <simpleType name="SpectralResolutionEnumeration">
+        <annotation>
+            <documentation>Spectral Resolution (�), Band Spatial Resolution  
+                Band 1: 0.450 - 0.515 (Blue), 30 meters
+                Band 2: 0.525 - 0.605 (Green), 30 meters
+                Band 3: 0.630 - 0.690 (Red), 30 meters
+                Band 4: 0.760 - 0.900 (Near IR), 30 meters
+                Band 5: 1.550 - 1.750 (Mid IR), 30 meters
+                Band 6: 10.40 - 12.5 (Thermal), 60 meters
+                Band 7: 2.080 - 2.35 (Mid IR), 30 meters
+                Band 8: 0.52 - 0.92 (Panchromatic), 15 meters
+            </documentation>
+        </annotation>
+        <restriction base="string">
+            <enumeration value="Panchromatic"/>
+            <enumeration value="Panchromatic sharpened"/>
+            <enumeration value="Multispectral"/>
+        </restriction>
+    </simpleType>
+    <!-- ==============================================================-->
+    <element name="PixelValue8bit" type="gml:integerOrNullList" substitutionGroup="gml:CountList">
+        <annotation>
+            <documentation>
+                GeoTIFF image data is delivered as an 8-bit string of unsigned integers.</documentation>
+        </annotation>
+    </element>
+    <!-- =========================================================== -->
+    <element name="ImageMetadata" type="app:ImageMetadataType" substitutionGroup="gml:_MetaData"/>
+    <!-- =========================================================== -->
+    <complexType name="ImageMetadataType" mixed="true">
+        <annotation>
+            <documentation>Landsat7 was launched in 1999. It contains seven spectral bands andpanchromatic band wide swath width (185 km) with 15-meter, 30-meter, 60-meter, and 80-meter . It has a 705km sun-synchronous orbit with a 16 day repeat cycle and contains a nadir-pointing instrument (ETM+ sensor).
+            </documentation>
+        </annotation>
+        <complexContent mixed="true">
+            <extension base="gml:AbstractMetaDataType">
+                <sequence>
+                    <element name="SUN_AZIMUTH" type="gml:MeasureType" minOccurs="0"/>
+                    <element name="SUN_ELEVATION" type="gml:MeasureType" minOccurs="0"/>
+                    <element name="QA_PERCENT_MISSING_DATA" type="gml:MeasureType" minOccurs="0"/>
+                    <element name="CLOUD_COVER" type="gml:MeasureType" minOccurs="0"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!-- ==============================================================-->
+</schema>

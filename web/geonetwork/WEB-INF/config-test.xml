@@ -119,5 +119,8 @@
                 <!-- TODO : add other loc files -->
 			</output>
 		</service>
+		<service name="test.csw">
+			<output sheet="test-csw.xsl"/>							
+		</service>
 	</services>
 </geonet>

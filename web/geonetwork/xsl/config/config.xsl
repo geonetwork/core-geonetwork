@@ -46,6 +46,7 @@
 		<xsl:call-template name="server"/>
 		<xsl:call-template name="intranet"/>
 		<xsl:call-template name="z3950"/>
+		<xsl:call-template name="csw"/>
 		<xsl:call-template name="proxy"/>
 		<xsl:call-template name="feedback"/>
 		<xsl:call-template name="removedMetadata"/>
@@ -140,6 +141,107 @@
 
 	<!-- ============================================================================================= -->
 
+	<xsl:template name="csw">
+		<script type="text/javascript" language="JavaScript1.2">
+			function updateContact(id) {
+				var records = {
+					<xsl:for-each select="/root/gui/users/record">
+						record_<xsl:value-of select="id"/> : {
+							username: "<xsl:value-of select="username"/>",
+							surname: "<xsl:value-of select="surname"/>",
+							name: "<xsl:value-of select="name"/>",
+							profile: "<xsl:value-of select="profile"/>",
+							address: "<xsl:value-of select="address"/>",
+							state: "<xsl:value-of select="state"/>",
+							country:"<xsl:value-of select="country"/>",
+							zip:"<xsl:value-of select="zip"/>",
+							email:"<xsl:value-of select="email"/>",
+							organisation:"<xsl:value-of select="organisation"/>",
+							kind:"<xsl:value-of select="kind"/>"
+						}
+						<xsl:if test="position()!=last()">
+							<xsl:text>,</xsl:text>
+						</xsl:if>
+					</xsl:for-each>
+				}
+				$('csw.individualName').value      = records['record_'+id].name +' '+ records['record_'+id].surname; 
+				$('csw.positionName').value        = records['record_'+id].profile;
+				$('csw.administrativeArea').value  = records['record_'+id].state;
+				$('csw.postalCode').value          = records['record_'+id].zip;
+				$('csw.country').value             = records['record_'+id].country;
+				$('csw.deliveryPoint').value       = records['record_'+id].address;
+				$('csw.city').value                = records['record_'+id].address;
+				$('csw.email').value               = records['record_'+id].email ;
+				$('csw.role').value                = records['record_'+id].kind;
+				$('csw.contactInstructions').value = records['record_'+id].organisation;
+			}
+		</script>
+		
+		<h1 align="left"><xsl:value-of select="/root/gui/config/csw"/></h1>
+		
+		<div align="left" style="{$style}">
+            <table>
+            	<tr>
+					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/enable"/></td>
+					<td class="padded"><input id="csw.enable" class="content" type="checkbox"/></td>
+				</tr>
+            	<tr>
+            		<td class="padded"><xsl:value-of select="/root/gui/config/contactId"/></td>
+            		<td class="padded">
+            			<select name="csw.contactId" id="csw.contactId" onchange="javascript:updateContact(this.value)">
+            				<option value="-1"></option>
+            				<xsl:for-each select="/root/gui/users/record">
+            					<option>
+            						<xsl:attribute name="value">
+            							<xsl:value-of select="id"/>
+            						</xsl:attribute>
+            						<xsl:value-of select="username"/>
+            						<xsl:text> ( </xsl:text><xsl:value-of select="surname"/>
+            						<xsl:text> </xsl:text>
+            						<xsl:value-of select="name"/><xsl:text> ) </xsl:text>
+            					</option>
+            				</xsl:for-each>
+            			</select>
+            		</td>
+            	</tr>
+            	<tr>
+            		<td class="padded"><xsl:value-of select="/root/gui/config/title"/></td>
+            		<td class="padded"><input id="csw.title" class="content" type="text" value="" size="40"/></td>
+            	</tr>
+            	<tr>
+            		<td class="padded"><xsl:value-of select="/root/gui/config/abstract"/></td>
+            		<td class="padded"><input id="csw.abstract" class="content" type="text" value="" size="40"/></td>
+            	</tr>
+            	<tr>
+            		<td class="padded"><xsl:value-of select="/root/gui/config/fees"/></td>
+            		<td class="padded"><input id="csw.fees" class="content" type="text" value="" size="40"/></td>
+            	</tr>
+            	<tr>
+            		<td class="padded"><xsl:value-of select="/root/gui/config/accessConstraints"/></td>
+            		<td class="padded"><input id="csw.accessConstraints" class="content" type="text" value="" size="40"/></td>
+            	</tr>
+            	<tr>
+            		<td class="padded" colspan="2">
+            			<input id="csw.individualName" class="content" type="hidden" value="" size="20"/>
+            			<input id="csw.positionName" class="content" type="hidden" value="" size="20"/>
+            			<input id="csw.voice" class="content" type="hidden" value="" size="20"/>
+            			<input id="csw.facsimile" class="content" type="hidden" value="" size="20"/>
+            			<input id="csw.deliveryPoint" class="content" type="hidden" value="" size="20"/>
+            			<input id="csw.city" class="content" type="hidden" value="" size="20"/>
+            			<input id="csw.administrativeArea" class="content" type="hidden" value="" size="20"/>
+            			<input id="csw.postalCode" class="content" type="hidden" value="" size="20"/>
+            			<input id="csw.country" class="content" type="hidden" value="" size="20"/>
+            			<input id="csw.email" class="content" type="hidden" value="" size="20"/>
+            			<input id="csw.hoursOfService" class="content" type="hidden" value="" size="20"/>
+            			<input id="csw.contactInstructions" class="content" type="hidden" value="" size="20"/>
+            			<input id="csw.role" class="content" type="hidden" value="" size="20"/>
+            		</td>
+            	</tr>
+            </table>
+        </div>
+	</xsl:template>
+	
+	<!-- ============================================================================================= -->
 	<xsl:template name="proxy">
 		<h1 align="left"><xsl:value-of select="/root/gui/config/proxy"/></h1>
 

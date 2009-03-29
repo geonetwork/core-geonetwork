@@ -20,7 +20,8 @@
 		 			<gmd:fileIdentifier>
 						<gco:CharacterString><xsl:value-of select="/root/env/uuid"/></gco:CharacterString>
 					</gmd:fileIdentifier>
-				</xsl:if>
+		 		</xsl:if>
+		 		
 			  <xsl:apply-templates select="@*|node()"/>
 		 </xsl:copy>
 	</xsl:template>
@@ -99,6 +100,7 @@
 				</xsl:attribute>
 			</xsl:if>
 			<xsl:apply-templates select="gco:CharacterString"/>
+			<xsl:copy-of select="*[name(.)!='gco:CharacterString']"/>
 		</xsl:copy>
 	</xsl:template>
 

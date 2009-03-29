@@ -40,6 +40,9 @@ public interface CatalogService
 
 	/** Convert params in a GET request to a POST request */
 	public Element adaptGetRequest(Map<String, String> params) throws CatalogException;
+	
+	/** Return domain values information for specific parameters */
+	public Element retrieveValues(String parameterName) throws CatalogException;
 }
 
 //=============================================================================

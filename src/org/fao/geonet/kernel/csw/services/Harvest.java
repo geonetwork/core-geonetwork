@@ -66,6 +66,10 @@ public class Harvest extends AbstractOperation implements CatalogService
 
 		return request;
 	}
+
+	public Element retrieveValues(String parameterName) throws CatalogException {
+		return null;
+	}
 }
 
 //=============================================================================

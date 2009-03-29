@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:gml="http://www.opengis.net/gml"
+        targetNamespace="http://www.opengis.net/gml"
+        version="3.1.1" elementFormDefault="qualified">
+
+  <include schemaLocation="basicTypes.xsd"/>
+
+  <element name="_Object" abstract="true"/>
+
+  <element name="_GML" type="gml:AbstractGMLType" abstract="true"
+           substitutionGroup="gml:_Object"/>
+  <complexType name="AbstractGMLType" abstract="true">
+    <attribute ref="gml:id" use="optional"/>
+  </complexType>
+
+  <attribute name="id" type="ID"/>
+</schema>

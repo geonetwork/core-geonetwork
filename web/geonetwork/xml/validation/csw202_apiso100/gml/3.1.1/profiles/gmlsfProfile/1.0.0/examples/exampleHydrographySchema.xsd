@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<schema 
+   targetNamespace="http://www.fgdc.gov/framework/073004/hydro"
+   xmlns:hyd="http://www.fgdc.gov/framework/073004/hydro"
+   xmlns:gml="http://www.opengis.net/gml"
+   xmlns:gmlsf="http://www.opengis.net/gmlsf"
+   xmlns="http://www.w3.org/2001/XMLSchema" 
+   elementFormDefault="qualified"
+   version="0.0.4">
+
+   <annotation>
+      <appinfo source="http://schemas.opengis.net/gml/3.1.1/profiles/gmlsfProfile/1.0.0/gmlsfLevels.xsd">
+         <gmlsf:ComplianceLevel>1</gmlsf:ComplianceLevel>
+         <gmlsf:GMLProfileSchema>http://schemas.opengis.net/gml/3.1.1/profiles/gmlsfProfile/1.0.0/gmlsf.xsd</gmlsf:GMLProfileSchema>
+      </appinfo>
+   </annotation>
+
+   <!-- ============================================================= -->
+   <!-- === includes and imports                                  === -->
+   <!-- ============================================================= -->
+   <import namespace="http://www.opengis.net/gml" 
+           schemaLocation="http://schemas.opengis.net/gml/3.1.1/gml.xsd"/>
+   <import namespace="http://www.opengis.net/gmlsf"
+           schemaLocation="http://schemas.opengis.net/gml/3.1.1/profiles/gmlsfProfile/1.0.0/gmlsfLevels.xsd"/>
+
+   <!-- ============================================================= -->
+   <!-- IDENTIFIER                                                    -->
+   <!-- ============================================================= -->
+   <complexType name="IdentifierPropertyType">
+      <sequence>
+         <element ref="hyd:Identifier"/>
+      </sequence>
+   </complexType>
+   <!-- ============================================================= -->
+   <element name="Identifier">
+      <complexType>
+         <sequence>
+            <element name="identifier" type="string"/>
+            <element name="idAuthority" type="string" minOccurs="0"
+               maxOccurs="1"/>
+            <element name="description" type="string" minOccurs="0"
+               maxOccurs="1"/>
+         </sequence>
+      </complexType>
+   </element>
+   <!-- ============================================================= -->
+   <!-- EXTERNALRESOURCE                                              -->
+   <!-- ============================================================= -->
+   <complexType name="ExternalResourcePropertyType">
+      <sequence>
+         <element ref="hyd:ExternalResource"/>
+      </sequence>
+   </complexType>
+   <!-- ============================================================= -->
+   <element name="ExternalResource">
+      <complexType>
+         <sequence>
+            <element name="url" type="anyURI"/>
+            <element name="urlType" minOccurs="0" maxOccurs="1">
+               <complexType>
+                  <simpleContent>
+                     <restriction base="gml:CodeType">
+                        <attribute name="codeSpace" type="anyURI"
+                           default="../Dictionaries/ResourceTypesDictionary.xml"/>
+                     </restriction>
+                  </simpleContent>
+               </complexType>
+            </element>
+            <element name="urlDescription" type="string" minOccurs="0"
+               maxOccurs="1"/>
+         </sequence>
+      </complexType>
+   </element>
+   <!-- ============================================================= -->
+   <!-- RESPONSIBLEPARTY                                              -->
+   <!-- ============================================================= -->
+   <complexType name="ResponsiblePartyPropertyType">
+      <sequence>
+         <element ref="hyd:ResponsibleParty"/>
+      </sequence>
+   </complexType>
+   <!-- ============================================================= -->
+   <element name="ResponsibleParty">
+      <complexType>
+         <sequence>
+            <element name="individualName" type="string"/>
+            <element name="organizationName" type="string" minOccurs="0"
+               maxOccurs="1"/>
+            <element name="positionName" type="string" minOccurs="0"
+               maxOccurs="1"/>
+            <element name="contactInfo" type="string" minOccurs="0"
+               maxOccurs="1"/>
+            <element name="role" type="string"/>
+         </sequence>
+      </complexType>
+   </element>
+   <!-- ============================================================= -->
+   <!-- EXTENDEDATTRIBUTE                                             -->
+   <!-- ============================================================= -->
+   <complexType name="ExtendedAttributePropertyType">
+      <sequence>
+         <element ref="hyd:ExtendedAttribute"/>
+      </sequence>
+   </complexType>
+   <!-- ============================================================= -->
+   <element name="ExtendedAttribute">
+      <complexType>
+         <sequence>
+            <element name="authority" type="string"/>
+            <element name="link" type="hyd:ExternalResourcePropertyType"
+               minOccurs="0" maxOccurs="1"/>
+            <element name="name" type="string"/>
+            <element name="type" minOccurs="0" maxOccurs="1">
+               <complexType>
+                  <simpleContent>
+                     <restriction base="gml:CodeType">
+                        <attribute name="codeSpace" type="anyURI" use="optional"
+                           default="../Dictionaries/DatatypeDictionary.xml"/>
+                     </restriction>
+                  </simpleContent>
+               </complexType>
+            </element>
+            <element name="value" type="string"/>
+         </sequence>
+      </complexType>
+   </element>
+   <!-- ============================================================= -->
+   <!-- NAME                                                          -->
+   <!-- ============================================================= -->
+   <complexType name="NamePropertyType">
+      <sequence>
+         <element ref="hyd:Name"/>
+      </sequence>
+   </complexType>
+   <!-- ============================================================= -->
+   <element name="Name">
+      <complexType>
+         <sequence>
+            <element name="name" type="string"/>
+            <element name="nameId" type="hyd:IdentifierPropertyType"
+               minOccurs="0" maxOccurs="1"/>
+         </sequence>
+      </complexType>
+   </element>
+   <!-- ============================================================= -->
+   <!-- REPRESENTATION                                                -->
+   <!-- ============================================================= -->
+   <complexType name="RepresentationPropertyType">
+      <sequence>
+         <element ref="hyd:Representation"/>
+      </sequence>
+   </complexType>
+   <!-- ============================================================= -->
+   <element name="Representation">
+      <complexType>
+         <sequence>
+            <element name="representationId" type="hyd:IdentifierPropertyType"
+               minOccurs="0" maxOccurs="1"/>
+         </sequence>
+      </complexType>
+   </element>
+   <!-- ============================================================= -->
+   <!-- MEASUREMENT                                                   -->
+   <!-- ============================================================= -->
+   <complexType name="MeasurementPropertyType">
+      <sequence>
+         <element ref="hyd:Measurement"/>
+      </sequence>
+   </complexType>
+   <!-- ============================================================= -->
+   <element name="Measurement">
+      <complexType>
+         <sequence>
+            <element name="accuracy" type="string" minOccurs="0" maxOccurs="1"/>
+            <element name="reportingOrganization"
+               type="hyd:ResponsiblePartyPropertyType"/>
+            <element name="units">
+               <complexType>
+                  <simpleContent>
+                     <restriction base="gml:CodeType">
+                        <attribute name="codeSpace" type="anyURI" use="optional"
+                           default="../Dictionaries/UnitsDictionary.xml"/>
+                     </restriction>
+                  </simpleContent>
+               </complexType>
+            </element>
+            <element name="value" type="string"/>
+         </sequence>
+      </complexType>
+   </element>
+   <!-- ============================================================= -->
+   <!-- ============================================================= -->
+   <complexType name="ComputedNetworkValuesPropertyType">
+      <sequence>
+         <element ref="hyd:ComputedNetworkValues"/>
+      </sequence>
+   </complexType>
+   <!-- ============================================================= -->
+   <element name="ComputedNetworkValues">
+      <complexType>
+         <sequence>
+            <element name="fromNode" type="integer"/>
+            <element name="toNode" type="integer"/>
+            <element name="hydrologicSequenceNumber" type="integer"/>
+            <element name="startFlag" type="integer"/>
+            <element name="terminalFlag" type="integer"/>
+            <element name="terminalDrainId" type="integer"/>
+            <element name="levelPathId" type="integer"/>
+            <element name="arbolateSumKm" type="gml:MeasureType"/>
+            <element name="pathLengthKm" type="gml:MeasureType"/>
+            <element name="thinner" type="integer"/>
+            <element name="divergenceFlag" type="integer"/>
+            <element name="drainStreamLevel" type="integer"/>
+            <element name="downstreamDrainLevel" type="integer"/>
+            <element name="streamOrder" type="integer"/>
+            <element name="upstreamLevelPathId" type="integer"/>
+            <element name="upstreamHydrologicSequenceNumber" type="integer"/>
+            <element name="upstreamMinimumHydrologicSequenceNumber"
+               type="integer"/>
+            <element name="downstreamLevelPathId" type="integer"/>
+            <element name="downstreamDrainCount" type="integer"/>
+            <element name="downstreamMinorHydrologicSequenceNumber"
+               type="integer"/>
+         </sequence>
+      </complexType>
+   </element>
+   <!-- ============================================================= -->
+   <!-- HYDRO COLLECTION                                              -->
+   <!-- ============================================================= -->
+   <element name="HydroCollection" type="hyd:HydroCollectionType"
+      substitutionGroup="gml:_Feature"/>
+   <!-- ============================================================= -->
+   <complexType name="HydroCollectionType">
+      <complexContent>
+         <extension base="gml:AbstractFeatureType">
+            <sequence>
+               <element name="metadata" type="anyURI" 
+                        minOccurs="0" maxOccurs="unbounded"/>
+               <element name="featureMember" maxOccurs="unbounded">
+                  <complexType>
+                     <annotation>
+                        <appinfo source="urn:x-gml:targetElement">hyd:HydroComplex/@gml:id</appinfo>
+                     </annotation>
+                     <sequence>
+                        <element ref="gml:_Feature"/>
+                     </sequence>
+                  </complexType>
+               </element>
+            </sequence>
+         </extension>
+      </complexContent>
+   </complexType>
+   <!-- ============================================================= -->
+   <!-- HYDRO COMPLEX                                                 -->
+   <!-- ============================================================= -->
+   <element name="HydroComplex" type="hyd:HydroComplexType"
+      substitutionGroup="gml:_Feature"/>
+   <!-- ============================================================= -->
+   <complexType name="HydroComplexType">
+      <complexContent>
+         <extension base="gml:AbstractFeatureType">
+            <sequence>
+               <element name="featureId" type="hyd:IdentifierPropertyType"/>
+               <element name="linkedResource"
+                  type="hyd:ExternalResourcePropertyType" minOccurs="0"
+                  maxOccurs="1"/>
+               <element name="metadata" type="anyURI" minOccurs="0"
+                  maxOccurs="unbounded"/>
+               <element name="featureDate" type="date"/>
+               <element name="name" type="hyd:NamePropertyType" minOccurs="0"
+                  maxOccurs="unbounded"/>
+               <element name="measure" type="hyd:MeasurementPropertyType"
+                  minOccurs="0" maxOccurs="unbounded"/>
+               <element name="representation"
+                  type="hyd:RepresentationPropertyType" minOccurs="0"
+                  maxOccurs="unbounded"/>
+               <element name="attribute"
+                  type="hyd:ExtendedAttributePropertyType" minOccurs="0"
+                  maxOccurs="unbounded"/>
+               <element name="compositeType" minOccurs="1" maxOccurs="1">
+                  <complexType>
+                     <simpleContent>
+                        <restriction base="gml:CodeType">
+                           <attribute name="codeSpace" type="anyURI"
+                              use="optional"
+                              default="../Dictionaries/CompositeTypeDictionary.xml"/>
+                        </restriction>
+                     </simpleContent>
+                  </complexType>
+               </element>
+               <element name="element" type="gml:ReferenceType" minOccurs="1"
+                  maxOccurs="unbounded">
+                  <annotation>
+                     <appinfo source="urn:x-gml:targetElement">hyd:HydroElement/@gml:id</appinfo>
+                  </annotation>
+               </element>
+            </sequence>
+         </extension>
+      </complexContent>
+      <!-- ============================================================= -->
+   </complexType>
+   <!-- ============================================================= -->
+   <!-- HYDRO ELEMENT                                                 -->
+   <!-- ============================================================= -->
+   <element name="HydroElement" type="hyd:HydroElementType"
+      substitutionGroup="gml:_Feature"/>
+   <complexType name="HydroElementType">
+      <complexContent>
+         <extension base="gml:AbstractFeatureType">
+            <sequence>
+               <element name="featureId" type="hyd:IdentifierPropertyType"/>
+               <element name="linkedResource"
+                  type="hyd:ExternalResourcePropertyType" minOccurs="0"
+                  maxOccurs="1"/>
+               <element name="metadata" type="anyURI" minOccurs="0"
+                  maxOccurs="unbounded"/>
+               <element name="featureDate" type="date"/>
+               <element name="name" type="hyd:NamePropertyType" minOccurs="0"
+                  maxOccurs="unbounded"/>
+               <element name="measure" type="hyd:MeasurementPropertyType"
+                  minOccurs="0" maxOccurs="unbounded"/>
+               <element name="representation"
+                  type="hyd:RepresentationPropertyType" minOccurs="0"
+                  maxOccurs="unbounded"/>
+               <element name="attribute"
+                  type="hyd:ExtendedAttributePropertyType" minOccurs="0"
+                  maxOccurs="unbounded"/>
+               <!-- ====================================================== -->
+               <element name="featureType">
+                  <complexType>
+                     <simpleContent>
+                        <restriction base="gml:CodeType">
+                           <attribute name="codeSpace" type="anyURI"
+                              use="optional"
+                              default="../Dictionaries/HydroFeatureTypeDictionary.xml"/>
+                        </restriction>
+                     </simpleContent>
+                  </complexType>
+               </element>
+               <element name="featureCode" minOccurs="0" maxOccurs="1">
+                  <complexType>
+                     <simpleContent>
+                        <restriction base="gml:CodeType">
+                           <attribute name="codeSpace" type="anyURI"
+                              use="optional"
+                              default="../Dictionaries/HydroFeatureCodeTypeDictionary.xml"/>
+                        </restriction>
+                     </simpleContent>
+                  </complexType>
+               </element>
+               <element name="geometry" type="gml:GeometryPropertyType"
+                  minOccurs="1" maxOccurs="1"/>
+               <element name="flowDirection" minOccurs="0" maxOccurs="1">
+                  <complexType>
+                     <simpleContent>
+                        <restriction base="gml:CodeType">
+                           <attribute name="codeSpace" type="anyURI"
+                              use="optional"
+                              default="../Dictionaries/FlowCodeDictionary.xml"/>
+                        </restriction>
+                     </simpleContent>
+                  </complexType>
+               </element>
+               <!-- ====================================================== -->
+               <element name="computedNetworkValues"
+                  type="hyd:ComputedNetworkValuesPropertyType" minOccurs="0"
+                  maxOccurs="1"/>
+            </sequence>
+         </extension>
+      </complexContent>
+   </complexType>
+   <!-- ============================================================= -->
+   <!-- FEATURERELATIONSHIP                                           -->
+   <!-- ============================================================= -->
+   <element name="FeatureRelationship" type="hyd:FeatureRelationshipType"
+      substitutionGroup="gml:_Feature"/>
+   <complexType name="FeatureRelationshipType">
+      <complexContent>
+         <extension base="gml:AbstractFeatureType">
+            <sequence>
+               <element name="sourceFeature" type="gml:ReferenceType">
+                  <annotation>
+                     <appinfo source="urn:x-gml:targetElement">hyd:HydroFeature/@gml:id</appinfo>
+                  </annotation>
+               </element>
+               <element name="targetFeature" type="gml:ReferenceType"
+                  minOccurs="1" maxOccurs="unbounded">
+                  <annotation>
+                     <appinfo source="urn:x-gml:targetElement">hyd:HydroFeature/@gml:id</appinfo>
+                  </annotation>
+               </element>
+               <element name="type">
+                  <complexType>
+                     <simpleContent>
+                        <restriction base="gml:CodeType">
+                           <attribute name="codeSpace" type="anyURI"
+                              use="optional"
+                              default="../Dictionaries/RelationshipTypeDictionary.xml"/>
+                        </restriction>
+                     </simpleContent>
+                  </complexType>
+               </element>
+               <element name="attribute"
+                  type="hyd:ExtendedAttributePropertyType" minOccurs="0"
+                  maxOccurs="unbounded"/>
+            </sequence>
+         </extension>
+      </complexContent>
+   </complexType>
+   <!-- ============================================================= -->
+   <!-- EVENT                                                         -->
+   <!-- ============================================================= -->
+   <element name="Event" type="hyd:EventType" substitutionGroup="gml:_Feature"/>
+   <complexType name="EventType">
+      <complexContent>
+         <extension base="gml:AbstractFeatureType">
+            <sequence>
+               <element name="date" type="date" minOccurs="0" maxOccurs="1"/>
+               <element name="eventID" type="gml:ReferenceType" minOccurs="1"
+                  maxOccurs="1">
+                  <annotation>
+                     <appinfo source="urn:x-gml:targetElement">hyd:Identifier/@gml:id</appinfo>
+                  </annotation>
+               </element>
+               <element name="relatedURL" type="anyURI" minOccurs="0"
+                  maxOccurs="unbounded"/>
+               <element name="metadata" type="anyURI" minOccurs="0"
+                  maxOccurs="1"/>
+               <element name="eventType">
+                  <complexType>
+                     <simpleContent>
+                        <restriction base="gml:CodeType">
+                           <attribute name="codeSpace" type="anyURI"
+                              use="optional"
+                              default="../Dictionaries/EventTypeDictionary.xml"/>
+                        </restriction>
+                     </simpleContent>
+                  </complexType>
+               </element>
+               <element name="dataType">
+                  <complexType>
+                     <simpleContent>
+                        <restriction base="gml:CodeType">
+                           <attribute name="codeSpace" type="anyURI"
+                              use="optional"
+                              fixed="../Dictionaries/DatatypeDictionary.xml"/>
+                        </restriction>
+                     </simpleContent>
+                  </complexType>
+               </element>
+               <element name="eventValue" type="string"/>
+               <element name="location" type="gml:GeometryPropertyType"
+                  minOccurs="0" maxOccurs="1"/>
+               <element name="measure" type="hyd:MeasurementPropertyType"
+                  minOccurs="0" maxOccurs="unbounded"/>
+               <element name="attribute"
+                  type="hyd:ExtendedAttributePropertyType" minOccurs="0"
+                  maxOccurs="unbounded"/>
+            </sequence>
+         </extension>
+      </complexContent>
+   </complexType>
+   <!-- ============================================================= -->
+   <!-- UNMEASUREDEVENT                                               -->
+   <!-- ============================================================= -->
+   <element name="UnmeasuredEvent" type="hyd:UnmeasuredEventType"
+      substitutionGroup="gml:_Feature"/>
+   <complexType name="UnmeasuredEventType">
+      <complexContent>
+         <extension base="gml:AbstractFeatureType">
+            <sequence>
+               <element name="event" type="gml:ReferenceType">
+                  <annotation>
+                     <appinfo source="urn:x-gml:targetElement">hyd:Event/@gml:id</appinfo>
+                  </annotation>
+               </element>
+               <element name="location" type="gml:GeometryPropertyType"/>
+            </sequence>
+         </extension>
+      </complexContent>
+   </complexType>
+   <!-- ============================================================= -->
+   <!-- MEASUREDEVENT                                                 -->
+   <!-- ============================================================= -->
+   <element name="MeasuredEvent" type="hyd:MeasuredEventType"
+      substitutionGroup="gml:_Feature"/>
+   <complexType name="MeasuredEventType">
+      <complexContent>
+         <extension base="gml:AbstractFeatureType">
+            <sequence>
+               <element name="event" type="gml:ReferenceType">
+                  <annotation>
+                     <appinfo source="urn:x-gml:targetElement">hyd:Event/@gml:id</appinfo>
+                  </annotation>
+               </element>
+               <element name="startPosition" type="gml:PointPropertyType"/>
+               <element name="endPosition" type="gml:PointPropertyType"
+                  minOccurs="0" maxOccurs="1"/>
+               <element name="startOffset" type="gml:MeasureType" minOccurs="0"
+                  maxOccurs="1"/>
+               <element name="endOffset" type="gml:MeasureType" minOccurs="0"
+                  maxOccurs="1"/>
+            </sequence>
+         </extension>
+      </complexContent>
+   </complexType>
+   <!-- ============================================================= -->
+   <!-- EVENT ON                                                      -->
+   <!-- ============================================================= -->
+   <element name="EventOn" type="hyd:EventOnType"
+      substitutionGroup="gml:_Feature"/>
+   <complexType name="EventOnType">
+      <complexContent>
+         <extension base="gml:AbstractFeatureType">
+            <sequence>
+               <element name="feature" type="gml:ReferenceType" minOccurs="1"
+                  maxOccurs="unbounded">
+                  <annotation>
+                     <appinfo source="urn:x-gml:targetElement">hyd:HydroFeature/@gml:id</appinfo>
+                  </annotation>
+               </element>
+               <element name="event" type="gml:ReferenceType" minOccurs="0"
+                  maxOccurs="unbounded">
+                  <annotation>
+                     <appinfo source="urn:x-gml:targetElement">hyd:Event/@gml:id</appinfo>
+                  </annotation>
+               </element>
+            </sequence>
+         </extension>
+      </complexContent>
+   </complexType>
+</schema>

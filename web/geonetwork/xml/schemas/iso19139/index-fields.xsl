@@ -114,8 +114,9 @@
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 
 			<xsl:for-each select="*/gmd:MD_Keywords">
-				<xsl:for-each select="gmd:keyword/gco:CharacterString">
+				<xsl:for-each select="gmd:keyword/gco:CharacterString|gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
 					<Field name="keyword" string="{string(.)}" store="true" index="true" token="false"/>
+					<Field name="subject" string="{string(.)}" store="true" index="true" token="false"/>
 				</xsl:for-each>
 
 				<xsl:for-each select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">
@@ -141,6 +142,13 @@
 			</xsl:choose>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
+			
+			<xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode|
+								gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString">
+				<Field name="subject" string="{string(.)}" store="true" index="true" token="false"/>
+			</xsl:for-each>
+			
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
 			<xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
 				<Field name="topicCat" string="{string(.)}" store="true" index="true" token="false"/>
@@ -167,7 +175,57 @@
 					<Field name="distanceUom" string="{string(.)}" store="true" index="true" token="false"/>
 				</xsl:for-each>
 			</xsl:for-each>
-
+			
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+			
+			<xsl:for-each select="gmd:resourceConstraints">
+				<xsl:for-each select="//gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue">
+					<Field name="accessConstr" string="{string(.)}" store="true" index="true" token="false"/>
+				</xsl:for-each>
+				<xsl:for-each select="//gmd:otherConstraints/gco:CharacterString">
+					<Field name="otherConstr" string="{string(.)}" store="true" index="true" token="false"/>
+				</xsl:for-each>
+				<xsl:for-each select="//gmd:classification/gmd:MD_ClassificationCode/@codeListValue">
+					<Field name="classif" string="{string(.)}" store="true" index="true" token="false"/>
+				</xsl:for-each>
+				<xsl:for-each select="//gmd:useLimitation/gco:CharacterString">
+					<Field name="conditionApplyingToAccessAndUse" string="{string(.)}" store="true" index="true" token="false"/>
+				</xsl:for-each>
+			</xsl:for-each>
+			
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+			<!--  Fields use to search on Service -->
+			
+			<xsl:for-each select="srv:serviceType/gco:LocalName">
+				<Field  name="serviceType" string="{string(.)}" store="true" index="true" token="false"/>
+			</xsl:for-each>
+			
+			<xsl:for-each select="srv:serviceTypeVersion/gco:CharacterString">
+				<Field  name="serviceTypeVersion" string="{string(.)}" store="true" index="true" token="false"/>
+			</xsl:for-each>
+			
+			<xsl:for-each select="//srv:SV_OperationMetadata/srv:operationName/gco:CharacterString">
+				<Field  name="operation" string="{string(.)}" store="true" index="true" token="false"/>
+			</xsl:for-each>
+			
+			<xsl:for-each select="srv:operatesOn/@uuidref">
+                <Field  name="operatesOn" string="{string(.)}" store="true" index="true" token="false"/>
+            </xsl:for-each>
+			
+			<xsl:for-each select="srv:coupledResource">
+				<xsl:for-each select="srv:SV_CoupledResource/srv:identifier/gco:CharacterString">
+					<Field  name="operatesOnIdentifier" string="{string(.)}" store="true" index="true" token="false"/>
+				</xsl:for-each>
+				
+				<xsl:for-each select="srv:SV_CoupledResource/srv:operationName/gco:CharacterString">
+					<Field  name="operatesOnName" string="{string(.)}" store="true" index="true" token="false"/>
+				</xsl:for-each>
+			</xsl:for-each>
+			
+			<xsl:for-each select="//srv:SV_CouplingType/srv:code/@codeListValue">
+				<Field  name="couplingType" string="{string(.)}" store="true" index="true" token="false"/>
+			</xsl:for-each>
+			
 		</xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
@@ -185,6 +243,30 @@
 			</xsl:for-each>
 		</xsl:for-each>
 
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
+		<!-- === Data Quality  === -->
+		<xsl:for-each select="gmd:dataQualityInfo/*/gmd:report/*/gmd:result">
+			
+			<xsl:for-each select="//gmd:pass/gco:Boolean">
+				<Field name="degree" string="{string(.)}" store="true" index="true" token="false"/>
+			</xsl:for-each>
+			
+			<xsl:for-each select="//gmd:specification/*/gmd:title/gco:CharacterString">
+				<Field name="specificationTitle" string="{string(.)}" store="true" index="true" token="false"/>
+			</xsl:for-each>
+			
+			<xsl:for-each select="//gmd:specification/*/gmd:date/*/gmd:date/gco:DateTime">
+				<Field name="specificationDate" string="{string(.)}" store="true" index="true" token="false"/>
+			</xsl:for-each>
+			
+			<xsl:for-each select="//gmd:specification/*/gmd:date/*/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue">
+				<Field name="specificationDateType" string="{string(.)}" store="true" index="true" token="false"/>
+			</xsl:for-each>
+		</xsl:for-each>
+		<xsl:for-each select="gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement/gco:CharacterString">
+			<Field name="lineage" string="{string(.)}" store="true" index="true" token="false"/>
+		</xsl:for-each>
+		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 		<!-- === General stuff === -->		
 
@@ -222,6 +304,18 @@
 		<xsl:for-each select="gmd:parentIdentifier/gco:CharacterString">
 			<Field name="parentId" string="{string(.)}" store="true" index="true" token="false"/>
 		</xsl:for-each>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<xsl:for-each select="gmd:dateStamp/gco:DateTime">
+			<Field name="changeDate" string="{string(.)}" store="true" index="true" token="false"/>
+		</xsl:for-each>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<xsl:for-each select="gmd:contact/*/gmd:organisationName/gco:CharacterString">
+			<Field name="metadataPOC" string="{string(.)}" store="true" index="true" token="false"/>
+		</xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 		<!-- === Reference system info === -->		
@@ -233,6 +327,14 @@
 				<xsl:if test="$crs != '::'">
 					<Field name="crs" string="{$crs}" store="true" index="true" token="false"/>
 				</xsl:if>
+			</xsl:for-each>
+		</xsl:for-each>
+		
+		<xsl:for-each select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem">
+			<xsl:for-each select="gmd:referenceSystemIdentifier/gmd:RS_Identifier">
+				<Field name="authority" string="{string(gmd:codeSpace/gco:CharacterString)}" store="true" index="true" token="false"/>
+				<Field name="crsCode" string="{string(gmd:code/gco:CharacterString)}" store="true" index="true" token="false"/>
+				<Field name="crsVersion" string="{string(gmd:version/gco:CharacterString)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
 		</xsl:for-each>
 

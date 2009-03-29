@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:gml="http://www.opengis.net/gml"
+        targetNamespace="http://www.opengis.net/gml"
+        version="3.1.1" elementFormDefault="qualified">
+
+  <include schemaLocation="geometryBasic0d1d.xsd"/>
+
+  <element name="_Surface" type="gml:AbstractSurfaceType"
+           abstract="true"
+           substitutionGroup="gml:_GeometricPrimitive"/>
+  <complexType name="AbstractSurfaceType">
+    <complexContent>
+      <extension base="gml:AbstractGeometricPrimitiveType"/>
+    </complexContent>
+  </complexType>
+
+  <element name="surfaceProperty" type="gml:SurfacePropertyType"/>
+  <complexType name="SurfacePropertyType">
+    <sequence>
+      <element ref="gml:_Surface"/>
+    </sequence>
+  </complexType>
+
+  <element name="Polygon" type="gml:PolygonType"
+           substitutionGroup="gml:_Surface"/>
+  <complexType name="PolygonType">
+    <complexContent>
+      <extension base="gml:AbstractSurfaceType">
+        <sequence>
+          <element ref="gml:exterior" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <element name="_Ring" type="gml:AbstractRingType" abstract="true"
+           substitutionGroup="gml:_Geometry"/>
+  <complexType name="AbstractRingType" abstract="true">
+    <complexContent>
+      <extension base="gml:AbstractGeometryType"/>
+    </complexContent>
+  </complexType>
+
+  <element name="exterior" type="gml:AbstractRingPropertyType"/>
+  <complexType name="AbstractRingPropertyType">
+    <sequence>
+      <element ref="gml:_Ring"/>
+    </sequence>
+  </complexType>
+
+  <element name="LinearRing" type="gml:LinearRingType"
+           substitutionGroup="gml:_Ring"/>
+  <complexType name="LinearRingType">
+    <complexContent>
+      <extension base="gml:AbstractRingType">
+        <sequence>
+          <choice>
+            <choice minOccurs="4" maxOccurs="16">
+              <element ref="gml:pos"/>
+              <element ref="gml:pointProperty"/>
+            </choice>
+            <element ref="gml:posList"/>
+          </choice>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+</schema>

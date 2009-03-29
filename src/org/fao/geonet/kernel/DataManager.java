@@ -524,8 +524,8 @@ public class DataManager
 		//--- setup root element
 
 		Element root = new Element("root");
-		root.addContent(md);
-		root.addContent(env);
+		root.addContent(md.detach());
+		root.addContent(env.detach());
 
 		//--- do an XSL  transformation
 

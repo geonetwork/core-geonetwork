@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<schema 
+   targetNamespace="http://www.cubewerx.com/cw"
+   xmlns:cw="http://www.cubewerx.com/cw"
+   xmlns="http://www.w3.org/2001/XMLSchema"
+   xmlns:gml="http://www.opengis.net/gml"
+   xmlns:gmlsf="http://www.opengis.net/gmlsf"
+   elementFormDefault="qualified"
+   version="1.0">
+
+   <annotation>
+      <appinfo source="http://schemas.opengis.net/gml/3.1.1/profiles/gmlsfProfile/1.0.0/gmlsfLevels.xsd"
+         <gmlsf:ComplianceLevel>0</gmlsf:ComplianceLevel>
+         <gmlsf:GMLProfileSchema>http://schemas.opengis.net/gml/3.1.1/profiles/gmlsfProfile/1.0.0/gmlsf.xsd</gmlsf:GMLProfileSchema>
+      </appinfo>
+   </annotation>
+
+   <!-- ============================================================= -->
+   <!-- === includes and imports                                  === -->
+   <!-- ============================================================= -->
+   <import namespace="http://www.opengis.net/gml"
+           schemaLocation="http://schemas.opengis.net/gml/3.1.1/gml.xsd"/>
+   <import namespace="http://www.opengis.net/gmlsf"
+           schemaLocation="http://schemas.opengis.net/gml/3.1.1/profiles/gmlsfProfile/1.0.0/gmlsfLevels.xsd"/>
+
+   <!-- =========================================================
+        define feature types
+        ========================================================= -->
+   <element name="Reporter" type="cw:ReporterType"
+            substitutionGroup="gml:_Feature"/>
+   <!-- ============================================================= -->
+   <complexType name="ReporterType">
+      <complexContent>
+         <extension base="gml:AbstractFeatureType">
+            <sequence>
+               <element name="reporterId">
+                  <simpleType>
+                     <restriction base="string">
+                        <maxLength value="9"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element name="firstName" minOccurs="0" maxOccurs="1">
+                  <simpleType>
+                     <restriction base="string">
+                        <maxLength value="20"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element name="lastName" minOccurs="0" maxOccurs="1">
+                  <simpleType>
+                     <restriction base="string">
+                        <maxLength value="20"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element name="organization" minOccurs="0" maxOccurs="1">
+                  <simpleType>
+                     <restriction base="string">
+                        <maxLength value="50"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element name="email" minOccurs="0" maxOccurs="1">
+                  <simpleType>
+                     <restriction base="string">
+                        <maxLength value="50"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element name="age" minOccurs="0" maxOccurs="1">
+                  <simpleType>
+                     <restriction base="integer">
+                        <totalDigits value="10"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element name="photo" minOccurs="0" maxOccurs="1">
+                  <complexType>
+                     <simpleContent>
+                        <extension base="base64Binary">
+                           <attribute name="url" type="anyURI" use="optional"/>
+                           <attribute name="mimeType" type="string"
+                              use="required"/>
+                           <attribute name="role" type="string" use="optional"/>
+                        </extension>
+                     </simpleContent>
+                  </complexType>
+               </element>
+            </sequence>
+         </extension>
+      </complexContent>
+   </complexType>
+   <!-- ============================================================= -->
+   <element name="NewsItem" type="cw:NewsItemType"
+      substitutionGroup="gml:_Feature"/>
+   <!-- ============================================================= -->
+   <complexType name="NewsItemType">
+      <complexContent>
+         <extension base="gml:AbstractFeatureType">
+            <sequence>
+               <element name="location" type="gml:PointPropertyType"
+                  minOccurs="1" maxOccurs="1"/>
+               <element name="reporterId" minOccurs="1" maxOccurs="1">
+                  <simpleType>
+                     <restriction base="string">
+                        <maxLength value="9"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element name="eventDate" type="dateTime" minOccurs="1"
+                  maxOccurs="1"/>
+               <element name="byLine" minOccurs="1" maxOccurs="1">
+                  <simpleType>
+                     <restriction base="string">
+                        <maxLength value="30"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element name="details" minOccurs="1" maxOccurs="1">
+                  <simpleType>
+                     <restriction base="string">
+                        <maxLength value="20000"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element name="image" minOccurs="0" maxOccurs="5">
+                  <complexType>
+                     <simpleContent>
+                        <extension base="base64Binary">
+                           <attribute name="url" type="anyURI" use="optional"/>
+                           <attribute name="mimeType" type="string"
+                              use="required"/>
+                           <attribute name="role" type="string" use="optional"/>
+                        </extension>
+                     </simpleContent>
+                  </complexType>
+               </element>
+            </sequence>
+         </extension>
+      </complexContent>
+   </complexType>
+   <!-- ============================================================= -->
+   <!-- Define a feature collection for a set of news items           -->
+   <!-- ============================================================= -->
+   <element name="NewsItems"
+            type="cw:NewsItemsType"
+            substitutionGroup="gml:_GML"/>
+   <complexType name="NewsItemsType"
+      <complexContent>
+         <extension base="gml:AbstractfeatureType">
+            <sequence minOccurs="1" maxOccurs="unbounded">
+               <element name="featureMember">
+                  <complexType>
+                     <sequence>
+                        <element ref="gml:_Feature"/>
+                     </sequence>
+                  </complexType>
+               </element>
+            </sequence>
+         </extension>
+      </complexContent>
+   </complexType>
+</schema>

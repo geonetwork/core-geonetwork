@@ -23,12 +23,14 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -39,11 +41,14 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.CachingWrapperFilter;
+import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -51,6 +56,8 @@ import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TermQuery;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.csw.common.Csw;
+import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
@@ -59,54 +66,98 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.spatial.Pair;
 import org.jdom.Element;
 
 //=============================================================================
 
 public class CatalogSearcher
 {
+	private Element _summaryConfig;
+	private Map<String, Boolean> _isTokenizedField = new HashMap<String, Boolean>();
+	private Hits _hits;
+	
+    public CatalogSearcher(File summaryConfig)
+    {
+    	try {
+			if (summaryConfig != null)
+				_summaryConfig = Xml.loadStream(new FileInputStream(summaryConfig));
+		} catch (Exception e) {
+			throw new RuntimeException ("Error reading summary configuration file", e);
+		}
+    }
+	
 	//---------------------------------------------------------------------------
 	//---
 	//--- Main search method
 	//---
 	//---------------------------------------------------------------------------
-    private Hits _hits;
 
 	/**
 	 * Convert a filter to a lucene search and run the search.
 	 * 
 	 * @return a list of id that match the given filter, ordered by sortFields
 	 */
-	public List<ResultItem> search(ServiceContext context, Element filterExpr, Set<TypeName> typeNames,
-										List<SortField> sortFields) throws CatalogException
+	public Pair<Element, List<ResultItem>> search(ServiceContext context, Element filterExpr,
+			String filterVersion, Set<TypeName> typeNames, Sort sort,
+			ResultType resultType, int maxRecords) throws CatalogException
 	{
 		Element luceneExpr = filterToLucene(context, filterExpr);
 
-		if (luceneExpr != null)
-		{
-			checkForErrors(luceneExpr);
-			remapFields(luceneExpr);
-			convertPhrases(luceneExpr);
-		}
-//System.out.println("============================================");
-//System.out.println("LUCENE:\n"+Xml.getString(luceneExpr));
+        try {
+		
+			if (luceneExpr != null)
+			{
+				checkForErrors(luceneExpr);
+				remapFields(luceneExpr);
+				convertPhrases(luceneExpr, context);
+			}
 
-		try
-		{
-			List<ResultItem> results = search(context, luceneExpr);
+            Pair<Element, List<ResultItem>> results = performSearch(context, luceneExpr,
+                    filterExpr, filterVersion, sort, resultType, maxRecords);
+            return results;
+        } catch (Exception e) {
+            Log.error(Geonet.CSW_SEARCH, "Error while searching metadata ");
+            Log.error(Geonet.CSW_SEARCH, "  (C) StackTrace:\n" + Util.getStackTrace(e));
 
-			sort(results, sortFields);
-
-			return results;
-		}
-		catch (Exception e)
-		{
-			context.error("Error while searching metadata ");
-			context.error("  (C) StackTrace:\n"+ Util.getStackTrace(e));
-
-			throw new NoApplicableCodeEx("Raised exception while searching metadata : "+ e);
-		}
+            throw new NoApplicableCodeEx(
+                    "Raised exception while searching metadata : " + e);
+        }
 	}
+	
+	/**
+     * <p>
+     * Gets results in current searcher
+     * </p>
+     * 
+     * @return current searcher result in "fast" mode
+     * 
+     * @throws IOException
+     * @throws CorruptIndexException
+     */
+    public Element getAll() throws CorruptIndexException, IOException
+    {
+        Element response = new Element("response");
+
+        if (_hits.length() == 0) {
+            response.setAttribute("from", 0 + "");
+            response.setAttribute("to", 0 + "");
+            return response;
+        }
+
+        response.setAttribute("from", 1 + "");
+        response.setAttribute("to", _hits.length() + "");
+        for (int i = 0; i < _hits.length(); i++) {
+            Document doc = _hits.doc(i);
+            String id = doc.get("_id");
+
+            // FAST mode
+            Element md = LuceneSearcher.getMetadataFromIndex(doc, id);
+            response.addContent(md);
+        }
+
+        return response;
+    }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -160,15 +211,17 @@ public class CatalogSearcher
 
 	//---------------------------------------------------------------------------
 
-	private void convertPhrases(Element elem)
+	// Only tokenize field must be converted
+	// TODO add token parameter in CSW conf for each field, may be useful for GetDomain operation too.
+	private void convertPhrases(Element elem, ServiceContext context) throws CorruptIndexException, IOException
 	{
 		if (elem.getName().equals("TermQuery"))
 		{
 			String field = elem.getAttributeValue("fld");
 			String text  = elem.getAttributeValue("txt");
 
-			if (text.indexOf(" ") != -1)
-			{
+			boolean isTokenized = isTokenized(field, context);
+			if ( isTokenized && text.indexOf(" ") != -1) {
 				elem.setName("PhraseQuery");
 
 				StringTokenizer st = new StringTokenizer(text, " ");
@@ -189,10 +242,40 @@ public class CatalogSearcher
 			List children = elem.getChildren();
 
 			for(int i=0; i<children.size(); i++)
-				convertPhrases((Element) children.get(i));
+				convertPhrases((Element) children.get(i), context);
 		}
 	}
 
+	//---------------------------------------------------------------------------
+	private boolean isTokenized(String field, ServiceContext context) throws IOException
+	{
+	    Boolean tokenized = _isTokenizedField.get(field);
+	    if (tokenized != null) {
+	        return tokenized.booleanValue();
+	    }
+	    GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+	    SearchManager sm = gc.getSearchmanager();
+	    IndexReader reader = IndexReader.open(sm.getLuceneDir());
+
+	    int i = 0;
+	    while (i < reader.numDocs() && tokenized == null) {
+	        Document doc = reader.document(i);
+	        Field tmp = doc.getField(field);
+	        if (tmp != null) {
+	            tokenized = tmp.isTokenized();
+	        }
+	        i++;
+	    }
+	    
+	    if (tokenized != null) {
+	        _isTokenizedField.put(field, tokenized.booleanValue());
+	        return tokenized.booleanValue();
+	    }
+	    _isTokenizedField.put(field, false);
+	    return false;
+	}
+	
+	
 	/**
 	 * Map OGC CSW search field names to Lucene field names
 	 * using {@link FieldMapper}. If a field name is not defined
@@ -203,21 +286,17 @@ public class CatalogSearcher
 	{
 		String field = elem.getAttributeValue("fld");
 
-		if (field != null) {
-			
-			if (field.equals("")) 
+		if (field != null)
+		{
+			if (field.equals(""))
 				field = "any";
-			
-			if(field.equalsIgnoreCase("anytext")) {
-				field = "any";
-			}
 
 			String mapped = FieldMapper.map(field);
 
 			if (mapped != null)
 				elem.setAttribute("fld", mapped);
 			else
-				Log.info(Geonet.CSW_SEARCH, "Unknown queryable field : "+ field);
+				Log.info(Geonet.CSW_SEARCH, "Unknown queryable field : "+ field);  //FIXME log doesn't work
 		}
 
 		List children = elem.getChildren();
@@ -228,57 +307,71 @@ public class CatalogSearcher
 
 	//---------------------------------------------------------------------------
 
-	/**
-	 * Call {@link LuceneSearcher} to do the CSW query and return results
-	 */
-	private List<ResultItem> search(ServiceContext context, Element luceneExpr) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+	private Pair <Element, List<ResultItem>> performSearch(ServiceContext context,
+			Element luceneExpr, Element filterExpr, String filterVersion, Sort sort, ResultType resultType, int maxRecords)
+			throws Exception
+    {
+		GeonetContext gc = (GeonetContext) context
+				.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
 
 		if (luceneExpr != null)
-			Log.debug(Geonet.CSW_SEARCH, "Search criteria:\n"+ Xml.getString(luceneExpr));
+			Log.debug(Geonet.CSW_SEARCH, "Search criteria:\n"
+					+ Xml.getString(luceneExpr));
 
-		Query data   = (luceneExpr == null) ? null : LuceneSearcher.makeQuery(luceneExpr);
+		Query data = (luceneExpr == null) ? null : LuceneSearcher
+				.makeQuery(luceneExpr);
 		Query groups = getGroupsQuery(context);
-		Query templ  = new TermQuery(new Term("_isTemplate", "n"));
-		// TODO : could we query only iso based record here instead of filtering afterwards ?
-		//--- put query on groups in AND with lucene query
 
-		BooleanQuery query  = new BooleanQuery();
+		// --- put query on groups in AND with lucene query
 
-		BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);					
+		BooleanQuery query = new BooleanQuery();
+		
+		// FIXME : DO I need to fix that here ???
+//		BooleanQuery.setMaxClauseCount(1024); // FIXME : using MAX_VALUE solve
+//        // partly the org.apache.lucene.search.BooleanQuery$TooManyClauses
+//        // problem.
+//        // Improve index content.
+
+		BooleanClause.Occur occur = LuceneUtils
+				.convertRequiredAndProhibitedToOccur(true, false);
 		if (data != null)
-			query.add(data,   occur);
+			query.add(data, occur);
 
 		query.add(groups, occur);
-		query.add(templ,  occur);
 
-		//--- proper search
-
-		IndexReader   reader   = IndexReader.open(sm.getLuceneDir());
+		// --- proper search
+		Log.debug(Geonet.CSW_SEARCH, "Lucene query: " + query.toString());
+		
+		IndexReader reader = IndexReader.open(sm.getLuceneDir());
 		IndexSearcher searcher = new IndexSearcher(reader);
-
+		
 		try
 		{
-			_hits = searcher.search(query);
+			// TODO Handle NPE creating spatial filter (due to constraint language version). 
+			Filter spatialfilter = sm.getSpatial().filter(query,
+					filterExpr, filterVersion);
+			
+            if (spatialfilter == null) {
+            	_hits = searcher.search(query, sort);
+            } else {
+            	_hits = searcher.search(query, new CachingWrapperFilter(spatialfilter), sort);
+            }
 
 			Log.debug(Geonet.CSW_SEARCH, "Records matched : "+ _hits.length());
-
+			
 			//--- retrieve results
 
-			ArrayList<ResultItem> results = new ArrayList<ResultItem>();
+			List<ResultItem> results = new ArrayList<ResultItem>();
 
-			for(int i=0; i<_hits.length(); i++)
-			{
+			for (int i = 0; i < _hits.length(); i++) {
 				Document doc = _hits.doc(i);
-				String   id  = doc.get("_id");
+				String id = doc.get("_id");
 
 				ResultItem ri = new ResultItem(id);
 				results.add(ri);
 
-				for(String field : FieldMapper.getMappedFields())
-				{
+				for (String field : FieldMapper.getMappedFields()) {
 					String value = doc.get(field);
 
 					if (value != null)
@@ -286,14 +379,26 @@ public class CatalogSearcher
 				}
 			}
 
-			return results;
+			Element summary = null;
+
+			// Only compute GeoNetwork summary on results_with_summary option 
+			if (resultType == ResultType.RESULTS_WITH_SUMMARY) {
+					summary = LuceneSearcher.makeSummary(_hits, _hits.length(),
+							_summaryConfig, resultType.toString(), 10);
+					summary.setName("Summary");
+					summary.setNamespace(Csw.NAMESPACE_GEONET);
+			}
+			
+			return Pair.read(summary, results);
 		}
 		finally
 		{
 			searcher.close();
 			reader  .close();
 		}
-	}
+    }
+	
+	//---------------------------------------------------------------------------
 
 	/**
 	 * Allow search on current user's groups only adding a 
@@ -317,68 +422,18 @@ public class CatalogSearcher
 			TermQuery tq = new TermQuery(new Term(operView, group.toString()));
 			query.add(tq, occur);
 		}
+		
+		// If user is authenticated, add the current user to the query because 
+        // if an editor unchecked all
+        // visible options in privileges panel for all groups, then the metadata
+        // records could not be found anymore, even by its editor.
+        if (context.getUserSession().getUserId() != null) {
+            TermQuery tq = new TermQuery(new Term("_owner", context.getUserSession().getUserId()));
+            query.add(tq, occur);
+        }
 
 		return query;
 	}
-
-	//---------------------------------------------------------------------------
-
-	private void sort(List<ResultItem> results, List<SortField> sortFields)
-	{
-		if (sortFields.isEmpty())
-			return;
-
-		ArrayList<SortField> fields = new ArrayList<SortField>();
-
-		for(SortField sf : sortFields)
-		{
-			String mapped = FieldMapper.map(sf.field);
-
-			if (mapped != null)
-			{
-				sf.field = mapped;
-				fields.add(sf);
-			}
-			else
-				Log.info(Geonet.CSW_SEARCH, "Skipping unknown sortable field : "+ sf.field);
-		}
-
-		Collections.sort(results, new ItemComparator(fields));
-	}
-	
-    /**
-     * <p>
-     * Gets results in current searcher
-     * </p>
-     * 
-     * @return current searcher result in "fast" mode
-     * 
-     * @throws IOException
-     * @throws CorruptIndexException
-     */
-    public Element getAll() throws CorruptIndexException, IOException
-    {
-        Element response = new Element("response");
-
-        if (_hits.length() == 0) {
-            response.setAttribute("from", 0 + "");
-            response.setAttribute("to", 0 + "");
-            return response;
-        }
-
-        response.setAttribute("from", 1 + "");
-        response.setAttribute("to", _hits.length() + "");
-        for (int i = 0; i < _hits.length(); i++) {
-            Document doc = _hits.doc(i);
-            String id = doc.get("_id");
-
-            // FAST mode
-            Element md = LuceneSearcher.getMetadataFromIndex(doc, id);
-            response.addContent(md);
-        }
-
-        return response;
-    }
 	
 }
 

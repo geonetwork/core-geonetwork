@@ -1,20 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-										xmlns:ogc="http://www.opengis.net/ogc"
-   									xmlns:gml="http://www.opengis.net/gml"
-										exclude-result-prefixes="ogc gml">
+							xmlns:ogc="http://www.opengis.net/ogc"
+   							xmlns:gml="http://www.opengis.net/gml"
+							exclude-result-prefixes="ogc gml">
 
 	<!-- ========================================================================== -->
 	<!-- === Property operators : =, <>, <, <=, >, >=, Like, Between === -->
 	<!-- ========================================================================== -->
 
 	<xsl:template match="ogc:PropertyIsEqualTo">
-		<xsl:choose>
+		<xsl:variable name="sibling" select="preceding-sibling::ogc:PropertyIsEqualTo[ogc:PropertyName='similarity']" />
+
+        <xsl:variable name="currentSimilarity">
+            <xsl:choose>
+                <xsl:when test="count($sibling) = 0">
+	                <xsl:value-of select="1"/><!-- Change this value to enable default FuzzySearch (eg. 0.8). -->
+                </xsl:when>
+                <xsl:otherwise>
+     	            <xsl:value-of
+                    select="$sibling[count($sibling)]/ogc:Literal"/>
+                </xsl:otherwise>
+             </xsl:choose>
+        </xsl:variable>
+         
+        <xsl:choose>
 			<!-- we cannot check ogc:PropertyName because it can be null to search for
               any property -->
-			<xsl:when test="ogc:Literal">
+			<xsl:when test="ogc:Literal and $currentSimilarity &gt;= 1.0">
 				<TermQuery fld="{ogc:PropertyName}" txt="{ogc:Literal}"/>
+			</xsl:when>
+			<xsl:when test="ogc:Literal">
+				<FuzzyQuery fld="{ogc:PropertyName}" txt="{ogc:Literal}" sim="{$currentSimilarity}"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<error type="Unknown content of expression">
@@ -110,8 +126,13 @@
 
 	<xsl:template match="ogc:PropertyIsLike">
 		<xsl:choose>
+			<!-- If search for all, MatchAllDocsQuery is faster than WildcardQuery. -->
+			<xsl:when test="ogc:PropertyName and ogc:Literal=@wildCard">
+				<MatchAllDocsQuery required="true" prohibited="false"/>
+			</xsl:when>
 			<xsl:when test="ogc:PropertyName and ogc:Literal">
-				<WildcardQuery fld="{ogc:PropertyName}" txt="{translate(translate(ogc:Literal, @wildCard, '*'), @singleChar, '?')}"/>
+				<WildcardQuery fld="{ogc:PropertyName}"
+					txt="{translate(translate(ogc:Literal, @wildCard, '*'), @singleChar, '?')}"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<error type="Unknown content of expression">
@@ -125,8 +146,10 @@
 
 	<xsl:template match="ogc:PropertyIsBetween">
 		<xsl:choose>
-			<xsl:when test="ogc:PropertyName and ogc:LowerBoundary/ogc:Literal and ogc:UpperBoundary/ogc:Literal">
-				<RangeQuery fld="{ogc:PropertyName}" lowerTxt="{ogc:LowerBoundary/ogc:Literal}" upperTxt="{ogc:UpperBoundary/ogc:Literal}" inclusive="true"/>
+			<xsl:when
+				test="ogc:PropertyName and ogc:LowerBoundary/ogc:Literal and ogc:UpperBoundary/ogc:Literal">
+				<RangeQuery fld="{ogc:PropertyName}" lowerTxt="{ogc:LowerBoundary/ogc:Literal}"
+					upperTxt="{ogc:UpperBoundary/ogc:Literal}" inclusive="true"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<error type="Unknown content of expression">
@@ -150,9 +173,11 @@
 
 	<xsl:template match="ogc:And">
 		<BooleanQuery>
-			<xsl:for-each select="*">
+			<xsl:for-each
+				select="*[(ogc:PropertyName!='similarity' and 
+				ogc:PropertyName!='group') or not(@*)]">
 				<BooleanClause required="true" prohibited="false">
-					<xsl:apply-templates select="." />
+					<xsl:apply-templates select="."/>
 				</BooleanClause>
 			</xsl:for-each>
 		</BooleanQuery>
@@ -162,9 +187,11 @@
 
 	<xsl:template match="ogc:Or">
 		<BooleanQuery>
-			<xsl:for-each select="*">
+			<xsl:for-each
+				select="*[(ogc:PropertyName!='similarity' and 
+				ogc:PropertyName!='group') or not(@*)]">
 				<BooleanClause required="false" prohibited="false">
-					<xsl:apply-templates select="." />
+					<xsl:apply-templates select="."/>
 				</BooleanClause>
 			</xsl:for-each>
 		</BooleanQuery>
@@ -178,9 +205,11 @@
 				<WildcardQuery fld="any" txt="*"/>
 			</BooleanClause>
 
-			<xsl:for-each select="*">
+			<xsl:for-each
+				select="*[(ogc:PropertyName!='similarity' and 
+					ogc:PropertyName!='group') or not(@*)]">
 				<BooleanClause required="false" prohibited="true">
-					<xsl:apply-templates select="." />
+					<xsl:apply-templates select="."/>
 				</BooleanClause>
 			</xsl:for-each>
 		</BooleanQuery>
@@ -189,6 +218,7 @@
 	<!-- ========================================================================== -->
 	<!-- === Spatial operators : BBOX === -->
 	<!-- ========================================================================== -->
+	<!--
 
 	<xsl:template match="ogc:BBOX">
 		<xsl:variable name="lower" select="gml:Envelope/gml:lowerCorner"/>
@@ -200,7 +230,7 @@
 		<xsl:variable name="westBL"  select="substring-after($lower,  ' ') + 360"/>
 
 		<xsl:choose>
-			<!-- A better test should be done by java code -->
+			 A better test should be done by java code
 			<xsl:when test="not (contains(ogc:PropertyName, 'ows:BoundingBox'))">
 				<error type="The queried property is not spatial">
 					<xsl:copy-of select="."/>
@@ -208,7 +238,7 @@
 			</xsl:when>
 
 			<xsl:otherwise>
-				<!-- overlaps test : BBOX = not disjoint -->
+				 overlaps test : BBOX = not disjoint
 		
 				<BooleanQuery>
 					<BooleanClause required="true" prohibited="false">
@@ -231,18 +261,82 @@
 		</xsl:choose>
 	</xsl:template>
 
+	-->
 	<!-- ========================================================================== -->
 
-	<xsl:template match="ogc:Equals|ogc:Disjoint|ogc:Touches|ogc:Within|ogc:Overlaps|ogc:Crosses|ogc:Intersects|ogc:Contains|ogc:DWithin|ogc:Beyond">
-		<error type="Operator not implemented">
+	<xsl:template
+		match="ogc:BBOX|ogc:Equals|ogc:Disjoint|ogc:Touches|ogc:Within|ogc:Overlaps|ogc:Crosses|ogc:Intersects|ogc:Contains|ogc:DWithin|ogc:Beyond">
+		<MatchAllDocsQuery/>
+		<!--<error type="Operator not implemented">
 			<xsl:copy-of select="."/>
-		</error>
+		</error>-->
 	</xsl:template>
 
 	<!-- ========================================================================== -->
+	<!-- Template based on group and privileges to search for 
+			* all records visible for one group (group)
+			* all records created in one group (_groupOwner)
+			* all records created by one user (_owner)
+	-->
+	<!-- Privilege variables stored in the index use for group access -->
+	<xsl:variable name="opView" select="'_op0'"/>
+	<xsl:variable name="opDownload" select="'_op1'"/>
+	<xsl:variable name="opDynamic" select="'_op5'"/>
+	<xsl:variable name="opFeatured" select="'_op6'"/>
+
+	<xsl:variable name="internetGp" select="'1'"/>
+
+
+	<xsl:template match="ogc:PropertyIsEqualTo[ogc:PropertyName='group']" priority="2">
+		<TermQuery fld="{$opView}" txt="{ogc:Literal}"/>
+	</xsl:template>
+
+	<!-- Do not allow FuzzyQuery for those fields -->
+	<xsl:template
+		match="ogc:PropertyIsEqualTo[ogc:PropertyName='_groupOwner' or
+									ogc:PropertyName='_owner' or
+									ogc:PropertyName='_validsch' or
+									ogc:PropertyName='_validxsd' or
+									ogc:PropertyName='_isTemplate' or
+									ogc:PropertyName='_isHarvested' or
+									ogc:PropertyName='_valid' or
+									ogc:PropertyName='_visibleForOwnerOnly']"
+		priority="2">
+		<TermQuery fld="{ogc:PropertyName}" txt="{ogc:Literal}"/>
+	</xsl:template>
+
+	<!-- An empty filter means return all -->
+	<xsl:template match="ogc:Filter[count(*)=0]">
+		<TermQuery fld="_isTemplate" txt="n"/>
+	</xsl:template>
+	
+	<!-- ========================================================================== -->
 
 	<xsl:template match="*">
-		<xsl:apply-templates select="*"/>
+		<xsl:choose>
+			<!-- Applied default criteria to exclude template from results -->
+			<xsl:when test="string(//ogc:PropertyName) != '_isTemplate'">
+				<xsl:call-template name="filterTemplate"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="*"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<!-- ========================================================================== -->
+	<!-- === Filter on isTemplate field, allows CSW search on that criteria === -->
+	<!-- ========================================================================== -->
+	<!-- -->
+	<xsl:template name="filterTemplate">
+		<BooleanQuery>
+			<BooleanClause required="true" prohibited="false">
+				<xsl:apply-templates select="*"/>
+			</BooleanClause>
+			<BooleanClause required="true" prohibited="false">
+				<TermQuery fld="_isTemplate" txt="n"/>
+			</BooleanClause>
+		</BooleanQuery>
 	</xsl:template>
 
 	<!-- ============================================================================= -->

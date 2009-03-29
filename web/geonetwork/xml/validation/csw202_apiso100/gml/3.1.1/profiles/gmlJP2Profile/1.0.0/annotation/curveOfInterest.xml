@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy 2005 R3 U (http://www.xmlspy.com) by David S. Burggraf (Galdos Systems Inc.) -->
+<CurveOfInterest gml:id="COI001" xmlns="http://www.opengis.net/xima" xmlns:gml="http://www.opengis.net/gml" xmlns:xima="http://www.opengis.net/xima" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/gml ../gmlJP2Profile.xsd http://www.opengis.net/xima annotation.xsd">
+    <gml:metaDataProperty>
+        <AnnotationMetaData>
+            <title>A curve of interest</title>
+            <author>Author Name</author>
+            <dateTime>2004-12-12T01:01:01</dateTime>
+            <certainty>medium</certainty>
+            <rationale>shape of polygon is a close match to that of known region of interest</rationale>
+        </AnnotationMetaData>
+    </gml:metaDataProperty>
+    <gml:defaultStyle>
+        <!--Style will overlay some arrow or line symbol on top of Annotation/pointer value-->
+    </gml:defaultStyle>
+    <gml:defaultStyle>
+        <!--Style will overlay line symbol(s) on annotates property value-->
+    </gml:defaultStyle>
+    <pointer>
+        <gml:LineString gml:id="L001">
+            <gml:pos>12 34</gml:pos>
+            <gml:pos>45 36</gml:pos>
+            <gml:pos>78 34</gml:pos>
+        </gml:LineString>
+    </pointer>
+    <content>
+        <Label>
+            <gml:defaultStyle>
+                <!--Style will place textContent value at anchorPoint at some angle-->
+            </gml:defaultStyle>
+            <xima:textContent>Text Describing Curve of Interest</xima:textContent>
+            <xima:anchorPoint>
+                <gml:Point gml:id="Pt001" srsName="gmljp2://xml/crs.gml#id">
+                    <gml:pos>0 10</gml:pos>
+                </gml:Point>
+            </xima:anchorPoint>
+        </Label>
+    </content>
+    <annotates>
+        <gml:LineString gml:id="L002">
+            <gml:pos>22 44</gml:pos>
+            <gml:pos>55 77</gml:pos>
+            <gml:pos>88 100</gml:pos>
+        </gml:LineString>
+    </annotates>
+</CurveOfInterest>

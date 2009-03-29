@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy 2005 R3 U (http://www.xmlspy.com) by David S. Burggraf (Galdos Systems Inc.) -->
+<FeatureOfInterest gml:id="FOI001" xmlns="http://www.opengis.net/xima"
+    xmlns:gml="http://www.opengis.net/gml" xmlns:xima="http://www.opengis.net/xima"
+    xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.opengis.net/gml ../gmlJP2Profile.xsd http://www.opengis.net/xima
+    annotation.xsd">
+    <gml:metaDataProperty>
+        <AnnotationMetaData>
+            <title>A building feature of interest</title>
+            <author>Author Name</author>
+            <dateTime>2004-12-12T01:01:01</dateTime>
+            <certainty>high</certainty>
+        </AnnotationMetaData>
+    </gml:metaDataProperty>
+    <gml:defaultStyle>
+        <!--Style will overlay some arrow or line symbol on top of Annotation/pointer value-->
+    </gml:defaultStyle>
+    <gml:defaultStyle>
+        <!--Style will overlay point symbol on annotates property value-->
+    </gml:defaultStyle>
+    <pointer>
+        <gml:LineString gml:id="L001">
+            <gml:pos>12 34</gml:pos>
+            <gml:pos>45 36</gml:pos>
+            <gml:pos>78 34</gml:pos>
+        </gml:LineString>
+    </pointer>
+    <content>
+        <Image>
+            <gml:defaultStyle>
+                <!--Style will place image file inside boundary Envelope-->
+            </gml:defaultStyle>
+            <xima:fileURI>file///c/BuildingPhoto.jpg</xima:fileURI>
+            <xima:boundary>
+                <gml:Envelope>
+                    <gml:lowerCorner>1 1</gml:lowerCorner>
+                    <gml:upperCorner>20 20</gml:upperCorner>
+                </gml:Envelope>
+            </xima:boundary>
+        </Image>
+    </content>
+    <annotates>
+        <gml:Point gml:id="Pt001" srsName="gmljp2://xml/crs.gml#id">
+            <gml:pos>30 30</gml:pos>
+        </gml:Point>
+    </annotates>
+    <gml:featureMember xlink:href="www.abc.com/building.xml#B001"/>
+</FeatureOfInterest>

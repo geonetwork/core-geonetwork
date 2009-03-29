@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<schema
+   targetNamespace="http://www.opengis.org/cipi1.2/level0/bts"
+   xmlns:bts="http://www.opengis.org/cipi1.2/level0/bts"
+   xmlns:gml="http://www.opengis.net/gml"
+   xmlns:gmlsf="http://www.opengis.net/gmlsf"
+   xmlns="http://www.w3.org/2001/XMLSchema"
+   elementFormDefault="qualified"
+   version="1.0">
+   <annotation>
+      <appinfo source="http://schemas.opengis.net/gml/3.1.1/profiles/gmlsfProfile/1.0.0/gmlsfLevels.xsd">
+      <gmlsf:ComplianceLevel>0</gmlsf:ComplianceLevel>
+      <gmlsf:GMLProfileSchema>http://schemas.opengis.net/gml/3.1.1/profiles/gmlsfProfile/1.0.0/gmlsf.xsd</gmlsf:GMLProfileSchema>
+      </appinfo>
+   </annotation>
+   <!-- ============================================================= -->
+   <!-- === includes and imports                                  === -->
+   <!-- ============================================================= -->
+   <import namespace="http://www.opengis.net/gml" 
+           schemaLocation="http://schemas.opengis.net/gml/3.1.1/gml.xsd"/>
+   <import namespace="http://www.opengis.net/gmlsf"
+           schemaLocation="http://schemas.opengis.net/gml/3.1.1/profiles/gmlsfProfile/1.0.0/gmlsfLevels.xsd"/>
+   <!-- =========================================================
+        define feature types
+        ========================================================= -->
+   <element name="Roads_bts" type="bts:Roads_btsType"
+            substitutionGroup="gml:_Feature"/>
+   <!-- ============================================================= -->
+   <complexType name="Roads_btsType">
+      <complexContent>
+         <extension base="gml:AbstractFeatureType">
+            <sequence>
+               <element maxOccurs="1" minOccurs="1" name="Objectid_1">
+                  <simpleType>
+                     <restriction base="integer">
+                        <totalDigits value="10"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element maxOccurs="1" minOccurs="1" name="Objectid">
+                  <simpleType>
+                     <restriction base="integer">
+                        <totalDigits value="10"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element maxOccurs="1" minOccurs="1" name="FNode_">
+                  <simpleType>
+                     <restriction base="integer">
+                        <totalDigits value="10"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element maxOccurs="1" minOccurs="1" name="TNode_">
+                  <simpleType>
+                     <restriction base="integer">
+                        <totalDigits value="10"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element maxOccurs="1" minOccurs="0" name="LPoly_">
+                  <simpleType>
+                     <restriction base="integer">
+                        <totalDigits value="10"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element maxOccurs="1" minOccurs="0" name="RPoly_">
+                  <simpleType>
+                     <restriction base="integer">
+                        <totalDigits value="10"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element maxOccurs="1" minOccurs="0" name="Length"
+                  type="gml:MeasureType"/>
+               <element maxOccurs="1" minOccurs="1" name="Bdt_roads_">
+                  <simpleType>
+                     <restriction base="integer">
+                        <totalDigits value="10"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element maxOccurs="1" minOccurs="1" name="Bdt_roads1">
+                  <simpleType>
+                     <restriction base="integer">
+                        <totalDigits value="10"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element maxOccurs="1" minOccurs="0" name="Prefix">
+                  <simpleType>
+                     <restriction base="string">
+                        <maxLength value="2"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element maxOccurs="1" minOccurs="0" name="Name">
+                  <simpleType>
+                     <restriction base="string">
+                        <maxLength value="30"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element maxOccurs="1" minOccurs="0" name="Type">
+                  <simpleType>
+                     <restriction base="string">
+                        <maxLength value="4"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element maxOccurs="1" minOccurs="0" name="Suffix">
+                  <simpleType>
+                     <restriction base="string">
+                        <maxLength value="2"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element maxOccurs="1" minOccurs="1" name="Fcc">
+                  <simpleType>
+                     <restriction base="string">
+                        <maxLength value="3"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element maxOccurs="1" minOccurs="1" name="Fips">
+                  <simpleType>
+                     <restriction base="string">
+                        <maxLength value="11"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element maxOccurs="1" minOccurs="0" name="Shape_len">
+                  <simpleType>
+                     <restriction base="decimal">
+                        <totalDigits value="30"/>
+                        <fractionDigits value="15"/>
+                     </restriction>
+                  </simpleType>
+               </element>
+               <element maxOccurs="1" minOccurs="0" name="Geometry"
+                  type="gml:CurvePropertyType"/>
+            </sequence>
+         </extension>
+      </complexContent>
+   </complexType>
+   <!-- ============================================================= -->
+   <!-- Define a feature collection for a set of Roads_bts            -->
+   <!-- ============================================================= -->
+   <element name="Roads"
+            type="bts:RoadsType"
+            substitutionGroup="gml:_GML"/>
+   <complexType name="RoadsType"
+      <complexContent>
+         <extension base="gml:AbstractfeatureType">
+            <sequence minOccurs="1" maxOccurs="unbounded">
+               <element name="featureMember">
+                  <complexType>
+                     <sequence>
+                        <element ref="gml:_Feature"/>
+                     </sequence>
+                  </complexType>
+               </element>
+            </sequence>
+         </extension>
+      </complexContent>
+   </complexType>
+</schema>

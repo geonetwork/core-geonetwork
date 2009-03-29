@@ -302,10 +302,32 @@ public class Geonet
          * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} (default)
          * or {@value org.fao.geonet.constants.Geonet.Text#OFF} */
         public static final String INTERMAP      = "intermap";
-
+        
+        /** Parameter name: {@value #GEOMETRY} - Used to filter results of query based on geometry
+         * Currently intersection is used to do the filtering
+         * 
+         * The geometry values a geometry expressed in WKT*/
+        public static final String GEOMETRY = "geometry";
+        
         /** Parameter name: {@value #UUID} - Text field that search 
          * for specific uuid given */
         public static final String UUID = "uuid";
+
+		public static final String RESULT_TYPE = "resultType";
+
+		//-----------------------------------------------------------------------
+
+        public class ResultType 
+        {
+            public static final String RESULTS                  = "results";
+            public static final String HITS                     = "hits";
+            public static final String VALIDATE                 = "validate";
+            /**
+             * Contains CSW results response with a GeoNetwork summary
+             * of the current search. 
+             */
+            public static final String RESULTS_WITH_SUMMARY     = "results-with-summary";
+        }
 
 		//-----------------------------------------------------------------------
 
@@ -315,6 +337,10 @@ public class Geonet
 			public static final String OVERLAPS  = "overlaps";
 			public static final String ENCLOSES  = "encloses";
 			public static final String OUTSIDEOF = "fullyOutsideOf";
+			public static final String INTERSECTION = "intersection";
+            public static final String CROSSES = "crosses";
+            public static final String TOUCHES = "touches";
+            public static final String WITHIN = "within";
 		}
 
 		//-----------------------------------------------------------------------
@@ -364,6 +390,7 @@ public class Geonet
 		public static final String DATA_DIR         = "dataDir";
 		public static final String CODELIST_DIR  	= "codeListDir";
 		public static final String DIR              = "dir";
+		public static final String SUMMARY_CONFIG   = "summaryConfig";
 	}
 
 	//--------------------------------------------------------------------------

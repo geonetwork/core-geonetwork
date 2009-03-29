@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-Instance" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xima="http://www.opengis.net/xima" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" targetNamespace="http://www.opengis.net/xima" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <!--=============================================-->
+    <!-- When packaged in jpx file the import statements will be replaced by the following
+        <import namespace="http://www.opengis.net/gml" schemaLocation="gmljp2://xml/gmlJP2Profile.xsd"/>
+        <import namespace=" http://www.w3.org/1999/xlink " schemaLocation="gmljp2://xml/xlinks.xsd"/>
+    -->
+    <import namespace="http://www.opengis.net/gml" schemaLocation="../gmlJP2Profile.xsd"/>
+    <import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../../../../../xlink/1.0.0/xlinks.xsd"/>
+    <!--=============================================-->
+    <element name="_Annotation" type="xima:AnnotationType" abstract="true" substitutionGroup="gml:_Feature"/>
+    <!--=============================================-->
+    <element name="Annotation" type="xima:AnnotationType" substitutionGroup="xima:_Annotation"/>
+    <!--=============================================-->
+    <complexType name="AnnotationType">
+        <complexContent>
+            <extension base="xima:AbstractAnnotationType">
+                <sequence>
+                    <element name="annotates" type="gml:GeometryPropertyType"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!--=============================================-->
+    <element name="AbstractAnnotation" type="xima:AbstractAnnotationType" abstract="true"/>
+    <!--=============================================-->
+    <complexType name="AbstractAnnotationType">
+        <complexContent>
+            <extension base="xima:AnnotationBaseType">
+                <sequence>
+                    <element name="pointer" type="gml:CurvePropertyType" minOccurs="0" maxOccurs="unbounded"/>
+                    <element ref="xima:content"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!--=============================================-->
+    <element name="content">
+        <complexType>
+            <sequence>
+                <element ref="xima:_AnnotationBase" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+    <!--=============================================-->
+    <element name="_AnnotationBase" type="xima:AnnotationBaseType" abstract="true" substitutionGroup="gml:_Feature"/>
+    <!--=============================================-->
+    <complexType name="AnnotationBaseType">
+        <complexContent>
+            <extension base="xima:AbstractAnnotationBaseType">
+                <sequence>
+                    <element ref="gml:defaultStyle" minOccurs="0" maxOccurs="unbounded"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!--=============================================-->
+    <complexType name="AbstractAnnotationBaseType">
+        <complexContent>
+            <restriction base="gml:AbstractFeatureType">
+                <sequence>
+                    <element ref="gml:metaDataProperty" minOccurs="0" maxOccurs="unbounded"/>
+                    <element ref="gml:description" minOccurs="0"/>
+                    <element ref="gml:name" minOccurs="0" maxOccurs="unbounded">
+                        <annotation>
+                            <documentation>Multiple names may be provided. These will often be distinguished by being assigned by different authorities, as indicated by the value of the codeSpace attribute. In an instance document there will usually only be one name per authority. </documentation>
+                        </annotation>
+                    </element>
+                </sequence>
+            </restriction>
+        </complexContent>
+    </complexType>
+    <!--=============================================-->
+    <element name="Label" type="xima:LabelType" substitutionGroup="xima:_AnnotationBase">
+        <annotation>
+            <documentation>
+                Label is a means of placing text relative to a specific geographic location. The appearance of the label is determined by the associated style.
+            </documentation>
+        </annotation>
+    </element>
+    <!--=============================================-->
+    <complexType name="LabelType">
+        <complexContent>
+            <extension base="xima:AnnotationBaseType">
+                <sequence>
+                    <element name="textContent" type="string"/>
+                    <element name="anchorPoint" type="gml:PointPropertyType"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!--=============================================-->
+    <element name="Image" type="xima:ImageType" substitutionGroup="xima:_AnnotationBase">
+        <annotation>
+            <documentation>
+                Image is a means of placing an image relative to a specific geometric location. The appearance of the image is determined by the associated style.
+            </documentation>
+        </annotation>
+    </element>
+    <!--=============================================-->
+    <complexType name="ImageType">
+        <complexContent>
+            <extension base="xima:AnnotationBaseType">
+                <sequence>
+                    <element name="fileURI" type="anyURI"/>
+                    <element name="boundary" type="xima:EnvelopePropertyType"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!--=============================================-->
+    <complexType name="EnvelopePropertyType">
+        <sequence>
+            <element ref="gml:Envelope"/>
+        </sequence>
+    </complexType>
+    <!--=============================================-->
+    <element name="PointOfInterest" type="xima:PointOfInterestType" substitutionGroup="xima:_AnnotationBase">
+        <annotation>
+            <documentation>
+                PointOfInterest is a means of indicating a point of interest on an image or map or in a geographic dataset. No specific feature is attached to the point in question. The PointOfInterest can have an arrow (pointing at the POI) and a Label or Image.</documentation>
+        </annotation>
+    </element>
+    <!--=============================================-->
+    <complexType name="PointOfInterestType">
+        <complexContent>
+            <extension base="xima:AbstractAnnotationType">
+                <sequence>
+                    <element name="annotates" type="gml:PointPropertyType"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!--=============================================-->
+    <!--
+        <element name="pointer" type="gml:CurvePropertyType" minOccurs="0" maxOccurs="unbounded"/>
+        <element ref="xima:content"/>
+        <element name="annotates" type="gml:GeometryPropertyType"/>
+    -->
+    <!--=============================================-->
+    <element name="CurveOfInterest" type="xima:CurveOfInterestType" substitutionGroup="xima:_AnnotationBase">
+        <annotation>
+            <documentation>
+                CurveOfInterest is a means of indicating a curve of interest on an image or map or in a geographic dataset. No specific feature is attached to the curve in question. The CurveOfInterest can have an arrow and a Label or Image.
+            </documentation>
+        </annotation>
+    </element>
+    <!--=============================================-->
+    <complexType name="CurveOfInterestType">
+        <complexContent>
+            <extension base="xima:AbstractAnnotationType">
+                <sequence>
+                    <element name="annotates" type="gml:CurvePropertyType"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!--=============================================-->
+    <element name="RegionOfInterest" type="xima:RegionOfInterestType" substitutionGroup="xima:_AnnotationBase">
+        <annotation>
+            <documentation>
+                Region of interest is a means of hi-lighting a region on an image or map. The region is bounded by a polygon, may have an indicator arrow, and either Label or Image.
+            </documentation>
+        </annotation>
+    </element>
+    <!--=============================================-->
+    <complexType name="RegionOfInterestType">
+        <complexContent>
+            <extension base="xima:AbstractAnnotationType">
+                <sequence>
+                    <element name="annotates" type="gml:PolygonPropertyType"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!--=============================================-->
+    <element name="FeatureOfInterest" type="xima:FeatureOfInterestType" substitutionGroup="xima:_AnnotationBase">
+        <annotation>
+            <documentation>
+                Feature of interest is a means of hi-lighting a feature on an image or map.  The feature is indicated by an arrow Label or Image.                         </documentation>
+        </annotation>
+    </element>
+    <!--=============================================-->
+    <complexType name="FeatureOfInterestType">
+        <complexContent>
+            <extension base="xima:AbstractAnnotationType">
+                <sequence>
+                    <element ref="gml:featureMember" minOccurs="0"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!--=============================================-->
+    <element name="AnnotationMetaData" substitutionGroup="gml:_MetaData">
+        <complexType mixed="true">
+            <complexContent mixed="true">
+                <extension base="gml:AbstractMetaDataType">
+                    <sequence>
+                        <group ref="xima:properties"/>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+    <!--=============================================-->
+    <group name="properties">
+        <sequence>
+            <element ref="xima:title" minOccurs="0"/>
+            <element ref="xima:author" minOccurs="0"/>
+            <element ref="xima:dateTime" minOccurs="0"/>
+            <sequence minOccurs="0">
+                <element ref="xima:certainty"/>
+                <element ref="xima:rationale" minOccurs="0"/>
+            </sequence>
+        </sequence>
+    </group>
+    <!--=============================================-->
+    <element name="title" type="string"/>
+    <element name="author" type="string"/>
+    <element name="dateTime" type="dateTime"/>
+    <element name="certainty" type="string"/>
+    <element name="rationale" type="string"/>
+    <!--=============================================-->
+</schema>

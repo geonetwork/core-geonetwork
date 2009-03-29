@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<geonet>
+	<operations>
+		<operation name="GetCapabilities">
+			<!-- Defines the number of keywords displayed in capabilities, ordered by frequency -->
+			<numberOfKeywords>10</numberOfKeywords>
+		</operation>
+		<operation name="GetRecords">
+			<parameters>
+				<!-- - - - - - - - - - - - - - -->
+				<!-- Core queryable properties -->
+				<!-- - - - - - - - - - - - - - -->
+				<parameter name="Subject" field="subject" type="SupportedISOQueryables" />
+				<parameter name="Title" field="title" type="SupportedISOQueryables" />
+				<parameter name="Abstract" field="abstract" type="SupportedISOQueryables" />
+				<parameter name="AnyText" field="any" type="SupportedISOQueryables" />
+				<parameter name="Format" field="format" type="SupportedISOQueryables" />
+				<parameter name="Identifier" field="fileId"
+					type="SupportedISOQueryables" />
+				<parameter name="Modified" field="changeDate" type="SupportedISOQueryables" />
+				<parameter name="Type" field="type" type="SupportedISOQueryables" />
+				<!-- what about CRS / BoundingBox -->
+
+				<!-- - - - - - - - - - - - - - - - - - - - - - - -->
+				<!-- Additional queryable properties  (common)   -->
+				<!-- - - - - - - - - - - - - - - - - - - - - - - -->
+				<parameter name="RevisionDate" field="revisionDate"
+					type="SupportedISOQueryables" range="true"/>
+				<parameter name="AlternateTitle" field="altTitle"
+					type="SupportedISOQueryables" />
+				<parameter name="CreationDate" field="createDate"
+					type="SupportedISOQueryables" range="true"/>
+				<parameter name="PublicationDate" field="publicationDate"
+					type="SupportedISOQueryables" range="true" />
+				<parameter name="OrganisationName" field="orgName"
+					type="SupportedISOQueryables" />
+				<parameter name="HasSecurityConstraints" field="secConstr"
+					type="SupportedISOQueryables" />
+				<parameter name="Language" field="language" type="SupportedISOQueryables" />
+				<parameter name="ResourceIdentifier" field="identifier"
+					type="SupportedISOQueryables" />
+				<parameter name="ParentIdentifier" field="parentId"
+					type="SupportedISOQueryables" />
+				<parameter name="KeywordType" field="keywordType"
+					type="SupportedISOQueryables" />
+
+				<!-- - - - - - - - - - - - - - - - - -->
+				<!-- Additional queryable properties -->
+				<!-- (both services and datasets)    -->
+				<!-- - - - - - - - - - - - - - - - - -->
+
+				<parameter name="GeographicDescriptionCode" field="geoDescCode"
+					type="SupportedISOQueryables" />
+
+				<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+				<!--    Additional queryable properties              -->
+				<!-- (dataset, datasetcollection, application ...)   -->
+				<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+				<parameter name="TopicCategory" field="topicCat"
+					type="SupportedISOQueryables" />
+				<parameter name="ResourceLanguage" field="datasetLang"
+					type="SupportedISOQueryables" />
+				<parameter name="Denominator" field="denominator"
+					type="SupportedISOQueryables" />
+				<parameter name="DistanceValue" field="distanceVal"
+					type="SupportedISOQueryables" range="true"/>
+				<parameter name="DistanceUOM" field="distanceUom"
+					type="SupportedISOQueryables" />
+				<parameter name="TempExtent_begin" field="tempExtentBegin"
+					type="SupportedISOQueryables" range="true" />
+				<parameter name="TempExtent_end" field="tempExtentEnd"
+					type="SupportedISOQueryables" range="true" />
+
+				<!-- - - - - - - - - - - - - - - - - - - - - - - -->
+				<!-- Additional queryable properties  (services) -->
+				<!-- - - - - - - - - - - - - - - - - - - - - - - -->
+
+				<parameter name="ServiceType" field="serviceType"
+					type="SupportedISOQueryables" />
+				<parameter name="ServiceTypeVersion" field="serviceTypeVersion"
+					type="SupportedISOQueryables" />
+				<parameter name="Operation" field="operation" type="SupportedISOQueryables" />
+				<parameter name="OperatesOn" field="operatesOn"
+					type="SupportedISOQueryables" />
+				<parameter name="OperatesOnIdentifier" field="operatesOnIdentifier"
+					type="SupportedISOQueryables" />
+				<parameter name="OperatesOnName" field="operatesOnName"
+					type="SupportedISOQueryables" />
+				<parameter name="CouplingType" field="couplingType"
+					type="SupportedISOQueryables" />
+
+				<!-- - - - - - - - - - - - - - - - - - - - - - -->
+				<!-- INSPIRE additional queryable properties   -->
+				<!-- - - - - - - - - - - - - - - - - - - - - - -->
+
+				<parameter name="Degree" field="degree" type="AdditionalQueryables" />
+				<parameter name="SpecificationTitle" field="specificationTitle"
+					type="AdditionalQueryables" />
+				<parameter name="SpecificationDate" field="specificationDate"
+					type="AdditionalQueryables" />
+				<parameter name="SpecificationDateType" field="specificationDateType"
+					type="AdditionalQueryables" />
+				<parameter name="AccessConstraints" field="accessConstr"
+					type="AdditionalQueryables" />
+				<parameter name="OtherConstraints" field="otherConstr"
+					type="AdditionalQueryables" />
+				<parameter name="Classification" field="classif"
+					type="AdditionalQueryables" />
+				<parameter name="ConditionApplyingToAccessAndUse" field="conditionApplyingToAccessAndUse"
+					type="AdditionalQueryables" />
+				<parameter name="MetadataPointOfContact" field="metadataPOC"
+					type="AdditionalQueryables" />
+				<parameter name="Lineage" field="lineage" type="AdditionalQueryables" />
+			</parameters>
+			<outputformat>
+				<format>application/xml</format>
+			</outputformat>
+			<constraintLanguage>
+				<value>Filter</value>
+				<value>CQL</value>
+			</constraintLanguage>
+			<typenames>
+				<typename namespace="http://www.isotc211.org/2005/gmd" 
+				prefix="gmd" name="MD_Metadata" />
+				<!-- FIXME ISO PROFIL : Use declared primeNS in current node. 
+				<typename namespace="http://www.cnig.gouv.fr/2005/fra"
+				prefix="fra" name="MD_Metadata" />-->
+				<typename namespace="http://www.opengis.net/cat/csw/2.0.2" 
+					prefix="csw" name="Record" />
+			</typenames>
+		</operation>
+		<operation name="DescribeRecord">
+			<!-- schema attribute must defined an existing schema file name -->
+			<!-- located at /web/geonetwork/xml/validation/csw/2.0.2/ -->
+			<typenames>
+				<typename namespace="http://www.isotc211.org/2005/gmd" 
+				    prefix="gmd" name="MD_Metadata" schema="identification.xsd" />
+				<!-- FIXME ISO PROFIL : Use declared primeNS in current node. 
+					<typename namespace="http://www.cnig.gouv.fr/2005/fra"
+					prefix="fra" name="MD_Metadata" schema="fra.xsd" />-->
+				<typename namespace="http://www.opengis.net/cat/csw/2.0.2" 
+				    prefix="csw" name="Record" schema="record.xsd" />
+			</typenames>
+			<outputformat>
+				<format>application/xml</format>
+			</outputformat>
+		</operation>
+	</operations>
+</geonet>

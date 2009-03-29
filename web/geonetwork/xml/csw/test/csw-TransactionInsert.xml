@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<csw:Transaction service="CSW" version="2.0.2" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2">
+    <csw:Insert>
+<MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <fileIdentifier>
+        <gco:CharacterString>bf7ab961-a69f-48e9-a6da-61c207de86d6</gco:CharacterString>
+            </fileIdentifier>
+            <language>
+                <gco:CharacterString>en</gco:CharacterString>
+            </language>
+            <hierarchyLevel>
+                <MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode" codeListValue="dataset"/>
+            </hierarchyLevel>
+            <hierarchyLevelName>
+                <gco:CharacterString>dataset</gco:CharacterString>
+            </hierarchyLevelName>
+            <contact>
+                <CI_ResponsibleParty>
+                    <individualName>
+                        <gco:CharacterString>Metadata Administrator</gco:CharacterString>
+                    </individualName>
+                    <organisationName>
+                        <gco:CharacterString>Utah State Goverment</gco:CharacterString>
+                    </organisationName>
+                    <contactInfo>
+                        <CI_Contact>
+                            <address>
+                                <CI_Address>
+                                    <deliveryPoint>
+                                        <gco:CharacterString>5130 State Office Building</gco:CharacterString>
+                                    </deliveryPoint>
+                                    <city>
+                                        <gco:CharacterString>Salt Lake City</gco:CharacterString>
+                                    </city>
+                                    <postalCode>
+                                        <gco:CharacterString>84114</gco:CharacterString>
+                                    </postalCode>
+                                    <country>
+                                        <gco:CharacterString>USA</gco:CharacterString>
+                                    </country>
+                                    <electronicMailAddress>
+                                        <gco:CharacterString>cclark@utah.gov</gco:CharacterString>
+                                    </electronicMailAddress>
+                                </CI_Address>
+                            </address>
+                        </CI_Contact>
+                    </contactInfo>
+                    <role>
+                        <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+                    </role>
+                </CI_ResponsibleParty>
+            </contact>
+    <!-- Date the metadata was created -->
+            <dateStamp>
+                <gco:Date>2006-12-15</gco:Date>
+            </dateStamp>
+            <metadataStandardName>
+                <gco:CharacterString>ISO 19115 Geographic Information Metadata</gco:CharacterString>
+            </metadataStandardName>
+            <metadataStandardVersion>
+                <gco:CharacterString>2003/Cor.1:2006</gco:CharacterString>
+            </metadataStandardVersion>
+    <!-- REFERENCE SYSTEM INFORMATION -->
+            <referenceSystemInfo>
+                <MD_ReferenceSystem>
+                    <referenceSystemIdentifier>
+                        <RS_Identifier>
+                            <code>
+                                <gco:CharacterString>26912</gco:CharacterString>
+                            </code>
+                            <codeSpace>
+                                <gco:CharacterString>EPSG</gco:CharacterString>
+                            </codeSpace>
+                        </RS_Identifier>
+                    </referenceSystemIdentifier>
+                </MD_ReferenceSystem>
+            </referenceSystemInfo>
+    <!-- END REFERENCE SYSTEM INFORMATION -->
+    <!-- IDENTIFICATION INFORMATION -->
+            <identificationInfo>
+                <MD_DataIdentification>
+                    <citation>
+                        <CI_Citation>
+                            <title>
+                                <gco:CharacterString>Municipalities 2004 (Archive)</gco:CharacterString>
+                            </title>
+                            <date>
+                                <CI_Date>
+                                    <date>
+                                        <gco:Date>2002-01-01</gco:Date>
+                                    </date>
+                                    <dateType>
+                                        <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                    </dateType>
+                                </CI_Date>
+                            </date>
+                            <edition>
+                                <gco:CharacterString>None</gco:CharacterString>
+                            </edition>
+                            <identifier>
+                                <MD_Identifier>
+                                    <code>
+                                        <gco:CharacterString>bf7ab961-a69f-48e9-a6da-61c207de86d6</gco:CharacterString>
+                                    </code>
+                                </MD_Identifier>
+                            </identifier>
+                            <series>
+                                <CI_Series>
+                                    <name>
+                                        <gco:CharacterString>State of Utah SGID</gco:CharacterString>
+                                    </name>
+                                    <issueIdentification>
+                                        <gco:CharacterString>None</gco:CharacterString>
+                                    </issueIdentification>
+                                </CI_Series>
+                            </series>
+                            <!-- not mapped
+                            <otherCitationDetails>
+                                <gco:CharacterString>Digital data with no scale</gco:CharacterString>
+                            </otherCitationDetails>
+                             -->
+                        </CI_Citation>
+                    </citation>
+                    <abstract>
+                        <gco:CharacterString>These data were first created through a cooperative effort of the Governors Office of Planning and Budget, the Utah Department of Transportation, the Utah State Tax Commission, and AGRC.  All incorporated municipalities in the state through dates varying from 1984 to 1992 were initially represented. Updates for further annexations and deannexations were completed with the cooperative efforts of the State Tax Commission, Property Tax Division, and AGRC, and currentness now ranges from 1993 through the end of the 2003 calendar year.  Data developed with coordinate geometry (COGO) from legal descriptions were used.  When necessary the data were adjusted to conform to known physical features. Due to adjustments to resolve conflicting or ambiguous data, the result was more a physical cadastre than a legal one. In other words, this dataset does not represent exact legal boundaries as per surveyed description, but, rather a set of boundaries used for the administrative purposes that conforms to logical  administrative rules (e.g. no two cities or redevlopment areas may cover the same geogrpahic extent).</gco:CharacterString>
+                    </abstract>
+                    <purpose>
+                        <gco:CharacterString>These data were created for planimetric display and tax area analysis.</gco:CharacterString>
+                    </purpose>
+                    <status>
+                        <MD_ProgressCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ProgressCode" codeListValue="completed"/>
+                    </status>
+                    <pointOfContact>
+                        <CI_ResponsibleParty>
+                            <individualName>
+                                <gco:CharacterString>Cindy Clark</gco:CharacterString>
+                            </individualName>
+                            <organisationName>
+                                <gco:CharacterString>Automated Geographic Reference Center</gco:CharacterString>
+                            </organisationName>
+                            <positionName>
+                                <gco:CharacterString>SGID Administrator</gco:CharacterString>
+                            </positionName>
+                            <contactInfo>
+                                <CI_Contact>
+                                    <phone>
+                                        <CI_Telephone>
+                                            <voice>
+                                                <gco:CharacterString>(801) 537-9201</gco:CharacterString>
+                                            </voice>
+                                            <facsimile>
+                                                <gco:CharacterString>(801) 538-3317</gco:CharacterString>
+                                            </facsimile>
+                                        </CI_Telephone>
+                                    </phone>
+                                    <address>
+                                        <CI_Address>
+                                            <deliveryPoint>
+                                                <gco:CharacterString>5130 State Office Building</gco:CharacterString>
+                                            </deliveryPoint>
+                                            <city>
+                                                <gco:CharacterString>Salt Lake City</gco:CharacterString>
+                                            </city>
+                                            <administrativeArea>
+                                                <gco:CharacterString>UT</gco:CharacterString>
+                                            </administrativeArea>
+                                            <postalCode>
+                                                <gco:CharacterString>84114</gco:CharacterString>
+                                            </postalCode>
+                                            <country>
+                                                <gco:CharacterString>USA</gco:CharacterString>
+                                            </country>
+                                            <electronicMailAddress>
+                                                <gco:CharacterString>cclark@utah.gov</gco:CharacterString>
+                                            </electronicMailAddress>
+                                        </CI_Address>
+                                    </address>
+                                </CI_Contact>
+                            </contactInfo>
+                            <role>
+                                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+                            </role>
+                        </CI_ResponsibleParty>
+                    </pointOfContact>
+            <!-- ***** KEYWORDS ***** -->
+            <!-- ***** DISCIPLINE ***** -->
+                    <descriptiveKeywords>
+                        <MD_Keywords>
+                            <keyword>
+                                <gco:CharacterString>Administration</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Ownership</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Municipal Boundaries</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Cities</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Towns</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>boundaries</gco:CharacterString>
+                            </keyword>
+                            <type>
+                                <MD_KeywordTypeCode codeList="http://metadata.dgiwg.org/codelistRegistry?MD_KeywordTypeCode" codeListValue="theme"/>
+                            </type>
+                        </MD_Keywords>
+                    </descriptiveKeywords>
+            <!-- ***** PLACE ***** -->
+                    <descriptiveKeywords>
+                        <MD_Keywords>
+                            <keyword>
+                                <gco:CharacterString>State of Utah</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Beaver County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Box Elder County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Cache County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Carbon County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Daggett County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Davis County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Duchesne County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Emery County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Garfield County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Grand County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Iron County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Juab County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Kane County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Millard County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Morgan County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Piute County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Rich County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Salt Lake County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>San Juan County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Sanpete County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Sevier County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Summit County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Tooele County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Uintah County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Utah County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Wasatch County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Washington County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Wayne County</gco:CharacterString>
+                            </keyword>
+                            <keyword>
+                                <gco:CharacterString>Weber County</gco:CharacterString>
+                            </keyword>
+                            <type>
+                                <MD_KeywordTypeCode codeList="http://metadata.dgiwg.org/codelistRegistry?MD_KeywordTypeCode" codeListValue="place"/>
+                            </type>
+                        </MD_Keywords>
+                    </descriptiveKeywords>
+                    <spatialRepresentationType>
+                        <MD_SpatialRepresentationTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_SpatialRepresentationTypeCode" codeListValue="vector"/>
+                    </spatialRepresentationType>
+                    <language>
+                        <gco:CharacterString>en</gco:CharacterString>
+                    </language>
+                    <topicCategory>
+                        <MD_TopicCategoryCode>geoscientificInformation</MD_TopicCategoryCode>
+                    </topicCategory>
+            <!-- Method one for indicating data coverage area -->
+            <!-- Use EX_GeographicBoundingBoxType to describe -->
+            <!-- the data coverage area using approximate coordinates -->
+            <!-- THIS METHOD IS MANDATORY IF THE HIERARCHY  -->
+            <!-- LEVEL OF THIS METADATA IS "DATASET" -->
+                    <extent>
+                        <EX_Extent>
+                            <geographicElement>
+                                <EX_GeographicBoundingBox>
+                                    <westBoundLongitude>
+                                        <gco:Decimal>-114.1</gco:Decimal>
+                                    </westBoundLongitude>
+                                    <eastBoundLongitude>
+                                        <gco:Decimal>-109.21</gco:Decimal>
+                                    </eastBoundLongitude>
+                                    <southBoundLatitude>
+                                        <gco:Decimal>36.98</gco:Decimal>
+                                    </southBoundLatitude>
+                                    <northBoundLatitude>
+                                        <gco:Decimal>42.01</gco:Decimal>
+                                    </northBoundLatitude>
+                                </EX_GeographicBoundingBox>
+                            </geographicElement>
+                        </EX_Extent>
+                    </extent>
+                    <extent>
+                        <EX_Extent>
+                            <temporalElement>
+                                <EX_TemporalExtent>
+                                    <extent>
+                                    <!--
+                                        <gml:TimePeriod gml:id="ID00001">
+                                         -->
+                                        <gml:TimePeriod>
+                                            <gml:beginPosition>2000-01-01</gml:beginPosition>
+                                            <gml:endPosition>2007-05-07</gml:endPosition>
+                                        </gml:TimePeriod>
+                                    </extent>
+                                </EX_TemporalExtent>
+                            </temporalElement>
+                        </EX_Extent>
+                    </extent>
+                    <extent>
+                        <EX_Extent>
+                            <geographicElement>
+                                <EX_GeographicDescription>
+                                    <geographicIdentifier>
+                                        <RS_Identifier>
+                                            <code>
+                                                <gco:CharacterString>Utah</gco:CharacterString>
+                                            </code>
+                                        </RS_Identifier>
+                                    </geographicIdentifier>
+                                </EX_GeographicDescription>
+                            </geographicElement>
+                        </EX_Extent>
+                    </extent>
+                    <supplementalInformation>
+                        <gco:CharacterString>Procedures_Used: The principal method of data entry used coordinate geometry software. Digitizing from paper maps and use of digital planimetric data were supplemental.  Conversions, filling of gaps, georeferencing, reconciliations, and reformatting were often necessary to create a coherent database. Revisions: Municipalities are current through December 31, 2003 Reviews_Applied_to_Data: Digital sources were visually compared with planimetric data. Digitized data were overlaid with source material and visually compared. Technical errors were also identified and corrected with ArcGIS Software. Notes: This metadata document contains a composite of information for all tiles in the library.</gco:CharacterString>
+                    </supplementalInformation>
+                </MD_DataIdentification>
+            </identificationInfo>
+    <!-- DATA QUALITY AND LINEAGE -->
+            <dataQualityInfo>
+                <DQ_DataQuality>
+                    <scope>
+                        <DQ_Scope>
+                            <level>
+                                <MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode" codeListValue="dataset"/>
+                            </level>
+                        </DQ_Scope>
+                    </scope>
+                    <lineage>
+                        <LI_Lineage>
+                            <source>
+                                <LI_Source>
+                                    <scaleDenominator>
+                                        <MD_RepresentativeFraction>
+                                            <denominator>
+                                                <gco:Integer>24000</gco:Integer>
+                                            </denominator>
+                                        </MD_RepresentativeFraction>
+                                    </scaleDenominator>
+                                    <sourceStep>
+                                        <LI_ProcessStep>
+                                            <description>
+                                                <gco:CharacterString>The data from UDOT was done in DIGIMAP software at 1:9600 without geographic coordinates. The drawing files were converted to DXF by UDOT. AGRC developed a process to geographically reference the data. Due to the way these drawings were created, there were gaps left in the boundary lines that had to be filled in manually.</gco:CharacterString>
+                                            </description>
+                                        </LI_ProcessStep>
+                                    </sourceStep>
+                                </LI_Source>
+                            </source>
+                        </LI_Lineage>
+                    </lineage>
+                </DQ_DataQuality>
+            </dataQualityInfo>
+    <!-- END OF DATA QUALITY & LINEAGE -->
+        </MD_Metadata>
+    </csw:Insert>
+</csw:Transaction>

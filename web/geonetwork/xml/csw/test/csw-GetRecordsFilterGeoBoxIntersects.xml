@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2.0.2">
+    <csw:Query typeNames="csw:Record">
+        <csw:Constraint version="1.1.0">
+            <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+                <ogc:And>
+                    <ogc:Intersects>
+                        <ogc:PropertyName>iso:BoundingBox</ogc:PropertyName>
+                        <gml:Envelope xmlns:gml="http://www.opengis.net/gml">
+                            <gml:lowerCorner>8.10 50.00</gml:lowerCorner>
+                            <gml:upperCorner>8.50 51.00</gml:upperCorner>
+                        </gml:Envelope>
+                    </ogc:Intersects>
+                </ogc:And>
+            </ogc:Filter>
+        </csw:Constraint>
+    </csw:Query>
+</csw:GetRecords>

@@ -195,7 +195,10 @@ public class GetRecordsRequest extends CatalogRequest
 		addParam("version", Csw.CSW_VERSION);
 
 		addParam("resultType",     resultType);
-		addParam("namespace",      Csw.NAMESPACE_CSW.getPrefix() +":"+ Csw.NAMESPACE_CSW.getURI());
+		// FIXME : Check xmlns([prefix=]uri) syntax are supported by all GeoNetwork nodes.
+		addParam("namespace",      "xmlns(" + Csw.NAMESPACE_CSW.getPrefix() + "=" + Csw.NAMESPACE_CSW.getURI() + ")," 
+				+ "xmlns(" + Csw.NAMESPACE_GMD.getPrefix() + "=" + Csw.NAMESPACE_GMD.getURI() + ")"
+				);
 		addParam("outputFormat",   outputFormat);
 		addParam("outputSchema",   outputSchema, Csw.NAMESPACE_CSW.getPrefix() + ":");
 		addParam("startPosition",  startPosition);
@@ -210,7 +213,13 @@ public class GetRecordsRequest extends CatalogRequest
 		addParam("constraintLanguage",          constrLang);
 		addParam("constraint_language_version", constrLangVersion);
 
-		fill("typeNames", hsTypeNames);
+		// FIXME : default typeNames to return results
+		// TODO : Check in Capabilities that typename exist
+		// TODO : Check that local node support typename used
+		if (hsTypeNames.size()==0)
+			addParam("typeNames", "gmd:MD_Metadata");
+		else
+			fill("typeNames", hsTypeNames);
 		fill("sortBy",    alSortBy);
 	}
 
@@ -251,8 +260,13 @@ public class GetRecordsRequest extends CatalogRequest
 	private Element getQuery()
 	{
 		Element query = new Element("Query", Csw.NAMESPACE_CSW);
-
-		setAttrib(query, "typeNames",      hsTypeNames, "");
+		// FIXME : default typeNames to return results
+		// TODO : Check in Capabilities that typename exist
+		// TODO : Check that local node support typename used
+		if (hsTypeNames.size()==0)
+			setAttrib(query, "typeNames", "gmd:MD_Metadata");
+		else
+			setAttrib(query, "typeNames", hsTypeNames, "");
 		addParam (query, "ElementSetName", elemSetName);
 
 		//--- handle constraint

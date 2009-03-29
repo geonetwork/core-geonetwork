@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+   targetNamespace="http://www.opengis.net/gmlsf"
+   xmlns:gmlsf="http://www.opengis.net/gmlsf"
+   xmlns="http://www.w3.org/2001/XMLSchema"
+   elementFormDefault="qualified">
+   <annotation>
+      <appinfo source="urn:opengis:specification:gml:schema-xsd:gmlsf:1.0.0">gmlsfLevels.xsd</appinfo>
+      <documentation>
+         Compliance levels schema for Simple features GML 3.1.1 Profile
+         Copyright (c) 2006 Open Geospatial Consortium, Inc.
+         All Rights Reserved.
+      </documentation>
+   </annotation>
+   <!-- ============================================================= -->
+   <element name="ComplianceLevel">
+      <annotation>
+         <documentation>
+            Level 0 = no complex-valued properties and minOccurs,maxOccurs
+                      have a value domain of 0 or 1
+            Level 1 = complex-valued properties with no restriction on
+                      minOccurs and maxOccurs
+            Level 2 = no restrictions on type of non-spatial scalar properties 
+                      but must only support spatial properties declared in
+                      clause 8
+         </documentation>
+      </annotation>
+      <simpleType>
+         <restriction base="integer">
+            <enumeration value="0"/>
+            <enumeration value="1"/>
+            <enumeration value="2"/>
+         </restriction>
+      </simpleType>
+   </element>
+   <!-- ============================================================= -->
+   <element name="GMLProfileSchema" type="anyURI">
+      <annotation>
+         <documentation>
+            This URI references the profile schema to which a GML
+            application schema conforms.
+         </documentation>
+      </annotation>
+   </element>
+</schema>

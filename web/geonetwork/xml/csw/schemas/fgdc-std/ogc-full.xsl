@@ -4,11 +4,15 @@
 										xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
 										xmlns:dc ="http://purl.org/dc/elements/1.1/"
 										xmlns:dct="http://purl.org/dc/terms/"
-										xmlns:ows="http://www.opengis.net/ows">
+										xmlns:ows="http://www.opengis.net/ows"
+										xmlns:geonet="http://www.fao.org/geonetwork">
 
+	<xsl:param name="displayInfo"/>
+	
 	<!-- ============================================================================= -->
 
 	<xsl:template match="metadata">
+		<xsl:variable name="info" select="geonet:info"/>
 		<csw:Record>
 
 			<xsl:for-each select="idinfo/citation/citeinfo/title/@cat_id">
@@ -72,6 +76,11 @@
 					</ows:UpperCorner>
 				</ows:BoundingBox>
 			</xsl:for-each>
+			
+			<!-- GeoNetwork elements added when resultType is equal to results_with_summary -->
+			<xsl:if test="$displayInfo = 'true'">
+				<xsl:copy-of select="$info"/>
+			</xsl:if>
 
 		</csw:Record>
 	</xsl:template>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<summary>
+
+	<def>
+		<hits/>
+		<results/>
+		<results_with_summary>
+			<!-- order defaults to "freq" if omitted and max defaults to 10 -->
+			<item name="denominator" plural="denominators" indexKey="denominator"
+				order="name" type="number" max="10" />
+			<item name="keyword" plural="keywords" indexKey="keyword" order="freq"
+				type="string" max="10" />
+			<item name="category" plural="categories" indexKey="topicCat"
+				order="name" type="string" max="10" />
+			<item name="spatialRepresentation" plural="spatialRepresentations"
+				indexKey="spatialRepresentation" type="string" order="freq" max="10" />
+			<item name="organizationName" plural="organizationNames"
+				indexKey="orgName" order="freq" type="string" max="10" />
+			<item name="serviceType" plural="serviceTypes" indexKey="serviceType"
+				order="freq" type="string" max="10" />
+			<item name="type" plural="types" indexKey="type" order="freq"
+				type="string" max="10" />
+			<item name="created" plural="created" indexKey="_createDate"
+				type="date" order="freq" max="10" />
+		</results_with_summary>
+	</def>
+	<typeConfig>
+		<dateFormat>yyyy-MM-dd'T'hh:mm:ss</dateFormat>
+		<dateFormat>yyyy-MM-dd't'hh:mm:ss</dateFormat>
+		<dateFormat>yyyy-MM-dd</dateFormat>
+	</typeConfig>
+</summary>

@@ -23,19 +23,33 @@
 package org.fao.geonet.kernel.search;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Log;
+import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
+import org.apache.lucene.analysis.KeywordAnalyzer;
+import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
+import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -43,8 +57,27 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermEnum;
+import org.apache.lucene.search.Filter;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.search.spatial.ContainsFilter;
+import org.fao.geonet.kernel.search.spatial.CrossesFilter;
+import org.fao.geonet.kernel.search.spatial.EqualsFilter;
+import org.fao.geonet.kernel.search.spatial.FullScanFilter;
+import org.fao.geonet.kernel.search.spatial.IntersectionFilter;
+import org.fao.geonet.kernel.search.spatial.OgcGenericFilters;
+import org.fao.geonet.kernel.search.spatial.OverlapsFilter;
+import org.fao.geonet.kernel.search.spatial.SpatialFilter;
+import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
+import org.fao.geonet.kernel.search.spatial.TouchesFilter;
+import org.fao.geonet.kernel.search.spatial.WithinFilter;
+import org.geotools.data.DefaultTransaction;
+import org.geotools.data.FeatureSource;
+import org.geotools.data.Transaction;
+import org.geotools.gml3.GMLConfiguration;
+import org.geotools.xml.Configuration;
+import org.geotools.xml.Parser;
 import org.jdom.Element;
 
 import com.k_int.IR.Searchable;
@@ -52,6 +85,8 @@ import com.k_int.hss.HeterogeneousSetOfSearchable;
 import com.k_int.util.LoggingFacade.LogContextFactory;
 import com.k_int.util.LoggingFacade.LoggingContext;
 import com.k_int.util.Repository.CollectionDirectory;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.index.SpatialIndex;
 
 /**
  * Indexes metadata using Lucene.
@@ -65,11 +100,14 @@ public class SearchManager
 	private static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";
 	private static final String SCHEMA_STYLESHEETS_DIR_PATH = "xml/schemas";
 
-	private File           _stylesheetsDir;
-	private File           _schemasDir;
+	private final File     _stylesheetsDir;
+	private final File     _schemasDir;
+	private final Element  _summaryConfig;
 	private File           _luceneDir;
+	private PerFieldAnalyzerWrapper _analyzer;
 	private LoggingContext _cat;
 	private Searchable     _hssSearchable;
+	private Spatial        _spatial;
 
 	//-----------------------------------------------------------------------------
 
@@ -78,14 +116,44 @@ public class SearchManager
 	 * @param luceneDir
 	 * @throws Exception
 	 */
-	public SearchManager(String appPath, String luceneDir) throws Exception
+	public SearchManager(String appPath, String luceneDir, String summaryConfigXmlFile) throws Exception
 	{
+		_summaryConfig = Xml.loadStream(new FileInputStream(new File(appPath,summaryConfigXmlFile)));
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
 		_schemasDir     = new File(appPath, SCHEMA_STYLESHEETS_DIR_PATH);
 
 		if (!_stylesheetsDir.isDirectory())
 			throw new Exception("directory " + _stylesheetsDir + " not found");
+		
+		_luceneDir = new File(luceneDir+ "/nonspatial");
+		
+		if (!_luceneDir.isAbsolute())
+            _luceneDir = new File(appPath + luceneDir+ "/nonspatial");
 
+        _luceneDir.getParentFile().mkdirs();
+
+        _spatial = new Spatial(_luceneDir.getParent() + "/spatial");
+
+        // Define the default Analyzer
+		_analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer());
+		// Here you could define specific analyzer for each fields stored in the index.
+		//
+		// For example adding a different analyzer for any (ie. full text search) 
+		// could be better than a standard analyzer which has a particular way of 
+		// creating tokens.
+		// In that situation, when field is "mission AD-T" is tokenized to "mission" "AD" & "T"
+		// using StandardAnalyzer.
+		// A WhiteSpaceTokenizer tokenized to "mission" "AD-T"
+		// which could be better in some situation.
+		// But when field is "mission AD-34T" is tokenized to "mission" "AD-34T" using StandardAnalyzer due to number.
+		// analyzer.addAnalyzer("any", new WhitespaceAnalyzer());
+		// 
+		// Uuid stored using a standard analyzer will be change to lower case.
+		// Whitespace will not.
+		_analyzer.addAnalyzer("_uuid", new WhitespaceAnalyzer());
+		_analyzer.addAnalyzer("operatesOn", new WhitespaceAnalyzer());
+		_analyzer.addAnalyzer("subject", new KeywordAnalyzer());
+		
 		initLucene(appPath, luceneDir);
 		initZ3950(appPath);
 	}
@@ -104,7 +172,7 @@ public class SearchManager
 	{
 		switch (type)
 		{
-			case LUCENE: return new LuceneSearcher(this, stylesheetName);
+			case LUCENE: return new LuceneSearcher(this, stylesheetName, _summaryConfig);
 			case Z3950:  return new Z3950Searcher(this, stylesheetName);
 			case UNUSED: return new UnusedSearcher();
 
@@ -121,15 +189,8 @@ public class SearchManager
 	private void initLucene(String appPath, String luceneDir)
 		throws Exception
 	{
-		_luceneDir = new File(luceneDir);
-
-		if (!_luceneDir.isAbsolute())
-			_luceneDir = new File(appPath + luceneDir);
-
-		//--- the lucene dir cannot be inside the CVS so it is better to create it here
-
-		_luceneDir.mkdirs();
-
+		//--- the lucene dir cannot be inside the CVS so it is better to create 
+		// it here
 		setupIndex(false); // RGFIX: check if this is correct
 	}
 
@@ -146,20 +207,34 @@ public class SearchManager
 	{
 		try
 		{
-			_cat = LogContextFactory.getContext("GeoNetwork"); // FIXME: maybe it should use the webapp path
+			_cat = LogContextFactory.getContext("GeoNetwork"); // FIXME: maybe
+																// it should use
+																// the webapp
+																// path
 
 			String configClass = "com.k_int.util.Repository.XMLDataSource";
-			String configUrl   = "file:///" + appPath + jeeves.constants.Jeeves.Path.XML + "/repositories.xml";
-			String directoryNamingLocation = "/Services/IR/Directory"; // RGFIX: change to use servlet context
+			String configUrl = "file:///" + appPath
+					+ jeeves.constants.Jeeves.Path.XML + "/repositories.xml";
+			String directoryNamingLocation = "/Services/IR/Directory"; // RGFIX:
+																		// change
+																		// to
+																		// use
+																		// servlet
+																		// context
 
 			Properties props = new Properties();
 			props.setProperty("CollectionDataSourceClassName", configClass);
-			props.setProperty("RepositoryDataSourceURL",       configUrl);
-			props.setProperty("DirectoryServiceName",          directoryNamingLocation); // RGFIX: check this
-			// set up the collection directory and register it with the naming service in the
+			props.setProperty("RepositoryDataSourceURL", configUrl);
+			props.setProperty("DirectoryServiceName", directoryNamingLocation); // RGFIX:
+																				// check
+																				// this
+			// set up the collection directory and register it with the naming
+			// service in the
 			// default way
-			// RGFIX: this could not work for different servlet instances, should be changed to use servlet context
-			CollectionDirectory cd = new CollectionDirectory(configClass, configUrl);
+			// RGFIX: this could not work for different servlet instances,
+			// should be changed to use servlet context
+			CollectionDirectory cd = new CollectionDirectory(configClass,
+					configUrl);
 			Context context = new InitialContext();
 			Context services_context = context.createSubcontext("Services");
 			Context ir_context = services_context.createSubcontext("IR");
@@ -175,12 +250,11 @@ public class SearchManager
 		}
 	}
 
-	/** deinitializes the Z3950 client searcher
+	/**
+	 * deinitializes the Z3950 client searcher
 	 */
-	private void endZ3950()
-	{
-		if (_hssSearchable != null)
-		{
+	private void endZ3950() {
+		if (_hssSearchable != null) {
 			_hssSearchable.destroy();
 			_hssSearchable = null;
 		}
@@ -199,54 +273,55 @@ public class SearchManager
 	 * @param title
 	 * @throws Exception
 	 */
-	public synchronized void index(String type, Element metadata, String id, List moreFields, String isTemplate, String title) throws Exception
+	public synchronized void index(String type, Element metadata, String id,
+			List moreFields, String isTemplate, String title) throws Exception 
 	{
 		delete("_id", id);
 
 		Element xmlDoc;
 
 		// check for subtemplates
-		if (isTemplate.equals("s"))
-		{
-			// create empty document with only title  and "any" fields
+		if (isTemplate.equals("s")) {
+			// create empty document with only title and "any" fields
 			xmlDoc = new Element("Document");
 
 			StringBuffer sb = new StringBuffer();
 			allText(metadata, sb);
-			addField(xmlDoc, "title", title,           true, true, true);
-			addField(xmlDoc, "any",   sb.toString(),   true, true, true);
-		}
-		else
-		{
-			Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n"+ Xml.getString(metadata));
+			addField(xmlDoc, "title", title, true, true, true);
+			addField(xmlDoc, "any", sb.toString(), true, true, true);
+		} else {
+			Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n"
+					+ Xml.getString(metadata));
 
 			xmlDoc = getIndexFields(type, metadata);
 
-			Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n"+ Xml.getString(xmlDoc));
+			Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n"
+					+ Xml.getString(xmlDoc));
 		}
 		// add _id field
 		addField(xmlDoc, "_id", id, true, true, false);
 
 		// add more fields
-		for (Iterator iter = moreFields.iterator(); iter.hasNext(); )
-		{
-			Element field = (Element)iter.next();
+		for (Iterator iter = moreFields.iterator(); iter.hasNext();) {
+			Element field = (Element) iter.next();
 			xmlDoc.addContent(field);
 		}
 
-		Log.debug(Geonet.INDEX_ENGINE, "Lucene document:\n"+ Xml.getString(xmlDoc));
+		Log.debug(Geonet.INDEX_ENGINE, "Lucene document:\n"
+				+ Xml.getString(xmlDoc));
 
 		Document doc = newDocument(xmlDoc);
-		IndexWriter writer = new IndexWriter(_luceneDir, new StandardAnalyzer(new String[] {}), false);
-		try
-		{
+		
+		
+		IndexWriter writer = new IndexWriter(_luceneDir, _analyzer, false);
+		try {
 			writer.addDocument(doc);
 			lazyOptimize(writer);
-		}
-		finally
-		{
+		} finally {
 			writer.close();
 		}
+		
+		_spatial.writer().index(_schemasDir.getPath(), type, id, metadata);
 	}
 
 	/**
@@ -271,41 +346,37 @@ public class SearchManager
 
 	/**
 	 * Extracts text from metadata record.
+	 * 
 	 * @param metadata
 	 * @param sb
 	 * @return all text in the metadata elements for indexing
 	 */
-	private void allText(Element metadata, StringBuffer sb)
-	{
+	private void allText(Element metadata, StringBuffer sb) {
 		String text = metadata.getText().trim();
-		if (text.length() > 0)
-		{
-			if (sb.length() > 0) sb.append(" ");
+		if (text.length() > 0) {
+			if (sb.length() > 0)
+				sb.append(" ");
 			sb.append(text);
 		}
 		List children = metadata.getChildren();
-		if (children.size() > 0)
-		{
-			for (Iterator i = children.iterator(); i.hasNext(); )
-				allText((Element)i.next(), sb);
+		if (children.size() > 0) {
+			for (Iterator i = children.iterator(); i.hasNext();)
+				allText((Element) i.next(), sb);
 		}
 	}
 
 	//--------------------------------------------------------------------------------
 	//  delete a document
 
-	public synchronized void delete(String fld, String txt) throws Exception
-	{
+	public synchronized void delete(String fld, String txt) throws Exception {
+		_spatial.writer().delete(txt);
 		// possibly remove old document
 		IndexReader reader = IndexReader.open(_luceneDir);
-		try
-		{
+		try {
 			reader.deleteDocuments(new Term(fld, txt));
 
 			// RGFIX: should I optimize here, or at least increase updateCount?
-		}
-		finally
-		{
+		} finally {
 			reader.close();
 		}
 	}
@@ -318,7 +389,9 @@ public class SearchManager
 		try {
 			Hashtable docs = new Hashtable();
 			for (int i = 0; i < reader.numDocs(); i++) {
-				if (reader.isDeleted(i)) continue; // FIXME: strange lucene hack: sometimes it tries to load a deleted document
+				if (reader.isDeleted(i))
+					continue; // FIXME: strange lucene hack: sometimes it tries
+								// to load a deleted document
 				Hashtable record = new Hashtable();
 				Document doc = reader.document(i);
 				String id = doc.get("_id");
@@ -364,19 +437,16 @@ public class SearchManager
 	//-----------------------------------------------------------------------------
 	// utilities
 
-	Element getIndexFields(String schema, Element xml)
-		throws Exception
-	{
+	Element getIndexFields(String schema, Element xml) throws Exception {
 		File schemaDir = new File(_schemasDir, schema);
 
-		try
-		{
-			String styleSheet = new File(schemaDir, "index-fields.xsl").getAbsolutePath();
+		try {
+			String styleSheet = new File(schemaDir, "index-fields.xsl")
+					.getAbsolutePath();
 			return Xml.transform(xml, styleSheet);
-		}
-		catch(Exception e)
-		{
-			Log.error(Geonet.SEARCH_ENGINE, "Indexing stylesheet contains errors : "+ e.getMessage());
+		} catch (Exception e) {
+			Log.error(Geonet.SEARCH_ENGINE,
+					"Indexing stylesheet contains errors : " + e.getMessage());
 			throw e;
 		}
 	}
@@ -384,53 +454,54 @@ public class SearchManager
 	//-----------------------------------------------------------------------------
 	// utilities
 
-	Element transform(String styleSheetName, Element xml)
-		throws Exception
+	Element transform(String styleSheetName, Element xml) throws Exception 
 	{
-		try
-		{
-			String styleSheetPath = new File(_stylesheetsDir, styleSheetName).getAbsolutePath();
+		try {
+			String styleSheetPath = new File(_stylesheetsDir, styleSheetName)
+					.getAbsolutePath();
 			return Xml.transform(xml, styleSheetPath);
-		}
-		catch(Exception e)
-		{
-			Log.error(Geonet.SEARCH_ENGINE, "Search stylesheet contains errors : "+ e.getMessage());
+		} catch (Exception e) {
+			Log.error(Geonet.SEARCH_ENGINE,
+					"Search stylesheet contains errors : " + e.getMessage());
 			throw e;
 		}
 	}
 
-	public File getLuceneDir() { return _luceneDir; }
+	public File getLuceneDir() 
+	{
+		return _luceneDir;
+	}
 
-	Searchable getSearchable() { return _hssSearchable; }
+	Searchable getSearchable() 
+	{
+		return _hssSearchable;
+	}
 
 	//-----------------------------------------------------------------------------
 	// private methods
 
 	// creates an index in directory luceneDir with StandardAnalyzer if not present
-	private void setupIndex(boolean rebuild)
-		throws Exception
+	private void setupIndex(boolean rebuild) throws Exception 
 	{
 		// if rebuild forced don't check
 		boolean badIndex = true;
-		if (!rebuild)
-		{
-			try
-			{
+		if (rebuild) {
+			try {
 				IndexReader reader = IndexReader.open(_luceneDir);
 				reader.close();
 				badIndex = false;
-			}
-			catch (Exception e)
-			{
-				Log.error(Geonet.SEARCH_ENGINE, "Exception while opening lucene index, going to rebuild it: " + e.getMessage());
+			} catch (Exception e) {
+				Log.error(Geonet.SEARCH_ENGINE,
+						"Exception while opening lucene index, going to rebuild it: "
+								+ e.getMessage());
 			}
 		}
 		// if rebuild forced or bad index then rebuild index
-		if (rebuild || badIndex)
-		{
+		if (rebuild || badIndex) {
 			Log.error(Geonet.SEARCH_ENGINE, "Rebuilding lucene index");
 
-			IndexWriter writer = new IndexWriter(_luceneDir, new StandardAnalyzer(new String[] {}), true);
+			_spatial.writer().reset();
+			IndexWriter writer = new IndexWriter(_luceneDir, _analyzer, true);
 			writer.close();
 		}
 	}
@@ -442,13 +513,15 @@ public class SearchManager
 	 *  @param dbms
 	 *  
 	 */
-	public boolean rebuildIndex(DataManager dataMan, Dbms dbms){
+	public boolean rebuildIndex(DataManager dataMan, Dbms dbms) {
 		try {
 			setupIndex(true);
 			dataMan.init(dbms, true);
 			return true;
-		}catch(Exception e){
-			Log.error(Geonet.SEARCH_ENGINE, "Exception while rebuilding lucene index, going to rebuild it: " + e.getMessage());
+		} catch (Exception e) {
+			Log.error(Geonet.SEARCH_ENGINE,
+					"Exception while rebuilding lucene index, going to rebuild it: "
+							+ e.getMessage());
 			return false;
 		}
 	}
@@ -463,7 +536,7 @@ public class SearchManager
 		{
 			Element field = (Element)iter.next();
 			String name   = field.getAttributeValue("name");
-			String string = field.getAttributeValue("string").toLowerCase(); // RGFIX: should be only needed for non-tokenized fields
+			String string = field.getAttributeValue("string"); // Lower case field is handled by Lucene Analyzer.
 			if (string.trim().length() > 0)
 			{
 				String sStore = field.getAttributeValue("store");
@@ -539,5 +612,209 @@ public class SearchManager
 			optimizing = false;
 		}
 	}
+	
+	public Spatial getSpatial()
+    {
+        return _spatial;
+    }
+	
+	public class Spatial 
+	{
+
+        private static final long 	TIME_BETWEEN_SPATIAL_COMMITS = 10000;
+        private final Map<String, Constructor<? extends SpatialFilter>> _types;
+        {
+            HashMap<String, Constructor<? extends SpatialFilter>> types = new HashMap<String, Constructor<? extends SpatialFilter>>();
+
+            try {
+                types.put(Geonet.SearchResult.Relation.ENCLOSES,
+                        constructor(ContainsFilter.class));
+                types.put(Geonet.SearchResult.Relation.CROSSES,
+                        constructor(CrossesFilter.class));
+                types.put(Geonet.SearchResult.Relation.OUTSIDEOF,
+                        constructor(FullScanFilter.class));
+                types.put(Geonet.SearchResult.Relation.EQUAL,
+                        constructor(EqualsFilter.class));
+                types.put(Geonet.SearchResult.Relation.INTERSECTION,
+                        constructor(IntersectionFilter.class));
+                types.put(Geonet.SearchResult.Relation.OVERLAPS,
+                        constructor(OverlapsFilter.class));
+                types.put(Geonet.SearchResult.Relation.TOUCHES,
+                        constructor(TouchesFilter.class));
+                types.put(Geonet.SearchResult.Relation.WITHIN,
+                        constructor(WithinFilter.class));
+                // types.put(Geonet.SearchResult.Relation.CONTAINS,
+                // constructor(BeyondFilter.class));
+                // types.put(Geonet.SearchResult.Relation.CONTAINS,
+                // constructor(DWithinFilter.class));
+            } catch (Exception e) {
+                throw new RuntimeException("Unable to create types mapping", e);
+            }
+            _types = Collections.unmodifiableMap(types);
+        }
+        private final String                                            _appPath;
+        private final Transaction                                       _transaction;
+        private final Timer                                             _timer;
+        private final Parser                                            _gmlParser;
+        private final Lock                                              _lock;
+        private SpatialIndexWriter                                      _writer;
+        private Committer                                               _committerTask;
+
+        public Spatial(String appPath) throws Exception
+        {
+            _lock = new ReentrantLock();
+            _appPath = appPath;
+            _transaction = new DefaultTransaction("SpatialIndexWriter");
+            _timer = new Timer(true);
+            _gmlParser = new Parser(new GMLConfiguration());
+            boolean rebuildIndex = false;
+
+            // This must be before createWriter because createWriter will create
+            // the file
+            // and therefore the test will not be worthwhile
+            if (!SpatialIndexWriter.createDataStoreFile(appPath).exists()) {
+                rebuildIndex = true;
+            }
+            rebuildIndex = createWriter(appPath);
+            if (rebuildIndex) {
+                setupIndex(true);
+            }else{
+                // since the index is considered good we will 
+                // call getIndex to make sure the in-memory index is 
+                // generated
+                _writer.getIndex();
+            }
+            addShutdownHook();
+        }
+
+        private boolean createWriter(String appPath) throws IOException
+        {
+            boolean rebuildIndex;
+            try {
+                _writer = new SpatialIndexWriter(appPath, _gmlParser,
+                        _transaction, _lock);
+                rebuildIndex = _writer.getFeatureSource().getSchema() == null;
+            } catch (Exception e) {
+                _writer.delete();
+                rebuildIndex = true;
+            }
+            return rebuildIndex;
+        }
+
+        private void addShutdownHook()
+        {
+            Runtime.getRuntime().addShutdownHook(new Thread()
+            {
+                @Override
+                public void run()
+                {
+                    _lock.lock();
+                    try {
+                        _writer.close();
+                    } catch (IOException e) {
+                        _cat.error("error writing spatial index", e);
+                    } finally {
+                        _lock.unlock();
+                    }
+                }
+            });
+        }
+        public Filter filter(org.apache.lucene.search.Query query, Element filterExpr, String filterVersion)
+                throws Exception
+        {
+
+            _lock.lock();
+            try {
+                Parser filterParser = getFilterParser(filterVersion);
+            	FeatureSource featureSource = _writer.getFeatureSource();
+            	SpatialIndex index = _writer.getIndex();
+                return OgcGenericFilters.create(query, filterExpr,
+                        featureSource, index, filterParser);
+            } finally {
+                _lock.unlock();
+            }
+        }
+
+		public SpatialFilter filter(org.apache.lucene.search.Query query,
+                Geometry geom, Element request) throws Exception
+        {
+            _lock.lock();
+            try {
+                String relation = Util.getParam(request,
+                        Geonet.SearchResult.RELATION,
+                        Geonet.SearchResult.Relation.INTERSECTION);
+                SpatialIndexWriter writer = writerNoLocking();
+                SpatialIndex index = writer.getIndex();
+                FeatureSource featureSource = writer.getFeatureSource();
+                return _types.get(relation).newInstance(query, request, geom,
+                        featureSource, index);
+            } finally {
+                _lock.unlock();
+            }
+        }
+
+        public SpatialIndexWriter writer() throws Exception
+        {
+            _lock.lock();
+            try {
+                if (_committerTask != null) {
+                    _committerTask.cancel();
+                }
+                _committerTask = new Committer();
+                _timer.schedule(_committerTask, TIME_BETWEEN_SPATIAL_COMMITS);
+                return writerNoLocking();
+            } finally {
+                _lock.unlock();
+            }
+        }
+
+        private SpatialIndexWriter writerNoLocking() throws Exception
+        {
+            if (_writer == null) {
+                _writer = new SpatialIndexWriter(_appPath, _gmlParser,
+                        _transaction, _lock);
+            }
+            return _writer;
+        }
+        
+        private Parser getFilterParser(String filterVersion) {
+			Configuration config;
+			config = filterVersion.equals(Csw.FILTER_VERSION_1_0) ? new org.geotools.filter.v1_0.OGCConfiguration()
+					: new org.geotools.filter.v1_1.OGCConfiguration();
+			return new Parser(config);
+		}
+
+        private class Committer extends TimerTask
+        {
+
+            @Override
+            public void run()
+            {
+                _lock.lock();
+                try {
+                    if (_committerTask == this) {
+                        _writer.commit();
+                        _committerTask = null;
+                    }
+                } catch (IOException e) {
+                    _cat.error("error writing spatial index", e);
+                } finally {
+                    _lock.unlock();
+                }
+            }
+
+        }
+
+
+    }
+
+    private static Constructor<? extends SpatialFilter> constructor(
+            Class<? extends SpatialFilter> clazz) throws SecurityException,
+            NoSuchMethodException
+    {
+        return clazz.getConstructor(org.apache.lucene.search.Query.class,
+                Element.class, Geometry.class, FeatureSource.class,
+                SpatialIndex.class);
+    }
 }
 

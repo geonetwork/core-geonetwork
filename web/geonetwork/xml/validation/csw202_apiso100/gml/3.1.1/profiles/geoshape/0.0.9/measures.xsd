@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:gml="http://www.opengis.net/gml"
+        targetNamespace="http://www.opengis.net/gml"
+        version="3.1.1" elementFormDefault="qualified">
+
+  <include schemaLocation="gmlBase.xsd"/>
+
+  <element name="measure" type="gml:MeasureType"/>
+  <complexType name="LengthType">
+    <simpleContent>
+      <restriction base="gml:MeasureType"/>
+    </simpleContent>
+  </complexType>
+
+  <element name="angle" type="gml:MeasureType"/>
+  <complexType name="AngleType">
+    <simpleContent>
+      <restriction base="gml:MeasureType"/>
+    </simpleContent>
+  </complexType>
+
+</schema>

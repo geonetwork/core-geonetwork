@@ -103,7 +103,10 @@ class Harvester
 	//---------------------------------------------------------------------------
 
 	/**
-	 * Does CSW GetCapabilities request.
+	 * Does CSW GetCapabilities request
+	 * and check that operations needed for harvesting
+	 * (ie. GetRecords and GetRecordById)
+	 * are available in remote node.
 	 */
 	private CswServer retrieveCapabilities(Logger log) throws Exception {		
 		if (!Lib.net.isUrlValid(params.capabUrl))
@@ -255,10 +258,12 @@ class Harvester
 
 		ArrayList<Element> queriables = new ArrayList<Element>();
 
-		buildFilterQueryable(queriables, "AnyText",      s.freeText);
-		buildFilterQueryable(queriables, "dc:title",     s.title);
+		// FIXME :
+		// old GeoNetwork node does not understand AnyText (csw:AnyText instead).
+		buildFilterQueryable(queriables, "csw:AnyText", s.freeText);
+		buildFilterQueryable(queriables, "dc:title", s.title);
 		buildFilterQueryable(queriables, "dct:abstract", s.abstrac);
-		buildFilterQueryable(queriables, "dc:subject",   s.subject);
+		buildFilterQueryable(queriables, "dc:subject", s.subject);
 
 		//--- build filter expression
 
@@ -289,7 +294,18 @@ class Harvester
 		if (value.length() == 0)
 			return;
 
-		Element prop     = new Element("PropertyIsEqualTo", Csw.NAMESPACE_OGC);
+		// add Like operator
+		Element prop = null;
+		
+		if (value.contains("%")) {
+			prop = new Element("PropertyIsLike", Csw.NAMESPACE_OGC);
+			prop.setAttribute("wildcard", "%");
+			prop.setAttribute("singleChar", "_");
+			prop.setAttribute("escapeChar", "\\");
+		} else {
+			prop     = new Element("PropertyIsEqualTo", Csw.NAMESPACE_OGC);
+		}
+		
 		Element propName = new Element("PropertyName",      Csw.NAMESPACE_OGC);
 		Element literal  = new Element("Literal",           Csw.NAMESPACE_OGC);
 
@@ -310,10 +326,10 @@ class Harvester
 
 		ArrayList<String> queryables = new ArrayList<String>();
 
-		buildCqlQueryable(queryables, "AnyText",      s.freeText);
-		buildCqlQueryable(queryables, "dc:title",     s.title);
+		buildCqlQueryable(queryables, "csw:AnyText", s.freeText);
+		buildCqlQueryable(queryables, "dc:title", s.title);
 		buildCqlQueryable(queryables, "dct:abstract", s.abstrac);
-		buildCqlQueryable(queryables, "dc:subject",   s.subject);
+		buildCqlQueryable(queryables, "dc:subject", s.subject);
 
 		//--- build CQL query
 
@@ -332,10 +348,17 @@ class Harvester
 
 	//---------------------------------------------------------------------------
 
+	/**
+	 * Build CQL from user entry. If parameter value
+	 * contains '%', then the like operator is used.
+	 */
 	private void buildCqlQueryable(List<String> queryables, String name, String value)
 	{
 		if (value.length() != 0)
-			queryables.add("("+ name +" = "+ value +")");
+			if (value.contains("%"))
+				queryables.add("("+ name +" like '"+ value +"')");
+			else
+				queryables.add("("+ name +" = "+ value +")");
 	}
 
 	//---------------------------------------------------------------------------

@@ -24,8 +24,12 @@
 package org.fao.geonet.kernel.csw.services;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
@@ -35,10 +39,13 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
+import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Namespace;
 
 //=============================================================================
 
@@ -73,47 +80,33 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 	if (outputFormat != null && !outputFormat.equals("application/xml"))
 	    throw new InvalidParameterValueEx("outputFormat", outputFormat);
 
-	if (schemaLanguage != null && !schemaLanguage.equals(Csw.SCHEMA_LANGUAGE))
-	    throw new InvalidParameterValueEx("schemaLanguage", schemaLanguage);
+	if (schemaLanguage != null
+				&& !schemaLanguage.equals(Csw.SCHEMA_LANGUAGE))
+		throw new InvalidParameterValueEx("schemaLanguage", schemaLanguage);
 
 	//--- build output
 
 	Element response = new Element(getName() +"Response", Csw.NAMESPACE_CSW);
 
-	Iterator i = request.getChildren("TypeName", Csw.NAMESPACE_CSW).iterator();
-
+	Iterator<Element> i = request.getChildren("TypeName", Csw.NAMESPACE_CSW).iterator();
+	
+	HashMap<String, Element> scMap = new HashMap<String, Element>();
+	// default search without typename
 	if (!i.hasNext())
-	    {
-		//	response.addContent(getSchemaComponent(context, "dataset"));
-		//	response.addContent(getSchemaComponent(context, "service"));
-		response.addContent(getSchemaComponent(context, null));
-	    }
-	else while(i.hasNext())
-		 {
-		     Element elem = (Element) i.next();
-		     String  typeNS   = elem.getAttributeValue("targetNamespace");
-		     String  typeName = elem.getText();
+		scMap = getSchemaComponents(context, null);
+	else {
+		while(i.hasNext()) {
+			
+			Element elem = i.next();
 
-		     // The value of TypeName has to be qualified by a namespace
-		     int colon = typeName.indexOf(':');
-		     if (colon > 0)
-			 {
-			     String[] typeParam = typeName.split(":");
-			     String ns = typeParam[0]; // namespace part
-			     String thisType = typeParam[1]; // the value, without the namespace
-
-			     // go fetch the fragment from the schema
-			     Element schema   = getSchemaComponent(context, thisType);
-
-			     if (schema != null)
-				 response.addContent(schema);
-			 }
-		     else // throw an exception if the request didn't include a namespace
-			 throw new InvalidParameterValueEx("TypeName", typeName);
-
-		     //if (typeNS == null)
-		     //throw new MissingParameterValueEx("targetNamespace");
-		 }
+			String typeName = elem.getText();
+			scMap.put(typeName, getSchemaComponents(context, typeName).get(typeName));
+		}
+	}
+	
+	for (String tName : scMap.keySet()) {
+		response.addContent(scMap.get(tName));
+	}
 
 	return response;
     }
@@ -137,19 +130,61 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 	setAttrib(request, "schemaLanguage", schemaLang);
 
 	//--- setup type names
+	if (typeNames != null && namespace == null)
+		throw new InvalidParameterValueEx("Namespace", "Typename's namespace not declared for "+typeNames+".");
+		
 	Map<String, String> hmTypeNames = retrieveTypeNames(typeNames, namespace);
 
 	for(Map.Entry<String, String> entry : hmTypeNames.entrySet())
 	    {
 		Element el = new Element("TypeName", Csw.NAMESPACE_CSW);
 		el.setText(entry.getKey());
-		el.setAttribute("targetNamespace", entry.getValue());
-
+		
 		request.addContent(el);
 	    }
 
 	return request;
     }
+    
+    //---------------------------------------------------------------------------
+    
+    public Element retrieveValues(String parameterName) throws CatalogException {
+
+		Element listOfValues = null;
+
+		if (parameterName.equalsIgnoreCase("outputformat")
+				|| parameterName.equalsIgnoreCase("namespace")
+				|| parameterName.equalsIgnoreCase("typename"))
+			listOfValues = new Element("ListOfValues", Csw.NAMESPACE_CSW);
+
+		// Handle outputFormat parameter
+		if (parameterName.equalsIgnoreCase("outputformat")) {
+			Set<String> formats = CatalogConfiguration
+					.getDescribeRecordOutputFormat();
+			List<Element> values = createValuesElement(formats);
+			listOfValues.addContent(values);
+		}
+
+		// Handle namespace parameter
+		if (parameterName.equalsIgnoreCase("namespace")) {
+			Set<Namespace> namespaces = CatalogConfiguration
+					.getDescribeRecordNamespaces();
+			List<Element> values = createValuesElementNS(namespaces);
+			listOfValues.addContent(values);
+		}
+
+		// Handle typename parameter
+		if (parameterName.equalsIgnoreCase("typename")) {
+			Set<String> typenames = CatalogConfiguration
+					.getDescribeRecordTypename().keySet();
+			List<Element> values = createValuesElement(typenames);
+			listOfValues.addContent(values);
+		}
+		
+		// TODO : Handle schemalanguage parameter
+
+		return listOfValues;
+	}
 
     //---------------------------------------------------------------------------
     //---
@@ -157,105 +192,64 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
     //---
     //---------------------------------------------------------------------------
 
-    private Element getSchemaComponent(ServiceContext context, String typeName)
-	throws NoApplicableCodeEx
-    {
-	String dir = context.getAppPath() + Geonet.Path.VALIDATION + "csw/2.0.2/csw-2.0.2.xsd";
+	private HashMap<String, Element> getSchemaComponents(ServiceContext context, String typeName) 
+    throws NoApplicableCodeEx, InvalidParameterValueEx {
+	
+	Element currentSC = null;
+	HashMap<String, Element> scElements = new HashMap<String, Element>();
+	
+	if (typeName == null) {
+		Set<String> schemaFiles = new HashSet<String>(CatalogConfiguration
+					.getDescribeRecordTypename().values());
+		for (String schema : schemaFiles) {			
+			String tname = schema.substring(0, schema.indexOf("."));
+			currentSC = loadSchemaComponent(context, tname, schema);
+			scElements.put(tname, currentSC);
+		}
+	} else {
+		if (CatalogConfiguration.getDescribeRecordTypename().containsKey(typeName)) {
+			scElements.put(typeName, loadSchemaComponent(context, typeName,
+					CatalogConfiguration.getDescribeRecordTypename().get(typeName)));
+		} else {
+			throw new InvalidParameterValueEx("TypeName", "Can't load typename "+typeName+" from CSW catalogue configuration.");
+		}
+	}
+	return scElements;
+    }
 
-	try
-	    {
-		Element schema = Xml.loadFile(dir);
-
-		Element sc = new Element("SchemaComponent", Csw.NAMESPACE_CSW);
-
-		sc.setAttribute("targetNamespace", Csw.NAMESPACE_CSW.getURI());
-		//			sc.setAttribute("parentSchema",    "?");
-		sc.setAttribute("schemaLanguage",  Csw.SCHEMA_LANGUAGE);
-
-		if (typeName == null)
-		    {
+    //---------------------------------------------------------------------------
+    
+    private Element loadSchemaComponent(ServiceContext context, String tname, String schemafile) 
+    throws NoApplicableCodeEx {
+    
+    	String dir = context.getAppPath() + Geonet.Path.VALIDATION + "csw202_apiso100/csw/2.0.2/";
+    	
+    	try {
+			Element schema = Xml.loadFile(dir+schemafile);
+			Element sc = new Element("SchemaComponent", Csw.NAMESPACE_CSW);
+			
+			// Add required attributes to SchemaComponent
+			sc.setAttribute("targetNamespace", Csw.NAMESPACE_CSW.getURI());
+			// (optional) sc.setAttribute("parentSchema",    "?");
+			sc.setAttribute("schemaLanguage",  Csw.SCHEMA_LANGUAGE);
+			
 			sc.addContent(schema);
 			return sc;
-		    }
-		else
-		    {
-			Element typeElem = findElement(schema, typeName);
 
-			if (typeElem == null)
-			    return null;
+    	} catch (IOException e) {
+			context.error("Cannot get schema file : "+ dir);
+			context.error("  (C) StackTrace\n"+ Util.getStackTrace(e));
+			
+			throw new NoApplicableCodeEx("Cannot get schema file for : "+ tname);
+		} catch (JDOMException e) {
+			context.error("Schema file is not well formed : "+ dir);
+			context.error("  (C) StackTrace\n"+ Util.getStackTrace(e));
 
-			sc.addContent(typeElem);
+			throw new NoApplicableCodeEx("Schema file not well formed : "+ tname);
+		}
+	}
 
-			return sc;
-		    }
-	    }
-	catch (IOException e)
-	    {
-		context.error("Cannot get schema file : "+ dir);
-		context.error("  (C) StackTrace\n"+ Util.getStackTrace(e));
-
-		throw new NoApplicableCodeEx("Cannot get schema file for : "+ typeName);
-	    }
-	catch (JDOMException e)
-	    {
-		context.error("Schema file is not well formed : "+ dir);
-		context.error("  (C) StackTrace\n"+ Util.getStackTrace(e));
-
-		throw new NoApplicableCodeEx("Schema file not well formed : "+ typeName);
-	    }
-    }
-
-    //---------------------------------------------------------------------------
-
-    private Element findElement(Element schema, String typeName)
-    {
-	Iterator i = schema.getChildren().iterator();
-
-	while (i.hasNext())
-	    {
-		Element elem = (Element) i.next();
-
-		String name = elem.getAttributeValue("name");
-
-		if (elem.getName().equals("element"))
-		    if (name.equals(typeName))
-			return (Element) elem.detach();
-
-	    }
-
-	return null;
-    }
-
-    //---------------------------------------------------------------------------
-
-    //	private Element getSchemaComponent(ServiceContext context, String typeName)
-    //													throws NoApplicableCodeEx
-    //	{
-    //		String file = typeName.equals("service") ? "services.xsd" : "identification.xsd";
-    //		String dir  = context.getAppPath() + Geonet.Path.CSW + file;
-    //
-    //		try
-    //		{
-    //			Element schema = Xml.loadFile(dir);
-    //
-    //			Element sc = new Element("SchemaComponent", Csw.NAMESPACE_CSW);
-    //
-    //			sc.setAttribute("targetNamespace", Csw.NAMESPACE_CSW.getURI());
-    ////			sc.setAttribute("parentSchema",    "?");
-    //			sc.setAttribute("schemaLanguage",  Csw.SCHEMA_LANGUAGE);
-    //
-    //			sc.addContent(schema);
-    //
-    //			return sc;
-    //		}
-    //		catch (Exception e)
-    //		{
-    //			context.error("Cannot get schema file : "+ dir);
-    //			context.error("  (C) StackTrace\n"+ Util.getStackTrace(e));
-    //
-    //			throw new NoApplicableCodeEx("Cannot get schema file for : "+ typeName);
-    //		}
-    //	}
+	//---------------------------------------------------------------------------
 }
 
 //=============================================================================

@@ -96,7 +96,27 @@ public class Set implements Service
 
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "z3950/enable",             "system/z3950/enable"),
 		new ConfigEntry(ConfigEntry.Type.INT,    false, "z3950/port",               "system/z3950/port"),
-
+		
+		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "csw/enable",               "system/csw/enable"),
+		new ConfigEntry(ConfigEntry.Type.INT,    false, "csw/contactId",                               "system/csw/contactId"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/individualName",                          "system/csw/individualName"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/positionName",                            "system/csw/positionName"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/contactInfo/phone/voice",                 "system/csw/contactInfo/phone/voice"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/contactInfo/phone/facsimile",             "system/csw/contactInfo/phone/facsimile"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/contactInfo/address/deliveryPoint",       "system/csw/contactInfo/address/deliveryPoint"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/contactInfo/address/city",                "system/csw/contactInfo/address/city"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/contactInfo/address/administrativeArea",  "system/csw/contactInfo/address/administrativeArea"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/contactInfo/address/postalCode",          "system/csw/contactInfo/address/postalCode"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/contactInfo/address/country",             "system/csw/contactInfo/address/country"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/contactInfo/address/email",               "system/csw/contactInfo/address/email"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/contactInfo/hoursOfService",              "system/csw/contactInfo/hoursOfService"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/contactInfo/contactInstructions",         "system/csw/contactInfo/contactInstructions"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/role",                                    "system/csw/role"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/title",                                   "system/csw/title"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/abstract",                                "system/csw/abstract"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/fees",                                    "system/csw/fees"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/accessConstraints",                       "system/csw/accessConstraints"),
+		
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "proxy/use",                "system/proxy/use"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "proxy/host",               "system/proxy/host"),
 		new ConfigEntry(ConfigEntry.Type.INT,    false, "proxy/port",               "system/proxy/port"),

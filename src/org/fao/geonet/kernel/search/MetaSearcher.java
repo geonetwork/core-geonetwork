@@ -68,12 +68,12 @@ public abstract class MetaSearcher
 	{
 		// get from and to default values
 		_from = 1;
-		Element defaultSearch = MainUtil.getDefaultSearch(srvContext, null);
 		try
 		{
+			Element defaultSearch = MainUtil.getDefaultSearch(srvContext, null);
 			_to = Integer.parseInt(defaultSearch.getChildText(Geonet.SearchResult.HITS_PER_PAGE));
 		}
-		catch (NumberFormatException nfe)
+		catch (Exception e)
 		{
 			_to = 10;
 		}

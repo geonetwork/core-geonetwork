@@ -69,8 +69,8 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.DbmsPool</provider>
 			<config>
-				<user>zuWRjZC6</user>
-				<password>GMGmk13z</password>
+				<user>9YJQLT96</user>
+				<password>Lbfn9cdT</password>
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>
@@ -122,6 +122,7 @@
 		<param name="dataDir" value="WEB-INF/data" />
 		<param name="thesauriDir" value="WEB-INF/gsthesauri" />
 		<param name="codeListDir" value="xml/codelist" />
+		<param name="summaryConfig" value="WEB-INF/summaryConfig.xml" />
 	</appHandler>
 
 	<!-- ====================================================================== -->
@@ -295,7 +296,7 @@
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Selection search services for filtering -->
-
+		
 		<service name="selection.search">
 			<class name=".services.main.SelectionSearch" />
 			<output forward="main.present.embedded" />
@@ -517,6 +518,10 @@
 		<service name="config">
 			<output sheet="config/config.xsl">
 				<xml name="config" file="xml/config.xml" />
+				<call name="users" class="jeeves.services.db.Select">
+					<param name="db" value="main-db" />
+					<param name="query" value="SELECT * FROM Users ORDER BY name" />
+				</call>
 			</output>
 		</service>
 
@@ -834,6 +839,7 @@
 			<param name="type" value="all-thesauri" />
 		  </class>
 		  <output sheet="thesaurus-admin.xsl">
+			<call name="importStyleSheets" class=".guiservices.util.GetImportXSLs" />
 			<call name="thesaurusCategory" class=".services.thesaurus.List">
 			  <param name="type" value="upload-directories" />
 			</call>
@@ -916,6 +922,7 @@
 	<include>config-portal.xml</include>
 	<include>config-export.xml</include>
 	<include>config-test.xml</include>
+	<include>config-csw.xml</include>
 
 	<!-- ====================================================================== -->
 

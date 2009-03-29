@@ -1,0 +1,3 @@
+<?xml version="1.0"?>
+<csw:DescribeRecord xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2.0.2"
+    outputFormat="application/xml" schemaLanguage="http://www.w3.org/XML/Schema"/>

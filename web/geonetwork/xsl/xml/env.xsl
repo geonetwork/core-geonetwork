@@ -11,6 +11,7 @@
 		<xsl:variable name="server"   select="children/server/children"/>
 		<xsl:variable name="intranet" select="children/intranet/children"/>
 		<xsl:variable name="z3950"    select="children/z3950/children"/>
+		<xsl:variable name="csw"        select="children/csw/children"/>
 		<xsl:variable name="proxy"    select="children/proxy/children"/>
 		<xsl:variable name="feedback" select="children/feedback/children"/>
 		<xsl:variable name="platform" select="children/platform/children"/>
@@ -41,6 +42,10 @@
 				<enable><xsl:value-of select="$z3950/enable/value"/></enable>
 				<port><xsl:value-of select="$z3950/port/value"/></port>
 			</z3950>
+			
+			<csw>
+				<contactId><xsl:value-of select="$csw/contactId/value"/></contactId>
+			</csw>
 
 			<proxy>
 				<use><xsl:value-of select="$proxy/use/value"/></use>

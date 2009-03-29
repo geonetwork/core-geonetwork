@@ -23,11 +23,15 @@
 
 package org.fao.geonet.services.main;
 
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Logger;
 import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
 //=============================================================================
@@ -39,7 +43,9 @@ public class CswDispatcher implements Service
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
-
+	
+	private Logger logger;
+	
 	public void init(String appPath, ServiceConfig config) throws Exception {}
 
 	//--------------------------------------------------------------------------
@@ -50,9 +56,27 @@ public class CswDispatcher implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
+		logger = context.getLogger();
+		
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		return gc.getCatalogDispatcher().dispatch(params, context);
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+		SettingManager settingMan = new SettingManager(dbms, context.getProviderManager());
+		
+		boolean cswEnable    = settingMan.getValueAsBool("system/csw/enable", false);
+		
+		Element response = new Element(Jeeves.Elem.RESPONSE);
+		
+		// FIXME : response should be more explicit, an exception should be return ?
+		if (!cswEnable) {
+			logger.info("CSW harvesting is disabled");
+			Element info  = new Element("info").setText("CSW harvesting is disabled");
+			response.addContent(info);
+		} else
+			response = gc.getCatalogDispatcher().dispatch(params, context);
+		
+		return response;
 	}
 }
 

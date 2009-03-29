@@ -25,6 +25,18 @@
 	form
 	-->
 	<xsl:template name="form">
+		<script type="text/javascript" language="JavaScript1.2">
+			function deleteUser(service, message, id){
+				var cswContactId = <xsl:value-of select="/root/gui/env/csw/contactId"/>;
+				if (id == cswContactId) {
+					if (!confirm("<xsl:value-of select="/root/gui/strings/delUserCsw"/>"))
+						return null;
+				}
+				doConfirm(service, message);
+				
+			}
+		</script>
+		
 		<table border="0">
 			<tr>
 				<th class="padded" style="width:80px;"><b><xsl:value-of select="/root/gui/strings/username"/></b></th>
@@ -43,7 +55,7 @@
 						<button class="content" onclick="load('{/root/gui/locService}/user.get?id={id}')"><xsl:value-of select="/root/gui/strings/edit"/></button>
 						&#160;
 						<xsl:if test="/root/gui/session/userId != id">
-							<button class="content" onclick="doConfirm('{/root/gui/locService}/user.remove?id={id}','{/root/gui/strings/delUserConf}')"><xsl:value-of select="/root/gui/strings/delete"/></button>
+							<button class="content" onclick="deleteUser('{/root/gui/locService}/user.remove?id={id}','{/root/gui/strings/delUserConf}', {id})"><xsl:value-of select="/root/gui/strings/delete"/></button>
 						</xsl:if>
 					</td>
 				</tr>

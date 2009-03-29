@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:gml="http://www.opengis.net/gml" xmlns:r3d="http://www.spotimage.com/Ref3D" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.spotimage.com/Ref3D" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+    <xs:import namespace="http://www.opengis.net/gml" schemaLocation="../gmlJP2Profile.xsd"/>
+    <!--=============================================================-->
+    <!--Elements ======================================================-->
+    <xs:element name="R3DOrthoCoverage" type="r3d:R3DOrthoCoverageType" substitutionGroup="gml:_Coverage"/>
+    <xs:element name="rangeSet" type="r3d:FileRangeSetType" substitutionGroup="gml:rangeSet"/>
+    <xs:element name="PixelValue8bit" type="gml:integerOrNullList" substitutionGroup="gml:CountList"/>
+    <xs:element name="PixelValue16bit" type="gml:integerOrNullList" substitutionGroup="gml:CountList"/>
+    <xs:element name="File" substitutionGroup="gml:File">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="gml:FileType">
+                    <xs:sequence>
+                        <xs:element name="fileDate" type="xs:date" minOccurs="0"/>
+                        <xs:element name="fileFormat" type="xs:string" minOccurs="0"/>
+                        <xs:element name="bandDescription" maxOccurs="4">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="Mosaicked Monospectral"/>
+                                    <xs:enumeration value="Elevation"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <!--Annotation elements ============================================-->
+    <xs:element name="_Annotation" type="r3d:AnnotationType" abstract="true" substitutionGroup="gml:_Feature"/>
+    <xs:element name="_AnnotationBase" type="r3d:AnnotationBaseType" abstract="true" substitutionGroup="gml:_Feature"/>
+    <xs:element name="content">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="r3d:_AnnotationBase" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Label" type="r3d:LabelType" substitutionGroup="r3d:_AnnotationBase"/>
+    <xs:element name="RegionOfInterest" type="r3d:RegionOfInterestType" substitutionGroup="r3d:_Annotation"/>
+    <!--=============================================================-->
+    <!--Complex types =================================================-->
+    <xs:complexType name="FileRangeSetType">
+        <xs:complexContent>
+            <xs:restriction base="gml:RangeSetType">
+                <xs:sequence>
+                    <xs:element ref="r3d:File"/>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="R3DOrthoCoverageType">
+        <xs:complexContent>
+            <xs:restriction base="gml:RectifiedGridCoverageType">
+                <xs:sequence>
+                    <xs:group ref="gml:StandardObjectProperties"/>
+                    <xs:element ref="gml:boundedBy" minOccurs="0"/>
+                    <xs:element ref="gml:rectifiedGridDomain"/>
+                    <xs:element ref="r3d:rangeSet"/>
+                    <xs:element ref="gml:coverageFunction" minOccurs="0"/>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <!--Annotation complex types ========================================-->
+    <xs:complexType name="AbstractAnnotationBaseType">
+        <xs:complexContent>
+            <xs:restriction base="gml:AbstractFeatureType">
+                <xs:sequence>
+                    <xs:sequence>
+                        <xs:group ref="gml:StandardObjectProperties"/>
+                    </xs:sequence>
+                    <xs:sequence>
+                        <xs:element ref="gml:boundedBy" minOccurs="0"/>
+                        <xs:element ref="gml:location" minOccurs="0">
+                            <xs:annotation>
+                                <xs:appinfo>deprecated</xs:appinfo>
+                                <xs:documentation>deprecated in GML version 3.1</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="AnnotationBaseType">
+        <xs:complexContent>
+            <xs:extension base="r3d:AbstractAnnotationBaseType">
+                <xs:sequence>
+                    <xs:element ref="gml:defaultStyle" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="AnnotationType">
+        <xs:complexContent>
+            <xs:extension base="r3d:AnnotationBaseType">
+                <xs:sequence/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="LabelType">
+        <xs:complexContent>
+            <xs:extension base="r3d:AnnotationBaseType">
+                <xs:sequence>
+                    <xs:element name="textContent" type="xs:string"/>
+                    <xs:element name="anchorPoint" type="gml:PointPropertyType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="RegionOfInterestType">
+        <xs:complexContent>
+            <xs:extension base="r3d:AnnotationType">
+                <xs:sequence>
+                    <xs:element ref="r3d:content"/>
+                    <xs:element name="annotates" type="gml:PolygonPropertyType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:schema>

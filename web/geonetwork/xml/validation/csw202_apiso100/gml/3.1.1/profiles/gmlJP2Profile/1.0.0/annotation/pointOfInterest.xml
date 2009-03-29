@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy 2005 R3 U (http://www.xmlspy.com) by David S. Burggraf (Galdos Systems Inc.) -->
+<PointOfInterest gml:id="POI001" xmlns="http://www.opengis.net/xima" xmlns:gml="http://www.opengis.net/gml" xmlns:xima="http://www.opengis.net/xima" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/gml ../gmlJP2Profile.xsd http://www.opengis.net/xima annotation.xsd">
+    <gml:metaDataProperty>
+        <AnnotationMetaData>
+            <title>Some point of interest</title>
+            <author>Author Name</author>
+            <dateTime>2004-12-12T01:01:01</dateTime>
+            <certainty>medium</certainty>
+            <rationale>proximity of point is a close match to that of known building</rationale>
+        </AnnotationMetaData>
+    </gml:metaDataProperty>
+    <gml:defaultStyle>
+        <!--Style overlays some arrow or line symbol on top of Annotation/pointer value-->
+        <gml:Style>
+            <gml:featureStyle>
+                <gml:FeatureStyle featureType="PointOfInterest" queryGrammar="xpath">
+                    <gml:geometryStyle>
+                        <gml:GeometryStyle geometryProperty="pointer" geometryType="gml:LineString">
+                            <gml:style>stroke:blue;stroke-width:5</gml:style>
+                        </gml:GeometryStyle>
+                    </gml:geometryStyle>
+                </gml:FeatureStyle>
+            </gml:featureStyle>
+        </gml:Style>
+    </gml:defaultStyle>
+    <gml:defaultStyle>
+        <!--Style overlays point symbol on annotates property value-->
+        <gml:Style>
+            <gml:featureStyle>
+                <gml:FeatureStyle featureType="PointOfInterest" queryGrammar="xpath">
+                    <gml:geometryStyle>
+                        <gml:GeometryStyle geometryProperty="annotates" geometryType="gml:Point">
+                            <gml:symbol symbolType="svg" xlink:href="http://symbology.com/stars.svg#Star01"/>
+                        </gml:GeometryStyle>
+                    </gml:geometryStyle>
+                </gml:FeatureStyle>
+            </gml:featureStyle>
+        </gml:Style>
+    </gml:defaultStyle>
+    <pointer>
+        <gml:LineString gml:id="L001">
+            <gml:pos>12 34</gml:pos>
+            <gml:pos>45 36</gml:pos>
+            <gml:pos>78 34</gml:pos>
+        </gml:LineString>
+    </pointer>
+    <content>
+        <Image>
+            <gml:defaultStyle>
+                <!--Stylel places image file inside boundary Envelope-->
+                <gml:Style>
+                    <gml:featureStyle>
+                        <gml:FeatureStyle featureType="Image" queryGrammar="xpath">
+                            <gml:geometryStyle>
+                                <gml:GeometryStyle geometryProperty="xima:boundary" geometryType="gml:Envelope">
+                                    <gml:style>stroke:maroon;stroke-width:5</gml:style>
+                                </gml:GeometryStyle>
+                            </gml:geometryStyle>
+                            <gml:geometryStyle>
+                                <gml:GeometryStyle geometryProperty="xima:boundary" geometryType="gml:Envelope">
+                                    <gml:symbol symbolType="other" xlink:href="file///c/BuildingPhoto.jpg"/>
+                                </gml:GeometryStyle>
+                            </gml:geometryStyle>
+                        </gml:FeatureStyle>
+                    </gml:featureStyle>
+                </gml:Style>
+            </gml:defaultStyle>
+            <xima:fileURI>file///c/BuildingPhoto.jpg</xima:fileURI>
+            <xima:boundary>
+                <gml:Envelope>
+                    <gml:lowerCorner>1 1</gml:lowerCorner>
+                    <gml:upperCorner>20 20</gml:upperCorner>
+                </gml:Envelope>
+            </xima:boundary>
+        </Image>
+    </content>
+    <annotates>
+        <gml:Point gml:id="Pt001" srsName="gmljp2://xml/crs.gml#id">
+            <gml:pos>30 30</gml:pos>
+        </gml:Point>
+    </annotates>
+</PointOfInterest>

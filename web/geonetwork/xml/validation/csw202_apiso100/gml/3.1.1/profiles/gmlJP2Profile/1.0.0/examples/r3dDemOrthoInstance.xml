@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gml:FeatureCollection xmlns:gml="http://www.opengis.net/gml" xmlns:iso="http://metadata.dgiwg.org/smXML" xmlns:r3d="http://www.spotimage.com/Ref3D" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/gml ../gmlJP2Profile.xsd http://www.spotimage.com/Ref3D r3dCoverage.xsd">
+	<gml:description>GML/JPEG2000 Root Instance of Spot Image DEM</gml:description>
+	<gml:boundedBy>
+		<gml:Null>withheld</gml:Null>
+	</gml:boundedBy>
+	<gml:featureMember>
+		<gml:FeatureCollection>
+			<gml:name>Ref3D DEM</gml:name>
+			<gml:boundedBy>
+				<gml:Null>withheld</gml:Null>
+			</gml:boundedBy>
+			<gml:featureMember>
+				<r3d:R3DOrthoCoverage dimension="2">
+					<gml:rectifiedGridDomain>
+						<gml:RectifiedGrid dimension="2">
+							<gml:limits>
+								<gml:GridEnvelope>
+									<gml:low>0 0</gml:low>
+									<gml:high>3601 3601</gml:high>
+								</gml:GridEnvelope>
+							</gml:limits>
+							<gml:axisName>x</gml:axisName>
+							<gml:axisName>y</gml:axisName>
+							<gml:origin>
+								<gml:Point srsName="urn:ogc:def:epsg:6.6:crs:4326">
+									<gml:pos>116.35 33.28</gml:pos>
+								</gml:Point>
+							</gml:origin>
+							<gml:offsetVector>1 0</gml:offsetVector>
+							<gml:offsetVector>0 1</gml:offsetVector>
+						</gml:RectifiedGrid>
+					</gml:rectifiedGridDomain>
+					<r3d:rangeSet>
+						<r3d:File>
+							<gml:rangeParameters>
+								<r3d:PixelValue8bit/>
+							</gml:rangeParameters>
+							<gml:fileName>DEM.TIF</gml:fileName>
+							<!--fileName value will change to the following URI when packaged in the jpx file
+							<gml:fileName>gmljp2://codestream/0</gml:fileName>-->
+							<gml:fileStructure>Record Interleaved</gml:fileStructure>
+							<r3d:fileDate>2003-11-27</r3d:fileDate>
+							<r3d:fileFormat>geoTIFF</r3d:fileFormat>
+							<r3d:bandDescription>Elevation</r3d:bandDescription>
+						</r3d:File>
+					</r3d:rangeSet>
+				</r3d:R3DOrthoCoverage>
+			</gml:featureMember>
+		</gml:FeatureCollection>
+	</gml:featureMember>
+	<gml:featureMember>
+		<gml:FeatureCollection>
+			<gml:description>GML/JPEG2000 Root Instance of Spot Image orthoimage with Region Of Interest</gml:description>
+			<gml:boundedBy>
+				<gml:Null>withheld</gml:Null>
+			</gml:boundedBy>
+			<gml:featureMember>
+				<gml:FeatureCollection>
+					<gml:name>Ref3D orthoimage</gml:name>
+					<gml:boundedBy>
+						<gml:Null>withheld</gml:Null>
+					</gml:boundedBy>
+					<gml:featureMember>
+						<r3d:R3DOrthoCoverage dimension="2">
+							<gml:rectifiedGridDomain>
+								<gml:RectifiedGrid dimension="2">
+									<gml:limits>
+										<gml:GridEnvelope>
+											<gml:low>0 0</gml:low>
+											<gml:high>636 497</gml:high>
+										</gml:GridEnvelope>
+									</gml:limits>
+									<gml:axisName>x</gml:axisName>
+									<gml:axisName>y</gml:axisName>
+									<gml:origin>
+										<gml:Point srsName="urn:EPSG:geographicCRS:4326">
+											<gml:pos>116.35 33.28</gml:pos>
+										</gml:Point>
+									</gml:origin>
+									<gml:offsetVector>00000.166667 0</gml:offsetVector>
+									<gml:offsetVector>0 00000.166667</gml:offsetVector>
+								</gml:RectifiedGrid>
+							</gml:rectifiedGridDomain>
+							<r3d:rangeSet>
+								<r3d:File>
+									<gml:rangeParameters>
+										<r3d:PixelValue8bit/>
+									</gml:rangeParameters>
+									<gml:fileName>OR.TIF</gml:fileName>
+									<!--fileName value will change to the following URI when packaged in the jpx file
+									<gml:fileName>gmljp2://codestream/1</gml:fileName>-->
+									<gml:fileStructure>Record Interleaved</gml:fileStructure>
+									<r3d:fileDate>2003-11-27</r3d:fileDate>
+									<r3d:fileFormat>geoTIFF</r3d:fileFormat>
+									<r3d:bandDescription>Mosaicked Monospectral</r3d:bandDescription>
+								</r3d:File>
+							</r3d:rangeSet>
+						</r3d:R3DOrthoCoverage>
+					</gml:featureMember>
+					<gml:featureMember>
+						<r3d:RegionOfInterest gml:id="S5S2S0307301844141">
+							<gml:defaultStyle>
+								<gml:Style>
+									<gml:featureStyle>
+										<gml:FeatureStyle featureType="r3d:RegionOfInterest" queryGrammar="xpath">
+											<gml:featureConstraint>@gml:id="S5S2S0307301844141"</gml:featureConstraint>
+											<gml:geometryStyle>
+												<gml:GeometryStyle geometryProperty="r3d:annotates" geometryType="gml:Polygon">
+													<gml:symbol symbolType="svg">
+														<svg style="fill:red;stroke-width:1;stroke:red"/>
+													</gml:symbol>
+												</gml:GeometryStyle>
+											</gml:geometryStyle>
+										</gml:FeatureStyle>
+									</gml:featureStyle>
+								</gml:Style>
+							</gml:defaultStyle>
+							<r3d:content>
+								<r3d:Label>
+									<gml:defaultStyle/>
+									<r3d:textContent>S5S2S0307301844141</r3d:textContent>
+									<r3d:anchorPoint>
+										<gml:Point>
+											<gml:pos>-116.9995938367 -32.2687541104</gml:pos>
+										</gml:Point>
+									</r3d:anchorPoint>
+								</r3d:Label>
+							</r3d:content>
+							<r3d:annotates>
+								<gml:Polygon srsName="urn:EPSG:geographicCRS:4326">
+									<gml:interior>
+										<gml:LinearRing>
+											<gml:pos>-116.9995938367 -32.2687541104</gml:pos>
+											<gml:pos>-116.9962604561 -32.2687541104</gml:pos>
+											<gml:pos> -116.9962604561 -32.2695874555</gml:pos>
+											<gml:pos> -116.9954271872 -32.2695874555</gml:pos>
+											<gml:pos> -116.9954271872 -32.2704208007</gml:pos>
+											<gml:pos> -116.9945938039 -32.2704208007</gml:pos>
+											<gml:pos> -116.9945938039 -32.2712541077</gml:pos>
+											<gml:pos> -116.9845938528 -32.2712541077</gml:pos>
+											<gml:pos> -116.9845938528 -32.2720874529</gml:pos>
+											<gml:pos> -116.9837604695 -32.2720874529</gml:pos>
+											<gml:pos> -116.9837604695 -32.2729207980</gml:pos>
+											<gml:pos> -116.9829272007 -32.2729207980</gml:pos>
+											<gml:pos> -116.9829272007 -32.2737541050</gml:pos>
+											<gml:pos> -116.9820938174 -32.2737541050</gml:pos>
+											<gml:pos> -116.9820938174 -32.2745874502</gml:pos>
+											<gml:pos> -116.9812604340 -32.2745874502</gml:pos>
+											<gml:pos> -116.9812604340 -32.2754207953</gml:pos>
+											<gml:pos> -116.9804272034 -32.2754207953</gml:pos>
+											<gml:pos> -116.9804272034 -32.2795874448</gml:pos>
+											<gml:pos> -116.9795938200 -32.2795874448</gml:pos>
+											<gml:pos> -116.9795938200 -32.2820874421</gml:pos>
+											<gml:pos> -116.9787605512 -32.2820874421</gml:pos>
+											<gml:pos> -116.9787605512 -32.2829207873</gml:pos>
+											<gml:pos> -116.9770937846 -32.2829207873</gml:pos>
+											<gml:pos> -116.9770937846 -32.2854207846</gml:pos>
+											<gml:pos> -116.9779271679 -32.2854207846</gml:pos>
+											<gml:pos> -116.9779271679 -32.2887540889</gml:pos>
+											<gml:pos> -116.9770937846 -32.2887540889</gml:pos>
+											<gml:pos> -116.9770937846 -32.2912540862</gml:pos>
+											<gml:pos> -116.9762605157 -32.2912540862</gml:pos>
+											<gml:pos> -116.9762605157 -32.2995874233</gml:pos>
+											<gml:pos> -116.9787605512 -32.2995874233</gml:pos>
+											<gml:pos> -116.9787605512 -32.3029207658</gml:pos>
+											<gml:pos> -116.9804272034 -32.3029207658</gml:pos>
+											<gml:pos> -116.9804272034 -32.3045874179</gml:pos>
+											<gml:pos> -116.9820938174 -32.3045874179</gml:pos>
+											<gml:pos> -116.9820938174 -32.3145874072</gml:pos>
+											<gml:pos> -116.9804272034 -32.3145874072</gml:pos>
+											<gml:pos> -116.9804272034 -32.3220874182</gml:pos>
+											<gml:pos> -116.9795938200 -32.3220874182</gml:pos>
+											<gml:pos> -116.9795938200 -32.3237540703</gml:pos>
+											<gml:pos> -116.9787605512 -32.3237540703</gml:pos>
+											<gml:pos> -116.9787605512 -32.3245874155</gml:pos>
+											<gml:pos> -116.9779271679 -32.3245874155</gml:pos>
+											<gml:pos> -116.9779271679 -32.3279207198</gml:pos>
+											<gml:pos> -116.9770937846 -32.3279207198</gml:pos>
+											<gml:pos> -116.9770937846 -32.3287540650</gml:pos>
+											<gml:pos> -116.9762605157 -32.3287540650</gml:pos>
+											<gml:pos> -116.9762605157 -32.3295874101</gml:pos>
+											<gml:pos> -116.9754271706 -32.3295874101</gml:pos>
+											<gml:pos> -116.9754271706 -32.3370874021</gml:pos>
+											<gml:pos> -116.9737605184 -32.3370874021</gml:pos>
+											<gml:pos> -116.9737605184 -32.3379207091</gml:pos>
+											<gml:pos> -116.9729271351 -32.3379207091</gml:pos>
+											<gml:pos> -116.9729271351 -32.3387540542</gml:pos>
+											<gml:pos> -116.9704270996 -32.3387540542</gml:pos>
+											<gml:pos> -116.9704270996 -32.3420873967</gml:pos>
+											<gml:pos> -116.9687604856 -32.3420873967</gml:pos>
+											<gml:pos> -116.9687604856 -32.3470873913</gml:pos>
+											<gml:pos> -116.9679272168 -32.3470873913</gml:pos>
+											<gml:pos> -116.9679272168 -32.3487540435</gml:pos>
+											<gml:pos> -116.9670938335 -32.3487540435</gml:pos>
+											<gml:pos> -116.9670938335 -32.3504207242</gml:pos>
+											<gml:pos> -116.9662604502 -32.3504207242</gml:pos>
+											<gml:pos> -116.9662604502 -32.3512540408</gml:pos>
+											<gml:pos> -116.9645938362 -32.3512540408</gml:pos>
+											<gml:pos> -116.9645938362 -32.3520873859</gml:pos>
+											<gml:pos> -116.9637605673 -32.3520873859</gml:pos>
+											<gml:pos> -116.9637605673 -32.3529207216</gml:pos>
+											<gml:pos> -116.9629271840 -32.3529207216</gml:pos>
+											<gml:pos> -116.9629271840 -32.3537540381</gml:pos>
+											<gml:pos> -116.9604271485 -32.3537540381</gml:pos>
+											<gml:pos> -116.9604271485 -32.3545873832</gml:pos>
+											<gml:pos> -116.9529272329 -32.3545873832</gml:pos>
+											<gml:pos> -116.9529272329 -32.3554207189</gml:pos>
+											<gml:pos> -116.9520938496 -32.3554207189</gml:pos>
+											<gml:pos> -116.9520938496 -32.3654207081</gml:pos>
+											<gml:pos> -116.9512604663 -32.3654207081</gml:pos>
+											<gml:pos> -116.9512604663 -32.3662540247</gml:pos>
+											<gml:pos> -116.9504271975 -32.3662540247</gml:pos>
+											<gml:pos> -116.9504271975 -32.3670873603</gml:pos>
+											<gml:pos> -116.9495938141 -32.3670873603</gml:pos>
+											<gml:pos> -116.9495938141 -32.3679207054</gml:pos>
+											<gml:pos> -116.9479272001 -32.3679207054</gml:pos>
+											<gml:pos> -116.9479272001 -32.3687540220</gml:pos>
+											<gml:pos> -116.9470938168 -32.3687540220</gml:pos>
+											<gml:pos> -116.9470938168 -32.3712540193</gml:pos>
+											<gml:pos> -116.9462605480 -32.3712540193</gml:pos>
+											<gml:pos> -116.9462605480 -32.3720873549</gml:pos>
+											<gml:pos> -116.9454271647 -32.3720873549</gml:pos>
+											<gml:pos> -116.9454271647 -32.3829206893</gml:pos>
+											<gml:pos> -116.9445938958 -32.3829206893</gml:pos>
+											<gml:pos> -116.9445938958 -32.3879206839</gml:pos>
+											<gml:pos>-116.9429271674 -32.3879206839</gml:pos>
+											<gml:pos> -116.9429271674 -32.4004206705</gml:pos>
+											<gml:pos> -116.9420938985 -32.4004206705</gml:pos>
+											<gml:pos> -116.9420938985 -32.4020873513</gml:pos>
+											<gml:pos> -116.9404272464 -32.4020873513</gml:pos>
+											<gml:pos> -116.9404272464 -32.4029206678</gml:pos>
+											<gml:pos> -116.9395938630 -32.4029206678</gml:pos>
+											<gml:pos> -116.9395938630 -32.4037540034</gml:pos>
+											<gml:pos> -116.9379272491 -32.4037540034</gml:pos>
+											<gml:pos> -116.9379272491 -32.4045873486</gml:pos>
+											<gml:pos> -116.9329271781 -32.4045873486</gml:pos>
+											<gml:pos> -116.9329271781 -32.4087539980</gml:pos>
+											<gml:pos> -116.9312605641 -32.4087539980</gml:pos>
+											<gml:pos> -116.9312605641 -32.4129206475</gml:pos>
+											<gml:pos> -116.9304271808 -32.4129206475</gml:pos>
+											<gml:pos> -116.9304271808 -32.4304206621</gml:pos>
+											<gml:pos> -116.9312605641 -32.4304206621</gml:pos>
+											<gml:pos> -116.9312605641 -32.4354206519</gml:pos>
+											<gml:pos> -116.9329271781 -32.4354206519</gml:pos>
+											<gml:pos> -116.9329271781 -32.4395873062</gml:pos>
+											<gml:pos> -116.9337605614 -32.4395873062</gml:pos>
+											<gml:pos> -116.9337605614 -32.4429206153</gml:pos>
+											<gml:pos> -116.9345938303 -32.4429206153</gml:pos>
+											<gml:pos> -116.9345938303 -32.4620873082</gml:pos>
+											<gml:pos> -116.9337605614 -32.4620873082</gml:pos>
+											<gml:pos> -116.9337605614 -32.4837539067</gml:pos>
+											<gml:pos> -116.9345938303 -32.4837539067</gml:pos>
+											<gml:pos> -116.9345938303 -32.4979206062</gml:pos>
+											<gml:pos> -116.9354272136 -32.4979206062</gml:pos>
+											<gml:pos> -116.9354272136 -32.4987539485</gml:pos>
+											<gml:pos> -116.9362605969 -32.4987539485</gml:pos>
+											<gml:pos> -116.9362605969 -32.4995872306</gml:pos>
+											<gml:pos> -116.9379272491 -32.4995872306</gml:pos>
+											<gml:pos> -116.9379272491 -32.5004205729</gml:pos>
+											<gml:pos> -116.9387604797 -32.5004205729</gml:pos>
+											<gml:pos> -116.9387604797 -32.5062539093</gml:pos>
+											<gml:pos> -116.9395938630 -32.5062539093</gml:pos>
+											<gml:pos> -116.9395938630 -32.5162538968</gml:pos>
+											<gml:pos> -116.9404272464 -32.5162538968</gml:pos>
+											<gml:pos> -116.9404272464 -32.5362538729</gml:pos>
+											<gml:pos> -116.9395938630 -32.5362538729</gml:pos>
+											<gml:pos> -116.9395938630 -32.5454205194</gml:pos>
+											<gml:pos> -116.9412605152 -32.5454205194</gml:pos>
+											<gml:pos> -116.9412605152 -32.5495872309</gml:pos>
+											<gml:pos> -116.9429271674 -32.5495872309</gml:pos>
+											<gml:pos> -116.9429271674 -32.5537538803</gml:pos>
+											<gml:pos> -116.9437605125 -32.5537538803</gml:pos>
+											<gml:pos> -116.9437605125 -32.5554205659</gml:pos>
+											<gml:pos> -116.9445938958 -32.5554205659</gml:pos>
+											<gml:pos> -116.9445938958 -32.5654205504</gml:pos>
+											<gml:pos> -116.9437605125 -32.5654205504</gml:pos>
+											<gml:pos> -116.9437605125 -32.5737538541</gml:pos>
+											<gml:pos> -116.9429271674 -32.5737538541</gml:pos>
+											<gml:pos> -116.9429271674 -32.5745871992</gml:pos>
+											<gml:pos> -116.9420938985 -32.5745871992</gml:pos>
+											<gml:pos> -116.9420938985 -32.5762538228</gml:pos>
+											<gml:pos> -116.9404272464 -32.5762538228</gml:pos>
+											<gml:pos> -116.9404272464 -32.5929204922</gml:pos>
+											<gml:pos> -116.9395938630 -32.5929204922</gml:pos>
+											<gml:pos> -116.9395938630 -32.5937538278</gml:pos>
+											<gml:pos> -116.9379272491 -32.5937538278</gml:pos>
+											<gml:pos> -116.9379272491 -32.5945871730</gml:pos>
+											<gml:pos> -116.9362605969 -32.5945871730</gml:pos>
+											<gml:pos> -116.9362605969 -32.5962538537</gml:pos>
+											<gml:pos> -116.9304271808 -32.5962538537</gml:pos>
+											<gml:pos> -116.9304271808 -32.6104204924</gml:pos>
+											<gml:pos> -116.9312605641 -32.6104204924</gml:pos>
+											<gml:pos> -116.9312605641 -32.6229204504</gml:pos>
+											<gml:pos> -116.9304271808 -32.6229204504</gml:pos>
+											<gml:pos> -116.9304271808 -32.6237537955</gml:pos>
+											<gml:pos> -116.9287605286 -32.6237537955</gml:pos>
+											<gml:pos> -116.9287605286 -32.6379204915</gml:pos>
+											<gml:pos> -116.9304271808 -32.6379204915 </gml:pos>
+											<gml:pos>-116.9304271808 -32.6454204548</gml:pos>
+											<gml:pos> -116.9312605641 -32.6454204548</gml:pos>
+											<gml:pos> -116.9312605641 -32.6462538000</gml:pos>
+											<gml:pos> -116.9320938330 -32.6462538000</gml:pos>
+											<gml:pos> -116.9320938330 -32.6537537538</gml:pos>
+											<gml:pos> -116.9312605641 -32.6537537538</gml:pos>
+											<gml:pos> -116.9312605641 -32.6554204441</gml:pos>
+											<gml:pos> -116.9304271808 -32.6554204441</gml:pos>
+											<gml:pos> -116.9304271808 -32.7129204013</gml:pos>
+											<gml:pos> -116.9312605641 -32.7129204013</gml:pos>
+											<gml:pos> -116.9312605641 -32.7279203852</gml:pos>
+											<gml:pos> -116.9320938330 -32.7279203852</gml:pos>
+											<gml:pos> -116.9320938330 -32.7287537304</gml:pos>
+											<gml:pos> -116.9337605614 -32.7287537304</gml:pos>
+											<gml:pos> -116.9337605614 -32.7295870564</gml:pos>
+											<gml:pos> -116.9354272136 -32.7295870564</gml:pos>
+											<gml:pos> -116.9354272136 -32.7420870239</gml:pos>
+											<gml:pos> -116.9370938657 -32.7420870239</gml:pos>
+											<gml:pos> -116.9370938657 -32.7470870186</gml:pos>
+											<gml:pos> -116.9387604797 -32.7470870186</gml:pos>
+											<gml:pos> -116.9387604797 -32.7479203637</gml:pos>
+											<gml:pos> -116.9404272464 -32.7479203637</gml:pos>
+											<gml:pos> -116.9404272464 -32.7520870132</gml:pos>
+											<gml:pos> -116.9412605152 -32.7520870132</gml:pos>
+											<gml:pos> -116.9412605152 -32.7554203747 </gml:pos>
+											<gml:pos>-116.9429271674 -32.7554203747 </gml:pos>
+											<gml:pos>-116.9429271674 -32.7629203285 </gml:pos>
+											<gml:pos>-116.9437605125 -32.7629203285</gml:pos>
+											<gml:pos> -116.9437605125 -32.7945869866</gml:pos>
+											<gml:pos> -116.9445938958 -32.7945869866</gml:pos>
+											<gml:pos> -116.9445938958 -32.8029203428</gml:pos>
+											<gml:pos> -116.9454271647 -32.8029203428</gml:pos>
+											<gml:pos> -116.9454271647 -32.8212536309</gml:pos>
+											<gml:pos> -116.9462605480 -32.8212536309</gml:pos>
+											<gml:pos> -116.9462605480 -32.8454202589</gml:pos>
+											<gml:pos> -116.9470938168 -32.8454202589</gml:pos>
+											<gml:pos> -116.9470938168 -32.8545869793</gml:pos>
+											<gml:pos> -116.9487605835 -32.8545869793</gml:pos>
+											<gml:pos> -116.9487605835 -32.8620869331</gml:pos>
+											<gml:pos> -116.9529272329 -32.8620869331</gml:pos>
+											<gml:pos> -116.9529272329 -32.8637536234</gml:pos>
+											<gml:pos> -116.9537605018 -32.8637536234</gml:pos>
+											<gml:pos> -116.9537605018 -32.8654202374</gml:pos>
+											<gml:pos> -116.9554272302 -32.8654202374</gml:pos>
+											<gml:pos> -116.9554272302 -32.8662535826</gml:pos>
+											<gml:pos> -116.9579271512 -32.8662535826</gml:pos>
+											<gml:pos> -116.9579271512 -32.8679202729</gml:pos>
+											<gml:pos> -116.9587605346 -32.8679202729</gml:pos>
+											<gml:pos> -116.9587605346 -32.8687536180</gml:pos>
+											<gml:pos> -116.9645938362 -32.8687536180</gml:pos>
+											<gml:pos> -116.9645938362 -32.8770869170</gml:pos>
+											<gml:pos> -116.9637605673 -32.8770869170</gml:pos>
+											<gml:pos> -116.9637605673 -32.8929202460</gml:pos>
+											<gml:pos> -116.9645938362 -32.8929202460</gml:pos>
+											<gml:pos> -116.9645938362 -32.8979202406</gml:pos>
+											<gml:pos> -116.9654271813 -32.8979202406</gml:pos>
+											<gml:pos>-116.9654271813 -32.9012535449</gml:pos>
+											<gml:pos> -116.9662604502 -32.9012535449</gml:pos>
+											<gml:pos> -116.9662604502 -32.9087535750</gml:pos>
+											<gml:pos> -116.9687604856 -32.9087535750</gml:pos>
+											<gml:pos> -116.9687604856 -32.9287535535</gml:pos>
+											<gml:pos> -116.9695938690 -32.9287535535 </gml:pos>
+											<gml:pos>-116.9695938690 -32.9295868605 </gml:pos>
+											<gml:pos>-116.9804272034 -32.9295868605</gml:pos>
+											<gml:pos> -116.9804272034 -32.9345868552</gml:pos>
+											<gml:pos> -116.9812604340 -32.9345868552</gml:pos>
+											<gml:pos> -116.9812604340 -32.9379201976</gml:pos>
+											<gml:pos> -116.9820938174 -32.9379201976</gml:pos>
+											<gml:pos> -116.9820938174 -32.9604201734</gml:pos>
+											<gml:pos> -116.9837604695 -32.9604201734</gml:pos>
+											<gml:pos> -116.9837604695 -32.9620868638</gml:pos>
+											<gml:pos> -116.9845938528 -32.9620868638</gml:pos>
+											<gml:pos> -116.9845938528 -32.9654202444</gml:pos>
+											<gml:pos> -116.9854271217 -32.9654202444</gml:pos>
+											<gml:pos> -116.9854271217 -32.9704201627 </gml:pos>
+											<gml:pos>-116.9862605050 -32.9704201627</gml:pos>
+											<gml:pos> -116.9862605050 -32.9720868530</gml:pos>
+											<gml:pos> -116.9895938856 -32.9720868530</gml:pos>
+											<gml:pos> -116.9895938856 -32.9729201982</gml:pos>
+											<gml:pos> -116.9920937685 -32.9729201982</gml:pos>
+											<gml:pos> -116.9920937685 -32.9754202336</gml:pos>
+											<gml:pos> -116.9929271518 -32.9754202336</gml:pos>
+											<gml:pos> -116.9929271518 -32.9770867713</gml:pos>
+											<gml:pos> -116.9937605351 -32.9770867713</gml:pos>
+											<gml:pos> -116.9937605351 -32.9804201519</gml:pos>
+											<gml:pos> -116.9945938039 -32.9804201519</gml:pos>
+											<gml:pos> -116.9945938039 -32.9879201057</gml:pos>
+											<gml:pos> -116.9954271872 -32.9879201057</gml:pos>
+											<gml:pos> -116.9954271872 -32.9895867960</gml:pos>
+											<gml:pos> -116.9979271846 -32.9895867960</gml:pos>
+											<gml:pos> -116.9979271846 -32.9904201412</gml:pos>
+											<gml:pos> -116.9995938367 -32.9904201412</gml:pos>
+											<gml:pos> -116.9995938367 -32.9937535218</gml:pos>
+											<gml:pos>-117.0001388806 -32.9937535218</gml:pos>
+											<gml:pos> -117.0001388806 -32.2670874582</gml:pos>
+											<gml:pos> -116.9995938367 -32.2670874582 </gml:pos>
+											<gml:pos>-116.9995938367 -32.2687541104</gml:pos>
+										</gml:LinearRing>
+									</gml:interior>
+								</gml:Polygon>
+							</r3d:annotates>
+						</r3d:RegionOfInterest>
+					</gml:featureMember>
+				</gml:FeatureCollection>
+			</gml:featureMember>
+		</gml:FeatureCollection>
+	</gml:featureMember>
+</gml:FeatureCollection>

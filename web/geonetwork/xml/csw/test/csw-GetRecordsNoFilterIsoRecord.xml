@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2.0.2"
+    resultType="results" outputSchema="csw:IsoRecord">
+    <csw:Query typeNames="gmd:MD_Metadata">
+        <!--
+            <csw:ElementSetName>brief</csw:ElementSetName>
+            <csw:ElementSetName>summary</csw:ElementSetName>
+            <csw:ElementSetName>full</csw:ElementSetName>
+        -->
+        <csw:Constraint version="1.1.0">
+            <Filter xmlns="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"/>
+        </csw:Constraint>
+    </csw:Query>
+</csw:GetRecords>

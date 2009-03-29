@@ -23,16 +23,34 @@
 
 package org.fao.geonet.kernel.csw.services;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
+import javax.xml.transform.TransformerException;
+
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
+import jeeves.utils.Xml;
+
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
+import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
+import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.geotools.filter.FilterTransformer;
+import org.geotools.filter.text.cql2.CQL;
+import org.geotools.filter.text.cql2.CQLException;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.opengis.filter.Filter;
 
 //=============================================================================
 
@@ -201,13 +219,142 @@ public abstract class AbstractOperation
 				String ns= hmNamespaces.get(prefix);
 
 				if (ns == null)
-					throw new InvalidParameterValueEx("typeName", typeName);
+					throw new InvalidParameterValueEx("typeName", "Can't find a valid namespace for typename "+typeName+". Check namespace parameter.");
 
-				hmTypeNames.put(type, ns);
+				hmTypeNames.put(typeName, ns);
 			}
 		}
 
 		return hmTypeNames;
+	}
+	
+	//---------------------------------------------------------------------------
+	
+	/**
+	 * Create value element for each item of the string list
+	 * @param param
+	 * @return
+	 */
+	protected List<Element> createValuesElement(Collection<String> param) {
+		List<Element> values = new ArrayList<Element>();
+		Iterator<String> it = param.iterator();
+		while (it.hasNext()) {
+			String value = (String) it.next();
+			values.add(new Element("Value",Csw.NAMESPACE_CSW).setText(value));
+		}
+		return values;
+	}
+	
+	//---------------------------------------------------------------------------
+	
+	/**
+	 * Create value element for each item of the namespace list
+	 * @param param
+	 * @return
+	 */
+	protected List<Element> createValuesElementNS(Collection<Namespace> param) {
+		List<Element> values = new ArrayList<Element>();
+		Iterator<Namespace> it = param.iterator();
+		while (it.hasNext()) {
+			Namespace ns = (Namespace) it.next();
+			String value = ns.getURI();
+			values.add(new Element("Value",Csw.NAMESPACE_CSW).setText(value));
+		}
+		return values;
+	}
+	
+	//---------------------------------------------------------------------------
+	
+    /**
+     * @param constr
+     * @param context
+     * @return
+     * @throws CatalogException
+     */
+    protected Element getFilterExpression(Element constr, ServiceContext context)
+			throws CatalogException {
+
+    	// Return an empty filter if no constraint
+    	// which is equivalent to a Lucene MatchAllDocsQuery.
+		if (constr == null)
+			return new Element("Filter", Csw.NAMESPACE_OGC);
+
+		
+		Element filter = constr.getChild("Filter", Csw.NAMESPACE_OGC);
+		Element cql = constr.getChild("CqlText", Csw.NAMESPACE_CSW);
+
+		if (filter == null && cql == null)
+			throw new NoApplicableCodeEx(
+					"Missing filter expression or cql query");
+
+		return (filter != null) ? filter : convertCQL(cql.getText());
+	}
+    
+    
+  //---------------------------------------------------------------------------
+
+    /**
+     * @param cql
+     * @return
+     * @throws CatalogException
+     */
+    private Element convertCQL(String cql) throws CatalogException  {
+    	
+    	Log.debug(Geonet.CSW, "Received CQL:\n"+ cql);
+    	
+    	Filter filter;
+		try {
+			filter = CQL.toFilter(cql);
+		} catch (CQLException e) {
+			Log.error(Geonet.CSW, "Error parsing CQL or during conversion into Filter");
+			throw new NoApplicableCodeEx("Error during CQL to Filter conversion : "+ e);
+		}
+
+		FilterTransformer transform = new FilterTransformer();
+        transform.setIndentation(2);
+        
+        String xml;
+		try {
+			xml = transform.transform( filter );
+		} catch (TransformerException e) {
+			Log.error(Geonet.CSW, "");
+			throw new NoApplicableCodeEx("Error transforming Filter to XML" + e);
+		}
+        
+        Element xmlFilter;
+		try {
+			xmlFilter = Xml.loadString(xml, false);
+		} catch (Exception e) {
+			Log.error(Geonet.CSW, "Error loadinf xml filter as jdom Element ");
+			throw new NoApplicableCodeEx("Error loadinf xml filter as jdom Element " + e);
+		}
+		
+		Log.debug(Geonet.CSW, "Transformed CQL gives the following filter:\n"+Xml.getString(xmlFilter));
+         
+    	return xmlFilter;
+    }
+    
+    //---------------------------------------------------------------------------
+    
+    /**
+     * @param constr
+     * @return
+     * @throws CatalogException
+     */
+    protected String getFilterVersion(Element constr) throws CatalogException {
+		if (constr == null)
+			return Csw.FILTER_VERSION_1_1;
+		String version = constr.getAttributeValue("version");
+		if (version == null)
+			throw new MissingParameterValueEx("version");
+
+		// Check version in both cas (CQL or filter) in order to specify parser
+		// version.
+		if (!version.equals(Csw.FILTER_VERSION_1_0)
+				&& !version.equals(Csw.FILTER_VERSION_1_1))
+			throw new InvalidParameterValueEx("version", version);
+
+		return version;
 	}
 }
 

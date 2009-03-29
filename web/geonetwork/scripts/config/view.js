@@ -72,6 +72,26 @@ ConfigView.prototype.setData = function(data)
 	$('z3950.enable').checked = data['Z3950_ENABLE'] == 'true';
 	$('z3950.port')  .value   = data['Z3950_PORT'];
 	
+	$('csw.enable').checked = data['CSW_ENABLE'] == 'true';
+	$('csw.contactId').value           = data['CSW_CONTACTID'];
+	$('csw.individualName').value      = data['CSW_INDIVIDUALNAME'];
+	$('csw.positionName').value        = data['CSW_POSITIONNAME'];
+	$('csw.voice').value               = data['CSW_VOICE'];
+	$('csw.facsimile').value           = data['CSW_FACSIMILE'];
+	$('csw.deliveryPoint').value       = data['CSW_DELIVERYPOINT'];
+	$('csw.city').value                = data['CSW_CITY'];
+	$('csw.administrativeArea').value  = data['CSW_ADMINAREA'];
+	$('csw.postalCode').value          = data['CSW_POSTALCODE'];
+	$('csw.country').value             = data['CSW_COUNTRY'];
+	$('csw.email').value               = data['CSW_EMAIL'];
+	$('csw.hoursOfService').value      = data['CSW_HOURSOFSERVICE'];
+	$('csw.contactInstructions').value = data['CSW_INSTRUCTIONS'];
+	$('csw.role').value                = data['CSW_ROLE'];
+	$('csw.title').value               = data['CSW_TITLE'];
+	$('csw.abstract').value            = data['CSW_ABSTRACT'];
+	$('csw.fees').value                = data['CSW_FEES'];
+	$('csw.accessConstraints').value   = data['CSW_ACCESS'];
+	
 	$('proxy.use') .checked   = data['PROXY_USE'] == 'true';
 	$('proxy.host').value     = data['PROXY_HOST'];
 	$('proxy.port').value     = data['PROXY_PORT'];
@@ -121,6 +141,26 @@ ConfigView.prototype.getData = function()
 	
 		Z3950_ENABLE : $('z3950.enable').checked,
 		Z3950_PORT   : $('z3950.port')  .value,
+		
+		CSW_ENABLE : $('csw.enable').checked,
+		CSW_CONTACTID       : $('csw.contactId').value,
+		CSW_INDIVIDUALNAME  : $('csw.individualName').value,
+		CSW_POSITIONNAME    : $('csw.positionName').value,
+		CSW_VOICE           : $('csw.voice').value,
+		CSW_FACSIMILE       : $('csw.facsimile').value,
+		CSW_DELIVERYPOINT   : $('csw.deliveryPoint').value,
+		CSW_CITY            : $('csw.city').value,
+		CSW_ADMINAREA       : $('csw.administrativeArea').value,
+		CSW_POSTALCODE      : $('csw.postalCode').value,
+		CSW_COUNTRY         : $('csw.country').value,
+		CSW_EMAIL           : $('csw.email').value,
+		CSW_HOURSOFSERVICE  : $('csw.hoursOfService').value,
+		CSW_INSTRUCTIONS    : $('csw.contactInstructions').value,
+		CSW_ROLE            : $('csw.role').value,
+		CSW_TITLE           : $('csw.title').value,
+		CSW_ABSTRACT        : $('csw.abstract').value,
+		CSW_FEES            : $('csw.fees').value,
+		CSW_ACCESS          : $('csw.accessConstraints').value,
 	
 		PROXY_USE  : $('proxy.use') .checked,
 		PROXY_HOST : $('proxy.host').value,
