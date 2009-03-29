@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -70,39 +71,45 @@ public class Update implements Service
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan = gc.getDataManager();
+		UserSession		session = context.getUserSession();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String id         = Util.getParam(params, Params.ID);
 		String version    = Util.getParam(params, Params.VERSION);
 		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
+		String showValidationErrors = 
+						Util.getParam(params, Params.SHOWVALIDATIONERRORS, "false");
 		String title      = params.getChildText(Params.TITLE);
 		String data       = params.getChildText(Params.DATA);
 
-		boolean validate = config.getValue(Params.VALIDATE, "no").equals("yes");
+		boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
+		boolean forget   = config.getValue(Params.FORGET, "no").equals("yes");
 
-		if (data != null)
-		{
-			Element md = Xml.loadString(data, false);
+		if (!forget) {
+			if (data != null) {
+				Element md = Xml.loadString(data, false);
 
-			if (!dataMan.updateMetadata(context, dbms, id, md, validate, version))
-				throw new ConcurrentUpdateEx(id);
+				if (!dataMan.updateMetadata(context.getUserSession(), dbms, id, md, false, version))
+					throw new ConcurrentUpdateEx(id);
+			} else {
+				EditUtils.updateContent(params, context, false, true);
+			}
+
+			dataMan.setTemplate(dbms, Integer.parseInt(id), isTemplate, title);
 		}
-		else
-			EditUtils.updateContent(params, context, validate);
-
-		dataMan.setTemplate(dbms, Integer.parseInt(id), isTemplate, title);
 
 		//-----------------------------------------------------------------------
 		//--- update element and return status
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
-		if (validate) {
-			Element schemaTronErrors = (Element) context.getUserSession().getProperty("schematron_"+id);
-			if (schemaTronErrors != null) {
-				elResp.addContent(schemaTronErrors);
-			}
+		elResp.addContent(new Element(Geonet.Elem.SHOWVALIDATIONERRORS)
+													.setText(showValidationErrors));
+
+		//--- if finished then remove the XML from the session
+		if (finished) {
+			dataMan.removeMetadataEmbedded(session);
 		}
 
 		return elResp;

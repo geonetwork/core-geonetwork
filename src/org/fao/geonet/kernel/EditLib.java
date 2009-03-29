@@ -33,16 +33,23 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.Vector;
 
+import jeeves.utils.Log;
+
 import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.schema.MetadataAttribute;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataType;
 import org.fao.geonet.kernel.schema.SchemaLoader;
 import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jdom.filter.ElementFilter;
+
 import org.jdom.Namespace;
+
 
 //=============================================================================
 
@@ -130,30 +137,56 @@ public class EditLib
 	}
 
 	//--------------------------------------------------------------------------
+
+	public String getCasedSchemaName(String name)
+	{
+		for (String schema : getSchemas()) {
+			if (schema.equalsIgnoreCase(name)) return schema;
+		}
+
+		throw new IllegalArgumentException("Schema not registered : " + name);
+	}
+
+	//--------------------------------------------------------------------------
 	/** Expands a metadata adding all information needed for editing.
 	  */
 
-	public String addEditingInfo(String schema, String id, Element md) throws Exception
+	public String getVersionForEditing(String schema, String id, Element md) throws Exception
 	{
 		String version = getVersion(id, true) +"";
-
-		//System.out.println("MD before editing infomation:\n" + jeeves.utils.Xml.getString(md));
-		enumerateTree(md, 1);
-		expandTree(getSchema(schema), md);
-		//System.out.println("MD after editing infomation:\n" + jeeves.utils.Xml.getString(md));
-
+	  addEditingInfo(schema,md,1,0);
 		return version;
 	}
 
-	//--------------------------------------------------------------------------
-
-	public void enumerateTree(Element md)
+	public void addEditingInfo(String schema, Element md, int id, int parent) throws Exception
 	{
-		enumerateTree(md, 1);
+		Log.debug(Geonet.EDITOR,"MD before editing infomation:\n" + jeeves.utils.Xml.getString(md));
+		enumerateTree(md,id,parent);
+		expandTree(getSchema(schema), md);
+		Log.debug(Geonet.EDITOR,"MD after editing infomation:\n" + jeeves.utils.Xml.getString(md));
+	}
+
+	public void addEditingInfoToSnippet(String schema, String grandParentName, String parentName, Element md) throws Exception
+	{
+		enumerateTree(md);
+		expandTreeSnippet(getSchema(schema), grandParentName, parentName, md);
 	}
 
 	//--------------------------------------------------------------------------
 
+	public void enumerateTree(Element md) throws Exception
+	{
+		enumerateTree(md,1,0);
+	}
+
+	//--------------------------------------------------------------------------
+
+	public void enumerateTreeStartingAt(Element md, int id, int parent) throws Exception
+	{
+		enumerateTree(md,id,parent);
+	}
+
+	//--------------------------------------------------------------------------
 	public String getVersion(String id)
 	{
 		return Integer.toString(getVersion(id, false));
@@ -176,6 +209,11 @@ public class EditLib
 		fillElement(getSchema(schema), getSchemaSuggestions(schema), parent, md);
 	}
 
+	public void fillElement(String schema, String parentName, Element md) throws Exception
+	{
+		fillElement(getSchema(schema), getSchemaSuggestions(schema), parentName, md);
+	}
+
 	//--------------------------------------------------------------------------
 	/** Given an expanded tree, removes all info added for editing and replaces
 	  * choice_elements with their children
@@ -183,13 +221,22 @@ public class EditLib
 
 	public void removeEditingInfo(Element md)
 	{
-		//--- purge children
+		//--- purge geonet: attributes
+
+		List listAtts = md.getAttributes();
+		for (int i=0; i<listAtts.size(); i++) {
+			Attribute attr = (Attribute) listAtts.get(i);
+			if (Edit.NS_PREFIX.equals(attr.getNamespacePrefix())) {
+				attr.detach();
+				i--;
+			}
+		}
+
+		//--- purge geonet: children
 
 		List list = md.getChildren();
-
-		for(int i=0; i<list.size(); i++) {
+		for (int i=0; i<list.size(); i++) {
 			Element child = (Element) list.get(i);
-
 			if (!Edit.NS_PREFIX.equals(child.getNamespacePrefix()))
 				removeEditingInfo(child);
 			else {
@@ -236,10 +283,10 @@ public class EditLib
 
 	public Element addElement(String schema, Element el, String qname) throws Exception
 	{
-		//System.out.println("#### in addElement()"); // DEBUG
+		Log.debug(Geonet.EDITORADDELEMENT,"#### in addElement()"); 
 
-		//System.out.println("#### - parent = " + el.getName()); // DEBUG
-		//System.out.println("#### - child qname = " + qname); // DEBUG
+		Log.debug(Geonet.EDITORADDELEMENT,"#### - parent = " + el.getName()); 
+		Log.debug(Geonet.EDITORADDELEMENT,"#### - child qname = " + qname); 
 
 		String name   = getUnqualifiedName(qname);
 		String ns     = getNamespace(qname, el, getSchema(schema));
@@ -247,14 +294,14 @@ public class EditLib
 		String parentName = getParentNameFromChild(el); 
 		
 
-		//System.out.println("#### - parent name for type retrieval = " + parentName); // DEBUG
-		//System.out.println("#### - child name = " + name); // DEBUG
-		//System.out.println("#### - child namespace = " + ns); // DEBUG
-		//System.out.println("#### - child prefix = " + prefix); // DEBUG
+		Log.debug(Geonet.EDITORADDELEMENT,"#### - parent name for type retrieval = " + parentName); 
+		Log.debug(Geonet.EDITORADDELEMENT,"#### - child name = " + name);
+		Log.debug(Geonet.EDITORADDELEMENT,"#### - child namespace = " + ns);
+		Log.debug(Geonet.EDITORADDELEMENT,"#### - child prefix = " + prefix);
 		List childS = el.getChildren();
 		if (childS.size() > 0) {
 			Element elChildS = (Element)childS.get(0);
-			//System.out.println("#### 	- parents first child = " + elChildS.getName()); // DEBUG
+			Log.debug(Geonet.EDITORADDELEMENT,"#### 	- parents first child = " + elChildS.getName());
 		}
 
 
@@ -265,11 +312,11 @@ public class EditLib
 
 		String typeName = mdSchema.getElementType(el.getQualifiedName(),parentName);
 
-		//System.out.println("#### - type name = " + typeName); // DEBUG
+		Log.debug(Geonet.EDITORADDELEMENT,"#### - type name = " + typeName); 
 
  		MetadataType type = mdSchema.getTypeInfo(typeName);
 
-		//System.out.println("#### - metadata tpe = " + type); // DEBUG
+		Log.debug(Geonet.EDITORADDELEMENT,"#### - metadata tpe = " + type); 
 
 		//--- collect all children, adding the new one at the end of the others
 
@@ -281,11 +328,11 @@ public class EditLib
 
 			String childName = type.getElementAt(i);
 
-			//System.out.println("####   - child of type " + type.getElementAt(i) + " list size = " + list.size()); // DEBUG
+			Log.debug(Geonet.EDITORADDELEMENT,"####   - child of type " + type.getElementAt(i) + " list size = " + list.size()); 
 			for (int j=0; j<list.size(); j++) {
 				Element aChild = (Element)list.get(j);
 				children.add(aChild);
-				//System.out.println("####		- add child "+aChild.toString());
+				Log.debug(Geonet.EDITORADDELEMENT,"####		- add child "+aChild.toString());
 			}
 
 			if (qname.equals(type.getElementAt(i)))
@@ -350,26 +397,31 @@ public class EditLib
 
 	private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, Element parent, Element md) throws Exception
 	{
-		//System.out.println("#### entering fillElement()"); // DEBUG
-
-		String elemName = md.getQualifiedName();
+		Log.debug(Geonet.EDITOR,"#### entering fillElement()"); 
 		String parentName = parent.getQualifiedName();
+		fillElement(schema,sugg,parentName,md);
+	}
 
-		//System.out.println("#### - elemName = " + elemName); // DEBUG
-		//System.out.println("#### - parentName = " + parentName); // DEBUG
-		//System.out.println("#### - isSimpleElement(" + elemName + ") = " + schema.isSimpleElement(elemName,parentName)); // DEBUG
+	private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, String parentName, Element md) throws Exception
+	{
+		Log.debug(Geonet.EDITOR,"#### entering fillElement()"); 
+		String elemName = md.getQualifiedName();
+
+		Log.debug(Geonet.EDITOR,"#### - elemName = " + elemName); 
+		Log.debug(Geonet.EDITOR,"#### - parentName = " + parentName); 
+		Log.debug(Geonet.EDITOR,"#### - isSimpleElement(" + elemName + ") = " + schema.isSimpleElement(elemName,parentName)); 
 
 		if (schema.isSimpleElement(elemName,parentName))
 			return;
 
 		MetadataType type = schema.getTypeInfo(schema.getElementType(elemName,parentName));
 
-		//System.out.println("#### - type:"); // DEBUG
-		//System.out.println("####   - name = " + type.getName()); // DEBUG
-		//System.out.println("####   - # attributes = " + type.getAttributeCount()); // DEBUG
-		//System.out.println("####   - # elements = " + type.getElementCount()); // DEBUG
-		//System.out.println("####   - # isOrType = " + type.isOrType()); // DEBUG
-		//System.out.println("####   - type = " + type); // DEBUG
+		Log.debug(Geonet.EDITOR,"#### - type:"); 
+		Log.debug(Geonet.EDITOR,"####   - name = " + type.getName()); 
+		Log.debug(Geonet.EDITOR,"####   - # attributes = " + type.getAttributeCount()); 
+		Log.debug(Geonet.EDITOR,"####   - # elements = " + type.getElementCount()); 
+		Log.debug(Geonet.EDITOR,"####   - # isOrType = " + type.isOrType()); 
+		Log.debug(Geonet.EDITOR,"####   - type = " + type); 
 
 		//-----------------------------------------------------------------------
 		//--- handle attributes
@@ -378,16 +430,16 @@ public class EditLib
 		{
 			MetadataAttribute attr = type.getAttributeAt(i);
 
-			//System.out.println("####   - " + i + " attribute = " + attr.name); // DEBUG
-			//System.out.println("####     - required = " + attr.required); // DEBUG
-			//System.out.println("####     - suggested = "+sugg.isSuggested(elemName, attr.name));
+			Log.debug(Geonet.EDITOR,"####   - " + i + " attribute = " + attr.name); 
+			Log.debug(Geonet.EDITOR,"####     - required = " + attr.required); 
+			Log.debug(Geonet.EDITOR,"####     - suggested = "+sugg.isSuggested(elemName, attr.name));
 			if (attr.required || sugg.isSuggested(elemName, attr.name))
 			{
 				String value = "";
 
 				if (attr.defValue != null) {
 					value = attr.defValue;
-					//System.out.println("####     - value = " + attr.defValue); // DEBUG
+					Log.debug(Geonet.EDITOR,"####     - value = " + attr.defValue); 
 				}
 
 				String uname = getUnqualifiedName(attr.name);
@@ -426,14 +478,14 @@ public class EditLib
 						fillElement(schema, sugg, md, child);
 					} else {
 						if (elemType.isOrType()) {
-							//System.out.println("WARNING (INNER): requested expansion of an OR element : " +childName);
+							Log.debug(Geonet.EDITOR,"WARNING (INNER): requested expansion of an OR element : " +childName);
 						}
 					}
 				}
 			}
 		}
 		else
-			System.out.println("WARNING : requested expansion of an OR element : " +md.getName());
+			Log.debug(Geonet.EDITOR,"WARNING : requested expansion of an OR element : " +md.getName());
 	}
 
 	//--------------------------------------------------------------------------
@@ -465,7 +517,7 @@ public class EditLib
 		MetadataType containerType = mdSchema.getTypeInfo(chName);
 		for (int k=0;k<containerType.getElementCount();k++) {	
 			String elemName = containerType.getElementAt(k);
-			//System.out.println("		-- Searching for child "+elemName);
+			Log.debug(Geonet.EDITOR,"		-- Searching for child "+elemName);
 			List elems;
 			if (elemName.contains(Edit.RootChild.GROUP)||
 					elemName.contains(Edit.RootChild.SEQUENCE)||
@@ -601,19 +653,72 @@ public class EditLib
 	/** Does a pre-order visit enumerating each node
 	  */
 
-	private int enumerateTree(Element md, int ref)
+	private int enumerateTree(Element md, int ref, int parent) throws Exception
 	{
-		Element elem = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
-		elem.setAttribute(new Attribute(Edit.Element.Attr.REF, ref +""));
+
+		int thisRef = ref;
+		int thisParent = ref;
 
 		List list = md.getChildren();
 
-		for(int i=0; i<list.size(); i++) 
-			ref = enumerateTree((Element) list.get(i), ref +1);
+		for(int i=0; i<list.size(); i++) {
+			Element child = (Element) list.get(i);
+			if (!Edit.NS_PREFIX.equals(child.getNamespacePrefix()))
+				ref = enumerateTree(child, ref +1, thisParent);
+		}
 
+		Element elem = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
+		elem.setAttribute(new Attribute(Edit.Element.Attr.REF, thisRef +""));
+		elem.setAttribute(new Attribute(Edit.Element.Attr.PARENT, parent +""));
+		elem.setAttribute(new Attribute(Edit.Element.Attr.UUID, md.getQualifiedName()+"_"+UUID.randomUUID().toString()));
 		md.addContent(elem);
 
 		return ref;
+	}
+
+	//--------------------------------------------------------------------------
+	/** Finds the ref element with the maximum ref value and returns it
+	  */
+	public int findMaximumRef(Element md)
+	{
+		int iRef = 0;
+		Iterator mdIt = md.getDescendants(new ElementFilter("element"));
+		while (mdIt.hasNext()) {
+			Element elem = (Element)mdIt.next();
+			String ref = elem.getAttributeValue("ref");
+			if (ref != null) {
+				int i = Integer.parseInt(ref);
+				if (i > iRef) iRef = i; 	
+			}
+		}
+
+		return iRef;
+	}
+
+	//--------------------------------------------------------------------------
+	/** Given a metadata, does a recursive scan adding information for editing
+	  * provide a parentName to this version because it is used by the snippet
+		* service because snippets are not connect to the JDOM tree 
+	  */
+
+	public void expandTreeSnippet(MetadataSchema schema, String grandParentName, String parentName, Element md) throws Exception
+	{
+		expandTree(schema, md);
+
+		// Finally get the ref element belonging to this element and add 
+		// the necessary cardinality to it using the grandParent to help
+
+		String myName = md.getQualifiedName();
+		String elemType = schema.getElementType(parentName, grandParentName);
+		MetadataType type = schema.getTypeInfo(elemType);
+		Element thisElem = md.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
+		for (int i=0; i<type.getElementCount(); i++) {
+			String listName = type.getElementAt(i);
+			if (listName.equals(myName)) {
+				thisElem.setAttribute(new Attribute(Edit.Element.Attr.MIN, ""+type.getMinCardinAt(i)));
+				thisElem.setAttribute(new Attribute(Edit.Element.Attr.MAX, ""+type.getMaxCardinAt(i)));
+			}
+		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -651,49 +756,49 @@ public class EditLib
 	/** Adds editing information to a single element
 	  */
 
-	private void expandElement(MetadataSchema schema, Element md) throws Exception
+	public void expandElement(MetadataSchema schema, Element md) throws Exception
 	{
-		//System.out.println("entering expandElement()"); // DEBUG
+		Log.debug(Geonet.EDITOREXPANDELEMENT,"entering expandElement()"); 
 
 		String elemName = md.getQualifiedName();
 		String parentName = getParentNameFromChild(md);
 
-		//System.out.println("elemName = " + elemName); // DEBUG
-		//System.out.println("parentName = " + parentName); // DEBUG
+		Log.debug(Geonet.EDITOREXPANDELEMENT,"elemName = " + elemName); 
+		Log.debug(Geonet.EDITOREXPANDELEMENT,"parentName = " + parentName); 
 
 		String elemType = schema.getElementType(elemName,parentName);
-		//System.out.println("elemType = " + elemType); // DEBUG
+		Log.debug(Geonet.EDITOREXPANDELEMENT,"elemType = " + elemType); 
 
 		Element elem = md.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
 		addValues(schema, elem, elemName, parentName);
 
 		if (schema.isSimpleElement(elemName,parentName))
 		{
-			//System.out.println("is simple element"); // DEBUG
+			Log.debug(Geonet.EDITOREXPANDELEMENT,"is simple element"); 
 			return;
 		}
 		MetadataType type = schema.getTypeInfo(elemType);
-		//System.out.println("Type = "+type);
+		Log.debug(Geonet.EDITOREXPANDELEMENT,"Type = "+type);
 
 		for (int i=0; i<type.getElementCount(); i++) {
 			String childQName = type.getElementAt(i);
 
-			//System.out.println("- childName = " + childQName); // DEBUG
+			Log.debug(Geonet.EDITOREXPANDELEMENT,"- childName = " + childQName); 
 			if (childQName == null) continue; // schema extensions cause null types; just skip
 
 			String childName   = getUnqualifiedName(childQName);
 			String childPrefix = getPrefix(childQName);
 			String childNS     = getNamespace(childQName, md, schema);
 
-			// System.out.println("- name      = " + childName); // DEBUG
-			// System.out.println("- prefix    = " + childPrefix); // DEBUG
-			// System.out.println("- namespace = " + childNS); // DEBUG
+			Log.debug(Geonet.EDITOREXPANDELEMENT,"- name      = " + childName); 
+			Log.debug(Geonet.EDITOREXPANDELEMENT,"- prefix    = " + childPrefix); 
+			Log.debug(Geonet.EDITOREXPANDELEMENT,"- namespace = " + childNS); 
 
 			List list = md.getChildren(childName, Namespace.getNamespace(childNS));
 			if (list.size() == 0 && !(type.isOrType())) {
-				// System.out.println("- no children of this type already present"); // DEBUG
+				Log.debug(Geonet.EDITOREXPANDELEMENT,"- no children of this type already present"); 
 
-				Element newElem = createElement(schema, elemName, childQName, childPrefix, childNS);
+				Element newElem = createElement(schema, elemName, childQName, childPrefix, childNS, type.getMinCardinAt(i), type.getMaxCardinAt(i));
 
 				if (i == 0)	insertFirst(md, newElem);
 				else {
@@ -703,13 +808,17 @@ public class EditLib
 					insertLast(md, prevName, prevNS, newElem);
 				}
 			} else {
-				 //System.out.println("- " + list.size() + " children of this type already present"); // DEBUG
-				 //System.out.println("- min cardinality = " + type.getMinCardinAt(i)); // DEBUG
-				 //System.out.println("- max cardinality = " + type.getMaxCardinAt(i)); // DEBUG
+				Log.debug(Geonet.EDITOREXPANDELEMENT,"- " + list.size() + " children of this type already present"); 
+				Log.debug(Geonet.EDITOREXPANDELEMENT,"- min cardinality = " + type.getMinCardinAt(i)); 
+				Log.debug(Geonet.EDITOREXPANDELEMENT,"- max cardinality = " + type.getMaxCardinAt(i)); 
+
 
 				for (int j=0; j<list.size(); j++) {
 					Element listChild = (Element) list.get(j);
 					Element listElem  = listChild.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
+					listElem.setAttribute(new Attribute(Edit.Element.Attr.UUID, listChild.getQualifiedName()+"_"+UUID.randomUUID().toString()));
+					listElem.setAttribute(new Attribute(Edit.Element.Attr.MIN, ""+type.getMinCardinAt(i)));
+					listElem.setAttribute(new Attribute(Edit.Element.Attr.MAX, ""+type.getMaxCardinAt(i)));
 
 					if (j > 0)
 						listElem.setAttribute(new Attribute(Edit.Element.Attr.UP, Edit.Value.TRUE));
@@ -719,9 +828,12 @@ public class EditLib
 
 					if (list.size() > type.getMinCardinAt(i))
 						listElem.setAttribute(new Attribute(Edit.Element.Attr.DEL, Edit.Value.TRUE));
+
+					if (j < type.getMaxCardinAt(i)-1) 
+						listElem.setAttribute(new Attribute(Edit.Element.Attr.ADD, Edit.Value.TRUE));
 				}
 				if (list.size() < type.getMaxCardinAt(i))
-					insertLast(md, childName, childNS, createElement(schema, elemName, childQName, childPrefix, childNS));
+					insertLast(md, childName, childNS, createElement(schema, elemName, childQName, childPrefix, childNS, type.getMinCardinAt(i), type.getMaxCardinAt(i)));
 			}
 		}
 		addAttribs(type, md, schema);
@@ -772,6 +884,17 @@ public class EditLib
 		return result;
 	}
 
+	public String getNamespace(String qname, MetadataSchema schema)
+	{
+		// check the list of namespaces we collected as we parsed the schema
+		String result;
+		String prefix = getPrefix(qname);
+		if (!prefix.equals("")) {
+			result = schema.getNS(prefix);
+			if (result == null) result="UNKNOWN";
+		} else result="UNKNOWN";
+		return result;
+	}
 	//--------------------------------------------------------------------------
 
 	public String checkNamespaces(String qname, Element md)
@@ -932,23 +1055,62 @@ public class EditLib
 	}
 
 	//--------------------------------------------------------------------------
-	/** Create a new element for editing, adding all mandatory subtags
+	/** Return MetadataType associated with an element
+	  */
+	public MetadataType getType(MetadataSchema mds, Element elem) throws Exception {
+
+		String elemName = elem.getQualifiedName();
+		String parentName = getParentNameFromChild(elem);
+
+		String elemType = mds.getElementType(elemName,parentName);
+		return mds.getTypeInfo(elemType);
+
+	}
+
+	//--------------------------------------------------------------------------
+	/** Create a new element for editing - used by Ajax new element addition
 	  */
 
-	private Element createElement(MetadataSchema schema, String parent, String qname, String childPrefix, String childNS) throws Exception {
+	public Element createElement(String schema, Element child, Element parent) throws Exception {
+
+		String childQName = child.getQualifiedName();
+
+		MetadataSchema mds = getSchema(schema);
+		MetadataType mdt = getType(mds, parent);
+
+		int min = -1, max = -1;
+
+		for (int i=0; i<mdt.getElementCount(); i++) {
+			if (childQName.equals(mdt.getElementAt(i))) {
+				min = mdt.getMinCardinAt(i);
+				max = mdt.getMaxCardinAt(i);
+			}
+		}
+		return createElement(mds,parent.getQualifiedName(),child.getQualifiedName(),child.getNamespacePrefix(),child.getNamespaceURI(), min, max);
+	}
+
+	//--------------------------------------------------------------------------
+	/** Create a new element for editing, adding all mandatory subtags
+	  */
+	private Element createElement(MetadataSchema schema, String parent, String qname, String childPrefix, String childNS, int min, int max) throws Exception {
 
 		Element child = new Element(Edit.RootChild.CHILD, Edit.NAMESPACE);
 	  
 		child.setAttribute(new Attribute(Edit.ChildElem.Attr.NAME, getUnqualifiedName(qname)));
-		child.setAttribute(new Attribute(Edit.ChildElem.Attr.PREFIX,   getPrefix(qname)));
+		child.setAttribute(new Attribute(Edit.ChildElem.Attr.PREFIX, getPrefix(qname)));
 		child.setAttribute(new Attribute(Edit.ChildElem.Attr.NAMESPACE, childNS));
+		child.setAttribute(new Attribute(Edit.ChildElem.Attr.UUID, Edit.RootChild.CHILD+"_"+qname+"_"+UUID.randomUUID().toString()));
+		child.setAttribute(new Attribute(Edit.ChildElem.Attr.MIN, ""+min));
+		child.setAttribute(new Attribute(Edit.ChildElem.Attr.MAX, ""+max));
 
+		String action = "replace"; // js adds new elements in place of this child
 		if (!schema.isSimpleElement(qname,parent)) {
 			String elemType = schema.getElementType(qname,parent);
 
 			MetadataType type = schema.getTypeInfo(elemType);
 
-			if (type.isOrType())
+			if (type.isOrType()) {
+				action = "before"; // js adds new elements before this child
 				for(int l=0; l<type.getElementCount(); l++) {
 					String chElem = type.getElementAt(l);
 					if (chElem.contains(Edit.RootChild.CHOICE)) {
@@ -961,7 +1123,11 @@ public class EditLib
 						createAndAddChoose(child,chElem);
 					}
 				}
+			} 
 		}
+
+		if (max == 1) action = "replace"; // force replace because one only
+		child.setAttribute(new Attribute(Edit.ChildElem.Attr.ACTION, action));
 
 		return child;
 	}

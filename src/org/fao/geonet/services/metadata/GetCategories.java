@@ -34,6 +34,7 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
@@ -64,6 +65,7 @@ public class GetCategories implements Service
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dataMan = gc.getDataManager();
+		AccessManager am = gc.getAccessManager();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
@@ -74,6 +76,12 @@ public class GetCategories implements Service
 
 		if (!dataMan.existsMetadata(dbms, id))
 			throw new IllegalArgumentException("Metadata not found --> " + id);
+
+		Element isOwner = new Element("owner");
+		if (am.isOwner(context,id))
+			isOwner.setText("true");
+		else
+			isOwner.setText("false");
 
 		//-----------------------------------------------------------------------
 		//--- retrieve metadata categories
@@ -113,7 +121,8 @@ public class GetCategories implements Service
 
 		Element elRes = new Element(Jeeves.Elem.RESPONSE)
 										.addContent(new Element(Geonet.Elem.ID).setText(id))
-										.addContent(elCateg);
+										.addContent(elCateg)
+										.addContent(isOwner);
 
 		return elRes;
 	}

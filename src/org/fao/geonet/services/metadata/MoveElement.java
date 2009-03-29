@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 
@@ -67,12 +68,12 @@ public class MoveElement implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		EditUtils.preprocessUpdate(params, context);
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan = gc.getDataManager();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		UserSession session = context.getUserSession();
 
 		String id  = Util.getParam(params, Params.ID);
 		String ref = Util.getParam(params, Params.REF);
@@ -80,11 +81,7 @@ public class MoveElement implements Service
 		//-----------------------------------------------------------------------
 		//--- swap elements and return status
 
-		EditUtils.updateContent(params, context);
-
-		// version already checked in updateContent
-		if (!dataMan.swapElement(dbms, id, ref, null, down))
-			throw new ConcurrentUpdateEx(id);
+		dataMan.swapElementEmbedded(dbms, session, id, ref, down);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));

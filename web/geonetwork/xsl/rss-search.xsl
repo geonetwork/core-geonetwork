@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
 	xmlns:geonet="http://www.fao.org/geonetwork"
-	xmlns:xalan= "http://xml.apache.org/xalan"
 	xmlns:media="http://search.yahoo.com/mrss/"
 	xmlns:georss="http://www.georss.org/georss"
 	xmlns:gml="http://www.opengis.net/gml"
-	exclude-result-prefixes="geonet xalan">
+	exclude-result-prefixes="geonet">
 
 	<xsl:output method="xml" media-type="application/rss+xml"/>
 

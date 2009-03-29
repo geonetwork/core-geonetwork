@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
 						xmlns:geonet="http://www.fao.org/geonetwork" 
-						xmlns:xalan="http://xml.apache.org/xalan"
-						exclude-result-prefixes="xsl xalan geonet">
+						xmlns:exslt="http://exslt.org/common"
+						exclude-result-prefixes="xsl exslt geonet">
 
 	<xsl:include href="metadata.xsl"/>
 	<xsl:include href="utils.xsl"/>
@@ -14,7 +14,7 @@
 		</xsl:variable>
 
 		<response>
-			<xsl:apply-templates select="xalan:nodeset($output)/*" mode="strip"/>
+			<xsl:apply-templates select="exslt:node-set($output)/*" mode="strip"/>
 		</response>
 	</xsl:template>
 	

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:geonet="http://www.fao.org/geonetwork" 
-	xmlns:xalan= "http://xml.apache.org/xalan"
+	xmlns:exslt="http://exslt.org/common"
 	xmlns:dc = "http://purl.org/dc/elements/1.1/" 
 	xmlns:gmd="http://www.isotc211.org/2005/gmd" 
 	xmlns:gco="http://www.isotc211.org/2005/gco">
@@ -44,7 +44,7 @@
 						<xsl:variable name="md">
 							<xsl:apply-templates mode="brief" select="."/>
 						</xsl:variable>
-						<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
+						<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
 						<xsl:variable name="mdURL" select="normalize-space(concat($baseURL, '?uuid=', geonet:info/uuid))"/>
 						
 						<!-- Add social bookmark icons here -->

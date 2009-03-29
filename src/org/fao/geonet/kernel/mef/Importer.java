@@ -130,6 +130,7 @@ class Importer
 					privileges =  new Element("group");
 					privileges.addContent(new Element("operation").setAttribute("name", "view"));
 					privileges.addContent(new Element("operation").setAttribute("name", "download"));
+					privileges.addContent(new Element("operation").setAttribute("name", "editing"));
 					privileges.addContent(new Element("operation").setAttribute("name", "notify"));
 					privileges.addContent(new Element("operation").setAttribute("name", "dynamic"));
 					privileges.addContent(new Element("operation").setAttribute("name", "featured"));
@@ -171,9 +172,9 @@ class Importer
 				if (!dcore && !fgdc && !iso115 && !iso139)
 					throw new Exception("Unknown schema format : "+schema);
 
-				String uuidAction = Util.getParam(params, Params.UUID_ACTION);
+				String uuidAction = Util.getParam(params, Params.UUID_ACTION, Params.NOTHING);
 				
-				if (uuid == null || uuid.equals("") || uuidAction.equals(Params.GENERATE_UUID))
+				if (uuid == null || uuid.equals(""))
 				{
 					uuid   = UUID.randomUUID().toString();
 					source = null;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xsl:stylesheet version="1.0"  xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xalan= "http://xml.apache.org/xalan" exclude-result-prefixes="xalan">
+<xsl:stylesheet version="1.0"  xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<!-- This stylesheet converts ISO19115 and ISO19139 metadata into ISO19139 metadata in XML format -->
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" />
 	<xsl:include href="../19115to19139/19115-to-19139.xsl"/>

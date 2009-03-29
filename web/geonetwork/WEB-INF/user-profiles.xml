@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<profiles>
+
+	<!-- FIXME: check for unused services -->
+
+	<!-- External system services are still missing-->
+	<!-- ====================================================================== -->
+
+	<profile name="Administrator" extends="UserAdmin">
+
+		<!-- Group maintenance services -->
+		<allow service="group.remove"/>
+		<allow service="group.update"/>
+
+		<!-- Category maintenance services -->
+		<allow service="category.remove"/>
+		<allow service="category.update"/>
+
+		<!-- Localization -->
+		<allow service="localization"/>
+		<allow service="xml.group.update"/>
+		<allow service="xml.category.update"/>
+		<allow service="xml.operation.update"/>
+		<allow service="xml.region.update"/>
+
+		<!-- Utilities  -->
+		<allow service="util.import"/>
+		<allow service="util.ping"/>
+		<allow service="util.empty"/>
+		<allow service="util.select"/>
+
+		<!-- Edit the context sensitive help -->
+		<allow service="help.edit.form"/>
+		<allow service="help.update"/>
+
+		<!-- Insert metadata from ISO19115 XML files from a local directory -->
+		<allow service="metadata.batchimport.form"/>
+
+		<!-- Search for orphaned metadata records -->
+		<allow service="metadata.searchunused.form"/>
+		<allow service="metadata.searchunused"/>
+
+		<!-- Harvesting facilities -->
+		<allow service="harvesting"/>
+		<allow service="xml.harvesting.get"/>
+		<allow service="xml.harvesting.add"/>
+		<allow service="xml.harvesting.update"/>
+		<allow service="xml.harvesting.remove"/>
+		<allow service="xml.harvesting.start"/>
+		<allow service="xml.harvesting.stop"/>
+		<allow service="xml.harvesting.run"/>
+		<allow service="xml.harvesting.info"/>
+
+		<!-- Thesaurus facilities -->
+		<allow service="thesaurus.admin"/>
+		<allow service="thesaurus.edit"/>
+		<allow service="thesaurus.update"/>
+		<allow service="thesaurus.upload"/>
+		<allow service="thesaurus.download"/>
+		<allow service="thesaurus.delete"/>
+		<allow service="thesaurus.editelement"/>
+		<allow service="thesaurus.addelement"/>
+		<allow service="thesaurus.deleteelement"/>
+		<allow service="thesaurus.updateelement"/>
+		<allow service="thesaurus.add"/>
+
+		<allow service="config"/>
+		<allow service="xml.config.get"/>
+		<allow service="xml.config.set"/>
+
+		<allow service="metadata.admin.index.rebuild"/>
+	</profile>
+
+	<!-- ====================================================================== -->
+
+	<profile name="UserAdmin" extends="Reviewer">
+
+		<!-- User maintenance services -->
+		<allow service="user.get"/>
+		<allow service="user.resetpw"/>
+		<allow service="user.edit"/>
+		<allow service="user.list"/>
+		<allow service="user.remove"/>
+		<allow service="user.update"/>
+
+		<!-- Transfer ownership services -->
+		<allow service="transfer.ownership"/>
+		<allow service="xml.ownership.editors"/>
+		<allow service="xml.ownership.groups"/>
+		<allow service="xml.ownership.transfer"/>
+
+		<!-- Massive New Owner services -->
+		<allow service="metadata.massive.newowner"/>
+		<allow service="metadata.massive.newowner.form"/>
+		<allow service="xml.usergroups.list"/>
+	</profile>
+
+	<!-- ====================================================================== -->
+
+	<profile name="Reviewer" extends="Editor"/>
+
+	<!-- ====================================================================== -->
+
+	<profile name="Editor" extends="RegisteredUser">
+
+		<!-- Allow to see the list of groups the user is member of -->
+		<allow service="group.list"/>
+		<allow service="group.get"/>
+
+		<!-- These are the metadata categories forms -->
+		<allow service="metadata.category"/>
+		<allow service="metadata.category.form"/>
+		<allow service="category.list"/>
+		<allow service="category.get"/>
+		<allow service="metadata.massive.category.form"/>
+		<allow service="metadata.massive.update.categories"/>
+
+		<!-- Allow to add a metadata record -->
+		<allow service="metadata.add"/>
+		<allow service="metadata.add.form"/>
+
+		<!-- These are the metadata privileges forms -->
+		<allow service="metadata.admin"/>
+		<allow service="metadata.admin.form"/>
+		<allow service="metadata.massive.admin.form"/>
+		<allow service="metadata.massive.update.privileges"/>
+
+		<!-- Allow to delete a metadata record -->
+		<allow service="metadata.delete"/>
+		<allow service="metadata.massive.delete"/>
+
+		<allow service="metadata.duplicate.form"/>
+		<allow service="metadata.create.form"/>
+		<allow service="metadata.create"/>
+		<allow service="metadata.create.edit"/>
+
+		<!-- Allow to edit a metadata record -->
+		<allow service="metadata.edit"/>
+		<allow service="metadata.elem.add"/>
+		<allow service="metadata.elem.delete"/>
+		<allow service="metadata.elem.down"/>
+		<allow service="metadata.elem.up"/>
+		<allow service="metadata.update"/>
+		<allow service="metadata.update.finish"/>
+		<allow service="metadata.update.forget"/>
+		<allow service="metadata.update.forgetandfinish"/>
+		<allow service="metadata.validate"/>
+
+		<!-- Allow to add a metadata record in XML format -->
+		<allow service="metadata.xmlinsert.form"/>
+		<allow service="metadata.insert"/>
+		<allow service="metadata.insert.paste"/>
+
+		<!-- Allow to upload a file -->
+		<allow service="file.upload"/>
+		<allow service="resources.upload"/>
+		<allow service="resources.prepare.upload"/>
+		<allow service="resources.del"/>
+
+		<!-- Allow thumbnail services -->
+		<allow service="metadata.thumbnail.form"/>
+		<allow service="metadata.thumbnail.set"/>
+		<allow service="metadata.thumbnail.unset"/>
+
+		<!-- Allow GeoNetwork Mapping services -->
+		<allow service="xml.metadata.insert"/>
+		<allow service="xml.metadata.delete"/>
+		<allow service="xml.user.list"/>
+
+		<!-- MEF facilities -->
+		<allow service="mef.import"/>
+
+		<!-- Relation services -->
+		<allow service="xml.relation.insert"/>
+		<allow service="xml.relation.delete"/>
+		
+	</profile>
+
+	<!-- ====================================================================== -->
+
+	<profile name="RegisteredUser" extends="Guest">
+
+		<!-- gives access to the admin form -->
+		<allow service="admin"/>
+
+		<!-- Allow the user to change it's password -->
+		<allow service="user.pwedit"/>
+		<allow service="user.pwupdate"/>
+		<allow service="user.infoedit"/>
+		<allow service="user.logout"/>
+
+	</profile>
+
+	<!-- ====================================================================== -->
+
+	<profile name="Guest">
+
+		<!-- Basic services to search and display the results -->
+		<allow service="main.home"/>
+		<allow service="main.searchform.simple.embedded"/> <!--  ETj -->		
+		<allow service="main.searchform.advanced.embedded"/> <!--  ETj -->		
+		<allow service="main.search.embedded"/> <!--  ETj -->
+		<allow service="main.present"/>
+		<allow service="main.present.embedded"/> <!--  ETj -->
+		<allow service="metadata.show"/>
+		<allow service="metadata.show.embedded"/> <!--  ETj -->
+		<allow service="remote.show"/>
+		<allow service="rating.popup"/>
+
+		<!-- Login and logout services -->
+		<allow service="user.login"/>
+		<allow service="shib.user.login"/>
+
+		<!-- User privileges -->
+		<allow service="user.privileges.error"/>
+		<allow service="res"/>
+
+		<!-- Get help -->
+		<allow service="help"/>
+		<allow service="links"/>
+		<allow service="about"/>
+
+		<!-- Give feedback -->
+		<allow service="feedback"/>
+		<allow service="feedback.insert"/>
+
+		<!-- Download a file -->
+		<allow service="file.download"/>
+		<allow service="file.disclaimer"/>
+		<allow service="feedback.download.insert"/>
+		<allow service="resources.get"/>
+		<allow service="prepare.file.download"/>
+
+		<!-- Get metadata from external application -->
+		<allow service="external.getmetadata"/>
+		<allow service="resources.getgraphover"/>
+		<allow service="graphover.show"/>
+
+		<!-- Select metadata -->
+		<allow service="metadata.select"/>
+		<allow service="selection.search"/>
+		<allow service="pdf.selection.search"/>
+
+		<!-- WMC -->
+		<allow service="intermap.wmc.setWmcContext"/>
+
+		<!-- XML services -->
+		<allow service="xml.user.login"/>
+		<allow service="xml.user.logout"/>
+		<allow service="xml.search"/>
+		<allow service="xml.search.keywords"/>
+		<allow service="xml.metadata.get"/>
+		<allow service="xml.metadocument.get"/>
+		<allow service="xml.metadocument.snippet"/>
+		<allow service="xml.info"/>
+		<allow service="xml.forward"/>
+		<allow service="xml.region.get"/>
+
+		<!-- Portal XML services -->
+		<allow service="portal.search"/>
+		<allow service="portal.opensearch"/>
+		<allow service="portal.search.keywords"/>
+		<allow service="portal.search.present"/>
+		<allow service="portal.present"/>
+		<allow service="portal.full"/>
+		<allow service="portal.get"/>
+		<allow service="portal.latest.updated"/>
+		<allow service="portal.featured"/>
+		<allow service="portal.categories"/>
+		<allow service="portal.sources"/>
+
+		<!-- Metadata export services -->
+		<allow service="pdf.search"/>
+		<allow service="dc.xml"/>
+		<allow service="fgdc.xml"/>
+		<allow service="iso19115to19139.xml"/>
+		<allow service="iso19139.xml"/>
+		<allow service="iso_arccatalog8.xml"/>
+
+		<!-- RSS services -->
+		<allow service="rss.latest"/>
+		<allow service="rss.search"/>
+		<allow service="rss.present"/>
+
+		<!-- KML services -->
+		<allow service="google.kml"/>
+<!--		<allow service="search.kml"/>
+		<allow service="search.present.kml"/> -->
+
+		<!-- Allow GeoNetwork Mapping services -->
+		<allow service="xml.group.list"/>
+
+		<!-- Catalogue Services for the Web -->
+		<allow service="csw"/>
+
+		<!-- Open Archive Initiative, Protocol for Metadata Harvesting -->
+		<allow service="oaipmh"/>
+		
+		<!-- MEF facilities -->
+		<allow service="mef.export"/>
+
+		<!-- Relation services -->
+		<allow service="xml.relation.get"/>
+
+		<!-- Metadata schema related -->
+		<allow service="xml.schema.info"/>
+
+		<!-- Rating services -->
+		<allow service="xml.metadata.rate"/>
+		
+		<!-- Thesaurus services -->
+	 	<allow service="keywords.search"/>
+	 	<allow service="keywords.sort"/>
+	 	<allow service="keywords.select"/>
+	 	<allow service="keywords.editsearch"/>
+		<allow service="keywords.getselected"/>
+	 	<allow service="thesaurus.list"/>
+		<allow service="thesaurus.view"/><!-- FIXME : Check if needed -->
+
+		<!-- Test i18n -->
+		<allow service="test.i18n"/>
+		<allow service="test.i18n.xml"/>
+
+		<!-- User self registration -->
+		<allow service="user.register.get"/>
+		<allow service="user.register.submit"/>
+	</profile>
+
+	<!-- ====================================================================== -->
+</profiles>
+

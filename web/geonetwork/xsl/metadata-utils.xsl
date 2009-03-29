@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
 	xmlns:geonet="http://www.fao.org/geonetwork"
-	xmlns:xalan= "http://xml.apache.org/xalan" exclude-result-prefixes="xalan">
+	xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="exslt">
 
 	<xsl:include href="metadata-iso19115.xsl"/>
 	<xsl:include href="metadata-iso19139.xsl"/>
@@ -16,7 +16,7 @@
 	<xsl:variable name="geonetNodeSet"><geonet:dummy/></xsl:variable>
 
 	<xsl:variable name="geonetUri">
-		<xsl:value-of select="namespace-uri(xalan:nodeset($geonetNodeSet)/*)"/>
+		<xsl:value-of select="namespace-uri(exslt:node-set($geonetNodeSet)/*)"/>
 	</xsl:variable>
 
 	<xsl:variable name="currTab">
@@ -140,33 +140,42 @@
 	<xsl:template name="buttons" match="*">
 		<xsl:param name="metadata" select="."/>
 
-		<!-- create button -->
-		<!-- When a user with access to the metadata.duplicate.form can see a template, he can use it.
-			  Also when not allowed to edit the template himself -->
+		<xsl:variable name="ltitle">
+			<xsl:call-template name="escapeString">
+				<xsl:with-param name="expr" select="concat(substring(normalize-space($metadata/title),1,40),'...')"/>
+			</xsl:call-template>
+		</xsl:variable>
 
+		<!-- create button -->
 		<xsl:if test="string(geonet:info/isTemplate)!='s' and (geonet:info/isTemplate='y' or geonet:info/source=/root/gui/env/site/siteId) and /root/gui/services/service/@name='metadata.duplicate.form'">
 			<button class="content" onclick="load('{/root/gui/locService}/metadata.duplicate.form?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/create"/></button>
 		</xsl:if>
 		
-		<!-- it is the server that decides if a user can edit/delete/set privileges/set categories to a metadata -->
+		<!-- edit button -->
 		<xsl:if test="geonet:info/edit='true'">
-			<!-- edit button -->
 			&#160;
 			<button class="content" onclick="load('{/root/gui/locService}/metadata.edit?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/edit"/></button>
-
-			<!-- delete button -->
-			&#160;
-			<button class="content" onclick="return doConfirm('{/root/gui/locService}/metadata.delete?id={$metadata/geonet:info/id}', '{/root/gui/strings/confirmDelete}')"><xsl:value-of select="/root/gui/strings/delete"/></button>
-			
-			<!-- privileges button -->
-			&#160;
-			<button class="content" onclick="load('{/root/gui/locService}/metadata.admin.form?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/privileges"/></button>
-			
-			<!-- categories button -->
-			&#160;
-			<button class="content" onclick="load('{/root/gui/locService}/metadata.category.form?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/categories"/></button>
 		</xsl:if>
 
+		<!-- delete button -->
+		<xsl:if test="geonet:info/owner='true'">
+			&#160;
+			<button class="content" onclick="return doConfirmDelete('{/root/gui/locService}/metadata.delete?id={$metadata/geonet:info/id}', '{/root/gui/strings/confirmDelete}','{$ltitle}','{$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/delete"/></button>
+		</xsl:if>
+			
+		<!-- privileges button -->
+		<xsl:if test="/root/gui/services/service/@name='metadata.admin.form'">
+			&#160;
+			<xsl:variable name="privileges" select="concat(/root/gui/strings/setshowprivileges,' ',$ltitle)"/>
+			<button class="content" onclick="doOtherButton('{/root/gui/locService}/metadata.admin.form?id={$metadata/geonet:info/id}','{$privileges}',600)"><xsl:value-of select="/root/gui/strings/privileges"/></button>
+		</xsl:if>
+			
+		<!-- categories button -->
+		<xsl:if test="/root/gui/services/service/@name='metadata.category.form'">
+			&#160;
+			<xsl:variable name="categories" select="concat(/root/gui/strings/setshowcategories,' ',$ltitle)"/>
+			<button class="content" onclick="doOtherButton('{/root/gui/locService}/metadata.category.form?id={$metadata/geonet:info/id}','{$categories}',300)"><xsl:value-of select="/root/gui/strings/categories"/></button>
+		</xsl:if>
 	</xsl:template>
 
 	<!--

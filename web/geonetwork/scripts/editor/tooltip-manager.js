@@ -42,8 +42,9 @@ function init()
 	{
 		var id = list[i].getAttribute('id');
 		
-		if (id.startsWith('tip.'))
-			new Tooltip(loader, list[i]);
+		if (id != null) {
+			if (id.startsWith('tip.')) new Tooltip(loader, list[i]);
+		}
 	}
 }
 

@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.UUID;
-
+import jeeves.exceptions.XSDValidationErrorEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -40,6 +40,7 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.kernel.DataManager;
 import org.jdom.Element;
 
@@ -121,7 +122,10 @@ public class ImportFromDir implements Service
 
 		context.info("Import time is :" + duration + " secs");
 
-		return new Element("ok").setText("records:" + result);
+		Element response = new Element("response");
+		Element records = new Element("records").setText(""+result);
+		response.addContent(records);
+		return response;
 	}
 
 	//--------------------------------------------------------------------------
@@ -158,11 +162,13 @@ public class ImportFromDir implements Service
 
 			Element xml = Xml.loadFile(files[i]);
 
-			if (!style.equals("_none_"))
+			if (!style.equals("_none_")) {
+				context.debug("Transforming with : "+stylePath +"/"+ style);
 				xml = Xml.transform(xml, stylePath +"/"+ style);
+			}
 
 			if (validate)
-				dm.validate(schema, xml);
+				validateIt(schema, xml, context, files[i].getName()); 
 
 			alMetadata.add(xml);
 		}
@@ -252,6 +258,63 @@ public class ImportFromDir implements Service
 
 	//--------------------------------------------------------------------------
 	//---
+	//--- validateIt (should be in DataManager?)
+	//---
+	//--------------------------------------------------------------------------
+
+	public static void validateIt(String schema, Element xml, ServiceContext context) throws Exception
+	{
+		validateIt(schema,xml,context," ");	
+	}
+
+	public static void validateIt(String schema, Element xml, ServiceContext context, String fileName) throws Exception
+	{
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+
+		DataManager dataMan = gc.getDataManager();
+
+		dataMan.setNamespacePrefix(xml);
+		try {
+			dataMan.validate(schema, xml);
+		} catch (XSDValidationErrorEx e) {
+			if (!fileName.equals(" ")) {
+				throw new XSDValidationErrorEx(e.getMessage()+ "(in "+fileName+"): ",e.getObject());
+			} else {
+				throw new XSDValidationErrorEx(e.getMessage(),e.getObject());
+			}
+		}
+
+		//-----------------------------------------------------------------------
+		//--- if the uuid does not exist we generate it
+
+		String uuid = dataMan.extractUUID(schema, xml);
+
+		if (uuid.length() == 0)
+			uuid = UUID.randomUUID().toString();
+
+		//--- Now do the schematron validation on this file - if there are errors
+		//--- then we say what they are!
+		//--- Note we have to use uuid here instead of id because we don't have 
+		//--- an id...
+
+		Element schemaTronXml = dataMan.doSchemaTronForEditor(dataMan.getSchemaDir(schema),xml);
+		xml.detach();
+		if (schemaTronXml != null && schemaTronXml.getContent().size() > 0) {
+			String schemaTronReport = dataMan.doSchemaTronReport(dataMan.getSchemaDir(schema),xml,uuid);
+			Element schematron = new Element("schematronerrors");
+			Element idElem = new Element("id");
+			idElem.setText(uuid);
+			Element fileNameElem = new Element("filename");
+			fileNameElem.setText(fileName);
+			schematron.addContent(idElem);
+			schematron.addContent(fileNameElem);
+			throw new SchematronValidationErrorEx("Schematron errors detected for file "+fileName+" - see "+schemaTronReport+" for more details",schematron);
+		}
+
+	}
+
+	//--------------------------------------------------------------------------
+	//---
 	//--- Private methods
 	//---
 	//--------------------------------------------------------------------------
@@ -270,16 +333,13 @@ public class ImportFromDir implements Service
 		if (uuid.length() == 0)
 			uuid = UUID.randomUUID().toString();
 
-
+		if (category.equals("_none_")) category = null;
 		//-----------------------------------------------------------------------
 		//--- insert metadata into the system
 
-		if (category.equals("_none_")) category = null;
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		String id = dm.insertMetadata(dbms, schema, category, group, xml, 
-								context.getSerialFactory(), gc.getSiteId(), uuid, 
-								context.getUserSession().getUserIdAsInt());
+		String id = dm.insertMetadata(dbms, schema, category, group, xml, context.getSerialFactory(), gc.getSiteId(), uuid, context.getUserSession().getUserIdAsInt());
 
 	}
 }

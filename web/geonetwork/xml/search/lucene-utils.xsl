@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-xmlns:xalan= "http://xml.apache.org/xalan" exclude-result-prefixes="xalan">
+xmlns:exslt = "http://exslt.org/common" exclude-result-prefixes="exslt">
 
 <!--
 equal: coordinates of the target rectangle within 1 degree from corresponding ones of metadata rectangle

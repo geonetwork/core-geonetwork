@@ -25,12 +25,14 @@ package org.fao.geonet.services.metadata;
 
 import java.util.List;
 import java.util.Set;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -39,6 +41,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.lib.Lib;
+
 import org.jdom.Element;
 
 //=============================================================================
@@ -81,7 +84,12 @@ public class GetAdminOper implements Service
 		if (info == null)
 			throw new MetadataNotFoundEx(id);
 
-		Element owner = new Element("owner").setText(info.owner);
+		Element ownerId = new Element("ownerid").setText(info.owner);
+		Element hasOwner = new Element("owner"); 
+		if (am.isOwner(context,id)) 
+			hasOwner.setText("true");
+		else
+			hasOwner.setText("false");
 
 		//--- get all operations
 
@@ -157,7 +165,8 @@ public class GetAdminOper implements Service
 										.addContent(new Element(Geonet.Elem.ID).setText(id))
 										.addContent(elOper)
 										.addContent(elGroup)
-										.addContent(owner);
+										.addContent(ownerId)
+										.addContent(hasOwner);
 
 		return elRes;
 	}

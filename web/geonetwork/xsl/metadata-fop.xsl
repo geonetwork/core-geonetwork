@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:xalan="http://xml.apache.org/xalan"
-	exclude-result-prefixes="xalan"
+	xmlns:exslt="http://exslt.org/common"
+	exclude-result-prefixes="exslt"
 	xmlns:gco="http://www.isotc211.org/2005/gco"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:fo="http://www.w3.org/1999/XSL/Format">
@@ -122,7 +122,7 @@
 								<fo:table-cell>
 									<fo:block>
 										<xsl:variable name="n"
-											select="xalan:nodeset($content)" />
+											select="exslt:node-set($content)" />
 										<xsl:if test="$n/node()">
 											<fo:table
 												table-layout="fixed" width="100%"
@@ -159,7 +159,7 @@
 		    <xsl:variable name="md">
                 <xsl:apply-templates mode="brief" select="."/>
             </xsl:variable>
-            <xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
+            <xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
             
             <xsl:if test="$metadata/geonet:info/id != ''">
 			<fo:table-row>

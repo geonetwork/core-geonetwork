@@ -39,6 +39,7 @@ import org.fao.geonet.constants.Edit;
 public class SchemaLoader
 {
 	private Element   elRoot;
+	private Element   elFirst = null;
 	private HashMap   hmElements = new HashMap();
 	private HashMap   hmTypes    = new HashMap();
 	private HashMap   hmAttrGrp  = new HashMap();
@@ -120,6 +121,7 @@ public class SchemaLoader
 		//--- PHASE 3 : add namespaces and elements
 
 		MetadataSchema mds = new MetadataSchema(elRoot);
+		mds.setPrimeNS(elFirst.getAttributeValue("targetNamespace"));
 		for (int j = 0;j < alElementFiles.size();j++) {
 			ElementInfo ei = (ElementInfo) alElementFiles.get(j);
 			mds.addNS(ei.targetNSPrefix,ei.targetNS);	
@@ -613,6 +615,7 @@ public class SchemaLoader
 		//--- load xml-schema
 
 		elRoot = Xml.loadFile(xmlSchemaFile);
+		if (elFirst == null) elFirst = elRoot;
 
 		// change target namespace
 		String oldtargetNS       = targetNS;
@@ -635,7 +638,7 @@ public class SchemaLoader
 		// namespace is as shown in the if statement then getAdditionalNamespaces 
 		// doesn't return the namespaces and we can't get a prefix - this fix gets
 		// around that bug
-		if (xmlSchemaFile.contains("xml.xsd") && targetNS.equals("http://www.w3.org/XML/1998/namespace")) targetNSPrefix="xml";
+		if ((xmlSchemaFile.contains("xml.xsd") || xmlSchemaFile.contains("xml-mod.xsd")) && targetNS.equals("http://www.w3.org/XML/1998/namespace")) targetNSPrefix="xml";
 
 		List children = elRoot.getChildren();
 
@@ -1047,7 +1050,7 @@ public class SchemaLoader
 		if (ref != null) {
 			ae = (AttributeEntry) hmAttribs.get(ref);
 			if (ae == null)
-				throw new IllegalArgumentException("Reference '"+ref+"' not found for attrib : " +name);
+				throw new IllegalArgumentException("Reference '"+ref+"' not found for attrib : " +name+":"+ref);
 		} 
 
 		if (ref != null && ref.contains(":"))

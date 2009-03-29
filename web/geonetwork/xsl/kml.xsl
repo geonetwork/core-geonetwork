@@ -3,8 +3,8 @@
 	xmlns:geonet="http://www.fao.org/geonetwork" 
 	xmlns:gmd="http://www.isotc211.org/2005/gmd"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:xalan="http://xml.apache.org/xalan"
-	xmlns:kml="http://earth.google.com/kml/2.1" exclude-result-prefixes="geonet xalan">
+	xmlns:exslt="http://exslt.org/common"
+	xmlns:kml="http://earth.google.com/kml/2.1" exclude-result-prefixes="geonet exslt">
 	<xsl:output method="xml"/>
 	<xsl:strip-space elements="*"/>
 	<xsl:include href="metadata.xsl"/>
@@ -29,7 +29,7 @@
 
 <!--		<briefdata1><xsl:copy-of select="$md"/></briefdata1> -->
 		
-		<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/> 
+		<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/> 
 
 		<xsl:call-template name="kml_record">
 			<xsl:with-param name="metadata" select="$metadata"/>

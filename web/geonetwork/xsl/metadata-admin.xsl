@@ -1,27 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format">
 	
-	<xsl:include href="main.xsl"/>
+	<xsl:include href="modal.xsl"/>
 
-	<xsl:template mode="script" match="/">
-		<script type="text/javascript" language="JavaScript">			
-			function setAll(id)
-			{
-				var list = $(id).getElementsByTagName('input');
-			
-				for (var i=0; i &lt; list.length; i++)
-					list[i].checked = true;
-			}
-
-			function clearAll(id)
-			{
-				var list = $(id).getElementsByTagName('input');
-			
-				for (var i=0; i &lt; list.length; i++)
-					list[i].checked = false;
-			}
-		</script>
-	</xsl:template>
+	<xsl:variable name="profile"  select="/root/gui/session/profile"/>
 
 	<!-- ================================================================================= -->
 	<!-- page content -->
@@ -33,20 +15,21 @@
 			<xsl:with-param name="content">
 			
 				<xsl:variable name="lang" select="/root/gui/language"/>
+				<xsl:variable name="disabled" select="(/root/response/owner='false')"/>
 
-				<form name="update" accept-charset="UTF-8" action="{/root/gui/locService}/metadata.admin" method="post">
-					<input name="id" type="hidden" value="{/root/response/id}"/>
+				<div id="privileges">
+					<input name="metadataid" id="metadataid" type="hidden" value="{/root/response/id}"/>
 					<table>
 						<tr>
 							<th class="padded"><xsl:value-of select="/root/gui/strings/groups"/></th>
-							<!-- loop on all operations, add edit, notify and admin privileges to the end -->
+							<!-- loop on all operations leaving editing and notify to last -->
 							<xsl:for-each select="/root/response/operations/record">
-								<xsl:if test="id!='2' and id!='4' and id!='3'">
+								<xsl:if test="id!='2' and id!='3'">
 									<th class="padded-center"><xsl:value-of select="label/child::*[name() = $lang]"/></th>
 								</xsl:if>
 							</xsl:for-each>
 							<xsl:for-each select="/root/response/operations/record">
-								<xsl:if test="id='3'">
+								<xsl:if test="id='2' or id='3'">
 									<th class="padded-center"><xsl:value-of select="label/child::*[name() = $lang]"/></th>
 								</xsl:if>
 							</xsl:for-each>
@@ -54,14 +37,21 @@
 							<th/>
 						</tr>
 			
-						<!-- 'All' and 'Internal' groups -->
+						<!-- 'Internet', 'Intranet' and GUEST groups -->
 
 						<xsl:apply-templates select="/root/response/groups/group[id='1']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
+							<xsl:with-param name="disabled" select="($profile != 'Administrator') and ($profile != 'Reviewer')"/>
 						</xsl:apply-templates>
 
 						<xsl:apply-templates select="/root/response/groups/group[id='0']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
+							<xsl:with-param name="disabled" select="($profile != 'Administrator') and ($profile != 'Reviewer')"/>
+						</xsl:apply-templates>
+
+						<xsl:apply-templates select="/root/response/groups/group[id='-1']" mode="group">
+							<xsl:with-param name="lang" select="$lang"/>
+							<xsl:with-param name="disabled" select="($profile != 'Administrator') and ($profile != 'Reviewer')"/>
 						</xsl:apply-templates>
 
 						<tr>
@@ -75,29 +65,43 @@
 			
 						<!-- loop on other groups except -->
 						<xsl:for-each select="/root/response/groups/group">
-							<xsl:if test="id!='0' and id!='1'">
+							<xsl:sort select="name"/>
+							<xsl:if test="id!='0' and id!='1' and id!='-1'">
 								<xsl:variable name="groupId" select="id"/>
 								<tr id="row.{id}">
-									<td class="padded"><xsl:value-of select="label/child::*[name() = $lang]"/></td>
+									<td class="padded">
+										<span>
+											<xsl:if test="$disabled">
+												<xsl:attribute name="style">color: #A0A0A0;</xsl:attribute>
+											</xsl:if>
+											<xsl:value-of select="label/child::*[name() = $lang]"/>
+										</span>
+									</td>
 									
-									<!-- loop on all operations, add edit, notify and admin privileges to the end -->
+							<!-- loop on all operations leaving editing and notify to last -->
 									<xsl:for-each select="oper">
-										<xsl:if test="id!='3'">
+										<xsl:if test="id!='2' and id!='3'">
 											<td class="padded" align="center" width="80">
-												<input type="checkbox" name="_{$groupId}_{id}">
+												<input type="checkbox" id="_{$groupId}_{id}" name="_{$groupId}_{id}">
 													<xsl:if test="on">
 														<xsl:attribute name="checked"/>
+													</xsl:if>
+													<xsl:if test="$disabled">
+														<xsl:attribute name="disabled"/>
 													</xsl:if>
 												</input>
 											</td>
 										</xsl:if>
 									</xsl:for-each>
 									<xsl:for-each select="oper">
-										<xsl:if test="id='3'">
+										<xsl:if test="id='2' or id='3'">
 											<td class="padded" align="center" width="80">
-												<input type="checkbox" name="_{$groupId}_{id}">
+												<input type="checkbox" id="_{$groupId}_{id}" name="_{$groupId}_{id}">
 													<xsl:if test="on">
 														<xsl:attribute name="checked"/>
+													</xsl:if>
+													<xsl:if test="$disabled">
+														<xsl:attribute name="disabled"/>
 													</xsl:if>
 												</input>
 											</td>
@@ -108,6 +112,10 @@
 
 									<td>
 										<button class="content" onclick="setAll('row.{id}'); return false;">
+											<xsl:if test="$disabled">
+												<xsl:attribute name="disabled"/>
+												<xsl:attribute name="style">color: #A0A0A0;</xsl:attribute>
+											</xsl:if>
 											<xsl:value-of select="/root/gui/strings/setAll"/>
 										</button>
 									</td>
@@ -116,19 +124,32 @@
 
 									<td>
 										<button class="content" onclick="clearAll('row.{id}'); return false;">
+											<xsl:if test="$disabled">
+												<xsl:attribute name="disabled"/>
+												<xsl:attribute name="style">color: #A0A0A0;</xsl:attribute>
+											</xsl:if>
 											<xsl:value-of select="/root/gui/strings/clearAll"/>
 										</button>
 									</td>
 								</tr>
 							</xsl:if>
 						</xsl:for-each>
+						<xsl:if test="not($disabled)">
+							<tr width="100%">
+								<td align="center" colspan="8">
+									<xsl:choose>
+										<xsl:when test="contains(/root/gui/reqService,'metadata.massive')">
+											<button class="content" onclick="checkBoxModalUpdate('privileges','metadata.massive.update.privileges',true,'{concat(/root/gui/strings/results,' ',/root/gui/strings/massiveUpdatePrivilegesTitle)}')"><xsl:value-of select="/root/gui/strings/submit"/></button>
+										</xsl:when>
+										<xsl:otherwise>
+											<button class="content" onclick="checkBoxModalUpdate('privileges','metadata.admin')"><xsl:value-of select="/root/gui/strings/submit"/></button>
+										</xsl:otherwise>
+									</xsl:choose>
+								</td>
+							</tr>
+						</xsl:if>
 					</table>			
-				</form>
-			</xsl:with-param>
-			<xsl:with-param name="buttons">
-				<button class="content" onclick="goBack()"><xsl:value-of select="/root/gui/strings/back"/></button>
-				&#160;
-				<button class="content" onclick="goSubmit('update')"><xsl:value-of select="/root/gui/strings/submit"/></button>
+				</div>
 			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
@@ -137,10 +158,9 @@
 
 	<xsl:template match="*" mode="group">
 		<xsl:param name="lang"/>
+		<xsl:param name="disabled" select="($profile != 'Administrator') and ($profile != 'Reviewer') and (/root/response/owner='false')"/>
 
 		<xsl:variable name="groupId"  select="id"/>
-		<xsl:variable name="profile"  select="/root/gui/session/profile"/>		
-		<xsl:variable name="disabled" select="($profile != 'Administrator') and ($profile != 'Reviewer')"/>
 		
 		<tr id="row.{id}">
 			<td class="padded">
@@ -154,9 +174,9 @@
 			
 			<!-- loop on all operations,  edit, notify and admin privileges are hidden-->
 			<xsl:for-each select="oper">
-				<xsl:if test="id!='3'">
+				<xsl:if test="id!='2' and id!='3'">
 					<td class="padded" align="center" width="80">
-						<input type="checkbox" name="_{$groupId}_{id}">
+						<input type="checkbox" name="_{$groupId}_{id}" id="_{$groupId}_{id}">
 							<xsl:if test="$disabled">
 								<xsl:attribute name="disabled"/>
 							</xsl:if>
@@ -170,7 +190,7 @@
 
 			<!-- fill empty slots -->
 			<xsl:for-each select="oper">
-				<xsl:if test="id='3'">
+				<xsl:if test="id='2' or id='3'">
 					<td/>
 				</xsl:if>
 			</xsl:for-each>

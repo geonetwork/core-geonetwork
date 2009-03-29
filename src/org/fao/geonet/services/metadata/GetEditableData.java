@@ -57,17 +57,17 @@ public class GetEditableData implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		EditUtils.preprocessUpdate(params, context);
-
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getDataManager();
 
 		String id = Util.getParam(params, Params.ID);
+		boolean showValidationErrors = 
+						Util.getParam(params, Params.SHOWVALIDATIONERRORS, false);
 
 		//-----------------------------------------------------------------------
 		//--- get metadata
 
-		Element elMd = dataMan.getMetadata(context, id, true);
+		Element elMd = dataMan.getMetadataEmbedded(context, id, true, showValidationErrors);
 		if (elMd == null)
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 

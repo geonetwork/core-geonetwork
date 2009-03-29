@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<profiles>
+	<!-- ====================================================================== -->
+
+	<profile name="Guest">
+		<allow service="main"/>
+		<allow service="skel"/>
+		
+		<allow service="map.getMain.embedded"/>
+		<allow service="minimap.rebuild"/>
+		
+		<allow service="static.form.pdf"/>
+		<allow service="create.pdf"/>
+		
+		<allow service="banner"/>
+		<allow service="map.addServices"/>
+		<allow service="map.addServicesExt"/>
+		<allow service="map.addServices.embedded"/>		
+		<allow service="map.getFrames"/>
+		<allow service="mapContexts.get"/>
+		<allow service="mapServers.listServers"/>
+		<allow service="mapServers.listServers.xml"/>
+		<allow service="mapServers.listServers.embedded"/>
+		<allow service="mapServers.getServices"/>
+		<allow service="mapServers.getServices.embedded"/>
+		<allow service="mapServers.getServicesExt"/>
+		<allow service="mapServers.getServices.xml"/>
+		<allow service="map.get"/>
+		<allow service="map.getLayers"/>
+		<allow service="map.getLayers.embedded"/>
+		<allow service="map.action"/>
+		<allow service="map.move"/>
+		<allow service="map.setScale"/>
+		<allow service="map.fullExtent"/>
+		<allow service="map.zoomToService"/>
+		<allow service="map.reset"/>
+		<allow service="map.identify"/>
+		<allow service="map.service.moveUp"/>
+		<allow service="map.service.moveDown"/>
+		<allow service="map.service.getLegend"/>
+		<allow service="map.service.wmsConfigForm"/>
+		<allow service="map.service.wmsConfig"/>
+		<allow service="map.service.showExtents"/>
+		<allow service="map.service.setExtents"/>
+		<allow service="map.service.showError"/>
+		<allow service="map.service.wmsLayerInfo"/>
+		<allow service="map.service.expand"/>
+		<allow service="map.service.collapse"/>
+		<allow service="map.setContext"/>
+		<allow service="map.getFeatures"/>
+
+		<allow service="wmc.setContext"/>
+		<allow service="wmc.uploadContext"/>
+		<allow service="wmc.setContextFromURL"/>
+		<allow service="wmc.mailContext"/>
+		<allow service="wmc.form"/>
+		<!--		<allow service="wmc.getContext"/>-->
+		<allow service="context.cml"/>
+		
+		<allow service="map.layers.add"/>
+		<allow service="map.layers.deleteLayer"/>
+		<allow service="map.layers.setOrder"/>
+		<allow service="map.layers.moveUp"/>
+		<allow service="map.layers.moveDown"/>		
+		<allow service="map.layers.setTransparency"/>
+		<allow service="map.layers.toggleVisibility"/>
+		<allow service="map.layers.getInfo"/>
+		<allow service="map.layers.getStyles"/>
+		<allow service="map.layers.setStyle"/>
+
+		<allow service="map.update"/>
+		<allow service="geonet.getGeonetRecords"/>
+		
+		<allow service="marker.add"/>
+		<allow service="marker.get"/>
+		<allow service="marker.delete"/>
+		<allow service="marker.update"/>
+		<allow service="marker.present"/>
+		
+	</profile>
+
+	<!-- ====================================================================== -->
+</profiles>
+

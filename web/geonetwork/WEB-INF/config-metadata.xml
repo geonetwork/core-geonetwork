@@ -7,6 +7,19 @@
 		<!-- Metadata services                                             -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="metadata.insert.paste">
+			<class name=".services.metadata.Insert"/>
+
+			<output sheet="metadata-insert-results.xsl"/>
+
+			<error sheet="error.xsl">
+        <xml name="error" file="xml/validation-error.xml" />
+        <xml name="validation" file="xml/metadata-validate.xml" />
+      </error>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="metadata.insert">
 			<class name=".services.metadata.Insert"/>
 
@@ -56,7 +69,7 @@
 
 			<output sheet="metadata-edit.xsl">
 				<call name="currTab"       class =".guiservices.util.GetCurrentMDTab"/>
-				<call name="position"      class =".guiservices.util.GetPositionMD"/>
+				<call name="position" 		 class =".guiservices.util.GetPositionMD"/>
 				<call name="groups"        class =".guiservices.groups.GetMine"/>
 				<call name="regions"       class =".guiservices.regions.Get"/>
 				<call name="sources"       class =".guiservices.util.Sources"/>
@@ -73,9 +86,19 @@
 		<service name="metadata.elem.add">
 			<class name=".services.metadata.AddElement"/>
 
-			<output forward="metadata.edit" />
+			<output sheet="metadata-edit-embedded.xsl">
+				<call name="currTab"       class =".guiservices.util.GetCurrentMDTab"/>
+				<call name="position" 		 class =".guiservices.util.GetPositionMD"/>
+				<call name="groups"        class =".guiservices.groups.GetMine"/>
+				<call name="regions"       class =".guiservices.regions.Get"/>
+				<call name="sources"       class =".guiservices.util.Sources"/>
+				<call name="isoLang"       class =".guiservices.isolanguages.Get"/>
+				<call name="subtemplates"  class ="jeeves.services.db.Select">
+					<param name="db"    value="main-db"/>
+					<param name="query" value="SELECT id, schemaId, root, title FROM Metadata WHERE isTemplate='s' ORDER BY root, title"/>
+				</call>
+			</output>
 
-			<error id="concurrent-update" sheet="metadata-error.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -83,39 +106,73 @@
 		<service name="metadata.elem.delete">
 			<class name=".services.metadata.DeleteElement"/>
 
-			<output forward="metadata.edit" />
+			<output sheet="metadata-edit-embedded.xsl">
+				<call name="currTab"       class =".guiservices.util.GetCurrentMDTab"/>
+				<call name="position" 		 class =".guiservices.util.GetPositionMD"/>
+				<call name="groups"        class =".guiservices.groups.GetMine"/>
+				<call name="regions"       class =".guiservices.regions.Get"/>
+				<call name="sources"       class =".guiservices.util.Sources"/>
+				<call name="isoLang"       class =".guiservices.isolanguages.Get"/>
+				<call name="subtemplates"  class ="jeeves.services.db.Select">
+					<param name="db"    value="main-db"/>
+					<param name="query" value="SELECT id, schemaId, root, title FROM Metadata WHERE isTemplate='s' ORDER BY root, title"/>
+				</call>
+			</output>
 
-			<error id="concurrent-update" sheet="metadata-error.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- saves edits -->
 
 		<service name="metadata.update">
 			<class name=".services.metadata.Update"/>
 
 			<output forward="metadata.edit" />
 
-			<error id="concurrent-update" sheet="metadata-error.xsl"/>
+			<error id="client" sheet="metadata-error.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- saves edits and returns to metadata.show form -->
+		<!-- saves edits and returns to viewer -->
 
 		<service name="metadata.update.finish">
-			<class name=".services.metadata.Update"/>
+			<class name=".services.metadata.Update">
+				<param name="finished" value="yes" />
+			</class>
 
-			<output forward="metadata.show" />
-
-			<error id="concurrent-update" sheet="metadata-error.xsl"/>
+			<error id="client" sheet="metadata-error.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- saves edits and returns to metadata.show form -->
+		<!-- reset - forget edits and return to last saved version -->
 
-		<service name="metadata.update.validate">
+		<service name="metadata.update.forget">
 			<class name=".services.metadata.Update">
-				<param name="validate" value="yes" />
+				<param name="forget" value="yes" />
 			</class>
+
+			<output forward="metadata.edit" />
+
+			<error id="client" sheet="metadata-error.xsl"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- cancel - forget edits and returns to viewer -->
+
+		<service name="metadata.update.forgetandfinish">
+			<class name=".services.metadata.Update">
+				<param name="forget" value="yes" />
+				<param name="finished" value="yes" />
+			</class>
+
+			<error id="client" sheet="metadata-error.xsl"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- validates metadata in session -->
+
+		<service name="metadata.validate">
+			<class name=".services.metadata.Validate"/>
 
 			<output sheet="metadata-validate.xsl">
 				<xml name="validation" file="xml/metadata-validate.xml" />
@@ -123,6 +180,7 @@
 
 			<error sheet="res-error.xsl">
 				<xml name="error" file="xml/validation-error.xml" />
+				<xml name="validation" file="xml/metadata-validate.xml" />
 			</error>
 		</service>
 
@@ -133,9 +191,6 @@
 				<param name="dir" value="down" />
 			</class>
 
-			<output forward="metadata.edit" />
-
-			<error id="concurrent-update" sheet="metadata-error.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -145,9 +200,6 @@
 				<param name="dir" value="up" />
 			</class>
 
-			<output forward="metadata.edit" />
-
-			<error id="concurrent-update" sheet="metadata-error.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -175,19 +227,85 @@
 		<service name="metadata.delete">
 			<class name=".services.metadata.Delete"/>
 
-			<output sheet="info.xsl">
+			<output sheet="infomodal.xsl">
 				<xml name="info" file="xml/metadata-delete.xml" />
 			</output>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.massiveDelete">
+		<service name="metadata.recent.additions.embedded">
+			<output sheet="metadata-recentadditions.xsl">
+				<call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
+          <param name="maxItems" value="10" />
+          <param name="timeBetweenUpdates" value="10" />
+        </call>
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="metadata.massive.delete">
 			<class name=".services.metadata.MassiveDelete"/>
 
-			<output sheet="info.xsl">
+			<output sheet="metadata-massive-results.xsl">
 				<xml name="info" file="xml/metadata-massiveDelete.xml" />
 			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!--
+		<service name="metadata.massive.newowner">
+			<class name=".services.metadata.MassiveNewOwner"/>
+
+			<output sheet="metadata-massive-results.xsl">
+				<xml name="info" file="xml/metadata-massiveNewOwner.xml" />
+			</output>
+		</service>
+
+		<service name="metadata.massive.newowner.form">
+			<class name=".services.ownership.PrepareMassiveOwnership"/>
+
+			<output sheet="metadata-massiveownership.xsl">
+				<xml name="info" file="xml/metadata-massiveNewOwner.xml" />
+			</output>
+		</service>
+
+		<service name="metadata.massive.category.form">
+			<class name=".services.metadata.PrepareMassiveUpdateCategories"/>
+
+			<output sheet="metadata-category.xsl"/>
+		</service>
+
+		<service name="metadata.massive.update.categories">
+			<class name=".services.metadata.MassiveUpdateCategories"/>
+
+			<output sheet="metadata-massive-results.xsl">
+				<xml name="info" file="xml/metadata-massiveUpdateCategories.xml" />
+			</output>
+		</service>
+
+		<service name="metadata.massive.admin.form">
+			<class name=".services.metadata.PrepareMassiveUpdatePrivileges"/>
+
+			<output sheet="metadata-admin.xsl"/>
+		</service>
+
+		<service name="metadata.massive.update.privileges">
+			<class name=".services.metadata.MassiveUpdateAdminOper"/>
+
+			<output sheet="metadata-massive-results.xsl">
+				<xml name="info" file="xml/metadata-massiveUpdatePrivileges.xml" />
+			</output>
+		</service>
+
+-->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="metadata.select">
+			<class name=".services.main.Select">
+				<param name="type" value="metadata" />
+			</class>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -207,6 +325,7 @@
 				<call name="groups" class=".guiservices.groups.GetMine"/>
 				<xml  name="create" file ="xml/metadata-create.xml" />
 			</output>
+
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -219,7 +338,24 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="metadata.admin.index.rebuild">
+			<documentation>
+				<para>Service to force a complete rebuild of Lucene index</para>
+			</documentation>
+			<class name=".services.metadata.IndexRebuild" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="metadata.admin.form">
+			<class name=".services.metadata.GetAdminOper"/>
+
+			<output sheet="metadata-admin.xsl"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="metadata.massive.admin.form">
 			<class name=".services.metadata.GetAdminOper"/>
 
 			<output sheet="metadata-admin.xsl"/>
@@ -230,7 +366,6 @@
 		<service name="metadata.admin">
 			<class name=".services.metadata.UpdateAdminOper"/>
 
-			<output forward="metadata.show" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -246,7 +381,6 @@
 		<service name="metadata.category">
 			<class name=".services.metadata.UpdateCategories"/>
 
-			<output forward="metadata.show" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -286,14 +420,6 @@
 
 			<output forward="main.present"/>
 		</service>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<service name="metadata.select">
-			<class name=".services.main.Select">
-				<param name="type" value="metadata" />
-			</class>
-		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Thumbnail services                                            -->
@@ -332,16 +458,6 @@
 				<xml name="ownership" file="xml/transfer-ownership.xml" />
 			</output>
 		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		 
-        <service name="metadata.admin.index.rebuild">
-        	<documentation>
-				<para>Service to force a complete rebuild of Lucene index. 
-				</para>
-			</documentation>
-            <class name=".services.metadata.IndexRebuild" />
-        </service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 

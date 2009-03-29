@@ -561,7 +561,7 @@ class Harvester
 														 params.uuid, date, date, 
 														 reg.uuid, 1, null);
 			
-			xml = dataMan.updateFixedInfo(schema, reg.id, xml, params.uuid);
+			xml = dataMan.updateFixedInfoNew(schema, reg.id, xml, params.uuid);
 			
 			int iId = Integer.parseInt(reg.id);
 			log.debug("    - Layer loaded in DB.");

@@ -303,6 +303,37 @@ button.md {
 }
 
 /*******************************************************************************
+editor
+*******************************************************************************/
+
+#editorBusy {
+  z-index: 100;
+	position: fixed;
+	top: 45%;
+	left: 45%;
+	background: transparent;
+}
+
+#editorOverlay {
+	position: absolute;
+	margin: auto;
+	top: 0; left: 0;
+	width: 100%; height: 100%;
+	z-index: 9999;
+	background-color: #000!important;
+}
+#editorOverlay[id] { position: fixed; }
+
+span.toolTipOverlay {
+	background: #fff;
+	position: absolute;
+	border-style: solid;
+	margin: 2px;
+	padding: 2px;
+}
+
+
+/*******************************************************************************
 utilities
 *******************************************************************************/
 

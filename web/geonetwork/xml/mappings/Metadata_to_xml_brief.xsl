@@ -2,7 +2,7 @@
  
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:geonet="http://www.fao.org/geonetwork"
-	xmlns:xalan = "http://xml.apache.org/xalan">
+	xmlns:exslt = "http://exslt.org/common">
 <xsl:output method="xml"/>
 
 <xsl:include href="../../xsl/metadata-utils.xsl"/>
@@ -12,7 +12,7 @@
 	<xsl:variable name="md">
 		<xsl:apply-templates mode="brief" select="*"/>
 	</xsl:variable>
-	<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
+	<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
 	
 	<!--
 	B: includes the Title (title) element.

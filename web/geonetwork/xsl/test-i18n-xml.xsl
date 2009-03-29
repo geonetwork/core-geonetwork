@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:xalan="http://xml.apache.org/xalan">
+	xmlns:exslt="http://exslt.org/common">
 
     <xsl:output method="xml"/>
     
@@ -27,7 +27,7 @@
 		    <strings file="strings.xml">
 	           <xsl:variable name="master" select="//strings.en"/>
 	
-				<xsl:for-each select="xalan:nodeset($langs)/langs/*">
+				<xsl:for-each select="exslt:node-set($langs)/langs/*">
 						    
 				    <xsl:variable name="l" select="name(.)"/>
 					<xsl:element name="{$l}">
@@ -44,7 +44,7 @@
 			<about file="about.xml">
 	           <xsl:variable name="master" select="//about.en"/>
     
-                <xsl:for-each select="xalan:nodeset($langs)/langs/*">
+                <xsl:for-each select="exslt:node-set($langs)/langs/*">
                             
                     <xsl:variable name="l" select="name(.)"/>
                     
@@ -62,7 +62,7 @@
 			<config file="config.xml">
                 <xsl:variable name="master" select="//config.en"/>
     
-                <xsl:for-each select="xalan:nodeset($langs)/langs/*">
+                <xsl:for-each select="exslt:node-set($langs)/langs/*">
                             
                     <xsl:variable name="l" select="name(.)"/>
                     
@@ -80,7 +80,7 @@
 			<harvesting file="harvesting.xml">
                 <xsl:variable name="master" select="//harvesting.en"/>
     
-                <xsl:for-each select="xalan:nodeset($langs)/langs/*">
+                <xsl:for-each select="exslt:node-set($langs)/langs/*">
                             
                     <xsl:variable name="l" select="name(.)"/>
                     
@@ -120,9 +120,9 @@
                 <xsl:with-param name="type" select="$type" />
                 <xsl:with-param name="id" select="$id" />
                 <xsl:with-param name="loctag1"
-                    select="xalan:nodeset(//*[name(.)=concat($file, '.', $lang)]/*)" />
+                    select="exslt:node-set(//*[name(.)=concat($file, '.', $lang)]/*)" />
                 <xsl:with-param name="loctag2"
-                    select="xalan:nodeset(//*[name(.)=concat($file, '.', $lang)]/*/*)" />
+                    select="exslt:node-set(//*[name(.)=concat($file, '.', $lang)]/*/*)" />
             </xsl:call-template><!-- TODO add lang param -->
         </xsl:variable>
 

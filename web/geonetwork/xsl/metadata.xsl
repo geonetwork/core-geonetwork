@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:xalan= "http://xml.apache.org/xalan" exclude-result-prefixes="xalan"
+	xmlns:exslt= "http://exslt.org/common"
 	xmlns:gco="http://www.isotc211.org/2005/gco"
-	xmlns:geonet="http://www.fao.org/geonetwork">
+	xmlns:geonet="http://www.fao.org/geonetwork"
+	exclude-result-prefixes="exslt">
 
 	<xsl:include href="metadata-utils.xsl"/>
+	<xsl:include href="metadata-controls.xsl"/>
 	
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<!-- main schema switch -->
@@ -45,7 +47,7 @@
 				<xsl:with-param name="embedded" select="$embedded" />
 				</xsl:apply-templates>
 			</xsl:when>
-			
+
 			<!-- Dublin Core -->
 			<xsl:when test="$schema='dublin-core'">
 				<xsl:apply-templates mode="dublin-core" select="." >
@@ -54,7 +56,7 @@
 				<xsl:with-param name="embedded" select="$embedded" />
 				</xsl:apply-templates>
 			</xsl:when>
-			
+		
 			<!-- default, no schema-specific formatting -->
 			<xsl:otherwise>
 				<xsl:apply-templates mode="element" select=".">
@@ -66,7 +68,7 @@
 		</xsl:choose>
 		
 	</xsl:template>
-	
+
 	<!--
 	new children
 	-->
@@ -75,11 +77,9 @@
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="embedded" />
 		
-		<!-- draw new children if
-		- it is not simple mode and
-			- it is an OR element or
-			- it does not exists a preceding brother
-		- or there are subtemplates
+		<!-- draw child element place holder if
+			- child is an OR element or
+			- there is no other element with the name of this placeholder 
 		-->
 		<xsl:variable name="name">
 			<xsl:choose>
@@ -87,14 +87,26 @@
 				<xsl:otherwise><xsl:value-of select="concat(@prefix,':',@name)"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:variable name="parentName" select="../geonet:element/@ref"/>
+		<!-- build a qualified name with COLON as the separator -->
+		<xsl:variable name="qname">
+			<xsl:choose>
+				<xsl:when test="@prefix=''"><xsl:value-of select="@name"/></xsl:when>
+				<xsl:otherwise><xsl:value-of select="concat(@prefix,'COLON',@name)"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:variable name="parentName" select="../geonet:element/@ref|@parent"/>
+		<xsl:variable name="max" select="../geonet:element/@max|@max"/>
 		<xsl:variable name="prevBrother" select="preceding-sibling::*[1]"/>
 		<!-- <xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)=$name]"/> -->
-		<xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)='']"/> 
-		<xsl:if test="$currTab!='simple' and (geonet:choose or name($prevBrother)!=$name) or $subtemplates">
+		<xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)='']"/>
+		<!-- Disable simple for the time being
+		<xsl:if test="$currTab!='simple' and (geonet:choose or name($prevBrother)!=$name) or $subtemplates"> 
+		-->
+		<xsl:if test="(geonet:choose or name($prevBrother)!=$name) or $subtemplates">
 			<xsl:variable name="text">
-				<xsl:if test="geonet:choose or $subtemplates">
-					<select class="md" name="_{$parentName}_{@name}" size="1">
+				<xsl:if test="geonet:choose">
+					<select class="md" name="_{$parentName}_{$qname}" size="1">
 						<xsl:for-each select="geonet:choose">
 							<option value="{@name}">
 								<xsl:call-template name="getTitle">
@@ -103,22 +115,17 @@
 								</xsl:call-template>
 							</option>
 						</xsl:for-each>
-						<xsl:for-each select="$subtemplates">
-							<option value="_s{id}">
-								<xsl:value-of select="title"/>
-							</option>
-						</xsl:for-each>
 					</select>
 				</xsl:if>
 			</xsl:variable>
-			<xsl:variable name="id" select="generate-id(.)"/>
+			<xsl:variable name="id" select="@uuid"/>
 			<xsl:variable name="addLink">
 				<xsl:choose>
 					<xsl:when test="geonet:choose or $subtemplates">
-						<xsl:value-of select="concat('javascript:doNewORElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',$parentName,',',$apos,$name,$apos,',document.mainForm._',$parentName,'_',@name,'.value,',$apos,$id,$apos,');')"/>
+						<xsl:value-of select="concat('doNewORElementAction(',$apos,'/metadata.elem.add',$apos,',',$parentName,',',$apos,$name,$apos,',document.mainForm._',$parentName,'_',$qname,'.value,',$apos,$id,$apos,',',$apos,@action,$apos,',',$max,');')"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="concat('javascript:doNewElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',$parentName,',',$apos,$name,$apos,',',$apos,$id,$apos,');')"/>
+						<xsl:value-of select="concat('doNewElementAction(',$apos,'/metadata.elem.add',$apos,',',$parentName,',',$apos,$name,$apos,',',$apos,$id,$apos,',',$apos,@action,$apos,',',$max,');')"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
@@ -340,9 +347,9 @@
 	<!--
 	prevent drawing of geonet:* elements
 	-->
-	<xsl:template mode="element" match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors"/>
-	<xsl:template mode="simpleElement" match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors"/>
-	<xsl:template mode="complexElement" match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors"/>
+	<xsl:template mode="element" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror"/>
+	<xsl:template mode="simpleElement" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror"/>
+	<xsl:template mode="complexElement" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror"/>
 	
 	<!--
 	prevent drawing of attributes starting with "_", used in old GeoNetwork versions
@@ -361,12 +368,15 @@
 		<xsl:param name="title"/>
 		<xsl:param name="text"/>
 		<xsl:param name="helpLink"/>
-		
-		<xsl:call-template name="simpleElementGui">
-			<xsl:with-param name="title" select="$title"/>
-			<xsl:with-param name="text" select="$text"/>
-			<xsl:with-param name="helpLink" select="$helpLink"/>
-		</xsl:call-template>
+	
+		<!-- don't show it if there isn't anything in it! -->
+		<xsl:if test="normalize-space($text)!=''">
+			<xsl:call-template name="simpleElementGui">
+				<xsl:with-param name="title" select="$title"/>
+				<xsl:with-param name="text" select="$text"/>
+				<xsl:with-param name="helpLink" select="$helpLink"/>
+			</xsl:call-template>
+		</xsl:if>
 	</xsl:template>
 	
 	<!--
@@ -377,14 +387,18 @@
 		<xsl:param name="title"/>
 		<xsl:param name="content"/>
 		<xsl:param name="helpLink"/>
-		
-		<xsl:call-template name="complexElementGui">
-			<xsl:with-param name="title" select="$title"/>
-			<xsl:with-param name="text" select="text()"/>
-			<xsl:with-param name="content" select="$content"/>
-			<xsl:with-param name="helpLink" select="$helpLink"/>
-			<xsl:with-param name="schema" select="$schema"/>
-		</xsl:call-template>
+	
+		<!-- don't show it if there isn't anything in it! -->
+		<xsl:if test="normalize-space($content)!=''">
+			<xsl:call-template name="complexElementGui">
+				<xsl:with-param name="title" select="$title"/>
+				<xsl:with-param name="text" select="text()"/>
+				<xsl:with-param name="content" select="$content"/>
+				<xsl:with-param name="helpLink" select="$helpLink"/>
+				<xsl:with-param name="schema" select="$schema"/>
+			</xsl:call-template>
+		</xsl:if>
+
 	</xsl:template>
 	
 	<!--
@@ -398,35 +412,53 @@
 		
 		<!-- if it's the last brother of it's type and there is a new brother make addLink -->
 
-		<xsl:variable name="id" select="generate-id(.)"/>
+		<xsl:variable name="id" select="geonet:element/@uuid"/>
 		<xsl:variable name="addLink">
 			<xsl:call-template name="addLink">
 				<xsl:with-param name="id" select="$id"/>
 			</xsl:call-template>
 		</xsl:variable>
 		<xsl:variable name="removeLink">
-			<xsl:if test="geonet:element/@del='true'">
-				<xsl:value-of select="concat('javascript:doElementAction(',$apos,/root/gui/locService,'/metadata.elem.delete',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,',0);')"/>
+			<xsl:value-of select="concat('doRemoveElementAction(',$apos,'/metadata.elem.delete',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',',geonet:element/@min,');')"/>
+			<xsl:if test="not(geonet:element/@del='true')">
+				<xsl:text>!OPTIONAL</xsl:text>
 			</xsl:if>
 		</xsl:variable>
 		<xsl:variable name="upLink">
-			<xsl:if test="geonet:element/@up='true'">
-				<xsl:value-of select="concat('javascript:doMoveElementAction(',$apos,/root/gui/locService,'/metadata.elem.up',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
+			<xsl:value-of select="concat('doMoveElementAction(',$apos,'/metadata.elem.up',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
+			<xsl:if test="not(geonet:element/@up='true')">
+				<xsl:text>!OPTIONAL</xsl:text>
 			</xsl:if>
 		</xsl:variable>
 		<xsl:variable name="downLink">
-			<xsl:if test="geonet:element/@down='true'">
-				<xsl:value-of select="concat('javascript:doMoveElementAction(',$apos,/root/gui/locService,'/metadata.elem.down',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
+			<xsl:value-of select="concat('doMoveElementAction(',$apos,'/metadata.elem.down',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
+			<xsl:if test="not(geonet:element/@down='true')">
+				<xsl:text>!OPTIONAL</xsl:text>
 			</xsl:if>
 		</xsl:variable>
-<!-- schematron info if in advanced mode (all elements) -->
-		<xsl:variable name="schematronLink">
+<!-- xsd and schematron validation info -->
+		<xsl:variable name="validationLink">
 			<xsl:variable name="ref" select="concat('#_',geonet:element/@ref)"/>
-			<xsl:if test="//geonet:errorFound[@ref=$ref]">
-				<xsl:for-each select="//geonet:errorFound[@ref=$ref]">
-					<xsl:text> </xsl:text><xsl:value-of select="geonet:diagnostics"/>
-				</xsl:for-each>
-			</xsl:if>
+			<xsl:choose> 
+				<!-- xsd validation -->
+				<xsl:when test="@geonet:xsderror">
+					<xsl:text> </xsl:text><xsl:value-of select="concat(/root/gui/strings/xsdError,': ',@geonet:xsderror)"/>
+				</xsl:when>
+				<!-- some simple elements hide lower elements to remove some
+				     complexity from the display (eg. gco: in iso19139) 
+						 so check if they have a schematron/xsderror and move it up 
+						 if they do -->
+				<xsl:when test="*/@geonet:xsderror"> 
+					<xsl:text> </xsl:text><xsl:value-of select="concat(/root/gui/strings/xsdError,': ',*/@geonet:xsderror)"/>
+				</xsl:when>
+				<!-- schematrons -->
+				<xsl:when test="//geonet:errorFound[@ref=$ref]"> 
+					<xsl:value-of select="concat(/root/gui/strings/schematronError,': ')"/>
+					<xsl:for-each select="//geonet:errorFound[@ref=$ref]">
+						<xsl:text> </xsl:text><xsl:value-of select="geonet:diagnostics"/>
+					</xsl:for-each>
+				</xsl:when>
+			</xsl:choose>
 		</xsl:variable>
 
 		<xsl:call-template name="simpleElementGui">
@@ -437,7 +469,7 @@
 			<xsl:with-param name="upLink"     select="$upLink"/>
 			<xsl:with-param name="downLink"   select="$downLink"/>
 			<xsl:with-param name="helpLink"   select="$helpLink"/>
-			<xsl:with-param name="schematronLink" select="$schematronLink"/>
+			<xsl:with-param name="validationLink" select="$validationLink"/>
 			<xsl:with-param name="edit"       select="true()"/>
 			<xsl:with-param name="id" select="$id"/>
 		</xsl:call-template>
@@ -447,8 +479,6 @@
 		<xsl:param name="id"/>
 
 		<xsl:variable name="name" select="name(.)"/>
-		<!-- <xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)=$name]"/> -->
-		<xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)='']"/>
 		<xsl:variable name="nextBrother" select="following-sibling::*[1]"/>
 		<xsl:variable name="nb">
 			<xsl:if test="name($nextBrother)='geonet:child'">
@@ -464,20 +494,24 @@
 				</xsl:choose>
 			</xsl:if>
 		</xsl:variable>
-		<xsl:variable name="newBrother" select="xalan:nodeset($nb)"/>
-		
-		<xsl:if test="$newBrother/* and not($newBrother/*/geonet:choose or $subtemplates)">
-			<xsl:choose>
-				<xsl:when test="$nextBrother/@prefix=''">
-					<xsl:value-of select="concat('javascript:doNewElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,',',$apos,$id,$apos,');')"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="concat('javascript:doNewElementAction(',$apos,/root/gui/locService,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,$nextBrother/@prefix,':',$nextBrother/@name,$apos,',',$apos,$id,$apos,');')"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:if>
+		<xsl:variable name="newBrother" select="exslt:node-set($nb)"/>
+
+		<xsl:choose>
+			<!-- place + because schema insists ie. next element is geonet:child -->
+			<xsl:when test="$newBrother/* and not($newBrother/*/geonet:choose)">
+				<xsl:value-of select="concat('doNewElementAction(',$apos,'/metadata.elem.add',$apos,',',geonet:element/@parent,',',$apos,name(.),$apos,',',$apos,$id,$apos,',',$apos,'add',$apos,',',geonet:element/@max,');')"/>
+			</xsl:when>
+			<!-- place optional + for use when re-ordering etc -->
+			<xsl:when test="geonet:element/@add='true' and name($nextBrother)=name(.)">
+				<xsl:value-of select="concat('doNewElementAction(',$apos,'/metadata.elem.add',$apos,',',geonet:element/@parent,',',$apos,name(.),$apos,',',$apos,$id,$apos,',',$apos,'add',$apos,',',geonet:element/@max,');!OPTIONAL')"/>
+			</xsl:when>
+			<!-- place + because schema insists but no geonet:child nextBrother 
+			     this case occurs in the javascript handling of the + -->
+			<xsl:when test="geonet:element/@add='true' and not($newBrother/*/geonet:choose)">
+				<xsl:value-of select="concat('doNewElementAction(',$apos,'/metadata.elem.add',$apos,',',geonet:element/@parent,',',$apos,name(.),$apos,',',$apos,$id,$apos,',',$apos,'add',$apos,',',geonet:element/@max,');')"/>
+			</xsl:when>
+		</xsl:choose>
 	</xsl:template>
-	
 	<!--
 	shows editable fields for an attribute
 	-->
@@ -507,37 +541,46 @@
 		<xsl:param name="content"/>
 		<xsl:param name="helpLink"/>
 		
-		<!-- if it's the last brother of it's type and there is a new brother make addLink -->
-
-		<xsl:variable name="id" select="generate-id(.)"/>
+		<xsl:variable name="id" select="geonet:element/@uuid"/>
 		<xsl:variable name="addLink">
 			<xsl:call-template name="addLink">
 				<xsl:with-param name="id" select="$id"/>
 			</xsl:call-template>
 		</xsl:variable>
 		<xsl:variable name="removeLink">
-			<xsl:if test="geonet:element/@del='true'">
-				<xsl:value-of select="concat('javascript:doElementAction(',$apos,/root/gui/locService,'/metadata.elem.delete',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,',0);')"/>
+			<xsl:value-of select="concat('doRemoveElementAction(',$apos,'/metadata.elem.delete',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',',geonet:element/@min,');')"/>
+			<xsl:if test="not(geonet:element/@del='true')">
+				<xsl:text>!OPTIONAL</xsl:text>
 			</xsl:if>
 		</xsl:variable>
 		<xsl:variable name="upLink">
-			<xsl:if test="geonet:element/@up='true'">
-				<xsl:value-of select="concat('javascript:doMoveElementAction(',$apos,/root/gui/locService,'/metadata.elem.up',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
+			<xsl:value-of select="concat('doMoveElementAction(',$apos,'/metadata.elem.up',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
+			<xsl:if test="not(geonet:element/@up='true')">
+				<xsl:text>!OPTIONAL</xsl:text>
 			</xsl:if>
 		</xsl:variable>
 		<xsl:variable name="downLink">
-			<xsl:if test="geonet:element/@down='true'">
-				<xsl:value-of select="concat('javascript:doMoveElementAction(',$apos,/root/gui/locService,'/metadata.elem.down',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
+			<xsl:value-of select="concat('doMoveElementAction(',$apos,'/metadata.elem.down',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
+			<xsl:if test="not(geonet:element/@down='true')">
+				<xsl:text>!OPTIONAL</xsl:text>
 			</xsl:if>
 		</xsl:variable>
-<!-- schematron info -->
-		<xsl:variable name="schematronLink">
+<!-- xsd and schematron validation info -->
+		<xsl:variable name="validationLink">
 			<xsl:variable name="ref" select="concat('#_',geonet:element/@ref)"/>
-			<xsl:if test="//geonet:errorFound[@ref=$ref]">
-				<xsl:for-each select="//geonet:errorFound[@ref=$ref]">
-					<xsl:text> </xsl:text><xsl:value-of select="geonet:diagnostics"/>
-				</xsl:for-each>
-			</xsl:if>
+			<xsl:choose> 
+				<!-- xsd validation -->
+				<xsl:when test="@geonet:xsderror">
+					<xsl:text> </xsl:text><xsl:value-of select="concat(/root/gui/strings/xsdError,': ',@geonet:xsderror)"/>
+				</xsl:when>
+				<!-- schematrons -->
+				<xsl:when test="//geonet:errorFound[@ref=$ref]"> 
+					<xsl:value-of select="concat(/root/gui/strings/schematronError,': ')"/>
+					<xsl:for-each select="//geonet:errorFound[@ref=$ref]">
+						<xsl:text> </xsl:text><xsl:value-of select="geonet:diagnostics"/>
+					</xsl:for-each>
+				</xsl:when>
+			</xsl:choose>
 		</xsl:variable>
 		
 		<xsl:call-template name="complexElementGui">
@@ -549,7 +592,7 @@
 			<xsl:with-param name="upLink" select="$upLink"/>
 			<xsl:with-param name="downLink" select="$downLink"/>
 			<xsl:with-param name="helpLink" select="$helpLink"/>
-			<xsl:with-param name="schematronLink" select="$schematronLink"/>
+			<xsl:with-param name="validationLink" select="$validationLink"/>
 			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="edit"   select="true()"/>			
 			<xsl:with-param name="id" select="$id"/>
@@ -571,20 +614,28 @@
 		<xsl:param name="removeLink"/>
 		<xsl:param name="upLink"/>
 		<xsl:param name="downLink"/>
-		<xsl:param name="schematronLink"/>
+		<xsl:param name="validationLink"/>
 		<xsl:param name="schema"/>
 		<xsl:param name="edit" select="false()"/>
-		<xsl:param name="id"/>
+		<xsl:param name="id" select="generate-id(.)"/>
+		<xsl:param name="visible" select="true()"/>
 
-		<tr id="{$id}">
+		<tr id="{$id}" type="metadata">
+			<xsl:if test="not($visible)">
+				<xsl:attribute name="style">
+					display:none;
+				</xsl:attribute>
+			</xsl:if>
 			<th class="md" width="20%" valign="top">
 				<xsl:choose>
 					<xsl:when test="$helpLink!=''">
-						<span id="tip.{$helpLink}" style="cursor:help;"><xsl:value-of select="$title"/>
+						<span id="stip.{$helpLink}|{$id}" onclick="toolTip(this.id);" class="content" style="cursor:help;"><xsl:value-of select="$title"/>
+							<!-- mandatory elements need XPath support
 							<xsl:call-template name="asterisk">
-								<xsl:with-param name="link" select="$helpLink"/>
+								<xsl:with-param name="link" select="$removeLink"/>
 								<xsl:with-param name="edit" select="$edit"/>
 							</xsl:call-template>
+							-->
 						</span>
 					</xsl:when>
 					<xsl:otherwise>
@@ -594,14 +645,16 @@
 					</xsl:otherwise>
 				</xsl:choose>
 				<xsl:text>&#160;</xsl:text>
-				<xsl:call-template name="getButtons">
-					<xsl:with-param name="addLink" select="$addLink"/>
-					<xsl:with-param name="removeLink" select="$removeLink"/>
-					<xsl:with-param name="upLink" select="$upLink"/>
-					<xsl:with-param name="downLink" select="$downLink"/>
-					<xsl:with-param name="schematronLink" select="$schematronLink"/>
-					<xsl:with-param name="id" select="$id"/>
-				</xsl:call-template>
+				<xsl:if test="$edit">
+					<xsl:call-template name="getButtons">
+						<xsl:with-param name="addLink" select="$addLink"/>
+						<xsl:with-param name="removeLink" select="$removeLink"/>
+						<xsl:with-param name="upLink" select="$upLink"/>
+						<xsl:with-param name="downLink" select="$downLink"/>
+						<xsl:with-param name="validationLink" select="$validationLink"/>
+						<xsl:with-param name="id" select="$id"/>
+					</xsl:call-template>
+				</xsl:if>
 			</th>
 			<td class="padded" valign="top"><xsl:copy-of select="$text"/></td>
 		</tr>
@@ -643,22 +696,24 @@
 		<xsl:param name="removeLink"/>
 		<xsl:param name="upLink"/>
 		<xsl:param name="downLink"/>
-		<xsl:param name="schematronLink"/>
+		<xsl:param name="validationLink"/>
 		<xsl:param name="schema"/>
 		<xsl:param name="edit" select="false()"/>
-		<xsl:param name="id"/>
+		<xsl:param name="id" select="generate-id(.)"/>
 		
-		<tr id="{$id}">
+		<tr id="{$id}" type="metadata">
 			<td class="padded-content" width="100%" colspan="2">
 				<fieldset class="metadata-block">
 					<legend class="block-legend">
 						<xsl:choose>
 							<xsl:when test="$helpLink!=''">
-								<span id="tip.{$helpLink}" class="help-content" style="cursor:help;"><xsl:value-of select="$title"/>
+								<span id="stip.{$helpLink}|{$id}" onclick="toolTip(this.id);" class="content" style="cursor:help;"><xsl:value-of select="$title"/>
+							<!-- mandatory elements need XPath support
 									<xsl:call-template name="asterisk">
 										<xsl:with-param name="link" select="$helpLink"/>
 										<xsl:with-param name="edit" select="$edit"/>
 									</xsl:call-template>
+								-->
 								</span>
 							</xsl:when>
 							<xsl:otherwise>
@@ -668,14 +723,16 @@
 								</xsl:call-template>
 							</xsl:otherwise>
 						</xsl:choose>
-						<xsl:call-template name="getButtons">
-							<xsl:with-param name="addLink" select="$addLink"/>
-							<xsl:with-param name="removeLink" select="$removeLink"/>
-							<xsl:with-param name="upLink" select="$upLink"/>
-							<xsl:with-param name="downLink" select="$downLink"/>
-							<xsl:with-param name="schematronLink" select="$schematronLink"/>
-							<xsl:with-param name="id" select="$id"/>
-						</xsl:call-template>
+						<xsl:if test="$edit">
+							<xsl:call-template name="getButtons">
+								<xsl:with-param name="addLink" select="$addLink"/>
+								<xsl:with-param name="removeLink" select="$removeLink"/>
+								<xsl:with-param name="upLink" select="$upLink"/>
+								<xsl:with-param name="downLink" select="$downLink"/>
+								<xsl:with-param name="validationLink" select="$validationLink"/>
+								<xsl:with-param name="id" select="$id"/>
+							</xsl:call-template>
+						</xsl:if>
 					</legend>
 					<table width="100%">
 						<xsl:copy-of select="$content"/>
@@ -721,13 +778,13 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-	
+
 		<xsl:choose>
 			<xsl:when test="normalize-space($title)!=''">
 				<xsl:value-of select="$title"/>
 			</xsl:when>
 			<xsl:otherwise>
-				[<xsl:value-of select="$name"/>]
+				<xsl:value-of select="$name"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -924,7 +981,7 @@
 	<xsl:template name="getHelpLink">
 		<xsl:param name="name"/>
 		<xsl:param name="schema"/>
-
+	
 		<xsl:choose>
 			<xsl:when test="contains($name,'_ELEMENT')">
 				<xsl:value-of select="''"/>
@@ -941,65 +998,31 @@
 		<xsl:param name="link"/>
 		<xsl:param name="edit"/>
 
-		<xsl:variable name="schema" select="substring-before($link, '|')"/>
-		<xsl:variable name="name"   select="substring-after($link, '|')"/>
-
-		<xsl:if test="$edit">
-			<xsl:if test="/root/gui/*[name() = $schema]/element[@name=$name]/condition">
-				<sup><font size="-1" color="#FF0000">&#xA0;*</font></sup>
-			</xsl:if>
-		</xsl:if>
-	</xsl:template>
-	
-	<!-- ================================================================================ -->
-	
-	<xsl:template name="getButtons">
-		<xsl:param name="addLink"/>
-		<xsl:param name="removeLink"/>
-		<xsl:param name="upLink"/>
-		<xsl:param name="downLink"/>
-		<xsl:param name="schematronLink"/>
-		<xsl:param name="id"/>
-	
-		<!-- add button -->
-		<xsl:if test="normalize-space($addLink)">
-			<xsl:text> </xsl:text>
-			<a id="button{$id}" onclick="setBunload(false);" href="{$addLink}"><img src="{/root/gui/url}/images/plus.gif" alt="{/root/gui/strings/add}"/></a>
-		</xsl:if>
-		<!-- remove button -->
-		<xsl:if test="normalize-space($removeLink)">
-			<xsl:text> </xsl:text>
-			<a id="button{$id}" onclick="setBunload(false);" href="{$removeLink}"><img src="{/root/gui/url}/images/del.gif" alt="{/root/gui/strings/del}"/></a>
-		</xsl:if>
-		<!-- up button -->
-		<xsl:if test="normalize-space($upLink)">
-			<xsl:text> </xsl:text>
-			<a id="button{$id}" onclick="setBunload(false);" href="{$upLink}"><img src="{/root/gui/url}/images/up.gif" alt="{/root/gui/strings/up}"/></a>
-		</xsl:if>
-		<!-- down button -->
-		<xsl:if test="normalize-space($downLink)">
-			<xsl:text> </xsl:text>
-			<a id="button{$id}" onclick="setBunload(false);" href="{$downLink}"><img src="{/root/gui/url}/images/down.gif" alt="{/root/gui/strings/down}"/></a>
-		</xsl:if>
-		<!-- schematron button -->
-		<xsl:if test="normalize-space($schematronLink)">
-			<xsl:text> </xsl:text>
-			<a href="javascript:alert('Message : {$schematronLink}');"><img src="{/root/gui/url}/images/schematron.gif"/></a>
+		<!-- <xsl:if test="$link='' and not(contains(name(.),'geonet:')) and $edit"> -->
+		<xsl:if test="geonet:element/@min='1' and $edit">
+			<sup><font size="-1" color="#FF0000">&#xA0;*</font></sup>
 		</xsl:if>
 	</xsl:template>
 
 	<!--
-	translates CR-LF sequences and LF character into HTML newlines <p/>
+	translates CR-LF sequences into HTML newlines <p/>
 	-->
 	<xsl:template name="preformatted">
 		<xsl:param name="text"/>
-	
+
 		<xsl:choose>
 			<xsl:when test="contains($text,'&#13;&#10;')">
 				<xsl:value-of select="substring-before($text,'&#13;&#10;')"/>
 				<br/>
 				<xsl:call-template name="preformatted">
 					<xsl:with-param name="text"  select="substring-after($text,'&#13;&#10;')"/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:when test="contains($text,'&#13;')">
+				<xsl:value-of select="substring-before($text,'&#13;')"/>
+				<br/>
+				<xsl:call-template name="preformatted">
+					<xsl:with-param name="text"  select="substring-after($text,'&#13;')"/>
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:when test="contains($text,'&#10;')">
@@ -1145,14 +1168,14 @@
 	-->
 	<xsl:template name="editXMLAttributes">
 		<xsl:for-each select="@*">
-			<xsl:text> </xsl:text>
-			<xsl:value-of select="name(.)"/>
-			<xsl:text>=</xsl:text>
-				<xsl:text>"</xsl:text>
-				<xsl:call-template name="escapeXMLEntities">
-					<xsl:with-param name="expr" select="string()"/>
-				</xsl:call-template>
-				<xsl:text>"</xsl:text>
+			<xsl:if test="not(starts-with(name(.),'geonet:'))">
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="name(.)"/>
+				<xsl:text>=</xsl:text>
+					<xsl:text>"</xsl:text>
+					<xsl:value-of select="string()"/>
+					<xsl:text>"</xsl:text>
+			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
 	
@@ -1257,14 +1280,16 @@
 	-->
 	<xsl:template name="showXMLAttributes">
 		<xsl:for-each select="@*">
-			<xsl:text> </xsl:text>
-			<xsl:value-of select="name(.)"/>
-			<xsl:text>=</xsl:text>
-			<font color="ff4444">
-				<xsl:text>"</xsl:text>
-				<xsl:value-of select="string()"/>
-				<xsl:text>"</xsl:text>
-			</font>
+			<xsl:if test="not(starts-with(name(.),'geonet:'))">
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="name(.)"/>
+				<xsl:text>=</xsl:text>
+				<font color="ff4444">
+					<xsl:text>"</xsl:text>
+					<xsl:value-of select="string()"/>
+					<xsl:text>"</xsl:text>
+				</font>
+			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
 	

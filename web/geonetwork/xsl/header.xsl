@@ -13,6 +13,7 @@
 
 		<!-- stylesheet -->
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork.css"/>
+		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/modalbox.css"/>
 		
 		<!-- Recent updates newsfeed -->
 		<link href="{/root/gui/locService}/rss.latest?georss=gml" rel="alternate" type="application/rss+xml" title="GeoNetwork opensource GeoRSS | {/root/gui/strings/recentAdditions}" />

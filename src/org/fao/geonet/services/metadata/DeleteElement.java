@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 
@@ -60,29 +61,20 @@ public class DeleteElement implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		EditUtils.preprocessUpdate(params, context);
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getDataManager();
 
+		UserSession session = context.getUserSession();
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		String id      = Util.getParam(params, Params.ID);
-		String ref     = Util.getParam(params, Params.REF);
+		String id      		= Util.getParam(params, Params.ID);
+		String ref     		= Util.getParam(params, Params.REF);
+		String parentRef	= Util.getParam(params, Params.PARENT);
 
-		//-----------------------------------------------------------------------
-		//--- delete element and return status
+		Element child = dataMan.deleteElementEmbedded(dbms, session, id, ref, parentRef);
 
-		EditUtils.updateContent(params, context);
-
-		// version already checked in updateContent
-		if (!dataMan.deleteElement(dbms, id, ref, null))
-			throw new ConcurrentUpdateEx(id);
-
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
-
-		return elResp;
+		return child;
 	}
 }
 

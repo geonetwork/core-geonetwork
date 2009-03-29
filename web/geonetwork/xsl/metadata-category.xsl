@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format">
 	
-	<xsl:include href="main.xsl"/>
+	<xsl:import href="modal.xsl"/>
 
 	<!--
 	page content
@@ -11,8 +11,10 @@
 			<xsl:with-param name="title" select="/root/gui/strings/categories"/>
 			<xsl:with-param name="content">
 
-				<form name="update" accept-charset="UTF-8" action="{/root/gui/locService}/metadata.category" method="post">
-					<input name="id" type="hidden" value="{/root/response/id}"/>
+				<xsl:variable name="disabled" select="(/root/response/owner='false')"/>
+
+				<div id="categories" align="center">
+					<input name="metadataid" id="metadataid" type="hidden" value="{/root/response/id}"/>
 					<table>
 						<tr>
 							<th class="padded"><xsl:value-of select="/root/gui/strings/categories"/></th>
@@ -24,25 +26,38 @@
 						<!-- loop on all categories -->
 
 						<xsl:for-each select="/root/response/categories/category">
+							<xsl:sort select="name"/>
 							<xsl:variable name="categId" select="id"/>
 							<tr>
 								<td class="padded"><xsl:value-of select="label/child::*[name() = $lang]"/></td>
 								<td class="padded" align="center">
-									<input type="checkbox" name="_{$categId}">
+									<input type="checkbox" id="_{$categId}" name="_{$categId}">
 										<xsl:if test="on">
 											<xsl:attribute name="checked"/>
+										</xsl:if>
+										<xsl:if test="$disabled">
+											<xsl:attribute name="disabled"/>
 										</xsl:if>
 									</input>
 								</td>
 							</tr>
 						</xsl:for-each>				
+						<xsl:if test="not($disabled)">
+							<tr width="100%">
+								<td align="center" colspan="2">
+									<xsl:choose>
+										<xsl:when test="contains(/root/gui/reqService,'metadata.massive')">
+											<button class="content" onclick="checkBoxModalUpdate('categories','metadata.massive.update.categories','true','{concat(/root/gui/strings/results,' ',/root/gui/strings/massiveUpdateCategoriesTitle)}')"><xsl:value-of select="/root/gui/strings/submit"/></button>
+										</xsl:when>
+										<xsl:otherwise>
+											<button class="content" onclick="checkBoxModalUpdate('categories','metadata.category');"><xsl:value-of select="/root/gui/strings/submit"/></button>
+										</xsl:otherwise>
+									</xsl:choose>
+								</td>
+							</tr>
+						</xsl:if>
 					</table>
-				</form>
-			</xsl:with-param>
-			<xsl:with-param name="buttons">
-				<button class="content" onclick="goBack()"><xsl:value-of select="/root/gui/strings/back"/></button>
-				&#160;
-				<button class="content" onclick="goSubmit('update')"><xsl:value-of select="/root/gui/strings/submit"/></button>
+				</div>
 			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>

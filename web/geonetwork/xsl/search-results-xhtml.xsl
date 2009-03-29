@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xsl:stylesheet version="1.0" xmlns:xsl   ="http://www.w3.org/1999/XSL/Transform"
-										xmlns:geonet="http://www.fao.org/geonetwork"
-										xmlns:xalan = "http://xml.apache.org/xalan">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:exslt="http://exslt.org/common">
 	
 	<xsl:include href="utils.xsl"/>
 	<xsl:include href="metadata.xsl"/>
@@ -188,7 +186,7 @@
 				<xsl:apply-templates mode="brief" select="."/>
 			</xsl:variable>
 			
-			<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
+			<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
 			<!--			<xsl:call-template name="formSeparator"/> -->
 			<xsl:call-template name="formContent">
 				<xsl:with-param name="content">
@@ -366,6 +364,22 @@
 					</xsl:if>
 				</tr>
 			</table>
+
+			<!-- some ownership info -->
+			<xsl:if test="$remote=false() and $metadata/geonet:info/isHarvested = 'n' and /root/gui/session/userId!=''">
+				<div style="float:right;">
+					<span class="owner"><xsl:value-of select="concat(/root/gui/strings/owner,': ',$metadata/geonet:info/ownername)"/></span>
+					&#160;
+					<xsl:choose>
+						<xsl:when test="$metadata/geonet:info/owner='true'">
+								<img src="{/root/gui/url}/images/owner.png" title="{/root/gui/strings/ownerRights}"/>
+						</xsl:when>
+						<xsl:otherwise>
+								<img src="{/root/gui/url}/images/notowner.png" title="{/root/gui/strings/noOwnerRights}"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</div>
+			</xsl:if>
 			
 			<!-- buttons -->
 			<!-- Here's where the buttons are created that are shown in the search results. The buttons are:

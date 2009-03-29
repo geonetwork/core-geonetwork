@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 
@@ -54,29 +55,20 @@ public class AddElement implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		EditUtils.preprocessUpdate(params, context);
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getDataManager();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		UserSession session = context.getUserSession();
 
 		String id    = Util.getParam(params, Params.ID);
 		String ref   = Util.getParam(params, Params.REF);
 		String name  = Util.getParam(params, Params.NAME);
 		String child = params.getChildText(Params.CHILD);
 
-		//-----------------------------------------------------------------------
-		//--- add element and return status
-
-		EditUtils.updateContent(params, context);
-
-		// version already checked in updateContent
-		if (!dataMan.addElement(dbms, id, ref, name, child, null))
-			throw new ConcurrentUpdateEx(id);
-
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
+		// -- build the element to be added and return it
+		Element elResp = dataMan.addElementEmbedded(dbms, session, id, ref, name, child);
 		return elResp;
 	}
 }

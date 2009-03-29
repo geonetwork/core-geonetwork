@@ -234,6 +234,7 @@ public class MefLib
 	{
 		if (descr.equals("view"))     return 0;
 		if (descr.equals("download")) return 1;
+		if (descr.equals("editing"))  return 2;
 		if (descr.equals("notify"))   return 3;
 		if (descr.equals("dynamic"))  return 5;
 		if (descr.equals("featured")) return 6;

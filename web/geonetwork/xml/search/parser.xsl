@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-xmlns:xalan= "http://xml.apache.org/xalan" exclude-result-prefixes="xalan">
+xmlns:exslt = "http://exslt.org/common" exclude-result-prefixes="exslt">
 
 <!--
 parses an expression into a parse tree
@@ -15,7 +15,7 @@ parses an expression into a parse tree
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:call-template name="doParse">
-		<xsl:with-param name="expr" select="xalan:nodeset($tokens)"/>
+		<xsl:with-param name="expr" select="exslt:node-set($tokens)"/>
 	</xsl:call-template>
 </xsl:template>
 
@@ -60,7 +60,7 @@ recursive parser
 		<xsl:when test="$oper=$currOper">
 			<xsl:copy-of select="$first"/>
 			<xsl:call-template name="doParse">
-				<xsl:with-param name="expr" select="xalan:nodeset($rest)"/>
+				<xsl:with-param name="expr" select="exslt:node-set($rest)"/>
 				<xsl:with-param name="currOper" select="$oper"/>
 			</xsl:call-template>
 		</xsl:when>
@@ -70,7 +70,7 @@ recursive parser
 			<tree type="{$oper}">
 				<xsl:copy-of select="$first"/>
 				<xsl:call-template name="doParse">
-					<xsl:with-param name="expr" select="xalan:nodeset($rest)"/>
+					<xsl:with-param name="expr" select="exslt:node-set($rest)"/>
 					<xsl:with-param name="currOper" select="$oper"/>
 				</xsl:call-template>
 			</tree>
@@ -86,7 +86,7 @@ makes a parse tree binary
 	<xsl:param name="expr"/>
 		
 	<xsl:call-template name="binarizeExpr">
-		<xsl:with-param name="expr" select="xalan:nodeset($expr)/*"/>
+		<xsl:with-param name="expr" select="exslt:node-set($expr)/*"/>
 	</xsl:call-template>
 </xsl:template>
 

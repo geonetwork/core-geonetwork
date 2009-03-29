@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:xalan="http://xml.apache.org/xalan" xmlns:geonet="http://www.fao.org/geonetwork"
-	exclude-result-prefixes="xsl xalan geonet">
+	xmlns:exslt="http://exslt.org/common" xmlns:geonet="http://www.fao.org/geonetwork"
+	exclude-result-prefixes="xsl exslt geonet">
 
 	<xsl:include href="main.xsl"/>
 	<xsl:include href="metadata.xsl"/>
@@ -17,6 +17,7 @@
 		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/controls.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/dragdrop.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/builder.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"/>
 
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar-setup.js"/>
@@ -41,6 +42,8 @@
 
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js?"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip-manager.js?"></script>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js?"></script>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-show.js?"></script>
 		
 		<!--  FIXME move this line elsewhere.  -->
 		<link rel="stylesheet" type="text/css" href="/intermap/intermap-embedded.css?" />
@@ -517,7 +520,7 @@
 					<xsl:variable name="md">
 						<xsl:apply-templates mode="brief" select="."/>
 					</xsl:variable>
-					<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
+					<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
 					<tr>
 						<td>
 							<h2>
@@ -565,7 +568,7 @@
 			<xsl:variable name="md">
 				<xsl:apply-templates mode="brief" select="."/>
 			</xsl:variable>
-			<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
+			<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
 			<div class="arrow" onClick="gn_showSingleMetadataUUID('{geonet:info/uuid}');" 
 				style="cursor:hand;cursor:pointer">
 				<xsl:value-of select="$metadata/title"/>

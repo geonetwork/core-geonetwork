@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:xalan="http://xml.apache.org/xalan">
+	xmlns:exslt="http://exslt.org/common">
 
 
     <xsl:variable name="langs">
@@ -49,7 +49,7 @@
 		<table>
 			<th>
 			     <td width="20px"><b>en</b></td>
-			     <xsl:for-each select="xalan:nodeset($langs)/langs/*">
+			     <xsl:for-each select="exslt:node-set($langs)/langs/*">
 			             <td width="20px"><b><xsl:value-of select="name(.)"/></b></td>
 			     </xsl:for-each>
 			</th>
@@ -158,11 +158,11 @@
             </xsl:if>
 		</td>              
 		<!-- FIXME: Why can't loop on $la ? 
-		<xsl:for-each select="xalan:nodeset($langs)/langs/*">
+		<xsl:for-each select="exslt:node-set($langs)/langs/*">
                 <td>
                     <xsl:variable name="la"><xsl:value-of select="concat($file, '.', name(.))"/></xsl:variable>
                     <xsl:value-of select="$la"/>
-                    <xsl:value-of select="count(xalan:nodeset(//*[name()='strings.fr']/*))"/>
+                    <xsl:value-of select="count(exslt:node-set(//*[name()='strings.fr']/*))"/>
                     
 		            <xsl:call-template name="compare">
 		                <xsl:with-param name="tag" select="$tag" />
@@ -171,9 +171,9 @@
 		                <xsl:with-param name="type" select="$type" />
 		                <xsl:with-param name="id" select="$id" />
 		                <xsl:with-param name="loctag1"
-		                    select="xalan:nodeset(//*[name(.)=$la]/*)" />
+		                    select="exslt:node-set(//*[name(.)=$la]/*)" />
 		                <xsl:with-param name="loctag2"
-		                    select="xalan:nodeset(//*[name(.)=$la]/*/*)" />
+		                    select="exslt:node-set(//*[name(.)=$la]/*/*)" />
 		            </xsl:call-template>
 		        </td>
         </xsl:for-each> -->
@@ -187,9 +187,9 @@
                 <xsl:with-param name="type" select="$type" />
 				<xsl:with-param name="id" select="$id" />
 				<xsl:with-param name="loctag1"
-					select="xalan:nodeset(//*[name(.)=concat($file, '.fr')]/*)" />
+					select="exslt:node-set(//*[name(.)=concat($file, '.fr')]/*)" />
 				<xsl:with-param name="loctag2"
-					select="xalan:nodeset(//*[name(.)=concat($file, '.fr')]/*/*)" />
+					select="exslt:node-set(//*[name(.)=concat($file, '.fr')]/*/*)" />
 			</xsl:call-template>
 		</td>
 		<td>
@@ -200,9 +200,9 @@
                 <xsl:with-param name="type" select="$type" />
 				<xsl:with-param name="id" select="$id" />
 				<xsl:with-param name="loctag1"
-					select="xalan:nodeset(//*[name(.)=concat($file, '.es')]/*)" />
+					select="exslt:node-set(//*[name(.)=concat($file, '.es')]/*)" />
 				<xsl:with-param name="loctag2"
-					select="xalan:nodeset(//*[name(.)=concat($file, '.es')]/*/*)" />
+					select="exslt:node-set(//*[name(.)=concat($file, '.es')]/*/*)" />
 			</xsl:call-template>
 		</td>
 		<td>
@@ -213,9 +213,9 @@
                 <xsl:with-param name="type" select="$type" />
 				<xsl:with-param name="id" select="$id" />
 				<xsl:with-param name="loctag1"
-					select="xalan:nodeset(//*[name(.)=concat($file, '.cn')]/*)" />
+					select="exslt:node-set(//*[name(.)=concat($file, '.cn')]/*)" />
 				<xsl:with-param name="loctag2"
-					select="xalan:nodeset(//*[name(.)=concat($file, '.cn')])/*/*" />
+					select="exslt:node-set(//*[name(.)=concat($file, '.cn')])/*/*" />
 			</xsl:call-template>
 		</td>
 		<td>
@@ -226,9 +226,9 @@
                 <xsl:with-param name="type" select="$type" />
 				<xsl:with-param name="id" select="$id" />
 				<xsl:with-param name="loctag1"
-					select="xalan:nodeset(//*[name(.)=concat($file, '.ar')])/*" />
+					select="exslt:node-set(//*[name(.)=concat($file, '.ar')])/*" />
 				<xsl:with-param name="loctag2"
-					select="xalan:nodeset(//*[name(.)=concat($file, '.ar')])/*/*" />
+					select="exslt:node-set(//*[name(.)=concat($file, '.ar')])/*/*" />
 			</xsl:call-template>
 		</td> 
         <td>
@@ -239,9 +239,9 @@
                 <xsl:with-param name="type" select="$type" />
                 <xsl:with-param name="id" select="$id" />
                 <xsl:with-param name="loctag1"
-                    select="xalan:nodeset(//*[name(.)=concat($file, '.de')])/*" />
+                    select="exslt:node-set(//*[name(.)=concat($file, '.de')])/*" />
                 <xsl:with-param name="loctag2"
-                    select="xalan:nodeset(//*[name(.)=concat($file, '.de')])/*/*" />
+                    select="exslt:node-set(//*[name(.)=concat($file, '.de')])/*/*" />
             </xsl:call-template>
         </td> 
 	</xsl:template>

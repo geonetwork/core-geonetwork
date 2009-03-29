@@ -83,6 +83,7 @@ public class Geonet
 		public static final String PROFILE    = "profile";
 		public static final String OPERATIONS = "operations";
 		public static final String OPER       = "oper";
+		public static final String SHOWVALIDATIONERRORS   = "showvalidationerrors";
 		public static final String SUMMARY    = "summary";
 		public static final String SITE_URL   = "siteURL";
 	}
@@ -116,6 +117,7 @@ public class Geonet
 		public static final String MAIN_SEARCH				= "main.search";
 		public static final String SEARCH_RESULT			= "search.result";
 		public static final String METADATA_SHOW			= "metadata.show";
+		public static final String METADATA_EDITING		= "metadata.editing";
 		public static final String METADATA_POSITION  = "metadata.position";
 		public static final String SEARCH_KEYWORDS_RESULT	= "search.keywords.result";
 		public static final String SELECTED_RESULT          = "selected.result";
@@ -346,6 +348,7 @@ public class Geonet
 		public static final String ADMINISTRATOR = "Administrator";
 		public static final String USER_ADMIN    = "UserAdmin";
 		public static final String REVIEWER      = "Reviewer";
+		public static final String EDITOR        = "Editor";
 		public static final String GUEST         = "Guest";
 	}
 
@@ -402,6 +405,9 @@ public class Geonet
 	public static final String MEF          = GEONETWORK + ".mef";
 	public static final String CSW          = GEONETWORK + ".csw";
 	public static final String LDAP         = GEONETWORK + ".ldap";
+	public static final String EDITOR				= GEONETWORK + ".editor";
+	public static final String EDITORADDELEMENT = GEONETWORK + ".editoraddelement";
+	public static final String EDITOREXPANDELEMENT = GEONETWORK + ".editorexpandelement";
 
 	public static final String CSW_SEARCH   = CSW + ".search";
 

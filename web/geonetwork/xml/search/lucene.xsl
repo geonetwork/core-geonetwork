@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-xmlns:xalan= "http://xml.apache.org/xalan" exclude-result-prefixes="xalan">
+xmlns:exslt = "http://exslt.org/common" exclude-result-prefixes="exslt">
 
 <xsl:import href="parser.xsl"/>
 <xsl:import href="lucene-utils.xsl"/>
@@ -457,7 +457,7 @@ compiles a parse tree into a class tree
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:call-template name="doCompile">
-		<xsl:with-param name="expr" select="xalan:nodeset($tree)/*"/>
+		<xsl:with-param name="expr" select="exslt:node-set($tree)/*"/>
 		<xsl:with-param name="field" select="$field"/>
 	</xsl:call-template>
 </xsl:template>

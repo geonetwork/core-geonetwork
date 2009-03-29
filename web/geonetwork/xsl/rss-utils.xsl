@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
 	xmlns:geonet="http://www.fao.org/geonetwork"
-	xmlns:xalan= "http://xml.apache.org/xalan"
+	xmlns:exslt="http://exslt.org/common"
 	xmlns:media="http://search.yahoo.com/mrss/"
 	xmlns:georss="http://www.georss.org/georss"
 	xmlns:gml="http://www.opengis.net/gml"
-	exclude-result-prefixes="geonet xalan">
+	exclude-result-prefixes="geonet exslt">
 
 	<xsl:include href="metadata.xsl"/>
 	<xsl:include href="utils.xsl"/>
@@ -18,7 +18,7 @@
 			<xsl:variable name="md">
 				<xsl:apply-templates mode="brief" select="."/>
 			</xsl:variable>
-			<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
+			<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
 			<xsl:variable name="mdURL" select="normalize-space(concat($baseURL, '?uuid=', geonet:info/uuid))"/>
 			<xsl:variable name="thumbnailLink" select="normalize-space($metadata/image[@type='thumbnail'])"/>
 			<xsl:variable name="bDynamic" select="geonet:info/dynamic" />

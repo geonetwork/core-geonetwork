@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:geonet="http://www.fao.org/geonetwork"
-	xmlns:xalan= "http://xml.apache.org/xalan">
+	xmlns:exslt="http://exslt.org/common"
+	xmlns:geonet="http://www.fao.org/geonetwork">
 
 	<!--
 	default: in simple mode just a flat list
@@ -433,7 +433,7 @@
 				<xsl:variable name="md">
 					<xsl:apply-templates mode="brief" select="."/>
 				</xsl:variable>
-				<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
+				<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
 				<xsl:call-template name="thumbnail">
 					<xsl:with-param name="metadata" select="$metadata"/>
 				</xsl:call-template>
@@ -607,7 +607,7 @@
 					<xsl:variable name="md">
 						<xsl:apply-templates mode="brief" select=".."/>
 					</xsl:variable>
-					<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
+					<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
 					<xsl:if test="$embedded = false()">
 						<xsl:call-template name="thumbnail">
 							<xsl:with-param name="metadata" select="$metadata"/>
@@ -1466,7 +1466,7 @@
 				<xsl:variable name="md">
 					<xsl:apply-templates mode="brief" select="../.."/>
 				</xsl:variable>
-				<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
+				<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
 				<td width="100" height="100" align="center">
 					<!--xsl:call-template name="thumbnail">
 						<xsl:with-param name="metadata" select="$metadata"/>
@@ -1620,13 +1620,7 @@
 								</script>
 							</td>
 							<td align="left" width="100%">
-								<xsl:text>  </xsl:text>
-								<a href="JavaScript:clear{$ref}();"> <xsl:value-of select="/root/gui/strings/clear"/></a>
-								<script type="text/javascript">
-									function clear<xsl:value-of select="$ref"/>()	{
-										document.mainForm._<xsl:value-of select="$ref"/>.value = &quot;&quot;
-									}
-								</script>
+								<xsl:text>  </xsl:text><a href="javascript:clearRef('{$ref}');"> <xsl:value-of select="/root/gui/strings/clear"/></a>
 							</td>
 						</tr></table>
 					</xsl:with-param>
@@ -1691,12 +1685,7 @@
 								</script>
 							</td>
 							<td align="left" width="100%">
-								<xsl:text>  </xsl:text><a href="JavaScript:clear{$ref}();"> clear</a>
-								<script type="text/javascript">
-									function clear<xsl:value-of select="$ref"/>()	{
-										document.mainForm._<xsl:value-of select="$ref"/>.value = &quot;&quot;
-									}
-								</script>
+								<xsl:text>  </xsl:text><a href="javascript:clearRef('{$ref}');"> <xsl:value-of select="/root/gui/strings/clear"/></a>
 							</td>
 						</tr></table>
 					</xsl:with-param>

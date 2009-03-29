@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-xmlns:xalan= "http://xml.apache.org/xalan" exclude-result-prefixes="xalan">
+xmlns:exslt = "http://exslt.org/common" exclude-result-prefixes="exslt">
 
 <xsl:import href="parser.xsl"/>
 
@@ -111,7 +111,7 @@ compiles a request into a Z39.50 query
 	<xsl:variable name="query">
 		<query attrset="{/request/attrset}">
 			<xsl:call-template name="binarizeTop">
-				<xsl:with-param name="list" select="xalan:nodeset($tree)/*"/>
+				<xsl:with-param name="list" select="exslt:node-set($tree)/*"/>
 			</xsl:call-template>
 		</query>
 	</xsl:variable>
@@ -192,7 +192,7 @@ compiles a parse tree into a class tree
 	</xsl:variable>
 	
 	<xsl:call-template name="doCompile">
-		<xsl:with-param name="expr"      select="xalan:nodeset($btree)/*"/>
+		<xsl:with-param name="expr"      select="exslt:node-set($btree)/*"/>
 		<xsl:with-param name="use"       select="$use"/>
 		<xsl:with-param name="structure" select="$structure"/>
 		<xsl:with-param name="relation"  select="$relation"/>

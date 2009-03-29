@@ -4,6 +4,7 @@
 	<xsl:variable name="apos">&#x27;</xsl:variable>
 
 	<xsl:variable name="maxAbstract" select="200"/>
+	<xsl:variable name="maxKeywords" select="400"/>
 	
 	<!-- default: just copy -->
 	<xsl:template match="@*|node()" mode="copy">
@@ -12,8 +13,33 @@
 		</xsl:copy>
 	</xsl:template>
 
-	<xsl:template name="escapeXMLEntities">
+	<xsl:template name="escapeString">
 		<xsl:param name="expr"/>
+		
+		<xsl:variable name="e1">
+			<xsl:call-template name="replaceString">
+				<xsl:with-param name="expr"        select="$expr"/>
+				<xsl:with-param name="pattern"     select="'&amp;'"/>
+				<xsl:with-param name="replacement" select="' and '"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="e2">
+			<xsl:call-template name="replaceString">
+				<xsl:with-param name="expr"        select="$e1"/>
+				<xsl:with-param name="pattern"     select='"&apos;"'/>
+				<xsl:with-param name="replacement" select="''"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:call-template name="replaceString">
+			<xsl:with-param name="expr"        select="$e2"/>
+			<xsl:with-param name="pattern"     select="'&quot;'"/>
+			<xsl:with-param name="replacement" select="''"/>
+		</xsl:call-template>
+	</xsl:template>
+
+	<xsl:template mode="escapeXMLEntities" match="text()">
+	
+		<xsl:variable name="expr" select="."/>
 		
 		<xsl:variable name="e1">
 			<xsl:call-template name="replaceString">
@@ -50,13 +76,6 @@
 		</xsl:call-template>
 	</xsl:template>
 
-	<xsl:template mode="escapeXMLEntities" match="text()">
-		<xsl:variable name="expr" select="."/>
-		<xsl:call-template name="escapeXMLEntities">
-			<xsl:with-param name="expr" select="$expr"/>
-		</xsl:call-template>
-	</xsl:template>
-	
 	<xsl:template name="replaceString">
 		<xsl:param name="expr"/>
 		<xsl:param name="pattern"/>
@@ -84,8 +103,16 @@
 		<xsl:param name="mdURL" />
 		<xsl:param name="title" />
 		<xsl:param name="abstract" />
-		<xsl:variable name="t" select="normalize-space($title)" />
-		<xsl:variable name="a" select="normalize-space($abstract)" />
+		<xsl:variable name="t">
+			<xsl:call-template name="escapeString">
+				<xsl:with-param name="expr"        select="normalize-space($title)"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="a">
+			<xsl:call-template name="escapeString">
+				<xsl:with-param name="expr"        select="normalize-space($abstract)"/>
+			</xsl:call-template>
+		</xsl:variable>
 		
 		<xsl:if test="not(contains($mdURL,'localhost')) and not(contains($mdURL,'127.0.0.1'))">
 			<a href="mailto:?subject={$t}&amp;body=%0ALink:%0A{$mdURL}%0A%0AAbstract:%0A{$a}">
@@ -102,22 +129,22 @@
 			</a> -->
 			
 			<!-- add first sentence of abstract to the delicious notes -->
-			<a href="http://del.icio.us/post?url={$mdURL}&amp;title={$t}&amp;notes={substring-before($a,'. ')}. ">
+			<a href="http://del.icio.us/post?url={$mdURL}&amp;title={$t}&amp;notes={substring-before($a,'. ')}. " target="_blank">
 				<img src="{$baseURL}/images/delicious.gif" 
 					alt="Bookmark on Delicious" title="Bookmark on Delicious" 
 					style="border: 0px solid;padding:2px;"/>
 			</a> 
-			<a href="http://digg.com/submit?url={$mdURL}&amp;title={substring($t,0,75)}&amp;bodytext={substring(substring-before($a,'. '),0,350)}.&amp;topic=environment">
+			<a href="http://digg.com/submit?url={$mdURL}&amp;title={substring($t,0,75)}&amp;bodytext={substring(substring-before($a,'. '),0,350)}.&amp;topic=environment" target="_blank">
 				<img src="{$baseURL}/images/digg.gif" 
 					alt="Bookmark on Digg" title="Bookmark on Digg" 
 					style="border: 0px solid;padding:2px;"/>
 			</a> 
-			<a href="http://www.facebook.com/sharer.php?u={$mdURL}">
+			<a href="http://www.facebook.com/sharer.php?u={$mdURL}" target="_blank">
 				<img src="{$baseURL}/images/facebook.gif" 
 					alt="Bookmark on Facebook" title="Bookmark on Facebook" 
 					style="border: 0px solid;padding:2px;"/>
 			</a> 
-			<a href="http://www.stumbleupon.com/submit?url={$mdURL}&amp;title={$t}">
+			<a href="http://www.stumbleupon.com/submit?url={$mdURL}&amp;title={$t}" target="_blank">
 				<img src="{$baseURL}/images/stumbleupon.gif" 
 					alt="Bookmark on StumbleUpon" title="Bookmark on StumbleUpon" 
 					style="border: 0px solid;padding:2px;"/>

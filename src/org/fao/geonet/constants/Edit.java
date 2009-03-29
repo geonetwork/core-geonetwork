@@ -55,6 +55,9 @@ public class Edit
 		public static final String ELEMENT   = "element";
 		public static final String ATTRIBUTE = "attribute";
 		public static final String CHILD     = "child";
+		public static final String NULL      = "null";
+		public static final String HELP      = "help";
+		public static final String CODELISTS = "codelists";
 		public static final String CHOICE    = "CHOICE_ELEMENT";
 		public static final String SEQUENCE  = "SEQUENCE_ELEMENT";
 		public static final String GROUP     = "GROUP_ELEMENT";
@@ -80,19 +83,23 @@ public class Edit
 			public static final String TITLE       = "title";
 			public static final String IS_HARVESTED= "isHarvested";
 			public static final String HARVEST_INFO= "harvestInfo";
+			public static final String OWNERNAME   = "ownername";
 			public static final String POPULARITY  = "popularity";
 			public static final String RATING      = "rating";
 			public static final String SELECTED    = "selected";
+			public static final String SUBTEMPLATES = "subtemplates";
 
 			//--- privileges
 
-			public static final String ADMIN    = "admin";
-			public static final String EDIT     = "edit";
-			public static final String NOTIFY   = "notify";
-			public static final String DOWNLOAD = "download";
-			public static final String DYNAMIC  = "dynamic";
-			public static final String FEATURED = "featured";
-			public static final String VIEW     = "view";
+			public static final String ADMIN    	= "admin";
+			public static final String EDIT     	= "edit";
+			public static final String NOTIFY   	= "notify";
+			public static final String DOWNLOAD 	= "download";
+			public static final String DYNAMIC  	= "dynamic";
+			public static final String FEATURED 	= "featured";
+			public static final String VIEW     	= "view";
+			public static final String GUEST_DOWNLOAD	= "guestdownload";
+			public static final String OWNER    	= "owner";
 		}
 	}
 
@@ -102,10 +109,15 @@ public class Edit
 	{
 		public class Attr
 		{
-			public static final String REF  = "ref";
-			public static final String DEL  = "del";
-			public static final String UP   = "up";
-			public static final String DOWN = "down";
+			public static final String REF  	= "ref";
+			public static final String DEL  	= "del";
+			public static final String UP   	= "up";
+			public static final String DOWN 	= "down";
+			public static final String ADD		= "add";
+			public static final String PARENT = "parent";
+			public static final String UUID   = "uuid";
+			public static final String MIN  = "min";
+			public static final String MAX  = "max";
 		}
 
 		public class Child
@@ -143,6 +155,11 @@ public class Edit
 			public static final String NAME      = "name";
 			public static final String PREFIX    = "prefix";
 			public static final String NAMESPACE = "namespace";
+			public static final String PARENT    = "parent";
+			public static final String UUID   	 = "uuid";
+			public static final String ACTION    = "action";
+			public static final String MIN       = "min";
+			public static final String MAX       = "max";
 		}
 
 		public class Child

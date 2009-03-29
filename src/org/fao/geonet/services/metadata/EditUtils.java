@@ -66,13 +66,14 @@ class EditUtils
 		String id = Util.getParam(params, Params.ID);
 
 		//-----------------------------------------------------------------------
-		//--- handle current tab
+		//--- handle current tab and position
 
 		Element elCurrTab = params.getChild(Params.CURRTAB);
 		Element elCurrPos = params.getChild(Params.POSITION);
 
-		if (elCurrTab != null)
+		if (elCurrTab != null) {
 			session.setProperty(Geonet.Session.METADATA_SHOW, elCurrTab.getText());
+		}
 		if (elCurrPos != null)
 			session.setProperty(Geonet.Session.METADATA_POSITION, elCurrPos.getText());
 
@@ -91,6 +92,12 @@ class EditUtils
 	  */
 
 	public static void updateContent(Element params, ServiceContext context, boolean validate) throws Exception
+	{
+		 updateContent(params, context, validate, false);
+		
+	}
+
+	public static void updateContent(Element params, ServiceContext context, boolean validate, boolean embedded) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getDataManager();
@@ -121,8 +128,16 @@ class EditUtils
 		//-----------------------------------------------------------------------
 		//--- update element and return status
 
-		if (!dataMan.updateMetadata(context, dbms, id, version, htChanges, validate))
+		boolean result;
+		if (embedded) {
+			result = dataMan.updateMetadataEmbedded(context.getUserSession(), dbms, id, version, htChanges);
+		} else {
+			result = dataMan.updateMetadata(context.getUserSession(), dbms, id, version, htChanges, validate);
+		}
+
+		if (!result)
 			throw new ConcurrentUpdateEx(id);
+
 	}
 
 	//--------------------------------------------------------------------------

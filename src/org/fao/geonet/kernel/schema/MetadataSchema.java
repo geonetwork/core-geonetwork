@@ -30,6 +30,7 @@ package org.fao.geonet.kernel.schema;
 import java.util.*;
 
 import org.jdom.Element;
+import org.jdom.Namespace;
 
 //==============================================================================
 
@@ -40,8 +41,10 @@ public class MetadataSchema
 	private HashMap hmTypes    = new HashMap();
 	private HashMap hmSubs		 = new HashMap();
 	private HashMap hmSubsLink = new HashMap();
-	private HashMap hmNameSpaces = new HashMap();
+	private Map<String,Namespace> hmNameSpaces = new HashMap<String,Namespace>();
+	private Map<String,Namespace> hmPrefixes = new HashMap<String,Namespace>();
 	private String	schemaName;
+	private String	primeNS;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -65,9 +68,26 @@ public class MetadataSchema
 		return;
 	}
 
+	//---------------------------------------------------------------------------
+	
 	public String getName()
 	{
 		return schemaName;
+	}
+
+	//---------------------------------------------------------------------------
+
+	public void setPrimeNS(String theNS)
+	{
+		primeNS = theNS;
+		return;
+	}
+
+	//---------------------------------------------------------------------------
+	
+	public String getPrimeNS()
+	{
+		return primeNS;
 	}
 
 	//---------------------------------------------------------------------------
@@ -220,16 +240,43 @@ public class MetadataSchema
 
 	//---------------------------------------------------------------------------
 
-	public void addNS(String targetNSPrefix, String targetNS)
+	public void addNS(String targetNSPrefix, String targetNSUri)
 	{
-		hmNameSpaces.put(targetNSPrefix, targetNS);
+
+		Namespace ns = Namespace.getNamespace(targetNSPrefix, targetNSUri);
+		hmNameSpaces.put(targetNSPrefix, ns);
+		hmPrefixes.put(targetNSUri, ns);
 	}
 
 	//---------------------------------------------------------------------------
 
 	public String getNS(String targetNSPrefix)
 	{
-		return (String) hmNameSpaces.get(targetNSPrefix);
+		Namespace ns = hmNameSpaces.get(targetNSPrefix);
+		if (ns != null) {
+			return ns.getURI();
+		} else {
+			return null;
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	public String getPrefix(String theNSUri)
+	{
+		Namespace ns = hmPrefixes.get(theNSUri);
+		if (ns != null) {
+			return ns.getPrefix();
+		} else {
+			return null;
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	public List<Namespace> getSchemaNS()
+	{
+		return new ArrayList(hmPrefixes.values());
 	}
 
 }

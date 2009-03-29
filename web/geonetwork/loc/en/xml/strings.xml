@@ -146,6 +146,7 @@
 	<cn>中文</cn> <!-- Do not translate! -->
 	<completeTab>Advanced view</completeTab>
 	<completeTabEditor>Advanced editor</completeTabEditor>
+	<confirmCancel>Are you sure you want to leave the editor? (You will lose any unsaved changes)</confirmCancel>
 	<confirmDelete>Are you sure you want to delete the metadata from the database?</confirmDelete>
 	<confirmMassiveDelete>Are you sure you want to delete all selected metadata from the database?</confirmMassiveDelete>
 	<confirmPassword>Confirm password</confirmPassword>
@@ -182,6 +183,9 @@
 	<down>down</down>
 	<download>Download</download>
 	<downloadable>Downloadable</downloadable>
+	<downloadSelect>Download?</downloadSelect>
+	<downloadSelected>Download Selected</downloadSelected>
+	<downloadSummary>Download Summary</downloadSummary>
 	<dynamic>Interactive</dynamic>
 	<downloadData>Data for download</downloadData>
 	<dsgpoly>Data Set G-Polygon</dsgpoly>
@@ -360,6 +364,7 @@
 	<noHelp>Sorry, no help available</noHelp>
 	<noInfo>Sorry, no info available</noInfo>
 	<noLogin>You are not logged in</noLogin>
+	<noOwnerRights>Privileges/Categories Locked: You do NOT have ownership rights</noOwnerRights>
 	<northbc>North Bounding Coordinate</northbc>
 	<noSelectedMd>No selection, select one metadata first.</noSelectedMd>
 	<online>Interactive map</online>
@@ -367,6 +372,8 @@
 	<opensearch>GeoNetwork opensearch service allow search to be made into the metadata catalog.</opensearch>
 	<operation>Operation</operation>
 	<organisation>Organisation / department</organisation>
+	<owner>Owner</owner>
+	<ownerRights>Delete/Privileges/Categories Unlocked: You have ownership rights</ownerRights>
 	<paper>Hard copy</paper>
 	<partial>Partially overlapping</partial>
 	<partialCooordinate>Partial coordinates </partialCooordinate>
@@ -439,6 +446,7 @@
 	<saveAndClose>Save and close</saveAndClose>
 	<saveAndValidate>Check</saveAndValidate>
 	<schema>Schema</schema>
+	<schematronError>Schematron Error</schematronError>
 	<search>Search</search>
 	<searchBox>Search for Data and Information</searchBox>
 	<searchIndex>Search index</searchIndex>
@@ -515,6 +523,7 @@
 
 	<xmlInsertTitle>Metadata insert</xmlInsertTitle>
 	<xmlTab>XML view</xmlTab>
+	<xsdError>XSD Validation Error</xsdError>
         
         <!--  intermap tooltips -->
         <imZoomFull>Zoom to full map extent</imZoomFull>

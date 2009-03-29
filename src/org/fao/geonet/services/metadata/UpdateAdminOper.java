@@ -84,8 +84,8 @@ public class UpdateAdminOper implements Service
 
 		boolean skip = false;
 
-		//--- in case of owner, privileges for groups 0,1 are disabled and
-		//--- are not sent to the server. So we cannot remove them
+		//--- in case of owner, privileges for groups 0,1 and GUEST are disabled 
+		//--- and are not sent to the server. So we cannot remove them
 
 		boolean isAdmin   = Geonet.Profile.ADMINISTRATOR.equals(us.getProfile());
 		boolean isReviewer= Geonet.Profile.REVIEWER     .equals(us.getProfile());

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:geonet="http://www.fao.org/geonetwork" 
-	xmlns:xalan= "http://xml.apache.org/xalan"
+	xmlns:exslt="http://exslt.org/common"
 	xmlns:dc = "http://purl.org/dc/elements/1.1/" 
 	xmlns:gmd="http://www.isotc211.org/2005/gmd" 
 	xmlns:gco="http://www.isotc211.org/2005/gco">
@@ -22,25 +22,12 @@
 	additional scripts
 	-->
 	<xsl:template mode="script" match="/">
-		<script language="JavaScript1.2" type="text/javascript">
-			
-			function doAction(action)
-			{
-				// alert("In doAction(" + action + ")"); // DEBUG
-				document.mainForm.action = action;
-				goSubmit('mainForm');
-			}
-			
-			function doTabAction(action, tab)
-			{
-				// alert("In doTabAction(" + action + ", " + tab + ")"); // DEBUG
-				document.mainForm.currTab.value = tab;
-				doAction(action);
-			}
-		</script>
-
+		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"></script>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"></script>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-show.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip-manager.js"></script>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"></script>
 	</xsl:template>
 	
 	<!--
@@ -64,7 +51,7 @@
 						<xsl:variable name="md">
 							<xsl:apply-templates mode="brief" select="."/>
 						</xsl:variable>
-						<xsl:variable name="metadata" select="xalan:nodeset($md)/*[1]"/>
+						<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
 						<xsl:variable name="mdURL" select="normalize-space(concat($baseURL, '?uuid=', geonet:info/uuid))"/>
 						
 						<xsl:call-template name="socialBookmarks">
@@ -78,7 +65,9 @@
 						
 							<xsl:variable name="buttons">
 								<tr><td class="padded-content" height="100%" align="center" valign="top">
-									<xsl:call-template name="buttons"/>
+									<xsl:call-template name="buttons">
+										<xsl:with-param name="metadata" select="$metadata"/>
+									</xsl:call-template>
 								</td></tr>
 							</xsl:variable>
 							<xsl:if test="$buttons!=''">

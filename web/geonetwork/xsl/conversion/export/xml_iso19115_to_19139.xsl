@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xsl:stylesheet version="1.0"  xmlns="http://www.isotc211.org/2005/gmd" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xalan= "http://xml.apache.org/xalan" exclude-result-prefixes="xalan">
+<xsl:stylesheet version="1.0"  xmlns="http://www.isotc211.org/2005/gmd" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="exslt">
 	<!-- This stylesheet converts ISO19115 and ISO19139 metadata into ISO19139 metadata in XML format -->
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" />
 	<xsl:namespace-alias stylesheet-prefix="#default" result-prefix="gmd"/>
@@ -12,8 +12,8 @@
 		<xsl:variable name="md">
 			<xsl:apply-templates select="Metadata"/>
 		</xsl:variable>
-<!--		<xsl:apply-templates select="xalan:nodeset($md)/*[1]"/> -->
-		<xsl:apply-templates select="xalan:nodeset($md)"/>
+<!--		<xsl:apply-templates select="exslt:node-set($md)/*[1]"/> -->
+		<xsl:apply-templates select="exslt:node-set($md)"/>
 	</xsl:template>
 	
 	<xsl:template match="@*|node()">

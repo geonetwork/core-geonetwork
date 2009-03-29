@@ -1,8 +1,10 @@
-# geonetwork version
-
-### this is used to build the jar filename
-release = 2.1.0
-
-### these are used by both gast and geonetwork at runtime
-version    = 2.1.0
-subVersion = final
+#GeoNetwork opensource properties. These are also used by both gast and geonetwork at runtime
+#Sun Mar 29 23:20:04 EST 2009
+release=2.3.0
+version=2.3.0
+day=29-3-2009
+date=0920292320
+javaVersion=1.5.0
+jre_url=http\://java.sun.com/javase/downloads/index_jdk5.jsp
+OS=Compiled on Linux (unix)
+subVersion=alpha1
