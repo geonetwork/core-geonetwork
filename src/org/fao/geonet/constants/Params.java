@@ -52,6 +52,7 @@ public class Params
 	public static final String URI          = "uri";
 	public static final String NAME         = "name";
 	public static final String ORG          = "org";
+	public static final String OVERWRITE    = "overwrite";
 	public static final String PASSWORD     = "password";
 	public static final String PARENT       = "parent";
 	public static final String POSITION     = "position";

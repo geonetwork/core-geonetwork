@@ -229,6 +229,7 @@
 		<allow service="file.disclaimer"/>
 		<allow service="feedback.download.insert"/>
 		<allow service="resources.get"/>
+		<allow service="resources.get.archive"/>
 		<allow service="prepare.file.download"/>
 
 		<!-- Get metadata from external application -->

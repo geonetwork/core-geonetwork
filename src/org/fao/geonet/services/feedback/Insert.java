@@ -73,7 +73,7 @@ public class Insert implements Service
 		MailSender sender = new MailSender(context);
 		sender.send(host, Integer.parseInt(port), email, name +" ("+org+")", to, null, subject, comments);
 
-		return params;
+		return new Element("response").addContent(params.cloneContent());
 	}
 }
 

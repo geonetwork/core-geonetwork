@@ -57,6 +57,9 @@ public class Geonet
 		 */
 		public static final String CQL_TO_FILTER       = "cql-to-filter.xsl";
 		public static final String FILTER_TO_LUCENE    = "filter-to-lucene.xsl";
+		public static final String LICENSE_ANNEX       = "license-annex.html";
+		public static final String LICENSE_ANNEX_XSL   = "metadata-license-annex.xsl";
+		public static final String METADATA_BRIEF      = "metadata-brief.xsl";
 	}
 
 	public class SchemaPath
@@ -387,6 +390,7 @@ public class Geonet
 		public static final String LUCENE_DIR       = "luceneDir";
 		public static final String MAX_SUMMARY_KEYS = "maxSummaryKeys";
 		public static final String SCHEMA_MAPPINGS  = "schemaMappings";
+		public static final String LICENSE_DIR      = "licenseDir";
 		public static final String DATA_DIR         = "dataDir";
 		public static final String CODELIST_DIR  	= "codeListDir";
 		public static final String DIR              = "dir";

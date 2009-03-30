@@ -180,6 +180,7 @@
 	<createTip>Create a new metadata from this template</createTip>
 	<dataQualityTab>Data quality</dataQualityTab>
 	<datasetTab>Dataset</datasetTab>
+	<dateModified>Date Modified</dateModified>
 	<dateRelChoice/>
 	<dateRelChoice value="14">before</dateRelChoice>
 	<dateRelChoice value="15">before or during</dateRelChoice>
@@ -203,6 +204,7 @@
 	<downloadSelect>Download?</downloadSelect>
 	<downloadSelected>Download Selected</downloadSelected>
 	<downloadSummary>Download Summary</downloadSummary>
+	<downloadThemAll>Download All Local</downloadThemAll>
 	<dynamic>Interactive</dynamic>
 	<downloadData>Data for download</downloadData>
 	<dsgpoly>Data Set G-Polygon</dsgpoly>
@@ -226,6 +228,7 @@
 	<feedbackComments>Feedback / comments</feedbackComments>
 	<feedbackRequest>Please provide your details before downloading</feedbackRequest>
 	<file>File</file>
+	<fileUploadSuccessful>File Upload Successful</fileUploadSuccessful>
 	<firstName>First Name</firstName>
 	<fr>Français</fr> <!-- Do not translate! -->
 	<freeKeyword>Free Keywords</freeKeyword>
@@ -282,9 +285,11 @@
 	<latMax>lat (max)</latMax>
 	<latMin>lat (min)</latMin>
 	<legend>Legend</legend>
+	<link>Link</link>
 	<links>Links</links>
 	<loading>Loading ...</loading>
 	<local>Local search</local>
+	<localType>Local</localType>
 	<localizationHelp>Important! This form allows you to add a Key value to the database.
 		The key can not have spaces.<br/>
 		After adding your key values, use the "Localization" form in the Administration panel to provide
@@ -388,12 +393,14 @@
 	<noLogin>You are not logged in</noLogin>
 	<noOwnerRights>Privileges/Categories Locked: You do NOT have ownership rights</noOwnerRights>
 	<northbc>North Bounding Coordinate</northbc>
+	<notfound>Not found</notfound>
 	<noSelectedMd>No selection, select one metadata first.</noSelectedMd>
 	<online>Interactive map</online>
 	<onlink>Online Linkage</onlink>
 	<opensearch>GeoNetwork opensearch service allow search to be made into the metadata catalog.</opensearch>
 	<operation>Operation</operation>
 	<organisation>Organisation / department</organisation>
+	<overwriteFile>Overwrite?</overwriteFile>
 	<owner>Owner</owner>
 	<ownerRights>Delete/Privileges/Categories Unlocked: You have ownership rights</ownerRights>
 	<paper>Hard copy</paper>
@@ -440,12 +447,14 @@
 	<region>Region</region>
 	<RegisteredUser>Registered user</RegisteredUser>
 	<remote>Remote search</remote>
+	<remoteType>Remote</remoteType>
 	<remove>remove</remove>
 	<reset>Reset</reset>
 	<options>Options</options>
 	<output>Output</output>
 	<outputType id="full">Full</outputType>
 	<outputType id="text">Text only</outputType>
+	<showFileDownloadSummary>Show File Download Chooser</showFileDownloadSummary>
 	<sortBy>Sort by</sortBy>
 	<sortByType id="relevance">Relevance</sortByType>
 	<sortByType id="rating">Rating</sortByType>
@@ -495,6 +504,7 @@
 	<simpleTabEditor>Default editor</simpleTabEditor>
 	<siteId>Site ID</siteId>
 	<site>Site</site>
+	<sizeBytes>Size (bytes)</sizeBytes>
 	<southbc>South Bounding Coordinate</southbc>
 	<spatial2Tab>Spat. Repr.</spatial2Tab>
 	<spatialTab>Spat. Info</spatialTab>
@@ -516,6 +526,7 @@
 	<to>To</to>
 	<tools>Tools</tools>
 	<topic>Topic</topic>
+	<type>Type</type>
 	<up>up</up>
 	<update>Update</update>
 	<updateGroup>Update group</updateGroup>

@@ -2217,13 +2217,6 @@
 							<xsl:with-param name="id" select="$id"/>
 						</xsl:apply-templates>
 					</xsl:when>
-					<xsl:when test="string(gmd:protocol/gco:CharacterString)='WWW:DOWNLOAD-1.0-http--download' and gmd:name">
-						<xsl:apply-templates mode="iso19139FileUpload" select="gmd:name/gco:CharacterString">
-							<xsl:with-param name="access" select="'private'"/>
-							<xsl:with-param name="id" select="$id"/>
-						</xsl:apply-templates>
-					</xsl:when>
-					<xsl:when test="string(gmd:protocol/gco:CharacterString)='WWW:LINK-1.0-http--link'"/> <!-- hide orName for www links -->
 					<xsl:otherwise>
 						<xsl:apply-templates mode="elementEP" select="gmd:name|geonet:child[string(@name)='name']">
 							<xsl:with-param name="schema" select="$schema"/>

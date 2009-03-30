@@ -23,6 +23,7 @@
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar-setup.js"></script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"></script>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/webtoolkit.aim.js"/>
 		<script type="text/javascript">
 			<xsl:if test="/root/gui/position!='-1'">
 				function scrollIt()

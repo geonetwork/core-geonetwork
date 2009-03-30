@@ -105,7 +105,11 @@
 			}
 
 			function runFileDownload(href,title) {
-				Modalbox.show(getGNServiceURL(href),{title:title, height:400, width:600});
+				if (href.include("resources.get")) { // do the file download direct
+					location.replace(getGNServiceURL(href));
+				} else { // show some dialog beforehand eg. constraints
+					Modalbox.show(getGNServiceURL(href),{title:title, height:400, width:600});
+				}
 			}
 
 			function runFileDownloadSummary(uuid, title) {
@@ -119,7 +123,7 @@
 							Modalbox.show(req.responseText ,{title: title, height:400, width: 600} );
 						},
 						onFailure: function(req) {
-							alert("ERROR: "+service+" failed: status "+req.status+" text: "+req.statusText+" - Try again later?");
+							alert("ERROR: "+getGNServiceURL('prepare.file.download')+" failed: status "+req.status+" text: "+req.statusText+" - Try again later?");
 						}
 					}
 				);

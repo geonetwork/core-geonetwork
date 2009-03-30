@@ -68,7 +68,7 @@ public class MEFLib
 	//---
 	//--------------------------------------------------------------------------
 
-	enum Format
+	public enum Format
 	{
 		SIMPLE, PARTIAL, FULL;
 

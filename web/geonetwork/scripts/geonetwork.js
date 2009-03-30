@@ -90,6 +90,54 @@ function get_cookie ( cookie_name )
 		return false;
 	}
 
+/**********************************************************
+ * Download support 
+ **********************************************************/
+
+	function feedbackSubmit()
+	{
+		var f = $('feedbackf');
+		if (isWhitespace(f.comments.value)) {
+			f.comments.value = 'No comment';
+		}
+
+		if (isWhitespace(f.name.value) || isWhitespace(f.org.value)) {
+			alert("Please fill in a Name or Organization");
+			return;
+		} else if (!isEmail(f.email.value)) {
+			alert("Please fill correct E-mail Address");
+			return;
+		} 
+
+		Modalbox.show(getGNServiceURL('file.download'),{height: 400, width: 600, params: f.serialize(true)});
+	}
+
+	function doDownload(id, all) {
+		var list = $('downloadlist').getElementsByTagName('INPUT');
+		var pars = '&id='+id+'&access=private';
+
+		var selected = false;
+		for (var i=0; i<list.length; i++) {
+			if (list[i].checked || all != null) {
+				selected = true;
+				var name = list[i].getAttribute('name');
+				pars += '&fname='+name;
+			}
+		}
+
+		if (!selected) {
+			alert("You'd better select at least one file to download!");
+			return;
+		}
+
+		Modalbox.show(getGNServiceURL('file.disclaimer') + "?" + pars, {height: 400, width: 600});
+	}
+
+
+/**********************************************************
+ * Massive Operations are called through this routine
+ **********************************************************/
+
 	function massiveOperation(service, title, width, message)
 	{
 
