@@ -11,10 +11,13 @@
 		<xsl:variable name="server"   select="children/server/children"/>
 		<xsl:variable name="intranet" select="children/intranet/children"/>
 		<xsl:variable name="z3950"    select="children/z3950/children"/>
+		<xsl:variable name="userSelfRegistration"    select="children/userSelfRegistration/children"/>
 		<xsl:variable name="csw"        select="children/csw/children"/>
 		<xsl:variable name="proxy"    select="children/proxy/children"/>
 		<xsl:variable name="feedback" select="children/feedback/children"/>
 		<xsl:variable name="platform" select="children/platform/children"/>
+		<xsl:variable name="shib"       select="children/shib/children"/>
+		<xsl:variable name="shibAttrib" select="$shib/attrib/children"/>
 
 		<env>
 			<site>
@@ -43,6 +46,10 @@
 				<port><xsl:value-of select="$z3950/port/value"/></port>
 			</z3950>
 			
+			<userSelfRegistration>
+				<enable><xsl:value-of select="$userSelfRegistration/enable/value"/></enable>
+			</userSelfRegistration>
+			
 			<csw>
 				<contactId><xsl:value-of select="$csw/contactId/value"/></contactId>
 			</csw>
@@ -60,6 +67,17 @@
 					<port><xsl:value-of select="$feedback/mailServer/children/port/value"/></port>
 				</mailServer>
 			</feedback>
+			
+			<shib>
+				<use><xsl:value-of select="$shib/use"/></use>
+				<path><xsl:value-of select="$shib/path"/></path>
+				<attrib>
+					<username><xsl:value-of select="$shibAttrib/username"/></username>
+					<surname><xsl:value-of select="$shibAttrib/surname"/></surname>
+					<firstname><xsl:value-of select="$shibAttrib/firstname"/></firstname>
+					<profile><xsl:value-of select="$shibAttrib/profile"/></profile>
+				</attrib>
+			</shib>			
 		</env>
 	</xsl:template>
 

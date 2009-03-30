@@ -29,6 +29,9 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
 //=============================================================================
@@ -50,8 +53,8 @@ public class Get implements Service
 	{
 		Element res = new Element(Jeeves.Elem.RESPONSE)
 									.addContent(getStack(context))
-									.addContent(getUserInfo(context));
-
+									.addContent(getUserInfo(context))
+									.addContent(getShibUse(context));
 		//--- add the invert tag if the banner must be flipped
 		//--- used for the arabic language
 
@@ -98,6 +101,23 @@ public class Get implements Service
 							.addContent(new Element("username").setText(session.getUsername()))
 							.addContent(new Element("name")    .setText(session.getName()))
 							.addContent(new Element("surname") .setText(session.getSurname()));
+	}
+
+	/**
+	 * Create an element "shib/use" describing whether shibboleth login is being used. 
+	 * @param srvContext The Jeeves service context.
+	 * @return Shib use element.
+	 */
+	private Element getShibUse(ServiceContext srvContext)
+	{
+		GeonetContext  gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
+		SettingManager sm = gc.getSettingManager();
+		String prefix = "system/shib";
+
+		String use          = sm.getValue      (prefix +"/use");
+
+		return new Element("shib")
+							.addContent(new Element("use").setText(use));
 	}
 
 	//--------------------------------------------------------------------------

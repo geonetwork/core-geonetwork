@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<!-- Self registration strings -->
+	<registerTitle>Self-Registration Form</registerTitle>
+	<profileChoice value="RegisteredUser">Registered user</profileChoice>
+	<profileChoice value="Editor">Editor</profileChoice>
+	<profileChoice value="Reviewer">Content reviewer</profileChoice>
+	<profileChoice value="UserAdmin">User administrator</profileChoice>
+	<profileChoice value="Administrator">Administrator</profileChoice>
+	<checkusername>Check</checkusername>
+	<register>Register</register>
+	<registerChoose>I want to </registerChoose>
+	<registrationDetails>Key registration details entered: </registrationDetails>
+	<firstNameMandatory js="true">The First Name field is mandatory</firstNameMandatory>
+	<lastNameMandatory js="true">The Last Name field is mandatory</lastNameMandatory>
+	<spacesNot js="true">Spaces in this field are not allowed</spacesNot>
+	<emailAddressInvalid js="true">Email address is invalid</emailAddressInvalid>
+	<yourRegistration js="true">Your registration...</yourRegistration>
+	<!-- End of Self registration strings -->
 	<fileType>File type:</fileType>
 	<generateUUID>Generate UUID for inserted metadata</generateUUID>
 	<insertFileMode>File Upload</insertFileMode>
@@ -471,6 +488,7 @@
 	<selectNone>Unselect metadata selected</selectNone>
 	<server>Server</server>
 	<setAll>Set All</setAll>
+	<shibLogin>Shib Login</shibLogin>
 	<show>Metadata</show>
 	<simple>Simple search</simple>
 	<simpleTab>Default view</simpleTab>

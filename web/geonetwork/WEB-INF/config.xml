@@ -405,6 +405,28 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- User self-registration services                               -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="user.register.get">
+			<output sheet="user-selfregistration.xsl">
+				<xml name="countries" file="xml/countries.xml" />
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="user.register.submit">
+			<class name=".services.register.SelfRegister" />
+			<output sheet="registration-info.xsl">
+				<xml name="info" file="xml/registration-sent.xml" />
+			</output>
+			<error sheet="registration-error.xsl">
+				<xml name="error" file="xml/registration-error.xml" />
+			</error>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Group services                                                -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -486,6 +508,18 @@
 
 		<service name="user.login">
 			<class name=".services.login.Login" />
+
+			<output forward="main.home" />
+
+			<error id="user-login" sheet="error.xsl">
+				<xml name="error" file="xml/login-error.xml" />
+			</error>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="shib.user.login">
+			<class name=".services.login.ShibLogin" />
 
 			<output forward="main.home" />
 

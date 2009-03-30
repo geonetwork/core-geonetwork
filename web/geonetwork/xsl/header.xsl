@@ -33,6 +33,8 @@
 		<!-- javascript -->
 		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"></script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/form_check.js"/>
 	
 		<script language="JavaScript" type="text/javascript">

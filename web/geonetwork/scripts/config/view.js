@@ -42,12 +42,19 @@ function ConfigView(strLoader)
 		{ id:'ldap.port',         type:'integer',  minValue:80, maxValue:65535, empty:true },		
 		{ id:'ldap.baseDN',       type:'length',  minSize :1,  maxSize :200 },
 		{ id:'ldap.usersDN',      type:'length',  minSize :1,  maxSize :200 },
-		{ id:'ldap.nameAttr',     type:'length',  minSize :1,  maxSize :200 }
+		{ id:'ldap.nameAttr',     type:'length',  minSize :1,  maxSize :200 },
+
+		{ id:'shib.path',              type:'length',   minSize :0, maxSize :256 },
+		{ id:'shib.attrib.username',   type:'length',   minSize :0, maxSize :150 },
+		{ id:'shib.attrib.surname',    type:'length',   minSize :0, maxSize :150 },
+		{ id:'shib.attrib.firstname',  type:'length',   minSize :0, maxSize :150 },
+		{ id:'shib.attrib.profile',    type:'length',   minSize :0, maxSize :150 }
 	]);
 	
 	this.z3950Shower = new Shower('z3950.enable', 'z3950.subpanel');	
 	this.proxyShower = new Shower('proxy.use',    'proxy.subpanel');
 	this.ldapShower  = new Shower('ldap.use',     'ldap.subpanel');
+	this.shibShower  = new Shower('shib.use',     'shib.subpanel');
 }
 
 //=====================================================================================
@@ -113,9 +120,19 @@ ConfigView.prototype.setData = function(data)
 	$('ldap.nameAttr')    .value = data['LDAP_ATTR_NAME'];
 	$('ldap.profileAttr') .value = data['LDAP_ATTR_PROFILE'];
 	
+	$('shib.use')           .checked = data['SHIB_USE'] == 'true';
+	$('shib.path')            .value = data['SHIB_PATH'];
+	$('shib.attrib.username') .value = data['SHIB_ATTRIB_USERNAME'];
+	$('shib.attrib.surname')  .value = data['SHIB_ATTRIB_SURNAME'];
+	$('shib.attrib.firstname').value = data['SHIB_ATTRIB_FIRSTNAME'];
+	$('shib.attrib.profile')  .value = data['SHIB_ATTRIB_PROFILE'];
+
+	$('userSelfRegistration.enable').checked = data['USERSELFREGISTRATION_ENABLE'] == 'true';
+
 	this.z3950Shower.update();
 	this.proxyShower.update();
 	this.ldapShower.update();
+	this.shibShower.update();
 }
 
 //=====================================================================================
@@ -181,7 +198,17 @@ ConfigView.prototype.getData = function()
 		LDAP_DN_BASE       : $F('ldap.baseDN'),
 		LDAP_DN_USERS      : $F('ldap.usersDN'),
 		LDAP_ATTR_NAME     : $F('ldap.nameAttr'),
-		LDAP_ATTR_PROFILE  : $F('ldap.profileAttr')
+		LDAP_ATTR_PROFILE  : $F('ldap.profileAttr'),
+		
+		SHIB_USE              : $('shib.use').checked,
+		SHIB_PATH             : $('shib.path').value,
+		SHIB_ATTRIB_USERNAME  : $('shib.attrib.username').value,
+		SHIB_ATTRIB_SURNAME   : $('shib.attrib.surname').value,
+		SHIB_ATTRIB_FIRSTNAME : $('shib.attrib.firstname').value,
+		SHIB_ATTRIB_PROFILE   : $('shib.attrib.profile').value,
+
+		USERSELFREGISTRATION_ENABLE : $('userSelfRegistration.enable').checked
+
 	}
 	
 	return data;

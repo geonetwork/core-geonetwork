@@ -62,6 +62,18 @@
 							<a class="banner" href="{/root/gui/locService}/links"><xsl:value-of select="/root/gui/strings/links"/></a>
 						</xsl:otherwise>
 					</xsl:choose>
+					<xsl:if test="string(/root/gui/session/userId)='' and
+								     string(/root/gui/env/userSelfRegistration/enable)='true'">
+					|
+						<xsl:choose>
+							<xsl:when test="/root/gui/reqService='user.register.get'">
+								<font class="banner-active"><xsl:value-of select="/root/gui/strings/register"/></font>
+							</xsl:when>
+							<xsl:otherwise>
+								<a class="banner" href="{/root/gui/locService}/user.register.get"><xsl:value-of select="/root/gui/strings/register"/></a>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:if>
 					|
 					<xsl:choose>
 						<xsl:when test="/root/gui/reqService='about'">
@@ -167,6 +179,12 @@
 					<xsl:otherwise>
 						<td align="right" class="banner-login">
 							<form name="login" action="{/root/gui/locService}/user.login" method="post">
+								<xsl:if test="string(/root/gui/env/shib/use)='true'">
+									<a class="banner" href="{/root/gui/env/shib/path}">
+										<xsl:value-of select="/root/gui/strings/shibLogin"/>
+									</a>
+									|
+								</xsl:if>
 								<input type="submit" style="display: none;" />
 								<xsl:value-of select="/root/gui/strings/username"/>
 								<input class="banner" type="text" id="username" name="username" size="10" onkeypress="return entSub('login')"/>

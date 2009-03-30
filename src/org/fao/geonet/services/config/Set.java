@@ -137,7 +137,16 @@ public class Set implements Service
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "ldap/distinguishedNames/users","system/ldap/distinguishedNames/users"),
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "ldap/userAttribs/name",        "system/ldap/userAttribs/name"),
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "ldap/userAttribs/password",    "system/ldap/userAttribs/password"),
-		new ConfigEntry(ConfigEntry.Type.STRING, false, "ldap/userAttribs/profile",     "system/ldap/userAttribs/profile")
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "ldap/userAttribs/profile",     "system/ldap/userAttribs/profile"),
+
+		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "userSelfRegistration/enable",     "system/userSelfRegistration/enable"),
+
+		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "shib/use",                     "system/shib/use"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "shib/path",                    "system/shib/path"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "shib/attrib/username",         "system/shib/attrib/username"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "shib/attrib/surname",          "system/shib/attrib/surname"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "shib/attrib/firstname",        "system/shib/attrib/firstname"),
+		new ConfigEntry(ConfigEntry.Type.STRING, false, "shib/attrib/profile",          "system/shib/attrib/profile")
 	};
 }
 

@@ -46,11 +46,13 @@
 		<xsl:call-template name="server"/>
 		<xsl:call-template name="intranet"/>
 		<xsl:call-template name="z3950"/>
+		<xsl:call-template name="userSelfRegistration"/>
 		<xsl:call-template name="csw"/>
 		<xsl:call-template name="proxy"/>
 		<xsl:call-template name="feedback"/>
 		<xsl:call-template name="removedMetadata"/>
 		<xsl:call-template name="ldap"/>
+		<xsl:call-template name="shib"/>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
@@ -135,6 +137,21 @@
 						</table>
 					</td>
 				</tr>			
+			</table>
+		</div>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template name="userSelfRegistration">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/userSelfRegistration"/></h1>
+
+		<div align="left" style="{$style}">
+			<table>
+				<tr>
+					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/enable"/></td>
+					<td class="padded"><input id="userSelfRegistration.enable" class="content" type="checkbox"/></td>
+				</tr>
 			</table>
 		</div>
 	</xsl:template>
@@ -439,6 +456,67 @@
 		</table>
 	</xsl:template>
 	
+	<!-- ============================================================================================= -->
+	<!-- === Shibboleth panels === -->
+	<!-- ============================================================================================= -->
+	
+	<xsl:template name="shib">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/shib"/></h1>
+
+		<div align="left" style="{$style}">
+			<table>
+				<tr>
+					<td class="padded"><xsl:value-of select="/root/gui/config/use"/></td>
+					<td class="padded"><input id="shib.use" class="content" type="checkbox" value=""/></td>
+				</tr>
+				<tr>
+					<td/>
+					<td>
+						<table id="shib.subpanel">
+							<tr>
+								<td class="padded"><xsl:value-of select="/root/gui/config/path"/></td>
+								<td class="padded"><input id="shib.path" class="content" type="text" size="256"/></td>
+							</tr>
+							
+							<!-- shibboleth attributes -->
+										
+							<tr>
+								<td class="padded" colspan="2"><xsl:value-of select="/root/gui/config/attributes"/></td>
+							</tr>
+							<tr>
+								<td/>
+								<td class="padded"><xsl:call-template name="shibAttribs"/></td>
+							</tr>
+						</table>
+					</td>
+				</tr>			
+			</table>
+		</div>
+	</xsl:template>
+	
+	<!-- ============================================================================================= -->
+	
+	<xsl:template name="shibAttribs">
+		<table>
+			<tr>
+				<td class="padded" width="60px"><xsl:value-of select="/root/gui/config/username"/></td>
+				<td class="padded"><input id="shib.attrib.username" class="content" type="text" value="" size="150"/></td>
+			</tr>
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/config/surname"/></td>
+				<td class="padded"><input id="shib.attrib.surname" class="content" type="text" value="" size="150"/></td>
+			</tr>
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/config/firstname"/></td>
+				<td class="padded"><input id="shib.attrib.firstname" class="content" type="text" value="" size="150"/></td>
+			</tr>
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/config/profile"/></td>
+				<td class="padded"><input id="shib.attrib.profile" class="content" type="text" value="" size="150"/></td>
+			</tr>
+		</table>
+	</xsl:template>
+
 	<!-- ============================================================================================= -->
 	<!-- === Buttons -->
 	<!-- ============================================================================================= -->

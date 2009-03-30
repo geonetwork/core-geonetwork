@@ -31,6 +31,8 @@
 		<email>EMail</email>
 		<smtpHost>SMTP Host</smtpHost>
 		<smtpPort>SMTP Port</smtpPort>
+
+	<userSelfRegistration>User Self-Registration</userSelfRegistration>
 	
 	<removedMetadata>Removed metadata</removedMetadata>
 		<dir>Directory</dir>
@@ -45,6 +47,14 @@
 		<userAttribs>User's attributes</userAttribs>
 			<name>Name</name>
 			<password>Password</password>
+			<profile>Profile</profile>
+
+	<shib>Shibboleth Authentication</shib>
+		<path>Path</path>
+		<attributes>Shibboleth attribute mapping</attributes>
+			<username>Username</username>
+			<surname>Surname</surname>
+			<firstname>Firstname</firstname>
 			<profile>Profile</profile>
 		
 	<!-- Buttons -->
@@ -169,6 +179,17 @@
 		<tip id="removedMd.dir">
 			Directory used to store metadata (in MEF format) when they are deleted.
 		</tip>
+
+		<!-- userSelfRegistration -->
+		
+		<tip id="userSelfRegistration.enable">
+			If set, users will be able to register themselves. Self-registered
+			users are assigned to the GUEST group. An email is sent to the
+			user with their username and password enclosed using the feedback
+			email information.
+			<br/>
+		</tip>
+		
 	</tips>
 	
 </strings>

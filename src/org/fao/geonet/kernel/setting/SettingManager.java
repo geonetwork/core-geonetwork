@@ -194,8 +194,10 @@ public class SettingManager
 
 				Setting s = resolve(path);
 
-				if (s == null)
+				if (s == null) {
 					success = false;
+					System.out.println("SettingManager: Unable to find Settings row to save " + path + " to.");
+				}
 				else
 				{
 					dbms.execute("UPDATE Settings SET value=? WHERE id=?", value, s.getId());

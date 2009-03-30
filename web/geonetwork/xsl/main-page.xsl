@@ -1106,13 +1106,4 @@
 		</table>
 	</xsl:template>
 
-	<xsl:template name="localization">
-		<xsl:comment>These fields are needed for js on-the-fly translations</xsl:comment>	
-		<xsl:for-each select="/root/gui/strings/*[@js='true']">			
-			<input type="hidden" id="i18n_{name(.)}" value="{.}" />
-		</xsl:for-each>				
-		<xsl:comment>End of i18n fields</xsl:comment>	
-	</xsl:template>	
-	
-
 </xsl:stylesheet>

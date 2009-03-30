@@ -62,6 +62,8 @@ public class Params
 	public static final String SCHEMA       = "schema";
 	public static final String SHOWVALIDATIONERRORS  = "showvalidationerrors";
 	public static final String SITE_ID      = "siteId";
+	public static final String SITENAME     = "sitename";
+	public static final String SITEORG      = "siteorg";
 	public static final String STYLESHEET   = "styleSheet";
 	public static final String SURNAME      = "surname";
 	public static final String TEMPLATE     = "template";

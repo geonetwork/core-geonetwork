@@ -1,5 +1,9 @@
 // VARIABLE DECLARATIONS
 
+var getGNServiceURL = function(service) {
+	return Env.locService+"/"+service;
+};
+
 function init() {}
 
 // Read a cookie
@@ -188,3 +192,86 @@ function get_cookie ( cookie_name )
 		ker.send('xml.usergroups.list', request, addGroupsCallback_OK);
 	}
 
+/**********************************************************************
+ * User self-registration actions
+ **********************************************************************/
+
+	function processRegSub(url)
+	{
+		// check start
+		var invalid = " "; // Invalid character is a space
+		var minLength = 6; // Minimum length
+            
+		if (document.userregisterform.name.value.length == 0) {
+			alert(i18n('firstNameMandatory'));
+			return;
+		} 
+		if (isWhitespace(document.userregisterform.name.value)) {
+			alert(i18n('firstNameMandatory'));
+			return;
+		}    
+		if (document.userregisterform.name.value.indexOf(invalid) > -1) {
+			alert(i18n('spacesNot'));
+			return;
+		}	
+			
+		if (document.userregisterform.surname.value.length == 0) {
+			alert(i18n('lastNameMandatory'));
+			return;
+		}  
+		if (isWhitespace(document.userregisterform.surname.value)) {
+			alert(i18n('lastNameMandatory'));
+			return;
+		}
+		if (document.userregisterform.surname.value.indexOf(invalid) > -1) {
+			alert(i18n('spacesNot'));
+			return;
+		}
+			
+		if (!isEmail(document.userregisterform.email.value)) {
+			alert(i18n('emailAddressInvalid'));
+			return;
+		}
+			
+		var myAjax = new Ajax.Request(
+			getGNServiceURL(url), 
+				{
+					method: 'post',
+					parameters: $('userregisterform').serialize(true), 
+						onSuccess: function(req) {
+            	var output = req.responseText;
+							var title = i18n('yourRegistration');
+        			Modalbox.show(output,{title: title, width: 300});
+						},
+						onFailure: function(req) {
+            	alert("ERROR: registration failed: "+req.responseText+" status: "+req.status+" - Try again later?");
+						}
+				}
+		);
+	}
+
+/*********************************************************************
+ * i18n 
+ *********************************************************************/
+/**
+ * Get a localized string.
+ * So far, localized strings used in the GUI should have a <i>js="true"</i> attribute.
+ * Such strings are imported in HTML pages by the <i>localization</i> subtemplate,
+ * using as id the string "i18n_"+key, to avoid id collisions.
+ *
+ * @param {String} key The key used in the <i>strings.xml</i> file.
+ * @return {String} The localized String
+ */
+function i18n(key)
+{
+    var v = $('i18n_'+key);
+    if(v)
+    {
+        if(v.value==='')
+            return '{'+key+'}';
+        else
+            return v.value;
+    }
+    else
+        return '['+key+']';
+}

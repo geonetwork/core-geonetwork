@@ -72,7 +72,16 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			LDAP_DN_BASE      : xml.evalXPath(node, 'ldap/distinguishedNames/base'),
 			LDAP_DN_USERS     : xml.evalXPath(node, 'ldap/distinguishedNames/users'),
 			LDAP_ATTR_NAME    : xml.evalXPath(node, 'ldap/userAttribs/name'),
-			LDAP_ATTR_PROFILE : xml.evalXPath(node, 'ldap/userAttribs/profile')
+			LDAP_ATTR_PROFILE : xml.evalXPath(node, 'ldap/userAttribs/profile'),
+
+			SHIB_USE              : xml.evalXPath(node, 'shib/use'),
+			SHIB_PATH             : xml.evalXPath(node, 'shib/path'),
+			SHIB_ATTRIB_USERNAME  : xml.evalXPath(node, 'shib/attrib/username'),
+			SHIB_ATTRIB_SURNAME   : xml.evalXPath(node, 'shib/attrib/surname'),
+			SHIB_ATTRIB_FIRSTNAME : xml.evalXPath(node, 'shib/attrib/firstname'),
+			SHIB_ATTRIB_PROFILE   : xml.evalXPath(node, 'shib/attrib/profile'),
+
+			USERSELFREGISTRATION_ENABLE : xml.evalXPath(node, 'userSelfRegistration/enable')
 		}
 		
 		this.getConfigCB(data);
@@ -183,6 +192,19 @@ ConfigModel.updateTemp =
 '			<profile>{LDAP_ATTR_PROFILE}</profile>'+
 '		</userAttribs>'+
 '	</ldap>'+
+'	<shib>'+
+'		<use>{SHIB_USE}</use>'+
+'		<path>{SHIB_PATH}</path>'+
+'		<attrib>'+
+'			<username>{SHIB_ATTRIB_USERNAME}</username>'+
+'			<surname>{SHIB_ATTRIB_SURNAME}</surname>'+
+'			<firstname>{SHIB_ATTRIB_FIRSTNAME}</firstname>'+
+'			<profile>{SHIB_ATTRIB_PROFILE}</profile>'+
+'		</attrib>'+
+'	</shib>'+
+' <userSelfRegistration>'+
+'		<enable>{USERSELFREGISTRATION_ENABLE}</enable>'+
+' </userSelfRegistration>'+
 '</config>';
 
 //=====================================================================================

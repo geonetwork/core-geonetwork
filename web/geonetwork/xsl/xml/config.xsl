@@ -18,6 +18,9 @@
 		<xsl:variable name="ldapLogin"  select="$ldap/login/children"/>
 		<xsl:variable name="ldapDisNam" select="$ldap/distinguishedNames/children"/>
 		<xsl:variable name="ldapUsrAtt" select="$ldap/userAttribs/children"/>
+		<xsl:variable name="userSelfRegistration"      select="children/userSelfRegistration/children"/>
+		<xsl:variable name="shib"       select="children/shib/children"/>
+		<xsl:variable name="shibAttrib" select="$shib/attrib/children"/>
 		<xsl:variable name="csw"        select="children/csw/children"/>
 		<xsl:variable name="cswInfo"    select="$csw/contactInfo/children"/>
 		<xsl:variable name="cswPhone"   select="$cswInfo/phone/children"/>
@@ -44,6 +47,10 @@
 				<port><xsl:value-of select="$z3950/port/value"/></port>
 			</z3950>
 			
+			<userSelfRegistration>
+				<enable><xsl:value-of select="$userSelfRegistration/enable/value"/></enable>
+			</userSelfRegistration>
+
 			<csw>
 				<enable><xsl:value-of select="$csw/enable/value"/></enable>
 				<contactId><xsl:value-of select="$csw/contactId/value"/></contactId>
@@ -106,6 +113,18 @@
 					<profile><xsl:value-of select="$ldapUsrAtt/profile/value"/></profile>
 				</userAttribs>
 			</ldap>
+
+			<shib>
+				<use><xsl:value-of select="$shib/use"/></use>
+				<path><xsl:value-of select="$shib/path"/></path>
+				<attrib>
+					<username><xsl:value-of select="$shibAttrib/username"/></username>
+					<surname><xsl:value-of select="$shibAttrib/surname"/></surname>
+					<firstname><xsl:value-of select="$shibAttrib/firstname"/></firstname>
+					<profile><xsl:value-of select="$shibAttrib/profile"/></profile>
+				</attrib>
+			</shib>			
+
 		</config>
 	</xsl:template>
 
