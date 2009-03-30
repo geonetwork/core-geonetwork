@@ -23,12 +23,11 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.OperationNotAllowedEx;
@@ -37,26 +36,24 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
+import jeeves.utils.Util;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.kernel.mef.MEFLib;
-import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.lib.Lib;
 
 import org.jdom.Element;
 
 //=============================================================================
 
-/** Removes a metadata from the system
+/** Sets new owner for a set of metadata records
   */
 
-public class MassiveDelete implements Service
+public class MassiveNewOwner implements Service
 {
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
@@ -69,11 +66,14 @@ public class MassiveDelete implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan   = gc.getDataManager();
+		DataManager   dm   = gc.getDataManager();
 		AccessManager accessMan = gc.getAccessManager();
 		UserSession   session   = context.getUserSession();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+		String targetUsr = Util.getParam(params, Params.USER);
+		String targetGrp = Util.getParam(params, Params.GROUP);
 
 		Set<Integer> metadata = new HashSet<Integer>();
 		Set<Integer> notFound = new HashSet<Integer>();
@@ -84,74 +84,89 @@ public class MassiveDelete implements Service
 
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
 			String uuid = (String) iter.next();
-			String id   = dataMan.getMetadataId(dbms, uuid);
+			String id   = dm.getMetadataId(dbms, uuid);
 
-			context.info("Deleting metadata with id:"+ id);
+			context.info("Attempting to set metadata owner on: "+ id);
 
-			//-----------------------------------------------------------------------
-			//--- check access
-
-			MdInfo info = dataMan.getMetadataInfo(dbms, id);
+			//--- check existence and access
+			MdInfo info = dm.getMetadataInfo(dbms, id);
 
 			if (info == null) {
-				notFound.add(new Integer(id));
+				notFound.add(new Integer(id));	
 			} else if (!accessMan.isOwner(context, id)) {
 				notOwner.add(new Integer(id));
 			} else {
 
-				//--- backup metadata in 'removed' folder
-				if (info.template != MdInfo.Template.SUBTEMPLATE) {
-					backupFile(context, id, info.uuid, MEFLib.doExport(context, info.uuid, "full", false));
-				}
+	 			//-- Get existing owner and privileges for that owner - note that 
+				//-- owners don't actually have explicit permissions - only their 
+				//-- group does which is why we have an ownerGroup (parameter groupid)
+				String sourceUsr = info.owner; 
+				String sourceGrp = info.groupOwner; 
+				if (sourceGrp.equals("")) {
+					context.info("Source Group for user "+sourceUsr+" was null, setting default privileges");
+					dm.copyDefaultPrivForGroup(dbms, id, targetGrp);
+				} else {
+					Vector<String> sourcePriv = retrievePrivileges(dbms, id, sourceUsr, sourceGrp);
 
-				//--- delete metadata and return status
-				dataMan.deleteMetadata(dbms, id);
+					// -- Set new privileges for new owner from privileges of the old  
+					// -- owner, if none then set defaults
+					if (sourcePriv.size() == 0) {
+						dm.copyDefaultPrivForGroup(dbms, id, targetGrp);
+						context.info("No privileges for user "+sourceUsr+" on metadata "+id+", so setting default privileges");
+					} else {
+						for (String priv : sourcePriv) {
+							dm.unsetOperation(dbms, id, sourceGrp, priv);
+							dm.setOperation(dbms, id, targetGrp, priv);
+						}
+					}
+				}
+				// -- set the new owner into the metadata record
+				dm.updateMetadataOwner(session, dbms, id, targetUsr, targetGrp);
+
 				metadata.add(new Integer(id));
 			}
 		}
 
-		// invalidate current result set
-		MetaSearcher searcher = (MetaSearcher)context.getUserSession().getProperty(Geonet.Session.SEARCH_RESULT);
+		dbms.commit();
 
-		if (searcher != null)
-			searcher.setValid(false);
+		// -- reindex metadata
+		for (int mdId : metadata) {
+			dm.indexMetadata(dbms, Integer.toString(mdId));
+		}
 
 		// -- for the moment just return the sizes - we could return the ids
 		// -- at a later stage for some sort of result display
 		return new Element(Jeeves.Elem.RESPONSE)
-			.addContent(new Element("done")    .setText(metadata.size()+""))
-			.addContent(new Element("notOwner").setText(notOwner.size()+""))
-			.addContent(new Element("notFound").setText(notFound.size()+""));
+							.addContent(new Element("done")    .setText(metadata.size()+""))
+							.addContent(new Element("notOwner").setText(notOwner.size()+""))
+							.addContent(new Element("notFound").setText(notFound.size()+""));
 	}
 
 	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
 
-	private void backupFile(ServiceContext context, String id, String uuid, String file)
+	private Vector<String> retrievePrivileges(Dbms dbms, String id, String userId, String groupId) throws Exception
 	{
-		String outDir = Lib.resource.getRemovedDir(context, id);
-		String outFile= outDir + uuid +".mef";
 
-		new File(outDir).mkdirs();
+		Object args[] = { new Integer(id), new Integer(userId), new Integer(groupId) };
+		String query = "SELECT * "+
+							"FROM OperationAllowed, Metadata "+
+							"WHERE metadataId=? AND owner=? AND groupId=?";
 
-		try
+		List list = dbms.select(query, args).getChildren();
+
+		Vector<String> result = new Vector<String>();
+
+		for (Object o : list)
 		{
-			FileInputStream  is = new FileInputStream(file);
-			FileOutputStream os = new FileOutputStream(outFile);
+			Element elem = (Element) o;
+			String  opId = elem.getChildText("operationid");
 
-			BinaryFile.copy(is, os, true, true);
-		}
-		catch(Exception e)
-		{
-			context.warning("Cannot backup mef file : "+e.getMessage());
-			e.printStackTrace();
+			result.add(opId);
 		}
 
-		new File(file).delete();
+		return result;
 	}
+
 }
 
 //=============================================================================

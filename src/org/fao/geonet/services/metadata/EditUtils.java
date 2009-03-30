@@ -130,9 +130,9 @@ class EditUtils
 
 		boolean result;
 		if (embedded) {
-			result = dataMan.updateMetadataEmbedded(context.getUserSession(), dbms, id, version, htChanges);
+			result = dataMan.updateMetadataEmbedded(context.getUserSession(), dbms, id, version, htChanges, context.getLanguage());
 		} else {
-			result = dataMan.updateMetadata(context.getUserSession(), dbms, id, version, htChanges, validate);
+			result = dataMan.updateMetadata(context.getUserSession(), dbms, id, version, htChanges, validate, context.getLanguage());
 		}
 
 		if (!result)

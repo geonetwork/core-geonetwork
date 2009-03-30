@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.services.ownership;
+package org.fao.geonet.services.metadata;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -33,12 +33,14 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.services.ownership.OwnershipUtils;
 import org.jdom.Element;
 
 //=============================================================================
 
-public class Editors implements Service
+public class PrepareMassiveNewOwner implements Service
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -59,12 +61,11 @@ public class Editors implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		UserSession   us   = context.getUserSession();
-		List<Element> list = OwnershipUtils.getOwnerUsers(context, us, dbms);
+		Element result = new Element("response");
 
-		Element result = new Element("root");
-
-		for (Element user : list)
-		{
+		// -- get the list of users (who are editors or above) from the database
+		List<Element> list = OwnershipUtils.getEditorUsers(context, us, dbms);
+		for (Element user : list) {
 			user = (Element) user.clone();
 			user.removeChild("password");
 			user.setName("editor");

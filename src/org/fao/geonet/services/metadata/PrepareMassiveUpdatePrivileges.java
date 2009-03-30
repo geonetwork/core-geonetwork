@@ -23,6 +23,9 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.util.List;
+import java.util.Set;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -30,34 +33,31 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-import jeeves.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.exceptions.ConcurrentUpdateEx;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.lib.Lib;
+
 import org.jdom.Element;
 
 //=============================================================================
 
-/** For editing : update leaves information. Access is restricted
+/** Return all groups of the current user with operations included.
   */
 
-public class Update implements Service
+public class PrepareMassiveUpdatePrivileges implements Service
 {
-	private ServiceConfig config;
-
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception
-	{
-		config = params;
-	}
+	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -67,54 +67,69 @@ public class Update implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		EditUtils.preprocessUpdate(params, context);
-
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan = gc.getDataManager();
-		UserSession		session = context.getUserSession();
+		DataManager   dm = gc.getDataManager();
+		AccessManager am = gc.getAccessManager();
+		UserSession   us = context.getUserSession();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		String id         = Util.getParam(params, Params.ID);
-		String version    = Util.getParam(params, Params.VERSION);
-		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
-		String showValidationErrors = 
-						Util.getParam(params, Params.SHOWVALIDATIONERRORS, "false");
-		String title      = params.getChildText(Params.TITLE);
-		String data       = params.getChildText(Params.DATA);
+		Element ownerId = new Element("ownerid").setText(us.getUserId());
+		Element hasOwner = new Element("owner").setText("true");
 
-		boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
-		boolean forget   = config.getValue(Params.FORGET, "no").equals("yes");
+		//--- get all operations
+		Element elOper = Lib.local.retrieve(dbms, "Operations").setName(Geonet.Elem.OPERATIONS);
 
-		if (!forget) {
-			if (data != null) {
-				Element md = Xml.loadString(data, false);
+		//--- retrieve groups operations
+		Set<String> userGroups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
 
-				if (!dataMan.updateMetadata(context.getUserSession(), dbms, id, md, false, version, context.getLanguage()))
-					throw new ConcurrentUpdateEx(id);
-			} else {
-				EditUtils.updateContent(params, context, false, true);
+		Element elGroup = Lib.local.retrieve(dbms, "Groups");
+
+		List list = elGroup.getChildren();
+
+		for(int i=0; i<list.size(); i++)
+		{
+			Element el = (Element) list.get(i);
+
+			el.setName(Geonet.Elem.GROUP);
+
+			//--- get all operations that this group can do on given metadata
+			String sGrpId = el.getChildText("id");
+
+			if (!userGroups.contains(sGrpId))
+			{
+				el.detach();
+				i--;
+				continue;
 			}
 
-			dataMan.setTemplate(dbms, Integer.parseInt(id), isTemplate, title);
+			int grpId = Integer.parseInt(sGrpId);
+
+			//--- now extend the group list adding proper operations
+			List listOper = elOper.getChildren();
+
+			for(int j=0; j<listOper.size(); j++)
+			{
+				String operId = ((Element) listOper.get(j)).getChildText("id");
+				Element elGrpOper = new Element(Geonet.Elem.OPER)
+													.addContent(new Element(Geonet.Elem.ID).setText(operId));
+				el.addContent(elGrpOper);
+			}
 		}
 
 		//-----------------------------------------------------------------------
-		//--- update element and return status
+		//--- put all together
 
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
-		elResp.addContent(new Element(Geonet.Elem.SHOWVALIDATIONERRORS)
-													.setText(showValidationErrors));
+		Element elRes = new Element(Jeeves.Elem.RESPONSE)
+										.addContent(elOper)
+										.addContent(elGroup)
+										.addContent(ownerId)
+										.addContent(hasOwner);
 
-		//--- if finished then remove the XML from the session
-		if (finished) {
-			dataMan.removeMetadataEmbedded(session);
-		}
-
-		return elResp;
+		return elRes;
 	}
 }
 
 //=============================================================================
+
 

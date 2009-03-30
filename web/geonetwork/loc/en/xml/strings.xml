@@ -336,6 +336,10 @@
 	<mapViewerClose>Close Map Viewer</mapViewerClose>
 	<mapViewerLoading>Loading Map Viewer...</mapViewerLoading>
 	<mapViewerOpen>Open Map Viewer</mapViewerOpen>
+	<massiveDeleteTitle>Massive Delete Operation</massiveDeleteTitle>
+	<massiveNewOwnerTitle>Massive New Owner Operation</massiveNewOwnerTitle>
+	<massiveUpdateCategoriesTitle>Massive Update Categories Operation</massiveUpdateCategoriesTitle>
+	<massiveUpdatePrivilegesTitle>Massive Update Privileges Operation</massiveUpdatePrivilegesTitle>
 	<max>Maximum</max>
 	<mdUpdateError>Update error</mdUpdateError>
 	<message>The username or the password is wrong.<br/>Press the 'back' button and try again.</message>
@@ -357,6 +361,7 @@
 	<newCategory>Add a new category</newCategory>
 	<newMdDes>Adds a new metadata into geonetwork copying it from a template</newMdDes>
 	<newMetadata>New metadata</newMetadata>
+	<newOwner>New Owner</newOwner>
 	<newPassword>New Password</newPassword>
 	<newUser>Add a new user</newUser>
 	<next>Next</next>
@@ -496,7 +501,9 @@
 	<up>up</up>
 	<update>Update</update>
 	<updateGroup>Update group</updateGroup>
+	<updateCategories>Update categories</updateCategories>
 	<updateCategory>Update category</updateCategory>
+	<updatePrivileges>Update privileges</updatePrivileges>
 	<updateUserAccount>Update User Account </updateUserAccount>
 	<upload>Upload </upload>
 	<user>User</user>

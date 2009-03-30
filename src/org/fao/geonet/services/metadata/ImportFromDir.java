@@ -297,10 +297,10 @@ public class ImportFromDir implements Service
 		//--- Note we have to use uuid here instead of id because we don't have 
 		//--- an id...
 
-		Element schemaTronXml = dataMan.doSchemaTronForEditor(dataMan.getSchemaDir(schema),xml);
+		Element schemaTronXml = dataMan.doSchemaTronForEditor(dataMan.getSchemaDir(schema),xml,context.getLanguage());
 		xml.detach();
 		if (schemaTronXml != null && schemaTronXml.getContent().size() > 0) {
-			String schemaTronReport = dataMan.doSchemaTronReport(dataMan.getSchemaDir(schema),xml,uuid);
+			String schemaTronReport = dataMan.doSchemaTronReport(dataMan.getSchemaDir(schema),xml,uuid,context.getLanguage());
 			Element schematron = new Element("schematronerrors");
 			Element idElem = new Element("id");
 			idElem.setText(uuid);

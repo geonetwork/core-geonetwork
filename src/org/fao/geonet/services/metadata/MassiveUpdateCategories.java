@@ -23,41 +23,40 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.exceptions.ConcurrentUpdateEx;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.kernel.SelectionManager;
+
 import org.jdom.Element;
 
 //=============================================================================
 
-/** For editing : update leaves information. Access is restricted
-  */
+/** Assigns categories to metadata.  */
 
-public class Update implements Service
+public class MassiveUpdateCategories implements Service
 {
-	private ServiceConfig config;
-
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception
-	{
-		config = params;
-	}
+	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -67,52 +66,64 @@ public class Update implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		EditUtils.preprocessUpdate(params, context);
-
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan = gc.getDataManager();
-		UserSession		session = context.getUserSession();
+
+		DataManager dm = gc.getDataManager();
+		AccessManager accessMan = gc.getAccessManager();
+		UserSession us = context.getUserSession();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		String id         = Util.getParam(params, Params.ID);
-		String version    = Util.getParam(params, Params.VERSION);
-		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
-		String showValidationErrors = 
-						Util.getParam(params, Params.SHOWVALIDATIONERRORS, "false");
-		String title      = params.getChildText(Params.TITLE);
-		String data       = params.getChildText(Params.DATA);
+		context.info("Get selected metadata");
+		SelectionManager sm = SelectionManager.getManager(us);
 
-		boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
-		boolean forget   = config.getValue(Params.FORGET, "no").equals("yes");
+		Set<Integer> metadata = new HashSet<Integer>();
+		Set<Integer> notFound = new HashSet<Integer>();
+		Set<Integer> notOwner = new HashSet<Integer>();
 
-		if (!forget) {
-			if (data != null) {
-				Element md = Xml.loadString(data, false);
+		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
+			String uuid = (String) iter.next();
+			String id   = dm.getMetadataId(dbms, uuid);
+								
+			//--- check access
 
-				if (!dataMan.updateMetadata(context.getUserSession(), dbms, id, md, false, version, context.getLanguage()))
-					throw new ConcurrentUpdateEx(id);
+			MdInfo info = dm.getMetadataInfo(dbms, id);
+			if (info == null) {
+				notFound.add(new Integer(id));
+			} else if (!accessMan.isOwner(context, id)) {
+				notOwner.add(new Integer(id));
 			} else {
-				EditUtils.updateContent(params, context, false, true);
+
+				//--- remove old operations
+				dm.deleteAllMetadataCateg(dbms, id);
+
+				//--- set new ones
+				List list = params.getChildren();
+
+				for(int i=0; i<list.size(); i++) {
+					Element el = (Element) list.get(i);
+					String name = el.getName();
+
+					if (name.startsWith("_"))
+						dm.setCategory(dbms, id, name.substring(1));
+				}
+				metadata.add(new Integer(id));
 			}
-
-			dataMan.setTemplate(dbms, Integer.parseInt(id), isTemplate, title);
 		}
 
-		//-----------------------------------------------------------------------
-		//--- update element and return status
+		dbms.commit();
 
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
-		elResp.addContent(new Element(Geonet.Elem.SHOWVALIDATIONERRORS)
-													.setText(showValidationErrors));
-
-		//--- if finished then remove the XML from the session
-		if (finished) {
-			dataMan.removeMetadataEmbedded(session);
+		//--- reindex metadata
+		for (int mdId : metadata) {
+			dm.indexMetadata(dbms, Integer.toString(mdId));
 		}
-
-		return elResp;
+		
+		// -- for the moment just return the sizes - we could return the ids
+		// -- at a later stage for some sort of result display
+		return new Element(Jeeves.Elem.RESPONSE)
+						.addContent(new Element("done")    .setText(metadata.size()+""))
+						.addContent(new Element("notOwner").setText(notOwner.size()+""))
+						.addContent(new Element("notFound").setText(notFound.size()+""));
 	}
 }
 

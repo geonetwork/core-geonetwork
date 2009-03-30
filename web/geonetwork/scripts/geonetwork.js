@@ -86,44 +86,105 @@ function get_cookie ( cookie_name )
 		return false;
 	}
 
-	function massiveDelete(message)
+	function massiveOperation(service, title, width, message)
 	{
-		if(!confirm(message))
-			return;
 
-		document.location.href = Env.locService +'/metadata.massiveDelete';
+		if (message != null) {
+			if(!confirm(message))
+				return;
+		}
+
+		var url = Env.locService +'/' + service;
+		Modalbox.show(url,{title: title, width: width, afterHide: function() { $('search-results-content').hide();}});
 	}
-	
-	// Other actions javascript functions
+
+/**********************************************************
+ * Select Actions 
+ **********************************************************/
+
 	function oActionsInit(name,id) {
-		if (id === undefined) {
-			id = "";
-        }
-		$(name+'Ele'+id).style.width = $(name+id).getWidth(); 
-	    $(name+'Ele'+id).style.top = $(name+id).positionedOffset().top + $(name+id).getHeight();
-	    $(name+'Ele'+id).style.left = $(name+id).positionedOffset().left;
+   if (id === undefined) {
+     id = "";
+   }
+   $(name+'Ele'+id).style.width = $(name+id).getWidth();
+   $(name+'Ele'+id).style.top = $(name+id).positionedOffset().top + $(name+id).getHeight();
+   $(name+'Ele'+id).style.left = $(name+id).positionedOffset().left;
 	}
 
 	function oActions(name,id) {
 		if (id === undefined) {
 			id = "";
-        }
+  	}
 		if (!$(name+'Ele'+id).style.top)
-	        oActionsInit (name, id);
-	        
-	    if ($(name+'Ele'+id).style.display == 'none') {
-	        $(name+'Ele'+id).style.display = 'block';
-	        $(name+'Img'+id).src = off;
-	    } else { 
-	        $(name+'Ele'+id).style.display = 'none';
-	        $(name+'Img'+id).src = on;
-	    }
+			oActionsInit (name, id);
 
+  	if ($(name+'Ele'+id).style.display == 'none') {
+    	$(name+'Ele'+id).style.display = 'block';
+    	$(name+'Img'+id).src = off;
+  	} else {
+    	$(name+'Ele'+id).style.display = 'none';
+    	$(name+'Img'+id).src = on;
+  	}
 	}
 
 	function actionOnSelect(msg) {
 		if ($('nbselected').innerHTML == 0 && $('oAcOsEle').style.display == 'none') {
-			a(msg);
-		} else
+			alert(msg);
+		} else {
 			oActions('oAcOs');
+		}
 	}
+
+/**********************************************************************
+ * Massive Ownership Transfer stuff
+ **********************************************************************/
+
+	function checkMassiveNewOwner(action,title) {
+
+	// These two alerts should use localized versions of the strings 
+	// in xml/metadata-massiveOwnership.xml 
+	
+		if ($('user').value == '') {
+			alert("Select the user who will be the new owner");
+			return false;
+		}
+		if ($('group').value == '') {
+			alert("Select a group that the selected user belongs to");
+			return false;
+		}
+		Modalbox.show(getGNServiceURL(action),{title: title, params: $('massivenewowner').serialize(true), afterHide: function() { $('search-results-content').hide(); }});
+	}
+
+	function addGroups(xmlRes) {
+		var list = xml.children(xmlRes, 'group');
+		$('group').options.length = 0; // clear out the options
+		for (var i=0; i<list.length; i++) {
+			var id     = xml.evalXPath(list[i], 'id');
+			var name	 = xml.evalXPath(list[i], 'name');
+			var opt = document.createElement('option');
+			opt.text  = name;
+			opt.value = id;
+			if (list.length == 1) opt.selected = true;
+			$('group').options.add(opt);
+		}
+	}
+
+	function addGroupsCallback_OK(xmlRes) {
+		if (xmlRes.nodeName == 'error') {
+			ker.showError('Cannot retrieve groups', xmlRes);
+			$('group').options.length = 0; // clear out the options
+			$('group').value = ''; 
+			var user = $('user'); 
+			for (i=0;i<user.options.length;i++) {
+				user.options[i].selected = false;
+			}
+		} else {
+			addGroups(xmlRes);
+		}
+	}
+	
+	function doGroups(userid) {
+		var request = ker.createRequest('id',userid);
+		ker.send('xml.usergroups.list', request, addGroupsCallback_OK);
+	}
+

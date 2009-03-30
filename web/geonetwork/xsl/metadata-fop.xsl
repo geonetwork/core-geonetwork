@@ -175,7 +175,12 @@
 	                                                select="concat('http://', $server/host,':', $server/port, $gui/url, '/images/logos/', $source , '.gif')" />')"
 	                                </xsl:attribute>
 	                    </fo:external-graphic>
-                    	<xsl:value-of select="$metadata/title" />
+                    	<xsl:value-of select="concat(position()-1,' - ',$metadata/title)" />
+					</fo:block>
+					<fo:block text-align="left" font-style="italic">
+						<xsl:value-of select="$gui/strings/uuid" />
+						:
+            <xsl:value-of select="$metadata/geonet:info/uuid" />
 					</fo:block>
 					<fo:block text-align="left">
 						<xsl:value-of select="$gui/strings/abstract" />
@@ -196,17 +201,32 @@
 							</xsl:for-each>
 						</fo:block>
 					</xsl:if>
+					<xsl:if test="$remote=false()">
+						<fo:block text-align="left">
+							<xsl:value-of select="$gui/strings/schema" />
+							:
+            	<xsl:value-of select="$metadata/geonet:info/schema" />
+						</fo:block>
+					</xsl:if>
 
+					<!-- display metadata url but only if its not a remote result -->
 					<fo:block text-align="left">
-						|<fo:basic-link text-decoration="underline"
-							color="blue">
-							<xsl:attribute
-								name="external-destination">
-                                   url('<xsl:value-of
-									select="concat('http://', $server/host,':', $server/port, $gui/locService,'/metadata.show?id=', $metadata/geonet:info/id, '&amp;currTab=simple')" />')
-                               </xsl:attribute>
-							<xsl:value-of select="$gui/strings/show" />
-						</fo:basic-link>|
+						<xsl:choose>
+							<xsl:when test="$remote=false()">
+								|<fo:basic-link text-decoration="underline" color="blue">
+									<xsl:attribute name="external-destination">
+                                  			url('<xsl:value-of
+											select="concat('http://', $server/host,':', $server/port, $gui/locService,'/metadata.show?id=', $metadata/geonet:info/id, '&amp;currTab=simple')" />')
+                              			</xsl:attribute>
+									<xsl:value-of select="$gui/strings/show" />
+								</fo:basic-link>|
+							</xsl:when>
+							<xsl:otherwise>
+								<fo:block text-align="left" font-style="italic">
+									<xsl:text>Z3950: </xsl:text><xsl:value-of select="$metadata/geonet:info/server" /><xsl:text> </xsl:text>
+								</fo:block>
+							</xsl:otherwise>
+						</xsl:choose>
 
 						<xsl:if test="$metadata/geonet:info/download='true'">
 							<xsl:for-each

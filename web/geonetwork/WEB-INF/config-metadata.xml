@@ -254,7 +254,7 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<!--
+
 		<service name="metadata.massive.newowner">
 			<class name=".services.metadata.MassiveNewOwner"/>
 
@@ -263,19 +263,25 @@
 			</output>
 		</service>
 
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="metadata.massive.newowner.form">
-			<class name=".services.ownership.PrepareMassiveOwnership"/>
+			<class name=".services.metadata.PrepareMassiveNewOwner"/>
 
 			<output sheet="metadata-massiveownership.xsl">
 				<xml name="info" file="xml/metadata-massiveNewOwner.xml" />
 			</output>
 		</service>
 
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="metadata.massive.category.form">
 			<class name=".services.metadata.PrepareMassiveUpdateCategories"/>
 
 			<output sheet="metadata-category.xsl"/>
 		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="metadata.massive.update.categories">
 			<class name=".services.metadata.MassiveUpdateCategories"/>
@@ -285,21 +291,24 @@
 			</output>
 		</service>
 
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="metadata.massive.admin.form">
 			<class name=".services.metadata.PrepareMassiveUpdatePrivileges"/>
 
 			<output sheet="metadata-admin.xsl"/>
 		</service>
 
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="metadata.massive.update.privileges">
-			<class name=".services.metadata.MassiveUpdateAdminOper"/>
+			<class name=".services.metadata.MassiveUpdatePrivileges"/>
 
 			<output sheet="metadata-massive-results.xsl">
 				<xml name="info" file="xml/metadata-massiveUpdatePrivileges.xml" />
 			</output>
 		</service>
 
--->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="metadata.select">

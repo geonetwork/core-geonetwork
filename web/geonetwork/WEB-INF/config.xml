@@ -680,6 +680,12 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="xml.usergroups.list">
+			<class name=".services.user.UserGroups" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="xml.group.list">
 			<class name=".services.group.List" />
 		</service>

@@ -34,6 +34,7 @@
 					<xsl:value-of select="/root/gui/strings/resultsMatching"/>
 					&#160;
 					<xsl:value-of select="/root/response/summary/@count"/>
+					<!--
 					&#160;&#160;
 					<span id="nbselected">
 						<xsl:choose>
@@ -44,7 +45,8 @@
 								<xsl:value-of select="count(//geonet:info[selected='true'])"/>
 							</xsl:otherwise>							
 						</xsl:choose>
-					</span><xsl:value-of select="/root/gui/strings/selected"/>
+					</span> <xsl:value-of select="/root/gui/strings/selected"/>
+					-->
 				</xsl:with-param>
 				<xsl:with-param name="indent" select="50"/>
 			</xsl:call-template>
@@ -115,6 +117,7 @@
 									<xsl:variable name="db" select="substring-after($rest,'/')"/>
 									<td class="padded" colspan="2">
 										<h1 align="left">
+											<!-- 
 											<xsl:variable name="isSelected" select="geonet:info/selected" />
 											<xsl:if test="$isSelected='true'">	
 								  				<input class="content"  type="checkbox" id="chk{geonet:info/id}" name="chk{geonet:info/id}" onclick="javascript:metadataselect('{geonet:info/uuid}', this.checked)"  checked="true"/>
@@ -122,6 +125,7 @@
 											<xsl:if test="$isSelected='false'">
 												<input class="content" type="checkbox" onclick="javascript:metadataselect('{geonet:info/uuid}', this.checked)"/>				
 											</xsl:if>
+											-->
 											<a href="{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple">
 												<xsl:value-of select="concat($metadata/geonet:info/id,' - ',$metadata/title)"/>
 											</a> 
@@ -148,6 +152,7 @@
 									</td>
 									<td class="padded" width="90%">
 										<h1 align="left">
+											<!--
 											<xsl:variable name="isSelected" select="geonet:info/selected" />
 											<xsl:if test="$isSelected='true'">	
 								  				<input class="content"  type="checkbox" id="chk{geonet:info/id}" name="chk{geonet:info/id}" onclick="javascript:metadataselect('{geonet:info/uuid}', this.checked)"  checked="true"/>
@@ -155,6 +160,7 @@
 											<xsl:if test="$isSelected='false'">
 												<input class="content" type="checkbox" onclick="javascript:metadataselect('{geonet:info/uuid}', this.checked)"/>				
 											</xsl:if>
+											-->
 											<a href="{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple">
 												<xsl:value-of select="$metadata/title"/>
 											</a> 

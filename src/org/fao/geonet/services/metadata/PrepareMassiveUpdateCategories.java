@@ -21,24 +21,30 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.services.ownership;
+package org.fao.geonet.services.metadata;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
 
-public class Editors implements Service
+/** Returns all categories.
+  */
+
+public class PrepareMassiveUpdateCategories implements Service
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -46,7 +52,7 @@ public class Editors implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -56,26 +62,35 @@ public class Editors implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager dataMan = gc.getDataManager();
+		AccessManager am = gc.getAccessManager();
+
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		UserSession   us   = context.getUserSession();
-		List<Element> list = OwnershipUtils.getOwnerUsers(context, us, dbms);
+		Element isOwner = new Element("owner").setText("true");
+		
+		//--- retrieve categories
+		Element elCateg = Lib.local.retrieve(dbms, "Categories");
+		List list = elCateg.getChildren();
 
-		Element result = new Element("root");
-
-		for (Element user : list)
+		for(int i=0; i<list.size(); i++)
 		{
-			user = (Element) user.clone();
-			user.removeChild("password");
-			user.setName("editor");
-
-			result.addContent(user);
+			Element el = (Element) list.get(i);
+			el.setName(Geonet.Elem.CATEGORY);
 		}
 
-		return result;
-	}
+		//-----------------------------------------------------------------------
+		//--- put all together
 
+		Element elRes = new Element(Jeeves.Elem.RESPONSE)
+										.addContent(elCateg)
+										.addContent(isOwner);
+
+		return elRes;
+	}
 }
 
 //=============================================================================
+
 

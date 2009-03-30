@@ -75,7 +75,6 @@ public class AccessManager
 
 			String id   = oper.getChildText("id");
 			String name = oper.getChildText("name");
-			System.out.println("ZZZZZ: Adding operation "+id+" with name "+name);
 
 			//--- build Hashset of all operations
 			hsAllOps.add(id);
@@ -368,7 +367,6 @@ public class AccessManager
 
 	public int getPrivilegeId(String descr)
 	{
-		System.out.println("hm "+hmNameToId.toString()+" descr '"+descr+"' "+hmNameToId.containsKey(descr));
 		return hmNameToId.containsKey(descr) ? hmNameToId.get(descr) : -1;
 
 	}

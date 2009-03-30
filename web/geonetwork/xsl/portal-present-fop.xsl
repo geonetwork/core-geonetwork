@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	version="1.0" xmlns:geonet="http://www.fao.org/geonetwork"
-	xmlns:date="http://xslt.org/dates-and-times"
+	xmlns:date="http://exslt.org/dates-and-times"
 	exclude-result-prefixes="xsl geonet">
 
 	<xsl:include href="metadata-fop.xsl" />

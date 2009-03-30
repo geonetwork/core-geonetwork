@@ -30,10 +30,12 @@ package org.fao.geonet.kernel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.Vector;
@@ -360,15 +362,15 @@ public class DataManager
 	
 	//--------------------------------------------------------------------------
 	
-	public Element schemaTron(String schemaPath, Element md, String id) throws Exception
+	public Element schemaTron(String schemaPath, Element md, String id, String lang) throws Exception
 	{
-		String fileSchemaTronReport = doSchemaTronReport(schemaPath,md,id);
-		return doSchemaTronForEditor(schemaPath,md);
+		String fileSchemaTronReport = doSchemaTronReport(schemaPath,md,id,lang);
+		return doSchemaTronForEditor(schemaPath,md,lang);
 	}
 
 	//--------------------------------------------------------------------------
 	
-	public String doSchemaTronReport(String schemaPath, Element md, String id) throws Exception
+	public String doSchemaTronReport(String schemaPath, Element md, String id, String lang) throws Exception
 	{
 
 		String dirId = "SchematronReport"+id;
@@ -381,15 +383,17 @@ public class DataManager
 		// set up the inputs to/output from the XSLT transformer and run it
 		// xslt transformer
 		String schemaTronReport = schemaPath+File.separator+Geonet.File.SCHEMATRON;
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("lang",lang);
 
 		// output schematron-errors.html
 		String fileOut = outDir+File.separator+"schematron-errors.html";
 		File fileResult = new File(fileOut);
 		Result result = new StreamResult(fileResult.toURI().getPath());
 		try {
-			Xml.transform(md,schemaTronReport,result);
+			Xml.transform(md,schemaTronReport,result,params);
 		} catch (Exception e) {
-			Log.warning(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+schemaTronReport+" failed");
+			Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+schemaTronReport+" failed");
 			e.printStackTrace();
 		}
 
@@ -402,7 +406,7 @@ public class DataManager
 		File schemaTronOut = new File(fileSchemaTronOut);
 		Result resultOut = new StreamResult(schemaTronOut.toURI().getPath());
 		try {
-			Xml.transform(md,schemaTronAnchors,resultOut);
+			Xml.transform(md,schemaTronAnchors,resultOut,params);
 		} catch (Exception e) {
 			Log.warning(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+schemaTronAnchors+" failed");
 			e.printStackTrace();
@@ -413,7 +417,7 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
-	public Element doSchemaTronForEditor(String schemaPath,Element md) throws Exception
+	public Element doSchemaTronForEditor(String schemaPath,Element md,String lang) throws Exception
 	{
 
 		// enumerate the metadata xml so that we can report any problems found 
@@ -421,7 +425,7 @@ public class DataManager
 		editLib.enumerateTree(md);
 
 		// get an xml version of the schematron errors and return for error display
-		Element schemaTronXmlReport = getSchemaTronXmlReport(schemaPath, md);
+		Element schemaTronXmlReport = getSchemaTronXmlReport(schemaPath, md, lang);
 
 		// remove editing info added by enumerateTree
 		editLib.removeEditingInfo(md);
@@ -431,16 +435,18 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 	
-	private Element getSchemaTronXmlReport(String schemaPath, Element md) throws Exception {
+	private Element getSchemaTronXmlReport(String schemaPath, Element md, String lang) throws Exception {
 		// NOTE: this method assumes that you've run enumerateTree on the 
 		// metadata
 		String schemaTronXmlXslt = schemaPath+File.separator+Geonet.File.SCHEMATRON_XML;
 		Element schemaTronXmlOut = null;
 		
 		try {
-			schemaTronXmlOut = Xml.transform(md, schemaTronXmlXslt);
+			Map<String,String> params = new HashMap<String,String>();
+			params.put("lang",lang);
+			schemaTronXmlOut = Xml.transform(md, schemaTronXmlXslt, params);
 		} catch (Exception e) {
-			Log.warning(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+schemaTronXmlXslt+" failed");
+			Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+schemaTronXmlXslt+" failed");
 			e.printStackTrace();
 		}
 
@@ -980,7 +986,7 @@ public class DataManager
 				//-- get a schematron error report if no xsd errors and add results
 				//-- to the metadata as a geonet:schematronerrors element with 
 				//-- links to the ref id of the affected element
-				Element condChecks = getSchemaTronXmlReport(getSchemaDir(schema),md);
+				Element condChecks = getSchemaTronXmlReport(getSchemaDir(schema),md,srvContext.getLanguage());
 				if (condChecks != null) md.addContent(condChecks);
 			}
 		}
@@ -1269,7 +1275,7 @@ public class DataManager
 	/** For Ajax Editing : updates all leaves with new values
 	  */
 
-	public synchronized boolean updateMetadataEmbedded(UserSession session, Dbms dbms, String id, String currVersion, Hashtable changes) throws Exception
+	public synchronized boolean updateMetadataEmbedded(UserSession session, Dbms dbms, String id, String currVersion, Hashtable changes, String lang) throws Exception
 	{
 		String schema = getMetadataSchema(dbms, id);
 
@@ -1334,7 +1340,7 @@ public class DataManager
 		editLib.removeEditingInfo(md);
 	
 		md.detach();
-		return updateMetadata(session, dbms, id, md, false, currVersion);
+		return updateMetadata(session, dbms, id, md, false, currVersion, lang);
 
 	}
 
@@ -1342,7 +1348,7 @@ public class DataManager
 	/** For Ajax Editing : retrieves metadata from session and validates it
 	  */
 
-	public void validateMetadataEmbedded(UserSession session, Dbms dbms, String id) throws Exception
+	public void validateMetadataEmbedded(UserSession session, Dbms dbms, String id, String lang) throws Exception
 	{
 		String schema = getMetadataSchema(dbms, id);
 
@@ -1356,7 +1362,7 @@ public class DataManager
 		md = updateFixedInfo(schema, id, md, dbms);
 
 		//--- do the validation on the metadata
-		doValidate(session,schema,id,md);
+		doValidate(session,schema,id,md, lang);
 
 	}
 	
@@ -1492,7 +1498,7 @@ public class DataManager
 	/** For Editing : updates all leaves with new values
 	  */
 
-	public synchronized boolean updateMetadata(UserSession session, Dbms dbms, String id, String currVersion, Hashtable changes, boolean validate) throws Exception
+	public synchronized boolean updateMetadata(UserSession session, Dbms dbms, String id, String currVersion, Hashtable changes, boolean validate, String lang) throws Exception
 	{
 		Element md = XmlSerializer.select(dbms, "Metadata", id);
 
@@ -1565,12 +1571,12 @@ public class DataManager
 		//--- remove editing info added by previous call
 		editLib.removeEditingInfo(md);
 
-		return updateMetadata(session, dbms, id, md, validate, currVersion);
+		return updateMetadata(session, dbms, id, md, validate, currVersion, lang);
 	}
 
 	//--------------------------------------------------------------------------
 
-	public synchronized boolean updateMetadata(UserSession session, Dbms dbms, String id, Element md, boolean validate, String version) throws Exception
+	public synchronized boolean updateMetadata(UserSession session, Dbms dbms, String id, Element md, boolean validate, String version, String lang) throws Exception
 	{
 		//--- check if the metadata has been modified from last time
 		if (version != null && !editLib.getVersion(id).equals(version)) {
@@ -1590,7 +1596,7 @@ public class DataManager
 
 		//--- do the validation last - it throws exceptions
 		if (validate) {
-			doValidate(session,schema,id,md);
+			doValidate(session,schema,id,md,lang);
 		}
 	
 		return true;
@@ -1599,7 +1605,7 @@ public class DataManager
 	//--------------------------------------------------------------------------
 	//--- Used by the validate embedded service
 
-	public void doValidate(UserSession session, String schema, String id, Element md) throws Exception
+	public void doValidate(UserSession session, String schema, String id, Element md, String lang) throws Exception
 	{
 
 		// XSD first... 
@@ -1613,7 +1619,7 @@ public class DataManager
 		}
 
 		// ...then schematrons
-		Element schemaTronXml = schemaTron(getSchemaDir(schema),md,id);
+		Element schemaTronXml = schemaTron(getSchemaDir(schema),md,id,lang);
 		if (schemaTronXml != null && schemaTronXml.getContent().size() > 0) {
 			Element schematron = new Element("schematronerrors");
 			Element idElem = new Element("id");
