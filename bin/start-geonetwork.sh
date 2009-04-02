@@ -1,10 +1,11 @@
 cd ../jetty
-rm log/*request.log*
-rm log/output.log
-mv log/geonetwork.log.* log/archive
-mv log/intermap.log.*   log/archive
+rm logs/*request.log*
+rm logs/output.log
+mv logs/geonetwork.log.* logs/archive
+mv logs/intermap.log.*   logs/archive
+mv logs/geoserver.log.* logs/archive
 
 # try changing the Xmx parameter if your machine has little RAM
-#java -Xms48m -Xmx256m -DSTOP.PORT=8079 -Djava.awt.headless=true -jar start.jar ../bin/jetty.xml &
+#java -Xms48m -Xmx256m -XX:MaxPermSize=128m -DSTOP.PORT=8079 -Djava.awt.headless=true -DSTOP.KEY=geonetwork -jar start.jar ../bin/jetty.xml &
 
-java -Xms48m -Xmx512m -DSTOP.PORT=8079 -Djava.awt.headless=true -jar start.jar ../bin/jetty.xml > log/output.log 2>&1 &
+java -Xms48m -Xmx512m -XX:MaxPermSize=128m -DSTOP.PORT=8079 -Djava.awt.headless=true -DSTOP.KEY=geonetwork -jar start.jar ../bin/jetty.xml > logs/output.log 2>&1 &

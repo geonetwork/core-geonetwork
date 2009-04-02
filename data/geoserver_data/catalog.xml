@@ -1,0 +1,62 @@
+<?config.xml version="1.0" encoding="UTF-8"?>
+<catalog >
+  <datastores >
+    <!--
+      a datastore configuration element serves as a common data source connection
+      parameters repository for all featuretypes it holds.
+    -->
+    <datastore id = "country_boundaries" enabled = "true" namespace = "gn" >
+      <connectionParams >
+        <parameter name = "memory mapped buffer" value = "true" />
+        <parameter name = "create spatial index" value = "true" />
+        <parameter name = "charset" value = "ISO-8859-1" />
+        <parameter name = "url" value = "file:data/boundaries/gboundaries.shp" />
+        <parameter name = "namespace" value = "http://geonetwork-opensource.org" />
+      </connectionParams>
+    </datastore>
+  </datastores>
+  <formats >
+    <!--
+      a format configuration element serves as a common data source
+      parameters repository for all coverages it holds.
+    -->
+    <format id = "BlueMarble_world" enabled = "true" namespace = "gn" >
+      <title>world</title>
+      <type>GeoTIFF</type>
+      <url>file:coverages/BlueMarble_world/bluemarble_jpeg_small.tiff</url>
+    </format>
+  </formats>
+  <!--
+    Defines namespaces to be used by the datastores.
+  -->
+  <namespaces >
+    <namespace prefix = "cite" uri = "http://www.opengeospatial.net/cite" />
+    <namespace default = "true" prefix = "gn" uri = "http://geonetwork-opensource.org" />
+    <namespace prefix = "topp" uri = "http://www.openplans.org/topp" />
+  </namespaces>
+  <styles >
+    <!--
+      Defines the style ids and file name to be used by the wms.
+    -->
+    <style id = "capitals" filename = "capitals.sld" />
+    <style id = "simple_roads" filename = "simpleRoads.sld" />
+    <style id = "grass" filename = "grass_poly.sld" />
+    <style id = "cite_lakes" filename = "Lakes.sld" />
+    <style id = "green" filename = "green.sld" />
+    <style id = "giant_polygon" filename = "giant_polygon.sld" />
+    <style id = "restricted" filename = "restricted.sld" />
+    <style id = "line" filename = "default_line.sld" />
+    <style id = "simple_streams" filename = "simple_streams.sld" />
+    <style id = "pophatch" filename = "pophatch.sld" />
+    <style id = "poi" filename = "poi.sld" />
+    <style id = "polygon" filename = "default_polygon.sld" />
+    <style id = "point" filename = "default_point.sld" />
+    <style id = "raster" filename = "raster.sld" />
+    <style id = "tiger_roads" filename = "tiger_roads.sld" />
+    <style id = "burg" filename = "burg.sld" />
+    <style id = "poly_landmarks" filename = "poly_landmarks.sld" />
+    <style id = "dem" filename = "dem.sld" />
+    <style id = "rain" filename = "rain.sld" />
+    <style id = "population" filename = "popshade.sld" />
+  </styles>
+</catalog>

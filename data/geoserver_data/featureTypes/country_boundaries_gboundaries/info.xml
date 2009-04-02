@@ -1,0 +1,29 @@
+<featureType datastore = "country_boundaries" >
+  <name>gboundaries</name>
+  <!--
+    native wich EPGS code for the FeatureTypeInfoDTO
+  -->
+  <SRS>4326</SRS>
+  <SRSHandling>0</SRSHandling>
+  <title>Country boundaries</title>
+  <abstract>Derived from GAUL Country Boundaries</abstract>
+  <wmspath>/</wmspath>
+  <numDecimals value = "0" />
+  <keywords>GAUL, FAO, Boundaries, Country</keywords>
+  <metadataLinks >
+    <metadataLink type = "text/html" metadataType = "TC211" >http://www.fao.org/geonetwork/srv/en/metadata.show?id=12691</metadataLink>
+  </metadataLinks>
+  <latLonBoundingBox dynamic = "false" maxx = "180.0" maxy = "83.6274185180664" minx = "-180.0" miny = "-89.9000015258789" />
+  <nativeBBox dynamic = "false" maxx = "180.0" maxy = "83.6274185180664" minx = "-180.0" miny = "-89.9000015258789" />
+  <!--
+    the default style this FeatureTypeInfoDTO can be represented by.
+    at least must contain the "default" attribute
+  -->
+  <styles default = "line" />
+  <cacheinfo enabled = "true" maxage = "3000" />
+  <searchable enabled = "false" />
+  <regionateAttribute value = "ADM0NAME" />
+  <regionateStrategy value = "best_guess" />
+  <regionateFeatureLimit value = "15" />
+  <maxFeatures>0</maxFeatures>
+</featureType>
