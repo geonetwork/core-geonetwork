@@ -289,7 +289,6 @@ function edit(node)
 		harv.setData(node);
 		editSwitcher.show(harv.getEditPanel());
 		currHarv = harv;
-		
 		//--- show edit panel
 		show(SHOW.EDIT);
 	}

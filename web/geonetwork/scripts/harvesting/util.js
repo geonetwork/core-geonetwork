@@ -24,6 +24,19 @@ hvutil.setOption = function(node, name, ctrlId)
 		else						ctrl.value   = value;
 }
 
+hvutil.setOptionIfExists = function(node, name, ctrlId)
+{
+	var value = hvutil.find(node, name);
+	var ctrl  = $(ctrlId);
+	if (!ctrl) return;	
+	var type  = ctrl.getAttribute('type');
+	
+	if (value == null)
+		return;
+		
+	if (type == 'checkbox')	ctrl.checked = (value == 'true');		
+	else	ctrl.value   = value;
+}
 //=====================================================================================
 
 hvutil.find = function(node, name)

@@ -49,9 +49,11 @@ this.getResultTip = function(node)
 this.setEmptyCommon = function()
 {
 	$(prefix+'.name')      .value = '';
+	if($(prefix+'.useAccount')) {
 	$(prefix+'.useAccount').checked = true;
 	$(prefix+'.username')  .value = '';
 	$(prefix+'.password')  .value = '';
+	}
 	
 	$(prefix+'.oneRunOnly').checked = false;
 
@@ -69,16 +71,12 @@ this.setDataCommon = function(node)
 {
 	var site   = node.getElementsByTagName('site')   [0];
 	var options= node.getElementsByTagName('options')[0];
-
 	hvutil.setOption(site, 'name',     prefix+'.name');
-	hvutil.setOption(site, 'use',      prefix+'.useAccount');
-	hvutil.setOption(site, 'username', prefix+'.username');
-	hvutil.setOption(site, 'password', prefix+'.password');
-	
+	hvutil.setOptionIfExists(site, 'use',      prefix+'.useAccount');
+	hvutil.setOptionIfExists(site, 'username', prefix+'.username');
+	hvutil.setOptionIfExists(site, 'password', prefix+'.password');
 	hvutil.setOption(options, 'oneRunOnly', prefix+'.oneRunOnly');
-
 	var every = new Every(hvutil.find(options, 'every'));
-	
 	$(prefix+'.every.days') .value = every.days;
 	$(prefix+'.every.hours').value = every.hours;
 	$(prefix+'.every.mins') .value = every.mins;
@@ -92,7 +90,9 @@ this.getDataCommon = function()
 	var hours = $F(prefix+'.every.hours');
 	var mins  = $F(prefix+'.every.mins');
 	
-	var data =
+	var data;
+	if($(prefix+'.useAccount')) {
+		data =
 	{
 		//--- site	
 		NAME     : $F(prefix+'.name'),
@@ -105,6 +105,19 @@ this.getDataCommon = function()
 		EVERY        : Every.build(days, hours, mins),
 		ONE_RUN_ONLY : $(prefix+'.oneRunOnly').checked
 	}
+	}
+	else {
+		data =
+		{
+			//--- site	
+			NAME     : $F(prefix+'.name'),
+			
+			//--- options		
+			EVERY        : Every.build(days, hours, mins),
+			ONE_RUN_ONLY : $(prefix+'.oneRunOnly').checked
+		}
+	}
+
 	
 	return data;
 }

@@ -36,9 +36,11 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
+import org.fao.geonet.kernel.harvest.harvester.arcsde.ArcSDEHarvester;
 import org.fao.geonet.kernel.harvest.harvester.csw.CswHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet20.Geonet20Harvester;
+import org.fao.geonet.kernel.harvest.harvester.localfilesystem.LocalFilesystemHarvester;
 import org.fao.geonet.kernel.harvest.harvester.oaipmh.OaiPmhHarvester;
 import org.fao.geonet.kernel.harvest.harvester.ogcwxs.OgcWxSHarvester;
 import org.fao.geonet.kernel.harvest.harvester.webdav.WebDavHarvester;
@@ -71,6 +73,8 @@ public abstract class AbstractHarvester
 		register(context, Z3950Harvester   .class);
 		register(context, OaiPmhHarvester  .class);
 		register(context, OgcWxSHarvester  .class);
+		register(context, ArcSDEHarvester  .class);
+		register(context, LocalFilesystemHarvester	.class);
 	}
 
 	//---------------------------------------------------------------------------

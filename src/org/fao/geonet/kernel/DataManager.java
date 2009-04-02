@@ -540,6 +540,13 @@ public class DataManager
 		return Xml.transform(root, styleSheet);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Element> getMetadataByHarvestingSource(Dbms dbms, String harvestingSource) throws Exception {
+		String query = "SELECT id FROM Metadata WHERE harvestUuid=?";
+		return dbms.select(query, harvestingSource).getChildren();
+	}
+
+
 	//--------------------------------------------------------------------------
 
 	public String getMetadataId(Dbms dbms, String uuid) throws Exception
@@ -2118,7 +2125,7 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
-	private String getSiteID()
+	public String getSiteID()
 	{
 		return settingMan.getValue("system/site/siteId");
 	}

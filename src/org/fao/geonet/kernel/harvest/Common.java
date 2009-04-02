@@ -23,12 +23,36 @@
 
 package org.fao.geonet.kernel.harvest;
 
+import org.jdom.Element;
+import org.jdom.Namespace;
+
 import jeeves.exceptions.BadParameterEx;
 
 //=============================================================================
 
-public class Common
-{
+public class Common {
+	/**
+	 * Examines an XML element and returns its UUID if it is in a recognized schema format.
+	 * 
+	 * @param xml
+	 * @return
+	 */
+	public static String retrieveUUID(Element xml, String schema) {
+		if(schema.equals("iso19139")) {
+			Element fileIdentifier = xml.getChild("fileIdentifier", Namespace.getNamespace("http://www.isotc211.org/2005/gmd"));
+			if(fileIdentifier == null) {
+				return null;
+			}
+			else {
+				return fileIdentifier.getChildText("CharacterString", Namespace.getNamespace("http://www.isotc211.org/2005/gco"));
+			}
+		}
+		// no other schemas supported for now
+		else {
+			return null;
+		}
+	}
+	
 	//---------------------------------------------------------------------------
 	//--- Status
 	//---------------------------------------------------------------------------

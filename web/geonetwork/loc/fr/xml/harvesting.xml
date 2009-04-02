@@ -45,6 +45,15 @@
         <short>OGC WxS</short>
         <long>OGC Web services (ie. WMS, WFS and WCS)</long>
     </info>
+	<info type="arcsde">
+		<short>ArcSDE</short>
+		<long>ArcSDE server</long>
+	</info>
+
+	<info type="localfilesystem">
+		<short>Local Filesystem</short>
+		<long>Local Filesystem Harvesting</long>
+	</info>	
     
     <wxstype>Type of OGC webservice</wxstype>
     <wxstypes>
@@ -71,7 +80,8 @@
 	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Site</site>
-	
+
+	<name>Nom</name>
 	<host>Hôte</host>
 	<port>Port</port>
 	<servlet>Servlet</servlet>
@@ -95,10 +105,12 @@
 	<warn>Vous pouvez récupérer ces informations seulement après avoir saisie la section de description du site</warn>
 	
 	<options>Options</options>
+	<every>Touts les</every>
 	<everySpec>(jours : heures : minutes)</everySpec>
 	<oneRun>Une seule exécution</oneRun>
 	<createGroups>Créer les groupes</createGroups>
 	<createCateg>Créer les catégories</createCateg>
+	<status>Status</status>
 	<active>Active</active>
 	<inactive></inactive>
 	

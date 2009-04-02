@@ -14,6 +14,8 @@ ker.include('harvesting/csw/csw.js');
 ker.include('harvesting/ogcwxs/ogcwxs.js');
 ker.include('harvesting/z3950/z3950.js');
 ker.include('harvesting/oaipmh/oaipmh.js');
+ker.include('harvesting/arcsde/arcsde.js');
+ker.include('harvesting/filesystem/filesystem.js');
 ker.include('harvesting/model.js');
 ker.include('harvesting/view.js');
 ker.include('harvesting/util.js');
@@ -47,6 +49,8 @@ function Harvesting()
 	var z3950    = new Z3950(loader);
 	var oaipmh   = new OaiPmh(loader);
 	var ogcwxs   = new OgcWxs(loader);
+	var arcsde   = new Arcsde(loader);
+	var filesystem   = new Filesystem(loader);
 	
 	//--- public objects
 
@@ -57,6 +61,8 @@ function Harvesting()
 	this.z3950    = z3950;
 	this.oaipmh   = oaipmh;
 	this.ogcwxs   = ogcwxs;
+	this.arcsde	  = arcsde;
+	this.filesystem  = filesystem;
 	
 	//--- public methods
 
@@ -86,6 +92,8 @@ function init()
 	view.register(ogcwxs);
 	view.register(z3950);
 	view.register(oaipmh);
+	view.register(arcsde);
+	view.register(filesystem);
 	view.show(SHOW.LIST);
 	
 	refresh();
