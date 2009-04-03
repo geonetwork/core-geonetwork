@@ -213,15 +213,15 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		//
 		// delete locally existing metadata from the same source if they were
 		// not in this harvesting result
-		//
+		//	
 		List<Element> existingMetadata = dataMan.getMetadataByHarvestingSource(dbms, params.uuid);
 		for(Element existingId : existingMetadata) {
-			if(!idsForHarvestingResult.contains(existingId)) {
-				String ex$ = existingId.getText();
+			String ex$ = existingId.getChildText("id");
+			if(!idsForHarvestingResult.contains(ex$)) {
 				dataMan.deleteMetadata(dbms, ex$);
 				result.removed++;
 			}
-		}	
+		}			
 	}
 
 	private void updateMetadata(Element xml, String id, Dbms dbms, String schema, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {

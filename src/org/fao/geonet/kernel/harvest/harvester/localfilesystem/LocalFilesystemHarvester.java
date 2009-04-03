@@ -220,15 +220,15 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 				}
 			}
 		}
-		if(!params.nodelete) {
+		if(params.nodelete) {
 			//
 			// delete locally existing metadata from the same source if they were
 			// not in this harvesting result
 			//
 			List<Element> existingMetadata = dataMan.getMetadataByHarvestingSource(dbms, params.uuid);
 			for(Element existingId : existingMetadata) {
-				if(!idsForHarvestingResult.contains(existingId)) {
-					String ex$ = existingId.getText();
+				String ex$ = existingId.getChildText("id");
+				if(!idsForHarvestingResult.contains(ex$)) {
 					dataMan.deleteMetadata(dbms, ex$);
 					result.removed++;
 				}
