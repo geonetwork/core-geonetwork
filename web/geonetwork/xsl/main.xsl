@@ -23,24 +23,9 @@
 					</td></tr>
 			
 					<!-- content -->
-					<tr height="100%"><td>
+					<tr height="100%"><td class="padded-content">
 						<xsl:call-template name="content"/>
 					</td></tr>
-				</table>
-				<table width="100%" height="20px">
-					<tr>
-						<td class="content">
-							<p align="center">
-								<a href="http://www.unicode.org/" title="Unicode Encoded" >
-									<img src="{/root/gui/url}/images/unicode.png" alt="Unicode Encoded" width="80" height="15" />
-								</a>
-								
-								<a href="http://browsehappy.com/" title="Browse Happy: Switch to a safer browser today">
-									<img src="{/root/gui/url}/images/bh_80x15.gif" alt="Browse Happy logo" width="80" height="15"/>
-								</a>
-							</p>
-						</td>
-					</tr>
 				</table>
 			</body>
 		</html>
