@@ -13,12 +13,12 @@
 
 		<init-param>
 			<param-name>systemLog</param-name>
-			<param-value>log/intermap.log</param-value>
+			<param-value>logs/intermap.log</param-value>
 		</init-param>
 
 		<init-param>
 			<param-name>moduleLog</param-name>
-			<param-value>log/modules.log</param-value>
+			<param-value>logs/modules.log</param-value>
 		</init-param>
 
 		<load-on-startup>1</load-on-startup>

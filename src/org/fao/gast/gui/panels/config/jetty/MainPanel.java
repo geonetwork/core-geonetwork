@@ -50,7 +50,6 @@ public class MainPanel extends FormPanel
 	private static final long serialVersionUID = 8316470016718942777L;
 	public MainPanel()
 	{
-		txtServlet.setText(Lib.embeddedSC.getServlet());
 		txtPort   .setText(Lib.embeddedSC.getPort());
 	}
 
@@ -73,7 +72,6 @@ public class MainPanel extends FormPanel
 			Lib.gui.showError(this, Messages.getString("portInt"));
 		else
 		{
-			Lib.embeddedSC.setServlet(txtServlet.getText());
 			Lib.embeddedSC.setPort(txtPort.getText());
 
 			try
@@ -98,14 +96,12 @@ public class MainPanel extends FormPanel
 	{
 		JPanel p = new JPanel();
 
-		FlexLayout fl = new FlexLayout(2,2);
+		FlexLayout fl = new FlexLayout(2,1);
 		fl.setColProp(1, FlexLayout.EXPAND);
 		p.setLayout(fl);
 
-		p.add("0,0",   new JLabel(Messages.getString("servlet")));
-		p.add("0,1",   new JLabel(Messages.getString("port")));
-		p.add("1,0,x", txtServlet);
-		p.add("1,1,x", txtPort);
+		p.add("0,0",   new JLabel("Port"));
+		p.add("1,0,x", txtPort);
 
 		return p;
 	}
@@ -116,7 +112,6 @@ public class MainPanel extends FormPanel
 	//---
 	//---------------------------------------------------------------------------
 
-	private JTextField txtServlet = new JTextField(20);
 	private JTextField txtPort    = new JTextField(20);
 }
 

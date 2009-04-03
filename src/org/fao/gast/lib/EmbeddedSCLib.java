@@ -72,11 +72,11 @@ public class EmbeddedSCLib
 				}
 			}
 
-			else if ("addWebApplication".equals(elCall.getAttributeValue("name")))
-			{
-				if (servletElem == null)
-					servletElem = elCall.getChild("Arg");
-			}
+//			else if ("addWebApplication".equals(elCall.getAttributeValue("name"))) // doesn't work with new Jetty 1.6.14
+//			{
+//				if (servletElem == null)
+//					servletElem = elCall.getChild("Arg");
+//			}
 		}
 	}
 
@@ -103,7 +103,8 @@ public class EmbeddedSCLib
 	public String getServlet()
 	{
 		//--- we have to skip the initial '/'
-		return (servletElem == null) ? null : servletElem.getText().substring(1);
+		// return (servletElem == null) ? null : servletElem.getText().substring(1);
+		return "geonetwork";
 	}
 
 	//---------------------------------------------------------------------------
@@ -124,19 +125,22 @@ public class EmbeddedSCLib
 
 	public void setServlet(String name)
 	{
-		if (servletElem != null)
-			servletElem.setText("/"+name);
-
-		for (Object e : webXml.getRootElement().getChildren())
-		{
-			Element elem = (Element) e;
-
-			if (elem.getName().equals("display-name"))
-			{
-				elem.setText(name);
-				return;
-			}
-		}
+		// Disabled for Jetty 1.6.14
+		return;
+//		if (servletElem != null)
+//			servletElem.setText("/"+name);
+//
+//		for (Object e : webXml.getRootElement().getChildren())
+//		{
+//			Element elem = (Element) e;
+//
+//			if (elem.getName().equals("display-name"))
+//			{
+//				elem.setText(name);
+//				return;
+//			}
+//		}
+		
 	}
 
 	//---------------------------------------------------------------------------

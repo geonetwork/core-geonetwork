@@ -4,7 +4,7 @@
 
 	<general>
 		<profiles>user-profiles.xml</profiles>
-		<uploadDir>WEB-INF/data/tmp</uploadDir>
+		<uploadDir>../../data/tmp</uploadDir>
 		<maxUploadSize>100</maxUploadSize> <!-- Size must be in megabyte (integer) -->
 		<debug>true</debug>
 	</general>
@@ -119,7 +119,7 @@
 		<param name="luceneDir" value="WEB-INF/lucene" />
 		<param name="htmlCacheDir" value="schematronCache" />
 		<param name="schemaMappings" value="schema-mappings.xml" />
-		<param name="dataDir" value="WEB-INF/data" />
+		<param name="dataDir" value="../../data" />
 		<param name="licenseDir" value="WEB-INF/licenses" />
 		<param name="thesauriDir" value="WEB-INF/gsthesauri" />
 		<param name="codeListDir" value="xml/codelist" />

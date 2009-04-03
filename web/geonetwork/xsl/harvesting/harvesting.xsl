@@ -11,7 +11,7 @@
 	<xsl:include href="webdav/webdav.xsl"/>
 	<xsl:include href="csw/csw.xsl"/>
 	<xsl:include href="ogcwxs/ogcwxs.xsl"/>
-	<xsl:include href="z3950/z3950.xsl"/>
+<!-- <xsl:include href="z3950/z3950.xsl"/> -->
 	<xsl:include href="oaipmh/oaipmh.xsl"/>
 	<xsl:include href="arcsde/arcsde.xsl"/>
 	<xsl:include href="filesystem/filesystem.xsl"/>
@@ -91,7 +91,7 @@
 		<xsl:call-template name="editPanel-GN20"/>
 		<xsl:call-template name="editPanel-CSW"/>
 		<xsl:call-template name="editPanel-OGCWXS"/>
-        <xsl:call-template name="editPanel-Z39"/>
+<!--        <xsl:call-template name="editPanel-Z39"/> -->
 		<xsl:call-template name="editPanel-OAI"/>
 		<xsl:call-template name="editPanel-Arcsde"/>
 		<xsl:call-template name="editPanel-Filesystem"/>

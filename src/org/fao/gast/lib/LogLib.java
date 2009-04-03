@@ -98,8 +98,8 @@ public class LogLib
 	//---------------------------------------------------------------------------
 
 	private static final String MODULE     = "gast";
-	private static final String LOG4J_CFG  = "/gast/log/log4j.cfg";
-	private static final String LOG4J_FILE = "/gast/log/gast.log";
+	private static final String LOG4J_CFG  = "/gast/logs/log4j.cfg";
+	private static final String LOG4J_FILE = "/gast/logs/gast.log";
 }
 
 //=============================================================================

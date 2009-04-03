@@ -85,7 +85,7 @@ public class Worker implements Runnable
 
 	private void executeJob(Dbms dbms) throws Exception
 	{
-		String      log = Lib.server.getAppPath() +"/gast/log/unmapped.log";
+		String      log = Lib.server.getAppPath() +"/gast/logs/unmapped.log";
 		PrintWriter out = new PrintWriter(new FileOutputStream(log));
 
 		dlg.reset(1);
