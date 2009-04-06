@@ -30,7 +30,6 @@ import java.util.Set;
 import java.util.Vector;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -45,7 +44,6 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
-
 import org.jdom.Element;
 
 //=============================================================================

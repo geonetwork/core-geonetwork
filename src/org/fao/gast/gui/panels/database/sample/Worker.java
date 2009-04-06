@@ -25,7 +25,6 @@ package org.fao.gast.gui.panels.database.sample;
 
 import java.io.File;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import jeeves.utils.XmlRequest;

@@ -23,8 +23,6 @@
 
 package org.fao.geonet.services.register;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -45,12 +43,10 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-import jeeves.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;

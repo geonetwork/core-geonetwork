@@ -23,8 +23,6 @@
 
 package org.fao.geonet.services.user;
 
-import org.jdom.*;
-
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.interfaces.Service;
@@ -32,9 +30,10 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
 
-import org.fao.geonet.constants.*;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.jdom.Element;
 
 //=============================================================================
 

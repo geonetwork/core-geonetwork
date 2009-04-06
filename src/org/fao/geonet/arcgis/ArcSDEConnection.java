@@ -22,7 +22,6 @@
 //==============================================================================
 package org.fao.geonet.arcgis;
 
-import com.esri.sde.sdk.GeoToolsDummyAPI;
 import com.esri.sde.sdk.client.SeConnection;
 import com.esri.sde.sdk.client.SeError;
 import com.esri.sde.sdk.client.SeException;

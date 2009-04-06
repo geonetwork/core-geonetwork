@@ -39,15 +39,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.Vector;
-import javax.xml.transform.Source;
+
 import javax.xml.transform.Result;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
+
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
@@ -55,26 +50,24 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.exceptions.XSDValidationErrorEx;
-import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.csw.common.Csw;
+import org.fao.geonet.exceptions.SchematronValidationErrorEx;
+import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.FileCopyMgr;
+import org.fao.geonet.util.ISODate;
 import org.jdom.Attribute;
-import org.jdom.Document;
-import org.jdom.filter.ElementFilter;
-import org.jdom.filter.Filter;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.Text;
-import org.jdom.output.DOMOutputter;
+import org.jdom.filter.ElementFilter;
+import org.jdom.filter.Filter;
 
 //=============================================================================
 

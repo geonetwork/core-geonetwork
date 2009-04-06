@@ -10,12 +10,11 @@ import java.util.Set;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
-import org.apache.lucene.search.Searcher;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.csw.services.getrecords.CatalogSearcher;
+import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.jdom.Element;
 
 /**

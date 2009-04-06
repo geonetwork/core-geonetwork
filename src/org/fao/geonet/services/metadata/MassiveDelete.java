@@ -31,7 +31,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -48,7 +47,6 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.lib.Lib;
-
 import org.jdom.Element;
 
 //=============================================================================

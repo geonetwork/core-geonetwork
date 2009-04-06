@@ -34,7 +34,6 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.DataManager;
 import org.jdom.Element;
 
