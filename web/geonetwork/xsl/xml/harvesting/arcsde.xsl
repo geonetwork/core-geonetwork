@@ -13,7 +13,7 @@
 	<xsl:template match="*" mode="site">
                 <server><xsl:value-of select="server/value" /></server>
 		<port><xsl:value-of select="port/value" /></port>
-                <username><xsl:value-of select="server/username" /></username>
+                <username><xsl:value-of select="username/value" /></username>
                 <password><xsl:value-of select="password/value" /></password>
                 <database><xsl:value-of select="database/value" /></database>
                 <icon><xsl:value-of select="icon/value" /></icon>
