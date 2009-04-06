@@ -11,7 +11,9 @@
 	<!-- ============================================================================================= -->
 
 	<xsl:template match="*" mode="site">
-		<capabilitiesUrl><xsl:value-of select="capabUrl/value" /></capabilitiesUrl>
+		<directory><xsl:value-of select="directory/value" /></directory>
+		<recurse><xsl:value-of select="recurse/value" /></recurse>
+		<nodelete><xsl:value-of select="nodelete/value" /></nodelete>
 		<icon><xsl:value-of select="icon/value" /></icon>
 	</xsl:template>
 

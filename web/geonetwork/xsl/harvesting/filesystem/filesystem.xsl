@@ -39,7 +39,10 @@
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/recurse"/></td>
 				<td class="padded"><input id="filesystem.recurse" type="checkbox" checked="on"/></td>
 			</tr>	
-			
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/nodelete"/></td>
+				<td class="padded"><input id="filesystem.nodelete" type="checkbox" checked="on"/></td>
+			</tr>			
 			<tr>
 				<td class="padded" valign="bottom"><xsl:value-of select="/root/gui/harvesting/icon"/></td>
 				<td class="padded">
