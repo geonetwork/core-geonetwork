@@ -47,7 +47,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
-import com.esri.sde.sdk.GeoToolsDummyAPI;
+//import com.esri.sde.sdk.GeoToolsDummyAPI;
 /**
  * 
  * Harvester from ArcSDE. Requires the propietary ESRI libraries containing their API. Since those are not
@@ -85,7 +85,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	
 	@Override
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException {
-		try {
+	/*	try {
 			@SuppressWarnings("unused")
 			int test = GeoToolsDummyAPI.DUMMY_API_VERSION;
 			// if you get here, you're using the dummy API
@@ -96,7 +96,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 			return null;
 		}
 		catch(NoClassDefFoundError n) {
-			// using the real ESRI ArcSDE libraries : continue		
+	*/		// using the real ESRI ArcSDE libraries : continue		
 			params = new ArcSDEParams(dataMan);
 		
 			//--- retrieve/initialize information
@@ -112,7 +112,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 			Lib.sources.copyLogo(context, "/images/harvesting/"+ params.icon, params.uuid);
 		
 			return id;
-		}
+	//	}
 	}
 
 	@Override
@@ -152,10 +152,6 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		ArcSDEMetadataAdapter adapter = new ArcSDEMetadataAdapter(params.server, params.port, params.database, params.username, params.password);
 		List<String> metadataList = adapter.retrieveMetadata();
 		align(metadataList, rm);
-		//		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
-
-		//Harvester h = new Harvester(log, context, dbms, params);
-		//result = h.harvest();
 		System.out.println("ArcSDE harvest finished");
 	}
 	
