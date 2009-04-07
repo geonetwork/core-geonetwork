@@ -24,7 +24,9 @@
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
 import java.io.IOException;
+
 import jeeves.utils.Xml;
+
 import org.apache.commons.httpclient.HttpException;
 import org.apache.webdav.lib.WebdavResource;
 import org.fao.geonet.util.ISODate;
@@ -33,18 +35,15 @@ import org.jdom.JDOMException;
 
 //=============================================================================
 
-class WebDavRemoteFile implements RemoteFile
-{
+class WebDavRemoteFile implements RemoteFile {
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//---------------------------------------------------------------------------
 
-	public WebDavRemoteFile(WebdavResource wr)
-	{
+	public WebDavRemoteFile(WebdavResource wr) {
 		this.wr = wr;
-
 		path       = wr.getPath();
 		changeDate = new ISODate(wr.getGetLastModified()).toString();
 	}
@@ -60,28 +59,23 @@ class WebDavRemoteFile implements RemoteFile
 
 	//---------------------------------------------------------------------------
 
-	public Element getMetadata() throws JDOMException, IOException, Exception
-	{
-		try
-		{
+	public Element getMetadata() throws JDOMException, IOException, Exception {
+		try {
 			wr.setPath(path);
-			return Xml.loadStream(wr.getMethodData());
+			Element result = Xml.loadStream(wr.getMethodData());
+			return result;
 		}
-		catch (HttpException e)
-		{
-			throw new Exception("WebDav exception : "+ e.getReason());
+		catch (HttpException x) {
+			throw new Exception("HTTPException : " + x.getMessage());
 		}
 	}
 
 	//---------------------------------------------------------------------------
 
-	public boolean isMoreRecentThan(String localChangeDate)
-	{
+	public boolean isMoreRecentThan(String localChangeDate) {
 		ISODate remoteDate = new ISODate(changeDate);
 		ISODate localDate  = new ISODate(localChangeDate);
-
 		//--- accept if remote date is greater than local date
-
 		return (remoteDate.sub(localDate) > 0);
 	}
 
@@ -98,4 +92,3 @@ class WebDavRemoteFile implements RemoteFile
 }
 
 //=============================================================================
-
