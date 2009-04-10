@@ -2,7 +2,6 @@ package com.esri.sde.sdk.client;
 
 import java.io.ByteArrayInputStream;
 import java.util.Calendar;
-import java.util.logging.Level;
 
 public class SeRow {
 	

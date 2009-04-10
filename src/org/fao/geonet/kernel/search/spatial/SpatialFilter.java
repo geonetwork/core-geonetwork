@@ -35,7 +35,6 @@ import org.opengis.filter.spatial.SpatialOperator;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.index.SpatialIndex;
 
 public abstract class SpatialFilter extends Filter

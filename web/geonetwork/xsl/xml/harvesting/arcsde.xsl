@@ -7,12 +7,16 @@
 	<xsl:import href="common.xsl"/>	
 
 	<!-- ============================================================================================= -->
-	<!-- === CSW harvesting node -->
+	<!-- === ARCSDE harvesting node -->
 	<!-- ============================================================================================= -->
 
 	<xsl:template match="*" mode="site">
-		<capabilitiesUrl><xsl:value-of select="capabUrl/value" /></capabilitiesUrl>
-		<icon><xsl:value-of select="icon/value" /></icon>
+                <server><xsl:value-of select="server/value" /></server>
+		<port><xsl:value-of select="port/value" /></port>
+                <username><xsl:value-of select="username/value" /></username>
+                <password><xsl:value-of select="password/value" /></password>
+                <database><xsl:value-of select="database/value" /></database>
+                <icon><xsl:value-of select="icon/value" /></icon>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->

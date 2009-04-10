@@ -27,7 +27,6 @@ import java.io.IOException;
 
 import org.apache.lucene.search.Query;
 import org.geotools.data.FeatureSource;
-import org.geotools.data.Transaction;
 import org.jdom.Element;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Literal;

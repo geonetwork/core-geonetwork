@@ -26,10 +26,11 @@ package org.fao.geonet.kernel.harvest.harvester.webdav;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import jeeves.interfaces.Logger;
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.HttpURL;
 import org.apache.commons.httpclient.HttpsURL;
 import org.apache.webdav.lib.WebdavResource;
@@ -38,18 +39,14 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 
-//=============================================================================
-
-class WebDavRetriever implements RemoteRetriever
-{
+class WebDavRetriever implements RemoteRetriever {
 	//--------------------------------------------------------------------------
 	//---
 	//--- RemoteRetriever interface
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(Logger log, ServiceContext context, WebDavParams params)
-	{
+	public void init(Logger log, ServiceContext context, WebDavParams params) {
 		this.log    = log;
 		this.context= context;
 		this.params = params;
@@ -57,26 +54,20 @@ class WebDavRetriever implements RemoteRetriever
 
 	//---------------------------------------------------------------------------
 
-	public List<RemoteFile> retrieve() throws Exception
-	{
+	public List<RemoteFile> retrieve() throws Exception {
 		davRes = open(params.url);
-
 		files.clear();
 		retrieveFiles(davRes);
-
 		return files;
 	}
 
 	//---------------------------------------------------------------------------
 
-	public void destroy()
-	{
-		try
-		{
+	public void destroy() {
+		try	{
 			davRes.close();
 		}
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			log.warning("Cannot close resource : "+ e.getMessage());
 		}
 	}
@@ -87,134 +78,123 @@ class WebDavRetriever implements RemoteRetriever
 	//---
 	//---------------------------------------------------------------------------
 
-	private WebdavResource open(String url) throws Exception
-	{
-		if (!url.endsWith("/"))
+	private WebdavResource open(String url) throws Exception {
+		log.debug("opening webdav resource with URL: " + url);
+		if (!url.endsWith("/")) {
+			log.debug("URL " + url + "does not end in slash -- will be appended");
 			url += "/";
-
-		try
-		{
-			log.info("Connecting to webdav url for node : "+ params.name + " URL: " + params.url);
-
-			WebdavResource wr = createResource(params.url);
-
-			log.info("Connected to webdav resource at : "+ url);
+		}
+		try {
+			log.debug("Connecting to webdav url for node : "+ params.name + " URL: " + params.url);
+			WebdavResource wr = createResource(url);
+			log.debug("Connected to webdav resource at : "+ url);
 
 			//--- we are interested only in folders
-			if (!wr.isCollection())
-			{
+			// heikki: somehow this works fine here, but see retrieveFiles()
+			if (!wr.isCollection()) {
 				log.error("Resource url is not a collection : "+ url);
 				wr.close();
-
 				throw new Exception("Resource url is not a collection : "+ url);
 			}
-
-			log.info("Resource path is : "+ wr.getPath());
-
-			return wr;
+			else {
+				log.info("Resource path is : "+ wr.getPath());
+				return wr;
+			}
 		}
-
-		catch(HttpException e)
-		{
-			int code = e.getReasonCode();
-
-			if (code == HttpStatus.SC_METHOD_NOT_ALLOWED)
-				throw new Exception("Server does not support WebDAV");
-
-			if (code == HttpStatus.SC_UNAUTHORIZED)
-				throw new Exception("Unauthorized to access resource");
-			
-			if (code == HttpStatus.SC_MOVED_PERMANENTLY)
-				throw new Exception("Error 301 - Resource moved permanently");
-
-			if (code == HttpStatus.SC_MULTI_STATUS)
-				throw new Exception("Error 207 - Multi status response");
-
-			log.debug("HTTP Status code: " + code);
-
-			throw new Exception("Received unknown response from server : "+ e.toString());
+		catch(HttpException e) {
+			throw new Exception("HTTPException: " + e.getMessage());
 		}
 	}
 
 	//---------------------------------------------------------------------------
 
-	private WebdavResource createResource(String url) throws Exception
-	{
+	private WebdavResource createResource(String url) throws Exception {
 		log.debug("Creating WebdavResource");
 
 		HttpURL http = url.startsWith("https") ? new HttpsURL(url) : new HttpURL(url);
-		
-		log.debug("Setting user account");
 
-		if (params.useAccount)
+		if(params.useAccount) {
+			log.debug("using account, username: " + params.username + " password: " + params.password);
 			http.setUserinfo(params.username, params.password);
+		}
+		else {
+			log.debug("not using account");
+		}
 
 		//--- setup proxy, if the case
 
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getSettingManager();
 
-		log.debug("checking for local proxy settings");
-		
 		boolean enabled = sm.getValueAsBool("system/proxy/use", false);
 		String  host    = sm.getValue("system/proxy/host");
 		String  port    = sm.getValue("system/proxy/port");
 		
-		if (!enabled)
-		{
-			log.debug("Ga nu WebdavResource teruggeven");
-			log.debug("http eigenschappen: " + http.getPort() + " " + http.getURI());
-			return new WebdavResource(http);
+		if (!enabled) {
+			log.debug("local proxy not enabled");
+			log.debug("returning a new WebdavResource");
+			log.debug("using http port: " + http.getPort() + " http uri: " + http.getURI());
+			WebdavResource webdavResource = new WebdavResource(http, 1);
+			return webdavResource;
 		}
-		
-		if (!Lib.type.isInteger(port))
-			throw new Exception("Proxy port is not an integer : "+ port);
-
-		return new WebdavResource(http, host, Integer.parseInt(port));
+		else {
+			log.debug("local proxy enabled");			
+			if (!Lib.type.isInteger(port)) {
+				throw new Exception("Proxy port is not an integer : "+ port);
+			}
+			log.debug("returning a new WebdavResource");
+			log.debug("using http proxy port: " + port + " proxy host: " + host + " http uri: " + http.getURI());
+			return new WebdavResource(http, host, Integer.parseInt(port));
+		}
 	}
 
 	//---------------------------------------------------------------------------
 
-	private void retrieveFiles(WebdavResource wr) throws HttpException, IOException
-	{
+	private void retrieveFiles(WebdavResource wr) throws HttpException, IOException {
 		String path = wr.getPath();
-
 		log.debug("Scanning resource : "+ path);
-
-		String[] children = wr.list();
-
-		if (children == null)
-			log.warning("Cannot scan resource. Error is : "+ wr.getStatusMessage());
-		else
-		{
+		WebdavResource[] wa = wr.listWebdavResources();
+		log.debug("# " + wa.length + " webdav resources found in: " + wr.getPath());
+		if(wa.length > 0) {
 			int startSize = files.size();
-
-			for (String name : children)
-			{
-				wr.setPath(path +"/"+ name);
-
-				if (wr.exists())
-				{
-					if (wr.isCollection())
-					{
-						//--- this test is needed to fix a slide bug
-
-						if (!wr.getPath().equals(path))
-							if (params.recurse)
-								retrieveFiles(wr);
+			for(WebdavResource w : wa) {
+				// heikki: even though response indicates that a sub directory is a collection, according to Slide
+				//         that is never the case. To determine if a resource is a sub directory, use the following
+				//         trick :				
+				// if(w.getIsCollection()) {
+				if(w.getPath().equals(wr.getPath()) && w.getDisplayName().length() > 0) {
+					if(params.recurse) {
+						log.debug(w.getPath() + " is a collection, processed recursively");
+						String url = w.getHttpURL().getURI();
+						url = url + w.getDisplayName()+ "/";
+						HttpURL http = url.startsWith("https") ? new HttpsURL(url) : new HttpURL(url);
+						WebdavResource huh = new WebdavResource(http, 1);
+						retrieveFiles(huh);						
 					}
-
-					else if (wr.getName().toLowerCase().endsWith(".xml"))
-						files.add(new WebDavRemoteFile(wr));
+					else {
+						log.debug(w.getPath() + " is a collection. Ignoring because recursion is disabled.");
+					}
 				}
-			}
-
+				else {
+					log.debug(w.getName() + " is not a collection");
+					if (w.getName().toLowerCase().endsWith(".xml")) {
+						log.debug("found xml file ! " + w.getName().toLowerCase());
+						files.add(new WebDavRemoteFile(w));
+					}
+					else {
+						log.debug(w.getName().toLowerCase() + " is not an xml file");
+					}					
+				}
+			}	
 			int endSize = files.size();
-			int added   = endSize - startSize;
-
-			if (added == 0) log.debug("No xml files found in path : "+ path);
-				else			 log.debug("Found "+ added +" xml file(s) in path : "+ path);
-		}
+			int added = endSize - startSize;
+			if (added == 0) {
+				log.debug("No xml files found in path : "+ path);
+			}
+			else {
+				log.debug("Found "+ added +" xml file(s) in path : "+ path);
+			}			
+		}		
 	}
 
 	//---------------------------------------------------------------------------
@@ -232,5 +212,3 @@ class WebDavRetriever implements RemoteRetriever
 }
 
 //=============================================================================
-
-

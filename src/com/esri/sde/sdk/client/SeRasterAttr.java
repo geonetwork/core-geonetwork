@@ -1,6 +1,5 @@
 package com.esri.sde.sdk.client;
 
-import java.awt.Dimension;
 
 public class SeRasterAttr {
 	

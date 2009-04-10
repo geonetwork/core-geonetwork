@@ -220,7 +220,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 				}
 			}
 		}
-		if(params.nodelete) {
+		if(!params.nodelete) {
 			//
 			// delete locally existing metadata from the same source if they were
 			// not in this harvesting result

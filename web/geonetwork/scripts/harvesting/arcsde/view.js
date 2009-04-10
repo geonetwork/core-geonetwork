@@ -86,6 +86,12 @@ function setData(node)
 	var username = node.getElementsByTagName('username')    [0];
 	var password = node.getElementsByTagName('password')    [0];
 	var database = node.getElementsByTagName('database')    [0];
+        hvutil.setOption(node, 'icon', 'arcsde.icon');
+        hvutil.setOption(node, 'server', 'arcsde.server');
+        hvutil.setOption(node, 'port', 'arcsde.port');
+        hvutil.setOption(node, 'username', 'arcsde.username');
+        hvutil.setOption(node, 'password', 'arcsde.password');
+        hvutil.setOption(node, 'database', 'arcsde.database');
 
 	//--- add privileges entries
 	

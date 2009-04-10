@@ -47,12 +47,15 @@ function init()
 		{ id:'filesystem.name', type:'length',   minSize :1,  maxSize :200 },
 		{ id:'filesystem.directoryname',     type:'length',   minSize :1,  maxSize :500 },
 		{ id:'filesystem.recurse',     type:'length',   minSize :1,  maxSize :10 },		
+		{ id:'filesystem.nodelete',    type:'length',   minSize :1,  maxSize :10 },		
 		{ id:'filesystem.every.days',  type:'integer',  minValue:0, maxValue:99 },
 		{ id:'filesystem.every.hours', type:'integer',  minValue:0, maxValue:23 },
 		{ id:'filesystem.every.mins',  type:'integer',  minValue:0, maxValue:59 }
 	]);
 
-	shower = new Shower('filesystem.recurse',  'filesystem.recurse');
+	//shower = new Shower('filesystem.recurse',  'filesystem.recurse');
+	//shower = new Shower('filesystem.nodelete',  'filesystem.nodelete');
+
 }
 
 //=====================================================================================
@@ -69,7 +72,7 @@ function setEmpty()
 			icons[i].selected = true;
 			break;
 		}		
-	shower.update();
+	//shower.update();
 	updateIcon();
 }
 
@@ -79,8 +82,13 @@ function setData(node)
 {
 	this.setDataCommon(node);
 	var name = node.getElementsByTagName('name')    [0];
-	var directoryname = node.getElementsByTagName('directoryname')    [0];
+	var directoryname = node.getElementsByTagName('directory')    [0];
 	var recurse = node.getElementsByTagName('recurse')    [0];
+	var nodelete = node.getElementsByTagName('nodelete')    [0];
+	hvutil.setOption(node, 'directory', 'filesystem.directoryname');
+	hvutil.setOption(node, 'recurse', 'filesystem.recurse');
+	hvutil.setOption(node, 'nodelete', 'filesystem.nodelete');
+	hvutil.setOption(node, 'icon', 'filesystem.icon');
 
 
 	//--- add privileges entries
@@ -94,7 +102,7 @@ function setData(node)
 	this.selectCategories(node);		
 
 	//--- setup other stuff	
-	shower.update();
+	//shower.update();
 	updateIcon();
 
 }
@@ -108,6 +116,7 @@ function getData()
 	data.DIRECTORYNAME = $F('filesystem.directoryname');
 
 	data.RECURSE = $F('filesystem.recurse');
+	data.NODELETE = $F('filesystem.nodelete');
 
 	data.ICON = $F('filesystem.icon');
 	

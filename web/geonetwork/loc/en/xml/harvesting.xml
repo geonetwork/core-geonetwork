@@ -120,6 +120,8 @@
 	<criteria>Criteria</criteria>
 	<validate>Validate</validate>
 	<recurse>Recurse</recurse>
+	<nodelete>Keep local if deleted at source</nodelete>
+	<server>Server</server>	
 	<database>Database</database>	
 	<host>Host</host>
 	<privileges>Privileges</privileges>

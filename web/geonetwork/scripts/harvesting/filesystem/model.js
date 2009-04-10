@@ -76,6 +76,7 @@ var updateTemp =
 '      <name>{NAME}</name>'+
 '      <directoryname>{DIRECTORYNAME}</directoryname>'+
 '      <recurse>{RECURSE}</recurse>'+
+'      <nodelete>{NODELETE}</nodelete>'+
 '      <icon>{ICON}</icon>'+
 '    </site>'+
 '    <options>'+
