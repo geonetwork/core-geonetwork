@@ -26,6 +26,7 @@
 	<target name="gn">
 		<delete	file="web/geonetwork/WEB-INF/lib/geonetwork.jar" />
 		<delete	file="web/geonetwork/WEB-INF/lib/oaipmh-lib.jar" />
+		<delete	file="web/geonetwork/WEB-INF/lib/dummy-api.jar" />
 		<delete	file="csw/lib/csw-client.jar" />
 		<delete	file="csw/lib/csw-common.jar" />
 		<delete	file="gast/gast.jar" />
@@ -35,7 +36,7 @@
 		<javac	srcdir  ="src"
 					destdir =".build"
 					extdirs ="web/geonetwork/WEB-INF/lib"
-					includes="org/fao/**"
+					includes="org/fao/**, com/esri/**"
 					encoding= "ISO8859-1"
 					debug   ="true" />
 
@@ -67,6 +68,10 @@
 				<attribute name="Main-Class" value="org.fao.gast.Gast"/>
 			</manifest>
 		</jar>
+
+		<jar		jarfile ="web/geonetwork/WEB-INF/lib/dummy-api.jar"
+					basedir =".build"
+					includes="com/esri/**" />
 		
 		<delete dir=".build"/>
 	</target>
