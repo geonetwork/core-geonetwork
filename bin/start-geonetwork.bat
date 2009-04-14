@@ -11,6 +11,6 @@ rem java -Xms48m -Xmx256m -XX:MaxPermSize=128m -DSTOP.PORT=8079 -DSTOP.KEY=geone
 rem if you want to hide the dos window when GeoNetwork is started, 
 rem comment out the next line and comment the last line
 
-java -Xms48m -Xmx512m -XX:MaxPermSize=128m -DSTOP.PORT=8079 -Djava.awt.headless=true -DSTOP.KEY=geonetwork -jar start.jar ..\bin\jetty.xml
+java -Xms48m -Xmx512m -Xss2M -XX:MaxPermSize=128m -DSTOP.PORT=8079 -Djava.awt.headless=true -DSTOP.KEY=geonetwork -jar start.jar ..\bin\jetty.xml
 
-rem start javaw -Xms48m -Xmx512m -XX:MaxPermSize=128m -DSTOP.PORT=8079 -Djava.awt.headless=true -DSTOP.KEY=geonetwork -jar start.jar ..\bin\jetty.xml
+rem start javaw -Xms48m -Xmx512m -Xss2M -XX:MaxPermSize=128m -DSTOP.PORT=8079 -Djava.awt.headless=true -DSTOP.KEY=geonetwork -jar start.jar ..\bin\jetty.xml
