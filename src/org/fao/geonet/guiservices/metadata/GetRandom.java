@@ -28,6 +28,8 @@ import org.jdom.*;
 import jeeves.interfaces.*;
 import jeeves.server.*;
 import jeeves.server.context.*;
+import jeeves.utils.Log;
+import jeeves.utils.Xml;
 
 import org.fao.geonet.constants.*;
 import org.fao.geonet.kernel.search.*;
@@ -45,6 +47,11 @@ public class GetRandom implements Service
 {
 	private int     _maxItems;
 	private long    _timeBetweenUpdates;
+	private String  _relation;
+	private String  _northBL;
+	private String  _southBL;
+	private String  _eastBL;
+	private String  _westBL;
 
 	private Element _response;
 	private long    _lastUpdateTime;
@@ -66,6 +73,13 @@ public class GetRandom implements Service
 		String sTimeBetweenUpdates = config.getValue("timeBetweenUpdates", "60");
 		_timeBetweenUpdates = Integer.parseInt(sTimeBetweenUpdates) * 1000;
 
+		// Allow the random search to be restricted to a geographic region
+		_relation = config.getValue("relation", "overlaps");
+		_northBL = config.getValue("northBL", "90");
+		_southBL = config.getValue("southBL", "-90");
+		_eastBL = config.getValue("eastBL", "180");
+		_westBL = config.getValue("westBL", "-180");
+        
 	}
 
 	//--------------------------------------------------------------------------
@@ -86,12 +100,21 @@ public class GetRandom implements Service
 			// FIXME: featured should be at metadata level, not at group level
 			Element searchRequest = new Element("request");
 			searchRequest.addContent(new Element("featured").setText("true"));
+			searchRequest.addContent(new Element("relation").setText(_relation));
+			searchRequest.addContent(new Element("northBL").setText(_northBL));
+			searchRequest.addContent(new Element("southBL").setText(_southBL));
+			searchRequest.addContent(new Element("eastBL").setText(_eastBL));
+			searchRequest.addContent(new Element("westBL").setText(_westBL));
+
+			Log.debug(Geonet.SEARCH_ENGINE, "RANDOM SEARCH CRITERIA:\n"+ Xml.getString(searchRequest));
+			
 			searcher.search(context, searchRequest, _config);
 
 			Element presentRequest = new Element("request");
 			presentRequest.addContent(new Element("fast").setText("true"));
 			presentRequest.addContent(new Element("from").setText("1"));
 			presentRequest.addContent(new Element("to").setText(searcher.getSize()+""));
+            
 			List results = searcher.present(context, presentRequest, _config).getChildren();
 
 			_response = new Element("response");

@@ -152,6 +152,12 @@
 				<call name="featured" class=".guiservices.metadata.GetRandom">
 					<param name="maxItems" value="1" />
 					<param name="timeBetweenUpdates" value="10" />
+					<!-- Restrict to a geographic area. Default is global overlap -->
+					<param name="relation" value="overlaps" />
+					<param name="northBL" value="90" />
+					<param name="southBL" value="-90" />
+					<param name="eastBL" value="180" />
+					<param name="westBL" value="-180" />
 				</call>
 
 				<xml name="repositories" file="xml/repositories.xml" localized="false" />
