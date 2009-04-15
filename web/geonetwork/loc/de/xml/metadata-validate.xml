@@ -2,4 +2,7 @@
 <strings>
 	<heading>Metadaten Validierung</heading>
 	<message>Metadaten erfolgreich validiert</message>
+	<schemaTronError>aber es sind Fehler bei der Validierung gegen die Schematron Regeln aufgetreten</schemaTronError>
+	<schemaTronValid>Validierung gegen Schematron Regeln abgeschlossen</schemaTronValid>
+	<schemaTronReport>Schematron Report hier verfügbar</schemaTronReport> 
 </strings>
