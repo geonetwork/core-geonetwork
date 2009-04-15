@@ -1,4 +1,4 @@
-This set of XML Schema Documents for the OpenGIS® Web Services (OWS) 
+This set of XML Schema Documents for the OpenGIS Web Services (OWS) 
 Implementation Specification version 1.0.0 [OGC 05-008] has been 
 edited to reflect the corrigendum to that document that is based 
 on the change requests: 
