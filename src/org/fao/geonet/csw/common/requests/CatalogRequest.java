@@ -23,7 +23,6 @@
 
 package org.fao.geonet.csw.common.requests;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -381,9 +380,10 @@ public abstract class CatalogRequest
 		try
 		{
 			client.executeMethod(httpMethod);
-			data = httpMethod.getResponseBody();
-
-			return Xml.loadStream(new ByteArrayInputStream(data));
+			
+			///data = httpMethod.getResponseBody();
+			
+			return Xml.loadStream(httpMethod.getResponseBodyAsStream());
 		}
 		finally
 		{
@@ -406,7 +406,7 @@ public abstract class CatalogRequest
 			setupGetParams();
 			httpMethod = new GetMethod();
 			httpMethod.setQueryString(alGetParams.toArray(new NameValuePair[1]));
-
+			System.out.println("GET params:"+httpMethod.getQueryString());
 			if (useSOAP)
 				httpMethod.addRequestHeader("Accept", "application/soap+xml");
 		}
@@ -425,7 +425,7 @@ public abstract class CatalogRequest
 				postData = Xml.getString(new Document(soapEmbed(params)));
 				post.setRequestEntity(new StringRequestEntity(postData, "application/soap+xml", "UTF8"));
 			}
-
+			System.out.println("POST params:"+Xml.getString(params));
 			httpMethod = post;
 		}
 

@@ -688,24 +688,26 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
-	public String autodetectSchema(Element md) {
-		Namespace nons     = Namespace.NO_NAMESPACE;
-		Namespace iso19139 = Csw.NAMESPACE_GMD;
-		Namespace csw = Csw.NAMESPACE_CSW;
+	public String autodetectSchema(Element md)
+	{
+		Namespace nons= Namespace.NO_NAMESPACE;
+		
+		Namespace metadatadRootElemenNSUri = md.getNamespace();
 
-		String mdNSUri = md.getNamespace().getURI();
-		Log.debug(Geonet.DATA_MANAGER, "Autodetect schema for: '"+md.getQualifiedName()+"' with namespace '"+md.getNamespace()+"'");
-	
-		if (md.getName().equals("Record") && md.getNamespace().equals(csw)) {
-			return "dublin-core";
-		}
-
-		if (md.getNamespace().equals(nons)) {
+		List<Namespace> metadataAdditionalNS = md.getAdditionalNamespaces();
+		
+		Log.debug(Geonet.DATA_MANAGER, "Autodetect schema for metadata with :\n * root element:'" + md.getQualifiedName()
+				 + "'\n * with namespace:'" + md.getNamespace()
+				 + "\n * with additional namespaces:" + metadataAdditionalNS.toString());
+		
+		if (md.getName().equals("Record") && md.getNamespace().equals(Csw.NAMESPACE_CSW)) {
+			return "csw-record";
+		} else if (md.getNamespace().equals(nons)) {
 			if (md.getName().equals("Metadata")) {
 				return "iso19115";
 			}
 
-			/* there are some other suggested container names, 
+			/* there are some other suggested container names,
 			 * like <dc>, <dublinCore>, <resource>, <record> and <metadata>
 			 * We may need to also check for those on import and export
 			 */
@@ -715,15 +717,55 @@ public class DataManager
 			if (md.getName().equals("metadata")) {
 				return "fgdc-std";
 			}
-		} else { 
-		// we assume that the root element will have a distinct namespace
-		// this is important for profiles which need to override the top level
-		// element for proper definition eg. mcp:MD_Metadata versus wmo:MD_Metadata
+		} else if (metadataAdditionalNS.contains(Csw.NAMESPACE_GMD)
+				|| metadatadRootElemenNSUri.equals(Csw.NAMESPACE_GMD)) {
+			// Here we have an iso19139 or an ISO profil
+			
+			// the root element will have different namespace (element name
+			// and additionnal namespace).
+			// this is important for profiles which usually need to override the top level
+			// element for proper definition 
+			// eg. mcp:MD_Metadata versus wmo:MD_Metadata
+			//
+			// But profil for france does not override top level element. But only sub
+			// elements.
+			// 
+			// we suppose that the root element declare the prime namespace of the profil
+			// declared as targetNamespace of schema.xsd.
+			// eg. <gmd:MD_Metadata  xmlns:gmd="http://www.isotc211.org/2005/gmd
+			//	 xmlns:fra="http://www.cnig.gouv.fr/2005/fra" ...
+			
+			// FIXME : Issue if :
+			// eg. <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd ..;
+			//	 <fra:FRA_DataIdentification xmlns:fra="http://www.cnig.gouv.fr/2005/fra">
+			// if profil specific namespace only declared on sub elements and not on root.
+
+			
 			for (String schema : getSchemas()) {
 				MetadataSchema mds = getSchema(schema);
-				String ns = mds.getPrimeNS();
-				if (ns != null && mdNSUri.equals(ns)) return schema;
+				String primeNs = mds.getPrimeNS();
+
+				// Check if gmd is not the root element namespace
+				// and root element as a namespace which is
+				// defined in one schema, we have an ISO profil
+				// and current schema is ok. 
+				if (metadatadRootElemenNSUri.equals(primeNs) && 
+						!metadatadRootElemenNSUri.equals(Csw.NAMESPACE_GMD)) {
+					return schema;
+				}
+				
+				// Check if a prime namespace exists in all
+				// additional namespaces of the root element
+				for (Namespace ns : metadataAdditionalNS) {
+					if (ns.getURI().equals(primeNs) &&
+							metadatadRootElemenNSUri.equals(Csw.NAMESPACE_GMD)) {
+						return schema;
+					}
+				}
 			}
+			
+			// Default schema name is 
+			return "iso19139";
 		}
 		return null;
 	}

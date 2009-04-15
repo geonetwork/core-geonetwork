@@ -31,7 +31,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import jeeves.utils.Log;
 
+
+import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -119,25 +122,14 @@ public class CswServer
 			return null;
 		}
 
-		Element dcp = oper.getChild("DCP", Csw.NAMESPACE_OWS);
 
-		if (dcp == null)
-		{
-			log("Missing 'ows:DCP' element in operation");
-			return null;
-		}
+		CswOperation op = new CswOperation();
+		op.name   = name;
+		
+		List<Element> dcp = oper.getChildren("DCP", Csw.NAMESPACE_OWS);
+		evaluateUrl(dcp, op);
 
-		Element http = dcp.getChild("HTTP", Csw.NAMESPACE_OWS);
-
-		if (http == null)
-		{
-			log("Missing 'ows:HTTP' element in operation/DCP");
-			return null;
-		}
-
-		Element get  = http.getChild("Get",  Csw.NAMESPACE_OWS);
-		Element post = http.getChild("Post", Csw.NAMESPACE_OWS);
-
+		
 		List<Element> parameters = oper.getChildren("Parameter", Csw.NAMESPACE_OWS);
 		log("Found " + parameters.size() + " parameters for operation: " + name);
 		List<Element> outputSchemas = null ;
@@ -145,33 +137,24 @@ public class CswServer
 			Element parameter = i.next();
 			String parameterName = parameter.getAttributeValue("name"); 
 			log("Processing parameter: " + parameterName);
-			
-			/**
-			 * outputSchema corresponds to namespace URI with at least CSW DC based format
-			 * and iso19139.
-			 */
-			if(parameterName != null && parameterName.equals("OutputSchema")) {
+			if(parameterName != null && parameterName.equals("outputSchema")) {	// CHECKME : case sensitive ?
 				Element outputSchemaListing = parameter;
 				outputSchemas = outputSchemaListing.getChildren("Value", Csw.NAMESPACE_OWS);
-				log("Found " + outputSchemas.size() + " OutputSchemas for operation: " + name);
+				log("Found " + outputSchemas.size() + " outputSchemas for operation: " + name);
 			}
 		}
 		
-		CswOperation op = new CswOperation();
-		op.name   = name;
-		op.getUrl = evaluateUrl(get);
-		op.postUrl= evaluateUrl(post);
 		if(outputSchemas != null) {
 			for(Iterator<Element> i = outputSchemas.iterator(); i.hasNext();) {
 				Element outputSchema = i.next();
 				String outputSchemaValue = outputSchema.getValue(); 
-				log("Adding OutputSchema: " + outputSchemaValue + " to operation: "+ name);
+				log("Adding outputSchema: " + outputSchemaValue + " to operation: "+ name);
 				op.outputSchemaList.add(outputSchemaValue);				
 			}
 			op.choosePreferredOutputSchema();
 		}
 		else {
-			log("No OutputSchema for operation: " + name);
+			log("No outputSchema for operation: " + name);
 		}
 
 		return op;
@@ -179,31 +162,82 @@ public class CswServer
 
 	//---------------------------------------------------------------------------
 	/**
-	 * Check that an xlink:href attribute is present to call the operation.
+	 * Search for valid POST or GET
+	 * URL and check that service is available
+	 * using GET method or POST/XML.
+	 * 
+	 * SOAP services are not supported (TODO ?).
 	 */
-	private URL evaluateUrl(Element method)
+	private void evaluateUrl(List<Element> dcps, CswOperation op)
 	{
-		if (method == null)
-			return null;
-
+		if (dcps == null)
+		{
+			log("Missing 'ows:DCP' element in operation");
+			return;
+		}
+		
 		Namespace ns = Namespace.getNamespace("http://www.w3.org/1999/xlink");
+		
+		for (Element dcp : dcps) {
+			Element http = dcp.getChild("HTTP", Csw.NAMESPACE_OWS);
+			
+			if (http == null) {
+				log ("Missing 'ows:HTTP' element in operation/DCP");
+				continue;
+			}
+		
+			// GET method
+			Element getUrl = http.getChild("Get",  Csw.NAMESPACE_OWS);
+			
+			if (getUrl == null) {
+				log ("No GET url found in current DCP. Checking POST ...");
+			} else {
+				String tmpGetUrl = getUrl.getAttributeValue("href", ns);
 
-		String url = method.getAttributeValue("href", ns);
+				if (tmpGetUrl != null && op.getUrl == null) {
+					try	{
+						op.getUrl = new URL(tmpGetUrl);
+						log ("Found URL (GET method): " + tmpGetUrl);
+					} catch (MalformedURLException e) {
+						log ("Malformed 'xlink:href' attribute in operation's http method");
+					}
+				}
+			}
+			
+			
+			
+			// POST method
+			Element postUrl = http.getChild("Post", Csw.NAMESPACE_OWS);
 
-		if (url == null)
-		{
-			log("Missing 'xlink:href' attribute in operation's http method");
-			return null;
-		}
-
-		try
-		{
-			return new URL(url);
-		}
-		catch (MalformedURLException e)
-		{
-			log("Malformed 'xlink:href' attribute in operation's http method");
-			return null;
+			if (postUrl == null) {
+				log ("No POST url found in current DCP.");
+			} else {
+				String tmpPostUrl = postUrl.getAttributeValue("href", ns);
+			
+				if (tmpPostUrl == null) {
+					log("Missing 'xlink:href' attribute in operation's http method");
+				} else {
+					if (op.postUrl == null) {
+						// PostEncoding could return a SOAP service address. Not supported
+						Element methodConstraint = postUrl.getChild("Constraint", Csw.NAMESPACE_OWS);
+						
+						if (methodConstraint != null) {
+							Element value = methodConstraint.getChild("Value", Csw.NAMESPACE_OWS);
+							if (value != null && value.getText().equals("SOAP")) {
+								log ("The URL " + tmpPostUrl + " using POST/SOAP method is not supported for harvesting.");
+								continue;
+							}
+						}
+	
+						try	{
+							op.postUrl = new URL(tmpPostUrl);
+							log ("Found URL (POST method):" + tmpPostUrl);
+						} catch (MalformedURLException e) {
+							log ("Malformed 'xlink:href' attribute in operation's http method");
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -212,6 +246,7 @@ public class CswServer
 	private void log(String message)
 	{
 		logs.add(message);
+		Log.debug(Geonet.HARVEST_MAN, message);
 	}
 
 	//---------------------------------------------------------------------------

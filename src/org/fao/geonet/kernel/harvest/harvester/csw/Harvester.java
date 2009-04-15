@@ -42,6 +42,7 @@ import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.CswOperation;
 import org.fao.geonet.csw.common.CswServer;
 import org.fao.geonet.csw.common.ElementSetName;
+import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
@@ -166,31 +167,45 @@ class Harvester
 	private Set<RecordInfo> search(CswServer server, Search s) throws Exception
 	{
 		int start =  1;
-		int max   = 10;
-
+		
 		GetRecordsRequest request = new GetRecordsRequest();
 
 		request.setResultType(ResultType.RESULTS);
+		//request.setOutputSchema(OutputSchema.OGC_CORE);	// Use default value
 		request.setElementSetName(ElementSetName.SUMMARY);
-		request.setMaxRecords(max +"");
+		request.setMaxRecords(GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE +"");
 
 		CswOperation oper = server.getOperation(CswServer.GET_RECORDS);
 
-		if (oper.postUrl != null)
-		{
-			request.setUrl(oper.postUrl);
-			request.setConstraintLanguage(ConstraintLanguage.FILTER);
-			request.setConstraintLangVersion("1.1.0");
-			request.setConstraint(getFilterConstraint(s));
-			request.setMethod(CatalogRequest.Method.POST);
-		}
-		else
-		{
+		// Use the preferred HTTP method and check one exist.
+		if (oper.getUrl != null && PREFERRED_HTTP_METHOD.equals("GET")) {
 			request.setUrl(oper.getUrl);
 			request.setConstraintLanguage(ConstraintLanguage.CQL);
 			request.setConstraintLangVersion("1.0");
 			request.setConstraint(getCqlConstraint(s));
 			request.setMethod(CatalogRequest.Method.GET);
+		} else if (oper.postUrl != null && PREFERRED_HTTP_METHOD.equals("POST")) {
+			request.setUrl(oper.postUrl);
+			request.setConstraintLanguage(ConstraintLanguage.FILTER);
+			request.setConstraintLangVersion("1.1.0");
+			request.setConstraint(getFilterConstraint(s));
+			request.setMethod(CatalogRequest.Method.POST);
+		} else {
+			if (oper.getUrl != null) {
+				request.setUrl(oper.getUrl);
+				request.setConstraintLanguage(ConstraintLanguage.CQL);
+				request.setConstraintLangVersion("1.0");
+				request.setConstraint(getCqlConstraint(s));
+				request.setMethod(CatalogRequest.Method.GET);
+			} else if (oper.getUrl != null) {
+				request.setUrl(oper.postUrl);
+				request.setConstraintLanguage(ConstraintLanguage.FILTER);
+				request.setConstraintLangVersion("1.1.0");
+				request.setConstraint(getFilterConstraint(s));
+				request.setMethod(CatalogRequest.Method.POST);	
+			} else {
+				throw new OperationAbortedEx("No GET or POST DCP available in this service.");
+			}
 		}
 
 		if (params.useAccount)
@@ -201,10 +216,9 @@ class Harvester
 		while (true)
 		{
 			request.setStartPosition(start +"");
-			log.debug("Request: " + request.toString());			 
-			Element response = doSearch(request, start, max);			
+			Element response = doSearch(request, start, GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE);			
 			log.debug("Number of child elements in response: " + response.getChildren().size());
-			
+			//System.out.println ("CSW response:" + Xml.getString(response));
 			Element results  = response.getChild("SearchResults", Csw.NAMESPACE_CSW);
 			// heikki: some providers forget to update their CSW namespace to the CSW 2.0.2 specification
 			if(results == null) {
@@ -239,10 +253,10 @@ class Harvester
 			log.debug("Records declared in response : "+ recCount);
 			log.debug("Records found in response    : "+ counter);
 
-			if (start+max > recCount)
+			if (start+GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE > recCount)
 				break;
 
-			start += max;
+			start += GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE;
 		}
 
 		log.info("Records added to result list : "+ records.size());
@@ -308,7 +322,7 @@ class Harvester
 		
 		Element propName = new Element("PropertyName",      Csw.NAMESPACE_OGC);
 		Element literal  = new Element("Literal",           Csw.NAMESPACE_OGC);
-
+		
 		propName.setText(name);
 		literal .setText(value);
 
@@ -356,9 +370,9 @@ class Harvester
 	{
 		if (value.length() != 0)
 			if (value.contains("%"))
-				queryables.add("("+ name +" like '"+ value +"')");
+				queryables.add(name +" like '"+ value +"'");
 			else
-				queryables.add("("+ name +" = "+ value +")");
+				queryables.add(name +" = '"+ value +"'");
 	}
 
 	//---------------------------------------------------------------------------
@@ -367,7 +381,7 @@ class Harvester
 	{
 		try
 		{
-			log.info("Searching on : "+ params.name +" ("+ start +".."+ max +")");
+			log.info("Searching on : "+ params.name +" ("+ start +".."+ (start + max) +")");
 			Element response = request.execute();
 			log.debug("Search results:\n"+Xml.getString(response));
 
@@ -427,7 +441,9 @@ class Harvester
 	//--- Variables
 	//---
 	//---------------------------------------------------------------------------
-
+	// FIXME : Currently switch from POST to GET for testing mainly.
+	public static final String PREFERRED_HTTP_METHOD = CatalogRequest.Method.GET.toString();
+	private static int GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE = 20;
 	private Logger         log;
 	private Dbms           dbms;
 	private CswParams      params;

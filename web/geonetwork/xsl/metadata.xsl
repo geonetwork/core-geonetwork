@@ -3,6 +3,7 @@
 	xmlns:exslt= "http://exslt.org/common"
 	xmlns:gco="http://www.isotc211.org/2005/gco"
 	xmlns:geonet="http://www.fao.org/geonetwork"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
 	exclude-result-prefixes="exslt">
 
 	<xsl:include href="metadata-utils.xsl"/>
@@ -347,9 +348,9 @@
 	<!--
 	prevent drawing of geonet:* elements
 	-->
-	<xsl:template mode="element" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror"/>
-	<xsl:template mode="simpleElement" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror"/>
-	<xsl:template mode="complexElement" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror"/>
+	<xsl:template mode="element" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type"/>
+	<xsl:template mode="simpleElement" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type"/>
+	<xsl:template mode="complexElement" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type"/>
 	
 	<!--
 	prevent drawing of attributes starting with "_", used in old GeoNetwork versions

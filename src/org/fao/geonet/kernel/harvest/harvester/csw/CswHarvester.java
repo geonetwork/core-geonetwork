@@ -77,7 +77,7 @@ public class CswHarvester extends AbstractHarvester
 
 	protected void doDestroy(Dbms dbms) throws SQLException
 	{
-		File icon = new File(context.getAppPath() +"images/logos", params.uuid +".gif");
+		File icon = new File(context.getAppPath() + "images/logos", params.uuid + ".gif");
 
 		icon.delete();
 		Lib.sources.delete(dbms, params.uuid);

@@ -33,9 +33,15 @@
 					</table>
 				</td>
 			</tr>
+			<xsl:if test="object">
+				<tr>
+					<td><b>Info</b> </td>
+					<td><xsl:value-of select="object"/></td>
+				</tr>
+			</xsl:if>
 		</table>
 	</xsl:template>
-
+		
 	<!-- ============================================================================================= -->
 
 </xsl:stylesheet>
