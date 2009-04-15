@@ -69,7 +69,7 @@
 	<wxs139>Создать метаданные для элементов слоя, используя полученную
 		GetCapabilities информацию.</wxs139>
 	<wxs139Layer>Создать метаданные для элементов слоя, используя атрибуты
-		metadataURL (если присутствуют и не используется GetCapabilities).</wxs139Layer>
+		MetadataURL (если присутствуют и не используется GetCapabilities).</wxs139Layer>
 	<createThumbnails>Создать эскизы для WMS-слоев.</createThumbnails>
 
 	<serviceCategory>Категория для сервиса</serviceCategory>
