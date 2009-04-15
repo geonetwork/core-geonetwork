@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<groups>Choisir le groupe auquel appartient cet utilisateur</groups>
+	<notfound>Métadonnées non trouvées</notfound>
+	<notowner>Métadonnées non transférées car vous n'en êtes pas l'auteur</notowner>
+	<updated>Métadonnées attribuées au nouvel auteur</updated>
+	<resultstitle>Rapport sur le transfert de privilèges</resultstitle>
+	<users>Sélectionner l'utilisateur qui sera l'auteur</users>
+</strings>

@@ -2,9 +2,9 @@
 
 <strings>
 	<username>Utilisateur</username>
-	<removedMetadata>Supprimer metadonnées</removedMetadata>
+	<removedMetadata>Sauvegarde des métadonnées lors de la suppression</removedMetadata>
 	<dir>Répertoire</dir>
-	<ldap>LDAP Authentication</ldap>
+	<ldap>Authentification LDAP</ldap>
 	<defProfile>Profil par défaut</defProfile>
 	<login>Login</login>
 	<userDN>User DN</userDN>
@@ -17,7 +17,20 @@
 	<site>Site</site>
 	<name>Nom</name>
 	<organ>Organisme</organ>
-
+	<csw>Serveur CSW</csw>
+	<contactId>Contact</contactId>
+	<title>Titre</title>
+	<abstract>Résumé</abstract>
+	<fees>Frais</fees>
+	<accessConstraints>Constraintes d'accès</accessConstraints>
+	
+	<userSelfRegistration>Enregistrement libre des internautes</userSelfRegistration>
+	<shib>Authentification via Shibboleth </shib>
+	<path>Chemin</path>
+	<attributes>Shibboleth attribute mapping</attributes>
+	<surname>Surname</surname>
+	<firstname>Firstname</firstname>
+	
 	<server>Serveur</server>
 	<host>Hôte</host>
 	<port>Port</port>
