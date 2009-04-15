@@ -3,6 +3,8 @@
 	xmlns:dc = "http://purl.org/dc/elements/1.1/"
 	xmlns:dct = "http://purl.org/dc/terms/"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ows="http://www.opengis.net/ows"
+	xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
 	xmlns:geonet="http://www.fao.org/geonetwork">
 
 	<!--
@@ -22,7 +24,7 @@
 	<!--
 	these elements should be boxed
 	-->
-	<xsl:template mode="dublin-core" match="simpledc">
+	<xsl:template mode="dublin-core" match="simpledc|csw:Record">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 
@@ -89,7 +91,7 @@
 			<!-- FIXME
 			<image>IMAGE</image>
 			-->
-			
+			<!-- TODO : ows:BoundingBox -->
 			<xsl:variable name="coverage" select="dc:coverage"/>
 			<xsl:variable name="n" select="substring-after($coverage,'North ')"/>
 			<xsl:variable name="north" select="substring-before($n,',')"/>
@@ -110,7 +112,7 @@
 				</geoBox>
 			</xsl:if>
 		
-			<xsl:copy-of select="geonet:info"/>
+			<xsl:copy-of select="geonet:*"/>
 		</metadata>
 	</xsl:template>
 				

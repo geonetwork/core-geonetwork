@@ -200,7 +200,7 @@ public class GetRecordsRequest extends CatalogRequest
 				+ "xmlns(" + Csw.NAMESPACE_GMD.getPrefix() + "=" + Csw.NAMESPACE_GMD.getURI() + ")"
 				);
 		addParam("outputFormat",   outputFormat);
-		addParam("outputSchema",   outputSchema, Csw.NAMESPACE_CSW.getPrefix() + ":");
+		addParam("outputSchema",   outputSchema);
 		addParam("startPosition",  startPosition);
 		addParam("maxRecords",     maxRecords);
 		addParam("elementSetName", elemSetName);
@@ -217,7 +217,7 @@ public class GetRecordsRequest extends CatalogRequest
 		// TODO : Check in Capabilities that typename exist
 		// TODO : Check that local node support typename used
 		if (hsTypeNames.size()==0)
-			addParam("typeNames", "gmd:MD_Metadata");
+			addParam("typeNames", "csw:Record");
 		else
 			fill("typeNames", hsTypeNames);
 		fill("sortBy",    alSortBy);
@@ -264,9 +264,10 @@ public class GetRecordsRequest extends CatalogRequest
 		// TODO : Check in Capabilities that typename exist
 		// TODO : Check that local node support typename used
 		if (hsTypeNames.size()==0)
-			setAttrib(query, "typeNames", "gmd:MD_Metadata");
+			setAttrib(query, "typeNames", "csw:Record");
 		else
 			setAttrib(query, "typeNames", hsTypeNames, "");
+			
 		addParam (query, "ElementSetName", elemSetName);
 
 		//--- handle constraint
@@ -311,10 +312,7 @@ public class GetRecordsRequest extends CatalogRequest
 	}
 
 	//---------------------------------------------------------------------------
-	/**
-	 * Load the filter passed by the operation parameter
-	 * 
-	 */
+
 	private void addFilter(Element constr)
 	{
 		try

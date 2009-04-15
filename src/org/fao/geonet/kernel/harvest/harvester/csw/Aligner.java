@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester.csw;
 import java.util.List;
 import java.util.Set;
 
+import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
@@ -56,7 +57,7 @@ public class Aligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public Aligner(Logger log, ServiceContext sc, Dbms dbms, CswServer server, CswParams params)
+	public Aligner(Logger log, ServiceContext sc, Dbms dbms, CswServer server, CswParams params) throws OperationAbortedEx
 	{
 		this.log        = log;
 		this.context    = sc;
@@ -75,20 +76,27 @@ public class Aligner
 
 		CswOperation oper = server.getOperation(CswServer.GET_RECORD_BY_ID);
 
-		if (oper.postUrl != null)
-		{
-			request.setUrl(oper.postUrl);
-			request.setMethod(CatalogRequest.Method.POST);
-		}
-		else
-		{
+		// Use the preferred HTTP method and check one exist.
+		if (oper.getUrl != null && Harvester.PREFERRED_HTTP_METHOD.equals("GET")) {
 			request.setUrl(oper.getUrl);
 			request.setMethod(CatalogRequest.Method.GET);
+		} else if (oper.postUrl != null && Harvester.PREFERRED_HTTP_METHOD.equals("POST")) {
+			request.setUrl(oper.postUrl);
+			request.setMethod(CatalogRequest.Method.POST);
+		} else {
+			if (oper.getUrl != null) {
+				request.setUrl(oper.getUrl);
+				request.setMethod(CatalogRequest.Method.GET);
+			} else if (oper.getUrl != null) {
+				request.setUrl(oper.postUrl);
+				request.setMethod(CatalogRequest.Method.POST);
+			} else {
+				throw new OperationAbortedEx("No GET or POST DCP available in this service.");
+			}
 		}
 
 		if(oper.preferredOutputSchema != null) {
 			request.setOutputSchema(oper.preferredOutputSchema);
-			System.out.println("set outputschema to: " + request.getOutputSchema());
 		}
 		
 		if (params.useAccount) {
@@ -171,7 +179,7 @@ public class Aligner
 			return;
 		}
 
-		log.debug("  - Adding metadata with remote uuid:"+ ri.uuid);
+		log.debug("  - Adding metadata with remote uuid:"+ ri.uuid + " schema:" + schema);
 
 		String id = dataMan.insertMetadataExt(dbms, schema, md, context.getSerialFactory(),
 													 params.uuid, ri.changeDate, ri.changeDate, ri.uuid, 1, null);
@@ -356,7 +364,6 @@ public class Aligner
 	private GroupMapper    localGroups;
 	private UUIDMapper     localUuids;
 	private CswResult      result;
-
 	private GetRecordByIdRequest request;
 }
 

@@ -5,7 +5,7 @@
 	xmlns:gmx="http://www.isotc211.org/2005/gmx"
 	xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:gml="http://www.opengis.net/gml"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:exslt="http://exslt.org/common">
 
