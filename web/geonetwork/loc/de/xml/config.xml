@@ -16,6 +16,13 @@
 	<z3950>Z39.50 Server</z3950>
 		<enable>Aktiv</enable>
 		
+	<csw>CSW</csw>
+		<contactId>Kontakt</contactId>
+		<title>Titel</title>
+		<abstract>Zusammenfassung</abstract>
+		<fees>Gebühren</fees>
+		<accessConstraints>Zugangsbeschränkungen</accessConstraints>
+		
 	<proxy>Proxy</proxy>
 		<use>Use</use>
 		<username>Username</username>
@@ -24,6 +31,8 @@
 		<email>EMail</email>
 		<smtpHost>SMTP Host</smtpHost>
 		<smtpPort>SMTP Port</smtpPort>
+		
+	<userSelfRegistration>Benutzerregistrierung</userSelfRegistration>
 	
 	<removedMetadata>Gelöschte Metadaten</removedMetadata>
 		<dir>Verzeichnis</dir>
@@ -35,10 +44,18 @@
 		<distNames>Distinguished names</distNames>
 			<baseDN>Base</baseDN>
 			<usersDN>Users</usersDN>
-		<userAttribs>User's attributes</userAttribs>
+		<userAttribs>Benutzerattribute</userAttribs>
 			<name>Name</name>
-			<password>Password</password>
-			<profile>Profile</profile>
+			<password>Passwort</password>
+			<profile>Profil</profile>
+			
+	<shib>Shibboleth Authentifikation</shib>
+		<path>Pfad</path>
+		<attributes>Shibboleth Attributzuordnung</attributes>
+			<username>Benutzername</username>
+			<surname>Nachname</surname>
+			<firstname>Vorname</firstname>
+			<profile>Profil</profile>
 		
 	<!-- Buttons -->
 	

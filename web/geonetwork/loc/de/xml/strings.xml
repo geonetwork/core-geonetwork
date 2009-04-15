@@ -1,5 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<!-- Self registration strings -->
+	<registerTitle>Selbstregistrierungsformular</registerTitle>
+	<profileChoice value="RegisteredUser">Registrierter Benutzer</profileChoice>
+	<profileChoice value="Editor">Editor</profileChoice>
+	<profileChoice value="Reviewer">Inhalt Kritiker</profileChoice>
+	<profileChoice value="UserAdmin">Benutzer Administrator</profileChoice>
+	<profileChoice value="Administrator">Administrator</profileChoice>
+	<checkusername>Überpüfen</checkusername>
+	<register>Registrieren</register>
+	<registerChoose>Ich möchte </registerChoose>
+	<registrationDetails>Eingegebene Details: </registrationDetails>
+	<firstNameMandatory js="true">Der Vorname ist verpflichtend</firstNameMandatory>
+	<lastNameMandatory js="true">Der Nachname ist verpflichtend</lastNameMandatory>
+	<spacesNot js="true">Leerzeichen sind in diesem Feld nicht erlaubt</spacesNot>
+	<emailAddressInvalid js="true">E-Mail Adresse ist ungültig</emailAddressInvalid>
+	<yourRegistration js="true">Ihre Registrierung...</yourRegistration>
+	<!-- End of Self registration strings -->
+	<fileType>Dateityp:</fileType>
+	<generateUUID>Generiere UUID für eingefügte Metadaten</generateUUID>
+	<insertFileMode>Dateiupload</insertFileMode>
+	<insertMode>Einfügungsmodus:</insertMode>
+	<insertPasteMode>Copy/Paste</insertPasteMode>
+	<mefFile>MEF Datei</mefFile>
+	<newMdInsert>Neuer Metadatensatz eingefügt:</newMdInsert>
+	<nothing>Keine Aktion bei Import</nothing>
+	<overwrite>Überschreibe Metadatensätze mit gleicher UUID</overwrite>
+	<singleFile>Einfache Datei (XML, SLD, WMC...)</singleFile>
+	<uuidAction>Import Aktionen:</uuidAction>
+
+	<metadata.admin.index>Index Manager</metadata.admin.index>
+	<metadata.admin.index.desc>Neuaufbau des Lucene Index</metadata.admin.index.desc>
+	<metadata.admin.index.success>Neuaufbau war erfolgreich.</metadata.admin.index.success>
+	<metadata.admin.index.failed>Fehler beim Aufabu des Lucene Index.</metadata.admin.index.failed>
+	<rebuild>Neuaufbau</rebuild>
+	<savepdf>Speichere Ergebnisse als PDF</savepdf>
 	<savexml>
 		<dc>Speicher Dublin Core Metadaten als XML</dc>
 		<fgdc>Speicher FGDC Metadaten als XML</fgdc>
@@ -45,6 +80,7 @@
 	<keyword>Schlüsselwort</keyword>
 	<res>Ergebnisse</res>
 	<ress>Ergebnis</ress>
+	<massiveActions>Massenaktionen:</massiveActions>
 
 	<thesaurus>
 		<category>Thesaurus Kategorie</category>
@@ -128,7 +164,9 @@
     <cn>中文</cn> <!-- Do not translate! -->
 	<completeTab>Erweiterte Ansicht</completeTab>
 	<completeTabEditor>Erweiterter Editor</completeTabEditor>
+	<confirmCancel>Sind Sie sicher, dass Sie die Aktione abbrechen wollen? (Alle ungespeicherten Eingaben gehen verloren)</confirmCancel>
 	<confirmDelete>Wollen Sie die Metadaten wirklich aus der Datenbank löschen?</confirmDelete>
+	<confirmMassiveDelete>Sind Sie sicher, dass Sie alle ausgewählten Metadatensätze löschen wollen?</confirmMassiveDelete>
 	<confirmPassword>Passwort bestätigen</confirmPassword>
 	<confirmNewPassword>Neues Passwort bestätigen</confirmNewPassword>
 	<constraintsTab>Grenzen</constraintsTab>
@@ -143,6 +181,7 @@
 	<createTip>Neue Metadaten mit dieser Vorlage erstellen</createTip>
 	<dataQualityTab>Daten Qualität</dataQualityTab>
 	<datasetTab>Datenbestand</datasetTab>
+	<dateModified>Datum verändert</dateModified>
 	<dateRelChoice/>
 	<dateRelChoice value="14">vor</dateRelChoice>
 	<dateRelChoice value="15">vor oder während</dateRelChoice>
@@ -163,6 +202,10 @@
 	<down>runter</down>
 	<download>Download</download>
 	<downloadable>Herunterladbar</downloadable>
+	<downloadSelect>Download?</downloadSelect>
+	<downloadSelected>ausgewählte herunterladen</downloadSelected>
+	<downloadSummary>Download Zusammenfassung</downloadSummary>
+	<downloadThemAll>Alle herunterladen</downloadThemAll>
 	<dynamic>Interaktiv</dynamic>
 	<downloadData>Daten zum Download</downloadData>
 	<dsgpoly>Datenbestand G-Polygon</dsgpoly>
@@ -186,6 +229,7 @@
 	<feedbackComments>Feedback / Kommentare</feedbackComments>
 	<feedbackRequest>Bitte geben Sie Ihre Kontaktdaten vor dem Download ein</feedbackRequest>
 	<file>Datei</file>
+	<fileUploadSuccessful>Dateiupload erfolgreich</fileUploadSuccessful>
 	<firstName>Vorname</firstName>
 	<fr>Français</fr> <!-- Do not translate! -->
 	<de>Deutsch</de>
@@ -244,9 +288,17 @@
 	<latitude>Breitengrad (zwischen -90 und 90)</latitude>
 	<latMax>lat (max)</latMax>
 	<latMin>lat (min)</latMin>
+	<legend>Legende</legend>
+	<link>Link</link>
 	<links>Links</links>
 	<loading>Laden ...</loading>
 	<local>Lokale Suche</local>
+	<localType>Lokal</localType>
+	<localizationHelp>Wichtig! Dieses Forumlar erlaubt das hinzufpgen von Schlüsselwerten in die Datenbank.
+		Der Schlüsselwert darf keine Leerzeichen enthalten.<br/>
+		Nach dem hinzufügen von Schlüsselwerten, benutzen Sie "Localisierungs" Formular Aministrationspanel um 
+		die Werte einzugeben, die auf der Webseite in den verschiedenen Sprachen erscheinen sollen.
+	</localizationHelp>
 	<localiz>Lokalisation</localiz>
 	<localizDes>Allows to change localized entities, like groups, categories etc...</localizDes>
 	<location>Wo?</location>
@@ -302,6 +354,10 @@
 	<mapViewerClose>Kartenviewer schließen</mapViewerClose>
 	<mapViewerLoading>Kartenviewer wird geladen...</mapViewerLoading>
 	<mapViewerOpen>Kartenviewer öffnen</mapViewerOpen>
+	<massiveDeleteTitle>Massen-Lösch-Operation</massiveDeleteTitle>
+	<massiveNewOwnerTitle>Massen-Neuer-Benutzer-Operation</massiveNewOwnerTitle>
+	<massiveUpdateCategoriesTitle>Massen-Update-Kategorien-Operation</massiveUpdateCategoriesTitle>
+	<massiveUpdatePrivilegesTitle>Massen-Update-Privilegien-Operation</massiveUpdatePrivilegesTitle>
 	<max>Maximum</max>
 	<mdUpdateError>Updatefehler</mdUpdateError>
 	<message>Benutzername oder Passwort ist falsch.<br/>Drücken Sie den 'zurück' Button und versuchen Sie es erneut.</message>
@@ -323,6 +379,7 @@
 	<newCategory>Neue Kategorie Hinzufügen</newCategory>
 	<newMdDes>Neue Metadaten hinzufügen</newMdDes>
 	<newMetadata>Neue Metadaten</newMetadata>
+	<newOwner>Neuer Besitzer</newOwner>
 	<newPassword>Neues Passwort</newPassword>
 	<newUser>Benutzer hinzufügen</newUser>
 	<next>Next</next>
@@ -330,13 +387,18 @@
 	<noHelp>Entschuldigung, keine Hilfe verfügbar</noHelp>
 	<noInfo>Entschuldigung, keine Informationen verfügbar</noInfo>
 	<noLogin>Sie sind nicht angemeldet</noLogin>
+	<noOwnerRights>Privilegien/Kategorien gesperrt: Sie haben keine Besitzerrechte</noOwnerRights>
 	<northbc>nördliche Grenzkoordinate</northbc>
+	<notfound>Nicht gefunden</notfound>
 	<noSelectedMd>No metadata selected! Please at least select one before select an action.</noSelectedMd>
 	<online>Interaktive Karte</online>
 	<onlink>Online Linkage</onlink>
 	<opensearch>GeoNetwork opensearch service allow search to be made into the metadata catalog.</opensearch>
 	<operation>Operation</operation>
 	<organisation>Organisation / Abteilung</organisation>
+	<overwriteFile>Überschreiben?</overwriteFile>
+	<owner>Besitzer</owner>
+	<ownerRights>Löschen/Privilegien/Kategorien gesperrt: Sie haben keine Besitzerrechte</ownerRights>
 	<paper>Analog</paper>
 	<partial>teilweise Überschneidung</partial>
 	<partialCooordinate>Partial coordinates </partialCooordinate>
@@ -353,6 +415,7 @@
 	<progressChoice value="complete">vollständig</progressChoice>
 	<progressChoice value="in-work">in arbeit</progressChoice>
 	<progressChoice value="planned">geplannt</progressChoice>
+	<protocol>Protokoll</protocol>
 	<protocolChoice value="WWW:LINK-1.0-http--link">Webaddresse (URL)</protocolChoice>
 	<protocolChoice value="WWW:LINK-1.0-http--samples">Modellprodukt (URL)</protocolChoice>
 	<protocolChoice value="WWW:LINK-1.0-http--related">Related link (URL)</protocolChoice>
@@ -380,12 +443,14 @@
 	<region>Region</region>
 	<RegisteredUser>Registrierte Benutzer</RegisteredUser>
 	<remote>enfernte Suche</remote>
+	<remoteType>entfernt</remoteType>
 	<remove>entfernen</remove>
 	<reset>Zurücksetzen</reset>
 	<options>Optionen</options>
 	<output>Ausgabe</output>
 	<outputType id="full">Komplett</outputType>
 	<outputType id="text">Nur Text</outputType>
+	<showFileDownloadSummary>Zeige Datei Download Auswahl</showFileDownloadSummary>
 	<sortBy>Geordnet nach</sortBy>
 	<sortByType id="relevance">Relevanz</sortByType>
 	<sortByType id="rating">Bewertung</sortByType>
@@ -409,6 +474,7 @@
 	<saveAndClose>Speichern und Schließen</saveAndClose>
 	<saveAndValidate>Überprüfen</saveAndValidate>
 	<schema>Schema</schema>
+	<schematronError>Schematron Fehler</schematronError>
 	<search>Suche</search>
 	<searchBox>Suche nach Daten und Informationen</searchBox>
 	<searchIndex>Suchindex</searchIndex>
@@ -428,12 +494,14 @@
 	<selectNone>Unselect metadata selected</selectNone>
 	<server>Server</server>
 	<setAll>Alle setzen</setAll>
+	<shibLogin>Shib Login</shibLogin>
 	<show>Metadaten</show>
 	<simple>einfache Suche</simple>
 	<simpleTab>Default Ansicht</simpleTab>
 	<simpleTabEditor>Default Editor</simpleTabEditor>
 	<siteId>Seiten ID</siteId>
 	<site>Seite</site>
+	<sizeBytes>Größe (Bytes)</sizeBytes>
 	<southbc>südliche Grenzkoordinate</southbc>
 	<spatial2Tab>Spat. Repr.</spatial2Tab>
 	<spatialTab>Spat. Info</spatialTab>
@@ -458,7 +526,9 @@
 	<up>hoch</up>
 	<update>Update</update>
 	<updateGroup>Update Gruppep</updateGroup>
+	<updateCategories>Update Kategorien</updateCategories>
 	<updateCategory>Update Kategorie</updateCategory>
+	<updatePrivileges>Update Privilegien</updatePrivileges>
 	<updateUserAccount>Update Benutzer Account </updateUserAccount>
 	<upload>Upload </upload>
 	<user>Benutzer</user>
@@ -473,6 +543,8 @@
 	<validate>Validieren</validate>
 	<validityBegins>Gültigkeit ab</validityBegins>
 	<validityEnds>und endet</validityEnds>
+	<viewInGE>In Google Earth ansehen</viewInGE>
+	<waitGetCap js="true">Laden der Karten Layer, bitte warten...</waitGetCap>
 	<westbc>westliche Grenzkoordinate</westbc>
 	<what>Was?</what>
 	<where>Wo?</where>
@@ -484,11 +556,20 @@
 
 	<xmlInsertTitle>XML Metadaten einfügen</xmlInsertTitle>
 	<xmlTab>XML Sicht</xmlTab>
+	<xsdError>XSD Validierungsfehler</xsdError>
+	
+	
+	<!--  intermap tooltips -->
+	<imZoomFull>Auf komplette Ausdehnung zoomen</imZoomFull>
 	<imZoomIn>reinzoomen</imZoomIn>
 	<imZoomOut>rauszoomen</imZoomOut>
-	<imZoomFull>Auf komplette Ausdehnung zoomen</imZoomFull>
 	<imPan>Kartenausschnitt verschieben</imPan>
+	<imZoomToLayer>Zoom auf ausgewählten Layer</imZoomToLayer>
 	<imAreaInterest>Fläche auswählen</imAreaInterest>
+	
+        <!-- date selector -->
+        <fromDateSelector>Auswahl des Anfangsdatums</fromDateSelector>
+        <toDateSelector>Auswahl des Enddatums</toDateSelector>
 
 	<SendAFriend>Link auf diesen Metadatensatz per E-Mail versenden</SendAFriend>
 </strings>

@@ -228,9 +228,9 @@
 		<updated>Geupdated</updated>
 		<unchanged>Nicht verändert</unchanged>
 		<unknownSchema>Unbekanntes Schema</unknownSchema>
-		<unretrievable>Unretrievable</unretrievable>
+		<unretrievable>nicht abrufbar</unretrievable>
 		<badFormat>Falsches XML Format</badFormat>
-		<doesNotValidate>Does not validate</doesNotValidate>
+		<doesNotValidate>Validiert nicht</doesNotValidate>
 	</tipHeader>
 	
 	<notRun>Warten auf das erste Update</notRun>
@@ -298,108 +298,101 @@
 	<!-- OGCWXS harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<tip id="ogcwxs.wxstype">
-			The type of the OGC web services.	
+			Typ des OGC Webservice.	
 		</tip>
 		
 		<tip id="ogcwxs.version">
-			The version of the OGC web services.	
+			Version des OGC Webservice.	
 		</tip>
 		
 		<tip id="ogcwxs.lang">
-			The language of the produced metadata.	
+			Sprache des Metadatensatzes.	
 		</tip>
 		
 		<tip id="ogcwxs.capabUrl">
-			The given URL must point to a web service entry point. The format of a
-			URL is like this:<br/>
+			Die URL muss auf einen Webservice verweisen. Das Format einer URL ist:<br/>
 			http://HOST/PATH			
 		</tip>
 		
-		
-		
 		<tip id="ogcwxs.addSearch">
-			Add one search on the remote server. You have to specify at least one search in order to
-			retrieve some metadata.
+			Fügen Sie eine Suche auf dem entfernten Server hinzu. Um Metadatensätze zu empfangen benötigen Sie mindestens eine Suche.
 		</tip>
 		
 		<tip id="ogcwxs.groups">
-			You can choose the privileges to associate to harvested metadata.
+			Sie können die Privilegien zu den assozierten geharvesteten Metadatensätzen wählen.
 		</tip>
 		
 		<tip id="ogcwxs.addGroups">
-			Select one or more groups (using the <b>&lt;CTRL&gt;</b> key) on the left panel and press this button.
+			Wählen Sie eine oder mehrere Gruppen (benutzen Sie die <b>&lt;STRG&gt;</b> Taste) auf der linken Seite und drücken Sie diesen Button.
 		</tip>
 		
 		<tip id="ogcwxs.categories">
-			You can assign one or more categories to harvested metadata. Use the <b>&lt;CTRL&gt;</b> 
-			key to select more than one category.
+			Sie können eine oder mehrere Kategorien zu den geharvesteten Metadatensätzen hinzufügen. Benutzen Sie die <b>&lt;STRG&gt;</b> Taste, wenn Sie mehrere Kategorien wählen wollen.
 		</tip>
 	
 	
 		<!-- OAI-PMH harvesting type - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<tip id="oai.url">
-			This URL must point to the OAI-PMH server
+			Die URL muss auf einen OAI-PMH Server zeigen
 		</tip>
 		
 		<tip id="oai.addSearch">
-			Add one search on the remote server. If you don't add any search, an unconstrained search
-			is performed using the 'oai_dc' metadata format
+			Fügen sie eine Suche auf dem entfernten Server hinzu. Wenn Sie keine Suche hinzufügen, wird eine If you don't add any search, eine Suche nache dem 'oai_dc' Metadatenformat vorgenommen
 		</tip>
 		
 		<tip id="oai.groups">
-			You can choose the privileges to associate to harvested metadata.
+			Sie können die Privilegien zu den assozierten geharvesteten Metadatensätzen wählen.
 		</tip>
 		
 		<tip id="oai.addGroups">
-			Select one or more groups (using the <b>&lt;CTRL&gt;</b> key) on the left panel and press this button.
+			Wählen Sie eine oder mehrere Gruppen (benutzen Sie die <b>&lt;STRG&gt;</b> Taste) auf der linken Seite und drücken Sie diesen Button.
 		</tip>
 		
 		<tip id="oai.categories">
-			You can assign one or more categories to harvested metadata. Use the <b>&lt;CTRL&gt;</b> 
-			key to select more than one category.
+			Sie können eine oder mehrere Kategorien zu den geharvesteten Metadatensätzen hinzufügen. Benutzen Sie die <b>&lt;STRG&gt;</b> Taste, wenn Sie mehrere Kategorien wählen wollen.
 		</tip>
 	
 		<tip id="oai.validate">
-			Harvests only metadata that validate against their schema.
+			Nur Harvesting von Metadaten, die valide zu Ihrem Schema sind.
 		</tip>
 		
 		<!-- OAI-PMH harvesting type : dynamic search part -->
 		
 		<tip id="oai.remove">
-			Remove this search criteria
+			Entfernen des Suchkriteriums
 		</tip>
 		
 		<tip id="oai.from">
-			Optional date to start harvesting from.
+			Optionales Datum zum Start des Harvesting.
 		</tip>
 		
 		<tip id="oai.from.set">
-			Open dialog to set FROM date
+			Öffne Dialog zum Anfangsdatum zu setzen
 		</tip>
 		
 		<tip id="oai.from.clear">
-			Clear FROM parameter
+			Entferne Anfangsdatum
 		</tip>
 		
 		<tip id="oai.until">
-			Optional date to end harvesting to.
+			Optionales Datum zum Beenden des Harvesting.
 		</tip>
 		
 		<tip id="oai.until.set">
-			Open dialog to set UNTIL date
+			Öffne Dialog um Enddatum zu setzen
 		</tip>
 		
 		<tip id="oai.until.clear">
-			Clear UNTIL parameter
+			Entferne Enddatum
 		</tip>
 	
 		<tip id="oai.set">
-			You can narrow the harvesting to specific metadata sets that exist remotely.
+			Sie können das Harvesting begrenzen, indem Sie Metdatensätze spezifizieren, die auf dem entfernten Server bestehen.
 		</tip>
 		
 		<tip id="oai.prefix">
-			Choose the metadata format you want to harvest.
+			Wählen Sie das Metadatenformat, das Sie harvesten wollen.
 		</tip>
 	</tips>
 </strings>
