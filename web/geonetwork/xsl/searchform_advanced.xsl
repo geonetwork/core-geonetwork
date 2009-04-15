@@ -262,7 +262,7 @@
 				<table id="minimap_root" width="340px">
 					<tr>
 						<td colspan="4" align="center" style="padding: 3px;">
-							<xsl:value-of select="/root/gui/strings/latMin"/> <input type="text" class="content" id="northBL" name="northBL"  size="5"
+							<xsl:value-of select="/root/gui/strings/latMax"/> <input type="text" class="content" id="northBL" name="northBL"  size="5"
 								value="{/root/gui/searchDefaults/northBL}" onChange="javascript:AoIrefresh();"/>
 						</td>
 					</tr>
@@ -316,7 +316,7 @@
 					<tr>
 						<td />
 						<td colspan="2" align="center" style="padding: 3px;">
-							<small><xsl:value-of select="/root/gui/strings/latMax"/></small> <input type="text" class="content" id="southBL" name="southBL" size="5"
+							<small><xsl:value-of select="/root/gui/strings/latMin"/></small> <input type="text" class="content" id="southBL" name="southBL" size="5"
 								value="{/root/gui/searchDefaults/southBL}" onChange="javascript:AoIrefresh();"/>
 						</td>
 						<td>

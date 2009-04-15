@@ -74,7 +74,7 @@
     <wxsImp>Type d'import</wxsImp>
     <wxs119Only>Par défaut, le moteur de moissonage génére uniquement les métadonnées de service<br/> au format ISO19119.</wxs119Only>
     <wxs139>Créer les métadonnées pour les couches diffusées par le service.</wxs139>
-    <wxs139Layer>Utiliser l'attribut metadataURL pour les métadonnées de données.</wxs139Layer>
+    <wxs139Layer>Utiliser l'attribut MetadataURL pour les métadonnées de données.</wxs139Layer>
     <createThumbnails>Créer les imagettes (WMS uniquement).</createThumbnails>
     
     <serviceCategory>Catégorie pour les métadonnées de services</serviceCategory>
