@@ -181,26 +181,26 @@ class Harvester
 		if (oper.getUrl != null && PREFERRED_HTTP_METHOD.equals("GET")) {
 			request.setUrl(oper.getUrl);
 			request.setConstraintLanguage(ConstraintLanguage.CQL);
-			request.setConstraintLangVersion("1.0");
+			request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 			request.setConstraint(getCqlConstraint(s));
 			request.setMethod(CatalogRequest.Method.GET);
 		} else if (oper.postUrl != null && PREFERRED_HTTP_METHOD.equals("POST")) {
 			request.setUrl(oper.postUrl);
 			request.setConstraintLanguage(ConstraintLanguage.FILTER);
-			request.setConstraintLangVersion("1.1.0");
+			request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 			request.setConstraint(getFilterConstraint(s));
 			request.setMethod(CatalogRequest.Method.POST);
 		} else {
 			if (oper.getUrl != null) {
 				request.setUrl(oper.getUrl);
 				request.setConstraintLanguage(ConstraintLanguage.CQL);
-				request.setConstraintLangVersion("1.0");
+				request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 				request.setConstraint(getCqlConstraint(s));
 				request.setMethod(CatalogRequest.Method.GET);
 			} else if (oper.getUrl != null) {
 				request.setUrl(oper.postUrl);
 				request.setConstraintLanguage(ConstraintLanguage.FILTER);
-				request.setConstraintLangVersion("1.1.0");
+				request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 				request.setConstraint(getFilterConstraint(s));
 				request.setMethod(CatalogRequest.Method.POST);	
 			} else {
@@ -444,6 +444,7 @@ class Harvester
 	// FIXME : Currently switch from POST to GET for testing mainly.
 	public static final String PREFERRED_HTTP_METHOD = CatalogRequest.Method.GET.toString();
 	private static int GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE = 20;
+	private static String CONSTRAINT_LANGUAGE_VERSION = "1.1.0";
 	private Logger         log;
 	private Dbms           dbms;
 	private CswParams      params;
