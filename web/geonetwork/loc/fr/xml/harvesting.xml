@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<directoryname>Répertoire</directoryname>
+	<database>Base de données</database>
+	<nodelete>Conserver les fichiers</nodelete>
 	<select>Sélectionner</select>
 	<name>Nom</name>
 	<type>Type</type>
@@ -43,18 +46,18 @@
 	
 	<info type="ogcwxs">
         <short>OGC WxS</short>
-        <long>OGC Web services (ie. WMS, WFS and WCS)</long>
+        <long>GéoService OGC (ie. WMS, WFS, WCS et WPS)</long>
     </info>
 	<info type="arcsde">
 		<short>ArcSDE</short>
-		<long>ArcSDE server</long>
+		<long>Serveur ArcSDE</long>
 	</info>
-
-	<info type="localfilesystem">
-		<short>Local Filesystem</short>
-		<long>Local Filesystem Harvesting</long>
-	</info>	
-    
+	
+	<info type="filesystem">
+		<short>Système de fichier</short>
+		<long>Moissonnage de système de fichier local</long>
+	</info>
+	
     <wxstype>Type of OGC webservice</wxstype>
     <wxstypes>
         <type value="WMS1.0.0">OGC Web Map Service (WMS) Version 1.0.0</type>

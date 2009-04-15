@@ -1,5 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<registerTitle>Formulaire d'enregistrement</registerTitle>
+	<profileChoice value="RegisteredUser">Invité</profileChoice>
+	<profileChoice value="Editor">Editeur</profileChoice>
+	<profileChoice value="Reviewer">Relecteur</profileChoice>
+	<profileChoice value="UserAdmin">Administrateur d'utilisateur</profileChoice>
+	<profileChoice value="Administrator">Administrateur</profileChoice>
+	<checkusername>Vérification</checkusername>
+	<register>Créer un compte</register>
+	<registerChoose>Je souhaite </registerChoose>
+	<registrationDetails>Information sur l'inscription :</registrationDetails>
+	<firstNameMandatory js="true">Le prénom est obligatoire</firstNameMandatory>
+	<lastNameMandatory js="true">Le nom est obligatoire</lastNameMandatory>
+	<spacesNot js="true">Les espaces ne sont pas autorisés dans ce champ</spacesNot>
+	<emailAddressInvalid js="true">Adresse email invalide</emailAddressInvalid>
+	<yourRegistration js="true">Création du compte ...</yourRegistration>
+	<massiveActions>Autre actions :</massiveActions>
+	<confirmCancel>Êtes-vous sûr de quitter l'éditeur ? (vous allez perdre les changements non sauvegardés)</confirmCancel>
+	<confirmMassiveDelete>Êtes-vous sûr de vouloir supprimer toutes les métadonnées sélectionnées ?</confirmMassiveDelete>
+	<dateModified>Date de modification</dateModified>
+	<downloadSelect>Télécharger ?</downloadSelect>
+	<downloadSelected>Télécharger la sélection</downloadSelected>
+	<downloadSummary>Rapport sur le téléchargement</downloadSummary>
+	<downloadThemAll>Tout télécharger</downloadThemAll>
+	<fileUploadSuccessful>Téléchargement réussi</fileUploadSuccessful>
+	<link>Lien</link>
+	<localType>Local</localType>
+	<massiveDeleteTitle>Opération de suppression</massiveDeleteTitle>
+	<massiveNewOwnerTitle>Opération de changement d\'auteur</massiveNewOwnerTitle>
+	<massiveUpdateCategoriesTitle>Opération de changement de catégories</massiveUpdateCategoriesTitle>
+	<massiveUpdatePrivilegesTitle>Opération de changement de privilèges</massiveUpdatePrivilegesTitle>
+	<newOwner>Associer à un autre auteur</newOwner>
+	<noOwnerRights>Privilèges/Catégories bloqués: vous n'avez pas ce privilège</noOwnerRights>
+	<notfound>Non trouvé</notfound>
+	<overwriteFile>Écraser ?</overwriteFile>
+	<owner>Auteur</owner>
+	<ownerRights>Suppression/Privilèges/Catégories débloqués: vous avez les droits</ownerRights>
+	<remoteType>Distant</remoteType>
+	<showFileDownloadSummary>Afficher le sélectionneur de fichier</showFileDownloadSummary>
+	<schematronError>Erreur Schematron</schematronError>
+	<shibLogin>Shib Login</shibLogin>
+	<sizeBytes>Size (bytes)</sizeBytes>
+	<updateCategories>Mettre à jour les catégories</updateCategories>
+	<updatePrivileges>Mettre à jour les privilèges</updatePrivileges>
+	<xsdError>Erreur de validation XSD</xsdError>
 	<fileType>Type de fichier :</fileType>
 	<generateUUID>Générer un nouvel identifiant pour les métadonnées insérées</generateUUID>
 	<insertFileMode>Import de fichiers</insertFileMode>
@@ -26,7 +70,7 @@
 	<transferOwnership>Transfert de privilèges</transferOwnership>
 	<transferOwnershipDes>Transfert des privilèges de métadonnées pour un autre utilisateur</transferOwnershipDes>
 	<intermapSearch>Recherche géographique</intermapSearch>
-	<Reviewer>Content reviewer</Reviewer>
+	<Reviewer>Relécteur</Reviewer>
 	<waitGetCap>Chargement en cours ...</waitGetCap>
     <downloadable>Téléchargeable</downloadable>
     <dynamic>Interactive</dynamic>
@@ -170,7 +214,7 @@
 	<cn>中文</cn> <!-- Do not translate! -->
 	<completeTab>Vue avancée</completeTab>
 	<completeTabEditor>Editeur avancé</completeTabEditor>
-	<confirmDelete>Etes-vous certain de vouloir supprimer cette fiche de métadonnées ?</confirmDelete>
+	<confirmDelete>Êtes-vous sûr de vouloir supprimer cette métadonnée ?</confirmDelete>
 	<confirmPassword>Confirmer le mot de passe</confirmPassword>
 	<confirmNewPassword>Confirmer le nouveau mot de passe</confirmNewPassword>
 	<constraintsTab>Contraintes</constraintsTab>
