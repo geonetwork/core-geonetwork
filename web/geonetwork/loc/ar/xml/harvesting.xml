@@ -77,7 +77,7 @@
 	<wxsImp>Type of import</wxsImp>
 	<wxs119Only>By default GetCapabilities harvester will create<br/> only metadata for services in ISO19119.</wxs119Only>
 	<wxs139>Create metadata for layer elements using GetCapabilities information.</wxs139>
-	<wxs139Layer>Create metadata for layer elements using metadataURL attributs (if existing, if not use GetCapabilities).</wxs139Layer>
+	<wxs139Layer>Create metadata for layer elements using MetadataURL attributes (if existing, if not use GetCapabilities).</wxs139Layer>
 	<createThumbnails>Create thumbnails for WMS layers.</createThumbnails>
 	
 	<serviceCategory>Category for service</serviceCategory>
