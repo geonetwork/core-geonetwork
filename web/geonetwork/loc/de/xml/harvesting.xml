@@ -45,7 +45,15 @@
 		<short>OGC WxS</short>
 		<long>OGC Web services (ie. WMS, WFS, WCS, WPS)</long>
 	</info>
+		<info type="arcsde">
+		<short>ArcSDE</short>
+		<long>ArcSDE Server</long>
+	</info>
 	
+	<info type="filesystem">
+		<short>Lokales Dateisystem</short>
+		<long>Lokales Dateisystem Harvesting</long>
+	</info>
 	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Site</site>
@@ -292,9 +300,6 @@
 			Benutzen Sie die <b>&lt;Strg&gt;</b>-Taste zur Auswahl mehrere Kategorien.
 		</tip>
 	
-	</tips>
-	
-	
 	<!-- OGCWXS harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<tip id="ogcwxs.wxstype">
@@ -396,4 +401,3 @@
 		</tip>
 	</tips>
 </strings>
-
