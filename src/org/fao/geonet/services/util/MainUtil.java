@@ -137,7 +137,7 @@ public class MainUtil {
 			Token t = ts.next();
 
 			while (t != null) {
-				result += (" " + t.termText());
+				result += (" " + new String(t.termBuffer()));
 				t = ts.next();
 			}
 		} catch (IOException e) {
