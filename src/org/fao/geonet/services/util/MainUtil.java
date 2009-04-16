@@ -48,8 +48,11 @@ public class MainUtil {
 	/**
 	 * Default params for search
 	 * Usually, default variable for search parameters
-	 * could be set up in xml/lucene.xml (e.g. template parameter
+	 * could be set up in xml/search/lucene.xsl (e.g. template parameter
 	 * default value is "n").
+	 * 
+	 * TODO : All DEFAULT_PARAMS should be set by lucene.xsl file to have
+	 * all default values in the same place.
 	 */
 	private static String[][] DEFAULT_PARAMS = {
 			{ Geonet.SearchResult.RELATION,
