@@ -41,10 +41,12 @@ public class Codec
 
 			if (c == '~')
 			{
-				String hv = s.substring(i+1, i+5);
-				i += 4;
+				if (i+4 < s.length()) {
+					String hv = s.substring(i+1, i+5);
+					i += 4;
 
-				c = (char) Util.convertFromHex(hv);
+					c = (char) Util.convertFromHex(hv);
+				}		
 			}
 
 			sb.append(c);
