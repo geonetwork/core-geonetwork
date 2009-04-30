@@ -749,7 +749,7 @@ public class DataManager
 				// and root element as a namespace which is
 				// defined in one schema, we have an ISO profil
 				// and current schema is ok. 
-				if (metadatadRootElemenNSUri.equals(primeNs) && 
+				if (metadatadRootElemenNSUri.getURI().equals(primeNs) && 
 						!metadatadRootElemenNSUri.equals(Csw.NAMESPACE_GMD)) {
 					return schema;
 				}
