@@ -439,7 +439,7 @@ public class Geonet
 	public static final String EDITOR				= GEONETWORK + ".editor";
 	public static final String EDITORADDELEMENT = GEONETWORK + ".editoraddelement";
 	public static final String EDITOREXPANDELEMENT = GEONETWORK + ".editorexpandelement";
-
+	public static final String SPATIAL      = GEONETWORK + ".spatial";
 	public static final String CSW_SEARCH   = CSW + ".search";
 
 	//--------------------------------------------------------------------------

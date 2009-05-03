@@ -4,9 +4,11 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
 import org.apache.lucene.search.Query;
+import org.fao.geonet.constants.Geonet;
 import org.geotools.data.FeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
@@ -47,9 +49,18 @@ public class OgcGenericFilters
             SpatialIndex index, Parser parser) throws Exception
     {
         String string = Xml.getString(filterExpr);
-        
+        parser.setValidating(true);
+        parser.setFailOnValidationError(false);
         Filter fullFilter = (org.opengis.filter.Filter) parser
                 .parse(new StringReader(string));
+        if( parser.getValidationErrors().size() > 0){
+        	Log.error(Geonet.SEARCH_ENGINE,"Errors occurred when trying to parse a filter:");
+        	Log.error(Geonet.SEARCH_ENGINE,"----------------------------------------------");
+	        for( Object error:parser.getValidationErrors()){
+	        	Log.error(Geonet.SEARCH_ENGINE,error);
+	        }
+        	Log.error(Geonet.SEARCH_ENGINE,"----------------------------------------------");
+        }
         final FilterFactory2 filterFactory2 = CommonFactoryFinder
                 .getFilterFactory2(GeoTools.getDefaultHints());
         FilterVisitor visitor = new GeomExtractor(filterFactory2);
@@ -182,7 +193,7 @@ public class OgcGenericFilters
      * 
      * @author jeichar
      */
-    public static class GeomExtractor extends DefaultFilterVisitor
+    private static class GeomExtractor extends DefaultFilterVisitor
     {
         private final FilterFactory2 _filterFactory;
 

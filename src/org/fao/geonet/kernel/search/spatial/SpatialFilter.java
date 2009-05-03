@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import jeeves.utils.Log;
+
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.SetBasedFieldSelector;
 import org.apache.lucene.index.IndexReader;
@@ -16,13 +18,17 @@ import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.HitCollector;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
+import org.fao.geonet.constants.Geonet;
 import org.geotools.data.DefaultQuery;
 import org.geotools.data.FeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
+import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.geometry.jts.JTS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -35,11 +41,23 @@ import org.opengis.filter.spatial.SpatialOperator;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.TopologyException;
 import com.vividsolutions.jts.index.SpatialIndex;
 
 public abstract class SpatialFilter extends Filter
 {
     private static final long     serialVersionUID = -6221744013750827050L;
+    private static SimpleFeatureType FEATURE_TYPE;
+
+    static {
+        SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
+        builder.add(SpatialIndexWriter.GEOM_ATTRIBUTE_NAME, Geometry.class,DefaultGeographicCRS.WGS84);
+        builder.setDefaultGeometry(SpatialIndexWriter.GEOM_ATTRIBUTE_NAME);
+        builder.setName(SpatialIndexWriter.SPATIAL_INDEX_FILENAME);
+        FEATURE_TYPE = builder.buildFeatureType();
+    }
+    
+    
     protected final Geometry      _geom;
     protected final FeatureSource _featureSource;
     protected final SpatialIndex    _index;
@@ -49,6 +67,7 @@ public abstract class SpatialFilter extends Filter
     protected final SetBasedFieldSelector _selector;
     private org.opengis.filter.Filter _spatialFilter;
     private Map<String, FeatureId> _unrefinedMatches;
+    private boolean warned = false;
 
     protected SpatialFilter(Query query, Element request, Geometry geom,
             FeatureSource featureSource, SpatialIndex index) throws IOException
@@ -99,7 +118,11 @@ public abstract class SpatialFilter extends Filter
             }
         });
         
-        return applySpatialFilter(matches,docIndexLookup,bits);
+        if( matches.isEmpty() ){
+            return bits;
+        }else{
+            return applySpatialFilter(matches,docIndexLookup,bits);
+        }
     }
 
     private BitSet applySpatialFilter(Set<FeatureId> matches, Map<FeatureId, Integer> docIndexLookup, BitSet bits) throws IOException
@@ -115,14 +138,29 @@ public abstract class SpatialFilter extends Filter
         try {
             while (iterator.hasNext()) {
                 SimpleFeature feature = iterator.next();
-                if( getFilter().evaluate(feature) ){
-                    bits.set(docIndexLookup.get(feature.getIdentifier()));
+                if( evaluateFeature(feature) ){
+                    FeatureId featureId = feature.getIdentifier();
+                    bits.set(docIndexLookup.get(featureId));
                 }
             }
         } finally {
             iterator.close();
         }
         return bits;
+    }
+
+    private boolean evaluateFeature(SimpleFeature feature)
+    {
+        try{
+            return getFilter().evaluate(feature);
+        }catch ( TopologyException e){
+            if( !warned ){
+                warned =true;
+                Log.warning(Geonet.SPATIAL, e.getMessage()+" errors are occuring with filter: "+getFilter());
+            }
+            Log.debug(Geonet.SPATIAL, e.getMessage()+": occurred during a search: "+getFilter()+" on feature: "+feature.getDefaultGeometry());
+            return false;
+        }
     }
 
     private synchronized org.opengis.filter.Filter getFilter()

@@ -174,8 +174,8 @@
 	<xsl:template match="ogc:And">
 		<BooleanQuery>
 			<xsl:for-each
-				select="*[(ogc:PropertyName!='similarity' and 
-				ogc:PropertyName!='group') or not(@*)]">
+				select="*[not(ogc:PropertyName)]|*[ogc:PropertyName!='similarity' and 
+				ogc:PropertyName!='group']">
 				<BooleanClause required="true" prohibited="false">
 					<xsl:apply-templates select="."/>
 				</BooleanClause>
@@ -188,8 +188,8 @@
 	<xsl:template match="ogc:Or">
 		<BooleanQuery>
 			<xsl:for-each
-				select="*[(ogc:PropertyName!='similarity' and 
-				ogc:PropertyName!='group') or not(@*)]">
+				select="*[not(ogc:PropertyName)]|*[ogc:PropertyName!='similarity' and 
+				ogc:PropertyName!='group']">
 				<BooleanClause required="false" prohibited="false">
 					<xsl:apply-templates select="."/>
 				</BooleanClause>
@@ -206,8 +206,8 @@
 			</BooleanClause>
 
 			<xsl:for-each
-				select="*[(ogc:PropertyName!='similarity' and 
-					ogc:PropertyName!='group') or not(@*)]">
+				select="*[not(ogc:PropertyName)]|*[ogc:PropertyName!='similarity' and 
+				ogc:PropertyName!='group']">
 				<BooleanClause required="false" prohibited="true">
 					<xsl:apply-templates select="."/>
 				</BooleanClause>
@@ -315,7 +315,7 @@
 	<xsl:template match="*">
 		<xsl:choose>
 			<!-- Applied default criteria to exclude template from results -->
-			<xsl:when test="string(//ogc:PropertyName) != '_isTemplate'">
+			<xsl:when test="not(//*[ogc:PropertyName='_isTemplate'])">
 				<xsl:call-template name="filterTemplate"/>
 			</xsl:when>
 			<xsl:otherwise>

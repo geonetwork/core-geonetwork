@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<Harvest xmlns="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2.0.2">
+    <Source>http://localhost:8080/geonetwork/srv/en/csw?request=GetCapabilities&amp;service=CSW&amp;version=2.0.2</Source>
+    <ResourceType>http://www.isotc211.org/schemas/2005/gmd</ResourceType>
+    <ResourceFormat>application/xml</ResourceFormat>
+    <ResponseHandler>mailto:anemail@here.org</ResponseHandler>
+    <!--        
+        <HarvestInterval/>
+    -->
+</Harvest>

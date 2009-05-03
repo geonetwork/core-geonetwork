@@ -345,13 +345,14 @@ public abstract class AbstractOperation
 			return Csw.FILTER_VERSION_1_1;
 		String version = constr.getAttributeValue("version");
 		if (version == null)
-			throw new MissingParameterValueEx("version");
+			throw new MissingParameterValueEx("CONSTRAINT_LANGUAGE_VERSION");
 
 		// Check version in both cas (CQL or filter) in order to specify parser
 		// version.
 		if (!version.equals(Csw.FILTER_VERSION_1_0)
 				&& !version.equals(Csw.FILTER_VERSION_1_1))
-			throw new InvalidParameterValueEx("version", version);
+			throw new InvalidParameterValueEx("version", version + ". Supported version are " 
+					+ Csw.FILTER_VERSION_1_0 + "," + Csw.FILTER_VERSION_1_1 + ".");
 
 		return version;
 	}
