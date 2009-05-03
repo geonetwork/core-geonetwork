@@ -21,6 +21,12 @@
 				<td><xsl:value-of select="/root/gui/info/notfound"/></td>
 				<td style="text-align: center;"><xsl:value-of select="/root/response/notFound"/></td>
 			</tr>
+			<xsl:if test="/root/gui/reqService='metadata.massive.processing'">
+				<tr>
+					<td><xsl:value-of select="/root/gui/info/notProcessFound"/></td>
+					<td style="text-align: center;"><xsl:value-of select="/root/response/notProcessFound"/></td>
+				</tr>
+			</xsl:if>
 		</table>
 	</xsl:template>
 	

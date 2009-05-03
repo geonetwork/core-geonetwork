@@ -311,6 +311,16 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="metadata.massive.processing">
+			<class name=".services.metadata.MassiveXslProcessing"/>
+			
+			<output sheet="metadata-massive-results.xsl">
+				<xml name="info" file="xml/metadata-massiveXslProcessing.xml" />
+			</output>
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
 		<service name="metadata.select">
 			<class name=".services.main.Select">
 				<param name="type" value="metadata" />
