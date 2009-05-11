@@ -161,6 +161,9 @@
 	<xsl:template name="csw">
 		<script type="text/javascript" language="JavaScript1.2">
 			function updateContact(id) {
+				if (id = -1)
+					return;
+					
 				var records = {
 					<xsl:for-each select="/root/gui/users/record">
 						record_<xsl:value-of select="id"/> : {
@@ -208,6 +211,7 @@
             			<select name="csw.contactId" id="csw.contactId" onchange="javascript:updateContact(this.value)">
             				<option value="-1"></option>
             				<xsl:for-each select="/root/gui/users/record">
+            					<xsl:sort select="username"/>
             					<option>
             						<xsl:attribute name="value">
             							<xsl:value-of select="id"/>
