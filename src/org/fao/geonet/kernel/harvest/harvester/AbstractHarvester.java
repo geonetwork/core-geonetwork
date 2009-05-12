@@ -313,7 +313,7 @@ public abstract class AbstractHarvester
 		ResourceManager rm = new ResourceManager(context.getProviderManager());
 
 		Logger logger = Log.createLogger(Geonet.HARVESTER);
-
+		
 		String nodeName = getParams().name +" ("+ getClass().getSimpleName() +")";
 
 		error = null;

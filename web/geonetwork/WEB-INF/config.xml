@@ -26,7 +26,7 @@
 			<xml name="iso19139" base="xml/schemas/iso19139/loc" file="codelists.xml" />
 			<xml name="fgdc-std" base="xml/schemas/fgdc-std/loc" file="labels.xml" />
 			<xml name="dublin-core" base="xml/schemas/dublin-core/loc" file="labels.xml" />
-			<xml name="csw-record" base="xml/schemas/csw-record/loc" file="labels.xml" />
+			<xml name="csw-record" base="xml/schemas/csw-record/loc" file="labels.xml" />			
 			<call name="session" class="jeeves.guiservices.session.Get" />
 			<call name="env" class="org.fao.geonet.guiservices.util.Env" />
 			<call name="results" class="org.fao.geonet.guiservices.search.GetResultsInfo" />
@@ -123,7 +123,7 @@
 		<param name="licenseDir" value="WEB-INF/licenses" />
 		<param name="thesauriDir" value="WEB-INF/gsthesauri" />
 		<param name="codeListDir" value="xml/codelist" />
-		<param name="summaryConfig" value="WEB-INF/summaryConfig.xml" />
+	    <param name="summaryConfig" value="WEB-INF/config-summary.xml" />	    
 	</appHandler>
 
 	<!-- ====================================================================== -->

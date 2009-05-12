@@ -93,6 +93,9 @@
 		<allow service="metadata.massive.newowner"/>
 		<allow service="metadata.massive.newowner.form"/>
 		<allow service="xml.usergroups.list"/>
+		
+		<allow service="metadata.massive.processing"/>        
+		
 	</profile>
 
 	<!-- ====================================================================== -->

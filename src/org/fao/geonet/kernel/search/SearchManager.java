@@ -60,6 +60,7 @@ import org.apache.lucene.index.TermEnum;
 import org.apache.lucene.search.Filter;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
+import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.spatial.ContainsFilter;
 import org.fao.geonet.kernel.search.spatial.CrossesFilter;
@@ -99,6 +100,9 @@ public class SearchManager
 
 	private static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";
 	private static final String SCHEMA_STYLESHEETS_DIR_PATH = "xml/schemas";
+
+	private static final Configuration FILTER_1_0_0 = new org.geotools.filter.v1_0.OGCConfiguration();
+    private static final Configuration FILTER_1_1_0 = new org.geotools.filter.v1_1.OGCConfiguration();
 
 	private final File     _stylesheetsDir;
 	private final File     _schemasDir;
@@ -725,17 +729,21 @@ public class SearchManager
 
             _lock.lock();
             try {
-                Parser filterParser = getFilterParser(filterVersion);
+            	Parser filterParser = getFilterParser(filterVersion);
             	FeatureSource featureSource = _writer.getFeatureSource();
-            	SpatialIndex index = _writer.getIndex();
+                SpatialIndex index = _writer.getIndex();
                 return OgcGenericFilters.create(query, filterExpr,
                         featureSource, index, filterParser);
+            } catch (Exception e) {
+            	// TODO Handle NPE creating spatial filter (due to constraint language version). 
+    			throw new NoApplicableCodeEx("Error when parsing spatial filter (version: " + 
+            			filterVersion + "):" + Xml.getString(filterExpr) + ". Error is: " + e.toString());
             } finally {
                 _lock.unlock();
             }
         }
 
-		public SpatialFilter filter(org.apache.lucene.search.Query query,
+        public SpatialFilter filter(org.apache.lucene.search.Query query,
                 Geometry geom, Element request) throws Exception
         {
             _lock.lock();
@@ -779,8 +787,7 @@ public class SearchManager
         
         private Parser getFilterParser(String filterVersion) {
 			Configuration config;
-			config = filterVersion.equals(Csw.FILTER_VERSION_1_0) ? new org.geotools.filter.v1_0.OGCConfiguration()
-					: new org.geotools.filter.v1_1.OGCConfiguration();
+			config = filterVersion.equals(Csw.FILTER_VERSION_1_0) ? FILTER_1_0_0  : FILTER_1_1_0;
 			return new Parser(config);
 		}
 

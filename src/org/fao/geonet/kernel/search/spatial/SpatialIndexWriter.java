@@ -36,6 +36,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
 import org.geotools.data.DefaultTransaction;
@@ -65,6 +66,7 @@ import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.identity.FeatureId;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.index.SpatialIndex;
@@ -148,7 +150,7 @@ public class SpatialIndexWriter
             if (extractGeometriesFrom.length > 0) {
                 FeatureCollection features = FeatureCollections.newCollection();
                 for (Geometry geometry : extractGeometriesFrom) {
-                    Object[] data = { toMultiPolygon(geometry), id };
+                    Object[] data = { geometry, id };
                     features.add(SimpleFeatureBuilder.build(_schema, data,
                             SimpleFeatureBuilder.createDefaultFeatureId()));
                 }
@@ -274,7 +276,7 @@ public class SpatialIndexWriter
      * Extracts a Geometry Collection from metadata default visibility for
      * testing access.
      */
-    static Geometry[] extractGeometriesFrom(String schemasDir, String type,
+    static MultiPolygon[] extractGeometriesFrom(String schemasDir, String type,
             Element metadata, Parser parser) throws Exception
     {
 
@@ -285,7 +287,7 @@ public class SpatialIndexWriter
                 .getAbsolutePath();
         Element transform = Xml.transform(metadata, sSheet);
         if (transform.getChildren().size() == 0) {
-            return new Polygon[0];
+            return new MultiPolygon[0];
         }
         String gml = Xml.getString(transform);
 
@@ -293,32 +295,40 @@ public class SpatialIndexWriter
             Object value = parser.parse(new StringReader(gml));
             if (value instanceof HashMap) {
                 HashMap map = (HashMap) value;
-                List<Geometry> geoms = new ArrayList<Geometry>();
+                List<Polygon> geoms = new ArrayList<Polygon>();
                 for (Object entry : map.values()) {
                     addToList(geoms, entry);
                 }
-                return geoms.toArray(new Geometry[0]);
+                if( geoms.isEmpty() ){
+                    return new MultiPolygon[0];
+                } else if( geoms.size()>1 ){
+                    GeometryFactory factory = geoms.get(0).getFactory();
+                    return new MultiPolygon[]{factory.createMultiPolygon(geoms.toArray(new Polygon[0]))};
+                } else {
+                    return new MultiPolygon[]{toMultiPolygon(geoms.get(0))};
+                }
+
             } else if (value == null) {
-                return new Polygon[0];
+                return new MultiPolygon[0];
             } else {
-                return new Polygon[] { (Polygon) value };
+                return new MultiPolygon[] { toMultiPolygon((Geometry) value) };
             }
         } catch (Exception e) {
-            return new Polygon[0];
+            return new MultiPolygon[0];
         }
     }
 
     /**
      * @see SpatialIndexWriter#extractGeometriesFrom(String, String, Element)
      */
-    private static void addToList(List<Geometry> geoms, Object entry)
+    private static void addToList(List<Polygon> geoms, Object entry)
     {
-        if (entry instanceof Geometry) {
-            geoms.add((Geometry) entry);
+        if (entry instanceof Polygon) {
+            geoms.add((Polygon) entry);
         } else if (entry instanceof Collection) {
             Collection collection = (Collection) entry;
             for (Object object : collection) {
-                geoms.add((Geometry) object);
+                geoms.add((Polygon) object);
             }
         }
     }
@@ -384,10 +394,19 @@ public class SpatialIndexWriter
         return (FeatureStore) ds.getFeatureSource(_schema.getTypeName());
     }
 
-    private MultiPolygon toMultiPolygon(Geometry geometry)
+    private static MultiPolygon toMultiPolygon(Geometry geometry)
     {
-        return geometry.getFactory().createMultiPolygon(
-                new Polygon[] { (Polygon) geometry });
+        if (geometry instanceof Polygon) {
+            Polygon polygon = (Polygon) geometry;
+            
+            return geometry.getFactory().createMultiPolygon(
+                    new Polygon[] { polygon });
+        }else if (geometry instanceof MultiPolygon) {
+            return  (MultiPolygon) geometry;
+        }
+        String message = geometry.getClass()+" cannot be converted to a polygon. Check Metadata";
+        Log.error("SpatialIndexWriter", message);
+        throw new IllegalArgumentException(message);
     }
 
 }

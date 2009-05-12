@@ -120,13 +120,15 @@ public class GetDomain extends AbstractOperation implements CatalogService
 		setAttrib(request, "service",        service);
 		setAttrib(request, "version",        version);
 		
-		//--- these 2 are in mutual exclusion
+		//--- these 2 are in mutual exclusion.
+		Element propName  = new Element("PropertyName", Csw.NAMESPACE_CSW).setText(propertyName);
+		Element paramName  = new Element("ParameterName", Csw.NAMESPACE_CSW).setText(parameterName);
 		
-		Element paramName  = new Element("ParameterName", Csw.NAMESPACE_OGC).setText(parameterName);
-		Element propName  = new Element("PropertyName", Csw.NAMESPACE_OGC).setText(propertyName);
-		
-		request.addContent(parameterName);
-		request.addContent(propName);
+		// Property is handled first.
+		if (propertyName != null && !propertyName.equals(""))
+			request.addContent(propName);
+		else if (parameterName != null && !parameterName.equals(""))
+			request.addContent(paramName);
 
 		return request;
 	}
@@ -157,7 +159,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 			// FIXME what should be the type ???
 			domainValues.setAttribute("type", "csw:Record");
 			
-			String property = propertyNames[i];
+			String property = propertyNames[i].trim();
 			
 			// Set propertyName in any case.
 			Element pn = new Element("PropertyName", Csw.NAMESPACE_CSW);
