@@ -351,7 +351,7 @@ public abstract class AbstractOperation
 		// version.
 		if (!version.equals(Csw.FILTER_VERSION_1_0)
 				&& !version.equals(Csw.FILTER_VERSION_1_1))
-			throw new InvalidParameterValueEx("version", version + ". Supported version are " 
+			throw new InvalidParameterValueEx("version", version + ". Supported versions are " 
 					+ Csw.FILTER_VERSION_1_0 + "," + Csw.FILTER_VERSION_1_1 + ".");
 
 		return version;
