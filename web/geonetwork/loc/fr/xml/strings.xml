@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<setOnSave>Valeur définie lors de la sauvegarde</setOnSave>
+	<missingSeeTab>Manquant - Voir l'onglet correspondant au groupe </missingSeeTab>
+	<missing>Vide ou manquant</missing>
+	<byPackage>Par section</byPackage>
+	<byGroup>Par groupe</byGroup>
+	<isoMinimum>ISO Minimum</isoMinimum>
+	<isoCore>ISO Core</isoCore>
+	<isoAll>ISO Complet</isoAll>
+	<deleteConfirmationTitle>Rapport sur la suppression</deleteConfirmationTitle>
+	<categoryNameMandatory>Le nom de la catégorie est obligatoire.</categoryNameMandatory>
+	<usernameMandatory>Le nom d'utilisateur est obligatoire.</usernameMandatory>
+	<passwordEntry>Vous devez saisir 2 fois le mot de passe.</passwordEntry>
+	<passwordLength>Votre mot de passe doit avoir au moins " + minLength + " caractères.</passwordLength>
+	<passwordSpace>Votre mot de passe ne doit pas contenir d'espace.</passwordSpace>
+	<passwordDoNotMatch>Vous n'avez pas saisie 2 fois le même mot de passe.</passwordDoNotMatch>
+	<userAtLeastOneGroup>Vous devez saisir au moins un groupe.</userAtLeastOneGroup>	
+	<deleteGroup>Supprimer le groupe ?</deleteGroup>
+	<noTemplatesAvailable>Aucun modèle disponible, importer des métadonnées tout d'abord.</noTemplatesAvailable>
+	<noCategory>Aucune catégorie disponible.</noCategory>
+	<deleteCategory>Supprimer la catégorie ?</deleteCategory>
 	<registerTitle>Formulaire d'enregistrement</registerTitle>
 	<profileChoice value="RegisteredUser">Invité</profileChoice>
 	<profileChoice value="Editor">Editeur</profileChoice>
@@ -16,7 +36,7 @@
 	<emailAddressInvalid js="true">Adresse email invalide</emailAddressInvalid>
 	<yourRegistration js="true">Création du compte ...</yourRegistration>
 	<massiveActions>Autre actions :</massiveActions>
-	<confirmCancel>Êtes-vous sûr de quitter l'éditeur ? (vous allez perdre les changements non sauvegardés)</confirmCancel>
+	<confirmCancel>Êtes-vous sûr de vouloir quitter l\'éditeur ? (vous allez perdre les changements non sauvegardés)</confirmCancel>
 	<confirmMassiveDelete>Êtes-vous sûr de vouloir supprimer toutes les métadonnées sélectionnées ?</confirmMassiveDelete>
 	<dateModified>Date de modification</dateModified>
 	<downloadSelect>Télécharger ?</downloadSelect>
@@ -189,8 +209,8 @@
 	<batchImportTitle>Import en série</batchImportTitle>
 	<begtime>Date de début</begtime> <!-- FIXME: check if only begdate is needed -->
 	<begdate>Date de début</begdate>
-	<bgFileDescChoice value="thumbnail">Aperçu</bgFileDescChoice>
-	<bgFileDescChoice value="large_thumbnail">Aperçu grand format</bgFileDescChoice>
+	<bgFileDescChoice value="thumbnail">Vignette</bgFileDescChoice>
+	<bgFileDescChoice value="large_thumbnail">Vignette grand format</bgFileDescChoice>
 	<bounding>Coordonnées de l'emprise</bounding>
 	<boundingRelation value="equal">identique</boundingRelation>
 	<boundingRelation value="overlaps">chevauche</boundingRelation>
@@ -208,8 +228,8 @@
 	<categoryManDes>Ajouter/Modifier/Supprimer et visualiser les catégories</categoryManDes>
 	<choose>- Choisir -</choose>
 	<chooseFile>Choisir le fichier à décharger</chooseFile>
-	<chooseLargeThumbnail>Choisir le fichier d'aperçu (grand format)</chooseLargeThumbnail>
-	<chooseThumbnail>Choisir le fichier d'aperçu (petit format)</chooseThumbnail>
+	<chooseLargeThumbnail>Choisir la vignette (grand format)</chooseLargeThumbnail>
+	<chooseThumbnail>Choisir la vignette (petit format)</chooseThumbnail>
 	<clear>Effacer</clear>
 	<cn>中文</cn> <!-- Do not translate! -->
 	<completeTab>Vue avancée</completeTab>
@@ -319,7 +339,7 @@
 	</interMapInfo>
 	<keywords>Mots-clés</keywords>
 	<keywordshelp>Sélectionner plusieurs mots-clés en utilisant la touche Ctrl</keywordshelp>
-	<large_thumbnail>Cliquer pour voir un aperçu (grand format)</large_thumbnail>
+	<large_thumbnail>Cliquer pour voir la vignette (grand format)</large_thumbnail>
 	<latitude>Latitude (entre -90 et 90) en degrés</latitude>
 	<latMax>lat (max)</latMax>
 	<latMin>lat (min)</latMin>
@@ -327,10 +347,8 @@
 	<legend>Légende</legend>
 	<loading>Chargement en cours ...</loading>
 	<local>Recherche local</local>
-	<localizationHelp>Important! This form allows you to add a Key value to the database.
-		The key can not have spaces.<br/>
-		After adding your key values, use the "Localization" form in the Administration panel to provide
-		the actual name you want to be displayed on the website for the different languages.
+	<localizationHelp>Pour traduire les nouvelles valeurs, aller dans la page d'<a href="admin">administration</a>
+		section <a href="localization">internationalisation</a>.
 	</localizationHelp>
 	<localiz>Internationalisation</localiz>
 	<localizDes>Permet la modification des traductions des groupes, catégories, etc.</localizDes>
@@ -549,7 +567,7 @@
 	<template>Modèle</template>
 	<thanks>Merci</thanks>
 	<theme>Sujet ISO</theme>
-	<thumbnails>Aperçus</thumbnails>
+	<thumbnails>Vignettes</thumbnails>
 	<timeout>Timeout</timeout>
 	<timeoutChoice value="10">10 secondes</timeoutChoice>
 	<timeoutChoice value="20">20 secondes</timeoutChoice>

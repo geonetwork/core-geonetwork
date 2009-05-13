@@ -140,6 +140,7 @@ public class MainUtil {
 			Token t = ts.next();
 
 			while (t != null) {
+				// CHECKME : result += (" " + t.termText());
 				result += (" " + new String(t.termBuffer()));
 				t = ts.next();
 			}

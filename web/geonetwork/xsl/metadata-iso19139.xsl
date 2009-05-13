@@ -50,7 +50,7 @@
 	<!-- ===================================================================== -->
 
 	<xsl:template mode="iso19139" match="gmd:graphicOverview"/>
-	<xsl:template mode="iso19139" match="gmd:contact|gmd:identificationInfo|gmd:distributionInfo|gmd:descriptiveKeywords|gmd:spatialRepresentationInfo|gmd:pointOfContact|gmd:dataQualityInfo|gmd:referenceSystemInfo|gmd:equivalentScale|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|srv:containsOperations">
+	<xsl:template mode="iso19139" match="gmd:identificationInfo|gmd:distributionInfo|gmd:descriptiveKeywords|gmd:spatialRepresentationInfo|gmd:pointOfContact|gmd:dataQualityInfo|gmd:referenceSystemInfo|gmd:equivalentScale|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|srv:containsOperations">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
@@ -287,6 +287,7 @@
 				<select class="md" name="_{../geonet:element/@ref}_{name(.)}" size="1">
 					<option name=""/>
 					<xsl:for-each select="$codelist/entry">
+						<xsl:sort select="label"/>
 						<option>
 							<xsl:if test="code=$value">
 								<xsl:attribute name="selected"/>
@@ -335,7 +336,9 @@
 			<xsl:with-param name="text">
 				<xsl:choose>
 					<xsl:when test="normalize-space(gco:CharacterString)=''">
-						<xsl:text>Value will be set when record is saved</xsl:text>
+						<span class="info">
+							- <xsl:value-of select="/root/gui/strings/setOnSave"/> - 
+						</span>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="gco:*"/>
@@ -1465,7 +1468,7 @@
 					<xsl:call-template name="complexElementGui">
 						<xsl:with-param name="title" select="$title"/>
 						<xsl:with-param name="content">
-							<font color="0x00ffff">MISSING - see "<xsl:value-of select="$group"/>" group tab in sidebar</font>
+							<span class="missing"> - <xsl:value-of select="/root/gui/strings/missingSeeTab"/> "<xsl:value-of select="$group"/>" - </span>
 						</xsl:with-param>
 						<xsl:with-param name="helpLink">
 							<xsl:call-template name="getHelpLink">
@@ -1486,7 +1489,7 @@
 							</xsl:call-template>
 						</xsl:with-param>
 						<xsl:with-param name="content">
-							<font color="0x00ffff">MISSING or EMPTY</font>
+							<span class="missing"> - <xsl:value-of select="/root/gui/strings/missing"/> - </span>
 						</xsl:with-param>
 						<xsl:with-param name="schema" select="$schema"/>
 					</xsl:call-template>
@@ -2875,34 +2878,34 @@
 		
 		<xsl:call-template name="displayTab">
 			<xsl:with-param name="tab"     select="'groups'"/> <!-- just a non-existing tab -->
-			<xsl:with-param name="text"    select="'By Group'"/>
+			<xsl:with-param name="text"    select="/root/gui/strings/byGroup"/>
 			<xsl:with-param name="tabLink" select="$tabLink"/>
 		</xsl:call-template>
 
 		<xsl:call-template name="displayTab">
 			<xsl:with-param name="tab"     select="'ISOMinimum'"/>
-			<xsl:with-param name="text"    select="'ISO Minimum'"/>
+			<xsl:with-param name="text"    select="/root/gui/strings/isoMinimum"/>
 			<xsl:with-param name="indent"  select="'&#xA0;&#xA0;&#xA0;'"/>
 			<xsl:with-param name="tabLink" select="$tabLink"/>
 		</xsl:call-template>
 
 		<xsl:call-template name="displayTab">
 			<xsl:with-param name="tab"     select="'ISOCore'"/>
-			<xsl:with-param name="text"    select="'ISO Core'"/>
+			<xsl:with-param name="text"    select="/root/gui/strings/isoCore"/>
 			<xsl:with-param name="indent"  select="'&#xA0;&#xA0;&#xA0;'"/>
 			<xsl:with-param name="tabLink" select="$tabLink"/>
 		</xsl:call-template>
 
 		<xsl:call-template name="displayTab">
 			<xsl:with-param name="tab"     select="'ISOAll'"/>
-			<xsl:with-param name="text"    select="'ISO All'"/>
+			<xsl:with-param name="text"    select="/root/gui/strings/isoAll"/>
 			<xsl:with-param name="indent"  select="'&#xA0;&#xA0;&#xA0;'"/>
 			<xsl:with-param name="tabLink" select="$tabLink"/>
 		</xsl:call-template>
 
 		<xsl:call-template name="displayTab">
 			<xsl:with-param name="tab"     select="'packages'"/> <!-- just a non-existing tab -->
-			<xsl:with-param name="text"    select="'By Package'"/>
+			<xsl:with-param name="text"    select="/root/gui/strings/byPackage"/>
 			<xsl:with-param name="tabLink" select="$tabLink"/>
 		</xsl:call-template>
 

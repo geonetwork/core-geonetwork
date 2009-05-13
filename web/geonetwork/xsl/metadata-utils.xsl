@@ -140,9 +140,20 @@
 	<xsl:template name="buttons" match="*">
 		<xsl:param name="metadata" select="."/>
 
+		<!-- Title is truncated if longer than maxLength.  -->
+		<xsl:variable name="maxLength" select="'40'"/>
+
 		<xsl:variable name="ltitle">
 			<xsl:call-template name="escapeString">
-				<xsl:with-param name="expr" select="concat(substring(normalize-space($metadata/title),1,40),'...')"/>
+				<xsl:with-param name="expr">
+					<xsl:choose>
+						<xsl:when test="string-length($metadata/title) &gt; $maxLength">
+							<xsl:value-of select="concat(substring(normalize-space($metadata/title), 1, $maxLength), ' ...')"/>
+						</xsl:when>
+						<xsl:otherwise><xsl:value-of select="normalize-space($metadata/title)"/></xsl:otherwise>
+					</xsl:choose>
+				</xsl:with-param>
+				
 			</xsl:call-template>
 		</xsl:variable>
 
@@ -160,7 +171,7 @@
 		<!-- delete button -->
 		<xsl:if test="geonet:info/owner='true'">
 			&#160;
-			<button class="content" onclick="return doConfirmDelete('{/root/gui/locService}/metadata.delete?id={$metadata/geonet:info/id}', '{/root/gui/strings/confirmDelete}','{$ltitle}','{$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/delete"/></button>
+			<button class="content" onclick="return doConfirmDelete('{/root/gui/locService}/metadata.delete?id={$metadata/geonet:info/id}', '{/root/gui/strings/confirmDelete}','{$ltitle}','{$metadata/geonet:info/id}', '{/root/gui/strings/deleteConfirmationTitle}')"><xsl:value-of select="/root/gui/strings/delete"/></button>
 		</xsl:if>
 			
 		<!-- privileges button -->

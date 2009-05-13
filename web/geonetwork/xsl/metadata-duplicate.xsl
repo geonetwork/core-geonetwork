@@ -4,23 +4,6 @@
 	<xsl:include href="main.xsl"/>
 
 	<!-- ============================================================================= -->
-
-	<xsl:template mode="script" match="/">
-		<script type="text/javascript" language="JavaScript">			
-			function checkAndSubmit()
-			{
-				if ($F('groups') == '')
-				{
-					alert('Please, select at least one group');
-					return;
-				}
-
-				document.createform.submit();
-			}
-		</script>
-	</xsl:template>
-
-	<!-- ============================================================================= -->
 	<!-- page content -->
 	<!-- ============================================================================= -->
 
@@ -33,7 +16,7 @@
 			<xsl:with-param name="buttons">
 				<button class="content" onclick="goBack()"><xsl:value-of select="/root/gui/strings/back"/></button>
 				&#160;
-				<button class="content" onclick="checkAndSubmit()"><xsl:value-of select="/root/gui/strings/create"/></button>
+				<button class="content" onclick="document.createform.submit();"><xsl:value-of select="/root/gui/strings/create"/></button>
 			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
@@ -41,7 +24,7 @@
 	<!-- ============================================================================= -->
 
 	<xsl:template name="form">
-		<form name="createform" accept-charset="UTF-8" action="{/root/gui/locService}/metadata.create" method="post">
+		<form name="createform" accept-charset="UTF-8" action="metadata.create" method="post">
 			<input name="id" type="hidden" value="{/root/response/id}"/>
 			<table>
 				<tr>
@@ -51,14 +34,14 @@
 				</tr>
 
 				<!-- groups -->
-
 				<xsl:variable name="lang" select="/root/gui/language"/>
 
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/groups"/></th>
 					<td class="padded">
-						<select class="content" size="10" name="group" multiple="" id="groups">
+							<select class="content" name="group" id="groups">
 							<xsl:for-each select="/root/gui/groups/record">
+								<xsl:sort select="label/child::*[name() = $lang]"/>
 								<option value="{id}">
 									<xsl:value-of select="label/child::*[name() = $lang]"/>
 								</option>

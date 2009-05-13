@@ -42,6 +42,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.jdom.Element;
 
 // FIXME: this class could be moved to DataManager
@@ -66,6 +67,9 @@ public class ImportFromDir implements Service
 
 	//--------------------------------------------------------------------------
 
+	/**
+	 * Filter xml or mef files.
+	 */
 	private FilenameFilter mdFilter = new FilenameFilter()
 	{
 		public boolean accept(File dir, String name)
@@ -76,7 +80,10 @@ public class ImportFromDir implements Service
 			if (name.startsWith("."))
 				return false;
 
-			return name.endsWith(".xml");
+			if (name.toLowerCase().endsWith(".xml") || name.toLowerCase().endsWith(".mef"))
+				return true;
+			else
+				return false;
 		}
 	};
 
@@ -103,6 +110,15 @@ public class ImportFromDir implements Service
 	//---
 	//--------------------------------------------------------------------------
 
+	/**
+	 * util.import service allow to import metadata in batch mode using 2 
+	 * different mode:
+	 * <ul>
+	 * <li>Search for all xml file in given directory and load them</li>
+	 * <li>Search for a file named import-config.xml in given directory
+	 * and the import as described in that file.</li>
+	 * </ul> 
+	 */
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		String dir  = Util.getParam(params, Params.DIR);
@@ -136,48 +152,15 @@ public class ImportFromDir implements Service
 
 	private int standardImport(Element params, ServiceContext context) throws Exception
 	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getDataManager();
-
 		String dir      = Util.getParam(params, Params.DIR);
-		String schema   = Util.getParam(params, Params.SCHEMA);
-		String group    = Util.getParam(params, Params.GROUP);
-		String category = Util.getParam(params, Params.CATEGORY);
-		String style    = Util.getParam(params, Params.STYLESHEET);
-
-		boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
-
+		
 		File files[] = new File(dir).listFiles(mdFilter);
 
 		if (files == null)
 			throw new Exception("Directory not found: " + dir);
 
-		ArrayList<Element> alMetadata = new ArrayList<Element>();
-
-		//--- first collect metadata
-
 		for(int i=0; i<files.length; i++)
-		{
-			context.debug("Importing : "+files[i]);
-
-			Element xml = Xml.loadFile(files[i]);
-
-			if (!style.equals("_none_")) {
-				context.debug("Transforming with : "+stylePath +"/"+ style);
-				xml = Xml.transform(xml, stylePath +"/"+ style);
-			}
-
-			if (validate)
-				validateIt(schema, xml, context, files[i].getName()); 
-
-			alMetadata.add(xml);
-		}
-
-		//--- then insert them. At this stage they are well formed and we should not
-		//--- get exceptions that invalidate the index
-
-		for (Element xml : alMetadata)
-			insert(schema, xml, group, context, category);
+			MEFLib.doImport(params, context, files[i], stylePath);
 
 		return files.length;
 	}
@@ -258,6 +241,37 @@ public class ImportFromDir implements Service
 
 	//--------------------------------------------------------------------------
 	//---
+	//--- Private methods
+	//---
+	//--------------------------------------------------------------------------
+
+	private void insert(String schema, Element xml, String group, ServiceContext context,
+							  String category) throws Exception
+	{
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager   dm = gc.getDataManager();
+
+		//-----------------------------------------------------------------------
+		//--- if the uuid does not exist we generate it
+
+		String uuid = dm.extractUUID(schema, xml);
+
+		if (uuid.length() == 0)
+			uuid = UUID.randomUUID().toString();
+
+		if (category.equals("_none_")) category = null;
+		//-----------------------------------------------------------------------
+		//--- insert metadata into the system
+
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+		String id = dm.insertMetadata(dbms, schema, category, group, xml, context.getSerialFactory(), gc.getSiteId(), uuid, context.getUserSession().getUserIdAsInt());
+
+	}
+	
+	
+	//--------------------------------------------------------------------------
+ 	//---
 	//--- validateIt (should be in DataManager?)
 	//---
 	//--------------------------------------------------------------------------
@@ -313,35 +327,6 @@ public class ImportFromDir implements Service
 
 	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
-
-	private void insert(String schema, Element xml, String group, ServiceContext context,
-							  String category) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getDataManager();
-
-		//-----------------------------------------------------------------------
-		//--- if the uuid does not exist we generate it
-
-		String uuid = dm.extractUUID(schema, xml);
-
-		if (uuid.length() == 0)
-			uuid = UUID.randomUUID().toString();
-
-		if (category.equals("_none_")) category = null;
-		//-----------------------------------------------------------------------
-		//--- insert metadata into the system
-
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-		String id = dm.insertMetadata(dbms, schema, category, group, xml, context.getSerialFactory(), gc.getSiteId(), uuid, context.getUserSession().getUserIdAsInt());
-
-	}
 }
 
 //=============================================================================
@@ -511,7 +496,7 @@ class ImportConfig
 			throw new IllegalArgumentException("Default schema not found : "+ defaultTo);
 
 		defaultSchema = defaultTo;
-	}
+	}	
 }
 
 //=============================================================================

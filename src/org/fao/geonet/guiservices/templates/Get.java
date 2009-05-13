@@ -38,8 +38,14 @@ import org.jdom.Element;
 
 //=============================================================================
 
-/** A simple service that returns all metadata templates that can be added
-  */
+/** 
+ * A simple service that returns all metadata templates that can be added
+ * User could also add search parameter in order to limit the list of templates
+ * proposed to the user.
+ * By default the search is restricted to template=y, extended=off and remote=off.
+ * 
+ * @see search parameters
+ */
 
 public class Get implements Service
 {
@@ -50,8 +56,7 @@ public class Get implements Service
 		"extended", "off",
 		"remote",   "off",
 		"attrset",  "geo",
-		"template", "y",
-		"any",      "",
+		"template", "y"
 	};
 
 	//--------------------------------------------------------------------------
@@ -73,7 +78,7 @@ public class Get implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		Element result = search(context).setName(Jeeves.Elem.RESPONSE);
+		Element result = search(params, context).setName(Jeeves.Elem.RESPONSE);
 		Element root   = new Element("root");
 
 		root.addContent(result);
@@ -106,13 +111,13 @@ public class Get implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	private Element search(ServiceContext context) throws Exception
+	private Element search(Element par, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		context.info("Creating searcher");
 
-		Element       params = buildParams();
+		Element       params = buildParams(par);
 		ServiceConfig config = new ServiceConfig();
 
 		SearchManager searchMan = gc.getSearchmanager();
@@ -131,11 +136,16 @@ public class Get implements Service
 	}
 
 	//--------------------------------------------------------------------------
-
-	private Element buildParams()
+	/**
+	 * Adding default params (i.e. force template search) to all other input parameters
+	 */
+	private Element buildParams(Element par)
 	{
 		Element params = new Element(Jeeves.Elem.REQUEST);
-
+		List<Element> in =  par.getChildren();
+		for (Element el : in)
+			params.addContent(new Element(el.getName()).setText(el.getText()));
+		
 		for(int i=0; i<arParams.length/2; i++)
 			params.addContent(new Element(arParams[i*2]).setText(arParams[i*2 +1]));
 

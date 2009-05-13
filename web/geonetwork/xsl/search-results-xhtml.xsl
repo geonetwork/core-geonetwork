@@ -115,27 +115,26 @@
 		
 						<div id="oAcOsEle" name="oAcOsEle" class="oAcEle" style="display:none;" onClick="oActions('oAcOs');">
 							<xsl:if test="/root/gui/services/service[starts-with(@name,'metadata.massive')]">
-								<xsl:value-of select="/root/gui/strings/massiveActions"/>
 								<xsl:if test="/root/gui/services/service/@name='metadata.massive.delete'">
-									<button class="content" onclick="massiveOperation('metadata.massive.delete','{/root/gui/strings/massiveDeleteTitle}',600,'{/root/gui/strings/confirmMassiveDelete}')">
+									<button onclick="massiveOperation('metadata.massive.delete','{/root/gui/strings/massiveDeleteTitle}',600,'{/root/gui/strings/confirmMassiveDelete}')">
 										<xsl:value-of select="/root/gui/strings/delete"/>
 									</button>
 								</xsl:if>
 								<xsl:if test="/root/gui/services/service/@name='metadata.massive.newowner'">
 								&#160;
-									<button class="content" onclick="massiveOperation('metadata.massive.newowner.form','{/root/gui/strings/massiveNewOwnerTitle}',800)">
+									<button onclick="massiveOperation('metadata.massive.newowner.form','{/root/gui/strings/massiveNewOwnerTitle}',800)">
 										<xsl:value-of select="/root/gui/strings/newOwner"/>
 									</button>
 								</xsl:if>
 								<xsl:if test="/root/gui/services/service/@name='metadata.massive.update.categories'">
 								&#160;
-									<button class="content" onclick="massiveOperation('metadata.massive.category.form','{/root/gui/strings/massiveUpdateCategoriesTitle}',800)">
+									<button onclick="massiveOperation('metadata.massive.category.form','{/root/gui/strings/massiveUpdateCategoriesTitle}',800)">
 										<xsl:value-of select="/root/gui/strings/updateCategories"/>
 									</button>
 								</xsl:if>
 								<xsl:if test="/root/gui/services/service/@name='metadata.massive.update.privileges'">
 								&#160;
-									<button class="content" onclick="massiveOperation('metadata.massive.admin.form','{/root/gui/strings/massiveUpdatePrivilegesTitle}',800)">
+									<button onclick="massiveOperation('metadata.massive.admin.form','{/root/gui/strings/massiveUpdatePrivilegesTitle}',800)">
 										<xsl:value-of select="/root/gui/strings/updatePrivileges"/>
 									</button>
 								</xsl:if>
@@ -631,12 +630,11 @@
 		<xsl:variable name="rating" select="$info/rating"/>
 		
 		<xsl:if test="$info/isHarvested = 'n' or $info/harvestInfo/type = 'geonetwork'">
-			<xsl:call-template name="showRating">
-				<xsl:with-param name="rating" select="$rating"/>
-			</xsl:call-template>
-		
-			<a id="rating.link.{$id}" style="cursor:pointer; padding-left:10px;" onClick="showRatingPopup({$id})">
-				<xsl:value-of select="/root/gui/strings/rateIt"/>
+			<a id="rating.link.{$id}" style="cursor:pointer; padding-left:10px;" onClick="showRatingPopup({$id})"
+				alt="{/root/gui/strings/rateIt}" title="{/root/gui/strings/rateIt}">
+				<xsl:call-template name="showRating">
+					<xsl:with-param name="rating" select="$rating"/>
+				</xsl:call-template>
 			</a>
 		</xsl:if>
 	</xsl:template>

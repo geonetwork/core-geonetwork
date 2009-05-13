@@ -10,7 +10,7 @@
 		<script type="text/javascript" language="JavaScript">
 			function delete1(url)
 			{
-				if(confirm("Delete the category ?"))
+				if(confirm("<xsl:value-of select="/root/gui/strings/deleteCategory"/>"))
 					load(url);
 			}
 		</script>
@@ -37,13 +37,14 @@
 	form
 	-->
 	<xsl:template name="form">
-		<div class="important"><xsl:value-of select="/root/gui/strings/localizationHelp"/></div>
+		<div class="important"><xsl:copy-of select="/root/gui/strings/localizationHelp"/></div>
 		<table width="70%">
 			<tr>
 				<th class="padded, bottom_border"><xsl:value-of select="/root/gui/strings/name"/></th>
 				<th class="padded"><xsl:value-of select="/root/gui/strings/operation"/></th>
 			</tr>
 			<xsl:for-each select="/root/response/record">
+				<xsl:sort select="name"/>
 				<tr>
 					<td class="padded, bottom_border"><xsl:value-of select="name"/></td>
 					<td class="padded" width="150px">

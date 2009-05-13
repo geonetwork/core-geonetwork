@@ -30,8 +30,8 @@
 						
 						<xsl:if test="/root/gui/services/service/@name='metadata.batchimport.form'">
 							<tr>
-								<td><a href="{/root/gui/locService}/metadata.batchimport.form"><xsl:value-of select="/root/gui/strings/batchImportTitle"/></a></td>
-								<td>
+								<td class="padded"><a href="{/root/gui/locService}/metadata.batchimport.form"><xsl:value-of select="/root/gui/strings/batchImportTitle"/></a></td>
+								<td class="padded">
 									<xsl:value-of select="/root/gui/strings/batchImport"/>
 								</td>
 							</tr>
@@ -39,8 +39,8 @@
 						
 						<xsl:if test="/root/gui/services/service/@name='metadata.searchunused.form'">
 							<tr>
-								<td><a href="{/root/gui/locService}/metadata.searchunused.form"><xsl:value-of select="/root/gui/strings/searchUnusedTitle"/></a></td>
-								<td>
+								<td class="padded"><a href="{/root/gui/locService}/metadata.searchunused.form"><xsl:value-of select="/root/gui/strings/searchUnusedTitle"/></a></td>
+								<td class="padded">
 									<xsl:value-of select="/root/gui/strings/searchUnused"/>
 								</td>
 							</tr>
@@ -76,14 +76,14 @@
 					<xsl:variable name="persInfoServices">
 						<xsl:if test="/root/gui/services/service/@name='user.pwupdate'">
 							<tr>
-								<td><a href="{/root/gui/locService}/user.pwedit?id={/root/gui/session/userId}"><xsl:value-of select="/root/gui/strings/userPw"/></a></td>
-								<td><xsl:value-of select="/root/gui/strings/userPwDes"/></td>
+								<td class="padded"><a href="{/root/gui/locService}/user.pwedit?id={/root/gui/session/userId}"><xsl:value-of select="/root/gui/strings/userPw"/></a></td>
+								<td class="padded"><xsl:value-of select="/root/gui/strings/userPwDes"/></td>
 							</tr>
 						</xsl:if>
 						<xsl:if test="/root/gui/services/service/@name='user.infoupdate'">
 							<tr>
-								<td><a href="{/root/gui/locService}/user.infoedit?id={/root/gui/session/userId}"><xsl:value-of select="/root/gui/strings/userInfo"/></a></td>
-								<td><xsl:value-of select="/root/gui/strings/userInfoDes"/></td>
+								<td class="padded"><a href="{/root/gui/locService}/user.infoedit?id={/root/gui/session/userId}"><xsl:value-of select="/root/gui/strings/userInfo"/></a></td>
+								<td class="padded"><xsl:value-of select="/root/gui/strings/userInfoDes"/></td>
 							</tr>
 						</xsl:if>
 					</xsl:variable>

@@ -2,31 +2,8 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	
 	<xsl:include href="main.xsl"/>
+	<xsl:include href="metadata-insert-form-utils.xsl"/>
 	
-    <xsl:template mode="script" match="/">
-        <script type="text/javascript" language="JavaScript">
-            
-            var schema = new Array (
-            <xsl:for-each select="/root/gui/schemas/name">
-               <xsl:sort select="."/>
-                "<xsl:value-of select="."/>"<xsl:if test="position()!=last()">,</xsl:if>
-            </xsl:for-each>);
-            
-            // Update schema according to stylesheet selected (ie. styleSheet MUST end with schemaName.xsl)
-            function updateSchema() {
-                var xsl = $('styleSheet').options[$('styleSheet').selectedIndex].value;
-                for (i = 0; i &lt; schema.length; i ++) { 
-                    if (xsl.toLowerCase().lastIndexOf(schema[i]+'.xsl') != -1) {
-                        $('schema').selectedIndex = i;
-                        return;
-                    }
-                 }
-                 $('schema').selectedIndex = 0;      
-            }
-        
-        </script>
-    </xsl:template>
-    
 	<!--
 	page content
 	-->
@@ -47,84 +24,33 @@
 	<xsl:template name="form">
 		<form name="xmlbatch" accept-charset="UTF-8" action="{/root/gui/locService}/util.import" method="post">
 			<input type="submit" style="display: none;" />
+			
 			<table>
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/directory"/></th>
-					<td class="padded"><input class="content" type="text" name="dir"/></td>
+					<td class="padded"><input class="content" type="text" size="50" name="dir"/></td>
 				</tr>
 				
                 <!-- transformation stylesheet -->
-
-                <tr>
-                    <th class="padded"><xsl:value-of select="/root/gui/strings/styleSheet"/></th>
-                    <td class="padded">
-                        <select class="content" name="styleSheet" id="styleSheet" size="1" onchange="updateSchema();">
-                            <option value="_none_">
-                                <xsl:value-of select="/root/gui/strings/none"/>
-                            </option>
-                            <xsl:for-each select="/root/gui/importStyleSheets/record">
-                                <xsl:sort select="name"></xsl:sort>
-                                <option value="{id}">
-                                    <xsl:value-of select="name"/>
-                                </option>
-                            </xsl:for-each>
-                        </select>
-                    </td>
-                </tr>
-				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/schema"/></th>
-					<td class="padded">
-						<select class="content" name="schema" id="schema" size="1">
-							<xsl:for-each select="/root/gui/schemas/name">
-								<xsl:sort select="."></xsl:sort>
-                                <option value="{.}">
-									<xsl:value-of select="."/>
-								</option>
-							</xsl:for-each>
-						</select>
+				<tr id="gn.fileType">
+					<th class="padded" valign="top"><xsl:value-of select="/root/gui/strings/fileType"/></th>
+					<td>
+						<table>
+							<tr>
+								<td class="padded">
+									<label for="singleFile"><xsl:value-of select="/root/gui/strings/singleFile"/></label>
+									<input type="radio" id="singleFile" name="file_type" value="single" checked="true"/>
+								</td>
+								<td class="padded">
+									<label for="mefFile"><xsl:value-of select="/root/gui/strings/mefFile"/></label>
+									<input type="radio" id="mefFile" name="file_type" value="mef"/>
+								</td>
+							</tr>
+						</table>
 					</td>
-				</tr>
-				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/validate"/></th>
-					<td><input class="content" type="checkbox" name="validate"/></td>
 				</tr>
 				
-				<!-- groups -->
-				
-				<xsl:variable name="lang" select="/root/gui/language"/>
-
-				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/group"/></th>
-					<td class="padded">
-						<select class="content" name="group" size="1">
-							<xsl:for-each select="/root/gui/groups/record">
-								<option value="{id}">
-									<xsl:value-of select="label/child::*[name() = $lang]"/>
-								</option>
-							</xsl:for-each>
-						</select>
-					</td>
-				</tr>
-
-				<!-- categories -->
-
-				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/category"/></th>
-					<td class="padded">
-						<select class="content" name="category" size="1">
-							<option value="_none_">
-								<xsl:value-of select="/root/gui/strings/none"/>
-							</option>
-							<xsl:for-each select="/root/gui/categories/record">
-								<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
-								<option value="{id}">
-									<xsl:value-of select="label/child::*[name() = $lang]"/>
-								</option>
-							</xsl:for-each>
-						</select>
-					</td>
-				</tr>
-
+				<xsl:call-template name="metadata-insert-common-form">/</xsl:call-template>
 			</table>
 		</form>
 	</xsl:template>

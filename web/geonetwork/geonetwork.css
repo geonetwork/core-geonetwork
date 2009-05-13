@@ -281,7 +281,6 @@ table.md {
 
 th.md {
 	text-align: left;
-	text-transform: capitalize;
 }
 
 input.md, select.md, textarea.md {
@@ -340,6 +339,16 @@ utilities
 font.error, font.warning {
 	color: #ff4040;
 }
+
+.missing {
+    color: #ff4040;
+    font-style: italic;
+}
+
+.info {
+    font-style: italic;
+}
+
 
 td.box {
 	border: 2px solid #266397;

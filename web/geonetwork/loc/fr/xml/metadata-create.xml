@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <strings>
 	<title>Création des métadonnées</title>
-	<message>SVP, sélectionner le groupe à attribuer à la copie du jeu de données</message>
+	<message>Sélectionner le groupe à attribuer à la copie de la métadonnée</message>
 	<button>Créer</button>
 </strings>

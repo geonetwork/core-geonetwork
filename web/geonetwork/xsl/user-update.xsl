@@ -16,7 +16,7 @@
 	
 				if (document.userupdateform.username.value.length == 0)
 				{
-					alert('The username field is mandatory.');
+					alert("<xsl:value-of select="/root/gui/strings/usernameMandatory"/>");
 					return;
 				}
 
@@ -26,25 +26,25 @@
 				// check for a value in both fields.
 				if (pw1 == '' || pw2 == '')
 				{
-					alert('Please enter your password twice.');
+					alert("<xsl:value-of select="/root/gui/strings/passwordEntry"/>");
 					return;
 				}
 				// check for minimum length
 				if (document.userupdateform.password.value.length &lt; minLength)
 				{
-					alert('Your password must be at least ' + minLength + ' characters long. Try again.');
+					alert("<xsl:value-of select="/root/gui/strings/passwordLength"/>");
 					return;
 				}
 				// check for spaces
 				if (document.userupdateform.password.value.indexOf(invalid) &gt; -1)
 				{
-					alert("Sorry, spaces are not allowed.");
+					alert("<xsl:value-of select="/root/gui/strings/passwordSpace"/>");
 					return;
 				}
 				// check for bad password confirmation
 				if (pw1 != pw2)
 				{
-					alert ("You did not enter the same new password twice. Please re-enter your password.");
+					alert ("<xsl:value-of select="/root/gui/strings/passwordDoNotMatch"/>");
 					return;
 				}
 
@@ -52,7 +52,7 @@
 				if ($F('groups') == '')
 					if ($F('user.profile') != 'Administrator')
 					{
-						alert('Please, select at least one group');
+						alert("<xsl:value-of select="/root/gui/strings/userAtLeastOneGroup"/>");
 						return;
 					}
 				
@@ -148,6 +148,7 @@
 								<option value=""/>
 							</xsl:if>
 							<xsl:for-each select="/root/gui/countries/country">
+								<xsl:sort select="."/>
 								<option value="{@iso2}">
 									<xsl:if test="string(/root/response/record/country)=@iso2">
 										<xsl:attribute name="selected"/>
@@ -171,6 +172,7 @@
 					<td class="padded">
 						<select class="content" size="1" name="kind">
 							<xsl:for-each select="/root/gui/strings/kindChoice">
+								<xsl:sort select="."/>
 								<option value="{@value}">
 									<xsl:if test="string(/root/response/record/kind)=@value">
 										<xsl:attribute name="selected"/>
@@ -250,6 +252,7 @@
 					<td class="padded">
 						<select class="content" size="7" name="groups" multiple="" id="groups">
 							<xsl:for-each select="/root/gui/groups/record">
+								<xsl:sort select="label/child::*[name() = $lang]"/>
 								<option value="{id}">
 									<xsl:variable name="aGroup" select="id"/>
 									<xsl:for-each select="/root/response/groups/id">

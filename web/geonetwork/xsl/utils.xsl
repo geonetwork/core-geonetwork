@@ -20,20 +20,22 @@
 			<xsl:call-template name="replaceString">
 				<xsl:with-param name="expr"        select="$expr"/>
 				<xsl:with-param name="pattern"     select="'&amp;'"/>
-				<xsl:with-param name="replacement" select="' and '"/>
+				<xsl:with-param name="replacement" select="' and '"/><!-- FIXME : this is only english -->
 			</xsl:call-template>
 		</xsl:variable>
 		<xsl:variable name="e2">
 			<xsl:call-template name="replaceString">
 				<xsl:with-param name="expr"        select="$e1"/>
 				<xsl:with-param name="pattern"     select='"&apos;"'/>
-				<xsl:with-param name="replacement" select="''"/>
+				<xsl:with-param name="replacement" select="' '"/><!-- FIXME : Here we should escape by
+				valid character and not nothing. Check if that template is only used for JS escaping ? -->
 			</xsl:call-template>
 		</xsl:variable>
 		<xsl:call-template name="replaceString">
 			<xsl:with-param name="expr"        select="$e2"/>
 			<xsl:with-param name="pattern"     select="'&quot;'"/>
-			<xsl:with-param name="replacement" select="''"/>
+			<xsl:with-param name="replacement" select="' '"/><!-- FIXME : Here we should escape by
+				valid character and not nothing. Check if that template is only used for JS escaping ? -->
 		</xsl:call-template>
 	</xsl:template>
 
