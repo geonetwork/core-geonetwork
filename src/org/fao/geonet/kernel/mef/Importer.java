@@ -64,7 +64,7 @@ class Importer
 	{
 		final GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		final DataManager   dm = gc.getDataManager();
-
+						
 		final Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		final String  id[] = { ""   };
@@ -108,16 +108,10 @@ class Importer
 				Element categs = null;
 				Element privileges = null;
 				// Element group = null;
-
-				boolean dcore = false;
-				boolean fgdc = false;
-				boolean iso115 = false;
-				boolean iso139 = false;
 				
 				// Handle non MEF files insertion
 				if (info.getChildren().size() == 0) {
 					
-					schema = Util.getParam(params, Params.SCHEMA);
 					source = Util.getParam(params, Params.SITE_ID, gc
 							.getSiteId());
 					isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
@@ -141,6 +135,8 @@ class Importer
 					if (!style.equals("_none_"))
 			        	md[0] = Xml.transform(md[0],stylePath+"/"+style);
 					
+					schema = dm.autodetectSchema(md[0]);
+					
 					// Get the Metadata uuid
 					if (isTemplate.equals("n"))
 						uuid = dm.extractUUID(schema, md[0]);
@@ -161,17 +157,13 @@ class Importer
 					isTemplate = general.getChildText("isTemplate").equals("true") ? "y" : "n";
 					rating     = general.getChildText("rating");
 					popularity = general.getChildText("popularity");
-	
+
+					schema = dm.autodetectSchema(md[0]);
 				}
-
-				dcore  = schema.equals("dublin-core");
-				fgdc   = schema.equals("fgdc-std");
-				iso115 = schema.equals("iso19115");
-				iso139 = schema.equals("iso19139");
 				
-				if (!dcore && !fgdc && !iso115 && !iso139)
-					throw new Exception("Unknown schema format : "+schema);
-
+				if (schema == null)
+					throw new Exception("Unknown schema format : " + schema);
+				
 				String uuidAction = Util.getParam(params, Params.UUID_ACTION, Params.NOTHING);
 				
 				if (uuid == null || uuid.equals(""))

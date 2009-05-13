@@ -264,28 +264,8 @@
 								</div>
 							</td>
 						</tr>
-						<tr>
-							<td valign="top">
-								<table class="geosearchfields" width="100%">
-									<tr>
-										<td>
-											<xsl:call-template name="categories"/>
-										</td>
-									</tr>
-								</table>
-							</td>
-						</tr>
-						<tr>
-							<td valign="top">
-								<table class="geosearchfields" width="100%">
-									<tr>
-										<td>
-											<xsl:call-template name="latestUpdates"/>
-										</td>
-									</tr>
-								</table>
-							</td>
-						</tr>
+						<xsl:call-template name="categories"/>
+						<xsl:call-template name="latestUpdates"/>
 					</table>
 				</td>
 
@@ -349,6 +329,10 @@
 	</xsl:template>
 
 
+	<!-- FIXME : should we keep that template
+	which was used for old (2.0.3) search interface ?
+	This is UI is not fonctionnal anymore (JS error, search failed, ...)
+	-->
 	<xsl:template name="normalcontent">
 		<table width="100%" height="100%">
 			<tr height="100%">
@@ -495,12 +479,8 @@
 								</xsl:otherwise>
 							</xsl:choose>
 
-							<td class="separator"/>
-
 							<!-- categories -->
-							<td class="footer" align="left" valign="top">
-								<xsl:call-template name="categories"/>
-							</td>
+							<xsl:call-template name="categories"/>
 
 						</tr>
 					</table>
@@ -557,42 +537,66 @@
 	latest updates
 	-->
 	<xsl:template name="latestUpdates">
-		<h1 align="left">
-			<xsl:value-of select="/root/gui/strings/recentAdditions"/> &#160;&#160;&#160; 
-			<a href="{/root/gui/locService}/rss.latest?georss=simplepoint" target="_blank">
-				<img style="cursor:hand;cursor:pointer" src="{/root/gui/url}/images/georss.png"
-					alt="GeoRSS-GML" title="{/root/gui/strings/georss}" align="top"/>
-			</a>
-		</h1>
-		<xsl:for-each select="/root/gui/latestUpdated/*">
-			<xsl:variable name="md">
-				<xsl:apply-templates mode="brief" select="."/>
-			</xsl:variable>
-			<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
-			<div class="arrow" onClick="gn_showSingleMetadataUUID('{geonet:info/uuid}');" 
-				style="cursor:hand;cursor:pointer">
-				<xsl:value-of select="$metadata/title"/>
-				<br/>
-			</div>
-		</xsl:for-each>
+		<xsl:if test="/root/gui/latestUpdated/*">
+			<tr>
+				<td valign="top">
+					<table class="geosearchfields" width="100%">
+						<tr>
+							<td>
+								<h1 align="left">
+									<xsl:value-of select="/root/gui/strings/recentAdditions"/> &#160;&#160;&#160; 
+									<a href="{/root/gui/locService}/rss.latest?georss=simplepoint" target="_blank">
+										<img style="cursor:hand;cursor:pointer" src="{/root/gui/url}/images/georss.png"
+											alt="GeoRSS-GML" title="{/root/gui/strings/georss}" align="top"/>
+									</a>
+								</h1>
+								<xsl:for-each select="/root/gui/latestUpdated/*">
+									<xsl:variable name="md">
+										<xsl:apply-templates mode="brief" select="."/>
+									</xsl:variable>
+									<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
+									<div class="arrow" onClick="gn_showSingleMetadataUUID('{geonet:info/uuid}');" 
+										style="cursor:hand;cursor:pointer">
+										<xsl:value-of select="$metadata/title"/>
+										<br/>
+									</div>
+								</xsl:for-each>							
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</xsl:if>
 	</xsl:template>
 
 	<!--
 	categories
 	-->
 	<xsl:template name="categories">
-		<h1 align="left">
-			<xsl:value-of select="/root/gui/strings/categories"/>
-		</h1>
-		<xsl:for-each select="/root/gui/categories/*">
-			<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
-			<xsl:variable name="categoryName" select="name"/>
-			<xsl:variable name="categoryLabel" select="label/child::*[name() = $lang]"/>
-			<div class="arrow" onClick="runCategorySearch('{$categoryName}');" style="cursor:hand;cursor:pointer">
-				<xsl:value-of select="$categoryLabel"/>
-				<br/>
-			</div>
-		</xsl:for-each>
+		<xsl:if test="/root/gui/categories/*">
+			<tr>
+				<td valign="top">
+					<table class="geosearchfields" width="100%">
+						<tr>
+							<td>
+								<h1 align="left">
+									<xsl:value-of select="/root/gui/strings/categories"/>
+								</h1>
+								<xsl:for-each select="/root/gui/categories/*">
+									<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
+									<xsl:variable name="categoryName" select="name"/>
+									<xsl:variable name="categoryLabel" select="label/child::*[name() = $lang]"/>
+									<div class="arrow" onClick="runCategorySearch('{$categoryName}');" style="cursor:hand;cursor:pointer">
+										<xsl:value-of select="$categoryLabel"/>
+										<br/>
+									</div>
+								</xsl:for-each>								
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</xsl:if>
 	</xsl:template>
 
 	<!--

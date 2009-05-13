@@ -64,9 +64,9 @@
 
 // processing delete button
 
-			function doConfirmDelete(url, message, title, id)
+			function doConfirmDelete(url, message, title, id, boxTitle)
 			{
-				if(confirm(message + " (Title: " + title + ")"))
+				if(confirm(message + " (" + title + ")"))
 				{
 					var divToHide;
 					if (opener) divToHide = opener.$(id);
@@ -74,7 +74,7 @@
 					if (divToHide) {
 						divToHide.hide();
 					}
-					Modalbox.show(url,{title: "Delete Metadata Confirmation", width: 600, afterHide: function() { location.replace(getGNServiceURL('main.home')); }});
+					Modalbox.show(url,{title: boxTitle, width: 600, afterHide: function() { location.replace(getGNServiceURL('main.home')); }});
 					return true;
 				}
 				return false;

@@ -383,8 +383,8 @@ public class CatalogSearcher
 
 			// Only compute GeoNetwork summary on results_with_summary option 
 			if (resultType == ResultType.RESULTS_WITH_SUMMARY) {
-					summary = LuceneSearcher.makeSummary(_hits, _hits.length(),
-							_summaryConfig, resultType.toString(), 10);
+	            	summary = LuceneSearcher.makeSummary(_hits, _hits.length(),
+							_summaryConfig, resultType.toString(), Integer.MAX_VALUE, context.getLanguage());
 					summary.setName("Summary");
 					summary.setNamespace(Csw.NAMESPACE_GEONET);
 			}

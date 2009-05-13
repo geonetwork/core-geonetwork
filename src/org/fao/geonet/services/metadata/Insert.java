@@ -24,7 +24,9 @@
 package org.fao.geonet.services.metadata;
 
 import java.util.UUID;
+
 import jeeves.constants.Jeeves;
+import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -32,6 +34,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -73,7 +76,6 @@ public class Insert implements Service
 
 		String data       = Util.getParam(params, Params.DATA);
 		String group      = Util.getParam(params, Params.GROUP);
-		String schema     = Util.getParam(params, Params.SCHEMA);
 		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
 		String title      = Util.getParam(params, Params.TITLE, "");
 		String category   = Util.getParam(params, Params.CATEGORY);
@@ -93,8 +95,11 @@ public class Insert implements Service
         if (!style.equals("_none_"))
             xml = Xml.transform(xml, stylePath +"/"+ style);
 
-		if (validate)
-			dataMan.validate(schema, xml);
+        String schema = dataMan.autodetectSchema(xml);
+        if (schema == null)
+        	throw new BadParameterEx("Can't detect schema for metadata automatically.", schema);
+
+		if (validate) ImportFromDir.validateIt(schema, xml, context);
 
 		//-----------------------------------------------------------------------
 		//--- if the uuid does not exist and is not a template we generate it

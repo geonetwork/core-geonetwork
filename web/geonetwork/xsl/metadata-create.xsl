@@ -26,8 +26,10 @@
 			</xsl:with-param>
 			<xsl:with-param name="buttons">
 				<button class="content" onclick="goBack()"><xsl:value-of select="/root/gui/strings/back"/></button>
-				&#160;
-				<button class="content" onclick="checkAndSubmit()"><xsl:value-of select="/root/gui/create/button"/></button>
+				<xsl:if test="/root/gui/templates/record">
+					&#160;
+					<button class="content" onclick="checkAndSubmit()"><xsl:value-of select="/root/gui/create/button"/></button>
+				</xsl:if>
 			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
@@ -35,13 +37,34 @@
 	<!-- ============================================================================= -->
 
 	<xsl:template name="form">
-		<form name="createform" accept-charset="UTF-8" action="{/root/gui/locService}/metadata.create" method="post">
+		<xsl:choose>
+			<xsl:when test="not(/root/gui/templates/record)">
+				<table>
+					<tr>
+						<td>
+							<xsl:value-of select="/root/gui/strings/noTemplatesAvailable"/>
+						</td>
+					</tr>
+				</table>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name="template-form"/>
+			</xsl:otherwise>
+		</xsl:choose>
+		
+	</xsl:template>
+
+	<!-- ============================================================================= -->
+	
+	<xsl:template name="template-form">
+		<form name="createform" accept-charset="UTF-8" action="metadata.create" method="post">
 			<table>
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/template"/></th>
 					<td class="padded">
 						<select class="content" name="id" size="1">
 							<xsl:for-each select="/root/gui/templates/record">
+								<xsl:sort select="name"/>
 								<option value="{id}">
 									<xsl:value-of select="name"/>
 								</option>
@@ -49,16 +72,17 @@
 						</select>
 					</td>
 				</tr>
-			
+				
 				<!-- groups -->
-
+				
 				<xsl:variable name="lang" select="/root/gui/language"/>
-
+				
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/group"/></th>
 					<td class="padded">
 						<select class="content" name="group" size="1" id="group">
 							<xsl:for-each select="/root/gui/groups/record">
+								<xsl:sort select="label/child::*[name() = $lang]"/>
 								<option value="{id}">
 									<xsl:value-of select="label/child::*[name() = $lang]"/>
 								</option>
@@ -70,6 +94,5 @@
 		</form>
 	</xsl:template>
 
-	<!-- ============================================================================= -->
 
 </xsl:stylesheet>

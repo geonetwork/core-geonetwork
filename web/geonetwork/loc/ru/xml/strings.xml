@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<categoryNameMandatory>A category name must be filled in.</categoryNameMandatory>
+	<usernameMandatory>The username field is mandatory.</usernameMandatory>
+	<passwordEntry>Please enter your password twice.</passwordEntry>
+	<passwordLength>Your password must be at least " + minLength + " characters long. Try again.</passwordLength>
+	<passwordSpace>Sorry, spaces are not allowed in password.</passwordSpace>
+	<passwordDoNotMatch>You did not enter the same new password twice. Please re-enter your password.</passwordDoNotMatch>
+	<userAtLeastOneGroup>Please, select at least one group.</userAtLeastOneGroup>
+	<deleteGroup>Delete the group ?</deleteGroup>
+	<noTemplatesAvailable>No templates available, import metadata first.</noTemplatesAvailable>
+	<deleteCategory>Delete the category?</deleteCategory>
 	<fileType>Тип файла:</fileType>
 	<generateUUID>Сгенерировать UUID-идентификатор для вставленных метаданных</generateUUID>
 	<insertFileMode>Выгрузить файл</insertFileMode>

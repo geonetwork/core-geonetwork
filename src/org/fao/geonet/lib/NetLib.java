@@ -23,24 +23,41 @@
 
 package org.fao.geonet.lib;
 
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Properties;
+
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.XmlRequest;
+
+import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HostConfiguration;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
-import java.net.MalformedURLException;
+
+import org.fao.oaipmh.requests.Transport;
 
 //=============================================================================
 
 public class NetLib
 {
-	//-----------------------------------------------------------------------------
+	public static final String ENABLED  = "system/proxy/use";
+	public static final String HOST     = "system/proxy/host";
+	public static final String PORT     = "system/proxy/port";
+	public static final String USERNAME = "system/proxy/username";
+	public static final String PASSWORD = "system/proxy/password";
+
+	//---------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---
-	//-----------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
 
 	public void setupProxy(ServiceContext context, XmlRequest req)
 	{
@@ -50,22 +67,21 @@ public class NetLib
 		setupProxy(sm, req);
 	}
 
-	//-----------------------------------------------------------------------------
-	/** Setup proxy
+	//---------------------------------------------------------------------------
+	/** Setup proxy for XmlRequest
 	  */
 
 	public void setupProxy(SettingManager sm, XmlRequest req)
 	{
-		boolean enabled = sm.getValueAsBool("system/proxy/use", false);
-		String  host    = sm.getValue("system/proxy/host");
-		String  port    = sm.getValue("system/proxy/port");
-		String  username= sm.getValue("system/proxy/username");
-		String  password= sm.getValue("system/proxy/password");
+		boolean enabled = sm.getValueAsBool(ENABLED, false);
+		String  host    = sm.getValue(HOST);
+		String  port    = sm.getValue(PORT);
+		String  username= sm.getValue(USERNAME);
+		String  password= sm.getValue(PASSWORD);
 
-		if (!enabled)
+		if (!enabled) {
 			req.setUseProxy(false);
-		else
-		{
+		} else {
 			if (!Lib.type.isInteger(port))
 				Log.error(Geonet.GEONETWORK, "Proxy port is not an integer : "+ port);
 			else
@@ -73,12 +89,119 @@ public class NetLib
 				req.setUseProxy(true);
 				req.setProxyHost(host);
 				req.setProxyPort(Integer.parseInt(port));
-				req.setProxyCredentials(username, password);
+				if (username.trim().length()!=0) {
+					req.setProxyCredentials(username, password);
+				}
 			}
 		}
 	}
 
-	//-----------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
+
+	public void setupProxy(ServiceContext context, HttpClient client)
+	{
+		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SettingManager sm = gc.getSettingManager();
+
+		setupProxy(sm, client);
+	}
+
+	//---------------------------------------------------------------------------
+
+	/** Setup proxy for http client
+	  */
+	public void setupProxy(SettingManager sm, HttpClient client)
+	{
+		boolean enabled = sm.getValueAsBool(ENABLED, false);
+		String  host    = sm.getValue(HOST);
+		String  port    = sm.getValue(PORT);
+		String  username= sm.getValue(USERNAME);
+		String  password= sm.getValue(PASSWORD);
+
+		if (enabled) {
+			if (!Lib.type.isInteger(port)) {
+				Log.error(Geonet.GEONETWORK, "Proxy port is not an integer : "+ port);
+			} else {
+				HostConfiguration config = client.getHostConfiguration();
+				if (config == null) config = new HostConfiguration();
+				config.setProxy(host,Integer.parseInt(port));
+				client.setHostConfiguration(config);
+
+				if (username.trim().length()!=0) {
+					Credentials cred = new UsernamePasswordCredentials(username, password);
+					AuthScope scope = new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM);
+
+					client.getState().setProxyCredentials(scope, cred);
+				}
+			}
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	public void setupProxy(ServiceContext context, Transport t)
+	{
+		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SettingManager sm = gc.getSettingManager();
+
+		setupProxy(sm, t);
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void setupProxy(SettingManager sm, Transport t) {
+		boolean enabled = sm.getValueAsBool(ENABLED, false);
+		String  host    = sm.getValue(HOST);
+		String  port    = sm.getValue(PORT);
+		String  username= sm.getValue(USERNAME);
+		String  password= sm.getValue(PASSWORD);
+		if (enabled) {
+			if (!Lib.type.isInteger(port)) {
+				Log.error(Geonet.GEONETWORK, "Proxy port is not an integer : "+ port);
+			} else {
+				t.setUseProxy(enabled);
+				t.setProxyHost(host);
+				t.setProxyPort(Integer.parseInt(port));
+				if (username.trim().length() != 0) {
+					t.setProxyCredentials(username, password);	
+				}
+			}
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	public void setupProxy(ServiceContext context)
+	{
+		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SettingManager sm = gc.getSettingManager();
+
+		setupProxy(sm);
+	}
+
+	//---------------------------------------------------------------------------
+
+	/** Setup proxy for http client
+	  */
+	public void setupProxy(SettingManager sm)
+	{
+		boolean enabled = sm.getValueAsBool(ENABLED, false);
+		String  host    = sm.getValue(HOST);
+		String  port    = sm.getValue(PORT);
+		String  username= sm.getValue(USERNAME);
+		String  password= sm.getValue(PASSWORD);
+
+		Properties props = System.getProperties();
+		props.put("http.proxyHost", host);
+		props.put("http.proxyPort", port);
+		if (username.trim().length() > 0) {
+			Log.error(Geonet.GEONETWORK, "Proxy credentials cannot be used");
+		}
+
+	}
+
+
+	//---------------------------------------------------------------------------
 
 	public boolean isUrlValid(String url)
 	{

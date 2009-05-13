@@ -333,6 +333,13 @@
 
 		<service name="util.import">
 			<class name=".services.metadata.ImportFromDir" />
+
+			<output sheet="metadata-insert-results.xsl" />
+				
+			<error sheet="error.xsl">
+				<xml name="error" file="xml/validation-error.xml" />
+				<xml name="validation" file="xml/metadata-validate.xml" />
+			</error>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

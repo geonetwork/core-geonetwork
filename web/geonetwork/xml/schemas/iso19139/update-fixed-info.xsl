@@ -74,6 +74,17 @@
 	</xsl:template>
 
 	<!-- ================================================================= -->
+	<!-- Do not allow to expand operatesOn sub-elements 
+		and constrain users to use uuidref attribute to link
+		service metadata to datasets. This will avoid to have
+		error on XSD validation. -->
+	<xsl:template match="srv:operatesOn">
+		<xsl:copy>
+			<xsl:copy-of select="@*"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<!-- ================================================================= -->
 	<!-- Fix srsName attribute and generate epsg:4326 entry by default -->
 
 	<xsl:template match="@srsName">

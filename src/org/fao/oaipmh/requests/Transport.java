@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpState;
@@ -73,6 +74,7 @@ public class Transport
 		state.addCookie(cookie);
 		client.setState(state);
 		client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
+		client.setHostConfiguration(config);
 	}
 
 	//---------------------------------------------------------------------------
@@ -126,6 +128,40 @@ public class Transport
 
 		if (port == -1)
 			port = 80;
+	}
+
+	//---------------------------------------------------------------------------
+
+	public void setUseProxy(boolean yesno)
+	{
+		useProxy = yesno;
+	}
+
+	//---------------------------------------------------------------------------
+
+	public void setProxyHost(String host)
+	{
+		proxyHost = host;
+	}
+
+	//---------------------------------------------------------------------------
+
+	public void setProxyPort(int port)
+	{
+		proxyPort = port;
+	}
+
+	//---------------------------------------------------------------------------
+
+	public void setProxyCredentials(String username, String password)
+	{
+		if (username == null || username.trim().length() == 0)
+			return;
+
+		Credentials cred = new UsernamePasswordCredentials(username, password);
+		AuthScope   scope= new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM);
+
+		client.getState().setProxyCredentials(scope, cred);
 	}
 
 	//---------------------------------------------------------------------------
@@ -199,7 +235,10 @@ public class Transport
 
 	private Element doExecute(HttpMethodBase httpMethod) throws IOException, JDOMException
 	{
-		client.getHostConfiguration().setHost(host, port, "http");
+		config.setHost(host, port, "http");
+
+		if (useProxy)
+			config.setProxy(proxyHost, proxyPort);
 
 		byte[] data = null;
 
@@ -268,10 +307,15 @@ public class Transport
 	private String  address;
 	private Method  method;
 	private boolean useAuthent;
+	private boolean useProxy;
+	private String  proxyHost;
+	private int     proxyPort;
 
 	private HttpClient client = new HttpClient();
 	private HttpState  state  = new HttpState();
 	private Cookie     cookie = new Cookie();
+
+	private HostConfiguration config = new HostConfiguration();
 
 	private ArrayList<NameValuePair> alParams = new ArrayList<NameValuePair>();
 

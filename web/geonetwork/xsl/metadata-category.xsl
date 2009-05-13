@@ -14,50 +14,61 @@
 				<xsl:variable name="disabled" select="(/root/response/owner='false')"/>
 
 				<div id="categories" align="center">
-					<input name="metadataid" id="metadataid" type="hidden" value="{/root/response/id}"/>
-					<table>
-						<tr>
-							<th class="padded"><xsl:value-of select="/root/gui/strings/categories"/></th>
-							<th class="padded"><xsl:value-of select="/root/gui/strings/assigned"/></th>
-						</tr>
-
-						<xsl:variable name="lang" select="/root/gui/language"/>
-			
-						<!-- loop on all categories -->
-
-						<xsl:for-each select="/root/response/categories/category">
-							<xsl:sort select="name"/>
-							<xsl:variable name="categId" select="id"/>
-							<tr>
-								<td class="padded"><xsl:value-of select="label/child::*[name() = $lang]"/></td>
-								<td class="padded" align="center">
-									<input type="checkbox" id="_{$categId}" name="_{$categId}">
-										<xsl:if test="on">
-											<xsl:attribute name="checked"/>
-										</xsl:if>
-										<xsl:if test="$disabled">
-											<xsl:attribute name="disabled"/>
-										</xsl:if>
-									</input>
-								</td>
-							</tr>
-						</xsl:for-each>				
-						<xsl:if test="not($disabled)">
-							<tr width="100%">
-								<td align="center" colspan="2">
-									<xsl:choose>
-										<xsl:when test="contains(/root/gui/reqService,'metadata.massive')">
-											<button class="content" onclick="checkBoxModalUpdate('categories','metadata.massive.update.categories','true','{concat(/root/gui/strings/results,' ',/root/gui/strings/massiveUpdateCategoriesTitle)}')"><xsl:value-of select="/root/gui/strings/submit"/></button>
-										</xsl:when>
-										<xsl:otherwise>
-											<button class="content" onclick="checkBoxModalUpdate('categories','metadata.category');"><xsl:value-of select="/root/gui/strings/submit"/></button>
-										</xsl:otherwise>
-									</xsl:choose>
-								</td>
-							</tr>
-						</xsl:if>
-					</table>
-				</div>
+					<xsl:choose>
+						<xsl:when test="/root/response/categories/*">
+							
+							<input name="metadataid" id="metadataid" type="hidden" value="{/root/response/id}"/>
+							<table>
+								<tr>
+									<th class="padded"><xsl:value-of select="/root/gui/strings/categories"/></th>
+									<th class="padded"><xsl:value-of select="/root/gui/strings/assigned"/></th>
+								</tr>
+		
+								<xsl:variable name="lang" select="/root/gui/language"/>
+					
+								<!-- loop on all categories -->
+		
+								<xsl:for-each select="/root/response/categories/category">
+									<xsl:sort select="name"/>
+									<xsl:variable name="categId" select="id"/>
+									<tr>
+										<td class="padded"><xsl:value-of select="label/child::*[name() = $lang]"/></td>
+										<td class="padded" align="center">
+											<input type="checkbox" id="_{$categId}" name="_{$categId}">
+												<xsl:if test="on">
+													<xsl:attribute name="checked"/>
+												</xsl:if>
+												<xsl:if test="$disabled">
+													<xsl:attribute name="disabled"/>
+												</xsl:if>
+											</input>
+										</td>
+									</tr>
+								</xsl:for-each>				
+								<xsl:if test="not($disabled)">
+									<tr width="100%">
+										<td align="center" colspan="2">
+											<xsl:choose>
+												<xsl:when test="contains(/root/gui/reqService,'metadata.massive')">
+													<button class="content" onclick="checkBoxModalUpdate('categories','metadata.massive.update.categories','true','{concat(/root/gui/strings/results,' ',/root/gui/strings/massiveUpdateCategoriesTitle)}')"><xsl:value-of select="/root/gui/strings/submit"/></button>
+												</xsl:when>
+												<xsl:otherwise>
+													<button class="content" onclick="checkBoxModalUpdate('categories','metadata.category');"><xsl:value-of select="/root/gui/strings/submit"/></button>
+												</xsl:otherwise>
+											</xsl:choose>
+										</td>
+									</tr>
+								</xsl:if>
+							</table>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="/root/gui/strings/noCategory"/>
+							<!-- TODO : here we should not suggest category management
+							from search results if no category available in the catalogue 
+							@see search-results.xhtml -->
+						</xsl:otherwise>
+					</xsl:choose>
+				</div>          
 			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>

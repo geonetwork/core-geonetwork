@@ -348,9 +348,9 @@
 	<!--
 	prevent drawing of geonet:* elements
 	-->
-	<xsl:template mode="element" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type"/>
-	<xsl:template mode="simpleElement" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type"/>
-	<xsl:template mode="complexElement" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type"/>
+	<xsl:template mode="element" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType"/>
+	<xsl:template mode="simpleElement" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType"/>
+	<xsl:template mode="complexElement" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType"/>
 	
 	<!--
 	prevent drawing of attributes starting with "_", used in old GeoNetwork versions
@@ -805,22 +805,45 @@
 		<xsl:choose>
 			<!-- list of values -->
 			<xsl:when test="geonet:element/geonet:text">
+
+
+				<!-- This code is mainly run under FGDC 
+				but also for enumeration like topic category and 
+				service parameter direction in ISO. 
+				
+				Create a temporary list and retrive label in 
+				current gui language which is sorted after. -->				
+				<xsl:variable name="list">
+					<items>
+						<xsl:for-each select="geonet:element/geonet:text">
+							<xsl:variable name="choiceValue" select="string(@value)"/>							
+							<xsl:variable name="label" select="/root/gui/*[name(.)=$schema]/codelist[@name = $name]/entry[code = $choiceValue]/label"/>
+							
+							<item>
+								<value>
+									<xsl:value-of select="@value"/>
+								</value>
+								<label>
+									<xsl:choose>
+										<xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
+										<xsl:otherwise><xsl:value-of select="$choiceValue"/></xsl:otherwise>
+									</xsl:choose>									
+								</label>
+							</item>
+						</xsl:for-each>
+					</items>
+				</xsl:variable>
+				
 				<select class="md" name="_{geonet:element/@ref}" size="1">
 					<option name=""/>
-					<xsl:for-each select="geonet:element/geonet:text">
+					<xsl:for-each select="exslt:node-set($list)//item">
+						<xsl:sort select="label"/>
 						<option>
-							<xsl:if test="@value=$value">
+							<xsl:if test="value=$value">
 								<xsl:attribute name="selected"/>
 							</xsl:if>
-							<xsl:variable name="choiceValue" select="string(@value)"/>
-							<xsl:attribute name="value"><xsl:value-of select="$choiceValue"/></xsl:attribute>
-
-							<!-- it seems that this code is run only under FGDC -->
-							<xsl:variable name="label" select="/root/gui/*[name(.)=$schema]/codelist[@name = $name]/entry[code = $choiceValue]/label"/>
-							<xsl:choose>
-								<xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
-								<xsl:otherwise><xsl:value-of select="$choiceValue"/></xsl:otherwise>
-							</xsl:choose>
+							<xsl:attribute name="value"><xsl:value-of select="value"/></xsl:attribute>
+							<xsl:value-of select="label"/>
 						</option>
 					</xsl:for-each>
 				</select>

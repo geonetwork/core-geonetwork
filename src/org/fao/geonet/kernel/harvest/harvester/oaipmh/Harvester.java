@@ -39,6 +39,7 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.ISODate;
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.exceptions.NoRecordsMatchException;
@@ -90,6 +91,9 @@ class Harvester
 
 		if (params.useAccount)
 			t.setCredentials(params.username, params.password);
+
+		//--- set the proxy info if necessary
+		Lib.net.setupProxy(context, t);
 
 		//--- perform all searches
 

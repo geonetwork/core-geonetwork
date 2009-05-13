@@ -213,7 +213,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 					addtoSortedSet(sortedValues, fieldValues, duplicateValues);
 				}
 				
-				SummaryComparator valuesComparator = new SummaryComparator(SortOption.FREQUENCY, Type.STRING, null);
+				SummaryComparator valuesComparator = new SummaryComparator(SortOption.FREQUENCY, Type.STRING, context.getLanguage(), null);
 				TreeSet<Map.Entry<String, Integer>> sortedValuesFrequency = new TreeSet<Map.Entry<String, Integer>>(valuesComparator);
 				sortedValuesFrequency.addAll(duplicateValues.entrySet());
 				

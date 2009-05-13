@@ -20,7 +20,8 @@
 		<xsl:variable name="info" select="geonet:info"/>
 		<xsl:variable name="identification" select="gmd:identificationInfo/gmd:MD_DataIdentification|
 			gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
-			gmd:identificationInfo/srv:SV_ServiceIdentification"/>
+			gmd:identificationInfo/srv:SV_ServiceIdentification|
+			gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']"/>
 		
 		<csw:Record>
 
@@ -130,6 +131,115 @@
 					</ows:UpperCorner>
 				</ows:BoundingBox>
 			</xsl:for-each>
+
+
+			<!-- Create as many URI element as coupledResource defined for a WMS service. -->
+			<xsl:for-each select="
+				gmd:identificationInfo/srv:SV_ServiceIdentification[srv:serviceType/gco:LocalName='OGC:WMS']|
+				gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification' and srv:serviceType/gco:LocalName='OGC:WMS']">
+				
+				<!-- Get one connect point for the service -->
+				<xsl:variable name="connectPoint" select="srv:containsOperations/srv:SV_OperationMetadata/srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
+				<xsl:variable name="serviceUrl">
+					<xsl:choose>
+						<xsl:when test="$connectPoint=''">
+							<xsl:value-of select="../gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$connectPoint"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				
+				<!-- Add as many layers defined in coupled resource elements.
+				This will create interactive map buttons on client side -->
+				<xsl:for-each select="srv:coupledResource/srv:SV_CoupledResource">
+					<xsl:if test="gco:ScopedName!=''">
+						<dc:URI protocol="OGC:WMS" name="{gco:ScopedName}"><xsl:value-of select="$serviceUrl"/></dc:URI>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:for-each>
+			
+			
+			<!-- Distribution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+			<xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
+				<xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
+					<dc:format><xsl:value-of select="."/></dc:format>
+				</xsl:for-each>
+				
+				<xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource">
+					<xsl:if test="gmd:linkage">
+						<dc:URI>
+							<xsl:if test="gmd:protocol">
+								<xsl:attribute name="protocol"><xsl:value-of select="gmd:protocol/gco:CharacterString"/></xsl:attribute>
+							</xsl:if>
+							
+							<xsl:if test="gmd:name">
+								<xsl:attribute name="name">
+									<xsl:apply-templates mode="localised" select="gmd:name">
+										<xsl:with-param name="langId" select="$langId"/>
+									</xsl:apply-templates>
+								</xsl:attribute>
+							</xsl:if>
+							
+							<xsl:if test="gmd:description">
+								<xsl:attribute name="title">
+									<xsl:apply-templates mode="localised" select="gmd:description">
+										<xsl:with-param name="langId" select="$langId"/>
+									</xsl:apply-templates>
+								</xsl:attribute>
+							</xsl:if>
+
+							<xsl:choose>
+								<xsl:when test="count(gmd:linkage/*[name(.)!='gmd:URL']) &gt; 0">
+									<!-- This section is specific to iso19139.che profil which defined a localised URL
+										element. FIXME
+									-->
+									<xsl:apply-templates mode="localisedUrl" select="gmd:linkage">
+										<xsl:with-param name="langId" select="$langId"/>
+									</xsl:apply-templates>		
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="gmd:linkage/gmd:URL"/>
+								</xsl:otherwise>
+							</xsl:choose>
+							
+						</dc:URI>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:for-each>
+
+			<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic">
+				<xsl:variable name="fileName" select="gmd:fileName/gco:CharacterString"/>
+				<xsl:variable name="fileDescr" select="gmd:fileDescription/gco:CharacterString"/>
+				
+				<xsl:if test="$fileName!='' and $fileDescr='thumbnail'">
+					<dc:URI>
+						<xsl:choose>
+							<xsl:when test="contains(gmd:fileName/gco:CharacterString, '.gif')">
+								<xsl:attribute name="protocol">image/gif</xsl:attribute>
+							</xsl:when>
+							<xsl:when test="contains(gmd:fileName/gco:CharacterString, '.png')">
+								<xsl:attribute name="protocol">image/png</xsl:attribute>
+							</xsl:when>
+						</xsl:choose>
+						
+						<xsl:if test="$fileDescr">
+							<xsl:attribute name="name"><xsl:value-of select="$fileDescr"/></xsl:attribute>
+						</xsl:if>
+						
+						<xsl:choose>
+							<xsl:when test="contains($fileName ,'://')"><xsl:value-of select="$fileName"/></xsl:when>
+							<xsl:otherwise><xsl:value-of select="concat('resources.get?id=',$info/id,'&amp;fname=',$fileName,'&amp;access=public')"/>
+							</xsl:otherwise>
+						</xsl:choose>
+						
+					</dc:URI>
+				</xsl:if>
+			</xsl:for-each>
+			
+
 			
 			<!-- GeoNetwork elements added when resultType is equal to results_with_summary -->
 			<xsl:if test="$displayInfo = 'true'">

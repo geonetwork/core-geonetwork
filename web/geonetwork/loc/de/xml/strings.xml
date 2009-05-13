@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<setOnSave>Value will be set when record is saved</setOnSave>
+	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>
+	<missing>MISSING or EMPTY</missing>	
+	<byPackage>By Package</byPackage>
+	<byGroup>By Group</byGroup>
+	<isoMinimum>ISO Minimum</isoMinimum>
+	<isoCore>ISO Core</isoCore>
+	<isoAll>ISO All</isoAll>
+	<deleteConfirmationTitle>Delete Metadata Confirmation</deleteConfirmationTitle>	
+	<noCategory>No category available.</noCategory>
+	<categoryNameMandatory>A category name must be filled in.</categoryNameMandatory>
+	<usernameMandatory>The username field is mandatory.</usernameMandatory>
+	<passwordEntry>Please enter your password twice.</passwordEntry>
+	<passwordLength>Your password must be at least " + minLength + " characters long. Try again.</passwordLength>
+	<passwordSpace>Sorry, spaces are not allowed in password.</passwordSpace>
+	<passwordDoNotMatch>You did not enter the same new password twice. Please re-enter your password.</passwordDoNotMatch>
+	<userAtLeastOneGroup>Please, select at least one group.</userAtLeastOneGroup>	
+	<deleteGroup>Delete the group ?</deleteGroup>
+	<noTemplatesAvailable>No templates available, import metadata first.</noTemplatesAvailable>
+	<deleteCategory>Delete the category?</deleteCategory>
 	<!-- Self registration strings -->
 	<registerTitle>Selbstregistrierungsformular</registerTitle>
 	<profileChoice value="RegisteredUser">Registrierter Benutzer</profileChoice>

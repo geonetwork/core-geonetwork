@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.util.FileCopyMgr;
 import org.jdom.Element;
 
 //=============================================================================
@@ -88,6 +89,14 @@ public class Delete implements Service
 
 		if (info.template != MdInfo.Template.SUBTEMPLATE)
 			backupFile(context, id, info.uuid, MEFLib.doExport(context, info.uuid, "full", false));
+
+		//-----------------------------------------------------------------------
+		//--- remove the public and private directories
+
+		File pb = new File(Lib.resource.getDir(context, Params.Access.PUBLIC, id));
+		FileCopyMgr.removeDirectoryOrFile(pb);
+		File pr = new File(Lib.resource.getDir(context, Params.Access.PRIVATE, id));
+		FileCopyMgr.removeDirectoryOrFile(pr);
 
 		//-----------------------------------------------------------------------
 		//--- delete metadata and return status

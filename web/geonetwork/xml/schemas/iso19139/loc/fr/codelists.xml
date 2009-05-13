@@ -182,7 +182,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>distributor</code>
-			<label>distributeur</label>
+			<label>Distributeur</label>
 			<description>Organisme qui distribue la ressource. Diffuseur de second niveau de la ressource</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -194,7 +194,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>pointOfContact</code>
-			<label>point de contact</label>
+			<label>Point de contact</label>
 			<description>Organisme que l’on peut contacter pour avoir des renseignements détaillés sur la ressource. Acteur à contacter en premier lieu pour obtenir des informations relatives à la ressource</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1060,13 +1060,13 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>7trackTape</code>
-			<label>7trackTape</label>
+			<label>Bande magnétique 7 pistes</label>
 			<description>Bande magnétique</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>9trackType</code>
-			<label>9trackType</label>
+			<code>9trackTape</code>
+			<label>Bande magnétique 9 pistes</label>
 			<description>Bande magnétique</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1107,7 +1107,7 @@
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>digitalLinearTap</code>
+			<code>digitalLinearTape</code>
 			<label>Bande magnétique 0.5 pouces</label>
 			<description>Bande magnétique 0.5 pouces</description>
 		</entry>
@@ -1900,5 +1900,21 @@
 					<label>libre</label>
 			</entry>
 	</codelist>
+	    
+    <codelist name="srv:SV_ParameterDirection">
+        <entry>
+            <code>in</code>
+            <label>Entrée</label>
+        </entry>
+        <entry>
+            <code>out</code>
+            <label>Sortie</label>
+        </entry>
+        <entry>
+            <code>in/out</code>
+            <label>Entrée/Sortie</label>
+        </entry>
+        
+    </codelist>
 	
 </codelists>

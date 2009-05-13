@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <fields>
+	<!-- Service -->
+	<field name="srv:coupledResource">
+		<suggest name="srv:SV_CoupledResource"/>
+	</field>
+	
+	<field name="srv:parameters">
+		<suggest name="srv:SV_Parameter"/>
+	</field>
+	
+	<field name="srv:direction">
+		<suggest name="srv:SV_ParameterDirection"/>
+	</field>
+	
 	<field name="gmd:CI_OnlineResource">
 		<suggest name="gmd:protocol"/>
 		<suggest name="gmd:name"/>

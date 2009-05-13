@@ -59,6 +59,7 @@
 								<option value=""/>
 							</xsl:if>
 							<xsl:for-each select="/root/gui/countries/country">
+								<xsl:sort select="."/>
 								<option value="{@iso2}">
 									<xsl:if test="string(/root/response/record/country)=@iso2">
 										<xsl:attribute name="selected"/>
@@ -82,6 +83,7 @@
 					<td class="padded">
 						<select class="content" size="1" name="kind">
 							<xsl:for-each select="/root/gui/strings/kindChoice">
+								<xsl:sort select="."/>
 								<option value="{@value}">
 									<xsl:if test="string(/root/response/record/kind)=@value">
 										<xsl:attribute name="selected"/>

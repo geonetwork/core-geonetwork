@@ -341,6 +341,16 @@ font.error, font.warning {
 	color: #ff4040;
 }
 
+.missing {
+    color: #ff4040;
+    font-style: italic;
+}
+
+.info {
+    font-style: italic;
+}
+
+
 td.box {
 	border: 2px solid #266397;
 	background: #4683b7;

@@ -377,51 +377,65 @@ class Harvester
 		if (root != null) {
 			log.debug("  - add SV_CoupledResource and OperatesOnUuid");
 			
+			Element couplingType = root.getChild("couplingType", srv);
+			int coupledResourceIdx = root.indexOf(couplingType);
+			
 			for (WxSLayerRegistry layer : layersRegistry)
 			{
-				// and maybe add the title for display in metadata of the service
-				
-				/*
-				Element cr = new Element ("coupledResource", srv);
+				// Create coupled resources elements to register all layername
+				// in service metadata. This information could be used to add
+				// interactive map button when viewing service metadata.
+				Element coupledResource = new Element ("coupledResource", srv);
 				Element scr = new Element ("SV_CoupledResource", srv);
-				Element on = new Element ("OperationName", srv);
+				
+				
+				// Create operation according to service type
+				Element operation = new Element ("operationName", srv);
+				Element operationValue = new Element ("CharacterString", gco);
 				
 				if (params.ogctype.startsWith("WMS"))
-					on.setText("GetMap"); 
+					operationValue.setText("GetMap"); 
 				else if (params.ogctype.startsWith("WFS"))
-					on.setText("GetFeature");
+					operationValue.setText("GetFeature");
 				else if (params.ogctype.startsWith("WCS"))
-					on.setText("GetCoverage");
-				// FIXME : we should use operations name others /ROOT/Capability/Request/child::name()
+					operationValue.setText("GetCoverage");
+				operation.addContent(operationValue);
 				
+				// Create identifier (which is the metadata identifier)
 				Element id = new Element ("identifier", srv);
-				id.setText(layer.uuid);
-				Element sn = new Element ("ScopedName", gco);
-				sn.setText(layer.name);
+				Element idValue = new Element ("CharacterString", gco);
+				idValue.setText(layer.uuid);
+				id.addContent(idValue);
 				
-				scr.addContent(on);
+				// Create scoped name element as defined in CSW 2.0.2 ISO profil
+				// specification to link service metadata to a layer in a service.
+				Element scopedName = new Element ("ScopedName", gco);
+				scopedName.setText(layer.name);
+				
+				scr.addContent(operation);
 				scr.addContent(id);
-				scr.addContent(sn);
-				cr.setContent(scr);
+				scr.addContent(scopedName);
+				coupledResource.addContent(scr);
 				
-				root.addContent(cr);
+				// Add coupled resource before coupling type element
+				root.addContent(coupledResourceIdx, coupledResource);
 				
-				 */
 				
+		
+				// Add operatesOn element at the end of identification section.
 				Element op = new Element ("operatesOn", srv);
-				//Element di = new Element ("MD_DataIdentification", gmd);
 				op.setAttribute("uuidref", layer.uuid);
 				// FIXME : 
 				// 	* This could use URN instead of URL. But then, how to resolve URN ?
 				//  * This should use UUID instead
 				op.setAttribute("href", context.getBaseUrl() + "/srv/en/metadata.show?id=" + layer.id, xlink);
 				op.setAttribute("title", layer.name, xlink);
-				//op.setContent(di);
-		
+				
 				root.addContent(op);
 				
 			}
 		}
+
 		
 		return md;
 	}
@@ -723,8 +737,10 @@ class Harvester
 		HttpClient httpclient = new HttpClient ();
         GetMethod req = new GetMethod (url);
 		
-		// TODO : Proxy ? BA ? 
 		log.debug ("Retrieving remote document: " + url);
+
+		// set proxy from settings manager
+		Lib.net.setupProxy(context, httpclient);
 		
 		try {
 		    // Connect

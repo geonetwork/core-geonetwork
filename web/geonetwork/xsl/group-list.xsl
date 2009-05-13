@@ -10,7 +10,7 @@
 		<script type="text/javascript" language="JavaScript">
 			function delete1(url)
 			{
-				if(confirm("Delete the group ?"))
+				if(confirm("<xsl:value-of select="/root/gui/strings/deleteGroup"/>"))
 					load(url);
 			}
 		</script>
@@ -46,6 +46,7 @@
 				<th class="padded"><xsl:value-of select="/root/gui/strings/operation"/></th>
 			</tr>
 			<xsl:for-each select="/root/response/record">
+				<xsl:sort select="name"/>
 				<tr>
 					<td class="padded, bottom_border"><xsl:value-of select="name"/></td>
 					<td class="padded, bottom_border" width="150"><xsl:value-of select="description"/></td>
