@@ -375,6 +375,8 @@
 	<metadataAdded>Metadata added with ID:</metadataAdded>
 	<metadataDeleted>Metadata deleted with ID:</metadataDeleted>
 	<metadataJSForm>Metadata from JS Form</metadataJSForm>
+	<metadataInsertResults>Results of Metadata Import</metadataInsertResults>
+	<metadataRecordsAdded>Total number of metadata records added :</metadataRecordsAdded>
 	<min>Minimum</min>
 	<more>more</more>
 	<moreinfo>For more information you can contact us via email at </moreinfo>

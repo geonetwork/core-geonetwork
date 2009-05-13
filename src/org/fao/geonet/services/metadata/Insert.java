@@ -93,8 +93,7 @@ public class Insert implements Service
         if (!style.equals("_none_"))
             xml = Xml.transform(xml, stylePath +"/"+ style);
 
-		if (validate)
-			dataMan.validate(schema, xml);
+		if (validate) ImportFromDir.validateIt(schema, xml, context);
 
 		//-----------------------------------------------------------------------
 		//--- if the uuid does not exist and is not a template we generate it

@@ -26,9 +26,23 @@ public class FileCopyMgr {
 		public static void copyFiles(String strPath, String dstPath) 
 														throws IOException {
 
-			//System.out.println("Copying "+strPath+" to "+dstPath);
 			File src = new File(strPath);
 			File dest = new File(dstPath);
+			copyFiles(src, dest);
+		}
+
+		public static void removeDirectoryOrFile(File dir) throws IOException {
+			if (dir.isDirectory()) {
+				File list[] = dir.listFiles();
+				for (int i = 0; i < list.length; i++) {
+					list[i].delete(); 
+				}
+			}
+			dir.delete();
+		}
+
+		public static void copyFiles(File src, File dest) 
+														throws IOException {
 			if (src.isDirectory()) {
 				if(dest.exists()!=true)
 					dest.mkdirs();

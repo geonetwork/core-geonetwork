@@ -50,10 +50,13 @@ public class DdfLoader
 
 		ArrayList<ImportField> alFields = new ArrayList<ImportField>();
 
+		int lineNumber = 0;
 		try
 		{
 			while ((line = rdr.readLine()) != null)
 			{
+				lineNumber++;
+				//System.out.println("Reading line "+lineNumber); // debug
 				//--- skip comments or blank lines
 
 				if (line.equals("") || line.startsWith("#"))

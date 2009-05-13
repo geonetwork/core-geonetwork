@@ -25,7 +25,9 @@
         	<xsl:value-of select='/root/gui/validation/schemaTronError'/>
       	</b></font>
   			<br/><br/>
-  			<a href="{/root/gui/url}/htmlCache/SchematronReport{/root/error/object/schematronerrors/id}/schematron-frame.html">
+				<!-- FIXME: schematronCache directory needs to come from 
+				            server! -->
+  			<a href="{/root/gui/url}/schematronCache/SchematronReport{/root/error/object/schematronerrors/id}/schematron-frame.html">
     			<xsl:value-of select="/root/gui/validation/schemaTronReport"/>
   			</a>
     	</xsl:when>

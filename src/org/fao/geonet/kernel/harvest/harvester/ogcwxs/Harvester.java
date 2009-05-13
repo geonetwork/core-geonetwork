@@ -723,8 +723,10 @@ class Harvester
 		HttpClient httpclient = new HttpClient ();
         GetMethod req = new GetMethod (url);
 		
-		// TODO : Proxy ? BA ? 
 		log.debug ("Retrieving remote document: " + url);
+
+		// set proxy from settings manager
+		Lib.net.setupProxy(context, httpclient);
 		
 		try {
 		    // Connect

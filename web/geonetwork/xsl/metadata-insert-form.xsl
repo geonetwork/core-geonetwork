@@ -56,7 +56,8 @@
                     Element.show('gn.xmlUp');
                     $('gn.fileType').style.display='none';
                     $('gn.uuidAction').style.display='none';
-                    document.xmlinsert.action=Env.locService+"/metadata.insert";
+                    document.xmlinsert.enctype="application/x-www-form-urlencoded";
+                    document.xmlinsert.action=Env.locService+"/metadata.insert.paste";
                     document.xmlinsert.target='_self';
                 } else {
                     Element.hide('gn.xmlUp');
