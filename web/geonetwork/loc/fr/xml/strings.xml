@@ -36,7 +36,7 @@
 	<emailAddressInvalid js="true">Adresse email invalide</emailAddressInvalid>
 	<yourRegistration js="true">Création du compte ...</yourRegistration>
 	<massiveActions>Autre actions :</massiveActions>
-	<confirmCancel>Êtes-vous sûr de vouloir quitter l\'éditeur ? (vous allez perdre les changements non sauvegardés)</confirmCancel>
+	<confirmCancel>Êtes-vous sûr de vouloir quitter l\'éditeur? (vous allez perdre les changements non sauvegardés)</confirmCancel>
 	<confirmMassiveDelete>Êtes-vous sûr de vouloir supprimer toutes les métadonnées sélectionnées ?</confirmMassiveDelete>
 	<dateModified>Date de modification</dateModified>
 	<downloadSelect>Télécharger ?</downloadSelect>
