@@ -2462,7 +2462,19 @@
 		<label>Keywords</label>
 		<description>Keywords describing service</description>
 	</element>
-	
+	<element name="srv:SV_Parameter">
+		<label>Parameter</label>
+		<description></description>
+	</element>
+	<element name="srv:direction">
+		<label>Direction</label>
+	</element>
+	<element name="srv:valueType">
+		<label>Value type</label>
+	</element>
+	<element name="srv:SV_ParameterDirection">
+		<label>Parameter direction</label>
+	</element>
 	<!-- ==================================================== -->
 	<!-- === Other labels //FIXME --> 
 	<!-- ==================================================== -->
@@ -2500,5 +2512,13 @@
 		<label>Reference Authority</label>
 		<description>Authority responsible for codification. i.e. EPSG</description>
 	</element>
-	
+	<element name="gco:aName">
+		<label>Name</label>
+	</element>
+	<element name="gco:attributeType">
+		<label>Attribute type</label>
+	</element>	
+	<element name="gco:TypeName">
+		<label>Type name</label>
+	</element>
 </labels>
