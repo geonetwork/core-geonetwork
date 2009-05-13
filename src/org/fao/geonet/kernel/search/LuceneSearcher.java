@@ -98,6 +98,7 @@ public class LuceneSearcher extends MetaSearcher
 	private int           _maxSummaryKeys;
 	private int           _numHits;
 	private String        _resultType;
+    private String        _language;
 
 	//--------------------------------------------------------------------------------
 	// constructor
@@ -278,6 +279,11 @@ public class LuceneSearcher extends MetaSearcher
 		Element xmlQuery = _sm.transform(_styleSheetName, request);
 		Log.debug(Geonet.SEARCH_ENGINE, "XML QUERY:\n"+ Xml.getString(xmlQuery));
 
+		if (srvContext != null)
+        	_language = srvContext.getLanguage();
+        else
+        	_language = "eng"; // TODO : set default not language in config
+        
 		_query = makeQuery(xmlQuery);
 		
 		Geometry geometry = getGeometry(request);
@@ -328,7 +334,7 @@ public class LuceneSearcher extends MetaSearcher
 		Log.debug(Geonet.SEARCH_ENGINE, "Hits found : "+ _hits.length());
 
 		if (_elSummary == null) {
-            _elSummary = makeSummary(_hits, getSize(), _summaryConfig, _resultType, _maxSummaryKeys);
+            _elSummary = makeSummary(_hits, getSize(), _summaryConfig, _resultType, _maxSummaryKeys, _language);
         }
 
 		setValid(true);
@@ -485,7 +491,7 @@ public class LuceneSearcher extends MetaSearcher
 
 	//--------------------------------------------------------------------------------
 
-	public static Element makeSummary(Hits hits, int count, Element summaryConfig, String resultType, int maxSummaryKeys) throws Exception
+	public static Element makeSummary(Hits hits, int count, Element summaryConfig, String resultType, int maxSummaryKeys, String langCode) throws Exception
 	{
 		Element elSummary  = new Element("summary");
 
@@ -517,7 +523,7 @@ public class LuceneSearcher extends MetaSearcher
             }
 
             SortOption sortOption = SortOption.parse(order);
-            SummaryComparator summaryComparator = new SummaryComparator(sortOption, Type.parse(type), summaryConfig.getChild("typeConfig"));
+            SummaryComparator summaryComparator = new SummaryComparator(sortOption, Type.parse(type), langCode, summaryConfig.getChild("typeConfig"));
             summarize(elSummary, hits, key, count, plural, name, summaryComparator, max);
         }
         return elSummary;

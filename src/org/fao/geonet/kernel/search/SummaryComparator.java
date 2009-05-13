@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.search;
 
+import java.text.Collator;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,31 +31,70 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import org.fao.geonet.kernel.LocaleUtil;
 import org.jdom.Element;
 
 public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
 {
+    
 
-    public enum Type {
-        STRING{
+    public enum Type
+    {
+        STRING
+        {
             @Override
-            public Comparable value(String string, Element configuration)
+            public Comparable value(String string, Locale locale, Element configuration)
             {
-                return string;
+                return new LocalizedStringComparable(string, locale);
             }
-        }, 
-        NUMBER{
+
+        },
+        NUMBER
+        {
             @Override
-            public Comparable value(String string, Element configuration)
+            public Comparable value(String string, Locale locale, Element configuration)
             {
-                return Double.valueOf(string);
+            	try {
+            		return Double.valueOf(string.trim());
+            	} catch (NumberFormatException e) {
+					return Double.valueOf(Integer.MAX_VALUE); // Bottom of the list
+				}
             }
-        }, 
-        DATE{
+        },
+        SCALE
+        {
             @Override
-            public Comparable value(String string, Element configuration)
+            public Comparable value(String string, Locale locale, Element configuration)
+            {
+                String scale = string;
+                /**
+                 * Check scaleDenominator value eg. 1:250000 or 1/2500000
+                 * and extract only the denominator.
+                 */
+                if (string.contains("/")) {
+                    String[] parts = string.split("/");
+                    scale = parts[parts.length - 1];
+                } else if (string.contains("\\")) {
+                    String[] parts = string.split("\\");
+                    scale = parts[parts.length - 1];
+                } else if (string.contains(":")) {
+                    String[] parts = string.split(":");
+                    scale = parts[parts.length - 1];
+                }
+                try {
+                	return Double.valueOf(scale.trim());
+                } catch (NullPointerException e) {
+					return Double.valueOf(Integer.MAX_VALUE);	// if scale is not a number value - Bottom of the list
+				}
+            }
+        },
+        DATE
+        {
+            @Override
+            public Comparable value(String string, Locale locale, Element configuration)
             {
                 List<DateFormat> formats = new ArrayList<DateFormat>();
                 for (Object child : configuration.getChildren("dateFormat")) {
@@ -83,8 +123,8 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
                         + " is not a recognized date pattern.  Add a dateFormat element to the configuration");
             }
         };
-        
-        public abstract Comparable value(String string, Element configuration);
+
+        public abstract Comparable value(String string, Locale locale, Element configuration);
 
         private static Map<Object, DateFormat> dateformats = new HashMap<Object, DateFormat>();
         static {
@@ -92,39 +132,40 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
             dateformats.put(SimpleDateFormat.MEDIUM, SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM));
             dateformats.put(SimpleDateFormat.LONG, SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG));
         }
-        
+
         public static Type parse(String type)
         {
             return valueOf(type.toUpperCase());
-        } 
+        }
     }
-    
-//    enum Aggregation {
-//        COUNT, EQUAL_INTERVAL, QUANTILE, ANNUALLY, MONTHLY, DAILY
-//    }
-    
+
+    // enum Aggregation {
+    // COUNT, EQUAL_INTERVAL, QUANTILE, ANNUALLY, MONTHLY, DAILY
+    // }
+
     public enum SortOption
     {
         NAME, FREQUENCY;
 
         public static SummaryComparator.SortOption parse(String order)
         {
-            if (order.equals("freq"))
+            if (order.equals("freq") || order.equals("frequency"))
                 return FREQUENCY;
             return valueOf(order.toUpperCase());
         }
     }
 
-    
     private SummaryComparator.SortOption _option;
-    private Type _type;
-    private Element _configuration;
+    private final Type                         _type;
+    private final Element                      _configuration;
+    private final Locale _locale;
 
-    public SummaryComparator(SummaryComparator.SortOption option, SummaryComparator.Type type, Element configuration)
+    public SummaryComparator(SummaryComparator.SortOption option, SummaryComparator.Type type, String langCode, Element configuration)
     {
         this._option = option;
         this._type = type;
-        this._configuration=configuration;
+        this._configuration = configuration;
+        _locale = LocaleUtil.toLocale(langCode);
     }
 
     public int compare(Map.Entry<String, Integer> me1, Map.Entry<String, Integer> me2)
@@ -137,22 +178,22 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
         {
         case NAME:
         {
-            
+
             int cmp = compareKeys(key1, key2);
             if (cmp != 0)
                 return cmp;
             else
-                return compareCount(count1,count2);
+                return compareCount(count1, count2);
         }
         case FREQUENCY:
         {
-        	return compareCount(count1, count2);
+            return compareCount(count1, count2);
         }
         default:
             throw new AssertionError(_option + "is not handled by this method");
         }
     }
-    
+
     private int compareCount(Integer count1, Integer count2)
     {
         int cmp = count2.compareTo(count1);
@@ -164,8 +205,25 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
 
     private int compareKeys(String key1, String key2)
     {
-        Comparable value1 = _type.value(key1, _configuration);
-        Comparable value2 = _type.value(key2,_configuration);
+        Comparable value1 = _type.value(key1, _locale, _configuration);
+        Comparable value2 = _type.value(key2, _locale, _configuration);
         return value1.compareTo(value2);
+    }
+    
+    private static class LocalizedStringComparable implements Comparable<LocalizedStringComparable>
+    {
+        public final String _wrapped;
+        private Collator _comparator;
+
+        public LocalizedStringComparable(String wrapped, Locale locale)
+        {
+            this._wrapped = wrapped;
+            _comparator = java.text.Collator.getInstance(locale);
+        }
+
+        public int compareTo(LocalizedStringComparable anotherString)
+        {
+            return _comparator.compare(_wrapped, anotherString._wrapped);
+        }
     }
 }
