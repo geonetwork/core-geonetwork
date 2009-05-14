@@ -2,6 +2,8 @@
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
 <xsd:element name="eainfo" type="eainfoType"/>
 <xsd:complexType name="eainfoType">
+<!-- Indeterminate schema design follows:
+		 Not possible for GeoNetwork to determine which one of these to offer
 	<xsd:choice>
 		<xsd:sequence>
 			<xsd:element ref="detailed" maxOccurs="unbounded"/>
@@ -9,6 +11,12 @@
 		</xsd:sequence>
 		<xsd:element ref="overview" maxOccurs="unbounded"/>
 	</xsd:choice>
+	Modify by offering both - add a schematron condition to check the
+	condition that this design was trying to capture later -->
+	<xsd:sequence>
+		<xsd:element ref="detailed" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="overview" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
 </xsd:complexType>
 
 <xsd:element name="detailed" type="detailedType"/>

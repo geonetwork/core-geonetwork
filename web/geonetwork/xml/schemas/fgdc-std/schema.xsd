@@ -94,7 +94,14 @@
 </xsd:simpleType>
 <xsd:simpleType name="FGDCstring">
 	<xsd:restriction base="xsd:string">
+		<!-- replace with restriction that doesn't cause problems with
+		     regular expression evaluators in xalan 
 		<xsd:pattern value="\s*\S(.|\n|\r)*"/>
+		Not necessary to collapse whiteSpace as this would remove internal
+		cr/lf structure and in any case an input with spaces gets collapsed
+		by Geonetwork to an empty element
+				 -->
+		<xsd:minLength value="1"/>
 	</xsd:restriction>
 </xsd:simpleType>
 <xsd:simpleType name="FGDClatitude">
