@@ -171,40 +171,27 @@
 				<xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource">
 					<xsl:if test="gmd:linkage">
 						<dc:URI>
+							<!-- FIXME : dc:URI has no attributes defined
+							but it could be relevant to have protocol
+							or name described here. 
+							
 							<xsl:if test="gmd:protocol">
 								<xsl:attribute name="protocol"><xsl:value-of select="gmd:protocol/gco:CharacterString"/></xsl:attribute>
 							</xsl:if>
 							
 							<xsl:if test="gmd:name">
 								<xsl:attribute name="name">
-									<xsl:apply-templates mode="localised" select="gmd:name">
-										<xsl:with-param name="langId" select="$langId"/>
-									</xsl:apply-templates>
+									<xsl:value-of select="gmd:name/gco:CharacterString"/>
 								</xsl:attribute>
 							</xsl:if>
 							
 							<xsl:if test="gmd:description">
-								<xsl:attribute name="title">
-									<xsl:apply-templates mode="localised" select="gmd:description">
-										<xsl:with-param name="langId" select="$langId"/>
-									</xsl:apply-templates>
+								<xsl:attribute name="description">
+									<xsl:value-of select="gmd:description/gco:CharacterString"/>
 								</xsl:attribute>
 							</xsl:if>
-
-							<xsl:choose>
-								<xsl:when test="count(gmd:linkage/*[name(.)!='gmd:URL']) &gt; 0">
-									<!-- This section is specific to iso19139.che profil which defined a localised URL
-										element. FIXME
-									-->
-									<xsl:apply-templates mode="localisedUrl" select="gmd:linkage">
-										<xsl:with-param name="langId" select="$langId"/>
-									</xsl:apply-templates>		
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="gmd:linkage/gmd:URL"/>
-								</xsl:otherwise>
-							</xsl:choose>
-							
+							-->
+							<xsl:value-of select="gmd:linkage/gmd:URL"/>							
 						</dc:URI>
 					</xsl:if>
 				</xsl:for-each>
@@ -216,6 +203,7 @@
 				
 				<xsl:if test="$fileName!='' and $fileDescr='thumbnail'">
 					<dc:URI>
+						<!-- FIXME
 						<xsl:choose>
 							<xsl:when test="contains(gmd:fileName/gco:CharacterString, '.gif')">
 								<xsl:attribute name="protocol">image/gif</xsl:attribute>
@@ -228,7 +216,7 @@
 						<xsl:if test="$fileDescr">
 							<xsl:attribute name="name"><xsl:value-of select="$fileDescr"/></xsl:attribute>
 						</xsl:if>
-						
+						-->
 						<xsl:choose>
 							<xsl:when test="contains($fileName ,'://')"><xsl:value-of select="$fileName"/></xsl:when>
 							<xsl:otherwise><xsl:value-of select="concat('resources.get?id=',$info/id,'&amp;fname=',$fileName,'&amp;access=public')"/>
