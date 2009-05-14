@@ -252,7 +252,7 @@
 			</xsl:for-each>
 			
 			<xsl:for-each select="//gmd:specification/*/gmd:title/gco:CharacterString">
-				<Field name="specificationTitle" string="{string(.)}" store="true" index="true" token="false"/>
+				<Field name="specificationTitle" string="{string(.)}" store="true" index="true" token="true"/>
 			</xsl:for-each>
 			
 			<xsl:for-each select="//gmd:specification/*/gmd:date/*/gmd:date/gco:DateTime">
