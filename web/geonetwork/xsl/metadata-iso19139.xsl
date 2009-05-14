@@ -335,7 +335,7 @@
 			<xsl:with-param name="edit"    select="false()"/>
 			<xsl:with-param name="text">
 				<xsl:choose>
-					<xsl:when test="normalize-space(gco:CharacterString)=''">
+					<xsl:when test="normalize-space(gco:*)=''">
 						<span class="info">
 							- <xsl:value-of select="/root/gui/strings/setOnSave"/> - 
 						</span>
