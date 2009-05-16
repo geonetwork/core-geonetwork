@@ -54,7 +54,7 @@ public class GetDefaults implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		return (Element)MainUtil.getDefaultSearch(context, params).clone();
+		return (Element)MainUtil.getDefaultSearch(context, null).clone();
 	}
 }
 

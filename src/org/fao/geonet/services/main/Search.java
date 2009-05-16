@@ -108,7 +108,7 @@ public class Search implements Service
 		if (remote)	searcher = searchMan.newSearcher(SearchManager.Z3950,  Geonet.File.SEARCH_Z3950_CLIENT);
 		else        searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
 
-		searcher.search(context, params, _config);
+		searcher.search(context, elData, _config);
 		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
 
 		context.info("Getting summary");
