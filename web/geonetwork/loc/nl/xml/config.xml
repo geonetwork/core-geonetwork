@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<strings>
+	<site>Site</site>
+		<name>Naam</name>
+		<organ>Organisatie</organ>
+	
+	<server>Server</server>
+		<host>Host</host>
+		<port>Poort</port>
+	
+	<intranet>Intranet</intranet>
+		<network>Netwerk</network>
+		<netmask>Netmask</netmask>
+	
+	<z3950>Z39.50 Server</z3950>
+		<enable>Aanzetten</enable>
+		
+	<csw>CSW</csw>
+		<contactId>Contact</contactId>
+		<title>Titel</title>
+		<abstract>Samenvatting</abstract>
+		<fees>Kosten</fees>
+		<accessConstraints>Toegangsrestricties</accessConstraints>
+	
+	<proxy>Proxy</proxy>
+		<use>Gebruik</use>
+		<username>Gebruikersnaam</username>
+	
+	<feedback>Respons</feedback>
+		<email>EMail</email>
+		<smtpHost>SMTP Host</smtpHost>
+		<smtpPort>SMTP Poort</smtpPort>
+	
+	<userSelfRegistration>Gebruikers zelf-registratie</userSelfRegistration>
+	
+	<removedMetadata>Verwijderde metadata</removedMetadata>
+		<dir>Map</dir>
+		
+	<ldap>LDAP Authenticatie</ldap>
+		<defProfile>Standaard profiel</defProfile>
+		<login>Login</login>
+			<userDN>Gebruiker DN</userDN>
+		<distNames>Gedist. Namen</distNames>
+			<baseDN>Basis</baseDN>
+			<usersDN>Gebruikers</usersDN>
+		<userAttribs>Gebruikers eigenschappen</userAttribs>
+			<name>Naam</name>
+			<password>Wachtwoord</password>
+			<profile>Profiel</profile>
+		
+	<shib>Shibboleth Authenticatie</shib>
+		<path>Locatie</path>
+		<attributes>Shibboleth attribute mapping</attributes>
+			<username>Gebruikesnaam</username>
+			<surname>Achternaam</surname>
+			<firstname>Voornaam</firstname>
+			<profile>Profiel</profile>
+		
+	<!-- Buttons -->
+	
+	<save>Bewaren</save>
+	<refresh>Verversen</refresh>
+	
+	<!-- validator messages -->
+	
+	<validator>
+		<length>
+			<cannotBeEmpty>Het veld '{NAME}' kan niet leeg zijn</cannotBeEmpty>
+			<invalidMinSize>Het veld '{NAME}' moet minimaal {VALUE} tekens(s) lang zijn</invalidMinSize>
+			<invalidMaxSize>Het veld '{NAME}' kan maximaal {VALUE} teken(s) lang zijn</invalidMaxSize>
+		</length>
+		
+		<integer>
+			<notInt>Het veld '{NAME}' moet een integer waarde bevatten</notInt>
+			<invalidMinValue>Het veld '{NAME}' moet &gt;= {VALUE}</invalidMinValue>
+			<invalidMaxValue>Het veld '{NAME}' moet &lt;= {VALUE}</invalidMaxValue>
+		</integer>		
+		
+		<alphanum>
+			<notAlphaNumeric>Het veld '{NAME}' moet alphanumeriek zijn en beginnen met een letter</notAlphaNumeric>
+		</alphanum>
+		
+		<hostname>
+			<notHostName>Het veld '{NAME}' bevat geen geldige waarde voor Hostname</notHostName>
+		</hostname>
+		
+		<url>
+			<notURL>Het veld '{NAME}' bevat geen geldige URL waarde</notURL>
+		</url>
+		
+		<ipaddress>
+			<notIP>Het veld '{NAME}' bevat geen geldig IP-adres</notIP>
+		</ipaddress>
+	</validator>
+	
+	<!-- display messages -->
+	
+	<cannotGet>Kan de systeemconfiguratie niet openen</cannotGet>
+	<cannotSave>Kan de systeemconfiguratie niet opslaan</cannotSave>
+	<saveOk>Systeemconfiguratie opgeslagen.</saveOk>
+	
+	<!-- tooltips -->
+	
+	<tips>
+		<tip id="site.name">
+			Gebruikt om deze installatie te identificeren.
+		</tip>
+		
+		<!-- server -->
+		
+		<tip id="server.host">
+			De <b>host</b> en <b>poort</b> waarden worden gebruikt om de URL samen te stellen
+			voor deze GeoNetwork server. Ze worden bijvoorbeeld gebruikt tijdens het editen 
+			van metadata om de bron voor de koppelingen aan te maken en om de specificaties
+                  van de server door te geven tijdens een CS/W aanvraag.
+			<br/>
+			<b>Opmerking:</b> U dient de GAST tool te gebruiken om deze wijzigingen door te voeren
+                  in de metadata. 
+		</tip>
+		
+		<!-- intranet -->
+		
+		<tip id="intranet.network">
+			De <b>netwerk</b> en <b>netmask</b> parameters worden gebruikt om de interne 
+                  connectie met de server mogelijk te maken. 
+		</tip>
+		
+		<!-- Z39.50 -->
+		
+		<tip id="z3950.enable">
+			Als deze optie is ingeschakeld zal Geonetwork de Z39.50 servercomponent gebruiken.
+			Deze component maakt gebruik van het ISO23950 protocol.
+			<br/>
+			<b>Opmerking:</b> Start GeoNetwork opnieuw om deze wijziging door te voeren. 
+		</tip>
+		
+		<tip id="z3950.port">
+			Wijzig de Z39.50 poort (listening).
+			<br/>
+			<b>Opmerking:</b> Start GeoNetwork opnieuw om deze wijziging door te voeren. 
+		</tip>
+		
+		<!-- CSW -->
+		<tip id="csw.enable">
+			De CSW server wordt geactiveerd indien geselecteerd. Andere catalogi kunnen (publieke) metadata harvesten.
+			<br/>
+			<b>Opmerking:</b> Herstart GeoNetwork om deze functie te activeren.
+		</tip>
+		<tip id="csw.contactId">
+			Pas de contactgegevens aan voor de CSW GetCapabilities operatie.
+		</tip>
+		<tip id="csw.title">Titel</tip>
+		<tip id="csw.abstract">Samenvatting</tip>
+		<tip id="csw.fees">Kosten</tip>
+		<tip id="csw.accessConstraints">Toegangsrestricties</tip>
+		
+		<!-- proxy -->
+		
+		<tip id="proxy.use">
+			Als deze optie is ingeschakeld zal GeoNetwork de proxy gebruiken als externe
+			nodes worden geraadpleegd. Bijvoorbeeld voor het harvesten van metadata.
+		</tip>
+		
+		<!-- feedback -->
+		
+		<tip id="feedback.email">
+			Dit is het emailadres van de administrator waar respons terecht moet komen.
+		</tip>
+		
+		<tip id="feedback.mail.host">
+			De SMTP <b>host</b> en <b>poort</b> waarden worden gebruikt om email te verzenden
+			naar gebruikers van GeoNetwork's wanneer een bepaalde dataset wordt gedownload.
+		</tip>
+		
+		<!-- removed metadata -->
+		
+		<tip id="removedMd.dir">
+			Map waar metadata wordt opgeslagen (in MEF formaat) wanneer deze wordt verwijderd.
+		</tip>
+	<!-- userSelfRegistration -->
+		
+		<tip id="userSelfRegistration.enable">
+			Indien geselecteerd, dan zijn gebruikers in staat om zichzelf te registreren. 
+            Deze gebruikers krijgen het GUEST group profiel. Er wordt een email gestuurd 
+            naar de gebruiker met een gebruikersnaam en wachtwoord via het 'feedback' email account.
+			<br/>
+		</tip>
+
+	</tips>
+	
+</strings>
+

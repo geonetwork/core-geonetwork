@@ -1,0 +1,629 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+
+	<!-- JM toevoeging ivm zoekresultaten lijst -->
+	<arcgislayer>ArcGIS layer</arcgislayer>
+	<metadata-edit>Metadata bewerken</metadata-edit>
+	<metadata-edit-delete>Metadata bewerken / verwijderen</metadata-edit-delete>
+	<page>pagina</page>
+            
+          <!-- Thijs Brentjens (Geonovum): added website -->
+          <website>Website</website>
+
+          <!-- Thijs Brentjens (Geonovum): only use INSPIRE service types for protocol -->
+	<protocolChoice show="y" value="discovery">Discovery service</protocolChoice>
+	<protocolChoice show="y" value="view">View service</protocolChoice>
+	<protocolChoice show="y" value="download">Download service</protocolChoice>
+          <protocolChoice show="y" value="transformation">Transformation service</protocolChoice>
+          <protocolChoice show="y" value="invoke">Invoke service</protocolChoice>
+          <protocolChoice show="y" value="other">Other service</protocolChoice> 
+
+	<!-- nader uit te zoeken (komen niet in Engelse versie 2.4.x RC2 voor) -->
+	<image>URL logo</image>
+	<isOrganisation>Organisatie?</isOrganisation>
+	<selectSortByType id="rating">Beoordeling</selectSortByType>
+	<selectSortByType id="popularity">Populariteit</selectSortByType>
+	<selectSortByType id="date">Laatste wijzigingsdatum</selectSortByType>	
+
+	<setOnSave>Value will be set when record is saved</setOnSave>
+	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>
+	<missing>MISSING or EMPTY</missing>
+	<byPackage>By Package</byPackage>
+	<byGroup>By Group</byGroup>
+	<isoMinimum>ISO Minimum</isoMinimum>
+	<isoCore>ISO Core</isoCore>
+	<isoAll>ISO All</isoAll>
+	<deleteConfirmationTitle>Delete Metadata Confirmation</deleteConfirmationTitle>	
+	<noCategory>No category available.</noCategory>
+	<categoryNameMandatory>A category name must be filled in.</categoryNameMandatory>
+	<usernameMandatory>The username field is mandatory.</usernameMandatory>
+	<passwordEntry>Please enter your password twice.</passwordEntry>
+	<passwordLength>Your password must be at least " + minLength + " characters long. Try again.</passwordLength>
+	<passwordSpace>Sorry, spaces are not allowed in password.</passwordSpace>
+	<passwordDoNotMatch>You did not enter the same new password twice. Please re-enter your password.</passwordDoNotMatch>
+	<userAtLeastOneGroup>Please, select at least one group.</userAtLeastOneGroup>
+	<deleteGroup>Delete the group ?</deleteGroup>
+	<noTemplatesAvailable>No templates available, import metadata first.</noTemplatesAvailable>
+	<deleteCategory>Delete the category?</deleteCategory>
+	<!-- Self registration strings -->
+	<registerTitle>Self-Registration Form</registerTitle>
+	<profileChoice value="RegisteredUser">Registered user</profileChoice>
+	<profileChoice value="Editor">Editor</profileChoice>
+	<profileChoice value="Reviewer">Content reviewer</profileChoice>
+	<profileChoice value="UserAdmin">User administrator</profileChoice>
+	<profileChoice value="Administrator">Administrator</profileChoice>
+	<checkusername>Check</checkusername>
+	<register>Register</register>
+	<registerChoose>I want to </registerChoose>
+	<registrationDetails>Key registration details entered: </registrationDetails>
+	<firstNameMandatory js="true">The First Name field is mandatory</firstNameMandatory>
+	<lastNameMandatory js="true">The Last Name field is mandatory</lastNameMandatory>
+	<spacesNot js="true">Spaces in this field are not allowed</spacesNot>
+	<emailAddressInvalid js="true">Email address is invalid</emailAddressInvalid>
+	<yourRegistration js="true">Your registration...</yourRegistration>
+	<!-- End of Self registration strings -->
+	<fileType>File type:</fileType>
+	<generateUUID>Generate UUID for inserted metadata</generateUUID>
+	<insertFileMode>File Upload</insertFileMode>
+	<insertMode>Insert mode:</insertMode>
+	<insertPasteMode>Copy/Paste</insertPasteMode>
+	<mefFile>MEF file</mefFile>
+	<newMdInsert>New metadata inserted:</newMdInsert>
+	<nothing>No action on import</nothing>
+	<overwrite>Overwrite metadata with same UUID</overwrite>
+	<singleFile>Single File (XML, SLD, WMC...)</singleFile>
+	<uuidAction>Import actions:</uuidAction>
+	<metadata.admin.index>Index manager</metadata.admin.index>
+	<metadata.admin.index.desc>Rebuild Lucene index</metadata.admin.index.desc>
+	<metadata.admin.index.success>Rebuild index operatie is gelukt.</metadata.admin.index.success>
+	<metadata.admin.index.failed>Het is niet gelukt de index te creeren.</metadata.admin.index.failed>
+	<rebuild>Rebuild</rebuild>
+    <savepdf>Sla de zoek resultaten als pdf op</savepdf>
+	<savexml>
+		<dc>Bewaar Dublin Core metadata als XML</dc>
+		<fgdc>Bewaar FGDC metadata als XML</fgdc>
+		<iso19115Esri>Bewaar ISO19115 metadata in XML voor ESRI ArcCatalog</iso19115Esri>
+		<iso19139>Bewaar ISO19115/19139 metadata als XML</iso19139>
+		<iso19139fra>Bewaar ISO19115/19139 Fra metadata als XML</iso19139fra>
+	</savexml>
+	<!-- new strings -->
+	<fuzzy>Zoek nauwkeurigheid</fuzzy>
+	<fuzzySearch>Stel de zoeknauwkeurigheid in (van exact zoeken tot fuzzy zoeken).</fuzzySearch>
+	<fuzzyImprecise>Onnauwkeurig</fuzzyImprecise>
+	<fuzzyPrecise>Precies</fuzzyPrecise>
+	<address>Addres</address>
+	<state>Provincie/Staat</state>
+	<zip>Postcode</zip>
+	<country>Land</country>
+	<email>Email</email>
+	<kind>Soort</kind>
+	<kindChoice value="natgov">Rijksoverheid</kindChoice>
+	<kindChoice value="prov">Provincies</kindChoice>
+	<kindChoice value="municip">Gemeenten</kindChoice>
+          <kindChoice value="water">Waterschappen</kindChoice>
+	<kindChoice value="research">Research</kindChoice>
+	<kindChoice value="gov">Overheid</kindChoice>
+	<kindChoice value="int-org">Internationale organisatie</kindChoice>
+	<kindChoice value="ngo">NGO</kindChoice>
+	<kindChoice value="uni">Universiteit/research center</kindChoice>
+	<kindChoice value="company">Bedrijfsleven</kindChoice>
+	<kindChoice value="research">Onderwijs en onderzoek</kindChoice>
+	<kindChoice value="consultant">Onafhankelijke consultant</kindChoice>
+	<kindChoice value="other">Overig</kindChoice>
+	<userInfo>Wijzig gebruikers informatie</userInfo>
+	<userInfoDes>Sta de huidige gebruiker toe gebruikersinformatie te wijzigen</userInfoDes>
+	<subtemplate>Subtemplate</subtemplate>
+	<subtemplateTitle>subtemplate titel</subtemplateTitle>
+	<view>View</view>
+	<Term>Zoekterm</Term>
+	<startsWith>Begint met</startsWith>
+	<contains>Bevat</contains>
+	<exactTerm>Exacte zoekterm</exactTerm>
+	<foundWords>Aantal zoektermen gevonden:</foundWords>
+	<selection>Selectie</selection>
+	<label>Label</label>
+	<type>Type</type>
+	<definition>Definitie</definition>
+	<close>Sluiten</close>
+	<identifier>Sleutelveld</identifier>
+	<keyword>sleutelwoord</keyword>
+	<res>resultaten</res>
+	<ress>resultaat</ress>
+	<massiveActions>Massieve acties : </massiveActions>
+
+	<thesaurus>
+		<category>Thesaurus categorie</category>
+		<management>Beheer thesauri</management>
+		<manDes>Toevoegen/wijzigen/verwijderen en tonen thesauri</manDes>
+		<edition>Wijzig thesaurus</edition>
+		<consultation>Bekijk thesaurus</consultation>
+		<thesaurus>Thesaurus</thesaurus>
+		<admin>Beheer thesaurus</admin>
+		<edit>Wijzig thesaurus</edit>
+		<update>Thesaurus bijwerken</update>
+		<upload>Uploaden thesaurus</upload>
+		<download>Downloaden thesaurus</download>
+		<delete>Thesaurus verwijderen</delete>	
+		<editelement>Element wijzigen</editelement>
+		<addelement>Element toevoegen</addelement>			
+		<deleteelement>Element verwijderen</deleteelement>
+		<updateelement>Element bijwerken</updateelement>
+		<keywordDescription>Sleutelwoord definitie:</keywordDescription>
+		<keywordConfirm>Bevestigen Sleutelwoord suppressie</keywordConfirm>
+		<unknown>Onbekende thesaurus</unknown>
+		<narrower>Specifieke term</narrower>
+		<broader>Algemenere term</broader>
+		<related>Gerelateerde term</related>
+		<en>in</en>
+		<foundKeyWords>Aantal termen gevonden</foundKeyWords>
+		<foundKeyWordsLimit>Maximum aantal termen gevonden</foundKeyWordsLimit>
+	</thesaurus>
+	<!-- End new strings -->
+	
+	<language>en</language>
+	<!-- ISO code -->
+	<about>Over</about>
+	<abstract>Samenvatting</abstract>
+	<accept>Accepteren</accept>
+	<actionOnSelect>acties bij selectie</actionOnSelect>
+	<add>toevoegen</add>
+	<addNewMetadata>Voeg nieuwe metadata toe</addNewMetadata>
+	<admin>Beheer</admin>
+	<Administrator>Beheerder</Administrator>
+	<agrovocKeyword>Agrovoc Sleutelwoorden</agrovocKeyword>
+	<all>alle</all>
+	<any>- elke -</any>
+	<anytime>Willekeurig tijdstip</anytime>
+	<appSchInfoTab>App. schema</appSchInfoTab>
+    <ar>عربي</ar> <!-- Do not translate! -->
+	<assigned>Toegewezen</assigned>
+	<attrlabl>Attribuut Label</attrlabl>
+	<availability>Beschikbaarheid</availability>
+	<back>Terug</back>
+	<backToDescription>Terug naar data-beschrijving</backToDescription>
+	<backToPreviousPage>Terug naar vorige pagina</backToPreviousPage>
+	<backToEditor>Terug naar wijzigen metadata</backToEditor>
+	<batchImport>Importeer alle XML metadata vanuit een lokale map</batchImport>
+
+	<batchImportTitle>Importeren in batch</batchImportTitle>
+	<begdate>Start datum</begdate>
+	<begtime>Start tijdstip</begtime>
+	<bgFileDescChoice value="thumbnail">Voorbeeldweergave</bgFileDescChoice>
+	<bgFileDescChoice value="large_thumbnail">Voorbeeldweergave (groot)</bgFileDescChoice>
+	<bounding>Ruimtelijke extent</bounding>
+	<boundingRelation value="equal">is gelijk aan</boundingRelation>
+	<boundingRelation value="overlaps">overlapt met</boundingRelation>
+	<boundingRelation value="encloses">omvat</boundingRelation>
+	<boundingRelation value="fullyOutsideOf">ligt volledig buiten</boundingRelation>
+	<browse>Afbeelding bladeren</browse>
+	<browsen>Afbeelding bladeren op naam</browsen>
+	<browsed>Afbeelding bladeren op omschrijving</browsed>
+	<browset>Afbeelding bladeren op bestandstype</browset>
+	<cancel>Terug</cancel>
+	<categories>Categorieen</categories>
+	<category>Categorie</category>
+	<categoryManagement>Categorie beheer</categoryManagement>
+	<categoryManDes>Toevoegen/wijzigen/verwijderen of bekijken van categorieen</categoryManDes>
+	<choose>-Kies-</choose>
+	<chooseFile>Kies de lokatie van het bestand dat u wilt uploaden</chooseFile>
+	<chooseLargeThumbnail>Kies de lokatie van het grote voorbeeldweergave bestand</chooseLargeThumbnail>
+	<chooseThumbnail>Kies de lokatie van het kleine voorbeeldweergave bestand</chooseThumbnail>
+	<clear>Wissen</clear>
+	<clearAll>Alles wissen</clearAll>
+	//<cn>中文</cn> <!-- Do not translate! -->
+	<completeTab>Uitgebreide weergave</completeTab>
+	<completeTabEditor>Geavanceerde editor</completeTabEditor>
+	<confirmCancel>Are you sure you want to leave the editor? (You will lose any unsaved changes)</confirmCancel>
+	<confirmDelete>Weet u zeker dat u de metadata wilt verwijderen uit de database?</confirmDelete>
+	<confirmMassiveDelete>Weet u zeker dat u alle geselecteerde metadata wild verwijderen uit de database?</confirmMassiveDelete>
+	<confirmPassword>Bevestig wachtwoord</confirmPassword>
+	<confirmNewPassword>Bevestig nieuw wachtwoord</confirmNewPassword>
+	<constraintsTab>Beperkingen</constraintsTab>
+	<contactUs>Contact</contactUs>
+	<contentInfoTab>Informatie over de inhoud</contentInfoTab>
+	<convert>Converteer</convert>
+	<copyright1>Copyright</copyright1>
+	<copyright2>
+		<p>Alle rechten voorbehouden.<br/> Uw algemene copyright melding </p>
+	</copyright2>
+	<create>Aanmaken</create>
+	<createTip>Maak een nieuw metadatarecord aan volgens deze template</createTip>
+	<dataQualityTab>Datakwaliteit</dataQualityTab>
+	<datasetTab>Dataset</datasetTab>
+	<dateModified>Veranderde datum</dateModified>
+	<dateRelChoice/>
+	<dateRelChoice value="14">voor</dateRelChoice>
+	<dateRelChoice value="15">voor of tijdens</dateRelChoice>
+	<dateRelChoice value="16">tijdens</dateRelChoice>
+	<dateRelChoice value="17">tijdens of na</dateRelChoice>
+	<dateRelChoice value="18">na</dateRelChoice>
+	<decline>Afwijzen</decline>
+	<del>verwijder</del>
+	<delete>Verwijderen</delete>
+	<descriptionTab>Beschrijving</descriptionTab>
+	<desSchema>Doel schema</desSchema>
+	<digital>Digitaal</digital>
+	<directory>Map</directory>
+	<dirParameter>(heeft de 'dir' parameter nodig)</dirParameter>
+	<disclaimer1>Uw disclaimer titel</disclaimer1>
+	<disclaimer2>Uw disclaimer tekst</disclaimer2>
+	<distributionTab>Distributie</distributionTab>
+	<down>beneden</down>
+	<download>Download</download>
+	<downloadable>Downloadable</downloadable>
+	<downloadSelect>Download?</downloadSelect>
+	<downloadSelected>Download geselecteerd</downloadSelected>
+	<downloadSummary>Download samenvatting</downloadSummary>
+	<downloadThemAll>Download alles locaal</downloadThemAll>
+	<dynamic>Interactief</dynamic>
+	<downloadData>Data voor download</downloadData>
+	<dsgpoly>Data Set G-Polygon</dsgpoly>
+	<eastbc>East Bounding Coordinate</eastbc>
+	<edit>Bewerken</edit>
+	<Editor>Editor</Editor>
+	<downloadEmail>Email downloaden</downloadEmail>
+	<en>English</en> <!-- Do not translate! -->
+	<enclosing>Inclusief</enclosing>
+	<enclosingCoordinate>Omvattende coordinaten </enclosingCoordinate>
+	<enddate>Einddatum</enddate>
+	<enttypl>Entiteit Type Label</enttypl>
+	//<es>Español</es> <!-- Do not translate! -->
+	<exactCoordinate>Exacte coordinaten </exactCoordinate>
+	<extended>Geavanceerd</extended>
+	<extent>Extent</extent>
+	<extensionInfoTab>Uitg. Info</extensionInfoTab>
+	<featuredMap>In het spotlicht</featuredMap>
+	<feedback>Respons</feedback>
+	<feedbackCardTitle>Respons en commentaar</feedbackCardTitle>
+	<feedbackComments>Respons / commentaar</feedbackComments>
+	<feedbackRequest>Vul a.u.b. uw gegevens in alvorens de download te starten </feedbackRequest>
+	<file>Bestand</file>
+	<fileUploadSuccessful>Upload van bestand gelukt</fileUploadSuccessful>
+	<firstName>Voornaam</firstName>
+	//<fr>Français</fr> <!-- Do not translate! -->
+	<freeKeyword>Vrij zoeken</freeKeyword>
+	<from>Van</from>
+	<general>Algemeen</general>
+	<generalInfo>Algemene informatie</generalInfo>
+	<georss>Open een GeoRSS feed</georss>
+	<group>Groep</group>
+	<groupManagement>Beheer groepen</groupManagement>
+	<groupManDes>Toevoegen/wijzigen/verwijderen en bekijken van groepen</groupManDes>
+	<groups>Groepen</groups>
+	<harvestingManagement>Harvesting beheer</harvestingManagement>
+	<harvestingManDes>Toevoegen/wijzigen/verwijderen/starten/stoppen van harvesting taken</harvestingManDes>
+	<transferOwnership>Stel eigenaar in</transferOwnership>
+	<transferOwnershipDes>Wijzig de rechten van eigenaar toe aan een andere gebruiker</transferOwnershipDes>
+	
+	<header_meta>
+		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis geospatial CSW mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
+		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
+		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
+		<meta name="DC.title" lang="nl" content="GeoNetwork opensource portaal voor geografische data en informatie"/>
+		<meta name="DC.creator" content="GeoNetwork Team"/>
+		<meta name="DC.subject" lang="nl" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
+		<meta name="DC.description" lang="nl" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
+		<meta name="DC.publisher" content=""/>
+		<meta name="DC.date" content="15-05-2009"/>
+		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
+		<meta name="DC.format" content="text/html; charset=UTF-8"/>
+		<meta name="DC.language" content="English French Spanish Russian Chinese Dutch"/>
+		<meta name="DC.coverage" content="Global"/>
+	</header_meta>
+	<help>Help</help>
+	<helpComplete>Complete help</helpComplete>
+	<hideAdvancedOptions>Verberg geavanceerde opties</hideAdvancedOptions>
+	<highlights>Highlights</highlights>
+	<hitsPerPage>Bezoeken per pagina</hitsPerPage>
+	<hitsPerPageChoice value="10">10</hitsPerPageChoice>
+	<hitsPerPageChoice value="20">20</hitsPerPageChoice>
+	<hitsPerPageChoice value="50">50</hitsPerPageChoice>
+	<hitsPerPageChoice value="100">100</hitsPerPageChoice>
+	<home>Startpagina</home>
+	<identificationTab>Identificatie</identificationTab>
+	<import>Importeren</import>
+	<infoTitle>Info</infoTitle>
+	<insert>Invoegen</insert>
+	<interactiveMap>Toon kaart</interactiveMap>		
+	<interMapInfo>
+		<h1>Informatie interactieve kaarten</h1> U kunt interactieve kaarten zoeken door naar digitale data te zoeken met een interactieve kaartcomponent, daarnaast kunt u rechtstreeks verbinding maken met een voorgeconfigureerde mapserver. <p/> Ondersteunde webmapping servers zijn <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial® Consortium</a> WMS Map Servers en <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>.</interMapInfo>
+	<intermapSearch>Ruimtelijk zoeken</intermapSearch>
+	<keywords>Sleutelwoorden</keywords>
+	<keywordshelp>Selecteer meerdere keywords door gebruik te maken van de CTRL-toets</keywordshelp>
+	<large_thumbnail>Klik om de grote voorbeeldweergave te openen</large_thumbnail>
+	<latitude>Breedte (tussen -90 and 90) in graden</latitude>
+	<latMax>lat (max)</latMax>
+	<latMin>lat (min)</latMin>
+	<legend>Legenda</legend>
+	<link>Link</link>
+	<links>Links</links>
+        <loading>Loading ...</loading>
+	<local>Lokaal zoeken</local>
+	<localType>Locaal</localType>
+	<localizationHelp>Important! This form allows you to add a Key value to the database. 
+		The key can not have spaces.<br/>
+		After adding your key values, use the "Localization" form in the Administration panel to provide 
+		the actual name you want to be displayed on the website for the different languages.
+	</localizationHelp>
+	<localiz>Vertalen</localiz>
+	<localizDes>Hier kunt u voor bepaalde objecten (groepen, operaties etc) vertalingen maken.</localizDes>
+	<location>Waar?</location>
+	<login>Inloggen</login>
+	<loginCardTitle>Login / Aanmelden</loginCardTitle>
+	<loginwarning>Enkel nodig voor beheer van de site</loginwarning>
+	<logout>Uitloggen</logout>
+	<logoutDes>Uitloggen</logoutDes>
+	<longitude>Lengte (tussen -180 and 180) in graden</longitude>
+	<longMax>long (max)</longMax>
+	<longMin>long (min)</longMin>
+	<mandatory>Verplicht</mandatory>
+	<mandatoryIf>Verplicht als</mandatoryIf>
+	<mainpage1>
+		<h1>GeoNetwork heeft als doel:</h1>
+		<ul>
+			<li>Het verbeteren van de toegang en het gebruik van ruimtelijk gerelateerde informatie.</li>
+			<li>Het ondersteunen van een interdisciplinaire benadering van duurzame ontwikkeling</li>
+			<li>Het ondersteunen van besluitvormingsprocessen</li>
+			<li>De voordelen van het gebruik van ruimtelijke gerelateerde informatie naar voren te brengen.</li>
+		</ul>
+	</mainpage1>
+	<mainpage2>
+		<p>
+		GeoNetwork opensource maakt het mogelijk ruimtelijke gerelateerde informatie te ontsluiten tussen 
+                    verschillende organisaties. Voor meer informatie kunt u contact opnemen met
+		</p>
+	</mainpage2>
+	<mainhelp1> Hoe kunt u zoeken... </mainhelp1>
+	<mainhelp2> Verberg deze helpfunctie... </mainhelp2>
+	<mainhelp3>
+		<p>
+			<font size="-2"> U kunt zoeken op 1 veld of een combinatie van velden.<br/> Alleen resultaten die volledig aan de gestelde criteria voldoen zullen worden weergegeven in het zoekresultaat.</font>
+		</p>
+		<p>
+			<font size="-2"> De <b>Wat?</b> zoekfunctie zoekt naar de door u ingevoerde tekst in alle metadata velden. <br/>
+				<i> Als u op meer dan 1 woord in het <b>Vrije tekst</b> veld zoekt zal dit worden geintepreteerd door het systeem als dat beide woorden in het zoekresultaat aanwezig moeten zijn (AND). </i>
+			</font>
+		</p>
+		<p>
+			<font size="-2"> Het <b>Onderwerp</b> veld staat u toe te zoeken naar kaarten met een specifiek onderwerp. </font>
+		</p>
+		<p>
+			<font size="-2"> De <b>Waar?</b> zoekfunctie zoekt naar kaarten die vallen binnen een bepaald gebied dat u aan kunt geven in het kaartje dat daaronder is opgenomen. </font>
+		</p>
+		<p>
+			<font size="-2"> Het selecteren van de optie "<b>
+					<input name="demo" type="checkbox" checked="checked"/> Inclusief</b> de geselecteerde <b>Oppervlakte</b>" zal kaarten vinden die een grotere dekking hebben dan de opgegeven oppervlakte.<br/>
+			         <i>For example: Regional or Global maps that, among other countries, also cover the selected country</i>
+                        </font>
+		</p>
+		<p>
+			<font size="-2"> Het selecteren van de optie "<b>
+					<input name="demo" type="checkbox" checked="checked"/> Gedeeltelijke overlap</b> de geselecteerde <b>Oppervlakte</b>" zal ook kaarten vinden die overlappen met de opgegeven oppervlakte. </font>
+		</p>
+	</mainhelp3>
+	<mainpageTitle>Zoek naar ruimtelijke gerelateerde informatie en hieraan gekoppelde applicaties.</mainpageTitle>
+	<maintenanceTab>Onderhoud</maintenanceTab>
+	<management>Beheer</management>
+	<mapType>Kaart type</mapType>
+	<mapViewerClose>Sluiten van de viewer</mapViewerClose>
+	<mapViewerLoading>Laden van de viewer...</mapViewerLoading>
+	<mapViewerOpen>Start viewer</mapViewerOpen>
+	<massiveDeleteTitle>Massive Delete Operatie</massiveDeleteTitle>
+	<massiveNewOwnerTitle>Massive New Owner Operatie</massiveNewOwnerTitle>
+	<massiveUpdateCategoriesTitle>Massive Update Categories Operatie</massiveUpdateCategoriesTitle>
+	<massiveUpdatePrivilegesTitle>Massive Update Privileges Operatie</massiveUpdatePrivilegesTitle>
+	<max>Maximaal</max>
+	<mdUpdateError>Fout tijdens bijwerken</mdUpdateError>
+	<message>De gebruikersnaam of het wachtwoord is niet juist.<br/>Druk op de 'terug' toets en probeer het opnieuw.</message>
+	<messageMdUpdateError>Er is een fout opgetreden tijdens het bijwerken van de metadata.</messageMdUpdateError>
+	<messageChanged>Fout, de metadata is zojuist door een andere gebruiker aangepast, probeer opnieuw.</messageChanged>
+	<messageDownload>Bedankt voor de reaktie, klik op onderstaande toets om het bestand te downloaden</messageDownload>
+	<messageLargeFile>Het bestand is te groot</messageLargeFile>
+	<messageNoPrivileges>U heeft niet de rechten (privileges) om deze actie uit te voeren.</messageNoPrivileges>
+	<messageNotPerformed>De gewenste actie kon niet worden uitgevoerd.</messageNotPerformed>
+	<metadata>Metadata</metadata>
+	<metadataAdded>Metadata met ID: is opgenomen in de database</metadataAdded>
+	<metadataDeleted>Metadata met ID: is niet meer aanwezig</metadataDeleted>
+	<metadataJSForm>Metadata van JS Form</metadataJSForm>
+	<metadataInsertResults>Results of Metadata Import</metadataInsertResults>
+	<metadataRecordsAdded>Total number of metadata records added :</metadataRecordsAdded>
+	<min>Minimaal</min>
+	<more>meer</more>
+	<moreinfo>Voor meer informatie kunt u ons bereiken via Email op </moreinfo>
+	<name>Naam</name>
+	<newGroup>Voeg een nieuwe groep toe</newGroup>
+	<newCategory>Voer een nieuwe categorie toe</newCategory>
+	<newMdDes>Voeg een nieuwe metadatarecord toe als kopie van een bestaande template</newMdDes>
+	<newMetadata>Nieuwe metadata</newMetadata>
+	<newOwner>Nieuwe gebruiker</newOwner>
+	<newPassword>Nieuw Wachtwoord</newPassword>
+	<newUser>Voeg een nieuwe gebruiker toe</newUser>
+      	<nl>Nederlands</nl> <!-- Do not translate -->
+    	<next>Volgende</next>
+	<none>geen</none>
+	<noHelp>Excuses, geen hulp aanwezig</noHelp>
+	<noInfo>Excuses, geen informatie aanwezig.</noInfo>
+	<noLogin>U bent niet ingelogd in het systeem</noLogin>
+	<noOwnerRights>Privileges/Categories Locked: U hebt geen ownership rechten</noOwnerRights>
+	<northbc>Coordinaat begrenzing Noorden</northbc>
+	<notfound>Niet gevonden</notfound>
+	<noSelectedMd>Geen selectie, selecteer pas een bestand.</noSelectedMd>
+	<online>Interactieve kaart</online>
+	<onlink>Webkoppelingen</onlink>
+	<opensearch>GeoNetwork opensearch service maakt het mogelijk te zoeken in de metadata catalogus.</opensearch>
+	<operation>Operatie</operation>
+	<organisation>Organisatie / afdeling</organisation>
+	<overwriteFile>Overschrijven?</overwriteFile>
+	<owner>Gebruiker</owner>
+	<ownerRights>Delete/Privileges/Categories Unlocked: U hebbed ownership rechten</ownerRights>
+	<paper>Hard copy</paper>
+	<partial>Gedeeltelijke overlapping</partial>
+	<partialCooordinate>Deel Coordinaten </partialCooordinate>
+	<password>Wachtwoord</password>
+	<persInfo>Persoonlijke informatie</persInfo>
+	<placeKeyword>Plaats sleutelwoorden</placeKeyword>
+	<porCatInfoTab>Catalogus</porCatInfoTab>
+	<poweredBy>Gemaakt met </poweredBy>
+	<previous>Vorige</previous>
+	<privileges>Privileges/rechten</privileges>
+	<profile>Profiel</profile>
+	<progress>Voortgang</progress>
+	<progressChoice/>
+	<progressChoice value="complete">compleet</progressChoice>
+	<progressChoice value="in-work">in wording</progressChoice>
+	<progressChoice value="planned">gepland</progressChoice>
+         <protocol>Protocol</protocol>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Webadres (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Showcase product (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--related">Gerelateerde link (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Partner webadres (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
+	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Bestand ter download</protocolChoice>
+	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Bestand ter download dmv FTP</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
+	<protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
+	<protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
+	<protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
+	<protocolChoice show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</protocolChoice>
+	<protocolChoice show="y" value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuratie Bestand (*.AXL)</protocolChoice>
+	<protocolChoice show="-" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
+	<protocolChoice show="y" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
+	<pubdate>Publicatie Datum</pubdate>
+	<publicationDate>Publicatie datum</publicationDate>
+	<publisher>Publiceerder</publisher>
+	<purpose>Doel</purpose>
+	<rawMetadata>Invoer ruwe metadata</rawMetadata>
+	<recentAdditions>Recente wijzigingen</recentAdditions>
+	<refSysTab>Ref. systeem</refSysTab>
+	<region>Regio</region>
+	<RegisteredUser>Geregistreerde gebruiker</RegisteredUser>
+	<remote>Gedistribueerd zoeken</remote>
+	<remoteType>Gedistribueerd</remoteType>
+	<remove>verwijderen</remove>
+	<reset>Reset</reset>
+	<options>Opties</options>
+	<output>Output</output>
+	<outputType id="full">Volledig</outputType>
+	<outputType id="text">Alleen Tekst</outputType>
+	<showFileDownloadSummary>Laat File Download Chooser zien</showFileDownloadSummary>
+	<sortBy>Sorteren</sortBy>
+	<sortByType id="relevance">Relevantie</sortByType>
+	<sortByType id="rating">Beoordeling</sortByType>
+	<sortByType id="popularity">Populariteit</sortByType>
+	<sortByType id="date">Laatste wijzigingsdatum</sortByType>
+    	<sortByType id="title">Titel</sortByType>
+	<rateIt>Rate It</rateIt>
+	<mdRating>Metadata Rating</mdRating>
+	<ratingMsg>Druk een knop voor beoordeling. Aanmerking: Voor verzamelde data moet u op een nieuwe run wachten.</ratingMsg>
+	<resetSearch>Start het zoek formulier opnieuw</resetSearch>
+	<resetFeedbackForm>Start een feedback formulier opnieuw</resetFeedbackForm>
+	<restrictTo>Restrict to</restrictTo>
+	<result>Vorige resultaten</result>
+	<resultsCoordinate>Resultaten die met de coordinaat zoek overeenkomen</resultsCoordinate>
+	<resultsFreeText>Resultaten die met de Free Text Word overeenkomen</resultsFreeText>
+	<resultsMatching>Zoekresultaten :</resultsMatching>
+	<rss>Open RSS feed</rss>
+	<rtitle>Titel</rtitle>
+	<ru>Русский</ru> <!-- Do not translate! -->
+	<save>Bewaar</save>
+	<saveAndClose>Bewaren en sluiten</saveAndClose>
+	<saveAndValidate>Controleren</saveAndValidate>
+	<schema>Schema</schema>
+	<schematronError>Schematron Fout</schematronError>
+	<search>Zoeken</search>
+	<searchBox>Zoek naar data en informatie</searchBox>
+	<searchIndex>Zoekindex</searchIndex>
+	<searching>...Bezig met zoeken naar metadata...</searching>
+	<searchPage>Zoekpagina</searchPage>
+	<searchPageDes>Ga naar de metadata zoekpagina</searchPageDes>
+	<searchTemplates>Zoek naar templates</searchTemplates>
+	<searchText>Wat?</searchText>
+	<searchAllText>Wat?</searchAllText>
+	<searchUnused>Zoek naar ongebruikte of lege metadatarecords</searchUnused>
+	<searchUnusedTitle>Zoek ongebruikt</searchUnusedTitle>
+	<select>Selectie : </select>
+	<selectAll>Selecteer alle metadata</selectAll>
+	<selected> geselecteerd</selected>
+	<selectedOnly>Alleen display geselecteerd</selectedOnly>
+	<selectNone>Niet geselecteerde metadata geselecteerd</selectNone>
+	<server>Server</server>
+	<setAll>Stel alles in</setAll>
+	<shibLogin>Shib Login</shibLogin>
+	<show>Metadata</show>
+	<simple>Eenvoudig zoeken</simple>
+	<simpleTab>Standaard weergave</simpleTab>
+	<simpleTabEditor>Standaard editor</simpleTabEditor>
+	<siteId>Site ID</siteId>
+	<site>Site</site>
+	<sizeBytes>Grootte (bytes)</sizeBytes>
+	<southbc>Coordinaat begrenzing Zuiden</southbc>
+	<spatial2Tab>Ruimt. Repr.</spatial2Tab>
+	<spatialTab>Ruimt. Info</spatialTab>
+	<styleSheet>StyleSheet</styleSheet>
+	<submit>Bewaren en sluiten</submit>
+	<summaryTab>Samenvatting</summaryTab>
+	<surName>Achternaam</surName>
+	<systemConfig>Systeem configuratie</systemConfig>
+	<systemConfigDes>Hiermee kunt u de systeemconfiguratie aanpassen</systemConfigDes>
+	<template>Template</template>
+	<thanks>Bedankt voor uw inspanningen.</thanks>
+	<theme>ISO onderwerp categorie</theme>
+	<thumbnails>Voorbeeldweergave</thumbnails>
+	<timeout>Timeout</timeout>
+	<timeoutChoice value="10">na 10 seconden</timeoutChoice>
+	<timeoutChoice value="20">na 20 seconden</timeoutChoice>
+	<timeoutChoice value="30">na 30 seconden</timeoutChoice>
+	<title>Nationaal GeoRegister</title>
+	<to>Tot</to>
+	<tools>Tools</tools>
+	<topic>Onderwerp</topic>
+	<type>Type</type>
+	<up>boven</up>
+	<update>Bijwerken</update>
+	<updateGroup>Groep bijwerken</updateGroup>
+	<updateCategories>Categorie√´n bijwerken</updateCategories>
+	<updateCategory>Categorie bijwerken</updateCategory>
+	<updatePrivileges>Privilegie√´n bijwerken</updatePrivileges>
+	<updateUserAccount>Bijwerken gebruikersgegevens</updateUserAccount>
+	<upload>Uploaden </upload>
+	<user>Gebruiker</user>
+	<UserAdmin>Gebruiker administrator</UserAdmin>
+        <userDefined>- User defined -</userDefined>
+	<Reviewer>Controleur gegevens</Reviewer>
+	<userManagement>Gebruikersbeheer</userManagement>
+	<userManDes>Toevoegen/wijzigen/verwijderen en tonen van gebruikers</userManDes>
+	<username>Gebruikersnaam</username>
+	<userPw>Wijzig wachtwoord</userPw>
+	<userPwDes>Sta de huidige gebruiker toe het wachtwoord te wijzigen</userPwDes>
+	<validate>Valideren</validate>
+	<validityBegins>Validatie begint</validityBegins>
+	<validityEnds>en eindigt op</validityEnds>
+	<viewInGE>View in Google Earth</viewInGE>
+	<waitGetCap js="true">Loading server layers, please wait...</waitGetCap>
+	<westbc>Coordinaat begrenzing West</westbc>
+	<what>Wat?</what>
+	<where>Waar?</where>
+	<when>Wanneer?</when>
+	<winInfo1>Dit venster laat de bronnen zien die worden gebruikt door GeoNetwork.</winInfo1>
+	<winInfo2>Het (?) icoontje geeft u toegang tot hulp. De output zal worden getoond in het bronvenster van GeoNetwork.</winInfo2>
+	<wwwlink>Web link</wwwlink>
+	<xmlInsert>Importeer XML metadata</xmlInsert>
+
+	<xmlInsertTitle>XML Metadata Invoegen</xmlInsertTitle>
+	<xmlTab>XML weergave</xmlTab>
+	<xsdError>XSD Validation Error</xsdError>
+	
+	        <!--  intermap tooltips -->
+        <imZoomFull>Laat de hele map zien</imZoomFull>
+        <imZoomIn>Zoom in</imZoomIn>
+        <imZoomOut>Zoom out</imZoomOut>
+        <imPan>Pan</imPan>
+        <imZoomToLayer>Laat de geselecteerde layer van de map zien</imZoomToLayer>
+        <imAreaInterest>Selecteer een gebied naar keuze</imAreaInterest>
+
+        <!-- date selector -->
+        <fromDateSelector>Selecteer FROM date</fromDateSelector> 
+        <toDateSelector>Selecteer TO date</toDateSelector> 
+</strings>

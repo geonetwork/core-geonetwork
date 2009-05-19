@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<strings>
+	<entity>Entity</entity>
+	
+	<entityType>
+		<type id="groups">Groepen</type>
+		<type id="categories">Categorieen</type>
+		<type id="operations">Operaties</type>
+		<type id="regions">Regios</type>
+	</entityType>
+	
+	<srcLang>Brontaal</srcLang>
+	<desLang>Doeltaal</desLang>
+	
+			<!-- Buttons -->
+	
+	<save>Bewaren</save>
+	<refresh>Verversen</refresh>
+	
+	<!-- validator messages -->
+	
+	<validator>
+		<length>
+			<cannotBeEmpty>De vertaalde tekst kan niet leeg zijn</cannotBeEmpty>
+			<invalidMaxSize>De vertaalde tekst kan maximaal {VALUE} teken(s) lang zijn</invalidMaxSize>
+		</length>		
+	</validator>
+	
+	<!-- display messages -->
+	
+	<cannotGetList>Kan de lijst met waarden niet ophalen</cannotGetList>
+	<cannotSave>Er is een fout opgetreden bij het bewaren</cannotSave>
+	
+	<!-- tooltips -->
+	
+	<tips>
+	</tips>
+	
+</strings>
+

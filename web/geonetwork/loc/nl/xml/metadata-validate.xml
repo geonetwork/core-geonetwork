@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Metadata Validatie</heading>
+	<message>Metadata met succes gevalideerd </message>
+	<schemaTronError>maar er waren fouten in het valideren in relatie tot de schematron rules</schemaTronError>
+	<schemaTronValid>Validatie is tegen de schematron rules gelukt</schemaTronValid>
+	<schemaTronReport>Schematron report hier verkrijgbaar</schemaTronReport> 
+</strings>
