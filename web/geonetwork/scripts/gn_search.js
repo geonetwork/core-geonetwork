@@ -44,6 +44,8 @@ function runSimpleSearch(type)
     if (type != "pdf")
         preparePresent();
 
+	setSort();
+
 	var pars = "any=" + encodeURIComponent($('any') .value);
 
 	var region = $('region').value;
@@ -203,6 +205,8 @@ function runAdvancedSearch(type)
     if (type != "pdf")
 	   preparePresent();
 
+	setSort();
+
 	var pars = "any=" + encodeURIComponent($('any') .value);
 	pars += fetchParam('phrase');
 	pars += fetchParam('or');
@@ -317,16 +321,22 @@ function showOptions()
 
 //-------------------------------------------------------------------
 
-function setSortAndSearch()
+function setSort()
 {
-	$('sortBy').value = $F('sortBy.live');
 	if ($('sortBy').value=='title') 
 	   $('sortOrder').value = 'reverse'; 
 	else 
 	   $('sortOrder').value = '';
-	
-	if ($('protocol') == null)	runSimpleSearch();
-		else							runAdvancedSearch();
+}
+
+//-------------------------------------------------------------------
+
+function setSortAndSearch()
+{
+	$('sortBy').value = $F('sortBy.live');
+	setSort();
+  if (document.cookie.indexOf("search=advanced")!=-1) runAdvancedSearch();
+	else runSimpleSearch();
 }
 
 //-------------------------------------------------------------------
