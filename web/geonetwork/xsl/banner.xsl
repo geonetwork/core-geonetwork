@@ -20,7 +20,7 @@
 
 			<!-- buttons -->
 			<tr class="banner">
-				<td class="banner-menu">
+				<td class="banner-menu" width="380px">
 					<a class="banner" href="{/root/gui/locService}/main.home"><xsl:value-of select="/root/gui/strings/home"/></a>
 					|
 					<xsl:if test="string(/root/gui/results)!=''">
@@ -104,7 +104,7 @@
 					</xsl:choose>
 					<span class="banner">|</span>
 				</td>
-				<td align="right" class="banner-menu">
+				<td align="right" class="banner-menu" width="610px">
 					<xsl:choose>
 						<xsl:when test="/root/gui/language='cn'">
 							<font class="banner-active"><xsl:value-of select="/root/gui/strings/cn"/></font>
@@ -149,6 +149,24 @@
 							<a class="banner" href="{/root/gui/service}/ru/main.home"><xsl:value-of select="/root/gui/strings/ru"/></a>
 						</xsl:otherwise>
 					</xsl:choose>
+					|
+					<xsl:choose>
+						<xsl:when test="/root/gui/language='de'">
+							<font class="banner-active"><xsl:value-of select="/root/gui/strings/de"/></font>
+						</xsl:when>
+						<xsl:otherwise>
+							<a class="banner" href="{/root/gui/service}/de/main.home"><xsl:value-of select="/root/gui/strings/de"/></a>
+						</xsl:otherwise>
+					</xsl:choose>
+					|
+					<xsl:choose>
+						<xsl:when test="/root/gui/language='nl'">
+							<font class="banner-active"><xsl:value-of select="/root/gui/strings/nl"/></font>
+						</xsl:when>
+						<xsl:otherwise>
+							<a class="banner" href="{/root/gui/service}/nl/main.home"><xsl:value-of select="/root/gui/strings/nl"/></a>
+						</xsl:otherwise>
+					</xsl:choose>
 				</td>
 			</tr>
 
@@ -156,7 +174,7 @@
 
 			<!-- login -->
 			<tr class="banner">
-				<td class="banner-login">
+				<td class="banner-login" align="right" width="380px">
 					<!-- FIXME
 					<button class="banner" onclick="goSubmit('{/root/gui/service}/es/main.present')">Last search results (11-20 of 73)</button>
 					<a class="banner" href="{/root/gui/service}/es/main.present">Last search results (11-20 of 73)<xsl:value-of select="/root/gui/strings/results"/></a>
