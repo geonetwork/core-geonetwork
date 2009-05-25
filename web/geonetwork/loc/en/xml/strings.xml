@@ -277,7 +277,7 @@
 		<meta name="DC.date" content="02-07-2007"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.language" content="English French Spanish Russian Chinese"/>
+		<meta name="DC.language" content="English French Spanish Russian Chinese Dutch"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
 	<help>Help</help>
@@ -408,6 +408,7 @@
 	<newOwner>New Owner</newOwner>
 	<newPassword>New Password</newPassword>
 	<newUser>Add a new user</newUser>
+      	<nl>Nederlands</nl> <!-- Do not translate -->
 	<next>Next</next>
 	<none>none</none>
 	<noHelp>Sorry, no help available</noHelp>
@@ -482,7 +483,7 @@
 	<sortByType id="rating">Rating</sortByType>
 	<sortByType id="popularity">Popularity</sortByType>
 	<sortByType id="date">Change date</sortByType>
-    <sortByType id="title">Title</sortByType>
+          <sortByType id="title">Title</sortByType>
 	<rateIt>Rate It</rateIt>
 	<mdRating>Data Rating</mdRating>
 	<ratingMsg>Press a button to rate. It may take some time for new ratings to become visible.</ratingMsg>

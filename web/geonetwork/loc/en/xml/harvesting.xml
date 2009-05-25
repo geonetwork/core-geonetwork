@@ -58,8 +58,6 @@
 	
 	<site>Site</site>
 
-	<name>Name</name>
-	
 	<wxstype>Type of OGC webservice</wxstype>
 	<wxstypes>
 		<type value="WMS1.0.0">OGC Web Map Service (WMS) Version 1.0.0</type>
@@ -123,7 +121,6 @@
 	<nodelete>Keep local if deleted at source</nodelete>
 	<server>Server</server>	
 	<database>Database</database>	
-	<host>Host</host>
 	<privileges>Privileges</privileges>
 	<categories>Categories</categories>
 	<url>URL</url>
