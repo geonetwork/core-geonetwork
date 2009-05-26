@@ -39,7 +39,7 @@ import org.jdom.Element;
 //=============================================================================
 
 /** 
- * A simple service that returns all metadata templates that can be added
+ * A simple service that returns all metadata templates that can be added.
  * User could also add search parameter in order to limit the list of templates
  * proposed to the user.
  * By default the search is restricted to template=y, extended=off and remote=off.
