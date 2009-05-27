@@ -274,6 +274,8 @@
 	<hitsPerPageChoice value="50">50</hitsPerPageChoice>
 	<hitsPerPageChoice value="100">100</hitsPerPageChoice>
 	<home>Inicio</home>
+	<i18n>Test i18n</i18n>
+	<i18nDesc>This service should help GeoNetwork opensource developers to have up to date localized files for the GUI.</i18nDesc>
 	<identificationTab>Identificación</identificationTab>
 	<import>Importar</import>
 	<infoTitle>Información</infoTitle>

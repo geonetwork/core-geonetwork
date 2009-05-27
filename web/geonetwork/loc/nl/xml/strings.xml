@@ -322,6 +322,8 @@
 	<hitsPerPageChoice value="50">50</hitsPerPageChoice>
 	<hitsPerPageChoice value="100">100</hitsPerPageChoice>
 	<home>Startpagina</home>
+	<i18n>Test i18n</i18n>
+	<i18nDesc>Deze service helpt GeoNetwork opensource ontwikkelaars om de status van de GUI vertalingsbestanden te bekijken.</i18nDesc>
 	<identificationTab>Identificatie</identificationTab>
 	<import>Importeren</import>
 	<infoTitle>Info</infoTitle>

@@ -186,6 +186,8 @@
 	<hitsPerPageChoice value="50">50</hitsPerPageChoice>
 	<hitsPerPageChoice value="100">100</hitsPerPageChoice>
 	<home>الصفحة الرئيسية</home>
+	<i18n>Test i18n</i18n>
+	<i18nDesc>This service should help GeoNetwork opensource developers to have up to date localized files for the GUI.</i18nDesc>
 	<identificationTab>Identification</identificationTab>
 	<identifier>Identifier</identifier>
 	<import>ادراج</import>

@@ -19,14 +19,15 @@
 
 	<xsl:template match="/">
 		<h1>Test i18n</h1>
-		<p>This service should help GeoNetwork opensource developpers to have up to date localized files.
+		<p>This service should help GeoNetwork opensource developers to have up to date localized files.
 		Even if there's no tranlsation, all terms should be added to all localized files (even if no translation 
-		are available). If new terms appear, you could ask to the genetwork-users@sourceforge.net for
+		are available). If new terms appear, you could ask to the geonetwork-users@sourceforge.net for
 		some contribution on that. <b>Try to reduce the number of red squares in that page ;).</b> Thanks.</p>
 		<i>
 			"en" is master language. Each element of english files are
 			compared to the others
 		</i>
+		<p><strong>Not all language files are checked!!</strong></p>
 		<p>
 		A draft XML document to use to update localized files is available <a href="test.i18n.xml">here</a>.
 		</p>

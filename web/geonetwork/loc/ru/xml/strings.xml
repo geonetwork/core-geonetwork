@@ -259,6 +259,8 @@
 	<hitsPerPageChoice value="50">50 результатов</hitsPerPageChoice>
 	<hitsPerPageChoice value="100">100 результатов</hitsPerPageChoice>
 	<home>Старт</home>
+	<i18n>Test i18n</i18n>
+	<i18nDesc>This service should help GeoNetwork opensource developers to have up to date localized files for the GUI.</i18nDesc>
 	<identificationTab>Идентификация</identificationTab>
 	<import>Импорт</import>
 	<infoTitle>Информация</infoTitle>

@@ -151,7 +151,16 @@
 						</tr>
 						<xsl:copy-of select="$adminServices"/>
 						<tr><td class="spacer"/></tr>
+						<tr>
+							<td class="padded"><a href="{/root/gui/locService}/test.i18n"><xsl:value-of select="/root/gui/strings/i18n"/></a></td>
+							<td class="padded"><xsl:value-of select="/root/gui/strings/i18nDesc"/></td>
+						</tr>
 					</xsl:if>
+					
+					<tr>
+						<td class="padded"><a href="{/root/gui/locService}/test.csw"><xsl:value-of select="/root/gui/strings/cswTest"/></a></td>
+						<td class="padded"><xsl:value-of select="/root/gui/strings/cswTestDesc"/></td>
+					</tr>
 					
 				</table>
 				<p/>
