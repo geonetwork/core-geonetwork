@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<errorText>The requested operation could not be performed.</errorText>
+	<heading>Fout</heading>
+	<message>De gewenste actie kon niet worden uitgevoerd.</message>
+	<button>Terug</button>
 </strings>
