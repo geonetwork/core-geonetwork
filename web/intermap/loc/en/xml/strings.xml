@@ -1,132 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<abstract>Abstract</abstract>
-	<activate>Activate</activate>
-	<address>Address</address>
-	<addService>Add more maps</addService>
-	<addLayer js="true">Add a new layer</addLayer>
-	<bigger>Bigger map</bigger>
-	<btnstyles>View and select styles</btnstyles>	
-	<cancel>Cancel</cancel>
-	<close>Close</close>
-	<choosemapfromlist>Please choose one or more map services from the list below</choosemapfromlist>
-	<choosemapserver>Please choose a map server from the list below or manually insert another map server</choosemapserver>
+	<abstract>Samenvatting</abstract>
+	<activate>Activeer</activate>
+	<address>Adres</address>
+	<addService>Voeg meer kaartlagen toe</addService>
+	<addLayer js="true">Voeg een nieuwe kaartlaag toe</addLayer>
+	<bigger>Grotere kaart</bigger>
+	<btnstyles>Bekijk en selecteer een stijl</btnstyles>	
+	<cancel>Annuleer</cancel>
+	<close>Sluiten</close>
+	<choosemapfromlist>Selecteer één of meerdere kaartlagen uit de onderstaande lijst</choosemapfromlist>
+	<choosemapserver>Selecteer een map server uit de onderstaande lijst of voeg er één handmatig toe</choosemapserver>
 	<mapServer>Map Server</mapServer>
-	<choosepredefinedmap>Please choose a predefined map overlay from the list below or</choosepredefinedmap>
-	<connect>Connect</connect>
-	<contactInfo>Contact information:</contactInfo>
-	<contactPerson>Primary contact person:</contactPerson>
-	<contexts>Contexts</contexts>
-	<delete>[del]</delete>
-	<down>Move layer down</down>
+	<choosepredefinedmap>Selecteer een samengestelde kaart uit de onderstaande lijst of</choosepredefinedmap>
+	<connect>Verbind</connect>
+	<contactInfo>Contact informatie:</contactInfo>
+	<contactPerson>Contact persoon:</contactPerson>
+	<contexts>Context</contexts>
+	<delete>[verwijder]</delete>
+	<down>Naar beneden</down>
 	<email>email:</email>
-	<error>[error]</error>
+	<error>[fout]</error>
 <!-- 
 	<errorText>Sorry, error connecting to the map server</errorText>
  -->
-	<exportAsPDF js="true">Export this map as a PDF</exportAsPDF>
-	<exportAsImage js="true">Export this map as an image</exportAsImage>
-	<exportAsWMC js="true">Save the Web Map Context</exportAsWMC>
-	<extents>Change the selected time (temporal data)</extents>
-	<extentSelected>Selected time: </extentSelected>
-	<featuresfound>features found</featuresfound>
-	<findMapsGeoNetwork>Find more maps through GeoNetwork opensource</findMapsGeoNetwork>
-	<findMapsMapServers>Add more layers by connecting to other Web Map Servers</findMapsMapServers>
-	<fullExtent>Zoom to the full map</fullExtent>
+	<exportAsPDF js="true">Exporteer kaart naar PDF</exportAsPDF>
+	<exportAsImage js="true">Exporteer kaart naar image</exportAsImage>
+	<exportAsWMC js="true">Bewaar de Web Map Context</exportAsWMC>
+	<extents>Verander de geselecteerde tijd (temporele data)</extents>
+	<extentSelected>Geselecteerde tijd: </extentSelected>
+	<featuresfound>Gevonden objecten</featuresfound>
+	<findMapsGeoNetwork>Vind meer kaarten in GeoNetwork opensource</findMapsGeoNetwork>
+	<findMapsMapServers>Voeg meer kaartlagen toe doo met andere Web Map Servers te verbinden</findMapsMapServers>
+	<fullExtent>Zoom naar hele kaart</fullExtent>
 	<gotoGeoNetwork>GeoNetwork opensource</gotoGeoNetwork>
 	<gotoMapServers>Map Servers</gotoMapServers>
-	<homepage>Home page:</homepage>
-	<identify>Identify a feature on the map</identify>
-	<makeActive>Select to make this layer active (e.g. for Identify)</makeActive>
+	<homepage>Home pagina:</homepage>
+	<identify>Identificeer een object op de kaart</identify>
+	<makeActive>Selecteer om deze laag actief te maken (bijv. voor de Identify functie)</makeActive>
 	<info>info</info>
-	<keywords>Keywords:</keywords>
-	<layerinfo>Layer info</layerinfo>
-	<layers>Layers</layers>
-	<layersAdded js="true">Selected layers have been added</layersAdded>
-	<layersHide>Hide layer list</layersHide>
-	<layersShow>Show layer list</layersShow>
-	<layerShowHide>Show or hide layer</layerShowHide>
-	<legend>Show the legend</legend>
-	<listofmaps>List of maps</listofmaps>
-	<listofmapservers>List of map servers</listofmapservers>
-	<loadingMap>...Loading map...</loadingMap>
-	<loadingFrom js="true">Loading services from</loadingFrom>
-	<loadingFromWMS js="true">Loading services from given WMS server</loadingFromWMS>
-	<manually>Create you own map</manually>
-	<map>Map</map>
-	<mapsfound>maps found</mapsfound>
-	<markerlistbutton>Marker list</markerlistbutton>
-	<markerlisttitle js="true">Marker list</markerlisttitle>
-	<markerUpdating>Updating marker...</markerUpdating> 
-	<markerUpdated>The marker has been updated</markerUpdated> 
-	<markerDeleting>Deleting marker...</markerDeleting> 
-	<markerDeleted>The marker has been deleted</markerDeleted> 
-	<markerNone>There are no markers defined.</markerNone>	
+	<keywords>Sluitelwoorden:</keywords>
+	<layerinfo>Kaartlaag info</layerinfo>
+	<layers>Kaartlagen</layers>
+	<layersAdded js="true">Geselecteerde lagen zijn toegevoegd</layersAdded>
+	<layersHide>Verberg kaartlagenlijst</layersHide>
+	<layersShow>Bekijk kaartlagenlijst</layersShow>
+	<layerShowHide>Bekijk of verberg kaartlaag</layerShowHide>
+	<legend>Bekijk de legenda</legend>
+	<listofmaps>Lijst van kaarten</listofmaps>
+	<listofmapservers>Lijst van map servers</listofmapservers>
+	<loadingMap>...Kaart laden...</loadingMap>
+	<loadingFrom js="true">Services laden van</loadingFrom>
+	<loadingFromWMS js="true">Services van gegeven WMS server laden</loadingFromWMS>
+	<manually>Maak je eigen kaart</manually>
+	<map>Kaart</map>
+	<mapsfound>gevonden kaarten</mapsfound>
+	<markerlistbutton>Marker lijst</markerlistbutton>
+	<markerlisttitle js="true">Marker lijst</markerlisttitle>
+	<markerUpdating>Marker bijwerken...</markerUpdating> 
+	<markerUpdated>De marker is bijgewerkt</markerUpdated> 
+	<markerDeleting>Verwijder marker...</markerDeleting> 
+	<markerDeleted>De marker is verwijderd</markerDeleted> 
+	<markerNone>Er zijn geen markers gedefiniëerd.</markerNone>	
 	<metadata>Metadata</metadata>
-	<newMap>Create a new map</newMap>
-	<noFeature>No features found</noFeature>
-	<noService>No maps found</noService>
-	<noStyle>Only the default style is available for this map</noStyle>
-	<oneService>One map found</oneService>
+	<newMap>Maak een nieuwe kaart</newMap>
+	<noFeature>Geen objecten gevonden</noFeature>
+	<noService>Geen kaarten gevonden</noService>
+	<noStyle>Alleen de standaard stijl is beschikbaar voor deze kaart</noStyle>
+	<oneService>één kaart gevonden</oneService>
 	<ok>Ok</ok>
-	<oneFeature>One feature found</oneFeature>
-	<otherArcIMS>- Other ArcIMS server </otherArcIMS>
-	<otherWMS>- Other WMS server </otherWMS>
+	<oneFeature>één object gevonden</oneFeature>
+	<otherArcIMS>- Andere ArcIMS server </otherArcIMS>
+	<otherWMS>- Andere WMS server </otherWMS>
 	<pan>Pan</pan>
-	<position>Position:</position>
-	<print>Print the map</print>
-	<properties>Properties</properties>
-	<reCenter>Re-center the map</reCenter>
-	<refresh>Refresh</refresh>
-	<refreshNotification>Please click the "Refresh" button under the layer list to see this change.</refreshNotification>
-	<removeLayer>Remove layer</removeLayer>
-	<removeMarker>Remove marker</removeMarker>
+	<position>Positie:</position>
+	<print>Print de kaart</print>
+	<properties>Eigenschappen</properties>
+	<reCenter>Centreer de kaart</reCenter>
+	<refresh>Verversen</refresh>
+	<refreshNotification>Selecteer "Verversen" onder de kaartlagenlijst om deze verandering te zien.</refreshNotification>
+	<removeLayer>Verwijder kaartlaag</removeLayer>
+	<removeMarker>Verwijder marker</removeMarker>
 	<reset>Reset</reset>
-	<sendByEmail js="true">Send this map via e-mail</sendByEmail>
-	<setScale>--Set Scale--</setScale>
-	<showLayerMD js="true">Layer information</showLayerMD>
-	<smaller>Smaller map</smaller>
-	<specify>Specify if other:</specify>
-	<style>Select the desired style</style>
+	<sendByEmail js="true">Stuur deze kaart via email</sendByEmail>
+	<setScale>--Stel kaartschaal in--</setScale>
+	<showLayerMD js="true">Kaartlaag informatie</showLayerMD>
+	<smaller>Kleinere kaart</smaller>
+	<specify>Specificeer indien anders:</specify>
+	<style>Selecteer de gewenste stijl</style>
 	<start>InterMap opensource</start>
-	<telephone>Telephone:</telephone>
+	<telephone>Telefoon:</telephone>
 	<title>InterMap opensource</title>
-	<titleShowStyles js="true">Available styles</titleShowStyles>
-	<transparency>Set transparency</transparency>
-	<unexpectedError>An unexpected error has been encountered while performing the operation:</unexpectedError>				
-	<up>Move layer up</up>
-	<update>Update</update>
-	<updateMarker>Update marker info</updateMarker>
-	<wait js="true">Please wait...</wait>
+	<titleShowStyles js="true">Beschikbare stijlen</titleShowStyles>
+	<transparency>Stel transparantie in</transparency>
+	<unexpectedError>Een onverwachte fout is opgetreden tijdens de uitvoering:</unexpectedError>				
+	<up>Naar boven</up>
+	<update>Vernieuw</update>
+	<updateMarker>Vernieuw marker info</updateMarker>
+	<wait js="true">Even geduld...</wait>
 	<wmctitle js="true">WMC Context menu</wmctitle>	
-	<wmctitlemail js="true">Send a WMC Context via e-mail</wmctitlemail>	
-	<wmctitleupload js="true">Upload and set a context</wmctitleupload>
-	<wmcbuttonmain js="true">View context menu</wmcbuttonmain>	
-	<wmcbuttonmail js="true">Send current context</wmcbuttonmail>	
-	<wmcbuttonupload js="true">Upload a context</wmcbuttonupload>	
-	<wmcbuttondownload js="true">Download current context</wmcbuttondownload>	
+	<wmctitlemail js="true">Stuur een Web Map Context via email</wmctitlemail>	
+	<wmctitleupload js="true">Laad en toon een context</wmctitleupload>
+	<wmcbuttonmain js="true">Toon context menu</wmcbuttonmain>	
+	<wmcbuttonmail js="true">Stuur huidige context</wmcbuttonmail>	
+	<wmcbuttonupload js="true">Laad context</wmcbuttonupload>	
+	<wmcbuttondownload js="true">Download huidige context</wmcbuttondownload>	
 
-	<wmcUploading>The context file is uploading...</wmcUploading> 
-	<wmcUploaded>The context has been uploaded </wmcUploaded>
-	<wmcUploadingError>An unexpected error has been encountered while uploading the context:</wmcUploadingError>				
-	<wmcMailBuilding>The mail is being built...</wmcMailBuilding>
-	<wmcMailSent>The mail has been successfully sent</wmcMailSent>
-	<wmcMailError>An unexpected error has been encountered while processing the mail:</wmcMailError>
-	<wmcUploadReplace>Replace current layers</wmcUploadReplace>
-	<wmcUploadAdd>Add to current layers</wmcUploadAdd>
-	<wmcMailSend>Send e-mail</wmcMailSend>
+	<wmcUploading>Het context bestand wordt geladen...</wmcUploading> 
+	<wmcUploaded>Het context bestand is geladen </wmcUploaded>
+	<wmcUploadingError>Een onverwachte fout is opgetreden tijdens het laden van de context:</wmcUploadingError>				
+	<wmcMailBuilding>Een email wordt aangemaakt...</wmcMailBuilding>
+	<wmcMailSent>De email is verstuurd</wmcMailSent>
+	<wmcMailError>Een onverwachte fout is opgetreden tijdens het aanmaken van de email:</wmcMailError>
+	<wmcUploadReplace>Vervang huidige kaartlagen</wmcUploadReplace>
+	<wmcUploadAdd>Voeg toe aan huidige kaart</wmcUploadAdd>
+	<wmcMailSend>Stuur email</wmcMailSend>
 	
-	<wmsConfigForm>Layer properties</wmsConfigForm >
+	<wmsConfigForm>Kaartlaag eigenschappen</wmsConfigForm >
 	<zoomIn>Zoom in</zoomIn>
-	<zoomOut>Zoom out</zoomOut>
-	<zoomLayer>Zoom to layer</zoomLayer>
+	<zoomOut>Zoom uit</zoomOut>
+	<zoomLayer>Zoom naar kaartlaag</zoomLayer>
 	<getFeatures>GET FEATURES</getFeatures>
 	
-	<styleSetting>Setting the style...</styleSetting> 
-	<styleSet>The style has been successfully set.</styleSet> 
-	<styleSetError>An unexpected error has been encountered:</styleSetError>				
-	<layerInfo>Layer Info:</layerInfo>
-	<associatedStyles>Associated styles:</associatedStyles>				
-	<setStyle>Set styles</setStyle>				
+	<styleSetting>Stijl wordt ingesteld...</styleSetting> 
+	<styleSet>De stijl is ingesteld.</styleSet> 
+	<styleSetError>Een onverwachte fout is opgetreden:</styleSetError>				
+	<layerInfo>Kaartlaag Info:</layerInfo>
+	<associatedStyles>Gerelateerde stijlen:</associatedStyles>				
+	<setStyle>Stel stijlen in</setStyle>				
 	
 </strings>
