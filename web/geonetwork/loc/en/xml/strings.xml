@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <ar>عربي</ar> <!-- Do not translate! -->
+	<cn>中文</cn> <!-- Do not translate! -->
+	<de>Deutsch</de> <!-- Do not translate! -->
+	<en>English</en> <!-- Do not translate! -->
+	<es>Español</es> <!-- Do not translate! -->
+	<fr>Français</fr> <!-- Do not translate! -->
+    <nl>Nederlands</nl> <!-- Do not translate -->
+	<ru>Русский</ru> <!-- Do not translate! -->
+
 	<setOnSave>Value will be set when record is saved</setOnSave>
 	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>
 	<missing>MISSING or EMPTY</missing>
@@ -144,7 +153,6 @@
 	<any>- Any -</any>
 	<anytime>Anytime</anytime>
 	<appSchInfoTab>App. schema</appSchInfoTab>
-    <ar>عربي</ar> <!-- Do not translate! -->
 	<assigned>Assigned</assigned>
 	<attrlabl>Attribute Label</attrlabl>
 	<availability>Availability</availability>
@@ -180,7 +188,6 @@
 	<city>City</city>
 	<clear>Clear</clear>
 	<clearAll>Clear All</clearAll>
-	<cn>中文</cn> <!-- Do not translate! -->
 	<completeTab>Advanced view</completeTab>
 	<completeTabEditor>Advanced editor</completeTabEditor>
 	<confirmCancel>Are you sure you want to leave the editor? (You will lose any unsaved changes)</confirmCancel>
@@ -234,12 +241,10 @@
 	<edit>Edit</edit>
 	<Editor>Editor</Editor>
 	<downloadEmail>Download Email</downloadEmail>
-	<en>English</en> <!-- Do not translate! -->
 	<enclosing>Including</enclosing>
 	<enclosingCoordinate>Enclosing coordinates </enclosingCoordinate>
 	<enddate>Ending Date</enddate>
 	<enttypl>Entity Type Label</enttypl>
-	<es>Español</es> <!-- Do not translate! -->
 	<exactCoordinate>Exact coordinates </exactCoordinate>
 	<extended>Advanced</extended>
 	<extent>Extent</extent>
@@ -252,7 +257,6 @@
 	<file>File</file>
 	<fileUploadSuccessful>File Upload Successful</fileUploadSuccessful>
 	<firstName>First Name</firstName>
-	<fr>Français</fr> <!-- Do not translate! -->
 	<freeKeyword>Free Keywords</freeKeyword>
 	<from>From</from>
 	<general>General</general>
@@ -412,7 +416,6 @@
 	<newOwner>New Owner</newOwner>
 	<newPassword>New Password</newPassword>
 	<newUser>Add a new user</newUser>
-      	<nl>Nederlands</nl> <!-- Do not translate -->
 	<next>Next</next>
 	<none>none</none>
 	<noHelp>Sorry, no help available</noHelp>
@@ -500,7 +503,6 @@
 	<resultsMatching>Aggregate Results matching search criteria :</resultsMatching>
 	<rss>Open RSS feed</rss>
 	<rtitle>Title</rtitle>
-	<ru>Русский</ru> <!-- Do not translate! -->
 	<save>Save</save>
 	<saveAndClose>Save and close</saveAndClose>
 	<saveAndValidate>Check</saveAndValidate>

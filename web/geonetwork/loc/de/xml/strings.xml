@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <ar>عربي</ar> <!-- Do not translate! -->
+	<cn>中文</cn> <!-- Do not translate! -->
+	<de>Deutsch</de> <!-- Do not translate! -->
+	<en>English</en> <!-- Do not translate! -->
+	<es>Español</es> <!-- Do not translate! -->
+	<fr>Français</fr> <!-- Do not translate! -->
+    <nl>Nederlands</nl> <!-- Do not translate -->
+	<ru>Русский</ru> <!-- Do not translate! -->
+
 	<setOnSave>Value will be set when record is saved</setOnSave>
 	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>
 	<missing>MISSING or EMPTY</missing>	
@@ -146,7 +155,6 @@
 	<any>- Alle -</any>
 	<anytime>zu jeder Zeit</anytime>
 	<appSchInfoTab>App. Schema</appSchInfoTab>
-    <ar>عربي</ar> <!-- Do not translate! -->
 	<assigned>Zugeteilt</assigned>
 	<attrlabl>Attribut Beschriftung</attrlabl>
 	<availability>Verfügbarkeit</availability>
@@ -182,7 +190,6 @@
 	<city>Stadt</city>
 	<clear>leeren</clear>
 	<clearAll>Alles leeren</clearAll>
-    <cn>中文</cn> <!-- Do not translate! -->
 	<completeTab>Erweiterte Ansicht</completeTab>
 	<completeTabEditor>Erweiterter Editor</completeTabEditor>
 	<confirmCancel>Sind Sie sicher, dass Sie die Aktione abbrechen wollen? (Alle ungespeicherten Eingaben gehen verloren)</confirmCancel>
@@ -236,12 +243,10 @@
 	<edit>Bearbeiten</edit>
 	<Editor>Editor</Editor>
 	<downloadEmail>Download Email</downloadEmail>
-	<en>English</en> <!-- Do not translate! -->
 	<enclosing>inklusive</enclosing>
 	<enclosingCoordinate>inklusive Koordinaten </enclosingCoordinate>
 	<enddate>Enddatum</enddate>
 	<enttypl>Entity Typ Label</enttypl>
-	<es>Español</es> <!-- Do not translate! -->
 	<exactCoordinate>Exakte Koordinaten </exactCoordinate>
 	<extended>Erweitert</extended>
 	<extent>Ausdehung</extent>
@@ -254,8 +259,6 @@
 	<file>Datei</file>
 	<fileUploadSuccessful>Dateiupload erfolgreich</fileUploadSuccessful>
 	<firstName>Vorname</firstName>
-	<fr>Français</fr> <!-- Do not translate! -->
-	<de>Deutsch</de>
 	<freeKeyword>Freie Schlüsselwörter</freeKeyword>
 	<from>Von</from>
 	<general>Generell</general>
@@ -494,7 +497,6 @@
 	<resultsMatching>Suchergebnisse :</resultsMatching>
 	<rss>RSS feed öffnen</rss>
 	<rtitle>Titel</rtitle>
-	<ru>Русский</ru> <!-- Do not translate! -->
 	<save>Speichern</save>
 	<saveAndClose>Speichern und Schließen</saveAndClose>
 	<saveAndValidate>Überprüfen</saveAndValidate>

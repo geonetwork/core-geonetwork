@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <ar>عربي</ar> <!-- Do not translate! -->
+	<cn>中文</cn> <!-- Do not translate! -->
+	<de>Deutsch</de> <!-- Do not translate! -->
+	<en>English</en> <!-- Do not translate! -->
+	<es>Español</es> <!-- Do not translate! -->
+	<fr>Français</fr> <!-- Do not translate! -->
+    <nl>Nederlands</nl> <!-- Do not translate -->
+	<ru>Русский</ru> <!-- Do not translate! -->
+
 	<setOnSave>Value will be set when record is saved</setOnSave>
 	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>
 	<missing>MISSING or EMPTY</missing>	
@@ -35,7 +44,6 @@
 	<all>all</all>
 	<any>- أي من -</any>
  <anytime>Anytime</anytime>
-	<ar>عربي</ar> <!-- Do not translate! -->
 	<appSchInfoTab>App. schema</appSchInfoTab>
 	<assigned>تعيين</assigned>
 	<attrlabl>عنوان قيمة</attrlabl>
@@ -72,7 +80,6 @@
 	<clear>مسح</clear>
 	<clearAll>Clear All</clearAll>
 	<close>Close</close>
-	<cn>中文</cn> <!-- Do not translate! -->
 	<completeTab>عرض متقدم</completeTab>
 	<completeTabEditor>تحرير متقدم</completeTabEditor>
 	<confirmDelete>هل أنت متأكد من مسح البيانات الاساسية meta data من قاعدة البيانات؟</confirmDelete>
@@ -123,14 +130,12 @@
 	<edit>ـعديل</edit>
 	<Editor>محرر</Editor>
 	<!--	<emailAddress>عنوان البريد</emailAddress> -->
- <en>English</en> <!-- Do not translate! -->
 	<enddate>تاريخ النهاية</enddate>
 	<enclosing>تحتوي على</enclosing>
 	<enclosingCoordinate>الاحداثيات</enclosingCoordinate>
 	<enttypl>عنوان جزئية نوع</enttypl>
 	<email>Email</email>
 	<emailAddress>Email address</emailAddress>
-	<es>Español</es> <!-- Do not translate! -->
 	<exactCoordinate>الاحداثيات بدقة</exactCoordinate>
 	<exactTerm>Exact term</exactTerm>
 	<extended>مزيد من الخيارات</extended>
@@ -144,7 +149,6 @@
 	<file>ملف</file>
 	<firstName>الاسم الأول</firstName>
 	<foundWords>Number of terms found:</foundWords>
-	<fr>Français</fr> <!-- Do not translate! -->
 	<freeKeyword>كاتبة حرة</freeKeyword>
 	<from>تاريخ من:</from>
 	<fromDateSelector>Select FROM date</fromDateSelector>
@@ -407,7 +411,6 @@
 	<Reviewer>Content reviewer</Reviewer>
 	<rss>فتح RSS</rss>
 	<rtitle>عنوان</rtitle>
-	<ru>Русский</ru> <!-- Do not translate! -->
 	<save>حفظ</save>
 	<savepdf>Save search results as pdf</savepdf>
 	<saveAndClose>حفظ وإغلاق</saveAndClose>

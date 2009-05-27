@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <ar>عربي</ar> <!-- Do not translate! -->
+	<cn>中文</cn> <!-- Do not translate! -->
+	<de>Deutsch</de> <!-- Do not translate! -->
+	<en>English</en> <!-- Do not translate! -->
+	<es>Español</es> <!-- Do not translate! -->
+	<fr>Français</fr> <!-- Do not translate! -->
+    <nl>Nederlands</nl> <!-- Do not translate -->
+	<ru>Русский</ru> <!-- Do not translate! -->
+
 	<setOnSave>Value will be set when record is saved</setOnSave>
 	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>
 	<missing>MISSING or EMPTY</missing>	
@@ -146,7 +155,6 @@
 	<any>- Cualquiera -</any>
 	<anytime>Cualquier momento</anytime>
 	<appSchInfoTab>Perfil de aplicación</appSchInfoTab>
-	<ar>عربي</ar> <!-- Do not translate! -->
 	<assigned>Asignado</assigned>
 	<attrlabl>Etiqueta de atributo</attrlabl>
 	<availability>Disponibilidad</availability>
@@ -179,7 +187,6 @@
 	<chooseThumbnail>Elegir la ubicación del fichero thumbnail pequeño</chooseThumbnail>
 	<city>City</city>
 	<clear>Borrar</clear>
-	<cn>中文</cn> <!-- Do not translate! -->
 	<completeTab>Vista en bloques</completeTab>
 	<completeTabEditor>Editar en bloques</completeTabEditor>
 	<confirmDelete>¿Está seguro de que desea borrar el Metadato de la Base de Datos?</confirmDelete>
@@ -222,12 +229,10 @@
 	<edit>Editar</edit>
 	<Editor>Editor</Editor>
 <!--	<emailAddress>Dirección de correo electrónico</emailAddress> -->
-	<en>English</en>	<!-- Do not translate! -->
 	<enclosing>Incluir</enclosing>
 	<enclosingCoordinate>Incluir coordenadas</enclosingCoordinate>
 	<enddate>Fecha de fin</enddate>
 	<enttypl>Etiqueta de tipo de entidad</enttypl>
-	<es>Español</es> <!-- Do not translate! -->
 	<exactCoordinate>Coordenadas exactas</exactCoordinate>
 	<extended>Experta</extended>
 	<extent>Extensión</extent>
@@ -238,7 +243,6 @@
 	<feedbackRequest>Por favor, proporcione sus datos antes de descargar los datos</feedbackRequest>
 	<file>Fichero</file>
 	<firstName>Nombre</firstName>
-	<fr>Français</fr> <!-- Do not translate! -->
 	<freeKeyword>Palabras libres</freeKeyword>
 	<from>De</from>
 	<general>General</general>
@@ -466,7 +470,6 @@
 	<resultsMatching>Los resultados de la búsqueda son:</resultsMatching>
 	<rss>Abrir alimentación RSS</rss>
 	<rtitle>Título</rtitle>
-	<ru>Русский</ru> <!-- Do not translate! -->
 	<save>Salvar</save>
 	<saveAndClose>Salvar y Cerrar</saveAndClose>
 	<saveAndValidate>Salvar y comprobar</saveAndValidate>

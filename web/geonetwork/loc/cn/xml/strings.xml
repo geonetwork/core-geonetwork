@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <ar>عربي</ar> <!-- Do not translate! -->
+	<cn>中文</cn> <!-- Do not translate! -->
+	<de>Deutsch</de> <!-- Do not translate! -->
+	<en>English</en> <!-- Do not translate! -->
+	<es>Español</es> <!-- Do not translate! -->
+	<fr>Français</fr> <!-- Do not translate! -->
+    <nl>Nederlands</nl> <!-- Do not translate -->
+	<ru>Русский</ru> <!-- Do not translate! -->
+
 	<setOnSave>Value will be set when record is saved</setOnSave>
 	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>
 	<missing>MISSING or EMPTY</missing>	
@@ -148,7 +157,6 @@
 	<any>- 任意 -</any>
 	<anytime>Anytime</anytime>
 	<appSchInfoTab>应用模式信息</appSchInfoTab>
-	 <ar>عربي</ar> <!-- Do not translate! -->
 	<assigned>已赋值</assigned>
 	<attrlabl>属性标签</attrlabl>
 	<availability>可用性</availability>
@@ -182,7 +190,6 @@
 	<city>City</city>
 	<clear>清除</clear>
 	<clearAll>Clear All</clearAll>
-	<cn>中文</cn> <!-- Do not translate! -->
 	<completeTab>高级视图</completeTab>
 	<completeTabEditor>高级编辑器</completeTabEditor>
 	<confirmDelete>确认要从数据库中删除该元数据吗？</confirmDelete>
@@ -226,12 +233,10 @@
 	<edit>编辑</edit>
 	<Editor>编辑器</Editor>
 	<emailAddress>电子邮件地址</emailAddress>
-	<en>English</en> <!-- Do not translate! -->
 	<enclosing>包含</enclosing>
 	<enclosingCoordinate>包含坐标 </enclosingCoordinate>
 	<enddate>终止日期</enddate>
 	<enttypl>实体类型标签</enttypl>
-	<es>Español</es> <!-- Do not translate! -->
 	<exactCoordinate>坐标提取 </exactCoordinate>
 	<extended>复杂搜索</extended>
 	<extent>范围</extent>
@@ -242,7 +247,6 @@
 	<feedbackRequest>下在前请提供您的详细信息</feedbackRequest>
 	<file>文件</file>
 	<firstName>名</firstName>
-	<fr>Français</fr> <!-- Do not translate! -->
 	<freeKeyword>关键词</freeKeyword>
 	<from>输入起始日期 : </from>
 	<general>常规</general>
@@ -450,7 +454,6 @@
 	<resultsMatching>满足多个条件的结果：</resultsMatching>
 	<rss>开放的RSS馈入</rss>
 	<rtitle>题名</rtitle>
-	<ru>Русский</ru> <!-- Do not translate! -->
 	<save>保存</save>
 	<saveAndClose>保存并关闭</saveAndClose>
 	<saveAndValidate>检查</saveAndValidate>
