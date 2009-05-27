@@ -66,6 +66,7 @@ public class Update implements Service
 		String name     = Util.getParam(params, Params.NAME,    "");
 		String profile  = Util.getParam(params, Params.PROFILE);
 		String address  = Util.getParam(params, Params.ADDRESS, "");
+		String city     = Util.getParam(params, Params.CITY,    "");
 		String state    = Util.getParam(params, Params.STATE,   "");
 		String zip      = Util.getParam(params, Params.ZIP,     "");
 		String country  = Util.getParam(params, Params.COUNTRY, "");
@@ -88,11 +89,11 @@ public class Update implements Service
 			id = context.getSerialFactory().getSerial(dbms, "Users") +"";
 
 			String query = "INSERT INTO Users (id, username, password, surname, name, profile, "+
-								"address, state, zip, country, email, organisation, kind) "+
-								"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+								"address, city, state, zip, country, email, organisation, kind) "+
+								"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 			dbms.execute(query, new Integer(id), username, Util.scramble(password), surname,
-							 name, profile, address, state, zip, country, email, organ, kind);
+							 name, profile, address, city, state, zip, country, email, organ, kind);
 
 			//--- add groups
 
@@ -106,11 +107,11 @@ public class Update implements Service
 		else 	//--- For Update
 		{
 			String query = "UPDATE Users SET username=?, password=?, surname=?, name=?, "+
-								"profile=?, address=?, state=?, zip=?, country=?, email=?," +
+								"profile=?, address=?, city=?, state=?, zip=?, country=?, email=?," +
 								"organisation=?, kind=? WHERE id=?";
 
 			dbms.execute (query, username, Util.scramble(password), surname, name,
-							 			profile, address, state, zip, country, email,
+							 			profile, address, city, state, zip, country, email,
 							 			organ, kind, new Integer(id));
 
 			//--- add groups

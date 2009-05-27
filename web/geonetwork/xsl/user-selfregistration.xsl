@@ -47,13 +47,17 @@
                     <th class="padded"><xsl:value-of select="/root/gui/strings/address"/></th>
                     <td class="padded"><input class="content" type="text" name="address" value=""/></td>
                 </tr>
-                <tr>
+                 <tr>
+                     <th class="padded"><xsl:value-of select="/root/gui/strings/city"/></th>
+                     <td class="padded"><input class="content" type="text" name="city" value=""/></td>
+                 </tr>
+                 <tr>
+                     <th class="padded"><xsl:value-of select="/root/gui/strings/zip"/></th>
+                     <td class="padded"><input class="content" type="text" name="zip" value="" size="8"/></td>
+                 </tr>
+                 <tr>
                     <th class="padded"><xsl:value-of select="/root/gui/strings/state"/></th>
-                    <td class="padded">
-                        <input class="content" type="text" name="state" value="" size="8"/>
-                        <b><xsl:value-of select="/root/gui/strings/zip"/></b>
-                        <input class="content" type="text" name="zip" value="" size="8"/>
-                    </td>
+                    <td class="padded"><input class="content" type="text" name="state" value="" size="8"/></td>
                 </tr>
                 <tr>
                     <th class="padded"><xsl:value-of select="/root/gui/strings/country"/></th>
