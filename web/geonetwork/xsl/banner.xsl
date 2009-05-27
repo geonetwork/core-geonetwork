@@ -23,7 +23,7 @@
 				<td class="banner-menu" width="380px">
 					<a class="banner" href="{/root/gui/locService}/main.home"><xsl:value-of select="/root/gui/strings/home"/></a>
 					|
-					<xsl:if test="string(/root/gui/results)!=''">
+<!--		//FIXME			<xsl:if test="string(/root/gui/results)!=''">
 						<xsl:choose>
 							<xsl:when test="/root/gui/reqService='main.present'">
 								<font class="banner-active"><xsl:value-of select="/root/gui/strings/result"/></font>
@@ -33,7 +33,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 						|
-					</xsl:if>
+					</xsl:if> -->
 					<xsl:if test="string(/root/gui/session/userId)!=''">
 						<xsl:choose>
 							<xsl:when test="/root/gui/reqService='admin'">
