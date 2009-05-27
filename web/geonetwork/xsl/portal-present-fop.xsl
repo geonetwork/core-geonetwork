@@ -32,7 +32,8 @@
             
 				<fo:static-content flow-name="xsl-region-before">
 					<fo:block text-align="end">
-						GeoNetwork opensource - <xsl:value-of select="date:format-date(date:date-time(),$df)"/> -
+						GeoNetwork opensource - <xsl:value-of select="date:date-time()"/>
+						<!-- FIXME - <xsl:value-of select="date:format-date(date:date-time(),$df)"/>--> -
 						<fo:page-number />
 						/
 						<fo:page-number-citation ref-id="terminator" />
