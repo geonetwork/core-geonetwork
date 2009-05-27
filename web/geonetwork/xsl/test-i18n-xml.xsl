@@ -13,6 +13,8 @@
 			<cn />
 			<ar />
             <de />
+			<ru />
+			<nl />
 		</langs>
 	</xsl:variable>
 

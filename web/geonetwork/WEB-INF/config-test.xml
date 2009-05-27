@@ -17,7 +17,11 @@
 					localized="false" />
 				<xml name="strings.de" file="loc/de/xml/strings.xml"
                     localized="false" />
-                <!-- about.xml -->
+				<xml name="strings.ru" file="loc/ru/xml/strings.xml"
+					localized="false" />
+				<xml name="strings.nl" file="loc/nl/xml/strings.xml"
+					localized="false" />
+				<!-- about.xml -->
 				<xml name="about.en" file="loc/en/xml/about.xml"
 					localized="false" />
 				<xml name="about.fr" file="loc/fr/xml/about.xml"
@@ -30,7 +34,11 @@
 					localized="false" />
 				<xml name="about.de" file="loc/de/xml/about.xml"
                     localized="false" />
-                <!-- config.xml -->
+				<xml name="about.ru" file="loc/ru/xml/about.xml"
+					localized="false" />
+				<xml name="about.nl" file="loc/nl/xml/about.xml"
+					localized="false" />
+				<!-- config.xml -->
 				<xml name="config.en" file="loc/en/xml/config.xml"
 					localized="false" />
 				<xml name="config.fr" file="loc/fr/xml/config.xml"
@@ -43,7 +51,11 @@
 					localized="false" />
 				<xml name="config.de" file="loc/de/xml/config.xml"
                     localized="false" />
-                <!-- harvesting.xml -->
+				<xml name="config.ru" file="loc/ru/xml/config.xml"
+					localized="false" />
+				<xml name="config.nl" file="loc/nl/xml/config.xml"
+					localized="false" />
+				<!-- harvesting.xml -->
 				<xml name="harvesting.en"
 					file="loc/en/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.fr"
@@ -56,7 +68,11 @@
 					file="loc/ar/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.de"
                     file="loc/de/xml/harvesting.xml" localized="false" />
-                <!-- TODO : add other loc files -->
+				<xml name="harvesting.ru"
+					file="loc/ru/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.nl"
+					file="loc/nl/xml/harvesting.xml" localized="false" />
+				<!-- TODO : add other loc files -->
 			</output>
 		</service>
 
@@ -75,9 +91,13 @@
 					localized="false" />
 				<xml name="strings.ar" file="loc/ar/xml/strings.xml"
 					localized="false" />
-				<xml name="strings.de" file="loc/ar/xml/strings.xml"
+				<xml name="strings.de" file="loc/de/xml/strings.xml"
                     localized="false" />
-                <!-- about.xml -->
+				<xml name="strings.ru" file="loc/ru/xml/strings.xml"
+					localized="false" />
+				<xml name="strings.nl" file="loc/nl/xml/strings.xml"
+					localized="false" />
+				<!-- about.xml -->
 				<xml name="about.en" file="loc/en/xml/about.xml"
 					localized="false" />
 				<xml name="about.fr" file="loc/fr/xml/about.xml"
@@ -90,7 +110,11 @@
 					localized="false" />
 				<xml name="about.de" file="loc/de/xml/about.xml"
                     localized="false" />
-                <!-- config.xml -->
+				<xml name="about.ru" file="loc/ru/xml/about.xml"
+					localized="false" />
+				<xml name="about.nl" file="loc/nl/xml/about.xml"
+					localized="false" />
+				<!-- config.xml -->
 				<xml name="config.en" file="loc/en/xml/config.xml"
 					localized="false" />
 				<xml name="config.fr" file="loc/fr/xml/config.xml"
@@ -103,7 +127,11 @@
 					localized="false" />
 				<xml name="config.de" file="loc/de/xml/config.xml"
                     localized="false" />
-                <!-- harvesting.xml -->
+				<xml name="config.ru" file="loc/ru/xml/config.xml"
+					localized="false" />
+				<xml name="config.nl" file="loc/nl/xml/config.xml"
+					localized="false" />
+				<!-- harvesting.xml -->
 				<xml name="harvesting.en"
 					file="loc/en/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.fr"
@@ -116,7 +144,11 @@
 					file="loc/ar/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.de"
                     file="loc/de/xml/harvesting.xml" localized="false" />
-                <!-- TODO : add other loc files -->
+				<xml name="harvesting.ru"
+					file="loc/ru/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.nl"
+					file="loc/nl/xml/harvesting.xml" localized="false" />
+				<!-- TODO : add other loc files -->
 			</output>
 		</service>
 		<service name="test.csw">

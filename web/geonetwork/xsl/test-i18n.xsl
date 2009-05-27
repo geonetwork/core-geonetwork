@@ -12,6 +12,8 @@
             <cn/>
             <ar/>
             <de/>
+        	<ru/>
+        	<nl/>
         </langs>
     </xsl:variable>
 
@@ -244,6 +246,32 @@
                     select="exslt:node-set(//*[name(.)=concat($file, '.de')])/*/*" />
             </xsl:call-template>
         </td> 
+		<td>
+			<xsl:call-template name="compare">
+				<xsl:with-param name="tag" select="$tag" />
+				<xsl:with-param name="string" select="$string" />
+				<xsl:with-param name="value" select="$value" />
+				<xsl:with-param name="type" select="$type" />
+				<xsl:with-param name="id" select="$id" />
+				<xsl:with-param name="loctag1"
+					select="exslt:node-set(//*[name(.)=concat($file, '.ru')])/*" />
+				<xsl:with-param name="loctag2"
+					select="exslt:node-set(//*[name(.)=concat($file, '.ru')])/*/*" />
+			</xsl:call-template>
+		</td> 
+		<td>
+			<xsl:call-template name="compare">
+				<xsl:with-param name="tag" select="$tag" />
+				<xsl:with-param name="string" select="$string" />
+				<xsl:with-param name="value" select="$value" />
+				<xsl:with-param name="type" select="$type" />
+				<xsl:with-param name="id" select="$id" />
+				<xsl:with-param name="loctag1"
+					select="exslt:node-set(//*[name(.)=concat($file, '.nl')])/*" />
+				<xsl:with-param name="loctag2"
+					select="exslt:node-set(//*[name(.)=concat($file, '.nl')])/*/*" />
+			</xsl:call-template>
+		</td> 
 	</xsl:template>
 
 

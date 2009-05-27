@@ -69,6 +69,11 @@
 		<allow service="xml.config.set"/>
 
 		<allow service="metadata.admin.index.rebuild"/>
+		
+		<!-- Test i18n - under administrator for performance reasons -->
+		<allow service="test.i18n"/>
+		<allow service="test.i18n.xml"/>
+		
 	</profile>
 
 	<!-- ====================================================================== -->
@@ -321,9 +326,7 @@
 	 	<allow service="thesaurus.list"/>
 		<allow service="thesaurus.view"/><!-- FIXME : Check if needed -->
 
-		<!-- Test i18n -->
-		<allow service="test.i18n"/>
-		<allow service="test.i18n.xml"/>
+		<!-- Test CSW ISO server -->
 		<allow service="test.csw"/>
 
 		<!-- User self registration -->
