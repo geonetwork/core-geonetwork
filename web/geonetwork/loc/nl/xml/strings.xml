@@ -25,59 +25,59 @@
 	<selectSortByType id="popularity">Populariteit</selectSortByType>
 	<selectSortByType id="date">Laatste wijzigingsdatum</selectSortByType>	
 
-	<setOnSave>Value will be set when record is saved</setOnSave>
-	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>
-	<missing>MISSING or EMPTY</missing>
-	<byPackage>By Package</byPackage>
-	<byGroup>By Group</byGroup>
+	<setOnSave>Waarde wordt ingesteld als het bestand wordt opgeslagen</setOnSave>
+	<missingSeeTab>ONTBREEKT - Zie de volgende groep tab in de zijkolom: </missingSeeTab>
+	<missing>ONTBREEKT of LEEG</missing>
+	<byPackage>Per Package</byPackage>
+	<byGroup>Per Groep</byGroup>
 	<isoMinimum>ISO Minimum</isoMinimum>
 	<isoCore>ISO Core</isoCore>
-	<isoAll>ISO All</isoAll>
-	<deleteConfirmationTitle>Delete Metadata Confirmation</deleteConfirmationTitle>	
-	<noCategory>No category available.</noCategory>
-	<categoryNameMandatory>A category name must be filled in.</categoryNameMandatory>
-	<usernameMandatory>The username field is mandatory.</usernameMandatory>
-	<passwordEntry>Please enter your password twice.</passwordEntry>
-	<passwordLength>Your password must be at least " + minLength + " characters long. Try again.</passwordLength>
-	<passwordSpace>Sorry, spaces are not allowed in password.</passwordSpace>
-	<passwordDoNotMatch>You did not enter the same new password twice. Please re-enter your password.</passwordDoNotMatch>
-	<userAtLeastOneGroup>Please, select at least one group.</userAtLeastOneGroup>
-	<deleteGroup>Delete the group ?</deleteGroup>
-	<noTemplatesAvailable>No templates available, import metadata first.</noTemplatesAvailable>
-	<deleteCategory>Delete the category?</deleteCategory>
+	<isoAll>ISO Alles</isoAll>
+	<deleteConfirmationTitle>Confirmeer Metadata Verwijderen</deleteConfirmationTitle>	
+	<noCategory>Geen categorie beschikbaar.</noCategory>
+	<categoryNameMandatory>Een categorie moet worden ingevuld.</categoryNameMandatory>
+	<usernameMandatory>Het gebruikersnaam veld is verplicht.</usernameMandatory>
+	<passwordEntry>Voer uw wachtwoord twee maal in.</passwordEntry>
+	<passwordLength>Uw wachtwoord moet tenminste " + minLength + " tekens lang zijn. Probeer het nogmaals.</passwordLength>
+	<passwordSpace>Helaas zijn spaties niet toegestaan in een wachtwoord.</passwordSpace>
+	<passwordDoNotMatch>U heeft het wachtwoord niet tweemaal hetzelfde ingevoerd. Voer het wachtwoord nogmaals in.</passwordDoNotMatch>
+	<userAtLeastOneGroup>Selecteer alstublieft tenminste één groep.</userAtLeastOneGroup>
+	<deleteGroup>Verwijder de groep?</deleteGroup>
+	<noTemplatesAvailable>Geen templates beschikbaar, importeer eerst metadata.</noTemplatesAvailable>
+	<deleteCategory>Verwijder de categorie?</deleteCategory>
 	<!-- Self registration strings -->
-	<registerTitle>Self-Registration Form</registerTitle>
-	<profileChoice value="RegisteredUser">Registered user</profileChoice>
+	<registerTitle>Zelf-Registratie Formulier</registerTitle>
+	<profileChoice value="RegisteredUser">Geregistreerde gebruiker</profileChoice>
 	<profileChoice value="Editor">Editor</profileChoice>
 	<profileChoice value="Reviewer">Content reviewer</profileChoice>
-	<profileChoice value="UserAdmin">User administrator</profileChoice>
-	<profileChoice value="Administrator">Administrator</profileChoice>
+	<profileChoice value="UserAdmin">Gebruikers beheerder</profileChoice>
+	<profileChoice value="Administrator">Beheerder</profileChoice>
 	<checkusername>Check</checkusername>
-	<register>Register</register>
-	<registerChoose>I want to </registerChoose>
-	<registrationDetails>Key registration details entered: </registrationDetails>
-	<firstNameMandatory js="true">The First Name field is mandatory</firstNameMandatory>
-	<lastNameMandatory js="true">The Last Name field is mandatory</lastNameMandatory>
-	<spacesNot js="true">Spaces in this field are not allowed</spacesNot>
-	<emailAddressInvalid js="true">Email address is invalid</emailAddressInvalid>
-	<yourRegistration js="true">Your registration...</yourRegistration>
+	<register>Registreren</register>
+	<registerChoose>Ik wil </registerChoose>
+	<registrationDetails>Voornaamste registratie gegevens ingevoerd: </registrationDetails>
+	<firstNameMandatory js="true">Het Voornaam veld is verplicht</firstNameMandatory>
+	<lastNameMandatory js="true">Het Achternaam veld is verplicht</lastNameMandatory>
+	<spacesNot js="true">Spaties zijn niet toegestaan in dit veld</spacesNot>
+	<emailAddressInvalid js="true">Email adres is ongeldig</emailAddressInvalid>
+	<yourRegistration js="true">Uw registratie...</yourRegistration>
 	<!-- End of Self registration strings -->
-	<fileType>File type:</fileType>
-	<generateUUID>Generate UUID for inserted metadata</generateUUID>
-	<insertFileMode>File Upload</insertFileMode>
+	<fileType>Bestandstype:</fileType>
+	<generateUUID>Genereer een UUID voor de nieuwe metadata</generateUUID>
+	<insertFileMode>Bestand Toevoegen</insertFileMode>
 	<insertMode>Insert mode:</insertMode>
-	<insertPasteMode>Copy/Paste</insertPasteMode>
-	<mefFile>MEF file</mefFile>
-	<newMdInsert>New metadata inserted:</newMdInsert>
-	<nothing>No action on import</nothing>
-	<overwrite>Overwrite metadata with same UUID</overwrite>
-	<singleFile>Single File (XML, SLD, WMC...)</singleFile>
-	<uuidAction>Import actions:</uuidAction>
+	<insertPasteMode>Kopieër/Plak</insertPasteMode>
+	<mefFile>MEF bestand</mefFile>
+	<newMdInsert>Nieuwe metadata toegevoegd:</newMdInsert>
+	<nothing>Geen aktie bij import</nothing>
+	<overwrite>Overschrijf metadata met eenzelfde UUID</overwrite>
+	<singleFile>Enkel Bestand (XML, SLD, WMC...)</singleFile>
+	<uuidAction>Import akties:</uuidAction>
 	<metadata.admin.index>Index manager</metadata.admin.index>
-	<metadata.admin.index.desc>Rebuild Lucene index</metadata.admin.index.desc>
-	<metadata.admin.index.success>Rebuild index operatie is gelukt.</metadata.admin.index.success>
-	<metadata.admin.index.failed>Het is niet gelukt de index te creeren.</metadata.admin.index.failed>
-	<rebuild>Rebuild</rebuild>
+	<metadata.admin.index.desc>Vernieuw Lucene index</metadata.admin.index.desc>
+	<metadata.admin.index.success>Vernieuwen van de index is gelukt.</metadata.admin.index.success>
+	<metadata.admin.index.failed>Het is niet gelukt de index te vernieuwen.</metadata.admin.index.failed>
+	<rebuild>Vernieuw</rebuild>
     <savepdf>Sla de zoek resultaten als pdf op</savepdf>
 	<savexml>
 		<dc>Bewaar Dublin Core metadata als XML</dc>
@@ -101,11 +101,11 @@
 	<kindChoice value="prov">Provincies</kindChoice>
 	<kindChoice value="municip">Gemeenten</kindChoice>
           <kindChoice value="water">Waterschappen</kindChoice>
-	<kindChoice value="research">Research</kindChoice>
+	<kindChoice value="research">Onderzoek</kindChoice>
 	<kindChoice value="gov">Overheid</kindChoice>
 	<kindChoice value="int-org">Internationale organisatie</kindChoice>
 	<kindChoice value="ngo">NGO</kindChoice>
-	<kindChoice value="uni">Universiteit/research center</kindChoice>
+	<kindChoice value="uni">Universiteit/onderzoekscentrum</kindChoice>
 	<kindChoice value="company">Bedrijfsleven</kindChoice>
 	<kindChoice value="research">Onderwijs en onderzoek</kindChoice>
 	<kindChoice value="consultant">Onafhankelijke consultant</kindChoice>
@@ -122,7 +122,6 @@
 	<foundWords>Aantal zoektermen gevonden:</foundWords>
 	<selection>Selectie</selection>
 	<label>Label</label>
-	<type>Type</type>
 	<definition>Definitie</definition>
 	<close>Sluiten</close>
 	<identifier>Sleutelveld</identifier>
@@ -149,7 +148,7 @@
 		<deleteelement>Element verwijderen</deleteelement>
 		<updateelement>Element bijwerken</updateelement>
 		<keywordDescription>Sleutelwoord definitie:</keywordDescription>
-		<keywordConfirm>Bevestigen Sleutelwoord suppressie</keywordConfirm>
+		<keywordConfirm>Bevestigen Sleutelwoord verwijderen</keywordConfirm>
 		<unknown>Onbekende thesaurus</unknown>
 		<narrower>Specifieke term</narrower>
 		<broader>Algemenere term</broader>
@@ -208,12 +207,13 @@
 	<chooseFile>Kies de lokatie van het bestand dat u wilt uploaden</chooseFile>
 	<chooseLargeThumbnail>Kies de lokatie van het grote voorbeeldweergave bestand</chooseLargeThumbnail>
 	<chooseThumbnail>Kies de lokatie van het kleine voorbeeldweergave bestand</chooseThumbnail>
+	<city>Woonplaats</city>
 	<clear>Wissen</clear>
 	<clearAll>Alles wissen</clearAll>
 	//<cn>中文</cn> <!-- Do not translate! -->
 	<completeTab>Uitgebreide weergave</completeTab>
 	<completeTabEditor>Geavanceerde editor</completeTabEditor>
-	<confirmCancel>Are you sure you want to leave the editor? (You will lose any unsaved changes)</confirmCancel>
+	<confirmCancel>Weet u zeker dat u de editor wilt sluiten? (Alle niet bewaarde aanpassingen gaan verloren)</confirmCancel>
 	<confirmDelete>Weet u zeker dat u de metadata wilt verwijderen uit de database?</confirmDelete>
 	<confirmMassiveDelete>Weet u zeker dat u alle geselecteerde metadata wild verwijderen uit de database?</confirmMassiveDelete>
 	<confirmPassword>Bevestig wachtwoord</confirmPassword>
@@ -228,6 +228,8 @@
 	</copyright2>
 	<create>Aanmaken</create>
 	<createTip>Maak een nieuw metadatarecord aan volgens deze template</createTip>
+	<cswTest>CSW ISO test</cswTest>
+	<cswTestDesc>Test omgeving voor de CSW ISO catalog interface</cswTestDesc>
 	<dataQualityTab>Datakwaliteit</dataQualityTab>
 	<datasetTab>Dataset</datasetTab>
 	<dateModified>Veranderde datum</dateModified>
@@ -250,21 +252,21 @@
 	<distributionTab>Distributie</distributionTab>
 	<down>beneden</down>
 	<download>Download</download>
-	<downloadable>Downloadable</downloadable>
+	<downloadable>Te downloaden</downloadable>
 	<downloadSelect>Download?</downloadSelect>
-	<downloadSelected>Download geselecteerd</downloadSelected>
+	<downloadSelected>Download geselecteerde gegevens</downloadSelected>
 	<downloadSummary>Download samenvatting</downloadSummary>
-	<downloadThemAll>Download alles locaal</downloadThemAll>
+	<downloadThemAll>Download alles</downloadThemAll>
 	<dynamic>Interactief</dynamic>
 	<downloadData>Data voor download</downloadData>
 	<dsgpoly>Data Set G-Polygon</dsgpoly>
-	<eastbc>East Bounding Coordinate</eastbc>
+	<eastbc>Oostelijke coordinaat</eastbc>
 	<edit>Bewerken</edit>
 	<Editor>Editor</Editor>
 	<downloadEmail>Email downloaden</downloadEmail>
 	<en>English</en> <!-- Do not translate! -->
 	<enclosing>Inclusief</enclosing>
-	<enclosingCoordinate>Omvattende coordinaten </enclosingCoordinate>
+	<enclosingCoordinate>Omvattende coordinaten</enclosingCoordinate>
 	<enddate>Einddatum</enddate>
 	<enttypl>Entiteit Type Label</enttypl>
 	//<es>Español</es> <!-- Do not translate! -->
@@ -444,10 +446,10 @@
 	<noHelp>Excuses, geen hulp aanwezig</noHelp>
 	<noInfo>Excuses, geen informatie aanwezig.</noInfo>
 	<noLogin>U bent niet ingelogd in het systeem</noLogin>
-	<noOwnerRights>Privileges/Categories Locked: U hebt geen ownership rechten</noOwnerRights>
-	<northbc>Coordinaat begrenzing Noorden</northbc>
+	<noOwnerRights>Toegangsrechten/Categorieën vergrendeld: U hebt geen beheersrechten</noOwnerRights>
+	<northbc>Noordelijke coordinaat</northbc>
 	<notfound>Niet gevonden</notfound>
-	<noSelectedMd>Geen selectie, selecteer pas een bestand.</noSelectedMd>
+	<noSelectedMd>Geen selectie, selecteer een bestand.</noSelectedMd>
 	<online>Interactieve kaart</online>
 	<onlink>Webkoppelingen</onlink>
 	<opensearch>GeoNetwork opensearch service maakt het mogelijk te zoeken in de metadata catalogus.</opensearch>
@@ -455,17 +457,17 @@
 	<organisation>Organisatie / afdeling</organisation>
 	<overwriteFile>Overschrijven?</overwriteFile>
 	<owner>Gebruiker</owner>
-	<ownerRights>Delete/Privileges/Categories Unlocked: U hebbed ownership rechten</ownerRights>
+	<ownerRights>Verwijder/Toegangsrechten/Categorieën vrij: U hebt beheersrechten</ownerRights>
 	<paper>Hard copy</paper>
 	<partial>Gedeeltelijke overlapping</partial>
 	<partialCooordinate>Deel Coordinaten </partialCooordinate>
 	<password>Wachtwoord</password>
 	<persInfo>Persoonlijke informatie</persInfo>
-	<placeKeyword>Plaats sleutelwoorden</placeKeyword>
+	<placeKeyword>Geef sleutelwoorden</placeKeyword>
 	<porCatInfoTab>Catalogus</porCatInfoTab>
 	<poweredBy>Gemaakt met </poweredBy>
 	<previous>Vorige</previous>
-	<privileges>Privileges/rechten</privileges>
+	<privileges>Toegangsrechten</privileges>
 	<profile>Profiel</profile>
 	<progress>Voortgang</progress>
 	<progressChoice/>
@@ -507,22 +509,22 @@
 	<output>Output</output>
 	<outputType id="full">Volledig</outputType>
 	<outputType id="text">Alleen Tekst</outputType>
-	<showFileDownloadSummary>Laat File Download Chooser zien</showFileDownloadSummary>
+	<showFileDownloadSummary>Laat File Download samenvatting zien</showFileDownloadSummary>
 	<sortBy>Sorteren</sortBy>
 	<sortByType id="relevance">Relevantie</sortByType>
 	<sortByType id="rating">Beoordeling</sortByType>
 	<sortByType id="popularity">Populariteit</sortByType>
 	<sortByType id="date">Laatste wijzigingsdatum</sortByType>
     	<sortByType id="title">Titel</sortByType>
-	<rateIt>Rate It</rateIt>
-	<mdRating>Metadata Rating</mdRating>
-	<ratingMsg>Druk een knop voor beoordeling. Aanmerking: Voor verzamelde data moet u op een nieuwe run wachten.</ratingMsg>
+	<rateIt>Waardeer</rateIt>
+	<mdRating>Metadata Waardering</mdRating>
+	<ratingMsg>Selecteer een aantal sterren ter beoordeling. Opmerking: De verwerking van de beoordeling kan vertraagd zijn.</ratingMsg>
 	<resetSearch>Start het zoek formulier opnieuw</resetSearch>
 	<resetFeedbackForm>Start een feedback formulier opnieuw</resetFeedbackForm>
-	<restrictTo>Restrict to</restrictTo>
+	<restrictTo>Beperk tot</restrictTo>
 	<result>Vorige resultaten</result>
-	<resultsCoordinate>Resultaten die met de coordinaat zoek overeenkomen</resultsCoordinate>
-	<resultsFreeText>Resultaten die met de Free Text Word overeenkomen</resultsFreeText>
+	<resultsCoordinate>Resultaten die met de coordinaten overeenkomen</resultsCoordinate>
+	<resultsFreeText>Resultaten die met de zoek criteria overeenkomen</resultsFreeText>
 	<resultsMatching>Zoekresultaten :</resultsMatching>
 	<rss>Open RSS feed</rss>
 	<rtitle>Titel</rtitle>
@@ -543,7 +545,7 @@
 	<searchAllText>Wat?</searchAllText>
 	<searchUnused>Zoek naar ongebruikte of lege metadatarecords</searchUnused>
 	<searchUnusedTitle>Zoek ongebruikt</searchUnusedTitle>
-	<select>Selectie : </select>
+	<select>Selectie: </select>
 	<selectAll>Selecteer alle metadata</selectAll>
 	<selected> geselecteerd</selected>
 	<selectedOnly>Alleen display geselecteerd</selectedOnly>
@@ -558,7 +560,7 @@
 	<siteId>Site ID</siteId>
 	<site>Site</site>
 	<sizeBytes>Grootte (bytes)</sizeBytes>
-	<southbc>Coordinaat begrenzing Zuiden</southbc>
+	<southbc>Zuidelijke coordinaat</southbc>
 	<spatial2Tab>Ruimt. Repr.</spatial2Tab>
 	<spatialTab>Ruimt. Info</spatialTab>
 	<styleSheet>StyleSheet</styleSheet>
@@ -575,7 +577,7 @@
 	<timeoutChoice value="10">na 10 seconden</timeoutChoice>
 	<timeoutChoice value="20">na 20 seconden</timeoutChoice>
 	<timeoutChoice value="30">na 30 seconden</timeoutChoice>
-	<title>Nationaal GeoRegister</title>
+	<title>GeoNetwork - Het portaal voor geografische data en informatie</title>
 	<to>Tot</to>
 	<tools>Tools</tools>
 	<topic>Onderwerp</topic>
@@ -583,9 +585,9 @@
 	<up>boven</up>
 	<update>Bijwerken</update>
 	<updateGroup>Groep bijwerken</updateGroup>
-	<updateCategories>Categorie√´n bijwerken</updateCategories>
+	<updateCategories>Categorieën bijwerken</updateCategories>
 	<updateCategory>Categorie bijwerken</updateCategory>
-	<updatePrivileges>Privilegie√´n bijwerken</updatePrivileges>
+	<updatePrivileges>Toegangsrechten bijwerken</updatePrivileges>
 	<updateUserAccount>Bijwerken gebruikersgegevens</updateUserAccount>
 	<upload>Uploaden </upload>
 	<user>Gebruiker</user>
@@ -602,7 +604,7 @@
 	<validityEnds>en eindigt op</validityEnds>
 	<viewInGE>View in Google Earth</viewInGE>
 	<waitGetCap js="true">Loading server layers, please wait...</waitGetCap>
-	<westbc>Coordinaat begrenzing West</westbc>
+	<westbc>Westelijke coordinaat</westbc>
 	<what>Wat?</what>
 	<where>Waar?</where>
 	<when>Wanneer?</when>
@@ -624,6 +626,6 @@
         <imAreaInterest>Selecteer een gebied naar keuze</imAreaInterest>
 
         <!-- date selector -->
-        <fromDateSelector>Selecteer FROM date</fromDateSelector> 
-        <toDateSelector>Selecteer TO date</toDateSelector> 
+        <fromDateSelector>Selecteer VANAF datum</fromDateSelector> 
+        <toDateSelector>Selecteer TOT datum</toDateSelector> 
 </strings>

@@ -23,8 +23,8 @@
 	</info>
 	
 	<info type="webdav">
-		<short>Web DAV</short>
-		<long>Web DAV server</long>
+		<short>WebDAV</short>
+		<long>WebDAV server</long>
 	</info>
 	
 	<info type="csw">
@@ -104,12 +104,10 @@
 	<warn>U kunt enkel gegevens ophalen na het invullen van de site gegevens.</warn>
 	
 	<options>Opties</options>
-	<every>Elke</every>
 	<everySpec>(dagen : uren : minuten)</everySpec>
 	<oneRun>Slechts eenmaal uitvoeren</oneRun>
 	<createGroups>Maak groepen</createGroups>
 	<createCateg>Maak categorieën</createCateg>
-	<status>Status</status>
 	<active>Actief</active>
 	<inactive></inactive>
 	<retrieveSources>Haal bronnen op</retrieveSources>

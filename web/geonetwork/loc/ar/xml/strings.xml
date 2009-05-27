@@ -68,6 +68,7 @@
 	<chooseFile>عين مكان الملف للتحميل</chooseFile>
 	<chooseLargeThumbnail>عين مكان الصورة التوضيحية الكبيرة</chooseLargeThumbnail>
 	<chooseThumbnail>عين مكان الصورة التوضيحية الصغيرة</chooseThumbnail>
+<city>City</city>
 	<clear>مسح</clear>
 	<clearAll>Clear All</clearAll>
 	<close>Close</close>
@@ -89,6 +90,8 @@
 	<country>Country</country>
 	<create>جديد</create>
 	<createTip>بيانات أساسية جديدة من هذا الوعاء</createTip>
+	<cswTest>CSW ISO test</cswTest>
+	<cswTestDesc>Test interface for the CSW ISO catalog interface</cswTestDesc>
 	<dataQualityTab>جودة البيانات</dataQualityTab>
 	<datasetTab>وحدة قاعدة بيانات Dataset</datasetTab>
 	<dateRelChoice/>

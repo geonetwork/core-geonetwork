@@ -151,6 +151,7 @@
 	<chooseFile>Укажите местоположение файла для загрузки</chooseFile>
 	<chooseLargeThumbnail>Укажите местоположение файла большого эскиза</chooseLargeThumbnail>
 	<chooseThumbnail>Укажите местоположение файла маленького эскиза</chooseThumbnail>
+	<city>City</city>
 	<clear>Очистить</clear>
 	<clearAll>Очистить все</clearAll>
 	<cn>中文</cn> <!-- Do not translate! -->
@@ -170,6 +171,8 @@
 	</copyright2>
 	<create>Создать</create>
 	<createTip>Создать новые метаданные, используя данный шаблон</createTip>
+	<cswTest>CSW ISO test</cswTest>
+	<cswTestDesc>Test interface for the CSW ISO catalog interface</cswTestDesc>
 	<dataQualityTab>Качество данных</dataQualityTab>
 	<datasetTab>Набор данных</datasetTab>
 	<dateRelChoice/>

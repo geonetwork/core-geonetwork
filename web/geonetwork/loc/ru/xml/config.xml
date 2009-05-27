@@ -1,43 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<site>Сайт</site>
-		<name>Название</name>
-		<organ>Организация</organ>
+	<name>Имя</name>
+	<organ>Организация</organ>
 
 	<server>Сервер</server>
-		<host>Хост</host>
-		<port>Порт</port>
+	<host>Хост</host>
+	<port>Порт</port>
 
 	<intranet>Локальная сеть</intranet>
-		<network>Адрес</network>
-		<netmask>Маска</netmask>
+	<network>Адрес</network>
+	<netmask>Маска</netmask>
 
 	<z3950>Сервер Z39.50</z3950>
-		<enable>Включить</enable>
+	<enable>Включить</enable>
 
 	<proxy>Прокси</proxy>
-		<use>Использовать</use>
-		<username>Пользователь</username>
+	<use>Использовать</use>
+	<username>Пользователь</username>
 
 	<feedback>Обратная связь</feedback>
-		<email>Электронная почта</email>
-		<smtpHost>SMTP-хост</smtpHost>
-		<smtpPort>SMTP-порт</smtpPort>
+	<email>Электронная почта</email>
+	<smtpHost>SMTP-хост</smtpHost>
+	<smtpPort>SMTP-порт</smtpPort>
 
 	<removedMetadata>Удаленные метаданные</removedMetadata>
-		<dir>Каталог</dir>
+	<dir>Каталог</dir>
 
 	<ldap>Аутентификация LDAP</ldap>
-		<defProfile>Профиль по умолчанию</defProfile>
-		<login>Логин</login>
-			<userDN>Пользовательский DN</userDN>
-		<distNames>Distinguished names</distNames>
-			<baseDN>Base</baseDN>
-			<usersDN>Users</usersDN>
-		<userAttribs>Атрибуты пользователя</userAttribs>
-			<name>Имя</name>
-			<password>Пароль</password>
-			<profile>Профиль</profile>
+	<defProfile>Профиль по умолчанию</defProfile>
+	<login>Логин</login>
+	<userDN>Пользовательский DN</userDN>
+	<distNames>Distinguished names</distNames>
+	<baseDN>Base</baseDN>
+	<usersDN>Users</usersDN>
+	<userAttribs>Атрибуты пользователя</userAttribs>
+	<password>Пароль</password>
+
+	<shib>Shibboleth Authentication</shib>
+	<path>Path</path>
+	<attributes>Shibboleth attribute mapping</attributes>
+	<surname>Surname</surname>
+	<firstname>Firstname</firstname>
+	<profile>Profile</profile>
 
 	<!-- Buttons -->
 

@@ -2,60 +2,57 @@
 
 <strings>
 	<site>Site</site>
-		<name>Naam</name>
-		<organ>Organisatie</organ>
+	<name>Naam</name>
+	<organ>Organisatie</organ>
 	
 	<server>Server</server>
-		<host>Host</host>
-		<port>Poort</port>
+	<host>Host</host>
+	<port>Poort</port>
 	
 	<intranet>Intranet</intranet>
-		<network>Netwerk</network>
-		<netmask>Netmask</netmask>
+	<network>Netwerk</network>
+	<netmask>Netmask</netmask>
 	
 	<z3950>Z39.50 Server</z3950>
-		<enable>Aanzetten</enable>
+	<enable>Aanzetten</enable>
 		
 	<csw>CSW</csw>
-		<contactId>Contact</contactId>
-		<title>Titel</title>
-		<abstract>Samenvatting</abstract>
-		<fees>Kosten</fees>
-		<accessConstraints>Toegangsrestricties</accessConstraints>
+	<contactId>Contact</contactId>
+	<title>Titel</title>
+	<abstract>Samenvatting</abstract>
+	<fees>Kosten</fees>
+	<accessConstraints>Toegangsrestricties</accessConstraints>
 	
 	<proxy>Proxy</proxy>
-		<use>Gebruik</use>
-		<username>Gebruikersnaam</username>
+	<use>Gebruik</use>
+	<username>Gebruikersnaam</username>
 	
 	<feedback>Respons</feedback>
-		<email>EMail</email>
-		<smtpHost>SMTP Host</smtpHost>
-		<smtpPort>SMTP Poort</smtpPort>
+	<email>EMail</email>
+	<smtpHost>SMTP Host</smtpHost>
+	<smtpPort>SMTP Poort</smtpPort>
 	
 	<userSelfRegistration>Gebruikers zelf-registratie</userSelfRegistration>
 	
 	<removedMetadata>Verwijderde metadata</removedMetadata>
-		<dir>Map</dir>
+	<dir>Map</dir>
 		
 	<ldap>LDAP Authenticatie</ldap>
-		<defProfile>Standaard profiel</defProfile>
-		<login>Login</login>
-			<userDN>Gebruiker DN</userDN>
-		<distNames>Gedist. Namen</distNames>
-			<baseDN>Basis</baseDN>
-			<usersDN>Gebruikers</usersDN>
-		<userAttribs>Gebruikers eigenschappen</userAttribs>
-			<name>Naam</name>
-			<password>Wachtwoord</password>
-			<profile>Profiel</profile>
+	<defProfile>Standaard profiel</defProfile>
+	<login>Login</login>
+	<userDN>Gebruiker DN</userDN>
+	<distNames>Gedist. Namen</distNames>
+	<baseDN>Basis</baseDN>
+	<usersDN>Gebruikers</usersDN>
+	<userAttribs>Gebruikers eigenschappen</userAttribs>
+	<password>Wachtwoord</password>
+	<profile>Profiel</profile>
 		
 	<shib>Shibboleth Authenticatie</shib>
-		<path>Locatie</path>
-		<attributes>Shibboleth attribute mapping</attributes>
-			<username>Gebruikesnaam</username>
-			<surname>Achternaam</surname>
-			<firstname>Voornaam</firstname>
-			<profile>Profiel</profile>
+	<path>Locatie</path>
+	<attributes>Shibboleth attribute mapping</attributes>
+	<surname>Achternaam</surname>
+	<firstname>Voornaam</firstname>
 		
 	<!-- Buttons -->
 	

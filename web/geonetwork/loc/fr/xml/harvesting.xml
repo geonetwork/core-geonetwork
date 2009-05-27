@@ -108,12 +108,10 @@
 	<warn>Vous pouvez récupérer ces informations seulement après avoir saisie la section de description du site</warn>
 	
 	<options>Options</options>
-	<every>Touts les</every>
 	<everySpec>(jours : heures : minutes)</everySpec>
 	<oneRun>Une seule exécution</oneRun>
 	<createGroups>Créer les groupes</createGroups>
 	<createCateg>Créer les catégories</createCateg>
-	<status>Status</status>
 	<active>Active</active>
 	<inactive></inactive>
 	

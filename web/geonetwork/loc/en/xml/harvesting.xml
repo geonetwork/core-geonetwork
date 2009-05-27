@@ -103,12 +103,10 @@
 	<warn>You can retrieve only after filling the site part</warn>
 	
 	<options>Options</options>
-	<every>Every</every>
 	<everySpec>(days : hours : minutes)</everySpec>
 	<oneRun>One run only</oneRun>
 	<createGroups>Create groups</createGroups>
 	<createCateg>Create categories</createCateg>
-	<status>Status</status>
 	<active>Active</active>
 	<inactive></inactive>
 	<retrieveSources>Retrieve sources</retrieveSources>

@@ -179,6 +179,7 @@
 	<chooseFile>Auswahl des Verzeinisses der hochgeladenen Datei </chooseFile>
 	<chooseLargeThumbnail>Auswahl des Verzeinisses der hochgeladenen großen Minaturansicht </chooseLargeThumbnail>
 	<chooseThumbnail>Auswahl des Verzeinisses der hochgeladenen Minaturansicht </chooseThumbnail>
+	<city>Stadt</city>
 	<clear>leeren</clear>
 	<clearAll>Alles leeren</clearAll>
     <cn>中文</cn> <!-- Do not translate! -->
@@ -199,6 +200,8 @@
 	</copyright2>
 	<create>Erstellen</create>
 	<createTip>Neue Metadaten mit dieser Vorlage erstellen</createTip>
+	<cswTest>CSW ISO test</cswTest>
+	<cswTestDesc>Test interface for the CSW ISO catalog interface</cswTestDesc>
 	<dataQualityTab>Daten Qualität</dataQualityTab>
 	<datasetTab>Datenbestand</datasetTab>
 	<dateModified>Datum verändert</dateModified>

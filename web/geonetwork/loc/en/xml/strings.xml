@@ -92,7 +92,6 @@
 	<foundWords>Number of terms found:</foundWords>
 	<selection>Selection</selection>
 	<label>Label</label>
-	<type>Type</type>
 	<definition>Definition</definition>
 	<close>Close</close>
 	<identifier>Identifier</identifier>
@@ -178,6 +177,7 @@
 	<chooseFile>Choose the location of the file to upload</chooseFile>
 	<chooseLargeThumbnail>Choose the location of the large thumbnail file</chooseLargeThumbnail>
 	<chooseThumbnail>Choose the location of the small thumbnail file </chooseThumbnail>
+	<city>City</city>
 	<clear>Clear</clear>
 	<clearAll>Clear All</clearAll>
 	<cn>中文</cn> <!-- Do not translate! -->
@@ -198,6 +198,8 @@
 	</copyright2>
 	<create>Create</create>
 	<createTip>Create a new metadata from this template</createTip>
+	<cswTest>CSW ISO test</cswTest>
+	<cswTestDesc>Test interface for the CSW ISO catalog interface</cswTestDesc>
 	<dataQualityTab>Data quality</dataQualityTab>
 	<datasetTab>Dataset</datasetTab>
 	<dateModified>Date Modified</dateModified>
@@ -545,7 +547,7 @@
 	<timeoutChoice value="10">after 10 seconds</timeoutChoice>
 	<timeoutChoice value="20">after 20 seconds</timeoutChoice>
 	<timeoutChoice value="30">after 30 seconds</timeoutChoice>
-	<title>GeoNetwork- The portal to spatial data and information</title>
+	<title>GeoNetwork - The portal to spatial data and information</title>
 	<to>To</to>
 	<tools>Tools</tools>
 	<topic>Topic</topic>

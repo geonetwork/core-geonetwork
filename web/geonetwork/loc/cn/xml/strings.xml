@@ -179,6 +179,7 @@
 	<chooseFile>选择上载文件的位置</chooseFile>
 	<chooseLargeThumbnail>选择较大缩略图文件的位置</chooseLargeThumbnail>
 	<chooseThumbnail>选择较小缩略图文件的位置 </chooseThumbnail>
+	<city>City</city>
 	<clear>清除</clear>
 	<clearAll>Clear All</clearAll>
 	<cn>中文</cn> <!-- Do not translate! -->
@@ -196,6 +197,8 @@
 	</copyright2>
 	<create>新建</create>
 	<createTip>根据该模板新建元数据</createTip>
+	<cswTest>CSW ISO test</cswTest>
+	<cswTestDesc>Test interface for the CSW ISO catalog interface</cswTestDesc>
 	<dataQualityTab>数据质量信息</dataQualityTab>
 	<datasetTab>数据集</datasetTab>
 	<dateRelChoice/>

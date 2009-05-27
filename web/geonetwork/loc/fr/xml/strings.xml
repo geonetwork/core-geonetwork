@@ -230,6 +230,7 @@
 	<chooseFile>Choisir le fichier à décharger</chooseFile>
 	<chooseLargeThumbnail>Choisir la vignette (grand format)</chooseLargeThumbnail>
 	<chooseThumbnail>Choisir la vignette (petit format)</chooseThumbnail>
+	<city>Ville</city>
 	<clear>Effacer</clear>
 	<cn>中文</cn> <!-- Do not translate! -->
 	<completeTab>Vue avancée</completeTab>
@@ -245,6 +246,8 @@
 	</copyright2>
 	<create>Dupliquer</create>
 	<createTip>Créer des métadonnées à partir de ce template</createTip>
+	<cswTest>CSW ISO test</cswTest>
+	<cswTestDesc>Test interface for the CSW ISO catalog interface</cswTestDesc>
 	<dataQualityTab>Qualité des données</dataQualityTab>
 	<datasetTab>Jeu de données</datasetTab>
 	<dateRelChoice/>
