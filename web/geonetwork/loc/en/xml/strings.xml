@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <ar>عربي</ar> <!-- Do not translate! -->
+	<cn>中文</cn> <!-- Do not translate! -->
+	<de>Deutsch</de> <!-- Do not translate! -->
+	<en>English</en> <!-- Do not translate! -->
+	<es>Español</es> <!-- Do not translate! -->
+	<fr>Français</fr> <!-- Do not translate! -->
+    <nl>Nederlands</nl> <!-- Do not translate -->
+	<ru>Русский</ru> <!-- Do not translate! -->
+
 	<setOnSave>Value will be set when record is saved</setOnSave>
 	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>
 	<missing>MISSING or EMPTY</missing>
@@ -92,7 +101,6 @@
 	<foundWords>Number of terms found:</foundWords>
 	<selection>Selection</selection>
 	<label>Label</label>
-	<type>Type</type>
 	<definition>Definition</definition>
 	<close>Close</close>
 	<identifier>Identifier</identifier>
@@ -145,7 +153,6 @@
 	<any>- Any -</any>
 	<anytime>Anytime</anytime>
 	<appSchInfoTab>App. schema</appSchInfoTab>
-    <ar>عربي</ar> <!-- Do not translate! -->
 	<assigned>Assigned</assigned>
 	<attrlabl>Attribute Label</attrlabl>
 	<availability>Availability</availability>
@@ -178,9 +185,9 @@
 	<chooseFile>Choose the location of the file to upload</chooseFile>
 	<chooseLargeThumbnail>Choose the location of the large thumbnail file</chooseLargeThumbnail>
 	<chooseThumbnail>Choose the location of the small thumbnail file </chooseThumbnail>
+	<city>City</city>
 	<clear>Clear</clear>
 	<clearAll>Clear All</clearAll>
-	<cn>中文</cn> <!-- Do not translate! -->
 	<completeTab>Advanced view</completeTab>
 	<completeTabEditor>Advanced editor</completeTabEditor>
 	<confirmCancel>Are you sure you want to leave the editor? (You will lose any unsaved changes)</confirmCancel>
@@ -198,6 +205,8 @@
 	</copyright2>
 	<create>Create</create>
 	<createTip>Create a new metadata from this template</createTip>
+	<cswTest>CSW ISO test</cswTest>
+	<cswTestDesc>Test interface for the CSW ISO catalog interface</cswTestDesc>
 	<dataQualityTab>Data quality</dataQualityTab>
 	<datasetTab>Dataset</datasetTab>
 	<dateModified>Date Modified</dateModified>
@@ -232,12 +241,10 @@
 	<edit>Edit</edit>
 	<Editor>Editor</Editor>
 	<downloadEmail>Download Email</downloadEmail>
-	<en>English</en> <!-- Do not translate! -->
 	<enclosing>Including</enclosing>
 	<enclosingCoordinate>Enclosing coordinates </enclosingCoordinate>
 	<enddate>Ending Date</enddate>
 	<enttypl>Entity Type Label</enttypl>
-	<es>Español</es> <!-- Do not translate! -->
 	<exactCoordinate>Exact coordinates </exactCoordinate>
 	<extended>Advanced</extended>
 	<extent>Extent</extent>
@@ -250,7 +257,6 @@
 	<file>File</file>
 	<fileUploadSuccessful>File Upload Successful</fileUploadSuccessful>
 	<firstName>First Name</firstName>
-	<fr>Français</fr> <!-- Do not translate! -->
 	<freeKeyword>Free Keywords</freeKeyword>
 	<from>From</from>
 	<general>General</general>
@@ -277,7 +283,7 @@
 		<meta name="DC.date" content="02-07-2007"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.language" content="English French Spanish Russian Chinese"/>
+		<meta name="DC.language" content="English French Spanish Russian Chinese Dutch"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
 	<help>Help</help>
@@ -290,6 +296,8 @@
 	<hitsPerPageChoice value="50">50</hitsPerPageChoice>
 	<hitsPerPageChoice value="100">100</hitsPerPageChoice>
 	<home>Home</home>
+	<i18n>Test i18n</i18n>
+	<i18nDesc>This service should help GeoNetwork opensource developers to have up to date localized files for the GUI.</i18nDesc>
 	<identificationTab>Identification</identificationTab>
 	<import>Import</import>
 	<infoTitle>Info</infoTitle>
@@ -482,7 +490,7 @@
 	<sortByType id="rating">Rating</sortByType>
 	<sortByType id="popularity">Popularity</sortByType>
 	<sortByType id="date">Change date</sortByType>
-    <sortByType id="title">Title</sortByType>
+          <sortByType id="title">Title</sortByType>
 	<rateIt>Rate It</rateIt>
 	<mdRating>Data Rating</mdRating>
 	<ratingMsg>Press a button to rate. It may take some time for new ratings to become visible.</ratingMsg>
@@ -495,7 +503,6 @@
 	<resultsMatching>Aggregate Results matching search criteria :</resultsMatching>
 	<rss>Open RSS feed</rss>
 	<rtitle>Title</rtitle>
-	<ru>Русский</ru> <!-- Do not translate! -->
 	<save>Save</save>
 	<saveAndClose>Save and close</saveAndClose>
 	<saveAndValidate>Check</saveAndValidate>
@@ -544,7 +551,7 @@
 	<timeoutChoice value="10">after 10 seconds</timeoutChoice>
 	<timeoutChoice value="20">after 20 seconds</timeoutChoice>
 	<timeoutChoice value="30">after 30 seconds</timeoutChoice>
-	<title>GeoNetwork- The portal to spatial data and information</title>
+	<title>GeoNetwork - The portal to spatial data and information</title>
 	<to>To</to>
 	<tools>Tools</tools>
 	<topic>Topic</topic>

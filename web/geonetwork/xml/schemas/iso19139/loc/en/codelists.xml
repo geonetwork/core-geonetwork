@@ -1893,19 +1893,19 @@
 	<!--=== CouplingType from ISO19119 ===-->
 	<codelist name="srv:SV_CouplingType">
 			<entry>
-					<description>Tightly coupled: data associated</description>
 					<code>tight</code>
 					<label>Tight</label>
+					<description>Tightly coupled: data associated</description>
 			</entry>
 			<entry>
-					<description>Mixed coupled: data associated; in addition, external data might be processed</description>
 					<code>mixed</code>
 					<label>Mixed</label>
+					<description>Mixed coupled: data associated; in addition, external data might be processed</description>
 			</entry>
 			<entry>
-					<description>Loosely coupled: no data associated</description>
 					<code>loose</code>
 					<label>Loose</label>
+					<description>Loosely coupled: no data associated</description>
 			</entry>
 	</codelist>
 </codelists>

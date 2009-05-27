@@ -281,7 +281,6 @@ table.md {
 
 th.md {
 	text-align: left;
-	text-transform: capitalize;
 }
 
 input.md, select.md, textarea.md {

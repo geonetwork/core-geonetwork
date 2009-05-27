@@ -50,7 +50,7 @@
 					</td>
 				</tr>
 				
-				<xsl:call-template name="metadata-insert-common-form">/</xsl:call-template>
+				<xsl:call-template name="metadata-insert-common-form"/>
 			</table>
 		</form>
 	</xsl:template>

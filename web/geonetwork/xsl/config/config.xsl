@@ -161,7 +161,7 @@
 	<xsl:template name="csw">
 		<script type="text/javascript" language="JavaScript1.2">
 			function updateContact(id) {
-				if (id = -1)
+				if (id == -1)
 					return;
 					
 				var records = {
@@ -172,6 +172,7 @@
 							name: "<xsl:value-of select="name"/>",
 							profile: "<xsl:value-of select="profile"/>",
 							address: "<xsl:value-of select="address"/>",
+							city: "<xsl:value-of select="city"/>",
 							state: "<xsl:value-of select="state"/>",
 							country:"<xsl:value-of select="country"/>",
 							zip:"<xsl:value-of select="zip"/>",
@@ -190,7 +191,7 @@
 				$('csw.postalCode').value          = records['record_'+id].zip;
 				$('csw.country').value             = records['record_'+id].country;
 				$('csw.deliveryPoint').value       = records['record_'+id].address;
-				$('csw.city').value                = records['record_'+id].address;
+				$('csw.city').value                = records['record_'+id].city;
 				$('csw.email').value               = records['record_'+id].email ;
 				$('csw.role').value                = records['record_'+id].kind;
 				$('csw.contactInstructions').value = records['record_'+id].organisation;

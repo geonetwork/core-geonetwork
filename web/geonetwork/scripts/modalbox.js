@@ -303,12 +303,13 @@ Modalbox.Methods = {
 				});
 			}.bind(this), 1);
 		} else { // Height is defined. Creating a scrollable window
-			this._setWidth();
-			this.MBcontent.setStyle({overflow: 'auto', height: $(this.MBwindow).getHeight() - $(this.MBheader).getHeight() - 13 + 'px'});
-			this.MBcontent.show();
-			this.focusableElements = this._findFocusableElements();
-			this._setFocus(); // Setting focus on first 'focusable' element in content (input, select, textarea, link or button)
-			setTimeout(function(){ // MSIE fix
+			setTimeout(function(){//Hack: content not loaded because of previous _insertContent timeout hack
+				this._setWidth();
+				this.MBcontent.setStyle({overflow: 'auto', height: $(this.MBwindow).getHeight() - $(this.MBheader).getHeight() - 13 + 'px'});
+				this.MBcontent.show();
+				this.focusableElements = this._findFocusableElements();
+				this._setFocus(); // Setting focus on first 'focusable' element in content (input, select, textarea, link or button)
+				// MSIE fix
 				if(callback != undefined)
 					callback(); // Executing internal JS from loaded content
 				this.event("afterLoad"); // Passing callback

@@ -650,7 +650,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:distributionFormat">
 		<label>Distribution format</label>
-		<description/>
+		<description>Distribution format</description>
 		<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -2192,7 +2192,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:value">
 		<label>Value</label>
-		<description/>
+		<description>Value</description>
 		<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->

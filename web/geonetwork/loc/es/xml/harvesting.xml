@@ -104,12 +104,10 @@
 	<warn>Solo puedes recuperar despues de haber llenado la parte del sitio</warn>
 	
 	<options>Opciones</options>
-	<every>Cada</every>
 	<everySpec>(dias : horas : minutos)</everySpec>
 	<oneRun>Solo una ejecución</oneRun>
 	<createGroups>Crear grupos</createGroups>
 	<createCateg>Crear categorias</createCateg>
-	<status>Estado</status>
 	<active>Activo</active>
 	<inactive></inactive>
 	<retrieveSources>Recuperar fuentes</retrieveSources>

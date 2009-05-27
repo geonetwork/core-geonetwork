@@ -99,12 +99,10 @@
 	<warn>Необходимо указать параметры сайта</warn>
 
 	<options>Опции</options>
-	<every>Период</every>
 	<everySpec>(дней : часов : минут)</everySpec>
 	<oneRun>Запустить один раз</oneRun>
 	<createGroups>Создать группы</createGroups>
 	<createCateg>Создать категории</createCateg>
-	<status>Статус</status>
 	<active>Активен</active>
 	<inactive>Неактивен</inactive>
 	<retrieveSources>Получить источники</retrieveSources>

@@ -60,6 +60,7 @@ public class InfoUpdate implements Service
 		String surname  = Util.getParam(params, Params.SURNAME);
 		String name     = Util.getParam(params, Params.NAME);
 		String address  = Util.getParam(params, Params.ADDRESS, "");
+		String city     = Util.getParam(params, Params.CITY,    "");
 		String state    = Util.getParam(params, Params.STATE,   "");
 		String zip      = Util.getParam(params, Params.ZIP,     "");
 		String country  = Util.getParam(params, Params.COUNTRY, "");
@@ -78,11 +79,11 @@ public class InfoUpdate implements Service
 
 		// change profile
 		String query = "UPDATE Users SET surname=?, name=?, "+
-							"address=?, state=?, zip=?, country=?, email=?," +
+							"address=?, city=?, state=?, zip=?, country=?, email=?," +
 							"organisation=?, kind=? WHERE id=?";
 
 		dbms.execute (query, surname, name,
-									address, state, zip, country, email,
+									address, city, state, zip, country, email,
 									organ, kind, new Integer(userId));
 
 		return new Element(Jeeves.Elem.RESPONSE);

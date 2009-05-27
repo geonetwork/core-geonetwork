@@ -121,7 +121,6 @@
 	<zoomOut>Zoom out</zoomOut>
 	<zoomLayer>Zoom to layer</zoomLayer>
 	<getFeatures>GET FEATURES</getFeatures>
-	
 	<styleSetting>Setting the style...</styleSetting> 
 	<styleSet>The style has been successfully set.</styleSet> 
 	<styleSetError>An unexpected error has been encountered:</styleSetError>				

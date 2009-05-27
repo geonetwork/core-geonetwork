@@ -113,12 +113,10 @@
 	<warn>Nur nach Ausfüllen der Felder können Abfragen ausgeführt werden.</warn>
 	
 	<options>Optionen</options>
-	<every>Alle</every>
 	<everySpec>(Tage : Stunden : Minuten)</everySpec>
 	<oneRun>Nur einmalig</oneRun>
 	<createGroups>Erstelle Gruppe</createGroups>
 	<createCateg>Erstelle Kategorie</createCateg>
-	<status>Status</status>
 	<active>aktiv</active>
 	<inactive>inaktiv</inactive>
 	<retrieveSources>Quelle abfragen</retrieveSources>

@@ -25,6 +25,7 @@ package org.fao.geonet.services.util;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Iterator;
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
@@ -87,10 +88,11 @@ public class MainUtil {
 		if (request != null) {
 			for (String[] p : DEFAULT_PARAMS) {
 				String pr = request.getChildText(p[0]);
-				if (pr != null)
+				if (pr != null) {
 					elData.addContent(new Element(p[0]).setText(pr));
-				else
+				} else {
 					elData.addContent(new Element(p[0]).setText(p[1]));
+				}
 
 				// Remove child for append the non default one later
 				request.removeChild(p[0]);
@@ -128,26 +130,33 @@ public class MainUtil {
 	 * @return
 	 */
 	public static String splitWord(String requestStr) {
+		
+		// leave phrases alone
+		if (requestStr.indexOf('"') == 0) return requestStr.toLowerCase(); 
+
 		Analyzer a = new StandardAnalyzer();
-		// Analyzer a = new CJKAnalyzer();
+		TokenStream ts = a.tokenStream(null, new StringReader(requestStr));
 
-		StringReader sr = new StringReader(requestStr);
-		TokenStream ts = a.tokenStream(null, sr);
-
-		String result = new String("");
-
+		ArrayList tokenList = new ArrayList();
 		try {
-			Token t = ts.next();
-
-			while (t != null) {
-				// CHECKME : result += (" " + t.termText());
-				result += (" " + new String(t.termBuffer()));
-				t = ts.next();
+			while (true) {
+				Token token = ts.next();
+				if (token == null) break;
+				tokenList.add(token.termText());
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return result;
+		StringBuffer result = new StringBuffer();
+
+		for (int i = 0;i < tokenList.size();i++) {
+			if (i > 0) {
+				result.append(" "+tokenList.get(i));
+			} else {
+				result.append(tokenList.get(i));
+			}
+		}
+		return result.toString();
 	}
 }

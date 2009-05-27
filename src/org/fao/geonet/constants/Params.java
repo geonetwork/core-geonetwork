@@ -76,6 +76,7 @@ public class Params
 	public static final String SELECTED     = "selected";
 	public static final String TYPE         = "type";
 	public static final String ADDRESS      = "address";
+	public static final String CITY         = "city";
 	public static final String STATE        = "state";
 	public static final String ZIP          = "zip";
 	public static final String COUNTRY      = "country";

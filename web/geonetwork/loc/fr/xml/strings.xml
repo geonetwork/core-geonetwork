@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <ar>عربي</ar> <!-- Do not translate! -->
+	<cn>中文</cn> <!-- Do not translate! -->
+	<de>Deutsch</de> <!-- Do not translate! -->
+	<en>English</en> <!-- Do not translate! -->
+	<es>Español</es> <!-- Do not translate! -->
+	<fr>Français</fr> <!-- Do not translate! -->
+    <nl>Nederlands</nl> <!-- Do not translate -->
+	<ru>Русский</ru> <!-- Do not translate! -->
+
 	<setOnSave>Valeur définie lors de la sauvegarde</setOnSave>
 	<missingSeeTab>Manquant - Voir l'onglet correspondant au groupe </missingSeeTab>
 	<missing>Vide ou manquant</missing>
@@ -196,7 +205,6 @@
 	<any>- Tous -</any>
 	<anytime>N'importe quand</anytime>
 	<appSchInfoTab>Schéma d'application</appSchInfoTab>
-  <ar>عربي</ar> <!-- Do not translate! -->
 	<assigned>Attribuer</assigned>
 	<attrlabl>Attribute Label</attrlabl>
 	<availability>Disponibilité</availability>
@@ -230,8 +238,8 @@
 	<chooseFile>Choisir le fichier à décharger</chooseFile>
 	<chooseLargeThumbnail>Choisir la vignette (grand format)</chooseLargeThumbnail>
 	<chooseThumbnail>Choisir la vignette (petit format)</chooseThumbnail>
+	<city>Ville</city>
 	<clear>Effacer</clear>
-	<cn>中文</cn> <!-- Do not translate! -->
 	<completeTab>Vue avancée</completeTab>
 	<completeTabEditor>Editeur avancé</completeTabEditor>
 	<confirmDelete>Êtes-vous sûr de vouloir supprimer cette métadonnée ?</confirmDelete>
@@ -245,6 +253,8 @@
 	</copyright2>
 	<create>Dupliquer</create>
 	<createTip>Créer des métadonnées à partir de ce template</createTip>
+	<cswTest>CSW ISO test</cswTest>
+	<cswTestDesc>Test interface for the CSW ISO catalog interface</cswTestDesc>
 	<dataQualityTab>Qualité des données</dataQualityTab>
 	<datasetTab>Jeu de données</datasetTab>
 	<dateRelChoice/>
@@ -272,12 +282,10 @@
 	<edit>Editer</edit>
 	<Editor>Éditeur</Editor>
 	<emailAddress>Email</emailAddress>
-	<en>English</en> <!-- Do not translate! -->
 	<enddate>Date de fin</enddate>
 	<enclosing>Incluant</enclosing>
 	<enclosingCoordinate>Coordonnées englobant</enclosingCoordinate>
 	<enttypl>Entity Type Label</enttypl>
-	<es>Español</es> <!-- Do not translate! -->
 	<exactCoordinate>Coordonnées exacts</exactCoordinate>
 	<extended>Avancée</extended>
 	<extent>Emprise</extent>
@@ -288,7 +296,6 @@
 	<feedbackRequest>Merci de préciser vos coordonnées avant le téléchargement des données</feedbackRequest>
 	<file>Fichier</file>
 	<firstName>Prénom</firstName>
-	<fr>Français</fr> <!-- Do not translate! -->
 	<freeKeyword>Mot-clés libres</freeKeyword>
 	<from>Début</from>
 	<general>Général</general>
@@ -324,6 +331,8 @@
 	<hitsPerPageChoice value="50">50</hitsPerPageChoice>
 	<hitsPerPageChoice value="100">100</hitsPerPageChoice>
 	<home>Accueil</home>
+	<i18n>Test i18n</i18n>
+	<i18nDesc>This service should help GeoNetwork opensource developers to have up to date localized files for the GUI.</i18nDesc>
 	<identificationTab>Identification</identificationTab>
 	<import>Importer</import>
 	<infoTitle>Info</infoTitle>
@@ -526,7 +535,6 @@
 	<resultsMatching>Nombre de résultats : </resultsMatching>
 	<rss>Ouvrez flux RSS</rss>
 	<rtitle>Titre</rtitle>
-	<ru>Русский</ru> <!-- Do not translate! -->
 	<save>Sauver</save>
 	<saveAndClose>Sauver et fermer</saveAndClose>
 	<saveAndValidate>Sauver et valider</saveAndValidate>

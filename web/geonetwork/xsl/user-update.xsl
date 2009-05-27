@@ -133,12 +133,16 @@
 					<td class="padded"><input class="content" type="text" name="address" value="{/root/response/record/address}"/></td>
 				</tr>
 				<tr>
+					<th class="padded"><xsl:value-of select="/root/gui/strings/city"/></th>
+					<td class="padded"><input class="content" type="text" name="city" value="{/root/response/record/city}"/></td>
+				</tr>
+				<tr>
+					<th class="padded"><xsl:value-of select="/root/gui/strings/zip"/></th>
+					<td class="padded"><input class="content" type="text" name="zip" value="{/root/response/record/zip}" size="8"/></td>
+				</tr>
+				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/state"/></th>
-					<td class="padded">
-						<input class="content" type="text" name="state" value="{/root/response/record/state}" size="8"/>
-						<b><xsl:value-of select="/root/gui/strings/zip"/></b>
-						<input class="content" type="text" name="zip" value="{/root/response/record/zip}" size="8"/>
-					</td>
+					<td class="padded"><input class="content" type="text" name="state" value="{/root/response/record/state}" size="8"/></td>
 				</tr>
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/country"/></th>

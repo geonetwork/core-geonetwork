@@ -261,12 +261,12 @@
 				
 				<table id="minimap_root" width="340px">
 					<tr>
-						<td colspan="4" align="center" style="padding: 3px;">
+						<td colspan="2" align="center" style="padding: 3px;">
 							<xsl:value-of select="/root/gui/strings/latMax"/> <input type="text" class="content" id="northBL" name="northBL"  size="5"
 								value="{/root/gui/searchDefaults/northBL}" onChange="javascript:AoIrefresh();"/>
 						</td>
 					</tr>
-					<tr height="102px" style="position:relative;">
+					<tr height="102px">
 						<td width="52px" style="padding-top: 25px; align: center;">
 							<small><xsl:value-of select="/root/gui/strings/longMin"/></small>
 							<br />
