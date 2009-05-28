@@ -252,6 +252,9 @@ public class Transaction extends AbstractOperation implements CatalogService
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dataMan = gc.getDataManager();
 		
+		if (context.getUserSession().getUserId() == null)
+			throw new NoApplicableCodeEx("User not authenticated.");
+		
 		boolean	bReturn = false;
 		
 		//first, search the record in the database to get the record id
@@ -276,6 +279,9 @@ public class Transaction extends AbstractOperation implements CatalogService
 			
 			if( id == null )
 				return false;
+			
+			if (!dataMan.getAccessManager().canEdit(context, id))
+				throw new NoApplicableCodeEx("User not allowed to update this metadata("+id+").");
 
 			dataMan.updateMetadataExt(dbms, id, xml, changeDate);
 			bReturn = true;
@@ -298,6 +304,9 @@ public class Transaction extends AbstractOperation implements CatalogService
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dataMan = gc.getDataManager();
 		
+		if (context.getUserSession().getUserId() == null)
+			throw new NoApplicableCodeEx("User not authenticated.");
+		
 		//first, search the record in the database to get the record id
 		Element constr = request.getChild("Constraint",Csw.NAMESPACE_CSW );
 		List<Element> results = getResultsFromConstraints(context, constr);
@@ -318,6 +327,9 @@ public class Transaction extends AbstractOperation implements CatalogService
 			
 			if( id == null )
 				return deleted;
+			
+			if (!dataMan.getAccessManager().canEdit(context, id))
+				throw new NoApplicableCodeEx("User not allowed to delete metadata : "+id);
 	
 			dataMan.deleteMetadata(dbms, id);
 			deleted++;
