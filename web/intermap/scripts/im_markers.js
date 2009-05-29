@@ -55,8 +55,8 @@ var marker_offset_y = 22;
 	img.src = '/intermap/images/marker.gif'; // FIXME context
 	// FIXME the image should be centered on the mouse click
 
-	img.style.left = pointerX - 6;
-	img.style.top = pointerY - 21;           
+	img.style.left = pointerX - 6 + "px";
+	img.style.top = pointerY - 21 + "px";           
 	document.body.appendChild(img);    
 	
 	
@@ -320,8 +320,8 @@ function im_createMarker(id, lat, lon, title, btemp)
 	img.title = title;
 
 	// FIXME the image should be centered on the coords	
-	img.style.left = x - 6;
-	img.style.top  = y - 21;
+	img.style.left = x - 6 + "px";
+	img.style.top  = y - 21 + "px";
 	
     parent.appendChild(img);
 

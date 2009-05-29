@@ -24,18 +24,18 @@ im_bm.setSize = function (w, h) // override
 
     if($('im_bm_image'))
     {
-        $('im_bm_image').style.width = w;
-        $('im_bm_image').style.height = h; 
+        $('im_bm_image').style.width = w + 'px';
+        $('im_bm_image').style.height = h + 'px'; 
         //$('im_map').style.width = w;
         //$('im_map').style.height = h;
         
-        $('im_mapContainer').style.width = im_bm.width + 2; 
-        $('im_mapContainer').style.height = im_bm.height + 2; 
+        $('im_mapContainer').style.width = (im_bm.width + 2) + 'px'; 
+        $('im_mapContainer').style.height = (im_bm.height + 2) + 'px'; 
         
-        $('im_map').style.width = w; 
-        $('im_map').style.height = h;
+        $('im_map').style.width = w + 'px'; 
+        $('im_map').style.height = h + 'px';
         
-        $('im_bm_image_waitdiv').style.width = w;
+        $('im_bm_image_waitdiv').style.width = w + 'px';
     }
 };
 
