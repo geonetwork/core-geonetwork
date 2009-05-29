@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
@@ -214,10 +215,19 @@ public class Transaction extends AbstractOperation implements CatalogService
 		// -----------------------------------------------------------------------
 		// --- insert metadata into the system
 
-		if (context.getUserSession().getUserId() == null)
+		UserSession us = context.getUserSession();
+		
+		if (us.getUserId() == null)
 			throw new NoApplicableCodeEx("User not authenticated.");
 		
-		int userId = context.getUserSession().getUserIdAsInt();
+		String profile = us.getProfile(); 
+		
+		// Only editors and above are allowed to insert metadata
+		if (!profile.equals(Geonet.Profile.EDITOR) && !profile.equals(Geonet.Profile.REVIEWER)
+				&& !profile.equals(Geonet.Profile.USER_ADMIN) && !profile.equals(Geonet.Profile.ADMINISTRATOR))
+			throw new NoApplicableCodeEx("User not allowed to insert metadata.");
+		
+		int userId = us.getUserIdAsInt();
 		
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		String id = dataMan.insertMetadataExt(dbms, schema, xml, context.getSerialFactory(), 
