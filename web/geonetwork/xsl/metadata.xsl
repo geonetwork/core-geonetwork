@@ -631,12 +631,10 @@
 				<xsl:choose>
 					<xsl:when test="$helpLink!=''">
 						<span id="stip.{$helpLink}|{$id}" onclick="toolTip(this.id);" class="content" style="cursor:help;"><xsl:value-of select="$title"/>
-							<!-- mandatory elements need XPath support
 							<xsl:call-template name="asterisk">
 								<xsl:with-param name="link" select="$removeLink"/>
 								<xsl:with-param name="edit" select="$edit"/>
 							</xsl:call-template>
-							-->
 						</span>
 					</xsl:when>
 					<xsl:otherwise>
@@ -709,12 +707,13 @@
 						<xsl:choose>
 							<xsl:when test="$helpLink!=''">
 								<span id="stip.{$helpLink}|{$id}" onclick="toolTip(this.id);" class="content" style="cursor:help;"><xsl:value-of select="$title"/>
-							<!-- mandatory elements need XPath support
+								<!-- Only show asterisks on simpleElements - user has to know
+								     which ones to fill out 
 									<xsl:call-template name="asterisk">
 										<xsl:with-param name="link" select="$helpLink"/>
 										<xsl:with-param name="edit" select="$edit"/>
 									</xsl:call-template>
-								-->
+									-->
 								</span>
 							</xsl:when>
 							<xsl:otherwise>

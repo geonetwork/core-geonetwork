@@ -52,6 +52,7 @@ public class XMLLib
 	public Document load(File file) throws JDOMException, IOException
 	{
 		SAXBuilder builder = new SAXBuilder();
+		builder.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd",false);
 		Document   jdoc    = builder.build(file);
 
 		return jdoc;
