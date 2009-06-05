@@ -212,9 +212,16 @@ public class LocalLib
 			id = record.getChildText("id");
 
 			List<String> list = langData.get(id);
+			if(list != null) {
+				for (int j=0; j<list.size(); j+=2) {
+					labels.addContent(new Element(list.get(j)).setText(list.get(j+1)));
+				}
+			}
+			else {
+				System.out.println("WARNING: CORRUPT DATA IN DATABASE: No localization found for record in table " + table + " with id: " + id + ", skipping it.");
 
-			for (int j=0; j<list.size(); j+=2)
-				labels.addContent(new Element(list.get(j)).setText(list.get(j+1)));
+			}
+
 		}
 
 		return result.setName(table.toLowerCase());
