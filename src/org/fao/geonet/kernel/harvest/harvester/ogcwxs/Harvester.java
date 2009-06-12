@@ -57,6 +57,7 @@ import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.thumbnail.Set;
 import org.jdom.Element;
@@ -161,6 +162,8 @@ class Harvester
 		
 		GeonetContext gc = (GeonetContext) context.getHandlerContext (Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager ();
+		SettingInfo si = new SettingInfo(context);
+		siteUrl = si.getSiteUrl() + context.getBaseUrl();
 		
 		
 	}
@@ -428,7 +431,7 @@ class Harvester
 				// FIXME : 
 				// 	* This could use URN instead of URL. But then, how to resolve URN ?
 				//  * This should use UUID instead
-				op.setAttribute("href", context.getBaseUrl() + "/srv/en/metadata.show?id=" + layer.id, xlink);
+				op.setAttribute("href", siteUrl + "/srv/en/metadata.show?id=" + layer.id, xlink);
 				op.setAttribute("title", layer.name, xlink);
 				
 				root.addContent(op);
@@ -878,6 +881,7 @@ class Harvester
 	 */
 	private String capabilitiesUrl;
 	private String crs = "epsg:4326";
+	private String siteUrl;
 	private static final int WIDTH = 300;
 	private static final String GETCAPABILITIES = "GetCapabilities";
 	private static final String GETMAP = "GetMap";
