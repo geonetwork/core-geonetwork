@@ -24,8 +24,11 @@
 package org.fao.geonet.services.metadata;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import jeeves.constants.Jeeves;
@@ -44,21 +47,25 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.kernel.search.MetaSearcher;
 import org.jdom.Element;
 
 //=============================================================================
 
 /**
  * Process a metadata with an XSL transformation declared for the metadata
- * schema.
+ * schema. Parameters sent to the service are forwaded to XSL process.
  * 
  * In each xml/schemas/schemaId directory, a process could be added in a
  * directory called process. Then the process could be called using the 
  * following URL :
- * http://localhost:8080/geonetwork/srv/en/metadata.massive.processing?process=keywords-comma-exploder
+ * http://localhost:8080/geonetwork/srv/en/metadata.massive.processing?process=keywords-comma-exploder&url=http://xyz
  * 
  * In that example the process has to be named keywords-comma-exploder.xsl.
+ * 
+ * To retrieve parameters in XSL process use the following:
+ * <code>
+ *     <xsl:param name="url">http://localhost:8080/</xsl:param>
+ * </code>
  * 
  * @author fxprunayre
  */
@@ -129,10 +136,14 @@ public class MassiveXslProcessing implements Service {
 
 				// --- Process metadata
 				Element md = dataMan.getMetadata(context, id, false);
-				// TODO : here we could send parameters set by user from 
+				// -- here we send parameters set by user from 
 				// URL if needed.
-				// Using Xml.transform(xml, styleSheetPath, params)
-				Element processedMetadata = Xml.transform(md, filePath);
+				List<Element> children = params.getChildren();
+				Map<String, String> xslParameter = new HashMap<String, String>();
+				for (Element param : children) {
+					xslParameter.put(param.getName(), param.getTextTrim());
+				}
+				Element processedMetadata = Xml.transform(md, filePath, xslParameter);
 				
 
 				// --- save metadata and return status
@@ -143,12 +154,6 @@ public class MassiveXslProcessing implements Service {
 			}
 		}
 
-		// invalidate current result set
-		MetaSearcher searcher = (MetaSearcher) context.getUserSession()
-				.getProperty(Geonet.Session.SEARCH_RESULT);
-
-		if (searcher != null)
-			searcher.setValid(false);
 
 		// -- for the moment just return the sizes - we could return the ids
 		// -- at a later stage for some sort of result display
