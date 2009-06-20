@@ -602,3 +602,101 @@ function noDoubleClick()
 		return false;
 	}
 }
+
+
+/**
+* Build duration format for gts:TM_PeriodDuration onkeyup or onchange
+* events of duration widget define in metadata-iso19139.xsl.
+*
+* This only apply to iso19139 (or iso profil) metadata.
+*
+* Duration format is: PnYnMnDTnHnMnS and could be negative.
+*
+* Parameters:
+* ref - {String} Identifier of a form element (ie. geonet:element/@ref)
+*/
+function buildDuration(ref) {
+    if ($('Y' + ref).value == '')
+    $('Y' + ref).value = 0;
+    if ($('M' + ref).value == '')
+    $('M' + ref).value = 0;
+    if ($('D' + ref).value == '')
+    $('D' + ref).value = 0;
+    if ($('H' + ref).value == '')
+    $('H' + ref).value = 0;
+    if ($('MI' + ref).value == '')
+    $('MI' + ref).value = 0;
+    if ($('S' + ref).value == '')
+    $('S' + ref).value = 0;
+    
+    $('_' + ref).value =
+    ($('N' + ref).checked? "-": "") +
+    "P" +
+    $('Y' + ref).value + "Y" +
+    $('M' + ref).value + "M" +
+    $('D' + ref).value + "DT" +
+    $('H' + ref).value + "H" +
+    $('MI' + ref).value + "M" +
+    $('S' + ref).value + "S";
+}
+
+
+/**
+* Validate numeric value input form element.
+* If invalid, set the class attribute to "error".
+*
+* TODO : here we could add a function to turn on/off
+* save button if we would like to have more constraint
+* in the editor. enableSave(true/false);
+*
+* Parameters:
+* input - {Object} Form element
+* nullValue - {Boolean} Allow null value
+* decimals - {Boolean} Allow decimals
+*/
+function validateNumber(input, nullValue, decimals) {
+    var text = input.value
+    var validChars = "0123456789";
+    
+    if (! nullValue)
+    	if (! validateNonEmpty(input))
+    		return false;
+    
+    if (decimals)
+    	validChars += '.';
+    
+    var isNumber = true;
+    var char;
+    
+    for (i = 0; i < text.length && isNumber; i++) {
+        char = text.charAt(i);
+        if (char == '-' || char == "+") {
+            if (i < 0)
+            	isNumber = false;
+        } else if (validChars.indexOf(char) == - 1) {
+            isNumber = false;
+        }
+    }
+    if (! isNumber) {
+        input.addClassName('error');
+        return false;
+    } else {
+        input.removeClassName('error');
+        return true;
+    }
+}
+
+/**
+* Validate numeric value input form element.
+* If invalid, set the class attribute to "error".
+*
+* Parameters:
+* input - {Object} Form element
+*/
+function validateNonEmpty(input) {
+    if (input.value.length < 1) {
+        input.addClassName('error');
+    } else {
+        input.removeClassName('error');
+    }
+}

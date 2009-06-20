@@ -2161,8 +2161,23 @@ Beispiel: "nicht für Navigationszwecke geeignet"</description>
 	<!-- ==================================================== -->
 	
 	<element name="gts:TM_PeriodDuration">
-		<label>Period duration</label>
-		<description></description>
+		<label>Benutzerdefiniertes Intervall</label>
+		<description>
+			Der Datentyp Dauer (duration) erlaubt es ein Zeitintervall zu spezifizieren.
+			
+			Das Intervall muss in der folgenden Form angegeben werden "PnYnMnDTnHnMnS", wobei:
+			
+			* P die Periodizität definiert (obligatorisch),
+			* nY die Anzahl (n) Jahre,
+			* nM die Anzahl (n) Monate,
+			* nD die Anzahl (n) Tage,
+			* T den Beginn der Zeitangaben kennzeichnet (obligatorisch wenn Stunden, Minuten und Sekunden spezifiziert werden sollen),
+			* nH die Anzahl (n) Stunden,
+			* nM die Anzahl (n) Minuten und
+			* nS die Anzahl (n) Sekunden bedeutet.
+			
+			Z.B. P0Y0M15D ist ein Intervall von 15 Tagen, P0Y0M0DT1H0M0S bedeutet ein stündliches Intervall.           
+		</description>
 	</element>
 	
 	<!-- ==================================================== -->

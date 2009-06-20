@@ -9,6 +9,19 @@
     <nl>Nederlands</nl> <!-- Do not translate -->
 	<ru>Русский</ru> <!-- Do not translate! -->
 
+	<durationSign>Negative duration</durationSign>
+	<durationNbYears>Number of years:</durationNbYears>
+	<durationNbMonths>Number of months:</durationNbMonths>
+	<durationNbDays>Number of days:</durationNbDays>
+	<durationNbHours>Number of hours:</durationNbHours>
+	<durationNbMinutes>Number of minutes:</durationNbMinutes>
+	<durationNbSeconds>Number of seconds:</durationNbSeconds>
+	<durationYears>year(s)</durationYears>
+	<durationMonths>month(s)</durationMonths>
+	<durationDays>day(s)</durationDays>
+	<durationHours>hour(s)</durationHours>
+	<durationMinutes>minute(s)</durationMinutes>
+	<durationSeconds>second(s)</durationSeconds>
 	<setOnSave>Value will be set when record is saved</setOnSave>
 	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>
 	<missing>MISSING or EMPTY</missing>

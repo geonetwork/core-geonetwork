@@ -223,6 +223,11 @@ input.content, select.content, textarea.content {
 	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
 }
 
+input.error, textarea.error {
+    color: #ff2211;
+    border-color: #ff2211;
+}
+
 button.content {
 	font-family: Verdana;
 	font-size: 9pt;

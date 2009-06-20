@@ -9,6 +9,19 @@
     <nl>Nederlands</nl> <!-- Do not translate -->
 	<ru>Русский</ru> <!-- Do not translate! -->
 
+	<durationSign>Durée négative</durationSign>
+	<durationNbYears>Nombre d'année :</durationNbYears>
+	<durationNbMonths>Nombre de mois :</durationNbMonths>
+	<durationNbDays>Nombre de jours :</durationNbDays>
+	<durationNbHours>Nombre d'heures :</durationNbHours>
+	<durationNbMinutes>Nombre de minutes :</durationNbMinutes>
+	<durationNbSeconds>Nombre de secondes :</durationNbSeconds>
+	<durationYears>année(s)</durationYears>
+	<durationMonths>mois</durationMonths>
+	<durationDays>jour(s)</durationDays>
+	<durationHours>heure(s)</durationHours>
+	<durationMinutes>minute(s)</durationMinutes>
+	<durationSeconds>seconde(s)</durationSeconds>
 	<setOnSave>Valeur définie lors de la sauvegarde</setOnSave>
 	<missingSeeTab>Manquant - Voir l'onglet correspondant au groupe </missingSeeTab>
 	<missing>Vide ou manquant</missing>

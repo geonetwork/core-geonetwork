@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl ="http://www.w3.org/1999/XSL/Transform"
 	xmlns:gmd="http://www.isotc211.org/2005/gmd"
+	xmlns:gts="http://www.isotc211.org/2005/gts"
 	xmlns:gco="http://www.isotc211.org/2005/gco"
 	xmlns:gmx="http://www.isotc211.org/2005/gmx"
 	xmlns:srv="http://www.isotc211.org/2005/srv"
@@ -110,6 +111,88 @@
         </xsl:apply-templates>
        
     </xsl:template>
+
+
+
+	<!--
+		Create widget to handle editing of xsd:duration elements.
+		
+		Format: PnYnMnDTnHnMnS
+		
+		*  P indicates the period (required)
+		* nY indicates the number of years
+		* nM indicates the number of months
+		* nD indicates the number of days
+		* T indicates the start of a time section (required if you are going to specify hours, minutes, or seconds)
+		* nH indicates the number of hours
+		* nM indicates the number of minutes
+		* nS indicates the number of seconds
+		
+		TODO : onload, we should run validateNumber handler in order to change 
+		input class when needed.
+		
+	-->
+	<xsl:template mode="iso19139" match="gts:TM_PeriodDuration" priority="100">
+		<xsl:param name="schema" />
+		<xsl:param name="edit" />
+		
+		<!--Set default value -->
+		<xsl:variable name="p">
+			<xsl:choose>
+				<xsl:when test=".=''">P0Y0M0DT0H0M0S</xsl:when>
+				<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
+		<!-- Extract fragment -->
+		<xsl:variable name="NEG">
+			<xsl:choose>
+				<xsl:when test="starts-with($p, '-')">true</xsl:when>
+				<xsl:otherwise></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="Y" select="substring-before(substring-after($p, 'P'), 'Y')"/>
+		<xsl:variable name="M" select="substring-before(substring-after($p, 'Y'), 'M')"/>
+		<xsl:variable name="D" select="substring-before(substring-after($p, 'M'), 'DT')"/>
+		<xsl:variable name="H" select="substring-before(substring-after($p, 'DT'), 'H')"/>
+		<xsl:variable name="MI" select="substring-before(substring-after($p, 'H'), 'M')"/>
+		<xsl:variable name="S" select="substring-before(substring-after(substring-after($p,'M' ),'M' ), 'S')"/>
+		
+		<xsl:variable name="text">
+			<xsl:choose>
+				<xsl:when test="$edit=true()">
+					<xsl:variable name="ref" select="geonet:element/@ref"/>
+					
+					<input type="checkbox" id="N{$ref}" onchange="buildDuration('{$ref}');">
+						<xsl:if test="$NEG!=''"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
+					</input>
+					<label for="N{$ref}"><xsl:value-of select="/root/gui/strings/durationSign"/></label><br/>
+					<xsl:value-of select="/root/gui/strings/durationNbYears"/><input type="text" id="Y{$ref}" value="{substring-before(substring-after($p, 'P'), 'Y')}" size="4" onchange="buildDuration('{$ref}');" onkeyup="validateNumber(this,true,false);"/>-
+					<xsl:value-of select="/root/gui/strings/durationNbMonths"/><input type="text" id="M{$ref}" value="{substring-before(substring-after($p, 'Y'), 'M')}" size="4" onchange="buildDuration('{$ref}');" onkeyup="validateNumber(this,true,false);"/>-
+					<xsl:value-of select="/root/gui/strings/durationNbDays"/><input type="text" id="D{$ref}" value="{substring-before(substring-after($p, 'M'), 'DT')}" size="4" onchange="buildDuration('{$ref}');" onkeyup="validateNumber(this,true,false);"/><br/>
+					<xsl:value-of select="/root/gui/strings/durationNbHours"/><input type="text" id="H{$ref}" value="{substring-before(substring-after($p, 'DT'), 'H')}" size="4" onchange="buildDuration('{$ref}');" onkeyup="validateNumber(this,true,false);"/>-
+					<xsl:value-of select="/root/gui/strings/durationNbMinutes"/><input type="text" id="MI{$ref}" value="{substring-before(substring-after($p, 'H'), 'M')}" size="4" onchange="buildDuration('{$ref}');" onkeyup="validateNumber(this,true,false);"/>-
+					<xsl:value-of select="/root/gui/strings/durationNbSeconds"/><input type="text" id="S{$ref}" value="{substring-before(substring-after(substring-after($p,'M' ),'M' ), 'S')}" size="4" onchange="buildDuration('{$ref}');" onkeyup="validateNumber(this,true,true);"/><br/>
+					<input type="hidden" name="_{$ref}" id="_{$ref}" value="{$p}" size="20"/><br/>
+					
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:if test="$NEG!=''">-</xsl:if><xsl:text> </xsl:text>
+					<xsl:value-of select="$Y"/><xsl:text> </xsl:text><xsl:value-of select="/root/gui/strings/durationYears"/><xsl:text>  </xsl:text>
+					<xsl:value-of select="$M"/><xsl:text> </xsl:text><xsl:value-of select="/root/gui/strings/durationMonths"/><xsl:text>  </xsl:text>
+					<xsl:value-of select="$D"/><xsl:text> </xsl:text><xsl:value-of select="/root/gui/strings/durationDays"/><xsl:text> / </xsl:text>
+					<xsl:value-of select="$H"/><xsl:text> </xsl:text><xsl:value-of select="/root/gui/strings/durationHours"/><xsl:text>  </xsl:text>
+					<xsl:value-of select="$MI"/><xsl:text> </xsl:text><xsl:value-of select="/root/gui/strings/durationMinutes"/><xsl:text>  </xsl:text>
+					<xsl:value-of select="$S"/><xsl:text> </xsl:text><xsl:value-of select="/root/gui/strings/durationSeconds"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:apply-templates mode="simpleElement" select=".">
+			<xsl:with-param name="schema" select="$schema"/>
+			<xsl:with-param name="edit"   select="$edit"/>
+			<xsl:with-param name="text"   select="$text"/>
+		</xsl:apply-templates>
+	</xsl:template>
 
     <!-- ==================================================================== -->
 

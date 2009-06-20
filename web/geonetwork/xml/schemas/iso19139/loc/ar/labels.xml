@@ -2266,7 +2266,20 @@
 	
 	<element name="gts:TM_PeriodDuration">
 		<label>Period duration</label>
-		<description></description>
+		<description>
+			The duration data type is used to specify a time interval.
+			
+			The time interval is specified in the following form "PnYnMnDTnHnMnS" where:
+			
+			* P indicates the period (required)
+			* nY indicates the number of years
+			* nM indicates the number of months
+			* nD indicates the number of days
+			* T indicates the start of a time section (required if you are going to specify hours, minutes, or seconds)
+			* nH indicates the number of hours
+			* nM indicates the number of minutes
+			* nS indicates the number of seconds            
+		</description>
 	</element>
 	
 	<!-- ==================================================== -->

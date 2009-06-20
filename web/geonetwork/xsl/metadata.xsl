@@ -630,12 +630,13 @@
 			<th class="md" width="20%" valign="top">
 				<xsl:choose>
 					<xsl:when test="$helpLink!=''">
-						<span id="stip.{$helpLink}|{$id}" onclick="toolTip(this.id);" class="content" style="cursor:help;"><xsl:value-of select="$title"/>
-							<xsl:call-template name="asterisk">
-								<xsl:with-param name="link" select="$removeLink"/>
-								<xsl:with-param name="edit" select="$edit"/>
-							</xsl:call-template>
+						<span id="stip.{$helpLink}|{$id}" onclick="toolTip(this.id);" class="content" style="cursor:help;">
+							<xsl:value-of select="$title"/>
 						</span>
+						<xsl:call-template name="asterisk">
+							<xsl:with-param name="link" select="$removeLink"/>
+							<xsl:with-param name="edit" select="$edit"/>
+						</xsl:call-template>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:call-template name="showTitleWithTag">
@@ -707,14 +708,14 @@
 						<xsl:choose>
 							<xsl:when test="$helpLink!=''">
 								<span id="stip.{$helpLink}|{$id}" onclick="toolTip(this.id);" class="content" style="cursor:help;"><xsl:value-of select="$title"/>
-								<!-- Only show asterisks on simpleElements - user has to know
-								     which ones to fill out 
-									<xsl:call-template name="asterisk">
-										<xsl:with-param name="link" select="$helpLink"/>
-										<xsl:with-param name="edit" select="$edit"/>
-									</xsl:call-template>
-									-->
 								</span>
+								<!-- Only show asterisks on simpleElements - user has to know
+									which ones to fill out 
+									<xsl:call-template name="asterisk">
+									<xsl:with-param name="link" select="$helpLink"/>
+									<xsl:with-param name="edit" select="$edit"/>
+									</xsl:call-template>
+								-->
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:call-template name="showTitleWithTag">
