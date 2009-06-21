@@ -384,7 +384,7 @@
 			<xsl:otherwise>
 				<!-- codelist in view mode -->
 				<xsl:if test="normalize-space($value)!=''">
-					<b><xsl:value-of select="$value"/></b>
+					<b><xsl:value-of select="$codelist/entry[code = $value]/label"/></b>
 					<xsl:value-of select="concat(': ',$codelist/entry[code = $value]/description)"/>
 				</xsl:if>
 			</xsl:otherwise>
