@@ -12,7 +12,7 @@
 				<xsl:if test="count(/root/response/summary/keywords/keyword)=0">0 <xsl:value-of select="/root/gui/strings/keyword"/>.</xsl:if>
 
 				<xsl:for-each select="/root/response/summary/keywords/keyword">
-					<input type="checkbox" name="" value="" onclick="keywordCheck(this.value, this.checked);">
+					<input type="checkbox" id="keyword{position()}" name="" value="" onclick="keywordCheck(this.value, this.checked);">
 						<xsl:attribute name="value">
 							<xsl:value-of select="@name"/>
 						</xsl:attribute>
@@ -21,17 +21,20 @@
 							<xsl:attribute name="checked">checked</xsl:attribute>
 						</xsl:if>
 					</input>
-					<xsl:value-of select="@name"/> <span>(<xsl:value-of select="@count"/>
-					<xsl:text> </xsl:text>
-					<xsl:choose>
-						<xsl:when test="@count=2">
-							<xsl:value-of select="/root/gui/strings/res"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="/root/gui/strings/ress"/>
-						</xsl:otherwise>
-					</xsl:choose>)
-					</span>
+					<label for="keyword{position()}">
+						<xsl:value-of select="@name"/>
+						<xsl:text> </xsl:text>
+						(<xsl:value-of select="@count"/>
+						<xsl:text> </xsl:text>
+						<xsl:choose>
+							<xsl:when test="@count=2">
+								<xsl:value-of select="/root/gui/strings/res"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="/root/gui/strings/ress"/>
+							</xsl:otherwise>
+						</xsl:choose>)
+					</label>
 					<br/>
 				</xsl:for-each>
 		</xsl:when>
