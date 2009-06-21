@@ -2,8 +2,12 @@
 <summary>
 
 	<def>
-		<hits/>
-		<results/>
+		<hits>
+			<item name="keyword" plural="keywords" indexKey="keyword" order="freq" type="string" max="100"/>            			
+		</hits>
+		<results>
+			<item name="keyword" plural="keywords" indexKey="keyword" order="freq" type="string" max="100"/>			
+		</results>
 		<results_with_summary>
 			<!-- order defaults to "freq" if omitted and max defaults to 10 -->
 			<item name="denominator" plural="denominators" indexKey="denominator"

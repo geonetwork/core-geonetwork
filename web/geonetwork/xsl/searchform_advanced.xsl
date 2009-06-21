@@ -130,11 +130,7 @@
 				<xsl:value-of select="/root/gui/strings/keywords"/>
 			</th>
 			<td style="padding-bottom:5px;">
-				<input id="themekey" name="themekey" class="content" size="20" value="{/root/gui/searchDefaults/themekey}"/>
-				<a href="#">
-					<img src="{/root/gui/url}/images/gdict.png" align="absmiddle"
-						onclick="keywordSelector();"/>
-				</a>
+				<input id="themekey" name="themekey" onClick="javascript:popKeyword (this, $(keywordSelectorFrame));" class="content" size="20" value="{/root/gui/searchDefaults/themekey}"/>
 				
 				<div id="keywordSelectorFrame" class="keywordSelectorFrame" style="display:none;z-index:1000;">
 					<div id="keywordSelector" class="keywordSelector"/>

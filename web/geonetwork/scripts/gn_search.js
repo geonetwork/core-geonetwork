@@ -781,15 +781,28 @@ function setParam(p, val)
   $("themekey").value = '"'+li.innerHTML+'"';
   }
 
-  function keywordSelector(){
-	if ($("keywordSelectorFrame").style.display == 'none'){
-		if (!keyordsSelected){
-			new Ajax.Updater("keywordSelector","portal.search.keywords?mode=selector&keyword="+$("themekey").value);
-			keyordsSelected = true;
-		}
-		$("keywordSelectorFrame").show();
-	}else{
-		$("keywordSelectorFrame").hide();
+  /**
+   * Place popup according to input element position.
+   * Load list of keywords
+   * 
+   * @param el
+   * @param pop
+   * @return
+   */
+  function popKeyword(el, pop){
+    if (pop.style.display == "block") {
+        pop.style.display = "none";
+        return false;
+    }
+                
+    pop.style.top = el.cumulativeOffset().top + el.getHeight();
+    pop.style.left = el.cumulativeOffset().left;
+    pop.style.width = '250px'; //el.getWidth();
+    pop.style.display = "block";
+  
+	if (!keyordsSelected){
+		new Ajax.Updater("keywordSelector","portal.search.keywords?mode=selector&keyword="+$("themekey").value);
+		keyordsSelected = true;
 	}
   }
 
