@@ -1163,13 +1163,13 @@
 				<xsl:with-param name="title">
 				<xsl:choose>
 					<xsl:when test="$dataset=true()">
-						<xsl:value-of select="'Data Identification'"/>
+						<xsl:value-of select="/root/gui/iso19139/element[@name='gmd:MD_DataIdentification']/label"/>
 					</xsl:when>
 					<xsl:when test="local-name(.)='SV_ServiceIdentification'">
-						<xsl:value-of select="'Service Identification'"/>
+						<xsl:value-of select="/root/gui/iso19139/element[@name='srv:SV_ServiceIdentification']/label"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="'Resource Identification'"/>
+						<xsl:value-of select="'Resource Identification'"/><!-- FIXME i18n-->
 					</xsl:otherwise>
 				</xsl:choose>
 				</xsl:with-param>
@@ -1230,7 +1230,7 @@
 				<xsl:if test="$dataset">
 					<xsl:for-each select="gmd:extent/gmd:EX_Extent">
 						<xsl:call-template name="complexElementGuiWrapper">
-							<xsl:with-param name="title" select="'Extent'"/>
+							<xsl:with-param name="title" select="/root/gui/iso19139/element[@name='gmd:EX_Extent']/label"/>
 							<xsl:with-param name="content">
 								<xsl:apply-templates mode="elementEP" select="*">
 									<xsl:with-param name="schema" select="$schema"/>
@@ -1256,7 +1256,7 @@
 		<!-- scope and lineage in their own box -->
 		
 			<xsl:call-template name="complexElementGuiWrapper">
-				<xsl:with-param name="title" select="'Lineage'"/>
+				<xsl:with-param name="title" select="/root/gui/iso19139/element[@name='gmd:LI_Lineage']/label"/>
 				<xsl:with-param name="content">
 
 					<xsl:for-each select="gmd:dataQualityInfo/gmd:DQ_DataQuality">
@@ -1281,7 +1281,7 @@
 		<!-- referenceSystemInfo in its own box -->
 		
 			<xsl:call-template name="complexElementGuiWrapper">
-				<xsl:with-param name="title" select="'Reference System Info'"/>
+				<xsl:with-param name="title" select="/root/gui/iso19139/element[@name='gmd:referenceSystemInfo']/label"/>
 				<xsl:with-param name="content">
 
 				<xsl:for-each select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem">
@@ -1306,7 +1306,7 @@
 			<!-- distribution Format and onlineResource(s) in their own box -->
 
     	<xsl:call-template name="complexElementGuiWrapper">
-      	<xsl:with-param name="title" select="'Distribution and On-line Resource(s)'"/>
+    		<xsl:with-param name="title" select="/root/gui/iso19139/element[@name='gmd:distributionInfo']/label"/>
       	<xsl:with-param name="content">
 
 				<xsl:for-each select="gmd:distributionInfo">
@@ -1333,7 +1333,7 @@
 		<!-- metadata info in its own box -->
 
 		<xsl:call-template name="complexElementGuiWrapper">
-			<xsl:with-param name="title" select="'Metadata Info'"/>
+			<xsl:with-param name="title" select="/root/gui/iso19139/element[@name='gmd:MD_Metadata']/label"/>
 			<xsl:with-param name="content">
 
 			<xsl:apply-templates mode="elementEP" select="gmd:fileIdentifier|geonet:child[string(@name)='fileIdentifier']">
@@ -1371,7 +1371,7 @@
 			<xsl:for-each select="gmd:contact">
 
 				<xsl:call-template name="complexElementGuiWrapper">
-					<xsl:with-param name="title" select="'Contact'"/>
+					<xsl:with-param name="title" select="/root/gui/iso19139/element[@name='gmd:contact']/label"/>
 					<xsl:with-param name="content">
 
 						<xsl:apply-templates mode="elementEP" select="*/gmd:individualName|*/geonet:child[string(@name)='individualName']">
