@@ -71,163 +71,159 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class CatalogSearcher
-{
+public class CatalogSearcher {
 	private Element _summaryConfig;
 	private Map<String, Boolean> _isTokenizedField = new HashMap<String, Boolean>();
 	private Hits _hits;
-	
-    public CatalogSearcher(File summaryConfig)
-    {
-    	try {
+
+	public CatalogSearcher(File summaryConfig) {
+		try {
 			if (summaryConfig != null)
-				_summaryConfig = Xml.loadStream(new FileInputStream(summaryConfig));
+				_summaryConfig = Xml.loadStream(new FileInputStream(
+						summaryConfig));
 		} catch (Exception e) {
-			throw new RuntimeException ("Error reading summary configuration file", e);
+			throw new RuntimeException(
+					"Error reading summary configuration file", e);
 		}
-    }
-	
-	//---------------------------------------------------------------------------
-	//---
-	//--- Main search method
-	//---
-	//---------------------------------------------------------------------------
+	}
+
+	// ---------------------------------------------------------------------------
+	// ---
+	// --- Main search method
+	// ---
+	// ---------------------------------------------------------------------------
 
 	/**
 	 * Convert a filter to a lucene search and run the search.
 	 * 
 	 * @return a list of id that match the given filter, ordered by sortFields
 	 */
-	public Pair<Element, List<ResultItem>> search(ServiceContext context, Element filterExpr,
-			String filterVersion, Set<TypeName> typeNames, Sort sort,
-			ResultType resultType, int maxRecords) throws CatalogException
-	{
+	public Pair<Element, List<ResultItem>> search(ServiceContext context,
+			Element filterExpr, String filterVersion, Set<TypeName> typeNames,
+			Sort sort, ResultType resultType, int maxRecords)
+			throws CatalogException {
 		Element luceneExpr = filterToLucene(context, filterExpr);
 
-        try {
-		
-			if (luceneExpr != null)
-			{
+		try {
+
+			if (luceneExpr != null) {
 				checkForErrors(luceneExpr);
 				remapFields(luceneExpr);
 				convertPhrases(luceneExpr, context);
 			}
 
-            Pair<Element, List<ResultItem>> results = performSearch(context, luceneExpr,
-                    filterExpr, filterVersion, sort, resultType, maxRecords);
-            return results;
-        } catch (Exception e) {
-            Log.error(Geonet.CSW_SEARCH, "Error while searching metadata ");
-            Log.error(Geonet.CSW_SEARCH, "  (C) StackTrace:\n" + Util.getStackTrace(e));
+			Pair<Element, List<ResultItem>> results = performSearch(context,
+					luceneExpr, filterExpr, filterVersion, sort, resultType,
+					maxRecords);
+			return results;
+		} catch (Exception e) {
+			Log.error(Geonet.CSW_SEARCH, "Error while searching metadata ");
+			Log.error(Geonet.CSW_SEARCH, "  (C) StackTrace:\n"
+					+ Util.getStackTrace(e));
 
-            throw new NoApplicableCodeEx(
-                    "Raised exception while searching metadata : " + e);
-        }
+			throw new NoApplicableCodeEx(
+					"Raised exception while searching metadata : " + e);
+		}
 	}
-	
-	/**
-     * <p>
-     * Gets results in current searcher
-     * </p>
-     * 
-     * @return current searcher result in "fast" mode
-     * 
-     * @throws IOException
-     * @throws CorruptIndexException
-     */
-    public Element getAll() throws CorruptIndexException, IOException
-    {
-        Element response = new Element("response");
-
-        if (_hits.length() == 0) {
-            response.setAttribute("from", 0 + "");
-            response.setAttribute("to", 0 + "");
-            return response;
-        }
-
-        response.setAttribute("from", 1 + "");
-        response.setAttribute("to", _hits.length() + "");
-        for (int i = 0; i < _hits.length(); i++) {
-            Document doc = _hits.doc(i);
-            String id = doc.get("_id");
-
-            // FAST mode
-            Element md = LuceneSearcher.getMetadataFromIndex(doc, id);
-            response.addContent(md);
-        }
-
-        return response;
-    }
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
 
 	/**
-	 * Use filter-to-lucene stylesheet to create a Lucene search query 
-	 * to be used by LuceneSearcher.
+	 * <p>
+	 * Gets results in current searcher
+	 * </p>
 	 * 
-	 * @return XML representation of Lucene query 
+	 * @return current searcher result in "fast" mode
+	 * 
+	 * @throws IOException
+	 * @throws CorruptIndexException
 	 */
-	private Element filterToLucene(ServiceContext context, Element filterExpr) throws NoApplicableCodeEx
-	{
+	public Element getAll() throws CorruptIndexException, IOException {
+		Element response = new Element("response");
+
+		if (_hits.length() == 0) {
+			response.setAttribute("from", 0 + "");
+			response.setAttribute("to", 0 + "");
+			return response;
+		}
+
+		response.setAttribute("from", 1 + "");
+		response.setAttribute("to", _hits.length() + "");
+		for (int i = 0; i < _hits.length(); i++) {
+			Document doc = _hits.doc(i);
+			String id = doc.get("_id");
+
+			// FAST mode
+			Element md = LuceneSearcher.getMetadataFromIndex(doc, id);
+			response.addContent(md);
+		}
+
+		return response;
+	}
+
+	// ---------------------------------------------------------------------------
+	// ---
+	// --- Private methods
+	// ---
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * Use filter-to-lucene stylesheet to create a Lucene search query to be
+	 * used by LuceneSearcher.
+	 * 
+	 * @return XML representation of Lucene query
+	 */
+	private Element filterToLucene(ServiceContext context, Element filterExpr)
+			throws NoApplicableCodeEx {
 		if (filterExpr == null)
 			return null;
 
-		String styleSheet = context.getAppPath() + Geonet.Path.CSW + Geonet.File.FILTER_TO_LUCENE;
+		String styleSheet = context.getAppPath() + Geonet.Path.CSW
+				+ Geonet.File.FILTER_TO_LUCENE;
 
-		try
-		{
+		try {
 			return Xml.transform(filterExpr, styleSheet);
-		}
-		catch (Exception e)
-		{
-			context.error("Error during Filter to Lucene conversion : "+ e);
-			context.error("  (C) StackTrace\n"+ Util.getStackTrace(e));
+		} catch (Exception e) {
+			context.error("Error during Filter to Lucene conversion : " + e);
+			context.error("  (C) StackTrace\n" + Util.getStackTrace(e));
 
-			throw new NoApplicableCodeEx("Error during Filter to Lucene conversion : "+ e);
+			throw new NoApplicableCodeEx(
+					"Error during Filter to Lucene conversion : " + e);
 		}
 	}
 
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
 
-	private void checkForErrors(Element elem) throws InvalidParameterValueEx
-	{
+	private void checkForErrors(Element elem) throws InvalidParameterValueEx {
 		List children = elem.getChildren();
 
-		if (elem.getName().equals("error"))
-		{
+		if (elem.getName().equals("error")) {
 			String type = elem.getAttributeValue("type");
 			String oper = Xml.getString((Element) children.get(0));
 
 			throw new InvalidParameterValueEx(type, oper);
 		}
 
-		for(int i=0; i<children.size(); i++)
+		for (int i = 0; i < children.size(); i++)
 			checkForErrors((Element) children.get(i));
 	}
 
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
 
 	// Only tokenize field must be converted
-	// TODO add token parameter in CSW conf for each field, may be useful for GetDomain operation too.
-	private void convertPhrases(Element elem, ServiceContext context) throws CorruptIndexException, IOException
-	{
-		if (elem.getName().equals("TermQuery"))
-		{
+	// TODO add token parameter in CSW conf for each field, may be useful for
+	// GetDomain operation too.
+	private void convertPhrases(Element elem, ServiceContext context)
+			throws CorruptIndexException, IOException {
+		if (elem.getName().equals("TermQuery")) {
 			String field = elem.getAttributeValue("fld");
-			String text  = elem.getAttributeValue("txt");
+			String text = elem.getAttributeValue("txt");
 
 			boolean isTokenized = isTokenized(field, context);
-			if ( isTokenized && text.indexOf(" ") != -1) {
+			if (isTokenized && text.indexOf(" ") != -1) {
 				elem.setName("PhraseQuery");
 
 				StringTokenizer st = new StringTokenizer(text, " ");
 
-				while (st.hasMoreTokens())
-				{
+				while (st.hasMoreTokens()) {
 					Element term = new Element("TermQuery");
 					term.setAttribute("fld", field);
 					term.setAttribute("txt", st.nextToken());
@@ -237,57 +233,59 @@ public class CatalogSearcher
 			}
 		}
 
-		else
-		{
+		else {
 			List children = elem.getChildren();
 
-			for(int i=0; i<children.size(); i++)
+			for (int i = 0; i < children.size(); i++)
 				convertPhrases((Element) children.get(i), context);
 		}
 	}
 
-	//---------------------------------------------------------------------------
-	private boolean isTokenized(String field, ServiceContext context) throws IOException
-	{
-	    Boolean tokenized = _isTokenizedField.get(field);
-	    if (tokenized != null) {
-	        return tokenized.booleanValue();
-	    }
-	    GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-	    SearchManager sm = gc.getSearchmanager();
-	    IndexReader reader = IndexReader.open(sm.getLuceneDir());
+	// ---------------------------------------------------------------------------
+	private boolean isTokenized(String field, ServiceContext context)
+			throws IOException {
+		Boolean tokenized = _isTokenizedField.get(field);
+		if (tokenized != null) {
+			return tokenized.booleanValue();
+		}
+		GeonetContext gc = (GeonetContext) context
+				.getHandlerContext(Geonet.CONTEXT_NAME);
+		SearchManager sm = gc.getSearchmanager();
+		IndexReader reader = IndexReader.open(sm.getLuceneDir());
 
-	    int i = 0;
-	    while (i < reader.numDocs() && tokenized == null) {
-	        Document doc = reader.document(i);
-	        Field tmp = doc.getField(field);
-	        if (tmp != null) {
-	            tokenized = tmp.isTokenized();
-	        }
-	        i++;
-	    }
-	    
-	    if (tokenized != null) {
-	        _isTokenizedField.put(field, tokenized.booleanValue());
-	        return tokenized.booleanValue();
-	    }
-	    _isTokenizedField.put(field, false);
-	    return false;
+		int i = 0;
+		while (i < reader.numDocs() && tokenized == null) {
+			if (reader.isDeleted(i)) {
+				i++;
+				continue; // FIXME: strange lucene hack: sometimes it tries
+				// to load a deleted document
+			}
+			Document doc = reader.document(i);
+			Field tmp = doc.getField(field);
+			if (tmp != null) {
+				tokenized = tmp.isTokenized();
+			}
+			i++;
+		}
+
+		if (tokenized != null) {
+			_isTokenizedField.put(field, tokenized.booleanValue());
+			return tokenized.booleanValue();
+		}
+		_isTokenizedField.put(field, false);
+		return false;
 	}
-	
-	
+
 	/**
-	 * Map OGC CSW search field names to Lucene field names
-	 * using {@link FieldMapper}. If a field name is not defined
-	 * then the any (ie. full text) criteria is used.
-	 *  
+	 * Map OGC CSW search field names to Lucene field names using
+	 * {@link FieldMapper}. If a field name is not defined then the any (ie.
+	 * full text) criteria is used.
+	 * 
 	 */
-	private void remapFields(Element elem)
-	{
+	private void remapFields(Element elem) {
 		String field = elem.getAttributeValue("fld");
 
-		if (field != null)
-		{
+		if (field != null) {
 			if (field.equals(""))
 				field = "any";
 
@@ -296,21 +294,22 @@ public class CatalogSearcher
 			if (mapped != null)
 				elem.setAttribute("fld", mapped);
 			else
-				Log.info(Geonet.CSW_SEARCH, "Unknown queryable field : "+ field);  //FIXME log doesn't work
+				Log.info(Geonet.CSW_SEARCH, "Unknown queryable field : "
+						+ field); // FIXME log doesn't work
 		}
 
 		List children = elem.getChildren();
 
-		for(int i=0; i<children.size(); i++)
+		for (int i = 0; i < children.size(); i++)
 			remapFields((Element) children.get(i));
 	}
 
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
 
-	private Pair <Element, List<ResultItem>> performSearch(ServiceContext context,
-			Element luceneExpr, Element filterExpr, String filterVersion, Sort sort, ResultType resultType, int maxRecords)
-			throws Exception
-    {
+	private Pair<Element, List<ResultItem>> performSearch(
+			ServiceContext context, Element luceneExpr, Element filterExpr,
+			String filterVersion, Sort sort, ResultType resultType,
+			int maxRecords) throws Exception {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
@@ -326,12 +325,13 @@ public class CatalogSearcher
 		// --- put query on groups in AND with lucene query
 
 		BooleanQuery query = new BooleanQuery();
-		
+
 		// FIXME : DO I need to fix that here ???
-//		BooleanQuery.setMaxClauseCount(1024); // FIXME : using MAX_VALUE solve
-//        // partly the org.apache.lucene.search.BooleanQuery$TooManyClauses
-//        // problem.
-//        // Improve index content.
+		// BooleanQuery.setMaxClauseCount(1024); // FIXME : using MAX_VALUE
+		// solve
+		// // partly the org.apache.lucene.search.BooleanQuery$TooManyClauses
+		// // problem.
+		// // Improve index content.
 
 		BooleanClause.Occur occur = LuceneUtils
 				.convertRequiredAndProhibitedToOccur(true, false);
@@ -342,25 +342,26 @@ public class CatalogSearcher
 
 		// --- proper search
 		Log.debug(Geonet.CSW_SEARCH, "Lucene query: " + query.toString());
-		
+
 		IndexReader reader = IndexReader.open(sm.getLuceneDir());
 		IndexSearcher searcher = new IndexSearcher(reader);
-		
-		try
-		{
-			// TODO Handle NPE creating spatial filter (due to constraint language version). 
-			Filter spatialfilter = sm.getSpatial().filter(query,
-					filterExpr, filterVersion);
-			
-            if (spatialfilter == null) {
-            	_hits = searcher.search(query, sort);
-            } else {
-            	_hits = searcher.search(query, new CachingWrapperFilter(spatialfilter), sort);
-            }
 
-			Log.debug(Geonet.CSW_SEARCH, "Records matched : "+ _hits.length());
-			
-			//--- retrieve results
+		try {
+			// TODO Handle NPE creating spatial filter (due to constraint
+			// language version).
+			Filter spatialfilter = sm.getSpatial().filter(query, filterExpr,
+					filterVersion);
+
+			if (spatialfilter == null) {
+				_hits = searcher.search(query, sort);
+			} else {
+				_hits = searcher.search(query, new CachingWrapperFilter(
+						spatialfilter), sort);
+			}
+
+			Log.debug(Geonet.CSW_SEARCH, "Records matched : " + _hits.length());
+
+			// --- retrieve results
 
 			List<ResultItem> results = new ArrayList<ResultItem>();
 
@@ -381,70 +382,70 @@ public class CatalogSearcher
 
 			Element summary = null;
 
-			// Only compute GeoNetwork summary on results_with_summary option 
+			// Only compute GeoNetwork summary on results_with_summary option
 			if (resultType == ResultType.RESULTS_WITH_SUMMARY) {
-	            	summary = LuceneSearcher.makeSummary(_hits, _hits.length(),
-							_summaryConfig, resultType.toString(), Integer.MAX_VALUE, context.getLanguage());
-					summary.setName("Summary");
-					summary.setNamespace(Csw.NAMESPACE_GEONET);
+				summary = LuceneSearcher.makeSummary(_hits, _hits.length(),
+						_summaryConfig, resultType.toString(),
+						Integer.MAX_VALUE, context.getLanguage());
+				summary.setName("Summary");
+				summary.setNamespace(Csw.NAMESPACE_GEONET);
 			}
-			
+
 			return Pair.read(summary, results);
-		}
-		finally
-		{
+		} finally {
 			searcher.close();
-			reader  .close();
+			reader.close();
 		}
-    }
-	
-	//---------------------------------------------------------------------------
+	}
+
+	// ---------------------------------------------------------------------------
 
 	/**
-	 * Allow search on current user's groups only adding a 
-	 * BooleanClause to the search.
+	 * Allow search on current user's groups only adding a BooleanClause to the
+	 * search.
 	 */
-	private Query getGroupsQuery(ServiceContext context) throws Exception
-	{
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+	private Query getGroupsQuery(ServiceContext context) throws Exception {
+		Dbms dbms = (Dbms) context.getResourceManager()
+				.open(Geonet.Res.MAIN_DB);
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		GeonetContext gc = (GeonetContext) context
+				.getHandlerContext(Geonet.CONTEXT_NAME);
 		AccessManager am = gc.getAccessManager();
-		Set<String>   hs = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
+		Set<String> hs = am.getUserGroups(dbms, context.getUserSession(),
+				context.getIpAddress());
 
 		BooleanQuery query = new BooleanQuery();
 
 		String operView = "_op0";
 
-		BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);							
-		for(Object group: hs)
-		{
+		BooleanClause.Occur occur = LuceneUtils
+				.convertRequiredAndProhibitedToOccur(false, false);
+		for (Object group : hs) {
 			TermQuery tq = new TermQuery(new Term(operView, group.toString()));
 			query.add(tq, occur);
 		}
-		
-		// If user is authenticated, add the current user to the query because 
-        // if an editor unchecked all
-        // visible options in privileges panel for all groups, then the metadata
-        // records could not be found anymore, even by its editor.
-        if (context.getUserSession().getUserId() != null) {
-            TermQuery tq = new TermQuery(new Term("_owner", context.getUserSession().getUserId()));
-            query.add(tq, occur);
-        }
+
+		// If user is authenticated, add the current user to the query because
+		// if an editor unchecked all
+		// visible options in privileges panel for all groups, then the metadata
+		// records could not be found anymore, even by its editor.
+		if (context.getUserSession().getUserId() != null) {
+			TermQuery tq = new TermQuery(new Term("_owner", context
+					.getUserSession().getUserId()));
+			query.add(tq, occur);
+		}
 
 		return query;
 	}
-	
+
 }
 
-//=============================================================================
+// =============================================================================
 
 /**
- * Class containing result items with information
- * retrieved from Lucene index.
+ * Class containing result items with information retrieved from Lucene index.
  */
-class ResultItem
-{
+class ResultItem {
 	/**
 	 * Metadata identifier
 	 */
@@ -455,74 +456,72 @@ class ResultItem
 	 */
 	private HashMap<String, String> hmFields = new HashMap<String, String>();
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
+	// ---
+	// --- Constructor
+	// ---
+	// ---------------------------------------------------------------------------
 
-	public ResultItem(String id)
-	{
+	public ResultItem(String id) {
 		this.id = id;
 	}
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
+	// ---
+	// --- API methods
+	// ---
+	// ---------------------------------------------------------------------------
 
-	public String getID() { return id; }
+	public String getID() {
+		return id;
+	}
 
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
 
-	public void add(String field, String value)
-	{
+	public void add(String field, String value) {
 		hmFields.put(field, value);
 	}
 
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
 
-	public String getValue(String field) { return hmFields.get(field); }
+	public String getValue(String field) {
+		return hmFields.get(field);
+	}
 }
 
-//=============================================================================
+// =============================================================================
 
 /**
  * Used to sort search results
  * 
  * comment francois : could we use {@link Sort} instead ?
  */
-class ItemComparator implements Comparator<ResultItem>
-{
+class ItemComparator implements Comparator<ResultItem> {
 	private List<SortField> sortFields;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
+	// ---
+	// --- Constructor
+	// ---
+	// ---------------------------------------------------------------------------
 
-	public ItemComparator(List<SortField> sf)
-	{
+	public ItemComparator(List<SortField> sf) {
 		sortFields = sf;
 	}
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Comparator interface
-	//---
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
+	// ---
+	// --- Comparator interface
+	// ---
+	// ---------------------------------------------------------------------------
 
-	public int compare(ResultItem ri1, ResultItem ri2)
-	{
-		for(SortField sf : sortFields)
-		{
+	public int compare(ResultItem ri1, ResultItem ri2) {
+		for (SortField sf : sortFields) {
 			String value1 = ri1.getValue(sf.field);
 			String value2 = ri2.getValue(sf.field);
 
-			//--- some metadata may have null values for some fields
-			//--- in this case we push null values at the bottom
+			// --- some metadata may have null values for some fields
+			// --- in this case we push null values at the bottom
 
 			if (value1 == null && value2 != null)
 				return 1;
@@ -533,7 +532,7 @@ class ItemComparator implements Comparator<ResultItem>
 			if (value1 == null || value2 == null)
 				return 0;
 
-			//--- values are ok, do a proper comparison
+			// --- values are ok, do a proper comparison
 
 			int comp = value1.compareTo(value2);
 
@@ -547,4 +546,4 @@ class ItemComparator implements Comparator<ResultItem>
 	}
 }
 
-//=============================================================================
+// =============================================================================

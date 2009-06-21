@@ -198,6 +198,10 @@ public class GetDomain extends AbstractOperation implements CatalogService
 				SortedSet<String> sortedValues = new TreeSet<String>();
 				HashMap<String, Integer> duplicateValues = new HashMap<String, Integer>();
 				for (int j = 0; j < numDocs; j++) {
+					if (reader.isDeleted(j))
+	                    continue; // FIXME: strange lucene hack: sometimes it tries
+	                              // to load a deleted document
+	                
 					Document doc = reader.document(j);
 					
 					// Skip templates and subTemplates
