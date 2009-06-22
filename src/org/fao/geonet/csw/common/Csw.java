@@ -44,13 +44,14 @@ public class Csw {
 	// FIXME ISO PROFIL : Use declared primeNS in current node.
 	public static final Namespace NAMESPACE_FRA = Namespace.getNamespace("fra", "http://www.cnig.gouv.fr/2005/fra");
 	public static final Namespace NAMESPACE_DC = Namespace.getNamespace("dc","http://purl.org/dc/elements/1.1/");
-
+	public static final Namespace NAMESPACE_XSI = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+	
 	//---------------------------------------------------------------------------
 	//---
 	//--- Strings
 	//---
 	//---------------------------------------------------------------------------
-
+	public static final String OWS_SCHEMA_LOCATIONS = "http://schemas.opengis.net"; 
 	public static final String SCHEMA_LANGUAGE = "http://www.w3.org/XML/Schema";
 	public static final String SERVICE         = "CSW";
 
