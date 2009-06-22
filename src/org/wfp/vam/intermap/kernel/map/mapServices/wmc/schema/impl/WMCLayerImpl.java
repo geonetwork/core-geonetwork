@@ -23,6 +23,7 @@
 
 package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.impl;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCExtension;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCLayer;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCServer;
@@ -237,30 +238,32 @@ public class WMCLayerImpl implements WMCLayer
 	 */
 	public Element toElement(String name)
 	{
-		if(_server == null)
-			throw new IllegalStateException(name + "/Server is missing");
+        if(_server == null)
+            throw new IllegalStateException(name + "/Server is missing");
 
-		if(_name == null)
-			throw new IllegalStateException(name + "/Name is missing");
+        if(_name == null)
+            throw new IllegalStateException(name + "/Name is missing");
 
-		if(_title == null)
-			throw new IllegalStateException(name + "/Title is missing");
+        if(_title == null)
+            throw new IllegalStateException(name + "/Title is missing");
 
-		Element ret = new Element(name)
-			.setAttribute("queryable", _queryable?"true":"false")
-			.setAttribute("hidden",  	_hidden?"true":"false")
-			.addContent(new Element("Name").setText(_name))
-			.addContent(new Element("Title").setText(_title))
-			.addContent(_server.toElement("Server"));
+        Namespace NS_WMC = Namespace.getNamespace("http://www.opengis.net/context");
 
-		if (_abstract != null)
-			ret.addContent(new Element("Abstract").setText(_abstract));
+        Element ret = new Element(name, NS_WMC)
+            .setAttribute("queryable", _queryable?"true":"false")
+            .setAttribute("hidden",  	_hidden?"true":"false")
+            .addContent(_server.toElement("Server"))
+            .addContent(new Element("Name", NS_WMC).setText(_name))
+            .addContent(new Element("Title", NS_WMC).setText(_title));
+
+        if (_abstract != null)
+            ret.addContent(new Element("Abstract").setText(_abstract));
 
 //		if( _dataURL != null)		// TODO
 //		if( _metadataURL != null)
 
-		if (_SRS != null)
-			ret.addContent(new Element("SRS").setText(_SRS));
+        if (_SRS != null)
+            ret.addContent(new Element("SRS").setText(_SRS));
 
 //		if( _dimensionList != null) // TODO
 //		if( _formatList != null)
@@ -268,10 +271,10 @@ public class WMCLayerImpl implements WMCLayer
 //		if( _minscale != null)
 //		if( _maxscale != null)
 
-		if(_extension != null )
-			ret.addContent(_extension.toElement("Extension"));
+        if(_extension != null )
+            ret.addContent(_extension.toElement("Extension"));
 
-		return ret;
+        return ret;
 
 	}
 }

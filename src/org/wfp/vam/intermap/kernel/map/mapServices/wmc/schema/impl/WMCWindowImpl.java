@@ -24,6 +24,7 @@
 package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.impl;
 
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCWindow;
 
 /**
@@ -85,15 +86,17 @@ public class WMCWindowImpl implements WMCWindow
 	 */
 	public Element toElement(String name)
 	{
-		if( _width == -1 )
-			throw new IllegalStateException(name + "/@Width is missing");
+        if( _width == -1 )
+            throw new IllegalStateException(name + "/@Width is missing");
 
-		if( _height == -1 )
-			throw new IllegalStateException(name + "/@Height is missing");
+        if( _height == -1 )
+            throw new IllegalStateException(name + "/@Height is missing");
 
-		return new Element(name)
-			.setAttribute("width", ""+_width)
-			.setAttribute("height", ""+_height);
+        Namespace NS_WMC = Namespace.getNamespace("http://www.opengis.net/context");
+
+        return new Element(name, NS_WMC)
+            .setAttribute("width", ""+_width)
+            .setAttribute("height", ""+_height);		
 	}
 
 }

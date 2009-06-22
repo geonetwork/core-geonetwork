@@ -24,6 +24,7 @@
 package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.impl;
 
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCOnlineResource;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCServer;
 
@@ -144,7 +145,7 @@ public class WMCServerImpl implements WMCServer
 	 */
 	public Element toElement(String name)
 	{
-		if(_onlineResource == null)
+        if(_onlineResource == null)
 			throw new IllegalStateException(name + "/OnlineResource is missing");
 
 		if(_service == null)
@@ -153,7 +154,9 @@ public class WMCServerImpl implements WMCServer
 		if(_version == null)
 			throw new IllegalStateException(name + "/version is missing");
 
-		Element ret = new Element(name)
+        Namespace NS_WMC = Namespace.getNamespace("http://www.opengis.net/context");
+
+		Element ret = new Element(name, NS_WMC)
 			.setAttribute("service", _service)
 			.setAttribute("version", _version)
 			.addContent(_onlineResource.toElement("OnlineResource"));
@@ -161,8 +164,7 @@ public class WMCServerImpl implements WMCServer
 		if (_title != null)
 			ret.setAttribute("title", _title);
 
-		return ret;
-	}
+		return ret;	}
 
 }
 
