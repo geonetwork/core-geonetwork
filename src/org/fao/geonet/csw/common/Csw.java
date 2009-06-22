@@ -45,6 +45,7 @@ public class Csw {
 	public static final Namespace NAMESPACE_FRA = Namespace.getNamespace("fra", "http://www.cnig.gouv.fr/2005/fra");
 	public static final Namespace NAMESPACE_DC = Namespace.getNamespace("dc","http://purl.org/dc/elements/1.1/");
 	public static final Namespace NAMESPACE_XSI = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+	public static final Namespace NAMESPACE_SRV = Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
 	
 	//---------------------------------------------------------------------------
 	//---
