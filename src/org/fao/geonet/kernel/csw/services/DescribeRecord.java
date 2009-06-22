@@ -42,6 +42,7 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
+import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -86,6 +87,10 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 	//--- build output
 
 	Element response = new Element(getName() +"Response", Csw.NAMESPACE_CSW);
+	response.addNamespaceDeclaration(Csw.NAMESPACE_CSW);	
+	Attribute schemaLocation = new Attribute("schemaLocation","http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd",Csw.NAMESPACE_XSI);
+	response.setAttribute(schemaLocation);
+
 
 	Iterator<Element> i = request.getChildren("TypeName", Csw.NAMESPACE_CSW).iterator();
 	
