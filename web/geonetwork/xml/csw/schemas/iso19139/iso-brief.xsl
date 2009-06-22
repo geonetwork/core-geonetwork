@@ -31,7 +31,9 @@
 
 	<xsl:template match="gmd:MD_DataIdentification|
 		*[@gco:isoType='gmd:MD_DataIdentification']|
-		srv:SV_ServiceIdentification">
+		srv:SV_ServiceIdentification|
+		*[@gco:isoType='srv:SV_ServiceIdentification']
+		">
 		<xsl:copy>
 			<xsl:apply-templates select="gmd:citation"/>
 			<xsl:apply-templates select="gmd:graphicOverview"/>
