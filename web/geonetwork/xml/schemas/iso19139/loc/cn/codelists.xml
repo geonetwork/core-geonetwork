@@ -985,8 +985,8 @@
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>quartely</code>
-			<label>Quartely</label>
+			<code>quarterly</code>
+			<label>Quarterly</label>
 			<description>Data is updated every three months</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1908,4 +1908,18 @@
 					<label>Loose</label>
 			</entry>
 	</codelist>
+	<codelist name="srv:SV_ParameterDirection">
+		<entry>
+			<code>in</code>
+			<label>Input</label>
+		</entry>
+		<entry>
+			<code>out</code>
+			<label>Output</label>
+		</entry>
+		<entry>
+			<code>in/out</code>
+			<label>Input/output</label>
+		</entry>
+	</codelist> 
 </codelists>

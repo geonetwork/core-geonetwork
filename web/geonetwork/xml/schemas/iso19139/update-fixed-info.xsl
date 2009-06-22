@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <xsl:stylesheet   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
 						xmlns:gml="http://www.opengis.net/gml"
 						xmlns:srv="http://www.isotc211.org/2005/srv"
+						xmlns:gmx="http://www.isotc211.org/2005/gmx"						
 						xmlns:gco="http://www.isotc211.org/2005/gco"
 						xmlns:gmd="http://www.isotc211.org/2005/gmd" exclude-result-prefixes="gmd">
 
@@ -16,13 +16,15 @@
 	
 	<xsl:template match="gmd:MD_Metadata">
 		 <xsl:copy>
+			 	<xsl:apply-templates select="@*"/>
+		 	
 		 		<xsl:if test="not(gmd:fileIdentifier)">
 		 			<gmd:fileIdentifier>
 						<gco:CharacterString><xsl:value-of select="/root/env/uuid"/></gco:CharacterString>
 					</gmd:fileIdentifier>
 		 		</xsl:if>
 		 		
-			  <xsl:apply-templates select="@*|node()"/>
+			  <xsl:apply-templates select="node()"/>
 		 </xsl:copy>
 	</xsl:template>
 
@@ -161,4 +163,47 @@
 
 	<!-- ================================================================= -->
 
+	<!-- Do not allow to expand operatesOn sub-elements 
+		and constrain users to use uuidref attribute to link
+		service metadata to datasets. This will avoid to have
+		error on XSD validation. -->
+	<xsl:template match="srv:operatesOn">
+		<xsl:copy>
+			<xsl:copy-of select="@*"/>
+		</xsl:copy>
+	</xsl:template>
+	
+	
+	<!-- ================================================================= -->
+	<!-- Set local identifier to the first 2 letters of iso code. Locale ids
+		are used for multilingual charcterString using #iso2code for referencing.
+	-->
+	<xsl:template match="gmd:PT_Locale">
+		<xsl:variable name="id" select="translate(
+			substring(gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 2), 
+			'abcdefghijklmnopqrstuvwxyz', 
+			'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/><!-- NOTE : using XSL v2 we could use upper-case() instead -->
+		
+		<xsl:choose>
+			<xsl:when test="@id and (normalize-space(@id)!='' and normalize-space(@id)=$id)">
+				<xsl:copy-of select="."/>
+			</xsl:when>
+			<xsl:otherwise>
+				<gmd:PT_Locale>
+					<xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
+					<xsl:copy-of select="./*"/>
+				</gmd:PT_Locale>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<!-- Replace gmx:Anchor element by a simple gco:CharacterString.
+		gmx:Anchor is usually used for linking element using xlink.
+		TODO : Currently gmx:Anchor is not supported
+	-->
+	<xsl:template match="gmx:Anchor">
+		<gco:CharacterString>
+			<xsl:value-of select="."/>
+		</gco:CharacterString>
+	</xsl:template>
 </xsl:stylesheet>

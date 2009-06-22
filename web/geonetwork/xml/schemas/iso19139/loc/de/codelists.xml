@@ -1043,8 +1043,7 @@
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>quartely</code>
-
+			<code>quarterly</code>
 			<label>vierteljährlich</label>
 			<description>Daten werden vierteljährlich aktualisiert</description>
 		</entry>
@@ -2026,5 +2025,19 @@ Anmerkung: Der Begriff Serie bezieht sich auf jeglichen Zusammenschluss über DS
 					<label>loose</label>
 			</entry>
 	</codelist>
+	<codelist name="srv:SV_ParameterDirection">
+		<entry>
+			<code>in</code>
+			<label>Input</label>
+		</entry>
+		<entry>
+			<code>out</code>
+			<label>Output</label>
+		</entry>
+		<entry>
+			<code>in/out</code>
+			<label>Input/output</label>
+		</entry>
+	</codelist> 	
 </codelists>
 

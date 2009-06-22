@@ -980,7 +980,7 @@
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>quartely</code>
+			<code>quarterly</code>
 			<label>1 x per kwartaal</label>
 			<description>Data wordt elke kwartaal geactualiseerd.</description>
 		</entry>
@@ -2091,5 +2091,19 @@ serviceType definitie. Metadata voor data wordt niet geleverd in de service meta
 			<label>download</label>
 			<description>download</description>
 		</entry>
-    </codelist>   
+    </codelist>
+	<codelist name="srv:SV_ParameterDirection">
+		<entry>
+			<code>in</code>
+			<label>Input</label>
+		</entry>
+		<entry>
+			<code>out</code>
+			<label>Output</label>
+		</entry>
+		<entry>
+			<code>in/out</code>
+			<label>Input/output</label>
+		</entry>
+	</codelist> 	
 </codelists>

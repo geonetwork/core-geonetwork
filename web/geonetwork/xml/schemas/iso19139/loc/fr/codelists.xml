@@ -945,7 +945,7 @@
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>quartely</code>
+			<code>quarterly</code>
 			<label>Trimestrielle</label>
 			<description>Mise à jour trimestrielle</description>
 		</entry>
@@ -1914,7 +1914,6 @@
             <code>in/out</code>
             <label>Entrée/Sortie</label>
         </entry>
-        
     </codelist>
 	
 </codelists>
