@@ -120,8 +120,8 @@
                 <ows:Value>gmd:MD_Metadata</ows:Value>
             </ows:Parameter>
             <ows:Parameter name="CONSTRAINTLANGUAGE">
-                <ows:Value>Filter</ows:Value>
-                <ows:Value>CQL_Text</ows:Value>
+                <ows:Value>FILTER</ows:Value>
+                <ows:Value>CQL_TEXT</ows:Value>
             </ows:Parameter>
             <ows:Constraint name="PostEncoding">
                 <ows:Value>XML</ows:Value>
