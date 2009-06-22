@@ -25,6 +25,7 @@ package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.impl;
 
 import java.util.List;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCExtension;
 
 
@@ -66,6 +67,7 @@ public class WMCExtensionImpl implements WMCExtension
 	public Element toElement(String name)
 	{
 		Element ret = (Element)_root.clone();
+        ret.setNamespace(Namespace.getNamespace("http://www.opengis.net/context"));
 		ret.setName(name);
 		return ret;
 	}
