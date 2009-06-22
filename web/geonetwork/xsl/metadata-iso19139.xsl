@@ -77,40 +77,43 @@
 	
 	<!-- ==================================================================== -->
 
-    <!-- ===================================================================== -->
-    <!-- xLink : transform xlink to hyperlink with href -->
-    <!-- ===================================================================== -->
-    <xsl:template mode="iso19139" match="srv:operatesOn[@xlink:href]">
-        <xsl:param name="schema"/>
-        <xsl:param name="edit"/>
-        
-        <xsl:variable name="title">
-            <xsl:call-template name="getTitle">
-                <xsl:with-param name="name"   select="name(.)"/>
-                <xsl:with-param name="schema" select="$schema"/>
-            </xsl:call-template>
-        </xsl:variable>
-        <xsl:variable name="helpLink">
-            <xsl:call-template name="getHelpLink">
-                <xsl:with-param name="name"   select="name(.)"/>
-                <xsl:with-param name="schema" select="$schema"/>
-            </xsl:call-template>
-        </xsl:variable>
-        <xsl:variable name="text">
-        <a>
-           <xsl:attribute name="href"><xsl:value-of select="@xlink:href"/></xsl:attribute>
-           <xsl:value-of select="@xlink:title"/>
-        </a>
-        </xsl:variable>
-        <xsl:apply-templates mode="simpleElement" select=".">
-             <xsl:with-param name="schema"   select="$schema"/>
-             <xsl:with-param name="edit"     select="$edit"/>
-             <xsl:with-param name="title"    select="$title"/>
-             <xsl:with-param name="helpLink" select="$helpLink"/>
-             <xsl:with-param name="text"     select="$text"/>
-        </xsl:apply-templates>
-       
-    </xsl:template>
+	<!--
+		OperatesOn element display or edit attribute uuidref.
+		TODO : Add selection popup ?
+		TODO : Replace uuid by metadata title ?
+		-->
+	<xsl:template mode="iso19139" match="srv:operatesOn">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+		<xsl:variable name="text">
+			
+			<xsl:choose>
+				<xsl:when test="$edit=true()">
+					<xsl:variable name="ref" select="geonet:element/@ref"/>
+					<input type="text" name="_{$ref}_uuidref" id="_{$ref}_uuidref" value="{./@uuidref}" size="20"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="@xlink:href">
+							<a href="{@xlink:href}">
+								<xsl:value-of select="@xlink:title"/>
+							</a>
+						</xsl:when>
+						<xsl:otherwise>
+							<a href="metadata.show?uuid={@uuidref}">
+								<xsl:value-of select="@uuidref"/>
+							</a>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:apply-templates mode="simpleElement" select=".">
+			<xsl:with-param name="schema" select="$schema"/>
+			<xsl:with-param name="edit"   select="$edit"/>
+			<xsl:with-param name="text"   select="$text"/>
+		</xsl:apply-templates>
+	</xsl:template>
 
 
 
@@ -353,6 +356,57 @@
 		</xsl:apply-templates>
 	</xsl:template>
 	
+	
+	<!-- LanguageCode is a codelist, but retrieving
+	the list of language as defined in the language database table
+	allows to create the list for selection.
+	
+	This table is also used for gmd:language element.
+	-->
+	<xsl:template mode="iso19139" match="gmd:LanguageCode" priority="2">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+		
+		<xsl:variable name="value" select="@codeListValue" />
+		<xsl:variable name="lang" select="/root/gui/language" />
+		<xsl:choose>
+			<xsl:when test="$edit=true()">
+				<select class="md" name="_{geonet:element/@ref}_codeListValue"
+					size="1">
+					<option name="" />
+					
+					<xsl:for-each select="/root/gui/isoLang/record">
+						<xsl:sort select="label/child::*[name() = $lang]"/>
+						<option value="{code}">
+							<xsl:if test="code = $value">
+								<xsl:attribute name="selected" />
+							</xsl:if>
+							<xsl:value-of select="label/child::*[name() = $lang]" />
+						</option>
+					</xsl:for-each>
+				</select>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of
+					select="/root/gui/isoLang/record[code=$value]/label/child::*[name() = $lang]" />
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<!--  Do not allow editing of id to end user. Id is based on language selection
+	and iso code.-->
+	<xsl:template mode="iso19139" match="gmd:PT_Locale/@id"
+		priority="2">
+		<xsl:param name="schema" />
+		<xsl:param name="edit" />
+		
+		<xsl:apply-templates mode="simpleElement" select=".">
+			<xsl:with-param name="schema" select="$schema" />
+			<xsl:with-param name="edit" select="false()" />
+		</xsl:apply-templates>
+	</xsl:template>
+	
+	
 	<!-- ============================================================================= -->
 
 	<xsl:template mode="iso19139GetAttributeText" match="@*">
@@ -365,31 +419,39 @@
 		<xsl:variable name="codelist" select="/root/gui/*[name(.)=$schema]/codelist[@name = $qname]"/>
 
 		<xsl:choose>
-			<xsl:when test="$edit=true()">
-				<!-- codelist in edit mode -->
-				<select class="md" name="_{../geonet:element/@ref}_{name(.)}" size="1">
-					<option name=""/>
-					<xsl:for-each select="$codelist/entry">
-						<xsl:sort select="label"/>
-						<option>
-							<xsl:if test="code=$value">
-								<xsl:attribute name="selected"/>
-							</xsl:if>
-							<xsl:attribute name="value"><xsl:value-of select="code"/></xsl:attribute>
-							<xsl:value-of select="label"/>
-						</option>
-					</xsl:for-each>
-				</select>
+			<xsl:when test="$qname='gmd:LanguageCode'">
+				<xsl:apply-templates mode="iso19139" select="..">
+					<xsl:with-param name="edit" select="$edit"/>
+				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:otherwise>
-				<!-- codelist in view mode -->
-				<xsl:if test="normalize-space($value)!=''">
-					<b><xsl:value-of select="$codelist/entry[code = $value]/label"/></b>
-					<xsl:value-of select="concat(': ',$codelist/entry[code = $value]/description)"/>
-				</xsl:if>
+				<xsl:choose>
+					<xsl:when test="$edit=true()">
+						<!-- codelist in edit mode -->
+						<select class="md" name="_{../geonet:element/@ref}_{name(.)}" size="1">
+							<option name=""/>
+							<xsl:for-each select="$codelist/entry">
+								<xsl:sort select="label"/>
+								<option>
+									<xsl:if test="code=$value">
+										<xsl:attribute name="selected"/>
+									</xsl:if>
+									<xsl:attribute name="value"><xsl:value-of select="code"/></xsl:attribute>
+									<xsl:value-of select="label"/>
+								</option>
+							</xsl:for-each>
+						</select>
+					</xsl:when>
+					<xsl:otherwise>
+						<!-- codelist in view mode -->
+						<xsl:if test="normalize-space($value)!=''">
+							<b><xsl:value-of select="$codelist/entry[code = $value]/label"/></b>
+							<xsl:value-of select="concat(': ',$codelist/entry[code = $value]/description)"/>
+						</xsl:if>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
-		
 		<!--
 		<xsl:call-template name="getAttributeText">
 			<xsl:with-param name="schema" select="$schema"/>
@@ -3098,6 +3160,54 @@
 				</xsl:for-each>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<!-- List of regions to define country.
+	gmd:country is not a codelist (only country in PT_Local is).
+	A list of existing countries in Regions table is suggested to the editor.
+	The input text could also be used to type another value.
+	-->
+	<xsl:template mode="iso19139" match="gmd:country[gco:CharacterString]" priority="1">
+		<xsl:param name="schema" />
+		<xsl:param name="edit" />
+		
+		<xsl:variable name="qname" select="name(.)"/>
+		<xsl:variable name="value" select="gco:CharacterString"/>
+		
+		<xsl:apply-templates mode="simpleElement" select=".">
+			<xsl:with-param name="schema" select="$schema" />
+			<xsl:with-param name="edit" select="$edit" />
+			<xsl:with-param name="text">
+				<xsl:choose>                    
+					<xsl:when test="$edit=true()">
+						
+						<xsl:variable name="lang" select="/root/gui/language"/>
+						<input class="md" name="_{gco:CharacterString/geonet:element/@ref}"
+						id="_{gco:CharacterString/geonet:element/@ref}" value="{gco:CharacterString}"/>
+						<xsl:text> </xsl:text>
+						<select class="md"
+							onchange="$('_{gco:CharacterString/geonet:element/@ref}').value = this.options[this.selectedIndex].value;"
+							size="1">
+							<option name="" />
+							<xsl:for-each select="/root/gui/regions/record">
+								<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
+								
+								<option value="{label/child::*[name() = $lang]}">
+									<xsl:if test="$value = label/child::*[name() = $lang]">
+										<xsl:attribute name="selected"/>
+									</xsl:if>
+									<xsl:value-of select="label/child::*[name() = $lang]"/>
+								</option>
+							</xsl:for-each>
+						</select>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of
+							select="$value" />
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:with-param>
+		</xsl:apply-templates>
 	</xsl:template>
 
 </xsl:stylesheet>
