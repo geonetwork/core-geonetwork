@@ -4,7 +4,7 @@
 	xmlns:gco="http://www.isotc211.org/2005/gco"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
-	exclude-result-prefixes="exslt">
+	exclude-result-prefixes="exslt gco geonet">
 
 	<xsl:include href="metadata-utils.xsl"/>
 	<xsl:include href="metadata-controls.xsl"/>
