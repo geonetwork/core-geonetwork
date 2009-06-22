@@ -55,6 +55,7 @@ import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
+import org.jdom.Attribute;
 
 //=============================================================================
 
@@ -148,6 +149,9 @@ public class GetRecords extends AbstractOperation implements CatalogService
 	    {
 
 		response = new Element(getName() +"Response", Csw.NAMESPACE_CSW);
+		
+		Attribute schemaLocation = new Attribute("schemaLocation","http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd",Csw.NAMESPACE_XSI);
+		response.setAttribute(schemaLocation);
 
 		Element status = new Element("SearchStatus", Csw.NAMESPACE_CSW);
 		status.setAttribute("timestamp",timeStamp);
