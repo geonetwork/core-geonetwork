@@ -72,6 +72,10 @@
                     </ows:Post>
                 </ows:HTTP>
             </ows:DCP>
+            <ows:Parameter name="typeName">
+                <ows:Value>csw:Record</ows:Value>
+                <ows:Value>gmd:MD_Metadata</ows:Value>
+            </ows:Parameter>
             <ows:Parameter name="outputFormat">
                 <ows:Value>application/xml</ows:Value>
             </ows:Parameter>
@@ -115,7 +119,7 @@
                 <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
                 <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
             </ows:Parameter>
-            <ows:Parameter name="typeName">
+            <ows:Parameter name="typeNames">
                 <ows:Value>csw:Record</ows:Value>
                 <ows:Value>gmd:MD_Metadata</ows:Value>
             </ows:Parameter>
