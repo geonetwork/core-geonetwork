@@ -257,7 +257,7 @@
 				
 				<table id="minimap_root" width="340px">
 					<tr>
-						<td colspan="2" align="center" style="padding: 3px;">
+						<td colspan="3" align="center" style="padding: 3px;">
 							<xsl:value-of select="/root/gui/strings/latMax"/> <input type="text" class="content" id="northBL" name="northBL"  size="5"
 								value="{/root/gui/searchDefaults/northBL}" onChange="javascript:AoIrefresh();"/>
 						</td>
