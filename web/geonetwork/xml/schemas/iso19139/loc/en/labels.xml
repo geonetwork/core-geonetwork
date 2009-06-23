@@ -2340,6 +2340,46 @@
 		<description>The inner boundary of a solid.</description>
 	</element>
 	<!-- ==================================================== -->
+	<element name="gml:begin">
+		<label>Begin</label>
+		<description/>
+	</element>    
+	<element name="gml:end">
+		<label>End</label>
+		<description/>
+	</element>    
+	<element name="gml:duration">
+		<label>Duration</label>
+		<description/>
+	</element>    
+	<element name="gml:timeInterval">
+		<label>Time interval</label>
+		<description/>
+	</element>
+	<element name="gml:TimeInstant">
+		<label>Time instant</label>
+		<description/>
+	</element>
+	<element name="gml:TimePosition">
+		<label>Time position</label>
+		<description/>
+	</element>
+	<element name="gml:TimePeriod">
+		<label>Time period</label>
+		<description/>
+	</element>
+	<element name="gml:TimeNode">
+		<label>Time node</label>
+		<description/>
+	</element>
+	<element name="gml:TimeEdge">
+		<label>Time edge</label>
+		<description/>
+	</element>
+	<element name="gml:ProjectedCRS">
+		<label>Projected CRS</label>
+		<description/>
+	</element>
 	<element name="gml:id">
 		<label>Identifier</label>
 		<description>Identifier</description>
