@@ -581,8 +581,8 @@
 			<!-- regions combobox -->
 
 			<xsl:variable name="lang" select="/root/gui/language"/>
-
-			<select name="place" size="1" onChange="document.mainForm._{$ref}.value=this.options[this.selectedIndex].text">
+			<xsl:text> </xsl:text>
+			<select name="place" size="1" onChange="document.mainForm._{$ref}.value=this.options[this.selectedIndex].text" class="md">
 				<option value=""/>
 				<xsl:for-each select="/root/gui/regions/record">
 					<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
@@ -629,7 +629,7 @@
 
 					<xsl:variable name="lang" select="/root/gui/language"/>
 
-					<select name="place" size="1" onChange="javascript:setRegion(document.mainForm._{gmd:westBoundLongitude/gco:Decimal/geonet:element/@ref}, document.mainForm._{gmd:eastBoundLongitude/gco:Decimal/geonet:element/@ref}, document.mainForm._{gmd:southBoundLatitude/gco:Decimal/geonet:element/@ref}, document.mainForm._{gmd:northBoundLatitude/gco:Decimal/geonet:element/@ref}, this.options[this.selectedIndex].value)">
+					<select name="place" size="1" onChange="javascript:setRegion(document.mainForm._{gmd:westBoundLongitude/gco:Decimal/geonet:element/@ref}, document.mainForm._{gmd:eastBoundLongitude/gco:Decimal/geonet:element/@ref}, document.mainForm._{gmd:southBoundLatitude/gco:Decimal/geonet:element/@ref}, document.mainForm._{gmd:northBoundLatitude/gco:Decimal/geonet:element/@ref}, this.options[this.selectedIndex].value)" class="md">
 						<option value=""/>
 						<xsl:for-each select="/root/gui/regions/record">
 							<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
@@ -2588,7 +2588,7 @@
 						<xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref"/>
 						<xsl:variable name="fref" select="../gmd:name/gco:CharacterString/geonet:element/@ref"/>
 						<input type="hidden" id="_{$ref}" name="_{$ref}" value="{$value}"/>
-						<select id="s_{$ref}" name="s_{$ref}" size="1" onchange="checkForFileUpload('{$fref}', '{$ref}');">
+						<select id="s_{$ref}" name="s_{$ref}" size="1" onchange="checkForFileUpload('{$fref}', '{$ref}');" class="md">
 							<xsl:if test="$value=''">
 								<option value=""/>
 							</xsl:if>
