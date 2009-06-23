@@ -21,6 +21,14 @@
 
 	<target name="compile" depends="gn, im" />
 
+	<!-- Classpath for GeoNetwork -->
+	<path id="geonetwork.class.path">
+		<fileset dir="web/geonetwork/WEB-INF/lib">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+
 	<!-- =============================================================== -->
 	
 	<target name="gn">
@@ -35,10 +43,12 @@
 
 		<javac	srcdir  ="src"
 					destdir =".build"
-					extdirs ="web/geonetwork/WEB-INF/lib"
 					includes="org/fao/**, com/esri/**"
 					encoding= "ISO8859-1"
-					debug   ="true" />
+					extdirs="jetty/lib"
+					debug   ="true">
+					<classpath refid="geonetwork.class.path"/>
+		</javac>
 
 		<copy			todir = ".build">
 			<fileset dir   = "src" includes = "*.properties"/>

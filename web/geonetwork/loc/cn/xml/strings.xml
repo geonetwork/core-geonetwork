@@ -34,6 +34,8 @@
 	<noCategory>No category available.</noCategory>
 	<categoryNameMandatory>A category name must be filled in.</categoryNameMandatory>
 	<usernameMandatory>The username field is mandatory.</usernameMandatory>
+	<resetPassword>Reset Password</resetPassword>
+	<passwordOldRequired>Your old password is mandatory</passwordOldRequired>
 	<passwordEntry>Please enter your password twice.</passwordEntry>
 	<passwordLength>Your password must be at least " + minLength + " characters long. Try again.</passwordLength>
 	<passwordSpace>Sorry, spaces are not allowed in password.</passwordSpace>

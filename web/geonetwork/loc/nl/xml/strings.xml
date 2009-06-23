@@ -58,6 +58,8 @@
 	<noCategory>Geen categorie beschikbaar.</noCategory>
 	<categoryNameMandatory>Een categorie moet worden ingevuld.</categoryNameMandatory>
 	<usernameMandatory>Het gebruikersnaam veld is verplicht.</usernameMandatory>
+	<resetPassword>Reset Password</resetPassword>
+	<passwordOldRequired>Your old password is mandatory</passwordOldRequired>
 	<passwordEntry>Voer uw wachtwoord twee maal in.</passwordEntry>
 	<passwordLength>Uw wachtwoord moet tenminste " + minLength + " tekens lang zijn. Probeer het nogmaals.</passwordLength>
 	<passwordSpace>Helaas zijn spaties niet toegestaan in een wachtwoord.</passwordSpace>

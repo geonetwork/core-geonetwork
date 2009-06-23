@@ -59,10 +59,31 @@ public class Remove implements Service
 	{
 		String id = Util.getParam(params, Params.ID);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+		UserSession usrSess = context.getUserSession();
+		String      myProfile = usrSess.getProfile();
+		String      myUserId  = usrSess.getUserId();
 
-		dbms.execute ("DELETE FROM UserGroups WHERE userId=" + id);
-		dbms.execute ("DELETE FROM Users      WHERE     id=" + id);
+		if (myUserId.equals(id)) {
+			throw new IllegalArgumentException("You cannot delete yourself from the user database");
+		}
+
+		if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) ||
+				myProfile.equals("UserAdmin"))  {
+
+			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+
+			if (myProfile.equals("UserAdmin")) {
+				java.util.List adminlist =dbms.select("SELECT groupId FROM UserGroups WHERE userId="+myUserId+" or userId = "+id+" group by groupId having count(*) > 1").getChildren();
+				if (adminlist.size() == 0) {
+				  throw new IllegalArgumentException("You don't have rights to delete this user because the user is not part of your group");
+				}
+			}
+
+			dbms.execute ("DELETE FROM UserGroups WHERE userId=" + id);
+			dbms.execute ("DELETE FROM Users      WHERE     id=" + id);
+		} else {
+			throw new IllegalArgumentException("You don't have rights to delete this user");
+		}
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}

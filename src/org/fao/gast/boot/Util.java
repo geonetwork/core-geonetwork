@@ -87,39 +87,37 @@ public class Util
 
 	//---------------------------------------------------------------------------
 
-	public static URL[] getJarUrls(String dir) throws Exception
+	public static URL[] getJarUrls(String[] dirs) throws Exception
 	{
-		try
-		{
-			String jars[] = new File(dir).list();
+		ArrayList<String> al = new ArrayList<String>();
 
-			ArrayList<String> al = new ArrayList<String>();
-
-			for(String jar : jars)
-				if (jar.endsWith(".jar"))
-					 al.add(jar);
-
-			URL urls[] = new URL[al.size()];
-
-			int pos = 0;
-
-			for(String jar : al)
-				urls[pos++] = new URL("file:" + dir + "/" + jar);
-
-			return urls;
+		for (String dir : dirs) {
+			try {
+				String jars[] = new File(dir).list();
+				for(String jar : jars) {
+					if (jar.endsWith(".jar")) {
+					 	al.add("file:" + dir + "/" + jar);
+					}
+				}
+			} catch(NullPointerException e) {
+				showError("Null pointer ex while scanning : " +dir);
+				throw e;
+			}
 		}
 
-		catch(MalformedURLException e)
-		{
+		URL urls[] = new URL[al.size()];
+	
+		int pos = 0;
+		try {
+			for(String jar : al) {
+				urls[pos++] = new URL(jar);
+			}
+		} catch(MalformedURLException e) {
 			showError("Malformed URL --> " + e.getMessage());
 			throw e;
 		}
-
-		catch(NullPointerException e)
-		{
-			showError("Null pointer ex while scanning : " +dir);
-			throw e;
-		}
+	
+		return urls;
 	}
 
 	//---------------------------------------------------------------------------

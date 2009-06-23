@@ -46,25 +46,22 @@ public class ServerPanel extends TPanel
 	{
 		super(Messages.getString("ServerPanel.title"));
 
-		FlexLayout fl = new FlexLayout(3,5);
+		FlexLayout fl = new FlexLayout(3,3);
 		fl.setColProp(2, FlexLayout.EXPAND);
 		setLayout(fl);
 
-		add("0,0,x,c,3", jrbEmbed);
-		add("0,1,x,c,3", jrbExter);
+		txtHost.setText(getHost());
+		add("0,0",   new JLabel(Messages.getString("host")));
+		add("1,0,x", txtHost);
 
-		add("1,2",   new JLabel(Messages.getString("host")));
-		add("2,2,x", txtHost);
+		txtPort.setText(getPort()+"");
+		add("0,1",   new JLabel(Messages.getString("port")));
+		add("1,1,x", txtPort);
 
-		add("1,3",   new JLabel(Messages.getString("port")));
-		add("2,3,x", txtPort);
+		txtServlet.setText(getServlet());
+		add("0,2",   new JLabel(Messages.getString("servlet")));
+		add("1,2,x", txtServlet);
 
-		add("1,4",   new JLabel(Messages.getString("servlet")));
-		add("2,4,x", txtServlet);
-
-		btgServer.add(jrbEmbed);
-		btgServer.add(jrbExter);
-		btgServer.setSelected(jrbEmbed.getModel(), true);
 	}
 
 	//---------------------------------------------------------------------------
@@ -75,15 +72,12 @@ public class ServerPanel extends TPanel
 
 	public String getHost()
 	{
-		if (jrbEmbed.isSelected())
-		{
-			String host = Lib.embeddedSC.getHost();
-
-			return (host == null) ? "localhost" : host;
-		}
-		else
-		{
-			return txtHost.getText();
+		if (txtHost.getText().trim().equals("")) {
+			return Lib.embeddedSC.getHost();
+		} else {
+			String host = txtHost.getText().trim();
+			if (host.equals("")) host="localhost";
+			return host;
 		}
 	}
 
@@ -91,19 +85,12 @@ public class ServerPanel extends TPanel
 
 	public int getPort() throws NumberFormatException
 	{
-		if (jrbEmbed.isSelected())
-		{
+		if (txtPort.getText().trim().equals("")) {
 			String port = Lib.embeddedSC.getPort();
-
-			return (port == null) ? 80 : Integer.parseInt(port);
-		}
-		else
-		{
+			return Integer.parseInt(port);
+		} else {
 			String port = txtPort.getText().trim();
-
-			if (port.length() == 0)
-				return 80;
-
+			if (port.length() == 0) port="8080";
 			return Integer.parseInt(port);
 		}
 	}
@@ -112,8 +99,13 @@ public class ServerPanel extends TPanel
 
 	public String getServlet()
 	{
-		if (jrbEmbed.isSelected())		return Lib.embeddedSC.getServlet();
-			else								return txtServlet.getText();
+		if (txtServlet.getText().trim().equals("")) {
+			return Lib.embeddedSC.getServlet();
+		} else {
+			String servlet = txtServlet.getText().trim();
+			if (servlet.equals("")) servlet="geonetwork";
+			return servlet;
+		}
 	}
 
 	//---------------------------------------------------------------------------
@@ -122,9 +114,6 @@ public class ServerPanel extends TPanel
 	//---
 	//---------------------------------------------------------------------------
 
-	private ButtonGroup    btgServer = new ButtonGroup();
-	private JRadioButton   jrbEmbed  = new JRadioButton(Messages.getString("embedded"));
-	private JRadioButton   jrbExter  = new JRadioButton(Messages.getString("external"));
 	private JTextField     txtHost   = new JTextField(20);
 	private JTextField     txtPort   = new JTextField(20);
 	private JTextField     txtServlet= new JTextField(20);

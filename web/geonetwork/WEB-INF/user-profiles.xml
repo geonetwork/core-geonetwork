@@ -195,6 +195,7 @@
 		<allow service="user.pwedit"/>
 		<allow service="user.pwupdate"/>
 		<allow service="user.infoedit"/>
+		<allow service="user.infoupdate"/>
 		<allow service="user.logout"/>
 
 	</profile>

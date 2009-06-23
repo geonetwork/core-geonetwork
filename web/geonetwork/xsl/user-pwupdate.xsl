@@ -14,31 +14,39 @@
 				var invalid = " "; // Invalid character is a space
 				var minLength = 6; // Minimum length
 	
+				var pw0 = document.userupdateform.password.value;
+				// check for a value in the old password field.
+				if (pw0 == '')
+				{
+					alert("<xsl:value-of select="/root/gui/strings/passwordOldRequired"/>");
+					return;
+				}
+	
 				var pw1 = document.userupdateform.newPassword.value;
 				var pw2 = document.userupdateform.newPassword2.value;
 	
 				// check for a value in both fields.
 				if (pw1 == '' || pw2 == '')
 				{
-					alert('Please enter your new password twice.');
+					alert("<xsl:value-of select="/root/gui/strings/passwordEntry"/>");
 					return;
 				}
 				// check for bad password confirmation
 				if (pw1 != pw2)
 				{
-					alert ("You did not enter the same new password twice. Please re-enter your password.");
+					alert ("<xsl:value-of select="/root/gui/strings/passwordDoNotMatch"/>");
 					return;
 				}
 				// check for minimum length of new password
 				if (pw1.length &lt; minLength)
 				{
-					alert('Your password must be at least ' + minLength + ' characters long. Try again.');
+					alert("<xsl:value-of select="/root/gui/strings/passwordLength"/>");
 					return;
 				}
 				// check for spaces
 				if (pw1.indexOf(invalid) &gt; -1)
 				{
-					alert("Sorry, spaces are not allowed.");
+					alert("<xsl:value-of select="/root/gui/strings/passwordSpace"/>");
 					return;
 				}
 				// all ok, proceed
@@ -76,7 +84,7 @@
 			<table>
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/password"/></th>
-					<td class="padded"><input class="content" type="password" name="password" value="{/root/response/record/password}"/></td>
+					<td class="padded"><input class="content" type="password" name="password"/></td>
 				</tr>
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/newPassword"/></th>

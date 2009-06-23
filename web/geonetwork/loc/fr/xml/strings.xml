@@ -33,6 +33,8 @@
 	<deleteConfirmationTitle>Rapport sur la suppression</deleteConfirmationTitle>
 	<categoryNameMandatory>Le nom de la catégorie est obligatoire.</categoryNameMandatory>
 	<usernameMandatory>Le nom d'utilisateur est obligatoire.</usernameMandatory>
+	<resetPassword>Reset Password</resetPassword>
+	<passwordOldRequired>Your old password is mandatory</passwordOldRequired>
 	<passwordEntry>Vous devez saisir 2 fois le mot de passe.</passwordEntry>
 	<passwordLength>Votre mot de passe doit avoir au moins " + minLength + " caractères.</passwordLength>
 	<passwordSpace>Votre mot de passe ne doit pas contenir d'espace.</passwordSpace>

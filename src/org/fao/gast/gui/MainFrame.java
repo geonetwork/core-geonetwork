@@ -82,6 +82,7 @@ public class MainFrame extends JFrame implements Starter, ActionListener
 	public void start(String appPath, String[] args) throws Exception
 	{
 		Lib.init(appPath);
+		dlgConfig = new ConfigDialog(this);
 		App.init(appPath, dlgConfig.getConfig());
 
 		GuiBuilder builder = new GuiBuilder(appPath, panView, panWork);
@@ -169,7 +170,7 @@ public class MainFrame extends JFrame implements Starter, ActionListener
 
 	private ViewPanel    panView   = new ViewPanel();
 	private WorkPanel    panWork   = new WorkPanel();
-	private ConfigDialog dlgConfig = new ConfigDialog(this);
+	private ConfigDialog dlgConfig;
 }
 
 //==============================================================================
