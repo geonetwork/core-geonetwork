@@ -414,6 +414,8 @@
 	<metadataAdded>Metadaten mit folgender ID hinzugefügt:</metadataAdded>
 	<metadataDeleted>Metadatamit folgender ID gelöscht:</metadataDeleted>
 	<metadataJSForm>Metadaten von einem JS Formular</metadataJSForm>
+	<metadataInsertResults>Ergebniss des Metadaten Imports</metadataInsertResults>
+	<metadataRecordsAdded>Anzahl, der hinzugefügten Metadatensätze:</metadataRecordsAdded>
 	<min>Minimum</min>
 	<more>mehr</more>
 	<moreinfo>Für mehr Informationen kontaktieren Sie uns per E-Mail </moreinfo>
