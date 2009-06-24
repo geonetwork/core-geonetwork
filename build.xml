@@ -19,7 +19,7 @@
 
 	<!-- =============================================================== -->
 
-	<target name="compile" depends="gn, im" />
+	<target name="compile" depends="jeeves, gn, im" />
 
 	<!-- Classpath for GeoNetwork -->
 	<path id="geonetwork.class.path">
@@ -28,6 +28,13 @@
 		</fileset>
 	</path>
 
+	<!-- =============================================================== -->
+
+	<target name="jeeves">
+		<ant dir="jeeves" target="all"/>
+		<copy     todir = "web/geonetwork/WEB-INF/lib" file="jeeves/jeeves.jar"/>
+		<copy     todir = "web/intermap/WEB-INF/lib" file="jeeves/jeeves.jar"/>
+	</target>
 
 	<!-- =============================================================== -->
 	
