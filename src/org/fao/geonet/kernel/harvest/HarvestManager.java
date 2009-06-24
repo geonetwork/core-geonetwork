@@ -28,6 +28,7 @@ import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Edit;
@@ -231,6 +232,20 @@ public class HarvestManager
 			return OperResult.NOT_FOUND;
 
 		return ah.run(dbms);
+	}
+
+	//---------------------------------------------------------------------------
+
+	public OperResult invoke(ResourceManager resourceManager, String id)
+	{
+		Log.debug(Geonet.HARVEST_MAN, "Invoking harvester with id : "+ id);
+
+		AbstractHarvester ah = hmHarvesters.get(id);
+
+		if (ah == null)
+			return OperResult.NOT_FOUND;
+
+		return ah.invoke(resourceManager);
 	}
 
 	//---------------------------------------------------------------------------
