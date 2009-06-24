@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+==============================================================================
+=== Build file to automate testing of jeeves/GN services.
+===
+=== Author : Just van den Broecke <just@justobjects.nl>
+==============================================================================
+-->
+
+<project name="test-services" default="all">
+
+    <!-- Classpath for service tests. -->
+    <path id="test.classpath">
+        <pathelement location="${basedir}/lib/servicetest.jar"/>
+        <fileset dir="${basedir}/../web/geonetwork/WEB-INF/lib">
+            <include name="**/*.jar"/>
+
+            <!-- we need to exclude Saxon to prevent xalan-related XSLT errors -->
+            <exclude name="**/saxon9.jar"/>
+        </fileset>
+        <pathelement location="${basedir}/../jeeves/lib/javax.servlet.jar"/>
+     </path>
+
+    <!-- =============================================================== -->
+
+    <target name="all" depends="build,run"/>
+
+
+    <!-- =============================================================== -->
+
+    <target name="build">
+        <delete file="lib/servicetest.jar"/>
+        <delete dir="lib"/>
+        <delete dir=".build"/>
+        <mkdir dir=".build"/>
+        <mkdir dir="lib"/>
+
+        <javac srcdir="src"
+               destdir=".build"
+               extdirs="${basedir}/../web/geonetwork/WEB-INF/lib"
+               encoding="ISO8859-1"
+               debug="true"/>
+
+
+        <jar jarfile="lib/servicetest.jar" basedir=".build"/>
+
+        <delete dir=".build"/>
+    </target>
+
+    <!-- Run all JUnit tests directly.. -->
+    <target name="run"
+        description="Runs the service tests quickly">
+
+        <java classname="org.fao.geonet.services.AllTests"
+            fork="true"
+            failonerror="true"
+            maxmemory="128m"
+            >
+            <sysproperty key="GN_HOME" value="${basedir}/.."/>
+            <classpath refid="test.classpath"/>
+        </java>
+    </target>
+
+<!--    TODO: needs work to get running
+     <target name="junit">
+        <junit printsummary="yes" haltonfailure="no" fork="yes">
+
+            <classpath>
+                <pathelement location="lib/servicetest.jar"/>
+                <fileset dir="../../web/geonetwork/WEB-INF/lib">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+
+            <test name="org.fao.geonet.services.cgp.CGPServerTest"/>
+        </junit>
+    </target>       -->
+</project>
