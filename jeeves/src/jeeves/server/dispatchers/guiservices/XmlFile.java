@@ -82,15 +82,14 @@ public class XmlFile implements GuiService
 	public Element exec(Element response, ServiceContext context) throws Exception
 	{
 		String lang = context.getLanguage();
-		if (!lang.equals(language)) xmlCache = null;
+		if (localized && !lang.equals(language)) xmlCache = null;
 		language = lang;
 		
 		String path = context.getAppPath();
 		String xmlLocalizedFilePath, xmlFilePath;
-		String xmlDefaultFilePath = path + base +"/"+ defaultLang +"/"+ file;
 
 		if (localized) xmlFilePath = path + base +"/"+ lang +"/"+ file;
-		else xmlFilePath = xmlDefaultFilePath;
+		else xmlFilePath = path + file;
 
 		if (xmlCache == null) xmlCache = new XmlFileCacher(new File(xmlFilePath));
 
@@ -98,7 +97,8 @@ public class XmlFile implements GuiService
 		try {
 			result = (Element)xmlCache.get().setName(name).detach();
 		} catch (JDOMException e) {
-			xmlCache = new XmlFileCacher(new File(xmlDefaultFilePath));
+			String xmlDefaultLangFilePath = path + base +"/"+ defaultLang +"/"+ file;
+			xmlCache = new XmlFileCacher(new File(xmlDefaultLangFilePath));
 			result = (Element)xmlCache.get().setName(name).detach();
 		}
 		return result;
