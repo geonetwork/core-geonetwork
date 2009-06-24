@@ -2,8 +2,9 @@ package org.fao.geonet.services;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
 import org.fao.geonet.services.harvesting.HarvestTest;
-import org.fao.geonet.services.metadata.MetaDataTest;
+import org.fao.geonet.services.main.CswTest;
 import org.fao.geonet.test.SuiteRunner;
 
 /**
@@ -25,6 +26,7 @@ public class AllTests extends SuiteRunner {
 		// Create the test suite using Class objects
 		TestSuite suite = new TestSuite("Service Tests");
 		suite.addTestSuite(HarvestTest.class);
+		suite.addTestSuite(CswTest.class);
 //		suite.addTestSuite(MetaDataTest.class);
 		return suite;
 	}
