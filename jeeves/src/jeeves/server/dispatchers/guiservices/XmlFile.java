@@ -23,11 +23,12 @@
 
 package jeeves.server.dispatchers.guiservices;
 
+import java.io.File;
 import jeeves.constants.ConfigFile;
 import jeeves.exceptions.BadInputEx;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import jeeves.utils.XmlFileCacher;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -44,6 +45,7 @@ public class XmlFile implements GuiService
 	private String  language;
 	private String  defaultLang;
 	private boolean localized;
+	private XmlFileCacher xmlCache;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -66,7 +68,9 @@ public class XmlFile implements GuiService
 		String local = config.getAttributeValue(ConfigFile.Xml.Attr.LOCALIZED);
 
 		if (local == null)	localized = defaultLocalized;
-			else					localized = local.equals("true");
+		else localized = local.equals("true");
+
+		xmlCache = null;
 	}
 
 	//---------------------------------------------------------------------------
@@ -77,28 +81,31 @@ public class XmlFile implements GuiService
 
 	public Element exec(Element response, ServiceContext context) throws Exception
 	{
-		String lang = language == null ? context.getLanguage() : language;
+		String lang = context.getLanguage();
+		if (!lang.equals(language)) xmlCache = null;
+		language = lang;
+		
 		String path = context.getAppPath();
+		String xmlLocalizedFilePath, xmlFilePath;
+		String xmlDefaultFilePath = path + base +"/"+ defaultLang +"/"+ file;
 
-		if (localized)		return loadLocalized(path, file, lang);
-			else 				return Xml.loadFile(path + file).setName(name);
+		if (localized) xmlFilePath = path + base +"/"+ lang +"/"+ file;
+		else xmlFilePath = xmlDefaultFilePath;
+
+		if (xmlCache == null) xmlCache = new XmlFileCacher(new File(xmlFilePath));
+
+		Element result = null;
+		try {
+			result = (Element)xmlCache.get().setName(name).detach();
+		} catch (JDOMException e) {
+			xmlCache = new XmlFileCacher(new File(xmlDefaultFilePath));
+			result = (Element)xmlCache.get().setName(name).detach();
+		}
+		return result;
 	}
 
 	//--------------------------------------------------------------------------
 
-	private Element loadLocalized(String path, String file, String lang) throws Exception
-	{
-		try
-		{
-			return Xml.loadFile(path + base +"/"+ lang +"/"+ file).setName(name);
-		}
-		catch (JDOMException e)
-		{
-			//--- if there is an error we try to load the file in the default language
-
-			return Xml.loadFile(path + base +"/"+ defaultLang +"/"+ file).setName(name);
-		}
-	}
 }
 
 //=============================================================================
