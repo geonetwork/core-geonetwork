@@ -8,7 +8,8 @@
 	xmlns:gml="http://www.opengis.net/gml"
     xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:geonet="http://www.fao.org/geonetwork"
-	xmlns:exslt="http://exslt.org/common">
+	xmlns:exslt="http://exslt.org/common"
+	exclude-result-prefixes="gmd gco gml gts srv xlink exslt geonet">
 
 	<!-- =================================================================== -->
 	<!-- default: in simple mode just a flat list -->
@@ -428,7 +429,11 @@
 				<xsl:choose>
 					<xsl:when test="$edit=true()">
 						<!-- codelist in edit mode -->
-						<select class="md" name="_{../geonet:element/@ref}_{name(.)}" size="1">
+						<select class="md" name="_{../geonet:element/@ref}_{name(.)}" id="_{../geonet:element/@ref}_{name(.)}" size="1">
+							<!-- Check element is mandatory or not -->
+							<xsl:if test="../../geonet:element/@min='1' and $edit">
+								<xsl:attribute name="onchange">validateNonEmpty(this);</xsl:attribute>
+							</xsl:if>
 							<option name=""/>
 							<xsl:for-each select="$codelist/entry">
 								<xsl:sort select="label"/>
@@ -833,14 +838,7 @@
 						
 						<table width="100%"><tr>
 							<td>
-								<xsl:choose>
-									<xsl:when test="gco:DateTime">
-										<input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{gco:DateTime/text()}" size="30" readonly="1"/>
-									</xsl:when>
-									<xsl:otherwise>
-										<input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{gco:Date/text()}" size="30" readonly="1"/>
-									</xsl:otherwise>
-								</xsl:choose>
+								<input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{gco:DateTime/text()|gco:Date/text()}" size="30" readonly="1"/>
 							</td>
 							<td align="center" width="30" valign="middle">
 								<img src="{/root/gui/url}/scripts/calendar/img.gif"
@@ -923,14 +921,7 @@
 						
 						<table width="100%"><tr>
 							<td>
-								<xsl:choose>
-                  <xsl:when test="gco:DateTime">
-                <input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{gco:DateTime/text()}" size="30" readonly="1"/>
-                  </xsl:when>
-                  <xsl:otherwise>
-                <input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{gco:Date/text()}" size="30" readonly="1"/>
-                  </xsl:otherwise>
-                </xsl:choose>
+								<input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{gco:DateTime/text()|gco:Date/text()}" size="30" readonly="1"/>
 							</td>
 							<td align="center" width="30" valign="middle">
 								<img src="{/root/gui/url}/scripts/calendar/img.gif"
@@ -944,15 +935,15 @@
 										{
 											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
 								<xsl:choose>
-                  <xsl:when test="gco:DateTime">
-                      ifFormat    : "%Y-%m-%dT%H:%M:00", // the date format
-                      showsTime : true, // Show the time
-                  </xsl:when>
-                  <xsl:otherwise>
-                      ifFormat    : "%Y-%m-%d", // the date format
-                      showsTime : false, // Do not show the time
-                  </xsl:otherwise>
-                </xsl:choose>
+				                  <xsl:when test="gco:DateTime">
+				                      ifFormat    : "%Y-%m-%dT%H:%M:00", // the date format
+				                      showsTime : true, // Show the time
+				                  </xsl:when>
+				                  <xsl:otherwise>
+				                      ifFormat    : "%Y-%m-%d", // the date format
+				                      showsTime : false, // Do not show the time
+				                  </xsl:otherwise>
+				                </xsl:choose>
 											button      : &quot;_<xsl:value-of select="$ref"/>_trigger&quot;  // ID of the button
 										}
 									);
@@ -960,15 +951,15 @@
 										{
 											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
 								<xsl:choose>
-                  <xsl:when test="gco:DateTime">
-                      ifFormat    : "%Y-%m-%dT%H:%M:00", // the date format
-                      showsTime : true, // Show the time
-                  </xsl:when>
-                  <xsl:otherwise>
-                      ifFormat    : "%Y-%m-%d",  // the date format
-                      showsTime : false, // Do not show the time
-                  </xsl:otherwise>
-                </xsl:choose>
+				                  <xsl:when test="gco:DateTime">
+				                      ifFormat    : "%Y-%m-%dT%H:%M:00", // the date format
+				                      showsTime : true, // Show the time
+				                  </xsl:when>
+				                  <xsl:otherwise>
+				                      ifFormat    : "%Y-%m-%d",  // the date format
+				                      showsTime : false, // Do not show the time
+				                  </xsl:otherwise>
+				                </xsl:choose>
 											button      : &quot;_<xsl:value-of select="$ref"/>_cal&quot;  // ID of the button
 										}
 									);
@@ -1008,7 +999,7 @@
 						
 						<table width="100%"><tr>
 							<td>
-	                					<input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{text()}" size="30" readonly="1"/>
+								<input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{text()}" size="30" readonly="1"/>
 							</td>
 							<td align="center" width="30" valign="middle">
 								<img src="{/root/gui/url}/scripts/calendar/img.gif"

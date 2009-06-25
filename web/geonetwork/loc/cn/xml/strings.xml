@@ -9,6 +9,7 @@
     <nl>Nederlands</nl> <!-- Do not translate -->
 	<ru>Русский</ru> <!-- Do not translate! -->
 
+	<helperList>Suggestions:</helperList>
 	<durationSign>Negative duration</durationSign>
 	<durationNbYears>Number of years:</durationNbYears>
 	<durationNbMonths>Number of months:</durationNbMonths>

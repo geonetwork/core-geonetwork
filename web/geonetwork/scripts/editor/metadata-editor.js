@@ -34,7 +34,7 @@ var Checks = {
 
 function unloadMess()
 {
-  mess = "If you press OK you will LOSE any changes you've made to the metadata!";
+  mess = "If you press OK you will LOSE any changes you've made to the metadata!"; // TODO
   return mess;
 }
 
@@ -331,6 +331,10 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement)
 				} else {
 					alert("doNewElementAjax: invalid what: "+what+" should be one of replace, after or before");
 				}
+				
+				// Check elements
+				validateMetadataFields();
+				
 				setBunload(true); // reset warning for window destroy
 			},
 			onFailure: function(req) { 
@@ -375,7 +379,8 @@ function doSaveAction(action,validateAction)
 					if (divToRestore) divToRestore.removeClassName('editing');
 					if (html.startsWith("<?xml") < 0) { // service returns xml on success
 						alert("Save failed: "+html);
-					} 
+					}
+					
 					setBunload(false);
 					location.replace(getGNServiceURL('metadata.show?id='+metadataId));
 				},
@@ -398,6 +403,7 @@ function doSaveAction(action,validateAction)
 						doActionInWindow.delay(1,validateAction); // delay the validate
 					}
 					setBunload(true); // reset warning for window destroy
+					validateMetadataFields();
 				},
 				onFailure: function(req) { 
 					alert("ERROR: Could not save form: status "+req.status+" text: "+req.statusText+" - Try again later?");
@@ -425,6 +431,10 @@ function doActionInWindow(action)
 				var myWindow = window.open('about:blank',"popWindow","location=no, toolbar=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=800, height=600");	
 				myWindow.document.write(html);
 				myWindow.document.close();
+				
+				// Check elements
+				validateMetadataFields();
+				
 				setBunload(true); // reset warning for window destroy
 			},
 			onFailure: function(req) { 
@@ -475,7 +485,7 @@ function checkForFileUpload(fref, pref)
 	// unless its between downloaddata and downloadother
 	if (fileUploaded) {
 		if (!protocolDownload ) {
-			alert('A file may have been uploaded. You cannot change the protocol until you remove that file');
+			alert('A file may have been uploaded. You cannot change the protocol until you remove that file'); // TODO
 			// protocol change is not ok so reset the protocol value
 			protoSelect.value = protoIn.value; 
 		} else { 
@@ -577,6 +587,11 @@ function setRegion(westField, eastField, southField, northField, choice)
 		southField.value = "";
 		northField.value = "";
 	}
+	
+	westField.onkeyup();
+	eastField.onkeyup();
+	southField.onkeyup();
+	northField.onkeyup();
 }
 
 function clearRef(ref) 
@@ -699,4 +714,18 @@ function validateNonEmpty(input) {
     } else {
         input.removeClassName('error');
     }
+}
+
+/**
+ * Retrieve all page's input and textarea element
+ * and check the onkeyup and onchange event (Usually used to check
+ * user entry. @see validateNonEmpty and validateNumber).
+ * 
+ * @return
+ */
+function validateMetadataFields() {
+    $$('input,textarea,select').each(function(input) {
+        if (input.onkeyup) input.onkeyup();
+        if (input.onchange) input.onchange();
+    });
 }

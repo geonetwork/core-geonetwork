@@ -4,7 +4,7 @@
 	xmlns:gco="http://www.isotc211.org/2005/gco"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
-	exclude-result-prefixes="exslt gco geonet">
+	exclude-result-prefixes="exslt xlink gco geonet">
 
 	<xsl:include href="metadata-utils.xsl"/>
 	<xsl:include href="metadata-controls.xsl"/>
@@ -109,11 +109,15 @@
 				<xsl:if test="geonet:choose">
 					<select class="md" name="_{$parentName}_{$qname}" size="1">
 						<xsl:for-each select="geonet:choose">
+							<!-- FIXME : here we should sort by title ? -->
+							<xsl:sort select="@name"/>
 							<option value="{@name}">
 								<xsl:call-template name="getTitle">
 									<xsl:with-param name="name"   select="@name"/>
 									<xsl:with-param name="schema" select="$schema"/>
 								</xsl:call-template>
+								<xsl:text> </xsl:text>
+								(<xsl:value-of select="@name"/>)
 							</option>
 						</xsl:for-each>
 					</select>
@@ -833,7 +837,6 @@
 						</xsl:for-each>
 					</items>
 				</xsl:variable>
-				
 				<select class="md" name="_{geonet:element/@ref}" size="1">
 					<option name=""/>
 					<xsl:for-each select="exslt:node-set($list)//item">
@@ -855,7 +858,11 @@
 									($schema='iso19115' and $name='keyword') or
 									(starts-with($schema,'iso19139') and (name(..)='gmd:keyword' 
 										or ../@gco:isoType='gmd:keyword'))">
-						<input class="md" type="text" id="_{geonet:element/@ref}" name="_{geonet:element/@ref}" value="{text()}" size="{$cols}"/>
+						<input class="md" type="text" id="_{geonet:element/@ref}" name="_{geonet:element/@ref}" value="{text()}" size="{$cols}">
+							<xsl:if test="../geonet:element/@min='1' and $edit">
+								<xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute>
+							</xsl:if>
+						</input>
 
 						<div id='keywordList' class="keywordList" ></div>
 						
@@ -874,12 +881,25 @@
 
 					</xsl:when>
 					<xsl:otherwise>
-						<input class="md" type="text" name="_{geonet:element/@ref}" value="{text()}" size="{$cols}" />
+						<input class="md" type="text" id="_{geonet:element/@ref}" name="_{geonet:element/@ref}" value="{text()}" size="{$cols}">
+							<xsl:if test="../geonet:element/@min='1' and $edit">
+								<xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute>
+							</xsl:if>
+						</input>
+						
+						<xsl:call-template name="helper">
+							<xsl:with-param name="schema" select="$schema"/>
+							<xsl:with-param name="attribute" select="false()"/>
+						</xsl:call-template>
+						
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$edit=true()">
 				<textarea class="md" name="_{geonet:element/@ref}" rows="{$rows}" cols="{$cols}">
+					<xsl:if test="../geonet:element/@min='1' and $edit">
+						<xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute>
+					</xsl:if>
 					<xsl:value-of select="text()"/>
 				</textarea>
 			</xsl:when>
@@ -949,7 +969,12 @@
 				</select>
 			</xsl:when>
 			<xsl:when test="$edit=true() and $rows=1">
-				<input class="md" type="text" name="_{../geonet:element/@ref}_{$updatename}" value="{string()}" size="{$cols}" />
+				<input class="md" type="text" id="_{../geonet:element/@ref}_{$updatename}" name="_{../geonet:element/@ref}_{$updatename}" value="{string()}" size="{$cols}" />
+				
+				<xsl:call-template name="helper">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="attribute" select="true()"/>
+				</xsl:call-template>
 			</xsl:when>
 			<xsl:when test="$edit=true()">
 				<textarea class="md" name="_{../geonet:element/@ref}_{$updatename}" rows="{$rows}" cols="{$cols}">
@@ -1338,7 +1363,73 @@
 			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
+
+
+
+	<!-- Create an helper list for the current input element.
+		Current input could be an element or an attribute (eg. uom). 
 	
+	In editing mode, for gco:CharacterString elements (with no codelist 
+	or enumeration defined in the schema) an helper list could be defined 
+	in loc files using the helper tag. Then a list of values
+	is displayed next to the input field. 
+	-->
+	<xsl:template name="helper">
+		<xsl:param name="schema"/>
+		<xsl:param name="attribute"/>
+		
+		<!-- Define the element to look for. -->
+		<xsl:variable name="parentName">
+			<xsl:choose>
+				<!-- In dublin core element contains value.
+					In ISO, attribute also but element contains characterString which contains the value -->
+				<xsl:when test="$attribute=true() or $schema = 'dublin-core'">
+					<xsl:value-of select="name(.)"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="name(parent::node())"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
+		<!-- Look for the helper -->
+		<xsl:variable name="helper">
+			<xsl:choose>
+				<xsl:when test="starts-with($schema,'iso19139') and not(/root/gui/*[name(.)=$schema]/element[@name = $parentName]/helper)">
+					<!-- Fallback to iso19139 helper for ISO profil if not exist ... -->
+					<xsl:copy-of select="/root/gui/iso19139/element[@name = $parentName]/helper"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:copy-of select="/root/gui/*[name(.)=$schema]/element[@name = $parentName]/helper"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
+		
+		<!-- Display the helper list -->
+		<xsl:if test="normalize-space($helper)!=''">
+			<xsl:variable name="refId">
+				<xsl:choose>
+					<xsl:when test="$attribute=true()">
+						<xsl:value-of select="concat(../geonet:element/@ref, '_', name(.))"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="geonet:element/@ref"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+			
+			<xsl:text> </xsl:text>				
+			(<xsl:value-of select="/root/gui/strings/helperList"/>
+			<select onchange="$('_{$refId}').value=this.options[this.selectedIndex].value; if ($('_{$refId}').onkeyup) $('_{$refId}').onkeyup();" class="md">
+				<option/>
+				<!-- This assume that helper list is already sort in alphabetical order in loc file. -->
+				<xsl:copy-of select="exslt:node-set($helper)"/>
+			</select>)
+		</xsl:if>
+	</xsl:template>
+	
+
 	<!--
 	prevent drawing of geonet:* elements
 	-->

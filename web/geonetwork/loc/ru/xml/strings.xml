@@ -2,7 +2,8 @@
 <strings>
 	<nl>Nederlands</nl> <!-- Do not translate -->
 	<de>Deutsch</de> <!-- Do not translate! -->
-
+	
+	<helperList>Suggestions:</helperList>	
 	<durationSign>Negative duration</durationSign>
 	<durationNbYears>Number of years:</durationNbYears>
 	<durationNbMonths>Number of months:</durationNbMonths>
