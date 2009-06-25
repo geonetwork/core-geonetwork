@@ -101,7 +101,7 @@ public class CachingTransformerFactory extends TransformerFactoryImpl
     // If no templatesEntry is found or this entry was obsolete
     if (templatesCacheEntry == null)
     {
-      System.out.println("Loading transformation [" + file.getAbsolutePath() + "].");
+//      System.out.println("Loading transformation [" + file.getAbsolutePath() + "].");
       // If this file does not exists, throw the exception
       if (!file.exists())
       {
@@ -118,10 +118,10 @@ public class CachingTransformerFactory extends TransformerFactoryImpl
       // Save this entry to the cache
       write(file.getAbsolutePath(), templatesCacheEntry);
     }
-    else
-    {
-      System.out.println("Using cached transformation [" + file.getAbsolutePath() + "].");
-    }
+//    else
+//    {
+//      System.out.println("Using cached transformation [" + file.getAbsolutePath() + "].");
+//    }
     return templatesCacheEntry.templates.newTransformer();
   }
 
