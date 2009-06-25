@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<nl>Nederlands</nl> <!-- Do not translate -->
+	<de>Deutsch</de> <!-- Do not translate! -->
+
 	<durationSign>Negative duration</durationSign>
 	<durationNbYears>Number of years:</durationNbYears>
 	<durationNbMonths>Number of months:</durationNbMonths>
