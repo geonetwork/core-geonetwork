@@ -725,6 +725,11 @@ function validateNonEmpty(input) {
  */
 function validateMetadataFields() {
     $$('input,textarea,select').each(function(input) {
+    	// Process only onchange and onkeyup event having validate in event name.
+    	if ((input.onchange && input.readAttribute("onchange").indexOf("validate") == -1) ||
+    			(input.onkeyup && input.readAttribute("onkeyup").indexOf("validate") == -1))
+    		return;
+    	
         if (input.onkeyup) input.onkeyup();
         if (input.onchange) input.onchange();
     });
