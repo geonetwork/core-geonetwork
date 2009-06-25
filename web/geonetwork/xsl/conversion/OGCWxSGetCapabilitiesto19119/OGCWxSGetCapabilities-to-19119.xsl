@@ -18,7 +18,6 @@ Mapping between :
 										xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 										xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 										xmlns:xlink="http://www.w3.org/1999/xlink"
-										xmlns:date="http://exslt.org/dates-and-times"
 										xmlns:wfs="http://www.opengis.net/wfs"
 										xmlns:wcs="http://www.opengis.net/wcs"
                                         xmlns:ows="http://www.opengis.net/ows"
@@ -26,7 +25,7 @@ Mapping between :
                                         xmlns:ows11="http://www.opengis.net/ows/1.1"
                                         xmlns:wps="http://www.opengeospatial.net/wps"
                                         xmlns:wps1="http://www.opengis.net/wps/1.0.0"
-										extension-element-prefixes="date wcs ows wfs ows11 wps wps1 owsg">
+										extension-element-prefixes="wcs ows wfs ows11 wps wps1 owsg">
 
 	<!-- ============================================================================= -->
 	
@@ -109,18 +108,9 @@ Mapping between :
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-			<xsl:variable name="df">yyyy-MM-dd'T'HH:mm:ss</xsl:variable>
+			<xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>
 			<dateStamp>
-				<xsl:choose> <!-- //FIXME function date-format is not always available -->
-					<xsl:when test="function-available('date:date-format')">
-						<gco:DateTime><xsl:value-of select="date:format-date(date:date-time(),$df)"/></gco:DateTime>
-					</xsl:when>
-					<xsl:otherwise>
-						<gco:DateTime>
-							<xsl:value-of select="date:date-time()"/>
-						</gco:DateTime>
-					</xsl:otherwise>
-				</xsl:choose>
+				<gco:DateTime><xsl:value-of select="format-dateTime(current-dateTime(),$df)"/></gco:DateTime>
 			</dateStamp>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

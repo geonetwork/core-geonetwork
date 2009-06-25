@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	version="1.0" xmlns:geonet="http://www.fao.org/geonetwork"
-	xmlns:date="http://exslt.org/dates-and-times"
 	exclude-result-prefixes="xsl geonet">
 
 	<xsl:include href="metadata-fop.xsl" />
@@ -32,11 +31,8 @@
             
 				<fo:static-content flow-name="xsl-region-before">
 					<fo:block text-align="end">
-						GeoNetwork opensource - <xsl:value-of select="date:date-time()"/>
-						<!-- FIXME - <xsl:value-of select="date:format-date(date:date-time(),$df)"/>--> -
-						<fo:page-number />
-						/
-						<fo:page-number-citation ref-id="terminator" />
+ 						<xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable> 
+							GeoNetwork opensource - <xsl:value-of select="format-dateTime(current-dateTime(),$df)"/> - <fo:page-number /> / <fo:page-number-citation ref-id="terminator" />
 					</fo:block>
 				</fo:static-content>
 
