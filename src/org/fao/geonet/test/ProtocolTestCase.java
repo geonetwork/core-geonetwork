@@ -5,6 +5,7 @@ import jeeves.server.local.LocalJeeves;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.DifferenceListener;
 import org.custommonkey.xmlunit.XMLTestCase;
+import org.custommonkey.xmlunit.XMLUnit;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -86,6 +87,7 @@ public class ProtocolTestCase extends XMLTestCase
 
 		// Do the Jeeves dispatch
 		Element result = LocalJeeves.dispatch(reqElm);
+		String s = getString(result);
 
 		// Expected elm is first child of response-fragment
 		Element expectedRspElm = (Element) testElm.getChild(TAG_RESPONSE).getChildren().get(0);
@@ -94,8 +96,8 @@ public class ProtocolTestCase extends XMLTestCase
 		// Compare the expected XML and actual response XML using XMLUnit
 		String strExpected = getString(expectedRspElm);
 		String strResult = getString(result);
+		XMLUnit.setIgnoreComments(true);
 		Diff diff = new Diff(strExpected, strResult);
-
 		if (differenceListener != null)
 		{
 			diff.overrideDifferenceListener(differenceListener);
