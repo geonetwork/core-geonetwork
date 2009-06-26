@@ -2,6 +2,7 @@ package org.fao.geonet.test;
 
 import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jdom.Namespace;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -71,23 +72,24 @@ public class XmlVars
 
 		// handle attributes
 		List attributes = aCommand.getAttributes();
-		List newAttributes = new ArrayList(attributes.size());
+		//List newAttributes = new ArrayList(attributes.size());
 		Attribute attribute;
 		for (Iterator iter = attributes.iterator(); iter.hasNext();)
 		{
 			attribute = (Attribute) iter.next();
 			String nextKey = attribute.getName();
 			String nextValue = attribute.getValue();
+			Namespace ns = attribute.getNamespace();
 
-			Attribute newAttribute = new Attribute(nextKey, nextValue);
+			// Attribute newAttribute = new Attribute(nextKey, nextValue);
 			if (XmlVars.containsVariableDeclarations(nextValue))
 			{
-				newAttribute.setValue(replaceVariablesWithValues(nextValue));
+				aCommand.setAttribute(nextKey, replaceVariablesWithValues(nextValue));
 			}
-			newAttributes.add(newAttribute);
+			//newAttributes.add(newAttribute);
 		}
 
-		aCommand.setAttributes(newAttributes);
+		//aCommand.setAttributes(newAttributes);
 
 		// text elements...
 		String text = aCommand.getText().trim();
@@ -206,14 +208,14 @@ public class XmlVars
 	{
 		// handle attributes
 		List attributes = elm.getAttributes();
-		List newAttributes = new ArrayList(attributes.size());
+		// List newAttributes = new ArrayList(attributes.size());
 		Attribute attribute;
 		for (Iterator iter = attributes.iterator(); iter.hasNext();)
 		{
 			attribute = (Attribute) iter.next();
 			String nextKey = attribute.getName();
 			String nextValue = attribute.getValue();
-			Attribute newAttribute = new Attribute(nextKey, nextValue);
+			// Attribute newAttribute = new Attribute(nextKey, nextValue);
 			if (nextValue != null)
 			{
 				// JvdB 4.11.08: sometimes an attr may contain multiple vars e.g. ids="${id1},${id2}"
@@ -222,17 +224,17 @@ public class XmlVars
 				{
 					if (XmlVars.containsVariableDeclarations(nextValue))
 					{
-						newAttribute.setValue(clearVariables(nextVal));
+						elm.setAttribute(nextKey, clearVariables(nextVal));
 					}
 					if (XmlVars.containsVariableReferences(nextValue))
 					{
-						newAttribute.setValue(replaceVariablesReferencesWithValues(nextVal));
+						elm.setAttribute(nextKey, replaceVariablesReferencesWithValues(nextVal));
 					}
 				}
 			}
-			newAttributes.add(newAttribute);
+			// newAttributes.add(newAttribute);
 		}
-		elm.setAttributes(newAttributes);
+		// elm.setAttributes(newAttributes);
 
 		// text elements...
 		String text = elm.getText().trim();

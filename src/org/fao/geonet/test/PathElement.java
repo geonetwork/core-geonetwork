@@ -1,6 +1,7 @@
 package org.fao.geonet.test;
 
 import org.jdom.Element;
+import org.jdom.Namespace;
 
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +29,7 @@ public class PathElement
 	 * The tag name or attribute name.
 	 */
 	private String name;
+	private Namespace ns;
 	/**
 	 * The index of an element amoung siblings with the same name.
 	 */
@@ -46,6 +48,7 @@ public class PathElement
 	{
 		type = ELEMENT;
 		name = anElement.getName();
+		ns = anElement.getNamespace();
 
 		if (anElement.getParent() == null)
 		{
@@ -142,6 +145,10 @@ public class PathElement
 		}
 
 		List children = context.getChildren(name);
+		if (ns != null) {
+			children = context.getChildren(name, ns);
+		}
+
 		if (children.size() > index)
 		{
 			return (Element) children.get(index);

@@ -5,10 +5,10 @@ import org.fao.geonet.test.ProtocolTestCase;
 
 public class CswTest extends ProtocolTestCase {
 
-//	@Test
-//	public void testGNCswGetCapabilities() throws Exception {
-//		doTest("gn-csw-GetCapabilities.xml");
-//	}
+	@Test
+	public void testGNCswGetCapabilities() throws Exception {
+		doTest("gn-csw-GetCapabilities.xml");
+	}
 //
 //	@Test
 //	public void testGNCswDescribeRecord() throws Exception {

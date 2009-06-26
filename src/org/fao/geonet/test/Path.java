@@ -89,7 +89,7 @@ public class Path
 	 */
 	public String findValue(Element elm)
 	{
-		log("Looking for " + toString() + " in element " + elm.getName());
+		log("Looking for " + toString() + " in element " + elm.getQualifiedName());
 		if (elements.size() == 0)
 		{
 			return null;
@@ -128,7 +128,7 @@ public class Path
 	 */
 	public Element findElement(Element elm)
 	{
-		log("Looking for " + toString() + " in element " + elm.getName());
+		log("Looking for " + toString() + " in element " + elm.getQualifiedName());
 		if (elements.size() == 0)
 		{
 			return null;
