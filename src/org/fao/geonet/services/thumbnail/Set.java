@@ -300,7 +300,7 @@ public class Set implements Service
 
 		Image thumb = origImg.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH);
 
-		BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+		BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TRANSLUCENT);
 
 		Graphics2D g = bimg.createGraphics();
 		g.drawImage(thumb, 0, 0, null);

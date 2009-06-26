@@ -233,6 +233,11 @@ function im_mm_redrawAoI()
 	var x2 = im_mm.lon2x(parseFloat(im_mm_ctrl_e.value));
 	var y1 = im_mm.lat2y(parseFloat(im_mm_ctrl_n.value));
 	var y2 = im_mm.lat2y(parseFloat(im_mm_ctrl_s.value));
+	
+	// IE fix : Do not redraw the map if values are NaN
+	if (isNaN(x1) || isNaN(x2) || isNaN(y1) || isNaN(y2))
+		return;
+	
 	var w = Math.abs(x2-x1);
 	var h = Math.abs(y2-y1);
 	
