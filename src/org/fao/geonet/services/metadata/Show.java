@@ -114,20 +114,31 @@ public class Show implements Service
 		Element elMd = dm.getMetadata(context, id, false);
 		elMd.addNamespaceDeclaration(Csw.NAMESPACE_CSW);	
 
-		// schemaLocation for ISO19139 metadata,
-		// but NOT if it is Service Metadata !
-		// (this is because ISO19119 does not have an official schema location)
-		boolean isServiceMetadata = false;
-		Element identificationInfo = elMd.getChild("identificationInfo", Csw.NAMESPACE_GMD);
-		if(identificationInfo != null) {
-			Element srvIdentification = identificationInfo.getChild("SV_ServiceIdentification", Csw.NAMESPACE_SRV);
-			if(srvIdentification != null) {
-				isServiceMetadata = true;
+		//
+		// setting schemaLocation
+		// TODO currently it's only set for ISO metadata
+		
+		// document has ISO root element and ISO namespace
+		if(elMd.getName().equals("MD_Metadata") && elMd.getNamespaceURI().equals("http://www.isotc211.org/2005/gmd")) {
+			// whether the metadata describes a service
+			boolean isServiceMetadata = false;
+			Element identificationInfo = elMd.getChild("identificationInfo", Csw.NAMESPACE_GMD);
+			if(identificationInfo != null) {
+				Element srvIdentification = identificationInfo.getChild("SV_ServiceIdentification", Csw.NAMESPACE_SRV);
+				if(srvIdentification != null) {
+					isServiceMetadata = true;
+				}
 			}
-		}
-		if(!isServiceMetadata && elMd.getName().equals("MD_Metadata") && elMd.getNamespaceURI().equals("http://www.isotc211.org/2005/gmd")){
-			Attribute schemaLocation = new Attribute("schemaLocation","http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd", Csw.NAMESPACE_XSI);
-			elMd.setAttribute(schemaLocation);
+			// document describes a dataset (not a service)
+			if(!isServiceMetadata){
+				Attribute schemaLocation = new Attribute("schemaLocation","http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd", Csw.NAMESPACE_XSI);
+				elMd.setAttribute(schemaLocation);
+			}
+			// document describes a service
+			else if(isServiceMetadata) {
+				Attribute schemaLocation = new Attribute("schemaLocation","http://www.isotc211.org/2005/gmd http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd", Csw.NAMESPACE_XSI);
+				elMd.setAttribute(schemaLocation);			
+			}
 		}
 
 		if (elMd == null)
