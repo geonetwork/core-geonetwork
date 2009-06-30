@@ -29,6 +29,8 @@ import org.fao.geonet.util.ISODate;
 
 public class RecordInfo
 {
+    private final static long SECONDS_PER_DAY = 60* 60 * 24;
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -74,9 +76,9 @@ public class RecordInfo
 		ISODate remoteDate = new ISODate(changeDate);
 		ISODate localDate  = new ISODate(localChangeDate);
 
-		//--- accept if remote date is greater than local date
-
-		return (remoteDate.sub(localDate) > 0);
+        //--- modified:  we accept metadata modified from 24 hours before
+        //--- to harvest several changes during a day (if short date format used) or date local differences
+        return (remoteDate.sub(localDate) > (-1) * SECONDS_PER_DAY);
 	}
 
 	//---------------------------------------------------------------------------
