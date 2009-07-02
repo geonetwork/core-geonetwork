@@ -1,7 +1,7 @@
 package org.fao.geonet.test;
 
-import junit.framework.TestResult;
 import junit.framework.Test;
+import junit.framework.TestResult;
 
 import java.util.Enumeration;
 
@@ -21,14 +21,18 @@ abstract public class SuiteRunner {
 		return result;
 	}
 
-	/** Subclass must create the test suite. */
+	/**
+	 * Subclass must create the test suite.
+	 */
 	abstract protected Test createSuite();
 
 	protected void p(String s) {
 		System.out.println(s);
 	}
 
-	/** Rand.: convert test result to String. */
+	/**
+	 * Rand.: convert test result to String.
+	 */
 	private String resultToString(TestResult aTestResult) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("=== AllTests JUnit results ===\n");

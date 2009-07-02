@@ -8,13 +8,22 @@ public class TestConfig {
 	 */
 	private static String GN_HOME;
 	private static String REL_TEST_HOME = "/test";
+	private static String REL_REOURCES_HOME = REL_TEST_HOME + "/resources";
+	private static String REL_DB_HOME = REL_TEST_HOME + "/db";
 	private static String REL_APP_PATH = "/web/geonetwork/";
-	private static String REL_CONFIG_PATH = REL_APP_PATH + "WEB-INF/";
- 	private static String GN_BASE_URL = "/geonetwork";
-
+	private static String REL_CONFIG_PATH = REL_REOURCES_HOME + "/config/";
+	private static String GN_BASE_URL = "/geonetwork";
 
 	static public String getAppPath() {
 		return GN_HOME + REL_APP_PATH;
+	}
+
+	static public String getDBPath() {
+		return GN_HOME + REL_DB_HOME;
+	}
+
+	static public String getResourcesPath() {
+		return GN_HOME + REL_REOURCES_HOME;
 	}
 
 	static public String getConfigPath() {
@@ -33,7 +42,7 @@ public class TestConfig {
 		return GN_HOME + REL_TEST_HOME;
 	}
 
-	static public void init() {
+	static public void init() throws Exception {
 		// Get GN_HOME from sysproperty (-DGN_HOME) or user working dir
 		GN_HOME = System.getProperty("GN_HOME");
 		if (GN_HOME == null) {
@@ -48,5 +57,6 @@ public class TestConfig {
 				throw new IllegalArgumentException(getTestHomePath() + " does not exist - please run from top of GN dir");
 			}
 		}
+
 	}
 }

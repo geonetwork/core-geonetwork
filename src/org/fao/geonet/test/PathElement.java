@@ -14,8 +14,7 @@ import java.util.List;
  * @author Just van den Broecke - just@justobjects.nl
  */
 
-public class PathElement
-{
+public class PathElement {
 
 	public static final int ATTRIBUTE = 1;
 	public static final int ELEMENT = 2;
@@ -44,28 +43,21 @@ public class PathElement
 	 *
 	 * @param anElement the Element to represent.
 	 */
-	PathElement(Element anElement)
-	{
+	PathElement(Element anElement) {
 		type = ELEMENT;
 		name = anElement.getName();
 		ns = anElement.getNamespace();
 
-		if (anElement.getParent() == null)
-		{
+		if (anElement.getParent() == null) {
 			isRoot = true;
-		} else
-		{
+		} else {
 			// find the index of this element among other elements of the same name.
-			for (Iterator iter = ((Element) anElement.getParent()).getChildren().iterator(); iter.hasNext();)
-			{
+			for (Iterator iter = ((Element) anElement.getParent()).getChildren().iterator(); iter.hasNext();) {
 				Element element = (Element) iter.next();
-				if (element.getName().equals(name))
-				{
-					if (element != anElement)
-					{
+				if (element.getName().equals(name)) {
+					if (element != anElement) {
 						index++;
-					} else
-					{
+					} else {
 						break;
 					}
 				}
@@ -79,8 +71,7 @@ public class PathElement
 	 *
 	 * @param attr the attribute name.
 	 */
-	PathElement(String attr)
-	{
+	PathElement(String attr) {
 		type = ATTRIBUTE;
 		name = attr;
 	}
@@ -88,8 +79,7 @@ public class PathElement
 	/**
 	 * Create a PathElement representing a text node.
 	 */
-	PathElement()
-	{
+	PathElement() {
 		type = TEXT;
 	}
 
@@ -99,29 +89,21 @@ public class PathElement
 	 * @param elm the Element to scrutinize.
 	 * @return true if the Element matches this PathElement, false otherwise.
 	 */
-	public boolean matches(Element elm)
-	{
-		if (type != ELEMENT || !elm.getName().equals(name))
-		{
+	public boolean matches(Element elm) {
+		if (type != ELEMENT || !elm.getName().equals(name)) {
 			return false;
 		}
 
-		if (elm.getParent() == null)
-		{
+		if (elm.getParent() == null) {
 			return isRoot;
-		} else
-		{
+		} else {
 			int count = 0;
-			for (Iterator iter = ((Element) elm.getParent()).getChildren().iterator(); iter.hasNext();)
-			{
+			for (Iterator iter = ((Element) elm.getParent()).getChildren().iterator(); iter.hasNext();) {
 				Element element = (Element) iter.next();
-				if (element.getName().equals(name))
-				{
-					if (count == index)
-					{
+				if (element.getName().equals(name)) {
+					if (count == index) {
 						return true;
-					} else
-					{
+					} else {
 						count++;
 					}
 				}
@@ -137,10 +119,8 @@ public class PathElement
 	 * @param context the Element to search in.
 	 * @return a child element of the context element that matches this PathElement.
 	 */
-	public Element findElement(Element context)
-	{
-		if (type != ELEMENT)
-		{
+	public Element findElement(Element context) {
+		if (type != ELEMENT) {
 			return null;
 		}
 
@@ -149,8 +129,7 @@ public class PathElement
 			children = context.getChildren(name, ns);
 		}
 
-		if (children.size() > index)
-		{
+		if (children.size() > index) {
 			return (Element) children.get(index);
 		}
 		return null;
@@ -163,20 +142,16 @@ public class PathElement
 	 * @return the text value or an attribute value of the context node if
 	 *         it matches this PathElement.
 	 */
-	public String findValue(Element context)
-	{
-		if (type == ELEMENT)
-		{
+	public String findValue(Element context) {
+		if (type == ELEMENT) {
 			return null;
 		}
 
-		if (type == TEXT)
-		{
+		if (type == TEXT) {
 			return context.getText();
 		}
 
-		if (type == ATTRIBUTE)
-		{
+		if (type == ATTRIBUTE) {
 			return context.getAttributeValue(name);
 		}
 
@@ -187,56 +162,47 @@ public class PathElement
 	/**
 	 * @return Returns the index.
 	 */
-	public int getIndex()
-	{
+	public int getIndex() {
 		return index;
 	}
 
 	/**
 	 * @return Returns the name.
 	 */
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
 	/**
 	 * @return Returns the type.
 	 */
-	public int getType()
-	{
+	public int getType() {
 		return type;
 	}
 
 	/**
 	 * @return Returns the isRoot.
 	 */
-	public boolean isRoot()
-	{
+	public boolean isRoot() {
 		return isRoot;
 	}
 
-	public String toString()
-	{
+	public String toString() {
 		StringBuffer buf = new StringBuffer();
 		toString(buf);
 		return buf.toString();
 	}
 
-	void toString(StringBuffer buf)
-	{
-		if (type == ELEMENT)
-		{
+	void toString(StringBuffer buf) {
+		if (type == ELEMENT) {
 			buf.append('/');
 			buf.append(name);
 		}
-		if (type == ATTRIBUTE)
-		{
+		if (type == ATTRIBUTE) {
 			buf.append("@");
 			buf.append(name);
 		}
-		if (type == TEXT)
-		{
+		if (type == TEXT) {
 			buf.append("/text()");
 		}
 	}

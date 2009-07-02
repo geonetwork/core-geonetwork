@@ -18,13 +18,11 @@ import java.util.List;
  *
  * @author Just van den Broecke - just@justobjects.nl
  */
-public class Path
-{
+public class Path {
 
 	private List elements;
 
-	private Path()
-	{
+	private Path() {
 		elements = new ArrayList();
 	}
 
@@ -35,11 +33,9 @@ public class Path
 	 * @param elm the Element to create a Path to.
 	 * @return a new Path to the given Element.
 	 */
-	public static Path createPathToElement(Element elm)
-	{
+	public static Path createPathToElement(Element elm) {
 		Path path = new Path();
-		do
-		{
+		do {
 			PathElement pe = new PathElement(elm);
 			path.elements.add(0, pe);
 		}
@@ -55,8 +51,7 @@ public class Path
 	 * @param attr
 	 * @return the created Path
 	 */
-	public static Path createPathToAttribute(Element elm, String attr)
-	{
+	public static Path createPathToAttribute(Element elm, String attr) {
 		Path path = createPathToElement(elm);
 		PathElement pe = new PathElement(attr);
 		path.elements.add(pe);
@@ -70,8 +65,7 @@ public class Path
 	 * @param elm
 	 * @return
 	 */
-	public static Path createPathToText(Element elm)
-	{
+	public static Path createPathToText(Element elm) {
 		Path path = createPathToElement(elm);
 		PathElement pe = new PathElement();
 		path.elements.add(pe);
@@ -87,33 +81,25 @@ public class Path
 	 * @param elm the context element.
 	 * @return the attribute value or text
 	 */
-	public String findValue(Element elm)
-	{
+	public String findValue(Element elm) {
 		log("Looking for " + toString() + " in element " + elm.getQualifiedName());
-		if (elements.size() == 0)
-		{
+		if (elements.size() == 0) {
 			return null;
-		} else if (((PathElement) elements.get(0)).matches(elm))
-		{
-			if (elements.size() == 1)
-			{
+		} else if (((PathElement) elements.get(0)).matches(elm)) {
+			if (elements.size() == 1) {
 				return null; // not a value.
-			} else
-			{
-				for (int i = 1; i < elements.size() - 1; i++)
-				{
+			} else {
+				for (int i = 1; i < elements.size() - 1; i++) {
 					PathElement pe = (PathElement) elements.get(i);
 					elm = pe.findElement(elm);
-					if (elm == null)
-					{
+					if (elm == null) {
 						return null;
 					}
 				}
 				PathElement pe = (PathElement) elements.get(elements.size() - 1);
 				return pe.findValue(elm);
 			}
-		} else
-		{
+		} else {
 			return null;
 		}
 	}
@@ -126,58 +112,45 @@ public class Path
 	 * @param elm the context of the search.
 	 * @return the Element that this Path points to.
 	 */
-	public Element findElement(Element elm)
-	{
+	public Element findElement(Element elm) {
 		log("Looking for " + toString() + " in element " + elm.getQualifiedName());
-		if (elements.size() == 0)
-		{
+		if (elements.size() == 0) {
 			return null;
-		} else if (((PathElement) elements.get(0)).matches(elm))
-		{
-			if (elements.size() == 1)
-			{
+		} else if (((PathElement) elements.get(0)).matches(elm)) {
+			if (elements.size() == 1) {
 				return elm;
-			} else
-			{
-				for (int i = 1; i < elements.size(); i++)
-				{
+			} else {
+				for (int i = 1; i < elements.size(); i++) {
 					PathElement pe = (PathElement) elements.get(i);
 					elm = pe.findElement(elm);
-					if (elm == null)
-					{
+					if (elm == null) {
 						break;
 					}
 				}
 				return elm;
 			}
-		} else
-		{
+		} else {
 			return null;
 		}
 	}
 
-	public String toString()
-	{
+	public String toString() {
 		StringBuffer buf = new StringBuffer();
 		toString(buf);
 		return buf.toString();
 	}
 
-	void toString(StringBuffer buf)
-	{
-		for (Iterator iter = elements.iterator(); iter.hasNext();)
-		{
+	void toString(StringBuffer buf) {
+		for (Iterator iter = elements.iterator(); iter.hasNext();) {
 			PathElement element = (PathElement) iter.next();
 			element.toString(buf);
-			if (element == elements.get(0) && !element.isRoot())
-			{
+			if (element == elements.get(0) && !element.isRoot()) {
 				buf.deleteCharAt(0);
 			}
 		}
 	}
 
-	private static void log(String message)
-	{
+	private static void log(String message) {
 		//System.out.println(message);
 	}
 

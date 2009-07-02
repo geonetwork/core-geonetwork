@@ -1,7 +1,6 @@
 package org.fao.geonet.test;
 
 import jeeves.utils.Xml;
-import jeeves.server.local.LocalJeeves;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.DifferenceListener;
 import org.custommonkey.xmlunit.XMLTestCase;
@@ -16,8 +15,7 @@ import org.jdom.output.XMLOutputter;
  *
  * @author Just van den Broecke - just@justobjects.nl
  */
-public class ProtocolTestCase extends XMLTestCase
-{
+public class ProtocolTestCase extends XMLTestCase {
 	/**
 	 * Holds symbolic vars used in XML test files.
 	 */
@@ -29,21 +27,28 @@ public class ProtocolTestCase extends XMLTestCase
 
 	private String xmlDir = null;
 
-	public ProtocolTestCase(String xmlDir)
-	{
+	private static boolean initDone;
+
+	public ProtocolTestCase(String xmlDir) {
 		this.xmlDir = xmlDir;
 	}
 
-	public ProtocolTestCase()
-	{
+	public ProtocolTestCase() {
 	}
 
-	protected void setUp()
-	{
-		// Setup Jeeves engine locally only once.
-		if (!LocalJeeves.isRunning()) {
-			TestConfig.init();
-			LocalJeeves.init(TestConfig.getAppPath(), TestConfig.getConfigPath(), TestConfig.getBaseUrl());
+	protected void setUp() {
+		// Setup config and server only once.
+		if (!initDone) {
+			try {
+				TestConfig.init();
+				ServerMediator.init();
+			} catch (Throwable t) {
+				p("Cannot init config or server: stopping");
+			} finally {
+				// Do this only once: if we fail we will also fail
+				// once only
+				initDone = true;
+			}
 		}
 
 		// Directory with xml test files supposed to be the same as Junit/XMLUnit java files
@@ -53,8 +58,7 @@ public class ProtocolTestCase extends XMLTestCase
 	/**
 	 * Post-test call by JUnit.
 	 */
-	protected void tearDown()
-	{
+	protected void tearDown() {
 		xmlVars.clearVariables();
 	}
 
@@ -63,8 +67,7 @@ public class ProtocolTestCase extends XMLTestCase
 	 *
 	 * @param aFileName file name relative to xml scripts homedir
 	 */
-	public void doTest(String aFileName) throws Exception
-	{
+	public void doTest(String aFileName) throws Exception {
 		doTest(aFileName, null);
 	}
 
@@ -73,9 +76,14 @@ public class ProtocolTestCase extends XMLTestCase
 	 *
 	 * @param aFileName file name relative to xml scripts homedir
 	 */
-	public void doTest(String aFileName, DifferenceListener differenceListener) throws Exception
-	{
+	public void doTest(String aFileName, DifferenceListener differenceListener) throws Exception {
+		if (!ServerMediator.isReady()) {
+			fail("Server is not ready err=" + ServerMediator.getError());
+			return;
+		}
+
 		p(aFileName);
+
 		// Load the file containing the test
 		Element testElm = loadXMLFile(aFileName);
 
@@ -85,9 +93,9 @@ public class ProtocolTestCase extends XMLTestCase
 		// Expand possible symbolic XmlVars
 		setRequestVars(reqElm);
 
-		// Do the Jeeves dispatch
-		Element result = LocalJeeves.dispatch(reqElm);
-		String s = getString(result);
+		// Send request to server through Mediator.
+		// Could be local (Jeeves) or remote GN server.
+		Element result = ServerMediator.dispatch(reqElm);
 
 		// Expected elm is first child of response-fragment
 		Element expectedRspElm = (Element) testElm.getChild(TAG_RESPONSE).getChildren().get(0);
@@ -98,8 +106,7 @@ public class ProtocolTestCase extends XMLTestCase
 		String strResult = getString(result);
 		XMLUnit.setIgnoreComments(true);
 		Diff diff = new Diff(strExpected, strResult);
-		if (differenceListener != null)
-		{
+		if (differenceListener != null) {
 			diff.overrideDifferenceListener(differenceListener);
 		}
 		assertXMLEqual("comparing test xml to control xml", diff, true);
@@ -108,43 +115,36 @@ public class ProtocolTestCase extends XMLTestCase
 	/**
 	 * Get a variable.
 	 */
-	public String getVariable(String name)
-	{
+	public String getVariable(String name) {
 		return xmlVars.getVariable(name);
 	}
 
 	/**
 	 * Set a variable.
 	 */
-	public void setVariable(String name, String value)
-	{
+	public void setVariable(String name, String value) {
 		xmlVars.setVariable(name, value);
 	}
 
 	/**
 	 * Converts an xml element to a string
 	 */
-	public static String getString(Element data)
-	{
+	public static String getString(Element data) {
 		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
 
 		return outputter.outputString(data);
 	}
 
-	protected Element loadXMLFile(String aFilePath)
-	{
-		try
-		{
+	protected Element loadXMLFile(String aFilePath) {
+		try {
 			return Xml.loadFile(xmlDir + aFilePath);
-		} catch (Throwable t)
-		{
+		} catch (Throwable t) {
 			err("Cannot load XML file=" + aFilePath, t);
 		}
 		return null;
 	}
 
-	protected void processResponseVars(Element expectedRspElm, Element actualRspElm)
-	{
+	protected void processResponseVars(Element expectedRspElm, Element actualRspElm) {
 		// Store the variables found in the incoming message.
 		// Unfortunately, I have to make a copy to be able to use Path,
 		// which only works from the root of a document. I also need
@@ -156,18 +156,15 @@ public class ProtocolTestCase extends XMLTestCase
 		xmlVars.processVariables(expectedRspElm);
 	}
 
-	protected void setRequestVars(Element anElm)
-	{
+	protected void setRequestVars(Element anElm) {
 		xmlVars.expandVariables(anElm);
 	}
 
-	private static void p(String s)
-	{
+	private static void p(String s) {
 		System.out.println();
 	}
 
-	private static void err(String s, Throwable t)
-	{
+	private static void err(String s, Throwable t) {
 		p("ERROR: " + s + " msg=" + t.getMessage());
 		t.printStackTrace();
 	}

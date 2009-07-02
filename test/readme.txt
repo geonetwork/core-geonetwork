@@ -1,6 +1,8 @@
 Author: Just van den Broecke
 Email: just@justobjects.nl
 
+Note: this is work in progress ! Don't run tests on a production system as your lucene index may be spoiled!
+
 This is the home of GeoNetwork service unit tests. Extended documentation should be forecoming.
 Although they are called unit tests a better name would be blackbox/protocol/webservice tests since
 we test the server protocol api similar to requests issued by an external client.
@@ -40,7 +42,7 @@ The local Jeeves engine can be found under jeeves/src/jeeves/server/local
 HOWTO
 0) Important when running tests is that have the top of the GeoNetwork
 svn dir (e.g. trunk) as working directory by:
-- a system property GN_HOME points to that directory! See e.g. build.xml run task (sysproperty).
+- a system property GN_HOME points to that directory. See e.g. build.xml run task (sysproperty).
 - user.dir is assumed to be the working dir.
 
 1) create a package with the same name as the service, e.g.  org/fao/geonet/services/category
@@ -105,5 +107,7 @@ example xml test file gn-harvester-add.xml:
 - using Ant (currently only for Alltests.java)
 
 In the first two cases don't forget to have the top dir as working dir !
+
+
 
 

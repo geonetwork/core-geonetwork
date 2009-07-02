@@ -4,7 +4,10 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,8 +25,7 @@ import java.util.regex.Pattern;
  *
  * @author Just van den Broecke - just@justobjects.nl
  */
-public class XmlVars
-{
+public class XmlVars {
 	/**
 	 * Variable names as keys, encountered values as values.
 	 */
@@ -46,12 +48,10 @@ public class XmlVars
 	private static final Pattern VALUEPATTERN = Pattern.compile(VALUE);
 
 
-	public XmlVars()
-	{
+	public XmlVars() {
 	}
 
-	private void p(String s)
-	{
+	private void p(String s) {
 		System.out.println("XmlVars: " + s);
 	}
 
@@ -59,31 +59,27 @@ public class XmlVars
 	/**
 	 * Clear all vars.
 	 */
-	public void clearVariables()
-	{
+	public void clearVariables() {
 		variables.clear();
 	}
 
 	/**
 	 * Expand some attribute values like local addresses that can only be known at runtime and the values in the variables table.
 	 */
-	public void expandVariables(Element aCommand)
-	{
+	public void expandVariables(Element aCommand) {
 
 		// handle attributes
 		List attributes = aCommand.getAttributes();
 		//List newAttributes = new ArrayList(attributes.size());
 		Attribute attribute;
-		for (Iterator iter = attributes.iterator(); iter.hasNext();)
-		{
+		for (Iterator iter = attributes.iterator(); iter.hasNext();) {
 			attribute = (Attribute) iter.next();
 			String nextKey = attribute.getName();
 			String nextValue = attribute.getValue();
 			Namespace ns = attribute.getNamespace();
 
 			// Attribute newAttribute = new Attribute(nextKey, nextValue);
-			if (XmlVars.containsVariableDeclarations(nextValue))
-			{
+			if (XmlVars.containsVariableDeclarations(nextValue)) {
 				aCommand.setAttribute(nextKey, replaceVariablesWithValues(nextValue));
 			}
 			//newAttributes.add(newAttribute);
@@ -93,15 +89,13 @@ public class XmlVars
 
 		// text elements...
 		String text = aCommand.getText().trim();
-		if (XmlVars.containsVariableDeclarations(text))
-		{
+		if (XmlVars.containsVariableDeclarations(text)) {
 			aCommand.setText(replaceVariablesWithValues(text));
 		}
 
 		// handle child elements
 		List children = aCommand.getChildren();
-		for (int i = 0; i < children.size(); i++)
-		{
+		for (int i = 0; i < children.size(); i++) {
 			expandVariables((Element) children.get(i));
 		}
 	}
@@ -109,53 +103,42 @@ public class XmlVars
 	/**
 	 * Get a variable.
 	 */
-	public String getVariable(String name)
-	{
+	public String getVariable(String name) {
 		return variables.get(name);
 	}
 
 	/**
 	 * Set a variable.
 	 */
-	public void setVariable(String name, String value)
-	{
+	public void setVariable(String name, String value) {
 		variables.put(name, value);
 	}
 
 	/**
 	 * Store the values we receive in the variables table.
 	 */
-	public void storeVariables(Element expected, Element received)
-	{
+	public void storeVariables(Element expected, Element received) {
 
 		List attributes = expected.getAttributes();
 		Attribute attribute;
-		for (Iterator iter = attributes.iterator(); iter.hasNext();)
-		{
+		for (Iterator iter = attributes.iterator(); iter.hasNext();) {
 			attribute = (Attribute) iter.next();
 			String nextKey = attribute.getName();
 			String nextValue = attribute.getValue();
-			if (nextValue != null)
-			{
+			if (nextValue != null) {
 				// JvdB 4.11.08: sometimes an attr may contain multiple vars e.g. ids="${id1},${id2}"
 				String[] nextValues = nextValue.split(",");
-				for (String nextVal : nextValues)
-				{
-					if (XmlVars.containsVariableDeclarations(nextVal))
-					{
+				for (String nextVal : nextValues) {
+					if (XmlVars.containsVariableDeclarations(nextVal)) {
 						Path path = Path.createPathToAttribute(expected, nextKey);
 						String value = path.findValue(received);
-						if (value == null)
-						{
+						if (value == null) {
 							Element receivedParent = (Element) received.getParent();
-							while (receivedParent != null)
-							{
+							while (receivedParent != null) {
 								value = path.findValue(receivedParent);
-								if (value == null)
-								{
+								if (value == null) {
 									receivedParent = (Element) receivedParent.getParent();
-								} else
-								{
+								} else {
 									break;
 								}
 							}
@@ -167,21 +150,16 @@ public class XmlVars
 		}
 
 		String text = expected.getText().trim();
-		if (XmlVars.containsVariableDeclarations(text))
-		{
+		if (XmlVars.containsVariableDeclarations(text)) {
 			Path path = Path.createPathToText(expected);
 			String value = path.findValue(received);
-			if (value == null)
-			{
+			if (value == null) {
 				Element receivedParent = (Element) received.getParent();
-				while (receivedParent != null)
-				{
+				while (receivedParent != null) {
 					value = path.findValue(receivedParent);
-					if (value == null)
-					{
+					if (value == null) {
 						receivedParent = (Element) receivedParent.getParent();
-					} else
-					{
+					} else {
 						break;
 					}
 				}
@@ -192,8 +170,7 @@ public class XmlVars
 
 		List expectedChildren = expected.getChildren();
 		List receivedChildren = received.getChildren();
-		for (int i = 0; i < expectedChildren.size(); i++)
-		{
+		for (int i = 0; i < expectedChildren.size(); i++) {
 			storeVariables((Element) expectedChildren.get(i), (Element) receivedChildren.get(i));
 		}
 	}
@@ -204,30 +181,24 @@ public class XmlVars
 	 *
 	 * @param elm the element to process.
 	 */
-	public void processVariables(Element elm)
-	{
+	public void processVariables(Element elm) {
 		// handle attributes
 		List attributes = elm.getAttributes();
 		// List newAttributes = new ArrayList(attributes.size());
 		Attribute attribute;
-		for (Iterator iter = attributes.iterator(); iter.hasNext();)
-		{
+		for (Iterator iter = attributes.iterator(); iter.hasNext();) {
 			attribute = (Attribute) iter.next();
 			String nextKey = attribute.getName();
 			String nextValue = attribute.getValue();
 			// Attribute newAttribute = new Attribute(nextKey, nextValue);
-			if (nextValue != null)
-			{
+			if (nextValue != null) {
 				// JvdB 4.11.08: sometimes an attr may contain multiple vars e.g. ids="${id1},${id2}"
 				String[] nextValues = nextValue.split(",");
-				for (String nextVal : nextValues)
-				{
-					if (XmlVars.containsVariableDeclarations(nextValue))
-					{
+				for (String nextVal : nextValues) {
+					if (XmlVars.containsVariableDeclarations(nextValue)) {
 						elm.setAttribute(nextKey, clearVariables(nextVal));
 					}
-					if (XmlVars.containsVariableReferences(nextValue))
-					{
+					if (XmlVars.containsVariableReferences(nextValue)) {
 						elm.setAttribute(nextKey, replaceVariablesReferencesWithValues(nextVal));
 					}
 				}
@@ -238,19 +209,16 @@ public class XmlVars
 
 		// text elements...
 		String text = elm.getText().trim();
-		if (XmlVars.containsVariableDeclarations(text))
-		{
+		if (XmlVars.containsVariableDeclarations(text)) {
 			elm.setText(clearVariables(text));
 		}
-		if (XmlVars.containsVariableReferences(text))
-		{
+		if (XmlVars.containsVariableReferences(text)) {
 			elm.setText(replaceVariablesReferencesWithValues(text));
 		}
 
 		// handle child elements
 		List children = elm.getChildren();
-		for (int i = 0; i < children.size(); i++)
-		{
+		for (int i = 0; i < children.size(); i++) {
 			processVariables((Element) children.get(i));
 		}
 
@@ -263,10 +231,8 @@ public class XmlVars
 	 * @param s the String to replace the variables in.
 	 * @return the result of the replacements.
 	 */
-	private String replaceVariablesWithValues(String s)
-	{
-		for (Iterator<String> iter = variables.keySet().iterator(); iter.hasNext();)
-		{
+	private String replaceVariablesWithValues(String s) {
+		for (Iterator<String> iter = variables.keySet().iterator(); iter.hasNext();) {
 			String key = iter.next();
 			String val = getVariable(key);
 			s = s.replaceAll("\\$\\{" + key + "\\}", val);
@@ -280,10 +246,8 @@ public class XmlVars
 	 * @param s the String to replace the variables in.
 	 * @return the result of the replacements.
 	 */
-	private String replaceVariablesReferencesWithValues(String s)
-	{
-		for (Iterator<String> iter = variables.keySet().iterator(); iter.hasNext();)
-		{
+	private String replaceVariablesReferencesWithValues(String s) {
+		for (Iterator<String> iter = variables.keySet().iterator(); iter.hasNext();) {
 			String key = iter.next();
 			String val = getVariable(key);
 			s = s.replaceAll("#\\{" + key + "\\}", val);
@@ -301,19 +265,16 @@ public class XmlVars
 	 * @param expected the String in which the variables are defined.
 	 * @param received the String in which the values of the variables can be found.
 	 */
-	private void storeVariableValues(String expected, String received)
-	{
+	private void storeVariableValues(String expected, String received) {
 
 		Matcher expMatcher = VARDECPATTERN.matcher(expected);
 		Matcher recMatcher = VALUEPATTERN.matcher((received != null ? received : ""));
 
 		int offset = 0;
-		while (expMatcher.find())
-		{
+		while (expMatcher.find()) {
 			String key = expMatcher.group();
 			String val = "";
-			if (received != null && received.length() > offset + expMatcher.start() && recMatcher.find(offset + expMatcher.start()))
-			{
+			if (received != null && received.length() > offset + expMatcher.start() && recMatcher.find(offset + expMatcher.start())) {
 				val = recMatcher.group();
 			}
 
@@ -330,8 +291,7 @@ public class XmlVars
 	 * @param s the String to check for variable definitions
 	 * @retun true if variables are defined in the given String, false otherwise.
 	 */
-	private static boolean containsVariableDeclarations(String s)
-	{
+	private static boolean containsVariableDeclarations(String s) {
 		Matcher matcher = VARDECPATTERN.matcher(s);
 		return matcher.find();
 	}
@@ -342,8 +302,7 @@ public class XmlVars
 	 * @param s the String to check for variable definitions
 	 * @retun true if variables are defined in the given String, false otherwise.
 	 */
-	private static boolean containsVariableReferences(String s)
-	{
+	private static boolean containsVariableReferences(String s) {
 		Matcher matcher = VARREFPATTERN.matcher(s);
 		return matcher.find();
 	}
@@ -354,10 +313,8 @@ public class XmlVars
 	 * @param s the String to remove the variables from.
 	 * @return the input String without the variables.
 	 */
-	private String clearVariables(String s)
-	{
-		for (Iterator<String> iter = variables.keySet().iterator(); iter.hasNext();)
-		{
+	private String clearVariables(String s) {
+		for (Iterator<String> iter = variables.keySet().iterator(); iter.hasNext();) {
 			s = s.replaceAll("\\$\\{" + iter.next() + "\\}", "");
 		}
 		return s;

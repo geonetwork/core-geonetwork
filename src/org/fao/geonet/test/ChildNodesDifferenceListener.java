@@ -11,20 +11,18 @@ import org.w3c.dom.Node;
  * <p>Subclasses get a chance to hook into {@link #childNodeDifferenceFound childNodeDifferenceFound}.
  * to implement a custom difference strategy.
  * </p>
+ *
  * @author Just van den Broecke - just@justobjects.nl
  */
-public abstract class ChildNodesDifferenceListener implements DifferenceListener
-{
+public abstract class ChildNodesDifferenceListener implements DifferenceListener {
 
-	public ChildNodesDifferenceListener()
-	{
+	public ChildNodesDifferenceListener() {
 	}
 
 	/**
 	 * Callback from Diff on difference found.
 	 */
-	public int differenceFound(Difference difference)
-	{
+	public int differenceFound(Difference difference) {
 		// Only difference id's related to child nodes are valid
 		switch (difference.getId()) {
 			case DifferenceConstants.HAS_CHILD_NODES_ID:
@@ -45,8 +43,7 @@ public abstract class ChildNodesDifferenceListener implements DifferenceListener
 	}
 
 
-	public void skippedComparison(Node control, Node test)
-	{
+	public void skippedComparison(Node control, Node test) {
 		p("skippedComparison: ctrl=" + control.getNodeName() + " test=" + test.getNodeName());
 	}
 
@@ -55,8 +52,7 @@ public abstract class ChildNodesDifferenceListener implements DifferenceListener
 	 */
 	public abstract int childNodeDifferenceFound(Difference difference, Node control, Node test);
 
-	private void p(String s)
-	{
+	private void p(String s) {
 		// System.out.println(s);
 	}
 

@@ -20,7 +20,11 @@
             <exclude name="**/saxon9.jar"/>
         </fileset>
         <pathelement location="${basedir}/../jeeves/lib/javax.servlet.jar"/>
-     </path>
+
+        <!-- Somehow Jetty is needed -->
+        <pathelement location="${basedir}/../jetty/lib/jetty-6.1.14.jar"/>
+        <pathelement location="${basedir}/../jetty/lib/jetty-util-6.1.14.jar"/>
+       </path>
 
     <!-- =============================================================== -->
 
