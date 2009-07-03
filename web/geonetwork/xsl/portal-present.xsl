@@ -9,11 +9,11 @@
 
 	<xsl:template match="/root">
 		<xsl:variable name="output">
-			<xsl:apply-templates select="response/@*" mode="copy"/>
 			<xsl:apply-templates select="response/*" mode="brief"/>
 		</xsl:variable>
 
 		<response>
+			<xsl:apply-templates select="response/@*" mode="copy"/>
 			<xsl:apply-templates select="exslt:node-set($output)/*" mode="strip"/>
 		</response>
 	</xsl:template>
