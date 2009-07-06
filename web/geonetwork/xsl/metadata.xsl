@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:exslt= "http://exslt.org/common"
 	xmlns:gco="http://www.isotc211.org/2005/gco"
@@ -880,6 +880,36 @@
 						</script>
 
 					</xsl:when>
+					
+					<!-- heikki doeleman: for gco:Boolean, use checkbox -->
+					<xsl:when test="name(.)='gco:Boolean'">
+						<input type="hidden" name="_{geonet:element/@ref}" id="_{geonet:element/@ref}" value="false"/>
+						<xsl:choose>
+							<xsl:when test="text()='true'">
+								<input class="md" type="checkbox" id="_{geonet:element/@ref}_checkbox" onclick="handleCheckbox();" checked="checked"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<input class="md" type="checkbox" id="_{geonet:element/@ref}_checkbox" onclick="handleCheckbox();"/>
+							</xsl:otherwise>
+						</xsl:choose>
+						<script type="text/javascript">
+						function handleCheckbox() {
+							<xsl:text>var hiddenBooleanId = "_</xsl:text>
+						 	<xsl:value-of select="geonet:element/@ref"/>
+						 	<xsl:text>";</xsl:text>							
+							<xsl:text>var checkboxId = "_</xsl:text>
+						 	<xsl:value-of select="geonet:element/@ref"/>
+						 	<xsl:text>_checkbox";</xsl:text>
+							if(!document.getElementById(checkboxId).checked) {
+								document.getElementById(hiddenBooleanId).value = 'false';
+							}
+							else {
+								document.getElementById(hiddenBooleanId).value = 'true';
+							}
+						}
+						</script>
+					</xsl:when>
+
 					<xsl:otherwise>
 						<input class="md" type="text" id="_{geonet:element/@ref}" name="_{geonet:element/@ref}" value="{text()}" size="{$cols}">
 							<xsl:if test="../geonet:element/@min='1' and $edit">
