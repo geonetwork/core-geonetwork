@@ -34,7 +34,7 @@ var Checks = {
 
 function unloadMess()
 {
-  mess = "If you press OK you will LOSE any changes you've made to the metadata!";
+  mess = "If you press OK you will LOSE any changes you've made to the metadata!"; // TODO
   return mess;
 }
 
@@ -331,6 +331,10 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement)
 				} else {
 					alert("doNewElementAjax: invalid what: "+what+" should be one of replace, after or before");
 				}
+				
+				// Check elements
+				validateMetadataFields();
+				
 				setBunload(true); // reset warning for window destroy
 			},
 			onFailure: function(req) { 
@@ -375,7 +379,8 @@ function doSaveAction(action,validateAction)
 					if (divToRestore) divToRestore.removeClassName('editing');
 					if (html.startsWith("<?xml") < 0) { // service returns xml on success
 						alert("Save failed: "+html);
-					} 
+					}
+					
 					setBunload(false);
 					location.replace(getGNServiceURL('metadata.show?id='+metadataId));
 				},
@@ -398,6 +403,7 @@ function doSaveAction(action,validateAction)
 						doActionInWindow.delay(1,validateAction); // delay the validate
 					}
 					setBunload(true); // reset warning for window destroy
+					validateMetadataFields();
 				},
 				onFailure: function(req) { 
 					alert("ERROR: Could not save form: status "+req.status+" text: "+req.statusText+" - Try again later?");
@@ -425,6 +431,10 @@ function doActionInWindow(action)
 				var myWindow = window.open('about:blank',"popWindow","location=no, toolbar=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=800, height=600");	
 				myWindow.document.write(html);
 				myWindow.document.close();
+				
+				// Check elements
+				validateMetadataFields();
+				
 				setBunload(true); // reset warning for window destroy
 			},
 			onFailure: function(req) { 
@@ -475,7 +485,7 @@ function checkForFileUpload(fref, pref)
 	// unless its between downloaddata and downloadother
 	if (fileUploaded) {
 		if (!protocolDownload ) {
-			alert('A file may have been uploaded. You cannot change the protocol until you remove that file');
+			alert('A file may have been uploaded. You cannot change the protocol until you remove that file'); // TODO
 			// protocol change is not ok so reset the protocol value
 			protoSelect.value = protoIn.value; 
 		} else { 
@@ -577,6 +587,11 @@ function setRegion(westField, eastField, southField, northField, choice)
 		southField.value = "";
 		northField.value = "";
 	}
+	
+	westField.onkeyup();
+	eastField.onkeyup();
+	southField.onkeyup();
+	northField.onkeyup();
 }
 
 function clearRef(ref) 
@@ -601,4 +616,121 @@ function noDoubleClick()
 	} else {
 		return false;
 	}
+}
+
+
+/**
+* Build duration format for gts:TM_PeriodDuration onkeyup or onchange
+* events of duration widget define in metadata-iso19139.xsl.
+*
+* This only apply to iso19139 (or iso profil) metadata.
+*
+* Duration format is: PnYnMnDTnHnMnS and could be negative.
+*
+* Parameters:
+* ref - {String} Identifier of a form element (ie. geonet:element/@ref)
+*/
+function buildDuration(ref) {
+    if ($('Y' + ref).value == '')
+    $('Y' + ref).value = 0;
+    if ($('M' + ref).value == '')
+    $('M' + ref).value = 0;
+    if ($('D' + ref).value == '')
+    $('D' + ref).value = 0;
+    if ($('H' + ref).value == '')
+    $('H' + ref).value = 0;
+    if ($('MI' + ref).value == '')
+    $('MI' + ref).value = 0;
+    if ($('S' + ref).value == '')
+    $('S' + ref).value = 0;
+    
+    $('_' + ref).value =
+    ($('N' + ref).checked? "-": "") +
+    "P" +
+    $('Y' + ref).value + "Y" +
+    $('M' + ref).value + "M" +
+    $('D' + ref).value + "DT" +
+    $('H' + ref).value + "H" +
+    $('MI' + ref).value + "M" +
+    $('S' + ref).value + "S";
+}
+
+
+/**
+* Validate numeric value input form element.
+* If invalid, set the class attribute to "error".
+*
+* TODO : here we could add a function to turn on/off
+* save button if we would like to have more constraint
+* in the editor. enableSave(true/false);
+*
+* Parameters:
+* input - {Object} Form element
+* nullValue - {Boolean} Allow null value
+* decimals - {Boolean} Allow decimals
+*/
+function validateNumber(input, nullValue, decimals) {
+    var text = input.value
+    var validChars = "0123456789";
+    
+    if (! nullValue)
+    	if (! validateNonEmpty(input))
+    		return false;
+    
+    if (decimals)
+    	validChars += '.';
+    
+    var isNumber = true;
+    var char;
+    
+    for (i = 0; i < text.length && isNumber; i++) {
+        char = text.charAt(i);
+        if (char == '-' || char == "+") {
+            if (i < 0)
+            	isNumber = false;
+        } else if (validChars.indexOf(char) == - 1) {
+            isNumber = false;
+        }
+    }
+    if (! isNumber) {
+        input.addClassName('error');
+        return false;
+    } else {
+        input.removeClassName('error');
+        return true;
+    }
+}
+
+/**
+* Validate numeric value input form element.
+* If invalid, set the class attribute to "error".
+*
+* Parameters:
+* input - {Object} Form element
+*/
+function validateNonEmpty(input) {
+    if (input.value.length < 1) {
+        input.addClassName('error');
+    } else {
+        input.removeClassName('error');
+    }
+}
+
+/**
+ * Retrieve all page's input and textarea element
+ * and check the onkeyup and onchange event (Usually used to check
+ * user entry. @see validateNonEmpty and validateNumber).
+ * 
+ * @return
+ */
+function validateMetadataFields() {
+    $$('input,textarea,select').each(function(input) {
+    	// Process only onchange and onkeyup event having validate in event name.
+    	if ((input.onchange && input.readAttribute("onchange").indexOf("validate") == -1) ||
+    			(input.onkeyup && input.readAttribute("onkeyup").indexOf("validate") == -1))
+    		return;
+    	
+        if (input.onkeyup) input.onkeyup();
+        if (input.onchange) input.onchange();
+    });
 }

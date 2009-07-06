@@ -596,6 +596,17 @@
 		<label>Denominator</label>
 		<description>The number below the line in a vulgar fraction</description>
 		<condition>mandatory</condition>
+		<helper>
+			<option value="5000">1:5´000</option>
+			<option value="10000">1:10´000</option>
+			<option value="25000">1:25´000</option>
+			<option value="50000">1:50´000</option>
+			<option value="100000">1:100´000</option>
+			<option value="200000">1:200´000</option>
+			<option value="300000">1:300´000</option>
+			<option value="500000">1:500´000</option>
+			<option value="1000000">1:1´000´000</option>
+		</helper>		
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:density">
@@ -646,6 +657,14 @@
 		<label>Distance</label>
 		<description>Ground sample distance</description>
 		<condition>conditional</condition>
+		<helper>
+			<option value="0.10">10 cm</option>
+			<option value="0.25">25 cm</option>
+			<option value="0.50">50 cm</option>
+			<option value="1">1 m</option>
+			<option value="30">30 m</option>
+			<option value="100">100 m</option>
+		</helper>		
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributionFormat">
@@ -2266,7 +2285,20 @@
 	
 	<element name="gts:TM_PeriodDuration">
 		<label>Period duration</label>
-		<description></description>
+		<description>
+			The duration data type is used to specify a time interval.
+			
+			The time interval is specified in the following form "PnYnMnDTnHnMnS" where:
+			
+			* P indicates the period (required)
+			* nY indicates the number of years
+			* nM indicates the number of months
+			* nD indicates the number of days
+			* T indicates the start of a time section (required if you are going to specify hours, minutes, or seconds)
+			* nH indicates the number of hours
+			* nM indicates the number of minutes
+			* nS indicates the number of seconds            
+		</description>
 	</element>
 	
 	<!-- ==================================================== -->
@@ -2327,6 +2359,46 @@
 		<description>The inner boundary of a solid.</description>
 	</element>
 	<!-- ==================================================== -->
+	<element name="gml:begin">
+		<label>Begin</label>
+		<description/>
+	</element>    
+	<element name="gml:end">
+		<label>End</label>
+		<description/>
+	</element>    
+	<element name="gml:duration">
+		<label>Duration</label>
+		<description/>
+	</element>    
+	<element name="gml:timeInterval">
+		<label>Time interval</label>
+		<description/>
+	</element>
+	<element name="gml:TimeInstant">
+		<label>Time instant</label>
+		<description/>
+	</element>
+	<element name="gml:TimePosition">
+		<label>Time position</label>
+		<description/>
+	</element>
+	<element name="gml:TimePeriod">
+		<label>Time period</label>
+		<description/>
+	</element>
+	<element name="gml:TimeNode">
+		<label>Time node</label>
+		<description/>
+	</element>
+	<element name="gml:TimeEdge">
+		<label>Time edge</label>
+		<description/>
+	</element>
+	<element name="gml:ProjectedCRS">
+		<label>Projected CRS</label>
+		<description/>
+	</element>
 	<element name="gml:id">
 		<label>Identifier</label>
 		<description>Identifier</description>
@@ -2353,6 +2425,13 @@
 	<element name="srv:serviceType">
 		<label>Service Type</label>
 		<description>Service type name from a registry of services. For example, the values of the nameSpace and name attributes of GeneralName may be 'OGC' and 'catalogue'</description>
+		<helper>
+			<option value="OGC:WMS">OGC Web Map Service (OGC:WMS)</option>
+			<option value="OGC:WFS">OGC Web Feature Service (OGC:WFS)</option>
+			<option value="OGC:WCS">OGC Web Coverage Service (OGC:WCS)</option>
+			<option value="W3C:HTML:DOWNLOAD">Download (W3C:HTML:DOWNLOAD)</option>
+			<option value="W3C:HTML:LINK">Information (W3C:HTML:LINK)</option>
+		</helper>
 	</element>
 	<element name="srv:serviceTypeVersion">
 		<label>Service Version</label>
@@ -2511,6 +2590,9 @@
 	<element name="codeSpace">
 		<label>Reference Authority</label>
 		<description>Authority responsible for codification. i.e. EPSG</description>
+		<helper>
+			<option value="EPSG">EPSG</option>
+		</helper>
 	</element>
 	<element name="gco:aName">
 		<label>Name</label>
@@ -2520,5 +2602,15 @@
 	</element>	
 	<element name="gco:TypeName">
 		<label>Type name</label>
+	</element>
+	<element name="uom">
+		<label>Units of measure</label>
+		<description/>
+		<helper>
+			<option value="mm">millimeter</option>
+			<option value="cm">centimeter</option>
+			<option value="m">meters</option>
+			<option value="km">kilometer</option>
+		</helper>
 	</element>
 </labels>

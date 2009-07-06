@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
 	xmlns:geonet="http://www.fao.org/geonetwork"
-	xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="exslt">
+	xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="exslt geonet">
 
 	<xsl:include href="metadata-iso19115.xsl"/>
 	<xsl:include href="metadata-iso19139.xsl"/>

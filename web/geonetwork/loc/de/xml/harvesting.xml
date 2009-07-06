@@ -2,6 +2,7 @@
 <strings>
 	<select>Ausgewählt</select>
 	<name>Name</name>
+	<directoryname>Verzeichnis</directoryname>
 	<type>Typ</type>
 	<status>Status</status>
 	<errors>Fehler</errors>
@@ -121,10 +122,14 @@
 	<inactive>inaktiv</inactive>
 	<retrieveSources>Quelle abfragen</retrieveSources>
 	<retrieveGroups>Gruppe abfragen</retrieveGroups>
+	<retrieveInfo>Empfange Info</retrieveInfo>
 	<source>Quelle</source>
 	<criteria>Kriterium</criteria>
 	<validate>Validieren</validate>
 	<recurse>Rekursiv</recurse>
+	<nodelete>Behalte lokal, wenn Quelle gelöscht wird</nodelete>
+	<server>Server</server>
+	<database>Datenbank</database>
 	<host>Host</host>
 	<privileges>Privilegien</privileges>
 	<categories>Kategorien</categories>
@@ -143,6 +148,12 @@
 		<copyToIntranet>Kopiere zu Intranetgruppe</copyToIntranet>
 		<dontCopy>Nicht kopieren</dontCopy>
 	</policy>
+	
+	<from>Von</from>
+	<until>Bis</until>
+	<set>Set</set>
+	<prefix>Präfix</prefix>
+	<stylesheet>Stylesheet</stylesheet>
 	
 	<!-- Buttons -->
 	
@@ -205,10 +216,11 @@
 	<supplyHost>Bitte geben Sie den 'host' Parameter an</supplyHost>
 	<supplyServlet>Bitte geben Sie den 'servlet' Parameter an</supplyServlet>
 	<pleaseSpecifySiteId>Bitte geben Sie eine Seiten ID ungleich 0 an.</pleaseSpecifySiteId>
+	<cannotQueryOai>Anfrage an OAI-PMH Server nicht möglich</cannotQueryOai>
 	<gn20Unsafe>Bitte beachten Sie das harvesting von alten GeoNetwork Knoten unsicher ist. 
  					Die alten Knoten haben keine einmalige Seiten ID
 					dies kann unberechnbare Folgen haben.</gn20Unsafe>
-			
+	<supplyUrl>Bitte geben Sie eine valide 'url' ein</supplyUrl>
 	<oper>
 		<op id="0">Ansehen</op>
 		<op id="1">Download</op>

@@ -19,6 +19,7 @@
 
 		<gui>
 			<xml name="strings" file="xml/strings.xml" />
+			<xml name="countries" file="xml/countries.xml" />
 
 			<xml name="iso19115" base="xml/schemas/iso19115/loc" file="labels.xml" />
 			<xml name="iso19115" base="xml/schemas/iso19115/loc" file="codelists.xml" />
@@ -69,8 +70,8 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.DbmsPool</provider>
 			<config>
-				<user>9YJQLT96</user>
-				<password>Lbfn9cdT</password>
+				<user>jkDGg5cU</user>
+				<password>zwOHDH5u</password>
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>
@@ -359,10 +360,31 @@
 		<service name="user.get">
 			<class name=".services.user.Get" />
 
+			<output sheet="user-new.xsl">
+				<call name="groups" class=".guiservices.groups.GetMine" />
+				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="user.edit">
+			<class name=".services.user.Get" />
+
 			<output sheet="user-update.xsl">
 				<call name="groups" class=".guiservices.groups.GetMine" />
 				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
-				<xml name="countries" file="xml/countries.xml" />
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="user.resetpw">
+			<class name=".services.user.Get" />
+
+			<output sheet="user-resetpw.xsl">
+				<call name="groups" class=".guiservices.groups.GetMine" />
+				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
 			</output>
 		</service>
 
@@ -404,7 +426,8 @@
 			<class name=".services.user.Get" />
 
 			<output sheet="user-infoupdate.xsl">
-				<xml name="countries" file="xml/countries.xml" />
+				<call name="groups" class=".guiservices.groups.GetMine" />
+				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
 			</output>
 		</service>
 
@@ -423,9 +446,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="user.register.get">
-			<output sheet="user-selfregistration.xsl">
-				<xml name="countries" file="xml/countries.xml" />
-			</output>
+			<output sheet="user-selfregistration.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

@@ -1,0 +1,10 @@
+By default XSL caching is active.
+
+The javax.xml.transform.TransformerFactory file is used to define
+the XSL processor to use.
+ * de.fzi.dbs.xml.transform.CachingTransformerFactory for XSL caching
+(recommended value for production use).
+ * org.apache.xalan.processor.TransformerFactoryImpl for no XSL caching
+(recommended for dev). When caching is on, only the main XSL stylesheet
+last update date is checked and not all included XSL. If you update
+an included stylesheet, cache is still used. 

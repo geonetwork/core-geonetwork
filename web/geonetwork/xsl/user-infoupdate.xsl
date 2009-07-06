@@ -2,6 +2,30 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	
 	<xsl:include href="main.xsl"/>
+	<xsl:include href="user-update-utils.xsl"/>
+	
+	<!--
+	additional scripts
+	-->
+	<xsl:template mode="script" match="/">
+<script type="text/javascript" language="JavaScript">
+			
+			function profileChanged()
+			{
+				var profile = $F('user.profile');
+
+				if (profile == 'Administrator')
+					Element.hide('group.list');
+				else
+					Element.show('group.list');
+			}
+			
+			function init()
+			{
+				profileChanged();
+			}
+</script>
+	</xsl:template>
 	
 	<!--
 	page content
@@ -25,79 +49,16 @@
 	-->
 	<xsl:template name="form">
 		<form name="userupdateform" accept-charset="UTF-8" action="{/root/gui/locService}/user.infoupdate" method="post">
+			<input type="hidden" name="id" value="{/root/response/record/id}"/>
+			<input type="hidden" name="username" value="{/root/response/record/username}"/>
+			<input type="hidden" name="password" value="password"/>
 			<input type="submit" style="display: none;" />
-			<table>
+      <table>
 				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/username"/></th>
-					<td class="padded"><xsl:value-of select="/root/response/record/username"/></td>
-				</tr>
-				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/surName"/></th>
-					<td class="padded"><input class="content" type="text" name="surname" value="{/root/response/record/surname}"/></td>
-				</tr>
-				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/firstName"/></th>
-					<td class="padded"><input class="content" type="text" name="name" value="{/root/response/record/name}"/></td>
-				</tr>
-				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/address"/></th>
-					<td class="padded"><input class="content" type="text" name="address" value="{/root/response/record/address}"/></td>
-				</tr>
-				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/city"/></th>
-					<td class="padded"><input class="content" type="text" name="city" value="{/root/response/record/city}"/></td>
-				</tr>
-				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/state"/></th>
-					<td class="padded"><input class="content" type="text" name="state" value="{/root/response/record/state}" size="8"/></td>
-				</tr>
-				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/zip"/></th>
-					<td class="padded"><input class="content" type="text" name="zip" value="{/root/response/record/zip}"/></td>
-				</tr>
-				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/country"/></th>
-					<td class="padded">
-						<select class="content" size="1" name="country">
-							<xsl:if test="string(/root/response/record/country)=''">
-								<option value=""/>
-							</xsl:if>
-							<xsl:for-each select="/root/gui/countries/country">
-								<xsl:sort select="."/>
-								<option value="{@iso2}">
-									<xsl:if test="string(/root/response/record/country)=@iso2">
-										<xsl:attribute name="selected"/>
-									</xsl:if>
-									<xsl:value-of select="."/>
-								</option>
-							</xsl:for-each>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/email"/></th>
-					<td class="padded"><input class="content" type="text" name="email" value="{/root/response/record/email}"/></td>
-				</tr>
-				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/organisation"/></th>
-					<td class="padded"><input class="content" type="text" name="org" value="{/root/response/record/organisation}"/></td>
-				</tr>
-				<tr>
-					<th class="padded"><xsl:value-of select="/root/gui/strings/kind"/></th>
-					<td class="padded">
-						<select class="content" size="1" name="kind">
-							<xsl:for-each select="/root/gui/strings/kindChoice">
-								<xsl:sort select="."/>
-								<option value="{@value}">
-									<xsl:if test="string(/root/response/record/kind)=@value">
-										<xsl:attribute name="selected"/>
-									</xsl:if>
-									<xsl:value-of select="."/>
-								</option>
-							</xsl:for-each>
-						</select>
-					</td>
-				</tr>
+          <th class="padded"><xsl:value-of select="/root/gui/strings/username"/></th>
+          <td class="padded"><xsl:value-of select="/root/response/record/username"/></td>
+        </tr>
+				<xsl:call-template name="userinfofields"/>
 			</table>
 		</form>
 	</xsl:template>

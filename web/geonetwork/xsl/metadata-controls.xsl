@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:exslt= "http://exslt.org/common" 
 	xmlns:str="http://exslt.org/strings" 
 	xmlns:geonet="http://www.fao.org/geonetwork"
@@ -19,7 +19,7 @@
 		<span id="buttons_{$id}">
 			<xsl:choose>
 				<xsl:when test="normalize-space($addLink)">
-					<xsl:variable name="linkTokens" select="str:tokenize($addLink,'!')"/>
+					<xsl:variable name="linkTokens" select="tokenize($addLink,'!')"/>
 					<xsl:text> </xsl:text>
 					<xsl:choose>
 						<xsl:when test="normalize-space($linkTokens[2])">
@@ -38,7 +38,7 @@
 			<!-- remove button -->
 			<xsl:choose>
 				<xsl:when test="normalize-space($removeLink)">
-					<xsl:variable name="linkTokens" select="str:tokenize($removeLink,'!')"/>
+					<xsl:variable name="linkTokens" select="tokenize($removeLink,'!')"/>
 					<xsl:text> </xsl:text>
 					<xsl:choose>
 						<xsl:when test="normalize-space($linkTokens[2])">
@@ -57,7 +57,7 @@
 			<!-- up button -->
 			<xsl:choose>
 				<xsl:when test="normalize-space($upLink)">
-					<xsl:variable name="linkTokens" select="str:tokenize($upLink,'!')"/>
+					<xsl:variable name="linkTokens" select="tokenize($upLink,'!')"/>
 					<xsl:text> </xsl:text>
 					<xsl:choose>
 						<xsl:when test="normalize-space($linkTokens[2])">
@@ -76,7 +76,7 @@
 			<!-- down button -->
 			<xsl:choose>
 				<xsl:when test="normalize-space($downLink)">
-					<xsl:variable name="linkTokens" select="str:tokenize($downLink,'!')"/>
+					<xsl:variable name="linkTokens" select="tokenize($downLink,'!')"/>
 					<xsl:text> </xsl:text>
 					<xsl:choose>
 						<xsl:when test="normalize-space($linkTokens[2])">

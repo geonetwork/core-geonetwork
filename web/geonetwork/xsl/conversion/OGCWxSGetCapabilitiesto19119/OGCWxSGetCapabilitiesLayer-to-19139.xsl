@@ -11,8 +11,7 @@
 										xmlns:ows="http://www.opengis.net/ows"
 										xmlns:wcs="http://www.opengis.net/wcs"
 										xmlns:xlink="http://www.w3.org/1999/xlink"
-										xmlns:date="http://exslt.org/dates-and-times"
-										extension-element-prefixes="date wcs ows wfs srv">
+										extension-element-prefixes="wcs ows wfs srv">
 
 	<!-- ============================================================================= -->
 
@@ -97,22 +96,12 @@
 					
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-			<xsl:variable name="df">yyyy-MM-dd'T'HH:mm:ss</xsl:variable>
+			<xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>
 			<dateStamp>
-				<xsl:choose> <!-- //FIXME function date-format is not always available -->
-					<xsl:when test="function-available('date:date-format')">
-						<gco:DateTime><xsl:value-of select="date:format-date(date:date-time(),$df)"/></gco:DateTime>
-					</xsl:when>
-					<xsl:otherwise>
-						<gco:DateTime>
-							<xsl:value-of select="date:date-time()"/>
-						</gco:DateTime>
-					</xsl:otherwise>
-				</xsl:choose>
+				<gco:DateTime><xsl:value-of select="format-dateTime(current-dateTime(),$df)"/></gco:DateTime>
 			</dateStamp>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
 			<metadataStandardName>
 				<gco:CharacterString>ISO 19115:2003/19139</gco:CharacterString>
 			</metadataStandardName>

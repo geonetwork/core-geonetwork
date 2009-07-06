@@ -111,7 +111,16 @@
 			<xsl:for-each select="gmd:parentIdentifier/gco:CharacterString">
 				<dc:relation><xsl:value-of select="."/></dc:relation>
 			</xsl:for-each>
+
+
+			<!-- Distribution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			
+			<xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
+				<xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
+					<dc:format><xsl:value-of select="."/></dc:format>
+				</xsl:for-each>
+			</xsl:for-each>				
+
 			<!-- bounding box -->
 
 			<xsl:for-each select="$identification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
@@ -120,8 +129,16 @@
 					*[@gco:isoType='MD_ReferenceSystem']/gmd:referenceSystemIdentifier/gmd:RS_Identifier"/>
 				<xsl:variable name="auth" select="$rsi/gmd:codeSpace/gco:CharacterString"/>
 				<xsl:variable name="id"   select="$rsi/gmd:code/gco:CharacterString"/>
+				<xsl:variable name="crs" select="concat('urn:ogc:def:crs:', $auth, '::', $id)"/>
 
-				<ows:BoundingBox crs="{$auth}::{$id}">
+				<ows:BoundingBox>
+					<xsl:attribute name="crs">
+						<xsl:choose>
+							<xsl:when test="$crs = 'urn:ogc:def:crs:::'">urn:ogc:def:crs:EPSG:6.6:4326</xsl:when>
+							<xsl:otherwise><xsl:value-of select="$crs"/></xsl:otherwise>
+						</xsl:choose>
+					</xsl:attribute>
+					
 					<ows:LowerCorner>
 						<xsl:value-of select="concat(gmd:eastBoundLongitude/gco:Decimal, ' ', gmd:southBoundLatitude/gco:Decimal)"/>
 					</ows:LowerCorner>
@@ -133,12 +150,23 @@
 			</xsl:for-each>
 
 
-			<!-- Create as many URI element as coupledResource defined for a WMS service. -->
+			<!-- Create as many URI element 
+				* thumbnails
+				* dataset online source elements
+				* as coupledResource defined for a WMS service. 
+				 * Get one connect point for the service
+				 * Add as many layers defined in coupled resource elements.
+
+				With this information, client could access to onlinesource defined in the metadata.
+				
+				CSW 2.0.2 ISO profil does not support dc:URI elements.
+				What could be done is to add an output format supporting dclite4g 
+				http://wiki.osgeo.org/wiki/DCLite4G (TODO)
+				
 			<xsl:for-each select="
 				gmd:identificationInfo/srv:SV_ServiceIdentification[srv:serviceType/gco:LocalName='OGC:WMS']|
 				gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification' and srv:serviceType/gco:LocalName='OGC:WMS']">
 				
-				<!-- Get one connect point for the service -->
 				<xsl:variable name="connectPoint" select="srv:containsOperations/srv:SV_OperationMetadata/srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
 				<xsl:variable name="serviceUrl">
 					<xsl:choose>
@@ -151,30 +179,18 @@
 					</xsl:choose>
 				</xsl:variable>
 				
-				<!-- Add as many layers defined in coupled resource elements.
-				This will create interactive map buttons on client side -->
 				<xsl:for-each select="srv:coupledResource/srv:SV_CoupledResource">
 					<xsl:if test="gco:ScopedName!=''">
 						<dc:URI protocol="OGC:WMS" name="{gco:ScopedName}"><xsl:value-of select="$serviceUrl"/></dc:URI>
 					</xsl:if>
 				</xsl:for-each>
-			</xsl:for-each>
-			
-			
-			<!-- Distribution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-			<xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
-				<xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
-					<dc:format><xsl:value-of select="."/></dc:format>
 				</xsl:for-each>
-				
+			
+			
+			<xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
 				<xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource">
 					<xsl:if test="gmd:linkage">
 						<dc:URI>
-							<!-- FIXME : dc:URI has no attributes defined
-							but it could be relevant to have protocol
-							or name described here. 
-							
 							<xsl:if test="gmd:protocol">
 								<xsl:attribute name="protocol"><xsl:value-of select="gmd:protocol/gco:CharacterString"/></xsl:attribute>
 							</xsl:if>
@@ -190,7 +206,7 @@
 									<xsl:value-of select="gmd:description/gco:CharacterString"/>
 								</xsl:attribute>
 							</xsl:if>
-							-->
+							
 							<xsl:value-of select="gmd:linkage/gmd:URL"/>							
 						</dc:URI>
 					</xsl:if>
@@ -203,7 +219,6 @@
 				
 				<xsl:if test="$fileName!='' and $fileDescr='thumbnail'">
 					<dc:URI>
-						<!-- FIXME
 						<xsl:choose>
 							<xsl:when test="contains(gmd:fileName/gco:CharacterString, '.gif')">
 								<xsl:attribute name="protocol">image/gif</xsl:attribute>
@@ -216,7 +231,6 @@
 						<xsl:if test="$fileDescr">
 							<xsl:attribute name="name"><xsl:value-of select="$fileDescr"/></xsl:attribute>
 						</xsl:if>
-						-->
 						<xsl:choose>
 							<xsl:when test="contains($fileName ,'://')"><xsl:value-of select="$fileName"/></xsl:when>
 							<xsl:otherwise><xsl:value-of select="concat('resources.get?id=',$info/id,'&amp;fname=',$fileName,'&amp;access=public')"/>
@@ -226,7 +240,7 @@
 					</dc:URI>
 				</xsl:if>
 			</xsl:for-each>
-			
+			-->
 
 			
 			<!-- GeoNetwork elements added when resultType is equal to results_with_summary -->

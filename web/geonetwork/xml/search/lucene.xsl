@@ -289,7 +289,7 @@ compiles a request
 			<xsl:with-param name="expr" select="/request/uuid"/>
 			<xsl:with-param name="field" select="'_uuid'"/>
 		</xsl:call-template>
-		
+
 		<!-- template -->
 		<xsl:choose>
 			<xsl:when test="string(/request/template)='y'">

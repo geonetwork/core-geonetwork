@@ -52,6 +52,10 @@
 		<label>Resource Type</label>
 		<description>The nature or genre of the content of the resource. Type includes terms describing general categories, functions, genres, or aggregation levels for content.</description>
 		<example>Recommended best practice is to select a value from a controlled vocabulary (for example, the DCMI Type Vocabulary). To describe the physical or digital manifestation of the resource, use the Format element.</example>
+		<helper>
+			<option value="dataset">Dataset</option>
+			<option value="service">Service</option>
+		</helper>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dc:format">

@@ -65,7 +65,54 @@
 				<br clear="all"/>
 				<xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
 			</description>
-			<pubDate><xsl:value-of select="geonet:info/changeDate"/></pubDate>
+			<xsl:variable name="date" select="geonet:info/changeDate"/>
+			<xsl:variable name="day" select="substring($date,9,2)" />
+			<xsl:variable name="monthnumber" select="substring($date,6,2)" />
+			<xsl:variable name="year" select="substring($date,1,4)" />
+			<xsl:variable name="time" select="substring($date,12)" />
+
+			<xsl:variable name="month">
+			<xsl:choose>
+			<xsl:when test="$monthnumber='01'">
+			<xsl:value-of select="'Jan'" />
+			</xsl:when>
+			<xsl:when test="$monthnumber='02'">
+			<xsl:value-of select="'Feb'" />
+			</xsl:when>
+			<xsl:when test="$monthnumber='03'">
+			<xsl:value-of select="'Mar'" />
+			</xsl:when>
+			<xsl:when test="$monthnumber='04'">
+			<xsl:value-of select="'Apr'" />
+			</xsl:when>
+			<xsl:when test="$monthnumber='05'">
+			<xsl:value-of select="'May'" />
+			</xsl:when>
+			<xsl:when test="$monthnumber='06'">
+			<xsl:value-of select="'Jun'" />
+			</xsl:when>
+			<xsl:when test="$monthnumber='07'">
+			<xsl:value-of select="'Jul'" />
+			</xsl:when>
+			<xsl:when test="$monthnumber='08'">
+			<xsl:value-of select="'Aug'" />
+			</xsl:when>
+			<xsl:when test="$monthnumber='09'">
+			<xsl:value-of select="'Sep'" />
+			</xsl:when>
+			<xsl:when test="$monthnumber='10'">
+			<xsl:value-of select="'Oct'" />
+			</xsl:when>
+			<xsl:when test="$monthnumber='11'">
+			<xsl:value-of select="'Nov'" />
+			</xsl:when>
+			<xsl:otherwise>
+			<xsl:value-of select="'Dec'" />
+			</xsl:otherwise>
+			</xsl:choose>
+			</xsl:variable>
+
+			<pubDate><xsl:value-of select="concat($day,' ',$month,' ',$year,' ',$time,' EST'))"/></pubDate> 
 			<guid><xsl:value-of select="$mdURL"/></guid>
 			<xsl:if test="string($thumbnailLink)!=''">
 				<media:content url="{$thumbnailLink}" type="image/gif" width="100"/>

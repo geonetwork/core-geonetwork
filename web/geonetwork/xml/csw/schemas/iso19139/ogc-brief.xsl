@@ -29,17 +29,6 @@
 			</xsl:for-each>
 			
 			<!-- DataIdentification -->
-			
-			<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification|
-				gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
-				gmd:identificationInfo/srv:SV_ServiceIdentification">
-				
-				<xsl:for-each select="gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString">
-					<dc:title><xsl:value-of select="."/></dc:title>
-				</xsl:for-each>
-				
-			</xsl:for-each>
-
 			<xsl:for-each select="$identification/gmd:citation/gmd:CI_Citation">    
 				<xsl:for-each select="gmd:title/gco:CharacterString">
 					<dc:title><xsl:value-of select="."/></dc:title>

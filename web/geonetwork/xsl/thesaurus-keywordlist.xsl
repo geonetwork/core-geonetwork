@@ -27,7 +27,7 @@
 						(<xsl:value-of select="@count"/>
 						<xsl:text> </xsl:text>
 						<xsl:choose>
-							<xsl:when test="@count=2">
+							<xsl:when test="@count &gt; 2">
 								<xsl:value-of select="/root/gui/strings/res"/>
 							</xsl:when>
 							<xsl:otherwise>

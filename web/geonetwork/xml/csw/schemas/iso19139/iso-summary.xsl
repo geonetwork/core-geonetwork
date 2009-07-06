@@ -160,7 +160,8 @@
 	<!-- === Services === -->
 	<!-- =================================================================== -->
 
-	<xsl:template match="srv:SV_ServiceIdentification">
+	<xsl:template match="srv:SV_ServiceIdentification|
+		*[@gco:isoType='srv:SV_ServiceIdentification']">
 		<xsl:copy>
 			<xsl:apply-templates select="gmd:citation"/>
 			<xsl:apply-templates select="gmd:abstract"/>

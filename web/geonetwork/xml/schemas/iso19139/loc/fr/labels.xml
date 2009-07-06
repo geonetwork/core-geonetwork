@@ -2911,74 +2911,134 @@
     <condition>mandatory</condition>
     
   </element>
+  <!-- ==================================================== -->
+  <!-- === GML namespace -->
+  <!-- ==================================================== -->
+  
+  <element name="gml:TimeInstant">
+    <label>Instant</label>
+    <description>Date ponctuelle</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:TimePeriod">
+    <label>Période</label>
+    <description>Période de temps (début/fin)</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:TimeNode">
+    <label>Noeud</label>
+    <description>Noeud</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:TimeEdge">
+    <label>Ecart</label>
+    <description>Ecart de temps</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:complex">
+    <label>Elément complexe</label>
+    <description>Elément complexe</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:previousEdge">
+    <label>Bord précédent</label>
+    <description>Bord précédent</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:nextEdge">
+    <label>Bord suivant</label>
+    <description>Bord suivant</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:start">
+    <label>Début</label>
+    <description>Début</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:end">
+    <label>Fin</label>
+    <description>Fin</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:begin">
+    <label>Début</label>
+    <description>Début</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:duration">
+    <label>Durée</label>
+    <description>Durée</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:timeInterval">
+    <label>Intervalle de temps</label>
+    <description>Intervalle de temps</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:extent">
+    <label>Extension</label>
+    <description>Extension</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:position">
+    <label>Position</label>
+    <description>Position</description>
+  </element>
+  <!-- ==================================================== -->
   <element name="gml:beginPosition">
     <label>Date de début</label>
     <description>Date de début de validité (AAAA-MM-JJTHH:mm:ss)</description>
-    <help/>
-    <condition/>
-    
   </element>
+  <!-- ==================================================== -->
   <element name="gml:endPosition">
     <label>Date de fin</label>
     <description>Date de fin de validité (AAAA-MM-JJTHH:mm:ss)</description>
-    <help/>
-    <condition/>
-    
   </element>
+  <!-- ==================================================== -->
   <element name="gml:relatedTime">
-    <label>Related time</label>
-    <description>Defines the relation of a given time to the object.</description>
-    <help/>
-    <condition/>
-    
+    <label>Relation de temps</label>
+    <description>Définit la relation entre un temps donné et l’objet</description>
   </element>
+  <!-- ==================================================== -->
   <element name="gml:coordinates">
-    <label>Coordinates</label>
-    <description>Used to record an array of tuples or coordinates.</description>
-    <help/>
-    <condition/>
-    
+    <label>Coordonnées</label>
+    <description>Coordonnées</description>
   </element>
+  <!-- ==================================================== -->
   <element name="gml:Polygon">
-    <label>Polygon</label>
-    <description>A gml:Polygon is a special surface that is defined by a single surface patch. The boundary of this patch is coplanar and the polygon uses planar interpolation in its interior.</description>
-    <help/>
-    <condition/>
-    
+    <label>Polygone</label>
+    <description>Polygone</description>
   </element>
+  <!-- ==================================================== -->
   <element name="gml:Point">
     <label>Point</label>
-    <description>A gml:Point is defined by a single coordinate tuple.</description>
-    <help/>
-    <condition/>
-    
+    <description>Point</description>
+    <example>74. -37.</example>
   </element>
+  <!-- ==================================================== -->
   <element name="gml:LineString">
-    <label>Line</label>
-    <description>A gml:LineString is a special curve that consists of a single segment with linear interpolation. It is defined by two or more coordinate tuples, with linear interpolation between them.</description>
-    <help/>
-    <condition/>
-    
+    <label>Ligne</label>
+    <description>Ligne</description>
   </element>
+  <!-- ==================================================== -->
   <element name="gml:LinearRing">
-    <label>Linear ring</label>
-    <description>A gml:LinearRing is defined by four or more coordinate tuples, with linear interpolation between them; the first and last coordinates shall be coincident.</description>
-    <help/>
-    <condition/>
-    
+    <label>Cercle</label>
+    <description>Cercle</description>
   </element>
+  <!-- ==================================================== -->
   <element name="gml:exterior">
-    <label>Outer boundary</label>
-    <description>The outer boundary of a solid.</description>
-    <help/>
-    <condition/>
-    
+    <label>Limite extérieure</label>
+    <description>Limite extérieure</description>
   </element>
+  <!-- ==================================================== -->
   <element name="gml:interior">
-    <label>Inner boundary</label>
-    <description>The inner boundary of a solid</description>
-    <help/>
-    <condition/>
+    <label>Limite intérieure</label>
+    <description>Limite intérieure</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:id">
+    <label>Identifiant</label>
+    <description></description>
   </element>
   <element name="gml:id" id="191.0" context="gmd:MD_CRS">
     <label>Ellipsoïde</label>

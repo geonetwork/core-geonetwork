@@ -11,11 +11,8 @@ ker.include('core/gui/validator.js');
 ker.include('core/gui/tooltip.js');
 ker.include('core/gui/tab-switcher.js');
 
-//=====================================================================================
-
 var gui = new Object();
 
-//=====================================================================================
 /* Given a table, removes all rows but the first
  */
 
@@ -27,7 +24,6 @@ gui.removeAllButFirst = function(tableId)
 		Element.remove(rows[i]);		
 }
 
-//=====================================================================================
 /* Creates tooltips for all provided elements in an XML node
  */
 
@@ -43,7 +39,6 @@ gui.setupTooltips = function(node)
 	}
 }
 
-//=====================================================================================
 /* Sets an element tooltip
  *  - id   : the HTML element
  *  - node : an XML node whose content is converted into HTML and taken as the tooltip text
@@ -58,7 +53,6 @@ gui.setupTooltip = function(id, node)
 		new Tooltip(elem, mesg);
 }
 
-//=====================================================================================
 
 gui.addToSelect = function(ctrl, value, content, selected)
 {
@@ -71,7 +65,6 @@ gui.addToSelect = function(ctrl, value, content, selected)
 	$(ctrl).appendChild(node);
 }
 
-//=====================================================================================
 
 gui.appendTableRow = function(tableId, node)
 {
@@ -84,7 +77,6 @@ gui.appendTableRow = function(tableId, node)
 	}
 }
 
-//=====================================================================================
 
 gui.replaceTableRow = function(rowId, newNode)
 {

@@ -15,9 +15,8 @@
                                         xmlns:wps1="http://www.opengis.net/wps/1.0.0"
                                         xmlns:gml="http://www.opengis.net/gml"
 										xmlns:math="http://exslt.org/math"
-										xmlns:date="http://exslt.org/dates-and-times"
 										xmlns:exslt="http://exslt.org/common"
-										extension-element-prefixes="math exslt wcs ows wps wps1 ows11 wfs gml date">
+										extension-element-prefixes="math exslt wcs ows wps wps1 ows11 wfs gml">
 
 	<!-- ============================================================================= -->
 
@@ -51,18 +50,9 @@
 				</title>
 				<date>
 					<CI_Date>
-						<xsl:variable name="df">yyyy-MM-dd'T'HH:mm:ss</xsl:variable>
+						<xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>
 						<date>
-							<xsl:choose> <!-- //FIXME function date-format is not always available -->
-								<xsl:when test="function-available('date:date-format')">
-									<gco:DateTime><xsl:value-of select="date:format-date(date:date-time(),$df)"/></gco:DateTime>
-								</xsl:when>
-								<xsl:otherwise>
-									<gco:DateTime>
-										<xsl:value-of select="date:date-time()"/>
-									</gco:DateTime>
-								</xsl:otherwise>
-							</xsl:choose>
+							<gco:DateTime><xsl:value-of select="format-dateTime(current-dateTime(),$df)"/></gco:DateTime>
 						</date>
 						<dateType>
 							<CI_DateTypeCode codeList="./resources/codeList.xml#CI_DateTypeCode" codeListValue="revision"/>
@@ -408,18 +398,9 @@
 				</title>
 				<date>
 					<CI_Date>
-						<xsl:variable name="df">yyyy-MM-dd'T'HH:mm:ss</xsl:variable>
+						<xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>
 						<date>
-							<xsl:choose> <!-- //FIXME function date-format is not always available -->
-								<xsl:when test="function-available('date:date-format')">
-									<gco:DateTime><xsl:value-of select="date:format-date(date:date-time(),$df)"/></gco:DateTime>
-								</xsl:when>
-								<xsl:otherwise>
-									<gco:DateTime>
-										<xsl:value-of select="date:date-time()"/>
-									</gco:DateTime>
-								</xsl:otherwise>
-							</xsl:choose>
+							<gco:DateTime><xsl:value-of select="format-dateTime(current-dateTime(),$df)"/></gco:DateTime>
 						</date>
 						<dateType>
 							<CI_DateTypeCode codeList="./resources/codeList.xml#CI_DateTypeCode" codeListValue="revision"/>

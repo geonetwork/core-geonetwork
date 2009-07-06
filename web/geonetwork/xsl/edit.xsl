@@ -21,7 +21,7 @@
 				</xsl:choose>
 				<xsl:apply-templates mode="script" select="/"/>
 			</head>
-			<body onload="init()">
+			<body onload="init();validateMetadataFields();">
 				<table width="100%">
 					
 					<!-- content -->

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:geonet="http://www.fao.org/geonetwork">
+	xmlns:geonet="http://www.fao.org/geonetwork"
+	exclude-result-prefixes="geonet">
 
 	<!--
 	edit metadata form
@@ -11,7 +12,7 @@
 	<!--
 	additional scripts
 	-->
-	<!-- needs priority to succeed over match="/" in main.xsl -->
+	<!-- needs priority to succeed over match="/"  in main.xsl -->
 	<xsl:template mode="script" match="/" priority="20">
 		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"></script>

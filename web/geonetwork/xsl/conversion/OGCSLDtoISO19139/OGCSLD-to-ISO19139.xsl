@@ -8,9 +8,7 @@
 				xmlns:gml="http://www.opengis.net/gml"
 				xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 				xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-				xmlns:xlink="http://www.w3.org/1999/xlink"
-				xmlns:date="http://exslt.org/dates-and-times"
-				extension-element-prefixes="date">
+				xmlns:xlink="http://www.w3.org/1999/xlink">
 
 				
 	<!-- ============================================================================= -->				
@@ -60,9 +58,9 @@
 			<!-- mdHrLvName -->
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-			<xsl:variable name="df">yyyy-MM-dd'T'HH:mm:ss</xsl:variable>
+			<xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>
 			<dateStamp>
-				<gco:DateTime><xsl:value-of select="date:format-date(date:date-time(),$df)"/></gco:DateTime>
+				<gco:DateTime><xsl:value-of select="format-dateTime(current-dateTime(),$df)"/></gco:DateTime>
 			</dateStamp>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
