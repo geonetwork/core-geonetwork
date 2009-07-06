@@ -63,19 +63,26 @@ public class PwUpdate implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
-		// check old password
 		UserSession session = context.getUserSession();
 		String      userId  = session.getUserId();
 
 		if (userId == null)
 			throw new UserNotFoundEx(null);
 
+		
+		// check valid user 
 		Element elUser = dbms.select(	"SELECT * FROM Users " +
-												"WHERE id=" + userId + " AND password='" + password + "'");
+												"WHERE id=" + userId);
 		if (elUser.getChildren().size() == 0)
 			throw new UserNotFoundEx(userId);
 
-		// change password
+		// check old password
+		elUser = dbms.select(	"SELECT * FROM Users " +
+												"WHERE id=" + userId + " AND password='" + password + "'");
+		if (elUser.getChildren().size() == 0)
+			throw new IllegalArgumentException("Old password is not correct");
+
+		// all ok so change password
 		dbms.execute ( "UPDATE Users SET password=? WHERE id=?", newPassword, new Integer(userId));
 
 		return new Element(Jeeves.Elem.RESPONSE);

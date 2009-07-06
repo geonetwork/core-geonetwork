@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCLayer;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCLayerList;
 
@@ -95,15 +96,18 @@ public class WMCLayerListImpl implements WMCLayerList
 
 	public Element toElement(String name)
 	{
-		if( _list.isEmpty() )
-			throw new IllegalStateException(name + " is empty");
+        if( _list.isEmpty() )
+            throw new IllegalStateException(name + " is empty");
 
-		Element ret = new Element(name);
+        Namespace NS_WMC = Namespace.getNamespace("http://www.opengis.net/context");
 
-		for(WMCLayer layer: _list)
-			ret.addContent(layer.toElement("Layer"));
+        Element ret = new Element(name, NS_WMC);
 
-		return ret;
+        for(WMCLayer layer: _list)
+            ret.addContent(layer.toElement("Layer"));
+
+        return ret;
+
 	}
 
 }

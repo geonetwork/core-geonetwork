@@ -25,6 +25,7 @@ package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.impl;
 
 
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCBoundingBox;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCExtension;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCGeneral;
@@ -205,18 +206,21 @@ public class WMCGeneralImpl implements WMCGeneral
 	 */
 	public Element toElement(String name)
 	{
-		if(_title == null)
+	    if(_title == null)
 			throw new IllegalStateException(name + "/Title is missing");
 
 		if(_boundingBox == null)
 			throw new IllegalStateException(name + "/BoundingBox is missing");
 
-		Element ret = new Element(name)
-			.addContent(new Element("Title").setText(_title))
-			.addContent(_boundingBox.toElement("BoundingBox"));
+        Namespace NS_WMC = Namespace.getNamespace("http://www.opengis.net/context");
+		Element ret = new Element(name, NS_WMC);
 
-		if( _window != null)
+        if( _window != null)
 			ret.addContent(_window.toElement("Window"));
+
+        ret.addContent(_boundingBox.toElement("BoundingBox"));
+	    ret.addContent(new Element("Title", NS_WMC).setText(_title));
+
 
 		// TODO add keywordlist
 

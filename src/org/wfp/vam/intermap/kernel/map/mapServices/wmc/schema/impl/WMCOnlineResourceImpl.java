@@ -68,15 +68,17 @@ public class WMCOnlineResourceImpl implements WMCOnlineResource
 
 	public Element toElement(String name)
 	{
-		Namespace nsXLink = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
+        Namespace nsXLink = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
 
-		Element ret = new Element(name)
-			.setAttribute("type", _type, nsXLink);
+        Namespace NS_WMC = Namespace.getNamespace("http://www.opengis.net/context");
 
-		if( _href != null)
-			ret.setAttribute("href", _href, nsXLink);
+        Element ret = new Element(name, NS_WMC)
+            .setAttribute("type", _type, nsXLink);
 
-		return ret;
+        if( _href != null)
+            ret.setAttribute("href", _href, nsXLink);
+
+        return ret;
 	}
 
 }

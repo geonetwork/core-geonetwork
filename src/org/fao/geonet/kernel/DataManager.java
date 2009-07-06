@@ -898,7 +898,7 @@ public class DataManager
 		int id = sf.getSerial(dbms, "Metadata");
 
 		return insertMetadataExt(dbms, schema, md, id, source, createDate, changeDate, uuid,
-										 owner, groupOwner);
+										 owner, groupOwner, "n");
 	}
 
 	//--------------------------------------------------------------------------
@@ -920,7 +920,7 @@ public class DataManager
 			md = updateFixedInfoExisting(schema, Integer.toString(id), md, uuid);
 
 		return insertMetadataExt(dbms, schema, md, id, source, createDate, changeDate, uuid,
-										 owner, groupOwner);
+										 owner, groupOwner, isTemplate);
 	}
 
 	//--------------------------------------------------------------------------
@@ -929,7 +929,7 @@ public class DataManager
 
 	public String insertMetadataExt(Dbms dbms, String schema, Element md, int id,
 											  String source, String createDate, String changeDate,
-											  String uuid, int owner, String groupOwner) throws Exception
+											  String uuid, int owner, String groupOwner, String isTemplate) throws Exception
 	{
 		if (source == null)
 			source = getSiteID();
@@ -940,7 +940,7 @@ public class DataManager
 		//--- Note: we cannot index metadata here. Indexing is done in the harvesting part
 
 		return XmlSerializer.insert(dbms, schema, md, id, source, uuid, createDate,
-											 changeDate, "n", null, owner, groupOwner);
+											 changeDate, isTemplate, null, owner, groupOwner);
 	}
 
 	//--------------------------------------------------------------------------

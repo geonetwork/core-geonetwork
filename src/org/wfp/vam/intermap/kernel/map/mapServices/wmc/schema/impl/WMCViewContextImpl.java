@@ -25,6 +25,7 @@ package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.impl;
 
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCGeneral;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCLayerList;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCViewContext;
@@ -154,20 +155,31 @@ public class WMCViewContextImpl implements WMCViewContext
 
 	public Element toElement()
 	{
-		if(_general == null)
-			throw new IllegalStateException("ViewContext/General is missing");
+        if(_general == null)
+            throw new IllegalStateException("ViewContext/General is missing");
 
-		if(_layerList == null)
-			throw new IllegalStateException("ViewContext/LayerList is missing");
+        if(_layerList == null)
+            throw new IllegalStateException("ViewContext/LayerList is missing");
 
-		if(_id == null)
-			throw new IllegalStateException("ViewContext/@id is missing");
+        if(_id == null)
+            throw new IllegalStateException("ViewContext/@id is missing");
 
-		return new Element("ViewContext")
-			.setAttribute("version", _version)
-			.setAttribute("id", _id)
-			.addContent(_general.toElement("General"))
-			.addContent(_layerList.toElement("LayerList"));
+        Namespace NS_WMC = Namespace.getNamespace("http://www.opengis.net/context");
+        Namespace NS_XSI = Namespace.getNamespace("xsi","http://www.w3.org/2001/XMLSchema-instance");
+        Namespace NS_XLINK = Namespace.getNamespace("xlink","http://www.w3.org/1999/xlink");
+
+        Element viewContext =  new Element("ViewContext",NS_WMC);
+
+        viewContext.setAttribute("version", _version)
+            .setAttribute("id", _id)
+            .setAttribute("schemaLocation", "http://www.opengis.net/context http://schemas.opengis.net/context/1.1.0/context.xsd", NS_XSI)
+            .addContent(_general.toElement("General"))
+            .addContent(_layerList.toElement("LayerList"));
+
+        viewContext.addNamespaceDeclaration(NS_XLINK);
+        viewContext.addNamespaceDeclaration(NS_XSI);
+
+        return viewContext;
 	}
 }
 

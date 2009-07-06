@@ -21,25 +21,28 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.services.user;
+package org.fao.geonet.services.harvesting;
 
-import org.jdom.*;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.harvest.Common;
+import org.fao.geonet.kernel.harvest.HarvestManager;
+import org.jdom.Attribute;
+import org.jdom.Element;
 
-import jeeves.constants.*;
-import jeeves.interfaces.*;
-import jeeves.resources.dbms.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-import jeeves.utils.*;
-
-import org.fao.geonet.constants.*;
-
-//=============================================================================
-
-/** Removes a user from the system. It removes the relationship to a group too
-  */
-
-public class Remove implements Service
+/**
+ * Run a harvester synchronously.
+ *
+ * The harvest "Run" service will run a harvester in the background, i.e.
+ * asynchronously. The "Invoke" service will run a harvester directly, i.e.
+ * synchronously. The main purpose for this service is testing, i.e. get results
+ * immmediately returned in a test script.
+ */
+public class Invoke implements Service
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -47,7 +50,9 @@ public class Remove implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception
+	{
+	}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -57,35 +62,17 @@ public class Remove implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		String id = Util.getParam(params, Params.ID);
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		HarvestManager hm = gc.getHarvestManager();
 
-		UserSession usrSess = context.getUserSession();
-		String      myProfile = usrSess.getProfile();
-		String      myUserId  = usrSess.getUserId();
+		String id = params.getChildText("id");
 
-		if (myUserId.equals(id)) {
-			throw new IllegalArgumentException("You cannot delete yourself from the user database");
-		}
+		// Invoke: synchronous "run" of harvester
+		Common.OperResult result = hm.invoke(context.getResourceManager(), id);
 
-		if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) ||
-				myProfile.equals("UserAdmin"))  {
-
-			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
-			if (myProfile.equals("UserAdmin")) {
-				java.util.List adminlist =dbms.select("SELECT groupId FROM UserGroups WHERE userId="+myUserId+" or userId = "+id+" group by groupId having count(*) > 1").getChildren();
-				if (adminlist.size() == 0) {
-				  throw new IllegalArgumentException("You don't have rights to delete this user because the user is not part of your group");
-				}
-			}
-
-			dbms.execute ("DELETE FROM UserGroups WHERE userId=" + id);
-			dbms.execute ("DELETE FROM Users      WHERE     id=" + id);
-		} else {
-			throw new IllegalArgumentException("You don't have rights to delete this user");
-		}
-
-		return new Element(Jeeves.Elem.RESPONSE);
+		// Construct result
+		return new Element(Jeeves.Elem.RESPONSE)
+				.addContent(new Element("id").setText(id).setAttribute(new Attribute("status", result.toString())));
 	}
 }
 

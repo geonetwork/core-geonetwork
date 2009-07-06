@@ -33,10 +33,12 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
+import org.jdom.Attribute;
 import org.jdom.Element;
 
 //=============================================================================
@@ -110,6 +112,34 @@ public class Show implements Service
 		//--- get metadata
 		
 		Element elMd = dm.getMetadata(context, id, false);
+		elMd.addNamespaceDeclaration(Csw.NAMESPACE_CSW);	
+
+		//
+		// setting schemaLocation
+		// TODO currently it's only set for ISO metadata
+		
+		// document has ISO root element and ISO namespace
+		if(elMd.getName().equals("MD_Metadata") && elMd.getNamespaceURI().equals("http://www.isotc211.org/2005/gmd")) {
+			// whether the metadata describes a service
+			boolean isServiceMetadata = false;
+			Element identificationInfo = elMd.getChild("identificationInfo", Csw.NAMESPACE_GMD);
+			if(identificationInfo != null) {
+				Element srvIdentification = identificationInfo.getChild("SV_ServiceIdentification", Csw.NAMESPACE_SRV);
+				if(srvIdentification != null) {
+					isServiceMetadata = true;
+				}
+			}
+			// document describes a dataset (not a service)
+			if(!isServiceMetadata){
+				Attribute schemaLocation = new Attribute("schemaLocation","http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd", Csw.NAMESPACE_XSI);
+				elMd.setAttribute(schemaLocation);
+			}
+			// document describes a service
+			else if(isServiceMetadata) {
+				Attribute schemaLocation = new Attribute("schemaLocation","http://www.isotc211.org/2005/gmd http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd", Csw.NAMESPACE_XSI);
+				elMd.setAttribute(schemaLocation);			
+			}
+		}
 
 		if (elMd == null)
 			throw new MetadataNotFoundEx(id);

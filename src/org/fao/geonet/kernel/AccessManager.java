@@ -390,17 +390,20 @@ public class AccessManager
 		//--- consider IPv4 & IPv6 loopback
 		//--- we use 'startsWith' because some addresses can be 0:0:0:0:0:0:0:1%0
 
-		if (ip.startsWith("0:0:0:0:0:0:0:1") || ip.equals("127.0.0.1"))
-			return true;
+		if (ip.startsWith("0:0:0:0:0:0:0:1") || ip.equals("127.0.0.1")) return true;
 
 		String network = settMan.getValue("system/intranet/network");
 		String netmask = settMan.getValue("system/intranet/netmask");
 
-		long lIntranetNet  = getAddress(network);
-		long lIntranetMask = getAddress(netmask);
-		long lAddress      = getAddress(ip);
-
-		return (lAddress & lIntranetMask) == lIntranetNet ;
+		try {
+			long lIntranetNet  = getAddress(network);
+			long lIntranetMask = getAddress(netmask);
+			long lAddress      = getAddress(ip);
+			return (lAddress & lIntranetMask) == lIntranetNet ;
+		} catch (Exception nfe) {
+			nfe.printStackTrace();
+			return false;
+		}
 	}
 
 	//--------------------------------------------------------------------------

@@ -250,6 +250,52 @@ public abstract class AbstractHarvester
 
 	//--------------------------------------------------------------------------
 
+	public synchronized OperResult invoke(ResourceManager rm)
+	{
+		// Cannot do invoke if this harvester was started (iei active)
+		if (status != Status.INACTIVE)
+			return OperResult.ALREADY_ACTIVE;
+
+		Logger logger = Log.createLogger(Geonet.HARVESTER);
+		String nodeName = getParams().name +" ("+ getClass().getSimpleName() +")";
+		OperResult result = OperResult.OK;
+
+		try
+		{
+			status = Status.ACTIVE;
+			logger.info("Started harvesting from node : "+ nodeName);
+			doHarvest(logger, rm);
+			logger.info("Ended harvesting from node : "+ nodeName);
+
+			rm.close();
+		}
+		catch(Throwable t)
+		{
+			result = OperResult.ERROR;
+			logger.warning("Raised exception while harvesting from : "+ nodeName);
+			logger.warning(" (C) Class   : "+ t.getClass().getSimpleName());
+			logger.warning(" (C) Message : "+ t.getMessage());
+			error = t;
+			t.printStackTrace();
+
+			try
+			{
+				rm.abort();
+			}
+			catch (Exception ex)
+			{
+				logger.warning("CANNOT ABORT EXCEPTION");
+				logger.warning(" (C) Exc : "+ ex);
+			}
+		} finally {
+			status = Status.INACTIVE;
+		}
+
+		return result;
+	}
+
+	//--------------------------------------------------------------------------
+
 	public synchronized void update(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
 		doUpdate(dbms, id, node);

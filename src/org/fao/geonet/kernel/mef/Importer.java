@@ -199,7 +199,7 @@ class Importer
 
 				id[0] = dm.insertMetadataExt(dbms, schema, md[0], context.getSerialFactory(),
 													  source, createDate, changeDate, uuid,
-													  context.getUserSession().getUserIdAsInt(), groupId);
+													  context.getUserSession().getUserIdAsInt(), groupId, isTemplate);
 
 				int iId = Integer.parseInt(id[0]);
 

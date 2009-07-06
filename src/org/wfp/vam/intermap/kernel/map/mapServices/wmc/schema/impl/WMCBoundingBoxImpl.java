@@ -24,6 +24,7 @@
 package org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.impl;
 
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.wfp.vam.intermap.kernel.map.mapServices.wmc.schema.type.WMCBoundingBox;
 
 /**
@@ -155,7 +156,9 @@ public class WMCBoundingBoxImpl implements WMCBoundingBox
 		if(_maxy == Float.NaN)
 			throw new IllegalStateException(name + "/maxy is missing");
 
-		return new Element(name)
+        Namespace NS_WMC = Namespace.getNamespace("http://www.opengis.net/context");
+
+		return new Element(name, NS_WMC)
 			.setAttribute("SRS", _srs)
 			.setAttribute("minx", ""+_minx)
 			.setAttribute("miny", ""+_miny)

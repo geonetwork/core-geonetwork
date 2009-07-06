@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.List;
 import jeeves.exceptions.OperationNotAllowedEx;
@@ -198,6 +199,9 @@ public class Worker implements Runnable
 
 	private void save(File mefFile, String uuid) throws IOException
 	{
+		// sanitize the uuid to remove and characters that might cause issues
+		// when we write the mef file out
+		uuid = simplifyName(uuid);
 		File outFile = new File(outDir, uuid + ".mef");
 
 		FileInputStream  is = new FileInputStream (mefFile);
@@ -222,6 +226,30 @@ public class Worker implements Runnable
 		{
 			return null;
 		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private String simplifyName(String file)
+	{
+
+		//--- we need to sanitize the filename here - make it UTF8, no ctrl
+		//--- characters and only containing [A-Z][a-z][0-9],_.-
+
+		//--- start by converting to UTF-8
+		try {
+			byte[] utf8Bytes = file.getBytes("UTF8");
+			file = new String(utf8Bytes, "UTF8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		//--- replace whitespace with underscore
+		file = file.replaceAll("\\s","_");
+
+		//--- remove everything that isn't [0-9][a-z][A-Z],#_.-
+		file = file.replaceAll("[^\\w&&[^,_.-]]","");
+		return file;
 	}
 
 	//---------------------------------------------------------------------------

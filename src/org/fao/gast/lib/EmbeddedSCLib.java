@@ -31,9 +31,15 @@ import java.util.Map;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.xml.sax.SAXException;
+
+import org.mortbay.jetty.Connector;
+import org.mortbay.jetty.Server;
+import org.mortbay.resource.Resource;
+import org.mortbay.xml.XmlConfiguration;
 
 //=============================================================================
-/** Embedde Servlet Container lib */
+/** Embedded Servlet Container lib */
 
 public class EmbeddedSCLib
 {
@@ -43,40 +49,29 @@ public class EmbeddedSCLib
 	//---
 	//---------------------------------------------------------------------------
 
-	public EmbeddedSCLib(String appPath) throws JDOMException, IOException
+	public EmbeddedSCLib(String appPath) throws Exception
 	{
+		
 		this.appPath = appPath;
 
-		jetty  = Lib.xml.load(appPath + JETTY_FILE);
+		String jetty  = appPath + JETTY_FILE;
 		webXml = Lib.xml.load(appPath + WEBXML_FILE);
 
-		//--- retrieve 'host', 'port' and 'servlet' parameters from jetty
+		//--- retrieve 'host', 'port' and 'servlet' parameters from jetty/web.xml
 
-		for (Object call : jetty.getRootElement().getChildren("Call"))
-		{
-			Element elCall = (Element) call;
-
-			if ("addListener".equals(elCall.getAttributeValue("name")))
-			{
-				Element elNew = elCall.getChild("Arg").getChild("New");
-
-				for (Object set : elNew.getChildren("Set"))
-				{
-					Element elSet = (Element) set;
-
-					if ("host".equals(elSet.getAttributeValue("name")))
-						hostElem = elSet;
-
-					else if ("port".equals(elSet.getAttributeValue("name")))
-						portElem = elSet;
-				}
-			}
-
-//			else if ("addWebApplication".equals(elCall.getAttributeValue("name"))) // doesn't work with new Jetty 1.6.14
-//			{
-//				if (servletElem == null)
-//					servletElem = elCall.getChild("Arg");
-//			}
+		System.out.println("Loading "+jetty);
+		XmlConfiguration config = new XmlConfiguration(Resource.newResource(jetty).getURL());
+		Server server = new Server();
+		config.configure(server);
+		Connector[] conns = server.getConnectors();
+		//--- assume connector we want is the first one?
+		if (conns.length == 1) {
+			host = conns[0].getHost();
+			System.out.println("Jetty on Host: "+host);
+			port = conns[0].getPort()+"";
+			System.out.println("Jetty on Port: "+port);
+		} else {
+			throw new Exception("Confusion: more than one connector in "+jetty);
 		}
 	}
 
@@ -88,22 +83,20 @@ public class EmbeddedSCLib
 
 	public String getHost()
 	{
-		return (hostElem == null) ? null : hostElem.getText();
+		return host;
 	}
 
 	//---------------------------------------------------------------------------
 
 	public String getPort()
 	{
-		return (portElem == null) ? null : portElem.getText();
+		return port;
 	}
 
 	//---------------------------------------------------------------------------
 
 	public String getServlet()
 	{
-		//--- we have to skip the initial '/'
-		// return (servletElem == null) ? null : servletElem.getText().substring(1);
 		return "geonetwork";
 	}
 
@@ -111,43 +104,41 @@ public class EmbeddedSCLib
 
 	public void setHost(String host)
 	{
+		// Disabled for Jetty 6.x
 	}
 
 	//---------------------------------------------------------------------------
 
 	public void setPort(String port)
 	{
-		if (portElem != null)
-			portElem.setText(port);
+		// Disabled for Jetty 6.x
 	}
 
 	//---------------------------------------------------------------------------
 
 	public void setServlet(String name)
 	{
-		// Disabled for Jetty 1.6.14
-		return;
-//		if (servletElem != null)
-//			servletElem.setText("/"+name);
-//
-//		for (Object e : webXml.getRootElement().getChildren())
-//		{
-//			Element elem = (Element) e;
-//
-//			if (elem.getName().equals("display-name"))
-//			{
-//				elem.setText(name);
-//				return;
-//			}
-//		}
-		
+		// Disabled for Jetty 6.x
+		//             if (servletElem != null)
+		//                     servletElem.setText("/"+name);
+		//
+		//             for (Object e : webXml.getRootElement().getChildren())
+		//             {
+		//                     Element elem = (Element) e;
+		//
+		//                     if (elem.getName().equals("display-name"))
+		//                     {
+		//                             elem.setText(name);
+		//                             return;
+		//                     }
+		//             }
+		//
 	}
 
 	//---------------------------------------------------------------------------
 
 	public void save() throws FileNotFoundException, IOException
 	{
-		Lib.xml.save(appPath + JETTY_FILE,  jetty);
 		Lib.xml.save(appPath + WEBXML_FILE, webXml);
 
 		//--- create proper index.html file to point to correct servlet
@@ -167,10 +158,8 @@ public class EmbeddedSCLib
 	//---------------------------------------------------------------------------
 
 	private String   appPath;
-	private Document jetty;
-	private Element  hostElem;
-	private Element  portElem;
-	private Element  servletElem;
+	private String   host;
+	private String   port;
 	private Document webXml;
 
 	private static final String JETTY_FILE  = "/bin/jetty.xml";

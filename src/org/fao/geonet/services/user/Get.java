@@ -58,31 +58,52 @@ public class Get implements Service
 	{
 		String id = params.getChildText(Params.ID);
 
-		if (id == null)
-			return new Element(Jeeves.Elem.RESPONSE);
+		UserSession usrSess = context.getUserSession();
+		if (!usrSess.isAuthenticated()) return new Element(Jeeves.Elem.RESPONSE);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+		String      myProfile = usrSess.getProfile();
+		String      myUserId  = usrSess.getUserId();
 
-		Element elUser = dbms.select ("SELECT * FROM Users WHERE id=" + id);
+		if (id == null) return new Element(Jeeves.Elem.RESPONSE);
+
+		if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) || myProfile.equals("UserAdmin") || myUserId.equals(id)) {
+
+			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+
+			Element elUser = dbms.select ("SELECT * FROM Users WHERE id=" + id);
 
 		//--- retrieve user groups
 
-		Element elGroups = new Element(Geonet.Elem.GROUPS);
+			Element elGroups = new Element(Geonet.Elem.GROUPS);
 
-		java.util.List list =dbms.select("SELECT groupId FROM UserGroups WHERE userId=" + id).getChildren();
+			java.util.List list =dbms.select("SELECT groupId FROM UserGroups WHERE userId=" + id).getChildren();
 
-		for(int i=0; i<list.size(); i++)
-		{
-			String grpId = ((Element)list.get(i)).getChildText("groupid");
+			for(int i=0; i<list.size(); i++)
+			{
+				String grpId = ((Element)list.get(i)).getChildText("groupid");
 
-			elGroups.addContent(new Element(Geonet.Elem.ID).setText(grpId));
-		}
+				elGroups.addContent(new Element(Geonet.Elem.ID).setText(grpId));
+			}
+
+			if (!(myUserId.equals(id)) && myProfile.equals("UserAdmin")) {
+			
+		//--- retrieve session user groups and check to see whether this user is 
+		//--- allowed to get this info
+
+				java.util.List adminlist = dbms.select("SELECT groupId FROM UserGroups WHERE userId="+myUserId+" or userId = "+id+" group by groupId having count(*) > 1").getChildren();
+				if (adminlist.size() == 0) {
+					throw new IllegalArgumentException("You don't have rights to do this because the user you want to edit is not part of your group");
+				}
+			}
 
 		//--- return data
 
-		elUser.addContent(elGroups);
+			elUser.addContent(elGroups);
+			return elUser;
+		} else {
+			throw new IllegalArgumentException("You don't have rights to do this");
+		}
 
-		return elUser;
 	}
 }
 

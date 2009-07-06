@@ -95,7 +95,8 @@ public class Common {
 		INACTIVE("inactive"),
 		ALREADY_ACTIVE("already-active"),
 		ALREADY_INACTIVE("already-inactive"),
-		ALREADY_RUNNING("already-running");
+		ALREADY_RUNNING("already-running"),
+		ERROR("error");
 
 		//------------------------------------------------------------------------
 

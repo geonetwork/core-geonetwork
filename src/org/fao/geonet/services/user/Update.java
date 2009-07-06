@@ -29,6 +29,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 
@@ -59,6 +60,7 @@ public class Update implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
+		String operation = Util.getParam(params, Params.OPERATION);
 		String id       = params.getChildText(Params.ID);
 		String username = Util.getParam(params, Params.USERNAME);
 		String password = Util.getParam(params, Params.PASSWORD);
@@ -74,55 +76,110 @@ public class Update implements Service
 		String organ    = Util.getParam(params, Params.ORG,     "");
 		String kind     = Util.getParam(params, Params.KIND,    "");
 
-		if (!context.getProfileManager().exists(profile))
-			throw new Exception("Unkown profile : "+ profile);
+		UserSession usrSess = context.getUserSession();
+		String      myProfile = usrSess.getProfile();
+		String      myUserId  = usrSess.getUserId();
 
 		java.util.List listGroups = params.getChildren(Params.GROUPS);
 
-		if (profile.equals(Geonet.Profile.ADMINISTRATOR))
-			listGroups = new ArrayList();
+		if (!operation.equals(Params.Operation.RESETPW)) {
+			if (!context.getProfileManager().exists(profile))
+				throw new Exception("Unknown profile : "+ profile);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
-		if (id == null)	// For Adding new user
-		{
-			id = context.getSerialFactory().getSerial(dbms, "Users") +"";
-
-			String query = "INSERT INTO Users (id, username, password, surname, name, profile, "+
-								"address, city, state, zip, country, email, organisation, kind) "+
-								"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-			dbms.execute(query, new Integer(id), username, Util.scramble(password), surname,
-							 name, profile, address, city, state, zip, country, email, organ, kind);
-
-			//--- add groups
-
-			for(int i=0; i<listGroups.size(); i++)
-			{
-				String group = ((Element) listGroups.get(i)).getText();
-				addGroup(dbms, id, group);
-			}
+			if (profile.equals(Geonet.Profile.ADMINISTRATOR))
+				listGroups = new ArrayList();
 		}
 
-		else 	//--- For Update
-		{
-			String query = "UPDATE Users SET username=?, password=?, surname=?, name=?, "+
-								"profile=?, address=?, city=?, state=?, zip=?, country=?, email=?," +
-								"organisation=?, kind=? WHERE id=?";
+		if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) ||
+				myProfile.equals("UserAdmin") ||
+				myUserId.equals(id)) {
 
-			dbms.execute (query, username, Util.scramble(password), surname, name,
-							 			profile, address, city, state, zip, country, email,
-							 			organ, kind, new Integer(id));
+
+			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+
+			// Before we do anything check (for UserAdmin) that they are not trying
+			// to add a user to any group outside of their own - if they are then
+			// raise an exception - this shouldn't happen unless someone has
+			// constructed their own malicious URL!
+			//
+			if (operation.equals("newuser") || operation.equals("editinfo")) {
+				if (!(myUserId.equals(id)) && myProfile.equals("UserAdmin")) {
+					Element bull = dbms.select("SELECT groupId from UserGroups WHERE userId="+myUserId);
+					java.util.List adminlist = bull.getChildren();
+					for(int i=0; i<listGroups.size(); i++) {
+						String group = ((Element) listGroups.get(i)).getText();
+						Boolean found = false;
+						for (int j=0;j<adminlist.size();j++) {
+							String testGroup = ((Element) adminlist.get(j)).getChild("groupid").getText();
+							System.out.println("Testing group "+group+" against "+testGroup);
+							if (group.equals(testGroup)) {
+								found = true;
+							}
+						}
+						if (!found) {
+							throw new IllegalArgumentException("tried to add group id "+group+" to user "+username+" - not allowed because you are not a member of that group!");	
+						}
+					}
+				}
+			}
+
+		// -- For Adding new user
+			if (operation.equals(Params.Operation.NEWUSER)) {
+				id = context.getSerialFactory().getSerial(dbms, "Users") +"";
+
+				String query = "INSERT INTO Users (id, username, password, surname, name, profile, "+
+							"address, city, state, zip, country, email, organisation, kind) "+
+							"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+				dbms.execute(query, new Integer(id), username, Util.scramble(password), surname, name, profile, address, city, state, zip, country, email, organ, kind);
 
 			//--- add groups
 
-			dbms.execute("DELETE FROM UserGroups WHERE userId=?", new Integer(id));
-
-			for(int i=0; i<listGroups.size(); i++)
-			{
-				String group = ((Element) listGroups.get(i)).getText();
-				addGroup(dbms, id, group);
+				for(int i=0; i<listGroups.size(); i++) {
+					String group = ((Element) listGroups.get(i)).getText();
+					addGroup(dbms, id, group);
+				}
 			}
+
+			else {
+
+			// -- full update
+				if (operation.equals(Params.Operation.FULLUPDATE)) {
+					String query = "UPDATE Users SET username=?, password=?, surname=?, name=?, profile=?, address=?, city=?, state=?, zip=?, country=?, email=?, organisation=?, kind=? WHERE id=?";
+
+					dbms.execute (query, username, Util.scramble(password), surname, name, profile, address, city, state, zip, country, email, organ, kind, new Integer(id));
+
+					//--- add groups
+
+					dbms.execute("DELETE FROM UserGroups WHERE userId=?", new Integer(id));
+
+					for(int i=0; i<listGroups.size(); i++) {
+						String group = ((Element) listGroups.get(i)).getText();
+						addGroup(dbms, id, group);
+					}
+
+			// -- edit user info
+				} else if (operation.equals(Params.Operation.EDITINFO)) {
+					String query = "UPDATE Users SET username=?, surname=?, name=?, profile=?, address=?, city=?, state=?, zip=?, country=?, email=?, organisation=?, kind=? WHERE id=?";
+					dbms.execute (query, username, surname, name, profile, address, city, state, zip, country, email, organ, kind, new Integer(id));
+					//--- add groups
+				
+					dbms.execute ("DELETE FROM UserGroups WHERE userId=" + id);
+					for(int i=0; i<listGroups.size(); i++) {
+						String group = ((Element) listGroups.get(i)).getText();
+						addGroup(dbms, id, group);
+					}
+
+			// -- reset password
+				} else if (operation.equals(Params.Operation.RESETPW)) {
+					String query = "UPDATE Users SET password=? WHERE id=?";
+					dbms.execute (query, Util.scramble(password),new Integer(id));
+				} else {
+					throw new IllegalArgumentException("unknown user update operation "+operation);
+				}
+			} 
+		} else {
+			throw new IllegalArgumentException("you don't have rights to do this");
 		}
 
 		return new Element(Jeeves.Elem.RESPONSE);

@@ -51,6 +51,7 @@ public class Params
 	public static final String UUID         = "uuid";
 	public static final String URI          = "uri";
 	public static final String NAME         = "name";
+	public static final String OPERATION    = "operation";
 	public static final String ORG          = "org";
 	public static final String OVERWRITE    = "overwrite";
 	public static final String PASSWORD     = "password";
@@ -99,6 +100,15 @@ public class Params
 	{
 		public static final String PUBLIC  = "public";
 		public static final String PRIVATE = "private";
+	}
+
+	public class Operation
+	{
+		public static final String NEWUSER  = "newuser";
+		public static final String EDITINFO = "editinfo";
+		public static final String FULLUPDATE = "fullupdate";
+		public static final String RESETPW = "resetpw";
+
 	}
 }
 
