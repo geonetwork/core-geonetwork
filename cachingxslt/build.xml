@@ -1,0 +1,22 @@
+<project name="cachingxslt" default="all">
+
+  <property name="debug" value="on"/>
+
+  <target name="all">
+		<delete file = "cachingxslt.jar" />
+		<delete dir  = "build" />
+		<mkdir dir  = "build" />
+
+    <javac
+     srcdir="src"
+     destdir="build"
+     extdirs="lib"
+     debug="${debug}">
+    </javac>
+
+    <jar jarfile="cachingxslt.jar"
+      basedir="build" includes="de/**, META-INF/**"/>
+		<delete dir="build"/>
+  </target>
+
+</project>

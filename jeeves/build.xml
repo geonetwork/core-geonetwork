@@ -1,0 +1,31 @@
+<!--
+==============================================================================
+=== Build file to allow ant (http://jakarta.apache.org/ant/) to be used
+=== to build the Jeeves project.
+==============================================================================
+-->
+
+<project name="jeeves" default="all">
+
+ <!-- =============================================================== -->
+
+ <target name="all">
+  <delete file = "jeeves.jar" />
+  <delete dir  = "build" />
+  <mkdir dir  = "build" />
+
+  <javac srcdir     = "src"
+     destdir    = "build"
+     extdirs    = "lib"
+     includes   = "jeeves/**"
+     debug      = "true"/>
+
+  <jar  jarfile  = "jeeves.jar"
+     basedir  = "build"
+     includes = "jeeves/**" />
+  <delete dir="build"/>
+ </target>
+
+ <!-- =============================================================== -->
+
+</project>

@@ -1,0 +1,13 @@
+<test>
+    <request url="/en/xml.harvesting.remove">
+        <params>
+            <id>${id}</id>
+        </params>
+    </request>
+
+    <response>
+        <response>
+          <id status="ok">${id}</id>
+        </response>
+    </response>
+</test>

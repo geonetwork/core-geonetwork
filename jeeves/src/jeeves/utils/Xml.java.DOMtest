@@ -1,0 +1,549 @@
+//=============================================================================
+//===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This library is free software; you can redistribute it and/or
+//===	modify it under the terms of the GNU Lesser General Public
+//===	License as published by the Free Software Foundation; either
+//===	version 2.1 of the License, or (at your option) any later version.
+//===
+//===	This library is distributed in the hope that it will be useful,
+//===	but WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//===	Lesser General Public License for more details.
+//===
+//===	You should have received a copy of the GNU Lesser General Public
+//===	License along with this library; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: GeoNetwork@fao.org
+//==============================================================================
+
+package jeeves.utils;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.StringReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
+import javax.xml.XMLConstants;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+import javax.xml.validation.ValidatorHandler;
+
+import jeeves.exceptions.XSDValidationErrorEx;
+
+import org.apache.fop.apps.FopFactory;
+import org.apache.fop.apps.Fop;
+import org.apache.fop.apps.MimeConstants;
+
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+import org.jdom.Namespace;
+import org.jdom.output.DOMOutputter;
+import org.jdom.output.Format;
+import org.jdom.output.JDOMLocator;
+import org.jdom.output.SAXOutputter;
+import org.jdom.output.XMLOutputter;
+import org.jdom.transform.JDOMResult;
+import org.jdom.transform.JDOMSource;
+import org.jdom.xpath.XPath;
+
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import net.sf.saxon.FeatureKeys;
+
+//=============================================================================
+
+/** General class of useful static methods
+  */
+
+public class Xml
+{
+	//--------------------------------------------------------------------------
+	//---
+	//--- Load API
+	//---
+	//--------------------------------------------------------------------------
+
+	public static Element loadFile(String file) throws IOException, JDOMException
+	{
+		return loadFile(new File(file));
+	}
+
+	//--------------------------------------------------------------------------
+	/** Loads an xml file from a URL and returns its root node */
+	
+	public static Element loadFile(URL url) throws IOException, JDOMException
+	{
+		SAXBuilder builder = new SAXBuilder();
+		Document   jdoc    = builder.build(url);
+
+		return (Element) jdoc.getRootElement().detach();
+	}
+
+	//--------------------------------------------------------------------------
+
+	/** Loads an xml file and returns its root node */
+
+	public static Element loadFile(File file) throws IOException, JDOMException
+	{
+		SAXBuilder builder = new SAXBuilder();
+		Document   jdoc    = builder.build(file);
+
+		return (Element) jdoc.getRootElement().detach();
+	}
+
+	//--------------------------------------------------------------------------
+	/** Loads an xml file and returns its root node (validates the xml with a dtd) */
+
+	public static Element loadString(String data, boolean validate)
+												throws IOException, JDOMException
+	{
+		SAXBuilder builder = new SAXBuilder(validate);
+		Document   jdoc    = builder.build(new StringReader(data));
+
+		return (Element) jdoc.getRootElement().detach();
+	}
+
+	//--------------------------------------------------------------------------
+	/** Loads an xml stream and returns its root node (validates the xml with a dtd) */
+
+	public static Element loadStream(InputStream input) throws IOException, JDOMException
+	{
+		SAXBuilder builder = new SAXBuilder();
+		builder.setFeature("http://apache.org/xml/features/validation/schema",false);
+		builder.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd",false);
+		Document   jdoc    = builder.build(input);
+
+		return (Element) jdoc.getRootElement().detach();
+	}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Transform API
+	//---
+	//--------------------------------------------------------------------------
+
+	/** Transform an xml tree into another using a stylesheet on disk */
+
+	public static Element transform(Element xml, String styleSheetPath) throws Exception
+	{
+		JDOMResult resXml = new JDOMResult();
+		transform(xml, styleSheetPath, resXml, null);
+		return (Element)resXml.getDocument().getRootElement().detach();
+	}
+
+	//--------------------------------------------------------------------------
+	/** Transform an xml tree into another using a stylesheet on disk and pass
+	 * parameters */
+
+	public static Element transform(Element xml, String styleSheetPath, Map<String,String> params) throws Exception
+	{
+		JDOMResult resXml = new JDOMResult();
+		transform(xml, styleSheetPath, resXml, params);
+		return (Element)resXml.getDocument().getRootElement().detach();
+	}
+
+	//--------------------------------------------------------------------------
+	/** Transform an xml tree putting the result to a stream (uses a stylesheet on disk) */
+	public static void transform(Element xml, String styleSheetPath, OutputStream out) throws Exception
+	{
+		StreamResult resStream= new StreamResult(out);
+		transform(xml, styleSheetPath, resStream, null);
+	}
+
+	//--------------------------------------------------------------------------
+	/** Transform an xml tree putting the result to a stream  - no parameters */
+	public static void transform(Element xml, String styleSheetPath, Result result) throws Exception
+	{
+		transform(xml, styleSheetPath, result, null);
+	}
+
+	//--------------------------------------------------------------------------
+	/** Transform an xml tree putting the result to a stream with optional parameters */
+
+	public static void transform(Element xml, String styleSheetPath, Result result, Map<String,String> params) throws Exception
+	{
+		File styleSheet = new File(styleSheetPath);
+		Source srcXml   = new JDOMSource(new Document((Element)xml.detach()));
+		Source srcSheet = new StreamSource(styleSheet);
+
+		// Dear old saxon likes to yell loudly about each and every XSLT 1.0
+		// stylesheet so switch it off but trap any exceptions because this
+		// code is run on transformers other than saxon 
+		TransformerFactory transFact = TransformerFactory.newInstance();
+		try {
+			transFact.setAttribute(FeatureKeys.VERSION_WARNING,false);
+			transFact.setAttribute(FeatureKeys.LINE_NUMBERING,true);
+			transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION,true);
+			// Add the following to get timing info on xslt transformations
+			//transFact.setAttribute(FeatureKeys.TIMING,true);
+		} catch (IllegalArgumentException e) {
+			System.out.println("WARNING: transformerfactory doesnt like saxon attributes!");
+			//e.printStackTrace();
+		} finally {
+			Transformer t = transFact.newTransformer(srcSheet);
+			if (params != null) {
+				for (String param : params.keySet()) {
+					t.setParameter(param,params.get(param));
+				}
+			}
+			t.transform(srcXml, result);
+		}
+	}
+
+   // --------------------------------------------------------------------------
+   /**
+   * Transform an xml tree to PDF using XSL-FOP 
+     * putting the result to a stream (uses a stylesheet
+   * on disk)
+   */
+
+   public static String transformFOP(String uploadDir, Element xml, String styleSheetPath)
+           throws Exception {
+       String file = uploadDir + UUID.randomUUID().toString () + ".pdf";
+
+   // Step 1: Construct a FopFactory
+   // (reuse if you plan to render multiple documents!)
+   FopFactory fopFactory = FopFactory.newInstance();
+   
+   // Step 2: Set up output stream.
+   // Note: Using BufferedOutputStream for performance reasons (helpful
+   // with FileOutputStreams).
+   OutputStream out = new BufferedOutputStream(new FileOutputStream(
+           new File(file)));
+   
+   try {
+       // Step 3: Construct fop with desired output format
+   Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, out);
+
+   // Step 4: Setup JAXP using identity transformer
+   TransformerFactory factory = TransformerFactory.newInstance();
+   Source xslt = new StreamSource(new File(styleSheetPath));
+		try {
+			factory.setAttribute(FeatureKeys.VERSION_WARNING,false);
+			factory.setAttribute(FeatureKeys.LINE_NUMBERING,true);
+		} catch (IllegalArgumentException e) {
+			System.out.println("WARNING: transformerfactory doesnt like saxon attributes!");
+			//e.printStackTrace();
+		} finally {
+   		Transformer transformer = factory.newTransformer(xslt);
+
+   		// Step 5: Setup input and output for XSLT transformation
+   		// Setup input stream
+			Source src = new JDOMSource(new Document((Element)xml.detach()));
+   
+   		// Resulting SAX events (the generated FO) must be piped through to
+   		// FOP
+   		Result res = new SAXResult(fop.getDefaultHandler());
+
+   		// Step 6: Start XSLT transformation and FOP processing
+      transformer.transform(src, res);
+		}
+   } catch (Exception e) {         
+       throw e;
+   } finally {
+       // Clean-up
+           out.close();
+       }
+       
+       return file;
+   }
+   
+	//--------------------------------------------------------------------------
+	//---
+	//--- General stuff
+	//---
+	//--------------------------------------------------------------------------
+
+	/** Writes an xml element to a stream */
+
+	public static void writeResponse(Document doc, OutputStream out) throws IOException
+	{
+		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+		outputter.output(doc, out);
+	}
+
+	//---------------------------------------------------------------------------
+	/** Converts an xml element to a string */
+
+	public static String getString(Element data)
+	{
+		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+
+		return outputter.outputString(data);
+	}
+
+	//---------------------------------------------------------------------------
+
+	public static String getString(Document data)
+	{
+		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+
+		return outputter.outputString(data);
+	}
+
+	//---------------------------------------------------------------------------
+	/** Creates and prepares an XPath element - simple xpath (like "a/b/c") */
+	private static XPath prepareXPath(Element xml, String xpath, List<Namespace> theNSs) throws Exception
+	{
+		XPath xp = XPath.newInstance (xpath);
+		for (Namespace ns : theNSs ) {
+			xp.addNamespace(ns);
+		}
+
+		return xp;
+	}
+
+	//---------------------------------------------------------------------------
+	/** Retrieves a single XML element given a simple xpath (like "a/b/c") */
+	public static Object selectSingle(Element xml, String xpath, List<Namespace> theNSs) throws Exception {
+
+		XPath xp = prepareXPath(xml, xpath, theNSs);
+
+		return xp.selectSingleNode(xml);
+	}
+
+	//---------------------------------------------------------------------------
+	/** Retrieves a single XML element as a JDOM element given a simple xpath */
+	public static Element selectElement(Element xml, String xpath) throws Exception {
+		return selectElement(xml, xpath, new ArrayList<Namespace>());
+	}
+
+	//---------------------------------------------------------------------------
+	/** Retrieves a single XML element as a JDOM element given a simple xpath */
+	public static Element selectElement(Element xml, String xpath, List<Namespace> theNSs) throws Exception {
+		Object result = selectSingle(xml, xpath, theNSs);
+		if (result == null) {
+			return null;
+		} else if (result instanceof Element) {
+			Element elem = (Element)result;
+			return (Element)(elem);
+		} else {
+			//-- Found something but not an element
+			return null;
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	/** Evaluates an XPath expression on an element and returns Elements */
+	public static List selectNodes(Element xml, String xpath) throws Exception {
+		XPath xp = XPath.newInstance(xpath);
+		return xp.selectNodes(xml);
+	}
+
+	//---------------------------------------------------------------------------
+	/** Evaluates an XPath expression on an element and returns string result */
+	public static String selectString(Element xml, String xpath) throws Exception {
+		return selectString(xml, xpath, new ArrayList<Namespace>());
+	}
+
+	//---------------------------------------------------------------------------
+	/** Evaluates an XPath expression on an element and returns string result */
+	public static String selectString(Element xml, String xpath, List<Namespace> theNSs) throws Exception {
+
+		XPath xp = prepareXPath(xml, xpath, theNSs);
+
+		return xp.valueOf(xml);
+	}
+
+	//---------------------------------------------------------------------------
+	/** Evaluates an XPath expression on an element and returns true/false */
+	public static boolean selectBoolean(Element xml, String xpath) throws Exception {
+		String result = selectString(xml, xpath, new ArrayList<Namespace>());
+		return result.length() > 0;
+	}
+
+	//---------------------------------------------------------------------------
+	/** Evaluates an XPath expression on an element and returns true/false */
+	public static boolean selectBoolean(Element xml, String xpath, List<Namespace> theNSs) throws Exception {
+		return selectString(xml, xpath, theNSs).length() > 0;
+	}
+
+	//---------------------------------------------------------------------------
+	/** Evaluates an XPath expression on an element and returns number result */
+	public static Number selectNumber(Element xml, String xpath) throws Exception {
+		return selectNumber(xml, xpath, new ArrayList<Namespace>());
+ 	}
+
+	//---------------------------------------------------------------------------
+	/** Evaluates an XPath expression on an element and returns number result */
+	public static Number selectNumber(Element xml, String xpath, List<Namespace> theNSs) throws Exception {
+
+		XPath xp = prepareXPath(xml, xpath, theNSs);
+
+		return xp.numberValueOf(xml);
+	}
+
+	//---------------------------------------------------------------------------
+	/** Error handler that collects up validation errors */
+
+	protected static class ErrorHandler extends DefaultHandler {
+
+		private int errorCount = 0;
+		private String errors = " ";
+		private Element xpaths;
+
+		public boolean errors() {
+			return errorCount > 0;
+		}
+
+		public Element getXPaths() {
+			return xpaths;
+		}
+
+		public void addMessage ( SAXParseException exception, String typeOfError ) {
+			if (errorCount == 0) xpaths = new Element("xsderrors");
+			errorCount++;
+
+			//Element elem = (Element) so.getLocator().getNode();
+			Element x = new Element("xpath");
+			/*
+			try {
+				String xpath = jeeves.utils.XPath.getXPath(elem);
+				//-- remove the first element to ensure XPath fits XML passed with
+				//-- root element
+				if (xpath.startsWith("/")) { 
+					int ind = xpath.indexOf("/",1);
+					if (ind != -1) {
+						xpath = xpath.substring(ind+1);
+					} else {
+						xpath = "."; // error to be placed on the root element
+					}
+				}
+				x.setText(xpath);
+			} catch (Exception e) {
+				e.printStackTrace();
+			*/
+				x.setText("nopath");
+			/*
+			}
+			*/
+			String message = typeOfError + "(" + errorCount + ") " + exception;// + " (Element: " + elem.getQualifiedName();
+			/*
+			String parentName;
+			if (!elem.isRootElement()) {
+				Element parent = (Element)elem.getParent();
+				if (parent != null)
+					parentName = parent.getQualifiedName();
+				else
+					parentName = "Unknown";
+			} else {
+				parentName = "/";
+			}
+			message += " with parent element: " + parentName + ")";
+			*/
+			System.out.println("Validation error: "+message);
+			Element m = new Element("message").setText(message);
+			Element e = new Element("error");
+			e.addContent(m);
+			e.addContent(x);
+			xpaths.addContent(e);
+		}
+		
+		public void error( SAXParseException parseException ) throws SAXException {
+		
+			addMessage( parseException, "ERROR" );
+		}
+
+		public void fatalError( SAXParseException parseException ) throws SAXException {
+			addMessage( parseException, "FATAL ERROR" );
+		}
+
+		public void warning( SAXParseException parseException ) throws SAXException {
+			addMessage( parseException, "WARNING" );
+		}
+
+	}
+
+	//---------------------------------------------------------------------------
+	/** Validates an xml document with respect to an xml schema described by .xsd file path */
+
+	
+	public static void validate(String schemaPath, Element xml) throws Exception
+	{
+		Element xsdXPaths = validateInfo(schemaPath,xml);
+		if (xsdXPaths != null && xsdXPaths.getContent().size() > 0) throw new XSDValidationErrorEx("XSD Validation error(s)",xsdXPaths);
+	}
+
+	public static Element validateInfo(String schemaPath, Element xml) throws Exception
+	{
+		ErrorHandler eh = new ErrorHandler();
+		validateGutsDom(schemaPath, xml, eh);
+		if (eh.errors()) {
+			return eh.getXPaths();
+		} else {
+			return null;
+		}
+	}
+
+	private static void validateGuts(String schemaPath, Element xml, ErrorHandler eh) throws Exception {
+		StreamSource schemaFile = new StreamSource(new File(schemaPath));
+		Schema schema = factory.newSchema(schemaFile);
+	
+		ValidatorHandler vh = schema.newValidatorHandler();
+		vh.setErrorHandler(eh);
+		so = new SAXOutputter(vh);
+		so.output(xml);
+	}
+
+	private static void validateGutsDom(String schemaPath, Element xml, ErrorHandler eh) throws Exception {
+    StreamSource schemaFile = new StreamSource(new File(schemaPath));
+    Schema schema = factory.newSchema(schemaFile);
+
+    Validator vh = schema.newValidator();
+    vh.setErrorHandler(eh);
+
+    //--- output to DOM document
+    DOMOutputter domOut = new DOMOutputter();
+    //domOut.setForceNamespaceAware(true);
+    org.w3c.dom.Document domDoc = domOut.output(new Document((Element)xml.detach()));
+    
+    //--- validate
+    vh.validate(new DOMSource(domDoc));
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//---------------------------------------------------------------------------
+
+	private static SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+	private static SAXOutputter so;
+
+
+}
+
+//=============================================================================
+
