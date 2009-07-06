@@ -51,6 +51,10 @@ import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.jdom.Text;
+import org.jdom.xpath.XPath;
+import org.jdom.output.XMLOutputter;
+import org.jdom.output.Format;
 
 //=============================================================================
 
@@ -218,7 +222,7 @@ class Harvester
 			request.setStartPosition(start +"");
 			Element response = doSearch(request, start, GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE);			
 			log.debug("Number of child elements in response: " + response.getChildren().size());
-			//System.out.println ("CSW response:" + Xml.getString(response));
+
 			Element results  = response.getChild("SearchResults", Csw.NAMESPACE_CSW);
 			// heikki: some providers forget to update their CSW namespace to the CSW 2.0.2 specification
 			if(results == null) {
@@ -414,26 +418,61 @@ class Harvester
 	private RecordInfo getRecordInfo(Element record)
 	{
 		String name = record.getName();
+        log.debug("getRecordInfo (name): " +  name);
 
-		if (!name.equals("SummaryRecord"))
+        // Summary
+        if (name.equals("SummaryRecord"))
 		{
-			log.warning("Skipped record not in 'SummaryRecord' format : "+ name);
+            Namespace dc  = Namespace.getNamespace("http://purl.org/dc/elements/1.1/");
+            Namespace dct = Namespace.getNamespace("http://purl.org/dc/terms/");
+
+            String identif  = record.getChildText("identifier", dc);
+            String modified = record.getChildText("modified",   dct);
+
+            if (identif == null)
+            {
+                log.warning("Skipped record with no 'dc:identifier' element : "+ name);
+                return null;
+            }
+
+            return new RecordInfo(identif, modified);
+
+			//log.warning("Skipped record not in 'SummaryRecord' format : "+ name);
+			//return null;
+
+        // Full record
+		} else if (name.equals("MD_Metadata")) {
+            try {
+                XPath xpath = XPath.newInstance("gmd:fileIdentifier/gco:CharacterString");
+                Element identif = (Element) xpath.selectSingleNode(record);
+
+                if (identif == null)
+                {
+                    log.warning("Skipped record with no 'gmd:fileIdentifier' element : "+ name);
+                    return null;
+                }
+
+                xpath = XPath.newInstance("gmd:dateStamp/gco:DateTime");
+                Element modified = (Element) xpath.selectSingleNode(record);
+                if (modified == null) {
+                    xpath = XPath.newInstance("gmd:dateStamp/gco:Date");
+                    modified = (Element) xpath.selectSingleNode(record);
+                }
+                log.debug("Record info: " +  identif + ", " + ((modified!=null)?modified.getText():null));
+
+                return new RecordInfo(identif.getText(), (modified!=null)?modified.getText():null);
+
+            } catch (Exception e) {
+                log.warning("Error parsing metadata: "+ e);
+			    return null;
+            }
+
+        } else {
+            log.warning("Skipped record not in supported format : "+ name);
 			return null;
-		}
+        }
 
-		Namespace dc  = Namespace.getNamespace("http://purl.org/dc/elements/1.1/");
-		Namespace dct = Namespace.getNamespace("http://purl.org/dc/terms/");
 
-		String identif  = record.getChildText("identifier", dc);
-		String modified = record.getChildText("modified",   dct);
-
-		if (identif == null)
-		{
-			log.warning("Skipped record with no 'dc:identifier' element : "+ name);
-			return null;
-		}
-
-		return new RecordInfo(identif, modified);
 	}
 
 	//---------------------------------------------------------------------------
