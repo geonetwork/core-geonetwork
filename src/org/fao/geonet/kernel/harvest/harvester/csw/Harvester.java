@@ -201,7 +201,7 @@ class Harvester
 				request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 				request.setConstraint(getCqlConstraint(s));
 				request.setMethod(CatalogRequest.Method.GET);
-			} else if (oper.getUrl != null) {
+			} else if (oper.postUrl != null) {
 				request.setUrl(oper.postUrl);
 				request.setConstraintLanguage(ConstraintLanguage.FILTER);
 				request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
