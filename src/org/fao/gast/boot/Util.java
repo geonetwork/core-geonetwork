@@ -23,14 +23,19 @@
 
 package org.fao.gast.boot;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
+import javax.xml.transform.TransformerFactory;
 
 import org.fao.gast.localization.Messages;
 
@@ -125,16 +130,41 @@ public class Util
 	public static void boot(String appPath, URL[] jarFiles, String className,
 									String args[]) throws Exception
 	{
+		//-- load jars and make this classloader the context class loader
 		URLClassLoader mcl = new URLClassLoader(jarFiles);
+		Thread.currentThread().setContextClassLoader(mcl);
 
-		try
-		{
+		//-- because we are using the URLClassLoader we need to take some 
+		//-- additional steps to select an XSLT transformerFactory
+		String tfName = appPath + "/web/geonetwork/WEB-INF/classes/META-INF/services/javax.xml.transform.TransformerFactory";
+		BufferedReader bReader = null;
+		try {
+			bReader = new BufferedReader(new FileReader(tfName));
+			String trans = bReader.readLine();
+			if (trans != null) {
+				System.setProperty("javax.xml.transform.TransformerFactory",trans);
+				System.out.println("INFO: Selected transformerFactory '"+trans+"' from '"+tfName+"'");
+			} else {
+				System.out.println("ERROR: EOF when attempting to read transformerFactory from '"+tfName+"' - JAXP will select the transformerFactory to be used.");
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			System.out.println("INFO: JAXP will select the transformerFactory to be used.");
+		} catch (Exception e) {
+			System.out.println("ERROR: Problem reading transformerFactory from '"+tfName+"' - JAXP will select the transformerFactory to be used.");
+			e.printStackTrace();
+		} finally {
+			if (bReader != null) bReader.close();
+		}
+		System.out.println("INFO: GAST will use XSLT factory : "+ TransformerFactory.newInstance().newTransformer().getClass().getName());
+
+		//-- now crank up the appropriate gast interface
+
+		try {
 			Starter starter = (Starter) Class.forName(className, true, mcl).newInstance();
 
 			starter.start(appPath, args);
-		}
-		catch(Throwable e)
-		{
+		} catch(Throwable e) {
 			e.printStackTrace();
 			showError(e);
 
