@@ -17,7 +17,6 @@
    <xsl:output method="html"/>
    <xsl:param name="lang"/>
    <xsl:variable name="loc" select="document(concat('loc/', $lang, '/schematron.xml'))"/>
-   <xsl:include href="../../../xsl/main.xsl"/>
    <xsl:template match="*|@*" mode="schematron-get-full-path">
       <xsl:apply-templates select="parent::*" mode="schematron-get-full-path"/>
       <xsl:text>/</xsl:text>

@@ -14,9 +14,6 @@
   </xsl:template>
 
 	<xsl:template name="schematron">
-		<xsl:if test="normalize-space(/root/error/object/schematronerrors/filename)!=''">
-			<font class="error">Errors in file: <xsl:value-of select="/root/error/object/schematronerrors/filename"/></font><br/><br/>
-		</xsl:if>
 		<xsl:value-of select="/root/gui/validation/message"/>
 		<br/><br/>
 		<xsl:choose>
