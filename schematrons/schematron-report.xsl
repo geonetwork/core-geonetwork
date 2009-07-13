@@ -54,7 +54,6 @@ ALTERED by Simon Pigot to remove escaping of quotes necessary for javascript
    
    <axsl:variable name="loc" select="document(concat('loc/', $lang, '/schematron.xml'))"/>
    
-   <axsl:include href="../../../xsl/main.xsl"/>
 </xsl:template>
 
 <xsl:template name="process-root">

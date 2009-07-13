@@ -8,22 +8,9 @@
 	page content
 	-->
 	<xsl:template name="content">
-		<xsl:value-of select='/root/gui/validation/message'/>
+		<b><xsl:value-of select='/root/gui/validation/message'/></b>
 		<br/><br/>
-		<xsl:choose>
-			<xsl:when test="/root/response/geonet:schematronerrors/geonet:errorFound">
-				<font color="FF0000"><b>
-				<xsl:value-of select='/root/gui/validation/schemaTronError'/>
-				</b></font>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select='/root/gui/validation/schemaTronValid'/>
-			</xsl:otherwise>
-		</xsl:choose>
-		<br/><br/>
-		<a href="{/root/gui/url}/schematronCache/SchematronReport{/root/response/id}/schematron-frame.html">
-			<xsl:value-of select="/root/gui/validation/schemaTronReport"/>
-		</a>
+		<b><xsl:value-of select='/root/gui/validation/schemaTronValid'/></b>
 		<br/>
 	</xsl:template>
 	
