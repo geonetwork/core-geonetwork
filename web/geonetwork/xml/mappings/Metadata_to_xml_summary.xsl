@@ -5,7 +5,8 @@
 	xmlns:exslt = "http://exslt.org/common">
 <xsl:output method="xml"/>
 
-<xsl:include href="../../xsl/metadata-utils.xsl"/>
+<xsl:include href="../../xsl/utils.xsl"/>
+<xsl:include href="../../xsl/metadata.xsl"/>
 
 <xsl:template match="/">
 		
