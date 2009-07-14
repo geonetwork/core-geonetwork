@@ -3,7 +3,6 @@
 	xmlns:geonet="http://www.fao.org/geonetwork">
 
 	<xsl:include href="main.xsl"/>
-	<xsl:include href="metadata-utils.xsl"/>
 	
 	<!--
 	page content
