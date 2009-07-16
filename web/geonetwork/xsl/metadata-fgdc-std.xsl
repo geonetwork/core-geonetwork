@@ -130,6 +130,7 @@
 		<metadata>
 			<xsl:copy-of select="idinfo/citation/citeinfo/title"/>
 			<xsl:copy-of select="idinfo/descript/abstract"/>
+			<xsl:copy-of select="idinfo/browse/browsen"/>
 
 			<xsl:for-each select="idinfo/keywords/theme/themekey[text()]">
 				<keyword><xsl:value-of select="."/></keyword>

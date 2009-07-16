@@ -126,6 +126,13 @@
 			</xsl:when>
 			-->
 
+			<!-- fgdc thumbnail -->
+			<xsl:when test="$metadata/browsen">
+				<a href="javascript:popWindow('{$metadata/browsen}')">
+					<IMG border="0" height="130" width="130" src="{$metadata/browsen}" title="Click on image for larger view"></IMG>
+				</a>
+			</xsl:when>
+
 			<!-- no thumbnail -->
 			<xsl:otherwise>
 				<img src="{/root/gui/locUrl}/images/nopreview.gif" alt="{/root/gui/strings/thumbnail}"/>
