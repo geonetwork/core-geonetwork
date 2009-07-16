@@ -186,13 +186,9 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 			String sectionName = section.getText();
 			// Handle recognized section names only, others are ignored. Case Sensitive.
 			if (sectionName.equals(Csw.SECTION_SI) || sectionName.equals(Csw.SECTION_SP)
-					|| sectionName.equals(Csw.SECTION_OM) || sectionName.equals(Csw.SECTION_FC))
+					|| sectionName.equals(Csw.SECTION_OM))
 				hsSections.add(sectionName);
 		}
-
-		// Unrecognized section names are ignored
-		if (hsSections.size() == 0)
-			return;
 
 		//--- remove not requested sections
 
@@ -205,8 +201,6 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		if (!hsSections.contains("OperationsMetadata"))
 			capabilities.getChild("OperationsMetadata", Csw.NAMESPACE_OWS).detach();
 
-		if (!hsSections.contains("Filter_Capabilities"))
-			capabilities.getChild("Filter_Capabilities", Csw.NAMESPACE_OGC).detach();
 	}
 
 	//---------------------------------------------------------------------------
