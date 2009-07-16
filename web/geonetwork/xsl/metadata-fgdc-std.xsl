@@ -130,7 +130,7 @@
 		<metadata>
 			<xsl:copy-of select="idinfo/citation/citeinfo/title"/>
 			<xsl:copy-of select="idinfo/descript/abstract"/>
-			<xsl:copy-of select="idinfo/browse/browsen"/>
+
 
 			<xsl:for-each select="idinfo/keywords/theme/themekey[text()]">
 				<keyword><xsl:value-of select="."/></keyword>
@@ -147,9 +147,6 @@
 			<xsl:for-each select="idinfo/citation/citeinfo/onlink[text()]">
 				<link type="url"><xsl:value-of select="."/></link>
 			</xsl:for-each>
-			<!-- FIXME
-			<image>IMAGE</image>
-			-->
 			
 			<xsl:if test="idinfo/spdom/bounding">
 				<geoBox>
@@ -159,7 +156,67 @@
 					<northBL><xsl:value-of select="idinfo/spdom/bounding/northbc"/></northBL>
 				</geoBox>
 			</xsl:if>
-		
+
+			<xsl:if test="not(geonet:info/server)">
+				<xsl:variable name="info" select="geonet:info"/>
+				<xsl:variable name="id" select="geonet:info/id"/>
+
+				<xsl:for-each select="idinfo/browse">
+					<xsl:variable name="fileName"  select="browsen"/>
+					<xsl:if test="$fileName != ''">
+						<xsl:variable name="fileDescr" select="browset"/>
+						<xsl:choose>
+
+							<!-- the thumbnail is an url -->
+
+							<xsl:when test="contains($fileName ,'://')">
+								<image type="unknown"><xsl:value-of select="$fileName"/></image>								
+							</xsl:when>
+
+							<!-- small thumbnail -->
+
+							<xsl:when test="string($fileDescr)='thumbnail'">
+								<xsl:choose>
+									<xsl:when test="$info/isHarvested = 'y'">
+										<xsl:if test="$info/harvestInfo/smallThumbnail">
+											<image type="thumbnail">
+												<xsl:value-of select="concat($info/harvestInfo/smallThumbnail, $fileName)"/>
+											</image>
+										</xsl:if>
+									</xsl:when>
+									
+									<xsl:otherwise>
+										<image type="thumbnail">
+											<xsl:value-of select="concat(/root/gui/locService,'/resources.get?id=',$id,'&amp;fname=',$fileName,'&amp;access=public')"/>
+										</image>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
+
+							<!-- large thumbnail -->
+
+							<xsl:when test="string($fileDescr)='large_thumbnail'">
+								<xsl:choose>
+									<xsl:when test="$info/isHarvested = 'y'">
+										<xsl:if test="$info/harvestInfo/largeThumbnail">
+											<image type="overview">
+												<xsl:value-of select="concat($info/harvestInfo/largeThumbnail, $fileName)"/>
+											</image>
+										</xsl:if>
+									</xsl:when>
+									
+									<xsl:otherwise>
+										<image type="overview">
+											<xsl:value-of select="concat(/root/gui/locService,'/graphover.show?id=',$id,'&amp;fname=',$fileName,'&amp;access=public')"/>
+										</image>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
+
+						</xsl:choose>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:if>
 			<xsl:copy-of select="geonet:info"/>
 		</metadata>
 	</xsl:template>

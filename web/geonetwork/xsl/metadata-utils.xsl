@@ -117,6 +117,11 @@
 
 			</xsl:when>
 
+			<!-- unknown thumbnail (usually a url so limit size) -->
+			<xsl:when test="$metadata/image[@type='unknown']">
+				<img src="{$metadata/image[@type='unknown']}" alt="{/root/gui/strings/thumbnail}" height="180" width="180"/>
+			</xsl:when>
+
 			<!-- papermaps thumbnail -->
 			<!-- FIXME
 			<xsl:when test="/root/gui/paperMap and string(dataIdInfo/idCitation/presForm/PresFormCd/@value)='mapHardcopy'">
@@ -125,13 +130,6 @@
 				</a>
 			</xsl:when>
 			-->
-
-			<!-- fgdc thumbnail -->
-			<xsl:when test="$metadata/browsen">
-				<a href="javascript:popWindow('{$metadata/browsen}')">
-					<IMG border="0" height="130" width="130" src="{$metadata/browsen}" title="Click on image for larger view"></IMG>
-				</a>
-			</xsl:when>
 
 			<!-- no thumbnail -->
 			<xsl:otherwise>
