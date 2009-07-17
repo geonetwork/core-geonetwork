@@ -8,7 +8,8 @@
 	<fr>Français</fr> <!-- Do not translate! -->
     <nl>Nederlands</nl> <!-- Do not translate -->
 	<ru>Русский</ru> <!-- Do not translate! -->
-	
+
+	<metadataRecordsAdded>Nombres de métadonnées insérées :</metadataRecordsAdded>
 	<helperList>Suggestions :</helperList>	
 	<durationSign>Durée négative</durationSign>
 	<durationNbYears>Nombre d'année :</durationNbYears>
