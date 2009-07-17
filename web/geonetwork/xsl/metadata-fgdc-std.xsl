@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:geonet="http://www.fao.org/geonetwork">
+<xsl:stylesheet version="1.0" 
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:exslt="http://exslt.org/common"
+	xmlns:geonet="http://www.fao.org/geonetwork"
+	exclude-result-prefixes="exslt geonet">
 
 	<!--
 	default: in simple mode just a flat list
@@ -22,8 +25,37 @@
 	<xsl:template mode="fgdc-std" match="idinfo|citeinfo|timeperd|status|bounding|keywords|metainfo|metc">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
-		
+
 		<xsl:apply-templates mode="complexElement" select=".">
+			<xsl:with-param name="schema" select="$schema"/>
+			<xsl:with-param name="edit"   select="$edit"/>
+		</xsl:apply-templates>
+	</xsl:template>
+	
+	<!--
+	metadata 
+	-->
+	<xsl:template mode="fgdc-std" match="metadata">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+		<xsl:param name="embedded"/>
+
+		<!-- thumbnail -->
+    <tr>
+			<td class="padded" align="center" valign="middle" colspan="2">
+				<xsl:variable name="md">
+					<xsl:apply-templates mode="brief" select="."/>
+				</xsl:variable>
+				<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
+				<xsl:if test="$embedded=false()">
+					<xsl:call-template name="thumbnail">
+						<xsl:with-param name="metadata" select="$metadata"/>
+					</xsl:call-template>
+				</xsl:if>
+			</td>
+		</tr>
+
+		<xsl:apply-templates mode="elementEP" select="*">
 			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="edit"   select="$edit"/>
 		</xsl:apply-templates>
