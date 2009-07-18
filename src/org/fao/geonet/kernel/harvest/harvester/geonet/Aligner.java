@@ -423,7 +423,7 @@ public class Aligner
 	private void updateMetadata(final RecordInfo ri, final String id) throws Exception
 	{
 		final Element md[]     = { null };
-		final Element thumbs[] = { null };
+		final Element publicFiles[] = { null };
 
 		if (localUuids.getID(ri.uuid) == null)
 			log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.name);
@@ -445,14 +445,14 @@ public class Aligner
 					public void handleInfo(Element info) throws Exception
 					{
 						updateMetadata(ri, id, md[0], info);
-						thumbs[0] = info.getChild("thumbnails");
+						publicFiles[0] = info.getChild("public");
 					}
 
 					//-----------------------------------------------------------------
 
 					public void handlePublicFile(String file, String changeDate, InputStream is) throws IOException
 					{
-						updateFile(id, file, changeDate, is, thumbs[0]);
+						updateFile(id, file, changeDate, is, publicFiles[0]);
 					}
 
 					//-----------------------------------------------------------------

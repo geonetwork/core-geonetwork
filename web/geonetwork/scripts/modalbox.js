@@ -186,6 +186,9 @@ Modalbox.Methods = {
 				});
 		} else {
 			this.MBwindow.setStyle({width: wWidth + byWidth + "px", height: wHeight + newHeight + "px"});
+			if (Prototype.Browser.Gecko) { // Work around Firefox 2 issue with input text box cursor 
+				this.MBwindow.setStyle({overflow: 'hidden'});
+			}
 			setTimeout(function() {
 				this.event("_afterResize"); // Passing internal callback
 				this.event("afterResize"); // Passing callback
@@ -305,7 +308,10 @@ Modalbox.Methods = {
 		} else { // Height is defined. Creating a scrollable window
 			setTimeout(function(){//Hack: content not loaded because of previous _insertContent timeout hack
 				this._setWidth();
-				this.MBcontent.setStyle({overflow: 'auto', height: $(this.MBwindow).getHeight() - $(this.MBheader).getHeight() - 13 + 'px'});
+				if (Prototype.Browser.Gecko) { // Work around Firefox 2 issue with input text box cursor 
+					this.MBwindow.setStyle({overflow: 'hidden'});
+				}
+				this.MBcontent.setStyle({overflow: 'auto', height: $(this.MBwindow).getHeight() - $(this.MBheader).getHeight() - 20 + 'px'});
 				this.MBcontent.show();
 				this.focusableElements = this._findFocusableElements();
 				this._setFocus(); // Setting focus on first 'focusable' element in content (input, select, textarea, link or button)
@@ -378,7 +384,18 @@ Modalbox.Methods = {
 	},
 	
 	_findFocusableElements: function(){ // Collect form elements or links from MB content
-		var mycontent = this.MBcontent.select('input:not([type~=hidden])', 'select', 'textarea', 'button', 'a[href]');
+		var mycontent = [];
+		var content = this.MBcontent.descendants();
+		for (var index = 0, len = content.length; index < len; ++index) {
+			var elem = content[index];
+			if (["textarea","select","button"].include(elem.tagName.toLowerCase())) {
+				mycontent.push(elem);
+			} else if (elem.tagName.toLowerCase() == "input" && elem.visible() && elem.type != "hidden") {
+				mycontent.push(elem);
+			} else if (elem.tagName.toLowerCase() == "a" && elem.href) {
+				mycontent.push(elem);
+			}
+		}
 		mycontent.invoke('addClassName', 'MB_focusable');
 		return mycontent;
 	},
@@ -575,3 +592,4 @@ Object.extend(Object.extend(Effect.ScaleBy.prototype, Effect.Base.prototype), {
     this.element.setStyle(d);
   }
 });
+
