@@ -11,7 +11,8 @@
 	<every>Fréquence (j:h:m)</every>
 	<lastRun>Dernière exécution</lastRun>
 	<operation>Opération</operation>
-
+	<server>Server</server>
+	
 	<!-- harvesting types - - - - - - - - - - - - - - - - - - - - -->
 	
 	<info type="geonetwork">
