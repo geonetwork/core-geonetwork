@@ -199,7 +199,7 @@
 	<insertMode>Insert mode:</insertMode>
 	<insertPasteMode>Copy/Paste</insertPasteMode>
 	<interactiveMap>Interactive Map</interactiveMap>
-	<interMapInfo><h1>Info in interactive maps</h1> You can find interactive maps by searching in GeoNetwork for digital data with an interactive map, or directly connet to a pre-configured map server. <p/> Supported map servers are <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial® Consortium</a> compliant WMS Map Servers and <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>.</interMapInfo>
+	<interMapInfo><h1>Info in interactive maps</h1><p>You can find interactive maps by searching in GeoNetwork for digital data with an interactive map, or directly connet to a pre-configured map server. </p><p> Supported map servers are <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial® Consortium</a> compliant WMS Map Servers and <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>.</p></interMapInfo>
 	<intermapSearch>Geographic search</intermapSearch>
 	<isoAll>ISO All</isoAll>
 	<isoCore>ISO Core</isoCore>
