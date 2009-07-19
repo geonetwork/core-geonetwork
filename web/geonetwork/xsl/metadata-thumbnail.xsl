@@ -4,6 +4,18 @@
 	<xsl:include href="main.xsl"/>
 
 	<xsl:param name="IMG_SIZE" select="100"/>
+
+	<xsl:template mode="script" match="/">
+		<script type="text/javascript">
+			function addThumbnail(myElement) {
+				if (document.forms[myElement.form.name].fname.value.length &lt; 1) {
+					alert("Browse for a file first please!");
+					return false;
+				}
+				document.forms[myElement.form.name].submit();
+			}
+		</script>
+	</xsl:template>
 	
 	<!--
 	page content
@@ -128,7 +140,7 @@
 				<td class="dots"/>
 				
 				<td align="center">
-					<input class="content" type="submit" value="{/root/gui/thumbnail/add}" name="add"/>
+					<input class="content" type="button" onclick="addThumbnail(this)" value="{/root/gui/thumbnail/add}" name="add"/>
 				</td>
 			</tr>
 			<tr>

@@ -572,6 +572,15 @@ function doFileRemoveAction(action, ref, access, id)
 	goSubmit('mainForm');
 }
 
+function handleCheckboxAsBoolean (input, ref) {
+	if (input.checked)	{
+		$(ref).value='true';
+	}
+	else {	
+		$(ref).value='false';
+	}
+}
+
 function setRegion(westField, eastField, southField, northField, choice)
 {
 		

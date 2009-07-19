@@ -880,6 +880,20 @@
 						</script>
 
 					</xsl:when>
+					
+					<!-- heikki doeleman: for gco:Boolean, use checkbox -->
+					<xsl:when test="name(.)='gco:Boolean'">
+						<input type="hidden" name="_{geonet:element/@ref}" id="_{geonet:element/@ref}" value="false"/>
+						<xsl:choose>
+							<xsl:when test="text()='true'">
+								<input class="md" type="checkbox" id="_{geonet:element/@ref}_checkbox" onclick="handleCheckboxAsBoolean(this, _{geonet:element/@ref});" checked="checked"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<input class="md" type="checkbox" id="_{geonet:element/@ref}_checkbox" onclick="handleCheckboxAsBoolean(this, _{geonet:element/@ref});"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
+
 					<xsl:otherwise>
 						<input class="md" type="text" id="_{geonet:element/@ref}" name="_{geonet:element/@ref}" value="{text()}" size="{$cols}">
 							<xsl:if test="../geonet:element/@min='1' and $edit">

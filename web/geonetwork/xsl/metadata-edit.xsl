@@ -127,7 +127,7 @@
 		</button>
 		
 		<!-- thumbnails -->
-		<xsl:if test="string(geonet:info/schema)='iso19115' or starts-with(string(geonet:info/schema),'iso19139')"> <!-- FIXME: should be more general -->
+		<xsl:if test="string(geonet:info/schema)='fgdc-std' or string(geonet:info/schema)='iso19115' or starts-with(string(geonet:info/schema),'iso19139')"> <!-- FIXME: should be more general -->
 			&#160;
 			<button class="content" onclick="doAction('{/root/gui/locService}/metadata.thumbnail.form')" type="button">
 				<xsl:value-of select="/root/gui/strings/thumbnails"/>

@@ -100,7 +100,7 @@ public class MetadataLib
 	{
 		try
 		{
-			List list = dbms.select("SELECT * FROM Metadata WHERE isTemplate='n'").getChildren();
+			List list = dbms.select("SELECT * FROM Metadata WHERE isTemplate='n' and isHarvested='n'").getChildren();
 			dbms.commit();
 
 			String siteURL = Lib.site.getSiteURL(dbms);

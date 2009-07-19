@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:geonet="http://www.fao.org/geonetwork">
+<xsl:stylesheet version="1.0" 
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:exslt="http://exslt.org/common"
+	xmlns:geonet="http://www.fao.org/geonetwork"
+	exclude-result-prefixes="exslt geonet">
 
 	<!--
 	default: in simple mode just a flat list
@@ -22,8 +25,37 @@
 	<xsl:template mode="fgdc-std" match="idinfo|citeinfo|timeperd|status|bounding|keywords|metainfo|metc">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
-		
+
 		<xsl:apply-templates mode="complexElement" select=".">
+			<xsl:with-param name="schema" select="$schema"/>
+			<xsl:with-param name="edit"   select="$edit"/>
+		</xsl:apply-templates>
+	</xsl:template>
+	
+	<!--
+	metadata 
+	-->
+	<xsl:template mode="fgdc-std" match="metadata">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+		<xsl:param name="embedded"/>
+
+		<!-- thumbnail -->
+    <tr>
+			<td class="padded" align="center" valign="middle" colspan="2">
+				<xsl:variable name="md">
+					<xsl:apply-templates mode="brief" select="."/>
+				</xsl:variable>
+				<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
+				<xsl:if test="$embedded=false()">
+					<xsl:call-template name="thumbnail">
+						<xsl:with-param name="metadata" select="$metadata"/>
+					</xsl:call-template>
+				</xsl:if>
+			</td>
+		</tr>
+
+		<xsl:apply-templates mode="elementEP" select="*">
 			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="edit"   select="$edit"/>
 		</xsl:apply-templates>
@@ -131,6 +163,7 @@
 			<xsl:copy-of select="idinfo/citation/citeinfo/title"/>
 			<xsl:copy-of select="idinfo/descript/abstract"/>
 
+
 			<xsl:for-each select="idinfo/keywords/theme/themekey[text()]">
 				<keyword><xsl:value-of select="."/></keyword>
 			</xsl:for-each>
@@ -146,9 +179,6 @@
 			<xsl:for-each select="idinfo/citation/citeinfo/onlink[text()]">
 				<link type="url"><xsl:value-of select="."/></link>
 			</xsl:for-each>
-			<!-- FIXME
-			<image>IMAGE</image>
-			-->
 			
 			<xsl:if test="idinfo/spdom/bounding">
 				<geoBox>
@@ -158,7 +188,67 @@
 					<northBL><xsl:value-of select="idinfo/spdom/bounding/northbc"/></northBL>
 				</geoBox>
 			</xsl:if>
-		
+
+			<xsl:if test="not(geonet:info/server)">
+				<xsl:variable name="info" select="geonet:info"/>
+				<xsl:variable name="id" select="geonet:info/id"/>
+
+				<xsl:for-each select="idinfo/browse">
+					<xsl:variable name="fileName"  select="browsen"/>
+					<xsl:if test="$fileName != ''">
+						<xsl:variable name="fileDescr" select="browset"/>
+						<xsl:choose>
+
+							<!-- the thumbnail is an url -->
+
+							<xsl:when test="contains($fileName ,'://')">
+								<image type="unknown"><xsl:value-of select="$fileName"/></image>								
+							</xsl:when>
+
+							<!-- small thumbnail -->
+
+							<xsl:when test="string($fileDescr)='thumbnail'">
+								<xsl:choose>
+									<xsl:when test="$info/isHarvested = 'y'">
+										<xsl:if test="$info/harvestInfo/smallThumbnail">
+											<image type="thumbnail">
+												<xsl:value-of select="concat($info/harvestInfo/smallThumbnail, $fileName)"/>
+											</image>
+										</xsl:if>
+									</xsl:when>
+									
+									<xsl:otherwise>
+										<image type="thumbnail">
+											<xsl:value-of select="concat(/root/gui/locService,'/resources.get?id=',$id,'&amp;fname=',$fileName,'&amp;access=public')"/>
+										</image>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
+
+							<!-- large thumbnail -->
+
+							<xsl:when test="string($fileDescr)='large_thumbnail'">
+								<xsl:choose>
+									<xsl:when test="$info/isHarvested = 'y'">
+										<xsl:if test="$info/harvestInfo/largeThumbnail">
+											<image type="overview">
+												<xsl:value-of select="concat($info/harvestInfo/largeThumbnail, $fileName)"/>
+											</image>
+										</xsl:if>
+									</xsl:when>
+									
+									<xsl:otherwise>
+										<image type="overview">
+											<xsl:value-of select="concat(/root/gui/locService,'/graphover.show?id=',$id,'&amp;fname=',$fileName,'&amp;access=public')"/>
+										</image>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
+
+						</xsl:choose>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:if>
 			<xsl:copy-of select="geonet:info"/>
 		</metadata>
 	</xsl:template>

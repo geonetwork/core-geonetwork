@@ -1,10 +1,10 @@
 #GeoNetwork opensource properties. These are also used by both gast and geonetwork at runtime
-#Wed May 27 22:51:36 CEST 2009
+#Fri May 29 12:30:30 CEST 2009
 release=2.4.0
 version=2.4.0
-day=27-5-2009
-date=0951272251
+day=29-5-2009
+date=0930291230
 javaVersion=1.5.0
 jre_url=http\://java.sun.com/javase/downloads/index_jdk5.jsp
-subVersion=RC2
 OS=Compiled on Mac OS X (macosx)
+subVersion=RC2
