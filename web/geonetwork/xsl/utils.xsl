@@ -119,7 +119,7 @@
 		<xsl:if test="not(contains($mdURL,'localhost')) and not(contains($mdURL,'127.0.0.1'))">
 			<a href="mailto:?subject={$t}&amp;body=%0ALink:%0A{$mdURL}%0A%0AAbstract:%0A{$a}">
 				<img src="{$baseURL}/images/mail.png" 
-					alt="Send to a friend" title="Send to a friend" 
+					alt="{/root/gui/strings/bookmarkEmail}" title="{/root/gui/strings/bookmarkEmail}" 
 					style="border: 0px solid;padding:2px;padding-right:10px;"/>
 			</a>
 				
@@ -129,26 +129,32 @@
 					alt="Bookmark" title="Bookmark" 
 					style="border: 0px solid;padding:2px;"/>
 			</a> -->
+
+			<!-- Instead of a bookmark, a permanent link to the record is useful anyway -->
+			<a href="{$mdURL}">
+				<img src="{$baseURL}/images/bookmark.png" 
+					alt="{/root/gui/strings/bookmarkPermanent}" title="{/root/gui/strings/bookmarkPermanent}" style="border: 0px solid;padding:2px;"/>
+			</a>
 			
 			<!-- add first sentence of abstract to the delicious notes -->
 			<a href="http://del.icio.us/post?url={$mdURL}&amp;title={$t}&amp;notes={substring-before($a,'. ')}. " target="_blank">
 				<img src="{$baseURL}/images/delicious.gif" 
-					alt="Bookmark on Delicious" title="Bookmark on Delicious" 
+					alt="{/root/gui/strings/bookmarkDelicious}" title="{/root/gui/strings/bookmarkDelicious}" 
 					style="border: 0px solid;padding:2px;"/>
 			</a> 
 			<a href="http://digg.com/submit?url={$mdURL}&amp;title={substring($t,0,75)}&amp;bodytext={substring(substring-before($a,'. '),0,350)}.&amp;topic=environment" target="_blank">
 				<img src="{$baseURL}/images/digg.gif" 
-					alt="Bookmark on Digg" title="Bookmark on Digg" 
+					alt="{/root/gui/strings/bookmarkDigg}" title="{/root/gui/strings/bookmarkDigg}" 
 					style="border: 0px solid;padding:2px;"/>
 			</a> 
 			<a href="http://www.facebook.com/sharer.php?u={$mdURL}" target="_blank">
 				<img src="{$baseURL}/images/facebook.gif" 
-					alt="Bookmark on Facebook" title="Bookmark on Facebook" 
+					alt="{/root/gui/strings/bookmarkFacebook}" title="{/root/gui/strings/bookmarkFacebook}" 
 					style="border: 0px solid;padding:2px;"/>
 			</a> 
 			<a href="http://www.stumbleupon.com/submit?url={$mdURL}&amp;title={$t}" target="_blank">
 				<img src="{$baseURL}/images/stumbleupon.gif" 
-					alt="Bookmark on StumbleUpon" title="Bookmark on StumbleUpon" 
+					alt="{/root/gui/strings/bookmarkStumbleUpon}" title="{/root/gui/strings/bookmarkStumbleUpon}" 
 					style="border: 0px solid;padding:2px;"/>
 			</a> 
 		</xsl:if>

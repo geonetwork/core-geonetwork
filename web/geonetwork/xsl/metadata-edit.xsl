@@ -20,7 +20,7 @@
 		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"></script>
 		<style type="text/css">@import url(<xsl:value-of select="/root/gui/url"/>/scripts/calendar/calendar-blue2.css);</style>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar.js"></script>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/lang/calendar-en.js"></script>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/lang/calendar-{/root/gui/language}.js"></script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar-setup.js"></script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"></script>

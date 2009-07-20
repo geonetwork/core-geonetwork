@@ -78,20 +78,19 @@
 						</tr>
 					</table>
 					<br/>
+					<xsl:comment>COORDS</xsl:comment>
+					<input type="hidden" class="content" id="northBL" name="northBL"  size="7"
+						value="{/root/gui/searchDefaults/northBL}"/>
+					<input type="hidden" class="content" id="westBL" name="westBL" size="7"
+						value="{/root/gui/searchDefaults/westBL}"/>
+					<input type="hidden" class="content" id="eastBL" name="eastBL" size="7"
+						value="{/root/gui/searchDefaults/eastBL}"/>
+					<input type="hidden" class="content" id="southBL" name="southBL" size="7"
+						value="{/root/gui/searchDefaults/southBL}"/>
+					<input type="hidden" class="content" id="relation" name="relation" size="7"
+						value="overlaps"/>
 				</td>
 			</tr>
-
-			<xsl:comment>COORDS</xsl:comment>
-			<input type="hidden" class="content" id="northBL" name="northBL"  size="7"
-				value="{/root/gui/searchDefaults/northBL}"/>
-			<input type="hidden" class="content" id="westBL" name="westBL" size="7"
-				value="{/root/gui/searchDefaults/westBL}"/>
-			<input type="hidden" class="content" id="eastBL" name="eastBL" size="7"
-				value="{/root/gui/searchDefaults/eastBL}"/>
-			<input type="hidden" class="content" id="southBL" name="southBL" size="7"
-				value="{/root/gui/searchDefaults/southBL}"/>
-			<input type="hidden" class="content" id="relation" name="relation" size="7"
-				value="overlaps"/>
 
 			<!-- Area -->
 			<tr>
