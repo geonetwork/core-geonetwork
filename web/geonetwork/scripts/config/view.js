@@ -53,7 +53,11 @@ function ConfigView(strLoader)
 	
 	this.z3950Shower = new Shower('z3950.enable', 'z3950.subpanel');	
 	this.proxyShower = new Shower('proxy.use',    'proxy.subpanel');
-	this.ldapShower  = new Shower('ldap.use',     'ldap.subpanel');
+
+	var targetIds = ['ldap.subpanel', 'geonetworkdb.subpanel'];
+	this.ldapShower  = new RadioShower('ldap.use',     'ldap.subpanel', targetIds);
+	this.geonetworkdbShower  = new RadioShower('geonetworkdb.use',     'geonetworkdb.subpanel', targetIds);
+
 	this.shibShower  = new Shower('shib.use',     'shib.subpanel');
 }
 
@@ -127,12 +131,15 @@ ConfigView.prototype.setData = function(data)
 	$('shib.attrib.firstname').value = data['SHIB_ATTRIB_FIRSTNAME'];
 	$('shib.attrib.profile')  .value = data['SHIB_ATTRIB_PROFILE'];
 
-	$('userSelfRegistration.enable').checked = data['USERSELFREGISTRATION_ENABLE'] == 'true';
+	$('geonetworkdb.use').checked = data['LDAP_USE'] != 'true';
+
+	$('userSelfRegistration.enable').checked = data['USERSELFREGISTRATION_ENABLE'] == 'true' && data['LDAP_USE'] != 'true';
 
 	this.z3950Shower.update();
 	this.proxyShower.update();
 	this.ldapShower.update();
 	this.shibShower.update();
+	this.geonetworkdbShower.update();
 }
 
 //=====================================================================================
@@ -207,7 +214,7 @@ ConfigView.prototype.getData = function()
 		SHIB_ATTRIB_FIRSTNAME : $('shib.attrib.firstname').value,
 		SHIB_ATTRIB_PROFILE   : $('shib.attrib.profile').value,
 
-		USERSELFREGISTRATION_ENABLE : $('userSelfRegistration.enable').checked
+		USERSELFREGISTRATION_ENABLE : $('userSelfRegistration.enable').checked && $('geonetworkdb.use').checked
 
 	}
 	
@@ -215,4 +222,3 @@ ConfigView.prototype.getData = function()
 }
 
 //=====================================================================================
-

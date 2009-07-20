@@ -27,6 +27,15 @@
 	<removedMetadata>Удаленные метаданные</removedMetadata>
 	<dir>Каталог</dir>
 
+	<userSelfRegistration>User Self-Registration</userSelfRegistration>
+
+	<authentication>Authentication</authentication>
+	
+	<loginuses>Login uses</loginuses>
+	<otherlogins>Allow other users to login from</otherlogins>
+
+	<geonetworkdb>GeoNetwork Database</geonetworkdb>
+		
 	<ldap>Аутентификация LDAP</ldap>
 	<defProfile>Профиль по умолчанию</defProfile>
 	<login>Логин</login>

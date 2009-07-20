@@ -35,6 +35,13 @@
 	<host>Hôte</host>
 	<port>Port</port>
 
+	<authentication>Authentication</authentication>
+	
+	<loginuses>Login uses</loginuses>
+	<otherlogins>Allow other users to login from</otherlogins>
+
+	<geonetworkdb>GeoNetwork Database</geonetworkdb>
+		
 	<intranet>Intranet</intranet>
 	<network>Network</network>
 	<netmask>Masque de sous-réseau</netmask>

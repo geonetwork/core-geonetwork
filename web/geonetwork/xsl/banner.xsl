@@ -102,7 +102,7 @@
 							<a class="banner" href="{/root/gui/url}/docs/eng/" target="_blank"><xsl:value-of select="/root/gui/strings/help"/></a>
 						</xsl:otherwise>
 					</xsl:choose>
-					<span class="banner">|</span>
+					|
 				</td>
 				<td align="right" class="banner-menu" width="610px">
 					<xsl:choose>

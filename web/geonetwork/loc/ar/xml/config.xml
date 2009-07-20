@@ -31,6 +31,16 @@
 	<username>Username</username>
 	<removedMetadata>Removed metadata</removedMetadata>
 	<dir>Directory</dir>
+
+	<authentication>Authentication</authentication>
+
+	<userSelfRegistration>User Self-Registration</userSelfRegistration>
+	
+	<loginuses>Login uses</loginuses>
+	<otherlogins>Allow other users to login from</otherlogins>
+
+	<geonetworkdb>GeoNetwork Database</geonetworkdb>
+
 	<ldap>LDAP Authentication</ldap>
 	<defProfile>Default profile</defProfile>
 	<login>Login</login>
@@ -41,6 +51,13 @@
 	<userAttribs>User's attributes</userAttribs>
 	<password>Password</password>
 	<profile>Profile</profile>
+
+	<shib>Shibboleth</shib>
+	<path>Path</path>
+	<attributes>Shibboleth attribute mapping</attributes>
+	<surname>Surname</surname>
+	<firstname>Firstname</firstname>
+
 	<!-- validator messages -->
 
 	<validator>
