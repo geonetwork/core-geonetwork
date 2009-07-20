@@ -33,7 +33,7 @@ compiles a request
 
 		<!-- view privileges -->
 		<xsl:call-template name="orFields">
-			<xsl:with-param name="expr" select="/request/mygroups"/>
+			<xsl:with-param name="expr" select="/request/group"/>
 			<xsl:with-param name="field" select="$opView"/>
 		</xsl:call-template>
 
