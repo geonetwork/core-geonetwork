@@ -117,7 +117,7 @@
 	<wmcUploading>The context file is uploading...</wmcUploading> 
 	<wmcUploadingError>An unexpected error has been encountered while uploading the context:</wmcUploadingError>				
 	<wmcUploadReplace>Replace current layers</wmcUploadReplace>
-	<wmsConfigForm>Layer properties</wmsConfigForm>
+	<wmsConfigForm>Layer properties</wmsConfigForm >
 	<zoomIn>Zoom in</zoomIn>
 	<zoomLayer>Zoom to layer</zoomLayer>
 	<zoomOut>Zoom out</zoomOut>

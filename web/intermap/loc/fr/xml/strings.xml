@@ -2,16 +2,17 @@
 <strings>
 	<abstract>Résumé</abstract>
 	<activate>Activater</activate>
+	<addLayer js="true">Add a new layer</addLayer>
 	<address>Adresse</address>
 	<addService>Ajouter une carte</addService>
-	<addLayer js="true">Add a new layer</addLayer>
+	<associatedStyles>Associated styles:</associatedStyles>
 	<bigger>Carte plus grande</bigger>
+	<btnstyles>View and select styles</btnstyles>
 	<cancel>Annuler</cancel>
-	<close>Fermer</close>
 	<choosemapfromlist>Choisissez un ou plusieurs géoservice à partir de la liste ci-dessous</choosemapfromlist>
 	<choosemapserver>Choisissez un géoservice à partir de la liste ou ajouter un autre géoservice manuellement</choosemapserver>
-	<mapServer>GéoService</mapServer>
 	<choosepredefinedmap>Choisissez une carte à partir de la liste ci-dessous</choosepredefinedmap>
+	<close>Fermer</close>
 	<connect>Connection</connect>
 	<contactInfo>Information sur le contact :</contactInfo>
 	<contactPerson>Contact principal :</contactPerson>
@@ -20,11 +21,8 @@
 	<down>Déplacer vers le bas</down>
 	<email>email:</email>
 	<error>[erreur]</error>
-<!-- 
-	<errorText>Sorry, error connecting to the map server</errorText>
- -->
-	<exportAsPDF js="true">Export votre carte vers PDF</exportAsPDF>
 	<exportAsImage js="true">Export votre carte vers une image</exportAsImage>
+	<exportAsPDF js="true">Export votre carte vers PDF</exportAsPDF>
 	<exportAsWMC js="true">Save the Web Map Context</exportAsWMC>
 	<extents>Modifier la période sélectionnée (Donnée temporelle)</extents>
 	<extentSelected>Temps sélectionné: </extentSelected>
@@ -32,36 +30,45 @@
 	<findMapsGeoNetwork>Trouver plus de cartes via GeoNetwork</findMapsGeoNetwork>
 	<findMapsMapServers>Ajouter plus de cartes en se connectant à un autre Web Map Servers</findMapsMapServers>
 	<fullExtent>Zoom global</fullExtent>
+	<getFeatures>GET FEATURES</getFeatures>
 	<gotoGeoNetwork>GeoNetwork</gotoGeoNetwork>
 	<gotoMapServers>Map Servers</gotoMapServers>
 	<homepage>Accueil :</homepage>
 	<identify>Identifier un objet sur la carte</identify>
-	<makeActive>Cocher pour rendre ce calque actif (e.g. pour rechercher)</makeActive>
 	<info>info</info>
 	<keywords>Mots-clés:</keywords>
-	<layerinfo>Description du calque</layerinfo>
+	<layerInfo>Description du calque</layerInfo>
 	<layers>Calques</layers>
 	<layersAdded js="true">Selected layers have been added</layersAdded>
 	<layersHide>Cacher la liste de calques</layersHide>
-	<layersShow>Afficher la liste de calques</layersShow>
 	<layerShowHide>Afficher ou cacher la calque</layerShowHide>
+	<layersShow>Afficher la liste de calques</layersShow>
 	<legend>Afficher la légende</legend>
 	<listofmaps>Liste des cartes</listofmaps>
 	<listofmapservers>Liste des géoservices</listofmapservers>
-	<loadingMap>...Loading map...</loadingMap>
 	<loadingFrom js="true">Loading services from</loadingFrom>
 	<loadingFromWMS js="true">Loading services from given WMS server</loadingFromWMS>
+	<loadingMap>...Loading map...</loadingMap>
+	<makeActive>Cocher pour rendre ce calque actif (e.g. pour rechercher)</makeActive>
 	<manually>Créer votre carte</manually>
 	<map>Carte</map>
+	<mapServer>GéoService</mapServer>
 	<mapsfound>cartes trouvées</mapsfound>
+	<markerDeleted>The marker has been deleted</markerDeleted>
+	<markerDeleting>Deleting marker...</markerDeleting>
+	<markerlistbutton>Marker list</markerlistbutton>
+	<markerlisttitle js="true">Marker list</markerlisttitle>
+	<markerNone>There are no markers defined.</markerNone>
+	<markerUpdated>The marker has been updated</markerUpdated>
+	<markerUpdating>Updating marker...</markerUpdating>
 	<metadata>Métadonnées</metadata>
 	<newMap>Créer une nouvelle carte</newMap>
 	<noFeature>Aucun objet trouvé</noFeature>
 	<noService>Aucune carte trouvée</noService>
 	<noStyle>Seul le style par défaut est disponible</noStyle>
-	<oneService>Une carte trouvée</oneService>
 	<ok>Ok</ok>
 	<oneFeature>Un objet trouvé</oneFeature>
+	<oneService>Une carte trouvée</oneService>
 	<otherArcIMS>- Autres serveurs ArcIMS</otherArcIMS>
 	<otherWMS>- Autres serveurs WMS</otherWMS>
 	<pan>Déplacement</pan>
@@ -76,20 +83,42 @@
 	<reset>Réinitialiser</reset>
 	<sendByEmail js="true">Envoyer par e-mail</sendByEmail>
 	<setScale>--Set Scale--</setScale>
+	<setStyle>Set styles</setStyle>
+	<showLayerMD js="true">Layer information</showLayerMD>
 	<smaller>Petite carte</smaller>
 	<specify>Définir si autre :</specify>
-	<style>Choisir le style :</style>
 	<start>InterMap opensource</start>
+	<style>Choisir le style :</style>
+	<styleSet>The style has been successfully set.</styleSet>
+	<styleSetError>An unexpected error has been encountered:</styleSetError>
+	<styleSetting>Setting the style...</styleSetting>
 	<telephone>Téléphone :</telephone>
 	<title>InterMap opensource</title>
+	<titleShowStyles js="true">Available styles</titleShowStyles>
 	<transparency>Définir la transparence</transparency>
+	<unexpectedError>An unexpected error has been encountered while performing the operation:</unexpectedError>
 	<up>Déplacer vers le haut</up>
 	<update>Update</update>
 	<updateMarker>Update marker info</updateMarker>
 	<wait js="true">Please wait...</wait>
-	<wmsConfigForm>Propriétés du calque</wmsConfigForm >
+	<wmcbuttondownload js="true">Download current context</wmcbuttondownload>
+	<wmcbuttonmail js="true">Send current context</wmcbuttonmail>
+	<wmcbuttonmain js="true">View context menu</wmcbuttonmain>
+	<wmcbuttonupload js="true">Upload a context</wmcbuttonupload>
+	<wmcMailBuilding>The mail is being built...</wmcMailBuilding>
+	<wmcMailError>An unexpected error has been encountered while processing the mail:</wmcMailError>
+	<wmcMailSend>Send e-mail</wmcMailSend>
+	<wmcMailSent>The mail has been successfully sent</wmcMailSent>
+	<wmctitle js="true">WMC Context menu</wmctitle>
+	<wmctitlemail js="true">Send a WMC Context via e-mail</wmctitlemail>
+	<wmctitleupload js="true">Upload and set a context</wmctitleupload>
+	<wmcUploadAdd>Add to current layers</wmcUploadAdd>
+	<wmcUploaded>The context has been uploaded</wmcUploaded>
+	<wmcUploading>The context file is uploading...</wmcUploading>
+	<wmcUploadingError>An unexpected error has been encountered while uploading the context:</wmcUploadingError>
+	<wmcUploadReplace>Replace current layers</wmcUploadReplace>
+	<wmsConfigForm>Propriétés du calque</wmsConfigForm>
 	<zoomIn>Zoom avant</zoomIn>
-	<zoomOut>Zoom arrière</zoomOut>
 	<zoomLayer>Zoom vers le calque</zoomLayer>
-	<getFeatures>GET FEATURES</getFeatures>
+	<zoomOut>Zoom arrière</zoomOut>
 </strings>

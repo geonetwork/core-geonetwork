@@ -2,17 +2,17 @@
 <strings>
 	<abstract>Resumen</abstract>
 	<activate>Activar</activate>
+	<addLayer js="true">Agregar capa</addLayer>
 	<address>Domicilio</address>
 	<addService>Agregar mapas</addService>
-	<addLayer js="true">Agregar capa</addLayer>
+	<associatedStyles>Associated styles:</associatedStyles>
 	<bigger>Mapa mas grande</bigger>
 	<btnstyles>Ver y seleccionar estilos</btnstyles>
 	<cancel>Cancelar</cancel>
-	<close>Cerrar</close>
 	<choosemapfromlist>Por favor elija uno o mas servicios de mapas de la lista</choosemapfromlist>
 	<choosemapserver>Por favor elija un servidor de mapas de la lista o inserte manualmente otro servidor</choosemapserver>
-	<mapServer>Servidor de mapas</mapServer>
 	<choosepredefinedmap>Por favor elija una sobreposición de mapas de la lista</choosepredefinedmap>
+	<close>Cerrar</close>
 	<connect>Connectar</connect>
 	<contactInfo>Información de contacto:</contactInfo>
 	<contactPerson>Persona para el contacto:</contactPerson>
@@ -21,11 +21,8 @@
 	<down>Mueve la capa hacia abajo</down>
 	<email>Correo:</email>
 	<error>[error]</error>
-<!-- 
-	<errorText>Sorry, error connecting to the map server</errorText>
- -->
-	<exportAsPDF js="true">Exportar este mapa como PDF</exportAsPDF>
 	<exportAsImage js="true">Exportar este mapa como imagen</exportAsImage>
+	<exportAsPDF js="true">Exportar este mapa como PDF</exportAsPDF>
 	<exportAsWMC js="true">Guardar el Web Map Context</exportAsWMC>
 	<extents>Cambiar el tiempo seleccionado (datos temporales)</extents>
 	<extentSelected>Tiempo seleccionado: </extentSelected>	
@@ -33,36 +30,45 @@
 	<findMapsGeoNetwork>Encontrar mapas a través de GeoNetwork opensource</findMapsGeoNetwork>	
 	<findMapsMapServers>Agregar capas conectándose a otros Web Map Servers</findMapsMapServers>	
 	<fullExtent>Zoom a la extensión del mapa</fullExtent>
+	<getFeatures>OBTENER CARACTERÍSTICAS</getFeatures>
 	<gotoGeoNetwork>GeoNetwork opensource</gotoGeoNetwork>	
 	<gotoMapServers>Servidores de mapas</gotoMapServers>
 	<homepage>Página principal:</homepage>	
 	<identify>Identificar una característica en el mapa</identify>
-	<makeActive>Seleccionar para activar esta capa (ej. para identificar)</makeActive>	
 	<info>información</info>	
 	<keywords>Palabras clave:</keywords>	
-	<layerinfo>Información de la capa</layerinfo>
+	<layerInfo>Información de la capa</layerInfo>
 	<layers>Capas</layers>	
 	<layersAdded js="true">Las capas seleccionadas han sido agregadas</layersAdded>
 	<layersHide>Ocultar lista de capas</layersHide>	
-	<layersShow>Mostrar lista de capas</layersShow>
 	<layerShowHide>Mostrar u ocultar capa</layerShowHide>	
+	<layersShow>Mostrar lista de capas</layersShow>
 	<legend>Mostrar la leyenda</legend>
 	<listofmaps>Lista de mapas</listofmaps>	
 	<listofmapservers>Lista de servidores de mapas</listofmapservers>
-	<loadingMap>...Cargando mapa...</loadingMap>	
 	<loadingFrom js="true">Cargando servicios desde</loadingFrom>
 	<loadingFromWMS js="true">Cargando servicios desde el servidor WMS dado</loadingFromWMS>
+	<loadingMap>...Cargando mapa...</loadingMap>	
+	<makeActive>Seleccionar para activar esta capa (ej. para identificar)</makeActive>	
 	<manually>Cree su propio mapa</manually>	
 	<map>Mapa</map>	
+	<mapServer>Servidor de mapas</mapServer>
 	<mapsfound>mapas encontrados</mapsfound>
+	<markerDeleted>The marker has been deleted</markerDeleted>
+	<markerDeleting>Deleting marker...</markerDeleting>
+	<markerlistbutton>Marker list</markerlistbutton>
+	<markerlisttitle js="true">Marker list</markerlisttitle>
+	<markerNone>There are no markers defined.</markerNone>
+	<markerUpdated>The marker has been updated</markerUpdated>
+	<markerUpdating>Updating marker...</markerUpdating>
 	<metadata>Metadato</metadata>	
 	<newMap>Crear un nuevo mapa</newMap>
 	<noFeature>No se encontraron características</noFeature>	
 	<noService>No se encontraron mapas</noService>
 	<noStyle>Solo el estilo por defecto está disponible para este mapa</noStyle>
-	<oneService>Un mapa encontrado</oneService>	
 	<ok>Ok</ok>
 	<oneFeature>Una característica encontrada</oneFeature>	
+	<oneService>Un mapa encontrado</oneService>	
 	<otherArcIMS>- Otros servidores ArcIMS</otherArcIMS>	
 	<otherWMS>- Otros servidores WMS</otherWMS>
 	<pan>Mover</pan>	
@@ -77,29 +83,42 @@
 	<reset>Restablecer</reset>
 	<sendByEmail js="true">Enviar este mapa por correo</sendByEmail>
 	<setScale>--Establecer escala--</setScale>
+	<setStyle>Set styles</setStyle>
 	<showLayerMD js="true">Información de la capa</showLayerMD>
 	<smaller>Mapa mas pequeño</smaller>	
 	<specify>Especificar si otro:</specify>
-	<style>Seleccionar el estilo deseado</style>
 	<start>InterMap opensource</start>	
+	<style>Seleccionar el estilo deseado</style>
+	<styleSet>The style has been successfully set.</styleSet>
+	<styleSetError>An unexpected error has been encountered:</styleSetError>
+	<styleSetting>Setting the style...</styleSetting>
 	<telephone>Teléfono:</telephone>
 	<title>InterMap opensource</title>
 	<titleShowStyles js="true">Estilos disponibles</titleShowStyles>	
 	<transparency>Establecer transparencia</transparency>
+	<unexpectedError>An unexpected error has been encountered while performing the operation:</unexpectedError>
 	<up>Mover la capa hacia arriba</up>
 	<update>Update</update>
 	<updateMarker>Update marker info</updateMarker>
 	<wait js="true">Por favor espere...</wait>
+	<wmcbuttondownload js="true">Bajar el contexto actual</wmcbuttondownload>	
+	<wmcbuttonmail js="true">Enviar el contexto actual</wmcbuttonmail>	
+	<wmcbuttonmain js="true">Ver menú de contexto</wmcbuttonmain>	
+	<wmcbuttonupload js="true">Subir un contexto</wmcbuttonupload>	
+	<wmcMailBuilding>The mail is being built...</wmcMailBuilding>
+	<wmcMailError>An unexpected error has been encountered while processing the mail:</wmcMailError>
+	<wmcMailSend>Send e-mail</wmcMailSend>
+	<wmcMailSent>The mail has been successfully sent</wmcMailSent>
 	<wmctitle js="true">menú de contextos WMC</wmctitle>	
 	<wmctitlemail js="true">Enviar un contexto WMC por correo</wmctitlemail>	
 	<wmctitleupload js="true">Subir y establecer un contexto</wmctitleupload>
-	<wmcbuttonmain js="true">Ver menú de contexto</wmcbuttonmain>	
-	<wmcbuttonmail js="true">Enviar el contexto actual</wmcbuttonmail>	
-	<wmcbuttonupload js="true">Subir un contexto</wmcbuttonupload>	
-	<wmcbuttondownload js="true">Bajar el contexto actual</wmcbuttondownload>	
+	<wmcUploadAdd>Add to current layers</wmcUploadAdd>
+	<wmcUploaded>The context has been uploaded</wmcUploaded>
+	<wmcUploading>The context file is uploading...</wmcUploading>
+	<wmcUploadingError>An unexpected error has been encountered while uploading the context:</wmcUploadingError>
+	<wmcUploadReplace>Replace current layers</wmcUploadReplace>
 	<wmsConfigForm>Propiedades de la capa</wmsConfigForm>
 	<zoomIn>Acercar</zoomIn>
-	<zoomOut>Alejar</zoomOut>
 	<zoomLayer>Zoom a la capa</zoomLayer>
-	<getFeatures>OBTENER CARACTERÍSTICAS</getFeatures>
+	<zoomOut>Alejar</zoomOut>
 </strings>
