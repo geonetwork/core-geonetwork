@@ -108,7 +108,7 @@
 	<createGroups>Create groups</createGroups>
 	<createCateg>Create categories</createCateg>
 	<active>Active</active>
-	<inactive></inactive>
+	<inactive>Inactive</inactive>
 	<retrieveSources>Retrieve sources</retrieveSources>
 	<retrieveGroups>Retrieve groups</retrieveGroups>
 	<retrieveInfo>Retrieve info</retrieveInfo>

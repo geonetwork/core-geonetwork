@@ -109,7 +109,7 @@
 	<createGroups>Crear grupos</createGroups>
 	<createCateg>Crear categorias</createCateg>
 	<active>Activo</active>
-	<inactive></inactive>
+	<inactive>Inactivo</inactive>
 	<retrieveSources>Recuperar fuentes</retrieveSources>
 	<retrieveGroups>Recuperar grupos</retrieveGroups>
 	<retrieveInfo>Recuperar información</retrieveInfo>

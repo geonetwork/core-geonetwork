@@ -1,52 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-    <ar>عربي</ar> <!-- Do not translate! -->
+	<ar>عربي</ar> <!-- Do not translate! -->
 	<cn>中文</cn> <!-- Do not translate! -->
 	<de>Deutsch</de> <!-- Do not translate! -->
 	<en>English</en> <!-- Do not translate! -->
 	<es>Español</es> <!-- Do not translate! -->
 	<fr>Français</fr> <!-- Do not translate! -->
-    <nl>Nederlands</nl> <!-- Do not translate -->
+	<nl>Nederlands</nl> <!-- Do not translate -->
 	<ru>Русский</ru> <!-- Do not translate! -->
 
-	<helperList>Suggestions:</helperList>	
-	<durationSign>Negative duration</durationSign>
-	<durationNbYears>Number of years:</durationNbYears>
-	<durationNbMonths>Number of months:</durationNbMonths>
-	<durationNbDays>Number of days:</durationNbDays>
-	<durationNbHours>Number of hours:</durationNbHours>
-	<durationNbMinutes>Number of minutes:</durationNbMinutes>
-	<durationNbSeconds>Number of seconds:</durationNbSeconds>
-	<durationYears>year(s)</durationYears>
-	<durationMonths>month(s)</durationMonths>
-	<durationDays>day(s)</durationDays>
-	<durationHours>hour(s)</durationHours>
-	<durationMinutes>minute(s)</durationMinutes>
-	<durationSeconds>second(s)</durationSeconds>
-	<setOnSave>Value will be set when record is saved</setOnSave>
-	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>
-	<missing>MISSING or EMPTY</missing>	
-	<byPackage>By Package</byPackage>
-	<byGroup>By Group</byGroup>
-	<isoMinimum>ISO Minimum</isoMinimum>
-	<isoCore>ISO Core</isoCore>
-	<isoAll>ISO All</isoAll>
-	<deleteConfirmationTitle>Delete Metadata Confirmation</deleteConfirmationTitle>	
-	<noCategory>No category available.</noCategory>
-	<categoryNameMandatory>A category name must be filled in.</categoryNameMandatory>
-	<usernameMandatory>The username field is mandatory.</usernameMandatory>
-	<resetPassword>Reset Password</resetPassword>
-	<passwordOldRequired>Your old password is mandatory</passwordOldRequired>
-	<passwordEntry>Please enter your password twice.</passwordEntry>
-	<passwordLength>Your password must be at least " + minLength + " characters long. Try again.</passwordLength>
-	<passwordSpace>Sorry, spaces are not allowed in password.</passwordSpace>
-	<passwordDoNotMatch>You did not enter the same new password twice. Please re-enter your password.</passwordDoNotMatch>
-	<userAtLeastOneGroup>Please, select at least one group.</userAtLeastOneGroup>	
-	<deleteGroup>Delete the group ?</deleteGroup>
-	<noTemplatesAvailable>No templates available, import metadata first.</noTemplatesAvailable>
-	<deleteCategory>Delete the category?</deleteCategory>
-	<language>ar</language>
-	<!-- ISO code -->
 	<about>عن البرنامج</about>
 	<abstract>مقدمة</abstract>
 	<accept>قبول</accept>
@@ -59,57 +21,67 @@
 	<agrovocKeyword>دوال أجروفوك</agrovocKeyword>
 	<all>all</all>
 	<any>- أي من -</any>
- <anytime>Anytime</anytime>
+	<anytime>Anytime</anytime>
 	<appSchInfoTab>App. schema</appSchInfoTab>
 	<assigned>تعيين</assigned>
 	<attrlabl>عنوان قيمة</attrlabl>
 	<availability>متوفر</availability>
 	<back>رجوع</back>
 	<backToDescription>رجوع إلى توصيف البيانات</backToDescription>
-	<backToPreviousPage>رجوع للصفحة السابقة</backToPreviousPage>
 	<backToEditor>رجوع لتحرير البيانات الاساسية</backToEditor>
+	<backToPreviousPage>رجوع للصفحة السابقة</backToPreviousPage>
 	<batchImport>استيراد جميع البيانات الاساسية المحررة بواسطة XML من الجهاز</batchImport>
 	<batchImportTitle>Batch Import</batchImportTitle>
 	<begdate>تاريخ البداية</begdate>
 	<begtime>تاريخ البداية</begtime>
-	<bgFileDescChoice value="thumbnail">صورة</bgFileDescChoice>
 	<bgFileDescChoice value="large_thumbnail">صورة كبيرة</bgFileDescChoice>
+	<bgFileDescChoice value="thumbnail">صورة</bgFileDescChoice>
+	<bookmarkDelicious>Bookmark on Delicious</bookmarkDelicious>
+	<bookmarkDigg>Bookmark on Digg</bookmarkDigg>
+	<bookmarkFacebook>Bookmark on Facebook</bookmarkFacebook>
+	<bookmarkPermanent>Permanent link to this description</bookmarkPermanent>
+	<bookmarkStumbleUpon>Bookmark on StumbleUpon</bookmarkStumbleUpon>
+	<bounding>Bounding Coordinates</bounding>
 	<bounding>الاحداثيات</bounding>
-	<boundingRelation value="equal">is</boundingRelation>
-	<boundingRelation value="overlaps">تقاطع</boundingRelation>
 	<boundingRelation value="encloses">يحتوي على</boundingRelation>
+	<boundingRelation value="equal">is</boundingRelation>
 	<boundingRelation value="fullyOutsideOf">خارج النطاق كليا</boundingRelation>
+	<boundingRelation value="overlaps">تقاطع</boundingRelation>
 	<browse>تصفح صورة</browse>
-	<browsen>تصفح اسم ملف صورة</browsen>
 	<browsed>تصفح توصيف ملف صورة</browsed>
+	<browsen>تصفح اسم ملف صورة</browsen>
 	<browset>تصفح نوع مللف صورة</browset>
+	<byGroup>By Group</byGroup>
+	<byPackage>By Package</byPackage>
 	<cancel>إلغاء</cancel>
 	<categories>تصنيفات</categories>
 	<category>تصنيف</category>
 	<categoryManagement>إدارة تصنيفات</categoryManagement>
 	<categoryManDes>إضافة/تعديل/حذف أو عرض التصنيفات</categoryManDes>
+	<categoryNameMandatory>A category name must be filled in.</categoryNameMandatory>
+	<checkusername>Check</checkusername>
 	<choose>- اختر -</choose>
 	<chooseFile>عين مكان الملف للتحميل</chooseFile>
 	<chooseLargeThumbnail>عين مكان الصورة التوضيحية الكبيرة</chooseLargeThumbnail>
 	<chooseThumbnail>عين مكان الصورة التوضيحية الصغيرة</chooseThumbnail>
-<city>City</city>
+	<city>City</city>
 	<clear>مسح</clear>
 	<clearAll>Clear All</clearAll>
 	<close>Close</close>
 	<completeTab>عرض متقدم</completeTab>
 	<completeTabEditor>تحرير متقدم</completeTabEditor>
+	<confirmCancel>Are you sure you want to leave the editor? (You will lose any unsaved changes)</confirmCancel>
 	<confirmDelete>هل أنت متأكد من مسح البيانات الاساسية meta data من قاعدة البيانات؟</confirmDelete>
-	<confirmPassword>إعادة تأكيد كلمة المرور</confirmPassword>
+	<confirmMassiveDelete>Are you sure you want to delete all selected metadata from the database?</confirmMassiveDelete>
 	<confirmNewPassword>أعادة تأكيد كلمة المرور</confirmNewPassword>
+	<confirmPassword>إعادة تأكيد كلمة المرور</confirmPassword>
 	<constraintsTab>المعوقات</constraintsTab>
 	<contactUs>الاتصال بنا</contactUs>
 	<contains>Contains</contains>
 	<contentInfoTab>Content Info</contentInfoTab>
 	<convert>تحويل</convert>
 	<copyright1>حقوق الطبع</copyright1>
-	<copyright2>
-	<p>جميع حقوق الطبع محفوظة<br/>عبارة حقوق الطبع</p>
-	</copyright2>
+	<copyright2><p>جميع حقوق الطبع محفوظة<br/>عبارة حقوق الطبع</p></copyright2>
 	<country>Country</country>
 	<create>جديد</create>
 	<createTip>بيانات أساسية جديدة من هذا الوعاء</createTip>
@@ -117,18 +89,22 @@
 	<cswTestDesc>Test interface for the CSW ISO catalog interface</cswTestDesc>
 	<dataQualityTab>جودة البيانات</dataQualityTab>
 	<datasetTab>وحدة قاعدة بيانات Dataset</datasetTab>
-	<dateRelChoice/>
+	<dateModified>Date Modified</dateModified>
 	<dateRelChoice value="14">قبل</dateRelChoice>
 	<dateRelChoice value="15">قبل أو خلال</dateRelChoice>
 	<dateRelChoice value="16">خلال</dateRelChoice>
 	<dateRelChoice value="17">خلال أو بعد</dateRelChoice>
 	<dateRelChoice value="18">بعد</dateRelChoice>
+	<dateRelChoice/>
 	<decline>رفض</decline>
 	<definition>Definition</definition>
 	<del>del</del>
 	<delete>حذف</delete>
+	<deleteCategory>Delete the category?</deleteCategory>
+	<deleteConfirmationTitle>Delete Metadata Confirmation</deleteConfirmationTitle>	
+	<deleteGroup>Delete the group ?</deleteGroup>
 	<descriptionTab>توصيف</descriptionTab>
- <desSchema>Destination schema</desSchema>
+	<desSchema>Destination schema</desSchema>
 	<digital>إلكتروني</digital>
 	<directory>مجلد</directory>
 	<dirParameter>تحتاج لدالة DIR</dirParameter>
@@ -140,18 +116,34 @@
 	<downloadable>Downloadable</downloadable>
 	<downloadData>بيانات للتحميل</downloadData>
 	<downloadEmail>Download Email</downloadEmail>
+	<downloadSelect>Download?</downloadSelect>
+	<downloadSelected>Download Selected</downloadSelected>
+	<downloadSummary>Download Summary</downloadSummary>
+	<downloadThemAll>Download All Local</downloadThemAll>
 	<dsgpoly>Data Set G-Polygon</dsgpoly>
+	<durationDays>day(s)</durationDays>
+	<durationHours>hour(s)</durationHours>
+	<durationMinutes>minute(s)</durationMinutes>
+	<durationMonths>month(s)</durationMonths>
+	<durationNbDays>Number of days:</durationNbDays>
+	<durationNbHours>Number of hours:</durationNbHours>
+	<durationNbMinutes>Number of minutes:</durationNbMinutes>
+	<durationNbMonths>Number of months:</durationNbMonths>
+	<durationNbSeconds>Number of seconds:</durationNbSeconds>
+	<durationNbYears>Number of years:</durationNbYears>
+	<durationSeconds>second(s)</durationSeconds>
+	<durationSign>Negative duration</durationSign>
+	<durationYears>year(s)</durationYears>
 	<dynamic>Interactive</dynamic>
 	<eastbc>الاحداثيات الشرقية</eastbc>
 	<edit>ـعديل</edit>
 	<Editor>محرر</Editor>
-	<!--	<emailAddress>عنوان البريد</emailAddress> -->
-	<enddate>تاريخ النهاية</enddate>
+	<email>Email</email>
+	<emailAddressInvalid js="true">Email address is invalid</emailAddressInvalid>
 	<enclosing>تحتوي على</enclosing>
 	<enclosingCoordinate>الاحداثيات</enclosingCoordinate>
+	<enddate>تاريخ النهاية</enddate>
 	<enttypl>عنوان جزئية نوع</enttypl>
-	<email>Email</email>
-	<emailAddress>Email address</emailAddress>
 	<exactCoordinate>الاحداثيات بدقة</exactCoordinate>
 	<exactTerm>Exact term</exactTerm>
 	<extended>مزيد من الخيارات</extended>
@@ -159,21 +151,25 @@
 	<extent>تماما</extent>
 	<featuredMap>خريطة مختارة</featuredMap>
 	<feedback>تعليقات</feedback>
-  <feedbackCardTitle>تعليقات</feedbackCardTitle>
-	 <feedbackComments>تعليقات</feedbackComments>
+	<feedbackCardTitle>تعليقات</feedbackCardTitle>
+	<feedbackComments>تعليقات</feedbackComments>
 	<feedbackRequest>الرجاء ادخال بياناتك قبل التحميل</feedbackRequest>
 	<file>ملف</file>
+	<fileType>File type:</fileType>
+	<fileUploadSuccessful>File Upload Successful</fileUploadSuccessful>
 	<firstName>الاسم الأول</firstName>
+	<firstNameMandatory js="true">The First Name field is mandatory</firstNameMandatory>
 	<foundWords>Number of terms found:</foundWords>
 	<freeKeyword>كاتبة حرة</freeKeyword>
 	<from>تاريخ من:</from>
 	<fromDateSelector>Select FROM date</fromDateSelector>
 	<fuzzy>Search accuracy</fuzzy>
-	<fuzzySearch>Set the precision of the search (from exact term search to fuzzy search).</fuzzySearch>
 	<fuzzyImprecise>Imprecise</fuzzyImprecise>
 	<fuzzyPrecise>Precise</fuzzyPrecise>
+	<fuzzySearch>Set the precision of the search (from exact term search to fuzzy search).</fuzzySearch>
 	<general>عام</general>
 	<generalInfo>معلومات عامة</generalInfo>
+	<generateUUID>Generate UUID for inserted metadata</generateUUID>
 	<georss>فتح GeoRSS</georss>
 	<group>مجموعة</group>
 	<groupManagement>إدارة مجموعة</groupManagement>
@@ -181,84 +177,70 @@
 	<groups>مجموعات</groups>
 	<harvestingManagement>Harvesting management</harvestingManagement>
 	<harvestingManDes>Add/modify/delete/start/stop harvesting tasks</harvestingManDes>
-	<header_meta>
-		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis geospatial CSW reference implementation mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
-		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
-		<link href="http://purl.org/dc/elements/1.1/" rel="schema.DC"/>
-		<meta name="DC.title" lang="Arabic" content="GeoNetwork opensource portal to spatial data and information"/>
-		<meta name="DC.creator" content="GeoNetwork Team"/>
-		<meta name="DC.subject" lang="Arabic" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
-		<meta name="DC.description" lang="Arabic" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
-		<meta name="DC.publisher" content="NBI Nile Transboundary Environmental Action Project (NTEAP)"/>
-		<meta name="DC.date" content="02-07-2007"/>
-		<meta name="DC.type" content="InteractiveResource" scheme="DCMIType"/>
-		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.language" content="English French Spanish Russian Chinese Arabic"/>
-		<meta name="DC.coverage" content="Global"/>
-	</header_meta>
 	<help>تعليمات</help>
 	<helpComplete>تعليمات كاملة</helpComplete>
- <hideAdvancedOptions>خيارات أقل</hideAdvancedOptions>
+	<helperList>Suggestions:</helperList>	
+	<hideAdvancedOptions>خيارات أقل</hideAdvancedOptions>
 	<highlights>تحديد</highlights>
 	<hitsPerPage>نتيجة على الصفحة</hitsPerPage>
 	<hitsPerPageChoice value="10">10</hitsPerPageChoice>
+	<hitsPerPageChoice value="100">100</hitsPerPageChoice>
 	<hitsPerPageChoice value="20">20</hitsPerPageChoice>
 	<hitsPerPageChoice value="50">50</hitsPerPageChoice>
-	<hitsPerPageChoice value="100">100</hitsPerPageChoice>
 	<home>الصفحة الرئيسية</home>
 	<i18n>Test i18n</i18n>
 	<i18nDesc>This service should help GeoNetwork opensource developers to have up to date localized files for the GUI.</i18nDesc>
 	<identificationTab>Identification</identificationTab>
 	<identifier>Identifier</identifier>
-	<import>ادراج</import>
-	<!--  intermap tooltips -->
 	<imAreaInterest>Select an Area Of Interest</imAreaInterest>
 	<imPan>Pan</imPan>
+	<import>ادراج</import>
 	<imZoomFull>Zoom to full map extent</imZoomFull>
 	<imZoomIn>Zoom in</imZoomIn>
 	<imZoomOut>Zoom out</imZoomOut>
 	<imZoomToLayer>Zoom to selected layer extent</imZoomToLayer>
-	<!-- end intermap tooltips -->
 	<infoTitle>معلومات</infoTitle>
 	<insert>إدخال</insert>
+	<insertFileMode>File Upload</insertFileMode>
+	<insertMode>Insert mode:</insertMode>
+	<insertPasteMode>Copy/Paste</insertPasteMode>
 	<interactiveMap>خريطة تفاعلية</interactiveMap>
-	<interMapInfo>
-		<h1>معلومات على الخريطة التفاعلية</h1> You can find interactive maps by searching in GeoNetwork
-		for digital data with an interactive map, or directly connet to a pre-configured map server.
-		يمكنك أيجاد خرائط تفاعلية عن طريق البحث عن معلومات الكترونية في GeoNetwork محتوية على خاريطة
-		تفاعلية. أو التوصيل مباشرة إلى عنوان مخدم خرائط Map Server<p/>مخدمات الخرائط المتوفرة<a
-		  class="sm" href="http://www.opengeospatial.org" target="_blank">Open GeoSpatial®
-		Consortium</a> compliant WMS Map Servers and <a class="sm" href="http://www.esri.com"
-		  target="_blank">ESRI® ArcIMS</a>.
+	<interMapInfo><h1>معلومات على الخريطة التفاعلية</h1>
+		<p>You can find interactive maps by searching in GeoNetwork for digital data with an interactive map, or directly connect to a pre-configured map server. يمكنك أيجاد خرائط تفاعلية عن طريق البحث عن معلومات الكترونية في GeoNetwork محتوية على خاريطة تفاعلية. أو التوصيل مباشرة إلى عنوان مخدم خرائط Map Server</p>
+		<p>مخدمات الخرائط المتوفرة<a class="sm" href="http://www.opengeospatial.org" target="_blank">Open GeoSpatial® Consortium</a> compliant WMS Map Servers and
+		<a class="sm" href="http://www.esri.com" target="_blank">ESRI® ArcIMS</a>.</p>
 	</interMapInfo>
 	<intermapSearch>Geographic search</intermapSearch>
+	<isoAll>ISO All</isoAll>
+	<isoCore>ISO Core</isoCore>
+	<isoMinimum>ISO Minimum</isoMinimum>
 	<keyword>keyword</keyword>
 	<keywords>كلمات دالة</keywords>
 	<keywordshelp>لأكثر من كلمة دالة مواصلة الضغط ctrl+key مع الضغط على زر الفأرة</keywordshelp>
 	<kind>Kind</kind>
+	<kindChoice value="company">Private company</kindChoice>
+	<kindChoice value="consultant">Independent consultant</kindChoice>
 	<kindChoice value="gov">Government</kindChoice>
 	<kindChoice value="int-org">International organisation</kindChoice>
 	<kindChoice value="ngo">NGO</kindChoice>
-	<kindChoice value="uni">University/research centre</kindChoice>
-	<kindChoice value="company">Private company</kindChoice>
-	<kindChoice value="consultant">Independent consultant</kindChoice>
 	<kindChoice value="other">Other</kindChoice>
+	<kindChoice value="uni">University/research centre</kindChoice>
 	<label>Label</label>
+	<language>ar</language>
 	<large_thumbnail>اضغط لرؤية صورة أكبر</large_thumbnail>
+	<lastNameMandatory js="true">The Last Name field is mandatory</lastNameMandatory>
 	<latitude>خط طول بين 90 و 90- درجة</latitude>
- <latMax>lat (max)</latMax>
- <latMin>lat (min)</latMin>
+	<latMax>lat (max)</latMax>
+	<latMin>lat (min)</latMin>
 	<legend>Legend</legend>
+	<link>Link</link>
 	<links>ارتباطات</links>
 	<loading>Loading ...</loading>
 	<local>بحث محلي</local>
-	<localizationHelp>Important! This form allows you to add a Key value to the database.
-		The key can not have spaces.<br/>
-		After adding your key values, use the "Localization" form in the Administration panel to provide
-		the actual name you want to be displayed on the website for the different languages.
-	</localizationHelp>
 	<localiz>Localization</localiz>
- <localizDes>Allows to change localized entities, like groups, categories etc...</localizDes>
+	<localizationHelp>Important! This form allows you to add a Key value to the database. The key can not have spaces.<br/>After adding your key values, use the "Localization" form in the Administration panel to provide the actual name you want to be displayed on the website for the different languages.</localizationHelp>
+	<localizDes>Allows to change localized entities, like groups, categories etc...</localizDes>
+	<localType>Local</localType>
 	<location>موقع</location>
 	<login>دخول أعضاء</login>
 	<loginCardTitle>دخول / تسجيل</loginCardTitle>
@@ -266,96 +248,69 @@
 	<logout>خروج</logout>
 	<logoutDes>جاري الخروج</logoutDes>
 	<longitude>خط عرض بين 180 و 180- درجة</longitude>
- <longMax>long (max)</longMax>
- <longMin>long (min)</longMin>
-	<mandatory>مطلوبة</mandatory>
-	<mandatoryIf>مطلوبة إذا</mandatoryIf>
-	<mainpage1>
-		<h1>الغرض من جيونتورك Geonetwork</h1>
-		<ul>
-		  <li>لزيادة القردة للحصول على بيانات ومعلومات جغرافية</li>
-		  <li>لدعم دوائر اتخاذ القرار</li>
-		  <li>تقديم برنامج متعدد الخصائص لتسهيل عملية التطوير</li>
-		  <li>لزيادة الوعي بقيمة وفوائد المعلومات الجغرافية</li>
-		</ul>
-	</mainpage1>
-	<mainpage2>جيونتورك يسمح بتبادل المعلومات الجغرافية بين المؤسسات المختلفة. لمزيد من المعلومات
-	الرجاء الاتصال بنا على العنوان التالي
-	</mainpage2>
-	<mainhelp1>كيف تبحث...</mainhelp1>
-	<mainhelp2>اخفاء المساعدة...</mainhelp2>
-	<mainhelp3>
-		<p>
-		  <font size="-2">يمكنك البحث بواحد أو أكثر من الخيارات المتوفرة<br/>فقط النتائج التي تتناسب مع
-			المتطلبات سيتم عرضها</font>
-		</p>
-		<p>
-		  <font size="-2">الـ<b>كتابة حرة</b>البحث يستم في كافة حقول البيانات الاساسية بقاعدة البيانات<br/>
-			<i>عند كتابة اكثر من كلمة في<b>كتابة حرة</b>الخانة سيتم تحليلها بواسطة النظام كل على حدة</i>
-		  </font>
-		</p>
-		<p>
-		  <font size="-2">الـ<b>عنوان</b>البحث سيكون على خرائط تتوافق مع عنوان محدد</font>
-		</p>
-		<p>
-		  <font size="-2">الـ<b>منطقة</b> search will find maps matching the bounding box of the
-			selected area. </font>
-		</p>
-		<p>
-		  <font size="-2">الخيار<b>
-			  <input checked="checked" name="demo" type="checkbox"/>ادراج</b>المختارة<b>المنطقة</b>ستم
-			ايجاد خرائط تغطي أكثر من المنطقة المختارة<br/>
-			<i>مثال: الخرائط الاقليمية أو الدولية التي بين دول أخرى أيضا تغطي البلد المختار</i>
-		  </font>
-		</p>
-		<p>
-		  <font size="-2">الخيار<b>
-			  <input checked="checked" name="demo" type="checkbox"/>يتقاطع
-			جزئيا</b>المختار<b>المنطقة</b>سيتم ايجاد خرائط تغطي جزئيا المنطقة المختارة</font>
-		</p>
-	</mainhelp3>
+	<longMax>long (max)</longMax>
+	<longMin>long (min)</longMin>
 	<mainpageTitle>أبحث عن خرائط تفاعلية صور أقمار صناعية وبرامج ذات صلة</mainpageTitle>
 	<maintenanceTab>صيانة</maintenanceTab>
 	<management>إدارة</management>
+	<mandatory>مطلوبة</mandatory>
+	<mandatoryIf>مطلوبة إذا</mandatoryIf>
 	<mapType>نوع الخريطة</mapType>
- <mapViewerClose>Close Map Viewer</mapViewerClose>
- <mapViewerLoading>Loading Map Viewer...</mapViewerLoading>
- <mapViewerOpen>Open Map Viewer</mapViewerOpen>
+	<mapViewerClose>Close Map Viewer</mapViewerClose>
+	<mapViewerLoading>Loading Map Viewer...</mapViewerLoading>
+	<mapViewerOpen>Open Map Viewer</mapViewerOpen>
+	<massiveActions>Massive actions:</massiveActions>
+	<massiveDeleteTitle>Massive Delete Operation</massiveDeleteTitle>
+	<massiveNewOwnerTitle>Massive New Owner Operation</massiveNewOwnerTitle>
+	<massiveUpdateCategoriesTitle>Massive Update Categories Operation</massiveUpdateCategoriesTitle>
+	<massiveUpdatePrivilegesTitle>Massive Update Privileges Operation</massiveUpdatePrivilegesTitle>
 	<max>الحد الأعلى</max>
+	<mdRating>Metadata Rating</mdRating>
 	<mdUpdateError>تحرير الخطأ</mdUpdateError>
+	<mefFile>MEF file</mefFile>
 	<message>اسم الدخول وكلمة المرور غير صحيحتين<br/>اضغط على زر رجوع وحاول مرة أخرى</message>
-	<messageMdUpdateError>عفواً نتج خطأ أثناء عملية تحرير البيانات الأساسية</messageMdUpdateError>
 	<messageChanged>البيانات الاساسية تم تعديلها بواسطة مستخدم آخر، الرجاء اعادة المحاولة</messageChanged>
 	<messageDownload>شكرا لاهتمامك، الرجاء الضغط على زر تحميل للحصول على البيانات</messageDownload>
 	<messageLargeFile>الملف كبير الحجم</messageLargeFile>
+	<messageMdUpdateError>عفواً نتج خطأ أثناء عملية تحرير البيانات الأساسية</messageMdUpdateError>
 	<messageNoPrivileges>ليس لديك التفويض للقيام بهذا العمل</messageNoPrivileges>
 	<messageNotPerformed>لم تتم تنفيذ العملية</messageNotPerformed>
+	<metadata.admin.index.desc>Rebuild Lucene index</metadata.admin.index.desc>
+	<metadata.admin.index.failed>Failed to rebuild index.</metadata.admin.index.failed>
+	<metadata.admin.index.success>Rebuild index operation was successful.</metadata.admin.index.success>
+	<metadata.admin.index>Index manager</metadata.admin.index>
 	<metadata>بيانات أساسية</metadata>
 	<metadataAdded>بيانات أساسية Metadata أضيفت برقم مميز:</metadataAdded>
 	<metadataDeleted>بيانات أساسية Metadata حذفت برقم مميز:</metadataDeleted>
+	<metadataInsertResults>Results of Metadata Import</metadataInsertResults>
 	<metadataJSForm>بيانات أساسية من حقول JS</metadataJSForm>
-	<mdRating>Metadata Rating</mdRating>
+	<metadataRecordsAdded>Total number of metadata records added :</metadataRecordsAdded>
 	<min>الحد الأدني</min>
+	<missing>MISSING or EMPTY</missing>	
+	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>
 	<more>المزيد</more>
 	<moreinfo>للمزيد من المعلومات يمكنك الاتصال بنا عن طريق البريد الاكتروني التالي</moreinfo>
 	<name>الاسم</name>
-	<newGroup>أضافة مجموعة جديدة</newGroup>
 	<newCategory>إضافة تصنيف جديد</newCategory>
+	<newGroup>أضافة مجموعة جديدة</newGroup>
 	<newMdDes>أضافة بيانات اساسية جديدة منسوخة من قالب</newMdDes>
+	<newMdInsert>New metadata inserted:</newMdInsert>
 	<newMetadata>بيانات اساسية Metadata جديدة</newMetadata>
+	<newOwner>New Owner</newOwner>
 	<newPassword>كلمة سر جديدة</newPassword>
 	<newUser>اضافة مستخدم جديد لقاعدة البيانات</newUser>
 	<next>Next</next>
-	<none>بلا</none>
-<!--  <nofilefound1>عفواً، لم يتم العثور على الملف المراد تحميله الرجاء إرسال</nofilefound1>
-	<nofilefound2>رسالة تعيلق</nofilefound2>
-	<nofilefound3> or an email (mrahim@nilebasin.org) with the title and the following Metadata id: </nofilefound3> -->
+	<noCategory>No category available.</noCategory>
 	<noHelp>عفواً، لا توجد مساعدة متوفرة</noHelp>
 	<noInfo>عفواً، لا توجد معلومات متوفرة</noInfo>
 	<noLogin>لم تتمكن من الدخول</noLogin>
+	<none>بلا</none>
+	<noOwnerRights>Privileges/Categories Locked: You do NOT have ownership rights</noOwnerRights>
 	<northbc>الاحداثيات الشمالية</northbc>
 	<noSelectedMd>No metadata selected! Please at least select one before select an action.</noSelectedMd>
-<!--  <nteaphome>موقع مشروع البيئة الاقليمي</nteaphome> -->
+	<noTemplatesAvailable>No templates available, import metadata first.</noTemplatesAvailable>
+	<notfound>Not found</notfound>
+	<nothing>No action on import</nothing>
 	<online>خريطة تفاعلية</online>
 	<onlink>روابط حية</onlink>
 	<opensearch>GeoNetwork opensearch service allow search to be made into the metadata catalog.</opensearch>
@@ -365,10 +320,19 @@
 	<output>Output</output>
 	<outputType id="full">Full</outputType>
 	<outputType id="text">Text only</outputType>
+	<overwrite>Overwrite metadata with same UUID</overwrite>
+	<overwriteFile>Overwrite?</overwriteFile>
+	<owner>Owner</owner>
+	<ownerRights>Delete/Privileges/Categories Unlocked: You have ownership rights</ownerRights>
 	<paper>ورقية</paper>
 	<partial>تغطية جزئية</partial>
 	<partialCooordinate>احداثيات جزئية</partialCooordinate>
 	<password>كلمة مرور</password>
+	<passwordDoNotMatch>You did not enter the same new password twice. Please re-enter your password.</passwordDoNotMatch>
+	<passwordEntry>Please enter your password twice.</passwordEntry>
+	<passwordLength>Your password must be at least " + minLength + " characters long. Try again.</passwordLength>
+	<passwordOldRequired>Your old password is mandatory</passwordOldRequired>
+	<passwordSpace>Sorry, spaces are not allowed in password.</passwordSpace>
 	<persInfo>بيانات شخصية</persInfo>
 	<placeKeyword>كلمة موقع</placeKeyword>
 	<porCatInfoTab>مجلد</porCatInfoTab>
@@ -376,50 +340,60 @@
 	<previous>Previous</previous>
 	<privileges>تفويض</privileges>
 	<profile>ملف شخصي</profile>
+	<profileChoice value="Administrator">Administrator</profileChoice>
+	<profileChoice value="Editor">Editor</profileChoice>
+	<profileChoice value="RegisteredUser">Registered user</profileChoice>
+	<profileChoice value="Reviewer">Content reviewer</profileChoice>
+	<profileChoice value="UserAdmin">User administrator</profileChoice>
 	<progress>تقدم</progress>
-	<progressChoice/>
 	<progressChoice value="complete">إنتهاء</progressChoice>
 	<progressChoice value="in-work">يعمل</progressChoice>
 	<progressChoice value="planned">مبرمجة</progressChoice>
+	<progressChoice/>
 	<protocol>Protocol</protocol>
-	<protocolChoice value="WWW:LINK-1.0-http--link">رابط الكتروني</protocolChoice>
-	<protocolChoice value="WWW:LINK-1.0-http--samples">Showcase product (URL)</protocolChoice>
-	<protocolChoice value="WWW:LINK-1.0-http--related">Related link (URL)</protocolChoice>
-	<protocolChoice value="WWW:LINK-1.0-http--partners">Partner web address (URL)</protocolChoice>
-	<protocolChoice value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</protocolChoice>
-	<protocolChoice value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
-	<protocolChoice value="WWW:DOWNLOAD-1.0-http--download">ملف للتحميل</protocolChoice>
-	<protocolChoice value="WWW:DOWNLOAD-1.0-ftp--download">ملف للتحميل (ftp)</protocolChoice>
-	<protocolChoice value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</protocolChoice>
-	<protocolChoice value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
-	<protocolChoice value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
-	<protocolChoice value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
-	<protocolChoice value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
-	<protocolChoice value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</protocolChoice>
 	<protocolChoice value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuration File (*.AXL)</protocolChoice>
-	<protocolChoice value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
 	<protocolChoice value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
+	<protocolChoice value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
+	<protocolChoice value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</protocolChoice>
+	<protocolChoice value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
+	<protocolChoice value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
+	<protocolChoice value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
+	<protocolChoice value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
+	<protocolChoice value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</protocolChoice>
+	<protocolChoice value="WWW:DOWNLOAD-1.0-ftp--download">ملف للتحميل (ftp)</protocolChoice>
+	<protocolChoice value="WWW:DOWNLOAD-1.0-http--download">ملف للتحميل</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--link">رابط الكتروني</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--partners">Partner web address (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--related">Related link (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</protocolChoice>
+	<protocolChoice value="WWW:LINK-1.0-http--samples">Showcase product (URL)</protocolChoice>
 	<pubdate>تاريخ النشر</pubdate>
 	<publicationDate>تاريخ التحرير</publicationDate>
 	<publisher>محرر</publisher>
 	<purpose>الغرض من</purpose>
 	<rateIt>Rate It</rateIt>
-	<ratingMsg>
-		Press a button to rate. Note that for harvested metadata you have to wait the new run.
-	</ratingMsg>
+	<ratingMsg>Press a button to rate. Note that for harvested metadata you have to wait the new run.</ratingMsg>
 	<rawMetadata>أدخال بيانات أساسية Metadata خام</rawMetadata>
+	<rebuild>Rebuild</rebuild>
 	<recentAdditions>الاضافات الحديث</recentAdditions>
 	<refSysTab>Ref. system</refSysTab>
 	<region>إقليم</region>
+	<register>Register</register>
+	<registerChoose>I want to</registerChoose>
 	<RegisteredUser>عضو مسجل</RegisteredUser>
+	<registerTitle>Self-Registration Form</registerTitle>
+	<registrationDetails>Key registration details entered:</registrationDetails>
 	<remote>بحث خارجي</remote>
+	<remoteType>Remote</remoteType>
 	<remove>إزالة</remove>
 	<res>results</res>
-	<ress>result</ress>
 	<reset>الحالة السابقة</reset>
-	<resetSearch>أعادة حقول البحث للحالة السابقة</resetSearch>
 	<resetFeedbackForm>إعادة الحقول للحالة السابقة</resetFeedbackForm>
- <restrictTo>Restrict to</restrictTo>
+	<resetPassword>Reset Password</resetPassword>
+	<resetSearch>أعادة حقول البحث للحالة السابقة</resetSearch>
+	<ress>result</ress>
+	<restrictTo>Restrict to</restrictTo>
 	<result>النتيجة</result>
 	<resultsCoordinate>النتيجة حسب الاحداثيات المدخلة</resultsCoordinate>
 	<resultsFreeText>النتيجة حسب الكلمة المدخلة</resultsFreeText>
@@ -428,54 +402,53 @@
 	<rss>فتح RSS</rss>
 	<rtitle>عنوان</rtitle>
 	<save>حفظ</save>
-	<savepdf>Save search results as pdf</savepdf>
 	<saveAndClose>حفظ وإغلاق</saveAndClose>
 	<saveAndValidate>التحقق</saveAndValidate>
-	<savexml>
-		<dc>Save Dublin Core metadata as XML</dc>
-		<fgdc>Save FGDC metadata as XML</fgdc>
-		<iso19115Esri>Save ISO19115 metadata in XML for ESRI ArcCatalog</iso19115Esri>
-		<iso19139>Save ISO19115/19139 metadata as XML</iso19139>
-		<iso19139fra>Save ISO19115/19139 Fra metadata as XML</iso19139fra>
-	</savexml>
+	<savepdf>Save search results as pdf</savepdf>
 	<schema>وحدة</schema>
+	<schematronError>Schematron Error</schematronError>
 	<search>بحث</search>
+	<searchAllText>كتابة حرة</searchAllText>
 	<searchBox>بحث بيانات ومعلومات</searchBox>
 	<searchIndex>بحث فهرس</searchIndex>
- <searching>...بحث في التقدم...</searching>
+	<searching>...بحث في التقدم...</searching>
 	<searchPage>بحث صفحة</searchPage>
 	<searchPageDes>القفز إلى صفحة بحث البيانات الاساسية</searchPageDes>
 	<searchTemplates>بحث عن قوالب</searchTemplates>
 	<searchText>كتابة حرة</searchText>
-	<searchAllText>كتابة حرة</searchAllText>
 	<searchUnused>بحث عن بيانات اساسية Metadata خالية</searchUnused>
 	<searchUnusedTitle>Search for Unused</searchUnusedTitle>
 	<select>Select : </select>
 	<selectAll>Select all metadata</selectAll>
 	<selected> selected</selected>
 	<selectedOnly>Display selected only</selectedOnly>
-	<selectNone>Unselect metadata selected</selectNone>
 	<selection>Selection</selection>
+	<selectNone>Unselect metadata selected</selectNone>
 	<server>مخدم</server>
 	<setAll>Set All</setAll>
+	<setOnSave>Value will be set when record is saved</setOnSave>
+	<shibLogin>Shib Login</shibLogin>
 	<show>بيانات أساسية</show>
+	<showFileDownloadSummary>Show File Download Chooser</showFileDownloadSummary>
 	<simple>خيارات أقل</simple>
 	<simpleTab>العرض الافتراضي</simpleTab>
 	<simpleTabEditor>المحرر الافتراضي</simpleTabEditor>
-	<siteId>رقم الموقع المميز</siteId>
+	<singleFile>Single File (XML, SLD, WMC...)</singleFile>
 	<site>الموقع</site>
-	<sort>Sort</sort>
+	<siteId>رقم الموقع المميز</siteId>
+	<sizeBytes>Size (bytes)</sizeBytes>
 	<sortBy>Sort by</sortBy>
-	<sortByType id="relevance">Relevance</sortByType>
-	<sortByType id="rating">Rating</sortByType>
-	<sortByType id="popularity">Popularity</sortByType>
 	<sortByType id="date">Change date</sortByType>
-    <sortByType id="title">Title</sortByType>
+	<sortByType id="popularity">Popularity</sortByType>
+	<sortByType id="rating">Rating</sortByType>
+	<sortByType id="relevance">Relevance</sortByType>
+	<sortByType id="title">Title</sortByType>
 	<southbc>الاحداثيات الجنوبية</southbc>
+	<spacesNot js="true">Spaces in this field are not allowed</spacesNot>
 	<spatial2Tab>Spat. Repr.</spatial2Tab>
 	<spatialTab>Spat. Info</spatialTab>
-	<state>State</state>
 	<startsWith>Start with</startsWith>
+	<state>State</state>
 	<styleSheet>StyleSheet</styleSheet>
 	<submit>أرسال</submit>
 	<subtemplate>Subtemplate</subtemplate>
@@ -488,33 +461,6 @@
 	<Term>Term</Term>
 	<thanks>شكرا لمجهودك</thanks>
 	<theme>ISO topic category</theme>
-	<thesaurus>
-		<category>Thesaurus category</category>
-		<management>Manage thesauri</management>
-		<manDes>Add/modify/delete and show thesauri</manDes>
-		<edition>Edit thesaurus</edition>
-		<consultation>View thesaurus</consultation>
-		<thesaurus>Thesaurus</thesaurus>
-		<admin>Manage thesaurus</admin>
-		<edit>Edit thesaurus</edit>
-		<update>Update thesaurus</update>
-		<upload>Upload thesaurus</upload>
-		<download>Download thesaurus</download>
-		<delete>Delete thesaurus</delete>
-		<editelement>Edit element</editelement>
-		<addelement>Add element</addelement>
-		<deleteelement>Delete element</deleteelement>
-		<updateelement>Update element</updateelement>
-		<keywordDescription>Keyword definition:</keywordDescription>
-		<keywordConfirm>Confirm keyword suppression</keywordConfirm>
-		<unknown>Unknown thesaurus</unknown>
-		<narrower>Narrower Term</narrower>
-		<broader>Broader Term</broader>
-		<related>Related Term</related>
-		<en>in</en>
-		<foundKeyWords>Number of terms found</foundKeyWords>
-		<foundKeyWordsLimit>Maximum number of terms found</foundKeyWordsLimit>
-	</thesaurus>
 	<thumbnails>صورة توضيحية</thumbnails>
 	<timeout>انتهاء الوقت</timeout>
 	<timeoutChoice value="10">بعد 10 ثواني</timeoutChoice>
@@ -530,38 +476,138 @@
 	<type>Type</type>
 	<up>إلى الأعلى</up>
 	<update>تحديث</update>
-	<updateGroup>تحديث مجموعة</updateGroup>
+	<updateCategories>Update categories</updateCategories>
 	<updateCategory>تحديث تصنيف</updateCategory>
+	<updateGroup>تحديث مجموعة</updateGroup>
+	<updatePrivileges>Update privileges</updatePrivileges>
 	<updateUserAccount>تحديث بيانات أعضاء</updateUserAccount>
 	<upload>تحميل</upload>
 	<user>مستخدم</user>
 	<UserAdmin>مستعمل أدارة موقع</UserAdmin>
+	<userAtLeastOneGroup>Please, select at least one group.</userAtLeastOneGroup>	
 	<userDefined>- User defined -</userDefined>
 	<userInfo>Change user information</userInfo>
 	<userInfoDes>Allow current user to change user information</userInfoDes>
 	<userManagement>أدارة بيانات أعضاء</userManagement>
 	<userManDes>أضافة/تحديث/حذف و عرض بيانات مستخدم</userManDes>
 	<username>اسم الدخول</username>
+	<usernameMandatory>The username field is mandatory.</usernameMandatory>
 	<userPw>تغيير كلمة المرور</userPw>
 	<userPwDes>امنح المستخدم الحالة امكانية تغير كلمة المرور</userPwDes>
+	<uuidAction>Import actions:</uuidAction>
 	<validate>تفيير</validate>
 	<validityBegins>التقييم يبدأ</validityBegins>
 	<validityEnds>وينتهي</validityEnds>
 	<view>View</view>
 	<viewInGE>Google Earth</viewInGE>
-	<waitGetCap>Loading server layers, please wait...</waitGetCap>
+	<waitGetCap js="true">Loading server layers, please wait...</waitGetCap>
 	<westbc>الاحداثيات الغربية</westbc>
 	<what>What?</what>
-	<where>Where?</where>
 	<when>When?</when>
-	<winInfo1>This window will show GeoNetwork resources. This window may be hidden at times depending
-	on how your browser manages windows. In this case, you will have to manually bring the window to
-	the foreground when necessary.</winInfo1>
-	<winInfo2>من خلال علامة ؟ يتم الحصول على التوضيحات اللازمة. عندما يتم تفعيل هذه العلامة، يتم عرض
-	التعليمات في نافذة مراجع</winInfo2>
+	<where>Where?</where>
+	<winInfo1>This window will show GeoNetwork resources. This window may be hidden at times depending on how your browser manages windows. In this case, you will have to manually bring the window to the foreground when necessary.</winInfo1>
+	<winInfo2>من خلال علامة ؟ يتم الحصول على التوضيحات اللازمة. عندما يتم تفعيل هذه العلامة، يتم عرض التعليمات في نافذة مراجع</winInfo2>
 	<wwwlink>رابط صفحة</wwwlink>
 	<xmlInsert>استيراد بينات أساسية حررت كـXML</xmlInsert>
 	<xmlInsertTitle>XML Metadata Insert</xmlInsertTitle>
 	<xmlTab>عرض XML</xmlTab>
+	<xsdError>XSD Validation Error</xsdError>
+	<yourRegistration js="true">Your registration...</yourRegistration>
 	<zip>Zip</zip>
+	
+	<header_meta>
+		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis geospatial CSW reference implementation mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
+		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
+		<link href="http://purl.org/dc/elements/1.1/" rel="schema.DC"/>
+		<meta name="DC.title" lang="Arabic" content="GeoNetwork opensource portal to spatial data and information"/>
+		<meta name="DC.creator" content="GeoNetwork Team"/>
+		<meta name="DC.subject" lang="Arabic" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
+		<meta name="DC.description" lang="Arabic" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
+		<meta name="DC.publisher" content="NBI Nile Transboundary Environmental Action Project (NTEAP)"/>
+		<meta name="DC.date" content="02-07-2007"/>
+		<meta name="DC.type" content="InteractiveResource" scheme="DCMIType"/>
+		<meta name="DC.format" content="text/html; charset=UTF-8"/>
+		<meta name="DC.language" content="English French Spanish Russian Chinese Arabic"/>
+		<meta name="DC.coverage" content="Global"/>
+	</header_meta>
+	<mainpage1>
+		<h1>الغرض من جيونتورك Geonetwork</h1>
+		<ul>
+			<li>لزيادة القردة للحصول على بيانات ومعلومات جغرافية</li>
+			<li>لدعم دوائر اتخاذ القرار</li>
+			<li>تقديم برنامج متعدد الخصائص لتسهيل عملية التطوير</li>
+			<li>لزيادة الوعي بقيمة وفوائد المعلومات الجغرافية</li>
+		</ul>
+	</mainpage1>
+	<mainpage2>جيونتورك يسمح بتبادل المعلومات الجغرافية بين المؤسسات المختلفة. لمزيد من المعلومات
+		الرجاء الاتصال بنا على العنوان التالي
+	</mainpage2>
+	<mainhelp1>كيف تبحث...</mainhelp1>
+	<mainhelp2>اخفاء المساعدة...</mainhelp2>
+	<mainhelp3>
+		<p>
+			<font size="-2">يمكنك البحث بواحد أو أكثر من الخيارات المتوفرة<br/>فقط النتائج التي تتناسب مع
+				المتطلبات سيتم عرضها</font>
+		</p>
+		<p>
+			<font size="-2">الـ<b>كتابة حرة</b>البحث يستم في كافة حقول البيانات الاساسية بقاعدة البيانات<br/>
+				<i>عند كتابة اكثر من كلمة في<b>كتابة حرة</b>الخانة سيتم تحليلها بواسطة النظام كل على حدة</i>
+			</font>
+		</p>
+		<p>
+			<font size="-2">الـ<b>عنوان</b>البحث سيكون على خرائط تتوافق مع عنوان محدد</font>
+		</p>
+		<p>
+			<font size="-2">الـ<b>منطقة</b> search will find maps matching the bounding box of the
+				selected area. </font>
+		</p>
+		<p>
+			<font size="-2">الخيار<b>
+				<input checked="checked" name="demo" type="checkbox"/>ادراج</b>المختارة<b>المنطقة</b>ستم
+				ايجاد خرائط تغطي أكثر من المنطقة المختارة<br/>
+				<i>مثال: الخرائط الاقليمية أو الدولية التي بين دول أخرى أيضا تغطي البلد المختار</i>
+			</font>
+		</p>
+		<p>
+			<font size="-2">الخيار<b>
+				<input checked="checked" name="demo" type="checkbox"/>يتقاطع
+				جزئيا</b>المختار<b>المنطقة</b>سيتم ايجاد خرائط تغطي جزئيا المنطقة المختارة</font>
+		</p>
+	</mainhelp3>
+	<savexml>
+		<dc>Save Dublin Core metadata as XML</dc>
+		<fgdc>Save FGDC metadata as XML</fgdc>
+		<iso19115Esri>Save ISO19115 metadata in XML for ESRI ArcCatalog</iso19115Esri>
+		<iso19139>Save ISO19115/19139 metadata as XML</iso19139>
+		<iso19139fra>Save ISO19115/19139 Fra metadata as XML</iso19139fra>
+	</savexml>
+	<thesaurus>
+		<addelement>Add element</addelement>
+		<admin>Manage thesaurus</admin>
+		<broader>Broader Term</broader>
+		<category>Thesaurus category</category>
+		<consultation>View thesaurus</consultation>
+		<delete>Delete thesaurus</delete>
+		<deleteelement>Delete element</deleteelement>
+		<download>Download thesaurus</download>
+		<edit>Edit thesaurus</edit>
+		<editelement>Edit element</editelement>
+		<edition>Edit thesaurus</edition>
+		<en>in</en>
+		<foundKeyWords>Number of terms found</foundKeyWords>
+		<foundKeyWordsLimit>Maximum number of terms found</foundKeyWordsLimit>
+		<keywordConfirm>Confirm keyword suppression</keywordConfirm>
+		<keywordDescription>Keyword definition:</keywordDescription>
+		<management>Manage thesauri</management>
+		<manDes>Add/modify/delete and show thesauri</manDes>
+		<narrower>Narrower Term</narrower>
+		<related>Related Term</related>
+		<thesaurus>Thesaurus</thesaurus>
+		<unknown>Unknown thesaurus</unknown>
+		<update>Update thesaurus</update>
+		<updateelement>Update element</updateelement>
+		<upload>Upload thesaurus</upload>
+	</thesaurus>
+	
+	
 </strings>

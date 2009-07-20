@@ -114,7 +114,7 @@
 	<createGroups>Créer les groupes</createGroups>
 	<createCateg>Créer les catégories</createCateg>
 	<active>Active</active>
-	<inactive></inactive>
+	<inactive>Inactive</inactive>
 	
 	<retrieveSources>Obtenir les sources</retrieveSources>
 	<retrieveGroups>Obtenir les groupes</retrieveGroups>
