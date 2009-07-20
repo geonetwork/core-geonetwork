@@ -2,6 +2,7 @@
 <strings>
 	<select>Выбор</select>
 	<name>Название</name>
+	<directoryname>Directory</directoryname>
 	<type>Тип</type>
 	<status>Статус</status>
 	<errors>Ошибки</errors>
@@ -46,7 +47,15 @@
 		<long>OGC Web services (WMS, WFS, WCS, WPS)</long>
 	</info>
 
-	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
+	<info type="arcsde">
+		<short>ArcSDE</short>
+		<long>ArcSDE server</long>
+	</info>
+
+	<info type="filesystem">
+		<short>Local Filesystem</short>
+		<long>Local Filesystem Harvesting</long>
+	</info>	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<site>Сайт</site>
 
@@ -75,7 +84,6 @@
 	<serviceCategory>Категория для сервиса</serviceCategory>
 	<datasetCategory>Категория для наборов данных</datasetCategory>
 
-	<name>Название</name>
 	<host>Хост</host>
 	<port>Порт</port>
 	<servlet>Сервлет</servlet>
@@ -112,7 +120,9 @@
 	<criteria>Критерий</criteria>
 	<validate>Проверить</validate>
 	<recurse>Рекурсивно</recurse>
-	<host>Хост</host>
+	<nodelete>Keep local if deleted at source</nodelete>
+	<server>Server</server>	
+	<database>Database</database>	
 	<privileges>Привилегии</privileges>
 	<categories>Категории</categories>
 	<url>URL</url>
@@ -299,6 +309,45 @@
 			Используйте клавишу <b>&lt;CTRL&gt;</b> для выделения более одной категории.
 		</tip>
 
+		<!-- OGCWXS harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<tip id="ogcwxs.wxstype">
+			Тип сетевых OGC-сервисов.
+		</tip>
+
+		<tip id="ogcwxs.version">
+			Версия сетевых OGC-сервисов.
+		</tip>
+
+		<tip id="ogcwxs.lang">
+			Язык получаемых метаданных.
+		</tip>
+
+		<tip id="ogcwxs.capabUrl">
+			Адрес должен указывать на точку входа сервиса и иметь вид:<br/>
+			http://HOST/PATH
+		</tip>
+
+		<tip id="ogcwxs.addSearch">
+			Добавить поисковый запрос на удаленный сервер. Для получения метаднных
+			необходимо указать хотя бы один запрос.
+		</tip>
+
+		<tip id="ogcwxs.groups">
+			Привилегии, присваиваемые получаемым метаданным.
+		</tip>
+
+		<tip id="ogcwxs.addGroups">
+			Выберите одну или более групп (используя клавишу <b>&lt;CTRL&gt;</b>) в
+			панели слева и нажмите данную кнопку.
+		</tip>
+
+		<tip id="ogcwxs.categories">
+			Вы можете присвоить одну или более категорий найденным метаданным.
+			Используйте клавишу <b>&lt;CTRL&gt;</b> для выделения более одной категории.
+		</tip>
+
+	
 		<!-- OAI-PMH harvesting type - - - - - - - - - - - - - - - - - - - - - -->
 
 		<tip id="oai.url">
@@ -310,16 +359,16 @@
 			поиск по умолчанию с помощью формата метаданных oai_dc.
 		</tip>
 
-		<tip id="csw.groups">
+		<tip id="oai.groups">
 			Вы можете присвоить одну или более категорий найденным метаданным.
 		</tip>
 
-		<tip id="csw.addGroups">
+		<tip id="oai.addGroups">
 			Выберите одну или более групп (используя клавишу <b>&lt;CTRL&gt;</b>) в
 			панели слева и нажмите данную кнопку.
 		</tip>
 
-		<tip id="csw.categories">
+		<tip id="oai.categories">
 			Вы можете присвоить одну или более категорий найденным метаданным.
 			Используйте клавишу <b>&lt;CTRL&gt;</b> для выделения более одной категории.
 		</tip>
@@ -366,42 +415,5 @@
 			Выберите формат метаданных, которые вы хотите найти.
 		</tip>
 
-		<!-- OGCWXS harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<tip id="ogcwxs.wxstype">
-			Тип сетевых OGC-сервисов.
-		</tip>
-
-		<tip id="ogcwxs.version">
-			Версия сетевых OGC-сервисов.
-		</tip>
-
-		<tip id="ogcwxs.lang">
-			Язык получаемых метаданных.
-		</tip>
-
-		<tip id="ogcwxs.capabUrl">
-			Адрес должен указывать на точку входа сервиса и иметь вид:<br/>
-			http://HOST/PATH
-		</tip>
-
-		<tip id="ogcwxs.addSearch">
-			Добавить поисковый запрос на удаленный сервер. Для получения метаднных
-			необходимо указать хотя бы один запрос.
-		</tip>
-
-		<tip id="ogcwxs.groups">
-			Привилегии, присваиваемые получаемым метаданным.
-		</tip>
-
-		<tip id="ogcwxs.addGroups">
-			Выберите одну или более групп (используя клавишу <b>&lt;CTRL&gt;</b>) в
-			панели слева и нажмите данную кнопку.
-		</tip>
-
-		<tip id="ogcwxs.categories">
-			Вы можете присвоить одну или более категорий найденным метаданным.
-			Используйте клавишу <b>&lt;CTRL&gt;</b> для выделения более одной категории.
-		</tip>
 	</tips>
 </strings>

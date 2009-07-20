@@ -36,8 +36,15 @@
 	
 	<removedMetadata>Gelöschte Metadaten</removedMetadata>
 	<dir>Verzeichnis</dir>
+
+	<authentication>Authentication</authentication>
+	
+	<loginuses>Login uses</loginuses>
+	<otherlogins>Allow other users to login from</otherlogins>
+
+	<geonetworkdb>GeoNetwork Database</geonetworkdb>
 		
-	<ldap>LDAP Authentifikation</ldap>
+	<ldap>LDAP</ldap>
 	<defProfile>Voreingestelltes Profil</defProfile>
 	<login>Login</login>
 	<userDN>User DN</userDN>
@@ -48,7 +55,7 @@
 	<password>Passwort</password>
 	<profile>Profil</profile>
 			
-	<shib>Shibboleth Authentifikation</shib>
+	<shib>Shibboleth</shib>
 	<path>Pfad</path>
 	<attributes>Shibboleth Attributzuordnung</attributes>
 	<surname>Nachname</surname>

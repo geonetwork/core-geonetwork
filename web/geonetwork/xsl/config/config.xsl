@@ -46,13 +46,38 @@
 		<xsl:call-template name="server"/>
 		<xsl:call-template name="intranet"/>
 		<xsl:call-template name="z3950"/>
-		<xsl:call-template name="userSelfRegistration"/>
 		<xsl:call-template name="csw"/>
 		<xsl:call-template name="proxy"/>
 		<xsl:call-template name="feedback"/>
 		<xsl:call-template name="removedMetadata"/>
-		<xsl:call-template name="ldap"/>
-		<xsl:call-template name="shib"/>
+		<xsl:call-template name="authentication"/>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template name="authentication">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/authentication"/></h1>
+		<div align="left" style="{$style}">
+			<b><xsl:value-of select="concat(/root/gui/config/loginuses,': ')"/></b>
+			<div align="left" style="{$style}">
+				<input align="left" type="radio" id="geonetworkdb.use" name="authentication" value="default"><xsl:value-of select="/root/gui/config/geonetworkdb"/></input>
+				<xsl:call-template name="geonetworkdb"/>
+			</div>
+			<div align="left" style="{$style}">
+				<input align="left" type="radio" id="ldap.use" name="authentication" value="ldap"><xsl:value-of select="/root/gui/config/ldap"/></input>
+				<xsl:call-template name="ldap"/>
+			</div>
+		</div>
+		
+		<div align="left" style="{$style}">
+			<b><xsl:value-of select="concat(/root/gui/config/otherlogins,': ')"/></b>
+			<div align="left" style="{$style}">
+				<input align="left" type="checkbox" id="shib.use" name="authentication" value="shib">
+					<xsl:value-of select="/root/gui/config/shib"/> 
+				</input>
+				<xsl:call-template name="shib"/>
+			</div>
+		</div>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
@@ -137,21 +162,6 @@
 						</table>
 					</td>
 				</tr>			
-			</table>
-		</div>
-	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
-	<xsl:template name="userSelfRegistration">
-		<h1 align="left"><xsl:value-of select="/root/gui/config/userSelfRegistration"/></h1>
-
-		<div align="left" style="{$style}">
-			<table>
-				<tr>
-					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/enable"/></td>
-					<td class="padded"><input id="userSelfRegistration.enable" class="content" type="checkbox"/></td>
-				</tr>
 			</table>
 		</div>
 	</xsl:template>
@@ -342,63 +352,65 @@
 			</table>
 		</div>
 	</xsl:template>
+
+	<!-- ============================================================================================= -->
+	<!-- === Geonetwork DB panels === -->
+	<!-- ============================================================================================= -->
+	
+	<xsl:template name="geonetworkdb">
+		<div align="left" style="{$style}">
+			<table id="geonetworkdb.subpanel">
+				<tr>
+					<td class="padded" width="40%"><xsl:value-of select="concat(/root/gui/config/enable,' ',/root/gui/config/userSelfRegistration)"/></td>
+					<td class="padded"><input id="userSelfRegistration.enable" class="content" type="checkbox"/></td>
+				</tr>
+			</table>
+		</div>
+	</xsl:template>
 	
 	<!-- ============================================================================================= -->
 	<!-- === LDAP panels === -->
 	<!-- ============================================================================================= -->
 	
 	<xsl:template name="ldap">
-		<h1 align="left"><xsl:value-of select="/root/gui/config/ldap"/></h1>
-
 		<div align="left" style="{$style}">
-			<table>
+			<table id="ldap.subpanel">
 				<tr>
-					<td class="padded"><xsl:value-of select="/root/gui/config/use"/></td>
-					<td class="padded"><input id="ldap.use" class="content" type="checkbox" value=""/></td>
+					<td class="padded"><xsl:value-of select="/root/gui/config/host"/></td>
+					<td class="padded"><input id="ldap.host" class="content" type="text" value="" size="20"/></td>
+				</tr>
+			
+				<tr>
+					<td class="padded"><xsl:value-of select="/root/gui/config/port"/></td>
+					<td class="padded"><input id="ldap.port" class="content" type="text" value="" size="20"/></td>
+				</tr>
+							
+				<tr>
+					<td class="padded"><xsl:value-of select="/root/gui/config/defProfile"/></td>
+					<td class="padded"><xsl:call-template name="ldapDefProfile"/></td>
+				</tr>
+							
+				<!-- distinguished names -->
+							
+				<tr>
+					<td class="padded"><xsl:value-of select="/root/gui/config/distNames"/></td>
+					<td/>
 				</tr>
 				<tr>
 					<td/>
-					<td>
-						<table id="ldap.subpanel">
-							<tr>
-								<td class="padded"><xsl:value-of select="/root/gui/config/host"/></td>
-								<td class="padded"><input id="ldap.host" class="content" type="text" value="" size="20"/></td>
-							</tr>
-			
-							<tr>
-								<td class="padded"><xsl:value-of select="/root/gui/config/port"/></td>
-								<td class="padded"><input id="ldap.port" class="content" type="text" value="" size="20"/></td>
-							</tr>
+					<td class="padded"><xsl:call-template name="ldapDistNames"/></td>
+				</tr>
 							
-							<tr>
-								<td class="padded"><xsl:value-of select="/root/gui/config/defProfile"/></td>
-								<td class="padded"><xsl:call-template name="ldapDefProfile"/></td>
-							</tr>
+				<!-- user's attributes -->
 							
-							<!-- distinguished names -->
-							
-							<tr>
-								<td class="padded"><xsl:value-of select="/root/gui/config/distNames"/></td>
-								<td/>
-							</tr>
-							<tr>
-								<td/>
-								<td class="padded"><xsl:call-template name="ldapDistNames"/></td>
-							</tr>
-							
-							<!-- user's attributes -->
-							
-							<tr>
-								<td class="padded"><xsl:value-of select="/root/gui/config/userAttribs"/></td>
-								<td/>
-							</tr>
-							<tr>
-								<td/>
-								<td class="padded"><xsl:call-template name="ldapUserAttribs"/></td>
-							</tr>
-						</table>
-					</td>
-				</tr>			
+				<tr>
+					<td class="padded"><xsl:value-of select="/root/gui/config/userAttribs"/></td>
+					<td/>
+				</tr>
+				<tr>
+					<td/>
+					<td class="padded"><xsl:call-template name="ldapUserAttribs"/></td>
+				</tr>
 			</table>
 		</div>
 	</xsl:template>
@@ -466,35 +478,23 @@
 	<!-- ============================================================================================= -->
 	
 	<xsl:template name="shib">
-		<h1 align="left"><xsl:value-of select="/root/gui/config/shib"/></h1>
 
 		<div align="left" style="{$style}">
-			<table>
+			<table id="shib.subpanel">
 				<tr>
-					<td class="padded"><xsl:value-of select="/root/gui/config/use"/></td>
-					<td class="padded"><input id="shib.use" class="content" type="checkbox" value=""/></td>
+					<td class="padded"><xsl:value-of select="/root/gui/config/path"/></td>
+					<td class="padded"><input id="shib.path" class="content" type="text" size="256"/></td>
+				</tr>
+					
+				<!-- shibboleth attributes -->
+									
+				<tr>
+					<td class="padded" colspan="2"><xsl:value-of select="/root/gui/config/attributes"/></td>
 				</tr>
 				<tr>
 					<td/>
-					<td>
-						<table id="shib.subpanel">
-							<tr>
-								<td class="padded"><xsl:value-of select="/root/gui/config/path"/></td>
-								<td class="padded"><input id="shib.path" class="content" type="text" size="256"/></td>
-							</tr>
-							
-							<!-- shibboleth attributes -->
-										
-							<tr>
-								<td class="padded" colspan="2"><xsl:value-of select="/root/gui/config/attributes"/></td>
-							</tr>
-							<tr>
-								<td/>
-								<td class="padded"><xsl:call-template name="shibAttribs"/></td>
-							</tr>
-						</table>
-					</td>
-				</tr>			
+					<td class="padded"><xsl:call-template name="shibAttribs"/></td>
+				</tr>
 			</table>
 		</div>
 	</xsl:template>

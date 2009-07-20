@@ -109,7 +109,7 @@
 	<createGroups>Maak groepen</createGroups>
 	<createCateg>Maak categorieën</createCateg>
 	<active>Actief</active>
-	<inactive></inactive>
+	<inactive>Inactief</inactive>
 	<retrieveSources>Haal bronnen op</retrieveSources>
 	<retrieveGroups>Haal groepen op</retrieveGroups>
         <retrieveInfo>Retrieve info</retrieveInfo>
@@ -404,7 +404,7 @@
 		</tip>
 	
 		<tip id="oai.set">
-                       U kunt het harvesten beperken to specifieke datasets die remote bestaan
+            U kunt het harvesten beperken to specifieke datasets die remote bestaan
 		</tip>
 		
 		<tip id="oai.prefix">

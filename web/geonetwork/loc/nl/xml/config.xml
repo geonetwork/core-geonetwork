@@ -37,6 +37,13 @@
 	<removedMetadata>Verwijderde metadata</removedMetadata>
 	<dir>Map</dir>
 		
+	<authentication>Authentication</authentication>
+	
+	<loginuses>Login uses</loginuses>
+	<otherlogins>Allow other users to login from</otherlogins>
+
+	<geonetworkdb>GeoNetwork Database</geonetworkdb>
+		
 	<ldap>LDAP Authenticatie</ldap>
 	<defProfile>Standaard profiel</defProfile>
 	<login>Login</login>
@@ -50,7 +57,7 @@
 		
 	<shib>Shibboleth Authenticatie</shib>
 	<path>Locatie</path>
-	<attributes>Shibboleth attribute mapping</attributes>
+	<attributes>Shibboleth attribuut mapping</attributes>
 	<surname>Achternaam</surname>
 	<firstname>Voornaam</firstname>
 		

@@ -15,6 +15,13 @@
 	<z3950>Сервер Z39.50</z3950>
 	<enable>Включить</enable>
 
+	<csw>CSW</csw>
+	<contactId>Contact</contactId>
+	<title>Title</title>
+	<abstract>Abstract</abstract>
+	<fees>Fees</fees>
+	<accessConstraints>Access Constraints</accessConstraints>
+	
 	<proxy>Прокси</proxy>
 	<use>Использовать</use>
 	<username>Пользователь</username>
@@ -24,9 +31,20 @@
 	<smtpHost>SMTP-хост</smtpHost>
 	<smtpPort>SMTP-порт</smtpPort>
 
+	<userSelfRegistration>User Self-Registration</userSelfRegistration>
+
 	<removedMetadata>Удаленные метаданные</removedMetadata>
 	<dir>Каталог</dir>
 
+	<userSelfRegistration>User Self-Registration</userSelfRegistration>
+
+	<authentication>Authentication</authentication>
+	
+	<loginuses>Login uses</loginuses>
+	<otherlogins>Allow other users to login from</otherlogins>
+
+	<geonetworkdb>GeoNetwork Database</geonetworkdb>
+		
 	<ldap>Аутентификация LDAP</ldap>
 	<defProfile>Профиль по умолчанию</defProfile>
 	<login>Логин</login>
@@ -36,13 +54,13 @@
 	<usersDN>Users</usersDN>
 	<userAttribs>Атрибуты пользователя</userAttribs>
 	<password>Пароль</password>
+	<profile>Profile</profile>
 
 	<shib>Shibboleth Authentication</shib>
 	<path>Path</path>
 	<attributes>Shibboleth attribute mapping</attributes>
 	<surname>Surname</surname>
 	<firstname>Firstname</firstname>
-	<profile>Profile</profile>
 
 	<!-- Buttons -->
 
@@ -126,6 +144,20 @@
 			перезапустить GeoNetwork.
 		</tip>
 
+		<!-- CSW -->
+		<tip id="csw.enable">
+			If set, this will enable the CSW server functionnality. It will allow other catalogs to harvest it.
+			<br/>
+			<b>Please note:</b> restart GeoNetwork to make this change active.
+		</tip>
+		<tip id="csw.contactId">
+			Configure CSW contact for GetCapabilities operation.
+		</tip>
+		<tip id="csw.title">Title</tip>
+		<tip id="csw.abstract">Abstract</tip>
+		<tip id="csw.fees">Fees</tip>
+		<tip id="csw.accessConstraints">Access constraints</tip>
+		
 		<!-- proxy -->
 
 		<tip id="proxy.use">
@@ -149,6 +181,16 @@
 		<tip id="removedMd.dir">
 			Каталог для хранения метаданных (в формате MEF) после их удаления.
 		</tip>
+        <!-- userSelfRegistration -->
+		
+		<tip id="userSelfRegistration.enable">
+			If set, users will be able to register themselves. Self-registered
+			users are assigned to the GUEST group. An email is sent to the
+			user with their username and password enclosed using the feedback
+			email information.
+			<br/>
+		</tip>
+		
 	</tips>
 
 </strings>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>	
+	<abstract>Abstract</abstract>
+	<activate>Activate</activate>
+	<addLayer js="true">Add a new layer</addLayer>
+	<address>Address</address>
+	<addService>Add more maps</addService>
+	<associatedStyles>Associated styles:</associatedStyles>				
+	<bigger>Bigger map</bigger>
+	<btnstyles>View and select styles</btnstyles>	
+	<cancel>Cancel</cancel>
+	<choosemapfromlist>Please choose one or more map services from the list below</choosemapfromlist>
+	<choosemapserver>Please choose a map server from the list below or manually insert another map server</choosemapserver>
+	<choosepredefinedmap>Please choose a predefined map overlay from the list below or</choosepredefinedmap>
+	<close>Close</close>
+	<connect>Connect</connect>
+	<contactInfo>Contact information:</contactInfo>
+	<contactPerson>Primary contact person:</contactPerson>
+	<contexts>Contexts</contexts>
+	<delete>[del]</delete>
+	<down>Move layer down</down>
+	<email>email:</email>
+	<error>[error]</error>
+	<exportAsImage js="true">Export this map as an image</exportAsImage>
+	<exportAsPDF js="true">Export this map as a PDF</exportAsPDF>
+	<exportAsWMC js="true">Save the Web Map Context</exportAsWMC>
+	<extents>Change the selected time (temporal data)</extents>
+	<extentSelected>Selected time: </extentSelected>
+	<featuresfound>features found</featuresfound>
+	<findMapsGeoNetwork>Find more maps through GeoNetwork opensource</findMapsGeoNetwork>
+	<findMapsMapServers>Add more layers by connecting to other Web Map Servers</findMapsMapServers>
+	<fullExtent>Zoom to the full map</fullExtent>
+	<getFeatures>GET FEATURES</getFeatures>
+	<gotoGeoNetwork>GeoNetwork opensource</gotoGeoNetwork>
+	<gotoMapServers>Map Servers</gotoMapServers>
+	<homepage>Home page:</homepage>
+	<identify>Identify a feature on the map</identify>
+	<info>info</info>
+	<keywords>Keywords:</keywords>
+	<layerInfo>Layer Info</layerInfo>
+	<layers>Layers</layers>
+	<layersAdded js="true">Selected layers have been added</layersAdded>
+	<layersHide>Hide layer list</layersHide>
+	<layerShowHide>Show or hide layer</layerShowHide>
+	<layersShow>Show layer list</layersShow>
+	<legend>Show the legend</legend>
+	<listofmaps>List of maps</listofmaps>
+	<listofmapservers>List of map servers</listofmapservers>
+	<loadingFrom js="true">Loading services from</loadingFrom>
+	<loadingFromWMS js="true">Loading services from given WMS server</loadingFromWMS>
+	<loadingMap>...Loading map...</loadingMap>
+	<makeActive>Select to make this layer active (e.g. for Identify)</makeActive>
+	<manually>Create you own map</manually>
+	<map>Map</map>
+	<mapServer>Map Server</mapServer>
+	<mapsfound>maps found</mapsfound>
+	<markerDeleted>The marker has been deleted</markerDeleted> 
+	<markerDeleting>Deleting marker...</markerDeleting> 
+	<markerlistbutton>Marker list</markerlistbutton>
+	<markerlisttitle js="true">Marker list</markerlisttitle>
+	<markerNone>There are no markers defined.</markerNone>	
+	<markerUpdated>The marker has been updated</markerUpdated> 
+	<markerUpdating>Updating marker...</markerUpdating> 
+	<metadata>Metadata</metadata>
+	<newMap>Create a new map</newMap>
+	<noFeature>No features found</noFeature>
+	<noService>No maps found</noService>
+	<noStyle>Only the default style is available for this map</noStyle>
+	<ok>Ok</ok>
+	<oneFeature>One feature found</oneFeature>
+	<oneService>One map found</oneService>
+	<otherArcIMS>- Other ArcIMS server </otherArcIMS>
+	<otherWMS>- Other WMS server </otherWMS>
+	<pan>Pan</pan>
+	<position>Position:</position>
+	<print>Print the map</print>
+	<properties>Properties</properties>
+	<reCenter>Re-center the map</reCenter>
+	<refresh>Refresh</refresh>
+	<refreshNotification>Please click the "Refresh" button under the layer list to see this change.</refreshNotification>
+	<removeLayer>Remove layer</removeLayer>
+	<removeMarker>Remove marker</removeMarker>
+	<reset>Reset</reset>
+	<sendByEmail js="true">Send this map via e-mail</sendByEmail>
+	<setScale>--Set Scale--</setScale>
+	<setStyle>Set styles</setStyle>				
+	<showLayerMD js="true">Layer information</showLayerMD>
+	<smaller>Smaller map</smaller>
+	<specify>Specify if other:</specify>
+	<start>InterMap opensource</start>
+	<style>Select the desired style</style>
+	<styleSet>The style has been successfully set.</styleSet> 
+	<styleSetError>An unexpected error has been encountered:</styleSetError>				
+	<styleSetting>Setting the style...</styleSetting> 
+	<telephone>Telephone:</telephone>
+	<title>InterMap opensource</title>
+	<titleShowStyles js="true">Available styles</titleShowStyles>
+	<transparency>Set transparency</transparency>
+	<unexpectedError>An unexpected error has been encountered while performing the operation:</unexpectedError>				
+	<up>Move layer up</up>
+	<update>Update</update>
+	<updateMarker>Update marker info</updateMarker>
+	<wait js="true">Please wait...</wait>
+	<wmcbuttondownload js="true">Download current context</wmcbuttondownload>	
+	<wmcbuttonmail js="true">Send current context</wmcbuttonmail>	
+	<wmcbuttonmain js="true">View context menu</wmcbuttonmain>	
+	<wmcbuttonupload js="true">Upload a context</wmcbuttonupload>	
+	<wmcMailBuilding>The mail is being built...</wmcMailBuilding>
+	<wmcMailError>An unexpected error has been encountered while processing the mail:</wmcMailError>
+	<wmcMailSend>Send e-mail</wmcMailSend>
+	<wmcMailSent>The mail has been successfully sent</wmcMailSent>
+	<wmctitle js="true">WMC Context menu</wmctitle>	
+	<wmctitlemail js="true">Send a WMC Context via e-mail</wmctitlemail>	
+	<wmctitleupload js="true">Upload and set a context</wmctitleupload>
+	<wmcUploadAdd>Add to current layers</wmcUploadAdd>
+	<wmcUploaded>The context has been uploaded </wmcUploaded>
+	<wmcUploading>The context file is uploading...</wmcUploading> 
+	<wmcUploadingError>An unexpected error has been encountered while uploading the context:</wmcUploadingError>				
+	<wmcUploadReplace>Replace current layers</wmcUploadReplace>
+	<wmsConfigForm>Layer properties</wmsConfigForm >
+	<zoomIn>Zoom in</zoomIn>
+	<zoomLayer>Zoom to layer</zoomLayer>
+	<zoomOut>Zoom out</zoomOut>
+</strings>

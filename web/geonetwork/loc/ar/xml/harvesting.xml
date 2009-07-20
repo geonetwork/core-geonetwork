@@ -2,6 +2,7 @@
 <strings>
 	<select>Select</select>
 	<name>Name</name>
+	<directoryname>Directory</directoryname>
 	<type>Type</type>
 	<status>Status</status>
 	<errors>Errors</errors>
@@ -45,22 +46,18 @@
 		<short>OGC WxS</short>
 		<long>OGC Web services (ie. WMS, WFS, WCS, WPS)</long>
 	</info>
-	
 	<info type="arcsde">
 		<short>ArcSDE</short>
 		<long>ArcSDE server</long>
 	</info>
 
-	<info type="localfilesystem">
+	<info type="filesystem">
 		<short>Local Filesystem</short>
 		<long>Local Filesystem Harvesting</long>
-	</info>	
-	
-	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
+	</info>	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Site</site>
-        <name>Name</name>
-		
+
 	<wxstype>Type of OGC webservice</wxstype>
 	<wxstypes>
 		<type value="WMS1.0.0">OGC Web Map Service (WMS) Version 1.0.0</type>
@@ -111,7 +108,7 @@
 	<createGroups>Create groups</createGroups>
 	<createCateg>Create categories</createCateg>
 	<active>Active</active>
-	<inactive></inactive>
+	<inactive>Inactive</inactive>
 	<retrieveSources>Retrieve sources</retrieveSources>
 	<retrieveGroups>Retrieve groups</retrieveGroups>
 	<retrieveInfo>Retrieve info</retrieveInfo>
@@ -119,6 +116,9 @@
 	<criteria>Criteria</criteria>
 	<validate>Validate</validate>
 	<recurse>Recurse</recurse>
+	<nodelete>Keep local if deleted at source</nodelete>
+	<server>Server</server>	
+	<database>Database</database>	
 	<privileges>Privileges</privileges>
 	<categories>Categories</categories>
 	<url>URL</url>

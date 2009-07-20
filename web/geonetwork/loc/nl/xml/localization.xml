@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <strings>
-	<entity>Entity</entity>
+	<entity>Entiteit</entity>
 	
 	<entityType>
 		<type id="groups">Groepen</type>

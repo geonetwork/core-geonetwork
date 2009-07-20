@@ -1,4 +1,4 @@
-// ** I18N
+	// ** I18N
 Calendar._DN = new Array
 ("Zondag",
  "Maandag",
@@ -9,8 +9,24 @@ Calendar._DN = new Array
  "Zaterdag",
  "Zondag");
 
-Calendar._SDN_len = 2;
+// short day names
+Calendar._SDN = new Array
+("Zo",
+ "Ma",
+ "Di",
+ "Wo",
+ "Do",
+ "Vr",
+ "Za",
+ "Zo");
 
+//Calendar._SDN_len = 2;
+
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 0;
+
+// full month names
 Calendar._MN = new Array
 ("Januari",
  "Februari",
@@ -24,6 +40,22 @@ Calendar._MN = new Array
  "Oktober",
  "November",
  "December");
+
+Calendar._SMN = new Array
+("Jan",
+ "Feb",
+ "Maa",
+ "Apr",
+ "Mei",
+ "Jun",
+ "Jul",
+ "Aug",
+ "Sep",
+ "Okt",
+ "Nov",
+ "Dec");
+
+//Calendar._SMN_len = 3;
 
 // tooltips
 Calendar._TT = {};

@@ -258,8 +258,9 @@
 				<table id="minimap_root" width="340px">
 					<tr>
 						<td colspan="3" align="center" style="padding: 3px;">
-							<xsl:value-of select="/root/gui/strings/latMax"/> <input type="text" class="content" id="northBL" name="northBL"  size="5"
-								value="{/root/gui/searchDefaults/northBL}" onChange="javascript:AoIrefresh();"/>
+							<small><xsl:value-of select="/root/gui/strings/latMax"/></small> <input type="text" class="content" id="northBL" name="northBL"  size="5"
+								value="{/root/gui/searchDefaults/northBL}" onChange="javascript:AoIrefresh();"
+								alt="{/root/gui/strings/latitude}" title="{/root/gui/strings/latitude}"/>
 						</td>
 					</tr>
 					<tr height="102px">
@@ -267,7 +268,8 @@
 							<small><xsl:value-of select="/root/gui/strings/longMin"/></small>
 							<br />
 							<input type="text" class="content" id="westBL" name="westBL" size="5"
-								value="{/root/gui/searchDefaults/westBL}" onChange="javascript:AoIrefresh();"/>
+								value="{/root/gui/searchDefaults/westBL}" onChange="javascript:AoIrefresh();"
+								alt="{/root/gui/strings/longitude}" title="{/root/gui/strings/longitude}"/>
 						</td>
 						<td width="16px">
 							<table width="16px">
@@ -306,14 +308,16 @@
 							<small><xsl:value-of select="/root/gui/strings/longMax"/></small>
 							<br />
 							<input type="text" class="content" id="eastBL" name="eastBL" size="5"
-								value="{/root/gui/searchDefaults/eastBL}" onChange="javascript:AoIrefresh();"/>
+								value="{/root/gui/searchDefaults/eastBL}" onChange="javascript:AoIrefresh();"
+								alt="{/root/gui/strings/longitude}" title="{/root/gui/strings/longitude}"/>
 						</td>
 					</tr>
 					<tr>
 						<td />
 						<td colspan="2" align="center" style="padding: 3px;">
 							<small><xsl:value-of select="/root/gui/strings/latMin"/></small> <input type="text" class="content" id="southBL" name="southBL" size="5"
-								value="{/root/gui/searchDefaults/southBL}" onChange="javascript:AoIrefresh();"/>
+								value="{/root/gui/searchDefaults/southBL}" onChange="javascript:AoIrefresh();"
+								alt="{/root/gui/strings/latitude}" title="{/root/gui/strings/latitude}"/>
 						</td>
 						<td>
 							<img src="/intermap/images/update.png" id="updateBB" name="updateBB" style="visibility:hidden;border:2px solid red;" title="Update Area Of Interest" onClick="javascript:updateAoIFromForm();"/>
