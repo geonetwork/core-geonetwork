@@ -32,17 +32,17 @@
 	<smtpHost>SMTP Host</smtpHost>
 	<smtpPort>SMTP Poort</smtpPort>
 	
-	<userSelfRegistration>Gebruikers zelf-registratie</userSelfRegistration>
+	<userSelfRegistration>gebruikers zelf-registratie</userSelfRegistration>
 	
 	<removedMetadata>Verwijderde metadata</removedMetadata>
 	<dir>Map</dir>
 		
 	<authentication>Authentication</authentication>
 	
-	<loginuses>Login uses</loginuses>
-	<otherlogins>Allow other users to login from</otherlogins>
+	<loginuses>Login gebruikt</loginuses>
+	<otherlogins>Sta andere gebruikers toe om in te loggen via</otherlogins>
 
-	<geonetworkdb>GeoNetwork Database</geonetworkdb>
+	<geonetworkdb>GeoNetwork Authenticatie</geonetworkdb>
 		
 	<ldap>LDAP Authenticatie</ldap>
 	<defProfile>Standaard profiel</defProfile>

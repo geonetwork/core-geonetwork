@@ -32,7 +32,7 @@
 	<smtpHost>SMTP Host</smtpHost>
 	<smtpPort>SMTP Port</smtpPort>
 
-	<userSelfRegistration>User Self-Registration</userSelfRegistration>
+	<userSelfRegistration>user self-registration</userSelfRegistration>
 	
 	<removedMetadata>Removed metadata</removedMetadata>
 	<dir>Directory</dir>
@@ -42,7 +42,7 @@
 	<loginuses>Login uses</loginuses>
 	<otherlogins>Allow other users to login from</otherlogins>
 
-	<geonetworkdb>GeoNetwork Database</geonetworkdb>
+	<geonetworkdb>GeoNetwork Authentication</geonetworkdb>
 
 	<ldap>LDAP</ldap>
 	<defProfile>Default profile</defProfile>

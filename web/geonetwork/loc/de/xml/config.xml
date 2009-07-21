@@ -42,9 +42,9 @@
 	<loginuses>Login uses</loginuses>
 	<otherlogins>Allow other users to login from</otherlogins>
 
-	<geonetworkdb>GeoNetwork Database</geonetworkdb>
+	<geonetworkdb>GeoNetwork Authentifizierung</geonetworkdb>
 		
-	<ldap>LDAP</ldap>
+	<ldap>LDAP Authentifizierung</ldap>
 	<defProfile>Voreingestelltes Profil</defProfile>
 	<login>Login</login>
 	<userDN>User DN</userDN>
@@ -55,7 +55,7 @@
 	<password>Passwort</password>
 	<profile>Profil</profile>
 			
-	<shib>Shibboleth</shib>
+	<shib>Shibboleth Authentifizierung</shib>
 	<path>Pfad</path>
 	<attributes>Shibboleth Attributzuordnung</attributes>
 	<surname>Nachname</surname>
@@ -168,6 +168,16 @@
 		
 		<tip id="removedMd.dir">
 			Directory used to store metadata (in MEF format) when they are deleted.
+		</tip>
+		
+		<!-- userSelfRegistration -->
+		
+		<tip id="userSelfRegistration.enable">
+			If set, users will be able to register themselves. Self-registered
+			users are assigned to the GUEST group. An email is sent to the
+			user with their username and password enclosed using the feedback
+			email information.
+			<br/>
 		</tip>
 	</tips>
 	

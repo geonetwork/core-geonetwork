@@ -35,12 +35,12 @@
 	<host>Hôte</host>
 	<port>Port</port>
 
-	<authentication>Authentication</authentication>
+	<authentication>Authentification</authentication>
 	
-	<loginuses>Login uses</loginuses>
+	<loginuses>Login utilise</loginuses>
 	<otherlogins>Allow other users to login from</otherlogins>
 
-	<geonetworkdb>GeoNetwork Database</geonetworkdb>
+	<geonetworkdb>Authentification via GeoNetwork</geonetworkdb>
 		
 	<intranet>Intranet</intranet>
 	<network>Network</network>

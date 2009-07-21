@@ -42,9 +42,9 @@
 	<loginuses>Login uses</loginuses>
 	<otherlogins>Allow other users to login from</otherlogins>
 
-	<geonetworkdb>GeoNetwork Database</geonetworkdb>
+	<geonetworkdb>GeoNetwork Authentication</geonetworkdb>
 
-	<ldap>LDAP</ldap>
+	<ldap>LDAP Authentication</ldap>
 	<defProfile>Default profile</defProfile>
 	<login>Login</login>
 	<userDN>User DN</userDN>
@@ -55,7 +55,7 @@
 	<password>Password</password>
 	<profile>Profile</profile>
 
-	<shib>Shibboleth</shib>
+	<shib>Shibboleth Authentication</shib>
 	<path>Path</path>
 	<attributes>Shibboleth attribute mapping</attributes>
 	<surname>Surname</surname>

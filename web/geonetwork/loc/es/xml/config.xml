@@ -25,7 +25,7 @@
 
 	<proxy>Proxy</proxy>
 	<use>Uso</use>
-	<username>Username</username>
+	<username>Nombre de usuario</username>
 
 	<feedback>Retroalimentación</feedback>
 	<email>Correo</email>
@@ -39,14 +39,14 @@
 
 	<userSelfRegistration>User Self-Registration</userSelfRegistration>
 
-	<authentication>Authentication</authentication>
+	<authentication>Autenticación</authentication>
 	
 	<loginuses>Login uses</loginuses>
 	<otherlogins>Allow other users to login from</otherlogins>
 
-	<geonetworkdb>GeoNetwork Database</geonetworkdb>
+	<geonetworkdb>GeoNetwork Autenticación</geonetworkdb>
 		
-	<ldap>LDAP</ldap>
+	<ldap>LDAP Autenticación</ldap>
 	<defProfile>Default profile</defProfile>
 	<login>Login</login>
 	<userDN>User DN</userDN>
@@ -57,11 +57,11 @@
 	<password>Password</password>
 	<profile>Profile</profile>
 
-	<shib>Shibboleth</shib>
+	<shib>Shibboleth Autenticación</shib>
 	<path>Path</path>
 	<attributes>Shibboleth attribute mapping</attributes>
-	<surname>Surname</surname>
-	<firstname>Firstname</firstname>
+	<surname>Nombre de familia</surname>
+	<firstname>Nombre</firstname>
 
 	<!-- Buttons -->
 
