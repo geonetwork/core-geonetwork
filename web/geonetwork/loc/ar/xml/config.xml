@@ -37,6 +37,13 @@
 	<removedMetadata>Removed metadata</removedMetadata>
 	<dir>Directory</dir>
 		
+	<authentication>Authentication</authentication>
+	
+	<loginuses>Login uses</loginuses>
+	<otherlogins>Allow other users to login from</otherlogins>
+
+	<geonetworkdb>GeoNetwork Authentication</geonetworkdb>
+
 	<ldap>LDAP Authentication</ldap>
 	<defProfile>Default profile</defProfile>
 	<login>Login</login>

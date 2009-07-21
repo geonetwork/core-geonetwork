@@ -36,14 +36,12 @@
 	<removedMetadata>Удаленные метаданные</removedMetadata>
 	<dir>Каталог</dir>
 
-	<userSelfRegistration>User Self-Registration</userSelfRegistration>
-
-	<authentication>Authentication</authentication>
+	<authentication>Аутентификация</authentication>
 	
 	<loginuses>Login uses</loginuses>
 	<otherlogins>Allow other users to login from</otherlogins>
 
-	<geonetworkdb>GeoNetwork Database</geonetworkdb>
+	<geonetworkdb>Аутентификация GeoNetwork</geonetworkdb>
 		
 	<ldap>Аутентификация LDAP</ldap>
 	<defProfile>Профиль по умолчанию</defProfile>
@@ -56,11 +54,11 @@
 	<password>Пароль</password>
 	<profile>Profile</profile>
 
-	<shib>Shibboleth Authentication</shib>
+	<shib>Аутентификация Shibboleth</shib>
 	<path>Path</path>
 	<attributes>Shibboleth attribute mapping</attributes>
-	<surname>Surname</surname>
-	<firstname>Firstname</firstname>
+	<surname>Фамилия</surname>
+	<firstname>Имя</firstname>
 
 	<!-- Buttons -->
 

@@ -38,6 +38,7 @@
 	<bgFileDescChoice value="thumbnail">صورة</bgFileDescChoice>
 	<bookmarkDelicious>Bookmark on Delicious</bookmarkDelicious>
 	<bookmarkDigg>Bookmark on Digg</bookmarkDigg>
+	<bookmarkEmail>Send a reference to this record by email</bookmarkEmail>
 	<bookmarkFacebook>Bookmark on Facebook</bookmarkFacebook>
 	<bookmarkPermanent>Permanent link to this description</bookmarkPermanent>
 	<bookmarkStumbleUpon>Bookmark on StumbleUpon</bookmarkStumbleUpon>
