@@ -699,8 +699,7 @@ function runCategorySearch(category)
 {
 	preparePresent();
 
-	var pars = "any=''";
-	pars += "&category="+category;
+	var pars = "category=" + category;
 	
 	// Load results via AJAX
 	gn_search(pars);    
