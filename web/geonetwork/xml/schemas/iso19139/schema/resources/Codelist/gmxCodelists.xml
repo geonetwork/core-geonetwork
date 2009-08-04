@@ -38,7 +38,7 @@
 			</codeEntry>
 			<codeEntry>
 				<CodeDefinition gml:id="CI_DateTypeCode_revision">
-					<gml:description>date identifies when the resource was examined or re-examined and imporved or amended</gml:description>
+					<gml:description>date identifies when the resource was examined or re-examined and improved or amended</gml:description>
 					<gml:identifier codeSpace="ISOTC211/19115">revision</gml:identifier>
 				</CodeDefinition>
 			</codeEntry>
