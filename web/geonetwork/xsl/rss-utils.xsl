@@ -112,7 +112,7 @@
 			</xsl:choose>
 			</xsl:variable>
 
-			<pubDate><xsl:value-of select="concat($day,' ',$month,' ',$year,' ',$time,' EST'))"/></pubDate> 
+			<pubDate><xsl:value-of select="concat($day,' ',$month,' ',$year,' ',$time,' EST')"/></pubDate> 
 			<guid><xsl:value-of select="$mdURL"/></guid>
 			<xsl:if test="string($thumbnailLink)!=''">
 				<media:content url="{$thumbnailLink}" type="image/gif" width="100"/>
