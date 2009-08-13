@@ -48,11 +48,16 @@
 			</tr>
 			<xsl:for-each select="/root/response/record">
 				<xsl:sort select="username"/>
+				
+				<xsl:variable name="profileId">
+					<xsl:value-of select="profile"/>
+				</xsl:variable>
+				
 				<tr>
 					<td class="padded"><xsl:value-of select="username"/></td>
 					<td class="padded"><xsl:value-of select="surname"/></td>
 					<td class="padded"><xsl:value-of select="name"/></td>
-					<td class="padded"><xsl:value-of select="profile"/></td>
+					<td class="padded"><xsl:value-of select="/root/gui/strings/profileChoice[@value=$profileId]"/></td>
 					<td class="padded">
 						<button class="content" onclick="load('{/root/gui/locService}/user.edit?id={id}')"><xsl:value-of select="/root/gui/strings/edit"/></button>
 						&#160;
