@@ -83,21 +83,37 @@
 					<div id="info"/>
 					<form action="{/root/gui/locService}/csw" method="POST"
 						target="response" name="form">
-						<!--					<label for="username">username:</label>
-						<input name="username" type="text" value=""/>
+						<label for="username">username:</label>
+						<input id="username" type="text" value="admin"/>
 						<br/>
 						<label for="password">password:</label>
-						<input name="password" type="text" value=""/>
-						<br/>-->
+						<input id="password" type="text" value="admin"/>
+						<br/>
 					</form>
 				</div>
 				<div class="test-submit">
-					<input type="button" onclick="submit();" name="submit" value="Submit"/>
+					<input type="button" onclick="submit();" name="submit" value="Send request (POST)"/>
+					<input type="button" onclick="loginAndRun();" name="submit" value="Log in and send request (POST)" 
+						alt="Use this option to test transaction operation."
+						title="Use this option to test transaction operation."/>
 				</div>
 				<div class="test">
 					<label for="response">Response:</label>
 					<textarea id="response" name="response" rows="30" cols="150"/>
 					<!--<iframe id="response" name="response" style="width:1070px;height:600px"/>-->
+				</div>
+				
+				
+				<div class="test-head-text">
+					<h1>
+						Get request examples:
+					</h1>
+					<p>
+						<ul>
+							<li><a href="csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities">GetCapabilities</a></li>
+							<li><a href="csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById&amp;ID=8c74e8c4-701a-4cd1-a988-7f2bf9e891bd">GetRecordById</a></li>
+						</ul>
+					</p>
 				</div>
 			</body>
 		</html>

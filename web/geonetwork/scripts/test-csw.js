@@ -120,3 +120,44 @@ function submit() {
 	var request = OpenLayers.Request.POST(opts);
 
 }
+
+/**
+ * JS example to run a request with a login action first.
+ * Log in is mainly required for transaction operation using CSW.
+ * First login to the remote node using xml.user.login service, 
+ * then run the request.
+ * 
+ * @return
+ */
+function loginAndRun() {
+	// Logout first
+	var request = OpenLayers.Request.GET(
+			{url: 'xml.user.logout'});
+
+	// Login
+	var opts = {
+		url: 'xml.user.login?username=' 
+			+ document.getElementById('username').value 
+			+ '&password='
+			+ document.getElementById('password').value
+	};
+	OpenLayers.Util.applyDefaults(opts, {
+		success : function(response) {
+			document.getElementById('response').value = response.responseText;
+		}
+	});
+	var request = OpenLayers.Request.GET(opts);
+	
+	// Run the request
+	opts = {
+			url :document.getElementById('url').value,
+			data :document.getElementById('body').value
+		};
+	OpenLayers.Util.applyDefaults(opts, {
+		success : function(response) {
+			document.getElementById('response').value = response.responseText;
+		}
+	});
+	request = OpenLayers.Request.POST(opts);
+}
+

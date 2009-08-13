@@ -378,7 +378,6 @@
                     </supplementalInformation>
                 </MD_DataIdentification>
             </identificationInfo>
-    <!-- DATA QUALITY AND LINEAGE -->
             <dataQualityInfo>
                 <DQ_DataQuality>
                     <scope>
@@ -412,7 +411,6 @@
                     </lineage>
                 </DQ_DataQuality>
             </dataQualityInfo>
-    <!-- END OF DATA QUALITY & LINEAGE -->
         </MD_Metadata>
     </csw:Insert>
 </csw:Transaction>
