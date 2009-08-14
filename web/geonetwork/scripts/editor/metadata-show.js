@@ -43,7 +43,7 @@
 							parameters: pars,
 							onSuccess: function() {},
 							onFailure: function(req) {
-								alert("ERROR: "+service+" failed: status "+req.status+" text: "+req.statusText+" - Try again later?");
+								alert(translate("error") + service + " / status "+req.status+" text: "+req.statusText+" - " + translate("tryAgain"));
 							}
 						}
 					);
@@ -56,7 +56,7 @@
 			function checkCreate(service,id) {
 				descs = $('groups').getValue();
 				if (descs.length == 0) {
-					alert("Please select at least one group!");
+					alert(translate("userAtLeastOneGroup"));
 					return false;
 				}
 				return true;
@@ -123,7 +123,7 @@
 							Modalbox.show(req.responseText ,{title: title, height:400, width: 600} );
 						},
 						onFailure: function(req) {
-							alert("ERROR: "+getGNServiceURL('prepare.file.download')+" failed: status "+req.status+" text: "+req.statusText+" - Try again later?");
+							alert(translate("error") + " "+getGNServiceURL('prepare.file.download')+" failed: status "+req.status+" text: "+req.statusText+" - " + translate("tryAgain"));
 						}
 					}
 				);

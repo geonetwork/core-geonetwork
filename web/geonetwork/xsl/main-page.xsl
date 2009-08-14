@@ -227,8 +227,6 @@
 		<h1 class="padded-content" style="margin-bottom: 0px;">
 			<xsl:value-of select="/root/gui/strings/mainpageTitle"/>
 		</h1>
-
-		<xsl:call-template name="localization"/>
 		
 		<xsl:comment>FORM FIELDS</xsl:comment>
 		<form name="search" action="{/root/gui/locService}/main.search" method="post"

@@ -28,7 +28,6 @@
     form
     -->
     <xsl:template name="form">
-				<xsl:call-template name="localization"/>
         <form id="userregisterform" name="userregisterform" accept-charset="UTF-8" action="{/root/gui/locService}/user.register.submit" method="post">
              <table align="center">                
                 <tr>

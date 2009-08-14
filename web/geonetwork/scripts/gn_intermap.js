@@ -158,7 +158,7 @@ function gn_showGetCapabilities(url, type, id)
     div.className = 'metadata_current';
     parent.appendChild(div);
     var t1 = document.createElement("p");
-    t1.innerHTML = i18n("waitGetCap");
+    t1.innerHTML = translate("waitGetCap");
     div.appendChild(t1);
             
     // Load and transform server's getCapabilities:
@@ -226,7 +226,7 @@ function gn_layersAdded(req, mdid)
     div.className = 'metadata_current';
     parent.appendChild(div);
     var t1 = document.createElement("p");
-    t1.innerHTML = i18n('layersAdded');
+    t1.innerHTML = translate('layersAdded');
     div.appendChild(t1);
 
 
@@ -243,7 +243,7 @@ function gn_addCloser(domnode, callback)
 	closer.className = 'im_wbcloser';
 	
 	var img = document.createElement('img');
-	img.title = i18n("close");
+	img.title = translate("close");
 	img.src = "/intermap/images/close.png";
 	
 	closer.appendChild(img);

@@ -98,14 +98,14 @@ function get_cookie ( cookie_name )
 	{
 		var f = $('feedbackf');
 		if (isWhitespace(f.comments.value)) {
-			f.comments.value = 'No comment';
+			f.comments.value = translate('noComment');
 		}
 
 		if (isWhitespace(f.name.value) || isWhitespace(f.org.value)) {
-			alert("Please fill in a Name or Organization");
+			alert(translate("addName"));
 			return;
 		} else if (!isEmail(f.email.value)) {
-			alert("Please fill correct E-mail Address");
+			alert(translate("checkEmail"));
 			return;
 		} 
 
@@ -126,7 +126,7 @@ function get_cookie ( cookie_name )
 		}
 
 		if (!selected) {
-			alert("You'd better select at least one file to download!");
+			alert(translate("selectOneFile"));
 			return;
 		}
 
@@ -192,16 +192,12 @@ function get_cookie ( cookie_name )
  **********************************************************************/
 
 	function checkMassiveNewOwner(action,title) {
-
-	// These two alerts should use localized versions of the strings 
-	// in xml/metadata-massiveOwnership.xml 
-	
 		if ($('user').value == '') {
-			alert("Select the user who will be the new owner");
+			alert(translate("selectNewOwner"));
 			return false;
 		}
 		if ($('group').value == '') {
-			alert("Select a group that the selected user belongs to");
+			alert(translate("selectOwnerGroup"));
 			return false;
 		}
 		Modalbox.show(getGNServiceURL(action),{title: title, params: $('massivenewowner').serialize(true), afterHide: function() { $('search-results-content').hide(); }});
@@ -223,7 +219,7 @@ function get_cookie ( cookie_name )
 
 	function addGroupsCallback_OK(xmlRes) {
 		if (xmlRes.nodeName == 'error') {
-			ker.showError('Cannot retrieve groups', xmlRes);
+			ker.showError(translate('cannotRetrieveGroup'), xmlRes);
 			$('group').options.length = 0; // clear out the options
 			$('group').value = ''; 
 			var user = $('user'); 
@@ -251,33 +247,33 @@ function get_cookie ( cookie_name )
 		var minLength = 6; // Minimum length
             
 		if (document.userregisterform.name.value.length == 0) {
-			alert(i18n('firstNameMandatory'));
+			alert(translate('firstNameMandatory'));
 			return;
 		} 
 		if (isWhitespace(document.userregisterform.name.value)) {
-			alert(i18n('firstNameMandatory'));
+			alert(translate('firstNameMandatory'));
 			return;
 		}    
 		if (document.userregisterform.name.value.indexOf(invalid) > -1) {
-			alert(i18n('spacesNot'));
+			alert(translate('spacesNot'));
 			return;
 		}	
 			
 		if (document.userregisterform.surname.value.length == 0) {
-			alert(i18n('lastNameMandatory'));
+			alert(translate('lastNameMandatory'));
 			return;
 		}  
 		if (isWhitespace(document.userregisterform.surname.value)) {
-			alert(i18n('lastNameMandatory'));
+			alert(translate('lastNameMandatory'));
 			return;
 		}
 		if (document.userregisterform.surname.value.indexOf(invalid) > -1) {
-			alert(i18n('spacesNot'));
+			alert(translate('spacesNot'));
 			return;
 		}
 			
 		if (!isEmail(document.userregisterform.email.value)) {
-			alert(i18n('emailAddressInvalid'));
+			alert(translate('emailAddressInvalid'));
 			return;
 		}
 			
@@ -288,38 +284,12 @@ function get_cookie ( cookie_name )
 					parameters: $('userregisterform').serialize(true), 
 						onSuccess: function(req) {
             	var output = req.responseText;
-							var title = i18n('yourRegistration');
+							var title = translate('yourRegistration');
         			Modalbox.show(output,{title: title, width: 300});
 						},
 						onFailure: function(req) {
-            	alert("ERROR: registration failed: "+req.responseText+" status: "+req.status+" - Try again later?");
+            	alert(translate("registrationFailed") + " " + req.responseText + " status: " + req.status + " - " + translate("tryAgain"));
 						}
 				}
 		);
 	}
-
-/*********************************************************************
- * i18n 
- *********************************************************************/
-/**
- * Get a localized string.
- * So far, localized strings used in the GUI should have a <i>js="true"</i> attribute.
- * Such strings are imported in HTML pages by the <i>localization</i> subtemplate,
- * using as id the string "i18n_"+key, to avoid id collisions.
- *
- * @param {String} key The key used in the <i>strings.xml</i> file.
- * @return {String} The localized String
- */
-function i18n(key)
-{
-    var v = $('i18n_'+key);
-    if(v)
-    {
-        if(v.value==='')
-            return '{'+key+'}';
-        else
-            return v.value;
-    }
-    else
-        return '['+key+']';
-}

@@ -14,7 +14,7 @@ function findPos(obj)
 }
 
 var Checks = {
-	message : "If you press OK you will LOSE any changes you've made to the metadata!",
+	message : translate("loseYourChange"),
 	_setMessage : function(str)
 	{
 		  this.message = str;
@@ -34,7 +34,7 @@ var Checks = {
 
 function unloadMess()
 {
-  mess = "If you press OK you will LOSE any changes you've made to the metadata!"; // TODO
+  mess = translate("loseYourChange");
   return mess;
 }
 
@@ -213,7 +213,8 @@ function doRemoveElementAction(action, ref, parentref, id, min)
 				setBunload(true); // reset warning for window destroy
 			},
 			onFailure: function(req) { 
-				alert("ERROR: Could not delete element "+name+" from document: status "+req.status+" text: "+req.statusText+" - Try again later?");
+				alert(translate("errorDeleteElement") + name + " " + translate("errorFromDoc") 
+							+ " / status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
 				setBunload(true); // reset warning for window destroy
 			}
 		}
@@ -260,7 +261,8 @@ function doMoveElementAction(action, ref, id)
 				setBunload(true); // reset warning for window destroy
 			},
 			onFailure: function(req) { 
-				alert("ERROR: Could not move element "+ref+": status "+req.status+" text: "+req.statusText+" - Try again later?");
+				alert(translate("errorMoveElement") + ref + " / status " + req.status 
+						+ " text: " + req.statusText + " - " + translate("tryAgain"));
 				setBunload(true); // reset warning for window destroy
 			}
 		}
@@ -329,7 +331,7 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement)
 					thisElement.insert({'before':html});
 					setAddControls(thisElement.previous(), orElement);
 				} else {
-					alert("doNewElementAjax: invalid what: "+what+" should be one of replace, after or before");
+					alert("doNewElementAjax: invalid what: " + what + " should be one of replace, after or before.");
 				}
 				
 				// Check elements
@@ -338,7 +340,8 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement)
 				setBunload(true); // reset warning for window destroy
 			},
 			onFailure: function(req) { 
-				alert("ERROR: Could not add element "+name+" to document: status "+req.status+" text: "+req.statusText+" - Try again later?");
+				alert(translate("errorAddElement") + name + translate("errorFromDoc") 
+						+ " / status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
 				setBunload(true); // reset warning for window destroy
 			}
 		}
@@ -385,7 +388,7 @@ function doSaveAction(action,validateAction)
 					location.replace(getGNServiceURL('metadata.show?id='+metadataId));
 				},
 				onFailure: function(req) { 
-					alert("ERROR: Could not save form: status "+req.status+" text: "+req.statusText+" - Try again later?");
+					alert(translate("errorSaveFailed") + "/ status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
  					$('editorBusy').hide();
 					setBunload(true); // reset warning for window destroy
 				}
@@ -406,7 +409,7 @@ function doSaveAction(action,validateAction)
 					validateMetadataFields();
 				},
 				onFailure: function(req) { 
-					alert("ERROR: Could not save form: status "+req.status+" text: "+req.statusText+" - Try again later?");
+					alert(translate("errorSaveFailed") + "/ status " + req.status+" text: " + req.statusText + " - " + translate("tryAgain"));
  					$('editorBusy').hide();
 					setBunload(true); // reset warning for window destroy
 				}
@@ -438,7 +441,7 @@ function doActionInWindow(action)
 				setBunload(true); // reset warning for window destroy
 			},
 			onFailure: function(req) { 
-				alert("ERROR: Could not do action "+action+" : status "+req.status+" text: "+req.statusText+" - Try again later?");
+				alert(translate("errorOnAction") + action + " / status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
    			$('editorBusy').hide();
 				setBunload(true); // reset warning for window destroy
 			}
@@ -485,7 +488,7 @@ function checkForFileUpload(fref, pref)
 	// unless its between downloaddata and downloadother
 	if (fileUploaded) {
 		if (!protocolDownload ) {
-			alert('A file may have been uploaded. You cannot change the protocol until you remove that file'); // TODO
+			alert(translate("errorChangeProtocol"));
 			// protocol change is not ok so reset the protocol value
 			protoSelect.value = protoIn.value; 
 		} else { 
@@ -514,7 +517,7 @@ function checkForFileUpload(fref, pref)
 // called by upload button in file field of metadata form
 function startFileUpload(id, fref)
 {
-	Modalbox.show(getGNServiceURL('resources.prepare.upload') + "?ref=" + fref + "&id=" + id, {title: 'File Upload', height: 200, width: 600});
+	Modalbox.show(getGNServiceURL('resources.prepare.upload') + "?ref=" + fref + "&id=" + id, {title: translate('insertFileMode'), height: 200, width: 600});
 }
 
 // called by file-upload-list form 
@@ -526,7 +529,7 @@ function doFileUploadSubmit(form)
 	var fref = fid['f_'+$F(ref)];
 	var fileName = $F(fref);
 	if (fileName == '') {
-		alert("Browse for, or enter a file name before pressing upload!");
+		alert(translate("selectOnFile"));
 		return false;
 	}
 
@@ -537,7 +540,7 @@ function doFileUploadSubmit(form)
 			'onComplete': function(doc) {
 				Modalbox.activate();
 				if (doc.body == null) { // error - upload failed for some reason
-					alert("Error: Upload failed! - returned "+doc);
+					alert(translate("uploadFailed") + doc);
 				} else {
 					$('uploadresponse').innerHTML = doc.body.innerHTML;
 				}
@@ -552,7 +555,7 @@ function doFileUploadSubmit(form)
 						$('db_'+$F(ref)).hide();
 						Modalbox.show(doc.body.innerHTML,{width:600});
 					} else {
-						alert("Error: Upload succeeded but unable to set filename!");
+						alert(translate("uploadSetFileNameFailed"));
 					}
 				}
 			}

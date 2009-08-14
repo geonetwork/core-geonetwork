@@ -133,7 +133,7 @@ public class SelfRegister implements Service {
 			dbms.execute(
 					"INSERT INTO UserGroups(userId, groupId) VALUES (?, ?)",
 					new Integer(id), new Integer(group));
-			
+			// TODO : i18n
 			String subject = "Your registration at "+thisSite;
 			
 			SettingInfo si = new SettingInfo(context);

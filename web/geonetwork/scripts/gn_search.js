@@ -415,7 +415,7 @@ function rateMetadata(rating)
 function rateMetadata_OK(xmlRes)
 {
 	if (xmlRes.nodeName == 'error')
-		ker.showError('Cannot rate metadata', xmlRes);
+		ker.showError(translate('rateMetadataFailed'), xmlRes);
 	else
 		hideRatingPopup();
 }
@@ -480,7 +480,7 @@ function getRegion_complete(req) {
 }
 
 function getRegion_error() {
-    alert("ERROR)");
+    alert(translate("error"));
 }
 
 function updateAoIFromForm() {
@@ -489,12 +489,12 @@ function updateAoIFromForm() {
   var eU = Number($('eastBL').value);
   var wU = Number($('westBL').value);
   
-  if (nU < sU) { alert("North < South"); } 
-  else if (nU > 90) { alert("North > 90 degrees"); }
-  else if (sU < -90) { alert("South < -90 degrees"); }
-  else if (eU < wU) { alert("East < West"); } 
-  else if (eU > 180) { alert("East > 180 degrees"); }
-  else if (wU < -180) { alert("West < -180 degrees"); }
+  if (nU < sU) { alert(translate("northSouth")); } 
+  else if (nU > 90) { alert(translate("north90")); }
+  else if (sU < -90) { alert(translate("south90")); }
+  else if (eU < wU) { alert(translate("eastWest")); } 
+  else if (eU > 180) { alert(translate("east180")); }
+  else if (wU < -180) { alert(translate("west180")); }
   else 
   { 
     im_mm_redrawAoI();
@@ -899,7 +899,7 @@ function metadataselect(id, selected){
 				item.innerHTML = nbSelected;
 		},
 		onFailure: function(originalRequest){
-			alert('Error on metadata selection.'); // TODO : translate
+			alert(translate('metadataSelectionError'));
 		}
 	});
 	if (selected=='remove-all') {
