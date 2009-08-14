@@ -9,6 +9,39 @@
 	<nl>Nederlands</nl> <!-- Do not translate -->
 	<ru>Русский</ru> <!-- Do not translate! -->
 	
+	<layersAdded js="true">Selected layers have been added</layersAdded>
+	<registrationFailed js="true">Error, registration failed:</registrationFailed>	
+	<tryAgain js="true">Try again later</tryAgain>
+	<cannotRetrieveGroup js="true">Cannot retrieve groups</cannotRetrieveGroup>
+	<selectNewOwner js="true">Select the user who will be the new owner</selectNewOwner>
+	<selectOwnerGroup je="true">Select a group that the selected user belongs to</selectOwnerGroup>
+	<selectOneFile je="true">You'd better select at least one file to download!</selectOneFile>
+	<checkEmail js="true">Please fill correct email address</checkEmail>
+	<addName js="true">Please fill in a name or organization</addName>
+	<noComment js="true">No comment</noComment>
+	<rateMetadataFailed js="true">Cannot rate metadata.</rateMetadataFailed>
+	<error js="true">Error</error>
+	<northSouth js="true">North &lt; South</northSouth>
+	<north90 js="true">North &gt; 90 degrees</north90>
+	<south90 js="true">South &lt; -90 degrees</south90>
+	<east180 js="true">East &gt; 180 degrees</east180>
+	<west180 js="true">West &lt; -180 degrees</west180>
+	<eastWest js="true">East &lt; West</eastWest>
+	<metadataSelectionError js="true">Error on metadata selection.</metadataSelectionError>
+	<closeWindow js="true">Close Window</closeWindow>
+	<loseYourChange js="true">If you press OK you will LOSE any changes you've made to the metadata!</loseYourChange>
+	<errorDeleteElement js="true">Error: Could not delete element</errorDeleteElement>
+	<errorFromDoc js="true">from document:</errorFromDoc>
+	<errorMoveElement js="true">Error: Could not move element </errorMoveElement>
+	<errorAddElement js="true">Error: Could not add element </errorAddElement>
+	<errorSaveFailed js="true">Error: Could not save form</errorSaveFailed>
+	<errorOnAction js="true">Error: Could not do action </errorOnAction>
+	<errorChangeProtocol js="true">A file may have been uploaded. You cannot change the protocol until you remove that file</errorChangeProtocol>
+	<selectOneFile js="true">Browse for, or enter a file name before pressing upload!</selectOneFile>
+	<uploadFailed js="true">Error: Upload failed! - returned </uploadFailed>
+	<uploadSetFileNameFailed js="true">Error: Upload succeeded but unable to set filename!</uploadSetFileNameFailed>
+	<cannotGetTooltip js="true">Cannot get tooltips from server</cannotGetTooltip>
+	
 	<about>Over</about>
 	<abstract>Samenvatting</abstract>
 	<accept>Accepteren</accept>
@@ -499,7 +532,7 @@
 	<upload>Uploaden </upload>
 	<user>Gebruiker</user>
 	<UserAdmin>Gebruiker administrator</UserAdmin>
-	<userAtLeastOneGroup>Selecteer alstublieft tenminste één groep.</userAtLeastOneGroup>
+	<userAtLeastOneGroup js="true">Selecteer alstublieft tenminste één groep.</userAtLeastOneGroup>
 	<userDefined>- Handmatig -</userDefined>
 	<userInfo>Wijzig gebruikers informatie</userInfo>
 	<userInfoDes>Sta de huidige gebruiker toe gebruikersinformatie te wijzigen</userInfoDes>

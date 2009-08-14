@@ -2721,7 +2721,7 @@
 					<xsl:with-param name="title" select="/root/gui/strings/file"/>
 					<xsl:with-param name="text">
 						<button class="content" onclick="startFileUpload({//geonet:info/id}, '{$ref}');" type="button">
-							<xsl:value-of select="'Upload File'"/>
+							<xsl:value-of select="/root/gui/strings/insertFileMode"/>
 						</button>
 					</xsl:with-param>
 					<xsl:with-param name="id" select="concat('db_',$ref)"/>

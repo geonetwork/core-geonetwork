@@ -12,14 +12,17 @@
 			{
 				if (isWhitespace(document.feedbackf.name.value) || isWhitespace(document.feedbackf.org.value))
 				{
-					alert("Please fill in a Name or Organization");
+					alert(translate("addName"));
 				}
 				else if (!isEmail(document.feedbackf.email.value))
 				{
-					 alert("Please fill correct E-mail Address");
+					 alert(translate("checkEmail"));
 				}
 				else
-				{
+				{				
+					if (isWhitespace(document.feedbackf.comments.value)) {
+						document.feedbackf.comments.value = translate('noComment');
+					}
 					goSubmit('feedbackf');
 				}
 			}

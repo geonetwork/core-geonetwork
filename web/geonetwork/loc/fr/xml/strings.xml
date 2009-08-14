@@ -9,6 +9,39 @@
     <nl>Nederlands</nl> <!-- Do not translate -->
 	<ru>Русский</ru> <!-- Do not translate! -->
 	
+	<layersAdded js="true">Les couches sélectionnées ont été ajoutées</layersAdded>
+	<registrationFailed js="true">Erreur, l'enregistrement a échoué :</registrationFailed>	
+	<tryAgain js="true">Essayez plus tard</tryAgain>
+	<cannotRetrieveGroup js="true">Impossible d'obtenir la liste des groupes</cannotRetrieveGroup>
+	<selectNewOwner js="true">Selectionner l'utilisateur qui sera le nouvel auteur</selectNewOwner>
+	<selectOwnerGroup je="true">Selectionner le groupe auquel l'utilisateur appartient</selectOwnerGroup>
+	<selectOneFile je="true">Vous devriez choisir un fichier à télécharger !</selectOneFile>
+	<checkEmail js="true">Saisissez une adresse email valide</checkEmail>
+	<addName js="true">Saisissez un nom et une organisation</addName>
+	<noComment js="true">Aucun commentaire</noComment>
+	<rateMetadataFailed js="true">Impossible de noter la métadonnée.</rateMetadataFailed>
+	<error js="true">Erreur</error>
+	<northSouth js="true">Nord &lt; Sud</northSouth>
+	<north90 js="true">Nord &gt; 90 degrés</north90>
+	<south90 js="true">Sud &lt; -90 degrés</south90>
+	<east180 js="true">Est &gt; 180 degrés</east180>
+	<west180 js="true">Ouest &lt; -180 degrés</west180>
+	<eastWest js="true">Est &lt; Ouest</eastWest>
+	<metadataSelectionError js="true">Erreur lors de la sélection des métadonnées.</metadataSelectionError>
+	<loseYourChange js="true">En validant, vous perdez toutes les modifications en cours !</loseYourChange>
+	<errorDeleteElement js="true">Erreur: Impossible de supprimer l'élément </errorDeleteElement>
+	<errorFromDoc js="true"> du document :</errorFromDoc>
+	<errorMoveElement js="true">Erreur : Impossible de déplacer l'élément </errorMoveElement>
+	<errorAddElement js="true">Erreur : Impossible d'ajouter l'élément </errorAddElement>
+	<errorSaveFailed js="true">Erreur : Impossible de sauver le formulaire </errorSaveFailed>
+	<errorOnAction js="true">Erreur : Impossible de réaliser l'action </errorOnAction>
+	<errorChangeProtocol js="true">Un fichier a dû être envoyé. Vous ne pouvez pas modifier le protocole à moins de le supprimer.</errorChangeProtocol>
+	<selectOneFile js="true">Sélectionner un fichier avant de l'envoyer !</selectOneFile>
+	<uploadFailed js="true">Erreur : Echec de l'envoi ! - Info : </uploadFailed>
+	<uploadSetFileNameFailed js="true">Erreur : Fichier envoyé mais impossible de définir le nom du fichier !</uploadSetFileNameFailed>
+	<cannotGetTooltip js="true">Pas d'information disponible.</cannotGetTooltip>
+	
+	
 	<about>A propos</about>
 	<abstract>Résumé</abstract>
 	<accept>Accepter</accept>
@@ -62,13 +95,13 @@
 	<categoryNameMandatory>Le nom de la catégorie est obligatoire.</categoryNameMandatory>
 	<checkusername>Vérification</checkusername>
 	<choose>- Choisir -</choose>
-	<chooseFile>Choisir le fichier à décharger</chooseFile>
+	<chooseFile>Choisir le fichier à télécharger</chooseFile>
 	<chooseLargeThumbnail>Choisir la vignette (grand format)</chooseLargeThumbnail>
 	<chooseThumbnail>Choisir la vignette (petit format)</chooseThumbnail>
 	<city>Ville</city>
 	<clear>Effacer</clear>
-	<clearAll>Clear All</clearAll>
-	<close>Fermer</close>
+	<clearAll>Aucun</clearAll>
+	<close js="true">Fermer</close>
 	<completeTab>Vue avancée</completeTab>
 	<completeTabEditor>Editeur avancé</completeTabEditor>
 	<confirmCancel>Êtes-vous sûr de vouloir quitter l\'éditeur? (vous allez perdre les changements non sauvegardés)</confirmCancel>
@@ -139,7 +172,7 @@
 	<eastbc>Coordonnée est de l'emprise</eastbc>
 	<edit>Editer</edit>
 	<Editor>Éditeur</Editor>
-	<email>Mél.</email>
+	<email>Email</email>
 	<emailAddress>Email</emailAddress>
 	<emailAddressInvalid js="true">Adresse email invalide</emailAddressInvalid>
 	<enclosing>Incluant</enclosing>
@@ -203,7 +236,7 @@
 	<imZoomToLayer>Zoom to selected layer extent</imZoomToLayer>
 	<infoTitle>Info</infoTitle>
 	<insert>Insérer</insert>
-	<insertFileMode>Import de fichiers</insertFileMode>
+	<insertFileMode js="true">Import de fichiers</insertFileMode>
 	<insertMode>Mode d'insertion :</insertMode>
 	<insertPasteMode>Copier/Coller</insertPasteMode>
 	<interactiveMap>Carte interactive</interactiveMap>
@@ -423,11 +456,11 @@
 	<selection>Sélection</selection>
 	<selectNone>Unselect metadata selected</selectNone>
 	<server>Serveur</server>
-	<setAll>Set All</setAll>
+	<setAll>Tous</setAll>
 	<setOnSave>Valeur définie lors de la sauvegarde</setOnSave>
 	<shibLogin>Shib Login</shibLogin>
 	<show>Métadonnées</show>
-	<showFileDownloadSummary>Afficher le sélectionneur de fichier</showFileDownloadSummary>
+	<showFileDownloadSummary>Télécharger des fichiers ...</showFileDownloadSummary>
 	<simple>Recherche simple</simple>
 	<simpleTab>Vue par défaut</simpleTab>
 	<simpleTabEditor>Editeur par défaut</simpleTabEditor>
@@ -480,10 +513,10 @@
 	<updateGroup>Mettre à jour le groupe</updateGroup>
 	<updatePrivileges>Mettre à jour les privilèges</updatePrivileges>
 	<updateUserAccount>Mettre à jour le compte utilisateur</updateUserAccount>
-	<upload>Déchargement </upload>
+	<upload>Téléchargement </upload>
 	<user>Utilisateur</user>
 	<UserAdmin>Administrateur d'utilisateur</UserAdmin>
-	<userAtLeastOneGroup>Vous devez saisir au moins un groupe.</userAtLeastOneGroup>	
+	<userAtLeastOneGroup js="true">Vous devez saisir au moins un groupe.</userAtLeastOneGroup>	
 	<userDefined>- User defined -</userDefined>
 	<userInfo>Modifier les informations utilisateurs</userInfo>
 	<userInfoDes>Permet de mettre à jour les informations sur l'utilisateur</userInfoDes>
@@ -614,7 +647,7 @@
 		<unknown>Thésaurus inconnu</unknown>
 		<update>Mettre à jour le thésaurus</update>
 		<updateelement>Mettre à jour l'élément</updateelement>
-		<upload>Décharger un thésaurus</upload>
+		<upload>Télécharger un thésaurus</upload>
 	</thesaurus>
 
 </strings>

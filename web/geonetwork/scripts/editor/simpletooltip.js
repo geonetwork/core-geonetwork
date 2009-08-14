@@ -17,7 +17,7 @@ function toolTip(spanId)
 		ker.send('xml.schema.info', request, ker.wrap(this, function(xmlRes) {
 	
 			if (xmlRes.nodeName == 'error') {
-				ker.showError('Cannot get tooltips from server', xmlRes);	
+				ker.showError(translate('cannotGetTooltip'), xmlRes);	
 			} else {
 				var htmlTip= getHtmlTip(xmlRes.getElementsByTagName('element')[0]);
 				tip = document.createElement('span');

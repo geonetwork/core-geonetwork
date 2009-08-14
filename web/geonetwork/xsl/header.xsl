@@ -72,9 +72,24 @@
                     runSimpleSearch();
              }
             };
-            </xsl:if>
-		</script>
+			</xsl:if>
+			
+            var translations = {
+				<xsl:apply-templates select="/root/gui/strings/*[@js='true' and not(*) and not(@id)]" mode="js-translations"/>
+			};
 
+			function translate(text) {
+				return translations[text] || text;
+			}
+		</script>
 	</xsl:template>
 	
+	<!--
+		All element from localisation files having an attribute named js
+		(eg. <key js="true">value</key>) is added to a global JS table. 
+		The content of the value could be accessed in JS using the translate 
+		function (ie. translate('key');).
+	-->
+	<xsl:template match="*" mode="js-translations">
+		"<xsl:value-of select="name(.)"/>":"<xsl:value-of select="normalize-space(translate(.,'&quot;', '`'))"/>",</xsl:template>	
 </xsl:stylesheet>

@@ -6,13 +6,13 @@
 	<dir>Répertoire</dir>
 	<ldap>Authentification LDAP</ldap>
 	<defProfile>Profil par défaut</defProfile>
-	<login>Login</login>
+	<login>Nom d'utilisateur</login>
 	<userDN>User DN</userDN>
 	<distNames>Distinguished names</distNames>
 	<baseDN>Base</baseDN>
-	<usersDN>Users</usersDN>
+	<usersDN>Utilisateur</usersDN>
 	<userAttribs>User's attributes</userAttribs>
-	<password>Password</password>
+	<password>Mot de passe</password>
 	<profile>Profil</profile>
 	<site>Site</site>
 	<name>Nom</name>
@@ -28,8 +28,8 @@
 	<shib>Authentification via Shibboleth </shib>
 	<path>Chemin</path>
 	<attributes>Shibboleth attribute mapping</attributes>
-	<surname>Surname</surname>
-	<firstname>Firstname</firstname>
+	<surname>Nom</surname>
+	<firstname>Prénom</firstname>
 	
 	<server>Serveur</server>
 	<host>Hôte</host>
@@ -37,8 +37,8 @@
 
 	<authentication>Authentification</authentication>
 	
-	<loginuses>Login utilise</loginuses>
-	<otherlogins>Allow other users to login from</otherlogins>
+	<loginuses>Nom d'utilisateur utilisé</loginuses>
+	<otherlogins>Autoriser les connexions d'autres utilisateurs depuis</otherlogins>
 
 	<geonetworkdb>Authentification via GeoNetwork</geonetworkdb>
 		
@@ -123,7 +123,7 @@
 	<cannotSave>
 		Impossible de sauver la configuration du système
 	</cannotSave>
-	<saveOk>System configuration saved.</saveOk>
+	<saveOk>Configuration du catalogue sauvegardée.</saveOk>
 
 	<!-- tooltips -->
 
