@@ -489,7 +489,7 @@ public class SearchManager
 	{
 		// if rebuild forced don't check
 		boolean badIndex = true;
-		if (rebuild) {
+		if (!rebuild) {
 			try {
 				IndexReader reader = IndexReader.open(_luceneDir);
 				reader.close();
