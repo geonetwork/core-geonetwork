@@ -163,6 +163,10 @@ function get_cookie ( cookie_name )
    $(name+'Ele'+id).style.left = $(name+id).positionedOffset().left;
 	}
 
+//
+// heikki doeleman: those on and off variables are
+// defined in header.xsl !!
+//
 	function oActions(name,id) {
 		if (id === undefined) {
 			id = "";
