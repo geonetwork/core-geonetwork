@@ -469,7 +469,7 @@
 	<select>Selectie: </select>
 	<selectAll>Selecteer alle metadata</selectAll>
 	<selected> geselecteerd</selected>
-	<selectedOnly>Alleen display geselecteerd</selectedOnly>
+	<selectedOnly>Toon alleen geselecteerde</selectedOnly>
 	<selection>Selectie</selection>
 	<selectNone>Niet geselecteerde metadata geselecteerd</selectNone>
 	<server>Server</server>
