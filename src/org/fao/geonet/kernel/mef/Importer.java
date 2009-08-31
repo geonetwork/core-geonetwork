@@ -166,7 +166,7 @@ class Importer
 				
 				String uuidAction = Util.getParam(params, Params.UUID_ACTION, Params.NOTHING);
 				
-				if (uuid == null || uuid.equals(""))
+				if (uuid == null || uuid.equals("") || uuidAction.equals(Params.GENERATE_UUID))
 				{
 					uuid   = UUID.randomUUID().toString();
 					source = null;
