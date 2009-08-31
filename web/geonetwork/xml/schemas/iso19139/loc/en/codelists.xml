@@ -116,7 +116,7 @@
 		<entry>
 			<code>modelHardcopy</code>
 			<label>Hardcopy model</label>
-			<description>3-Dimensional, physical model</description>
+			<description>3-dimensional, physical model</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -229,7 +229,17 @@
 			<label>Author</label>
 			<description>Party who authored the resource</description>
 		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- ISO PROFIL CHE ONLY 
+		<entry>
+			<code>editor</code>
+			<label>Editor</label>
+			<description></description>
+		</entry>
+		<entry>
+			<code>partner</code>
+			<label>Partner</label>
+			<description></description>
+		</entry>-->
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:DQ_EvaluationMethodTypeCode">
@@ -1025,7 +1035,13 @@
 			<label>Unknown</label>
 			<description>Frequency of maintenance for the data is not known</description>
 		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- ISO PROFIL CHE ONLY
+		<entry>
+			<code>userDefined</code>
+			<label>User defined</label>
+			<description></description>
+		</entry>
+		-->
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_MediumFormatCode">
@@ -1105,8 +1121,8 @@
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>9trackType</code>
-			<label>9 Track type</label>
+			<code>9trackTape</code>
+			<label>9 track tape</label>
 			<description>9 track magnetic tape</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1130,13 +1146,13 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>4mmCartridgeTape</code>
-			<label>4mm Cartridge tape</label>
+			<label>4 mm Cartridge tape</label>
 			<description>4 millimetre magnetic tape</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8mmCartridgeTape</code>
-			<label>8mm Cartridge tape</label>
+			<label>8 mm Cartridge tape</label>
 			<description>8 millimetre magnetic tape</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1176,6 +1192,33 @@
 			<description>Pamphlet or leaflet giving descriptive information</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- ISO PROFIL CHE ONLY 
+		<entry>
+			<code>zip100</code>
+			<label>Zip100</label>
+			<description></description>
+		</entry>
+		<entry>
+			<code>zip250</code>
+			<label>Zip250</label>
+			<description></description>
+		</entry>      <entry>
+			<code>e-mail</code>
+			<label>E-mail</label>
+			<description></description>
+		</entry>      <entry>
+			<code>zip</code>
+			<label>Zip</label>
+			<description></description>
+		</entry>      <entry>
+			<code>jaz</code>
+			<label>Jaz</label>
+			<description></description>
+		</entry>      <entry>
+			<code>other</code>
+			<label>Other</label>
+			<description></description>
+		</entry>-->
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_ObligationCode">
@@ -1255,7 +1298,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>onGoing</code>
-			<label>Ongoing</label>
+			<label>On going</label>
 			<description>Data is continually being updated</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1299,7 +1342,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>patentPending</code>
-			<label>Patent pending</label>
+			<label>Pending patent</label>
 			<description>Produced or sold information awaiting a patent</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1437,7 +1480,22 @@
 			<description>Information applies to a tile, a spatial subset of geographic
 			data</description>
 		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- ISO PROFIL CHE ONLY
+		<entry>
+			<code>project</code>
+			<label>Project</label>
+			<description></description>
+		</entry>
+		<entry>
+			<code>stationSite</code>
+			<label>Station site</label>
+			<description></description>
+		</entry>
+		<entry>
+			<code>publication</code>
+			<label>Publication</label>
+			<description>Publication</description>
+		</entry>-->
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_SpatialRepresentationTypeCode">
@@ -1455,7 +1513,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>textTable</code>
-			<label>Text table</label>
+			<label>Text, table</label>
 			<description>Textual or tabular data is used to represent geographic data</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1477,7 +1535,12 @@
 			<label>Video</label>
 			<description>Scene from a video recording</description>
 		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- ISO PROFIL CHE ONLY
+		<entry>
+			<code>paperMap</code>
+			<label>Paper map</label>
+			<description></description>
+		</entry>-->
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_TopicCategoryCode">
@@ -1808,7 +1871,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>stereomate</code>
-			<label>Stereomate</label>
+			<label>Stereo mate</label>
 			<description>The referencing entity applies to a transfer aggregate which was originally
 				identified as a stereo mate (DS_StereoMate)</description>
 		</entry>
@@ -1887,7 +1950,7 @@
 			<entry>
 					<description>DCP is WebServices</description>
 					<code>WebServices</code>
-					<label>WebServices</label>
+					<label>Web services</label>
 			</entry>
 	</codelist>
 	<!--=== CouplingType from ISO19119 ===-->

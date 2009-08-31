@@ -5,7 +5,7 @@
 	<codelist name="gmd:CI_DateTypeCode">
 		<entry>
 			<code>creation</code>
-			<label>création</label>
+			<label>Création</label>
 			<description>Date à laquelle la ressource est créée</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -17,22 +17,21 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>revision</code>
-			<label>révision</label>
+			<label>Révision</label>
 			<description>Date à laquelle la ressource est révisée</description>
 		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- ISO PROFIL FRA ONLY
 		<entry>
 			<code>validity</code>
-			<label>validité</label>
+			<label>Validité</label>
 			<description>Date à laquelle la ressource est validée</description>
 		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>useBy</code>
-			<label>péremption</label>
+			<label>Péremption</label>
 			<description>Date de péremption de la ressource</description>
 		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+-->
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:CI_OnLineFunctionCode">
@@ -44,8 +43,8 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>information</code>
-			<label>information</label>
-			<description>online information about the resource</description>
+			<label>Information</label>
+			<description>Online information about the resource</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -212,7 +211,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>publisher</code>
-			<label>Editeur</label>
+			<label>Editeur (publication)</label>
 			<description>Organisme qui assure la publication de la ressource.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -221,7 +220,17 @@
 			<label>Auteur</label>
 			<description>Organisme  ou personne qui est auteur. Acteur qui dispose des droits moraux relatifs à la ressource</description>
 		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- ISO PROFIL CHE ONLY
+		<entry>
+			<code>editor</code>
+			<label>Editeur</label>
+			<description></description>
+		</entry>
+		<entry>
+			<code>partner</code>
+			<label>Partenaire</label>
+			<description></description>
+		</entry>-->
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:DQ_EvaluationMethodTypeCode">
@@ -239,7 +248,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>indirect</code>
-			<label>indirecte</label>
+			<label>Indirecte</label>
 			<description>Méthode d’évaluation de la qualité basée sur une connaissance externe.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -287,7 +296,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>collection</code>
-			<label>collection</label>
+			<label>Collection</label>
 			<description>Accumulation de données dans un but précis</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -380,7 +389,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>area</code>
-			<label>Pixel</label>
+			<label>Surface</label>
 			<description>Chaque cellule représente une surface</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -525,51 +534,51 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>jis</code>
-			<label>jis</label>
-			<description>japanese code set used for electronic transmission</description>
+			<label>Jis</label>
+			<description>Japanese code set used for electronic transmission</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>shiftJIS</code>
-			<label>shiftJIS</label>
-			<description>japanese code set used on MS-DOS machines</description>
+			<label>ShiftJIS</label>
+			<description>Japanese code set used on MS-DOS machines</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>eucJP</code>
-			<label>eucJP</label>
-			<description>japanese code set used on UNIX based machines</description>
+			<label>EucJP</label>
+			<description>Japanese code set used on UNIX based machines</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>usAscii</code>
-			<label>usAscii</label>
+			<label>UsAscii</label>
 			<description>United States ASCII code set (ISO 646 US)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>ebcdic</code>
-			<label>ebcdic</label>
+			<label>Ebcdic</label>
 			<description>IBM mainframe code set</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>eucKR</code>
-			<label>eucKR</label>
+			<label>EucKR</label>
 			<description>Korean code set</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>big5</code>
-			<label>big5</label>
-			<description>traditional Chinese code set used in Taiwan, Hong Kong of China and other
+			<label>Big5</label>
+			<description>Traditional Chinese code set used in Taiwan, Hong Kong of China and other
 				areas</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>GB2312</code>
 			<label>GB2312</label>
-			<description>simplified Chinese code set</description>
+			<description>Simplified Chinese code set</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -637,20 +646,20 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>codelist</code>
-			<label>Liste de code</label>
-			<description>Enumération modifiable, utilisée pour exprimée une liste de valeur extensible</description>
+			<label>Liste de codes</label>
+			<description>Enumération modifiable, utilisée pour exprimée une liste de valeurs extensible</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>enumeration</code>
 			<label>Enumération</label>
-			<description>Enumération, utilisée pour exprimée une liste de valeur non extensible</description>
+			<description>Enumération, utilisée pour exprimée une liste de valeurs non extensible</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>codelistElement</code>
-			<label>Elément d'une liste de code</label>
-			<description>Valeur possible pour une liste de code</description>
+			<label>Elément d'une liste de codes</label>
+			<description>Valeur possible pour une liste de codes</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -703,7 +712,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>characterString</code>
-			<label>Chaîne de caractère</label>
+			<label>Chaîne de caractères</label>
 			<description>Texte libre</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -776,37 +785,37 @@
 		<entry>
 			<code>complex</code>
 			<label>Complexes</label>
-			<description>ensemble de primitives géométriques représentées comme l'union d'autres primitives</description>
+			<description>Ensemble de primitives géométriques représentées comme l'union d'autres primitives</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>composite</code>
-			<label>composite</label>
-			<description>ensemble de lignes connectées entre elles</description>
+			<label>Composite</label>
+			<description>Ensemble de lignes connectées entre elles</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>curve</code>
 			<label>Lignes</label>
-			<description>primitive géométrique à une dimension représentant une image continue d'une ligne</description>
+			<description>Primitive géométrique à une dimension représentant une image continue d'une ligne</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>point</code>
 			<label>Point</label>
-			<description>primitive géométrique à zéro dimension représentant une position sans étendue</description>
+			<description>Primitive géométrique à zéro dimension représentant une position sans étendue</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>solid</code>
 			<label>Volume</label>
-			<description>primitive géométrique à trois dimensions représentant un volume (définition à revoir)</description>
+			<description>Primitive géométrique à trois dimensions représentant un volume (définition à revoir)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>surface</code>
 			<label>Polygone</label>
-			<description>primitive géométrique à deux dimensions représentant une surface</description>
+			<description>Primitive géométrique à deux dimensions représentant une surface</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -985,7 +994,12 @@
 			<label>Inconnue</label>
 			<description>Mise à jour inconnue</description>
 		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- ISO PROFIL CHE ONLY
+		<entry>
+			<code>userDefined</code>
+			<label>Fréquence personnalisée</label>
+			<description>Dans ce cas l'attribut définissant une fréquence personnalisée doit être utilisée</description>
+		</entry>-->
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_MediumFormatCode">
@@ -1030,19 +1044,19 @@
 	<codelist name="gmd:MD_MediumNameCode">
 		<entry>
 			<code>cdRom</code>
-			<label>Cd-Rom</label>
+			<label>CD-ROM</label>
 			<description>Disque optique en lecture seule</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>dvd</code>
-			<label>Dvd</label>
+			<label>DVD</label>
 			<description>Disque numérique universel</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>dvdRom</code>
-			<label>Dvd-Rom</label>
+			<label>DVD-ROM</label>
 			<description>Disque numérique universel en lecture seule</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1135,7 +1149,33 @@
 			<label>Papier</label>
 			<description>Document papier</description>
 		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- ISO PROFIL CHE ONLY
+			<entry>
+			<code>zip100</code>
+			<label>ZIP 100</label>
+			<description></description>
+		</entry>
+		<entry>
+			<code>zip250</code>
+			<label>ZIP 250</label>
+			<description></description>
+		</entry>      <entry>
+			<code>e-mail</code>
+			<label>E-mail</label>
+			<description></description>
+		</entry>      <entry>
+			<code>zip</code>
+			<label>ZIP</label>
+			<description></description>
+		</entry>      <entry>
+			<code>jaz</code>
+			<label>JAZ</label>
+			<description></description>
+		</entry>      <entry>
+			<code>other</code>
+			<label>Autre</label>
+			<description></description>
+		</entry>-->
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_ObligationCode">
@@ -1334,7 +1374,7 @@
 		<entry>
 			<code>dimensionGroup</code>
 			<label>Dimension d'un groupe</label>
-			<description>informations appliquées à un groupe</description>
+			<description>Informations appliquées à un groupe</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1384,7 +1424,22 @@
 			<label>Tuile</label>
 			<description>Tuile</description>
 		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- ISO PROFIL CHE ONLY
+		<entry>
+			<code>project</code>
+			<label>Projet</label>
+			<description>Le projet décrit le cadre organisationnel défini pour l'accomplissement d'une tâche: il intègre la description des tenants et des aboutissants du problème, les objectifs, les activités prévues, les étapes de réalisation, les délais, les ressources...</description>
+		</entry>
+		<entry>
+			<code>stationSite</code>
+			<label>Station</label>
+			<description>Cet élément décrit les activités d'acquisition de données des stations de mesure ; il ne décrit pas les données mais la manière dont elles ont été saisies (paramètres de saisie, méthodes, instruments)</description>
+		</entry>
+		<entry>
+			<code>publication</code>
+			<label>Publication</label>
+			<description>Ce sont des produits finis tels que les ouvrages, brochures, articles, rapports, matériel audiovisuel...</description>
+		</entry>-->
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_SpatialRepresentationTypeCode">
@@ -1420,10 +1475,15 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>video</code>
-			<label>vidéo</label>
+			<label>Vidéo</label>
 			<description>Enregistrement vidéo</description>
 		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- ISO PROFIL CHE ONLY
+		<entry>
+			<code>paperMap</code>
+			<label>Carte papier</label>
+			<description></description>
+		</entry>-->
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_TopicCategoryCode">
@@ -1435,7 +1495,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>biota</code>
-			<label>Faune et flore</label>
+			<label>Biologie, faune et flore</label>
 			<description>Flore et faune dans un écosystème naturel. Exemples : habitat, écologie, faune sauvage, faune aquatique, sciences biologiques, zones humides, végétation, biodiversité</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1459,19 +1519,19 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>elevation</code>
-			<label>Topographie</label>
-			<description>Topographie au dessous et dessus du niveau de la mer. Exemples : altitude, bathymétrie, MNT, pentes et calculs dérivés de l’altitude</description>
+			<label>Altimétrie</label>
+			<description>Hauteurs au dessous et dessus du niveau de la mer. Exemples : altitude, bathymétrie, MNT, pentes et calculs dérivés de l’altitude</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>environment</code>
-			<label>Ressources et gestion de l'environnement</label>
+			<label>Environnement</label>
 			<description>Ressources naturelles, protection, conservation des ressources naturelles. Exemples : pollution, traitement et stockage des déchets, suivi de l’environnement, gestion du risque, réserves naturelles, paysage</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>geoscientificInformation</code>
-			<label>Géosciences</label>
+			<label>Sciences de la terre, géosciences</label>
 			<description>Informations relatives aux sciences de la terre. Exemples : composants et processus géophysiques, géologie, minéralogie, tectonique, risque sismique</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1495,13 +1555,13 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>inlandWaters</code>
-			<label>Hydrographie</label>
+			<label>Eaux intérieures, Hydrographie</label>
 			<description>Exemples : fleuves, rivières, glaciers, lacs salés, systèmes hydrographiques, barrages, débits, qualité de l’eau</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>location</code>
-			<label>Localisation de réseaux</label>
+			<label>Localisation</label>
 			<description>Exemples : zones postales, adresses, points de contrôle, réseau géodésique</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1513,7 +1573,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>planningCadastre</code>
-			<label>Planification et gestion du territoire</label>
+			<label>Cadastre, aménagement</label>
 			<description>Exemples : carte d’utilisation des terres, plan d’occupation des sols, planification pour la prévention des risques</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1525,8 +1585,8 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>structure</code>
-			<label>Aménagements urbains</label>
-			<description>aménagements urbains. Exemples : musée, église, usines, maisons, monuments, boutiques, immeubles</description>
+			<label>Constructions et ouvrages</label>
+			<description>Aménagements urbains. Exemples : musée, église, usines, maisons, monuments, boutiques, immeubles</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1537,7 +1597,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utilitiesCommunication</code>
-			<label>Réseaux de télécommunication, d'énergie</label>
+			<label>Télécommunication, approvisionnement et énergie</label>
 			<description>Systèmes de distribution de gestion ou de stockage de l’énergie, de l’eau, des déchets. Infrastructures et services de communication. Exemples : source d’énergie solaire, hydroélectrique, nucléaire, épuration et distribution des eaux, réseau de distribution électrique, de gaz, réseau de télécommunication, radio.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1576,7 +1636,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>fullSurfaceGraph</code>
-			<label>topologie de surface complète</label>
+			<label>Topologie de surface complète</label>
 			<description>Topologie 2D avec surfaces</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1588,13 +1648,13 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>fullTopology3D</code>
-			<label>topologie 3D complète</label>
+			<label>Topologie 3D complète</label>
 			<description>Couverture complète d’un espace Euclidien 3D</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>abstract</code>
-			<label>spaghetti</label>
+			<label>Spaghetti</label>
 			<description>Objets géométriques sans description de la topologie</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1646,7 +1706,7 @@
 		<entry>
 			<code>dimensionGroup</code>
 			<label>Dimension d'un groupe</label>
-			<description>informations appliquées à un groupe</description>
+			<description>Informations appliquées à un groupe</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1740,7 +1800,7 @@
 		<entry>
 			<code>dimensionGroup</code>
 			<label>Dimension d'un groupe</label>
-			<description>informations appliquées à un groupe</description>
+			<description>Informations appliquées à un groupe</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1800,49 +1860,49 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>stereomate</code>
-			<label>stereomate</label>
+			<label>Stereomate</label>
 			<description>The referencing entity applies to a transfer aggregate which was originally
 				identified as a stereo mate (DS_StereoMate)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>sensor</code>
-			<label>sensor</label>
+			<label>Sensor</label>
 			<description>The referencing entity applies to a transfer aggregate which was originally
 				identified as a sensor (DS_Sensor)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>platformSeries</code>
-			<label>platformSeries</label>
+			<label>PlatformSeries</label>
 			<description>The referencing entity applies to a transfer aggregate which was originally
 				identified as a platform series (DS_PlatformSeries)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>sensorSeries</code>
-			<label>sensorSeries</label>
+			<label>SensorSeries</label>
 			<description>The referencing entity applies to a transfer aggregate which was originally
 				identified as a sensor series (DS_SensorSeries)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>productionSeries</code>
-			<label>productionSeries</label>
+			<label>ProductionSeries</label>
 			<description>The referencing entity applies to a transfer aggregate which was originally
 				identified as a production series (DS_ProductionSeries)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>transferAggregate</code>
-			<label>transferAggregate</label>
+			<label>TransferAggregate</label>
 			<description>The referencing entity applies to a transfer aggregate which has no existence
 				outside of the transfer context</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>otherAggregate</code>
-			<label>otherAggregate</label>
+			<label>OtherAggregate</label>
 			<description>The referencing entity applies to a transfer aggregate which has an existence
 				outside of the transfer context, but which does not pertains to a specific aggregate
 				type.</description>
@@ -1887,17 +1947,17 @@
 			<entry>
 					<description>Présence d'une donnée associée</description>
 					<code>tight</code>
-					<label>reserré</label>
+					<label>Reserré</label>
 			</entry>
 			<entry>
 					<description>Présence de plusieurs données associées</description>
 					<code>mixed</code>
-					<label>mixte</label>
+					<label>Mixte</label>
 			</entry>
 			<entry>
 					<description>Absence de donnée associée</description>
 					<code>loose</code>
-					<label>libre</label>
+					<label>Libre</label>
 			</entry>
 	</codelist>
 	    
