@@ -42,38 +42,36 @@ import org.jdom.Namespace;
 
 //=============================================================================
 
-public class Info implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class Info implements Service {
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Init
+	// ---
+	// --------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception
-	{
+	public void init(String appPath, ServiceConfig params) throws Exception {
 		this.appPath = appPath;
 	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Service
+	// ---
+	// --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getDataManager();
+	public Element exec(Element params, ServiceContext context)
+			throws Exception {
+		GeonetContext gc = (GeonetContext) context
+				.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager dm = gc.getDataManager();
 
 		String langCode = context.getLanguage();
 
 		Element response = new Element("response");
 
-		for (Object o : params.getChildren())
-		{
+		for (Object o : params.getChildren()) {
 			Element elem = (Element) o;
-			String  name = elem.getName();
+			String name = elem.getName();
 
 			if (name.equals("element"))
 				response.addContent(handleElement(dm, langCode, elem));
@@ -88,33 +86,36 @@ public class Info implements Service
 		return response;
 	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Private methods
+	// ---
+	// --------------------------------------------------------------------------
 
-	private Element handleElement(DataManager dm, String langCode, Element elem) throws Exception
-	{
+	private Element handleElement(DataManager dm, String langCode, Element elem)
+			throws Exception {
 		return handleObject(dm, langCode, elem, "labels.xml");
 	}
 
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 
-	private Element handleCodelist(DataManager dm, String langCode, Element elem) throws Exception
-	{
+	private Element handleCodelist(DataManager dm, String langCode, Element elem)
+			throws Exception {
 		return handleObject(dm, langCode, elem, "codelists.xml");
 	}
 
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 
 	private Element handleObject(DataManager dm, String langCode, Element elem,
-										  String fileName) throws BadInputEx, OperationAbortedEx
-	{
+			String fileName) throws BadInputEx, OperationAbortedEx {
 		String schema = Util.getAttrib(elem, "schema");
-		String name   = Util.getAttrib(elem, "name");
+		String name = Util.getAttrib(elem, "name");
+		String context = Util.getAttrib(elem, "context", "");
+		String isoType = Util.getAttrib(elem, "isoType", "");
 
 		name = normalizeNamespace(elem, name);
+		context = normalizeNamespace(elem, context);
+		isoType = normalizeNamespace(elem, isoType);
 
 		if (name == null)
 			return buildError(elem, UNKNOWN_NAMESPACE);
@@ -122,49 +123,66 @@ public class Info implements Service
 		if (!dm.existsSchema(schema))
 			return buildError(elem, UNKNOWN_SCHEMA);
 
+		return getHelp(dm, langCode, elem, fileName, schema, name, context,
+				isoType);
+	}
+
+	private Element getHelp(DataManager dm, String langCode, Element elem,
+			String fileName, String schema, String name, String context,
+			String isoType) throws BadInputEx, OperationAbortedEx {
 		File file = getFile(langCode, schema, fileName);
 
 		if (file == null)
-			throw new OperationAbortedEx("File not found for : "+ schema +"/"+fileName);
+			throw new OperationAbortedEx("File not found for : " + schema + "/"
+					+ fileName);
 
 		XmlFileCacher xfc = cache.get(file);
 
-		if (xfc == null)
-		{
+		if (xfc == null) {
 			xfc = new XmlFileCacher(file);
 			cache.put(file, xfc);
 		}
 
-		try
-		{
+		try {
 			Element entries = xfc.get();
 
-			for (Object o : entries.getChildren())
-			{
+			for (Object o : entries.getChildren()) {
 				Element currElem = (Element) o;
-				String  currName = currElem.getAttributeValue("name");
+				String currName = currElem.getAttributeValue("name");
+				String currContext = currElem.getAttributeValue("context");
 
 				currName = normalizeNamespace(entries, currName);
 
 				if (currName == null)
-					throw new OperationAbortedEx("No namespace found for : "+currName);
+					throw new OperationAbortedEx("No namespace found for : "
+							+ currName);
 
-				if (name.equals(currName))
+				if (currContext != null && context != null && isoType != null) {
+					currContext = normalizeNamespace(entries, currContext);
+
+					if (name.equals(currName)
+							&& (context.equals(currContext) || isoType
+									.equals(currContext)))
+						return (Element) currElem.clone();
+				} else if (name.equals(currName))
 					return (Element) currElem.clone();
+
 			}
 
-			return buildError(elem, NOT_FOUND);
-		}
-		catch (Exception e)
-		{
-			throw new OperationAbortedEx("Can't load xml file : "+ file, e);
+			if (schema.contains("iso19139") && !(schema.equals("iso19139"))) {
+				return getHelp(dm, langCode, elem, fileName, "iso19139", name,
+						context, isoType);
+			} else
+				return buildError(elem, NOT_FOUND);
+		} catch (Exception e) {
+			throw new OperationAbortedEx("Can't load xml file : " + file
+					+ " element name:" + name, e);
 		}
 	}
 
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 
-	private String normalizeNamespace(Element elem, String name)
-	{
+	private String normalizeNamespace(Element elem, String name) {
 		int pos = name.indexOf(":");
 
 		if (pos == -1)
@@ -180,17 +198,18 @@ public class Info implements Service
 		return ns.getURI() + name.substring(pos);
 	}
 
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 
-	private File getFile(String langCode, String schema, String fileName)
-	{
-		File file = new File(appPath +"xml/schemas/"+ schema +"/loc/"+ langCode +"/"+fileName);
+	private File getFile(String langCode, String schema, String fileName) {
+		File file = new File(appPath + "xml/schemas/" + schema + "/loc/"
+				+ langCode + "/" + fileName);
 
 		if (file.exists())
 			return file;
 
-		//--- let's try the default language 'en'
-		file = new File(appPath +"xml/schemas/"+ schema +"/loc/en/"+fileName);
+		// --- let's try the default language 'en'
+		file = new File(appPath + "xml/schemas/" + schema + "/loc/"
+				+ Geonet.DEFAULT_LANGUAGE + "/" + fileName);
 
 		if (file.exists())
 			return file;
@@ -198,33 +217,31 @@ public class Info implements Service
 		return null;
 	}
 
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 
-	private Element buildError(Element elem, String error)
-	{
+	private Element buildError(Element elem, String error) {
 		elem = (Element) elem.clone();
 		elem.setAttribute("error", error);
 
 		return elem;
 	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Variables
+	// ---
+	// --------------------------------------------------------------------------
 
-	private static final String UNKNOWN_SCHEMA    = "unknown-schema";
+	private static final String UNKNOWN_SCHEMA = "unknown-schema";
 	private static final String UNKNOWN_NAMESPACE = "unknown-namespace";
-	private static final String NOT_FOUND         = "not-found";
+	private static final String NOT_FOUND = "not-found";
 
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 
 	private String appPath;
 
 	private Map<File, XmlFileCacher> cache = new HashMap<File, XmlFileCacher>();
 }
 
-//=============================================================================
-
+// =============================================================================
 

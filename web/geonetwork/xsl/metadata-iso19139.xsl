@@ -76,6 +76,7 @@
 		</xsl:call-template>
 	</xsl:template>
 	
+	
 	<!-- ==================================================================== -->
 
 	<!--
@@ -805,7 +806,7 @@
 	<!-- supplementalInformation | purpose -->
 	<!-- ============================================================================= -->
 
-	<xsl:template mode="iso19139" match="gmd:supplementalInformation|gmd:purpose|gmd:statement" priority="2">
+	<xsl:template mode="iso19139" match="gmd:supplementalInformation|gmd:purpose|gmd:statement|gmd:explanation" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
@@ -1013,8 +1014,16 @@
 										{
 											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
 						                    ifFormat    : "%Y-%m-%dT%H:%M:00", // the date format
-                    						showsTime : true, // Do not show the time
+                    						showsTime : true, 
 											button      : &quot;_<xsl:value-of select="$ref"/>_trigger&quot;  // ID of the button
+										}
+									);
+									Calendar.setup(
+										{
+											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
+											ifFormat    : "%Y-%m-%dT%H:%M:00", // the date format
+											showsTime : true,
+											button      : &quot;_<xsl:value-of select="$ref"/>_cal&quot;  // ID of the button
 										}
 									);
 								</script>

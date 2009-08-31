@@ -80,8 +80,10 @@ function setupTooltip(x, y)
 	var tokens = id.substring(4).split('|');
 	var schema = tokens[0];
 	var name   = tokens[1];
+	var context = tokens[2];
+	var isoType = tokens[3];
 	
-	var request = str.substitute(requestTemp, { SCHEMA:schema, NAME:name });
+	var request = str.substitute(requestTemp, { SCHEMA:schema, NAME:name, CONTEXT: context, ISOTYPE: isoType });
 	
 	exited = false;
 	
@@ -127,21 +129,28 @@ function getHtmlTip(node)
 	else
 	{
 		var temp = tooltipTemp;
-		var label= xml.evalXPath(node, 'label');
-		var descr= xml.evalXPath(node, 'description');
+		var label = xml.evalXPath(node, 'label');
+		var descr = xml.evalXPath(node, 'description');
 		var cond = xml.evalXPath(node, 'condition');
+		var help = xml.evalXPath(node, 'help');
 		
 		if (cond == null)
 			cond = '';
-			
-		var data = { LABEL: label, DESCRIPTION : descr, CONDITION : cond };
+		if (help == null)
+			help = '';
+		
+		var data = { LABEL: label, DESCRIPTION : descr, CONDITION : cond, HELP : help };
 		
 		return str.substitute(tooltipTemp, data);
 	}
 }
 
 //=====================================================================================
-
+/**
+ * FIXME : Here you need to add any namespace required by metadata schema.
+ * How could we define required namespace from registered schemas in the catalogue ?
+ * 
+ */
 var requestTemp =
 '<request xmlns:gmd="http://www.isotc211.org/2005/gmd"'+
 '         xmlns:gts="http://www.isotc211.org/2005/gts"'+ 
@@ -150,7 +159,7 @@ var requestTemp =
 '         xmlns:gco="http://www.isotc211.org/2005/gco"'+
 '         xmlns:dct="http://purl.org/dc/terms/"'+
 '         xmlns:dc = "http://purl.org/dc/elements/1.1/">'+
-'   <element schema="{SCHEMA}" name="{NAME}"/>'+
+'   <element schema="{SCHEMA}" name="{NAME}" context="{CONTEXT}" isoType="{ISOTYPE}"/>'+
 '</request>';
 
 //=====================================================================================
@@ -160,7 +169,8 @@ var tooltipTemp=
 '   <br>'+
 '   {DESCRIPTION}'+
 '   <br>'+
-'   <font color="#C00000">{CONDITION}</font>';
+'   <font color="#C00000">{CONDITION}</font>'+
+'   <i>{HELP}</i>';
 
 //=====================================================================================
 

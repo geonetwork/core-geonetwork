@@ -328,14 +328,16 @@ editor
 }
 #editorOverlay[id] { position: fixed; }
 
-span.toolTipOverlay {
+div.toolTipOverlay {
 	background: #fff;
+    max-width: 600px!important;
+    height: auto;
+	font-weight: normal;
 	position: absolute;
 	border-style: solid;
 	margin: 2px;
 	padding: 2px;
 }
-
 
 /*******************************************************************************
 utilities
@@ -579,7 +581,6 @@ div.keywordResults ul li.selected {
         background-color: #beb800;
         cursor: pointer;
 }
-
 
 /* GEOGRAPHIC SEARCH */
 

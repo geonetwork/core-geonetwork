@@ -30,7 +30,8 @@ import jeeves.constants.*;
 public class Geonet
 {
 	public static final String CONTEXT_NAME = "contextName";
-
+	public static final String DEFAULT_LANGUAGE = "en";
+	
 	//--------------------------------------------------------------------------
 	//--- container for file names
 
@@ -441,7 +442,7 @@ public class Geonet
 	public static final String EDITOREXPANDELEMENT = GEONETWORK + ".editorexpandelement";
 	public static final String SPATIAL      = GEONETWORK + ".spatial";
 	public static final String CSW_SEARCH   = CSW + ".search";
-
+	
 	//--------------------------------------------------------------------------
 	//--- services
 

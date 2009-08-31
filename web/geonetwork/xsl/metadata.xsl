@@ -752,26 +752,56 @@
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<!--
-	returns the title of an element
+		Returns the title of an element. If the schema is an ISO profil then search:
+		* the ISO profil help first
+		* with context (ie. context is the class where the element is defined)
+		* with no context
+		and if not found search the iso19139 main help.
+		
+		If not iso based, search in corresponding schema.
+		
+		If not found return the element name between "[]".
 	-->
 	<xsl:template name="getTitle">
 		<xsl:param name="name"/>
 		<xsl:param name="schema"/>
+
+		<xsl:variable name="context" select="name(parent::node())"/>
+		<xsl:variable name="contextIsoType" select="parent::node()/@gco:isoType"/>
 		
 		<xsl:variable name="title">
 			<xsl:choose>
-
-<!-- if the schema is a profile of iso19139 then search the profile help first
-     and if not found search the iso19139 main help -->
-
 				<xsl:when test="starts-with($schema,'iso19139')">
-					<xsl:variable name="schematitle" select="string(/root/gui/*[name(.)=$schema]/element[@name=$name]/label)"/>
+					<!-- Name with context in current schema -->
+					<xsl:variable name="schematitleWithContext"
+								  select="string(/root/gui/*[name(.)=$schema]
+								  /element[@name=$name and (@context=$context or @context=$contextIsoType)]
+								  /label)"/>
+
+					
+					<!-- Name with context in base schema -->
+					<xsl:variable name="schematitleWithContextIso"
+						select="string(/root/gui/iso19139/element[@name=$name and (@context=$context or @context=$contextIsoType)]
+						/label)"/>
+
+					<!-- Name in current schema -->
+					<xsl:variable name="schematitle" select="string(/root/gui/*[name(.)=$schema]/element[@name=$name and not(@context)]/label)"/>
+				
 					<xsl:choose>
-						<xsl:when test="normalize-space($schematitle)=''">
+						<xsl:when test="normalize-space($schematitle)='' and
+										normalize-space($schematitleWithContext)='' and
+										normalize-space($schematitleWithContextIso)=''">
 							<xsl:value-of select="string(/root/gui/iso19139/element[@name=$name]/label)"/>
 						</xsl:when>
+						<xsl:when test="normalize-space($schematitleWithContext)='' and
+										normalize-space($schematitleWithContextIso)=''">
+								<xsl:value-of select="$schematitle"/>
+						</xsl:when>
+						<xsl:when test="normalize-space($schematitleWithContext)=''">
+								<xsl:value-of select="$schematitleWithContextIso"/>
+						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="$schematitle"/>
+							<xsl:value-of select="$schematitleWithContext"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
@@ -1044,13 +1074,13 @@
 	<xsl:template name="getHelpLink">
 		<xsl:param name="name"/>
 		<xsl:param name="schema"/>
-	
+
 		<xsl:choose>
 			<xsl:when test="contains($name,'_ELEMENT')">
 				<xsl:value-of select="''"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="concat($schema,'|', $name)"/>
+				<xsl:value-of select="concat($schema,'|', $name ,'|', name(parent::node()) ,'|', ../@gco:isoType)"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

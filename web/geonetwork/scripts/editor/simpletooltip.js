@@ -11,8 +11,10 @@ function toolTip(spanId)
 		var tokens = elem.getAttribute('id').split('|'); 
 		var schema = tokens[0].substring(5); // remove stip. 
 		var name   = tokens[1];
+		var context = tokens[2];
+		var isoType = tokens[3];
 	
-		var request = str.substitute(toolTipRequestTemp, { SCHEMA:schema, NAME:name });
+		var request = str.substitute(toolTipRequestTemp, { SCHEMA:schema, NAME:name, CONTEXT: context, ISOTYPE: isoType });
 		
 		ker.send('xml.schema.info', request, ker.wrap(this, function(xmlRes) {
 	
@@ -20,7 +22,7 @@ function toolTip(spanId)
 				ker.showError(translate('cannotGetTooltip'), xmlRes);	
 			} else {
 				var htmlTip= getHtmlTip(xmlRes.getElementsByTagName('element')[0]);
-				tip = document.createElement('span');
+				tip = document.createElement('div');
 				tip.className     = 'toolTipOverlay';
 				tip.innerHTML     = htmlTip;
 				elem.appendChild(tip);
@@ -52,18 +54,24 @@ function getHtmlTip(node)
 		var label= xml.evalXPath(node, 'label');
 		var descr= xml.evalXPath(node, 'description');
 		var cond = xml.evalXPath(node, 'condition');
+		var help = xml.evalXPath(node, 'help');
 		
 		if (cond == null)
 			cond = '';
+		if (help == null)
+			help = '';
 			
-		var data = { LABEL: label, DESCRIPTION : descr, CONDITION : cond };
-		
+		var data = { LABEL: label, DESCRIPTION : descr, CONDITION : cond, HELP : help };
+				
 		return str.substitute(toolTipTemp, data);
 	}
 }
 
 //=========================================================================
-
+/**
+ * FIXME : Here you need to add any namespace required by metadata schema.
+ * How could we define required namespace from registered schemas in the catalogue ?
+ */
 var toolTipRequestTemp =
 '<request xmlns:gmd="http://www.isotc211.org/2005/gmd"'+
 '         xmlns:gts="http://www.isotc211.org/2005/gts"'+ 
@@ -72,17 +80,18 @@ var toolTipRequestTemp =
 '         xmlns:gco="http://www.isotc211.org/2005/gco"'+
 '         xmlns:dct="http://purl.org/dc/terms/"'+
 '         xmlns:dc ="http://purl.org/dc/elements/1.1/">'+
-'   <element schema="{SCHEMA}" name="{NAME}"/>'+
+'   <element schema="{SCHEMA}" name="{NAME}" context="{CONTEXT}" isoType="{ISOTYPE}"/>'+
 '</request>';
 
 //=====================================================================================
 
-var toolTipTemp=
-'   <b>{LABEL}</b>'+
-'   <br>'+
-'   {DESCRIPTION}'+
-'   <br>'+
-'   <font color="#C00000">{CONDITION}</font>';
+var toolTipTemp =
+	'   <b>{LABEL}</b>'+
+	'   <br/>'+
+	'   <span>{DESCRIPTION}</span>'+
+	'   <br/>'+
+	'   <font color="#C00000">{CONDITION}</font>'+
+	'   <i>{HELP}</i>';
 
 //=====================================================================================
 
