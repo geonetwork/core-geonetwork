@@ -58,6 +58,7 @@
                     $('gn.fileType').style.display='none';
                     $('gn.uuidAction').style.display='none';
                     document.xmlinsert.enctype="application/x-www-form-urlencoded";
+										document.xmlinsert.encoding="application/x-www-form-urlencoded";
                     document.xmlinsert.action=Env.locService+"/metadata.insert.paste";
                     document.xmlinsert.target='_self';
                 } else {
@@ -66,6 +67,7 @@
                     $('gn.fileType').style.display='';
                     $('gn.uuidAction').style.display='';
                     document.xmlinsert.enctype="multipart/form-data";
+										document.xmlinsert.encoding="multipart/form-data";
                     document.xmlinsert.action=Env.locService+"/mef.import";
                     document.xmlinsert.target='upFrame';
                 }
