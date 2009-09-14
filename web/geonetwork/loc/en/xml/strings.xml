@@ -118,6 +118,8 @@
 	<country>Country</country>
 	<create>Create</create>
 	<createTip>Create a new metadata from this template</createTip>
+	<crs code="EPSG:4326">WGS 84</crs>
+	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
 	<cswTest>CSW ISO test</cswTest>
 	<cswTestDesc>Test interface for the CSW ISO catalog interface</cswTestDesc>
 	<dataQualityTab>Data quality</dataQualityTab>

@@ -6,6 +6,7 @@
         	<xsl:apply-templates/>
        	</gml:GeometryCollection>
     </xsl:template>
+    
     <xsl:template match="*">
         <xsl:apply-templates/>
     </xsl:template>
@@ -13,13 +14,23 @@
     <xsl:template match="text()"/>
     
     <xsl:template match="gmd:EX_BoundingPolygon" priority="2">
-        <xsl:copy-of select="./gml:Polygon"/>
-	</xsl:template>
+        <!--
+            TODO : here we could index bounding polygon. 
+            If required, bounding box and bounding polygon need to be 
+            merged into one geometry for the index to search.
+            Done in geocat.ch sandbox.
+            
+            <xsl:for-each select="gmd:polygon/gml:*">
+            <xsl:copy-of select="."/>
+        </xsl:for-each>-->
+    </xsl:template>
+    
     <xsl:template match="gmd:EX_GeographicBoundingBox" priority="2">
         <xsl:variable name="w" select="./gmd:westBoundLongitude/gco:Decimal/text()"/>
         <xsl:variable name="e" select="./gmd:eastBoundLongitude/gco:Decimal/text()"/>
         <xsl:variable name="n" select="./gmd:northBoundLatitude/gco:Decimal/text()"/>
         <xsl:variable name="s" select="./gmd:southBoundLatitude/gco:Decimal/text()"/>
+        
         <gml:Polygon>
             <gml:exterior>
                 <gml:LinearRing>

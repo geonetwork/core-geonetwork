@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ Define here all GUI specific parameters to be used in XSL stylesheet.
+ Each parameter could be retrieved using /root/gui/config/your-parameter-key xpath.
+-->
+<config>
+ <map>
+  <!-- Configuration for map displayed in metadata sheet
+  (view or edit mode). -->
+  <metadata>
+   <width>100%</width>
+   <height>300px</height>
+  </metadata>
+  <proj>
+   <!-- List all needed projections for view and editing maps.
+    If more than one projection is available, bounding box
+    coordinates will be displayed in the list of available projection.
+    
+    Default attribute define the default projection to use. Do
+    not define more than one default projection.
+    
+   -->
+   <crs code="EPSG:4326" default="1" edit="1"/><!-- WGS84 is mandatory because ISO store it by default in LatLong-->
+   <!--<crs code="EPSG:3786" edit="1" def="+proj=eqc +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +a=6371007 +b=6371007 +units=m +no_defs "></crs>
+   <crs code="EPSG:900913" def="+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs "/>
+   <crs code="EPSG:4258" def="+proj=longlat +ellps=GRS80 +no_defs"/>
+   <crs code="EPSG:27572" edit="1" def="+proj=lcc +lat_1=46.8 +lat_0=46.8 +lon_0=0 +k_0=0.99987742 +x_0=600000 +y_0=2200000 +a=6378249.2 +b=6356515 +towgs84=-168,-60,320,0,0,0,0 +pm=paris +units=m +no_defs"/>
+   -->
+  </proj>
+ </map>
+</config>

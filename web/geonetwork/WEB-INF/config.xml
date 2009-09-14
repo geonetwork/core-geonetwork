@@ -30,6 +30,7 @@
 			<call name="session" class="jeeves.guiservices.session.Get" />
 			<call name="env" class="org.fao.geonet.guiservices.util.Env" />
 			<call name="results" class="org.fao.geonet.guiservices.search.GetResultsInfo" />
+		    <xml name="config" file="WEB-INF/config-gui.xml" localized="false" />
 		</gui>
 
 		<!-- service not found -->
@@ -69,8 +70,8 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.DbmsPool</provider>
 			<config>
-				<user>9YJQLT96</user>
-				<password>Lbfn9cdT</password>
+				<user>w5c4xhmu</user>
+				<password>ox445cyA</password>
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>

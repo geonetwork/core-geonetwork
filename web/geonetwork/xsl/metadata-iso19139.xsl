@@ -11,6 +11,8 @@
 	xmlns:exslt="http://exslt.org/common"
 	exclude-result-prefixes="gmd gco gml gts srv xlink exslt geonet">
 
+	<xsl:include href="metadata-iso19139-geo.xsl"/>
+
 	<!-- =================================================================== -->
 	<!-- default: in simple mode just a flat list -->
 	<!-- =================================================================== -->
@@ -301,7 +303,7 @@
 	<!-- some elements that have both attributes and content               -->
 	<!-- ================================================================= -->
 
-	<xsl:template mode="iso19139" match="gml:coordinates|gml:identifier|gml:axisDirection|gml:descriptionReference">
+	<xsl:template mode="iso19139" match="gml:identifier|gml:axisDirection|gml:descriptionReference">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 
@@ -607,185 +609,7 @@
 			<xsl:with-param name="text"   select="$text"/>
 		</xsl:apply-templates>
 	</xsl:template>
-		
-	<!-- ============================================================================= -->
-	<!-- EX_GeographicBoundingBox -->
-	<!-- ============================================================================= -->
-
-	<xsl:template mode="iso19139" match="gmd:EX_GeographicBoundingBox" priority="2">
-		<xsl:param name="schema"/>
-		<xsl:param name="edit"/>
-		
-		<xsl:variable name="geoBox">
-			<xsl:apply-templates mode="iso19139GeoBox" select=".">
-				<xsl:with-param name="schema" select="$schema"/>
-				<xsl:with-param name="edit"   select="$edit"/>
-			</xsl:apply-templates>
-		</xsl:variable>
-		
-		<xsl:choose>
-			<xsl:when test="$edit=true()">
-				<xsl:variable name="places">
-					<xsl:variable name="ref" select="geonet:element/@ref"/>
-					<xsl:variable name="keyword" select="string(.)"/>
-
-					<xsl:variable name="selection" select="concat(gmd:westBoundLongitude/gco:Decimal,';',gmd:eastBoundLongitude/gco:Decimal,';',gmd:southBoundLatitude/gco:Decimal,';',gmd:northBoundLatitude/gco:Decimal)"/>
-
-					<!-- regions combobox -->
-
-					<xsl:variable name="lang" select="/root/gui/language"/>
-
-					<select name="place" size="1" onChange="javascript:setRegion(document.mainForm._{gmd:westBoundLongitude/gco:Decimal/geonet:element/@ref}, document.mainForm._{gmd:eastBoundLongitude/gco:Decimal/geonet:element/@ref}, document.mainForm._{gmd:southBoundLatitude/gco:Decimal/geonet:element/@ref}, document.mainForm._{gmd:northBoundLatitude/gco:Decimal/geonet:element/@ref}, this.options[this.selectedIndex].value)" class="md">
-						<option value=""/>
-						<xsl:for-each select="/root/gui/regions/record">
-							<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
-		
-							<xsl:variable name="value" select="concat(west,';',east,';',south,';',north)"/>
-							<option value="{$value}">
-								<xsl:if test="$value=$selection">
-									<xsl:attribute name="selected"/>
-								</xsl:if>
-								<xsl:value-of select="label/child::*[name() = $lang]"/>
-							</option>
-						</xsl:for-each>
-					</select>
-				</xsl:variable>
-				<xsl:apply-templates mode="complexElement" select=".">
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="$edit"/>
-					<xsl:with-param name="content">
-						<tr>
-							<td align="center">
-								<xsl:copy-of select="$geoBox"/>
-							</td>
-							<td>
-								<xsl:copy-of select="$places"/>
-							</td>
-						</tr>
-					</xsl:with-param>
-				</xsl:apply-templates>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates mode="complexElement" select=".">
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="$edit"/>
-					<xsl:with-param name="content">
-						<tr>
-							<td align="center">
-								<xsl:copy-of select="$geoBox"/>
-							</td>
-						</tr>
-					</xsl:with-param>
-				</xsl:apply-templates>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<!-- ============================================================================= -->
-
-	<xsl:template mode="iso19139GeoBox" match="*">
-		<xsl:param name="schema"/>
-		<xsl:param name="edit"/>
-
-		<table>
-			<tr>
-				<td/>
-				<td class="padded" align="center">
-					<xsl:apply-templates mode="iso19139VertElement" select="gmd:northBoundLatitude/gco:Decimal">
-						<xsl:with-param name="schema" select="$schema"/>
-						<xsl:with-param name="edit"   select="$edit"/>
-						<xsl:with-param name="name"   select="'gmd:northBoundLatitude'"/>
-					</xsl:apply-templates>
-				</td>
-				<td/>
-			</tr>
-			<tr>
-				<td class="padded" align="center">
-					<xsl:apply-templates mode="iso19139VertElement" select="gmd:westBoundLongitude/gco:Decimal">
-						<xsl:with-param name="schema" select="$schema"/>
-						<xsl:with-param name="edit"   select="$edit"/>
-						<xsl:with-param name="name"   select="'gmd:westBoundLongitude'"/>
-					</xsl:apply-templates>
-				</td>
-				
-				<!--
-				<td class="box" width="100" height="100" align="center">
-				-->
-				<xsl:variable name="md">
-					<xsl:apply-templates mode="brief" select="//gmd:MD_Metadata|//*[@gco:isoType='gmd:MD_Metadata']"/>
-				</xsl:variable>
-				<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
-				<!--td width="100" height="100" align="center">
-					<xsl:call-template name="thumbnail">
-						<xsl:with-param name="metadata" select="$metadata"/>
-					</xsl:call-template>
-				</td-->
-				<td/>
-				<td class="padded" align="center">
-					<xsl:apply-templates mode="iso19139VertElement" select="gmd:eastBoundLongitude/gco:Decimal">
-						<xsl:with-param name="schema" select="$schema"/>
-						<xsl:with-param name="edit"   select="$edit"/>
-						<xsl:with-param name="name"   select="'gmd:eastBoundLongitude'"/>
-					</xsl:apply-templates>
-				</td>
-			</tr>
-			<tr>
-				<td/>
-				<td class="padded" align="center">
-					<xsl:apply-templates mode="iso19139VertElement" select="gmd:southBoundLatitude/gco:Decimal">
-						<xsl:with-param name="schema" select="$schema"/>
-						<xsl:with-param name="edit"   select="$edit"/>
-						<xsl:with-param name="name"   select="'gmd:southBoundLatitude'"/>
-					</xsl:apply-templates>
-				</td>
-				<td/>
-			</tr>
-		</table>
-	</xsl:template>
-	
-	<!-- ============================================================================= -->
-
-	<xsl:template mode="iso19139VertElement" match="*">
-		<xsl:param name="schema"/>
-		<xsl:param name="edit"/>
-		<xsl:param name="name"/>
-		
-		<xsl:variable name="title">
-			<xsl:call-template name="getTitle">
-				<xsl:with-param name="schema" select="$schema"/>
-				<xsl:with-param name="name"   select="$name"/>
-			</xsl:call-template>
-		</xsl:variable>
-		<xsl:variable name="helpLink">
-			<xsl:call-template name="getHelpLink">
-				<xsl:with-param name="schema" select="$schema"/>
-				<xsl:with-param name="name"   select="$name"/>
-			</xsl:call-template>
-		</xsl:variable>
-		<b>
-			<xsl:choose>
-				<xsl:when test="$helpLink!=''">
-					<span id="stip.{$helpLink}|{generate-id(.)}" onclick="toolTip(this.id);" style="cursor:help;"><xsl:value-of select="$title"/>
-						<!--
-						<xsl:call-template name="asterisk">
-							<xsl:with-param name="link" select="$helpLink"/>
-							<xsl:with-param name="edit" select="$edit"/>
-						</xsl:call-template>
-					-->
-					</span>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="$title"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</b>
-		<br/>
-		<xsl:call-template name="getElementText">
-			<xsl:with-param name="schema" select="$schema"/>
-			<xsl:with-param name="edit"   select="$edit"/>
-			<xsl:with-param name="cols"  select="10"/>
-		</xsl:call-template>
-	</xsl:template>
+			
 
 	<!-- ============================================================================= -->
 	<!-- abstract -->

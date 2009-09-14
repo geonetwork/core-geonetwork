@@ -503,8 +503,8 @@ public class SearchManager
 		// if rebuild forced or bad index then rebuild index
 		if (rebuild || badIndex) {
 			Log.error(Geonet.SEARCH_ENGINE, "Rebuilding lucene index");
-
-			_spatial.writer().reset();
+			if (_spatial != null)
+				_spatial.writer().reset();
 			IndexWriter writer = new IndexWriter(_luceneDir, _analyzer, true);
 			writer.close();
 		}
@@ -677,7 +677,8 @@ public class SearchManager
             // the file
             // and therefore the test will not be worthwhile
             if (!SpatialIndexWriter.createDataStoreFile(appPath).exists()) {
-                rebuildIndex = true;
+            	Log.error(Geonet.SEARCH_ENGINE, "Rebuild index because spatial index does not exist.");
+            	rebuildIndex = true;
             }
             rebuildIndex = createWriter(appPath);
             if (rebuildIndex) {
@@ -699,7 +700,8 @@ public class SearchManager
                         _transaction, _lock);
                 rebuildIndex = _writer.getFeatureSource().getSchema() == null;
             } catch (Exception e) {
-                _writer.delete();
+                if (_writer != null)
+                	_writer.delete();
                 rebuildIndex = true;
             }
             return rebuildIndex;

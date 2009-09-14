@@ -1343,9 +1343,21 @@ public class DataManager
 				attr = ref.substring(at +1);
 				ref  = ref.substring(0, at);
 			}
+			boolean xmlContent = false;
+            if (ref.startsWith("X"))
+            {
+                ref = ref.substring(1);
+                xmlContent = true;
+            }
+//			CHECKME : here we have to catch element
+//			starting with a X to replace XML content
+//			like in updateMetadata // not sure this is ok 
+//          in new ajax mode
+			
 			Element el = editLib.findElement(md, ref);
 			if (el == null)
-				throw new IllegalStateException("Element not found at ref = " + ref);
+				//throw new IllegalStateException("Element not found at ref = " + ref);
+				Log.error(Geonet.DATA_MANAGER, "Element not found at ref = " + ref);
 
 			if (attr != null) {
 				Integer indexColon = attr.indexOf("COLON");
@@ -1361,7 +1373,19 @@ public class DataManager
  					if (el.getAttribute(attr) != null)
 						el.setAttribute(new Attribute(attr, val));
 				}
-			}
+			} else if(xmlContent)
+			{
+                el.removeContent();
+                //add the gml namespace if its missing
+                if (val.contains("<gml:") && !val.contains("xmlns:gml=\"")) {
+                    val = val.replaceFirst("<gml:([^ >]+)", "<gml:$1 xmlns:gml=\"http://www.opengis.net/gml\"");
+                }
+                // FIXME : MCT adds this constraints for ISO 19139.np templates.
+                if (val != null && !val.equals("")) {
+                	el.addContent(Xml.loadString(val, false));
+                	Log.debug(Geonet.DATA_MANAGER, "replacing XML content");
+                }
+            }
 			else
 			{
 				List content = el.getContent();
@@ -1456,7 +1480,8 @@ public class DataManager
 		Element el = editLib.findElement(md, ref);
 
 		if (el == null)
-			throw new IllegalStateException("Element not found at ref = " + ref);
+			Log.error(Geonet.DATA_MANAGER, "Element not found at ref = " + ref);
+			//throw new IllegalStateException("Element not found at ref = " + ref);
 
 		//--- remove editing info added by previous call
 		editLib.removeEditingInfo(md);
@@ -1570,6 +1595,12 @@ public class DataManager
 				attr = ref.substring(at +1);
 				ref  = ref.substring(0, at);
 			}
+			boolean xmlContent = false;
+            if (ref.startsWith("X"))
+            {
+                ref = ref.substring(1);
+                xmlContent = true;
+            }
 			Element el = editLib.findElement(md, ref);
 			if (el == null)
 				throw new IllegalStateException("Element not found at ref = " + ref);
@@ -1594,7 +1625,16 @@ public class DataManager
           if (el.getAttribute(attr) != null)
             el.setAttribute(new Attribute(attr, val));
         }
-			}
+			} else if(xmlContent)
+			{
+                el.removeContent();
+                //add the gml namespace if its missing
+                if (val.contains("<gml:") && !val.contains("xmlns:gml=\"")) {
+                    val = val.replaceFirst("<gml:([^ >]+)", "<gml:$1 xmlns:gml=\"http://www.opengis.net/gml\"");
+                }
+                el.addContent(Xml.loadString(val, false));
+                Log.debug(Geonet.DATA_MANAGER, "replacing XML content");
+            }
 			else
 			{
 				List content = el.getContent();

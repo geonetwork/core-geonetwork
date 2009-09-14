@@ -256,7 +256,7 @@ public class EditLib
 	{
 		Element elem = md.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
 
-		if (ref.equals(elem.getAttributeValue(Edit.Element.Attr.REF)))
+		if (elem != null && ref.equals(elem.getAttributeValue(Edit.Element.Attr.REF)))
 			 return md;
 
 		//--- search on children

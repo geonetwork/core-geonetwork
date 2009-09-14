@@ -609,6 +609,9 @@ function gn_showSingleMet(pars)
                 
                 div.innerHTML = req.responseText;
                 
+                // Init maps contained in search results
+                extentMap.initMapDiv();
+                
                 Effect.BlindDown(div);
                 
                 var tipman = new TooltipManager();
@@ -645,6 +648,9 @@ function gn_showMetadata(id)
                 parent.appendChild(div);
                 
                 div.innerHTML = req.responseText;
+                
+                // Init maps contained in search results
+                extentMap.initMapDiv();
                 
                 Effect.BlindDown(div);
                 

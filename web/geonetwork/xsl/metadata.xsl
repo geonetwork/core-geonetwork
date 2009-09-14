@@ -832,6 +832,16 @@
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="rows" select="1"/>
 		<xsl:param name="cols" select="50"/>
+		<!-- Add javascript validator function. By default, if element 
+		is mandatory a non empty validator is defined. -->
+		<xsl:param name="validator"/>
+		<!-- Use input_type parameter to create an hidden field. 
+		Default is a text input. -->
+		<xsl:param name="input_type">text</xsl:param>
+		<!-- Set to true no_name parameter in order to create an element 
+		which will not be submitted to the form. -->
+		<xsl:param name="no_name" select="false()" />
+		
 		
 		<xsl:variable name="name"  select="name(.)"/>
 		<xsl:variable name="value" select="string(.)"/>
@@ -925,7 +935,17 @@
 					</xsl:when>
 
 					<xsl:otherwise>
-						<input class="md" type="text" id="_{geonet:element/@ref}" name="_{geonet:element/@ref}" value="{text()}" size="{$cols}">
+						<input class="md" type="{$input_type}" value="{text()}" size="{$cols}">
+							<xsl:choose>
+								<xsl:when test="$no_name=false()">
+									<xsl:attribute name="name">_<xsl:value-of select="geonet:element/@ref"/></xsl:attribute>
+									<xsl:attribute name="id">_<xsl:value-of select="geonet:element/@ref"/></xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:attribute name="id"><xsl:value-of select="geonet:element/@ref"/></xsl:attribute>
+								</xsl:otherwise>
+							</xsl:choose>
+
 							<xsl:if test="../geonet:element/@min='1' and $edit">
 								<xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute>
 							</xsl:if>

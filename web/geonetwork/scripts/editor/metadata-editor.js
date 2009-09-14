@@ -334,6 +334,10 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement)
 					alert("doNewElementAjax: invalid what: " + what + " should be one of replace, after or before.");
 				}
 				
+				// Init map if spatial extent editing
+				if (name == 'gmd:geographicElement');
+					extentMap.initMapDiv();
+				
 				// Check elements
 				validateMetadataFields();
 				
@@ -584,26 +588,45 @@ function handleCheckboxAsBoolean (input, ref) {
 	}
 }
 
-function setRegion(westField, eastField, southField, northField, choice)
+/**
+ * Update bounding box form element.
+ * If description id is provided, set description character string.
+ */
+function setRegion(westField, eastField, southField, northField, region, eltRef, descriptionRef)
 {
-		
+	var choice = region.value;
+	var w = "";
+	var e = "";
+	var s = "";
+	var n = "";
+	
 	if (choice != "") {
-		coords = choice.split(";")
-		westField.value  = coords[0];
-		eastField.value  = coords[1];
-		southField.value = coords[2];
-		northField.value = coords[3];
+		coords = choice.split(",")
+		w = coords[0];
+		e = coords[1];
+		s = coords[2];
+		n = coords[3];
+		$("_" + westField).value  = w;
+		$("_" + eastField).value  = e;
+		$("_" + southField).value = s;
+		$("_" + northField).value = n;
+		
+		if ($("_" + descriptionRef) != null)
+			$("_" + descriptionRef).value = region.text;
 	} else {
-		westField.value  = "";
-		eastField.value  = "";
-		southField.value = "";
-		northField.value = "";
+		$("_" + westField).value  = "";
+		$("_" + eastField).value  = "";
+		$("_" + southField).value = "";
+		$("_" + northField).value = "";
 	}
 	
-	westField.onkeyup();
-	eastField.onkeyup();
-	southField.onkeyup();
-	northField.onkeyup();
+	var viewers = Ext.DomQuery.select('.extentViewer');
+	for (var idx = 0; idx < viewers.length; ++idx) {
+	     var viewer = viewers[idx];
+	     if (eltRef == viewer.getAttribute("elt_ref")) {
+	    	 extentMap.updateBbox(extentMap.maps[eltRef], westField + "," + southField + "," + eastField + "," + northField, eltRef, true); // Region are in WGS84
+	     };
+	}
 }
 
 function clearRef(ref) 

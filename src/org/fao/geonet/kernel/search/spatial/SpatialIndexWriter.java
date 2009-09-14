@@ -54,6 +54,7 @@ import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.Parser;
@@ -64,6 +65,7 @@ import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.identity.FeatureId;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -379,6 +381,12 @@ public class SpatialIndexWriter
         // + SPATIAL_INDEX_FILENAME + ".h2");
     }
 
+    /**
+     * Create a Shapefile datastore in WGS84.
+     * 
+     * @return
+     * @throws Exception
+     */
     private FeatureStore createFeatureStore() throws Exception
     {
         _file.getParentFile().mkdirs();
@@ -386,7 +394,12 @@ public class SpatialIndexWriter
         IndexedShapefileDataStore ds = new IndexedShapefileDataStore(_file
                 .toURI().toURL(), new URI("http://geonetwork.org"), false,
                 true, IndexType.NONE, Charset.defaultCharset());
-
+        CoordinateReferenceSystem crs = CRS.decode("EPSG:4326");
+        
+        if (crs != null) {
+        	ds.forceSchemaCRS(crs);
+        }
+        
         if (!_file.exists()) {
             ds.createSchema(_schema);
         }
@@ -396,7 +409,7 @@ public class SpatialIndexWriter
 
     private static MultiPolygon toMultiPolygon(Geometry geometry)
     {
-        if (geometry instanceof Polygon) {
+    	if (geometry instanceof Polygon) {
             Polygon polygon = (Polygon) geometry;
             
             return geometry.getFactory().createMultiPolygon(

@@ -9,7 +9,8 @@
     <nl>Nederlands</nl> <!-- Do not translate -->
 	<ru>Русский</ru> <!-- Do not translate! -->
 	
-	<layersAdded js="true">Les couches sélectionnées ont été ajoutées</layersAdded>
+    <crs code="EPSG:4326">WGS 84</crs>
+    <layersAdded js="true">Les couches sélectionnées ont été ajoutées</layersAdded>
 	<registrationFailed js="true">Erreur, l'enregistrement a échoué :</registrationFailed>	
 	<tryAgain js="true">Essayez plus tard</tryAgain>
 	<cannotRetrieveGroup js="true">Impossible d'obtenir la liste des groupes</cannotRetrieveGroup>

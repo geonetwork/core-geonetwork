@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	
+	<xsl:include href="geo/utils.xsl"/>
+	
 	<!--
 	main html header
 	-->
@@ -31,6 +33,13 @@
 		<META HTTP-EQUIV="Expires" CONTENT="-1"/>
 
 		<!-- javascript -->
+		<!-- Add geo JS (ie. OpenLayers, GeoExt) only when needed, ie. metadata.edit metadata.show, ... -->
+		<xsl:if test="/root/gui/reqService = 'main.home' 
+					or /root/gui/reqService = 'metadata.show' 
+					or /root/gui/reqService = 'metadata.edit'">
+			<xsl:call-template name="geoHeader"/>
+		</xsl:if>
+		
 		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"/>
