@@ -1099,7 +1099,7 @@
     <element name="gmd:fileName" id="49.0">
         <label>File name</label>
         <description>Name of the file that contains a graphic that provides an illustration of the
-            dataset</description>
+            dataset. It could be a public image document URL.</description>
         <condition>mandatory</condition>
     </element>
     <element name="gmd:fileType" id="51.0">

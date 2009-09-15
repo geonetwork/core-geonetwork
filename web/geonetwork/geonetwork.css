@@ -773,3 +773,27 @@ div#error {
 	font-size: 0.9em;
 }
 
+div.thumbnail {
+    width: 250px !important;
+    height: 150px !important;
+    float: left;
+    text-align:center;
+    vertical-align:middle;
+    margin:2px;
+}
+img.thumbnail {
+    border: 1px solid #266397;
+ }
+ img.thumbnail {
+    width: 120px;
+    height: auto;
+}
+img.thumbnail {
+    height: 120px;
+    width: auto;
+}
+span.thumbnail {
+    font-size: small;
+    font-style: italic;
+    color: #2a628f;
+}

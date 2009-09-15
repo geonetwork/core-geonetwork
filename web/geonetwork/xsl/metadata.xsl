@@ -2,6 +2,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:exslt= "http://exslt.org/common"
 	xmlns:gco="http://www.isotc211.org/2005/gco"
+	xmlns:gmd="http://www.isotc211.org/2005/gmd"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	exclude-result-prefixes="exslt xlink gco geonet">
@@ -99,12 +100,24 @@
 		<xsl:variable name="parentName" select="../geonet:element/@ref|@parent"/>
 		<xsl:variable name="max" select="../geonet:element/@max|@max"/>
 		<xsl:variable name="prevBrother" select="preceding-sibling::*[1]"/>
+		
+		<!--
+			Exception for gmd:graphicOverview because GeoNetwork manage thumbnail
+			using specific interface for thumbnail and large_thumbnail but user should be able to add
+			thumbnail using a simple URL.
+		-->		
+		<xsl:variable name="exception" select="../gmd:graphicOverview[gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='thumbnail' or gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='large_thumbnail']"/>
+
+		
 		<!-- <xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)=$name]"/> -->
 		<xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)='']"/>
 		<!-- Disable simple for the time being
 		<xsl:if test="$currTab!='simple' and (geonet:choose or name($prevBrother)!=$name) or $subtemplates"> 
 		-->
-		<xsl:if test="(geonet:choose or name($prevBrother)!=$name) or $subtemplates">
+		<xsl:if test="(geonet:choose 
+						or name($prevBrother)!=$name 
+						or $exception) 
+					or $subtemplates">
 			<xsl:variable name="text">
 				<xsl:if test="geonet:choose">
 					<select class="md" name="_{$parentName}_{$qname}" size="1">

@@ -51,11 +51,25 @@
 			
 	</xsl:template>
 	
+	
+	<!--=====================================================================-->
+	<!-- these elements should not be displayed 
+		* do not display graphicOverview managed by GeoNetwork (ie. having a 
+		fileDescription set to thumbnail or large_thumbnail). Those thumbnails
+		are managed in then thumbnail popup. Others could be valid URL pointing to
+		an image available on the Internet.
+	-->
+	<!--=====================================================================-->
+	
+	<xsl:template mode="iso19139"
+		match="gmd:graphicOverview[gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='thumbnail' or gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='large_thumbnail']"
+		priority="20" />
+	
+	
 	<!-- ===================================================================== -->
 	<!-- these elements should be boxed -->
 	<!-- ===================================================================== -->
 
-	<xsl:template mode="iso19139" match="gmd:graphicOverview"/>
 	<xsl:template mode="iso19139" match="gmd:identificationInfo|gmd:distributionInfo|gmd:descriptiveKeywords|gmd:spatialRepresentationInfo|gmd:pointOfContact|gmd:dataQualityInfo|gmd:referenceSystemInfo|gmd:equivalentScale|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|srv:containsOperations">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -2475,100 +2489,6 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<!-- ============================================================================= -->
-	<!-- FIXME graphOver -->
-	<!-- ============================================================================= -->
-
-	<xsl:template mode="iso19139" match="graphOver">
-		<xsl:param name="schema"/>
-		<xsl:param name="edit"/>
-		
-		<xsl:if test="$edit=true() and $currTab!='simple'">
-			<xsl:apply-templates mode="iso19139EditGraphOver" select=".">
-				<xsl:with-param name="schema" select="$schema"/>
-			</xsl:apply-templates>
-		</xsl:if>
-	</xsl:template>
-	
-	<!-- ============================================================================= -->
-	<!-- FIXME 	-->
-	<!-- ============================================================================= -->
-
-	<xsl:template mode="iso19139EditGraphOver" match="*">
-		<xsl:param name="schema"/>
-		
-		<xsl:apply-templates mode="complexElement" select=".">
-			<xsl:with-param name="schema" select="$schema"/>
-			<xsl:with-param name="edit"   select="true()"/>
-			<xsl:with-param name="content">
-				
-				<xsl:choose>
-					<xsl:when test="(string(bgFileDesc)='thumbnail' or string(bgFileDesc)='large_thumbnail') and string(bgFileName)!=''">
-						<xsl:apply-templates mode="iso19139FileRemove" select="bgFileName"/>
-					</xsl:when>
-					<xsl:when test="string(bgFileDesc)='thumbnail' or string(bgFileDesc)='large_thumbnail'">
-						<xsl:apply-templates mode="iso19139FileUpload" select="bgFileName"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:apply-templates mode="elementEP" select="bgFileName|geonet:child[string(@name)='bgFileName']">
-							<xsl:with-param name="schema" select="$schema"/>
-							<xsl:with-param name="edit"   select="true()"/>
-						</xsl:apply-templates>
-					</xsl:otherwise>
-				</xsl:choose>
-
-				<xsl:apply-templates mode="elementEP" select="bgFileDesc|geonet:child[string(@name)='bgFileDesc']">
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="true()"/>
-				</xsl:apply-templates>
-				
-				<xsl:apply-templates mode="elementEP" select="bgFileType|geonet:child[string(@name)='bgFileType']">
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="true()"/>
-				</xsl:apply-templates>
-			</xsl:with-param>
-		</xsl:apply-templates>
-	</xsl:template>
-	
-	<!-- ============================================================================= -->
-	<!-- FIXME bgFileDesc -->
-	<!-- ============================================================================= -->
-
-	<xsl:template mode="iso19139" match="bgFileDesc">
-		<xsl:param name="schema"/>
-		<xsl:param name="edit"/>
-		
-		<xsl:choose>
-			<xsl:when test="$edit=true()">
-				<xsl:apply-templates mode="simpleElement" select=".">
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="text">
-						<xsl:variable name="value" select="string(.)"/>
-						<select name="_{geonet:element/@ref}" size="1">
-							<xsl:if test="string(.)=''">
-								<option value=""/>
-							</xsl:if>
-							<xsl:for-each select="/root/gui/strings/bgFileDescChoice[@value]">
-								<option value="{string(@value)}">
-									<xsl:if test="string(@value)=$value">
-										<xsl:attribute name="selected"/>
-									</xsl:if>
-									<xsl:value-of select="string(.)"/>
-								</option>
-							</xsl:for-each>
-						</select>
-					</xsl:with-param>
-				</xsl:apply-templates>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates mode="element" select=".">
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="false()"/>
-				</xsl:apply-templates>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-	
 	<!-- ===================================================================== -->
 	<!-- name for onlineresource only -->
 	<!-- ===================================================================== -->
@@ -3106,6 +3026,90 @@
 	</xsl:template>
 
 
+
+
+	<!-- Display extra thumbnails (not managed by GeoNetwork).
+		Thumbnails managed by GeoNetwork are displayed on header.
+		If fileName does not start with http://, just display as
+		simple elements.
+	-->
+	<xsl:template mode="iso19139" match="gmd:graphicOverview" priority="2">
+		<xsl:param name="schema" />
+		<xsl:param name="edit" />
+		
+		<!-- do not show empty elements in view mode -->
+		<xsl:choose>
+			<xsl:when test="$edit=true()">
+				<xsl:apply-templates mode="element" select=".">
+					<xsl:with-param name="schema" select="$schema" />
+					<xsl:with-param name="edit" select="true()" />
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates mode="simpleElement"
+					select=".">
+					<xsl:with-param name="schema" select="$schema" />
+					<xsl:with-param name="text">&#160;
+					    
+					    
+						<xsl:variable name="langId">
+							<xsl:call-template name="getLangId">
+								<xsl:with-param name="langGui" select="/root/gui/language" />
+								<xsl:with-param name="md"
+									select="ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" />
+							</xsl:call-template>
+						</xsl:variable>
+						
+					    <xsl:variable name="imageTitle">
+					        <xsl:choose>
+					            <xsl:when test="gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString
+					            	and not(gmd:MD_BrowseGraphic/gmd:fileDescription/@gco:nilReason)">
+					            	<xsl:for-each select="gmd:MD_BrowseGraphic/gmd:fileDescription">
+					            		<xsl:call-template name="localised">
+					            			<xsl:with-param name="langId" select="$langId"/>
+					            		</xsl:call-template>
+					            	</xsl:for-each>
+					            </xsl:when>
+					        	<xsl:otherwise>
+					        		<!-- Filename is not multilingual -->
+					        		<xsl:value-of select="gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
+					        	</xsl:otherwise>
+					        </xsl:choose>
+					    </xsl:variable>
+					    
+						<xsl:choose>
+						    <!-- Probably the image will be available using http/https protocols
+						    then display an image. -->
+							<xsl:when test="contains(gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString, '://')">
+							    <div class="thumbnail">
+							    	<a href="{gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString}" target="thumbnail-view">
+							    		<xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
+							    		<xsl:attribute name="title"><xsl:value-of select="$imageTitle"/></xsl:attribute>
+	    								<img class="thumbnail" src="{gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString}">
+	    									<xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
+	    								    <xsl:attribute name="title"><xsl:value-of select="$imageTitle"/></xsl:attribute>
+	    								</img>
+							    	</a>	
+							    	<br/>
+    							    <span class="thumbnail"><xsl:value-of select="$imageTitle"/></span>
+							    </div>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:apply-templates mode="element" select=".">
+									<xsl:with-param name="schema" select="$schema" />
+									<xsl:with-param name="edit" select="false()" />
+									<xsl:with-param name="flat" select="$currTab='simple'" />
+								</xsl:apply-templates>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:with-param>
+				</xsl:apply-templates>
+			</xsl:otherwise>
+		</xsl:choose>		
+	</xsl:template>
+	
+
+
 	<!--
 		=====================================================================
 		Multilingual metadata:
@@ -3521,10 +3525,4 @@
 			</gmd:PT_FreeText>
 		</xsl:for-each>
 	</xsl:template>
-	
-	
-	<!--
-		=====================================================================
-		-->
-
 </xsl:stylesheet>
