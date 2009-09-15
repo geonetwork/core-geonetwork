@@ -805,15 +805,15 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
-
-<!-- otherwise just get the title out of the approriate schema help file -->
-
+				
+				<!-- otherwise just get the title out of the approriate schema help file -->
+				
 				<xsl:otherwise>
 					<xsl:value-of select="string(/root/gui/*[name(.)=$schema]/element[@name=$name]/label)"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-
+		
 		<xsl:choose>
 			<xsl:when test="normalize-space($title)!=''">
 				<xsl:value-of select="$title"/>
@@ -831,7 +831,9 @@
 		<xsl:param name="schema"/>
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="rows" select="1"/>
-		<xsl:param name="cols" select="50"/>
+		<xsl:param name="cols" select="40"/>
+		<xsl:param name="langId"/>
+		<xsl:param name="visible" select="true"/>
 		<!-- Add javascript validator function. By default, if element 
 		is mandatory a non empty validator is defined. -->
 		<xsl:param name="validator"/>
@@ -878,6 +880,9 @@
 					</items>
 				</xsl:variable>
 				<select class="md" name="_{geonet:element/@ref}" size="1">
+					<xsl:if test="$visible = 'false'">
+						<xsl:attribute name="style">display:none;</xsl:attribute>
+					</xsl:if>
 					<option name=""/>
 					<xsl:for-each select="exslt:node-set($list)//item">
 						<xsl:sort select="label"/>
@@ -899,7 +904,13 @@
 									(starts-with($schema,'iso19139') and (name(..)='gmd:keyword' 
 										or ../@gco:isoType='gmd:keyword'))">
 						<input class="md" type="text" id="_{geonet:element/@ref}" name="_{geonet:element/@ref}" value="{text()}" size="{$cols}">
-							<xsl:if test="../geonet:element/@min='1' and $edit">
+							<xsl:if test="$visible = 'false'">
+								<xsl:attribute name="style">display:none;</xsl:attribute>
+							</xsl:if>
+							<xsl:if test="(
+								(name(.)='gmd:LocalisedCharacterString' and ../../geonet:element/@min='1')
+								or ../geonet:element/@min='1'
+								) and $edit">
 								<xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute>
 							</xsl:if>
 						</input>
@@ -921,15 +932,26 @@
 
 					</xsl:when>
 					
-					<!-- heikki doeleman: for gco:Boolean, use checkbox -->
+					<!-- heikki doeleman: for gco:Boolean, use checkbox.
+					Default value set to false. -->
 					<xsl:when test="name(.)='gco:Boolean'">
-						<input type="hidden" name="_{geonet:element/@ref}" id="_{geonet:element/@ref}" value="false"/>
+					    <input type="hidden" name="_{geonet:element/@ref}" id="_{geonet:element/@ref}" value="{.}">
+					        <xsl:choose>
+					            <xsl:when test=". = ''">
+					                <xsl:attribute name="value">false</xsl:attribute>
+					            </xsl:when>
+					            <xsl:otherwise>
+					                <xsl:attribute name="value"><xsl:value-of select="."/></xsl:attribute>
+					            </xsl:otherwise>
+					        </xsl:choose>
+					    </input>
+					    
 						<xsl:choose>
-							<xsl:when test="text()='true'">
-								<input class="md" type="checkbox" id="_{geonet:element/@ref}_checkbox" onclick="handleCheckboxAsBoolean(this, _{geonet:element/@ref});" checked="checked"/>
+						    <xsl:when test="text()='true' or text()='1'">
+								<input class="md" type="checkbox" id="_{geonet:element/@ref}_checkbox" onclick="handleCheckboxAsBoolean(this, '_{geonet:element/@ref}');" checked="checked"/>
 							</xsl:when>
 							<xsl:otherwise>
-								<input class="md" type="checkbox" id="_{geonet:element/@ref}_checkbox" onclick="handleCheckboxAsBoolean(this, _{geonet:element/@ref});"/>
+								<input class="md" type="checkbox" id="_{geonet:element/@ref}_checkbox" onclick="handleCheckboxAsBoolean(this, '_{geonet:element/@ref}');"/>
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:when>
@@ -946,11 +968,17 @@
 								</xsl:otherwise>
 							</xsl:choose>
 
-							<xsl:if test="../geonet:element/@min='1' and $edit">
+							<xsl:if test="$visible = 'false'">
+								<xsl:attribute name="style">display:none;</xsl:attribute>
+							</xsl:if>
+							<xsl:if test="(
+								(name(.)='gmd:LocalisedCharacterString' and ../../geonet:element/@min='1')
+								or ../geonet:element/@min='1'
+								)
+								and $edit">
 								<xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute>
 							</xsl:if>
 						</input>
-						
 						<xsl:call-template name="helper">
 							<xsl:with-param name="schema" select="$schema"/>
 							<xsl:with-param name="attribute" select="false()"/>
@@ -960,16 +988,35 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$edit=true()">
-				<textarea class="md" name="_{geonet:element/@ref}" rows="{$rows}" cols="{$cols}">
-					<xsl:if test="../geonet:element/@min='1' and $edit">
+				<textarea class="md" name="_{geonet:element/@ref}" id="_{geonet:element/@ref}" rows="{$rows}" cols="{$cols}">
+					<xsl:if test="$visible = 'false'">
+						<xsl:attribute name="style">display:none;</xsl:attribute>
+					</xsl:if>
+					<xsl:if test="(
+						(name(.)='gmd:LocalisedCharacterString' and ../../geonet:element/@min='1')
+						or ../geonet:element/@min='1'
+						) and $edit">
 						<xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute>
 					</xsl:if>
 					<xsl:value-of select="text()"/>
 				</textarea>
 			</xsl:when>
 			<xsl:when test="$edit=false() and $rows!=1">
+				<xsl:variable name="text">
+					<xsl:choose>
+						<xsl:when test="starts-with($schema,'iso19139')">
+							<xsl:apply-templates mode="localised" select="..">
+								<xsl:with-param name="langId" select="$langId"></xsl:with-param>
+							</xsl:apply-templates>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$value"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				
 				<xsl:call-template name="preformatted">
-					<xsl:with-param name="text" select="$value"/>
+					<xsl:with-param name="text" select="$text"/>
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:otherwise>
@@ -977,6 +1024,11 @@
 				<xsl:variable name="label" select="/root/gui/*[name(.)=$schema]/codelist[@name = $name]/entry[code=$value]/label"/>
 				<xsl:choose>
 					<xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
+					<xsl:when test="starts-with($schema,'iso19139') and name(.)!='gco:ScopedName'">
+						<xsl:apply-templates mode="localised" select="..">
+							<xsl:with-param name="langId" select="$langId"></xsl:with-param>
+						</xsl:apply-templates>
+					</xsl:when>
 					<xsl:otherwise><xsl:value-of select="$value"/></xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
@@ -990,7 +1042,7 @@
 		<xsl:param name="schema"/>
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="rows" select="1"/>
-		<xsl:param name="cols" select="50"/>
+		<xsl:param name="cols" select="40"/>
 		
 		<xsl:variable name="name"  select="name(.)"/>
 		<xsl:variable name="value" select="string(.)"/>
@@ -1041,7 +1093,7 @@
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:when test="$edit=true()">
-				<textarea class="md" name="_{../geonet:element/@ref}_{$updatename}" rows="{$rows}" cols="{$cols}">
+				<textarea class="md" name="_{../geonet:element/@ref}_{$updatename}" id="_{../geonet:element/@ref}_{$updatename}" rows="{$rows}" cols="{$cols}">
 					<xsl:value-of select="string()"/>
 				</textarea>
 			</xsl:when>

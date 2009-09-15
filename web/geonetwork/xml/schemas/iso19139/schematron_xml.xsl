@@ -53,6 +53,8 @@
          <xsl:apply-templates select="/" mode="M29"/>
          <xsl:apply-templates select="/" mode="M30"/>
          <xsl:apply-templates select="/" mode="M31"/>
+         <xsl:apply-templates select="/" mode="M32"/>
+         <xsl:apply-templates select="/" mode="M33"/>
       </geonet:schematronerrors>
    </xsl:template>
    <xsl:template match="*[gco:CharacterString]" priority="4000" mode="M7">
@@ -431,5 +433,33 @@
       <xsl:apply-templates mode="M31"/>
    </xsl:template>
    <xsl:template match="text()" priority="-1" mode="M31"/>
+   <xsl:template match="//gmd:MD_Metadata/gmd:language|//*[@gco:isoType='gmd:MD_Metadata']/gmd:language"
+                 priority="4000"
+                 mode="M32">
+      <xsl:if test="../gmd:locale and @gco:nilReason='missing'">
+         <geonet:errorFound ref="#_{geonet:element/@ref}">
+            <geonet:pattern name="{name(.)}"/>
+            <geonet:diagnostics>
+               <xsl:value-of select="$loc/strings/alert.M500"/>
+            </geonet:diagnostics>
+         </geonet:errorFound>
+      </xsl:if>
+      <xsl:apply-templates mode="M32"/>
+   </xsl:template>
+   <xsl:template match="text()" priority="-1" mode="M32"/>
+   <xsl:template match="//gmd:MD_Metadata/gmd:locale|//*[@gco:isoType='gmd:MD_Metadata']/gmd:locale"
+                 priority="4000"
+                 mode="M33">
+      <xsl:if test="gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue=../gmd:language/gco:CharacterString">
+         <geonet:errorFound ref="#_{geonet:element/@ref}">
+            <geonet:pattern name="{name(.)}"/>
+            <geonet:diagnostics>
+               <xsl:value-of select="$loc/strings/alert.M501"/>
+            </geonet:diagnostics>
+         </geonet:errorFound>
+      </xsl:if>
+      <xsl:apply-templates mode="M33"/>
+   </xsl:template>
+   <xsl:template match="text()" priority="-1" mode="M33"/>
    <xsl:template match="text()" priority="-1"/>
 </xsl:stylesheet>

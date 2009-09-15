@@ -1337,6 +1337,13 @@ public class DataManager
 			String val = ((String) changes.get(ref)).trim();
 			String attr= null;
 
+			if (ref.equals(""))
+				continue;
+			
+			if(updatedLocalizedTextElement(md, ref, val)) {
+			    continue;
+			}
+			
 			int at = ref.indexOf("_");
 			if (at != -1)
 			{
@@ -1410,6 +1417,73 @@ public class DataManager
 
 	}
 
+	/**
+	 * Add a localised character string to an element.
+	 * 
+	 * @param md metadata record
+	 * @param ref current ref of element. All _lang_AB_123 element will be processed.
+	 * @param val
+	 * @return
+	 */
+    private boolean updatedLocalizedTextElement(Element md, String ref, String val)
+    {
+        if (ref.startsWith("lang"))
+        {
+            if (val.length() > 0)
+            {
+                String[] ids = ref.split("_");
+                // --- search element in current metadata record
+                Element parent = editLib.findElement(md, ids[2]);
+
+                // --- add required attribute
+                parent.setAttribute("type", 
+                			"gmd:PT_FreeText_PropertyType", 
+                			Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance")
+                		);
+                
+                // --- add new translation
+                Namespace gmd = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
+                Element langElem = new Element("LocalisedCharacterString", gmd);
+                langElem.setAttribute("locale", "#" + ids[1]);
+                langElem.setText(val);
+
+                Element freeText = getOrAdd(parent, "PT_FreeText", gmd);
+
+                Element textGroup = new Element("textGroup", gmd);
+                freeText.addContent(textGroup);
+                textGroup.addContent(langElem);
+                Element refElem = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
+                refElem.setAttribute(Edit.Element.Attr.REF, "");
+                textGroup.addContent(refElem);
+                langElem.addContent((Element) refElem.clone());
+            }
+            return true;
+        }
+        return false;
+    }
+	
+    /**
+     * If no PT_FreeText element exist create a geonet:element with
+     * an empty ref.
+     * 
+     * @param parent
+     * @param name
+     * @param ns
+     * @return
+     */
+	private Element getOrAdd(Element parent, String name, Namespace ns)
+	{
+		Element child = parent.getChild(name, ns);
+		if (child == null)
+		{
+			child = new Element(name, ns);
+			Element refElem = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
+			refElem.setAttribute(Edit.Element.Attr.REF, "");
+			child.addContent(refElem);
+			parent.addContent(child);
+		}
+		return child;
+	}
 	//--------------------------------------------------------------------------
 	/** For Ajax Editing : retrieves metadata from session and validates it
 	  */
@@ -1589,6 +1663,10 @@ public class DataManager
 			String val = ((String) changes.get(ref)).trim();
 			String attr= null;
 
+			if(updatedLocalizedTextElement(md, ref, val)) {
+			    continue;
+			}
+			
 			int at = ref.indexOf("_");
 			if (at != -1)
 			{

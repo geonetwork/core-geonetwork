@@ -153,6 +153,14 @@
                         <xsl:value-of select="$loc/strings/M30"/>
                      </h3>
                      <xsl:apply-templates select="/" mode="M31"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M500"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M32"/>
+                     <h3>
+                        <xsl:value-of select="$loc/strings/M501"/>
+                     </h3>
+                     <xsl:apply-templates select="/" mode="M33"/>
                   </td>
                </tr>
             </table>
@@ -565,5 +573,35 @@
       <xsl:apply-templates mode="M31"/>
    </xsl:template>
    <xsl:template match="text()" priority="-1" mode="M31"/>
+   <xsl:template match="//gmd:MD_Metadata/gmd:language|//*[@gco:isoType='gmd:MD_Metadata']/gmd:language"
+                 priority="4000"
+                 mode="M32">
+      <xsl:if test="../gmd:locale and @gco:nilReason='missing'">
+         <li>
+            <a href="schematron-out.html#{generate-id(.)}" target="out"
+               title="Link to where this pattern was found">
+               <xsl:value-of select="$loc/strings/alert.M500"/>
+               <b/>
+            </a>
+         </li>
+      </xsl:if>
+      <xsl:apply-templates mode="M32"/>
+   </xsl:template>
+   <xsl:template match="text()" priority="-1" mode="M32"/>
+   <xsl:template match="//gmd:MD_Metadata/gmd:locale|//*[@gco:isoType='gmd:MD_Metadata']/gmd:locale"
+                 priority="4000"
+                 mode="M33">
+      <xsl:if test="gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue=../gmd:language/gco:CharacterString">
+         <li>
+            <a href="schematron-out.html#{generate-id(.)}" target="out"
+               title="Link to where this pattern was found">
+               <xsl:value-of select="$loc/strings/alert.M501"/>
+               <b/>
+            </a>
+         </li>
+      </xsl:if>
+      <xsl:apply-templates mode="M33"/>
+   </xsl:template>
+   <xsl:template match="text()" priority="-1" mode="M33"/>
    <xsl:template match="text()" priority="-1"/>
 </xsl:stylesheet>

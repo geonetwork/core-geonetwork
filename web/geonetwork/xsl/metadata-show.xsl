@@ -91,13 +91,14 @@
 													</xsl:otherwise>
 												</xsl:choose>
 											</td>
+											<td class="padded" width="90%">
+												<h1 align="left">
+													<xsl:value-of select="$metadata/title"/>
+												</h1>
+											</td>
+											
 											<xsl:choose>
 												<xsl:when test="contains(geonet:info/schema,'dublin-core')">
-													<td class="padded" width="90%">
-														<h1 align="left">
-															<xsl:value-of select="/root/simpledc/dc:title"/>
-														</h1>
-													</td>
 													<td align="right" class="padded-content" height="16" nowrap="nowrap">
 														<a href="{/root/gui/locService}/dc.xml?id={geonet:info/id}" target="_blank" title="Download Dublin Core metadata in XML">
 															<img src="{/root/gui/url}/images/xml.png" alt="Dublin Core XML" title="Save Dublin Core metadata as XML" border="0"/>
@@ -105,11 +106,6 @@
 													</td>
 												</xsl:when>
 												<xsl:when test="contains(geonet:info/schema,'fgdc-std')">
-													<td class="padded" width="90%">
-														<h1 align="left">
-															<xsl:value-of select="/root/metadata/idinfo/citation/citeinfo/title"/>
-														</h1>
-													</td>
 													<td align="right" class="padded-content" height="16" nowrap="nowrap">
 														<a href="{/root/gui/locService}/fgdc.xml?id={geonet:info/id}" target="_blank" title="Download FGDC metadata in XML">
 															<img src="{/root/gui/url}/images/xml.png" alt="FGDC XML" title="Save FGDC metadata as XML" border="0"/>
@@ -117,11 +113,6 @@
 													</td>
 												</xsl:when>
 												<xsl:when test="contains(geonet:info/schema,'iso19115')">
-													<td class="padded" width="90%">
-														<h1 align="left">
-															<xsl:value-of select="/root/Metadata/dataIdInfo/idCitation/resTitle"/>
-														</h1>
-													</td>
 													<td align="right" class="padded-content" height="16" nowrap="nowrap">
 														<a href="{/root/gui/locService}/iso19115to19139.xml?id={geonet:info/id}" target="_blank" title="Save ISO19115/19139 metadata as XML">
 															<img src="{/root/gui/url}/images/xml.png" alt="IISO19115/19139 XML" title="Save ISO19115/19139 metadata as XML" border="0"/>
@@ -132,18 +123,10 @@
 													</td>
 												</xsl:when>
 												<xsl:when test="contains(geonet:info/schema,'iso19139')">
-													<td class="padded" width="90%">
-														<h1 align="left">
-															<xsl:value-of select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
-														</h1>
-													</td>
 													<td align="right" class="padded-content" height="16" nowrap="nowrap">
 														<a href="{/root/gui/locService}/iso19139.xml?id={geonet:info/id}" target="_blank" title="Download ISO19115/19139 metadata in XML">
 															<img src="{/root/gui/url}/images/xml.png" alt="ISO19115/19139 XML" title="Save ISO19115/19139 metadata as XML" border="0"/>
 														</a>
-<!-- //FIXME											<a href="{/root/gui/locService}/iso_arccatalog8.xml?id={geonet:info/id}" target="_blank" title="Download ISO19115 metadata in XML for ESRI ArcCatalog">
-															<img src="{/root/gui/url}/images/ac.png" alt="ISO19115 XML for ArcCatalog" title="Save ISO19115 metadata in XML for ESRI ArcCatalog" border="0"/>
-	</a> -->
 													</td>
 												</xsl:when>
 											</xsl:choose>

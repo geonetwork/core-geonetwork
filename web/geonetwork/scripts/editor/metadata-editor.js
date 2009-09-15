@@ -1,4 +1,3 @@
-
 var getGNServiceURL = function(service) {
 	return Env.locService+"/"+service;
 };
@@ -752,20 +751,182 @@ function validateNonEmpty(input) {
 }
 
 /**
- * Retrieve all page's input and textarea element
- * and check the onkeyup and onchange event (Usually used to check
- * user entry. @see validateNonEmpty and validateNumber).
+ * Retrieve all page's input and textarea element and check the onkeyup and
+ * onchange event (Usually used to check user entry.
+ * 
+ * @see validateNonEmpty and validateNumber).
  * 
  * @return
  */
 function validateMetadataFields() {
-    $$('input,textarea,select').each(function(input) {
-    	// Process only onchange and onkeyup event having validate in event name.
-    	if ((input.onchange && input.readAttribute("onchange").indexOf("validate") == -1) ||
-    			(input.onkeyup && input.readAttribute("onkeyup").indexOf("validate") == -1))
-    		return;
-    	
-        if (input.onkeyup) input.onkeyup();
-        if (input.onchange) input.onchange();
-    });
+	// --- display lang selector when appropriate
+	$$('select.lang_selector')
+			.each( function(input) {
+				// --- language selector has a code attribute to be used to be
+					// matched with GUI language in order to edit by default
+					// element
+					// in GUI language. If none, default language is selected.
+					for (i = 0; i < input.options.length; i++)
+						if (input.options[i].readAttribute("code")
+								.toLowerCase() == Env.lang)
+							input.options[i].selected = true;
+
+					enableLocalInput(input, false)
+				});
+
+	// --- display validator events when needed.
+	$$('input,textarea,select').each( function(input) {
+		validateMetadataField(input);
+	});
+
+}
+
+
+
+/**
+ * Trigger validating event of an element.
+ * 
+ * @return
+ */
+function validateMetadataField(input) {
+	// Process only onchange and onkeyup event having validate in event name.
+	if (!input
+			|| (input.onchange && input.readAttribute("onchange").indexOf(
+					"validate") == -1)
+			|| (input.onkeyup && input.readAttribute("onkeyup").indexOf(
+					"validate") == -1))
+		return;
+
+	if (input.onkeyup)
+		input.onkeyup();
+	if (input.onchange)
+		input.onchange();
+}
+
+
+/**
+ * Multilingual widget is composed of one or more input or textarea (one for
+ * each language) and on select list. If Google translation service is activated
+ * then a suggestion div is also proposed (and clear on language selection).
+ * 
+ * Parameters:
+ * 
+ * @param node -
+ *            {Object} node to enable
+ * @param focus -
+ *            {Object} focus
+ */
+function enableLocalInput(node, focus) {
+	var ref = node.value;
+	var parent = node.parentNode.parentNode;
+	var nodes = parent.getElementsByTagName("input");
+	var textarea = parent.getElementsByTagName("textarea");
+
+	show(nodes, ref, focus);
+	show(textarea, ref, focus);
+};
+
+function clearSuggestion(divSuggestion) {
+	if ($(divSuggestion) != null)
+		$(divSuggestion).innerHTML = "";
+};
+
+/**
+ * 
+ * Parameters:
+ * 
+ * @param node -
+ *            {Object} node
+ * @param ref -
+ *            {String} ref
+ * @param focus -
+ *            {Object} focus
+ */
+function show(nodes, ref, focus) {
+	for (index in nodes) {
+		var input = nodes[index];
+		if (input.style != null && input.style.display != "none")
+			input.style.display = "none";
+	}
+	for (index in nodes) {
+		var input = nodes[index];
+		if (input.name == ref) {
+			input.style.display = "block";
+			if (focus)
+				input.focus();
+		}
+	}
+}
+
+/**
+ * Google translation API demo See:
+ * http://code.google.com/apis/ajaxlanguage/documentation/
+ * Google AJAX API Terms of Use http://code.google.com/apis/ajaxlanguage/terms.html
+ * 
+ * Translate a string using Google translation API.
+ * 
+ * Parameters:
+ * 
+ * @param ref -
+ *            {String} ref identifier of source element (usually input box in
+ *            default metadata language)
+ * @param divSuggestion -
+ *            {String} div element to suggest a translation. User need to do
+ *            analyze and type the translation.
+ * @param target -
+ *            {String} target identifier of target element
+ * @param fromLang -
+ *            {String} fromLang language (default metadata language)
+ * @param toLang -
+ *            {String} toLang target language (current language selected in
+ *            language list)
+ */
+function googleTranslate(ref, divSuggestion, target, fromLang, toLang) {
+	// --- map language code to Google language code
+	var map = {
+		"GE" :"de",
+		"SP" :"es",
+		"CH" :"zh"
+	};
+
+	// --- map
+	if (map[fromLang])
+		fromLang = map[fromLang];
+	if (map[toLang])
+		toLang = map[toLang];
+
+	// --- Check text to translate
+	if ($(ref).value == "") {
+		alert(translate("translateWithGoogle.emptyInput"));
+		return;
+	}
+		
+	if ($(ref).value.length > 5000) {
+		// TODO : i18n
+		alert(translate("translateWithGoogle.maxSize"));
+		return;
+	}
+
+	if ($(divSuggestion) != null)
+		$(divSuggestion).innerHTML = "";
+
+	// --- translate
+	google.language.translate($(ref).value, fromLang, toLang, function(result) {
+		if (!result.error) {
+			var suggestion = result.translation.replace(/&#39;/g, "'").replace(
+					/&quot;/g, '"'); // FIXME : here we should take
+			// care of other html entities ?
+			if ($(target) != null)
+				$(target).value = suggestion;
+			if ($(divSuggestion) != null) {
+				$(divSuggestion).innerHTML = suggestion;
+				$(divSuggestion).style.display = "block";
+			}
+		} else {
+			alert(result.error.message + " (" + result.error.code + ")");
+			// Sometime 400 characters seems to be the limit.
+		}
+
+		validateMetadataField($(target));
+	});
 }

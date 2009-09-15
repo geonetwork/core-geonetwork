@@ -76,5 +76,9 @@
     <alert.M28>Le code est obligatoire si le type de valeur est \&apos;Elément d\&apos;une liste de code\&apos;</alert.M28>
     <alert.M29>Le nom court est obligatoire si le type de valeur n\&apos;est pas \&apos;Elément d\&apos;une liste de code\&apos;</alert.M29>
     <alert.M30>La description des points de calage est obligatoire si elle est disponible</alert.M30> 
-    
+
+    <M500>[Langue] - La langue principale des métadonnées n'est pas définie alors que d'autres langues le sont.</M500>
+    <alert.M500>Définir la langue principale et vérifier dans la section autres langues (ie. gmd:locale) que les autres langues sont définies (voir vue avancée / section métadonnée). Suggestions: Définir la langue par défaut ou supprimer les autres langues.</alert.M500>
+    <M501>[Langue] - La langue principale ne doit pas être définie dans la section autres langues.</M501>
+    <alert.M501>Définir la langue principale une seule fois (voir vue avancée / section métadonnée). Suggestions: supprimer la langue par défaut de la section autres langues.</alert.M501>    
 </strings>

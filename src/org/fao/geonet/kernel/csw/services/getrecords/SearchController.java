@@ -172,6 +172,7 @@ public class SearchController
 		String styleSheet = schemaDir + prefix +"-"+ setName +".xsl";
 
 		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("lang", context.getLanguage());
 		params.put("displayInfo", 
 				resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
 		

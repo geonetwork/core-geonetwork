@@ -2342,8 +2342,8 @@
         <description>DS_StereoMate</description>
     </element>
     <element name="gmd:languageCode">
-        <label>Language Code</label>
-        <description>LanguageCode</description>
+        <label>Language</label>
+        <description>Language code</description>
     </element>
     <element name="gmd:characterEncoding">
         <label>Character encoding</label>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+<xsl:stylesheet   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 						xmlns:gml="http://www.opengis.net/gml"
 						xmlns:srv="http://www.isotc211.org/2005/srv"
 						xmlns:gmx="http://www.isotc211.org/2005/gmx"						
@@ -179,10 +179,8 @@
 		are used for multilingual charcterString using #iso2code for referencing.
 	-->
 	<xsl:template match="gmd:PT_Locale">
-		<xsl:variable name="id" select="translate(
-			substring(gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 2), 
-			'abcdefghijklmnopqrstuvwxyz', 
-			'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/><!-- NOTE : using XSL v2 we could use upper-case() instead -->
+		<xsl:variable name="id" select="upper-case(
+			substring(gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 2))"/>
 		
 		<xsl:choose>
 			<xsl:when test="@id and (normalize-space(@id)!='' and normalize-space(@id)=$id)">

@@ -4,7 +4,7 @@
 	exclude-result-prefixes="geonet">
 
 	<!--
-	edit metadata form
+	edit metadata form 
 	-->
 	<xsl:include href="edit.xsl"/>
 	<xsl:include href="metadata.xsl"/>
@@ -35,6 +35,20 @@
 				timeId = setTimeout('scrollIt()',1000);	
 			</xsl:if>
 		</script>
+		
+		
+		
+		<!-- =================================
+				Google translation API demo (Load the API in version 1).
+		================================= -->
+		<xsl:if test="/root/gui/config/editor-google-translate = 1">			
+			<script type="text/javascript" src="http://www.google.com/jsapi"/>
+			<script type="text/javascript">
+				google.load("language", "1");
+			</script>
+		</xsl:if>
+		
+		
 	</xsl:template>
 	
 	<!--

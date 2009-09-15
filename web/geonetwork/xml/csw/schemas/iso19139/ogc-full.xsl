@@ -12,12 +12,22 @@
 										exclude-result-prefixes="gmd srv gco">
 
 	<xsl:param name="displayInfo"/>
+	<xsl:param name="lang"/>
+	
+	<xsl:include href="../../../../xsl/metadata-iso19139-utils.xsl"/>
 	
 	<!-- ============================================================================= -->
 
 	<xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
 		
 		<xsl:variable name="info" select="geonet:info"/>
+		<xsl:variable name="langId">
+			<xsl:call-template name="getLangId">
+				<xsl:with-param name="langGui" select="$lang"/>
+				<xsl:with-param name="md" select="."/>
+			</xsl:call-template>
+		</xsl:variable>
+		
 		<xsl:variable name="identification" select="gmd:identificationInfo/gmd:MD_DataIdentification|
 			gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
 			gmd:identificationInfo/srv:SV_ServiceIdentification|
@@ -32,27 +42,47 @@
 			<!-- DataIdentification - - - - - - - - - - - - - - - - - - - - - -->
 
 			<xsl:for-each select="$identification/gmd:citation/gmd:CI_Citation">	
-				<xsl:for-each select="gmd:title/gco:CharacterString">
-					<dc:title><xsl:value-of select="."/></dc:title>
+				<xsl:for-each select="gmd:title">
+					<dc:title>
+						<xsl:apply-templates mode="localised" select=".">
+								<xsl:with-param name="langId" select="$langId"/>
+						</xsl:apply-templates>
+					</dc:title>
 				</xsl:for-each>
 				
 				<!-- Type - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 				
 				<xsl:for-each select="../../../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue">
-					<dc:type><xsl:value-of select="."/></dc:type>
+					<dc:type>
+						<xsl:apply-templates mode="localised" select=".">
+								<xsl:with-param name="langId" select="$langId"/>
+						</xsl:apply-templates>
+					</dc:type>
 				</xsl:for-each>
 				
 				<!-- subject -->
 				
-				<xsl:for-each select="../../gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString">
-					<dc:subject><xsl:value-of select="."/></dc:subject>
+				<xsl:for-each select="../../gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword">
+					<dc:subject>
+						<xsl:apply-templates mode="localised" select=".">
+								<xsl:with-param name="langId" select="$langId"/>
+						</xsl:apply-templates>
+					</dc:subject>
 				</xsl:for-each>
+				<xsl:for-each select="../../gmd:topicCategory/gmd:MD_TopicCategoryCode">
+					<dc:subject><xsl:value-of select="."/></dc:subject><!-- TODO : translate ? -->
+				</xsl:for-each>
+				
 				
 				<!-- Distribution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 				
 				<xsl:for-each select="../../../../gmd:distributionInfo/gmd:MD_Distribution">
-					<xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
-						<dc:format><xsl:value-of select="."/></dc:format>
+					<xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name">
+						<dc:format>
+							<xsl:apply-templates mode="localised" select=".">
+								<xsl:with-param name="langId" select="$langId"/>
+							</xsl:apply-templates>
+						</dc:format>
 					</xsl:for-each>
 				</xsl:for-each>
 				
@@ -61,24 +91,40 @@
 					<dct:modified><xsl:value-of select="."/></dct:modified>
 				</xsl:for-each>
 
-				<xsl:for-each select="gmd:citedResponsibleParty/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='originator']/gmd:organisationName/gco:CharacterString">
-					<dc:creator><xsl:value-of select="."/></dc:creator>
+				<xsl:for-each select="gmd:citedResponsibleParty/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='originator']/gmd:organisationName">
+					<dc:creator>
+						<xsl:apply-templates mode="localised" select=".">
+							<xsl:with-param name="langId" select="$langId"/>
+						</xsl:apply-templates>
+					</dc:creator>
 				</xsl:for-each>
 
-				<xsl:for-each select="gmd:citedResponsibleParty/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='publisher']/gmd:organisationName/gco:CharacterString">
-					<dc:publisher><xsl:value-of select="."/></dc:publisher>
+				<xsl:for-each select="gmd:citedResponsibleParty/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='publisher']/gmd:organisationName">
+					<dc:publisher>
+						<xsl:apply-templates mode="localised" select=".">
+							<xsl:with-param name="langId" select="$langId"/>
+						</xsl:apply-templates>
+					</dc:publisher>
 				</xsl:for-each>
 
-				<xsl:for-each select="gmd:citedResponsibleParty/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='author']/gmd:organisationName/gco:CharacterString">
-					<dc:contributor><xsl:value-of select="."/></dc:contributor>
+				<xsl:for-each select="gmd:citedResponsibleParty/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='author']/gmd:organisationName">
+					<dc:contributor>
+						<xsl:apply-templates mode="localised" select=".">
+							<xsl:with-param name="langId" select="$langId"/>
+						</xsl:apply-templates>					
+					</dc:contributor>
 				</xsl:for-each>
 			</xsl:for-each>
 
 			
 			<!-- abstract -->
 
-			<xsl:for-each select="$identification/gmd:abstract/gco:CharacterString">
-				<dct:abstract><xsl:value-of select="."/></dct:abstract>
+			<xsl:for-each select="$identification/gmd:abstract">
+				<dct:abstract>
+					<xsl:apply-templates mode="localised" select=".">
+						<xsl:with-param name="langId" select="$langId"/>
+					</xsl:apply-templates>				
+				</dct:abstract>
 			</xsl:for-each>
 
 			<!-- rights -->
@@ -89,8 +135,12 @@
 					<dc:rights><xsl:value-of select="."/></dc:rights>
 				</xsl:for-each>
 
-				<xsl:for-each select="$identification/otherConstraints/gco:CharacterString">
-					<dc:rights><xsl:value-of select="."/></dc:rights>
+				<xsl:for-each select="$identification/otherConstraints">
+					<dc:rights>
+						<xsl:apply-templates mode="localised" select=".">
+							<xsl:with-param name="langId" select="$langId"/>
+						</xsl:apply-templates>									
+					</dc:rights>
 				</xsl:for-each>
 			</xsl:for-each>
 
@@ -102,8 +152,12 @@
 			
 			<!-- Lineage -->
 			
-			<xsl:for-each select="gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement/gco:CharacterString">
-				<dc:source><xsl:value-of select="."/></dc:source>
+			<xsl:for-each select="gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement">
+				<dc:source>
+					<xsl:apply-templates mode="localised" select=".">
+						<xsl:with-param name="langId" select="$langId"/>
+					</xsl:apply-templates>				
+				</dc:source>
 			</xsl:for-each>
 			
 			<!-- Parent Identifier -->
@@ -116,8 +170,12 @@
 			<!-- Distribution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			
 			<xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
-				<xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
-					<dc:format><xsl:value-of select="."/></dc:format>
+				<xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name">
+					<dc:format>
+						<xsl:apply-templates mode="localised" select=".">
+							<xsl:with-param name="langId" select="$langId"/>
+						</xsl:apply-templates>
+					</dc:format>
 				</xsl:for-each>
 			</xsl:for-each>				
 
@@ -197,17 +255,25 @@
 							
 							<xsl:if test="gmd:name">
 								<xsl:attribute name="name">
-									<xsl:value-of select="gmd:name/gco:CharacterString"/>
+									<xsl:for-each select="gmd:name">
+										<xsl:apply-templates mode="localised" select=".">
+											<xsl:with-param name="langId" select="$langId"/>
+										</xsl:apply-templates>
+									</xsl:for-each>
 								</xsl:attribute>
 							</xsl:if>
 							
 							<xsl:if test="gmd:description">
 								<xsl:attribute name="description">
-									<xsl:value-of select="gmd:description/gco:CharacterString"/>
+									<xsl:for-each select="gmd:description">
+										<xsl:apply-templates mode="localised" select=".">
+											<xsl:with-param name="langId" select="$langId"/>
+										</xsl:apply-templates>
+									</xsl:for-each>
 								</xsl:attribute>
 							</xsl:if>
 							
-							<xsl:value-of select="gmd:linkage/gmd:URL"/>							
+							<xsl:value-of select="gmd:linkage/gmd:URL"/>
 						</dc:URI>
 					</xsl:if>
 				</xsl:for-each>

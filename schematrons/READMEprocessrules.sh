@@ -1,10 +1,10 @@
 #!/bin/sh
 # An example of how to create the schematrons for geonetwork - you'll need 
-# saxon8.jar and some kind of Unix environment for this script to work.
+# saxon.jar and some kind of Unix environment for this script to work.
 
 echo "Converting schematron rules to XSL files ..."
-java -jar saxon8.jar -s allSchtrnRules.sch -o schematron.xsl schematron-report.xsl
-java -jar saxon8.jar -s allSchtrnRules.sch -o schematron_xml.xsl schematron-report-geonetwork-xml.xsl
+java -jar saxon9.jar -s allSchtrnRules.sch -o schematron.xsl schematron-report.xsl
+java -jar saxon9.jar -s allSchtrnRules.sch -o schematron_xml.xsl schematron-report-geonetwork-xml.xsl
 
 # After this they need to be copied to the relevant schema directory:
 # (NOTE: you may want to back up the ones supplied with this release first!)

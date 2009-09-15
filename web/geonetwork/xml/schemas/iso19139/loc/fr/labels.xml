@@ -3081,7 +3081,7 @@
   </element>
   <element name="gmd:locale">
     <label>Autre langue</label>
-    <description>Autre langue</description>
+    <description>Utiliser cette section pour définir la liste des langues utilisées dans cette métadonnée.</description>
     <help/>
     <condition/>
   </element>

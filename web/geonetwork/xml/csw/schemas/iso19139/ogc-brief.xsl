@@ -11,12 +11,22 @@
 										exclude-result-prefixes="gmd srv gco">
 
 	<xsl:param name="displayInfo"/>
+	<xsl:param name="lang"/>
+	
+	<xsl:include href="../../../../xsl/metadata-iso19139-utils.xsl"/>
 	
 	<!-- ============================================================================= -->
 
 	<xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
 		
 		<xsl:variable name="info" select="geonet:info"/>
+		<xsl:variable name="langId">
+			<xsl:call-template name="getLangId">
+				<xsl:with-param name="langGui" select="$lang"/>
+				<xsl:with-param name="md" select="."/>
+			</xsl:call-template>
+		</xsl:variable>
+		
 		<xsl:variable name="identification" select="gmd:identificationInfo/gmd:MD_DataIdentification|
 			gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
 			gmd:identificationInfo/srv:SV_ServiceIdentification"/>
@@ -30,8 +40,12 @@
 			
 			<!-- DataIdentification -->
 			<xsl:for-each select="$identification/gmd:citation/gmd:CI_Citation">    
-				<xsl:for-each select="gmd:title/gco:CharacterString">
-					<dc:title><xsl:value-of select="."/></dc:title>
+				<xsl:for-each select="gmd:title">
+					<dc:title>
+						<xsl:apply-templates mode="localised" select=".">
+							<xsl:with-param name="langId" select="$langId"/>
+						</xsl:apply-templates>
+					</dc:title>
 				</xsl:for-each>
 			</xsl:for-each>
 

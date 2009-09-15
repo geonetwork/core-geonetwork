@@ -9,6 +9,9 @@
     <nl>Nederlands</nl> <!-- Do not translate -->
 	<ru>Русский</ru> <!-- Do not translate! -->
 	
+	<translateWithGoogle>Utiliser le service de traduction de Google pour proposer une traduction pour la langue sélectionnée.</translateWithGoogle>
+	<translateWithGoogle.maxSize js="true">Le texte à traduire dépasse les 5000 caractères (voir http://code.google.com/apis/ajaxlanguage/terms.html).</translateWithGoogle.maxSize>
+	<translateWithGoogle.emptyInput js="true">La valeur de ce champ dans la langue principale est vide. Saisir une valeur avant d'utiliser le service de traduction.</translateWithGoogle.emptyInput>	
     <crs code="EPSG:4326">WGS 84</crs>
     <layersAdded js="true">Les couches sélectionnées ont été ajoutées</layersAdded>
 	<registrationFailed js="true">Erreur, l'enregistrement a échoué :</registrationFailed>	

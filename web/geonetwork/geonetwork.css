@@ -228,6 +228,10 @@ input.error, textarea.error, select.error {
     border: 3px solid #FF2211 !important;
 }
 
+select.lang_selector {
+	max-width: 70px;
+}
+
 button.content {
 	font-family: Verdana;
 	font-size: 9pt;
@@ -575,6 +579,11 @@ div.important {
 	text-align: justify;
 	margin: 15px;
 	padding: 10px;
+}
+
+div.suggestion {
+	font-style:italic;
+	padding: 2px;
 }
 
 div.keywordResults ul li.selected {

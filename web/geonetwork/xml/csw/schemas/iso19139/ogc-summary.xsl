@@ -11,12 +11,21 @@
 	exclude-result-prefixes="gmd srv gco">
 	
 	<xsl:param name="displayInfo"/>
+	<xsl:param name="lang"/>
+	
+	<xsl:include href="../../../../xsl/metadata-iso19139-utils.xsl"/>
 	
 	<!-- ============================================================================= -->
 	
 	<xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
 		
 		<xsl:variable name="info" select="geonet:info"/>
+		<xsl:variable name="langId">
+			<xsl:call-template name="getLangId">
+				<xsl:with-param name="langGui" select="$lang"/>
+				<xsl:with-param name="md" select="."/>
+			</xsl:call-template>
+		</xsl:variable>
 		
 		<csw:SummaryRecord>
 			
@@ -32,7 +41,11 @@
 				gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']">
 				
 				<xsl:for-each select="gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString">
-					<dc:title><xsl:value-of select="."/></dc:title>
+					<dc:title>
+						<xsl:apply-templates mode="localised" select=".">
+							<xsl:with-param name="langId" select="$langId"/>
+						</xsl:apply-templates>
+					</dc:title>
 				</xsl:for-each>
 				
 				<!-- Type -->
@@ -41,16 +54,26 @@
 				</xsl:for-each>
 				
 				
-				<xsl:for-each select="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString
-					|gmd:topicCategory/gmd:MD_TopicCategoryCode">
-					<dc:subject><xsl:value-of select="."/></dc:subject>
+				<xsl:for-each select="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword">
+					<dc:subject>
+						<xsl:apply-templates mode="localised" select=".">
+							<xsl:with-param name="langId" select="$langId"/>
+						</xsl:apply-templates>
+					</dc:subject>
+				</xsl:for-each>
+				<xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
+					<dc:subject><xsl:value-of select="."/></dc:subject><!-- TODO : translate ? -->
 				</xsl:for-each>
 				
 				<!-- Distribution -->
 				
 				<xsl:for-each select="../../gmd:distributionInfo/gmd:MD_Distribution">
-					<xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
-						<dc:format><xsl:value-of select="."/></dc:format>
+					<xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name">
+						<dc:format>
+							<xsl:apply-templates mode="localised" select=".">
+								<xsl:with-param name="langId" select="$langId"/>
+							</xsl:apply-templates>
+						</dc:format>
 					</xsl:for-each>
 				</xsl:for-each>
 				
@@ -64,8 +87,12 @@
 					<dct:modified><xsl:value-of select="."/></dct:modified>
 				</xsl:for-each>
 				
-				<xsl:for-each select="gmd:abstract/gco:CharacterString">
-					<dct:abstract><xsl:value-of select="."/></dct:abstract>
+				<xsl:for-each select="gmd:abstract">
+					<dct:abstract>
+						<xsl:apply-templates mode="localised" select=".">
+							<xsl:with-param name="langId" select="$langId"/>
+						</xsl:apply-templates>
+					</dct:abstract>
 				</xsl:for-each>
 				
 			</xsl:for-each>

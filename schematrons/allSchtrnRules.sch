@@ -220,4 +220,29 @@ USA.
 			<sch:report test="(gmd:checkPointAvailability/gco:Boolean='1' or gmd:checkPointAvailability/gco:Boolean='true') and not(gmd:checkPointDescription)">$loc/strings/alert.M30</sch:report>
 		</sch:rule>
 	</sch:pattern>
+	<!-- =============================================================
+		GeoNetwork schematron rules:
+		=============================================================
+		* Language:
+		 * Do not declare a language twice in gmd:locale section.	
+			This should not happen due to XSD error
+			which is usually made before schematron validation:
+			"The value 'XX' of attribute 'id' on element 'gmd:PT_Locale' is not valid with respect to its type, 'ID'. 
+			(Element: gmd:PT_Locale with parent element: gmd:locale)"
+		 * gmd:LocalisedCharacterString locale="#FR" id exist in gmd:locale.
+		 * Check that main language is not defined and gmd:locale element exist.		 
+	-->
+	<sch:pattern name="$loc/strings/M500">
+		<sch:rule context="//gmd:MD_Metadata/gmd:language|//*[@gco:isoType='gmd:MD_Metadata']/gmd:language">
+			<sch:report test="../gmd:locale and @gco:nilReason='missing'">$loc/strings/alert.M500</sch:report>
+		</sch:rule>
+	</sch:pattern>
+	<!-- 
+		* Check that main language is defined and does not exist in gmd:locale.
+	-->
+	<sch:pattern name="$loc/strings/M501">
+		<sch:rule context="//gmd:MD_Metadata/gmd:locale|//*[@gco:isoType='gmd:MD_Metadata']/gmd:locale">
+			<sch:report test="gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue=../gmd:language/gco:CharacterString">$loc/strings/alert.M501</sch:report>
+		</sch:rule>
+	</sch:pattern>
 </sch:schema>
