@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2.0.2"  resultType="results">
+    <csw:Query typeNames="csw:Record">
+        <csw:Constraint version="1.1.0">
+            <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+                <ogc:BBOX>
+                    <ogc:PropertyName>iso:BoundingBox</ogc:PropertyName>
+                    <gml:Envelope xmlns:gml="http://www.opengis.net/gml">
+                        <gml:lowerCorner>181 -90</gml:lowerCorner>
+                        <gml:upperCorner>220 90</gml:upperCorner>
+                    </gml:Envelope>
+                </ogc:BBOX>
+            </ogc:Filter>
+        </csw:Constraint>
+    </csw:Query>
+</csw:GetRecords>
+

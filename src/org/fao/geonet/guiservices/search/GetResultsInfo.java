@@ -30,7 +30,7 @@ import jeeves.server.*;
 import jeeves.server.context.*;
 
 import org.fao.geonet.constants.*;
-import org.fao.geonet.kernel.search.MetaSearcher;
+import org.fao.geonet.kernel.search.LuceneSearcher;
 
 //=============================================================================
 
@@ -54,9 +54,11 @@ public class GetResultsInfo implements Service
 		
 		Element results = new Element("results");
 		
-		MetaSearcher searcher = (MetaSearcher)context.getUserSession().getProperty(Geonet.Session.SEARCH_RESULT);
+		Object searcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
+		
 		if (searcher != null)
-			results.setText(searcher.getSize()+"");
+			if (searcher instanceof LuceneSearcher)
+				results.setText(((LuceneSearcher)searcher).getSize()+"");
 		return results;
 	}
 }

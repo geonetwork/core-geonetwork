@@ -37,6 +37,8 @@ import jeeves.utils.Log;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.search.Hits;
+import org.apache.lucene.search.IndexSearcher;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -46,10 +48,11 @@ import org.fao.geonet.csw.common.exceptions.OperationNotSupportedEx;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.csw.CatalogService;
-import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
-import org.fao.geonet.kernel.search.SummaryComparator.Type;
+import org.fao.geonet.kernel.csw.services.getrecords.CatalogSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SummaryComparator;
+import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
+import org.fao.geonet.kernel.search.SummaryComparator.Type;
 import org.jdom.Element;
 
 //=============================================================================
@@ -168,7 +171,9 @@ public class GetDomain extends AbstractOperation implements CatalogService
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 			SearchManager sm = gc.getSearchmanager();
 			
-			IndexReader reader = IndexReader.open(sm.getLuceneDir());
+			IndexReader reader = sm.getIndexReader();
+			IndexSearcher searcher = new IndexSearcher(reader);
+			Hits hits = searcher.search(CatalogSearcher.getGroupsQuery(context));
 			
 			try {
 				// Get mapped lucene field in CSW configuration
@@ -193,16 +198,12 @@ public class GetDomain extends AbstractOperation implements CatalogService
 					listOfValues = new Element("ListOfValues", Csw.NAMESPACE_CSW);
 
 				// parse each document in the index
-				int numDocs = reader.numDocs();
+				int numDocs = hits.length();
 				String[] fieldValues;
 				SortedSet<String> sortedValues = new TreeSet<String>();
 				HashMap<String, Integer> duplicateValues = new HashMap<String, Integer>();
 				for (int j = 0; j < numDocs; j++) {
-					if (reader.isDeleted(j))
-	                    continue; // FIXME: strange lucene hack: sometimes it tries
-	                              // to load a deleted document
-	                
-					Document doc = reader.document(j);
+					Document doc = hits.doc(j);
 					
 					// Skip templates and subTemplates
 					String[] isTemplate = doc.getValues("_isTemplate");
@@ -227,9 +228,6 @@ public class GetDomain extends AbstractOperation implements CatalogService
 					listOfValues.addContent(createValuesElement(sortedValues, isRange));
 				
 			} finally {
-				// Close the current lucene reader.
-				reader.close();
-
 				// any children means that the catalog was unable to determine
 				// anything about the specified parameter
 				if (listOfValues!= null && listOfValues.getChildren().size() != 0)

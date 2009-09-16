@@ -50,6 +50,7 @@ import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
+import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.spatial.Pair;
@@ -480,7 +481,13 @@ public class GetRecords extends AbstractOperation implements CatalogService
 			String field = el.getChildText("PropertyName", Csw.NAMESPACE_OGC);
 			String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
 
-			al.add(Pair.read(field, "DESC".equals(order)));
+			// Map CSW search field to Lucene for sorting. And if not mapped assumes the field is a Lucene field.
+			String luceneField = FieldMapper.map(field);
+			
+			if (luceneField != null)
+				al.add(Pair.read(luceneField, "DESC".equals(order)));
+			else
+				al.add(Pair.read(field, "DESC".equals(order)));
 		}
 
 		// we always want to keep the relevancy as part of the sorting mechanism

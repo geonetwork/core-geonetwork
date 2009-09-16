@@ -75,7 +75,7 @@
 			</xsl:when>
 
 			<!-- Dublin core -->
-			<xsl:when test="$schema='dublin-core'">
+			<xsl:when test="$schema='dublin-core' or $schema='csw-record'">
 				<xsl:call-template name="dublin-coreBrief"/>
 			</xsl:when>
 

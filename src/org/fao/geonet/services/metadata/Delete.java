@@ -41,6 +41,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.kernel.csw.services.getrecords.CatalogSearcher;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.lib.Lib;
@@ -107,7 +108,10 @@ public class Delete implements Service
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
 
 		// invalidate current result set set
-		MetaSearcher searcher = (MetaSearcher)context.getUserSession().getProperty(Geonet.Session.SEARCH_RESULT);
+		Object o = session.getProperty(Geonet.Session.SEARCH_RESULT);
+		if (o instanceof CatalogSearcher)
+			o = null;
+		MetaSearcher searcher = (MetaSearcher)o;
 
 		if (searcher != null)
 			searcher.setValid(false);

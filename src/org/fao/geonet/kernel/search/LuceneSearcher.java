@@ -221,7 +221,6 @@ public class LuceneSearcher extends MetaSearcher
 		{
 			if (_searcher != null) {
                 _searcher.close();
-                _reader.close();
                 _searcher = null;
             }
             setValid(false);
@@ -317,7 +316,7 @@ public class LuceneSearcher extends MetaSearcher
 	 */
 	private void performQuery(Element request, boolean keepSearch) throws Exception
 	{
-		_reader = IndexReader.open(_sm.getLuceneDir());
+		_reader = _sm.getIndexReader();
 		_searcher = new IndexSearcher(_reader);
 		
 		if (_filter == null) {
@@ -367,32 +366,43 @@ public class LuceneSearcher extends MetaSearcher
         return sort;
     }
     
+    /**
+     * Define sort field. By default, the field is assumed to be a string.
+     * Only popularity and rating are sorted based on integer type.
+     * In order to works well sort field needs to be not tokenized in Lucene index.
+     * 
+     * Relevance is the default Lucene sorting mechanism.
+     * 
+     * @param sortBy
+     * @param sortOrder
+     * @return
+     */
     private static SortField makeSortField(String sortBy, boolean sortOrder)
     {
-        int sortType = SortField.INT;
-
-        if (!(sortBy.equals(Geonet.SearchResult.SortBy.DATE) || sortBy.equals(Geonet.SearchResult.SortBy.TITLE)
-                || sortBy.equals(Geonet.SearchResult.SortBy.RATING) || sortBy
-                .equals(Geonet.SearchResult.SortBy.POPULARITY) || sortBy
-                .equals(Geonet.SearchResult.SortBy.RELEVANCE))) {
-            Log.debug(Geonet.SEARCH_ENGINE, "Unknow sort by option: " + sortBy + ", "
-                    + Geonet.SearchResult.SortBy.RELEVANCE + " used.");
-            sortBy = Geonet.SearchResult.SortBy.RELEVANCE;
-        }
+        int sortType = SortField.STRING;
 
         if( sortBy.equals(Geonet.SearchResult.SortBy.RELEVANCE) ){
             return null;
         }
         
-        if (sortBy.equals(Geonet.SearchResult.SortBy.DATE)
-        		|| sortBy.equals(Geonet.SearchResult.SortBy.TITLE))
-            sortType = SortField.STRING;
+        // FIXME : here we should be able to define field type ?
+        // Add "_" prefix for internal fields. Maybe we should
+        // update that in DataManager indexMetadata to have the list of
+        // internal Lucene fields (ie. not defined in index-fields.xsl).
+        if (sortBy.equals(Geonet.SearchResult.SortBy.POPULARITY)
+        		|| sortBy.equals(Geonet.SearchResult.SortBy.RATING)) {
+            sortType = SortField.INT;
+            sortBy = "_" + sortBy;
+        } else if (sortBy.equals(Geonet.SearchResult.SortBy.DATE) 
+        		|| sortBy.equals(Geonet.SearchResult.SortBy.TITLE)) {
+            sortBy = "_" + sortBy;
+        }
         
-        SortField sortField = new SortField("_" + sortBy, sortType, sortOrder);
+        SortField sortField = new SortField(sortBy, sortType, sortOrder);
         
         return sortField;
     }
-
+    
 	//--------------------------------------------------------------------------------
 	/**
 	 *  Makes a new lucene query

@@ -182,7 +182,8 @@ public class DataManager
 		}
 		catch (Exception e)
 		{
-			Log.error(Geonet.DATA_MANAGER, "The metadata with id="+id+" is corrupt/invalid - ignoring it");
+			Log.error(Geonet.DATA_MANAGER, "The metadata document index with id="+id+" is corrupt/invalid - ignoring it. Error: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

@@ -23,7 +23,7 @@
 	<!-- ================================================================= -->
 	
 	<xsl:template match="csw:Record">
-		<simpledc xmlns:dc ="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/">
+		<csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc ="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/">
 			<xsl:apply-templates select="dc:title"/>
 			<xsl:apply-templates select="dc:creator"/>
 			<xsl:apply-templates select="dc:subject"/>
@@ -91,7 +91,7 @@
 			<xsl:apply-templates select="dct:valid"/>
 			
 			<xsl:apply-templates select="ows:BoundingBox"/>
-		</simpledc>
+		</csw:Record>
 	</xsl:template>
 
 	<!-- ================================================================= -->

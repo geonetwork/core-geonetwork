@@ -89,18 +89,25 @@
 			<Field name="southBL" string="{$south + 360}" store="true" index="true" token="false"/>
 			<Field name="northBL" string="{$north + 360}" store="true" index="true" token="false"/>
 			
+			<xsl:for-each select="/csw:Record/dc:subject">
+				<xsl:apply-templates select=".">
+					<xsl:with-param name="name" select="'keyword'"/>
+					<xsl:with-param name="store" select="'true'"/>
+		
+					<!--  the value was 'true' and has been changed to false to pass the CITE scripts 
+							Anyway, users should add several dc:subject elements each one containing a
+							single word. Hence, it is lecit to not tokenize the subject -->
+		
+					<xsl:with-param name="token" select="'false'"/> 
+				</xsl:apply-templates>
+		
+				<xsl:apply-templates select=".">
+					<xsl:with-param name="name" select="'subject'"/>
+					<xsl:with-param name="store" select="'true'"/>
+					<xsl:with-param name="token" select="'false'"/> 
+				</xsl:apply-templates>
+			</xsl:for-each>
 			
-			<xsl:apply-templates select="/csw:Record/dc:subject">
-				<xsl:with-param name="name" select="'keyword'"/>
-				<xsl:with-param name="store" select="'true'"/>
-	
-				<!--  the value was 'true' and has been changed to false to pass the CITE scripts 
-						Anyway, users should add several dc:subject elements each one containing a
-						single word. Hence, it is lecit to not tokenize the subject -->
-	
-				<xsl:with-param name="token" select="'false'"/> 
-			</xsl:apply-templates>
-	
 			<Field name="any" store="false" index="true" token="true">
 				<xsl:attribute name="string">
 					<xsl:apply-templates select="/csw:Record" mode="allText"/>

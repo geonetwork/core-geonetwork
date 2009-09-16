@@ -104,11 +104,13 @@ public class CatalogSearcher {
 			throws CatalogException {
 		Element luceneExpr = filterToLucene(context, filterExpr);
 
+		if (luceneExpr != null) {
+			checkForErrors(luceneExpr);
+			remapFields(luceneExpr);
+		}
+		
 		try {
-
 			if (luceneExpr != null) {
-				checkForErrors(luceneExpr);
-				remapFields(luceneExpr);
 				convertPhrases(luceneExpr, context);
 			}
 
@@ -343,7 +345,7 @@ public class CatalogSearcher {
 		// --- proper search
 		Log.debug(Geonet.CSW_SEARCH, "Lucene query: " + query.toString());
 
-		IndexReader reader = IndexReader.open(sm.getLuceneDir());
+		IndexReader reader = sm.getIndexReader();
 		IndexSearcher searcher = new IndexSearcher(reader);
 
 		try {
@@ -394,7 +396,6 @@ public class CatalogSearcher {
 			return Pair.read(summary, results);
 		} finally {
 			searcher.close();
-			reader.close();
 		}
 	}
 
@@ -404,7 +405,7 @@ public class CatalogSearcher {
 	 * Allow search on current user's groups only adding a BooleanClause to the
 	 * search.
 	 */
-	private Query getGroupsQuery(ServiceContext context) throws Exception {
+	public static Query getGroupsQuery(ServiceContext context) throws Exception {
 		Dbms dbms = (Dbms) context.getResourceManager()
 				.open(Geonet.Res.MAIN_DB);
 

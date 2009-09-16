@@ -57,8 +57,10 @@ public class FieldMapper
 	String name = elem.getQualifiedName();
 
 	for (String field : elemNames)
-	    if (getAbsolute(field).equals(name))
-		return true;
+		// Here we supposed that namespaces prefix are equals when removing elements 
+		// when an ElementName parameter is set.
+	    if (field.equals(name))
+	    	return true;
 
 	return false;
     }

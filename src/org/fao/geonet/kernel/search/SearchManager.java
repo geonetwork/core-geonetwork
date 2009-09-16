@@ -53,11 +53,13 @@ import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermEnum;
 import org.apache.lucene.search.Filter;
+import org.apache.lucene.store.Directory;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
@@ -108,6 +110,7 @@ public class SearchManager
 	private final File     _schemasDir;
 	private final Element  _summaryConfig;
 	private File           _luceneDir;
+	private IndexReader	   _indexReader;
 	private PerFieldAnalyzerWrapper _analyzer;
 	private LoggingContext _cat;
 	private Searchable     _hssSearchable;
@@ -135,7 +138,7 @@ public class SearchManager
             _luceneDir = new File(appPath + luceneDir+ "/nonspatial");
 
         _luceneDir.getParentFile().mkdirs();
-
+        
         _spatial = new Spatial(_luceneDir.getParent() + "/spatial");
 
         // Define the default Analyzer
@@ -316,15 +319,14 @@ public class SearchManager
 
 		Document doc = newDocument(xmlDoc);
 		
-		
 		IndexWriter writer = new IndexWriter(_luceneDir, _analyzer, false);
 		try {
 			writer.addDocument(doc);
 			lazyOptimize(writer);
 		} finally {
 			writer.close();
+			_indexReader = getIndexReader();
 		}
-		
 		_spatial.writer().index(_schemasDir.getPath(), type, id, metadata);
 	}
 
@@ -373,15 +375,14 @@ public class SearchManager
 	//  delete a document
 
 	public synchronized void delete(String fld, String txt) throws Exception {
-		_spatial.writer().delete(txt);
+		
 		// possibly remove old document
-		IndexReader reader = IndexReader.open(_luceneDir);
+		IndexReader indexReader = IndexReader.open(_luceneDir);
 		try {
-			reader.deleteDocuments(new Term(fld, txt));
-
-			// RGFIX: should I optimize here, or at least increase updateCount?
+			_spatial.writer().delete(txt);
+			indexReader.deleteDocuments(new Term(fld, txt));
 		} finally {
-			reader.close();
+			indexReader.close();
 		}
 	}
 
@@ -389,29 +390,25 @@ public class SearchManager
 
 	public Hashtable getDocs() throws Exception
 	{
-		IndexReader reader = IndexReader.open(_luceneDir);
-		try {
-			Hashtable docs = new Hashtable();
-			for (int i = 0; i < reader.numDocs(); i++) {
-				if (reader.isDeleted(i))
-					continue; // FIXME: strange lucene hack: sometimes it tries
-								// to load a deleted document
-				Hashtable record = new Hashtable();
-				Document doc = reader.document(i);
-				String id = doc.get("_id");
-				List<Field> fields = doc.getFields();
-				for (Iterator<Field> j = fields.iterator(); j.hasNext(); ) {
-					Field field = j.next();
-					record.put(field.name(), field.stringValue());
-				}
-				docs.put(id, record);
+		_indexReader = getIndexReader();
+	
+		Hashtable docs = new Hashtable();
+		for (int i = 0; i < _indexReader.numDocs(); i++) {
+			if (_indexReader.isDeleted(i))
+				continue; // FIXME: strange lucene hack: sometimes it tries
+							// to load a deleted document
+			Hashtable record = new Hashtable();
+			Document doc = _indexReader.document(i);
+			String id = doc.get("_id");
+			List<Field> fields = doc.getFields();
+			for (Iterator<Field> j = fields.iterator(); j.hasNext(); ) {
+				Field field = j.next();
+				record.put(field.name(), field.stringValue());
 			}
-			return docs;
+			docs.put(id, record);
 		}
-		finally
-		{
-			reader.close();
-		}
+		return docs;
+	
 	}
 
 	//--------------------------------------------------------------------------------
@@ -420,20 +417,13 @@ public class SearchManager
 	{
 		Vector terms = new Vector();
 
-		IndexReader reader = IndexReader.open(_luceneDir);
-		try
+		TermEnum enu = getIndexReader().terms(new Term(fld, ""));
+		
+		while (enu.next())
 		{
-			TermEnum enu = reader.terms(new Term(fld, ""));
-			while (enu.next())
-			{
-				Term term = enu.term();
-				if (term.field().equals(fld))
-					terms.add(enu.term().text());
-			}
-		}
-		finally
-		{
-			reader.close();
+			Term term = enu.term();
+			if (term.field().equals(fld))
+				terms.add(enu.term().text());
 		}
 		return terms;
 	}
@@ -476,6 +466,21 @@ public class SearchManager
 		return _luceneDir;
 	}
 
+	/**
+	 * Return a reopened index reader to do operations on
+	 * an up-to-date index.
+	 * 
+	 * @return
+	 */
+	public IndexReader getIndexReader() throws CorruptIndexException, IOException {
+		IndexReader indexReader = _indexReader.reopen();
+		// Close old instance if index has changed
+		if (indexReader != _indexReader)
+			_indexReader.close();
+		_indexReader = indexReader;
+		return _indexReader;
+	}
+	
 	Searchable getSearchable() 
 	{
 		return _hssSearchable;
@@ -491,8 +496,8 @@ public class SearchManager
 		boolean badIndex = true;
 		if (!rebuild) {
 			try {
-				IndexReader reader = IndexReader.open(_luceneDir);
-				reader.close();
+				IndexReader indexReader = IndexReader.open(_luceneDir);
+				indexReader.close();
 				badIndex = false;
 			} catch (Exception e) {
 				Log.error(Geonet.SEARCH_ENGINE,
@@ -508,6 +513,8 @@ public class SearchManager
 			IndexWriter writer = new IndexWriter(_luceneDir, _analyzer, true);
 			writer.close();
 		}
+		
+        _indexReader = IndexReader.open(_luceneDir);
 	}
 
 	/*

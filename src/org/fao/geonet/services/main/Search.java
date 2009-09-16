@@ -72,9 +72,9 @@ public class Search implements Service
 		String  sRemote = elData.getChildText(Geonet.SearchResult.REMOTE);
 		boolean remote  = sRemote != null && sRemote.equals(Geonet.Text.ON);
 
-		Element title = params.getChild(Geonet.SearchResult.TITLE);
-		Element abstr = params.getChild(Geonet.SearchResult.ABSTRACT);
-		Element any   = params.getChild(Geonet.SearchResult.ANY);
+		Element title = elData.getChild(Geonet.SearchResult.TITLE);
+		Element abstr = elData.getChild(Geonet.SearchResult.ABSTRACT);
+		Element any   = elData.getChild(Geonet.SearchResult.ANY);
 
 		if (title != null)
 			title.setText(MainUtil.splitWord(title.getText()));
@@ -87,10 +87,11 @@ public class Search implements Service
 
 		// possibly close old searcher
 		UserSession  session     = context.getUserSession();
-		MetaSearcher oldSearcher = (MetaSearcher)session.getProperty(Geonet.Session.SEARCH_RESULT);
-
-		if (oldSearcher != null)
-			oldSearcher.close();
+		Object oldSearcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
+		
+ 		if (oldSearcher != null)
+ 			if (oldSearcher instanceof LuceneSearcher)
+ 				((LuceneSearcher)oldSearcher).close();
 		
 		// possibly close old selection
 		SelectionManager oldSelection = (SelectionManager)session.getProperty(Geonet.Session.SELECTED_RESULT);
@@ -99,6 +100,7 @@ public class Search implements Service
 			oldSelection.close();
 			oldSelection = null;
 		}
+		
 
 		// perform the search and save search result into session
 		MetaSearcher searcher;

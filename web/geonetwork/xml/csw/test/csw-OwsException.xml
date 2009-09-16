@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:gmd="http://www.isotc211.org/2005/gmd" service="CSW" version="2.0.2">
+    <!-- This example should return an exception. -->
+</csw:GetRecords>

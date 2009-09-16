@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -45,6 +46,7 @@ import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.jdom.Element;
 
@@ -76,7 +78,25 @@ public class SearchController
 	Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
 
 	Pair<Element, List<ResultItem>> summaryAndSearchResults = _searcher.search(context, filterExpr, filterVersion, typeNames, sort, resultType, maxRecords);
+	
+	
+	UserSession session = context.getUserSession();
+	session.setProperty(Geonet.Session.SEARCH_RESULT, _searcher);
 
+	// clear selection from session when query filter change
+	String requestId = Util.scramble(Xml.getString(filterExpr));
+	String sessionRequestId = (String) session.getProperty(Geonet.Session.SEARCH_REQUEST_ID);
+	if (sessionRequestId != null && !sessionRequestId.equals(requestId)) {
+		// possibly close old selection
+		SelectionManager oldSelection = (SelectionManager)session.getProperty(Geonet.Session.SELECTED_RESULT);
+		
+		if (oldSelection != null){
+			oldSelection.close();
+			oldSelection = null;
+		}	
+	}
+	session.setProperty(Geonet.Session.SEARCH_REQUEST_ID, requestId);
+	
 	int counter = 0;
 
 	List<ResultItem> resultsList = summaryAndSearchResults.two();

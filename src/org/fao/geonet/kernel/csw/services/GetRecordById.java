@@ -78,13 +78,12 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
 		Element response = new Element(getName() +"Response", Csw.NAMESPACE_CSW);
 
+		Iterator ids = request.getChildren("Id", Csw.NAMESPACE_CSW).iterator();
+
+		if (!ids.hasNext())
+			throw new MissingParameterValueEx("id");
+
 		try {
-		
-			Iterator ids = request.getChildren("Id", Csw.NAMESPACE_CSW).iterator();
-	
-			if (!ids.hasNext())
-				throw new MissingParameterValueEx("id");
-	
 			while(ids.hasNext())
 			{
 				String  uuid = ((Element) ids.next()).getText();
@@ -92,9 +91,9 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 				String id = gc.getDataManager().getMetadataId(dbms, uuid);
 				
-				// Metadata not found
+				// Metadata not found, search for next ids
 				if (id == null)
-					return response;
+					continue;
 					//throw new InvalidParameterValueEx("uuid", "Can't find metadata with uuid "+uuid);
 				
 				Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, ResultType.RESULTS);

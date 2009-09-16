@@ -6,11 +6,15 @@
 		xmlns:geonet="http://www.fao.org/geonetwork"		
 		xmlns:ows="http://www.opengis.net/ows" >
 
-	<xsl:template match="csw:Record">
+	<xsl:param name="displayInfo"/>
+	
+	<xsl:template match="csw:Record">		
 		<csw:Record>
-			<xsl:apply-templates select="*"/>
+			<xsl:apply-templates select="*[name(.)!='geonet:info']"/>			
 			
-			<xsl:copy-of select="geonet:info"/>
+			<xsl:if test="$displayInfo = 'true'">				
+				<xsl:copy-of select="geonet:info"/>
+			</xsl:if>
 		</csw:Record>
 	</xsl:template>
 

@@ -15,6 +15,7 @@ import org.geotools.factory.GeoTools;
 import org.geotools.filter.visitor.DefaultFilterVisitor;
 import org.geotools.filter.visitor.DuplicatingFilterVisitor;
 import org.geotools.filter.visitor.ExtractBoundsFilterVisitor;
+import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Parser;
 import org.jdom.Element;
@@ -36,6 +37,7 @@ import org.opengis.filter.spatial.Intersects;
 import org.opengis.filter.spatial.Overlaps;
 import org.opengis.filter.spatial.Touches;
 import org.opengis.filter.spatial.Within;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.SpatialIndex;
@@ -49,8 +51,21 @@ public class OgcGenericFilters
             SpatialIndex index, Parser parser) throws Exception
     {
         String string = Xml.getString(filterExpr);
+//        FIXME : Hack to temporary remove srsName information
+//        which are not resolved correctly by the parser.
+//        This assume all filter are using WGS84
+        string = string.replaceAll(" srsName=\"(.*)\"", "");
+//        is this related to http://jira.codehaus.org/browse/GEOT-1388 ?
+//        System.setProperty("org.geotools.referencing.forceXY", "true");
+//        CoordinateReferenceSystem urn = CRS.decode("");
+//        System.out.println(urn);
+//        CoordinateReferenceSystem epsg = CRS.decode("EPSG:4326");
+//        System.out.println(epsg);
+
         parser.setValidating(true);
         parser.setFailOnValidationError(false);
+
+        
         Filter fullFilter = (org.opengis.filter.Filter) parser
                 .parse(new StringReader(string));
         if( parser.getValidationErrors().size() > 0){

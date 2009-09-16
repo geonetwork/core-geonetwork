@@ -108,10 +108,14 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 		}
 	}
 	
-	for (String tName : scMap.keySet()) {
-		response.addContent(scMap.get(tName));
-	}
 
+	for (String tName : scMap.keySet()) {
+		Element schemaComponent = scMap.get(tName);
+	
+		if (schemaComponent != null)
+			response.addContent(schemaComponent);
+	}
+	
 	return response;
     }
 
@@ -214,9 +218,24 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 		if (CatalogConfiguration.getDescribeRecordTypename().containsKey(typeName)) {
 			scElements.put(typeName, loadSchemaComponent(context, typeName,
 					CatalogConfiguration.getDescribeRecordTypename().get(typeName)));
-		} else {
-			throw new InvalidParameterValueEx("TypeName", "Can't load typename "+typeName+" from CSW catalogue configuration.");
 		}
+//		  CSW 2.0.2 testsuite csw:csw-2.0.2-DescribeRecord-tc3.1:
+//		  "The response to a DescribeRecord request that contains an unknown TypeName
+//		    element must not include any csw:SchemaComponent elements."
+//
+//			Previous behaviour:
+//		else {
+//			throw new InvalidParameterValueEx("TypeName", "Can't load typename " + typeName + " from CSW catalogue configuration.");
+//		}
+		
+//		  CSW 2.0.2 testsuite csw:csw-2.0.2-DescribeRecord-tc7.1:		
+//	      "Pass if all of the following conditions are true: (1) the response
+//	      entity has &lt;ows:ExceptionReport&gt; as the document element; and (2)
+//	      ows:Exception/@exceptionCode="InvalidParameterValuePhase" (csw:TypeName not qualified)."
+		else if (!typeName.contains(":")) {
+			throw new InvalidParameterValueEx("TypeName", "csw:TypeName not qualified for typename: " + typeName);
+		}
+		// Return no exception but an empty DescribeRecordResponse if no typename found
 	}
 	return scElements;
     }
