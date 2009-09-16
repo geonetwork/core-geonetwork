@@ -2,6 +2,7 @@
 
 <xsl:stylesheet   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" 
 						xmlns:gco="http://www.isotc211.org/2005/gco"
+						xmlns:srv="http://www.isotc211.org/2005/srv"
 						xmlns:gmd="http://www.isotc211.org/2005/gmd">
 
 	<!-- ================================================================= -->
@@ -38,7 +39,6 @@
 						</gmd:MD_DataIdentification>
 					</gmd:identificationInfo>
 				</xsl:when>
-				
 				<xsl:otherwise>
 					<xsl:apply-templates select="gmd:identificationInfo"/>
 				</xsl:otherwise>
@@ -61,8 +61,9 @@
 
 	<!-- ================================================================= -->
 	
-	<xsl:template match="gmd:MD_DataIdentification">
+	<xsl:template match="gmd:MD_DataIdentification|*[@gco:isoType='gmd:MD_DataIdentification']">
 		<xsl:copy>
+			<xsl:copy-of select="@*"/>
 			<xsl:apply-templates select="gmd:citation"/>
 			<xsl:apply-templates select="gmd:abstract"/>
 			<xsl:apply-templates select="gmd:purpose"/>
@@ -89,6 +90,30 @@
 			<xsl:apply-templates select="gmd:supplementalInformation"/>
 		</xsl:copy>
 	</xsl:template>
+	
+	<xsl:template match="srv:SV_ServiceIdentification|*[@gco:isoType='srv:SV_ServiceIdentification']">
+		<xsl:copy>
+			<xsl:copy-of select="@*"/>
+			<xsl:apply-templates select="gmd:citation"/>
+			<xsl:apply-templates select="gmd:abstract"/>
+			<xsl:apply-templates select="gmd:purpose"/>
+			<xsl:apply-templates select="gmd:credit"/>
+			<xsl:apply-templates select="gmd:status"/>
+			<xsl:apply-templates select="gmd:pointOfContact"/>
+			<xsl:apply-templates select="gmd:resourceMaintenance"/>
+			<xsl:apply-templates select="gmd:graphicOverview[not(gmd:MD_BrowseGraphic/gmd:fileDescription) or gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString != /root/env/type]"/>
+			
+			<xsl:call-template name="fill"/>
+			
+			<xsl:apply-templates select="gmd:resourceFormat"/>
+			<xsl:apply-templates select="gmd:descriptiveKeywords"/>
+			<xsl:apply-templates select="gmd:resourceSpecificUsage"/>
+			<xsl:apply-templates select="gmd:resourceConstraints"/>
+			<xsl:apply-templates select="gmd:aggregationInfo"/>
+			<xsl:apply-templates select="srv:*"/>
+		</xsl:copy>
+	</xsl:template>
+	
 	
 	<!-- ================================================================= -->
 	
