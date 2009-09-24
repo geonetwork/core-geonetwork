@@ -18,8 +18,8 @@
 	<tryAgain js="true">Try again later</tryAgain>
 	<cannotRetrieveGroup js="true">Cannot retrieve groups</cannotRetrieveGroup>
 	<selectNewOwner js="true">Select the user who will be the new owner</selectNewOwner>
-	<selectOwnerGroup je="true">Select a group that the selected user belongs to</selectOwnerGroup>
-	<selectOneFile je="true">You'd better select at least one file to download!</selectOneFile>
+	<selectOwnerGroup js="true">Select a group that the selected user belongs to</selectOwnerGroup>
+	<selectOneFile js="true">You'd better select at least one file to download!</selectOneFile>
 	<checkEmail js="true">Please fill correct email address</checkEmail>
 	<addName js="true">Please fill in a name or organization</addName>
 	<noComment js="true">No comment</noComment>

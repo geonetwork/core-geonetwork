@@ -18,8 +18,8 @@
 	<tryAgain js="true">Essayez plus tard</tryAgain>
 	<cannotRetrieveGroup js="true">Impossible d'obtenir la liste des groupes</cannotRetrieveGroup>
 	<selectNewOwner js="true">Selectionner l'utilisateur qui sera le nouvel auteur</selectNewOwner>
-	<selectOwnerGroup je="true">Selectionner le groupe auquel l'utilisateur appartient</selectOwnerGroup>
-	<selectOneFile je="true">Vous devriez choisir un fichier à télécharger !</selectOneFile>
+	<selectOwnerGroup js="true">Selectionner le groupe auquel l'utilisateur appartient</selectOwnerGroup>
+	<selectOneFile js="true">Vous devriez choisir un fichier à télécharger !</selectOneFile>
 	<checkEmail js="true">Saisissez une adresse email valide</checkEmail>
 	<addName js="true">Saisissez un nom et une organisation</addName>
 	<noComment js="true">Aucun commentaire</noComment>
