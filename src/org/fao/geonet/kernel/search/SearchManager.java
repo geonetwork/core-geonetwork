@@ -154,7 +154,10 @@ public class SearchManager
 		// 
 		// Uuid stored using a standard analyzer will be change to lower case.
 		// Whitespace will not.
-		_analyzer.addAnalyzer("_uuid", new WhitespaceAnalyzer());
+
+		// heikki doeleman: UUID must be case insensitive, as its parts are hexadecimal numbers which
+		// are not case sensitive.
+		_analyzer.addAnalyzer("_uuid", new StandardAnalyzer());
 		_analyzer.addAnalyzer("operatesOn", new WhitespaceAnalyzer());
 		_analyzer.addAnalyzer("subject", new KeywordAnalyzer());
 		
