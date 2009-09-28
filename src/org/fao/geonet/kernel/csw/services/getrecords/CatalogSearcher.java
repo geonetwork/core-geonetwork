@@ -253,7 +253,7 @@ public class CatalogSearcher {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
-		IndexReader reader = IndexReader.open(sm.getLuceneDir());
+		IndexReader reader = sm.getIndexReader();
 
 		int i = 0;
 		while (i < reader.numDocs() && tokenized == null) {
