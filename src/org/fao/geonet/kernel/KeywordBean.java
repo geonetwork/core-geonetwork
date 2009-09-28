@@ -153,15 +153,17 @@ public class KeywordBean {
 	}
 
 	public String getRelativeCode() {
-		String tmpres= code;
-		String res = tmpres.split("#")[1];
-		return res;
+		if (code.contains("#"))
+		    return code.split("#")[1];
+		else
+			return code;
 	}
 
 	public String getNameSpaceCode() {
-		String tmpres= code;
-		String res = tmpres.split("#")[0] + "#";
-		return res;
+		if (code.contains("#"))
+			return code.split("#")[0] + "#";
+		else
+			return "";
 	}
 
 	public void setCode(String code) {
