@@ -42,12 +42,14 @@ public class CswOperation {
 	 * The OutputSchemas as advertised in the CSW server's GetCapabilities response.
 	 */
 	public List<String> outputSchemaList = new ArrayList<String>();
-	
+
 	/**
 	 * The preferred OutputSchema from the above.
 	 */
 	public String preferredOutputSchema;
-	
+
+    public String preferredServerVersion;
+
 	protected void choosePreferredOutputSchema() {
 		OutputSchemaPreference preference = new OutputSchemaPreference();
 		for(Iterator<String> i = preference.iterator(); i.hasNext();){
