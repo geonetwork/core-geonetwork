@@ -41,6 +41,9 @@ import org.fao.geonet.lib.Lib;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
+import java.util.TimerTask;
+import java.util.Timer;
+
 //=============================================================================
 
 /** Retrieves a particular metadata. Access is restricted
@@ -146,10 +149,10 @@ public class Show implements Service
 
 		//--- increase metadata popularity
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-		if (!skipPopularity)
-			dm.increasePopularity(dbms, id);
+        if (!skipPopularity) {
+            Timer t = new Timer();
+            t.schedule(new IncreasePopularityTask(context, id), 10);
+        }
 
 		return elMd;
 	}
@@ -161,6 +164,30 @@ public class Show implements Service
 	//--------------------------------------------------------------------------
 
 	private boolean skipPopularity;
+}
+
+class IncreasePopularityTask extends TimerTask {
+    ServiceContext context;
+    Dbms dbms;
+    String id;
+
+    IncreasePopularityTask(ServiceContext context, String id) {
+        this.context = context;
+        this.id = id;
+    }
+
+    public void run() {
+        try {
+            Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+            DataManager dm = gc.getDataManager();
+
+            dm.increasePopularity(dbms, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 //=============================================================================
