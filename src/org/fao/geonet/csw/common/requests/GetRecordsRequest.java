@@ -36,6 +36,7 @@ import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.util.Xml;
 import org.jdom.Element;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -81,6 +82,8 @@ public class GetRecordsRequest extends CatalogRequest
 	//---------------------------------------------------------------------------
 
 	public GetRecordsRequest() {}
+
+    public GetRecordsRequest(ServiceContext context) { super(context);}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -192,7 +195,7 @@ public class GetRecordsRequest extends CatalogRequest
 	{
 		addParam("request", getRequestName());
 		addParam("service", Csw.SERVICE);
-		addParam("version", Csw.CSW_VERSION);
+		addParam("version", getServerVersion());
 
 		addParam("resultType",     resultType);
 		// FIXME : Check xmlns([prefix=]uri) syntax are supported by all GeoNetwork nodes.
@@ -231,7 +234,7 @@ public class GetRecordsRequest extends CatalogRequest
 
 		//--- 'service' and 'version' are common mandatory attributes
 		setAttrib(params, "service", Csw.SERVICE);
-		setAttrib(params, "version", Csw.CSW_VERSION);
+		setAttrib(params, "version", getServerVersion());
 
 		setAttrib(params, "resultType",    resultType);
 		setAttrib(params, "outputFormat",  outputFormat);

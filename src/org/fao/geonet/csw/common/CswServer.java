@@ -70,6 +70,7 @@ public class CswServer
 		logs      .clear();
 		operations.clear();
 
+        parseVersions(capab);
 		parseOperations(capab);
 	}
 
@@ -77,6 +78,8 @@ public class CswServer
 
 	public CswOperation getOperation(String name) { return operations.get(name); }
 
+    public String getPreferredServerVersion() { return preferredServerVersion; }
+    
 	//---------------------------------------------------------------------------
 	//---
 	//--- Private methods
@@ -157,9 +160,53 @@ public class CswServer
 			log("No outputSchema for operation: " + name);
 		}
 
+        op.preferredServerVersion = preferredServerVersion;
+
 		return op;
 	}
 
+     /**
+     * Get server supported versions
+     */
+    private void parseVersions(Element capabil)
+    {
+        List<String> serverVersions = new ArrayList<String>();
+        Element serviceIdentificationMd = capabil.getChild("ServiceIdentification", Csw.NAMESPACE_OWS);
+
+        if (serviceIdentificationMd == null) {
+            log("Missing 'ows:ServiceTypeVersion' element");
+        } else {
+
+            List<Element> serviceIdentificationMdElems = serviceIdentificationMd.getChildren();
+            for(Iterator<Element> i = serviceIdentificationMdElems.iterator();i.hasNext();) {
+                Element value = i.next();
+                String valueName = value.getName();
+                log("Processing value: " + valueName);
+                if(valueName != null && valueName.equalsIgnoreCase("ServiceTypeVersion")) {
+                    serverVersions.add(value.getValue());
+                }
+            }
+        }
+
+        // Select default CSW supported version
+        if (serverVersions.isEmpty()) serverVersions.add(Csw.CSW_VERSION);
+
+        List<String> preferenceVersions = new ArrayList<String>();
+        preferenceVersions.add(Csw.CSW_VERSION);
+        preferenceVersions.add("2.0.1");
+        preferenceVersions.add("2.0.0");
+
+		for(Iterator<String> i = preferenceVersions.iterator(); i.hasNext();){
+			String nextBest = i.next();
+			if(serverVersions.contains(nextBest)) {
+				preferredServerVersion = nextBest;
+				break;
+			}
+		}
+
+    }
+
+    
 	//---------------------------------------------------------------------------
 	/**
 	 * Search for valid POST or GET
@@ -258,6 +305,8 @@ public class CswServer
 	private Map<String, CswOperation> operations = new HashMap<String, CswOperation>();
 
 	private List<String> logs = new ArrayList<String>();
+
+    private String preferredServerVersion = Csw.CSW_VERSION;
 
 	//---------------------------------------------------------------------------
 }

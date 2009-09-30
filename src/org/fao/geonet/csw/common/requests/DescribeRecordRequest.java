@@ -29,6 +29,7 @@ import java.util.List;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.TypeName;
 import org.jdom.Element;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -53,6 +54,8 @@ public class DescribeRecordRequest extends CatalogRequest
 
 	public DescribeRecordRequest() {}
 
+    public DescribeRecordRequest(ServiceContext context) { super(context); }
+    
 	//---------------------------------------------------------------------------
 	//---
 	//--- API methods
@@ -92,7 +95,7 @@ public class DescribeRecordRequest extends CatalogRequest
 	{
 		addParam("request", getRequestName());
 		addParam("service", Csw.SERVICE);
-		addParam("version", Csw.CSW_VERSION);
+		addParam("version", getServerVersion());
 
 		if (outputFormat != null)
 			addParam("outputFormat", outputFormat);
@@ -113,7 +116,7 @@ public class DescribeRecordRequest extends CatalogRequest
 
 		//--- 'service' and 'version' are common mandatory attributes
 		params.setAttribute("service", Csw.SERVICE);
-		params.setAttribute("version", Csw.CSW_VERSION);
+		params.setAttribute("version", getServerVersion());
 
 		if (outputFormat != null)
 			params.setAttribute("outputFormat", outputFormat);

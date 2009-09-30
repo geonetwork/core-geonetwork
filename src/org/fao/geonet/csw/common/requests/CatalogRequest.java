@@ -46,10 +46,12 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.util.Xml;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -63,15 +65,17 @@ public abstract class CatalogRequest
 	//---
 	//---------------------------------------------------------------------------
 
-	public CatalogRequest() { this(null); }
+	public CatalogRequest() { this(null, null); }
+
+    public CatalogRequest(ServiceContext context) { this(context, null); }
+    
+	//---------------------------------------------------------------------------
+
+	public CatalogRequest(ServiceContext context, String host) { this(context, host, 80); }
 
 	//---------------------------------------------------------------------------
 
-	public CatalogRequest(String host) { this(host, 80); }
-
-	//---------------------------------------------------------------------------
-
-	public CatalogRequest(String host, int port)
+	public CatalogRequest(ServiceContext context, String host, int port)
 	{
 		this.host    = host;
 		this.port    = port;
@@ -80,6 +84,8 @@ public abstract class CatalogRequest
 		state.addCookie(cookie);
 		client.setState(state);
 		client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
+
+        if (context != null) Lib.net.setupProxy(context, client);
 	}
 
 	//---------------------------------------------------------------------------
@@ -105,7 +111,15 @@ public abstract class CatalogRequest
 		this.outputSchema = outputSchema;
 	}
 
-	public void setHost(String host)
+    public String getServerVersion() {
+        return serverVersion;
+    }
+
+    public void setServerVersion(String serverVersion) {
+        this.serverVersion = serverVersion;
+    }
+
+    public void setHost(String host)
 	{
 		this.host = host;
 	}
@@ -531,6 +545,8 @@ public abstract class CatalogRequest
 	private String  password;
 	protected String outputSchema;
 
+    protected String serverVersion = Csw.CSW_VERSION;  // Sets default value
+    
 	private HttpClient client = new HttpClient();
 	private HttpState  state  = new HttpState();
 	private Cookie     cookie = new Cookie();

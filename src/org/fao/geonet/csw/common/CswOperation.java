@@ -47,7 +47,9 @@ public class CswOperation {
 	 * The preferred OutputSchema from the above.
 	 */
 	public String preferredOutputSchema;
-	
+
+    public String preferredServerVersion;
+    
 	protected void choosePreferredOutputSchema() {
 		OutputSchemaPreference preference = new OutputSchemaPreference();
 		for(Iterator<String> i = preference.iterator(); i.hasNext();){

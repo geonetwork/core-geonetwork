@@ -44,6 +44,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+import jeeves.utils.XmlRequest;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -145,7 +146,7 @@ class Harvester
      * @param log		
      * @param context		Jeeves context
      * @param dbms 			Database
-     * @param OgcWxSParam	Information about harvesting configuration for the node
+     * @param params    Information about harvesting configuration for the node
      * 
      * @return null
      */
@@ -196,8 +197,13 @@ class Harvester
         		"&REQUEST=" + GETCAPABILITIES
         		;
 		
-		xml = Xml.loadFile (new URL(this.capabilitiesUrl));
-		
+        XmlRequest req = new XmlRequest();
+		req.setUrl(new URL(this.capabilitiesUrl));
+        req.setMethod(XmlRequest.Method.GET);
+        Lib.net.setupProxy(context, req);
+
+        xml = req.execute();
+
 		//-----------------------------------------------------------------------
 		//--- remove old metadata
 		for (String uuid : localUuids.getUUIDs())
@@ -329,11 +335,11 @@ class Harvester
 		
 		// Add Thumbnails only after metadata insertion to avoid concurrent transaction
 		// and loaded thumbnails could eventually failed anyway.
-		if (params.ogctype.startsWith("WMS") && params.createThumbnails)
-			for (WxSLayerRegistry layer : layersRegistry) 
+		if (params.ogctype.startsWith("WMS") && params.createThumbnails) {
+			for (WxSLayerRegistry layer : layersRegistry) { 
 				loadThumbnail (layer);
-			
-	
+            }
+        }
 	}
 	
 	
@@ -346,7 +352,7 @@ class Harvester
 	 *	</srv:operatesOn>
      *	
      * @param md        iso19119 metadata
-     * @param uuid		uuid to be added as an uuidref attribute
+     * @param layersRegistry            uuid to be added as an uuidref attribute
      *                   
      */
 	 private Element addOperatesOnUuid (Element md, List<WxSLayerRegistry> layersRegistry) {
@@ -452,7 +458,7 @@ class Harvester
      * Layer/FeatureType/Coverage element.
      * If loaded document contain an existing uuid, metadata will not be loaded in the catalogue.
      *  
-     * @param md        Layer/FeatureType/Coverage element
+     * @param layer     Layer/FeatureType/Coverage element
      * @param capa		GetCapabilities document
      *  
      * @return          uuid 
@@ -680,7 +686,7 @@ class Harvester
      * Remove thumbnails directory for all metadata
      * FIXME : Do this only for existing one !
      *  
-     * @param layer   layer for which the thumbnail needs to be generated
+     * @param id   layer for which the thumbnail needs to be generated
      *                   
      */
 	private void unsetThumbnail (String id){

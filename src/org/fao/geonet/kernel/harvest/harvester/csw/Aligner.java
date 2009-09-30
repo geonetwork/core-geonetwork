@@ -98,7 +98,11 @@ public class Aligner
 		if(oper.preferredOutputSchema != null) {
 			request.setOutputSchema(oper.preferredOutputSchema);
 		}
-		
+
+        if(oper.preferredServerVersion != null) {
+            request.setServerVersion(oper.preferredServerVersion);
+        }
+        
 		if (params.useAccount) {
 			request.setCredentials(params.username, params.password);
 		}	

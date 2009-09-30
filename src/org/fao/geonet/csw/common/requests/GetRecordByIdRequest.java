@@ -29,6 +29,7 @@ import java.util.List;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
 import org.jdom.Element;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -50,6 +51,8 @@ public class GetRecordByIdRequest extends CatalogRequest
 	//---------------------------------------------------------------------------
 
 	public GetRecordByIdRequest() {}
+
+    public GetRecordByIdRequest(ServiceContext context) { super(context); }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -89,7 +92,7 @@ public class GetRecordByIdRequest extends CatalogRequest
 	protected void setupGetParams() {
 		addParam("request", getRequestName());
 		addParam("service", Csw.SERVICE);
-		addParam("version", Csw.CSW_VERSION);
+		addParam("version", getServerVersion());
 		// heikki doeleman: set outputSchema as per CSW 2.0.2 specification 07-45 section 7.4:
 		if(outputSchema != null) {
 			addParam("outputSchema", outputSchema);
@@ -107,7 +110,7 @@ public class GetRecordByIdRequest extends CatalogRequest
 
 		//--- 'service' and 'version' are common mandatory attributes
 		params.setAttribute("service", Csw.SERVICE);
-		params.setAttribute("version", Csw.CSW_VERSION);
+		params.setAttribute("version", getServerVersion());
 
 		// heikki doeleman: set outputSchema as per CSW 2.0.2 specification 07-45 section 7.4:
 		if(outputSchema != null) {
