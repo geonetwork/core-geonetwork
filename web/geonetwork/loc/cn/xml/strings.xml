@@ -45,12 +45,17 @@
 	<uploadFailed js="true">Error: Upload failed! - returned </uploadFailed>
 	<uploadSetFileNameFailed js="true">Error: Upload succeeded but unable to set filename!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Cannot get tooltips from server</cannotGetTooltip>
+	<maxResults js="true">Number of results per thesaurus</maxResults>
+	<anyThesaurus js="true">Any thesaurus</anyThesaurus>
+	<selectedKeywords js="true">Selected keywords</selectedKeywords>
+	<foundKeywords js="true">Available keywords</foundKeywords>
+	<keywordSelectionWindowTitle js="true">Keywords selection</keywordSelectionWindowTitle>	
 	
 	<about>关于本站</about>
 	<abstract>摘要</abstract>
 	<accept>提交</accept>
 	<actionOnSelect>Actions on selected metadata</actionOnSelect>
-	<add>添加</add>
+	<add js="true">添加</add>
 	<addNewMetadata>增加新的元数据</addNewMetadata>
 	<address>地址</address>
 	<admin>系统管理</admin>
@@ -103,7 +108,7 @@
 	<chooseLargeThumbnail>选择较大缩略图文件的位置</chooseLargeThumbnail>
 	<chooseThumbnail>选择较小缩略图文件的位置 </chooseThumbnail>
 	<city>City</city>
-	<clear>清除</clear>
+	<clear js="true">清除</clear>
 	<clearAll>Clear All</clearAll>
 	<close>Close</close>
 	<completeTab>高级视图</completeTab>
@@ -445,7 +450,7 @@
 	<searchAllText>全文</searchAllText>
 	<searchBox>数据与信息搜索</searchBox>
 	<searchIndex>搜索索引</searchIndex>
-	<searching>...搜索进步...</searching>
+	<searching js="true">...搜索进步...</searching>
 	<searchPage>搜索页面</searchPage>
 	<searchPageDes>跳至元数据搜索页</searchPageDes>
 	<searchTemplates>查找模板</searchTemplates>

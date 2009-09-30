@@ -70,8 +70,8 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.DbmsPool</provider>
 			<config>
-				<user>w5c4xhmu</user>
-				<password>ox445cyA</password>
+				<user>SDrK7pCz</user>
+				<password>EXMiLUeg</password>
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>
@@ -923,12 +923,14 @@
 	   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<service name="xml.search.keywords" type="xml">
 		  <class name=".services.thesaurus.GetKeywords" />
-		  <output sheet="thesaurus-autosearchlist.xsl" />
 		</service>
 		<service name="xml.search.keywordlink" type="xml">
 		  <class name=".services.thesaurus.GetNarrowerBroader" />
 		  <output sheet="thesaurus-autosearchlist.xsl" />
 		</service>
+	    <service name="xml.keyword.get" type="xml">
+	        <class name=".services.thesaurus.GetKeywordById" />
+        </service>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<service name="keywords.editsearch">
 		  <class name=".services.thesaurus.List">
@@ -1014,8 +1016,10 @@
 		  <class name=".services.thesaurus.DeleteElement" />
 		  <!--<output forward="thesaurus.edit"/>-->
 		</service>
-
-
+	    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <service name="xml.thesaurus.getList" type="xml">
+            <class name=".services.thesaurus.GetList" />
+        </service>
 	</services>
 
 	<!-- ====================================================================== -->

@@ -39,6 +39,10 @@
 					or /root/gui/reqService = 'metadata.edit'">
 			<xsl:call-template name="geoHeader"/>
 		</xsl:if>
+		<!-- Add Ext selection panel JS only when needed -->
+		<xsl:if test="/root/gui/reqService = 'metadata.edit'">
+			<xsl:call-template name="selectionPanel"/>
+		</xsl:if>
 		
 		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"/>
@@ -55,6 +59,8 @@
 			Env.lang      = "<xsl:value-of select="/root/gui/language"/>";
             var on        = "<xsl:value-of select="/root/gui/url"/>/images/plus.gif";
             var off       = "<xsl:value-of select="/root/gui/url"/>/images/minus.png";
+			
+			window.javascriptsLocation = "<xsl:value-of select="/root/gui/url"/>/scripts/";
 			
 			<xsl:if test="//service/@name = 'main.home'">
             document.onkeyup = alertkey;

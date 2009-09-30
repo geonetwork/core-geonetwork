@@ -265,6 +265,7 @@
 		<allow service="xml.info"/>
 		<allow service="xml.forward"/>
 		<allow service="xml.region.get"/>
+		<allow service="xml.keyword.get"/>
 
 		<!-- Portal XML services -->
 		<allow service="portal.search"/>
@@ -326,6 +327,7 @@
 		<allow service="keywords.getselected"/>
 	 	<allow service="thesaurus.list"/>
 		<allow service="thesaurus.view"/><!-- FIXME : Check if needed -->
+		<allow service="xml.thesaurus.getList"/>
 
 		<!-- Test CSW ISO server -->
 		<allow service="test.csw"/>

@@ -162,62 +162,72 @@ function isSameElement(el1,el2)
 function topControls(el,min) 
 {
 	var elDescs = getControlsFromElement(el);
+	
+	// Check addXmlFragment control
+	var index = 0;
+	if (elDescs.length == 5) index = 1;
+	
 	// sort out +
 	if (bottomElement(el) && !orElement(el)) elDescs[0].show();
 	else elDescs[0].hide();
+	
+	// sort out +/x (addXmlFragment)
+	if (index == 1) {
+		if (bottomElement(el) && !orElement(el))
+			elDescs[index].show();
+		else
+			elDescs[index].hide();
+	}
 
 	// sort out x
 	if (bottomElement(el)) {
-		if (min == 0) elDescs[1].show();
-		else elDescs[1].hide();
-	} else elDescs[1].show();
+		if (min == 0) elDescs[1+index].show();
+		else elDescs[1+index].hide();
+	} else elDescs[1+index].show();
 
 	// sort out ^
-	elDescs[2].hide();
+	elDescs[2+index].hide();
 
 	// sort out v
-	if (bottomElement(el)) elDescs[3].hide();
-	else elDescs[3].show();
+	if (bottomElement(el)) elDescs[3+index].hide();
+	else elDescs[3+index].show();
 }
 
 function doRemoveElementAction(action, ref, parentref, id, min)
 {
 	var metadataId = document.mainForm.id.value;
-	var pars = "&id="+metadataId+"&ref="+ref+"&parent="+parentref;
 	var thisElement = $(id);
 	var nextElement = thisElement.next();
 	var prevElement = thisElement.previous();
-
-	var myAjax = new Ajax.Request(
-		getGNServiceURL(action),
-		{
-			method: 'get',
-			parameters: pars,
-			onSuccess: function(req) {
-				var html = req.responseText;
-				if (html.blank()) { // more than one left, no child-placeholder returned
-					if (bottomElement(thisElement)) { 
-						swapControls(thisElement,prevElement);
-						thisElement.remove();
-						thisElement = prevElement;
-					} else {
-						thisElement.remove();
-						thisElement = nextElement;
-					}
-					if (topElement(thisElement)) topControls(thisElement,min); 
-				} else { // last one, so replace with child-placeholder returned
-					if (orElement(thisElement)) thisElement.remove();
-					else thisElement.replace(html);
-				} 
-				setBunload(true); // reset warning for window destroy
-			},
-			onFailure: function(req) { 
-				alert(translate("errorDeleteElement") + name + " " + translate("errorFromDoc") 
-							+ " / status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
-				setBunload(true); // reset warning for window destroy
-			}
+	
+	var myExtAJaxRequest = Ext.Ajax.request({
+		url: getGNServiceURL(action),
+		method: 'GET',
+		params: {id:metadataId, ref:ref, parent:parentref},
+		success: function(result, request) {
+			var html = result.responseText;
+			if (html.blank()) { // more than one left, no child-placeholder returned
+				if (bottomElement(thisElement)) { 
+					swapControls(thisElement,prevElement);
+					thisElement.remove();
+					thisElement = prevElement;
+				} else {
+					thisElement.remove();
+					thisElement = nextElement;
+				}
+				if (topElement(thisElement)) topControls(thisElement,min); 
+			} else { // last one, so replace with child-placeholder returned
+				if (orElement(thisElement)) thisElement.remove();
+				else thisElement.replace(html);
+			} 
+			setBunload(true); // reset warning for window destroy
+		},
+		failure:function (result, request) { 
+			Ext.MessageBox.alert(translate("errorDeleteElement") + name + " " + translate("errorFromDoc") 
+						+ " / status " + result.status + " text: " + result.statusText + " - " + translate("tryAgain"));
+			setBunload(true); // reset warning for window destroy
 		}
-	);
+	});
 }
 
 function swapControls(el1,el2) 
@@ -285,24 +295,37 @@ function doNewORElementAction(action, ref, name, child, id, what, max)
 function setAddControls(el, orElement) 
 {
 	elDescs = getControlsFromElement(el);
+	
+	// Check addXmlFragment control
+	var index = 0;
+	if (elDescs.length == 5) index = 1;
+	
 	// + x ^ _ or _ x ^ _ is default on add
 	if (orElement) elDescs[0].hide();
 	else elDescs[0].show();
-	elDescs[1].show();
-	elDescs[2].show();
-	elDescs[3].hide();
+	
+	if (index == 1) {
+		if (orElement) elDescs[index].hide();
+		else elDescs[index].show();
+	}
+	elDescs[1+index].show();
+	elDescs[2+index].show();
+	elDescs[3+index].hide();
 
 	// special cases - if this is topElement - need + x _ _ or _ x _ _
 	if (topElement(el)) {
-		elDescs[2].hide();
+		elDescs[2+index].hide();
 	} else { // otherwise fix up previous element
 		var prevEl = el.previous();
 		var prevDescs = getControlsFromElement(prevEl);
+		var prevIndex = 0;
+		if ( prevDescs.length == 5) prevIndex = 1;
 		prevDescs[0].hide();
-		prevDescs[1].show();
-		if (topElement(prevEl)) prevDescs[2].hide();
-		else prevDescs[2].show();
-		prevDescs[3].show();
+		if (prevIndex==1) prevDescs[prevIndex].hide();
+		prevDescs[1+prevIndex].show();
+		if (topElement(prevEl)) prevDescs[2+prevIndex].hide();
+		else prevDescs[2+prevIndex].show();
+		prevDescs[3+prevIndex].show();
 	}
 }
 
@@ -779,6 +802,63 @@ function validateMetadataFields() {
 		validateMetadataField(input);
 	});
 
+}
+
+/**
+ * Property: keywordSelectionWindow
+ * The window in which we can select keywords
+ */
+var keywordSelectionWindow;
+
+/**
+ * Display keyword selection panel
+ * 
+ * @param ref
+ * @param name
+ * @return
+ */
+function showKeywordSelectionPanel(ref, name) {
+    if (!keywordSelectionWindow) {
+        var keywordSelectionPanel = new app.KeywordSelectionPanel({
+            width: 620,
+            height: 300,
+            listeners: {
+                keywordselected: function(panel, keywords) {
+	        		var id = '_X' + this.ref + '_' + name.replace(":","COLON");
+	        		var xml;
+					var first = true;
+	        		Ext.each(keywords, function(item, index) {
+						// Format XML
+	        			keywords[index] = item.replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>","")
+							.replace(/\"/g,"&quot;").replace(/\r\n/g,"");
+						if (first) {
+							xml = keywords[index];
+							first = false;
+						} else
+							xml += "&amp;&amp;&amp;" + keywords[index];
+					});
+					
+					// Add XML fragments into main form.
+					var input = {tag: 'input', type: 'hidden', id: id, name: id, value: xml};
+					var dh = Ext.DomHelper;
+					dh.append(Ext.get("hiddenFormElements"), input);
+						
+					// Save
+					doAction('metadata.update');
+                }
+            }
+        });
+
+        keywordSelectionWindow = new Ext.Window({
+            title: translate('keywordSelectionWindowTitle'),
+            layout: 'fit',
+            items: keywordSelectionPanel,
+            closeAction: 'hide'
+        });
+    }
+    
+    keywordSelectionWindow.items.get(0).setRef(ref);
+    keywordSelectionWindow.show();
 }
 
 

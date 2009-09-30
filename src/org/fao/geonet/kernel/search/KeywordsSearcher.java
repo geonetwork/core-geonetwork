@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -52,6 +53,8 @@ public class KeywordsSearcher {
 	private ArrayList<KeywordBean> _results = new ArrayList<KeywordBean>();
 
 	private int _pTypeSearch = 1;
+	
+	private int _maxResults = 10;
 
 
 	// --------------------------------------------------------------------------------
@@ -115,7 +118,9 @@ public class KeywordsSearcher {
 			throws Exception {
 		// Get params from request and set default
 		String sKeyword = Util.getParam(params, "pKeyword");
-
+		
+		// Get max results number or set default one.
+		_maxResults = Util.getParam(params, "maxResults", _maxResults);
 
 		// Type of search
 		int pTypeSearch = _pTypeSearch;
@@ -135,7 +140,14 @@ public class KeywordsSearcher {
 			listThesauri = params.getChildren("pThesauri");
 			bAll = false;
 
-			if (((Element) listThesauri.get(0)).getTextTrim().equals(""))	// If first element is empty </>
+			// Check empty child and remove empty ones.
+			for (Iterator<Element> it = listThesauri.iterator(); it.hasNext();) {
+				Element th = it.next();
+				if ("".equals(th.getTextTrim()))
+					it.remove();
+			}
+			
+			if (listThesauri.size() == 0)
 				bAll = true;
 		}
 
@@ -198,6 +210,7 @@ public class KeywordsSearcher {
 				break;
 			}
 			_query 	+= " IGNORE CASE "
+					+ " LIMIT "+ _maxResults
 					+ " USING NAMESPACE skos=<http://www.w3.org/2004/02/skos/core#>, gml=<http://www.opengis.net/gml#> ";
 
 		}
@@ -409,12 +422,15 @@ public class KeywordsSearcher {
 			elValue.addContent(kb.getValue());
 			Element elDefiniton = new Element("definition");
 			elDefiniton.addContent(kb.getDefinition());
+			Element elTh = new Element("thesaurus");
+			elTh.addContent(kb.getThesaurus());
 			Element elUri = new Element("uri");
 			elUri.addContent(kb.getCode());
 			elKeyword.addContent(elSelected);
 			elKeyword.addContent(elId);
 			elKeyword.addContent(elValue);
 			elKeyword.addContent(elDefiniton);
+			elKeyword.addContent(elTh);
 			elKeyword.addContent(elUri);
 			elDescKeys.addContent(elKeyword);
 		}

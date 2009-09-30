@@ -82,6 +82,9 @@
 							<input class="md" type="hidden" name="showvalidationerrors" value="false"/> 
 							<input class="md" type="hidden" name="currTab" value="{/root/gui/currTab}"/>
 
+							<!-- Hidden div to contains extra elements like when posting multiple keywords. -->
+							<div id="hiddenFormElements" style="display:none;"/>
+							
 							<table width="100%">
 								<tr><td class="padded-content" height="100%" align="center" valign="top">
 									<xsl:call-template name="editButtons"/>

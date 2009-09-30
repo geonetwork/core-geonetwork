@@ -45,12 +45,17 @@
 	<uploadFailed js="true">Error: Upload failed! - returned </uploadFailed>
 	<uploadSetFileNameFailed js="true">Error: Upload succeeded but unable to set filename!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Cannot get tooltips from server</cannotGetTooltip>
+	<maxResults js="true">Number of results per thesaurus</maxResults>
+	<anyThesaurus js="true">Any thesaurus</anyThesaurus>
+	<selectedKeywords js="true">Selected keywords</selectedKeywords>
+	<foundKeywords js="true">Available keywords</foundKeywords>
+	<keywordSelectionWindowTitle js="true">Keywords selection</keywordSelectionWindowTitle>
 	
 	<about>Acerca de</about>
 	<abstract>Resumen</abstract>
 	<accept>Aceptar </accept>
 	<actionOnSelect>Actions on selected metadata</actionOnSelect>
-	<add>Añadir</add>
+	<add js="true">Añadir</add>
 	<addNewMetadata>Añadir Metadato</addNewMetadata>
 	<address>Dirección</address>
 	<admin>Administrador</admin>
@@ -103,7 +108,7 @@
 	<chooseLargeThumbnail>Elegir la ubicación del fichero thumbnail grande</chooseLargeThumbnail>
 	<chooseThumbnail>Elegir la ubicación del fichero thumbnail pequeño</chooseThumbnail>
 	<city>City</city>
-	<clear>Borrar</clear>
+	<clear js="true">Borrar</clear>
 	<clearAll>Clear All</clearAll>
 	<close>Cerrar</close>
 	<completeTab>Vista en bloques</completeTab>
@@ -446,7 +451,7 @@
 	<searchAllText>¿Qué? (Texto)</searchAllText>
 	<searchBox>Buscar datos e información</searchBox>
 	<searchIndex>Índice de búsqueda</searchIndex>
-	<searching>...Búsqueda en marcha...</searching>
+	<searching js="true">...Búsqueda en marcha...</searching>
 	<searchPage>Página de búsquedas</searchPage>
 	<searchPageDes>Ir a búscar Metadatos</searchPageDes>
 	<searchTemplates>Buscar plantillas</searchTemplates>

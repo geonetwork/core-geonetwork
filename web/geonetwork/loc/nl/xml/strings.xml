@@ -45,12 +45,17 @@
 	<uploadFailed js="true">Error: Upload failed! - returned </uploadFailed>
 	<uploadSetFileNameFailed js="true">Error: Upload succeeded but unable to set filename!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Cannot get tooltips from server</cannotGetTooltip>
+	<maxResults js="true">Number of results per thesaurus</maxResults>
+	<anyThesaurus js="true">Any thesaurus</anyThesaurus>
+	<selectedKeywords js="true">Selected keywords</selectedKeywords>
+	<foundKeywords js="true">Available keywords</foundKeywords>
+	<keywordSelectionWindowTitle js="true">Keywords selection</keywordSelectionWindowTitle>
 	
 	<about>Over</about>
 	<abstract>Samenvatting</abstract>
 	<accept>Accepteren</accept>
 	<actionOnSelect>acties bij selectie</actionOnSelect>
-	<add>toevoegen</add>
+	<add js="true">toevoegen</add>
 	<addNewMetadata>Voeg nieuwe metadata toe</addNewMetadata>
 	<address>Addres</address>
 	<admin>Beheer</admin>
@@ -104,7 +109,7 @@
 	<chooseLargeThumbnail>Kies de lokatie van het grote voorbeeldweergave bestand</chooseLargeThumbnail>
 	<chooseThumbnail>Kies de lokatie van het kleine voorbeeldweergave bestand</chooseThumbnail>
 	<city>Woonplaats</city>
-	<clear>Wissen</clear>
+	<clear js="true">Wissen</clear>
 	<clearAll>Alles wissen</clearAll>
 	<close>Sluiten</close>
 	<completeTab>Uitgebreide weergave</completeTab>
@@ -463,7 +468,7 @@
 	<searchAllText>Wat?</searchAllText>
 	<searchBox>Zoek naar data en informatie</searchBox>
 	<searchIndex>Zoekindex</searchIndex>
-	<searching>...Bezig met zoeken naar metadata...</searching>
+	<searching js="true">...Bezig met zoeken naar metadata...</searching>
 	<searchPage>Zoekpagina</searchPage>
 	<searchPageDes>Ga naar de metadata zoekpagina</searchPageDes>
 	<searchTemplates>Zoek naar templates</searchTemplates>

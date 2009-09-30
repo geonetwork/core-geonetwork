@@ -37,7 +37,7 @@
 				<xsl:apply-templates mode="iso19139" select="." >
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
-				<xsl:with-param name="embedded" select="$embedded" />
+					<xsl:with-param name="embedded" select="$embedded" />
 				</xsl:apply-templates>
 			</xsl:when>
 			
@@ -147,6 +147,9 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
+			<xsl:variable name="addXMLFragment">
+				<xsl:value-of select="concat('javascript:showKeywordSelectionPanel(',$parentName,',',$apos,$name,$apos,');')"/>
+			</xsl:variable>
 			<xsl:variable name="helpLink">
 				<xsl:call-template name="getHelpLink">
 					<xsl:with-param name="name"   select="$name"/>
@@ -162,6 +165,7 @@
 				</xsl:with-param>
 				<xsl:with-param name="text" select="$text"/>
 				<xsl:with-param name="addLink"  select="$addLink"/>
+				<xsl:with-param name="addXMLFragment"  select="$addXMLFragment"/>
 				<xsl:with-param name="helpLink" select="$helpLink"/>
 				<xsl:with-param name="edit"     select="$edit"/>
 				<xsl:with-param name="id"     	select="$id"/>
@@ -436,6 +440,11 @@
 				<xsl:with-param name="id" select="$id"/>
 			</xsl:call-template>
 		</xsl:variable>
+		<xsl:variable name="addXMLFragment">
+			<xsl:call-template name="addXMLFragment">
+				<xsl:with-param name="id" select="$id"/>
+			</xsl:call-template>
+		</xsl:variable>
 		<xsl:variable name="removeLink">
 			<xsl:value-of select="concat('doRemoveElementAction(',$apos,'/metadata.elem.delete',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',',geonet:element/@min,');')"/>
 			<xsl:if test="not(geonet:element/@del='true')">
@@ -483,6 +492,7 @@
 			<xsl:with-param name="title" select="$title"/>
 			<xsl:with-param name="text" select="$text"/>
 			<xsl:with-param name="addLink" select="$addLink"/>
+			<xsl:with-param name="addXMLFragment" select="$addXMLFragment"/>
 			<xsl:with-param name="removeLink" select="$removeLink"/>
 			<xsl:with-param name="upLink"     select="$upLink"/>
 			<xsl:with-param name="downLink"   select="$downLink"/>
@@ -530,6 +540,55 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
+	
+	<!-- 
+		Add elements : will popup a remote element selector
+		and add the XML fragment in the metadata
+	-->
+	<xsl:template name="addXMLFragment">
+		<xsl:param name="id"/>
+		
+		<xsl:variable name="name" select="name(.)"/>
+		
+		<xsl:variable name="nextBrother" select="following-sibling::*[1]"/>
+		<xsl:variable name="nb">
+			<xsl:if test="name($nextBrother)='geonet:child'">
+				<xsl:choose>
+					<xsl:when test="$nextBrother/@prefix=''">
+						<xsl:if test="$nextBrother/@name=$name"><xsl:copy-of select="$nextBrother"/></xsl:if>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:if test="concat($nextBrother/@prefix,':',$nextBrother/@name)=$name">
+							<xsl:copy-of select="$nextBrother"/>
+						</xsl:if>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+		</xsl:variable>
+		
+		<xsl:variable name="newBrother" select="exslt:node-set($nb)"/>
+		
+		<xsl:choose>
+			<!-- place +/x because schema insists ie. next element is geonet:child -->
+			<xsl:when test="$newBrother/* and not($newBrother/*/geonet:choose) and $nextBrother/@prefix=''">
+				<xsl:value-of select="concat('javascript:showKeywordSelectionPanel(',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,');')"/>
+			</xsl:when>
+			<xsl:when test="$newBrother/* and not($newBrother/*/geonet:choose)">
+                <xsl:value-of select="concat('javascript:showKeywordSelectionPanel(',../geonet:element/@ref,',',$apos,$nextBrother/@prefix,':',$nextBrother/@name,$apos,');')"/>
+			</xsl:when>
+			<!-- place optional +/x for use when re-ordering etc -->
+            <xsl:when test="geonet:element/@add='true' and name($nextBrother)=name(.)">
+            	<xsl:value-of select="concat('javascript:showKeywordSelectionPanel(',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,');!OPTIONAL')"/>
+            </xsl:when>
+			<!-- place +/x because schema insists but no geonet:child nextBrother 
+                 this case occurs in the javascript handling of the +/+ -->
+            <xsl:when test="geonet:element/@add='true' and not($newBrother/*/geonet:choose)">
+            	<xsl:value-of select="concat('javascript:showKeywordSelectionPanel(',geonet:element/@parent,',',$apos,$name,$apos,');')"/>
+            </xsl:when>
+		</xsl:choose>
+		
+	</xsl:template>
+	
 	<!--
 	shows editable fields for an attribute
 	-->
@@ -562,6 +621,11 @@
 		<xsl:variable name="id" select="geonet:element/@uuid"/>
 		<xsl:variable name="addLink">
 			<xsl:call-template name="addLink">
+				<xsl:with-param name="id" select="$id"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="addXMLFragment">
+			<xsl:call-template name="addXMLFragment">
 				<xsl:with-param name="id" select="$id"/>
 			</xsl:call-template>
 		</xsl:variable>
@@ -606,6 +670,7 @@
 			<xsl:with-param name="text" select="text()"/>
 			<xsl:with-param name="content" select="$content"/>
 			<xsl:with-param name="addLink" select="$addLink"/>
+			<xsl:with-param name="addXMLFragment" select="$addXMLFragment"/>
 			<xsl:with-param name="removeLink" select="$removeLink"/>
 			<xsl:with-param name="upLink" select="$upLink"/>
 			<xsl:with-param name="downLink" select="$downLink"/>
@@ -629,6 +694,7 @@
 		<xsl:param name="text"/>
 		<xsl:param name="helpLink"/>
 		<xsl:param name="addLink"/>
+		<xsl:param name="addXMLFragment"/>
 		<xsl:param name="removeLink"/>
 		<xsl:param name="upLink"/>
 		<xsl:param name="downLink"/>
@@ -665,6 +731,7 @@
 				<xsl:if test="$edit">
 					<xsl:call-template name="getButtons">
 						<xsl:with-param name="addLink" select="$addLink"/>
+						<xsl:with-param name="addXMLFragment" select="$addXMLFragment"/>
 						<xsl:with-param name="removeLink" select="$removeLink"/>
 						<xsl:with-param name="upLink" select="$upLink"/>
 						<xsl:with-param name="downLink" select="$downLink"/>
@@ -710,6 +777,7 @@
 		<xsl:param name="content"/>
 		<xsl:param name="helpLink"/>
 		<xsl:param name="addLink"/>
+		<xsl:param name="addXMLFragment"/>
 		<xsl:param name="removeLink"/>
 		<xsl:param name="upLink"/>
 		<xsl:param name="downLink"/>
@@ -744,6 +812,7 @@
 						<xsl:if test="$edit">
 							<xsl:call-template name="getButtons">
 								<xsl:with-param name="addLink" select="$addLink"/>
+								<xsl:with-param name="addXMLFragment" select="$addXMLFragment"/>
 								<xsl:with-param name="removeLink" select="$removeLink"/>
 								<xsl:with-param name="upLink" select="$upLink"/>
 								<xsl:with-param name="downLink" select="$downLink"/>
@@ -928,6 +997,8 @@
 							</xsl:if>
 						</input>
 
+						<!-- Removed autocompletion div when editing metadata -->  
+						<!--
 						<div id='keywordList' class="keywordList" ></div>
 						
 						<script type="text/javascript">
@@ -942,6 +1013,7 @@
 						  <xsl:text>', 'keywordList', 'xml.search.keywords?pNewSearch=true&amp;pTypeSearch=1&amp;pMode=search',{method:'get', paramName: 'pKeyword'});</xsl:text>
 
 						</script>
+						-->
 
 					</xsl:when>
 					

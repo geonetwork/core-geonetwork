@@ -1,0 +1,72 @@
+.x-color-picker {
+    width: 250px;
+    height: 200px;
+}
+
+.x-cp-rgbpicker {
+    margin: 7px;
+    float: left;
+    cursor: pointer;
+    _margin: 7px 7px 7px 4px;
+}
+
+.x-cp-rgbpicker-inner {
+    position: relative;
+    background-image: url(mask.png);
+    background-repeat: no-repeat;
+    background-color: red;
+    width: 182px;
+    height: 182px;
+    _cursor: hand;
+    _behavior: expression(   /* IE only - transparency with proper handling of relative URLs */
+       this.__src = this.__src ? this.__src : this.currentStyle.backgroundImage.split('"')[1],
+       this.style.backgroundImage = "none",
+       this.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src=" + this.__src + ")"
+    );
+}
+
+.x-cp-rgbpicker-thumb {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-image: url(target.gif) !important;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    _cursor: hand;
+}
+
+/*
+ * hue as a vertical slider 
+ */
+.x-cp-hueslider {
+    float: left;
+    margin: 7px 0 0 7px;
+    width: 15px;
+}
+
+.x-cp-hueslider .x-slider {
+    background: transparent !important;
+    padding-top:0px;
+}
+
+.x-cp-hueslider .x-slider-end {
+    background: transparent !important;
+    padding-bottom:0px;
+}
+
+.x-cp-hueslider .x-slider-inner {
+    background-image:url(hue.png) !important;
+    background-position: 8px 0;
+    height:183px;
+    cursor: pointer;
+    _cursor: hand;
+}
+
+.x-cp-hueslider .x-slider-thumb {
+    width: 14px;
+    height: 14px;
+    background-image: url(slider-thumb-horizontal.png) !important;
+    background-repeat: no-repeat;
+    background-position: -30px 0;
+    left: -5px;
+}

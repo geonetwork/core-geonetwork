@@ -7,13 +7,12 @@
 
 	<xsl:template name="getButtons">
 		<xsl:param name="addLink"/>
+		<xsl:param name="addXMLFragment"/>
 		<xsl:param name="removeLink"/>
 		<xsl:param name="upLink"/>
 		<xsl:param name="downLink"/>
 		<xsl:param name="validationLink"/>
 		<xsl:param name="id"/>
-
-
 
 		<!-- add button -->
 		<span id="buttons_{$id}">
@@ -34,6 +33,32 @@
 					<span id="add_{$id}"/>
 				</xsl:otherwise>
 			</xsl:choose>
+			
+			<!-- 
+				add as remote XML fragment button for
+				* element not descendant of a fragment element
+				* geonet:child of type keyword -->
+			<xsl:if test="normalize-space($addXMLFragment) 
+					and (
+						(@name = 'descriptiveKeywords' and @prefix = 'gmd') 
+						or name(.) = 'gmd:descriptiveKeywords'						
+					)">
+				<xsl:variable name="xlinkTokens" select="tokenize($addXMLFragment,'!')"/>
+				<xsl:text> </xsl:text>
+				<xsl:choose>
+					<xsl:when test="normalize-space($xlinkTokens[2])">
+						<a id="addXlink_{$id}" onclick="if (noDoubleClick()) {$xlinkTokens[1]}" style="display:none;">
+							<img src="{/root/gui/url}/images/plusx.gif" alt="{/root/gui/strings/addXMLFragment}" title="{/root/gui/strings/addXMLFragment}"/>
+						</a>
+					</xsl:when>
+					<xsl:otherwise>
+						<a id="addXlink_{$id}" onclick="{$addXMLFragment}" style="cursor:pointer;">
+							<img src="{/root/gui/url}/images/plusx.gif" alt="{/root/gui/strings/addXMLFragment}" title="{/root/gui/strings/addXMLFragment}"/>
+						</a>
+					</xsl:otherwise>
+				</xsl:choose>
+				
+			</xsl:if>
 				
 			<!-- remove button -->
 			<xsl:choose>

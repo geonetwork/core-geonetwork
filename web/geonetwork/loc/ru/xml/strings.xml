@@ -45,12 +45,17 @@
 	<uploadFailed js="true">Error: Upload failed! - returned </uploadFailed>
 	<uploadSetFileNameFailed js="true">Error: Upload succeeded but unable to set filename!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Cannot get tooltips from server</cannotGetTooltip>
+	<maxResults js="true">Number of results per thesaurus</maxResults>
+	<anyThesaurus js="true">Any thesaurus</anyThesaurus>
+	<selectedKeywords js="true">Selected keywords</selectedKeywords>
+	<foundKeywords js="true">Available keywords</foundKeywords>
+	<keywordSelectionWindowTitle js="true">Keywords selection</keywordSelectionWindowTitle>
 	
 	<about>О системе</about>
 	<abstract>Резюме</abstract>
 	<accept>Принять</accept>
 	<actionOnSelect>действия над выделением</actionOnSelect>
-	<add>добавить</add>
+	<add js="true">добавить</add>
 	<addNewMetadata>Добавить новые метаданные</addNewMetadata>
 	<address>Адрес</address>
 	<admin>Управление</admin>
@@ -103,7 +108,7 @@
 	<chooseLargeThumbnail>Укажите местоположение файла большого эскиза</chooseLargeThumbnail>
 	<chooseThumbnail>Укажите местоположение файла маленького эскиза</chooseThumbnail>
 	<city>City</city>
-	<clear>Очистить</clear>
+	<clear js="true">Очистить</clear>
 	<clearAll>Очистить все</clearAll>
 	<close>Закрыть</close>
 	<completeTab>Улучшенный вид</completeTab>
@@ -445,7 +450,7 @@
 	<searchAllText>Что?</searchAllText>
 	<searchBox>Поиск данных и информации</searchBox>
 	<searchIndex>Поисковый индекс</searchIndex>
-	<searching>...Поиск метаданных...</searching>
+	<searching js="true">...Поиск метаданных...</searching>
 	<searchPage>Страница поиска</searchPage>
 	<searchPageDes>Переход на страницу поиска метаданных</searchPageDes>
 	<searchTemplates>Искать шаблоны</searchTemplates>

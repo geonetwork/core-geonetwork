@@ -797,3 +797,13 @@ span.thumbnail {
     font-style: italic;
     color: #2a628f;
 }
+
+/*******************************
+ Keywords search box
+ *******************************/
+ 
+.ux-mselect-item .ux-mselect-item-thesaurus {
+    color: #555;
+    font-style: italic;
+}
+

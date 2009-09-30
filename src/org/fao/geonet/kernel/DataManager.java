@@ -1318,90 +1318,75 @@ public class DataManager
 	/** For Ajax Editing : updates all leaves with new values
 	  */
 
-	public synchronized boolean updateMetadataEmbedded(UserSession session, Dbms dbms, String id, String currVersion, Hashtable changes, String lang) throws Exception
-	{
+	public synchronized boolean updateMetadataEmbedded(UserSession session,
+			Dbms dbms, String id, String currVersion, Hashtable changes,
+			String lang) throws Exception {
 		String schema = getMetadataSchema(dbms, id);
 
-		//--- check if the metadata has been modified from last time
+		// --- check if the metadata has been modified from last time
 		if (currVersion != null && !editLib.getVersion(id).equals(currVersion)) {
-			Log.error(Geonet.DATA_MANAGER, "Version mismatch: had "+currVersion+" but expected "+editLib.getVersion(id));
+			Log.error(Geonet.DATA_MANAGER, "Version mismatch: had "
+					+ currVersion + " but expected " + editLib.getVersion(id));
 			return false;
 		}
 
-		//--- get metadata from session
+		// --- get metadata from session
 		Element md = getMetadataFromSession(session);
 
-		//--- update elements
-		for(Enumeration e=changes.keys(); e.hasMoreElements();)
-		{
-			String ref = ((String) e.nextElement()) .trim();
+		// Store XML fragments to be handled after other elements update
+		HashMap<String, String> xmlInputs = new HashMap<String, String>();
+
+		// --- update elements
+		for (Enumeration e = changes.keys(); e.hasMoreElements();) {
+			String ref = ((String) e.nextElement()).trim();
 			String val = ((String) changes.get(ref)).trim();
-			String attr= null;
+			String attr = null;
+
+			// Catch element starting with a X to replace XML fragments
+			if (ref.startsWith("X")) {
+				ref = ref.substring(1);
+				xmlInputs.put(ref, val);
+				continue;
+			}
 
 			if (ref.equals(""))
 				continue;
-			
-			if(updatedLocalizedTextElement(md, ref, val)) {
-			    continue;
+
+			if (updatedLocalizedTextElement(md, ref, val)) {
+				continue;
 			}
-			
+
 			int at = ref.indexOf("_");
-			if (at != -1)
-			{
-				attr = ref.substring(at +1);
-				ref  = ref.substring(0, at);
+			if (at != -1) {
+				attr = ref.substring(at + 1);
+				ref = ref.substring(0, at);
 			}
-			boolean xmlContent = false;
-            if (ref.startsWith("X"))
-            {
-                ref = ref.substring(1);
-                xmlContent = true;
-            }
-//			CHECKME : here we have to catch element
-//			starting with a X to replace XML content
-//			like in updateMetadata // not sure this is ok 
-//          in new ajax mode
-			
+
 			Element el = editLib.findElement(md, ref);
 			if (el == null)
-				//throw new IllegalStateException("Element not found at ref = " + ref);
 				Log.error(Geonet.DATA_MANAGER, "Element not found at ref = " + ref);
 
 			if (attr != null) {
 				Integer indexColon = attr.indexOf("COLON");
-        if (indexColon != -1) {
-          String prefix = attr.substring(0,indexColon);
-          String localname = attr.substring(indexColon + 5);
-          String namespace = editLib.getNamespace(prefix+":"+localname,md,getSchema(schema));
-          Namespace attrNS = Namespace.getNamespace(prefix,namespace);
-          if (el.getAttribute(localname,attrNS) != null) {
-            el.setAttribute(new Attribute(localname,val,attrNS));
-          }
-        } else {
- 					if (el.getAttribute(attr) != null)
+				if (indexColon != -1) {
+					String prefix = attr.substring(0, indexColon);
+					String localname = attr.substring(indexColon + 5);
+					String namespace = editLib.getNamespace(prefix + ":"
+							+ localname, md, getSchema(schema));
+					Namespace attrNS = Namespace
+							.getNamespace(prefix, namespace);
+					if (el.getAttribute(localname, attrNS) != null) {
+						el.setAttribute(new Attribute(localname, val, attrNS));
+					}
+				} else {
+					if (el.getAttribute(attr) != null)
 						el.setAttribute(new Attribute(attr, val));
 				}
-			} else if(xmlContent)
-			{
-                el.removeContent();
-                //add the gml namespace if its missing
-                if (val.contains("<gml:") && !val.contains("xmlns:gml=\"")) {
-                    val = val.replaceFirst("<gml:([^ >]+)", "<gml:$1 xmlns:gml=\"http://www.opengis.net/gml\"");
-                }
-                // FIXME : MCT adds this constraints for ISO 19139.np templates.
-                if (val != null && !val.equals("")) {
-                	el.addContent(Xml.loadString(val, false));
-                	Log.debug(Geonet.DATA_MANAGER, "replacing XML content");
-                }
-            }
-			else
-			{
+			} else {
 				List content = el.getContent();
 
-				for(int i=0; i<content.size(); i++)
-				{
-					if (content.get(i) instanceof Text)
-					{
+				for (int i = 0; i < content.size(); i++) {
+					if (content.get(i) instanceof Text) {
 						el.removeContent((Text) content.get(i));
 						i--;
 					}
@@ -1410,9 +1395,50 @@ public class DataManager
 			}
 		}
 
-		//--- remove editing info
+		// Deals with XML fragments to insert or update
+		if (!xmlInputs.isEmpty()) {
+
+			// Loop over each XML fragments to insert or replace
+			for (Iterator<String> it = xmlInputs.keySet().iterator(); it
+					.hasNext();) {
+				String ref = it.next();
+				String value = xmlInputs.get(ref);
+
+				String name = null;
+				int addIndex = ref.indexOf("_");
+				if (addIndex != -1) {
+					name = ref.substring(addIndex + 1);
+					ref = ref.substring(0, addIndex);
+				}
+
+				// Get element to fill
+				Element el = editLib.findElement(md, ref);
+
+				if (el == null)
+					throw new IllegalStateException(
+							"Element not found at ref = " + ref);
+
+				if (value != null && !value.equals("")) {
+					String[] fragments = value.split("&&&");
+					for (String fragment : fragments) {
+						if (name != null) {
+							name = name.replace("COLON", ":");
+							editLib.addFragment(schema, el, name, fragment);
+						} else {
+							// clean before update
+							el.removeContent();
+							// Add content
+							el.addContent(Xml.loadString(fragment, false));
+						}
+					}
+					Log.debug(Geonet.DATA_MANAGER, "replacing XML content");
+				}
+			}
+		}
+
+		// --- remove editing info
 		editLib.removeEditingInfo(md);
-	
+
 		md.detach();
 		return updateMetadata(session, dbms, id, md, false, currVersion, lang);
 

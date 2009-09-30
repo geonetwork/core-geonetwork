@@ -44,13 +44,18 @@
 	<uploadFailed js="true">Erreur : Echec de l'envoi ! - Info : </uploadFailed>
 	<uploadSetFileNameFailed js="true">Erreur : Fichier envoyé mais impossible de définir le nom du fichier !</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Pas d'information disponible.</cannotGetTooltip>
+	<maxResults js="true">Nombre de résultats par thésaurus</maxResults>
+	<anyThesaurus js="true">Tous les thésaurus</anyThesaurus>
+	<selectedKeywords js="true">Mots clés selectionnés</selectedKeywords>
+	<foundKeywords js="true">Mots clés trouvés</foundKeywords>
+	<keywordSelectionWindowTitle js="true">Selection de mots clés</keywordSelectionWindowTitle>
 	
 	
 	<about>A propos</about>
 	<abstract>Résumé</abstract>
 	<accept>Accepter</accept>
 	<actionOnSelect>Actions sur la sélection</actionOnSelect>
-	<add>Ajouter</add>
+	<add js="true">Ajouter</add>
 	<addNewMetadata>Créer une nouvelle fiche de métadonnées</addNewMetadata>
 	<address>Adresse</address>
 	<admin>Administration</admin>
@@ -103,7 +108,7 @@
 	<chooseLargeThumbnail>Choisir la vignette (grand format)</chooseLargeThumbnail>
 	<chooseThumbnail>Choisir la vignette (petit format)</chooseThumbnail>
 	<city>Ville</city>
-	<clear>Effacer</clear>
+	<clear js="true">Effacer</clear>
 	<clearAll>Aucun</clearAll>
 	<close js="true">Fermer</close>
 	<completeTab>Vue avancée</completeTab>
@@ -446,7 +451,7 @@
 	<searchAllText>Partout</searchAllText>
 	<searchBox>Recherche de données et information</searchBox>
 	<searchIndex>Index de recherche</searchIndex>
-	<searching>... Recherche en cours ...</searching>
+	<searching js="true">... Recherche en cours ...</searching>
 	<searchPage>Page de recherche</searchPage>
 	<searchPageDes>Aller à la page de recherche</searchPageDes>
 	<searchTemplates>Rechercher les Modèles</searchTemplates>

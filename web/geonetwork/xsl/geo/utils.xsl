@@ -43,6 +43,16 @@
         <xsl:call-template name="css"/>
     </xsl:template>
     
+	<!-- Insert required JS and CSS for Ext selection panel (ie KeywordSelectionPanel) -->
+    <xsl:template name="selectionPanel">
+        <link rel="stylesheet" type="text/css" href="../../scripts/ext-ux/MultiselectItemSelector-3.0/Multiselect.css" />
+        
+        <script type="text/javascript" src="../../scripts/ext-ux/MultiselectItemSelector-3.0/Multiselect.js"></script>
+        <script type="text/javascript" src="../../scripts/ext-ux/MultiselectItemSelector-3.0/DDView.js"></script>
+        <script type="text/javascript" src="../../scripts/ext-ux/TwinTriggerComboBox/TwinTriggerComboBox.js"></script>
+        <script type="text/javascript" src="../../scripts/editor/app.KeywordSelectionPanel.js"></script>
+    </xsl:template>
+    
     <xsl:template name="css">
         <style type="text/css">
             .drawPolygon {

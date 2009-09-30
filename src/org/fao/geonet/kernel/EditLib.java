@@ -37,6 +37,7 @@ import java.util.UUID;
 import java.util.Vector;
 
 import jeeves.utils.Log;
+import jeeves.utils.Xml;
 
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -349,6 +350,67 @@ public class EditLib
 		fillElement(mdSchema, mdSugg, el, child);
 
 		return child;
+	}
+	
+	/**
+	 * Add XML fragments to the metadata.
+	 * 
+	 * @param schema
+	 * @param el
+	 * @param qname
+	 * @param fragments
+	 * @throws Exception
+	 */
+	public void addFragment(String schema, Element el, String qname,
+			String fragment) throws Exception {
+
+		String name = getUnqualifiedName(qname);
+		String ns = getNamespace(qname, el, getSchema(schema));
+		String prefix = getPrefix(qname);
+		String parentName = getParentNameFromChild(el);
+
+		Element root = new Element(name, prefix, ns);
+
+		try {
+			Element fragElt = Xml.loadString(fragment, false);
+			// Clean children if exist before loading new fragment.
+			root.removeContent();
+			// Add XML fragment collection
+			root.addContent(fragElt);
+		} catch (Exception e) {
+			Log.error("EditLib : Error adding element ", e.toString());
+			throw new IllegalStateException("EditLib : Error adding element " + e.getMessage());
+			
+		}
+		
+		MetadataSchema mdSchema = getSchema(schema);
+		String typeName = mdSchema.getElementType(el.getQualifiedName(), parentName);
+ 		MetadataType type = mdSchema.getTypeInfo(typeName);
+ 		
+ 		//--- collect all children, adding the new one at the end of the others
+		Vector<Element> children = new Vector<Element>();
+
+		for(int i=0; i<type.getElementCount(); i++)
+		{
+			List<Element> list = getChildren(el, type.getElementAt(i));
+
+			for (int j=0; j<list.size(); j++) {
+				Element aChild = (Element)list.get(j);
+				children.add(aChild);
+			}
+
+			if (qname.equals(type.getElementAt(i)))
+				children.add(root);
+		}
+		//--- remove everything and then add all collected children to the element 
+		//--- to assure a correct position for the new one
+
+		el.removeContent();
+		for(int i=0; i<children.size(); i++)
+			el.addContent((Element) children.get(i));
+
+		//--- add mandatory sub-tags
+		//fillElement(mdSchema, mdSugg, el, child);
 	}
 
 	//--------------------------------------------------------------------------

@@ -45,12 +45,17 @@
 	<uploadFailed js="true">Error: Upload failed! - returned </uploadFailed>
 	<uploadSetFileNameFailed js="true">Error: Upload succeeded but unable to set filename!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Cannot get tooltips from server</cannotGetTooltip>
+	<maxResults js="true">Number of results per thesaurus</maxResults>
+	<anyThesaurus js="true">Any thesaurus</anyThesaurus>
+	<selectedKeywords js="true">Selected keywords</selectedKeywords>
+	<foundKeywords js="true">Available keywords</foundKeywords>
+	<keywordSelectionWindowTitle js="true">Keywords selection</keywordSelectionWindowTitle>
 	
 	<about>Über</about>
 	<abstract>Kurzübersicht</abstract>
 	<accept>Abschicken</accept>
 	<actionOnSelect>Actions on selected metadata</actionOnSelect>
-	<add>hinzufügen</add>
+	<add js="true">hinzufügen</add>
 	<addNewMetadata>Neue Metadaten</addNewMetadata>
 	<address>Adresse</address>
 	<admin>Administration</admin>
@@ -104,7 +109,7 @@
 	<chooseLargeThumbnail>Auswahl des Verzeinisses der hochgeladenen großen Minaturansicht </chooseLargeThumbnail>
 	<chooseThumbnail>Auswahl des Verzeinisses der hochgeladenen Minaturansicht </chooseThumbnail>
 	<city>Stadt</city>
-	<clear>leeren</clear>
+	<clear js="true">leeren</clear>
 	<clearAll>Alles leeren</clearAll>
 	<close>Schließen</close>
 	<completeTab>Erweiterte Ansicht</completeTab>
@@ -447,7 +452,7 @@
 	<searchAllText>Was?</searchAllText>
 	<searchBox>Suche nach Daten und Informationen</searchBox>
 	<searchIndex>Suchindex</searchIndex>
-	<searching>...Suche nach Metadaten...</searching>
+	<searching js="true">...Suche nach Metadaten...</searching>
 	<searchPage>Suchseite</searchPage>
 	<searchPageDes>Zur Metadatensuchseite springen</searchPageDes>
 	<searchTemplates>Suche nach Vorlagen</searchTemplates>

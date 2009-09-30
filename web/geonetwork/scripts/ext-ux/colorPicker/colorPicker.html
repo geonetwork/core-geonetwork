@@ -1,0 +1,140 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <title>Ext ColorPicker User Extension Demo</title>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/ext-all.css" />
+
+    <!-- GC -->
+     <!-- LIBS -->
+     <script type="text/javascript" src="../../adapter/ext/ext-base.js"></script>
+     <!-- ENDLIBS -->
+
+    <script type="text/javascript" src="../../ext-all-debug.js"></script>
+
+    <script language="javascript" src="ext.ux.ColorPickerField.js"></script>
+    <script language="javascript" src="ext.ux.ColorPicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="color-picker.ux.css" />
+
+<!-- Common Styles for the examples -->
+<link rel="stylesheet" type="text/css" href="../shared/examples.css" />
+
+    <style type="text/css">
+    .x-panel-body p {
+        margin:10px;
+        font-size:12px;
+    }
+    </style>
+    
+    <script type="text/javascript">
+Ext.BLANK_IMAGE_URL = '../../resources/images/default/s.gif';
+
+
+Ext.onReady(function(){
+
+    Ext.QuickTips.init();
+    
+    var cp = new Ext.ux.ColorPicker();  // initial selected color
+//    cp.render("standalone");
+    
+    cp.on('select', function(picker, color){
+        Ext.example.msg('Color Selected', 'You chosed {0}.', color);
+    });    
+    
+    
+    var panel = new Ext.Panel({
+        items: [cp]
+    });
+    panel.render("standalone");
+
+    var colorMenu = new Ext.ux.ColorPickerMenu({
+        hideOnClick: false
+    });
+    colorMenu.on('select', function(cm, color) {
+        Ext.example.msg('Color Selected', 'You chose {0}.', color);
+    });
+    
+    
+    var button = new Ext.Button({
+        text: 'clik me',
+        menu: colorMenu
+    });
+    button.render("colormenu");
+
+
+    
+    var cpf = new Ext.ux.ColorPickerField({
+        fieldLabel: 'Choose a color',
+        value: '#0A9F50'
+    });
+    cpf.on('valid', function(field) {
+        Ext.example.msg('Color Selected', 'You chose {0}.', field.getValue());
+    });
+
+    var form = new Ext.FormPanel({
+        border: false,
+        width: 300,
+        bodyStyle: {'background': 'transparent'},
+        items: [{
+            xtype: 'fieldset',
+            autoHeight: true,
+            border: false,
+            items: [cpf]
+        }]
+    });
+
+    form.render("colorfield");
+
+});
+    </script>
+    <style type="text/css">
+        body  {
+          margin: 25px;
+          line-height: 1.25em;
+        }
+        h1  {
+          font-size: 2em;
+        }
+        h2  {
+          font-size: 1.5em;
+        }
+        .support  {
+          overflow: hidden;
+          margin: 1em 0;
+        }
+        .support dt  {
+          font-weight: bold;
+          margin: auto .5em;
+        }
+        .support dt, dd  {
+          font-size: 1em;
+        }
+        dd  {
+          margin-left: 25px;
+        }
+        p  {
+          margin: 1em auto;
+        }
+    </style>
+    
+</head>
+<body>
+  <script type="text/javascript" src="../shared/examples.js"></script><!-- EXAMPLES -->
+  <h1>Ext.ux.ColorPicker</h1>
+  <p>ColorField is a user extension component for the popular Javascript library, <a href='http://extjs.com'>ExtJS</a>.</p>
+  <h2>Browser Compatibility</h2>
+  <dl class='support'>
+    <dt >IE6+ (Win)</dt>
+      <dd>Needs some position fix.</dd>
+    <dt >Firefox 3 (Linux) </dt>
+    <dt>
+  </dl>  
+  <h2>Live Demo</h2>
+    <div id="standalone">Standalone Ext.ux.ColorPicker</div><br />
+    <div id="colormenu">Picker within an Ext.ux.ColorMenu</div><br />
+    <div id="colorfield">Picker within an Ext.ux.ColorField</div>
+  <h2>Issues</h2>
+  <ul>
+    <li>Ext.ux.ColorPickerField fires the 'valid' event twice when the ColorPicker is opened and user clicks on a color</li>
+  </ul>
+</body>
+</html>

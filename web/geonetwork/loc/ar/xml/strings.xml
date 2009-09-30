@@ -45,12 +45,18 @@
 	<uploadFailed js="true">Error: Upload failed! - returned </uploadFailed>
 	<uploadSetFileNameFailed js="true">Error: Upload succeeded but unable to set filename!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Cannot get tooltips from server</cannotGetTooltip>
+	<maxResults js="true">Number of results per thesaurus</maxResults>
+	<anyThesaurus js="true">Any thesaurus</anyThesaurus>
+	<selectedKeywords js="true">Selected keywords</selectedKeywords>
+	<foundKeywords js="true">Available keywords</foundKeywords>
+	<keywordSelectionWindowTitle js="true">Keywords selection</keywordSelectionWindowTitle>
+	
 	
 	<about>عن البرنامج</about>
 	<abstract>مقدمة</abstract>
 	<accept>قبول</accept>
 	<actionOnSelect>Actions on selected metadata</actionOnSelect>
-	<add>إضافة</add>
+	<add js="true">إضافة</add>
 	<addNewMetadata>بيانات أساسية Metadata جديدة</addNewMetadata>
 	<address>Address</address>
 	<admin>إدارة موقع</admin>
@@ -103,7 +109,7 @@
 	<chooseLargeThumbnail>عين مكان الصورة التوضيحية الكبيرة</chooseLargeThumbnail>
 	<chooseThumbnail>عين مكان الصورة التوضيحية الصغيرة</chooseThumbnail>
 	<city>City</city>
-	<clear>مسح</clear>
+	<clear js="true">مسح</clear>
 	<clearAll>Clear All</clearAll>
 	<close>Close</close>
 	<completeTab>عرض متقدم</completeTab>
@@ -449,7 +455,7 @@
 	<searchAllText>كتابة حرة</searchAllText>
 	<searchBox>بحث بيانات ومعلومات</searchBox>
 	<searchIndex>بحث فهرس</searchIndex>
-	<searching>...بحث في التقدم...</searching>
+	<searching js="true">...بحث في التقدم...</searching>
 	<searchPage>بحث صفحة</searchPage>
 	<searchPageDes>القفز إلى صفحة بحث البيانات الاساسية</searchPageDes>
 	<searchTemplates>بحث عن قوالب</searchTemplates>
