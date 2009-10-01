@@ -4,7 +4,8 @@
 	xmlns:exslt="http://exslt.org/common"
 	xmlns:dc = "http://purl.org/dc/elements/1.1/" 
 	xmlns:gmd="http://www.isotc211.org/2005/gmd" 
-	xmlns:gco="http://www.isotc211.org/2005/gco">
+	xmlns:gco="http://www.isotc211.org/2005/gco"
+	exclude-result-prefixes="gco gmd dc exslt geonet">
 
 	<!--
 	show metadata form
@@ -83,9 +84,6 @@
 					</td>
 				</tr>
 			</xsl:for-each>
-			<tr>
-				<td class="blue-content" />
-			</tr>
 		</table>
 	</xsl:template>
 	

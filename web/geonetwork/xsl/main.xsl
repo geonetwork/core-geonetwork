@@ -23,7 +23,7 @@
 					</td></tr>
 			
 					<!-- content -->
-					<tr height="100%"><td class="padded-content">
+					<tr height="100%"><td>
 						<xsl:call-template name="content"/>
 					</td></tr>
 				</table>
