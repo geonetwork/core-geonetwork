@@ -120,7 +120,7 @@
 	</xsl:template>
 	<xsl:template name="form">
 		<form method="get" action="javascript:doSearchSubmit();" name="simplesearch">
-			<input value="200" type="hidden" id="nbResults" name="nbResults"/>
+			<input value="200" type="hidden" id="maxResults" name="maxResults"/>
 			<input type="hidden" value="true" id="thesaSelected"/>
 			<input type="hidden" id="pThesauri">
 				<xsl:attribute name="value"><xsl:value-of select="/root/response/selectedThesaurus"/></xsl:attribute>
@@ -142,7 +142,7 @@
 												<script type="text/javascript">
 													  document.simplesearch.pKeyword.focus();
 
-													  new Ajax.Autocompleter('pKeyword', 'keywordList', 'xml.search.keywords?pMode=search&amp;pNewSearch=true&amp;pThesauri=<xsl:value-of select="/root/response/selectedThesaurus"/>&amp;nbResults=&amp;pTypeSearch=1&amp;',{method:'get', paramName: 'pKeyword'});
+													  new Ajax.Autocompleter('pKeyword', 'keywordList', 'xml.search.keywords?pMode=search&amp;pNewSearch=true&amp;pThesauri=<xsl:value-of select="/root/response/selectedThesaurus"/>&amp;maxResults=&amp;pTypeSearch=1&amp;',{method:'get', paramName: 'pKeyword'});
 												</script>
 											</td>
 										

@@ -52,7 +52,7 @@ KSearching.prototype.search = function(form)
 	req += '<pTypeSearch>'+ radiovalue +'</pTypeSearch>\n';
 	
 	// Number of result / page
-	req += '<nbResults>'+ $F('nbResults') +'</nbResults>\n';
+	req += '<maxResults>'+ $F('maxResults') +'</maxResults>\n';
 	req += '<pNewSearch>true</pNewSearch>\n';
 
 	if(mode!=''){	

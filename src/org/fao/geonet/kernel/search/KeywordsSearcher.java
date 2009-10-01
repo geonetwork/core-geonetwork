@@ -54,7 +54,7 @@ public class KeywordsSearcher {
 
 	private int _pTypeSearch = 1;
 	
-	private int _maxResults = 10;
+	private int _maxResults = 10000;
 
 
 	// --------------------------------------------------------------------------------
@@ -395,14 +395,7 @@ public class KeywordsSearcher {
 
 		Element elDescKeys = new Element("descKeys");
 
-
-		// Return only the n first elements according to GUI.
-		int nbResults = 36000;
-		// FIXME
-		if (params.getChild("nbResults") != null)
-			nbResults = Util.getParam(params, "nbResults", this.getNbResults());
-
-		nbResults = (this.getNbResults()<=nbResults?this.getNbResults():nbResults);
+		int nbResults = (this.getNbResults()<=_maxResults?this.getNbResults():_maxResults);
 
 		//for (int i = from; i <= to; i++) {
 		for (int i = 0; i <= nbResults - 1; i++) {
