@@ -103,7 +103,7 @@ app.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
         
         this.bbar = ['->', {
             id: 'keywordSearchValidateButton',
-            iconCls: 'x-icon-go',
+            iconCls: 'addIcon',
             disabled: true,
             text: translate('add'),
             handler: function() {

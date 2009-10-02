@@ -853,7 +853,9 @@ function showKeywordSelectionPanel(ref, name) {
             title: translate('keywordSelectionWindowTitle'),
             layout: 'fit',
             items: keywordSelectionPanel,
-            closeAction: 'hide'
+            closeAction: 'hide',
+            constrain: true,
+            iconCls: 'searchIcon'
         });
     }
     

@@ -14,18 +14,45 @@
 		<xsl:param name="validationLink"/>
 		<xsl:param name="id"/>
 
-		<!-- add button -->
+		
 		<span id="buttons_{$id}">
+			<!-- 
+				add as remote XML fragment button for
+				* element not descendant of a fragment element
+				* geonet:child of type keyword -->
+			<xsl:if test="normalize-space($addXMLFragment) 
+				and (
+				(@name = 'descriptiveKeywords' and @prefix = 'gmd') 
+				or name(.) = 'gmd:descriptiveKeywords'						
+				)">
+				<xsl:variable name="xlinkTokens" select="tokenize($addXMLFragment,'!')"/>
+				<xsl:text> </xsl:text>
+				<xsl:choose>
+					<xsl:when test="normalize-space($xlinkTokens[2])">
+						<a id="addXlink_{$id}" onclick="if (noDoubleClick()) {$xlinkTokens[1]}" style="display:none;">
+							<img src="{/root/gui/url}/images/find.png" alt="{/root/gui/strings/addXMLFragment}" title="{/root/gui/strings/addXMLFragment}"/>
+						</a>
+					</xsl:when>
+					<xsl:otherwise>
+						<a id="addXlink_{$id}" onclick="{$addXMLFragment}" style="cursor:pointer;">
+							<img src="{/root/gui/url}/images/find.png" alt="{/root/gui/strings/addXMLFragment}" title="{/root/gui/strings/addXMLFragment}"/>
+						</a>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+			
+			
+			<!-- add button -->
 			<xsl:choose>
 				<xsl:when test="normalize-space($addLink)">
 					<xsl:variable name="linkTokens" select="tokenize($addLink,'!')"/>
 					<xsl:text> </xsl:text>
 					<xsl:choose>
 						<xsl:when test="normalize-space($linkTokens[2])">
-							<a id="add_{$id}" style="display:none;cursor:hand;cursor:pointer;"  onclick="if (noDoubleClick()) {$linkTokens[1]}" target="_blank"><img src="{/root/gui/url}/images/plus.gif" alt="{/root/gui/strings/add}"/></a>
+							<a id="add_{$id}" style="display:none;cursor:hand;cursor:pointer;"  onclick="if (noDoubleClick()) {$linkTokens[1]}" target="_blank"><img src="{/root/gui/url}/images/plus.gif" alt="{/root/gui/strings/add}" title="{/root/gui/strings/add}"/></a>
 						</xsl:when>
 						<xsl:otherwise>
-							<a id="add_{$id}" style="cursor:hand;cursor:pointer;" onclick="if (noDoubleClick()) {$addLink}" target="_blank"><img src="{/root/gui/url}/images/plus.gif" alt="{/root/gui/strings/add}"/></a>
+							<a id="add_{$id}" style="cursor:hand;cursor:pointer;" onclick="if (noDoubleClick()) {$addLink}" target="_blank"><img src="{/root/gui/url}/images/plus.gif" alt="{/root/gui/strings/add}" title="{/root/gui/strings/add}"/></a>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
@@ -34,31 +61,6 @@
 				</xsl:otherwise>
 			</xsl:choose>
 			
-			<!-- 
-				add as remote XML fragment button for
-				* element not descendant of a fragment element
-				* geonet:child of type keyword -->
-			<xsl:if test="normalize-space($addXMLFragment) 
-					and (
-						(@name = 'descriptiveKeywords' and @prefix = 'gmd') 
-						or name(.) = 'gmd:descriptiveKeywords'						
-					)">
-				<xsl:variable name="xlinkTokens" select="tokenize($addXMLFragment,'!')"/>
-				<xsl:text> </xsl:text>
-				<xsl:choose>
-					<xsl:when test="normalize-space($xlinkTokens[2])">
-						<a id="addXlink_{$id}" onclick="if (noDoubleClick()) {$xlinkTokens[1]}" style="display:none;">
-							<img src="{/root/gui/url}/images/plusx.gif" alt="{/root/gui/strings/addXMLFragment}" title="{/root/gui/strings/addXMLFragment}"/>
-						</a>
-					</xsl:when>
-					<xsl:otherwise>
-						<a id="addXlink_{$id}" onclick="{$addXMLFragment}" style="cursor:pointer;">
-							<img src="{/root/gui/url}/images/plusx.gif" alt="{/root/gui/strings/addXMLFragment}" title="{/root/gui/strings/addXMLFragment}"/>
-						</a>
-					</xsl:otherwise>
-				</xsl:choose>
-				
-			</xsl:if>
 				
 			<!-- remove button -->
 			<xsl:choose>
@@ -67,10 +69,10 @@
 					<xsl:text> </xsl:text>
 					<xsl:choose>
 						<xsl:when test="normalize-space($linkTokens[2])">
-							<a id="remove_{$id}" style="display:none;cursor:hand;cursor:pointer;"  onclick="if (noDoubleClick()) {$linkTokens[1]}" target="_blank"><img src="{/root/gui/url}/images/del.gif" alt="{/root/gui/strings/del}"/></a>
+							<a id="remove_{$id}" style="display:none;cursor:hand;cursor:pointer;"  onclick="if (noDoubleClick()) {$linkTokens[1]}" target="_blank"><img src="{/root/gui/url}/images/del.gif" alt="{/root/gui/strings/del}" title="{/root/gui/strings/del}"/></a>
 						</xsl:when>
 						<xsl:otherwise>
-							<a id="remove_{$id}"  style="cursor:hand;cursor:pointer;" onclick="if (noDoubleClick()) {$removeLink}" target="_blank"><img src="{/root/gui/url}/images/del.gif" alt="{/root/gui/strings/del}"/></a>
+							<a id="remove_{$id}"  style="cursor:hand;cursor:pointer;" onclick="if (noDoubleClick()) {$removeLink}" target="_blank"><img src="{/root/gui/url}/images/del.gif" alt="{/root/gui/strings/del}" title="{/root/gui/strings/del}"/></a>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
@@ -86,10 +88,10 @@
 					<xsl:text> </xsl:text>
 					<xsl:choose>
 						<xsl:when test="normalize-space($linkTokens[2])">
-							<a id="up_{$id}" style="display:none;cursor:hand;cursor:pointer;"  onclick="if (noDoubleClick()) {$linkTokens[1]}" target="_blank"><img src="{/root/gui/url}/images/up.gif" alt="{/root/gui/strings/up}"/></a>
+							<a id="up_{$id}" style="display:none;cursor:hand;cursor:pointer;"  onclick="if (noDoubleClick()) {$linkTokens[1]}" target="_blank"><img src="{/root/gui/url}/images/up.gif" alt="{/root/gui/strings/up}" title="{/root/gui/strings/up}"/></a>
 						</xsl:when>
 						<xsl:otherwise>
-							<a id="up_{$id}" style="cursor:hand;cursor:pointer;"  onclick="if (noDoubleClick()) {$upLink}" target="_blank"><img src="{/root/gui/url}/images/up.gif" alt="{/root/gui/strings/up}"/></a>
+							<a id="up_{$id}" style="cursor:hand;cursor:pointer;"  onclick="if (noDoubleClick()) {$upLink}" target="_blank"><img src="{/root/gui/url}/images/up.gif" alt="{/root/gui/strings/up}" title="{/root/gui/strings/up}"/></a>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
@@ -105,10 +107,10 @@
 					<xsl:text> </xsl:text>
 					<xsl:choose>
 						<xsl:when test="normalize-space($linkTokens[2])">
-							<a id="down_{$id}" style="display:none;cursor:hand;cursor:pointer;"  onclick="if (noDoubleClick()) {$linkTokens[1]}" target="_blank"><img src="{/root/gui/url}/images/down.gif" alt="{/root/gui/strings/down}"/></a>
+							<a id="down_{$id}" style="display:none;cursor:hand;cursor:pointer;"  onclick="if (noDoubleClick()) {$linkTokens[1]}" target="_blank"><img src="{/root/gui/url}/images/down.gif" alt="{/root/gui/strings/down}" title="{/root/gui/strings/down}"/></a>
 						</xsl:when>
 						<xsl:otherwise>
-							<a id="down_{$id}" style="cursor:hand;cursor:pointer;" onclick="if (noDoubleClick()) {$downLink}" target="_blank"><img src="{/root/gui/url}/images/down.gif" alt="{/root/gui/strings/down}"/></a>
+							<a id="down_{$id}" style="cursor:hand;cursor:pointer;" onclick="if (noDoubleClick()) {$downLink}" target="_blank"><img src="{/root/gui/url}/images/down.gif" alt="{/root/gui/strings/down}" title="{/root/gui/strings/down}"/></a>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>

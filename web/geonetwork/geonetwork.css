@@ -807,3 +807,5 @@ span.thumbnail {
     font-style: italic;
 }
 
+.addIcon { background-image: url('images/add.png') !important; }
+.searchIcon { background-image: url('images/find.png') !important; }
