@@ -31,7 +31,6 @@ import java.util.Set;
 import org.fao.geonet.csw.common.ConstraintLanguage;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
-import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.util.Xml;
@@ -68,7 +67,6 @@ public class GetRecordsRequest extends CatalogRequest
 	private boolean distribSearch;
 
 	private ResultType         resultType;
-	private OutputSchema       outputSchema;
 	private ElementSetName     elemSetName;
 	private ConstraintLanguage constrLang;
 
@@ -101,13 +99,6 @@ public class GetRecordsRequest extends CatalogRequest
 	public void setOutputFormat(String format)
 	{
 		outputFormat = format;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public void setOutputSchema(OutputSchema schema)
-	{
-		outputSchema = schema;
 	}
 
 	//---------------------------------------------------------------------------
@@ -238,7 +229,8 @@ public class GetRecordsRequest extends CatalogRequest
 
 		setAttrib(params, "resultType",    resultType);
 		setAttrib(params, "outputFormat",  outputFormat);
-		setAttrib(params, "outputSchema",  outputSchema, Csw.NAMESPACE_CSW.getPrefix() + ":");
+		//setAttrib(params, "outputSchema",  outputSchema, Csw.NAMESPACE_CSW.getPrefix() + ":");
+        setAttrib(params, "outputSchema",  outputSchema);
 		setAttrib(params, "startPosition", startPosition);
 		setAttrib(params, "maxRecords",    maxRecords);
 

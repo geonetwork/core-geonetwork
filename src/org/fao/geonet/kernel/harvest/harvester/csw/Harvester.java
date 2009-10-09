@@ -185,6 +185,7 @@ class Harvester
 		if (oper.getUrl != null && PREFERRED_HTTP_METHOD.equals("GET")) {
 			request.setUrl(oper.getUrl);
             request.setServerVersion(server.getPreferredServerVersion());
+            request.setOutputSchema(oper.preferredOutputSchema);
 			request.setConstraintLanguage(ConstraintLanguage.CQL);
 			request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 			request.setConstraint(getCqlConstraint(s));
@@ -192,6 +193,7 @@ class Harvester
 		} else if (oper.postUrl != null && PREFERRED_HTTP_METHOD.equals("POST")) {
 			request.setUrl(oper.postUrl);
             request.setServerVersion(server.getPreferredServerVersion());
+            request.setOutputSchema(oper.preferredOutputSchema);
 			request.setConstraintLanguage(ConstraintLanguage.FILTER);
 			request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 			request.setConstraint(getFilterConstraint(s));
@@ -200,13 +202,15 @@ class Harvester
 			if (oper.getUrl != null) {
 				request.setUrl(oper.getUrl);
                 request.setServerVersion(server.getPreferredServerVersion());
-				request.setConstraintLanguage(ConstraintLanguage.CQL);
+                request.setOutputSchema(oper.preferredOutputSchema);
+                request.setConstraintLanguage(ConstraintLanguage.CQL);
 				request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 				request.setConstraint(getCqlConstraint(s));
 				request.setMethod(CatalogRequest.Method.GET);
 			} else if (oper.postUrl != null) {
 				request.setUrl(oper.postUrl);
                 request.setServerVersion(server.getPreferredServerVersion());
+                request.setOutputSchema(oper.preferredOutputSchema);
 				request.setConstraintLanguage(ConstraintLanguage.FILTER);
 				request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 				request.setConstraint(getFilterConstraint(s));
