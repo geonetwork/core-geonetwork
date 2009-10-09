@@ -40,11 +40,7 @@ import javax.swing.JTextField;
 
 import org.dlib.gui.FlexLayout;
 import org.dlib.gui.TPanel;
-import org.fao.geonet.csw.common.ConstraintLanguage;
-import org.fao.geonet.csw.common.ElementSetName;
-import org.fao.geonet.csw.common.OutputSchema;
-import org.fao.geonet.csw.common.ResultType;
-import org.fao.geonet.csw.common.TypeName;
+import org.fao.geonet.csw.common.*;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
 
@@ -264,8 +260,8 @@ public class GetRecordsPanel extends TPanel {
 		cmbResultType.addItem(ResultType.VALIDATE);
 
 		cmbOutSchema.addItem("(default)");
-		cmbOutSchema.addItem(OutputSchema.OGC_CORE);
-		cmbOutSchema.addItem(OutputSchema.ISO_PROFILE);
+		cmbOutSchema.addItem(Csw.NAMESPACE_GMD.getURI() );
+		cmbOutSchema.addItem(Csw.NAMESPACE_CSW .getURI());
 
 		cmbElemSetName.addItem("(default)");
 		cmbElemSetName.addItem(ElementSetName.BRIEF);
@@ -326,7 +322,7 @@ public class GetRecordsPanel extends TPanel {
 			request.setResultType((ResultType) cmbResultType.getSelectedItem());
 
 		if (cmbOutSchema.getSelectedIndex() != 0)
-			request.setOutputSchema((OutputSchema) cmbOutSchema.getSelectedItem());
+			request.setOutputSchema((String) cmbOutSchema.getSelectedItem());
 
 		if (cmbElemSetName.getSelectedIndex() != 0)
 			request.setElementSetName((ElementSetName) cmbElemSetName.getSelectedItem());
