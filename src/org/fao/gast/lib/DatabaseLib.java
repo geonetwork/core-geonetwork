@@ -526,7 +526,7 @@ public class DatabaseLib
 			if (!schema.getName().startsWith("."))
 				for (File temp : Lib.io.scanDir(schema, "xml"))
 				{
-					Lib.log.debug(" - Adding template file : "+ temp.getName());
+					Lib.log.debug(" - Adding template file (for schema " + schema.getName() + "): " + temp.getName());
 
 					Document doc  = Lib.xml.load(temp);
 					String   uuid = UUID.randomUUID().toString();
