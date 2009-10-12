@@ -1012,3 +1012,27 @@ function googleTranslate(ref, divSuggestion, target, fromLang, toLang) {
 		validateMetadataField($(target));
 	});
 }
+
+/**
+ * Update upper cardinality in ISO 19110
+ * depending on selected list value (0,1,n)
+ * 
+ * @param ref
+ * @param value
+ * @return
+ */
+function updateUpperCardinality(ref, value) {
+    var isInf = ref + "_isInfinite";
+        
+    if (value == '0' || value == '1') {
+        $(ref).value = value;
+        $(isInf).value = 'false';
+    } else if (value == 'n'){
+        $(ref).value = '';
+        $(isInf).value = 'true';
+    } else {
+        $(ref).value = '';
+        $(isInf).value = 'false';
+    }
+}
+

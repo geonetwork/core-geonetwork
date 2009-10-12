@@ -41,6 +41,15 @@
 				</xsl:apply-templates>
 			</xsl:when>
 			
+			<!-- ISO 19110 -->
+			<xsl:when test="$schema='iso19110'">
+				<xsl:apply-templates mode="iso19110" select="." >
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
+					<xsl:with-param name="embedded" select="$embedded" />
+				</xsl:apply-templates>
+			</xsl:when>
+			
 			<!-- FGDC -->
 			<xsl:when test="$schema='fgdc-std'">
 				<xsl:apply-templates mode="fgdc-std" select="." >
@@ -896,6 +905,7 @@
 			</xsl:choose>
 		</xsl:variable>
 		
+
 		<xsl:choose>
 			<xsl:when test="normalize-space($title)!=''">
 				<xsl:value-of select="$title"/>

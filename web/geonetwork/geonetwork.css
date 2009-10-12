@@ -292,6 +292,11 @@ th.md {
 	text-align: left;
 }
 
+ul.md {
+     list-style-type: circle;
+     margin-left: 20px;
+}
+
 input.md, select.md, textarea.md {
 	font-family: Verdana;
 	font-size: 8pt;

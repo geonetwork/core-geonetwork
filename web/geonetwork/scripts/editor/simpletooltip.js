@@ -77,6 +77,7 @@ var toolTipRequestTemp =
 '         xmlns:gts="http://www.isotc211.org/2005/gts"'+ 
 '         xmlns:srv="http://www.isotc211.org/2005/srv"'+ 
 '         xmlns:gml="http://www.opengis.net/gml"'+
+'         xmlns:gfc="http://www.isotc211.org/2005/gfc"' +
 '         xmlns:gco="http://www.isotc211.org/2005/gco"'+
 '         xmlns:dct="http://purl.org/dc/terms/"'+
 '         xmlns:dc ="http://purl.org/dc/elements/1.1/">'+

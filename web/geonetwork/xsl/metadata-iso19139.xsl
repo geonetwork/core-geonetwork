@@ -465,8 +465,7 @@
 		<xsl:variable name="name"     select="local-name(..)"/>
 		<xsl:variable name="qname"    select="name(..)"/>
 		<xsl:variable name="value"    select="../@codeListValue"/>
-		<xsl:variable name="codelist" select="/root/gui/*[name(.)=$schema]/codelist[@name = $qname]"/>
-
+		
 		<xsl:choose>
 			<xsl:when test="$qname='gmd:LanguageCode'">
 				<xsl:apply-templates mode="iso19139" select="..">
@@ -474,6 +473,35 @@
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:otherwise>
+				<!--
+					Get codelist from profil first and use use default one if not
+					available.
+				-->
+				<xsl:variable name="codelistProfil">
+					<xsl:choose>
+						<xsl:when test="starts-with($schema,'iso19139.')">
+							<xsl:copy-of
+								select="/root/gui/*[name(.)=$schema]/codelist[@name = $qname]/*" />
+						</xsl:when>
+						<xsl:otherwise />
+					</xsl:choose>
+				</xsl:variable>
+				
+				<xsl:variable name="codelistCore">
+					<xsl:choose>
+						<xsl:when test="normalize-space($codelistProfil)!=''">
+							<xsl:copy-of select="$codelistProfil" />
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:copy-of
+								select="/root/gui/*[name(.)='iso19139']/codelist[@name = $qname]/*" />
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				
+				<xsl:variable name="codelist" select="exslt:node-set($codelistCore)" />
+
+
 				<xsl:choose>
 					<xsl:when test="$edit=true()">
 						<!-- codelist in edit mode -->
@@ -2125,6 +2153,16 @@
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 
+		<xsl:call-template name="contactTemplate">
+			<xsl:with-param name="edit" select="$edit"/>
+			<xsl:with-param name="schema" select="$schema"/>
+		</xsl:call-template>
+	</xsl:template>
+
+	<xsl:template name="contactTemplate">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+		
 		<xsl:variable name="content">
 			<xsl:for-each select="gmd:CI_ResponsibleParty">
 				<td class="padded-content" width="100%" colspan="2">
@@ -2132,7 +2170,7 @@
 						<tr>
 							<td width="50%" valign="top">
 								<table width="100%">
-
+									
 									<xsl:apply-templates mode="elementEP" select="gmd:individualName|geonet:child[string(@name)='individualName']">
 										<xsl:with-param name="schema" select="$schema"/>
 										<xsl:with-param name="edit"   select="$edit"/>
@@ -2168,15 +2206,15 @@
 				</td>
 			</xsl:for-each>
 		</xsl:variable>
-
+		
 		<xsl:apply-templates mode="complexElement" select=".">
 			<xsl:with-param name="schema"  select="$schema"/>
 			<xsl:with-param name="edit"    select="$edit"/>
 			<xsl:with-param name="content" select="$content"/>
 		</xsl:apply-templates>
-
+		
 	</xsl:template>
-	
+
 	<!-- ============================================================================= -->
 	<!-- online resources -->
 	<!-- ============================================================================= -->

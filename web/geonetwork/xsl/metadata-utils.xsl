@@ -5,6 +5,7 @@
 
 	<xsl:include href="metadata-iso19115.xsl"/>
 	<xsl:include href="metadata-iso19139.xsl"/>
+	<xsl:include href="metadata-iso19110.xsl"/>
 	<xsl:include href="metadata-fgdc-std.xsl"/>
 	<xsl:include href="metadata-dublin-core.xsl"/>
 	
@@ -31,6 +32,7 @@
 			<xsl:when test="string(geonet:info/schema)!=''"><xsl:value-of select="geonet:info/schema"/></xsl:when>
 			<xsl:when test="name(.)='Metadata'">iso19115</xsl:when>
 			<xsl:when test="local-name(.)='MD_Metadata'">iso19139</xsl:when>
+			<xsl:when test="local-name(.)='FC_FeatureCatalogue'">iso19110</xsl:when>
 			<xsl:when test="name(.)='metadata'">fgdc-std</xsl:when>
 			<xsl:otherwise>UNKNOWN</xsl:otherwise>
 		</xsl:choose>
@@ -46,7 +48,7 @@
 		<xsl:param name="schema">
 			<xsl:apply-templates mode="schema" select="."/>
 		</xsl:param>
-
+		
 		<!--
 		[schema:<xsl:value-of select="$schema"/>]
 		-->
@@ -65,8 +67,13 @@
 			</xsl:when>
 
 			<!-- ISO 19139 -->
-			<xsl:when test="$schema='iso19139'">
+			<xsl:when test="starts-with($schema,'iso19139')">
 				<xsl:call-template name="iso19139Brief"/>
+			</xsl:when>
+			
+			<!-- ISO 19110 -->
+			<xsl:when test="$schema='iso19110'">
+				<xsl:call-template name="iso19110Brief"/>
 			</xsl:when>
 
 			<!-- FGDC -->
@@ -238,7 +245,7 @@
 						</xsl:when>
 						
 						<!-- ISO 19139 -->
-						<xsl:when test="$schema='iso19139'">
+						<xsl:when test="starts-with($schema,'iso19139')">
 							<xsl:call-template name="iso19139CompleteTab">
 								<xsl:with-param name="tabLink" select="$tabLink"/>
 							</xsl:call-template>

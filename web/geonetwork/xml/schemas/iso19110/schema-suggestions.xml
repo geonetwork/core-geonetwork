@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fields>
+	<field name="gfc:FC_FeatureCatalogue">
+		<suggest name="gfc:name"/>
+		<suggest name="gfc:scope"/>
+        <suggest name="gfc:fieldOfApplication"/>
+        <suggest name="gfc:versionNumber"/>
+        <suggest name="gfc:versionDate"/>
+        <suggest name="gfc:functionalLanguage"/>
+        <suggest name="gfc:producer"/>
+	</field>
+	
+    <field name="gmd:CI_ResponsibleParty">
+        <suggest name="gmd:individualName"/>
+        <suggest name="gmd:organisationName"/>
+        <suggest name="gmd:positionName"/>
+        <suggest name="gmd:contactInfo"/>
+    </field>
+    
+	<field name="gfc:FC_FeatureType">
+		<suggest name="gfc:typeName"/>
+	</field>
+	
+    <field name="gfc:listedValue">
+        <suggest name="gfc:FC_ListedValue"/>
+    </field>
+    
+    <field name="gfc:FC_ListedValue">
+        <suggest name="gfc:code"/>
+    </field>
+    
+    <field name="gfc:FC_AssociationRole">
+        <suggest name="gfc:definition"/>
+    </field>
+    
+    <field name="gfc:constrainedBy">
+        <suggest name="gfc:FC_Constraint"/>
+    </field>    
+    
+	<field name="gfc:FC_FeatureAttribute">
+		<suggest name="gfc:memberName"/>
+		<suggest name="gfc:definition"/>
+        <suggest name="gfc:valueType"/>
+	    <suggest name="gfc:featureType"/>
+	</field>
+    
+    <field name="gfc:inheritsTo">
+        <suggest name="gfc:FC_InheritanceRelation"/>
+    </field>
+    
+    <field name="gfc:inheritsFrom">
+        <suggest name="gfc:FC_InheritanceRelation"/>
+    </field>
+</fields>
