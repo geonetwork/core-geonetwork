@@ -104,6 +104,8 @@ ConfigView.prototype.setData = function(data)
 	$('csw.accessConstraints').value   = data['CSW_ACCESS'];
 
 	$('clickablehyperlinks.enable').checked = data['CLICKABLE_HYPERLINKS'] == 'true';
+
+	$('localrating.enable').checked = data['LOCAL_RATING'] == 'true';
 	
 	$('proxy.use') .checked   = data['PROXY_USE'] == 'true';
 	$('proxy.host').value     = data['PROXY_HOST'];
@@ -190,6 +192,8 @@ ConfigView.prototype.getData = function()
 
 		CLICKABLE_HYPERLINKS : $('clickablehyperlinks.enable').checked,
 		
+		LOCAL_RATING : $('localrating.enable').checked,
+
 		PROXY_USE  : $('proxy.use') .checked,
 		PROXY_HOST : $('proxy.host').value,
 		PROXY_PORT : $('proxy.port').value,
