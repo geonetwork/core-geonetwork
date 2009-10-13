@@ -56,6 +56,8 @@
 
 	<clickablehyperlinks>Hyperliens cliquables</clickablehyperlinks>
 
+	<localrating>Evaluation Local</localrating>
+	
 	<proxy>Proxy</proxy>
 	<use>Activé</use>
 
@@ -181,6 +183,11 @@
 		
 		<tip id="clickablehyperlinks.enable">
 			Si défini, GeoNetwork permet de trouver des hyperliens cliquables dans les métadonnées.
+		</tip>
+		
+		<!-- local rating -->
+		<tip id="localrating.enable">
+			Si défini, GeoNetwork va calculer les cotes de l'utilisateur pour les métadonnées de ce nœud seulement (pas répartis entre les autres nœuds GeoNetwork).
 		</tip>
 		
 		<!-- proxy -->

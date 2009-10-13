@@ -24,6 +24,8 @@
 	
 	<clickablehyperlinks>Работающую гиперссылку</clickablehyperlinks>
 	
+	<localrating>Местные Рейтинг</localrating>
+
 	<proxy>Прокси</proxy>
 	<use>Использовать</use>
 	<username>Пользователь</username>
@@ -164,6 +166,11 @@
 			Если установлено, GeoNetwork покажет работающую гиперссылку в метаданных.
 		</tip>
 
+		<!-- local rating -->
+		<tip id="localrating.enable">
+			Если установлено, GeoNetwork будет вычислять пользователей оценки для метаданных из этого узла (хоть и не распределяется между другими узлами GeoNetwork).
+		</tip>
+		
 		<!-- proxy -->
 
 		<tip id="proxy.use">

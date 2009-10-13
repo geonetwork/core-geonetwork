@@ -25,6 +25,8 @@
 
 	<clickablehyperlinks>Klikbare hyperlinks</clickablehyperlinks>
 	
+	<localrating>Locale Waardering</localrating>
+	
 	<proxy>Proxy</proxy>
 	<use>Gebruik</use>
 	<username>Gebruikersnaam</username>
@@ -167,6 +169,11 @@
 			Als deze optie is ingeschakeld zal GeoNetwork klikbare hyperlinks tonen in de metadata.
 		</tip>
 
+		<!-- local rating -->
+		<tip id="localrating.enable">
+			Als deze optie is ingeschakeld zal GeoNetwork de gebruikerswaardering van metadata alleen van deze node berekenen (niet gedistribueerd met andere GeoNetwork nodes).
+		</tip>
+		
 		<!-- proxy -->
 		
 		<tip id="proxy.use">

@@ -25,6 +25,8 @@
 
 	<clickablehyperlinks>Anklickbare Hyperlinks</clickablehyperlinks>
 
+	<localrating>Lokale Bewertung</localrating>
+
 	<proxy>Proxy</proxy>
 	<use>Use</use>
 	<username>Benutzername</username>
@@ -154,6 +156,11 @@
 			Falls gesetzt, werden GeoNetwork anklickbare Hyperlinks Anzeige in den Metadaten.
 		</tip>
 	
+		<!-- local rating -->
+		<tip id="localrating.enable">
+			Falls gesetzt, werden GeoNetwork Ihre Bewertung für Metadaten aus diesen Knoten zu berechnen nur (nicht unter anderem GeoNetwork Knoten verteilt).
+		</tip>
+		
 		<!-- proxy -->
 		
 		<tip id="proxy.use">

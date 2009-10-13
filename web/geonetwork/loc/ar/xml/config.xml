@@ -25,6 +25,8 @@
 
 	<clickablehyperlinks>التشعبية القابلة للنقر عليها</clickablehyperlinks>
 	
+	<localrating>تصنيف المحلية</localrating>
+	
 	<proxy>Proxy</proxy>
 	<use>Use</use>
 	<username>Username</username>
@@ -165,9 +167,13 @@
 		<!-- clickable hyperlinks -->
 		
 		<tip id="clickablehyperlinks.enable">
-			If set, GeoNetwork will display clickable hyperlinks in the metadata.
+			إذا كان تعيين ، سوف يعرض وصلات الشبكة الأرضية للنقر في الفوقية.
 		</tip>
 		
+		<!-- local rating -->
+		<tip id="localrating.enable">
+			إذا كان تعيين وسوف الشبكة الأرضية للمستخدم حساب التصنيفات الفوقية من هذه العقدة فقط (وليس توزيعها بين العقدتين الشبكة الأرضية الأخرى).
+		</tip>		
 		<!-- proxy -->
 		
 		<tip id="proxy.use">

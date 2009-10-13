@@ -25,6 +25,8 @@
 
 	<clickablehyperlinks>hipervínculos se puede hacer clic</clickablehyperlinks>
 
+	<localrating>Clasificación Local</localrating>
+
 	<proxy>Proxy</proxy>
 	<use>Uso</use>
 	<username>Nombre de usuario</username>
@@ -202,7 +204,12 @@
 		<tip id="clickablehyperlinks.enable">
 			Si está establecido, GeoNetwork mostrará hacer clic en enlaces en los metadatos.
 		</tip>
-
+		
+		<!-- local rating -->
+		<tip id="localrating.enable">
+			Si está establecido, GeoNetwork calculará puntuaciones de usuario para los metadatos de este nodo sólo (no distribuida entre los otros nodos de GeoNetwork).
+		</tip>
+		
 		<!-- proxy -->
 			
 		<tip id="proxy.use">

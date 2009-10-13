@@ -24,6 +24,8 @@
 	<accessConstraints>Access Constraints</accessConstraints>
 
 	<clickablehyperlinks>Clickable hyperlinks</clickablehyperlinks>
+
+	<localrating>Local Rating</localrating>
 	
 	<proxy>Proxy</proxy>
 	<use>Use</use>
@@ -166,6 +168,11 @@
 		
 		<tip id="clickablehyperlinks.enable">
 			If set, GeoNetwork will display clickable hyperlinks in the metadata.
+		</tip>
+
+		<!-- local rating -->
+		<tip id="localrating.enable">
+			If set, GeoNetwork will calculate user ratings for metadata from this node only (not distributed among other GeoNetwork nodes).
 		</tip>
 		
 		<!-- proxy -->

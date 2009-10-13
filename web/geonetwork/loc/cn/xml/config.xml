@@ -24,6 +24,8 @@
 	<accessConstraints>Access Constraints</accessConstraints>
 
 	<clickablehyperlinks>可点击链接</clickablehyperlinks>
+
+	<localrating>本地的信贷评级</localrating>
 	
 	<proxy>Proxy</proxy>
 	<use>Use</use>
@@ -166,6 +168,11 @@
 		
 		<tip id="clickablehyperlinks.enable">
 			如果设置，地理网将显示在数据可点击链接。
+		</tip>
+		
+		<!-- local rating -->
+		<tip id="localrating.enable">
+			如果设置，地理网将计算从这个节点的数据用户评级只（不分配等地理网节点）。
 		</tip>
 		
 		<!-- proxy -->
