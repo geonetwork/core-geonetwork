@@ -23,6 +23,8 @@
 	<fees>Fees</fees>
 	<accessConstraints>Access Constraints</accessConstraints>
 	
+	<clickablehyperlinks>可点击链接</clickablehyperlinks>
+	
 	<proxy>Proxy</proxy>
 	<use>Use</use>
 	<username>Username</username>
@@ -159,6 +161,12 @@
 		<tip id="csw.abstract">Abstract</tip>
 		<tip id="csw.fees">Fees</tip>
 		<tip id="csw.accessConstraints">Access constraints</tip>
+		
+		<!-- clickable hyperlinks -->
+		
+		<tip id="clickablehyperlinks.enable">
+			如果设置，地理网将显示在数据可点击链接。
+		</tip>
 		
 		<!-- proxy -->
 		

@@ -26,6 +26,9 @@
 	<proxy>Proxy</proxy>
 	<use>Gebruik</use>
 	<username>Gebruikersnaam</username>
+
+	<clickablehyperlinks>Klikbare hyperlinks</clickablehyperlinks>
+
 	
 	<feedback>Respons</feedback>
 	<email>EMail</email>
@@ -158,6 +161,12 @@
 		<tip id="csw.abstract">Samenvatting</tip>
 		<tip id="csw.fees">Kosten</tip>
 		<tip id="csw.accessConstraints">Toegangsrestricties</tip>
+		
+		<!-- clickable hyperlinks -->
+		
+		<tip id="clickablehyperlinks.enable">
+			Als deze optie is ingeschakeld zal GeoNetwork klikbare hyperlinks tonen in de metadata.
+		</tip>
 		
 		<!-- proxy -->
 		

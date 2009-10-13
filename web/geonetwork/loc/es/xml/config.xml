@@ -23,6 +23,8 @@
 	<fees>Fees</fees>
 	<accessConstraints>Access Constraints</accessConstraints>
 
+	<clickablehyperlinks>hipervínculos se puede hacer clic</clickablehyperlinks>
+	
 	<proxy>Proxy</proxy>
 	<use>Uso</use>
 	<username>Nombre de usuario</username>
@@ -195,6 +197,11 @@
 		<tip id="csw.fees">Fees</tip>
 		<tip id="csw.accessConstraints">Access constraints</tip>
 		
+		<!-- clickable hyperlinks -->
+		
+		<tip id="clickablehyperlinks.enable">
+			Si está establecido, GeoNetwork mostrará hacer clic en enlaces en los metadatos.
+		</tip>
 		<!-- proxy -->
 		
 		<tip id="proxy.use">
