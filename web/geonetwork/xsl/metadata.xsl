@@ -7,6 +7,7 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	exclude-result-prefixes="exslt xlink gco geonet">
 
+	<xsl:import href="text-utilities.xsl"/>
 	<xsl:include href="metadata-utils.xsl"/>
 	<xsl:include href="metadata-controls.xsl"/>
 	
@@ -749,7 +750,18 @@
 					</xsl:call-template>
 				</xsl:if>
 			</th>
-			<td class="padded" valign="top"><xsl:copy-of select="$text"/></td>
+			<td class="padded" valign="top">
+				<xsl:choose>
+					<xsl:when test="$edit">
+						<xsl:copy-of select="$text"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:call-template name="addHyperlinksAndLineBreaks">
+							<xsl:with-param name="txt" select="$text"/>
+						</xsl:call-template>
+					</xsl:otherwise>
+				</xsl:choose>			
+			</td>
 		</tr>
 	</xsl:template>
 	<!--
