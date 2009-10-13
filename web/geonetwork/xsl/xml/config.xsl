@@ -19,6 +19,7 @@
 		<xsl:variable name="ldapDisNam" select="$ldap/distinguishedNames/children"/>
 		<xsl:variable name="ldapUsrAtt" select="$ldap/userAttribs/children"/>
 		<xsl:variable name="userSelfRegistration"      select="children/userSelfRegistration/children"/>
+		<xsl:variable name="clickablehyperlinks"      select="children/clickablehyperlinks/children"/>		
 		<xsl:variable name="shib"       select="children/shib/children"/>
 		<xsl:variable name="shibAttrib" select="$shib/attrib/children"/>
 		<xsl:variable name="csw"        select="children/csw/children"/>
@@ -78,6 +79,10 @@
 				<fees><xsl:value-of select="$csw/fees/value"/></fees>
 				<accessConstraints><xsl:value-of select="$csw/accessConstraints/value"/></accessConstraints>
 			</csw>
+			
+			<clickablehyperlinks>
+				<enable><xsl:value-of select="$clickablehyperlinks/enable/value"/></enable>
+			</clickablehyperlinks>			
 			
 			<proxy>
 				<use><xsl:value-of select="$proxy/use/value"/></use>
