@@ -47,6 +47,7 @@
 		<xsl:call-template name="intranet"/>
 		<xsl:call-template name="z3950"/>
 		<xsl:call-template name="csw"/>
+		<xsl:call-template name="hyperlinks"/>
 		<xsl:call-template name="proxy"/>
 		<xsl:call-template name="feedback"/>
 		<xsl:call-template name="removedMetadata"/>
@@ -271,6 +272,19 @@
             	</tr>
             </table>
         </div>
+	</xsl:template>
+	<!-- ============================================================================================= -->
+	<xsl:template name="hyperlinks">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/clickablehyperlinks"/></h1>
+
+		<div align="left" style="{$style}">
+			<table>
+				<tr>
+					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/enable"/></td>
+					<td class="padded"><input id="clickablehyperlinks.enable" class="content" type="checkbox" value=""/></td>
+				</tr>
+			</table>
+		</div>
 	</xsl:template>
 	
 	<!-- ============================================================================================= -->
