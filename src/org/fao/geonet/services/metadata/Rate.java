@@ -42,16 +42,23 @@ import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetParams;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
 
-/** Allow to rate a metadata (local or harvested by the geonetwork harvesting type)
-  */
-
+/**
+ * User rating of metadata. If the metadata was harvested using the 'GeoNetwork' protocol and
+ * the system setting "localrating/enabled" is false (the default), the user's rating is shared
+ * between GN nodes partaking in this harvesting network. If the metadata was not harvested or
+ * if "localrating/enabled" is true then 'local rating' is applied, counting only rating from
+ * users of this node itself.
+ *
+ */
 public class Rate implements Service
 {
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -103,7 +110,11 @@ public class Rate implements Service
 
 		String harvUuid = getHarvestingUuid(dbms, id);
 
-		if (harvUuid == null)
+		// look up value of localrating/enabled
+		SettingManager settingManager = gc.getSettingManager();
+		boolean localRating = settingManager.getValueAsBool("system/localrating/enabled", false);
+		
+		if (localRating || harvUuid == null)
 			//--- metadata is local, just rate it
 			rating = dm.rateMetadata(dbms, new Integer(id), ip, rating);
 		else
