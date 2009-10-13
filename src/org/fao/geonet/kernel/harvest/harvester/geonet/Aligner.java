@@ -47,6 +47,7 @@ import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.mef.MEFFileVisitor;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFVisitor;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
@@ -153,8 +154,17 @@ public class Aligner
 			{
 				String id = dataMan.getMetadataId(dbms, ri.uuid);
 
-				if (id == null)	addMetadata(ri);
-					else				updateMetadata(ri, id);
+				// look up value of localrating/enabled
+				GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+				SettingManager settingManager = gc.getSettingManager();
+				boolean localRating = settingManager.getValueAsBool("system/localrating/enabled", false);
+				
+				if (id == null)	{
+					addMetadata(ri, localRating);
+				}
+				else {
+					updateMetadata(ri, id, localRating);
+				}
 			}
 		}
 
@@ -169,7 +179,7 @@ public class Aligner
 	//---
 	//--------------------------------------------------------------------------
 
-	private void addMetadata(final RecordInfo ri) throws Exception
+	private void addMetadata(final RecordInfo ri, final boolean localRating) throws Exception
 	{
 		final String  id[] = { null };
 		final Element md[] = { null };
@@ -191,7 +201,7 @@ public class Aligner
 
 				public void handleInfo(Element info) throws Exception
 				{
-					id[0] = addMetadata(ri, md[0], info);
+					id[0] = addMetadata(ri, md[0], info, localRating);
 				}
 
 				//--------------------------------------------------------------------
@@ -227,7 +237,7 @@ public class Aligner
 
 	//--------------------------------------------------------------------------
 
-	private String addMetadata(RecordInfo ri, Element md, Element info) throws Exception
+	private String addMetadata(RecordInfo ri, Element md, Element info, boolean localRating) throws Exception
 	{
 		Element general = info.getChild("general");
 
@@ -235,7 +245,6 @@ public class Aligner
 		String changeDate = general.getChildText("changeDate");
 		String isTemplate = general.getChildText("isTemplate");
 		String siteId     = general.getChildText("siteId");
-		String rating     = general.getChildText("rating");
 		String popularity = general.getChildText("popularity");
 
 		if ("true".equals(isTemplate))	isTemplate = "y";
@@ -250,10 +259,13 @@ public class Aligner
 
 		dataMan.setTemplate(dbms, iId, isTemplate, null);
 		dataMan.setHarvested(dbms, iId, params.uuid);
-
-		if (rating != null)
-			dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", new Integer(rating), iId);
-
+		
+		if(!localRating) {
+			String rating = general.getChildText("rating");
+			if (rating != null)
+				dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", new Integer(rating), iId);
+		}
+		
 		if (popularity != null)
 			dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", new Integer(popularity), iId);
 
@@ -420,7 +432,7 @@ public class Aligner
 	//---
 	//--------------------------------------------------------------------------
 
-	private void updateMetadata(final RecordInfo ri, final String id) throws Exception
+	private void updateMetadata(final RecordInfo ri, final String id, final boolean localRating) throws Exception
 	{
 		final Element md[]     = { null };
 		final Element publicFiles[] = { null };
@@ -444,7 +456,7 @@ public class Aligner
 
 					public void handleInfo(Element info) throws Exception
 					{
-						updateMetadata(ri, id, md[0], info);
+						updateMetadata(ri, id, md[0], info, localRating);
 						publicFiles[0] = info.getChild("public");
 					}
 
@@ -474,7 +486,7 @@ public class Aligner
 
 	//--------------------------------------------------------------------------
 
-	private void updateMetadata(RecordInfo ri, String id, Element md, Element info) throws Exception
+	private void updateMetadata(RecordInfo ri, String id, Element md, Element info, boolean localRating) throws Exception
 	{
 		String date = localUuids.getChangeDate(ri.uuid);
 
@@ -492,12 +504,14 @@ public class Aligner
 
 		Element general = info.getChild("general");
 
-		String rating     = general.getChildText("rating");
 		String popularity = general.getChildText("popularity");
 
-		if (rating != null)
-			dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", new Integer(rating), new Integer(id));
-
+		if(!localRating) {
+			String rating = general.getChildText("rating");
+			if (rating != null)
+				dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", new Integer(rating), new Integer(id));
+		}
+		
 		if (popularity != null)
 			dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", new Integer(popularity), new Integer(id));
 
