@@ -91,7 +91,7 @@
 				</xsl:choose>			
 			</xsl:when>
 			<xsl:otherwise>
-				ZZZ<xsl:value-of select="$txt"/>
+				<xsl:value-of select="$txt"/>
 			</xsl:otherwise>
 		</xsl:choose>			
 	</xsl:template>
