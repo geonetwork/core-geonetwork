@@ -3,6 +3,8 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="geonet exslt">
 	
 	<xsl:include href="utils.xsl"/>
+	<xsl:include href="text-utilities.xsl"/>
+
 	<xsl:include href="metadata.xsl"/>
 	
 	<xsl:variable name="pageRange"   select="5"/>
@@ -290,7 +292,9 @@
 													</xsl:otherwise>
 												</xsl:choose>
 												<!-- <input id="selId" name="{$metadata/geonet:info/id}" type="checkbox" /> -->
-												<xsl:value-of select="$metadata/title"/>
+												<xsl:call-template name="addHyperlinksAndLineBreaks">
+													<xsl:with-param name="txt" select="$metadata/title"/>
+												</xsl:call-template>
 											</h1>
 										</td>
 	
@@ -338,10 +342,15 @@
 										<xsl:choose>
 											<!-- show a maximum of $maxAbstract characters in the abstract -->
 											<xsl:when test="string-length ($metadata/abstract) &gt; $maxAbstract">
-												<xsl:value-of select="substring ($metadata/abstract, 0, $maxAbstract)"/>...
+												<xsl:call-template name="addHyperlinksAndLineBreaks">
+													<xsl:with-param name="txt" select="substring ($metadata/abstract, 0, $maxAbstract)"/>
+												</xsl:call-template>												
+												...
 											</xsl:when>
 											<xsl:otherwise>
-												<xsl:value-of select="$metadata/abstract"/>
+												<xsl:call-template name="addHyperlinksAndLineBreaks">
+													<xsl:with-param name="txt" select="$metadata/abstract"/>
+												</xsl:call-template>
 											</xsl:otherwise>
 										</xsl:choose>
 									</td>
