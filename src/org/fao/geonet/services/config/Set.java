@@ -116,7 +116,9 @@ public class Set implements Service
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/abstract",                                "system/csw/abstract"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/fees",                                    "system/csw/fees"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/accessConstraints",                       "system/csw/accessConstraints"),
-		
+
+		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "clickablehyperlinks/enable", "system/clickablehyperlinks/enable"),
+
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "proxy/use",                "system/proxy/use"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "proxy/host",               "system/proxy/host"),
 		new ConfigEntry(ConfigEntry.Type.INT,    false, "proxy/port",               "system/proxy/port"),
