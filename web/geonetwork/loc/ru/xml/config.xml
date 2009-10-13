@@ -22,6 +22,8 @@
 	<fees>Fees</fees>
 	<accessConstraints>Access Constraints</accessConstraints>
 	
+	<clickablehyperlinks>Работающую гиперссылку</clickablehyperlinks>
+	
 	<proxy>Прокси</proxy>
 	<use>Использовать</use>
 	<username>Пользователь</username>
@@ -155,7 +157,13 @@
 		<tip id="csw.abstract">Abstract</tip>
 		<tip id="csw.fees">Fees</tip>
 		<tip id="csw.accessConstraints">Access constraints</tip>
+	
+		<!-- clickable hyperlinks -->
 		
+		<tip id="clickablehyperlinks.enable">
+			Если установлено, GeoNetwork покажет работающую гиперссылку в метаданных.
+		</tip>
+
 		<!-- proxy -->
 
 		<tip id="proxy.use">

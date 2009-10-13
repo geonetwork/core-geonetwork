@@ -54,6 +54,8 @@
 	<smtpHost>Serveur SMTP</smtpHost>
 	<smtpPort>Port SMTP</smtpPort>
 
+	<clickablehyperlinks>Hyperliens cliquables</clickablehyperlinks>
+
 	<proxy>Proxy</proxy>
 	<use>Activé</use>
 
@@ -174,7 +176,13 @@
 			<b>Please note:</b>
 			restart GeoNetwork to make this change active.
 		</tip>
-
+		
+		<!-- clickable hyperlinks -->
+		
+		<tip id="clickablehyperlinks.enable">
+			Si défini, GeoNetwork permet de trouver des hyperliens cliquables dans les métadonnées.
+		</tip>
+		
 		<!-- proxy -->
 
 		<tip id="proxy.use">

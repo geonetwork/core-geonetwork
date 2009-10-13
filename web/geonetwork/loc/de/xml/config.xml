@@ -22,7 +22,9 @@
 	<abstract>Zusammenfassung</abstract>
 	<fees>Gebühren</fees>
 	<accessConstraints>Zugangsbeschränkungen</accessConstraints>
-		
+
+	<clickablehyperlinks>Anklickbare Hyperlinks</clickablehyperlinks>
+
 	<proxy>Proxy</proxy>
 	<use>Use</use>
 	<username>Benutzername</username>
@@ -145,7 +147,13 @@
 			<br/>
 			<b>Please note:</b> restart GeoNetwork to make this change active.
 		</tip>
+	
+		<!-- clickable hyperlinks -->
 		
+		<tip id="clickablehyperlinks.enable">
+			Falls gesetzt, werden GeoNetwork anklickbare Hyperlinks Anzeige in den Metadaten.
+		</tip>
+	
 		<!-- proxy -->
 		
 		<tip id="proxy.use">

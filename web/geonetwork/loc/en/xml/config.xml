@@ -22,6 +22,8 @@
 	<abstract>Abstract</abstract>
 	<fees>Fees</fees>
 	<accessConstraints>Access Constraints</accessConstraints>
+
+	<clickablehyperlinks>Clickable hyperlinks</clickablehyperlinks>
 	
 	<proxy>Proxy</proxy>
 	<use>Use</use>
@@ -159,6 +161,12 @@
 		<tip id="csw.abstract">Abstract</tip>
 		<tip id="csw.fees">Fees</tip>
 		<tip id="csw.accessConstraints">Access constraints</tip>
+		
+		<!-- clickable hyperlinks -->
+		
+		<tip id="clickablehyperlinks.enable">
+			If set, GeoNetwork will display clickable hyperlinks in the metadata.
+		</tip>
 		
 		<!-- proxy -->
 		
