@@ -55,6 +55,7 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			CSW_ABSTRACT      : xml.evalXPath(node, 'csw/abstract'),
 			CSW_FEES          : xml.evalXPath(node, 'csw/fees'),
 			CSW_ACCESS        : xml.evalXPath(node, 'csw/accessConstraints'),
+			CLICKABLE_HYPERLINKS         : xml.evalXPath(node, 'clickablehyperlinks/enable'),
 			PROXY_USE         : xml.evalXPath(node, 'proxy/use'),
 			PROXY_HOST        : xml.evalXPath(node, 'proxy/host'),
 			PROXY_PORT        : xml.evalXPath(node, 'proxy/port'),
@@ -161,6 +162,9 @@ ConfigModel.updateTemp =
 '		<fees>{CSW_FEES}</fees>'+
 '		<accessConstraints>{CSW_ACCESS}</accessConstraints>'+
 '	</csw>'+
+'	<clickablehyperlinks>' +
+'		<enable>{CLICKABLE_HYPERLINKS}</enable>'+
+'	</clickablehyperlinks>' +
 '	<proxy>'+
 '		<use>{PROXY_USE}</use>'+
 '		<host>{PROXY_HOST}</host>'+

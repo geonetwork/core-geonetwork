@@ -103,6 +103,8 @@ ConfigView.prototype.setData = function(data)
 	$('csw.fees').value                = data['CSW_FEES'];
 	$('csw.accessConstraints').value   = data['CSW_ACCESS'];
 	
+	$('clickablehyperlinks.enable').checked = data['CLICKABLE_HYPERLINKS'] == 'true';
+
 	$('proxy.use') .checked   = data['PROXY_USE'] == 'true';
 	$('proxy.host').value     = data['PROXY_HOST'];
 	$('proxy.port').value     = data['PROXY_PORT'];
@@ -185,7 +187,9 @@ ConfigView.prototype.getData = function()
 		CSW_ABSTRACT        : $('csw.abstract').value,
 		CSW_FEES            : $('csw.fees').value,
 		CSW_ACCESS          : $('csw.accessConstraints').value,
-	
+
+		CLICKABLE_HYPERLINKS : $('clickablehyperlinks.enable').checked,
+		
 		PROXY_USE  : $('proxy.use') .checked,
 		PROXY_HOST : $('proxy.host').value,
 		PROXY_PORT : $('proxy.port').value,
