@@ -60,9 +60,7 @@ public class CswDispatcher implements Service
 		
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-		SettingManager settingMan = new SettingManager(dbms, context.getProviderManager());
+		SettingManager settingMan = gc.getSettingManager();
 		
 		boolean cswEnable    = settingMan.getValueAsBool("system/csw/enable", false);
 		
