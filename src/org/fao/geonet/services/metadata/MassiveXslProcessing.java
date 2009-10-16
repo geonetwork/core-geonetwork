@@ -107,6 +107,7 @@ public class MassiveXslProcessing implements Service {
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(session);
 
+		synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter
 				.hasNext();) {
 			String uuid = (String) iter.next();
@@ -152,6 +153,7 @@ public class MassiveXslProcessing implements Service {
 
 				metadata.add(new Integer(id));
 			}
+		}
 		}
 
 

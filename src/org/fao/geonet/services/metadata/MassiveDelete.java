@@ -83,6 +83,7 @@ public class MassiveDelete implements Service
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(session);
 
+		synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
 			String uuid = (String) iter.next();
 			String id   = dataMan.getMetadataId(dbms, uuid);
@@ -115,6 +116,7 @@ public class MassiveDelete implements Service
 				dataMan.deleteMetadata(dbms, id);
 				metadata.add(new Integer(id));
 			}
+		}
 		}
 
 		// invalidate current result set

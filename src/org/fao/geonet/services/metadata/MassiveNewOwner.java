@@ -80,6 +80,7 @@ public class MassiveNewOwner implements Service
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(session);
 
+		synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
 			String uuid = (String) iter.next();
 			String id   = dm.getMetadataId(dbms, uuid);
@@ -123,6 +124,7 @@ public class MassiveNewOwner implements Service
 
 				metadata.add(new Integer(id));
 			}
+		}
 		}
 
 		dbms.commit();

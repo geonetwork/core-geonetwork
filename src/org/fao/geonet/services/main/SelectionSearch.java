@@ -81,14 +81,16 @@ public class SelectionSearch implements Service
 		if (sm != null) {
 			String uuids= "";
 			boolean first = true;
-			for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
-				String uuid = (String) iter.next();
-				if (first) {
-					uuids = (String) uuid;
-					first = false;
+			synchronized(sm.getSelection("metadata")) {
+				for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
+					String uuid = (String) iter.next();
+					if (first) {
+						uuids = (String) uuid;
+						first = false;
+					}
+					else 
+						uuids = uuids +" or "+ uuid;
 				}
-				else 
-					uuids = uuids +" or "+ uuid;
 			}
 			context.debug("List of selected uuids: " + uuids);
 			params.addContent(new Element(Geonet.SearchResult.UUID).setText(uuids));
