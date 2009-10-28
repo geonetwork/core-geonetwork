@@ -1659,7 +1659,7 @@ public class DataManager
 
 	public synchronized void updateMetadataOwner(UserSession session, Dbms dbms, int id, String owner, String groupOwner) throws Exception
 	{
-		dbms.execute("UPDATE Metadata SET owner=?, groupOwner=? WHERE id=?", owner, groupOwner, id);
+		dbms.execute("UPDATE Metadata SET owner=?, groupOwner=? WHERE id=?", new Integer(owner), new Integer(groupOwner), id);
 	}
 
 	//--------------------------------------------------------------------------
