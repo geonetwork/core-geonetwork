@@ -71,7 +71,8 @@ public class Csw {
 	public static final String SECTION_OM = "OperationsMetadata";
 	public static final String SECTION_FC = "Filter_Capabilities";
 	
-	
+	public static final String OUTPUT_FORMAT_APPLICATION_XML  = "application/xml";
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Configuration file

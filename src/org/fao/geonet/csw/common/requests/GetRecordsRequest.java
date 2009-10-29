@@ -261,7 +261,7 @@ public class GetRecordsRequest extends CatalogRequest
 		if (hsTypeNames.size()==0)
 			setAttrib(query, "typeNames", "csw:Record");
 		else
-			setAttrib(query, "typeNames", hsTypeNames, "");
+			setAttribComma(query, "typeNames", hsTypeNames, "");
 			
 		addParam (query, "ElementSetName", elemSetName);
 

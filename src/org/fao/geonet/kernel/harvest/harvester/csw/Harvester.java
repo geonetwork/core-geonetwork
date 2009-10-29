@@ -37,13 +37,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 
-import org.fao.geonet.csw.common.ConstraintLanguage;
-import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.csw.common.CswOperation;
-import org.fao.geonet.csw.common.CswServer;
-import org.fao.geonet.csw.common.ElementSetName;
-import org.fao.geonet.csw.common.OutputSchema;
-import org.fao.geonet.csw.common.ResultType;
+import org.fao.geonet.csw.common.*;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
@@ -51,10 +45,7 @@ import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.jdom.Text;
 import org.jdom.xpath.XPath;
-import org.jdom.output.XMLOutputter;
-import org.jdom.output.Format;
 
 //=============================================================================
 
@@ -127,7 +118,7 @@ class Harvester
 		Element capabil = req.execute();
 
 		log.debug("Capabilities:\n"+Xml.getString(capabil));
-
+        
 		if (capabil.getName().equals("ExceptionReport"))
 			CatalogException.unmarshal(capabil);
 
@@ -190,6 +181,11 @@ class Harvester
 			request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 			request.setConstraint(getCqlConstraint(s));
 			request.setMethod(CatalogRequest.Method.GET);
+            for(String typeName: oper.typeNamesList) {
+                request.addTypeName(TypeName.getTypeName(typeName));
+            }
+            request.setOutputFormat(oper.preferredOutputFormat) ;
+
 		} else if (oper.postUrl != null && PREFERRED_HTTP_METHOD.equals("POST")) {
 			request.setUrl(oper.postUrl);
             request.setServerVersion(server.getPreferredServerVersion());
@@ -198,6 +194,11 @@ class Harvester
 			request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 			request.setConstraint(getFilterConstraint(s));
 			request.setMethod(CatalogRequest.Method.POST);
+            for(String typeName: oper.typeNamesList) {
+                request.addTypeName(TypeName.getTypeName(typeName));
+            }
+            request.setOutputFormat(oper.preferredOutputFormat) ;
+
 		} else {
 			if (oper.getUrl != null) {
 				request.setUrl(oper.getUrl);
@@ -207,6 +208,11 @@ class Harvester
 				request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 				request.setConstraint(getCqlConstraint(s));
 				request.setMethod(CatalogRequest.Method.GET);
+                for(String typeName: oper.typeNamesList) {
+                    request.addTypeName(TypeName.getTypeName(typeName));
+                }
+                request.setOutputFormat(oper.preferredOutputFormat) ;
+
 			} else if (oper.postUrl != null) {
 				request.setUrl(oper.postUrl);
                 request.setServerVersion(server.getPreferredServerVersion());
@@ -215,6 +221,12 @@ class Harvester
 				request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
 				request.setConstraint(getFilterConstraint(s));
 				request.setMethod(CatalogRequest.Method.POST);	
+
+                for(String typeName: oper.typeNamesList) {
+                    request.addTypeName(TypeName.getTypeName(typeName));
+                }
+                request.setOutputFormat(oper.preferredOutputFormat) ;
+
 			} else {
 				throw new OperationAbortedEx("No GET or POST DCP available in this service.");
 			}

@@ -43,12 +43,24 @@ public class CswOperation {
 	 */
 	public List<String> outputSchemaList = new ArrayList<String>();
 
+    /**
+	 * The OutputFormats as advertised in the CSW server's GetCapabilities response.
+	 */
+    public List<String> outputFormatList = new ArrayList<String>();
+
 	/**
 	 * The preferred OutputSchema from the above.
 	 */
 	public String preferredOutputSchema;
 
+    /**
+	 * The preferred OutputFormat from the above.
+	 */
+    public String preferredOutputFormat;
+
     public String preferredServerVersion;
+
+    public List<String> typeNamesList = new ArrayList<String>();
 
 	protected void choosePreferredOutputSchema() {
 		OutputSchemaPreference preference = new OutputSchemaPreference();
@@ -60,4 +72,18 @@ public class CswOperation {
 			}
 		}
 	}
+
+    protected void choosePreferredOutputFormat() {
+		OutputFormatPreference preference = new OutputFormatPreference();
+		for(Iterator<String> i = preference.iterator(); i.hasNext();){
+			String nextBest = i.next();
+			if(outputFormatList.contains(nextBest)) {
+				preferredOutputFormat = nextBest;
+				break;
+			}
+		}
+
+        if (preferredOutputFormat == null) preferredOutputFormat = Csw.OUTPUT_FORMAT_APPLICATION_XML;
+	}
+
 }

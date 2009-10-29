@@ -105,10 +105,10 @@ public class CswServer
 					CswOperation oper = extractOperation(elem);
 
 					if (oper != null)
-						operations.put(oper.name, oper);
+                        operations.put(oper.name, oper);
 				}
 			}
-	}
+    }
 
 	//---------------------------------------------------------------------------
 
@@ -135,7 +135,10 @@ public class CswServer
 		
 		List<Element> parameters = oper.getChildren("Parameter", Csw.NAMESPACE_OWS);
 		log("Found " + parameters.size() + " parameters for operation: " + name);
-		List<Element> outputSchemas = null ;
+		List<Element> outputSchemas = null;
+        List<Element> typeNames = null;
+        List<Element> outputFormats = null;
+
 		for(Iterator<Element> i = parameters.iterator();i.hasNext();) {
 			Element parameter = i.next();
 			String parameterName = parameter.getAttributeValue("name"); 
@@ -145,8 +148,20 @@ public class CswServer
 				outputSchemas = outputSchemaListing.getChildren("Value", Csw.NAMESPACE_OWS);
 				log("Found " + outputSchemas.size() + " outputSchemas for operation: " + name);
 			}
+
+            if(parameterName != null && parameterName.equals("typeName")) {	// CHECKME : case sensitive ?
+				Element typeNameListing = parameter;
+				typeNames = typeNameListing.getChildren("Value", Csw.NAMESPACE_OWS);
+				log("Found " + typeNames.size() + " typeNames for operation: " + name);
+			}
+
+            if(parameterName != null && parameterName.equals("outputFormat")) {	// CHECKME : case sensitive ?
+				Element outputFormatListing = parameter;
+				outputFormats = outputFormatListing.getChildren("Value", Csw.NAMESPACE_OWS);
+				log("Found " + outputFormats.size() + " outputFormats for operation: " + name);
+			}
 		}
-		
+
 		if(outputSchemas != null) {
 			for(Iterator<Element> i = outputSchemas.iterator(); i.hasNext();) {
 				Element outputSchema = i.next();
@@ -160,10 +175,49 @@ public class CswServer
 			log("No outputSchema for operation: " + name);
 		}
 
+        if(typeNames != null) {
+			for(Iterator<Element> i = typeNames.iterator(); i.hasNext();) {
+				Element typeName = i.next();
+				String typeNameValue = typeName.getValue();
+				log("Adding typeName: " + typeNameValue + " to operation: "+ name);
+				if (typeNameValue != null) op.typeNamesList.add(typeNameValue);
+			}
+		}
+		else {
+			log("No typeNames for operation: " + name);
+		}
+
+        if(outputSchemas != null) {
+			for(Iterator<Element> i = outputSchemas.iterator(); i.hasNext();) {
+				Element outputSchema = i.next();
+				String outputSchemaValue = outputSchema.getValue();
+				log("Adding outputSchema: " + outputSchemaValue + " to operation: "+ name);
+				op.outputSchemaList.add(outputSchemaValue);
+			}
+			op.choosePreferredOutputSchema();
+		}
+		else {
+			log("No outputSchema for operation: " + name);
+		}
+
+        if(outputFormats != null) {
+			for(Iterator<Element> i = outputFormats.iterator(); i.hasNext();) {
+				Element outputFormat = i.next();
+				String outputFormatValue = outputFormat.getValue();
+				log("Adding outputFormat: " + outputFormatValue + " to operation: "+ name);
+				op.outputFormatList.add(outputFormatValue);
+			}
+			op.choosePreferredOutputFormat();
+		}
+		else {
+            op.preferredOutputFormat = Csw.OUTPUT_FORMAT_APPLICATION_XML;
+			log("No outputFormat for operation: " + name);
+		}
+
         op.preferredServerVersion = preferredServerVersion;
-           
-		return op;
-	}
+
+        return op;
+    }
 
     /**
      * Get server supported versions
@@ -254,37 +308,40 @@ public class CswServer
 			
 			
 			// POST method
-			Element postUrl = http.getChild("Post", Csw.NAMESPACE_OWS);
+			List<Element> postUrlList = http.getChildren("Post", Csw.NAMESPACE_OWS);
 
-			if (postUrl == null) {
-				log ("No POST url found in current DCP.");
-			} else {
-				String tmpPostUrl = postUrl.getAttributeValue("href", ns);
-			
-				if (tmpPostUrl == null) {
-					log("Missing 'xlink:href' attribute in operation's http method");
-				} else {
-					if (op.postUrl == null) {
-						// PostEncoding could return a SOAP service address. Not supported
-						Element methodConstraint = postUrl.getChild("Constraint", Csw.NAMESPACE_OWS);
-						
-						if (methodConstraint != null) {
-							Element value = methodConstraint.getChild("Value", Csw.NAMESPACE_OWS);
-							if (value != null && value.getText().equals("SOAP")) {
-								log ("The URL " + tmpPostUrl + " using POST/SOAP method is not supported for harvesting.");
-								continue;
-							}
-						}
-	
-						try	{
-							op.postUrl = new URL(tmpPostUrl);
-							log ("Found URL (POST method):" + tmpPostUrl);
-						} catch (MalformedURLException e) {
-							log ("Malformed 'xlink:href' attribute in operation's http method");
-						}
-					}
-				}
-			}
+            for(Element postUrl: postUrlList) {
+                if (postUrl == null) {
+                    log ("No POST url found in current DCP.");
+                } else {
+                    String tmpPostUrl = postUrl.getAttributeValue("href", ns);
+
+                    if (tmpPostUrl == null) {
+                        log("Missing 'xlink:href' attribute in operation's http method");
+                    } else {
+                        if (op.postUrl == null) {
+                            // PostEncoding could return a SOAP service address. Not supported
+                            Element methodConstraint = postUrl.getChild("Constraint", Csw.NAMESPACE_OWS);
+
+                            if (methodConstraint != null) {
+                                Element value = methodConstraint.getChild("Value", Csw.NAMESPACE_OWS);
+                                if (value != null && value.getText().equals("SOAP")) {
+                                    log ("The URL " + tmpPostUrl + " using POST/SOAP method is not supported for harvesting.");
+                                    continue;
+                                }
+                            }
+
+                            try	{
+                                op.postUrl = new URL(tmpPostUrl);
+                                log ("Found URL (POST method):" + tmpPostUrl);
+                                break;
+                            } catch (MalformedURLException e) {
+                                log ("Malformed 'xlink:href' attribute in operation's http method");
+                            }
+                        }
+                    }
+                }
+            }
 		}
 	}
 

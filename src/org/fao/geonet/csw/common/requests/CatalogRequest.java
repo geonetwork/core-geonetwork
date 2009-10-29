@@ -23,8 +23,7 @@
 
 package org.fao.geonet.csw.common.requests;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -352,6 +351,29 @@ public abstract class CatalogRequest
 		el.setAttribute(name, sb.toString());
 	}
 
+    	//---------------------------------------------------------------------------
+
+	protected void setAttribComma(Element el, String name, Iterable iter, String prefix)
+	{
+		Iterator i = iter.iterator();
+
+		if (!i.hasNext())
+			return;
+
+		StringBuffer sb = new StringBuffer();
+
+		while(i.hasNext())
+		{
+            Object value =  i.next();
+
+            sb.append(prefix + value.toString());
+
+			if (i.hasNext())
+				sb.append(",");
+		}
+
+		el.setAttribute(name, sb.toString());
+	}
 	//--------------------------------------------------------------------------
 	//--- Parameters facilities (POST)
 	//---------------------------------------------------------------------------
@@ -396,7 +418,7 @@ public abstract class CatalogRequest
 			client.executeMethod(httpMethod);
 			
 			///data = httpMethod.getResponseBody();
-			
+
 			return Xml.loadStream(httpMethod.getResponseBodyAsStream());
 		}
 		finally
