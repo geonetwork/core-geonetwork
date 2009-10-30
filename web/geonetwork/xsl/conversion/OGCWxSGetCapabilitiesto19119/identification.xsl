@@ -235,7 +235,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			
 		<srv:couplingType>
-			<srv:SV_CouplingType codeList="#SV_CouplingType" codeListValue="tight">
+			<srv:SV_CouplingType codeList="./resources/codeList.xml#SV_CouplingType" codeListValue="tight">
 				<xsl:choose>
 					<xsl:when test="name(.)='wps:Capabilities' or name(.)='wps1:Capabilities'">loosely</xsl:when>
 					<xsl:otherwise>tight</xsl:otherwise>
@@ -252,10 +252,11 @@
 		<xsl:for-each select="Capability/Request/*|
                                 wfs:Capability/wfs:Request/*|
                                 wcs:Capability/wcs:Request/*|
-                                ows:OperationsMetadata/*|
-                                ows11:OperationsMetadata/*|
+                                ows:OperationsMetadata/ows:Operation|
+                                ows11:OperationsMetadata/ows:Operation|
                                 wps:ProcessOfferings/*|
                                 wps1:ProcessOfferings/*">
+			<!-- Some services provide information about ows:ExtendedCapabilities TODO ? -->
 			<srv:containsOperations>
 				<srv:SV_OperationMetadata>
 					<srv:operationName>
@@ -270,7 +271,7 @@
 					<!--  CHECKME : DCPType/SOAP ? -->
 					<xsl:for-each select="DCPType/HTTP/*|wfs:DCPType/wfs:HTTP/*|wcs:DCPType/wcs:HTTP/*|ows:DCP/ows:HTTP/*|ows11:DCP/ows11:HTTP/*">
 						<srv:DCP>
-							<srv:DCPList codeList="#DCPList">
+							<srv:DCPList codeList="./resources/codeList.xml#DCPList">
 								<xsl:variable name="dcp">
 									<xsl:choose>
 										<xsl:when test="name(.)='Get' or name(.)='wfs:Get' or name(.)='wcs:Get' or name(.)='ows:Get' or name(.)='ows11:Get'">HTTP-GET</xsl:when>

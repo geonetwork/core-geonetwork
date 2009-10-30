@@ -94,18 +94,30 @@ Mapping between :
             
 			<!-- mdHrLvName -->
 
-			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-			<xsl:for-each select="Service/ContactInformation|
-                                    wfs:Service/wfs:ContactInformation|
-                                    owsg:ServiceIdentification/owsg:ServiceProvider|
-                                    ows11:ServiceIdentification/ows11:ServiceProvider">
-				<contact>
-					<CI_ResponsibleParty>
-						<xsl:apply-templates select="." mode="RespParty"/>
-					</CI_ResponsibleParty>
-				</contact>
-			</xsl:for-each>
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->			
+			<xsl:choose>
+				<xsl:when test="Service/ContactInformation|
+					wfs:Service/wfs:ContactInformation|
+					ows:ServiceProvider|
+					owsg:ServiceProvider|
+					ows11:ServiceProvider">
+					<xsl:for-each select="Service/ContactInformation|
+						wfs:Service/wfs:ContactInformation|
+						ows:ServiceProvider|
+						owsg:ServiceProvider|
+						ows11:ServiceProvider">
+						<contact>
+							<CI_ResponsibleParty>
+								<xsl:apply-templates select="." mode="RespParty"/>
+							</CI_ResponsibleParty>
+						</contact>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					<contact gco:nilReason="missing"/>
+				</xsl:otherwise>
+			</xsl:choose>
+			
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>
