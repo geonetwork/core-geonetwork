@@ -115,14 +115,17 @@ public class LuceneSearcher extends MetaSearcher
 	public void search(ServiceContext srvContext, Element request, ServiceConfig config)
 		throws Exception
 	{
-		computeQuery(srvContext, request, config);
-		performQuery(request, srvContext!=null?true:false);
-		initSearchRange(srvContext);
-
-		_hits = null;
-		_searcher.close();
-		_searcher = null;
-		setValid(false);
+		try {
+			computeQuery(srvContext, request, config);
+			performQuery(request, srvContext!=null?true:false);
+			initSearchRange(srvContext);
+		}
+		finally {
+			_hits = null;
+			_searcher.close();
+			_searcher = null;
+			setValid(false);
+		}
 	}
 
 	//--------------------------------------------------------------------------------
