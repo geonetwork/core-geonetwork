@@ -10,7 +10,11 @@
 	<!-- === Generate the error tooltip for the harvesting entry list -->
 	<!-- ============================================================================================= -->
 
-	<xsl:template match="/root/node/error">
+	<xsl:template match="/root">
+		<xsl:apply-templates select="*"/>
+	</xsl:template>
+
+	<xsl:template match="error">
 		<table>
 			<tr>
 				<td><b>Class</b> </td>
@@ -40,6 +44,11 @@
 				</tr>
 			</xsl:if>
 		</table>
+	</xsl:template>
+
+	<!-- swallow the rest of the elements -->
+	<xsl:template match="@*|node()">
+		<xsl:apply-templates select="*"/>
 	</xsl:template>
 		
 	<!-- ============================================================================================= -->
