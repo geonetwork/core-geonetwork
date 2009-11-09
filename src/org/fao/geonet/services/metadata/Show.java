@@ -184,6 +184,10 @@ class IncreasePopularityTask extends TimerTask {
             DataManager dm = gc.getDataManager();
 
             dm.increasePopularity(dbms, id);
+			
+             //-- explicitly close Dbms resource to avoid exhausting Dbms pool
+             context.getResourceManager().close();
+			 
         } catch (Exception e) {
             e.printStackTrace();
         }
