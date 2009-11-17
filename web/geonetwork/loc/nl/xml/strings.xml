@@ -496,7 +496,7 @@
 	<siteId>Site ID</siteId>
 	<sizeBytes>Grootte (bytes)</sizeBytes>
 	<sortBy>Sorteren</sortBy>
-	<sortByType id="date">Laatste wijzigingsdatum</sortByType>
+	<sortByType id="changeDate">Laatste wijzigingsdatum</sortByType>
 	<sortByType id="popularity">Populariteit</sortByType>
 	<sortByType id="rating">Beoordeling</sortByType>
 	<sortByType id="relevance">Relevantie</sortByType>

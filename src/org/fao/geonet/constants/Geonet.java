@@ -363,7 +363,7 @@ public class Geonet
 			public static final String RELEVANCE = "relevance";
 			public static final String RATING    = "rating";
 			public static final String POPULARITY= "popularity";
-			public static final String DATE      = "date";
+			public static final String DATE      = "changeDate";
 
 			/** Parameter name: {@value #_TITLE} - Title not tokenized mainly
 			 * used for sorting purpose */

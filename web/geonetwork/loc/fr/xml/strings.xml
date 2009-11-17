@@ -480,7 +480,7 @@
 	<sizeBytes>Size (bytes)</sizeBytes>
 	<sort>Trier</sort>
 	<sortBy>Trier par</sortBy>
-	<sortByType id="date">Date de mise à jour</sortByType>
+	<sortByType id="changeDate">Date de mise à jour</sortByType>
 	<sortByType id="popularity">Popularité</sortByType>
 	<sortByType id="rating">Note</sortByType>
 	<sortByType id="relevance">Pertinence</sortByType>

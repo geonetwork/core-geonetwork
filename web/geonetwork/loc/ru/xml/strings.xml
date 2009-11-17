@@ -478,7 +478,7 @@
 	<siteId>Идентификатор сайта</siteId>
 	<sizeBytes>Size (bytes)</sizeBytes>
 	<sortBy>Сортировать по</sortBy>
-	<sortByType id="date">Дате изменения</sortByType>
+	<sortByType id="changeDate">Дате изменения</sortByType>
 	<sortByType id="popularity">Популярности</sortByType>
 	<sortByType id="rating">Рейтингу</sortByType>
 	<sortByType id="relevance">Значимости</sortByType>

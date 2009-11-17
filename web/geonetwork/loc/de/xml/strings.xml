@@ -483,7 +483,7 @@
 	<sizeBytes>Größe (Bytes)</sizeBytes>
 	<sort>Art</sort>
 	<sortBy>Geordnet nach</sortBy>
-	<sortByType id="date">Änderungsdatum</sortByType>
+	<sortByType id="changeDate">Änderungsdatum</sortByType>
 	<sortByType id="popularity">Popularität</sortByType>
 	<sortByType id="rating">Bewertung</sortByType>
 	<sortByType id="relevance">Relevanz</sortByType>

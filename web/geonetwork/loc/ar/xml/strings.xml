@@ -483,7 +483,7 @@
 	<siteId>رقم الموقع المميز</siteId>
 	<sizeBytes>Size (bytes)</sizeBytes>
 	<sortBy>Sort by</sortBy>
-	<sortByType id="date">Change date</sortByType>
+	<sortByType id="changeDate">Change date</sortByType>
 	<sortByType id="popularity">Popularity</sortByType>
 	<sortByType id="rating">Rating</sortByType>
 	<sortByType id="relevance">Relevance</sortByType>

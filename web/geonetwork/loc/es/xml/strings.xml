@@ -479,7 +479,7 @@
 	<siteId>Id del lugar</siteId>
 	<sizeBytes>Size (bytes)</sizeBytes>
 	<sortBy>Ordenar por</sortBy>
-	<sortByType id="date">Fecha de modificación</sortByType>
+	<sortByType id="changeDate">Fecha de modificación</sortByType>
 	<sortByType id="popularity">Popularidad</sortByType>
 	<sortByType id="rating">Rating</sortByType>
 	<sortByType id="relevance">Relevancia</sortByType>
