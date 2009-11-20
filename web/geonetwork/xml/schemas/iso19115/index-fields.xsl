@@ -66,6 +66,17 @@
 				<xsl:with-param name="token" select="'false'"/>
 			</xsl:apply-templates>
 	
+			<xsl:choose>
+				<xsl:when test="/Metadata/mdHrLv/ScopeCd/@value">
+					<xsl:for-each select="/Metadata/mdHrLv/ScopeCd/@value">
+						<Field name="type" string="{string(.)}" store="true" index="true" token="false"/>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					<Field name="type" string="dataset" store="true" index="true" token="false"/>
+				</xsl:otherwise>
+			</xsl:choose>
+	
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 			<!-- === Parent identifier (should be mapped if available) === -->
 	<!--		<xsl:for-each select="/Metadata/parentIdentifier">
@@ -119,7 +130,7 @@
 			<xsl:for-each select="/Metadata/dataIdInfo/tpCat/TopicCatCd/@value">
 				<Field name="topicCat" string="{string(.)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
-	
+			
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 			<!-- === all text === -->
 			<Field name="any" store="false" index="true" token="true">
