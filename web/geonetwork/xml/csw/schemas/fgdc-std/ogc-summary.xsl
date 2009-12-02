@@ -14,10 +14,17 @@
 		<xsl:variable name="info" select="geonet:info"/>
 		<csw:SummaryRecord>
 
-			<xsl:for-each select="idinfo/citation/citeinfo/title/@cat_id">
-				<dc:identifier><xsl:value-of select="."/></dc:identifier>
-			</xsl:for-each>
-
+			<xsl:choose>
+				<xsl:when test="idinfo/citation/citeinfo/title/@cat_id">
+					<xsl:for-each select="idinfo/citation/citeinfo/title/@cat_id">
+						<dc:identifier><xsl:value-of select="."/></dc:identifier>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					<dc:identifier><xsl:value-of select="geonet:info/uuid"/></dc:identifier>
+				</xsl:otherwise>
+			</xsl:choose>
+			
 			<xsl:for-each select="idinfo/citation/citeinfo/title">
 				<dc:title><xsl:value-of select="."/></dc:title>
 			</xsl:for-each>
