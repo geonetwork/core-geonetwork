@@ -1,9 +1,0 @@
-#!/home/fxprunayre/myworkspace/catalogue/GeoNetwork-GeoExt/trunk/jsbuild/venv/bin/python
-# EASY-INSTALL-ENTRY-SCRIPT: 'JSTools==0.1.1a','console_scripts','jsbuild'
-__requires__ = 'JSTools==0.1.1a'
-import sys
-from pkg_resources import load_entry_point
-
-sys.exit(
-   load_entry_point('JSTools==0.1.1a', 'console_scripts', 'jsbuild')()
-)

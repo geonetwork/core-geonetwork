@@ -1,1 +1,0 @@
-/usr/lib/python2.6/codecs.py
