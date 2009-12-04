@@ -123,17 +123,15 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	}
 
 	/**
-	 * Reads contents of all files in directory and returns a list of JDOM elements. If files cannot be loaded as XML
-	 * they are ignored. If recurse is true, processes recursively all subdirectories too.
+	 * Returns a list of all file names in a directory - if recurse is true, 
+	 * processes all subdirectories too.
 	 * @param directory
 	 * @param recurse
 	 * @return
-	 * @throws IOException
-	 * @throws JDOMException
 	 */
-	private List<Element> harvestFromDirectory(File directory, boolean recurse) throws IOException, JDOMException {
+	private List<String> harvestFromDirectory(File directory, boolean recurse) throws IOException {
 		System.out.println("LocalFilesystem harvesting: directory " + directory.getAbsolutePath());
-		List<Element> results = new ArrayList<Element>();
+		List<String> results = new ArrayList<String>();
 		if(! directory.exists()) {
 			throw new IOException("directory does not exist: "+ directory.getAbsolutePath());
 		}
@@ -155,15 +153,8 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 					throw new IOException("cannot read file "+ file.getAbsolutePath());
 				}
 				else {
-					try {
-						// get file content as Element
-						System.out.println("processing file: " + file.getName());
-						Element xml = Xml.loadFile(file);
-						results.add(xml);
-					}
-					catch(Throwable x) {
-						System.out.println("error loading XML from file " + file.getName() + ", ignoring");
-					}
+					System.out.println("adding file: " + file.getName());
+					results.add(file.getAbsolutePath());
 				}
 			}
 		}		
@@ -179,9 +170,9 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	 * @param rm
 	 * @throws Exception
 	 */
-	private void align(List<Element> results, ResourceManager rm) throws Exception {
+	private void align(List<String> results, ResourceManager rm) throws Exception {
 		System.out.println("Start of alignment for : "+ params.name);
-		LocalFilesystemResult result = new LocalFilesystemResult();
+		this.result = new LocalFilesystemResult();
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 		//----------------------------------------------------------------
 		//--- retrieve all local categories and groups
@@ -192,8 +183,23 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		List<String> idsForHarvestingResult = new ArrayList<String>();
 		//-----------------------------------------------------------------------
 		//--- insert/update new metadata
-		for(Element xml : results) {
+		for(String xmlFile : results) {
 			result.total++;
+			Element xml = null;
+			try {
+				System.out.println("reading file: " + xmlFile);	
+				xml = Xml.loadFile(xmlFile);
+			} catch (JDOMException e) { // JDOM problem
+				System.out.println("Error loading XML from file " + xmlFile +", ignoring");	
+				e.printStackTrace();
+				result.badFormat++;
+				continue; // skip this one
+			} catch (Exception e) { // some other error
+				System.out.println("Error retrieving XML from file " + xmlFile +", ignoring");	
+				e.printStackTrace();
+				result.unretrievable++;
+				continue; // skip this one
+			}
 			String schema = dataMan.autodetectSchema(xml);
 			if(schema == null) {
 				result.unknownSchema++;
@@ -331,7 +337,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	protected void doHarvest(Logger l, ResourceManager rm) throws Exception {
 		System.out.println("LocalFilesystem doHarvest: top directory is " + params.directoryname + ", recurse is " + params.recurse);
 		File directory = new File(params.directoryname);
-		List<Element> results = harvestFromDirectory(directory, params.recurse);
+		List<String> results = harvestFromDirectory(directory, params.recurse);
 		System.out.println("LocalFilesystem doHarvest: found #" + results.size() + " results");
 		align(results, rm);		
 	}
