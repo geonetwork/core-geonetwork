@@ -158,6 +158,8 @@ public class Transport
 		if (username == null || username.trim().length() == 0)
 			return;
 
+		this.proxyAuthent = true;
+
 		Credentials cred = new UsernamePasswordCredentials(username, password);
 		AuthScope   scope= new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM);
 
@@ -168,7 +170,7 @@ public class Transport
 
 	public void setCredentials(String username, String password)
 	{
-		this.useAuthent = (username != null);
+		this.serverAuthent = (username != null);
 
 		if (username != null)
 		{
@@ -226,7 +228,7 @@ public class Transport
 		}
 
 		httpMethod.setPath(address);
-		httpMethod.setDoAuthentication(useAuthent);
+		httpMethod.setDoAuthentication(useAuthent());
 
 		return httpMethod;
 	}
@@ -295,6 +297,12 @@ public class Transport
 		}
 		catch (UnsupportedEncodingException e) {}
 	}
+	
+	//---------------------------------------------------------------------------
+	
+	private boolean useAuthent() {
+		return proxyAuthent||serverAuthent;
+	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -306,10 +314,11 @@ public class Transport
 	private int     port;
 	private String  address;
 	private Method  method;
-	private boolean useAuthent;
+	private boolean serverAuthent;
 	private boolean useProxy;
 	private String  proxyHost;
 	private int     proxyPort;
+	private boolean proxyAuthent;
 
 	private HttpClient client = new HttpClient();
 	private HttpState  state  = new HttpState();

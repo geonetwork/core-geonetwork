@@ -190,6 +190,8 @@ public class XmlRequest
 		AuthScope   scope= new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM);
 
 		client.getState().setProxyCredentials(scope, cred);
+		
+		proxyAuthent = true;
 	}
 
 	//---------------------------------------------------------------------------
@@ -277,7 +279,7 @@ public class XmlRequest
 		post.setRequestEntity(new MultipartRequestEntity(parts, post.getParams()));
 		post.addRequestHeader("Accept", !useSOAP ? "application/xml" : "application/soap+xml");
 		post.setPath(address);
-		post.setDoAuthentication(useAuthent);
+		post.setDoAuthentication(useAuthent());
 
 		//--- execute request
 
@@ -298,7 +300,7 @@ public class XmlRequest
 
 		client.getState().setCredentials(scope, cred);
 
-		useAuthent = true;
+		serverAuthent = true;
 	}
 
 	//---------------------------------------------------------------------------
@@ -418,7 +420,7 @@ public class XmlRequest
 		}
 
 		httpMethod.setPath(address);
-		httpMethod.setDoAuthentication(useAuthent);
+		httpMethod.setDoAuthentication(useAuthent());
 
 		return httpMethod;
 	}
@@ -506,6 +508,12 @@ public class XmlRequest
 	}
 
 	//---------------------------------------------------------------------------
+	
+	private boolean useAuthent() {
+		return proxyAuthent||serverAuthent;
+	}
+
+	//---------------------------------------------------------------------------
 	//---
 	//--- Variables
 	//---
@@ -514,14 +522,15 @@ public class XmlRequest
 	private String  host;
 	private int     port;
 	private String  address;
+	private boolean serverAuthent;
 	private String  query;
 	private Method  method;
 	private boolean useSOAP;
-	private boolean useAuthent;
 	private Element postParams;
 	private boolean useProxy;
 	private String  proxyHost;
 	private int     proxyPort;
+	private boolean proxyAuthent;
 
 	private HttpClient client = new HttpClient();
 	private HttpState  state  = new HttpState();
