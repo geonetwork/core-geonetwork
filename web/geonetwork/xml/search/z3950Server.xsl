@@ -115,40 +115,91 @@ recursive compiler
 			</BooleanQuery>
 		</xsl:when>
 
-		<!-- title -->
-		<xsl:when test="name($expr)='term' and $expr/@use='4'">
-			<xsl:call-template name="wordListTerm">
-				<xsl:with-param name="expr" select="$expr/text()"/>
-				<xsl:with-param name="field" select="'title'"/>
-			</xsl:call-template>
-		</xsl:when>
+		<xsl:when test="name($expr)='term'">
 
-		<!-- abstract -->
-		<xsl:when test="name($expr)='term' and $expr/@use='62'">
-			<xsl:call-template name="wordListTerm">
-				<xsl:with-param name="expr" select="$expr/text()"/>
-				<xsl:with-param name="field" select="'abstract'"/>
-			</xsl:call-template>
-		</xsl:when>
+   		<!-- title -->
+			<xsl:if test="$expr/@use='4'">
+				<xsl:call-template name="Multi2WordListTerm">
+					<xsl:with-param name="expr" select="$expr/text()"/>
+					<xsl:with-param name="field1" select="'altTitle'"/>
+					<xsl:with-param name="field2" select="'title'"/>
+				</xsl:call-template>
+			</xsl:if>
 
-		<!-- any -->
-		<xsl:when test="name($expr)='term' and $expr/@use='1016'">
-			<xsl:call-template name="wordListTerm">
-				<xsl:with-param name="expr" select="$expr/text()"/>
-				<xsl:with-param name="field" select="'any'"/>
-			</xsl:call-template>
-		</xsl:when>
+			<!-- abstract -->
+			<xsl:if test="$expr/@use='62'">
+				<xsl:call-template name="wordListTerm">
+					<xsl:with-param name="expr" select="$expr/text()"/>
+					<xsl:with-param name="field" select="'abstract'"/>
+				</xsl:call-template>
+			</xsl:if>
 
-		<!-- keywords -->
-		<xsl:when test="name($expr)='term' and $expr/@use='2002'">
-			<TermQuery fld="keyword" txt="{$expr/text()}"/>
-		</xsl:when>
+			<!-- description (same Z3950 attribute, different Lucene index) -->
+			<xsl:if test="$expr/@use='62'">
+				<xsl:call-template name="wordListTerm">
+					<xsl:with-param name="expr" select="$expr/text()"/>
+					<xsl:with-param name="field" select="'description'"/>
+				</xsl:call-template>
+			</xsl:if>
 
-		<!-- bounding box -->
-		<xsl:when test="name($expr)='term' and $expr/@use='2060'">
+			<!-- changeDate -->
+			<xsl:if test="$expr/@use='1012'">
+				<xsl:call-template name="dateTerm">
+					<xsl:with-param name="date" select="$expr/text()"/>
+					<xsl:with-param name="field" select="'_changeDate'"/>
+					<xsl:with-param name="relation" select="$expr/@relation"/>
+					<xsl:with-param name="structure" select="$expr/@structure"/>
+				</xsl:call-template>
+			</xsl:if>
 
+			<!-- createDate -->
+			<xsl:if test="$expr/@use='30'">
+				<xsl:call-template name="dateTerm">
+					<xsl:with-param name="date" select="$expr/text()"/>
+					<xsl:with-param name="field" select="'_createDate'"/>
+					<xsl:with-param name="relation" select="$expr/@relation"/>
+					<xsl:with-param name="structure" select="$expr/@structure"/>
+				</xsl:call-template>
+			</xsl:if>
+
+			<!-- fileId -->
+			<xsl:if test="$expr/@use='2012'">
+				<xsl:call-template name="wordListTerm">
+					<xsl:with-param name="expr" select="$expr/text()"/>
+					<xsl:with-param name="field" select="'fileId'"/>
+				</xsl:call-template>
+			</xsl:if>
+
+			<!-- identifier -->
+			<xsl:if test="$expr/@use='12'">
+				<xsl:call-template name="wordListTerm">
+					<xsl:with-param name="expr" select="$expr/text()"/>
+					<xsl:with-param name="field" select="'identifier'"/>
+				</xsl:call-template>
+			</xsl:if>
+
+			<!-- keyword (three equivalent Z3950 attributes, three different Lucene indexes) -->
+			<!-- subject (three equivalent Z3950 attributes, three different Lucene indexes) -->
+			<!-- topicCat (three equivalent Z3950 attributes, three different Lucene indexes) -->
+			<xsl:if test="$expr/@use='21' or $expr/@use='29' or $expr/@use='2002'">
+				<xsl:call-template name="Multi3WordListTerm">
+					<xsl:with-param name="expr" select="$expr/text()"/>
+					<xsl:with-param name="field1" select="'keyword'"/>
+					<xsl:with-param name="field2" select="'subject'"/>
+					<xsl:with-param name="field3" select="'topicCat'"/>
+				</xsl:call-template>
+			</xsl:if>
+
+			<!-- any -->
+			<xsl:if test="$expr/@use='1016'">
+				<xsl:call-template name="wordListTerm">
+					<xsl:with-param name="expr" select="$expr/text()"/>
+					<xsl:with-param name="field" select="'any'"/>
+				</xsl:call-template>
+			</xsl:if>
+       
 			<!-- bounding box -->
-			<xsl:if test="$boundingBox">
+			<xsl:if test="$expr/@use='2060' and $boundingBox">
 				<xsl:choose>
 
 					<!-- equal -->
@@ -193,6 +244,109 @@ recursive compiler
 
 	</xsl:choose>
 </xsl:template>
+
+<xsl:template name="dateTerm">
+	<xsl:param name="date"/>
+	<xsl:param name="field"/>
+	<xsl:param name="relation"/>
+	<xsl:param name="structure"/>
+
+	<!-- trim date because we dont want time resolution till the uppercase / lowercase indexing is fixed in GN-->
+	<xsl:variable name="trimdate" select="substring($date,0,11)"/>
+
+	<xsl:variable name="future" select="'9999-99-99T99:99:99'"/>
+	<xsl:variable name="past" select="'0001-01-01T00:00:00'"/>
+
+		<xsl:choose>
+			<xsl:when test="$relation=1"> <!-- less than -->
+				<RangeQuery fld="{$field}" upperTxt="{$trimdate}" lowerTxt="{$past}" inclusive="false"/>
+			</xsl:when>
+			<xsl:when test="$relation=2"> <!-- less than or equal to -->
+				<RangeQuery fld="{$field}" upperTxt="{$trimdate}" lowerTxt="{$past}" inclusive="true"/>
+			</xsl:when>
+			<xsl:when test="$relation=3"> <!-- equal to, we use no term query because it is case sensitive in GN -->
+				<RangeQuery fld="{$field}" upperTxt="{$trimdate}" lowerTxt="{$trimdate}" inclusive="true"/>
+			</xsl:when>
+			<xsl:when test="$relation=4"> <!-- equal to or greater than -->
+				<RangeQuery fld="{$field}" upperTxt="{$future}" lowerTxt="{$trimdate}"  inclusive="true"/>
+			</xsl:when>
+			<xsl:when test="$relation=5"> <!-- greater than -->
+				<RangeQuery fld="{$field}" upperTxt="{$future}" lowerTxt="{$trimdate}" inclusive="false"/>
+			</xsl:when>
+		</xsl:choose>
+</xsl:template>
+
+
+<!-- we want XSLT 2.0 and tokenize functions -->
+<xsl:template name="Multi2WordListTerm">
+	<xsl:param name="expr"/>
+	<xsl:param name="field1"/>
+	<xsl:param name="field2"/>
+
+
+	<BooleanQuery>
+
+	<BooleanClause required="false" prohibited="false">
+		<PhraseQuery>
+		<xsl:call-template name="phraseQueryArgs">
+			<xsl:with-param name="expr" select="$expr"/>
+			<xsl:with-param name="field" select="$field1"/>
+		</xsl:call-template>
+		</PhraseQuery>
+	</BooleanClause>
+
+	<BooleanClause required="false" prohibited="false">
+		<PhraseQuery>
+		<xsl:call-template name="phraseQueryArgs">
+			<xsl:with-param name="expr" select="$expr"/>
+			<xsl:with-param name="field" select="$field2"/>
+		</xsl:call-template>
+		</PhraseQuery>
+	</BooleanClause>
+
+	</BooleanQuery>
+
+</xsl:template>
+
+<!-- we want XSLT 2.0 and tokenize functions -->
+<xsl:template name="Multi3WordListTerm">
+	<xsl:param name="expr"/>
+	<xsl:param name="field1"/>
+	<xsl:param name="field2"/>
+	<xsl:param name="field3"/>
+
+	<BooleanQuery>
+
+	<BooleanClause required="false" prohibited="false">
+		<PhraseQuery>
+		<xsl:call-template name="phraseQueryArgs">
+			<xsl:with-param name="expr" select="$expr"/>
+			<xsl:with-param name="field" select="$field1"/>
+		</xsl:call-template>
+		</PhraseQuery>
+	</BooleanClause>
+
+	<BooleanClause required="false" prohibited="false">
+		<PhraseQuery>
+		<xsl:call-template name="phraseQueryArgs">
+			<xsl:with-param name="expr" select="$expr"/>
+			<xsl:with-param name="field" select="$field2"/>
+		</xsl:call-template>
+		</PhraseQuery>
+	</BooleanClause>
+
+	<BooleanClause required="false" prohibited="false">
+		<PhraseQuery>
+		<xsl:call-template name="phraseQueryArgs">
+			<xsl:with-param name="expr" select="$expr"/>
+			<xsl:with-param name="field" select="$field3"/>
+		</xsl:call-template>
+		</PhraseQuery>
+	</BooleanClause>
+	</BooleanQuery>
+
+</xsl:template>
+
 
 <xsl:template name="wordListTerm">
 	<xsl:param name="expr"/>
