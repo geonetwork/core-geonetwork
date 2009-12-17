@@ -23,6 +23,9 @@
 
 package org.fao.geonet.kernel.csw.services;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,8 +33,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-
-import javax.xml.transform.TransformerException;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
@@ -44,9 +45,12 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
-import org.geotools.filter.FilterTransformer;
 import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
+import org.geotools.filter.v1_1.OGC;
+import org.geotools.filter.v1_1.OGCConfiguration;
+import org.geotools.xml.Configuration;
+import org.geotools.xml.Encoder;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.opengis.filter.Filter;
@@ -291,7 +295,6 @@ public abstract class AbstractOperation
     
     
   //---------------------------------------------------------------------------
-
     /**
      * @param cql
      * @return
@@ -309,23 +312,28 @@ public abstract class AbstractOperation
 			throw new NoApplicableCodeEx("Error during CQL to Filter conversion : "+ e);
 		}
 
-		FilterTransformer transform = new FilterTransformer();
-        transform.setIndentation(2);
-        
-        String xml;
+		final Configuration filter110Config = new OGCConfiguration();
+		final Encoder encoder = new Encoder(filter110Config);
+		
+		final Charset charset = Charset.forName("UTF-16");
+		encoder.setEncoding(charset);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		
+		String xml;
 		try {
-			xml = transform.transform( filter );
-		} catch (TransformerException e) {
-			Log.error(Geonet.CSW, "");
+			encoder.encode(filter, OGC.Filter, out);
+			xml = new String(out.toByteArray(), charset.toString());
+		} catch (IOException e) {
+			Log.error(Geonet.CSW, e.getMessage());
 			throw new NoApplicableCodeEx("Error transforming Filter to XML" + e);
 		}
-        
+		
         Element xmlFilter;
 		try {
 			xmlFilter = Xml.loadString(xml, false);
 		} catch (Exception e) {
-			Log.error(Geonet.CSW, "Error loadinf xml filter as jdom Element ");
-			throw new NoApplicableCodeEx("Error loadinf xml filter as jdom Element " + e);
+			Log.error(Geonet.CSW, "Error loading xml filter as jdom Element ");
+			throw new NoApplicableCodeEx("Error loading xml filter as jdom Element " + e);
 		}
 		
 		Log.debug(Geonet.CSW, "Transformed CQL gives the following filter:\n"+Xml.getString(xmlFilter));
