@@ -117,69 +117,67 @@
 			thumbnail using a simple URL.
 		-->		
 		<xsl:variable name="exception" select="../gmd:graphicOverview[gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='thumbnail' or gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='large_thumbnail']"/>
-
 		
 		<!-- <xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)=$name]"/> -->
 		<xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)='']"/>
-		<!-- Disable simple for the time being
 		<xsl:if test="$currTab!='simple' and (geonet:choose or name($prevBrother)!=$name) or $subtemplates"> 
-		-->
-		<xsl:if test="(geonet:choose 
-						or name($prevBrother)!=$name 
-						or $exception) 
-					or $subtemplates">
-			<xsl:variable name="text">
-				<xsl:if test="geonet:choose">
-					<select class="md" name="_{$parentName}_{$qname}" size="1">
-						<xsl:for-each select="geonet:choose">
-							<!-- FIXME : here we should sort by title ? -->
-							<xsl:sort select="@name"/>
-							<option value="{@name}">
-								<xsl:call-template name="getTitle">
-									<xsl:with-param name="name"   select="@name"/>
-									<xsl:with-param name="schema" select="$schema"/>
-								</xsl:call-template>
-								<xsl:text> </xsl:text>
-								(<xsl:value-of select="@name"/>)
-							</option>
-						</xsl:for-each>
-					</select>
-				</xsl:if>
-			</xsl:variable>
-			<xsl:variable name="id" select="@uuid"/>
-			<xsl:variable name="addLink">
-				<xsl:choose>
-					<xsl:when test="geonet:choose or $subtemplates">
-						<xsl:value-of select="concat('doNewORElementAction(',$apos,'/metadata.elem.add',$apos,',',$parentName,',',$apos,$name,$apos,',document.mainForm._',$parentName,'_',$qname,'.value,',$apos,$id,$apos,',',$apos,@action,$apos,',',$max,');')"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="concat('doNewElementAction(',$apos,'/metadata.elem.add',$apos,',',$parentName,',',$apos,$name,$apos,',',$apos,$id,$apos,',',$apos,@action,$apos,',',$max,');')"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:variable>
-			<xsl:variable name="addXMLFragment">
-				<xsl:value-of select="concat('javascript:showKeywordSelectionPanel(',$parentName,',',$apos,$name,$apos,');')"/>
-			</xsl:variable>
-			<xsl:variable name="helpLink">
-				<xsl:call-template name="getHelpLink">
-					<xsl:with-param name="name"   select="$name"/>
-					<xsl:with-param name="schema" select="$schema"/>
-				</xsl:call-template>
-			</xsl:variable>
-			<xsl:call-template name="simpleElementGui">
-				<xsl:with-param name="title">
-					<xsl:call-template name="getTitle">
+			<xsl:if test="(geonet:choose 
+							or name($prevBrother)!=$name 
+							or $exception) 
+							or $subtemplates">
+				<xsl:variable name="text">
+					<xsl:if test="geonet:choose">
+						<select class="md" name="_{$parentName}_{$qname}" size="1">
+							<xsl:for-each select="geonet:choose">
+								<!-- FIXME : here we should sort by title ? -->
+								<xsl:sort select="@name"/>
+								<option value="{@name}">
+									<xsl:call-template name="getTitle">
+										<xsl:with-param name="name"   select="@name"/>
+										<xsl:with-param name="schema" select="$schema"/>
+									</xsl:call-template>
+									<xsl:text> </xsl:text>
+									(<xsl:value-of select="@name"/>)
+								</option>
+							</xsl:for-each>
+						</select>
+					</xsl:if>
+				</xsl:variable>
+				<xsl:variable name="id" select="@uuid"/>
+				<xsl:variable name="addLink">
+					<xsl:choose>
+						<xsl:when test="geonet:choose or $subtemplates">
+							<xsl:value-of select="concat('doNewORElementAction(',$apos,'/metadata.elem.add',$apos,',',$parentName,',',$apos,$name,$apos,',document.mainForm._',$parentName,'_',$qname,'.value,',$apos,$id,$apos,',',$apos,@action,$apos,',',$max,');')"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="concat('doNewElementAction(',$apos,'/metadata.elem.add',$apos,',',$parentName,',',$apos,$name,$apos,',',$apos,$id,$apos,',',$apos,@action,$apos,',',$max,');')"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				<xsl:variable name="addXMLFragment">
+					<xsl:value-of select="concat('javascript:showKeywordSelectionPanel(',$parentName,',',$apos,$name,$apos,');')"/>
+				</xsl:variable>
+				<xsl:variable name="helpLink">
+					<xsl:call-template name="getHelpLink">
 						<xsl:with-param name="name"   select="$name"/>
 						<xsl:with-param name="schema" select="$schema"/>
 					</xsl:call-template>
-				</xsl:with-param>
-				<xsl:with-param name="text" select="$text"/>
-				<xsl:with-param name="addLink"  select="$addLink"/>
-				<xsl:with-param name="addXMLFragment"  select="$addXMLFragment"/>
-				<xsl:with-param name="helpLink" select="$helpLink"/>
-				<xsl:with-param name="edit"     select="$edit"/>
-				<xsl:with-param name="id"     	select="$id"/>
-			</xsl:call-template>
+				</xsl:variable>
+				<xsl:call-template name="simpleElementGui">
+					<xsl:with-param name="title">
+						<xsl:call-template name="getTitle">
+							<xsl:with-param name="name"   select="$name"/>
+							<xsl:with-param name="schema" select="$schema"/>
+						</xsl:call-template>
+					</xsl:with-param>
+					<xsl:with-param name="text" select="$text"/>
+					<xsl:with-param name="addLink"  select="$addLink"/>
+					<xsl:with-param name="addXMLFragment"  select="$addXMLFragment"/>
+					<xsl:with-param name="helpLink" select="$helpLink"/>
+					<xsl:with-param name="edit"     select="$edit"/>
+					<xsl:with-param name="id"     	select="$id"/>
+				</xsl:call-template>
+			</xsl:if>
 		</xsl:if>
 	</xsl:template>
 	
