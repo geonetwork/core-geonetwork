@@ -33,12 +33,22 @@ import jeeves.constants.*;
 
 public class ErrorPage extends AbstractPage
 {
+	private int statusCode;
+	
 	//--------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---
 	//--------------------------------------------------------------------------
 
+	public int getStatusCode() {
+		return statusCode;
+	}
+
+	public void setStatusCode(int statusCode) {
+		this.statusCode = statusCode;
+	}
+	
 	public boolean matches(String id)
 	{
 		String test = getTestCondition();

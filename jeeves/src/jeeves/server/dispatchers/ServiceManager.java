@@ -40,6 +40,7 @@ import jeeves.server.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ErrorPage;
 import jeeves.server.dispatchers.guiservices.Call;
 import jeeves.server.dispatchers.guiservices.GuiService;
 import jeeves.server.dispatchers.guiservices.XmlFile;
@@ -259,6 +260,19 @@ public class ServiceManager
 			contType = defaultContType;
 
 		errPage.setContentType(contType);
+		
+		// -- set status code
+		int statusCode;
+		String strStatusCode = err.getAttributeValue(ConfigFile.Error.Attr.STATUS_CODE);
+		
+		try {
+			statusCode = Integer.parseInt(strStatusCode);
+		} catch (Exception e) {
+			// Default value for an error page where status code is not defined.
+			statusCode = 500;
+		}
+		
+		errPage.setStatusCode(statusCode);
 
 		//--- handle children
 
@@ -722,6 +736,9 @@ public class ServiceManager
 
 		String  styleSheet = outPage.getStyleSheet();
 		Element guiElem    = outPage.invokeGuiServices(context, response, vDefaultGui);
+		
+		// Dispatch HTTP status code
+		req.setStatusCode(outPage.getStatusCode());
 
 		addPrefixes(guiElem, context.getLanguage(), req.getService());
 

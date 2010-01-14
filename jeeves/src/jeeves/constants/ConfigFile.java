@@ -271,6 +271,7 @@ public class ConfigFile
 			public static final String ID           = "id";
 			public static final String SHEET        = "sheet";
 			public static final String CONTENT_TYPE = "contentType";
+			public static final String STATUS_CODE  = "statusCode";
 		}
 
 		public class Child

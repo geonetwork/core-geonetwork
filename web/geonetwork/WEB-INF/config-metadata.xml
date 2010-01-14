@@ -39,7 +39,7 @@
 				<call name="isoLang"  class=".guiservices.isolanguages.Get"/>
 			</output>
 
-			<error id="operation-not-allowed" sheet="error.xsl">
+			<error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
 				<xml name="error" file="xml/metadata-show-error.xml" />
 			</error>
 		</service>
@@ -57,7 +57,7 @@
 				<call name="isoLang"  class=".guiservices.isolanguages.Get"/>
 			</output>
 
-			<error id="operation-not-allowed" sheet="error-embedded.xsl">
+			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
 				<xml name="error" file="xml/metadata-show-error.xml" />
 			</error>
 		</service>
