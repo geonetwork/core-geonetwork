@@ -72,8 +72,8 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.DbmsPool</provider>
 			<config>
-				<user>SDrK7pCz</user>
-				<password>EXMiLUeg</password>
+				<user>zmeJlnzp</user>
+				<password>f4TcH09S</password>
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>
@@ -858,7 +858,6 @@
 			<class name=".services.metadata.Show" />
 			<output sheet="kml.xsl" contentType="application/kml; charset=UTF-8">
 				<call name="services" class="jeeves.guiservices.services.Get" />
-				<xml name="sources" file="xml/sources.xml" localized="false" />
 			</output>
 			<error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
 				<xml name="error" file="xml/privileges-error.xml" />
