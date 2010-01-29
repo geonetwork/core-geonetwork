@@ -54,7 +54,7 @@
 
     <!-- Run all JUnit tests directly.. -->
     <target name="run"
-        description="Runs the service tests quickly">
+        description="Runs all the service tests quickly using Jeeves TestSuite.">
 
         <java classname="org.fao.geonet.services.AllTests"
             fork="true"
@@ -66,18 +66,22 @@
         </java>
     </target>
 
-<!--    TODO: needs work to get running
-     <target name="junit">
+     <target name="junit" description="Run only IO tests on a localhost node.">
         <junit printsummary="yes" haltonfailure="no" fork="yes">
+	    <!--<formatter type="plain"/>-->
+	    <formatter usefile="false" type="plain"/>
 
+            <sysproperty key="GN_HOME" value="${basedir}/.."/>
             <classpath>
                 <pathelement location="lib/servicetest.jar"/>
-                <fileset dir="../../web/geonetwork/WEB-INF/lib">
+                <fileset dir="../web/geonetwork/WEB-INF/lib">
                     <include name="**/*.jar"/>
                 </fileset>
             </classpath>
 
-            <test name="org.fao.geonet.services.cgp.CGPServerTest"/>
+            <test name="org.fao.geonet.services.io.XMLIOTest"/>
+			<test name="org.fao.geonet.services.io.MEFIOTest"/>
+            
         </junit>
-    </target>       -->
+    </target>
 </project>

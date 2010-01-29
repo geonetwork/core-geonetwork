@@ -4,12 +4,14 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.fao.geonet.services.harvesting.HarvestTest;
+import org.fao.geonet.services.io.MEFIOTest;
+import org.fao.geonet.services.io.XMLIOTest;
 import org.fao.geonet.services.main.CswTest;
 import org.fao.geonet.test.SuiteRunner;
 
 /**
  * Runs all JUnit tests for GN services.
- *
+ * 
  * @author Just van den Broecke
  */
 public class AllTests extends SuiteRunner {
@@ -27,10 +29,10 @@ public class AllTests extends SuiteRunner {
 		TestSuite suite = new TestSuite("Service Tests");
 		suite.addTestSuite(HarvestTest.class);
 		suite.addTestSuite(CswTest.class);
-//		suite.addTestSuite(MetaDataTest.class);
+		suite.addTestSuite(XMLIOTest.class);
+		suite.addTestSuite(MEFIOTest.class);
+		// suite.addTestSuite(MetaDataTest.class);
 		return suite;
 	}
 
 }
-
-
