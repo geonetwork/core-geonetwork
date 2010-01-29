@@ -74,6 +74,35 @@ public class Get implements Service {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dm = gc.getDataManager();
+		
+		Set<String> result = getRelationIds(id, relation, context);
+		
+				// --- retrieve metadata and return result
+		Element response = new Element("response");
+
+		for (String mdId : result) {
+			Element md = dm.getMetadata(context, mdId, false);
+			// --- we could have a race condition so, just perform a simple
+			// check
+			if (md != null)
+				response.addContent(md);
+		}
+
+		return response;
+	}
+
+	
+	/**
+	 * Method to query Relation table and get a Set of identifiers of related
+	 * metadata
+	 * 
+	 * @param id
+	 * @param relation
+	 * @param context
+	 * @return
+	 * @throws Exception 
+	 */
+	public static Set<String> getRelationIds(int id, String relation, ServiceContext context) throws Exception {
 		Dbms dbms = (Dbms) context.getResourceManager()
 		.open(Geonet.Res.MAIN_DB);
 		
@@ -90,20 +119,9 @@ public class Get implements Service {
 			result.addAll(retrieveIds(dbms, query, "id", id));
 		}
 
-		// --- retrieve metadata and return result
-		Element response = new Element("response");
-
-		for (String mdId : result) {
-			Element md = dm.getMetadata(context, mdId, false);
-			// --- we could have a race condition so, just perform a simple
-			// check
-			if (md != null)
-				response.addContent(md);
-		}
-
-		return response;
+		return result;
 	}
-
+	
 	/**
 	 * Run the query and load a Set based on query results.
 	 * 

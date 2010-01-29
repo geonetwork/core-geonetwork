@@ -237,7 +237,7 @@ class MEF2Exporter {
 		if (id == null)
 			throw new MetadataNotFoundEx("uuid=" + uuid);
 
-		Set<String> relatedIds = Get.getRelation("normal", new Integer(id), dbms);
+		Set<String> relatedIds = Get.getRelationIds(new Integer(id), "normal", context);
 		if (relatedIds.size() == 0)
 			return "";
 
