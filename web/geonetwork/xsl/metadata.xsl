@@ -474,26 +474,32 @@
 <!-- xsd and schematron validation info -->
 		<xsl:variable name="validationLink">
 			<xsl:variable name="ref" select="concat('#_',geonet:element/@ref)"/>
-			<xsl:choose> 
-				<!-- xsd validation -->
-				<xsl:when test="@geonet:xsderror">
-					<xsl:text> </xsl:text><xsl:value-of select="concat(/root/gui/strings/xsdError,': ',@geonet:xsderror)"/>
-				</xsl:when>
-				<!-- some simple elements hide lower elements to remove some
-				     complexity from the display (eg. gco: in iso19139) 
-						 so check if they have a schematron/xsderror and move it up 
-						 if they do -->
-				<xsl:when test="*/@geonet:xsderror"> 
-					<xsl:text> </xsl:text><xsl:value-of select="concat(/root/gui/strings/xsdError,': ',*/@geonet:xsderror)"/>
-				</xsl:when>
-				<!-- schematrons -->
-				<xsl:when test="//geonet:errorFound[@ref=$ref]"> 
-					<xsl:value-of select="concat(/root/gui/strings/schematronError,': ')"/>
-					<xsl:for-each select="//geonet:errorFound[@ref=$ref]">
-						<xsl:text> </xsl:text><xsl:value-of select="geonet:diagnostics"/>
-					</xsl:for-each>
-				</xsl:when>
-			</xsl:choose>
+			
+			<xsl:if test="@geonet:xsderror
+				or */@geonet:xsderror
+				or //geonet:errorFound[@ref=$ref]">
+				<ul>
+					<xsl:choose> 
+						<!-- xsd validation -->
+						<xsl:when test="@geonet:xsderror">
+							<li><xsl:value-of select="concat(/root/gui/strings/xsdError,': ',@geonet:xsderror)"/></li>
+						</xsl:when>
+						<!-- some simple elements hide lower elements to remove some
+						     complexity from the display (eg. gco: in iso19139) 
+								 so check if they have a schematron/xsderror and move it up 
+								 if they do -->
+						<xsl:when test="*/@geonet:xsderror"> 
+							<li><xsl:value-of select="concat(/root/gui/strings/xsdError,': ',*/@geonet:xsderror)"/></li>
+						</xsl:when>
+						<!-- schematrons -->
+						<xsl:when test="//geonet:errorFound[@ref=$ref]"> 
+							<xsl:for-each select="//geonet:errorFound[@ref=$ref]">
+								<li><xsl:copy-of select="geonet:diagnostics"/></li>
+							</xsl:for-each>
+						</xsl:when>
+					</xsl:choose>
+				</ul>
+			</xsl:if>
 		</xsl:variable>
 
 		<xsl:call-template name="simpleElementGui">
@@ -658,19 +664,24 @@
 <!-- xsd and schematron validation info -->
 		<xsl:variable name="validationLink">
 			<xsl:variable name="ref" select="concat('#_',geonet:element/@ref)"/>
-			<xsl:choose> 
-				<!-- xsd validation -->
-				<xsl:when test="@geonet:xsderror">
-					<xsl:text> </xsl:text><xsl:value-of select="concat(/root/gui/strings/xsdError,': ',@geonet:xsderror)"/>
-				</xsl:when>
-				<!-- schematrons -->
-				<xsl:when test="//geonet:errorFound[@ref=$ref]"> 
-					<xsl:value-of select="concat(/root/gui/strings/schematronError,': ')"/>
-					<xsl:for-each select="//geonet:errorFound[@ref=$ref]">
-						<xsl:text> </xsl:text><xsl:value-of select="geonet:diagnostics"/>
-					</xsl:for-each>
-				</xsl:when>
-			</xsl:choose>
+			
+			<xsl:if test="@geonet:xsderror or //geonet:errorFound[@ref=$ref]">
+				<ul>
+					<xsl:choose> 
+						<!-- xsd validation -->
+						<xsl:when test="@geonet:xsderror">
+							<li><xsl:value-of select="concat(/root/gui/strings/xsdError,': ',@geonet:xsderror)"/></li>
+						</xsl:when>
+						<!-- schematrons -->
+						<xsl:when test="//geonet:errorFound[@ref=$ref]"> 
+							<xsl:for-each select="//geonet:errorFound[@ref=$ref]">
+								<li><xsl:copy-of select="geonet:diagnostics"/></li>
+							</xsl:for-each>
+						</xsl:when>
+					</xsl:choose>
+				</ul>
+			</xsl:if>
+			
 		</xsl:variable>
 		
 		<xsl:call-template name="complexElementGui">

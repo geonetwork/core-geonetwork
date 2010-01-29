@@ -14,7 +14,7 @@
 	-->
 	<!-- needs priority to succeed over match="/"  in main.xsl -->
 	<xsl:template mode="script" match="/" priority="20">
-		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=effects,controls"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"></script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/sarissa.js"></script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"></script>
@@ -35,7 +35,6 @@
 				timeId = setTimeout('scrollIt()',1000);	
 			</xsl:if>
 		</script>
-		
 		
 		
 		<!-- =================================
@@ -113,6 +112,12 @@
 								</td></tr>
 							</table>
 						</form>
+						
+						<div id="validationReport" class="content" style="display:none;"/>
+						<div id="shortcutHelp" class="content" style="display:none;">
+							<xsl:copy-of select="/root/gui/strings/helpShortcutsEditor"/>
+						</div>
+						
 					</td>
 				</tr>
 			</xsl:for-each>
@@ -123,37 +128,37 @@
 	<xsl:template name="editButtons" match="*">
 
 		<!-- reset button -->
-		<button class="content" onclick="doSaveAction('metadata.update.forget')" type="button"><xsl:value-of select="/root/gui/strings/reset"/></button>
+		<button class="content" id="btnReset" onclick="doSaveAction('metadata.update.forget')" type="button"><xsl:value-of select="/root/gui/strings/reset"/></button>
 		
 		<!-- save button -->
 		&#160;
-		<button class="content" onclick="doSaveAction('metadata.update')" type="button">
+		<button class="content" id="btnSave" onclick="doSaveAction('metadata.update')" type="button">
 			<xsl:value-of select="/root/gui/strings/save"/>
 		</button>
 		
 		<!-- save and close button -->
 		&#160;
-		<button class="content" onclick="doSaveAction('metadata.update.finish')" type="button">
+		<button class="content" id="btnSaveAndClose" onclick="doSaveAction('metadata.update.finish')" type="button">
 			<xsl:value-of select="/root/gui/strings/saveAndClose"/>
 		</button>
 		
 		<!-- save and validate button -->
 		&#160;
-		<button class="content" onclick="doSaveAction('metadata.update','metadata.validate');return false;" type="button">
+		<button class="content" id="btnValidate" onclick="doSaveAction('metadata.update','metadata.validate');return false;" type="button">
 			<xsl:value-of select="/root/gui/strings/saveAndValidate"/>
 		</button>
 		
 		<!-- thumbnails -->
 		<xsl:if test="string(geonet:info/schema)='fgdc-std' or string(geonet:info/schema)='iso19115' or starts-with(string(geonet:info/schema),'iso19139')"> <!-- FIXME: should be more general -->
 			&#160;
-			<button class="content" onclick="doAction('{/root/gui/locService}/metadata.thumbnail.form')" type="button">
+			<button class="content" id="btnThumbnails" onclick="doAction('{/root/gui/locService}/metadata.thumbnail.form')" type="button">
 				<xsl:value-of select="/root/gui/strings/thumbnails"/>
 			</button>
 		</xsl:if>
 		
 		<!-- cancel button -->
 		&#160;
-		<button class="content" onclick="doCancelAction('metadata.update.forgetandfinish','{/root/gui/strings/confirmCancel}',this.id)" type="button">
+		<button class="content" id="btnCancel" onclick="doCancelAction('metadata.update.forgetandfinish','{/root/gui/strings/confirmCancel}',this.id)" type="button">
 			<xsl:value-of select="/root/gui/strings/cancel"/>
 		</button>
 		
