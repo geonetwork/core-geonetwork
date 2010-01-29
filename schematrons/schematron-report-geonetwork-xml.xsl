@@ -47,10 +47,11 @@
 <xsl:template name="process-prolog">
    <axsl:output method="xml" />
 
-   <axsl:param name="lang" />
-
-   <axsl:variable name="loc"
-      select="document(concat('loc/', $lang, '/schematron.xml'))" />
+   <axsl:param name="lang" />   
+   <axsl:param name="rule"/>
+   
+   <axsl:variable name="loc" select="document(concat('loc/', $lang, '/', substring-before($rule, '.xsl'), '.xml'))"/>
+   
 </xsl:template>
 
 <xsl:template name="process-root">
@@ -71,6 +72,11 @@
    <xsl:param name="icon" />
    <xsl:param name="name" />
    <xsl:param name="see" />
+   <geonet:pattern>
+         <xsl:element name="xsl:value-of">
+            <xsl:attribute name="select"><xsl:value-of select="$name"/></xsl:attribute>
+         </xsl:element>
+      </geonet:pattern>
 </xsl:template>
 
 <!-- use default rule for process-name: output name -->
@@ -82,13 +88,11 @@
    <xsl:param name="icon" />
    <xsl:param name="subject" />
    <xsl:param name="diagnostics" />
-   <geonet:errorFound ref="#_{{geonet:element/@ref}}">
+   <geonet:errorFound ref="#_{{geonet:element/@ref}}" id="#{generate-id(.)}">
 	 	<geonet:pattern name="{{name(.)}}"/>
 		<geonet:diagnostics>
-		<xsl:element name="xsl:value-of">
-          <xsl:attribute name="select">
-                    <xsl:apply-templates mode="text" />
-                </xsl:attribute>
+		<xsl:element name="xsl:copy-of">
+          <xsl:attribute name="select"><xsl:apply-templates mode="text"/></xsl:attribute>
         </xsl:element>
 		</geonet:diagnostics>
 	</geonet:errorFound>
@@ -101,13 +105,11 @@
    <xsl:param name="id" />
    <xsl:param name="subject" />
    <xsl:param name="diagnostics" />
-   <geonet:errorFound ref="#_{{geonet:element/@ref}}">
+   <geonet:errorFound ref="#_{{geonet:element/@ref}}" id="#{generate-id(.)}">
 	 	<geonet:pattern name="{{name(.)}}"/>
 		<geonet:diagnostics>
-        <xsl:element name="xsl:value-of">
-          <xsl:attribute name="select">
-                    <xsl:apply-templates mode="text" />
-                </xsl:attribute>
+        <xsl:element name="xsl:copy-of">
+          <xsl:attribute name="select"><xsl:apply-templates mode="text"/></xsl:attribute>
         </xsl:element>
 		</geonet:diagnostics>
 	</geonet:errorFound>

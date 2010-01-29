@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <!-- INSPIRE metadata rules translation / START -->
+    <inspirerule>Règles INSPIRE</inspirerule>
+    <M35>[INSPIRE] - Le titre de la ressource est obligatoire</M35>
+    <M36>[INSPIRE] - Le résumé est obligatoire</M36>
+    <M37>[INSPIRE] - Le type de la ressource est obligatoire</M37>
+    <M38>[INSPIRE] - L'identifiant unique de la ressource est obligatoire</M38>
+    <M39>[INSPIRE] - Une catégorie de sujet ISO (thématique) est obligatoire</M39>
+    <M40>[INSPIRE] - Un mot-clé est obligatoire</M40>
+    <M41>[INSPIRE] - L'étendue géographique de la ressource est obligatoire</M41>
+    <M42>[INSPIRE] - Une référence temporelle est obligatoire</M42>
+    <M43>[INSPIRE] - La généalogie de la donnée est obligatoire</M43>
+    <M44>[INSPIRE] - La conformité est obligatoire</M44>
+    <M45>[INSPIRE] - Une contrainte d'accès et d'utilisation (i.limite d'utilisation) de la ressource est obligatoire</M45>
+    <M46>[INSPIRE] - La limitation d'accès public (i.e. contraintes légales ou de sécurité) est obligatoire</M46>
+    <M47>[INSPIRE] - le nom de l'organisation et l'email du contact sont obligatoires pour la ressource</M47>
+    <M48>[INSPIRE] - Le nom de l'organisation et l'email du contact sont obligatoires pour la métadonnée</M48>
+    <M49>[INSPIRE] - La langue de la métadonnée est obligatoire</M49>
+    <M50>[INSPIRE] - La date de création de la métadonnée est obligatoire</M50>
+    <M51>[INSPIRE for Services] - La ressource couplée est obligatoire si un lien est disponible</M51>
+    <M52>[INSPIRE] - La localisation de la ressource est obligatoire si un lien est disponible</M52>
+    <M53>[INSPIRE] - Une seule contrainte d'accès et d'utilisation est autorisée (i.e. limite d'utilisation)</M53>
+    <M54>[INSPIRE] - Les contraintes d'accès prennent la valeur 'autres restrictions' si et seulement si le champ autres contraintes est rempli</M54>
+    <M55>[INSPIRE] - La langue de la ressource doit être renseignée si celle-ci contient du texte</M55>
+    <M56>[INSPIRE] - La résolution spatiale est obligatoire si une échelle ou une distance est disponible pour la ressource</M56>
+    <M57>[ISO19119 for Services] Le nom de l'opération est obligatoire</M57>
+    <M58>[ISO19119 for Services] Le type de communication est obligatoire</M58>
+    <M59>[ISO19119 for Services] Une source en ligne est obligatoire</M59>
+    <M60>[ISO19119 for Services] Le type de service est obligatoire</M60>
+    
+    
+    <alert.M35><div>[INSPIRE] - Le titre de la ressource est obligatoire</div></alert.M35>
+    <alert.M36><div>[INSPIRE] - Le résumé est obligatoire</div></alert.M36>
+    <alert.M37><div>[INSPIRE] - Le type de la ressource est obligatoire</div></alert.M37>
+    <alert.M38><div>[INSPIRE] - L'identifiant unique de la ressource est obligatoire</div></alert.M38>
+    <alert.M39><div>[INSPIRE] - Une catégorie de sujet ISO (i.e. thématique) est obligatoire</div></alert.M39>
+    <alert.M40><div>[INSPIRE] - Un mot-clé est obligatoire</div></alert.M40>
+    <alert.M41><div>[INSPIRE] - L'étendue géographique de la ressource est obligatoire</div></alert.M41>
+    <alert.M42><div>[INSPIRE] - Une référence temporelle est obligatoire</div></alert.M42>
+    <alert.M43><div>[INSPIRE] - La généalogie de la ressource est obligatoire</div></alert.M43>
+    <alert.M44><div>[INSPIRE] - La conformité est obligatoire</div></alert.M44>
+    <alert.M45><div>[INSPIRE] - Une contrainte d'accès et d'utilisation (i.e. limite d'utilisation) de la ressource est obligatoire</div></alert.M45>
+    <alert.M46><div>[INSPIRE] - La limitation d'accès public (i.e. contraintes légales ou de sécurité) est obligatoire</div></alert.M46>
+    <alert.M47><div>[INSPIRE] - Le nom de l'organisation et l'email du contact sont obligatoires pour la ressource</div></alert.M47>
+    <alert.M48><div>[INSPIRE] - Le nom de l'organisation et l'email du contact sont obligatoires pour la métadonnée</div></alert.M48>
+    <alert.M49><div>[INSPIRE] - La langue de la métadonnée est obligatoire</div></alert.M49>
+    <alert.M50><div>[INSPIRE] - La date de création de la métadonnée est obligatoire</div></alert.M50>
+    <alert.M51><div>[INSPIRE for Services] - La ressource couplée est obligatoire si un lien est disponible</div></alert.M51>
+    <alert.M52><div>[INSPIRE] - La localisation de la ressource est obligatoire si un lien est disponible</div></alert.M52>
+    <alert.M53><div>[INSPIRE] - Une seule contrainte d'accès et d'utilisation est autorisée</div></alert.M53>
+    <alert.M54><div>[INSPIRE] - Les contraintes d'accès prennent la valeur 'autres restrictions' si et seulement si le champ 'autres contraintes' est renseigné</div></alert.M54>
+    <alert.M55><div>[INSPIRE] - La langue de la ressource doit être renseignée si celle-ci contient du texte</div></alert.M55>
+    <alert.M56><div>[INSPIRE] - La résolution spatiale est obligatoire si une échelle ou une distance est disponible pour la ressource</div></alert.M56>
+    <alert.M57><div>[ISO19119 for Services] Le nom de l'opération est obligatoire</div></alert.M57>
+    <alert.M58><div>[ISO19119 for Services] Le type de communication est obligatoire</div></alert.M58>
+    <alert.M59><div>[ISO19119 for Services] Au moins une source en ligne est obligatoire</div></alert.M59>
+    <alert.M60><div>[ISO19119 for Services] Le type de service est obligatoire</div></alert.M60>
+    <!-- INSPIRE metadata rules translation / END -->
+
+</strings>

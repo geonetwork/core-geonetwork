@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="geonetwork-schematron" default="schematron">
+
+	<property name="schematronDir" value="." description="Schematron directory" />
+	<property name="buildDir" value=".build" description="Build directory" />
+	<property name="schemaDir" value="../web/geonetwork/xml/schemas/" description="Schemas directory" />
+	<property name="parser" value="../web/geonetwork/WEB-INF/lib/saxon9.jar" />
+	<property name="serializer" value="serializer-2.7.1.jar" />
+	<property name="defaultLang" value="en" />
+	<!--<pathelement location="../web/geonetwork/WEB-INF/lib/${xalan};../web/geonetwork/WEB-INF/lib/${serializer};"/>-->
+	<!--<java jar="web/geonetwork/WEB-INF/lib/${xalan}-->
+
+	<target name="clean">
+		<delete dir="${buildDir}" verbose="true"/>
+
+		<ant target="clean-schema-dir">
+			<property name="schema" value="dublin-core" />
+		</ant>
+		<ant target="clean-schema-dir">
+			<property name="schema" value="csw-record" />
+		</ant>
+		<ant target="clean-schema-dir">
+			<property name="schema" value="fgdc-std" />
+		</ant>
+		<ant target="clean-schema-dir">
+			<property name="schema" value="iso19110" />
+		</ant>
+		<ant target="clean-schema-dir">
+			<property name="schema" value="iso19115" />
+		</ant>
+		<ant target="clean-schema-dir">
+			<property name="schema" value="iso19139" />
+		</ant>
+	</target>
+
+	<target name="clean-schema-dir">
+		<property name="schema" value="" />
+		<echo message="Cleanning schema: ${schema}."/>
+		
+		<delete verbose="true">
+			<fileset dir="../web/geonetwork/xml/schemas/${schema}/" includes="schematron-rules-*.xsl" />
+			<fileset dir="../web/geonetwork/xml/schemas/${schema}/loc" includes="**/schematron-rules-*.xml" />
+		</delete>
+	</target>
+
+
+	<target name="schematron" description="Process schematron rules and copy XSL validation file to schema directory.">
+		<!-- Compile rules -->
+		<ant target="compile-schematron">
+			<property name="rules" value="none" />
+		</ant>
+		<ant target="compile-schematron">
+			<property name="rules" value="iso" />
+		</ant>
+		<ant target="compile-schematron">
+			<property name="rules" value="geonetwork" />
+		</ant>
+
+
+
+		<!-- 
+		Add publish statements here to propagate rules to other schema if needed.
+		-->
+		<ant target="publish-schematron">
+			<property name="rules" value="none" />
+			<property name="schema" value="csw-record" />
+		</ant>
+		<ant target="publish-schematron">
+			<property name="rules" value="none" />
+			<property name="schema" value="dublin-core" />
+		</ant>
+		<ant target="publish-schematron">
+			<property name="rules" value="none" />
+			<property name="schema" value="fgdc-std" />
+		</ant>
+		<ant target="publish-schematron">
+			<property name="rules" value="none" />
+			<property name="schema" value="iso19110" />
+		</ant>
+		<ant target="publish-schematron">
+			<property name="rules" value="none" />
+			<property name="schema" value="iso19115" />
+		</ant>
+
+		<!-- iso19139 -->
+		<ant target="publish-schematron">
+			<property name="rules" value="iso" />
+			<property name="schema" value="iso19139" />
+		</ant>
+		<ant target="publish-schematron">
+			<property name="rules" value="geonetwork" />
+			<property name="schema" value="iso19139" />
+		</ant>
+	</target>
+
+	<target name="inspire" description="Add INSPIRE rules to iso19139 schema." depends="schematron">
+		<ant target="compile-schematron">
+			<property name="rules" value="inspire" />
+		</ant>
+
+		<ant target="publish-schematron">
+			<property name="rules" value="inspire" />
+			<property name="schema" value="iso19139" />
+		</ant>
+	</target>
+
+
+	<target name="profil-fra" description="Add Profil for France rules to iso19139.fra schema." depends="schematron, inspire">
+		<ant target="compile-schematron">
+			<property name="rules" value="iso-fra" />
+		</ant>
+
+
+		<ant target="publish-schematron">
+			<property name="rules" value="geonetwork" />
+			<property name="schema" value="iso19139.fra" />
+		</ant>
+		<ant target="publish-schematron">
+			<property name="rules" value="iso" />
+			<property name="schema" value="iso19139.fra" />
+		</ant>
+		<ant target="publish-schematron">
+			<property name="rules" value="inspire" />
+			<property name="schema" value="iso19139.fra" />
+		</ant>
+		<ant target="publish-schematron">
+			<property name="rules" value="iso-fra" />
+			<property name="schema" value="iso19139.fra" />
+		</ant>
+	</target>
+
+	<target name="compile-schematron" description="Produce stylesheets for schematron reporting">
+		<property name="rules" value="" />
+		<mkdir dir="${buildDir}" />
+
+		<echo level="info" message="Parsing rules: ${rules}" />
+		<echo level="info" message=" - generate xsl for reporting" />
+		<java jar="${parser}" fork="true" failonerror="true" dir="${schematronDir}" maxmemory="128m">
+			<!--           <arg line="-IN allSchtrnRules.sch -OUT ${schemaDir}/schematron.xsl -XSL schematron-report.xsl"/>-->
+			<arg line="-s rules/schematron-rules-${rules}.sch -o ${buildDir}/schematron-rules-${rules}.xsl schematron-report-geonetwork-xml.xsl" />
+			<classpath>
+				<pathelement location="../web/geonetwork/WEB-INF/lib/${serializer}" />
+				<pathelement path="${java.class.path}" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="publish-schematron" description="Publish stylesheets for schematron reporting in a schema">
+		<property name="rules" value="" />
+		<property name="schema" value="" />
+		<echo level="info" message=" - copy rules: ${rules} to schema: ${schema}" />
+		<copy description="Copy schematron XSLT to ${schema} schema." todir="../web/geonetwork/xml/schemas/${schema}" verbose="true">
+			<fileset dir="${buildDir}" includes="schematron-rules-${rules}.xsl" />
+		</copy>
+
+
+
+		<echo level="info" message=" - copy loc files for rules: ${rules} to schema: ${schema}" />
+		<ant target="publish-loc-file">
+			<property name="lang" value="en" />
+			<property name="rules" value="${rules}" />
+			<property name="schema" value="${schema}" />
+		</ant>
+		<ant target="publish-loc-file">
+			<property name="lang" value="fr" />
+			<property name="rules" value="${rules}" />
+			<property name="schema" value="${schema}" />
+		</ant>
+		<ant target="publish-loc-file">
+			<property name="lang" value="de" />
+			<property name="rules" value="${rules}" />
+			<property name="schema" value="${schema}" />
+		</ant>
+		<ant target="publish-loc-file">
+			<property name="lang" value="es" />
+			<property name="rules" value="${rules}" />
+			<property name="schema" value="${schema}" />
+		</ant>
+		<ant target="publish-loc-file">
+			<property name="lang" value="ru" />
+			<property name="rules" value="${rules}" />
+			<property name="schema" value="${schema}" />
+		</ant>
+		<ant target="publish-loc-file">
+			<property name="lang" value="ar" />
+			<property name="rules" value="${rules}" />
+			<property name="schema" value="${schema}" />
+		</ant>
+		<ant target="publish-loc-file">
+			<property name="lang" value="cn" />
+			<property name="rules" value="${rules}" />
+			<property name="schema" value="${schema}" />
+		</ant>
+		<ant target="publish-loc-file">
+			<property name="lang" value="nl" />
+			<property name="rules" value="${rules}" />
+			<property name="schema" value="${schema}" />
+		</ant>
+	</target>
+
+
+	<!-- Copy loc file. If not exist, copy default language localization file
+	and echo an alert. -->
+	<target name="publish-loc-file">
+		<property name="lang" value="" />
+		<property name="schema" value="" />
+		<property name="rules" value="" />
+
+		<!--<echo message="      - copy ${schematronDir}/rules/loc/${lang}/schematron-rules-${rules}.xml loc file in ${schema}/${lang}."></echo>
+		-->
+		<copy description="Copy localization file to ${schema} schema." todir="../web/geonetwork/xml/schemas/${schema}/loc/${lang}" verbose="true">
+			<fileset dir="${schematronDir}/rules/loc/${lang}" includes="schematron-rules-${rules}.xml" />
+		</copy>
+	</target>
+
+
+</project>
