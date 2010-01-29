@@ -41,8 +41,6 @@ public class Csw {
 	public static final Namespace NAMESPACE_ENV = Namespace.getNamespace("env", "http://www.w3.org/2003/05/soap-envelope");
 	public static final Namespace NAMESPACE_GMD = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
 	public static final Namespace NAMESPACE_GEONET = Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork");
-	// FIXME ISO PROFIL : Use declared primeNS in current node.
-	public static final Namespace NAMESPACE_FRA = Namespace.getNamespace("fra", "http://www.cnig.gouv.fr/2005/fra");
 	public static final Namespace NAMESPACE_DC = Namespace.getNamespace("dc","http://purl.org/dc/elements/1.1/");
 	public static final Namespace NAMESPACE_XSI = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
 	public static final Namespace NAMESPACE_SRV = Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");

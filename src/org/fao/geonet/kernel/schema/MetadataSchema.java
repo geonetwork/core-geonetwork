@@ -27,6 +27,8 @@
 
 package org.fao.geonet.kernel.schema;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.util.*;
 
 import org.jdom.Element;
@@ -44,7 +46,11 @@ public class MetadataSchema
 	private Map<String,Namespace> hmNameSpaces = new HashMap<String,Namespace>();
 	private Map<String,Namespace> hmPrefixes = new HashMap<String,Namespace>();
 	private String	schemaName;
+	private String	schemaDir;
 	private String	primeNS;
+	private String[] schematronRules;
+
+	private static final String SCHEMATRON_RULE_FILE_PREFIX = "schematron-rules";
 
 	//---------------------------------------------------------------------------
 	//---
@@ -75,6 +81,24 @@ public class MetadataSchema
 		return schemaName;
 	}
 
+	/**
+	 * Get schema directory
+	 * 
+	 * @return
+	 */
+	public String getSchemaDir() {
+		return schemaDir;
+	}
+
+	/**
+	 * Set schema directory
+	 * 
+	 * @param schemaDir
+	 */
+	public void setSchemaDir(String schemaDir) {
+		this.schemaDir = schemaDir;
+	}
+	
 	//---------------------------------------------------------------------------
 
 	public void setPrimeNS(String theNS)
@@ -279,6 +303,44 @@ public class MetadataSchema
 		return new ArrayList(hmPrefixes.values());
 	}
 
+	/**
+	 * Load all schematron rules available for current schema.
+	 * Schematron rules files are in schema directory
+	 * and start with "schematron-rules" prefix.
+	 * 
+	 * @param schemasDir
+	 * @return
+	 */
+	public void loadSchematronRules() {
+		String saSchemas[] = new File(schemaDir)
+				.list(new SchematronReportRulesFilter());
+		setSchematronRules(saSchemas);
+	}
+
+	/**
+	 * Schematron rules filename is like "schematron-rules-iso.xsl
+	 * 
+	 */
+	private class SchematronReportRulesFilter implements FilenameFilter {
+		public boolean accept(File directory, String filename) {
+			if (filename.startsWith(SCHEMATRON_RULE_FILE_PREFIX)
+					&& filename.endsWith(".xsl"))
+				return true;
+			return false;
+		}
+	}
+	
+	/**
+	 * Return the list of schematron rules to applied for this schema
+	 * @return
+	 */
+	public String[] getSchematronRules() {
+		return schematronRules;
+	}
+
+	private void setSchematronRules(String[] schematronRules) {
+		this.schematronRules = schematronRules;
+	}
 }
 
 //==============================================================================

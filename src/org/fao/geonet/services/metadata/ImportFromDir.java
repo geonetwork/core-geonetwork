@@ -311,18 +311,12 @@ public class ImportFromDir implements Service
 		//--- Note we have to use uuid here instead of id because we don't have 
 		//--- an id...
 
-		Element schemaTronXml = dataMan.doSchemaTronForEditor(dataMan.getSchemaDir(schema),xml,context.getLanguage());
+		Element schemaTronXml = dataMan.doSchemaTronForEditor(schema,xml,context.getLanguage());
 		xml.detach();
 		if (schemaTronXml != null && schemaTronXml.getContent().size() > 0) {
-			String schemaTronReport = dataMan.doSchemaTronReport(dataMan.getSchemaDir(schema),xml,uuid,context.getLanguage());
-			Element schematron = new Element("schematronerrors");
-			Element idElem = new Element("id");
-			idElem.setText(uuid);
-			Element fileNameElem = new Element("filename");
-			fileNameElem.setText(fileName);
-			schematron.addContent(idElem);
-			schematron.addContent(fileNameElem);
-			throw new SchematronValidationErrorEx("Schematron errors detected for file "+fileName+" - see "+schemaTronReport+" for more details",schematron);
+			Element schemaTronReport = dataMan.doSchemaTronForEditor(schema,xml,context.getLanguage());
+			throw new SchematronValidationErrorEx("Schematron errors detected for file "+fileName+" - " 
+					+ Xml.getString(schemaTronReport) + " for more details",schemaTronReport);
 		}
 
 	}

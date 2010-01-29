@@ -436,11 +436,12 @@ public class Xml
 	//---------------------------------------------------------------------------
 	/** Error handler that collects up validation errors */
 
-	protected static class ErrorHandler extends DefaultHandler {
+	public static class ErrorHandler extends DefaultHandler {
 
 		private int errorCount = 0;
 		private String errors = " ";
 		private Element xpaths;
+		private Namespace ns = Namespace.NO_NAMESPACE;
 
 		public boolean errors() {
 			return errorCount > 0;
@@ -451,11 +452,11 @@ public class Xml
 		}
 
 		public void addMessage ( SAXParseException exception, String typeOfError ) {
-			if (errorCount == 0) xpaths = new Element("xsderrors");
+			if (errorCount == 0) xpaths = new Element("xsderrors", ns);
 			errorCount++;
 
 			Element elem = (Element) so.getLocator().getNode();
-			Element x = new Element("xpath");
+			Element x = new Element("xpath", ns);
 			try {
 				String xpath = jeeves.utils.XPath.getXPath(elem);
 				//-- remove the first element to ensure XPath fits XML passed with
@@ -473,7 +474,7 @@ public class Xml
 				e.printStackTrace();
 				x.setText("nopath");
 			}
-			String message = typeOfError + "(" + errorCount + ") " + exception + " (Element: " + elem.getQualifiedName();
+			String message = exception.getMessage() + " (Element: " + elem.getQualifiedName();
 			String parentName;
 			if (!elem.isRootElement()) {
 				Element parent = (Element)elem.getParent();
@@ -485,16 +486,19 @@ public class Xml
 				parentName = "/";
 			}
 			message += " with parent element: " + parentName + ")";
-			System.out.println("Validation error: "+message);
-			Element m = new Element("message").setText(message);
-			Element e = new Element("error");
+			
+			Element m = new Element("message", ns).setText(message);
+			Element errorType = new Element("typeOfError", ns).setText(typeOfError);
+			Element errorNumber = new Element("errorNumber", ns).setText(String.valueOf(errorCount));
+			Element e = new Element("error", ns);
+			e.addContent(errorType);
+			e.addContent(errorNumber);
 			e.addContent(m);
 			e.addContent(x);
 			xpaths.addContent(e);
 		}
 		
 		public void error( SAXParseException parseException ) throws SAXException {
-		
 			addMessage( parseException, "ERROR" );
 		}
 
@@ -506,6 +510,17 @@ public class Xml
 			addMessage( parseException, "WARNING" );
 		}
 
+		/**
+		 * Set namespace to use for report elements
+		 * @param ns
+		 */
+		public void setNs(Namespace ns) {
+			this.ns = ns;
+		}
+
+		public Namespace getNs() {
+			return ns;
+		}
 	}
 
 	//---------------------------------------------------------------------------
@@ -529,6 +544,16 @@ public class Xml
 		}
 	}
 
+	public static Element validateInfo(String schemaPath, Element xml, ErrorHandler eh)
+			throws Exception {
+		validateGuts(schemaPath, xml, eh);
+		if (eh.errors()) {
+			return eh.getXPaths();
+		} else {
+			return null;
+		}
+	}
+	
 	private static void validateGuts(String schemaPath, Element xml, ErrorHandler eh) throws Exception {
 		StreamSource schemaFile = new StreamSource(new File(schemaPath));
 		Schema schema = factory.newSchema(schemaFile);

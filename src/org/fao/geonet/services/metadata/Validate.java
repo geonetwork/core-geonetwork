@@ -39,9 +39,12 @@ import org.jdom.Element;
 
 //=============================================================================
 
-/** For editing : update leaves information. Access is restricted
-  */
-
+/**
+ *  For editing : update leaves information. Access is restricted
+ *  Validate current metadata record in session.
+ *  
+ *  FIXME : id MUST be the id of the current metadata record in session ?
+ */
 public class Validate implements Service
 {
 
@@ -72,11 +75,12 @@ public class Validate implements Service
 		String id         = Util.getParam(params, Params.ID);
 
 		//--- validate metadata from session
-		dataMan.validateMetadataEmbedded(session, dbms, id, context.getLanguage());
+		Element errorReport = dataMan.validateMetadataEmbedded(session, dbms, id, context.getLanguage());
 
 		//--- update element and return status
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
+		elResp.addContent(errorReport);
 
 		return elResp;
 	}

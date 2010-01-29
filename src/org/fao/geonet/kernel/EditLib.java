@@ -94,6 +94,8 @@ public class EditLib
 
 		MetadataSchema mds = new SchemaLoader().load(xmlSchemaFile,name,xmlSubstitutionsFile);
 		mds.setName(name);
+		mds.setSchemaDir(path);
+		mds.loadSchematronRules();
 		htSchemas   .put(name, mds);
 		htSchemaDirs.put(name, path);
 		htSchemaSugg.put(name, new SchemaSuggestions(xmlSuggestFile));
