@@ -803,6 +803,27 @@ span.thumbnail {
     color: #2a628f;
 }
 
+div.relatedElements {
+    float:right;
+    border:1px solid black;
+    width:320px;
+    padding:2px;
+    margin:2px;
+    text-align:left;
+}
+
+div.relatedElements ul {
+    margin-left: 0px;
+}
+
+div.relatedElements ul li ul {
+    margin-left: 5px;
+}
+
+div.relatedElements ul li ul li ul {
+    margin-left: 10px;
+}
+
 /*******************************
  Keywords search box
  *******************************/
@@ -814,3 +835,4 @@ span.thumbnail {
 
 .addIcon { background-image: url('images/add.png') !important; }
 .searchIcon { background-image: url('images/find.png') !important; }
+.linkIcon { background-image: url('images/link.png') !important; }

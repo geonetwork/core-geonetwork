@@ -16,8 +16,7 @@
     -->
     <xsl:template name="geoHeader">
         <script src="../../scripts/ext/adapter/ext/ext-base.js" type="text/javascript"/>
-        <script src="../../scripts/ext/ext-all.js"  type="text/javascript"/>
-
+        
         <link rel="stylesheet" type="text/css" href="../../scripts/ext/resources/css/ext-all.css"/>
         <link rel="stylesheet" type="text/css" href="../../scripts/geoext/resources/css/geoext-all-debug.css"/>
         <link rel="stylesheet" type="text/css" href="../../scripts/openlayers/theme/geonetwork/style.css"/>
@@ -26,13 +25,15 @@
 
         <xsl:choose>
             <xsl:when test="/root/request/debug">
-                <script src="../../scripts/openlayers/OpenLayers.js" type="text/javascript"/>
+            	<script src="../../scripts/ext/ext-all-debug.js"  type="text/javascript"/>
+                <script src="../../scripts/openlayers/lib/OpenLayers.js" type="text/javascript"/>
                 <script src="../../scripts/geoext/lib/GeoExt.js" type="text/javascript"/>
                 <script src="../../scripts/geo/extentMap.js" type="text/javascript"/>
                 <!--<script src="../../scripts/geo/app.FeatureSelectionPanel.js" type="text/javascript"/>-->
             </xsl:when>
             <xsl:otherwise>
-                <script src="../../scripts/geo/geo-libs.js" type="text/javascript"/>
+            	<script src="../../scripts/ext/ext-all.js"  type="text/javascript"/>
+                <script src="../../scripts/geo/gn.libs.js" type="text/javascript"/>
             </xsl:otherwise>
         </xsl:choose>
         
@@ -46,11 +47,21 @@
 	<!-- Insert required JS and CSS for Ext selection panel (ie KeywordSelectionPanel) -->
     <xsl:template name="selectionPanel">
         <link rel="stylesheet" type="text/css" href="../../scripts/ext-ux/MultiselectItemSelector-3.0/Multiselect.css" />
-        
         <script type="text/javascript" src="../../scripts/ext-ux/MultiselectItemSelector-3.0/Multiselect.js"></script>
         <script type="text/javascript" src="../../scripts/ext-ux/MultiselectItemSelector-3.0/DDView.js"></script>
         <script type="text/javascript" src="../../scripts/ext-ux/TwinTriggerComboBox/TwinTriggerComboBox.js"></script>
-        <script type="text/javascript" src="../../scripts/editor/app.KeywordSelectionPanel.js"></script>
+        
+        <!-- Load javascript needed for editor in debug mode.
+        If not, they are part of gn.libs.js -->
+        <xsl:choose>
+            <xsl:when test="/root/request/debug">
+                <script type="text/javascript" src="../../scripts/editor/csw.SearchTools.js"></script>
+		        <script type="text/javascript" src="../../scripts/editor/app.SearchField.js"></script>
+		        <script type="text/javascript" src="../../scripts/editor/app.KeywordSelectionPanel.js"></script>
+
+			</xsl:when>
+        </xsl:choose>		        
+        <script type="text/javascript" src="../../scripts/editor/app.LinkedMetadataSelectionPanel.js"></script>
     </xsl:template>
     
     <xsl:template name="css">

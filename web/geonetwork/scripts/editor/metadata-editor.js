@@ -622,7 +622,7 @@ function setRegion(westField, eastField, southField, northField, region, eltRef,
 	var s = "";
 	var n = "";
 	
-	if (choice != "") {
+	if (choice != undefined && choice != "") {
 		coords = choice.split(",")
 		w = coords[0];
 		e = coords[1];
@@ -861,6 +861,205 @@ function showKeywordSelectionPanel(ref, name) {
     
     keywordSelectionWindow.items.get(0).setRef(ref);
     keywordSelectionWindow.show();
+}
+
+
+
+
+/**
+ * Property: linkedMetadataSelectionWindow
+ * The window in which we can select linked metadata
+ * 
+ * @param ref		Reference of the element to update. If null, trigger action.
+ * @param name		Type of element to update. Based on this information
+ * 	define if multiple selection is allowed and if hidden parameters need
+ *  to be added to CSW query.
+ */
+function showLinkedMetadataSelectionPanel(ref, name) {
+    var single = ((name=='uuidref' || name=='iso19110' || name=='')?true:false);
+    // Add extra parameters according to selection panel
+    
+	var linkedMetadataSelectionPanel = new app.LinkedMetadataSelectionPanel({
+        width: 620,
+        height: 300,
+        ref: ref,
+        singleSelect: single,
+        mode: name,
+        listeners: {
+            linkedmetadataselected: function(panel, metadata) {
+    			if (single) {
+    				if (this.ref != null) {
+    					$('_'+this.ref+(name!=''?'_'+name:'')).value = metadata[0].data.uuid;
+    				} else {
+    					// Create relation between current record and selected one
+    					if (this.mode=='iso19110') {
+    						var url = 'xml.relation.insert?parentId=' + document.mainForm.id.value + 
+    								'&childUuid=' + metadata[0].data.uuid;
+    						
+
+    						var myExtAJaxRequest = Ext.Ajax.request({
+    							url: url,
+    							method: 'GET',
+    							success: function(result, request) {
+    								var html = result.responseText;
+    								// TODO : check if error.
+    								// Refresh current edits
+    								doAction('metadata.update');
+    							},
+    							failure:function (result, request) { 
+    								Ext.MessageBox.alert(translate("error") 
+    											+ " / status " + result.status + " text: " + result.statusText + " - " + translate("tryAgain"));
+    								setBunload(true); // reset warning for window destroy
+    							}
+    						});
+    						
+    					}
+    				}
+    			} else {
+    				var inputs = [];
+    				var multi = metadata.length > 1? true : false;
+    				Ext.each(metadata, function(md, index) {
+    					if (multi) name = name+'_'+index;
+    					// Add related metadata uuid into main form.
+    					inputs.push({tag: 'input', type: 'hidden', id: name, name: name, value: md.data.uuid});
+    				});
+    				var dh = Ext.DomHelper;
+					dh.append(Ext.get("hiddenFormElements"), inputs);
+    			}
+            }
+        }
+    });
+
+    var linkedMetadataSelectionWindow = new Ext.Window({
+        title: translate('linkedMetadataSelectionWindowTitle'),
+        layout: 'fit',
+        items: linkedMetadataSelectionPanel,
+        closeAction: 'hide',
+        constrain: true,
+        iconCls: 'linkIcon',
+        modal: true
+    });
+
+    linkedMetadataSelectionWindow.show();
+}
+
+
+
+
+/**
+ * Property: linkedMetadataSelectionWindow
+ * The window in which we can select linked metadata
+ */
+function showLinkedServiceMetadataSelectionPanel(name, serviceUrl, uuid) {
+    var linkedMetadataSelectionPanel = new app.LinkedMetadataSelectionPanel({
+        mode: name,
+		width: 620,
+        height: 400,
+        autoWidth: true,
+        ref: null,
+        proxy: Env.proxy,
+        serviceUrl: serviceUrl,
+        region: 'north',
+        uuid: uuid,
+        createIfNotExistURL: 'metadata.create.form?type=' +  (name=='attachService'?'service':'dataset'),
+        /**
+         * Create a relation between **one** service (current one)
+         * and **one** dataset due to the definition of the layername
+         * parameter.
+         */
+        singleSelect: true,
+        listeners: {
+            linkedmetadataselected: function(panel, metadata) {
+				var layerName = Ext.getCmp('getCapabilitiesLayerName').getValue();
+		 		// update dataset metadata record
+				// and/or the service. Failed on privileges error.
+				if (name=='attachService') {
+					// Current dataset is a dataset metadata record.
+					// 1. Update service (if current user has privileges), using XHR request
+					var serviceUpdateUrl = "xml.metadata.processing?uuid=" + metadata[0].data.uuid + 
+	    					"&process=update-srv-attachDataset&uuidref=" +
+	    					this.uuid +
+	    					"&scopedName=" + layerName;
+					
+					Ext.Ajax.request({
+						url: serviceUpdateUrl,
+						method: 'GET',
+						success: function(result, request) {
+							var response = result.responseText;
+							
+							// Check error
+							if (response.indexOf('Not owner')!=-1) {
+								alert(translate("NotOwnerError"));
+							} else if (response.indexOf('error')!=-1) {
+								alert(translate("error") + response);
+							}
+							// FIXME : error on update
+							// 2. Update current metadata record, in current window
+							window.location.replace("metadata.processing?uuid=" + this.uuid + 
+			    					"&process=update-onlineSrc&desc=" +
+			    					layerName + "&url=" +
+			    					// TODO encode metadata[0].data.uri +
+			    					"&scopedName=" + layerName);
+						},
+						failure:function (result, request) { 
+							Ext.MessageBox.alert(translate("ServiceUpdateError"));
+							setBunload(true);
+						}
+					});
+					
+					
+				} else {
+					// Current dataset is a service metadata record.
+					// 1. Update dataset (if current user has privileges), using XHR request
+					var datasetUpdateUrl = "xml.metadata.processing?uuid=" + metadata[0].data.uuid + 
+	    					"&process=update-onlineSrc&desc=" +
+	    					layerName + "&url=" +
+	    					serviceUrl +
+	    					"&scopedName=" + layerName;
+
+					Ext.Ajax.request({
+						url: datasetUpdateUrl,
+						method: 'GET',
+						success: function(result, request) {
+							var response = result.responseText;
+							// Check error
+							if (response.indexOf('Not owner')!=-1) {
+								// TODO : create Ext popup ?
+								alert(translate("NotOwnerError"));
+							} else if (response.indexOf('error')!=-1) {
+								alert(translate("error") + response);
+							}
+							
+							// TODO : ask for more
+	    					// 2. Update current metadata record, in current window
+	    					window.location.replace("metadata.processing?uuid=" + uuid + 
+	    	    					"&process=update-srv-attachDataset&uuidref=" +
+	    	    					metadata[0].data.uuid +
+	    	    					"&scopedName=" + layerName);	
+						},
+						failure:function (result, request) { 
+							Ext.MessageBox.alert(translate("ServiceUpdateError"));
+							setBunload(true);
+						}
+					});		
+				}
+            },
+            scope: this
+        }
+    });
+	
+    var linkedMetadataSelectionWindow = new Ext.Window({
+        title: (name=='attachService'?translate('associateService'):translate('associateDataset')),
+        layout: 'fit',
+        width: 620,
+        items: linkedMetadataSelectionPanel,
+        closeAction: 'hide',
+        constrain: true,
+        iconCls: 'linkIcon',
+        modal: true
+    });
+
+    linkedMetadataSelectionWindow.show();
 }
 
 

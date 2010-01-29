@@ -70,7 +70,7 @@
 	<!-- these elements should be boxed -->
 	<!-- ===================================================================== -->
 
-	<xsl:template mode="iso19139" match="gmd:identificationInfo|gmd:distributionInfo|gmd:descriptiveKeywords|gmd:thesaurusName|gmd:spatialRepresentationInfo|gmd:pointOfContact|gmd:dataQualityInfo|gmd:referenceSystemInfo|gmd:equivalentScale|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|srv:containsOperations">
+	<xsl:template mode="iso19139" match="gmd:identificationInfo|gmd:distributionInfo|gmd:descriptiveKeywords|gmd:thesaurusName|gmd:spatialRepresentationInfo|gmd:pointOfContact|gmd:dataQualityInfo|gmd:referenceSystemInfo|gmd:equivalentScale|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|srv:containsOperations|srv:SV_CoupledResource">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
@@ -99,9 +99,13 @@
 	<!-- ==================================================================== -->
 
 	<!--
-		OperatesOn element display or edit attribute uuidref.
-		TODO : Add selection popup ?
-		TODO : Replace uuid by metadata title ?
+		OperatesOn element display or edit attribute uuidref. In edit mode
+		the metadata selection panel is provided to set the uuid.
+		In view mode, the title of the metadata is displayed.
+		
+		Note: it could happen that linked metadata record is not accessible
+		to current user. In such a situation, clicking the link will return
+		a privileges exception.
 		-->
 	<xsl:template mode="iso19139" match="srv:operatesOn">
 		<xsl:param name="schema"/>
@@ -111,21 +115,19 @@
 			<xsl:choose>
 				<xsl:when test="$edit=true()">
 					<xsl:variable name="ref" select="geonet:element/@ref"/>
-					<input type="text" name="_{$ref}_uuidref" id="_{$ref}_uuidref" value="{./@uuidref}" size="20"/>
+					<input type="text" name="_{$ref}_uuidref" id="_{$ref}_uuidref" value="{./@uuidref}" size="20"
+						onfocus="javascript:showLinkedMetadataSelectionPanel('{$ref}', 'uuidref');"/>
+					<img src="../../images/find.png" alt="{/root/gui/strings/search}" title="{/root/gui/strings/search}"
+						onclick="javascript:showLinkedMetadataSelectionPanel('{$ref}', 'uuidref');" onmouseover="this.style.cursor='pointer';"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:choose>
-						<xsl:when test="@xlink:href">
-							<a href="{@xlink:href}">
-								<xsl:value-of select="@xlink:title"/>
-							</a>
-						</xsl:when>
-						<xsl:otherwise>
-							<a href="metadata.show?uuid={@uuidref}">
-								<xsl:value-of select="@uuidref"/>
-							</a>
-						</xsl:otherwise>
-					</xsl:choose>
+					<a href="metadata.show?uuid={@uuidref}">
+						<a href="metadata.show?uuid={.}">
+                 			<xsl:call-template name="getMetadataTitle">
+								<xsl:with-param name="uuid" select="@uuidref"/>
+							</xsl:call-template>
+                    	</a>
+					</a>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -135,6 +137,73 @@
 			<xsl:with-param name="text"   select="$text"/>
 		</xsl:apply-templates>
 	</xsl:template>
+
+
+
+    <!-- ============================================================================= -->
+    <!--   
+	 Display a list of related resources to which the current service metadata operatesOn.
+	 
+     Ie. User should define related metadata record using operatesOn elements and then if
+     needed, set a coupledResource to create a link to the data itself
+      (using layer name/feature type/coverage name as described in capabilities documents). 
+     
+     To create a relation best is using the related resources panel (see relatedResources 
+     template in metadata-iso19139-utils.xsl).
+      -->
+    <xsl:template mode="iso19139" match="srv:coupledResource/srv:SV_CoupledResource/srv:identifier" priority="200">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+
+        <xsl:choose>
+            <xsl:when test="$edit=true()">
+                <xsl:variable name="text">
+                    <xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref"/>
+                   	<xsl:variable name="currentUuid" select="gco:CharacterString/text()"/>
+                    <input type="text" class="md" name="_{$ref}" id="_{$ref}" onchange="validateNonEmpty(this)" value="{$currentUuid}" size="30"/>
+                    <xsl:choose>
+                        <xsl:when test="count(//srv:operatesOn[@uuidref!=''])=0">
+                            <xsl:value-of select="/root/gui/strings/noOperatesOn"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <select onchange="javascript:$('_{$ref}').value=this.options[this.selectedIndex].value;" class="md">
+                                <option></option>
+                                <xsl:for-each select="//srv:operatesOn[@uuidref!='']">
+                                    <option value="{@uuidref}">
+                                    	<xsl:if test="@uuidref = $currentUuid">
+                                    		<xsl:attribute name="selected">selected</xsl:attribute>
+                                    	</xsl:if>
+                                        <xsl:call-template name="getMetadataTitle">
+                                            <xsl:with-param name="uuid" select="@uuidref"/>
+                                        </xsl:call-template>
+                                    </option>
+                                </xsl:for-each>
+                            </select>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+
+                <xsl:apply-templates mode="simpleElement" select=".">
+                    <xsl:with-param name="schema" select="$schema"/>
+                    <xsl:with-param name="edit"   select="true()"/>
+                    <xsl:with-param name="text"   select="$text"/>
+                </xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates mode="simpleElement" select=".">
+                    <xsl:with-param name="schema"  select="$schema"/>
+                    <xsl:with-param name="text">
+                    	<a href="metadata.show?uuid={gco:CharacterString}">
+                 			<xsl:call-template name="getMetadataTitle">
+								<xsl:with-param name="uuid" select="gco:CharacterString"/>
+							</xsl:call-template>
+                    	</a>
+                    </xsl:with-param>
+                </xsl:apply-templates>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
 
 
 
@@ -1018,14 +1087,11 @@
 
 		<xsl:variable name="dataset" select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='dataset' or normalize-space(gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue)=''"/>
 		
-		<xsl:choose>
-		
-			<!-- metadata tab -->
-			<xsl:when test="$currTab='metadata'">
-			
-				<!-- thumbnail -->
-				<tr>
-					<td class="padded" align="center" valign="middle" colspan="2">
+		<!-- thumbnail -->
+		<tr>
+			<td valign="middle" colspan="2">
+				<xsl:if test="$currTab='metadata' or $currTab='identification' or $currTab='simple'">
+					<div style="float:left;width:70%;text-align:center;">
 						<xsl:variable name="md">
 							<xsl:apply-templates mode="brief" select="."/>
 						</xsl:variable>
@@ -1033,9 +1099,22 @@
 						<xsl:call-template name="thumbnail">
 							<xsl:with-param name="metadata" select="$metadata"/>
 						</xsl:call-template>
-					</td>
-				</tr>
-
+					</div>
+				</xsl:if>
+				<xsl:if test="/root/gui/config/editor-metadata-relation">
+					<div style="float:right;">				
+						<xsl:call-template name="relatedResources">
+							<xsl:with-param name="edit" select="$edit"/>
+						</xsl:call-template>
+					</div>
+				</xsl:if>
+			</td>
+		</tr>
+		
+		<xsl:choose>
+		
+			<!-- metadata tab -->
+			<xsl:when test="$currTab='metadata'">
 				<xsl:call-template name="iso19139Metadata">
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
@@ -1044,19 +1123,6 @@
 
 			<!-- identification tab -->
 			<xsl:when test="$currTab='identification'">
-			
-				<!-- thumbnail -->
-				<tr>
-					<td class="padded" align="center" valign="middle" colspan="2">
-						<xsl:variable name="md">
-							<xsl:apply-templates mode="brief" select="."/>
-						</xsl:variable>
-						<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
-						<xsl:call-template name="thumbnail">
-							<xsl:with-param name="metadata" select="$metadata"/>
-						</xsl:call-template>
-					</td>
-				</tr>
 				<xsl:apply-templates mode="elementEP" select="gmd:identificationInfo|geonet:child[string(@name)='identificationInfo']">
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
@@ -1181,28 +1247,11 @@
 			
 			<!-- default -->
 			<xsl:otherwise>
-			
-				<!-- thumbnail -->
-				<tr>
-					<td class="padded" align="center" valign="middle" colspan="2">
-						<xsl:variable name="md">
-							<xsl:apply-templates mode="brief" select="."/>
-						</xsl:variable>
-						<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
-						<xsl:if test="$embedded = false()">
-							<xsl:call-template name="thumbnail">
-								<xsl:with-param name="metadata" select="$metadata"/>
-							</xsl:call-template>
-						</xsl:if>
-					</td>
-				</tr>
-				
 				<xsl:call-template name="iso19139Simple">
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
 					<xsl:with-param name="flat"   select="$currTab='simple'"/>
 				</xsl:call-template>
-				
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -3097,6 +3146,54 @@
 
 
 
+ 	<!--
+        Open a popup to select a parent and set the parent identifier field.
+        In view mode display an hyperlink to the parent metadata record.
+    -->
+    <xsl:template mode="iso19139" match="gmd:parentIdentifier"
+        priority="2">
+        <xsl:param name="schema" />
+        <xsl:param name="edit" />
+
+        <xsl:choose>
+            <xsl:when test="$edit=true()">
+                <xsl:variable name="text">
+                    <xsl:variable name="ref"
+                        select="gco:CharacterString/geonet:element/@ref" />
+                        <input onfocus="javascript:showLinkedMetadataSelectionPanel('{$ref}', '');"
+	                    	class="md" type="text" name="_{$ref}" id="_{$ref}" value="{gco:CharacterString/text()}" size="20" />
+	                    <img src="../../images/find.png" alt="{/root/gui/strings/parentSearch}" title="{/root/gui/strings/parentSearch}"
+                        	onclick="javascript:showLinkedMetadataSelectionPanel('{$ref}', '');"/>
+                </xsl:variable>
+
+                <xsl:apply-templates mode="simpleElement"
+                    select=".">
+                    <xsl:with-param name="schema" select="$schema" />
+                    <xsl:with-param name="edit" select="true()" />
+                    <xsl:with-param name="text" select="$text" />
+                </xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates mode="simpleElement"
+                    select=".">
+                    <xsl:with-param name="schema" select="$schema" />
+                    <xsl:with-param name="text">
+                    
+                        <xsl:variable name="metadataTitle">
+                            <xsl:call-template name="getMetadataTitle">
+                                <xsl:with-param name="uuid" select="gco:CharacterString"></xsl:with-param>
+                            </xsl:call-template>
+                        </xsl:variable>
+                        <a href="metadata.show?uuid={gco:CharacterString}">
+                            <xsl:value-of select="$metadataTitle"/>
+                        </a>
+                    </xsl:with-param>
+                </xsl:apply-templates>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+
 
 	<!-- Display extra thumbnails (not managed by GeoNetwork).
 		Thumbnails managed by GeoNetwork are displayed on header.
@@ -3345,7 +3442,9 @@
 		gmd:orientationParameterDescription[gco:CharacterString]|
 		srv:SV_OperationChainMetadata/srv:name[gco:CharacterString]|
 		srv:SV_OperationMetadata/srv:invocationName[gco:CharacterString]|
-		srv:serviceTypeVersion[gco:CharacterString]
+		srv:serviceTypeVersion[gco:CharacterString]|
+		srv:operationName[gco:CharacterString]|
+		srv:identifier[gco:CharacterString]
 		"
 		priority="100">
 		<xsl:param name="schema" />

@@ -8,7 +8,45 @@
 	<fr>Français</fr> <!-- Do not translate! -->
 	<nl>Nederlands</nl> <!-- Do not translate -->
 	<ru>Русский</ru> <!-- Do not translate! -->
-
+	
+	<getCapabilitiesLayer js="true">GetCapabilities layer</getCapabilitiesLayer>
+	<ServiceUpdateError js="true">Error during service metadata update</ServiceUpdateError>
+	<NotOwnerError js="true">You don't have privileges to update this related record.</NotOwnerError>
+	<NoServiceURLError js="true">Check that selected service URL is defined.</NoServiceURLError>
+	<GetCapabilitiesDocumentError js="true">Error loading service GetCapabilities document from URL: </GetCapabilitiesDocumentError>
+	<noOperatesOn>No related dataset</noOperatesOn>
+	<linkedFeatureCatalogue>Related feature catalogues:</linkedFeatureCatalogue>
+	<linkedFeatureCatalogueHelp>Add a relation between current metadata record
+	and a feature catalogue in ISO19110 standard.</linkedFeatureCatalogueHelp>
+	<createLinkedFeatureCatalogue>Link feature catalogue</createLinkedFeatureCatalogue>
+	<layerNameHelp js="true">When linking metadata on services with one or more 
+	metadata on dataset, the coupled resource element could contains the layer 
+	name as defined in the OGC service.
+	The list of service layers could help metadata editor to add 
+	an existing value.</layerNameHelp>
+	<layerName js="true">Layer name</layerName>
+	<createIfNotExistButton js="true">Create a new metadata record</createIfNotExistButton>
+	<associateService js="true">Link service metadata</associateService>
+	<associateDataset js="true">Link dataset metadata</associateDataset>
+	<associateServiceHelp>To add a relation to a service metadata, search for service and define layer name.</associateServiceHelp>
+	<associateDatasetHelp>To add a relation to a dataset, go to ISO view > Identification section, and defined operates on elements.</associateDatasetHelp>
+	<addParent> Add or update parent metadata section</addParent>
+	<createAssoService>Create relation</createAssoService>
+	<updateMdd>Update dataset metadata</updateMdd>
+	<datasetCreate>Create dataset metadata</datasetCreate>
+	<linkedServices> Related service metadata:</linkedServices>
+	<linkedServiceMetadataHelp>To add a relation to a service, go to ISO view &gt; Distribution tab.</linkedServiceMetadataHelp>
+	<linkedParentMetadata> Parent/child metadata:</linkedParentMetadata>
+	<linkedParentMetadataHelp>To add a relation to a parent, go to ISO view &gt; Metadata tab.</linkedParentMetadataHelp>
+	<linkedChildrenMetadata> Children metadata:</linkedChildrenMetadata>
+	<linkedChildrenMetadataHelp>List of children linked to current metadata record.</linkedChildrenMetadataHelp>
+	<linkedDatasetMetadata> Related datasets:</linkedDatasetMetadata>
+	<serviceCreate>Create new service metadata</serviceCreate>
+	<parentSearch js="true">Search for a metadata record to set as parent of current record.</parentSearch>
+	<linkedMetadataSelectionWindowTitle js="true">Related metadata selection</linkedMetadataSelectionWindowTitle>
+	<searchText js="true">Text search</searchText>
+	<mdTitle js="true">Metadata title</mdTitle>
+	<createRelation js="true">Create relation</createRelation>
 	<export>Export</export>
 	<addXMLFragment>Add from dictionnary ...</addXMLFragment>
 	<translateWithGoogle>Use Google translation service to suggest a translation for selected language.</translateWithGoogle>
@@ -46,7 +84,8 @@
 	<uploadFailed js="true">Error: Upload failed! - returned </uploadFailed>
 	<uploadSetFileNameFailed js="true">Error: Upload succeeded but unable to set filename!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Cannot get tooltips from server</cannotGetTooltip>
-	<maxResults js="true">Number of results per thesaurus</maxResults>
+	<maxResults js="true">Number of results</maxResults>
+	<perThesaurus js="true"> per thesaurus</perThesaurus>
 	<anyThesaurus js="true">Any thesaurus</anyThesaurus>
 	<selectedKeywords js="true">Selected keywords</selectedKeywords>
 	<foundKeywords js="true">Available keywords</foundKeywords>
@@ -256,7 +295,7 @@
 	<isoCore>ISO Core</isoCore>
 	<isoMinimum>ISO Minimum</isoMinimum>
 	<keyword>keyword</keyword>
-	<keywords>Keywords</keywords>
+	<keywords js="true">Keywords</keywords>
 	<keywordshelp>Select multiple keywords by holding the Ctrl-key when selecting with the mouse</keywordshelp>
 	<kind>Kind</kind>
 	<kindChoice value="company">Private company</kindChoice>

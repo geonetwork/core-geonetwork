@@ -57,7 +57,8 @@
 			Env.locUrl    = "<xsl:value-of select="/root/gui/locUrl"/>";
 			Env.url       = "<xsl:value-of select="/root/gui/url"/>";
 			Env.lang      = "<xsl:value-of select="/root/gui/language"/>";
-            var on        = "<xsl:value-of select="/root/gui/url"/>/images/plus.gif";
+            Env.proxy     = "<xsl:value-of select="/root/gui/config/proxy-url"/>";
+			var on        = "<xsl:value-of select="/root/gui/url"/>/images/plus.gif";
             var off       = "<xsl:value-of select="/root/gui/url"/>/images/minus.png";
 			
 			window.javascriptsLocation = "<xsl:value-of select="/root/gui/url"/>/scripts/";

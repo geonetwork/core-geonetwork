@@ -1510,14 +1510,7 @@
 			</xsl:call-template>
 		</xsl:variable>
 		<b>
-			<xsl:choose>
-				<xsl:when test="$helpLink!=''">
-					<a href="javascript:popNew('{$helpLink}')"><xsl:value-of select="$title"/></a>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="$title"/>
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:value-of select="$title"/>
 		</b>
 		<br/>
 		<xsl:call-template name="getElementText">

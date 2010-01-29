@@ -181,7 +181,7 @@
 			<xsl:when test="contains($word-to-use, '@')">
 				<a style="font-weight:bolder;">
 					<xsl:attribute name="href">
-						mailto:<xsl:value-of select="$word-to-use"/>
+						<xsl:text>mailto:</xsl:text><xsl:value-of select="$word-to-use"/>
 					</xsl:attribute>
 					<xsl:call-template name="addLineBreaksToSingleWord">
 						<xsl:with-param name="word" select="$word-to-use"/>

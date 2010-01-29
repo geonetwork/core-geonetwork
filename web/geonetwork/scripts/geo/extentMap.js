@@ -79,7 +79,6 @@ var extentMap = {
      */
     initMapDiv: function () {
         var viewers, idFunc;
-
         extentMap.mainProj = new OpenLayers.Projection(extentMap.mainProjCode);
         extentMap.alternateProj = extentMap.mainProj;
         
@@ -203,7 +202,7 @@ var extentMap = {
 		                pressed: false,
 		                allowDepress: true,
 		                toggleGroup: "tool",
-		                iconCls: "drawPolygon",
+		                iconCls: "drawPolygon"
 		            }));
 		            control = new OpenLayers.Control.DrawFeature(
 	            		extentMap.vectorLayer,
@@ -227,7 +226,7 @@ var extentMap = {
 		                pressed: false,
 		                allowDepress: true,
 		                toggleGroup: "tool",
-		                iconCls: "drawCircle",
+		                iconCls: "drawCircle"
 		            }));
 		            
 //					TODO : this button define a popup which allow to select a geographic

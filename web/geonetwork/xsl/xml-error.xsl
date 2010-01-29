@@ -11,6 +11,7 @@
                                <xsl:value-of select="error/@id"/>
                        </xsl:attribute>
                        <xsl:value-of select="error/message"/>
+                       <xsl:copy-of select="error/object"/>
                </error>
        </xsl:template>
 
