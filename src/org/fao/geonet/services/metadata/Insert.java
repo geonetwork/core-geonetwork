@@ -23,6 +23,8 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import jeeves.constants.Jeeves;
@@ -39,6 +41,8 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.mef.Importer;
+import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -78,8 +82,7 @@ public class Insert implements Service
 		String group      = Util.getParam(params, Params.GROUP);
 		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
 		String title      = Util.getParam(params, Params.TITLE, "");
-		String category   = Util.getParam(params, Params.CATEGORY);
-		String style      = Util.getParam(params, Params.STYLESHEET);
+		String style      = Util.getParam(params, Params.STYLESHEET, "_none_");
 
 		boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
 
@@ -112,19 +115,49 @@ public class Insert implements Service
 		}
 		else uuid = UUID.randomUUID().toString();
 
-		//-----------------------------------------------------------------------
-		//--- insert metadata into the system
+		String uuidAction = Util.getParam(params, Params.UUID_ACTION,
+				Params.NOTHING);
 
-		if (category.equals("_none_")) category = null;
+		String date = new ISODate().toString();
+
+		final List<String> id = new ArrayList<String>();
+		final List<Element> md = new ArrayList<Element>();
+		String localId = null;
+		md.add(xml);
+		
+		// Import record
+		Importer.importRecord(uuid, localId , uuidAction, md, schema, 0,
+				gc.getSiteId(), gc.getSiteName(), context, id, date,
+				date, group, isTemplate);
+		
+		int iId = Integer.parseInt(id.get(0));
+		
+		
+		// Set template
+		DataManager dm = gc.getDataManager();
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		dm.setTemplate(dbms, iId, isTemplate, null);
 
-		String id = dataMan.insertMetadata(dbms, schema, category, group, xml,
-													  context.getSerialFactory(), gc.getSiteId(),
-													  uuid, isTemplate, title,
-													  context.getUserSession().getUserIdAsInt());
+		
+		// Import category
+		String category   = Util.getParam(params, Params.CATEGORY, "");
 
+		if (!category.equals("_none_") || !category.equals("")) {
+			Element categs = new Element("categories");
+			categs.addContent((new Element("category")).setAttribute(
+					"name", category));
+
+			Importer.addCategories(dm, dbms, id.get(0), categs);
+		} 
+
+		
+		// Index
+		dm.indexMetadata(dbms, id.get(0));
+		
+		
+		// Return response
 		Element response = new Element(Jeeves.Elem.RESPONSE);
-		response.addContent(new Element(Params.ID).setText(id));
+		response.addContent(new Element(Params.ID).setText(String.valueOf(iId)));
 
 		return response;
 	};

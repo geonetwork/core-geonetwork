@@ -253,14 +253,14 @@ public class LuceneSearcher extends MetaSearcher
 				for (String group : hs)
 					request.addContent(new Element("group").addContent(group));
 	
-				String owner = srvContext.getUserSession().getUserId();
+				UserSession us = srvContext.getUserSession();
+	
+				String owner = us.getUserId();
 	
 				if (owner != null)
 					request.addContent(new Element("owner").addContent(owner));
 	
 			//--- in case of an admin we have to show all results
-	
-				UserSession us = srvContext.getUserSession();
 	
 				if (us.isAuthenticated())
 				{

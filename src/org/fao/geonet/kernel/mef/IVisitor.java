@@ -28,28 +28,31 @@ import java.io.IOException;
 import java.io.InputStream;
 import org.jdom.Element;
 
-
-//=============================================================================
-
-public interface FileVisitor
+/**
+ * Register XML or binary file to process.
+ */
+public interface IVisitor
 {
-	// --------------------------------------------------------------------------
-	// ---
-	// --- API methods
-	// ---
-	// --------------------------------------------------------------------------
+	/**
+	 * Register XML or binary file to process.
+	 */
+	public void visit(File mefFile, IMEFVisitor v) throws Exception;
 
-	public void visit(File mefFile, MEFVisitor v) throws Exception;
+	/**
+	 * Register XML files.
+	 */
+	public Element handleXml(File mefFile, IMEFVisitor v) throws Exception ;
 
-	// --------------------------------------------------------------------------
-
-	public Element handleXml(File mefFile, MEFVisitor v) throws Exception ;
-
-	// --------------------------------------------------------------------------
-
-	public void handleBin(File mefFile, MEFVisitor v, Element info) throws Exception ;
-
-	// --------------------------------------------------------------------------
+	/**
+	 * Register binary file.
+	 * 
+	 * @param mefFile		a {@link File} to process
+	 * @param v				the visitor
+	 * @param info			the information file
+	 * @param index			the index to store the results
+	 * @throws Exception
+	 */
+	public void handleBin(File mefFile, IMEFVisitor v, Element info, int index) throws Exception ;
 
 }
 

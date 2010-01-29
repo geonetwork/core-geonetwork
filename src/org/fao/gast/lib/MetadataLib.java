@@ -24,15 +24,20 @@
 package org.fao.gast.lib;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
+import org.jdom.Namespace;
 
 //=============================================================================
 
@@ -249,6 +254,94 @@ public class MetadataLib
 		XmlSerializer.insert(dbms, schema, md, id, source, uuid, createDate,
 											 changeDate, template, title, owner, groupOwner);
 	}
+
+	/**
+	 * Similar to @see {@link DataManager}
+	 * @param md
+	 * @return
+	 */
+	public static String autodetectSchema(Element md)
+	{
+		Namespace nons= Namespace.NO_NAMESPACE;
+		
+		Namespace metadatadRootElemenNSUri = md.getNamespace();
+
+		List<Namespace> metadataAdditionalNS = md.getAdditionalNamespaces();
+		
+		Lib.log.debug("Autodetect schema for metadata with :\n * root element:'" + md.getQualifiedName()
+				 + "'\n * with namespace:'" + md.getNamespace()
+				 + "\n * with additional namespaces:" + metadataAdditionalNS.toString());
+		
+
+		if (md.getName().equals("Record") && md.getNamespace().equals(Csw.NAMESPACE_CSW)) {
+			return "csw-record";
+		} else if (md.getNamespace().equals(nons)) {
+			if (md.getName().equals("Metadata")) {
+				return "iso19115";
+			}
+
+			/* there are some other suggested container names,
+			 * like <dc>, <dublinCore>, <resource>, <record> and <metadata>
+			 * We may need to also check for those on import and export
+			 */
+			if (md.getName().equals("simpledc")) {
+				return "dublin-core";
+			}
+			if (md.getName().equals("metadata")) {
+				return "fgdc-std";
+			}
+		} else if (metadataAdditionalNS.contains(Csw.NAMESPACE_GMD)
+				|| metadatadRootElemenNSUri.equals(Csw.NAMESPACE_GMD)) {
+			// Here we have an iso19139 or an ISO profil
+			
+			// the root element will have different namespace (element name
+			// and additionnal namespace).
+			// this is important for profiles which usually need to override the top level
+			// element for proper definition 
+			// eg. mcp:MD_Metadata versus wmo:MD_Metadata
+			//
+			// But profil for france does not override top level element. But only sub
+			// elements.
+			// 
+			// we suppose that the root element declare the prime namespace of the profil
+			// declared as targetNamespace of schema.xsd.
+			// eg. <gmd:MD_Metadata  xmlns:gmd="http://www.isotc211.org/2005/gmd
+			//	 xmlns:fra="http://www.cnig.gouv.fr/2005/fra" ...
+			HashMap<String, String> schemas = new HashMap<String, String>();
+			// Here we need to declare namespace known by catalogue because
+			// GAST in command line can't define catalogue schemas and prime 
+			// namespace. We should probably not use this method to get such information.
+			schemas.put("iso19139.fra", "http://www.cnig.gouv.fr/2005/fra");
+			
+			for (String schema : schemas.keySet())
+	        {
+	        	String primeNs = schemas.get(schema);
+
+				// Check if gmd is not the root element namespace
+				// and root element as a namespace which is
+				// defined in one schema, we have an ISO profil
+				// and current schema is ok. 
+				if (metadatadRootElemenNSUri.equals(primeNs) && 
+						!metadatadRootElemenNSUri.equals(Csw.NAMESPACE_GMD)) {
+					return schema;
+				}
+				
+				// Check if a prime namespace exists in all
+				// additional namespaces of the root element
+				for (Namespace ns : metadataAdditionalNS) {
+					if (ns.getURI().equals(primeNs) &&
+							metadatadRootElemenNSUri.equals(Csw.NAMESPACE_GMD)) {
+						return schema;
+					}
+				}
+			}
+			
+			// Default schema name is 
+			return "iso19139";
+		}
+		return null;
+	}
+
 
 	//-----------------------------------------------------------------------------
 	//---

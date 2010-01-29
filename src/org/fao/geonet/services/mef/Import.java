@@ -24,6 +24,9 @@
 package org.fao.geonet.services.mef;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.List;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -33,40 +36,56 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.jdom.Element;
 
-//=============================================================================
-
-public class Import implements Service
-{
+/**
+ * Import MEF file.
+ * 
+ */
+public class Import implements Service {
 	private String stylePath;
-	
+
 	public void init(String appPath, ServiceConfig params) throws Exception {
 		this.stylePath = appPath + Geonet.Path.IMPORT_STYLESHEETS;
 	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		String mefFile   = Util.getParam(params, "mefFile");
+	/**
+	 * Service to import MEF File.
+	 * 
+	 * 
+	 * @param params
+	 *            List of parameters:
+	 *            <ul>
+	 *            <li>mefFile: file to upload</li>
+	 *            <li>file_type: "single" for loading a single XML file, "mef" to
+	 *            load MEF file (version 1 or 2). "mef" is the default value.</li>
+	 *            </ul>
+	 * 
+	 * @return List of imported ids.
+	 * 
+	 */
+	public Element exec(Element params, ServiceContext context)
+			throws Exception {
+		String mefFile = Util.getParam(params, "mefFile");
 		String uploadDir = context.getUploadDir();
 
 		File file = new File(uploadDir, mefFile);
-		int  id   = MEFLib.doImport(params, context, file, stylePath);
 
+		List<String> id = MEFLib.doImport(params, context, file, stylePath);
+		Element result = new Element("id");
+		String ids = "";
+
+		Iterator<String> iter = id.iterator();
+		while (iter.hasNext()) {
+			String item = (String) iter.next();
+			ids += item + ";";
+
+		}
 		file.delete();
+		result.setText(ids);
 
-		//--- return success with the metadata id
-
-		Element result = new Element("ok");
-		result.setText(id +"");
-
+		// --- return success with all metadata id
 		return result;
 	}
 }
 
-//=============================================================================
+// =============================================================================
 

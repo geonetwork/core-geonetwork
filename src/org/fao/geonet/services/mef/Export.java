@@ -23,58 +23,215 @@
 
 package org.fao.geonet.services.mef;
 
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
+import jeeves.utils.Log;
 import jeeves.utils.Util;
+import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.mef.MEFLib;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.kernel.mef.MEFLib.Format;
+import org.fao.geonet.kernel.mef.MEFLib.Version;
+import org.fao.geonet.kernel.search.MetaSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
 
-//=============================================================================
+/**
+ * Export one or more metadata records in Metadata Exchange Format (MEF) file
+ * format. See http ://trac.osgeo.org/geonetwork/wiki/MEF for more details.
+ */
+public class Export implements Service {
+	private String stylePath;
+	private ServiceConfig _config;
 
-public class Export implements Service
-{
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception {
+		this.stylePath = appPath + Geonet.Path.SCHEMAS;
+		this._config = params;
+	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+	/**
+	 * Service to do a MEF export.
+	 * 
+	 * @param params
+	 *            Service input parameters:
+	 *            <ul>
+	 *            <li>uuid: Required for MEF1. Optional for MEF2, Current
+	 *            selection is used</li>
+	 *            <li>format: One of {@link Format}</li>
+	 *            <li>skipUuid: Does not add uuid and site information for
+	 *            information file.
+	 *            <li>version: If {@link Version} parameter not set, return MEF
+	 *            version 1 file (ie. need an UUID parameter).</li>
+	 *            <li>relation: export related metadata or not. True by default.
+	 *            Related metadata is : child metadata (Using parentUuid search
+	 *            field), service metadata (Using operatesOn search field),
+	 *            related metadata (Using xml.relation.get service).</li>
+	 *            </ul>
+	 */
+	public Element exec(Element params, ServiceContext context)
+			throws Exception {
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getDataManager();
+		// Get parameters
+		String file = null;
+		String uuid = Util.getParam(params, "uuid", null);
+		String format = Util.getParam(params, "format", "full");
+		String version = Util.getParam(params, "version", null);
+		String skipUUID = Util.getParam(params, "skipUuid", "false");
+		String relatedMetadataRecord = Util
+				.getParam(params, "relation", "true");
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		UserSession session = context.getUserSession();
 
-		String uuid    = Util.getParam(params, "uuid");
-		String id      = dm.getMetadataId(dbms, uuid);
-		String format  = Util.getParam(params, "format");
-		String skipUUID= Util.getParam(params, "skipUuid", "false");
+		// Use current selction if no uuid provided.
+		if (uuid != null) {
+			SelectionManager.getManager(session).addSelection(
+					SelectionManager.SELECTION_METADATA, uuid);
+		}
 
-		if (id == null)
-			throw new MetadataNotFoundEx("uuid="+uuid);
+		Log.info(Geonet.MEF, "Create export task for selected metadata(s).");
+		SelectionManager selectionManger = SelectionManager.getManager(session);
+		Set<String> uuids = selectionManger
+				.getSelection(SelectionManager.SELECTION_METADATA);
+		Set<String> uuidsBeforeExp = Collections
+				.synchronizedSet(new HashSet<String>(0));
+		Log.info(Geonet.MEF, "Current record(s) in selection: " + uuids.size());
+		uuidsBeforeExp.addAll(uuids);
 
-		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
+		// MEF version 1 only support one metadata record by file.
+		// Uuid parameter MUST be set and add to selection manager before
+		// export.
+		if (version == null) {
+			file = MEFLib.doExport(context, uuid, format, skipUUID
+					.equals("true"));
+		} else {
+			// MEF version 2 support multiple metadata record by file.
 
-		if (format.equals("full"))
-			Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
+			if (relatedMetadataRecord.equals("true")) {
+				// Adding children in MEF file
+				Set<String> tmpUuid = new HashSet<String>();
+				for (Iterator<String> iter = uuids.iterator(); iter.hasNext();) {
+					String _uuid = (String) iter.next();
 
-		String file = MEFLib.doExport(context, uuid, format, skipUUID.equals("true"));
+					// Creating request for services search
+					Element childRequest = new Element("request");
+					childRequest.addContent(new Element("parentUuid")
+							.setText(_uuid));
 
-		return BinaryFile.encode(200, file, uuid +".mef", true);
+					// Get children to export
+					Set<String> childs = getUuidsToExport(_uuid, context,
+							childRequest);
+					if (childs.size() != 0) {
+						tmpUuid.addAll(childs);
+					}
+
+					// Creating request for services search
+					Element servicesRequest = new Element(Jeeves.Elem.REQUEST);
+					servicesRequest.addContent(new Element(
+							org.fao.geonet.constants.Params.OPERATES_ON)
+							.setText(_uuid));
+					servicesRequest.addContent(new Element(
+							org.fao.geonet.constants.Params.TYPE)
+							.setText("service"));
+
+					// Get linked services for export
+					Set<String> services = getUuidsToExport(_uuid, context,
+							servicesRequest);
+					if (services.size() != 0) {
+						tmpUuid.addAll(services);
+					}
+				}
+
+				if (selectionManger.addAllSelection(
+						SelectionManager.SELECTION_METADATA, tmpUuid))
+					Log.info(Geonet.MEF,
+							"Child and services added into the selection");
+			}
+
+			uuids = selectionManger
+					.getSelection(SelectionManager.SELECTION_METADATA);
+			Log.info(Geonet.MEF, "Building MEF2 file with " + uuids.size()
+					+ " records.");
+
+			file = MEFLib
+					.doMEF2Export(context, uuids, format, false, stylePath);
+		}
+
+		// -- Reset selection manager
+		selectionManger.close();
+		selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA,
+				uuidsBeforeExp);
+
+		String fname = String.valueOf(Calendar.getInstance().getTimeInMillis());
+
+		return BinaryFile.encode(200, file, "export-" + format + "-" + fname
+				+ ".zip", true);
+	}
+
+	/**
+	 * Run an XML query and return a list of UUIDs.
+	 * 
+	 * @param uuid
+	 *            Metadata identifier
+	 * @param context
+	 *            Current context
+	 * @param request
+	 *            XML Request to run which will search for related metadata
+	 *            records to export
+	 * @return List of related UUIDs to export
+	 * @throws Exception
+	 */
+	private Set<String> getUuidsToExport(String uuid, ServiceContext context,
+			Element request) throws Exception {
+		Log.debug(Geonet.MEF, "Creating searcher to run request: "
+				+ Xml.getString(request));
+
+		GeonetContext gc = (GeonetContext) context
+				.getHandlerContext(Geonet.CONTEXT_NAME);
+		SearchManager searchMan = gc.getSearchmanager();
+		MetaSearcher searcher = searchMan.newSearcher(SearchManager.LUCENE,
+				Geonet.File.SEARCH_LUCENE);
+
+		Set<String> uuids = new HashSet<String>();
+
+		// perform the search
+		searcher.search(context, request, _config);
+
+		// If element type found, then get their uuid
+		if (searcher.getSize() != 0) {
+			Log.debug(Geonet.MEF, "  Exporting record(s) found for metadata: "
+					+ uuid);
+			Element elt = searcher.present(context, request, _config);
+			// Get ISO records only
+			List<Element> isoElt = elt.getChildren();
+			for (Iterator<Element> i = isoElt.iterator(); i.hasNext();) {
+				Element md = (Element) i.next();
+				// -- Only metadata record should be processed
+				if (!md.getName().equals("summary")) {
+					String mdUuid = md.getChild(Edit.RootChild.INFO,
+							Edit.NAMESPACE).getChildText(Edit.Info.Elem.UUID);
+					Log.debug(Geonet.MEF, "    Adding: " + mdUuid);
+					uuids.add(mdUuid);
+				}
+			}
+		}
+		searcher.close();
+		Log.info(Geonet.MEF, "  Found " + uuids.size() + " record(s).");
+
+		return uuids;
 	}
 }
-
-//=============================================================================
-

@@ -161,7 +161,8 @@ public class SearchManager
 		// heikki doeleman: UUID must be case insensitive, as its parts are hexadecimal numbers which
 		// are not case sensitive.
 		_analyzer.addAnalyzer("_uuid", new StandardAnalyzer());
-		_analyzer.addAnalyzer("operatesOn", new WhitespaceAnalyzer());
+		_analyzer.addAnalyzer("parentUuid", new StandardAnalyzer());
+		_analyzer.addAnalyzer("operatesOn", new StandardAnalyzer());
 		_analyzer.addAnalyzer("subject", new KeywordAnalyzer());
 		
 		initLucene(appPath, luceneDir);

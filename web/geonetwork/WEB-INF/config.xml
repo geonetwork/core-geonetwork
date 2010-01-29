@@ -126,7 +126,17 @@
 		<param name="licenseDir" value="WEB-INF/licenses" />
 		<param name="thesauriDir" value="WEB-INF/gsthesauri" />
 		<param name="codeListDir" value="xml/codelist" />
-	    <param name="summaryConfig" value="WEB-INF/config-summary.xml" />	    
+	    <param name="summaryConfig" value="WEB-INF/config-summary.xml" />
+		<!-- Preferred schema parameter is used on import
+			when a ZIP or MEF file is imported with more than one
+			xml files. For example, export produce one file for
+			iso19139 and on file for the ISO profil (eg. fra, che).
+			
+			Recommanded value is iso19139 if user is not 
+			interested for having metadata in a specific
+			ISO profil.
+		-->
+		<param name="preferredSchema" value="iso19139" />
 	</appHandler>
 
 	<!-- ====================================================================== -->
@@ -869,14 +879,15 @@
 
 		<service name="mef.import">
 			<class name=".services.mef.Import" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" /> 
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="mef.export">
 			<class name=".services.mef.Export" />
-
 			<output file="true" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

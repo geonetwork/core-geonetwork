@@ -23,19 +23,44 @@
 
 package org.fao.geonet.kernel.mef;
 
-/**
- * Main MEF constants. 
- */
-class MEFConstants {
+import java.io.File;
 
-	static final String DIR_PUBLIC = "public/";
-	static final String DIR_PRIVATE = "private/";
-	static final String FILE_METADATA = "metadata.xml";
-	static final String FILE_INFO = "info.xml";
-	static final String VERSION = "1.1";
-	static final String XML_EXTENSION = ".xml";
-	static final String MD_DIR = "metadata/";
-	static final String SCHEMA = "applschema/";
-	static final String FS = "/";
-	static final String FILE_METADATA_19139 = "metadata.iso19139.xml";
+import jeeves.exceptions.BadFormatEx;
+import jeeves.utils.Xml;
+
+import org.jdom.Element;
+
+/**
+ * Import an XML file and create a temporary information file before passing the
+ * information to the MEF visitor.
+ * 
+ */
+public class XmlVisitor implements IVisitor {
+
+	public void visit(File xmlFile, IMEFVisitor v) throws Exception {
+		handleXml(xmlFile, v);
+	}
+
+	/**
+	 * Load an XML file and pass it to a MEF visitor.
+	 */
+	public Element handleXml(File xmlFile, IMEFVisitor v) throws Exception {
+
+		Element md = null;
+		md = Xml.loadFile(xmlFile);
+		if (md == null)
+			throw new BadFormatEx("Missing xml metadata file .");
+
+		v.handleMetadata(md, 0);
+
+		// Generate dummy info file.
+		Element info = null;
+		info = new Element("info");
+		v.handleInfo(info, 0);
+		return info;
+	}
+
+	public void handleBin(File mefFile, IMEFVisitor v, Element info, int index)
+			throws Exception {
+	}
 }

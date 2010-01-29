@@ -39,53 +39,37 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class Get implements Service
-{
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+public class Get implements Service {
+	public void init(String appPath, ServiceConfig params) throws Exception {
+	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Service
+	// ---
+	// --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getDataManager();
+	public Element exec(Element params, ServiceContext context)
+			throws Exception {
+		GeonetContext gc = (GeonetContext) context
+				.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager dm = gc.getDataManager();
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		Dbms dbms = (Dbms) context.getResourceManager()
+				.open(Geonet.Res.MAIN_DB);
 
 		int id = Util.getParamAsInt(params, "id");
-
 		String relation = Util.getParam(params, "relation", "normal");
+		Set<String> result = getRelation(relation, id, dbms);
 
-		Set<String> result = new HashSet<String>();
+		// --- retrieve metadata and return result
+		Element response = new Element("response");
 
-		//--- perform proper queries to retrieve the id set
-
-		if (relation.equals("normal") || relation.equals("full"))
-		{
-			String query = "SELECT relatedId FROM Relations WHERE id=?";
-			result.addAll(retrieveIds(dbms, query, "relatedid", id));
-		}
-
-		if (relation.equals("reverse") || relation.equals("full"))
-		{
-			String query = "SELECT id FROM Relations WHERE relatedId=?";
-			result.addAll(retrieveIds(dbms, query, "id", id));
-		}
-
-		//--- retrieve metadata and return result
-
-		Element response =  new Element("response");
-
-		for (String mdId : result)
-		{
+		for (String mdId : result) {
 			Element md = dm.getMetadata(context, mdId, false);
 
-			//--- we could have a race condition so, just perform a simple check
-
+			// --- we could have a race condition so, just perform a simple
+			// check
 			if (md != null)
 				response.addContent(md);
 		}
@@ -93,18 +77,55 @@ public class Get implements Service
 		return response;
 	}
 
-	//--------------------------------------------------------------------------
+	/**
+	 * Method to query Relation table and get a Set of identifiers of related
+	 * metadata
+	 * 
+	 * @param relation
+	 *            Could be normal, reverse or full
+	 * @param id
+	 *            Metadata identifier
+	 * @param dbms
+	 * @return
+	 * @throws SQLException
+	 */
+	public static Set<String> getRelation(String relation, int id, Dbms dbms)
+			throws SQLException {
+		String query;
+		Set<String> result = new HashSet<String>();
 
-	private Set<String> retrieveIds(Dbms dbms, String query, String field, int id) throws SQLException
-	{
-		List records = dbms.select(query, id).getChildren();
+		// --- perform proper queries to retrieve the id set
+		if (relation.equals("normal") || relation.equals("full")) {
+			query = "SELECT relatedId FROM Relations WHERE id=?";
+			result.addAll(retrieveIds(dbms, query, "relatedid", id));
+		}
 
+		if (relation.equals("reverse") || relation.equals("full")) {
+			query = "SELECT id FROM Relations WHERE relatedId=?";
+			result.addAll(retrieveIds(dbms, query, "id", id));
+		}
+
+		return result;
+	}
+
+	/**
+	 * Run the query and load a Set based on query results.
+	 * 
+	 * @param dbms
+	 * @param query
+	 * @param field
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	private static Set<String> retrieveIds(Dbms dbms, String query,
+			String field, int id) throws SQLException {
+		List<Element> records = dbms.select(query, new Integer(id)).getChildren();
 		Set<String> results = new HashSet<String>();
 
-		for (Object o : records)
-		{
+		for (Object o : records) {
 			Element rec = (Element) o;
-			String  val = rec.getChildText(field);
+			String val = rec.getChildText(field);
 
 			results.add(val);
 		}
@@ -112,6 +133,3 @@ public class Get implements Service
 		return results;
 	}
 }
-
-//=============================================================================
-

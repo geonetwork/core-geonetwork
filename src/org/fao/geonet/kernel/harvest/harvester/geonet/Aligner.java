@@ -32,10 +32,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import jeeves.exceptions.BadFormatEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
+import jeeves.utils.Log;
+import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -44,9 +48,9 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
-import org.fao.geonet.kernel.mef.MEFFileVisitor;
-import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFVisitor;
+import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.mef.IMEFVisitor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.ISODate;
@@ -190,26 +194,30 @@ public class Aligner
 
 		try
 		{
-			MEFLib.visit(mefFile, new MEFFileVisitor(), new MEFVisitor()
+			MEFLib.visit(mefFile, new MEFVisitor(), new IMEFVisitor()
 			{
-				public void handleMetadata(Element mdata) throws Exception
+				public void handleMetadata(Element mdata, int index) throws Exception
 				{
-					md[0] = mdata;
+					md[index] = mdata;
+				}
+
+				//--------------------------------------------------------------------
+				
+				public void handleMetadataFiles(File[] files, int index) throws Exception {}
+				
+				//--------------------------------------------------------------------
+
+				public void handleInfo(Element info, int index) throws Exception
+				{
+					id[index] = addMetadata(ri, md[index], info, localRating);
 				}
 
 				//--------------------------------------------------------------------
 
-				public void handleInfo(Element info) throws Exception
-				{
-					id[0] = addMetadata(ri, md[0], info, localRating);
-				}
-
-				//--------------------------------------------------------------------
-
-				public void handlePublicFile(String file, String changeDate, InputStream is) throws IOException
+				public void handlePublicFile(String file, String changeDate, InputStream is, int index) throws IOException
 				{
 					log.debug("    - Adding remote public file with name:"+ file);
-					String pubDir = Lib.resource.getDir(context, "public", id[0]);
+					String pubDir = Lib.resource.getDir(context, "public", id[index]);
 
 					File outFile = new File(pubDir, file);
 					FileOutputStream os = new FileOutputStream(outFile);
@@ -220,6 +228,14 @@ public class Aligner
 				//--------------------------------------------------------------------
 
 				public void handlePrivateFile(String file, String changeDate, InputStream is) {}
+				
+				public void handleFeatureCat(Element md, int index)
+						throws Exception {
+					// Feature Catalog not managed for harvesting
+				}
+
+				public void handlePrivateFile(String file, String changeDate,
+						InputStream is, int index) throws IOException {}
 			});
 		}
 		catch(Exception e)
@@ -445,31 +461,46 @@ public class Aligner
 
 			try
 			{
-				MEFLib.visit(mefFile, new MEFFileVisitor(), new MEFVisitor()
+				MEFLib.visit(mefFile, new MEFVisitor(), new IMEFVisitor()
 				{
-					public void handleMetadata(Element mdata) throws Exception
+					public void handleMetadata(Element mdata, int index) throws Exception
 					{
-						md[0] = mdata;
+						md[index] = mdata;
+					}
+
+					//-----------------------------------------------------------------
+					
+					public void handleMetadataFiles(File[] files, int index) throws Exception
+					{
+						//md[index] = mdata;
+					}
+					
+					public void handleInfo(Element info, int index) throws Exception
+					{
+						updateMetadata(ri, id, md[index], info, localRating);
+						publicFiles[index] = info.getChild("public");
 					}
 
 					//-----------------------------------------------------------------
 
-					public void handleInfo(Element info) throws Exception
+					public void handlePublicFile(String file, String changeDate, InputStream is, int index) throws IOException
 					{
-						updateMetadata(ri, id, md[0], info, localRating);
-						publicFiles[0] = info.getChild("public");
-					}
-
-					//-----------------------------------------------------------------
-
-					public void handlePublicFile(String file, String changeDate, InputStream is) throws IOException
-					{
-						updateFile(id, file, changeDate, is, publicFiles[0]);
+						updateFile(id, file, changeDate, is, publicFiles[index]);
 					}
 
 					//-----------------------------------------------------------------
 
 					public void handlePrivateFile(String file, String changeDate, InputStream is) {}
+								
+					public void handleFeatureCat(Element md, int index)
+							throws Exception {
+						// Feature Catalog not managed for harvesting
+					}
+
+					public void handlePrivateFile(String file,
+							String changeDate, InputStream is, int index)
+							throws IOException {}
+					
 				});
 			}
 			catch(Exception e)

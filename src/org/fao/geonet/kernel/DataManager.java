@@ -2397,6 +2397,21 @@ public class DataManager
 		throw new IllegalArgumentException("Cannot find a namespace to set for element "+md.getQualifiedName()+" with namespace URI "+nsUri);
 	}
 
+	/**
+	 * Update group owner when handling privileges during import.
+	 * Does not update the index.
+	 * 
+	 * @param dbms
+	 * @param mdId
+	 * @param grpId
+	 * @throws Exception
+	 */
+	public void setGroupOwner(Dbms dbms, String mdId, String grpId)
+			throws Exception {
+		dbms.execute("UPDATE Metadata SET groupOwner=? WHERE id=?", Integer
+				.parseInt(grpId), Integer.parseInt(mdId));
+	}
+	
 	//--------------------------------------------------------------------------
 	//---
 	//--- Variables

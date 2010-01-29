@@ -110,6 +110,9 @@ public class Show implements Service
 			}			
 		}
 		
+		if (id == null)
+			throw new MetadataNotFoundEx("Metadata not found.");
+		
 		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
 
 		//-----------------------------------------------------------------------

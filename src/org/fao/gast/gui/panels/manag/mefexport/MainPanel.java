@@ -134,9 +134,9 @@ public class MainPanel extends FormPanel
 		btnBrowse.addActionListener(this);
 		btnBrowse.setActionCommand("browse");
 
-		cmbFormat.addItem(Messages.getString("simple"));
-		cmbFormat.addItem(Messages.getString("partial"));
-		cmbFormat.addItem(Messages.getString("full"));
+		cmbFormat.addItem("simple");
+		cmbFormat.addItem("partial");
+		cmbFormat.addItem("full");
 
 
 		return p;

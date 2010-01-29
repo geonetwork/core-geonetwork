@@ -46,6 +46,7 @@ public class Params
 	public static final String GROUP        = "group";
 	public static final String GROUPS       = "groups";
 	public static final String ID           = "id";
+	public static final String RELATED_ID   = "relatedid";
     public static final String PARENT_ID    = "parentId";
     public static final String CHILD_ID     = "childId";
 	public static final String UUID         = "uuid";
@@ -85,6 +86,7 @@ public class Params
 	public static final String RATING       = "rating";
 	public static final String FILE_TYPE    = "file_type";
 	public static final String GENERATE_UUID= "generateUUID";
+	public static final String OPERATES_ON  = "operatesOn";	
 	public static final String UUID_ACTION  = "uuidAction";
 	public static final String NOTHING      = "nothing";
 	public static final String PROCESS      = "process";

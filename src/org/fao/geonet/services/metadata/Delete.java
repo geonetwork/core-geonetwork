@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import jeeves.constants.Jeeves;
+import jeeves.exceptions.MissingParameterEx;
 import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -72,8 +73,27 @@ public class Delete implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		String id = Util.getParam(params, Params.ID);
-
+		// the metadata ID
+		String id;
+		
+		// does the request contain a UUID ?
+		try {
+			String uuid = Util.getParam(params, Params.UUID);
+			// lookup ID by UUID
+			id = dataMan.getMetadataId(context, uuid);	
+		}
+		catch(MissingParameterEx x) {
+			// request does not contain UUID; use ID from request
+			try {
+				id = Util.getParam(params, Params.ID);
+			}
+			// request does not contain ID
+			catch(MissingParameterEx xx) {
+				// give up
+				throw new Exception("Request must contain a UUID or an ID");
+			}			
+		}
+		
 		//-----------------------------------------------------------------------
 		//--- check access
 

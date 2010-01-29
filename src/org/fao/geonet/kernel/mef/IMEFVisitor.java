@@ -20,46 +20,29 @@
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
+
 package org.fao.geonet.kernel.mef;
 
 import java.io.File;
-
-import jeeves.exceptions.BadFormatEx;
-import jeeves.utils.Xml;
-
+import java.io.IOException;
+import java.io.InputStream;
 import org.jdom.Element;
 
-public class XMLFileVisitor implements FileVisitor {
-	
-	// --------------------------------------------------------------------------
-	// ---
-	// --- API methods
-	// ---
-	// --------------------------------------------------------------------------
+/**
+ * Register XML or binary file to process for a MEF file.
+ */
+public interface IMEFVisitor {
+	public void handleMetadata(Element md, int index) throws Exception;
 
-	public void visit(File mefFile, MEFVisitor v) throws Exception {
-		Element info = handleXml(mefFile, v);
-	}
+	public void handleMetadataFiles(File[] File, int index) throws Exception;
 
-	// --------------------------------------------------------------------------
+	public void handleInfo(Element md, int index) throws Exception;
 
-	public Element handleXml(File mefFile, MEFVisitor v)
-			throws Exception {
-				
-		Element md = null;
-		Element info = null;
+	public void handleFeatureCat(Element md, int index) throws Exception;
 
-		md = Xml.loadFile(mefFile);
-		info = new Element("info");
+	public void handlePublicFile(String file, String changeDate,
+			InputStream is, int index) throws IOException;
 
-		if (md == null)
-			throw new BadFormatEx("Missing xml metadata file .");
-
-		v.handleMetadata(md);
-		v.handleInfo(info);
-
-		return info;
-	}
-	
-	public void handleBin(File mefFile, MEFVisitor v, Element info) throws Exception {}
+	public void handlePrivateFile(String file, String changeDate,
+			InputStream is, int index) throws IOException;
 }
