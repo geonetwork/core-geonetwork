@@ -35,6 +35,7 @@
 				<call name="services" class="jeeves.guiservices.services.Get"/>
 				<call name="currTab"  class=".guiservices.util.GetCurrentMDTab"/>
 				<call name="position" class=".guiservices.util.GetPositionMD"/>
+				<call name="relation" class =".guiservices.metadata.GetRelated"/>
 				<call name="sources"  class=".guiservices.util.Sources"/>
 				<call name="isoLang"  class=".guiservices.isolanguages.Get"/>
 			</output>
@@ -53,6 +54,7 @@
 				<call name="services" class="jeeves.guiservices.services.Get"/>
 				<call name="currTab"  class=".guiservices.util.GetCurrentMDTab"/>
 				<call name="position" class=".guiservices.util.GetPositionMD"/>
+				<call name="relation" class =".guiservices.metadata.GetRelated"/>
 				<call name="sources"  class=".guiservices.util.Sources"/>
 				<call name="isoLang"  class=".guiservices.isolanguages.Get"/>
 			</output>
@@ -69,8 +71,9 @@
 
 			<output sheet="metadata-edit.xsl">
 				<call name="currTab"       class =".guiservices.util.GetCurrentMDTab"/>
-				<call name="position" 		 class =".guiservices.util.GetPositionMD"/>
+				<call name="position" 	   class =".guiservices.util.GetPositionMD"/>
 				<call name="groups"        class =".guiservices.groups.GetMine"/>
+				<call name="relation"  	   class =".guiservices.metadata.GetRelated"/>
 				<call name="regions"       class =".guiservices.regions.Get"/>
 				<call name="sources"       class =".guiservices.util.Sources"/>
 				<call name="isoLang"       class =".guiservices.isolanguages.Get"/>
@@ -317,6 +320,16 @@
 			<output sheet="metadata-massive-results.xsl">
 				<xml name="info" file="xml/metadata-massiveXslProcessing.xml" />
 			</output>
+		</service>
+		
+		<service name="metadata.processing">
+			<class name=".services.metadata.XslProcessing"/>
+			<output forward="metadata.edit" />
+		</service>
+		
+		<service name="xml.metadata.processing">
+			<class name=".services.metadata.XslProcessing"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
 		</service>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

@@ -36,4 +36,15 @@
   Google AJAX API Terms of Use http://code.google.com/apis/ajaxlanguage/terms.html
  -->
  <editor-google-translate>0</editor-google-translate>
+ 
+ <!-- Metadata relation information
+ Comment out this element to turn off metadata relation display in metadata
+ edit and view mode. 
+ -->
+ <editor-metadata-relation/>
+ 
+ <!-- Proxy URL to use for XHR. 
+ Check that the proxy could query allowed hosts.
+ -->
+ <proxy-url>/cgi-bin/proxy.cgi</proxy-url>
 </config>

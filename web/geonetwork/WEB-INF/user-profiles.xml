@@ -153,6 +153,8 @@
 		<allow service="metadata.update.forget"/>
 		<allow service="metadata.update.forgetandfinish"/>
 		<allow service="metadata.validate"/>
+		<allow service="metadata.processing"/>
+		<allow service="xml.metadata.processing"/>
 
 		<!-- Allow to add a metadata record in XML format -->
 		<allow service="metadata.xmlinsert.form"/>
