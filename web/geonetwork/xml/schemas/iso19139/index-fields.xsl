@@ -302,7 +302,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 
 		<xsl:for-each select="gmd:parentIdentifier/gco:CharacterString">
-			<Field name="parentId" string="{string(.)}" store="true" index="true" token="false"/>
+			<Field name="parentUuid" string="{string(.)}" store="true" index="true" token="false"/>
 		</xsl:for-each>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

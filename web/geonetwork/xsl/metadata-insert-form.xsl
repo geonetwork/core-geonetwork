@@ -56,18 +56,16 @@
                     Element.hide('gn.fileUp');
                     Element.show('gn.xmlUp');
                     $('gn.fileType').style.display='none';
-                    $('gn.uuidAction').style.display='none';
                     document.xmlinsert.enctype="application/x-www-form-urlencoded";
-										document.xmlinsert.encoding="application/x-www-form-urlencoded";
+					document.xmlinsert.encoding="application/x-www-form-urlencoded";
                     document.xmlinsert.action=Env.locService+"/metadata.insert.paste";
                     document.xmlinsert.target='_self';
                 } else {
                     Element.hide('gn.xmlUp');
                     Element.show('gn.fileUp');
                     $('gn.fileType').style.display='';
-                    $('gn.uuidAction').style.display='';
                     document.xmlinsert.enctype="multipart/form-data";
-										document.xmlinsert.encoding="multipart/form-data";
+					document.xmlinsert.encoding="multipart/form-data";
                     document.xmlinsert.action=Env.locService+"/mef.import";
                     document.xmlinsert.target='upFrame';
                 }
@@ -96,12 +94,15 @@
             function doFileUpload(){
                 var response = $('upFrame').contentWindow.document;
                 var elt;
+                var error;
+                
                 if (response.XMLDocument){
-                	elt = response.XMLDocument.selectSingleNode('ok');
+                	elt = response.XMLDocument.selectSingleNode('id');
+                	error = response.XMLDocument.selectSingleNode('error');
                 } else {
-                	elt = response.getElementsByTagName('ok')[0]; 
+                	elt = response.getElementsByTagName('id')[0];
+                	error = response.getElementsByTagName('error')[0];  
                 }
-                var error = $('upFrame').contentWindow.document.getElementById('error');
                 
                 if (elt != null || error != null) {
                 	$('btInsert').style.display='none';
@@ -112,34 +113,41 @@
                 			id= elt.text;
                 		else
                 			id = elt.firstChild.nodeValue;
-                	createResponseForm(id);
+                		createResponseForm(id);
                 	} else if (error != null){
-                		$('back').style.display='none';
-                		displayError(error);
+                		displayError(error.textContent);
                 	}
                     $('gn.result').style.display = 'block';
                 }   
             }
             
+            /**
+             * Create link to inserted metadata records.
+             */
             function createResponseForm(value) {
+                var ids = value.split(";");
                 var contentElt = $('gn.resultContent');
-                var id = document.createTextNode(value);
-                var element = document.createElement("a");
-                var space = document.createTextNode("&#160;");
+                for (var i=0; i &lt; ids.length - 1; i++) {
+                    var id = document.createTextNode(ids[i]);
+                    var element = document.createElement("a");
+                    var space = document.createTextNode("&#160;");
+                    
+                    element.setAttribute("href", "metadata.show?id=" + ids[i] + "&amp;currTab=simple");
+                    element.appendChild(id);
+                    contentElt.appendChild(element);
+                    contentElt.appendChild(space);
+                }
                 
-                element.setAttribute("href", Env.locService+"/metadata.show?id="+value+"&amp;currTab=simple");
-                element.appendChild(id);
-                
-                contentElt.appendChild(element);
-                contentElt.appendChild(space);
             }
             
-            function displayError(errorDiv) {
+            
+            function displayError(errorMessage) {
             	var content = $('gn.resultContent');
             	$('gn.resultTitle').innerHTML = "" ;
            		if (!$('error')) {
-           			content.appendChild(errorDiv);
-           			$('goBack').onclick = function () { 
+           			var msg = document.createTextNode(errorMessage);
+           			content.appendChild(msg);
+           			$('back').onclick = function () { 
            				load('metadata.xmlinsert.form');
            			};
            		}

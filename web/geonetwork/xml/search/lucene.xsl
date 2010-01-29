@@ -290,6 +290,18 @@ compiles a request
 			<xsl:with-param name="field" select="'_uuid'"/>
 		</xsl:call-template>
 
+		<!-- parent uuid -->
+		<xsl:call-template name="textField">
+			<xsl:with-param name="expr" select="/request/parentUuid"/>
+			<xsl:with-param name="field" select="'parentUuid'"/>
+		</xsl:call-template>
+		
+		<!-- operates on (identify datasets link to services) -->
+		<xsl:call-template name="textField">
+			<xsl:with-param name="expr" select="/request/operatesOn"/>
+			<xsl:with-param name="field" select="'operatesOn'"/>
+		</xsl:call-template>
+		
 		<!-- template -->
 		<xsl:choose>
 			<xsl:when test="string(/request/template)='y'">
