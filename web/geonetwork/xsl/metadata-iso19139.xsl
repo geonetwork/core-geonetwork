@@ -260,12 +260,12 @@
 						<xsl:if test="$NEG!=''"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
 					</input>
 					<label for="N{$ref}"><xsl:value-of select="/root/gui/strings/durationSign"/></label><br/>
-					<xsl:value-of select="/root/gui/strings/durationNbYears"/><input type="text" id="Y{$ref}" value="{substring-before(substring-after($p, 'P'), 'Y')}" size="4" onchange="buildDuration('{$ref}');" onkeyup="validateNumber(this,true,false);"/>-
-					<xsl:value-of select="/root/gui/strings/durationNbMonths"/><input type="text" id="M{$ref}" value="{substring-before(substring-after($p, 'Y'), 'M')}" size="4" onchange="buildDuration('{$ref}');" onkeyup="validateNumber(this,true,false);"/>-
-					<xsl:value-of select="/root/gui/strings/durationNbDays"/><input type="text" id="D{$ref}" value="{substring-before(substring-after($p, 'M'), 'DT')}" size="4" onchange="buildDuration('{$ref}');" onkeyup="validateNumber(this,true,false);"/><br/>
-					<xsl:value-of select="/root/gui/strings/durationNbHours"/><input type="text" id="H{$ref}" value="{substring-before(substring-after($p, 'DT'), 'H')}" size="4" onchange="buildDuration('{$ref}');" onkeyup="validateNumber(this,true,false);"/>-
-					<xsl:value-of select="/root/gui/strings/durationNbMinutes"/><input type="text" id="MI{$ref}" value="{substring-before(substring-after($p, 'H'), 'M')}" size="4" onchange="buildDuration('{$ref}');" onkeyup="validateNumber(this,true,false);"/>-
-					<xsl:value-of select="/root/gui/strings/durationNbSeconds"/><input type="text" id="S{$ref}" value="{substring-before(substring-after(substring-after($p,'M' ),'M' ), 'S')}" size="4" onchange="buildDuration('{$ref}');" onkeyup="validateNumber(this,true,true);"/><br/>
+					<xsl:value-of select="/root/gui/strings/durationNbYears"/><input type="text" id="Y{$ref}" class="content" value="{substring-before(substring-after($p, 'P'), 'Y')}" size="4" onchange="buildDuration('{$ref}');" onkeyup="validateNumber(this,true,false);"/>-
+					<xsl:value-of select="/root/gui/strings/durationNbMonths"/><input type="text" id="M{$ref}" class="content" value="{substring-before(substring-after($p, 'Y'), 'M')}" size="4" onchange="buildDuration('{$ref}');" onkeyup="validateNumber(this,true,false);"/>-
+					<xsl:value-of select="/root/gui/strings/durationNbDays"/><input type="text" id="D{$ref}" class="content" value="{substring-before(substring-after($p, 'M'), 'DT')}" size="4" onchange="buildDuration('{$ref}');" onkeyup="validateNumber(this,true,false);"/><br/>
+					<xsl:value-of select="/root/gui/strings/durationNbHours"/><input type="text" id="H{$ref}" class="content" value="{substring-before(substring-after($p, 'DT'), 'H')}" size="4" onchange="buildDuration('{$ref}');" onkeyup="validateNumber(this,true,false);"/>-
+					<xsl:value-of select="/root/gui/strings/durationNbMinutes"/><input type="text" id="MI{$ref}" class="content" value="{substring-before(substring-after($p, 'H'), 'M')}" size="4" onchange="buildDuration('{$ref}');" onkeyup="validateNumber(this,true,false);"/>-
+					<xsl:value-of select="/root/gui/strings/durationNbSeconds"/><input type="text" id="S{$ref}" class="content" value="{substring-before(substring-after(substring-after($p,'M' ),'M' ), 'S')}" size="4" onchange="buildDuration('{$ref}');" onkeyup="validateNumber(this,true,true);"/><br/>
 					<input type="hidden" name="_{$ref}" id="_{$ref}" value="{$p}" size="20"/><br/>
 					
 				</xsl:when>

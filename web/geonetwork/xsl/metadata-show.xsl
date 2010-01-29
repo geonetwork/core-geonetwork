@@ -25,7 +25,7 @@
 	-->
 	<xsl:template mode="script" match="/">
 		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"></script>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=effects,controls"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"></script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-show.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
