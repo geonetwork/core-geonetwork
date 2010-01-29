@@ -19,7 +19,7 @@
 
 	<!-- =============================================================== -->
 
-	<target name="compile" depends="cachingxslt, jeeves, gn, im" />
+	<target name="compile" depends="cachingxslt, jeeves, schematron, gn, im" />
 
 	<!-- Classpath for GeoNetwork -->
 	<path id="geonetwork.class.path">
@@ -28,6 +28,12 @@
 		</fileset>
 	</path>
 
+	<!-- =============================================================== -->
+
+	<target name="schematron">
+		<ant dir="schematrons" target="schematron"/>
+	</target>
+		
 	<!-- =============================================================== -->
 
 	<target name="jeeves">
