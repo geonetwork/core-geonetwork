@@ -71,6 +71,30 @@ compiles a request
 			<xsl:with-param name="field" select="'any'"/>
 		</xsl:call-template>
 
+		<!-- type -->
+		<xsl:call-template name="textField">
+			<xsl:with-param name="expr" select="/request/type"/>
+			<xsl:with-param name="field" select="'type'"/>
+		</xsl:call-template>
+
+		<!-- schema -->
+		<xsl:call-template name="textField">
+			<xsl:with-param name="expr" select="/request/_schema"/>
+			<xsl:with-param name="field" select="'_schema'"/>
+		</xsl:call-template>
+		
+		<!-- operates On -->
+		<xsl:call-template name="textField">
+			<xsl:with-param name="expr" select="/request/operatesOn"/>
+			<xsl:with-param name="field" select="'operatesOn'"/>
+		</xsl:call-template>
+		
+		<!-- parent UUID -->
+		<xsl:call-template name="textField">
+			<xsl:with-param name="expr" select="/request/parentUuid"/>
+			<xsl:with-param name="field" select="'parentUuid'"/>
+		</xsl:call-template>
+		
 		<xsl:if test="string(/request/themekey) != ''">
 			<BooleanClause prohibited="false" required="true">
 				<BooleanQuery>

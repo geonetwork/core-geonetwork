@@ -220,7 +220,7 @@
 				CSW 2.0.2 ISO profil does not support dc:URI elements.
 				What could be done is to add an output format supporting dclite4g 
 				http://wiki.osgeo.org/wiki/DCLite4G (TODO)
-				
+				-->
 			<xsl:for-each select="
 				gmd:identificationInfo/srv:SV_ServiceIdentification[srv:serviceType/gco:LocalName='OGC:WMS']|
 				gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification' and srv:serviceType/gco:LocalName='OGC:WMS']">
@@ -237,12 +237,14 @@
 					</xsl:choose>
 				</xsl:variable>
 				
+				<dc:URI protocol="OGC:WMS-1.1.1-http-get-capabilities"><xsl:value-of select="$serviceUrl"/></dc:URI>
 				<xsl:for-each select="srv:coupledResource/srv:SV_CoupledResource">
 					<xsl:if test="gco:ScopedName!=''">
 						<dc:URI protocol="OGC:WMS" name="{gco:ScopedName}"><xsl:value-of select="$serviceUrl"/></dc:URI>
 					</xsl:if>
 				</xsl:for-each>
-				</xsl:for-each>
+				 
+			</xsl:for-each>
 			
 			
 			<xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">

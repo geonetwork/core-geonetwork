@@ -18,7 +18,7 @@
 	<xsl:template match="gfc:FC_FeatureCatalogue">
 		 <xsl:copy>
 		 	<xsl:attribute name="uuid"><xsl:value-of select="/root/env/uuid"/></xsl:attribute>
-		 	<xsl:apply-templates select="@*|node()"/>
+		 	<xsl:apply-templates select="@*[name(.) != 'uuid']|node()"/>
 		 </xsl:copy>
 	</xsl:template>
 	
