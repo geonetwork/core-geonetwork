@@ -23,63 +23,78 @@
 
 package org.fao.geonet.services.relations;
 
+import java.util.List;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import jeeves.utils.Xml;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 //=============================================================================
 
-/** Insert the relation between two metadata records
+/**
+ * Insert the relation between two metadata records. Input parameters could be
+ * UUID or internal id.
  * 
-  */
+ * TODO : Should we add a relation type to store different kind of relation. For
+ * the time being, relation table is used to store link between iso19139 and
+ * iso19110 metadata records.
+ */
 
-public class Insert implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class Insert implements Service {
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception {
+	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+	/*
+	 * Insert the relation between two metadata records.
+	 * If it already exist, bypass insert statement and an alreadyExist flag.
+	 * 
+	 * @see jeeves.interfaces.Service#exec(org.jdom.Element,
+	 * jeeves.server.context.ServiceContext) Parameter name: parentId - Parent
+	 * metadata identifier Parameter name: childId - Child metadata identifier
+	 */
+	public Element exec(Element params, ServiceContext context)
+			throws Exception {
+		int parentId = Integer.parseInt(Utils.getIdentifierFromParameters(
+				params, context, Params.PARENT_UUID, Params.PARENT_ID));
+		int childId = Integer.parseInt(Utils.getIdentifierFromParameters(
+				params, context, Params.CHILD_UUID, Params.CHILD_ID));
+
+		Dbms dbms = (Dbms) context.getResourceManager()
+				.open(Geonet.Res.MAIN_DB);
+
+		String query = "Select count(*) exist from Relations where id=? and relatedId=?";
+		Element record = dbms.select(query, parentId, childId).getChild("record");
+		boolean exist = false;
+		if (record.getChild("exist").getText().equals("1")) {
+			exist = true;
+		} else {
+			// Add new relation
+			query = "INSERT INTO Relations (id, relatedId) "
+					+ "VALUES (?, ?)";
 	
-	
-	/* Insert the relation between two metadata records
-	 * @see jeeves.interfaces.Service#exec(org.jdom.Element, jeeves.server.context.ServiceContext)
-	 * Parameter name: parentId - Parent metadata identifier 
-     * Parameter name: childId - Child metadata identifier 
-     */
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		int parentId       = Util.getParamAsInt(params, Params.PARENT_ID);
-		int childId = Util.getParamAsInt(params, Params.CHILD_ID);
-
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
-		// Add new relation
-		String query = "INSERT INTO Relations (id, relatedId) "+"VALUES (?, ?)";
-
-		dbms.execute(query, parentId, childId);
+			dbms.execute(query, parentId, childId);
+		}
 		
 		Element response = new Element(Jeeves.Elem.RESPONSE)
-		    .addContent(new Element("parentId").setText(String.valueOf(parentId)))
-		    .addContent(new Element("childId").setText(String.valueOf(childId)));
-		
+				.setAttribute("alreadyExist", String.valueOf(exist))
+				.addContent(
+						new Element("parentId").setText(String
+								.valueOf(parentId)))
+				.addContent(
+						new Element("childId").setText(String.valueOf(childId)));
+
 		return response;
 	}
 }
 
-//=============================================================================
+// =============================================================================
 

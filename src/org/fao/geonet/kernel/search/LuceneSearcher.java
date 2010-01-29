@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.search;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -130,6 +131,10 @@ public class LuceneSearcher extends MetaSearcher
 
 	//--------------------------------------------------------------------------------
 
+	/**
+	 * @return		An empty response if no result or a list of results. Return
+	 * only geonet:info element in fast mode. 
+	 */
 	public Element present(ServiceContext srvContext, Element request, ServiceConfig config)
 		throws Exception
 	{
@@ -650,6 +655,61 @@ public class LuceneSearcher extends MetaSearcher
             response.addContent(md);
         }
         return response;
+    }
+
+	/**
+     * Search in Lucene index and return Lucene index
+     * field value. Metadata records is retrieved 
+     * based on its uuid.
+     * 
+     * @param id metadata uuid
+     * @param fieldname lucene field value
+     * @param languageCode (NOT USED : only one language index here).
+     * @return
+     */
+    public static String getMetadataFromIndex(String appPath, String id, String fieldname, String languageCode) throws Exception
+    {
+    	String value = "";
+    	File luceneDir = new File(appPath + "WEB-INF/lucene/nonspatial");
+        IndexReader reader = IndexReader.open(luceneDir);
+        Searcher searcher = new IndexSearcher(reader);
+        
+    	try {	
+			TermQuery query = new TermQuery(new Term("_uuid", id));
+	    	Hits hits = searcher.search(query);
+	        
+	        for (int j=0; j<hits.length(); j++) {
+        		Document doc = hits.doc(j);
+	    	
+		        Element record = new Element("record");
+		        List<Field> fields = doc.getFields();
+		        
+		        for (Iterator<Field> i = fields.iterator(); i.hasNext();) {
+		            Field field = i.next();
+		            String name = field.name();
+		            
+		            if (name.equals(fieldname)) {
+		            	value = field.stringValue();
+		            	break;
+		            	// TODO : handle multiple fields ?
+		            }
+	        	}
+	        }
+	        
+	        searcher.close();
+	        reader.close();
+    	} catch (CorruptIndexException e) {
+			// TODO: handle exception
+    		System.out.println (e.getMessage());
+		} catch (IOException e) {
+			// TODO: handle exception
+			System.out.println (e.getMessage());
+		} finally {
+			searcher.close();
+			reader.close();
+		}
+	
+        return value;
     }
 }
 

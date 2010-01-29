@@ -136,4 +136,29 @@ public final class XslUtil
 
         return results.toString();
     }
+    
+
+    /**
+     * Get field value for metadata identified by uuid. Return "" if uuid not found.
+     * 
+     * @param appPath 	Application path to access Lucene index in a static context
+     * @param uuid 		Metadata uuid
+     * @param field 	Lucene field name
+     * @param lang 		Language of the index to search in
+     * 
+     * @return metadata title
+     */
+    public static String getIndexField(Object appPath, Object uuid, Object field, Object lang)
+    {
+    	String path = appPath.toString();
+    	String id = uuid.toString();
+    	String fieldname = field.toString();
+    	String language = (lang.toString().equals("")?Geonet.DEFAULT_LANGUAGE:lang.toString());
+    	try {
+    		return LuceneSearcher.getMetadataFromIndex(path, id, fieldname, language);
+    	} catch (Exception e) {
+			Log.debug(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
+    		return "";
+		}
+    }
 }

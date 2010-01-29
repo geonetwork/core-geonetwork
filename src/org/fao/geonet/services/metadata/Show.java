@@ -38,6 +38,7 @@ import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.Utils;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -89,26 +90,7 @@ public class Show implements Service
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getDataManager();
 
-		// the metadata ID
-		String id;
-		
-		// does the request contain a UUID ?
-		try {
-			String uuid = Util.getParam(params, Params.UUID);
-			// lookup ID by UUID
-			id = dm.getMetadataId(context, uuid);	
-		}
-		catch(MissingParameterEx x) {
-			// request does not contain UUID; use ID from request
-			try {
-				id = Util.getParam(params, Params.ID);
-			}
-			// request does not contain ID
-			catch(MissingParameterEx xx) {
-				// give up
-				throw new Exception("Request must contain a UUID or an ID");
-			}			
-		}
+		String id = Utils.getIdentifierFromParameters(params, context);
 		
 		if (id == null)
 			throw new MetadataNotFoundEx("Metadata not found.");

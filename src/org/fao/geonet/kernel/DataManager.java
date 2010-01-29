@@ -1427,6 +1427,9 @@ public class DataManager
 						} else {
 							// clean before update
 							el.removeContent();
+
+							fragment = addNamespaceToFragment(fragment);
+			                
 							// Add content
 							el.addContent(Xml.loadString(fragment, false));
 						}
@@ -1732,13 +1735,12 @@ public class DataManager
         }
 			} else if(xmlContent)
 			{
-                el.removeContent();
-                //add the gml namespace if its missing
-                if (val.contains("<gml:") && !val.contains("xmlns:gml=\"")) {
-                    val = val.replaceFirst("<gml:([^ >]+)", "<gml:$1 xmlns:gml=\"http://www.opengis.net/gml\"");
-                }
-                el.addContent(Xml.loadString(val, false));
-                Log.debug(Geonet.DATA_MANAGER, "replacing XML content");
+				Log.debug(Geonet.DATA_MANAGER, "replacing XML content");
+				el.removeContent();
+				
+				val = addNamespaceToFragment(val);
+
+				el.addContent(Xml.loadString(val, false));
             }
 			else
 			{
@@ -2343,6 +2345,27 @@ public class DataManager
 		for (Object o : md.getChildren())
 			setNamespacePrefix((Element) o, ns);
 	}
+	
+	//---------------------------------------------------------------------------
+
+	/**
+	 * Add missing namespace (ie. GML) to XML inputs. It should be done by the client side
+	 * but add a check in here.
+	 * 
+	 * @param fragment 		The fragment to be checked and processed.
+	 * 
+	 * @return 				The updated fragment.
+	 */
+	private String addNamespaceToFragment(String fragment)
+	{
+        //add the gml namespace if its missing
+        if (fragment.contains("<gml:") && !fragment.contains("xmlns:gml=\"")) {
+        	Log.debug(Geonet.DATA_MANAGER, "  Add missing GML namespace.");
+        	fragment = fragment.replaceFirst("<gml:([^ >]+)", "<gml:$1 xmlns:gml=\"http://www.opengis.net/gml\"");
+        }
+		return fragment;
+	}
+	
 
 	//--------------------------------------------------------------------------
 

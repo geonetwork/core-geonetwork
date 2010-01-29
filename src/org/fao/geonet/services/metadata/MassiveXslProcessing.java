@@ -47,6 +47,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 //=============================================================================
@@ -106,54 +107,16 @@ public class MassiveXslProcessing implements Service {
 
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(session);
-
+		
 		synchronized(sm.getSelection("metadata")) {
-		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter
-				.hasNext();) {
-			String uuid = (String) iter.next();
-			String id = dataMan.getMetadataId(dbms, uuid);
-			context.info("Processing metadata with id:" + id);
-
-			MdInfo info = dataMan.getMetadataInfo(dbms, id);
-
-			if (info == null) {
-				notFound.add(new Integer(id));
-			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(new Integer(id));
-			} else {
-
-				// -----------------------------------------------------------------------
-				// --- check processing exist for current schema
-				String schema = info.schemaId;
-				String filePath = _appPath + "xml/schemas/" + schema
-						+ "/process/" + process + ".xsl";
-				File xslProcessing = new File(filePath);
-				if (!xslProcessing.exists()) {
-					context.info("  Processing instruction not found for "
-							+ schema + " schema.");
-					notProcessFound.add(new Integer(id));
-					continue;
-				}
-
-				// --- Process metadata
-				Element md = dataMan.getMetadata(context, id, false);
-				// -- here we send parameters set by user from 
-				// URL if needed.
-				List<Element> children = params.getChildren();
-				Map<String, String> xslParameter = new HashMap<String, String>();
-				for (Element param : children) {
-					xslParameter.put(param.getName(), param.getTextTrim());
-				}
-				Element processedMetadata = Xml.transform(md, filePath, xslParameter);
-				
-
-				// --- save metadata and return status
-				dataMan.updateMetadata(context.getUserSession(), dbms, id,
-						processedMetadata, false, null, context.getLanguage());
-
-				metadata.add(new Integer(id));
+			for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter
+					.hasNext();) {
+				String uuid = (String) iter.next();
+				String id = dataMan.getMetadataId(dbms, uuid);
+				context.info("Processing metadata with id:" + id);
+	
+				XslProcessing.process(id, process, _appPath, params, context, metadata, notFound, notOwner, notProcessFound);
 			}
-		}
 		}
 
 

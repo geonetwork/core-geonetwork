@@ -21,53 +21,47 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.services.relations;
+package org.fao.geonet.guiservices.util;
 
-import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 //=============================================================================
 
-/** Removes a user from the system. It removes the relationship to a group too
-  */
+/** 
+ * This service returns the application path
+ * mainly used for XSL call to static java
+ * method which could need such information to get
+ * access to Lucene index for example.
+ * 
+ * TODO : Could we make this better ? from static context
+ * get application path ?
+ */
 
-public class Remove implements Service
+public class GetAppPath implements Service
 {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
-
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	private String appPath = null;
+	
+	public void init(String appPath, ServiceConfig params) throws Exception {
+		this.appPath = appPath;
+	}
 
 	//--------------------------------------------------------------------------
 	//---
-	//--- Service to delete a related resource
-	//--- 
+	//--- Service
+	//---
 	//--------------------------------------------------------------------------
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		int parentId = Integer.parseInt(Utils.getIdentifierFromParameters(
-				params, context, Params.PARENT_UUID, Params.PARENT_ID));
-		int childId = Integer.parseInt(Utils.getIdentifierFromParameters(
-				params, context, Params.CHILD_UUID, Params.CHILD_ID));
+		Element root = new Element("root");
+		root.addContent(new Element(Geonet.Elem.APP_PATH).setText(appPath));
 
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
-		dbms.execute ("DELETE FROM Relations WHERE id=" + String.valueOf(parentId) 
-		        + " AND relatedId=" + String.valueOf(childId));
-
-		return new Element(Jeeves.Elem.RESPONSE);
+		return root;
 	}
 }
 

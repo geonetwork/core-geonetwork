@@ -32,9 +32,11 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 //=============================================================================
@@ -51,23 +53,48 @@ public class Get implements Service {
 
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
+		int id = Integer.parseInt(Utils.getIdentifierFromParameters(params,
+				context));
+		String relation = Util.getParam(params, "relation", "normal");
+
+		return getRelation(id, relation, context);
+	}
+
+	/**
+	 * TODO : should we move relation management in DataManager or in a specific
+	 * relation management class ?
+	 * 
+	 * @param id
+	 * @param relation
+	 * @param context
+	 * @return
+	 * @throws Exception 
+	 */
+	public static Element getRelation(int id, String relation, ServiceContext context) throws Exception {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dm = gc.getDataManager();
-
 		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
+		.open(Geonet.Res.MAIN_DB);
+		
+		Set<String> result = new HashSet<String>();
+		
+		// --- perform proper queries to retrieve the id set
+		if (relation.equals("normal") || relation.equals("full")) {
+			String query = "SELECT relatedId FROM Relations WHERE id=?";
+			result.addAll(retrieveIds(dbms, query, "relatedid", id));
+		}
 
-		int id = Util.getParamAsInt(params, "id");
-		String relation = Util.getParam(params, "relation", "normal");
-		Set<String> result = getRelation(relation, id, dbms);
+		if (relation.equals("reverse") || relation.equals("full")) {
+			String query = "SELECT id FROM Relations WHERE relatedId=?";
+			result.addAll(retrieveIds(dbms, query, "id", id));
+		}
 
 		// --- retrieve metadata and return result
 		Element response = new Element("response");
 
 		for (String mdId : result) {
 			Element md = dm.getMetadata(context, mdId, false);
-
 			// --- we could have a race condition so, just perform a simple
 			// check
 			if (md != null)
@@ -75,37 +102,6 @@ public class Get implements Service {
 		}
 
 		return response;
-	}
-
-	/**
-	 * Method to query Relation table and get a Set of identifiers of related
-	 * metadata
-	 * 
-	 * @param relation
-	 *            Could be normal, reverse or full
-	 * @param id
-	 *            Metadata identifier
-	 * @param dbms
-	 * @return
-	 * @throws SQLException
-	 */
-	public static Set<String> getRelation(String relation, int id, Dbms dbms)
-			throws SQLException {
-		String query;
-		Set<String> result = new HashSet<String>();
-
-		// --- perform proper queries to retrieve the id set
-		if (relation.equals("normal") || relation.equals("full")) {
-			query = "SELECT relatedId FROM Relations WHERE id=?";
-			result.addAll(retrieveIds(dbms, query, "relatedid", id));
-		}
-
-		if (relation.equals("reverse") || relation.equals("full")) {
-			query = "SELECT id FROM Relations WHERE relatedId=?";
-			result.addAll(retrieveIds(dbms, query, "id", id));
-		}
-
-		return result;
 	}
 
 	/**
