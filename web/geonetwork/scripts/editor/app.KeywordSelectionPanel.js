@@ -311,7 +311,9 @@ app.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
         method: 'GET',
         scope: this,
         success: function(response) {
-          this.keywordsSelected.push(response.responseText);
+          var keyword = response.responseText;
+          if (keyword.indexOf('<gmd:MD_Keywords') != -1)
+          	this.keywordsSelected.push(response.responseText);
           Ext.getCmp('keywordSearchValidateButton').enable();
           this.ThesaurusCount -= 1;
           if (this.ThesaurusCount == 0) {

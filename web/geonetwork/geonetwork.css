@@ -337,16 +337,7 @@ editor
 }
 #editorOverlay[id] { position: fixed; }
 
-div.toolTipOverlay {
-	background: #fff;
-    max-width: 600px!important;
-    height: auto;
-	font-weight: normal;
-	position: absolute;
-	border-style: solid;
-	margin: 2px;
-	padding: 2px;
-}
+
 
 /*******************************************************************************
 utilities
@@ -833,6 +824,45 @@ div.relatedElements ul li ul li ul {
     font-style: italic;
 }
 
+.validation-report fieldset {
+    margin: 5px 2px 2px 2px;
+    padding: 5px 2px 2px 2px;
+}
+
+.validation-report img {
+    vertical-align:middle;
+    height:8px;
+    width:8px;
+}
+
+.validation-report ul li {
+    margin-left:25px;
+    margin-top:3px;
+    /*list-style-type:disc;*/
+}
+.validation-report ul li ul li {
+    list-style-type: disc;
+}
+
+div.toolTipOverlay {
+	background: #fff;
+    max-width: 600px!important;
+    height: auto;
+	font-weight: normal;
+	position: absolute;
+	border-style: solid;
+	margin: 2px;
+	padding: 2px;
+}
+
+
+div.toolTipOverlay ul li, div.shortcutHelp ul li {
+    margin-left:15px;
+    list-style-type: disc;
+}
+
 .addIcon { background-image: url('images/add.png') !important; }
 .searchIcon { background-image: url('images/find.png') !important; }
+.validationReportIcon { background-image: url('images/schematron.gif') !important; }
+.shortcutHelpIcon { background-image: url('images/schematron.gif') !important; }
 .linkIcon { background-image: url('images/link.png') !important; }

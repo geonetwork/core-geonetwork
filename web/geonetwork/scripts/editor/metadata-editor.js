@@ -50,15 +50,50 @@ function setBunload(on)
 	}
 }
 
-function gn_editKeyObserver(e)
-{
-	// nothing yet - but a key to save the metadata would be nice
-}
-
 function doEditorLoadActions() 
 {
 	setBunload(true);
-	Event.observe(window,'keypress',gn_editKeyObserver);
+	// Define editor shortcut here.
+	// Documentation on shortcuts is defined in /root/gui/strings/helpShortcutsEditor
+	var map = new Ext.KeyMap(document, [
+	    {
+	        key: "s",
+	        ctrl:true,
+	        shift:true,
+	        fn: function(){ $('btnSave').onclick(); }
+	    },{
+	        key: "q",
+	        ctrl:true,
+	        shift:true,
+	        fn: function(){ $('btnSaveAndClose').onclick(); }
+	    },{
+	        key: "v",
+	        ctrl:true,
+	        shift:true,
+	        fn: function(){ $('btnValidate').onclick(); }
+	    },{
+	        key: "t",
+	        ctrl:true,
+	        shift:true,
+	        fn: function(){ $('btnThumbnails').onclick(); }
+	    },{
+	        key: "r",
+	        ctrl:true,
+	        shift:true,
+	        fn: function(){ $('btnReset').onclick(); }
+	    },{
+	        key: "c",
+	        ctrl:true,
+	        shift:true,
+	        fn: function(){ $('btnCancel').onclick(); }
+	    },{
+       		key: 112,
+       	    fn: function(){
+	  	    	displayBox(null, 'shortcutHelp', true);
+	        }
+	    }
+	]);
+	map.enable();
 }
 
 Event.observe(window,'load',doEditorLoadActions);
@@ -407,7 +442,7 @@ function doSaveAction(action,validateAction)
 					var html = req.responseText;
 					if (divToRestore) divToRestore.removeClassName('editing');
 					if (html.startsWith("<?xml") < 0) { // service returns xml on success
-						alert("Save failed: "+html);
+						alert(translate("errorSaveFailed") + html);
 					}
 					
 					setBunload(false);
@@ -428,11 +463,10 @@ function doSaveAction(action,validateAction)
 				parameters: $('editForm').serialize(true),
 				evalScripts: true,
 				onComplete: function(req) {
-					if (typeof validateAction != 'undefined') {
-						doActionInWindow.delay(1,validateAction); // delay the validate
-					}
+					getValidationReport();
 					setBunload(true); // reset warning for window destroy
 					validateMetadataFields();
+					initTooltip();
 				},
 				onFailure: function(req) { 
 					alert(translate("errorSaveFailed") + "/ status " + req.status+" text: " + req.statusText + " - " + translate("tryAgain"));
@@ -445,34 +479,8 @@ function doSaveAction(action,validateAction)
 
 }
 
-function doActionInWindow(action)
-{
-
-	var metadataId = document.mainForm.id.value;
-	var pars = "&id="+metadataId;
-
-	var myAjax = new Ajax.Request(getGNServiceURL(action),
-		{
-			method: 'get',
-			parameters: pars,
-			onSuccess: function(req) {
-				var html = req.responseText;
-				var myWindow = window.open('about:blank',"popWindow","location=no, toolbar=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=800, height=600");	
-				myWindow.document.write(html);
-				myWindow.document.close();
-				
-				// Check elements
-				validateMetadataFields();
-				
-				setBunload(true); // reset warning for window destroy
-			},
-			onFailure: function(req) { 
-				alert(translate("errorOnAction") + action + " / status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
-   			$('editorBusy').hide();
-				setBunload(true); // reset warning for window destroy
-			}
-		}
-	);
+function initTooltip() {
+	console.log('Init tooltips');
 }
 
 function doCancelAction(action, message)
@@ -493,11 +501,12 @@ function doConfirm(action, message)
 	return false;
 }
 
-function doEditorAlert(message)
+function doEditorAlert(divId, imgId)
 {
-	alert(message);
+	$(divId).style.display='block';
 	setBunload(true); // reset warning for window destroy
 }
+
 
 // called when protocol select field changes in metadata form
 function checkForFileUpload(fref, pref)
@@ -1233,5 +1242,46 @@ function updateUpperCardinality(ref, value) {
         $(ref).value = '';
         $(isInf).value = 'false';
     }
+}
+
+
+
+function updateValidationReportVisibilityRules(errorOnly) {
+	$('validationReport').descendants().each(function(el) {
+		if (el.nodeName == 'LI') {
+			if (el.getAttribute('name')=='pass' && errorOnly) {
+				el.style.display = "none";
+			} else {
+				el.style.display = "block";
+			}
+		}
+    });
+}
+
+
+/**
+ * Get the validation report for current metadata record
+ * and display the report if success.
+ */
+function getValidationReport()
+{	var metadataId = document.mainForm.id.value;
+	var pars = "&id="+metadataId;
+	var action = 'metadata.validate';
+	var myAjax = new Ajax.Request(getGNServiceURL(action),
+		{
+			method: 'get',
+			parameters: pars,
+			onSuccess: function(req) {
+				var html = req.responseText;
+				displayBox(html, 'validationReport', false);
+				setBunload(true); // reset warning for window destroy
+			},
+			onFailure: function(req) { 
+				alert(translate("errorOnAction") + action + " / status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
+   				$('editorBusy').hide();
+				setBunload(true); // reset warning for window destroy
+			}
+		}
+	);
 }
 

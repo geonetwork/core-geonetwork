@@ -9,6 +9,26 @@
 	<nl>Nederlands</nl> <!-- Do not translate -->
 	<ru>Русский</ru> <!-- Do not translate! -->
 	
+	<shortcutHelp js="true">Help on shortcuts ?</shortcutHelp>
+	<helpShortcutsEditor>
+		<h2>Shortcuts in editing mode:</h2>
+		<hr/>
+		<ul>
+			<li>ctrl+shift+s: Save editing</li>
+			<li>ctrl+shift+v: Validate document</li>
+			<li>ctrl+shift+q: Save and close editing</li>
+			<li>ctrl+shift+t: Set thumbnail for current metadata</li>
+			<li>ctrl+shift+r: Reset editing</li>
+			<li>ctrl+shift+c: Cancel editing</li>
+		</ul>
+	</helpShortcutsEditor>
+	<validationReport js="true">Validation report</validationReport>
+	<errorsOnly>View errors only</errorsOnly>
+	<schematronReport>Compliance to metadata recommandations (Schematron)</schematronReport>
+	<xsdReport>Compliance to metadata standard (XML Schema)</xsdReport>
+	<rules name="schematron-rules-inspire">INSPIRE implementing rules</rules>
+	<rules name="schematron-rules-iso">ISO 19115/19119 rules</rules>
+	<rules name="schematron-rules-geonetwork">GeoNetwork recommandations</rules>	
 	<getCapabilitiesLayer js="true">GetCapabilities layer</getCapabilitiesLayer>
 	<ServiceUpdateError js="true">Error during service metadata update</ServiceUpdateError>
 	<NotOwnerError js="true">You don't have privileges to update this related record.</NotOwnerError>
@@ -64,6 +84,7 @@
 	<noComment js="true">No comment</noComment>
 	<rateMetadataFailed js="true">Cannot rate metadata.</rateMetadataFailed>
 	<error js="true">Error</error>
+	<errors>errors</errors>
 	<northSouth js="true">North &lt; South</northSouth>
 	<north90 js="true">North &gt; 90 degrees</north90>
 	<south90 js="true">South &lt; -90 degrees</south90>

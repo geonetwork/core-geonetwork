@@ -297,3 +297,55 @@ function get_cookie ( cookie_name )
 				}
 		);
 	}
+	
+	
+	
+	
+
+/**
+ * Display a popup, update the content if needed.
+ * modal box are collapsibled and centered.
+ */
+function displayBox(content, contentDivId, modal) {
+	var id = contentDivId + "Box";
+	
+	if (content != null) {
+		$(contentDivId).innerHTML = '';
+		$(contentDivId).innerHTML = content;
+	}
+	
+	$(contentDivId).style.display = 'block'
+	
+	var w = Ext.getCmp(id);
+	
+	if (!w) {
+		w = new Ext.Window({
+	        title: translate(contentDivId),
+	        id: id,
+	        layout: 'fit',
+	        modal: modal,
+	        constrain: true,
+	        width: 400,
+	        collapsible: (modal?false:true),
+	        autoScroll: true,
+	        iconCls: contentDivId + 'Icon',
+	        closeAction: 'hide',
+	        onEsc: 'hide',
+	        listeners: {
+	            hide: function() {
+	                this.hide();
+	            }
+	        },
+	        contentEl: contentDivId
+	    });
+	}
+
+    if (w) {
+    	w.show();
+    	w.setHeight(345);
+    	w.setWidth(Ext.get(contentDivId).getWidth());
+    	w.anchorTo(Ext.getBody(), (modal?'c-c':'tr-tr'));	// Align top right if not modal, or center
+    }
+
+}
+	
