@@ -39,6 +39,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.mef.MEF2Visitor;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.IMEFVisitor;
+import org.fao.geonet.kernel.mef.MEFVisitor;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
@@ -60,7 +61,7 @@ public class MefLib {
 
 		Lib.log.info("Adding MEF file : " + mefFile.getAbsolutePath());
 
-		MEFLib.visit(mefFile, new MEF2Visitor(), new IMEFVisitor() {
+		MEFLib.visit(mefFile, new MEFVisitor(), new IMEFVisitor() {
 			public void handleMetadata(Element mdata, int index)
 					throws Exception {
 				md[index] = mdata;
