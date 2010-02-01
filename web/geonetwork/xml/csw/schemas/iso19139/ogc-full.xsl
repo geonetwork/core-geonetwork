@@ -308,8 +308,6 @@
 					</dc:URI>
 				</xsl:if>
 			</xsl:for-each>
-			-->
-
 			
 			<!-- GeoNetwork elements added when resultType is equal to results_with_summary -->
 			<xsl:if test="$displayInfo = 'true'">
