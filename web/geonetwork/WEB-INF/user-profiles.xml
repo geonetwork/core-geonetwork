@@ -28,6 +28,10 @@
 		<allow service="util.ping"/>
 		<allow service="util.empty"/>
 		<allow service="util.select"/>
+		
+		<!-- Order templates -->
+        <allow service="metadata.templates.list"/>
+		<allow service="metadata.templates.displayorder.save"/>		
 
 		<!-- Edit the context sensitive help -->
 		<allow service="help.edit.form"/>
