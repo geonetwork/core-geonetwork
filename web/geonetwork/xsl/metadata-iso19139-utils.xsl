@@ -173,7 +173,7 @@
 						
 						Display a tree representation of parent
 					-->
-		        	<xsl:if test="normalize-space($parent)!='' or $children or $edit">
+		        	<xsl:if test="(normalize-space($parent)!='' or $children or $edit) and geonet:info/schema != 'iso19110'">
 		        		<h3><img src="{/root/gui/url}/images/dataset.gif"
 		        			alt="{/root/gui/strings/linkedParentMetadataHelp}" title="{/root/gui/strings/linkedParentMetadataHelp}" align="absmiddle"/>
 		        			<xsl:value-of select="/root/gui/strings/linkedParentMetadata"/></h3>
@@ -228,7 +228,7 @@
 
 					<!-- Services linked to a dataset using an operatesOn elements.
 						Not displayed for services. -->
-					<xsl:if test="not($isService) and ($services or $edit)">
+					<xsl:if test="not($isService) and ($services or $edit) and geonet:info/schema != 'iso19110'">
 						<xsl:if test="$services or $edit">
 							<h3><img src="{/root/gui/url}/images/service.gif"
 								alt="{/root/gui/strings/associateService}" title="{/root/gui/strings/associateService}" align="absmiddle"/><xsl:value-of select="/root/gui/strings/linkedServices"/></h3>
@@ -301,43 +301,65 @@
 					
 		        	<!-- Feature Catalogue (not available for service metadata records)
 		        		. -->
-		        	<xsl:if test="not($isService) and ($relatedRecords or $edit)">
-	        			<h3><img src="{/root/gui/url}/images/dataset.gif"
-	        				align="absmiddle"/>
-	        				<xsl:value-of select="/root/gui/strings/linkedFeatureCatalogue"/></h3>
-	        			<ul>
-	        				<xsl:for-each select="$relatedRecords">
-	        					<li><a class="arrow" href="metadata.show?uuid={geonet:info/uuid}">
-	        						<xsl:call-template name="getMetadataTitle">
-	        							<xsl:with-param name="uuid" select="geonet:info/uuid"/>
-	        						</xsl:call-template>
-	        					</a>
-        						<xsl:if test="$edit">
-        							<!-- Allow deletion of coupledResource and operatesOn element -->
-        							<xsl:text> </xsl:text>
-        							<a href="xml.relation.delete?parentUuid={$metadata/geonet:info/uuid}&amp;childUuid={geonet:info/uuid}">
-        								<img alt="{/root/gui/strings/delete}" title="{/root/gui/strings/delete}"
-        									src="{/root/gui/url}/images/del.gif"
-        									align="absmiddle"
-        								/>
-        							</a>
-        						</xsl:if>
-	        					</li>
-	        				</xsl:for-each>
-	        			</ul>
-		        		
-		        		<xsl:if test="$edit">
-		        			<img alt="{/root/gui/strings/linkedFeatureCatalogueHelp}" title="{/root/gui/strings/linkedFeatureCatalogueHelp}"
-		        				src="{/root/gui/url}/images/plus.gif"
+		        	<xsl:choose>
+		        		<!-- If feature catalogue, list related datasets -->
+		        		<xsl:when test="geonet:info/schema = 'iso19110'">
+	        				<h3><img src="{/root/gui/url}/images/dataset.gif"
 		        				align="absmiddle"/>
-		        			<xsl:text> </xsl:text>
-		        			<a alt="{/root/gui/strings/linkedFeatureCatalogueHelp}" title="{/root/gui/strings/linkedFeatureCatalogueHelp}"
-		        				href="#" onclick="javascript:showLinkedMetadataSelectionPanel(null, 'iso19110');">
-		        				<xsl:value-of select="/root/gui/strings/createLinkedFeatureCatalogue"/></a>
-		        		</xsl:if>
-		        		<br/>						
-		        		<br/>
-	        		</xsl:if>
+		        				<xsl:value-of select="/root/gui/strings/linkedDataset"/></h3>
+		        			<ul>
+		        				<xsl:for-each select="$relatedRecords">
+		        					<li><a class="arrow" href="metadata.show?uuid={geonet:info/uuid}">
+		        						<xsl:call-template name="getMetadataTitle">
+		        							<xsl:with-param name="uuid" select="geonet:info/uuid"/>
+		        						</xsl:call-template>
+		        						</a>
+	        						</li>
+	        					</xsl:for-each>
+	        				</ul>
+	        				<!-- TODO : Add menu to link a dataset if needed -->
+		        		</xsl:when>
+		        		<xsl:otherwise>
+		        			<xsl:if test="not($isService) and ($relatedRecords or $edit)">
+			        			<h3><img src="{/root/gui/url}/images/dataset.gif"
+			        				align="absmiddle"/>
+			        				<xsl:value-of select="/root/gui/strings/linkedFeatureCatalogue"/></h3>
+			        			<ul>
+			        				<xsl:for-each select="$relatedRecords">
+			        					<li><a class="arrow" href="metadata.show?uuid={geonet:info/uuid}">
+			        						<xsl:call-template name="getMetadataTitle">
+			        							<xsl:with-param name="uuid" select="geonet:info/uuid"/>
+			        						</xsl:call-template>
+			        					</a>
+		        						<xsl:if test="$edit">
+		        							<!-- Allow deletion of coupledResource and operatesOn element -->
+		        							<xsl:text> </xsl:text>
+		        							<a href="xml.relation.delete?parentUuid={$metadata/geonet:info/uuid}&amp;childUuid={geonet:info/uuid}">
+		        								<img alt="{/root/gui/strings/delete}" title="{/root/gui/strings/delete}"
+		        									src="{/root/gui/url}/images/del.gif"
+		        									align="absmiddle"
+		        								/>
+		        							</a>
+		        						</xsl:if>
+			        					</li>
+			        				</xsl:for-each>
+			        			</ul>
+				        		
+				        		<xsl:if test="$edit">
+				        			<img alt="{/root/gui/strings/linkedFeatureCatalogueHelp}" title="{/root/gui/strings/linkedFeatureCatalogueHelp}"
+				        				src="{/root/gui/url}/images/plus.gif"
+				        				align="absmiddle"/>
+				        			<xsl:text> </xsl:text>
+				        			<a alt="{/root/gui/strings/linkedFeatureCatalogueHelp}" title="{/root/gui/strings/linkedFeatureCatalogueHelp}"
+				        				href="#" onclick="javascript:showLinkedMetadataSelectionPanel(null, 'iso19110');">
+				        				<xsl:value-of select="/root/gui/strings/createLinkedFeatureCatalogue"/></a>
+				        		</xsl:if>
+				        		<br/>						
+				        		<br/>
+			        		</xsl:if>
+
+		        		</xsl:otherwise>
+		        	</xsl:choose>
 				</div>
 			</xsl:if>
 

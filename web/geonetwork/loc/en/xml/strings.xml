@@ -35,7 +35,8 @@
 	<NoServiceURLError js="true">Check that selected service URL is defined.</NoServiceURLError>
 	<GetCapabilitiesDocumentError js="true">Error loading service GetCapabilities document from URL: </GetCapabilitiesDocumentError>
 	<noOperatesOn>No related dataset</noOperatesOn>
-	<linkedFeatureCatalogue>Related feature catalogues:</linkedFeatureCatalogue>
+    <linkedDataset>Related datasets:</linkedDataset>
+    <linkedFeatureCatalogue>Related feature catalogues:</linkedFeatureCatalogue>
 	<linkedFeatureCatalogueHelp>Add a relation between current metadata record
 	and a feature catalogue in ISO19110 standard.</linkedFeatureCatalogueHelp>
 	<createLinkedFeatureCatalogue>Link feature catalogue</createLinkedFeatureCatalogue>

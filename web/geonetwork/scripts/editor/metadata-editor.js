@@ -466,7 +466,6 @@ function doSaveAction(action,validateAction)
 					getValidationReport();
 					setBunload(true); // reset warning for window destroy
 					validateMetadataFields();
-					initTooltip();
 				},
 				onFailure: function(req) { 
 					alert(translate("errorSaveFailed") + "/ status " + req.status+" text: " + req.statusText + " - " + translate("tryAgain"));
@@ -477,10 +476,6 @@ function doSaveAction(action,validateAction)
 		);
 	}
 
-}
-
-function initTooltip() {
-	console.log('Init tooltips');
 }
 
 function doCancelAction(action, message)
