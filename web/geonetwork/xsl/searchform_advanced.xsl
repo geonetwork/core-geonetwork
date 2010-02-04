@@ -74,7 +74,9 @@
 				<xsl:value-of select="/root/gui/strings/searchAllText"/>
 			</th>
 			<td style="padding-bottom:10px;">
-				<input name="any" id="any" class="content"  size="20" value="{/root/gui/searchDefaults/any}"/>
+				<span title="{/root/gui/strings/searchhelp/searchAllText}">
+					<input name="any" id="any" class="content"  size="20" value="{/root/gui/searchDefaults/any}"/>
+				</span>
 			</td>
 		</tr>
 		
@@ -114,7 +116,9 @@
 				<xsl:value-of select="/root/gui/strings/rtitle"/>
 			</th>
 			<td style="padding-bottom:5px;">
-				<input name="title" id="title" class="content"  size="20" value="{/root/gui/searchDefaults/title}"/>
+				<span title="{/root/gui/strings/searchhelp/rtitle}">
+					<input name="title" id="title" class="content"  size="20" value="{/root/gui/searchDefaults/title}"/>
+				</span>
 			</td>
 		</tr>
 		<tr>
@@ -122,7 +126,9 @@
 				<xsl:value-of select="/root/gui/strings/abstract"/>
 			</th>
 			<td style="padding-bottom:5px;">
-				<input name="abstract" id="abstract" class="content"  size="20" value="{/root/gui/searchDefaults/abstract}"/>
+				<span title="{/root/gui/strings/searchhelp/abstract}">
+					<input name="abstract" id="abstract" class="content"  size="20" value="{/root/gui/searchDefaults/abstract}"/>
+				</span>
 			</td>
 		</tr>
 		<tr>
@@ -130,7 +136,14 @@
 				<xsl:value-of select="/root/gui/strings/keywords"/>
 			</th>
 			<td style="padding-bottom:5px;">
-				<input id="themekey" name="themekey" onClick="javascript:popKeyword (this, $(keywordSelectorFrame));" class="content" size="20" value="{/root/gui/searchDefaults/themekey}"/>
+				<span title="{/root/gui/strings/searchhelp/keywords}">
+					<input id="themekey" name="themekey" onClick="javascript:popKeyword (this, $(keywordSelectorFrame));"
+				 		class="content" size="20" value="{/root/gui/searchDefaults/themekey}"/>
+				</span>
+
+	  			<a style="cursor:pointer;" onclick="javascript:showSearchKeywordSelectionPanel();">
+	  				<img src="{/root/gui/url}/images/find.png" alt="{/root/gui/strings/searchhelp/thesaurus}" title="{/root/gui/strings/searchhelp/thesaurus}"/>
+				</a>
 				
 				<div id="keywordSelectorFrame" class="keywordSelectorFrame" style="display:none;z-index:1000;">
 					<div id="keywordSelector" class="keywordSelector"/>

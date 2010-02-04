@@ -872,7 +872,84 @@ function showKeywordSelectionPanel(ref, name) {
     keywordSelectionWindow.show();
 }
 
+/**
+ * Property: searchKeywordSelectionWindow
+ * The window in which we can select keywords
+ */
+var searchKeywordSelectionWindow;
 
+/**
+ * Display keyword selection panel
+ * 
+ * @return
+ */
+function showSearchKeywordSelectionPanel() {
+    if (!searchKeywordSelectionWindow) {
+        var searchKeywordSelectionPanel = new app.KeywordSelectionPanel({
+            width: 620,
+            height: 300,
+            listeners: {
+                keywordselected: function(panel, keywords) {
+
+					var xml;
+					var first = true;
+
+					Ext.each(keywords, function(item, index) {
+						xml = keywords[index];
+
+						// http://www.extjs.com/forum/showthread.php?t=18148
+						// parse XML document
+						var doc;
+						if (window.ActiveXObject) {
+						    var doc = new ActiveXObject("Microsoft.XMLDOM");
+						    doc.async = "false";
+						    doc.loadXML(xml);
+						} else {
+						    var doc = new DOMParser().parseFromString(xml,"text/xml");
+						}
+						
+						var keys = doc.getElementsByTagName("gmd:keyword");
+						var kw;
+	
+						// Add values to text box
+						Ext.each(keys, function(item, index) {
+							var kw = keys[index].childNodes[1].childNodes[0].nodeValue;
+							addKeyword(kw, first);
+							first = false;
+						});
+					});
+                }
+            }
+        });
+
+        searchKeywordSelectionWindow = new Ext.Window({
+            title: translate('keywordSelectionWindowTitle'),
+            layout: 'fit',
+            items: searchKeywordSelectionPanel,
+            closeAction: 'hide',
+            constrain: true,
+            iconCls: 'searchIcon'
+        });
+    }
+    
+    searchKeywordSelectionWindow.show();
+}
+
+/**
+ * Add keyword to themekey text box
+ * 
+ * @return
+ */
+function addKeyword(k, first){
+	k = '"'+ k + '"';
+	//alert (k+"-"+check);
+	if (first) $("themekey").value = '';
+	// add the keyword to the list
+	if ($("themekey").value != '') // add the "or" keyword
+		$("themekey").value += ' or '+ k;
+	else
+		$("themekey").value = k;
+}
 
 
 /**

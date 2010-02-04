@@ -145,7 +145,7 @@ app.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
         xtype: 'textfield',
         name: 'maxResults',
         id: 'maxResults',
-        value: 5,
+        value: 50,
         width: 40
       };
     },

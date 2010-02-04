@@ -24,6 +24,8 @@
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/lang/calendar-{/root/gui/language}.js"/>
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/calendar/calendar-blue2.css" />
 		
+		<xsl:call-template name="selectionPanel"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js?"/>
 		
 		<script type="text/javascript" src="{/root/gui/url}/scripts/gn_search.js?"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/gn_intermap.js?"/>
