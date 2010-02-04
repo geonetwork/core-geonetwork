@@ -272,14 +272,18 @@
         <xsl:param name="edit"/>
         <xsl:param name="embedded"/>
 
-		<xsl:if test="/root/gui/config/editor-metadata-relation">
-			<div style="float:right;">
-				<xsl:call-template name="relatedResources">
-					<xsl:with-param name="edit" select="$edit"/>
-				</xsl:call-template>
-			</div>
-		</xsl:if>
-
+		<tr>
+			<td valign="middle" colspan="2">
+				<xsl:if test="/root/gui/config/editor-metadata-relation">
+					<div style="float:right;">
+						<xsl:call-template name="relatedResources">
+							<xsl:with-param name="edit" select="$edit"/>
+						</xsl:call-template>
+					</div>
+				</xsl:if>
+			</td>
+		</tr>
+		
         <xsl:call-template name="iso19110Simple">
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit" select="$edit"/>
