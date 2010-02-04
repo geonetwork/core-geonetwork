@@ -14,19 +14,43 @@
 	<!-- ================================================================================== -->
 
 	<xsl:template name="content">
-
 		<xsl:call-template name="formLayout">
 			<xsl:with-param name="title" select="/root/gui/strings/metadata-template-order"/>
 			<xsl:with-param name="content">
-				<xsl:comment>content</xsl:comment>
-				<div id="search-results-content">
-					<form id="templateorderform" name="templateorderform" accept-charset="UTF-8" action="{/root/gui/locService}/metadata.templates.displayorder.save" method="post">
-						<xsl:comment>list of templates</xsl:comment>
-						<xsl:call-template name="display-templates"/>
-					</form>
-				</div>
+				<xsl:choose>
+					<xsl:when test="not(/root/gui/templates/record)">
+						<table>
+							<tr>
+								<td>
+									<xsl:value-of select="/root/gui/strings/noTemplatesAvailable"/>
+								</td>
+							</tr>
+						</table>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:call-template name="template-list-form"/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:with-param>
-		</xsl:call-template>	
+			<xsl:with-param name="buttons">
+				<xsl:if test="/root/gui/templates/record">
+					<button class="content" onclick="save();return false;">
+						<xsl:value-of select="/root/gui/strings/save"/>
+					</button>
+					&#160;
+				</xsl:if>
+				<button class="content" onclick="goBack()"><xsl:value-of select="/root/gui/strings/back"/></button>
+			</xsl:with-param>
+		</xsl:call-template>
+	</xsl:template>
+
+	<xsl:template name="template-list-form">
+		<div id="search-results-content">
+			<form id="templateorderform" name="templateorderform" accept-charset="UTF-8" action="{/root/gui/locService}/metadata.templates.displayorder.save" method="post">
+				<xsl:comment>list of templates</xsl:comment>
+				<xsl:call-template name="display-templates"/>
+			</form>
+		</div>
 
 		<script>
 			var table = document.getElementById('templates-table');
@@ -190,20 +214,9 @@
 					</tr>
 				</xsl:for-each>
 			</table>
-		<div id="waiting" style="display:none;margin-left:20px;">
-			<img src="{/root/gui/url}/images/spinner.gif" alt="" title=""/>
-		</div>
-		
-		<div style="margin:30px 0px 0px 0px;">
-			<button class="content" onclick="save();return false;">
-				<xsl:value-of select="/root/gui/strings/save"/>
-			</button>
-			
-			<button class="content" onclick="goBack();return false;" style="margin-left:10px;">
-				<xsl:value-of select="/root/gui/strings/back"/>
-			</button>	
-		</div>	
-		
+			<div id="waiting" style="display:none;margin-left:20px;">
+				<img src="{/root/gui/url}/images/spinner.gif" alt="" title=""/>
+			</div>
 		</div>
 	</xsl:template>
 		

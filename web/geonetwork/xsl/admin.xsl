@@ -66,8 +66,8 @@
 						
 						<xsl:if test="/root/gui/services/service/@name='metadata.templates.list'">
 							<tr>
-								<td class="geonovum-vertical-padded"><a href="{/root/gui/locService}/metadata.templates.list"><xsl:value-of select="/root/gui/strings/metadata-template-order"/></a></td>
-								<td class="geonovum-vertical-padded geonovum-green"><xsl:value-of select="/root/gui/strings/metadata-template-order-desc"/></td>
+								<td class="padded"><a href="{/root/gui/locService}/metadata.templates.list"><xsl:value-of select="/root/gui/strings/metadata-template-order"/></a></td>
+								<td class="padded"><xsl:value-of select="/root/gui/strings/metadata-template-order-desc"/></td>
 							</tr>
 						</xsl:if>							
 						
