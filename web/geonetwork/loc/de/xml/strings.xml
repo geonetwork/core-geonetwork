@@ -321,6 +321,8 @@
 	<metadata.admin.index.failed>Fehler beim Aufabu des Lucene Index.</metadata.admin.index.failed>
 	<metadata.admin.index.success>Neuaufbau war erfolgreich.</metadata.admin.index.success>
 	<metadata.admin.index>Index Manager</metadata.admin.index>
+	<metadata-template-order>Sort Templates</metadata-template-order>	
+	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>		
 	<metadata>Metadaten</metadata>
 	<metadataAdded>Metadaten mit folgender ID hinzugefügt:</metadataAdded>
 	<metadataDeleted>Metadatamit folgender ID gelöscht:</metadataDeleted>

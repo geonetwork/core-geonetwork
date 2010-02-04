@@ -320,6 +320,8 @@
 	<metadata.admin.index.failed>Failed to rebuild index.</metadata.admin.index.failed>
 	<metadata.admin.index.success>Rebuild index operation was successful.</metadata.admin.index.success>
 	<metadata.admin.index>Index manager</metadata.admin.index>
+	<metadata-template-order>Sort Templates</metadata-template-order>	
+	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>		
 	<metadata>元数据</metadata>
 	<metadataAdded>元数据已添加，其ID为：</metadataAdded>
 	<metadataDeleted>元数据已删除，其ID为：</metadataDeleted>

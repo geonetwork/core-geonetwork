@@ -331,6 +331,8 @@
 	<metadata.admin.index.failed>Het is niet gelukt de index te vernieuwen.</metadata.admin.index.failed>
 	<metadata.admin.index.success>Vernieuwen van de index is gelukt.</metadata.admin.index.success>
 	<metadata.admin.index>Index manager</metadata.admin.index>
+	<metadata-template-order>Templates sorteren</metadata-template-order>	
+	<metadata-template-order-desc>Sorteer uw templates</metadata-template-order-desc>		
 	<metadata>Metadata</metadata>
 	<metadataAdded>Metadata met ID: is opgenomen in de database</metadataAdded>
 	<metadataDeleted>Metadata met ID: is niet meer aanwezig</metadataDeleted>

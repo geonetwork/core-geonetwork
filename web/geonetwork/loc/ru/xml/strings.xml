@@ -320,6 +320,8 @@
 	<metadata.admin.index.failed>Индекс не может быть перестроен.</metadata.admin.index.failed>
 	<metadata.admin.index.success>Индекс успешно перестроен.</metadata.admin.index.success>
 	<metadata.admin.index>Управление индексом поиска</metadata.admin.index>
+	<metadata-template-order>Sort Templates</metadata-template-order>	
+	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>		
 	<metadata>Метаданные</metadata>
 	<metadataAdded>Идентификатор добавленных метаданных:</metadataAdded>
 	<metadataDeleted>Идентификатор удаленных метаданных:</metadataDeleted>

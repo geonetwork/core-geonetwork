@@ -321,6 +321,8 @@
 	<metadata.admin.index.failed>Echec lors de la reconstruction de l'index</metadata.admin.index.failed>
 	<metadata.admin.index.success>L'index a été reconstruit avec succès...</metadata.admin.index.success>
 	<metadata.admin.index>Gestion de l&apos;index</metadata.admin.index>
+	<metadata-template-order>Sort Templates</metadata-template-order>	
+	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>		
 	<metadata>Métadonnées</metadata>
 	<metadataAdded>Métadonnées ajouter avec l'ID:</metadataAdded>
 	<metadataDeleted>Métadonnées supprimer avec l'ID:</metadataDeleted>

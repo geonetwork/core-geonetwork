@@ -321,6 +321,8 @@
 	<metadata.admin.index.failed>Failed to rebuild index.</metadata.admin.index.failed>
 	<metadata.admin.index.success>Rebuild index operation was successful.</metadata.admin.index.success>
 	<metadata.admin.index>Index manager</metadata.admin.index>
+	<metadata-template-order>Sort Templates</metadata-template-order>	
+	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>		
 	<metadata>Metadatos</metadata>
 	<metadataAdded>Metadato añadido con ID:</metadataAdded>
 	<metadataDeleted>Metadato borrado con ID:</metadataDeleted>
