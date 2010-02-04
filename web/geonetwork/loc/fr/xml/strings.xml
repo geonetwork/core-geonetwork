@@ -46,7 +46,7 @@
 	<uploadFailed js="true">Erreur : Echec de l'envoi ! - Info : </uploadFailed>
 	<uploadSetFileNameFailed js="true">Erreur : Fichier envoyé mais impossible de définir le nom du fichier !</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Pas d'information disponible.</cannotGetTooltip>
-	<maxResults js="true">Nombre de résultats par thésaurus</maxResults>
+	<maxResults js="true">Nombre de résultats</maxResults>
 	<anyThesaurus js="true">Tous les thésaurus</anyThesaurus>
 	<selectedKeywords js="true">Mots clés selectionnés</selectedKeywords>
 	<foundKeywords js="true">Mots clés trouvés</foundKeywords>
@@ -662,5 +662,11 @@
 		<updateelement>Mettre à jour l'élément</updateelement>
 		<upload>Télécharger un thésaurus</upload>
 	</thesaurus>
-
+	<searchhelp>
+		<searchAllText>Enter free text here</searchAllText>
+		<rtitle>Enter title here</rtitle>
+		<abstract>Enter abstract here</abstract>
+		<keywords>Pick keywords from existing metadata records</keywords>
+		<thesaurus>Pick keywords from thesauri</thesaurus>
+	</searchhelp>
 </strings>

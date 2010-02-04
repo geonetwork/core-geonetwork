@@ -68,7 +68,7 @@
 	<mdTitle js="true">Metadata title</mdTitle>
 	<createRelation js="true">Create relation</createRelation>
 	<export>Export</export>
-	<addXMLFragment>Add from dictionnary ...</addXMLFragment>
+	<addXMLFragment>Add from dictionary ...</addXMLFragment>
 	<translateWithGoogle>Use Google translation service to suggest a translation for selected language.</translateWithGoogle>
 	<translateWithGoogle.maxSize js="true">Text to translate is larger than 5000 characters (see http://code.google.com/apis/ajaxlanguage/terms.html).</translateWithGoogle.maxSize>
 	<translateWithGoogle.emptyInput js="true">Main language input is empty. Add the main language value before using the translation service.</translateWithGoogle.emptyInput>
@@ -709,5 +709,11 @@
 		<updateelement>Update element</updateelement>
 		<upload>Upload thesaurus</upload>
 	</thesaurus>
-
+	<searchhelp>
+		<searchAllText>Enter free text here</searchAllText>
+		<rtitle>Enter title here</rtitle>
+		<abstract>Enter abstract here</abstract>
+		<keywords>Pick keywords from existing metadata records</keywords>
+		<thesaurus>Pick keywords from thesauri</thesaurus>
+	</searchhelp>
 </strings>

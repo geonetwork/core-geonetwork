@@ -10,7 +10,7 @@
 	<ru>Русский</ru> <!-- Do not translate! -->
 
 	<export>Export</export>
-	<addXMLFragment>Add from dictionnary ...</addXMLFragment>
+	<addXMLFragment>Add from dictionary ...</addXMLFragment>
 	<translateWithGoogle>Use Google translation service to suggest a translation for selected language.</translateWithGoogle>
 	<translateWithGoogle.maxSize js="true">Text to translate is larger than 5000 characters (see http://code.google.com/apis/ajaxlanguage/terms.html).</translateWithGoogle.maxSize>
 	<translateWithGoogle.emptyInput js="true">Main language input is empty. Add the main language value before using the translation service.</translateWithGoogle.emptyInput>
@@ -47,7 +47,7 @@
 	<uploadFailed js="true">Error: Upload failed! - returned </uploadFailed>
 	<uploadSetFileNameFailed js="true">Error: Upload succeeded but unable to set filename!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Cannot get tooltips from server</cannotGetTooltip>
-	<maxResults js="true">Number of results per thesaurus</maxResults>
+	<maxResults js="true">Number of results</maxResults>
 	<anyThesaurus js="true">Any thesaurus</anyThesaurus>
 	<selectedKeywords js="true">Selected keywords</selectedKeywords>
 	<foundKeywords js="true">Available keywords</foundKeywords>
@@ -648,5 +648,11 @@
 		<updateelement>Actualizar elemento</updateelement>
 		<upload>Subir tesauro</upload>
 	</thesaurus>
-
+	<searchhelp>
+		<searchAllText>Enter free text here</searchAllText>
+		<rtitle>Enter title here</rtitle>
+		<abstract>Enter abstract here</abstract>
+		<keywords>Pick keywords from existing metadata records</keywords>
+		<thesaurus>Pick keywords from thesauri</thesaurus>
+	</searchhelp>
 </strings>
