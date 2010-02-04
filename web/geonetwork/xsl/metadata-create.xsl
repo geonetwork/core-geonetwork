@@ -64,7 +64,7 @@
 					<td class="padded">
 						<select class="content" name="id" size="1">
 							<xsl:for-each select="/root/gui/templates/record">
-								<xsl:sort select="name"/>
+								<xsl:sort select="displayorder" data-type="number"/>
 								<option value="{id}">
 									<xsl:value-of select="name"/>
 								</option>

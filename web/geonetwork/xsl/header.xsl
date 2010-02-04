@@ -49,6 +49,8 @@
 		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"></script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/form_check.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/tablednd.js"></script>
+		
 	
 		<script language="JavaScript" type="text/javascript">
 			var Env = new Object();
