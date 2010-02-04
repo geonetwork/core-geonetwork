@@ -23,7 +23,6 @@
 
 package org.fao.geonet.guiservices.templates;
 
-import java.util.List;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -35,6 +34,10 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 //=============================================================================
 
@@ -87,8 +90,10 @@ public class Get implements Service
 
 		Element response = new Element("dummy");
 
-		for(int i=0; i<list.size(); i++)
-		{
+        // heikki: geonovum: first build the list of response records
+        List<Element> responseRecords = new ArrayList<Element>();
+
+		for(int i=0; i<list.size(); i++) {
 			Element elem = (Element) list.get(i);
 			Element info = elem.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
 
@@ -97,11 +102,39 @@ public class Get implements Service
 
 			String id       = info.getChildText(Edit.Info.Elem.ID);
 			String template = info.getChildText(Edit.Info.Elem.IS_TEMPLATE);
+            String displayOrder = info.getChildText(Edit.Info.Elem.DISPLAY_ORDER);
 
-			if (template.equals("y"))
-				response.addContent(buildRecord(id, elem.getChildText("title")));
+			if (template.equals("y"))    {
+				// heikki, GeoNovum: added displayOrder
+                responseRecords.add(buildRecord(id, elem.getChildText("title"), displayOrder));
+            }
 		}
-
+        // heikki, Geonovum: then process them to ensure displayOrder is not empty and is unique
+        List<Integer> displayOrderList = new ArrayList<Integer>();
+        for(Iterator<Element> i = responseRecords.iterator(); i.hasNext();){
+            Element record = i.next();
+            String displayOrder = record.getChildText("displayorder");
+            if(displayOrder == null || displayOrder.equals("")) {
+                displayOrder = "-1";
+            }
+            Integer displayOrderI = Integer.parseInt(displayOrder);
+            // not yet in list
+            if(!displayOrderList.contains(displayOrderI)) {
+                // add to list
+                displayOrderList.add(displayOrderI);
+            }
+            // already in list
+            else {
+                // while in list
+                while(displayOrderList.contains(displayOrderI)) {
+                    displayOrderI++;
+                }
+                // add to list
+                displayOrderList.add(displayOrderI);                
+            }
+            record.getChild("displayorder").setText(displayOrderI.toString());
+            response.addContent(record);
+		}
 		return response;
 	}
 
@@ -153,13 +186,14 @@ public class Get implements Service
 	}
 
 	//--------------------------------------------------------------------------
-
-	private Element buildRecord(String id, String name)
+    // heikki, GeoNovum: added displayOrder
+	private Element buildRecord(String id, String name, String displayOrder)
 	{
 		Element el = new Element("record");
 
 		el.addContent(new Element("id")  .setText(id));
 		el.addContent(new Element("name").setText(name));
+        el.addContent(new Element("displayorder").setText(displayOrder));
 
 		return el;
 	}

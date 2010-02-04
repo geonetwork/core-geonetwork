@@ -572,7 +572,7 @@ public class DataManager
 	public MdInfo getMetadataInfo(Dbms dbms, String id) throws Exception
 	{
 		String query = "SELECT id, uuid, schemaId, isTemplate, isHarvested, createDate, "+
-							"       changeDate, source, title, root, owner, groupOwner "+
+							"       changeDate, source, title, root, owner, groupOwner, displayOrder "+
 							"FROM   Metadata "+
 							"WHERE id=?";
 
@@ -596,6 +596,7 @@ public class DataManager
 		info.root        = record.getChildText("root");
 		info.owner       = record.getChildText("owner");
 		info.groupOwner  = record.getChildText("groupowner");
+                info.displayOrder  = record.getChildText("displayOrder");
 
 		String temp = record.getChildText("istemplate");
 
@@ -753,6 +754,12 @@ public class DataManager
 		}
 		return null;
 	}
+    //--------------------------------------------------------------------------
+    public void updateDisplayOrder(Dbms dbms, String id, String displayOrder) throws Exception {
+        String query = "UPDATE Metadata SET displayOrder = ? WHERE id = ?";
+        int result = dbms.execute(query, new Integer(displayOrder), new  Integer(id));
+    }
+
 
 	//--------------------------------------------------------------------------
 
@@ -2206,7 +2213,7 @@ public class DataManager
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, title, "+
-									"uuid, isHarvested, harvestUuid, popularity, rating, owner FROM Metadata WHERE id = " + id;
+									"uuid, isHarvested, harvestUuid, popularity, rating, owner, displayOrder FROM Metadata WHERE id = " + id;
 
 		// add Metadata table infos: schemaId, createDate, changeDate, source,
 		Element rec = dbms.select(query).getChild("record");
@@ -2223,6 +2230,7 @@ public class DataManager
 		String  popularity = rec.getChildText("popularity");
 		String  rating     = rec.getChildText("rating");
 		String  owner      = rec.getChildText("owner");
+                String  displayOrder = rec.getChildText("displayorder");
 
 		Element info = new Element(Edit.RootChild.INFO, Edit.NAMESPACE);
 
@@ -2237,6 +2245,7 @@ public class DataManager
 		addElement(info, Edit.Info.Elem.IS_HARVESTED,isHarvested);
 		addElement(info, Edit.Info.Elem.POPULARITY,  popularity);
 		addElement(info, Edit.Info.Elem.RATING,      rating);
+                addElement(info, Edit.Info.Elem.DISPLAY_ORDER,  displayOrder);
 
 		if (isHarvested.equals("y"))
 			info.addContent(harvestMan.getHarvestInfo(harvestUuid, id, uuid));

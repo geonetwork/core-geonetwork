@@ -88,6 +88,7 @@ public class Edit
 			public static final String RATING      = "rating";
 			public static final String SELECTED    = "selected";
 			public static final String SUBTEMPLATES = "subtemplates";
+                        public static final String DISPLAY_ORDER      = "displayOrder";
 
 			//--- privileges
 
