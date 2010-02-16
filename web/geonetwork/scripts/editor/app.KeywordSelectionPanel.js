@@ -4,7 +4,7 @@ Ext.namespace("app");
  * Class: app.KeywordSelectionPanel
  */
 
-app.keyword = {}
+app.keyword = {};
 
 var Keyword = Ext.data.Record.create([
   {name: 'value'},
@@ -164,7 +164,7 @@ app.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
             reader: new Ext.data.XmlReader({
                 record: 'thesaurus'
             }, Thesaurus),
-            fields: ['filename', 'id'],
+            fields: ['filename', 'id']
         });
 
         // add the "any thesaurus" record

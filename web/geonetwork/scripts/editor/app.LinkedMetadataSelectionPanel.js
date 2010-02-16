@@ -30,7 +30,7 @@ app.Utility = {
 			var result = '';
 			for (var i = 0; i < values.length; i ++) {
 				if (i != 0)
-					result += s
+					result += s;
 				result += values[i].value;
 			}
 		    return result;
@@ -232,7 +232,7 @@ app.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
         		},
         		scope: this
         	}
-        })
+        });
         
         
         if (this.mode=='attachService' || this.mode=='coupledResource') 

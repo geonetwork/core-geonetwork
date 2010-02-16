@@ -11,7 +11,7 @@ In order to build:
 sudo apt-get install python-setuptools
 sudo easy_install jstools
 }}}
- * jsbuild directory, run jsbuild utility. This will create geo-libs.js files used by GeoNetwork
+ * jsbuild directory, run jsbuild utility. This will create gn.libs.js files used by GeoNetwork
 {{{
 jsbuild -o ../web/geonetwork/scripts/geo full.cfg
 }}}

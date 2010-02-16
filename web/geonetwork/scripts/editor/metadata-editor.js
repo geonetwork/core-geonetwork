@@ -392,7 +392,7 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement)
 				}
 				
 				// Init map if spatial extent editing
-				if (name == 'gmd:geographicElement');
+				if (name == 'gmd:geographicElement')
 					extentMap.initMapDiv();
 				
 				// Check elements
@@ -627,7 +627,7 @@ function setRegion(westField, eastField, southField, northField, region, eltRef,
 	var n = "";
 	
 	if (choice != undefined && choice != "") {
-		coords = choice.split(",")
+		coords = choice.split(",");
 		w = coords[0];
 		e = coords[1];
 		s = coords[2];
@@ -651,7 +651,7 @@ function setRegion(westField, eastField, southField, northField, region, eltRef,
 	     var viewer = viewers[idx];
 	     if (eltRef == viewer.getAttribute("elt_ref")) {
 	    	 extentMap.updateBbox(extentMap.maps[eltRef], westField + "," + southField + "," + eastField + "," + northField, eltRef, true); // Region are in WGS84
-	     };
+	     }
 	}
 }
 
@@ -731,7 +731,7 @@ function buildDuration(ref) {
 * decimals - {Boolean} Allow decimals
 */
 function validateNumber(input, nullValue, decimals) {
-    var text = input.value
+    var text = input.value;
     var validChars = "0123456789";
     
     if (! nullValue)
@@ -798,7 +798,7 @@ function validateMetadataFields() {
 								.toLowerCase() == Env.lang)
 							input.options[i].selected = true;
 
-					enableLocalInput(input, false)
+					enableLocalInput(input, false);
 				});
 
 	// --- display validator events when needed.
@@ -1186,12 +1186,12 @@ function enableLocalInput(node, focus) {
 
 	show(nodes, ref, focus);
 	show(textarea, ref, focus);
-};
+}
 
 function clearSuggestion(divSuggestion) {
 	if ($(divSuggestion) != null)
 		$(divSuggestion).innerHTML = "";
-};
+}
 
 /**
  * 
