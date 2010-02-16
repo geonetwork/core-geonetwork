@@ -61,6 +61,23 @@
 			
 			window.onload = initTemplateOrderList;
 			
+			// TODO move to utilities file.
+			function getInternetExplorerVersion()
+				// Returns the version of Internet Explorer or a -1
+				// (indicating the use of another browser).
+			{
+				var rv = -1; // Return value assumes failure.
+				if (navigator.appName == 'Microsoft Internet Explorer')
+				{
+					var ua = navigator.userAgent;
+					var re  = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+					if (re.exec(ua) != null)
+						rv = parseFloat( RegExp.$1 );
+				}
+				return rv;
+			}
+
+
 			function initTemplateOrderList() {
 				var table = $('templates-table');
 				var rows = table.getElementsByTagName('tr');
@@ -117,7 +134,14 @@
 					var td = document.createElement("td");
 					td.setAttribute("class", "bottom_border");
 					var div = document.createElement("div");
-					div.setAttribute("style","margin:3px;");
+					// you're not using IE
+					if(getInternetExplorerVersion() == -1) {
+						div.setAttribute("style","margin:3px;");
+					}
+					// you're using IE
+					else {
+						div.style.cssText = "margin:3px;";
+					}
 					div.setAttribute("value", templateOrderList[i].id);
 					div.innerHTML = templateOrderList[i].title;
 					var input = document.createElement("input");
@@ -175,7 +199,7 @@
 				getGNServiceURL('{/root/gui/locService}/metadata.templates.displayorder.save'), 
 					{
 						method: 'post',
-						parameters: document.getElementById('templateorderform').serialize(), 
+						parameters: $('templateorderform').serialize(), 
 							onSuccess: success,
 							onFailure: failed
 					});
