@@ -509,6 +509,7 @@
 	<saveAndClose>Save and close</saveAndClose>
 	<saveAndValidate>Check</saveAndValidate>
 	<savepdf>Save search results as pdf</savepdf>
+	<printSelection>Print selection</printSelection>
 	<schema>Schema</schema>
 	<schematronError>Schematron Error</schematronError>
 	<search>Search</search>

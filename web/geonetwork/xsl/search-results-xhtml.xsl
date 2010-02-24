@@ -140,12 +140,10 @@
 									</button>
 								</xsl:if>
 							</xsl:if>
-							&#160;
-							<button onclick="gn_filteredSearch()"><xsl:value-of select="/root/gui/strings/selectedOnly"/></button>
-							<button onclick="load('{/root/gui/locService}/mef.export?uuid=&amp;format=full&amp;version=2')"><xsl:value-of select="/root/gui/strings/export"/></button>
+							&#160;<button onclick="gn_filteredSearch()"><xsl:value-of select="/root/gui/strings/selectedOnly"/></button>
+							&#160;<button onclick="runPdfSearch(true);" alt="{/root/gui/strings/savepdf}" title="{/root/gui/strings/savepdf}"><xsl:value-of select="/root/gui/strings/printSelection"/></button>
+							&#160;<button onclick="load('{/root/gui/locService}/mef.export?uuid=&amp;format=full&amp;version=2')"><xsl:value-of select="/root/gui/strings/export"/></button>
 						</div>
-						&#160;
-						<a href="#" onclick="runPdfSearch();"><img align="absmiddle" src="{/root/gui/url}/images/pdf.gif" alt="{/root/gui/strings/savepdf}" title="{/root/gui/strings/savepdf}"/></a>
 					</div>
 				</xsl:if>			
 			</td>

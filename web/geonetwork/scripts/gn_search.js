@@ -31,12 +31,25 @@ function gn_anyKeyObserver(e)
 		runSimpleSearch();
 }
 
-/*  */
-function runPdfSearch() {
-    if (document.cookie.indexOf("search=advanced")!=-1)
-        runAdvancedSearch("pdf");
-    else
-        runSimpleSearch("pdf");
+/**
+ * Trigger PDF search. 
+ * 
+ * If run on selection run pdf.selection.search 
+ * to retrieve the PDF document and clean current selection.
+ * 
+ * If not, use the pdf.search service.
+ */
+function runPdfSearch(onSelection) {
+	
+	if (onSelection) {
+		location.replace (getGNServiceURL('pdf.selection.search'));
+		metadataselect(0, 'remove-all');
+	} else {
+	    if (document.cookie.indexOf("search=advanced")!=-1)
+	        runAdvancedSearch("pdf");
+	    else
+	        runSimpleSearch("pdf");
+	}
 }
 
 function runSimpleSearch(type) 

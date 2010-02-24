@@ -85,6 +85,23 @@ public class Search implements Service
 		if (any != null)
 			any.setText(MainUtil.splitWord(any.getText()));
 
+		// Parse bbox & assign to four *BL params
+		Element bbox  = elData.getChild(Geonet.SearchResult.BBOX);
+		Element westBL = elData.getChild(Geonet.SearchResult.WEST_BL);
+		Element southBL = elData.getChild(Geonet.SearchResult.SOUTH_BL);
+		Element eastBL = elData.getChild(Geonet.SearchResult.EAST_BL);
+		Element northBL = elData.getChild(Geonet.SearchResult.NORTH_BL);
+		
+		if (bbox != null && westBL == null && southBL == null && eastBL == null && northBL == null) {
+			String bounds[] = bbox.getText().split(",");
+			if (bounds.length == 4) {
+				elData.addContent(new Element(Geonet.SearchResult.WEST_BL).addContent(bounds[0]));
+				elData.addContent(new Element(Geonet.SearchResult.SOUTH_BL).addContent(bounds[1]));
+				elData.addContent(new Element(Geonet.SearchResult.EAST_BL).addContent(bounds[2]));
+				elData.addContent(new Element(Geonet.SearchResult.NORTH_BL).addContent(bounds[3]));
+			}
+		}
+		
 		// possibly close old searcher
 		UserSession  session     = context.getUserSession();
 		Object oldSearcher = session.getProperty(Geonet.Session.SEARCH_RESULT);

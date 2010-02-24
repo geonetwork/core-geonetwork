@@ -95,10 +95,11 @@
     <!-- Init all maps. -->
     <xsl:template name="extentViewerJavascriptInit">
         <script language="JavaScript1.2" type="text/javascript">
-            if( Ext )
-              Ext.onReady(extentMap.initMapDiv)
-            else
+            if (Ext) {
+              Ext.onReady(extentMap.initMapDiv);
+            } else {
               Event.observe(window,'load',extentMap.initMapDiv);
+            }
         </script>
     </xsl:template>
 </xsl:stylesheet>

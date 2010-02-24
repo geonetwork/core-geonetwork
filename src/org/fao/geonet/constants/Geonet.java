@@ -186,6 +186,12 @@ public class Geonet
          * floating point format (geographic coordinate) 
          * Default value is {@code -180} */
 		public static final String WEST_BL       = "westBL";
+
+		/** Parameter name: {@value #BBOX} - Boundary box in comma separated
+		 * xmin,ymin,xmax,ymax format, as in OpenSearch-geo or WMS specification.
+		 * A compact alternative to the four westBL, southBL, eastBL and northBL
+		 * parameters. */
+		public static final String BBOX          = "bbox";
 		
         /** Parameter name: {@value #RELATION} - Defines the type of spatial
          * query matching used

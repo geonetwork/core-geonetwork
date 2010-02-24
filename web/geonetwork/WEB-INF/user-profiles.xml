@@ -214,6 +214,7 @@
 		<allow service="main.searchform.simple.embedded"/> <!--  ETj -->		
 		<allow service="main.searchform.advanced.embedded"/> <!--  ETj -->		
 		<allow service="main.search.embedded"/> <!--  ETj -->
+		<allow service="main.search"/> <!-- Enables OpenSearch HTML responses -->
 		<allow service="main.present"/>
 		<allow service="main.present.embedded"/> <!--  ETj -->
 		<allow service="metadata.show"/>
@@ -256,7 +257,8 @@
 		<allow service="metadata.select"/>
 		<allow service="selection.search"/>
 		<allow service="pdf.selection.search"/>
-
+		<allow service="pdf.present"/>
+		
 		<!-- WMC -->
 		<allow service="intermap.wmc.setWmcContext"/>
 
