@@ -3565,9 +3565,17 @@
 									gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$mainLangId]/geonet:element/@ref)"/>
 								<xsl:variable name="suggestionDiv" select="concat('suggestion', $mainLanguageRef)"/>
 								
+								<!-- Language selector is only displayed when more than one language
+								is set in gmd:locale. -->
 								<select class="md lang_selector" name="localization" id="localization_{geonet:element/@ref}" 
 									onchange="enableLocalInput(this);clearSuggestion('{$suggestionDiv}');" 
 									selected="true">
+									<xsl:attribute name="style">
+										<xsl:choose>
+											<xsl:when test="count($ptFreeTextTree//gmd:LocalisedCharacterString)=0">display:none;</xsl:when>
+											<xsl:otherwise>display:block;</xsl:otherwise>
+										</xsl:choose>
+									</xsl:attribute>
 									<xsl:choose>
 										<xsl:when test="gco:*">
 											<option value="_{gco:*/geonet:element/@ref}" code="{substring-after($mainLangId, '#')}">
