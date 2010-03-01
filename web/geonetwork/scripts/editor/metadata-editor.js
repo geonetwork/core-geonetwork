@@ -424,6 +424,8 @@ function doSaveAction(action,validateAction)
 	// - by default false
 	if (typeof validateAction != 'undefined') {
 		document.mainForm.showvalidationerrors.value = "true";
+	} else {
+		document.mainForm.showvalidationerrors.value = "false";
 	}
 
 	var metadataId = document.mainForm.id.value;
@@ -456,6 +458,11 @@ function doSaveAction(action,validateAction)
 			}
 		);
 	} else {
+		// Destroy element before body update.
+		var w = Ext.getCmp('validationReportBox');
+		if (w)
+			w.destroy();
+		
 		var myAjax = new Ajax.Updater(document.body,
 			getGNServiceURL(action),
 			{
@@ -463,7 +470,8 @@ function doSaveAction(action,validateAction)
 				parameters: $('editForm').serialize(true),
 				evalScripts: true,
 				onComplete: function(req) {
-					getValidationReport();
+					if (document.mainForm.showvalidationerrors.value=='true')
+						getValidationReport();
 					setBunload(true); // reset warning for window destroy
 					validateMetadataFields();
 				},
@@ -1339,6 +1347,7 @@ function getValidationReport()
 {	var metadataId = document.mainForm.id.value;
 	var pars = "&id="+metadataId;
 	var action = 'metadata.validate';
+	
 	var myAjax = new Ajax.Request(getGNServiceURL(action),
 		{
 			method: 'get',

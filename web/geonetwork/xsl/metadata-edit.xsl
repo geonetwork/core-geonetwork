@@ -78,7 +78,7 @@
 							<input class="md" type="hidden" name="position" value="-1"/>
 							<!-- showvalidationerrors is only set to true when 'Check' is 
 							     pressed - default is false -->
-							<input class="md" type="hidden" name="showvalidationerrors" value="false"/> 
+							<input class="md" type="hidden" name="showvalidationerrors" value="{/root/request/showvalidationerrors}"/> 
 							<input class="md" type="hidden" name="currTab" value="{/root/gui/currTab}"/>
 
 							<!-- Hidden div to contains extra elements like when posting multiple keywords. -->

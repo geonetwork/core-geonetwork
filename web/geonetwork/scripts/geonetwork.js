@@ -308,17 +308,8 @@ function get_cookie ( cookie_name )
  */
 function displayBox(content, contentDivId, modal) {
 	var id = contentDivId + "Box";
-	
-	if (content != null) {
-		$(contentDivId).innerHTML = '';
-		$(contentDivId).innerHTML = content;
-	}
-	
-	$(contentDivId).style.display = 'block'
-	
 	var w = Ext.getCmp(id);
-	
-	if (!w) {
+	if (w == undefined) {
 		w = new Ext.Window({
 	        title: translate(contentDivId),
 	        id: id,
@@ -339,11 +330,14 @@ function displayBox(content, contentDivId, modal) {
 	        contentEl: contentDivId
 	    });
 	}
-
     if (w) {
+    	if (content != null) {
+    		$(contentDivId).innerHTML = '';
+    		$(contentDivId).innerHTML = content;
+    		$(contentDivId).style.display = 'block'
+    	}
     	w.show();
     	w.setHeight(345);
-    	w.setWidth(Ext.get(contentDivId).getWidth());
     	w.anchorTo(Ext.getBody(), (modal?'c-c':'tr-tr'));	// Align top right if not modal, or center
     }
 
