@@ -130,7 +130,7 @@ function getData()
 	data.OGCTYPE          = $F('ogcwxs.ogctype');
 	data.LANG             = $F('ogcwxs.lang');
 	data.TOPIC            = $F('ogcwxs.topic');
-	data.DATASETCATEGORY  = $F('ogcwxs.datasetCategory');
+	data.DATASETCATEGORY  = ($F('ogcwxs.datasetCategory')==null?'':$F('ogcwxs.datasetCategory'));
 	data.CREATETHUMBNAILS = $('ogcwxs.createThumbnails').checked;
 	data.USELAYER	      = $('ogcwxs.useLayer').checked;
 	data.USELAYERMD       = $('ogcwxs.useLayerMd').checked;

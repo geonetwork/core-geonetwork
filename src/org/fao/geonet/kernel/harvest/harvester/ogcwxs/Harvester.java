@@ -591,7 +591,8 @@ class Harvester
 			
 			log.debug("    - Set Privileges and category.");
 			addPrivileges(reg.id);
-			dataMan.setCategory (dbms, reg.id, params.datasetCategory);
+			if (params.datasetCategory!=null && !params.datasetCategory.equals(""))
+				dataMan.setCategory (dbms, reg.id, params.datasetCategory);
 			
 			log.debug("    - Set Harvested.");
 			dataMan.setHarvested(dbms, iId, params.uuid, params.url); // FIXME : harvestUuid should be a MD5 string
