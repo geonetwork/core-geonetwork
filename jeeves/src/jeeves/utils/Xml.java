@@ -24,11 +24,9 @@
 package jeeves.utils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -37,12 +35,9 @@ import java.net.URL;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import javax.xml.XMLConstants;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -52,7 +47,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 import javax.xml.validation.ValidatorHandler;
 import jeeves.exceptions.XSDValidationErrorEx;
 import org.apache.fop.apps.FopFactory;
@@ -63,10 +57,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.Namespace;
-import org.jdom.output.DOMOutputter;
 import org.jdom.output.SAXOutputter;
 import org.jdom.output.Format;
-import org.jdom.output.JDOMLocator;
 import org.jdom.output.XMLOutputter;
 import org.jdom.transform.JDOMResult;
 import org.jdom.transform.JDOMSource;
@@ -442,7 +434,12 @@ public class Xml
 		private String errors = " ";
 		private Element xpaths;
 		private Namespace ns = Namespace.NO_NAMESPACE;
-
+		private SAXOutputter so;
+		
+		public void setSo(SAXOutputter so) {
+			this.so = so;
+		}
+		
 		public boolean errors() {
 			return errorCount > 0;
 		}
@@ -556,23 +553,18 @@ public class Xml
 	
 	private static void validateGuts(String schemaPath, Element xml, ErrorHandler eh) throws Exception {
 		StreamSource schemaFile = new StreamSource(new File(schemaPath));
-		Schema schema = factory.newSchema(schemaFile);
+		Schema schema = factory().newSchema(schemaFile);
 	
 		ValidatorHandler vh = schema.newValidatorHandler();
 		vh.setErrorHandler(eh);
-		so = new SAXOutputter(vh);
+		SAXOutputter so = new SAXOutputter(vh);
+		eh.setSo(so);
 		so.output(xml);
 	} 
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private static SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-
-	private static SAXOutputter so;
+	private static SchemaFactory factory() {
+		return SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+	}
 
 
 }
