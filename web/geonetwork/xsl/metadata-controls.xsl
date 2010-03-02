@@ -17,14 +17,8 @@
 		
 		<span id="buttons_{$id}">
 			<!-- 
-				add as remote XML fragment button for
-				* element not descendant of a fragment element
-				* geonet:child of type keyword -->
-			<xsl:if test="normalize-space($addXMLFragment) 
-				and (
-				(@name = 'descriptiveKeywords' and @prefix = 'gmd') 
-				or name(.) = 'gmd:descriptiveKeywords'						
-				)">
+				add as remote XML fragment button when relevant -->
+			<xsl:if test="normalize-space($addXMLFragment)">
 				<xsl:variable name="xlinkTokens" select="tokenize($addXMLFragment,'!')"/>
 				<xsl:text> </xsl:text>
 				<xsl:choose>

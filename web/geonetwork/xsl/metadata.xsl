@@ -155,7 +155,12 @@
 					</xsl:choose>
 				</xsl:variable>
 				<xsl:variable name="addXMLFragment">
-					<xsl:value-of select="concat('javascript:showKeywordSelectionPanel(',$parentName,',',$apos,$name,$apos,');')"/>
+					<xsl:variable name="function">
+						<xsl:apply-templates mode="addXMLFragment" select="."/>
+					</xsl:variable>
+					<xsl:if test="normalize-space($function)!=''">
+						<xsl:value-of select="concat('javascript:', $function, '(',$parentName,',',$apos,$name,$apos,');')"/>
+					</xsl:if>
 				</xsl:variable>
 				<xsl:variable name="helpLink">
 					<xsl:call-template name="getHelpLink">
@@ -189,9 +194,9 @@
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"   select="false()"/>
 		<xsl:param name="flat"   select="false()"/>
-		<xsl:param name="embedded" />		
+		<xsl:param name="embedded" />
+							
 		<xsl:choose>
-			
 			<!-- has children or attributes, existing or potential -->
 			<xsl:when test="*[namespace-uri(.)!=$geonetUri]|@*|geonet:child|geonet:element/geonet:attribute">
 			
@@ -564,41 +569,50 @@
 		
 		<xsl:variable name="name" select="name(.)"/>
 		
-		<xsl:variable name="nextBrother" select="following-sibling::*[1]"/>
-		<xsl:variable name="nb">
-			<xsl:if test="name($nextBrother)='geonet:child'">
-				<xsl:choose>
-					<xsl:when test="$nextBrother/@prefix=''">
-						<xsl:if test="$nextBrother/@name=$name"><xsl:copy-of select="$nextBrother"/></xsl:if>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:if test="concat($nextBrother/@prefix,':',$nextBrother/@name)=$name">
-							<xsl:copy-of select="$nextBrother"/>
-						</xsl:if>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:if>
+		<xsl:variable name="function">
+			<xsl:apply-templates mode="addXMLFragment" select="."/>
 		</xsl:variable>
-		
-		<xsl:variable name="newBrother" select="exslt:node-set($nb)"/>
-		
 		<xsl:choose>
-			<!-- place +/x because schema insists ie. next element is geonet:child -->
-			<xsl:when test="$newBrother/* and not($newBrother/*/geonet:choose) and $nextBrother/@prefix=''">
-				<xsl:value-of select="concat('javascript:showKeywordSelectionPanel(',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,');')"/>
+			<!-- Create link only when a function is available -->
+			<xsl:when test="normalize-space($function)!=''">
+
+				<xsl:variable name="nextBrother" select="following-sibling::*[1]"/>
+				<xsl:variable name="nb">
+					<xsl:if test="name($nextBrother)='geonet:child'">
+						<xsl:choose>
+							<xsl:when test="$nextBrother/@prefix=''">
+								<xsl:if test="$nextBrother/@name=$name"><xsl:copy-of select="$nextBrother"/></xsl:if>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:if test="concat($nextBrother/@prefix,':',$nextBrother/@name)=$name">
+									<xsl:copy-of select="$nextBrother"/>
+								</xsl:if>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:if>
+				</xsl:variable>
+				
+				<xsl:variable name="newBrother" select="exslt:node-set($nb)"/>
+				
+				<xsl:choose>
+					<!-- place +/x because schema insists ie. next element is geonet:child -->
+					<xsl:when test="$newBrother/* and not($newBrother/*/geonet:choose) and $nextBrother/@prefix=''">
+						<xsl:value-of select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,');')"/>
+					</xsl:when>
+					<xsl:when test="$newBrother/* and not($newBrother/*/geonet:choose)">
+		                <xsl:value-of select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@prefix,':',$nextBrother/@name,$apos,');')"/>
+					</xsl:when>
+					<!-- place optional +/x for use when re-ordering etc -->
+		            <xsl:when test="geonet:element/@add='true' and name($nextBrother)=name(.)">
+		            	<xsl:value-of select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,');!OPTIONAL')"/>
+		            </xsl:when>
+					<!-- place +/x because schema insists but no geonet:child nextBrother 
+		                 this case occurs in the javascript handling of the +/+ -->
+		            <xsl:when test="geonet:element/@add='true' and not($newBrother/*/geonet:choose)">
+		            	<xsl:value-of select="concat('javascript:', $function, '(',geonet:element/@parent,',',$apos,$name,$apos,');')"/>
+		            </xsl:when>
+				</xsl:choose>
 			</xsl:when>
-			<xsl:when test="$newBrother/* and not($newBrother/*/geonet:choose)">
-                <xsl:value-of select="concat('javascript:showKeywordSelectionPanel(',../geonet:element/@ref,',',$apos,$nextBrother/@prefix,':',$nextBrother/@name,$apos,');')"/>
-			</xsl:when>
-			<!-- place optional +/x for use when re-ordering etc -->
-            <xsl:when test="geonet:element/@add='true' and name($nextBrother)=name(.)">
-            	<xsl:value-of select="concat('javascript:showKeywordSelectionPanel(',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,');!OPTIONAL')"/>
-            </xsl:when>
-			<!-- place +/x because schema insists but no geonet:child nextBrother 
-                 this case occurs in the javascript handling of the +/+ -->
-            <xsl:when test="geonet:element/@add='true' and not($newBrother/*/geonet:choose)">
-            	<xsl:value-of select="concat('javascript:showKeywordSelectionPanel(',geonet:element/@parent,',',$apos,$name,$apos,');')"/>
-            </xsl:when>
 		</xsl:choose>
 		
 	</xsl:template>

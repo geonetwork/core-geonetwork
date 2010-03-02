@@ -3702,4 +3702,13 @@
 			</gmd:PT_FreeText>
 		</xsl:for-each>
 	</xsl:template>
+	
+	<!-- Template to return the function name to be use
+	to build the XML fragment in the editor. -->
+	<xsl:template mode="addXMLFragment" match="gmd:descriptiveKeywords|
+				geonet:child[@name='descriptiveKeywords' and @prefix='gmd']">
+		<xsl:text>showKeywordSelectionPanel</xsl:text>
+	</xsl:template>
+	<xsl:template mode="addXMLFragment" match="*|@*"></xsl:template>
+	
 </xsl:stylesheet>
