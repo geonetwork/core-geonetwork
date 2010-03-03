@@ -73,8 +73,9 @@ public class GetCategories implements Service
 
 		//-----------------------------------------------------------------------
 		//--- check access
-
-		if (!dataMan.existsMetadata(dbms, id))
+		int iLocalId = Integer.parseInt(id);
+		
+		if (!dataMan.existsMetadata(dbms, iLocalId))
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
 		Element isOwner = new Element("owner");

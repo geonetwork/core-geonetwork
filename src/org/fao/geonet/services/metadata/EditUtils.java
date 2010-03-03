@@ -79,8 +79,9 @@ class EditUtils
 
 		//-----------------------------------------------------------------------
 		//--- check access
-
-		if (!dataMan.existsMetadata(dbms, id))
+		int iLocalId = Integer.parseInt(id);
+		
+		if (!dataMan.existsMetadata(dbms, iLocalId))
 			throw new BadParameterEx("id", id);
 
 		if (!accessMan.canEdit(context, id))

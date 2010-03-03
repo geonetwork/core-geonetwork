@@ -1043,8 +1043,7 @@ public class DataManager
 	//--------------------------------------------------------------------------
 	/** Returns true if the metadata exists in the database
 	  */
-
-	public boolean existsMetadata(Dbms dbms, String id) throws Exception
+	public boolean existsMetadata(Dbms dbms, int id) throws Exception
 	{
 		//FIXME : should use lucene
 

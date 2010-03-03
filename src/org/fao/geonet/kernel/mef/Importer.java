@@ -396,15 +396,33 @@ public class Importer {
 		}
 
 		Log.debug(Geonet.MEF, "Adding metadata with uuid:" + uuid);
-
-		if (localId != null && !dm.existsMetadata(dbms, localId)) {
-			Log.debug(Geonet.MEF, "Using given localId: " + localId);
-			int iLocalId = Integer.parseInt(localId);
-			id.add(index, dm.insertMetadataExt(dbms, schema, md.get(index),
-					iLocalId, source, createDate, changeDate, uuid, context
-							.getUserSession().getUserIdAsInt(), groupId,
-					isTemplate)); // CHECKME
-		} else {
+		
+		// Try to insert record with localId provided, if not use a new id.
+		boolean insertedWithLocalId = false;
+		if (localId != null && !localId.equals("")) {
+			try {
+				int iLocalId = Integer.parseInt(localId);
+		
+				// Use the same id to insert the metadata record.
+				// This is an optional element. If present, indicates the
+				// id used locally by the sourceId actor to store the metadata. Its
+				// purpose is just to allow the reuse of the same local id when
+				// reimporting a metadata. 
+				if (!dm.existsMetadata(dbms, iLocalId)) {
+					Log.debug(Geonet.MEF, "Using given localId: " + localId);
+					
+					id.add(index, dm.insertMetadataExt(dbms, schema, md.get(index),
+							iLocalId, source, createDate, changeDate, uuid, context
+									.getUserSession().getUserIdAsInt(), groupId,
+							isTemplate));
+					insertedWithLocalId = true;
+				}
+			} catch (NumberFormatException e) {
+				Log.debug(Geonet.MEF, "Invalid localId provided: " + localId + ". Adding record with a new id.");
+			}
+		} 
+		
+		if (!insertedWithLocalId) {
 			id.add(index, dm.insertMetadataExt(dbms, schema, md.get(index),
 					context.getSerialFactory(), source, createDate, changeDate,
 					uuid, context.getUserSession().getUserIdAsInt(), groupId));
