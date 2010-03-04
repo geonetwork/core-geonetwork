@@ -247,7 +247,7 @@ public class OgcGenericFilters
         @Override
         public Not visit(Not filter, Object data)
         {
-            Filter newChild = (Filter) filter.accept(this, null);
+            Filter newChild = (Filter) filter.getFilter().accept(this, null);
             if (newChild == null) {
                 return null;
             }
