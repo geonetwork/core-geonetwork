@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<strings>
+	<site>Página Web</site>
+	<name>Nome</name>
+	<organ>Organização</organ>
+	
+	<server>Servidor</server>
+	<host>Host</host>
+	<port>Port</port>
+	
+	<intranet>Intranet</intranet>
+	<network>Rede</network>
+	<netmask>Máscara de rede</netmask>
+	
+	<z3950>Servidor Z39.50</z3950>
+	<enable>Activar</enable>
+		
+	<csw>CSW</csw>
+	<contactId>Contacto</contactId>
+	<title>Título</title>
+	<abstract>Resumo</abstract>
+	<fees>Taxas</fees>
+	<accessConstraints>Restrições de acesso</accessConstraints>
+		
+	<proxy>Proxy</proxy>
+	<use>Usar</use>
+	<username>Nome de utilizador</username>
+	
+	<feedback>Feedback</feedback>
+	<email>Email</email>
+	<smtpHost>SMTP Host</smtpHost>
+	<smtpPort>SMTP Port</smtpPort>
+		
+	<userSelfRegistration>Registo próprio de utilizador</userSelfRegistration>
+	
+	<removedMetadata>Metadados apagados</removedMetadata>
+	<dir>Directório</dir>
+
+	<authentication>Autenticação</authentication>
+	
+	<loginuses>Login usa</loginuses>
+	<otherlogins>Permitir outros utilizadores de iniciar uma sessão de</otherlogins>
+
+	<geonetworkdb>Autenticação GeoNetwork</geonetworkdb>
+		
+	<ldap>Autenticação LDAP</ldap>
+	<defProfile>Perfil pré-definido</defProfile>
+	<login>Iniciar sessão</login>
+	<userDN>DN de utilizador</userDN>
+	<distNames>Nomes distintos</distNames>
+	<baseDN>Base</baseDN>
+	<usersDN>Utilizadores</usersDN>
+	<userAttribs>Atributos dos utilizadores</userAttribs>
+	<password>Palavra-passe</password>
+	<profile>Perfil</profile>
+			
+	<shib>Autenticação Shibboleth</shib>
+	<path>Caminho</path>
+	<attributes>Shibboleth alocação de atributos</attributes>
+	<surname>Apelido</surname>
+	<firstname>Nome próprio</firstname>
+		
+	<!-- Buttons -->
+	
+	<save>Gravar</save>
+	<refresh>Refrescar</refresh>
+	
+	<!-- validator messages -->
+	
+	<validator>
+		<length>
+			<cannotBeEmpty>O campo '{NAME}' não pode ficar vázio</cannotBeEmpty>
+			<invalidMinSize>O campo '{NAME}' tem que ter pelo menos {VALUE} carácter(es)</invalidMinSize>
+			<invalidMaxSize>O campo '{NAME}' deve ter no máximo {VALUE} carácter(es)</invalidMaxSize>
+		</length>
+		
+		<integer>
+			<notInt>O campo '{NAME}' tem que ser um número inteiro</notInt>
+			<invalidMinValue>O campo '{NAME}' tem que ser &gt;= {VALUE}</invalidMinValue>
+			<invalidMaxValue>O campo '{NAME}' tem que ser &lt;= {VALUE}</invalidMaxValue>
+		</integer>		
+		
+		<alphanum>
+			<notAlphaNumeric>O campo '{NAME}' tem que ser alfanumérico (e deve começar com uma letra)</notAlphaNumeric>
+		</alphanum>
+		
+		<hostname>
+			<notHostName>O campo '{NAME}' não é um nome válido dum host</notHostName>
+		</hostname>
+		
+		<url>
+			<notURL>O campo '{NAME}' não é um URL válido</notURL>
+		</url>
+		
+		<ipaddress>
+			<notIP>O campo '{NAME}' não é um endereço de IP válido</notIP>
+		</ipaddress>
+	</validator>
+	
+	<!-- display messages -->
+	
+	<cannotGet>Não consegue abrir a configuração de sistema</cannotGet>
+	<cannotSave>Não consegue gravar a configuração de sistema</cannotSave>
+	<saveOk>Configuração de sistema gravada.</saveOk>
+	
+	<!-- tooltips -->
+	
+	<tips>
+		<tip id="site.name">
+			Usado para identificar a instalação.
+		</tip>
+		
+		<!-- server -->
+		
+		<tip id="server.host">
+			O <b>host</b> e o <b>port</b> do servidor são usado para criar os URLs ao
+			servidor de GeoNetwork. Por exemplo, são usados durante uma edição
+			dos metadados para criar ligações a recursos e quando retornam
+			as capacidades do servidor durante um pedido de CS/W.
+			<br/>
+			<b>Por favor note:</b> deva usar a ferramenta 'GAST' para reflectir esta
+			alteração nos metadados.
+		</tip>
+		
+		<!-- intranet -->
+		
+		<tip id="intranet.network">
+			Os parâmetros da <b>rede</b> e da <b>máscara de rede</b> são usados para identificar
+			conexões internas à GeoNetwork, isso é, identificar o grupo de intranet.
+		</tip>
+		
+		<!-- Z39.50 -->
+		
+		<tip id="z3950.enable">
+			Se definido, a GeoNetwork iniciaria o componente Z39.50 de servidor durante a inicialização.
+			Este componente usa o protocol ISO23950.
+			<br/>
+			<b>Por favor note:</b> reinicie a GeoNetwork para activar esta alteração.
+		</tip>
+		
+		<tip id="z3950.port">
+			Altere o port Z39.50 (listening).
+			<br/>
+			<b>Por favor note:</b> reinicie a GeoNetwork para activar esta alteração.
+		</tip>
+		
+		<!-- CSW -->
+		<tip id="csw.enable">
+			Se definido, activaria-se o servidor de CSW. Assim, outros catálogos poderiam harvest metadados (públicos).
+			<br/>
+			<b>Por favor note:</b> reinicie a GeoNetwork para activar esta alteração.
+		</tip>
+		<tip id="csw.contactId">
+			Configure contacto de CSW para a operação de GetCapabilities.
+		</tip>
+		<tip id="csw.title">Título</tip>
+		<tip id="csw.abstract">Resumo</tip>
+		<tip id="csw.fees">Taxas</tip>
+		<tip id="csw.accessConstraints">Restrições de acesso</tip>
+		
+		<!-- proxy -->
+		
+		<tip id="proxy.use">
+			Se definido, a GeoNetwork usaria os parâmetros de proxy disponíveis para entrar
+			em nós remotos. Por exemplo, é usado para a harvesting de metadados.
+		</tip>
+		
+		<!-- feedback -->
+		
+		<tip id="feedback.email">
+			Este é o endereço de email do administrador e usa-se para enviar feedback.
+		</tip>
+		
+		<tip id="feedback.mail.host">
+			Os parâmetros SMTP de <b>host</b> e <b>port</b> são usados para enviar emails
+			para utilizadores da GeoNetwork quando um recurso seja downloaded.
+		</tip>
+		
+		<!-- removed metadata -->
+		
+		<tip id="removedMd.dir">
+			Este directório é usado para armazenar metadados (no formato MEF) quando eles são apagados.
+		</tip>
+
+		<!-- userSelfRegistration -->
+		
+		<tip id="userSelfRegistration.enable">
+			Se definido, utilizadores poderiam registar-se propriamente. Aqueles são
+			atribuídos ao grupo 'GUEST'. Um email é enviado para o utilizador
+			com o seu nome de utilizador e a sua palavra-passe,
+			pela conta de email de feedback.
+			<br/>
+		</tip>
+		
+	</tips>
+	
+</strings>

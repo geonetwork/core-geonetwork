@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<notfound>Registos de metadados não encontrados</notfound>
+	<notowner>Não foi possível processar os registos de metadados seguintes porque você não é o dono</notowner>
+	<updated>Registos de metadados processados</updated>
+    <notProcessFound>Processo de metadados para a esquema de metadados não foi encontrado</notProcessFound>
+</strings>

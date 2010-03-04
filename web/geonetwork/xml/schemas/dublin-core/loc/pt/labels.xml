@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<labels xmlns:dc = "http://purl.org/dc/elements/1.1/" xmlns:dct = "http://purl.org/dc/terms/">
+	<!-- ==================================================== -->
+	<element name="simpledc">
+		<label>Metadados</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:title">
+		<label>Título</label>
+		<description>Um nome dado a um recurso. Normalmente, O titulo será um nome pelo qual o recurso é formalmente conhecido</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:creator">
+		<label>Criador</label>
+		<description>Uma entidade primária responsavél por elaborar o conteudo do recurso</description>
+      	<example>Exemplos de criadores são: uma pessoa, uma organização ou serviço. Normalmente, o nome de um criador deve ser usado para indicar a entidade</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:subject">
+		<label>Assunto e palavras chave</label>
+		<description>Um tópico do conteúdo do recurso. Normalmente Normalmente, o assunto será expressado em palavras-chaves, frases-chaves, ou códigos de classificação que descrevem o tópico do recurso</description>
+		<example>A prática recomendada é selecionar um valor de um vocabulário controlado ou um sistema de classificação formal.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:description">
+		<label>Descrição</label>
+		<description>Uma conta do conteudo do recurso</description>
+		<example>Exemplos da descrição incluem, mas não estão limitados a, um resumo, uma tabela de conteúdos, referência a uma representação gráfica dos conteúdos ou uma conta de texto livre do conteúdo</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:publisher">
+		<label>Editor</label>
+		<description>Uma entidade responsável por tornar o recurso responsável</description>
+		<example>Exemplos de um editor, incluem uma pessoa, uma organização ou um serviço. Normalmente, o nome do editor deve indicar a entidade</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:contributor">
+		<label>Colaborador</label>
+		<description>Uma entidade responsável por contribuir no que respeita aos conteudos do recurso.</description>
+		<example>Exemplos de colaboradores incluem uma pessoa, uma organização ou serviço. Normalmente, o nome do colaborador deve ser usado para indicar a entidade.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:date">
+		<label>Data</label>
+		<description>A data de um evento no ciclo de vida de um recurso. Normalmente a data será associada á criação ou disponibilização do recurso.</description>
+		<example>As práticas recomendadas para a codificação do valor da data são definidas pela norma  ISO 8602 e inclui (entre outros) datas de forma AAAA-MM-DD</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:type">
+		<label>Tipo de Recurso</label>
+		<description>A natureza ou género do conteudo do recurso. Inclui termos que descrevem categorias gerais, funções, generos, ou niveis de agregação de conteudos.</description>
+		<example>A prática recomendada é seleccionar um valor de uma tabela dominio, (por, exemplo, o DCMI type vocabulary) Para descrever a representação digital, de um elemento, usa-se o comando formato.</example>
+		<helper>
+			<option value="dataset">Dataset</option>
+			<option value="service">Servico</option>
+		</helper>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:format">
+		<label>Formato</label>
+		<description>A representação digital, de um elemento. Normalmente, O formato inclui um indentificador media-type do recurso. O formato pode ser usado para identificar o sftware, hardwere, ou outros equipamentos necessários para exibir ou utilizar o ficheiro.</description>
+		<example>Um exemplo de uma representação inclui o tamanho e a duração. A prática recomendada é solecionar um valor de uma tabela dominio, (por exemplo, a lista de media-types na internet que define os formatos média no computador.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:identifier">
+		<label>Identificador de recurso</label>
+		<description>Uma referência inequivoca para o recurso dentro de um determinado contexto.</description>
+		<example>A prática recomendada é identificar o recurso através de uma sequência de caracteres ou numero de acordo com um sistema de identificação. Os sistemas de identficação incluem, mas não estão limitados ao Uniform Resource Identifier (URI) (incluindo o Uniform Resource Locator (URL)), o Digital Object Identifier (DOI) e o International Standard Book Number (ISBN).</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:source">
+		<label>Fonte</label>
+		<description>Uma referência a um recurso do qual este é derivado. O presente recurso pode, no seu todo ou em parte, ser derivada da fonte de recursos.</description>
+		<example>Aprática recumendada é identificar o recurso referenciado através de uma sequÊncia de caracteres ou numero de acordo com um sistema de identificação.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:language">
+		<label>Lingua</label>
+		<description>A linguagem especifica do conteudo do recurso. As boas práticas recomendam que se use a RFC 3066, que, em, conjunto com a norma ISO 639 define dois ou três tags principais ou subtags opcionais</description>
+		<example>Exemplos incluem "en" ou "eng" para Inglês ", AKK" para Akkadian, e "en-GB" para o Inglês do Reino Unido.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:relation">
+		<label>Relação</label>
+		<description>Uma referência a um recurso relacionado</description>
+		<example>As boas práticas recomendam que seja identificado o o recurso referênciado por uma sequÊncia de caracteres ou um numero de acordo com um sistema de identificação.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:coverage">
+		<label>Coverage</label>
+		<description>A extenção e o alcançe do conteudo do recurso. Normalmente, a coverage vai incluir a a localização espacial (nome de um lugar ou coordenadas geográficas), periodo temporal (periodo da label, data, intervalo da data) ou jurisdição (como o nome de uma entidade administrativa)</description>
+		<example>Por exemplo: "Norte 90, Sul -90, Leste 180, Oeste -180. Global". As boas práticas recomendam que se selecione um valor de uma tabela dominio (por exemplo, o Thesaurus of Geographic Names [TGN]) e de usar, se for caso disso, o nome do lugar ou o periodo de tempo, de preferência identificadores numéricos tais como coordenadas ou intervalos de data.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:rights">
+		<label>Gestão de direitos</label>
+		<description>Informação sobre os direitos detidos sobre o recurso.</description>
+		<example>Normalmente, deverá conter uma declaração de gestão de direitos do recurso, ou uma informação sobre um serviço que possa fornecer tais informações. Esta informação engloba muitas vezes direitos de propriedade intelectual(IPR), direitos de autor, e varios de propriadade intelectual Se estes direitos não constarem, nenhuma suposição deverá ser tida sobre direitos de posse ou sobre o recurso.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:modified">
+		<label>Dta da modificação</label>
+		<description>Data onde os metadados foram modificados.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:abstract">
+		<label>Resumo</label>
+		<description>Um resumo do conteúdo do recurso</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:spatial">
+		<label>Espaço</label>
+		<description>Caracteristicas espaciais do conteudo do recurso</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:audience">
+		<label>Audiência</label>
+		<description>A classe da entidade para qual o recurso se destina ou é util.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualMethod">
+		<label>Método de exercicio</label>
+		<description>Os metodos pelo qual os itens são adicionados a uma colecção.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualPeriodicity">
+		<label>Accrual Periodicity</label>
+		<description>A frequência pelo qual os itens são adicionados a uma colecção.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualPolicy">
+		<label>Accrual Policy</label>
+		<description>A política que rege a adição de itens a uma coleção.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:instructionalMethod">
+		<label>Método de ensino</label>
+		<description>Um processo, usado para gerar conhecimento, atitudes e habilidades, que o recurso se destina a suportar.
+</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:provenance">
+		<label>Proveniência</label>
+		<description>Uma declaração de quaisqueres alterações na posse e guarda dos recursos desde a sua criação, que são importantes para a sua autenticidade, integridade e interpretação.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:rightsHolder">
+		<label>Direitos do titular</label>
+		<description>Uma pessoa ou organização que possuem gerem os direitos sobre o recurso</description>
+	</element>
+	<!-- ==================================================== -->
+</labels>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Erro de privilégio</heading>
+	<message>Você não tem os direitos necessários para efectuar este operação.</message>
+	<button>Voltar</button>
+</strings>

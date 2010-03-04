@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>	
+	<abstract>Resumo</abstract>
+	<activate>Activar</activate>
+	<addLayer js="true">Adicionar novo layer</addLayer>
+	<address>Endereço</address>
+	<addService>Adicionar mais mapas</addService>
+	<associatedStyles>estilos associados:</associatedStyles>				
+	<bigger>Mapa maior</bigger>
+	<btnstyles>Visualizar e selecionar estilos</btnstyles>	
+	<cancel>Cancelar</cancel>
+	<choosemapfromlist>Por favor escolha um ou mais serviços de mapas da lista em baixo</choosemapfromlist>
+	<choosemapserver>Por favor escolha um servidor de mapas da lista em baixo ou insira outro manualmente</choosemapserver>
+	<choosepredefinedmap>Por favor escolha um mapa predefinido da lista em baixo ou</choosepredefinedmap>
+	<close>Fechar</close>
+	<connect>Ligar</connect>
+	<contactInfo>Contactos:</contactInfo>
+	<contactPerson>Contacto do responsável:</contactPerson>
+	<contexts>Contexto</contexts>
+	<delete>[delete]</delete>
+	<down>Mover layer para baixo</down>
+	<email>email:</email>
+	<error>[erro]</error>
+	<exportAsImage js="true">Exportar este mapa como uma imagem</exportAsImage>
+	<exportAsPDF js="true">Exportar este mapa como um PDF</exportAsPDF>
+	<exportAsWMC js="true">Salva o Web Map Context</exportAsWMC>
+	<extents>Mude o tempos selecionados (temporal data)</extents>
+	<extentSelected>Tempo Selecionado: </extentSelected>
+	<featuresfound>Recursos encontrados</featuresfound>
+	<findMapsGeoNetwork>Encontre mais mapas através do GeoNetwork opensource</findMapsGeoNetwork>
+	<findMapsMapServers>Adicione mais layers através da ligação a outros Web Map Servers</findMapsMapServers>
+	<fullExtent>Zoom á totalidade do mapa</fullExtent>
+	<getFeatures>Adicione recursos</getFeatures>
+	<gotoGeoNetwork>GeoNetwork opensource</gotoGeoNetwork>
+	<gotoMapServers>Servidores de mapas</gotoMapServers>
+	<homepage>Pagina Inicial:</homepage>
+	<identify>Identificar um recurso no mapa</identify>
+	<info>info</info>
+	<keywords>Palavras chave:</keywords>
+	<layerInfo>Layer Info</layerInfo>
+	<layers>Layers</layers>
+	<layersAdded js="true">Os layers selecionados foram adicionados</layersAdded>
+	<layersHide>Esconder a lista de layers</layersHide>
+	<layerShowHide>Mostrar ou esconder layer</layerShowHide>
+	<layersShow>Mostrar a lista de layers</layersShow>
+	<legend>Mostrar a legenda</legend>
+	<listofmaps>Lista de mapas</listofmaps>
+	<listofmapservers>Lista de servidores de mapas</listofmapservers>
+	<loadingFrom js="true">A carregar serviços de</loadingFrom>
+	<loadingFromWMS js="true">A carregar serviços do servidor WMS dado</loadingFromWMS>
+	<loadingMap>...Mapa a Carregar...</loadingMap>
+	<makeActive>Selecionar para colocar este layer activo(e.g. for Identify)</makeActive>
+	<manually>Crie o seu próprio mapa</manually>
+	<map>Mapa</map>
+	<mapServer>Servidor de Mapas</mapServer>
+	<mapsfound>Mapas Encontrados</mapsfound>
+	<markerDeleted>O Simbolo foi apagado</markerDeleted> 
+	<markerDeleting>Simbolo a ser apagada...</markerDeleting> 
+	<markerlistbutton>Lista de Simbolos</markerlistbutton>
+	<markerlisttitle js="true">Lista de Simbolos</markerlisttitle>
+	<markerNone>Não há simbolos definidos.</markerNone>	
+	<markerUpdated>O simbolo foi actualizado</markerUpdated> 
+	<markerUpdating>Actualizando simbolo...</markerUpdating> 
+	<metadata>Metadados</metadata>
+	<newMap>Criar um novo mapa</newMap>
+	<noFeature>Não foram encontrados recursos</noFeature>
+	<noService>Não foram econtrados mapas</noService>
+	<noStyle>Só o estilo por defeito está disponivel para este mapa</noStyle>
+	<ok>Ok</ok>
+	<oneFeature>Um recurso encontrado</oneFeature>
+	<oneService>Um mapa encontrado</oneService>
+	<otherArcIMS>- Outro servidor de ArcIMS </otherArcIMS>
+	<otherWMS>- Outro servidor de WMS  </otherWMS>
+	<pan>Pan</pan>
+	<position>Posição:</position>
+	<print>Imprimir o mapa</print>
+	<properties>Propriedades</properties>
+	<reCenter>Recentrar o mapa</reCenter>
+	<refresh>Refresh</refresh>
+	<refreshNotification>Por favor click o botao de "Refresh" debaixo da lista de layers para ver as mudanças.</refreshNotification>
+	<removeLayer>Remover layer</removeLayer>
+	<removeMarker>Remover marker</removeMarker>
+	<reset>Reset</reset>
+	<sendByEmail js="true">Enviar este mapa por e-mail</sendByEmail>
+	<setScale>--Definir escala--</setScale>
+	<setStyle>Definir estilos</setStyle>				
+	<showLayerMD js="true">Informação sobre o Layer</showLayerMD>
+	<smaller>Mapa mais pequeno</smaller>
+	<specify>Especificar se for outro:</specify>
+	<start>InterMap opensource</start>
+	<style>Selecionar o estilo desejado</style>
+	<styleSet>The style has been successfully set.</styleSet> 
+	<styleSetError>Um erro inesperado foi encontrado:</styleSetError>				
+	<styleSetting>A defenir o estilo...</styleSetting> 
+	<telephone>telefone:</telephone>
+	<title>InterMap opensource</title>
+	<titleShowStyles js="true">Estilos disponiveis</titleShowStyles>
+	<transparency>Definir transparência</transparency>
+	<unexpectedError>Foi encontrado um erro inesperado enquanto estava a realizar a operação:</unexpectedError>				
+	<up>Mover layer para cima</up>
+	<update>Actualizar</update>
+	<updateMarker>Actualizar a informação do simbolo</updateMarker>
+	<wait js="true">Por Favor espere...</wait>
+	
+	<wmcbuttondownload js="true">Download current context</wmcbuttondownload>	
+	<wmcbuttonmail js="true">Send current context</wmcbuttonmail>	
+	<wmcbuttonmain js="true">View context menu</wmcbuttonmain>	
+	<wmcbuttonupload js="true">Upload a context</wmcbuttonupload>	
+	
+	<wmcMailBuilding>O email está a ser construido...</wmcMailBuilding>
+	<wmcMailError>Foi encontrado um erro inesperado enquanto estava a processar o mail:</wmcMailError>
+	<wmcMailSend>Enviar e-mail</wmcMailSend>
+	<wmcMailSent>O e-mail foi enviado com sucesso</wmcMailSent>
+	
+	<wmctitle js="true">WMC Context menu</wmctitle>	
+	<wmctitlemail js="true">Send a WMC Context via e-mail</wmctitlemail>	
+	<wmctitleupload js="true">Upload and set a context</wmctitleupload>
+	
+	<wmcUploadAdd>Adicionar para os layers presentes</wmcUploadAdd>
+	
+	<wmcUploaded>The context has been uploaded </wmcUploaded>
+	<wmcUploading>The context file is uploading...</wmcUploading> 
+	<wmcUploadingError>An unexpected error has been encountered while uploading the context:</wmcUploadingError>				
+	
+	<wmcUploadReplace>Substituir layers presentes</wmcUploadReplace>
+	<wmsConfigForm>Propriedades do Layer</wmsConfigForm>
+	<zoomIn>Zoom in</zoomIn>
+	<zoomLayer>Zoom ao layer</zoomLayer>
+	<zoomOut>Zoom out</zoomOut>
+</strings>
