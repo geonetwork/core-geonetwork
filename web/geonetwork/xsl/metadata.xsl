@@ -5,7 +5,7 @@
 	xmlns:gmd="http://www.isotc211.org/2005/gmd"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
-	exclude-result-prefixes="exslt xlink gco geonet">
+	exclude-result-prefixes="exslt xlink gco gmd geonet">
 
 	<xsl:import href="text-utilities.xsl"/>
 	<xsl:include href="metadata-utils.xsl"/>
@@ -774,12 +774,20 @@
 				</xsl:if>
 			</th>
 			<td class="padded" valign="top">
+			
+				<xsl:variable name="textnode" select="exslt:node-set($text)"/>
 				<xsl:choose>
 					<xsl:when test="$edit">
 						<xsl:copy-of select="$text"/>
 					</xsl:when>
+					<xsl:when test="count($textnode/*) &gt; 0">
+					<!-- In some templates, text already contains HTML (eg. codelist, link for download).
+						In that case copy text content and does not resolve
+						hyperlinks. -->
+						<xsl:copy-of select="$text"/>
+					</xsl:when>
 					<xsl:otherwise>
-						<xsl:call-template name="addHyperlinksAndLineBreaks">
+						<xsl:call-template name="addLineBreaksAndHyperlinks">
 							<xsl:with-param name="txt" select="$text"/>
 						</xsl:call-template>
 					</xsl:otherwise>
@@ -1132,29 +1140,24 @@
 				</textarea>
 			</xsl:when>
 			<xsl:when test="$edit=false() and $rows!=1">
-				<xsl:variable name="text">
-					<xsl:choose>
-						<xsl:when test="starts-with($schema,'iso19139')">
-							<xsl:apply-templates mode="localised" select="..">
-								<xsl:with-param name="langId" select="$langId"></xsl:with-param>
-							</xsl:apply-templates>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="$value"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
-				
-				<xsl:call-template name="preformatted">
-					<xsl:with-param name="text" select="$text"/>
-				</xsl:call-template>
+				<xsl:choose>
+					<xsl:when test="starts-with($schema,'iso19139')">
+						<xsl:apply-templates mode="localised" select="..">
+							<xsl:with-param name="langId" select="$langId"></xsl:with-param>
+						</xsl:apply-templates>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:copy-of select="$value"/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
 				<!-- not editable text/codelists -->
 				<xsl:variable name="label" select="/root/gui/*[name(.)=$schema]/codelist[@name = $name]/entry[code=$value]/label"/>
 				<xsl:choose>
 					<xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
-					<xsl:when test="starts-with($schema,'iso19139') and name(.)!='gco:ScopedName'">
+					<xsl:when test="starts-with($schema,'iso19139') 
+							and name(.)!='gco:ScopedName' and name(.)!='gco:Date' and name(.)!='gco:DateTime'">
 						<xsl:apply-templates mode="localised" select="..">
 							<xsl:with-param name="langId" select="$langId"></xsl:with-param>
 						</xsl:apply-templates>
@@ -1299,40 +1302,6 @@
 		</xsl:if>
 	</xsl:template>
 
-	<!--
-	translates CR-LF sequences into HTML newlines <p/>
-	-->
-	<xsl:template name="preformatted">
-		<xsl:param name="text"/>
-
-		<xsl:choose>
-			<xsl:when test="contains($text,'&#13;&#10;')">
-				<xsl:value-of select="substring-before($text,'&#13;&#10;')"/>
-				<br/>
-				<xsl:call-template name="preformatted">
-					<xsl:with-param name="text"  select="substring-after($text,'&#13;&#10;')"/>
-				</xsl:call-template>
-			</xsl:when>
-			<xsl:when test="contains($text,'&#13;')">
-				<xsl:value-of select="substring-before($text,'&#13;')"/>
-				<br/>
-				<xsl:call-template name="preformatted">
-					<xsl:with-param name="text"  select="substring-after($text,'&#13;')"/>
-				</xsl:call-template>
-			</xsl:when>
-			<xsl:when test="contains($text,'&#10;')">
-				<xsl:value-of select="substring-before($text,'&#10;')"/>
-				<br/>
-				<xsl:call-template name="preformatted">
-					<xsl:with-param name="text"  select="substring-after($text,'&#10;')"/>
-				</xsl:call-template>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="$text"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-	
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<!-- XML formatting -->
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

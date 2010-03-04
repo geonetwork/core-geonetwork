@@ -745,16 +745,20 @@
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="text">
-						<xsl:for-each select="gmd:MD_Keywords/gmd:keyword">
-							<xsl:if test="position() &gt; 1">, </xsl:if>
-							<xsl:value-of select="."/>
-						</xsl:for-each>
-						<xsl:if test="gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue!=''">
-							<xsl:text> (</xsl:text>
-							<xsl:value-of select="gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue"/>
-							<xsl:text>)</xsl:text>
-						</xsl:if>
-						<xsl:text>.</xsl:text>
+						<xsl:variable name="value">
+							<xsl:for-each select="gmd:MD_Keywords/gmd:keyword">
+								<xsl:if test="position() &gt; 1"><xsl:text>, </xsl:text></xsl:if>
+								<xsl:value-of select="."/>
+							</xsl:for-each>
+							<xsl:if test="gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue!=''">
+								<xsl:text> (</xsl:text>
+								<xsl:value-of select="gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue"/>
+								<xsl:text>)</xsl:text>
+							</xsl:if>
+							<xsl:text>.</xsl:text>
+						</xsl:variable>
+						<!-- Clean new lines which may be added by formatting. -->
+						<xsl:value-of select="normalize-space($value)"/>
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:otherwise>

@@ -10,7 +10,8 @@
 	<xsl:output method='html' omit-xml-declaration="yes" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd" indent="yes"/>
 
 	<xsl:include href="edit.xsl"/>
-
+	<xsl:include href="text-utilities.xsl"/>
+	
 	<!-- page content -->
   <xsl:template name="content">
 		<script>
@@ -252,8 +253,8 @@
 									<b><xsl:value-of select="name(.)"/></b>
 								</td>
 								<td align="left">
-									<xsl:call-template name="preformatted">
-										<xsl:with-param name="text" select="."/>
+									<xsl:call-template name="addLineBreaksAndHyperlinks">
+										<xsl:with-param name="txt" select="."/>
 									</xsl:call-template>
 								</td>
 							</tr>
@@ -270,40 +271,6 @@
 				<xsl:copy-of select="*"/>
 			</table>
 		</div>
-	</xsl:template>
-
-	<!--
-	translates CR-LF sequences into HTML newlines <p/>
-	-->
-	<xsl:template name="preformatted">
-		<xsl:param name="text"/>
-
-		<xsl:choose>
-			<xsl:when test="contains($text,'&#13;&#10;')">
-				<xsl:value-of select="substring-before($text,'&#13;&#10;')"/>
-				<br/>
-				<xsl:call-template name="preformatted">
-					<xsl:with-param name="text"  select="substring-after($text,'&#13;&#10;')"/>
-				</xsl:call-template>
-			</xsl:when>
-			<xsl:when test="contains($text,'&#13;')">
-				<xsl:value-of select="substring-before($text,'&#13;')"/>
-				<br/>
-				<xsl:call-template name="preformatted">
-					<xsl:with-param name="text"  select="substring-after($text,'&#13;')"/>
-				</xsl:call-template>
-			</xsl:when>
-			<xsl:when test="contains($text,'&#10;')">
-				<xsl:value-of select="substring-before($text,'&#10;')"/>
-				<br/>
-				<xsl:call-template name="preformatted">
-					<xsl:with-param name="text"  select="substring-after($text,'&#10;')"/>
-				</xsl:call-template>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="$text"/>
-			</xsl:otherwise>
-		</xsl:choose>
 	</xsl:template>
 	
 </xsl:stylesheet>
