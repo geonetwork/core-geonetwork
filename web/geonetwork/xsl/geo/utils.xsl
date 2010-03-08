@@ -62,6 +62,7 @@
 			</xsl:when>
         </xsl:choose>		        
         <script type="text/javascript" src="../../scripts/editor/app.LinkedMetadataSelectionPanel.js"></script>
+        <script type="text/javascript" src="../../scripts/editor/app.CRSSelectionPanel.js"></script>
     </xsl:template>
     
     <xsl:template name="css">
