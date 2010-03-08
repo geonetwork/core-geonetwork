@@ -3713,6 +3713,10 @@
 				geonet:child[@name='descriptiveKeywords' and @prefix='gmd']">
 		<xsl:text>showKeywordSelectionPanel</xsl:text>
 	</xsl:template>
+	<xsl:template mode="addXMLFragment" match="gmd:referenceSystemInfo|
+				geonet:child[@name='referenceSystemInfo' and @prefix='gmd']">
+		<xsl:text>showCRSSelectionPanel</xsl:text>
+	</xsl:template>
 	<xsl:template mode="addXMLFragment" match="*|@*"></xsl:template>
 	
 </xsl:stylesheet>

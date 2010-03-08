@@ -112,6 +112,9 @@
 	<selectedKeywords js="true">Selected keywords</selectedKeywords>
 	<foundKeywords js="true">Available keywords</foundKeywords>
 	<keywordSelectionWindowTitle js="true">Keywords selection</keywordSelectionWindowTitle>
+	<crsSelectionWindowTitle js="true">Coordinate reference system selection</crsSelectionWindowTitle>
+	<selectedCRS js="true">Selected coordinate systems</selectedCRS>
+	<foundCRS js="true">Available coordinate systems</foundCRS>
 	
 	<about>About</about>
 	<abstract>Abstract</abstract>

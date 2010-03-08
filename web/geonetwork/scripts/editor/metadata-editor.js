@@ -1152,6 +1152,53 @@ function showLinkedServiceMetadataSelectionPanel(name, serviceUrl, uuid) {
 }
 
 
+/**
+ * Property: crsSelectionWindow
+ * The window in which we can select CRS
+ */
+var crsSelectionWindow;
+
+/**
+ * Display CRS selection panel
+ * 
+ * @param ref
+ * @param name
+ * @return
+ */
+function showCRSSelectionPanel(ref, name) {
+    if (!crsSelectionWindow) {
+        var crsSelectionPanel = new app.CRSSelectionPanel({
+            width: 620,
+            height: 300,
+            listeners: {
+                crsSelected: function(xml) {
+        			var id = '_X' + ref + '_' + name.replace(":","COLON");
+
+	        		// Add XML fragments into main form.
+					var input = {tag: 'input', type: 'hidden', id: id, name: id, value: xml};
+					var dh = Ext.DomHelper;
+					dh.append(Ext.get("hiddenFormElements"), input);
+						
+					// Save
+					doAction('metadata.update');
+                }
+            }
+        });
+
+        crsSelectionWindow = new Ext.Window({
+            title: translate('crsSelectionWindowTitle'),
+            layout: 'fit',
+            items: crsSelectionPanel,
+            closeAction: 'hide',
+            constrain: true,
+            iconCls: 'searchIcon'
+        });
+    }
+    
+    crsSelectionWindow.items.get(0).setRef(ref);
+    crsSelectionWindow.show();
+}
+
 
 /**
  * Trigger validating event of an element.

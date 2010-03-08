@@ -258,7 +258,7 @@
 		<allow service="selection.search"/>
 		<allow service="pdf.selection.search"/>
 		<allow service="pdf.present"/>
-		
+
 		<!-- WMC -->
 		<allow service="intermap.wmc.setWmcContext"/>
 
@@ -336,7 +336,12 @@
 	 	<allow service="thesaurus.list"/>
 		<allow service="thesaurus.view"/><!-- FIXME : Check if needed -->
 		<allow service="xml.thesaurus.getList"/>
-
+		
+		<!-- CRS get -->
+		<allow service="crs.search"/>
+		<allow service="crs.types"/>
+		<allow service="crs.get"/>
+		
 		<!-- Test CSW ISO server -->
 		<allow service="test.csw"/>
 
