@@ -19,7 +19,8 @@
 					&#160;
 					<input name="submit" type="submit" value="{/root/gui/strings/upload}"/>
 					&#160;
-					<xsl:value-of select="/root/gui/strings/overwriteFile"/><input name="overwrite" type="checkbox" />
+					<label for="overwrite"><xsl:value-of select="/root/gui/strings/overwriteFile"/></label>
+					<input id="overwrite" name="overwrite" type="checkbox" />
 				</form>
 			<div id='uploadresponse'></div>
 			</center>
