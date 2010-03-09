@@ -68,7 +68,8 @@
 	<searchText js="true">Text search</searchText>
 	<mdTitle js="true">Metadata title</mdTitle>
 	<createRelation js="true">Create relation</createRelation>
-	<export>Export</export>
+	<export>Export (ZIP)</export>
+	<exportText>Export (CSV)</exportText>	
 	<addXMLFragment>Add from dictionary ...</addXMLFragment>
 	<translateWithGoogle>Use Google translation service to suggest a translation for selected language.</translateWithGoogle>
 	<translateWithGoogle.maxSize js="true">Text to translate is larger than 5000 characters (see http://code.google.com/apis/ajaxlanguage/terms.html).</translateWithGoogle.maxSize>

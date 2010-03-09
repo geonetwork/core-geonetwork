@@ -891,6 +891,22 @@
 			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
+
+
+       <!-- Service to export a GeoNetwork query in a text file output. -->
+		<service name="csv.search">
+		   <class name=".services.main.SelectionSearch">
+		       <param name="fast" value="false" />
+		   </class>
+		   <output forward="csv.present" />
+		</service>
+		<service name="csv.present">
+		   <class name=".services.main.Result"/>
+		   <output sheet="csv-search.xsl" contentType="text/plain; charset=UTF-8" />
+		</service>
+		
+
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- relation services -->
 

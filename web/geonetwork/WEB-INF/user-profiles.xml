@@ -301,6 +301,10 @@
 		<allow service="rss.search"/>
 		<allow service="rss.present"/>
 
+		<!-- CSV Service -->
+		<allow service="csv.search"/>
+		<allow service="csv.present"/>		
+
 		<!-- KML services -->
 		<allow service="google.kml"/>
 <!--		<allow service="search.kml"/>
