@@ -567,7 +567,7 @@ function doFileUploadSubmit(form)
 	var fref = fid['f_'+$F(ref)];
 	var fileName = $F(fref);
 	if (fileName == '') {
-		alert(translate("selectOnFile"));
+		alert(translate("selectOneFile"));
 		return false;
 	}
 
