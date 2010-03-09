@@ -556,7 +556,7 @@
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
-					<xsl:with-param name="text" select="concat(refDate,' (',refDateType/DateTypCd/@value,')')"/>
+					<xsl:with-param name="text"><xsl:value-of select="refDate"/><xsl:text> (</xsl:text><xsl:value-of select="refDateType/DateTypCd/@value"/>)</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:when>
 			
