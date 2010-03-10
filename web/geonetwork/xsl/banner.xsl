@@ -115,7 +115,7 @@
 					</xsl:choose>
 					</xsl:variable>
 					
-					<select class="banner-content">
+					<select class="banner-content content">
 						<xsl:attribute name="onchange">location.replace('../' + this.options[this.selectedIndex].value + '/<xsl:value-of select="$redirectTo"/>');</xsl:attribute>
 						<xsl:for-each select="/root/gui/config/languages/*">
 							<xsl:variable name="lang" select="name(.)"/>
