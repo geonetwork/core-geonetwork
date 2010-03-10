@@ -5,6 +5,21 @@
  Updating a parameter don't need a restart (but need an XSL cache refresh if XSL caching is on).
 -->
 <config>
+ <!-- Comment out languages to hide them
+ from language selector. -->
+ <languages>
+  <!--<ar/>-->
+  <cn/>
+  <de/>
+  <en/>
+  <es/>
+  <fr/>
+  <nl/>
+  <pt/>
+  <ru/>
+ </languages>
+ 
+ 
  <map>
   <!-- Configuration for map displayed in metadata sheet
   (view or edit mode). -->
@@ -42,6 +57,7 @@
  edit and view mode. 
  -->
  <editor-metadata-relation/>
+
  
  <!-- Proxy URL to use for XHR. 
  Check that the proxy could query allowed hosts.

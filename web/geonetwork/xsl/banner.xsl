@@ -105,68 +105,28 @@
 					|
 				</td>
 				<td align="right" class="banner-menu" width="610px">
+					<!-- Redirect to current page when no error could happen 
+					(ie. when having no parameters in GET), if not redirect to the home page. -->
+					<xsl:variable name="redirectTo">
 					<xsl:choose>
-						<xsl:when test="/root/gui/language='cn'">
-							<font class="banner-active"><xsl:value-of select="/root/gui/strings/cn"/></font>
-						</xsl:when>
-						<xsl:otherwise>
-							<a class="banner" href="{/root/gui/service}/cn/main.home"><xsl:value-of select="/root/gui/strings/cn"/></a>
-						</xsl:otherwise>
+						<xsl:when test="/root/gui/reqService='metadata.show'">main.home</xsl:when>
+						<!-- TODO : Add other exception ? -->
+						<xsl:otherwise><xsl:value-of select="/root/gui/reqService"/></xsl:otherwise>
 					</xsl:choose>
-					|
-					<xsl:choose>
-						<xsl:when test="/root/gui/language='en'">
-							<font class="banner-active"><xsl:value-of select="/root/gui/strings/en"/></font>
-						</xsl:when>
-						<xsl:otherwise>
-							<a class="banner" href="{/root/gui/service}/en/main.home"><xsl:value-of select="/root/gui/strings/en"/></a>
-						</xsl:otherwise>
-					</xsl:choose>
-					|
-					<xsl:choose>
-						<xsl:when test="/root/gui/language='es'">
-							<font class="banner-active"><xsl:value-of select="/root/gui/strings/es"/></font>
-						</xsl:when>
-						<xsl:otherwise>
-							<a class="banner" href="{/root/gui/service}/es/main.home"><xsl:value-of select="/root/gui/strings/es"/></a>
-						</xsl:otherwise>
-					</xsl:choose>
-					|
-					<xsl:choose>
-						<xsl:when test="/root/gui/language='fr'">
-							<font class="banner-active"><xsl:value-of select="/root/gui/strings/fr"/></font>
-						</xsl:when>
-						<xsl:otherwise>
-							<a class="banner" href="{/root/gui/service}/fr/main.home"><xsl:value-of select="/root/gui/strings/fr"/></a>
-						</xsl:otherwise>
-					</xsl:choose>
-					|
-					<xsl:choose>
-						<xsl:when test="/root/gui/language='ru'">
-							<font class="banner-active"><xsl:value-of select="/root/gui/strings/ru"/></font>
-						</xsl:when>
-						<xsl:otherwise>
-							<a class="banner" href="{/root/gui/service}/ru/main.home"><xsl:value-of select="/root/gui/strings/ru"/></a>
-						</xsl:otherwise>
-					</xsl:choose>
-					|
-					<xsl:choose>
-						<xsl:when test="/root/gui/language='de'">
-							<font class="banner-active"><xsl:value-of select="/root/gui/strings/de"/></font>
-						</xsl:when>
-						<xsl:otherwise>
-							<a class="banner" href="{/root/gui/service}/de/main.home"><xsl:value-of select="/root/gui/strings/de"/></a>
-						</xsl:otherwise>
-					</xsl:choose>
-					|
-					<xsl:choose>
-						<xsl:when test="/root/gui/language='nl'">
-							<font class="banner-active"><xsl:value-of select="/root/gui/strings/nl"/></font>
-						</xsl:when>
-						<xsl:otherwise>
-							<a class="banner" href="{/root/gui/service}/nl/main.home"><xsl:value-of select="/root/gui/strings/nl"/></a>
-						</xsl:otherwise>
-					</xsl:choose>
+					</xsl:variable>
+					
+					<select class="banner-content">
+						<xsl:attribute name="onchange">location.replace('../' + this.options[this.selectedIndex].value + '/<xsl:value-of select="$redirectTo"/>');</xsl:attribute>
+						<xsl:for-each select="/root/gui/config/languages/*">
+							<xsl:variable name="lang" select="name(.)"/>
+							<option value="{$lang}">
+								<xsl:if test="/root/gui/language=$lang">
+									<xsl:attribute name="selected">selected</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="/root/gui/strings/*[name(.)=$lang]"/>
+							</option>	
+						</xsl:for-each>
+					</select>
 				</td>
 			</tr>
 

@@ -8,7 +8,8 @@
 	<fr>Français</fr> <!-- Do not translate! -->
 	<nl>Nederlands</nl> <!-- Do not translate -->
 	<ru>Русский</ru> <!-- Do not translate! -->
-	
+    <pt>Рortuguês</pt> <!-- Do not translate! -->
+    
 	<shortcutHelp js="true">Help on shortcuts ?</shortcutHelp>
 	<helpShortcutsEditor>
 		<h2>Shortcuts in editing mode:</h2>

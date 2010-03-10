@@ -223,6 +223,14 @@ input.content, select.content, textarea.content {
 	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
 }
 
+select.banner-content {
+	font-family: Verdana;
+	font-size: 7pt;
+	color: #064377;
+	max-width: 400px;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
 input.error, textarea.error, select.error {
     color: #FF2211 !important;
     border: 3px solid #FF2211 !important;
@@ -257,6 +265,7 @@ input.content-small, button.content-small {
 legend.block-legend {
 	font-weight: bold;
 }
+
 
 /*******************************************************************************
 footer
