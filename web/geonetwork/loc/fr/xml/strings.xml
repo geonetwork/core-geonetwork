@@ -9,6 +9,75 @@
     <nl>Nederlands</nl> <!-- Do not translate -->
 	<ru>Русский</ru> <!-- Do not translate! -->
 	
+	<shortcutHelp>Aide pour les raccourcis ?</shortcutHelp>
+	<helpShortcutsEditor> 
+		<h2>Raccourcis pour l'édition:</h2>
+		<hr/>
+		<ul>
+			<li>ctrl+shift+s: Sauver</li>
+			<li>ctrl+shift+v: Valider le document</li>
+			<li>ctrl+shift+q: Sauver et fermer</li>
+			<li>ctrl+shift+t: Définir les imagettes pour le document</li>
+			<li>ctrl+shift+r: Réinitialiser</li>
+			<li>ctrl+shift+c: Annuler</li>
+		</ul>
+	</helpShortcutsEditor>
+	<validationReport js="true">Rapport de validation</validationReport>
+	<errorsOnly>Erreurs uniquement</errorsOnly>
+	<schematronReport>Conformité par rapport aux recommendations (Schematron)</schematronReport>
+	<xsdReport>Conformité par rapport au standard (Schéma XML)</xsdReport>
+	<rules name="schematron-rules-inspire">Règles INSPIRE</rules>
+	<rules name="schematron-rules-iso">Règles ISO 19115/19119</rules>
+	<rules name="schematron-rules-geonetwork">Recommendations GeoNetwork</rules>
+	<getCapabilitiesLayer js="true">Couches du GetCapabilities</getCapabilitiesLayer>
+	<ServiceUpdateError js="true">Erreur lors de la mise à jour de la métadonnée.</ServiceUpdateError>
+	<NotOwnerError js="true">Vous n'avez pas les privilèges pour mettre à jour la métadonnée associée.</NotOwnerError>
+	<NoServiceURLError js="true">Vérifier que l'URL du service est définie.</NoServiceURLError>
+	<GetCapabilitiesDocumentError js="true">Erreur lors de la tentative de récupération des informations du service (ie. GetCapabilities) avec l'adresse: </GetCapabilitiesDocumentError>
+	<noOperatesOn>Aucun jeux de données associé.</noOperatesOn>
+	<linkedDataset>Jeux de données associés:</linkedDataset>
+	<linkedFeatureCatalogue>Catalogue d'attributs associés:</linkedFeatureCatalogue>
+	<linkedFeatureCatalogueHelp>Ajouter une relation entre la métadonnnée en cours et
+		un catalogue d'attribut au format ISO19110.</linkedFeatureCatalogueHelp>
+	<createLinkedFeatureCatalogue>Associer un catalogue d'attribut</createLinkedFeatureCatalogue>
+	<layerNameHelp>Lors de l'association d'une métadonnée de service avec une ou plusieurs
+		métadonnée de données, l'élément 
+		"coupled resource" (ressource couplée) peut contenir la nom de la couche tel que définie dans le service OGC.
+		La list des couches diffusées par le service peut aider l'éditeur à choisir une valeur.
+		</layerNameHelp>
+	<layerName js="true">Nom de la couche</layerName>
+	<createIfNotExistButton js="true">Créer une nouvelle métadonnée</createIfNotExistButton>
+	<associateService js="true">Associer une métadonnée de service</associateService>
+	<associateDataset js="true">Associer une métadonnée de données</associateDataset>
+	<associateServiceHelp>Pour associer une métadonnée de service, rechercher un service et choisir la couche associée.</associateServiceHelp>
+	<associateDatasetHelp>Pour associer une métadonnée de données, aller dans la vue ISO &gt; onglet Identification,
+		et définir l'élément "operates on".</associateDatasetHelp>
+	<addParent> Ajouter ou mettre à jour l'information sur le parent</addParent>
+	<createAssoService>Créer la relation</createAssoService>
+	<updateMdd>Mettre à jour la métadonnée de données</updateMdd>
+	<datasetCreate>Créer une métadonnée de données</datasetCreate>
+	<linkedServices> Services associés:</linkedServices>
+	<linkedServiceMetadataHelp>Pour associer une métadonnée de service, aller dans la vue ISO &gt; onglet Distribution.</linkedServiceMetadataHelp>
+	<linkedParentMetadata> Parent/enfant :</linkedParentMetadata>
+	<linkedParentMetadataHelp>Pour associer un parent, aller dans la vue ISO &gt; onglet Metadonnées.</linkedParentMetadataHelp>
+	<linkedChildrenMetadata> Enfants:</linkedChildrenMetadata>
+	<linkedChildrenMetadataHelp>Liste des enfants pour la métadonnée en cours.</linkedChildrenMetadataHelp>
+	<linkedDatasetMetadata> Jeux de données associés:</linkedDatasetMetadata>
+	<serviceCreate>Créer une métadonnée de service</serviceCreate>
+	<parentSearch js="true">Chercher un parent pour la métadonnée en cours.</parentSearch>
+	<linkedMetadataSelectionWindowTitle js="true">Sélection des métadonnées associées</linkedMetadataSelectionWindowTitle>
+	<mdTitle js="true">Titre de la métadonnée</mdTitle>
+	<createRelation js="true">Créer la relation</createRelation>
+	<exportText>Export (CSV)</exportText>
+	<selectOneFile>Vous devriez sélectionner un fichier !</selectOneFile>
+	<errors>erreurs</errors>
+	<closeWindow>Fermer la fenêtre</closeWindow>
+	<selectOneFile>Chercher ou saisir un nom de fichier avant l'envoi !</selectOneFile>
+	<perThesaurus> par thesaurus</perThesaurus>
+	<crsSelectionWindowTitle>Sélection des systèmes de coordonnées</crsSelectionWindowTitle>
+	<selectedCRS>Systèmes sélectionnés</selectedCRS>
+	<foundCRS>Systèmes de coordonnées disponibles</foundCRS>
+	<printSelection>Imprimer la sélection</printSelection>
 	<export>Exporter</export>
 	<addXMLFragment>Ajouter depuis un dictionnaire ...</addXMLFragment>
 	<translateWithGoogle>Utiliser le service de traduction de Google pour proposer une traduction pour la langue sélectionnée.</translateWithGoogle>
@@ -42,7 +111,6 @@
 	<errorSaveFailed js="true">Erreur : Impossible de sauver le formulaire </errorSaveFailed>
 	<errorOnAction js="true">Erreur : Impossible de réaliser l'action </errorOnAction>
 	<errorChangeProtocol js="true">Un fichier a dû être envoyé. Vous ne pouvez pas modifier le protocole à moins de le supprimer.</errorChangeProtocol>
-	<selectOneFile js="true">Sélectionner un fichier avant de l'envoyer !</selectOneFile>
 	<uploadFailed js="true">Erreur : Echec de l'envoi ! - Info : </uploadFailed>
 	<uploadSetFileNameFailed js="true">Erreur : Fichier envoyé mais impossible de définir le nom du fichier !</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Pas d'information disponible.</cannotGetTooltip>
@@ -86,7 +154,6 @@
 	<bookmarkFacebook>Bookmark on Facebook</bookmarkFacebook>
 	<bookmarkPermanent>Permanent link to this description</bookmarkPermanent>
 	<bookmarkStumbleUpon>Bookmark on StumbleUpon</bookmarkStumbleUpon>
-	<bounding>Bounding Coordinates</bounding>
 	<bounding>Coordonnées de l'emprise</bounding>
 	<boundingRelation value="encloses">contient</boundingRelation>
 	<boundingRelation value="equal">identique</boundingRelation>
@@ -321,8 +388,8 @@
 	<metadata.admin.index.failed>Echec lors de la reconstruction de l'index</metadata.admin.index.failed>
 	<metadata.admin.index.success>L'index a été reconstruit avec succès...</metadata.admin.index.success>
 	<metadata.admin.index>Gestion de l&apos;index</metadata.admin.index>
-	<metadata-template-order>Sort Templates</metadata-template-order>	
-	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>		
+	<metadata-template-order>Ordonner les modèles</metadata-template-order>	
+	<metadata-template-order-desc>Ordonner les modèles de saisie</metadata-template-order-desc>		
 	<metadata>Métadonnées</metadata>
 	<metadataAdded>Métadonnées ajouter avec l'ID:</metadataAdded>
 	<metadataDeleted>Métadonnées supprimer avec l'ID:</metadataDeleted>

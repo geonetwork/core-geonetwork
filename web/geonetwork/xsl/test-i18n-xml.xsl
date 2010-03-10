@@ -15,6 +15,7 @@
             <de />
 			<ru />
 			<nl />
+			<pt />
 		</langs>
 	</xsl:variable>
 
@@ -130,27 +131,9 @@
 
         <xsl:if test="$ok='red'">
 	        <!-- FIXME : this will not take sub-child element -->
-	        <!-- TODO : how to create an element name from var ?
-	         <xsl:element name="$tag"></xsl:element>
-	         -->
-			<xsl:element name="{$tag}">
-				
-				<xsl:if test="$value">
-		            <xsl:attribute name="value">
-		                  <xsl:value-of select="$value" />
-		            </xsl:attribute>
-				</xsl:if>
-				<xsl:if test="$id">
-	                <xsl:attribute name="id">
-	                      <xsl:value-of select="$id" />
-	                </xsl:attribute>
-				</xsl:if>
-				<xsl:if test="$type">
-	                <xsl:attribute name="type">
-	                      <xsl:value-of select="$type" />
-	                </xsl:attribute>
-				</xsl:if>
-                <xsl:value-of select="$string" />
+	        <xsl:element name="{$tag}">
+				<xsl:copy-of select="@*" />
+				<xsl:value-of select="$string" />
     		</xsl:element>
         </xsl:if>
 	</xsl:template>

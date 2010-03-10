@@ -14,6 +14,7 @@
             <de/>
         	<ru/>
         	<nl/>
+        	<pt/>
         </langs>
     </xsl:variable>
 
