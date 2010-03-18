@@ -18,7 +18,8 @@
     xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd"
     xmlns:str="http://exslt.org/strings" xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:geonet="http://www.fao.org/geonetwork" xmlns:xalan="http://xml.apache.org/xalan"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    exclude-result-prefixes="gfc gmx gmd gco str xlink">
 
     <!-- =================================================================== -->
     <!-- default: in simple mode just a flat list -->
@@ -356,37 +357,37 @@
                 </xsl:apply-templates>
 
                 <xsl:apply-templates mode="elementEP"
-                    select="gfc:name">
+                    select="gfc:name|geonet:child[@name='name']">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit" select="$edit"/>
                 </xsl:apply-templates>
 
-                <xsl:apply-templates mode="elementEP" select="gfc:scope">
+                <xsl:apply-templates mode="elementEP" select="gfc:scope|geonet:child[@name='scope']">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit" select="$edit"/>
                 </xsl:apply-templates>
 
-                <xsl:apply-templates mode="elementEP" select="gfc:fieldOfApplication">
+                <xsl:apply-templates mode="elementEP" select="gfc:fieldOfApplication|geonet:child[@name='fieldOfApplication']">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit" select="$edit"/>
                 </xsl:apply-templates>
 
-                <xsl:apply-templates mode="elementEP" select="gfc:versionNumber">
+                <xsl:apply-templates mode="elementEP" select="gfc:versionNumber|geonet:child[@name='versionNumber']">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit" select="$edit"/>
                 </xsl:apply-templates>
 
-                <xsl:apply-templates mode="elementEP" select="gfc:versionDate">
+                <xsl:apply-templates mode="elementEP" select="gfc:versionDate|geonet:child[@name='versionDate']">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit" select="$edit"/>
                 </xsl:apply-templates>
 
-                <xsl:apply-templates mode="elementEP" select="gfc:producer">
+                <xsl:apply-templates mode="elementEP" select="gfc:producer|geonet:child[@name='producer']">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit" select="$edit"/>
                 </xsl:apply-templates>
 
-                <xsl:apply-templates mode="elementEP" select="gfc:functionalLanguage">
+                <xsl:apply-templates mode="elementEP" select="gfc:functionalLanguage|geonet:child[@name='functionalLanguage']">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit" select="$edit"/>
                 </xsl:apply-templates>
