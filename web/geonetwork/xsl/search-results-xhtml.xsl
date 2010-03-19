@@ -291,9 +291,7 @@
 													</xsl:otherwise>
 												</xsl:choose>
 												<!-- <input id="selId" name="{$metadata/geonet:info/id}" type="checkbox" /> -->
-												<xsl:call-template name="addHyperlinksAndLineBreaks">
-													<xsl:with-param name="txt" select="$metadata/title"/>
-												</xsl:call-template>
+												<xsl:value-of select="$metadata/title"/>
 											</h1>
 										</td>
 	
