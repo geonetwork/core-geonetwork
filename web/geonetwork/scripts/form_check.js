@@ -1,5 +1,11 @@
 // FormChek.js
 //
+// GeoNetwork dependencies :
+//  * contact form use isEmpty, isWhitespace, isEmail
+//  * thesaurus concept editing use checkString
+//
+// TODO : do we need all that lib ? 
+// 
 // SUMMARY
 //
 // This is a set of JavaScript functions for validating input on 

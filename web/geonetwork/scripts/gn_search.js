@@ -622,13 +622,13 @@ function gn_showSingleMet(pars)
                 
                 div.innerHTML = req.responseText;
                 
-                // Init maps contained in search results
-                extentMap.initMapDiv();
-                
                 Effect.BlindDown(div);
                 
                 var tipman = new TooltipManager();
                 ker.loadMan.wait(tipman);
+               
+                // Init maps contained in search results
+                extentMap.initMapDiv();
             },
             onFailure: gn_search_error// FIXME
         });
@@ -662,13 +662,13 @@ function gn_showMetadata(id)
                 
                 div.innerHTML = req.responseText;
                 
-                // Init maps contained in search results
-                extentMap.initMapDiv();
-                
                 Effect.BlindDown(div);
                 
                 var tipman = new TooltipManager();
                 ker.loadMan.wait(tipman);
+                
+                // Init maps contained in search results
+                extentMap.initMapDiv();
             },
             onFailure: gn_search_error// FIXME
         });

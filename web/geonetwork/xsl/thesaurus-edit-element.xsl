@@ -26,8 +26,11 @@
 		</html>
 </xsl:template>
 
+<xsl:template mode="css" match="/"/>
+
 <!--additional scripts-->
 <xsl:template mode="script" match="/">
+<script type="text/javascript" src="{/root/gui/url}/scripts/form_check.js" language="JavaScript"/>
 <script type="text/javascript" language="JavaScript1.2">
 
 refreshParent = function(){

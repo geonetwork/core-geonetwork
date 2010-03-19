@@ -9,21 +9,37 @@
 	<xsl:include href="edit.xsl"/>
 	<xsl:include href="metadata.xsl"/>
 
+	<xsl:template mode="css" match="/">
+		<xsl:call-template name="geoCssHeader"/>
+		<xsl:call-template name="ext-ux-css"/>
+	</xsl:template>
+	
+
 	<!--
 	additional scripts
 	-->
 	<!-- needs priority to succeed over match="/"  in main.xsl -->
 	<xsl:template mode="script" match="/" priority="20">
-		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=effects,controls"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"></script>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/sarissa.js"></script>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"></script>
+		
+		<xsl:call-template name="geoHeader"/>
+		
+		<xsl:choose>
+            <xsl:when test="/root/request/debug">
+	    		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"></script>
+        		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"></script>
+		    </xsl:when>
+            <xsl:otherwise>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"></script>
+            </xsl:otherwise>
+        </xsl:choose>
+	
+		<xsl:call-template name="edit-header"/>
+		
 		<style type="text/css">@import url(<xsl:value-of select="/root/gui/url"/>/scripts/calendar/calendar-blue2.css);</style>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar.js"></script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/lang/calendar-{/root/gui/language}.js"></script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar-setup.js"></script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"></script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/webtoolkit.aim.js"/>
 		<script type="text/javascript">
 			<xsl:if test="/root/gui/position!='-1'">

@@ -32,6 +32,7 @@
 	</xsl:template>
 
 	<xsl:template mode="script" match="/"/>
+	<xsl:template mode="css" match="/"/>
 
 	<xsl:template name="formLayout">
 		<xsl:param name="title"/>

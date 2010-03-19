@@ -149,7 +149,7 @@ function doResetCommonsAction(action, name, licenseurl, type, id, ref)
 }
 
 function getControlsFromElement(el) {
-	var id = el.readAttribute('id');
+	var id = el.getAttribute('id');
 	elButtons = $('buttons_'+id);
 	return elButtons.immediateDescendants();
 }
@@ -168,7 +168,7 @@ function bottomElement(el)
 
 function getIdSplit(el) 
 {
-	var id = el.readAttribute('id');
+	var id = el.getAttribute('id');
 	if (id == null) return null;
 	return id.split("_");
 }
@@ -588,7 +588,7 @@ function doFileUploadSubmit(form)
 				if (fname != null) { 
 					var name = $('_'+$F(ref));
 					if (name != null) {
-						name.value = fname.readAttribute('title');
+						name.value = fname.getAttribute('title');
 						$('di_'+$F(ref)).show();
 						$('db_'+$F(ref)).hide();
 						Modalbox.show(doc.body.innerHTML,{width:600});
@@ -796,18 +796,18 @@ function validateNonEmpty(input) {
 function validateMetadataFields() {
 	// --- display lang selector when appropriate
 	$$('select.lang_selector')
-			.each( function(input) {
-				// --- language selector has a code attribute to be used to be
-					// matched with GUI language in order to edit by default
-					// element
-					// in GUI language. If none, default language is selected.
-					for (i = 0; i < input.options.length; i++)
-						if (input.options[i].readAttribute("code")
-								.toLowerCase() == Env.lang)
-							input.options[i].selected = true;
-
-					enableLocalInput(input, false);
-				});
+		.each( function(input) {
+			// --- language selector has a code attribute to be used to be
+				// matched with GUI language in order to edit by default
+				// element
+				// in GUI language. If none, default language is selected.
+				for (i = 0; i < input.options.length; i++)
+					if (input.options[i].getAttribute("code")
+							.toLowerCase() == Env.lang)
+						input.options[i].selected = true;
+				
+				enableLocalInput(input, false);
+			});
 
 	// --- display validator events when needed.
 	$$('input,textarea,select').each( function(input) {
@@ -832,8 +832,6 @@ var keywordSelectionWindow;
 function showKeywordSelectionPanel(ref, name) {
     if (!keywordSelectionWindow) {
         var keywordSelectionPanel = new app.KeywordSelectionPanel({
-            width: 620,
-            height: 300,
             listeners: {
                 keywordselected: function(panel, keywords) {
 	        		var id = '_X' + this.ref + '_' + name.replace(":","COLON");
@@ -863,13 +861,15 @@ function showKeywordSelectionPanel(ref, name) {
 
         keywordSelectionWindow = new Ext.Window({
             title: translate('keywordSelectionWindowTitle'),
+            width: 620,
+            height: 300,
             layout: 'fit',
             items: keywordSelectionPanel,
             closeAction: 'hide',
             constrain: true,
             iconCls: 'searchIcon'
         });
-    }
+    };
     
     keywordSelectionWindow.items.get(0).setRef(ref);
     keywordSelectionWindow.show();
@@ -889,8 +889,6 @@ var searchKeywordSelectionWindow;
 function showSearchKeywordSelectionPanel() {
     if (!searchKeywordSelectionWindow) {
         var searchKeywordSelectionPanel = new app.KeywordSelectionPanel({
-            width: 620,
-            height: 300,
             listeners: {
                 keywordselected: function(panel, keywords) {
 
@@ -926,6 +924,8 @@ function showSearchKeywordSelectionPanel() {
         });
 
         searchKeywordSelectionWindow = new Ext.Window({
+        	width: 620,
+            height: 300,
             title: translate('keywordSelectionWindowTitle'),
             layout: 'fit',
             items: searchKeywordSelectionPanel,
@@ -969,8 +969,6 @@ function showLinkedMetadataSelectionPanel(ref, name) {
     // Add extra parameters according to selection panel
     
 	var linkedMetadataSelectionPanel = new app.LinkedMetadataSelectionPanel({
-        width: 620,
-        height: 300,
         ref: ref,
         singleSelect: single,
         mode: name,
@@ -1021,6 +1019,8 @@ function showLinkedMetadataSelectionPanel(ref, name) {
 
     var linkedMetadataSelectionWindow = new Ext.Window({
         title: translate('linkedMetadataSelectionWindowTitle'),
+        width: 620,
+        height: 300,
         layout: 'fit',
         items: linkedMetadataSelectionPanel,
         closeAction: 'hide',
@@ -1040,11 +1040,10 @@ function showLinkedMetadataSelectionPanel(ref, name) {
  * The window in which we can select linked metadata
  */
 function showLinkedServiceMetadataSelectionPanel(name, serviceUrl, uuid) {
+	
     var linkedMetadataSelectionPanel = new app.LinkedMetadataSelectionPanel({
         mode: name,
-		width: 620,
-        height: 400,
-        autoWidth: true,
+		autoWidth: true,
         ref: null,
         proxy: Env.proxy,
         serviceUrl: serviceUrl,
@@ -1067,7 +1066,7 @@ function showLinkedServiceMetadataSelectionPanel(name, serviceUrl, uuid) {
 					// 1. Update service (if current user has privileges), using XHR request
 					var serviceUpdateUrl = "xml.metadata.processing?uuid=" + metadata[0].data.uuid + 
 	    					"&process=update-srv-attachDataset&uuidref=" +
-	    					this.uuid +
+	    					uuid +
 	    					"&scopedName=" + layerName;
 					
 					Ext.Ajax.request({
@@ -1082,12 +1081,11 @@ function showLinkedServiceMetadataSelectionPanel(name, serviceUrl, uuid) {
 							} else if (response.indexOf('error')!=-1) {
 								alert(translate("error") + response);
 							}
-							// FIXME : error on update
 							// 2. Update current metadata record, in current window
-							window.location.replace("metadata.processing?uuid=" + this.uuid + 
+							window.location.replace("metadata.processing?uuid=" + uuid + 
 			    					"&process=update-onlineSrc&desc=" +
 			    					layerName + "&url=" +
-			    					// TODO encode metadata[0].data.uri +
+			    					escape(metadata[0].data.uri) +
 			    					"&scopedName=" + layerName);
 						},
 						failure:function (result, request) { 
@@ -1119,7 +1117,6 @@ function showLinkedServiceMetadataSelectionPanel(name, serviceUrl, uuid) {
 								alert(translate("error") + response);
 							}
 							
-							// TODO : ask for more
 	    					// 2. Update current metadata record, in current window
 	    					window.location.replace("metadata.processing?uuid=" + uuid + 
 	    	    					"&process=update-srv-attachDataset&uuidref=" +
@@ -1141,6 +1138,7 @@ function showLinkedServiceMetadataSelectionPanel(name, serviceUrl, uuid) {
         title: (name=='attachService'?translate('associateService'):translate('associateDataset')),
         layout: 'fit',
         width: 620,
+        height: 400,
         items: linkedMetadataSelectionPanel,
         closeAction: 'hide',
         constrain: true,
@@ -1168,8 +1166,6 @@ var crsSelectionWindow;
 function showCRSSelectionPanel(ref, name) {
     if (!crsSelectionWindow) {
         var crsSelectionPanel = new app.CRSSelectionPanel({
-            width: 620,
-            height: 300,
             listeners: {
                 crsSelected: function(xml) {
         			var id = '_X' + ref + '_' + name.replace(":","COLON");
@@ -1188,6 +1184,8 @@ function showCRSSelectionPanel(ref, name) {
         crsSelectionWindow = new Ext.Window({
             title: translate('crsSelectionWindowTitle'),
             layout: 'fit',
+            width: 620,
+            height: 300,
             items: crsSelectionPanel,
             closeAction: 'hide',
             constrain: true,
@@ -1208,9 +1206,9 @@ function showCRSSelectionPanel(ref, name) {
 function validateMetadataField(input) {
 	// Process only onchange and onkeyup event having validate in event name.
 	if (!input
-			|| (input.onchange && input.readAttribute("onchange").indexOf(
+			|| (input.onchange && input.getAttribute("onchange").indexOf(
 					"validate") == -1)
-			|| (input.onkeyup && input.readAttribute("onkeyup").indexOf(
+			|| (input.onkeyup && input.getAttribute("onkeyup").indexOf(
 					"validate") == -1))
 		return;
 

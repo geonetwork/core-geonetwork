@@ -63,4 +63,10 @@
  Check that the proxy could query allowed hosts.
  -->
  <proxy-url>/cgi-bin/proxy.cgi</proxy-url>
+ 
+ <search>
+  <!-- Display or not keyword selection panel in advanced search panel 
+   <keyword-selection-panel/> 
+  -->
+ </search>
 </config>

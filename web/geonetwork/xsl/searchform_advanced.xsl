@@ -141,9 +141,11 @@
 				 		class="content" size="20" value="{/root/gui/searchDefaults/themekey}"/>
 				</span>
 
-	  			<a style="cursor:pointer;" onclick="javascript:showSearchKeywordSelectionPanel();">
-	  				<img src="{/root/gui/url}/images/find.png" alt="{/root/gui/strings/searchhelp/thesaurus}" title="{/root/gui/strings/searchhelp/thesaurus}"/>
-				</a>
+				<xsl:if test="/root/gui/config/search/keyword-selection-panel">
+		  			<a style="cursor:pointer;" onclick="javascript:showSearchKeywordSelectionPanel();">
+		  				<img src="{/root/gui/url}/images/find.png" alt="{/root/gui/strings/searchhelp/thesaurus}" title="{/root/gui/strings/searchhelp/thesaurus}"/>
+					</a>
+				</xsl:if>
 				
 				<div id="keywordSelectorFrame" class="keywordSelectorFrame" style="display:none;z-index:1000;">
 					<div id="keywordSelector" class="keywordSelector"/>

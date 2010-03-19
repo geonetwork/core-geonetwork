@@ -4,7 +4,12 @@ var getGNServiceURL = function(service) {
 	return Env.locService+"/"+service;
 };
 
-function init() {}
+function init() {};
+
+function translate(text) {
+	return translations[text] || text;
+};
+
 
 // Read a cookie
 function get_cookie ( cookie_name )
@@ -15,7 +20,7 @@ function get_cookie ( cookie_name )
     return ( unescape ( results[1] ) );
   else
     return null;
-}
+};
 
 // New browser windows
 	function popNew(a)

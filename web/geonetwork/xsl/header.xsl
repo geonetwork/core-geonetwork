@@ -13,45 +13,17 @@
 		<link href="{/root/gui/url}/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 		<link href="{/root/gui/url}/favicon.ico" rel="icon" type="image/x-icon" />
 
-		<!-- stylesheet -->
-		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork.css"/>
-		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/modalbox.css"/>
-		
 		<!-- Recent updates newsfeed -->
 		<link href="{/root/gui/locService}/rss.latest?georss=gml" rel="alternate" type="application/rss+xml" title="GeoNetwork opensource GeoRSS | {/root/gui/strings/recentAdditions}" />
 		<link href="{/root/gui/locService}/portal.opensearch" rel="search" type="application/opensearchdescription+xml">
-
 		<xsl:attribute name="title"><xsl:value-of select="//site/name"/> (GeoNetwork)</xsl:attribute>
-
 		</link>
 
-		
 		<!-- meta tags -->
 		<xsl:copy-of select="/root/gui/strings/header_meta/meta"/>
-		
 		<META HTTP-EQUIV="Pragma"  CONTENT="no-cache"/>
 		<META HTTP-EQUIV="Expires" CONTENT="-1"/>
-
-		<!-- javascript -->
-		<!-- Add geo JS (ie. OpenLayers, GeoExt) only when needed, ie. metadata.edit metadata.show, ... -->
-		<xsl:if test="/root/gui/reqService = 'main.home' 
-					or /root/gui/reqService = 'metadata.show' 
-					or /root/gui/reqService = 'metadata.edit'">
-			<xsl:call-template name="geoHeader"/>
-		</xsl:if>
-		<!-- Add Ext selection panel JS only when needed -->
-		<xsl:if test="/root/gui/reqService = 'metadata.edit'">
-			<xsl:call-template name="selectionPanel"/>
-		</xsl:if>
 		
-		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"></script>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/form_check.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/tablednd.js"></script>
-		
-	
 		<script language="JavaScript" type="text/javascript">
 			var Env = new Object();
 
@@ -91,15 +63,16 @@
              }
             };
 			</xsl:if>
-			
-            var translations = {
-				<xsl:apply-templates select="/root/gui/strings/*[@js='true' and not(*) and not(@id)]" mode="js-translations"/>
-			};
-
-			function translate(text) {
-				return translations[text] || text;
-			}
-		</script>
+		</script>		
+		
+		<!-- stylesheet -->
+		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork.css"/>
+		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/modalbox.css"/>
+		<xsl:apply-templates mode="css" select="/"/>
+		
+		<!-- JS -->
+		<xsl:call-template name="jsHeader"/>
+		
 	</xsl:template>
 	
 	<!--

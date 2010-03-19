@@ -110,7 +110,7 @@ var CSWSearchTools = {
 
         // TODO : we should probably extend Filter and add similarity as an attribute
         // to CSW clause (like the matchCase attribute).
-    	var defaultSimilarity = 0.8;
+    	var defaultSimilarity = ".8";
         var similarity = values['E_similarity'];
         if (similarity != null) {
             defaultSimilarity = values['E_similarity'];
@@ -164,7 +164,7 @@ var CSWSearchTools = {
             }));
         } else if (type.charAt(0) == 'E') {    //equals
             if (type.length > 1) {
-                // this means that we want to specificy the similarity
+            	// this means that we want to specificy the similarity
                 filters.push(new OpenLayers.Filter.Comparison({
                     type: OpenLayers.Filter.Comparison.EQUAL_TO,
                     property: "similarity",

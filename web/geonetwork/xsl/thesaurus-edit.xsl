@@ -2,6 +2,8 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:include href="main.xsl"/>
 	<xsl:include href="thesaurus-util.xsl"/>
+	
+	
 	<!--
 	additional scripts
 	-->
@@ -20,7 +22,7 @@
 		</script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js" language="JavaScript"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/keywordsearching.js" language="JavaScript"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=effects,controls"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/form_check.js"></script>
 		<script language="JavaScript1.2" type="text/javascript">
 		
 			mode = '<xsl:value-of select="/root/response/mode"/>';

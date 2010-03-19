@@ -1,3 +1,7 @@
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
+
 /**
  * @requires OpenLayers/Format/XML.js
  * @requires OpenLayers/Format/CSWGetRecords.js
@@ -31,6 +35,7 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
     
     /**
      * Property: defaultPrefix
+     * {String} The default prefix (used by Format.XML).
      */
     defaultPrefix: "csw",
     
@@ -46,7 +51,73 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
      *   http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd
      */
     schemaLocation: "http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd",
-    
+
+    /**
+     * APIProperty: requestId
+     * {String} Value of the requestId attribute of the GetRecords element.
+     */
+    requestId: null,
+
+    /**
+     * APIProperty: resultType
+     * {String} Value of the resultType attribute of the GetRecords element,
+     *     specifies the result type in the GetRecords response, "hits" is
+     *     the default.
+     */
+    resultType: null,
+
+    /**
+     * APIProperty: outputFormat
+     * {String} Value of the outputFormat attribute of the GetRecords element,
+     *     specifies the format of the GetRecords response,
+     *     "application/xml" is the default.
+     */
+    outputFormat: null,
+
+    /**
+     * APIProperty: outputSchema
+     * {String} Value of the outputSchema attribute of the GetRecords element,
+     *     specifies the schema of the GetRecords response.
+     */
+    outputSchema: null,
+
+    /**
+     * APIProperty: startPosition
+     * {String} Value of the startPosition attribute of the GetRecords element,
+     *     specifies the start position (offset+1) for the GetRecords response,
+     *     1 is the default.
+     */
+    startPosition: null,
+
+    /**
+     * APIProperty: maxRecords
+     * {String} Value of the maxRecords attribute of the GetRecords element,
+     *     specifies the maximum number of records in the GetRecords response,
+     *     10 is the default.
+     */
+    maxRecords: null,
+
+    /**
+     * APIProperty: DistributedSearch
+     * {String} Value of the csw:DistributedSearch element, used when writing
+     *     a csw:GetRecords document.
+     */
+    DistributedSearch: null,
+
+    /**
+     * APIProperty: ResponseHandler
+     * {Array({String})} Values of the csw:ResponseHandler elements, used when
+     *     writting a csw:GetRecords document.
+     */
+    ResponseHandler: null,
+
+    /**
+     * APIProperty: Query
+     * {String} Value of the csw:Query element, used when writing a csw:GetRecords
+     *     document.
+     */
+    Query: null,
+
     /**
      * Constructor: OpenLayers.Format.CSWGetRecords.v2_0_2
      * A class for parsing and generating CSWGetRecords v2.0.2 transactions.
@@ -55,28 +126,24 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
      * options - {Object} Optional object whose properties will be set on the
      *     instance.
      *
-     * Valid options properties:
-     * requestId - {String} requestId for csw GetRecords request.
-     * resultType - {String} resultType for csw GetRecords request. Default is
-     *     'hits'.
-     * outputFormat - {String} outputFormat for csw GetRecords request. Default
-     *     is 'application/xml'
-     * outputSchema - {String} outputSchema for csw GetRecords request.
-     * startPosition - {Integer} startPosition for csw GetRecords request.
-     *     Default is 1.
-     * maxRecords - {Integer} maxRecords for csw GetRecords request.
-     *     Default is 10.
-     * DistributedSearch - {Object} DistributedSearch options for csw GetRecords request.
-     * ResponseHandler - {Array} array of ResponseHandler values for csw GetRecords request.
-     * Query - {Object} Query options for csw GetRecords request.
+     * Valid options properties (documented as class properties):
+     * - requestId
+     * - resultType
+     * - outputFormat
+     * - outputSchema
+     * - startPosition
+     * - maxRecords
+     * - DistributedSearch
+     * - ResponseHandler
+     * - Query
      */
     initialize: function(options) {
         OpenLayers.Format.XML.prototype.initialize.apply(this, [options]);
     },
 
     /**
-     * Method: read
-     * Parse the response from a transaction.
+     * APIMethod: read
+     * Parse the response from a GetRecords request.
      */
     read: function(data) {
         if(typeof data == "string") { 
@@ -127,8 +194,7 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
                         (attrs[i].name == "numberOfRecordsReturned") ||
                         (attrs[i].name == "nextRecord")) {
                         SearchResults[attrs[i].name] = parseInt(attrs[i].nodeValue);
-                    }
-                    else {
+                    } else {
                         SearchResults[attrs[i].name] = attrs[i].nodeValue;
                     }
                 }
@@ -160,8 +226,10 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
             // identifier, language, provenance, publisher, relation, rights,
             // rightsHolder, source, subject, title, type, URI
             "*": function(node, obj) {
-                if (!(obj[node.localName] instanceof Array)) {
-                    obj[node.localName] = new Array();
+        		var name = node.localName || node.nodeName.split(":").pop();
+
+                if (!(obj[name] instanceof Array)) {
+                    obj[name] = new Array();
                 }
                 var dc_element = {};
                 var attrs = node.attributes;
@@ -169,16 +237,18 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
                     dc_element[attrs[i].name] = attrs[i].nodeValue;
                 }
                 dc_element.value = this.getChildValue(node);
-                obj[node.localName].push(dc_element);
+                obj[name].push(dc_element);
             }
         },
         "dct": {
             // abstract, modified, spatial
             "*": function(node, obj) {
-                if (!(obj[node.localName] instanceof Array)) {
-                    obj[node.localName] = new Array();
+        		var name = node.localName || node.nodeName.split(":").pop();
+        		
+        		if (!(obj[name] instanceof Array)) {
+                    obj[name] = new Array();
                 }
-                obj[node.localName].push(this.getChildValue(node));
+                obj[name].push(this.getChildValue(node));
             }
         },
         "ows": {
@@ -204,7 +274,7 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
                     )[0]
                 ).split(' ', 2);
 
-                var BoundingBox = {
+                var boundingBox = {
                     value: [
                         parseFloat(lc[0]),
                         parseFloat(lc[1]),
@@ -212,12 +282,12 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
                         parseFloat(uc[1])
                     ]
                 };
-                // store BoundingBox attributes
+                // store boundingBox attributes
                 var attrs = node.attributes;
                 for(var i=0, len=attrs.length; i<len; ++i) {
-                    BoundingBox[attrs[i].name] = attrs[i].nodeValue;
+                    boundingBox[attrs[i].name] = attrs[i].nodeValue;
                 }
-                obj.BoundingBox.push(BoundingBox);
+                obj.BoundingBox.push(boundingBox);
             },
 
             "BoundingBox": function(node, obj) {
@@ -277,9 +347,7 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
                     );
                 }
                 var ResponseHandler = options.ResponseHandler || this.ResponseHandler;
-                if (ResponseHandler &&
-                    (ResponseHandler instanceof Array) &&
-                    (ResponseHandler.length > 0)) {
+                if (ResponseHandler instanceof Array && ResponseHandler.length > 0) {
                     // ResponseHandler must be a non-empty array
                     for(var i=0, len=ResponseHandler.length; i<len; i++) {
                         this.writeNode(
@@ -316,9 +384,7 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
                     }
                 });
                 var ElementName = options.ElementName;
-                if (ElementName &&
-                    (ElementName instanceof Array) &&
-                    (ElementName.length > 0)) {
+                if (ElementName instanceof Array && ElementName.length > 0) {
                     // ElementName must be a non-empty array
                     for(var i=0, len=ElementName.length; i<len; i++) {
                         this.writeNode(
@@ -327,8 +393,7 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
                             node
                         );
                     }
-                }
-                else {
+                } else {
                     this.writeNode(
                         "csw:ElementSetName",
                         options.ElementSetName || {value: 'summary'},
@@ -374,12 +439,11 @@ OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML,
                     }
                 });
                 if (options.Filter) {
-                    var format_filter = new OpenLayers.Format.Filter({
+                    var format = new OpenLayers.Format.Filter({
                         version: options.version
                     });
-                    node.appendChild(format_filter.write(options.Filter));
-                }
-                else {
+                    node.appendChild(format.write(options.Filter));
+                } else if (options.CqlText) {
                     var child = this.createElementNSPlus("CqlText", {
                         value: options.CqlText.value
                     });

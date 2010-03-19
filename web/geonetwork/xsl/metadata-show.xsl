@@ -20,16 +20,29 @@
 	<xsl:variable name="baseURL" select="concat('http://',$host,':',$port,/root/gui/url)" />
 	<xsl:variable name="serverUrl" select="concat('http://',$host,':',$port,/root/gui/locService)" />
 	
+	
+	<xsl:template mode="css" match="/">
+		<xsl:call-template name="geoCssHeader"/>
+		<xsl:call-template name="ext-ux-css"/>
+	</xsl:template>
+	
 	<!--
 	additional scripts
 	-->
 	<xsl:template mode="script" match="/">
-		<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"></script>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=effects,controls"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"></script>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-show.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"></script>
+		<xsl:call-template name="geoHeader"/>
+		<xsl:call-template name="jsHeader"/>
+		
+		<xsl:choose>
+            <xsl:when test="/root/request/debug">
+	    		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"></script>
+        		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"></script>
+		    </xsl:when>
+            <xsl:otherwise>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"></script>
+            </xsl:otherwise>
+        </xsl:choose>		
 	</xsl:template>
 	
 	<!--

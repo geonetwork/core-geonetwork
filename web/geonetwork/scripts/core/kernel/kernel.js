@@ -25,7 +25,7 @@ ker.include = function(file)
 //=====================================================================================
 
 //ker.include('prototype.js');
-ker.include('sarissa.js');
+//ker.include('sarissa.js');
 
 ker.include('core/kernel/xml.js');
 ker.include('core/kernel/string.js');

@@ -122,7 +122,6 @@ var extentMap = {
             } else {
                 id = viewer.identify();
             }
-
             var map = extentMap.createMap();
             extentMap.maps[extentMap.eltRef] = map;
             
@@ -319,6 +318,7 @@ var extentMap = {
                     }
 	            });
             }
+            
             var mapPanel = new GeoExt.MapPanel({
                 renderTo: id,
                 height: 300,	// TODO : make config file see with ELE.
@@ -327,7 +327,7 @@ var extentMap = {
                 //title: 'Geographic extent', // TODO : i18n,
                 tbar: (extentMap.edit?tbarItems:null)
             });
-
+            
             if (children.length > 0) {
                 extentMap.readFeature(children[0].innerHTML, {
                     format: 'WKT',
@@ -371,6 +371,7 @@ var extentMap = {
     },
     /**
      * Create default map with one vector layer for drawing.
+     * 
      */
     createMap: function() {
     	OpenLayers.ImgPath = "../../scripts/openlayers/img/";
@@ -381,10 +382,11 @@ var extentMap = {
     		    projection: extentMap.mainProjCode,
     		    theme: null
     		};
-
+    	
         var map = extentMap.map = new OpenLayers.Map(
         		options
         );
+        
         
         
         // Disable mouse wheel and navigation toolbar in view mode.
@@ -397,7 +399,6 @@ var extentMap = {
         
         // Add mouse position control to display coordintate.
         map.addControl(new OpenLayers.Control.MousePosition());
-        
         
         // Add layers.
         // TODO : after migration from Intermap to OpenLayers

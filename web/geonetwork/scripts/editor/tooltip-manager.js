@@ -4,7 +4,7 @@
 //===
 //=====================================================================================
 
-ker.include('editor/tooltip.js');
+//ker.include('editor/tooltip.js');
 
 var tipMan = null;
 

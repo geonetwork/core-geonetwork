@@ -12,6 +12,9 @@
 	<!-- ================================================================================== -->
 	<!-- page content -->
 	<!-- ================================================================================== -->
+	<xsl:template mode="script" match="/" priority="20">
+		<script type="text/javascript" src="{/root/gui/url}/scripts/tablednd.js"></script>
+	</xsl:template>
 
 	<xsl:template name="content">
 		<xsl:call-template name="formLayout">

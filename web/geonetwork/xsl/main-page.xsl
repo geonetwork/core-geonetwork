@@ -7,48 +7,71 @@
 	<xsl:include href="metadata.xsl"/>
 	<xsl:include href="searchform_simple_template.xsl"/>
 	
+	<xsl:template mode="css" match="/">
+		<!--  FIXME : hard coded intermap link.  -->
+		<link rel="stylesheet" type="text/css" href="/intermap/intermap-embedded.css?" />
+		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/calendar/calendar-blue2.css"></link>
+		<xsl:call-template name="geoCssHeader"/>
+		<xsl:call-template name="ext-ux-css"/>
+	</xsl:template>
+	
 	<!--
 	additional scripts
 	-->
 	<xsl:template mode="script" match="/">
+	
+		<xsl:call-template name="geoHeader"/>
 		
-		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/slider.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/effects.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/controls.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/dragdrop.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/builder.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"/>
-
-		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar-setup.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/lang/calendar-{/root/gui/language}.js"/>
-		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/calendar/calendar-blue2.css" />
+		<!-- Required by keyword selection panel -->
+		<xsl:if test="/root/gui/config/search/keyword-selection-panel">
+			<xsl:call-template name="ext-ux"/>
+		</xsl:if>
 		
-		<xsl:call-template name="selectionPanel"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js?"/>
+	    <xsl:choose>
+            <xsl:when test="/root/request/debug">
+	            <script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"></script>
+	
+				<script type="text/javascript" src="{/root/gui/url}/scripts/gn_search.js"></script>
+				
+				<script type="text/javascript" src="/intermap/scripts/util.js"></script>
+				<script type="text/javascript" src="/intermap/scripts/im_extras.js"></script>
+				<script type="text/javascript" src="/intermap/scripts/im_ajax.js"></script>
+				<script type="text/javascript" src="/intermap/scripts/im_class.js"></script>
+				<script type="text/javascript" src="/intermap/scripts/im_minimap.js"></script>
+				<script type="text/javascript" src="/intermap/scripts/im_bigmap.js"></script>
+				<script type="text/javascript" src="/intermap/scripts/im_markers.js"></script>
+				<script type="text/javascript" src="/intermap/scripts/im_integration.js"></script>
+				<script type="text/javascript" src="/intermap/scripts/im_layers.js"></script>
 		
-		<script type="text/javascript" src="{/root/gui/url}/scripts/gn_search.js?"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/gn_intermap.js?"/>
-
-		<script type="text/javascript" src="/intermap/scripts/util.js?" />
-		<script type="text/javascript" src="/intermap/scripts/im_extras.js?"/>
-		<script type="text/javascript" src="/intermap/scripts/im_ajax.js?" />
+				<script type="text/javascript" src="{/root/gui/url}/scripts/gn_intermap.js"></script>
+				
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip-manager.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-show.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"></script>
+            </xsl:when>
+            <xsl:otherwise>
+		        <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"></script>
+				
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/intermap.js"></script>
+				
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"></script>
+        		<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.search.js"></script>
+        		<!-- Editor JS is still required here at least for massive operation -->
+        		<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"></script>
+		    </xsl:otherwise>
+        </xsl:choose>
 		
-		<script type="text/javascript" src="/intermap/scripts/im_class.js?"/>
-		<script type="text/javascript" src="/intermap/scripts/im_minimap.js?"/>
-		<script type="text/javascript" src="/intermap/scripts/im_bigmap.js?" />
-		<script type="text/javascript" src="/intermap/scripts/im_markers.js?" />
-		<script type="text/javascript" src="/intermap/scripts/im_integration.js?"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar.js"></script>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar-setup.js"></script>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/lang/calendar-{/root/gui/language}.js"></script>
 		
-		<script type="text/javascript" src="/intermap/scripts/im_layers.js?" />
-
-		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js?"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip-manager.js?"></script>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js?"></script>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-show.js?"></script>
-		
-		<!--  FIXME move this line elsewhere.  -->
-		<link rel="stylesheet" type="text/css" href="/intermap/intermap-embedded.css?" />
+		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"></script>
 		
 		<xsl:variable name="wmc"><xsl:copy-of select="/root/request/wmc"/></xsl:variable>
 		<xsl:variable name="uuid"><xsl:copy-of select="/root/request/uuid"/></xsl:variable>
@@ -94,82 +117,13 @@
 					}
 				}
 			}
-			
-			var getGNServiceURL = function(service)
-			{				
-				return Env.locService+"/"+service;
-			};
-			
+						
 			var getIMServiceURL = function(service)
 			{
 				// FIXME: the "/intermap/" context should be parametrized
 				return "/intermap/srv/"+Env.lang+"/"+service;
 			};
-					
-			
-<!--			function getWmsLayerInfo(name, url) 
-			{
-				window.open('/intermap/srv/en/map.service.wmsLayerInfo?url='+url+'&amp;name=' + name, 'dialog', 'HEIGHT=300,WIDTH=400,scrollbars=yes,toolbar=no,status=no,menubar=no,location=no,resizable=yes');
-			}
-			
-			
-			function goExtended(onoff, link)
-			{
-				document.search.intermap.value='off';			
-				document.search.extended.value=onoff;
-				document.search.action=link;
-				document.search.submit();
-			}
-	
-			function goRemote(onoff, link)
-			{
-				document.search.remote.value=onoff;
-				document.search.action=link;
-				document.search.submit();
-			}
 
-			function goIntermap(onoff, link)
-			{
-				document.search.intermap.value=onoff;
-				document.search.action=link;
-				document.search.submit();
-			}
-
-			function deselect(select)
-			{
-				for (var i=0; i &lt; select.length; i++)
-				{
-					select.options[i].selected = false;
-				}
-			}
-	
-			function profileSelected()
-			{
-				var serverList = document.search.profile.options[document.search.profile.selectedIndex].value;
-				var serverArray = serverList.split(' ');
-				deselectAllServers();
-				for (var i=0; i &lt; serverArray.length; i++)
-					selectServer(serverArray[i]);
-			}
-	
-			function serverSelected()
-			{
-				document.search.profile.options[0].selected = true;
-			}
-	
-			function deselectAllServers()
-			{
-				for (var i=0; i &lt; document.search.servers.length; i++)
-					document.search.servers.options[i].selected = false;
-			}
-	
-			function selectServer(server)
-			{
-				for (var i=0; i &lt; document.search.servers.length; i++)
-					if (document.search.servers.options[i].value == server)
-						document.search.servers.options[i].selected = true;
-			}
--->		
 			function checkSubmit()
 			{
 				if (document.search.remote.value == 'on')
@@ -179,7 +133,7 @@
 						!(document.search['abstract'] &amp;&amp; !isWhitespace(document.search['abstract'].value)) &amp;&amp;
 						!(document.search.themekey &amp;&amp; !isWhitespace(document.search.themekey.value)))
 					{
-						alert("Please type some search criteria");
+						alert("Please type some search criteria");	// TODO : i18n
 						return false;
 					}
 					servers = 0;
@@ -187,7 +141,7 @@
 						if (document.search.servers.options[i].selected) servers++;
 					if (servers == 0)
 					{
-						alert("Please select a server");
+						alert("Please select a server");// TODO : i18n
 						return false;
 					}
 				}

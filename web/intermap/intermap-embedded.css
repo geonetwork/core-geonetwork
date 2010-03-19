@@ -366,10 +366,6 @@ td.im_identify_2_last {
 	padding: 4px;
 }
 
-ul {
-	list-style-image: url(images/list_arrow.gif);
-	list-style-type: circle;
-}
 
 table.im_identify a {
 	font-weight: bold;

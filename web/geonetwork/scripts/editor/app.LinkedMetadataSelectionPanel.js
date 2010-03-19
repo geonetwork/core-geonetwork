@@ -55,8 +55,6 @@ app.Utility = {
 /**
  * Class: app.LinkedMetadataSelectionPanel
  * 
- * @include OpenLayers/Format/CSWGetRecords.js
- * @include GeoExt/data/CSWRecordsReader.js
  */
 app.linkedMetadata = {};
 
@@ -78,7 +76,7 @@ app.linkedMetadata.linkedMetadataStore = new Ext.data.JsonStore({
     }, {
         name: 'subject', convert: app.Utility.convertSubjectAsCommaSeparatedValues, defaultValue: ''
     }, {
-        name: 'uuid', mapping: 'identifier[0].value'
+        name: 'uuid', mapping: 'identifier[0].value', defaultValue: ''
     }, {
         name: 'uri', convert: app.Utility.checkUriNullValues
     }
@@ -131,7 +129,7 @@ app.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
     serviceUrl: null,
     capabilitiesStore: null,
     initComponent: function() {
-        this.addEvents(
+	    this.addEvents(
             /**
              * triggered when the user has selected an element
              */
