@@ -378,13 +378,13 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<xsl:for-each select="thesaName">
+		<xsl:if test="thesaName">
 			<thesaurusName>
 				<CI_Citation>
-					<xsl:apply-templates select="idCitation" mode="Citation"/>
+					<xsl:apply-templates select="thesaName" mode="Citation"/>
 				</CI_Citation>
 			</thesaurusName>
-		</xsl:for-each>
+		</xsl:if>
 
 	</xsl:template>
 
