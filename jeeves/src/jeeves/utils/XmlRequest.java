@@ -57,6 +57,7 @@ import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.auth.AuthPolicy;
 
 //=============================================================================
 
@@ -88,6 +89,11 @@ public class XmlRequest
 		client.setState(state);
 		client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 		client.setHostConfiguration(config);
+		List authPrefs = new ArrayList(2); 
+		authPrefs.add(AuthPolicy.DIGEST); 
+		authPrefs.add(AuthPolicy.BASIC); 
+		// This will exclude the NTLM authentication scheme 
+		client.getParams().setParameter(AuthPolicy.AUTH_SCHEME_PRIORITY, authPrefs);
 	}
 
 	//---------------------------------------------------------------------------

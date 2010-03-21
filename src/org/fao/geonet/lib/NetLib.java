@@ -25,12 +25,15 @@ package org.fao.geonet.lib;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList; 
+import java.util.List; 
 import java.util.Properties;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.XmlRequest;
 
+import org.apache.commons.httpclient.auth.AuthPolicy;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
@@ -91,7 +94,7 @@ public class NetLib
 				req.setProxyPort(Integer.parseInt(port));
 				if (username.trim().length()!=0) {
 					req.setProxyCredentials(username, password);
-				}
+				} 
 			}
 		}
 	}
@@ -133,6 +136,11 @@ public class NetLib
 
 					client.getState().setProxyCredentials(scope, cred);
 				}
+				List authPrefs = new ArrayList(2);
+				authPrefs.add(AuthPolicy.DIGEST);
+				authPrefs.add(AuthPolicy.BASIC);
+				// This will exclude the NTLM authentication scheme
+				client.getParams().setParameter(AuthPolicy.AUTH_SCHEME_PRIORITY, authPrefs);
 			}
 		}
 	}
@@ -200,18 +208,14 @@ public class NetLib
 
 	}
 
-
 	//---------------------------------------------------------------------------
 
 	public boolean isUrlValid(String url)
 	{
-		try
-		{
+		try {
 			new URL(url);
 			return true;
-		}
-		catch (MalformedURLException e)
-		{
+		} catch (MalformedURLException e) {
 			return false;
 		}
 	}
