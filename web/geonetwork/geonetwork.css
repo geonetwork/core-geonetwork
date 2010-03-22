@@ -490,6 +490,10 @@ div.keywordSelectorFrame {
 		top: 225px;
 }
 
+* html div.keywordSelector {
+	    height: expression( this.scrollHeight > 201 ? "200px" : "auto" ); /* sets min-height for IE */
+}
+
 div.keywordSelector {
         background: #fff;
         border: 4px solid #064377;
