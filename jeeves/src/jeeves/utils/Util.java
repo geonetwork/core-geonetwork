@@ -241,8 +241,52 @@ public class Util
 	}
 
 	//---------------------------------------------------------------------------
+	private static final String HEXES = "0123456789abcdef";
 
+	/**
+	 * Convert byte array in hexadecimal encoded string
+	 * 
+	 * @param raw
+	 * @return the hexadecimal encoded string
+	 */
+	private static String getHex(byte[] raw) {
+		if (raw == null) {
+			return null;
+		}
+		final StringBuilder hex = new StringBuilder(2 * raw.length);
+		for (final byte b : raw) {
+			hex.append(HEXES.charAt((b & 0xF0) >> 4)).append(
+					HEXES.charAt((b & 0x0F)));
+		}
+		return hex.toString();
+	}
+  
+	/**
+	 * SHA-1 Cryptographic hash algorithm
+	 * See #191
+	 * 
+	 * @param text	password to digest
+	 * @return	the hexadecimal encoded string
+	 */
 	public static String scramble(String text)
+	{
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-1") ;
+			md.update(text.getBytes("UTF-8"));
+			return getHex(md.digest());
+		}
+		catch (UnsupportedEncodingException e) { return null; }
+		catch (NoSuchAlgorithmException e)     { return null; }
+	}
+	
+	/**
+	 * Old Jeeves scramble method which lost leading 0
+	 * during byte to hexadecimal string conversion.
+	 * 
+	 * @param text
+	 * @return	the hexadecimal encoded string with missing leading 0
+	 */
+	public static String oldScramble(String text)
 	{
 		try
 		{
@@ -253,13 +297,15 @@ public class Util
 			StringBuffer sb = new StringBuffer();
 
 			for (byte b : md.digest())
-				sb.append(Integer.toString(b & 0xFF, 16));
+				sb.append(Integer.toString(b & 0xFF, 16));	// #191 : here leading 0 are removed
 
 			return sb.toString();
 		}
 		catch (UnsupportedEncodingException e) { return null; }
 		catch (NoSuchAlgorithmException e)     { return null; }
 	}
+
+	
 }
 
 //=============================================================================

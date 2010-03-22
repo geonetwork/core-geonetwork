@@ -83,12 +83,17 @@ public class Login implements Service
 		//--- attempt to load user from db
 
 		String query = "SELECT * FROM Users WHERE username = ? AND password = ?";
-
+	
 		List list = dbms.select(query, username, Util.scramble(password)).getChildren();
+		if (list.size() == 0) {
+			// Check old password hash method
+			list = dbms.select(query, username, Util.oldScramble(password)).getChildren();
 
-		if (list.size() == 0)
-			throw new UserLoginEx(username);
-
+			if (list.size() == 0)
+				throw new UserLoginEx(username);
+			else
+				context.info("User '" + username + "' logged in using an old scrambled password.");
+		}
 		Element user = (Element) list.get(0);
 
 		String sId       = user.getChildText(Geonet.Elem.ID);
