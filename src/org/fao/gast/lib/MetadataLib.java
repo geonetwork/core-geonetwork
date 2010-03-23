@@ -69,6 +69,20 @@ public class MetadataLib
 
 	//---------------------------------------------------------------------------
 
+	/**
+	 * Check that a schema exist in current GeoNetwork installation.
+	 * 
+	 * @param 	The schema identifier (based on schema directory name). 
+	 * @return	True if schema is registered in current node.
+	 */
+	public boolean schemaExists(String schema)
+	{
+		String path = appPath +"/web/geonetwork/xml/schemas/" + schema;
+		return new File(path).exists();
+	}
+
+	//---------------------------------------------------------------------------
+
 	public boolean canConvert(String fromSchema, String toSchema)
 	{
 		String format = fromSchema +"-to-"+ toSchema;

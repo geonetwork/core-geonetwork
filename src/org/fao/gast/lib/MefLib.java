@@ -32,11 +32,8 @@ import java.util.UUID;
 
 import jeeves.exceptions.BadFormatEx;
 import jeeves.resources.dbms.Dbms;
-import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.mef.MEF2Visitor;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.IMEFVisitor;
 import org.fao.geonet.kernel.mef.MEFVisitor;
@@ -168,17 +165,13 @@ public class MefLib {
 		String schema = general.getChildText("schema");
 		String isTemplate = general.getChildText("isTemplate").equals("true") ? "y"
 				: "n";
-
-		boolean dcore = schema.equals("dublin-core");
-		boolean fgdc = schema.equals("fgdc-std");
-		boolean iso115 = schema.equals("iso19115");
-		boolean iso139 = schema.equals("iso19139");
-		boolean iso139fra = schema.equals("iso19139fra");
-
-		// TODO : Add this as parameters for GAST
-		if (!dcore && !fgdc && !iso115 && !iso139 && !iso139fra)
+		
+		// Check schema is registered in current installation
+		if (!Lib.metadata.schemaExists(schema))
 			throw new Exception("Unknown schema format : " + schema);
-
+		else
+			Lib.log.debug(" - Schema " + schema + " is registered in current installation.");
+					
 		if (uuid == null) {
 			uuid = UUID.randomUUID().toString();
 			source = Lib.site.getSiteId(dbms);
