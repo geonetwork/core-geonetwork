@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetParams;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 //=============================================================================
@@ -81,21 +82,14 @@ public class Rate implements Service
 		DataManager    dm = gc.getDataManager();
 		HarvestManager hm = gc.getHarvestManager();
 
-		String id  = Util.getParam(params, Params.ID,   null);
-		String uuid= Util.getParam(params, Params.UUID, null);
+		String id = Utils.getIdentifierFromParameters(params, context);
+
 		String rat = Util.getParam(params, Params.RATING);
 		String ip  = context.getIpAddress();
 
-		if (id == null && uuid == null)
-			throw new MissingParameterEx("id or uuid");
-
-		//--- resolve id & uuid
-
-		if (id != null) 	uuid = dm.getMetadataUuid(dbms, id);
-			else				id   = dm.getMetadataId(dbms, uuid);
-
-		if (id == null || uuid == null)
-			throw new MetadataNotFoundEx("id:"+ id +" or uuid:"+ uuid);
+		int iLocalId = Integer.parseInt(id);
+		if (!dm.existsMetadata(dbms, iLocalId))
+			throw new IllegalArgumentException("Metadata not found --> " + id);
 
 		if (ip == null)
 			ip = "???.???.???.???";
@@ -123,9 +117,10 @@ public class Rate implements Service
 
 			AbstractHarvester ah = hm.getHarvester(harvUuid);
 
-			if (ah.getType().equals(GeonetHarvester.TYPE))
+			if (ah.getType().equals(GeonetHarvester.TYPE)) {
+				String uuid = dm.getMetadataUuid(dbms, id);
 				rating = setRemoteRating(context, (GeonetParams) ah.getParams(), uuid, rating);
-			else
+			} else
 				rating = -1;
 		}
 

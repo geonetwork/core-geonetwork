@@ -36,6 +36,7 @@ import jeeves.utils.*;
 
 import org.fao.geonet.constants.*;
 import org.fao.geonet.kernel.*;
+import org.fao.geonet.services.Utils;
 import org.fao.geonet.*;
 
 //=============================================================================
@@ -67,7 +68,7 @@ public class UpdateCategories implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		String id = Util.getParam(params, Params.ID);
+		String id = Utils.getIdentifierFromParameters(params, context);
 
 		//-----------------------------------------------------------------------
 		//--- check access

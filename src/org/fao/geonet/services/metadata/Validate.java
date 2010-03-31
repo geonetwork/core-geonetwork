@@ -35,6 +35,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 //=============================================================================
@@ -72,7 +73,7 @@ public class Validate implements Service
 
 		UserSession session = context.getUserSession();
 
-		String id         = Util.getParam(params, Params.ID);
+		String id = Utils.getIdentifierFromParameters(params, context);
 
 		//--- validate metadata from session
 		Element errorReport = dataMan.validateMetadataEmbedded(session, dbms, id, context.getLanguage());

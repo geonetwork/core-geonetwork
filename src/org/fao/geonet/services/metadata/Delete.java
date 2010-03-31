@@ -46,6 +46,7 @@ import org.fao.geonet.kernel.csw.services.getrecords.CatalogSearcher;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.FileCopyMgr;
 import org.jdom.Element;
 
@@ -73,26 +74,7 @@ public class Delete implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		// the metadata ID
-		String id;
-		
-		// does the request contain a UUID ?
-		try {
-			String uuid = Util.getParam(params, Params.UUID);
-			// lookup ID by UUID
-			id = dataMan.getMetadataId(context, uuid);	
-		}
-		catch(MissingParameterEx x) {
-			// request does not contain UUID; use ID from request
-			try {
-				id = Util.getParam(params, Params.ID);
-			}
-			// request does not contain ID
-			catch(MissingParameterEx xx) {
-				// give up
-				throw new Exception("Request must contain a UUID or an ID");
-			}			
-		}
+		String id = Utils.getIdentifierFromParameters(params, context);
 		
 		//-----------------------------------------------------------------------
 		//--- check access

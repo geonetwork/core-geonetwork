@@ -41,6 +41,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.Utils;
 
 import org.jdom.Element;
 
@@ -74,7 +75,7 @@ public class GetAdminOper implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		String id = Util.getParam(params, Params.ID);
+		String id = Utils.getIdentifierFromParameters(params, context);
 
 		//-----------------------------------------------------------------------
 		//--- check access
