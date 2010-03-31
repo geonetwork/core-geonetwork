@@ -58,6 +58,8 @@
  -->
  <editor-metadata-relation/>
 
+ <!-- Display error only when loading validation report 
+  <editor-validation-errors-only-on-load/>-->
  
  <!-- Proxy URL to use for XHR. 
  Check that the proxy could query allowed hosts.

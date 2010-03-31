@@ -119,7 +119,10 @@
 	<anyThesaurus js="true">Tous les thésaurus</anyThesaurus>
 	<selectedKeywords js="true">Mots clés selectionnés</selectedKeywords>
 	<foundKeywords js="true">Mots clés trouvés</foundKeywords>
-	<keywordSelectionWindowTitle js="true">Selection de mots clés</keywordSelectionWindowTitle>
+	<keywordSelectionWindowTitle js="true">Sélection de mots clés</keywordSelectionWindowTitle>
+	<crsSelectionWindowTitle js="true">Sélection des systèmes de coordonnées</crsSelectionWindowTitle>
+	<selectedCRS js="true">Systèmes sélectionnés</selectedCRS>
+	<foundCRS js="true">Systèmes disponibles</foundCRS>
 	
 	
 	<about>A propos</about>

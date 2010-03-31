@@ -443,7 +443,7 @@
     
   </element>
   <element name="gmd:MD_DigitalTransferOptions" id="274.0">
-    <label>Options de transfer digital</label>
+    <label>Options de transfert numérique</label>
     <description>Classe avec les possibilités techniques et les médias avec lesquels une ressource peut être obtenue par un distributeur</description>
     <help>Classe contenant les possibilités techniques et les supports envisageables pour l'obtention d'une ressource auprès d'un distributeur. Cf. MD_Distribution pour des informations complémentaires.</help>
     <condition/>
@@ -2590,7 +2590,7 @@
     
   </element>
   <element name="gmd:transferOptions" id="273.0">
-    <label>Options de transfer</label>
+    <label>Options de transfert</label>
     <description>Informations sur la façon de se procurer les données chez le distributeur</description>
     <help>Informations relatives au mode d'obtention des données auprès du distributeur. Ces informations sont gérées dans la classe MD_DigitalTransferOptions.</help>
     <condition/>

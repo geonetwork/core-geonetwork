@@ -390,9 +390,9 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement)
 				} else {
 					alert("doNewElementAjax: invalid what: " + what + " should be one of replace, after or before.");
 				}
-				
-				// Init map if spatial extent editing
-				if (name == 'gmd:geographicElement')
+
+				// Init map if spatial extent editing - usually bounding box or bounding polygon
+				if (name == 'gmd:geographicElement' || name == 'gmd:polygon')
 					extentMap.initMapDiv();
 				
 				// Check elements
@@ -1400,6 +1400,7 @@ function getValidationReport()
 			onSuccess: function(req) {
 				var html = req.responseText;
 				displayBox(html, 'validationReport', false);
+				updateValidationReportVisibilityRules($('checkError').checked);
 				setBunload(true); // reset warning for window destroy
 			},
 			onFailure: function(req) { 

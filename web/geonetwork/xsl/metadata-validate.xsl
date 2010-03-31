@@ -23,7 +23,11 @@
 		<div style="display:block;" class="content">
 			<div>
 				<input type="checkbox" id="checkError"
-					onclick="updateValidationReportVisibilityRules(this.checked);"/>
+					onclick="updateValidationReportVisibilityRules(this.checked);">
+					<xsl:if test="/root/gui/config/editor-validation-errors-only-on-load">
+						<xsl:attribute name="checked">checked</xsl:attribute>
+					</xsl:if>
+				</input>
 				<label for="checkError">
 					<xsl:value-of select="/root/gui/strings/errorsOnly"/>
 				</label>
@@ -152,7 +156,7 @@
 						</li>
 					</xsl:if>
 				</xsl:for-each>
-			</ul>
+			</ul>		
 		</fieldset>
 	</xsl:template>
 
