@@ -179,7 +179,7 @@
 											<gco:CharacterString>OGC:WFS-1.1.0-http-get-feature</gco:CharacterString>
 										</xsl:when>
 										<xsl:when test="name(.)='WFS_Capabilities'">
-											<gco:CharacterString>OGC:WMS-1.0.0-http-get-feature</gco:CharacterString>
+											<gco:CharacterString>OGC:WFS-1.0.0-http-get-feature</gco:CharacterString>
 										</xsl:when>
 										<xsl:otherwise>
 											<gco:CharacterString>OGC:WCS-1.0.0-http-get-coverage</gco:CharacterString>
