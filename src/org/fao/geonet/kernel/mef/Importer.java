@@ -53,6 +53,12 @@ public class Importer {
 	public static List<String> doImport(final Element params,
 			final ServiceContext context, File mefFile, final String stylePath)
 			throws Exception {
+			return doImport(params, context, mefFile, stylePath, false);
+	}
+
+	public static List<String> doImport(final Element params,
+			final ServiceContext context, File mefFile, final String stylePath,
+			final boolean indexGroup) throws Exception {
 		final GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		final DataManager dm = gc.getDataManager();
@@ -304,8 +310,8 @@ public class Importer {
 					dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?",
 							new Integer(popularity), iId);
 
-				dm.setTemplate(dbms, iId, isTemplate, null);
-				dm.setHarvested(dbms, iId, null);
+				dm.setTemplateExt(dbms, iId, isTemplate, null);
+				dm.setHarvestedExt(dbms, iId, null);
 
 				String pubDir = Lib.resource.getDir(context, "public", id
 						.get(index));
@@ -323,7 +329,11 @@ public class Importer {
 				else
 					addOperations(dm, dbms, privileges, id.get(index), groupId);
 
-				dm.indexMetadata(dbms, id.get(index));
+				if (indexGroup) {
+					dm.indexMetadataGroup(dbms, id.get(index));
+				} else {
+					dm.indexMetadata(dbms, id.get(index));
+				}
 			}
 
 			// --------------------------------------------------------------------

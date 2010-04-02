@@ -37,6 +37,8 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
@@ -93,6 +95,16 @@ public class Set implements Service
 
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "intranet/network",         "system/intranet/network"),
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "intranet/netmask",         "system/intranet/netmask"),
+
+		new ConfigEntry(ConfigEntry.Type.INT,		 true,  "selectionmanager/maxrecords",         "system/selectionmanager/maxrecords"),
+
+		new ConfigEntry(ConfigEntry.Type.BOOL,    true,  "indexoptimizer/enable",  "system/indexoptimizer/enable"),
+		new ConfigEntry(ConfigEntry.Type.INT,    true,  "indexoptimizer/at/hour",  "system/indexoptimizer/at/hour"),
+		new ConfigEntry(ConfigEntry.Type.INT,    true,  "indexoptimizer/at/min",  "system/indexoptimizer/at/min"),
+		new ConfigEntry(ConfigEntry.Type.INT,    true,  "indexoptimizer/at/sec",  "system/indexoptimizer/at/sec"),
+		new ConfigEntry(ConfigEntry.Type.INT,    true,  "indexoptimizer/interval/day",  "system/indexoptimizer/interval/day"),
+		new ConfigEntry(ConfigEntry.Type.INT,    true,  "indexoptimizer/interval/hour",  "system/indexoptimizer/interval/hour"),
+		new ConfigEntry(ConfigEntry.Type.INT,    true,  "indexoptimizer/interval/min",  "system/indexoptimizer/interval/min"),
 
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "z3950/enable",             "system/z3950/enable"),
 		new ConfigEntry(ConfigEntry.Type.INT,    false, "z3950/port",               "system/z3950/port"),

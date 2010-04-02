@@ -21,32 +21,33 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.services.category;
-
-import java.util.List;
+package org.fao.geonet.services.config;
 
 import jeeves.constants.Jeeves;
+import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import jeeves.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.services.util.ServiceMetadataReindexer;
-
+import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
 
-/** Removes a category from the system.
-  */
-
-public class Remove implements Service
+public class DoActions implements Service
 {
+	//--------------------------------------------------------------------------
+	//---
+	//--- Init
+	//---
+	//--------------------------------------------------------------------------
+
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
@@ -57,29 +58,43 @@ public class Remove implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		String id = Util.getParam(params, Params.ID);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+		if (params.getText().equals("ok")) {
+			doActions(context);
+		} else {
+			// else what? Exceptions don't get this far so must be "ok" response
+			throw new OperationAbortedEx("DoActions received unexpected request: "+Xml.getString(params));
+		}
 
-		String query = "SELECT metadataId FROM MetadataCateg WHERE categoryId="+id;
-
-		List<Element> reindex = dbms.select(query).getChildren();
-
-		dbms.execute ("DELETE FROM MetadataCateg WHERE categoryId=" + id);
-		dbms.execute ("DELETE FROM CategoriesDes WHERE idDes="      + id);
-		dbms.execute ("DELETE FROM Categories    WHERE id="         + id);
-
-		//--- reindex affected metadata
-
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getDataManager();
-
-		ServiceMetadataReindexer s = new ServiceMetadataReindexer(dm, dbms, reindex);
-		s.processWithFastIndexing();
-
-		return new Element(Jeeves.Elem.RESPONSE)
-							.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.REMOVED));
+		return new Element(Jeeves.Elem.RESPONSE).setText("ok");
 	}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- doActions - do any immediate actions resulting from changes to settings
+	//---
+	//--------------------------------------------------------------------------
+
+	// do any immediate actions resulting from changes to settings	
+	private void doActions(ServiceContext context) throws Exception {
+		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager		dataMan = gc.getDataManager();
+		SettingInfo si = new SettingInfo(gc.getSettingManager());
+
+		try {
+			if (si.getLuceneIndexOptimizerSchedulerEnabled()) {
+				dataMan.rescheduleOptimizer(si.getLuceneIndexOptimizerSchedulerAt(), si.getLuceneIndexOptimizerSchedulerInterval());
+			} else {
+				dataMan.disableOptimizer();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new OperationAbortedEx("Parameters saved but cannot restart Lucene Index Optimizer: "+e.getMessage());
+		}
+		
+		// should also restart the Z server?
+	}
+
 }
 
 //=============================================================================

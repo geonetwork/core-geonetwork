@@ -15,6 +15,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.csw.services.getrecords.CatalogSearcher;
 import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.jdom.Element;
 
 /**
@@ -26,6 +27,10 @@ public class SelectionManager {
 	private UserSession session = null;
 
 	public static final String SELECTION_METADATA = "metadata";
+
+	// used to limit select all if get system setting maxrecords fails
+	// or contains value we can't parse
+	public static final int DEFAULT_MAXHITS = 1000;
 
 	private static final String STATUS_SELECTED = "status";
 	private static final String ADD_ALL_SELECTED = "add-all";
@@ -230,6 +235,14 @@ public class SelectionManager {
 	 */
 	public void selectAll(String type, ServiceContext context) {
 		Set<String> selection = selections.get(type);
+		SettingInfo si = new SettingInfo(context);
+		int maxhits = DEFAULT_MAXHITS;
+
+		try {
+			maxhits = Integer.parseInt(si.getSelectionMaxRecords());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		if (selection != null)
 			selection.clear();
@@ -240,28 +253,17 @@ public class SelectionManager {
 			if (searcher == null)
 				return;
 
-			Element ht;
+			List<String> uuidList;
 			try {
 				if (searcher instanceof LuceneSearcher)
-					ht = ((LuceneSearcher) searcher).getAll();
+					uuidList = ((LuceneSearcher) searcher).getAllUuids(maxhits);
 				else if (searcher instanceof CatalogSearcher)
-					ht = ((CatalogSearcher) searcher).getAll();
+					uuidList = ((CatalogSearcher) searcher).getAllUuids(context, maxhits);
 				else
 					return;
+				
+				selection.addAll(uuidList);
 
-				List<Element> elList = ht.getChildren();
-
-				for (Iterator<Element> iter = elList.iterator(); iter.hasNext();) {
-					Element element = (Element) iter.next();
-					Element info = element.getChild(Edit.RootChild.INFO,
-							Edit.NAMESPACE);
-					String UUID = info.getChildText(Edit.Info.Elem.UUID);
-
-					if (UUID == null)
-						continue;
-
-					selection.add(UUID);
-				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

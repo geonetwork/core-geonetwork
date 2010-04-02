@@ -49,6 +49,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.services.Utils;
+import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
 //=============================================================================
@@ -95,7 +96,7 @@ public class XslProcessing implements Service {
 
 		try {
 			Element processedMetadata = process(id, process, _appPath, params,
-				context, metadata, notFound, notOwner, notProcessFound);
+				context, metadata, notFound, notOwner, notProcessFound, false);
 			if (processedMetadata == null) {
 				throw new BadParameterEx("Processing failed", 
 						"Not found:" + notFound.size() +
@@ -131,7 +132,7 @@ public class XslProcessing implements Service {
 	public static Element process(String id, String process, String appPath,
 			Element params, ServiceContext context, Set<Integer> metadata,
 			Set<Integer> notFound, Set<Integer> notOwner,
-			Set<Integer> notProcessFound) throws Exception {
+			Set<Integer> notProcessFound, boolean useIndexGroup) throws Exception {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dataMan = gc.getDataManager();
@@ -173,8 +174,13 @@ public class XslProcessing implements Service {
 					xslParameter);
 
 			// --- save metadata and return status
-			dataMan.updateMetadata(context.getUserSession(), dbms, id,
-					processedMetadata, false, null, context.getLanguage());
+			dataMan.updateMetadataExt(dbms, id, processedMetadata, new ISODate().toString());
+
+			if (useIndexGroup) {
+				dataMan.indexMetadataGroup(dbms, id);
+			} else {
+				dataMan.indexMetadata(dbms, id);
+			}
 
 			metadata.add(new Integer(id));
 

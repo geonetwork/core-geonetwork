@@ -323,8 +323,11 @@
 	<messageNoPrivileges>ليس لديك التفويض للقيام بهذا العمل</messageNoPrivileges>
 	<messageNotPerformed>لم تتم تنفيذ العملية</messageNotPerformed>
 	<metadata.admin.index.desc>Rebuild Lucene index</metadata.admin.index.desc>
-	<metadata.admin.index.failed>Failed to rebuild index.</metadata.admin.index.failed>
-	<metadata.admin.index.success>Rebuild index operation was successful.</metadata.admin.index.success>
+	<metadata.admin.index.failed>Index operation failed.</metadata.admin.index.failed>
+	<metadata.admin.index.success>Index operation was successful.</metadata.admin.index.success>
+	<metadata.admin.index.optimize.desc>Optimize Lucene index</metadata.admin.index.optimize.desc>
+	<doYouReallyWantToDoThis js="true">This operation may take some time on large catalogs and should not be done during peak usage. Continue?</doYouReallyWantToDoThis>
+	<optimize>Optimize</optimize>
 	<metadata.admin.index>Index manager</metadata.admin.index>
 	<metadata-template-order>Sort Templates</metadata-template-order>	
 	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>		
@@ -469,6 +472,7 @@
 	<searchUnusedTitle>Search for Unused</searchUnusedTitle>
 	<select>Select : </select>
 	<selectAll>Select all metadata</selectAll>
+	<selectAllNotPossible>Too many hits! Must be less than </selectAllNotPossible>
 	<selected> selected</selected>
 	<selectedOnly>Display selected only</selectedOnly>
 	<selection>Selection</selection>

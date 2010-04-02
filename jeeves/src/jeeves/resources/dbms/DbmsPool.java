@@ -23,12 +23,19 @@
 
 package jeeves.resources.dbms;
 
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import jeeves.constants.Jeeves;
 import jeeves.server.resources.ResourceListener;
 import jeeves.server.resources.ResourceProvider;
+import jeeves.utils.Log;
+
 import org.jdom.Element;
 
 //=============================================================================
@@ -43,11 +50,12 @@ public class DbmsPool implements ResourceProvider
 	private String name;
 	private String user;
 	private String passwd;
+	private String url;
 	private int    maxTries;
 	private int    maxWait;
 	private long   reconnectTime;
 
-	private HashSet<ResourceListener> hsListeners = new HashSet<ResourceListener>();
+	private Set<ResourceListener> hsListeners = Collections.synchronizedSet(new HashSet<ResourceListener>());
 
 	//--------------------------------------------------------------------------
 	//---
@@ -64,8 +72,8 @@ public class DbmsPool implements ResourceProvider
 
 		user          = config.getChildText(Jeeves.Res.Pool.USER);
 		passwd        = config.getChildText(Jeeves.Res.Pool.PASSWORD);
+		url 				  = config.getChildText(Jeeves.Res.Pool.URL);
 		String driver = config.getChildText(Jeeves.Res.Pool.DRIVER);
-		String url    = config.getChildText(Jeeves.Res.Pool.URL);
 		String size   = config.getChildText(Jeeves.Res.Pool.POOL_SIZE);
 		String maxt   = config.getChildText(Jeeves.Res.Pool.MAX_TRIES);
 		String maxw   = config.getChildText(Jeeves.Res.Pool.MAX_WAIT);
@@ -86,6 +94,16 @@ public class DbmsPool implements ResourceProvider
 
 	//--------------------------------------------------------------------------
 
+	public Map<String,String> getProps() {
+		Map<String,String> result = new HashMap<String,String>();
+		result.put("name",		 name);
+		result.put("user",		 user);
+		result.put("password", passwd);
+		result.put("url",	 		 url);
+		return result;
+	}
+
+	//--------------------------------------------------------------------------
 	public void end()
 	{
 		for(Enumeration e=htDbms.keys(); e.hasMoreElements();)
@@ -111,10 +129,13 @@ public class DbmsPool implements ResourceProvider
 		for (int nTries = 0; nTries < maxTries; nTries++)
 		{
 			// try to get a free dbms
+			int i = 0;
 			for(Enumeration e=htDbms.keys(); e.hasMoreElements();)
 			{
+
 				Dbms    dbms   = (Dbms)    e.nextElement();
 				Boolean locked = (Boolean) htDbms.get(dbms);
+				debug("DBMS Resource "+i+" is "+locked);
 
 				if (!locked.booleanValue())
 				{
@@ -131,7 +152,7 @@ public class DbmsPool implements ResourceProvider
 
 							if (currTime - lastConnTime >= reconnectTime)
 							{
-								System.out.println("reconnecting: " + (currTime - lastConnTime) + ">=" + reconnectTime + " ms since last connection"); // FIXME
+								error("reconnecting: " + (currTime - lastConnTime) + ">=" + reconnectTime + " ms since last connection"); // FIXME
 
 								// FIXME: what happens if it disconnects but is unable to connect again?
 								dbms.disconnect();
@@ -139,6 +160,7 @@ public class DbmsPool implements ResourceProvider
 							}
 						}
 
+						debug("SUCCESS: DBMS Resource "+i+" is not locked");
 						htDbms.put(dbms, new Boolean(true));
 						return dbms;
 					}
@@ -148,6 +170,7 @@ public class DbmsPool implements ResourceProvider
 						lastMessage = ex.getMessage();
 					}
 				}
+				i++;
 			}
 			// wait MAX_WAIT msecs (but not after last try)
 			if (nTries < maxTries - 1)
@@ -166,12 +189,15 @@ public class DbmsPool implements ResourceProvider
 	public void close(Object resource) throws Exception
 	{
 		checkResource(resource);
+		debug("Committing and closing "+resource);
 
 		((Dbms) resource).commit();
 		htDbms.put(resource, new Boolean(false));
 
-		for(ResourceListener l : hsListeners)
-			l.close(resource);
+		synchronized(hsListeners) {
+			for(ResourceListener l : hsListeners)
+				l.close(resource);
+		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -181,6 +207,7 @@ public class DbmsPool implements ResourceProvider
 	public void abort(Object resource) throws Exception
 	{
 		checkResource(resource);
+		debug("Aborting "+resource);
 
 		try
 		{
@@ -191,22 +218,24 @@ public class DbmsPool implements ResourceProvider
 			htDbms.put(resource, new Boolean(false));
 		}
 
-		for(ResourceListener l : hsListeners)
-			l.abort(resource);
+		synchronized(hsListeners) {
+			for(ResourceListener l : hsListeners)
+				l.abort(resource);
+		}
 	}
 
 	//--------------------------------------------------------------------------
 
 	public void addListener(ResourceListener l)
 	{
-		hsListeners.add(l);
+			hsListeners.add(l);
 	}
 
 	//--------------------------------------------------------------------------
 
 	public void removeListener(ResourceListener l)
 	{
-		hsListeners.remove(l);
+			hsListeners.remove(l);
 	}
 
 	//--------------------------------------------------------------------------
@@ -225,6 +254,11 @@ public class DbmsPool implements ResourceProvider
 		if (!locked.booleanValue())
 			throw new IllegalArgumentException("Resource not locked :"+resource);
 	}
+
+	private void debug  (String message) { Log.debug  (Log.DBMSPOOL, message); }
+	static  void info   (String message) { Log.info   (Log.DBMSPOOL, message); }
+	private void warning(String message) { Log.warning(Log.DBMSPOOL, message); }
+	static  void error  (String message) { Log.error  (Log.DBMSPOOL, message); }
 }
 
 //=============================================================================

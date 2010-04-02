@@ -10,6 +10,10 @@
 		<xsl:variable name="site"       select="children/site/children"/>
 		<xsl:variable name="server"     select="children/server/children"/>
 		<xsl:variable name="intranet"   select="children/intranet/children"/>
+		<xsl:variable name="selectionmanager"      select="children/selectionmanager/children"/>
+		<xsl:variable name="indexoptimizer" select="children/indexoptimizer/children"/>
+		<xsl:variable name="indexoptimizerAt" select="$indexoptimizer/at/children"/>
+		<xsl:variable name="indexoptimizerInterval" select="$indexoptimizer/interval/children"/>
 		<xsl:variable name="z3950"      select="children/z3950/children"/>
 		<xsl:variable name="proxy"      select="children/proxy/children"/>
 		<xsl:variable name="feedback"   select="children/feedback/children"/>
@@ -43,6 +47,24 @@
 				<network><xsl:value-of select="$intranet/network/value"/></network>
 				<netmask><xsl:value-of select="$intranet/netmask/value"/></netmask>
 			</intranet>
+
+			<selectionmanager>
+				<maxrecords><xsl:value-of select="$selectionmanager/maxrecords/value"/></maxrecords>
+			</selectionmanager>
+
+			<indexoptimizer>
+				<enable><xsl:value-of select="$indexoptimizer/enable/value"/></enable>
+				<at>
+					<hour><xsl:value-of select="$indexoptimizerAt/hour/value"/></hour>
+					<min><xsl:value-of select="$indexoptimizerAt/min/value"/></min>
+					<sec><xsl:value-of select="$indexoptimizerAt/sec/value"/></sec>
+				</at>
+				<interval>
+					<day><xsl:value-of select="$indexoptimizerInterval/day/value"/></day>
+					<hour><xsl:value-of select="$indexoptimizerInterval/hour/value"/></hour>
+					<min><xsl:value-of select="$indexoptimizerInterval/min/value"/></min>
+				</interval>
+			</indexoptimizer>
 
 			<z3950>
 				<enable><xsl:value-of select="$z3950/enable/value"/></enable>

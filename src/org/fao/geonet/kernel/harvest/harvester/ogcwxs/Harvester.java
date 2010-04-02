@@ -298,15 +298,15 @@ class Harvester
 										
 			List<Element> layers = xp.selectNodes(capa);
 			log.info("  - Number of layers, featureTypes or Coverages found : " + layers.size());
-			
+		
 			for (Element layer : layers) {
 				WxSLayerRegistry s = addLayerMetadata (layer, capa);
 				if (s != null)
 					layersRegistry.add(s);
 			}       
 			
-	        // Update ISO19119 for data/service links creation (ie. operatesOn element)
-			// The editor will support that but it will make quite heavy XML.
+	  // Update ISO19119 for data/service links creation (ie. operatesOn element)
+		// The editor will support that but it will make quite heavy XML.
 			md = addOperatesOnUuid (md, layersRegistry);
 			
 		}	
@@ -325,11 +325,11 @@ class Harvester
 		addPrivileges(id);
 		addCategories(id);
 		
+		dataMan.setHarvestedExt(dbms, iId, params.uuid, params.url);
 		dataMan.setTemplate(dbms, iId, "n", null);
-		dataMan.setHarvested(dbms, iId, params.uuid, params.url);
 		
 		dbms.commit();
-		//dataMan.indexMetadata(dbms, id); setHarvested update the index
+		//dataMan.indexMetadata(dbms, id); setTemplate update the index
 		
 		result.added ++;
 		
@@ -595,11 +595,11 @@ class Harvester
 				dataMan.setCategory (dbms, reg.id, params.datasetCategory);
 			
 			log.debug("    - Set Harvested.");
-			dataMan.setHarvested(dbms, iId, params.uuid, params.url); // FIXME : harvestUuid should be a MD5 string
+			dataMan.setHarvestedExt(dbms, iId, params.uuid, params.url); // FIXME : harvestUuid should be a MD5 string
 			
 			dbms.commit();
 			
-			//dataMan.indexMetadata(dbms, reg.id); setHarvested update the index
+			dataMan.indexMetadataGroup(dbms, reg.id);
 			
 			try {
     			// Load bbox info for later use (eg. WMS thumbnails creation)

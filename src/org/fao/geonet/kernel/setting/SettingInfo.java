@@ -23,7 +23,10 @@
 
 package org.fao.geonet.kernel.setting;
 
+import java.util.Calendar;
+
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 
@@ -77,6 +80,50 @@ public class SettingInfo
 			sb.append(":"+ port);
 
 		return sb.toString();
+	}
+
+	//---------------------------------------------------------------------------
+
+	public String getSelectionMaxRecords()
+	{
+		return sm.getValue("system/selectionmanager/maxrecords");
+	}
+
+	//---------------------------------------------------------------------------
+
+	public boolean getLuceneIndexOptimizerSchedulerEnabled()
+	{
+		return sm.getValue("system/indexoptimizer/enable").equals("true");
+	}
+
+	//---------------------------------------------------------------------------
+
+	public Calendar getLuceneIndexOptimizerSchedulerAt() throws IllegalArgumentException {
+		Calendar calendar = Calendar.getInstance();
+		try {
+			calendar.set(0,0,0,
+					Integer.parseInt(sm.getValue("system/indexoptimizer/at/hour")),
+					Integer.parseInt(sm.getValue("system/indexoptimizer/at/min")) ,
+					Integer.parseInt(sm.getValue("system/indexoptimizer/at/sec")));
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Failed parsing schedule at info from settings: "+e.getMessage());
+		}
+		return calendar;
+	}
+
+	//---------------------------------------------------------------------------
+
+	public int getLuceneIndexOptimizerSchedulerInterval() throws IllegalArgumentException {
+		int result = -1;
+		try {
+			int day  = Integer.parseInt(sm.getValue("system/indexoptimizer/interval/day"));
+			int hour = Integer.parseInt(sm.getValue("system/indexoptimizer/interval/hour"));
+			int min  = Integer.parseInt(sm.getValue("system/indexoptimizer/interval/min"));
+			result = (day * 24 * 60) + (hour * 60) + min;
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Failed parsing scheduler interval from settings: "+e.getMessage());
+		}
+		return result;
 	}
 
 	//---------------------------------------------------------------------------

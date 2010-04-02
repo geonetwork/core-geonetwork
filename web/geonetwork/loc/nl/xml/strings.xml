@@ -329,8 +329,11 @@
 	<metadata-edit-delete>Metadata bewerken / verwijderen</metadata-edit-delete>
 	<metadata-edit>Metadata bewerken</metadata-edit>
 	<metadata.admin.index.desc>Vernieuw Lucene index</metadata.admin.index.desc>
-	<metadata.admin.index.failed>Het is niet gelukt de index te vernieuwen.</metadata.admin.index.failed>
-	<metadata.admin.index.success>Vernieuwen van de index is gelukt.</metadata.admin.index.success>
+	<metadata.admin.index.failed>Index operation failed.</metadata.admin.index.failed>
+	<metadata.admin.index.success>Index operation was successful.</metadata.admin.index.success>
+	<metadata.admin.index.optimize.desc>Optimize Lucene index</metadata.admin.index.optimize.desc>
+	<doYouReallyWantToDoThis js="true">This operation may take some time on large catalogs and should not be done during peak usage. Continue?</doYouReallyWantToDoThis>
+	<optimize>Optimize</optimize>
 	<metadata.admin.index>Index manager</metadata.admin.index>
 	<metadata-template-order>Templates sorteren</metadata-template-order>	
 	<metadata-template-order-desc>Sorteer uw templates</metadata-template-order-desc>		
@@ -482,6 +485,7 @@
 	<searchUnusedTitle>Zoek ongebruikt</searchUnusedTitle>
 	<select>Selectie: </select>
 	<selectAll>Selecteer alle metadata</selectAll>
+	<selectAllNotPossible>Too many hits! Must be less than </selectAllNotPossible>
 	<selected> geselecteerd</selected>
 	<selectedOnly>Toon alleen geselecteerde</selectedOnly>
 	<selection>Selectie</selection>

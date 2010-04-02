@@ -152,7 +152,7 @@
 						</xsl:if>
 						
 						
-						<xsl:if test="/root/gui/services/service/@name='metadata.admin.index.rebuild'">            
+						<xsl:if test="/root/gui/services/service/@name='metadata.admin.index.rebuild' and /root/gui/services/service/@name='metadata.admin.index.optimize'">            
 							<xsl:call-template name="admin-index"/>
 						</xsl:if>
 						
@@ -187,16 +187,18 @@
 	<xsl:template name="admin-index">
 		
 		<tr>
-			<td class="padded"><xsl:value-of select="/root/gui/strings/metadata.admin.index"/></td>
-			<td>
+			<td class="padded"><xsl:value-of select="/root/gui/strings/metadata.admin.index.desc"/>
 				<script language="JavaScript" type="text/javascript">   
 					var msgSuccess = "<xsl:value-of select="/root/gui/strings/metadata.admin.index.success"/>";
 					var msgFailed = "<xsl:value-of select="/root/gui/strings/metadata.admin.index.failed"/>";
+					var doYouReally = "<xsl:value-of select="/root/gui/strings/doYouReallyWantToDoThis"/>";
 					
-					function idxRebuild(){
-					  url = Env.locService + '/metadata.admin.index.rebuild';
-					  $('wait').style.display = 'block';
-					  $('btIdx').style.display = 'none';
+					function idxOperation(service, wait, btn){
+						if (!confirm(doYouReally)) return;
+
+						var url = Env.locService + '/' + service;
+					  $(wait).style.display = 'block';
+					  $(btn).style.display = 'none';
 					  var http = new Ajax.Request(
 					    url, 
 					    {
@@ -209,30 +211,35 @@
    					        var root = originalRequest.responseXML.documentElement;
 					
 					        var resp = root.getElementsByTagName('status')[0].firstChild.nodeValue;
-					        $('wait').style.display = 'none';
-					        $('btIdx').style.display = 'block';
+					        $(wait).style.display = 'none';
+					        $(btn).style.display = 'block';
 					        if (resp == "true")
   					          alert (msgSuccess);
 					        else
  					          alert(msgFailed);
 					      },
 					      onFailure: function(originalRequest){
-					        $('wait').style.display = 'none';
-					        $('btIdx').style.display = 'block';
+					        $(wait).style.display = 'none';
+					        $(btn).style.display = 'block';
 					        alert(msgFailed);
 					      }
 					    }
 					  );
 					}
 				</script>
-				
-				<form name="rebuild" accept-charset="UTF-8" action="{/root/gui/locService}/metadata.admin.index.rebuild" method="post">
-					<xsl:value-of select="/root/gui/strings/metadata.admin.index.desc"/>
-				</form>
-				<button class="content" onclick="idxRebuild()" id="btIdx" name="btIdx"><xsl:value-of select="/root/gui/strings/rebuild"/></button>
-				<img src="{/root/gui/url}/images/loading.gif" id="wait" style="display:none;"/>
+			</td>
+			<td>
+				<button class="content" onclick="idxOperation('metadata.admin.index.rebuild','waitIdx', this.name)" id="btIdx" name="btIdx"><xsl:value-of select="/root/gui/strings/rebuild"/></button>
+				<img src="{/root/gui/url}/images/loading.gif" id="waitIdx" style="display:none;"/>
 			</td>
 		</tr>
+		<tr>
+      <td class="padded"><xsl:value-of select="/root/gui/strings/metadata.admin.index.optimize.desc"/></td>
+      <td>
+        <button class="content" onclick="idxOperation('metadata.admin.index.optimize', 'waitIdxOpt', this.name)" id="btOptIdx" name="btOptIdx"><xsl:value-of select="/root/gui/strings/optimize"/></button>
+        <img src="{/root/gui/url}/images/loading.gif" id="waitIdxOpt" style="display:none;"/>
+      </td>
+    </tr>
 		
 	</xsl:template>
 	

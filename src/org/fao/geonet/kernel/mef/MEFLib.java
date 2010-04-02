@@ -148,6 +148,11 @@ public class MEFLib {
 		V2
 	}
 	
+	public static List<String> doImportIndexGroup(Element params, ServiceContext context, File mefFile, String stylePath) throws Exception {
+		return Importer.doImport(params, context, mefFile, stylePath, true);
+	}
+
+	// --------------------------------------------------------------------------
 	
 	public static List<String> doImport(Element params, ServiceContext context,
 			File mefFile, String stylePath) throws Exception {

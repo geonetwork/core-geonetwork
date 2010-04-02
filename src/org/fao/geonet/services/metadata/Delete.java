@@ -109,15 +109,6 @@ public class Delete implements Service
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
 
-		// invalidate current result set set
-		Object o = session.getProperty(Geonet.Session.SEARCH_RESULT);
-		if (o instanceof CatalogSearcher)
-			o = null;
-		MetaSearcher searcher = (MetaSearcher)o;
-
-		if (searcher != null)
-			searcher.setValid(false);
-
 		return elResp;
 	}
 

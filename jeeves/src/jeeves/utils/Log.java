@@ -43,6 +43,7 @@ public class Log
 	public static final String SCHEDULER = JEEVES+ ".scheduler";
 	public static final String RESOURCES = JEEVES+ ".resources";
 	public static final String DBMS      = JEEVES+ ".dbms";
+	public static final String DBMSPOOL	 = JEEVES+ ".dbmspool";
 
 	public class Dbms
 	{

@@ -24,6 +24,12 @@
 package org.fao.geonet;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.util.Map;
+import java.util.HashMap;
+
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
@@ -43,8 +49,28 @@ import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.services.util.z3950.Server;
+
+import org.geotools.data.DataStore;
+//import org.geotools.data.oracle.OracleDataStoreFactory; Not until geotools 2.6.1
+import org.geotools.data.postgis.PostgisDataStoreFactory;
+import org.geotools.data.shapefile.indexed.IndexType;
+import org.geotools.data.shapefile.indexed.IndexedShapefileDataStore;
+import org.geotools.feature.AttributeTypeBuilder;
+import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
+
+import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.feature.type.AttributeDescriptor;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+
 import org.jdom.Element;
+
+import com.vividsolutions.jts.geom.MultiPolygon;
 
 //=============================================================================
 
@@ -56,6 +82,8 @@ public class Geonetwork implements ApplicationHandler
 	private Logger        		logger;
 	private SearchManager 		searchMan;
 	private ThesaurusManager 	thesaurusMan;
+	private String						SPATIAL_INDEX_FILENAME    = "spatialindex";
+	static final String				IDS_ATTRIBUTE_NAME        = "id";
 
 	//---------------------------------------------------------------------------
 	//---
@@ -132,11 +160,14 @@ public class Geonetwork implements ApplicationHandler
 
 		logger.info("  - Search...");
 
-		String luceneDir = handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_DIR);
+		String luceneDir = path + handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_DIR);
 
 		String summaryConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.SUMMARY_CONFIG);
-		
-		searchMan = new SearchManager(path, luceneDir, summaryConfigXmlFile);
+
+		DataStore dataStore = createDataStore(context.getResourceManager().getProps(Geonet.Res.MAIN_DB), luceneDir);
+	
+		String optimizerInterval = settingMan.getValue("system/indexoptimizer/interval");
+		searchMan = new SearchManager(path, luceneDir, summaryConfigXmlFile, dataStore, optimizerInterval, new SettingInfo(settingMan));
 
 		//------------------------------------------------------------------------
 		//--- extract intranet ip/mask and initialize AccessManager
@@ -251,6 +282,142 @@ public class Geonetwork implements ApplicationHandler
 
 		logger.info("  - Z39.50...");
 		Server.end();
+	}
+
+	//---------------------------------------------------------------------------
+
+	private DataStore createDataStore(Map<String,String> props, String luceneDir) throws Exception {
+		String url = props.get("url");
+		String user = props.get("user");
+		String passwd = props.get("password");
+
+		DataStore ds = null;
+		try {
+			if (url.contains("postgis")) {
+				ds = createPostgisDatastore(user, passwd, url);
+			} else if (url.contains("oracle")) {
+				ds = createOracleDatastore(user, passwd, url);
+			}
+		} catch (Exception e) {
+			logger.error("Failed to create datastore for "+url+". Will use shapefile instead.");
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}
+
+		if (ds != null) return ds;
+		else return createShapefileDatastore(luceneDir);
+	}
+
+	//---------------------------------------------------------------------------
+
+	private DataStore createPostgisDatastore(String user, String passwd, String url) throws Exception {
+
+		String[] values = url.split("/");
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PostgisDataStoreFactory.DBTYPE.key, PostgisDataStoreFactory.DBTYPE.sample);
+		params.put(PostgisDataStoreFactory.DATABASE.key, getDatabase(url, values));
+		params.put(PostgisDataStoreFactory.USER.key, user);
+		params.put(PostgisDataStoreFactory.PASSWD.key, passwd);
+		params.put(PostgisDataStoreFactory.HOST.key, getHost(url, values));
+		params.put(PostgisDataStoreFactory.PORT.key, getPort(url, values));
+		//logger.info("Connecting using "+params); - don't show unless we need it
+
+		PostgisDataStoreFactory factory = new PostgisDataStoreFactory();
+		DataStore ds = factory.createDataStore(params);
+		logger.info("NOTE: Using POSTGIS for spatial index");
+
+		return ds;
+	}
+
+	//---------------------------------------------------------------------------
+
+	private DataStore createOracleDatastore(String user, String passwd, String url) throws Exception {
+
+		String[] values = url.split(":");
+/*
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(OracleDataStoreFactory.DBTYPE.key, OracleDataStoreFactory.DBTYPE.sample);
+		params.put(OracleDataStoreFactory.DATABASE.key, getDatabase(url, values));
+		params.put(OracleDataStoreFactory.USER.key, user);
+		params.put(OracleDataStoreFactory.PASSWD.key, passwd);
+		params.put(OracleDataStoreFactory.HOST.key, getHost(url, values));
+		params.put(OracleDataStoreFactory.PORT.key, getPort(url, values));
+
+		OracleDataStoreFactory factory = new OracleDataStoreFactory();
+		DataStore ds = factory.createDataStore(params);
+
+		return ds;
+*/
+		return null;
+	}
+
+	//---------------------------------------------------------------------------
+
+	private DataStore createShapefileDatastore(String luceneDir) throws Exception {
+		File file = new File(luceneDir + "/spatial/" + SPATIAL_INDEX_FILENAME + ".shp");
+		file.getParentFile().mkdirs();
+		if (!file.exists()) {
+			logger.info("Creating shapefile "+file.getAbsolutePath());
+		} else {
+			logger.info("Using shapefile "+file.getAbsolutePath());
+		}
+		IndexedShapefileDataStore ds = new IndexedShapefileDataStore(file.toURI().toURL(), new URI("http://geonetwork.org"), true, true, IndexType.QIX, Charset.defaultCharset());
+		CoordinateReferenceSystem crs = CRS.decode("EPSG:4326");
+
+		if (crs != null) {
+			ds.forceSchemaCRS(crs);
+		}
+
+		if (!file.exists()) {
+			SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
+			AttributeDescriptor geomDescriptor = new AttributeTypeBuilder().crs(DefaultGeographicCRS.WGS84).binding(MultiPolygon.class).buildDescriptor("the_geom");
+			builder.setName(SPATIAL_INDEX_FILENAME);
+			builder.add(geomDescriptor);
+			builder.add(IDS_ATTRIBUTE_NAME, String.class);
+			ds.createSchema(builder.buildFeatureType());
+		}	
+
+		logger.info("NOTE: Using shapefile for spatial index, this can be slow for larger catalogs");
+		return ds;
+	}
+
+	//---------------------------------------------------------------------------
+
+	private String getDatabase(String url, String[] values) throws Exception {
+		if (url.contains("postgis")) {
+			return values[3];
+		} else if (url.contains("oracle")) {
+			return values[5];
+		} else {
+			throw new Exception("Unknown database in url "+url);
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private String getHost(String url, String[] values) throws Exception {
+		if (url.contains("postgis")) {
+			String value = values[2];
+			return value.substring(0,value.indexOf(":"));
+		} else if (url.contains("oracle")) {
+			return values[3];
+		} else {
+			throw new Exception("Unknown database in url "+url);
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private String getPort(String url, String values[]) throws Exception {
+		if (url.contains("postgis")) {
+			String value = values[2];
+			return value.substring(value.indexOf(":")+1);
+		} else if (url.contains("oracle")) {
+			return values[4];
+		} else {
+			throw new Exception("Unknown database in url "+url);
+		}
 	}
 }
 

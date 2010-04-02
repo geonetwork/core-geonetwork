@@ -34,6 +34,7 @@ import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.harvest.harvester.arcsde.ArcSDEHarvester;
@@ -354,6 +355,23 @@ public abstract class AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
+	// Nested class to handle harvesting with fast indexing
+	public class HarvestWithIndexProcessor extends MetadataIndexerProcessor {
+		ResourceManager rm;
+		Logger logger;
+
+		public HarvestWithIndexProcessor(DataManager dm, Logger logger, ResourceManager rm) {
+			super(dm);
+			this.logger = logger;
+			this.rm = rm;
+		}
+
+		@Override
+		public void process() throws Exception {
+			doHarvest(logger, rm);
+		}
+	}
+
 	void harvest()
 	{
 		ResourceManager rm = new ResourceManager(context.getProviderManager());
@@ -376,7 +394,8 @@ public abstract class AbstractHarvester
 			//--- proper harvesting
 
 			logger.info("Started harvesting from node : "+ nodeName);
-			doHarvest(logger, rm);
+			HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger, rm);
+			h.processWithFastIndexing();
 			logger.info("Ended harvesting from node : "+ nodeName);
 
 			if (getParams().oneRunOnly)

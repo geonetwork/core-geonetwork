@@ -42,6 +42,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.jdom.Element;
 
@@ -146,12 +147,42 @@ public class ImportFromDir implements Service
 
 	//--------------------------------------------------------------------------
 	//---
+	//--- ImportMetadataReindexer class (used in standardImport)
+	//---
+	//--------------------------------------------------------------------------
+
+	public class ImportMetadataReindexer extends MetadataIndexerProcessor {
+		Element params;
+		File files[];
+		String stylePath;
+		ServiceContext context;
+
+		public ImportMetadataReindexer(DataManager dm, Element params, ServiceContext context, File files[], String stylePath) {
+			super (dm);
+			this.params = params;
+			this.context = context;
+			this.files = files;
+			this.stylePath = stylePath;
+		}
+
+		public void process() throws Exception {
+			for(int i=0; i<files.length; i++)
+				MEFLib.doImportIndexGroup(params, context, files[i], stylePath);
+			
+		}
+	}
+
+	//--------------------------------------------------------------------------
+	//---
 	//--- Standard import
 	//---
 	//--------------------------------------------------------------------------
 
 	private int standardImport(Element params, ServiceContext context) throws Exception
 	{
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager   dm = gc.getDataManager();
+
 		String dir      = Util.getParam(params, Params.DIR);
 		
 		File files[] = new File(dir).listFiles(mdFilter);
@@ -159,8 +190,8 @@ public class ImportFromDir implements Service
 		if (files == null)
 			throw new Exception("Directory not found: " + dir);
 
-		for(int i=0; i<files.length; i++)
-			MEFLib.doImport(params, context, files[i], stylePath);
+		ImportMetadataReindexer r = new ImportMetadataReindexer(dm, params, context, files, stylePath);
+		r.processWithFastIndexing();
 
 		return files.length;
 	}

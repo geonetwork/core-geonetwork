@@ -23,6 +23,8 @@
 
 package jeeves.server.resources;
 
+import java.util.Map;
+
 import org.jdom.Element;
 
 //=============================================================================
@@ -39,6 +41,9 @@ public interface ResourceProvider
 
 	/** Initializes the provider */
 	public void init(String name, Element config) throws Exception;
+
+	/** gets props from the provider */
+	public Map<String,String> getProps();
 
 	/** Stops the provider */
 	public void end();

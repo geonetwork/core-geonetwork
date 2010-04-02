@@ -37,7 +37,6 @@ import jeeves.utils.Xml;
 
 import org.fao.geonet.arcgis.ArcSDEMetadataAdapter;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.harvest.Common;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -183,8 +182,9 @@ public class ArcSDEHarvester extends AbstractHarvester {
 			}
 			// the xml is recognizable iso19139 format
 			else {
-				String uuid = Common.retrieveUUID(iso19139, schema);
-				if(uuid == null) {
+				String uuid = dataMan.extractUUID(schema, iso19139);
+				if(uuid == null || uuid.equals("")) {
+					System.out.println("Skipping metadata due to failure extracting uuid (uuid null or empty).");
 					result.badFormat++;
 				}
 				else {
@@ -232,7 +232,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		addCategories(id, localCateg, dbms);
 
 		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id);
 	}
 	/**
 	 * Inserts a metadata into the database. Lucene index is updated after insertion.
@@ -253,14 +253,14 @@ public class ArcSDEHarvester extends AbstractHarvester {
 												createDate, uuid, 1, null);
 
 		int iId = Integer.parseInt(id);
-		dataMan.setTemplate(dbms, iId, "n", null);
-		dataMan.setHarvested(dbms, iId, source);
+		dataMan.setTemplateExt(dbms, iId, "n", null);
+		dataMan.setHarvestedExt(dbms, iId, source);
 
 		addPrivileges(id, localGroups, dbms);
 		addCategories(id, localCateg, dbms);
 
 		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id);
 		return id;
 	}
 	

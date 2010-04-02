@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,8 @@ import jeeves.utils.Xml;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldSelector;
+import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
@@ -49,11 +52,13 @@ import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
 import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.Hits;
-import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.TopFieldCollector;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -67,6 +72,7 @@ import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
+
 import org.jdom.Element;
 
 //=============================================================================
@@ -74,7 +80,11 @@ import org.jdom.Element;
 public class CatalogSearcher {
 	private Element _summaryConfig;
 	private Map<String, Boolean> _isTokenizedField = new HashMap<String, Boolean>();
-	private Hits _hits;
+	private FieldSelector _selector;
+	private Query         _query;
+	private CachingWrapperFilter _filter;
+	private Sort          _sort;
+	private String        _lang;
 
 	public CatalogSearcher(File summaryConfig) {
 		try {
@@ -85,6 +95,13 @@ public class CatalogSearcher {
 			throw new RuntimeException(
 					"Error reading summary configuration file", e);
 		}
+
+		_selector = new FieldSelector() {
+			public final FieldSelectorResult accept(String name) {
+				if (name.equals("_id")) return FieldSelectorResult.LOAD;
+				else return FieldSelectorResult.NO_LOAD;
+			}
+		};
 	}
 
 	// ---------------------------------------------------------------------------
@@ -100,7 +117,7 @@ public class CatalogSearcher {
 	 */
 	public Pair<Element, List<ResultItem>> search(ServiceContext context,
 			Element filterExpr, String filterVersion, Set<TypeName> typeNames,
-			Sort sort, ResultType resultType, int maxRecords)
+			Sort sort, ResultType resultType, int startPosition, int maxRecords)
 			throws CatalogException {
 		Element luceneExpr = filterToLucene(context, filterExpr);
 
@@ -116,7 +133,7 @@ public class CatalogSearcher {
 
 			Pair<Element, List<ResultItem>> results = performSearch(context,
 					luceneExpr, filterExpr, filterVersion, sort, resultType,
-					maxRecords);
+					startPosition, maxRecords);
 			return results;
 		} catch (Exception e) {
 			Log.error(Geonet.CSW_SEARCH, "Error while searching metadata ");
@@ -128,6 +145,7 @@ public class CatalogSearcher {
 		}
 	}
 
+	// ---------------------------------------------------------------------------
 	/**
 	 * <p>
 	 * Gets results in current searcher
@@ -138,26 +156,37 @@ public class CatalogSearcher {
 	 * @throws IOException
 	 * @throws CorruptIndexException
 	 */
-	public Element getAll() throws CorruptIndexException, IOException {
-		Element response = new Element("response");
+	public List<String> getAllUuids(ServiceContext context, int maxHits) throws Exception {
 
-		if (_hits.length() == 0) {
-			response.setAttribute("from", 0 + "");
-			response.setAttribute("to", 0 + "");
-			return response;
+		FieldSelector uuidselector = new FieldSelector() {
+			public final FieldSelectorResult accept(String name) {
+				if (name.equals("_uuid")) return FieldSelectorResult.LOAD;
+				else return FieldSelectorResult.NO_LOAD;
+			}
+		};
+
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SearchManager sm = gc.getSearchmanager();
+		IndexReader reader = sm.getIndexReader();
+
+		Pair<TopFieldCollector,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary( maxHits, Integer.MAX_VALUE, _lang, ResultType.RESULTS.toString(), _summaryConfig, reader, _query, _filter, _sort, false);
+		TopFieldCollector tfc = searchResults.one();
+		Element summary = searchResults.two();
+
+		int numHits = Integer.parseInt(summary.getAttributeValue("count"));
+
+		Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
+
+		// --- retrieve results
+
+		List<String> response = new ArrayList<String>();
+		TopDocs tdocs = tfc.topDocs(0, maxHits);
+
+		for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
+			Document doc = reader.document(sdoc.doc, uuidselector);
+			String uuid = doc.get("_uuid");
+			if (uuid != null) response.add(uuid);
 		}
-
-		response.setAttribute("from", 1 + "");
-		response.setAttribute("to", _hits.length() + "");
-		for (int i = 0; i < _hits.length(); i++) {
-			Document doc = _hits.doc(i);
-			String id = doc.get("_id");
-
-			// FAST mode
-			Element md = LuceneSearcher.getMetadataFromIndex(doc, id);
-			response.addContent(md);
-		}
-
 		return response;
 	}
 
@@ -310,10 +339,10 @@ public class CatalogSearcher {
 
 	private Pair<Element, List<ResultItem>> performSearch(
 			ServiceContext context, Element luceneExpr, Element filterExpr,
-			String filterVersion, Sort sort, ResultType resultType,
-			int maxRecords) throws Exception {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
+			String filterVersion, Sort sort, ResultType resultType, 
+			int startPosition, int maxRecords) throws Exception {
+
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
 
 		if (luceneExpr != null)
@@ -323,6 +352,10 @@ public class CatalogSearcher {
 		Query data = (luceneExpr == null) ? null : LuceneSearcher
 				.makeQuery(luceneExpr);
 		Query groups = getGroupsQuery(context);
+
+		if (sort == null) {
+			sort = LuceneSearcher.makeSort(Collections.singletonList(Pair.read(Geonet.SearchResult.SortBy.RELEVANCE, true)));
+		}
 
 		// --- put query on groups in AND with lucene query
 
@@ -346,57 +379,51 @@ public class CatalogSearcher {
 		Log.debug(Geonet.CSW_SEARCH, "Lucene query: " + query.toString());
 
 		IndexReader reader = sm.getIndexReader();
-		IndexSearcher searcher = new IndexSearcher(reader);
 
-		try {
-			// TODO Handle NPE creating spatial filter (due to constraint
-			// language version).
-			Filter spatialfilter = sm.getSpatial().filter(query, filterExpr,
-					filterVersion);
+		// TODO Handle NPE creating spatial filter (due to constraint
+		// language version).
+		Filter spatialfilter = sm.getSpatial().filter(query, filterExpr, filterVersion);
+		CachingWrapperFilter cFilter = null;
+		if (spatialfilter != null) cFilter = new CachingWrapperFilter(spatialfilter);
+		boolean buildSummary = resultType == ResultType.RESULTS_WITH_SUMMARY;
 
-			if (spatialfilter == null) {
-				_hits = searcher.search(query, sort);
-			} else {
-				_hits = searcher.search(query, new CachingWrapperFilter(
-						spatialfilter), sort);
+		// record globals for reuse
+		_query = query;
+		_filter = cFilter;
+		_sort = sort;
+		_lang = context.getLanguage();
+
+		Pair<TopFieldCollector,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary( startPosition + maxRecords, Integer.MAX_VALUE, context.getLanguage(), resultType.toString(), _summaryConfig, reader, query, cFilter, sort, buildSummary);
+		TopFieldCollector tfc = searchResults.one();
+		Element summary = searchResults.two();
+
+		int numHits = Integer.parseInt(summary.getAttributeValue("count"));
+
+		Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
+
+		// --- retrieve results
+
+		List<ResultItem> results = new ArrayList<ResultItem>();
+		TopDocs hits = tfc.topDocs(startPosition, maxRecords);
+
+		for (int i = 0; i < hits.scoreDocs.length; i++) {
+			Document doc = reader.document(hits.scoreDocs[i].doc, _selector);
+			String id = doc.get("_id");
+
+			ResultItem ri = new ResultItem(id);
+			results.add(ri);
+
+			for (String field : FieldMapper.getMappedFields()) {
+				String value = doc.get(field);
+
+				if (value != null)
+					ri.add(field, value);
 			}
-
-			Log.debug(Geonet.CSW_SEARCH, "Records matched : " + _hits.length());
-
-			// --- retrieve results
-
-			List<ResultItem> results = new ArrayList<ResultItem>();
-
-			for (int i = 0; i < _hits.length(); i++) {
-				Document doc = _hits.doc(i);
-				String id = doc.get("_id");
-
-				ResultItem ri = new ResultItem(id);
-				results.add(ri);
-
-				for (String field : FieldMapper.getMappedFields()) {
-					String value = doc.get(field);
-
-					if (value != null)
-						ri.add(field, value);
-				}
-			}
-
-			Element summary = null;
-
-			// Only compute GeoNetwork summary on results_with_summary option
-			if (resultType == ResultType.RESULTS_WITH_SUMMARY) {
-				summary = LuceneSearcher.makeSummary(_hits, _hits.length(),
-						_summaryConfig, resultType.toString(),
-						Integer.MAX_VALUE, context.getLanguage());
-				summary.setName("Summary");
-				summary.setNamespace(Csw.NAMESPACE_GEONET);
-			}
-
-			return Pair.read(summary, results);
-		} finally {
-			searcher.close();
 		}
+
+		summary.setName("Summary");
+		summary.setNamespace(Csw.NAMESPACE_GEONET);
+		return Pair.read(summary, results);
 	}
 
 	// ---------------------------------------------------------------------------

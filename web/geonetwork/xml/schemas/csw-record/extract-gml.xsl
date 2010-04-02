@@ -18,11 +18,11 @@
    			-->
    			<xsl:variable name="lc" select="/csw:Record/ows:BoundingBox/ows:LowerCorner"/>
    			<xsl:variable name="uc" select="/csw:Record/ows:BoundingBox/ows:UpperCorner"/>
-			<xsl:variable name="n" select="substring-after($uc,' ')"/>
-			<xsl:variable name="s" select="substring-after($lc,' ')"/>
+				<xsl:variable name="n" select="substring-after($uc,' ')"/>
+				<xsl:variable name="s" select="substring-after($lc,' ')"/>
    			<xsl:variable name="e" select="substring-before($uc,' ')"/>
    			<xsl:variable name="w" select="substring-before($lc,' ')"/>
-			
+				<xsl:if test="$w!='' and $e!='' and $n!='' and $s!=''">			
 	        <gml:Polygon>
 	            <gml:exterior>
 	                <gml:LinearRing>
@@ -30,6 +30,7 @@
 	                </gml:LinearRing>
 	            </gml:exterior>
 	        </gml:Polygon>
-       	</gml:GeometryCollection>
+				</xsl:if>
+      </gml:GeometryCollection>
     </xsl:template>
 </xsl:stylesheet>

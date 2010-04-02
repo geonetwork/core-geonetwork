@@ -26,6 +26,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -42,6 +45,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
+import jeeves.exceptions.JeevesException;
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
@@ -53,6 +57,8 @@ import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldSelector;
+import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
@@ -60,6 +66,7 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermEnum;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.store.Directory;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
@@ -75,12 +82,16 @@ import org.fao.geonet.kernel.search.spatial.SpatialFilter;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.search.spatial.TouchesFilter;
 import org.fao.geonet.kernel.search.spatial.WithinFilter;
+import org.fao.geonet.kernel.setting.SettingInfo;
+
+import org.geotools.data.DataStore;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Transaction;
 import org.geotools.gml3.GMLConfiguration;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.Parser;
+
 import org.jdom.Element;
 
 import com.k_int.IR.Searchable;
@@ -88,6 +99,7 @@ import com.k_int.hss.HeterogeneousSetOfSearchable;
 import com.k_int.util.LoggingFacade.LogContextFactory;
 import com.k_int.util.LoggingFacade.LoggingContext;
 import com.k_int.util.Repository.CollectionDirectory;
+
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
 
@@ -115,15 +127,23 @@ public class SearchManager
 	private LoggingContext _cat;
 	private Searchable     _hssSearchable;
 	private Spatial        _spatial;
+	private LuceneIndexWriterFactory    _indexWriter;
+	private Timer					 _optimizerTimer = null;
+	// minutes between optimizations of the lucene index
+	private int						 _optimizerInterval;
+	private Calendar       _optimizerBeginAt;
+	private SimpleDateFormat _dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 	//-----------------------------------------------------------------------------
 
 	/**
 	 * @param appPath
 	 * @param luceneDir
+	 * @param summaryConfigXmlFile
+	 * @param dataStore
 	 * @throws Exception
 	 */
-	public SearchManager(String appPath, String luceneDir, String summaryConfigXmlFile) throws Exception
+	public SearchManager(String appPath, String luceneDir, String summaryConfigXmlFile, DataStore dataStore, String optimizerInterval, SettingInfo si) throws Exception
 	{
 		_summaryConfig = Xml.loadStream(new FileInputStream(new File(appPath,summaryConfigXmlFile)));
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
@@ -134,12 +154,11 @@ public class SearchManager
 		
 		_luceneDir = new File(luceneDir+ "/nonspatial");
 		
-		if (!_luceneDir.isAbsolute())
-            _luceneDir = new File(appPath + luceneDir+ "/nonspatial");
+		if (!_luceneDir.isAbsolute()) _luceneDir = new File(appPath + luceneDir+ "/nonspatial");
 
-        _luceneDir.getParentFile().mkdirs();
+     _luceneDir.getParentFile().mkdirs();
         
-        _spatial = new Spatial(_luceneDir.getParent() + "/spatial");
+     _spatial = new Spatial(dataStore);
 
         // Define the default Analyzer
 		_analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer());
@@ -164,9 +183,17 @@ public class SearchManager
 		_analyzer.addAnalyzer("parentUuid", new StandardAnalyzer());
 		_analyzer.addAnalyzer("operatesOn", new StandardAnalyzer());
 		_analyzer.addAnalyzer("subject", new KeywordAnalyzer());
-		
+
 		initLucene(appPath, luceneDir);
 		initZ3950(appPath);
+
+		if (si.getLuceneIndexOptimizerSchedulerEnabled()) {
+      _optimizerBeginAt  = si.getLuceneIndexOptimizerSchedulerAt();
+      _optimizerInterval = si.getLuceneIndexOptimizerSchedulerInterval();
+      scheduleOptimizerThread();
+    } else {
+      Log.info(Geonet.INDEX_ENGINE, "Scheduling thread that optimizes lucene index is disabled");
+    }	
 	}
 
 	//-----------------------------------------------------------------------------
@@ -174,6 +201,89 @@ public class SearchManager
 	public void end() throws Exception
 	{
 		endZ3950();
+		_optimizerTimer.cancel();
+	}
+
+	//-----------------------------------------------------------------------------
+
+	public synchronized void disableOptimizer() throws Exception
+  {
+    Log.info(Geonet.INDEX_ENGINE, "Scheduling thread that optimizes lucene index is disabled");
+    if (_optimizerTimer != null) {
+      _optimizerTimer.cancel();
+    }
+  }
+
+	//-----------------------------------------------------------------------------
+	
+	public synchronized void rescheduleOptimizer(Calendar optimizerBeginAt, int optimizerInterval) throws Exception
+	{
+		if (_dateFormat.format(optimizerBeginAt.getTime()).equals(_dateFormat.format(_optimizerBeginAt.getTime())) && (optimizerInterval == _optimizerInterval)) return; // do nothing unless at and interval has changed
+
+		_optimizerInterval = optimizerInterval;
+		_optimizerBeginAt  = optimizerBeginAt;
+		if (_optimizerTimer != null) _optimizerTimer.cancel();
+		scheduleOptimizerThread();
+	}
+
+	//-----------------------------------------------------------------------------
+
+	private void scheduleOptimizerThread() throws Exception {
+		_optimizerTimer = new Timer(true);
+
+		// at _optimizerBeginAt and again at every _optimizerInterval minutes
+		Date beginAt = getBeginAt(_optimizerBeginAt);
+		_optimizerTimer.schedule(new OptimizeTask(), beginAt, _optimizerInterval * 60 * 1000); 
+
+		Log.info(Geonet.INDEX_ENGINE, "Scheduling thread that optimizes lucene index to run at "+_dateFormat.format(beginAt)+" and every "+_optimizerInterval+" minutes afterwards");
+	}
+
+	//-----------------------------------------------------------------------------
+
+	private Date getBeginAt(Calendar timeToStart) {
+		Calendar now = Calendar.getInstance();
+		Calendar ts  = Calendar.getInstance();
+
+		ts.set(Calendar.DAY_OF_MONTH,	now.get(Calendar.DAY_OF_MONTH));
+		ts.set(Calendar.MONTH,				now.get(Calendar.MONTH));
+		ts.set(Calendar.YEAR,					now.get(Calendar.YEAR));
+		ts.set(Calendar.HOUR,					timeToStart.get(Calendar.HOUR));
+		ts.set(Calendar.MINUTE,				timeToStart.get(Calendar.MINUTE));
+		ts.set(Calendar.SECOND,				timeToStart.get(Calendar.SECOND));
+
+		// if the starttime has already past then schedule for tommorrow
+		if (now.after(ts)) ts.add(Calendar.DAY_OF_MONTH, 1);
+
+		return ts.getTime();
+	}
+
+	//-----------------------------------------------------------------------------
+
+	class OptimizeTask extends TimerTask {
+		public void run() {
+			try {
+				_indexWriter.openWriter();
+			} catch (Exception e) {
+				Log.error(Geonet.INDEX_ENGINE, "Optimize task failed to open the index: "+e.getMessage());
+				e.printStackTrace();
+			}
+
+			try {
+				Log.info(Geonet.INDEX_ENGINE, "Index Optimization Thread Task...started");
+				_indexWriter.optimize();
+				Log.info(Geonet.INDEX_ENGINE, "Index Optimization Thread Task...ended");
+			} catch (Exception e) {
+				Log.error(Geonet.INDEX_ENGINE, "Optimize task failed: "+e.getMessage());
+				e.printStackTrace();
+			} finally {
+				try {
+					_indexWriter.closeWriter();
+				} catch (Exception e) {
+					Log.error(Geonet.INDEX_ENGINE, "Optimize task failed to close the index: "+e.getMessage());
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	//-----------------------------------------------------------------------------
@@ -200,9 +310,7 @@ public class SearchManager
 	private void initLucene(String appPath, String luceneDir)
 		throws Exception
 	{
-		//--- the lucene dir cannot be inside the CVS so it is better to create 
-		// it here
-		setupIndex(false); // RGFIX: check if this is correct
+		setupIndex(false); 
 	}
 
 	//-----------------------------------------------------------------------------
@@ -284,10 +392,45 @@ public class SearchManager
 	 * @param title
 	 * @throws Exception
 	 */
-	public synchronized void index(String type, Element metadata, String id,
-			List moreFields, String isTemplate, String title) throws Exception 
+	public void index(String type, Element metadata, String id, List moreFields, String isTemplate, String title) throws Exception 
 	{
+		Log.debug(Geonet.INDEX_ENGINE, "Opening Writer from index");
+		_indexWriter.openWriter();
+		try {
+			Document doc = buildIndexDocument(type, metadata, id, moreFields, isTemplate, title);
+			_indexWriter.addDocument(doc);
+		} finally {
+			Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from index");
+			_indexWriter.closeWriter();
+		}
+
+		_spatial.writer().index(_schemasDir.getPath(), type, id, metadata);
+	}
+
+	public void startIndexGroup() throws Exception {
+		Log.debug(Geonet.INDEX_ENGINE, "Opening Writer from startIndexGroup");
+		_indexWriter.openWriter();
+	}
+
+	public void indexGroup(String type, Element metadata, String id, List moreFields, String isTemplate, String title) throws Exception 
+	{
+		Document doc = buildIndexDocument(type, metadata, id, moreFields, isTemplate, title);
+		_indexWriter.addDocument(doc);
+
+		_spatial.writer().index(_schemasDir.getPath(), type, id, metadata);
+	}
+
+	public void endIndexGroup() throws Exception {
+		Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from endIndexGroup");
+		_indexWriter.closeWriter();
+	}
+
+	private Document buildIndexDocument(String type, Element metadata, String id, List moreFields, String isTemplate, String title) throws Exception 
+	{
+
+		Log.debug(Geonet.INDEX_ENGINE, "Deleting "+id+" from index");
 		delete("_id", id);
+		Log.debug(Geonet.INDEX_ENGINE, "Finished Delete");
 
 		Element xmlDoc;
 
@@ -322,16 +465,7 @@ public class SearchManager
 				+ Xml.getString(xmlDoc));
 
 		Document doc = newDocument(xmlDoc);
-		
-		IndexWriter writer = new IndexWriter(_luceneDir, _analyzer, false);
-		try {
-			writer.addDocument(doc);
-			lazyOptimize(writer);
-		} finally {
-			writer.close();
-			_indexReader = getIndexReader();
-		}
-		_spatial.writer().index(_schemasDir.getPath(), type, id, metadata);
+		return doc;	
 	}
 
 	/**
@@ -378,20 +512,23 @@ public class SearchManager
 	//--------------------------------------------------------------------------------
 	//  delete a document
 
-	public synchronized void delete(String fld, String txt) throws Exception {
+	public void delete(String fld, String txt) throws Exception {
 		
 		// possibly remove old document
-		IndexReader indexReader = IndexReader.open(_luceneDir);
+		Log.debug(Geonet.INDEX_ENGINE, "Opening Writer from delete");
+		_indexWriter.openWriter();
 		try {
-			_spatial.writer().delete(txt);
-			indexReader.deleteDocuments(new Term(fld, txt));
+			_indexWriter.deleteDocuments(new Term(fld, txt));
 		} finally {
-			indexReader.close();
+			Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from delete");
+			_indexWriter.closeWriter();
 		}
+		_spatial.writer().delete(txt);
 	}
 
 	//--------------------------------------------------------------------------------
 
+	// Dangerous or not at all possible if the index is very large!
 	public Hashtable getDocs() throws Exception
 	{
 		_indexReader = getIndexReader();
@@ -413,6 +550,35 @@ public class SearchManager
 		}
 		return docs;
 	
+	}
+
+	//--------------------------------------------------------------------------------
+
+	public HashMap<String,String> getDocsChangeDate() throws Exception
+	{
+		_indexReader = getIndexReader();
+
+		FieldSelector idChangeDateSelector = new FieldSelector() {
+			public final FieldSelectorResult accept(String name) {
+				if (name.equals("_id") || name.equals("_changeDate")) return FieldSelectorResult.LOAD;
+				else return FieldSelectorResult.NO_LOAD;
+			}
+		};
+	
+		int capacity = (int)(_indexReader.maxDoc() / 0.75)+1;
+		HashMap<String,String> docs = new HashMap<String,String>(capacity);
+		for (int i = 0; i < _indexReader.numDocs(); i++) {
+			if (_indexReader.isDeleted(i)) continue; // FIXME: strange lucene hack: sometimes it tries to load a deleted document
+			Hashtable record = new Hashtable();
+			Document doc = _indexReader.document(i, idChangeDateSelector);
+			String id = doc.get("_id");
+			if (id == null) {
+				Log.error(Geonet.INDEX_ENGINE, "Document with no _id field skipped! Document is "+doc);
+				continue;
+			}
+			docs.put(id, doc.get("_changeDate"));
+		}
+		return docs;
 	}
 
 	//--------------------------------------------------------------------------------
@@ -443,7 +609,7 @@ public class SearchManager
 					.getAbsolutePath();
 			return Xml.transform(xml, styleSheet);
 		} catch (Exception e) {
-			Log.error(Geonet.SEARCH_ENGINE,
+			Log.error(Geonet.INDEX_ENGINE,
 					"Indexing stylesheet contains errors : " + e.getMessage());
 			throw e;
 		}
@@ -459,7 +625,7 @@ public class SearchManager
 					.getAbsolutePath();
 			return Xml.transform(xml, styleSheetPath);
 		} catch (Exception e) {
-			Log.error(Geonet.SEARCH_ENGINE,
+			Log.error(Geonet.INDEX_ENGINE,
 					"Search stylesheet contains errors : " + e.getMessage());
 			throw e;
 		}
@@ -504,23 +670,43 @@ public class SearchManager
 				indexReader.close();
 				badIndex = false;
 			} catch (Exception e) {
-				Log.error(Geonet.SEARCH_ENGINE,
+				Log.error(Geonet.INDEX_ENGINE,
 						"Exception while opening lucene index, going to rebuild it: "
 								+ e.getMessage());
 			}
 		}
 		// if rebuild forced or bad index then rebuild index
 		if (rebuild || badIndex) {
-			Log.error(Geonet.SEARCH_ENGINE, "Rebuilding lucene index");
-			if (_spatial != null)
-				_spatial.writer().reset();
+			Log.error(Geonet.INDEX_ENGINE, "Rebuilding lucene index");
+			if (_spatial != null) _spatial.writer().reset();
 			IndexWriter writer = new IndexWriter(_luceneDir, _analyzer, true);
 			writer.close();
 		}
 		
-        _indexReader = IndexReader.open(_luceneDir);
+    _indexReader = IndexReader.open(_luceneDir);
+		_indexWriter = new LuceneIndexWriterFactory(_luceneDir, _analyzer);
 	}
 
+	//----------------------------------------------------------------------------
+	/*
+	 *  Optimize the Lucene index
+	 *  
+	 */
+	public boolean optimizeIndex() {
+		try {
+			_indexWriter.openWriter();
+			_indexWriter.optimize();
+			_indexWriter.closeWriter();
+			return true;
+		} catch (Exception e) {
+			Log.error(Geonet.INDEX_ENGINE,
+					"Exception while optimizing lucene index: "
+							+ e.getMessage());
+			return false;
+		}
+	}
+	
+	//----------------------------------------------------------------------------
 	/*
 	 *  Rebuild the Lucene index
 	 *  
@@ -530,17 +716,19 @@ public class SearchManager
 	 */
 	public boolean rebuildIndex(DataManager dataMan, Dbms dbms) {
 		try {
+			if (_indexWriter.isOpen()) {
+				throw new Exception("Cannot rebuild index while it is being updated - please wait till later");
+			}
 			setupIndex(true);
 			dataMan.init(dbms, true);
 			return true;
 		} catch (Exception e) {
-			Log.error(Geonet.SEARCH_ENGINE,
+			Log.error(Geonet.INDEX_ENGINE,
 					"Exception while rebuilding lucene index, going to rebuild it: "
 							+ e.getMessage());
 			return false;
 		}
 	}
-	
 	
 	
 	// creates a new document
@@ -585,49 +773,6 @@ public class SearchManager
 
 	//--------------------------------------------------------------------------------
 
-	private static final long TIME_BETWEEN_OPTS     = 1000; // time between two optimizations in ms
-	private static final int  UPDTATES_BETWEEN_OPTS = 10;   // number of updates between two optimizations
-
-	private long    lastOptTime = 0; // time since last optimization
-	private int     updateCount = UPDTATES_BETWEEN_OPTS - 1; // number of updates since last uptimization
-	private boolean optimizing = false; // true iff optimization is in progress
-	private Object  mutex = new Object(); // RGFIX: check concurrent access from multiple servlets
-	/**
-	 * lazy optimization: optimize index if
-     * at least TIME_BETWEEN_OPTS time passed or
-     * at least UPDTATES_BETWEEN_OPTS updates were performed
-     * since last optimization
-	 * @param writer
-	 * @throws Exception
-	 */
-	private void lazyOptimize(IndexWriter writer)
-		throws Exception
-	{
-		if (optimizing) return;
-
-		boolean doOptimize;
-		synchronized (mutex)
-		{
-			if (System.currentTimeMillis() - lastOptTime < TIME_BETWEEN_OPTS
-				 && ++updateCount < UPDTATES_BETWEEN_OPTS)
-				doOptimize = false;
-			else
-			{
-				doOptimize  = true;
- 				optimizing  = true;
-				updateCount = 0;
-			}
-		}
-		if (doOptimize)
-		{
-			// System.out.println("**** OPTIMIZING"); // DEBUG
-
-			writer.optimize();
-			lastOptTime = System.currentTimeMillis();
-			optimizing = false;
-		}
-	}
-	
 	public Spatial getSpatial()
     {
         return _spatial;
@@ -636,6 +781,7 @@ public class SearchManager
 	public class Spatial 
 	{
 
+				private final DataStore _datastore;
         private static final long 	TIME_BETWEEN_SPATIAL_COMMITS = 10000;
         private final Map<String, Constructor<? extends SpatialFilter>> _types;
         {
@@ -667,7 +813,6 @@ public class SearchManager
             }
             _types = Collections.unmodifiableMap(types);
         }
-        private final String                                            _appPath;
         private final Transaction                                       _transaction;
         private final Timer                                             _timer;
         private final Parser                                            _gmlParser;
@@ -675,23 +820,16 @@ public class SearchManager
         private SpatialIndexWriter                                      _writer;
         private Committer                                               _committerTask;
 
-        public Spatial(String appPath) throws Exception
+        public Spatial(DataStore dataStore) throws Exception
         {
             _lock = new ReentrantLock();
-            _appPath = appPath;
+            _datastore = dataStore;
             _transaction = new DefaultTransaction("SpatialIndexWriter");
             _timer = new Timer(true);
             _gmlParser = new Parser(new GMLConfiguration());
             boolean rebuildIndex = false;
 
-            // This must be before createWriter because createWriter will create
-            // the file
-            // and therefore the test will not be worthwhile
-            if (!SpatialIndexWriter.createDataStoreFile(appPath).exists()) {
-            	Log.error(Geonet.SEARCH_ENGINE, "Rebuild index because spatial index does not exist.");
-            	rebuildIndex = true;
-            }
-            rebuildIndex = createWriter(appPath);
+            rebuildIndex = createWriter(_datastore);
             if (rebuildIndex) {
                 setupIndex(true);
             }else{
@@ -703,16 +841,21 @@ public class SearchManager
             addShutdownHook();
         }
 
-        private boolean createWriter(String appPath) throws IOException
+        private boolean createWriter(DataStore datastore) throws IOException
         {
             boolean rebuildIndex;
             try {
-                _writer = new SpatialIndexWriter(appPath, _gmlParser,
+                _writer = new SpatialIndexWriter(datastore, _gmlParser,
                         _transaction, _lock);
                 rebuildIndex = _writer.getFeatureSource().getSchema() == null;
             } catch (Exception e) {
-                if (_writer != null)
-                	_writer.delete();
+								String exceptionString = Xml.getString(JeevesException.toElement(e));
+                Log.warning(Geonet.SPATIAL, "Failure to make _writer, maybe a problem but might also not be an issue:"+exceptionString);
+                try {
+          				_writer.reset();
+								} catch (Exception e1) {
+          				Log.error(Geonet.SPATIAL, "Unable to call reset on Spatial writer");
+        				}
                 rebuildIndex = true;
             }
             return rebuildIndex;
@@ -792,7 +935,7 @@ public class SearchManager
         private SpatialIndexWriter writerNoLocking() throws Exception
         {
             if (_writer == null) {
-                _writer = new SpatialIndexWriter(_appPath, _gmlParser,
+                _writer = new SpatialIndexWriter(_datastore, _gmlParser,
                         _transaction, _lock);
             }
             return _writer;

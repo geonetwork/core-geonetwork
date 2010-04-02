@@ -116,10 +116,10 @@ public class MassiveUpdateCategories implements Service
 		dbms.commit();
 
 		//--- reindex metadata
-		for (int mdId : metadata) {
-			dm.indexMetadata(dbms, Integer.toString(mdId));
-		}
-		
+		context.info("Re-indexing metadata");
+		MassiveOpsMetadataReindexer r = new MassiveOpsMetadataReindexer(dm, dbms, metadata);
+		r.processWithFastIndexing();
+
 		// -- for the moment just return the sizes - we could return the ids
 		// -- at a later stage for some sort of result display
 		return new Element(Jeeves.Elem.RESPONSE)

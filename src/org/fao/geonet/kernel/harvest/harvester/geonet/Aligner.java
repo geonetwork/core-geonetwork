@@ -151,7 +151,7 @@ public class Aligner
 			if (!dataMan.existsSchema(ri.schema))
 			{
 				log.debug("  - Metadata skipped due to unknown schema. uuid:"+ ri.uuid
-							 +", schema:"+ ri.schema);
+						 	+", schema:"+ ri.schema);
 				result.unknownSchema++;
 			}
 			else
@@ -273,8 +273,8 @@ public class Aligner
 
 		int iId = Integer.parseInt(id);
 
-		dataMan.setTemplate(dbms, iId, isTemplate, null);
-		dataMan.setHarvested(dbms, iId, params.uuid);
+		dataMan.setTemplateExt(dbms, iId, isTemplate, null);
+		dataMan.setHarvestedExt(dbms, iId, params.uuid);
 		
 		if(!localRating) {
 			String rating = general.getChildText("rating");
@@ -295,7 +295,7 @@ public class Aligner
 		addPrivileges(id, info.getChild("privileges"));
 
 		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id);
 		result.addedMetadata++;
 
 		return id;
@@ -553,7 +553,7 @@ public class Aligner
 		addPrivileges(id, info.getChild("privileges"));
 
 		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id);
 	}
 
 	//--------------------------------------------------------------------------

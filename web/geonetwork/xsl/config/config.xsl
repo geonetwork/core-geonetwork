@@ -45,6 +45,8 @@
 		<xsl:call-template name="site"/>
 		<xsl:call-template name="server"/>
 		<xsl:call-template name="intranet"/>
+		<xsl:call-template name="selectionmanager"/>
+		<xsl:call-template name="indexoptimizer"/>
 		<xsl:call-template name="z3950"/>
 		<xsl:call-template name="csw"/>
 		<xsl:call-template name="hyperlinks"/>
@@ -164,6 +166,82 @@
 						</table>
 					</td>
 				</tr>			
+			</table>
+		</div>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template name="selectionmanager">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/selectionmanager"/></h1>
+
+		<div align="left" style="{$style}">
+			<table>
+				<td class="padded"><xsl:value-of select="/root/gui/config/maxrecords"/></td>
+				<td class="padded"><input id="selection.maxrecords" class="content" type="text" value="" size="20"/></td>
+			</table>
+		</div>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template mode="selectoptions" match="day|hour|minute">
+		<option>
+			<xsl:attribute name="value">
+				<xsl:value-of select="."/>
+			</xsl:attribute>
+			<xsl:value-of select="@label"/>
+		</option>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template name="indexoptimizer">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/indexoptimizer"/></h1>
+
+		<div align="left" style="{$style}">
+			<table>
+				<tr>
+					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/enable"/></td>
+					<td class="padded"><input id="indexoptimizer.enable" class="content" type="checkbox"/></td>
+				</tr>
+	
+				<tr>
+					<td/>
+					<td>
+						<table id="indexoptimizer.subpanel">
+							<tr>
+								<td class="padded"><xsl:value-of select="/root/gui/config/at"/></td>
+								<td class="padded">
+									<select id="indexoptimizer.at.hour" class="content">
+										<xsl:apply-templates mode="selectoptions" select="/root/gui/config/hours/hour"/>
+									</select>:
+									<select id="indexoptimizer.at.min" class="content">
+										<xsl:apply-templates mode="selectoptions" select="/root/gui/config/minutes/minute"/>
+									</select>
+									<!-- leave seconds hidden - not really necessary? -->
+									<input id="indexoptimizer.at.sec"  class="content" type="hidden" value="0" size="2"/>
+									&#160;
+									<xsl:value-of select="/root/gui/config/atSpec"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="padded"><xsl:value-of select="/root/gui/config/interval"/></td>
+								<td class="padded">
+									<!-- leave days hidden - not really necessary? -->
+									<input id="indexoptimizer.interval.day" class="content" type="hidden" value="0" size="2"/>
+									<select id="indexoptimizer.interval.hour" class="content">
+										<xsl:apply-templates mode="selectoptions" select="/root/gui/config/hourintervals/hour"/>
+									</select>
+									<!-- leave minutes hidden - not really necessary? -->
+									<input id="indexoptimizer.interval.min" class="content" type="hidden" value="0" size="2"/>
+									&#160;
+									<xsl:value-of select="/root/gui/config/intervalSpec"/>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
 			</table>
 		</div>
 	</xsl:template>

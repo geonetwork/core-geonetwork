@@ -119,7 +119,7 @@ public class Search implements Service
 		}
 		
 
-		// perform the search and save search result into session
+		// perform the search and save search query into session
 		MetaSearcher searcher;
 
 		context.info("Creating searchers");

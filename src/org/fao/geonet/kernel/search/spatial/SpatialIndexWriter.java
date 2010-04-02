@@ -26,46 +26,37 @@ package org.fao.geonet.kernel.search.spatial;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.URI;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
-import org.geotools.data.DefaultTransaction;
+import org.fao.geonet.constants.Geonet;
+import org.geotools.data.DataStore;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.FeatureStore;
 import org.geotools.data.Transaction;
-import org.geotools.data.shapefile.indexed.IndexType;
-import org.geotools.data.shapefile.indexed.IndexedShapefileDataStore;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
-import org.geotools.feature.AttributeTypeBuilder;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureCollections;
 import org.geotools.feature.FeatureIterator;
-import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
-import org.geotools.referencing.CRS;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.geotools.xml.Configuration;
 import org.geotools.xml.Parser;
 import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.identity.FeatureId;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.xml.sax.SAXException;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -77,41 +68,26 @@ import com.vividsolutions.jts.index.strtree.STRtree;
 /**
  * This class is responsible for extracting geographic information from metadata
  * and writing that information to a storage mechanism.
- * 
+ *
  * @author jeichar
  */
+@SuppressWarnings("unchecked")
 public class SpatialIndexWriter
 {
 
     static final String                                          IDS_ATTRIBUTE_NAME        = "id";
     static final String                                          GEOM_ATTRIBUTE_NAME       = "the_geom";
-    static final String                                          SPATIAL_INDEX_FILENAME    = "spatialIndex";
+    static final String                                          SPATIAL_INDEX_TYPENAME    = "spatialindex";
     private static final int                                     MAX_WRITES_IN_TRANSACTION = 5000;
 
     private final Parser                                         _parser;
     private final Transaction                                    _transaction;
-    private final SimpleFeatureType                              _schema;
-    private final File                                           _file;
     private final Lock                                           _lock;
-    private FeatureStore<SimpleFeatureType, SimpleFeature> _featureStore;
+    private FeatureStore<SimpleFeatureType, SimpleFeature>       _featureStore;
     private STRtree                                              _index;
     private static int                                           _writes;
 
-    public SpatialIndexWriter(String indexBasedir, Configuration config)
-            throws Exception
-    {
-        this(indexBasedir, new Parser(config),
-                new DefaultTransaction("SpatialIndexWriter"),
-                new ReentrantLock());
-    }
-
-    public SpatialIndexWriter(String indexBasedir, Configuration config,
-            Transaction transaction) throws Exception
-    {
-        this(indexBasedir, new Parser(config), transaction, new ReentrantLock());
-    }
-
-    public SpatialIndexWriter(String indexBasedir, Parser parser,
+    public SpatialIndexWriter(DataStore datastore, Parser parser,
             Transaction transaction, Lock lock) throws Exception
     {
         // Note: The Configuration takes a long time to create so it is worth
@@ -120,18 +96,16 @@ public class SpatialIndexWriter
         _parser = parser;
         _parser.setStrict(false);
         _parser.setValidating(false);
-        _file = createDataStoreFile(indexBasedir);
         _transaction = transaction;
 
-        _schema = createSchema();
-        _featureStore = createFeatureStore();
+        _featureStore = createFeatureStore(datastore);
         _featureStore.setTransaction(_transaction);
 
     }
 
     /**
      * Add a metadata record to the index
-     * 
+     *
      * @param schemasDir
      *            the base directory that contains the different metadata
      *            schemas
@@ -146,16 +120,21 @@ public class SpatialIndexWriter
         _lock.lock();
         try {
             _index = null;
-            Geometry[] extractGeometriesFrom = extractGeometriesFrom(
+            Geometry geometry = extractGeometriesFrom(
                     schemasDir, type, metadata, _parser);
 
-            if (extractGeometriesFrom.length > 0) {
+            if (geometry != null) {
                 FeatureCollection features = FeatureCollections.newCollection();
-                for (Geometry geometry : extractGeometriesFrom) {
-                    Object[] data = { geometry, id };
-                    features.add(SimpleFeatureBuilder.build(_schema, data,
-                            SimpleFeatureBuilder.createDefaultFeatureId()));
+                Object[] data;
+                SimpleFeatureType schema = _featureStore.getSchema();
+				if(schema.getDescriptor(0) == schema.getGeometryDescriptor()){
+					data = new Object[] { geometry, id };
+                } else {
+                	data = new Object[] { id, geometry};
                 }
+                	
+                features.add(SimpleFeatureBuilder.build(schema, data,
+                        SimpleFeatureBuilder.createDefaultFeatureId()));
 
                 _featureStore.addFeatures(features);
 
@@ -182,20 +161,6 @@ public class SpatialIndexWriter
             _transaction.close();
             _index = null;
             _featureStore.setTransaction(Transaction.AUTO_COMMIT);
-        } finally {
-            _lock.unlock();
-        }
-    }
-
-    public void delete() throws IOException
-    {
-        _lock.lock();
-        try {
-            if (_featureStore.getTransaction() != Transaction.AUTO_COMMIT) {
-                close();
-            }
-            _index = null;
-            delete(_file.getParentFile());
         } finally {
             _lock.unlock();
         }
@@ -249,7 +214,7 @@ public class SpatialIndexWriter
             if (_index==null) {
                 populateIndex();
             }
-            return _index; 
+            return _index;
         } finally {
             _lock.unlock();
         }
@@ -261,13 +226,11 @@ public class SpatialIndexWriter
      */
     public void reset() throws Exception
     {
-
         _lock.lock();
         try {
             _featureStore.setTransaction(Transaction.AUTO_COMMIT);
             _index=null;
-            delete(_file);
-            _featureStore=createFeatureStore();
+            _featureStore.removeFeatures(Filter.INCLUDE);
             _featureStore.setTransaction(_transaction);
         }finally{
             _lock.unlock();
@@ -278,10 +241,9 @@ public class SpatialIndexWriter
      * Extracts a Geometry Collection from metadata default visibility for
      * testing access.
      */
-    static MultiPolygon[] extractGeometriesFrom(String schemasDir, String type,
+    static MultiPolygon extractGeometriesFrom(String schemasDir, String type,
             Element metadata, Parser parser) throws Exception
     {
-
         org.geotools.util.logging.Logging.getLogger("org.geotools.xml")
                 .setLevel(Level.SEVERE);
         File schemaDir = new File(schemasDir, type);
@@ -289,41 +251,66 @@ public class SpatialIndexWriter
                 .getAbsolutePath();
         Element transform = Xml.transform(metadata, sSheet);
         if (transform.getChildren().size() == 0) {
-            return new MultiPolygon[0];
+            return null;
         }
-        String gml = Xml.getString(transform);
+        List<Polygon> allPolygons = new ArrayList<Polygon>();
+        for (Element geom : (List<Element>)transform.getChildren()) {
+            String gml = Xml.getString(geom);
 
-        try {
-            Object value = parser.parse(new StringReader(gml));
-            if (value instanceof HashMap) {
-                HashMap map = (HashMap) value;
-                List<Polygon> geoms = new ArrayList<Polygon>();
-                for (Object entry : map.values()) {
-                    addToList(geoms, entry);
+            try {
+                MultiPolygon jts = parseGml(parser, gml);
+                for (int i = 0; i < jts.getNumGeometries(); i++) {
+                    allPolygons.add((Polygon) jts.getGeometryN(i));
                 }
-                if( geoms.isEmpty() ){
-                    return new MultiPolygon[0];
-                } else if( geoms.size()>1 ){
-                    GeometryFactory factory = geoms.get(0).getFactory();
-                    return new MultiPolygon[]{factory.createMultiPolygon(geoms.toArray(new Polygon[0]))};
-                } else {
-                    return new MultiPolygon[]{toMultiPolygon(geoms.get(0))};
-                }
-
-            } else if (value == null) {
-                return new MultiPolygon[0];
-            } else {
-                return new MultiPolygon[] { toMultiPolygon((Geometry) value) };
+            } catch (Exception e) {
+                Log.error(Geonet.INDEX_ENGINE, "Failed to convert gml to jts object: "+gml+"\n\t"+e.getMessage());
+								e.printStackTrace();
+                // continue
             }
-        } catch (Exception e) {
-            return new MultiPolygon[0];
+        }
+
+        if( allPolygons.isEmpty()){
+            return null;
+        }else{
+            try {
+                Polygon[] array = new Polygon[allPolygons.size()];
+                GeometryFactory geometryFactory = allPolygons.get(0).getFactory();
+                return geometryFactory.createMultiPolygon(allPolygons.toArray(array));
+            } catch (Exception e) {
+                Log.error(Geonet.INDEX_ENGINE, "Failed to create a MultiPolygon from: "+allPolygons);
+                // continue
+                return null;
+            }
         }
     }
 
-    /**
-     * @see SpatialIndexWriter#extractGeometriesFrom(String, String, Element)
-     */
-    private static void addToList(List<Polygon> geoms, Object entry)
+    public static MultiPolygon parseGml(Parser parser, String gml) throws IOException, SAXException,
+            ParserConfigurationException
+    {
+        Object value = parser.parse(new StringReader(gml));
+        if (value instanceof HashMap) {
+            HashMap map = (HashMap) value;
+            List<Polygon> geoms = new ArrayList<Polygon>();
+            for (Object entry : map.values()) {
+                addToList(geoms, entry);
+            }
+            if( geoms.isEmpty() ){
+                return null;
+            } else if( geoms.size()>1 ){
+                GeometryFactory factory = geoms.get(0).getFactory();
+                return factory.createMultiPolygon(geoms.toArray(new Polygon[0]));
+            } else {
+                return toMultiPolygon(geoms.get(0));
+            }
+
+        } else if (value == null) {
+            return null;
+        } else {
+            return toMultiPolygon((Geometry) value);
+        }
+    }
+
+    public static void addToList(List<Polygon> geoms, Object entry)
     {
         if (entry instanceof Polygon) {
             geoms.add((Polygon) entry);
@@ -333,16 +320,6 @@ public class SpatialIndexWriter
                 geoms.add((Polygon) object);
             }
         }
-    }
-
-    private static void delete(File parentFile)
-    {
-        if (parentFile.isDirectory()) {
-            for (File file : parentFile.listFiles()) {
-                delete(file);
-            }
-        }
-        parentFile.delete();
     }
 
     private void populateIndex() throws IOException
@@ -362,63 +339,25 @@ public class SpatialIndexWriter
         }
     }
 
-    private SimpleFeatureType createSchema() throws SchemaException
+	private FeatureStore createFeatureStore(DataStore datastore) throws Exception
     {
-        SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
-        AttributeDescriptor geomDescriptor = new AttributeTypeBuilder().crs(
-                DefaultGeographicCRS.WGS84).binding(MultiPolygon.class)
-                .buildDescriptor("the_geom");
-        builder.setName(SPATIAL_INDEX_FILENAME);
-        builder.add(geomDescriptor);
-        builder.add(IDS_ATTRIBUTE_NAME, String.class);
-        return builder.buildFeatureType();
+        DataStore ds = datastore;
+
+        return (FeatureStore) ds.getFeatureSource(SPATIAL_INDEX_TYPENAME);
     }
 
-    public static File createDataStoreFile(String indexBasedir)
+	public static MultiPolygon toMultiPolygon(Geometry geometry)
     {
-        return new File(indexBasedir + "/" + SPATIAL_INDEX_FILENAME + ".shp");
-        // return new File(indexBasedir + "/" + SPATIAL_INDEX_FILENAME + "/"
-        // + SPATIAL_INDEX_FILENAME + ".h2");
-    }
-
-    /**
-     * Create a Shapefile datastore in WGS84.
-     * 
-     * @return
-     * @throws Exception
-     */
-    private FeatureStore createFeatureStore() throws Exception
-    {
-        _file.getParentFile().mkdirs();
-
-        IndexedShapefileDataStore ds = new IndexedShapefileDataStore(_file
-                .toURI().toURL(), new URI("http://geonetwork.org"), false,
-                true, IndexType.NONE, Charset.defaultCharset());
-        CoordinateReferenceSystem crs = CRS.decode("EPSG:4326");
-        
-        if (crs != null) {
-        	ds.forceSchemaCRS(crs);
-        }
-        
-        if (!_file.exists()) {
-            ds.createSchema(_schema);
-        }
-        
-        return (FeatureStore) ds.getFeatureSource(_schema.getTypeName());
-    }
-
-    private static MultiPolygon toMultiPolygon(Geometry geometry)
-    {
-    	if (geometry instanceof Polygon) {
+        if (geometry instanceof Polygon) {
             Polygon polygon = (Polygon) geometry;
-            
+
             return geometry.getFactory().createMultiPolygon(
                     new Polygon[] { polygon });
         }else if (geometry instanceof MultiPolygon) {
             return  (MultiPolygon) geometry;
         }
         String message = geometry.getClass()+" cannot be converted to a polygon. Check Metadata";
-        Log.error("SpatialIndexWriter", message);
+        Log.error(Geonet.INDEX_ENGINE, message);
         throw new IllegalArgumentException(message);
     }
 

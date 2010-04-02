@@ -389,8 +389,11 @@
 	<messageNoPrivileges>Vous n'avez pas le droit de réaliser cette action.</messageNoPrivileges>
 	<messageNotPerformed>Cette opération ne peut être réalisée.</messageNotPerformed>
 	<metadata.admin.index.desc>Regénérer l&apos;index du catalogue</metadata.admin.index.desc>
-	<metadata.admin.index.failed>Echec lors de la reconstruction de l'index</metadata.admin.index.failed>
-	<metadata.admin.index.success>L'index a été reconstruit avec succès...</metadata.admin.index.success>
+	<metadata.admin.index.failed>Index operation failed.</metadata.admin.index.failed>
+	<metadata.admin.index.success>Index operation was successful.</metadata.admin.index.success>
+	<metadata.admin.index.optimize.desc>Optimize Lucene index</metadata.admin.index.optimize.desc>
+	<doYouReallyWantToDoThis js="true">This operation may take some time on large catalogs and should not be done during peak usage. Continue?</doYouReallyWantToDoThis>
+	<optimize>Optimize</optimize>
 	<metadata.admin.index>Gestion de l&apos;index</metadata.admin.index>
 	<metadata-template-order>Ordonner les modèles</metadata-template-order>	
 	<metadata-template-order-desc>Ordonner les modèles de saisie</metadata-template-order-desc>		
@@ -535,6 +538,7 @@
 	<searchUnusedTitle>Métadonnées inutilisées</searchUnusedTitle>
 	<select>Sélectionner : </select>
 	<selectAll>Select all metadata</selectAll>
+	<selectAllNotPossible>Too many hits! Must be less than </selectAllNotPossible>
 	<selected> selectionné(s)</selected>
 	<selectedOnly>Afficher la sélection</selectedOnly>
 	<selection>Sélection</selection>

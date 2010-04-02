@@ -119,12 +119,6 @@ public class MassiveDelete implements Service
 		}
 		}
 
-		// invalidate current result set
-		MetaSearcher searcher = (MetaSearcher)context.getUserSession().getProperty(Geonet.Session.SEARCH_RESULT);
-
-		if (searcher != null)
-			searcher.setValid(false);
-
 		// -- for the moment just return the sizes - we could return the ids
 		// -- at a later stage for some sort of result display
 		return new Element(Jeeves.Elem.RESPONSE)

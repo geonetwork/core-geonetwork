@@ -413,7 +413,12 @@ public class DatabaseLib
 					if (cb != null)
 						cb.creating(getObjectName(sql), getObjectType(sql));
 
-					dbms.execute(sql);
+					Lib.log.info("Executing "+sql);
+					if (sql.trim().startsWith("SELECT")) {
+						dbms.select(sql);
+					} else {
+						dbms.execute(sql);
+					}
 					sb = new StringBuffer();
 				}
 			}
@@ -482,6 +487,10 @@ public class DatabaseLib
 
 		else if (url.indexOf("postgresql") != -1)
 			file = "create-db-postgres.sql";
+
+		else if (url.indexOf("postgis") != -1)
+			file = "create-db-postgis.sql";
+
 
 		//--- load the dbms schema
 

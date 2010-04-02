@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.csw.services.getrecords;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -48,7 +49,11 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
+
+import org.jdom.Content;
 import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.JDOMException;
 
 //=============================================================================
 
@@ -77,8 +82,7 @@ public class SearchController
     {
 	Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
 
-	Pair<Element, List<ResultItem>> summaryAndSearchResults = _searcher.search(context, filterExpr, filterVersion, typeNames, sort, resultType, maxRecords);
-	
+	Pair<Element, List<ResultItem>> summaryAndSearchResults = _searcher.search(context, filterExpr, filterVersion, typeNames, sort, resultType, startPos, maxRecords);
 	
 	UserSession session = context.getUserSession();
 	session.setProperty(Geonet.Session.SEARCH_RESULT, _searcher);
@@ -97,37 +101,31 @@ public class SearchController
 	}
 	session.setProperty(Geonet.Session.SEARCH_REQUEST_ID, requestId);
 	
-	int counter = 0;
-
 	List<ResultItem> resultsList = summaryAndSearchResults.two();
-	if (resultType == ResultType.RESULTS || resultType == ResultType.RESULTS_WITH_SUMMARY)
-	    for (int i=startPos; (i<startPos+maxRecords) && (i<=resultsList.size()); i++)
-		{
-		    counter++;
-
-		    String  id = resultsList.get(i -1).getID();
+	int counter = Math.min(maxRecords,resultsList.size());
+	if ((resultType == ResultType.RESULTS || resultType == ResultType.RESULTS_WITH_SUMMARY) && resultsList.size() > 0) {
+		for (int i=0; (i<maxRecords) && (i<=resultsList.size()); i++) {
+		    String  id = resultsList.get(i).getID();
 		    Element md = retrieveMetadata(context, id, setName, outSchema, elemNames, resultType);
 
-		    if (md == null)
-			context.warning("SearchController : Metadata not found or invalid schema : "+ id);
-		    else
-			results.addContent(md);
+		    if (md == null) context.warning("SearchController : Metadata not found or invalid schema : "+ id);
+		    else results.addContent(md);
 		}
+	}
 
-	results.setAttribute("numberOfRecordsMatched",  resultsList.size() +"");
+	Element summary = summaryAndSearchResults.one();
+
+	int numMatches = Integer.parseInt(summary.getAttributeValue("count"));
+	results.setAttribute("numberOfRecordsMatched",  numMatches+"");
 	results.setAttribute("numberOfRecordsReturned", counter +"");
 	results.setAttribute("elementSet",              setName.toString());
 
-	if (resultsList.size() > counter)
-	    {
+	if (numMatches > counter) {
 		results.setAttribute("nextRecord", counter + startPos + "");
-	    } 
-	else 
-	    {
+	} else {
 		results.setAttribute("nextRecord","0");
-	    }
+	}
 	
-	Element summary = summaryAndSearchResults.one();
 	return Pair.read(summary, results);
     }
 
@@ -184,9 +182,11 @@ public class SearchController
 						id + " schema.", schema);
 			}
 		}
-		
-		if (schema.contains("iso19139"))
-			schema = "iso19139";
+	
+		// We provide specific mappings for profiles to ISO or OGC in separate
+		// directories - Simon Pigot - Fix
+		//if (schema.contains("iso19139")) 
+		//	schema = "iso19139";
 		
 		String schemaDir  = context.getAppPath() +"xml"+ FS +"csw"+ FS +"schemas"+ FS +schema+ FS;
 		String styleSheet = schemaDir + prefix +"-"+ setName +".xsl";
@@ -200,19 +200,25 @@ public class SearchController
 
 		//--- if the client has specified some ElementNames, then we remove the unwanted children
 
-		if (elemNames != null)
-		    removeElements(res, elemNames);
-
+		if (elemNames != null) {
+		    if (outSchema != OutputSchema.OGC_CORE) {
+					try {
+						selectElementsUsingXPath(res, elemNames);
+					} catch (JDOMException e) {
+						throw new InvalidParameterValueEx("elementName has invalid XPath","");
+					}
+				} else {
+		    	removeElements(res, elemNames);
+				}
+		}
 		return res;
-	    }
-	catch (Exception e)
-	    {
+	} catch (Exception e) {
 		context.error("Error while getting metadata with id : "+ id);
 		context.error("  (C) StackTrace:\n"+ Util.getStackTrace(e));
 
 		throw new NoApplicableCodeEx("Raised exception while getting metadata :"+ e);
-	    }
-    }
+  }
+	}
 
     //---------------------------------------------------------------------------
 
@@ -227,6 +233,39 @@ public class SearchController
 		if (!FieldMapper.match(elem, elemNames))
 		    i.remove();
 	    }
+    }
+
+    //---------------------------------------------------------------------------
+
+    private static void selectElementsUsingXPath(Element md, Set<String> elemNames) throws Exception
+    {
+
+			//-- build a union XPath from the elementNames specified
+
+			StringBuffer xpath = new StringBuffer();
+			for (String s : elemNames) {
+				xpath.append(s+"|");
+			}
+			xpath.deleteCharAt(xpath.length()-1);
+
+			//-- get all namespaces from the metadata
+
+			List<Namespace> theNss = new ArrayList();
+			Namespace ns = md.getNamespace();
+			if (ns != null) {
+				theNss.add(ns);
+				theNss.addAll(md.getAdditionalNamespaces());
+			}
+
+			//-- get the elements from the XPath union
+
+			Element theMd = (Element)md.clone();
+			List<Content> content  = Xml.selectNodes(theMd, xpath.toString(), theNss);
+
+			md.removeContent();
+			for (Content c : content) {
+				md.addContent(c.detach());
+			}
     }
 }
 

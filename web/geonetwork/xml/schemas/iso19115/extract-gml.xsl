@@ -16,10 +16,11 @@
         <xsl:copy-of select="./gml:Polygon"/>
 	</xsl:template>
     <xsl:template match="geoBox" priority="2">
-        <xsl:variable name="w" select="./westBL/text()"/>
-        <xsl:variable name="e" select="./eastBL/text()"/>
-        <xsl:variable name="n" select="./northBL/text()"/>
-        <xsl:variable name="s" select="./southBL/text()"/>
+      <xsl:variable name="w" select="./westBL/text()"/>
+      <xsl:variable name="e" select="./eastBL/text()"/>
+      <xsl:variable name="n" select="./northBL/text()"/>
+      <xsl:variable name="s" select="./southBL/text()"/>
+			<xsl:if test="$w!='' and $e!='' and $n!='' and $s!=''">			
         <gml:Polygon>
             <gml:exterior>
                 <gml:LinearRing>
@@ -27,5 +28,6 @@
                 </gml:LinearRing>
             </gml:exterior>
         </gml:Polygon>
+			</xsl:if>
     </xsl:template>
 </xsl:stylesheet>

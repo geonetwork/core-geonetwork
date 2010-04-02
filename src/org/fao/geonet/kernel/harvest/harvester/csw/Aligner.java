@@ -152,7 +152,7 @@ public class Aligner
 			String id = dataMan.getMetadataId(dbms, ri.uuid);
 
 			if (id == null)	addMetadata(ri);
-				else				updateMetadata(ri, id);
+			else				updateMetadata(ri, id);
 		}
 
 		log.info("End of alignment for : "+ params.name);
@@ -190,14 +190,14 @@ public class Aligner
 
 		int iId = Integer.parseInt(id);
 
-		dataMan.setTemplate(dbms, iId, "n", null);
-		dataMan.setHarvested(dbms, iId, params.uuid);
+		dataMan.setTemplateExt(dbms, iId, "n", null);
+		dataMan.setHarvestedExt(dbms, iId, params.uuid);
 
 		addPrivileges(id);
 		addCategories(id);
 
 		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id);
 		result.addedMetadata++;
 	}
 
@@ -291,7 +291,7 @@ public class Aligner
 				addCategories(id);
 
 				dbms.commit();
-				dataMan.indexMetadata(dbms, id);
+				dataMan.indexMetadataGroup(dbms, id);
 				result.updatedMetadata++;
 			}
 		}

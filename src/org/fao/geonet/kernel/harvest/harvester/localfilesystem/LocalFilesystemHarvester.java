@@ -183,6 +183,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		List<String> idsForHarvestingResult = new ArrayList<String>();
 		//-----------------------------------------------------------------------
 		//--- insert/update new metadata
+
 		for(String xmlFile : results) {
 			result.total++;
 			Element xml = null;
@@ -205,9 +206,8 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 				result.unknownSchema++;
 			}
 			else {
-				String uuid = Common.retrieveUUID(xml, schema);
-				System.out.println("extracted uuid: " + uuid);
-				if(uuid == null) {
+				String uuid = dataMan.extractUUID(schema, xml);
+				if(uuid == null || uuid.equals("")) {
 					result.badFormat++;
 				}
 				else {
@@ -226,6 +226,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 				}
 			}
 		}
+
 		if(!params.nodelete) {
 			//
 			// delete locally existing metadata from the same source if they were
@@ -255,7 +256,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		addCategories(id, localCateg, dbms);
 
 		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id);
 	}
 
 	
@@ -278,14 +279,14 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 												createDate, uuid, 1, null);
 
 		int iId = Integer.parseInt(id);
-		dataMan.setTemplate(dbms, iId, "n", null);
-		dataMan.setHarvested(dbms, iId, source);
+		dataMan.setTemplateExt(dbms, iId, "n", null);
+		dataMan.setHarvestedExt(dbms, iId, source);
 
 		addPrivileges(id, localGroups, dbms);
 		addCategories(id, localCateg, dbms);
 
 		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id);
 		return id;
 	}
 	

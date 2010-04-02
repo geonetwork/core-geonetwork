@@ -184,6 +184,7 @@
 		<service name="main.search">
 			<class name=".services.main.Search">
 				<param name="maxSummaryKeys" value="10" />
+				<param name="maxHitsInSummary" value="1000" />
 			</class>
 
 			<output forward="main.present" />
@@ -195,6 +196,7 @@
  		<service name="main.search.embedded">
  			<class name=".services.main.Search">
  				<param name="maxSummaryKeys" value="10" />
+				<param name="maxHitsInSummary" value="1000" />
  			</class>
 
  			<output forward="main.present.embedded" />
@@ -211,6 +213,7 @@
  				<call name="groups" class=".guiservices.groups.GetMine" />
  				<call name="sources" class=".guiservices.util.Sources" />
  				<call name="services" class="jeeves.guiservices.services.Get" />
+				<call name="config" class=".services.config.Get" />
  				<xml name="repositories" file="xml/repositories.xml" localized="false" />
  			</output>
 
@@ -617,6 +620,13 @@
 
 		<service name="xml.config.set">
 			<class name=".services.config.Set" />
+			<output forward="xml.config.doActions" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.config.doActions">
+			<class name=".services.config.DoActions" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -844,6 +854,7 @@
 		<service name="rss.search">
 			<class name=".services.main.Search">
 				<param name="maxSummaryKeys" value="10" />
+				<param name="maxHitsInSummary" value="1000" />
 			</class>
 			<output sheet="rss-search.xsl" contentType="application/rss+xml; charset=UTF-8">
 				<call name="rssItems" class=".services.main.Result" />
@@ -901,7 +912,9 @@
 		   <output forward="csv.present" />
 		</service>
 		<service name="csv.present">
-		   <class name=".services.main.Result"/>
+		   <class name=".services.main.Result">
+			 		<param name="range" value="all" />
+				</class>
 		   <output sheet="csv-search.xsl" contentType="text/plain; charset=UTF-8" />
 		</service>
 		

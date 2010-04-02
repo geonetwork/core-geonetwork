@@ -59,11 +59,6 @@ public abstract class MetaSearcher
 	//--------------------------------------------------------------------------------
 	// utilities
 	
-	public void setValid(boolean valid)
-	{
-		_valid = valid;
-	}
-	
 	protected void initSearchRange(ServiceContext srvContext)
 	{
 		// get from and to default values

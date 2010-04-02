@@ -108,6 +108,7 @@ class Harvester {
 		}
 		//-----------------------------------------------------------------------
 		//--- insert/update new metadata
+
 		for(RemoteFile rf : files) {
 			result.total++;
 			String id = localUris.getID(rf.getPath());
@@ -158,14 +159,14 @@ class Harvester {
 
 		int iId = Integer.parseInt(id);
 
-		dataMan.setTemplate(dbms, iId, "n", null);
-		dataMan.setHarvested(dbms, iId, params.uuid, rf.getPath());
+		dataMan.setTemplateExt(dbms, iId, "n", null);
+		dataMan.setHarvestedExt(dbms, iId, params.uuid, rf.getPath());
 
 		addPrivileges(id);
 		addCategories(id);
 
 		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id);
 		result.added++;
 	}
 
@@ -285,7 +286,7 @@ class Harvester {
 			dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
 			addCategories(id);
 			dbms.commit();
-			dataMan.indexMetadata(dbms, id);
+			dataMan.indexMetadataGroup(dbms, id);
 			result.updated++;
 		}
 	}

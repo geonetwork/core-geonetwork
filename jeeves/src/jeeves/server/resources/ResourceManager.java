@@ -75,6 +75,16 @@ public class ResourceManager
 	}
 
 	//--------------------------------------------------------------------------
+	/** Gets properties from the named resource provider
+	  */
+
+	public Map<String,String> getProps(String name) throws Exception
+	{
+		ResourceProvider provider = provManager.getProvider(name);
+		return provider.getProps();
+	}
+
+	//--------------------------------------------------------------------------
 	/** Closes all resources doing a commit
 	  */
 

@@ -44,6 +44,9 @@ import jeeves.utils.Xml;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldSelector;
+import org.apache.lucene.document.FieldSelectorResult;
+import org.apache.lucene.document.MapFieldSelector;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
@@ -52,7 +55,6 @@ import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.FuzzyQuery;
-import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.PhraseQuery;
@@ -60,10 +62,15 @@ import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.RangeQuery;
 import org.apache.lucene.search.Searcher;
+import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.TopFieldCollector;
+import org.apache.lucene.search.TopFieldDocs;
 import org.apache.lucene.search.WildcardQuery;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -71,6 +78,7 @@ import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.lib.Lib;
+
 import org.jdom.Content;
 import org.jdom.Element;
 
@@ -87,19 +95,17 @@ public class LuceneSearcher extends MetaSearcher
 	private String        _styleSheetName;
 	private Element       _summaryConfig;
 
-	private IndexReader   _reader;
-	private Searcher      _searcher;
 	private Query         _query;
 	private Filter        _filter;
 	private Sort          _sort;
-	private Hits          _hits;
-	private Hits          _lastHits;
 	private Element       _elSummary;
+	private FieldSelector _selector;
 
 	private int           _maxSummaryKeys;
+	private int           _maxHitsInSummary;
 	private int           _numHits;
 	private String        _resultType;
-    private String        _language;
+  private String        _language;
 
 	//--------------------------------------------------------------------------------
 	// constructor
@@ -108,6 +114,12 @@ public class LuceneSearcher extends MetaSearcher
 		_sm             = sm;
 		_styleSheetName = styleSheetName;
 		_summaryConfig  = summaryConfig;
+		_selector = new FieldSelector() {
+			public final FieldSelectorResult accept(String name) {
+				if (name.equals("_id")) return FieldSelectorResult.LOAD;
+				else return FieldSelectorResult.NO_LOAD;
+			}
+		};
 	}
 
 	//--------------------------------------------------------------------------------
@@ -116,17 +128,9 @@ public class LuceneSearcher extends MetaSearcher
 	public void search(ServiceContext srvContext, Element request, ServiceConfig config)
 		throws Exception
 	{
-		try {
-			computeQuery(srvContext, request, config);
-			performQuery(request, srvContext!=null?true:false);
-			initSearchRange(srvContext);
-		}
-		finally {
-			_hits = null;
-			_searcher.close();
-			_searcher = null;
-			setValid(false);
-		}
+		computeQuery(srvContext, request, config);
+		initSearchRange(srvContext);
+		performQuery(getFrom()-1, getTo());
 	}
 
 	//--------------------------------------------------------------------------------
@@ -138,9 +142,6 @@ public class LuceneSearcher extends MetaSearcher
 	public Element present(ServiceContext srvContext, Element request, ServiceConfig config)
 		throws Exception
 	{
-		if (!isValid())
-			performQuery(request, srvContext!=null?true:false);
-
 		updateSearchRange(request);
 
 		GeonetContext gc = null;
@@ -150,57 +151,57 @@ public class LuceneSearcher extends MetaSearcher
 		String sFast = request.getChildText("fast");
 		boolean fast = sFast != null && sFast.equals("true");
 
-		// srvContext.log("METASEARCHER " + _styleSheetName + " FROM: " + from +
-		// "(" + sFrom + ")"); // DEBUG
-		// srvContext.log("METASEARCHER " + _styleSheetName + " TO:   " + to +
-		// "(" + sTo + ")"); // DEBUG
-
 		// build response
 		Element response =  new Element("response");
 		response.setAttribute("from",  getFrom()+"");
 		response.setAttribute("to",    getTo()+"");
+		Log.debug(Geonet.SEARCH_ENGINE, Xml.getString(response));
 
 		response.addContent((Element)_elSummary.clone());
 
-		if (getTo() > 0)
-		{
-			for(int i = getFrom() - 1; i < getTo(); i++)
-			{
-				Document doc = _hits.doc(i);
-				String id = doc.get("_id");
-				Element md = new Element ("md");
+		if (getTo() > 0) {
+			Pair<IndexReader,TopDocs> results = performQuery(getFrom()-1, getTo()); // get enough hits to show a page	
 
-				if (fast)
-				{
-					md = getMetadataFromIndex(doc, id);
+			IndexReader reader = results.one();
+			TopDocs tdocs = results.two();
+
+			int nrHits = getTo() - (getFrom()-1);
+			if (tdocs.scoreDocs.length >= nrHits) {
+				for (int i = 0; i < nrHits; i++) {
+					Document doc = null;
+					if (fast) {
+						doc = reader.document(tdocs.scoreDocs[i].doc); // no selector
+					} else {
+						doc = reader.document(tdocs.scoreDocs[i].doc, _selector);
+					}
+					String id = doc.get("_id");
+					Element md = new Element ("md");
+
+					if (fast) {
+						md = getMetadataFromIndex(doc, id);
+					} else if (srvContext != null) {
+						md = gc.getDataManager().getMetadata(srvContext, id, false);
+					} else {
+						md = null;
+					}
+
+					//--- a metadata could have been deleted just before showing 
+					//--- search results
+
+					if (md != null) {
+						// Calculate score and add it to info elem
+						Float score = tdocs.scoreDocs[i].score;
+						Element info = md.getChild (Edit.RootChild.INFO, Edit.NAMESPACE);
+						addElement(info, Edit.Info.Elem.SCORE, score.toString());
+	
+						response.addContent(md);
+					}
 				}
-				else if (srvContext != null)
-				{
-					md = gc.getDataManager().getMetadata(srvContext, id, false);
-				} else {
-					md = null;
-				}
-
-				//--- the search result is buffered so a metadata could have been deleted
-				//--- just before showing search results
-
-				if (md != null)
-				{
-					// Calculate score and add it to info elem
-					Float score = _hits.score(i);
-					Element info = md.getChild (Edit.RootChild.INFO, Edit.NAMESPACE);
-					addElement(info, Edit.Info.Elem.SCORE, score.toString());
-
-					response.addContent(md);
-				}
+			} else {
+				throw new Exception("Failed: Not enough search results ("+tdocs.scoreDocs.length+") available to meet request for "+nrHits+".");
 			}
 		}
 		
-		_hits = null;
-		_searcher.close();
-        _searcher = null;
-        setValid(false);
-        
 		return response;
 	}
 	
@@ -221,27 +222,19 @@ public class LuceneSearcher extends MetaSearcher
 	}
 
 	//--------------------------------------------------------------------------------
-	// RGFIX: check this
 
-	public void close()
-	{
-		try
-		{
-			if (_searcher != null) {
-                _searcher.close();
-                _searcher = null;
-            }
-            setValid(false);
-		} catch (IOException e) {
-			e.printStackTrace(); 
-		} // DEBUG
-	}
+	public void close() {}
 
 	//--------------------------------------------------------------------------------
 	// private setup, index, delete and search functions
 
 	private void computeQuery(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception
 	{
+
+		String sMaxRecordsInKeywordSummary = request.getChildText("maxHitsInSummary");
+		if (sMaxRecordsInKeywordSummary == null) sMaxRecordsInKeywordSummary = config.getValue("maxHitsInSummary", "1000");
+		_maxHitsInSummary = Integer.parseInt(sMaxRecordsInKeywordSummary);
+
 		String sMaxSummaryKeys = request.getChildText("maxSummaryKeys");
 		if (sMaxSummaryKeys == null) sMaxSummaryKeys = config.getValue("maxSummaryKeys", "10");
 		_maxSummaryKeys = Integer.parseInt(sMaxSummaryKeys);
@@ -315,6 +308,7 @@ public class LuceneSearcher extends MetaSearcher
         }
 	}
 
+	//--------------------------------------------------------------------------------
 	/**
 	 * Execute Lucene query with sorting option. 
 	 * 
@@ -322,31 +316,34 @@ public class LuceneSearcher extends MetaSearcher
 	 * Default sort order option is not reverse order. Reverse order is active 
 	 * if sort order option is set and not null
 	 */
-	private void performQuery(Element request, boolean keepSearch) throws Exception
+	private Pair<IndexReader, TopDocs> performQuery(int startHit, int endHit) throws Exception
 	{
-		_reader = _sm.getIndexReader();
-		_searcher = new IndexSearcher(_reader);
-		
-		if (_filter == null) {
-			_hits = _searcher.search(_query, _sort);
+		IndexReader reader = _sm.getIndexReader();
+
+		CachingWrapperFilter cFilter = null;
+		if (_filter != null) cFilter = new CachingWrapperFilter(_filter);
+
+		int numHits;
+		boolean buildSummary = _elSummary == null;
+		if (buildSummary) {
+			// get as many results as instructed or enough for search summary
+			numHits = Math.max(_maxHitsInSummary,endHit);
 		} else {
-			_hits = _searcher.search(_query, new CachingWrapperFilter(_filter), _sort);
+			numHits = endHit;
 		}
 
-		_numHits = _hits.length();
+		Pair<TopFieldCollector,Element> results = doSearchAndMakeSummary( numHits, _maxSummaryKeys, _language, _resultType, _summaryConfig, reader, _query, cFilter, _sort, buildSummary);
+		TopFieldCollector tfc = results.one();
+		_elSummary = results.two();
+		_numHits = Integer.parseInt(_elSummary.getAttributeValue("count"));
+
+		Log.debug(Geonet.SEARCH_ENGINE, "Hits found : "+_numHits+"");
 		
-		if (keepSearch)
-			_lastHits = _hits;
-
-		Log.debug(Geonet.SEARCH_ENGINE, "Hits found : "+ _hits.length());
-
-		if (_elSummary == null) {
-            _elSummary = makeSummary(_hits, getSize(), _summaryConfig, _resultType, _maxSummaryKeys, _language);
-        }
-
-		setValid(true);
+		return Pair.read(reader, tfc.topDocs(startHit, endHit));
 	}
-	
+
+	//--------------------------------------------------------------------------------
+
 	private Geometry getGeometry(Element request) throws Exception
     {
         String geomWKT = Util.getParam(request, Geonet.SearchResult.GEOMETRY, null);
@@ -357,6 +354,7 @@ public class LuceneSearcher extends MetaSearcher
         return null;
     }
 	
+	//--------------------------------------------------------------------------------
 	// Create the Sort to use in the search
     public static Sort makeSort(List<Pair<String, Boolean>> fields)
     {
@@ -374,6 +372,7 @@ public class LuceneSearcher extends MetaSearcher
         return sort;
     }
     
+	//--------------------------------------------------------------------------------
     /**
      * Define sort field. By default, the field is assumed to be a string.
      * Only popularity and rating are sorted based on integer type.
@@ -509,86 +508,178 @@ public class LuceneSearcher extends MetaSearcher
 
 	//--------------------------------------------------------------------------------
 
-	public static Element makeSummary(Hits hits, int count, Element summaryConfig, String resultType, int maxSummaryKeys, String langCode) throws Exception
-	{
-		Element elSummary  = new Element("summary");
+	private static HashMap<String,HashMap<String,Object>> getSummaryConfig(Element summaryConfig, String resultType, int maxSummaryKeys) throws Exception {
 
-		elSummary.setAttribute("count", count+"");
-		elSummary.setAttribute("type", "local");
-		
+		HashMap<String,HashMap<String,Object>> results = new HashMap<String,HashMap<String,Object>>();
+
 		Element resultTypeConfig = summaryConfig.getChild("def").getChild(resultType);
 		List<Element> elements = resultTypeConfig.getChildren();
-		
+
 		for (Element summaryElement : elements) {
-            String name = summaryElement.getAttributeValue("name");
-            String plural = summaryElement.getAttributeValue("plural");
-            String key = summaryElement.getAttributeValue("indexKey");
-            String order = summaryElement.getAttributeValue("order");
-            String maxString = summaryElement.getAttributeValue("max");
-            String type = summaryElement.getAttributeValue("type");
-            if (order == null) {
-                order = "frequency";
-            }
-            int max;
-            if (maxString == null) {
-                max = 10;
-            } else {
-                max = Integer.parseInt(maxString);
-            }
-            max = Math.min(maxSummaryKeys, max);
-            if( type==null ){
-                type = "string";
-            }
+			String name = summaryElement.getAttributeValue("name");
+			String plural = summaryElement.getAttributeValue("plural");
+			String key = summaryElement.getAttributeValue("indexKey");
+			String order = summaryElement.getAttributeValue("order");
+			String maxString = summaryElement.getAttributeValue("max");
+			String type = summaryElement.getAttributeValue("type");
+			if (order == null) {
+				order = "frequency";
+			}
+			int max;
+			if (maxString == null) {
+				max = 10;
+			} else {
+				max = Integer.parseInt(maxString);
+			}
+			max = Math.min(maxSummaryKeys, max);
+			if( type==null ){
+				type = "string";
+			}
 
-            SortOption sortOption = SortOption.parse(order);
-            SummaryComparator summaryComparator = new SummaryComparator(sortOption, Type.parse(type), langCode, summaryConfig.getChild("typeConfig"));
-            summarize(elSummary, hits, key, count, plural, name, summaryComparator, max);
-        }
-        return elSummary;
+			HashMap<String,Object> values = new HashMap<String,Object>();
+			values.put("name", name);
+			values.put("plural", plural);
+			values.put("max", new Integer(max));
+			values.put("order", order);
+			values.put("type", type);
+			values.put("typeConfig", summaryConfig.getChild("typeConfig"));
+			results.put(key,values);
+		}
+
+		return results;
 	}
+
+	//--------------------------------------------------------------------------------
+
+	private static SummaryComparator getSummaryComparator(String key, String langCode, HashMap<String,Object> summaryConfigValuesForKey) throws Exception
+	{
+		
+			SortOption sortOption = SortOption.parse((String)summaryConfigValuesForKey.get("order"));
+			return new SummaryComparator(sortOption, Type.parse((String)summaryConfigValuesForKey.get("type")), langCode, (Element)summaryConfigValuesForKey.get("typeConfig"));
+	}
+
+	//--------------------------------------------------------------------------------
+
+	private static HashMap<String,HashMap<String,Integer>> prepareSummaryMaps(Set<String> indexKeys) throws Exception
+	{
+		HashMap<String,HashMap<String,Integer>> summaryMaps = new HashMap<String,HashMap<String,Integer>>();
+		for (String key : indexKeys) {
+			summaryMaps.put(key, new HashMap<String, Integer>());
+		}
+		return summaryMaps;
+	}
+
+	//--------------------------------------------------------------------------------
+
+	private static HashMap<String,HashMap<String,Integer>> buildSummaryMaps(Element elSummary, IndexReader reader, ScoreDoc[] sdocs, final HashMap<String,HashMap<String,Integer>> summaryMaps) {
+		elSummary.setAttribute("hitsusedforsummary", sdocs.length+"");
+
+		FieldSelector keySelector = new FieldSelector() {
+			public final FieldSelectorResult accept(String name) {
+				if (summaryMaps.get(name) != null) return FieldSelectorResult.LOAD;
+				else return FieldSelectorResult.NO_LOAD;
+			}
+		};
+
+		for ( int i = 0; i < sdocs.length; i++) {
+			ScoreDoc sdoc = sdocs[i];
+			Document doc = null;
+			try {
+        doc = reader.document(sdoc.doc, keySelector);
+			} catch (Exception e) {
+				Log.error(Geonet.SEARCH_ENGINE, e.getMessage()+" Caused Failure to get document "+sdoc.doc);
+				e.printStackTrace();
+			}
+
+			for ( String key : summaryMaps.keySet() ) {
+				HashMap<String, Integer> summary = summaryMaps.get(key);
+				String hits[] = doc.getValues(key);
+				if (hits != null) {
+					for (int j = 0; j < hits.length; j++) {
+						String info = hits[j];
+						Integer catCount = (Integer) summary.get(info);
+						if (catCount == null) {
+							catCount = new Integer(1);
+						} else {
+							catCount = new Integer(catCount.intValue() + 1);
+						}
+						summary.put(info, catCount);
+					}
+				}
+			}
+		}
+
+		return summaryMaps;
+	}
+
+	//--------------------------------------------------------------------------------
+
+	private static Element addSortedSummaryKeys(Element elSummary, String langCode, HashMap<String,HashMap<String,Integer>> summaryMaps, HashMap<String,HashMap<String,Object>> summaryConfigValues) throws Exception {
 	
-	private static void summarize(Element elSummary, Hits phits, String indexKey, int count, String rootElemName, String elemName,
-            SummaryComparator summaryComparator, int max) throws CorruptIndexException, IOException
-    {
+		for ( String indexKey : summaryMaps.keySet() ) {
+			HashMap <String,Object> summaryConfigValuesForKey = summaryConfigValues.get(indexKey);
+       Element rootElem = new Element((String)summaryConfigValuesForKey.get("plural"));
+      // sort according to frequency
+			SummaryComparator summaryComparator = getSummaryComparator(indexKey, langCode, summaryConfigValuesForKey);
+			HashMap<String,Integer> summary = summaryMaps.get(indexKey);
+		  Log.debug(Geonet.SEARCH_ENGINE, "Sorting "+summary.size()+" according to frequency of " + indexKey);
 
-        HashMap<String, Integer> summary = new HashMap<String, Integer>();
-        for (int i = 0; i < count; i++) {
-            Document doc = phits.doc(i);
-            String hits[] = doc.getValues(indexKey);
-            if (hits != null) // if there are no categories lucene returns null
-                // instead of an empty array
-                for (int j = 0; j < hits.length; j++) {
-                    String info = hits[j];
-                    Integer catCount = (Integer) summary.get(info);
-                    if (catCount == null)
-                        catCount = new Integer(1);
-                    else
-                        catCount = new Integer(catCount.intValue() + 1);
-                    summary.put(info, catCount);
-                }
-        }
+			TreeSet<Map.Entry<String, Integer>> sortedSummary = new TreeSet<Map.Entry<String, Integer>>(summaryComparator);
+			sortedSummary.addAll(summary.entrySet());
 
-        Element rootElem = new Element(rootElemName);
-        // sort according to frequency
-        TreeSet<Map.Entry<String, Integer>> sortedSummary = new TreeSet<Map.Entry<String, Integer>>(summaryComparator);
-        sortedSummary.addAll(summary.entrySet());
+			Integer max = (Integer)summaryConfigValuesForKey.get("max");
 
-        int nKeys = 0;
-        for (Iterator iter = sortedSummary.iterator(); iter.hasNext();) {
-            if (++nKeys > max)
-                break;
+			int nKeys = 0;
+			for (Iterator iter = sortedSummary.iterator(); iter.hasNext();) {
+				if (++nKeys > max.intValue()) break;
 
-            Map.Entry me = (Map.Entry) iter.next();
-            String keyword = (String) me.getKey();
-            Integer keyCount = (Integer) me.getValue();
+				Map.Entry me = (Map.Entry) iter.next();
+				String keyword = (String) me.getKey();
+				Integer keyCount = (Integer) me.getValue();
 
-            Element childElem = new Element(elemName);
-            childElem.setAttribute("count", keyCount.toString());
-            childElem.setAttribute("name", keyword);
-            rootElem.addContent(childElem);
-        }
-        elSummary.addContent(rootElem);
-    }
+				Element childElem = new Element((String)summaryConfigValuesForKey.get("name"));
+				childElem.setAttribute("count", keyCount.toString());
+				childElem.setAttribute("name", keyword);
+				rootElem.addContent(childElem);
+			}
+			elSummary.addContent(rootElem);
+		}
+
+		return elSummary;
+	}
+
+	//--------------------------------------------------------------------------------
+
+	public static Pair<TopFieldCollector,Element> doSearchAndMakeSummary(int numHits, int maxSummaryKeys, String langCode, String resultType, Element summaryConfig, IndexReader reader, Query query, CachingWrapperFilter cFilter, Sort sort, boolean buildSummary) throws Exception
+	{
+
+		Log.debug(Geonet.SEARCH_ENGINE, "Setting up the TFC with numHits "+numHits);
+		TopFieldCollector tfc = TopFieldCollector.create(sort, numHits, true, false, false, false);
+
+		new IndexSearcher(reader).search(query, cFilter, tfc); 
+
+		Element elSummary= new Element("summary");
+		elSummary.setAttribute("count", tfc.getTotalHits()+"");
+		elSummary.setAttribute("type", "local");
+
+		if (buildSummary) {	
+			Log.debug(Geonet.SEARCH_ENGINE, "building summary");
+
+			// -- prepare
+			HashMap<String,HashMap<String,Object>> summaryConfigValues = getSummaryConfig(summaryConfig, resultType, maxSummaryKeys);
+			HashMap<String,HashMap<String,Integer>> summaryMaps = prepareSummaryMaps(summaryConfigValues.keySet());
+
+			// -- get topdocs from search
+			TopDocs tdocs = tfc.topDocs(0, numHits);
+
+			// -- add summary keys to summary element
+			summaryMaps = buildSummaryMaps(elSummary, reader, tdocs.scoreDocs, summaryMaps);
+			elSummary = addSortedSummaryKeys(elSummary, langCode, summaryMaps, summaryConfigValues);
+		}
+
+
+		return Pair.read(tfc,elSummary);
+	}
 
 	//--------------------------------------------------------------------------------
 
@@ -624,10 +715,10 @@ public class LuceneSearcher extends MetaSearcher
 	}
 	
 	//--------------------------------------------------------------------------------
-
 	/**
 	 * <p>
 	 * Gets results in current searcher
+	 * WARNING: will use lots of memory for large result sets!
 	 * </p>
 	 * 
 	 * @return current searcher result in "fast" mode
@@ -635,28 +726,70 @@ public class LuceneSearcher extends MetaSearcher
 	 * @throws IOException 
 	 * @throws CorruptIndexException 
 	 */
-    public Element getAll() throws CorruptIndexException, IOException {
+    public Element getAll(int maxHits) throws Exception {
+			
+				Pair<IndexReader, TopDocs> results  = performQuery(0, maxHits);
+				IndexReader reader = results.one();
+				TopDocs tdocs = results.two();
+
         Element response = new Element("response");
-        if (_lastHits == null || _lastHits.length() == 0) {
+        if (_numHits == 0) {
             response.setAttribute("from", 0 + "");
             response.setAttribute("to", 0 + "");
             return response;
         }
 
         response.setAttribute("from", 1 + "");
-        response.setAttribute("to", _lastHits.length() + "");
+        response.setAttribute("to", tdocs.scoreDocs.length + "");
 
-        for (int i = 0; i < _lastHits.length(); i++) {
-            Document doc = _lastHits.doc(i);
+        for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
+            Document doc = reader.document(sdoc.doc); // no selector here!;
             String id = doc.get("_id");
 
             // FAST mode
             Element md = getMetadataFromIndex(doc, id);
             response.addContent(md);
         }
+
         return response;
     }
 
+	//--------------------------------------------------------------------------------
+	/**
+	 * <p>
+	 * Gets all metadata uuids in current searcher
+	 * </p>
+	 * 
+	 * @return current searcher result in "fast" mode
+	 * 
+	 * @throws IOException 
+	 * @throws CorruptIndexException 
+	 */
+    public List<String>  getAllUuids(int maxHits) throws Exception {
+
+				FieldSelector uuidselector = new FieldSelector() {
+					public final FieldSelectorResult accept(String name) {
+						if (name.equals("_uuid")) return FieldSelectorResult.LOAD;
+						else return FieldSelectorResult.NO_LOAD;
+					}
+				};
+
+				Pair<IndexReader, TopDocs> results  = performQuery(0, maxHits);
+				IndexReader reader = results.one();
+				TopDocs tdocs = results.two();
+
+        List<String> response = new ArrayList<String>();
+
+        for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
+            Document doc = reader.document(sdoc.doc, uuidselector);
+            String uuid = doc.get("_uuid");
+						if (uuid != null) response.add(uuid);
+        }
+
+        return response;
+    }
+
+	//--------------------------------------------------------------------------------
 	/**
      * Search in Lucene index and return Lucene index
      * field value. Metadata records is retrieved 
@@ -669,30 +802,32 @@ public class LuceneSearcher extends MetaSearcher
      */
     public static String getMetadataFromIndex(String appPath, String id, String fieldname, String languageCode) throws Exception
     {
-    	String value = "";
-    	File luceneDir = new File(appPath + "WEB-INF/lucene/nonspatial");
-        IndexReader reader = IndexReader.open(luceneDir);
-        Searcher searcher = new IndexSearcher(reader);
+			List<String> fieldnames = new ArrayList<String>();
+			fieldnames.add(fieldname);
+			return getMetadataFromIndex(appPath, id, fieldnames, languageCode).get(fieldname);
+		}
+
+    public static Map<String,String> getMetadataFromIndex(String appPath, String id, List<String> fieldnames, String languageCode) throws Exception
+    {
+
+			MapFieldSelector selector = new MapFieldSelector(fieldnames); 
+
+			File luceneDir = new File(appPath + "WEB-INF/lucene/nonspatial");
+			IndexReader reader = IndexReader.open(luceneDir);
+      Searcher searcher = new IndexSearcher(reader);
+
+			Map<String,String> values = new HashMap<String,String>();
         
     	try {	
-			TermQuery query = new TermQuery(new Term("_uuid", id));
-	    	Hits hits = searcher.search(query);
+				TermQuery query = new TermQuery(new Term("_uuid", id));
+		    TopDocs tdocs = searcher.search(query,1);
 	        
-	        for (int j=0; j<hits.length(); j++) {
-        		Document doc = hits.doc(j);
+	       for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
+        		Document doc = reader.document(sdoc.doc, selector);
 	    	
 		        Element record = new Element("record");
-		        List<Field> fields = doc.getFields();
-		        
-		        for (Iterator<Field> i = fields.iterator(); i.hasNext();) {
-		            Field field = i.next();
-		            String name = field.name();
-		            
-		            if (name.equals(fieldname)) {
-		            	value = field.stringValue();
-		            	break;
-		            	// TODO : handle multiple fields ?
-		            }
+		        for ( String fieldname :  fieldnames ) {
+							values.put(fieldname, doc.get(fieldname));
 	        	}
 	        }
 	        
@@ -709,8 +844,8 @@ public class LuceneSearcher extends MetaSearcher
 			reader.close();
 		}
 	
-        return value;
-    }
+    return values;
+  }
 }
 
 //==============================================================================

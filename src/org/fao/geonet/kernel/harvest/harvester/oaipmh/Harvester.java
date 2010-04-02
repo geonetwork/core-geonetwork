@@ -210,7 +210,7 @@ class Harvester
 			String id = localUuids.getID(ri.id);
 
 			if (id == null)	addMetadata(t, ri);
-				else				updateMetadata(t, ri, id);
+			else				updateMetadata(t, ri, id);
 		}
 
 		log.info("End of alignment for : "+ params.name);
@@ -252,14 +252,14 @@ class Harvester
 
 		int iId = Integer.parseInt(id);
 
-		dataMan.setTemplate(dbms, iId, "n", null);
-		dataMan.setHarvested(dbms, iId, params.uuid);
+		dataMan.setTemplateExt(dbms, iId, "n", null);
+		dataMan.setHarvestedExt(dbms, iId, params.uuid);
 
 		addPrivileges(id);
 		addCategories(id);
 
 		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id);
 		result.added++;
 	}
 
@@ -453,7 +453,7 @@ class Harvester
 			addCategories(id);
 
 			dbms.commit();
-			dataMan.indexMetadata(dbms, id);
+			dataMan.indexMetadataGroup(dbms, id);
 			result.updated++;
 		}
 	}

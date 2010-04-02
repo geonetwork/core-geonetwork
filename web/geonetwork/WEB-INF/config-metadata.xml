@@ -379,6 +379,15 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="metadata.admin.index.optimize">
+			<documentation>
+				<para>Service to force optimization of Lucene index</para>
+			</documentation>
+			<class name=".services.metadata.IndexOptimize" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="metadata.admin.form">
 			<class name=".services.metadata.GetAdminOper"/>
 

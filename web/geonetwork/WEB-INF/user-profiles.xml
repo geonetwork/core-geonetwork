@@ -71,8 +71,10 @@
 		<allow service="config"/>
 		<allow service="xml.config.get"/>
 		<allow service="xml.config.set"/>
+		<allow service="xml.config.doActions"/>
 
 		<allow service="metadata.admin.index.rebuild"/>
+		<allow service="metadata.admin.index.optimize"/>
 		
 		<!-- Test i18n - under administrator for performance reasons -->
 		<allow service="test.i18n"/>

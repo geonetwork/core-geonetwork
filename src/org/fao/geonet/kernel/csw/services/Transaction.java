@@ -107,30 +107,42 @@ public class Transaction extends AbstractOperation implements CatalogService
 				if( transactionType.equals("insert") || transactionType.equals("update") || transactionType.equals("delete") )
 				{	
 					List<Element> mdList = transRequest.getChildren();
+					GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+					DataManager dataMan = gc.getDataManager();
 					
 					// insert to database, and get the number of inserted successful
 					if( transactionType.equals("insert" ) )
 					{
 						Iterator<Element> inIt = mdList.iterator();
-						while (inIt.hasNext()){
-							Element metadata = (Element) inIt.next().clone();
-							boolean insertSuccess = insertTransaction( metadata, strFileIds, context);
-							if (insertSuccess)
-								totalInserted++;
+						dataMan.startIndexGroup();
+						try {
+							while (inIt.hasNext()){
+								Element metadata = (Element) inIt.next().clone();
+								boolean insertSuccess = insertTransaction( metadata, strFileIds, context);
+								if (insertSuccess)
+									totalInserted++;
+							}
+						} finally {
+							dataMan.endIndexGroup();
 						}
 					}
 					// Update
 					else if( transactionType.equals("update" ) ) 
 					{
 						Iterator<Element> inIt = mdList.iterator();
-						while (inIt.hasNext()){
-							Element metadata = (Element) inIt.next().clone();
-							if (!metadata.getName().equals("Constraint") && !metadata.getNamespace().equals(Csw.NAMESPACE_CSW))
-							{
-								boolean updateSuccess = updateTransaction( transRequest, metadata, context );
-								if (updateSuccess)
-									totalUpdated++;
+						dataMan.startIndexGroup();
+						try {
+							while (inIt.hasNext()){
+								Element metadata = (Element) inIt.next().clone();
+								if (!metadata.getName().equals("Constraint") && !metadata.getNamespace().equals(Csw.NAMESPACE_CSW))
+								{
+									boolean updateSuccess = updateTransaction( transRequest, metadata, context );
+									if (updateSuccess)
+										totalUpdated++;
+								}
 							}
+						} finally {
+							dataMan.endIndexGroup();
 						}
 					}
 					// Delete
@@ -236,13 +248,13 @@ public class Transaction extends AbstractOperation implements CatalogService
 		if( id == null )
 			return false;
 		
-		dataMan.indexMetadata(dbms, id);
-		
-		fileIds.add( uuid );
-		
 		// --- Insert category if requested
 		if (!"_none_".equals(category))
 			dataMan.setCategory(dbms, id, category);
+		
+		dataMan.indexMetadataGroup(dbms, id);
+		
+		fileIds.add( uuid );
 		
 		dbms.commit();
 				
@@ -294,6 +306,8 @@ public class Transaction extends AbstractOperation implements CatalogService
 				throw new NoApplicableCodeEx("User not allowed to update this metadata("+id+").");
 
 			dataMan.updateMetadataExt(dbms, id, xml, changeDate);
+			dataMan.indexMetadataGroup(dbms, id);
+
 			bReturn = true;
 			break;
 		}

@@ -12,7 +12,8 @@ import java.util.Set;
 import jeeves.utils.Log;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.SetBasedFieldSelector;
+import org.apache.lucene.document.FieldSelector;
+import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.HitCollector;
@@ -53,7 +54,7 @@ public abstract class SpatialFilter extends Filter
         SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
         builder.add(SpatialIndexWriter.GEOM_ATTRIBUTE_NAME, Geometry.class,DefaultGeographicCRS.WGS84);
         builder.setDefaultGeometry(SpatialIndexWriter.GEOM_ATTRIBUTE_NAME);
-        builder.setName(SpatialIndexWriter.SPATIAL_INDEX_FILENAME);
+        builder.setName(SpatialIndexWriter.SPATIAL_INDEX_TYPENAME);
         FEATURE_TYPE = builder.buildFeatureType();
     }
     
@@ -64,7 +65,7 @@ public abstract class SpatialFilter extends Filter
 
     protected final FilterFactory2  _filterFactory;
     protected final Query                 _query;
-    protected final SetBasedFieldSelector _selector;
+    protected final FieldSelector _selector;
     private org.opengis.filter.Filter _spatialFilter;
     private Map<String, FeatureId> _unrefinedMatches;
     private boolean warned = false;
@@ -79,10 +80,12 @@ public abstract class SpatialFilter extends Filter
         _filterFactory = CommonFactoryFinder.getFilterFactory2(GeoTools
                 .getDefaultHints());
 
-        Set fieldsToLoad = new HashSet<String>();
-        fieldsToLoad.add("_id");
-        Set lazyFieldsToLoad = Collections.emptySet();
-        _selector = new SetBasedFieldSelector(fieldsToLoad, lazyFieldsToLoad);
+				_selector = new FieldSelector() {
+						public final FieldSelectorResult accept(String name) {
+							if (name.equals("_id")) return FieldSelectorResult.LOAD;
+							else return FieldSelectorResult.NO_LOAD;
+						}
+				};
     }
 
     protected SpatialFilter(Query query, Envelope bounds,
@@ -105,7 +108,7 @@ public abstract class SpatialFilter extends Filter
             {
                 Document document;
                 try {
-                    document = reader.document(doc);
+                    document = reader.document(doc, _selector);
                     String key = document.get("_id");
                     FeatureId featureId = unrefinedSpatialMatches.get(key); 
                     if (featureId!=null) {

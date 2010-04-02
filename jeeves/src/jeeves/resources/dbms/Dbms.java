@@ -83,10 +83,12 @@ public class Dbms
 
 	public void connect(String username, String password) throws SQLException
 	{
-		conn = DriverManager.getConnection(url, username, password);
+		String actualUrl = url;
+		if (actualUrl.contains("postgis")) actualUrl = actualUrl.replaceFirst("postgis","postgresql");
+		conn = DriverManager.getConnection(actualUrl, username, password);
 
 		conn.setAutoCommit(false);
-		if (url.toUpperCase().contains("ORACLE")) {
+		if (actualUrl.toUpperCase().contains("ORACLE")) {
 			Log.debug(Log.RESOURCES,"ORACLE is using TRANSACTION_READ_COMMITTED");
 			conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 		} else {

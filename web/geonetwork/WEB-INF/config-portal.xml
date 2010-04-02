@@ -9,6 +9,7 @@
 		<service name="portal.search">
 			<class name=".services.main.Search">
 				<param name="maxSummaryKeys" value="10" />
+				<param name="maxHitsInSummary" value="1000" />
 			</class>
 	      <output sheet="portal-search.xsl" contentType="text/xml; charset=UTF-8"/>
 		</service>
@@ -25,6 +26,7 @@
 		<service name="portal.search.keywords">
 			<class name=".services.main.Search">
 				<param name="maxSummaryKeys" value="1000" />
+				<param name="maxHitsInSummary" value="10000" />
 			</class>
 			<output sheet="thesaurus-keywordlist.xsl" contentType="text/xml; charset=UTF-8"/>
 		</service>
@@ -42,6 +44,7 @@
 		<service name="portal.search.present">
 			<class name=".services.main.SearchResult">
 				<param name="maxSummaryKeys" value="10" />
+				<param name="maxHitsInSummary" value="1000" />
 				<param name="range" value="all" />
 			</class>
 
@@ -107,6 +110,7 @@
         <service name="pdf.search">
             <class name=".services.main.Search">
                 <param name="maxSummaryKeys" value="1000" />
+								<param name="maxHitsInSummary" value="1000" />
             </class>
 
             <output sheet="portal-present-fop.xsl" file="true" contentType="application/pdf">
@@ -124,6 +128,7 @@
 			<class name=".services.main.Result">
 				<param name="maxRecords" value="10" />
 				<param name="syntax" value="f" />
+				<param name="range" value="all" />
 			</class>
 			
 			<output sheet="portal-present-fop.xsl" file="true" contentType="application/pdf">

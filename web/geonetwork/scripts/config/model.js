@@ -34,8 +34,20 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			SERVER_PORT       : xml.evalXPath(node, 'server/port'),
 			INTRANET_NETWORK  : xml.evalXPath(node, 'intranet/network'),
 			INTRANET_NETMASK  : xml.evalXPath(node, 'intranet/netmask'),
+
+			SELECTION_MAXRECORDS : xml.evalXPath(node, 'selectionmanager/maxrecords'),
+
+			INDEXOPTIMIZER_ENABLE	  : xml.evalXPath(node, 'indexoptimizer/enable'),
+			INDEXOPTIMIZER_AT_HOUR  : xml.evalXPath(node, 'indexoptimizer/at/hour'),
+			INDEXOPTIMIZER_AT_MIN   : xml.evalXPath(node, 'indexoptimizer/at/min'),
+			INDEXOPTIMIZER_AT_SEC   : xml.evalXPath(node, 'indexoptimizer/at/sec'),
+			INDEXOPTIMIZER_INTERVAL_DAY  : xml.evalXPath(node, 'indexoptimizer/interval/day'),
+			INDEXOPTIMIZER_INTERVAL_HOUR : xml.evalXPath(node, 'indexoptimizer/interval/hour'),
+			INDEXOPTIMIZER_INTERVAL_MIN  : xml.evalXPath(node, 'indexoptimizer/interval/min'),
+
 			Z3950_ENABLE      : xml.evalXPath(node, 'z3950/enable'),
 			Z3950_PORT        : xml.evalXPath(node, 'z3950/port'),
+
 			CSW_ENABLE        : xml.evalXPath(node, 'csw/enable'),
 			CSW_CONTACTID     : xml.evalXPath(node, 'csw/contactId'),
 			CSW_INDIVIDUALNAME: xml.evalXPath(node, 'csw/individualName'),
@@ -132,6 +144,22 @@ ConfigModel.updateTemp =
 '		<network>{INTRANET_NETWORK}</network>'+
 '		<netmask>{INTRANET_NETMASK}</netmask>'+
 '	</intranet>'+
+'	<selectionmanager>'+
+'		<maxrecords>{SELECTION_MAXRECORDS}</maxrecords>'+
+'	</selectionmanager>'+
+' <indexoptimizer>'+
+'		<enable>{INDEXOPTIMIZER_ENABLE}</enable>'+
+'		<at>'+
+'			<hour>{INDEXOPTIMIZER_AT_HOUR}</hour>'+
+'			<min>{INDEXOPTIMIZER_AT_MIN}</min>'+
+'			<sec>{INDEXOPTIMIZER_AT_SEC}</sec>'+
+'		</at>'+
+'		<interval>'+
+'			<day>{INDEXOPTIMIZER_INTERVAL_DAY}</day>'+
+'			<hour>{INDEXOPTIMIZER_INTERVAL_HOUR}</hour>'+
+'			<min>{INDEXOPTIMIZER_INTERVAL_MIN}</min>'+
+'		</interval>'+
+' </indexoptimizer>'+
 '	<z3950>'+
 '		<enable>{Z3950_ENABLE}</enable>'+
 '		<port>{Z3950_PORT}</port>'+

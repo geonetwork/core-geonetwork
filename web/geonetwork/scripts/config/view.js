@@ -21,9 +21,18 @@ function ConfigView(strLoader)
 		
 		{ id:'intranet.network', type:'ipaddress' },
 		{ id:'intranet.netmask', type:'ipaddress' },
-		
+
+		{ id:'selection.maxrecords',   type:'integer',  minValue:1000, maxValue:10000, empty:false },
+
+		{ id:'indexoptimizer.at.hour',   type:'integer',  minValue:0, maxValue:23, empty:false }, 
+		{ id:'indexoptimizer.at.min',   type:'integer',  minValue:0, maxValue:59, empty:false }, 
+		{ id:'indexoptimizer.at.sec',   type:'integer',  minValue:0, maxValue:59, empty:false }, 
+		{ id:'indexoptimizer.interval.day',   type:'integer',  minValue:0, maxValue:14, empty:false }, 
+		{ id:'indexoptimizer.interval.hour',   type:'integer',  minValue:0, maxValue:65535, empty:false }, 
+		{ id:'indexoptimizer.interval.min',   type:'integer',  minValue:0, maxValue:59, empty:false }, 
+
 		{ id:'z3950.port',   type:'integer',  minValue:80, maxValue:65535, empty:true },
-		
+
 		{ id:'feedback.email',     type:'length',   minSize :0,  maxSize :200 },		
 		{ id:'feedback.mail.host', type:'length',   minSize :0,  maxSize :200 },
 		{ id:'feedback.mail.host', type:'hostname' },
@@ -52,6 +61,7 @@ function ConfigView(strLoader)
 	]);
 	
 	this.z3950Shower = new Shower('z3950.enable', 'z3950.subpanel');	
+	this.indexOptimizerShower = new Shower('indexoptimizer.enable', 'indexoptimizer.subpanel');
 	this.proxyShower = new Shower('proxy.use',    'proxy.subpanel');
 
 	var targetIds = ['ldap.subpanel', 'geonetworkdb.subpanel'];
@@ -82,6 +92,16 @@ ConfigView.prototype.setData = function(data)
 	
 	$('z3950.enable').checked = data['Z3950_ENABLE'] == 'true';
 	$('z3950.port')  .value   = data['Z3950_PORT'];
+
+	$('selection.maxrecords')  .value   = data['SELECTION_MAXRECORDS'];
+
+	$('indexoptimizer.enable').checked = data['INDEXOPTIMIZER_ENABLE'] == 'true';
+	$('indexoptimizer.at.hour').value = data['INDEXOPTIMIZER_AT_HOUR'];
+	$('indexoptimizer.at.min').value  = data['INDEXOPTIMIZER_AT_MIN'];
+	$('indexoptimizer.at.sec').value  = data['INDEXOPTIMIZER_AT_SEC'];
+	$('indexoptimizer.interval.day').value  = data['INDEXOPTIMIZER_INTERVAL_DAY'];
+	$('indexoptimizer.interval.hour').value = data['INDEXOPTIMIZER_INTERVAL_HOUR'];
+	$('indexoptimizer.interval.min').value  = data['INDEXOPTIMIZER_INTERVAL_MIN'];
 	
 	$('csw.enable').checked = data['CSW_ENABLE'] == 'true';
 	$('csw.contactId').value           = data['CSW_CONTACTID'];
@@ -140,6 +160,7 @@ ConfigView.prototype.setData = function(data)
 	$('userSelfRegistration.enable').checked = data['USERSELFREGISTRATION_ENABLE'] == 'true' && data['LDAP_USE'] != 'true';
 
 	this.z3950Shower.update();
+	this.indexOptimizerShower.update();
 	this.proxyShower.update();
 	this.ldapShower.update();
 	this.shibShower.update();
@@ -169,7 +190,17 @@ ConfigView.prototype.getData = function()
 	
 		Z3950_ENABLE : $('z3950.enable').checked,
 		Z3950_PORT   : $('z3950.port')  .value,
-		
+	
+		SELECTION_MAXRECORDS   : $('selection.maxrecords')  .value,
+
+		INDEXOPTIMIZER_ENABLE: $('indexoptimizer.enable')  .checked,
+		INDEXOPTIMIZER_AT_HOUR: $('indexoptimizer.at.hour').value,
+		INDEXOPTIMIZER_AT_MIN:  $('indexoptimizer.at.min') .value,
+		INDEXOPTIMIZER_AT_SEC:  $('indexoptimizer.at.sec') .value,
+		INDEXOPTIMIZER_INTERVAL_DAY:  $('indexoptimizer.interval.day') .value,
+		INDEXOPTIMIZER_INTERVAL_HOUR: $('indexoptimizer.interval.hour').value,
+		INDEXOPTIMIZER_INTERVAL_MIN:  $('indexoptimizer.interval.min') .value,
+
 		CSW_ENABLE : $('csw.enable').checked,
 		CSW_CONTACTID       : $('csw.contactId').value,
 		CSW_INDIVIDUALNAME  : $('csw.individualName').value,

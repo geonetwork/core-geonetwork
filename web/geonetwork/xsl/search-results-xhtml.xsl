@@ -101,9 +101,19 @@
 					<!-- filtered search, massive actions and print pdf - - -->
 					<div style="float:right;">
 						<xsl:value-of select="/root/gui/strings/select" />
-						<a href="javascript:metadataselect(0, 'add-all')" title="{/root/gui/strings/selectAll}" alt="{/root/gui/strings/selectAll}">
-							<xsl:value-of select="/root/gui/strings/all"/>
-						</a>,
+						<xsl:choose>
+							<xsl:when test="number(/root/response/summary/@count) > number(/root/gui/config/selectionmanager/maxrecords)">
+								<xsl:variable name="errorMess" select="concat(/root/gui/strings/selectAllNotPossible,/root/gui/config/selectionmanager/maxrecords,'.')"/>
+								<a href="javascript:alert('{$errorMess}')" title="{$errorMess}" alt="{$errorMess}">
+									<xsl:value-of select="/root/gui/strings/all"/>
+								</a>,
+							</xsl:when>
+							<xsl:otherwise>
+								<a href="javascript:metadataselect(0, 'add-all')" title="{/root/gui/strings/selectAll}" alt="{/root/gui/strings/selectAll}">
+									<xsl:value-of select="/root/gui/strings/all"/>
+								</a>,
+							</xsl:otherwise>
+						</xsl:choose>
 						<a href="javascript:metadataselect(0, 'remove-all')" title="{/root/gui/strings/selectNone}" alt="{/root/gui/strings/selectNone}">
 							<xsl:value-of select="/root/gui/strings/none"/>
 						</a>

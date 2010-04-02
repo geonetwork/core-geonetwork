@@ -23,16 +23,21 @@
 
 package org.fao.geonet.services.group;
 
+import java.util.List;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.services.util.ServiceMetadataReindexer;
+
 import org.jdom.Element;
 
 //=============================================================================
@@ -59,7 +64,7 @@ public class Remove implements Service
 
 		String query = "SELECT DISTINCT metadataId FROM OperationAllowed WHERE groupId="+id;
 
-		java.util.List reindex = dbms.select(query).getChildren();
+		List<Element> reindex = dbms.select(query).getChildren();
 
 		dbms.execute("DELETE FROM OperationAllowed WHERE groupId="+ id);
 		dbms.execute("DELETE FROM UserGroups       WHERE groupId="+ id);
@@ -71,13 +76,8 @@ public class Remove implements Service
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getDataManager();
 
-		for (Object o : reindex)
-		{
-			Element md   = (Element) o;
-			String  mdId = md.getChildText("metadataid");
-
-			dm.indexMetadata(dbms, mdId);
-		}
+		ServiceMetadataReindexer s = new ServiceMetadataReindexer(dm, dbms, reindex);
+		s.processWithFastIndexing();
 
 		return new Element(Jeeves.Elem.RESPONSE)
 							.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.REMOVED));

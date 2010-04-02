@@ -29,6 +29,7 @@ package org.fao.geonet.kernel;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -102,59 +103,61 @@ public class DataManager
 	 * @param force         Force reindexing all from scratch
 	 *
 	 **/
-	public void init(Dbms dbms, Boolean force) throws Exception {
+	public synchronized void init(Dbms dbms, Boolean force) throws Exception {
 
 		// get all metadata from DB
 		Element result = dbms.select("SELECT id, changeDate FROM Metadata ORDER BY id ASC");
-		List list = result.getChildren();
 
-		Log.debug(Geonet.DATA_MANAGER, "DB CONTENT:\n'"+ Xml.getString(result) +"'"); //DEBUG
+		Log.debug(Geonet.DATA_MANAGER, "DB CONTENT:\n'"+ Xml.getString(result) +"'"); 
 
-		// get all metadata from index
-		Hashtable docs = searchMan.getDocs();
+		// get lastchangedate of all metadata in index
+		HashMap<String,String> docs = searchMan.getDocsChangeDate();
 
-        Log.debug(Geonet.DATA_MANAGER, "INDEX CONTENT:"); //DEBUG
+		Log.debug(Geonet.DATA_MANAGER, "INDEX CONTENT:");
 
 		// index all metadata in DBMS if needed
-		for(int i = 0; i < list.size(); i++)
-		{
-			// get metadata
-			Element record = (Element) list.get(i);
-			String  id     = record.getChildText("id");
-
-			Log.debug(Geonet.DATA_MANAGER, "- record ("+ id +")"); //DEBUG
-
-			Hashtable idxRec = (Hashtable)docs.get(id);
-
-			// if metadata is not indexed index it
-			if (idxRec == null)
-				indexMetadata(dbms, id);
-
-			// else, if indexed version is not the latest index it
-			else
+		startIndexGroup();
+		try {
+			for(int i = 0; i < result.getContentSize(); i++)
 			{
-				docs.remove(id);
+				// get metadata
+				Element record = (Element) result.getContent(i);
+				String  id     = record.getChildText("id");
+	
+				Log.debug(Geonet.DATA_MANAGER, "- record ("+ id +")");
+	
+				String idxLastChange = (String)docs.get(id);
 
-				String lastChange    = record.getChildText("changedate");
-				String idxLastChange = (String)idxRec.get("_changeDate");
-
-	            Log.debug(Geonet.DATA_MANAGER, "- lastChange: " + lastChange); //DEBUG
-                Log.debug(Geonet.DATA_MANAGER, "- idxLastChange: " + idxLastChange); //DEBUG
-
-				if (force || !idxLastChange.equalsIgnoreCase(lastChange)) // date in index contains 't', date in DBMS contains 'T'
-					indexMetadata(dbms, id);
+				// if metadata is not indexed index it
+				if (idxLastChange == null)
+					indexMetadataGroup(dbms, id);
+	
+				// else, if indexed version is not the latest index it
+				else
+				{
+					docs.remove(id);
+	
+					String lastChange    = record.getChildText("changedate");
+	
+         	Log.debug(Geonet.DATA_MANAGER, "- lastChange: " + lastChange); 
+         	Log.debug(Geonet.DATA_MANAGER, "- idxLastChange: " + idxLastChange); 
+	
+					if (force || !idxLastChange.equalsIgnoreCase(lastChange)) // date in index contains 't', date in DBMS contains 'T'
+						indexMetadataGroup(dbms, id);
+				}
 			}
+		} finally {
+			endIndexGroup();
 		}
 
-		Log.debug(Geonet.DATA_MANAGER, "INDEX SURPLUS:"); //DEBUG
+		Log.debug(Geonet.DATA_MANAGER, "INDEX HAS RECORDS THAT ARE NOT IN DB:"); 
 
 		// remove from index metadata not in DBMS
-		for (Enumeration i = docs.keys(); i.hasMoreElements(); )
+		for ( String id : docs.keySet() )
 		{
-			String id = (String)i.nextElement();
 			searchMan.delete("_id", id);
 
-            Log.debug(Geonet.DATA_MANAGER, "- record (" + id + ")"); //DEBUG
+      Log.debug(Geonet.DATA_MANAGER, "- removed record (" + id + ") from index");
 		}
 	}
 
@@ -165,16 +168,42 @@ public class DataManager
 
 	    Log.debug(Geonet.DATA_MANAGER, "Indexing record (" + id + ")"); //DEBUG
 
-	    indexMetadata(dbms, id, searchMan);
+	    indexMetadata(dbms, id, searchMan, false);
+	}
+
+	//--------------------------------------------------------------------------
+
+	public void startIndexGroup() throws Exception {
+		searchMan.startIndexGroup();
+	}
+
+	//--------------------------------------------------------------------------
+
+	public void endIndexGroup() throws Exception {
+		searchMan.endIndexGroup();
+	}
+
+	//--------------------------------------------------------------------------
+
+	public void indexMetadataGroup(Dbms dbms, String id) throws Exception {
+		Log.debug(Geonet.DATA_MANAGER, "Indexing record (" + id + ")"); //DEBUG
+		indexMetadata(dbms, id, searchMan, true);
 	}
 
 	//--------------------------------------------------------------------------
 
 	public static void indexMetadata(Dbms dbms, String id, SearchManager sm) throws Exception
 	{
+		indexMetadata(dbms, id, sm, false);
+	}
+
+	//--------------------------------------------------------------------------
+
+	public static void indexMetadata(Dbms dbms, String id, SearchManager sm, boolean indexGroup) throws Exception
+	{
 		try
 		{
-			indexMetadataI(dbms, id, sm);
+			indexMetadataI(dbms, id, sm, indexGroup);
 		}
 		catch (Exception e)
 		{
@@ -185,7 +214,7 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
-	private static void indexMetadataI(Dbms dbms, String id, SearchManager sm) throws Exception
+	private static void indexMetadataI(Dbms dbms, String id, SearchManager sm, boolean indexGroup) throws Exception
 	{
 		Vector moreFields = new Vector();
 
@@ -255,7 +284,23 @@ public class DataManager
 			moreFields.add(makeField("_cat", categoryName, true, true, false));
 		}
 
-		sm.index(schema, md, id, moreFields, isTemplate, title);
+		if (indexGroup) {
+			sm.indexGroup(schema, md, id, moreFields, isTemplate, title);
+		} else {
+			sm.index(schema, md, id, moreFields, isTemplate, title);
+		}
+	}
+
+	//--------------------------------------------------------------------------
+
+	public void rescheduleOptimizer(Calendar beginAt, int interval) throws Exception {
+		searchMan.rescheduleOptimizer(beginAt, interval);
+	}
+
+	//--------------------------------------------------------------------------
+
+	public void disableOptimizer() throws Exception {
+		searchMan.disableOptimizer();
 	}
 
 	//--------------------------------------------------------------------------
@@ -630,14 +675,29 @@ public class DataManager
 
 	public void setTemplate(Dbms dbms, int id, String isTemplate, String title) throws Exception
 	{
-		if (title == null) dbms.execute("UPDATE Metadata SET isTemplate=? WHERE id=?", isTemplate, id);
-		else               dbms.execute("UPDATE Metadata SET isTemplate=?, title=? WHERE id=?", isTemplate, title, id);
+		setTemplateExt(dbms, id, isTemplate, title);
 		indexMetadata(dbms, Integer.toString(id));
 	}
 
 	//--------------------------------------------------------------------------
 
+	public void setTemplateExt(Dbms dbms, int id, String isTemplate, String title) throws Exception
+	{
+		if (title == null) dbms.execute("UPDATE Metadata SET isTemplate=? WHERE id=?", isTemplate, id);
+		else               dbms.execute("UPDATE Metadata SET isTemplate=?, title=? WHERE id=?", isTemplate, title, id);
+	}
+
+	//--------------------------------------------------------------------------
+
 	public void setHarvested(Dbms dbms, int id, String harvestUuid) throws Exception
+	{
+		setHarvestedExt(dbms, id, harvestUuid);
+		indexMetadata(dbms, Integer.toString(id));
+	}
+
+	//--------------------------------------------------------------------------
+
+	public void setHarvestedExt(Dbms dbms, int id, String harvestUuid) throws Exception
 	{
 		String value = (harvestUuid != null) ? "y" : "n";
 		if (harvestUuid == null) {
@@ -645,19 +705,16 @@ public class DataManager
 		} else {
 			dbms.execute("UPDATE Metadata SET isHarvested=?, harvestUuid=? WHERE id=?", value, harvestUuid, id);
 		}
-
-		indexMetadata(dbms, Integer.toString(id));
 	}
 
 	//--------------------------------------------------------------------------
 
-	public void setHarvested(Dbms dbms, int id, String harvestUuid, String harvestUri) throws Exception
+	public void setHarvestedExt(Dbms dbms, int id, String harvestUuid, String harvestUri) throws Exception
 	{
 		String value = (harvestUuid != null) ? "y" : "n";
 		String query = "UPDATE Metadata SET isHarvested=?, harvestUuid=?, harvestUri=? WHERE id=?";
 
 		dbms.execute(query, value, harvestUuid, harvestUri, id);
-		indexMetadata(dbms, Integer.toString(id));
 	}
 
 	//---------------------------------------------------------------------------
@@ -2294,12 +2351,15 @@ public class DataManager
 		}
 
 		// add subtemplates
+		/* -- don't add as we need to investigate indexing for the fields 
+		   -- in the metadata table used here
 		List subList = getSubtemplates(dbms, schema);
 		if (subList != null) {
 			Element subs = new Element(Edit.Info.Elem.SUBTEMPLATES);
 			subs.addContent(subList);
 			info.addContent(subs);
 		}
+		*/
 		return info;
 	}
 

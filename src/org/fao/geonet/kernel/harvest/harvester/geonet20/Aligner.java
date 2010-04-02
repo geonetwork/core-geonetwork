@@ -100,38 +100,43 @@ public class Aligner
 		//-----------------------------------------------------------------------
 		//--- insert/update new metadata
 
-		for(Iterator i=mdList.iterator(); i.hasNext(); )
-		{
-			Element info = ((Element) i.next()).getChild("info", Edit.NAMESPACE);
-
-			String remoteId  = info.getChildText("id");
-			String remoteUuid= info.getChildText("uuid");
-			String schema    = info.getChildText("schema");
-			String changeDate= info.getChildText("changeDate");
-
-			this.result.totalMetadata++;
-
-			log.debug("Obtained remote id="+ remoteId +", changeDate="+ changeDate);
-
-			if (!dataMan.existsSchema(schema))
+		dataMan.startIndexGroup();
+		try {
+			for(Iterator i=mdList.iterator(); i.hasNext(); )
 			{
-				log.debug("  - Skipping unsupported schema : "+ schema);
-				this.result.schemaSkipped++;
-			}
-			else
-			{
-				String id = dataMan.getMetadataId(dbms, remoteUuid);
+				Element info = ((Element) i.next()).getChild("info", Edit.NAMESPACE);
 
-				if (id == null)	id = addMetadata(siteId, info);
+				String remoteId  = info.getChildText("id");
+				String remoteUuid= info.getChildText("uuid");
+				String schema    = info.getChildText("schema");
+				String changeDate= info.getChildText("changeDate");
+
+				this.result.totalMetadata++;
+
+				log.debug("Obtained remote id="+ remoteId +", changeDate="+ changeDate);
+
+				if (!dataMan.existsSchema(schema))
+				{
+					log.debug("  - Skipping unsupported schema : "+ schema);
+					this.result.schemaSkipped++;
+				}
+				else
+				{
+					String id = dataMan.getMetadataId(dbms, remoteUuid);
+
+					if (id == null)	id = addMetadata(siteId, info);
 					else				updateMetadata(siteId, info, id);
 
-				dbms.commit();
+					dbms.commit();
 
-				//--- maybe the metadata was unretrievable
+					//--- maybe the metadata was unretrievable
 
-				if (id != null)
-					dataMan.indexMetadata(dbms, id);
+					if (id != null)
+						dataMan.indexMetadataGroup(dbms, id);
+				}
 			}
+		} finally {
+			dataMan.endIndexGroup();
 		}
 
 		log.info("End of alignment for site-id="+ siteId);

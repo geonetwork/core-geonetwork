@@ -67,6 +67,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 import net.sf.saxon.FeatureKeys;
+import net.sf.saxon.Configuration;
 
 //=============================================================================
 
@@ -220,6 +221,7 @@ public class Xml
 			transFact.setAttribute(FeatureKeys.VERSION_WARNING,false);
 			transFact.setAttribute(FeatureKeys.LINE_NUMBERING,true);
 			transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION,true);
+			transFact.setAttribute(FeatureKeys.RECOVERY_POLICY,Configuration.RECOVER_SILENTLY);
 			// Add the following to get timing info on xslt transformations
 			//transFact.setAttribute(FeatureKeys.TIMING,true);
 		} catch (IllegalArgumentException e) {
@@ -267,6 +269,7 @@ public class Xml
 		try {
 			factory.setAttribute(FeatureKeys.VERSION_WARNING,false);
 			factory.setAttribute(FeatureKeys.LINE_NUMBERING,true);
+			factory.setAttribute(FeatureKeys.RECOVERY_POLICY,Configuration.RECOVER_SILENTLY);
 		} catch (IllegalArgumentException e) {
 			System.out.println("WARNING: transformerfactory doesnt like saxon attributes!");
 			//e.printStackTrace();

@@ -46,6 +46,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
@@ -109,14 +110,8 @@ public class MassiveXslProcessing implements Service {
 		SelectionManager sm = SelectionManager.getManager(session);
 		
 		synchronized(sm.getSelection("metadata")) {
-			for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter
-					.hasNext();) {
-				String uuid = (String) iter.next();
-				String id = dataMan.getMetadataId(dbms, uuid);
-				context.info("Processing metadata with id:" + id);
-	
-				XslProcessing.process(id, process, _appPath, params, context, metadata, notFound, notOwner, notProcessFound);
-			}
+			MassiveXslMetadataReindexer m = new MassiveXslMetadataReindexer(dataMan, dbms, sm.getSelection("metadata").iterator(), process, _appPath, params, context, metadata, notFound, notOwner, notProcessFound);
+			m.processWithFastIndexing();
 		}
 
 
@@ -136,6 +131,41 @@ public class MassiveXslProcessing implements Service {
 	// --- Private methods
 	// ---
 	// --------------------------------------------------------------------------
+
+	class MassiveXslMetadataReindexer extends MetadataIndexerProcessor {
+		Dbms dbms;
+		Iterator<String> iter;
+		String process;
+		String appPath;
+		Element params;
+		ServiceContext context;
+    Set<Integer> metadata, notFound, notOwner, notProcessFound;
+
+    public MassiveXslMetadataReindexer(DataManager dm, Dbms dbms, Iterator<String> iter, String process, String appPath, Element params, ServiceContext context, Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notOwner, Set<Integer> notProcessFound) {
+        super(dm);
+				this.dbms = dbms;
+				this.iter = iter;
+				this.process = process;
+				this.appPath = appPath;
+				this.params = params;
+				this.context = context;
+        this.metadata = metadata;
+				this.notFound = notFound;
+				this.notOwner = notOwner;
+				this.notProcessFound = notProcessFound;
+    }
+
+    @Override
+    public void process() throws Exception {
+			while (iter.hasNext()) {
+				String uuid = (String) iter.next();
+				String id = dm.getMetadataId(dbms, uuid);
+				context.info("Processing metadata with id:" + id);
+	
+				XslProcessing.process(id, process, appPath, params, context, metadata, notFound, notOwner, notProcessFound, true);
+			}
+    }
+	}
 }
 
 // =============================================================================

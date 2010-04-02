@@ -12,31 +12,26 @@
     </xsl:template>
     
     <xsl:template match="text()"/>
-    
-    <xsl:template match="gmd:EX_BoundingPolygon" priority="2">
-        <!--
-            TODO : here we could index bounding polygon. 
-            If required, bounding box and bounding polygon need to be 
-            merged into one geometry for the index to search.
-            Done in geocat.ch sandbox.
-            
-            <xsl:for-each select="gmd:polygon/gml:*">
-            <xsl:copy-of select="."/>
-        </xsl:for-each>-->
-    </xsl:template>
+
+		<xsl:template match="gmd:EX_BoundingPolygon[string(gmd:extentTypeCode/gco:Boolean) != 'false' and string(gmd:extentTypeCode/gco:Boolean) != '0']" priority="2">
+			<xsl:for-each select="gmd:polygon/gml:*">
+				<xsl:copy-of select="."/>
+			</xsl:for-each>
+		</xsl:template>
     
     <xsl:template match="gmd:EX_GeographicBoundingBox" priority="2">
         <xsl:variable name="w" select="./gmd:westBoundLongitude/gco:Decimal/text()"/>
         <xsl:variable name="e" select="./gmd:eastBoundLongitude/gco:Decimal/text()"/>
         <xsl:variable name="n" select="./gmd:northBoundLatitude/gco:Decimal/text()"/>
         <xsl:variable name="s" select="./gmd:southBoundLatitude/gco:Decimal/text()"/>
-        
-        <gml:Polygon>
-            <gml:exterior>
-                <gml:LinearRing>
-                    <gml:coordinates><xsl:value-of select="$w"/>,<xsl:value-of select="$n"/>, <xsl:value-of select="$e"/>,<xsl:value-of select="$n"/>, <xsl:value-of select="$e"/>,<xsl:value-of select="$s"/>, <xsl:value-of select="$w"/>,<xsl:value-of select="$s"/>, <xsl:value-of select="$w"/>,<xsl:value-of select="$n"/></gml:coordinates>
-                </gml:LinearRing>
-            </gml:exterior>
-        </gml:Polygon>
+        <xsl:if test="$w!='' and $e!='' and $n!='' and $s!=''">
+	        <gml:Polygon>
+	            <gml:exterior>
+	                <gml:LinearRing>
+	                    <gml:coordinates><xsl:value-of select="$w"/>,<xsl:value-of select="$n"/>, <xsl:value-of select="$e"/>,<xsl:value-of select="$n"/>, <xsl:value-of select="$e"/>,<xsl:value-of select="$s"/>, <xsl:value-of select="$w"/>,<xsl:value-of select="$s"/>, <xsl:value-of select="$w"/>,<xsl:value-of select="$n"/></gml:coordinates>
+	                </gml:LinearRing>
+	            </gml:exterior>
+	        </gml:Polygon>
+        </xsl:if>
     </xsl:template>
 </xsl:stylesheet>

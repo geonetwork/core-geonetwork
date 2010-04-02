@@ -13,10 +13,11 @@
     <xsl:template match="text()"/>
     
     <xsl:template match="bounding" priority="2">
-        <xsl:variable name="w" select="./westbc/text()"/>
-        <xsl:variable name="e" select="./eastbc/text()"/>
-        <xsl:variable name="n" select="./northbc/text()"/>
-        <xsl:variable name="s" select="./southbc/text()"/>
+      <xsl:variable name="w" select="./westbc/text()"/>
+      <xsl:variable name="e" select="./eastbc/text()"/>
+      <xsl:variable name="n" select="./northbc/text()"/>
+      <xsl:variable name="s" select="./southbc/text()"/>
+			<xsl:if test="$w!='' and $e!='' and $n!='' and $s!=''">			
         <gml:Polygon>
             <gml:exterior>
                 <gml:LinearRing>
@@ -24,5 +25,6 @@
                 </gml:LinearRing>
             </gml:exterior>
         </gml:Polygon>
+			</xsl:if>
     </xsl:template>
 </xsl:stylesheet>

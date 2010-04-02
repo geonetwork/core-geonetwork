@@ -307,8 +307,11 @@
 	<messageNoPrivileges>Você não tem a autorização para efectuar esta operação.</messageNoPrivileges>
 	<messageNotPerformed>A operação solicitada não pôde ser realizada.</messageNotPerformed>
 	<metadata.admin.index.desc>Reconstruir o índice de Lucene</metadata.admin.index.desc>
-	<metadata.admin.index.failed>Reconstrução do índice de Lucene falhou.</metadata.admin.index.failed>
-	<metadata.admin.index.success>Reconstrução do índice de Lucene foi concluído com sucesso.</metadata.admin.index.success>
+	<metadata.admin.index.failed>Index operation failed.</metadata.admin.index.failed>
+	<metadata.admin.index.success>Index operation was successful.</metadata.admin.index.success>
+	<metadata.admin.index.optimize.desc>Optimize Lucene index</metadata.admin.index.optimize.desc>
+	<doYouReallyWantToDoThis js="true">This operation may take some time on large catalogs and should not be done during peak usage. Continue?</doYouReallyWantToDoThis>
+	<optimize>Optimize</optimize>
 	<metadata.admin.index>Gestor de índice</metadata.admin.index>
 	<metadata>Metadados</metadata>
 	<metadataAdded>Metadados com o ID seguinte foram adicionados:</metadataAdded>
@@ -452,6 +455,7 @@
 	<searchUnusedTitle>Pesquisar não utilizados</searchUnusedTitle>
 	<select>Seleccionar:</select>
 	<selectAll>Seleccionar todos os metadados</selectAll>
+	<selectAllNotPossible>Too many hits! Must be less than </selectAllNotPossible>
 	<selected>Seleccionados</selected>
 	<selectedOnly>Mostrar só os seleccionados</selectedOnly>
 	<selection>Selecção</selection>
