@@ -2,9 +2,9 @@
 
 <fields>
 <!-- override all the schema substitutes for gco:CharacterString 
-			- we don't want any -->
+	- we don't want any
 	<field name="gco:CharacterString">
-	</field>
+	</field> --> 
 
 <!-- offer just the service and data identification -->
 	<field name="gmd:AbstractMD_Identification">

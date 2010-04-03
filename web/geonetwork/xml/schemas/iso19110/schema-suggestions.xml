@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <fields>
+    <field name="gfc:scope">
+        <suggest name="gco:CharacterString"/>
+        <suggest name="gmx:FileName"/>
+    </field> 
+    <field name="gmx:FileName">
+        <suggest name="src"/>
+    </field> 
+    
 	<field name="gfc:FC_FeatureCatalogue">
 		<suggest name="gfc:name"/>
 		<suggest name="gfc:scope"/>

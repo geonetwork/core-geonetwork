@@ -442,6 +442,87 @@
 		</xsl:apply-templates>
 	</xsl:template>
 
+
+	<!-- gmx:FileName could be used as substitution of any
+		gco:CharacterString. To turn this on add a schema 
+		suggestion.
+		-->
+	<xsl:template mode="iso19139" name="file-upload" match="*[gmx:FileName]">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+		
+		<xsl:apply-templates mode="complexElement" select=".">
+			<xsl:with-param name="schema"   select="$schema"/>
+			<xsl:with-param name="edit"   	select="$edit"/>
+			<xsl:with-param name="content">
+				
+				<xsl:choose>
+					<xsl:when test="$edit">
+						<xsl:variable name="id" select="generate-id(.)"/>
+						<div id="{$id}"/>
+						
+						<xsl:variable name="ref" select="gmx:FileName/geonet:element/@ref"/>
+						<xsl:variable name="value" select="gmx:FileName"/>
+						<xsl:variable name="button" select="normalize-space(gmx:FileName)!=''"/>
+						
+						<xsl:call-template name="simpleElementGui">
+							<xsl:with-param name="schema" select="$schema"/>
+							<xsl:with-param name="edit" select="$edit"/>
+							<xsl:with-param name="title" select="/root/gui/strings/file"/>
+							<xsl:with-param name="text">
+								<button class="content" onclick="startFileUpload({//geonet:info/id}, '{$ref}');" type="button">
+									<xsl:value-of select="/root/gui/strings/insertFileMode"/>
+								</button>
+							</xsl:with-param>
+							<xsl:with-param name="id" select="concat('db_',$ref)"/>
+							<xsl:with-param name="visible" select="not($button)"/>
+						</xsl:call-template>
+						
+						<xsl:if test="$button">
+							<xsl:apply-templates mode="iso19139FileRemove" select="gmx:FileName">
+								<xsl:with-param name="access" select="'private'"/>
+								<xsl:with-param name="id" select="$id"/>
+							</xsl:apply-templates>
+						</xsl:if>
+						
+						<xsl:call-template name="simpleElementGui">
+							<xsl:with-param name="schema" select="$schema"/>
+							<xsl:with-param name="edit" select="$edit"/>
+							<xsl:with-param name="title">
+								<xsl:call-template name="getTitle">
+									<xsl:with-param name="name"   select="name(.)"/>
+									<xsl:with-param name="schema" select="$schema"/>
+								</xsl:call-template>
+							</xsl:with-param>
+							<xsl:with-param name="text">
+								<input id="_{gmx:FileName/geonet:element/@ref}" class="md" type="text" name="_{gmx:FileName/geonet:element/@ref}" value="{gmx:FileName/text()}" size="40" />
+							</xsl:with-param>
+							<xsl:with-param name="id" select="concat('di_',$ref)"/>
+						</xsl:call-template>
+					</xsl:when>
+					<xsl:otherwise>
+						<!-- Add an hyperlink in view mode -->						
+						<xsl:call-template name="simpleElementGui">
+							<xsl:with-param name="schema" select="$schema"/>
+							<xsl:with-param name="edit" select="$edit"/>
+							<xsl:with-param name="title">
+								<xsl:call-template name="getTitle">
+									<xsl:with-param name="name"   select="name(.)"/>
+									<xsl:with-param name="schema" select="$schema"/>
+								</xsl:call-template>
+							</xsl:with-param>
+							<xsl:with-param name="text">
+								<a href="{gmx:FileName/@src}"><xsl:value-of select="gmx:FileName"/></a>
+							</xsl:with-param>
+						</xsl:call-template>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:with-param>
+		</xsl:apply-templates>
+	</xsl:template>
+
+
+
 	<!-- ================================================================= -->
 	<!-- codelists -->
 	<!-- ================================================================= -->
@@ -455,6 +536,7 @@
 			<xsl:with-param name="edit"   select="$edit"/>
 		</xsl:call-template>
 	</xsl:template>
+
 	
 	<!-- ============================================================================= -->
 

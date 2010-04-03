@@ -5,6 +5,7 @@
     xmlns:gfc="http://www.isotc211.org/2005/gfc"
     xmlns:gco="http://www.isotc211.org/2005/gco"
     xmlns:gmd="http://www.isotc211.org/2005/gmd"
+  	xmlns:gmx="http://www.isotc211.org/2005/gmx"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
 	<!-- =================================================================-->
@@ -73,6 +74,15 @@
 			</xsl:if>
 			<xsl:attribute name="nil" namespace="http://www.w3.org/2001/XMLSchema-instance">
 				<xsl:value-of select="$isNil"/>
+			</xsl:attribute>
+			<xsl:value-of select="."/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="gmx:FileName">
+		<xsl:copy>
+			<xsl:attribute name="src">
+				<xsl:value-of select="concat(/root/env/siteURL,'/resources.get?id=',/root/env/id,'&amp;fname=',.,'&amp;access=private')"/>
 			</xsl:attribute>
 			<xsl:value-of select="."/>
 		</xsl:copy>

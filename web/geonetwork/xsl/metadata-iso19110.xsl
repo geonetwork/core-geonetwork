@@ -119,6 +119,16 @@
         </xsl:call-template>
     </xsl:template>
 
+    <xsl:template mode="iso19110"
+        match="gfc:*[gmx:FileName]" priority="2">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+        <xsl:call-template name="file-upload">
+        	<xsl:with-param name="schema" select="$schema"/>
+        	<xsl:with-param name="edit" select="$edit"/>
+        </xsl:call-template>
+	</xsl:template>
+
     <!-- ================================================================= -->
     <!-- codelists -->
     <!-- ================================================================= -->

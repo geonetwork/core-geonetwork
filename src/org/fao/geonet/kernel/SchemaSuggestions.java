@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -85,6 +86,33 @@ public class SchemaSuggestions
 		}
 
 		return false;
+	}
+	
+	/**
+	 * Return true if parent element is defined in suggestion
+	 * file and check that suggested elements are valid children
+	 * of current element.
+	 * <br/>
+	 * For example, gmd:extent could have suggestions as a child
+	 * of gmd:identificationInfo or as a child of gmd:EX_TemporalExtent.
+	 *  
+	 * 
+	 * @param parent
+	 * @param arrayList 
+	 * @return	true if having suggestion for at least one of its child elements.
+	 */
+	public boolean hasSuggestion(String parent, ArrayList<String> childElements) {
+		Element el = (Element) htFields.get(parent);
+
+		if (el == null)
+			return false;	// No suggestion available for element
+		else {
+			for (String child : childElements) {
+				if (isSuggested(parent, child))	
+					return true; // At least one child element is suggested for this element type
+			}
+			return false;
+		}
 	}
 }
 

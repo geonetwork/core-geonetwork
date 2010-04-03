@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <fields>
+	<field name="gmd:otherCitationDetails">
+		<suggest name="gco:CharacterString"/>
+		<suggest name="gmx:FileName"/>
+	</field> 
+	<field name="gmx:FileName">
+		<suggest name="src"/>
+	</field> 
+	
 	<!-- Service -->
 	<field name="srv:coupledResource">
 		<suggest name="srv:SV_CoupledResource"/>
@@ -58,6 +66,10 @@
 
 	<field name="gmd:EX_TemporalExtent">
 		<suggest name="gmd:extent"/>
+	</field>
+	
+	<field name="gmd:polygon">
+		<suggest name="gml:Polygon"/>
 	</field>
 	
 	<field name="gmd:extent">

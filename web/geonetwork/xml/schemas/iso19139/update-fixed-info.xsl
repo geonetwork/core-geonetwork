@@ -153,6 +153,15 @@
 		</gmd:linkage>
 	</xsl:template>
 
+	<xsl:template match="gmx:FileName">
+		<xsl:copy>
+			<xsl:attribute name="src">
+				<xsl:value-of select="concat(/root/env/siteURL,'/resources.get?id=',/root/env/id,'&amp;fname=',.,'&amp;access=private')"/>
+			</xsl:attribute>
+			<xsl:value-of select="."/>
+		</xsl:copy>
+	</xsl:template>
+
 	<!-- ================================================================= -->
 	
 	<xsl:template match="@*|node()">

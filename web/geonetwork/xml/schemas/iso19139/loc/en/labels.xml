@@ -2473,7 +2473,7 @@
         </description>
     </element>
     <element name="gco:CharacterString">
-        <label>Character string</label>
+        <label>Text</label>
         <description/>
     </element>
     <element name="gco:nilReason">
@@ -2486,5 +2486,13 @@
     <element name="gmd:verticalCRS">
         <label>Vertical CRS</label>
         <description>Provides information about the origin from which the maximum and minimum elevation values are measured</description>
+    </element>
+    <element name="gmx:FileName">
+        <label>File name</label>
+        <description>File name and source URL.</description>
+    </element>
+    <element name="src">
+        <label>Source URL</label>
+        <description>URL of the document.</description>
     </element>
 </labels>

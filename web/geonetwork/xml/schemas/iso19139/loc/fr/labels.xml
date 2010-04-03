@@ -3399,7 +3399,7 @@
     
   </element>
   <element name="gco:CharacterString">
-    <label/>
+    <label>Texte</label>
     <description/>
     <help/>
     <condition/>
@@ -3415,5 +3415,13 @@
   <element name="gmd:verticalCRS">
     <label>CRS vertical</label>
     <description>Information sur l'origine depuis laquelle les altitudes maximale et minimale ont été mesurées</description>
+  </element>
+  <element name="gmx:FileName">
+    <label>Nom du fichier</label>
+    <description>Nom du fichier et URL.</description>
+  </element>
+  <element name="src">
+    <label>URL</label>
+    <description>URL du document.</description>
   </element>
 </labels>

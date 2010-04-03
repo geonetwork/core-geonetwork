@@ -12,6 +12,7 @@
 	<!-- ================================== Imports ================================== -->
 	<xs:import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="../iso19139/schema/gmd/citation.xsd"/>
 	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="../iso19139/schema/gco/basicTypes.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gmx" schemaLocation="../iso19139/schema/gmx/gmx.xsd"/>
 	<!-- ########################################################################### -->
 	<!-- ########################################################################### -->
 	<!-- ================================== Classes ================================= -->

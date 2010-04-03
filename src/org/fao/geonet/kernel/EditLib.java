@@ -470,7 +470,7 @@ public class EditLib
 	{
 		Log.debug(Geonet.EDITOR,"#### entering fillElement()"); 
 		String elemName = md.getQualifiedName();
-
+		
 		Log.debug(Geonet.EDITOR,"#### - elemName = " + elemName); 
 		Log.debug(Geonet.EDITOR,"#### - parentName = " + parentName); 
 		Log.debug(Geonet.EDITOR,"#### - isSimpleElement(" + elemName + ") = " + schema.isSimpleElement(elemName,parentName)); 
@@ -479,6 +479,7 @@ public class EditLib
 			return;
 
 		MetadataType type = schema.getTypeInfo(schema.getElementType(elemName,parentName));
+		boolean useSuggestion = sugg.hasSuggestion(elemName, type.getElementList());
 
 		Log.debug(Geonet.EDITOR,"#### - type:"); 
 		Log.debug(Geonet.EDITOR,"####   - name = " + type.getName()); 
@@ -523,7 +524,12 @@ public class EditLib
 			for(int i=0; i<type.getElementCount(); i++) {
 				int    minCard   = type.getMinCardinAt(i);
 				String childName = type.getElementAt(i);
+				boolean hasSuggestion = sugg.hasSuggestion(childName, type.getElementList());
 
+				Log.debug(Geonet.EDITOR,"####   - " + i + " element = " + childName); 
+				Log.debug(Geonet.EDITOR,"####     - suggested = "+sugg.isSuggested(elemName, childName));
+				Log.debug(Geonet.EDITOR,"####     - has suggestion = "+hasSuggestion );
+				
 				if (minCard > 0 || sugg.isSuggested(elemName, childName)) {
 					MetadataType elemType = schema.getTypeInfo(schema.getElementType(childName,elemName));
 
@@ -531,7 +537,10 @@ public class EditLib
 					//--- In this case we cannot expand the inner 'or' elements so the
 					//--- only way to solve the problem is to avoid the creation of them
 
-					if (schema.isSimpleElement(elemName, childName) || !elemType.isOrType()) {
+					if (
+							(schema.isSimpleElement(elemName, childName) || !elemType.isOrType()) ||
+							(elemType.isOrType() && elemType.getElementList().contains("gco:CharacterString") && !hasSuggestion)
+						) {
 						String name   = getUnqualifiedName(childName);
 						String ns     = getNamespace(childName, md, schema);
 						String prefix = getPrefix(childName);
@@ -542,14 +551,23 @@ public class EditLib
 						fillElement(schema, sugg, md, child);
 					} else {
 						if (elemType.isOrType()) {
-							Log.debug(Geonet.EDITOR,"WARNING (INNER): requested expansion of an OR element : " +childName);
+							if (elemType.getElementList().contains("gco:CharacterString") && !hasSuggestion) {
+								Log.debug(Geonet.EDITOR,"####   - (INNER) Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + md.getName());
+							} else 
+								Log.debug(Geonet.EDITOR,"####   - WARNING (INNER): requested expansion of an OR element : " +childName);
 						}
 					}
 				}
 			}
 		}
-		else
-			Log.debug(Geonet.EDITOR,"WARNING : requested expansion of an OR element : " +md.getName());
+		else if (type.getElementList().contains("gco:CharacterString") && !useSuggestion) {
+			// Here we could probably expand element having one and only one suggestion for 
+			// an or element - then we force to expand that only one suggestion ? 
+			Log.debug(Geonet.EDITOR,"####   - Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + md.getName());
+			Element child = new Element("CharacterString", "gco", "http://www.isotc211.org/2005/gco");
+			md.addContent(child);
+		} else
+			Log.debug(Geonet.EDITOR,"####   - WARNING : requested expansion of an OR element : " +md.getName());
 	}
 
 	//--------------------------------------------------------------------------
@@ -1141,7 +1159,7 @@ public class EditLib
 
 		MetadataSchema mds = getSchema(schema);
 		MetadataType mdt = getType(mds, parent);
-
+		
 		int min = -1, max = -1;
 
 		for (int i=0; i<mdt.getElementCount(); i++) {
@@ -1159,7 +1177,8 @@ public class EditLib
 	private Element createElement(MetadataSchema schema, String parent, String qname, String childPrefix, String childNS, int min, int max) throws Exception {
 
 		Element child = new Element(Edit.RootChild.CHILD, Edit.NAMESPACE);
-	  
+		SchemaSuggestions mdSugg   = getSchemaSuggestions(schema.getName());
+		
 		child.setAttribute(new Attribute(Edit.ChildElem.Attr.NAME, getUnqualifiedName(qname)));
 		child.setAttribute(new Attribute(Edit.ChildElem.Attr.PREFIX, getPrefix(qname)));
 		child.setAttribute(new Attribute(Edit.ChildElem.Attr.NAMESPACE, childNS));
@@ -1172,23 +1191,51 @@ public class EditLib
 			String elemType = schema.getElementType(qname,parent);
 
 			MetadataType type = schema.getTypeInfo(elemType);
-
+			// Choice elements will be added if present in suggestion only.
+			boolean useSuggestion = mdSugg.hasSuggestion(qname, type.getElementList());
+			
 			if (type.isOrType()) {
-				action = "before"; // js adds new elements before this child
-				for(int l=0; l<type.getElementCount(); l++) {
-					String chElem = type.getElementAt(l);
-					if (chElem.contains(Edit.RootChild.CHOICE)) {
-						ArrayList chElems = recurseOnNestedChoices(schema,chElem,parent);
-						for (int k=0;k<chElems.size();k++) {
-							chElem = (String)chElems.get(k);
-							createAndAddChoose(child,chElem);
+				// Here we handle elements with potential substitute suggested. 
+				// In most of the cases, elements have gco:CharacterString as one of the possible substitute.
+				// gco:CharacterString is then used as a default substitute to use for those
+				// elements. It could be a good idea to have that information in configuration file
+				// (eg. like schema-substitute) in order to define the default substitute to use
+				// for a type. TODO
+				if (type.getElementList().contains("gco:CharacterString") && !useSuggestion) {
+					Log.debug(Geonet.EDITOR,"OR element having gco:CharacterString substitute and no suggestion: " + qname);
+
+					Element newElem = createElement(schema, qname,
+							"gco:CharacterString",
+							"gco",
+							"http://www.isotc211.org/2005/gco", 1, 1);
+					child.addContent(newElem);
+				} else {
+					action = "before"; // js adds new elements before this child
+					for(int l=0; l<type.getElementCount(); l++) {
+						String chElem = type.getElementAt(l);
+						if (chElem.contains(Edit.RootChild.CHOICE)) {
+							ArrayList chElems = recurseOnNestedChoices(schema,chElem,parent);
+							
+							for (int k=0;k<chElems.size();k++) {
+								chElem = (String)chElems.get(k);
+								if (!useSuggestion
+										|| (useSuggestion && mdSugg.isSuggested(qname, chElem))){
+									// Add all substitute found in the schema or all suggested if suggestion
+									createAndAddChoose(child,chElem);
+								}	
+							}
+						} else {
+							
+							if (!useSuggestion
+									|| (useSuggestion && mdSugg.isSuggested(qname, chElem))){
+								// Add all substitute found in the schema or all suggested if suggestion
+								createAndAddChoose(child,chElem);
+							}
 						}
-					} else {
-						createAndAddChoose(child,chElem);
 					}
 				}
-			} 
-		}
+			}
+		} 
 
 		if (max == 1) action = "replace"; // force replace because one only
 		child.setAttribute(new Attribute(Edit.ChildElem.Attr.ACTION, action));

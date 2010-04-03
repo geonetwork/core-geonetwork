@@ -212,4 +212,12 @@
     <element name="gfc:valueMeasurementUnit">
         <label>Value measurement unit</label>
     </element>
+    <element name="gco:CharacterString">
+        <label>Text</label>
+        <description></description>
+    </element>    
+    <element name="gmx:FileName">
+        <label>File name</label>
+        <description></description>
+    </element>
 </labels>
