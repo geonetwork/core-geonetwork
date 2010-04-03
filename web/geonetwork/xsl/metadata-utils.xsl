@@ -194,7 +194,7 @@
 		</xsl:if>
 			
 		<!-- categories button -->
-		<xsl:if test="/root/gui/services/service/@name='metadata.category.form'">
+		<xsl:if test="/root/gui/services/service/@name='metadata.category.form' and /root/gui/config/category/admin">
 			&#160;
 			<xsl:variable name="categories" select="concat(/root/gui/strings/setshowcategories,' ',$ltitle)"/>
 			<button class="content" onclick="doOtherButton('{/root/gui/locService}/metadata.category.form?id={$metadata/geonet:info/id}','{$categories}',300)"><xsl:value-of select="/root/gui/strings/categories"/></button>

@@ -104,7 +104,7 @@
         set default value to _none_ if no categories available.
         -->
         <xsl:choose>
-            <xsl:when test="/root/gui/categories/record">
+            <xsl:when test="/root/gui/categories/record and /root/gui/config/category/admin">
                 <tr id="gn.categories">
                     <th class="padded">
                         <xsl:value-of select="/root/gui/strings/category"/>

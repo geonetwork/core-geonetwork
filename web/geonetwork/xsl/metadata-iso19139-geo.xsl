@@ -178,7 +178,7 @@
         
         <!-- regions combobox -->
         <xsl:variable name="places">
-            <xsl:if test="$edit=true()">
+            <xsl:if test="$edit=true() and /root/gui/regions/record">
                 <xsl:variable name="ref" select="geonet:element/@ref"/>
                 <xsl:variable name="keyword" select="string(.)"/>
                 

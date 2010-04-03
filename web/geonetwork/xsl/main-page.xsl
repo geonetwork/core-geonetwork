@@ -527,7 +527,7 @@
 	categories
 	-->
 	<xsl:template name="categories">
-		<xsl:if test="/root/gui/categories/*">
+		<xsl:if test="/root/gui/categories/* and /root/gui/config/category/admin">
 			<tr>
 				<td valign="top">
 					<table class="geosearchfields" width="100%">
@@ -541,6 +541,9 @@
 									<xsl:variable name="categoryName" select="name"/>
 									<xsl:variable name="categoryLabel" select="label/child::*[name() = $lang]"/>
 									<div class="arrow" onClick="runCategorySearch('{$categoryName}');" style="cursor:hand;cursor:pointer">
+										<xsl:if test="/root/gui/config/category/display-in-search">
+											<img class="category" src="../../images/category/{$categoryName}.png"/>
+										</xsl:if>
 										<xsl:value-of select="$categoryLabel"/>
 										<br/>
 									</div>

@@ -2904,7 +2904,24 @@
 				</xsl:choose>
 			</xsl:for-each>
 
-			<xsl:copy-of select="geonet:info"/>
+			<geonet:info>
+				<xsl:copy-of select="geonet:info/*"/>
+				<!-- 
+					Internal category could be define using different informations
+				in a metadata record (according to standard). This could be improved.
+				This type of categories could be added to Lucene index also in order
+				to be queriable. 
+				Services and datasets are at least the required internal categories
+				to be distinguished for INSPIRE requirements (hierarchyLevel could be
+				use also). TODO
+				-->
+				<category internal="true">
+					<xsl:choose>
+						<xsl:when test="gmd:identificationInfo/srv:SV_ServiceIdentification">service</xsl:when>
+						<xsl:otherwise>dataset</xsl:otherwise>
+					</xsl:choose>
+				</category>
+			</geonet:info>
 		</metadata>
 	</xsl:template>
 

@@ -875,3 +875,10 @@ div.toolTipOverlay ul li, div.shortcutHelp ul li {
 .validationReportIcon { background-image: url('images/schematron.gif') !important; }
 .shortcutHelpIcon { background-image: url('images/schematron.gif') !important; }
 .linkIcon { background-image: url('images/link.png') !important; }
+
+img.category {
+    width:15px;
+    height:15px;
+    margin: 2px;    
+    vertical-align: middle;
+}

@@ -541,33 +541,34 @@
 		</xsl:if>
 		
 		<!-- Category -->
-		
-		<tr>
-			<th class="padded">
-				<xsl:value-of select="/root/gui/strings/category"/>
-			</th>
-			<td class="padded">
-				<select class="content" name="category" id="category">
-					<option value="">
-						<xsl:if test="/root/gui/searchDefaults/category=''">
-							<xsl:attribute name="selected"/>
-						</xsl:if>
-						<xsl:value-of select="/root/gui/strings/any"/>
-					</option>
-					
-					<xsl:for-each select="/root/gui/categories/record">
-						<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
-						
-						<option value="{name}">
-							<xsl:if test="name = /root/gui/searchDefaults/category">
+		<xsl:if test="/root/gui/config/category/admin">
+			<tr>
+				<th class="padded">
+					<xsl:value-of select="/root/gui/strings/category"/>
+				</th>
+				<td class="padded">
+					<select class="content" name="category" id="category">
+						<option value="">
+							<xsl:if test="/root/gui/searchDefaults/category=''">
 								<xsl:attribute name="selected"/>
 							</xsl:if>
-							<xsl:value-of select="label/child::*[name() = $lang]"/>
+							<xsl:value-of select="/root/gui/strings/any"/>
 						</option>
-					</xsl:for-each>
-				</select>
-			</td>
-		</tr>
+						
+						<xsl:for-each select="/root/gui/categories/record">
+							<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
+							
+							<option value="{name}">
+								<xsl:if test="name = /root/gui/searchDefaults/category">
+									<xsl:attribute name="selected"/>
+								</xsl:if>
+								<xsl:value-of select="label/child::*[name() = $lang]"/>
+							</option>
+						</xsl:for-each>
+					</select>
+				</td>
+			</tr>
+		</xsl:if>
 		
 	</table>
 	</fieldset>

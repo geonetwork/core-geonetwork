@@ -63,9 +63,36 @@
  
  <!-- Proxy URL to use for XHR. 
  Check that the proxy could query allowed hosts.
- -->
  <proxy-url>/cgi-bin/proxy.cgi</proxy-url>
+ -->
+ <proxy-url/>
  
+ <!-- Display or not category information : Categories are stored in the database and a metadata
+ record could be linked to one or more categories. -->
+ <category>
+  <!-- 
+   To disable that feature
+   comment this out. This will hide categories in search criteria, search results, 
+   metadata editing and administration interface.
+  -->
+  <admin/>
+  
+  <!-- Display category as icon in search results. Categories could be :
+    * define from category table or
+    * define based on schema : iso19139 could be service or dataset and iso19110 is feature catalogue (internal category)
+  
+  mode attribute could be:
+   * all : all categories
+   * db : only from category table
+   * internal : only internal category
+  <display-in-search mode="db"/>
+  -->
+  
+ </category>
+
+ <!-- Display rating feature in search results panel. -->
+ <rating/>
+
  <search>
   <!-- Display or not keyword selection panel in advanced search panel 
    <keyword-selection-panel/> 

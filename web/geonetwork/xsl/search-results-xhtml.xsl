@@ -137,7 +137,7 @@
 										<xsl:value-of select="/root/gui/strings/newOwner"/>
 									</button>
 								</xsl:if>
-								<xsl:if test="/root/gui/services/service/@name='metadata.massive.update.categories'">
+								<xsl:if test="/root/gui/services/service/@name='metadata.massive.update.categories' and /root/gui/config/category">
 								&#160;
 									<button onclick="massiveOperation('metadata.massive.category.form','{/root/gui/strings/massiveUpdateCategoriesTitle}',800)">
 										<xsl:value-of select="/root/gui/strings/updateCategories"/>
@@ -381,19 +381,39 @@
 						
 					<xsl:if test="/root/gui/searchDefaults/output = 'full'">
 						<td class="padded" align="center" valign="middle" width="200">
-						
+
 							<!-- metadata rating -->
-							
 							<xsl:call-template name="rating">
 								<xsl:with-param name="info" select="$metadata/geonet:info"/>
 							</xsl:call-template>
-						
-							<br/> <!-- metadata thumbnail -->
-						
+							<br/> 
+
+							<!-- metadata thumbnail -->
 							<xsl:call-template name="thumbnail">
 								<xsl:with-param name="metadata" select="$metadata"/>
 							</xsl:call-template>
 						</td>
+						<xsl:if test="/root/gui/config/category/display-in-search">
+							<td style="width:18px;">
+								<xsl:choose>
+									<xsl:when test="/root/gui/config/category/display-in-search/@mode = 'all'">
+										<xsl:for-each select="$metadata/geonet:info/category">
+											<img class="category" src="../../images/category/{.}.png"/><br/>
+										</xsl:for-each>
+									</xsl:when>
+									<xsl:when test="/root/gui/config/category/display-in-search/@mode = 'internal'">
+										<xsl:for-each select="$metadata/geonet:info/category[@internal]">
+											<img class="category" src="../../images/category/{.}.png"/><br/>
+										</xsl:for-each>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:for-each select="$metadata/geonet:info/category[not(@internal)]">
+											<img class="category" src="../../images/category/{.}.png"/><br/>
+										</xsl:for-each>
+									</xsl:otherwise>
+								</xsl:choose>
+							</td>
+						</xsl:if>
 					</xsl:if>
 				</tr>
 			</table>
@@ -642,16 +662,19 @@
 	<xsl:template name="rating">
 		<xsl:param name="info"/>
 
-		<xsl:variable name="id"     select="$info/id"/>
-		<xsl:variable name="rating" select="$info/rating"/>
-		
-		<xsl:if test="$info/isHarvested = 'n' or $info/harvestInfo/type = 'geonetwork'">
-			<a id="rating.link.{$id}" style="cursor:pointer; padding-left:10px;" onClick="showRatingPopup({$id})"
-				alt="{/root/gui/strings/rateIt}" title="{/root/gui/strings/rateIt}">
-				<xsl:call-template name="showRating">
-					<xsl:with-param name="rating" select="$rating"/>
-				</xsl:call-template>
-			</a>
+		<xsl:if test="/root/gui/config/rating">
+								
+			<xsl:variable name="id"     select="$info/id"/>
+			<xsl:variable name="rating" select="$info/rating"/>
+			
+			<xsl:if test="$info/isHarvested = 'n' or $info/harvestInfo/type = 'geonetwork'">
+				<a id="rating.link.{$id}" style="cursor:pointer; padding-left:10px;" onClick="showRatingPopup({$id})"
+					alt="{/root/gui/strings/rateIt}" title="{/root/gui/strings/rateIt}">
+					<xsl:call-template name="showRating">
+						<xsl:with-param name="rating" select="$rating"/>
+					</xsl:call-template>
+				</a>
+			</xsl:if>
 		</xsl:if>
 	</xsl:template>
 	

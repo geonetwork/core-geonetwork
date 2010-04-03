@@ -347,7 +347,10 @@
                 </abstract>
             </xsl:if>
 
-            <xsl:copy-of select="geonet:*"/>
+			<geonet:info>
+				<xsl:copy-of select="geonet:info/*"/>
+				<category internal="true">featureCatalogue</category>
+			</geonet:info>
         </metadata>
     </xsl:template>
 

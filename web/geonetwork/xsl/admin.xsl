@@ -112,7 +112,7 @@
 							</tr>
 						</xsl:if>
 						
-						<xsl:if test="/root/gui/services/service/@name='category.update'">
+						<xsl:if test="/root/gui/services/service/@name='category.update' and /root/gui/config/category/admin">
 							<tr>
 								<td class="padded"><a href="{/root/gui/locService}/category.list"><xsl:value-of select="/root/gui/strings/categoryManagement"/></a></td>
 								<td class="padded"><xsl:value-of select="/root/gui/strings/categoryManDes"/></td>
