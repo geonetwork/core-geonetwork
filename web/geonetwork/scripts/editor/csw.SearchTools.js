@@ -250,7 +250,8 @@ var CSWSearchTools = {
     buildCSWQueryPOST: function(filter, startRecord, sortBy) {
 
         var result = '<?xml version="1.0" encoding="UTF-8"?>\n' +
-                     '<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2.0.2" resultType="results_with_summary" startPosition="' + startRecord + '" maxRecords="' + app.nbResultPerPage + '">\n' +
+                     '<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2.0.2" resultType="'+
+                     this.resultsMode +'" startPosition="' + startRecord + '" maxRecords="' + app.nbResultPerPage + '">\n' +
                      '  <csw:Query typeNames="csw:Record">\n' +
                      '    <csw:ElementSetName>full</csw:ElementSetName>\n';
 
