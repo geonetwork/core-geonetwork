@@ -27,13 +27,12 @@
 		<script language="JavaScript" type="text/javascript">
 			var Env = new Object();
 
+			Env.host = "http://<xsl:value-of select="/root/gui/env/server/host"/>:<xsl:value-of select="/root/gui/env/server/port"/>";
 			Env.locService= "<xsl:value-of select="/root/gui/locService"/>";
 			Env.locUrl    = "<xsl:value-of select="/root/gui/locUrl"/>";
 			Env.url       = "<xsl:value-of select="/root/gui/url"/>";
 			Env.lang      = "<xsl:value-of select="/root/gui/language"/>";
             Env.proxy     = "<xsl:value-of select="/root/gui/config/proxy-url"/>";
-			var on        = "<xsl:value-of select="/root/gui/url"/>/images/plus.gif";
-            var off       = "<xsl:value-of select="/root/gui/url"/>/images/minus.png";
 			
 			window.javascriptsLocation = "<xsl:value-of select="/root/gui/url"/>/scripts/";
 			

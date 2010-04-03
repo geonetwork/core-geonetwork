@@ -236,7 +236,7 @@ select.lang_selector {
 	max-width: 70px;
 }
 
-button.content {
+a.content, button.content {
 	font-family: Verdana;
 	font-size: 9pt;
 	color: #064377;
@@ -246,6 +246,21 @@ button.content {
 	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
 	background-color: #e7e7e7;
 	text-shadow: gray 2px 2px 3px;
+}
+
+button.content img.icon {
+    width: 15px;
+    height: 15px;
+    align: absmiddle;
+    margin-right: 2px;
+}
+
+a.content {
+    padding: 1px 10px 1px 10px;
+}
+
+a.content:hover {
+    text-decoration: none
 }
 
 input.content-small, button.content-small {
@@ -469,10 +484,10 @@ Other action buttons
     text-align:left;
     font-family: Verdana;
     color: #064377;
-    font-size: 9pt;
+    font-size: 8pt;
     cursor: pointer;
     cursor: hand;
-    width:90%;
+    width:98%;
     border-width: 0px;
 }
 .oAcEle button:hover {

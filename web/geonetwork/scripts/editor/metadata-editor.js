@@ -1412,3 +1412,14 @@ function getValidationReport()
 	);
 }
 
+
+/**
+ * Launch metadata processing to compute extent based on keyword analysis.
+ * 
+ * @param mode	If 0, bounding box will be added, If 1, replaced
+ * @return
+ */
+function computeExtentFromKeywords(mode) {
+	window.location.replace("metadata.processing?id=" + document.mainForm.id.value + 
+			"&process=add-extent-from-geokeywords&url=" + Env.host + Env.locService + "&replace=" + mode);
+};

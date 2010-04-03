@@ -173,19 +173,22 @@ function get_cookie ( cookie_name )
 // in header.xsl !!
 //
 	function oActions(name,id) {
+		var on        = "../../images/plus.gif";
+        var off       = "../../images/minus.png";
+		
 		if (id === undefined) {
 			id = "";
-  	}
+		}
 		if (!$(name+'Ele'+id).style.top)
 			oActionsInit (name, id);
 
-  	if ($(name+'Ele'+id).style.display == 'none') {
-    	$(name+'Ele'+id).style.display = 'block';
-    	$(name+'Img'+id).src = off;
-  	} else {
-    	$(name+'Ele'+id).style.display = 'none';
-    	$(name+'Img'+id).src = on;
-  	}
+	  	if ($(name+'Ele'+id).style.display == 'none') {
+	    	$(name+'Ele'+id).style.display = 'block';
+	    	$(name+'Img'+id).src = off;
+	  	} else {
+	    	$(name+'Ele'+id).style.display = 'none';
+	    	$(name+'Img'+id).src = on;
+	  	}
 	}
 
 	function actionOnSelect(msg) {

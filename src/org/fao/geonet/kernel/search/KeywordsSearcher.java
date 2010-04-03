@@ -419,6 +419,9 @@ public class KeywordsSearcher {
 			elTh.addContent(kb.getThesaurus());
 			Element elUri = new Element("uri");
 			elUri.addContent(kb.getCode());
+			
+			addBbox(kb, elKeyword);
+			
 			elKeyword.addContent(elSelected);
 			elKeyword.addContent(elId);
 			elKeyword.addContent(elValue);
@@ -467,24 +470,7 @@ public class KeywordsSearcher {
 				String code=kb.getRelativeCode();
 				//code = code.split("#")[1];
 				elCode.addContent(code);
-				if (kb.getCoordEast() != null && kb.getCoordWest() != null
-						&& kb.getCoordSouth() != null
-						&& kb.getCoordNorth() != null) {
-					Element elBbox = new Element("geo");
-					Element elEast = new Element("east");
-					elEast.addContent(kb.getCoordEast());
-					Element elWest = new Element("west");
-					elWest.addContent(kb.getCoordWest());
-					Element elSouth = new Element("south");
-					elSouth.addContent(kb.getCoordSouth());
-					Element elNorth = new Element("north");
-					elNorth.addContent(kb.getCoordNorth());
-					elBbox.addContent(elEast);
-					elBbox.addContent(elWest);
-					elBbox.addContent(elSouth);
-					elBbox.addContent(elNorth);
-					elKeyword.addContent(elBbox);
-				}
+				addBbox(kb, elKeyword);
 				elKeyword.addContent(elCode);
 				elKeyword.addContent(elValue);
 				elDescKeys.addContent(elKeyword);
@@ -496,6 +482,36 @@ public class KeywordsSearcher {
 		elDescKeys.addContent(elNbTot);
 
 		return elDescKeys;
+	}
+
+	/**
+	 * Add bounding box of keyword if one available.
+	 * 
+	 * @param kb	The keyword to analyze.
+	 * @param elKeyword	The XML fragment to update.
+	 */
+	private void addBbox(KeywordBean kb, Element elKeyword) {
+		if (kb.getCoordEast() != null && kb.getCoordWest() != null
+				&& kb.getCoordSouth() != null
+				&& kb.getCoordNorth() != null && !kb.getCoordEast().equals("") 
+				&& !kb.getCoordWest().equals("")
+				&& !kb.getCoordSouth().equals("")
+				&& !kb.getCoordNorth().equals("")) {
+			Element elBbox = new Element("geo");
+			Element elEast = new Element("east");
+			elEast.addContent(kb.getCoordEast());
+			Element elWest = new Element("west");
+			elWest.addContent(kb.getCoordWest());
+			Element elSouth = new Element("south");
+			elSouth.addContent(kb.getCoordSouth());
+			Element elNorth = new Element("north");
+			elNorth.addContent(kb.getCoordNorth());
+			elBbox.addContent(elEast);
+			elBbox.addContent(elWest);
+			elBbox.addContent(elSouth);
+			elBbox.addContent(elNorth);
+			elKeyword.addContent(elBbox);
+		}
 	}
 	/**
 	 * @return a collection of descKeys element describing the list of selected keywords

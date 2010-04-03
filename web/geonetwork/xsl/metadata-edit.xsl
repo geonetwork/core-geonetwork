@@ -164,13 +164,36 @@
 			<xsl:value-of select="/root/gui/strings/saveAndValidate"/>
 		</button>
 		
-		<!-- thumbnails -->
-		<xsl:if test="string(geonet:info/schema)='fgdc-std' or string(geonet:info/schema)='iso19115' or starts-with(string(geonet:info/schema),'iso19139')"> <!-- FIXME: should be more general -->
-			&#160;
-			<button class="content" id="btnThumbnails" onclick="doAction('{/root/gui/locService}/metadata.thumbnail.form')" type="button">
-				<xsl:value-of select="/root/gui/strings/thumbnails"/>
-			</button>
-		</xsl:if>
+		&#160;	
+        <!-- =========================  -->
+        <!-- Add other actions list     -->
+        <a id="oAc{geonet:info/id}" name="oAc{geonet:info/id}" class="button content" onclick="oActions('oAc',{geonet:info/id});" title="{/root/gui/strings/otherActions}">
+            <img id="oAcImg{geonet:info/id}" name="oAcImg{geonet:info/id}" src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/>
+            <xsl:value-of select="/root/gui/strings/otherActions"/>
+        </a>
+        <div id="oAcEle{geonet:info/id}" class="oAcEle" style="display:none;width:350px" onClick="oActions('oAc',{geonet:info/id});">
+			
+			<!-- thumbnails -->
+			<xsl:if test="string(geonet:info/schema)='fgdc-std' or string(geonet:info/schema)='iso19115' or starts-with(string(geonet:info/schema),'iso19139')"> <!-- FIXME: should be more general -->
+				<button class="content" id="btnThumbnails" onclick="doAction('{/root/gui/locService}/metadata.thumbnail.form')" type="button">
+					<img class="icon" src="../../images/photo.png"/><xsl:value-of select="/root/gui/strings/thumbnails"/>
+				</button>
+			</xsl:if>
+		
+			<xsl:if test="starts-with(string(geonet:info/schema),'iso19139') and /root/gui/config/editor-actions/compute-extent-from-keyword">
+				<!-- TODO : check that keywords are available in current metadata -->
+				<button class="content" id="btnComputeExtent" onclick="computeExtentFromKeywords(1);" type="button" 
+					alt="{/root/gui/strings/computeExtentFromKeywordsHelp}"
+					title="{/root/gui/strings/computeExtentFromKeywordsHelp}">
+					<img class="icon" src="../../images/extent.png"/><xsl:value-of select="/root/gui/strings/computeExtentFromKeywordsReplace"/>
+				</button>
+				<button class="content" id="btnComputeExtentAddMode" onclick="computeExtentFromKeywords(0);" type="button"
+					title="{/root/gui/strings/computeExtentFromKeywordsHelp}"
+					alt="{/root/gui/strings/computeExtentFromKeywordsHelp}">
+					<img class="icon" src="../../images/extent-add.png"/><xsl:value-of select="/root/gui/strings/computeExtentFromKeywords"/>
+				</button>
+			</xsl:if>
+		</div>
 		
 		<!-- cancel button -->
 		&#160;

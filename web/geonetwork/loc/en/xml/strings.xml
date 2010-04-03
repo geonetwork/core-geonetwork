@@ -10,6 +10,14 @@
 	<ru>Русский</ru> <!-- Do not translate! -->
     <pt>Рortuguês</pt> <!-- Do not translate! -->
     
+	<otherActions>Other actions</otherActions>
+	<computeExtentFromKeywords>Compute extent (add)</computeExtentFromKeywords>
+	<computeExtentFromKeywordsReplace>Compute extent (replace)</computeExtentFromKeywordsReplace>
+	<computeExtentFromKeywordsHelp>Compute extent action analyses metadata keywords section
+	and search for similar concept having an extent in all thesaurus available.
+	One extent is added for each matching keywords. In "add" mode, existing extent are
+	preserved. In "replace" mode, existing bounding box extent is removed (temporal, vertical 
+	and bounding polygon are preserved). Save your metadata record before launching the action.</computeExtentFromKeywordsHelp>
 	<shortcutHelp js="true">Help on shortcuts ?</shortcutHelp>
 	<helpShortcutsEditor>
 		<h2>Shortcuts in editing mode:</h2>

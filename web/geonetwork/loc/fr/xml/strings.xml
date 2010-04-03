@@ -10,6 +10,16 @@
 	<ru>Русский</ru> <!-- Do not translate! -->
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
 
+	<otherActions>Autres actions</otherActions>
+	<computeExtentFromKeywords>Calcul des emprises (ajout)</computeExtentFromKeywords>
+	<computeExtentFromKeywordsReplace>Calcul des emprises (remplace)</computeExtentFromKeywordsReplace>
+	<computeExtentFromKeywordsHelp>Calcul des emprises de la métadonnée par analyse des
+		mots clés et recherche dans les thésaurus du catalogue.
+		Une emprise est ajoutée pour chaque mot clé identifié. En mode "ajout", les emprises
+		existantes sont conservées. En mode "remplace", les emprises existantes sont supprimées
+		 (les élements temporelle, verticale 
+		et polygon englobant sont conservés). Sauvegarder la métadonnées avant le lancement
+		de l'action.</computeExtentFromKeywordsHelp>
 	<shortcutHelp>Aide pour les raccourcis ?</shortcutHelp>
 	<helpShortcutsEditor> 
 		<h2>Raccourcis pour l'édition:</h2>
