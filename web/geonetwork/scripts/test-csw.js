@@ -31,7 +31,7 @@ operations[i++] = [
 		'csw-GetRecordsNoFilterOwn',
 		'csw-GetRecords | no filter | outputSchema: own (CSW GeoNetwork extension)',
 		'' ];
-+operations[i++] = [ 'csw-GetRecordsElementName',
+operations[i++] = [ 'csw-GetRecordsElementName',
 		'csw-GetRecords | SortBy title', '' ];
 //GetRecords ------------- FILTER -- //
 operations[i++] = [ 'csw-GetRecordsSortBy',
