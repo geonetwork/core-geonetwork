@@ -104,7 +104,7 @@ public class SearchController
 	List<ResultItem> resultsList = summaryAndSearchResults.two();
 	int counter = Math.min(maxRecords,resultsList.size());
 	if ((resultType == ResultType.RESULTS || resultType == ResultType.RESULTS_WITH_SUMMARY) && resultsList.size() > 0) {
-		for (int i=0; (i<maxRecords) && (i<=resultsList.size()); i++) {
+		for (int i=0; (i<maxRecords) && (i<resultsList.size()); i++) {
 		    String  id = resultsList.get(i).getID();
 		    Element md = retrieveMetadata(context, id, setName, outSchema, elemNames, resultType);
 
@@ -131,7 +131,13 @@ public class SearchController
 
     //---------------------------------------------------------------------------
     /**
-     * Retrieve metadata from the database
+     * Retrieve metadata from the database.
+     * Conversion between metadata record and output schema are defined
+     * in xml/csw/schemas/ directory.
+     * 
+     * @return	The XML metadata record if the record could be converted to 
+     * the required output schema. Null if no conversion available for 
+     * the schema (eg. fgdc record could not be converted to ISO).
      */
     public static Element retrieveMetadata(ServiceContext context, String id,  ElementSetName setName,
 				     OutputSchema outSchema, Set<String> elemNames, ResultType resultType)

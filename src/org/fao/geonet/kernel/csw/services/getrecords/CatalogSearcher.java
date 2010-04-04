@@ -404,7 +404,7 @@ public class CatalogSearcher {
 		// --- retrieve results
 
 		List<ResultItem> results = new ArrayList<ResultItem>();
-		TopDocs hits = tfc.topDocs(startPosition, maxRecords);
+		TopDocs hits = tfc.topDocs(startPosition - 1, maxRecords);
 
 		for (int i = 0; i < hits.scoreDocs.length; i++) {
 			Document doc = reader.document(hits.scoreDocs[i].doc, _selector);
