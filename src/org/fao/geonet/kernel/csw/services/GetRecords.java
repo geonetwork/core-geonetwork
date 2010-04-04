@@ -116,7 +116,16 @@ public class GetRecords extends AbstractOperation implements CatalogService
 	Element constr = query.getChild("Constraint", Csw.NAMESPACE_CSW);
 	Element filterExpr = getFilterExpression(constr, context);
 	String filterVersion = getFilterVersion(constr);
-
+	
+	// Get max hits to be used for summary - CSW GeoNetwork extension 
+	int maxHitsInSummary = 1000;
+	String sMaxRecordsInKeywordSummary = query.getAttributeValue("maxHitsInSummary");
+	if (sMaxRecordsInKeywordSummary != null) {
+		// TODO : it could be better to use service config parameter instead 
+		// sMaxRecordsInKeywordSummary = config.getValue("maxHitsInSummary", "1000");
+		maxHitsInSummary = Integer.parseInt(sMaxRecordsInKeywordSummary);
+	}
+	
 	Sort sort = getSortFields(request);
 
 	Element response;
@@ -161,7 +170,7 @@ public class GetRecords extends AbstractOperation implements CatalogService
 		Pair<Element, Element> search = _searchController.search(context,
 					startPos, maxRecords, hopCount, resultType, outSchema,
 					setName, typeNames, filterExpr, filterVersion, sort,
-					elemNames);
+					elemNames, maxHitsInSummary);
 		
 		// Only add GeoNetwork summary on results_with_summary option 
 		if (resultType == ResultType.RESULTS_WITH_SUMMARY)

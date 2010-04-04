@@ -117,7 +117,8 @@ public class CatalogSearcher {
 	 */
 	public Pair<Element, List<ResultItem>> search(ServiceContext context,
 			Element filterExpr, String filterVersion, Set<TypeName> typeNames,
-			Sort sort, ResultType resultType, int startPosition, int maxRecords)
+			Sort sort, ResultType resultType, int startPosition, int maxRecords,
+			int maxHitsInSummary)
 			throws CatalogException {
 		Element luceneExpr = filterToLucene(context, filterExpr);
 
@@ -133,7 +134,7 @@ public class CatalogSearcher {
 
 			Pair<Element, List<ResultItem>> results = performSearch(context,
 					luceneExpr, filterExpr, filterVersion, sort, resultType,
-					startPosition, maxRecords);
+					startPosition, maxRecords, maxHitsInSummary);
 			return results;
 		} catch (Exception e) {
 			Log.error(Geonet.CSW_SEARCH, "Error while searching metadata ");
@@ -340,7 +341,7 @@ public class CatalogSearcher {
 	private Pair<Element, List<ResultItem>> performSearch(
 			ServiceContext context, Element luceneExpr, Element filterExpr,
 			String filterVersion, Sort sort, ResultType resultType, 
-			int startPosition, int maxRecords) throws Exception {
+			int startPosition, int maxRecords, int maxHitsInSummary) throws Exception {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
@@ -386,6 +387,12 @@ public class CatalogSearcher {
 		CachingWrapperFilter cFilter = null;
 		if (spatialfilter != null) cFilter = new CachingWrapperFilter(spatialfilter);
 		boolean buildSummary = resultType == ResultType.RESULTS_WITH_SUMMARY;
+		int numHits = startPosition + maxRecords;
+
+		// get as many results as instructed or enough for search summary
+		if (buildSummary) {
+			numHits = Math.max(maxHitsInSummary, numHits);
+		}
 
 		// record globals for reuse
 		_query = query;
@@ -393,17 +400,20 @@ public class CatalogSearcher {
 		_sort = sort;
 		_lang = context.getLanguage();
 
-		Pair<TopFieldCollector,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary( startPosition + maxRecords, Integer.MAX_VALUE, context.getLanguage(), resultType.toString(), _summaryConfig, reader, query, cFilter, sort, buildSummary);
+		Pair<TopFieldCollector,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, Integer.MAX_VALUE, context.getLanguage(), resultType.toString(), _summaryConfig, reader, query, cFilter, sort, buildSummary);
 		TopFieldCollector tfc = searchResults.one();
 		Element summary = searchResults.two();
 
-		int numHits = Integer.parseInt(summary.getAttributeValue("count"));
+		numHits = Integer.parseInt(summary.getAttributeValue("count"));
 
 		Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
 
 		// --- retrieve results
 
 		List<ResultItem> results = new ArrayList<ResultItem>();
+		// FIXME : topDocs could have been used already once in MakeSummary
+		// so the second call return null docs. resultType=results return
+		// record, but results_with_summary does not.
 		TopDocs hits = tfc.topDocs(startPosition - 1, maxRecords);
 
 		for (int i = 0; i < hits.scoreDocs.length; i++) {

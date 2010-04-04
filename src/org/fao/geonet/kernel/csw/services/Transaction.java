@@ -379,7 +379,7 @@ public class Transaction extends AbstractOperation implements CatalogService
 		ElementSetName  setName = ElementSetName.BRIEF;
 		
 		Pair<Element, Element> results= sc.search(context, 1, 100, -1, ResultType.RESULTS, 
-				OutputSchema.OGC_CORE, setName, typeNames, filterExpr, filterVersion, null, null);
+				OutputSchema.OGC_CORE, setName, typeNames, filterExpr, filterVersion, null, null, 0);
 		
 		return results.two().getChildren();
 	}
