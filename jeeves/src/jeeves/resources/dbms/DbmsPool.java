@@ -191,8 +191,14 @@ public class DbmsPool implements ResourceProvider
 		checkResource(resource);
 		debug("Committing and closing "+resource);
 
-		((Dbms) resource).commit();
-		htDbms.put(resource, new Boolean(false));
+		try
+		{
+		    ((Dbms) resource).commit();
+        }
+		finally
+		{
+		    htDbms.put(resource, new Boolean(false));
+        }
 
 		synchronized(hsListeners) {
 			for(ResourceListener l : hsListeners)
