@@ -158,6 +158,8 @@
 		<allow service="metadata.update.finish"/>
 		<allow service="metadata.update.forget"/>
 		<allow service="metadata.update.forgetandfinish"/>
+		<allow service="metadata.massive.children.form"/>
+		<allow service="metadata.massive.update.children"/>
 		<allow service="metadata.validate"/>
 		<allow service="metadata.processing"/>
 		<allow service="xml.metadata.processing"/>

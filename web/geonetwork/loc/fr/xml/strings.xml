@@ -10,6 +10,36 @@
 	<ru>Русский</ru> <!-- Do not translate! -->
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
 
+	<createChild>Créer un enfant</createChild>
+	<updateChildren>Mettre à jour les enfants</updateChildren>
+	<updateChildrenOk>Enfants mis à jour</updateChildrenOk>
+	<updateChildrenFailed>Echec de la mise à jour</updateChildrenFailed>
+	<massiveUpdateChildrenTitle>Mettre à jour les enfants</massiveUpdateChildrenTitle>
+	<updateMode>Choisir la stratégie de mise à jour : </updateMode>
+	<addMode>Ajouter les sections</addMode>
+	<replaceMode>Remplacer les sections</replaceMode>
+	<updateChildrenHelp>
+		<div>
+			<h2>Plus d'informations</h2>
+			Mettre à jour l'ensemble des enfants pour la métadonnée en cours. Choisir
+			la stratégie à appliquer pour l'ensemble des sections.
+			<br/>
+			<br/>
+			<b>Ajouter</b> conservera la section correspondante de l'enfant et ajoutera
+			celle du parent.
+			<b>Remplacer </b> supprimera la section correspondante de l'enfant
+			par celle du parent.
+			<br/>
+			<br/>
+			L'identifiant de l'enfant, le jeux de caractère, la langue, l'identifiant du
+			parent, le niveau de hiérarchie, l'URI et la section identification
+			(à l'exception de l'étendue et des mots clés) sont toujours conservés.
+			<br/>
+			Les sections <b>distribution et maintenance</b> sont toujours remplacées
+			(y compris en mode ajout) car l'ISO19115 impose la présence d'une seule
+			de ces sections.
+		</div>
+	</updateChildrenHelp>
 	<otherActions>Autres actions</otherActions>
 	<computeExtentFromKeywords>Calcul des emprises (ajout)</computeExtentFromKeywords>
 	<computeExtentFromKeywordsReplace>Calcul des emprises (remplace)</computeExtentFromKeywordsReplace>

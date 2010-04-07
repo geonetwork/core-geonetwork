@@ -26,6 +26,8 @@
 	<xsl:template name="form">
 		<form name="createform" accept-charset="UTF-8" action="metadata.create" method="post">
 			<input name="id" type="hidden" value="{/root/response/id}"/>
+			<input name="uuid" type="hidden" value="{/root/response/uuid}"/>
+			<input name="child" type="hidden" value="{/root/response/child}"/>
 			<table>
 				<tr>
 					<td colspan="2">

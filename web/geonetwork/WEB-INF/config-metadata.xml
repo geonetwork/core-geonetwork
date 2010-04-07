@@ -311,6 +311,17 @@
 				<xml name="info" file="xml/metadata-massiveUpdatePrivileges.xml" />
 			</output>
 		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Update child -->
+		
+		<service name="metadata.massive.children.form">
+			<output sheet="metadata-children.xsl"/>
+		</service>
+		
+		<service name="metadata.massive.update.children">
+			<class name=".services.metadata.UpdateChildren"/>
+		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 

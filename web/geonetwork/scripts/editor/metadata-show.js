@@ -128,4 +128,50 @@
 					}
 				);
 			}
+			
+			function massiveUpdateChildren(service, title, width) {
+				var url = getGNServiceURL(service);
+				Modalbox.show(url,{title: title, width: width});
+			}
+				
+			function updateChildren(div, url, onFailureMsg) {
+				
+				var pars = "&id="+$('id').value+"&parentUuid="+$('parentUuid').value+
+				"&schema="+$('schema').value+"&childrenIds="+$('childrenIds').value;
+				
+				// handle checkbox values
+				var boxes = $(div).getElementsBySelector('input[type="checkbox"]');
+				boxes.each( function(s) {
+					if (s.checked) {
+						pars += "&"+s.name+"=true";
+					}
+				});
+				
+				// handle radio value
+				var radios = $(div).getElementsBySelector('input[type="radio"]');
+				radios.each ( function(radio) {
+				    if(radio.checked) {
+				        pars += "&"+radio.name+"="+radio.value;
+				    }
+				});
+				
+				Ext.Ajax.request ({
+					url: Env.locService + "/" + url,
+					method: 'GET',
+					params: pars,
+					success: function(result, request) {
+						var xmlNode = result.responseXML;
+						if (xmlNode.childNodes.length != 0 &&
+								xmlNode.childNodes[0].localName == "response"){
+							var response = xmlNode.childNodes[0].childNodes[0].nodeValue;
+							alert(response);
+							window.Modalbox.hide();
+						} else 
+							alert(onFailureMsg);
+					},
+					failure: function (result, request) { 
+						alert(onFailureMsg)
+					}
+				});
+			}
 

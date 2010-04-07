@@ -10,6 +10,37 @@
 	<ru>Russo</ru> <!-- Do not translate! -->
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
 
+	<createChild>Create child</createChild>
+	<updateChildren>Update children</updateChildren>
+	<updateChildrenOk>Children updated</updateChildrenOk>
+	<updateChildrenFailed>Children update failed</updateChildrenFailed>
+	<massiveUpdateChildrenTitle>Update children</massiveUpdateChildrenTitle>
+	<updateMode>Choose the strategy applied for children update from parent : </updateMode>
+	<addMode>Add sections</addMode>
+	<replaceMode>Replace sections</replaceMode>
+	<updateChildrenHelp>
+		<div>
+			<h2>More details</h2>
+			Update all children related to current metadata record. Select the
+			strategy to be applied on each main sections.
+			<br/>
+			<br/>
+			<b>Add</b> will preserve child section and add the parent equivalent
+			section after the child ones.
+			<b>Replace </b> will remove child section by parent equivalent section.
+			<br/>
+			<br/>
+			Children identifier, character set, language, parent identifier,
+			hierarchy level, dataset URI and identification section (excluding
+			extent and keywords) are always preserved.
+			Parent locales are always replaced.
+			<br/>
+			<b>Distribution and maintenance section</b> are always replaced (even
+			in add mode) because
+			ISO19115 does not allow to have more than one.
+		</div>
+	</updateChildrenHelp>
+	<otherActions>Other actions</otherActions>
 	<layersAdded js="true">Layers escolhidos foram adicionados</layersAdded>
 	<registrationFailed js="true">Erro, registo falhou:</registrationFailed>	
 	<tryAgain js="true">Tente novamente mais tarde</tryAgain>

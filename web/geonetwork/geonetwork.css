@@ -8,7 +8,7 @@ general
 	font-size: 100%; /* without this font sizes are not inherited correctly */
 }
 
-body {
+body, div {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 9pt;
 	margin: 0px;
@@ -478,6 +478,7 @@ Other action buttons
     opacity: .9;
     filter: alpha(opacity=90);
     -moz-opacity: 0.9;
+    z-index:1;
 }
 
 .oAcEle button {
@@ -896,4 +897,20 @@ img.category {
     height:15px;
     margin: 2px;    
     vertical-align: middle;
+}
+
+div.modalbox{
+    padding: 3px;
+}
+
+div.modalbox * label {
+    padding-left: 5px;
+}
+
+div.modalbox * li {
+    font-size: small
+}
+
+div.modalbox * li * li {
+    font-size: smaller
 }

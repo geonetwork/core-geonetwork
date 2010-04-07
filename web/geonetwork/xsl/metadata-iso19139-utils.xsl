@@ -212,14 +212,36 @@
 		        			</ul>
 		        		</xsl:if>
 		        		
-		        		<xsl:if test="$edit">
-		        			<img src="{/root/gui/url}/images/plus.gif"
-		        				alt="{/root/gui/strings/linkedParentMetadataHelp}" title="{/root/gui/strings/linkedParentMetadataHelp}" align="absmiddle"/>
-		        			<xsl:text> </xsl:text>
-		        			<a alt="{/root/gui/strings/linkedParentMetadataHelp}"
-		        				title="{/root/gui/strings/linkedParentMetadataHelp}"
-		        				href="javascript:doTabAction('metadata.update', 'metadata');"><xsl:value-of select="/root/gui/strings/addParent"/></a>
-		        		</xsl:if>
+		        		<xsl:choose>
+		        			<xsl:when test="$edit">
+		        				<img src="{/root/gui/url}/images/plus.gif"
+		        					alt="{/root/gui/strings/linkedParentMetadataHelp}" title="{/root/gui/strings/linkedParentMetadataHelp}" align="absmiddle"/>
+		        				<xsl:text> </xsl:text>
+		        				<a alt="{/root/gui/strings/linkedParentMetadataHelp}"
+		        					title="{/root/gui/strings/linkedParentMetadataHelp}"
+		        					href="javascript:doTabAction('metadata.update', 'metadata');"><xsl:value-of select="/root/gui/strings/addParent"/></a>
+		        			</xsl:when>
+		        			<xsl:otherwise>
+		        				<!-- update child option only for iso19139 schema based metadata and admin user -->
+		        				<!-- FIXME : on edit mode, we don't know how many child are here -->
+		        				<xsl:variable name="profile"  select="/root/gui/session/profile"/>
+		        				<xsl:variable name="childCount"  select="/root/gui/relation/children/response/summary/@count"/>
+		        				<xsl:variable name="childrenIds">
+		        					<xsl:for-each select="/root/gui/relation/children/response/MD_Metadata">
+		        						<xsl:value-of select="concat(geonet:info/id,',')"/>
+		        					</xsl:for-each>
+		        				</xsl:variable>
+		        				<xsl:if test="($profile = 'Administrator' or $profile = 'Editor' or $profile = 'Reviewer' or $profile = 'UserAdmin') and $childCount &gt; 0">
+		        					<img src="{/root/gui/url}/images/plus.gif"
+		        						alt="{/root/gui/strings/updateChildren}" title="{/root/gui/strings/updateChildren}" align="absmiddle"/>
+		        					<xsl:text> </xsl:text>
+		        					<a alt="{/root/gui/strings/updateChildren}" title="{/root/gui/strings/updateChildren}"
+		        						href="#" onclick="javascript:massiveUpdateChildren('metadata.massive.children.form?id={$metadata/geonet:info/id}&amp;schema={$metadata/geonet:info/schema}&amp;parentUuid={$metadata/geonet:info/uuid}&amp;childrenIds={$childrenIds}','{/root/gui/strings/massiveUpdateChildrenTitle}',800);">
+		        						<xsl:value-of select="/root/gui/strings/updateChildren"/>
+		        					</a>
+		        				</xsl:if>
+		        			</xsl:otherwise>
+		        		</xsl:choose>
 		        		<br/>
 		        		<br/>
 	        		</xsl:if>

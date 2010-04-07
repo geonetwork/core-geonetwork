@@ -23,76 +23,84 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadInputEx;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.jdom.Element;
 
+
 //=============================================================================
 
-/** Creates a metadata copying data from a given template
-  */
+/** 
+ * A simple service that returns a small report
+ * about children update process. 
+ *
+ * @author m.coudert
+ */
 
-public class Create implements Service
+public class UpdateChildren implements Service
 {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	//--------------------------------------------------------------------------
+	//---
+	//--- Init
+	//---
+	//--------------------------------------------------------------------------
+
+	public void init(String appPath, ServiceConfig params) throws Exception
+	{}
 
 	//--------------------------------------------------------------------------
 	//---
-	//--- Service
+	//--- API
 	//---
 	//--------------------------------------------------------------------------
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
+		String parentUuid = Util.getParam(params,"parentUuid");
+		String childrenIds = Util.getParam(params, "childrenIds");
+		
+		// Transform params element into Map<String, String> for xsl transformation
+		List<Element> lstParams = params.getChildren();
+		Map<String, String> parameters = new HashMap<String, String>();
+		for (Element param : lstParams) {
+			parameters.put(param.getName(), param.getTextTrim());
+		}
+		
+		// Handle children IDs.
+		String[] children = childrenIds.split(",");
+		
+		// Update children
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getDataManager();
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+		Set<String> untreatedChildren = dm.updateChildren(context, parentUuid, children, parameters);
 		
-		String child = Util.getParam(params, Params.CHILD, "n");
-		String id = "";
-		String uuid = "";
-		
-		// does the request contain a UUID ?
-		try {
-			uuid = Util.getParam(params, Params.UUID);
-			// lookup ID by UUID
-			id = dm.getMetadataId(context, uuid);	
-		}
-		catch(BadInputEx x) {
-			try {
-				id = Util.getParam(params, Params.ID);
-				uuid = dm.getMetadataUuid(dbms, id);
-			}
-			// request does not contain ID
-			catch(BadInputEx xx) {
-				// give up
-				throw new Exception("Request must contain a UUID or an ID");
-			}		
+		Element response = new Element(Jeeves.Elem.RESPONSE);
+		int treatedChildren = children.length;
+		String untreatedReport = "";
+		if (untreatedChildren.size() != 0) {
+			treatedChildren = children.length - untreatedChildren.size();
+			untreatedReport = untreatedChildren.size() +" child/children not updated";
+			for (String id : untreatedChildren)
+				untreatedReport += ", "+id;
 		}
 		
-		String groupOwner= Util.getParam(params, Params.GROUP);
-
-		//--- query the data manager
-
-		String newId = dm.createMetadata(dbms, id, groupOwner, context.getSerialFactory(),
-												  gc.getSiteId(), context.getUserSession().getUserIdAsInt(), 
-												  (child.equals("n")?null:uuid));
-
-		return new Element(Jeeves.Elem.RESPONSE)
-							.addContent(new Element(Geonet.Elem.ID).setText(newId));
+		String report = treatedChildren + " child/children updated for metadata " + parentUuid + ". " + untreatedReport;
+		
+		return response.setText(report); 
 	}
 }
 
 //=============================================================================
-
-

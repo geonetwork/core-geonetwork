@@ -53,6 +53,7 @@ import jeeves.utils.Xml.ErrorHandler;
 
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
@@ -884,7 +885,8 @@ public class DataManager
 	  */
 
 	public String createMetadata(Dbms dbms, String templateId, String groupOwner,
-										  SerialFactory sf, String source, int owner) throws Exception
+										  SerialFactory sf, String source, int owner,
+										  String parentUuid) throws Exception
 	{
 		String query = "SELECT schemaId, data FROM Metadata WHERE id="+ templateId;
 
@@ -902,7 +904,7 @@ public class DataManager
 		//--- generate a new metadata id
 		int serial = sf.getSerial(dbms, "Metadata");
 
-		Element xml = updateFixedInfoNew(schema, Integer.toString(serial), Xml.loadString(data, false), uuid);
+		Element xml = updateFixedInfoNew(schema, Integer.toString(serial), Xml.loadString(data, false), uuid, parentUuid);
 
 		//--- store metadata
 
@@ -2227,7 +2229,7 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
-	public Element updateFixedInfoNew(String schema, String id, Element md, String uuid) throws Exception
+	public Element updateFixedInfoNew(String schema, String id, Element md, String uuid, String parentUuid) throws Exception
 	{
 		//--- setup environment - for new records
 
@@ -2235,7 +2237,8 @@ public class DataManager
 
 		env.addContent(new Element("id")        			.setText(id));
 		env.addContent(new Element("uuid")      			.setText(uuid));
-		env.addContent(new Element("updateDateStamp")	.setText("yes"));
+		env.addContent(new Element("parentUuid")			.setText(parentUuid));
+		env.addContent(new Element("updateDateStamp")		.setText("yes"));
 		return updateFixedInfo(schema, md, env);
 	}
 
@@ -2262,6 +2265,99 @@ public class DataManager
 		return Xml.transform(root, styleSheet);
 	}
 
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Update all children of the selected parent. Some elements are protected
+	 * in the children according to the stylesheet used in
+	 * xml/schemas/[SCHEMA]/update-child-from-parent-info.xsl.
+	 * 
+	 * Children MUST be editable and also in the same schema of the parent. 
+	 * If not, child is not updated. 
+	 * 
+	 * @param srvContext
+	 *            service context
+	 * @param parentUuid
+	 *            parent uuid
+	 * @param params
+	 *            parameters
+	 * @param children
+	 *            children
+	 * @return
+	 * @throws Exception
+	 */
+	public Set<String> updateChildren(ServiceContext srvContext,
+			String parentUuid, String[] children, Map<String, String> params)
+			throws Exception {
+		Dbms dbms = (Dbms) srvContext.getResourceManager().open(
+				Geonet.Res.MAIN_DB);
+
+		String parentId = params.get(Params.ID);
+		String parentSchema = params.get(Params.SCHEMA);
+
+		// --- get parent metadata in read/only mode
+		Element parent = getMetadata(srvContext, parentId, false);
+
+		Element env = new Element("update");
+		env.addContent(new Element("parentUuid").setText(parentUuid));
+		env.addContent(new Element("siteURL").setText(getSiteURL()));
+		env.addContent(new Element("parent").addContent(parent));
+
+		// Set of untreated children (out of privileges, different schemas)
+		Set<String> untreatedChildSet = new HashSet<String>();
+
+		// only get iso19139 records
+		for (String childId : children) {
+
+			// Check privileges
+			if (!accessMan.canEdit(srvContext, childId)) {
+				untreatedChildSet.add(childId);
+				Log.debug(Geonet.DATA_MANAGER, "Could not update child ("
+						+ childId + ") because of privileges.");
+				continue;
+			}
+
+			Element child = getMetadata(srvContext, childId, false);
+			String childSchema = child.getChild(Edit.RootChild.INFO,
+					Edit.NAMESPACE).getChildText(Edit.Info.Elem.SCHEMA);
+
+			// Check schema matching. CHECKME : this suppose that parent and
+			// child are in the same schema (even not profil different)
+			if (!childSchema.equals(parentSchema)) {
+				untreatedChildSet.add(childId);
+				Log.debug(Geonet.DATA_MANAGER, "Could not update child ("
+						+ childId + ") because schema (" + childSchema
+						+ ") is different from the parent one (" + parentSchema
+						+ ").");
+				continue;
+			}
+
+			Log.debug(Geonet.DATA_MANAGER, "Updating child (" + childId +") ...");
+
+			// --- setup xml element to be processed by XSLT
+
+			Element rootEl = new Element("root");
+			Element childEl = new Element("child").addContent(child.detach());
+			rootEl.addContent(childEl);
+			rootEl.addContent(env.detach());
+
+			// --- do an XSL transformation
+
+			String styleSheet = editLib.getSchemaDir(parentSchema)
+					+ Geonet.File.UPDATE_CHILD_FROM_PARENT_INFO;
+			Element childForUpdate = new Element("root");
+			childForUpdate = Xml.transform(rootEl, styleSheet, params);
+			
+			XmlSerializer.update(dbms, childId, childForUpdate, new ISODate()
+					.toString());
+
+			rootEl = null;
+		}
+
+		return untreatedChildSet;
+	}
+
+	
 	//--------------------------------------------------------------------------
 
 	private Element buildInfoElem(ServiceContext context, String id, String version) throws Exception
