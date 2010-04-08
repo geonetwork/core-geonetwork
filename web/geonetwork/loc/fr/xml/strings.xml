@@ -227,7 +227,7 @@
 	<completeTab>Vue avancée</completeTab>
 	<completeTabEditor>Editeur avancé</completeTabEditor>
 	<confirmCancel>Êtes-vous sûr de vouloir quitter l\'éditeur? (vous allez perdre les changements non sauvegardés)</confirmCancel>
-	<confirmDelete>Êtes-vous sûr de vouloir supprimer cette métadonnée ?</confirmDelete>
+	<confirmDelete js="true">Êtes-vous sûr de vouloir supprimer cette métadonnée ?</confirmDelete>
 	<confirmMassiveDelete>Êtes-vous sûr de vouloir supprimer toutes les métadonnées sélectionnées ?</confirmMassiveDelete>
 	<confirmNewPassword>Confirmer le nouveau mot de passe</confirmNewPassword>
 	<confirmPassword>Confirmer le mot de passe</confirmPassword>
@@ -577,8 +577,8 @@
 	<searchUnused>Rechercher des métadonnées vides ou non utilisées</searchUnused>
 	<searchUnusedTitle>Métadonnées inutilisées</searchUnusedTitle>
 	<select>Sélectionner : </select>
-	<selectAll>Select all metadata</selectAll>
-	<selectAllNotPossible>Too many hits! Must be less than </selectAllNotPossible>
+	<selectAll>Tout sélectionner</selectAll>
+	<selectAllNotPossible>Trop d'enregistrement ! Doit être inférieur à </selectAllNotPossible>
 	<selected> selectionné(s)</selected>
 	<selectedOnly>Afficher la sélection</selectedOnly>
 	<selection>Sélection</selection>
