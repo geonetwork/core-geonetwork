@@ -135,7 +135,7 @@
 		<echo level="info" message="Parsing rules: ${rules}" />
 		<echo level="info" message=" - generate xsl for reporting" />
 		<xslt basedir="."
-	   		style="skeleton/iso_svrl_for_xslt2.xsl" 
+	   		style="resources/iso_svrl_for_xslt2.xsl" 
 			in="rules/schematron-rules-${rules}.sch" 
 			out="${buildDir}/schematron-rules-${rules}.xsl"> 
 			<classpath>
