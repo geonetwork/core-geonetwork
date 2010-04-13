@@ -423,7 +423,7 @@
 	<mefFile>Fichier MEF</mefFile>
 	<message>Le nom ou mot de passe est incorrect.<br/>Appuyer sur le bouton 'retour'.</message>
 	<messageChanged>La fiche de métadonnées a été modifié par un autre utilisateur. Essayez à nouveau.</messageChanged>
-	<messageDownload>Merci pour votre intérêts. Cliquer sur le bouton pour lancer le téléchargement</messageDownload>
+	<messageDownload>Merci pour votre intérêt. Cliquer sur le bouton pour lancer le téléchargement.</messageDownload>
 	<messageLargeFile>Le fichier est trop gros.</messageLargeFile>
 	<messageMdUpdateError>Désolé, une erreur s'est produite lors de la mise à jour des métadonnées.</messageMdUpdateError>
 	<messageNoPrivileges>Vous n'avez pas le droit de réaliser cette action.</messageNoPrivileges>
