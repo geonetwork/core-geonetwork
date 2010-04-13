@@ -59,6 +59,11 @@
 				<Field name="language" string="{string(.)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
 	
+	
+			<xsl:for-each select="/Metadata/mdDateSt">
+				<Field name="changeDate" string="{string(.)}" store="true" index="true" token="false"/>
+			</xsl:for-each>
+	
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 			<!-- === Metadata file identifier (GUID in GeoNetwork) === -->
 			<xsl:apply-templates select="/Metadata/mdFileID">
