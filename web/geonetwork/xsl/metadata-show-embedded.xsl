@@ -57,7 +57,15 @@
 						</xsl:call-template>
 												
 						<table width="100%">
-
+							
+							<xsl:if test="/root/request/control">
+								<tr><td class="padded-content" height="100%" align="center" valign="top">
+									<xsl:call-template name="buttons">
+										<xsl:with-param name="metadata" select="$metadata"/>
+									</xsl:call-template>
+								</td></tr>
+							</xsl:if>
+							
 							<!-- subtemplate title button -->
 							<xsl:if test="(string(geonet:info/isTemplate)='s')">
 								<tr><td class="padded-content" height="100%" align="center" valign="top">

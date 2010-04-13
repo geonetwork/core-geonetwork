@@ -123,7 +123,7 @@ function gn_present(frompage,topage)
 {preparePresent();var pars='from='+frompage+"&to="+topage;var myAjax=new Ajax.Request(getGNServiceURL('main.present.embedded'),{method:'get',parameters:pars,onSuccess:gn_search_complete,onFailure:gn_search_error});}
 function gn_search_complete(req){var rlist=$('resultList');rlist.innerHTML=req.responseText;$('loadingMD').hide();}
 function gn_showSingleMetadataUUID(uuid)
-{var pars='uuid='+uuid+'&currTab=simple';gn_showSingleMet(pars);}
+{var pars='uuid='+uuid+'&control&currTab=simple';gn_showSingleMet(pars);}
 function gn_showSingleMetadata(id)
 {var pars='id='+id+'&currTab=simple';gn_showSingleMet(pars);}
 function gn_showSingleMet(pars)
