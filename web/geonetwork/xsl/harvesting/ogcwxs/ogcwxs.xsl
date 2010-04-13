@@ -77,7 +77,7 @@
 					<select id="ogcwxs.lang">
 					<!--  TODO loop on languages -->
 						<option value="eng">eng</option>
-						<option value="fra">fra</option>
+						<option value="fre">fre</option>
 					</select>
 				</td>
 			</tr>
