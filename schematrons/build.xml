@@ -5,6 +5,7 @@
 	<property name="buildDir" value=".build" description="Build directory" />
 	<property name="schemaDir" value="../web/geonetwork/xml/schemas/" description="Schemas directory" />
 	<property name="parser" value="../web/geonetwork/WEB-INF/lib/saxon9.jar" />
+	<property name="lib.dir" value="../web/geonetwork/WEB-INF/lib" />
 	<property name="serializer" value="serializer-2.7.1.jar" />
 	<property name="defaultLang" value="en" />
 	<!--<pathelement location="../web/geonetwork/WEB-INF/lib/${xalan};../web/geonetwork/WEB-INF/lib/${serializer};"/>-->
@@ -43,7 +44,6 @@
 		</delete>
 	</target>
 
-
 	<target name="schematron" description="Process schematron rules and copy XSL validation file to schema directory.">
 		<!-- Compile rules -->
 		<ant target="compile-schematron">
@@ -55,8 +55,7 @@
 		<ant target="compile-schematron">
 			<property name="rules" value="geonetwork" />
 		</ant>
-
-
+		
 
 		<!-- 
 		Add publish statements here to propagate rules to other schema if needed.
@@ -135,14 +134,14 @@
 
 		<echo level="info" message="Parsing rules: ${rules}" />
 		<echo level="info" message=" - generate xsl for reporting" />
-		<java jar="${parser}" fork="true" failonerror="true" dir="${schematronDir}" maxmemory="128m">
-			<!--           <arg line="-IN allSchtrnRules.sch -OUT ${schemaDir}/schematron.xsl -XSL schematron-report.xsl"/>-->
-			<arg line="-s rules/schematron-rules-${rules}.sch -o ${buildDir}/schematron-rules-${rules}.xsl schematron-report-geonetwork-xml.xsl" />
+		<xslt basedir="."
+	   		style="skeleton/iso_svrl_for_xslt2.xsl" 
+			in="rules/schematron-rules-${rules}.sch" 
+			out="${buildDir}/schematron-rules-${rules}.xsl"> 
 			<classpath>
-				<pathelement location="../web/geonetwork/WEB-INF/lib/${serializer}" />
-				<pathelement path="${java.class.path}" />
+				<pathelement location="${lib.dir}/saxon9.jar"/>
 			</classpath>
-		</java>
+	   </xslt>
 	</target>
 
 	<target name="publish-schematron" description="Publish stylesheets for schematron reporting in a schema">

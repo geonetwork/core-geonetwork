@@ -3,7 +3,7 @@
 	xmlns:geonet="http://www.fao.org/geonetwork" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:sch="http://www.ascc.net/xml/schematron" xmlns:gml="http://www.opengis.net/gml"
 	xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv"
-	xmlns:gco="http://www.isotc211.org/2005/gco"
+	xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:svrl="http://purl.oclc.org/dsdl/svrl" 
 	exclude-result-prefixes="geonet srv gco gmd xlink gml sch">
 
 	<!--
@@ -75,7 +75,7 @@
 				<ul>
 					<xsl:for-each select="geonet:error">
 						<li name="error">
-							<xsl:variable name="message"> #<xsl:value-of select="geonet:errorNumber"
+							<xsl:variable name="message">#<xsl:value-of select="geonet:errorNumber"
 									/>:<xsl:value-of select="geonet:typeOfError"/>-XPath:
 									<xsl:value-of select="geonet:xpath"/>
 							</xsl:variable>
@@ -95,68 +95,66 @@
 				</ul>
 			</xsl:if>
 		</fieldset>
+		
 	</xsl:template>
 
+	<xsl:template match="svrl:active-pattern" mode="validation-report">
+		<xsl:variable name="preceding-ap" select="count(following-sibling::svrl:active-pattern)"/>
+		
+		<span class="arrow"><xsl:value-of select="@name"/></span>
+		<div>
+			<ul>
+				<xsl:apply-templates mode="validation-report" 
+					select="following-sibling::*[(name(.)='svrl:failed-assert' or name(.)='svrl:successful-report')
+					and count(following-sibling::svrl:active-pattern) = $preceding-ap]"/>
+			</ul>
+		</div>
+	</xsl:template>
+
+
+	<xsl:template match="svrl:failed-assert" mode="validation-report">
+		<li>
+			<xsl:attribute name="name">error</xsl:attribute>
+			<a href="{@ref}" title="{@location}" alt="{@location}">
+				<img src="../../images/schematron.gif" style="border:none;"/>
+			</a><xsl:text> </xsl:text>
+			<xsl:value-of select="svrl:text"/>								
+		</li>
+	</xsl:template>
+	
+	<xsl:template match="svrl:successful-report" mode="validation-report">
+		<li>
+			<xsl:attribute name="name">pass</xsl:attribute>
+			<a href="{@ref}" title="{@location}" alt="{@location}">
+				<img src="../../images/button_ok.png" style="border:none;"/>
+			</a><xsl:text> </xsl:text>
+			<xsl:value-of select="svrl:text"/>
+		</li>
+	</xsl:template>
+	
+	
 	<xsl:template match="geonet:report" mode="validation-report">
 		<xsl:variable name="rule" select="@geonet:rule"/>
-		<xsl:variable name="count" select="count(geonet:schematronerrors/geonet:errorFound)"/>
+		<xsl:variable name="count" select="count(svrl:schematron-output/svrl:failed-assert)"/>
 
 		<fieldset class="validation-report">
 			<legend class="block-legend">
-				<xsl:value-of select="/root/gui/strings/rules[@name=$rule]"/>
+				<xsl:value-of select="/root/gui/strings/rules[@name=$rule]"/><xsl:text> </xsl:text>
 				<xsl:choose>
-					<xsl:when test="$count != 0"> (<xsl:value-of
-							select="count(geonet:schematronerrors/geonet:errorFound)"
-							/><xsl:text> </xsl:text><xsl:value-of select="/root/gui/strings/errors"
-						/>) </xsl:when>
+					<xsl:when test="$count != 0"> (
+						<img src="../../images/schematron.gif" alt="failed" title="failed"/>
+						<xsl:value-of select="$count"/>
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="/root/gui/strings/errors"/>) 
+					</xsl:when>
 					<xsl:otherwise>
 						<img src="../../images/button_ok.png" alt="pass" title="pass"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</legend>
-			<ul>
-				<xsl:for-each select="geonet:schematronerrors/*">
-					<!-- For each error pattern found, display error message 
-					in the following sibling. -->
-					<xsl:if test="name(.)='geonet:pattern'">
-						<li>
-							<xsl:choose>
-								<xsl:when test="geonet:pattern">
-									<xsl:copy-of select="."/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:variable name="errorNotFound"
-										select="name(following-sibling::node())!='geonet:errorFound'"/>
-
-									<xsl:choose>
-										<xsl:when test="$errorNotFound">
-											<xsl:attribute name="name">pass</xsl:attribute>
-											<img src="../../images/button_ok.png" alt="error"
-												title="error"/>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:attribute name="name">error</xsl:attribute>
-											<img src="../../images/schematron.gif" alt="error"
-												title="error"/>
-										</xsl:otherwise>
-									</xsl:choose>
-									<xsl:text> </xsl:text>
-									<xsl:copy-of select="."/>
-									<xsl:if test="not($errorNotFound)">
-										<ul>
-											<li>
-												<xsl:copy-of
-												select="following-sibling::node()[1]/geonet:diagnostics/*/."/>
-												<br/>
-											</li>
-										</ul>
-									</xsl:if>
-								</xsl:otherwise>
-							</xsl:choose>
-						</li>
-					</xsl:if>
-				</xsl:for-each>
-			</ul>		
+			
+			<xsl:apply-templates mode="validation-report" select="svrl:schematron-output/svrl:active-pattern"/>
+					
 		</fieldset>
 	</xsl:template>
 
@@ -167,9 +165,6 @@
 			</legend>
 			<xsl:apply-templates select="*" mode="validation-report"/>
 		</fieldset>
-		<!--				<a href="{/root/gui/url}/htmlCache/SchematronReport{/root/error/object/schematronerrors/id}/schematron-frame.html">
-			<xsl:value-of select="/root/gui/validation/schemaTronReport"/>
-			<xsl:value-of select="/root/gui/validation/schemaTronValid"/>-->
 	</xsl:template>
 
 </xsl:stylesheet>

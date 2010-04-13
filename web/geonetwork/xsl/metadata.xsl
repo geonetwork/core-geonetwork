@@ -5,7 +5,8 @@
 	xmlns:gmd="http://www.isotc211.org/2005/gmd"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
-	exclude-result-prefixes="exslt xlink gco gmd geonet">
+	xmlns:svrl="http://purl.oclc.org/dsdl/svrl" 
+	exclude-result-prefixes="exslt xlink gco gmd geonet svrl">
 
 	<xsl:import href="text-utilities.xsl"/>
 	<xsl:include href="metadata-utils.xsl"/>
@@ -479,32 +480,9 @@
 <!-- xsd and schematron validation info -->
 		<xsl:variable name="validationLink">
 			<xsl:variable name="ref" select="concat('#_',geonet:element/@ref)"/>
-			
-			<xsl:if test="@geonet:xsderror
-				or */@geonet:xsderror
-				or //geonet:errorFound[@ref=$ref]">
-				<ul>
-					<xsl:choose> 
-						<!-- xsd validation -->
-						<xsl:when test="@geonet:xsderror">
-							<li><xsl:value-of select="concat(/root/gui/strings/xsdError,': ',@geonet:xsderror)"/></li>
-						</xsl:when>
-						<!-- some simple elements hide lower elements to remove some
-						     complexity from the display (eg. gco: in iso19139) 
-								 so check if they have a schematron/xsderror and move it up 
-								 if they do -->
-						<xsl:when test="*/@geonet:xsderror"> 
-							<li><xsl:value-of select="concat(/root/gui/strings/xsdError,': ',*/@geonet:xsderror)"/></li>
-						</xsl:when>
-						<!-- schematrons -->
-						<xsl:when test="//geonet:errorFound[@ref=$ref]"> 
-							<xsl:for-each select="//geonet:errorFound[@ref=$ref]">
-								<li><xsl:copy-of select="geonet:diagnostics"/></li>
-							</xsl:for-each>
-						</xsl:when>
-					</xsl:choose>
-				</ul>
-			</xsl:if>
+			<xsl:call-template name="validationLink">
+				<xsl:with-param name="ref" select="$ref"/>
+			</xsl:call-template>
 		</xsl:variable>
 
 		<xsl:call-template name="simpleElementGui">
@@ -520,6 +498,40 @@
 			<xsl:with-param name="edit"       select="true()"/>
 			<xsl:with-param name="id" select="$id"/>
 		</xsl:call-template>
+	</xsl:template>
+	
+	<!--
+		Template to create validation link popup on XSD errors
+		or schematron errors.
+		-->
+	<xsl:template name="validationLink">
+		<xsl:param name="ref"/>
+		
+		<xsl:if test="@geonet:xsderror
+			or */@geonet:xsderror
+			or //svrl:failed-assert[@ref=$ref]">
+			<ul>
+				<xsl:choose> 
+					<!-- xsd validation -->
+					<xsl:when test="@geonet:xsderror">
+						<li><xsl:value-of select="concat(/root/gui/strings/xsdError,': ',@geonet:xsderror)"/></li>
+					</xsl:when>
+					<!-- some simple elements hide lower elements to remove some
+						complexity from the display (eg. gco: in iso19139) 
+						so check if they have a schematron/xsderror and move it up 
+						if they do -->
+					<xsl:when test="*/@geonet:xsderror"> 
+						<li><xsl:value-of select="concat(/root/gui/strings/xsdError,': ',*/@geonet:xsderror)"/></li>
+					</xsl:when>
+					<!-- schematrons -->
+					<xsl:when test="//svrl:failed-assert[@ref=$ref]"> 
+						<xsl:for-each select="//svrl:failed-assert[@ref=$ref]">
+							<li><xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> : <xsl:copy-of select="svrl:text"/></li>
+						</xsl:for-each>
+					</xsl:when>
+				</xsl:choose>
+			</ul>
+		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template name="addLink">
@@ -678,24 +690,9 @@
 <!-- xsd and schematron validation info -->
 		<xsl:variable name="validationLink">
 			<xsl:variable name="ref" select="concat('#_',geonet:element/@ref)"/>
-			
-			<xsl:if test="@geonet:xsderror or //geonet:errorFound[@ref=$ref]">
-				<ul>
-					<xsl:choose> 
-						<!-- xsd validation -->
-						<xsl:when test="@geonet:xsderror">
-							<li><xsl:value-of select="concat(/root/gui/strings/xsdError,': ',@geonet:xsderror)"/></li>
-						</xsl:when>
-						<!-- schematrons -->
-						<xsl:when test="//geonet:errorFound[@ref=$ref]"> 
-							<xsl:for-each select="//geonet:errorFound[@ref=$ref]">
-								<li><xsl:copy-of select="geonet:diagnostics"/></li>
-							</xsl:for-each>
-						</xsl:when>
-					</xsl:choose>
-				</ul>
-			</xsl:if>
-			
+			<xsl:call-template name="validationLink">
+				<xsl:with-param name="ref" select="$ref"/>
+			</xsl:call-template>
 		</xsl:variable>
 		
 		<xsl:call-template name="complexElementGui">
@@ -861,6 +858,7 @@
 								</xsl:call-template>
 							</xsl:otherwise>
 						</xsl:choose>
+						
 						<xsl:if test="$edit">
 							<xsl:call-template name="getButtons">
 								<xsl:with-param name="addLink" select="$addLink"/>
