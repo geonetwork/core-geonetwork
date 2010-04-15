@@ -904,57 +904,19 @@
 					<xsl:with-param name="edit"   select="$edit"/>
 					<xsl:with-param name="text">
 						<xsl:variable name="ref" select="gco:Date/geonet:element/@ref|gco:DateTime/geonet:element/@ref"/>
+						<xsl:variable name="format">
+							<xsl:choose>
+								<xsl:when test="gco:Date"><xsl:text>%Y-%m-%d</xsl:text></xsl:when>
+								<xsl:otherwise><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:otherwise>
+							</xsl:choose>
+						</xsl:variable>
 						
-						<table width="100%"><tr>
-							<td>
-								<input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{gco:DateTime/text()|gco:Date/text()}" size="30" readonly="1"/>
-							</td>
-							<td align="center" width="30" valign="middle">
-								<img src="{/root/gui/url}/scripts/calendar/img.gif"
-									 id="_{$ref}_trigger"
-									 style="cursor: pointer; border: 1px solid;"
-									 title="Date selector"
-									 onmouseover="this.style.background='red';"
-									 onmouseout="this.style.background=''" />
-								<script type="text/javascript">
-									Calendar.setup(
-										{
-											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
-											<xsl:choose>
-												<xsl:when test="gco:Date">
-											ifFormat    : "%Y-%m-%d",
-											showsTime   : false,
-												</xsl:when>
-												<xsl:otherwise>
-											ifFormat    : "%Y-%m-%dT%H:%M:00",   // the date format
-											showsTime   : true,                  // show the time
-												</xsl:otherwise>
-											</xsl:choose>
-											button      : &quot;_<xsl:value-of select="$ref"/>_trigger&quot;  // ID of the button
-										}
-									);
-									Calendar.setup(
-										{
-											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
-											<xsl:choose>
-												<xsl:when test="gco:Date">
-											ifFormat    : "%Y-%m-%d",
-											showsTime   : false,
-												</xsl:when>
-												<xsl:otherwise>
-											ifFormat    : "%Y-%m-%dT%H:%M:00",  // the date format
-											showsTime   : true,                 // show the time
-												</xsl:otherwise>
-											</xsl:choose>
-											button      : &quot;_<xsl:value-of select="$ref"/>_cal&quot;  // ID of the button
-										}
-									);
-								</script>
-							</td>
-							<td align="left" width="100%">
-								<xsl:text>  </xsl:text><a onclick="javascript:setBunload(false);" href="javascript:clearRef('{$ref}');"> <xsl:value-of select="/root/gui/strings/clear"/></a>
-							</td>
-						</tr></table>
+						<xsl:call-template name="calendar">
+							<xsl:with-param name="ref" select="$ref"/>
+							<xsl:with-param name="date" select="gco:DateTime/text()|gco:Date/text()"/>
+							<xsl:with-param name="format" select="$format"/>
+						</xsl:call-template>
+						
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:when>
@@ -987,57 +949,19 @@
 					<xsl:with-param name="edit"   select="$edit"/>
 					<xsl:with-param name="text">
 						<xsl:variable name="ref" select="gco:DateTime/geonet:element/@ref|gco:Date/geonet:element/@ref"/>
+						<xsl:variable name="format">
+							<xsl:choose>
+								<xsl:when test="gco:Date"><xsl:text>%Y-%m-%d</xsl:text></xsl:when>
+								<xsl:otherwise><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:otherwise>
+							</xsl:choose>
+						</xsl:variable>
 						
-						<table width="100%"><tr>
-							<td>
-								<input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{gco:DateTime/text()|gco:Date/text()}" size="30" readonly="1"/>
-							</td>
-							<td align="center" width="30" valign="middle">
-								<img src="{/root/gui/url}/scripts/calendar/img.gif"
-									 id="_{$ref}_trigger"
-									 style="cursor: pointer; border: 1px solid;"
-									 title="Date selector"
-									 onmouseover="this.style.background='red';"
-									 onmouseout="this.style.background=''" />
-								<script type="text/javascript">
-									Calendar.setup(
-										{
-											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
-								<xsl:choose>
-				                  <xsl:when test="gco:DateTime">
-				                      ifFormat    : "%Y-%m-%dT%H:%M:00", // the date format
-				                      showsTime : true, // Show the time
-				                  </xsl:when>
-				                  <xsl:otherwise>
-				                      ifFormat    : "%Y-%m-%d", // the date format
-				                      showsTime : false, // Do not show the time
-				                  </xsl:otherwise>
-				                </xsl:choose>
-											button      : &quot;_<xsl:value-of select="$ref"/>_trigger&quot;  // ID of the button
-										}
-									);
-									Calendar.setup(
-										{
-											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
-								<xsl:choose>
-				                  <xsl:when test="gco:DateTime">
-				                      ifFormat    : "%Y-%m-%dT%H:%M:00", // the date format
-				                      showsTime : true, // Show the time
-				                  </xsl:when>
-				                  <xsl:otherwise>
-				                      ifFormat    : "%Y-%m-%d",  // the date format
-				                      showsTime : false, // Do not show the time
-				                  </xsl:otherwise>
-				                </xsl:choose>
-											button      : &quot;_<xsl:value-of select="$ref"/>_cal&quot;  // ID of the button
-										}
-									);
-								</script>
-							</td>
-							<td align="left" width="100%">
-								<xsl:text>  </xsl:text><a onclick="javascript:setBunload(false);" href="javascript:clearRef('{$ref}');"> <xsl:value-of select="/root/gui/strings/clear"/></a>
-							</td>
-						</tr></table>
+						<xsl:call-template name="calendar">
+							<xsl:with-param name="ref" select="$ref"/>
+							<xsl:with-param name="date" select="gco:DateTime/text()|gco:Date/text()"/>
+							<xsl:with-param name="format" select="$format"/>
+						</xsl:call-template>
+						
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:when>
@@ -1065,42 +989,14 @@
 					<xsl:with-param name="edit"   select="$edit"/>
 					<xsl:with-param name="text">
 						<xsl:variable name="ref" select="geonet:element/@ref"/>
+						<xsl:variable name="format"><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:variable>
 						
-						<table width="100%"><tr>
-							<td>
-								<input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{text()}" size="30" readonly="1"/>
-							</td>
-							<td align="center" width="30" valign="middle">
-								<img src="{/root/gui/url}/scripts/calendar/img.gif"
-									 id="_{$ref}_trigger"
-									 style="cursor: pointer; border: 1px solid;"
-									 title="Date selector"
-									 onmouseover="this.style.background='red';"
-									 onmouseout="this.style.background=''" />
-								<script type="text/javascript">
-									Calendar.setup(
-										{
-											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
-						                    ifFormat    : "%Y-%m-%dT%H:%M:00", // the date format
-                    						showsTime : true, 
-											button      : &quot;_<xsl:value-of select="$ref"/>_trigger&quot;  // ID of the button
-										}
-									);
-									Calendar.setup(
-										{
-											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
-											ifFormat    : "%Y-%m-%dT%H:%M:00", // the date format
-											showsTime : true,
-											button      : &quot;_<xsl:value-of select="$ref"/>_cal&quot;  // ID of the button
-										}
-									);
-								</script>
-							</td>
-							<td align="left" width="100%">
-								<xsl:text>  </xsl:text><a onclick="javascript:setBunload(false);" href="javascript:clearRef('{$ref}');"> <xsl:value-of select="/root/gui/strings/clear"/></a>
-							</td>
-						</tr></table>
-
+						<xsl:call-template name="calendar">
+							<xsl:with-param name="ref" select="$ref"/>
+							<xsl:with-param name="date" select="text()"/>
+							<xsl:with-param name="format" select="$format"/>
+						</xsl:call-template>
+												
 						<xsl:if test="@indeterminatePosition">
 							<xsl:apply-templates mode="simpleElement" select="@indeterminatePosition">
 								<xsl:with-param name="schema" select="$schema"/>

@@ -395,6 +395,8 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement)
 				if (name == 'gmd:geographicElement' || name == 'gmd:polygon')
 					extentMap.initMapDiv();
 				
+				initCalendar();
+				
 				// Check elements
 				validateMetadataFields();
 				
@@ -473,6 +475,7 @@ function doSaveAction(action,validateAction)
 					if (document.mainForm.showvalidationerrors.value=='true')
 						getValidationReport();
 					setBunload(true); // reset warning for window destroy
+					initCalendar();
 					validateMetadataFields();
 				},
 				onFailure: function(req) { 
@@ -814,6 +817,32 @@ function validateMetadataFields() {
 		validateMetadataField(input);
 	});
 
+}
+
+/**
+ * Init all calendar input identified by class "calendar" 
+ * @return
+ */
+function initCalendar() {
+	$$('input.calendar').each( function(input) {
+		var name = input['name'];
+		var format = $(name + '_format').value;
+		var showTime = (format.indexOf('T')==-1?false:true);
+
+		// Init calendar for input field and calendar icon
+		Calendar.setup({
+				inputField  : name + "_cal",
+				ifFormat    : format,
+				showsTime   : showTime,
+				button      : name + "_trigger"
+			});
+		Calendar.setup({
+				inputField  : name + "_cal",
+				ifFormat    : format,
+				showsTime   : showTime,
+				button      : name + "_cal"
+			});
+	});
 }
 
 /**
