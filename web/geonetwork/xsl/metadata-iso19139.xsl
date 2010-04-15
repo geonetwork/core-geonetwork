@@ -123,11 +123,9 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<a href="metadata.show?uuid={@uuidref}">
-						<a href="metadata.show?uuid={.}">
-                 			<xsl:call-template name="getMetadataTitle">
-								<xsl:with-param name="uuid" select="@uuidref"/>
-							</xsl:call-template>
-                    	</a>
+                 		<xsl:call-template name="getMetadataTitle">
+							<xsl:with-param name="uuid" select="@uuidref"/>
+						</xsl:call-template>
 					</a>
 				</xsl:otherwise>
 			</xsl:choose>
