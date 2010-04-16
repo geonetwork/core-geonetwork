@@ -17,16 +17,19 @@ function toolTip(spanId)
 		var request = str.substitute(toolTipRequestTemp, { SCHEMA:schema, NAME:name, CONTEXT: context, ISOTYPE: isoType });
 		
 		ker.send('xml.schema.info', request, ker.wrap(this, function(xmlRes) {
-	
+			var htmlTip = '';
+			tip = document.createElement('div');
+			tip.className     = 'toolTipOverlay';
+			
 			if (xmlRes.nodeName == 'error') {
-				ker.showError(translate('cannotGetTooltip'), xmlRes);	
+				//ker.showError(translate('cannotGetTooltip'), xmlRes);
+				htmlTip = translate('cannotGetTooltip');
 			} else {
-				var htmlTip= getHtmlTip(xmlRes.getElementsByTagName('element')[0]);
-				tip = document.createElement('div');
-				tip.className     = 'toolTipOverlay';
-				tip.innerHTML     = htmlTip;
-				elem.appendChild(tip);
+				htmlTip= getHtmlTip(xmlRes.getElementsByTagName('element')[0]);
 			}
+			tip.innerHTML     = htmlTip;
+			elem.appendChild(tip);
+			
 		}));	
 	} else { 
 		childs = elem.childElements();
