@@ -160,18 +160,15 @@ function get_cookie ( cookie_name )
  **********************************************************/
 
 	function oActionsInit(name,id) {
-   if (id === undefined) {
-     id = "";
-   }
-   $(name+'Ele'+id).style.width = $(name+id).getWidth();
-   $(name+'Ele'+id).style.top = $(name+id).positionedOffset().top + $(name+id).getHeight();
-   $(name+'Ele'+id).style.left = $(name+id).positionedOffset().left;
+	    if (id === undefined) {
+	    	id = "";
+	    }
+	    $(name+'Ele'+id).style.width = $(name+id).getWidth();
+	    $(name+'Ele'+id).style.top = $(name+id).positionedOffset().top + $(name+id).getHeight();
+	    $(name+'Ele'+id).style.left = $(name+id).positionedOffset().left;
 	}
 
-//
-// heikki doeleman: those on and off variables are defined
-// in header.xsl !!
-//
+
 	function oActions(name,id) {
 		var on        = "../../images/plus.gif";
         var off       = "../../images/minus.png";

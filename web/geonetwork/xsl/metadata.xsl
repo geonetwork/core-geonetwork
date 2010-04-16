@@ -526,7 +526,7 @@
 					<!-- schematrons -->
 					<xsl:when test="//svrl:failed-assert[@ref=$ref]"> 
 						<xsl:for-each select="//svrl:failed-assert[@ref=$ref]">
-							<li><xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> : <xsl:copy-of select="svrl:text"/></li>
+							<li><xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> : <xsl:copy-of select="svrl:text/*/*"/></li>
 						</xsl:for-each>
 					</xsl:when>
 				</xsl:choose>

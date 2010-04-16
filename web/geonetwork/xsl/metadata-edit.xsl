@@ -124,7 +124,9 @@
 									<xsl:call-template name="templateChoice"/>
 								</td></tr>
 								<tr><td class="padded-content" height="100%" align="center" valign="top">
-									<xsl:call-template name="editButtons"/>
+									<xsl:call-template name="editButtons">
+										<xsl:with-param name="top" select="false()"/>
+									</xsl:call-template>
 								</td></tr>
 							</table>
 						</form>
@@ -142,7 +144,8 @@
 	</xsl:template>
 	
 	<xsl:template name="editButtons" match="*">
-
+		<xsl:param name="top" select="true()"/>
+		
 		<!-- reset button -->
 		<button class="content" id="btnReset" onclick="doSaveAction('metadata.update.forget')" type="button"><xsl:value-of select="/root/gui/strings/reset"/></button>
 		
@@ -167,11 +170,11 @@
 		&#160;	
         <!-- =========================  -->
         <!-- Add other actions list     -->
-        <a id="oAc{geonet:info/id}" name="oAc{geonet:info/id}" class="button content" onclick="oActions('oAc',{geonet:info/id});" title="{/root/gui/strings/otherActions}">
-            <img id="oAcImg{geonet:info/id}" name="oAcImg{geonet:info/id}" src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/>
+		<a id="oAc{geonet:info/id}{$top}" name="oAc{geonet:info/id}{$top}" class="button content" onclick="oActions('oAc','{geonet:info/id}{$top}');" title="{/root/gui/strings/otherActions}">
+			<img id="oAcImg{geonet:info/id}{$top}" name="oAcImg{geonet:info/id}{$top}" src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/>
             <xsl:value-of select="/root/gui/strings/otherActions"/>
         </a>
-        <div id="oAcEle{geonet:info/id}" class="oAcEle" style="display:none;width:350px" onClick="oActions('oAc',{geonet:info/id});">
+		<div id="oAcEle{geonet:info/id}{$top}" class="oAcEle" style="display:none;width:350px" onClick="oActions('oAc','{geonet:info/id}{$top}');">
 			
 			<!-- thumbnails -->
 			<xsl:if test="string(geonet:info/schema)='fgdc-std' or string(geonet:info/schema)='iso19115' or starts-with(string(geonet:info/schema),'iso19139')"> <!-- FIXME: should be more general -->

@@ -9,7 +9,6 @@
 	xmlns:gml="http://www.opengis.net/gml"
     xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:geonet="http://www.fao.org/geonetwork"
-	xmlns:svrl="http://purl.oclc.org/dsdl/svrl" 
 	xmlns:exslt="http://exslt.org/common"
 	exclude-result-prefixes="gmx xsi gmd gco gml gts srv xlink exslt geonet">
 

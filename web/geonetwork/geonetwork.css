@@ -892,6 +892,9 @@ div.toolTipOverlay {
 	padding: 2px;
 }
 
+div.toolTipOverlay * li {
+    white-space: pre-wrap;
+}
 
 div.toolTipOverlay ul li, div.shortcutHelp ul li {
     margin-left:15px;
