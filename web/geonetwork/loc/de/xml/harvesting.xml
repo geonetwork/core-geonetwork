@@ -28,8 +28,8 @@
 	</info>
 	
 	<info type="csw">
-		<short>CSW/2.0</short>
-		<long>Katalogservice für Web 2.0</long>
+		<short>CSW/ISO 2.0</short>
+		<long>Katalogservice für Web ISO Profil 2.0</long>
 	</info>
 	
 	<info type="z3950">
@@ -284,7 +284,7 @@
 			die <b>&lt;STRGL&gt;</b>-Taste, wenn Sie mehrere Kategorien auswählen wollen.
 		</tip>
 		
-		<!-- CSW harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- CSW ISO Profile harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<tip id="csw.capabUrl">
 			Die URL muss auf ein Capabilities-Dokument verweisen. Das Format ist:<br/>

@@ -31,8 +31,8 @@
 	</info>
 	
 	<info type="csw">
-		<short>CSW/2.0</short>
-		<long>Service de catalogage pour le Web OGC version 2.0</long>
+		<short>CSW/ISO 2.0</short>
+		<long>Service de catalogage pour le Web OGC Profil ISO version 2.0</long>
 	</info>
 	
 	<info type="z3950">
@@ -283,7 +283,7 @@
 			key to select more than one category.
 		</tip>
 		
-		<!-- CSW harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- CSW ISO Profile harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<tip id="csw.capabUrl">
 			The given URL must point to a capabilities document. The format of a capabilities

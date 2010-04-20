@@ -65,7 +65,7 @@
 	<z3950>Сервер Z39.50</z3950>
 	<enable>Включить</enable>
 
-	<csw>CSW</csw>
+	<csw>CSW ISO Profile</csw>
 	<contactId>Contact</contactId>
 	<title>Title</title>
 	<abstract>Abstract</abstract>
@@ -196,14 +196,14 @@
 			перезапустить GeoNetwork.
 		</tip>
 
-		<!-- CSW -->
+		<!-- CSW ISO Profile -->
 		<tip id="csw.enable">
-			If set, this will enable the CSW server functionnality. It will allow other catalogs to harvest it.
+			If set, this will enable the CSW ISO Profile server functionnality. It will allow other catalogs to harvest it.
 			<br/>
 			<b>Please note:</b> restart GeoNetwork to make this change active.
 		</tip>
 		<tip id="csw.contactId">
-			Configure CSW contact for GetCapabilities operation.
+			Configure CSW ISO Profile contact for GetCapabilities operation.
 		</tip>
 		<tip id="csw.title">Title</tip>
 		<tip id="csw.abstract">Abstract</tip>

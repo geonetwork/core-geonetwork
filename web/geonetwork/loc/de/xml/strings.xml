@@ -163,8 +163,8 @@
 	<country>Staat</country>
 	<create>Erstellen</create>
 	<createTip>Neue Metadaten mit dieser Vorlage erstellen</createTip>
-	<cswTest>CSW ISO test</cswTest>
-	<cswTestDesc>Test interface for the CSW ISO catalog interface</cswTestDesc>
+	<cswTest>CSW ISO Profile test</cswTest>
+	<cswTestDesc>Test interface for the CSW ISO Profile catalog interface</cswTestDesc>
 	<dataQualityTab>Daten Qualität</dataQualityTab>
 	<datasetTab>Datenbestand</datasetTab>
 	<dateModified>Datum verändert</dateModified>

@@ -151,8 +151,8 @@
 	<country>País</country>
 	<create>Criar</create>
 	<createTip>Criar metadados novos deste molde</createTip>
-	<cswTest>Teste CSW ISO teste</cswTest>
-	<cswTestDesc>Teste da interface para a interface do catalogo CSW ISO</cswTestDesc>
+	<cswTest>Teste CSW Perfil ISO teste</cswTest>
+	<cswTestDesc>Teste da interface para a interface do catalogo CSW Perfil ISO</cswTestDesc>
 	<dataQualityTab>Qualidade de dados</dataQualityTab>
 	<datasetTab>Dataset</datasetTab>
 	<dateModified>Data modificada</dateModified>

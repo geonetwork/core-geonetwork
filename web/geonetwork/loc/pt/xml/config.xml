@@ -66,7 +66,7 @@
 	<z3950>Servidor Z39.50</z3950>
 	<enable>Activar</enable>
 		
-	<csw>CSW</csw>
+	<csw>CSW Perfil ISO</csw>
 	<contactId>Contacto</contactId>
 	<title>Título</title>
 	<abstract>Resumo</abstract>
@@ -195,14 +195,14 @@
 			<b>Por favor note:</b> reinicie a GeoNetwork para activar esta alteração.
 		</tip>
 		
-		<!-- CSW -->
+		<!-- CSW ISO Profile -->
 		<tip id="csw.enable">
-			Se definido, activaria-se o servidor de CSW. Assim, outros catálogos poderiam harvest metadados (públicos).
+			Se definido, activaria-se o servidor de Perfil ISO CSW. Assim, outros catálogos poderiam harvest metadados (públicos).
 			<br/>
 			<b>Por favor note:</b> reinicie a GeoNetwork para activar esta alteração.
 		</tip>
 		<tip id="csw.contactId">
-			Configure contacto de CSW para a operação de GetCapabilities.
+			Configure contacto de Perfil ISO CSW para a operação de GetCapabilities.
 		</tip>
 		<tip id="csw.title">Título</tip>
 		<tip id="csw.abstract">Resumo</tip>

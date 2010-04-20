@@ -162,8 +162,8 @@
 	<country>国家</country>
 	<create>新建</create>
 	<createTip>根据该模板新建元数据</createTip>
-	<cswTest>CSW ISO test</cswTest>
-	<cswTestDesc>Test interface for the CSW ISO catalog interface</cswTestDesc>
+	<cswTest>CSW ISO Profile test</cswTest>
+	<cswTestDesc>Test interface for the CSW ISO Profile catalog interface</cswTestDesc>
 	<dataQualityTab>数据质量信息</dataQualityTab>
 	<datasetTab>数据集</datasetTab>
 	<dateModified>Date Modified</dateModified>

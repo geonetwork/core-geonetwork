@@ -66,7 +66,7 @@
 			<minute label="45">45</minute>
 		</minutes>
 
-	<csw>CSW</csw>
+	<csw>CSW ISO Profile</csw>
 	<contactId>Contact</contactId>
 	<title>Titel</title>
 	<abstract>Samenvatting</abstract>
@@ -199,14 +199,14 @@
 			<b>Opmerking:</b> Start GeoNetwork opnieuw om deze wijziging door te voeren. 
 		</tip>
 		
-		<!-- CSW -->
+		<!-- CSW ISO Profile -->
 		<tip id="csw.enable">
-			De CSW server wordt geactiveerd indien geselecteerd. Andere catalogi kunnen (publieke) metadata harvesten.
+			De CSW ISO Profile server wordt geactiveerd indien geselecteerd. Andere catalogi kunnen (publieke) metadata harvesten.
 			<br/>
 			<b>Opmerking:</b> Herstart GeoNetwork om deze functie te activeren.
 		</tip>
 		<tip id="csw.contactId">
-			Pas de contactgegevens aan voor de CSW GetCapabilities operatie.
+			Pas de contactgegevens aan voor de CSW ISO Profile GetCapabilities operatie.
 		</tip>
 		<tip id="csw.title">Titel</tip>
 		<tip id="csw.abstract">Samenvatting</tip>

@@ -163,8 +163,8 @@
 	<country>Land</country>
 	<create>Aanmaken</create>
 	<createTip>Maak een nieuw metadatarecord aan volgens deze template</createTip>
-	<cswTest>CSW ISO test</cswTest>
-	<cswTestDesc>Test omgeving voor de CSW ISO catalog interface</cswTestDesc>
+	<cswTest>CSW ISO Profile test</cswTest>
+	<cswTestDesc>Test omgeving voor de CSW ISO Profile catalog interface</cswTestDesc>
 	<dataQualityTab>Datakwaliteit</dataQualityTab>
 	<datasetTab>Dataset</datasetTab>
 	<dateModified>Veranderde datum</dateModified>

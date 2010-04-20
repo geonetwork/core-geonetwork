@@ -241,8 +241,8 @@
 	<country>Pays</country>
 	<create>Dupliquer</create>
 	<createTip>Créer des métadonnées à partir de ce template</createTip>
-	<cswTest>CSW ISO test</cswTest>
-	<cswTestDesc>Test interface for the CSW ISO catalog interface</cswTestDesc>
+	<cswTest>CSW ISO Profile test</cswTest>
+	<cswTestDesc>Test interface for the CSW ISO Profile catalog interface</cswTestDesc>
 	<dataQualityTab>Qualité des données</dataQualityTab>
 	<datasetTab>Jeu de données</datasetTab>
 	<dateModified>Date de modification</dateModified>

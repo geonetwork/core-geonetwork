@@ -162,8 +162,8 @@
 	<country>País</country>
 	<create>Crear</create>
 	<createTip>Añadir un nuevo metadato usando esta plantilla</createTip>
-	<cswTest>CSW ISO test</cswTest>
-	<cswTestDesc>Test interface for the CSW ISO catalog interface</cswTestDesc>
+	<cswTest>CSW ISO Profile test</cswTest>
+	<cswTestDesc>Test interface for the CSW ISO Profile catalog interface</cswTestDesc>
 	<dataQualityTab>Calidad de los datos</dataQualityTab>
 	<datasetTab>Conjunto de datos</datasetTab>
 	<dateModified>Date Modified</dateModified>
