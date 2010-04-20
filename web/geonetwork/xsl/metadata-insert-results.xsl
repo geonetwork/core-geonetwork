@@ -31,7 +31,7 @@
 				<xsl:if test='/root/response/id'>
 					<button class="content" onclick="goBack()" id="back"><xsl:value-of select="/root/gui/strings/back"/></button>
 					&#160;
-					<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={/root/response/id}')"><xsl:value-of select="'Show'"/></button>
+					<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={/root/response/id}')"><xsl:value-of select="/root/gui/strings/show"/></button>
 					&#160;
 					<button class="content" onclick="load('{/root/gui/locService}/metadata.edit?id={/root/response/id}')"><xsl:value-of select="/root/gui/strings/edit"/></button>
 				</xsl:if>
