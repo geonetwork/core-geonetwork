@@ -46,9 +46,9 @@
 	<legend>Afficher la légende</legend>
 	<listofmaps>Liste des cartes</listofmaps>
 	<listofmapservers>Liste des géoservices</listofmapservers>
-	<loadingFrom js="true">Loading services from</loadingFrom>
-	<loadingFromWMS js="true">Loading services from given WMS server</loadingFromWMS>
-	<loadingMap>...Loading map...</loadingMap>
+	<loadingFrom js="true">Chargement des services à partir </loadingFrom>
+	<loadingFromWMS js="true">Chargement des services à partir du server WMS</loadingFromWMS>
+	<loadingMap>... Chargement ...</loadingMap>
 	<makeActive>Cocher pour rendre ce calque actif (e.g. pour rechercher)</makeActive>
 	<manually>Créer votre carte</manually>
 	<map>Carte</map>

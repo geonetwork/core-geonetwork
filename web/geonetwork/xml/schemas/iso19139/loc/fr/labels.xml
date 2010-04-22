@@ -35,7 +35,7 @@
   </element>
   <element name="codeSpace" id="208.1">
     <label>Nom de l'identifiant</label>
-    <description>Nom ou identification de la personne ou de l'organisation responsable pour la domaine de valeurs</description>
+    <description>Nom ou identification de la personne ou de l'organisation responsable pour le domaine de valeurs</description>
     <help>Informations sur la personne ou l'organisation en charge de l'espace nominal ou de l'identifiant.</help>
     <condition/>
     
@@ -122,7 +122,7 @@
   </element>
   <element name="gmd:CI_OnlineResource" id="396.0">
     <label>Ressource en ligne</label>
-    <description>Type de données pour l'information sur les sources on-line, grâce auxquelles les éléments de métadonnées étendus sur le jeu de données, la spécification ou le profil peuvent être obtenus</description>
+    <description>Type de données pour l'information sur les sources en ligne, grâce auxquelles les éléments de métadonnées étendus sur le jeu de données, la spécification ou le profil peuvent être obtenus</description>
     <help>Type de données contenant des informations relatives à la possibilité et dans l'affirmative, à la manière d'accéder en ligne au jeu de données.</help>
     <condition/>
     
@@ -182,7 +182,7 @@
     
   </element>
   <element name="gmd:DQ_ConceptualConsistency" id="112.0">
-    <label>Constitance conceptuelle</label>
+    <label>Cohérence conceptuelle</label>
     <description>Classe pour l'adhésion aux règles du schéma conceptuel</description>
     <help>Classe permettant la description du respect des règles du schéma conceptuel.
       Exemple : Une parcelle n’a pas de propriétaire.</help>
@@ -190,7 +190,7 @@
     
   </element>
   <element name="gmd:DQ_ConformanceResult" id="129.0">
-    <label>Résultat de conformance</label>
+    <label>Résultat de conformité</label>
     <description>Classe qui contient l'information sur les résultats des évaluations des valeurs (ou jeu de valeurs) obtenues en comparaison avec une valeur de qualité spécifique</description>
     <help>Classe contenant des informations relatives aux résultats d'exploitation se déduisant de la comparaison des valeurs obtenues avec un indicateur de qualité spécifié.</help>
     <condition/>
@@ -210,7 +210,7 @@
     
   </element>
   <element name="gmd:DQ_DomainConsistency" id="113.0">
-    <label>Consistance du domaine de valeur</label>
+    <label>Cohérence du domaine de valeur</label>
     <description>Classe pour l'adhésion des valeurs aux domaines de valeurs</description>
     <help>Classe permettant la description du respect des valeurs des domaines de valeurs.
       Exemple : Un attribut a une valeur non renseignée dans la nomenclature, La charte graphique n’est pas respectée.</help>
@@ -218,8 +218,8 @@
     
   </element>
   <element name="gmd:DQ_FormatConsistency" id="114.0">
-    <label>Consistance formelle</label>
-    <description>Classe pour la description du degré au niveau duquel les données sont stockées en accordance avec la structure physique du jeu de données, comme décrit dans le domaine d'applicabilité</description>
+    <label>Cohérence du format</label>
+    <description>Degré de conformité de l’échange de données avec le format spécifié.</description>
     <help>Classe permettant la description du niveau d'accord auquel le jeu de données décrit dans le domaine de qualité des données est mémorisé en regard de la structure de données physique.
       Exemple : France / Le lot EDIGEO n’est pas conforme au standard PCI, Les couleurs Autocad sont renseignées sur l’entité et non sur le layer, Un objet bâtiments est stocké dans la couche parcelle.</help>
     <condition/>
@@ -271,7 +271,7 @@
     
   </element>
   <element name="gmd:DQ_TemporalConsistency" id="122.0">
-    <label>Consistance temporelle</label>
+    <label>Cohérence temporelle</label>
     <description>Classe pour la description de la justesse d'événements, ou séquences, ordonnés, dans le cas ou ils sont donnés</description>
     <help>Exemple : La date renseignée d’approbation d’une procédure est antérieure à celle de la demande.</help>
     <condition/>
@@ -293,7 +293,7 @@
     
   </element>
   <element name="gmd:DQ_TopologicalConsistency" id="115.0">
-    <label>Consistance topologique</label>
+    <label>Cohérence topologique</label>
     <description>Classe pour la description de la justesse des caractéristiques topologiques définies explicitement du jeu de donnée définit par le domaine</description>
     <help>Classe permettant de décrire l'exactitude des caractéristiques topologiques définies explicitement, conformément au champ d'application défini pour le jeu de données.
       Exemple : La zone de plan d'occupation du sol (POS) ne passe pas sur tous les sommets des parcelles.</help>
@@ -741,8 +741,8 @@
     
   </element>
   <element name="gmd:applicationProfile" id="399.0">
-    <label>Profile d'application</label>
-    <description>Nom d'un profile d'application qui peut être utilisé avec les ressources on-line</description>
+    <label>Profil d'application</label>
+    <description>Nom d'un profil d'application qui peut être utilisé avec les ressources en ligne</description>
     <help>Nom d'un profil d'application pouvant être utilisé pour la source en ligne.</help>
     <condition/>
     
@@ -2006,7 +2006,7 @@
     <condition>Condition</condition>
   </element>
   <element name="gmd:offLine" id="278.0">
-    <label>Sources off-line</label>
+    <label>Sources hors connexion</label>
     <description>Information sur les médias off-line depuis lesquels la ressource peut être obtenue</description>
     <help>Informations concernant le support hors ligne sur lequel le jeu de données peut être obtenu. Ces informations sont gérées dans la classe MD_Medium.</help>
     <condition/>
@@ -2492,7 +2492,7 @@
   </element>
   <element name="gmd:specification" id="288.0" context="gmd:MD_Format">
     <label>Spécification</label>
-    <description>Nom d'une spécification de sous-ensemble, profile ou produit du format</description>
+    <description>Nom d'une spécification de sous-ensemble, profil ou produit du format</description>
     <help>Nom d'une spécification partielle, de profil ou de produit du format.</help>
     <condition>Obligatoire</condition>
     
