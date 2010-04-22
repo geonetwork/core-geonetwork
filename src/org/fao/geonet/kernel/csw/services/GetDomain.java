@@ -172,69 +172,74 @@ public class GetDomain extends AbstractOperation implements CatalogService
 			SearchManager sm = gc.getSearchmanager();
 			
 			IndexReader reader = sm.getIndexReader();
-			IndexSearcher searcher = new IndexSearcher(reader);
-			Hits hits = searcher.search(CatalogSearcher.getGroupsQuery(context));
-			
 			try {
-				// Get mapped lucene field in CSW configuration
-				String indexField = CatalogConfiguration.getFieldMapping().get(
-						property.toLowerCase());
-				if (indexField != null)
-					property = indexField;
-
-				// check if params asked is in the index using getFieldNames ?
-				if (!reader.getFieldNames(IndexReader.FieldOption.ALL)
-						.contains(property))
-					continue;
-				
-				boolean isRange = false;
-				if (CatalogConfiguration.getGetRecordsRangeFields().contains(
-						property))
-					isRange = true;
-				
-				if (isRange)
-					listOfValues = new Element("RangeOfValues", Csw.NAMESPACE_CSW);
-				else	
-					listOfValues = new Element("ListOfValues", Csw.NAMESPACE_CSW);
-
-				// parse each document in the index
-				int numDocs = hits.length();
-				String[] fieldValues;
-				SortedSet<String> sortedValues = new TreeSet<String>();
-				HashMap<String, Integer> duplicateValues = new HashMap<String, Integer>();
-				for (int j = 0; j < numDocs; j++) {
-					Document doc = hits.doc(j);
-					
-					// Skip templates and subTemplates
-					String[] isTemplate = doc.getValues("_isTemplate");
-					if (isTemplate[0] != null && !isTemplate[0].equals("n"))
+				IndexSearcher searcher = new IndexSearcher(reader);
+				Hits hits = searcher.search(CatalogSearcher.getGroupsQuery(context));
+			
+				try {
+					// Get mapped lucene field in CSW configuration
+					String indexField = CatalogConfiguration.getFieldMapping().get(
+							property.toLowerCase());
+					if (indexField != null)
+						property = indexField;
+	
+					// check if params asked is in the index using getFieldNames ?
+					if (!reader.getFieldNames(IndexReader.FieldOption.ALL)
+							.contains(property))
 						continue;
 					
-					// Get doc values for specified property
-					fieldValues = doc.getValues(property);
-					if (fieldValues == null)
-						continue;
+					boolean isRange = false;
+					if (CatalogConfiguration.getGetRecordsRangeFields().contains(
+							property))
+						isRange = true;
 					
-					addtoSortedSet(sortedValues, fieldValues, duplicateValues);
+					if (isRange)
+						listOfValues = new Element("RangeOfValues", Csw.NAMESPACE_CSW);
+					else	
+						listOfValues = new Element("ListOfValues", Csw.NAMESPACE_CSW);
+	
+					// parse each document in the index
+					int numDocs = hits.length();
+					String[] fieldValues;
+					SortedSet<String> sortedValues = new TreeSet<String>();
+					HashMap<String, Integer> duplicateValues = new HashMap<String, Integer>();
+					for (int j = 0; j < numDocs; j++) {
+						Document doc = hits.doc(j);
+						
+						// Skip templates and subTemplates
+						String[] isTemplate = doc.getValues("_isTemplate");
+						if (isTemplate[0] != null && !isTemplate[0].equals("n"))
+							continue;
+						
+						// Get doc values for specified property
+						fieldValues = doc.getValues(property);
+						if (fieldValues == null)
+							continue;
+					
+						addtoSortedSet(sortedValues, fieldValues, duplicateValues);
+					}
+				
+					SummaryComparator valuesComparator = new SummaryComparator(SortOption.FREQUENCY, Type.STRING, context.getLanguage(), null);
+					TreeSet<Map.Entry<String, Integer>> sortedValuesFrequency = new TreeSet<Map.Entry<String, Integer>>(valuesComparator);
+					sortedValuesFrequency.addAll(duplicateValues.entrySet());
+				
+					if (freq)
+						return createValuesByFrequency(sortedValuesFrequency);
+					else
+						listOfValues.addContent(createValuesElement(sortedValues, isRange));
+					
+				} finally {
+					// any children means that the catalog was unable to determine
+					// anything about the specified parameter
+					if (listOfValues!= null && listOfValues.getChildren().size() != 0)
+						domainValues.addContent(listOfValues);
+
+					// Add current DomainValues to the list
+					domainValuesList.add(domainValues);
+					searcher.close();
 				}
-				
-				SummaryComparator valuesComparator = new SummaryComparator(SortOption.FREQUENCY, Type.STRING, context.getLanguage(), null);
-				TreeSet<Map.Entry<String, Integer>> sortedValuesFrequency = new TreeSet<Map.Entry<String, Integer>>(valuesComparator);
-				sortedValuesFrequency.addAll(duplicateValues.entrySet());
-				
-				if (freq)
-					return createValuesByFrequency(sortedValuesFrequency);
-				else
-					listOfValues.addContent(createValuesElement(sortedValues, isRange));
-				
 			} finally {
-				// any children means that the catalog was unable to determine
-				// anything about the specified parameter
-				if (listOfValues!= null && listOfValues.getChildren().size() != 0)
-					domainValues.addContent(listOfValues);
-
-				// Add current DomainValues to the list
-				domainValuesList.add(domainValues);
+				sm.releaseIndexReader(reader);
 			}
 		}
 		return domainValuesList;

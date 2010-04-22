@@ -30,6 +30,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.MetaSearcher;
+import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
 
@@ -64,10 +65,11 @@ public class SearchUnused implements Service
 
 		// possibly close old searcher
 		UserSession  session     = context.getUserSession();
-		MetaSearcher oldSearcher = (MetaSearcher) session.getProperty(Geonet.Session.SEARCH_RESULT);
+		Object oldSearcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
 
 		if (oldSearcher != null)
-			oldSearcher.close();
+			if (oldSearcher instanceof LuceneSearcher)
+				((LuceneSearcher)oldSearcher).close();
 
 		// perform the search and save search result into session
 

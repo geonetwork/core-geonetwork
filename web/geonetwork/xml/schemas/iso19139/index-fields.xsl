@@ -6,6 +6,8 @@
 										xmlns:srv="http://www.isotc211.org/2005/srv"
 										xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
+	<xsl:include href="../iso19139/convert/functions.xsl"/>
+
 	<!-- This file defines what parts of the metadata are indexed by Lucene
 	     Searches can be conducted on indexes defined here. 
 	     The Field@name attribute defines the name of the search variable.
@@ -92,20 +94,16 @@
 				</xsl:for-each>
 
 				<xsl:for-each select="gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent">
-					<xsl:for-each select="gml:TimePeriod/gml:beginPosition">
-						<Field name="tempExtentBegin" string="{string(.)}" store="true" index="true" token="false"/>
-					</xsl:for-each>
+					<xsl:for-each select="gml:TimePeriod">
+						<xsl:variable name="times">
+							<xsl:call-template name="newGmlTime">
+								<xsl:with-param name="begin" select="gml:beginPosition|gml:begin/gml:TimeInstant/gml:timePosition"/>
+								<xsl:with-param name="end" select="gml:endPosition|gml:end/gml:TimeInstant/gml:timePosition"/>
+							</xsl:call-template>
+						</xsl:variable>
 
-					<xsl:for-each select="gml:TimePeriod/gml:endPosition">
-						<Field name="tempExtentEnd" string="{string(.)}" store="true" index="true" token="false"/>
-					</xsl:for-each>
-
-					<xsl:for-each select="gml:TimePeriod/gml:begin/gml:TimeInstant/gml:timePosition">
-						<Field name="tempExtentBegin" string="{string(.)}" store="true" index="true" token="false"/>
-					</xsl:for-each>
-
-					<xsl:for-each select="gml:TimePeriod/gml:end/gml:TimeInstant/gml:timePosition">
-						<Field name="tempExtentEnd" string="{string(.)}" store="true" index="true" token="false"/>
+						<Field name="tempExtentBegin" string="{lower-case(substring-before($times,'|'))}" store="true" index="true" token="false"/>
+						<Field name="tempExtentEnd" string="{lower-case(substring-after($times,'|'))}" store="true" index="true" token="false"/>
 					</xsl:for-each>
 
 				</xsl:for-each>

@@ -136,6 +136,7 @@
 	<categoryManagement>Gestión de Categorías</categoryManagement>
 	<categoryManDes>añade/modifica/borra y muestra las categorías</categoryManDes>
 	<categoryNameMandatory>A category name must be filled in.</categoryNameMandatory>
+	<changeDate>Metadata change date</changeDate>
 	<checkusername>Check</checkusername>
 	<choose>-Elegir-</choose>
 	<chooseFile>Seleccionar la ubicación del fichero a enviar</chooseFile>
@@ -165,6 +166,7 @@
 	<cswTest>CSW ISO Profile test</cswTest>
 	<cswTestDesc>Test interface for the CSW ISO Profile catalog interface</cswTestDesc>
 	<dataQualityTab>Calidad de los datos</dataQualityTab>
+	<datasetIssued>Temporal Extent</datasetIssued>
 	<datasetTab>Conjunto de datos</datasetTab>
 	<dateModified>Date Modified</dateModified>
 	<dateRelChoice value="14">antes</dateRelChoice>

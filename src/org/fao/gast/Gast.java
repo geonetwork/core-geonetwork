@@ -49,6 +49,9 @@ public class Gast
 									: "org.fao.gast.cli.Cli";
 
 		Util.boot(appPath, jars, starter, args);
+		// Shouldn't need the following - slf4j and log4j cause the cli to
+		// never terminate?
+		if (starter.equals("org.fao.gast.cli.Cli")) System.exit(0);
 	}
 
 	//---------------------------------------------------------------------------

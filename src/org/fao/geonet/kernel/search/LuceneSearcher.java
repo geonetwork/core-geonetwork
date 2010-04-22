@@ -78,6 +78,7 @@ import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.util.JODAISODate;
 
 import org.jdom.Content;
 import org.jdom.Element;
@@ -269,6 +270,11 @@ public class LuceneSearcher extends MetaSearcher
 						request.addContent(new Element("isReviewer").addContent("true"));
 				}
 			}
+
+			//--- handle the time elements
+
+			processTimeRange(request.getChild("dateFrom"), "0000-01-01",request.getChild("dateTo"), "9999-01-01");
+
 			//--- some other stuff
 
 			Log.debug(Geonet.SEARCH_ENGINE, "CRITERIA:\n"+ Xml.getString(request));
@@ -308,6 +314,27 @@ public class LuceneSearcher extends MetaSearcher
         }
 	}
 
+	//---------------------------------------------------------------------------
+	
+	private void processTimeRange(Element fromTime, String defaultFromTime, Element toTime, String defaultToTime) {
+		if (fromTime != null && toTime != null) { 
+			if (fromTime.getTextTrim().equals("") && 
+								 toTime.getTextTrim().equals("")) {
+				fromTime.detach(); toTime.detach();
+			} else {
+				if (fromTime.getTextTrim().equals("")) {
+					fromTime.setText(defaultFromTime);
+				} else if (toTime.getTextTrim().equals("")) {
+					toTime.setText(defaultToTime);
+				}
+				String newFromTime = JODAISODate.parseISODateTime(fromTime.getText());
+				fromTime.setText(newFromTime);	
+				String newToTime = JODAISODate.parseISODateTime(toTime.getText());
+				toTime.setText(newToTime);	
+			}
+		}
+	}
+
 	//--------------------------------------------------------------------------------
 	/**
 	 * Execute Lucene query with sorting option. 
@@ -320,26 +347,30 @@ public class LuceneSearcher extends MetaSearcher
 	{
 		IndexReader reader = _sm.getIndexReader();
 
-		CachingWrapperFilter cFilter = null;
-		if (_filter != null) cFilter = new CachingWrapperFilter(_filter);
+		try {
+			CachingWrapperFilter cFilter = null;
+			if (_filter != null) cFilter = new CachingWrapperFilter(_filter);
 
-		int numHits;
-		boolean buildSummary = _elSummary == null;
-		if (buildSummary) {
-			// get as many results as instructed or enough for search summary
-			numHits = Math.max(_maxHitsInSummary,endHit);
-		} else {
-			numHits = endHit;
+			int numHits;
+			boolean buildSummary = _elSummary == null;
+			if (buildSummary) {
+				// get as many results as instructed or enough for search summary
+				numHits = Math.max(_maxHitsInSummary,endHit);
+			} else {
+				numHits = endHit;
+			}
+	
+			Pair<TopFieldCollector,Element> results = doSearchAndMakeSummary( numHits, _maxSummaryKeys, _language, _resultType, _summaryConfig, reader, _query, cFilter, _sort, buildSummary);
+			TopFieldCollector tfc = results.one();
+			_elSummary = results.two();
+			_numHits = Integer.parseInt(_elSummary.getAttributeValue("count"));
+	
+			Log.debug(Geonet.SEARCH_ENGINE, "Hits found : "+_numHits+"");
+			
+			return Pair.read(reader, tfc.topDocs(startHit, endHit));
+		} finally {
+			_sm.releaseIndexReader(reader);
 		}
-
-		Pair<TopFieldCollector,Element> results = doSearchAndMakeSummary( numHits, _maxSummaryKeys, _language, _resultType, _summaryConfig, reader, _query, cFilter, _sort, buildSummary);
-		TopFieldCollector tfc = results.one();
-		_elSummary = results.two();
-		_numHits = Integer.parseInt(_elSummary.getAttributeValue("count"));
-
-		Log.debug(Geonet.SEARCH_ENGINE, "Hits found : "+_numHits+"");
-		
-		return Pair.read(reader, tfc.topDocs(startHit, endHit));
 	}
 
 	//--------------------------------------------------------------------------------

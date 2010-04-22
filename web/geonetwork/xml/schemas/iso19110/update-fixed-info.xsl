@@ -82,7 +82,17 @@
 	<xsl:template match="gmx:FileName">
 		<xsl:copy>
 			<xsl:attribute name="src">
-				<xsl:value-of select="concat(/root/env/siteURL,'/resources.get?id=',/root/env/id,'&amp;fname=',.,'&amp;access=private')"/>
+				<xsl:choose>
+					<xsl:when test="/root/env/config/downloadservice/simple='true'">
+						<xsl:value-of select="concat(/root/env/siteURL,'/resources.get?id=',/root/env/id,'&amp;fname=',.,'&amp;access=private')"/>
+					</xsl:when>
+					<xsl:when test="/root/env/config/downloadservice/withdisclaimer='true'">
+						<xsl:value-of select="concat(/root/env/siteURL,'/file.disclaimer?id=',/root/env/id,'&amp;fname=',.,'&amp;access=private')"/>
+					</xsl:when>
+					<xsl:otherwise> <!-- /root/env/config/downloadservice/leave='true' -->
+						<xsl:value-of select="@src"/> <!-- whatever is in there already -->
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:attribute>
 			<xsl:value-of select="."/>
 		</xsl:copy>

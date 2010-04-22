@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:gco="http://www.isotc211.org/2005/gco" 
+    xmlns:gmx="http://www.isotc211.org/2005/gmx" 
     xmlns:gmd="http://www.isotc211.org/2005/gmd"
     xmlns:srv="http://www.isotc211.org/2005/srv"
     xmlns:geonet="http://www.fao.org/geonetwork"
@@ -25,14 +26,14 @@
                     select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId]"
                 />
             </xsl:when>
-            <xsl:when test="not(gco:CharacterString)">
+            <xsl:when test="not(gco:CharacterString) and not(gmx:MimeFileType)">
                 <!-- If no CharacterString, try to use the first textGroup available -->
                 <xsl:value-of
                     select="gmd:PT_FreeText/gmd:textGroup[position()=1]/gmd:LocalisedCharacterString"
                 />
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="gco:CharacterString"/>
+                <xsl:value-of select="gco:CharacterString|gmx:MimeFileType"/>
             </xsl:otherwise>
         </xsl:choose>
 

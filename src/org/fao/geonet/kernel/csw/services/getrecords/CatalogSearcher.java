@@ -169,26 +169,29 @@ public class CatalogSearcher {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
 		IndexReader reader = sm.getIndexReader();
+		try {
+			Pair<TopFieldCollector,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary( maxHits, Integer.MAX_VALUE, _lang, ResultType.RESULTS.toString(), _summaryConfig, reader, _query, _filter, _sort, false);
+			TopFieldCollector tfc = searchResults.one();
+			Element summary = searchResults.two();
 
-		Pair<TopFieldCollector,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary( maxHits, Integer.MAX_VALUE, _lang, ResultType.RESULTS.toString(), _summaryConfig, reader, _query, _filter, _sort, false);
-		TopFieldCollector tfc = searchResults.one();
-		Element summary = searchResults.two();
+			int numHits = Integer.parseInt(summary.getAttributeValue("count"));
 
-		int numHits = Integer.parseInt(summary.getAttributeValue("count"));
+			Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
 
-		Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
+			// --- retrieve results
 
-		// --- retrieve results
+			List<String> response = new ArrayList<String>();
+			TopDocs tdocs = tfc.topDocs(0, maxHits);
 
-		List<String> response = new ArrayList<String>();
-		TopDocs tdocs = tfc.topDocs(0, maxHits);
-
-		for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
-			Document doc = reader.document(sdoc.doc, uuidselector);
-			String uuid = doc.get("_uuid");
-			if (uuid != null) response.add(uuid);
+			for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
+				Document doc = reader.document(sdoc.doc, uuidselector);
+				String uuid = doc.get("_uuid");
+				if (uuid != null) response.add(uuid);
+			}
+			return response;
+		} finally {
+			sm.releaseIndexReader(reader);
 		}
-		return response;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -244,7 +247,7 @@ public class CatalogSearcher {
 	// TODO add token parameter in CSW conf for each field, may be useful for
 	// GetDomain operation too.
 	private void convertPhrases(Element elem, ServiceContext context)
-			throws CorruptIndexException, IOException {
+			throws InterruptedException, CorruptIndexException, IOException {
 		if (elem.getName().equals("TermQuery")) {
 			String field = elem.getAttributeValue("fld");
 			String text = elem.getAttributeValue("txt");
@@ -274,8 +277,7 @@ public class CatalogSearcher {
 	}
 
 	// ---------------------------------------------------------------------------
-	private boolean isTokenized(String field, ServiceContext context)
-			throws IOException {
+	private boolean isTokenized(String field, ServiceContext context) throws CorruptIndexException, IOException, InterruptedException {
 		Boolean tokenized = _isTokenizedField.get(field);
 		if (tokenized != null) {
 			return tokenized.booleanValue();
@@ -284,28 +286,31 @@ public class CatalogSearcher {
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
 		IndexReader reader = sm.getIndexReader();
-
-		int i = 0;
-		while (i < reader.numDocs() && tokenized == null) {
-			if (reader.isDeleted(i)) {
+		try {
+			int i = 0;
+			while (i < reader.numDocs() && tokenized == null) {
+				if (reader.isDeleted(i)) {
+					i++;
+					continue; // FIXME: strange lucene hack: sometimes it tries
+					// to load a deleted document
+				}
+				Document doc = reader.document(i);
+				Field tmp = doc.getField(field);
+				if (tmp != null) {
+					tokenized = tmp.isTokenized();
+				}
 				i++;
-				continue; // FIXME: strange lucene hack: sometimes it tries
-				// to load a deleted document
 			}
-			Document doc = reader.document(i);
-			Field tmp = doc.getField(field);
-			if (tmp != null) {
-				tokenized = tmp.isTokenized();
+	
+			if (tokenized != null) {
+				_isTokenizedField.put(field, tokenized.booleanValue());
+				return tokenized.booleanValue();
 			}
-			i++;
+			_isTokenizedField.put(field, false);
+			return false;
+		} finally {
+			sm.releaseIndexReader(reader);
 		}
-
-		if (tokenized != null) {
-			_isTokenizedField.put(field, tokenized.booleanValue());
-			return tokenized.booleanValue();
-		}
-		_isTokenizedField.put(field, false);
-		return false;
 	}
 
 	/**
@@ -380,60 +385,64 @@ public class CatalogSearcher {
 		Log.debug(Geonet.CSW_SEARCH, "Lucene query: " + query.toString());
 
 		IndexReader reader = sm.getIndexReader();
+		try {
 
-		// TODO Handle NPE creating spatial filter (due to constraint
-		// language version).
-		Filter spatialfilter = sm.getSpatial().filter(query, filterExpr, filterVersion);
-		CachingWrapperFilter cFilter = null;
-		if (spatialfilter != null) cFilter = new CachingWrapperFilter(spatialfilter);
-		boolean buildSummary = resultType == ResultType.RESULTS_WITH_SUMMARY;
-		int numHits = startPosition + maxRecords;
+			// TODO Handle NPE creating spatial filter (due to constraint
+			// language version).
+			Filter spatialfilter = sm.getSpatial().filter(query, filterExpr, filterVersion);
+			CachingWrapperFilter cFilter = null;
+			if (spatialfilter != null) cFilter = new CachingWrapperFilter(spatialfilter);
+			boolean buildSummary = resultType == ResultType.RESULTS_WITH_SUMMARY;
+			int numHits = startPosition + maxRecords;
 
-		// get as many results as instructed or enough for search summary
-		if (buildSummary) {
-			numHits = Math.max(maxHitsInSummary, numHits);
-		}
-
-		// record globals for reuse
-		_query = query;
-		_filter = cFilter;
-		_sort = sort;
-		_lang = context.getLanguage();
-
-		Pair<TopFieldCollector,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, Integer.MAX_VALUE, context.getLanguage(), resultType.toString(), _summaryConfig, reader, query, cFilter, sort, buildSummary);
-		TopFieldCollector tfc = searchResults.one();
-		Element summary = searchResults.two();
-
-		numHits = Integer.parseInt(summary.getAttributeValue("count"));
-
-		Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
-
-		// --- retrieve results
-
-		List<ResultItem> results = new ArrayList<ResultItem>();
-		// FIXME : topDocs could have been used already once in MakeSummary
-		// so the second call return null docs. resultType=results return
-		// record, but results_with_summary does not.
-		TopDocs hits = tfc.topDocs(startPosition - 1, maxRecords);
-
-		for (int i = 0; i < hits.scoreDocs.length; i++) {
-			Document doc = reader.document(hits.scoreDocs[i].doc, _selector);
-			String id = doc.get("_id");
-
-			ResultItem ri = new ResultItem(id);
-			results.add(ri);
-
-			for (String field : FieldMapper.getMappedFields()) {
-				String value = doc.get(field);
-
-				if (value != null)
-					ri.add(field, value);
+			// get as many results as instructed or enough for search summary
+			if (buildSummary) {
+				numHits = Math.max(maxHitsInSummary, numHits);
 			}
-		}
 
-		summary.setName("Summary");
-		summary.setNamespace(Csw.NAMESPACE_GEONET);
-		return Pair.read(summary, results);
+			// record globals for reuse
+			_query = query;
+			_filter = cFilter;
+			_sort = sort;
+			_lang = context.getLanguage();
+	
+			Pair<TopFieldCollector,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, Integer.MAX_VALUE, context.getLanguage(), resultType.toString(), _summaryConfig, reader, query, cFilter, sort, buildSummary);
+			TopFieldCollector tfc = searchResults.one();
+			Element summary = searchResults.two();
+
+			numHits = Integer.parseInt(summary.getAttributeValue("count"));
+	
+			Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
+
+			// --- retrieve results
+
+			List<ResultItem> results = new ArrayList<ResultItem>();
+			// FIXME : topDocs could have been used already once in MakeSummary
+			// so the second call return null docs. resultType=results return
+			// record, but results_with_summary does not.
+			TopDocs hits = tfc.topDocs(startPosition - 1, maxRecords);
+	
+			for (int i = 0; i < hits.scoreDocs.length; i++) {
+				Document doc = reader.document(hits.scoreDocs[i].doc, _selector);
+				String id = doc.get("_id");
+	
+				ResultItem ri = new ResultItem(id);
+				results.add(ri);
+	
+				for (String field : FieldMapper.getMappedFields()) {
+					String value = doc.get(field);
+
+					if (value != null)
+						ri.add(field, value);
+				}
+			}
+
+			summary.setName("Summary");
+			summary.setNamespace(Csw.NAMESPACE_GEONET);
+			return Pair.read(summary, results);
+		} finally {
+			sm.releaseIndexReader(reader);
+		}
 	}
 
 	// ---------------------------------------------------------------------------

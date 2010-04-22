@@ -81,11 +81,11 @@
 	</xsl:template>
 	
 	<!-- ===================================================================== -->
-	<!-- some gco: elements -->
+	<!-- some gco: elements and gmx:MimeFileType are swallowed -->
 	<!-- ===================================================================== -->
 
-	<xsl:template mode="iso19139" match="gmd:*[gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gco:Scale|gco:RecordType]|
-									srv:*[gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gco:Scale|gco:RecordType]">
+	<xsl:template mode="iso19139" match="gmd:*[gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gco:Scale|gco:RecordType|gmx:MimeFileType]|
+									srv:*[gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gco:Scale|gco:RecordType|gmx:MimeFileType]">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
@@ -493,7 +493,7 @@
 								</xsl:call-template>
 							</xsl:with-param>
 							<xsl:with-param name="text">
-								<input id="_{gmx:FileName/geonet:element/@ref}" class="md" type="text" name="_{gmx:FileName/geonet:element/@ref}" value="{gmx:FileName/text()}" size="40" />
+								<input id="_{$ref}" class="md" type="text" name="_{$ref}" value="{$value}" size="40" />
 							</xsl:with-param>
 							<xsl:with-param name="id" select="concat('di_',$ref)"/>
 						</xsl:call-template>
@@ -2353,8 +2353,8 @@
 				</xsl:apply-templates>
 				
 				<xsl:choose>
-					<xsl:when test="string(gmd:protocol/gco:CharacterString)='WWW:DOWNLOAD-1.0-http--download' and string(gmd:name/gco:CharacterString)!=''">
-						<xsl:apply-templates mode="iso19139FileRemove" select="gmd:name/gco:CharacterString">
+					<xsl:when test="string(gmd:protocol/gco:CharacterString)='WWW:DOWNLOAD-1.0-http--download' and string(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)!=''">
+						<xsl:apply-templates mode="iso19139FileRemove" select="gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType">
 							<xsl:with-param name="access" select="'private'"/>
 							<xsl:with-param name="id" select="$id"/>
 						</xsl:apply-templates>
@@ -2388,7 +2388,7 @@
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
-		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString)" />
+		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)" />
 		<xsl:variable name="description" select="normalize-space(gmd:description/gco:CharacterString)" />
 		
 		<xsl:choose>
@@ -2404,7 +2404,7 @@
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
 					<xsl:with-param name="text">
 						<!-- ETj
-						<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={gmd:linkage/gmd:URL}&amp;service={gmd:name/gco:CharacterString}&amp;type=2')" title="{/root/strings/interactiveMap}">
+						<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={gmd:linkage/gmd:URL}&amp;service={gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType}&amp;type=2')" title="{/root/strings/interactiveMap}">
 						-->
 						<a href="javascript:runIM_addService('{$linkage}','{$name}',2)" title="{/root/strings/interactiveMap}">
 							<xsl:choose>
@@ -2449,7 +2449,7 @@
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
-		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString)" />
+		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)" />
 		<xsl:variable name="description" select="normalize-space(gmd:description/gco:CharacterString)" />
 		
 		<xsl:choose>
@@ -2487,7 +2487,7 @@
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
-		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString)" />
+		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)" />
 		<xsl:variable name="description" select="normalize-space(gmd:description/gco:CharacterString)" />
 		
 		<xsl:choose>
@@ -2501,7 +2501,7 @@
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
 					<xsl:with-param name="text">
-<!--	ETj					<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={gmd:linkage/gmd:URL}&amp;service={gmd:name/gco:CharacterString}&amp;type=1')" title="{/root/strings/interactiveMap}">
+<!--	ETj					<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={gmd:linkage/gmd:URL}&amp;service={gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType}&amp;type=1')" title="{/root/strings/interactiveMap}">
 -->						<a href="javascript:runIM_addService('{$linkage}','{$name}',1)" title="{/root/strings/interactiveMap}">
 								<xsl:choose>
 								<xsl:when test="string($description)!=''">
@@ -2527,7 +2527,7 @@
 		<xsl:param name="edit"/>
 		<xsl:variable name="download_check"><xsl:text>&amp;fname=&amp;access</xsl:text></xsl:variable>
 		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
-		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString)" />
+		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)" />
 		<xsl:variable name="description" select="normalize-space(gmd:description/gco:CharacterString)" />
 		
 		<xsl:choose>
@@ -2580,7 +2580,7 @@
 					<xsl:with-param name="text">
 						<xsl:variable name="value" select="string(gco:CharacterString)"/>
 						<xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref"/>
-						<xsl:variable name="fref" select="../gmd:name/gco:CharacterString/geonet:element/@ref"/>
+						<xsl:variable name="fref" select="../gmd:name/gco:CharacterString/geonet:element/@ref|gmd:name/gmx:MimeFileType/geonet:element/@ref"/>
 						<input type="hidden" id="_{$ref}" name="_{$ref}" value="{$value}"/>
 						<select id="s_{$ref}" name="s_{$ref}" size="1" onchange="checkForFileUpload('{$fref}', '{$ref}');" class="md">
 							<xsl:if test="$value=''">
@@ -2620,8 +2620,8 @@
 			<xsl:when test="$edit=true()">
 				<xsl:variable name="protocol" select="../gmd:protocol/gco:CharacterString"/>
 				<xsl:variable name="pref" select="../gmd:protocol/gco:CharacterString/geonet:element/@ref"/>
-				<xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref"/>
-				<xsl:variable name="value" select="gco:CharacterString"/>
+				<xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref|gmx:MimeFileType/geonet:element/@ref"/>
+				<xsl:variable name="value" select="gco:CharacterString|gmx:MimeFileType"/>
 				<xsl:variable name="button" select="starts-with($protocol,'WWW:DOWNLOAD') and contains($protocol,'http') and normalize-space($value)=''"/>
 
 				<xsl:call-template name="simpleElementGui">
@@ -2647,7 +2647,7 @@
 						</xsl:call-template>
 					</xsl:with-param>
 					<xsl:with-param name="text">
-						<input id="_{gco:CharacterString/geonet:element/@ref}" class="md" type="text" name="_{gco:CharacterString/geonet:element/@ref}" value="{gco:CharacterString/text()}" size="40" />
+						<input id="_{$ref}" class="md" type="text" name="_{$ref}" value="{$value}" size="40" />
 						</xsl:with-param>
 					<xsl:with-param name="id" select="concat('di_',$ref)"/>
 					<xsl:with-param name="visible" select="not($button)"/>
@@ -2712,6 +2712,8 @@
 						</xsl:call-template>
 					</xsl:for-each>
 				</xsl:variable>
+
+				<xsl:variable name="mimeType" select="normalize-space(gmd:name/gmx:MimeFileType/@type)"/>
 				
 				<xsl:variable name="desc">
 					<xsl:for-each select="gmd:description">
@@ -2728,6 +2730,9 @@
 							<xsl:attribute name="href"><xsl:value-of select="$linkage"/></xsl:attribute>
 							<xsl:attribute name="name"><xsl:value-of select="$name"/></xsl:attribute>
 							<xsl:choose>
+								<xsl:when test="(starts-with($protocol,'WWW:LINK-') or starts-with($protocol,'WWW:DOWNLOAD-')) and $mimeType!=''">
+									<xsl:attribute name="type"><xsl:value-of select="$mimeType"/></xsl:attribute>
+								</xsl:when>
 								<xsl:when test="starts-with($protocol,'WWW:LINK-')">
 									<xsl:attribute name="type">text/html</xsl:attribute>
 								</xsl:when>

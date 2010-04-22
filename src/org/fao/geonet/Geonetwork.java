@@ -163,11 +163,12 @@ public class Geonetwork implements ApplicationHandler
 		String luceneDir = path + handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_DIR);
 
 		String summaryConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.SUMMARY_CONFIG);
+		String dataDir = path + handlerConfig.getMandatoryValue(Geonet.Config.DATA_DIR);
 
 		DataStore dataStore = createDataStore(context.getResourceManager().getProps(Geonet.Res.MAIN_DB), luceneDir);
 	
 		String optimizerInterval = settingMan.getValue("system/indexoptimizer/interval");
-		searchMan = new SearchManager(path, luceneDir, summaryConfigXmlFile, dataStore, optimizerInterval, new SettingInfo(settingMan));
+		searchMan = new SearchManager(path, luceneDir, dataDir, summaryConfigXmlFile, dataStore, optimizerInterval, new SettingInfo(settingMan));
 
 		//------------------------------------------------------------------------
 		//--- extract intranet ip/mask and initialize AccessManager
@@ -186,7 +187,7 @@ public class Geonetwork implements ApplicationHandler
 		if (!_htmlCacheDir.isAbsolute()) {
 			htmlCacheDir = path + htmlCacheDir;
 		}
-		DataManager dataMan = new DataManager(searchMan, accessMan, dbms, settingMan, baseURL, htmlCacheDir);
+		DataManager dataMan = new DataManager(searchMan, accessMan, dbms, settingMan, baseURL, htmlCacheDir, dataDir, path);
 
 		String schemasDir = path + Geonet.Path.SCHEMAS;
 		String saSchemas[] = new File(schemasDir).list();

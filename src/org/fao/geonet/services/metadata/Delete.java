@@ -44,7 +44,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.csw.services.getrecords.CatalogSearcher;
 import org.fao.geonet.kernel.mef.MEFLib;
-import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.FileCopyMgr;

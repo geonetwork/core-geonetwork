@@ -15,6 +15,7 @@
 		<xsl:variable name="indexoptimizerAt" select="$indexoptimizer/at/children"/>
 		<xsl:variable name="indexoptimizerInterval" select="$indexoptimizer/interval/children"/>
 		<xsl:variable name="z3950"      select="children/z3950/children"/>
+		<xsl:variable name="downloadservice"      select="children/downloadservice/children"/>
 		<xsl:variable name="proxy"      select="children/proxy/children"/>
 		<xsl:variable name="feedback"   select="children/feedback/children"/>
 		<xsl:variable name="removedMd"  select="children/removedMetadata/children"/>
@@ -71,6 +72,12 @@
 				<port><xsl:value-of select="$z3950/port/value"/></port>
 			</z3950>
 			
+			<downloadservice>
+				<leave><xsl:value-of select="$downloadservice/leave/value"/></leave>
+				<simple><xsl:value-of select="$downloadservice/simple/value"/></simple>
+				<withdisclaimer><xsl:value-of select="$downloadservice/withdisclaimer/value"/></withdisclaimer>
+			</downloadservice>
+
 			<userSelfRegistration>
 				<enable><xsl:value-of select="$userSelfRegistration/enable/value"/></enable>
 			</userSelfRegistration>

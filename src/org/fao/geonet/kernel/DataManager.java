@@ -59,6 +59,7 @@ import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -83,7 +84,7 @@ public class DataManager
 	/** initializes the search manager and index not-indexed metadata
 	  */
 
-	public DataManager(SearchManager sm, AccessManager am, Dbms dbms, SettingManager ss, String baseURL, String htmlCacheDir) throws Exception
+	public DataManager(SearchManager sm, AccessManager am, Dbms dbms, SettingManager ss, String baseURL, String htmlCacheDir, String dataDir, String appPath) throws Exception
 	{
 		searchMan = sm;
 		accessMan = am;
@@ -91,6 +92,8 @@ public class DataManager
 
 		this.baseURL = baseURL;
 		this.htmlCacheDir = htmlCacheDir;
+		this.dataDir = dataDir;
+		this.appPath = appPath;
 
 		init(dbms, false);
 	}
@@ -2223,6 +2226,7 @@ public class DataManager
 		env.addContent(new Element("id")        			.setText(id));
 		env.addContent(new Element("uuid")      			.setText(uuid));
 		env.addContent(new Element("updateDateStamp")	.setText("no"));
+		env.addContent(new Element("datadir")         .setText(Lib.resource.getDir(dataDir, Params.Access.PRIVATE, id)));
 		return updateFixedInfo(schema, md, env);
 	}
 
@@ -2238,7 +2242,8 @@ public class DataManager
 		env.addContent(new Element("id")        			.setText(id));
 		env.addContent(new Element("uuid")      			.setText(uuid));
 		env.addContent(new Element("parentUuid")			.setText(parentUuid));
-		env.addContent(new Element("updateDateStamp")		.setText("yes"));
+		env.addContent(new Element("updateDateStamp")	.setText("yes"));
+		env.addContent(new Element("datadir")         .setText(Lib.resource.getDir(dataDir, Params.Access.PRIVATE, id)));
 		return updateFixedInfo(schema, md, env);
 	}
 
@@ -2251,6 +2256,8 @@ public class DataManager
 		
 		env.addContent(new Element("changeDate").setText(new ISODate().toString()));
 		env.addContent(new Element("siteURL")   .setText(getSiteURL()));
+		Element system = settingMan.get("system", -1);
+		env.addContent(Xml.transform(system, appPath + Geonet.Path.STYLESHEETS+ "/xml/config.xsl"));
 
 		//--- setup root element
 
@@ -2630,6 +2637,8 @@ public class DataManager
 	private SettingManager settingMan;
 	private HarvestManager harvestMan;
 	private String htmlCacheDir;
+	private String dataDir;
+	private String appPath;
 }
 
 //=============================================================================

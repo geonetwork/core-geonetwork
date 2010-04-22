@@ -162,7 +162,7 @@
 						<a onClick="showAdvancedSearch()" style="cursor:pointer;">
 							<xsl:value-of select="/root/gui/strings/extended"/>
 						</a>
-						<a onClick="showOptions()" style="cursor:pointer; padding-left:10px;">
+						<a onClick="showFields('options.img','options.div')" style="cursor:pointer; padding-left:10px;">
 							<img id="options.img" src="{/root/gui/url}/images/plus.gif"/>
 							<xsl:value-of select="/root/gui/strings/options"/>
 						</a>

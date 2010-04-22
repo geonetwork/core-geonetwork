@@ -109,6 +109,10 @@ public class Set implements Service
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "z3950/enable",             "system/z3950/enable"),
 		new ConfigEntry(ConfigEntry.Type.INT,    false, "z3950/port",               "system/z3950/port"),
 		
+		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "downloadservice/enable",             "system/downloadservice/enable"),
+		new ConfigEntry(ConfigEntry.Type.BOOL,   false, "downloadservice/simple",             "system/downloadservice/simple"),
+		new ConfigEntry(ConfigEntry.Type.BOOL,   false, "downloadservice/withdisclaimer",     "system/downloadservice/withdisclaimer"),
+		
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "csw/enable",               "system/csw/enable"),
 		new ConfigEntry(ConfigEntry.Type.INT,    false, "csw/contactId",                               "system/csw/contactId"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/individualName",                          "system/csw/individualName"),

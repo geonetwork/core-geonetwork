@@ -34,6 +34,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
+import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
 
@@ -68,10 +69,11 @@ public class SelectionSearch implements Service
 		
 		// possibly close old searcher
 		UserSession  session     = context.getUserSession();
-		MetaSearcher oldSearcher = (MetaSearcher)session.getProperty(Geonet.Session.SEARCH_RESULT);
+		Object oldSearcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
 
 		if (oldSearcher != null)
-			oldSearcher.close();
+			if (oldSearcher instanceof LuceneSearcher) 
+				((LuceneSearcher)oldSearcher).close();
 
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(session) ;

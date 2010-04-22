@@ -64,7 +64,17 @@
 	-->
 	<xsl:template match="linkage[parent::onLineSrc and starts-with(following-sibling::protocol,'WWW:DOWNLOAD-') and contains(following-sibling::protocol,'http--download') and following-sibling::orName]">
 		<linkage>
-			<xsl:value-of select="concat(/root/env/siteURL,'/resources.get?id=',/root/env/id,'&amp;fname=',following-sibling::orName,'&amp;access=private')"/>
+			<xsl:choose>
+				<xsl:when test="/root/env/config/downloadservice/simple='true'">
+					<xsl:value-of select="concat(/root/env/siteURL,'/resources.get?id=',/root/env/id,'&amp;fname=',following-sibling::orName,'&amp;access=private')"/>
+				</xsl:when>
+				<xsl:when test="/root/env/config/downloadservice/withdisclaimer='true'">
+					<xsl:value-of select="concat(/root/env/siteURL,'/file.disclaimer?id=',/root/env/id,'&amp;fname=',following-sibling::orName,'&amp;access=private')"/>
+				</xsl:when>
+				<xsl:otherwise> <!-- /root/env/config/downloadservice/leave='true' -->
+					<xsl:value-of select="linkage"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</linkage>
 	</xsl:template>
 

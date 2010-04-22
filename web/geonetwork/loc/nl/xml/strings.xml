@@ -137,6 +137,7 @@
 	<categoryManagement>Categorie beheer</categoryManagement>
 	<categoryManDes>Toevoegen/wijzigen/verwijderen of bekijken van categorieen</categoryManDes>
 	<categoryNameMandatory>Een categorie moet worden ingevuld.</categoryNameMandatory>
+	<changeDate>Metadata change date</changeDate>
 	<checkusername>Check</checkusername>
 	<choose>-Kies-</choose>
 	<chooseFile>Kies de lokatie van het bestand dat u wilt uploaden</chooseFile>
@@ -166,6 +167,7 @@
 	<cswTest>CSW ISO Profile test</cswTest>
 	<cswTestDesc>Test omgeving voor de CSW ISO Profile catalog interface</cswTestDesc>
 	<dataQualityTab>Datakwaliteit</dataQualityTab>
+	<datasetIssued>Temporal Extent</datasetIssued>
 	<datasetTab>Dataset</datasetTab>
 	<dateModified>Veranderde datum</dateModified>
 	<dateRelChoice value="14">voor</dateRelChoice>

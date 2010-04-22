@@ -59,7 +59,7 @@ function closeSearch(s)
 else
 {$(s).hide();clearNode($(s))}}
 function initAdvancedSearch()
-{im_mm_init();new Ajax.Autocompleter('themekey','keywordList','portal.search.keywords?',{paramName:'keyword',updateElement:addQuote});Calendar.setup({inputField:"dateFrom",ifFormat:"%Y-%m-%dT%H:%M:00",button:"from_trigger_c",showsTime:true,align:"Tl",singleClick:true});Calendar.setup({inputField:"dateTo",ifFormat:"%Y-%m-%dT%H:%M:00",button:"to_trigger_c",showsTime:true,align:"Tl",singleClick:true});}
+{im_mm_init();new Ajax.Autocompleter('themekey','keywordList','portal.search.keywords?',{paramName:'keyword',updateElement:addQuote});Calendar.setup({inputField:"dateFrom",ifFormat:"%Y-%m-%dT%H:%M:00",button:"from_trigger_c",showsTime:true,align:"Tl",singleClick:true});Calendar.setup({inputField:"dateTo",ifFormat:"%Y-%m-%dT%H:%M:00",button:"to_trigger_c",showsTime:true,align:"Tl",singleClick:true});Calendar.setup({inputField:"extFrom",ifFormat:"%Y-%m-%dT%H:%M:00",button:"extfrom_trigger_c",showsTime:true,align:"Tl",singleClick:true});Calendar.setup({inputField:"extTo",ifFormat:"%Y-%m-%dT%H:%M:00",button:"extto_trigger_c",showsTime:true,align:"Tl",singleClick:true});}
 function runAdvancedSearch(type)
 {if(type!="pdf")
 preparePresent();setSort();var pars="any="+encodeURIComponent($('any').value);pars+=fetchParam('phrase');pars+=fetchParam('or');pars+=fetchParam('without');pars+=fetchParam('title');pars+=fetchParam('abstract');pars+=fetchParam('themekey');pars+=fetchRadioParam('similarity');var region=$('region').value;if(region!="")
@@ -67,13 +67,15 @@ preparePresent();setSort();var pars="any="+encodeURIComponent($('any').value);pa
 {pars+=fetchParam('region');}}
 if($('radfrom1').checked)
 {pars+=fetchParam('dateFrom');pars+=fetchParam('dateTo');}
+if($('radfromext1').checked)
+{pars+=fetchParam('extFrom');pars+=fetchParam('extTo');}
 pars+=fetchParam('group');pars+=fetchParam('category');pars+=fetchParam('siteId');pars+=fetchBoolParam('digital');pars+=fetchBoolParam('paper');pars+=fetchBoolParam('dynamic');pars+=fetchBoolParam('download');pars+=fetchParam('protocol').toLowerCase();pars+=fetchParam('template');pars+=fetchParam('sortBy');pars+=fetchParam('sortOrder');pars+=fetchParam('hitsPerPage');pars+=fetchParam('output');if(type=="pdf")
 gn_searchpdf(pars);else
 gn_search(pars);}
 function resetAdvancedSearch()
-{setParam('any','');setParam('phrase','');setParam('or','');setParam('without','');setParam('title','');setParam('abstract','');setParam('themekey','');var radioSimil=document.getElementsByName('similarity');radioSimil[1].checked=true;setParam('relation','overlaps');setParam('region',null);$('northBL').value='90';$('southBL').value='-90';$('eastBL').value='180';$('westBL').value='-180';im_mm_redrawAoI();im_mm_zoomToAoI();setParam('dateFrom','');setParam('dateTo','');$('radfrom0').checked=true;$('radfrom1').disabled='disabled';setParam('group','');setParam('category','');setParam('siteId','');$('digital').checked=false;$('paper').checked=false;$('dynamic').checked=false;$('download').checked=false;setParam('protocol','');setParam('template','n');setParam('sortBy','relevance');setParam('sortOrder','');setParam('hitsPerPage','10');setParam('output','full');}
-function showOptions()
-{var img=$('options.img');var src=img.getAttribute('src');var ndx=src.lastIndexOf('/');var div=$('options.div');src=src.substring(0,ndx+1);if(div.visible())img.setAttribute('src',src+'plus.gif');else img.setAttribute('src',src+'minus.png');div.toggle();}
+{setParam('any','');setParam('phrase','');setParam('or','');setParam('without','');setParam('title','');setParam('abstract','');setParam('themekey','');var radioSimil=document.getElementsByName('similarity');radioSimil[1].checked=true;setParam('relation','overlaps');setParam('region',null);$('northBL').value='90';$('southBL').value='-90';$('eastBL').value='180';$('westBL').value='-180';im_mm_redrawAoI();im_mm_zoomToAoI();setParam('dateFrom','');setParam('dateTo','');$('radfrom0').checked=true;$('radfrom1').disabled='disabled';setParam('extFrom','');setParam('extTo','');$('radfromext1').disabled='disabled';setParam('group','');setParam('category','');setParam('siteId','');$('digital').checked=false;$('paper').checked=false;$('dynamic').checked=false;$('download').checked=false;setParam('protocol','');setParam('template','n');setParam('sortBy','relevance');setParam('sortOrder','');setParam('hitsPerPage','10');setParam('output','full');}
+function showFields(img,div)
+{var img=$(img);var src=img.getAttribute('src');var ndx=src.lastIndexOf('/');var div=$(div);src=src.substring(0,ndx+1);if(div.visible())img.setAttribute('src',src+'plus.gif');else img.setAttribute('src',src+'minus.png');div.toggle();}
 function setSort()
 {if($('sortBy').value=='title')
 $('sortOrder').value='reverse';else
@@ -164,12 +166,12 @@ function keywordCheck(k,check){k='"'+k+'"';if(check){if($("themekey").value!='')
 $("themekey").value+=' or '+k;else
 $("themekey").value=k;}else{$("themekey").value=$("themekey").value.replace(' or '+k,'');$("themekey").value=$("themekey").value.replace(k,'');pos=$("themekey").value.indexOf(" or ");if(pos==0){$("themekey").value=$("themekey").value.substring(4,$("themekey").value.length);}}}
 function setDates(what)
-{var xfrom=$('dateFrom');var xto=$('dateTo');if(what==0)
-{xfrom.value="";xto.value="";return;}
+{var xfrom=$('dateFrom');var xto=$('dateTo');var extfrom=$('extFrom');var extto=$('extTo');if(what==0)
+{xfrom.value="";xto.value="";extfrom.value="";extto.value="";return;}
 today=new Date();fday=today.getDate();if(fday.toString().length==1)
 fday="0"+fday.toString();fmonth=today.getMonth()+1;if(fmonth.toString().length==1)
 fmonth="0"+fmonth.toString();fyear=today.getYear();if(fyear<1900)
-fyear=fyear+1900;var todate=fyear+"-"+fmonth+"-"+fday+"T23:59:59";var fromdate=(fyear-10)+"-"+fmonth+"-"+fday+"T00:00:00";xto.value=todate;xfrom.value=fromdate;}
+fyear=fyear+1900;var todate=fyear+"-"+fmonth+"-"+fday+"T23:59:59";var fromdate=(fyear-10)+"-"+fmonth+"-"+fday+"T00:00:00";xto.value=todate;xfrom.value=fromdate;extto.value=todate;extfrom.value=fromdate;}
 function check(status){var checks=$('search-results-content').getElementsByTagName('INPUT');var checksLength=checks.length;for(var i=0;i<checksLength;i++){checks[i].checked=status;}}
 function metadataselect(id,selected){if(selected===true)
 selected='add';else if(selected===false)

@@ -68,6 +68,7 @@ import org.apache.lucene.search.Filter;
 import org.apache.lucene.store.Directory;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.DataManager;
@@ -83,6 +84,7 @@ import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.search.spatial.TouchesFilter;
 import org.fao.geonet.kernel.search.spatial.WithinFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.lib.Lib;
 
 import org.geotools.data.DataStore;
 import org.geotools.data.DefaultTransaction;
@@ -122,11 +124,12 @@ public class SearchManager
 	private final File     _schemasDir;
 	private final Element  _summaryConfig;
 	private File           _luceneDir;
-	private IndexReader	   _indexReader;
 	private PerFieldAnalyzerWrapper _analyzer;
 	private LoggingContext _cat;
+	private String         _dataDir;
 	private Searchable     _hssSearchable;
 	private Spatial        _spatial;
+	private LuceneIndexReaderFactory    _indexReader;
 	private LuceneIndexWriterFactory    _indexWriter;
 	private Timer					 _optimizerTimer = null;
 	// minutes between optimizations of the lucene index
@@ -143,11 +146,12 @@ public class SearchManager
 	 * @param dataStore
 	 * @throws Exception
 	 */
-	public SearchManager(String appPath, String luceneDir, String summaryConfigXmlFile, DataStore dataStore, String optimizerInterval, SettingInfo si) throws Exception
+	public SearchManager(String appPath, String luceneDir, String dataDir, String summaryConfigXmlFile, DataStore dataStore, String optimizerInterval, SettingInfo si) throws Exception
 	{
 		_summaryConfig = Xml.loadStream(new FileInputStream(new File(appPath,summaryConfigXmlFile)));
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
 		_schemasDir     = new File(appPath, SCHEMA_STYLESHEETS_DIR_PATH);
+		_dataDir        = dataDir;
 
 		if (!_stylesheetsDir.isDirectory())
 			throw new Exception("directory " + _stylesheetsDir + " not found");
@@ -447,7 +451,8 @@ public class SearchManager
 			Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n"
 					+ Xml.getString(metadata));
 
-			xmlDoc = getIndexFields(type, metadata);
+			String mdDataDir = Lib.resource.getDir(_dataDir, Params.Access.PRIVATE, id);
+			xmlDoc = getIndexFields(type, metadata, mdDataDir);
 
 			Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n"
 					+ Xml.getString(xmlDoc));
@@ -528,57 +533,36 @@ public class SearchManager
 
 	//--------------------------------------------------------------------------------
 
-	// Dangerous or not at all possible if the index is very large!
-	public Hashtable getDocs() throws Exception
-	{
-		_indexReader = getIndexReader();
-	
-		Hashtable docs = new Hashtable();
-		for (int i = 0; i < _indexReader.numDocs(); i++) {
-			if (_indexReader.isDeleted(i))
-				continue; // FIXME: strange lucene hack: sometimes it tries
-							// to load a deleted document
-			Hashtable record = new Hashtable();
-			Document doc = _indexReader.document(i);
-			String id = doc.get("_id");
-			List<Field> fields = doc.getFields();
-			for (Iterator<Field> j = fields.iterator(); j.hasNext(); ) {
-				Field field = j.next();
-				record.put(field.name(), field.stringValue());
-			}
-			docs.put(id, record);
-		}
-		return docs;
-	
-	}
-
-	//--------------------------------------------------------------------------------
-
 	public HashMap<String,String> getDocsChangeDate() throws Exception
 	{
-		_indexReader = getIndexReader();
+		IndexReader reader = getIndexReader();
 
-		FieldSelector idChangeDateSelector = new FieldSelector() {
-			public final FieldSelectorResult accept(String name) {
-				if (name.equals("_id") || name.equals("_changeDate")) return FieldSelectorResult.LOAD;
-				else return FieldSelectorResult.NO_LOAD;
-			}
-		};
+		try {
+			FieldSelector idChangeDateSelector = new FieldSelector() {
+				public final FieldSelectorResult accept(String name) {
+					if (name.equals("_id") || name.equals("_changeDate")) return FieldSelectorResult.LOAD;
+					else return FieldSelectorResult.NO_LOAD;
+				}
+			};
 	
-		int capacity = (int)(_indexReader.maxDoc() / 0.75)+1;
-		HashMap<String,String> docs = new HashMap<String,String>(capacity);
-		for (int i = 0; i < _indexReader.numDocs(); i++) {
-			if (_indexReader.isDeleted(i)) continue; // FIXME: strange lucene hack: sometimes it tries to load a deleted document
-			Hashtable record = new Hashtable();
-			Document doc = _indexReader.document(i, idChangeDateSelector);
-			String id = doc.get("_id");
-			if (id == null) {
-				Log.error(Geonet.INDEX_ENGINE, "Document with no _id field skipped! Document is "+doc);
-				continue;
+			int capacity = (int)(reader.maxDoc() / 0.75)+1;
+			HashMap<String,String> docs = new HashMap<String,String>(capacity);
+			for (int i = 0; i < reader.numDocs(); i++) {
+				if (reader.isDeleted(i)) continue; // FIXME: strange lucene hack: sometimes it tries to load a deleted document
+				Hashtable record = new Hashtable();
+				Document doc = reader.document(i, idChangeDateSelector);
+				String id = doc.get("_id");
+				if (id == null) {
+					Log.error(Geonet.INDEX_ENGINE, "Document with no _id field skipped! Document is "+doc);
+					continue;
+				}
+				docs.put(id, doc.get("_changeDate"));
 			}
-			docs.put(id, doc.get("_changeDate"));
+			return docs;
+		} finally {
+			releaseIndexReader(reader);
 		}
-		return docs;
+	
 	}
 
 	//--------------------------------------------------------------------------------
@@ -587,21 +571,26 @@ public class SearchManager
 	{
 		Vector terms = new Vector();
 
-		TermEnum enu = getIndexReader().terms(new Term(fld, ""));
-		
-		while (enu.next())
-		{
-			Term term = enu.term();
-			if (term.field().equals(fld))
-				terms.add(enu.term().text());
+		IndexReader reader = getIndexReader();
+
+		try {
+			TermEnum enu = reader.terms(new Term(fld, ""));
+			while (enu.next())
+			{
+				Term term = enu.term();
+				if (term.field().equals(fld))
+					terms.add(enu.term().text());
+			}
+			return terms;
+		} finally {
+			releaseIndexReader(reader);
 		}
-		return terms;
 	}
 
 	//-----------------------------------------------------------------------------
 	// utilities
 
-	Element getIndexFields(String schema, Element xml) throws Exception {
+	Element getIndexFields(String schema, Element xml, String mdDataDir) throws Exception {
 		File schemaDir = new File(_schemasDir, schema);
 
 		try {
@@ -636,20 +625,25 @@ public class SearchManager
 		return _luceneDir;
 	}
 
+	//-----------------------------------------------------------------------------
 	/**
 	 * Return a reopened index reader to do operations on
 	 * an up-to-date index.
 	 * 
 	 * @return
 	 */
-	public IndexReader getIndexReader() throws CorruptIndexException, IOException {
-		IndexReader indexReader = _indexReader.reopen();
-		// Close old instance if index has changed
-		if (indexReader != _indexReader)
-			_indexReader.close();
-		_indexReader = indexReader;
-		return _indexReader;
+
+	public IndexReader getIndexReader() throws InterruptedException, CorruptIndexException, IOException {
+		return _indexReader.getReader();
 	}
+
+	//-----------------------------------------------------------------------------
+	
+	public void releaseIndexReader(IndexReader reader) throws IOException {
+		_indexReader.releaseReader(reader);
+	}
+
+	//-----------------------------------------------------------------------------
 	
 	Searchable getSearchable() 
 	{
@@ -683,7 +677,7 @@ public class SearchManager
 			writer.close();
 		}
 		
-    _indexReader = IndexReader.open(_luceneDir);
+    _indexReader = new LuceneIndexReaderFactory(_luceneDir);
 		_indexWriter = new LuceneIndexWriterFactory(_luceneDir, _analyzer);
 	}
 

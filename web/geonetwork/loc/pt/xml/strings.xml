@@ -126,6 +126,7 @@
 	<categoryManDes>Adicionar/Modificar/Apagar/Mostrar de categorias</categoryManDes>
 	<categoryNameMandatory>É obrigatório de preencher nome de categoria.</categoryNameMandatory>
 	<checkusername>Verificar</checkusername>
+	<changeDate>Metadata change date</changeDate>
 	<choose>-Escolher-</choose>
 	<chooseFile>Escolha o diretório do ficheiro que deve ser carregado</chooseFile>
 	<chooseLargeThumbnail>Escolha o diretório da imagem miniatura grande</chooseLargeThumbnail>
@@ -154,6 +155,7 @@
 	<cswTest>Teste CSW Perfil ISO teste</cswTest>
 	<cswTestDesc>Teste da interface para a interface do catalogo CSW Perfil ISO</cswTestDesc>
 	<dataQualityTab>Qualidade de dados</dataQualityTab>
+	<datasetIssued>Temporal Extent</datasetIssued>
 	<datasetTab>Dataset</datasetTab>
 	<dateModified>Data modificada</dateModified>
 	<dateRelChoice value="14">antes</dateRelChoice>

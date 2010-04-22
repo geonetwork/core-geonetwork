@@ -239,59 +239,7 @@ if(height>0){height--;}}
 n.style.left=left+'px';n.style.top=top+'px';n.style.width=width+'px';n.style.height='0px';e.style.left=(left+width-1)+'px';e.style.top=top+'px';e.style.width='0px';e.style.height=height+'px';s.style.left=left+'px';s.style.top=(top+height-1)+'px';s.style.width=width+'px';s.style.height='0px';w.style.left=left+'px';w.style.top=top+'px';w.style.width='0px';w.style.height=height+'px';if(Prototype.Browser.IE)
 {n.style.height='1px';e.style.width='1px';s.style.height='1px';w.style.width='1px';}};FakeBox.prototype.hide=function()
 {$(this.name+'_n').hide();$(this.name+'_e').hide();$(this.name+'_s').hide();$(this.name+'_w').hide();};FakeBox.prototype.show=function()
-{$(this.name+'_n').show();$(this.name+'_e').show();$(this.name+'_s').show();$(this.name+'_w').show();};Ajax.Responders.register({onException:function(req,e){var debug=false;var qqq=document.createElement('div');qqq.innerHTML="Exception '"+e.message+"'";document.body.appendChild(qqq);if(debug){alert("Exception: "+e.message+"\nFile "+e.fileName+"\nLine "+e.lineNumber+"\nStack "+e.stack);}}});function im_mm_init(wmc,callback)
-{im_mm_initTextControls($('northBL'),$('eastBL'),$('southBL'),$('westBL'));if(im_mm_ctrl_n.value===''){im_mm_ctrl_n.value=im_mm.north;}
-if(im_mm_ctrl_e.value===''){im_mm_ctrl_e.value=im_mm.east;}
-if(im_mm_ctrl_s.value===''){im_mm_ctrl_s.value=im_mm.south;}
-if(im_mm_ctrl_w.value===''){im_mm_ctrl_w.value=im_mm.west;}
-var newCallback=function()
-{if(callback)
-{callback();}
-im_mm_fullAoI();};if(wmc&&Prototype.Browser.IE)
-{alert("Sorry, but your browser can't handle long URLs.\n\n"+"If you arrived on this page following a link for viewing a map someone sent you,\n"+"please be advised that you can't use that feature with your current browser.\n"+"You are going to see a default map, and not the one you were looking for.\n\n"+"Please use the 'Upload a context' button in the Map Viewer and provide a valid context document.");wmc=null;}
-if(wmc)
-{im_setWMC(wmc,function(req)
-{var resp=req.responseXML.documentElement;im_bm.setBBox_dom(resp);im_bm.setSize_dom(resp);openIntermap();im_mm.setBBox_dom(resp);im_mm.rebuild(newCallback);im_mm.setTool('zoomin');});}
-else
-{im_mm.rebuild(newCallback);im_mm.setTool('zoomin');}}
-var im_refreshMiniMap=function()
-{im_mm.rebuild();};var im_refreshBothMaps=function()
-{im_bm.rebuild(im_refreshMiniMap);};im_extra_drivingMap=im_bm;im_extra_afterLayerUpdated=im_refreshBothMaps;im_extra_afterWmcSet=function(resp)
-{im_bm.set_dom(resp);im_bm.setBBox_dom(resp);im_redrawMarkers(resp);im_mm.setBBox_dom(resp);im_mm.rebuild(im_mm_fullAoI);};var im_1stTimeIntermap=true;function openIntermap()
-{if(im_1stTimeIntermap)
-{im_1stTimeIntermap=false;$('openIMBtn').hide();$('loadIMBtn').show();imc_init_loadSkel();return;}
-$('openIMBtn').hide();$('loadIMBtn').hide();$('closeIMBtn').show();if(!Prototype.Browser.IE)
-{Effect.BlindDown('im_map');Effect.BlindDown('im_bm_image');Effect.BlindDown('fillMeWithIntermap');}
-else
-{$('im_map').show();$('im_bm_image').show();$('fillMeWithIntermap').show();}
-im_showClientMarkers(true);}
-function closeIntermap()
-{if(!$('im_map'))
-return;im_showClientMarkers(false);try{$('closeIMBtn').hide();$('openIMBtn').show();}catch(e){}
-if(!Prototype.Browser.IE)
-{Effect.BlindUp('im_map');Effect.BlindUp('fillMeWithIntermap');}
-else
-{$('im_map').hide();$('fillMeWithIntermap').hide();}}
-function imc_init_loadSkel()
-{var myAjax=new Ajax.Request(getIMServiceURL('map.getMain.embedded'),{method:'get',parameters:'',onSuccess:im_init_loadCompleted,onFailure:im_load_error});}
-function im_init_loadCompleted(req)
-{var im=$('fillMeWithIntermap');im.innerHTML=req.responseText;$('im_mm_image_waitdiv').hide();new Effect.Pulsate('openIMBtn');im_bm.rebuild(im_init_bmLoaded);}
-function im_init_bmLoaded()
-{im_mm.setStatus('idle');im_bm.setStatus('idle');Event.observe('im_resize','mousedown',im_bm_resizeStart);setTool('zoomin');imc_reloadLayers();openIntermap();}
-function im_reset()
-{im_bm.setStatus('busy');im_mm.setStatus('busy');imc_reset();}
-function imc_reset()
-{var myAjax=new Ajax.Request(getIMServiceURL('map.reset'),{method:'get',onSuccess:im_reset_complete,onFailure:im_load_error});}
-function im_reset_complete(req)
-{im_bm.setTool('zoomin');im_mm.setTool('zoomin');imc_reloadLayers();im_bm.setBBox_dom(req.responseXML);im_mm.setBBox_dom(req.responseXML);im_bm.rebuild(im_mm.rebuild.bindAsEventListener(im_mm));}
-function i18n(key)
-{var v=$('i18n_'+key);if(v)
-{if(v.value==='')
-return'{'+key+'}';else
-return v.value;}
-else
-return'['+key+']';}
-var im_mm=new Intermap(200,100,'im_mm_image');var im_aoi=new FakeBox('im_mm_aoibox');var im_mm_ctrl_n,im_mm_ctrl_e,im_mm_ctrl_s,im_mm_ctrl_w;function trace(fname)
+{$(this.name+'_n').show();$(this.name+'_e').show();$(this.name+'_s').show();$(this.name+'_w').show();};var im_mm=new Intermap(200,100,'im_mm_image');var im_aoi=new FakeBox('im_mm_aoibox');var im_mm_ctrl_n,im_mm_ctrl_e,im_mm_ctrl_s,im_mm_ctrl_w;function trace(fname)
 {alert("Entering function --> "+fname);}
 function im_mm_initTextControls(n,e,s,w)
 {im_mm_ctrl_n=n;im_mm_ctrl_e=e;im_mm_ctrl_s=s;im_mm_ctrl_w=w;}
@@ -398,6 +346,58 @@ function im_retitleClientMarker(markerid,title)
 {img.title=title;}}}
 function im_markerClicked(e,id)
 {im_markerList(id);}
+Ajax.Responders.register({onException:function(req,e){var debug=false;var qqq=document.createElement('div');qqq.innerHTML="Exception '"+e.message+"'";document.body.appendChild(qqq);if(debug){alert("Exception: "+e.message+"\nFile "+e.fileName+"\nLine "+e.lineNumber+"\nStack "+e.stack);}}});function im_mm_init(wmc,callback)
+{im_mm_initTextControls($('northBL'),$('eastBL'),$('southBL'),$('westBL'));if(im_mm_ctrl_n.value===''){im_mm_ctrl_n.value=im_mm.north;}
+if(im_mm_ctrl_e.value===''){im_mm_ctrl_e.value=im_mm.east;}
+if(im_mm_ctrl_s.value===''){im_mm_ctrl_s.value=im_mm.south;}
+if(im_mm_ctrl_w.value===''){im_mm_ctrl_w.value=im_mm.west;}
+var newCallback=function()
+{if(callback)
+{callback();}
+im_mm_fullAoI();};if(wmc&&Prototype.Browser.IE)
+{alert("Sorry, but your browser can't handle long URLs.\n\n"+"If you arrived on this page following a link for viewing a map someone sent you,\n"+"please be advised that you can't use that feature with your current browser.\n"+"You are going to see a default map, and not the one you were looking for.\n\n"+"Please use the 'Upload a context' button in the Map Viewer and provide a valid context document.");wmc=null;}
+if(wmc)
+{im_setWMC(wmc,function(req)
+{var resp=req.responseXML.documentElement;im_bm.setBBox_dom(resp);im_bm.setSize_dom(resp);openIntermap();im_mm.setBBox_dom(resp);im_mm.rebuild(newCallback);im_mm.setTool('zoomin');});}
+else
+{im_mm.rebuild(newCallback);im_mm.setTool('zoomin');}}
+var im_refreshMiniMap=function()
+{im_mm.rebuild();};var im_refreshBothMaps=function()
+{im_bm.rebuild(im_refreshMiniMap);};im_extra_drivingMap=im_bm;im_extra_afterLayerUpdated=im_refreshBothMaps;im_extra_afterWmcSet=function(resp)
+{im_bm.set_dom(resp);im_bm.setBBox_dom(resp);im_redrawMarkers(resp);im_mm.setBBox_dom(resp);im_mm.rebuild(im_mm_fullAoI);};var im_1stTimeIntermap=true;function openIntermap()
+{if(im_1stTimeIntermap)
+{im_1stTimeIntermap=false;$('openIMBtn').hide();$('loadIMBtn').show();imc_init_loadSkel();return;}
+$('openIMBtn').hide();$('loadIMBtn').hide();$('closeIMBtn').show();if(!Prototype.Browser.IE)
+{Effect.BlindDown('im_map');Effect.BlindDown('im_bm_image');Effect.BlindDown('fillMeWithIntermap');}
+else
+{$('im_map').show();$('im_bm_image').show();$('fillMeWithIntermap').show();}
+im_showClientMarkers(true);}
+function closeIntermap()
+{if(!$('im_map'))
+return;im_showClientMarkers(false);try{$('closeIMBtn').hide();$('openIMBtn').show();}catch(e){}
+if(!Prototype.Browser.IE)
+{Effect.BlindUp('im_map');Effect.BlindUp('fillMeWithIntermap');}
+else
+{$('im_map').hide();$('fillMeWithIntermap').hide();}}
+function imc_init_loadSkel()
+{var myAjax=new Ajax.Request(getIMServiceURL('map.getMain.embedded'),{method:'get',parameters:'',onSuccess:im_init_loadCompleted,onFailure:im_load_error});}
+function im_init_loadCompleted(req)
+{var im=$('fillMeWithIntermap');im.innerHTML=req.responseText;$('im_mm_image_waitdiv').hide();new Effect.Pulsate('openIMBtn');im_bm.rebuild(im_init_bmLoaded);}
+function im_init_bmLoaded()
+{im_mm.setStatus('idle');im_bm.setStatus('idle');Event.observe('im_resize','mousedown',im_bm_resizeStart);setTool('zoomin');imc_reloadLayers();openIntermap();}
+function im_reset()
+{im_bm.setStatus('busy');im_mm.setStatus('busy');imc_reset();}
+function imc_reset()
+{var myAjax=new Ajax.Request(getIMServiceURL('map.reset'),{method:'get',onSuccess:im_reset_complete,onFailure:im_load_error});}
+function im_reset_complete(req)
+{im_bm.setTool('zoomin');im_mm.setTool('zoomin');imc_reloadLayers();im_bm.setBBox_dom(req.responseXML);im_mm.setBBox_dom(req.responseXML);im_bm.rebuild(im_mm.rebuild.bindAsEventListener(im_mm));}
+function i18n(key)
+{var v=$('i18n_'+key);if(v)
+{if(v.value==='')
+return'{'+key+'}';else
+return v.value;}
+else
+return'['+key+']';}
 var im_layer_width=176;var activeLayerId=null;function imc_reloadLayers()
 {var myAjax=new Ajax.Request(getIMServiceURL('map.getLayers.embedded'),{method:'get',onComplete:im_buildLayerList});}
 function im_buildLayerList(req)

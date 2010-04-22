@@ -61,6 +61,12 @@ function ConfigView(strLoader)
 	]);
 	
 	this.z3950Shower = new Shower('z3950.enable', 'z3950.subpanel');	
+
+	var dsTargetIds = ['downloadservice_simple.subpanel', 'downloadservice_withdisclaimer.subpanel', 'downloadservice_leave.subpanel'];
+	this.downloadservicesimpleShower  = new RadioShower('downloadservice.simple',     'downloadservice_simple.subpanel', dsTargetIds);
+	this.downloadservicewithdisclaimerShower  = new RadioShower('downloadservice.withdisclaimer',     'downloadservice_withdisclaimer.subpanel', dsTargetIds);
+	this.downloadserviceleaveShower  = new RadioShower('downloadservice.leave',     'downloadservice_leave.subpanel', dsTargetIds);
+
 	this.indexOptimizerShower = new Shower('indexoptimizer.enable', 'indexoptimizer.subpanel');
 	this.proxyShower = new Shower('proxy.use',    'proxy.subpanel');
 
@@ -92,6 +98,10 @@ ConfigView.prototype.setData = function(data)
 	
 	$('z3950.enable').checked = data['Z3950_ENABLE'] == 'true';
 	$('z3950.port')  .value   = data['Z3950_PORT'];
+
+	$('downloadservice.simple')        .checked = data['DOWNLOADSERVICE_SIMPLE'] == 'true';
+	$('downloadservice.withdisclaimer').checked = data['DOWNLOADSERVICE_WITHDISCLAIMER'] == 'true';
+	$('downloadservice.leave')         .checked = data['DOWNLOADSERVICE_LEAVE'] == 'true';
 
 	$('selection.maxrecords')  .value   = data['SELECTION_MAXRECORDS'];
 
@@ -191,6 +201,10 @@ ConfigView.prototype.getData = function()
 		Z3950_ENABLE : $('z3950.enable').checked,
 		Z3950_PORT   : $('z3950.port')  .value,
 	
+		DOWNLOADSERVICE_SIMPLE : $('downloadservice.simple').checked,
+		DOWNLOADSERVICE_WITHDISCLAIMER : $('downloadservice.withdisclaimer').checked,
+		DOWNLOADSERVICE_LEAVE : $('downloadservice.leave').checked,
+
 		SELECTION_MAXRECORDS   : $('selection.maxrecords')  .value,
 
 		INDEXOPTIMIZER_ENABLE: $('indexoptimizer.enable')  .checked,

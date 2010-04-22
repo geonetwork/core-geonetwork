@@ -66,6 +66,11 @@
 	<z3950>Z39.50 Server</z3950>
 	<enable>Aktiv</enable>
 		
+	<downloadservice>Data-For-Download Service</downloadservice>
+	<leave>Use metadata linkage as is - no changes to linkage</leave>
+	<simple>Use GeoNetwork simple file download service (resources.get)</simple>
+	<withdisclaimer>Use GeoNetwork disclaimer and constraints service (file.disclaimer)</withdisclaimer>
+
 	<csw>CSW ISO Profil</csw>
 	<contactId>Kontakt</contactId>
 	<title>Titel</title>
@@ -243,6 +248,16 @@
 			user with their username and password enclosed using the feedback
 			email information.
 			<br/>
+		</tip>
+
+		<tip id="downloadservice.simple">
+				If metadata protocol is 'Data for download' then this service lets the user download the resource from GeoNetwork with no further user input - it is the simplest download interface
+		</tip>
+		<tip id="downloadservice.withdisclaimer">
+				If metadata protocol is 'Data for download' then this service lets the user download the resource from GeoNetwork after they have agreed to accept any metadata constraints/generic disclaimer. The resource is bundled into a zip archive with an html description of the metadata constraints and a snapshot of the metadata record (as a MEF).
+		</tip>
+		<tip id="downloadservice.leave">
+				Selecting this option means that GeoNetwork will not handle file downloads.
 		</tip>
 	</tips>
 	

@@ -155,12 +155,46 @@
 				
 			</td>
 		</tr>
+
+		<!-- Category -->
+		<tr>
+			<th class="padded">
+				<xsl:value-of select="/root/gui/strings/category"/>
+			</th>
+			<td class="padded">
+				<select class="content" name="category" id="category">
+					<option value="">
+						<xsl:if test="/root/gui/searchDefaults/category=''">
+							<xsl:attribute name="selected"/>
+						</xsl:if>
+						<xsl:value-of select="/root/gui/strings/any"/>
+					</option>
+					
+					<xsl:for-each select="/root/gui/categories/record">
+						<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
+						
+						<option value="{name}">
+							<xsl:if test="name = /root/gui/searchDefaults/category">
+								<xsl:attribute name="selected"/>
+							</xsl:if>
+							<xsl:value-of select="label/child::*[name() = $lang]"/>
+						</option>
+					</xsl:for-each>
+				</select>
+			</td>
+		</tr>
 		
 		<tr>
 			<td colspan="2" style="padding-top:3px; white-space: nowrap;">
-				<fieldset>
-					<legend><xsl:value-of select="/root/gui/strings/mapType"/></legend>
-					<table width="100%">
+<!--				<fieldset>
+					<legend><xsl:value-of select="/root/gui/strings/mapType"/></legend> -->
+				<a onclick="showFields('maptype.img','maptype.table')" style="cursor:pointer;cursor:hand;">
+					<img id="maptype.img" src="{/root/gui/url}/images/plus.gif"/>
+					<xsl:text> </xsl:text>	
+					<xsl:value-of select="/root/gui/strings/mapType"/>
+				</a>
+			
+					<table id="maptype.table" style="display:none;border-color:#2a628f;border-style:solid;border-width:1px;" width="100%">
 						<tr>
 							<td>
 							<input name="digital" id="digital" type="checkbox" value="on">
@@ -214,42 +248,51 @@
 								</xsl:if>
 							</xsl:for-each>
 						</select> -->
-				</fieldset>
+<!--				</fieldset> -->
 			</td>	
 		</tr>
 				
 		<tr>
 			<td colspan="2" style="padding-top:3px; white-space: nowrap;">
-				<fieldset>
-					<legend><xsl:value-of select="/root/gui/strings/fuzzy"/></legend>
-					<xsl:value-of select="/root/gui/strings/fuzzyPrecise"/> <input type="radio" id="similarity" name="similarity" value="1" >
-						<xsl:if test="/root/gui/searchDefaults/similarity='1'">
-								<xsl:attribute name="checked"/>
-						</xsl:if>
-					</input>
-					<input type="radio" id="similarity" name="similarity" value=".8">
-						<xsl:if test="/root/gui/searchDefaults/similarity='.8'">
-								<xsl:attribute name="checked"/>
-						</xsl:if>
-					</input>
-					<input type="radio" id="similarity" name="similarity" value=".6" >
-						<xsl:if test="/root/gui/searchDefaults/similarity='.6'">
-								<xsl:attribute name="checked"/>
-						</xsl:if>
-					</input>
-
-					<input type="radio" id="similarity" name="similarity" value=".4" >
-						<xsl:if test="/root/gui/searchDefaults/similarity='.4'">
-								<xsl:attribute name="checked"/>
-						</xsl:if>
-					</input> 
-					<input type="radio" id="similarity" name="similarity" value=".2" >
-						<xsl:if test="/root/gui/searchDefaults/similarity='.2'">
-								<xsl:attribute name="checked"/>
-						</xsl:if>
-					</input><xsl:value-of select="/root/gui/strings/fuzzyImprecise"/>
-				</fieldset>		
-			</td>	
+				<a onclick="showFields('fuzzy.img','fuzzy.td')" style="cursor:pointer;cursor:hand;">
+					<img id="fuzzy.img" src="{/root/gui/url}/images/plus.gif"/>
+					<xsl:text> </xsl:text>	
+					<xsl:value-of select="/root/gui/strings/fuzzy"/>
+				</a>
+				<table id="fuzzy.td" style="display:none;border-color:#2a628f;border-style:solid;border-width:1px;">
+					<td>
+	<!--				<fieldset>
+						<legend><xsl:value-of select="/root/gui/strings/fuzzy"/></legend> -->
+						<xsl:value-of select="/root/gui/strings/fuzzyPrecise"/> <input type="radio" id="similarity" name="similarity" value="1" >
+							<xsl:if test="/root/gui/searchDefaults/similarity='1'">
+									<xsl:attribute name="checked"/>
+							</xsl:if>
+						</input>
+						<input type="radio" id="similarity" name="similarity" value=".8">
+							<xsl:if test="/root/gui/searchDefaults/similarity='.8'">
+									<xsl:attribute name="checked"/>
+							</xsl:if>
+						</input>
+						<input type="radio" id="similarity" name="similarity" value=".6" >
+							<xsl:if test="/root/gui/searchDefaults/similarity='.6'">
+									<xsl:attribute name="checked"/>
+							</xsl:if>
+						</input>
+	
+						<input type="radio" id="similarity" name="similarity" value=".4" >
+							<xsl:if test="/root/gui/searchDefaults/similarity='.4'">
+									<xsl:attribute name="checked"/>
+							</xsl:if>
+						</input> 
+						<input type="radio" id="similarity" name="similarity" value=".2" >
+							<xsl:if test="/root/gui/searchDefaults/similarity='.2'">
+									<xsl:attribute name="checked"/>
+							</xsl:if>
+						</input><xsl:value-of select="/root/gui/strings/fuzzyImprecise"/>
+	<!--				</fieldset>	-->
+					</td>
+				</table>
+			</td>
 		</tr>
 	</table>
 
@@ -410,46 +453,97 @@
 		<tr>
 			<td colspan="2">
 				<input onclick="setDates(0);" value="" name="radfrom" id="radfrom0" type="radio">
-					<xsl:if test="string(/root/gui/searchDefaults/dateFrom)='' and string(/root/gui/searchDefaults/dateTo)=''">
+					<xsl:if test="string(/root/gui/searchDefaults/dateFrom)='' and string(/root/gui/searchDefaults/dateTo)=''
+							and string(/root/gui/searchDefaults/extFrom)='' and string(/root/gui/searchDefaults/extTo)=''">
 						<xsl:attribute name="checked" />
  					</xsl:if>
 					<label for="radfrom0"><xsl:value-of select="/root/gui/strings/anytime"/></label>
 				</input>
 			</td>
 		</tr>
-		
-		<tr>		
-			<td align="left" nowrap="nowrap">
+
+		<tr>
+			<td colspan="2">
 				<input value="" name="radfrom" id="radfrom1" type="radio" disabled="disabled">
 					<xsl:if test="string(/root/gui/searchDefaults/dateFrom)!='' and string(/root/gui/searchDefaults/dateTo)!=''">
 						<xsl:attribute name="checked" />
 					</xsl:if>
-					<xsl:value-of select="/root/gui/strings/from"/>
-					<input style="width: 90px;" readonly="1" id="dateFrom" value="{/root/gui/searchDefaults/dateFrom}" name="dateFrom" class="inpBnds" type="text"
-						onchange="$('radfrom1').checked=true;$('radfrom1').disabled='';"/>
-					<img title="{/root/gui/strings/fromDateSelector}" style="cursor: pointer; margin-bottom: 6px; margin-right:10px;" id="from_trigger_c" 
-						src="{/root/gui/url}/scripts/calendar/img.gif" alt="{/root/gui/strings/fromDateSelector}" align="middle" hspace="1"/>
-							
-					<xsl:value-of select="/root/gui/strings/to"/>
-					<input  style="width: 90px;" readonly="1" id="dateTo" value="{/root/gui/searchDefaults/dateTo}" name="dateTo" class="inpBnds" type="text"
-						onchange="$('radfrom1').checked=true;$('radfrom1').disabled='';" />
-					<img title="{/root/gui/strings/toDateSelector}" style="cursor: pointer; margin-bottom: 6px;" id="to_trigger_c" 
-						src="{/root/gui/url}/scripts/calendar/img.gif" alt="{/root/gui/strings/toDateSelector}" align="middle" hspace="1"/>								
+					<label for="radfrom1"><xsl:value-of select="/root/gui/strings/changeDate"/></label>
 				</input>
+			</td>
+		</tr>
+		
+		<tr>		
+			<td align="left" nowrap="nowrap">
+				<xsl:value-of select="/root/gui/strings/from"/>
+				<input style="width: 90px;" readonly="1" id="dateFrom" value="{/root/gui/searchDefaults/dateFrom}" name="dateFrom" class="inpBnds" type="text"
+					onchange="JavaScript:$('extFrom').value ='';$('extTo').value ='';
+							  $('radfrom1').checked=true;$('radfrom1').disabled='';$('radfromext1').disabled='disabled';"/>
+				<img title="{/root/gui/strings/fromDateSelector}" style="cursor: pointer; margin-bottom: 6px; margin-right:10px;" id="from_trigger_c" 
+					src="{/root/gui/url}/scripts/calendar/img.gif" alt="{/root/gui/strings/fromDateSelector}" align="middle" hspace="1"/>
+						
+				<xsl:value-of select="/root/gui/strings/to"/>
+				<input style="width: 90px;" readonly="1" id="dateTo" value="{/root/gui/searchDefaults/dateTo}" name="dateTo" class="inpBnds" type="text"
+					onchange="JavaScript:$('extFrom').value ='';$('extTo').value ='';
+							  $('radfrom1').checked=true;$('radfrom1').disabled='';$('radfromext1').disabled='disabled';" />
+				<img title="{/root/gui/strings/toDateSelector}" style="cursor: pointer; margin-bottom: 6px;" id="to_trigger_c" 
+					src="{/root/gui/url}/scripts/calendar/img.gif" alt="{/root/gui/strings/toDateSelector}" align="middle" hspace="1"/>
+					
 <!--				<div onclick="JavaScript:$('dateFrom').value ='';$('dateTo').value ='';" style="cursor: pointer;"><xsl:value-of select="/root/gui/strings/clear"/></div> -->
 				<img title="{/root/gui/strings/clear}" style="cursor: pointer; margin-bottom: 6px;" id="clearDates" 
 					src="{/root/gui/url}/images/clear_left.png" alt="{/root/gui/strings/clear}" align="middle" 
-					hspace="1" onclick="JavaScript:$('dateFrom').value ='';$('dateTo').value ='';$('radfrom0').checked=true;$('radfrom1').disabled='disabled';"/>
+					hspace="1" onclick="JavaScript:$('dateFrom').value ='';$('dateTo').value ='';"/> <!-- $('radfrom0').checked=true;$('radfrom1').disabled='disabled';$('radfromext1').disabled='disabled';"/> -->
+			</td>
+		</tr>
+	</table>
+
+	<table border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td colspan="2">
+				<input value="" name="radfrom" id="radfromext1" type="radio" disabled="disabled">
+					<xsl:if test="string(/root/gui/searchDefaults/extFrom)!='' and string(/root/gui/searchDefaults/extTo)!=''">
+						<xsl:attribute name="checked" />
+					</xsl:if>
+					<label for="radfromext1"><xsl:value-of select="/root/gui/strings/datasetIssued"/></label>
+				</input>
+			</td>
+		</tr>
+		
+		<tr>
+			<td align="left" nowrap="nowrap">
+				<xsl:value-of select="/root/gui/strings/from"/>
+				<input style="width: 90px;" readonly="1" id="extFrom" value="{/root/gui/searchDefaults/extFrom}" name="extFrom" class="inpBnds" type="text"
+					onchange="JavaScript:$('dateFrom').value ='';$('dateTo').value ='';
+							  $('radfromext1').checked=true;$('radfromext1').disabled='';$('radfrom1').disabled='disabled';"/>
+				<img title="{/root/gui/strings/fromDateSelector}" style="cursor: pointer; margin-bottom: 6px; margin-right:10px;" id="extfrom_trigger_c" 
+					src="{/root/gui/url}/scripts/calendar/img.gif" alt="{/root/gui/strings/fromDateSelector}" align="middle" hspace="1"/>
+						
+				<xsl:value-of select="/root/gui/strings/to"/>
+				<input  style="width: 90px;" readonly="1" id="extTo" value="{/root/gui/searchDefaults/extTo}" name="extTo" class="inpBnds" type="text"
+					onchange="JavaScript:$('dateFrom').value ='';$('dateTo').value ='';
+							  $('radfromext1').checked=true;$('radfromext1').disabled='';$('radfrom1').disabled='disabled';" />
+				<img title="{/root/gui/strings/toDateSelector}" style="cursor: pointer; margin-bottom: 6px;" id="extto_trigger_c" 
+					src="{/root/gui/url}/scripts/calendar/img.gif" alt="{/root/gui/strings/toDateSelector}" align="middle" hspace="1"/>
+													
+				<img title="{/root/gui/strings/clear}" style="cursor: pointer; margin-bottom: 6px;" id="clearDates" 
+					src="{/root/gui/url}/images/clear_left.png" alt="{/root/gui/strings/clear}" align="middle" 
+					hspace="1" onclick="JavaScript:$('extFrom').value ='';$('extTo').value ='';"/> <!-- $('radfrom0').checked=true;$('radfromext1').disabled='disabled';$('radfrom1').disabled='disabled';"/> -->
 			</td>
 		</tr>
 	</table>
 
 	<!-- restrict to - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
-	<fieldset>
-		<legend><xsl:value-of select="/root/gui/strings/restrictTo"/></legend>
+<!--	<fieldset>
+		<legend><xsl:value-of select="/root/gui/strings/restrictTo"/></legend> -->
 
-	<table>
+	<a onclick="showFields('restrictions.img','restrictions.table')" style="cursor:pointer;cursor:hand;">
+		<img id="restrictions.img" src="{/root/gui/url}/images/plus.gif"/>
+		<xsl:text> </xsl:text>	
+		<xsl:value-of select="/root/gui/strings/restrictTo"/>
+	</a>
+
+	<table id="restrictions.table" style="display:none;border-color:#2a628f;border-style:solid;border-width:1px;">
 
 		<!-- Source -->
 		<tr>
@@ -571,14 +665,34 @@
 		</xsl:if>
 		
 	</table>
-	</fieldset>
+<!--	</fieldset> -->
+
+	<!-- now make sure we open expanded if any restrictions are selected -->
+	<xsl:if test="/root/gui/searchDefaults/siteId!='' or
+				  /root/gui/searchDefaults/groups/group!='' or
+				  /root/gui/searchDefaults/ownergroups='on' or
+	              /root/gui/searchDefaults/owner='on' or
+	              /root/gui/searchDefaults/notgroups='on' or
+ 				  ( /root/gui/searchDefaults/template!='' and /root/gui/searchDefaults/template!='n' ) or
+				  /root/gui/searchDefaults/category!=''">
+		<script type="text/javascript">
+			showFields('restrictions.img','restrictions.table');
+		</script>
+	</xsl:if>
 
 	<!-- options - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
-	<fieldset>
-		<legend><xsl:value-of select="/root/gui/strings/options"/></legend>
+<!--	<fieldset>
+		<legend><xsl:value-of select="/root/gui/strings/options"/></legend> -->
 
-		<table>
+	<br/>
+	<a onclick="showFields('advoptions.img','advoptions.table')" style="cursor:pointer;cursor:hand;">
+		<img id="advoptions.img" src="{/root/gui/url}/images/plus.gif"/>
+		<xsl:text> </xsl:text>	
+		<xsl:value-of select="/root/gui/strings/options"/>
+	</a>
+
+		<table id="advoptions.table" style="display:none;border-color:#2a628f;border-style:solid;border-width:1px;">
 			<!-- sort by - - - - - - - - - - - - - - - - - - - - -->
 			
 			<tr>
@@ -644,7 +758,15 @@
 				</td>
 			</tr>
 		</table>
-	</fieldset>
+<!--	</fieldset> -->
+		<!-- now make sure we open expanded if any options are selected -->
+		<xsl:if test="/root/gui/searchDefaults/sortBy!='relevance' or
+	  	              /root/gui/searchDefaults/hitsPerPage!='10' or
+					  /root/gui/searchDefaults/output!='full'">
+			<script type="text/javascript">
+				showFields('advoptions.img','advoptions.fieldset');
+			</script>
+		</xsl:if>
 </xsl:template>
 	
 

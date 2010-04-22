@@ -215,6 +215,7 @@
 	<categoryManagement>Gestion des catégories</categoryManagement>
 	<categoryManDes>Ajouter/Modifier/Supprimer et visualiser les catégories</categoryManDes>
 	<categoryNameMandatory>Le nom de la catégorie est obligatoire.</categoryNameMandatory>
+	<changeDate>Metadata change date</changeDate>
 	<checkusername>Vérification</checkusername>
 	<choose>- Choisir -</choose>
 	<chooseFile>Choisir le fichier à télécharger</chooseFile>
@@ -244,6 +245,7 @@
 	<cswTest>CSW ISO Profile test</cswTest>
 	<cswTestDesc>Test interface for the CSW ISO Profile catalog interface</cswTestDesc>
 	<dataQualityTab>Qualité des données</dataQualityTab>
+	<datasetIssued>Temporal Extent</datasetIssued>
 	<datasetTab>Jeu de données</datasetTab>
 	<dateModified>Date de modification</dateModified>
 	<dateRelChoice value="14">avant</dateRelChoice>

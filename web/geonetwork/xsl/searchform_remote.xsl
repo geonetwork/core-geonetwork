@@ -155,7 +155,7 @@
                                 <a onClick="showSimpleSearch()" style="cursor:pointer;">
                                     <xsl:value-of select="/root/gui/strings/hideAdvancedOptions"/> <!-- FIXME -->
                                 </a>
-                                <a onClick="showOptions()" style="cursor:pointer; padding-left:10px;" title="{/root/gui/strings/options}" alt="{/root/gui/strings/options}">
+                                <a onClick="showFields('options.img','options.div')" style="cursor:pointer; padding-left:10px;" title="{/root/gui/strings/options}" alt="{/root/gui/strings/options}">
                                     <img id="options.img" src="{/root/gui/url}/images/configure.png"/>
 <!--                                    <xsl:value-of select="/root/gui/strings/options"/> -->
                                 </a>

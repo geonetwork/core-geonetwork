@@ -48,6 +48,7 @@
 		<xsl:call-template name="selectionmanager"/>
 		<xsl:call-template name="indexoptimizer"/>
 		<xsl:call-template name="z3950"/>
+		<xsl:call-template name="downloadservice"/>
 		<xsl:call-template name="csw"/>
 		<xsl:call-template name="hyperlinks"/>
 		<xsl:call-template name="localrating"/>
@@ -140,6 +141,37 @@
 					<td class="padded"><input id="intranet.netmask" class="content" type="text" value="" size="30"/></td>
 				</tr>
 			</table>
+		</div>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template name="downloadservice">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/downloadservice"/></h1>
+
+		<div align="left" style="{$style}">
+			<input align="left" type="radio" id="downloadservice.simple" value="simple" name="downloadservice"><xsl:value-of select="/root/gui/config/simple"/></input>
+			<div align="left" style="{$style}">
+				<span id="downloadservice_simple.subpanel">
+					<xsl:value-of select="/root/gui/config/tips/tip[id='downloadservice.simple']"/>
+				</span>
+			</div>
+		</div>
+		<div align="left" style="{$style}">
+			<input align="left" type="radio" id="downloadservice.withdisclaimer" value="disclaimer" name="downloadservice"><xsl:value-of select="/root/gui/config/withdisclaimer"/></input>
+			<div align="left" style="{$style}">
+				<span id="downloadservice_withdisclaimer.subpanel">
+					<xsl:value-of select="/root/gui/config/tips/tip[id='downloadservice.withdisclaimer']"/>
+				</span>
+			</div>
+		</div>
+		<div align="left" style="{$style}">
+			<input align="left" type="radio" id="downloadservice.leave" value="leave" name="downloadservice"><xsl:value-of select="/root/gui/config/leave"/></input>
+			<div align="left" style="{$style}">
+				<span id="downloadservice_leave.subpanel">
+					<xsl:value-of select="/root/gui/config/tips/tip[id='downloadservice.leave']"/>
+				</span>
+			</div>
 		</div>
 	</xsl:template>
 

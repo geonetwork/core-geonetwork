@@ -372,6 +372,67 @@ compiles a request
 			</BooleanClause>
 		</xsl:if>
 
+		<!-- date range search - finds records where temporal extent overlaps 
+		     the search extent -->
+
+		<xsl:if test="(/request/extFrom or /request/extTo)">
+		    <BooleanClause required="true" prohibited="false">
+		    	<BooleanQuery>
+		    	    <!-- temporal extent start is within search extent -->
+					<BooleanClause required="false" prohibited="false">
+						<RangeQuery fld="tempExtentBegin" inclusive="true">
+							<xsl:if test="/request/extFrom">
+								<xsl:attribute name="lowerTxt">
+									<xsl:value-of select="/request/extFrom"/>
+								</xsl:attribute>
+							</xsl:if>
+							<xsl:if test="/request/extTo">
+								<xsl:attribute name="upperTxt">
+									<xsl:value-of select="/request/extTo"/>
+								</xsl:attribute>
+							</xsl:if>
+						</RangeQuery>
+					</BooleanClause>
+					<!-- or temporal extent end is within search extent -->
+					<BooleanClause required="false" prohibited="false">
+						<RangeQuery fld="tempExtentEnd" inclusive="true">
+							<xsl:if test="/request/extFrom">
+								<xsl:attribute name="lowerTxt">
+									<xsl:value-of select="/request/extFrom"/>
+								</xsl:attribute>
+							</xsl:if>
+							<xsl:if test="/request/extTo">
+								<xsl:attribute name="upperTxt">
+									<xsl:value-of select="/request/extTo"/>
+								</xsl:attribute>
+							</xsl:if>
+						</RangeQuery>
+					</BooleanClause>
+					<!-- or temporal extent contains search extent -->
+					<xsl:if test="/request/extTo and /request/extFrom">
+						<BooleanClause required="false" prohibited="false">
+							<BooleanQuery>
+								<BooleanClause required="true" prohibited="false">
+									<RangeQuery fld="tempExtentEnd" inclusive="true">
+											<xsl:attribute name="lowerTxt">
+												<xsl:value-of select="/request/extTo"/>
+											</xsl:attribute>
+									</RangeQuery>
+								</BooleanClause>
+								<BooleanClause required="true" prohibited="false">
+									<RangeQuery fld="tempExtentBegin" inclusive="true">
+											<xsl:attribute name="upperTxt">
+												<xsl:value-of select="/request/extFrom"/>
+											</xsl:attribute>
+									</RangeQuery>
+								</BooleanClause>
+							</BooleanQuery>
+						</BooleanClause>
+					</xsl:if>
+				</BooleanQuery>
+			</BooleanClause>
+		</xsl:if>
+
 	</BooleanQuery>
 </xsl:template>
 

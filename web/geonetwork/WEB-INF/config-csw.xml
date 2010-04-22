@@ -112,6 +112,12 @@
 				<parameter name="MetadataPointOfContact" field="metadataPOC"
 					type="AdditionalQueryables" />
 				<parameter name="Lineage" field="lineage" type="AdditionalQueryables" />
+				<!-- - - - - - - - - - - - - - - - - - - - - - -->
+				<!-- Other additional queryable properties   -->
+				<!-- - - - - - - - - - - - - - - - - - - - - - -->
+
+				<parameter name="OnlineResourceType" field="protocol" type="AdditionalQueryables" />
+				<parameter name="OnlineResourceMimeType" field="mimetype" type="AdditionalQueryables" />
 			</parameters>
 			<outputformat>
 				<format>application/xml</format>

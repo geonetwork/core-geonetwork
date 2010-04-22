@@ -48,6 +48,10 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			Z3950_ENABLE      : xml.evalXPath(node, 'z3950/enable'),
 			Z3950_PORT        : xml.evalXPath(node, 'z3950/port'),
 
+			DOWNLOADSERVICE_LEAVE         : xml.evalXPath(node, 'downloadservice/leave'),
+			DOWNLOADSERVICE_SIMPLE         : xml.evalXPath(node, 'downloadservice/simple'),
+			DOWNLOADSERVICE_WITHDISCLAIMER : xml.evalXPath(node, 'downloadservice/withdisclaimer'),
+
 			CSW_ENABLE        : xml.evalXPath(node, 'csw/enable'),
 			CSW_CONTACTID     : xml.evalXPath(node, 'csw/contactId'),
 			CSW_INDIVIDUALNAME: xml.evalXPath(node, 'csw/individualName'),
@@ -164,6 +168,11 @@ ConfigModel.updateTemp =
 '		<enable>{Z3950_ENABLE}</enable>'+
 '		<port>{Z3950_PORT}</port>'+
 '	</z3950>'+
+'	<downloadservice>'+
+'		<leave>{DOWNLOADSERVICE_LEAVE}</leave>'+
+'		<simple>{DOWNLOADSERVICE_SIMPLE}</simple>'+
+'		<withdisclaimer>{DOWNLOADSERVICE_WITHDISCLAIMER}</withdisclaimer>'+
+'	</downloadservice>'+
 '	<csw>'+
 '		<enable>{CSW_ENABLE}</enable>'+
 '		<contactId>{CSW_CONTACTID}</contactId>'+

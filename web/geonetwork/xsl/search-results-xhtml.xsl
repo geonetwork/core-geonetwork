@@ -485,7 +485,7 @@
 									</xsl:choose>
 								</xsl:when>
 								<xsl:when test="count($metadata/link[@type='download'])=1">
-									<button class="content" onclick="load('{$metadata/link[@type='download']}')" title="{/root/gui/strings/download}">
+									<button class="content" onclick="javascript:runFileDownload('{$metadata/link[@type='download']}','{$metadata/title}')" type="button">
 										<xsl:value-of select="/root/gui/strings/download"/>
 									</button>
 								</xsl:when>

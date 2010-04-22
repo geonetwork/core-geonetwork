@@ -211,6 +211,24 @@ function initAdvancedSearch()
 		singleClick	:    true
 	});
 
+	Calendar.setup({
+		inputField     :    "extFrom",     // id of the input field
+		ifFormat       :    "%Y-%m-%dT%H:%M:00",      // format of the input field
+		button         :    "extfrom_trigger_c",  // trigger for the calendar (button ID)
+		showsTime 		 :		true,
+		align          :    "Tl",           // alignment (defaults to "Bl")
+		singleClick    :    true
+	});
+	
+	Calendar.setup({
+		inputField	:    "extTo",     // id of the input field
+		ifFormat	:    "%Y-%m-%dT%H:%M:00",      // format of the input field           
+		button		:    "extto_trigger_c",  // trigger for the calendar (button ID)
+		showsTime	:    true,
+		align		:    "Tl",           // alignment (defaults to "Bl")
+		singleClick	:    true
+	});
+
 }
 
 function runAdvancedSearch(type) 
@@ -245,6 +263,12 @@ function runAdvancedSearch(type)
 	{
 		pars += fetchParam('dateFrom');
 		pars += fetchParam('dateTo');
+	}
+
+	if($('radfromext1').checked)
+	{
+		pars += fetchParam('extFrom');
+		pars += fetchParam('extTo');
 	}
 
 	pars += fetchParam('group');
@@ -296,6 +320,9 @@ function resetAdvancedSearch()
 	setParam('dateTo','');
 	$('radfrom0').checked=true;
 	$('radfrom1').disabled='disabled';
+	setParam('extFrom','');
+	setParam('extTo','');
+	$('radfromext1').disabled='disabled';
 	setParam('group','');		
 	setParam('category','');		
 	setParam('siteId','');		
@@ -317,20 +344,21 @@ function resetAdvancedSearch()
 ***
 **********************************************************/
 
-function showOptions()
+function showFields(img, div)
 {
-	var img = $('options.img');
-	var src = img.getAttribute('src');
-	var ndx = src.lastIndexOf('/');
-	var div = $('options.div');
-	
-	src = src.substring(0, ndx+1);
-	
-	if (div.visible())	img.setAttribute('src', src +'plus.gif');
-		else					img.setAttribute('src', src +'minus.png');
-	
-	div.toggle();
+        var img = $(img);
+        var src = img.getAttribute('src');
+        var ndx = src.lastIndexOf('/');
+        var div = $(div);
+        
+        src = src.substring(0, ndx+1);
+        
+        if (div.visible())      img.setAttribute('src', src +'plus.gif');
+                else                                    img.setAttribute('src', src +'minus.png');
+        
+        div.toggle();
 }
+
 
 //-------------------------------------------------------------------
 
@@ -847,15 +875,21 @@ function setParam(p, val)
  
  Function extracted by the current FAO site and adapted
  */
+ 
 function setDates(what) 
 {
 	var xfrom = $('dateFrom');
 	var xto = $('dateTo');
+
+	var extfrom = $('extFrom');
+	var extto = $('extTo');
 	
 	if (what==0) //anytime 
 	{ 
 		xfrom.value = "";
 		xto.value = "";
+		extfrom.value = "";
+		extto.value = "";
 		return;
 	}
 	//BUILDS to DATE STRING AND UPDATES INPUT
@@ -874,6 +908,8 @@ function setDates(what)
 	var fromdate = (fyear-10)+"-"+fmonth+"-"+fday+"T00:00:00";
 	xto.value = todate;
 	xfrom.value = fromdate;
+	extto.value = todate;
+	extfrom.value = fromdate;
 }
 
 

@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.resources.ProviderManager;
 import jeeves.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
@@ -36,6 +37,7 @@ import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -117,6 +119,8 @@ public class MetadataLib
 
 	public void sync(Dbms dbms) throws Exception
 	{
+		SettingManager sm = new SettingManager(dbms, new ProviderManager());
+		Element settings = Xml.transform(sm.get("system", -1), appPath + "/web/geonetwork/" + Geonet.Path.STYLESHEETS+ "/xml/config.xsl");
 		try
 		{
 			List list = dbms.select("SELECT * FROM Metadata WHERE isTemplate='n' and isHarvested='n'").getChildren();
@@ -135,7 +139,7 @@ public class MetadataLib
 				String date   = record.getChildText("createdate");
 
 				Element md = updateFixedInfo(id, Xml.loadString(data, false),
-													  uuid, date, schema, siteURL);
+													  uuid, date, schema, siteURL, settings);
 
 				XmlSerializer.update(dbms, id, md, date);
 				dbms.commit();
@@ -150,8 +154,7 @@ public class MetadataLib
 
 	//--------------------------------------------------------------------------
 
-	public Element updateFixedInfo(String id, Element md, String uuid, String date,
-											  String schema, String siteURL) throws Exception
+	private Element updateFixedInfo(String id, Element md, String uuid, String date, String schema, String siteURL, Element settings) throws Exception
 	{
 		md.detach();
 
@@ -162,7 +165,16 @@ public class MetadataLib
 		env.addContent(new Element("id")        .setText(id));
 		env.addContent(new Element("uuid")      .setText(uuid));
 		env.addContent(new Element("changeDate").setText(date));
+		env.addContent(new Element("updateDateStamp") .setText("no"));
+		try {
+			env.addContent(new Element("datadir")         .setText(getDir(Integer.parseInt(id), Params.Access.PRIVATE)));
+		} catch (NumberFormatException nfe) {
+			Lib.log.error("Failed to get integer from "+id);
+			nfe.printStackTrace();
+			throw nfe;
+		}
 		env.addContent(new Element("siteURL")   .setText(siteURL));
+		env.addContent(settings.detach());
 
 		//--- setup root element
 
