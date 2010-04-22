@@ -36,16 +36,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
+import java.util.UUID;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import java.text.SimpleDateFormat;
+
+import jeeves.exceptions.MissingParameterEx;
 import jeeves.exceptions.ResourceNotFoundEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.UserSession;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -56,8 +61,8 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.MailSender;
@@ -65,7 +70,7 @@ import org.jdom.Element;
 
 //=============================================================================
 
-/** Sends the resource to the client with a whole bunch of stuff
+/** Sends the resource to the client in a zip archive with metadata and license
   */
 
 public class DownloadArchive implements Service
@@ -95,16 +100,29 @@ public class DownloadArchive implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-		String id     = Util.getParam(params, Params.ID);
-		String access = Util.getParam(params, Params.ACCESS, Params.Access.PUBLIC);
-
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm   = gc.getDataManager();
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		UserSession session = context.getUserSession();
 
-		//--- resource required is public (thumbnails)? 
+
+		String id;
+		// does the request contain a UUID ?
+		try {
+			String uuid = Util.getParam(params, Params.UUID);
+			// lookup ID by UUID
+			id = dm.getMetadataId(context, uuid.toLowerCase());
+			if (id == null) throw new IllegalArgumentException("Metadata not found --> " + uuid);
+		} catch (MissingParameterEx x) {
+			try {
+				id = Util.getParam(params, Params.ID);
+			} catch (MissingParameterEx xx) {
+				throw new Exception("Request must contain a UUID or an ID");
+			}
+		}
+		String access = Util.getParam(params, Params.ACCESS, Params.Access.PUBLIC);
+
+		//--- resource required is public (thumbnails)
 		if (access.equals(Params.Access.PUBLIC)) { 
 			File dir = new File(Lib.resource.getDir(context, access, id));
 			String fname = Util.getParam(params, Params.FNAME);
@@ -113,6 +131,17 @@ public class DownloadArchive implements Service
 		}
 
 		//--- from here on resource required is private datafile(s)
+
+		//--- check if disclaimer for this metadata has been displayed
+		Element elData = (Element) session.getProperty(Geonet.Session.FILE_DISCLAIMER);
+		if (elData == null) {
+			return new Element("response");
+		} else {
+			String idAllowed = elData.getChildText(Geonet.Elem.ID);
+			if (idAllowed == null || !idAllowed.equals(id)) {
+				return new Element("response");
+			}
+		}
 
 		//--- check whether notify is required
 		boolean doNotify = false;
@@ -226,7 +255,7 @@ public class DownloadArchive implements Service
 		//--- being read yet again(!) from the database by the MEF exporter
 		String outmef = MEFLib.doExport(context, info.uuid, MEFLib.Format.PARTIAL.toString(), false);
     in = new FileInputStream(outmef);
-		addFile(out, "metadata.mef", in);
+		addFile(out, "metadata.zip", in);
     in.close();
 
 		//--- now close the zip file and send it out

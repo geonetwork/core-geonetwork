@@ -83,6 +83,7 @@ public class Geonet
 		public static final String RECORD     = "record";
 		public static final String ID         = "id";
 		public static final String ON         = "on";
+		public static final String METADATA   = "metadata";
 		public static final String NAME       = "name";
 		public static final String SURNAME    = "surname";
 		public static final String PROFILE    = "profile";
@@ -131,6 +132,7 @@ public class Geonet
 		public static final String VALIDATION_REPORT = "validation.report";
 		public static final String METADATA_ISO19110		= "metadata.iso19110";
 		public static final String FC_ISO19110		        = "fc.iso19110";
+		public static final String FILE_DISCLAIMER    = "file.disclaimer";
 	}
 
 	//--------------------------------------------------------------------------

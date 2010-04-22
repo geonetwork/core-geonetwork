@@ -26,14 +26,13 @@
 					<table align="center">
 						<tr class="padded"><td colspan="2">
 							<xsl:choose>
-							<xsl:when test="/root/response/metadata/gmd:MD_Metadata">
-								<!-- display usage, legal, security constraints for eg
-								<xsl:for-each select="/root/response/metadata/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints">
+							<xsl:when test="(/root/response/metadata/gmd:MD_Metadata or /root/response/metadata/*[gco:isoType='gmd:MD_Metadata']) and /root/response/metadata/*/gmd:identificationInfo/*/gmd:resourceConstraints">
+								<!-- display usage, legal, security constraints -->
+								<xsl:for-each select="/root/response/metadata/*/gmd:identificationInfo/*/gmd:resourceConstraints">
 									<xsl:apply-templates mode="elementEP" select="*">
 										<xsl:with-param name="schema" select="'iso19139'"/>
 									</xsl:apply-templates>
 								</xsl:for-each>
-								-->
 							</xsl:when>
 							<xsl:otherwise>
 								<!-- generic stuff from strings.xml -->

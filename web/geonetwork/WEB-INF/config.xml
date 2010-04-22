@@ -673,7 +673,14 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="file.disclaimer">
+			<class name=".services.feedback.AddLimitations"/>
 			<output sheet="file-download-disclaimer.xsl" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.file.disclaimer">
+			<class name=".services.feedback.AddLimitations"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -682,6 +689,13 @@
 			<class name=".services.feedback.Insert" />
 
 			<output sheet="file-download.xsl" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.file.download">
+			<class name=".services.feedback.Insert" />
+			<output forward="resources.get.archive" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

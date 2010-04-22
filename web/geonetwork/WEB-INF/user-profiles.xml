@@ -278,6 +278,8 @@
 		<allow service="xml.forward"/>
 		<allow service="xml.region.get"/>
 		<allow service="xml.keyword.get"/>
+		<allow service="xml.file.disclaimer"/>
+		<allow service="xml.file.download"/>
 
 		<!-- Portal XML services -->
 		<allow service="portal.search"/>

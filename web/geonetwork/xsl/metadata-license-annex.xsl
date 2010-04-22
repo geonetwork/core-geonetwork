@@ -1,23 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+						xmlns:geonet="http://www.fao.org/geonetwork"
+						xmlns:exslt = "http://exslt.org/common"
+						xmlns:dc = "http://purl.org/dc/elements/1.1/"
+						xmlns:gmd="http://www.isotc211.org/2005/gmd"
+						xmlns:gco="http://www.isotc211.org/2005/gco"
+            version="1.0"
+						exclude-result-prefixes="#all">
 
-	<!-- 
-			 runs on brief metadata and produces a license description - annex
-			 This is an example of what you could do to include license 
-			 conditions from your metadata with downloads
-	  -->
+	<!-- runs on brief metadata and produces a license description - annex -->
+	<!-- not localized - license is in english -->
 
 	<xsl:output method='html' omit-xml-declaration="yes" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd" indent="yes"/>
 
 	<xsl:include href="edit.xsl"/>
-	<xsl:include href="text-utilities.xsl"/>
-	
+
+	<xsl:variable name="baseurl" select="//geonet:info/baseurl"/>
+	<xsl:variable name="locserv" select="//geonet:info/locserv"/>
+
+	<xsl:template match="/">
+		<xsl:apply-templates mode="doit" select="*"/>
+	</xsl:template>
+
+	<xsl:template mode="doit" match="*">
+		<html>
+			<head>
+				<xsl:call-template name="myheader"/>
+			</head>
+			<body>
+				<table width="100%">
+						<!-- banner -->
+						<tr><td>
+							<xsl:call-template name="mybanner"/>
+						</td></tr>
+
+						<!-- content -->
+						<tr><td>
+								<xsl:call-template name="content"/>
+						</td></tr>
+				</table>
+			</body>
+		</html>
+	</xsl:template>
+
+	<xsl:template name="myheader">
+		<link href="{$baseurl}/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+		<link href="{$baseurl}/favicon.ico" rel="icon" type="image/x-icon" />
+
+		<!-- stylesheet -->
+		<link rel="stylesheet" type="text/css" href="{$baseurl}/geonetwork.css"/>
+		<link rel="stylesheet" type="text/css" href="{$baseurl}/modalbox.css"/>
+	</xsl:template>
+
+	<xsl:template name="mybanner">
+		<table width="100%">
+			<tr class="banner">
+				<td class="banner">
+					<img src="{$baseurl}/images/header-left.jpg" alt="World picture" align="top" />
+				</td>
+				<td align="right" class="banner">
+					<img src="{$baseurl}/images/header-right.gif" alt="GeoNetwork opensource logo" align="top" />
+				</td>
+			</tr>
+		</table>
+	</xsl:template>
+
 	<!-- page content -->
   <xsl:template name="content">
-		<script>
-			// required to stop js errors
-			function init() {}
-		</script>
 		<xsl:apply-templates mode="metadata" select="/root/metadata"/>
 	</xsl:template>
 
@@ -37,27 +86,30 @@
 					<xsl:apply-templates mode="doCommons" select="creativecommons"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<h1>NO creative commons or data commons license found in Metadata!</h1>
-					<h2 align="center">Download date: <xsl:value-of select="@currdate"/></h2>
+					<h1 align="center">"LICENSED CONDITIONS OF USE agreement"</h1>
+						<b align="center">Agreement to conditions of use at <xsl:value-of select="@currdate"/>, applies to the files listed below.</b>
+					<br/>
 					<br/>
 				</xsl:otherwise>
 			</xsl:choose>
 			<xsl:apply-templates mode="fileInfo" select="/root/downloaded"/>
 			<br/>
-			<xsl:apply-templates mode="doLicensee" select="."/>
-			<br/>
-			<xsl:apply-templates mode="doLicensor" select="licensor|ipOwner|owner|principalInvestigator"/>
-			<br/>
 			<xsl:apply-templates mode="metadataInfo" select="."/>
 			<br/>
+			<xsl:apply-templates mode="doLicensee" select="."/>
+			<br/>
+			<!-- 
+			<xsl:apply-templates mode="doLicensor" select="licensor|ipOwner|owner|principalInvestigator"/>
+			<br/>
+			 -->
 			<xsl:if test="SecurityConstraints or Constraints or LegalConstraints">
 				<fieldset>
-				<legend><b><xsl:value-of select="'Other Constraints from Metadata'"/></b></legend>
+				<legend><b><xsl:value-of select="'Additional Constraints on use of the files'"/></b></legend>
 				<xsl:if test="SecurityConstraints">
 				<fieldset>
 					<legend><b><xsl:value-of select="'Security Constraints'"/></b></legend>
 					<xsl:for-each select="SecurityConstraints">
-						<xsl:apply-templates mode="doOtherConstraints" select="."/>
+						<xsl:apply-templates mode="doOtherConstraints" select="*"/>
 					</xsl:for-each>
 				</fieldset>
 				</xsl:if>
@@ -66,7 +118,7 @@
 				<fieldset>
 					<legend><b><xsl:value-of select="'Legal Constraints'"/></b></legend>
 					<xsl:for-each select="LegalConstraints">
-						<xsl:apply-templates mode="doOtherConstraints" select="."/>
+						<xsl:apply-templates mode="doOtherConstraints" select="*"/>
 					</xsl:for-each>
 				</fieldset>
 				</xsl:if>
@@ -75,7 +127,7 @@
 				<fieldset>
 					<legend><b><xsl:value-of select="'General Constraints'"/></b></legend>
 					<xsl:for-each select="Constraints">
-						<xsl:apply-templates mode="doOtherConstraints" select="."/>
+						<xsl:apply-templates mode="doOtherConstraints" select="*"/>
 					</xsl:for-each>
 				</fieldset>
 				</xsl:if>
@@ -114,51 +166,53 @@
 	</xsl:template>
 
 	<xsl:template mode="doLicensee" match="*">
-		<div align="center">
-			<fieldset>
-				<legend><b>Licensee Information</b></legend>
-				<table width="100%">
-					<tr>
-						<td colspan="3">
-							<b>Information Provided:</b>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<b>Name: </b><i><xsl:value-of select="/root/entered/name"/></i>
-						</td>
-						<td>
-							<b>Organisation: </b><i><xsl:value-of select="/root/entered/org"/></i>
-						</td>
-						<td>
-							<b>Email: </b><i><xsl:value-of select="/root/entered/email"/></i>
-						</td>
-					</tr>
-				<xsl:if test="/root/userdetails/username">
-					<tr>
-						<td colspan="3">
-							<b>Logged in as </b><i><xsl:value-of select="/root/userdetails/username"/></i>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<b>Name: </b><i><xsl:value-of select="concat(/root/userdetails/name,' ',/root/userdetails/surname)"/></i><br/>
-							<b>Address: </b><br/>
-							<i><xsl:value-of select="/root/userdetails/address"/><br/>
-							<xsl:value-of select="concat(/root/userdetails/state,' ',/root/userdetails/zip)"/><br/>
-							<xsl:value-of select="/root/userdetails/country"/><br/></i>
-						</td>
-						<td>
-							<b>Organisation: </b><i><xsl:value-of select="/root/userdetails/organisation"/></i>
-						</td>
-						<td>
-							<b>Email: </b><i><xsl:value-of select="/root/userdetails/email"/></i>
-						</td>
-					</tr>
-				</xsl:if>
-				</table>
-			</fieldset>
-		</div>
+		<xsl:if test="/root/entered">
+			<div align="center">
+				<fieldset>
+					<legend><b>Licensee Information</b></legend>
+					<table width="100%">
+						<tr>
+							<td colspan="3">
+								<b>Information Provided:</b>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<b>Name: </b><i><xsl:value-of select="/root/entered/name"/></i>
+							</td>
+							<td>
+								<b>Organisation: </b><i><xsl:value-of select="/root/entered/org"/></i>
+							</td>
+							<td>
+								<b>Email: </b><i><xsl:value-of select="/root/entered/email"/></i>
+							</td>
+						</tr>
+					<xsl:if test="/root/userdetails/username">
+						<tr>
+							<td colspan="3">
+								<b>Logged in as </b><i><xsl:value-of select="/root/userdetails/username"/></i>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<b>Name: </b><i><xsl:value-of select="concat(/root/userdetails/name,' ',/root/userdetails/surname)"/></i><br/>
+								<b>Address: </b><br/>
+								<i><xsl:value-of select="/root/userdetails/address"/><br/>
+								<xsl:value-of select="concat(/root/userdetails/state,' ',/root/userdetails/zip)"/><br/>
+								<xsl:value-of select="/root/userdetails/country"/><br/></i>
+							</td>
+							<td>
+								<b>Organisation: </b><i><xsl:value-of select="/root/userdetails/organisation"/></i>
+							</td>
+							<td>
+								<b>Email: </b><i><xsl:value-of select="/root/userdetails/email"/></i>
+							</td>
+						</tr>
+					</xsl:if>
+					</table>
+				</fieldset>
+			</div>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template mode="metadataInfo" match="*">
@@ -253,8 +307,8 @@
 									<b><xsl:value-of select="name(.)"/></b>
 								</td>
 								<td align="left">
-									<xsl:call-template name="addLineBreaksAndHyperlinks">
-										<xsl:with-param name="txt" select="."/>
+									<xsl:call-template name="preformatted">
+										<xsl:with-param name="text" select="."/>
 									</xsl:call-template>
 								</td>
 							</tr>
@@ -268,9 +322,83 @@
 	<xsl:template mode="doOtherConstraints" match="*">
 		<div align="center">
 			<table width="100%">
-				<xsl:copy-of select="*"/>
+				<xsl:apply-templates mode="constraints" select="."/>
 			</table>
 		</div>
+	</xsl:template>
+
+	<!-- HACK - translate field names here until we can redesign process to use labels.xml -->
+	
+	<xsl:template mode="constraints" match="@*|node()">
+		<xsl:copy>
+			<xsl:apply-templates mode="constraints" select="@*|node()"/>
+		</xsl:copy>
+	</xsl:template>
+	
+	<xsl:template mode="constraints" match="text()[.='gmd:useLimitation']">
+		<xsl:text>Use Limitation</xsl:text>	
+	</xsl:template>
+	
+	<xsl:template mode="constraints" match="text()[.='gmd:accessConstraints']">
+		<xsl:text>Access Constraints</xsl:text>	
+	</xsl:template>
+	
+	<xsl:template mode="constraints" match="text()[.='gmd:useConstraints']">
+		<xsl:text>Use Constraints</xsl:text>	
+	</xsl:template>
+	
+	<xsl:template mode="constraints" match="text()[.='gmd:otherConstraints']">
+		<xsl:text>Other Constraints</xsl:text>	
+	</xsl:template>
+	
+	<xsl:template mode="constraints" match="text()[.='gmd:classification']">
+		<xsl:text>Classification</xsl:text>	
+	</xsl:template>
+	
+	<xsl:template mode="constraints" match="text()[.='gmd:userNote']">
+		<xsl:text>User Note</xsl:text>	
+	</xsl:template>
+	
+	<xsl:template mode="constraints" match="text()[.='gmd:classificationSystem']">
+		<xsl:text>Classification System</xsl:text>	
+	</xsl:template>
+	
+	<xsl:template mode="constraints" match="text()[.='gmd:handlingDescription']">
+		<xsl:text>Handling Description</xsl:text>	
+	</xsl:template>
+
+	<!--
+	translates CR-LF sequences into HTML newlines <p/>
+	-->
+	<xsl:template name="preformatted">
+		<xsl:param name="text"/>
+
+		<xsl:choose>
+			<xsl:when test="contains($text,'&#13;&#10;')">
+				<xsl:value-of select="substring-before($text,'&#13;&#10;')"/>
+				<br/>
+				<xsl:call-template name="preformatted">
+					<xsl:with-param name="text"  select="substring-after($text,'&#13;&#10;')"/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:when test="contains($text,'&#13;')">
+				<xsl:value-of select="substring-before($text,'&#13;')"/>
+				<br/>
+				<xsl:call-template name="preformatted">
+					<xsl:with-param name="text"  select="substring-after($text,'&#13;')"/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:when test="contains($text,'&#10;')">
+				<xsl:value-of select="substring-before($text,'&#10;')"/>
+				<br/>
+				<xsl:call-template name="preformatted">
+					<xsl:with-param name="text"  select="substring-after($text,'&#10;')"/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$text"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	
 </xsl:stylesheet>
