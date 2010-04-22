@@ -6,6 +6,6 @@ mv logs/intermap.log.*   logs/archive
 mv logs/geoserver.log.* logs/archive
 
 # try changing the Xmx parameter if your machine has little RAM
-#java -Xms48m -Xmx256m -Xss2M -XX:MaxPermSize=128m -Dmime-mappings=../web/geonetwork/WEB-INF/mime-types.properties -DSTOP.PORT=8079 -Djava.awt.headless=true -DSTOP.KEY=geonetwork -jar start.jar ../bin/jetty.xml &
+#java -Xms48m -Xmx256m -Xss2M -XX:MaxPermSize=128m -XX:CompileCommandFile=hotspot_compiler -Dmime-mappings=../web/geonetwork/WEB-INF/mime-types.properties -DSTOP.PORT=8079 -Djava.awt.headless=true -DSTOP.KEY=geonetwork -jar start.jar ../bin/jetty.xml &
 
-java -Xms48m -Xmx512m -Xss2M -XX:MaxPermSize=128m -Dmime-mappings=../web/geonetwork/WEB-INF/mime-types.properties -DSTOP.PORT=8079 -Djava.awt.headless=true -DSTOP.KEY=geonetwork -jar start.jar ../bin/jetty.xml > logs/output.log 2>&1 &
+java -Xms48m -Xmx512m -Xss2M -XX:MaxPermSize=128m -XX:CompileCommandFile=hotspot_compiler -Dmime-mappings=../web/geonetwork/WEB-INF/mime-types.properties -DSTOP.PORT=8079 -Djava.awt.headless=true -DSTOP.KEY=geonetwork -jar start.jar ../bin/jetty.xml > logs/output.log 2>&1 &
