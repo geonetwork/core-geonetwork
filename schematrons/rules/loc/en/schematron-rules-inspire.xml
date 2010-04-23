@@ -1,40 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
     <!-- INSPIRE metadata rules translation / START -->
-    <M35>[INSPIRE] - Title is mandatory</M35>
-    <M36>[INSPIRE] - Abstract is mandatory</M36>
-    <M37>[INSPIRE] - Resource type is mandatory</M37>
-    <M38>[INSPIRE] - Unique resource identifier is mandatory</M38>
-    <M39>[INSPIRE] - ISO topic category is mandatory</M39>
-    <M40>[INSPIRE] - Keyword is mandatory</M40>
-    <M41>[INSPIRE] - Geographic bounding box is mandatory</M41>
-    <M42>[INSPIRE] - Temporal reference is mandatory</M42>
-    <M43>[INSPIRE] - Lineage is mandatory</M43>
-    <M44>[INSPIRE] - Conformity is mandatory (in DQ_DomainConsistency.result.DQ_ConformanceResult)</M44>
-    <M45>[INSPIRE] - Conditions for access and use is mandatory</M45>
-    <M46>[INSPIRE] - Limitations on public access is mandatory</M46>
-    <M47>[INSPIRE] - Responsible organisation is mandatory</M47>
-    <M48>[INSPIRE] - Metadata point of contact is mandatory</M48>
-    <M49>[INSPIRE] - Metadata language is mandatory</M49>
-    <M50>[INSPIRE] - Metadata date is mandatory</M50>
-    <M51>[INSPIRE] (service) - Coupled resource is mandatory if linkage to data sets on which the service operates are available</M51>
-    <M52>[INSPIRE] - Resource locator is mandatory if linkage is available</M52>
-    <M53>[INSPIRE] - There may be zero or one condition applying to access and use</M53>
-    <M54>[INSPIRE] - The value of accessConstraints is otherRestrictions, if and only if they are instances of otherConstraints expressing limitations on public access</M54>
-    <M55>[INSPIRE] (data sets and series) - Resource language is mandatory if the resource includes textual information</M55>
-    <M56>[INSPIRE] - Spatial resolution is mandatory if an equivalent scale or a resolution distance can be specified</M56>
-    <M57>[ISO19119 for services] - OperationName is mandatory</M57>
-    <M58>[ISO19119 for services] - DCP is mandatory</M58>
-    <M59>[ISO19119 for services] - ConnectPoint is mandatory</M59>
-    <M60>[ISO19119 for services] - ServiceType is mandatory</M60>
     
-    <alert.M35><div><h2>INSPIRE - Title is mandatory</h2></div></alert.M35>
-    <alert.M36><div><h2>INSPIRE - Abstract is mandatory</h2>
+    <!-- List of pattern title -->
+    <identification>Identification</identification>
+    <dataIdentification>Data Identification</dataIdentification>    
+    <serviceIdentification>Service Identification</serviceIdentification>
+    <theme>Keyword and INSPIRE themes</theme>
+    <serviceTaxonomy>INSPIRE Service taxonomy</serviceTaxonomy>
+    <geo>Geographic location</geo>
+    <temporal>Temporal reference</temporal>
+    <quality>Quality and validity</quality>
+    <conformity>Conformity</conformity>
+    <constraints>Constraints related to access and use</constraints>
+    <org>Responsible organisation</org>
+    <metadata>Metadata on metadata</metadata>
+    
+    
+    <alert.M35><div><h2>Resource title is missing.</h2></div></alert.M35>
+    <report.M35><div><h2>Resource title found:</h2></div></report.M35>
+    <alert.M36><div><h2>Resource abstract is missing.</h2>
         <br/>
         <b>Example:</b><br/>
         Dataset contains large scale (1:1.000) topography, which covers the whole country.
     </div></alert.M36>
-    <alert.M37><div><h2>INSPIRE - Resource type is mandatory</h2>
+    <report.M36><div><h2>Resource abstract is :</h2></div></report.M36>
+    <alert.M37><div><h2>Resource type is missing or has a wrong value.</h2>
         <br/>
         <b>Implementing instructions:</b><br/>
         The values of MD_ScopeCode in the scope of the
@@ -48,12 +39,15 @@
         19115, but is mandated for conformance to the INSPIRE
         Metadata Implementing rules (See SC2 in 1.2).        
     </div></alert.M37>
-    <alert.M38><div><h2>INSPIRE - Unique resource identifier is mandatory</h2>
+    <report.M37><div><h2>Resource type is: </h2></div></report.M37>
+    <alert.M38><div><h2>Unique resource identifier is missing</h2>
         <br/>
         <b>Implementing instructions</b><br/>        
         Mandatory for dataset and dataset series.<br/>
         <b>Example:</b> 527c4cac-070c-4bca-9aaf-92bece7be902
     </div></alert.M38>
+    <report.M38><div>Unique resource identifier is:</div></report.M38>
+    <report.M38.codespace><div>Unique resource identifier codespace is:</div></report.M38.codespace>
     <alert.M39><div><h2>INSPIRE - ISO topic category is mandatory</h2><br/>
         The topic categories defined in Part D 2 of the INSPIRE
         Implementing rules for metadata are derived directly from
@@ -67,7 +61,9 @@
         appearing in the “name” column of the table in B.5.27 of
         ISO 19115.
     </div></alert.M39>
-    <alert.M40><div><h2>INSPIRE - Keyword is mandatory</h2></div></alert.M40>
+    <report.M39><div>ISO topic category is:</div></report.M39>
+    <alert.M40><div><h2>INSPIRE theme is mandatory</h2></div></alert.M40>
+    <report.M40><div> INSPIRE theme(s) found.</div></report.M40>
     <alert.M41><div><h2>INSPIRE - Geographic bounding box is mandatory</h2><br/>
         <ul>
             <li>
@@ -106,7 +102,17 @@
         </ul>      
         
     </div></alert.M41>
+    <alert.M41.N><div>WestBoundLongitude is missing or has wrong value</div></alert.M41.N>
+    <alert.M41.S><div>SouthBoundLongitude is missing or has wrong value</div></alert.M41.S>
+    <alert.M41.E><div>EastBoundLongitude is missing or has wrong value</div></alert.M41.E>
+    <alert.M41.W><div>NorthBoundLongitude is missing or has wrong value</div></alert.M41.W>
+    <report.M41.N><div>NorthBoundLongitude found:</div></report.M41.N>
+    <report.M41.S><div>SouthBoundLongitude found:</div></report.M41.S>
+    <report.M41.E><div>EastBoundLongitude found:</div></report.M41.E>
+    <report.M41.W><div>WestBoundLongitude found:</div></report.M41.W>
+    
     <alert.M42><div><h2>INSPIRE - Temporal reference is mandatory</h2>
+        No instance of Temporal reference has been found.
         <b>Implementing instructions</b><br/>
         Each instance of the temporal extent may be an interval
         of dates or an individual date. The overall time period
@@ -117,6 +123,16 @@
         <b>Example:</b>
         From 1977-03-10T11:45:30 to 2005-01-15T09:10:00
     </div></alert.M42>
+    <alert.M42.creation><div>There shall not be more than one instance of 
+        MD_Metadata.identificationInfo[1].MD_Identification.citation.CI_Citation.date 
+        declared as a creation date (i.e. CI_Date.dateType having the creation value)</div></alert.M42.creation>
+    <report.M42.begin><div>Temporal extent (begin) found: </div></report.M42.begin>
+    <report.M42.end><div>Temporal extent (end) found: </div></report.M42.end>
+    <report.M42.publication><div>Date of publication of the resource found:</div></report.M42.publication>
+    <report.M42.creation><div>Date of creation of the resource found:</div></report.M42.creation>
+    <report.M42.revision><div>Date of revision of the resource found:</div></report.M42.revision>
+    
+    
     <alert.M43><div><h2>INSPIRE - Lineage is mandatory</h2><br/>
         <ul>
             <li>Mandatory for spatial dataset and spatial dataset series.</li>
@@ -133,6 +149,9 @@
         <b>Example:</b>    Dataset has been digitised from the standard 1:5.000 map
         
     </div></alert.M43>
+    <report.M43><div><h2>Lineage is set.</h2></div></report.M43>
+    
+    
     <alert.M44><div><h2>INSPIRE - Conformity is mandatory (in DQ_DomainConsistency.result.DQ_ConformanceResult)</h2><br/>
         <b>Implementing instructions</b> <br/>
         The first two degrees of conformity defined in Part D 5 of
@@ -146,15 +165,37 @@
         harmonisation of administrative boundaries”.
                 
     </div></alert.M44>
+    <report.M44.nonev><div>The degree of conformity of the resource has not yet been evaluated.</div></report.M44.nonev>
+    <report.M44.degree><div>Degree of conformity found:</div></report.M44.degree>
+    <report.M44.spec><div>Specification:</div></report.M44.spec>
+    
+    <alert.M45.rc><div><h2>There shall be at least one instance of
+        MD_Metadata.identificationInfo[1].MD_Identification.resourceConstraints</h2></div></alert.M45.rc>
+    <report.M45.ac><div>Limitation on public access (accessConstraints) found:</div></report.M45.ac>
+    <report.M45.class><div>Limitation on public access (classification) found:</div></report.M45.class>
+    <alert.M45.or><div>The value of 'accessConstraints' must be 'otherRestrictions', 
+        if there are instances of 'otherConstraints' expressing limitations on public access.</div></alert.M45.or>
+    <report.M45.or><div>Limitation on public access (otherConstraints) found:</div></report.M45.or>
+    <alert.M45.us><div>Conditions applying to access and use is missing</div></alert.M45.us>
+    <report.M45.us><div>Conditions applying to access and use found:</div></report.M45.us>
+
+
     <alert.M45><div><h2>INSPIRE - Conditions for access and use is mandatory</h2><br/>
     </div></alert.M45>
     <alert.M46><div><h2>INSPIRE - Limitations on public access is mandatory</h2></div></alert.M46>
+    
+    
+    
     <alert.M47><div><h2>INSPIRE - Responsible organisation for the resource is mandatory</h2><br/>
         Relative to a responsible organisation, but there may be
-        many responsible organisations for a single resource.
+        many responsible organisations for a single resource. Organisation name and email are required.
         <br/>
         See identification section / point of contact.
     </div></alert.M47>
+    <report.M47><div>Responsible organisation for the resource found.</div></report.M47>
+    <alert.M47.info><div>Organisation name and email not found for responsible organisation.</div></alert.M47.info>
+    <report.M47.info><div>Organisation name and email found for :</div></report.M47.info>
+    
     <alert.M48><div><h2>INSPIRE - Metadata point of contact is mandatory</h2><br/>
         <b>Implementing instructions:</b><br/>
         The role of the responsible party serving as a metadata
@@ -163,12 +204,21 @@
         19115. Its value can be defaulted to pointOfContact.<br/>
         See metadata section.
     </div></alert.M48>
+    <report.M48><div>Metadata point of contact found.</div></report.M48>
+    <alert.M48.info><div>Organisation name and email not found metadata point of contact.</div></alert.M48.info>
+    <report.M48.info><div>Organisation name and email found for :</div></report.M48.info>
+    
     <alert.M49><div><h2>INSPIRE - Metadata language is mandatory</h2><br/>
         The language property is not mandated by ISO 19115, but
         is mandated for conformance to the INSPIRE Metadata
         Implementing rules
     </div></alert.M49>
-    <alert.M50><div><h2>INSPIRE - Metadata date is mandatory</h2></div></alert.M50>
+    <report.M49><div>Metadata language is :</div></report.M49>
+    
+    <alert.M50><div><h2>Metadata date stamp is missing</h2></div></alert.M50>
+    <report.M50><div><h2>Metadata date stamp is :</h2></div></report.M50>
+    
+    
     <alert.M51><div><h2>INSPIRE (service) - Coupled resource is mandatory if linkage to data sets on which the service operates are available</h2>
         <br/>
         <b>Implementing instructions</b><br/>
@@ -186,6 +236,7 @@
         coupled resource.</li>
         </ul>
     </div></alert.M51>
+    <report.M51><div>Coupled resources found: </div></report.M51>
     <alert.M52><div><h2>INSPIRE - Resource locator is mandatory if linkage is available</h2><br/>
         See advanved view / distribution section / only resource element.
         <br/>
@@ -206,6 +257,7 @@
             </ul>
             
     </div></alert.M52>
+    <report.M52><div>Resource locator found:</div></report.M52>
     <alert.M53><div><h2>INSPIRE - There may be zero or one condition applying to access and use</h2><br/>
         Access constraints applied to assure the protection of
         privacy or intellectual property, and any special restrictions
@@ -232,6 +284,7 @@
         Codelist (See ISO/TS 19139) based on alpha-3 codes of
         ISO 639-2.
     </div></alert.M55>
+    <report.M55><div>Resource language is:</div></report.M55>
     <alert.M56><div><h2>INSPIRE - Spatial resolution is mandatory if an equivalent scale or a resolution distance can be specified</h2><br/>
         <b>Implementing instructions:</b>
         <ul>
@@ -247,14 +300,18 @@
         </ul>
         <b>Example:</b> 5000 (e.g. 1:5000 scale map)
     </div></alert.M56>
+    <report.M56><div>Spatial resolution is set.</div></report.M56>
+    
     <alert.M57><div><h2>[ISO19119 for services] - OperationName is mandatory</h2></div></alert.M57>
-    <alert.M58><div><h2>[ISO19119 for services] - DCP is mandatory</h2></div></alert.M58>
+    
+    <alert.M58><div>Missing service taxonomy information (select on or more keyword from "inspire-service-taxonomy.rdf" thesaurus)</div></alert.M58>
+    <report.M58><div> service taxonomy classification defined.</div></report.M58>
     <alert.M59><div><h2>[ISO19119 for services] - ConnectPoint is mandatory</h2></div></alert.M59>
     <alert.M60><div><h2>[ISO19119 for services] - ServiceType is mandatory</h2><br/>
         Mandatory for services.<br/>
         Not applicable to dataset and dataset series<br/>
-        <b>Example:</b> OGC:CSW
-        
+        <b>Example:</b> 'view', 'discovery', 'download', 'transformation', 'invoke', 'other'
     </div></alert.M60>
+    <report.M60><div>Service type is:</div></report.M60>
     <!-- INSPIRE metadata rules translation / END -->
 </strings>

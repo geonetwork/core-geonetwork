@@ -205,12 +205,13 @@
 			<xsl:attribute name="encoding"><xsl:value-of select=" $output-encoding" /></xsl:attribute>
 		</xsl:if>
     </axsl:output>
-
-   <axsl:param name="lang" />   
-   <axsl:param name="rule"/>
+	
+	<axsl:include href="../../../xsl/utils-fn.xsl"/>
    
-   <axsl:variable name="loc" select="document(concat('loc/', $lang, '/', substring-before($rule, '.xsl'), '.xml'))"/>
-     
+    <axsl:param name="lang" />   
+    <axsl:param name="rule"/>
+   
+    <axsl:variable name="loc" select="document(concat('loc/', $lang, '/', substring-before($rule, '.xsl'), '.xml'))"/> 
 </xsl:template>
 
 <!-- Overrides skeleton.xsl -->
