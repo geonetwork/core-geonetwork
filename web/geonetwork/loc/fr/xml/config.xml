@@ -46,8 +46,8 @@
 	<network>Network</network>
 	<netmask>Masque de sous-réseau</netmask>
 
-	<selectionmanager>Metadata Search Results</selectionmanager>
-	<maxrecords>Maximum selected records</maxrecords>
+	<selectionmanager>Résultat de recherches</selectionmanager>
+	<maxrecords>Nombre maximum d'items sélectionnés</maxrecords>
 
 	<indexoptimizer>Optimisation de l'index Lucene</indexoptimizer>
 		<at>Lancer à </at>
@@ -99,10 +99,10 @@
 	<z3950>Z39.50 Serveur</z3950>
 	<enable>Activé</enable>
 
-	<downloadservice>Data-For-Download Service</downloadservice>
-	<leave>Use metadata linkage as is - no changes to linkage</leave>
-	<simple>Use GeoNetwork simple file download service (resources.get)</simple>
-	<withdisclaimer>Use GeoNetwork disclaimer and constraints service (file.disclaimer)</withdisclaimer>
+	<downloadservice>Service de téléchargement</downloadservice>
+	<leave>Utiliser les liens de la section distribution - sans changement</leave>
+	<simple>Utiliser le service de téléchargement GeoNetwork (resources.get)</simple>
+	<withdisclaimer>Utiliser le service analysant les contraintes d'accès GeoNetwork (file.disclaimer)</withdisclaimer>
 
 	<feedback>Alerte par email</feedback>
 	<email>Email</email>
