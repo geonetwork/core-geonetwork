@@ -130,8 +130,9 @@ function gn_showSingleMetadata(id)
 {var pars='id='+id+'&currTab=simple';gn_showSingleMet(pars);}
 function gn_showSingleMet(pars)
 {var myAjax=new Ajax.Request(getGNServiceURL('metadata.show.embedded'),{method:'get',parameters:pars,onSuccess:function(req){var parent=$('resultList');clearNode(parent);var div=document.createElement('div');div.className='metadata_current';div.style.display='none';div.style.width='100%';parent.appendChild(div);div.innerHTML=req.responseText;Effect.BlindDown(div);var tipman=new TooltipManager();ker.loadMan.wait(tipman);extentMap.initMapDiv();},onFailure:gn_search_error});}
-function gn_showMetadata(id)
-{var pars='id='+id+'&currTab=simple';$('gn_showmd_'+id).hide();$('gn_loadmd_'+id).show();var myAjax=new Ajax.Request(getGNServiceURL('metadata.show.embedded'),{method:'get',parameters:pars,onSuccess:function(req){var parent=$('mdwhiteboard_'+id);clearNode(parent);$('gn_loadmd_'+id).hide();$('gn_hidemd_'+id).show();var div=document.createElement('div');div.className='metadata_current';div.style.display='none';div.style.width='100%';parent.appendChild(div);div.innerHTML=req.responseText;Effect.BlindDown(div);var tipman=new TooltipManager();ker.loadMan.wait(tipman);extentMap.initMapDiv();},onFailure:gn_search_error});}
+function gn_showMetadata(id){gn_showMetadata(id,'simple');}
+function gn_showMetadata(id,currTab)
+{var pars='id='+id+'&currTab='+currTab;$('gn_showmd_'+id).hide();$('gn_loadmd_'+id).show();var myAjax=new Ajax.Request(getGNServiceURL('metadata.show.embedded'),{method:'get',parameters:pars,onSuccess:function(req){var parent=$('mdwhiteboard_'+id);clearNode(parent);$('gn_loadmd_'+id).hide();$('gn_hidemd_'+id).show();var div=document.createElement('div');div.className='metadata_current';div.style.display='none';div.style.width='100%';parent.appendChild(div);div.innerHTML=req.responseText;Effect.BlindDown(div);var tipman=new TooltipManager();ker.loadMan.wait(tipman);extentMap.initMapDiv();},onFailure:gn_search_error});}
 function gn_hideMetadata(id)
 {var parent=$('mdwhiteboard_'+id);var div=parent.firstChild;Effect.BlindUp(div,{afterFinish:function(obj){clearNode(parent);$('gn_showmd_'+id).show();$('gn_hidemd_'+id).hide();}});}
 function a(msg){alert(msg);}
