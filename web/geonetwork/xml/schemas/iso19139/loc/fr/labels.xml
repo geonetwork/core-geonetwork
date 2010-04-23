@@ -2957,6 +2957,12 @@
       <option value="OGC:WCS">OGC Web Coverage Service</option>
       <option value="W3C:HTML:DOWNLOAD">Téléchargement</option>
       <option value="W3C:HTML:LINK">Information</option>
+      <!-- INSPIRE Service type defined in MD IR / 1.3.1 Spatial data service type
+        <option value="discovery">Service de découverte (discovery)</option>
+        <option value="view">Service de visualisation (view)</option>
+        <option value="download">Service de téléchargement (download)</option>
+        <option value="transformation">Service de transformation (transformation)</option>
+        <option value="other">Autres services (other)</option> -->       
     </helper>
   </element>
   <element name="srv:SV_Parameter">
@@ -3222,7 +3228,6 @@
     <label>Unité</label>
     <description>Unité de mesure</description>
     <helper>
-      <option value=""></option>
       <option value="m">mètres</option>
     </helper>
   </element>

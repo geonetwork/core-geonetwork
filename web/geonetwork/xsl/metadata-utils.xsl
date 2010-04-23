@@ -226,27 +226,20 @@
 		<xsl:param name="tabLink"/>
 		
 		<table width="100%">
-		
+			<!-- Tab visibility is managed in config-gui.xml -->
 			<!-- simple tab -->
-			<xsl:call-template name="displayTab">
-				<xsl:with-param name="tab"     select="'simple'"/>
-				<xsl:with-param name="text"    select="/root/gui/strings/simpleTab"/>
-				<xsl:with-param name="tabLink" select="$tabLink"/>
-			</xsl:call-template>
+			<xsl:if test="/root/gui/config/metadata-tab/simple">
+				<xsl:call-template name="displayTab">
+					<xsl:with-param name="tab"     select="'simple'"/>
+					<xsl:with-param name="text"    select="/root/gui/strings/simpleTab"/>
+					<xsl:with-param name="tabLink" select="$tabLink"/>
+				</xsl:call-template>
+			</xsl:if>
 			
 			<!--  complete tab(s) -->
 			<xsl:choose>
-			
 				<!-- hide complete tab for subtemplates -->
 				<xsl:when test="geonet:info[isTemplate='s']"/>
-			
-				<xsl:when test="$currTab='xml' or $currTab='simple'">
-					<xsl:call-template name="displayTab">
-						<xsl:with-param name="tab"     select="'metadata'"/>
-						<xsl:with-param name="text"    select="/root/gui/strings/completeTab"/>
-						<xsl:with-param name="tabLink" select="$tabLink"/>
-					</xsl:call-template>
-				</xsl:when>
 				<xsl:otherwise>
 				
 					<!-- metadata type-specific complete tab -->
@@ -263,6 +256,7 @@
 						<xsl:when test="starts-with($schema,'iso19139')">
 							<xsl:call-template name="iso19139CompleteTab">
 								<xsl:with-param name="tabLink" select="$tabLink"/>
+								<xsl:with-param name="schema" select="$schema"/>
 							</xsl:call-template>
 						</xsl:when>
 						
@@ -278,22 +272,13 @@
 			</xsl:choose>
 			
 			<!-- xml tab -->
-			<xsl:choose>
-				<xsl:when test="contains($tabLink,'metadata.show')">
-					<xsl:call-template name="displayTab">
-						<xsl:with-param name="tab"     select="'xml'"/>
-						<xsl:with-param name="text"    select="/root/gui/strings/xmlTab"/>
-						<xsl:with-param name="tabLink" select="$tabLink"/>
+			<xsl:if test="/root/gui/config/metadata-tab/xml">
+				<xsl:call-template name="displayTab">
+					<xsl:with-param name="tab"     select="'xml'"/>
+					<xsl:with-param name="text"    select="/root/gui/strings/xmlTab"/>
+					<xsl:with-param name="tabLink" select="$tabLink"/>
 				</xsl:call-template>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:call-template name="displayTab">
-						<xsl:with-param name="tab"     select="'xml'"/>
-						<xsl:with-param name="text"    select="/root/gui/strings/xmlTab"/>
-						<xsl:with-param name="tabLink" select="$tabLink"/>
-					</xsl:call-template>
-				</xsl:otherwise>
-			</xsl:choose>
+			</xsl:if>
 		</table>
 	</xsl:template>
 	
@@ -308,14 +293,6 @@
 			<xsl:with-param name="text"    select="/root/gui/strings/completeTab"/>
 			<xsl:with-param name="tabLink" select="$tabLink"/>
 		</xsl:call-template>
-		<!--
-		<xsl:call-template name="displayTab">
-			<xsl:with-param name="tab"     select="'metadata'"/>
-			<xsl:with-param name="text"    select="/root/gui/strings/metadata"/>
-			<xsl:with-param name="indent"  select="'&#xA0;&#xA0;'"/>
-			<xsl:with-param name="tabLink" select="$tabLink"/>
-		</xsl:call-template>
-		-->
 	</xsl:template>
 	
 	<!--

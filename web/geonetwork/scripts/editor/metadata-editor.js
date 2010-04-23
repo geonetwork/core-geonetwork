@@ -789,6 +789,21 @@ function validateNonEmpty(input) {
 }
 
 /**
+* Validate email input form element.
+* If invalid, set the class attribute to "error".
+*
+* Parameters:
+* input - {Object} Form element
+*/
+function validateEmail(input) {
+	if (!isEmail(input.value)) {
+        input.addClassName('error');
+    } else {
+        input.removeClassName('error');
+    }
+}
+
+/**
  * Retrieve all page's input and textarea element and check the onkeyup and
  * onchange event (Usually used to check user entry.
  * 

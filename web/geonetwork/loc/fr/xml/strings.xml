@@ -673,6 +673,40 @@
 	<xmlInsert>Importer des fichiers ISO19115</xmlInsert>
 	<xmlInsertTitle>Import de fichiers XML</xmlInsertTitle>
 	<xmlTab>XML</xmlTab>
+    <inspireTab>Vue INSPIRE</inspireTab>
+    <inspireSection>
+        <identification>
+            <title>Identification</title>
+        </identification>
+        <classification>
+            <title>Classification des données ou services</title>
+        </classification>
+        <keywords>
+            <title>Mots-clés &amp; thèmes INSPIRE</title>
+        </keywords>
+        <geoloc>
+            <title>Localisation géographique</title>
+        </geoloc>
+        <temporal>
+            <title>Référence temporelle</title>
+        </temporal>
+        <quality>
+            <title>Qualité et validité</title>
+        </quality>
+        <conformity>
+            <title>Conformité</title>
+        </conformity>
+        <constraint>
+            <title>Constrainte d'accès et d'utilisation</title>
+        </constraint>
+        <org>
+            <title>Organisations responsable de la réalisation, gestion, maintenance et distribution</title>
+        </org>
+        <metadata>
+            <title>Métadonnée</title>
+        </metadata>
+    </inspireSection>
+    <inspireAddConformity>Ajouter une section conformité INSPIRE</inspireAddConformity>    
 	<xsdError>Erreur de validation XSD</xsdError>
 	<yourRegistration js="true">Création du compte ...</yourRegistration>
 	<zip>Code postal</zip>

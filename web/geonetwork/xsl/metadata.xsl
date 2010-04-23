@@ -526,7 +526,7 @@
 					<!-- schematrons -->
 					<xsl:when test="//svrl:failed-assert[@ref=$ref]"> 
 						<xsl:for-each select="//svrl:failed-assert[@ref=$ref]">
-							<li><xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> : <xsl:copy-of select="svrl:text/*/*"/></li>
+							<li><xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> : <xsl:copy-of select="svrl:text/*"/></li>
 						</xsl:for-each>
 					</xsl:when>
 				</xsl:choose>
@@ -839,6 +839,18 @@
 			<td class="padded-content" width="100%" colspan="2">
 				<fieldset class="metadata-block">
 					<legend class="block-legend">
+						<xsl:if test="/root/gui/config/metadata-view-toggleTab">
+							<input id="toggle{$id}" type="checkbox" class="toggle" 
+								onclick="$('toggled{$id}').style.display=($(this.id).checked?'none':'block');"
+							/>
+							<!--
+								Toggle mechanism could have been achieved without any JS but pure CSS
+								input.toggle { display: block; }
+								input.toggle:checked+table { display: none; }
+								
+								Issue is IE does not support pseudo class selection checked.
+							 -->
+						</xsl:if>
 						<xsl:choose>
 							<xsl:when test="$helpLink!=''">
 								<span id="stip.{$helpLink}|{$id}" onclick="toolTip(this.id);" class="content" style="cursor:help;"><xsl:value-of select="$title"/>
@@ -871,7 +883,7 @@
 							</xsl:call-template>
 						</xsl:if>
 					</legend>
-					<table width="100%">
+					<table width="100%" id="toggled{$id}">
 						<xsl:copy-of select="$content"/>
 					</table>
 				</fieldset>
@@ -1107,13 +1119,36 @@
 							<xsl:if test="$visible = 'false'">
 								<xsl:attribute name="style">display:none;</xsl:attribute>
 							</xsl:if>
-							<xsl:if test="(
-								(name(.)='gmd:LocalisedCharacterString' and ../../geonet:element/@min='1')
-								or ../geonet:element/@min='1'
-								)
-								and $edit">
-								<xsl:attribute name="onkeyup">validateNonEmpty(this);</xsl:attribute>
-							</xsl:if>
+							
+							<xsl:variable name="mandatory" select="(name(.)='gmd:LocalisedCharacterString' 
+									and ../../geonet:element/@min='1')
+									or ../geonet:element/@min='1'"/>
+							
+							<xsl:choose>
+								<!-- Numeric field -->
+								<xsl:when test="name(.)='gco:Integer' or 
+									name(.)='gco:Decimal' or name(.)='gco:Real'">
+									<xsl:choose>
+										<xsl:when test="name(.)='gco:Integer'">
+											<xsl:attribute name="onkeyup">validateNumber(this, <xsl:value-of select="$mandatory"/>, false);</xsl:attribute>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:attribute name="onkeyup">validateNumber(this, <xsl:value-of select="$mandatory"/>, true);</xsl:attribute>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:when>
+								<!-- Mandatory field (with extra validator) -->
+								<xsl:when test="$mandatory
+									and $edit">
+									<xsl:attribute name="onkeyup">
+										validateNonEmpty(this);
+									</xsl:attribute>
+								</xsl:when>
+								<!-- Custom validator -->
+								<xsl:when test="$validator">
+									<xsl:attribute name="onkeyup"><xsl:value-of select="$validator"/></xsl:attribute>
+								</xsl:when>
+							</xsl:choose>
 						</input>
 						<xsl:call-template name="helper">
 							<xsl:with-param name="schema" select="$schema"/>

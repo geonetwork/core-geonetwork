@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<fields>
+<fields>	
 	<field name="gmd:otherCitationDetails">
 		<suggest name="gco:CharacterString"/>
 		<suggest name="gmx:FileName"/>
@@ -28,6 +28,21 @@
 		<suggest name="gmd:description"/>
 	</field>
 	
+	<!-- Add a distribution format / INSPIRE requirement
+	<field name="gmd:distributionInfo">
+		<suggest name="gmd:MD_Distribution"/>
+	</field>
+	<field name="gmd:MD_Distribution">
+		<suggest name="gmd:distributionFormat"/>
+		<suggest name="gmd:transferOptions"/>
+	</field>
+	<field name="gmd:distributionFormat">
+		<suggest name="gmd:MD_Format"/>
+		</field> -->
+	
+	
+	
+	<!-- Contact info: suggest all by default. -->
 	<field name="gmd:CI_ResponsibleParty">
 		<suggest name="gmd:individualName"/>
 		<suggest name="gmd:organisationName"/>
@@ -52,7 +67,27 @@
 		<suggest name="gmd:postalCode"/>
 		<suggest name="gmd:country"/>
 		<suggest name="gmd:electronicMailAddress"/>
+		</field>
+	
+	
+	<!-- INSPIRE Suggestion for contact suggest 
+		organisation name and email address as defined in metadata IR.
+		ie. less fields than in GeoNetwork default behaviour.
+	<field name="gmd:CI_ResponsibleParty">
+		<suggest name="gmd:organisationName"/>
+		<suggest name="gmd:contactInfo"/>
 	</field>
+	
+	<field name="gmd:CI_Contact">
+		<suggest name="gmd:address"/>
+	</field>
+	
+	<field name="gmd:CI_Address">
+		<suggest name="gmd:electronicMailAddress"/>
+	</field>-->
+	
+	
+	
 	
 	<field name="gmd:MD_Keywords">
 		<suggest name="gmd:type"/>

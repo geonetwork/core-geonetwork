@@ -19,6 +19,7 @@
 				<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"></script>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"></script>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/form_check.js"></script>
             </xsl:when>
             <xsl:otherwise>
 		        <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.js"></script>
@@ -26,10 +27,6 @@
 				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"></script>    
             </xsl:otherwise>
         </xsl:choose>
-            
-        <xsl:if test="not($small)">
-			<script type="text/javascript" src="{/root/gui/url}/scripts/form_check.js"></script>
-		</xsl:if>
 	</xsl:template>
 
 	<xsl:template name="geoCssHeader">

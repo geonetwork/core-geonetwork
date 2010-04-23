@@ -661,10 +661,12 @@ function gn_showSingleMet(pars)
             onFailure: gn_search_error// FIXME
         });
 }
-
-function gn_showMetadata(id) 
+function gn_showMetadata(id) {
+	gn_showMetadata(id, 'simple');
+}
+function gn_showMetadata(id, currTab) 
 {
-    var pars = 'id=' + id + '&currTab=simple';
+    var pars = 'id=' + id + '&currTab=' + currTab;
     
     $('gn_showmd_' + id) .hide();
     $('gn_loadmd_' + id) .show();

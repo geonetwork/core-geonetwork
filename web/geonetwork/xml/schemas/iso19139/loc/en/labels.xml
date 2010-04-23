@@ -1554,7 +1554,7 @@
     <element name="gmd:pointOfContact" id="29.0">
         <label>Point of contact</label>
         <description>Identification of, and means of communication with, person(s) and
-            organizations(s) associated with the resource(s)</description>
+        organizations(s) associated with the resource(s)</description>
     </element>
     <element name="gmd:polygon" id="342.0">
         <label>Polygon</label>
@@ -2146,6 +2146,12 @@
             <option value="OGC:WCS">OGC Web Coverage Service (OGC:WCS)</option>
             <option value="W3C:HTML:DOWNLOAD">Download (W3C:HTML:DOWNLOAD)</option>
             <option value="W3C:HTML:LINK">Information (W3C:HTML:LINK)</option>
+            <!-- INSPIRE Service type defined in MD IR / 1.3.1 Spatial data service type
+            <option value="discovery">Discovery Service (discovery)</option>
+            <option value="view">View Service (view)</option>
+            <option value="download">Download Service (download)</option>
+            <option value="transformation">Transformation Service (transformation)</option>
+            <option value="other">Other Services (other)</option> --> 
         </helper>
     </element>
     <element name="srv:serviceTypeVersion">
@@ -2250,6 +2256,7 @@
     <element name="srv:coupledResource">
         <label>Coupled Resource</label>
         <description>Details of services coupled with this one</description>
+        <inspireInfo>Optional in INSPIRE</inspireInfo>
     </element>
     <element name="srv:SV_CoupledResource">
         <label>Coupled Resource</label>

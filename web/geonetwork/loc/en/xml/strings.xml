@@ -665,6 +665,164 @@
 	<xmlInsert>Import metadata record in XML or MEF format</xmlInsert>
 	<xmlInsertTitle>Metadata insert</xmlInsertTitle>
 	<xmlTab>XML view</xmlTab>
+	<inspireTab>INSPIRE view</inspireTab>
+	<inspireSection>
+		<identification>
+			<title>Identification</title>
+			<help>
+				<div>
+				The following metadata elements shall be provided:
+				<ul>
+					<li>Resource title:
+				This a characteristic, and often-unique, name by which the resource is known. The value domain of this metadata element is free text.</li>
+					<li>Resource abstract:
+						This is a brief narrative summary of the content of the resource. The value domain of this metadata element is free text.</li>
+					<li>Resource type:
+						This is the type of resource being described by the metadata. The value domain of this metadata element is defined in Part D.1.</li>
+					<li>Resource locator:
+						The resource locator defines the link(s) to the resource and/or the link to additional information about the resource. The value domain of this metadata element is a character string, commonly expressed as Uniform Resource Locator (URL).</li>
+					<li>Unique resource identifier:
+						A value uniquely identifying the resource. The value domain of this metadata element is a mandatory character string code, generally assigned by the data owner, and a character string namespace uniquely identifying the context of the identifier code (for example, the data owner).	</li>
+					<li>Coupled resource:
+						If the resource is a spatial data service, this metadata element identifies, where relevant, the target spatial data set(s) of the service through their Unique Resource Identifiers (URI). The value domain of this metadata element is a mandatory character string code, generally assigned by the data owner, and a character string namespace uniquely identifying the context of the identifier code (for example, the data owner).</li>
+					<li>Resource language:
+						The language(s) used within the resource. The value domain of this metadata element is limited to the languages defined in ISO 639-2.</li>
+				</ul>
+				</div>
+			</help>
+		</identification>
+		<classification>
+			<title>Classification of spatial data and services</title>
+			<help>
+				<div>
+					<ul>
+						<li>Topic category:			
+						The topic category is a high-level classification scheme to assist in the grouping and topic-based search of available spatial data resources. The value domain of this metadata element is defined in Part D.2.</li>
+						<li>
+							Spatial data service type: 
+							This is a classification to assist in the search of available spatial data services. A specific service shall be categorised in only one category. The value domain of this metadata element is defined in Part D.3.
+						</li>
+					</ul>
+				</div>
+			</help>
+		</classification>
+		<keywords>
+			<title>Keywords &amp; INSPIRE themes</title>
+			<help>
+				<div>
+					According to the INSPIRE Implementing Rule for Metadata, if a resource is a spatial data set or spatial data set series, at least one keyword shall be provided from the General Environmental Multi-lingual Thesaurus (GEMET) describing the relevant spatial data theme as defined in Annex I, II or III to Directive 2007/2/EC.
+					<br/>					
+					The titles and definitions of all 34 INSPIRE Spatial Data Themes have now been integrated into the General Environmental Multi-lingual Thesaurus (GEMET) in the 23 official Community languages: http://www.eionet.europa.eu/gemet/inspire_themes.
+					<br/>
+					Note that, in addition to the INSPIRE Spatial Data Theme, also other keywords might be added. These may be described as a free text or may originate from any Controlled Vocabulary. If they originate from a Controlled Vocabulary (Thesaurus, Ontology), the citation of the originating Controlled Vocabulary shall be provided, as described below. 
+				</div>
+			</help>
+		</keywords>
+		<geoloc>
+			<title>Geographic location</title>
+			<help>
+				<div>
+					The requirement for geographic location referred to in Article 11(2)(e) of Directive 2007/2/EC shall be expressed with the metadata element geographic bounding box.
+					This is the extent of the resource in the geographic space, given as a bounding box. The bounding box shall be expressed with westbound and eastbound longitudes, and southbound and northbound latitudes in decimal degrees, with a precision of at least 2 decimals. 
+				</div>
+			</help>
+		</geoloc>
+		<temporal>
+			<title>Temporal reference</title>
+			<help>
+				<div>
+					This metadata element addresses the requirement to have information on the temporal dimension of the data as referred to in Article 8(2)(d) of Directive 2007/2/EC . At least one of the metadata elements referred to in points 5.1 to 5.4 shall be provided. The value domain of the metadata elements referred to in points 5.1 to 5.4 is a set of dates. Each date shall refer to a temporal reference system and shall be expressed in a form compatible with that system. The default reference system shall be the Gregorian calendar, with dates expressed in accordance with ISO 8601.
+					<br/>
+					The temporal extent defines the time period covered by the content of the resource.
+					
+					This time period may be expressed as any of the following:
+					<ul>					
+						<li>an individual date</li>
+						<li>an interval of dates expressed through the starting date and end date of the interval</li>
+						<li>a mix of individual dates and intervals of dates</li>
+					</ul>
+				</div>
+			</help>
+		</temporal>
+		<quality>
+			<title>Quality and validity</title>
+			<help>
+				<div> The requirements referred to in Article 5(2) and Article 11(2) of Directive 2007/2/EC relating to the quality and validity of spatial data shall be addressed by the following metadata elements: 
+					<ul>
+						<li>Lineage:
+						This is a statement on process history and/or overall quality of the spatial data set. Where appropriate it may include a statement whether the data set has been validated or quality assured, whether it is the official version (if multiple versions exist), and whether it has legal validity. The value domain of this metadata element is free text.</li>
+						<li>
+							Spatial resolution:
+							
+							Spatial resolution refers to the level of detail of the data set. It shall be expressed as a set of zero to many resolution distances (typically for gridded data and imagery-derived products) or equivalent scales (typically for maps or map-derived products). An equivalent scale is generally expressed as an integer value expressing the scale denominator. A resolution distance shall be expressed as a numerical value associated with a unit of length.			
+						</li>
+					</ul>				
+				</div>
+			</help>
+		</quality>
+		<conformity>
+			<title>Conformity</title>
+			<help>
+				<div>
+					The requirements referred to in Article 5(2)(a) and Article 11(2)(d) of Directive 2007/2/EC relating to the conformity, and the degree of conformity, with implementing rules adopted under Article 7(1) of Directive 2007/2/EC shall be addressed by the following metadata elements:
+					<ul>
+						<li>Specification:					
+							This is a citation of the implementing rules adopted under Article 7(1) of Directive 2007/2/EC or other specification to which a particular resource conforms. A resource may conform to more than one implementing rules adopted under Article 7(1) of Directive 2007/2/EC or other specification.
+							This citation shall include at least the title and a reference date (date of publication, date of last revision or of creation) of the implementing rules adopted under Article 7(1) of Directive 2007/2/EC or of the specification.
+						</li>
+						<li>
+							Degree:					
+							This is the degree of conformity of the resource to the implementing rules adopted under Article 7(1) of Directive 2007/2/EC or other specification. The value domain of this metadata element is defined in Part D. 							
+						</li>
+					</ul>					
+				</div>
+			</help>
+		</conformity>
+		<constraint>
+			<title>Constraint related to access and use </title>
+			<help>
+				<div>
+					A constraint related to access and use shall be either or both of the following:
+					<ul>
+						<li>
+							Conditions applying to access and use:					
+							This metadata element defines the conditions for access and use of spatial data sets and services, and where applicable, corresponding fees as required by Article 5(2)(b) and Article 11(2)(f) of Directive 2007/2/EC. The value domain of this metadata element is free text. The element must have values.
+							
+							If no conditions apply to the access and use of the resource, "no conditions apply" shall be used. If conditions are unknown, "conditions unknown" shall be used. This element shall also provide information on any fees necessary to access and use the resource, if applicable, or refer to a Uniform Resource Locator (URL) where information on fees is available.							
+						</li>
+						<li>
+							Limitations on public access: 
+							When Member States limit public access to spatial data sets and spatial data services under Article 13 of Directive 2007/2/EC, this metadata element shall provide information on the limitations and the reasons for them. If there are no limitations on public access, this metadata element shall indicate that fact. The value domain of this metadata element is free text.							
+						</li>
+					</ul>					
+				</div>
+			</help>
+		</constraint>
+		<org>
+			<title>Organisations responsible for the establishment, management, maintenance and distribution</title>
+			<help>
+				<div>
+					For the purposes of Article 5(2)(d) and Article 11(2)(g) of Directive 2007/2/EC, the following two metadata elements shall be provided:
+					<ul>
+						<li>
+							Responsible party:
+							This is the description of the organisation responsible for the establishment, management, maintenance and distribution of the resource. This description shall include:
+							(the name of the organisation as free text, a contact e-mail address as a character string.)							
+						</li>
+						<li>
+							Responsible party role:					
+							This is the role of the responsible organisation. The value domain of this metadata element is defined in Part D.6.	
+						</li>
+					</ul>
+				</div>
+			</help>
+		</org>
+		<metadata>
+			<title>Metadata</title>
+			<help>For the purposes of Article 5(1) of Directive 2007/2/EC.</help>
+		</metadata>
+	</inspireSection>
+	<inspireAddConformity>Add INSPIRE conformity section</inspireAddConformity>
 	<xsdError>XSD Validation Error</xsdError>
 	<yourRegistration js="true">Your registration...</yourRegistration>
 	<zip>Zip</zip>

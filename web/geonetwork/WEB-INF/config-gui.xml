@@ -60,13 +60,39 @@
  <!-- Display error only when loading validation report 
   <editor-validation-errors-only-on-load/>-->
  
+ <!-- Display metadata tabs in edit and view mode. 
+  ISO and INSPIRE view only available for ISO19139 records.
+  Default view is always visible.
+  
+  Use the flat attribute in order to display elements in simple mode 
+  (ie. could not access to all elements defined in the schema)
+  
+  Use the default attribute in order to use this view in search result panel.
+  It is recommended to use the simple or inspire view because user will not
+  have access to section tab switcher.
+ -->
+ <metadata-tab>
+  <simple flat="true"  default="true"/>
+  <advanced/><!-- This view should not be removed as this is the only view to be able 
+  to edit all elements defined in a schema. -->
+  <iso/>
+  <!-- This view display all INSPIRE recommended elements
+  <inspire flat="true"/>
+  in a view -->
+  <xml/>
+ </metadata-tab>
+ 
+ 
+ <!-- Add an option to be able to toggle all fieldsets
+  in view and edit mode. -->
+ <metadata-view-toggleTab/>
+ 
  <!-- Actions configuration
  -->
  <editor-actions>
   <!-- Action to allow editors to compute bounding box from keyword analysis. -->
   <compute-extent-from-keyword/> 
  </editor-actions>
- 
  
  <!-- Proxy URL to use for XHR. 
  Check that the proxy could query allowed hosts.
