@@ -440,8 +440,10 @@ class Harvester
 		String name = record.getName();
         log.debug("getRecordInfo (name): " +  name);
 
-        // Summary
-        if (name.equals("SummaryRecord"))
+        // Summary or Full
+        // Note: Summary is requested, but some servers return full response.
+        // As identifier and modified values are in full response it's ok
+        if ((name.equals("SummaryRecord") || (name.equals("Record"))))
 		{
             Namespace dc  = Namespace.getNamespace("http://purl.org/dc/elements/1.1/");
             Namespace dct = Namespace.getNamespace("http://purl.org/dc/terms/");
