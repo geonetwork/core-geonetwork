@@ -967,3 +967,31 @@ div.modalbox * li {
 div.modalbox * li * li {
     font-size: smaller
 }
+
+div.row {
+  margin-bottom: 5px;
+}
+
+span.labelField {
+    display: table-cell;
+    display: inline-block;
+    width: 90px;
+    vertical-align: top;
+    font-size: 0.9em;
+}
+
+div.inspireThemeTitle {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+span.inspireThemeElement {
+    display: table-cell;
+    display: inline-block;
+    width: 230px;
+	vertical-align:top;
+}
+
+.advsearchinspire {
+	margin-top: 5px;
+}

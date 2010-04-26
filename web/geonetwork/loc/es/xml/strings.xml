@@ -693,6 +693,66 @@
 		<thesaurus>Seleccione las palabras clave del tesauro</thesaurus>
 	</searchhelp>
 
+        <inspire>
+        <what>
+            <l1>Opciones de búsqueda de INSPIRE </l1>
+            <l2>Metadatos INSPIRE metadata</l2>
+            <l3>Sólo metadatos INSPIRE </l3>
+            <l4>Ocultar opciones INSPIRE</l4>
+            <l5>Mostrar opciones INSPIRE</l5>
+            <l6>Anexo</l6>
+            <l7>Tipo de fuente</l7>
+            <l8>Everything</l8>
+            <l9>Datasets and dataset series</l9>
+            <l10>Services</l10>
+            <l11>Organisation</l11>
+            <l12>Show INSPIRE Themes</l12>
+            <l13>Hide INSPIRE Themes</l13>
+            <l14>Tema de INSPIRE</l14>
+            <l15>Tipo de servicio</l15>
+        </what>
+        <annex1>
+            <l1>Sistemas de coordenadas de referencia</l1>
+            <l2>Sistema de cuadrículas geográficas</l2>
+            <l3>Nombres geográficos</l3>
+            <l4>Unidades administrativas</l4>
+            <l5>Direcciones</l5>
+            <l6>Parcelas catastrales</l6>
+            <l7>Redes de transporte</l7>
+            <l8>Hidrografía</l8>
+            <l9>Lugares protegidos</l9>
+        </annex1>
+        <annex2>
+            <l1>Elevaciones</l1>
+            <l2>Cubierta terrestre</l2>
+            <l3>Ortoimágenes</l3>
+            <l4>Geología</l4>
+        </annex2>
+        <annex3>
+            <l1>Unidades estadísticas</l1>
+            <l2>Edificios</l2>
+            <l3>Suelo</l3>
+            <l4>Uso del suelo</l4>
+            <l5>Salud y seguridad humanas</l5>
+            <l6>Servicios de utilidad pública y estatales</l6>
+            <l7>Instalaciones de observación del medio ambiente</l7>
+            <l8>Instalaciones de producción e industriales</l8>
+            <l9>Instalaciones agrícolas y de acuicultura</l9>
+            <l10>Distribución de la población — demografía</l10>
+            <l11>Zonas sujetas a ordenación, a restricciones o reglamentaciones y unidades de notificación</l11>
+            <l12>Zonas de riesgos naturales</l12>
+            <l13>Condiciones atmosféricas</l13>
+            <l14>Aspectos geográficos de carácter meteorológico</l14>
+            <l15>Rasgos geográficos oceanográficos</l15>
+            <l16>Regiones marinas</l16>
+            <l17>Regiones biogeográficas</l17>
+            <l18>Hábitats y biotopos</l18>
+            <l19>Distribución de las especies</l19>
+            <l20>Recursos energéticos</l20>
+            <l21>Recursos minerales</l21>
+        </annex3>
+    </inspire>
+
     <selectMetadataFileAlert>Debe de seleccionar el fichero de metadatos a insertar</selectMetadataFileAlert>    
     <showMoreSearchFields>Mostrar/Ocultar más campos de búsqueda</showMoreSearchFields>
     <searchEitherOfTheWords>Cualquiera de las palabras</searchEitherOfTheWords>

@@ -715,6 +715,66 @@
 		<thesaurus>Pick keywords from thesauri</thesaurus>
 	</searchhelp>
 
+    <inspire>
+          <what>
+            <l1>INSPIRE zoekopties</l1>
+            <l2>INSPIRE metadata</l2>
+            <l3>Alleen INSPIRE metadata</l3>
+            <l4>Verberg INSPIRE opties</l4>
+            <l5>Toon INSPIRE opties</l5>
+            <l6>Annex </l6>
+            <l7>Brontype</l7>
+            <l8>Alles</l8>
+            <l9>Datasets en dataset series</l9>
+            <l10>Services</l10>
+            <l11>Organisatie</l11>
+            <l12>Toon INSPIRE Thema's</l12>
+            <l13>Verberg INSPIRE Thema's</l13>
+            <l14>INSPIRE Thema</l14>
+            <l15>Service type</l15>
+        </what>
+        <annex1>
+        	<l1>Geografisch coördinatenstelsel</l1>
+            <l2>Geografisch grid systeem</l2>
+            <l3>Geografische namen</l3>
+            <l4>Administratieve eenheden</l4>
+            <l5>Adressen</l5>
+            <l6>Kadastrale percelen</l6>
+            <l7>Transportnetwerk</l7>
+            <l8>Hydrografie</l8>
+            <l9>Beschermde gebieden</l9>
+        </annex1>
+        <annex2>
+            <l1>Elevation</l1>
+            <l2>Land cover</l2>
+            <l3>Orthoimagery</l3>
+            <l4>Geology</l4>
+        </annex2>
+        <annex3>
+            <l1>Statistical units</l1>
+            <l2>Buildings</l2>
+            <l3>Soil</l3>
+            <l4>Land use</l4>
+            <l5>Human health and safety</l5>
+            <l6>Utility and Government services</l6>
+            <l7>Environmental monitoring facilities</l7>
+            <l8>Production and industrial facilities</l8>
+            <l9>Agriculture and aquaculture facilities</l9>
+            <l10>Population distribution - demography</l10>
+            <l11>Area management/restriction/regulation zones and reporting units</l11>
+            <l12>Natural risk zones</l12>
+            <l13>Atmospheric conditions</l13>
+            <l14>Meteorological geographical features</l14>
+            <l15>Oceanographic geographical features</l15>
+            <l16>Sea regions</l16>
+            <l17>Bio-geographical regions</l17>
+            <l18>Habitats and biotopes</l18>
+            <l19>Species distribution</l19>
+            <l20>Energy resources</l20>
+            <l21>Mineral resources</l21>
+        </annex3>
+    </inspire>
+    
     <selectMetadataFileAlert>U moet een metadata bestand selecteren</selectMetadataFileAlert>    
     <showMoreSearchFields>Meer zoekvelden</showMoreSearchFields>
     <searchEitherOfTheWords>Met één van deze woorden</searchEitherOfTheWords>

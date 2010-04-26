@@ -287,7 +287,17 @@ function runAdvancedSearch(type)
 	pars += fetchParam('hitsPerPage');
 	pars += fetchParam('output');
 
+     //Inspire
+    pars += fetchParam('inspireannex');
+    pars += addINSPIREThemes();
 
+	var inspire = $('inspire');
+
+    if (inspire) {
+        if (inspire.checked) pars += "&inspire=true";
+    }
+    // Inspire
+    
     if (type == "pdf")
        gn_searchpdf(pars);
     else
@@ -338,6 +348,11 @@ function resetAdvancedSearch()
  	setParam('sortOrder',   '');
  	setParam('hitsPerPage', '10');
  	setParam('output',      'full');
+
+    // reset INSPIRE options
+    resetInspireOptions();
+    // End reset INSPIRE options    
+
 }
 
 /**********************************************************
@@ -984,5 +999,133 @@ function toggleMoreFields() {
   } else {
 	$("i_morefields").setAttribute('src', src +'plus.gif');
   }
+}
+
+function toggleInspire() {
+  $("inspiresearchfields").toggle();
+  $("arrow_inspire").toggle();
+
+  var src = $("i_inspire").getAttribute('src');
+  var ndx = src.lastIndexOf('/');
+
+  src = src.substring(0, ndx+1);
+
+  if ($("inspiresearchfields").visible() == true) {
+	$("i_inspire").setAttribute('src', src +'minus.png');
+  } else {
+	$("i_inspire").setAttribute('src', src +'plus.gif');
+  }
+}
+/********************************************************************/
+/* INSPIRE                                                          */
+/********************************************************************/
+function showInspireSearch() {
+   var inspire = $('inspire');
+   if(inspire.checked) {
+       inspire.value = 'true';
+   } else {
+       inspire.value = '';
+   }
+
+}
+
+function inspireAnnexChanged(inspireannex) {
+    var inspire = $('inspire');
+    if (inspireannex!="") {
+        // we have an Annex, so only INSPIRE metadata can be queried
+        //    let the user know this, by checking the checkbox
+        if (inspire) inspire.checked = true;
+    } else {
+        if (inspire) inspire.checked = false;
+    }
+}
+
+function inspireOrganisationChanged(groupId) {
+	setParam('group',groupId);
+}
+
+// TODO: document asspumtion: there is an input field 'type'
+function inspireBrontypeChanged(brontype) {
+    setParam('type',brontype);
+}
+
+// TODO: document asspumtion: there is an input field 'protocol'
+function inspireServiceTypeChanged(servicetype) {
+    setParam('protocol',servicetype);
+}
+
+function taggleVisibility(elementId) {
+	var element = $(elementId);
+	if(element != null) {
+		if(element.style.display == "none") {
+			element.style.display = "block";
+		}
+		else {
+			element.style.display = "none";
+		}
+	}
+	else {
+		return;
+	}
+}
+
+function addINSPIREThemes() {
+	var allThemes = '';
+	var prefix = '&inspiretheme=';
+    // Select all checkboxes in inspirethemesdiv
+    var inspireThemeChk = $$('#inspirethemesdiv input[type="checkbox"]');
+    // console.log(inspireThemeChk.length);
+    for (i=0;i<inspireThemeChk.length;i++) {
+        if (inspireThemeChk[i].checked) {
+            allThemes += prefix + inspireThemeChk[i].value+"*";
+        }
+    }
+	return allThemes ;
+}
+
+function resetInspireOptions() {
+     // reset INSPIRE options
+	$('inspire').checked=false;
+	setParam('title','');
+	setParam('inspireannex','');
+	setParam('inspirebrontype','');
+	setParam('protocol','');
+	setParam('orgselect_inspire','');
+
+	$('inspire_GeographicalNames').checked=false;
+	$('inspire_AdministrativeUnits').checked=false;
+	$('inspire_Addresses').checked=false;
+	$('inspire_CadastralParcels').checked=false;
+	$('inspire_TransportNetworks').checked=false;
+	$('inspire_Hydrography').checked=false;
+	$('inspire_ProtectedSites').checked=false;
+	$('inspire_Elevation').checked=false;
+	$('inspire_LandCover').checked=false;
+	$('inspire_Orthoimagery').checked=false;
+	$('inspire_Geology').checked=false;
+	$('inspire_StatisticalUnits').checked=false;
+	$('inspire_Buildings').checked=false;
+	$('inspire_Soil').checked=false;
+	$('inspire_LandUse').checked=false;
+	$('inspire_HumanHealthAndSafety').checked=false;
+	$('inspire_UtilityAndGovernmentServices').checked=false;
+	$('inspire_EnvironmentalMonitoringFacilities').checked=false;
+	$('inspire_ProductionAndIndustrialFacilities').checked=false;
+	$('inspire_AgriculturalAndAquacultureFacilities').checked=false;
+	$('inspire_PopulationDistribution-Demography').checked=false;
+	$('inspire_AreaManagementRestrictionRegulationZonesAndReportingUnits').checked=false;
+	$('inspire_NaturalRiskZones').checked=false;
+	$('inspire_AtmosphericConditions').checked=false;
+	$('inspire_MeteorologicalGeographicalFeatures').checked=false;
+	$('inspire_OceanographicGeographicalFeatures').checked=false;
+	$('inspire_SeaRegions').checked=false;
+	$('inspire_Bio-geographicalRegions').checked=false;
+	$('inspire_HabitatsAndBiotopes').checked=false;
+	$('inspire_SpeciesDistribution').checked=false;
+	$('inspire_EnergyResources').checked=false;
+	$('inspire_MineralResources').checked=false;
+	$('inspire_MineralResources').checked=false;
+	$('inspire_MineralResources').checked=false;
+	// End reset INSPIRE options
 }
 /*** EOF ***********************************************************/

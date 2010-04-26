@@ -18,8 +18,13 @@
 	<!-- ========================================================================================= -->
 	
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" />
-	
+
+
 	<!-- ========================================================================================= -->
+
+    <xsl:param name="inspire">false</xsl:param>
+
+    <!-- ========================================================================================= -->
 
 	<xsl:template match="/">
 		<Document>
@@ -111,11 +116,36 @@
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 
+            <xsl:variable name="lower">abcdefghijklmnopqrstuvwxyz</xsl:variable>
+            <xsl:variable name="upper">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
 			<xsl:for-each select="*/gmd:MD_Keywords">
 				<xsl:for-each select="gmd:keyword/gco:CharacterString|gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
-					<Field name="keyword" string="{string(.)}" store="true" index="true" token="false"/>
+                    <xsl:variable name="keywordLower" select="translate(string(.),$upper,$lower)"/>
+                    <Field name="keyword" string="{string(.)}" store="true" index="true" token="false"/>
 					<Field name="subject" string="{string(.)}" store="true" index="true" token="false"/>
-				</xsl:for-each>
+
+                    <xsl:if test="$inspire='true'">
+                        <xsl:if test="string-length(.) &gt; 0">
+                            <xsl:if test="$keywordLower='coordinate reference systems' or $keywordLower='geographical grid systems' or $keywordLower='geographical names' or $keywordLower='administrative units' or $keywordLower='addresses' or $keywordLower='cadastral parcels' or $keywordLower='transport networks' or $keywordLower='hydrography' or $keywordLower='protected sites'">
+                                <Field name="inspiretheme" string="{string(.)}" store="true" index="true" token="true"/>
+                                <Field name="inspireannex" string="i" store="true" index="true" token="false"/>
+                                <Field name="inspirecat" string="true" store="true" index="true" token="false"/>
+                            </xsl:if>
+
+                            <xsl:if test="$keywordLower='elevation' or $keywordLower='land cover' or $keywordLower='orthoimagery' or $keywordLower='geology'">
+                                <Field name="inspiretheme" string="{string(.)}" store="true" index="true" token="true"/>
+                                <Field name="inspireannex" string="ii" store="true" index="true" token="false"/>
+                                <Field name="inspirecat" string="true" store="true" index="true" token="false"/>
+                                </xsl:if>
+
+                            <xsl:if test="$keywordLower='statistical units' or $keywordLower='buildings' or $keywordLower='soil' or $keywordLower='land use' or $keywordLower='human health and safety' or $keywordLower='utility and government services' or $keywordLower='environmental monitoring facilities' or $keywordLower='production and industrial facilities' or $keywordLower='agricultural and aquaculture facilities' or $keywordLower='population distribution - demography' or $keywordLower='area management/restriction/regulation zones and reporting units' or $keywordLower='natural risk zones' or $keywordLower='atmospheric conditions' or $keywordLower='meteorological geographical features' or $keywordLower='oceanographic geographical features' or $keywordLower='sea regions' or $keywordLower='bio-geographical regions' or $keywordLower='habitats and biotopes' or $keywordLower='species distribution' or $keywordLower='energy resources' or $keywordLower='mineral resources'">
+                                <Field name="inspiretheme" string="{string(.)}" store="true" index="true" token="true"/>
+                                <Field name="inspireannex" string="iii" store="true" index="true" token="false"/>
+                                <Field name="inspirecat" string="true" store="true" index="true" token="false"/>
+                            </xsl:if>
+                        </xsl:if>
+                    </xsl:if>
+                </xsl:for-each>
 
 				<xsl:for-each select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">
 					<Field name="keywordType" string="{string(.)}" store="true" index="true" token="true"/>

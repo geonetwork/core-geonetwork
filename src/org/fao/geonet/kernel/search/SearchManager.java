@@ -86,6 +86,7 @@ import org.fao.geonet.kernel.search.spatial.WithinFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 
+import org.fao.geonet.util.spring.StringUtils;
 import org.geotools.data.DataStore;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureSource;
@@ -137,21 +138,26 @@ public class SearchManager
 	private Calendar       _optimizerBeginAt;
 	private SimpleDateFormat _dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
+    private boolean        _inspireEnabled = false;
+
 	//-----------------------------------------------------------------------------
 
 	/**
 	 * @param appPath
 	 * @param luceneDir
 	 * @param summaryConfigXmlFile
+     * @param guiConfigXmlFile
 	 * @param dataStore
 	 * @throws Exception
 	 */
-	public SearchManager(String appPath, String luceneDir, String dataDir, String summaryConfigXmlFile, DataStore dataStore, String optimizerInterval, SettingInfo si) throws Exception
+	public SearchManager(String appPath, String luceneDir, String dataDir, String summaryConfigXmlFile,  String guiConfigXmlFile, DataStore dataStore, String optimizerInterval, SettingInfo si) throws Exception
 	{
 		_summaryConfig = Xml.loadStream(new FileInputStream(new File(appPath,summaryConfigXmlFile)));
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
 		_schemasDir     = new File(appPath, SCHEMA_STYLESHEETS_DIR_PATH);
 		_dataDir        = dataDir;
+
+        checkInspireConfig(appPath, guiConfigXmlFile);
 
 		if (!_stylesheetsDir.isDirectory())
 			throw new Exception("directory " + _stylesheetsDir + " not found");
@@ -596,7 +602,10 @@ public class SearchManager
 		try {
 			String styleSheet = new File(schemaDir, "index-fields.xsl")
 					.getAbsolutePath();
-			return Xml.transform(xml, styleSheet);
+            Map<String,String> params = new HashMap();
+            params.put("inspire", new Boolean(_inspireEnabled).toString());
+
+			return Xml.transform(xml, styleSheet, params);
 		} catch (Exception e) {
 			Log.error(Geonet.INDEX_ENGINE,
 					"Indexing stylesheet contains errors : " + e.getMessage());
@@ -604,6 +613,23 @@ public class SearchManager
 		}
 	}
 
+    private void checkInspireConfig(String appPath, String guiConfigXmlFile) {
+        try {
+            Element  guiConfig = Xml.loadStream(new FileInputStream(new File(appPath, guiConfigXmlFile)));
+
+            String inspireParam = guiConfig.getChild("inspire").getValue();
+            if (StringUtils.hasText(inspireParam)) {
+               _inspireEnabled = (inspireParam.equals("1"));
+            } else {
+                _inspireEnabled = false;
+            }
+        } catch (Exception ex) {
+            // If not defined the parameter, then inspire is disabled
+            _inspireEnabled = false;
+        }
+
+    }
+    
 	//-----------------------------------------------------------------------------
 	// utilities
 

@@ -411,6 +411,8 @@ public class Geonet
 		public static final String CODELIST_DIR  	= "codeListDir";
 		public static final String DIR              = "dir";
 		public static final String SUMMARY_CONFIG   = "summaryConfig";
+        public static final String GUI_CONFIG       = "guiConfig";
+        
 	}
 
 	//--------------------------------------------------------------------------

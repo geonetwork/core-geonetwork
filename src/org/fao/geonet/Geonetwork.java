@@ -164,11 +164,12 @@ public class Geonetwork implements ApplicationHandler
 
 		String summaryConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.SUMMARY_CONFIG);
 		String dataDir = path + handlerConfig.getMandatoryValue(Geonet.Config.DATA_DIR);
+        String guiConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.GUI_CONFIG);
 
 		DataStore dataStore = createDataStore(context.getResourceManager().getProps(Geonet.Res.MAIN_DB), luceneDir);
 	
 		String optimizerInterval = settingMan.getValue("system/indexoptimizer/interval");
-		searchMan = new SearchManager(path, luceneDir, dataDir, summaryConfigXmlFile, dataStore, optimizerInterval, new SettingInfo(settingMan));
+		searchMan = new SearchManager(path, luceneDir, dataDir, summaryConfigXmlFile, guiConfigXmlFile, dataStore, optimizerInterval, new SettingInfo(settingMan));
 
 		//------------------------------------------------------------------------
 		//--- extract intranet ip/mask and initialize AccessManager

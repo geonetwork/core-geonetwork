@@ -576,6 +576,88 @@ public class LuceneQueryTest extends TestCase {
 		assertEquals("+_isTemplate:n +type:dataset", query.toString());
 	}
 
+    /**
+     * 'inspire' parameter with a single value.
+     */
+    public void testSingleInspire() {
+        // create request object
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element any = factory.element("inspire");
+        any.addContent("true");
+        request.addContent(any);
+        // build lucene query
+        Query query = new LuceneQueryBuilder().build(request);
+        // verify query
+        assertEquals("+_isTemplate:n +inspirecat:true", query.toString());
+    }
+
+    /**
+     * 'inspiretheme' parameter with a single value.
+     */
+    public void testSingleInspireTheme() {
+        // create request object
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element any = factory.element("inspiretheme");
+        any.addContent("Addresses*");
+        request.addContent(any);
+        // build lucene query
+        Query query = new LuceneQueryBuilder().build(request);
+        // verify query
+        assertEquals("+_isTemplate:n +(inspiretheme:\"addresses\")", query.toString());
+    }
+
+    /**
+     * 'inspiretheme' parameter with a single multi-token value.
+     */
+    public void testSingleMultiTokenInspireTheme() {
+        // create request object
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element any = factory.element("inspiretheme");
+        any.addContent("Administrative units*");
+        request.addContent(any);
+        // build lucene query
+        Query query = new LuceneQueryBuilder().build(request);
+        // verify query
+        assertEquals("+_isTemplate:n +(inspiretheme:\"administrative units\")", query.toString());
+    }
+    /**
+     * 'inspiretheme' parameter with multiple values.
+     */
+    public void testMultipleInspireTheme() {
+        // create request object
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element any = factory.element("inspiretheme");
+        any.addContent("Cadastral parcels*");
+        request.addContent(any);
+        Element any2 = factory.element("inspiretheme");
+        any2.addContent("Hydrography*");
+        request.addContent(any2);
+        // build lucene query
+        Query query = new LuceneQueryBuilder().build(request);
+        // verify query
+        assertEquals("+_isTemplate:n +(inspiretheme:\"cadastral parcels\" inspiretheme:\"hydrography\")", query.toString());
+    }
+
+    /**
+     * 'inspireannex' parameter with a single token value.
+     */
+    public void testSingleTokenInspireAnnex() {
+        // create request object
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element any = factory.element("inspireannex");
+        any.addContent("joostmaghetweten");
+        request.addContent(any);
+        // build lucene query
+        Query query = new LuceneQueryBuilder().build(request);
+        // verify query
+        assertEquals("+_isTemplate:n +inspireannex:joostmaghetweten", query.toString());
+    }
+
 	/**
 	 * 'themekey' parameter with a single value.
 	 */

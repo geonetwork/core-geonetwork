@@ -821,6 +821,66 @@
 		<thesaurus>Pick keywords from thesauri</thesaurus>
 	</searchhelp>
 
+    <inspire>
+        <what>
+            <l1>Recherche INSPIRE</l1>
+            <l2>Métadonnées INSPIRE</l2>
+            <l3>Uniquement les métadonnées INSPIRE</l3>
+            <l4>Cacher les critères INSPIRE</l4>
+            <l5>Voir les critères INSPIRE</l5>
+            <l6>Annexe </l6>
+            <l7>Type de source</l7>
+            <l8>Tout</l8>
+            <l9>Données et collections de données</l9>
+            <l10>Services</l10>
+            <l11>Organisation</l11>
+            <l12>Voir les thèmes INSPIRE</l12>
+            <l13>Cacher les thèmes INSPIRE</l13>
+            <l14>Thèmes INSPIRE</l14>
+            <l15>Type de service</l15>
+        </what>
+        <annex1>
+            <l1>Référentiels de coordonnées</l1>
+            <l2>Systèmes de maillage géographique</l2>
+            <l3>Dénominations géographiques</l3>
+            <l4>Unités administratives</l4>
+            <l5>Adresses</l5>
+            <l6>Parcelles cadastrales</l6>
+            <l7>Réseaux de transport</l7>
+            <l8>Hydrographie</l8>
+            <l9>Sites protégés</l9>
+        </annex1>
+        <annex2>
+            <l1>Altitude</l1>
+            <l2>Occupation des terres</l2>
+            <l3>Ortho-imagerie</l3>
+            <l4>Géologie</l4>
+        </annex2>
+        <annex3>
+            <l1>Unités statistiques</l1>
+            <l2>Bâtiments</l2>
+            <l3>Sols</l3>
+            <l4>Usage des sols</l4>
+            <l5>Santé et sécurité des personnes</l5>
+            <l6>Services d'utilité publique et services publics</l6>
+            <l7>Installations de suivi environnemental</l7>
+            <l8>Lieux de production et sites industriels</l8>
+            <l9>Installations agricoles et aquacoles</l9>
+            <l10>Répartition de la population — démographie</l10>
+            <l11>Zones de gestion, de restriction ou de réglementation et unités de déclaration</l11>
+            <l12>Zones à risque naturel</l12>
+            <l13>Conditions atmosphériques</l13>
+            <l14>Caractéristiques géographiques météorologiques</l14>
+            <l15>Caractéristiques géographiques océanographiques</l15>
+            <l16>Régions maritimes</l16>
+            <l17>Régions biogéographiques</l17>
+            <l18>Habitats et biotopes</l18>
+            <l19>Répartition des espèces</l19>
+            <l20>Sources d'énergie</l20>
+            <l21>Ressources minérales</l21>
+        </annex3>
+    </inspire>
+    
     <selectMetadataFileAlert>Vous devez sélectionner un fichier à insérer</selectMetadataFileAlert>    
     <showMoreSearchFields>Autres critères de recherche</showMoreSearchFields>
     <searchEitherOfTheWords>Au moins un des mots suivants</searchEitherOfTheWords>

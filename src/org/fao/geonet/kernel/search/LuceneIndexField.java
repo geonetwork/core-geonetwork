@@ -17,7 +17,10 @@ public class LuceneIndexField {
 	public static final String DUMMY = "_dummy";
 	public static final String EAST = "eastBL";
 	public static final String GROUP_OWNER = "_groupOwner";
+    public static final String INSPIRE_ANNEX = "inspireannex";
+    public static final String INSPIRE_THEME = "inspiretheme";
 	public static final String IS_TEMPLATE = "_isTemplate";
+    public static final String INSPIRE_CAT = "inspirecat";
 	public static final String KEYWORD = "keyword";
 	public static final String METADATA_STANDARD_NAME = "metadataStandardName";
 	public static final String NORTH = "northBL";

@@ -513,6 +513,59 @@ public class LuceneQueryBuilder {
 			query.add(typeClause);
 		}
 
+        		//
+		// inspire
+		//
+		String inspire = request.getChildText("inspire");
+		if(inspire != null) {
+			TermQuery inspireQuery = new TermQuery(new Term(LuceneIndexField.INSPIRE_CAT, inspire));
+            BooleanClause.Occur inspireOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+
+			BooleanClause inspireClause = new BooleanClause(inspireQuery, inspireOccur);
+			query.add(inspireClause);
+		}
+
+		//
+		// inspireTheme
+		//
+		@SuppressWarnings("unchecked")
+		List<Element> inspireThemes = (List<Element>)request.getChildren("inspiretheme");
+		if(inspireThemes != null && inspireThemes.size() > 0) {
+			BooleanQuery inspireThemesQuery = new BooleanQuery();
+			BooleanClause.Occur inspireThemesOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+			for(Iterator<Element> i = inspireThemes.iterator(); i.hasNext();) {
+				String inspireTheme = i.next().getText();
+				inspireTheme = inspireTheme.trim();
+				if(inspireTheme.length() > 0) {
+					// some clients (like GN's GUI) stupidly append a * already. Prevent them here:
+					if(inspireTheme.endsWith("*")) {
+						inspireTheme = inspireTheme.substring(0, inspireTheme.length()-1);
+					}
+					// NOTE if we want to support a combined phrase/prefix query we should (instead) create a MultiPhraseQuery here.
+					// but  think that may be slow.
+					PhraseQuery phraseQuery = new PhraseQuery();
+					BooleanClause.Occur phraseOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
+					// tokenize phrase
+				    StringTokenizer st = new StringTokenizer(inspireTheme);
+				    while (st.hasMoreTokens()) {
+				        String phraseElement = st.nextToken();
+				        phraseElement = phraseElement.trim().toLowerCase();
+				        phraseQuery.add(new Term(LuceneIndexField.INSPIRE_THEME, phraseElement));
+				    }
+				    inspireThemesQuery.add(phraseQuery, phraseOccur);
+				}
+			}
+			query.add(inspireThemesQuery, inspireThemesOccur);
+		}
+
+		//
+		// inspireannex
+		//
+		BooleanClause inspireannexQuery = requiredTextField(request.getChildText("inspireannex"), LuceneIndexField.INSPIRE_ANNEX, similarity);
+		if(inspireannexQuery != null) {
+			query.add(inspireannexQuery);
+		}
+        
 		//
 		// siteId / source
 		//
