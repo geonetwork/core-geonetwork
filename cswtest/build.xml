@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+==============================================================================
+=== Build file to automate testing of CSW ISO AP tests.
+===
+=== Author : josegar
+==============================================================================
+-->
+
+<project name="test-services" default="all">
+
+
+    <!-- Classpath for CSW ISO AP tests. -->
+    <path id="test.classpath">
+        <pathelement location="${basedir}/resources" />
+
+        <fileset dir="${basedir}/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+
+    </path>
+
+    <!-- =============================================================== -->
+
+    <target name="all" depends="build,junit"/>
+
+
+    <!-- =============================================================== -->
+
+    <target name="build">
+        <delete dir=".build"/>
+        <mkdir dir=".build"/>
+
+        <!-- run the ant timestamp task -->
+        <tstamp><format property="gndate" pattern="yyyy-MM-dd'T'k:mm:ssZ"/></tstamp>
+        
+        <javac srcdir="src"
+               destdir=".build"       
+               encoding="ISO8859-1"
+               debug="true">
+
+             <classpath refid="test.classpath"/>
+        </javac>
+
+        <jar jarfile="cswtest.jar" basedir=".build">
+            <manifest>
+                <attribute name="GeoNetwork-Version" value="${version}"/>
+                <attribute name="Class-compatibility-Version-Number" value="${ant.build.javac.target}"/>
+                <attribute name="Built-Date" value="${gndate}"/>
+            </manifest>
+        </jar>
+
+        <delete dir=".build"/>
+    </target>
+
+     <target name="junit" depends="build">
+
+        <delete dir="log"/>
+        <delete dir="work"/>
+        <mkdir dir="log" />
+        <mkdir dir="work" />
+
+        <junit printsummary="yes" haltonfailure="yes" fork="yes" showoutput="yes">
+
+            <formatter type="xml"/>
+
+            <classpath>
+                <pathelement location="cswtest.jar"/>
+            </classpath>
+
+            <classpath refid="test.classpath"/>
+
+            <test name="org.fao.geonet.csw.TestCswIsoApp"/>
+        </junit>
+    </target>
+</project>
