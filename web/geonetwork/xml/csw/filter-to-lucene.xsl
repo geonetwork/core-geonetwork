@@ -130,10 +130,25 @@
 			<xsl:when test="ogc:PropertyName and ogc:Literal=@wildCard">
 				<MatchAllDocsQuery required="true" prohibited="false"/>
 			</xsl:when>
-			<xsl:when test="ogc:PropertyName and ogc:Literal">
-				<WildcardQuery fld="{ogc:PropertyName}"
-					txt="{translate(translate(ogc:Literal, @wildCard, '*'), @singleChar, '?')}"/>
-			</xsl:when>
+            
+			<!-- Lucene supports single and multiple character wildcard searches within
+                 single terms (not within phrase queries). -->
+            <xsl:when test="ogc:PropertyName and ogc:Literal">
+                <xsl:variable name="pn" select="ogc:PropertyName" />
+                <xsl:variable name="wc" select="@wildCard" />
+                <xsl:variable name="sc" select="@singleChar" />
+
+                <BooleanQuery>
+                    <xsl:for-each select="tokenize(ogc:Literal, ' ')">
+                        <xsl:variable name="token" select="." />
+                        <xsl:variable name="ol" select="translate(translate($token, $wc, '*'), $sc, '?')" />
+                        <BooleanClause required="true" prohibited="false">
+                            <WildcardQuery fld="{$pn}" txt="{$ol}"/>
+                        </BooleanClause>
+                    </xsl:for-each>
+                </BooleanQuery>
+            </xsl:when>
+            
 			<xsl:otherwise>
 				<error type="Unknown content of expression">
 					<xsl:copy-of select="."/>

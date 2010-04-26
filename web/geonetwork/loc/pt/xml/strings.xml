@@ -679,4 +679,9 @@
 		<upload>Upload Thesaurus</upload>
 	</thesaurus>
 
+    <showMoreSearchFields>Show/Hide more search fields</showMoreSearchFields>
+    <searchEitherOfTheWords>Either of the words</searchEitherOfTheWords>
+    <searchExactPhrase>Exact phrase</searchExactPhrase>
+    <searchAllWords>All of the words</searchAllWords>
+    <searchWithoutWords>Without the words</searchWithoutWords>
 </strings>

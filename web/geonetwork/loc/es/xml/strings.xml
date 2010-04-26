@@ -693,4 +693,10 @@
 		<keywords>Pick keywords from existing metadata records</keywords>
 		<thesaurus>Pick keywords from thesauri</thesaurus>
 	</searchhelp>
+
+    <showMoreSearchFields>Mostrar/Ocultar más campos de búsqueda</showMoreSearchFields>
+    <searchEitherOfTheWords>Cualquiera de las palabras</searchEitherOfTheWords>
+    <searchExactPhrase>Frase exacta</searchExactPhrase>
+    <searchAllWords>Todas las palabras</searchAllWords>
+    <searchWithoutWords>Sin las palabras</searchWithoutWords>
 </strings>

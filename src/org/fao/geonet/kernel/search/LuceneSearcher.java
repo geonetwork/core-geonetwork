@@ -278,19 +278,29 @@ public class LuceneSearcher extends MetaSearcher
 			//--- some other stuff
 
 			Log.debug(Geonet.SEARCH_ENGINE, "CRITERIA:\n"+ Xml.getString(request));
-			request.addContent(Lib.db.select(dbms, "Regions", "region"));
+
+            // Construct Lucene query by Java, not XSLT
+            _query = new LuceneQueryBuilder().build(request);
+
+			//
+            // Use RegionsData rather than fetching from the DB everytime
+            //
+            //request.addContent(Lib.db.select(dbms, "Regions", "region"));
+            Element regions = RegionsData.getRegions(dbms);
+            request.addContent(regions);
 		}
 
-
-		Element xmlQuery = _sm.transform(_styleSheetName, request);
-		Log.debug(Geonet.SEARCH_ENGINE, "XML QUERY:\n"+ Xml.getString(xmlQuery));
+        // Construct Lucene query by Java, not XSLT (Commented code)
+		//Element xmlQuery = _sm.transform(_styleSheetName, request);
+		//Log.debug(Geonet.SEARCH_ENGINE, "XML QUERY:\n"+ Xml.getString(xmlQuery));
 
 		if (srvContext != null)
         	_language = srvContext.getLanguage();
         else
         	_language = "eng"; // TODO : set default not language in config
-        
-		_query = makeQuery(xmlQuery);
+
+        // Construct Lucene query by Java, not XSLT (Commented code)
+		//_query = makeQuery(xmlQuery);
 		
 		Geometry geometry = getGeometry(request);
         if (geometry != null) {

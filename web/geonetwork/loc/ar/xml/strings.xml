@@ -701,4 +701,10 @@
 		<keywords>Pick keywords from existing metadata records</keywords>
 		<thesaurus>Pick keywords from thesauri</thesaurus>
 	</searchhelp>
+
+    <showMoreSearchFields>Show/Hide more search fields</showMoreSearchFields>
+    <searchEitherOfTheWords>Either of the words</searchEitherOfTheWords>
+    <searchExactPhrase>Exact phrase</searchExactPhrase>
+    <searchAllWords>All of the words</searchAllWords>
+    <searchWithoutWords>Without the words</searchWithoutWords>
 </strings>

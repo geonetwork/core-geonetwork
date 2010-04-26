@@ -22,7 +22,7 @@ function initSimpleSearch(wmc)
 				$('openIMBtn').style.cursor = 'pointer';
 				Event.observe('openIMBtn', 'click',  function(){openIntermap()} );
 			}
-		);		
+		);
 }
 
 function gn_anyKeyObserver(e)
@@ -32,15 +32,15 @@ function gn_anyKeyObserver(e)
 }
 
 /**
- * Trigger PDF search. 
- * 
- * If run on selection run pdf.selection.search 
+ * Trigger PDF search.
+ *
+ * If run on selection run pdf.selection.search
  * to retrieve the PDF document and clean current selection.
- * 
+ *
  * If not, use the pdf.search service.
  */
 function runPdfSearch(onSelection) {
-	
+
 	if (onSelection) {
 		location.replace (getGNServiceURL('pdf.selection.search'));
 		metadataselect(0, 'remove-all');
@@ -52,7 +52,7 @@ function runPdfSearch(onSelection) {
 	}
 }
 
-function runSimpleSearch(type) 
+function runSimpleSearch(type)
 {
     if (type != "pdf")
         preparePresent();
@@ -62,7 +62,7 @@ function runSimpleSearch(type)
 	var pars = "any=" + encodeURIComponent($('any') .value);
 
 	var region = $('region').value;
-	if(region!="") 
+	if(region!="")
   {
 		pars += "&"+im_mm_getURLselectedbbox();
 		pars += fetchParam('relation');
@@ -76,30 +76,30 @@ function runSimpleSearch(type)
 	pars += fetchParam('sortOrder');
 	pars += fetchParam('hitsPerPage');
 	pars += fetchParam('output');
-	
+
 	if (type == "pdf")
        gn_searchpdf(pars);
     else
 	   // Load results via AJAX
-	   gn_search(pars);    
+	   gn_search(pars);
 }
 
 function resetSimpleSearch()
 {
 /* make sure all values are completely reset (instead of just using the default
    form.reset that would only return to the values stored in the session */
-    setParam('any','');		
-    setParam('relation','overlaps');		
+    setParam('any','');
+    setParam('relation','overlaps');
     setParam('region',null);
-    
-    $('northBL').value='90'; 
+
+    $('northBL').value='90';
     $('southBL').value='-90';
     $('eastBL').value='180';
-    $('westBL').value='-180';		
-    
-    // FIXME: maybe we should zoom back to a fullExtent (not to the whole world)  
+    $('westBL').value='-180';
+
+    // FIXME: maybe we should zoom back to a fullExtent (not to the whole world)
     im_mm_redrawAoI();
-    im_mm_zoomToAoI(); 	
+    im_mm_zoomToAoI();
  	setParam('sortBy',      'relevance');
  	setParam('sortOrder',   '');
  	setParam('hitsPerPage', '10');
@@ -107,7 +107,7 @@ function resetSimpleSearch()
 }
 
 /********************************************************************
-* 
+*
 *  Toggling between simple/advanced search
 *
 ********************************************************************/
@@ -119,39 +119,39 @@ function showAdvancedSearch()
 	document.cookie = "search=advanced";
 
 	var myAjax = new Ajax.Updater (
-		'advancedsearch',    
-		getGNServiceURL('main.searchform.advanced.embedded'), 
+		'advancedsearch',
+		getGNServiceURL('main.searchform.advanced.embedded'),
 		{
-			method: 'get',    		    	
+			method: 'get',
 			onComplete: function()
 			{
 				openSearch('advancedsearch');
-				initAdvancedSearch();				
+				initAdvancedSearch();
 			},
 			onFailure: im_load_error
 		}
-	);	
- 
+	);
+
 }
 
 function showSimpleSearch()
 {
 	closeSearch('advancedsearch');
 	document.cookie = "search=default";
-	
+
 	var myAjax = new Ajax.Updater (
-		'simplesearch',    
-		getGNServiceURL('main.searchform.simple.embedded'), 
+		'simplesearch',
+		getGNServiceURL('main.searchform.simple.embedded'),
 		{
 			method: 'get',
 			onComplete: function()
 			{
 				openSearch('simplesearch');
-				initSimpleSearch();								
+				initSimpleSearch();
 			},
 			onFailure: im_load_error
 		}
-	);	
+	);
 }
 
 function openSearch(s)
@@ -161,8 +161,8 @@ function openSearch(s)
 		Effect.BlindDown(s);
 	}
 	else
-	{    
-		$(s).show();		    
+	{
+		$(s).show();
 	}
 }
 
@@ -175,9 +175,9 @@ function closeSearch(s)
 		Effect.BlindUp($(s), {afterFinish: function(){ clearNode($(s)); } });
 	}
 	else
-	{    
-		$(s).hide();	
-		clearNode($(s))	    
+	{
+		$(s).hide();
+		clearNode($(s))
 	}
 }
 
@@ -201,10 +201,10 @@ function initAdvancedSearch()
 		align          :    "Tl",           // alignment (defaults to "Bl")
 		singleClick    :    true
 	});
-	
+
 	Calendar.setup({
 		inputField	:    "dateTo",     // id of the input field
-		ifFormat	:    "%Y-%m-%dT%H:%M:00",      // format of the input field           
+		ifFormat	:    "%Y-%m-%dT%H:%M:00",      // format of the input field
 		button		:    "to_trigger_c",  // trigger for the calendar (button ID)
 		showsTime	:    true,
 		align		:    "Tl",           // alignment (defaults to "Bl")
@@ -219,10 +219,10 @@ function initAdvancedSearch()
 		align          :    "Tl",           // alignment (defaults to "Bl")
 		singleClick    :    true
 	});
-	
+
 	Calendar.setup({
 		inputField	:    "extTo",     // id of the input field
-		ifFormat	:    "%Y-%m-%dT%H:%M:00",      // format of the input field           
+		ifFormat	:    "%Y-%m-%dT%H:%M:00",      // format of the input field
 		button		:    "extto_trigger_c",  // trigger for the calendar (button ID)
 		showsTime	:    true,
 		align		:    "Tl",           // alignment (defaults to "Bl")
@@ -231,14 +231,15 @@ function initAdvancedSearch()
 
 }
 
-function runAdvancedSearch(type) 
+function runAdvancedSearch(type)
 {
     if (type != "pdf")
 	   preparePresent();
 
 	setSort();
 
-	var pars = "any=" + encodeURIComponent($('any') .value);
+	//var pars = "any=" + encodeURIComponent($('any') .value);
+    var pars = fetchParam('all');
 	pars += fetchParam('phrase');
 	pars += fetchParam('or');
 	pars += fetchParam('without');
@@ -248,7 +249,7 @@ function runAdvancedSearch(type)
 	pars += fetchRadioParam('similarity');
 
 	var region = $('region').value;
-	if(region!="") 
+	if(region!="")
   {
 		pars += "&attrset=geo";
 		pars += "&"+im_mm_getURLselectedbbox();
@@ -274,7 +275,7 @@ function runAdvancedSearch(type)
 	pars += fetchParam('group');
 	pars += fetchParam('category');
 	pars += fetchParam('siteId');
-	
+
 	pars += fetchBoolParam('digital');
 	pars += fetchBoolParam('paper');
 	pars += fetchBoolParam('dynamic');
@@ -291,31 +292,32 @@ function runAdvancedSearch(type)
        gn_searchpdf(pars);
     else
 	   // Load results via AJAX
-	   gn_search(pars);    
+	   gn_search(pars);
 }
 
 function resetAdvancedSearch()
 {
 /* make sure all values are completely reset (instead of just using the default
    form.reset that would only return to the values stored in the session */
-	setParam('any','');
+	//setParam('any','');
+    setParam('all','');
 	setParam('phrase', '');
 	setParam('or', '');
-	setParam('without', '');				
-	setParam('title','');		
-	setParam('abstract','');		
-	setParam('themekey','');		
+	setParam('without', '');
+	setParam('title','');
+	setParam('abstract','');
+	setParam('themekey','');
 	var radioSimil = document.getElementsByName('similarity');
 	radioSimil[1].checked=true;
-	setParam('relation','overlaps');		
-	setParam('region',null);		
+	setParam('relation','overlaps');
+	setParam('region',null);
 	$('northBL').value='90';
 	$('southBL').value='-90';
 	$('eastBL').value='180';
 	$('westBL').value='-180';
             im_mm_redrawAoI();
-            im_mm_zoomToAoI();	
- 	
+            im_mm_zoomToAoI();
+
 	setParam('dateFrom','');
 	setParam('dateTo','');
 	$('radfrom0').checked=true;
@@ -323,13 +325,13 @@ function resetAdvancedSearch()
 	setParam('extFrom','');
 	setParam('extTo','');
 	$('radfromext1').disabled='disabled';
-	setParam('group','');		
-	setParam('category','');		
-	setParam('siteId','');		
-	$('digital') .checked = false;		
-	$('paper')   .checked = false;		
+	setParam('group','');
+	setParam('category','');
+	setParam('siteId','');
+	$('digital') .checked = false;
+	$('paper')   .checked = false;
 	$('dynamic') .checked = false;
-	$('download').checked = false;		
+	$('download').checked = false;
 	setParam('protocol',    '');
 	setParam('template',    'n');
  	setParam('sortBy',      'relevance');
@@ -350,12 +352,12 @@ function showFields(img, div)
         var src = img.getAttribute('src');
         var ndx = src.lastIndexOf('/');
         var div = $(div);
-        
+
         src = src.substring(0, ndx+1);
-        
+
         if (div.visible())      img.setAttribute('src', src +'plus.gif');
                 else                                    img.setAttribute('src', src +'minus.png');
-        
+
         div.toggle();
 }
 
@@ -364,9 +366,9 @@ function showFields(img, div)
 
 function setSort()
 {
-	if ($('sortBy').value=='title') 
-	   $('sortOrder').value = 'reverse'; 
-	else 
+	if ($('sortBy').value=='title')
+	   $('sortOrder').value = 'reverse';
+	else
 	   $('sortOrder').value = '';
 }
 
@@ -390,34 +392,34 @@ function showRatingPopup(id)
 {
 	if (ratingPopup == null)
 	{
-		ker.loadURL('rating.popup', ker.wrap(this, 
+		ker.loadURL('rating.popup', ker.wrap(this,
 			function(t)
 			{
 				var p = document.createElement('div');
-	
+
 				p.className     = 'ratingBox';
 				p.innerHTML     = t.responseText;
 				p.style.display = 'none';
 				p.style.zIndex  = 32000;
-				
-				p.setAttribute('id', 'rating.popup');				
+
+				p.setAttribute('id', 'rating.popup');
 				document.body.appendChild(p);
-				
+
 				ratingPopup = p;
-				
-				setTimeout(ker.wrap(this, function(){ showRatingPopup(id); }), 10);	
+
+				setTimeout(ker.wrap(this, function(){ showRatingPopup(id); }), 10);
 			}));
-		
+
 		return;
 	}
-			
+
 	var pos = Position.cumulativeOffset($('rating.link.'+ id));
 
 	ratingPopup.style.left = pos[0] -100;
 	ratingPopup.style.top  = pos[1] +16;
-	
+
 	ratingPopup.setAttribute('mdid', id);
-	
+
 	Element.show(ratingPopup);
 }
 
@@ -426,11 +428,11 @@ function showRatingPopup(id)
 function hideRatingPopup()
 {
 	var popup = $('rating.popup');
-	
+
 	if (popup != null)
 	{
 		Element.hide(popup);
-		Element.hide('rating.image');	
+		Element.hide('rating.image');
 	}
 }
 
@@ -439,16 +441,16 @@ function hideRatingPopup()
 function rateMetadata(rating)
 {
 	var id = ratingPopup.getAttribute('mdid');
-	
-	Element.show('rating.image');	
-	
+
+	Element.show('rating.image');
+
 	var request =
 		'<request>'+
 		'   <id>'+ id +'</id>'+
 		'   <rating>'+ rating +'</rating>'+
 		'</request>';
-	
-	ker.send('xml.metadata.rate', request, ker.wrap(this, rateMetadata_OK));	
+
+	ker.send('xml.metadata.rate', request, ker.wrap(this, rateMetadata_OK));
 }
 
 //-------------------------------------------------------------------
@@ -469,31 +471,31 @@ function rateMetadata_OK(xmlRes)
 function doRegionSearch()
 {
     var region = $('region').value;
-    if(region=="") 
+    if(region=="")
     {
         region=null;
         $('northBL').value='90';
         $('southBL').value='-90';
         $('eastBL').value='180';
         $('westBL').value='-180';
-        
+
         im_mm_redrawAoI();
-        im_mm_zoomToAoI();        
+        im_mm_zoomToAoI();
     }  else if (region=="userdefined") {
 		// Do nothing. AoI is set by the user
-    } else 
+    } else
     {
         getRegion(region);
     }
 }
 
-function getRegion(region) 
+function getRegion(region)
 {
     if(region)
         var pars = "id="+region;
-    
+
     var myAjax = new Ajax.Request(
-        getGNServiceURL('xml.region.get'), 
+        getGNServiceURL('xml.region.get'),
         {
             method: 'get',
             parameters: pars,
@@ -504,7 +506,7 @@ function getRegion(region)
 }
 
 function getRegion_complete(req) {
-    //Response received 
+    //Response received
     var node = req.responseXML;
     var northcc = xml.evalXPath(node, 'response/record/north');
     var southcc = xml.evalXPath(node, 'response/record/south');
@@ -529,17 +531,17 @@ function updateAoIFromForm() {
   var sU = Number($('southBL').value);
   var eU = Number($('eastBL').value);
   var wU = Number($('westBL').value);
-  
-  if (nU < sU) { alert(translate("northSouth")); } 
+
+  if (nU < sU) { alert(translate("northSouth")); }
   else if (nU > 90) { alert(translate("north90")); }
   else if (sU < -90) { alert(translate("south90")); }
-  else if (eU < wU) { alert(translate("eastWest")); } 
+  else if (eU < wU) { alert(translate("eastWest")); }
   else if (eU > 180) { alert(translate("east180")); }
   else if (wU < -180) { alert(translate("west180")); }
-  else 
-  { 
+  else
+  {
     im_mm_redrawAoI();
-    im_mm_zoomToAoI(); 
+    im_mm_zoomToAoI();
     $('updateBB').style.visibility="hidden";
   }
 }
@@ -558,17 +560,17 @@ function im_mm_aoiUpdated(bUpdate) {
 *** DO THE SEARCH!
 ********************************************************************/
 
-function preparePresent() 
+function preparePresent()
 {
 	// Display results area
 	clearNode('resultList');
 	$('loadingMD').show();
 }
 
-function gn_search(pars) 
+function gn_search(pars)
 {
 	var myAjax = new Ajax.Request(
-		getGNServiceURL('main.search.embedded'), 
+		getGNServiceURL('main.search.embedded'),
 		{
 			method: 'get',
 			parameters: pars,
@@ -578,9 +580,9 @@ function gn_search(pars)
 	);
 }
 
-function gn_searchpdf(pars) 
+function gn_searchpdf(pars)
 {
-    pars = pars.replace(/hitsPerPage=\d{2,3}/, 'hitsPerPage=9999'); 
+    pars = pars.replace(/hitsPerPage=\d{2,3}/, 'hitsPerPage=9999');
     // Update this value if more document required in PDF output
     // FIXME : Should be defined in service config.
     location.replace (
@@ -588,14 +590,14 @@ function gn_searchpdf(pars)
     );
 }
 
-function gn_present(frompage, topage) 
+function gn_present(frompage, topage)
 {
 	preparePresent();
-	
+
 	var pars = 'from=' + frompage + "&to=" + topage;
-	
+
 	var myAjax = new Ajax.Request(
-		getGNServiceURL('main.present.embedded'), 
+		getGNServiceURL('main.present.embedded'),
 		{
 			method: 'get',
 			parameters: pars,
@@ -607,14 +609,14 @@ function gn_present(frompage, topage)
 
 function gn_search_complete(req) {
     var rlist = $('resultList');
-    
+
     rlist.innerHTML = req.responseText;
-    
+
     $('loadingMD').hide();
 }
 
 /********************************************************************
-* 
+*
 *  Show metadata content
 *
 ********************************************************************/
@@ -627,14 +629,14 @@ function gn_showSingleMetadataUUID(uuid)
 function gn_showSingleMetadata(id)
 {
    var pars = 'id=' + id + '&currTab=simple';
-   gn_showSingleMet(pars);  
+   gn_showSingleMet(pars);
 }
 
 function gn_showSingleMet(pars)
 {
 
    var myAjax = new Ajax.Request(
-        getGNServiceURL('metadata.show.embedded'), 
+        getGNServiceURL('metadata.show.embedded'),
         {
             method: 'get',
             parameters: pars,
@@ -647,14 +649,14 @@ function gn_showSingleMet(pars)
                 div.style.display = 'none';
                 div.style.width = '100%';
                 parent.appendChild(div);
-                
+
                 div.innerHTML = req.responseText;
-                
+
                 Effect.BlindDown(div);
-                
+
                 var tipman = new TooltipManager();
                 ker.loadMan.wait(tipman);
-               
+
                 // Init maps contained in search results
                 extentMap.initMapDiv();
             },
@@ -664,39 +666,39 @@ function gn_showSingleMet(pars)
 function gn_showMetadata(id) {
 	gn_showMetadata(id, 'simple');
 }
-function gn_showMetadata(id, currTab) 
+function gn_showMetadata(id, currTab)
 {
     var pars = 'id=' + id + '&currTab=' + currTab;
-    
+
     $('gn_showmd_' + id) .hide();
     $('gn_loadmd_' + id) .show();
-    
+
     var myAjax = new Ajax.Request(
-        getGNServiceURL('metadata.show.embedded'), 
+        getGNServiceURL('metadata.show.embedded'),
         {
             method: 'get',
             parameters: pars,
             onSuccess: function (req) {
                 var parent = $('mdwhiteboard_' + id);
                 clearNode(parent);
-                
+
                 $('gn_loadmd_' + id) .hide();
                 $('gn_hidemd_' + id) .show();
-                
+
                 // create new element
                 var div = document.createElement('div');
                 div.className = 'metadata_current';
                 div.style.display = 'none';
                 div.style.width = '100%';
                 parent.appendChild(div);
-                
+
                 div.innerHTML = req.responseText;
-                
+
                 Effect.BlindDown(div);
-                
+
                 var tipman = new TooltipManager();
                 ker.loadMan.wait(tipman);
-                
+
                 // Init maps contained in search results
                 extentMap.initMapDiv();
             },
@@ -704,7 +706,7 @@ function gn_showMetadata(id, currTab)
         });
 }
 
-function gn_hideMetadata(id) 
+function gn_hideMetadata(id)
 {
     var parent = $('mdwhiteboard_' + id);
     var div = parent.firstChild;
@@ -728,7 +730,7 @@ function gn_search_error() {
 
 function gn_filteredSearch() {
 	var myAjax = new Ajax.Request(
-		getGNServiceURL('selection.search'), 
+		getGNServiceURL('selection.search'),
 		{
 			method: 'get',
 			parameters: '',
@@ -744,14 +746,14 @@ function gn_filteredSearch() {
 ***
 **********************************************************/
 
-function runCategorySearch(category) 
+function runCategorySearch(category)
 {
 	preparePresent();
 
 	var pars = "category=" + category;
-	
+
 	// Load results via AJAX
-	gn_search(pars);    
+	gn_search(pars);
 }
 
 
@@ -762,13 +764,13 @@ function runCategorySearch(category)
 function fetchParam(p)
 {
   var pL = $(p);
-  if (!pL) 
+  if (!pL)
     return "";
   else {
   	var t = pL.value;
   	if(t)
   		return "&"+p+"="+encodeURIComponent(t);
-  	else 
+  	else
   		return "";
 	}
 }
@@ -776,12 +778,12 @@ function fetchParam(p)
 function fetchBoolParam(p)
 {
   var pL = $(p);
-  if (!pL) 
+  if (!pL)
     return "";
   else {
   	if(pL.checked )
   		return "&"+p+"=on";
-  	else 
+  	else
   		return "&"+p+"=off";
   }
 }
@@ -832,7 +834,7 @@ function setParam(p, val)
   /**
    * Place popup according to input element position.
    * Load list of keywords
-   * 
+   *
    * @param el
    * @param pop
    * @return
@@ -842,12 +844,12 @@ function setParam(p, val)
         pop.style.display = "none";
         return false;
     }
-                
+
     pop.style.top = el.cumulativeOffset().top + el.getHeight();
     pop.style.left = el.cumulativeOffset().left;
     pop.style.width = '250px'; //el.getWidth();
     pop.style.display = "block";
-  
+
 	if (!keyordsSelected){
 		new Ajax.Updater("keywordSelector","portal.search.keywords?mode=selector&keyword="+$("themekey").value);
 		keyordsSelected = true;
@@ -874,20 +876,20 @@ function setParam(p, val)
 
 
  /*sets date string (user defined 'from' date to Now()) in advanced search [0: any;1: after; 2: change sel
- 
+
  Function extracted by the current FAO site and adapted
  */
- 
-function setDates(what) 
+
+function setDates(what)
 {
 	var xfrom = $('dateFrom');
 	var xto = $('dateTo');
 
 	var extfrom = $('extFrom');
 	var extto = $('extTo');
-	
-	if (what==0) //anytime 
-	{ 
+
+	if (what==0) //anytime
+	{
 		xfrom.value = "";
 		xto.value = "";
 		extfrom.value = "";
@@ -897,15 +899,15 @@ function setDates(what)
 	//BUILDS to DATE STRING AND UPDATES INPUT
 	today=new Date();
 	fday = today.getDate();
-	if (fday.toString().length==1) 
+	if (fday.toString().length==1)
 		fday = "0"+fday.toString();
 	fmonth = today.getMonth()+1; //Month is 0-11 in JavaScript
-	if (fmonth.toString().length==1) 
+	if (fmonth.toString().length==1)
 		fmonth = "0"+fmonth.toString();
 	fyear = today.getYear();
-	if (fyear<1900) 
+	if (fyear<1900)
 		fyear = fyear + 1900;
-	
+
 	var todate = fyear+"-"+fmonth+"-"+fday+"T23:59:59";
 	var fromdate = (fyear-10)+"-"+fmonth+"-"+fday+"T00:00:00";
 	xto.value = todate;
@@ -922,7 +924,7 @@ function setDates(what)
  */
 function check(status) {
 	var checks = $('search-results-content').getElementsByTagName('INPUT');
-	var checksLength = checks.length;				
+	var checksLength = checks.length;
 	for (var i = 0; i < checksLength; i++) {
 		checks[i].checked = status;
 	}
@@ -946,7 +948,7 @@ function metadataselect(id, selected){
 			},
 			onSuccess: function(originalRequest){
 				var xmlString = originalRequest.responseText;
-				
+
 				// convert the string to an XML object
 				var xmlobject = (new DOMParser()).parseFromString(xmlString, "text/xml");
 				// get the XML root item
@@ -965,5 +967,22 @@ function metadataselect(id, selected){
 	if (selected=='add-all') {
 		check(true);
 	};
+}
+
+function toggleMoreFields() {
+  $("all_search_row").toggle();
+  $("phrase_search_row").toggle();
+  $("without_search_row").toggle();
+
+  var src = $("i_morefields").getAttribute('src');
+  var ndx = src.lastIndexOf('/');
+
+  src = src.substring(0, ndx+1);
+
+  if ($("all_search_row").visible() == true) {
+	$("i_morefields").setAttribute('src', src +'minus.png');
+  } else {
+	$("i_morefields").setAttribute('src', src +'plus.gif');
+  }
 }
 /*** EOF ***********************************************************/

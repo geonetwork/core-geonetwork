@@ -69,47 +69,54 @@
 <xsl:template name="adv_what">
 	<h1><xsl:value-of select="/root/gui/strings/what"/></h1>
 	<table heigth="100%	">
-		<tr>
+		<tr style="display:none;">
 			<th class="padded">
 				<xsl:value-of select="/root/gui/strings/searchAllText"/>
 			</th>
 			<td style="padding-bottom:10px;">
-				<span title="{/root/gui/strings/searchhelp/searchAllText}">
-					<input name="any" id="any" class="content"  size="20" value="{/root/gui/searchDefaults/any}"/>
-				</span>
+				<input name="any" id="any" class="content"  size="20" value="{/root/gui/searchDefaults/any}"/>
 			</td>
 		</tr>
-		
-		<!-- enable for PHRASE search -->
-		<tr style="display:none;">
+		<!-- enable for OR search -->
+		<tr id="or_search_row">
 			<th class="padded">
-				<!-- TODO localization -->
-				<xsl:text>Exact phrase</xsl:text>
-			</th>			
+                <xsl:value-of select="/root/gui/strings/searchEitherOfTheWords"/>
+			</th>
+			<td style="padding-bottom:10px;">
+				<input name="or" id="or" class="content" size="20" value=""/>
+				 <a href="#" onclick="toggleMoreFields()" style="margin-left:2px"><img id="i_morefields" width="9px" height="9px" src="{/root/gui/url}/images/plus.gif" title="{/root/gui/strings/showMoreSearchFields}" alt="{/root/gui/strings/showMoreSearchFields}"/></a>
+			</td>
+		</tr>
+
+		<!-- enable for PHRASE search -->
+		<tr id="phrase_search_row" style="display:none">
+			<th class="padded">
+				 <xsl:value-of select="/root/gui/strings/searchExactPhrase"/>
+			</th>
 			<td style="padding-bottom:10px;">
 				<input name="phrase" id="phrase" class="content" size="20" value=""/>
 			</td>
 		</tr>
-		<!-- enable for OR search -->
-		<tr style="display:none;">
+
+        <!-- enable for ALL search -->
+		<tr id="all_search_row" style="display:none">
 			<th class="padded">
-				<!-- TODO localization -->
-				<xsl:text>Either of the words</xsl:text>
-			</th>			
+				<xsl:value-of select="/root/gui/strings/searchAllWords"/>
+			</th>
 			<td style="padding-bottom:10px;">
-				<input name="or" id="or" class="content" size="20" value=""/>
+				<input name="all" id="all" class="content" size="20" value=""/>
 			</td>
 		</tr>
-		<!-- enable for WITHOUT search -->		
-		<tr style="display:none;">
+
+		<!-- enable for WITHOUT search -->
+		<tr id="without_search_row" style="display:none">
 			<th class="padded">
-				<!-- TODO localization -->
-				<xsl:text>Without the words</xsl:text>
-			</th>			
+				<xsl:value-of select="/root/gui/strings/searchWithoutWords"/>
+			</th>
 			<td style="padding-bottom:10px;">
 				<input name="without" id="without" class="content" size="20" value=""/>
 			</td>
-		</tr>	
+		</tr>
 		
 		<tr>
 			<th class="padded">

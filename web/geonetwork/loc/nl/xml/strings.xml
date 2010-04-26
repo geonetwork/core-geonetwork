@@ -714,4 +714,10 @@
 		<keywords>Pick keywords from existing metadata records</keywords>
 		<thesaurus>Pick keywords from thesauri</thesaurus>
 	</searchhelp>
+
+    <showMoreSearchFields>Meer zoekvelden</showMoreSearchFields>
+    <searchEitherOfTheWords>Met één van deze woorden</searchEitherOfTheWords>
+    <searchExactPhrase>Met de exacte woordcombinatie</searchExactPhrase>
+    <searchAllWords>Met al deze woorden</searchAllWords>
+    <searchWithoutWords>Zonder de woorden</searchWithoutWords>
 </strings>

@@ -820,4 +820,10 @@
 		<keywords>Pick keywords from existing metadata records</keywords>
 		<thesaurus>Pick keywords from thesauri</thesaurus>
 	</searchhelp>
+
+    <showMoreSearchFields>Autres critères de recherche</showMoreSearchFields>
+    <searchEitherOfTheWords>Au moins un des mots suivants</searchEitherOfTheWords>
+    <searchExactPhrase>Cette expression exacte</searchExactPhrase>
+    <searchAllWords>Tous les mots suivants</searchAllWords>
+    <searchWithoutWords>Aucun des mots suivants</searchWithoutWords>
 </strings>

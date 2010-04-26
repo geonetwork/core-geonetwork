@@ -156,7 +156,7 @@ compiles a request
 			<BooleanClause required="true" prohibited="false">			
 				<BooleanQuery>
 					<BooleanClause required="false" prohibited="false">
-						<WildcardQuery fld="protocol" txt="www:download-*--download"/>
+                        <WildcardQuery fld="protocol" txt="WWW:DOWNLOAD-*--download"/>
 					</BooleanClause>
 				</BooleanQuery>
 			</BooleanClause>
@@ -168,15 +168,15 @@ compiles a request
 			<BooleanClause required="true" prohibited="false">
 				<BooleanQuery>
 					<BooleanClause required="false" prohibited="false">
-						<WildcardQuery fld="protocol" txt="ogc:wms-*-get-map"/>
+                        <WildcardQuery fld="protocol" txt="OGC:WMS-*-get-map"/>
 					</BooleanClause>
 
 					<BooleanClause required="false" prohibited="false">
-						<WildcardQuery fld="protocol" txt="ogc:wms-*-get-capabilities"/>
+                        <WildcardQuery fld="protocol" txt="OGC:WMS-*-get-capabilities"/>
 					</BooleanClause>
 
 					<BooleanClause required="false" prohibited="false">
-						<WildcardQuery fld="protocol" txt="esri:aims-*-get-image"/>
+                        <WildcardQuery fld="protocol" txt="ESRI:AIMS-*-get-image"/>
 					</BooleanClause>
 				</BooleanQuery>
 			</BooleanClause>

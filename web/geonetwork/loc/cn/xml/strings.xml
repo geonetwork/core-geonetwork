@@ -691,4 +691,6 @@
 		<keywords>Pick keywords from existing metadata records</keywords>
 		<thesaurus>Pick keywords from thesauri</thesaurus>
 	</searchhelp>
+
+    <showMoreSearchFields>Show/Hide more search fields</showMoreSearchFields>    
 </strings>
