@@ -40,8 +40,8 @@
 			ISO19115 does not allow to have more than one.
 		</div>
 	</updateChildrenHelp>
-	<otherActions>Other actions</otherActions>
-	<export>Export</export>
+	<otherActions>Otras acciones</otherActions>
+	<export>Exportar</export>
 	<addXMLFragment>Add from dictionary ...</addXMLFragment>
 	<translateWithGoogle>Use Google translation service to suggest a translation for selected language.</translateWithGoogle>
 	<translateWithGoogle.maxSize js="true">Text to translate is larger than 5000 characters (see http://code.google.com/apis/ajaxlanguage/terms.html).</translateWithGoogle.maxSize>
@@ -49,14 +49,14 @@
 	<crs code="EPSG:4326">WGS 84</crs>
 	<layersAdded js="true">Selected layers have been added</layersAdded>
 	<registrationFailed js="true">Error, registration failed:</registrationFailed>	
-	<tryAgain js="true">Try again later</tryAgain>
+	<tryAgain js="true">Intentelo de nuevo más tarde</tryAgain>
 	<cannotRetrieveGroup js="true">Cannot retrieve groups</cannotRetrieveGroup>
-	<selectNewOwner js="true">Select the user who will be the new owner</selectNewOwner>
+	<selectNewOwner js="true">Seleccione el usuario que será el nuevo propietario</selectNewOwner>
 	<selectOwnerGroup js="true">Select a group that the selected user belongs to</selectOwnerGroup>
 	<selectOneFile js="true">You'd better select at least one file to download!</selectOneFile>
-	<checkEmail js="true">Please fill correct email address</checkEmail>
-	<addName js="true">Please fill in a name or organization</addName>
-	<noComment js="true">No comment</noComment>
+	<checkEmail js="true">Por favor, indique una dirección de correo electrónico válida</checkEmail>
+	<addName js="true">Por favor, indique un nombre u organización</addName>
+	<noComment js="true">Sin comentarios</noComment>
 	<rateMetadataFailed js="true">Cannot rate metadata.</rateMetadataFailed>
 	<error js="true">Error</error>
 	<northSouth js="true">North &lt; South</northSouth>
@@ -66,7 +66,7 @@
 	<west180 js="true">West &lt; -180 degrees</west180>
 	<eastWest js="true">East &lt; West</eastWest>
 	<metadataSelectionError js="true">Error on metadata selection.</metadataSelectionError>
-	<closeWindow js="true">Close Window</closeWindow>
+	<closeWindow js="true">Cerrar ventana</closeWindow>
 	<loseYourChange js="true">If you press OK you will LOSE any changes you've made to the metadata!</loseYourChange>
 	<errorDeleteElement js="true">Error: Could not delete element</errorDeleteElement>
 	<errorFromDoc js="true">from document:</errorFromDoc>
@@ -79,7 +79,7 @@
 	<uploadFailed js="true">Error: Upload failed! - returned </uploadFailed>
 	<uploadSetFileNameFailed js="true">Error: Upload succeeded but unable to set filename!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Cannot get tooltips from server</cannotGetTooltip>
-	<maxResults js="true">Number of results</maxResults>
+	<maxResults js="true">Número de resultados</maxResults>
 	<anyThesaurus js="true">Any thesaurus</anyThesaurus>
 	<selectedKeywords js="true">Selected keywords</selectedKeywords>
 	<foundKeywords js="true">Available keywords</foundKeywords>
@@ -88,14 +88,14 @@
 	<about>Acerca de</about>
 	<abstract>Resumen</abstract>
 	<accept>Aceptar </accept>
-	<actionOnSelect>Actions on selected metadata</actionOnSelect>
+	<actionOnSelect>Acciones sobre los metadatos seleccionados</actionOnSelect>
 	<add js="true">Añadir</add>
 	<addNewMetadata>Añadir Metadato</addNewMetadata>
 	<address>Dirección</address>
 	<admin>Administrador</admin>
 	<Administrator>Administrador</Administrator>
 	<agrovocKeyword>Palabras del Diccionario de Agrovoc</agrovocKeyword>
-	<all>all</all>
+	<all>todos</all>
 	<any>- Cualquiera -</any>
 	<anytime>Cualquier momento</anytime>
 	<appSchInfoTab>Perfil de aplicación</appSchInfoTab>
@@ -112,13 +112,12 @@
 	<begtime>Hora de inicio</begtime>
 	<bgFileDescChoice value="large_thumbnail">Vista previa grande</bgFileDescChoice>
 	<bgFileDescChoice value="thumbnail">Vista previa</bgFileDescChoice>
-	<bookmarkDelicious>Bookmark on Delicious</bookmarkDelicious>
-	<bookmarkDigg>Bookmark on Digg</bookmarkDigg>
+	<bookmarkDelicious>Agregar a favoritos en Delicious</bookmarkDelicious>
+	<bookmarkDigg>Agregar a favoritos en Digg</bookmarkDigg>
 	<bookmarkEmail>Send a reference to this record by email</bookmarkEmail>
-	<bookmarkFacebook>Bookmark on Facebook</bookmarkFacebook>
+	<bookmarkFacebook>Agregar a favoritos en Facebook</bookmarkFacebook>
 	<bookmarkPermanent>Permanent link to this description</bookmarkPermanent>
-	<bookmarkStumbleUpon>Bookmark on StumbleUpon</bookmarkStumbleUpon>
-	<bounding>Bounding Coordinates</bounding>
+	<bookmarkStumbleUpon>Agregar a favoritos en StumbleUpon</bookmarkStumbleUpon>
 	<bounding>Coordenadas de la envolvente</bounding>
 	<boundingRelation value="encloses">incluye</boundingRelation>
 	<boundingRelation value="equal">igual</boundingRelation>
@@ -128,29 +127,29 @@
 	<browsed>Descripción del fichero de vista previa</browsed>
 	<browsen>Nombre del fichero con la vista previa</browsen>
 	<browset>Tipo de fichero de vista previa</browset>
-	<byGroup>By Group</byGroup>
+	<byGroup>Por grupo</byGroup>
 	<byPackage>By Package</byPackage>
 	<cancel>Cancelar</cancel>
 	<categories>Categorías</categories>
 	<category>Categoría</category>
 	<categoryManagement>Gestión de Categorías</categoryManagement>
 	<categoryManDes>añade/modifica/borra y muestra las categorías</categoryManDes>
-	<categoryNameMandatory>A category name must be filled in.</categoryNameMandatory>
-	<changeDate>Metadata change date</changeDate>
+	<categoryNameMandatory>Se debe rellenar el nombre de la categoría.</categoryNameMandatory>
+	<changeDate>Fecha de modificación de los metadatos</changeDate>
 	<checkusername>Check</checkusername>
 	<choose>-Elegir-</choose>
 	<chooseFile>Seleccionar la ubicación del fichero a enviar</chooseFile>
 	<chooseLargeThumbnail>Elegir la ubicación del fichero thumbnail grande</chooseLargeThumbnail>
 	<chooseThumbnail>Elegir la ubicación del fichero thumbnail pequeño</chooseThumbnail>
-	<city>City</city>
+	<city>Ciudad</city>
 	<clear js="true">Borrar</clear>
-	<clearAll>Clear All</clearAll>
+	<clearAll>Borrar todos</clearAll>
 	<close>Cerrar</close>
 	<completeTab>Vista en bloques</completeTab>
 	<completeTabEditor>Editar en bloques</completeTabEditor>
-	<confirmCancel>Are you sure you want to leave the editor? (You will lose any unsaved changes)</confirmCancel>
+	<confirmCancel>¿Está seguro de que desea abandonar el editor? (Perderá todos los cambios no guardados)</confirmCancel>
 	<confirmDelete>¿Está seguro de que desea borrar el Metadato de la Base de Datos?</confirmDelete>
-	<confirmMassiveDelete>Are you sure you want to delete all selected metadata from the database?</confirmMassiveDelete>
+	<confirmMassiveDelete>¿Está seguro de que desea borrar todos los Metadatos seleccionados de la Base de Datos?</confirmMassiveDelete>
 	<confirmNewPassword>Confirmar nueva contraseña</confirmNewPassword>
 	<confirmPassword>Confirmar la Contraseña</confirmPassword>
 	<constraintsTab>Restricciones</constraintsTab>
@@ -164,9 +163,9 @@
 	<create>Crear</create>
 	<createTip>Añadir un nuevo metadato usando esta plantilla</createTip>
 	<cswTest>CSW ISO Profile test</cswTest>
-	<cswTestDesc>Test interface for the CSW ISO Profile catalog interface</cswTestDesc>
+	<cswTestDesc>Testear el interface CSW ISO del catálogo</cswTestDesc>
 	<dataQualityTab>Calidad de los datos</dataQualityTab>
-	<datasetIssued>Temporal Extent</datasetIssued>
+	<datasetIssued>Extensión temporal</datasetIssued>
 	<datasetTab>Conjunto de datos</datasetTab>
 	<dateModified>Date Modified</dateModified>
 	<dateRelChoice value="14">antes</dateRelChoice>
@@ -179,11 +178,11 @@
 	<definition>Definición</definition>
 	<del>borrar</del>
 	<delete>Borrar</delete>
-	<deleteCategory>Delete the category?</deleteCategory>
+	<deleteCategory>¿Borrar la categoría?</deleteCategory>
 	<deleteConfirmationTitle>Delete Metadata Confirmation</deleteConfirmationTitle>	
-	<deleteGroup>Delete the group ?</deleteGroup>
+	<deleteGroup>¿Borrar el grupo?</deleteGroup>
 	<descriptionTab>Descripción</descriptionTab>
-	<desSchema>Schema destino</desSchema>
+	<desSchema>Esquema destino</desSchema>
 	<digital>Datos digitales</digital>
 	<directory>Directorio</directory>
 	<dirParameter>('directorio' es un parámetro obligatorio)</dirParameter>
@@ -192,34 +191,34 @@
 	<distributionTab>Distribución</distributionTab>
 	<down>bajar</down>
 	<download>Descarga</download>
-	<downloadable>Downloadable</downloadable>
+	<downloadable>Descargable</downloadable>
 	<downloadData>Datos para la descarga</downloadData>
-	<downloadEmail>Download Email</downloadEmail>
-	<downloadSelect>Download?</downloadSelect>
+	<downloadEmail>Descargar Email</downloadEmail>
+	<downloadSelect>¿Descargar?</downloadSelect>
 	<downloadSelected>Download Selected</downloadSelected>
 	<downloadSummary>Download Summary</downloadSummary>
 	<downloadThemAll>Download All Local</downloadThemAll>
 	<dsgpoly>Conjunto de datos tipo G-Polygon</dsgpoly>
-	<durationDays>day(s)</durationDays>
-	<durationHours>hour(s)</durationHours>
-	<durationMinutes>minute(s)</durationMinutes>
-	<durationMonths>month(s)</durationMonths>
-	<durationNbDays>Number of days:</durationNbDays>
-	<durationNbHours>Number of hours:</durationNbHours>
-	<durationNbMinutes>Number of minutes:</durationNbMinutes>
-	<durationNbMonths>Number of months:</durationNbMonths>
-	<durationNbSeconds>Number of seconds:</durationNbSeconds>
-	<durationNbYears>Number of years:</durationNbYears>
-	<durationSeconds>second(s)</durationSeconds>
-	<durationSign>Negative duration</durationSign>
-	<durationYears>year(s)</durationYears>
-	<dynamic>Interactive</dynamic>
+	<durationDays>dia(s)</durationDays>
+	<durationHours>hora(s)</durationHours>
+	<durationMinutes>minuto(s)</durationMinutes>
+	<durationMonths>mes(es)</durationMonths>
+	<durationNbDays>Número de días:</durationNbDays>
+	<durationNbHours>Número de horas:</durationNbHours>
+	<durationNbMinutes>Número de minutos:</durationNbMinutes>
+	<durationNbMonths>Número de meses:</durationNbMonths>
+	<durationNbSeconds>Número de segundos:</durationNbSeconds>
+	<durationNbYears>Número de años:</durationNbYears>
+	<durationSeconds>segundo(s)</durationSeconds>
+	<durationSign>Duración negativa</durationSign>
+	<durationYears>año(s)</durationYears>
+	<dynamic>Interactivo</dynamic>
 	<eastbc>Coordenadas Este</eastbc>
 	<edit>Editar</edit>
 	<Editor>Editor</Editor>
 	<email>Email</email>
 	<emailAddress>Dirección de correo</emailAddress>
-	<emailAddressInvalid js="true">Email address is invalid</emailAddressInvalid>
+	<emailAddressInvalid js="true">La dirección de Email no es correcta</emailAddressInvalid>
 	<enclosing>Incluir</enclosing>
 	<enclosingCoordinate>Incluir coordenadas</enclosingCoordinate>
 	<enddate>Fecha de fin</enddate>
@@ -235,10 +234,10 @@
 	<feedbackComments>Retroalimentación / comentarios</feedbackComments>
 	<feedbackRequest>Por favor, proporcione sus datos antes de descargar los datos</feedbackRequest>
 	<file>Fichero</file>
-	<fileType>File type:</fileType>
-	<fileUploadSuccessful>File Upload Successful</fileUploadSuccessful>
+	<fileType>Tipo de fichero:</fileType>
+	<fileUploadSuccessful>La carga del archivo se ha completado con éxito</fileUploadSuccessful>
 	<firstName>Nombre</firstName>
-	<firstNameMandatory js="true">The First Name field is mandatory</firstNameMandatory>
+	<firstNameMandatory js="true">El campo Nombre es obligatorio</firstNameMandatory>
 	<foundWords>Número de términos encontrados:</foundWords>
 	<freeKeyword>Palabras libres</freeKeyword>
 	<from>De</from>
@@ -249,7 +248,7 @@
 	<fuzzySearch>Establece la precisión de la búsqueda (desde búdqueda de términos exactos a búsquedas fuzzy).</fuzzySearch>
 	<general>General</general>
 	<generalInfo>Información general</generalInfo>
-	<generateUUID>Generate UUID for inserted metadata</generateUUID>
+	<generateUUID>Generar UUID para el metadato insertado</generateUUID>
 	<georss>Abrir alimentación GeoRSS</georss>
 	<group>Grupo de usuarios</group>
 	<groupManagement>Gestión de grupos de usuarios</groupManagement>
@@ -259,7 +258,7 @@
 	<harvestingManDes>Agregar/modificar/borrar/iniciar/parar tareas de harvesting</harvestingManDes>
 	<help>Ayuda</help>
 	<helpComplete>Ayuda Completa</helpComplete>
-	<helperList>Suggestions:</helperList>
+	<helperList>Sugerencias:</helperList>
 	<hideAdvancedOptions>Búsqueda Simple</hideAdvancedOptions>
 	<highlights>Destacados</highlights>
 	<hitsPerPage>Resultados por página</hitsPerPage>
@@ -268,8 +267,8 @@
 	<hitsPerPageChoice value="20">20</hitsPerPageChoice>
 	<hitsPerPageChoice value="50">50</hitsPerPageChoice>
 	<home>Inicio</home>
-	<i18n>Test i18n</i18n>
-	<i18nDesc>This service should help GeoNetwork opensource developers to have up to date localized files for the GUI.</i18nDesc>
+	<i18n>Testear i18n</i18n>
+	<i18nDesc>Este servicio debe ayudar a los desarrolladores de GeoNetwork opensource a tener actualizados los archivos localizados para la interfaz gráfica de usuario</i18nDesc>
 	<identificationTab>Identificación</identificationTab>
 	<identifier>Identificador</identifier>
 	<imAreaInterest>Seleccionar área de interés</imAreaInterest>
@@ -281,12 +280,12 @@
 	<imZoomToLayer>Zoom a la capa</imZoomToLayer>
 	<infoTitle>Información</infoTitle>
 	<insert>Insertar</insert>
-	<insertFileMode js="true">File Upload</insertFileMode>
-	<insertMode>Insert mode:</insertMode>
-	<insertPasteMode>Copy/Paste</insertPasteMode>
+	<insertFileMode js="true">Subir fichero</insertFileMode>
+	<insertMode>Modo de inserción:</insertMode>
+	<insertPasteMode>Copiar/Pegar</insertPasteMode>
 	<interactiveMap>Mapa interactivo</interactiveMap>
 	<interMapInfo><h1>Información sobre servidores de mapas</h1>Usted puede encontrar servidores de mapas buscando en GeoNetwork por datos digitales y servidores de mapas, o simplemente conectarse directamente con un conjunto de servidores de mapas predefinidos.<p />Los servidores de mapas disponibles son <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial Consortium</a> Servidores de mapas compatibles OGC o Servidores de mapas <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>.</interMapInfo>
-	<intermapSearch>Geographic search</intermapSearch>
+	<intermapSearch>Búsqueda geográfica</intermapSearch>
 	<isoAll>ISO All</isoAll>
 	<isoCore>ISO Core</isoCore>
 	<isoMinimum>ISO Minimum</isoMinimum>
@@ -304,12 +303,12 @@
 	<label>Etiqueta</label>
 	<language>es</language>
 	<large_thumbnail>Pulse para ver la previsualización mayor</large_thumbnail>
-	<lastNameMandatory js="true">The Last Name field is mandatory</lastNameMandatory>
+	<lastNameMandatory js="true">El campo Apellidos es obligatorio</lastNameMandatory>
 	<latitude>Latitud (entre -90 y 90) en grados</latitude>
 	<latMax>lat (max)</latMax>
 	<latMin>lat (min)</latMin>
 	<legend>Leyenda</legend>
-	<link>Link</link>
+	<link>Enlace</link>
 	<links>Enlaces</links>
 	<loading>Cargando...</loading>
 	<local>Búsqueda Local</local>
@@ -343,7 +342,7 @@
 	<max>Máximo</max>
 	<mdRating>Rating de metadatos</mdRating>
 	<mdUpdateError>Actualizar error</mdUpdateError>
-	<mefFile>MEF file</mefFile>
+	<mefFile>Fichero MEF</mefFile>
 	<message>El nombre de usuario o la contaseña son incorrectos.<br/>Presione el botón 'atrás' e intentelo de nuevo.</message>
 	<messageChanged>El metadato ha sido modificado por otro usuario. Intentelo de nuevo por favor.</messageChanged>
 	<messageDownload>Gracias por su interés. Pulse sobre el botón de descarga para recoger los datos</messageDownload>
@@ -351,21 +350,21 @@
 	<messageMdUpdateError>Lo siento, se ha producido un error mientras se actualizaban los metadatos.</messageMdUpdateError>
 	<messageNoPrivileges>Usted no dispone de los permisos necesarios para hacer esta operación</messageNoPrivileges>
 	<messageNotPerformed>La operación solicitada no pudo realizarse.</messageNotPerformed>
-	<metadata.admin.index.desc>Rebuild Lucene index</metadata.admin.index.desc>
-	<metadata.admin.index.failed>Index operation failed.</metadata.admin.index.failed>
-	<metadata.admin.index.success>Index operation was successful.</metadata.admin.index.success>
-	<metadata.admin.index.optimize.desc>Optimize Lucene index</metadata.admin.index.optimize.desc>
-	<doYouReallyWantToDoThis js="true">This operation may take some time on large catalogs and should not be done during peak usage. Continue?</doYouReallyWantToDoThis>
-	<optimize>Optimize</optimize>
-	<metadata.admin.index>Index manager</metadata.admin.index>
-	<metadata-template-order>Sort Templates</metadata-template-order>	
-	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>		
+	<metadata.admin.index.desc>Volver a generar el índice de Lucene</metadata.admin.index.desc>
+	<metadata.admin.index.failed>No se ha podido regenerar el índice de Lucene.</metadata.admin.index.failed>
+	<metadata.admin.index.success>La operación de generar índice de Lucene se completó con éxito.</metadata.admin.index.success>
+	<metadata.admin.index.optimize.desc>Optimizar el índice de Lucene</metadata.admin.index.optimize.desc>
+	<doYouReallyWantToDoThis js="true">Esta operación puede tardar algún tiempo sobre los catálogos con muchos metadatados y no se debe hacer en momentos de uso intensivo. ¿Desea continuar?</doYouReallyWantToDoThis>
+	<optimize>Optimizar</optimize>
+	<metadata.admin.index>Manejar índices</metadata.admin.index>
+	<metadata-template-order>Ordenar plantillas</metadata-template-order>
+	<metadata-template-order-desc>Ordenar sus plantillas</metadata-template-order-desc>
 	<metadata>Metadatos</metadata>
 	<metadataAdded>Metadato añadido con ID:</metadataAdded>
 	<metadataDeleted>Metadato borrado con ID:</metadataDeleted>
-	<metadataInsertResults>Results of Metadata Import</metadataInsertResults>
+	<metadataInsertResults>Resultados de la importación de metadatos</metadataInsertResults>
 	<metadataJSForm>Metadatos desde un formulario JS</metadataJSForm>
-	<metadataRecordsAdded>Total number of metadata records added :</metadataRecordsAdded>
+	<metadataRecordsAdded>Número total de metadatos añadidos :</metadataRecordsAdded>
 	<min>Mínimo</min>
 	<missing>MISSING or EMPTY</missing>	
 	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>
@@ -375,23 +374,23 @@
 	<newCategory>Añadir una nueva categoría</newCategory>
 	<newGroup>Añade un grupo</newGroup>
 	<newMdDes>Añade un nuevo metadato</newMdDes>
-	<newMdInsert>New metadata inserted:</newMdInsert>
+	<newMdInsert>Nuevo metadato insertado:</newMdInsert>
 	<newMetadata>Nuevo Metadato</newMetadata>
-	<newOwner>New Owner</newOwner>
+	<newOwner>Nuevo propietario</newOwner>
 	<newPassword>Nueva contraseña</newPassword>
 	<newUser>Añade un nuevo usuario a la Base de datos</newUser>
-	<next>Next</next>
-	<noCategory>No category available.</noCategory>
+	<next>Siguiente</next>
+	<noCategory>No hay categorias disponibles.</noCategory>
 	<noHelp>Disculpe las molestias, no hay ayuda disponible</noHelp>
 	<noInfo>Disculpe las molestias, no hay información disponible</noInfo>
 	<noLogin>No está identificado como usuario</noLogin>
-	<none>nada</none>
+	<none>ninguno</none>
 	<noOwnerRights>Privileges/Categories Locked: You do NOT have ownership rights</noOwnerRights>
 	<northbc>Coordenada Norte</northbc>
-	<noSelectedMd>No metadata selected! Please at least select one before select an action.</noSelectedMd>
-	<noTemplatesAvailable>No templates available, import metadata first.</noTemplatesAvailable>
-	<notfound>Not found</notfound>
-	<nothing>No action on import</nothing>
+	<noSelectedMd>¡No hay metadatos seleccionados! Por favor, seleccione al menos un metadato.</noSelectedMd>
+	<noTemplatesAvailable>No hay plantillas disponibles, importelas primero.</noTemplatesAvailable>
+	<notfound>No encontrado</notfound>
+	<nothing>No realizar ninguna acción en la importación</nothing>
 	<online>Mapa Interactivo</online>
 	<onlink>Recurso en línea</onlink>
 	<opensearch>GeoNetwork opensearch service allow search to be made into the metadata catalog.</opensearch>
@@ -401,24 +400,24 @@
 	<output>Salida</output>
 	<outputType id="full">Completa</outputType>
 	<outputType id="text">Solo texto</outputType>
-	<overwrite>Overwrite metadata with same UUID</overwrite>
-	<overwriteFile>Overwrite?</overwriteFile>
-	<owner>Owner</owner>
+	<overwrite>Sobrescribir los metadatos con el mismo UUID</overwrite>
+	<overwriteFile>¿Sobrescribir?</overwriteFile>
+	<owner>Propietario</owner>
 	<ownerRights>Delete/Privileges/Categories Unlocked: You have ownership rights</ownerRights>
 	<paper>Copia impresa</paper>
 	<partial>Parcialmente contenido</partial>
 	<partialCooordinate>Coordenadas parciales </partialCooordinate>
 	<password>Contraseña</password>
-	<passwordDoNotMatch>You did not enter the same new password twice. Please re-enter your password.</passwordDoNotMatch>
-	<passwordEntry>Please enter your password twice.</passwordEntry>
-	<passwordLength>Your password must be at least " + minLength + " characters long. Try again.</passwordLength>
-	<passwordOldRequired>Your old password is mandatory</passwordOldRequired>
-	<passwordSpace>Sorry, spaces are not allowed in password.</passwordSpace>
+	<passwordDoNotMatch>Los passwords no coinciden. Por favor, reintroduzca el nuevo password.</passwordDoNotMatch>
+	<passwordEntry>Por favor, introduzca el password por duplicado.</passwordEntry>
+	<passwordLength>El password debe de tener al menos " + minLength + " caracteres. Intentelo de nuevo.</passwordLength>
+	<passwordOldRequired>El password anterior es obligatorio</passwordOldRequired>
+	<passwordSpace>Disculpe, no se permiten espacios en el password.</passwordSpace>
 	<persInfo>Información personal</persInfo>
 	<placeKeyword>Palabras clave de lugar</placeKeyword>
 	<porCatInfoTab>Catálogo</porCatInfoTab>
 	<poweredBy>Software usado: </poweredBy>
-	<previous>Previous</previous>
+	<previous>Anterior</previous>
 	<privileges>Privilegios</privileges>
 	<profile>Perfíl</profile>
 	<profileChoice value="Administrator">Administrator</profileChoice>
@@ -456,14 +455,14 @@
 	<rateIt>Establecer rating</rateIt>
 	<ratingMsg>Presione un botón para establecer el rating. Note que para metadatos harvested necesitas esperar a la siguiente ejecución.</ratingMsg>
 	<rawMetadata>Añade fila de Metadatos</rawMetadata>
-	<rebuild>Rebuild</rebuild>
+	<rebuild>Regenerar</rebuild>
 	<recentAdditions>Agregados recientemente</recentAdditions>
 	<refSysTab>Sistema de Referencia</refSysTab>
 	<region>Región</region>
-	<register>Register</register>
-	<registerChoose>I want to </registerChoose>
+	<register>Registrarse</register>
+	<registerChoose>Quiero </registerChoose>
 	<RegisteredUser>Usuario registrado</RegisteredUser>
-	<registerTitle>Self-Registration Form</registerTitle>
+	<registerTitle>Formulario de auto-registro</registerTitle>
 	<registrationDetails>Key registration details entered: </registrationDetails>
 	<remote>Búsqueda remota</remote>
 	<remoteType>Remote</remoteType>
@@ -471,7 +470,7 @@
 	<res>resultados</res>
 	<reset>Vaciar</reset>
 	<resetFeedbackForm>Vaciar el formulario de Sugerencias</resetFeedbackForm>
-	<resetPassword>Reset Password</resetPassword>
+	<resetPassword>Resetear Password</resetPassword>
 	<resetSearch>Vaciar el formulario de búsquedas</resetSearch>
 	<ress>resultado</ress>
 	<restrictTo>Limitar a</restrictTo>
@@ -485,7 +484,7 @@
 	<save>Salvar</save>
 	<saveAndClose>Salvar y Cerrar</saveAndClose>
 	<saveAndValidate>Salvar y comprobar</saveAndValidate>
-	<savepdf>Save search results as pdf</savepdf>
+	<savepdf>Guardar los resultados de búsqueda en formato PDF</savepdf>
 	<schema>Esquema</schema>
 	<schematronError>Schematron Error</schematronError>
 	<search>Buscar</search>
@@ -499,13 +498,13 @@
 	<searchText>¿Qué? (Texto)</searchText>
 	<searchUnused>Búsqueda de metadatos vacíos o que no han sido usados nunca</searchUnused>
 	<searchUnusedTitle>Buscar no usados</searchUnusedTitle>
-	<select>Select : </select>
-	<selectAll>Select all metadata</selectAll>
+	<select>Seleccionar : </select>
+	<selectAll>Seleccionar todos los metadatos</selectAll>
 	<selectAllNotPossible>Too many hits! Must be less than </selectAllNotPossible>
-	<selected> selected</selected>
-	<selectedOnly>Display selected only</selectedOnly>
+	<selected> seleccionados</selected>
+	<selectedOnly>Mostrar sólo seleccionados</selectedOnly>
 	<selection>Selección</selection>
-	<selectNone>Unselect metadata selected</selectNone>
+	<selectNone>Deseleccionar metadatos seleccionados</selectNone>
 	<server>Servidor</server>
 	<setAll>Establecer todos</setAll>
 	<setOnSave>Value will be set when record is saved</setOnSave>
@@ -515,7 +514,7 @@
 	<simple>Búsqueda Simple</simple>
 	<simpleTab>Vista predefinida</simpleTab>
 	<simpleTabEditor>Vista del editor de Metadatos predefinida</simpleTabEditor>
-	<singleFile>Single File (XML, SLD, WMC...)</singleFile>
+	<singleFile>Fichero (XML, SLD, WMC...)</singleFile>
 	<site>Lugar</site>
 	<siteId>Id del lugar</siteId>
 	<sizeBytes>Size (bytes)</sizeBytes>
@@ -533,7 +532,7 @@
 	<state>Estado</state>
 	<styleSheet>Hoja de Estilo</styleSheet>
 	<submit>Enviar</submit>
-	<subtemplate>Subtemplate</subtemplate>
+	<subtemplate>Subplantilla</subtemplate>
 	<subtemplateTitle>Título del subtemplate</subtemplateTitle>
 	<summaryTab>Resumen</summaryTab>
 	<surName>Apellidos</surName>
@@ -553,36 +552,36 @@
 	<toDateSelector>Selector de fecha de fin</toDateSelector>
 	<tools>Herramientas</tools>
 	<topic>Tema</topic>
-	<transferOwnership>Transfer ownership</transferOwnership>
-	<transferOwnershipDes>Transfer metadata ownership to another user</transferOwnershipDes>
+	<transferOwnership>Transferir propiedad</transferOwnership>
+	<transferOwnershipDes>Transferir la propiedad de los metadatos a otro usuario</transferOwnershipDes>
 	<type>Tipo</type>
 	<up>Arriba</up>
 	<update>Actualiza</update>
-	<updateCategories>Update categories</updateCategories>
+	<updateCategories>Actualizar categorías</updateCategories>
 	<updateCategory>Actualizar categoría</updateCategory>
 	<updateGroup>Actualizar grupo</updateGroup>
-	<updatePrivileges>Update privileges</updatePrivileges>
+	<updatePrivileges>Actualizar privilegios</updatePrivileges>
 	<updateUserAccount>Actualizar información de usuario </updateUserAccount>
 	<upload>Actualización </upload>
 	<user>Usuario </user>
 	<UserAdmin>Usuario administrador</UserAdmin>
-	<userAtLeastOneGroup js="true">Please, select at least one group.</userAtLeastOneGroup>	
-	<userDefined>- User defined -</userDefined>
+	<userAtLeastOneGroup js="true">Por favor, seleccione al menos un grupo.</userAtLeastOneGroup>	
+	<userDefined>- Definido por el usuario -</userDefined>
 	<userInfo>Cambiar la información de usuario</userInfo>
 	<userInfoDes>Permitir al usuario actual cmabiar la información de usuario</userInfoDes>
 	<userManagement>Gestionar Usuarios</userManagement>
 	<userManDes>Añadir/modificar/borrar y mostrar usuarios</userManDes>
 	<username>Usuario</username>
-	<usernameMandatory>The username field is mandatory.</usernameMandatory>
+	<usernameMandatory>El campo Usuario es obligatorio.</usernameMandatory>
 	<userPw>Cambio de contraseña</userPw>
 	<userPwDes>Permite a los usuarios cambiar la contraseña</userPwDes>
-	<uuidAction>Import actions:</uuidAction>
+	<uuidAction>Acciones de importación:</uuidAction>
 	<validate>Validar</validate>
 	<validityBegins>Comienzo</validityBegins>
 	<validityEnds>y fin válidos</validityEnds>
 	<view>Ver</view>
 	<viewInGE>Google Earth</viewInGE>
-	<waitGetCap js="true">Loading server layers, please wait...</waitGetCap>
+	<waitGetCap js="true">Cargando las capas del servidor, por favor espere ...</waitGetCap>
 	<westbc>Coordenadas Oeste</westbc>
 	<what>¿Qué?</what>
 	<when>¿Cuándo?</when>
@@ -672,7 +671,7 @@
 		<editelement>Editar elemento</editelement>
 		<edition>Editar tesauro</edition>
 		<en>en</en>
-		<foundKeyWords>Número de términso encontrados</foundKeyWords>
+		<foundKeyWords>Número de términos encontrados</foundKeyWords>
 		<foundKeyWordsLimit>Número máximo de términos encontrados</foundKeyWordsLimit>
 		<keywordConfirm>Confirmar eliminación de la palabra clave</keywordConfirm>
 		<keywordDescription>Definición de la palabra clave:</keywordDescription>
@@ -687,11 +686,11 @@
 		<upload>Subir tesauro</upload>
 	</thesaurus>
 	<searchhelp>
-		<searchAllText>Enter free text here</searchAllText>
-		<rtitle>Enter title here</rtitle>
-		<abstract>Enter abstract here</abstract>
-		<keywords>Pick keywords from existing metadata records</keywords>
-		<thesaurus>Pick keywords from thesauri</thesaurus>
+		<searchAllText>Introduzca un texto libre aquí</searchAllText>
+		<rtitle>Introduzca el título aquí</rtitle>
+		<abstract>Introduzca el resumen aquí</abstract>
+		<keywords>Seleccione las palabras clave asociadas a metadatos</keywords>
+		<thesaurus>Seleccione las palabras clave del tesauro</thesaurus>
 	</searchhelp>
 
     <showMoreSearchFields>Mostrar/Ocultar más campos de búsqueda</showMoreSearchFields>

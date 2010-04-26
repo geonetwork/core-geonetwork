@@ -21,22 +21,22 @@
 	<simple>Use GeoNetwork simple file download service (resources.get)</simple>
 	<withdisclaimer>Use GeoNetwork disclaimer and constraints service (file.disclaimer)</withdisclaimer>
 
-	<selectionmanager>Metadata Search Results</selectionmanager>
-	<maxrecords>Maximum selected records</maxrecords>
+	<selectionmanager>Resultados de la búsqueda de metadatos</selectionmanager>
+	<maxrecords>Máximo número de registros a seleccionar</maxrecords>
 
-	<indexoptimizer>Lucene Index Optimizer</indexoptimizer>
-		<at>Run at</at>
-		<atSpec>( hour of day : minute eg. 23:15 )</atSpec>
-		<interval>Will run again every</interval>
+	<indexoptimizer>Optimización del índice de Lucene</indexoptimizer>
+		<at>Ejecutar a las </at>
+		<atSpec>( hora del día : minuto ej. 23:15 )</atSpec>
+		<interval>Ejecutar cada</interval>
 		<hourintervals>
-			<hour label="1 hour (not recommended)">1</hour>
-			<hour label="3 hours">3</hour>
-			<hour label="6 hours">6</hour>
-			<hour label="12 hours">12</hour>
-			<hour label="1 day">24</hour>
-			<hour label="2 days">48</hour>
-			<hour label="3 days">72</hour>
-			<hour label="4 days">96</hour>
+			<hour label="1 hora (no recomendado)">1</hour>
+			<hour label="3 horas">3</hour>
+			<hour label="6 horas">6</hour>
+			<hour label="12 horas">12</hour>
+			<hour label="1 día">24</hour>
+			<hour label="2 días">48</hour>
+			<hour label="3 días">72</hour>
+			<hour label="4 días">96</hour>
 		</hourintervals>
 		<hours>
 			<hour label="0">0</hour>
@@ -72,13 +72,13 @@
 		</minutes>
 
 	<csw>CSW Perfil ISO</csw>
-	<contactId>Contact</contactId>
-	<title>Title</title>
-	<abstract>Abstract</abstract>
-	<fees>Fees</fees>
-	<accessConstraints>Access Constraints</accessConstraints>
+	<contactId>Contacto</contactId>
+	<title>Título</title>
+	<abstract>Resumen</abstract>
+	<fees>Tasas</fees>
+	<accessConstraints>Restricciones de acceso</accessConstraints>
 
-	<clickablehyperlinks>hipervínculos se puede hacer clic</clickablehyperlinks>
+	<clickablehyperlinks>Se puede hacer clic en hipervínculos</clickablehyperlinks>
 
 	<localrating>Clasificación Local</localrating>
 
@@ -91,17 +91,15 @@
 	<smtpHost>Servidor SMTP</smtpHost>
 	<smtpPort>Puerto SMTP</smtpPort>
 
-	<userSelfRegistration>User Self-Registration</userSelfRegistration>
+	<userSelfRegistration>Auto-Registro de usuarios</userSelfRegistration>
 	
-	<removedMetadata>Removed metadata</removedMetadata>
-	<dir>Directory</dir>
-
-	<userSelfRegistration>User Self-Registration</userSelfRegistration>
+	<removedMetadata>Metadatos borrados</removedMetadata>
+	<dir>Directorio</dir>
 
 	<authentication>Autenticación</authentication>
 	
-	<loginuses>Login uses</loginuses>
-	<otherlogins>Allow other users to login from</otherlogins>
+	<loginuses>Usar Login</loginuses>
+	<otherlogins>Permitir a otros usuarios hacer login usando</otherlogins>
 
 	<geonetworkdb>GeoNetwork Autenticación</geonetworkdb>
 		
@@ -228,14 +226,14 @@
 			iniciará el componente de servidor Z39.50. Este componente
 			usa el protocolo ISO23950.
 			<br />
-			<b>Por favor note:</b>
+			<b>Por favor:</b>
 			debe reiniciar GeoNetwork para que este cambio tenga efecto.
 		</tip>
 
 		<tip id="z3950.port">
 			Cambie el puerto de Z39.50.
 			<br />
-			<b>Por favor note:</b>
+			<b>Por favor:</b>
 			debe reiniciar GeoNetwork para que este cambio tenga efecto.
 		</tip>
 
@@ -249,10 +247,10 @@
 		<tip id="csw.contactId">
 			Configure CSW ISO Profile contact for GetCapabilities operation.
 		</tip>
-		<tip id="csw.title">Title</tip>
-		<tip id="csw.abstract">Abstract</tip>
-		<tip id="csw.fees">Fees</tip>
-		<tip id="csw.accessConstraints">Access constraints</tip>
+		<tip id="csw.title">Título</tip>
+		<tip id="csw.abstract">Resumen</tip>
+		<tip id="csw.fees">Tasas</tip>
+		<tip id="csw.accessConstraints">Restricciones de acceso</tip>
 		
 		<!-- clickable hyperlinks -->
 		
@@ -291,7 +289,7 @@
 	<!-- removed metadata -->
 		
 		<tip id="removedMd.dir">
-			Directory used to store metadata (in MEF format) when they are deleted.
+            Directorio para almacenar los metadatos (en formato MEF ) cuando se borran.			
 		</tip>
 
 		<!-- userSelfRegistration -->
