@@ -73,6 +73,7 @@ import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
 
+import org.fao.geonet.services.util.MainUtil;
 import org.jdom.Element;
 
 //=============================================================================
@@ -125,6 +126,7 @@ public class CatalogSearcher {
 		if (luceneExpr != null) {
 			checkForErrors(luceneExpr);
 			remapFields(luceneExpr);
+            processFieldsAnalyzer(luceneExpr);
 		}
 		
 		try {
@@ -312,6 +314,28 @@ public class CatalogSearcher {
 			sm.releaseIndexReader(reader);
 		}
 	}
+
+    /**
+     * Process the fields title, abstract and any in same way as done
+     * in org.fao.geonet.services.main.Search service
+     *
+     * @param elem
+     */
+    private void processFieldsAnalyzer(Element elem) {
+        String field = elem.getAttributeValue("fld");
+        if (field != null) {
+            if ((field.equals(Geonet.SearchResult.TITLE)) ||
+                    (field.equals(Geonet.SearchResult.ABSTRACT)) ||
+                    (field.equals(Geonet.SearchResult.ANY))) {
+                 elem.setAttribute("txt", MainUtil.splitWord( elem.getAttributeValue("txt")));
+            }
+        }
+
+        List children = elem.getChildren();
+
+		for (int i = 0; i < children.size(); i++)
+			processFieldsAnalyzer((Element) children.get(i));
+    }
 
 	/**
 	 * Map OGC CSW search field names to Lucene field names using
