@@ -715,6 +715,7 @@
 		<thesaurus>Pick keywords from thesauri</thesaurus>
 	</searchhelp>
 
+    <selectMetadataFileAlert>U moet een metadata bestand selecteren</selectMetadataFileAlert>    
     <showMoreSearchFields>Meer zoekvelden</showMoreSearchFields>
     <searchEitherOfTheWords>Met één van deze woorden</searchEitherOfTheWords>
     <searchExactPhrase>Met de exacte woordcombinatie</searchExactPhrase>

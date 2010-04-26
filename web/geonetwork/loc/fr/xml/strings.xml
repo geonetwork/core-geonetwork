@@ -821,6 +821,7 @@
 		<thesaurus>Pick keywords from thesauri</thesaurus>
 	</searchhelp>
 
+    <selectMetadataFileAlert>Vous devez sélectionner un fichier à insérer</selectMetadataFileAlert>    
     <showMoreSearchFields>Autres critères de recherche</showMoreSearchFields>
     <searchEitherOfTheWords>Au moins un des mots suivants</searchEitherOfTheWords>
     <searchExactPhrase>Cette expression exacte</searchExactPhrase>

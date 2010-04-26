@@ -692,5 +692,10 @@
 		<thesaurus>Pick keywords from thesauri</thesaurus>
 	</searchhelp>
 
-    <showMoreSearchFields>Show/Hide more search fields</showMoreSearchFields>    
+    <selectMetadataFileAlert>You must select a metadata file to insert</selectMetadataFileAlert>            
+    <showMoreSearchFields>Show/Hide more search fields</showMoreSearchFields>
+    <searchEitherOfTheWords>Either of the words</searchEitherOfTheWords>
+    <searchExactPhrase>Exact phrase</searchExactPhrase>
+    <searchAllWords>All of the words</searchAllWords>
+    <searchWithoutWords>Without the words</searchWithoutWords>
 </strings>

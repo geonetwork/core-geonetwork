@@ -693,6 +693,7 @@
 		<thesaurus>Seleccione las palabras clave del tesauro</thesaurus>
 	</searchhelp>
 
+    <selectMetadataFileAlert>Debe de seleccionar el fichero de metadatos a insertar</selectMetadataFileAlert>    
     <showMoreSearchFields>Mostrar/Ocultar más campos de búsqueda</showMoreSearchFields>
     <searchEitherOfTheWords>Cualquiera de las palabras</searchEitherOfTheWords>
     <searchExactPhrase>Frase exacta</searchExactPhrase>

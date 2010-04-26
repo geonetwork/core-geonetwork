@@ -153,6 +153,16 @@
            		}
             }
 
+            function submitInsertForm() {
+                if (getModeValue() == '1') {
+                    if ($('mefFileContent').value == '') {
+                        alert('<xsl:value-of select="/root/gui/strings/selectMetadataFileAlert"/>');
+                        return false;
+                    }
+                }
+
+                goSubmit('xmlinsert');
+            }
 		</script>
 	</xsl:template>
 
@@ -213,7 +223,7 @@
                                     <textarea class="content" name="data" cols="80" rows="20"/>
                                 </span>
                                 <span id="gn.fileUp" style="display:none">
-                                    <input type="file" accept="*.xml, *.zip, *.mef" class="content" size="60" name="mefFile" value=""/>
+                                    <input type="file" accept="*.xml, *.zip, *.mef" class="content" size="60" name="mefFile" id="mefFileContent" value=""/>
                                 </span>
                             </td>
                         </tr>
@@ -254,7 +264,7 @@
 			<xsl:with-param name="buttons">
 				<button class="content" onclick="goBack()" id="back"><xsl:value-of select="/root/gui/strings/back"/></button>
 				&#160;
-				<button class="content" onclick="goSubmit('xmlinsert')" id="btInsert"><xsl:value-of select="/root/gui/strings/insert"/></button>
+				<button class="content" onclick="return submitInsertForm();"  id="btInsert"><xsl:value-of select="/root/gui/strings/insert"/></button>
 			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>

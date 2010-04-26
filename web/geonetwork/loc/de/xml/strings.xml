@@ -693,6 +693,7 @@
 		<thesaurus>Pick keywords from thesauri</thesaurus>
 	</searchhelp>
 
+    <selectMetadataFileAlert>You must select a metadata file to insert</selectMetadataFileAlert>            
     <showMoreSearchFields>Show/Hide more search fields</showMoreSearchFields>
     <searchEitherOfTheWords>Either of the words</searchEitherOfTheWords>
     <searchExactPhrase>Exact phrase</searchExactPhrase>
