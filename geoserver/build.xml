@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+==============================================================================
+=== Build file to deploy GeoServer
+===
+=== Author : josegar
+==============================================================================
+-->
+
+<project name="test-services" default="all">
+
+    <property name="geoserver_dir" value="../web/geoserver" />
+
+    <!-- =============================================================== -->
+
+    <target name="all" depends="build"/>
+
+    <!-- =============================================================== -->
+
+    <target name="build">
+	   <delete  dir="${geoserver_dir}" includeemptydirs="true"/>
+       <mkdir  dir="${geoserver_dir}"/>
+				
+		<!-- Deploy geoserver -->
+		<unzip src="geoserver-2.0.1.war"
+			dest="${geoserver_dir}" />
+	
+	    <!-- Delete GeoServer default data directory to avoid confusion with
+			 custom (INSTALL_DIR/data/geoserver_data) -->
+		<delete  dir="${geoserver_dir}/data" includeemptydirs="true"/>
+		
+		<!-- Deploy plugins -->
+		<unzip src="geoserver-2.0.1-restconfig-plugin.zip"
+			dest="${geoserver_dir}/WEB-INF/lib" />
+			
+		<unzip src="geoserver-2.0.1-charts-plugin.zip"
+			dest="${geoserver_dir}/WEB-INF/lib" />	
+			
+		<!-- Styler -->	
+		<unzip src="styler.zip"
+			dest="${geoserver_dir}" />	
+			
+		<!-- Update config file with data directory path -->
+		<copy file="web.xml" todir="${geoserver_dir}/WEB-INF" overwrite="yes" />
+    </target>
+</project>
