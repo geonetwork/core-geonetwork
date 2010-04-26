@@ -293,6 +293,7 @@
 		<allow service="portal.featured"/>
 		<allow service="portal.categories"/>
 		<allow service="portal.sources"/>
+        <allow service="portal.sitemap"/>
 
 		<!-- Metadata export services -->
 		<allow service="pdf.search"/>

@@ -136,7 +136,12 @@
 				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
 			</output>
 		</service>
-        
+
+        <service name="portal.sitemap">
+			<class name=".guiservices.metadata.Sitemap" />
+            
+	      <output sheet="portal-sitemap.xsl" contentType="text/xml; charset=UTF-8"/>
+		</service>
 	</services>
 </geonet>
 
