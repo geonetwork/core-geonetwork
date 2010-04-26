@@ -5,18 +5,18 @@
   <NamedLayer>
     <Name>Default Line</Name>
     <UserStyle>
-      <Title>1 px yellow line</Title>
-      <Abstract>Default line style, 1 pixel wide yellow</Abstract>
+      <Title>1 px blue line</Title>
+      <Abstract>Default line style, 1 pixel wide blue</Abstract>
 
       <FeatureTypeStyle>
         <!--FeatureTypeName>Feature</FeatureTypeName-->
         <Rule>
-          <Title>Yellow Line</Title>
-          <Abstract>A 1 pixel wide yellow line</Abstract>
+          <Title>Blue Line</Title>
+          <Abstract>A 1 pixel wide blue line</Abstract>
           <LineSymbolizer>
             <Stroke>
-              <CssParameter name="stroke">#ffff00</CssParameter>
-              <CssParameter name="stroke-width">1</CssParameter>            </Stroke>
+              <CssParameter name="stroke">#0000FF</CssParameter>
+            </Stroke>
           </LineSymbolizer>
         </Rule>
 

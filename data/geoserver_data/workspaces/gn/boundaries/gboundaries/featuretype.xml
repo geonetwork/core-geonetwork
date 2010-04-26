@@ -1,0 +1,33 @@
+<featureType>
+  <id>FeatureTypeInfoImpl--71dd1428:126769556b6:-7ffd</id>
+  <name>gboundaries</name>
+  <nativeName>gboundaries</nativeName>
+  <namespace>
+    <id>NamespaceInfoImpl--71dd1428:126769556b6:-7fff</id>
+  </namespace>
+  <title>gboundaries</title>
+  <srs>EPSG:4326</srs>
+  <nativeBoundingBox>
+    <minx>-180.0</minx>
+    <maxx>180.0</maxx>
+    <miny>-89.9</miny>
+    <maxy>83.627</maxy>
+  </nativeBoundingBox>
+  <latLonBoundingBox>
+    <minx>-180.0</minx>
+    <maxx>180.0</maxx>
+    <miny>-89.9</miny>
+    <maxy>83.627</maxy>
+    <crs>EPSG:4326</crs>
+  </latLonBoundingBox>
+  <projectionPolicy>FORCE_DECLARED</projectionPolicy>
+  <enabled>true</enabled>
+  <metadata>
+    <entry key="cachingEnabled">false</entry>
+  </metadata>
+  <store class="dataStore">
+    <id>DataStoreInfoImpl--71dd1428:126769556b6:-7ffe</id>
+  </store>
+  <maxFeatures>0</maxFeatures>
+  <numDecimals>0</numDecimals>
+</featureType>

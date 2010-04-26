@@ -67,7 +67,9 @@
         <Rule>
           <Title>Boundary</Title>
           <LineSymbolizer>
-            <Stroke />
+            <Stroke>
+              <CssParameter name="stroke-width">0.2</CssParameter>
+            </Stroke>
           </LineSymbolizer>
           <TextSymbolizer>
             <Label>

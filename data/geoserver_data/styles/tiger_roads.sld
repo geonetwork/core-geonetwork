@@ -1,104 +1,121 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor version="1.0.0" 
-	xsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd" 
-	xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" 
-	xmlns:xlink="http://www.w3.org/1999/xlink" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-<NamedLayer> <Name> area landmarks </Name>
-    <UserStyle>
-         <FeatureTypeStyle>
-            <FeatureTypeName>Feature</FeatureTypeName>
-			<Rule>  
-	               <MinScaleDenominator>32000</MinScaleDenominator>
-	    		   <LineSymbolizer>
-	    		       <Stroke>
-	    				<CssParameter name="stroke">
-	    					<ogc:Literal>#666666</ogc:Literal>
-	    				</CssParameter>
-	    				<CssParameter name="stroke-width">
-	    					<ogc:Literal>2</ogc:Literal>
-	    				</CssParameter>
-	    			</Stroke>
-	    		   </LineSymbolizer>
-            </Rule>
-
-            <Rule>	<!-- thick line drawn first-->
-				<MaxScaleDenominator>32000</MaxScaleDenominator>
-				<LineSymbolizer>
-					<Stroke>
-						<CssParameter name="stroke">
-							<ogc:Literal>#666666</ogc:Literal>
-						</CssParameter>
-						<CssParameter name="stroke-width">
-							<ogc:Literal>7</ogc:Literal>
-						</CssParameter>
-					</Stroke>
-				</LineSymbolizer>
-            </Rule>
-        </FeatureTypeStyle>
-        <FeatureTypeStyle>
-           <FeatureTypeName>Feature</FeatureTypeName>
-           <Rule>	<!-- thin line drawn second -->
-				<MaxScaleDenominator>32000</MaxScaleDenominator>
-	            <LineSymbolizer>
-	    		       <Stroke>
-	    				<CssParameter name="stroke">
-	    					<ogc:Literal>#FFFFFF</ogc:Literal>
-	    				</CssParameter>
-	    				<CssParameter name="stroke-width">
-	    					<ogc:Literal>4</ogc:Literal>
-	    				</CssParameter>
-	    			</Stroke>
-				</LineSymbolizer>
-            </Rule> 
-            <!-- label -->     
-			<Rule>
-				<MaxScaleDenominator>32000</MaxScaleDenominator>
-				<TextSymbolizer>
-					<Label>
-						<ogc:PropertyName>NAME</ogc:PropertyName>
-					</Label>
-
-					<Font>
-						<CssParameter name="font-family">Times New Roman</CssParameter>
-						<CssParameter name="font-style">Normal</CssParameter>
-						<CssParameter name="font-size">14</CssParameter>
-						<CssParameter name="font-weight">bold</CssParameter>
-					</Font>
-					
-					<LabelPlacement>
-					  <LinePlacement>
-					  </LinePlacement>
-					</LabelPlacement>
-					<Halo>
-						<Radius>
-							<ogc:Literal>2</ogc:Literal>
-						</Radius>
-						<Fill>
-							<CssParameter name="fill">#FFFFFF</CssParameter>
-							<CssParameter name="fill-opacity">0.85</CssParameter>				
-						</Fill>
-					</Halo>
-					
-					<Fill>
-						<CssParameter name="fill">#000000</CssParameter>
-					</Fill>
-					
-					<VendorOption name="group">true</VendorOption>
-					<!-- To make the following set USE_NG_LABELLER to true
-					     either as a web.xml init param, as a java system
-					     variable (-DUSE_NG_LABELLER=true) or as an
-					     enviroment variable (export USE_NG_LABELLER=true)
-					-->
-					<VendorOption name="followLine">true</VendorOption>
-					<VendorOption name="maxDisplacement">50</VendorOption>
-					<VendorOption name="repeat">300</VendorOption>
-					
-					
-				</TextSymbolizer>
-			</Rule>
-        </FeatureTypeStyle>
-        
-    </UserStyle>
-    </NamedLayer>
-</StyledLayerDescriptor>
+<sld:UserStyle xmlns="http://www.opengis.net/sld" xmlns:sld="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">
+  <sld:Name>tiger_roads</sld:Name>
+  <sld:Title/>
+  <sld:FeatureTypeStyle>
+    <sld:Name>name</sld:Name>
+    <sld:FeatureTypeName>Feature</sld:FeatureTypeName>
+    <sld:SemanticTypeIdentifier>SemanticType[ANY]</sld:SemanticTypeIdentifier>
+    <sld:Rule>
+      <sld:Name>default</sld:Name>
+      <sld:MaxScaleDenominator>32000.0</sld:MaxScaleDenominator>
+      <sld:LineSymbolizer>
+        <sld:Stroke>
+          <sld:CssParameter name="stroke">
+            <ogc:Literal>#FFFFFF</ogc:Literal>
+          </sld:CssParameter>
+          <sld:CssParameter name="stroke-linecap">
+            <ogc:Literal>butt</ogc:Literal>
+          </sld:CssParameter>
+          <sld:CssParameter name="stroke-linejoin">
+            <ogc:Literal>miter</ogc:Literal>
+          </sld:CssParameter>
+          <sld:CssParameter name="stroke-opacity">
+            <ogc:Literal>1</ogc:Literal>
+          </sld:CssParameter>
+          <sld:CssParameter name="stroke-width">
+            <ogc:Literal>4</ogc:Literal>
+          </sld:CssParameter>
+          <sld:CssParameter name="stroke-dashoffset">
+            <ogc:Literal>0</ogc:Literal>
+          </sld:CssParameter>
+        </sld:Stroke>
+      </sld:LineSymbolizer>
+    </sld:Rule>
+    <sld:Rule>
+      <sld:Name>default</sld:Name>
+      <sld:MaxScaleDenominator>32000.0</sld:MaxScaleDenominator>
+      <sld:TextSymbolizer>
+        <sld:Label>
+          <ogc:PropertyName>NAME</ogc:PropertyName>
+        </sld:Label>
+        <sld:Font>
+          <sld:CssParameter name="font-family">
+            <ogc:Literal>Times New Roman</ogc:Literal>
+          </sld:CssParameter>
+          <sld:CssParameter name="font-size">
+            <ogc:Literal>14</ogc:Literal>
+          </sld:CssParameter>
+          <sld:CssParameter name="font-style">
+            <ogc:Literal>Normal</ogc:Literal>
+          </sld:CssParameter>
+          <sld:CssParameter name="font-weight">
+            <ogc:Literal>bold</ogc:Literal>
+          </sld:CssParameter>
+        </sld:Font>
+        <sld:LabelPlacement>
+          <sld:PointPlacement>
+            <sld:AnchorPoint>
+              <sld:AnchorPointX>
+                <ogc:Literal>0.0</ogc:Literal>
+              </sld:AnchorPointX>
+              <sld:AnchorPointY>
+                <ogc:Literal>0.5</ogc:Literal>
+              </sld:AnchorPointY>
+            </sld:AnchorPoint>
+            <sld:Rotation>
+              <ogc:Literal>0</ogc:Literal>
+            </sld:Rotation>
+          </sld:PointPlacement>
+        </sld:LabelPlacement>
+        <sld:Halo>
+          <sld:Radius>
+            <ogc:Literal>2</ogc:Literal>
+          </sld:Radius>
+          <sld:Fill>
+            <sld:CssParameter name="fill">
+              <ogc:Literal>#FFFFFF</ogc:Literal>
+            </sld:CssParameter>
+            <sld:CssParameter name="fill-opacity">
+              <ogc:Literal>0.85</ogc:Literal>
+            </sld:CssParameter>
+          </sld:Fill>
+        </sld:Halo>
+        <sld:Fill>
+          <sld:CssParameter name="fill">
+            <ogc:Literal>#000000</ogc:Literal>
+          </sld:CssParameter>
+          <sld:CssParameter name="fill-opacity">
+            <ogc:Literal>1</ogc:Literal>
+          </sld:CssParameter>
+        </sld:Fill>
+      </sld:TextSymbolizer>
+    </sld:Rule>
+    <sld:Rule>
+      <sld:Name>default</sld:Name>
+      <sld:LineSymbolizer>
+        <sld:Stroke>
+          <sld:CssParameter name="stroke">
+            <ogc:Literal>#000000</ogc:Literal>
+          </sld:CssParameter>
+          <sld:CssParameter name="stroke-linecap">
+            <ogc:Literal>butt</ogc:Literal>
+          </sld:CssParameter>
+          <sld:CssParameter name="stroke-linejoin">
+            <ogc:Literal>miter</ogc:Literal>
+          </sld:CssParameter>
+          <sld:CssParameter name="stroke-opacity">
+            <ogc:Literal>1</ogc:Literal>
+          </sld:CssParameter>
+          <sld:CssParameter name="stroke-width">
+            <ogc:Literal>1</ogc:Literal>
+          </sld:CssParameter>
+          <sld:CssParameter name="stroke-dashoffset">
+            <ogc:Literal>0</ogc:Literal>
+          </sld:CssParameter>
+          <sld:CssParameter name="stroke-dasharray">2.0 4.0 </sld:CssParameter>
+        </sld:Stroke>
+      </sld:LineSymbolizer>
+    </sld:Rule>
+  </sld:FeatureTypeStyle>
+</sld:UserStyle>

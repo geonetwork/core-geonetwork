@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gwcConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                  xsi:noNamespaceSchemaLocation="http://geowebcache.org/schema/1.2.2/geowebcache.xsd" 
+                  xmlns="http://geowebcache.org/schema/1.2.2">
+<version>1.2.2</version>
+<backendTimeout>120</backendTimeout>
+
+<layers>
+
+  <wmsLayer>
+    <name>gn:gboundaries</name>
+    <gridSubsets>
+      <gridSubset>
+        <gridSetName>EPSG:4326</gridSetName>
+      </gridSubset>
+    </gridSubsets>  
+    <wmsUrl><string>http://localhost:8080/geoserver/wm</string></wmsUrl>
+  </wmsLayer>
+  
+  <wmsLayer>
+    <name>gn:world</name>
+    <mimeFormats><string>image/jpeg</string></mimeFormats>
+    <wmsUrl><string>http://localhost:8080/geoserver/wms</string></wmsUrl>    
+  </wmsLayer>
+
+</layers>
+</gwcConfiguration>

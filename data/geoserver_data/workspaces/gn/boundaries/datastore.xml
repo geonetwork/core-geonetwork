@@ -1,0 +1,17 @@
+<dataStore>
+  <id>DataStoreInfoImpl--71dd1428:126769556b6:-7ffe</id>
+  <name>boundaries</name>
+  <description>boundaries</description>
+  <type>Shapefile</type>
+  <enabled>true</enabled>
+  <workspace>
+    <id>WorkspaceInfoImpl--71dd1428:126769556b6:-8000</id>
+  </workspace>
+  <connectionParameters>
+    <entry key="memory mapped buffer">true</entry>
+    <entry key="create spatial index">true</entry>
+    <entry key="charset">ISO-8859-1</entry>
+    <entry key="url">file:data/boundaries</entry>
+    <entry key="namespace">http://geonetwork</entry>
+  </connectionParameters>
+</dataStore>
