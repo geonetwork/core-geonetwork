@@ -803,6 +803,8 @@ public class DataManager
 				// Check if a prime namespace exists in all
 				// additional namespaces of the root element
 				for (Namespace ns : metadataAdditionalNS) {
+                    if (ns.equals(Csw.NAMESPACE_CSW)) continue;
+                    
 					if (ns.getURI().equals(primeNs) &&
 							metadatadRootElemenNSUri.equals(Csw.NAMESPACE_GMD)) {
 						return schema;
