@@ -783,8 +783,10 @@ function validateNumber(input, nullValue, decimals) {
 function validateNonEmpty(input) {
     if (input.value.length < 1) {
         input.addClassName('error');
+        return false;
     } else {
         input.removeClassName('error');
+        return true;
     }
 }
 
@@ -798,8 +800,10 @@ function validateNonEmpty(input) {
 function validateEmail(input) {
 	if (!isEmail(input.value)) {
         input.addClassName('error');
+        return false;
     } else {
         input.removeClassName('error');
+        return true;
     }
 }
 

@@ -1130,10 +1130,10 @@
 									name(.)='gco:Decimal' or name(.)='gco:Real'">
 									<xsl:choose>
 										<xsl:when test="name(.)='gco:Integer'">
-											<xsl:attribute name="onkeyup">validateNumber(this, <xsl:value-of select="$mandatory"/>, false);</xsl:attribute>
+											<xsl:attribute name="onkeyup">validateNumber(this, <xsl:value-of select="not($mandatory)"/>, false);</xsl:attribute>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:attribute name="onkeyup">validateNumber(this, <xsl:value-of select="$mandatory"/>, true);</xsl:attribute>
+											<xsl:attribute name="onkeyup">validateNumber(this, <xsl:value-of select="not($mandatory)"/>, true);</xsl:attribute>
 										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:when>

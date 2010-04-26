@@ -459,7 +459,7 @@
 	<newOwner>Associer à un autre auteur</newOwner>
 	<newPassword>Nouveau mot de passe</newPassword>
 	<newUser>Ajouter un utilisateur</newUser>
-	<next>Next</next>
+	<next>&gt;&gt;</next>
 	<noCategory>Aucune catégorie disponible.</noCategory>
 	<noHelp>Désolé, pas d'aide disponible</noHelp>
 	<noInfo>Désolé, pas d'information disponible</noInfo>
@@ -497,7 +497,7 @@
 	<placeKeyword>Mot-clé géographique</placeKeyword>
 	<porCatInfoTab>Catalogue</porCatInfoTab>
 	<poweredBy>Fonctionne avec </poweredBy>
-	<previous>Previous</previous>
+	<previous>&lt;&lt;</previous>
 	<privileges>Privilèges</privileges>
 	<profile>Profile</profile>
 	<profileChoice value="Administrator">Administrateur</profileChoice>

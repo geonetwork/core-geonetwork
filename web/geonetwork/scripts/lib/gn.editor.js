@@ -144,8 +144,8 @@ return false;if(decimals)
 validChars+='.';var isNumber=true;var char;for(i=0;i<text.length&&isNumber;i++){char=text.charAt(i);if(char=='-'||char=="+"){if(i<0)
 isNumber=false;}else if(validChars.indexOf(char)==-1){isNumber=false;}}
 if(!isNumber){input.addClassName('error');return false;}else{input.removeClassName('error');return true;}}
-function validateNonEmpty(input){if(input.value.length<1){input.addClassName('error');}else{input.removeClassName('error');}}
-function validateEmail(input){if(!isEmail(input.value)){input.addClassName('error');}else{input.removeClassName('error');}}
+function validateNonEmpty(input){if(input.value.length<1){input.addClassName('error');return false;}else{input.removeClassName('error');return true;}}
+function validateEmail(input){if(!isEmail(input.value)){input.addClassName('error');return false;}else{input.removeClassName('error');return true;}}
 function validateMetadataFields(){$$('select.lang_selector').each(function(input){for(i=0;i<input.options.length;i++)
 if(input.options[i].getAttribute("code").toLowerCase()==Env.lang)
 input.options[i].selected=true;enableLocalInput(input,false);});$$('input,textarea,select').each(function(input){validateMetadataField(input);});}
