@@ -33,6 +33,11 @@ public class LuceneIndexField {
 	public static final String TYPE = "type";
 	public static final String UUID = "_uuid";
 	public static final String WEST = "westBL";
+    public static final String PARENTUUID = "parentUuid";
+    public static final String OPERATESON = "operatesOn";
+    public static final String SCHEMA =  "_schema";
+    public static final String TEMPORALEXTENT_BEGIN = "tempExtentBegin";
+    public static final String TEMPORALEXTENT_END = "tempExtentEnd";
 
     public static final String DOWNLOAD = "download";
     public static final String DIGITAL = "digital";

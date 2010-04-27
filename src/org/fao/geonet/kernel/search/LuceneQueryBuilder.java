@@ -498,11 +498,109 @@ public class LuceneQueryBuilder {
 			query.add(dateRangeClause);
 		}
 
+
+        //
+        // Temporal extent : finds records where temporal extent overlaps the search extent
+        //
+        String extTo = request.getChildText("extTo");
+        String extFrom = request.getChildText("extFrom");
+
+
+        if((extTo != null && extTo.length() > 0) || (extFrom != null && extFrom.length() > 0)) {
+            BooleanQuery temporalExtentQuery = new BooleanQuery();
+            BooleanClause.Occur temporalExtentOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+            BooleanClause.Occur temporalRangeQueryOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
+
+			Term lowerTerm = null;
+			Term upperTerm = null;
+			RangeQuery temporalRangeQuery = null;
+
+			// temporal extent start is within search extent
+            if(extFrom != null) {
+				lowerTerm = new Term(LuceneIndexField.TEMPORALEXTENT_BEGIN , extFrom);
+			}
+			if(extTo != null) {
+				upperTerm = new Term(LuceneIndexField.TEMPORALEXTENT_BEGIN, extTo);
+			}
+			temporalRangeQuery = new RangeQuery(lowerTerm, upperTerm, true);
+			BooleanClause temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
+			
+            temporalExtentQuery.add(temporalRangeQueryClause);
+
+
+            // or temporal extent end is within search extent
+            lowerTerm = null;
+			upperTerm = null;
+
+            if(extFrom != null) {
+				lowerTerm = new Term(LuceneIndexField.TEMPORALEXTENT_END , extFrom);
+			}
+
+			if(extTo != null) {
+				upperTerm = new Term(LuceneIndexField.TEMPORALEXTENT_END, extTo);
+			}
+            temporalRangeQuery = new RangeQuery(lowerTerm, upperTerm, true);
+            temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
+
+            temporalExtentQuery.add(temporalRangeQueryClause);
+
+            //or temporal extent contains search extent
+            if((extTo != null && extTo.length() > 0) && (extFrom != null && extFrom.length() > 0)) {
+                BooleanQuery bq = new BooleanQuery();
+
+                lowerTerm = null;
+                upperTerm = null;
+                RangeQuery rangeQuery = null;
+                lowerTerm = new Term(LuceneIndexField.TEMPORALEXTENT_END , extTo);
+                temporalRangeQuery = new RangeQuery(lowerTerm, null, true);
+                temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
+
+                bq.add(temporalRangeQueryClause);
+
+                lowerTerm = null;
+                upperTerm = new Term(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom);
+
+                temporalRangeQuery = new RangeQuery(lowerTerm, upperTerm, true);
+                temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
+                bq.add(temporalRangeQueryClause);
+
+                temporalExtentQuery.add(bq, temporalRangeQueryOccur);
+            }
+
+            if (temporalExtentQuery.clauses().size() > 0) {
+                temporalRangeQueryClause = new BooleanClause(temporalExtentQuery, temporalExtentOccur);
+                query.add(temporalRangeQueryClause);
+            }
+        }
+
+
+
 		// metadataStandardName
 		//
 		BooleanClause metadataStandardNameClause = requiredTextField(request.getChildText("metadataStandardName"), LuceneIndexField.METADATA_STANDARD_NAME, similarity);
 		if(metadataStandardNameClause != null) {
 			query.add(metadataStandardNameClause);
+		}
+
+        // schema
+        //
+        BooleanClause schemaClause = requiredTextField(request.getChildText("_schema"), LuceneIndexField.SCHEMA, similarity);
+        if(schemaClause != null) {
+           query.add(schemaClause);
+        }
+
+        // parentUuid
+		//
+		BooleanClause parentUuidClause = requiredTextField(request.getChildText("parentUuid"), LuceneIndexField.PARENTUUID, similarity);
+		if(parentUuidClause != null) {
+			query.add(parentUuidClause);
+		}
+
+        // operatesOn
+		//
+		BooleanClause operatesOnClause = requiredTextField(request.getChildText("operatesOn"), LuceneIndexField.OPERATESON, similarity);
+		if(operatesOnClause != null) {
+			query.add(operatesOnClause);
 		}
 
 		//
@@ -513,7 +611,7 @@ public class LuceneQueryBuilder {
 			query.add(typeClause);
 		}
 
-        		//
+        //
 		// inspire
 		//
 		String inspire = request.getChildText("inspire");

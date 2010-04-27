@@ -730,6 +730,116 @@ public class LuceneQueryTest extends TestCase {
 		assertEquals("+(+(_cat:hoeperdepoep)) +_isTemplate:n", query.toString());
 	}
 
+    /**
+	 * 'parentUUID' parameter.
+	 */
+	public void testParentUUID() {
+		// create request object
+		JDOMFactory factory = new DefaultJDOMFactory();
+		Element request = factory.element("request");
+		Element any = factory.element("parentUuid");
+		any.addContent("as432f-s45hj3-vcx35s-fsd8sf");
+		request.addContent(any);
+		// build lucene query
+		Query query = new LuceneQueryBuilder().build(request);
+		// verify query
+		assertEquals("+_isTemplate:n +parentUuid:as432f-s45hj3-vcx35s-fsd8sf", query.toString());
+	}
+
+    /**
+     * 'operatesOn' parameter.
+     */
+    public void testOperatesOn() {
+        // create request object
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element any = factory.element("operatesOn");
+        any.addContent("value");
+        request.addContent(any);
+        // build lucene query
+        Query query = new LuceneQueryBuilder().build(request);
+        // verify query
+        assertEquals("+_isTemplate:n +operatesOn:value", query.toString());
+    }
+
+    /**
+     * '_schema' parameter.
+     */
+    public void testSchema() {
+        // create request object
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element any = factory.element("_schema");
+        any.addContent("value");
+        request.addContent(any);
+        // build lucene query
+        Query query = new LuceneQueryBuilder().build(request);
+        // verify query
+        assertEquals("+_isTemplate:n +_schema:value", query.toString());
+    }                                                                    
+
+    /**
+     * 'temporalExtent' parameters
+     */
+     public void testTemporalExtent() {
+        // create request object
+        JDOMFactory factory = new DefaultJDOMFactory();
+
+        // test extFrom
+        Element request = factory.element("request");
+        Element extFrom = factory.element("extFrom");
+        extFrom.addContent("2010-04-01T17:35:00");
+        request.addContent(extFrom);
+        // build lucene query
+        Query query = new LuceneQueryBuilder().build(request);
+
+        String expected = "+_isTemplate:n +(tempExtentBegin:[2010-04-01T17:35:00 TO *] tempExtentEnd:[2010-04-01T17:35:00 TO *])";
+        assertEquals(expected, query.toString());
+
+        // test extTo
+        request = factory.element("request");
+        Element extTo = factory.element("extTo");
+        extTo.addContent("2010-04-27T17:43:00");
+        request.addContent(extTo);
+        // build lucene query
+        query = new LuceneQueryBuilder().build(request);
+
+        expected = "+_isTemplate:n +(tempExtentBegin:[* TO 2010-04-27T17:43:00] tempExtentEnd:[* TO 2010-04-27T17:43:00])";
+        assertEquals(expected, query.toString());
+
+        // test extfrom and extTo
+        request = factory.element("request");
+
+        extFrom = factory.element("extFrom");
+        extFrom.addContent("2010-04-08T17:46:00");
+        request.addContent(extFrom);
+
+        extTo = factory.element("extTo");
+        extTo.addContent("2010-04-27T17:43:00");
+        request.addContent(extTo);
+        // build lucene query
+        query = new LuceneQueryBuilder().build(request);
+
+        expected = "+_isTemplate:n +(tempExtentBegin:[2010-04-08T17:46:00 TO 2010-04-27T17:43:00] tempExtentEnd:[2010-04-08T17:46:00 TO 2010-04-27T17:43:00] (+tempExtentEnd:[2010-04-27T17:43:00 TO *] +tempExtentBegin:[* TO 2010-04-08T17:46:00]))";
+        assertEquals(expected, query.toString());
+
+        // create request object
+        /*JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element extFrom = factory.element("extFrom");
+        extFrom.addContent("2010-04-27T16:40:00");
+        request.addContent(extFrom);
+        Element extTo = factory.element("extTo");
+        extTo.addContent("2010-04-29T16:40:00");
+        request.addContent(extTo);
+        // build lucene query
+        Query query = new LuceneQueryBuilder().build(request);
+        // verify query
+        assertEquals("+_isTemplate:n +(tempExtentBegin:[2010-04-27T16:40:00 TO 2010-04-29T16:40:00]" +
+                " tempExtentEnd:[2010-04-27T16:40:00 TO 2010-04-29T16:40:00] " +
+                "(+tempExtentEnd:[2010-04-29T16:40:00 TO *] " +
+                "+tempExtentBegin:[* TO 2010-04-27T16:40:00]))", query.toString());*/
+    }
 	/**
 	 * 'category' parameter with a multiple values.
 	 */
