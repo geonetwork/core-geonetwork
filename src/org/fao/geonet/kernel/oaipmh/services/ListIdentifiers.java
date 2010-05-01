@@ -161,10 +161,13 @@ public class ListIdentifiers implements OaiPmhService
 		String schema     = rec.getChildText("schemaid");
 		String changeDate = rec.getChildText("changedate");
 
-		//--- try to disseminate format
+		//--- try to disseminate format if not by schema then by conversion
 
-		if (!prefix.equals(schema) && !prefix.equals("oai_dc"))
-			return null;
+		if (!prefix.equals(schema)) {
+			if (!Lib.existsConverter(schema, context.getAppPath(), prefix)) {
+				return null;
+			}
+		}
 
 		//--- build header and set some infos
 

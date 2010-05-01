@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.oaipmh;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import jeeves.constants.Jeeves;
@@ -81,9 +82,15 @@ public class Lib
 
 	//--------------------------------------------------------------------------
 
-	public static Element toOaiDC(String schema, Element md, String uuid,
-											String changeDate, String appPath) throws Exception
-	{
+	public static boolean existsConverter(String schema, String appPath, String prefix) {
+		 File f = new File(appPath + Geonet.Path.SCHEMAS + schema + "/convert/" + prefix + ".xsl");
+		 return f.exists();
+	}
+
+	//--------------------------------------------------------------------------
+
+	public static Element transform(String schema, Element md, String uuid, String changeDate, String appPath, String targetFormat) throws Exception {
+
 		//--- setup environment
 
 		Element env = new Element("env");
@@ -99,7 +106,7 @@ public class Lib
 
 		//--- do an XSL transformation
 
-		String styleSheet = appPath +"xml/schemas/"+schema+"/convert/oai-dc.xsl";
+		String styleSheet = appPath + Geonet.Path.SCHEMAS +schema + "/convert/" + targetFormat + ".xsl";
 
 		return Xml.transform(root, styleSheet);
 	}

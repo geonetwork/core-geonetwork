@@ -23,7 +23,10 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
@@ -76,7 +79,9 @@ public class ListMetadataFormats implements OaiPmhService
 				res.addFormat(getSchemaInfo(context, schema));
 		}
 
-		res.addFormat(getDefaultFormat(context));
+		for (MetadataFormat mdf : getDefaultFormats(context)) {
+			res.addFormat(mdf);
+		}
 
 		return res;
 	}
@@ -109,11 +114,17 @@ public class ListMetadataFormats implements OaiPmhService
 
 	//---------------------------------------------------------------------------
 
-	private MetadataFormat getDefaultFormat(ServiceContext context)
+	private List<MetadataFormat> getDefaultFormats(ServiceContext context) throws IOException, JDOMException
 	{
-		String url = Lib.getSchemaUrl(context, OAI_PATH);
+	
+		Element elem = Xml.loadFile(context.getAppPath() + DEFAULT_SCHEMAS_FILE);
+		List<Element> defaultSchemas = elem.getChildren();
 
-		return new MetadataFormat("oai_dc", url, "http://www.openarchives.org/OAI/2.0/");
+		List <MetadataFormat> defMdfs = new ArrayList();
+		for (Element schema : defaultSchemas) {
+			defMdfs.add(new MetadataFormat(schema.getAttributeValue("prefix"), schema.getAttributeValue("schemaLocation"), schema.getAttributeValue("nsUrl")));
+		}
+		return defMdfs; 
 	}
 
 	//---------------------------------------------------------------------------
@@ -122,8 +133,8 @@ public class ListMetadataFormats implements OaiPmhService
 	//---
 	//---------------------------------------------------------------------------
 
-	private static final String OAI_PATH    = "xml/validation/oai/dc/oai_dc.xsd";
 	private static final String SCHEMA_PATH = "xml/schemas/";
+	private static final String DEFAULT_SCHEMAS_FILE = "xml/validation/oai/schemas.xml";
 }
 
 //=============================================================================

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemas>
+	<!-- oai_dc is Mandatory - converter oai_dc.xsl exists for each schema in
+	     web/geonetwork/xml/schemas/*/convert directory -->
+	<schema prefix="oai_dc" nsUrl="http://www.openarchives.org/OAI/2.0/" schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc.xsd"/>
+	<!-- Optional -->
+	<!-- example of adding a schema to ListMetadataFormats OAI response - this 
+	     schema is supported by a converter (rifcs.xsl) in 
+	     convert directory of any/all GeoNetwork schemas -->
+	<!--
+	<schema prefix="rifcs" nsUrl="http://ands.org.au/standards/rif-cs/registryObjects" schemaLocation="http://services.ands.org.au/home/orca/schemata/registryObjects.xsd"/>
+	-->
+</schemas>

@@ -88,10 +88,8 @@ public abstract class AbstractRequest
 		if (!Lib.isRootValid(response))
 			throw new Exception("Response is not in OAI-PMH format");
 
-		//--- if a schema is provided, validate the result
-
-		if (schemaPath != null)
-			Xml.validate(schemaPath.getAbsolutePath(), response);
+		//--- validate the result
+		Xml.validate(response);
 
 		//--- raises an exception if the case
 		OaiPmhException.unmarshal(response);

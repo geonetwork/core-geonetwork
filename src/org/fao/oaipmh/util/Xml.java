@@ -32,12 +32,19 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
+import javax.xml.validation.ValidatorHandler;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.jdom.output.SAXOutputter;
 import org.jdom.transform.JDOMSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+
+import org.w3c.dom.ls.LSResourceResolver;
+import org.w3c.dom.ls.LSInput;
 
 //=============================================================================
 
@@ -84,13 +91,15 @@ public class Xml
 
 	//---------------------------------------------------------------------------
 
-	public static void validate(String schemaPath, Element xml) throws IOException, SAXException
+	public static void validate(Element xml) throws IOException, SAXException, JDOMException
 	{
-		Source    schemaFile = new StreamSource(new File(schemaPath));
-		Schema    schema     = factory.newSchema(schemaFile);
-		Validator validator  = schema.newValidator();
+		//NOTE: Create a schema object without schema file name so that schemas
+		//will be obtained from whatever locations are provided in the document
 
-		validator.validate(new JDOMSource(xml));
+		Schema    schema     = factory.newSchema();
+		ValidatorHandler vh = schema.newValidatorHandler();
+		so = new SAXOutputter(vh);
+		so.output(xml);
 	}
 
 	//---------------------------------------------------------------------------
@@ -100,6 +109,8 @@ public class Xml
 	//---------------------------------------------------------------------------
 
 	private static SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+	private static SAXOutputter so;
+
 }
 
 //=============================================================================

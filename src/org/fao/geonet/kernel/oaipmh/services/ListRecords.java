@@ -169,18 +169,16 @@ public class ListRecords implements OaiPmhService
 
 		//--- try to disseminate format
 
-		if (prefix.equals(schema))
-		{
+		if (prefix.equals(schema)) {
 			String schemaUrl = Lib.getSchemaUrl(context, "xml/schemas/" + schema + "/schema.xsd");
 			String schemaLoc = md.getNamespace().getURI() +" "+ schemaUrl;
 			md.setAttribute("schemaLocation", schemaLoc, OaiPmh.Namespaces.XSI);
-		}
-		else
-		{
-			if (!prefix.equals("oai_dc"))
+		} else {
+			if (Lib.existsConverter(schema, context.getAppPath(), prefix)) {
+				md = Lib.transform(schema, md, uuid, changeDate, context.getAppPath(), prefix);
+			} else {
 				return null;
-
-			md = Lib.toOaiDC(schema, md, uuid, changeDate, context.getAppPath());
+			}
 		}
 
 		//--- build header and set some infos
