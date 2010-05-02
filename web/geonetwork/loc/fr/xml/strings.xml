@@ -10,6 +10,10 @@
 	<ru>Русский</ru> <!-- Do not translate! -->
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
 
+	<!-- new strings - SP 2.5 -->
+	<showRemoteHTML>Show HTML from remote server</showRemoteHTML>
+	<!-- end new strings -->
+
 	<createChild>Créer un enfant</createChild>
 	<updateChildren>Mettre à jour les enfants</updateChildren>
 	<updateChildrenOk>Enfants mis à jour</updateChildrenOk>

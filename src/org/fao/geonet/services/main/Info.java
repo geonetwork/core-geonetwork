@@ -29,6 +29,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -36,10 +38,16 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.MetaSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.util.z3950.RepositoryInfo;
+
 import org.jdom.Element;
 
 //=============================================================================
@@ -47,6 +55,9 @@ import org.jdom.Element;
 public class Info implements Service
 {
 	private String xslPath;
+	private String xmlPath;
+	private String otherSheets;
+	private ServiceConfig _config;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -57,6 +68,9 @@ public class Info implements Service
 	public void init(String appPath, ServiceConfig config) throws Exception
 	{
 		xslPath = appPath + Geonet.Path.STYLESHEETS+ "/xml";
+		otherSheets = appPath + Geonet.Path.STYLESHEETS;
+		xmlPath = appPath + Geonet.Path.XML;
+		_config = config;
 	}
 
 	//--------------------------------------------------------------------------
@@ -65,12 +79,22 @@ public class Info implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element exec(Element inParams, ServiceContext context) throws Exception
 	{
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getSettingManager();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+		Element params = (Element)inParams.clone();
+
+		// --- if we have a parameter specified in the config then use it instead
+		// --- of the usual params 
+		String ptype = _config.getValue("type");
+		if (ptype != null) {
+			params.removeContent();
+			params.addContent(new Element("type").setText(ptype));
+		}
 
 		Element result = new Element("root");
 
@@ -104,6 +128,12 @@ public class Info implements Service
 
 			else if (type.equals("users"))
 				result.addContent(getUsers(context, dbms));
+
+			else if (type.equals("templates"))
+				result.addContent(getTemplates(context));
+
+			else if (type.equals("z3950repositories"))
+				result.addContent(getZRepositories(context));
 
 			else
 				throw new BadParameterEx("type", type);
@@ -166,6 +196,125 @@ public class Info implements Service
 		}
 
 		return sources;
+	}
+
+	//--------------------------------------------------------------------------
+	//--- ZRepositories
+	//--------------------------------------------------------------------------
+
+	private Element getZRepositories(ServiceContext context) throws Exception
+	{
+
+		List<RepositoryInfo> list = new ArrayList<RepositoryInfo>(RepositoryInfo.getRepositories(context));
+
+		Element response = new Element("z3950repositories");
+
+		for (int i=0; i<list.size(); i++) {
+			RepositoryInfo repo = list.get(i);
+			response.addContent(buildRecord(repo.getDn(),repo.getName(),repo.getCode()));
+		}
+
+		return response;
+	}
+
+	//--------------------------------------------------------------------------
+	//--- Templates
+	//--------------------------------------------------------------------------
+
+	private Element getTemplates(ServiceContext context) throws Exception
+	{
+		String styleSheet = otherSheets +"/portal-present.xsl";
+		Element result = search(context).setName(Jeeves.Elem.RESPONSE);
+		Element root   = new Element("root");
+
+		root.addContent(result);
+
+		List list = Xml.transform(root, styleSheet).getChildren();
+
+		Element response = new Element("templates");
+
+		for(int i=0; i<list.size(); i++)
+		{
+			Element elem = (Element) list.get(i);
+			Element info = elem.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+
+			if (!elem.getName().equals("metadata"))
+				continue;
+
+			String id       = info.getChildText(Edit.Info.Elem.ID);
+			String template = info.getChildText(Edit.Info.Elem.IS_TEMPLATE);
+
+			if (template.equals("y"))
+				response.addContent(buildRecord(id, elem.getChildText("title")));
+		}
+
+		return response;
+	}
+
+	//--------------------------------------------------------------------------
+
+	private Element search(ServiceContext context) throws Exception
+	{
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+
+		context.info("Creating searcher");
+
+		Element       params = buildParams();
+		ServiceConfig config = new ServiceConfig();
+
+		SearchManager searchMan = gc.getSearchmanager();
+		MetaSearcher  searcher  = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+
+		searcher.search(context, params, config);
+
+		params.addContent(new Element("from").setText("1"));
+		params.addContent(new Element("to").setText(searcher.getSize() +""));
+
+		Element result = searcher.present(context, params, config);
+
+		searcher.close();
+
+		return result;
+	}
+
+	//--------------------------------------------------------------------------
+
+	private Element buildParams()
+	{
+		Element params = new Element(Jeeves.Elem.REQUEST);
+		String arParams[] = {
+			"extended", "off",
+			"remote",   "off",
+			"attrset",  "geo",
+			"template", "y",
+			"any",      "",
+		};
+
+		for(int i=0; i<arParams.length/2; i++)
+			params.addContent(new Element(arParams[i*2]).setText(arParams[i*2 +1]));
+
+		return params;
+	}
+
+	//--------------------------------------------------------------------------
+
+	private Element buildRecord(String id, String name)
+	{
+		return buildRecord(id, name, null);
+	}
+
+	//--------------------------------------------------------------------------
+
+	private Element buildRecord(String id, String name, String code)
+	{
+		Element el = new Element("record");
+
+		Element idE = new Element("id").setText(id);
+		if (code != null) idE.setAttribute("code", code);
+		el.addContent(idE);
+		el.addContent(new Element("name").setText(name));
+
+		return el;
 	}
 
 	//--------------------------------------------------------------------------

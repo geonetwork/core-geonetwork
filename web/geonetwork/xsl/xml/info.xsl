@@ -32,6 +32,7 @@
 	<xsl:template match="categories">
 		<xsl:copy>
 			<xsl:for-each select="record">
+				<xsl:sort select="name" order="ascending"/>
 				<category id="{id}">
 					<xsl:copy-of select="name"/>
 					<xsl:copy-of select="label"/>
@@ -42,9 +43,26 @@
 
 	<!-- ============================================================================================= -->
 
+	<xsl:template match="z3950repositories">
+		<xsl:copy>
+			<xsl:for-each select="record">
+				<xsl:sort select="name" order="ascending"/>
+				<repository id="{id}">
+					<xsl:copy-of select="id"/>
+					<label>
+						<xsl:value-of select="name"/>
+					</label>
+				</repository>
+			</xsl:for-each>
+		</xsl:copy>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
 	<xsl:template match="groups">
 		<xsl:copy>
 			<xsl:for-each select="record">
+				<xsl:sort select="name" order="ascending"/>
 				<group id="{id}">
 					<xsl:copy-of select="name"/>
 					<xsl:copy-of select="description"/>
@@ -90,6 +108,22 @@
 
 	<xsl:template match="sources">
 		<xsl:copy-of select="."/>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template match="templates">
+		<xsl:copy>
+			<xsl:for-each select="record">
+				<xsl:sort select="name" order="ascending"/>
+				<template id="{id}">
+					<xsl:copy-of select="id"/>
+					<title>
+						<xsl:value-of select="name"/>
+					</title>
+				</template>
+			</xsl:for-each>
+		</xsl:copy>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->

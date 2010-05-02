@@ -1,0 +1,215 @@
+# Default OID Configuration file
+#
+# $Id: oidreg.default,v 1.1.1.1 2004/06/18 06:38:12 ibbo Exp $
+#
+
+# Attribute Set OID's
+
+# Bib-1 Attribute Set
+oid.bib-1={1,2,840,10003,3,1}
+
+# Explain Attribute Set
+oid.exp-1={1,2,840,10003,3,2}
+
+oid.ext-1={1,2,840,10003,3,3}
+
+oid.ccl={1,2,840,10003,3,4}
+
+oid.gils_attrset={1,2,840,10003,3,5}
+
+oid.stas={1,2,840,10003,3,6}
+
+oid.collect1={1,2,840,10003,3,7}
+
+oid.cimi={1,2,840,10003,3,8}
+
+oid.geo={1,2,840,10003,3,9}
+
+oid.zbig={1,2,840,10003,3,10}
+
+oid.util={1,2,840,10003,3,11}
+
+oid.xd1={1,2,840,10003,3,12}
+name.xd1=Cross Domain Attribute Set
+
+oid.zthes={1,2,840,10003,3,13}
+name.zthes=Thesaurus Attribute Set
+
+oid.holdings={1,2,840,10003,3,16}
+name.holdings=Holdings Attribute Set
+
+
+# Record Syntax OID's
+
+oid.unimarc={1,2,840,10003,5,1}
+name.unimarc=UNIMarc Record
+
+oid.usmarc={1,2,840,10003,5,10}
+name.usmarc=US Marc Record
+
+oid.marc21={1,2,840,10003,5,10}
+name.marc21=Marc21 Record
+
+oid.ukmarc={1,2,840,10003,5,11}
+name.ukmark=UK Marc Record
+
+oid.normarc={1,2,840,10003,5,12}
+name.normarc=NorMarc Record
+
+oid.librismarc={1,2,840,10003,5,13}
+name.librismarc=LibrisMarc Record
+
+oid.danmarc={1,2,840,10003,5,14}
+
+oid.finmarc={1,2,840,10003,5,15}
+
+oid.canmarc={1,2,840,10003,5,17}
+
+oid.ausmarc={1,2,840,10003,5,20}
+
+oid.ibermarc={1,2,840,10003,5,21}
+name.ibermarc=IberMarc Record
+
+oid.catmarc={1,2,840,10003,5,22}
+name.catmarc=CatMarc Record
+
+oid.explain={1,2,840,10003,5,100}
+name.explain=Explain Record
+# codec.explain=com.k_int.IR.provider.z3950.gen.RecordSyntax_explain.Explain_Record_codec
+
+oid.sutrs={1,2,840,10003,5,101}
+name.sutrs=Simple Unstructured Text Record
+# codec.sutrs=com.k_int.IR.provider.z3950.gen.RecordSyntax_SUTRS.SutrsRecord_codec
+
+oid.opac={1,2,840,10003,5,102}
+name.opac=Opac Record
+# codec.opac=com.k_int.IR.provider.z3950.gen.RecordSyntax_opac.OPACRecord_codec
+
+oid.summary={1,2,840,10003,5,103}
+name.summary=Summary Record
+# codec.summary=com.k_int.IR.provider.z3950.gen.RecordSyntax_summary.BriefBib_codec
+
+oid.grs-1={1,2,840,10003,5,105}
+name.grs-1=Generic Record
+# codec.grs-1=com.k_int.IR.provider.z3950.gen.RecordSyntax_generic.GenericRecord_codec
+
+oid.pdf={1,2,840,10003,5,109,1}
+name.pdf=PDF Document
+
+oid.postscript={1,2,840,10003,5,109,2}
+name.postscript=Postscript Document
+
+oid.html={1,2,840,10003,5,109,3}
+name.html=HTML data
+
+oid.sgml={1,2,840,10003,5,109,9}
+name.sgml=SGML data
+
+oid.xml={1,2,840,10003,5,109,10}
+name.xml=XML data
+
+# Diagnostic Set OID's
+
+oid.diag-bib-1={1,2,840,10003,4,1}
+name.diag-bib-1=Bib1 Diagnostic Set
+
+oid.diag-1={1,2,840,10003,4,2}
+name.diag-1=Diag1 Diagnostic Set
+# codec.diag-1=com.k_int.IR.provider.z3950.gen.DiagnosticFormatDiag1.DiagnosticFormat_codec
+
+# Schema OID's
+
+oid.wais_schema={1,2,840,10003,13,1}
+name.wais_schema=WAIS Record Schema
+
+oid.gils_schema={1,2,840,10003,13,2}
+name.gils_schema=GILS Record Schema
+
+oid.collections_schema={1,2,840,10003,13,3}
+name.collections_schema=GILS Record Schema
+
+oid.geo_schema={1,2,840,10003,13,4}
+name.geo_schema=GEO Record Schema
+
+oid.cimi_schema={1,2,840,10003,13,5}
+name.cimi_schema=CIMI Record Schema
+
+oid.update_schema={1,2,840,10003,13,6}
+name.update_schema=CIMI Record Schema
+
+oid.holdings_schema={1,2,840,10003,13,7}
+name.holdings_schema=Holdings Record Schema
+
+oid.zthes_schema={1,2,840,10003,13,8}
+name.zthes_schema=Zthes Record Schema
+
+oid.z_charset_neg_3={1,2,840,10003,15,3}
+name.z_charset_neg_3=Z39.50-Character-Set-Negotiation-3
+# codec.z_charset_neg_3=com.k_int.IR.provider.z3950.gen.NegotiationRecordDefinition_charSetandLanguageNegotiation_3.CharSetandLanguageNegotiation_codec
+
+oid.charset_ucs2={1,0,10646,1,0,2}
+name.charset_ucs2=UCS-2
+
+oid.charset_ucs4={1,0,10646,1,0,4}
+name.charset_ucs4=UCS-4
+
+oid.charset_utf16={1,0,10646,1,0,5}
+name.charset_utf16=UTF-16
+
+oid.charset_utf8={1,0,10646,1,0,8}
+name.charset_utf8=UTF-8
+
+oid.es_persistent_result_set={1,2,840,10003,9,1}
+name.es_persistent_result_set=Persistent Result Set Extended Service
+
+oid.es_persistent_query={1,2,840,10003,9,2}
+name.es_persistent_query=Persistent Query Extended Service
+
+oid.es_periodic_query_schedule={1,2,840,10003,9,3}
+name.es_periodic_query_schedule=Periodic Query Schedule Extended Service
+
+oid.es_item_order={1,2,840,10003,9,4}
+name.es_item_order=Item Order Extended Service
+
+oid.es_database_update={1,2,840,10003,9,5}
+name.es_database_update=Database Update
+# codec.es_database_update=com.k_int.IR.provider.z3950.gen.ESFormat_Update0.Update_codec
+
+oid.es_database_update_r1={1,2,840,10003,9,5,1,1}
+name.es_database_update_r1=Database Update Revision 1
+# codec.es_database_update_r1=com.k_int.IR.provider.z3950.gen.ESFormat_Update.Update_codec
+
+oid.es_export_specification={1,2,840,10003,9,6}
+name.es_export_specification=Export Specification
+
+oid.es_export_invocation={1,2,840,10003,9,6}
+name.es_export_invocation=Export Invocation
+
+# ISO ILL Externals
+oid.ILL_OCLC_PRISM_Error={1,0,10161,13,1}
+name.ILL_OCLC_PRISM_Error=OCLC Prism Error Extension
+
+oid.ILL_OCLC_Request={1,0,10161,13,2}
+name.ILL_OCLC_Request=OCLC Request Extension
+
+oid.ILL_APDU_Delivery_Info={1,0,10161,13,3}
+name.ILL_APDU_Delivery_Info=ILL APDU Delivery Info
+# codec.ILL_APDU_Delivery_Info=com.k_int.OpenRequest.isoill.gen.ILL_APDU_Delivery_Info.APDU_Delivery_Info_codec
+
+oid.ILL_Supplemental_Client_Info={1,0,10161,13,4}
+name.ILL_Supplemental_Client_Info=ILL Supplemental Client Info
+
+oid.ILL_Forwarded_Additional_Info={1,0,10161,13,5}
+name.ILL_Forwarded_Additional_Info=ILL Forwarded Additional Info
+
+oid.IPIG_Additional_User_Error_Info={1,0,10161,13,6}
+name.IPIG_Additional_User_Error_Info=IPIG Additional User Error Information
+
+oid.ILL_Suppliers_Reference={1,0,10161,13,7}
+name.ILL_Suppliers_Reference=ILL Suppliers Reference
+
+oid.ILL_Internal_Reference_Number={1,0,10161,13,8}
+name.ILL_Internal_Reference_Number=ILL Internal Reference Number
+
+oid.IPIG_ILL_Request_Extension={1,0,10161,13,9}
+name.IPIG_ILL_Request_Extension=IPIG ILL Request Extension

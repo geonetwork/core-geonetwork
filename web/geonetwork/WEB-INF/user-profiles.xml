@@ -352,7 +352,10 @@
 		<allow service="crs.search"/>
 		<allow service="crs.types"/>
 		<allow service="crs.get"/>
-		
+
+		<!-- SRU (Z3950) portal search service -->
+		<allow service="portal.sru"/>
+
 		<!-- Test CSW ISO server -->
 		<allow service="test.csw"/>
 

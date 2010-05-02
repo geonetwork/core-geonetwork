@@ -1,0 +1,10 @@
+<profile id="1" code="bath" profileName="BATH Profile">
+  <Or>
+    <And>
+      <Regexp type="AccessPoint">bib-1\.1\..*</Regexp> <!-- Any bib-1 USE attribute -->
+    </And>
+    <And>
+      <Regexp type="AccessPoint">bib-1\.2\..*</Regexp> <!-- Any bib-1 RELATION attribute -->
+    </And>
+  </Or>
+</profile>

@@ -211,7 +211,7 @@ public class Xml
 	{
 		File styleSheet = new File(styleSheetPath);
 		Source srcXml   = new JDOMSource(new Document((Element)xml.detach()));
-		Source srcSheet = new StreamSource(styleSheet);
+		Source srcSheet = new StreamSource(styleSheet.toURI().toASCIIString());
 
 		// Dear old saxon likes to yell loudly about each and every XSLT 1.0
 		// stylesheet so switch it off but trap any exceptions because this
@@ -265,7 +265,7 @@ public class Xml
 
    // Step 4: Setup JAXP using identity transformer
    TransformerFactory factory = TransformerFactory.newInstance();
-   Source xslt = new StreamSource(new File(styleSheetPath));
+   Source xslt = new StreamSource(new File(styleSheetPath).toURI().toASCIIString());
 		try {
 			factory.setAttribute(FeatureKeys.VERSION_WARNING,false);
 			factory.setAttribute(FeatureKeys.LINE_NUMBERING,true);

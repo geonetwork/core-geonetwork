@@ -114,6 +114,7 @@ public class Geonet
 		public static final String CONV_STYLESHEETS   = STYLESHEETS + "/conversion";
 		public static final String IMPORT_STYLESHEETS = CONV_STYLESHEETS + "/import";
 		public static final String LOGOS              = "/images/logos/";
+		public static final String XML                = Jeeves.Path.XML;
 	}
 
 	//--------------------------------------------------------------------------
@@ -331,6 +332,14 @@ public class Geonet
         /** Parameter name: {@value #UUID} - Text field that search 
          * for specific uuid given */
         public static final String UUID = "uuid";
+		/**
+			* Attrset used in Z39.50 search
+			*/
+				public static final String ATTRSET = "attrset";
+		/** Parameter name: {@value #ZQUERY} - A Z3950 query as specified in the 
+		  * Z3950 harvester */
+				public static final String ZQUERY	= "zquery";
+
 
 		public static final String RESULT_TYPE = "resultType";
 
@@ -408,10 +417,11 @@ public class Geonet
 		public static final String SCHEMA_MAPPINGS  = "schemaMappings";
 		public static final String LICENSE_DIR      = "licenseDir";
 		public static final String DATA_DIR         = "dataDir";
-		public static final String CODELIST_DIR  	= "codeListDir";
+		public static final String CODELIST_DIR  	  = "codeListDir";
 		public static final String DIR              = "dir";
 		public static final String SUMMARY_CONFIG   = "summaryConfig";
-        public static final String GUI_CONFIG       = "guiConfig";
+		public static final String GUI_CONFIG       = "guiConfig";
+		public static final String JZKITCONFIG      = "jzkitConfig";
         
 	}
 
@@ -459,6 +469,8 @@ public class Geonet
 	public static final String EDITOREXPANDELEMENT = GEONETWORK + ".editorexpandelement";
 	public static final String SPATIAL      = GEONETWORK + ".spatial";
 	public static final String CSW_SEARCH   = CSW + ".search";
+	public static final String SRU          = GEONETWORK + ".sru";
+	public static final String SRU_SEARCH   = SRU + ".search";
 	
 	//--------------------------------------------------------------------------
 	//--- services

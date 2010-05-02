@@ -1,0 +1,120 @@
+<Crosswalk scope="Global" sourceNamespace="geo">
+
+
+<!-- attributes  -->
+
+<SourceAttr sourceAttrValue="any">
+    <MapsTo targetNamespace="geo">1.1016</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="anywhere">
+    <MapsTo targetNamespace="geo">1.1016</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="serverChoice">
+    <MapsTo targetNamespace="geo">1.1016</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="id">
+    <MapsTo targetNamespace="geo">1.12</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="identifier">
+    <MapsTo targetNamespace="geo">1.12</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="title">
+    <MapsTo targetNamespace="geo">1.4</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="author">
+    <MapsTo targetNamespace="geo">1.1003</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="creator">
+    <MapsTo targetNamespace="geo">1.1003</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="origin">
+    <MapsTo targetNamespace="geo">1.1003</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="abstract">
+    <MapsTo targetNamespace="geo">1.62</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="description">
+    <MapsTo targetNamespace="geo">1.62</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="keywords">
+    <MapsTo targetNamespace="geo">1.21</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="subject">
+    <MapsTo targetNamespace="geo">1.29</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="themekeyword">
+    <MapsTo targetNamespace="geo">1.2002</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="theme">
+    <MapsTo targetNamespace="geo">1.3122</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="creationdate">
+    <MapsTo targetNamespace="geo">1.30</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="publicationdate">
+    <MapsTo targetNamespace="geo">1.31</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="modificationdate">
+    <MapsTo targetNamespace="geo">1.1012</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="begdate">
+    <MapsTo targetNamespace="geo">1.2072</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="beginningdate">
+    <MapsTo targetNamespace="geo">1.2072</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="enddate">
+    <MapsTo targetNamespace="geo">1.2073</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="endingDate">
+    <MapsTo targetNamespace="geo">1.2073</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="spatialdomain">
+    <MapsTo targetNamespace="geo">1.2059</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="bounds">
+    <MapsTo targetNamespace="geo">1.2060</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="placekeyword">
+    <MapsTo targetNamespace="geo">1.2042</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="place">
+    <MapsTo targetNamespace="geo">1.2061</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="directspatialreferencemethod">
+    <MapsTo targetNamespace="geo">1.3302</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="type">
+    <MapsTo targetNamespace="geo">1.1031</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="type">
+    <MapsTo targetNamespace="geo">1.1031</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="format">
+    <MapsTo targetNamespace="geo">1.1034</MapsTo>
+  </SourceAttr>
+
+ <!--  structures. Mapping does not yet work -->
+
+  <SourceAttr sourceAttrValue="*">
+    <MapsTo targetNamespace="geo">4.1</MapsTo>
+  </SourceAttr>
+    <SourceAttr sourceAttrValue="any">
+    <MapsTo targetNamespace="geo">4.2</MapsTo>
+  </SourceAttr>
+    <SourceAttr sourceAttrValue="exact">
+    <MapsTo targetNamespace="geo">4.108</MapsTo>
+  </SourceAttr>
+    <SourceAttr sourceAttrValue="coordinate">
+    <MapsTo targetNamespace="geo">4.108</MapsTo>
+  </SourceAttr>
+    <SourceAttr sourceAttrValue="nwse">
+    <MapsTo targetNamespace="geo">4.201</MapsTo>
+  </SourceAttr>
+    <SourceAttr sourceAttrValue="date">
+    <MapsTo targetNamespace="geo">4.210</MapsTo>
+  </SourceAttr>
+    <SourceAttr sourceAttrValue="isodate">
+    <MapsTo targetNamespace="geo">4.210</MapsTo>
+  </SourceAttr>
+</Crosswalk>

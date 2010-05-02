@@ -121,8 +121,8 @@
 
 	<appHandler class="org.fao.geonet.Geonetwork">
 		<param name="luceneDir" value="WEB-INF/lucene" />
-		<param name="htmlCacheDir" value="schematronCache" />
-		<param name="schemaMappings" value="schema-mappings.xml" />
+		<!-- this must be a directory in web/geonetwork because html is served -->
+		<param name="htmlCacheDir" value="htmlCache" />
 		<param name="dataDir" value="../../data" />
 		<param name="licenseDir" value="WEB-INF/licenses" />
 		<param name="thesauriDir" value="WEB-INF/gsthesauri" />
@@ -139,6 +139,7 @@
 			ISO profil.
 		-->
 		<param name="preferredSchema" value="iso19139" />
+		<param name="jzkitConfig" value="JZkitApplicationContext.xml" />
 	</appHandler>
 
 	<!-- ====================================================================== -->
@@ -175,7 +176,6 @@
 					<param name="westBL" value="-180" />
 				</call>
 
-				<xml name="repositories" file="xml/repositories.xml" localized="false" />
 				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
 			</output>
 		</service>
@@ -203,6 +203,8 @@
  			<output forward="main.present.embedded" />
  		</service>
 
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="main.present.embedded">
  			<class name=".services.main.Result">
  				<param name="maxRecords" value="10" />
@@ -215,7 +217,9 @@
  				<call name="sources" class=".guiservices.util.Sources" />
  				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="config" class=".services.config.Get" />
- 				<xml name="repositories" file="xml/repositories.xml" localized="false" />
+				<call name="repositories" class=".services.main.Info">
+					<param name="type" value="z3950repositories"/>
+				</call>
  			</output>
 
  		</service>
@@ -231,8 +235,9 @@
 				<call name="categories" class=".services.category.List" />
 				<call name="regions" class=".guiservices.regions.Get" />
 				<call name="sources" class=".guiservices.util.Sources" />
-
-				<xml name="repositories" file="xml/repositories.xml" localized="false" />
+				<call name="repositories" class=".services.main.Info">
+					<param name="type" value="z3950repositories"/>
+				</call>
 				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
 			</output>
 		</service>
@@ -248,8 +253,9 @@
 				<call name="categories" class=".services.category.List" />
 				<call name="regions" class=".guiservices.regions.Get" />
 				<call name="sources" class=".guiservices.util.Sources" />
-
-				<xml name="repositories" file="xml/repositories.xml" localized="false" />
+				<call name="repositories" class=".services.main.Info">
+					<param name="type" value="z3950repositories"/>
+				</call>
 				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
 			</output>
 		</service>
@@ -273,7 +279,9 @@
 				<call name="groups" class=".guiservices.groups.GetMine" />
 				<call name="sources" class=".guiservices.util.Sources" />
 				<call name="services" class="jeeves.guiservices.services.Get" />
-				<xml name="repositories" file="xml/repositories.xml" localized="false" />
+				<call name="repositories" class=".services.main.Info">
+					<param name="type" value="z3950repositories"/>
+				</call>
 			</output>
 		</service>
 
@@ -287,7 +295,9 @@
 			<output sheet="remote-show.xsl">
 				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
-				<xml name="repositories" file="xml/repositories.xml" localized="false" />
+				<call name="repositories" class=".services.main.Info">
+					<param name="type" value="z3950repositories"/>
+				</call>
 			</output>
 		</service>
 
@@ -1099,6 +1109,7 @@
 	<include>config-export.xml</include>
 	<include>config-test.xml</include>
 	<include>config-csw.xml</include>
+	<include>config-sru.xml</include>
 
 	<!-- ====================================================================== -->
 

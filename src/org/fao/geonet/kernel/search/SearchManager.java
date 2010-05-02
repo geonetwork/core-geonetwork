@@ -47,6 +47,7 @@ import javax.naming.InitialContext;
 
 import jeeves.exceptions.JeevesException;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -67,6 +68,7 @@ import org.apache.lucene.index.TermEnum;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.store.Directory;
 
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.csw.common.Csw;
@@ -85,8 +87,8 @@ import org.fao.geonet.kernel.search.spatial.TouchesFilter;
 import org.fao.geonet.kernel.search.spatial.WithinFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
-
 import org.fao.geonet.util.spring.StringUtils;
+
 import org.geotools.data.DataStore;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureSource;
@@ -97,11 +99,7 @@ import org.geotools.xml.Parser;
 
 import org.jdom.Element;
 
-import com.k_int.IR.Searchable;
-import com.k_int.hss.HeterogeneousSetOfSearchable;
-import com.k_int.util.LoggingFacade.LogContextFactory;
-import com.k_int.util.LoggingFacade.LoggingContext;
-import com.k_int.util.Repository.CollectionDirectory;
+import org.jzkit.search.provider.iface.Searchable;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
@@ -126,7 +124,7 @@ public class SearchManager
 	private final Element  _summaryConfig;
 	private File           _luceneDir;
 	private PerFieldAnalyzerWrapper _analyzer;
-	private LoggingContext _cat;
+	private String         _htmlCacheDir;
 	private String         _dataDir;
 	private Searchable     _hssSearchable;
 	private Spatial        _spatial;
@@ -150,17 +148,23 @@ public class SearchManager
 	 * @param dataStore
 	 * @throws Exception
 	 */
-	public SearchManager(String appPath, String luceneDir, String dataDir, String summaryConfigXmlFile,  String guiConfigXmlFile, DataStore dataStore, String optimizerInterval, SettingInfo si) throws Exception
+	public SearchManager(String appPath, String luceneDir, String htmlCacheDir, String dataDir, String summaryConfigXmlFile,  String guiConfigXmlFile, DataStore dataStore, SettingInfo si) throws Exception
 	{
 		_summaryConfig = Xml.loadStream(new FileInputStream(new File(appPath,summaryConfigXmlFile)));
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
 		_schemasDir     = new File(appPath, SCHEMA_STYLESHEETS_DIR_PATH);
-		_dataDir        = dataDir;
 
         checkInspireConfig(appPath, guiConfigXmlFile);
 
 		if (!_stylesheetsDir.isDirectory())
 			throw new Exception("directory " + _stylesheetsDir + " not found");
+
+		File htmlCacheDirTest   = new File(appPath, htmlCacheDir);
+		if (!htmlCacheDirTest.isDirectory())
+			throw new IllegalArgumentException("directory " + htmlCacheDir + " not found");
+		_htmlCacheDir = htmlCacheDir;
+		_dataDir        = dataDir;
+
 		
 		_luceneDir = new File(luceneDir+ "/nonspatial");
 		
@@ -331,62 +335,21 @@ public class SearchManager
 	 * @param appPath
 	 * @throws Exception
 	 */
-	private void initZ3950(String appPath)
-		throws Exception
-	{
-		try
-		{
-			_cat = LogContextFactory.getContext("GeoNetwork"); // FIXME: maybe
-																// it should use
-																// the webapp
-																// path
-
-			String configClass = "com.k_int.util.Repository.XMLDataSource";
-			String configUrl = "file:///" + appPath
-					+ jeeves.constants.Jeeves.Path.XML + "/repositories.xml";
-			String directoryNamingLocation = "/Services/IR/Directory"; // RGFIX:
-																		// change
-																		// to
-																		// use
-																		// servlet
-																		// context
-
-			Properties props = new Properties();
-			props.setProperty("CollectionDataSourceClassName", configClass);
-			props.setProperty("RepositoryDataSourceURL", configUrl);
-			props.setProperty("DirectoryServiceName", directoryNamingLocation); // RGFIX:
-																				// check
-																				// this
-			// set up the collection directory and register it with the naming
-			// service in the
-			// default way
-			// RGFIX: this could not work for different servlet instances,
-			// should be changed to use servlet context
-			CollectionDirectory cd = new CollectionDirectory(configClass,
-					configUrl);
-			Context context = new InitialContext();
-			Context services_context = context.createSubcontext("Services");
-			Context ir_context = services_context.createSubcontext("IR");
-			ir_context.bind("Directory", cd);
-
-			// pull in the repository
-			_hssSearchable = new HeterogeneousSetOfSearchable();
-			_hssSearchable.init(props);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
+	private void initZ3950(String appPath) {}
 
 	/**
 	 * deinitializes the Z3950 client searcher
 	 */
 	private void endZ3950() {
 		if (_hssSearchable != null) {
-			_hssSearchable.destroy();
-			_hssSearchable = null;
+			// nothing ??
 		}
+	}
+	
+	//-----------------------------------------------------------------------------
+
+	public String getHtmlCacheDir() {
+		return _htmlCacheDir;
 	}
 
 	//--------------------------------------------------------------------------------
@@ -874,7 +837,8 @@ public class SearchManager
                 try {
           				_writer.reset();
 								} catch (Exception e1) {
-          				Log.error(Geonet.SPATIAL, "Unable to call reset on Spatial writer");
+          				Log.error(Geonet.SPATIAL, "Unable to call reset on Spatial writer: "+e1.getMessage());
+									e1.printStackTrace();
         				}
                 rebuildIndex = true;
             }
@@ -892,7 +856,8 @@ public class SearchManager
                     try {
                         _writer.close();
                     } catch (IOException e) {
-                        _cat.error("error writing spatial index", e);
+                        Log.error(Geonet.SPATIAL,"error writing spatial index: "+e.getMessage());
+												e.printStackTrace();
                     } finally {
                         _lock.unlock();
                     }
@@ -980,7 +945,7 @@ public class SearchManager
                         _committerTask = null;
                     }
                 } catch (IOException e) {
-                    _cat.error("error writing spatial index", e);
+                    Log.error(Geonet.SPATIAL, "error writing spatial index "+e.getMessage());
                 } finally {
                     _lock.unlock();
                 }

@@ -23,6 +23,8 @@
 
 package org.fao.geonet;
 
+import com.vividsolutions.jts.geom.MultiPolygon;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -50,6 +52,7 @@ import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
 
 import org.geotools.data.DataStore;
@@ -63,14 +66,14 @@ import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 
-import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import org.jdom.Element;
 
-import com.vividsolutions.jts.geom.MultiPolygon;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 //=============================================================================
 
@@ -140,25 +143,42 @@ public class Geonetwork implements ApplicationHandler
 		boolean z3950Enable    = settingMan.getValueAsBool("system/z3950/enable", false);
 		String  z3950port      = settingMan.getValue("system/z3950/port");
 		String  host           = settingMan.getValue("system/server/host");
-		String  schemaMappings = handlerConfig.getMandatoryValue(Geonet.Config.SCHEMA_MAPPINGS);
 
-		if (!z3950Enable)
-			logger.info("     disabled");
-		else
-		{
-			logger.info("     Enabled. Schema mappings is : " + schemaMappings);
+		// null means not initialized
+		ApplicationContext app_context = null;
 
-			UserSession session = new UserSession();
-			session.authenticate(null, "z39.50", "", "", "Guest");
-			context.setUserSession(session);
-			context.setIpAddress("127.0.0.1");
-			Server.init(host, z3950port, path, schemaMappings, context);
+		// build Z3950 repositories file first from template
+		if (Repositories.build(path, context)) {
+			logger.info("     Repositories file built from template.");
+
+			app_context = new  ClassPathXmlApplicationContext( handlerConfig.getMandatoryValue( Geonet.Config.JZKITCONFIG )   );
+
+			// to have access to the GN context in spring-managed objects
+			ContextContainer cc = (ContextContainer)app_context.getBean("ContextGateway");
+			cc.setSrvctx(context);
+
+			if (!z3950Enable)
+				logger.info("     Server is Disabled.");
+			else
+			{
+				logger.info("     Server is Enabled.");
+	
+				UserSession session = new UserSession();
+				session.authenticate(null, "z39.50", "", "", "Guest");
+				context.setUserSession(session);
+				context.setIpAddress("127.0.0.1");
+				Server.init(host, z3950port, path, context, app_context);
+			}
+		} else {
+			logger.error("     Repositories file builder FAILED - Z3950 server disabled and Z3950 client services (remote search, harvesting) may not work.");
 		}
 
 		//------------------------------------------------------------------------
 		//--- initialize search and editing
 
 		logger.info("  - Search...");
+
+		String htmlCacheDir = handlerConfig.getMandatoryValue(Geonet.Config.HTMLCACHE_DIR);
 
 		String luceneDir = path + handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_DIR);
 
@@ -168,8 +188,7 @@ public class Geonetwork implements ApplicationHandler
 
 		DataStore dataStore = createDataStore(context.getResourceManager().getProps(Geonet.Res.MAIN_DB), luceneDir);
 	
-		String optimizerInterval = settingMan.getValue("system/indexoptimizer/interval");
-		searchMan = new SearchManager(path, luceneDir, dataDir, summaryConfigXmlFile, guiConfigXmlFile, dataStore, optimizerInterval, new SettingInfo(settingMan));
+		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, dataDir, summaryConfigXmlFile, guiConfigXmlFile, dataStore, new SettingInfo(settingMan));
 
 		//------------------------------------------------------------------------
 		//--- extract intranet ip/mask and initialize AccessManager
@@ -183,7 +202,6 @@ public class Geonetwork implements ApplicationHandler
 
 		logger.info("  - Data manager...");
 
-		String htmlCacheDir = handlerConfig.getMandatoryValue(Geonet.Config.HTMLCACHE_DIR);
 		File _htmlCacheDir = new File(htmlCacheDir);
 		if (!_htmlCacheDir.isAbsolute()) {
 			htmlCacheDir = path + htmlCacheDir;
@@ -246,6 +264,7 @@ public class Geonetwork implements ApplicationHandler
 		gnContext.harvestMan  = harvestMan;
 		gnContext.thesaurusMan= thesaurusMan;
 		gnContext.oaipmhDis   = oaipmhDis;
+		gnContext.app_context = app_context;
 
 		logger.info("Site ID is : " + gnContext.getSiteId());
 

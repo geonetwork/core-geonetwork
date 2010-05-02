@@ -79,6 +79,8 @@ public class Edit
 			public static final String SCORE       = "score";
 			public static final String CATEGORY    = "category";
 			public static final String SERVER      = "server";
+			public static final String COLLECTION  = "collection";
+			public static final String HTML        = "html";
 			public static final String IS_TEMPLATE = "isTemplate";
 			public static final String TITLE       = "title";
 			public static final String IS_HARVESTED= "isHarvested";
@@ -88,7 +90,7 @@ public class Edit
 			public static final String RATING      = "rating";
 			public static final String SELECTED    = "selected";
 			public static final String SUBTEMPLATES = "subtemplates";
-                        public static final String DISPLAY_ORDER      = "displayOrder";
+      public static final String DISPLAY_ORDER  = "displayOrder";
 
 			//--- privileges
 

@@ -32,6 +32,7 @@ import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.springframework.context.ApplicationContext;
 
 //=============================================================================
 
@@ -46,6 +47,7 @@ public class GeonetContext
 	/* package */ HarvestManager    harvestMan;
 	/* package */ ThesaurusManager  thesaurusMan;
 	/* package */ OaiPmhDispatcher  oaipmhDis;
+	/* package */ ApplicationContext app_context;
 
 	//---------------------------------------------------------------------------
 	/*package*/ GeonetContext() {}
@@ -60,6 +62,7 @@ public class GeonetContext
 	public HarvestManager    getHarvestManager()    { return harvestMan;   }
 	public ThesaurusManager  getThesaurusManager()  { return thesaurusMan; }
 	public OaiPmhDispatcher  getOaipmhDispatcher()  { return oaipmhDis;    }
+	public ApplicationContext  getApplicationContext() { return app_context; }
 
 	//---------------------------------------------------------------------------
 

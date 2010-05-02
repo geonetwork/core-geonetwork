@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-xmlns:exslt = "http://exslt.org/common" exclude-result-prefixes="exslt">
+xmlns:exslt= "http://exslt.org/common" exclude-result-prefixes="exslt">
 
 <xsl:import href="parser.xsl"/>
 <xsl:import href="lucene-utils.xsl"/>
 
 <xsl:variable name="opView"     select="'_op0'"/>
+<xsl:variable name="category"     select="'_cat'"/>
 
 <!--
 computes bounding box values
@@ -33,8 +34,15 @@ compiles a request
 
 		<!-- view privileges -->
 		<xsl:call-template name="orFields">
-			<xsl:with-param name="expr" select="/request/group"/>
+			<xsl:with-param name="expr" select="/request/mygroups"/>
 			<xsl:with-param name="field" select="$opView"/>
+		</xsl:call-template>
+
+		<!-- collection in z query is passed through to category search on local
+		     z server -->
+		<xsl:call-template name="orFields">
+			<xsl:with-param name="expr" select="/request/category"/>
+			<xsl:with-param name="field" select="$category"/>
 		</xsl:call-template>
 
 		<BooleanClause required="true" prohibited="false">
@@ -135,7 +143,7 @@ recursive compiler
 			</xsl:if>
 
 			<!-- description (same Z3950 attribute, different Lucene index) -->
-			<xsl:if test="$expr/@use='62'">
+			<xsl:if test="$expr/@use='62' or $expr/@use='3102'">
 				<xsl:call-template name="wordListTerm">
 					<xsl:with-param name="expr" select="$expr/text()"/>
 					<xsl:with-param name="field" select="'description'"/>
@@ -162,6 +170,76 @@ recursive compiler
 				</xsl:call-template>
 			</xsl:if>
 
+			<!-- publicationDate -->
+			<xsl:if test="$expr/@use='31'">
+				<xsl:call-template name="dateTerm">
+					<xsl:with-param name="date" select="$expr/text()"/>
+					<xsl:with-param name="field" select="'publicationDate'"/>
+					<xsl:with-param name="relation" select="$expr/@relation"/>
+					<xsl:with-param name="structure" select="$expr/@structure"/>
+				</xsl:call-template>
+			</xsl:if>
+                       
+			<!-- beginDate-->
+			<xsl:if test="$expr/@use='2072'">
+				<xsl:call-template name="dateTerm">
+					<xsl:with-param name="date" select="$expr/text()"/>
+					<xsl:with-param name="field" select="'tempExtentBegin'"/>
+					<xsl:with-param name="relation" select="$expr/@relation"/>
+					<xsl:with-param name="structure" select="$expr/@structure"/>
+				</xsl:call-template>
+			</xsl:if>
+                       
+			<!-- endingDate-->
+			<xsl:if test="$expr/@use='2073'">
+				<xsl:call-template name="dateTerm">
+					<xsl:with-param name="date" select="$expr/text()"/>
+					<xsl:with-param name="field" select="'tempExtentEnd'"/>
+					<xsl:with-param name="relation" select="$expr/@relation"/>
+					<xsl:with-param name="structure" select="$expr/@structure"/>
+				</xsl:call-template>
+			</xsl:if>
+
+			<!-- spatialDomain, spatialreferencemethod -->
+			<xsl:if test="$expr/@use='2059' or $expr/@use='3302'">
+				<xsl:call-template name="wordListTerm">
+					<xsl:with-param name="expr" select="$expr/text()"/>
+					<xsl:with-param name="field" select="'crs'"/>
+				</xsl:call-template>
+			</xsl:if>
+
+			<!-- placeKeyword, place-->
+			<xsl:if test="$expr/@use='2042' or $expr/@use='2061'">
+				<xsl:call-template name="wordListTerm">
+					<xsl:with-param name="expr" select="$expr/text()"/>
+					<xsl:with-param name="field" select="'geoDescCode'"/>
+				</xsl:call-template>
+			</xsl:if>
+                       
+			<!-- Type, ResourceType -->
+			<xsl:if test="$expr/@use='1031'">
+				<xsl:call-template name="wordListTerm">
+					<xsl:with-param name="expr" select="$expr/text()"/>
+					<xsl:with-param name="field" select="'keywordType'"/>
+				</xsl:call-template>
+			</xsl:if>
+                       
+			<!-- Author -->
+			<xsl:if test="$expr/@use='1003'">
+				<xsl:call-template name="wordListTerm">
+					<xsl:with-param name="expr" select="$expr/text()"/>
+					<xsl:with-param name="field" select="'orgName'"/>
+				</xsl:call-template>
+			</xsl:if>
+
+			<!-- format-->
+			<xsl:if test="$expr/@use='1034'">
+				<xsl:call-template name="wordListTerm">
+					<xsl:with-param name="expr" select="$expr/text()"/>
+					<xsl:with-param name="field" select="'format'"/>
+				</xsl:call-template>
+			</xsl:if>
+
 			<!-- fileId -->
 			<xsl:if test="$expr/@use='2012'">
 				<xsl:call-template name="wordListTerm">
@@ -181,7 +259,7 @@ recursive compiler
 			<!-- keyword (three equivalent Z3950 attributes, three different Lucene indexes) -->
 			<!-- subject (three equivalent Z3950 attributes, three different Lucene indexes) -->
 			<!-- topicCat (three equivalent Z3950 attributes, three different Lucene indexes) -->
-			<xsl:if test="$expr/@use='21' or $expr/@use='29' or $expr/@use='2002'">
+			<xsl:if test="$expr/@use='21' or $expr/@use='29' or $expr/@use='2002' or $expr/@use='3121' or $expr/@use='3122'">
 				<xsl:call-template name="Multi3WordListTerm">
 					<xsl:with-param name="expr" select="$expr/text()"/>
 					<xsl:with-param name="field1" select="'keyword'"/>
@@ -346,7 +424,6 @@ recursive compiler
 	</BooleanQuery>
 
 </xsl:template>
-
 
 <xsl:template name="wordListTerm">
 	<xsl:param name="expr"/>

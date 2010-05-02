@@ -34,7 +34,8 @@ import jeeves.utils.Xml;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import com.k_int.z3950.server.ZServer;
+import org.jzkit.z3950.server.Z3950Listener;
+import org.springframework.context.ApplicationContext;
 
 //=============================================================================
 
@@ -43,50 +44,27 @@ import com.k_int.z3950.server.ZServer;
 
 public class Server
 {
-	private static ZServer _server;
+	private static Z3950Listener _listener;
 
 	//--------------------------------------------------------------------------
 
 	/** initializes the server
 	  */
-	public static void init(String host, String port, String appPath,
-									String schemaMappings, ServiceContext context)
+	public static void init(String host, String port, String appPath, ServiceContext context, ApplicationContext app_context)
 	{
 		try
 		{
-			//--- fix schema-mappings.xml file
-
-			String tempSchema = appPath + Jeeves.Path.XML + schemaMappings +".tem";
-			String realSchema = appPath + Jeeves.Path.XML + schemaMappings;
-
-			fixSchemaFile(tempSchema, realSchema);
-
-			//--- fix repositories.xml file
-
-			String tempRepo = appPath + Jeeves.Path.XML + "repositories.xml" +".tem";
-			String realRepo = appPath + Jeeves.Path.XML + "repositories.xml";
-
-			fixRepositoriesFile(tempRepo, realRepo, host, port);
-
 			//--- normal processing
 
-			String evaluator    = "org.fao.geonet.services.util.z3950.GNSearchable";
-			String configurator = "com.k_int.IR.Syntaxes.Conversion.XMLConfigurator";
-
-			Properties props = new Properties();
-			props.setProperty("port",                              port);
-			props.setProperty("evaluator",                         evaluator);
-			props.setProperty("XSLConverterConfiguratorClassName", configurator);
-			props.setProperty("ConvertorConfigFile",               realSchema);
-			props.put("srvContext", context);
-
-			_server = new ZServer(props);
-			_server.start();
+			_listener  = (Z3950Listener)app_context.getBean("Z3950Listener", Z3950Listener.class);
+			_listener.setPort(Integer.parseInt(port));
+			_listener.start();
 		}
 		catch (Exception e)
 		{
-			//--- Z39.50 must start even if there are problems
+			//--- Z39.50 must not stop Geonetwork starting even if there are problems
 			context.warning("Cannot start Z39.50 server : "+ e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -96,54 +74,10 @@ public class Server
 	  */
 	public static void end()
 	{
-		if (_server != null)
-			_server.shutdown(0); // shutdown type is not used in current implementation
+		if (_listener != null)
+			_listener.shutdown(0); // shutdown type is not used in current implementation
 	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
-
-	private static void fixSchemaFile(String src, String des) throws Exception
-	{
-		Element root  = Xml.loadFile(src);
-		Element temSrc= root.getChild("templatesource");
-
-		String dir = new File(src).getParentFile().getAbsolutePath() +"/mappings";
-
-		temSrc.setAttribute("directory", dir);
-
-		FileOutputStream os = new FileOutputStream(des);
-		Xml.writeResponse(new Document(root), os);
-		os.close();
-	}
-
-	//--------------------------------------------------------------------------
-
-	private static void fixRepositoriesFile(String src, String des, String host,
-														 String z3950port) throws Exception
-	{
-		Element root = Xml.loadFile(src);
-		Element repo = root.getChild("Repository");
-
-		for (Object o : repo.getChildren("RepositoryProperty"))
-		{
-			Element rp = (Element) o;
-			String  name = rp.getAttributeValue("name");
-
-			if ("ServiceHost".equals(name))
-				rp.setAttribute("value", host);
-
-			else if ("ServicePort".equals(name))
-				rp.setAttribute("value", z3950port);
-		}
-
-		FileOutputStream os = new FileOutputStream(des);
-		Xml.writeResponse(new Document(root), os);
-		os.close();
-	}
 }
 
 //=============================================================================

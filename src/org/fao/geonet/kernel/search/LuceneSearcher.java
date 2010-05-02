@@ -74,6 +74,7 @@ import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
 import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
 import org.fao.geonet.kernel.search.spatial.Pair;
@@ -279,28 +280,29 @@ public class LuceneSearcher extends MetaSearcher
 
 			Log.debug(Geonet.SEARCH_ENGINE, "CRITERIA:\n"+ Xml.getString(request));
 
-            // Construct Lucene query by Java, not XSLT
-            _query = new LuceneQueryBuilder().build(request);
+			if (_styleSheetName.equals(Geonet.File.SEARCH_Z3950_SERVER)) {
+        // Construct Lucene query by XSLT, not Java, for Z3950 anyway :-)
+				Element xmlQuery = _sm.transform(_styleSheetName, request);
+				Log.debug(Geonet.SEARCH_ENGINE, "XML QUERY:\n"+ Xml.getString(xmlQuery));
+				_query = makeQuery(xmlQuery);
+			} else {
+        // Construct Lucene query by Java, not XSLT
+        _query = new LuceneQueryBuilder().build(request);
+			}
 
-			//
-            // Use RegionsData rather than fetching from the DB everytime
-            //
-            //request.addContent(Lib.db.select(dbms, "Regions", "region"));
-            Element regions = RegionsData.getRegions(dbms);
-            request.addContent(regions);
+
+      // Use RegionsData rather than fetching from the DB everytime
+      //
+      //request.addContent(Lib.db.select(dbms, "Regions", "region"));
+      Element regions = RegionsData.getRegions(dbms);
+      request.addContent(regions);
 		}
-
-        // Construct Lucene query by Java, not XSLT (Commented code)
-		//Element xmlQuery = _sm.transform(_styleSheetName, request);
-		//Log.debug(Geonet.SEARCH_ENGINE, "XML QUERY:\n"+ Xml.getString(xmlQuery));
 
 		if (srvContext != null)
         	_language = srvContext.getLanguage();
         else
         	_language = "eng"; // TODO : set default not language in config
 
-        // Construct Lucene query by Java, not XSLT (Commented code)
-		//_query = makeQuery(xmlQuery);
 		
 		Geometry geometry = getGeometry(request);
         if (geometry != null) {
@@ -518,6 +520,14 @@ public class LuceneSearcher extends MetaSearcher
 			Term upperTerm = (upperTxt == null ? null : new Term(fld, upperTxt.toLowerCase()));
 
 			returnValue = new RangeQuery(lowerTerm, upperTerm, inclusive);
+		}
+		else if (name.equals("DateRangeQuery"))
+		{
+			String  fld        = xmlQuery.getAttributeValue("fld");
+			String  lowerTxt   = xmlQuery.getAttributeValue("lowerTxt");
+			String  upperTxt   = xmlQuery.getAttributeValue("upperTxt");
+			String  sInclusive = xmlQuery.getAttributeValue("inclusive");
+			returnValue = new DateRangeQuery(fld, lowerTxt, upperTxt, sInclusive);
 		}
 		else if (name.equals("BooleanQuery"))
 		{

@@ -1,0 +1,74 @@
+<profile id="1" code="geo" profileName="GEONET (preliminary geo) Profile">
+  <Or>
+	 <And>
+	  <Or>
+    	  <Regexp type="AccessPoint">.*\.1\.1016</Regexp> 
+    	  <Regexp type="AccessPoint">.*\.1\.4</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.12</Regexp> 
+    	  <Regexp type="AccessPoint">.*\.1\.1003</Regexp> 
+    	  <Regexp type="AccessPoint">.*\.1\.62</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.3102</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.21</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.29</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.2002</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.3112</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.3122</Regexp>  
+    	  <Regexp type="AccessPoint">.*\.1\.30</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.31</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.1012</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.2072</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.2073</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.2059</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.2060</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.2042</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.2061</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.3302</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.1031</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.1034</Regexp> 
+
+      </Or>
+      <Or>	  
+    	  <Regexp type="Relation">.*\.2\.1</Regexp>
+    	  <Regexp type="Relation">.*\.2\.2</Regexp>
+    	  <Regexp type="Relation">.*\.2\.3</Regexp>
+    	  <Regexp type="Relation">.*\.2\.4</Regexp>
+    	  <Regexp type="Relation">.*\.2\.5</Regexp>
+    	  <Regexp type="Relation">.*\.2\.6</Regexp>
+    	  <Regexp type="Relation">.*\.2\.7</Regexp> 
+      </Or>
+
+  	 </And>
+	 <And>
+	  <Or>
+	      <Regexp type="AccessPoint">.*\.1\.1016</Regexp> 
+    	  <Regexp type="AccessPoint">.*\.1\.4</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.12</Regexp> 
+    	  <Regexp type="AccessPoint">.*\.1\.1003</Regexp> 
+    	  <Regexp type="AccessPoint">.*\.1\.62</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.3102</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.21</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.29</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.2002</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.3112</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.3122</Regexp>  
+    	  <Regexp type="AccessPoint">.*\.1\.30</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.31</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.1012</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.2072</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.2073</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.2059</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.2060</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.2042</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.2061</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.3302</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.1031</Regexp>
+    	  <Regexp type="AccessPoint">.*\.1\.1034</Regexp>
+       </Or>
+	   
+		<Not>
+			<Regexp type="Relation">.*\.2\..*</Regexp>
+		</Not>
+	  
+	 </And>
+  </Or>
+</profile>

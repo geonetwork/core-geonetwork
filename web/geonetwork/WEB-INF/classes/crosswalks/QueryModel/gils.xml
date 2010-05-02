@@ -1,0 +1,74 @@
+<Crosswalk scope="Global" sourceNamespace="gils">
+  <SourceAttr sourceAttrValue="any">
+    <MapsTo targetNamespace="gils">1.1016</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="identifier">
+    <MapsTo targetNamespace="gils">1.12</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="recordIdentifier">
+    <MapsTo targetNamespace="gils">1.12</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="title">
+    <MapsTo targetNamespace="gils">1.4</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="author">
+    <MapsTo targetNamespace="gils">1.1003</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="creator">
+    <MapsTo targetNamespace="gils">1.1003</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="origin">
+    <MapsTo targetNamespace="gils">1.1003</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="abstract">
+    <MapsTo targetNamespace="gils">1.62</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="description">
+    <MapsTo targetNamespace="gils">1.62</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="keywords">
+    <MapsTo targetNamespace="gils">1.21</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="subject">
+    <MapsTo targetNamespace="gils">1.29</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="creationDate">
+    <MapsTo targetNamespace="gils">1.30</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="publicationDate">
+    <MapsTo targetNamespace="gils">1.31</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="modificationDate">
+    <MapsTo targetNamespace="gils">1.1012</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="begdate">
+    <MapsTo targetNamespace="gils">1.2072</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="beginningDate">
+    <MapsTo targetNamespace="gils">1.2072</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="enddate">
+    <MapsTo targetNamespace="gils">1.2073</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="endingDate">
+    <MapsTo targetNamespace="gils">1.2073</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="spatialDomain">
+    <MapsTo targetNamespace="gils">1.2059</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="bounds">
+    <MapsTo targetNamespace="gils">1.2060</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="placeKeyword">
+    <MapsTo targetNamespace="gils">1.2042</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="place">
+    <MapsTo targetNamespace="gils">1.2061</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="type">
+    <MapsTo targetNamespace="gils">1.1031</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="format">
+    <MapsTo targetNamespace="gils">1.1034</MapsTo>
+  </SourceAttr>
+</Crosswalk>

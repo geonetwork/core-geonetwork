@@ -47,10 +47,32 @@
 				</td>
 				<td class="content" valign="top">
 					<table width="100%">
-							<xsl:variable name="server" select="geonet:info/server"/>
-							<xsl:variable name="name" select="/root/gui/repositories/Collection[@collection_dn=$server]/@collection_name"/>
+							<xsl:variable name="collection" select="geonet:info/collection"/>
+							<xsl:variable name="repocode" select="substring-before(geonet:info/server,':')"/>
+							<xsl:variable name="name" select="/root/gui/repositories/z3950repositories/repository[id/@code=$repocode and (substring-after(id,'/')=$collection or id=$collection)]/label"/>
 							
-							<tr><td class="padded-content"><h1><xsl:value-of select="geonet:info[server]/id"/><xsl:text> - </xsl:text><xsl:value-of select="$name"/></h1></td></tr>
+							<tr><td class="padded-content">
+							<h1>
+								<xsl:value-of select="geonet:info[server]/id"/><xsl:text> - </xsl:text><xsl:value-of select="$name"/>
+								<xsl:if test="geonet:info/html">
+									<xsl:text> - </xsl:text>
+									<xsl:choose>
+										<xsl:when test="geonet:info/html/@error"> 
+											&#160;
+											<img src="{/root/gui/url}/images/important.png" onclick="$('html.error').toggle()">
+											<span id="html.error" class="searchHelpFrame" style="display:none;z-index:1000;">
+												<font class="error">
+													<xsl:value-of select="geonet:info/html/@error"/>
+												</font>
+											</span>
+											</img>
+										</xsl:when>
+										<xsl:otherwise>
+											<a href="{geonet:info/html}"><xsl:value-of select="/root/gui/strings/showRemoteHTML"/></a> 
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:if>
+							</h1></td></tr>
 							<tr><td class="dots"/></tr>
 							<tr><td class="padded-content">
 								<table class="md" width="100%">

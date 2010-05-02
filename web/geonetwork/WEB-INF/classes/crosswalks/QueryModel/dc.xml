@@ -1,0 +1,26 @@
+<Crosswalk scope="Global" sourceNamespace="dc">
+  <SourceAttr sourceAttrValue="resourceIdentifier">
+    <MapsTo targetNamespace="dc">1.12</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="title">
+    <MapsTo targetNamespace="dc">1.4</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="creator">
+    <MapsTo targetNamespace="dc">1.1003</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="description">
+    <MapsTo targetNamespace="dc">1.62</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="subject">
+    <MapsTo targetNamespace="dc">1.29</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="date">
+    <MapsTo targetNamespace="dc">1.30</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="resourceType">
+    <MapsTo targetNamespace="dc">1.1031</MapsTo>
+  </SourceAttr>
+  <SourceAttr sourceAttrValue="format">
+    <MapsTo targetNamespace="dc">1.1034</MapsTo>
+  </SourceAttr>
+</Crosswalk>
