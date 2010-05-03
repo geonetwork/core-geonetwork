@@ -26,6 +26,7 @@ package jeeves.server.sources;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,7 +68,15 @@ public class ServiceRequestFactory
 
 		// FIXME: if request character encoding is undefined set it to UTF-8
 
-		if (req.getCharacterEncoding() == null)
+		String encoding = req.getCharacterEncoding();
+        try {
+            // verify that encoding is valid
+            Charset.forName(encoding);
+        } catch (Exception e) {
+            encoding = null;
+        }
+
+		if (encoding == null)
 			try
 			{
 				req.setCharacterEncoding("UTF-8");
@@ -276,7 +285,8 @@ public class ServiceRequestFactory
 				String   name = item.getFieldName();
 
 				if (item.isFormField()) {
-					params.addContent(new Element(name).setText(item.getString()));
+				    String encoding = req.getCharacterEncoding();
+					params.addContent(new Element(name).setText(item.getString(encoding)));
 				} else {
 					String file = item.getName();
 					String type = item.getContentType();
