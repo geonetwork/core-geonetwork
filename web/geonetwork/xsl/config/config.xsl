@@ -48,6 +48,7 @@
 		<xsl:call-template name="selectionmanager"/>
 		<xsl:call-template name="indexoptimizer"/>
 		<xsl:call-template name="z3950"/>
+		<xsl:call-template name="xlinkResolver"/>
 		<xsl:call-template name="downloadservice"/>
 		<xsl:call-template name="csw"/>
 		<xsl:call-template name="hyperlinks"/>
@@ -56,6 +57,20 @@
 		<xsl:call-template name="feedback"/>
 		<xsl:call-template name="removedMetadata"/>
 		<xsl:call-template name="authentication"/>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template name="xlinkResolver">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/xlinkResolver"/></h1>
+		<div align="left" style="{$style}">
+			<table>
+				<tr>
+					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/enable"/></td>
+					<td class="padded"><input id="xlinkResolver.enable" class="content" type="checkbox"/></td>
+				</tr>
+			</table>
+		</div>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->

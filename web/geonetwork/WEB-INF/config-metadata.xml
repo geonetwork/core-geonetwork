@@ -390,6 +390,18 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="metadata.admin.index.rebuildxlinks">
+			<documentation>
+				<para>Service to clear all cached xlinks and rebuild index for metadata records with xlinks</para>
+			</documentation>
+			<class name=".services.metadata.IndexRebuild">
+				<param name="rebuildxlinkindex" value="yes" />
+			</class>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
 		<service name="metadata.admin.index.optimize">
 			<documentation>
 				<para>Service to force optimization of Lucene index</para>

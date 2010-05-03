@@ -62,12 +62,16 @@ public class MainPanel extends FormPanel
 
 	private void sync()
 	{
+
 		Resource resource = null;
 
 		try
 		{
 			resource  = Lib.config.createResource();
-			Lib.metadata.sync((Dbms) resource.open());
+			Dbms dbms = (Dbms) resource.open();
+			Lib.metadata.init(dbms);
+
+			Lib.metadata.sync(dbms);
 			Lib.gui.showInfo(this, Messages.getString("MainPanel.metadataSync"));
 		}
 		catch (Exception e)

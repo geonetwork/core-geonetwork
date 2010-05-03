@@ -31,6 +31,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.csw.common.Csw;
@@ -61,9 +62,13 @@ public class Show implements Service
 
 	public void init(String appPath, ServiceConfig params) throws Exception
 	{
-		String skip = params.getValue("skipPopularity", "n");
-
+		String skip;
+		
+		skip = params.getValue("skipPopularity", "n");
 		skipPopularity = skip.equals("y");
+
+		skip = params.getValue("skipInfo", "n");
+		skipInfo = skip.equals("y");
 	}
 
 	//--------------------------------------------------------------------------
@@ -100,8 +105,9 @@ public class Show implements Service
 		//-----------------------------------------------------------------------
 		//--- get metadata
 		
-		Element elMd = dm.getMetadata(context, id, false);
-		// elMd.addNamespaceDeclaration(Csw.NAMESPACE_CSW);	
+		boolean addEditing = false;
+		Element elMd = dm.getMetadata(context, id, addEditing);
+		if (skipInfo) elMd.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
 
 		//
 		// setting schemaLocation
@@ -141,6 +147,7 @@ public class Show implements Service
 	//--------------------------------------------------------------------------
 
 	private boolean skipPopularity;
+	private boolean skipInfo;
 }
 
 class IncreasePopularityTask extends TimerTask {

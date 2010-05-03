@@ -38,11 +38,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimerTask;
+import java.util.Timer;
 import java.util.UUID;
 import java.util.Vector;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.JeevesException;
+import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -50,7 +53,9 @@ import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
 import jeeves.utils.Xml;
 import jeeves.utils.Xml.ErrorHandler;
+import jeeves.xlink.Processor;
 
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -84,7 +89,7 @@ public class DataManager
 	/** initializes the search manager and index not-indexed metadata
 	  */
 
-	public DataManager(SearchManager sm, AccessManager am, Dbms dbms, SettingManager ss, String baseURL, String htmlCacheDir, String dataDir, String appPath) throws Exception
+	public DataManager(ServiceContext context, SearchManager sm, AccessManager am, Dbms dbms, SettingManager ss, String baseURL, String htmlCacheDir, String dataDir, String appPath) throws Exception
 	{
 		searchMan = sm;
 		accessMan = am;
@@ -95,66 +100,84 @@ public class DataManager
 		this.dataDir = dataDir;
 		this.appPath = appPath;
 
-		init(dbms, false);
+		XmlSerializer.setSettingManager(ss);
+
+		init(context, dbms, false);
 	}
+
+	private synchronized void startRebuilding() { rebuilding = true; }
+	private synchronized void finishRebuilding() { rebuilding = false; }
 
 	/**
 	 * Init Data manager and refresh index if needed. 
-	 * Could be called after GeoNetwork startup in order to rebuild the lucene 
+	 * Can also be called after GeoNetwork startup in order to rebuild the lucene 
 	 * index
 	 * 
+	 * @param context
 	 * @param dbms
 	 * @param force         Force reindexing all from scratch
 	 *
 	 **/
-	public synchronized void init(Dbms dbms, Boolean force) throws Exception {
+	public synchronized void init(ServiceContext context, Dbms dbms, Boolean force) throws Exception {
+
+		if (rebuilding) throw new OperationNotAllowedEx("Index rebuilding already in progress");
 
 		// get all metadata from DB
 		Element result = dbms.select("SELECT id, changeDate FROM Metadata ORDER BY id ASC");
-
+		
 		Log.debug(Geonet.DATA_MANAGER, "DB CONTENT:\n'"+ Xml.getString(result) +"'"); 
 
 		// get lastchangedate of all metadata in index
 		HashMap<String,String> docs = searchMan.getDocsChangeDate();
 
+		// set up results HashMap for post processing of records to be indexed
+		ArrayList<Integer> toIndex = new ArrayList<Integer>();
+
 		Log.debug(Geonet.DATA_MANAGER, "INDEX CONTENT:");
 
 		// index all metadata in DBMS if needed
-		startIndexGroup();
-		try {
-			for(int i = 0; i < result.getContentSize(); i++)
-			{
-				// get metadata
-				Element record = (Element) result.getContent(i);
-				String  id     = record.getChildText("id");
+		for(int i = 0; i < result.getContentSize(); i++) {
+			// get metadata
+			Element record = (Element) result.getContent(i);
+			String  id     = record.getChildText("id");
+			int iId = Integer.parseInt(id);
 	
-				Log.debug(Geonet.DATA_MANAGER, "- record ("+ id +")");
-	
-				String idxLastChange = (String)docs.get(id);
+			Log.debug(Geonet.DATA_MANAGER, "- record ("+ id +")");
 
-				// if metadata is not indexed index it
-				if (idxLastChange == null)
-					indexMetadataGroup(dbms, id);
+			String idxLastChange = (String)docs.get(id);
+
+			// if metadata is not indexed index it
+			if (idxLastChange == null) {
+				Log.debug(Geonet.DATA_MANAGER, "-  will be indexed");
+				toIndex.add(new Integer(iId));
 	
-				// else, if indexed version is not the latest index it
-				else
-				{
-					docs.remove(id);
+			// else, if indexed version is not the latest index it
+			} else {
+				docs.remove(id);
 	
-					String lastChange    = record.getChildText("changedate");
+				String lastChange    = record.getChildText("changedate");
 	
-         	Log.debug(Geonet.DATA_MANAGER, "- lastChange: " + lastChange); 
-         	Log.debug(Geonet.DATA_MANAGER, "- idxLastChange: " + idxLastChange); 
+       	Log.debug(Geonet.DATA_MANAGER, "- lastChange: " + lastChange); 
+       	Log.debug(Geonet.DATA_MANAGER, "- idxLastChange: " + idxLastChange); 
 	
-					if (force || !idxLastChange.equalsIgnoreCase(lastChange)) // date in index contains 't', date in DBMS contains 'T'
-						indexMetadataGroup(dbms, id);
+				// date in index contains 't', date in DBMS contains 'T'
+				if (force || !idxLastChange.equalsIgnoreCase(lastChange)) {
+					Log.debug(Geonet.DATA_MANAGER, "-  will be indexed");
+					toIndex.add(new Integer(iId));
 				}
 			}
-		} finally {
-			endIndexGroup();
 		}
 
-		Log.debug(Geonet.DATA_MANAGER, "INDEX HAS RECORDS THAT ARE NOT IN DB:"); 
+		// if anything to index then schedule it to be done after servlet is
+		// up so that any links to local fragments are resolvable
+		if ( toIndex.size() > 0 ) {
+			Timer t = new Timer();
+			t.schedule(new IndexMetadataTask(context, toIndex), 10);
+		}
+
+		if (docs.size() > 0) { // anything left?
+			Log.debug(Geonet.DATA_MANAGER, "INDEX HAS RECORDS THAT ARE NOT IN DB:"); 
+		}
 
 		// remove from index metadata not in DBMS
 		for ( String id : docs.keySet() )
@@ -166,7 +189,70 @@ public class DataManager
 	}
 
 	//--------------------------------------------------------------------------
-	
+
+	public synchronized void rebuildIndexXLinkedMetadata(ServiceContext context, Dbms dbms) throws Exception {
+		
+		if (rebuilding) throw new OperationNotAllowedEx("Index rebuilding already in progress");
+
+		// get all metadata with XLinks
+		ArrayList<Integer> toIndex = searchMan.getDocsWithXLinks();
+
+		Log.debug(Geonet.DATA_MANAGER, "Will index "+toIndex.size()+" records with XLinks");
+		if ( toIndex.size() > 0 ) {
+			// clean XLink Cache so that cache and index remain in sync
+			Processor.clearCache();	
+
+			// execute indexing operation
+			Timer t = new Timer();
+			t.schedule(new IndexMetadataTask(context, toIndex), 10);
+		}
+	}
+
+	//--------------------------------------------------------------------------
+
+	class IndexMetadataTask extends TimerTask {
+		ServiceContext context;
+		ArrayList<Integer> toIndex;
+		Dbms dbms;
+
+		IndexMetadataTask(ServiceContext context, ArrayList<Integer> toIndex) {
+			this.context = context;
+			this.toIndex = toIndex;
+		}
+
+		public void run() {
+
+			try {
+				Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+				// poll context to see whether servlet is up yet
+				while (!context.isServletInitialized()) {
+					Log.debug(Geonet.DATA_MANAGER, "Waiting for servlet to finish initializing.."); 
+					Thread.sleep(10000); // sleep 10 seconds
+				}
+
+				// its up so safe to index all metadata that needs indexing
+				startIndexGroup();
+				try {
+					for ( Integer id : toIndex ) {
+						indexMetadataGroup(dbms, id.toString());
+					}
+				} finally {
+					endIndexGroup();
+				}
+
+				//-- explicitly close Dbms resource to avoid exhausting Dbms pool
+				context.getResourceManager().close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				finishRebuilding();
+			}
+		}
+	}
+
+	//--------------------------------------------------------------------------
+
 	public void indexMetadata(Dbms dbms, String id) throws Exception
 	{
 
@@ -222,8 +308,26 @@ public class DataManager
 	{
 		Vector moreFields = new Vector();
 
+		// get metadata, extracting and indexing any xlinks
+		Element md   = XmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id);
+		if (XmlSerializer.resolveXLinks()) {
+			List<Attribute> xlinks = Processor.getXLinks(md);
+			if (xlinks.size() > 0) {
+				moreFields.add(makeField("_hasxlinks", "1", true, true, false));
+				StringBuilder sb = new StringBuilder();
+				for (Attribute xlink : xlinks) {
+					sb.append(xlink.getValue()); sb.append(" ");
+				}
+				moreFields.add(makeField("_xlink", sb.toString(), true, true, false));
+				Processor.detachXLink(md);
+			} else {
+				moreFields.add(makeField("_hasxlinks", "0", true, true, false));
+			}
+		} else {
+			moreFields.add(makeField("_hasxlinks", "0", true, true, false));	
+		}
+
 		// get metadata table fields
-		Element md   = XmlSerializer.select(dbms, "Metadata", id);
 		String  root = md.getName();
 
 		String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, title, uuid, "+
@@ -1057,15 +1161,15 @@ public class DataManager
 
 		Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		Element md = XmlSerializer.select(dbms, "Metadata", id);
-
-		if (md == null)
-			return null;
+		boolean doXLinks = XmlSerializer.resolveXLinks();
+			
+		Element md = XmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id);
+		if (md == null) return null;
 
 		String version = null;
 
-		if (forEditing)
-		{
+		if (forEditing) { // copy in xlink'd fragments but leave xlink atts to editor
+			if (doXLinks) Processor.processXLink(md); 
 			String schema = getMetadataSchema(dbms, id);
 
 			if (withEditorValidationErrors) {
@@ -1085,6 +1189,8 @@ public class DataManager
 				Element condChecks = getSchemaTronXmlReport(schema,md,srvContext.getLanguage());
 				if (condChecks != null) md.addContent(condChecks);
 			}
+		} else {
+			if (doXLinks) Processor.detachXLink(md);
 		}
 
 		md.addNamespaceDeclaration(Edit.NAMESPACE);
@@ -2641,6 +2747,7 @@ public class DataManager
 	private String htmlCacheDir;
 	private String dataDir;
 	private String appPath;
+	private boolean rebuilding = false;
 }
 
 //=============================================================================

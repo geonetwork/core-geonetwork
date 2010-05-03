@@ -438,6 +438,8 @@
 	<metadata.admin.index.failed>Echec lors de la mise à jour de l'index.</metadata.admin.index.failed>
 	<metadata.admin.index.success>Mise à jour de l'index réussie.</metadata.admin.index.success>
 	<metadata.admin.index.optimize.desc>Optimisation de l'index Lucene</metadata.admin.index.optimize.desc>
+	<metadata.admin.index.rebuildxlinks.desc>Clear XLink Cache and Rebuild Index of Records with XLinks</metadata.admin.index.rebuildxlinks.desc>
+	<rebuildxlinks>Rebuild XLinks</rebuildxlinks>
 	<doYouReallyWantToDoThis js="true">Cette opération peut prendre du temps sur des catalogues volumineux. Il n'est pas recommandé de la lancer lors des périodes d'utilisation intense. Continuer ?</doYouReallyWantToDoThis>
 	<optimize>Optimiser</optimize>
 	<metadata.admin.index>Gestion de l&apos;index</metadata.admin.index>

@@ -734,13 +734,21 @@
 		<xsl:param name="id" select="generate-id(.)"/>
 		<xsl:param name="visible" select="true()"/>
 
+		<xsl:variable name="xlink"  select="count(ancestor-or-self::*[@xlink:href])"/>
+		<xsl:variable name="geonet" select="starts-with(name(.),'geonet:')"/>
+
 		<tr id="{$id}" type="metadata">
-			<xsl:if test="not($visible)">
+			<xsl:if test="not($visible) or ($xlink>0 and $geonet='true')">
 				<xsl:attribute name="style">
 					display:none;
 				</xsl:attribute>
 			</xsl:if>
 			<th class="md" width="20%" valign="top">
+				<xsl:if test="$xlink>0">
+					<xsl:attribute name="style">
+						<xsl:text>color:rgb(255,0,0);</xsl:text>
+					</xsl:attribute>
+				</xsl:if>
 				<xsl:choose>
 					<xsl:when test="$helpLink!=''">
 						<span id="stip.{$helpLink}|{$id}" onclick="toolTip(this.id);" class="content" style="cursor:help;">
@@ -834,10 +842,17 @@
 		<xsl:param name="schema"/>
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="id" select="generate-id(.)"/>
-		
+	
+		<xsl:variable name="xlink"  select="count(ancestor-or-self::*[@xlink:href])"/>
+
 		<tr id="{$id}" type="metadata">
 			<td class="padded-content" width="100%" colspan="2">
 				<fieldset class="metadata-block">
+					<xsl:if test="$xlink>0">
+						<xsl:attribute name="style">
+							<xsl:text>color:rgb(255,0,0);</xsl:text>
+						</xsl:attribute>
+					</xsl:if>
 					<legend class="block-legend">
 						<xsl:if test="/root/gui/config/metadata-view-toggleTab">
 							<input id="toggle{$id}" type="checkbox" class="toggle" 

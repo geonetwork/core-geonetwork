@@ -65,6 +65,8 @@
 	<z3950>Сервер Z39.50</z3950>
 	<enable>Включить</enable>
 
+	<xlinkResolver>XLink Resolver</xlinkResolver>
+		
 	<downloadservice>Data-For-Download Service</downloadservice>
 	<leave>Use metadata linkage as is - no changes to linkage</leave>
 	<simple>Use GeoNetwork simple file download service (resources.get)</simple>
@@ -267,6 +269,12 @@
 		</tip>
 		<tip id="downloadservice.leave">
 				Selecting this option means that GeoNetwork will not handle file downloads.
+		</tip>
+
+		<!-- xlinkResolver -->
+
+		<tip id="xlinkResolver.enable">
+			If set, XLinks to metadata fragments in records will be resolved.
 		</tip>
 	</tips>
 

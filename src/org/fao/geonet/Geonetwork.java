@@ -32,6 +32,7 @@ import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.HashMap;
 
+import jeeves.JeevesJCS;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
@@ -39,6 +40,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+import jeeves.xlink.Processor;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -113,6 +115,10 @@ public class Geonetwork implements ApplicationHandler
 		String baseURL = context.getBaseUrl();
 
 		logger.info("Initializing geonetwork...");
+
+		JeevesJCS.setConfigFilename(path+"WEB-INF/classes/cache.ccf");
+		// force cache to be config'd so shutdown hook works correctly
+		JeevesJCS jcsDummy = JeevesJCS.getInstance(Processor.XLINK_JCS);
 
 		ServiceConfig handlerConfig = new ServiceConfig(config.getChildren());
 
@@ -206,7 +212,7 @@ public class Geonetwork implements ApplicationHandler
 		if (!_htmlCacheDir.isAbsolute()) {
 			htmlCacheDir = path + htmlCacheDir;
 		}
-		DataManager dataMan = new DataManager(searchMan, accessMan, dbms, settingMan, baseURL, htmlCacheDir, dataDir, path);
+		DataManager dataMan = new DataManager(context, searchMan, accessMan, dbms, settingMan, baseURL, htmlCacheDir, dataDir, path);
 
 		String schemasDir = path + Geonet.Path.SCHEMAS;
 		String saSchemas[] = new File(schemasDir).list();

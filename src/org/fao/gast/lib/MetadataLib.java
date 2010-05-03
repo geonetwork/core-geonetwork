@@ -54,8 +54,14 @@ public class MetadataLib
 	public MetadataLib(String appPath) throws Exception
 	{
 		this.appPath = appPath;
+	}
 
-//		searchMan = new SearchManager(appPath +"/web/geonetwork/", Lib.config.getLuceneDir());
+	//---------------------------------------------------------------------------
+	// -- must be called before any Metadata Ops if you want XLinks
+
+	public void init(Dbms dbms) throws Exception
+	{
+		XmlSerializer.setSettingManager(new SettingManager(dbms, new ProviderManager()));
 	}
 
 	//---------------------------------------------------------------------------

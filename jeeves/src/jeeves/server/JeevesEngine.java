@@ -44,6 +44,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.sources.ServiceRequest;
+import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
 import jeeves.utils.Util;
@@ -90,7 +91,7 @@ public class JeevesEngine
 	/** Inits the engine, loading all needed data
 	  */
 
-	public void init(String appPath, String configPath, String baseUrl) throws ServletException
+	public void init(String appPath, String configPath, String baseUrl, JeevesServlet servlet) throws ServletException
 	{
 		try
 		{
@@ -128,6 +129,7 @@ public class JeevesEngine
 			serviceMan.setProviderMan(providerMan);
 			serviceMan.setSerialFactory(serialFact);
 			serviceMan.setBaseUrl(baseUrl);
+			serviceMan.setServlet(servlet);
 
 			scheduleMan.setAppPath(appPath);
 			scheduleMan.setProviderMan(providerMan);
@@ -143,7 +145,7 @@ public class JeevesEngine
 			//--- with the ProfileManager already loaded
 
 			for(int i=0; i<appHandList.size(); i++)
-				initAppHandler((Element) appHandList.get(i));
+				initAppHandler((Element) appHandList.get(i), servlet);
 
 			info("Starting schedule manager...");
 			scheduleMan.start();
@@ -396,7 +398,7 @@ public class JeevesEngine
 	//---
 	//---------------------------------------------------------------------------
 
-	private void initAppHandler(Element handler) throws Exception
+	private void initAppHandler(Element handler, JeevesServlet servlet) throws Exception
 	{
 		if (handler == null)
 			info("Handler not found");
@@ -418,6 +420,7 @@ public class JeevesEngine
 			ServiceContext srvContext = serviceMan.createServiceContext("AppHandler");
 			srvContext.setLanguage(defaultLang);
 			srvContext.setLogger(appHandLogger);
+			srvContext.setServlet(servlet);
 
 			try
 			{

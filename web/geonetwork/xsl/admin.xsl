@@ -240,6 +240,16 @@
         <img src="{/root/gui/url}/images/loading.gif" id="waitIdxOpt" style="display:none;"/>
       </td>
     </tr>
+		<xsl:if test="string(/root/gui/env/xlinkResolver/enable)='true'">
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/strings/metadata.admin.index.rebuildxlinks.desc"/></td>
+				<td>
+					<button class="content" onclick="idxOperation('metadata.admin.index.rebuildxlinks', 'waitIdxXLnks', this.name)" id="btIdxXLnks" name="btIdxXLnks"><xsl:value-of select="/root/gui/strings/rebuildxlinks"/></button>
+					<img src="{/root/gui/url}/images/loading.gif" id="waitIdxXLnks" style="display:none;"/>
+				</td>
+			</tr>
+		</xsl:if>
+
 		
 	</xsl:template>
 	

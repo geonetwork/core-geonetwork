@@ -30,6 +30,7 @@ import jeeves.interfaces.Logger;
 import jeeves.server.ProfileManager;
 import jeeves.server.UserSession;
 import jeeves.server.resources.ProviderManager;
+import jeeves.server.sources.http.JeevesServlet;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.utils.Log;
@@ -52,7 +53,8 @@ public class ServiceContext extends BasicContext
 	private String service;
 	private String ipAddress;
 	private String uploadDir;
-    private int    maxUploadSize;
+  private int    maxUploadSize;
+	private JeevesServlet servlet;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -85,10 +87,15 @@ public class ServiceContext extends BasicContext
 
 	public InputMethod  getInputMethod()  { return input;  }
 	public OutputMethod getOutputMethod() { return output; }
+	public boolean isServletInitialized() { 
+		if (servlet != null) return servlet.isInitialized(); 
+		else return true; // Jeeves not running in servlet container eg for testing
+	}
 
 	//--------------------------------------------------------------------------
 
 	public void setLanguage (String lang)    { language  = lang;    }
+	public void setServlet (JeevesServlet serv)    { servlet  = serv;    }
 	public void setIpAddress(String address) { ipAddress = address; }
 	public void setUploadDir(String dir)     { uploadDir = dir;     }
     public void setMaxUploadSize(int size)   { maxUploadSize = size;}

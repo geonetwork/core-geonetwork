@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import jeeves.exceptions.BadFormatEx;
@@ -95,8 +96,20 @@ public class MEFVisitor implements IVisitor {
 		ZipInputStream zis = new ZipInputStream(new FileInputStream(mefFile));
 		InputStreamBridge isb = new InputStreamBridge(zis);
 
-		List<Element> pubFiles = info.getChild("public").getChildren();
-		List<Element> prvFiles = info.getChild("private").getChildren();
+		// yes they must be registered but make sure we don't crash if the 
+		// public/private elements don't exist
+		List<Element> pubFiles;
+		if (info.getChild("public") != null) {
+			pubFiles = info.getChild("public").getChildren();
+		} else {
+			pubFiles = new ArrayList<Element>();
+		}
+		List<Element> prvFiles;
+		if (info.getChild("private") != null) {
+			prvFiles = info.getChild("private").getChildren();
+		} else {
+			prvFiles = new ArrayList<Element>();
+		}
 
 		ZipEntry entry;
 

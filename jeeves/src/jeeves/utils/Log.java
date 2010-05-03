@@ -44,6 +44,7 @@ public class Log
 	public static final String RESOURCES = JEEVES+ ".resources";
 	public static final String DBMS      = JEEVES+ ".dbms";
 	public static final String DBMSPOOL	 = JEEVES+ ".dbmspool";
+	public static final String XLINK_PROCESSOR = JEEVES+ ".xlinkprocessor";
 
 	public class Dbms
 	{

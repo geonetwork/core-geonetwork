@@ -98,6 +98,8 @@ ConfigView.prototype.setData = function(data)
 	
 	$('z3950.enable').checked = data['Z3950_ENABLE'] == 'true';
 	$('z3950.port')  .value   = data['Z3950_PORT'];
+	
+	$('xlinkResolver.enable').checked = data['XLINKRESOLVER_ENABLE'] == 'true';
 
 	$('downloadservice.simple')        .checked = data['DOWNLOADSERVICE_SIMPLE'] == 'true';
 	$('downloadservice.withdisclaimer').checked = data['DOWNLOADSERVICE_WITHDISCLAIMER'] == 'true';
@@ -200,6 +202,8 @@ ConfigView.prototype.getData = function()
 	
 		Z3950_ENABLE : $('z3950.enable').checked,
 		Z3950_PORT   : $('z3950.port')  .value,
+	
+		XLINKRESOLVER_ENABLE : $('xlinkResolver.enable').checked,
 	
 		DOWNLOADSERVICE_SIMPLE : $('downloadservice.simple').checked,
 		DOWNLOADSERVICE_WITHDISCLAIMER : $('downloadservice.withdisclaimer').checked,

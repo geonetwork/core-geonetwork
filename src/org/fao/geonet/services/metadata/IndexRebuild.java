@@ -42,13 +42,17 @@ import org.jdom.Element;
 
 public class IndexRebuild implements Service
 {
+	private ServiceConfig _config;
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig config) throws Exception {
+		_config = config;
+	}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -58,13 +62,18 @@ public class IndexRebuild implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
+		boolean xlinks = false;
+
+		String rebuildXLinkIndex = _config.getValue("rebuildxlinkindex");
+		if (rebuildXLinkIndex != null) {
+			xlinks = rebuildXLinkIndex.equals("yes");
+		}
+
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		SearchManager searchMan = gc.getSearchmanager();
-		DataManager dataMan = gc.getDataManager();
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		
-		boolean info = searchMan.rebuildIndex(dataMan, dbms);
+		boolean info = searchMan.rebuildIndex(context, xlinks);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element("status").setText((info?"true":"false")));

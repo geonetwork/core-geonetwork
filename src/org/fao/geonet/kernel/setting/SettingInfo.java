@@ -98,6 +98,13 @@ public class SettingInfo
 
 	//---------------------------------------------------------------------------
 
+	public boolean isXLinkResolverEnabled()
+	{
+		return sm.getValue("system/xlinkResolver/enable").equals("true");
+	}
+
+	//---------------------------------------------------------------------------
+
 	public Calendar getLuceneIndexOptimizerSchedulerAt() throws IllegalArgumentException {
 		Calendar calendar = Calendar.getInstance();
 		try {

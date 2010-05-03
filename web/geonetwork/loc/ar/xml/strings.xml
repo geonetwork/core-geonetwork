@@ -363,6 +363,8 @@
 	<metadata.admin.index.failed>Index operation failed.</metadata.admin.index.failed>
 	<metadata.admin.index.success>Index operation was successful.</metadata.admin.index.success>
 	<metadata.admin.index.optimize.desc>Optimize Lucene index</metadata.admin.index.optimize.desc>
+	<metadata.admin.index.rebuildxlinks.desc>Clear XLink Cache and Rebuild Index of Records with XLinks</metadata.admin.index.rebuildxlinks.desc>
+	<rebuildxlinks>Rebuild XLinks</rebuildxlinks>
 	<doYouReallyWantToDoThis js="true">This operation may take some time on large catalogs and should not be done during peak usage. Continue?</doYouReallyWantToDoThis>
 	<optimize>Optimize</optimize>
 	<metadata.admin.index>Index manager</metadata.admin.index>

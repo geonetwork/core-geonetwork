@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Collections;
@@ -502,6 +503,41 @@ public class SearchManager
 
 	//--------------------------------------------------------------------------------
 
+	public ArrayList<Integer> getDocsWithXLinks() throws Exception
+	{
+		IndexReader reader = getIndexReader();
+
+		try {
+			FieldSelector idXLinkSelector = new FieldSelector() {
+				public final FieldSelectorResult accept(String name) {
+					if (name.equals("_id") || name.equals("_hasxlinks")) return FieldSelectorResult.LOAD;
+					else return FieldSelectorResult.NO_LOAD;
+				}
+			};
+	
+			ArrayList<Integer> docs = new ArrayList<Integer>();
+			for (int i = 0; i < reader.maxDoc(); i++) {
+				if (reader.isDeleted(i)) continue; // FIXME: strange lucene hack: sometimes it tries to load a deleted document
+				Document doc = reader.document(i, idXLinkSelector);
+				String id = doc.get("_id");
+				String hasxlinks = doc.get("_hasxlinks");
+				Log.debug(Geonet.INDEX_ENGINE, "Got id "+id+" : '"+hasxlinks+"'");
+				if (id == null) {
+					Log.error(Geonet.INDEX_ENGINE, "Document with no _id field skipped! Document is "+doc);
+					continue;
+				}
+				if (hasxlinks.trim().equals("1")) {
+					docs.add(new Integer(id));
+				}
+			}
+			return docs;
+		} finally {
+			releaseIndexReader(reader);
+		}
+	}
+
+	//--------------------------------------------------------------------------------
+
 	public HashMap<String,String> getDocsChangeDate() throws Exception
 	{
 		IndexReader reader = getIndexReader();
@@ -516,7 +552,7 @@ public class SearchManager
 	
 			int capacity = (int)(reader.maxDoc() / 0.75)+1;
 			HashMap<String,String> docs = new HashMap<String,String>(capacity);
-			for (int i = 0; i < reader.numDocs(); i++) {
+			for (int i = 0; i < reader.maxDoc(); i++) {
 				if (reader.isDeleted(i)) continue; // FIXME: strange lucene hack: sometimes it tries to load a deleted document
 				Hashtable record = new Hashtable();
 				Document doc = reader.document(i, idChangeDateSelector);
@@ -693,17 +729,26 @@ public class SearchManager
 	/*
 	 *  Rebuild the Lucene index
 	 *  
-	 *  @param dataMan
-	 *  @param dbms
+	 *  @param context
+	 *  @param xlinks
 	 *  
 	 */
-	public boolean rebuildIndex(DataManager dataMan, Dbms dbms) {
+	public boolean rebuildIndex(ServiceContext context, boolean xlinks) throws Exception {
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+
+		DataManager dataMan = gc.getDataManager();
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
 		try {
 			if (_indexWriter.isOpen()) {
 				throw new Exception("Cannot rebuild index while it is being updated - please wait till later");
 			}
-			setupIndex(true);
-			dataMan.init(dbms, true);
+			if (!xlinks) {
+				setupIndex(true);
+				dataMan.init(context, dbms, true);
+			} else {
+				dataMan.rebuildIndexXLinkedMetadata(context, dbms);
+			}
 			return true;
 		} catch (Exception e) {
 			Log.error(Geonet.INDEX_ENGINE,

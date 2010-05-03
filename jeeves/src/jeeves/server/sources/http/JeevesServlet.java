@@ -46,6 +46,7 @@ import jeeves.utils.Util;
 public class JeevesServlet extends HttpServlet
 {
 	private JeevesEngine jeeves = new JeevesEngine();
+	private boolean initialized = false;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -63,7 +64,8 @@ public class JeevesServlet extends HttpServlet
 		String baseUrl    = getServletContext().getServletContextName();
 		String configPath = appPath + "WEB-INF/";
 
-		jeeves.init(appPath, configPath, baseUrl);
+		jeeves.init(appPath, configPath, baseUrl, this);
+		initialized = true;
 	}
 
 	//---------------------------------------------------------------------------
@@ -173,6 +175,8 @@ public class JeevesServlet extends HttpServlet
 
 		jeeves.dispatch(srvReq, session);
 	}
+
+	public boolean isInitialized() { return initialized; }
 }
 
 //=============================================================================

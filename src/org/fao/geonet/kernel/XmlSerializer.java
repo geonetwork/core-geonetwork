@@ -29,10 +29,15 @@ import java.util.Vector;
 
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
+import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+import jeeves.xlink.Processor;
 
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
+
 import org.jdom.Element;
 
 //=============================================================================
@@ -43,17 +48,20 @@ import org.jdom.Element;
 
 public class XmlSerializer
 {
+	private static SettingManager sm;
+
 	//--------------------------------------------------------------------------
 	//---
-	//--- API
+	//--- PRIVATE METHODS
 	//---
 	//--------------------------------------------------------------------------
+
 
 	/** Retrieve the xml element which id matches the given one. The element is
 	  * read from 'table' and the string read is converted into xml
 	  */
 
-	public static Element select(Dbms dbms, String table, String id) throws Exception
+	private static Element internalSelect(Dbms dbms, String table, String id) throws Exception
 	{
 		String query = "SELECT * FROM " + table + " WHERE id = ?";
 
@@ -70,6 +78,63 @@ public class XmlSerializer
 		rec = Xml.loadString(xmlData, false);
 
 		return (Element) rec.detach();
+	}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- PUBLIC API
+	//---
+	//--------------------------------------------------------------------------
+
+	public static void setSettingManager(SettingManager sMan) {
+		sm = sMan;
+	}
+
+	//--------------------------------------------------------------------------
+
+	public static boolean resolveXLinks() {
+		if (sm == null) { // no initialization, no XLinks
+			Log.error(Geonet.DATA_MANAGER,"No settingManager in XmlSerializer, XLink Resolver disabled.");
+			return false; 
+		}
+
+		String xlR = sm.getValue("system/xlinkResolver/enable");
+		if (xlR != null) {
+			boolean isEnabled = xlR.equals("true");
+			if (isEnabled) Log.info(Geonet.DATA_MANAGER,"XLink Resolver enabled.");
+			else Log.info(Geonet.DATA_MANAGER,"XLink Resolver disabled.");
+			return isEnabled; 
+		} else {
+			Log.error(Geonet.DATA_MANAGER,"XLink resolver setting does not exist! XLink Resolver disabled.");
+			return false;
+		}
+	}
+
+	//--------------------------------------------------------------------------
+
+	/** Retrieve the xml element which id matches the given one. The element is
+	  * read from 'table' and the string read is converted into xml, XLinks are
+		* resolved when config'd on
+	  */
+
+	public static Element select(Dbms dbms, String table, String id) throws Exception
+	{
+		Element rec = internalSelect(dbms, table, id);
+		if (resolveXLinks()) Processor.detachXLink(rec);
+		return rec;
+	}
+
+	//--------------------------------------------------------------------------
+
+	/** Retrieve the xml element which id matches the given one. The element is
+	  * read from 'table' and the string read is converted into xml, XLinks are
+		* NOT resolved even if they are config'd on - this is used when you want
+		* to do XLink processing yourself
+	  */
+
+	public static Element selectNoXLinkResolver(Dbms dbms, String table, String id) throws Exception
+	{
+		return internalSelect(dbms, table, id);
 	}
 
 	//--------------------------------------------------------------------------
@@ -96,6 +161,9 @@ public class XmlSerializer
 										 String changeDate, String isTemplate, String title,
 										 int owner, String groupOwner) throws SQLException
 	{
+	
+		if (resolveXLinks()) Processor.removeXLink(xml);
+
 		String date = new ISODate().toString();
 
 		if (createDate == null)
@@ -155,6 +223,8 @@ public class XmlSerializer
 
 	public static void update(Dbms dbms, String id, Element xml, String changeDate) throws SQLException
 	{
+		if (resolveXLinks()) Processor.removeXLink(xml);
+
 		String query = "UPDATE Metadata SET data=?, changeDate=?, root=? WHERE id=?";
 
 		Vector args = new Vector();
@@ -177,6 +247,9 @@ public class XmlSerializer
 
 	public static void delete(Dbms dbms, String table, String id) throws SQLException
 	{
+		// TODO: Ultimately we want to remove any xlinks in this document
+		// that aren't already in use from the xlink cache. For now we
+		// rely on the admin clearing cache and reindexing regularly
 		String query = "DELETE FROM " + table + " WHERE id="+id;
 
 		dbms.execute(query);

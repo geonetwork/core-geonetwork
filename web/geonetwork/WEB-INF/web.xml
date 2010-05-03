@@ -6,6 +6,13 @@
 			version="2.4">
 			
 	<display-name>geonetwork</display-name>
+
+	<!-- shut down java cache used for xlinks and spatial index -->
+	<listener>
+		<listener-class>
+			org.apache.jcs.utils.servlet.JCSServletContextListener
+		</listener-class>
+	</listener>
 	
 	<servlet>
 		<servlet-name>gn-servlet</servlet-name>

@@ -48,6 +48,8 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			Z3950_ENABLE      : xml.evalXPath(node, 'z3950/enable'),
 			Z3950_PORT        : xml.evalXPath(node, 'z3950/port'),
 
+			XLINKRESOLVER_ENABLE      : xml.evalXPath(node, 'xlinkResolver/enable'),
+
 			DOWNLOADSERVICE_LEAVE         : xml.evalXPath(node, 'downloadservice/leave'),
 			DOWNLOADSERVICE_SIMPLE         : xml.evalXPath(node, 'downloadservice/simple'),
 			DOWNLOADSERVICE_WITHDISCLAIMER : xml.evalXPath(node, 'downloadservice/withdisclaimer'),
@@ -168,6 +170,9 @@ ConfigModel.updateTemp =
 '		<enable>{Z3950_ENABLE}</enable>'+
 '		<port>{Z3950_PORT}</port>'+
 '	</z3950>'+
+'	<xlinkResolver>'+
+'		<enable>{XLINKRESOLVER_ENABLE}</enable>'+
+'	</xlinkResolver>'+
 '	<downloadservice>'+
 '		<leave>{DOWNLOADSERVICE_LEAVE}</leave>'+
 '		<simple>{DOWNLOADSERVICE_SIMPLE}</simple>'+

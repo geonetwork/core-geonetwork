@@ -801,6 +801,7 @@
 		<service name="xml.metadata.get">
 			<class name=".services.metadata.Show">
 				<param name="skipPopularity" value="y" />
+				<param name="skipInfo" value="y" />
 			</class>
 		</service>
 

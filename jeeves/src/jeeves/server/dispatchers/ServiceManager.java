@@ -45,6 +45,7 @@ import jeeves.server.dispatchers.guiservices.Call;
 import jeeves.server.dispatchers.guiservices.GuiService;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.resources.ProviderManager;
+import jeeves.server.sources.http.JeevesServlet;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
@@ -78,6 +79,7 @@ public class ServiceManager
 	private String  defaultLang;
 	private String  defaultContType;
 	private boolean defaultLocal;
+	private JeevesServlet servlet;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -94,6 +96,7 @@ public class ServiceManager
 
 	public void setProviderMan  (ProviderManager p) { providMan  = p; }
 	public void setSerialFactory(SerialFactory   s) { serialFact = s; }
+	public void setServlet(JeevesServlet serv) { servlet = serv; }
 
 	//---------------------------------------------------------------------------
 
@@ -308,6 +311,7 @@ public class ServiceManager
 		context.setAppPath(appPath);
 		context.setUploadDir(uploadDir);
         context.setMaxUploadSize(maxUploadSize);
+		context.setServlet(servlet);
 
 		return context;
 	}
@@ -334,6 +338,7 @@ public class ServiceManager
 		context.setInputMethod(req.getInputMethod());
 		context.setOutputMethod(req.getOutputMethod());
 		context.setHeaders(req.getHeaders());
+		context.setServlet(servlet);
 
 		//--- invoke service and build result
 

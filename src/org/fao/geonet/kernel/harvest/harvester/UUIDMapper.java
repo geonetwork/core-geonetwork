@@ -36,8 +36,9 @@ import org.jdom.Element;
 
 public class UUIDMapper
 {
-	private HashMap<String, String> hmUuidDate = new HashMap<String, String>();
-	private HashMap<String, String> hmUuidId   = new HashMap<String, String>();
+	private HashMap<String, String> hmUuidDate 		 = new HashMap<String, String>();
+	private HashMap<String, String> hmUuidId   		 = new HashMap<String, String>();
+	private HashMap<String, String> hmUuidTemplate = new HashMap<String, String>();
 
 	//--------------------------------------------------------------------------
 	//---
@@ -47,20 +48,21 @@ public class UUIDMapper
 
 	public UUIDMapper(Dbms dbms, String harvestUuid) throws Exception
 	{
-		String query = "SELECT id, uuid, changeDate FROM Metadata WHERE harvestUuid=?";
+		String query = "SELECT id, uuid, changeDate, isTemplate FROM Metadata WHERE harvestUuid=?";
 
 		List idsList = dbms.select(query, harvestUuid).getChildren();
 
-		for (int i=0; i<idsList.size(); i++)
-		{
+		for (int i=0; i<idsList.size(); i++) {
 			Element record = (Element) idsList.get(i);
 
 			String id   = record.getChildText("id");
 			String uuid = record.getChildText("uuid");
 			String date = record.getChildText("changedate");
+			String isTemplate = record.getChildText("istemplate");
 
 			hmUuidDate.put(uuid, date);
 			hmUuidId  .put(uuid, id);
+			hmUuidTemplate  .put(uuid, isTemplate);
 		}
 	}
 
@@ -70,6 +72,10 @@ public class UUIDMapper
 	//---
 	//--------------------------------------------------------------------------
 
+	public String getTemplate(String uuid) { return hmUuidTemplate.get(uuid); }
+
+	//--------------------------------------------------------------------------
+	
 	public String getChangeDate(String uuid) { return hmUuidDate.get(uuid); }
 
 	//--------------------------------------------------------------------------
