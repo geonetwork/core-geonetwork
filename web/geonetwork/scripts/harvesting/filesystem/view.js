@@ -13,7 +13,6 @@ filesystem.View = function(xmlLoader)
 	
 	var loader = xmlLoader;
 	var valid  = new Validator(loader);
-	var shower = null;
 	
 	this.setPrefix('filesystem');
 	this.setPrivilTransf(privilTransf);
@@ -53,9 +52,6 @@ function init()
 		{ id:'filesystem.every.mins',  type:'integer',  minValue:0, maxValue:59 }
 	]);
 
-	//shower = new Shower('filesystem.recurse',  'filesystem.recurse');
-	//shower = new Shower('filesystem.nodelete',  'filesystem.nodelete');
-
 }
 
 //=====================================================================================
@@ -72,7 +68,6 @@ function setEmpty()
 			icons[i].selected = true;
 			break;
 		}		
-	//shower.update();
 	updateIcon();
 }
 
@@ -102,7 +97,6 @@ function setData(node)
 	this.selectCategories(node);		
 
 	//--- setup other stuff	
-	//shower.update();
 	updateIcon();
 
 }

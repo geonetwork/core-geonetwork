@@ -9,7 +9,9 @@ gn.Model = function(xmlLoader)
 	HarvesterModel.call(this);	
 	
 	var loader = xmlLoader;
+	var callBackStyleSheets = null;
 
+	this.retrieveImportXslts = retrieveImportXslts;
 	this.retrieveSources   = retrieveSources;
 	this.retrieveGroups    = retrieveGroups;
 	this.retrieveCategories= retrieveCategories;
@@ -45,6 +47,34 @@ function retrieveGroups(data, callBack, username, password)
 	url += '/'+data.SERVLET+'/srv/'+Env.lang+'/xml.info';
 	
 	new InfoService(loader, 'groups', callBack, url, username, password);
+}
+
+//=====================================================================================
+
+function retrieveImportXslts(callBack)
+{
+	callBackStyleSheets = callBack;	
+
+	var request = ker.createRequest('type', 'importStylesheets');
+	ker.send('xml.harvesting.info', request, ker.wrap(this, retrieveXslts_OK));
+}
+
+//=====================================================================================
+
+function retrieveXslts_OK(xmlRes)
+{
+	if (xmlRes.nodeName == 'error')
+		ker.showError(loader.getText('cannotRetrieve'), xmlRes);
+	else
+	{
+		var data = [];
+		var list = xml.children(xml.children(xmlRes)[0]);
+		
+		for (var i=0; i<list.length; i++)
+			data.push(xml.toObject(list[i]));
+		
+		callBackStyleSheets(data);
+	}
 }
 
 //=====================================================================================
@@ -103,6 +133,11 @@ var updateTemp =
 '      <every>{EVERY}</every>'+
 '      <oneRunOnly>{ONE_RUN_ONLY}</oneRunOnly>'+
 '    </options>'+
+
+'    <content>'+
+'      <validate>{VALIDATE}</validate>'+
+'      <importxslt>{IMPORTXSLT}</importxslt>'+
+'    </content>'+
 
 '    <searches>'+
 '       {SEARCH_LIST}'+

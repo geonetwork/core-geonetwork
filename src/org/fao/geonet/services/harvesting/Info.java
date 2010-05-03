@@ -27,6 +27,8 @@ import java.io.File;
 import java.io.FileFilter;
 import java.net.URL;
 import java.util.Iterator;
+
+import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.BadXmlResponseEx;
@@ -35,6 +37,8 @@ import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.lib.Lib;
 import org.fao.oaipmh.exceptions.NoSetHierarchyException;
 import org.fao.oaipmh.exceptions.OaiPmhException;
@@ -43,9 +47,12 @@ import org.fao.oaipmh.requests.ListSetsRequest;
 import org.fao.oaipmh.responses.ListMetadataFormatsResponse;
 import org.fao.oaipmh.responses.ListSetsResponse;
 import org.fao.oaipmh.responses.MetadataFormat;
+import org.fao.oaipmh.requests.Transport;
 import org.fao.oaipmh.responses.SetInfo;
+
 import org.jdom.Element;
 import org.jdom.JDOMException;
+
 import org.xml.sax.SAXException;
 
 //=============================================================================
@@ -60,8 +67,11 @@ public class Info implements Service
 
 	public void init(String appPath, ServiceConfig config) throws Exception
 	{
-		iconPath = new File(appPath +"/images/harvesting");
-		oaiSchema= new File(appPath +"/xml/validation/oai/OAI-PMH.xsd");
+		wfsXslPath = new File(appPath + Geonet.Path.WFS_STYLESHEETS);
+		tdsXslPath = new File(appPath + Geonet.Path.TDS_STYLESHEETS);
+		importXslPath = new File(appPath + Geonet.Path.IMPORT_STYLESHEETS);
+		iconPath   = new File(appPath +"/images/harvesting");
+		oaiSchema  = new File(appPath +"/xml/validation/oai/OAI-PMH.xsd");
 	}
 
 	//--------------------------------------------------------------------------
@@ -88,7 +98,16 @@ public class Info implements Service
 				result.addContent(getIcons());
 
 			else if (type.equals("oaiPmhServer"))
-				result.addContent(getOaiPmhServer(el));
+				result.addContent(getOaiPmhServer(el, context));
+
+			else if (type.equals("wfsFragmentStylesheets"))
+				result.addContent(getStylesheets(el, context, wfsXslPath));
+
+			else if (type.equals("threddsFragmentStylesheets"))
+				result.addContent(getStylesheets(el, context, tdsXslPath));
+
+			else if (type.equals("importStylesheets"))
+				result.addContent(getStylesheets(el, context, importXslPath));
 
 			else
 				throw new BadParameterEx("type", type);
@@ -136,10 +155,39 @@ public class Info implements Service
 	};
 
 	//--------------------------------------------------------------------------
+	//--- Metadata fragment/import stylesheets
+	//--------------------------------------------------------------------------
+
+	private Element getStylesheets(Element el, ServiceContext context, File xslPath) throws Exception {
+		String sheets[] = xslPath.list();
+
+		if (sheets == null)
+			throw new Exception("Cannot scan directory : "+ xslPath.getAbsolutePath());
+		Element elRoot = new Element("stylesheets");
+
+		for (int i=0; i<sheets.length; i++) {
+			if (sheets[i].endsWith(".xsl")) {
+				int    pos = sheets[i].lastIndexOf(".xsl");
+				String name= sheets[i].substring(0, pos);
+				String id  = sheets[i];
+
+				Element res = new Element(Jeeves.Elem.RECORD);
+
+				res.addContent(new Element(Geonet.Elem.ID)  .setText(id));
+				res.addContent(new Element(Geonet.Elem.NAME).setText(name));
+
+				elRoot.addContent(res);
+			}
+		}
+
+		return elRoot;
+	}
+
+	//--------------------------------------------------------------------------
 	//--- OaiPmhServer
 	//--------------------------------------------------------------------------
 
-	private Element getOaiPmhServer(Element el) throws BadInputEx
+	private Element getOaiPmhServer(Element el, ServiceContext context) throws BadInputEx
 	{
 		String url = el.getAttributeValue("url");
 
@@ -153,8 +201,8 @@ public class Info implements Service
 
 		try
 		{
-			res.addContent(getMdFormats(url));
-			res.addContent(getSets(url));
+			res.addContent(getMdFormats(url, context));
+			res.addContent(getSets(url, context));
 		}
 		catch(JDOMException e)
 		{
@@ -178,11 +226,13 @@ public class Info implements Service
 
 	//--------------------------------------------------------------------------
 
-	private Element getMdFormats(String url) throws Exception
+	private Element getMdFormats(String url, ServiceContext context) throws Exception
 	{
 		ListMetadataFormatsRequest req = new ListMetadataFormatsRequest();
 		req.setValidationSchema(oaiSchema);
-		req.getTransport().setUrl(new URL(url));
+		Transport t = req.getTransport();
+		t.setUrl(new URL(url));
+		Lib.net.setupProxy(context, t);
 		ListMetadataFormatsResponse res = req.execute();
 
 		//--- build response
@@ -197,7 +247,7 @@ public class Info implements Service
 
 	//--------------------------------------------------------------------------
 
-	private Element getSets(String url) throws Exception
+	private Element getSets(String url, ServiceContext context) throws Exception
 	{
 		Element root = new Element("sets");
 
@@ -205,7 +255,9 @@ public class Info implements Service
 		{
 			ListSetsRequest req = new ListSetsRequest();
 			req.setValidationSchema(oaiSchema);
-			req.getTransport().setUrl(new URL(url));
+			Transport t = req.getTransport();
+			t.setUrl(new URL(url));
+			Lib.net.setupProxy(context, t);
 			ListSetsResponse res = req.execute();
 
 			//--- build response
@@ -238,7 +290,9 @@ public class Info implements Service
 
 	private File iconPath;
 	private File oaiSchema;
-
+	private File wfsXslPath;
+	private File tdsXslPath;
+	private File importXslPath;
 
 	private static final String iconExt[] = { ".gif", ".png", ".jpg", ".jpeg" };
 }

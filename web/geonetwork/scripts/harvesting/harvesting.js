@@ -12,7 +12,9 @@ ker.include('harvesting/geonet20/geonetwork20.js');
 ker.include('harvesting/webdav/webdav.js');
 ker.include('harvesting/csw/csw.js');
 ker.include('harvesting/ogcwxs/ogcwxs.js');
-//ker.include('harvesting/z3950/z3950.js');
+ker.include('harvesting/thredds/thredds.js');
+ker.include('harvesting/metadatafragments/metadatafragments.js');
+ker.include('harvesting/z3950/z3950.js');
 ker.include('harvesting/oaipmh/oaipmh.js');
 ker.include('harvesting/arcsde/arcsde.js');
 ker.include('harvesting/filesystem/filesystem.js');
@@ -46,10 +48,12 @@ function Harvesting()
 	var geonet20 = new Geonetwork20(loader);
 	var webdav   = new WebDav(loader);
 	var csw      = new Csw(loader);
-//	var z3950    = new Z3950(loader);
+	var z3950    = new Z3950(loader);
 	var oaipmh   = new OaiPmh(loader);
 	var ogcwxs   = new OgcWxs(loader);
 	var arcsde   = new Arcsde(loader);
+	var thredds  = new Thredds(loader);
+	var metadatafragments = new MetadataFragments(loader);
 	var filesystem   = new Filesystem(loader);
 	
 	//--- public objects
@@ -58,9 +62,11 @@ function Harvesting()
 	this.geonet20 = geonet20;
 	this.webdav   = webdav;
 	this.csw      = csw;
-//	this.z3950    = z3950;
+	this.z3950    = z3950;
 	this.oaipmh   = oaipmh;
 	this.ogcwxs   = ogcwxs;
+	this.thredds  = thredds;
+	this.metadatafragments  = metadatafragments;
 	this.arcsde	  = arcsde;
 	this.filesystem  = filesystem;
 	
@@ -90,8 +96,10 @@ function init()
 	view.register(webdav);
 	view.register(csw);
 	view.register(ogcwxs);
-//	view.register(z3950);
+	view.register(thredds);
+	view.register(z3950);
 	view.register(oaipmh);
+	view.register(metadatafragments);
 	view.register(arcsde);
 	view.register(filesystem);
 	view.show(SHOW.LIST);

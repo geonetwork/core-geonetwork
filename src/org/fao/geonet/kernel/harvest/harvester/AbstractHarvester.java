@@ -46,6 +46,8 @@ import org.fao.geonet.kernel.harvest.harvester.oaipmh.OaiPmhHarvester;
 import org.fao.geonet.kernel.harvest.harvester.ogcwxs.OgcWxSHarvester;
 import org.fao.geonet.kernel.harvest.harvester.webdav.WebDavHarvester;
 import org.fao.geonet.kernel.harvest.harvester.z3950.Z3950Harvester;
+import org.fao.geonet.kernel.harvest.harvester.thredds.ThreddsHarvester;
+import org.fao.geonet.kernel.harvest.harvester.metadatafragments.MetadataFragmentsHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
@@ -76,6 +78,8 @@ public abstract class AbstractHarvester
 		register(context, OgcWxSHarvester  .class);
 		register(context, ArcSDEHarvester  .class);
 		register(context, LocalFilesystemHarvester	.class);
+		register(context, MetadataFragmentsHarvester  .class);
+		register(context, LocalFilesystemHarvester      .class);
 	}
 
 	//---------------------------------------------------------------------------
@@ -458,6 +462,7 @@ public abstract class AbstractHarvester
 		String siteId    = settingMan.add(dbms, path, "site",    "");
 		String optionsId = settingMan.add(dbms, path, "options", "");
 		String infoId    = settingMan.add(dbms, path, "info",    "");
+		String contentId = settingMan.add(dbms, path, "content", "");
 
 		//--- setup site node ----------------------------------------
 
@@ -474,6 +479,11 @@ public abstract class AbstractHarvester
 		settingMan.add(dbms, "id:"+optionsId, "every",      params.every);
 		settingMan.add(dbms, "id:"+optionsId, "oneRunOnly", params.oneRunOnly);
 		settingMan.add(dbms, "id:"+optionsId, "status",     status);
+
+		//--- setup content node ---------------------------------------
+
+		settingMan.add(dbms, "id:"+contentId, "importxslt", params.importXslt);
+		settingMan.add(dbms, "id:"+contentId, "validate",   params.validate);
 
 		//--- setup stats node ----------------------------------------
 

@@ -11,7 +11,10 @@
 	<!-- ============================================================================================= -->
 
 	<xsl:template match="*" mode="site">
+		<query><xsl:value-of select="query/value" /></query>
 		<icon><xsl:value-of select="icon/value" /></icon>
+
+		<xsl:apply-templates select="repositories/children" mode="repositories"/>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
@@ -20,19 +23,15 @@
 
 	<!-- ============================================================================================= -->
 
-	<!--xsl:template match="*" mode="searches">
-		<searches>
-			<xsl:for-each select="children/search">
-				<search>
-					<freeText><xsl:value-of select="children/freeText/value" /></freeText>
-					<title><xsl:value-of    select="children/title/value" /></title>
-					<abstract><xsl:value-of select="children/abstract/value" /></abstract>
-					<subject><xsl:value-of  select="children/subject/value" /></subject>
-				</search>
+	<xsl:template match="*" mode="repositories">
+		<repositories>
+			<xsl:for-each select="repository">
+				<repository id="{value}"/>
 			</xsl:for-each>
-		</searches>
-	</xsl:template-->
-	
+		</repositories>
+	</xsl:template>
+
 	<!-- ============================================================================================= -->
+
 
 </xsl:stylesheet>

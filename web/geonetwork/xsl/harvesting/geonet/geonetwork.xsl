@@ -14,6 +14,8 @@
 			<div class="dots"/>
 			<xsl:call-template name="options-GN"/>
 			<div class="dots"/>
+			<xsl:call-template name="content-GN"/>
+			<div class="dots"/>
 			<xsl:call-template name="privileges-GN"/>
 			<div class="dots"/>
 			<xsl:call-template name="categories-GN"/>
@@ -110,6 +112,29 @@
 				<td class="padded"><input id="gn.oneRunOnly" type="checkbox" value=""/></td>
 			</tr>
 		</table>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template name="content-GN">
+	<div style="display:none;"> <!-- UNUSED -->
+		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/content"/></h1>
+
+		<table border="0">
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/importxslt"/></td>
+				<td class="padded">
+					&#160;
+					<select id="gn.importxslt" class="content" name="importxslt" size="1"/>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/validate"/></td>
+				<td class="padded"><input id="gn.validate" type="checkbox" value=""/></td>
+			</tr>
+		</table>
+	</div>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->

@@ -12,7 +12,7 @@
 
 	<xsl:template match="/root/group">
 
-		<tr id="z39.group.{@id}">
+		<tr id="z3950.group.{@id}">
 			<td class="padded" align="center"><xsl:value-of select="@name"/></td>
 			
 			<!-- view - - - - - - - - - - - - - - - - - - - - - - -->
@@ -20,43 +20,45 @@
 			<td class="padded" align="center">
 				<input name="view" type="checkbox">
 					<xsl:if test="operation/@name = 'view'">
-						<xsl:attribute name="checked"/>
+						<xsl:attribute name="checked">on</xsl:attribute>
 					</xsl:if>
 				</input>
 			</td>
 		
-			<!-- dynamic - - - - - - - - - - - - - - - - - - - - - - -->
-			
+			<!-- dynamic - - - - - - - - - - - - - - - - - - - - -->
 			<td class="padded" align="center">
 				<input name="dynamic" type="checkbox">
 					<xsl:if test="operation/@name = 'dynamic'">
-						<xsl:attribute name="checked"/>
+						<xsl:attribute name="checked">on</xsl:attribute>
 					</xsl:if>
 				</input>
-			</td>
+				</td>
 			
-			<!-- featured - - - - - - - - - - - - - - - - - - - - - - -->
+			
+			<!-- featured - - - - - - - - - - - - - - - - - - - - -->
 			
 			<td class="padded" align="center">
 				<input name="featured" type="checkbox">
 					<xsl:if test="operation/@name = 'featured'">
-						<xsl:attribute name="checked"/>
+						<xsl:attribute name="checked">on</xsl:attribute>
 					</xsl:if>
 				</input>
 			</td>
-			
-			<!-- actions - - - - - - - - - - - - - - - - - - - - - - -->
+			<!-- actions - - - - - - - - - - - - - - - - - - - - -->
 			
 			<td class="padded" align="center">
-				<button class="content" onclick="harvesting.z3950.removeGroupRow('z39.group.{@id}')">
+				<a href="javascript:harvesting.z3950.removeGroupRow('z3950.group.{@id}')">
 					<xsl:value-of select="/root/strings/remove"/>
-				</button>
+				</a>
 			</td>
-			
 		</tr>
 
 	</xsl:template>
 
+	<!-- ============================================================================================= -->
+	
+	<xsl:template match="strings"/>
+	<xsl:template match="env"/>
 	
 	<!-- ============================================================================================= -->
 

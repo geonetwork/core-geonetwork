@@ -9,6 +9,7 @@
 	<xsl:template match="node">
 		<xsl:variable name="site"  select="children/site/children"/>
 		<xsl:variable name="opt"   select="children/options/children"/>
+		<xsl:variable name="con"   select="children/content/children"/>
 		<xsl:variable name="priv"  select="children/privileges/children"/>
 		<xsl:variable name="categ" select="children/categories/children"/>
 		<xsl:variable name="info"  select="children/info/children"/>
@@ -26,6 +27,11 @@
 				<xsl:apply-templates select="$site" mode="site"/>
 			</site>
 		
+			<content>
+				<validate><xsl:value-of select="$con/validate/value" /></validate>
+				<importxslt><xsl:value-of select="$con/importxslt/value" /></importxslt>
+			</content>
+
 			<options>
 				<every><xsl:value-of select="$opt/every/value" /></every>
 				<oneRunOnly><xsl:value-of select="$opt/oneRunOnly/value" /></oneRunOnly>

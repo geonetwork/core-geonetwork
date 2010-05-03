@@ -48,6 +48,7 @@ this.init = function()
 	this.view.init();
 	
 	model.retrieveCategories(ker.wrap(this, init_categ_OK));
+	model.retrieveImportXslts     (ker.wrap(this, init_importXslts_OK));
 }
 
 //-------------------------------------------------------------------------------------
@@ -58,6 +59,18 @@ function init_categ_OK(data)
 		
 	for (var i=0; i<data.length; i++)
 		view.addCategory(data[i].id, data[i].label[Env.lang]);				
+}
+
+//-------------------------------------------------------------------------------------
+
+function init_importXslts_OK(data)
+{
+	view.clearImportXslt();
+	
+	view.addImportXslt('none','--None--');
+	for (var i=0; i<data.length; i++) {
+		view.addImportXslt(data[i].id,data[i].name);				
+	}
 }
 
 //=====================================================================================

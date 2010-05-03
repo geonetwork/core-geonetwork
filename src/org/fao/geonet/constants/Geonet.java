@@ -113,6 +113,8 @@ public class Geonet
 		public static final String STYLESHEETS        = "/xsl";
 		public static final String CONV_STYLESHEETS   = STYLESHEETS + "/conversion";
 		public static final String IMPORT_STYLESHEETS = CONV_STYLESHEETS + "/import";
+		public static final String WFS_STYLESHEETS    = CONV_STYLESHEETS + "/WFSToFragments";
+		public static final String TDS_STYLESHEETS    = CONV_STYLESHEETS + "/ThreddsToFragments";
 		public static final String LOGOS              = "/images/logos/";
 		public static final String XML                = Jeeves.Path.XML;
 	}
@@ -295,6 +297,12 @@ public class Geonet
          * search waits for responses from remote servers before timing out.
          * Default is 20 seconds */
         public static final String TIMEOUT       = "timeout";
+
+				/** Parameter name: {@value #SERVERHTML} - Boolean that indicates
+				 * whether remote Z39.50 server should return HTML or XML. Values are
+				 * {@value org.fao.geonet.constants.Geonet.Text#ON} or
+				 * {@value org.fao.geonet.constants.Geonet.Text#OFF} (default) */
+				public static final String SERVERHTML    = "serverhtml";
 
 	    /** Parameter name: {@value #HITS_PER_PAGE} - Number of results
 	     * returned by the search engine. Default is 10 results */

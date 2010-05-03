@@ -211,7 +211,7 @@ public class Xml
 	{
 		File styleSheet = new File(styleSheetPath);
 		Source srcXml   = new JDOMSource(new Document((Element)xml.detach()));
-		Source srcSheet = new StreamSource(styleSheet.toURI().toASCIIString());
+		Source srcSheet = new StreamSource(styleSheet);
 
 		// Dear old saxon likes to yell loudly about each and every XSLT 1.0
 		// stylesheet so switch it off but trap any exceptions because this
@@ -265,7 +265,7 @@ public class Xml
 
    // Step 4: Setup JAXP using identity transformer
    TransformerFactory factory = TransformerFactory.newInstance();
-   Source xslt = new StreamSource(new File(styleSheetPath).toURI().toASCIIString());
+   Source xslt = new StreamSource(new File(styleSheetPath));
 		try {
 			factory.setAttribute(FeatureKeys.VERSION_WARNING,false);
 			factory.setAttribute(FeatureKeys.LINE_NUMBERING,true);
@@ -530,7 +530,18 @@ public class Xml
 	public static void validate(String schemaPath, Element xml) throws Exception
 	{
 		Element xsdXPaths = validateInfo(schemaPath,xml);
-		if (xsdXPaths != null && xsdXPaths.getContent().size() > 0) throw new XSDValidationErrorEx("XSD Validation error(s)",xsdXPaths);
+		if (xsdXPaths != null && xsdXPaths.getContent().size() > 0) throw new XSDValidationErrorEx("XSD Validation error(s)", xsdXPaths);
+	}
+
+	public static void validate(Element xml) throws Exception 
+	{
+		//NOTE: Create a schema object without schema file name so that schemas
+		//will be obtained from whatever locations are provided in the document
+		//including over the net
+
+		Schema schema = factory().newSchema();             
+		ErrorHandler eh = new ErrorHandler();
+		validateRealGuts(schema, xml, eh);
 	}
 
 	public static Element validateInfo(String schemaPath, Element xml) throws Exception
@@ -557,7 +568,10 @@ public class Xml
 	private static void validateGuts(String schemaPath, Element xml, ErrorHandler eh) throws Exception {
 		StreamSource schemaFile = new StreamSource(new File(schemaPath));
 		Schema schema = factory().newSchema(schemaFile);
-	
+		validateRealGuts(schema, xml, eh);
+	}
+
+	private static void validateRealGuts(Schema schema, Element xml, ErrorHandler eh) throws Exception {
 		ValidatorHandler vh = schema.newValidatorHandler();
 		vh.setErrorHandler(eh);
 		SAXOutputter so = new SAXOutputter(vh);

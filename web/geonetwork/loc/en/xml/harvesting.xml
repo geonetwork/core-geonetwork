@@ -46,9 +46,20 @@
 		<short>OGC WxS</short>
 		<long>OGC Web services (ie. WMS, WFS, WCS, WPS)</long>
 	</info>
+
 	<info type="arcsde">
 		<short>ArcSDE</short>
 		<long>ArcSDE server</long>
+	</info>
+
+	<info type="thredds">
+		<short>Thredds</short>
+		<long>Thredds Catalog</long>
+	</info>
+	
+	<info type="metadatafragments">
+		<short>WFS Fragments</short>
+		<long>Metadata Fragments from OGC WFS</long>
 	</info>
 
 	<info type="filesystem">
@@ -102,6 +113,9 @@
 	<retrieve>Retrieve</retrieve>
 	<warn>You can retrieve only after filling the site part</warn>
 	
+	<content>Harvested Content</content>
+	<importxslt>Apply this XSLT to harvested records</importxslt>
+
 	<options>Options</options>
 	<everySpec>(days : hours : minutes)</everySpec>
 	<oneRun>One run only</oneRun>
@@ -158,6 +172,34 @@
 	<hours>hours</hours>
 	<mins>minutes</mins>
 	
+	<threddslang>Metadata language</threddslang>
+	<threddsImp>Type of import</threddsImp>
+	<threddsServiceMdOnly19119>Create metadata for all services in the catalog using ISO19119.</threddsServiceMdOnly19119>
+	<threddsCollectionDataset19115>Create metadata for Collection Datasets.</threddsCollectionDataset19115>
+	<threddsAtomicDataset19115>Create metadata for Atomic Datasets.</threddsAtomicDataset19115>
+	<threddsCreateDefaultMd>Create default metadata</threddsCreateDefaultMd>
+	<threddsCreateFragments>Customise metadata generation using fragments</threddsCreateFragments>
+  <threddsFragmentStylesheetForCollections>Stylesheet to use to create metadata fragments from collection datasets</threddsFragmentStylesheetForCollections>
+  <collectionFragmentStylesheet>Collection Stylesheet</collectionFragmentStylesheet>
+  <threddsFragmentStylesheetForAtomics>Stylesheet to use to create metadata fragments from atomic datasets</threddsFragmentStylesheetForAtomics>
+  <atomicFragmentStylesheet>Atomic Stylesheet</atomicFragmentStylesheet>
+	<threddsCreateSubtemplates>Create subtemplates for fragments (xlinks will be used in generated metadata)</threddsCreateSubtemplates>
+	<threddsIgnoreHarvestOnCollections>Ignore harvesting attribute on collection datasets in catalog</threddsIgnoreHarvestOnCollections>
+	<threddsOSCollections>Select schema for collection metadata records</threddsOSCollections>
+	<threddsIgnoreHarvestOnAtomics>Ignore harvesting attribute on atomic datasets</threddsIgnoreHarvestOnAtomics>
+	<threddsOSAtomics>Select schema for atomic metadata records</threddsOSAtomics>
+	<threddsCreateThumbnails>Create thumbnails for any datasets delivered by WMS</threddsCreateThumbnails>
+	
+	<metadatafragmentsQuery>GetFeature Query</metadatafragmentsQuery>
+	<metadataFragmentsStylesheet>Stylesheet to use to create fragments</metadataFragmentsStylesheet>
+	<template>Template to use to build metadata using fragments</template>
+	<fragmentCategory>Category for fragments</fragmentCategory>
+	<recordCategory>Category for records built with linked fragments</recordCategory>
+
+	<z3950repositories>Z3950 Server(s)</z3950repositories>
+	<z3950query>Z3950 Query</z3950query>
+	
+	<cataUrl>Catalog URL</cataUrl>
 	<!-- validator messages -->
 	
 	<validator>
@@ -244,6 +286,17 @@
 		<datasetMdUrl>Metadata Url used</datasetMdUrl>
 		<thumbnails>Thumbnails</thumbnails>
 		<thumbnailsFailed>Thumbnails failed</thumbnailsFailed>
+		<serviceRecords>Services Added</serviceRecords>
+		<collectionDatasetRecords>Collections Added</collectionDatasetRecords>
+		<atomicDatasetRecords>Atomics Added</atomicDatasetRecords>
+        <fragmentsAdded>Fragments Added</fragmentsAdded>
+        <subtemplatesAdded>Sub-templates Added</subtemplatesAdded>
+        <fragmentsRemoved>Fragments Removed</fragmentsRemoved>
+        <subtemplatesRemoved>Sub-templates Removed</subtemplatesRemoved>
+		<fragmentsUnknownSchema>Fragments w/Unknown Schema</fragmentsUnknownSchema>
+		<fragmentsReturned>Fragments Returned</fragmentsReturned>
+		<fragmentsMatched>Fragments Matched</fragmentsMatched>
+		<recordsBuilt>Records Built</recordsBuilt>
 	</tipHeader>
 	
 	<notRun>Waiting for the first run</notRun>
@@ -277,6 +330,20 @@
 		<tip id="gn.categories">
 			You can assign one or more categories to harvested metadata. Use the <b>&lt;CTRL&gt;</b> 
 			key to select more than one category.
+		</tip>
+		
+		<!-- Z3950 harvesting type - - - - - - - - - - - - - - - - - - - - - -->
+	
+		<tip id="z3950.repositories">
+			Select one or more of the Z3950 servers shown
+		</tip>
+		
+		<tip id="z3950.query">
+			The query should be a valid Z3950 query eg. @attrset geo @attr 1=1016 @attr 4=6 @attr 2=3 "water"
+		</tip>
+	
+		<tip id="z3950.profile">
+			Select a profile (group of) Z3950 servers
 		</tip>
 		
 		<!-- CSW harvesting type - - - - - - - - - - - - - - - - - - - - - - -->

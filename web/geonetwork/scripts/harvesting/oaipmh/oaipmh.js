@@ -77,6 +77,18 @@ function init_categ_OK(data)
 
 //-------------------------------------------------------------------------------------
 
+function init_importXslts_OK(data)
+{
+	view.clearImportXslt();
+	
+	view.addImportXslt('none','--None--');
+	for (var i=0; i<data.length; i++) {
+		view.addImportXslt(data[i].id,data[i].name);				
+	}
+}
+
+//-------------------------------------------------------------------------------------
+
 function init_icons_OK(data)
 {
 	view.clearIcons();

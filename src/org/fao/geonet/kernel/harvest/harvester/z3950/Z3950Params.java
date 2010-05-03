@@ -1,7 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
+//===	Copyright (C) 2009 Swisstopo
 //===
 //===	This program is free software; you can redistribute it and/or modify
 //===	it under the terms of the GNU General Public License as published by
@@ -23,123 +21,111 @@
 
 package org.fao.geonet.kernel.harvest.harvester.z3950;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import jeeves.exceptions.BadInputEx;
+import jeeves.exceptions.MissingParameterEx;
 import jeeves.utils.Util;
+
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;
 
 //=============================================================================
 
-public class Z3950Params extends AbstractParams
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class Z3950Params extends AbstractParams {
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Constructor
+	// ---
+	// --------------------------------------------------------------------------
 
-	public Z3950Params(DataManager dm)
-	{
+	public Z3950Params(DataManager dm) {
 		super(dm);
 	}
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Create : called when a new entry must be added. Reads values from the
-	//---          provided entry, providing default values
-	//---
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
+	// ---
+	// --- Create : called when a new entry must be added. Reads values from the
+	// --- provided entry, providing default values
+	// ---
+	// ---------------------------------------------------------------------------
 
-	public void create(Element node) throws BadInputEx
-	{
+	public void create(Element node) throws BadInputEx {
 		super.create(node);
 
-		Element site     = node.getChild("site");
-//		Element searches = node.getChild("searches");
-//
-//		capabUrl = Util.getParam(site, "capabilitiesUrl", "");
-		icon     = Util.getParam(site, "icon",            "default.gif");
-//
-//		addSearches(searches);
+		Element site = node.getChild("site");
+
+		icon = Util.getParam(site, "icon", "default.gif");
+		query = Util.getParam(site, "query", "");
+		maximumHits = Util.getParam(site, "maximumHits", maximumHits);
+
+		addRepositories(site.getChild("repositories"));
 	}
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Update : called when an entry has changed and variables must be updated
-	//---
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
+	// ---
+	// --- Update : called when an entry has changed and variables must be
+	// updated
+	// ---
+	// ---------------------------------------------------------------------------
 
-	public void update(Element node) throws BadInputEx
-	{
+	public void update(Element node) throws BadInputEx {
 		super.update(node);
 
-		Element site     = node.getChild("site");
-//		Element searches = node.getChild("searches");
-//
-//		capabUrl = Util.getParam(site, "capabilitiesUrl", capabUrl);
-		icon     = Util.getParam(site, "icon",            icon);
-//
-//		//--- if some search queries are given, we drop the previous ones and
-//		//--- set these new ones
-//
-//		if (searches != null)
-//			addSearches(searches);
+		Element site = node.getChild("site");
+
+		icon = Util.getParam(site, "icon", icon);
+		query = Util.getParam(site, "query", query);
+		maximumHits = Util.getParam(site, "maximumHits", maximumHits);
+
+		Element repos = site.getChild("repositories");
+		if (repos != null) {
+			addRepositories(repos);
+		}
 	}
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Other API methods
-	//---
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
 
-//	public Iterable<Search> getSearches() { return alSearches; }
-
-	//---------------------------------------------------------------------------
-
-	public Z3950Params copy()
-	{
+	public Z3950Params copy() {
 		Z3950Params copy = new Z3950Params(dm);
 		copyTo(copy);
 
-//		copy.capabUrl = capabUrl;
-		copy.icon     = icon;
-//
-//		for (Search s : alSearches)
-//			copy.alSearches.add(s.copy());
+		copy.icon = icon;
+		copy.query = query;
+		copy.maximumHits = maximumHits;
+
+		for (String s : alRepositories) {
+			copy.alRepositories.add(s);
+		}
 
 		return copy;
 	}
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
+	// ---------------------------------------------------------------------------
+
+	private void addRepositories(Element repos) throws BadInputEx {
+		alRepositories.clear();
+
+		if (repos == null) return;
+
+		Iterator repoList = repos.getChildren("repository").iterator();
+
+    while (repoList.hasNext()) {
+      Element repoElem = (Element) repoList.next();
+      String  repoId   = repoElem.getAttributeValue("id");
+
+      if (repoId == null)
+        throw new MissingParameterEx("attribute:id", repoElem);
+
+      alRepositories.add(repoId);
+    }
+	}
+
 	//---------------------------------------------------------------------------
 
-//	private void addSearches(Element searches)
-//	{
-//		alSearches.clear();
-//
-//		if (searches == null)
-//			return;
-//
-//		Iterator searchList = searches.getChildren("search").iterator();
-//
-//		while (searchList.hasNext())
-//		{
-//			Element search = (Element) searchList.next();
-//
-//			Search s = new Search();
-//
-//			s.freeText = Util.getParam(search, "freeText", "").trim();
-//			s.title    = Util.getParam(search, "title",    "").trim();
-//			s.abstrac  = Util.getParam(search, "abstract", "").trim();
-//			s.subject  = Util.getParam(search, "subject",  "").trim();
-//
-//			alSearches.add(s);
-//		}
-//	}
+	public Iterable<String>     getRepositories() { return alRepositories; }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -147,45 +133,8 @@ public class Z3950Params extends AbstractParams
 	//---
 	//---------------------------------------------------------------------------
 
-//	public String capabUrl;
 	public String icon;
-//
-//	private ArrayList<Search> alSearches = new ArrayList<Search>();
+	public ArrayList<String> alRepositories = new ArrayList<String>();
+	public String query;
+	public String maximumHits = "100"; // default
 }
-
-//=============================================================================
-
-//class Search
-//{
-//	//---------------------------------------------------------------------------
-//	//---
-//	//--- API methods
-//	//---
-//	//---------------------------------------------------------------------------
-//
-//	public Search copy()
-//	{
-//		Search s = new Search();
-//
-//		s.freeText = freeText;
-//		s.title    = title;
-//		s.abstrac  = abstrac;
-//		s.subject  = subject;
-//
-//		return s;
-//	}
-//
-//	//---------------------------------------------------------------------------
-//	//---
-//	//--- Variables
-//	//---
-//	//---------------------------------------------------------------------------
-//
-//	public String freeText;
-//	public String title;
-//	public String abstrac;
-//	public String subject;
-//}
-
-//=============================================================================
-

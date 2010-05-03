@@ -22,8 +22,6 @@ function Z3950(xmlLoader)
 	
 	//--- public methods
 	
-//	this.addSearchRow   = view.addEmptySearch;
-//	this.removeSearchRow= view.removeSearch;
 	this.addGroupRow    = addGroupRow;
 	this.removeGroupRow = view.removeGroupRow;
 	this.getResultTip   = view.getResultTip;
@@ -39,7 +37,7 @@ function Z3950(xmlLoader)
 
 this.getType      = function() { return "z3950"; }
 this.getLabel     = function() { return loader.eval("info[@type='z3950']/long"); }
-this.getEditPanel = function() { return "z39.editPanel"; }
+this.getEditPanel = function() { return "z3950.editPanel"; }
 
 //=====================================================================================
 
@@ -50,6 +48,8 @@ this.init = function()
 	model.retrieveGroups    (ker.wrap(this, init_groups_OK));
 	model.retrieveCategories(ker.wrap(this, init_categ_OK));
 	model.retrieveIcons     (ker.wrap(this, init_icons_OK));
+	model.retrieveRepositories (ker.wrap(this, init_repositories_OK));
+	model.retrieveImportXslts     (ker.wrap(this, init_importXslts_OK));
 }
 
 //-------------------------------------------------------------------------------------
@@ -80,6 +80,28 @@ function init_icons_OK(data)
 		
 	for (var i=0; i<data.length; i++)
 		view.addIcon(data[i]);				
+}
+
+//-------------------------------------------------------------------------------------
+
+function init_importXslts_OK(data)
+{
+	view.clearImportXslt();
+	
+	view.addImportXslt('none','--None--');
+	for (var i=0; i<data.length; i++) {
+		view.addImportXslt(data[i].id,data[i].name);				
+	}
+}
+
+//-------------------------------------------------------------------------------------
+
+function init_repositories_OK(data)
+{
+	view.clearRepositories();
+
+	for (var i=0; i<data.length; i++)
+		view.addRepository(data[i].id, data[i].label);				
 }
 
 //=====================================================================================

@@ -49,6 +49,12 @@ var updateTemp =
 '      <every>{EVERY}</every>'+
 '      <oneRunOnly>{ONE_RUN_ONLY}</oneRunOnly>'+
 '    </options>'+
+
+'    <content>'+
+'      <validate>{VALIDATE}</validate>'+
+'      <importxslt>{IMPORTXSLT}</importxslt>'+
+'    </content>'+
+
 '  </node>';
 
 //=====================================================================================

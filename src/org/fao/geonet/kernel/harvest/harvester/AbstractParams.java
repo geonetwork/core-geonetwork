@@ -60,6 +60,8 @@ public abstract class AbstractParams
 	{
 		Element site    = node.getChild("site");
 		Element opt     = node.getChild("options");
+		Element content = node.getChild("content");
+
 		Element account = (site == null) ? null : site.getChild("account");
 
 		name       = Util.getParam(site, "name", "");
@@ -71,6 +73,9 @@ public abstract class AbstractParams
 
 		every      = Util.getParam(opt, "every",      90   );
 		oneRunOnly = Util.getParam(opt, "oneRunOnly", false);
+
+		importXslt = Util.getParam(content, "importxslt", "none");
+		validate = Util.getParam(content, "validate", false);
 
 		checkEvery(every);
 
@@ -84,6 +89,8 @@ public abstract class AbstractParams
 	{
 		Element site    = node.getChild("site");
 		Element opt     = node.getChild("options");
+		Element content = node.getChild("content");
+
 		Element account = (site == null) ? null : site.getChild("account");
 		Element privil  = node.getChild("privileges");
 		Element categ   = node.getChild("categories");
@@ -96,6 +103,9 @@ public abstract class AbstractParams
 
 		every      = Util.getParam(opt, "every",      every);
 		oneRunOnly = Util.getParam(opt, "oneRunOnly", oneRunOnly);
+
+		importXslt = Util.getParam(content, "importxslt", importXslt);
+		validate = Util.getParam(content, "validate", validate);
 
 		checkEvery(every);
 
@@ -128,6 +138,9 @@ public abstract class AbstractParams
 
 		copy.every      = every;
 		copy.oneRunOnly = oneRunOnly;
+
+		copy.importXslt = importXslt;
+		copy.validate   = validate;
 
 		for (Privileges p : alPrivileges)
 			copy.alPrivileges.add(p.copy());
@@ -275,6 +288,9 @@ public abstract class AbstractParams
 
 	public int     every;
 	public boolean oneRunOnly;
+
+	public boolean validate;
+	public String importXslt;
 
 	//---------------------------------------------------------------------------
 

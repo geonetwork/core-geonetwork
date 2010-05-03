@@ -106,8 +106,14 @@ public class Show implements Service
 		//--- get metadata
 		
 		boolean addEditing = false;
-		Element elMd = dm.getMetadata(context, id, addEditing);
-		if (skipInfo) elMd.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+		Element elMd;
+		if (!skipInfo) {
+			elMd = dm.getMetadata(context, id, addEditing);
+		} else {
+			elMd = dm.getMetadataNoInfo(context, id);
+		}
+
+		if (elMd == null) throw new MetadataNotFoundEx(id);
 
 		//
 		// setting schemaLocation
@@ -126,9 +132,6 @@ public class Show implements Service
 			Attribute schemaLocation = new Attribute("schemaLocation", locations, Csw.NAMESPACE_XSI);
 			elMd.setAttribute(schemaLocation);			
 		}
-
-		if (elMd == null)
-			throw new MetadataNotFoundEx(id);
 
 		//--- increase metadata popularity
 

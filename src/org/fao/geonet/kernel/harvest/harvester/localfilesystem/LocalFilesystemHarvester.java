@@ -174,6 +174,14 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		System.out.println("Start of alignment for : "+ params.name);
 		this.result = new LocalFilesystemResult();
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
+
+		boolean transformIt = false;
+		String thisXslt = context.getAppPath() + Geonet.Path.IMPORT_STYLESHEETS + "/";
+		if (!params.importXslt.equals("none")) {
+			thisXslt = thisXslt + params.importXslt;
+			transformIt = true;
+		}
+
 		//----------------------------------------------------------------
 		//--- retrieve all local categories and groups
 		//--- retrieve harvested uuids for given harvesting node
@@ -201,6 +209,29 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 				result.unretrievable++;
 				continue; // skip this one
 			}
+
+			// validate it here if requested
+			if (params.validate) {
+				try {
+					Xml.validate(xml);
+				} catch (Exception e) {
+					System.out.println("Cannot validate XML from file " + xmlFile +", ignoring. Error was: "+e.getMessage());
+					result.doesNotValidate++;
+					continue; // skip this one
+				}
+			}
+			
+			// transform using importxslt if not none
+			if (transformIt) {
+				try {
+					xml = Xml.transform(xml, thisXslt);
+				} catch (Exception e) {
+					System.out.println("Cannot transform XML from file " + xmlFile+", ignoring. Error was: "+e.getMessage());
+					result.badFormat++;
+					continue; // skip this one
+				}
+			}
+
 			String schema = dataMan.autodetectSchema(xml);
 			if(schema == null) {
 				result.unknownSchema++;
@@ -275,8 +306,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 
 		String source = params.uuid;
 		String createDate = new ISODate().toString();
-		String id = dataMan.insertMetadataExt(dbms, schema, xml, context.getSerialFactory(), source, createDate, 
-												createDate, uuid, 1, null);
+		String id = dataMan.insertMetadataExt(dbms, schema, xml, context.getSerialFactory(), source, createDate, createDate, uuid, 1, null);
 
 		int iId = Integer.parseInt(id);
 		dataMan.setTemplateExt(dbms, iId, "n", null);

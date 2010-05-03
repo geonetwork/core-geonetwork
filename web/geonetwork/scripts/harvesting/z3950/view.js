@@ -8,7 +8,6 @@ z3950.View = function(xmlLoader)
 {
 	HarvesterView.call(this);	
 
-//	var searchTransf = new XSLTransformer('harvesting/csw/client-search-row.xsl', xmlLoader);
 	var privilTransf = new XSLTransformer('harvesting/z3950/client-privil-row.xsl', xmlLoader);
 	var resultTransf = new XSLTransformer('harvesting/z3950/client-result-tip.xsl', xmlLoader);
 	
@@ -18,7 +17,7 @@ z3950.View = function(xmlLoader)
 	
 	var currSearchId = 0;
 	
-	this.setPrefix('z39');
+	this.setPrefix('z3950');
 	this.setPrivilTransf(privilTransf);
 	this.setResultTransf(resultTransf);
 	
@@ -31,10 +30,12 @@ z3950.View = function(xmlLoader)
 	this.isDataValid    = isDataValid;
 	this.clearIcons     = clearIcons;
 	this.addIcon        = addIcon;		
-//	this.addEmptySearch = addEmptySearch;
-//	this.removeSearch   = removeSearch;
+	this.clearRepositories     = clearRepositories;
+	this.unselectRepositories     = unselectRepositories;
+	this.addRepository     = addRepository;
+	this.getSelectedRepositories     = getSelectedRepositories;
 
-	Event.observe('z39.icon', 'change', ker.wrap(this, updateIcon));
+	Event.observe('z3950.icon', 'change', ker.wrap(this, updateIcon));
 
 //=====================================================================================
 //===
@@ -46,15 +47,17 @@ function init()
 {
 	valid.add(
 	[
-		{ id:'z39.name',        type:'length',   minSize :1,  maxSize :200 },
-		{ id:'z39.username',    type:'length',   minSize :0,  maxSize :200 },
-		{ id:'z39.password',    type:'length',   minSize :0,  maxSize :200 },
-		{ id:'z39.every.days',  type:'integer',  minValue:0, maxValue:99 },
-		{ id:'z39.every.hours', type:'integer',  minValue:0, maxValue:23 },
-		{ id:'z39.every.mins',  type:'integer',  minValue:0, maxValue:59 }
+		{ id:'z3950.name',        type:'length',   minSize :1,  maxSize :200 },
+		{ id:'z3950.repositories',type:'length',   minSize :1,  maxSize :200 },
+		{ id:'z3950.query',       type:'length',   minSize :1,  maxSize :200 },
+		{ id:'z3950.username',    type:'length',   minSize :0,  maxSize :200 },
+		{ id:'z3950.password',    type:'length',   minSize :0,  maxSize :200 },
+		{ id:'z3950.every.days',  type:'integer',  minValue:0, maxValue:99 },
+		{ id:'z3950.every.hours', type:'integer',  minValue:0, maxValue:23 },
+		{ id:'z3950.every.mins',  type:'integer',  minValue:0, maxValue:59 }
 	]);
 
-	shower = new Shower('z39.useAccount', 'z39.account');
+	shower = new Shower('z3950.useAccount', 'z3950.account');
 }
 
 //=====================================================================================
@@ -62,12 +65,11 @@ function init()
 function setEmpty()
 {
 	this.setEmptyCommon();
-	
-//	removeAllSearch();
-	
-//	$('csw.capabUrl').value = '';
-	
-	var icons = $('z39.icon').options;
+
+	this.unselectRepositories();
+	$('z3950.query').value='';
+
+	var icons = $('z3950.icon').options;
 	
 	for (var i=0; i<icons.length; i++)
 		if (icons[i].value == 'default.gif')
@@ -87,19 +89,12 @@ function setData(node)
 	this.setDataCommon(node);
 
 	var site     = node.getElementsByTagName('site')    [0];
-	var searches = node.getElementsByTagName('searches')[0];
 
-//	hvutil.setOption(site, 'capabilitiesUrl', 'csw.capabUrl');
-	hvutil.setOption(site, 'icon',            'z39.icon');
-	
-	//--- add search entries
-	
-//	var list = searches.getElementsByTagName('search');
-	
-//	removeAllSearch();
-	
-//	for (var i=0; i<list.length; i++)
-//		addSearch(list[i]);
+	unselectRepositories();
+	selectRepositories(node);
+
+	hvutil.setOption(site, 'query',           'z3950.query');
+	hvutil.setOption(site, 'icon',            'z3950.icon');
 
 	//--- add privileges entries
 	
@@ -120,30 +115,11 @@ function setData(node)
 function getData()
 {
 	var data = this.getDataCommon();
-	
-//	data.CAPAB_URL = $F('csw.capabUrl');
-	data.ICON      = $F('z39.icon');
-	
-	//--- retrieve search information
-	
-//	var searchData = [];
-//	var searchList = xml.children($('csw.searches'));
-	
-//	for(var i=0; i<searchList.length; i++)
-//	{
-//		var divElem = searchList[i];
-//		
-//		searchData.push(
-//		{
-//			ANY_TEXT : xml.getElementById(divElem, 'csw.anytext') .value,
-//			TITLE    : xml.getElementById(divElem, 'csw.title')   .value,
-//			ABSTRACT : xml.getElementById(divElem, 'csw.abstract').value,
-//			SUBJECT  : xml.getElementById(divElem, 'csw.subject') .value,		
-//		});
-//	}
-//	
-//	data.SEARCH_LIST = searchData;
-	
+
+	data.REPOSITORIES = this.getSelectedRepositories();
+	data.QUERY 		 = $F('z3950.query');
+	data.ICON      = $F('z3950.icon');
+
 	//--- retrieve privileges and categories information
 	
 	data.PRIVILEGES = this.getPrivileges();
@@ -166,7 +142,7 @@ function isDataValid()
 
 function clearIcons() 
 { 
-	$('z39.icon').options.length = 0;
+	$('z3950.icon').options.length = 0;
 }
 
 //=====================================================================================
@@ -174,68 +150,84 @@ function clearIcons()
 function addIcon(file)
 {
 	var html='<option value="'+ file +'">'+ xml.escape(file) +'</option>';
-	new Insertion.Bottom('z39.icon', html);
+	new Insertion.Bottom('z3950.icon', html);
 }
 
 //=====================================================================================
 
 function updateIcon()
 {
-	var icon = $F('z39.icon');
-	var image= $('z39.icon.image');
+	var icon = $F('z3950.icon');
+	var image= $('z3950.icon.image');
 	
 	image.setAttribute('src', Env.url +'/images/harvesting/'+icon);
 }
 
 //=====================================================================================
-//=== Search methods
-//=====================================================================================
 
-//function addEmptySearch()
-//{
-//	var doc    = Sarissa.getDomDocument();	
-//	var search = doc.createElement('search');
-//	
-//	addSearch(search);
-//}
-
-//=====================================================================================
-/*
-function addSearch(search)
+function clearRepositories()
 {
-	var id = ''+ currSearchId++;
-	search.setAttribute('id', id);
-	
-	var xslRes = searchTransf.transform(search);
-
-	//--- add the new search in list
-	new Insertion.Bottom('csw.searches', xml.toString(xslRes));
-	
-	valid.add(
-	[
-		{ id:'csw.anytext',  type:'length',   minSize :0,  maxSize :200 },
-		{ id:'csw.title',    type:'length',   minSize :0,  maxSize :200 },
-		{ id:'csw.abstract', type:'length',   minSize :0,  maxSize :200 },
-		{ id:'csw.subject',  type:'length',   minSize :0,  maxSize :200 }
-	], id);
-}
-*/
-//=====================================================================================
-/*
-function removeSearch(id)
-{
-	valid.removeByParent(id);
-	Element.remove(id);
-}
-*/
-//=====================================================================================
-/*
-function removeAllSearch()
-{
-	$('csw.searches').innerHTML = '';
-	valid.removeByParent();	
-}
-*/
-//=====================================================================================
+	$('z3950.repositories').options.length = 0;
 }
 
+//=====================================================================================
+
+function addRepository(id, label)
+{
+	gui.addToSelect('z3950.repositories', id, label);
+}
+
+//=====================================================================================
+
+function unselectRepositories()
+{
+	var ctrl = $('z3950.repositories');
+
+	for (var i=0; i<ctrl.options.length; i++)
+		ctrl.options[i].selected = false;
+}
+
+//=====================================================================================
+
+function selectRepositories(node)
+{
+	var repositories = node.getElementsByTagName('repositories');
+	if (repositories.length == 0) return;
+
+	var list = repositories[0].getElementsByTagName('repository');
+
+	for (var i=0; i<list.length; i++)
+		selectRepository(list[i]);
+}
+
+//=====================================================================================
+
+function selectRepository(repository)
+{
+	var id = repository.getAttribute('id');
+	var ctrl = $('z3950.repositories');
+
+	for (var i=0; i<ctrl.options.length; i++) {
+		if (ctrl.options[i].value == id) {
+			ctrl.options[i].selected = true;
+			return;
+		}
+	}
+}
+
+//=====================================================================================
+
+function getSelectedRepositories(server)
+{
+	var ctrl = $('z3950.repositories');
+	var result = [];
+	for (var i=0; i<ctrl.options.length; i++) {
+		if (ctrl.options[i].selected) {
+			result.push({ ID : ctrl.options[i].value });
+		}
+	}
+	return result;
+}
+
+//=====================================================================================
+}

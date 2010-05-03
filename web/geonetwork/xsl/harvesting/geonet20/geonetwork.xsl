@@ -11,6 +11,7 @@
 			<xsl:call-template name="site-GN20"/>
 			<xsl:call-template name="search-GN20"/>
 			<xsl:call-template name="options-GN20"/>
+			<xsl:call-template name="content-GN20"/>
 			<p/>
 			<span style="color:red"><xsl:value-of select="/root/gui/harvesting/gn20Unsafe"/></span>
 		</div>
@@ -112,5 +113,28 @@
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
-	
+
+	<xsl:template name="content-GN20">
+	<div style="display:none;"> <!-- UNUSED -->
+		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/content"/></h1>
+
+		<table border="0">
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/importxslt"/></td>
+				<td class="padded">
+					&#160;
+					<select id="gn20.importxslt" class="content" name="importxslt" size="1"/>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/validate"/></td>
+				<td class="padded"><input id="gn20.validate" type="checkbox" value=""/></td>
+			</tr>
+		</table>
+	</div>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
 </xsl:stylesheet>

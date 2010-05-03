@@ -10,7 +10,9 @@ csw.Model = function(xmlLoader)
 
 	var loader    = xmlLoader;
 	var callBackF = null;
-	
+	var callBackStyleSheets = null;
+
+	this.retrieveImportXslts = retrieveImportXslts;
 	this.retrieveGroups    = retrieveGroups;
 	this.retrieveCategories= retrieveCategories;
 	this.retrieveIcons     = retrieveIcons;
@@ -61,6 +63,34 @@ function retrieveIcons_OK(xmlRes)
 
 //=====================================================================================
 
+function retrieveImportXslts(callBack)
+{
+	callBackStyleSheets = callBack;	
+
+	var request = ker.createRequest('type', 'importStylesheets');
+	ker.send('xml.harvesting.info', request, ker.wrap(this, retrieveXslts_OK));
+}
+
+//=====================================================================================
+
+function retrieveXslts_OK(xmlRes)
+{
+	if (xmlRes.nodeName == 'error')
+		ker.showError(loader.getText('cannotRetrieve'), xmlRes);
+	else
+	{
+		var data = [];
+		var list = xml.children(xml.children(xmlRes)[0]);
+		
+		for (var i=0; i<list.length; i++)
+			data.push(xml.toObject(list[i]));
+		
+		callBackStyleSheets(data);
+	}
+}
+
+//=====================================================================================
+
 function getUpdateRequest(data)
 {
 	var request = str.substitute(updateTemp, data);
@@ -95,6 +125,11 @@ var updateTemp =
 '      <every>{EVERY}</every>'+
 '      <oneRunOnly>{ONE_RUN_ONLY}</oneRunOnly>'+
 '    </options>'+
+
+'    <content>'+
+'      <validate>{VALIDATE}</validate>'+
+'      <importxslt>{IMPORTXSLT}</importxslt>'+
+'    </content>'+
 
 '    <searches>'+
 '       {SEARCH_LIST}'+

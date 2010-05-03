@@ -61,6 +61,9 @@ this.setEmptyCommon = function()
 	$(prefix+'.every.hours').value = '1';
 	$(prefix+'.every.mins') .value = '30';
 	
+	$(prefix+'.validate').checked = false;
+	this.unselectImportXslt();
+
 	this.removeAllGroupRows();
 	this.unselectCategories();
 }
@@ -71,6 +74,7 @@ this.setDataCommon = function(node)
 {
 	var site   = node.getElementsByTagName('site')   [0];
 	var options= node.getElementsByTagName('options')[0];
+	var content= node.getElementsByTagName('content')[0];
 	hvutil.setOption(site, 'name',     prefix+'.name');
 	hvutil.setOptionIfExists(site, 'use',      prefix+'.useAccount');
 	hvutil.setOptionIfExists(site, 'username', prefix+'.username');
@@ -80,6 +84,8 @@ this.setDataCommon = function(node)
 	$(prefix+'.every.days') .value = every.days;
 	$(prefix+'.every.hours').value = every.hours;
 	$(prefix+'.every.mins') .value = every.mins;
+	hvutil.setOption(content, 'validate', prefix+'.validate');
+	hvutil.setOption(content, 'importxslt', prefix+'.importxslt');
 }
 
 //=====================================================================================
@@ -103,7 +109,11 @@ this.getDataCommon = function()
 	
 		//--- options		
 		EVERY        : Every.build(days, hours, mins),
-		ONE_RUN_ONLY : $(prefix+'.oneRunOnly').checked
+		ONE_RUN_ONLY : $(prefix+'.oneRunOnly').checked,
+	
+		//--- content		
+		IMPORTXSLT   : $F(prefix+'.importxslt'),
+		VALIDATE     : $(prefix+'.validate').checked
 	}
 	}
 	else {
@@ -114,10 +124,13 @@ this.getDataCommon = function()
 			
 			//--- options		
 			EVERY        : Every.build(days, hours, mins),
-			ONE_RUN_ONLY : $(prefix+'.oneRunOnly').checked
+			ONE_RUN_ONLY : $(prefix+'.oneRunOnly').checked,
+
+			//--- content		
+			IMPORTXSLT   : $F(prefix+'.importxslt'),
+			VALIDATE     : $(prefix+'.validate').checked
 		}
 	}
-
 	
 	return data;
 }
@@ -288,6 +301,32 @@ this.getPrivileges = function()
 	}
 	
 	return data;
+}
+
+//=====================================================================================
+//=== ImportXslt methods
+//=====================================================================================
+
+this.clearImportXslt = function() 
+{ 
+	$(prefix+ '.importxslt').options.length = 0;
+}
+
+//=====================================================================================
+
+this.addImportXslt = function(id,name)
+{
+	gui.addToSelect(prefix+'.importxslt', id, name);
+}
+
+//=====================================================================================
+
+this.unselectImportXslt = function() 
+{ 
+	var ctrl = $(prefix+'.importxslt');
+	
+	for (var i=0; i<ctrl.options.length; i++)
+		ctrl.options[i].selected = false;
 }
 
 //=====================================================================================

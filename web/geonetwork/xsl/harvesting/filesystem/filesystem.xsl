@@ -12,6 +12,8 @@
 			<div class="dots"/>
 			<xsl:call-template name="options-Filesystem"/>
 			<div class="dots"/>
+			<xsl:call-template name="content-Filesystem"/>
+			<div class="dots"/>
 			<xsl:call-template name="privileges-Filesystem"/>
 			<div class="dots"/>
 			<xsl:call-template name="categories-Filesystem"/>			
@@ -51,6 +53,27 @@
 					<img id="filesystem.icon.image" src="" alt="" />
 				</td>
 			</tr>			
+		</table>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template name="content-Filesystem">
+		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/content"/></h1>
+
+		<table border="0">
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/importxslt"/></td>
+				<td class="padded">
+					&#160;
+					<select id="filesystem.importxslt" class="content" name="importxslt" size="1"/>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/validate"/></td>
+				<td class="padded"><input id="filesystem.validate" type="checkbox" value=""/></td>
+			</tr>
 		</table>
 	</xsl:template>
 

@@ -1144,6 +1144,15 @@ public class DataManager
 	//---
 	//--------------------------------------------------------------------------
 
+	/** Retrieves a metadata (in xml) given its id with no geonet:info
+	 */
+	public Element getMetadataNoInfo(ServiceContext srvContext, String id) throws Exception
+	{
+		Element md = getMetadata(srvContext, id, false, false);
+		md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+		return md;
+	}
+
 	/** Retrieves a metadata (in xml) given its id; adds editing information 
 	 *  if requested and does NOT include validation errors
 	 */
