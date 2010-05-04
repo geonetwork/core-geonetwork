@@ -323,7 +323,7 @@ public class SRUSearch implements Service
 			String query = params.get(OP_SR_QUERY);
 
 
-			ExplicitRecordFormatSpecification display_spec = new ExplicitRecordFormatSpecification("xml","f",null);
+			ExplicitRecordFormatSpecification display_spec = new ExplicitRecordFormatSpecification("xml",null,"f");
 
 
 			Log.debug(Geonet.SRU,"getting reference to search session factory");
@@ -332,7 +332,8 @@ public class SRUSearch implements Service
 			// TODO: would be nice to move this to init method but I dont know where to get the context from there..
 
 			// not supported by Geonetwork modules URL layout schema
-			LandscapeSpecification landscape = new SimpleLandscapeSpecification("Default");
+			// TODO: collections could also be mapped to GeoNetwork categories?
+			LandscapeSpecification landscape = new SimpleLandscapeSpecification("geonetwork");
 
 			DefaultContextSetCQLString model =  new DefaultContextSetCQLString(query, "geo", "cql", "geo");
 			// we assume that all incoming queries are from the geo (attributes,structure) and cql (relation) context sets
