@@ -1,21 +1,33 @@
 <project name="cachingxslt" default="all">
 
-  <property name="debug" value="on"/>
+  <property file="../web/geonetwork/WEB-INF/server.prop"/>
+  <property name="ant.build.javac.target" value="${ant.build.javac.target}"/>
+  <property name="debugOn" value="${debugOn}"/>    
 
   <target name="all">
 		<delete file = "cachingxslt.jar" />
 		<delete dir  = "build" />
 		<mkdir dir  = "build" />
 
+    <!-- run the ant timestamp task -->
+    <tstamp><format property="cdate" pattern="yyyy-MM-dd'T'k:mm:ssZ"/></tstamp>
+    
     <javac
      srcdir="src"
      destdir="build"
      extdirs="lib"
-     debug="${debug}">
+     debug="${debugOn}">
     </javac>
 
     <jar jarfile="cachingxslt.jar"
-      basedir="build" includes="de/**, META-INF/**"/>
+      basedir="build" includes="de/**, META-INF/**">
+      <manifest>
+        <attribute name="GeoNetwork-Version" value="${version}"/>
+		<attribute name="Class-compatibility-Version-Number" value="${ant.build.javac.target}"/>
+        <attribute name="Built-Date" value="${cdate}"/>
+      </manifest>
+    </jar>
+    
 		<delete dir="build"/>
   </target>
 
