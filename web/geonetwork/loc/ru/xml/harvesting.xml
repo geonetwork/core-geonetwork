@@ -65,7 +65,9 @@
 	<info type="filesystem">
 		<short>Local Filesystem</short>
 		<long>Local Filesystem Harvesting</long>
-	</info>	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
+	</info>
+
+	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<site>Сайт</site>
 
@@ -116,6 +118,9 @@
 	<retrieve>Получить</retrieve>
 	<warn>Необходимо указать параметры сайта</warn>
 
+	<content>Harvested Content</content>
+	<importxslt>Apply this XSLT to harvested records</importxslt>
+
 	<options>Опции</options>
 	<everySpec>(дней : часов : минут)</everySpec>
 	<oneRun>Запустить один раз</oneRun>
@@ -157,6 +162,21 @@
 	<prefix>Prefix</prefix>
 	<stylesheet>Stylesheet</stylesheet>
 
+	<!-- Buttons -->
+
+	<add>Добавить</add>
+	<edit>Редактировать</edit>
+	<save>Сохранить</save>
+	<activate>Активировать</activate>
+	<deactivate>Деактивировать</deactivate>
+	<run>Запустить</run>
+	<remove>Удалить</remove>
+	<refresh>Обновить</refresh>
+
+	<days>дней</days>
+	<hours>часов</hours>
+	<mins>минут</mins>
+
 	<threddslang>Metadata language</threddslang>
 	<threddsImp>Type of import</threddsImp>
 	<threddsServiceMdOnly19119>Create metadata for all services in the catalog using ISO19119.</threddsServiceMdOnly19119>
@@ -185,21 +205,6 @@
 	<z3950query>Z3950 Query</z3950query>
 	
 	<cataUrl>Catalog URL</cataUrl>
-	<!-- Buttons -->
-
-	<add>Добавить</add>
-	<edit>Редактировать</edit>
-	<save>Сохранить</save>
-	<activate>Активировать</activate>
-	<deactivate>Деактивировать</deactivate>
-	<run>Запустить</run>
-	<remove>Удалить</remove>
-	<refresh>Обновить</refresh>
-
-	<days>дней</days>
-	<hours>часов</hours>
-	<mins>минут</mins>
-
 	<!-- validator messages -->
 
 	<validator>
@@ -252,7 +257,6 @@
 		уникальных идентификаторов, что может привести к непредсказуемым
 		результатам.</gn20Unsafe>
 	<supplyUrl>Пожалуйста, укажите URL-адрес</supplyUrl>
-
 	<oper>
 		<op id="0">Просмотр</op>
 		<op id="1">Загрузка</op>
@@ -477,6 +481,5 @@
 		<tip id="oai.prefix">
 			Выберите формат метаданных, которые вы хотите найти.
 		</tip>
-
 	</tips>
 </strings>

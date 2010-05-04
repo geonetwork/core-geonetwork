@@ -8,7 +8,7 @@
 	<fr>Français</fr> <!-- Do not translate! -->
 	<nl>Nederlands</nl> <!-- Do not translate -->
 	<ru>Русский</ru> <!-- Do not translate! -->
-    <pt>Рortuguês</pt> <!-- Do not translate! -->
+          <pt>Рortuguês</pt> <!-- Do not translate! -->
     
 	<!-- new strings - SP 2.5 -->
 	<showRemoteHTML>Show HTML from remote server</showRemoteHTML>
@@ -509,17 +509,17 @@
 	<progressChoice value="planned">planned</progressChoice>
 	<progressChoice/>
 	<protocol>Protocol</protocol>
-	<protocolChoice show="-" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
-	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
-	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</protocolChoice>
-	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">File for download through FTP</protocolChoice>
-	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">File for download</protocolChoice>
 	<protocolChoice show="y" value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuration File (*.AXL)</protocolChoice>
 	<protocolChoice show="y" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
+	<protocolChoice show="-" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
 	<protocolChoice show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</protocolChoice>
 	<protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
 	<protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
 	<protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</protocolChoice>
+	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">File for download through FTP</protocolChoice>
+	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">File for download</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Web address (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Partner web address (URL)</protocolChoice>
@@ -832,7 +832,7 @@
 	<xsdError>XSD Validation Error</xsdError>
 	<yourRegistration js="true">Your registration...</yourRegistration>
 	<zip>Zip</zip>
-    <header_meta>
+    	<header_meta>
 		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis geospatial CSW reference implementation mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
 		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
@@ -844,7 +844,7 @@
 		<meta name="DC.date" content="02-07-2007"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.language" content="English French Spanish Russian Chinese Dutch"/>
+		<meta name="DC.language" content="English French Spanish German Russian Chinese Dutch Portuguese"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
 	<mainpage1>

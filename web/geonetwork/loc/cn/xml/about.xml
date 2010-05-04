@@ -22,16 +22,16 @@
 			</li>
 		</ul>
 		<p>
-			<span lang="EN-US"><b>GeoNetwork opensource</b>的主要目标是促进从不同范围对不同来源的各种经过组织与文档说明的数据及相关信息的获取，而组织与文档说明的工作都遵循统一的规范。 </span>
+			<span lang="ZH-CN"><b>GeoNetwork opensource</b>的主要目标是促进从不同范围对不同来源的各种经过组织与文档说明的数据及相关信息的获取，而组织与文档说明的工作都遵循统一的规范。 </span>
 		</p>
 		<p>
-			<span lang="EN-US">挑战在于增强各机构之间的数据交换与共享，避免重复，增强数据获取过程中的合作与协调，并使之惠及每个参与者，避免浪费，同时还要保护数据与信息的所有权。</span>
+			<span lang="ZH-CN">挑战在于增强各机构之间的数据交换与共享，避免重复，增强数据获取过程中的合作与协调，并使之惠及每个参与者，避免浪费，同时还要保护数据与信息的所有权。</span>
 		</p>
 		<p>
-			<span lang="EN-US"><a target="_blank"   href="http://www.fao.org"> FAO  </a> and <a href="http://www.wfp.org" target="_blank"> WFP </a>，最近还有更多，例如<a href="http://www.unep.org"   target="_blank">UNEP</a>，已经联合他们的研究与制图专业人员，把开发<b>GeoNetwork opensource</b>作为共同战略，以有效共享其包括数字地图、卫星影像以及相关统计资料的空间数据库。这三个组织充分利用GIS、RS软件制作常常包含多种信息的地图。 <b>GeoNetwork opensource</b> 为他们从单一入口访问大量存于世界各地的地图及其他空间信息。</span>
+			<span lang="ZH-CN"><a target="_blank"   href="http://www.fao.org"> FAO  </a> and <a href="http://www.wfp.org" target="_blank"> WFP </a>，最近还有更多，例如<a href="http://www.unep.org"   target="_blank">UNEP</a>，已经联合他们的研究与制图专业人员，把开发<b>GeoNetwork opensource</b>作为共同战略，以有效共享其包括数字地图、卫星影像以及相关统计资料的空间数据库。这三个组织充分利用GIS、RS软件制作常常包含多种信息的地图。 <b>GeoNetwork opensource</b> 为他们从单一入口访问大量存于世界各地的地图及其他空间信息。</span>
 		</p>
 		<p>
-			<b><span lang="EN-US">GeoNetwork opensource </span></b><span lang="EN-US"> 开发用于通过先进的结构连接空间信息各界及其数据，同时具有功能强大和成本低廉的特点，以免费开源软件(FOSS)的原则为指导，基于国际开放标准实现各类服务和协议(包括 <a href="http://www.isotc211.org" target="_blank">ISO/TC211</a>和<a href="http://www.opengeospatial.org"  target="_blank">OGC</a>)</span>
+			<b><span lang="ZH-CN">GeoNetwork opensource </span></b><span lang="ZH-CN"> 开发用于通过先进的结构连接空间信息各界及其数据，同时具有功能强大和成本低廉的特点，以免费开源软件(FOSS)的原则为指导，基于国际开放标准实现各类服务和协议(包括 <a href="http://www.isotc211.org" target="_blank">ISO/TC211</a>和<a href="http://www.opengeospatial.org"  target="_blank">OGC</a>)</span>
 		</p>
 		<p><a  href="http://geonetwork-opensource.org" target="_blank">更多 ... </a></p>
 	</content>

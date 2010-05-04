@@ -1,37 +1,37 @@
-<?xml version="1.0" encoding="UTF-8"?>
+ï»¿<?xml version="1.0" encoding="UTF-8"?>
 <help>
-	<title>Sobre a página do projecto GeoNetwork opensource</title>
+	<title>Sobre a pÃ¡gina do projecto GeoNetwork opensource</title>
 	<content>
-		<p>Esta página usa a software da <a href="http://geonetwork-opensource.org" target="_blank">GeoNetwork opensource</a>.
+		<p>Esta pÃ¡gina usa a software da <a href="http://geonetwork-opensource.org" target="_blank">GeoNetwork opensource</a>.
 		</p>
 		<p>
-			<strong>GeoNetwork opensource</strong> é um ambiente padronizado e descentralizado para a gestão de informação espacial. É desenhado para proporcionar acesso a bancos de dados georeferenciados, produtos cartográficos e metadados relacionados, obtidos duma variedade de fontes. Usando as capacidades de Internet, a GeoNetwork melhora a troca e a partilha de informação espacial entre organizações e a assistência das mesmas. Esta aproximação à gestão de informação geográfica pretende facilitar um acesso simples e oportuno a dados espaciais e mapas temáticas existentes para uma comunidade larga de utilizadores, de modo que tomadas de decisões possam ser apoiada pela informação actual.
+			<strong>GeoNetwork opensource</strong> Ã© um ambiente padronizado e descentralizado para a gestÃ£o de informaÃ§Ã£o espacial. Ã‰ desenhado para proporcionar acesso a bancos de dados georeferenciados, produtos cartogrÃ¡ficos e metadados relacionados, obtidos duma variedade de fontes. Usando as capacidades de Internet, a GeoNetwork melhora a troca e a partilha de informaÃ§Ã£o espacial entre organizaÃ§Ãµes e a assistÃªncia das mesmas. Esta aproximaÃ§Ã£o Ã  gestÃ£o de informaÃ§Ã£o geogrÃ¡fica pretende facilitar um acesso simples e oportuno a dados espaciais e mapas temÃ¡ticas existentes para uma comunidade larga de utilizadores, de modo que tomadas de decisÃµes possam ser apoiada pela informaÃ§Ã£o actual.
 		</p>
 		<p>
-			<span lang="EN-US">Mapas, inclusive aqueles derivados de imagens de satélite,</span> são ferramentas de comunicação efectivas e têm um papel importante no trabalho de vários<span lang="EN-US"> tipos de utilizadores:</span>
+			<span lang="EN-US">Mapas, inclusive aqueles derivados de imagens de satÃ©lite,</span> sÃ£o ferramentas de comunicaÃ§Ã£o efectivas e tÃªm um papel importante no trabalho de vÃ¡rios<span lang="EN-US"> tipos de utilizadores:</span>
 		</p>
 		<ul type="disc" style="margin-top: 0cm;">
 			<li>
-				Tomadores de decisões: p.ex. projéctistas de desenvolvimento sustentável e gestores de emergência e de ajuda humanitária que precisam urgentemente dos produtos <span lang="EN-US">cartográficos </span>de confiança, actuais e faciais de usar como base para<span lang="EN-US"> agir,</span><span lang="EN-US"> </span><span lang="EN-US">assim como planear e monitorizar melhor as suas actividades.</span>
+				Tomadores de decisÃµes: p.ex. projÃ©ctistas de desenvolvimento sustentÃ¡vel e gestores de emergÃªncia e de ajuda humanitÃ¡ria que precisam urgentemente dos produtos <span lang="EN-US">cartogrÃ¡ficos </span>de confianÃ§a, actuais e faciais de usar como base para<span lang="EN-US"> agir,</span><span lang="EN-US"> </span><span lang="EN-US">assim como planear e monitorizar melhor as suas actividades.</span>
 			</li>
 			<li>
-				Especialistas de SIG em necessidade de intercambiar dados gegráficos consistentes e actuais.
+				Especialistas de SIG em necessidade de intercambiar dados gegrÃ¡ficos consistentes e actuais.
 			</li>
 			<li>
-				Analistas espaciais em necessidade de dados multidisciplinares para antecipar análises geográficas e prognósticos de confiança para planear intervenções apropriadas em áreas vulneráveis.
+				Analistas espaciais em necessidade de dados multidisciplinares para antecipar anÃ¡lises geogrÃ¡ficas e prognÃ³sticos de confianÃ§a para planear intervenÃ§Ãµes apropriadas em Ã¡reas vulnerÃ¡veis.
 			</li>
 		</ul>
 		<p>
-			<span lang="EN-US">O objectivo principal da <b>GeoNetwork opensource </b> software é melhorar a acessibilidade a uma variedade de dados, em conjunto com as informações associados, a escalas diferentes e de fontes multidisciplinares, organizado e documentado numa maneira padronizada e consistente.</span>
+			<span lang="EN-US">O objectivo principal da <b>GeoNetwork opensource </b> software Ã© melhorar a acessibilidade a uma variedade de dados, em conjunto com as informaÃ§Ãµes associados, a escalas diferentes e de fontes multidisciplinares, organizado e documentado numa maneira padronizada e consistente.</span>
 		</p>
 		<p>
-			<span lang="EN-US">O desafio é melhorar a troca e a partilha de dados entre organizações com os objectivos de evitar duplicações, aumentar a cooperação e a coordenação nos esforços de coleccionar dados e disponibiliza-los para o benefício de todos, poupar recursos e ao mesmo tempo a preservação dos direitos de propriedade sobre os dados e as informações.</span>
+			<span lang="EN-US">O desafio Ã© melhorar a troca e a partilha de dados entre organizaÃ§Ãµes com os objectivos de evitar duplicaÃ§Ãµes, aumentar a cooperaÃ§Ã£o e a coordenaÃ§Ã£o nos esforÃ§os de coleccionar dados e disponibiliza-los para o benefÃ­cio de todos, poupar recursos e ao mesmo tempo a preservaÃ§Ã£o dos direitos de propriedade sobre os dados e as informaÃ§Ãµes.</span>
 		</p>
 		<p>
-			<span lang="EN-US"><a target="_blank" href="http://www.fao.org">FAO</a> e <a href="http://www.wfp.org" target="_blank">WFP</a>, e mais recente <a href="http://www.unep.org" target="_blank">UNEP</a>, reuniram as suas competências nas áreas de investigação e de elaboração de mapas para desenvolver <b>GeoNetwork opensource </b> como uma estratégia comum para partilhar efectivamente os seus bancos de dados espaciais,  inclusive mapas digitais, imagens de satélites e estatísticas relacionadas. As três organizações usam extensivamente das ferramentas de visualização de dados, baseadas em computadores e conhecido como software de Sistema de Informação Geográfica (SIG) e detecção remota, principalmente para criar mapas aquelas combinam vários layers (camadas) de informação. <b>GeoNetwork opensource </b> proporciona-lhes a capacidade de ter acesso a uma vasta selecção de mapas e outras informações espaciais armazenadas em bancos de dados diferentes em todo mundo, através de um único ponto de entrada.</span>
+			<span lang="EN-US"><a target="_blank" href="http://www.fao.org">FAO</a> e <a href="http://www.wfp.org" target="_blank">WFP</a>, e mais recente <a href="http://www.unep.org" target="_blank">UNEP</a>, reuniram as suas competÃªncias nas Ã¡reas de investigaÃ§Ã£o e de elaboraÃ§Ã£o de mapas para desenvolver <b>GeoNetwork opensource </b> como uma estratÃ©gia comum para partilhar efectivamente os seus bancos de dados espaciais,  inclusive mapas digitais, imagens de satÃ©lites e estatÃ­sticas relacionadas. As trÃªs organizaÃ§Ãµes usam extensivamente das ferramentas de visualizaÃ§Ã£o de dados, baseadas em computadores e conhecido como software de Sistema de InformaÃ§Ã£o GeogrÃ¡fica (SIG) e detecÃ§Ã£o remota, principalmente para criar mapas aquelas combinam vÃ¡rios layers (camadas) de informaÃ§Ã£o. <b>GeoNetwork opensource </b> proporciona-lhes a capacidade de ter acesso a uma vasta selecÃ§Ã£o de mapas e outras informaÃ§Ãµes espaciais armazenadas em bancos de dados diferentes em todo mundo, atravÃ©s de um Ãºnico ponto de entrada.</span>
 		</p>
 		<p>
-			<b><span lang="EN-US">GeoNetwork opensource </span></b><span lang="EN-US"> foi desenvolvido para conectar comunidades de informação espacial e os dados das mesmas </span>usando <span lang="EN-US">uma arquitectura moderna, aquela é de grande potência e de baixo custo ao mesmo tempo e baseado nos </span>princípios de Free and Open Source Software (FOSS) e padrões abertos e internacionais de serviços e protocolos<span lang="EN-US"> (entre outros de <a href="http://www.isotc211.org" target="_blank">ISO/TC211</a> e <a href="http://www.opengeospatial.org" target="_blank">OGC</a>).</span>
+			<b><span lang="EN-US">GeoNetwork opensource </span></b><span lang="EN-US"> foi desenvolvido para conectar comunidades de informaÃ§Ã£o espacial e os dados das mesmas </span>usando <span lang="EN-US">uma arquitectura moderna, aquela Ã© de grande potÃªncia e de baixo custo ao mesmo tempo e baseado nos </span>princÃ­pios de Free and Open Source Software (FOSS) e padrÃµes abertos e internacionais de serviÃ§os e protocolos<span lang="EN-US"> (entre outros de <a href="http://www.isotc211.org" target="_blank">ISO/TC211</a> e <a href="http://www.opengeospatial.org" target="_blank">OGC</a>).</span>
 		</p>
 		<p><a href="http://geonetwork-opensource.org" target="_blank">Leia mais ...</a></p>
 	</content>

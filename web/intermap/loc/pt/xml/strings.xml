@@ -1,21 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
+Ôªø<?xml version="1.0" encoding="UTF-8"?>
 <strings>	
 	<abstract>Resumo</abstract>
 	<activate>Activar</activate>
 	<addLayer js="true">Adicionar novo layer</addLayer>
-	<address>EndereÁo</address>
+	<address>Endere√ßo</address>
 	<addService>Adicionar mais mapas</addService>
 	<associatedStyles>estilos associados:</associatedStyles>				
 	<bigger>Mapa maior</bigger>
 	<btnstyles>Visualizar e selecionar estilos</btnstyles>	
 	<cancel>Cancelar</cancel>
-	<choosemapfromlist>Por favor escolha um ou mais serviÁos de mapas da lista em baixo</choosemapfromlist>
+	<choosemapfromlist>Por favor escolha um ou mais servi√ßos de mapas da lista em baixo</choosemapfromlist>
 	<choosemapserver>Por favor escolha um servidor de mapas da lista em baixo ou insira outro manualmente</choosemapserver>
 	<choosepredefinedmap>Por favor escolha um mapa predefinido da lista em baixo ou</choosepredefinedmap>
 	<close>Fechar</close>
 	<connect>Ligar</connect>
 	<contactInfo>Contactos:</contactInfo>
-	<contactPerson>Contacto do respons·vel:</contactPerson>
+	<contactPerson>Contacto do respons√°vel:</contactPerson>
 	<contexts>Contexto</contexts>
 	<delete>[delete]</delete>
 	<down>Mover layer para baixo</down>
@@ -27,9 +27,9 @@
 	<extents>Mude o tempos selecionados (temporal data)</extents>
 	<extentSelected>Tempo Selecionado: </extentSelected>
 	<featuresfound>Recursos encontrados</featuresfound>
-	<findMapsGeoNetwork>Encontre mais mapas atravÈs do GeoNetwork opensource</findMapsGeoNetwork>
-	<findMapsMapServers>Adicione mais layers atravÈs da ligaÁ„o a outros Web Map Servers</findMapsMapServers>
-	<fullExtent>Zoom · totalidade do mapa</fullExtent>
+	<findMapsGeoNetwork>Encontre mais mapas atrav√©s do GeoNetwork opensource</findMapsGeoNetwork>
+	<findMapsMapServers>Adicione mais layers atrav√©s da liga√ß√£o a outros Web Map Servers</findMapsMapServers>
+	<fullExtent>Zoom √° totalidade do mapa</fullExtent>
 	<getFeatures>Adicione recursos</getFeatures>
 	<gotoGeoNetwork>GeoNetwork opensource</gotoGeoNetwork>
 	<gotoMapServers>Servidores de mapas</gotoMapServers>
@@ -46,11 +46,11 @@
 	<legend>Mostrar a legenda</legend>
 	<listofmaps>Lista de mapas</listofmaps>
 	<listofmapservers>Lista de servidores de mapas</listofmapservers>
-	<loadingFrom js="true">A carregar serviÁos de</loadingFrom>
-	<loadingFromWMS js="true">A carregar serviÁos do servidor WMS dado</loadingFromWMS>
+	<loadingFrom js="true">A carregar servi√ßos de</loadingFrom>
+	<loadingFromWMS js="true">A carregar servi√ßos do servidor WMS dado</loadingFromWMS>
 	<loadingMap>...Mapa a Carregar...</loadingMap>
 	<makeActive>Selecionar para colocar este layer activo(e.g. for Identify)</makeActive>
-	<manually>Crie o seu prÛprio mapa</manually>
+	<manually>Crie o seu pr√≥prio mapa</manually>
 	<map>Mapa</map>
 	<mapServer>Servidor de Mapas</mapServer>
 	<mapsfound>Mapas Encontrados</mapsfound>
@@ -58,33 +58,33 @@
 	<markerDeleting>Simbolo a ser apagada...</markerDeleting> 
 	<markerlistbutton>Lista de Simbolos</markerlistbutton>
 	<markerlisttitle js="true">Lista de Simbolos</markerlisttitle>
-	<markerNone>N„o h· simbolos definidos.</markerNone>	
+	<markerNone>N√£o h√° simbolos definidos.</markerNone>	
 	<markerUpdated>O simbolo foi actualizado</markerUpdated> 
 	<markerUpdating>Actualizando simbolo...</markerUpdating> 
 	<metadata>Metadados</metadata>
 	<newMap>Criar um novo mapa</newMap>
-	<noFeature>N„o foram encontrados recursos</noFeature>
-	<noService>N„o foram econtrados mapas</noService>
-	<noStyle>SÛ o estilo por defeito est· disponivel para este mapa</noStyle>
+	<noFeature>N√£o foram encontrados recursos</noFeature>
+	<noService>N√£o foram econtrados mapas</noService>
+	<noStyle>S√≥ o estilo por defeito est√° disponivel para este mapa</noStyle>
 	<ok>Ok</ok>
 	<oneFeature>Um recurso encontrado</oneFeature>
 	<oneService>Um mapa encontrado</oneService>
 	<otherArcIMS>- Outro servidor de ArcIMS </otherArcIMS>
 	<otherWMS>- Outro servidor de WMS  </otherWMS>
 	<pan>Pan</pan>
-	<position>PosiÁ„o:</position>
+	<position>Posi√ß√£o:</position>
 	<print>Imprimir o mapa</print>
 	<properties>Propriedades</properties>
 	<reCenter>Recentrar o mapa</reCenter>
 	<refresh>Refresh</refresh>
-	<refreshNotification>Por favor click o botao de "Refresh" debaixo da lista de layers para ver as mudanÁas.</refreshNotification>
+	<refreshNotification>Por favor click o botao de "Refresh" debaixo da lista de layers para ver as mudan√ßas.</refreshNotification>
 	<removeLayer>Remover layer</removeLayer>
 	<removeMarker>Remover marker</removeMarker>
 	<reset>Reset</reset>
 	<sendByEmail js="true">Enviar este mapa por e-mail</sendByEmail>
 	<setScale>--Definir escala--</setScale>
 	<setStyle>Definir estilos</setStyle>				
-	<showLayerMD js="true">InformaÁ„o sobre o Layer</showLayerMD>
+	<showLayerMD js="true">Informa√ß√£o sobre o Layer</showLayerMD>
 	<smaller>Mapa mais pequeno</smaller>
 	<specify>Especificar se for outro:</specify>
 	<start>InterMap opensource</start>
@@ -95,11 +95,11 @@
 	<telephone>telefone:</telephone>
 	<title>InterMap opensource</title>
 	<titleShowStyles js="true">Estilos disponiveis</titleShowStyles>
-	<transparency>Definir transparÍncia</transparency>
-	<unexpectedError>Foi encontrado um erro inesperado enquanto estava a realizar a operaÁ„o:</unexpectedError>				
+	<transparency>Definir transpar√™ncia</transparency>
+	<unexpectedError>Foi encontrado um erro inesperado enquanto estava a realizar a opera√ß√£o:</unexpectedError>				
 	<up>Mover layer para cima</up>
 	<update>Actualizar</update>
-	<updateMarker>Actualizar a informaÁ„o do simbolo</updateMarker>
+	<updateMarker>Actualizar a informa√ß√£o do simbolo</updateMarker>
 	<wait js="true">Por Favor espere...</wait>
 	
 	<wmcbuttondownload js="true">Download current context</wmcbuttondownload>	
@@ -107,7 +107,7 @@
 	<wmcbuttonmain js="true">View context menu</wmcbuttonmain>	
 	<wmcbuttonupload js="true">Upload a context</wmcbuttonupload>	
 	
-	<wmcMailBuilding>O email est· a ser construido...</wmcMailBuilding>
+	<wmcMailBuilding>O email est√° a ser construido...</wmcMailBuilding>
 	<wmcMailError>Foi encontrado um erro inesperado enquanto estava a processar o mail:</wmcMailError>
 	<wmcMailSend>Enviar e-mail</wmcMailSend>
 	<wmcMailSent>O e-mail foi enviado com sucesso</wmcMailSent>

@@ -115,6 +115,9 @@
 	<retrieve>Recuperar</retrieve>
 	<warn>Solo puedes recuperar despues de haber llenado la parte del sitio</warn>
 	
+	<content>Harvested Content</content>
+	<importxslt>Apply this XSLT to harvested records</importxslt>
+
 	<options>Opciones</options>
 	<everySpec>(dias : horas : minutos)</everySpec>
 	<oneRun>Solo una ejecución</oneRun>
@@ -156,6 +159,21 @@
 	<prefix>Prefijo</prefix>
 	<stylesheet>Hoja de estilos</stylesheet>
 	
+	<!-- Buttons -->
+	
+	<add>Agregar</add>
+	<edit>Editar</edit>
+	<save>Guardar</save>
+	<activate>Activar</activate>
+	<deactivate>Desactivar</deactivate>
+	<run>Ejecutar</run>
+	<remove>Remover</remove>
+	<refresh>Refrescar</refresh>
+	
+	<days>días</days>
+	<hours>horas</hours>
+	<mins>minutos</mins>
+	
 	<threddslang>Metadata language</threddslang>
 	<threddsImp>Type of import</threddsImp>
 	<threddsServiceMdOnly19119>Create metadata for all services in the catalog using ISO19119.</threddsServiceMdOnly19119>
@@ -184,21 +202,6 @@
 	<z3950query>Z3950 Query</z3950query>
 	
 	<cataUrl>Catalog URL</cataUrl>
-	<!-- Buttons -->
-	
-	<add>Agregar</add>
-	<edit>Editar</edit>
-	<save>Guardar</save>
-	<activate>Activar</activate>
-	<deactivate>Desactivar</deactivate>
-	<run>Ejecutar</run>
-	<remove>Remover</remove>
-	<refresh>Refrescar</refresh>
-	
-	<days>días</days>
-	<hours>horas</hours>
-	<mins>minutos</mins>
-	
 	<!-- validator messages -->
 	
 	<validator>
@@ -249,9 +252,7 @@
 	<gn20Unsafe>Por favor recuerde que el hacer harvesting a nodos viejos de GeoNetwork no es seguro. 
  					los nodos antiguos no tienen ids de sitio único y esto puede causar
 					resultados impredecibles (como remover nodos de otros harvestings).</gn20Unsafe>
-			
 	<supplyUrl>Por favor proporcione un parámetro 'url' válido</supplyUrl>
-	
 	<oper>
 		<op id="0">Vista</op>
 		<op id="1">Bajar</op>
@@ -477,7 +478,6 @@
 		<tip id="oai.prefix">
 			Elija el formato de metadato al cual desea hacer harvesting.
 		</tip>
-		
-		</tips>
+	</tips>
 </strings>
 

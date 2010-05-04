@@ -1,29 +1,29 @@
-<?xml version="1.0" encoding="UTF-8"?>
+ï»¿<?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<abstract>Resumo</abstract>
 	<activate>Activar</activate>
-	<address>Endereço</address>
+	<address>EndereÃ§o</address>
 	<addService>Adicionar mais mapas</addService>
 	<bigger>Mapa maior</bigger>
 	<cancel>Cancelar</cancel>
 	<close>Fechar</close>
-	<choosemapfromlist>Por favor escolha um ou mais serviços de mapas da lista em baixo</choosemapfromlist>
+	<choosemapfromlist>Por favor escolha um ou mais serviÃ§os de mapas da lista em baixo</choosemapfromlist>
 	<choosemapserver>Por favor escolha um servidor de mapas da lista em baixo ou insira outro manualmente</choosemapserver>
 	<choosepredefinedmap>Por favor escolha um mapa predefinido da lista em baixo ou</choosepredefinedmap>
 	<connect>Ligar</connect>
 	<contactInfo>Contactos:</contactInfo>
-	<contactPerson>Contacto do responsável:</contactPerson>
+	<contactPerson>Contacto do responsÃ¡vel:</contactPerson>
 	<contexts>Contexto</contexts>
 	<delete>[delete]</delete>
 	<down>Mover layer para baixo</down>
 	<email>email:</email>
 	<error>[erro]</error>
-	<errorText>Desculpe, Falha na ligação com o servidor de mapas</errorText>
+	<errorText>Desculpe, Falha na ligaÃ§Ã£o com o servidor de mapas</errorText>
 	<extents>Mude o tempos selecionados (temporal data)</extents>
 	<featuresfound>Recursos encontrados</featuresfound>
-	<findMapsGeoNetwork>Encontre mais mapas através do GeoNetwork</findMapsGeoNetwork>
-	<findMapsMapServers>Adicione mais layers através da ligação a outros Web Map Servers</findMapsMapServers>
-	<fullExtent>Zoom á totalidade do mapa</fullExtent>
+	<findMapsGeoNetwork>Encontre mais mapas atravÃ©s do GeoNetwork</findMapsGeoNetwork>
+	<findMapsMapServers>Adicione mais layers atravÃ©s da ligaÃ§Ã£o a outros Web Map Servers</findMapsMapServers>
+	<fullExtent>Zoom Ã¡ totalidade do mapa</fullExtent>
 	<gotoGeoNetwork>GeoNetwork</gotoGeoNetwork>
 	<gotoMapServers>Servidores de mapas</gotoMapServers>
 	<homepage>Pagina Inicial:</homepage>
@@ -38,25 +38,25 @@
 	<legend>Mostrar a legenda</legend>
 	<listofmaps>Lista de mapas</listofmaps>
 	<listofmapservers>Lista de servidores de mapas</listofmapservers>
-	<manually>Crie o seu próprio mapa</manually>
+	<manually>Crie o seu prÃ³prio mapa</manually>
 	<map>Mapa</map>
 	<mapsfound>Mapas Encontrados</mapsfound>
 	<metadata>Metadados</metadata>
 	<newMap>Criar um novo mapa</newMap>
-	<noFeature>Não foram encontrados recursos</noFeature>
-	<noService>Não foram econtrados mapas</noService>
-	<noStyle>Só o estilo por defeito está disponivel para este mapa</noStyle>
+	<noFeature>NÃ£o foram encontrados recursos</noFeature>
+	<noService>NÃ£o foram econtrados mapas</noService>
+	<noStyle>SÃ³ o estilo por defeito estÃ¡ disponivel para este mapa</noStyle>
 	<oneService>Um mapa encontrado</oneService>
 	<ok>Ok</ok>
 	<oneFeature>Um recurso encontrado</oneFeature>
 	<otherArcIMS>- Outro servidor de ArcIMS (especificado em baixo)</otherArcIMS>
 	<otherWMS>- Outro servidor de WMS (especificado em baixo)</otherWMS>
-	<position>Posição:</position>
+	<position>PosiÃ§Ã£o:</position>
 	<print>Imprimir o mapa</print>
 	<properties>Propriedades</properties>
 	<reCenter>Recentrar o mapa</reCenter>
 	<refresh>Refresh</refresh>
-	<refreshNotification>Por favor click o botao de "Refresh" debaixo da lista de layers para ver as mudanças.</refreshNotification>
+	<refreshNotification>Por favor click o botao de "Refresh" debaixo da lista de layers para ver as mudanÃ§as.</refreshNotification>
 	<removeLayer>Remover layer</removeLayer>
 	<smaller>Mapa mais pequeno</smaller>
 	<specify>Especificar se for outro:</specify>
@@ -64,7 +64,7 @@
 	<start>VAM Intermap</start>
 	<telephone>Telefone:</telephone>
 	<title>Intermap Open Source</title>
-	<transparency>Definir transparência</transparency>
+	<transparency>Definir transparÃªncia</transparency>
 	<up>Mover layer para cima</up>
 	<wmsConfigForm>Propriedades do Layer</wmsConfigForm >
 	<zoomIn>Zoom in</zoomIn>

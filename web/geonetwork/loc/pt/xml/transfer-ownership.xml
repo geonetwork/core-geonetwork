@@ -1,17 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
+Ôªø<?xml version="1.0" encoding="UTF-8"?>
 
 <strings>
 	<sourceUser>Editor de origem</sourceUser>
 	<targetUser>Editor de destino</targetUser>
 	<sourceGroup>Grupo de origem</sourceGroup>
 	<targetGroup>Grupo de destino</targetGroup>
-	<operation>OperaÁ„o</operation>
+	<operation>Opera√ß√£o</operation>
 	
-	<cannotRetrieve>N„o consegue receber informaÁ„o do servidor</cannotRetrieve>
-	<cannotTransfer>N„o consegue transferir direitos de dono</cannotTransfer>
-	<noUser>Editor de destino, a qual devam ser transferido os direitos de dono, n„o È definido</noUser>
+	<cannotRetrieve>N√£o consegue receber informa√ß√£o do servidor</cannotRetrieve>
+	<cannotTransfer>N√£o consegue transferir direitos de dono</cannotTransfer>
+	<noUser>Editor de destino, a qual devam ser transferido os direitos de dono, n√£o √© definido</noUser>
 	<transfer>Transferir</transfer>
-	<result>{PRIV} PrivilÈgios de {MD} metadados transferidos</result>
-	<noEditors>N„o h· editores com metadados associados.</noEditors>
+	<result>{PRIV} Privil√©gios de {MD} metadados transferidos</result>
+	<noEditors>N√£o h√° editores com metadados associados.</noEditors>
 </strings>
 

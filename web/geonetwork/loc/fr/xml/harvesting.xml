@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<directoryname>Répertoire</directoryname>
-	<database>Base de données</database>
-	<nodelete>Conserver les fichiers</nodelete>
 	<select>Sélectionner</select>
 	<name>Nom</name>
+	<directoryname>Répertoire</directoryname>
 	<type>Type</type>
 	<status>Status</status>
 	<errors>Erreurs</errors>
 	<every>Fréquence (j:h:m)</every>
 	<lastRun>Dernière exécution</lastRun>
 	<operation>Opération</operation>
-	<server>Server</server>
 	
 	<!-- harvesting types - - - - - - - - - - - - - - - - - - - - -->
 	
@@ -70,7 +67,11 @@
 		<long>Moissonnage de système de fichier local</long>
 	</info>
 	
-    <wxstype>Type of OGC webservice</wxstype>
+    <!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<site>Site</site>
+
+	<wxstype>Type of OGC webservice</wxstype>
     <wxstypes>
         <type value="WMS1.0.0">OGC Web Map Service (WMS) Version 1.0.0</type>
         <type value="WMS1.1.1">OGC Web Map Service (WMS) Version 1.1.1 - preferred</type>
@@ -92,11 +93,6 @@
     <serviceCategory>Catégorie pour les métadonnées de services</serviceCategory>
     <datasetCategory>Catégorie pour les métadonnées de données</datasetCategory>
     
-	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<site>Site</site>
-
-	<name>Nom</name>
 	<host>Hôte</host>
 	<port>Port</port>
 	<servlet>Servlet</servlet>
@@ -119,6 +115,9 @@
 	<retrieve>Récupérer</retrieve>
 	<warn>Vous pouvez récupérer ces informations seulement après avoir saisie la section de description du site</warn>
 	
+	<content>Harvested Content</content>
+	<importxslt>Apply this XSLT to harvested records</importxslt>
+
 	<options>Options</options>
 	<everySpec>(jours : heures : minutes)</everySpec>
 	<oneRun>Une seule exécution</oneRun>
@@ -126,7 +125,6 @@
 	<createCateg>Créer les catégories</createCateg>
 	<active>Active</active>
 	<inactive>Inactive</inactive>
-	
 	<retrieveSources>Obtenir les sources</retrieveSources>
 	<retrieveGroups>Obtenir les groupes</retrieveGroups>
 	<retrieveInfo>Obtenir des info</retrieveInfo>
@@ -134,6 +132,9 @@
 	<criteria>Critères</criteria>
 	<validate>Valider</validate>
 	<recurse>Récursif</recurse>
+	<nodelete>Conserver les fichiers</nodelete>
+	<server>Server</server>
+	<database>Base de données</database>
 	<privileges>Privilèges</privileges>
 	<categories>Categories</categories>
 	<url>URL</url>
@@ -157,6 +158,21 @@
 	<set>Ensemble</set>
 	<prefix>Préfixe</prefix>
 	<stylesheet>Stylesheet</stylesheet>
+	
+	<!-- Buttons -->
+	
+	<add>Ajouter</add>
+	<edit>Editer</edit>
+	<save>Sauver</save>
+	<activate>Activer</activate>
+	<deactivate>Désactiver</deactivate>
+	<run>Lancer</run>
+	<remove>Supprimer</remove>
+	<refresh>Rafraîchir</refresh>
+	
+	<days>jours</days>
+	<hours>heures</hours>
+	<mins>minutes</mins>
 	
 	<threddslang>Metadata language</threddslang>
 	<threddsImp>Type of import</threddsImp>
@@ -186,21 +202,6 @@
 	<z3950query>Z3950 Query</z3950query>
 	
 	<cataUrl>Catalog URL</cataUrl>
-	<!-- Buttons -->
-	
-	<add>Ajouter</add>
-	<edit>Editer</edit>
-	<save>Sauver</save>
-	<activate>Activer</activate>
-	<deactivate>Désactiver</deactivate>
-	<run>Lancer</run>
-	<remove>Supprimer</remove>
-	<refresh>Rafraîchir</refresh>
-	
-	<days>jours</days>
-	<hours>heures</hours>
-	<mins>minutes</mins>
-	
 	<!-- validator messages -->
 	
 	<validator>
@@ -251,9 +252,7 @@
 	<gn20Unsafe>Attention, noter que le moissonnage d'un ancien noeud GeoNetwork n'est pas sur. 
  					Les anciens noeuds n'ont pas un identifiant unique et ceci peut conduire
 					à des résultats inatendus (par exemple supprimer des noeuds d'autres moissonnages).</gn20Unsafe>
-			
 	<supplyUrl>SVP, fournir une url valide</supplyUrl>
-	
 	<oper>
 		<op id="0">Voir</op>
 		<op id="1">Télécharger</op>
@@ -372,7 +371,8 @@
 			You can assign one or more categories to harvested metadata. Use the <b>&lt;CTRL&gt;</b> 
 			key to select more than one category.
 		</tip>
-<!-- OGCWXS harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <!-- OGCWXS harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<tip id="ogcwxs.wxstype">
 			The type of the OGC web services.	

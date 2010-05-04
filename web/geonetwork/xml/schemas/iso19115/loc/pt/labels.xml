@@ -1,20 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
+ï»¿<?xml version="1.0" encoding="UTF-8"?>
 
 <labels>
 	<!-- ==================================================== -->
 	<element name="accessConsts">
-		<label>Restrição de acesso</label>
-		<description>restrições  de acesso, aplicadas para assegurar a protecção e privacidade da propriedade intelectual, e quaisquer restrições ou limitações especiais sobre como obter o 
+		<label>RestriÃ§Ã£o de acesso</label>
+		<description>restriÃ§Ãµes  de acesso, aplicadas para assegurar a protecÃ§Ã£o e privacidade da propriedade intelectual, e quaisquer restriÃ§Ãµes ou limitaÃ§Ãµes especiais sobre como obter o 
 recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Address">
-		<label>Endereço</label>
-		<description>localização da pessoa ou organização responsável</description>
+		<label>EndereÃ§o</label>
+		<description>localizaÃ§Ã£o da pessoa ou organizaÃ§Ã£o responsÃ¡vel</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="adminArea">
-		<label>Área administrativa</label>
+		<label>Ãrea administrativa</label>
 		<description>distrito, concelho e lugar</description>
 	</element>
 	<!-- ==================================================== -->
@@ -24,78 +24,78 @@ recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="appProfile">
-		<label>Perfil da aplicação</label>
-		<description>nome de um perfil da aplicação que pode ser usado com recursos online</description>
+		<label>Perfil da aplicaÃ§Ã£o</label>
+		<description>nome de um perfil da aplicaÃ§Ã£o que pode ser usado com recursos online</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="AppSchInfo">
-		<label>Aplicação do esquema info</label>
-		<description>informações sobre o esquema de aplicação utilizado para construir dataset</description>
+		<label>AplicaÃ§Ã£o do esquema info</label>
+		<description>informaÃ§Ãµes sobre o esquema de aplicaÃ§Ã£o utilizado para construir dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="appSchInfo">
-		<label>Aplicação do esquema info</label>
-		<description>fornece informações sobre o esquema conceitual de um dataset</description>
+		<label>AplicaÃ§Ã£o do esquema info</label>
+		<description>fornece informaÃ§Ãµes sobre o esquema conceitual de um dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="artPage">
 		<label>Pagina</label>
-		<description>detalhes sobre as páginas onde o artigo foi publicado</description>
+		<description>detalhes sobre as pÃ¡ginas onde o artigo foi publicado</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="asAscii">
 		<label>schemaAscii</label>
-		<description>esquema de aplicação integral dado como um ficheiro ASCII</description>
+		<description>esquema de aplicaÃ§Ã£o integral dado como um ficheiro ASCII</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="asCstLang">
-		<label>Linguagem de restrição</label>
-		<description> linguagem formal utilizada na aplicação do esquema </description>
-		<condition>Obrigatório</condition>
+		<label>Linguagem de restriÃ§Ã£o</label>
+		<description> linguagem formal utilizada na aplicaÃ§Ã£o do esquema </description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="asGraFile">
-		<label>Ficheiro gráfico</label>
-		<description>esquema de aplicação integral dado como um ficheiro gráfico</description>
+		<label>Ficheiro grÃ¡fico</label>
+		<description>esquema de aplicaÃ§Ã£o integral dado como um ficheiro grÃ¡fico</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="asName">
 		<label>Nome</label>
-		<description>nome do esquema de aplicação utilizado</description>
-		<condition>Obrigatório</condition>
+		<description>nome do esquema de aplicaÃ§Ã£o utilizado</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="asSchLang">
 		<label>linguagem do esquema</label>
-		<description>identificação da linguagem de esquema utilizado</description>
-		<condition>Obrigatório</condition>
+		<description>identificaÃ§Ã£o da linguagem de esquema utilizado</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="asSwDevFiFt">
 		<label>Desenvolvimento de software de formato do ficheiro</label>
-		<description>formato de software depende do software utilizado e da aplicação do ficheiro</description>
+		<description>formato de software depende do software utilizado e da aplicaÃ§Ã£o do ficheiro</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="asSwDevFile">
 		<label>Ficheiro do software de desenvolvimento</label>
-		<description>esquema de aplicação integral dado como um ficheiro de desenvolvimento do software</description>
+		<description>esquema de aplicaÃ§Ã£o integral dado como um ficheiro de desenvolvimento do software</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="attDesc">
-		<label>Descrição de atributos</label>
-		<description>descrição do atributo dado pelo valor de medição</description>
-		<condition>Obrigatório</condition>
+		<label>DescriÃ§Ã£o de atributos</label>
+		<description>descriÃ§Ã£o do atributo dado pelo valor de mediÃ§Ã£o</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="attribIntSet">
-		<label>Atributos das instâncias</label>
-		<description>atributos das instâncias a que as informações se destinam</description>
+		<label>Atributos das instÃ¢ncias</label>
+		<description>atributos das instÃ¢ncias a que as informaÃ§Ãµes se destinam</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="attribSet">
 		<label>Atributos</label>
-		<description>Atributos a que se aplicam as informações</description>
+		<description>Atributos a que se aplicam as informaÃ§Ãµes</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -105,64 +105,64 @@ recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="axDimProps">
-		<label>Propriedades e dimenssões do eixo</label>
-		<description>informações sobre as propriedades espaço-temporal do eixo</description>
-		<condition>Obrigatório</condition>
+		<label>Propriedades e dimenssÃµes do eixo</label>
+		<description>informaÃ§Ãµes sobre as propriedades espaÃ§o-temporal do eixo</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="axisUnits">
 		<label>Unidadas do eixo</label>
 		<description>unidades do semi-eixo maior</description>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="aziAngle">
 		<label>Angulo azimutal</label>
-		<description>ângulo medido no sentido dos ponteiros do relógio, a partir do norte e expresso em graus</description>
-		<condition>Obrigatório</condition>
+		<description>Ã¢ngulo medido no sentido dos ponteiros do relÃ³gio, a partir do norte e expresso em graus</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="aziPtLong">
 		<label>longitude do ponto de medida azimutal</label>
-		<description>longitude da origem da projeção do mapa</description>
-		<condition>Obrigatório</condition>
+		<description>longitude da origem da projeÃ§Ã£o do mapa</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Band">
 		<label>Band</label>
-		<description>omprimentos de onda do espectro electromagnético</description>
+		<description>omprimentos de onda do espectro electromagnÃ©tico</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="begin">
 		<label>Data de inicio</label>
-		<description>data de início do período de validade</description>
+		<description>data de inÃ­cio do perÃ­odo de validade</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="bgFileDesc">
-		<label>Descrição do ficheiro</label>
-		<description>Texto de descrição da ilustração</description>
+		<label>DescriÃ§Ã£o do ficheiro</label>
+		<description>Texto de descriÃ§Ã£o da ilustraÃ§Ã£o</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="bgFileName">
 		<label>Nome do ficheiro</label>
-		<description>nome do ficheiro que contém um gráfico que fornece uma ilustração do 
+		<description>nome do ficheiro que contÃ©m um grÃ¡fico que fornece uma ilustraÃ§Ã£o do 
 dataset</description>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="bgFileType">
 		<label>Tipo de ficheiro</label>
-		<description>formato em que a ilustração é codificada</description>
+		<description>formato em que a ilustraÃ§Ã£o Ã© codificada</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Binary">
-		<label>Binário</label>
+		<label>BinÃ¡rio</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="bitsPerVal">
 		<label>Bits por valor</label>
-		<description>número máximo de bits significativos na representação descompactada para o 
+		<description>nÃºmero mÃ¡ximo de bits significativos na representaÃ§Ã£o descompactada para o 
 valor de cada banda de cada pixel</description>
 	</element>
 	<!-- ==================================================== -->
@@ -174,29 +174,29 @@ valor de cada banda de cada pixel</description>
 	<element name="BoundPoly">
 		<label>EX_BoundingPolygon</label>
 		<description>limite envolvendo o conjunto de dados, expresso como um conjunto fechado de  coordenadas (x, y)
-do polígono (último ponto repete o primeiro ponto)</description>
+do polÃ­gono (Ãºltimo ponto repete o primeiro ponto)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="BrowGraph">
 		<label>MD_BrowseGraphic</label>
-		<description>gráfico que fornece uma ilustração do conjunto de dados (deve incluir uma legenda para 
-o gráfico)</description>
+		<description>grÃ¡fico que fornece uma ilustraÃ§Ã£o do conjunto de dados (deve incluir uma legenda para 
+o grÃ¡fico)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="calDate">
-		<label>Data do calendário</label>
+		<label>Data do calendÃ¡rio</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="camCalInAv">
-		<label>Informações de calibração da camara disponiveis</label>
-		<description>Indicação da existência ou não de informações disponiveis que permitem correcções de calibração da camara</description>
+		<label>InformaÃ§Ãµes de calibraÃ§Ã£o da camara disponiveis</label>
+		<description>IndicaÃ§Ã£o da existÃªncia ou nÃ£o de informaÃ§Ãµes disponiveis que permitem correcÃ§Ãµes de calibraÃ§Ã£o da camara</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="catCitation">
 		<label>Label do recurso</label>
-		<description>completar a referência bibliográfica para uma ou mais label´s de um recurso externo</description>
-		<condition>Obrigatório</condition>
+		<description>completar a referÃªncia bibliogrÃ¡fica para uma ou mais labelÅ½s de um recurso externo</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="catFetTypes">
@@ -206,25 +206,25 @@ o gráfico)</description>
 	<!-- ==================================================== -->
 	<element name="catLang">
 		<label>Linguagem</label>
-		<description>Linguagem usada nas label´s</description>
+		<description>Linguagem usada nas labelÅ½s</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="cellGeo">
 		<label>Geometria das celulas</label>
-		<description>identificação dos dados de rede como ponto ou célula</description>
-		<condition>Obrigatório</condition>
+		<description>identificaÃ§Ã£o dos dados de rede como ponto ou cÃ©lula</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="CellGeoCd">
-		<label>Código da geometria da célula</label>
+		<label>CÃ³digo da geometria da cÃ©lula</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="centerPt">
 		<label>Ponto central</label>
-		<description>Local de terra no sistema de coordenadas definido pelo Sistema de Referência Espacial 
+		<description>Local de terra no sistema de coordenadas definido pelo Sistema de ReferÃªncia Espacial 
 e coordenada grig da celula a meio caminho entre as extremidades opostas da grid nas 
-dimensões espaciais</description>
+dimensÃµes espaciais</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="CharacterString">
@@ -233,66 +233,66 @@ dimensões espaciais</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="CharSetCd">
-		<label>Conjunto de caracteres de código</label>
+		<label>Conjunto de caracteres de cÃ³digo</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="chkPtAv">
 		<label>Consulte a disponibilidade do ponto</label>
-		<description>indicação da existência ou não de pontos de posição geográfica disponíveis para testar a 
-a precisão dos dados da grid georreferenciada</description>
-		<condition>Obrigatório</condition>
+		<description>indicaÃ§Ã£o da existÃªncia ou nÃ£o de pontos de posiÃ§Ã£o geogrÃ¡fica disponÃ­veis para testar a 
+a precisÃ£o dos dados da grid georreferenciada</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="chkPtDesc">
-		<label>Descrição do check point</label>
-		<description>descrição dos pontos de posição geográfica utilizados para testar a precisão da 
+		<label>DescriÃ§Ã£o do check point</label>
+		<description>descriÃ§Ã£o dos pontos de posiÃ§Ã£o geogrÃ¡fica utilizados para testar a precisÃ£o da 
 grid de dados georreferenciados</description>
 		<condition>Condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Citation">
 		<label>CI Citation</label>
-		<description>referência padronizada do recurso</description>
+		<description>referÃªncia padronizada do recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="citId">
 		<label>Indentificador</label>
-		<description>identificador único para o recurso. EXEMPLO: Universal Product Code (UPC), 
+		<description>identificador Ãºnico para o recurso. EXEMPLO: Universal Product Code (UPC), 
 National Stock Number (NSN)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="citIdType">
 		<label>Tipo de identificador</label>
-		<description>formulário de referência do identificador único (ID). Exemplo: Universal Product Code 
+		<description>formulÃ¡rio de referÃªncia do identificador Ãºnico (ID). Exemplo: Universal Product Code 
 (UPC), National Stock Number (NSN)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="citRespParty">
-		<label>Responsável citado</label>
-		<description>nome e posição, de um indivíduo ou organização que está 
-responsável por esse recurso</description>
+		<label>ResponsÃ¡vel citado</label>
+		<description>nome e posiÃ§Ã£o, de um indivÃ­duo ou organizaÃ§Ã£o que estÃ¡ 
+responsÃ¡vel por esse recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="city">
 		<label>Cidade</label>
-		<description>Localização da cidade</description>
+		<description>LocalizaÃ§Ã£o da cidade</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="class">
 		<label>Classe</label>
-		<description>nome de restrições à movimentação de recursos</description>
-		<condition>Obrigatório</condition>
+		<description>nome de restriÃ§Ãµes Ã  movimentaÃ§Ã£o de recursos</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ClasscationCd">
-		<label>Codigo de classificação</label>
+		<label>Codigo de classificaÃ§Ã£o</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="classSys">
-		<label>Sistema de de classificação</label>
-		<description>nome do sistema de classificação</description>
+		<label>Sistema de de classificaÃ§Ã£o</label>
+		<description>nome do sistema de classificaÃ§Ã£o</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="clkTime">
@@ -302,31 +302,31 @@ responsável por esse recurso</description>
 	<!-- ==================================================== -->
 	<element name="cloudCovPer">
 		<label>Percentagem de Cloud cover</label>
-		<description>área do conjunto de dados obscurecida por nuvens, expressa como uma percentagem da extensão do território</description>
+		<description>Ã¡rea do conjunto de dados obscurecida por nuvens, expressa como uma percentagem da extensÃ£o do territÃ³rio</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="cmpGenQuan">
-		<label>Quantidade de compressões efectuadas</label>
-		<description>contagem do número de ciclos de compressões realizadas na 
+		<label>Quantidade de compressÃµes efectuadas</label>
+		<description>contagem do nÃºmero de ciclos de compressÃµes realizadas na 
 imagem</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="cntAddress">
-		<label>Endereço</label>
-		<description>endereço físico e e-mail na qual a organização ou indivíduo pode ser 
+		<label>EndereÃ§o</label>
+		<description>endereÃ§o fÃ­sico e e-mail na qual a organizaÃ§Ã£o ou indivÃ­duo pode ser 
 contactado</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="cntHours">
-		<label>Horas de serviço</label>
-		<description>Hora a que (incluindo o fuso horário), os utilizadores podem contactar a organização 
-ou os responsáveis</description>
+		<label>Horas de serviÃ§o</label>
+		<description>Hora a que (incluindo o fuso horÃ¡rio), os utilizadores podem contactar a organizaÃ§Ã£o 
+ou os responsÃ¡veis</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="cntInstr">
-		<label>IOnstruções de contacto</label>
-		<description>instruções complementares sobre como ou quando entrar em contato com o responsável ou com a 
-organização</description>
+		<label>IOnstruÃ§Ãµes de contacto</label>
+		<description>instruÃ§Ãµes complementares sobre como ou quando entrar em contato com o responsÃ¡vel ou com a 
+organizaÃ§Ã£o</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="cntOnLineRes">
@@ -336,54 +336,54 @@ organização</description>
 	<!-- ==================================================== -->
 	<element name="cntPhone">
 		<label>Telefone</label>
-		<description>números de telefone pelo qual a organização ou indivíduo pode ser 
+		<description>nÃºmeros de telefone pelo qual a organizaÃ§Ã£o ou indivÃ­duo pode ser 
 contactada</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="collTitle">
 		<label>Titulo colectivo</label>
-		<description>título comum com nota de participações Título da nota identifica elementos de uma série colectiva  juntamente com informações sobre os volumes disponíveis na fonte citada</description>
+		<description>tÃ­tulo comum com nota de participaÃ§Ãµes TÃ­tulo da nota identifica elementos de uma sÃ©rie colectiva  juntamente com informaÃ§Ãµes sobre os volumes disponÃ­veis na fonte citada</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="compCode">
-		<label>Código de conformidade</label>
-		<description>indicação da existência ou não de label´s, em conformidade com a norma ISO 19110</description>
+		<label>CÃ³digo de conformidade</label>
+		<description>indicaÃ§Ã£o da existÃªncia ou nÃ£o de labelÅ½s, em conformidade com a norma ISO 19110</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="conExpl">
-		<label>Explicação</label>
-		<description>explicação do significado de conformidade para este resultado</description>
-		<condition>Obrigatório</condition>
+		<label>ExplicaÃ§Ã£o</label>
+		<description>explicaÃ§Ã£o do significado de conformidade para este resultado</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="conPass">
 		<label>Passe</label>
-		<description>indicação do resultado da conformidade, onde 0 = não e 1 = passe</description>
-		<condition>Obrigatório</condition>
+		<description>indicaÃ§Ã£o do resultado da conformidade, onde 0 = nÃ£o e 1 = passe</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ConResult">
 		<label>Resultado de conformidade</label>
-		<description>Informações sobre o resultado da avaliação do valor obtido (ou conjunto de valores) 
-comprovando um nível de qualidade aceitável especificado a sua conformidade</description>
+		<description>InformaÃ§Ãµes sobre o resultado da avaliaÃ§Ã£o do valor obtido (ou conjunto de valores) 
+comprovando um nÃ­vel de qualidade aceitÃ¡vel especificado a sua conformidade</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="conSpec">
-		<label>Especificação</label>
-		<description>citação de especificação do produto ou a necessidade do usuário, para o qual os dados estão sendo 
+		<label>EspecificaÃ§Ã£o</label>
+		<description>citaÃ§Ã£o de especificaÃ§Ã£o do produto ou a necessidade do usuÃ¡rio, para o qual os dados estÃ£o sendo 
 avaliados</description>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Consts">
-		<label>Restricções</label>
-		<description>restrições de acesso e utilização de um recurso ou metadados</description>
+		<label>RestricÃ§Ãµes</label>
+		<description>restriÃ§Ãµes de acesso e utilizaÃ§Ã£o de um recurso ou metadados</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="contentTyp">
-		<label>Tipo de conteúdo</label>
-		<description>tipo de informação representada pelo valor da célula</description>
-		<condition>Obrigatório</condition>
+		<label>Tipo de conteÃºdo</label>
+		<description>tipo de informaÃ§Ã£o representada pelo valor da cÃ©lula</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ContentTypCd">
@@ -392,18 +392,18 @@ avaliados</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ContInfo">
-		<label>Informação de conteúdo</label>
-		<description>Descrição do conteudo de um data set</description>
+		<label>InformaÃ§Ã£o de conteÃºdo</label>
+		<description>DescriÃ§Ã£o do conteudo de um data set</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="contInfo">
-		<label>Informação de conteúdo</label>
-		<description>fornece informações sobre as label´s e descreve a covarege e 
-dados das características de imagem</description>
+		<label>InformaÃ§Ã£o de conteÃºdo</label>
+		<description>fornece informaÃ§Ãµes sobre as labelÅ½s e descreve a covarege e 
+dados das caracterÃ­sticas de imagem</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="conversionToISOstandarUnit">
-		<label>Conversão para a unidade standart iso</label>
+		<label>ConversÃ£o para a unidade standart iso</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
@@ -419,107 +419,107 @@ dados das características de imagem</description>
 	<!-- ==================================================== -->
 	<element name="cornerPts">
 		<label>Pontos dos cantos</label>
-		<description>Local de terra no sistema de coordenadas definido pelo Sistema de Referência Espacial 
-e a grid de coordenadas das células em extremidades opostas da coverage da rede ao longo de duas diagonais 
-na grid de dimensões espaciais. Há quatro pontos de canto em uma grid georeferenciada;
-pelo menos dois pontos de canto ao longo de uma diagonal são necessários</description>
-		<condition>Obrigatório</condition>
+		<description>Local de terra no sistema de coordenadas definido pelo Sistema de ReferÃªncia Espacial 
+e a grid de coordenadas das cÃ©lulas em extremidades opostas da coverage da rede ao longo de duas diagonais 
+na grid de dimensÃµes espaciais. HÃ¡ quatro pontos de canto em uma grid georeferenciada;
+pelo menos dois pontos de canto ao longo de uma diagonal sÃ£o necessÃ¡rios</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="country">
-		<label>País</label>
-		<description>Endereço fisico do país</description>
+		<label>PaÃ­s</label>
+		<description>EndereÃ§o fisico do paÃ­s</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="CovDesc">
-		<label>Descrição da Coverage</label>
-		<description>informações sobre o conteúdo de uma célula de dados da grid</description>
+		<label>DescriÃ§Ã£o da Coverage</label>
+		<description>informaÃ§Ãµes sobre o conteÃºdo de uma cÃ©lula de dados da grid</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="covDim">
-		<label>Dimenssões</label>
-		<description>informações sobre as dimensões do valor de medição de células</description>
+		<label>DimenssÃµes</label>
+		<description>informaÃ§Ãµes sobre as dimensÃµes do valor de mediÃ§Ã£o de cÃ©lulas</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ctrlPtAv">
 		<label>Disponibilidade de pono(s) de controlo</label>
-		<description>indicação da existência ou não de ponto (s) de controle</description>
-		<condition>Obrigatório</condition>
+		<description>indicaÃ§Ã£o da existÃªncia ou nÃ£o de ponto (s) de controle</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dataChar">
 		<label>Character set</label>
-		<description>nome completo da codificação de caracteres padrão usados para o dataset</description>
+		<description>nome completo da codificaÃ§Ã£o de caracteres padrÃ£o usados para o dataset</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dataExt">
-		<label>Extensão</label>
-		<description>informações adicionais da extensão, incluindo o polígono delimitador, vertical e 
-extensão temporal do dataset</description>
+		<label>ExtensÃ£o</label>
+		<description>informaÃ§Ãµes adicionais da extensÃ£o, incluindo o polÃ­gono delimitador, vertical e 
+extensÃ£o temporal do dataset</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DataIdent">
-		<label>Identificação dos dados</label>
-		<description>informações necessárias para identificar um dataset</description>
+		<label>IdentificaÃ§Ã£o dos dados</label>
+		<description>informaÃ§Ãµes necessÃ¡rias para identificar um dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dataIdInfo">
-		<label>Informação de identificação</label>
-		<description>informações básicas sobre o recurso (s) a que se aplicam os metadados</description>
-		<condition>Obrigatório</condition>
+		<label>InformaÃ§Ã£o de identificaÃ§Ã£o</label>
+		<description>informaÃ§Ãµes bÃ¡sicas sobre o recurso (s) a que se aplicam os metadados</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dataLang">
 		<label>Linguagem</label>
-		<description>Línguagem utilizada dentro do dataset</description>
-		<condition>Obrigatório</condition>
+		<description>LÃ­nguagem utilizada dentro do dataset</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dataLineage">
 		<label>Linhagem</label>
-		<description>informação não-quantitativa sobre a qualidade da linhagem dos dados especificados pelo alcance</description>
+		<description>informaÃ§Ã£o nÃ£o-quantitativa sobre a qualidade da linhagem dos dados especificados pelo alcance</description>
 		<condition>conditcional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DataQual">
 		<label>Qualidade dos dados</label>
-		<description>informação da qualidade para os dados especificados pela qualidade do alcance</description>
+		<description>informaÃ§Ã£o da qualidade para os dados especificados pela qualidade do alcance</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dataScale">
-		<label>Resolução espacial</label>
-		<description>factor que proporciona uma compreensão geral da densidade de dados espaciais num dataset</description>
+		<label>ResoluÃ§Ã£o espacial</label>
+		<description>factor que proporciona uma compreensÃ£o geral da densidade de dados espaciais num dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="datasetSeries">
-		<label>Série</label>
-		<description>informações sobre a série de dados ou do dataset agregado, cujo dataset é uma 
+		<label>SÃ©rie</label>
+		<description>informaÃ§Ãµes sobre a sÃ©rie de dados ou do dataset agregado, cujo dataset Ã© uma 
 parte</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DatasetSeries">
-		<label>Séries</label>
-		<description>informações sobre a série de dados ou dataset agregada, a que uma dataset
+		<label>SÃ©ries</label>
+		<description>informaÃ§Ãµes sobre a sÃ©rie de dados ou dataset agregada, a que uma dataset
 pertence</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="datasetSet">
 		<label>Definir dataset</label>
-		<description>dataset a que a informação se destina</description>
+		<description>dataset a que a informaÃ§Ã£o se destina</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dataSource">
 		<label>Fonte</label>
-		<description>informações sobre a fonte de dados utilizados na criação dos dados especificados pelo 
+		<description>informaÃ§Ãµes sobre a fonte de dados utilizados na criaÃ§Ã£o dos dados especificados pelo 
 alcance</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DatatypeCd">
-		<label>Código do tipo de dados</label>
+		<label>CÃ³digo do tipo de dados</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
@@ -529,13 +529,13 @@ alcance</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dateNext">
-		<label>Data da próxima actualização</label>
-		<description>Data prevista para a revisão do recurso(AAAA-MM-DD)</description>
+		<label>Data da prÃ³xima actualizaÃ§Ã£o</label>
+		<description>Data prevista para a revisÃ£o do recurso(AAAA-MM-DD)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DateRef">
 		<label>Data</label>
-		<description>data de referência e de eventos utilizados para descrevê-lo (AAAA-MM-DD)</description>
+		<description>data de referÃªncia e de eventos utilizados para descrevÃª-lo (AAAA-MM-DD)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DateTime">
@@ -544,7 +544,7 @@ alcance</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DateTypCd">
-		<label>Código do tipo de data</label>
+		<label>CÃ³digo do tipo de data</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
@@ -580,19 +580,19 @@ alcance</description>
 	<!-- ==================================================== -->
 	<element name="delPoint">
 		<label>Ponto de entrega</label>
-		<description>linha de endereço para o local (como descrito na ISO 11180, anexo A)</description>
+		<description>linha de endereÃ§o para o local (como descrito na ISO 11180, anexo A)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="denFlatRat">
-		<label>Denominador do rácio de achatamento</label>
-		<description>razão da diferença entre os raios equatorial e polar do elipsóide 
-ao raio equatorial, quando o numerador é definida como 1</description>
+		<label>Denominador do rÃ¡cio de achatamento</label>
+		<description>razÃ£o da diferenÃ§a entre os raios equatorial e polar do elipsÃ³ide 
+ao raio equatorial, quando o numerador Ã© definida como 1</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="descKeys">
 		<label>Palavraa chaves descritivas</label>
-		<description>Fornece a palavra chave da categoria, o seu tipo e a referência da fonte</description>
+		<description>Fornece a palavra chave da categoria, o seu tipo e a referÃªncia da fonte</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="designator">
@@ -601,140 +601,140 @@ ao raio equatorial, quando o numerador é definida como 1</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DigTranOps">
-		<label>Transferência de opções Digitais</label>
-		<description>meios técnicos e meios pelos quais um recurso é obtido a partir do destribuidor</description>
+		<label>TransferÃªncia de opÃ§Ãµes Digitais</label>
+		<description>meios tÃ©cnicos e meios pelos quais um recurso Ã© obtido a partir do destribuidor</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dimDescrp">
 		<label>Descriptor</label>
-		<description>descrição do alcance de um valor de medição de células
+		<description>descriÃ§Ã£o do alcance de um valor de mediÃ§Ã£o de cÃ©lulas
 </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Dimen">
-		<label>Dimensão</label>
+		<label>DimensÃ£o</label>
 		<description>Propriedades do eixo</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dimension">
-		<label>Dimensão</label>
+		<label>DimensÃ£o</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dimName">
-		<label>Nome da dimensão</label>
+		<label>Nome da dimensÃ£o</label>
 		<description>nome do eixo</description>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DimNameTypCd">
-		<label>Tipo de código do nome da dimensão</label>
+		<label>Tipo de cÃ³digo do nome da dimensÃ£o</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dimResol">
-		<label>Resolução</label>
+		<label>ResoluÃ§Ã£o</label>
 		<description>grau de detalhe no grid dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dimSize">
-		<label>Tamanho da dimensão</label>
-		<description>número de elementos ao longo do eixo</description>
-		<condition>Obrigatório</condition>
+		<label>Tamanho da dimensÃ£o</label>
+		<description>nÃºmero de elementos ao longo do eixo</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Distance">
-		<label>Distância</label>
+		<label>DistÃ¢ncia</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="distFormat">
-		<label>Formato da distribuição</label>
+		<label>Formato da distribuiÃ§Ã£o</label>
 		<description/>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="distInfo">
-		<label>Informação da distribuição</label>
-		<description>fornece informações sobre o distribuidor e as opções para a obtenção do 
+		<label>InformaÃ§Ã£o da distribuiÃ§Ã£o</label>
+		<description>fornece informaÃ§Ãµes sobre o distribuidor e as opÃ§Ãµes para a obtenÃ§Ã£o do 
 recurso(s)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="distorCont">
 		<label>Contacto do distribuidor</label>
-		<description>lista onde o recurso pode ser obtido. Esta lista não precisa ser exaustiva</description>
-		<condition>Obrigatório</condition>
+		<description>lista onde o recurso pode ser obtido. Esta lista nÃ£o precisa ser exaustiva</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="distorFormat">
-		<label>Forma da distribuição</label>
-		<description>Fornece informações dobre a forma de distribuição utilizada pelo destribuidor</description>
+		<label>Forma da distribuiÃ§Ã£o</label>
+		<description>Fornece informaÃ§Ãµes dobre a forma de distribuiÃ§Ã£o utilizada pelo destribuidor</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="distorOrdPrc">
-		<label>Processo de pedido de Distribuição</label>
-		<description>fornece informações sobre como os recursos podem ser obtidos, e afins, para além de 
-informações de custos</description>
+		<label>Processo de pedido de DistribuiÃ§Ã£o</label>
+		<description>fornece informaÃ§Ãµes sobre como os recursos podem ser obtidos, e afins, para alÃ©m de 
+informaÃ§Ãµes de custos</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Distrib">
-		<label>Distribuição</label>
-		<description>informações sobre o distribuidor e as opções para a obtenção do 
+		<label>DistribuiÃ§Ã£o</label>
+		<description>informaÃ§Ãµes sobre o distribuidor e as opÃ§Ãµes para a obtenÃ§Ã£o do 
 recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Distributor">
 		<label>Distribuidor</label>
-		<description>Informação acerca do destribuidor</description>
+		<description>InformaÃ§Ã£o acerca do destribuidor</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="distributor">
 		<label>Distribuidor</label>
-		<description>fornece informações sobre o distribuidor</description>
+		<description>fornece informaÃ§Ãµes sobre o distribuidor</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="distroTran">
-		<label>Transferência da Distribuição</label>
+		<label>TransferÃªncia da DistribuiÃ§Ã£o</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="distTranOps">
-		<label>Opções de destribuição</label>
-		<description>fornece informações sobre os meios técnicos e meios pelos quais um recurso é 
-obtidos através do distribuidor</description>
+		<label>OpÃ§Ãµes de destribuiÃ§Ã£o</label>
+		<description>fornece informaÃ§Ãµes sobre os meios tÃ©cnicos e meios pelos quais um recurso Ã© 
+obtidos atravÃ©s do distribuidor</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DQAbsExtPosAcc">
-		<label>Precisão posicional absoluta externa</label>
+		<label>PrecisÃ£o posicional absoluta externa</label>
 		<description>proximidade dos valores de coordenadas relacionados com os valores aceites como sendo verdadeiros</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DQAccTimeMeas">
-		<label>Precisão do tempo de medição</label>
-		<description>exatidão das referências temporais de um item (referência ao erro na hora 
-medição)</description>
+		<label>PrecisÃ£o do tempo de mediÃ§Ã£o</label>
+		<description>exatidÃ£o das referÃªncias temporais de um item (referÃªncia ao erro na hora 
+mediÃ§Ã£o)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DQCompComm">
 		<label>Completeness commission</label>
-		<description>excesso de dados presentes no dataset, descritos pela aplicação </description>
+		<description>excesso de dados presentes no dataset, descritos pela aplicaÃ§Ã£o </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DQCompOm">
 		<label>Completeness omission</label>
-		<description>dados ausentes do dataset, descritos pela aplicação
+		<description>dados ausentes do dataset, descritos pela aplicaÃ§Ã£o
 </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DQConcConsis">
-		<label>Coerência conceptual</label>
-		<description>adesão às regras do esquema conceitual</description>
+		<label>CoerÃªncia conceptual</label>
+		<description>adesÃ£o Ã s regras do esquema conceitual</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DQDomConsis">
-		<label>Coerência de Domínio</label>
-		<description>adesão do valor dos vaores de dominio</description>
+		<label>CoerÃªncia de DomÃ­nio</label>
+		<description>adesÃ£o do valor dos vaores de dominio</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DQElementTypes">
@@ -743,145 +743,145 @@ medição)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DQFormConsis">
-		<label>Coerência do formato</label>
-		<description>grau em que os dados são armazenados em conformidade com a estrutura física do 
-dataset, descrito pela aplicação</description>
+		<label>CoerÃªncia do formato</label>
+		<description>grau em que os dados sÃ£o armazenados em conformidade com a estrutura fÃ­sica do 
+dataset, descrito pela aplicaÃ§Ã£o</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DQGridDataPosAcc">
-		<label>Precisão posicional dos Dados em Grid </label>
-		<description>proximidade da posição dos valores dos dados em grid,  aceites como sendo verdadeiros
+		<label>PrecisÃ£o posicional dos Dados em Grid </label>
+		<description>proximidade da posiÃ§Ã£o dos valores dos dados em grid,  aceites como sendo verdadeiros
 </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dqInfo">
-		<label>Informação da qualidade dos dados</label>
-		<description>  Fornece uma avaliação global de qualidade de um recurso (s) </description>
+		<label>InformaÃ§Ã£o da qualidade dos dados</label>
+		<description>  Fornece uma avaliaÃ§Ã£o global de qualidade de um recurso (s) </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DQNonQuanAttAcc">
-		<label>Precisão dos atributos não quantitativos</label>
-		<description>exatidão de atributos não quantitativos</description>
+		<label>PrecisÃ£o dos atributos nÃ£o quantitativos</label>
+		<description>exatidÃ£o de atributos nÃ£o quantitativos</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DQQuanAttAcc">
-		<label>Precisão de atributos quantitativos</label>
-		<description>exatidão de atributos quantitativos</description>
+		<label>PrecisÃ£o de atributos quantitativos</label>
+		<description>exatidÃ£o de atributos quantitativos</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DQRelIntPosAcc">
-		<label>Precisão da posição relativa interna</label>
-		<description>proximidade das posições relativas dos recursos no âmbito de suas respectivas 
-posições relativas aceites como sendo verdadeiras</description>
+		<label>PrecisÃ£o da posiÃ§Ã£o relativa interna</label>
+		<description>proximidade das posiÃ§Ãµes relativas dos recursos no Ã¢mbito de suas respectivas 
+posiÃ§Ãµes relativas aceites como sendo verdadeiras</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dqReport">
-		<label>Relatório</label>
-		<description>informações quantitativas de qualidade para os dados especificados pela aplicação</description>
+		<label>RelatÃ³rio</label>
+		<description>informaÃ§Ãµes quantitativas de qualidade para os dados especificados pela aplicaÃ§Ã£o</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DQScope">
-		<label>Aplicação</label>
-		<description>descrição dos dados especificados pela aplicação</description>
-		<condition>Obrigatório</condition>
+		<label>AplicaÃ§Ã£o</label>
+		<description>descriÃ§Ã£o dos dados especificados pela aplicaÃ§Ã£o</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dqScope">
-		<label>Aplicação</label>
-		<description>Dados específicos a que se aplica a informação da qualidade dos dados</description>
+		<label>AplicaÃ§Ã£o</label>
+		<description>Dados especÃ­ficos a que se aplica a informaÃ§Ã£o da qualidade dos dados</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DQTempConsis">
-		<label>Consistência temporal</label>
-		<description>regularidade de eventos ordenados ou seqüências, se relatado</description>
+		<label>ConsistÃªncia temporal</label>
+		<description>regularidade de eventos ordenados ou seqÃ¼Ãªncias, se relatado</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DQTempValid">
 		<label>Validade temporal</label>
-		<description>validade dos dados especificados no âmbito da aplicação em relação ao tempo</description>
+		<description>validade dos dados especificados no Ã¢mbito da aplicaÃ§Ã£o em relaÃ§Ã£o ao tempo</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DQThemClassCor">
-		<label>Exatidão de classificação temática</label>
-		<description>comparação das classes atribuídas e suas características ou atributos ao universo 
+		<label>ExatidÃ£o de classificaÃ§Ã£o temÃ¡tica</label>
+		<description>comparaÃ§Ã£o das classes atribuÃ­das e suas caracterÃ­sticas ou atributos ao universo 
 do discurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DQTopConsis">
-		<label>Consistência topológica</label>
-		<description>exactidão das características topologicamente codificadas de um dataset 
-descritos pela aplicação</description>
+		<label>ConsistÃªncia topolÃ³gica</label>
+		<description>exactidÃ£o das caracterÃ­sticas topologicamente codificadas de um dataset 
+descritos pela aplicaÃ§Ã£o</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="dsFormat">
 		<label>Formato de recurso</label>
-		<description>fornece uma descrição do formato do recurso (s)</description>
+		<description>fornece uma descriÃ§Ã£o do formato do recurso (s)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="eastBL">
 		<label>East bound longitude</label>
-		<description>coordenadas mais orientais do limite da extensão do dataset, em que a longitude é expressa
+		<description>coordenadas mais orientais do limite da extensÃ£o do dataset, em que a longitude Ã© expressa
  em graus decimais (positiva a leste)</description>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="eleDatatype">
 		<label>Tipo de dados</label>
 		<description/>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ellipsoid">
-		<label>Ellipsóide</label>
-		<description>identidade da elipsóide utilizada</description>
+		<label>EllipsÃ³ide</label>
+		<description>identidade da elipsÃ³ide utilizada</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ellParas">
-		<label>Parametros da ellipsóide</label>
-		<description>conjunto de parâmetros que descrevem o elipsóide</description>
+		<label>Parametros da ellipsÃ³ide</label>
+		<description>conjunto de parÃ¢metros que descrevem o elipsÃ³ide</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="EllParas">
-		<label>Parametros do ellipsóide</label>
-		<description>conjunto de parâmetros que descrevem o elipsóide</description>
+		<label>Parametros do ellipsÃ³ide</label>
+		<description>conjunto de parÃ¢metros que descrevem o elipsÃ³ide</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="eMailAdd">
-		<label>Enderesso electrónico</label>
-		<description>endereço do correio eletrônico da empresa ou pessoa responsável</description>
+		<label>Enderesso electrÃ³nico</label>
+		<description>endereÃ§o do correio eletrÃ´nico da empresa ou pessoa responsÃ¡vel</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="end">
 		<label>data final</label>
-		<description>data de término do período de validade</description>
+		<description>data de tÃ©rmino do perÃ­odo de validade</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="envirDesc">
-		<label>Descrição do Ambiente</label>
-		<description>descrição do dataser no ambiente de processamento, incluindo 
+		<label>DescriÃ§Ã£o do Ambiente</label>
+		<description>descriÃ§Ã£o do dataser no ambiente de processamento, incluindo 
 itens, como o software, o sistema operacional do computador, nome do ficheiro, e o tamanho do dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="equScale">
 		<label>Escala equivalente</label>
-		<description>nível de detalhe, expressa numa escala de um mapa ou gráfico impresso</description>
+		<description>nÃ­vel de detalhe, expressa numa escala de um mapa ou grÃ¡fico impresso</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="errStat">
 		<label>Erro estatistico</label>
-		<description>método estatístico usado para determinar o valor</description>
+		<description>mÃ©todo estatÃ­stico usado para determinar o valor</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="evalMethDesc">
-		<label>Descrição do método de avaliação</label>
-		<description>Descrição do método de avaliação</description>
+		<label>DescriÃ§Ã£o do mÃ©todo de avaliaÃ§Ã£o</label>
+		<description>DescriÃ§Ã£o do mÃ©todo de avaliaÃ§Ã£o</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="evalMethType">
-		<label>Código do tipo de método de avaliação</label>
-		<description>tipo de método utilizado para avaliar a qualidade do dataset</description>
+		<label>CÃ³digo do tipo de mÃ©todo de avaliaÃ§Ã£o</label>
+		<description>tipo de mÃ©todo utilizado para avaliar a qualidade do dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="EvalMethTypeCd">
@@ -890,125 +890,125 @@ itens, como o software, o sistema operacional do computador, nome do ficheiro, e
 	</element>
 	<!-- ==================================================== -->
 	<element name="evaluationProcedure">
-		<label>Procedimento de avaliação</label>
+		<label>Procedimento de avaliaÃ§Ã£o</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="exDesc">
-		<label>Descrição</label>
-		<description>extensão espacial e temporal para o objecto de referência</description>
+		<label>DescriÃ§Ã£o</label>
+		<description>extensÃ£o espacial e temporal para o objecto de referÃªncia</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="exSpat">
-		<label>Extensão espacial</label>
-		<description>Estenção espacial do composto espacial e elemento prorrogado temporal</description>
-		<condition>Obrigatório</condition>
+		<label>ExtensÃ£o espacial</label>
+		<description>EstenÃ§Ã£o espacial do composto espacial e elemento prorrogado temporal</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="extDomcode">
-		<label>codigo de domínio</label>
+		<label>codigo de domÃ­nio</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="extEleCond">
-		<label>Condição</label>
-		<description>Condição sob a qual o elemento prorrogado é obrigatória</description>
+		<label>CondiÃ§Ã£o</label>
+		<description>CondiÃ§Ã£o sob a qual o elemento prorrogado Ã© obrigatÃ³ria</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="extEleDef">
-		<label>Definição</label>
-		<description>Definição do elemento prorrogado</description>
-		<condition>Obrigatório</condition>
+		<label>DefiniÃ§Ã£o</label>
+		<description>DefiniÃ§Ã£o do elemento prorrogado</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="extEleDomVal">
-		<label>Valor de dominío</label>
-		<description>valores válidos que podem ser atribuídos ao elemento prorrogado</description>
+		<label>Valor de dominÃ­o</label>
+		<description>valores vÃ¡lidos que podem ser atribuÃ­dos ao elemento prorrogado</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ExtEleInfo">
-		<label>Informação da elemento prorrogado</label>
-		<description>Novos metadados, não contidos na ISO 19115, que são necessários para descrever dados geográficos</description>
+		<label>InformaÃ§Ã£o da elemento prorrogado</label>
+		<description>Novos metadados, nÃ£o contidos na ISO 19115, que sÃ£o necessÃ¡rios para descrever dados geogrÃ¡ficos</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="extEleInfo">
-		<label>Informações da elemento prorrogado</label>
-		<description>fornece informações sobre novos metadados, não contidos na ISO 19115, necessários para descrever os dados geográficos</description>
+		<label>InformaÃ§Ãµes da elemento prorrogado</label>
+		<description>fornece informaÃ§Ãµes sobre novos metadados, nÃ£o contidos na ISO 19115, necessÃ¡rios para descrever os dados geogrÃ¡ficos</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="extEleMxOc">
-		<label>Máximo de ocorrências</label>
-		<description>Máximo de ocorrências do elemento prorrogado</description>
+		<label>MÃ¡ximo de ocorrÃªncias</label>
+		<description>MÃ¡ximo de ocorrÃªncias do elemento prorrogado</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="extEleName">
 		<label>Nome</label>
 		<description>nome dos metadados do elemento prorrogado</description>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="extEleOb">
-		<label>Obrigação</label>
-		<description>Obrigação do elemento prorrogado</description>
+		<label>ObrigaÃ§Ã£o</label>
+		<description>ObrigaÃ§Ã£o do elemento prorrogado</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="extEleParEnt">
-		<label>Entidade mãe</label>
-		<description>nome da entidade dos metadados, em que esta elemento prorrogado dos metadados pode aparecer O nome pode ser padrão ou outro.
+		<label>Entidade mÃ£e</label>
+		<description>nome da entidade dos metadados, em que esta elemento prorrogado dos metadados pode aparecer O nome pode ser padrÃ£o ou outro.
 </description>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="extEleRat">
-		<label>Fundamentação</label>
-		<description>razões para criar o elemento prorrogado</description>
+		<label>FundamentaÃ§Ã£o</label>
+		<description>razÃµes para criar o elemento prorrogado</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="extEleRule">
 		<label>Regra</label>
 		<description>especifica como o elemento prorrogado se relaciona com outros elementos e entidades existentes</description>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="extEleSrc">
 		<label>Fonte</label>
-		<description>nome da pessoa ou organização que criou o elemento prorrogado</description>
-		<condition>Obrigatório</condition>
+		<description>nome da pessoa ou organizaÃ§Ã£o que criou o elemento prorrogado</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="exTemp">
-		<label>Extensão</label>
-		<description>data e hora para o conteúdo do dataset</description>
-		<condition>Obrigatório</condition>
+		<label>ExtensÃ£o</label>
+		<description>data e hora para o conteÃºdo do dataset</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Extent">
-		<label>Extenção</label>
-		<description>informações sobre a extensão espacial, vertical e temporal</description>
+		<label>ExtenÃ§Ã£o</label>
+		<description>informaÃ§Ãµes sobre a extensÃ£o espacial, vertical e temporal</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="extOnRes">
-		<label>Recurso on-line da extensão</label>
-		<description>Informações sobre fontes on-line contendo o nome do perfil da comunidade e do elemento prorrogado dos metadados. Informações para todos os novos elementos dos metadados
+		<label>Recurso on-line da extensÃ£o</label>
+		<description>InformaÃ§Ãµes sobre fontes on-line contendo o nome do perfil da comunidade e do elemento prorrogado dos metadados. InformaÃ§Ãµes para todos os novos elementos dos metadados
 </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="extShortName">
 		<label>Nome curto</label>
-		<description>pequeno formulário apropriado para a aplicação de um método, tais como XML ou SGML. NOTA 
-Outros métodos podem ser utilizados</description>
+		<description>pequeno formulÃ¡rio apropriado para a aplicaÃ§Ã£o de um mÃ©todo, tais como XML ou SGML. NOTA 
+Outros mÃ©todos podem ser utilizados</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="exTypeCode">
 		<label>Extent type code</label>
-		<description>indicação se o polígono delimitador abrange uma área coberta pelos 
-dados de uma área onde os dados não estão presentes</description>
+		<description>indicaÃ§Ã£o se o polÃ­gono delimitador abrange uma Ã¡rea coberta pelos 
+dados de uma Ã¡rea onde os dados nÃ£o estÃ£o presentes</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="falEastng">
 		<label>False easting</label>
-		<description>valor acrescentado para todos os valores _x_  das coordenadas retangulares de uma projecção. Este valor é freqüentemente atribuído para eliminar números negativos. Expresso numa 
+		<description>valor acrescentado para todos os valores _x_  das coordenadas retangulares de uma projecÃ§Ã£o. Este valor Ã© freqÃ¼entemente atribuÃ­do para eliminar nÃºmeros negativos. Expresso numa 
  unidade de medida identificado em Planar Coordinate Units</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1020,42 +1020,42 @@ dados de uma área onde os dados não estão presentes</description>
 	<element name="falNorthng">
 		<label>False northing</label>
 		<description>valor acrescentado para todos os valores_Y_  das coordenadas retangulares de uma
-projeção. Este valor é freqüentemente atribuído para eliminar números negativos. Expresso numa
+projeÃ§Ã£o. Este valor Ã© freqÃ¼entemente atribuÃ­do para eliminar nÃºmeros negativos. Expresso numa
  unidade de medida identificada em Planar Coordinate Units.
  </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="faxNum">
 		<label>Fax</label>
-		<description>número de  fax para da organização ou do individuo responsável</description>
+		<description>nÃºmero de  fax para da organizaÃ§Ã£o ou do individuo responsÃ¡vel</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="featIntSet">
-		<label>Instâncias de recurso</label>
-		<description>instâncias de recurso para as quais as informações se destinam</description>
+		<label>InstÃ¢ncias de recurso</label>
+		<description>instÃ¢ncias de recurso para as quais as informaÃ§Ãµes se destinam</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="featSet">
 		<label>Recursos</label>
-		<description>Recursos aos quas a informação se aplica</description>
+		<description>Recursos aos quas a informaÃ§Ã£o se aplica</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="featTypeList">
 		<label>Lista do tipo de recursos</label>
-		<description>fornece informações sobre a lista de tipos de recurso com a mesma representação espacial</description>
+		<description>fornece informaÃ§Ãµes sobre a lista de tipos de recurso com a mesma representaÃ§Ã£o espacial</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="FeatTypList">
 		<label>Lista do tipo de recursos</label>
-		<description>lista de nomes de tipos de recursos com a mesma representação espacial (o mesmo que 
+		<description>lista de nomes de tipos de recursos com a mesma representaÃ§Ã£o espacial (o mesmo que 
 atributos espaciais)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="FetCatDesc">
 		<label>Caracteristicas do recurso</label>
-		<description>informações de identificação do recurso</description>
+		<description>informaÃ§Ãµes de identificaÃ§Ã£o do recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="fetCatSup">
@@ -1064,109 +1064,109 @@ atributos espaciais)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="fileDecmTech">
-		<label>Ficheiro décnico de descompressão</label>
-		<description>recomendações de algoritmos ou processos que podem ser aplicados para ler ou expandir 
-recursos através de técnicas de compressão aplicadas</description>
+		<label>Ficheiro dÃ©cnico de descompressÃ£o</label>
+		<description>recomendaÃ§Ãµes de algoritmos ou processos que podem ser aplicados para ler ou expandir 
+recursos atravÃ©s de tÃ©cnicas de compressÃ£o aplicadas</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="filmDistInAv">
 		<label>Film distortion information availability</label>
-		<description>indicação da existência ou não de informações sobre calibração é 
-disponível</description>
+		<description>indicaÃ§Ã£o da existÃªncia ou nÃ£o de informaÃ§Ãµes sobre calibraÃ§Ã£o Ã© 
+disponÃ­vel</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Format">
 		<label>Formato</label>
-		<description>descrição da linguagem computacional de construção que especifica a representação 
-de objectos de dados num registro, ficheiro, mensagem, dispositivo de armazenamento ou canal de transmissão 
+		<description>descriÃ§Ã£o da linguagem computacional de construÃ§Ã£o que especifica a representaÃ§Ã£o 
+de objectos de dados num registro, ficheiro, mensagem, dispositivo de armazenamento ou canal de transmissÃ£o 
 </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="formatAmdNum">
-		<label>Numero da alteração</label>
-		<description>Numero da alteração da versão do formato</description>
+		<label>Numero da alteraÃ§Ã£o</label>
+		<description>Numero da alteraÃ§Ã£o da versÃ£o do formato</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="formatName">
 		<label>Nome</label>
-		<description>nome do formato de transferência de dados</description>
-		<condition>Obrigatório</condition>
+		<description>nome do formato de transferÃªncia de dados</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="formatSpec">
-		<label>Especificação</label>
-		<description>nome de um subconjunto, perfil, ou caderno de especificações do formato</description>
+		<label>EspecificaÃ§Ã£o</label>
+		<description>nome de um subconjunto, perfil, ou caderno de especificaÃ§Ãµes do formato</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="formatVer">
-		<label>Versão</label>
-		<description>versão do formato (data, número, etc)</description>
-		<condition>Obrigatório</condition>
+		<label>VersÃ£o</label>
+		<description>versÃ£o do formato (data, nÃºmero, etc)</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="GenericNameTypes">
-		<label>Tipo de nomes genéricos</label>
+		<label>Tipo de nomes genÃ©ricos</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="GeoBndBox">
 		<label>Geographic bounding box</label>
-		<description>Posição geográfica do dataset</description>
+		<description>PosiÃ§Ã£o geogrÃ¡fica do dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="geoBox">
 		<label>Geographic box</label>
-		<description>retângulo mínimo delimitador, dentro do qual há dados disponíveis</description>
+		<description>retÃ¢ngulo mÃ­nimo delimitador, dentro do qual hÃ¡ dados disponÃ­veis</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="geoDesc">
-		<label>Descrição geográfica</label>
-		<description>Descrição da área geográfica em que há dados disponíveis</description>
+		<label>DescriÃ§Ã£o geogrÃ¡fica</label>
+		<description>DescriÃ§Ã£o da Ã¡rea geogrÃ¡fica em que hÃ¡ dados disponÃ­veis</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="GeoDesc">
-		<label>Descrição geográfica</label>
-		<description>Descrição da área geográfica usando identificadores</description>
+		<label>DescriÃ§Ã£o geogrÃ¡fica</label>
+		<description>DescriÃ§Ã£o da Ã¡rea geogrÃ¡fica usando identificadores</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="geoEle">
-		<label>Elemento geográfico</label>
-		<description>fornece uma componente geográfica da extensão do objetco de referência</description>
+		<label>Elemento geogrÃ¡fico</label>
+		<description>fornece uma componente geogrÃ¡fica da extensÃ£o do objetco de referÃªncia</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="geoId">
-		<label>Identificador geográfico</label>
-		<description>identificador utilizado para representar uma área geográfica</description>
-		<condition>Obrigatório</condition>
+		<label>Identificador geogrÃ¡fico</label>
+		<description>identificador utilizado para representar uma Ã¡rea geogrÃ¡fica</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="geometObjs">
-		<label>Objecto geométrico</label>
-		<description>informações sobre os objectos geométricos utilizados no dataset</description>
+		<label>Objecto geomÃ©trico</label>
+		<description>informaÃ§Ãµes sobre os objectos geomÃ©tricos utilizados no dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="GeometObjs">
 		<label>Objectos geometricos </label>
-		<description>número de objectos geométricos, listados por tipo de objecto, utilizado no 
+		<description>nÃºmero de objectos geomÃ©tricos, listados por tipo de objecto, utilizado no 
 dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="geoObjCnt">
-		<label>Contagem de objectos geométricos</label>
-		<description>número total de objectos (pontos ou vectores) no dataset</description>
+		<label>Contagem de objectos geomÃ©tricos</label>
+		<description>nÃºmero total de objectos (pontos ou vectores) no dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="geoObjTyp">
-		<label>Tipo de objectos geométricos</label>
-		<description>nome do ponto e vector de objectos espaciais utilizados para localização espacial em 0, 1, ou 2 dimensões no dataset</description>
-		<condition>Obrigatório</condition>
+		<label>Tipo de objectos geomÃ©tricos</label>
+		<description>nome do ponto e vector de objectos espaciais utilizados para localizaÃ§Ã£o espacial em 0, 1, ou 2 dimensÃµes no dataset</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="GeoObjTypCd">
-		<label>Código do tipo de objecto geométrico</label>
+		<label>CÃ³digo do tipo de objecto geomÃ©trico</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
@@ -1189,7 +1189,7 @@ dataset</description>
 	<element name="georefPars">
 		<label>Georeferenced parameters</label>
 		<description>termos de apoio ao georreferenciamento de dados grid</description>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="GM_Point">
@@ -1203,24 +1203,24 @@ dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="graphOver">
-		<label>Resumo Gráfico</label>
-		<description>fornece um gráfico que ilustra o recurso (s) (deve incluir uma legenda para 
-o gráfico)</description>
+		<label>Resumo GrÃ¡fico</label>
+		<description>fornece um grÃ¡fico que ilustra o recurso (s) (deve incluir uma legenda para 
+o grÃ¡fico)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="GridSpatRep">
-		<label>representação espacial grid do gráfico</label>
-		<description>informações sobre a grid espacial dos objectos no dataset</description>
+		<label>representaÃ§Ã£o espacial grid do grÃ¡fico</label>
+		<description>informaÃ§Ãµes sobre a grid espacial dos objectos no dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="handDesc">
-		<label>Descrição de tratamento</label>
-		<description>informações adicionais sobre as restrições á modificação do 
+		<label>DescriÃ§Ã£o de tratamento</label>
+		<description>informaÃ§Ãµes adicionais sobre as restriÃ§Ãµes Ã¡ modificaÃ§Ã£o do 
 recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="hgtProsPt">
-		<label>Altura do ponto de prespectiva acima da superfície</label>
+		<label>Altura do ponto de prespectiva acima da superfÃ­cie</label>
 		<description>altura do ponto de vista sobre a Terra, expressa em metros</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1231,85 +1231,85 @@ recurso</description>
 	<!-- ==================================================== -->
 	<element name="idAbs">
 		<label>Resumo</label>
-		<description>resumo descritivo do conteúdo do recurso</description>
-		<condition>Obrigatório</condition>
+		<description>resumo descritivo do conteÃºdo do recurso</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="idCitation">
-		<label>Citação</label>
-		<description>Dados de citação para o recurso</description>
+		<label>CitaÃ§Ã£o</label>
+		<description>Dados de citaÃ§Ã£o para o recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="idCredit">
 		<label>Creditos</label>
-		<description>reconhecimento daqueles que contribuíram para o recurso</description>
+		<description>reconhecimento daqueles que contribuÃ­ram para o recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="identAuth">
 		<label>Autoridade</label>
-		<description>pessoa ou entidade responsável pela manutenção do namespace</description>
+		<description>pessoa ou entidade responsÃ¡vel pela manutenÃ§Ã£o do namespace</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="identCode">
 		<label>Codigo</label>
-		<description>valor alfanumérico que identifica uma instância no namespace</description>
-		<condition>Obrigatório</condition>
+		<description>valor alfanumÃ©rico que identifica uma instÃ¢ncia no namespace</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="idPoC">
 		<label>Ponto de contacto</label>
-		<description>identificação e meios de comunicação com a pessoa(s) ou		
-organização(s) associada com o recurso(s)</description>
+		<description>identificaÃ§Ã£o e meios de comunicaÃ§Ã£o com a pessoa(s) ou		
+organizaÃ§Ã£o(s) associada com o recurso(s)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="idPurp">
-		<label>Propósito</label>
-		<description>resumo das intenções com as quais o recurso (s) foi desenvolvido</description>
+		<label>PropÃ³sito</label>
+		<description>resumo das intenÃ§Ãµes com as quais o recurso (s) foi desenvolvido</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="idSpecUse">
-		<label>uso de recursos específicos</label>
-		<description>fornece informações básicas sobre a aplicação específica, por diferentes utilizadores, para o qual o recurso tenha / tenham sido ou estiver a ser usado</description>
+		<label>uso de recursos especÃ­ficos</label>
+		<description>fornece informaÃ§Ãµes bÃ¡sicas sobre a aplicaÃ§Ã£o especÃ­fica, por diferentes utilizadores, para o qual o recurso tenha / tenham sido ou estiver a ser usado</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="illAziAng">
-		<label>Algulo azimutal da iluminação</label>
-		<description>azimute de iluminação medida em graus, no sentido dos ponteiros do relógio a partir do norte verdadeiro no momento em que 
-a imagem é tirada. Para imagens de um dispositivo de digitalização, referem-se ao centro do pixel da
+		<label>Algulo azimutal da iluminaÃ§Ã£o</label>
+		<description>azimute de iluminaÃ§Ã£o medida em graus, no sentido dos ponteiros do relÃ³gio a partir do norte verdadeiro no momento em que 
+a imagem Ã© tirada. Para imagens de um dispositivo de digitalizaÃ§Ã£o, referem-se ao centro do pixel da
 imagem</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="illElevAng">
-		<label>ãngulo de elevação da iluminação</label>
-		<description>elevação da iluminação medida em graus no sentido dos ponteiros do relógio a partir do plano de destino na 
-interseção da linha óptica de visão com a superfície da terra. Para imagens de um 
-dispositivo de digitalização, referem-se ao centro do pixel da imagem</description>
+		<label>Ã£ngulo de elevaÃ§Ã£o da iluminaÃ§Ã£o</label>
+		<description>elevaÃ§Ã£o da iluminaÃ§Ã£o medida em graus no sentido dos ponteiros do relÃ³gio a partir do plano de destino na 
+interseÃ§Ã£o da linha Ã³ptica de visÃ£o com a superfÃ­cie da terra. Para imagens de um 
+dispositivo de digitalizaÃ§Ã£o, referem-se ao centro do pixel da imagem</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="imagCond">
 		<label>Imaging condition</label>
-		<description>Condições que afectam a imagem</description>
+		<description>CondiÃ§Ãµes que afectam a imagem</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="imagQuCode">
-		<label>Código da qualidade de imagem</label>
+		<label>CÃ³digo da qualidade de imagem</label>
 		<description>especifica a qualidade da imagem</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ImgCondCd">
-		<label>Codigo da condição da imagem</label>
+		<label>Codigo da condiÃ§Ã£o da imagem</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ImgDesc">
-		<label>Descrição da imagem</label>
-		<description>informações sobre um adequado uso da imagem</description>
+		<label>DescriÃ§Ã£o da imagem</label>
+		<description>informaÃ§Ãµes sobre um adequado uso da imagem</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="incWithDS">
 		<label>Incluido com o dataset</label>
-		<description>indicação da existência ou não do recurso incluído no dataset</description>
-		<condition>Obrigatório</condition>
+		<description>indicaÃ§Ã£o da existÃªncia ou nÃ£o do recurso incluÃ­do no dataset</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Integer">
@@ -1323,8 +1323,8 @@ dispositivo de digitalização, referem-se ao centro do pixel da imagem</descripti
 	</element>
 	<!-- ==================================================== -->
 	<element name="issId">
-		<label>Identificação do problema</label>
-		<description>Informações para identificar o problema da série</description>
+		<label>IdentificaÃ§Ã£o do problema</label>
+		<description>InformaÃ§Ãµes para identificar o problema da sÃ©rie</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="issn">
@@ -1338,7 +1338,7 @@ dispositivo de digitalização, referem-se ao centro do pixel da imagem</descripti
 	</element>
 	<!-- ==================================================== -->
 	<element name="KeyTypCd">
-		<label>Código do tipo de palavra-chave</label>
+		<label>CÃ³digo do tipo de palavra-chave</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
@@ -1350,47 +1350,47 @@ assunto</description>
 	<!-- ==================================================== -->
 	<element name="Keywords">
 		<label>Palavra-chave</label>
-		<description>Tipo e referência da origem da palavras-chave</description>
+		<description>Tipo e referÃªncia da origem da palavras-chave</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="languageCode">
-		<label>Código da linguagem</label>
+		<label>CÃ³digo da linguagem</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="latProjCnt">
-		<label>Latitude do centro de projeção</label>
-		<description>latitude do ponto de projecção para projeções azimutais</description>
+		<label>Latitude do centro de projeÃ§Ã£o</label>
+		<description>latitude do ponto de projecÃ§Ã£o para projeÃ§Ãµes azimutais</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="latProjOri">
-		<label>Latitude da origem da projeção</label>
-		<description>latitude escolhida como origem das coordenadas retangulares de uma projecção
-projeção</description>
+		<label>Latitude da origem da projeÃ§Ã£o</label>
+		<description>latitude escolhida como origem das coordenadas retangulares de uma projecÃ§Ã£o
+projeÃ§Ã£o</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="LegConsts">
-		<label>Restrições legais</label>
-		<description>restrições e pré-requisitos legais para aceder e utilizar o 
+		<label>RestriÃ§Ãµes legais</label>
+		<description>restriÃ§Ãµes e prÃ©-requisitos legais para aceder e utilizar o 
 recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="lensDistInAv">
-		<label>disponibilidade de informações distorção da lente</label>
-		<description>indicação da existência ou não informações disponiveis acerca da correção da vizualização da lente</description>
+		<label>disponibilidade de informaÃ§Ãµes distorÃ§Ã£o da lente</label>
+		<description>indicaÃ§Ã£o da existÃªncia ou nÃ£o informaÃ§Ãµes disponiveis acerca da correÃ§Ã£o da vizualizaÃ§Ã£o da lente</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Lineage">
 		<label>Lineage</label>
-		<description>informações sobre os eventos ou fonte de dados utilizados na criação de dados 
-especificado pela aplicação ou falta de conhecimento sobre a linhagem</description>
+		<description>informaÃ§Ãµes sobre os eventos ou fonte de dados utilizados na criaÃ§Ã£o de dados 
+especificado pela aplicaÃ§Ã£o ou falta de conhecimento sobre a linhagem</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="linkage">
 		<label>Linkage</label>
-		<description>endereço on-line usando um Uniform Resource Locator ou esquema de endereço 
+		<description>endereÃ§o on-line usando um Uniform Resource Locator ou esquema de endereÃ§o 
 semelhante, como http://www.statkart.no/isotc211</description>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="LocalName">
@@ -1400,68 +1400,68 @@ semelhante, como http://www.statkart.no/isotc211</description>
 	<!-- ==================================================== -->
 	<element name="longCntMer">
 		<label>Longitude do meridiano central</label>
-		<description>meridiano no centro de uma projeção, geralmente utilizado como base 
-para a construção da projeção</description>
+		<description>meridiano no centro de uma projeÃ§Ã£o, geralmente utilizado como base 
+para a construÃ§Ã£o da projeÃ§Ã£o</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="longProjCnt">
-		<label>Longitude do centro de projeção</label>
-		<description>longitude do ponto de projecção para projeções azimutais</description>
+		<label>Longitude do centro de projeÃ§Ã£o</label>
+		<description>longitude do ponto de projecÃ§Ã£o para projeÃ§Ãµes azimutais</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="maintFreq">
-		<label>Freqüência de manutenção e atualização</label>
-		<description>frequência com que as alterações e adições feitas ao recurso após o 
+		<label>FreqÃ¼Ãªncia de manutenÃ§Ã£o e atualizaÃ§Ã£o</label>
+		<description>frequÃªncia com que as alteraÃ§Ãµes e adiÃ§Ãµes feitas ao recurso apÃ³s o 
 recurso inicial estar concluido</description>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="MaintFreqCd">
-		<label>Frequência da manutenção do código</label>
+		<label>FrequÃªncia da manutenÃ§Ã£o do cÃ³digo</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="MaintInfo">
-		<label>Informação de manutenção</label>
-		<description>informações sobre o alcance e a freqüência de atualizações</description>
+		<label>InformaÃ§Ã£o de manutenÃ§Ã£o</label>
+		<description>informaÃ§Ãµes sobre o alcance e a freqÃ¼Ãªncia de atualizaÃ§Ãµes</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="maintNote">
-		<label>Notas de manutenção</label>
-		<description>informação sobre os requisitos específicos para a manutenção da 
+		<label>Notas de manutenÃ§Ã£o</label>
+		<description>informaÃ§Ã£o sobre os requisitos especÃ­ficos para a manutenÃ§Ã£o da 
 recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="maintScp">
 		<label>Update scope</label>
-		<description>âmbito dos dados a que a manutenção é aplicada</description>
+		<description>Ã¢mbito dos dados a que a manutenÃ§Ã£o Ã© aplicada</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="maxVal">
-		<label>Valor máximo</label>
-		<description>comprimento de onda mais longo que o sensor é capaz de recolher com uma designada 
+		<label>Valor mÃ¡ximo</label>
+		<description>comprimento de onda mais longo que o sensor Ã© capaz de recolher com uma designada 
 banda</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="mdChar">
 		<label>Character set</label>
-		<description>nome completo da codificação de caracteres padrão usados para um conjunto de metadados</description>
+		<description>nome completo da codificaÃ§Ã£o de caracteres padrÃ£o usados para um conjunto de metadados</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="mdConst">
-		<label>Restrições de Metadados</label>
-		<description>prevê restrições de acesso e utilização dos dados</description>
+		<label>RestriÃ§Ãµes de Metadados</label>
+		<description>prevÃª restriÃ§Ãµes de acesso e utilizaÃ§Ã£o dos dados</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="mdContact">
 		<label>Autor dos metadados</label>
-		<description>responsável pela informação dos metadados</description>
-		<condition>Obrigatório</condition>
+		<description>responsÃ¡vel pela informaÃ§Ã£o dos metadados</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="MdCoRefSys">
-		<label>Sistema de coordenadas de referência</label>
+		<label>Sistema de coordenadas de referÃªncia</label>
 		<description>metadados sobre um sistema de coordenadas no qual os atributos foram derivados do
 SC_CRS como definido na norma ISO 19111 _ referenciamento espacial por coordenadas</description>
 	</element>
@@ -1469,33 +1469,33 @@ SC_CRS como definido na norma ISO 19111 _ referenciamento espacial por coordenad
 	<element name="mdDateSt">
 		<label>Date stamp</label>
 		<description>data em que os metadados foram criados (AAAA-MM-DDThh: mm: ss) </description>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="mdExtInfo">
-		<label>Informação da extensão dos Metadados</label>
-		<description>informações que descrevem as extensões de metadados</description>
+		<label>InformaÃ§Ã£o da extensÃ£o dos Metadados</label>
+		<description>informaÃ§Ãµes que descrevem as extensÃµes de metadados</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="MdExtInfo">
-		<label>Informação da extensão dos Metadados</label>
-		<description>informações que descrevem as extensões de metadados</description>
+		<label>InformaÃ§Ã£o da extensÃ£o dos Metadados</label>
+		<description>informaÃ§Ãµes que descrevem as extensÃµes de metadados</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="mdFileID">
 		<label>Indentificado do ficheiro</label>
-		<description>identificador único para este ficheiro de metadados</description>
+		<description>identificador Ãºnico para este ficheiro de metadados</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="mdHrLv">
-		<label>Nível de Hierarquia</label>
-		<description>Âmbito de aplicação dos metadados(ver anexo H para obter mais informações sobre 
-níveis de hierarquia dos metadados )</description>
+		<label>NÃ­vel de Hierarquia</label>
+		<description>Ã‚mbito de aplicaÃ§Ã£o dos metadados(ver anexo H para obter mais informaÃ§Ãµes sobre 
+nÃ­veis de hierarquia dos metadados )</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="mdHrLvName">
-		<label>Hierarquia de nomes de nível</label>
-		<description>nome dos níveis de hierarquia para que os metadados sao fornecido</description>
+		<label>Hierarquia de nomes de nÃ­vel</label>
+		<description>nome dos nÃ­veis de hierarquia para que os metadados sao fornecido</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="MdIdent">
@@ -1515,8 +1515,8 @@ níveis de hierarquia dos metadados )</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="mdMaint">
-		<label>Manutenção dos metadados</label>
-		<description>fornece informações sobre a freqüência de actualizações de metadados, e o âmbito dessas atualizações</description>
+		<label>ManutenÃ§Ã£o dos metadados</label>
+		<description>fornece informaÃ§Ãµes sobre a freqÃ¼Ãªncia de actualizaÃ§Ãµes de metadados, e o Ã¢mbito dessas atualizaÃ§Ãµes</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="mdParentID">
@@ -1526,12 +1526,12 @@ níveis de hierarquia dos metadados )</description>
 	<!-- ==================================================== -->
 	<element name="mdStanName">
 		<label>Metadata standard name</label>
-		<description>nome do padrão de metadados utilizados(incluindo o nome do perfil)</description>
+		<description>nome do padrÃ£o de metadados utilizados(incluindo o nome do perfil)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="mdStanVer">
 		<label>Metadata standard version</label>
-		<description>versão (perfil) do padrão de metadados usados</description>
+		<description>versÃ£o (perfil) do padrÃ£o de metadados usados</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="measDateTm">
@@ -1541,8 +1541,8 @@ níveis de hierarquia dos metadados )</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="measId">
-		<label>Identificação da medida</label>
-		<description>código que identifica um procedimento padrão registrado</description>
+		<label>IdentificaÃ§Ã£o da medida</label>
+		<description>cÃ³digo que identifica um procedimento padrÃ£o registrado</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="measName">
@@ -1555,7 +1555,7 @@ níveis de hierarquia dos metadados )</description>
 		<description>value (or set of values) obtained from applying a data quality measure or the out
 			come of evaluating the obtained value (or set of values) against a specified acceptable
 			conformance quality level</description>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Measure">
@@ -1564,24 +1564,24 @@ níveis de hierarquia dos metadados )</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="measureDescription">
-		<label>Descrição da medida</label>
+		<label>DescriÃ§Ã£o da medida</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="medDensity">
 		<label>Densidade</label>
-		<description>densidade para a qual os dados são gravados</description>
+		<description>densidade para a qual os dados sÃ£o gravados</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="medDenUnits">
 		<label>Unidades de densidade</label>
-		<description>unidades de medida para a densidade de gravação</description>
+		<description>unidades de medida para a densidade de gravaÃ§Ã£o</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="medFormat">
 		<label>Medium format</label>
-		<description>Método usado para descrever meio</description>
+		<description>MÃ©todo usado para descrever meio</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="MedFormCd">
@@ -1633,7 +1633,7 @@ níveis de hierarquia dos metadados )</description>
 	<!-- ==================================================== -->
 	<element name="minVal">
 		<label>Valor minimo</label>
-		<description>comprimento de onda mais curto que o sensor é capaz de recolher de um designada 
+		<description>comprimento de onda mais curto que o sensor Ã© capaz de recolher de um designada 
 banda</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1644,9 +1644,9 @@ banda</description>
 	<!-- ==================================================== -->
 	<element name="northBL">
 		<label>North bound latitude</label>
-		<description>Alocalização mais a norte, a coordenação do limite da extensão de conjunto de dados expressos em 
+		<description>AlocalizaÃ§Ã£o mais a norte, a coordenaÃ§Ã£o do limite da extensÃ£o de conjunto de dados expressos em 
 latitude em graus decimais (Norte positivo)</description>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="NumberTypes">
@@ -1655,56 +1655,56 @@ latitude em graus decimais (Norte positivo)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="numDims">
-		<label>Número de dimensões</label>
-		<description>Numero de eisos espaço-temporais independentes</description>
-		<condition>Obrigatório</condition>
+		<label>NÃºmero de dimensÃµes</label>
+		<description>Numero de eisos espaÃ§o-temporais independentes</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ObCd">
-		<label>Código de compromisso</label>
+		<label>CÃ³digo de compromisso</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ObLineAzi">
-		<label>Linha oblíqua azimutal</label>
-		<description>método utilizado para descrever a linha ao longo da projeção Oblique Mercator com a origem na projecção inicial e seu azimute</description>
+		<label>Linha oblÃ­qua azimutal</label>
+		<description>mÃ©todo utilizado para descrever a linha ao longo da projeÃ§Ã£o Oblique Mercator com a origem na projecÃ§Ã£o inicial e seu azimute</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="obLineLat">
-		<label>Latitude da linha oblíqua</label>
-		<description>latitude do ponto de definição da linha oblíqua</description>
-		<condition>Obrigatório</condition>
+		<label>Latitude da linha oblÃ­qua</label>
+		<description>latitude do ponto de definiÃ§Ã£o da linha oblÃ­qua</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="obLineLong">
-		<label>Longitude da linha oblíqua</label>
-		<description>longitude do ponto de definição da linha oblíqua</description>
-		<condition>Obrigatório</condition>
+		<label>Longitude da linha oblÃ­qua</label>
+		<description>longitude do ponto de definiÃ§Ã£o da linha oblÃ­qua</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ObLinePt">
 		<label>Oblique line point</label>
-		<description>método utilizado para descrever a linha ao longo da qual uma projeção Oblique Mercator e levada a cabo, a partir do centro de dois pontos próximos dos limites da região do mapa que define o centro 
+		<description>mÃ©todo utilizado para descrever a linha ao longo da qual uma projeÃ§Ã£o Oblique Mercator e levada a cabo, a partir do centro de dois pontos prÃ³ximos dos limites da regiÃ£o do mapa que define o centro 
 linha</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="obLnAziPars">
 		<label>Parametro azimutal da linha obliqua</label>
-		<description>parâmetros que descrevem o azimute da linha oblíqua</description>
+		<description>parÃ¢metros que descrevem o azimute da linha oblÃ­qua</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="obLnPtPars">
 		<label>Oblique line point parameter</label>
-		<description>parâmetros que descrevem o ponto da linha oblíqua</description>
+		<description>parÃ¢metros que descrevem o ponto da linha oblÃ­qua</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="offset">
 		<label>Offset</label>
-		<description>o valor físico correspondente a um valor da célula com valor zero</description>
+		<description>o valor fÃ­sico correspondente a um valor da cÃ©lula com valor zero</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="OnFunctCd">
-		<label>Código de função online</label>
+		<label>CÃ³digo de funÃ§Ã£o online</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
@@ -1715,41 +1715,41 @@ linha</description>
 	<!-- ==================================================== -->
 	<element name="OnlineRes">
 		<label>Recursos online</label>
-		<description>informações sobre fontes on-line a partir do qual o conjunto de dados, especificação ou 
+		<description>informaÃ§Ãµes sobre fontes on-line a partir do qual o conjunto de dados, especificaÃ§Ã£o ou 
 nome do perfil da comunidade e elementos dos metadados podem ser obtidas</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="onLineSrc">
 		<label>Recursos online</label>
-		<description>informações sobre fontes on-line a partir do qual o recurso pode ser 
+		<description>informaÃ§Ãµes sobre fontes on-line a partir do qual o recurso pode ser 
 obtido</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="orDesc">
-		<label>Descrição</label>
+		<label>DescriÃ§Ã£o</label>
 		<description>texto descritivo detalhado do que o recurso on-line</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ordInstr">
 		<label>Ordering instructions</label>
-		<description>instruções gerais, os termos e serviços prestados pelo 
+		<description>instruÃ§Ãµes gerais, os termos e serviÃ§os prestados pelo 
 distribuidor</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ordTurn">
 		<label>Turnaround</label>
-		<description>tempo de resposta típica para a execução de uma ordem</description>
+		<description>tempo de resposta tÃ­pica para a execuÃ§Ã£o de uma ordem</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="orFunct">
-		<label>Função</label>
-		<description>código para a função desempenhada pelo recurso on-line</description>
+		<label>FunÃ§Ã£o</label>
+		<description>cÃ³digo para a funÃ§Ã£o desempenhada pelo recurso on-line</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="orieParaAv">
-		<label>Disponibilidade do parametro orientação</label>
-		<description>indicação da existência ou não de parâmetros de orientação disponíveis</description>
-		<condition>Obrigatório</condition>
+		<label>Disponibilidade do parametro orientaÃ§Ã£o</label>
+		<description>indicaÃ§Ã£o da existÃªncia ou nÃ£o de parÃ¢metros de orientaÃ§Ã£o disponÃ­veis</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="orName">
@@ -1758,60 +1758,60 @@ distribuidor</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="othConsts">
-		<label>Outras restrições</label>
-		<description>outras restrições e pré-requisitos legais para aceder e utilizar o recurso</description>
+		<label>Outras restriÃ§Ãµes</label>
+		<description>outras restriÃ§Ãµes e prÃ©-requisitos legais para aceder e utilizar o recurso</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="other">
 		<label>Outro</label>
-		<description>classe de informações que não se enquadram nas categorias a que a 
-informações se aplica</description>
+		<description>classe de informaÃ§Ãµes que nÃ£o se enquadram nas categorias a que a 
+informaÃ§Ãµes se aplica</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="otherCitDet">
-		<label>Outros detalhes de citações</label>
-		<description>outras informações necessárias para completar a citação que não é registrada em mais nenhum lugar</description>
+		<label>Outros detalhes de citaÃ§Ãµes</label>
+		<description>outras informaÃ§Ãµes necessÃ¡rias para completar a citaÃ§Ã£o que nÃ£o Ã© registrada em mais nenhum lugar</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="paraCit">
-		<label>Parâmetro citação</label>
-		<description>descrição de referência que fornece os parâmetros</description>
+		<label>ParÃ¢metro citaÃ§Ã£o</label>
+		<description>descriÃ§Ã£o de referÃªncia que fornece os parÃ¢metros</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="PixOrientCd">
-		<label>Codigo de orientação do pixel</label>
+		<label>Codigo de orientaÃ§Ã£o do pixel</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="pkResp">
 		<label>Pico de resposta</label>
-		<description>comprimento de onda em que a resposta é a mais elevada</description>
+		<description>comprimento de onda em que a resposta Ã© a mais elevada</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="planAvDtTm">
 		<label>data planeada</label>
-		<description>data e hora em que o conjunto de dados estará disponível 
+		<description>data e hora em que o conjunto de dados estarÃ¡ disponÃ­vel 
 (CCYY-MM-DDThh: mm: ss)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="polygon">
-		<label>polígono</label>
-		<description>conjuntos de pontos que definem o limite do polígono</description>
-		<condition>Obrigatório</condition>
+		<label>polÃ­gono</label>
+		<description>conjuntos de pontos que definem o limite do polÃ­gono</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="porCatInfo">
 		<label>Portrayal catalogue info</label>
-		<description>fornece informações sobre o catálogo de regras definidas para o retrato de uma 
+		<description>fornece informaÃ§Ãµes sobre o catÃ¡logo de regras definidas para o retrato de uma 
 recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="portCatCit">
 		<label>Portrayal catalogue citation</label>
-		<description>referência bibliográfica para o retrato do catálogo citado</description>
-		<condition>Obrigatório</condition>
+		<description>referÃªncia bibliogrÃ¡fica para o retrato do catÃ¡logo citado</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="PortCatRef">
@@ -1820,8 +1820,8 @@ recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="postCode">
-		<label>Código postal</label>
-		<description>Zip ou outro código postal</description>
+		<label>CÃ³digo postal</label>
+		<description>Zip ou outro cÃ³digo postal</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="PrcessStep">
@@ -1844,61 +1844,61 @@ recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="precision">
-		<label>Precisão</label>
+		<label>PrecisÃ£o</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="presForm">
-		<label>Forma de apresentação</label>
-		<description>modo em que o recurso é representado</description>
+		<label>Forma de apresentaÃ§Ã£o</label>
+		<description>modo em que o recurso Ã© representado</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="PresFormCd">
-		<label>Código da apresentação do formulário</label>
+		<label>CÃ³digo da apresentaÃ§Ã£o do formulÃ¡rio</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ProgCd">
-		<label>Código do Progresso</label>
+		<label>CÃ³digo do Progresso</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="projection">
-		<label>Projecção</label>
-		<description>Identificação da projecção usada</description>
+		<label>ProjecÃ§Ã£o</label>
+		<description>IdentificaÃ§Ã£o da projecÃ§Ã£o usada</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="projParas">
-		<label>Parâmetros da projecção</label>
-		<description>conjunto de parâmetros que descrevem a projeção</description>
+		<label>ParÃ¢metros da projecÃ§Ã£o</label>
+		<description>conjunto de parÃ¢metros que descrevem a projeÃ§Ã£o</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ProjParas">
-		<label>Parâmetros da projecção</label>
-		<description>conjunto de parâmetros que descrevem a projeção</description>
+		<label>ParÃ¢metros da projecÃ§Ã£o</label>
+		<description>conjunto de parÃ¢metros que descrevem a projeÃ§Ã£o</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="protocol">
 		<label>Protocolo</label>
-		<description>protocolo de ligação a ser utilizado</description>
+		<description>protocolo de ligaÃ§Ã£o a ser utilizado</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ptInPixel">
 		<label>PointIn pixel</label>
-		<description>ponto de um pixel correspondente à localização na Terra</description>
-		<condition>Obrigatório</condition>
+		<description>ponto de um pixel correspondente Ã  localizaÃ§Ã£o na Terra</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="QuanResult">
 		<label>Resultado quantitativo</label>
-		<description>Informação sobre o valor (ou conjunto de valores) obtidos a partir de uma aplicação de dados 
+		<description>InformaÃ§Ã£o sobre o valor (ou conjunto de valores) obtidos a partir de uma aplicaÃ§Ã£o de dados 
 medidos pela qualidade</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="quanVal">
 		<label>Valor</label>
 		<description/>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="quanValType">
@@ -1908,23 +1908,23 @@ medidos pela qualidade</description>
 	<!-- ==================================================== -->
 	<element name="quanValUnit">
 		<label>Unidade Valor</label>
-		<description>valor unitário por reportar um resultado da qualidade de dados</description>
-		<condition>Obrigatório</condition>
+		<description>valor unitÃ¡rio por reportar um resultado da qualidade de dados</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="radCalDatAv">
-		<label>Disponibilidade de calibração radiométrica dos dados</label>
+		<label>Disponibilidade de calibraÃ§Ã£o radiomÃ©trica dos dados</label>
 		<description>indication of whether or not the radiometric calibration information for
 			generating the radiometrically calibrated standard data product is available</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="RangeDim">
 		<label>Range dimension</label>
-		<description>informações sobre o intervalo de cada dimensão de uma célula medido pelo valor</description>
+		<description>informaÃ§Ãµes sobre o intervalo de cada dimensÃ£o de uma cÃ©lula medido pelo valor</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="RangeDimTypes">
-		<label>Tipo de dimensão</label>
+		<label>Tipo de dimensÃ£o</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
@@ -1940,114 +1940,114 @@ medidos pela qualidade</description>
 	<!-- ==================================================== -->
 	<element name="refDate">
 		<label>Data</label>
-		<description>data de referência para o recurso citado (AAAA-MM-DD)</description>
-		<condition>Obrigatório</condition>
+		<description>data de referÃªncia para o recurso citado (AAAA-MM-DD)</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="refDateType">
 		<label>Tipo de data</label>
-		<description>evento utilizado para a data de referência</description>
-		<condition>Obrigatório</condition>
+		<description>evento utilizado para a data de referÃªncia</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="refSysID">
-		<label>Identificador referência do sistema</label>
-		<description>Nome do sistema de referÊncia</description>
+		<label>Identificador referÃªncia do sistema</label>
+		<description>Nome do sistema de referÃŠncia</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="refSysInfo">
-		<label>Informação do sistema de referência</label>
-		<description>descrição dos sistemas de referência espacial e temporal utilizados no 
+		<label>InformaÃ§Ã£o do sistema de referÃªncia</label>
+		<description>descriÃ§Ã£o dos sistemas de referÃªncia espacial e temporal utilizados no 
 dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="refSysName">
 		<label>Nome</label>
 		<description/>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="RefSystem">
-		<label>Sistema de referência</label>
-		<description>Informações acerca do sistema de referência</description>
+		<label>Sistema de referÃªncia</label>
+		<description>InformaÃ§Ãµes acerca do sistema de referÃªncia</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="RefSystemTypes">
-		<label>Tipos de sistema de referência</label>
+		<label>Tipos de sistema de referÃªncia</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="RepFract">
-		<label>Fracção representante</label>
+		<label>FracÃ§Ã£o representante</label>
 		<description>derivados de escala onde MD_RepresentativeFraction.denominator = 1 / 
 Scale.measure E Scale.targetUnits = Scale.sourceUnits</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="resAltTitle">
 		<label>Titulo alternativo</label>
-		<description>nome abreviado ou nome noutra lingua, através da qual a informação já é conhecida. 
-Exemplo: "DCW" como um título alternativo para "Digital Chart of the World</description>
+		<description>nome abreviado ou nome noutra lingua, atravÃ©s da qual a informaÃ§Ã£o jÃ¡ Ã© conhecida. 
+Exemplo: "DCW" como um tÃ­tulo alternativo para "Digital Chart of the World</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="resConst">
-		<label>Limitações de recursos</label>
-		<description>fornece informações sobre as restrições que se aplicam aos 
+		<label>LimitaÃ§Ãµes de recursos</label>
+		<description>fornece informaÃ§Ãµes sobre as restriÃ§Ãµes que se aplicam aos 
 recursos</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="resEd">
-		<label>Edição</label>
-		<description>Versão do recurso citado</description>
+		<label>EdiÃ§Ã£o</label>
+		<description>VersÃ£o do recurso citado</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="resEdDate">
-		<label>Data de edição</label>
-		<description>data da edição (AAAA-MM-DD)</description>
+		<label>Data de ediÃ§Ã£o</label>
+		<description>data da ediÃ§Ã£o (AAAA-MM-DD)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="resFees">
 		<label>Taxas</label>
-		<description>taxas e condições para obter o recurso. Incluir unidades monetárias (conforme especificado 
+		<description>taxas e condiÃ§Ãµes para obter o recurso. Incluir unidades monetÃ¡rias (conforme especificado 
 na norma ISO 4217)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="resMaint">
-		<label>Manutenção do recurso</label>
-		<description>fornece informações sobre a freqüência de atualizações do recurso, e o âmbito dessas atualizações</description>
+		<label>ManutenÃ§Ã£o do recurso</label>
+		<description>fornece informaÃ§Ãµes sobre a freqÃ¼Ãªncia de atualizaÃ§Ãµes do recurso, e o Ã¢mbito dessas atualizaÃ§Ãµes</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Resol">
-		<label>Resolução</label>
-		<description>nível de detalhe expresso como um fator de escala ou a uma distância na terra</description>
+		<label>ResoluÃ§Ã£o</label>
+		<description>nÃ­vel de detalhe expresso como um fator de escala ou a uma distÃ¢ncia na terra</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="RespParty">
-		<label>Entidade responsavél</label>
-		<description>identificação e meios de comunicação com pessoa (s) e organizações 
+		<label>Entidade responsavÃ©l</label>
+		<description>identificaÃ§Ã£o e meios de comunicaÃ§Ã£o com pessoa (s) e organizaÃ§Ãµes 
 associadas ao conjunto de dados</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="resRefDate">
 		<label>Data</label>
-		<description>data de referência para o recurso citado (AAAA-MM-DD)</description>
-		<condition>Obrigatório</condition>
+		<description>data de referÃªncia para o recurso citado (AAAA-MM-DD)</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="resTitle">
-		<label>Titúlo</label>
-		<description>nome pelo qual o recurso já é conhecido</description>
-		<condition>Obrigatório</condition>
+		<label>TitÃºlo</label>
+		<description>nome pelo qual o recurso jÃ¡ Ã© conhecido</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="RestrictCd">
-		<label>Código de restrição</label>
+		<label>CÃ³digo de restriÃ§Ã£o</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Result">
 		<label>Resultado</label>
-		<description>generalização de resultados mais especificos das classes</description>
+		<description>generalizaÃ§Ã£o de resultados mais especificos das classes</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ResultTypes">
@@ -2057,42 +2057,42 @@ associadas ao conjunto de dados</description>
 	<!-- ==================================================== -->
 	<element name="rfDenom">
 		<label>Denominador</label>
-		<description>o número abaixo da linha numa fração vulgar</description>
-		<condition>Obrigatório</condition>
+		<description>o nÃºmero abaixo da linha numa fraÃ§Ã£o vulgar</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="role">
 		<label>Regra</label>
-		<description>função desempenhada pela entidade responsável</description>
-		<condition>Obrigatório</condition>
+		<description>funÃ§Ã£o desempenhada pela entidade responsÃ¡vel</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="RoleCd">
-		<label>Código da regra</label>
+		<label>CÃ³digo da regra</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="rpCntInfo">
-		<label>Informação do contacto</label>
-		<description>endereço do responsável</description>
+		<label>InformaÃ§Ã£o do contacto</label>
+		<description>endereÃ§o do responsÃ¡vel</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="rpIndName">
-		<label>Nome da pessoa responsável</label>
-		<description>nome do responsável, apelido, nome, separados por um
+		<label>Nome da pessoa responsÃ¡vel</label>
+		<description>nome do responsÃ¡vel, apelido, nome, separados por um
 delimitador</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="rpOrgName">
 		<label>Nome do organismo</label>
-		<description>nome da organização responsável</description>
+		<description>nome da organizaÃ§Ã£o responsÃ¡vel</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="rpPosName">
 		<label>Cargo</label>
-		<description>função ou cargo da pessoa responsável</description>
+		<description>funÃ§Ã£o ou cargo da pessoa responsÃ¡vel</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -2107,78 +2107,78 @@ delimitador</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="scaleDist">
-		<label>Distância</label>
+		<label>DistÃ¢ncia</label>
 		<description>ground sample distance</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="sclFac">
 		<label>Factor de escala</label>
-		<description> fator de escala que foi aplicada ao valor da célula </description>
+		<description> fator de escala que foi aplicada ao valor da cÃ©lula </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="sclFacCnt">
 		<label>Factor de escala no centro</label>
-		<description>relação entre distância física e distância do mapa correspondente, junto ao centro 
+		<description>relaÃ§Ã£o entre distÃ¢ncia fÃ­sica e distÃ¢ncia do mapa correspondente, junto ao centro 
 linha</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="sclFacEqu">
 		<label>Scale factor at equat</label>
-		<description>relação entre distância física e distância de mapa correspondente, ao longo da 
+		<description>relaÃ§Ã£o entre distÃ¢ncia fÃ­sica e distÃ¢ncia de mapa correspondente, ao longo da 
 linha equatorial</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="sclFacPrOr">
 		<label>Scale factor at projection origin</label>
-		<description>multiplicador para reduzir a distância de um mapa obtido por cálculo ou dimensionamento 
-Distância real na origem de projeção</description>
+		<description>multiplicador para reduzir a distÃ¢ncia de um mapa obtido por cÃ¡lculo ou dimensionamento 
+DistÃ¢ncia real na origem de projeÃ§Ã£o</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="scope">
-		<label>Competência</label>
+		<label>CompetÃªncia</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ScopeCd">
-		<label>codigo da competência</label>
+		<label>codigo da competÃªncia</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ScopedName">
-		<label>nome da competência</label>
+		<label>nome da competÃªncia</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="ScpDesc">
-		<label>Descrição de âmbito</label>
-		<description>descrição da classe de informação abranjida pelas informações</description>
+		<label>DescriÃ§Ã£o de Ã¢mbito</label>
+		<description>descriÃ§Ã£o da classe de informaÃ§Ã£o abranjida pelas informaÃ§Ãµes</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="scpExt">
-		<label>Extenção</label>
-		<description>informações espaciais, verticais e temporais dos dados especificados 
-pela sua competência
+		<label>ExtenÃ§Ã£o</label>
+		<description>informaÃ§Ãµes espaciais, verticais e temporais dos dados especificados 
+pela sua competÃªncia
 </description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="scpLvl">
-		<label>Nivél hiérarquico</label>
-		<description>nível hierárquico dos dados especificados pela sua competência</description>
-		<condition>Obrigatório</condition>
+		<label>NivÃ©l hiÃ©rarquico</label>
+		<description>nÃ­vel hierÃ¡rquico dos dados especificados pela sua competÃªncia</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="scpLvlDesc">
-		<label>Descrição do nivél</label>
-		<description>descrição detalhada sobre o nível dos dados especificados pela sua competência</description>
+		<label>DescriÃ§Ã£o do nivÃ©l</label>
+		<description>descriÃ§Ã£o detalhada sobre o nÃ­vel dos dados especificados pela sua competÃªncia</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="SecConsts">
-		<label>Medidas de segurança</label>
-		<description>restrições impostas à movimentação dos recursos para a segurança nacional ou
-preocupações de segurança similares</description>
+		<label>Medidas de seguranÃ§a</label>
+		<description>restriÃ§Ãµes impostas Ã  movimentaÃ§Ã£o dos recursos para a seguranÃ§a nacional ou
+preocupaÃ§Ãµes de seguranÃ§a similares</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="seconds">
@@ -2188,61 +2188,61 @@ preocupações de segurança similares</description>
 	<!-- ==================================================== -->
 	<element name="semiMajAx">
 		<label>Semi eixo maior</label>
-		<description>raio do eixo equatorial do elipsóide</description>
-		<condition>Obrigatório</condition>
+		<description>raio do eixo equatorial do elipsÃ³ide</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="seqID">
-		<label>Identificador de Seqüência</label>
-		<description>Número que identifica exemplos de bandas de comprimentos de onda em que um 
+		<label>Identificador de SeqÃ¼Ãªncia</label>
+		<description>NÃºmero que identifica exemplos de bandas de comprimentos de onda em que um 
 sensor opera</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="seriesName">
 		<label>Nome</label>
-		<description>nome da série, ou conjunto de dados agregados</description>
+		<description>nome da sÃ©rie, ou conjunto de dados agregados</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Source">
 		<label>Fonte</label>
-		<description>informação sobre a fonte dos dados utilizados na criação de dados especificados pela sua competência</description>
+		<description>informaÃ§Ã£o sobre a fonte dos dados utilizados na criaÃ§Ã£o de dados especificados pela sua competÃªncia</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="southBL">
 		<label>South bound latitude</label>
-		<description>coordenada mais a sul do limite da extensão de conjunto de dados, expressos em 
+		<description>coordenada mais a sul do limite da extensÃ£o de conjunto de dados, expressos em 
  graus decimais (Norte positivo)</description>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="SpatAttSup">
 		<label>Spatial attribute supplement</label>
-		<description>atributos espaciais no esquema de aplicação para os tipos de recurso </description>
+		<description>atributos espaciais no esquema de aplicaÃ§Ã£o para os tipos de recurso </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="spatObj">
 		<label>Objecto espacial</label>
-		<description>instância de um tipo definido no esquema espacial</description>
+		<description>instÃ¢ncia de um tipo definido no esquema espacial</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="spatRepInfo">
-		<label>Informação sobre a representação espacial</label>
-		<description>representação digital da informação espacial do dataset</description>
+		<label>InformaÃ§Ã£o sobre a representaÃ§Ã£o espacial</label>
+		<description>representaÃ§Ã£o digital da informaÃ§Ã£o espacial do dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="SpatRepTypCd">
-		<label>Código do tipo de representação espacial</label>
+		<label>CÃ³digo do tipo de representaÃ§Ã£o espacial</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="SpatRepTypes">
-		<label>Tipos de representação espacial</label>
+		<label>Tipos de representaÃ§Ã£o espacial</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="spatRpType">
-		<label>Tipo de Representação Espacial</label>
-		<description>método utilizado para representar espacialmente a informação geográfica</description>
+		<label>Tipo de RepresentaÃ§Ã£o Espacial</label>
+		<description>mÃ©todo utilizado para representar espacialmente a informaÃ§Ã£o geogrÃ¡fica</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="spatSchName">
@@ -2251,62 +2251,62 @@ sensor opera</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="SpatTempEx">
-		<label>Extensão espacial e temporal</label>
-		<description>limites de extensão em relação à data / hora e limites espaciais</description>
+		<label>ExtensÃ£o espacial e temporal</label>
+		<description>limites de extensÃ£o em relaÃ§Ã£o Ã  data / hora e limites espaciais</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="specUsage">
-		<label>uso específico</label>
-		<description>breve descrição dos recursos e uso destes</description>
-		<condition>Obrigatório</condition>
+		<label>uso especÃ­fico</label>
+		<description>breve descriÃ§Ã£o dos recursos e uso destes</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="srcCitatn">
 		<label>Fote citada</label>
-		<description>referência recomendado para ser usado como fonte dos dados</description>
+		<description>referÃªncia recomendado para ser usado como fonte dos dados</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="srcDesc">
-		<label>Descrição</label>
-		<description>descrição detalhada do nível da fonte de dados</description>
+		<label>DescriÃ§Ã£o</label>
+		<description>descriÃ§Ã£o detalhada do nÃ­vel da fonte de dados</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="srcExt">
-		<label>Extenção da fonte</label>
-		<description>dados de informações sobre a extensão espacial, vertical e temporal da fonte</description>
+		<label>ExtenÃ§Ã£o da fonte</label>
+		<description>dados de informaÃ§Ãµes sobre a extensÃ£o espacial, vertical e temporal da fonte</description>
 		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="srcRefSys">
-		<label>Sistema de referência da Fonte</label>
-		<description>sistema de referência espacial usado pela fonte de dados</description>
+		<label>Sistema de referÃªncia da Fonte</label>
+		<description>sistema de referÃªncia espacial usado pela fonte de dados</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="srcScale">
 		<label>Escala</label>
-		<description>denominador da fracção representativa duma fonte do mapa</description>
+		<description>denominador da fracÃ§Ã£o representativa duma fonte do mapa</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="srcStep">
 		<label>Source step</label>
-		<description>informações sobre um evento no processo da criação da fonte de
+		<description>informaÃ§Ãµes sobre um evento no processo da criaÃ§Ã£o da fonte de
 dados</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="StanOrdProc">
 		<label>Standard order process</label>
 		<description>formas comuns em que os recursos podem ser obtidos ou recebidos, 
-informações e instruções de taxa</description>
+informaÃ§Ãµes e instruÃ§Ãµes de taxa</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="stanPara">
-		<label>Padrão paralelo</label>
+		<label>PadrÃ£o paralelo</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="statement">
-		<label>Declaração</label>
+		<label>DeclaraÃ§Ã£o</label>
 		<description>general explanation of the data producer_s knowledge about the lineage of a
 			dataset</description>
 		<condition>condicional</condition>
@@ -2324,25 +2324,25 @@ informações e instruções de taxa</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="stepDesc">
-		<label>Descrição</label>
-		<description>descrição do evento, incluindo os parâmetros relacionados ou tolerâncias</description>
-		<condition>Obrigatório</condition>
+		<label>DescriÃ§Ã£o</label>
+		<description>descriÃ§Ã£o do evento, incluindo os parÃ¢metros relacionados ou tolerÃ¢ncias</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="stepProc">
 		<label>Processador</label>
-		<description>identificação e meios de comunicação com pessoa (s) organização (ões) 
-associados ás etapas do processo</description>
+		<description>identificaÃ§Ã£o e meios de comunicaÃ§Ã£o com pessoa (s) organizaÃ§Ã£o (Ãµes) 
+associados Ã¡s etapas do processo</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="stepRat">
-		<label>Fundamentação</label>
-		<description>exigência ou finalidade para o processo</description>
+		<label>FundamentaÃ§Ã£o</label>
+		<description>exigÃªncia ou finalidade para o processo</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="stepSrc">
 		<label>Fonte</label>
-		<description>informações sobre a fonte de dados utilizados na criação dos dados especificados pela sua competência</description>
+		<description>informaÃ§Ãµes sobre a fonte de dados utilizados na criaÃ§Ã£o dos dados especificados pela sua competÃªncia</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="stVrLongPl">
@@ -2351,14 +2351,14 @@ associados ás etapas do processo</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="suppInfo">
-		<label>Informações adicionais</label>
-		<description>quaisquer outras informações descritivas sobre o dataset</description>
+		<label>InformaÃ§Ãµes adicionais</label>
+		<description>quaisquer outras informaÃ§Ãµes descritivas sobre o dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Telephone">
 		<label>Telefone</label>
-		<description>números de telefone para entrar em contato com a pessoa responsável ou 
-organização</description>
+		<description>nÃºmeros de telefone para entrar em contato com a pessoa responsÃ¡vel ou 
+organizaÃ§Ã£o</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="tempEle">
@@ -2369,7 +2369,7 @@ organização</description>
 	<!-- ==================================================== -->
 	<element name="TempExtent">
 		<label>Temporal Extent</label>
-		<description>período de tempo abrangido pelo conteúdo do dataset</description>
+		<description>perÃ­odo de tempo abrangido pelo conteÃºdo do dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="TempExtentTypes">
@@ -2389,7 +2389,7 @@ organização</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="timeIndicator">
-		<label>Indicação da hora</label>
+		<label>IndicaÃ§Ã£o da hora</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
@@ -2399,7 +2399,7 @@ organização</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="TM_ClockTime">
-		<label>Hora do relógio</label>
+		<label>Hora do relÃ³gio</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
@@ -2424,12 +2424,12 @@ organização</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="TM_PeriodDuration">
-		<label>Duração do periodo</label>
+		<label>DuraÃ§Ã£o do periodo</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="TM_PositionTypes">
-		<label>Tipo de posição</label>
+		<label>Tipo de posiÃ§Ã£o</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
@@ -2439,62 +2439,62 @@ organização</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="tmPosition">
-		<label>Posição</label>
+		<label>PosiÃ§Ã£o</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="toneGrad">
-		<label>Graduação de tons</label>
-		<description>dados de números de valores numéricos discretos da grid</description>
+		<label>GraduaÃ§Ã£o de tons</label>
+		<description>dados de nÃºmeros de valores numÃ©ricos discretos da grid</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="TopicCatCd">
-		<label>Tópico código de categoria</label>
+		<label>TÃ³pico cÃ³digo de categoria</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="TopLevCd">
-		<label>Topologia código de nível</label>
+		<label>Topologia cÃ³digo de nÃ­vel</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="topLvl">
 		<label>Nivel de topologia</label>
-		<description>código que identifica o grau de relacionamento da complexidade do espaço 
+		<description>cÃ³digo que identifica o grau de relacionamento da complexidade do espaÃ§o 
 </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="tpCat">
 		<label>Topico categoria</label>
 		<description>tema do dataset</description>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="tranParaAv">
-		<label>Disponibilidade da transformação do parâmetro</label>
-		<description>indicação da existência ou não dos parâmetros para a transformação</description>
-		<condition>Obrigatório</condition>
+		<label>Disponibilidade da transformaÃ§Ã£o do parÃ¢metro</label>
+		<description>indicaÃ§Ã£o da existÃªncia ou nÃ£o dos parÃ¢metros para a transformaÃ§Ã£o</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="transDimDesc">
-		<label>Dimensão da transformação da descrição </label>
-		<description>descrição das informações sobre as dimensões espaciais da grid</description>
+		<label>DimensÃ£o da transformaÃ§Ã£o da descriÃ§Ã£o </label>
+		<description>descriÃ§Ã£o das informaÃ§Ãµes sobre as dimensÃµes espaciais da grid</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="transDimMap">
-		<label>Transformação dimensão do mapa</label>
-		<description>informações sobre  as dimensões espaciais da rede</description>
+		<label>TransformaÃ§Ã£o dimensÃ£o do mapa</label>
+		<description>informaÃ§Ãµes sobre  as dimensÃµes espaciais da rede</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="transSize">
-		<label>Tamanho da tranferência</label>
-		<description>tamanho estimado de uma unidade de transferência no formato especificado, expressa em 
-megabytes. O tamanho da transferência é> 0,0</description>
+		<label>Tamanho da tranferÃªncia</label>
+		<description>tamanho estimado de uma unidade de transferÃªncia no formato especificado, expressa em 
+megabytes. O tamanho da transferÃªncia Ã©> 0,0</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="trianInd">
-		<label>Indicador de Triangulação</label>
-		<description>indicação de triangulação que tenha sido ou não, realizada em cima da
+		<label>Indicador de TriangulaÃ§Ã£o</label>
+		<description>indicaÃ§Ã£o de triangulaÃ§Ã£o que tenha sido ou nÃ£o, realizada em cima da
 imagem</description>
 	</element>
 	<!-- ==================================================== -->
@@ -2514,8 +2514,8 @@ imagem</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="unitsODist">
-		<label>Unidades de destribuição</label>
-		<description>tiles, layers, áreas geográficas, etc, nos quais há dados disponíveis</description>
+		<label>Unidades de destribuiÃ§Ã£o</label>
+		<description>tiles, layers, Ã¡reas geogrÃ¡ficas, etc, nos quais hÃ¡ dados disponÃ­veis</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="uom">
@@ -2524,7 +2524,7 @@ imagem</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="UomAngle">
-		<label>Ângulo</label>
+		<label>Ã‚ngulo</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
@@ -2564,8 +2564,8 @@ imagem</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="upScpDesc">
-		<label>descrição da actualização da extensão</label>
-		<description>informações adicionais sobre o alcance ou extensão do recurso</description>
+		<label>descriÃ§Ã£o da actualizaÃ§Ã£o da extensÃ£o</label>
+		<description>informaÃ§Ãµes adicionais sobre o alcance ou extensÃ£o do recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="URL">
@@ -2574,50 +2574,50 @@ imagem</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="Usage">
-		<label>Utilização</label>
-		<description>breve descrição da forma pelo qual o recurso (s) é / são actualmente 
+		<label>UtilizaÃ§Ã£o</label>
+		<description>breve descriÃ§Ã£o da forma pelo qual o recurso (s) Ã© / sÃ£o actualmente 
 usado</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="usageDate">
-		<label>Data e hora da utilização</label>
-		<description>data e hora da primeira utilização ou conjunto de utilizações dos recursos e / ou serie de recursos
+		<label>Data e hora da utilizaÃ§Ã£o</label>
+		<description>data e hora da primeira utilizaÃ§Ã£o ou conjunto de utilizaÃ§Ãµes dos recursos e / ou serie de recursos
 (AAAA-MM-DDThh: mm: ss)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="useConsts">
-		<label>Restrições de utilização</label>
-		<description>restrições aplicadas que garantam a protecção da privacidade ou a propriedade intelectual, 
-e quaisquer restrições ou limitações especiais e advertências sobre o uso dos recursos</description>
+		<label>RestriÃ§Ãµes de utilizaÃ§Ã£o</label>
+		<description>restriÃ§Ãµes aplicadas que garantam a protecÃ§Ã£o da privacidade ou a propriedade intelectual, 
+e quaisquer restriÃ§Ãµes ou limitaÃ§Ãµes especiais e advertÃªncias sobre o uso dos recursos</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="useLimit">
-		<label>Limitações de utilização</label>
-		<description>limitações que afetam a aptidão para o uso do recurso. Exemplo, _ _not to be
+		<label>LimitaÃ§Ãµes de utilizaÃ§Ã£o</label>
+		<description>limitaÃ§Ãµes que afetam a aptidÃ£o para o uso do recurso. Exemplo, _ _not to be
 			used for navigation_</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="userNote">
 		<label>Nota do utilizador</label>
-		<description>explicação sobre a aplicação das restrições legais ou outras restrições e 
-pré-requisitos legais para a obtenção e utilização do recurso</description>
+		<description>explicaÃ§Ã£o sobre a aplicaÃ§Ã£o das restriÃ§Ãµes legais ou outras restriÃ§Ãµes e 
+prÃ©-requisitos legais para a obtenÃ§Ã£o e utilizaÃ§Ã£o do recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="usrCntInfo">
 		<label>User contact info</label>
-		<description>identificação e meios de comunicação do responsávél ou organização responsável pela utilização do recurso</description>
-		<condition>Obrigatório</condition>
+		<description>identificaÃ§Ã£o e meios de comunicaÃ§Ã£o do responsÃ¡vÃ©l ou organizaÃ§Ã£o responsÃ¡vel pela utilizaÃ§Ã£o do recurso</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="usrDefFreq">
-		<label>Freqüência de manutenção definido pelo utilizador</label>
-		<description>período de manutenção, a excepção dos definidos </description>
+		<label>FreqÃ¼Ãªncia de manutenÃ§Ã£o definido pelo utilizador</label>
+		<description>perÃ­odo de manutenÃ§Ã£o, a excepÃ§Ã£o dos definidos </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="usrDetLim">
 		<label>Limites utilizados pelo utilizador</label>
-		<description>Aplicação, determinada pelo usuário para o qual o recurso e / ou série de recursos 
- não é (são) adequado</description>
+		<description>AplicaÃ§Ã£o, determinada pelo usuÃ¡rio para o qual o recurso e / ou sÃ©rie de recursos 
+ nÃ£o Ã© (sÃ£o) adequado</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="value">
@@ -2627,61 +2627,61 @@ pré-requisitos legais para a obtenção e utilização do recurso</description>
 	<!-- ==================================================== -->
 	<element name="valUnit">
 		<label>Unidade de valor</label>
-		<description>unidades em que sensor de comprimentos de onda é expresso</description>
+		<description>unidades em que sensor de comprimentos de onda Ã© expresso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="VectSpatRep">
-		<label>Representação espacial do vector</label>
-		<description>informações sobre objectos espaciais vectoriais do dataset
+		<label>RepresentaÃ§Ã£o espacial do vector</label>
+		<description>informaÃ§Ãµes sobre objectos espaciais vectoriais do dataset
 </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="vertDatum">
 		<label>Vertical datum</label>
-		<description>fornece informações sobre a origem, do qual os valores máximos e minimos sãp medidos</description>
-		<condition>Obrigatório</condition>
+		<description>fornece informaÃ§Ãµes sobre a origem, do qual os valores mÃ¡ximos e minimos sÃ£p medidos</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="vertEle">
 		<label>Elemento vertical</label>
-		<description>fornece a componente vertical da extensão do objecto de referência</description>
+		<description>fornece a componente vertical da extensÃ£o do objecto de referÃªncia</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="VertExtent">
-		<label>Extensão vertical</label>
+		<label>ExtensÃ£o vertical</label>
 		<description>Dominio vertical do dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="vertMaxVal">
-		<label>Valor máximo/label>
-		<description>maior valor da extensão vertical contida no dataset</description>
-		<condition>Obrigatório</condition>
+		<label>Valor mÃ¡ximo</label>
+		<description>maior valor da extensÃ£o vertical contida no dataset</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="vertMinVal">
 		<label>Valor minimo</label>
-		<description>menor valor da extensão vertical contida no dataset</description>
-		<condition>Obrigatório</condition>
+		<description>menor valor da extensÃ£o vertical contida no dataset</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="vertUoM">
 		<label>Unidade de medida vertical</label>
-		<description>unidades de medida verticais utilizadas para obter informações de dimensão vertical. Exemplos: metros, pés, 
-milímetros, hectopascals</description>
-		<condition>Obrigatório</condition>
+		<description>unidades de medida verticais utilizadas para obter informaÃ§Ãµes de dimensÃ£o vertical. Exemplos: metros, pÃ©s, 
+milÃ­metros, hectopascals</description>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="voiceNum">
 		<label>Voz</label>
-		<description>número de telefone através do qual as pessoas podem falar com a organização ou os individuos responsáveis</description>
+		<description>nÃºmero de telefone atravÃ©s do qual as pessoas podem falar com a organizaÃ§Ã£o ou os individuos responsÃ¡veis</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="westBL">
 		<label>West bound longitude</label>
-		<description>coordenada mais ocidental do limite da extensão de dataset, expressa em 
+		<description>coordenada mais ocidental do limite da extensÃ£o de dataset, expressa em 
 graus decimais (positiva a leste)</description>
-		<condition>Obrigatório</condition>
+		<condition>ObrigatÃ³rio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="years">
@@ -2691,7 +2691,7 @@ graus decimais (positiva a leste)</description>
 	<!-- ==================================================== -->
 	<element name="zone">
 		<label>Zona</label>
-		<description>identificador único para a zona de 100.000 metros de rede</description>
+		<description>identificador Ãºnico para a zona de 100.000 metros de rede</description>
 	</element>
 	<!-- ==================================================== -->
 </labels>

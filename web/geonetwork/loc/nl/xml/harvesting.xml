@@ -65,7 +65,9 @@
 	<info type="filesystem">
 		<short>Lokaal Bestandsysteem</short>
 		<long>Lokale Harvesting Bestandsysteem</long>
-	</info>	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
+	</info>	
+
+    <!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Website</site>
 	
@@ -113,6 +115,9 @@
 	<retrieve>Ophalen</retrieve>
 	<warn>U kunt enkel gegevens ophalen na het invullen van de site gegevens.</warn>
 	
+	<content>Harvested Content</content>
+	<importxslt>Apply this XSLT to harvested records</importxslt>
+
 	<options>Opties</options>
 	<everySpec>(dagen : uren : minuten)</everySpec>
 	<oneRun>Slechts eenmaal uitvoeren</oneRun>
@@ -154,6 +159,21 @@
 	<prefix>Voorvoegsel</prefix>
 	<stylesheet>Stylesheet</stylesheet>
 	
+	<!-- Buttons -->
+	
+	<add>Toevoegen</add>
+	<edit>Wijzigen</edit>
+	<save>Bewaren</save>
+	<activate>Activeren</activate>
+	<deactivate>Deactiveren</deactivate>
+	<run>Uitvoeren</run>
+	<remove>Verwijderen</remove>
+	<refresh>Verversen</refresh>
+	
+	<days>dagen</days>
+	<hours>uren</hours>
+	<mins>minuten</mins>
+	
 	<threddslang>Metadata language</threddslang>
 	<threddsImp>Type of import</threddsImp>
 	<threddsServiceMdOnly19119>Create metadata for all services in the catalog using ISO19119.</threddsServiceMdOnly19119>
@@ -182,21 +202,6 @@
 	<z3950query>Z3950 Query</z3950query>
 	
 	<cataUrl>Catalog URL</cataUrl>
-	<!-- Buttons -->
-	
-	<add>Toevoegen</add>
-	<edit>Wijzigen</edit>
-	<save>Bewaren</save>
-	<activate>Activeren</activate>
-	<deactivate>Deactiveren</deactivate>
-	<run>Uitvoeren</run>
-	<remove>Verwijderen</remove>
-	<refresh>Verversen</refresh>
-	
-	<days>dagen</days>
-	<hours>uren</hours>
-	<mins>minuten</mins>
-	
 	<!-- validator messages -->
 	
 	<validator>
@@ -247,8 +252,7 @@
 	<gn20Unsafe>Het harvesten van oude geonetwork nodes is niet veilig. 
  					De oude nodes hebben geen unieke site IDs en als gevolg hiervan kunnen
 					onvoorspelbare fouten optreden.</gn20Unsafe>
-		
-        <supplyUrl>Geef a.u.b. een geldige 'url' parameter</supplyUrl>	
+    <supplyUrl>Geef a.u.b. een geldige 'url' parameter</supplyUrl>	
 	<oper>
 		<op id="0">Bekijken</op>
 		<op id="1">Downloaden</op>

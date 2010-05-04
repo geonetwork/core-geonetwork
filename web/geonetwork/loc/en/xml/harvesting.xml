@@ -65,7 +65,9 @@
 	<info type="filesystem">
 		<short>Local Filesystem</short>
 		<long>Local Filesystem Harvesting</long>
-	</info>	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
+	</info>	
+
+    <!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Site</site>
 
@@ -250,9 +252,7 @@
 	<gn20Unsafe>Please notice that harvesting old GeoNetwork nodes is unsafe. 
  					The old nodes do not have unique site ids and this could cause
 					unpredictable results (like removing nodes from other harvestings).</gn20Unsafe>
-			
 	<supplyUrl>Please, provide a valid 'url' parameter</supplyUrl>
-	
 	<oper>
 		<op id="0">View</op>
 		<op id="1">Download</op>

@@ -66,19 +66,11 @@
 		<short>Sistema local de ficheiros</short>
 		<long>Harvesting de sistema local de ficheiros</long>
 	</info>
+
 	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Página</site>
 
-	<info type="ogcwxs">
-		<short>OGC WxS</short>
-		<long>Serviços de web OGC (isso é WMS, WFS, WCS, WPS)</long>
-	</info>
-	
-	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<site>Página</site>
-		
 	<wxstype>Tipo de serviço web OGC</wxstype>
 	<wxstypes>
 		<type value="WMS1.0.0">OGC Web Map Service (WMS) Versão 1.0.0</type>
@@ -101,7 +93,6 @@
 	<serviceCategory>Categoria para serviços</serviceCategory>
 	<datasetCategory>Categoria para registos</datasetCategory>
 		
-	<name>Nome</name>
 	<host>Host</host>
 	<port>Port</port>
 	<servlet>Servlet</servlet>
@@ -124,6 +115,9 @@
 	<retrieve>Solicitar</retrieve>
 	<warn>Pode solicitar apenas em seguida de ter preenchido os campos de página.</warn>
 	
+	<content>Harvested Content</content>
+	<importxslt>Apply this XSLT to harvested records</importxslt>
+
 	<options>Opções</options>
 	<everySpec>(Dias : Horas : Minutos)</everySpec>
 	<oneRun>So uma execução</oneRun>
@@ -141,7 +135,6 @@
 	<nodelete>Manter uma cópia local, quando apagado na fonte.</nodelete>
 	<server>Servidor</server>
 	<database>Banco de dados</database>
-	<host>Host</host>
 	<privileges>Privilégios</privileges>
 	<categories>Categorias</categories>
 	<url>URL</url>
@@ -165,6 +158,21 @@
 	<set>Definir</set>
 	<prefix>Prefixo</prefix>
 	<stylesheet>Stylesheet</stylesheet>
+	
+	<!-- Buttons -->
+	
+	<add>Adicionar</add>
+	<edit>Editar</edit>
+	<save>Gravar</save>
+	<activate>Activar</activate>
+	<deactivate>Desactivar</deactivate>
+	<run>Efectuar</run>
+	<remove>Remover</remove>
+	<refresh>Refrescar</refresh>
+	
+	<days>Dias</days>
+	<hours>Horas</hours>
+	<mins>Minutos</mins>
 	
 	<threddslang>Metadata language</threddslang>
 	<threddsImp>Type of import</threddsImp>
@@ -194,21 +202,6 @@
 	<z3950query>Z3950 Query</z3950query>
 	
 	<cataUrl>Catalog URL</cataUrl>
-	<!-- Buttons -->
-	
-	<add>Adicionar</add>
-	<edit>Editar</edit>
-	<save>Gravar</save>
-	<activate>Activar</activate>
-	<deactivate>Desactivar</deactivate>
-	<run>Efectuar</run>
-	<remove>Remover</remove>
-	<refresh>Refrescar</refresh>
-	
-	<days>Dias</days>
-	<hours>Horas</hours>
-	<mins>Minutos</mins>
-	
 	<!-- validator messages -->
 	
 	<validator>

@@ -115,6 +115,9 @@
 	<retrieve>Retrieve</retrieve>
 	<warn>You can retrieve only after filling the site part</warn>
 	
+	<content>Harvested Content</content>
+	<importxslt>Apply this XSLT to harvested records</importxslt>
+
 	<options>Options</options>
 	<everySpec>(days : hours : minutes)</everySpec>
 	<oneRun>One run only</oneRun>
@@ -156,6 +159,21 @@
 	<prefix>Prefix</prefix>
 	<stylesheet>Stylesheet</stylesheet>
 	
+	<!-- Buttons -->
+	
+	<add>Add</add>
+	<edit>Edit</edit>
+	<save>Save</save>
+	<activate>Activate</activate>
+	<deactivate>Deactivate</deactivate>
+	<run>Run</run>
+	<remove>Remove</remove>
+	<refresh>Refresh</refresh>
+	
+	<days>days</days>
+	<hours>hours</hours>
+	<mins>minutes</mins>
+	
 	<threddslang>Metadata language</threddslang>
 	<threddsImp>Type of import</threddsImp>
 	<threddsServiceMdOnly19119>Create metadata for all services in the catalog using ISO19119.</threddsServiceMdOnly19119>
@@ -184,21 +202,6 @@
 	<z3950query>Z3950 Query</z3950query>
 	
 	<cataUrl>Catalog URL</cataUrl>
-	<!-- Buttons -->
-	
-	<add>Add</add>
-	<edit>Edit</edit>
-	<save>Save</save>
-	<activate>Activate</activate>
-	<deactivate>Deactivate</deactivate>
-	<run>Run</run>
-	<remove>Remove</remove>
-	<refresh>Refresh</refresh>
-	
-	<days>days</days>
-	<hours>hours</hours>
-	<mins>minutes</mins>
-	
 	<!-- validator messages -->
 	
 	<validator>

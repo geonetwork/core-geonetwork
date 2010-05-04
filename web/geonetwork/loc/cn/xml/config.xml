@@ -13,6 +13,16 @@
 	<network>Network</network>
 	<netmask>Netmask</netmask>
 	
+	<z3950>Z39.50 Server</z3950>
+	<enable>Enable</enable>
+
+	<xlinkResolver>XLink Resolver</xlinkResolver>
+		
+	<downloadservice>Data-For-Download Service</downloadservice>
+	<leave>Use metadata linkage as is - no changes to linkage</leave>
+	<simple>Use GeoNetwork simple file download service (resources.get)</simple>
+	<withdisclaimer>Use GeoNetwork disclaimer and constraints service (file.disclaimer)</withdisclaimer>
+
 	<selectionmanager>Metadata Search Results</selectionmanager>
 	<maxrecords>Maximum selected records</maxrecords>
 
@@ -62,16 +72,6 @@
 			<minute label="30">30</minute>
 			<minute label="45">45</minute>
 		</minutes>
-
-	<z3950>Z39.50 Server</z3950>
-	<enable>Enable</enable>
-	
-	<xlinkResolver>XLink Resolver</xlinkResolver>
-		
-	<downloadservice>Data-For-Download Service</downloadservice>
-	<leave>Use metadata linkage as is - no changes to linkage</leave>
-	<simple>Use GeoNetwork simple file download service (resources.get)</simple>
-	<withdisclaimer>Use GeoNetwork disclaimer and constraints service (file.disclaimer)</withdisclaimer>
 
 	<csw>CSW ISO Profile</csw>
 	<contactId>Contact</contactId>

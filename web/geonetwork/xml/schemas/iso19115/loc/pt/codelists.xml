@@ -1,24 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
+Ôªø<?xml version="1.0" encoding="UTF-8"?>
 
 <codelists>
 	<!-- ==================================================== -->
 	<codelist name="DateTypCd">
 		<entry>
-			<code>CriaÁ„o</code>
-			<label>CriaÁ„o</label>
-			<description>Data da criaÁ„o do recurso</description>
+			<code>Cria√ß√£o</code>
+			<label>Cria√ß√£o</label>
+			<description>Data da cria√ß√£o do recurso</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>PublicÁ„o</code>
-			<label>PublicaÁ„o</label>
-			<description>Data da publicaÁ„o do recurso</description>
+			<code>Public√ß√£o</code>
+			<label>Publica√ß√£o</label>
+			<description>Data da publica√ß√£o do recurso</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>Revis„o</code>
-			<label>Revis„o</label>
-			<description>data da revis„o do recurso, bem como alteraÁıes e melhoramentos</description>
+			<code>Revis√£o</code>
+			<label>Revis√£o</label>
+			<description>data da revis√£o do recurso, bem como altera√ß√µes e melhoramentos</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -27,31 +27,31 @@
 		<entry>
 			<code>download</code>
 			<label>Download</label>
-			<description>InstruÁıes online para fazer o download de dados</description>
+			<description>Instru√ß√µes online para fazer o download de dados</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>InformaÁ„o</code>
-			<label>InformaÁ„o</label>
-			<description>InformaÁ„o online acerca do recurso</description>
+			<code>Informa√ß√£o</code>
+			<label>Informa√ß√£o</label>
+			<description>Informa√ß√£o online acerca do recurso</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>offlineAccess</code>
 			<label>Offline Access</label>
-			<description>InstruÁıes online para solicitar a permiÁ„o de acesso ao recurso</description>
+			<description>Instru√ß√µes online para solicitar a permi√ß√£o de acesso ao recurso</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Pedido</code>
 			<label>Pedido</label>
-			<description>Processo online para obtenÁ„o do recurso</description>
+			<description>Processo online para obten√ß√£o do recurso</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Procura</code>
 			<label>Procura</label>
-			<description>Interface de busca online para procurar informaÁıes sobre o recurso</description>
+			<description>Interface de busca online para procurar informa√ß√µes sobre o recurso</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -60,13 +60,13 @@
 		<entry>
 			<code>Documento digital</code>
 			<label>Documento digital</label>
-			<description>representaÁ„o digital de textos que podem tambÈm conter imagens</description>
+			<description>representa√ß√£o digital de textos que podem tamb√©m conter imagens</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Documento Hardcopy</code>
 			<label>Documento Hardcopy</label>
-			<description>representaÁ„o digital de textos que podem tambÈm conter imagens, em papel, papel fotogr·fico, ou outros</description>
+			<description>representa√ß√£o digital de textos que podem tamb√©m conter imagens, em papel, papel fotogr√°fico, ou outros</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -96,13 +96,13 @@
 		<entry>
 			<code>Mapa Hardcopy</code>
 			<label>Mapa Hardcopy</label>
-			<description>Mapa impresso em papel, material fotogr·fico ou outros normalmente utilizados</description>
+			<description>Mapa impresso em papel, material fotogr√°fico ou outros normalmente utilizados</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Modelo digital</code>
 			<label>Modelo digital</label>
-			<description>representaÁ„o digital multi-dimensional de um recurso</description>
+			<description>representa√ß√£o digital multi-dimensional de um recurso</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -114,37 +114,37 @@
 		<entry>
 			<code>Prefil Digital</code>
 			<label>Prefil Digital</label>
-			<description>secÁ„o transversal vertical em formato digital</description>
+			<description>sec√ß√£o transversal vertical em formato digital</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Perfil Hardcopy</code>
 			<label>Perfil Hardcopy</label>
-			<description>secÁ„o transversal vertical em papel</description>
+			<description>sec√ß√£o transversal vertical em papel</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Tabela Digital</code>
 			<label>Tabela Digital</label>
-			<description>RepresentaÁ„o digital de factos ou figuras, sistematicamente, normalmente em colunas</description>
+			<description>Representa√ß√£o digital de factos ou figuras, sistematicamente, normalmente em colunas</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Tabela Hardcopy</code>
 			<label>Tabela Hardcopy</label>
-			<description>RepresentaÁ„o digital de factos ou figuras, sistematicamente, normalmente em colunas impresso em papel ou outros</description>
+			<description>Representa√ß√£o digital de factos ou figuras, sistematicamente, normalmente em colunas impresso em papel ou outros</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Video Digital</code>
 			<label>Video Digital</label>
-			<description>GravaÁ„o de viedo digital</description>
+			<description>Grava√ß√£o de viedo digital</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Video Hardcopy</code>
 			<label>Video Hardcopy</label>
-			<description>GravaÁ„o de video em filme</description>
+			<description>Grava√ß√£o de video em filme</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -159,12 +159,12 @@
 		<entry>
 			<code>Detentor</code>
 			<label>Detentor</label>
-			<description>Parte que aceita a assumir a responsabilidade pelos dados e garante a sua manutenÁ„o adequada</description>
+			<description>Parte que aceita a assumir a responsabilidade pelos dados e garante a sua manuten√ß√£o adequada</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>Propriat·rio</code>
-			<label>Propriat·rio</label>
+			<code>Propriat√°rio</code>
+			<label>Propriat√°rio</label>
 			<description>Quem pussui o recurso</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -189,19 +189,19 @@
 		<entry>
 			<code>contacto</code>
 			<label>contacto</label>
-			<description>Contacto para aquisiÁ„o do recurso ou para adquirir conhecimentos deste</description>
+			<description>Contacto para aquisi√ß√£o do recurso ou para adquirir conhecimentos deste</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Investigador principal</code>
 			<label>Investigador principal</label>
-			<description>ResponsavÈl por adquirir a informaÁ„o e conduzir a pesquisa</description>
+			<description>Responsav√©l por adquirir a informa√ß√£o e conduzir a pesquisa</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>Pessoa que processou a informaÁ„o</code>
-			<label>Pessoa que processou a informaÁ„o</label>
-			<description>Pessoa que ao processar a informaÁ„o de tal forma, a modificou</description>
+			<code>Pessoa que processou a informa√ß√£o</code>
+			<label>Pessoa que processou a informa√ß√£o</label>
+			<description>Pessoa que ao processar a informa√ß√£o de tal forma, a modificou</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -232,22 +232,22 @@
 		<entry>
 			<code>Indirecto</code>
 			<label>Indirecto</label>
-			<description>mÈtodo de avaliaÁ„o da qualidade de um conjunto de dados baseado no conhecimento externo</description>
+			<description>m√©todo de avalia√ß√£o da qualidade de um conjunto de dados baseado no conhecimento externo</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="AscTypeCd">
 		<entry>
-			<code>ReferÍncias cruzadas</code>
-			<label>ReferÍncias cruzadas</label>
-			<description>ReferÍncia de um dataset para outro</description>
+			<code>Refer√™ncias cruzadas</code>
+			<label>Refer√™ncias cruzadas</label>
+			<description>Refer√™ncia de um dataset para outro</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>Meior citaÁ„o</code>
-			<label>Maior citaÁ„o</label>
-			<description>referÍncia a um dataset de principal import‚ncia</description>
+			<code>Meior cita√ß√£o</code>
+			<label>Maior cita√ß√£o</label>
+			<description>refer√™ncia a um dataset de principal import√¢ncia</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -259,7 +259,7 @@
 		<entry>
 			<code>Fonte</code>
 			<label>Fonte</label>
-			<description>Origem dos dados a partir de informaÁ„o cartogr·fica e de mapas</description>
+			<description>Origem dos dados a partir de informa√ß√£o cartogr√°fica e de mapas</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -274,37 +274,37 @@
 		<entry>
 			<code>Campanha</code>
 			<label>Campanha</label>
-			<description>serie organizada de acÁıes planeadas</description>
+			<description>serie organizada de ac√ß√µes planeadas</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>ColecÁ„o</code>
-			<label>ColecÁ„o</label>
-			<description>AcomulaÁ„o de conjuntos, orgaizados para um fim especifico</description>
+			<code>Colec√ß√£o</code>
+			<label>Colec√ß√£o</label>
+			<description>Acomula√ß√£o de conjuntos, orgaizados para um fim especifico</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Exercicio</code>
 			<label>Exercicio</label>
-			<description>desempenho de uma funÁ„o ou grupo de funÁoes especificas</description>
+			<description>desempenho de uma fun√ß√£o ou grupo de fun√ßoes especificas</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>ExperiÍncia</code>
-			<label>ExperiÍncia</label>
-			<description>Processo que visa descubrir se algo e v·lido ou eficaz</description>
+			<code>Experi√™ncia</code>
+			<label>Experi√™ncia</label>
+			<description>Processo que visa descubrir se algo e v√°lido ou eficaz</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>InvestigaÁ„o</code>
-			<label>InvestigaÁ„o</label>
-			<description>Pesquisa ou investigaÁ„o sistem·tica</description>
+			<code>Investiga√ß√£o</code>
+			<label>Investiga√ß√£o</label>
+			<description>Pesquisa ou investiga√ß√£o sistem√°tica</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>Miss„o</code>
-			<label>Miss„o</label>
-			<description>OperaÁ„o de um sistema que visa a aquisiÁ„o de dados</description>
+			<code>Miss√£o</code>
+			<label>Miss√£o</label>
+			<description>Opera√ß√£o de um sistema que visa a aquisi√ß√£o de dados</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -314,21 +314,21 @@
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>OperaÁ„o</code>
-			<label>OperaÁ„o</label>
-			<description>AcÁ„o que integra uma serie de acÁıes</description>
+			<code>Opera√ß√£o</code>
+			<label>Opera√ß√£o</label>
+			<description>Ac√ß√£o que integra uma serie de ac√ß√µes</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Plantaforma</code>
 			<label>Plantaforma</label>
-			<description>Veiculo ou base de suporte de veiculos que contÈm um sensor</description>
+			<description>Veiculo ou base de suporte de veiculos que cont√©m um sensor</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Processo</code>
 			<label>Processo</label>
-			<description>MÈtodo de fazer algo que envolve uma serie de passos</description>
+			<description>M√©todo de fazer algo que envolve uma serie de passos</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -346,7 +346,7 @@
 		<entry>
 			<code>Estudo</code>
 			<label>Estudo</label>
-			<description>Exame ou investigaÁ„o</description>
+			<description>Exame ou investiga√ß√£o</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -367,13 +367,13 @@
 		<entry>
 			<code>ponto</code>
 			<label>Ponto</label>
-			<description>cada cÈlula representa um ponto</description>
+			<description>cada c√©lula representa um ponto</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>area</code>
 			<label>Area</label>
-			<description>cada cÈlula representa uma area</description>
+			<description>cada c√©lula representa uma area</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -412,61 +412,61 @@
 		<entry>
 			<code>8859part1</code>
 			<label>8859 part 1</label>
-			<description>Latim-1, conjunto de cÛdigos da Europa Ocidental</description>
+			<description>Latim-1, conjunto de c√≥digos da Europa Ocidental</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part2</code>
 			<label>8859 part 2</label>
-			<description>Latim-2, conjunto de cÛdigos da Europa Central</description>
+			<description>Latim-2, conjunto de c√≥digos da Europa Central</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part3</code>
 			<label>8859 part 3</label>
-			<description>latin-3, conjunto de cÛdigos do Sul Europeu</description>
+			<description>latin-3, conjunto de c√≥digos do Sul Europeu</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part4</code>
 			<label>8859 part 4</label>
-			<description>latin-4, conjunto de cÛdigos do norte da Europa</description>
+			<description>latin-4, conjunto de c√≥digos do norte da Europa</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part5</code>
 			<label>8859 part 5</label>
-			<description>conjunto de cÛdigos cirÌlico</description>
+			<description>conjunto de c√≥digos cir√≠lico</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part6</code>
 			<label>8859 part 6</label>
-			<description>conjunto de cÛdigo ·rabe</description>
+			<description>conjunto de c√≥digo √°rabe</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part7</code>
 			<label>8859 part 7</label>
-			<description>CÛdigo grego conjunto</description>
+			<description>C√≥digo grego conjunto</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part8</code>
 			<label>8859 part 8</label>
-			<description>conjunto de cÛdigo em hebraico</description>
+			<description>conjunto de c√≥digo em hebraico</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part9</code>
 			<label>8859 part 9</label>
-			<description>latin-5, conjunto de cÛdigos Turco</description>
+			<description>latin-5, conjunto de c√≥digos Turco</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part11</code>
 			<label>8859 part 11</label>
-			<description> conjunto de cÛdigos TailandÍs</description>
+			<description> conjunto de c√≥digos Tailand√™s</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -484,7 +484,7 @@
 		<entry>
 			<code>jis</code>
 			<label>Jis</label>
-			<description>conjunto de cÛdigos em japonÍs utilizados para a transmiss„o electrÛnica</description>
+			<description>conjunto de c√≥digos em japon√™s utilizados para a transmiss√£o electr√≥nica</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -520,34 +520,34 @@
 		<entry>
 			<code>big5</code>
 			<label>Big5</label>
-			<description>conjunto de cÛdigos de Taiwan</description>
+			<description>conjunto de c√≥digos de Taiwan</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="ClasscationCd">
 		<entry>
-			<code>N„o classificados</code>
-			<label>N„o classificados</label>
-			<description>InformaÁ„o geral disponivel</description>
+			<code>N√£o classificados</code>
+			<label>N√£o classificados</label>
+			<description>Informa√ß√£o geral disponivel</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Restrito</code>
 			<label>Restrito</label>
-			<description>N„o permitida a divulgaÁ„o geral</description>
+			<description>N√£o permitida a divulga√ß√£o geral</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Confidencial</code>
-			<label>confidÍncial</label>
-			<description>disponivÈl so para quem tem permiss„o</description>
+			<label>confid√™ncial</label>
+			<description>disponiv√©l so para quem tem permiss√£o</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>secreto</code>
 			<label>Secreto</label>
-			<description>Para ser mantido confidÍncial, ou pelo menos para confidÍncial para alguns</description>
+			<description>Para ser mantido confid√™ncial, ou pelo menos para confid√™ncial para alguns</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -562,18 +562,18 @@
 		<entry>
 			<code>Imagem</code>
 			<label>Imagem</label>
-			<description>RepresentaÁ„o numÈrica do valor real de um parametro fisico</description>
+			<description>Representa√ß√£o num√©rica do valor real de um parametro fisico</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>ClassificaÁ„o tem·tica</code>
-			<label>ClassificaÁ„o tem·tica</label>
+			<code>Classifica√ß√£o tem√°tica</code>
+			<label>Classifica√ß√£o tem√°tica</label>
 			<description>Valor de codigo sem significado quantitativo usado para representar quantidades</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>MediÁ„o fisica</code>
-			<label>MediÁ„o fisica</label>
+			<code>Medi√ß√£o fisica</code>
+			<label>Medi√ß√£o fisica</label>
 			<description>Valor em quantidades fisicas de quantidades a serem medidas</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -583,27 +583,27 @@
 		<entry>
 			<code>Classe</code>
 			<label>Classe</label>
-			<description>descritores de um conjunto de objectos que compartilham os mesmos atributos, operaÁıes, 
-mÈtodos, relacionamentos e comportamentos</description>
+			<description>descritores de um conjunto de objectos que compartilham os mesmos atributos, opera√ß√µes, 
+m√©todos, relacionamentos e comportamentos</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>Lista de cÛdigos</code>
-			<label>Lista de cÛdigos</label>
-			<description>enumeraÁ„o flexÌvel ˙til para expressar uma longa lista de valores podendo ser alargada</description>
+			<code>Lista de c√≥digos</code>
+			<label>Lista de c√≥digos</label>
+			<description>enumera√ß√£o flex√≠vel √∫til para expressar uma longa lista de valores podendo ser alargada</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>EnumeraÁ„o</code>
-			<label>EnumeraÁ„o</label>
+			<code>Enumera√ß√£o</code>
+			<label>Enumera√ß√£o</label>
 			<description>data type whose instances form a list of named literal values, not
 			extendable</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>Elementos da lista de cÛdigos</code>
-			<label>Elemento da lista de cÛdigos</label>
-			<description>valor admissÌvel para uma lista de cÛdigos ou enumeraÁ„o</description>
+			<code>Elementos da lista de c√≥digos</code>
+			<label>Elemento da lista de c√≥digos</label>
+			<description>valor admiss√≠vel para uma lista de c√≥digos ou enumera√ß√£o</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -615,13 +615,13 @@ mÈtodos, relacionamentos e comportamentos</description>
 		<entry>
 			<code>Classe agregada</code>
 			<label>Classe agregada</label>
-			<description>classe que comopıe classes conectada por um relacionamento agregado</description>
+			<description>classe que comop√µe classes conectada por um relacionamento agregado</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Classe especifica</code>
 			<label>Classe especifica</label>
-			<description>subclasse que pode ser substituÌda pela sua superclasse</description>
+			<description>subclasse que pode ser substitu√≠da pela sua superclasse</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -635,26 +635,26 @@ mÈtodos, relacionamentos e comportamentos</description>
 		<entry>
 			<code>interfaceClass</code>
 			<label>Interface Class</label>
-			<description>conjunto de operaÁıes que caracteriz„o o comportamento do elemento</description>
+			<description>conjunto de opera√ß√µes que caracteriz√£o o comportamento do elemento</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>unionClass</code>
 			<label>Union Class</label>
-			<description>classe que descreve uma seleÁ„o de um dos tipos especificados</description>
+			<description>classe que descreve uma sele√ß√£o de um dos tipos especificados</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>metaclass</code>
 			<label>Metaclass</label>
-			<description>classe cujas inst¬ncias s„o classes</description>
+			<description>classe cujas inst√Çncias s√£o classes</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Tipo de classe</code>
 			<label>Tipo de clase</label>
-			<description>classe utilizada para a especificaÁ„o de um domÌnio de inst‚ncias (objectos), juntamente com 
-as operaÁıes aplic·veis aos objectos. Um dos tipos pode ter atributos e associaÁıes</description>
+			<description>classe utilizada para a especifica√ß√£o de um dom√≠nio de inst√¢ncias (objectos), juntamente com 
+as opera√ß√µes aplic√°veis aos objectos. Um dos tipos pode ter atributos e associa√ß√µes</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -666,14 +666,14 @@ as operaÁıes aplic·veis aos objectos. Um dos tipos pode ter atributos e associaÁ
 		<entry>
 			<code>integer</code>
 			<label>Integer</label>
-			<description>campo numÈrico</description>
+			<description>campo num√©rico</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>association</code>
 			<label>Association</label>
-			<description>relaÁ„o sem‚ntica entre duas classes que envolve conexıes entre 
-suas inst‚ncias</description>
+			<description>rela√ß√£o sem√¢ntica entre duas classes que envolve conex√µes entre 
+suas inst√¢ncias</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -712,19 +712,19 @@ suas inst‚ncias</description>
 		<entry>
 			<code>linha</code>
 			<label>Linha</label>
-			<description>linha de digitalizaÁ„o de um sensor</description>
+			<description>linha de digitaliza√ß√£o de um sensor</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Amostra</code>
 			<label>Amostra</label>
-			<description>elemento ao longo de uma linha de digitalizaÁ„o</description>
+			<description>elemento ao longo de uma linha de digitaliza√ß√£o</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Tempo</code>
 			<label>Tempo</label>
-			<description>DuracÁ„o</description>
+			<description>Durac√ß√£o</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -777,25 +777,25 @@ suas inst‚ncias</description>
 		<entry>
 			<code>blurredImage</code>
 			<label>Blurred Image</label>
-			<description>Parte da imagem est· desfocada</description>
+			<description>Parte da imagem est√° desfocada</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Nuvem</code>
 			<label>Nuvem</label>
-			<description>parte da imagem est· parcialmente obscura devido · existÍncia de nuvens</description>
+			<description>parte da imagem est√° parcialmente obscura devido √° exist√™ncia de nuvens</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>degradingObliquity</code>
 			<label>Degrading Obliquity</label>
-			<description>‚ngulo agudo entre o plano da eclÌptica (o plano da Ûrbita da Terra) e o plano do equador celeste</description>
+			<description>√¢ngulo agudo entre o plano da ecl√≠ptica (o plano da √≥rbita da Terra) e o plano do equador celeste</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Nevoeiro</code>
 			<label>Nevoeiro</label>
-			<description>Parte da imagem est· parcialmente obscura por nevoeiro</description>
+			<description>Parte da imagem est√° parcialmente obscura por nevoeiro</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -819,13 +819,13 @@ suas inst‚ncias</description>
 		<entry>
 			<code>semiDarkness</code>
 			<label>Semi Darkness</label>
-			<description>imagem obtida com alguma escurid„o</description>
+			<description>imagem obtida com alguma escurid√£o</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Sombra</code>
 			<label>Sombra</label>
-			<description>Parte da imagem est· escurecida pela sombra</description>
+			<description>Parte da imagem est√° escurecida pela sombra</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -854,19 +854,19 @@ suas inst‚ncias</description>
 		<entry>
 			<code>Lugar</code>
 			<label>Lugar</label>
-			<description>Palavra-chave que identifica uma lozalizaÁ„o</description>
+			<description>Palavra-chave que identifica uma lozaliza√ß√£o</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Estrato</code>
 			<label>Estrato</label>
-			<description>palavra-chave identifica a layer(s) de qualquer subst‚ncia depositada</description>
+			<description>palavra-chave identifica a layer(s) de qualquer subst√¢ncia depositada</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>temporal</code>
 			<label>Temporal</label>
-			<description>palavra-chave que identifica um perÌodo de tempo relacionado com o conjunto de dados</description>
+			<description>palavra-chave que identifica um per√≠odo de tempo relacionado com o conjunto de dados</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -881,73 +881,73 @@ suas inst‚ncias</description>
 		<entry>
 			<code>continual</code>
 			<label>Continual</label>
-			<description>dados actualizados com frequÍncia e repetitivamente</description>
+			<description>dados actualizados com frequ√™ncia e repetitivamente</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>Di·rio</code>
-			<label>Di·rio</label>
-			<description>Dados s„o actualizados todos os dias</description>
+			<code>Di√°rio</code>
+			<label>Di√°rio</label>
+			<description>Dados s√£o actualizados todos os dias</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Semanal</code>
 			<label>Semanal</label>
-			<description>Dados s„o actualizados semanalmente</description>
+			<description>Dados s√£o actualizados semanalmente</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Quinzenal</code>
 			<label>Quinzenal</label>
-			<description>dados s„o actualizados quinzenalmente</description>
+			<description>dados s√£o actualizados quinzenalmente</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Mensal</code>
 			<label>Mensal</label>
-			<description>Dados s„o actualizados mensalmente</description>
+			<description>Dados s√£o actualizados mensalmente</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Trimestral</code>
 			<label>Trimestral</label>
-			<description>Dasos s„o actualizados trimestralmente</description>
+			<description>Dasos s√£o actualizados trimestralmente</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Semestralmente</code>
 			<label>Semestralmente</label>
-			<description>Dasos s„o actualizados semestralmente</description>
+			<description>Dasos s√£o actualizados semestralmente</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Anual</code>
 			<label>Anual</label>
-			<description>Ddos s„o actualizados anualmente</description>
+			<description>Ddos s√£o actualizados anualmente</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>Conforme necess·rio</code>
-			<label>Conforme necess·rio</label>
-			<description>Dados s„o actualizados quando necess·rio</description>
+			<code>Conforme necess√°rio</code>
+			<label>Conforme necess√°rio</label>
+			<description>Dados s√£o actualizados quando necess√°rio</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Irregular</code>
 			<label>Irregular</label>
-			<description>Dados s„o actualizados em intervalos de tempo cuja duraÁ„o È desigual</description>
+			<description>Dados s√£o actualizados em intervalos de tempo cuja dura√ß√£o √© desigual</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>N„o planeado</code>
-			<label>N„o planeado</label>
-			<description>N„o est· planeada a actualizaÁ„o dos dados</description>
+			<code>N√£o planeado</code>
+			<label>N√£o planeado</label>
+			<description>N√£o est√° planeada a actualiza√ß√£o dos dados</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Desconhecida</code>
 			<label>Desconhecida</label>
-			<description>A frequÍncia para actualizaÁ„o dos dados È desconhecida</description>
+			<description>A frequ√™ncia para actualiza√ß√£o dos dados √© desconhecida</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -974,7 +974,7 @@ suas inst‚ncias</description>
 		<entry>
 			<code>iso9660</code>
 			<label>Iso9660</label>
-			<description>Processamento de informaÁıes - volume e estrutura de ficheiros de CD-ROM</description>
+			<description>Processamento de informa√ß√µes - volume e estrutura de ficheiros de CD-ROM</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1001,37 +1001,37 @@ suas inst‚ncias</description>
 		<entry>
 			<code>dvd</code>
 			<label>Dvd</label>
-			<description>Disco digital vers·til</description>
+			<description>Disco digital vers√°til</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>dvdRom</code>
 			<label>Dvd Rom</label>
-			<description>diso digital vers·til apenas de leitura</description>
+			<description>diso digital vers√°til apenas de leitura</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>3halfInchFloppy</code>
 			<label>3 half Inch Floppy</label>
-			<description>disco magnÈtico de 3,5 polegadas</description>
+			<description>disco magn√©tico de 3,5 polegadas</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>5quarterInchFloppy</code>
 			<label>5 quarter Inch Floppy</label>
-			<description>disco magnÈtico de 5,25 polegadas</description>
+			<description>disco magn√©tico de 5,25 polegadas</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>7trackTape</code>
 			<label>7 track Tape</label>
-			<description>fita magnÈtica 7</description>
+			<description>fita magn√©tica 7</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>9trackTape</code>
 			<label>9 track Tape</label>
-			<description>fita magnÈtica 9</description>
+			<description>fita magn√©tica 9</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1055,19 +1055,19 @@ suas inst‚ncias</description>
 		<entry>
 			<code>4mmCartridgeTape</code>
 			<label>4mm Cartridge Tape</label>
-			<description>fita magnÈtica de 4mm</description>
+			<description>fita magn√©tica de 4mm</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8mmCartridgeTape</code>
 			<label>8mm Cartridge Tape</label>
-			<description>fita magnÈtica de 8mm</description>
+			<description>fita magn√©tica de 8mm</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>1quarterInchCartridgeTape</code>
 			<label>1 quarter Inch Cartridge Tape</label>
-			<description>fita magnÈctica de 0,25 cm</description>
+			<description>fita magn√©ctica de 0,25 cm</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1079,25 +1079,25 @@ suas inst‚ncias</description>
 		<entry>
 			<code>onLine</code>
 			<label>On Line</label>
-			<description>LigaÁ„o dircta ao computador</description>
+			<description>Liga√ß√£o dircta ao computador</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>satellite</code>
 			<label>Satellite</label>
-			<description>LigaÁ„o atravÈs de um sistema de comunicaÁ„o via satÈlite</description>
+			<description>Liga√ß√£o atrav√©s de um sistema de comunica√ß√£o via sat√©lite</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>telephoneLink</code>
 			<label>Telephone Link</label>
-			<description>comunicaÁ„o atravÈs de uma rede telefÛnica</description>
+			<description>comunica√ß√£o atrav√©s de uma rede telef√≥nica</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>hardcopy</code>
 			<label>Hardcopy</label>
-			<description>panfleto ou folheto com informaÁıes descritivas</description>
+			<description>panfleto ou folheto com informa√ß√µes descritivas</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -1106,7 +1106,7 @@ suas inst‚ncias</description>
 		<entry>
 			<code>mandatory</code>
 			<label>Mandatory</label>
-			<description>elemento sempre necess·rio</description>
+			<description>elemento sempre necess√°rio</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1118,7 +1118,7 @@ suas inst‚ncias</description>
 		<entry>
 			<code>conditional</code>
 			<label>Conditional</label>
-			<description>O elemento È necesspario quando uma determinada condiÁ„o especifica for satisfeita</description>
+			<description>O elemento √© necesspario quando uma determinada condi√ß√£o especifica for satisfeita</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -1133,26 +1133,26 @@ suas inst‚ncias</description>
 		<entry>
 			<code>lowerLeft</code>
 			<label>Lower Left</label>
-			<description>"canto do pixel mais prÛximo da origem do SRS, se os dois est„o · mesma dist‚ncia da origem, È aquele com o menor valor x " 
+			<description>"canto do pixel mais pr√≥ximo da origem do SRS, se os dois est√£o √° mesma dist√¢ncia da origem, √© aquele com o menor valor x " 
 </description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>lowerRight</code>
 			<label>Lower Right</label>
-			<description>a partir da esquina inferior esquerda no sentido contr·rio aos dos pontods do relÛgio</description>
+			<description>a partir da esquina inferior esquerda no sentido contr√°rio aos dos pontods do rel√≥gio</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>upperRight</code>
 			<label>Upper Right</label>
-			<description>a partir da esquina inferior direita no sentido contrario ao dos ponteiros do relÛgio</description>
+			<description>a partir da esquina inferior direita no sentido contrario ao dos ponteiros do rel√≥gio</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>upperLeft</code>
 			<label>Upper Left</label>
-			<description>a partir da esquina superior direita no sentido contrario dos ponteiro do relÛgio</description>
+			<description>a partir da esquina superior direita no sentido contrario dos ponteiro do rel√≥gio</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -1161,19 +1161,19 @@ suas inst‚ncias</description>
 		<entry>
 			<code>completed</code>
 			<label>Completed</label>
-			<description>producÁ„o de daos foi concluida</description>
+			<description>produc√ß√£o de daos foi concluida</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>Arquivo histÛrico</code>
-			<label>Arquivo histÛrico</label>
-			<description>dados foram armazenados numa instalaÁ„o de armazenamento offline</description>
+			<code>Arquivo hist√≥rico</code>
+			<label>Arquivo hist√≥rico</label>
+			<description>dados foram armazenados numa instala√ß√£o de armazenamento offline</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>obsoleto</code>
 			<label>Obsoleto</label>
-			<description>Dados j· n„o s„o importantes</description>
+			<description>Dados j√° n√£o s√£o importantes</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1185,12 +1185,12 @@ suas inst‚ncias</description>
 		<entry>
 			<code>Planeado</code>
 			<label>Planeado</label>
-			<description>data que estabelece quando os dados s„o criados ou actualizados</description>
+			<description>data que estabelece quando os dados s√£o criados ou actualizados</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>Necess·rio</code>
-			<label>Necess·rio</label>
+			<code>Necess√°rio</code>
+			<label>Necess√°rio</label>
 			<description>Dados que necessitam de ser gerados ou actualizados</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1206,51 +1206,51 @@ suas inst‚ncias</description>
 		<entry>
 			<code>copyright</code>
 			<label>Copyright</label>
-			<description>direito de exclusividade para a publicaÁ„o, produÁ„o ou venda dos direitos de uma obra liter·ria, dram·tica, musical ou artÌstica, ou a utilizaÁ„o de uma impress„o comercial ou 
-selo, concedido por lei para um determinado perÌodo de tempo para um autor, compositor, artista ou distribuidor</description>
+			<description>direito de exclusividade para a publica√ß√£o, produ√ß√£o ou venda dos direitos de uma obra liter√°ria, dram√°tica, musical ou art√≠stica, ou a utiliza√ß√£o de uma impress√£o comercial ou 
+selo, concedido por lei para um determinado per√≠odo de tempo para um autor, compositor, artista ou distribuidor</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Patente</code>
 			<label>Patente</label>
-			<description>governo concedeu o direito exclusivo de fabricar, vender, usar uma invenÁ„o ou descoberta atravÈs de uma licenÁa</description>
+			<description>governo concedeu o direito exclusivo de fabricar, vender, usar uma inven√ß√£o ou descoberta atrav√©s de uma licen√ßa</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>patentPending</code>
 			<label>Patent Pending</label>
-			<description>informaÁıes produzidas ou vendidas atravÈs de uma patente</description>
+			<description>informa√ß√µes produzidas ou vendidas atrav√©s de uma patente</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Marcas</code>
 			<label>Marcas</label>
-			<description>um nome, sÌmbolo ou outro dispositivo que identifica um produto, oficialmente registrado 
-e legalmente restrito o uso ao propriet·rio ou do fabricante</description>
+			<description>um nome, s√≠mbolo ou outro dispositivo que identifica um produto, oficialmente registrado 
+e legalmente restrito o uso ao propriet√°rio ou do fabricante</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>licensa</code>
 			<label>Licensa</label>
-			<description>permiss„o formal para fazer alguma coisa</description>
+			<description>permiss√£o formal para fazer alguma coisa</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Direitos de Propriedade Intelectual</code>
 			<label>Direitos de Propriedade Intelectual</label>
-			<description>direito ‡ prestaÁ„o financeira e controle de distribuiÁ„o de caracteristicas n„o-palp·veis, que resultam da criatividade</description>
+			<description>direito √† presta√ß√£o financeira e controle de distribui√ß√£o de caracteristicas n√£o-palp√°veis, que resultam da criatividade</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>RestriÁ„o</code>
-			<label>RestricÁ„o</label>
-			<description>interdiÁ„o de circolaÁ„o ou divulgaÁ„o</description>
+			<code>Restri√ß√£o</code>
+			<label>Restric√ß√£o</label>
+			<description>interdi√ß√£o de circola√ß√£o ou divulga√ß√£o</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>Outras restriÁıes</code>
-			<label>Outras restricÁıes</label>
-			<description>LimitaÁ„o n„o listada</description>
+			<code>Outras restri√ß√µes</code>
+			<label>Outras restric√ß√µes</label>
+			<description>Limita√ß√£o n√£o listada</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -1259,13 +1259,13 @@ e legalmente restrito o uso ao propriet·rio ou do fabricante</description>
 		<entry>
 			<code>Atributos</code>
 			<label>Atributos</label>
-			<description>InformaÁ„o aplicada a classe do atributo</description>
+			<description>Informa√ß√£o aplicada a classe do atributo</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Tipo de atributo</code>
 			<label>Tipo de atributo</label>
-			<description>InformaÁıes que se aplicam a caracteristica de um recurso</description>
+			<description>Informa√ß√µes que se aplicam a caracteristica de um recurso</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1283,19 +1283,19 @@ e legalmente restrito o uso ao propriet·rio ou do fabricante</description>
 		<entry>
 			<code>dataset</code>
 			<label>Dataset</label>
-			<description>InformaÁıes aplicadas a um dataset</description>
+			<description>Informa√ß√µes aplicadas a um dataset</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>series</code>
 			<label>Series</label>
-			<description>InformaÁ„o aplicada · serie</description>
+			<description>Informa√ß√£o aplicada √° serie</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>Dados n„o geogr·ficos</code>
-			<label>Dados n„o-geogr·ficos</label>
-			<description>InformaÁıes aplicadas a dados n„o-geogr·ficos</description>
+			<code>Dados n√£o geogr√°ficos</code>
+			<label>Dados n√£o-geogr√°ficos</label>
+			<description>Informa√ß√µes aplicadas a dados n√£o-geogr√°ficos</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1307,31 +1307,31 @@ e legalmente restrito o uso ao propriet·rio ou do fabricante</description>
 		<entry>
 			<code>feature</code>
 			<label>Feature</label>
-			<description>InformaÁıes aplicado a uma feature</description>
+			<description>Informa√ß√µes aplicado a uma feature</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>featureType</code>
 			<label>Feature Type</label>
-			<description>informaÁ„o apliado a um tipo de feacture</description>
+			<description>informa√ß√£o apliado a um tipo de feacture</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>tipo de imÛvel</code>
-			<label>tipo de imÛvel</label>
-			<description>InformaÁ„o aplicada a um tipo de imÛvel</description>
+			<code>tipo de im√≥vel</code>
+			<label>tipo de im√≥vel</label>
+			<description>Informa√ß√£o aplicada a um tipo de im√≥vel</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>Campo de sess„o</code>
-			<label>Campo de sess„o</label>
-			<description>InformaÁ„o aplicada a um campo de sess„o</description>
+			<code>Campo de sess√£o</code>
+			<label>Campo de sess√£o</label>
+			<description>Informa√ß√£o aplicada a um campo de sess√£o</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>software</code>
 			<label>Software</label>
-			<description>InformaÁ„o aplicada a um programa de computador ou um procedimento de rotina</description>
+			<description>Informa√ß√£o aplicada a um programa de computador ou um procedimento de rotina</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1345,7 +1345,7 @@ e legalmente restrito o uso ao propriet·rio ou do fabricante</description>
 		<entry>
 			<code>Modelo</code>
 			<label>Modelo</label>
-			<description>informaÁıes aplicas a uma cÛpia ou imitaÁ„o de um objecto hipotÈtico ou j· existente</description>
+			<description>informa√ß√µes aplicas a uma c√≥pia ou imita√ß√£o de um objecto hipot√©tico ou j√° existente</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -1354,7 +1354,7 @@ e legalmente restrito o uso ao propriet·rio ou do fabricante</description>
 		<entry>
 			<code>vector</code>
 			<label>Vector</label>
-			<description>dados vectoriais usados para representar dados geogr·ficos</description>
+			<description>dados vectoriais usados para representar dados geogr√°ficos</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1366,7 +1366,7 @@ e legalmente restrito o uso ao propriet·rio ou do fabricante</description>
 		<entry>
 			<code>textTable</code>
 			<label>Text Table</label>
-			<description> dados textuais em tabela usados para representar dados geogr·ficos </description>
+			<description> dados textuais em tabela usados para representar dados geogr√°ficos </description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1385,7 +1385,7 @@ e legalmente restrito o uso ao propriet·rio ou do fabricante</description>
 		<entry>
 			<code>video</code>
 			<label>Video</label>
-			<description>cena a partir da granvaÁ„o de vÌdeo</description>
+			<description>cena a partir da granva√ß√£o de v√≠deo</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -1394,7 +1394,7 @@ e legalmente restrito o uso ao propriet·rio ou do fabricante</description>
 		<entry>
 			<code>farming</code>
 			<label>Farming</label>
-			<description>criaÁ„o de animais e / ou cultivo de plantas</description>
+			<description>cria√ß√£o de animais e / ou cultivo de plantas</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1406,43 +1406,43 @@ e legalmente restrito o uso ao propriet·rio ou do fabricante</description>
 		<entry>
 			<code>boundaries</code>
 			<label>Boundaries</label>
-			<description>descriÁıes legais da terra</description>
+			<description>descri√ß√µes legais da terra</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>climatologyMeteorologyAtmosphere</code>
 			<label>Climatology Meteorology Atmosphere</label>
-			<description>processoa e fenomenos atmosfÈricos</description>
+			<description>processoa e fenomenos atmosf√©ricos</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Economia</code>
 			<label>Economia</label>
-			<description>atividades econÙmicas, condiÁıes e emprego</description>
+			<description>atividades econ√¥micas, condi√ß√µes e emprego</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>ElevaÁ„o</code>
-			<label>ElevaÁ„o</label>
-			<description>altura acima ou abaixo do nÌvel do mar</description>
+			<code>Eleva√ß√£o</code>
+			<label>Eleva√ß√£o</label>
+			<description>altura acima ou abaixo do n√≠vel do mar</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Ambiente</code>
 			<label>Ambiente</label>
-			<description>recursos ambientais, protecÁ„o e conservaÁ„o</description>
+			<description>recursos ambientais, protec√ß√£o e conserva√ß√£o</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>InformaÁ„o geociÍnticfica</code>
-			<label>InformaÁ„o geociÍnticfica</label>
-			<description>ciÍncias da informaÁ„o referenta a terra</description>
+			<code>Informa√ß√£o geoci√™nticfica</code>
+			<label>Informa√ß√£o geoci√™nticfica</label>
+			<description>ci√™ncias da informa√ß√£o referenta a terra</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>Sa˙de</code>
-			<label>Sa˙de</label>
-			<description>sa˙de, serviÁos de sa˙de, ecologia humana e seguranÁa</description>
+			<code>Sa√∫de</code>
+			<label>Sa√∫de</label>
+			<description>sa√∫de, servi√ßos de sa√∫de, ecologia humana e seguran√ßa</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1452,34 +1452,34 @@ e legalmente restrito o uso ao propriet·rio ou do fabricante</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>InteligÍncia militar</code>
-			<label>InteligÍncia militar</label>
+			<code>Intelig√™ncia militar</code>
+			<label>Intelig√™ncia militar</label>
 			<description>Bases, estruturas e actividades militares</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>¡guas interiores</code>
-			<label>¡guas interiores</label>
-			<description>·gua interiores, sistemas de drenagem e sua 
-caracterÌsticas</description>
+			<code>√Åguas interiores</code>
+			<label>√Åguas interiores</label>
+			<description>√°gua interiores, sistemas de drenagem e sua 
+caracter√≠sticas</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>LocalizaÁ„o</code>
-			<label>LocalizaÁ„o</label>
-			<description>localizaÁ„o de pontos de InformaÁ„o e serviÁos</description>
+			<code>Localiza√ß√£o</code>
+			<label>Localiza√ß√£o</label>
+			<description>localiza√ß√£o de pontos de Informa√ß√£o e servi√ßos</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Oceanos</code>
 			<label>Oceanos </label>
-			<description>recursos e caracterÌsticas da ·gua salgada (excluindo aguas interiores)</description>
+			<description>recursos e caracter√≠sticas da √°gua salgada (excluindo aguas interiores)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Cadastro planeado</code>
 			<label>Cadastro planeado</label>
-			<description>informaÁıes utilizadas am aÁıes apropriadas para o  futuro uso da terra</description>
+			<description>informa√ß√µes utilizadas am a√ß√µes apropriadas para o  futuro uso da terra</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1491,19 +1491,19 @@ caracterÌsticas</description>
 		<entry>
 			<code>Estrutura</code>
 			<label>Estrutura</label>
-			<description>ConstruÁıes</description>
+			<description>Constru√ß√µes</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>Trasnporte</code>
 			<label>Transporte</label>
-			<description>meios e formas de deslocaÁ„o de pessoas e / ou mercadorias</description>
+			<description>meios e formas de desloca√ß√£o de pessoas e / ou mercadorias</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utilitiesCommunication</code>
 			<label>Utilities Communication</label>
-			<description>infra-estrutura de comunicaÁıes e serviÁos e sistemas de energia, aguas e residuos</description>
+			<description>infra-estrutura de comunica√ß√µes e servi√ßos e sistemas de energia, aguas e residuos</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>

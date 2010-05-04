@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+ï»¿<?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<maxTimeMsg>Por favor especifique o período máximo entre a criação e a actualização mais recente de metadados</maxTimeMsg>
-	<maxDiff>Período máximo</maxDiff>
+	<maxTimeMsg>Por favor especifique o perÃ­odo mÃ¡ximo entre a criaÃ§Ã£o e a actualizaÃ§Ã£o mais recente de metadados</maxTimeMsg>
+	<maxDiff>PerÃ­odo mÃ¡ximo</maxDiff>
 	
 	<diffList>
 		<item id="5"   >5 minutos</item>

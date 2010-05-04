@@ -13,6 +13,16 @@
 	<network>Rede</network>
 	<netmask>Máscara de rede</netmask>
 	
+	<z3950>Servidor Z39.50</z3950>
+	<enable>Activar</enable>
+		
+	<xlinkResolver>XLink Resolver</xlinkResolver>
+		
+	<downloadservice>Data-For-Download Service</downloadservice>
+	<leave>Use metadata linkage as is - no changes to linkage</leave>
+	<simple>Use GeoNetwork simple file download service (resources.get)</simple>
+	<withdisclaimer>Use GeoNetwork disclaimer and constraints service (file.disclaimer)</withdisclaimer>
+
 	<selectionmanager>Metadata Search Results</selectionmanager>
 	<maxrecords>Maximum selected records</maxrecords>
 
@@ -63,16 +73,6 @@
 			<minute label="45">45</minute>
 		</minutes>
 
-	<z3950>Servidor Z39.50</z3950>
-	<enable>Activar</enable>
-		
-	<xlinkResolver>XLink Resolver</xlinkResolver>
-		
-	<downloadservice>Data-For-Download Service</downloadservice>
-	<leave>Use metadata linkage as is - no changes to linkage</leave>
-	<simple>Use GeoNetwork simple file download service (resources.get)</simple>
-	<withdisclaimer>Use GeoNetwork disclaimer and constraints service (file.disclaimer)</withdisclaimer>
-
 	<csw>CSW Perfil ISO</csw>
 	<contactId>Contacto</contactId>
 	<title>Título</title>
@@ -80,6 +80,10 @@
 	<fees>Taxas</fees>
 	<accessConstraints>Restrições de acesso</accessConstraints>
 		
+	<clickablehyperlinks>Clickable hyperlinks</clickablehyperlinks>
+
+	<localrating>Local Rating</localrating>
+	
 	<proxy>Proxy</proxy>
 	<use>Usar</use>
 	<username>Nome de utilizador</username>
@@ -215,6 +219,17 @@
 		<tip id="csw.abstract">Resumo</tip>
 		<tip id="csw.fees">Taxas</tip>
 		<tip id="csw.accessConstraints">Restrições de acesso</tip>
+		
+		<!-- clickable hyperlinks -->
+		
+		<tip id="clickablehyperlinks.enable">
+			If set, GeoNetwork will display clickable hyperlinks in the metadata.
+		</tip>
+
+		<!-- local rating -->
+		<tip id="localrating.enable">
+			If set, GeoNetwork will calculate user ratings for metadata from this node only (not distributed among other GeoNetwork nodes).
+		</tip>
 		
 		<!-- proxy -->
 		

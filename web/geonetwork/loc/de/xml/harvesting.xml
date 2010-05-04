@@ -69,15 +69,6 @@
 	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Site</site>
-
-	<info type="ogcwxs">
-		<short>OGC WxS</short>
-		<long>OGC Web services (ie. WMS, WFS, WCS, WPS)</long>
-	</info>
-	
-	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<site>Site</site>
 		
 	<wxstype>Type of OGC webservice</wxstype>
 	<wxstypes>
@@ -101,7 +92,6 @@
 	<serviceCategory>Category for service</serviceCategory>
 	<datasetCategory>Category for datasets</datasetCategory>
 		
-	<name>Name</name>
 	<host>Host</host>
 	<port>Port</port>
 	<servlet>Servlet</servlet>
@@ -124,6 +114,9 @@
 	<retrieve>Abfrage</retrieve>
 	<warn>Nur nach Ausfüllen der Felder können Abfragen ausgeführt werden.</warn>
 	
+	<content>Harvested Content</content>
+	<importxslt>Apply this XSLT to harvested records</importxslt>
+
 	<options>Optionen</options>
 	<everySpec>(Tage : Stunden : Minuten)</everySpec>
 	<oneRun>Nur einmalig</oneRun>
@@ -141,7 +134,6 @@
 	<nodelete>Behalte lokal, wenn Quelle gelöscht wird</nodelete>
 	<server>Server</server>
 	<database>Datenbank</database>
-	<host>Host</host>
 	<privileges>Privilegien</privileges>
 	<categories>Kategorien</categories>
 	<url>URL</url>
@@ -288,6 +280,11 @@
 		<unretrievable>nicht abrufbar</unretrievable>
 		<badFormat>Falsches XML Format</badFormat>
 		<doesNotValidate>Validiert nicht</doesNotValidate>
+		<datasetAdded>Datasets</datasetAdded>
+		<datasetExist>Existing datasets</datasetExist>
+		<datasetMdUrl>Metadata Url used</datasetMdUrl>
+		<thumbnails>Thumbnails</thumbnails>
+		<thumbnailsFailed>Thumbnails failed</thumbnailsFailed>
 		<serviceRecords>Services Added</serviceRecords>
 		<collectionDatasetRecords>Collections Added</collectionDatasetRecords>
 		<atomicDatasetRecords>Atomics Added</atomicDatasetRecords>

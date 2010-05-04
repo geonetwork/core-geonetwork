@@ -54,7 +54,7 @@
 		 (les élements temporelle, verticale 
 		et polygon englobant sont conservés). Sauvegarder la métadonnées avant le lancement
 		de l'action.</computeExtentFromKeywordsHelp>
-	<shortcutHelp>Aide pour les raccourcis ?</shortcutHelp>
+	<shortcutHelp js="true">Aide pour les raccourcis ?</shortcutHelp>
 	<helpShortcutsEditor> 
 		<h2>Raccourcis pour l'édition:</h2>
 		<hr/>
@@ -85,7 +85,7 @@
 	<linkedFeatureCatalogueHelp>Ajouter une relation entre la métadonnnée en cours et
 		un catalogue d'attribut au format ISO19110.</linkedFeatureCatalogueHelp>
 	<createLinkedFeatureCatalogue>Associer un catalogue d'attribut</createLinkedFeatureCatalogue>
-	<layerNameHelp>Lors de l'association d'une métadonnée de service avec une ou plusieurs
+	<layerNameHelp js="true">Lors de l'association d'une métadonnée de service avec une ou plusieurs
 		métadonnée de données, l'élément 
 		"coupled resource" (ressource couplée) peut contenir la nom de la couche tel que définie dans le service OGC.
 		La list des couches diffusées par le service peut aider l'éditeur à choisir une valeur.
@@ -111,25 +111,16 @@
 	<serviceCreate>Créer une métadonnée de service</serviceCreate>
 	<parentSearch js="true">Chercher un parent pour la métadonnée en cours.</parentSearch>
 	<linkedMetadataSelectionWindowTitle js="true">Sélection des métadonnées associées</linkedMetadataSelectionWindowTitle>
+	<searchText js="true">Text search</searchText>
 	<mdTitle js="true">Titre de la métadonnée</mdTitle>
 	<createRelation js="true">Créer la relation</createRelation>
-	<exportText>Export (CSV)</exportText>
-	<selectOneFile>Vous devriez sélectionner un fichier !</selectOneFile>
-	<errors>erreurs</errors>
-	<closeWindow>Fermer la fenêtre</closeWindow>
-	<selectOneFile>Chercher ou saisir un nom de fichier avant l'envoi !</selectOneFile>
-	<perThesaurus js="true"> par thesaurus</perThesaurus>
-	<crsSelectionWindowTitle>Sélection des systèmes de coordonnées</crsSelectionWindowTitle>
-	<selectedCRS>Systèmes sélectionnés</selectedCRS>
-	<foundCRS>Systèmes de coordonnées disponibles</foundCRS>
-	<printSelection>Imprimer la sélection</printSelection>
 	<export>Exporter</export>
+	<exportText>Export (CSV)</exportText>
 	<addXMLFragment>Ajouter depuis un dictionnaire ...</addXMLFragment>
 	<translateWithGoogle>Utiliser le service de traduction de Google pour proposer une traduction pour la langue sélectionnée.</translateWithGoogle>
 	<translateWithGoogle.maxSize js="true">Le texte à traduire dépasse les 5000 caractères (voir http://code.google.com/apis/ajaxlanguage/terms.html).</translateWithGoogle.maxSize>
 	<translateWithGoogle.emptyInput js="true">La valeur de ce champ dans la langue principale est vide. Saisir une valeur avant d'utiliser le service de traduction.</translateWithGoogle.emptyInput>	
-    <crs code="EPSG:4326">WGS 84</crs>
-    <layersAdded js="true">Les couches sélectionnées ont été ajoutées</layersAdded>
+          <layersAdded js="true">Les couches sélectionnées ont été ajoutées</layersAdded>
 	<registrationFailed js="true">Erreur, l'enregistrement a échoué :</registrationFailed>	
 	<tryAgain js="true">Essayez plus tard</tryAgain>
 	<cannotRetrieveGroup js="true">Impossible d'obtenir la liste des groupes</cannotRetrieveGroup>
@@ -141,6 +132,7 @@
 	<noComment js="true">Aucun commentaire</noComment>
 	<rateMetadataFailed js="true">Impossible de noter la métadonnée.</rateMetadataFailed>
 	<error js="true">Erreur</error>
+	<errors>erreurs</errors>
 	<northSouth js="true">Nord &lt; Sud</northSouth>
 	<north90 js="true">Nord &gt; 90 degrés</north90>
 	<south90 js="true">Sud &lt; -90 degrés</south90>
@@ -148,6 +140,7 @@
 	<west180 js="true">Ouest &lt; -180 degrés</west180>
 	<eastWest js="true">Est &lt; Ouest</eastWest>
 	<metadataSelectionError js="true">Erreur lors de la sélection des métadonnées.</metadataSelectionError>
+	<closeWindow js="true">Fermer la fenêtre</closeWindow>
 	<loseYourChange js="true">En validant, vous perdez toutes les modifications en cours !</loseYourChange>
 	<errorDeleteElement js="true">Erreur: Impossible de supprimer l'élément </errorDeleteElement>
 	<errorFromDoc js="true"> du document :</errorFromDoc>
@@ -156,10 +149,12 @@
 	<errorSaveFailed js="true">Erreur : Impossible de sauver le formulaire </errorSaveFailed>
 	<errorOnAction js="true">Erreur : Impossible de réaliser l'action </errorOnAction>
 	<errorChangeProtocol js="true">Un fichier a dû être envoyé. Vous ne pouvez pas modifier le protocole à moins de le supprimer.</errorChangeProtocol>
+	<selectOneFile js="true">Chercher ou saisir un nom de fichier avant l'envoi !</selectOneFile>
 	<uploadFailed js="true">Erreur : Echec de l'envoi ! - Info : </uploadFailed>
 	<uploadSetFileNameFailed js="true">Erreur : Fichier envoyé mais impossible de définir le nom du fichier !</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Pas d'information disponible.</cannotGetTooltip>
 	<maxResults js="true">Nombre de résultats</maxResults>
+	<perThesaurus js="true"> per thesaurus</perThesaurus>
 	<anyThesaurus js="true">Tous les thésaurus</anyThesaurus>
 	<selectedKeywords js="true">Mots clés selectionnés</selectedKeywords>
 	<foundKeywords js="true">Mots clés trouvés</foundKeywords>
@@ -167,7 +162,6 @@
 	<crsSelectionWindowTitle js="true">Sélection des systèmes de coordonnées</crsSelectionWindowTitle>
 	<selectedCRS js="true">Systèmes sélectionnés</selectedCRS>
 	<foundCRS js="true">Systèmes disponibles</foundCRS>
-	
 	
 	<about>A propos</about>
 	<abstract>Résumé</abstract>
@@ -232,7 +226,7 @@
 	<completeTab>Vue avancée</completeTab>
 	<completeTabEditor>Editeur avancé</completeTabEditor>
 	<confirmCancel>Êtes-vous sûr de vouloir quitter l\'éditeur? (vous allez perdre les changements non sauvegardés)</confirmCancel>
-	<confirmDelete js="true">Êtes-vous sûr de vouloir supprimer cette métadonnée ?</confirmDelete>
+	<confirmDelete js="true">Êtes-vous sûr de vouloir supprimer cette métadonnée ?</confirmDelete> <!-- Check if js=true is required -->
 	<confirmMassiveDelete>Êtes-vous sûr de vouloir supprimer toutes les métadonnées sélectionnées ?</confirmMassiveDelete>
 	<confirmNewPassword>Confirmer le nouveau mot de passe</confirmNewPassword>
 	<confirmPassword>Confirmer le mot de passe</confirmPassword>
@@ -246,6 +240,8 @@
 	<country>Pays</country>
 	<create>Dupliquer</create>
 	<createTip>Créer des métadonnées à partir de ce template</createTip>
+	<crs code="EPSG:4326">WGS 84</crs>
+	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
 	<cswTest>CSW ISO Profile test</cswTest>
 	<cswTestDesc>Test interface for the CSW ISO Profile catalog interface</cswTestDesc>
 	<dataQualityTab>Qualité des données</dataQualityTab>
@@ -301,7 +297,6 @@
 	<edit>Editer</edit>
 	<Editor>Éditeur</Editor>
 	<email>Email</email>
-	<emailAddress>Email</emailAddress>
 	<emailAddressInvalid js="true">Adresse email invalide</emailAddressInvalid>
 	<enclosing>Incluant</enclosing>
 	<enclosingCoordinate>Coordonnées englobant</enclosingCoordinate>
@@ -374,7 +369,7 @@
 	<isoCore>ISO Core</isoCore>
 	<isoMinimum>ISO Minimum</isoMinimum>
 	<keyword>Mot-clé</keyword>
-	<keywords>Mots-clés</keywords>
+	<keywords js="true">Mots-clés</keywords>
 	<keywordshelp>Sélectionner plusieurs mots-clés en utilisant la touche Ctrl</keywordshelp>
 	<kind>Type</kind>
 	<kindChoice value="company">Entreprise privée</kindChoice>
@@ -517,17 +512,17 @@
 	<progressChoice value="planned">prévu</progressChoice>
 	<progressChoice/>
 	<protocol>Protocol</protocol>
-	<protocolChoice show="-" value="ESRI:AIMS--http--configuration">ArcIMS Map Service : Fichier de configuration (*.AXL)</protocolChoice>
-	<protocolChoice show="-" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
-	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
-	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC-WMS Web Map Service (ver 1.1.1)</protocolChoice>
-	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Fichier à télécharger (FTP)</protocolChoice>
-	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Fichier à télécharger</protocolChoice>
-	<protocolChoice show="y" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
+	<protocolChoice show="y" value="ESRI:AIMS--http--configuration">ArcIMS Map Service : Fichier de configuration (*.AXL)</protocolChoice>
+	<protocolChoice show="y" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
+	<protocolChoice show="-" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
 	<protocolChoice show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</protocolChoice>
 	<protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
 	<protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
 	<protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC-WMS Web Map Service (ver 1.1.1)</protocolChoice>
+	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Fichier à télécharger (FTP)</protocolChoice>
+	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Fichier à télécharger</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Adresse Internet (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Site web partenaire (URL)</protocolChoice>
@@ -571,6 +566,7 @@
 	<saveAndClose>Sauver et fermer</saveAndClose>
 	<saveAndValidate>Sauver et valider</saveAndValidate>
 	<savepdf>Visualiser les résultats de la recherche au format pdf</savepdf>
+	<printSelection>Imprimer la sélection</printSelection>
 	<schema>Schéma</schema>
 	<schematronError>Erreur Schematron</schematronError>
 	<search>Rechercher</search>
@@ -683,34 +679,158 @@
     <inspireSection>
         <identification>
             <title>Identification</title>
-        </identification>
+        <help>
+				<div>
+				The following metadata elements shall be provided:
+				<ul>
+					<li>Resource title:
+				This a characteristic, and often-unique, name by which the resource is known. The value domain of this metadata element is free text.</li>
+					<li>Resource abstract:
+						This is a brief narrative summary of the content of the resource. The value domain of this metadata element is free text.</li>
+					<li>Resource type:
+						This is the type of resource being described by the metadata. The value domain of this metadata element is defined in Part D.1.</li>
+					<li>Resource locator:
+						The resource locator defines the link(s) to the resource and/or the link to additional information about the resource. The value domain of this metadata element is a character string, commonly expressed as Uniform Resource Locator (URL).</li>
+					<li>Unique resource identifier:
+						A value uniquely identifying the resource. The value domain of this metadata element is a mandatory character string code, generally assigned by the data owner, and a character string namespace uniquely identifying the context of the identifier code (for example, the data owner).	</li>
+					<li>Coupled resource:
+						If the resource is a spatial data service, this metadata element identifies, where relevant, the target spatial data set(s) of the service through their Unique Resource Identifiers (URI). The value domain of this metadata element is a mandatory character string code, generally assigned by the data owner, and a character string namespace uniquely identifying the context of the identifier code (for example, the data owner).</li>
+					<li>Resource language:
+						The language(s) used within the resource. The value domain of this metadata element is limited to the languages defined in ISO 639-2.</li>
+				</ul>
+				</div>
+			</help>
+		</identification>
         <classification>
             <title>Classification des données ou services</title>
-        </classification>
+        <help>
+				<div>
+					<ul>
+						<li>Topic category:			
+						The topic category is a high-level classification scheme to assist in the grouping and topic-based search of available spatial data resources. The value domain of this metadata element is defined in Part D.2.</li>
+						<li>
+							Spatial data service type: 
+							This is a classification to assist in the search of available spatial data services. A specific service shall be categorised in only one category. The value domain of this metadata element is defined in Part D.3.
+						</li>
+					</ul>
+				</div>
+			</help>
+		</classification>
         <keywords>
             <title>Mots-clés &amp; thèmes INSPIRE</title>
-        </keywords>
+        <help>
+				<div>
+					According to the INSPIRE Implementing Rule for Metadata, if a resource is a spatial data set or spatial data set series, at least one keyword shall be provided from the General Environmental Multi-lingual Thesaurus (GEMET) describing the relevant spatial data theme as defined in Annex I, II or III to Directive 2007/2/EC.
+					<br/>					
+					The titles and definitions of all 34 INSPIRE Spatial Data Themes have now been integrated into the General Environmental Multi-lingual Thesaurus (GEMET) in the 23 official Community languages: http://www.eionet.europa.eu/gemet/inspire_themes.
+					<br/>
+					Note that, in addition to the INSPIRE Spatial Data Theme, also other keywords might be added. These may be described as a free text or may originate from any Controlled Vocabulary. If they originate from a Controlled Vocabulary (Thesaurus, Ontology), the citation of the originating Controlled Vocabulary shall be provided, as described below. 
+				</div>
+			</help>
+		</keywords>
         <geoloc>
             <title>Localisation géographique</title>
-        </geoloc>
+        <help>
+				<div>
+					The requirement for geographic location referred to in Article 11(2)(e) of Directive 2007/2/EC shall be expressed with the metadata element geographic bounding box.
+					This is the extent of the resource in the geographic space, given as a bounding box. The bounding box shall be expressed with westbound and eastbound longitudes, and southbound and northbound latitudes in decimal degrees, with a precision of at least 2 decimals. 
+				</div>
+			</help>
+		</geoloc>
         <temporal>
             <title>Référence temporelle</title>
-        </temporal>
+        <help>
+				<div>
+					This metadata element addresses the requirement to have information on the temporal dimension of the data as referred to in Article 8(2)(d) of Directive 2007/2/EC . At least one of the metadata elements referred to in points 5.1 to 5.4 shall be provided. The value domain of the metadata elements referred to in points 5.1 to 5.4 is a set of dates. Each date shall refer to a temporal reference system and shall be expressed in a form compatible with that system. The default reference system shall be the Gregorian calendar, with dates expressed in accordance with ISO 8601.
+					<br/>
+					The temporal extent defines the time period covered by the content of the resource.
+					
+					This time period may be expressed as any of the following:
+					<ul>					
+						<li>an individual date</li>
+						<li>an interval of dates expressed through the starting date and end date of the interval</li>
+						<li>a mix of individual dates and intervals of dates</li>
+					</ul>
+				</div>
+			</help>
+		</temporal>
         <quality>
             <title>Qualité et validité</title>
-        </quality>
+        <help>
+				<div> The requirements referred to in Article 5(2) and Article 11(2) of Directive 2007/2/EC relating to the quality and validity of spatial data shall be addressed by the following metadata elements: 
+					<ul>
+						<li>Lineage:
+						This is a statement on process history and/or overall quality of the spatial data set. Where appropriate it may include a statement whether the data set has been validated or quality assured, whether it is the official version (if multiple versions exist), and whether it has legal validity. The value domain of this metadata element is free text.</li>
+						<li>
+							Spatial resolution:
+							
+							Spatial resolution refers to the level of detail of the data set. It shall be expressed as a set of zero to many resolution distances (typically for gridded data and imagery-derived products) or equivalent scales (typically for maps or map-derived products). An equivalent scale is generally expressed as an integer value expressing the scale denominator. A resolution distance shall be expressed as a numerical value associated with a unit of length.			
+						</li>
+					</ul>				
+				</div>
+			</help>
+		</quality>
         <conformity>
             <title>Conformité</title>
-        </conformity>
+        <help>
+				<div>
+					The requirements referred to in Article 5(2)(a) and Article 11(2)(d) of Directive 2007/2/EC relating to the conformity, and the degree of conformity, with implementing rules adopted under Article 7(1) of Directive 2007/2/EC shall be addressed by the following metadata elements:
+					<ul>
+						<li>Specification:					
+							This is a citation of the implementing rules adopted under Article 7(1) of Directive 2007/2/EC or other specification to which a particular resource conforms. A resource may conform to more than one implementing rules adopted under Article 7(1) of Directive 2007/2/EC or other specification.
+							This citation shall include at least the title and a reference date (date of publication, date of last revision or of creation) of the implementing rules adopted under Article 7(1) of Directive 2007/2/EC or of the specification.
+						</li>
+						<li>
+							Degree:					
+							This is the degree of conformity of the resource to the implementing rules adopted under Article 7(1) of Directive 2007/2/EC or other specification. The value domain of this metadata element is defined in Part D. 							
+						</li>
+					</ul>					
+				</div>
+			</help>
+		</conformity>
         <constraint>
             <title>Constrainte d'accès et d'utilisation</title>
-        </constraint>
+        <help>
+				<div>
+					A constraint related to access and use shall be either or both of the following:
+					<ul>
+						<li>
+							Conditions applying to access and use:					
+							This metadata element defines the conditions for access and use of spatial data sets and services, and where applicable, corresponding fees as required by Article 5(2)(b) and Article 11(2)(f) of Directive 2007/2/EC. The value domain of this metadata element is free text. The element must have values.
+							
+							If no conditions apply to the access and use of the resource, "no conditions apply" shall be used. If conditions are unknown, "conditions unknown" shall be used. This element shall also provide information on any fees necessary to access and use the resource, if applicable, or refer to a Uniform Resource Locator (URL) where information on fees is available.							
+						</li>
+						<li>
+							Limitations on public access: 
+							When Member States limit public access to spatial data sets and spatial data services under Article 13 of Directive 2007/2/EC, this metadata element shall provide information on the limitations and the reasons for them. If there are no limitations on public access, this metadata element shall indicate that fact. The value domain of this metadata element is free text.							
+						</li>
+					</ul>					
+				</div>
+			</help>
+		</constraint>
         <org>
             <title>Organisations responsable de la réalisation, gestion, maintenance et distribution</title>
-        </org>
+        <help>
+				<div>
+					For the purposes of Article 5(2)(d) and Article 11(2)(g) of Directive 2007/2/EC, the following two metadata elements shall be provided:
+					<ul>
+						<li>
+							Responsible party:
+							This is the description of the organisation responsible for the establishment, management, maintenance and distribution of the resource. This description shall include:
+							(the name of the organisation as free text, a contact e-mail address as a character string.)							
+						</li>
+						<li>
+							Responsible party role:					
+							This is the role of the responsible organisation. The value domain of this metadata element is defined in Part D.6.	
+						</li>
+					</ul>
+				</div>
+			</help>
+		</org>
         <metadata>
             <title>Métadonnée</title>
-        </metadata>
+        <help>For the purposes of Article 5(1) of Directive 2007/2/EC.</help>
+		</metadata>
     </inspireSection>
     <inspireAddConformity>Ajouter une section conformité INSPIRE</inspireAddConformity>    
 	<xsdError>Erreur de validation XSD</xsdError>
@@ -728,7 +848,7 @@
 		<meta name="DC.date" content="02-07-2007"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.language" content="English French Spanish Russian Chinese"/>
+		<meta name="DC.language" content="English French Spanish Russian Chinese Dutch Portuguese"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
 	<mainpage1>
