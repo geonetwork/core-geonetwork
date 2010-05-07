@@ -130,9 +130,14 @@ public class LuceneSearcher extends MetaSearcher
 	public void search(ServiceContext srvContext, Element request, ServiceConfig config)
 		throws Exception
 	{
-		computeQuery(srvContext, request, config);
-		initSearchRange(srvContext);
-		performQuery(getFrom()-1, getTo());
+		IndexReader reader = _sm.getIndexReader();
+		try {
+			computeQuery(srvContext, request, config);
+			initSearchRange(srvContext);
+			performQuery(reader, getFrom()-1, getTo());
+		} finally {
+			_sm.releaseIndexReader(reader);
+		}
 	}
 
 	//--------------------------------------------------------------------------------
@@ -162,45 +167,48 @@ public class LuceneSearcher extends MetaSearcher
 		response.addContent((Element)_elSummary.clone());
 
 		if (getTo() > 0) {
-			Pair<IndexReader,TopDocs> results = performQuery(getFrom()-1, getTo()); // get enough hits to show a page	
+			IndexReader reader = _sm.getIndexReader();
+			try {
 
-			IndexReader reader = results.one();
-			TopDocs tdocs = results.two();
+				TopDocs tdocs = performQuery(reader, getFrom()-1, getTo()); // get enough hits to show a page	
 
-			int nrHits = getTo() - (getFrom()-1);
-			if (tdocs.scoreDocs.length >= nrHits) {
-				for (int i = 0; i < nrHits; i++) {
-					Document doc = null;
-					if (fast) {
-						doc = reader.document(tdocs.scoreDocs[i].doc); // no selector
-					} else {
-						doc = reader.document(tdocs.scoreDocs[i].doc, _selector);
-					}
-					String id = doc.get("_id");
-					Element md = new Element ("md");
-
-					if (fast) {
-						md = getMetadataFromIndex(doc, id);
-					} else if (srvContext != null) {
-						md = gc.getDataManager().getMetadata(srvContext, id, false);
-					} else {
-						md = null;
-					}
-
-					//--- a metadata could have been deleted just before showing 
-					//--- search results
-
-					if (md != null) {
-						// Calculate score and add it to info elem
-						Float score = tdocs.scoreDocs[i].score;
-						Element info = md.getChild (Edit.RootChild.INFO, Edit.NAMESPACE);
-						addElement(info, Edit.Info.Elem.SCORE, score.toString());
+				int nrHits = getTo() - (getFrom()-1);
+				if (tdocs.scoreDocs.length >= nrHits) {
+					for (int i = 0; i < nrHits; i++) {
+						Document doc = null;
+						if (fast) {
+							doc = reader.document(tdocs.scoreDocs[i].doc); // no selector
+						} else {
+							doc = reader.document(tdocs.scoreDocs[i].doc, _selector);
+						}
+						String id = doc.get("_id");
+						Element md = new Element ("md");
 	
-						response.addContent(md);
+						if (fast) {
+							md = getMetadataFromIndex(doc, id);
+						} else if (srvContext != null) {
+							md = gc.getDataManager().getMetadata(srvContext, id, false);
+						} else {
+							md = null;
+						}
+	
+						//--- a metadata could have been deleted just before showing 
+						//--- search results
+	
+						if (md != null) {
+							// Calculate score and add it to info elem
+							Float score = tdocs.scoreDocs[i].score;
+							Element info = md.getChild (Edit.RootChild.INFO, Edit.NAMESPACE);
+							addElement(info, Edit.Info.Elem.SCORE, score.toString());
+	
+							response.addContent(md);
+						}
 					}
+				} else {
+					throw new Exception("Failed: Not enough search results ("+tdocs.scoreDocs.length+") available to meet request for "+nrHits+".");
 				}
-			} else {
-				throw new Exception("Failed: Not enough search results ("+tdocs.scoreDocs.length+") available to meet request for "+nrHits+".");
+			} finally {
+				_sm.releaseIndexReader(reader);
 			}
 		}
 		
@@ -355,34 +363,28 @@ public class LuceneSearcher extends MetaSearcher
 	 * Default sort order option is not reverse order. Reverse order is active 
 	 * if sort order option is set and not null
 	 */
-	private Pair<IndexReader, TopDocs> performQuery(int startHit, int endHit) throws Exception
+	private TopDocs performQuery(IndexReader reader, int startHit, int endHit) throws Exception
 	{
-		IndexReader reader = _sm.getIndexReader();
+		CachingWrapperFilter cFilter = null;
+		if (_filter != null) cFilter = new CachingWrapperFilter(_filter);
 
-		try {
-			CachingWrapperFilter cFilter = null;
-			if (_filter != null) cFilter = new CachingWrapperFilter(_filter);
-
-			int numHits;
-			boolean buildSummary = _elSummary == null;
-			if (buildSummary) {
-				// get as many results as instructed or enough for search summary
-				numHits = Math.max(_maxHitsInSummary,endHit);
-			} else {
-				numHits = endHit;
-			}
-	
-			Pair<TopFieldCollector,Element> results = doSearchAndMakeSummary( numHits, _maxSummaryKeys, _language, _resultType, _summaryConfig, reader, _query, cFilter, _sort, buildSummary);
-			TopFieldCollector tfc = results.one();
-			_elSummary = results.two();
-			_numHits = Integer.parseInt(_elSummary.getAttributeValue("count"));
-	
-			Log.debug(Geonet.SEARCH_ENGINE, "Hits found : "+_numHits+"");
-			
-			return Pair.read(reader, tfc.topDocs(startHit, endHit));
-		} finally {
-			_sm.releaseIndexReader(reader);
+		int numHits;
+		boolean buildSummary = _elSummary == null;
+		if (buildSummary) {
+			// get as many results as instructed or enough for search summary
+			numHits = Math.max(_maxHitsInSummary,endHit);
+		} else {
+			numHits = endHit;
 		}
+	
+		Pair<TopFieldCollector,Element> results = doSearchAndMakeSummary( numHits, _maxSummaryKeys, _language, _resultType, _summaryConfig, reader, _query, cFilter, _sort, buildSummary);
+		TopFieldCollector tfc = results.one();
+		_elSummary = results.two();
+		_numHits = Integer.parseInt(_elSummary.getAttributeValue("count"));
+	
+		Log.debug(Geonet.SEARCH_ENGINE, "Hits found : "+_numHits+"");
+			
+		return tfc.topDocs(startHit, endHit);
 	}
 
 	//--------------------------------------------------------------------------------
@@ -778,18 +780,16 @@ public class LuceneSearcher extends MetaSearcher
 	 * @throws CorruptIndexException 
 	 */
     public Element getAll(int maxHits) throws Exception {
-			
-				Pair<IndexReader, TopDocs> results  = performQuery(0, maxHits);
-				IndexReader reader = results.one();
-				TopDocs tdocs = results.two();
-
-        Element response = new Element("response");
-        if (_numHits == 0) {
-            response.setAttribute("from", 0 + "");
-            response.setAttribute("to", 0 + "");
-            return response;
-        }
-
+      Element response = new Element("response");
+      if (_numHits == 0) {
+         response.setAttribute("from", 0 + "");
+         response.setAttribute("to", 0 + "");
+         return response;
+      }
+		
+			IndexReader reader = _sm.getIndexReader();
+			try {
+				TopDocs tdocs  = performQuery(reader, 0, maxHits);
         response.setAttribute("from", 1 + "");
         response.setAttribute("to", tdocs.scoreDocs.length + "");
 
@@ -801,8 +801,11 @@ public class LuceneSearcher extends MetaSearcher
             Element md = getMetadataFromIndex(doc, id);
             response.addContent(md);
         }
+			} finally {
+				_sm.releaseIndexReader(reader);
+			}
 
-        return response;
+      return response;
     }
 
 	//--------------------------------------------------------------------------------
@@ -825,17 +828,19 @@ public class LuceneSearcher extends MetaSearcher
 					}
 				};
 
-				Pair<IndexReader, TopDocs> results  = performQuery(0, maxHits);
-				IndexReader reader = results.one();
-				TopDocs tdocs = results.two();
-
+				IndexReader reader = _sm.getIndexReader();
         List<String> response = new ArrayList<String>();
+				try {
+					TopDocs tdocs = performQuery(reader, 0, maxHits);
 
-        for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
+        	for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
             Document doc = reader.document(sdoc.doc, uuidselector);
             String uuid = doc.get("_uuid");
 						if (uuid != null) response.add(uuid);
-        }
+        	}
+				} finally {
+					_sm.releaseIndexReader(reader);
+				}
 
         return response;
     }
