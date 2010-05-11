@@ -47,7 +47,8 @@
 			<xsl:when test="ogc:PropertyName and ogc:Literal">
 				<BooleanQuery>
 					<BooleanClause required="true" prohibited="false">
-						<WildcardQuery fld="any" txt="*"/>
+						<!--WildcardQuery fld="any" txt="*"/-->
+                        <MatchAllDocsQuery required="true" prohibited="false"/>
 					</BooleanClause>
 					<BooleanClause required="false" prohibited="true">
 						<TermQuery fld="{ogc:PropertyName}" txt="{ogc:Literal}"/>
@@ -217,7 +218,8 @@
 	<xsl:template match="ogc:Not">
 		<BooleanQuery>
 			<BooleanClause required="true" prohibited="false">
-				<WildcardQuery fld="any" txt="*"/>
+				<!--WildcardQuery fld="any" txt="*"/-->
+				<MatchAllDocsQuery required="true" prohibited="false"/>
 			</BooleanClause>
 
 			<xsl:for-each
