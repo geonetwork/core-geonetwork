@@ -108,6 +108,11 @@ public class Worker implements Runnable
 		public void skipping(String table) {}
 		//------------------------------------------------------------------------
 
+		public void loadingData()
+        {
+            dlg.advance(Messages.getString("Worker.loadingData"));
+        }
+		
 		public void filling(String table, String file)
 		{
 			dlg.advance(MessageFormat.format(Messages.getString("Worker.fillingTable"), table));

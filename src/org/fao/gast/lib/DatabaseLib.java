@@ -65,6 +65,7 @@ public class DatabaseLib
 		public void cyclicRefs(List<String> objects);
 		public void creating(String object, String type);
 		public void skipping(String table);
+		public void loadingData();
 		public void filling (String table, String file);
 	}
 
@@ -106,7 +107,7 @@ public class DatabaseLib
 			//--- needed for PostgreSQL
 			dbms.commit();
 
-			fillTables   (dbms, cb);
+			fillTablesSql(dbms, cb);
 			setupSiteId  (dbms);
 			setupVersion (dbms);
 
@@ -123,30 +124,6 @@ public class DatabaseLib
 			resource.abort();
 			throw e;
 		}
-	}
-
-	//---------------------------------------------------------------------------
-	/** Transactional */
-
-	public void setupNoFill(Resource resource, HashSet notTables, CallBack cb) throws Exception
-	{
-	
-		Dbms dbms = (Dbms) resource.open();
-
-		try
-		{
-			removeObjects(dbms, cb);
-			createSchema (dbms, cb);
-			dbms.commit();
-			fillTables(dbms, notTables, cb);
-			setupSiteId  (dbms);
-			setupVersion (dbms);
-			dbms.commit();
-		} catch(Exception e) {
-			resource.abort();
-			throw e;
-		}
-
 	}
 
 	//---------------------------------------------------------------------------
@@ -427,45 +404,36 @@ public class DatabaseLib
 	//---------------------------------------------------------------------------
 	/** Transaction must be aborted on error */
 
-	public void fillTables(Dbms dbms, CallBack cb) throws Exception
-	{
-		HashSet notTables = new HashSet();
-		fillTables(dbms,notTables,cb);
-	}
+	public void fillTablesSql(Dbms dbms, CallBack cb) throws Exception
+    {
+        Lib.log.info("Filling database tables");
 
-	public void fillTables(Dbms dbms, HashSet notTables, CallBack cb) throws Exception
-	{
-		Lib.log.info("Filling database tables");
+        List<String> data = loadSqlDataFile(dbms.getURL());
 
-		List<String> schema = loadSchemaFile(dbms.getURL());
+        StringBuffer sb = new StringBuffer();
 
-		for(String row : schema)
-			if (row.toUpperCase().startsWith("CREATE TABLE "))
+        for(String row : data) {
+            if (!row.toUpperCase().startsWith("REM") && !row.startsWith("--") && !row.trim().equals(""))
 			{
-				String table = getObjectName(row);
-				if (!notTables.contains(table)) {
-					String file  = appPath +SETUP_DIR+ "/db/"+ table +".ddf";
+                sb.append(" ");
+				sb.append(row);
+	
+				if (row.endsWith(";"))
+				{
+					String sql = sb.toString();
 
-					if (!new File(file).exists())
-					{
-						if (cb != null)
-							cb.skipping(table);
-					}
-					else
-					{
-						if (cb != null)
-							cb.filling(table, file);
-	
-						Lib.log.debug(" - Filling table : "+ table);
-	
-						Import.load(dbms.getConnection(), table, file);
-						dbms.commit();
-					}
-				} else {
-					cb.skipping(table);
+					sql = sql.substring(0, sql.length() -1);
+
+					if (cb != null)
+						cb.loadingData();
+
+					dbms.execute(row);                   
+					sb = new StringBuffer();	
 				}
-			}
-	}
+            }
+		}
+        dbms.commit();
+    }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -496,6 +464,30 @@ public class DatabaseLib
 
 		return Lib.text.load(appPath +SETUP_DIR+ "/sql/"+ file);
 	}
+
+	//---------------------------------------------------------------------------
+
+    private List<String> loadSqlDataFile(String url) throws FileNotFoundException, IOException
+    {
+        //--- find out which dbms data file to load
+		String file = "data-db-mckoi.sql";
+
+		if (url.indexOf("oracle") != -1)
+			file = "data-db-oracle.sql";
+
+		else if (url.indexOf("mysql") != -1)
+			file = "data-db-mysql.sql";
+
+		else if (url.indexOf("postgresql") != -1)
+			file = "data-db-postgres.sql";
+
+		else if (url.indexOf("postgis") != -1)
+			file = "data-db-postgres.sql";
+		
+        //--- load the sql data
+        
+        return Lib.text.load(appPath +SETUP_DIR+ "/sql/"+ file, "UTF-8");
+    }
 
 	//---------------------------------------------------------------------------
 

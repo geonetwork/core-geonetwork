@@ -68,6 +68,26 @@ public class TextLib
 		}
 	}
 
+	public List<String> load(String file, String encoding) throws FileNotFoundException, IOException
+	{
+		FileInputStream is = new FileInputStream(file);
+		BufferedReader  ir = new BufferedReader(new InputStreamReader(is, encoding));
+
+		ArrayList<String> al = new ArrayList<String>();
+		
+		String line;
+		try
+		{
+			while ((line = ir.readLine()) != null)
+				al.add(line);
+			return al;
+		}
+		finally
+		{
+			ir.close();
+		}
+	}
+	
 	//---------------------------------------------------------------------------
 
 	public void save(String file, List<String> lines) throws FileNotFoundException, IOException
