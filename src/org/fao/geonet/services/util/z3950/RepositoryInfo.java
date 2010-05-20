@@ -24,6 +24,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
+import jeeves.utils.Log;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.jzkit.ServiceDirectory.CollectionDescriptionDBO;
@@ -35,10 +37,11 @@ import org.springframework.context.ApplicationContext;
 import jeeves.server.context.ServiceContext;
 
 /**
- * helperclass to get a list of remote searchable repositories from
- * the JZkit configuration
+ * helperclass to get a list of remote searchable collections from the 
+ * repositories in the JZkit configuration
  *
  * @author 'Timo Proescholdt <tproescholdt@wmo.int>'
+ * @author 'Simon Pigot'
  *
  */
 public class RepositoryInfo {
@@ -46,11 +49,13 @@ public class RepositoryInfo {
        private String dn;
        private String name;
 			 private String code;
+			 private String classname;
        
-       private RepositoryInfo(String dn, String name, String code) {
+       private RepositoryInfo(String dn, String name, String code, String classname) {
                this.name=name;
                this.dn=dn;
 							 this.code=code;
+							 this.classname = classname;
        }
        
        public String getDn() {
@@ -65,8 +70,12 @@ public class RepositoryInfo {
                return code;
        }
        
+       public String getClassName() {
+               return classname;
+       }
+       
        public String toString() {
-               return getName()+":"+getDn()+":"+getCode();
+               return getName()+":"+getDn()+":"+getCode()+":"+getClassName();
        }
        
        
@@ -90,11 +99,11 @@ public class RepositoryInfo {
      	Collection<CollectionDescriptionDBO> col = ssd.getCollections();
 			if (col.size()>0) {
 				Iterator<CollectionDescriptionDBO> colit = col.iterator();
-				srvContext.getLogger().info("Service "+ssd.getServiceName()+" has "+col.size()+" collections "+colit.hasNext());
+				Log.debug(Geonet.Z3950, "Service "+ssd.getServiceName()+" has "+col.size()+" collections "+colit.hasNext());
 				while (colit.hasNext()) {
 					CollectionDescriptionDBO oneCol = colit.next();
-					srvContext.getLogger().info("Adding collection "+oneCol.getCode()+":"+oneCol.getCollectionName()+":"+ssd.getCode());
-					ret.add( new RepositoryInfo(  oneCol.getCode() , oneCol.getCollectionName(), ssd.getCode()) ) ;                               
+					Log.debug(Geonet.Z3950, "Adding collection "+oneCol.getCode()+":"+oneCol.getCollectionName()+":"+ssd.getCode());
+					ret.add( new RepositoryInfo(  oneCol.getCode() , oneCol.getCollectionName(), ssd.getCode(), ssd.getClassName()) ) ;                               
 				}
      	}
 		}

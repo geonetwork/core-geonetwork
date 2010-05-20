@@ -37,6 +37,7 @@ import java.util.StringTokenizer;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.UserSession;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -83,6 +84,7 @@ public class CatalogSearcher {
 	private Map<String, Boolean> _isTokenizedField = new HashMap<String, Boolean>();
 	private FieldSelector _selector;
 	private Query         _query;
+	private IndexReader   _reader;
 	private CachingWrapperFilter _filter;
 	private Sort          _sort;
 	private String        _lang;
@@ -170,30 +172,25 @@ public class CatalogSearcher {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
-		IndexReader reader = sm.getIndexReader();
-		try {
-			Pair<TopFieldCollector,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary( maxHits, Integer.MAX_VALUE, _lang, ResultType.RESULTS.toString(), _summaryConfig, reader, _query, _filter, _sort, false);
-			TopFieldCollector tfc = searchResults.one();
-			Element summary = searchResults.two();
+		Pair<TopFieldCollector,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary( maxHits, Integer.MAX_VALUE, _lang, ResultType.RESULTS.toString(), _summaryConfig, _reader, _query, _filter, _sort, false);
+		TopFieldCollector tfc = searchResults.one();
+		Element summary = searchResults.two();
 
-			int numHits = Integer.parseInt(summary.getAttributeValue("count"));
+		int numHits = Integer.parseInt(summary.getAttributeValue("count"));
 
-			Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
+		Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
 
-			// --- retrieve results
+		// --- retrieve results
 
-			List<String> response = new ArrayList<String>();
-			TopDocs tdocs = tfc.topDocs(0, maxHits);
+		List<String> response = new ArrayList<String>();
+		TopDocs tdocs = tfc.topDocs(0, maxHits);
 
-			for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
-				Document doc = reader.document(sdoc.doc, uuidselector);
-				String uuid = doc.get("_uuid");
-				if (uuid != null) response.add(uuid);
-			}
-			return response;
-		} finally {
-			sm.releaseIndexReader(reader);
+		for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
+			Document doc = _reader.document(sdoc.doc, uuidselector);
+			String uuid = doc.get("_uuid");
+			if (uuid != null) response.add(uuid);
 		}
+		return response;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -303,16 +300,16 @@ public class CatalogSearcher {
 				}
 				i++;
 			}
-	
-			if (tokenized != null) {
-				_isTokenizedField.put(field, tokenized.booleanValue());
-				return tokenized.booleanValue();
-			}
-			_isTokenizedField.put(field, false);
-			return false;
 		} finally {
 			sm.releaseIndexReader(reader);
 		}
+	
+		if (tokenized != null) {
+			_isTokenizedField.put(field, tokenized.booleanValue());
+			return tokenized.booleanValue();
+		}
+		_isTokenizedField.put(field, false);
+		return false;
 	}
 
     /**
@@ -374,6 +371,17 @@ public class CatalogSearcher {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
+		UserSession session = context.getUserSession();
+
+		// if this is a new search or request has changed them release indexreader
+		// and get a (reopened) indexreader
+		String requestId = Util.scramble(Xml.getString(filterExpr));
+		String sessionRequestId = (String) session.getProperty(Geonet.Session.SEARCH_REQUEST_ID);
+		if ((sessionRequestId != null && !sessionRequestId.equals(requestId)) || sessionRequestId == null) {
+			Log.debug(Geonet.CSW_SEARCH, "Query changed, reopening IndexReader");
+			if (_reader != null) sm.releaseIndexReader(_reader);
+			_reader = sm.getIndexReader();
+		}
 
 		if (luceneExpr != null)
 			Log.debug(Geonet.CSW_SEARCH, "Search criteria:\n"
@@ -408,65 +416,59 @@ public class CatalogSearcher {
 		// --- proper search
 		Log.debug(Geonet.CSW_SEARCH, "Lucene query: " + query.toString());
 
-		IndexReader reader = sm.getIndexReader();
-		try {
-
-			// TODO Handle NPE creating spatial filter (due to constraint
-			// language version).
-			Filter spatialfilter = sm.getSpatial().filter(query, filterExpr, filterVersion);
-			CachingWrapperFilter cFilter = null;
-			if (spatialfilter != null) cFilter = new CachingWrapperFilter(spatialfilter);
-			boolean buildSummary = resultType == ResultType.RESULTS_WITH_SUMMARY;
-			int numHits = startPosition + maxRecords;
+		// TODO Handle NPE creating spatial filter (due to constraint
+		// language version).
+		Filter spatialfilter = sm.getSpatial().filter(query, filterExpr, filterVersion);
+		CachingWrapperFilter cFilter = null;
+		if (spatialfilter != null) cFilter = new CachingWrapperFilter(spatialfilter);
+		boolean buildSummary = resultType == ResultType.RESULTS_WITH_SUMMARY;
+		int numHits = startPosition + maxRecords;
 
 			// get as many results as instructed or enough for search summary
-			if (buildSummary) {
-				numHits = Math.max(maxHitsInSummary, numHits);
-			}
-
-			// record globals for reuse
-			_query = query;
-			_filter = cFilter;
-			_sort = sort;
-			_lang = context.getLanguage();
-	
-			Pair<TopFieldCollector,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, Integer.MAX_VALUE, context.getLanguage(), resultType.toString(), _summaryConfig, reader, query, cFilter, sort, buildSummary);
-			TopFieldCollector tfc = searchResults.one();
-			Element summary = searchResults.two();
-
-			numHits = Integer.parseInt(summary.getAttributeValue("count"));
-	
-			Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
-
-			// --- retrieve results
-
-			List<ResultItem> results = new ArrayList<ResultItem>();
-			// FIXME : topDocs could have been used already once in MakeSummary
-			// so the second call return null docs. resultType=results return
-			// record, but results_with_summary does not.
-			TopDocs hits = tfc.topDocs(startPosition - 1, maxRecords);
-	
-			for (int i = 0; i < hits.scoreDocs.length; i++) {
-				Document doc = reader.document(hits.scoreDocs[i].doc, _selector);
-				String id = doc.get("_id");
-	
-				ResultItem ri = new ResultItem(id);
-				results.add(ri);
-	
-				for (String field : FieldMapper.getMappedFields()) {
-					String value = doc.get(field);
-
-					if (value != null)
-						ri.add(field, value);
-				}
-			}
-
-			summary.setName("Summary");
-			summary.setNamespace(Csw.NAMESPACE_GEONET);
-			return Pair.read(summary, results);
-		} finally {
-			sm.releaseIndexReader(reader);
+		if (buildSummary) {
+			numHits = Math.max(maxHitsInSummary, numHits);
 		}
+
+		// record globals for reuse
+		_query = query;
+		_filter = cFilter;
+		_sort = sort;
+		_lang = context.getLanguage();
+	
+		Pair<TopFieldCollector,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, Integer.MAX_VALUE, context.getLanguage(), resultType.toString(), _summaryConfig, _reader, query, cFilter, sort, buildSummary);
+		TopFieldCollector tfc = searchResults.one();
+		Element summary = searchResults.two();
+
+		numHits = Integer.parseInt(summary.getAttributeValue("count"));
+	
+		Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
+
+		// --- retrieve results
+
+		List<ResultItem> results = new ArrayList<ResultItem>();
+		// FIXME : topDocs could have been used already once in MakeSummary
+		// so the second call return null docs. resultType=results return
+		// record, but results_with_summary does not.
+		TopDocs hits = tfc.topDocs(startPosition - 1, maxRecords);
+	
+		for (int i = 0; i < hits.scoreDocs.length; i++) {
+			Document doc = _reader.document(hits.scoreDocs[i].doc, _selector);
+			String id = doc.get("_id");
+	
+			ResultItem ri = new ResultItem(id);
+			results.add(ri);
+	
+			for (String field : FieldMapper.getMappedFields()) {
+				String value = doc.get(field);
+
+				if (value != null)
+					ri.add(field, value);
+			}
+		}
+
+		summary.setName("Summary");
+		summary.setNamespace(Csw.NAMESPACE_GEONET);
+		return Pair.read(summary, results);
 	}
 
 	// ---------------------------------------------------------------------------

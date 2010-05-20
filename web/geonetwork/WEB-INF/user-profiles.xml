@@ -262,7 +262,6 @@
 		<allow service="metadata.select"/>
 		<allow service="selection.search"/>
 		<allow service="pdf.selection.search"/>
-		<allow service="pdf.present"/>
 
 		<!-- WMC -->
 		<allow service="intermap.wmc.setWmcContext"/>

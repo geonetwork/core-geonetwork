@@ -102,6 +102,7 @@ public class LuceneSearcher extends MetaSearcher
 	private Sort          _sort;
 	private Element       _elSummary;
 	private FieldSelector _selector;
+	private IndexReader		_reader;
 
 	private int           _maxSummaryKeys;
 	private int           _maxHitsInSummary;
@@ -130,14 +131,10 @@ public class LuceneSearcher extends MetaSearcher
 	public void search(ServiceContext srvContext, Element request, ServiceConfig config)
 		throws Exception
 	{
-		IndexReader reader = _sm.getIndexReader();
-		try {
-			computeQuery(srvContext, request, config);
-			initSearchRange(srvContext);
-			performQuery(reader, getFrom()-1, getTo());
-		} finally {
-			_sm.releaseIndexReader(reader);
-		}
+		_reader = _sm.getIndexReader();
+		computeQuery(srvContext, request, config);
+		initSearchRange(srvContext);
+		performQuery(getFrom()-1, getTo());
 	}
 
 	//--------------------------------------------------------------------------------
@@ -167,48 +164,42 @@ public class LuceneSearcher extends MetaSearcher
 		response.addContent((Element)_elSummary.clone());
 
 		if (getTo() > 0) {
-			IndexReader reader = _sm.getIndexReader();
-			try {
+			TopDocs tdocs = performQuery(getFrom()-1, getTo()); // get enough hits to show a page	
 
-				TopDocs tdocs = performQuery(reader, getFrom()-1, getTo()); // get enough hits to show a page	
-
-				int nrHits = getTo() - (getFrom()-1);
-				if (tdocs.scoreDocs.length >= nrHits) {
-					for (int i = 0; i < nrHits; i++) {
-						Document doc = null;
-						if (fast) {
-							doc = reader.document(tdocs.scoreDocs[i].doc); // no selector
-						} else {
-							doc = reader.document(tdocs.scoreDocs[i].doc, _selector);
-						}
-						String id = doc.get("_id");
-						Element md = new Element ("md");
-	
-						if (fast) {
-							md = getMetadataFromIndex(doc, id);
-						} else if (srvContext != null) {
-							md = gc.getDataManager().getMetadata(srvContext, id, false);
-						} else {
-							md = null;
-						}
-	
-						//--- a metadata could have been deleted just before showing 
-						//--- search results
-	
-						if (md != null) {
-							// Calculate score and add it to info elem
-							Float score = tdocs.scoreDocs[i].score;
-							Element info = md.getChild (Edit.RootChild.INFO, Edit.NAMESPACE);
-							addElement(info, Edit.Info.Elem.SCORE, score.toString());
-	
-							response.addContent(md);
-						}
+			int nrHits = getTo() - (getFrom()-1);
+			if (tdocs.scoreDocs.length >= nrHits) {
+				for (int i = 0; i < nrHits; i++) {
+					Document doc = null;
+					if (fast) {
+						doc = _reader.document(tdocs.scoreDocs[i].doc); // no selector
+					} else {
+						doc = _reader.document(tdocs.scoreDocs[i].doc, _selector);
 					}
-				} else {
-					throw new Exception("Failed: Not enough search results ("+tdocs.scoreDocs.length+") available to meet request for "+nrHits+".");
+					String id = doc.get("_id");
+					Element md = new Element ("md");
+	
+					if (fast) {
+						md = getMetadataFromIndex(doc, id);
+					} else if (srvContext != null) {
+						md = gc.getDataManager().getMetadata(srvContext, id, false);
+					} else {
+						md = null;
+					}
+	
+					//--- a metadata could have been deleted just before showing 
+					//--- search results
+	
+					if (md != null) {
+						// Calculate score and add it to info elem
+						Float score = tdocs.scoreDocs[i].score;
+						Element info = md.getChild (Edit.RootChild.INFO, Edit.NAMESPACE);
+						addElement(info, Edit.Info.Elem.SCORE, score.toString());
+
+						response.addContent(md);
+					}
 				}
-			} finally {
-				_sm.releaseIndexReader(reader);
+			} else {
+				throw new Exception("Failed: Not enough search results ("+tdocs.scoreDocs.length+") available to meet request for "+nrHits+".");
 			}
 		}
 		
@@ -233,7 +224,14 @@ public class LuceneSearcher extends MetaSearcher
 
 	//--------------------------------------------------------------------------------
 
-	public void close() {}
+	public void close() {
+		try {
+			_sm.releaseIndexReader(_reader);
+		} catch (IOException e) {
+			Log.error(Geonet.SEARCH_ENGINE,"Failed to close Index Reader: "+e.getMessage());
+			e.printStackTrace();
+		}
+	}
 
 	//--------------------------------------------------------------------------------
 	// private setup, index, delete and search functions
@@ -363,7 +361,7 @@ public class LuceneSearcher extends MetaSearcher
 	 * Default sort order option is not reverse order. Reverse order is active 
 	 * if sort order option is set and not null
 	 */
-	private TopDocs performQuery(IndexReader reader, int startHit, int endHit) throws Exception
+	private TopDocs performQuery(int startHit, int endHit) throws Exception
 	{
 		CachingWrapperFilter cFilter = null;
 		if (_filter != null) cFilter = new CachingWrapperFilter(_filter);
@@ -377,7 +375,7 @@ public class LuceneSearcher extends MetaSearcher
 			numHits = endHit;
 		}
 	
-		Pair<TopFieldCollector,Element> results = doSearchAndMakeSummary( numHits, _maxSummaryKeys, _language, _resultType, _summaryConfig, reader, _query, cFilter, _sort, buildSummary);
+		Pair<TopFieldCollector,Element> results = doSearchAndMakeSummary( numHits, _maxSummaryKeys, _language, _resultType, _summaryConfig, _reader, _query, cFilter, _sort, buildSummary);
 		TopFieldCollector tfc = results.one();
 		_elSummary = results.two();
 		_numHits = Integer.parseInt(_elSummary.getAttributeValue("count"));
@@ -787,23 +785,18 @@ public class LuceneSearcher extends MetaSearcher
          return response;
       }
 		
-			IndexReader reader = _sm.getIndexReader();
-			try {
-				TopDocs tdocs  = performQuery(reader, 0, maxHits);
-        response.setAttribute("from", 1 + "");
-        response.setAttribute("to", tdocs.scoreDocs.length + "");
+			TopDocs tdocs  = performQuery(0, maxHits);
+      response.setAttribute("from", 1 + "");
+      response.setAttribute("to", tdocs.scoreDocs.length + "");
 
-        for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
-            Document doc = reader.document(sdoc.doc); // no selector here!;
-            String id = doc.get("_id");
+      for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
+          Document doc = _reader.document(sdoc.doc); // no selector here!;
+          String id = doc.get("_id");
 
-            // FAST mode
-            Element md = getMetadataFromIndex(doc, id);
-            response.addContent(md);
-        }
-			} finally {
-				_sm.releaseIndexReader(reader);
-			}
+          // FAST mode
+          Element md = getMetadataFromIndex(doc, id);
+          response.addContent(md);
+      }
 
       return response;
     }
@@ -828,20 +821,14 @@ public class LuceneSearcher extends MetaSearcher
 					}
 				};
 
-				IndexReader reader = _sm.getIndexReader();
         List<String> response = new ArrayList<String>();
-				try {
-					TopDocs tdocs = performQuery(reader, 0, maxHits);
+				TopDocs tdocs = performQuery(0, maxHits);
 
-        	for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
-            Document doc = reader.document(sdoc.doc, uuidselector);
-            String uuid = doc.get("_uuid");
-						if (uuid != null) response.add(uuid);
-        	}
-				} finally {
-					_sm.releaseIndexReader(reader);
-				}
-
+        for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
+          Document doc = _reader.document(sdoc.doc, uuidselector);
+          String uuid = doc.get("_uuid");
+					if (uuid != null) response.add(uuid);
+        }
         return response;
     }
 

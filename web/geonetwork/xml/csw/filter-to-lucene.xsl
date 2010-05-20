@@ -215,7 +215,7 @@
 
 	<!-- ========================================================================== -->
 
-	<xsl:template match="ogc:Not">
+	<xsl:template match="ogc:Not[not(ogc:Disjoint|ogc:Within|ogc:Equals|ogc:Touches|ogc:Overlaps|ogc:Crosses|ogc:Intersects|ogc:Contains|ogc:DWithin|ogc:Beyond|ogc:BBOX)]">
 		<BooleanQuery>
 			<BooleanClause required="true" prohibited="false">
 				<!--WildcardQuery fld="any" txt="*"/-->

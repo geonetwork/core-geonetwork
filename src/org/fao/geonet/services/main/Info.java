@@ -133,7 +133,7 @@ public class Info implements Service
 				result.addContent(getTemplates(context));
 
 			else if (type.equals("z3950repositories"))
-				result.addContent(getZRepositories(context));
+				result.addContent(getZRepositories(context, sm));
 
 			else
 				throw new BadParameterEx("type", type);
@@ -202,16 +202,20 @@ public class Info implements Service
 	//--- ZRepositories
 	//--------------------------------------------------------------------------
 
-	private Element getZRepositories(ServiceContext context) throws Exception
+	private Element getZRepositories(ServiceContext context, SettingManager sm) throws Exception
 	{
+		boolean z3950Enable   = sm.getValue("system/z3950/enable").equals("true");
 
-		List<RepositoryInfo> list = new ArrayList<RepositoryInfo>(RepositoryInfo.getRepositories(context));
+		List<RepositoryInfo> repoList = new ArrayList<RepositoryInfo>(RepositoryInfo.getRepositories(context));
 
 		Element response = new Element("z3950repositories");
 
-		for (int i=0; i<list.size(); i++) {
-			RepositoryInfo repo = list.get(i);
-			response.addContent(buildRecord(repo.getDn(),repo.getName(),repo.getCode()));
+		for (RepositoryInfo repo : repoList) {
+			if (!z3950Enable && repo.getClassName().startsWith("org.fao.geonet") ) {
+				continue; // skip Local GeoNetwork Z server if not enabled
+			} else {
+				response.addContent(buildRecord(repo.getDn(),repo.getName(),repo.getCode()));
+			}
 		}
 
 		return response;

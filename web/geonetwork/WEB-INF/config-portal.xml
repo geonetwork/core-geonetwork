@@ -107,41 +107,40 @@
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         
-        <service name="pdf.search">
-            <class name=".services.main.Search">
-                <param name="maxSummaryKeys" value="1000" />
-								<param name="maxHitsInSummary" value="1000" />
-            </class>
-
-            <output sheet="portal-present-fop.xsl" file="true" contentType="application/pdf">
-                <call name="mdresults" class=".services.main.Result" />
-                <call name="siteURL" class=".guiservices.util.GetSiteURL" />
-            </output>
-        </service>
-        
-		<service name="pdf.selection.search">
-			<class name=".services.main.SelectionSearch"/>
-			<output forward="pdf.present" />
-		</service>
-		
-		<service name="pdf.present">
-			<class name=".services.main.Result">
-				<param name="maxRecords" value="10" />
-				<param name="syntax" value="f" />
-				<param name="range" value="all" />
+		<service name="pdf.search">
+			<class name=".services.main.Search">
+				<param name="maxSummaryKeys" value="1000" />
+				<param name="maxHitsInSummary" value="1000" />
 			</class>
-			
+
 			<output sheet="portal-present-fop.xsl" file="true" contentType="application/pdf">
 				<call name="mdresults" class=".services.main.Result" />
 				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
 			</output>
 		</service>
+        
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        
+		<service name="pdf.selection.search">
+			<class name=".services.main.SelectionSearch">
+				<param name="restoreLastSearch" value="yes" />
+			</class>
 
-        <service name="portal.sitemap">
+			<output sheet="portal-present-fop.xsl" file="true" contentType="application/pdf">
+				<call name="mdresults" class=".services.main.Result">
+					<param name="range" value="1000"/>
+				</call>
+				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        
+		<service name="portal.sitemap">
 			<class name=".guiservices.metadata.Sitemap" />
-            
 	      <output sheet="portal-sitemap.xsl" contentType="text/xml; charset=UTF-8"/>
 		</service>
+
 	</services>
 </geonet>
 

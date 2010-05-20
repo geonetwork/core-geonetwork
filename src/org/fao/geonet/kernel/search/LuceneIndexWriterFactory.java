@@ -8,10 +8,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import jeeves.utils.Log;
 
+import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
+import org.apache.lucene.store.FSDirectory;
 
 import org.fao.geonet.constants.Geonet;
 
@@ -39,7 +40,7 @@ public class LuceneIndexWriterFactory {
 
 	public synchronized void openWriter() throws Exception {
 		if (_count == 0) {
-			_writer = new IndexWriter(_luceneDir, _analyzer, false);
+			_writer = new IndexWriter(FSDirectory.open(_luceneDir), _analyzer, IndexWriter.MaxFieldLength.UNLIMITED);
 			_writer.setRAMBufferSizeMB(48.0d); 
 			// 48MB seems to be plenty for running at least two long 
 			// indexing jobs (eg. importing 20,000 records) and keeping disk 
@@ -47,7 +48,7 @@ public class LuceneIndexWriterFactory {
 			// option
 		}
 		_count++;
-		Log.debug(Geonet.INDEX_ENGINE, "Opening Index_writer, ref count "+_count+" ram in use "+_writer.ramSizeInBytes()+" docs buffered "+_writer.numRamDocs());
+		Log.info(Geonet.INDEX_ENGINE, "Opening Index_writer, ref count "+_count+" ram in use "+_writer.ramSizeInBytes()+" docs buffered "+_writer.numRamDocs());
 	}
 
 	public synchronized boolean isOpen() {
@@ -60,7 +61,7 @@ public class LuceneIndexWriterFactory {
 		// lower reference count, close if count reaches zero
 		if (_count > 0) {
 			_count--;
-			Log.debug(Geonet.INDEX_ENGINE, "Closing Index_writer, ref _count "+_count+" ram in use "+_writer.ramSizeInBytes()+" docs buffered "+_writer.numRamDocs());
+			Log.info(Geonet.INDEX_ENGINE, "Closing Index_writer, ref _count "+_count+" ram in use "+_writer.ramSizeInBytes()+" docs buffered "+_writer.numRamDocs());
 			if (_count==0) _writer.close(); 
 		}
 	}

@@ -56,7 +56,7 @@ public class WithinFilter extends SpatialFilter
     protected SpatialOperator createGeomFilter(FilterFactory2 filterFactory,
             PropertyName geomPropertyName, Literal geomExpression)
     {
-        return filterFactory.overlaps(geomPropertyName, geomExpression);
+        return filterFactory.within(geomPropertyName, geomExpression);
     }
 
 }

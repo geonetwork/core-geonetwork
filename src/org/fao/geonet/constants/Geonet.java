@@ -126,6 +126,7 @@ public class Geonet
 	{
 		public static final String MAIN_SEARCH				= "main.search";
 		public static final String SEARCH_RESULT			= "search.result";
+		public static final String LAST_SEARCH_RESULT = "last.search.result";
 		public static final String SEARCH_REQUEST_ID 		= "search_request_id";		
 		public static final String METADATA_SHOW			= "metadata.show";
 		public static final String METADATA_EDITING		= "metadata.editing";
@@ -330,6 +331,10 @@ public class Geonet
          * Values are {@value org.fao.geonet.constants.Geonet.Text#ON} (default)
          * or {@value org.fao.geonet.constants.Geonet.Text#OFF} */
         public static final String INTERMAP      = "intermap";
+
+		/** Parameter name: {@value #RESTORELASTSEARCH} - Text field that
+		 *  specified whether the last search result should be restored */
+		 		public static final String RESTORELASTSEARCH = "restorelastsearch";
         
         /** Parameter name: {@value #GEOMETRY} - Used to filter results of query based on geometry
          * Currently intersection is used to do the filtering
@@ -468,6 +473,7 @@ public class Geonet
 	public static final String THESAURUS_MAN= GEONETWORK + ".thesaurus-man";
 	public static final String SEARCH_ENGINE= GEONETWORK + ".search";
 	public static final String Z3950_SERVER = GEONETWORK + ".z3950server";
+	public static final String Z3950        = GEONETWORK + ".z3950";
 	public static final String INDEX_ENGINE = GEONETWORK + ".index";
 	public static final String MEF          = GEONETWORK + ".mef";
 	public static final String CSW          = GEONETWORK + ".csw";

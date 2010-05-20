@@ -10,15 +10,21 @@ import jeeves.utils.Xml;
 import org.apache.lucene.search.Query;
 import org.fao.geonet.constants.Geonet;
 import org.geotools.data.FeatureSource;
+//import org.geotools.data.wfs.v1_1_0.ReprojectingFilterVisitor;
+//Leave this out as we are using our own copy of this for now
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
+import org.geotools.feature.AttributeTypeBuilder;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.filter.visitor.DefaultFilterVisitor;
 import org.geotools.filter.visitor.DuplicatingFilterVisitor;
 import org.geotools.filter.visitor.ExtractBoundsFilterVisitor;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Parser;
+
 import org.jdom.Element;
+
 import org.opengis.filter.And;
 import org.opengis.filter.BinaryLogicOperator;
 import org.opengis.filter.Filter;
@@ -33,14 +39,35 @@ import org.opengis.filter.spatial.Contains;
 import org.opengis.filter.spatial.Crosses;
 import org.opengis.filter.spatial.DWithin;
 import org.opengis.filter.spatial.Disjoint;
+import org.opengis.filter.spatial.Equals;
 import org.opengis.filter.spatial.Intersects;
 import org.opengis.filter.spatial.Overlaps;
 import org.opengis.filter.spatial.Touches;
 import org.opengis.filter.spatial.Within;
+import org.opengis.feature.type.GeometryDescriptor;
+import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.index.SpatialIndex;
+
+// -- define the featureType that will be used in the reprojectFilter
+class Reproject {
+		public static SimpleFeatureType fType = initialize();
+
+		private static SimpleFeatureType initialize() {
+			SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
+ 			AttributeTypeBuilder attBuilder  = new AttributeTypeBuilder();
+			attBuilder.crs(DefaultGeographicCRS.WGS84);
+			attBuilder.binding(MultiPolygon.class);
+			GeometryDescriptor geomDescriptor = attBuilder.buildDescriptor(SpatialIndexWriter.GEOM_ATTRIBUTE_NAME, attBuilder.buildGeometryType());
+			builder.setName("dummy");
+			builder.setCRS( DefaultGeographicCRS.WGS84 );
+ 			builder.add(geomDescriptor);
+			return builder.buildFeatureType();
+		}
+} 
 
 public class OgcGenericFilters
 {
@@ -50,22 +77,14 @@ public class OgcGenericFilters
             Element filterExpr, FeatureSource featureSource,
             SpatialIndex index, Parser parser) throws Exception
     {
+				// -- parse Filter and report any validation issues
         String string = Xml.getString(filterExpr);
-//        FIXME : Hack to temporary remove srsName information
-//        which are not resolved correctly by the parser.
-//        This assume all filter are using WGS84
-        string = string.replaceAll(" srsName=\"(.*)\"", "");
-//        is this related to http://jira.codehaus.org/browse/GEOT-1388 ?
-//        System.setProperty("org.geotools.referencing.forceXY", "true");
-//        CoordinateReferenceSystem urn = CRS.decode("");
-//        System.out.println(urn);
-//        CoordinateReferenceSystem epsg = CRS.decode("EPSG:4326");
-//        System.out.println(epsg);
+				Log.debug(Geonet.SEARCH_ENGINE,"Filter string is :\n"+string);
 
         parser.setValidating(true);
         parser.setFailOnValidationError(false);
 
-        
+       	Log.debug(Geonet.SEARCH_ENGINE,"Parsing filter"); 
         Filter fullFilter = (org.opengis.filter.Filter) parser
                 .parse(new StringReader(string));
         if( parser.getValidationErrors().size() > 0){
@@ -78,19 +97,29 @@ public class OgcGenericFilters
         }
         final FilterFactory2 filterFactory2 = CommonFactoryFinder
                 .getFilterFactory2(GeoTools.getDefaultHints());
+
+				// -- extract spatial terms from Filter expression
         FilterVisitor visitor = new GeomExtractor(filterFactory2);
-
         Filter trimmedFilter = (Filter) fullFilter.accept(visitor, null);
-
         if (trimmedFilter == null) {
             return null;
         }
-        
-        final Filter finalFilter = (Filter) trimmedFilter.accept(new RenameGeometryPropertyNameVisitor(),null);
+       
+			 	// -- rename all PropertyName elements used in Filter to match the
+				// -- geometry type used in the spatial index
+        Filter remappedFilter = (Filter) trimmedFilter.accept(new RenameGeometryPropertyNameVisitor(),null);
 
-        Envelope bounds = (Envelope) trimmedFilter.accept(
+				// -- finally reproject all geometry in the Filter to match GeoNetwork
+				// -- default of WGS84 (long/lat ordering)
+				visitor = new ReprojectingFilterVisitor(filterFactory2, Reproject.fType);
+				final Filter finalFilter = (Filter) remappedFilter.accept(visitor, null);
+        Log.debug(Geonet.SEARCH_ENGINE,"Reprojected Filter is "+finalFilter);
+
+				// -- extract an envelope/bbox for the whole filter expression
+        Envelope bounds = (Envelope) finalFilter.accept(
                 ExtractBoundsFilterVisitor.BOUNDS_VISITOR,
                 DefaultGeographicCRS.WGS84);
+				Log.debug(Geonet.SEARCH_ENGINE,"Filter Envelope is "+bounds);
         
         Boolean disjointFilter = (Boolean) finalFilter.accept(new DisjointDetector(), false);
         if( disjointFilter ){
@@ -247,7 +276,7 @@ public class OgcGenericFilters
         @Override
         public Not visit(Not filter, Object data)
         {
-            Filter newChild = (Filter) filter.getFilter().accept(this, null);
+            Filter newChild = (Filter) filter.getFilter().accept(this, data);
             if (newChild == null) {
                 return null;
             }
@@ -299,6 +328,12 @@ public class OgcGenericFilters
 
         @Override
         public DWithin visit(DWithin filter, Object data)
+        {
+            return filter;
+        }
+
+        @Override
+        public Equals visit(Equals filter, Object data)
         {
             return filter;
         }

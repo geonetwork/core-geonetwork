@@ -29,7 +29,6 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SelectionManager;
@@ -66,14 +65,20 @@ public class SelectionSearch implements Service
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		
 		SearchManager searchMan = gc.getSearchmanager();
-		
-		// possibly close old searcher
+
+		String restoreLastSearch = _config.getValue("restoreLastSearch","no");
+
+		// store or possibly close old searcher
 		UserSession  session     = context.getUserSession();
 		Object oldSearcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
 
-		if (oldSearcher != null)
-			if (oldSearcher instanceof LuceneSearcher) 
-				((LuceneSearcher)oldSearcher).close();
+		if (oldSearcher != null) {
+			if (restoreLastSearch.equals("yes")) {
+				session.setProperty(Geonet.Session.LAST_SEARCH_RESULT, oldSearcher);
+			} else {
+				if (oldSearcher instanceof LuceneSearcher) ((LuceneSearcher)oldSearcher).close();
+			}
+		}
 
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(session) ;
@@ -96,8 +101,12 @@ public class SelectionSearch implements Service
 			}
 			context.debug("List of selected uuids: " + uuids);
 			params.addContent(new Element(Geonet.SearchResult.UUID).setText(uuids));
-			sm.close();
-			sm = null;
+
+			// if not going to restore last search, destroy selection
+			if (restoreLastSearch.equals("no")) {
+				sm.close();
+				sm = null;
+			}
 		} 
 		
 		// perform the search and save search result into session
@@ -108,11 +117,14 @@ public class SelectionSearch implements Service
 		searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
 
 		searcher.search(context, params, _config);
+
 		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
 
 		context.info("Getting summary");
 		
-		return searcher.getSummary();
+		Element summary = searcher.getSummary();
+		summary.addContent(new Element(Geonet.SearchResult.RESTORELASTSEARCH).setText(restoreLastSearch));
+		return summary;	
 		
 	}
 }
