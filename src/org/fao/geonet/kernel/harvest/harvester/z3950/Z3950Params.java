@@ -136,5 +136,5 @@ public class Z3950Params extends AbstractParams {
 	public String icon;
 	public ArrayList<String> alRepositories = new ArrayList<String>();
 	public String query;
-	public String maximumHits = "100"; // default
+	public String maximumHits = "100000"; // default
 }

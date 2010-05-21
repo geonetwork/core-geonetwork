@@ -123,101 +123,110 @@ class Harvester {
 			throw new Exception("Search failed or returned 0 results");
 		}
 
+		// -- process the hits in groups of 100
+		int numberOfHits = Math.min(Integer.parseInt(params.maximumHits),s.getSize());
+		int groupSize = 100;
+
 		// --- return only maximum hits as directed by the harvest params
-		request.addContent(new Element("from")
-				.setText("1"));  
-		request.addContent(new Element("to")
-				.setText(params.maximumHits));  
+		int nrGroups = (numberOfHits / groupSize) + 1;
+		for (int i = 1; i < nrGroups; i++) {
+			int lower = ((i-1)*groupSize)+1;	
+			int upper = (i*groupSize);
+			request.addContent(new Element("from")
+				.setText(""+lower));  
+			request.addContent(new Element("to")
+				.setText(""+upper));  
 
-		// --- Loading resutls.
-		Element results = s.present(context, request, config);
+			// --- Loading results
+			Element results = s.present(context, request, config);
 
-		// --- Loading categories and groups
-		localCateg = new CategoryMapper(dbms);
-		localGroups = new GroupMapper(dbms);
+			// --- Loading categories and groups
+			localCateg = new CategoryMapper(dbms);
+			localGroups = new GroupMapper(dbms);
 
-		// --- Store records
-		List<Element> list = results.getChildren();
+			// --- Store records
+			List<Element> list = results.getChildren();
 
-		log.debug("There are "+list.size()+" children in the results");
+			log.debug("There are "+list.size()+" children in the results");
 
-		boolean transformIt = false;
-		String thisXslt = context.getAppPath() + Geonet.Path.IMPORT_STYLESHEETS + "/";
-		if (!params.importXslt.equals("none")) {
-			thisXslt = thisXslt + params.importXslt;
-			transformIt = true;
-		}
+			boolean transformIt = false;
+			String thisXslt = context.getAppPath() + Geonet.Path.IMPORT_STYLESHEETS + "/";
+			if (!params.importXslt.equals("none")) {
+				thisXslt = thisXslt + params.importXslt;
+				transformIt = true;
+			}
 
-		// --- For each record....
-		for (Element md : list) {
-			md = (Element)md.clone();
-			
-			if (md.getQualifiedName().equals("summary")) continue;
+			// --- For each record....
+			for (Element md : list) {
+				md = (Element)md.clone();
+				
+				if (md.getQualifiedName().equals("summary")) continue;
 
-			// -- Remove existing geonet:info children as for example
-			// -- GeoNetwork Z39.50 server return when full mode
-			// -- an extra element with server info not needed
-			// -- once harvested
-			md.removeChildren(Edit.RootChild.INFO, Edit.NAMESPACE);
+				// -- Remove existing geonet:info children as for example
+				// -- GeoNetwork Z39.50 server return when full mode
+				// -- an extra element with server info not needed
+				// -- once harvested
+				md.removeChildren(Edit.RootChild.INFO, Edit.NAMESPACE);
 
-			// validate it here if requested
-			if (params.validate) {
-				try {
-					Xml.validate(md);
-				} catch (Exception e) {
-					System.out.println("Cannot validate XML, ignoring. Error was: "+e.getMessage());
-					result.doesNotValidate++;
-					continue; // skip this one
+				// validate it here if requested
+				if (params.validate) {
+					try {
+						Xml.validate(md);
+					} catch (Exception e) {
+						System.out.println("Cannot validate XML, ignoring. Error was: "+e.getMessage());
+						result.doesNotValidate++;
+						continue; // skip this one
+					}
 				}
-			}
 			
-			// transform using importxslt if not none
-			if (transformIt) {
-				try {
-					md = Xml.transform(md, thisXslt);
-				} catch (Exception e) {
-					System.out.println("Cannot transform XML, ignoring. Error was: "+e.getMessage());
-					result.badFormat++;
-					continue; // skip this one
+				// transform using importxslt if not none
+				if (transformIt) {
+					try {
+						md = Xml.transform(md, thisXslt);
+					} catch (Exception e) {
+						System.out.println("Cannot transform XML, ignoring. Error was: "+e.getMessage());
+						result.badFormat++;
+						continue; // skip this one
+					}
 				}
+
+				// detect schema, extract uuid and add
+				String schema = dataMan.autodetectSchema(md);
+				if (schema == null) {
+					log.warning("Skipping metadata with unknown schema.");
+					result.unknownSchema++;
+					continue;
+				}
+
+				String uuid = dataMan.extractUUID(schema, md);
+				if (uuid == null || uuid.equals("")) {
+					log.warning("Skipping metadata due to failure extracting uuid (uuid null or empty).");
+					result.unretrievable++;
+					continue;
+				}
+
+				log.info("  - Adding metadata for services with " + uuid);
+				DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+				Date date = new Date();
+
+				String id = dataMan.insertMetadataExt(dbms, schema, md, context
+						.getSerialFactory(), params.uuid, df.format(date), df
+						.format(date), uuid, 1, null, "n");
+
+				int iId = Integer.parseInt(id);
+
+				addPrivileges(id);
+				addCategories(id);
+
+				dataMan.setTemplateExt(dbms, iId, "n", null);
+				dataMan.setHarvestedExt(dbms, iId, params.uuid, params.name);
+
+				dbms.commit();
+				dataMan.indexMetadata(dbms, id);
+
+				result.addedMetadata++;
+
 			}
-
-			// detect schema, extract uuid and add
-			String schema = dataMan.autodetectSchema(md);
-			if (schema == null) {
-				log.warning("Skipping metadata with unknown schema.");
-				result.unknownSchema++;
-				continue;
-			}
-
-			String uuid = dataMan.extractUUID(schema, md);
-			if (uuid == null || uuid.equals("")) {
-				log.warning("Skipping metadata due to failure extracting uuid (uuid null or empty).");
-				result.unretrievable++;
-				continue;
-			}
-
-			log.info("  - Adding metadata for services with " + uuid);
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-			Date date = new Date();
-
-			String id = dataMan.insertMetadataExt(dbms, schema, md, context
-					.getSerialFactory(), params.uuid, df.format(date), df
-					.format(date), uuid, 1, null, "n");
-
-			int iId = Integer.parseInt(id);
-
-			addPrivileges(id);
-			addCategories(id);
-
-			dataMan.setTemplateExt(dbms, iId, "n", null);
-			dataMan.setHarvestedExt(dbms, iId, params.uuid, params.name);
-
-			dbms.commit();
-			dataMan.indexMetadata(dbms, id);
-
-			result.addedMetadata++;
-
 		}
 
 		return result;

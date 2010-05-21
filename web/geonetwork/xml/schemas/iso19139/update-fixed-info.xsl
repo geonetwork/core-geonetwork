@@ -89,14 +89,15 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<!-- ================================================================= -->
-	<!-- Fix srsName attribute and generate epsg:4326 entry by default -->
+	<!-- ==================================================================== -->
+	<!-- Fix srsName attribute generate CRS:84 (EPSG:4326 with long/lat 
+	     ordering) by default -->
 
 	<xsl:template match="@srsName">
 		<xsl:choose>
 			<xsl:when test="normalize-space(.)=''">
 				<xsl:attribute name="srsName">
-					<xsl:text>urn:x-ogc:def:crs:EPSG:6.6:4326</xsl:text>
+					<xsl:text>CRS:84</xsl:text>
 				</xsl:attribute>
 			</xsl:when>
 			<xsl:otherwise>

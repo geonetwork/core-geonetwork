@@ -49,13 +49,21 @@ import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureCollections;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.geometry.jts.JTS;
+import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Parser;
+
 import org.jdom.Element;
+
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.identity.FeatureId;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
+
 import org.xml.sax.SAXException;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -255,18 +263,28 @@ public class SpatialIndexWriter
         }
         List<Polygon> allPolygons = new ArrayList<Polygon>();
         for (Element geom : (List<Element>)transform.getChildren()) {
-            String gml = Xml.getString(geom);
+					String srs = geom.getAttributeValue("srsName"); 
+					CoordinateReferenceSystem sourceCRS = DefaultGeographicCRS.WGS84;
+          String gml = Xml.getString(geom);
 
-            try {
-                MultiPolygon jts = parseGml(parser, gml);
-                for (int i = 0; i < jts.getNumGeometries(); i++) {
-                    allPolygons.add((Polygon) jts.getGeometryN(i));
-                }
-            } catch (Exception e) {
-                Log.error(Geonet.INDEX_ENGINE, "Failed to convert gml to jts object: "+gml+"\n\t"+e.getMessage());
-								e.printStackTrace();
-                // continue
+          try {
+						if (srs != null && !(srs.equals(""))) sourceCRS = CRS.decode(srs);
+            MultiPolygon jts = parseGml(parser, gml);
+							
+						// if we have an srs and its not WGS84 then transform to WGS84
+						if (!CRS.equalsIgnoreMetadata(sourceCRS, DefaultGeographicCRS.WGS84)) {
+							MathTransform tform = CRS.findMathTransform(sourceCRS, DefaultGeographicCRS.WGS84);
+							jts = (MultiPolygon)JTS.transform(jts, tform);
+						}
+
+            for (int i = 0; i < jts.getNumGeometries(); i++) {
+							allPolygons.add((Polygon) jts.getGeometryN(i));
             }
+          } catch (Exception e) {
+            Log.error(Geonet.INDEX_ENGINE, "Failed to convert gml to jts object: "+gml+"\n\t"+e.getMessage());
+						e.printStackTrace();
+            // continue
+          }
         }
 
         if( allPolygons.isEmpty()){
@@ -275,9 +293,12 @@ public class SpatialIndexWriter
             try {
                 Polygon[] array = new Polygon[allPolygons.size()];
                 GeometryFactory geometryFactory = allPolygons.get(0).getFactory();
-                return geometryFactory.createMultiPolygon(allPolygons.toArray(array));
+								return geometryFactory.createMultiPolygon(allPolygons.toArray(array));
+
+
             } catch (Exception e) {
                 Log.error(Geonet.INDEX_ENGINE, "Failed to create a MultiPolygon from: "+allPolygons);
+								e.printStackTrace();
                 // continue
                 return null;
             }
