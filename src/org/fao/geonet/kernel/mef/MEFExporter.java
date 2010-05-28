@@ -37,6 +37,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.lib.Lib;
@@ -110,9 +111,14 @@ class MEFExporter {
 		if (format == Format.PARTIAL || format == Format.FULL)
 			MEFLib.savePublic(zos, pubDir, null);
 
-		if (format == Format.FULL)
-			MEFLib.savePrivate(zos, priDir, null);
-
+		if (format == Format.FULL) {
+			try {
+				Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
+				MEFLib.savePrivate(zos, priDir, null);
+			} catch (Exception e) {
+				// Current user could not download private data
+			}
+		}
 		// --- cleanup and exit
 
 		zos.close();
