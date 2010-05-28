@@ -379,13 +379,12 @@
 		<xsl:param name="Name"/>
 		<xsl:param name="topic"/>		
 		<xsl:param name="ows"/>
-		
 		<citation>
 			<CI_Citation>
 				<title>
 					<gco:CharacterString>
 						<xsl:choose>
-							<xsl:when test="name(.)='WFS_Capabilities' or $ows='true'">
+							<xsl:when test="name(.)='WFS_Capabilities' or name(.)='wfs:WFS_Capabilities' or $ows='true'">
 								<xsl:value-of select="//wfs:FeatureType[wfs:Name=$Name]/wfs:Title"/>
 							</xsl:when>
 							<xsl:when test="name(.)='WMT_MS_Capabilities'">
