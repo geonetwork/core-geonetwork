@@ -18,8 +18,14 @@
 			<xsl:value-of select="concat('http://',//server/host,':',//server/port,/root/gui/locService,'/main.search?')"/>
 			<xsl:text>any={searchTerms}&amp;hitsPerPage={count?}&amp;bbox={geo:box?}&amp;geometry={geo:geometry?}&amp;name={geo:locationString?}</xsl:text>
 			</xsl:attribute>
-		   </Url>		    
-		    <Image height="16" width="16" type="image/x-icon">
+		   </Url>
+		   <Url type="application/x-suggestions+json">
+		   	<xsl:attribute name="template">
+				<xsl:value-of select="concat('http://',//server/host,':',//server/port,/root/gui/locService,'/main.search.suggest?')"/>
+				<xsl:text>q={searchTerms}</xsl:text>
+			</xsl:attribute>
+		   </Url>
+		   <Image height="16" width="16" type="image/x-icon">
 			<xsl:value-of select="concat('http://',//server/host,':',//server/port)"/>
 			<xsl:value-of select="/root/gui/url"/>/favicon.ico</Image>
 		</OpenSearchDescription>

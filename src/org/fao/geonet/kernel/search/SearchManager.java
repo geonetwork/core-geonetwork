@@ -53,6 +53,7 @@ import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
@@ -570,8 +571,13 @@ public class SearchManager
 	
 	}
 
-	//--------------------------------------------------------------------------------
-
+	/**
+	 * Browse the index and return all values for the Lucene field.
+	 * 
+	 * @param fld	The Lucene field name 
+	 * @return	The list of values for the field
+	 * @throws Exception
+	 */
 	public Vector getTerms(String fld) throws Exception
 	{
 		Vector terms = new Vector();
@@ -592,6 +598,83 @@ public class SearchManager
 		}
 	}
 
+	/**
+	 * Browse the index for the specified Lucene field and return the list
+	 * of terms found containing the search value with their frequency.
+	 * 
+	 * @param fieldName	The Lucene field name 
+	 * @param searchValue	The value to search for. Could be "".
+	 * @param maxNumberOfTerms	Max number of term's values to look in the index. For large catalogue
+	 * this value should be increased in order to get better results. If this
+	 * value is too high, then looking for terms could take more times. The use
+	 * of good analyzer should allow to reduce the number of useless values like
+	 * (a, the, ...).
+	 * @param threshold	Minimum frequency for a term to be returned.
+	 * @return	An unsorted and unordered list of terms with their frequency.
+	 * @throws Exception
+	 */
+	public List<TermFrequency> getTermsFequency(String fieldName, String searchValue, int maxNumberOfTerms, int threshold) throws Exception
+	{
+		List<TermFrequency> termList = new ArrayList<TermFrequency>();
+		IndexReader reader = getIndexReader();
+		TermEnum term = reader.terms();
+		int i = 0;
+		// TODO : we should apply the same Analyzer used for field indexing
+		// to the term searched.
+
+		try {
+			// Extract terms containing search value.
+			while (term.next()) {
+				if (++i > maxNumberOfTerms)
+					break;
+
+				if (term.docFreq() >= threshold
+						&& term.term().field().equals(fieldName)
+						&& term.term().text().contains(searchValue)) {
+					TermFrequency freq = new TermFrequency(term.term().text(), term
+							.docFreq());
+					termList.add(freq);
+				}
+			}
+		} finally {
+			releaseIndexReader(reader);
+		}
+		return termList;
+	}
+	
+	
+	/**
+	 * Frequence of terms
+	 */
+	public static class TermFrequency implements Comparable<Object> {
+		String term;
+		int frequency;
+
+		public TermFrequency(String term, int frequency) {
+			this.term = term;
+			this.frequency = frequency;
+		}
+
+		public String getTerm() {
+			return this.term;
+		}
+
+		public int getFrequency() {
+			return this.frequency;
+		}
+		
+		public int compareTo(Object o) {
+			if (o instanceof TermFrequency) {
+				TermFrequency oFreq = (TermFrequency) o;
+				return new CompareToBuilder()
+						.append(frequency, oFreq.frequency).append(term,
+								oFreq.term).toComparison();
+			} else {
+				return 0;
+			}
+		}
+	}
+	
 	//-----------------------------------------------------------------------------
 	// utilities
 

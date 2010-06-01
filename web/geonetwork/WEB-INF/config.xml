@@ -73,8 +73,8 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.DbmsPool</provider>
 			<config>
-				<user>srrQ8kZI</user>
-				<password>YyBOtpgo</password>
+				<user>JSzGvMb5</user>
+				<password>hGfwsstj</password>
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>
@@ -115,6 +115,7 @@
 				<poolSize>10</poolSize>
 			</config>
 		</resource>
+	    
 	</resources>
 
 	<!-- ====================================================================== -->
@@ -203,6 +204,26 @@
  			<output forward="main.present.embedded" />
  		</service>
 
+		<service name="main.search.suggest">
+			<class name=".services.main.SearchSuggestion">
+				<!-- Minimum frequency for a term value to be proposed in suggestion. -->
+				<param name="threshold" value="3" />
+				<!--
+				 Max number of term's values to look in the index. For large catalogue
+				 this value should be increased in order to get better results. If this
+				 value is too high, then looking for terms could take more times. The use
+				 of good analyzer should allow to reduce the number of useless values like
+				 (a, the, ...).
+				-->
+				<param name="max_number_of_terms" value="100000" />
+				<!-- Default field to search in. any is full-text search field. -->
+				<param name="default_search_field" value="any" />
+			</class>
+			
+			<output sheet="search-suggestions.xsl" contentType="application/json; charset=UTF-8" />
+		</service>
+		
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="main.present.embedded">
@@ -218,7 +239,7 @@
  				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="config" class=".services.config.Get" />
 				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories"/>
+					<param name="type" value="z3950repositories" />
 				</call>
  			</output>
 
@@ -236,7 +257,7 @@
 				<call name="regions" class=".guiservices.regions.Get" />
 				<call name="sources" class=".guiservices.util.Sources" />
 				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories"/>
+					<param name="type" value="z3950repositories" />
 				</call>
 				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
 			</output>
@@ -254,7 +275,7 @@
 				<call name="regions" class=".guiservices.regions.Get" />
 				<call name="sources" class=".guiservices.util.Sources" />
 				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories"/>
+					<param name="type" value="z3950repositories" />
 				</call>
 				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
 			</output>
@@ -280,7 +301,7 @@
 				<call name="sources" class=".guiservices.util.Sources" />
 				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories"/>
+					<param name="type" value="z3950repositories" />
 				</call>
 			</output>
 		</service>
@@ -296,7 +317,7 @@
 				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
 				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories"/>
+					<param name="type" value="z3950repositories" />
 				</call>
 			</output>
 		</service>
@@ -684,14 +705,14 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="file.disclaimer">
-			<class name=".services.feedback.AddLimitations"/>
+			<class name=".services.feedback.AddLimitations" />
 			<output sheet="file-download-disclaimer.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.file.disclaimer">
-			<class name=".services.feedback.AddLimitations"/>
+			<class name=".services.feedback.AddLimitations" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1098,7 +1119,7 @@
 		</service>
 		<service name="crs.get">
 			<class name=".services.crs.GetCRS" />
-			<output sheet="crs.xsl" contentType="text/xml; charset=UTF-8"/>
+			<output sheet="crs.xsl" contentType="text/xml; charset=UTF-8" />
 		</service>
 	</services>
 
