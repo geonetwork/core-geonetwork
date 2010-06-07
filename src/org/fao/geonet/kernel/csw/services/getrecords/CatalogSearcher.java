@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -74,14 +75,13 @@ import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
 
-import org.fao.geonet.services.util.MainUtil;
 import org.jdom.Element;
 
 //=============================================================================
 
 public class CatalogSearcher {
 	private Element _summaryConfig;
-	private Map<String, Boolean> _isTokenizedField = new HashMap<String, Boolean>();
+	private HashSet<String> _tokenizedFieldSet;
 	private FieldSelector _selector;
 	private Query         _query;
 	private IndexReader   _reader;
@@ -89,7 +89,7 @@ public class CatalogSearcher {
 	private Sort          _sort;
 	private String        _lang;
 
-	public CatalogSearcher(File summaryConfig) {
+	public CatalogSearcher(File summaryConfig, File luceneConfig) {
 		try {
 			if (summaryConfig != null)
 				_summaryConfig = Xml.loadStream(new FileInputStream(
@@ -97,6 +97,24 @@ public class CatalogSearcher {
 		} catch (Exception e) {
 			throw new RuntimeException(
 					"Error reading summary configuration file", e);
+		}
+
+		_tokenizedFieldSet = new HashSet<String>();
+		try {
+			if (luceneConfig != null) {
+				Element config = Xml.loadStream(new FileInputStream(luceneConfig));
+				Element fields = config.getChild("tokenized");
+				for ( int i = 0; i < fields.getContentSize(); i++ ) {
+					Object o = fields.getContent(i);
+					if (o instanceof Element) {
+						Element elem = (Element)o;
+						_tokenizedFieldSet.add(elem.getAttributeValue("name")); 
+					}
+				}
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(
+					"Error reading tokenized fields file", e);
 		}
 
 		_selector = new FieldSelector() {
@@ -128,7 +146,6 @@ public class CatalogSearcher {
 		if (luceneExpr != null) {
 			checkForErrors(luceneExpr);
 			remapFields(luceneExpr);
-            processFieldsAnalyzer(luceneExpr);
 		}
 		
 		try {
@@ -240,19 +257,16 @@ public class CatalogSearcher {
 			checkForErrors((Element) children.get(i));
 	}
 
+
 	// ---------------------------------------------------------------------------
 
-	// Only tokenize field must be converted
-	// TODO add token parameter in CSW conf for each field, may be useful for
-	// GetDomain operation too.
 	private void convertPhrases(Element elem, ServiceContext context)
 			throws InterruptedException, CorruptIndexException, IOException {
 		if (elem.getName().equals("TermQuery")) {
 			String field = elem.getAttributeValue("fld");
 			String text = elem.getAttributeValue("txt");
 
-			boolean isTokenized = isTokenized(field, context);
-			if (isTokenized && text.indexOf(" ") != -1) {
+			if (_tokenizedFieldSet.contains(field) && text.indexOf(" ") != -1) {
 				elem.setName("PhraseQuery");
 
 				StringTokenizer st = new StringTokenizer(text, " ");
@@ -276,64 +290,6 @@ public class CatalogSearcher {
 	}
 
 	// ---------------------------------------------------------------------------
-	private boolean isTokenized(String field, ServiceContext context) throws CorruptIndexException, IOException, InterruptedException {
-		Boolean tokenized = _isTokenizedField.get(field);
-		if (tokenized != null) {
-			return tokenized.booleanValue();
-		}
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		SearchManager sm = gc.getSearchmanager();
-		IndexReader reader = sm.getIndexReader();
-		try {
-			int i = 0;
-			while (i < reader.numDocs() && tokenized == null) {
-				if (reader.isDeleted(i)) {
-					i++;
-					continue; // FIXME: strange lucene hack: sometimes it tries
-					// to load a deleted document
-				}
-				Document doc = reader.document(i);
-				Field tmp = doc.getField(field);
-				if (tmp != null) {
-					tokenized = tmp.isTokenized();
-				}
-				i++;
-			}
-		} finally {
-			sm.releaseIndexReader(reader);
-		}
-	
-		if (tokenized != null) {
-			_isTokenizedField.put(field, tokenized.booleanValue());
-			return tokenized.booleanValue();
-		}
-		_isTokenizedField.put(field, false);
-		return false;
-	}
-
-    /**
-     * Process the fields title, abstract and any in same way as done
-     * in org.fao.geonet.services.main.Search service
-     *
-     * @param elem
-     */
-    private void processFieldsAnalyzer(Element elem) {
-        String field = elem.getAttributeValue("fld");
-        if (field != null) {
-            if ((field.equals(Geonet.SearchResult.TITLE)) ||
-                    (field.equals(Geonet.SearchResult.ABSTRACT)) ||
-                    (field.equals(Geonet.SearchResult.ANY))) {
-                 elem.setAttribute("txt", MainUtil.splitWord( elem.getAttributeValue("txt")));
-            }
-        }
-
-        List children = elem.getChildren();
-
-		for (int i = 0; i < children.size(); i++)
-			processFieldsAnalyzer((Element) children.get(i));
-    }
-
 	/**
 	 * Map OGC CSW search field names to Lucene field names using
 	 * {@link FieldMapper}. If a field name is not defined then the any (ie.
@@ -388,7 +344,7 @@ public class CatalogSearcher {
 					+ Xml.getString(luceneExpr));
 
 		Query data = (luceneExpr == null) ? null : LuceneSearcher
-				.makeQuery(luceneExpr);
+				.makeQuery(luceneExpr, sm.getAnalyzer(), _tokenizedFieldSet);
 		Query groups = getGroupsQuery(context);
 
 		if (sort == null) {

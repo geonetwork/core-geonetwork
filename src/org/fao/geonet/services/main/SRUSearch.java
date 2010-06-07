@@ -67,7 +67,6 @@ import org.fao.geonet.constants.*;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.services.util.MainUtil;
 import org.geotools.xml.XML;
 
 //=============================================================================

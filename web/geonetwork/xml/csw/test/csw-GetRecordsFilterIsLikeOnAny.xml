@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:gmd="http://www.isotc211.org/2005/gmd" service="CSW" version="2.0.2" outputSchema="csw:Record" resultType="results">
+    <csw:Query typeNames="csw:Record">
+        <csw:ElementSetName>summary</csw:ElementSetName>
+        <csw:Constraint version="1.1.0">
+            <Filter xmlns="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">
+                <PropertyIsLike wildCard="%" singleChar="_" escapeChar="\">
+                    <PropertyName>any</PropertyName>
+                    <Literal>Victoria</Literal>
+                </PropertyIsLike>
+            </Filter>
+        </csw:Constraint>
+    </csw:Query>
+</csw:GetRecords>

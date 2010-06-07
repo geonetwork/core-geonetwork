@@ -1,11 +1,13 @@
 package org.fao.geonet.kernel.search;
 
 import jeeves.utils.Xml;
+import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.*;
 import org.fao.geonet.util.spring.StringUtils;
 import org.jdom.Element;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -19,6 +21,14 @@ import java.util.StringTokenizer;
  */
 public class LuceneQueryBuilder {
 
+	HashSet<String> _tokenizedFieldSet;
+	PerFieldAnalyzerWrapper _analyzer;
+
+	public LuceneQueryBuilder(HashSet<String> tokenizedFieldSet, PerFieldAnalyzerWrapper analyzer) {
+		_tokenizedFieldSet = tokenizedFieldSet;
+		_analyzer          = analyzer;
+	}
+
 	/**
 	 * Creates a query for a string.
 	 */
@@ -27,7 +37,7 @@ public class LuceneQueryBuilder {
 		if(similarity == null || similarity.equals("1")) {
 			TermQuery query = null;
 			if(string != null) {
-				query = new TermQuery(new Term(luceneIndexField, string.toLowerCase()));
+				query = new TermQuery(new Term(luceneIndexField, LuceneSearcher.analyzeQueryText(luceneIndexField, string, _analyzer, _tokenizedFieldSet)));
 			}
 			return query;
 		}
@@ -36,7 +46,7 @@ public class LuceneQueryBuilder {
 			FuzzyQuery query = null;
 			if(string != null) {
 				Float minimumSimilarity = Float.parseFloat(similarity);
-				query = new FuzzyQuery(new Term(luceneIndexField, string.toLowerCase()), minimumSimilarity);
+				query = new FuzzyQuery(new Term(luceneIndexField, LuceneSearcher.analyzeQueryText(luceneIndexField, string, _analyzer, _tokenizedFieldSet)), minimumSimilarity);
 			}
 			return query;
 		}

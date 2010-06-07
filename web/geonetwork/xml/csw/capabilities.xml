@@ -227,8 +227,12 @@
                 <ogc:ComparisonOperator>Like</ogc:ComparisonOperator>
                 <ogc:ComparisonOperator>LessThan</ogc:ComparisonOperator>
                 <ogc:ComparisonOperator>GreaterThan</ogc:ComparisonOperator>
+								<!-- LessThanOrEqualTo is in OGC Filter Spec, LessThanEqualTo is in OGC CSW schema -->
                 <ogc:ComparisonOperator>LessThanEqualTo</ogc:ComparisonOperator>
+                <ogc:ComparisonOperator>LessThanOrEqualTo</ogc:ComparisonOperator>
+								<!-- GreaterThanOrEqualTo is in OGC Filter Spec, GreaterThanEqualTo is in OGC CSW schema -->
                 <ogc:ComparisonOperator>GreaterThanEqualTo</ogc:ComparisonOperator>
+                <ogc:ComparisonOperator>GreaterThanOrEqualTo</ogc:ComparisonOperator>
                 <ogc:ComparisonOperator>NotEqualTo</ogc:ComparisonOperator>
                 <ogc:ComparisonOperator>Between</ogc:ComparisonOperator>
                 <ogc:ComparisonOperator>NullCheck</ogc:ComparisonOperator>

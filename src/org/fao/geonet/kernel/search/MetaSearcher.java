@@ -22,7 +22,7 @@
 
 package org.fao.geonet.kernel.search;
 
-import org.fao.geonet.services.util.MainUtil;
+import org.fao.geonet.services.util.SearchDefaults;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 
@@ -65,7 +65,7 @@ public abstract class MetaSearcher
 		_from = 1;
 		try
 		{
-			Element defaultSearch = MainUtil.getDefaultSearch(srvContext, null);
+			Element defaultSearch = SearchDefaults.getDefaultSearch(srvContext, null);
 			_to = Integer.parseInt(defaultSearch.getChildText(Geonet.SearchResult.HITS_PER_PAGE));
 		}
 		catch (Exception e)

@@ -32,7 +32,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.services.util.MainUtil;
+import org.fao.geonet.services.util.SearchDefaults;
 import org.jdom.Element;
 
 //=============================================================================
@@ -64,7 +64,7 @@ public class XmlSearch implements Service
 
 		SearchManager searchMan = gc.getSearchmanager();
 
-		Element elData  = MainUtil.getDefaultSearch(context, params);
+		Element elData  = SearchDefaults.getDefaultSearch(context, params);
 		String  sRemote = elData.getChildText(Geonet.SearchResult.REMOTE);
 		boolean remote  = sRemote != null && sRemote.equals(Geonet.Text.ON);
 

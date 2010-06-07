@@ -15,10 +15,22 @@
     <property file="web/geonetwork/WEB-INF/server.prop"/>
 	<property name="ant.build.javac.target" value="${ant.build.javac.target}"/>
 	<property name="debugOn" value="${debugOn}"/>
-	
+	<property name="test.class.name" value="org.fao.geonet.kernel.search.LuceneQueryTest" />
+
 	<!-- =============================================================== -->
 
 	<target name="all" depends="compile"/>	
+
+	<!-- =============================================================== -->
+
+	<target name="test" depends="compile">
+ 	 <junit fork="yes" haltonfailure="yes">
+    <test name="${test.class.name}" />
+    <formatter type="plain" usefile="false" />
+    <classpath refid="geonetwork.class.path" />
+  	</junit>
+	</target>
+
 
 	<!-- =============================================================== -->
 

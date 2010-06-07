@@ -128,8 +128,9 @@
 		<param name="licenseDir" value="WEB-INF/licenses" />
 		<param name="thesauriDir" value="WEB-INF/gsthesauri" />
 		<param name="codeListDir" value="xml/codelist" />
-	    <param name="summaryConfig" value="WEB-INF/config-summary.xml" />
-        <param name="guiConfig" value="WEB-INF/config-gui.xml" />        
+	  <param name="summaryConfig" value="WEB-INF/config-summary.xml" />
+    <param name="guiConfig" value="WEB-INF/config-gui.xml" />        
+    <param name="luceneConfig" value="WEB-INF/config-lucene.xml" />        
 		<!-- Preferred schema parameter is used on import
 			when a ZIP or MEF file is imported with more than one
 			xml files. For example, export produce one file for

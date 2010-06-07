@@ -190,11 +190,12 @@ public class Geonetwork implements ApplicationHandler
 
 		String summaryConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.SUMMARY_CONFIG);
 		String dataDir = path + handlerConfig.getMandatoryValue(Geonet.Config.DATA_DIR);
-        String guiConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.GUI_CONFIG);
+    String guiConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.GUI_CONFIG);
+    String luceneConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
 
 		DataStore dataStore = createDataStore(context.getResourceManager().getProps(Geonet.Res.MAIN_DB), luceneDir);
 	
-		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, dataDir, summaryConfigXmlFile, guiConfigXmlFile, dataStore, new SettingInfo(settingMan));
+		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, dataDir, summaryConfigXmlFile, guiConfigXmlFile, luceneConfigXmlFile, dataStore, new SettingInfo(settingMan));
 
 		//------------------------------------------------------------------------
 		//--- extract intranet ip/mask and initialize AccessManager
@@ -247,7 +248,7 @@ public class Geonetwork implements ApplicationHandler
 		logger.info("  - Catalogue services for the web...");
 
 		CatalogConfiguration.loadCatalogConfig(path, Csw.CONFIG_FILE);
-		CatalogDispatcher catalogDis = new CatalogDispatcher(new File(path,summaryConfigXmlFile));
+		CatalogDispatcher catalogDis = new CatalogDispatcher(new File(path,summaryConfigXmlFile), new File(path,luceneConfigXmlFile));
 
 		//------------------------------------------------------------------------
 		//--- initialize catalogue services for the web

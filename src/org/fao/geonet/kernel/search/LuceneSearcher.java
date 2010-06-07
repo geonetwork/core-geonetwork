@@ -25,9 +25,13 @@ package org.fao.geonet.kernel.search;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +46,9 @@ import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
+import org.apache.lucene.analysis.Token;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldSelector;
@@ -50,6 +57,7 @@ import org.apache.lucene.document.MapFieldSelector;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
@@ -110,9 +118,11 @@ public class LuceneSearcher extends MetaSearcher
 	private String        _resultType;
   private String        _language;
 
+	private HashSet<String>	_tokenizedFieldSet;
+
 	//--------------------------------------------------------------------------------
 	// constructor
-	public LuceneSearcher (SearchManager sm, String styleSheetName, Element summaryConfig)
+	public LuceneSearcher (SearchManager sm, String styleSheetName, Element summaryConfig, Element tokenizedFields)
 	{
 		_sm             = sm;
 		_styleSheetName = styleSheetName;
@@ -123,6 +133,16 @@ public class LuceneSearcher extends MetaSearcher
 				else return FieldSelectorResult.NO_LOAD;
 			}
 		};
+
+		// build _tokenizedFieldSet
+		_tokenizedFieldSet = new HashSet<String>();
+		for ( int i = 0; i < tokenizedFields.getContentSize(); i++ ) {
+			Object o = tokenizedFields.getContent(i);
+			if (o instanceof Element) {
+				Element elem = (Element)o;
+				_tokenizedFieldSet.add(elem.getAttributeValue("name")); 
+			}
+		}
 	}
 
 	//--------------------------------------------------------------------------------
@@ -290,10 +310,10 @@ public class LuceneSearcher extends MetaSearcher
         // Construct Lucene query by XSLT, not Java, for Z3950 anyway :-)
 				Element xmlQuery = _sm.transform(_styleSheetName, request);
 				Log.debug(Geonet.SEARCH_ENGINE, "XML QUERY:\n"+ Xml.getString(xmlQuery));
-				_query = makeQuery(xmlQuery);
+				_query = makeQuery(xmlQuery, _sm.getAnalyzer(), _tokenizedFieldSet);
 			} else {
         // Construct Lucene query by Java, not XSLT
-        _query = new LuceneQueryBuilder().build(request);
+        _query = new LuceneQueryBuilder(_tokenizedFieldSet, _sm.getAnalyzer()).build(request);
 			}
 
 
@@ -374,7 +394,7 @@ public class LuceneSearcher extends MetaSearcher
 		} else {
 			numHits = endHit;
 		}
-	
+
 		Pair<TopFieldCollector,Element> results = doSearchAndMakeSummary( numHits, _maxSummaryKeys, _language, _resultType, _summaryConfig, _reader, _query, cFilter, _sort, buildSummary);
 		TopFieldCollector tfc = results.one();
 		_elSummary = results.two();
@@ -455,14 +475,13 @@ public class LuceneSearcher extends MetaSearcher
     
 	//--------------------------------------------------------------------------------
 	/**
-	 *  Makes a new lucene query
+	 *  Makes a new lucene query.
 	 *  
-	 *  Converts to lowercase if needed as the StandardAnalyzer.
-	 *  Therefore, some fields (eg. uuid, subject) are indexed 
-	 *  using a different analyzer @see SearchManager.
+	 *  If the field to be queried is tokenized then this method applies 
+	 *  the appropriate analyzer (see SearchManager) to the field.
 	 *   
 	 */
-	public static Query makeQuery(Element xmlQuery) throws Exception
+	public static Query makeQuery(Element xmlQuery, PerFieldAnalyzerWrapper analyzer, HashSet<String> tokenizedFieldSet) throws Exception
 	{
 		String name = xmlQuery.getName();
 		Query returnValue = null;
@@ -470,20 +489,20 @@ public class LuceneSearcher extends MetaSearcher
 		if (name.equals("TermQuery"))
 		{
 			String fld = xmlQuery.getAttributeValue("fld");
-			String txt = xmlQuery.getAttributeValue("txt");//.toLowerCase();
+			String txt = analyzeQueryText(fld, xmlQuery.getAttributeValue("txt"), analyzer, tokenizedFieldSet);
 			returnValue = new TermQuery(new Term(fld, txt));
 		}
 		else if (name.equals("FuzzyQuery"))
 		{
 			String fld = xmlQuery.getAttributeValue("fld");
 			Float sim = Float.valueOf(xmlQuery.getAttributeValue("sim"));
-			String txt = xmlQuery.getAttributeValue("txt").toLowerCase();
+			String txt = analyzeQueryText(fld, xmlQuery.getAttributeValue("txt"), analyzer, tokenizedFieldSet);
 			returnValue = new FuzzyQuery(new Term(fld, txt), sim.floatValue());
 		}
 		else if (name.equals("PrefixQuery"))
 		{
 			String fld = xmlQuery.getAttributeValue("fld");
-			String txt = xmlQuery.getAttributeValue("txt").toLowerCase();
+			String txt = analyzeQueryText(fld, xmlQuery.getAttributeValue("txt"), analyzer, tokenizedFieldSet);
 			returnValue = new PrefixQuery(new Term(fld, txt));
 		}
 		else if (name.equals("MatchAllDocsQuery"))
@@ -494,7 +513,7 @@ public class LuceneSearcher extends MetaSearcher
 		else if (name.equals("WildcardQuery"))
 		{
 			String fld = xmlQuery.getAttributeValue("fld");
-			String txt = xmlQuery.getAttributeValue("txt").toLowerCase();
+			String txt = analyzeQueryText(fld, xmlQuery.getAttributeValue("txt"), analyzer, tokenizedFieldSet);
 			returnValue = new WildcardQuery(new Term(fld, txt));
 		}
 		else if (name.equals("PhraseQuery"))
@@ -503,7 +522,7 @@ public class LuceneSearcher extends MetaSearcher
 			for(Iterator i = xmlQuery.getChildren().iterator(); i.hasNext();) {
 				Element xmlTerm = (Element) i.next();
 				String fld = xmlTerm.getAttributeValue("fld");
-				String txt = xmlTerm.getAttributeValue("txt").toLowerCase();
+				String txt = analyzeQueryText(fld, xmlTerm.getAttributeValue("txt"), analyzer, tokenizedFieldSet);
 				query.add(new Term(fld, txt));
 			}
 			returnValue = query;
@@ -516,8 +535,8 @@ public class LuceneSearcher extends MetaSearcher
 			String  sInclusive = xmlQuery.getAttributeValue("inclusive");
 			boolean inclusive  = "true".equals(sInclusive);
 
-			Term lowerTerm = (lowerTxt == null ? null : new Term(fld, lowerTxt.toLowerCase()));
-			Term upperTerm = (upperTxt == null ? null : new Term(fld, upperTxt.toLowerCase()));
+			Term lowerTerm = (lowerTxt == null ? null : new Term(fld, analyzeQueryText(fld, lowerTxt, analyzer, tokenizedFieldSet)));
+			Term upperTerm = (upperTxt == null ? null : new Term(fld, analyzeQueryText(fld, upperTxt, analyzer, tokenizedFieldSet)));
 
 			returnValue = new RangeQuery(lowerTerm, upperTerm, inclusive);
 		}
@@ -544,7 +563,7 @@ public class LuceneSearcher extends MetaSearcher
 				Element xmlSubQuery;
 				if (subQueries!=null && subQueries.size()!=0) {
 					xmlSubQuery = subQueries.get(0);
-					query.add(makeQuery(xmlSubQuery), occur);
+					query.add(makeQuery(xmlSubQuery, analyzer, tokenizedFieldSet), occur);
 				}
 			}
 			BooleanQuery.setMaxClauseCount(16384); // FIXME: quick fix; using Filters should be better
@@ -889,6 +908,97 @@ public class LuceneSearcher extends MetaSearcher
 	
     return values;
   }
+
+	public static String analyzeQueryText(String field, String aText, PerFieldAnalyzerWrapper analyzer, HashSet<String> tokenizedFieldSet) {
+		Log.debug(Geonet.SEARCH_ENGINE, "Analyze field "+field+" : "+aText);
+		if (tokenizedFieldSet.contains(field)) {
+			String analyzedText = analyzeText(field, aText, analyzer);	
+			Log.debug(Geonet.SEARCH_ENGINE, "Analyzed text is "+analyzedText);
+			return analyzedText;
+		} else return aText;
+	}
+
+
+	/**
+	 * Splits text into tokens using the Analyzer that is matched to the field.
+	 * 
+	 * @param requestStr
+	 * @return
+	 */
+	public static String analyzeText(String field, String requestStr, PerFieldAnalyzerWrapper a) {
+
+		boolean phrase = false;
+		if ((requestStr.startsWith("\"") && requestStr.endsWith("\""))) phrase = true;
+		
+		TokenStream ts = a.tokenStream(field, new StringReader(requestStr));
+
+		ArrayList tokenList = new ArrayList();
+		try {
+			while (true) {
+				Token token = ts.next();
+				if (token == null) break;
+				tokenList.add(token.termText());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		StringBuffer result = new StringBuffer();
+
+		for (int i = 0;i < tokenList.size();i++) {
+			if (i > 0) {
+				result.append(" "+tokenList.get(i));
+			} else {
+				result.append(tokenList.get(i));
+			}
+		}
+		String outStr = result.toString();
+		if (phrase) outStr = "\"" + outStr + "\"";
+		return outStr;
+	}
+
+	// Unused at the moment - but might be useful later 
+	public static String escapeLuceneChars(String aText, String excludes) {
+     final StringBuilder result = new StringBuilder();
+     final StringCharacterIterator iterator = new StringCharacterIterator(aText);
+     char character =  iterator.current();
+     while (character != CharacterIterator.DONE ) {
+       if (character == '\\' && !excludes.contains("\\")) {
+         result.append("\\");
+       } else if (character == '!' && !excludes.contains("!")) {
+         result.append("\\");
+       } else if (character == '(' && !excludes.contains("(")) {
+         result.append("\\");
+       } else if (character == ')' && !excludes.contains(")")) {
+         result.append("\\");
+       } else if (character == '*' && !excludes.contains("*")) {
+         result.append("\\");
+       } else if (character == '+' && !excludes.contains("+")) {
+         result.append("\\");
+       } else if (character == '-' && !excludes.contains("-")) {
+         result.append("\\");
+       } else if (character == ':' && !excludes.contains(":")) {
+         result.append("\\");
+       } else if (character == '?' && !excludes.contains("?")) {
+         result.append("\\");
+       } else if (character == '[' && !excludes.contains("[")) {
+         result.append("\\");
+       } else if (character == ']' && !excludes.contains("]")) {
+         result.append("\\");
+       } else if (character == '^' && !excludes.contains("^")) {
+         result.append("\\");
+       } else if (character == '{' && !excludes.contains("{")) {
+         result.append("\\");
+       } else if (character == '}' && !excludes.contains("}")) {
+         result.append("\\");
+       } 
+       result.append(character);
+       character = iterator.next();
+     }
+		 Log.debug(Geonet.SEARCH_ENGINE, "Escaped: "+result.toString());
+     return result.toString();
+  }
+
 }
 
 //==============================================================================

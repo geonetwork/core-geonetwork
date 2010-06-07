@@ -34,7 +34,7 @@ import org.fao.geonet.constants.*;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.*;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.services.util.MainUtil;
+import org.fao.geonet.services.util.SearchDefaults;
 
 //=============================================================================
 
@@ -68,7 +68,7 @@ public class Search implements Service
 
 		SearchManager searchMan = gc.getSearchmanager();
 
-		Element elData  = MainUtil.getDefaultSearch(context, params);
+		Element elData  = SearchDefaults.getDefaultSearch(context, params);
 		String  sRemote = elData.getChildText(Geonet.SearchResult.REMOTE);
 		boolean remote  = sRemote != null && sRemote.equals(Geonet.Text.ON);
 
@@ -79,27 +79,6 @@ public class Search implements Service
         Element or    = elData.getChild(Geonet.SearchResult.OR);
         Element without  = elData.getChild(Geonet.SearchResult.WITHOUT);
         Element all   = elData.getChild(Geonet.SearchResult.ALL);
-
-		if (title != null)
-			title.setText(MainUtil.splitWord(title.getText()));
-
-		if (abstr != null)
-			abstr.setText(MainUtil.splitWord(abstr.getText()));
-
-		if (any != null)
-			any.setText(MainUtil.splitWord(any.getText()));
-
-        if (phrase != null)
-           phrase.setText(MainUtil.splitWord(phrase.getText()));
-
-        if (or != null)
-           or.setText(MainUtil.splitWord(or.getText()));
-
-        if (without != null)
-           without.setText(MainUtil.splitWord(without.getText()));
-
-        if (all != null)
-           all.setText(MainUtil.splitWord(all.getText()));
 
 		// Parse bbox & assign to four *BL params
 		Element bbox  = elData.getChild(Geonet.SearchResult.BBOX);

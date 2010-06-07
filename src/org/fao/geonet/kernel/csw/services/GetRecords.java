@@ -70,8 +70,8 @@ public class GetRecords extends AbstractOperation implements CatalogService
 
 	private SearchController _searchController;
 	
-	public GetRecords(File summaryConfig) {
-    	_searchController = new SearchController(summaryConfig);
+	public GetRecords(File summaryConfig, File luceneConfig) {
+    	_searchController = new SearchController(summaryConfig, luceneConfig);
     }
 
     //---------------------------------------------------------------------------

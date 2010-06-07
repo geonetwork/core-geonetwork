@@ -62,13 +62,13 @@ public class CatalogDispatcher
 	//---
 	//---------------------------------------------------------------------------
 
-	public CatalogDispatcher(File summaryConfig)
+	public CatalogDispatcher(File summaryConfig, File luceneConfig)
 	{
 		register(new DescribeRecord());
 		register(new GetCapabilities());
 		register(new GetDomain());
 		register(new GetRecordById());
-		register(new GetRecords(summaryConfig));
+		register(new GetRecords(summaryConfig, luceneConfig));
 		register(new Harvest());
 		register(new Transaction());
 	}

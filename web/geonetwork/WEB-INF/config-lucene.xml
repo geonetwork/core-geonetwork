@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<config>
+
+	<!-- All Lucene fields that are tokenized must be kept here because it
+       is impossible unfortunately from Lucene API to work out which fields are
+		 	 tokenized and which aren't unless we read documents and we may not have
+		 	 an index to do this on so since most fields are not tokenized we 
+		 	 keep a list of tokenized fields here
+	 -->
+		 
+	<tokenized>
+		<Field name="any"/>
+		<Field name="abstract"/>
+		<Field name="title"/>
+		<Field name="altTitle"/>
+ 		<Field name="inspiretheme"/>
+		<Field name="keywordType"/>
+		<Field name="orgName"/>
+		<Field name="specificationTitle"/>
+		<Field name="levelName"/>
+		<!-- from SearchManager/static -->
+		<Field name="_uuid"/>
+		<Field name="parentUuid"/>
+		<Field name="operatesOn"/>
+		<Field name="subject"/>
+	</tokenized>
+
+</config>

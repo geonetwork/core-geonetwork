@@ -28,7 +28,7 @@ import org.jdom.*;
 import jeeves.interfaces.*;
 import jeeves.server.*;
 import jeeves.server.context.*;
-import org.fao.geonet.services.util.MainUtil;
+import org.fao.geonet.services.util.SearchDefaults;
 
 //=============================================================================
 
@@ -54,7 +54,7 @@ public class GetDefaults implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		return (Element)MainUtil.getDefaultSearch(context, null).clone();
+		return (Element)SearchDefaults.getDefaultSearch(context, null).clone();
 	}
 }
 

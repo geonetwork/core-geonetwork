@@ -32,6 +32,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -124,8 +125,9 @@ public class SearchManager
 	private final File     _stylesheetsDir;
 	private final File     _schemasDir;
 	private final Element  _summaryConfig;
+	private final Element  _tokenizedFields;
 	private File           _luceneDir;
-	private PerFieldAnalyzerWrapper _analyzer;
+	private static PerFieldAnalyzerWrapper _analyzer;
 	private String         _htmlCacheDir;
 	private String         _dataDir;
 	private Searchable     _hssSearchable;
@@ -138,7 +140,40 @@ public class SearchManager
 	private Calendar       _optimizerBeginAt;
 	private SimpleDateFormat _dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-    private boolean        _inspireEnabled = false;
+  private boolean        _inspireEnabled = false;
+
+	//-----------------------------------------------------------------------------
+	static {
+    // Define the default Analyzer
+		_analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer(new HashSet<String>()));
+		// Here you could define specific analyzer for each fields stored in the index.
+		//
+		// For example adding a different analyzer for any (ie. full text search) 
+		// could be better than a standard analyzer which has a particular way of 
+		// creating tokens.
+		// In that situation, when field is "mission AD-T" is tokenized to "mission" "AD" & "T"
+		// using StandardAnalyzer.
+		// A WhiteSpaceTokenizer tokenized to "mission" "AD-T"
+		// which could be better in some situation.
+		// But when field is "mission AD-34T" is tokenized to "mission" "AD-34T" using StandardAnalyzer due to number.
+		// analyzer.addAnalyzer("any", new WhitespaceAnalyzer());
+		// 
+		// Uuid stored using a standard analyzer will be change to lower case.
+		// Whitespace will not.
+		
+		// heikki doeleman: UUID must be case insensitive, as its parts are hexadecimal numbers which
+		// are not case sensitive.
+		_analyzer.addAnalyzer("_uuid", new StandardAnalyzer(new HashSet<String>()));
+		_analyzer.addAnalyzer("parentUuid", new StandardAnalyzer(new HashSet<String>()));
+		_analyzer.addAnalyzer("operatesOn", new StandardAnalyzer(new HashSet<String>()));
+		_analyzer.addAnalyzer("subject", new KeywordAnalyzer());
+	}
+
+	//-----------------------------------------------------------------------------
+
+	public static PerFieldAnalyzerWrapper getAnalyzer() {
+		return _analyzer;
+	}
 
 	//-----------------------------------------------------------------------------
 
@@ -150,9 +185,13 @@ public class SearchManager
 	 * @param dataStore
 	 * @throws Exception
 	 */
-	public SearchManager(String appPath, String luceneDir, String htmlCacheDir, String dataDir, String summaryConfigXmlFile,  String guiConfigXmlFile, DataStore dataStore, SettingInfo si) throws Exception
+	public SearchManager(String appPath, String luceneDir, String htmlCacheDir, String dataDir, String summaryConfigXmlFile,  String guiConfigXmlFile, String luceneConfigXmlFile, DataStore dataStore, SettingInfo si) throws Exception
 	{
 		_summaryConfig = Xml.loadStream(new FileInputStream(new File(appPath,summaryConfigXmlFile)));
+
+		Element luceneConfig = Xml.loadStream(new FileInputStream(new File(appPath,luceneConfigXmlFile)));
+		_tokenizedFields = luceneConfig.getChild("tokenized");
+
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
 		_schemasDir     = new File(appPath, SCHEMA_STYLESHEETS_DIR_PATH);
 
@@ -175,30 +214,6 @@ public class SearchManager
      _luceneDir.getParentFile().mkdirs();
         
      _spatial = new Spatial(dataStore);
-
-        // Define the default Analyzer
-		_analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer());
-		// Here you could define specific analyzer for each fields stored in the index.
-		//
-		// For example adding a different analyzer for any (ie. full text search) 
-		// could be better than a standard analyzer which has a particular way of 
-		// creating tokens.
-		// In that situation, when field is "mission AD-T" is tokenized to "mission" "AD" & "T"
-		// using StandardAnalyzer.
-		// A WhiteSpaceTokenizer tokenized to "mission" "AD-T"
-		// which could be better in some situation.
-		// But when field is "mission AD-34T" is tokenized to "mission" "AD-34T" using StandardAnalyzer due to number.
-		// analyzer.addAnalyzer("any", new WhitespaceAnalyzer());
-		// 
-		// Uuid stored using a standard analyzer will be change to lower case.
-		// Whitespace will not.
-		
-		// heikki doeleman: UUID must be case insensitive, as its parts are hexadecimal numbers which
-		// are not case sensitive.
-		_analyzer.addAnalyzer("_uuid", new StandardAnalyzer());
-		_analyzer.addAnalyzer("parentUuid", new StandardAnalyzer());
-		_analyzer.addAnalyzer("operatesOn", new StandardAnalyzer());
-		_analyzer.addAnalyzer("subject", new KeywordAnalyzer());
 
 		initLucene(appPath, luceneDir);
 		initZ3950(appPath);
@@ -309,7 +324,7 @@ public class SearchManager
 	{
 		switch (type)
 		{
-			case LUCENE: return new LuceneSearcher(this, stylesheetName, _summaryConfig);
+			case LUCENE: return new LuceneSearcher(this, stylesheetName, _summaryConfig, _tokenizedFields);
 			case Z3950:  return new Z3950Searcher(this, stylesheetName);
 			case UNUSED: return new UnusedSearcher();
 

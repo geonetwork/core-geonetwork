@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!-- title is tokenized by Lucene - this test checks whether the 
+     the correct analyzer is applied to tokenize the exact title phrase
+		 specified to return a match for PropertyIsEqualTo -->
+<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:gmd="http://www.isotc211.org/2005/gmd" service="CSW" version="2.0.2" outputSchema="csw:Record" resultType="results">
+    <csw:Query typeNames="csw:Record">
+        <csw:ElementSetName>summary</csw:ElementSetName>
+        <csw:Constraint version="1.1.0">
+            <Filter xmlns="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">
+                <PropertyIsEqualTo>
+                    <PropertyName>title</PropertyName>
+                    <Literal>Hydrological Basins in Africa (Sample record, please remove!)</Literal>
+                </PropertyIsEqualTo>
+            </Filter>
+        </csw:Constraint>
+    </csw:Query>
+</csw:GetRecords>

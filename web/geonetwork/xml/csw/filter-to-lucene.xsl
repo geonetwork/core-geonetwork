@@ -80,7 +80,10 @@
 
 	<!-- ========================================================================== -->
 
-	<xsl:template match="ogc:PropertyIsLessThanOrEqualTo">
+	<!-- Filter spec says ogc:PropertyIsLessThanOrEqualTo, OGC CSW schema and 
+	     GetCapabilties says ogc:PropertyIsLessThanEqualTo so we'd better 
+			 support both -->
+	<xsl:template match="ogc:PropertyIsLessThanOrEqualTo|ogc:PropertyIsLessThanEqualTo">
 		<xsl:choose>
 			<xsl:when test="ogc:PropertyName and ogc:Literal">
 				<RangeQuery fld="{ogc:PropertyName}" upperTxt="{ogc:Literal}" inclusive="true"/>
@@ -110,7 +113,10 @@
 
 	<!-- ========================================================================== -->
 
-	<xsl:template match="ogc:PropertyIsGreaterThanOrEqualTo">
+	<!-- Filter spec says ogc:PropertyIsGreaterThanOrEqualTo, OGC CSW schema and 
+	     GetCapabilties says ogc:PropertyIsGreaterThanEqualTo so we'd better 
+			 support both -->
+	<xsl:template match="ogc:PropertyIsGreaterThanOrEqualTo|ogc:PropertyIsGreaterThanEqualTo">
 		<xsl:choose>
 			<xsl:when test="ogc:PropertyName and ogc:Literal">
 				<RangeQuery fld="{ogc:PropertyName}" lowerTxt="{ogc:Literal}" inclusive="true"/>

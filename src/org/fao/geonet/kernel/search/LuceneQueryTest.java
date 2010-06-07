@@ -1,10 +1,22 @@
 package org.fao.geonet.kernel.search;
 
 import junit.framework.TestCase;
+
+import org.apache.lucene.analysis.KeywordAnalyzer;
+import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
+import org.apache.lucene.analysis.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.search.Query;
+
 import org.jdom.DefaultJDOMFactory;
 import org.jdom.Element;
 import org.jdom.JDOMFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.HashSet;
+
+import jeeves.utils.Xml;
 
 /**
  *
@@ -15,8 +27,30 @@ import org.jdom.JDOMFactory;
  */
 public class LuceneQueryTest extends TestCase {
 
-	public LuceneQueryTest(String name) {
+	private HashSet<String> _tokenizedFieldSet;
+	private PerFieldAnalyzerWrapper _analyzer;
+
+	public LuceneQueryTest(String name) throws Exception {
 		super(name);
+
+		_analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer());
+    _analyzer.addAnalyzer("_uuid", new StandardAnalyzer());
+    _analyzer.addAnalyzer("parentUuid", new StandardAnalyzer());
+    _analyzer.addAnalyzer("operatesOn", new StandardAnalyzer());
+    _analyzer.addAnalyzer("subject", new KeywordAnalyzer());
+
+		Element tokenizedFields = Xml.loadStream(new FileInputStream(new File("web/geonetwork/WEB-INF/config-lucene.xml")));		
+
+		// build _tokenizedFieldSet
+    _tokenizedFieldSet = new HashSet<String>();
+		Element tokenized = tokenizedFields.getChild("tokenized");
+    for ( int i = 0; i < tokenized.getContentSize(); i++ ) {
+      Object o = tokenized.getContent(i);
+      if (o instanceof Element) {
+        Element elem = (Element)o;
+        _tokenizedFieldSet.add(elem.getAttributeValue("name"));
+      }
+    }
 	}
 
 	/**
@@ -30,7 +64,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("hoeperdepoep");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+any:hoeperdepoep +_isTemplate:n", query.toString());
 	}
@@ -46,7 +80,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n", query.toString());
 	}
@@ -62,7 +96,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("hOeperdEpoeP");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+any:hoeperdepoep +_isTemplate:n", query.toString());
 	}
@@ -81,7 +115,7 @@ public class LuceneQueryTest extends TestCase {
 		similarity.addContent("0.5740458015267176");
 		request.addContent(similarity);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+any:asjemenou~0.5740458 +_isTemplate:n", query.toString());
 	}
@@ -97,7 +131,7 @@ public class LuceneQueryTest extends TestCase {
 		uuid.addContent("ad2aa2c7-f099-47cb-8a38-4effe2a2d250");
 		request.addContent(uuid);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(_uuid:ad2aa2c7-f099-47cb-8a38-4effe2a2d250) +_isTemplate:n", query.toString());
 	}
@@ -113,7 +147,7 @@ public class LuceneQueryTest extends TestCase {
 		uuid.addContent("63C2378A-17A7-B863-BFF4-CC3EF507D10D or ad2aa2c7-f099-47cb-8a38-4effe2a2d250");
 		request.addContent(uuid);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(_uuid:63c2378a-17a7-b863-bff4-cc3ef507d10d _uuid:ad2aa2c7-f099-47cb-8a38-4effe2a2d250) +_isTemplate:n", query.toString());
 	}
@@ -133,7 +167,7 @@ public class LuceneQueryTest extends TestCase {
 		similarity.addContent("1");
 		request.addContent(similarity);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+any:asjemenou +_isTemplate:n", query.toString());
 	}
@@ -149,7 +183,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("deze die");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(+any:deze +any:die) +_isTemplate:n", query.toString());
 	}
@@ -168,7 +202,7 @@ public class LuceneQueryTest extends TestCase {
 		similarity.addContent("0.6885496183206108");
 		request.addContent(similarity);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(+any:fucking~0.68854964 +any:hell~0.68854964) +_isTemplate:n", query.toString());
 	}
@@ -184,7 +218,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("hoeperdepoep");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(any:hoeperdepoep) +_isTemplate:n", query.toString());
 	}
@@ -200,7 +234,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("hoep poep");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(any:hoep any:poep) +_isTemplate:n", query.toString());
 	}
@@ -219,7 +253,7 @@ public class LuceneQueryTest extends TestCase {
 		similarity.addContent("0.5969465648854961");
 		request.addContent(similarity);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(any:hoep~0.59694654 any:poep~0.59694654) +_isTemplate:n", query.toString());
 	}
@@ -235,7 +269,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("hoeperdepoep");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+any:hoeperdepoep +_isTemplate:n", query.toString());
 	}
@@ -254,7 +288,7 @@ public class LuceneQueryTest extends TestCase {
 		similarity.addContent("0.6885496183206108");
 		request.addContent(similarity);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(+any:fucking~0.68854964 +any:hell~0.68854964) +_isTemplate:n", query.toString());
 	}
@@ -270,7 +304,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("hoeperdepoep");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		//assertEquals("+(+MatchAllDocsQuery -any:hoeperdepoep) +_isTemplate:n", query.toString());
         assertEquals("+(+*:* -any:hoeperdepoep) +_isTemplate:n", query.toString());
@@ -287,7 +321,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("hip hop");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(+*:* -any:hip -any:hop) +_isTemplate:n", query.toString());
 	}
@@ -306,7 +340,7 @@ public class LuceneQueryTest extends TestCase {
 		similarity.addContent("0.6885496183206108");
 		request.addContent(similarity);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(+*:* -any:hip -any:hop) +_isTemplate:n", query.toString());
 	}
@@ -322,7 +356,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("humph");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+any:\"humph\" +_isTemplate:n", query.toString());
 	}
@@ -338,7 +372,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("that one");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+any:\"that one\" +_isTemplate:n", query.toString());
 	}
@@ -357,7 +391,7 @@ public class LuceneQueryTest extends TestCase {
 		similarity.addContent("0.6885496183206108");
 		request.addContent(similarity);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+any:\"that one\" +_isTemplate:n", query.toString());
 	}
@@ -373,7 +407,7 @@ public class LuceneQueryTest extends TestCase {
 		tc.addContent("biota*");
 		request.addContent(tc);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(topicCat:biota*) +_isTemplate:n", query.toString());
 	}
@@ -395,7 +429,7 @@ public class LuceneQueryTest extends TestCase {
 		tc3.addContent("environment*");
 		request.addContent(tc3);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(topicCat:biota* topicCat:boundaries* topicCat:environment*) +_isTemplate:n", query.toString());
 	}
@@ -412,7 +446,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("y");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:y", query.toString());
 	}
@@ -428,7 +462,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("s");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:s", query.toString());
 	}
@@ -443,7 +477,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("WTF");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n", query.toString());
 	}
@@ -455,7 +489,7 @@ public class LuceneQueryTest extends TestCase {
 		JDOMFactory factory = new DefaultJDOMFactory();
 		Element request = factory.element("request");
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n", query.toString());
 	}
@@ -471,7 +505,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("12-05-1989");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n +changeDate:[12-05-1989 TO *]", query.toString());
 	}
@@ -487,7 +521,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("12-05-1989");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n +changeDate:[* TO 12-05-1989T23:59:59]", query.toString());
 	}
@@ -507,7 +541,7 @@ public class LuceneQueryTest extends TestCase {
 		any2.addContent("11-05-1989");
 		request.addContent(any2);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n +changeDate:[11-05-1989 TO 12-05-1989T23:59:59]", query.toString());
 	}
@@ -523,7 +557,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("f74e4ccf-755a-48ef-bedf-990f9872298b");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n +source:f74e4ccf-755a-48ef-bedf-990f9872298b", query.toString());
 	}
@@ -539,7 +573,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("humph");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n +title:humph", query.toString());
 	}
@@ -555,7 +589,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("download");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+protocol:download +_isTemplate:n", query.toString());
 	}
@@ -571,7 +605,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("dataset");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n +type:dataset", query.toString());
 	}
@@ -587,7 +621,7 @@ public class LuceneQueryTest extends TestCase {
         any.addContent("true");
         request.addContent(any);
         // build lucene query
-        Query query = new LuceneQueryBuilder().build(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
         // verify query
         assertEquals("+_isTemplate:n +inspirecat:true", query.toString());
     }
@@ -603,7 +637,7 @@ public class LuceneQueryTest extends TestCase {
         any.addContent("Addresses*");
         request.addContent(any);
         // build lucene query
-        Query query = new LuceneQueryBuilder().build(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
         // verify query
         assertEquals("+_isTemplate:n +(inspiretheme:\"addresses\")", query.toString());
     }
@@ -619,7 +653,7 @@ public class LuceneQueryTest extends TestCase {
         any.addContent("Administrative units*");
         request.addContent(any);
         // build lucene query
-        Query query = new LuceneQueryBuilder().build(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
         // verify query
         assertEquals("+_isTemplate:n +(inspiretheme:\"administrative units\")", query.toString());
     }
@@ -637,7 +671,7 @@ public class LuceneQueryTest extends TestCase {
         any2.addContent("Hydrography*");
         request.addContent(any2);
         // build lucene query
-        Query query = new LuceneQueryBuilder().build(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
         // verify query
         assertEquals("+_isTemplate:n +(inspiretheme:\"cadastral parcels\" inspiretheme:\"hydrography\")", query.toString());
     }
@@ -653,7 +687,7 @@ public class LuceneQueryTest extends TestCase {
         any.addContent("joostmaghetweten");
         request.addContent(any);
         // build lucene query
-        Query query = new LuceneQueryBuilder().build(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
         // verify query
         assertEquals("+_isTemplate:n +inspireannex:joostmaghetweten", query.toString());
     }
@@ -669,7 +703,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("hoeperdepoep");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n +(keyword:hoeperdepoep)", query.toString());
 	}
@@ -689,7 +723,7 @@ public class LuceneQueryTest extends TestCase {
 		any2.addContent("zat op de stoep");
 		request.addContent(any2);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n +(keyword:hoeperdepoep) +(keyword:zat op de stoep)", query.toString());
 	}
@@ -708,7 +742,7 @@ public class LuceneQueryTest extends TestCase {
         any.addContent("\"hoeperdepoep\"" + keywordSeparator + "\"zat op de stoep\"");
         request.addContent(any);
         // build lucene query
-        Query query = new LuceneQueryBuilder().build(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
         // verify query
         assertEquals("+_isTemplate:n +(keyword:hoeperdepoep keyword:zat op de stoep)", query.toString());
 
@@ -725,7 +759,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("hoeperdepoep");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(+(_cat:hoeperdepoep)) +_isTemplate:n", query.toString());
 	}
@@ -741,7 +775,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("as432f-s45hj3-vcx35s-fsd8sf");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n +parentUuid:as432f-s45hj3-vcx35s-fsd8sf", query.toString());
 	}
@@ -757,7 +791,7 @@ public class LuceneQueryTest extends TestCase {
         any.addContent("value");
         request.addContent(any);
         // build lucene query
-        Query query = new LuceneQueryBuilder().build(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
         // verify query
         assertEquals("+_isTemplate:n +operatesOn:value", query.toString());
     }
@@ -773,7 +807,7 @@ public class LuceneQueryTest extends TestCase {
         any.addContent("value");
         request.addContent(any);
         // build lucene query
-        Query query = new LuceneQueryBuilder().build(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
         // verify query
         assertEquals("+_isTemplate:n +_schema:value", query.toString());
     }                                                                    
@@ -791,7 +825,7 @@ public class LuceneQueryTest extends TestCase {
         extFrom.addContent("2010-04-01T17:35:00");
         request.addContent(extFrom);
         // build lucene query
-        Query query = new LuceneQueryBuilder().build(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 
         String expected = "+_isTemplate:n +(tempExtentBegin:[2010-04-01T17:35:00 TO *] tempExtentEnd:[2010-04-01T17:35:00 TO *])";
         assertEquals(expected, query.toString());
@@ -802,7 +836,7 @@ public class LuceneQueryTest extends TestCase {
         extTo.addContent("2010-04-27T17:43:00");
         request.addContent(extTo);
         // build lucene query
-        query = new LuceneQueryBuilder().build(request);
+        query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 
         expected = "+_isTemplate:n +(tempExtentBegin:[* TO 2010-04-27T17:43:00] tempExtentEnd:[* TO 2010-04-27T17:43:00])";
         assertEquals(expected, query.toString());
@@ -818,7 +852,7 @@ public class LuceneQueryTest extends TestCase {
         extTo.addContent("2010-04-27T17:43:00");
         request.addContent(extTo);
         // build lucene query
-        query = new LuceneQueryBuilder().build(request);
+        query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 
         expected = "+_isTemplate:n +(tempExtentBegin:[2010-04-08T17:46:00 TO 2010-04-27T17:43:00] tempExtentEnd:[2010-04-08T17:46:00 TO 2010-04-27T17:43:00] (+tempExtentEnd:[2010-04-27T17:43:00 TO *] +tempExtentBegin:[* TO 2010-04-08T17:46:00]))";
         assertEquals(expected, query.toString());
@@ -833,7 +867,7 @@ public class LuceneQueryTest extends TestCase {
         extTo.addContent("2010-04-29T16:40:00");
         request.addContent(extTo);
         // build lucene query
-        Query query = new LuceneQueryBuilder().build(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
         // verify query
         assertEquals("+_isTemplate:n +(tempExtentBegin:[2010-04-27T16:40:00 TO 2010-04-29T16:40:00]" +
                 " tempExtentEnd:[2010-04-27T16:40:00 TO 2010-04-29T16:40:00] " +
@@ -854,7 +888,7 @@ public class LuceneQueryTest extends TestCase {
 		any2.addContent("zat op de stoep");
 		request.addContent(any2);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(+(_cat:hoeperdepoep) +(_cat:zat _cat:op _cat:de _cat:stoep)) +_isTemplate:n", query.toString());
 	}
@@ -870,7 +904,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("JanMetDeKorteNaam");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_groupOwner:JanMetDeKorteNaam +_isTemplate:n", query.toString());
 	}
@@ -889,7 +923,7 @@ public class LuceneQueryTest extends TestCase {
 		any2.addContent("GregoriusMetDeLangeNaam");
 		request.addContent(any2);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_groupOwner:JanMetDeKorteNaam +_groupOwner:GregoriusMetDeLangeNaam +_isTemplate:n", query.toString());
 	}
@@ -905,7 +939,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("true");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_op6:1 +_op0:1 +_isTemplate:n", query.toString());
 	}
@@ -921,7 +955,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("not true");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n", query.toString());
 	}
@@ -938,7 +972,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("hatsjekidee");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(_op0:hatsjekidee) +_isTemplate:n", query.toString());
 	}
@@ -956,7 +990,7 @@ public class LuceneQueryTest extends TestCase {
 		Element any2 = factory.element("group");
 		any2.addContent("nou moe");
 		request.addContent(any2);		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(_op0:hatsjekidee _op0:nou moe) +_isTemplate:n", query.toString());
 	}
@@ -978,7 +1012,7 @@ public class LuceneQueryTest extends TestCase {
 		any3.addContent("yeah!");
 		request.addContent(any3);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(_op0:hatsjekidee _op0:nou moe _groupOwner:hatsjekidee _groupOwner:nou moe) +_isTemplate:n", query.toString());
 	}
@@ -1000,7 +1034,7 @@ public class LuceneQueryTest extends TestCase {
 		any3.addContent("yeah!");
 		request.addContent(any3);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(_op0:hatsjekidee _op0:nou moe _owner:yeah!) +_isTemplate:n", query.toString());
 	}
@@ -1022,7 +1056,7 @@ public class LuceneQueryTest extends TestCase {
 		any3.addContent("yeah!");
 		request.addContent(any3);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(_op0:hatsjekidee _op0:nou moe _dummy:0) +_isTemplate:n", query.toString());
 	}
@@ -1051,7 +1085,7 @@ public class LuceneQueryTest extends TestCase {
 		anyR.addContent("equal");
 		request.addContent(anyR);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n +eastBL:[414.0 TO 416.0] +westBL:[402.0 TO 404.0] +northBL:[479.0 TO 481.0] +southBL:[449.0 TO 451.0]", query.toString());
 	}
@@ -1079,7 +1113,7 @@ public class LuceneQueryTest extends TestCase {
 		anyR.addContent("overlaps");
 		request.addContent(anyR);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n +eastBL:[404.0 TO 540] +westBL:[180 TO 414.0] +northBL:[451.0 TO 450] +southBL:[270 TO 479.0]", query.toString());
 	}
@@ -1107,7 +1141,7 @@ public class LuceneQueryTest extends TestCase {
 		anyR.addContent("encloses");
 		request.addContent(anyR);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n +eastBL:[414.0 TO 540] +westBL:[180 TO 404.0] +northBL:[479.0 TO 450] +southBL:[270 TO 451.0]", query.toString());
 	}
@@ -1135,7 +1169,7 @@ public class LuceneQueryTest extends TestCase {
 		anyR.addContent("fullyEnclosedWithin");
 		request.addContent(anyR);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n +eastBL:[402.0 TO 416.0] +westBL:[402.0 TO 416.0] +northBL:[449.0 TO 481.0] +southBL:[449.0 TO 481.0]", query.toString());
 	}
@@ -1163,7 +1197,7 @@ public class LuceneQueryTest extends TestCase {
 		anyR.addContent("fullyOutsideOf");
 		request.addContent(anyR);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n eastBL:[180 TO 404.0] +westBL:[414.0 TO 540] +northBL:[270 TO 451.0] +southBL:[479.0 TO 540]", query.toString());
 	}
@@ -1191,7 +1225,7 @@ public class LuceneQueryTest extends TestCase {
 		anyR.addContent("overlaps");
 		request.addContent(anyR);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n +eastBL:[181.0 TO 540] +westBL:[180 TO 539.0] +northBL:[271.0 TO 450] +southBL:[270 TO 449.0]", query.toString());
 	}
@@ -1266,7 +1300,7 @@ public class LuceneQueryTest extends TestCase {
 		anyR.addContent("overlaps");
 		request.addContent(anyR);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(_op0:0 _op0:1) +_isTemplate:n +title:hoi +eastBL:[181.0 TO 540] +westBL:[180 TO 539.0] +northBL:[271.0 TO 450] +southBL:[270 TO 449.0]", query.toString());
 	}
@@ -1393,7 +1427,7 @@ public class LuceneQueryTest extends TestCase {
 		request.addContent(sortBySelect);
 
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n +eastBL:[181.0 TO 540] +westBL:[180 TO 539.0] +northBL:[271.0 TO 450] +southBL:[270 TO 449.0]", query.toString());
 	}
@@ -1410,7 +1444,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("on");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(protocol:OGC:WMS-*-get-map protocol:OGC:WMS-*-get-capabilities protocol:ESRI:AIMS-*-get-image) +_isTemplate:n", query.toString());
 
@@ -1424,7 +1458,7 @@ public class LuceneQueryTest extends TestCase {
 		template.addContent("y");
 		request.addContent(template);
 		// build lucene query
-		 query = new LuceneQueryBuilder().build(request);
+		 query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:y", query.toString());
     }
@@ -1440,7 +1474,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("on");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+(protocol:WWW:DOWNLOAD-*--download) +_isTemplate:n", query.toString());
 
@@ -1454,7 +1488,7 @@ public class LuceneQueryTest extends TestCase {
 		template.addContent("y");
 		request.addContent(template);
 		// build lucene query
-		 query = new LuceneQueryBuilder().build(request);
+		 query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:y", query.toString());
     }
@@ -1474,7 +1508,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("off");
 		request.addContent(any);
 		// build lucene query
-		Query query = new LuceneQueryBuilder().build(request);
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n +digital:true", query.toString());
 
@@ -1488,7 +1522,7 @@ public class LuceneQueryTest extends TestCase {
 		any.addContent("on");
 		request.addContent(any);
 		// build lucene query
-		 query = new LuceneQueryBuilder().build(request);
+		 query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+_isTemplate:n +paper:true", query.toString());
 
@@ -1501,7 +1535,7 @@ public class LuceneQueryTest extends TestCase {
         any.addContent("off");
         request.addContent(any);
         // build lucene query
-        query = new LuceneQueryBuilder().build(request);
+        query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
         // verify query
         assertEquals("+_isTemplate:n", query.toString());
 
@@ -1514,7 +1548,7 @@ public class LuceneQueryTest extends TestCase {
         any.addContent("on");
         request.addContent(any);
         // build lucene query
-        query = new LuceneQueryBuilder().build(request);
+        query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
         // verify query
         assertEquals("+_isTemplate:n", query.toString());
 

@@ -370,7 +370,7 @@ public class Transaction extends AbstractOperation implements CatalogService
 	 * @throws CatalogException
 	 */
 	private List<Element> getResultsFromConstraints(ServiceContext context, Element constr) throws CatalogException {
-		SearchController sc = new SearchController(null);
+		SearchController sc = new SearchController(null, null);
 		
 		Set<TypeName> typeNames = getTypeNames(constr);
 		Element filterExpr  = getFilterExpression(constr, context);

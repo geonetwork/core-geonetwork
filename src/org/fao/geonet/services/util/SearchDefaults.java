@@ -24,16 +24,11 @@
 package org.fao.geonet.services.util;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.Token;
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
@@ -45,7 +40,7 @@ import org.jdom.Element;
  * @author fxprunayre
  *
  */
-public class MainUtil {
+public class SearchDefaults {
 	/**
 	 * Default params for search
 	 * Usually, default variable for search parameters
@@ -123,40 +118,4 @@ public class MainUtil {
 		return elData;
 	}
 
-	/**
-	 * Splits a text in tokens.
-	 * 
-	 * @param requestStr
-	 * @return
-	 */
-	public static String splitWord(String requestStr) {
-		
-		// leave phrases alone
-		if (requestStr.indexOf('"') == 0) return requestStr.toLowerCase(); 
-
-		Analyzer a = new StandardAnalyzer();
-		TokenStream ts = a.tokenStream(null, new StringReader(requestStr));
-
-		ArrayList tokenList = new ArrayList();
-		try {
-			while (true) {
-				Token token = ts.next();
-				if (token == null) break;
-				tokenList.add(token.termText());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		StringBuffer result = new StringBuffer();
-
-		for (int i = 0;i < tokenList.size();i++) {
-			if (i > 0) {
-				result.append(" "+tokenList.get(i));
-			} else {
-				result.append(tokenList.get(i));
-			}
-		}
-		return result.toString();
-	}
 }

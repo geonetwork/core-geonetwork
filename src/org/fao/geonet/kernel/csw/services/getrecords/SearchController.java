@@ -61,9 +61,9 @@ public class SearchController
 {
     
 	private final CatalogSearcher _searcher;
-    public SearchController(File summaryConfig)
+    public SearchController(File summaryConfig, File luceneConfig)
     {
-        _searcher = new CatalogSearcher(summaryConfig);
+        _searcher = new CatalogSearcher(summaryConfig, luceneConfig);
     }
 	
 	//---------------------------------------------------------------------------
