@@ -155,7 +155,7 @@ public class Worker implements Runnable
 
 	private void checkOldUser(Dbms oldDbms) throws Exception
 	{
-		String query = "SELECT id, profile FROM users WHERE username = ?";
+		String query = "SELECT id, profile FROM Users WHERE username = ?";
 		List oldUserIds = oldDbms.select(query, oldUserName).getChildren();
 		oldDbms.commit();
 
@@ -171,7 +171,7 @@ public class Worker implements Runnable
 		// Check if the group exists
 		oldUserId = Integer.parseInt(((Element)oldUserIds.get(0)).getChildText("id"));
 
-		query = "SELECT id FROM groups WHERE name = ?";
+		query = "SELECT id FROM Groups WHERE name = ?";
 		List oldGroupIds = oldDbms.select(query, oldGroupName).getChildren();
 		oldDbms.commit();
 		if (oldGroupIds.size() == 0)
@@ -180,9 +180,10 @@ public class Worker implements Runnable
 		// Check if the user belongs to the given group
 		oldGroupId = Integer.parseInt(((Element)oldGroupIds.get(0)).getChildText("id"));
 
-		query = "SELECT groupId FROM userGroups WHERE groupId = ? AND userId = ?";
+		query = "SELECT groupId FROM UserGroups WHERE groupId = ? AND userId = ?";
 		List userGroups = oldDbms.select(query, new Integer(oldGroupId), new Integer(oldUserId)).getChildren();
 		oldDbms.commit();
+		
 		if (userGroups.size() == 0)
 			throw new Exception(MessageFormat.format(Messages.getString("Worker.11"),oldUserName,oldGroupName));
 	}
