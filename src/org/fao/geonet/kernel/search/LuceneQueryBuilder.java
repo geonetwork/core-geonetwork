@@ -472,31 +472,31 @@ public class LuceneQueryBuilder {
 		}
 		query.add(templateQuery, templateOccur);
 
-		//
-		// date range
-		//
-		String dateTo = request.getChildText("dateTo");
-		String dateFrom = request.getChildText("dateFrom");
-		if((dateTo != null && dateTo.length() > 0) || (dateFrom != null && dateFrom.length() > 0)) {
-			Term lowerTerm = null;
-			Term upperTerm = null;
-			RangeQuery rangeQuery = null;
-			if(dateFrom != null) {
-				lowerTerm = new Term(LuceneIndexField.CHANGE_DATE, dateFrom);
-			}
-			if(dateTo != null) {
-				// while the 'from' parameter can be short (like yyyy-mm-dd)
-				// the 'until' parameter must be long to match
-				if(dateTo.length() == 10) {
-					dateTo = dateTo + "T23:59:59";
-				}
-				upperTerm = new Term(LuceneIndexField.CHANGE_DATE, dateTo);
-			}
-			rangeQuery = new RangeQuery(lowerTerm, upperTerm, true);
-			BooleanClause.Occur dateOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-			BooleanClause dateRangeClause = new BooleanClause(rangeQuery, dateOccur);
-			query.add(dateRangeClause);
-		}
+		// metadata date range
+		addDateRangeQuery(query, 
+				request.getChildText("dateTo"), 
+				request.getChildText("dateFrom"), 
+				LuceneIndexField.CHANGE_DATE);
+
+		// Revision, publication and creation dates may
+		// have been index as temporal extent also.
+		// data revision date range
+		addDateRangeQuery(query, 
+				request.getChildText("revisionDateTo"), 
+				request.getChildText("revisionDateFrom"), 
+				LuceneIndexField.REVISION_DATE);
+
+		// data publication date range
+		addDateRangeQuery(query, 
+				request.getChildText("publicationDateTo"), 
+				request.getChildText("publicationDateFrom"), 
+				LuceneIndexField.PUBLICATION_DATE);
+
+		// data creation date range
+		addDateRangeQuery(query, 
+				request.getChildText("creationDateTo"), 
+				request.getChildText("creationDateFrom"), 
+				LuceneIndexField.CREATE_DATE);
 
 
         //
@@ -767,6 +767,31 @@ public class LuceneQueryBuilder {
 		System.out.println("\n\nLuceneQueryBuilder: query is\n" + query + "\n\n");
 
 		return query;
+	}
+
+	
+	private void addDateRangeQuery(BooleanQuery query, String dateTo,
+			String dateFrom, String luceneIndexField) {
+		if((dateTo != null && dateTo.length() > 0) || (dateFrom != null && dateFrom.length() > 0)) {
+			Term lowerTerm = null;
+			Term upperTerm = null;
+			RangeQuery rangeQuery = null;
+			if(dateFrom != null) {
+				lowerTerm = new Term(luceneIndexField, dateFrom);
+			}
+			if(dateTo != null) {
+				// while the 'from' parameter can be short (like yyyy-mm-dd)
+				// the 'until' parameter must be long to match
+				if(dateTo.length() == 10) {
+					dateTo = dateTo + "T23:59:59";
+				}
+				upperTerm = new Term(luceneIndexField, dateTo);
+			}
+			rangeQuery = new RangeQuery(lowerTerm, upperTerm, true);
+			BooleanClause.Occur dateOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+			BooleanClause dateRangeClause = new BooleanClause(rangeQuery, dateOccur);
+			query.add(dateRangeClause);
+		}
 	}
 
 	private void addBoundingBox(BooleanQuery query, String relation, String eastBL, String westBL, String northBL, String southBL) {

@@ -38,7 +38,9 @@ public class LuceneIndexField {
     public static final String SCHEMA =  "_schema";
     public static final String TEMPORALEXTENT_BEGIN = "tempExtentBegin";
     public static final String TEMPORALEXTENT_END = "tempExtentEnd";
-
+    public static final String PUBLICATION_DATE = "publicationDate";
+    public static final String CREATE_DATE = "createDate";
+    public static final String REVISION_DATE = "revisionDate";
     public static final String DOWNLOAD = "download";
     public static final String DIGITAL = "digital";
     public static final String PAPER = "paper";
