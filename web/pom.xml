@@ -1,0 +1,325 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.geonetwork-opensource</groupId>
+    <artifactId>geonetwork</artifactId>
+    <version>2.5.0-SNAPSHOT</version>
+  </parent>
+
+
+  <!-- =========================================================== -->
+  <!--     Module Description                                      -->
+  <!-- =========================================================== -->
+  <groupId>org.geonetwork-opensource</groupId>
+  <artifactId>geonetwork-main</artifactId>
+  <packaging>jar</packaging>
+  <name>Geonetwork Web module</name>
+  <description> Geonetwork web module description (TODO). </description>
+
+  <licenses>
+    <license>
+      <name>Lesser General Public License (LGPL)</name>
+      <url>http://www.gnu.org/copyleft/lesser.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+
+  <!-- FIXME set common dependencies to the root pom.xml  -->
+  <dependencies>
+    
+    <dependency>
+      <groupId>xalan</groupId>
+      <artifactId>xalan</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openrdf</groupId>
+      <artifactId>openrdf-model</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.openrdf</groupId>
+      <artifactId>openrdf-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.openrdf</groupId>
+      <artifactId>rio</artifactId>
+    </dependency>
+    
+    <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.dspace</groupId>
+      <artifactId>cql-java</artifactId>
+    </dependency>
+
+    <!--<dependency>
+      <groupId>org.openrdf.sesame</groupId>
+      <artifactId>sesame-model</artifactId>
+      <version>2.1</version>
+    </dependency>-->
+    
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools.xsd</groupId>
+      <artifactId>gt-xsd-gml3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-cql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-shapefile</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools.xsd</groupId>
+      <artifactId>gt-xsd-filter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-epsg-extension</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-referencing</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-epsg-hsql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-postgis</artifactId>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-analyzers</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-email</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>mckoi</groupId>
+      <artifactId>mckoi</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ojdbc</groupId>
+      <artifactId>ojdbc</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>eu.medsea.mimeutil</groupId>
+      <artifactId>mime-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
+    </dependency>
+
+    <!-- those ones are from geotools repositories -->
+    <dependency>
+      <groupId>ki</groupId>
+      <artifactId>a2jruntime</artifactId>
+      <version>X</version>
+    </dependency>
+    <dependency>
+      <groupId>ki</groupId>
+      <artifactId>ki-jzkit-iface</artifactId>
+      <version>X</version>
+    </dependency>
+    <dependency>
+      <groupId>ki</groupId>
+      <artifactId>ki-util</artifactId>
+      <version>X</version>
+    </dependency>
+    <dependency>
+      <groupId>ki</groupId>
+      <artifactId>ki-jzkit-z3950</artifactId>
+      <version>X</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>xmlunit</groupId>
+      <artifactId>xmlunit</artifactId>
+    </dependency>
+
+    <!-- ====================== -->
+    <!-- Generated dependencies -->
+    <dependency>
+      <groupId>org.geonetwork-opensource</groupId>
+      <artifactId>jeeves</artifactId>
+      <version>${pom.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.geonetwork-opensource</groupId>
+      <artifactId>cachingxslt</artifactId>
+      <version>${pom.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.geonetwork-opensource</groupId>
+      <artifactId>oaipmh</artifactId>
+      <version>${pom.version}</version>
+    </dependency>
+    <dependency> <!-- dummy API for ARC SDE stuff -->
+      <groupId>org.geonetwork-opensource</groupId>
+      <artifactId>dummy-api</artifactId>
+      <version>${pom.version}</version>
+    </dependency>
+
+    <!-- Handled locally by a temporarly repository -->
+    <dependency>
+      <groupId>dlib</groupId>
+      <artifactId>dlib</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>lizard</groupId>
+      <artifactId>lizard-tiff</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jzkit</groupId>
+      <artifactId>jzkit-hss</artifactId>
+      <version>1.2.3</version>
+    </dependency>
+    <dependency>
+      <groupId>jzkit</groupId>
+      <artifactId>jzkit-core</artifactId>
+      <version>3.r260.patch</version>
+    </dependency>
+    <dependency>
+      <groupId>jzkit</groupId>
+      <artifactId>jzkit-service</artifactId>
+      <version>3.r260.patch</version>
+    </dependency>
+    <dependency>
+      <groupId>jzkit</groupId>
+      <artifactId>jzkit-z3950-server</artifactId>
+      <version>3.r260.patch</version>
+    </dependency>
+    <dependency>
+      <groupId>jzkit</groupId>
+      <artifactId>jzkit-z3950-plugin</artifactId>
+      <version>3.r260.patch</version>
+    </dependency>
+    <dependency>
+      <groupId>jakarta</groupId>
+      <artifactId>jakarta-slide-webdavlib</artifactId>
+      <version>2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.ucar</groupId>
+      <artifactId>netcdf</artifactId>
+      <version>4.0.patch</version>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+          <execution>
+            <id>ant-schematrons-clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>ant</executable>
+              <commandlineArgs>clean</commandlineArgs> 
+              <environmentVariables>
+                <ANT_OPTS>-client</ANT_OPTS>
+              </environmentVariables>
+              <workingDirectory>${basedir}/../schematrons</workingDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>ant-schematrons</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>ant</executable>
+              <environmentVariables>
+                <ANT_OPTS>-client</ANT_OPTS>
+              </environmentVariables>
+              <workingDirectory>${basedir}/../schematrons</workingDirectory>
+            </configuration>
+          </execution>
+        </executions>      
+      </plugin>
+      <plugin>
+        <inherited>true</inherited>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <warName>geonetwork</warName>
+          <webappDirectory>${project.build.directory}/geonetwork</webappDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>install</phase>
+            <goals>
+              <goal>war</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>maven-jetty-plugin</artifactId>
+        <version>6.1.18</version>
+        <configuration>
+          <contextPath>geonetwork</contextPath>
+          <connectors>
+            <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+              <port>8080</port>
+              <maxIdleTime>10000</maxIdleTime>
+            </connector>
+          </connectors>
+          <contextPath>geonetwork</contextPath>
+          <webApp>${project.build.directory}/geonetwork</webApp>
+        </configuration>
+      </plugin>
+      
+      
+    </plugins>
+  </build>
+
+</project>

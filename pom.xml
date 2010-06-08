@@ -1,0 +1,485 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.geonetwork-opensource</groupId>
+  <artifactId>geonetwork</artifactId>
+  <packaging>pom</packaging>
+  <version>2.5.0-SNAPSHOT</version>
+  <name>GeoNetwork opensource</name>
+  <description>GeoNetwork opensource is a standards based, Free and 
+    Open Source catalog application to manage spatially referenced 
+    resources through the web.</description>
+  <url>http://geonetwork-opensource.org</url>
+  <scm>
+    <connection>
+      scm:svn:https://geonetwork.svn.sourceforge.net/svnroot/geonetwork/trunk
+    </connection>
+    <url>https://geonetwork.svn.sourceforge.net/svnroot/geonetwork/trunk</url>
+  </scm>
+  <inceptionYear>2003</inceptionYear>
+  <issueManagement>
+    <system>trac</system>
+    <url>http://trac.osgeo.org/geonetwork/report</url>
+  </issueManagement>
+  <mailingLists>
+    <mailingList>
+      <name>Users</name>
+      <post>geonetwork-users@lists.sourceforge.net</post>
+      <subscribe>https://lists.sourceforge.net/lists/listinfo/geonetwork-users</subscribe>
+      <unsubscribe>https://lists.sourceforge.net/lists/options/geonetwork-users</unsubscribe>
+      <archive>http://n2.nabble.com/GeoNetwork-users-f2013074.html</archive>
+    </mailingList>
+    <mailingList>
+      <name>Utilisateurs (fr)</name>
+      <post>geonetwork-users-fr@lists.sourceforge.net</post>
+      <subscribe>https://lists.sourceforge.net/lists/listinfo/geonetwork-users-fr</subscribe>
+      <unsubscribe>https://lists.sourceforge.net/lists/options/geonetwork-users-fr</unsubscribe>
+      <archive>http://n2.nabble.com/GeoNetwork-users-francophone-f3246912.html</archive>
+    </mailingList>
+    <mailingList>
+      <name>Usuarios (es)</name>
+      <post>geonetwork-usuarios-es@lists.sourceforge.net</post>
+      <subscribe>https://lists.sourceforge.net/lists/listinfo/geonetwork-usuarios-es</subscribe>
+      <unsubscribe>https://lists.sourceforge.net/lists/options/geonetwork-usuarios-es</unsubscribe>
+      <archive>http://n2.nabble.com/GeoNetwork-users-espa-ol-f3246989.html</archive>
+    </mailingList>
+    <mailingList>
+      <name>Dev</name>
+      <post>geonetwork-devel@lists.sourceforge.net</post>
+      <subscribe>https://lists.sourceforge.net/lists/listinfo/geonetwork-devel</subscribe>
+      <unsubscribe>https://lists.sourceforge.net/lists/options/geonetwork-devel</unsubscribe>
+      <archive>http://n2.nabble.com/GeoNetwork-developer-f2014756.html</archive>
+    </mailingList>
+    <mailingList>
+      <name>Commits</name>
+      <post>geonetwork-commit@lists.sourceforge.net</post>
+      <subscribe>https://lists.sourceforge.net/lists/listinfo/geonetwork-commit</subscribe>
+      <unsubscribe>https://lists.sourceforge.net/lists/options/geonetwork-commit</unsubscribe>
+      <archive>http://n2.nabble.com/GeoNetwork-commit-f2020497.html</archive>
+    </mailingList>
+  </mailingLists>
+  
+  <!-- TODO developer part-->
+  <developers>
+    <developer>
+      <name></name>
+      <id></id>
+      <organization></organization>
+      <organizationUrl></organizationUrl>
+      <email></email>
+      <roles>
+        <role></role>
+      </roles>
+      <timezone></timezone>
+    </developer>
+  </developers>
+  
+  <licenses>
+    <license>
+      <name>General Public License (GPL)</name>
+      <url>http://www.gnu.org/copyleft/gpl.txt</url>
+    </license>
+  </licenses>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+      
+   
+      <!-- This plugin Allows to deploy several webapps into a specific container (ie. jetty) -->
+      <plugin>
+        <groupId>org.codehaus.cargo</groupId>
+        <artifactId>cargo-maven2-plugin</artifactId>
+        <configuration>
+          <container>
+            <containerId>jetty6x</containerId>
+            <type>embedded</type>
+            <log>${project.build.directory}/server-logs</log>
+            <output>${project.build.directory}/server-output</output>
+          </container>
+          <configuration>
+            <home>${project.build.directory}/test-server</home>
+            <properties>
+              <cargo.servlet.port>8080</cargo.servlet.port>
+            </properties>
+            <deployables>
+              <deployable>
+                <location>${project.build.directory}/../web/target/geonetwork.war</location>
+                <type>war</type>
+              </deployable>
+              <deployable>
+                <location>${project.build.directory}/../intermap/target/intermap.war</location>
+                <type>war</type>
+              </deployable>
+            </deployables>
+          </configuration>
+        </configuration>
+      </plugin>
+
+
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2-beta-5</version>
+        <configuration>
+          <descriptors>
+            <descriptor>release/zip-war.xml</descriptor>
+          </descriptors>
+          <finalName>geonetwork-${version}</finalName>
+          <outputDirectory>${project.build.directory}/release</outputDirectory>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <!-- =========================================================== -->
+  <!--     Dependency Management                                   -->
+  <!--     If a POM declares one of those dependencies, then it    -->
+  <!--     will use the version specified here. Otherwise, those   -->
+  <!--     dependencies are ignored.                               -->
+  <!-- =========================================================== -->
+  <dependencyManagement>
+    <dependencies>
+
+      <!-- XML -->
+      <dependency>
+        <groupId>jdom</groupId>
+        <artifactId>jdom</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>xalan</groupId>
+        <artifactId>xalan</artifactId>
+        <version>2.7.1</version>
+      </dependency>
+      <dependency>
+        <groupId>net.sf.saxon</groupId>  <!--FIXME Handled by local repository -->
+        <artifactId>saxon</artifactId>
+        <version>9.0</version>   <!-- FIXME no public repositories for this version -->
+      </dependency>
+
+      <!-- Thesaurus stuff -->
+      <dependency>
+        <groupId>org.openrdf</groupId>
+        <artifactId>openrdf-model</artifactId>
+        <version>1.2.7</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openrdf</groupId>
+        <artifactId>openrdf-util</artifactId>
+        <version>1.2.7</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openrdf</groupId>
+        <artifactId>rio</artifactId>
+        <version>1.0.9</version>
+      </dependency>
+      
+      <!-- PDF stuff -->
+      <dependency>
+        <groupId>com.lowagie</groupId>
+        <artifactId>itext</artifactId>
+        <version>2.0.6</version>
+      </dependency>
+      <dependency>
+        <groupId>fop</groupId>
+        <artifactId>fop</artifactId>
+        <version>0.93</version>
+        <classifier>jdk14</classifier> <!-- TODO check which version to use -->
+        <!-- Which one to use? <classifier>jdk15</classifier> -->
+      </dependency>
+      
+      <!-- Jetty stuff -->
+      <dependency>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>jetty</artifactId>
+        <version>6.1.14</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>jetty-util</artifactId>
+        <version>6.1.14</version>
+      </dependency>
+
+
+      <!-- Apache -->
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>2.1</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>1.1.1</version>
+        <!-- 1.0.2 in Geonetwork -->
+      </dependency>
+      <dependency>
+        <groupId>commons-fileupload</groupId>
+        <artifactId>commons-fileupload</artifactId>
+        <version>1.2.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-email</artifactId>
+        <version>1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.13</version>
+        <!-- Same as the dependency in commons-logging -->
+      </dependency>
+      <dependency>
+        <groupId>commons-httpclient</groupId>
+        <artifactId>commons-httpclient</artifactId>
+        <version>3.0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>xerces</groupId>
+        <artifactId>xercesImpl</artifactId>
+        <version>2.7.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.lucene</groupId>
+        <artifactId>lucene-core</artifactId>
+        <version>2.9.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.lucene</groupId>
+        <artifactId>lucene-analyzers</artifactId>
+        <version>2.9.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.jcs</groupId>
+        <artifactId>jcs</artifactId>
+        <version>1.3</version> <!-- TODO check version -->
+      </dependency>
+      
+      <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>2.5.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.dspace</groupId>
+        <artifactId>cql-java</artifactId>
+        <version>1.0</version>
+      </dependency>
+
+      <!-- Geotools and spatial search stuff -->
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-api</artifactId>
+        <version>2.6.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-gml3</artifactId>
+        <version>2.6.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-cql</artifactId>
+        <version>2.6.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-shapefile</artifactId>
+        <version>2.6.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-filter</artifactId>
+        <version>2.6.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-epsg-extension</artifactId>
+        <version>2.6.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-referencing</artifactId>
+        <version>2.6.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-epsg-hsql</artifactId>
+        <version>2.6.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-postgis</artifactId>
+        <version>2.6.2</version>
+      </dependency>
+      <dependency>
+        <groupId>lizard</groupId>
+        <artifactId>lizard-tiff</artifactId>
+        <version>1.0</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>javax.media</groupId>
+        <artifactId>jai_codec</artifactId>
+        <version>1.1.3</version>
+      </dependency>
+
+      <dependency>
+        <groupId>eu.medsea.mimeutil</groupId>
+        <artifactId>mime-util</artifactId>
+        <version>2.1.2</version>
+      </dependency>
+      <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>1.5.2</version>
+      </dependency>
+
+      <!-- Security stuff -->
+      <dependency>
+        <groupId>jsch</groupId>
+        <artifactId>jsch</artifactId>
+        <version>0.1.8</version> <!-- TODO check version, latest from public repository -->
+      </dependency>
+      <dependency>
+        <groupId>globus</groupId>
+        <artifactId>cog-jglobus</artifactId>
+        <version>1.2-060802</version>
+      </dependency>
+
+      <!-- Databased stuff -->
+      <dependency>
+        <groupId>mckoi</groupId>
+        <artifactId>mckoi</artifactId>
+        <version>1.0.2</version>
+      </dependency>
+
+      <!-- Other stuff -->
+      <dependency>
+        <groupId>dlib</groupId>  <!--FIXME Handled by local repository -->
+        <artifactId>dlib</artifactId>
+        <version>1.0</version> <!-- FIXME totally unknown -->
+      </dependency> 
+
+      <!-- Tests -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.6</version>
+        <!--<scope>test</scope>-->
+      </dependency>
+
+      <!-- should we had this as scope test?-->
+      <dependency>
+        <groupId>xmlunit</groupId>
+        <artifactId>xmlunit</artifactId>
+        <version>1.2</version>
+      </dependency>
+
+      <!-- db -->
+      <dependency>
+        <groupId>postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>8.4-701.jdbc4</version>
+      </dependency>
+      <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>5.1.12</version>
+      </dependency>
+      <dependency>
+        <groupId>ojdbc</groupId>
+        <artifactId>ojdbc</artifactId>
+        <version>14</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <!-- =========================================================== -->
+  <!--     Dependencies to be inherited by all modules.            -->
+  <!-- =========================================================== -->
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <!-- The version number is specified above. -->
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jdom</groupId>
+      <artifactId>jdom</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+    </dependency>
+
+  </dependencies>
+
+  <!-- ================================================================== -->
+  <!--     Repositories. This is where Maven looks for dependencies. The  -->
+  <!--     Maven repository is implicit and doesn't need to be specified. -->
+  <!-- ================================================================== -->
+  <repositories>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>geotools</id>
+      <name>Geotools repository</name>
+      <url>http://download.osgeo.org/webdav/geotools/</url>
+    </repository>
+    <!-- Local repository which allow to handle temporarly local dependencies 
+     // FIXME : Should be a remote repository -->
+    <repository>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <id>localGeoNetwork</id>
+      <name>GeoNetwork local repository</name>
+      <url>file://maven_repo</url>
+    </repository>
+  </repositories>
+
+
+  <!-- =========================================================== -->
+  <!--     Modules for the build in approximate dependency order   -->
+  <!-- =========================================================== -->
+  <modules>
+    <module>cachingxslt</module>
+    <module>jeeves</module> 
+    <module>oaipmh</module>
+    <module>sde</module>
+    <module>web</module>
+    <module>intermap</module>
+    <module>gast</module>
+<!--    <module>release</module>
+
+    TODO
+    <module>docs</module>
+-->
+  </modules>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>scp-repository.geonetwork-opensource.org</id>
+      <name>GeoNetwork opensource repositories</name>
+      <url>scpexe://TO DEFINED</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+</project>
