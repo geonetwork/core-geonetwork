@@ -39,7 +39,7 @@ public class LuceneQueryTest extends TestCase {
     _analyzer.addAnalyzer("operatesOn", new StandardAnalyzer());
     _analyzer.addAnalyzer("subject", new KeywordAnalyzer());
 
-		Element tokenizedFields = Xml.loadStream(new FileInputStream(new File("web/geonetwork/WEB-INF/config-lucene.xml")));		
+		Element tokenizedFields = Xml.loadStream(new FileInputStream(new File("src/main/webapp/WEB-INF/config-lucene.xml")));		
 
 		// build _tokenizedFieldSet
     _tokenizedFieldSet = new HashSet<String>();
