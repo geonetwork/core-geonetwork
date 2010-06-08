@@ -471,6 +471,7 @@ public class Geonet
 	public static final String HARVESTER    = GEONETWORK + ".harvester";
 	public static final String SETTINGS     = GEONETWORK + ".settings";
 	public static final String DATA_MANAGER = GEONETWORK + ".datamanager";
+	public static final String DB			= GEONETWORK + ".database";
 	public static final String THESAURUS_MAN= GEONETWORK + ".thesaurus-man";
 	public static final String SEARCH_ENGINE= GEONETWORK + ".search";
 	public static final String Z3950_SERVER = GEONETWORK + ".z3950server";

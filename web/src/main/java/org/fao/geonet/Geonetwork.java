@@ -26,11 +26,16 @@ package org.fao.geonet;
 import com.vividsolutions.jts.geom.MultiPolygon;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.UUID;
 
 import jeeves.JeevesJCS;
 import jeeves.interfaces.ApplicationHandler;
@@ -39,9 +44,12 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.BinaryFile;
 import jeeves.utils.Util;
 import jeeves.xlink.Processor;
 
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.AccessManager;
@@ -63,7 +71,6 @@ import org.geotools.data.postgis.PostgisDataStoreFactory;
 import org.geotools.data.shapefile.indexed.IndexType;
 import org.geotools.data.shapefile.indexed.IndexedShapefileDataStore;
 import org.geotools.feature.AttributeTypeBuilder;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -75,7 +82,6 @@ import org.jdom.Element;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 //=============================================================================
 
@@ -85,6 +91,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 public class Geonetwork implements ApplicationHandler
 {
 	private Logger        		logger;
+	private String 				path;				
 	private SearchManager 		searchMan;
 	private ThesaurusManager 	thesaurusMan;
 	private String						SPATIAL_INDEX_FILENAME    = "spatialindex";
@@ -111,10 +118,14 @@ public class Geonetwork implements ApplicationHandler
 	{
 		logger = context.getLogger();
 
-		String path    = context.getAppPath();
+		path    = context.getAppPath();
 		String baseURL = context.getBaseUrl();
 
-		logger.info("Initializing geonetwork...");
+		ServerLib sl = new ServerLib(path);
+		String version = sl.getVersion();
+		String subVersion = sl.getSubVersion();
+		
+		logger.info("Initializing GeoNetwork " + version +  "." + subVersion +  " ...");
 
 		JeevesJCS.setConfigFilename(path+"WEB-INF/classes/cache.ccf");
 		// force cache to be config'd so shutdown hook works correctly
@@ -122,7 +133,8 @@ public class Geonetwork implements ApplicationHandler
 
 		ServiceConfig handlerConfig = new ServiceConfig(config.getChildren());
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		// --- Check current database and create database if an emty one is found
+		Dbms dbms = initDatabase(context);
 
 		//------------------------------------------------------------------------
 		//--- initialize settings subsystem
@@ -131,6 +143,10 @@ public class Geonetwork implements ApplicationHandler
 
 		SettingManager settingMan = new SettingManager(dbms, context.getProviderManager());
 
+		
+		// --- Migrate database if an old one is found
+		migrateDatabase(dbms, settingMan, version, subVersion);
+		
 		//------------------------------------------------------------------------
 		//--- Initialize thesaurus
 
@@ -185,14 +201,12 @@ public class Geonetwork implements ApplicationHandler
 		logger.info("  - Search...");
 
 		String htmlCacheDir = handlerConfig.getMandatoryValue(Geonet.Config.HTMLCACHE_DIR);
-
 		String luceneDir = path + handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_DIR);
-
 		String summaryConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.SUMMARY_CONFIG);
 		String dataDir = path + handlerConfig.getMandatoryValue(Geonet.Config.DATA_DIR);
-    String guiConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.GUI_CONFIG);
-    String luceneConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
-
+        String guiConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.GUI_CONFIG);
+        String luceneConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
+        
 		DataStore dataStore = createDataStore(context.getResourceManager().getProps(Geonet.Res.MAIN_DB), luceneDir);
 	
 		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, dataDir, summaryConfigXmlFile, guiConfigXmlFile, luceneConfigXmlFile, dataStore, new SettingInfo(settingMan));
@@ -278,6 +292,151 @@ public class Geonetwork implements ApplicationHandler
 		return gnContext;
 	}
 
+
+	/**
+	 * Check if current database is running same version as the web application.
+	 * If not, apply migration SQL script :
+	 *  resources/sql/migration/{version}-to-{version}-{dbtype}.sql.
+	 * eg. 2.4.3-to-2.5.0-default.sql
+	 * 
+	 * @param dbms
+	 * @param settingMan
+	 * @param version
+	 * @param subVersion
+	 */
+	private void migrateDatabase(Dbms dbms, SettingManager settingMan, String version, String subVersion) {
+		logger.info("  - Migration ...");
+		
+		// Get db version and subversion
+		String dbVersion = settingMan.getValue("system/platform/version");
+		String dbSubVersion = settingMan.getValue("system/platform/subVersion");
+		
+		// Migrate db if needed
+		logger.debug("      Webapp   version:" + version + " subversion:" + subVersion);
+		logger.debug("      Database version:" + dbVersion + " subversion:" + dbSubVersion);
+		
+		if (version.equals(dbVersion)
+				//&& subVersion.equals(dbSubVersion) Check only on version number
+		) {
+			logger.info("      Webapp version = Database version, no migration task to apply.");
+		} else {
+			// Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
+			String dbType = Lib.db.getDBType(dbms);
+			logger.info("      Migrating from " + dbVersion + " to " + version + " (dbtype:" + dbType + ")...");
+			String sqlMigrationScriptPath = path + "/WEB-INF/classes/setup/sql/migrate/" + 
+				 dbVersion + "-to-" + version + "/" + dbType + ".sql";
+			File sqlMigrationScript = new File(sqlMigrationScriptPath);
+			if (sqlMigrationScript.exists()) {
+				try {
+					// Run the SQL migration
+					logger.info("      Running SQL migration step ...");
+					Lib.db.runSQL(dbms, sqlMigrationScript);
+					
+					// Refresh setting manager in case the migration task added some new settings.
+					settingMan.refresh();
+					
+					// Update the logo 
+					String siteId = settingMan.getValue("system/site/siteId");
+					initLogo(dbms, siteId);
+					
+					// TODO : Maybe a force rebuild index is required in such situation.
+				} catch (Exception e) {
+					logger.info("      Errors occurs during SQL migration task: " + sqlMigrationScriptPath 
+							+ " or when refreshing settings manager.");
+					e.printStackTrace();
+				}
+				
+				logger.info("      Successfull migration.\n" +
+							"      Catalogue administrator still need to update the catalogue\n" +
+							"      logo and data directory in order to complete the migration process.\n" +
+							"      Lucene index rebuild is also recommended after migration."
+				);
+				
+			} else {
+				logger.info("      No migration task found between webapp and database version.\n" +
+						"      The system may be unstable or may failed to start if you try to run \n" +
+						"      the current GeoNetwork " + version + " with an older database (ie. " + dbVersion + "\n" +
+						"      ). Try to run the migration task manually on the current database\n" +
+						"      before starting the application or start with a new empty database.\n" +
+						"      Sample SQL scripts for migration could be found in WEB-INF/sql/migrate folder.\n"
+						);
+				
+			}
+			
+			// TODO : Maybe some migration stuff has to be done in Java ?
+		}
+	}
+
+	/**
+	 * Database initialization. If no table in current database
+	 * create the GeoNetwork database. If an existing GeoNetwork database 
+	 * exists, try to migrate the content.
+	 * 
+	 * @param context
+	 * @return
+	 * @throws Exception
+	 */
+	private Dbms initDatabase(ServiceContext context) throws Exception {
+		Dbms dbms = null;
+		try {
+			dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		} catch (Exception e) {
+			logger.info("    Failed to open database connection, Check config.xml db file configuration."
+					+ "Error is: " + e.getMessage());
+		}
+		
+		String dbURL = dbms.getURL();
+		logger.info("  - Database connection on " + dbURL + " ...");
+		
+		// Create db if empty
+		if (!Lib.db.touch(dbms)) {
+			logger.info("      " + dbURL + " is an empry database (Metadata table not found).");
+			
+			// Do we need to remove object before creating the database ?
+			Lib.db.removeObjects(dbms, path);
+			Lib.db.createSchema(dbms, path);
+			dbms.commit();
+			Lib.db.insertData(dbms, path);
+			
+			// Copy logo
+			String uuid = UUID.randomUUID().toString();
+			initLogo(dbms, uuid);
+	
+		} else {
+			logger.info("      Found an existing GeoNetwork database.");
+		}
+		
+		return dbms;
+	}
+
+	/**
+	 * Copy the default dummy logo to the logo folder based on uuid
+	 * @param dbms
+	 * @param appPath
+	 * @param nodeUuid
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws SQLException
+	 */
+	private void initLogo(Dbms dbms, String nodeUuid) {
+		try {
+			FileInputStream  is = new FileInputStream (path +"/images/logos/dummy.gif");
+			FileOutputStream os = new FileOutputStream(path +"/images/logos/"+ nodeUuid +".gif");
+			logger.info("      Setting catalogue logo for current node identified by: " + nodeUuid);
+			BinaryFile.copy(is, os, true, true);
+		} catch (Exception e) {
+			logger.error("      Error when setting the logo: " + e.getMessage());
+		}
+		
+		try {
+			dbms.execute("UPDATE Settings SET value=? WHERE name='siteId'", nodeUuid);
+		} catch (SQLException e) {
+			logger.error("      Error when setting siteId values: " + e.getMessage());
+		}
+	}
+	
+	
+	
 	//---------------------------------------------------------------------------
 	//---
 	//--- Stop
@@ -312,6 +471,8 @@ public class Geonetwork implements ApplicationHandler
 		Server.end();
 	}
 
+	
+	
 	//---------------------------------------------------------------------------
 
 	private DataStore createDataStore(Map<String,String> props, String luceneDir) throws Exception {

@@ -23,19 +23,51 @@
 
 package org.fao.geonet.lib;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
 //=============================================================================
 
-public class Lib
+public class ServerLib
 {
-	public static LocalLib    local     = new LocalLib();
-	public static ElementLib  element   = new ElementLib();
-	public static DbLib       db        = new DbLib();
-	public static ResourceLib resource  = new ResourceLib();
-	public static TypeLib     type      = new TypeLib();
-	public static NetLib      net       = new NetLib();
-	public static SourcesLib  sources   = new SourcesLib();
-	public static MetadataLib metadata  = new MetadataLib();
-	public static TextLib text = new TextLib();
+	//---------------------------------------------------------------------------
+	//---
+	//--- Constructor
+	//---
+	//---------------------------------------------------------------------------
+
+	public ServerLib(String appPath) throws IOException
+	{
+		this.appPath = appPath;
+
+		serverProps = new Properties();
+
+		FileInputStream is = new FileInputStream(appPath + SERVER_PROPS);
+		serverProps.load(is);
+		is.close();
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- API methods
+	//---
+	//---------------------------------------------------------------------------
+
+	public String getAppPath()    { return appPath; }
+	public String getVersion()    { return serverProps.getProperty("version",    "???"); }
+	public String getSubVersion() { return serverProps.getProperty("subVersion", "???"); }
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//---------------------------------------------------------------------------
+
+	private String     appPath;
+	private Properties serverProps;
+
+	private static final String SERVER_PROPS = "/WEB-INF/server.prop";
 }
 
 //=============================================================================

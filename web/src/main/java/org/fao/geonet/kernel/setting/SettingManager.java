@@ -75,7 +75,7 @@ import org.jdom.Element;
 public class SettingManager
 {
 	private Setting root;
-
+	private Dbms dbms;
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -84,14 +84,26 @@ public class SettingManager
 
 	public SettingManager(Dbms dbms, ProviderManager provMan) throws SQLException
 	{
-		List list = dbms.select("SELECT * FROM Settings").getChildren();
-
-		root = new Setting(0, null, null);
-		createSubTree(root, list);
+		this.dbms = dbms;
+		init(dbms);
 
 		for(ResourceProvider rp : provMan.getProviders())
 			if (rp.getName().equals(Geonet.Res.MAIN_DB))
 				rp.addListener(resList);
+	}
+
+	
+	/**
+	 * Init the settings tree from the Settings table content
+	 * 
+	 * @param dbms
+	 * @throws SQLException
+	 */
+	private void init(Dbms dbms) throws SQLException {
+		List list = dbms.select("SELECT * FROM Settings").getChildren();
+
+		root = new Setting(0, null, null);
+		createSubTree(root, list);
 	}
 
 	//---------------------------------------------------------------------------
@@ -103,7 +115,6 @@ public class SettingManager
 	//---------------------------------------------------------------------------
 	//--- Getters
 	//---------------------------------------------------------------------------
-
 	public Element get(String path, int level)
 	{
 		lock.readLock().lock();
@@ -309,6 +320,26 @@ public class SettingManager
 	//--- Auxiliary methods
 	//---------------------------------------------------------------------------
 
+	/**
+	 * Refresh current settings manager. This has to be used
+	 * when updating the Settings table without using this class.
+	 * For example when using an SQL script.
+	 */
+	public boolean refresh() throws SQLException
+	{
+		lock.readLock().lock();
+		try
+		{
+			this.init(this.dbms);
+			return true;
+		}
+		finally
+		{
+			lock.readLock().unlock();
+		}
+	}
+
+	
 	public boolean getValueAsBool(String path, boolean defValue)
 	{
 		String value = getValue(path);
