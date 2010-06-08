@@ -13,11 +13,12 @@
     <!-- Classpath for service tests. -->
     <path id="test.classpath">
         <pathelement location="${basedir}/lib/servicetest.jar"/>
+		<pathelement location="${basedir}/../web/geonetwork/WEB-INF/classes"/>
         <fileset dir="${basedir}/../web/geonetwork/WEB-INF/lib">
             <include name="**/*.jar"/>
 
-            <!-- we need to exclude Saxon to prevent xalan-related XSLT errors -->
-            <exclude name="**/saxon9.jar"/>
+            <!-- we need to exclude Saxon to prevent xalan-related XSLT errors
+            <exclude name="**/saxon9.jar"/>    -->
         </fileset>
         <pathelement location="${basedir}/../jeeves/lib/javax.servlet.jar"/>
 

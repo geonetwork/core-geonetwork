@@ -118,13 +118,15 @@
 
 	<appHandler class="org.fao.geonet.Geonetwork">
 		<param name="luceneDir" value="WEB-INF/lucene" />
-		<param name="htmlCacheDir" value="schematronCache" />
+		<param name="htmlCacheDir" value="htmlCache" />
 		<param name="schemaMappings" value="schema-mappings.xml" />
 		<param name="dataDir" value="../../data" />
 		<param name="licenseDir" value="WEB-INF/licenses" />
 		<param name="thesauriDir" value="WEB-INF/gsthesauri" />
 		<param name="codeListDir" value="xml/codelist" />
 	    <param name="summaryConfig" value="WEB-INF/config-summary.xml" />
+		<param name="guiConfig" value="WEB-INF/config-gui.xml" />
+		<param name="jzkitConfig" value="JZkitApplicationContext.xml" />
 	</appHandler>
 
 	<!-- ====================================================================== -->
