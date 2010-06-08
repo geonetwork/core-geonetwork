@@ -27,7 +27,7 @@ public class AllTests extends SuiteRunner {
 	protected Test createSuite() {
 		// Create the test suite using Class objects
 		TestSuite suite = new TestSuite("Service Tests");
-//		suite.addTestSuite(HarvestTest.class);
+		suite.addTestSuite(HarvestTest.class);
 		suite.addTestSuite(CswTest.class);
 //		suite.addTestSuite(XMLIOTest.class);
 //		suite.addTestSuite(MEFIOTest.class);

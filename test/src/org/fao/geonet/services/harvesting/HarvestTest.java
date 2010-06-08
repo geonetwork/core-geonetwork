@@ -7,26 +7,30 @@ import org.fao.geonet.test.ProtocolTestCase;
 /**
  * Tests for harvesting Jeeves-services.
  */
-public class HarvestTest extends ProtocolTestCase
-{
-	public static final String URL_FAO="www.fao.org";
+public class HarvestTest extends ProtocolTestCase {
+	public static final String URL_FAO = "www.fao.org";
 
 	@Test
-	public void testGNHarvester() throws Exception
-	{
-		setVariable("name", "gn.fao");
-		setVariable("host", URL_FAO);
-		doTest("gn-harvester-add.xml");
-		doTest("gn-harvester-get-inactive.xml");
+	public void testGNHarvester() throws Exception {
+
+		try {
+			setVariable("name", "gn.fao");
+			setVariable("host", URL_FAO);
+			doTest("gn-harvester-add.xml");
+			doTest("gn-harvester-get-inactive.xml");
 //		doTest("harvester-run-inactive.xml");
-		doTest("harvester-start.xml");
-		doTest("gn-harvester-get-active.xml");
+			doTest("harvester-start.xml");
+			doTest("gn-harvester-get-active.xml");
 
-		doTest("harvester-stop.xml");
+			doTest("harvester-stop.xml");
 
-		// Inactive status
-		doTest("gn-harvester-get-inactive.xml");
-		doTest("harvester-remove.xml");
+			// Inactive status
+			doTest("gn-harvester-get-inactive.xml");
+			doTest("harvester-remove.xml");
+		} catch (Exception e) {
+			System.out.println("Exception :" + e);
+			fail("Error: testGNHarvester " + e);
+		}
 	}
 
 /*	@Test
