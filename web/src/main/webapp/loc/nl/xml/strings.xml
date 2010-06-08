@@ -447,7 +447,9 @@
 	<optimize>Optimize</optimize>
 	<metadata.admin.index>Index manager</metadata.admin.index>
 	<metadata-template-order>Templates sorteren</metadata-template-order>	
-	<metadata-template-order-desc>Sorteer uw templates</metadata-template-order-desc>		
+	<metadata-template-order-desc>Sorteer uw templates</metadata-template-order-desc>
+	<metadata-template-add-default>Add templates</metadata-template-add-default>	
+	<metadata-template-add-default-desc>Add default templates</metadata-template-add-default-desc>		
 	<metadata>Metadata</metadata>
 	<metadataAdded>Metadata met ID: is opgenomen in de database</metadataAdded>
 	<metadataDeleted>Metadata met ID: is niet meer aanwezig</metadataDeleted>

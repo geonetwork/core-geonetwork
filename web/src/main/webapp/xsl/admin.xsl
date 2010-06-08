@@ -56,14 +56,6 @@
 								<td class="padded"><xsl:value-of select="/root/gui/strings/transferOwnershipDes"/></td>
 							</tr>
 						</xsl:if>
-
-						<xsl:if test="/root/gui/services/service/@name='metadata.templates.list'">
-							<tr>
-								<td class="padded"><a href="{/root/gui/locService}/metadata.templates.list"><xsl:value-of select="/root/gui/strings/metadata-template-order"/></a></td>
-								<td class="padded"><xsl:value-of select="/root/gui/strings/metadata-template-order-desc"/></td>
-							</tr>
-						</xsl:if>							
-						
 					</xsl:variable>
 					<xsl:if test="$mdServices">
 						<tr>
@@ -72,6 +64,40 @@
 						<xsl:copy-of select="$mdServices"/>
 						<tr><td class="spacer"/></tr>
 					</xsl:if>
+					
+					
+					<!-- Template administration -->
+					<xsl:variable name="mdTemplate">
+						<xsl:if test="/root/gui/services/service/@name='metadata.templates.list'">
+							<tr>
+								<td class="padded"><a href="{/root/gui/locService}/metadata.templates.list"><xsl:value-of select="/root/gui/strings/metadata-template-order"/></a></td>
+								<td class="padded"><xsl:value-of select="/root/gui/strings/metadata-template-order-desc"/></td>
+							</tr>
+						</xsl:if>
+						<xsl:if test="/root/gui/services/service/@name='metadata.templates.add.default'">
+							<tr>
+								<td class="padded"><a href="{/root/gui/locService}/metadata.templates.add.default"><xsl:value-of select="/root/gui/strings/metadata-template-add-default"/></a></td>
+								<td class="padded">
+									<xsl:value-of select="/root/gui/strings/metadata-template-add-default-desc"/>
+									<ul>
+										<li><a href="metadata.templates.add.default"><xsl:value-of select="/root/gui/strings/all"/></a></li>
+										<li><a href="metadata.templates.add.default?schema=iso19139">iso19139</a></li>
+										<li><a href="metadata.templates.add.default?schema=iso19110">iso19110</a></li>
+										<li><a href="metadata.templates.add.default?schema=dublin-core">dublin-core</a></li>
+										<li><a href="metadata.templates.add.default?schema=fgdc-std">fgdc-std</a></li>
+									</ul>
+								</td>
+							</tr>
+						</xsl:if>
+					</xsl:variable>
+					<xsl:if test="$mdTemplate">
+						<tr>
+							<td colspan="2"><b><xsl:value-of select="/root/gui/strings/template"/></b></td>
+						</tr>
+						<xsl:copy-of select="$mdTemplate"/>
+						<tr><td class="spacer"/></tr>
+					</xsl:if>
+					
 					
 					<!-- personal info services -->
 					<xsl:variable name="persInfoServices">

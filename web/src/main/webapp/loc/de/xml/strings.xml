@@ -436,7 +436,9 @@
 	<optimize>Optimize</optimize>
 	<metadata.admin.index>Index Manager</metadata.admin.index>
 	<metadata-template-order>Sort Templates</metadata-template-order>	
-	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>		
+	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>
+	<metadata-template-add-default>Add templates</metadata-template-add-default>	
+	<metadata-template-add-default-desc>Add default templates</metadata-template-add-default-desc>		
 	<metadata>Metadaten</metadata>
 	<metadataAdded>Metadaten mit folgender ID hinzugefügt:</metadataAdded>
 	<metadataDeleted>Metadatamit folgender ID gelöscht:</metadataDeleted>

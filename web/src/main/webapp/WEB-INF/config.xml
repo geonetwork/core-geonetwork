@@ -73,8 +73,8 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.DbmsPool</provider>
 			<config>
-				<user>JSzGvMb5</user>
-				<password>hGfwsstj</password>
+				<user>BayACrsQ</user>
+				<password>Qf7Po9T0</password>
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>

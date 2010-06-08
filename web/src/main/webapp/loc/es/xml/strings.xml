@@ -437,6 +437,8 @@
 	<metadata.admin.index>Manejar índices</metadata.admin.index>
 	<metadata-template-order>Ordenar plantillas</metadata-template-order>
 	<metadata-template-order-desc>Ordenar sus plantillas</metadata-template-order-desc>
+	<metadata-template-add-default>Add templates</metadata-template-add-default>	
+	<metadata-template-add-default-desc>Add default templates</metadata-template-add-default-desc>		
 	<metadata>Metadatos</metadata>
 	<metadataAdded>Metadato añadido con ID:</metadataAdded>
 	<metadataDeleted>Metadato borrado con ID:</metadataDeleted>

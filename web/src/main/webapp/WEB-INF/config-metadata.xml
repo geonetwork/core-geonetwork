@@ -562,6 +562,9 @@
 			<class name=".guiservices.templates.SaveDisplayOrder"/>
         </service>
 		
+		<service name="metadata.templates.add.default">
+			<class name=".guiservices.templates.AddDefault"/>
+		</service>
 	</services>
 </geonet>
 
