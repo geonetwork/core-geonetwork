@@ -128,7 +128,6 @@
 		<mkdir dir="${buildDir}" />
 
 		<echo level="info" message="Parsing rules: ${rules}" />
-		<echo level="info" message=" - generate xsl for reporting" />
 		<xslt basedir="."
 	   		style="resources/iso_svrl_for_xslt2.xsl" 
 			in="rules/schematron-rules-${rules}.sch" 
@@ -149,8 +148,6 @@
 		</copy>
 
 
-
-		<echo level="info" message=" - copy loc files for rules: ${rules} to schema: ${schema}" />
 		<ant target="publish-loc-file">
 			<property name="lang" value="en" />
 			<property name="rules" value="${rules}" />
@@ -188,6 +185,11 @@
 		</ant>
 		<ant target="publish-loc-file">
 			<property name="lang" value="nl" />
+			<property name="rules" value="${rules}" />
+			<property name="schema" value="${schema}" />
+		</ant>
+		<ant target="publish-loc-file">
+			<property name="lang" value="pt" />
 			<property name="rules" value="${rules}" />
 			<property name="schema" value="${schema}" />
 		</ant>
