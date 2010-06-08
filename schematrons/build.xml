@@ -4,8 +4,6 @@
 	<property name="schematronDir" value="." description="Schematron directory" />
 	<property name="buildDir" value=".build" description="Build directory" />
 	<property name="schemaDir" value="../web/src/main/webapp/xml/schemas/" description="Schemas directory" />
-	<!--<property name="parser" value="../web/geonetwork/WEB-INF/lib/saxon9.jar" />
-	<property name="serializer" value="serializer-2.7.1.jar" />-->
 	<property name="defaultLang" value="en" />
 
 	<target name="clean">
@@ -203,9 +201,8 @@
 		<property name="schema" value="" />
 		<property name="rules" value="" />
 
-		<!--<echo message="      - copy ${schematronDir}/rules/loc/${lang}/schematron-rules-${rules}.xml loc file in ${schema}/${lang}."></echo>
-		-->
-		<copy description="Copy localization file to ${schema} schema." todir="../web/src/main/webapp/xml/schemas/${schema}/loc/${lang}" verbose="true">
+		<mkdir dir="${schematronDir}/rules/loc/${lang}"/>
+        <copy description="Copy localization file to ${schema} schema." todir="../web/src/main/webapp/xml/schemas/${schema}/loc/${lang}" verbose="true">
 			<fileset dir="${schematronDir}/rules/loc/${lang}" includes="schematron-rules-${rules}.xml" />
 		</copy>
 	</target>
