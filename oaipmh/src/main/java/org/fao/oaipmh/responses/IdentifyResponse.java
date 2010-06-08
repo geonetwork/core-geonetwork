@@ -25,9 +25,10 @@ package org.fao.oaipmh.responses;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.fao.geonet.util.ISODate;
+
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.requests.IdentifyRequest;
+import org.fao.oaipmh.util.ISODate;
 import org.jdom.Element;
 
 //=============================================================================

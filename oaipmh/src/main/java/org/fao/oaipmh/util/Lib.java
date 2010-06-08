@@ -24,7 +24,7 @@
 package org.fao.oaipmh.util;
 
 import java.util.Map;
-import org.fao.geonet.util.ISODate;
+
 import org.fao.oaipmh.OaiPmh;
 import org.jdom.Element;
 

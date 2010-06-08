@@ -25,7 +25,7 @@ package org.fao.oaipmh.server;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.fao.geonet.util.ISODate;
+
 import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.fao.oaipmh.exceptions.BadVerbException;
 import org.fao.oaipmh.requests.AbstractRequest;
@@ -35,6 +35,7 @@ import org.fao.oaipmh.requests.ListIdentifiersRequest;
 import org.fao.oaipmh.requests.ListMetadataFormatsRequest;
 import org.fao.oaipmh.requests.ListRecordsRequest;
 import org.fao.oaipmh.requests.ListSetsRequest;
+import org.fao.oaipmh.util.ISODate;
 import org.jdom.Element;
 
 //=============================================================================

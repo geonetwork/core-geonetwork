@@ -26,9 +26,10 @@ package org.fao.oaipmh.requests;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.fao.geonet.util.ISODate;
+
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.responses.ListRecordsResponse;
+import org.fao.oaipmh.util.ISODate;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 
