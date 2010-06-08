@@ -23,8 +23,8 @@
 
 package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
-import org.fao.geonet.util.ISODate;
 import org.fao.oaipmh.responses.Header;
+import org.fao.oaipmh.util.ISODate;
 
 //=============================================================================
 
