@@ -277,7 +277,7 @@
           </execution>
           <execution>
             <id>ant-schematrons</id>
-            <phase>compile</phase>
+            <phase>prepare-package</phase>
             <goals>
               <goal>exec</goal>
             </goals>
@@ -301,7 +301,7 @@
         </configuration>
         <executions>
           <execution>
-            <phase>install</phase>
+            <phase>package</phase>
             <goals>
               <goal>war</goal>
             </goals>

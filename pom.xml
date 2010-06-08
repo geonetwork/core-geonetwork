@@ -119,6 +119,10 @@
                 <location>${project.build.directory}/../intermap/target/intermap.war</location>
                 <type>war</type>
               </deployable>
+              <deployable>
+                <location>${project.build.directory}/../geoserver/target/geoserver.war</location>
+                <type>war</type>
+              </deployable>
             </deployables>
           </configuration>
         </configuration>
@@ -483,6 +487,7 @@
     <module>web</module>
     <module>intermap</module>
     <module>gast</module>
+    <module>geoserver</module>
 <!--    <module>release</module>
 
     TODO
