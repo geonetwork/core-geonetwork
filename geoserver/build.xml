@@ -10,18 +10,20 @@
 
 <project name="test-services" default="all">
 
-    <property name="geoserver_dir" value="../web/geoserver" />
+    <property name="target_dir" value="target" />
+    <property name="geoserver_dir" value="${target_dir}/geoserver" />
 
     <!-- =============================================================== -->
 
     <target name="all" depends="build"/>
 
     <!-- =============================================================== -->
-
-    <target name="build">
-	   <delete  dir="${geoserver_dir}" includeemptydirs="true"/>
+    <target name="clean">
+  	   <delete  dir="${geoserver_dir}" includeemptydirs="true"/>
        <mkdir  dir="${geoserver_dir}"/>
-				
+    </target>
+
+    <target name="build" depends="clean">
 		<!-- Deploy geoserver -->
 		<unzip src="geoserver-2.0.1.war"
 			dest="${geoserver_dir}" />
@@ -43,5 +45,10 @@
 			
 		<!-- Update config file with data directory path -->
 		<copy file="web.xml" todir="${geoserver_dir}/WEB-INF" overwrite="yes" />
+
+        <!-- -->
+        <war destfile="${target_dir}/geoserver.war">
+            <fileset dir="${geoserver_dir}"/>
+        </war>
     </target>
 </project>

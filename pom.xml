@@ -131,6 +131,7 @@
         <configuration>
           <descriptors>
             <descriptor>release/zip-war.xml</descriptor>
+            <descriptor>release/bin.xml</descriptor>
           </descriptors>
           <finalName>geonetwork-${version}</finalName>
           <outputDirectory>${project.build.directory}/release</outputDirectory>
@@ -411,6 +412,12 @@
         <artifactId>ojdbc</artifactId>
         <version>14</version>
       </dependency>
+      <dependency>
+        <groupId>org.codehaus.izpack</groupId>
+        <artifactId>izpack-standalone-compiler</artifactId>
+        <version>4.3.1</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
