@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<metadata>
+  <idinfo>
+    <citation>
+      <citeinfo>
+        <origin />
+        <pubdate />
+        <title>Template for FGDC</title>
+        <pubinfo>
+          <pubplace />
+          <publish />
+        </pubinfo>
+      </citeinfo>
+    </citation>
+    <descript>
+      <abstract />
+      <purpose />
+    </descript>
+    <timeperd>
+      <timeinfo>
+        <rngdates>
+          <begdate />
+          <enddate />
+        </rngdates>
+      </timeinfo>
+      <current />
+    </timeperd>
+    <status>
+      <progress />
+      <update />
+    </status>
+    <spdom>
+      <bounding>
+        <westbc />
+        <eastbc />
+        <northbc />
+        <southbc />
+      </bounding>
+    </spdom>
+    <keywords>
+      <theme>
+        <themekt></themekt>
+        <themekey></themekey>
+      </theme>
+    </keywords>
+    <accconst />
+    <useconst />
+  </idinfo>
+  <metainfo>
+    <metd />
+    <metc>
+      <cntinfo>
+        <cntperp>
+          <cntper />
+        </cntperp>
+        <cntaddr>
+          <addrtype />
+          <city />
+          <state />
+          <postal />
+        </cntaddr>
+        <cntvoice />
+      </cntinfo>
+    </metc>
+    <metstdn />
+    <metstdv />
+  </metainfo>
+</metadata>
