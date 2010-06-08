@@ -28,7 +28,6 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
-import org.fao.geonet.constants.Params;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.wfp.vam.intermap.Constants;
@@ -61,7 +60,7 @@ public class UploadWmcContext implements Service
 	{
 		String uploadDir = context.getUploadDir();
 
-		String fname = params.getChildText(Params.FNAME);
+		String fname = params.getChildText("fname");
 		if(fname == null)
 			throw new IllegalArgumentException("Invalid file");
 
