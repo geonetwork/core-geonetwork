@@ -120,6 +120,10 @@ public class LocalJeeves
 		{
 			p("init...");
 
+			// Needed to explicitly select Saxon over default Xalan
+			System.setProperty("javax.xml.transform.TransformerFactory",
+									 "net.sf.saxon.TransformerFactoryImpl");
+
 			// Init jeeves with proper config
 			jeeves = new JeevesEngine();
 			// null JeevesServlet arg because not running in servlet here
