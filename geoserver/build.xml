@@ -47,8 +47,8 @@
 		<copy file="web.xml" todir="${geoserver_dir}/WEB-INF" overwrite="yes" />
 
         <!-- -->
-        <war destfile="${target_dir}/geoserver.war">
+        <zip destfile="${target_dir}/geoserver.war">
             <fileset dir="${geoserver_dir}"/>
-        </war>
+        </zip>
     </target>
 </project>
