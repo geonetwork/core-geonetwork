@@ -486,12 +486,10 @@
     <module>sde</module>
     <module>web</module>
     <module>intermap</module>
-    <module>gast</module>
     <module>geoserver</module>
-<!--    <module>release</module>
-
-    TODO
-    <module>docs</module>
+<!-- 
+   <module>release</module>
+    <module>gast</module>
 -->
   </modules>
 
