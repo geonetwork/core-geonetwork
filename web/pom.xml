@@ -322,6 +322,12 @@
           </connectors>
           <contextPath>geonetwork</contextPath>
           <webApp>${project.build.directory}/geonetwork</webApp>
+          <contextHandlers>            
+            <contextHandler implementation="org.mortbay.jetty.webapp.WebAppContext">
+              <war>${basedir}/../intermap/target/intermap.war</war>
+              <contextPath>/intermap</contextPath>
+            </contextHandler>
+          </contextHandlers>
         </configuration>
       </plugin>
       
