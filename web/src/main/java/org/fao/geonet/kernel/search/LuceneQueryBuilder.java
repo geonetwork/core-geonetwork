@@ -1,9 +1,11 @@
 package org.fao.geonet.kernel.search;
 
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.*;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.util.spring.StringUtils;
 import org.jdom.Element;
 
@@ -144,8 +146,9 @@ public class LuceneQueryBuilder {
 
 	public Query build(Element request) {
 
-		System.out.println("\n\nLuceneQueryBuilder: request is\n" + Xml.getString(request) + "\n\n");
-
+		Log.debug(Geonet.SEARCH_ENGINE, "\n\nLuceneQueryBuilder: request is\n" + Xml.getString(request) + "\n\n");
+//		DEBUG
+//		System.out.println("\n\nLuceneQueryBuilder: request is\n" + Xml.getString(request) + "\n\n");
 
 		// top query to hold all sub-queries for each search parameter
 		BooleanQuery query = new BooleanQuery();
@@ -773,8 +776,9 @@ public class LuceneQueryBuilder {
 
 		addBoundingBox(query, relation, eastBL, westBL, northBL, southBL);
 
-		//System.out.println("#### query: " + query);
-		System.out.println("\n\nLuceneQueryBuilder: query is\n" + query + "\n\n");
+//		DEBUG
+//		System.out.println("\n\nLuceneQueryBuilder: query is\n" + query + "\n\n");
+		Log.debug(Geonet.SEARCH_ENGINE, "\n\nLuceneQueryBuilder: query is\n" + query + "\n\n");
 
 		return query;
 	}
