@@ -58,7 +58,7 @@
 		        <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.js"></script>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"></script>
 				
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/intermap.js"></script>
+				<script type="text/javascript" src="/intermap/scripts/intermap.js"></script>
 				
 				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"></script>
         		<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.search.js"></script>

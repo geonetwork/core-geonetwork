@@ -78,6 +78,39 @@
   
   <build>
     <plugins>
+        <plugin>
+            <groupId>net.alchim31.maven</groupId>
+            <artifactId>yuicompressor-maven-plugin</artifactId>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>compress</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <nosuffix>true</nosuffix>
+                <jswarn>false</jswarn>
+                <aggregations>
+                    <aggregation>
+                        <insertNewLine>true</insertNewLine>
+                        <output>${basedir}/src/main/webapp/scripts/intermap.js</output>
+                        <includes>
+                            <include>im_extras.js</include>
+                            <include>im_class.js</include>
+                            <include>util.js</include>
+                            <include>im_ajax.js</include>
+                            <include>im_minimap.js</include>
+                            <include>im_bigmap.js</include>
+                            <include>im_markers.js</include>
+                            <include>im_integration.js</include>
+                            <include>im_layers.js</include>
+                        </includes>
+                    </aggregation>
+                </aggregations>
+            </configuration>
+        </plugin>
+        
        <plugin>
         <inherited>true</inherited>
         <groupId>org.apache.maven.plugins</groupId>

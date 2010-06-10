@@ -753,14 +753,14 @@ function validateNumber(input, nullValue, decimals) {
     	validChars += '.';
     
     var isNumber = true;
-    var char;
+    var c;
     
     for (i = 0; i < text.length && isNumber; i++) {
-        char = text.charAt(i);
-        if (char == '-' || char == "+") {
+        c = text.charAt(i);
+        if (c == '-' || c == "+") {
             if (i < 0)
             	isNumber = false;
-        } else if (validChars.indexOf(char) == - 1) {
+        } else if (validChars.indexOf(c) == - 1) {
             isNumber = false;
         }
     }

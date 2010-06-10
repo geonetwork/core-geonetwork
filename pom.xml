@@ -84,6 +84,16 @@
   </licenses>
   
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>net.alchim31.maven</groupId>
+          <artifactId>yuicompressor-maven-plugin</artifactId>
+          <version>0.9</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -108,6 +118,8 @@
           <configuration>
             <home>${project.build.directory}/test-server</home>
             <properties>
+<!-- Cargo VMARGS are not working. FIXME -->
+              <cargo.jvmargs><![CDATA[-Xms48m -Xmx512m -Xss2M -XX:MaxPermSize=128m -XX:CompileCommandFile=hotspot_compiler -Dmime-mappings=../geonetwork/WEB-INF/mime-types.properties]]></cargo.jvmargs>
               <cargo.servlet.port>8080</cargo.servlet.port>
             </properties>
             <deployables>
@@ -201,7 +213,7 @@
         <classifier>jdk14</classifier> <!-- TODO check which version to use -->
         <!-- Which one to use? <classifier>jdk15</classifier> -->
       </dependency>
-      
+     
       <!-- Jetty stuff -->
       <dependency>
         <groupId>org.mortbay.jetty</groupId>
@@ -233,14 +245,44 @@
         <version>1.6</version>
       </dependency>
       <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>1.3.1</version>
+      </dependency>
+      <dependency>
         <groupId>commons-fileupload</groupId>
         <artifactId>commons-fileupload</artifactId>
         <version>1.2.1</version>
       </dependency>
       <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>3.1</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-email</artifactId>
         <version>1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.xmlgraphics</groupId>
+        <artifactId>xmlgraphics-commons</artifactId>
+        <version>1.2</version>
+      </dependency>
+      <dependency>
+        <groupId>avalon-framework</groupId>
+        <artifactId>avalon-framework-api</artifactId>
+        <version>4.2.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.avalon.framework</groupId>
+        <artifactId>avalon-framework-impl</artifactId>
+        <version>4.3.1</version>
+      </dependency>
+      <dependency>
+        <groupId>batik</groupId>
+        <artifactId>batik-ext</artifactId>
+        <version>1.6</version>
       </dependency>
       <dependency>
         <groupId>log4j</groupId>
@@ -440,7 +482,6 @@
         <artifactId>izpack-standalone-compiler</artifactId>
         <version>4.3.1</version>
       </dependency>
-
     </dependencies>
   </dependencyManagement>
 
