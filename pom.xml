@@ -228,6 +228,11 @@
         <!-- 1.0.2 in Geonetwork -->
       </dependency>
       <dependency>
+        <groupId>commons-digester</groupId>
+        <artifactId>commons-digester</artifactId>
+        <version>1.6</version>
+      </dependency>
+      <dependency>
         <groupId>commons-fileupload</groupId>
         <artifactId>commons-fileupload</artifactId>
         <version>1.2.1</version>
@@ -268,7 +273,7 @@
         <artifactId>jcs</artifactId>
         <version>1.3</version> <!-- TODO check version -->
       </dependency>
-      
+ 
       <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
       <dependency>
         <groupId>org.springframework</groupId>
@@ -280,7 +285,16 @@
         <artifactId>cql-java</artifactId>
         <version>1.0</version>
       </dependency>
-
+      <dependency>
+        <groupId>org.jzkit</groupId>
+        <artifactId>a2j</artifactId>
+        <version>2.0.4</version>
+      </dependency>
+      <dependency>
+        <groupId>marc4j</groupId>
+        <artifactId>marc4j</artifactId>
+        <version>2.3.1</version>
+      </dependency>
       <!-- Geotools and spatial search stuff -->
       <dependency>
         <groupId>org.geotools</groupId>
@@ -357,6 +371,11 @@
         <groupId>joda-time</groupId>
         <artifactId>joda-time</artifactId>
         <version>1.5.2</version>
+      </dependency>
+      <dependency>
+        <groupId>jaxen</groupId>
+        <artifactId>jaxen</artifactId>
+        <version>1.1.1</version>
       </dependency>
 
       <!-- Security stuff -->
@@ -460,6 +479,15 @@
       <name>Geotools repository</name>
       <url>http://download.osgeo.org/webdav/geotools/</url>
     </repository>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>k-int</id>
+      <name>Developer k-int repository</name>
+      <url>http://developer.k-int.com/maven2/</url>
+    </repository>
+    
     <!-- Local repository which allow to handle temporarly local dependencies 
      // FIXME : Should be a remote repository -->
     <repository>

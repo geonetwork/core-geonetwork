@@ -59,8 +59,15 @@
       <groupId>org.dspace</groupId>
       <artifactId>cql-java</artifactId>
     </dependency>
-
-    <!--<dependency>
+    <dependency>
+      <groupId>org.jzkit</groupId>
+      <artifactId>a2j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>marc4j</groupId>
+      <artifactId>marc4j</artifactId>
+    </dependency>
+ <!--<dependency>
       <groupId>org.openrdf.sesame</groupId>
       <artifactId>sesame-model</artifactId>
       <version>2.1</version>
@@ -121,6 +128,14 @@
       <artifactId>commons-email</artifactId>
     </dependency>
     <dependency>
+      <groupId>commons-digester</groupId>
+      <artifactId>commons-digester</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+    </dependency>
+    <dependency>
       <groupId>mckoi</groupId>
       <artifactId>mckoi</artifactId>
     </dependency>
@@ -152,7 +167,11 @@
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>jaxen</groupId>
+      <artifactId>jaxen</artifactId>
+    </dependency>
+    
     <!-- those ones are from geotools repositories -->
     <dependency>
       <groupId>ki</groupId>
