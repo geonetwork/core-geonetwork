@@ -60,15 +60,15 @@
 
 	<!-- ================================================================= -->
 	
-	<xsl:template match="gmd:metadataStandardName" priority="10">
+	<!-- Only set metadataStandardName and metadataStandardVersion
+	if not set. -->
+	<xsl:template match="gmd:metadataStandardName[@gco:nilReason='missing' or gco:CharacterString='']" priority="10">
 		<xsl:copy>
 			<gco:CharacterString>ISO 19115:2003/19139</gco:CharacterString>
 		</xsl:copy>
 	</xsl:template>
-
-	<!-- ================================================================= -->
 	
-	<xsl:template match="gmd:metadataStandardVersion" priority="10">
+	<xsl:template match="gmd:metadataStandardVersion[@gco:nilReason='missing' or gco:CharacterString='']" priority="10">
 		<xsl:copy>
 			<gco:CharacterString>1.0</gco:CharacterString>
 		</xsl:copy>

@@ -704,7 +704,7 @@
 	-->
 	<!-- ============================================================================= -->
 
-	<xsl:template mode="iso19139" match="gmd:dateStamp|gmd:metadataStandardName|gmd:metadataStandardVersion|gmd:fileIdentifier" priority="2">
+	<xsl:template mode="iso19139" match="gmd:dateStamp|gmd:fileIdentifier" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		

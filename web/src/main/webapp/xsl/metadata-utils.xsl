@@ -173,19 +173,20 @@
 		<xsl:if test="string(geonet:info/isTemplate)!='s' and (geonet:info/isTemplate='y' or geonet:info/source=/root/gui/env/site/siteId) and /root/gui/services/service/@name='metadata.duplicate.form'">
 			<button class="content" onclick="load('{/root/gui/locService}/metadata.duplicate.form?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/create"/></button>
 		</xsl:if>
-		
-		<!-- edit button -->
-		<xsl:if test="geonet:info/edit='true'">
+		<xsl:if test="
+		(/root/gui/config/allow-editing-for-harvested-record = 1 and geonet:info/isHarvested = 'y' and geonet:info/edit='true')
+		or (geonet:info/isHarvested = 'n' and geonet:info/edit='true')">
+			<!-- edit button -->
 			&#160;
 			<button class="content" onclick="load('{/root/gui/locService}/metadata.edit?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/edit"/></button>
 		</xsl:if>
-
+		
 		<!-- delete button -->
 		<xsl:if test="geonet:info/owner='true'">
 			&#160;
 			<button class="content" onclick="return doConfirmDelete('{/root/gui/locService}/metadata.delete?id={$metadata/geonet:info/id}', '{/root/gui/strings/confirmDelete}','{$ltitle}','{$metadata/geonet:info/id}', '{/root/gui/strings/deleteConfirmationTitle}')"><xsl:value-of select="/root/gui/strings/delete"/></button>
 		</xsl:if>
-			
+						
 		<xsl:if test="geonet:info/edit='true'">
 			&#160;
 			<!-- =========================  -->
