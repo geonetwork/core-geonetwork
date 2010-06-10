@@ -95,15 +95,28 @@
     </pluginManagement>
 
     <plugins>
+      
+      <!--     Compilation.                                        -->
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.5</source>  <!-- The -source argument for the Java compiler. -->
+          <target>1.5</target>  <!-- The -target argument for the Java compiler. -->
+          <debug>true</debug>   <!-- Whether to include debugging information.   -->
+          <encoding>UTF-8</encoding> <!-- The -encoding argument for the Java compiler. -->
         </configuration>
       </plugin>
-      
-   
+
+      <!-- resources -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+
       <!-- This plugin Allows to deploy several webapps into a specific container (ie. jetty) -->
       <plugin>
         <groupId>org.codehaus.cargo</groupId>
@@ -118,7 +131,7 @@
           <configuration>
             <home>${project.build.directory}/test-server</home>
             <properties>
-<!-- Cargo VMARGS are not working. FIXME -->
+              <!-- Cargo VMARGS are not working. FIXME -->
               <cargo.jvmargs><![CDATA[-Xms48m -Xmx512m -Xss2M -XX:MaxPermSize=128m -XX:CompileCommandFile=hotspot_compiler -Dmime-mappings=../geonetwork/WEB-INF/mime-types.properties]]></cargo.jvmargs>
               <cargo.servlet.port>8080</cargo.servlet.port>
             </properties>
@@ -140,7 +153,7 @@
         </configuration>
       </plugin>
 
-
+      <!-- artifact assembly -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>2.2-beta-5</version>
