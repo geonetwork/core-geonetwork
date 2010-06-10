@@ -132,19 +132,19 @@
 									</button>
 								</xsl:if>
 								<xsl:if test="/root/gui/services/service/@name='metadata.massive.newowner'">
-								&#160;
+								<xsl:text>&#160;</xsl:text>
 									<button onclick="massiveOperation('metadata.massive.newowner.form','{/root/gui/strings/massiveNewOwnerTitle}',800)">
 										<xsl:value-of select="/root/gui/strings/newOwner"/>
 									</button>
 								</xsl:if>
 								<xsl:if test="/root/gui/services/service/@name='metadata.massive.update.categories' and /root/gui/config/category">
-								&#160;
+								<xsl:text>&#160;</xsl:text>
 									<button onclick="massiveOperation('metadata.massive.category.form','{/root/gui/strings/massiveUpdateCategoriesTitle}',800)">
 										<xsl:value-of select="/root/gui/strings/updateCategories"/>
 									</button>
 								</xsl:if>
 								<xsl:if test="/root/gui/services/service/@name='metadata.massive.update.privileges'">
-								&#160;
+								<xsl:text>&#160;</xsl:text>
 									<button onclick="massiveOperation('metadata.massive.admin.form','{/root/gui/strings/massiveUpdatePrivilegesTitle}',800)">
 										<xsl:value-of select="/root/gui/strings/updatePrivileges"/>
 									</button>
