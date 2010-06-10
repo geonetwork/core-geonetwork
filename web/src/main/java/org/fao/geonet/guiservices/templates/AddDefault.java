@@ -68,7 +68,8 @@ public class AddDefault implements Service {
 			throws Exception {
 
 		String schemaList = Util.getParam(params, Params.SCHEMA, "");
-
+		String serviceStatus = "true";
+		
 		Element result = new Element(Jeeves.Elem.RESPONSE);
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -139,6 +140,7 @@ public class AddDefault implements Service {
 						dbms.commit();
 						status = "loaded";
 					} catch (Exception e) {
+						serviceStatus = "false";
 						Log.error(Geonet.DATA_MANAGER,
 								"Error loading template: " + e.getMessage());
 					}
@@ -148,6 +150,7 @@ public class AddDefault implements Service {
 				result.addContent(schema);
 			}
 		}
+		result.setAttribute("status", serviceStatus);
 		return result;
 	}
 }

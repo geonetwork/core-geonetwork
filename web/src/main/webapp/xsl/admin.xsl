@@ -5,6 +5,67 @@
 	
 	<xsl:template mode="script" match="/">
 		<xsl:call-template name="jsHeader"/>
+		
+		<script language="JavaScript" type="text/javascript">   
+            function allTemplate(cb) {
+                if (cb == $('all')) {
+                    if ($('all').checked) {
+                        $('iso19139').checked = $('iso19110').checked = $('iso19115').checked = $('dublin-core').checked = $('fgdc-std').checked = true;
+                    } else {
+                        $('iso19139').checked = $('iso19110').checked = $('iso19115').checked = $('dublin-core').checked = $('fgdc-std').checked = false;
+                    }
+                } else {
+                    $('all').checked = false;
+                }
+            }
+
+			function addTemplate() {
+				var wait = 'waitTpl';
+				var btn = 'tplBtn';
+				$(wait).style.display = 'block';
+				$(btn).style.display = 'none';
+				
+				var url = "metadata.templates.add.default?schema=";
+				if ($('all').checked) {
+				} else {
+					if ($('iso19139').checked)
+						url += "iso19139";
+					if ($('iso19110').checked)
+						url += "iso19110";
+					if ($('dublin-core').checked)
+					url += "dublin-core";
+					if ($('fgdc-std').checked)
+						url += "fgdc-std";
+				}
+				
+				var http = new Ajax.Request(
+					url, 
+					{
+						method: 'get', 
+						parameters: null,
+						onComplete: function(originalRequest){},
+						onLoaded: function(originalRequest){},
+						onSuccess: function(originalRequest){                                       
+							// get the XML root item
+							var root = originalRequest.responseXML.documentElement;
+							var resp = root.getAttribute('status');
+							$(wait).style.display = 'none';
+							$(btn).style.display = 'block';
+
+							if (resp == "true")
+								alert ("ok");
+							else
+								alert(translate('error'));
+						},
+						onFailure: function(originalRequest){
+							$(wait).style.display = 'none';
+							$(btn).style.display = 'block';
+							alert(msgFailed);
+						}
+				});
+			}
+		</script>
+		
 	</xsl:template>
 
 	<!--
@@ -76,16 +137,19 @@
 						</xsl:if>
 						<xsl:if test="/root/gui/services/service/@name='metadata.templates.add.default'">
 							<tr>
-								<td class="padded"><a href="{/root/gui/locService}/metadata.templates.add.default"><xsl:value-of select="/root/gui/strings/metadata-template-add-default"/></a></td>
+								<td class="padded"><xsl:value-of select="/root/gui/strings/metadata-template-add-default"/></td>
 								<td class="padded">
-									<xsl:value-of select="/root/gui/strings/metadata-template-add-default-desc"/>
-									<ul>
-										<li><a href="metadata.templates.add.default"><xsl:value-of select="/root/gui/strings/all"/></a></li>
-										<li><a href="metadata.templates.add.default?schema=iso19139">iso19139</a></li>
-										<li><a href="metadata.templates.add.default?schema=iso19110">iso19110</a></li>
-										<li><a href="metadata.templates.add.default?schema=dublin-core">dublin-core</a></li>
-										<li><a href="metadata.templates.add.default?schema=fgdc-std">fgdc-std</a></li>
-									</ul>
+									<xsl:value-of select="/root/gui/strings/metadata-template-add-default-desc"/> :
+									<input type="checkbox" name="iso19139" id="iso19139" onClick="allTemplate(this);"/><label for="iso19139">iso19139</label>
+									<input type="checkbox" name="iso19115" id="iso19115" onClick="allTemplate(this);"/><label for="iso19115">iso19115</label>
+									<input type="checkbox" name="iso19110" id="iso19110" onClick="allTemplate(this);"/><label for="iso19110">iso19110</label>
+									<input type="checkbox" name="dublin-core" id="dublin-core" onClick="allTemplate(this);"/><label for="dublin-core">dublin-core</label>
+									<input type="checkbox" name="fgdc-std" id="fgdc-std" onClick="allTemplate(this);"/><label for="fgdc-std">fgdc-std</label>
+									<input type="checkbox" name="" id="all" onClick="allTemplate(this);"/><label for="all">all</label>
+									<button class="content" onclick="addTemplate();" id="tplBtn">
+										<xsl:value-of select="/root/gui/strings/metadata-template-add-default"/>
+									</button>
+									<img src="{/root/gui/url}/images/loading.gif" id="waitTpl" style="display:none;"/>									
 								</td>
 							</tr>
 						</xsl:if>
