@@ -32,7 +32,11 @@
 									<xsl:sort select="name"/>
 									<xsl:variable name="categId" select="id"/>
 									<tr>
-										<td class="padded"><xsl:value-of select="label/child::*[name() = $lang]"/></td>
+										<td class="padded">
+											<label for="_{$categId}">
+												<xsl:value-of select="label/child::*[name() = $lang]"/>
+											</label>
+										</td>
 										<td class="padded" align="center">
 											<input type="checkbox" id="_{$categId}" name="_{$categId}">
 												<xsl:if test="on">
