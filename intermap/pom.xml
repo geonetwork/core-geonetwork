@@ -50,7 +50,12 @@
       <groupId>javax.media</groupId>
       <artifactId>jai_codec</artifactId>
     </dependency>
-    
+    <dependency>
+      <groupId>tyrex</groupId>
+      <artifactId>tyrex</artifactId>
+      <version>1.0</version>
+    </dependency> 
+
     <!-- =========================================================== -->
     <!-- FIXME :  Local repository for now -->
     <dependency>
