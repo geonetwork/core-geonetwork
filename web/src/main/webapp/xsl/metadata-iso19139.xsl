@@ -652,7 +652,7 @@
 				</xsl:variable>
 				
 				<xsl:variable name="codelist" select="exslt:node-set($codelistCore)" />
-
+				<xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0" />
 
 				<xsl:choose>
 					<xsl:when test="$edit=true()">
@@ -661,6 +661,9 @@
 							<!-- Check element is mandatory or not -->
 							<xsl:if test="../../geonet:element/@min='1' and $edit">
 								<xsl:attribute name="onchange">validateNonEmpty(this);</xsl:attribute>
+							</xsl:if>
+							<xsl:if test="$isXLinked">
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
 							</xsl:if>
 							<option name=""/>
 							<xsl:for-each select="$codelist/entry[not(@hideInEditMode)]">
@@ -2230,7 +2233,7 @@
 	
 	<!-- ============================================================================= -->
 
-	<xsl:template mode="iso19139" match="gmd:contact|gmd:pointOfContact">
+	<xsl:template mode="iso19139" match="gmd:contact|gmd:pointOfContact|gmd:citedResponsibleParty">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 
@@ -2251,6 +2254,10 @@
 						<tr>
 							<td width="50%" valign="top">
 								<table width="100%">
+									<xsl:apply-templates mode="elementEP" select="../@xlink:href">
+										<xsl:with-param name="schema" select="$schema"/>
+										<xsl:with-param name="edit"   select="$edit"/>
+									</xsl:apply-templates>
 									
 									<xsl:apply-templates mode="elementEP" select="gmd:individualName|geonet:child[string(@name)='individualName']">
 										<xsl:with-param name="schema" select="$schema"/>
@@ -3195,6 +3202,7 @@
 		
 		<xsl:variable name="qname" select="name(.)"/>
 		<xsl:variable name="value" select="gco:CharacterString"/>
+		<xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0" />		
 		
 		<xsl:apply-templates mode="simpleElement" select=".">
 			<xsl:with-param name="schema" select="$schema" />
@@ -3205,23 +3213,29 @@
 						
 						<xsl:variable name="lang" select="/root/gui/language"/>
 						<input class="md" name="_{gco:CharacterString/geonet:element/@ref}"
-						id="_{gco:CharacterString/geonet:element/@ref}" value="{gco:CharacterString}"/>
-						<xsl:text> </xsl:text>
-						<select class="md"
-							onchange="$('_{gco:CharacterString/geonet:element/@ref}').value = this.options[this.selectedIndex].value;"
-							size="1">
-							<option name="" />
-							<xsl:for-each select="/root/gui/regions/record">
-								<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
-								
-								<option value="{label/child::*[name() = $lang]}">
-									<xsl:if test="$value = label/child::*[name() = $lang]">
-										<xsl:attribute name="selected"/>
-									</xsl:if>
-									<xsl:value-of select="label/child::*[name() = $lang]"/>
-								</option>
-							</xsl:for-each>
-						</select>
+						id="_{gco:CharacterString/geonet:element/@ref}" value="{gco:CharacterString}">
+							<xsl:if test="$isXLinked">
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
+							</xsl:if>					
+						</input>
+						<xsl:if test="not($isXLinked)">
+							<xsl:text> </xsl:text>
+							<select class="md"
+								onchange="$('_{gco:CharacterString/geonet:element/@ref}').value = this.options[this.selectedIndex].value;"
+								size="1">
+								<option name="" />
+								<xsl:for-each select="/root/gui/regions/record">
+									<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
+									
+									<option value="{label/child::*[name() = $lang]}">
+										<xsl:if test="$value = label/child::*[name() = $lang]">
+											<xsl:attribute name="selected"/>
+										</xsl:if>
+										<xsl:value-of select="label/child::*[name() = $lang]"/>
+									</option>
+								</xsl:for-each>
+							</select>
+						</xsl:if>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of
