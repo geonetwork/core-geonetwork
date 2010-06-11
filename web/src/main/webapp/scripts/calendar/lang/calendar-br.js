@@ -1,4 +1,4 @@
-﻿// ** I18N
+// ** I18N
 
 // Calendar pt-BR language
 // Author: Fernando Dourado, <fernando.dourado@ig.com.br>

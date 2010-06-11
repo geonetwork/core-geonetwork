@@ -1,4 +1,4 @@
-﻿// ** I18N
+// ** I18N
 
 // Calendar PL language
 // Author: Dariusz Pietrzak, <eyck@ghost.anime.pl>
