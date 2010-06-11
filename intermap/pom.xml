@@ -16,7 +16,7 @@
   <!-- =========================================================== -->
   <groupId>intermap</groupId>
   <artifactId>intermap</artifactId>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
   <name>Intermap Web module</name>
   <description> Intermap web module. </description>
 
@@ -117,21 +117,13 @@
         </plugin>
         
        <plugin>
-        <inherited>true</inherited>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
+        <version>2.1-alpha-2</version>
         <configuration>
-          <warName>intermap</warName>
-          <webappDirectory>${project.build.directory}/intermap</webappDirectory>
+            <attachClasses>true</attachClasses>
+            <warName>intermap</warName>
+            <webappDirectory>${project.build.directory}/intermap</webappDirectory>
         </configuration>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>war</goal>
-            </goals>
-          </execution>
-        </executions>
        </plugin>
       
       <plugin>
