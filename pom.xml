@@ -576,10 +576,7 @@
     <module>web</module>
     <module>intermap</module>
     <module>geoserver</module>
-<!-- 
-   <module>release</module>
     <module>gast</module>
--->
   </modules>
 
   <distributionManagement>
