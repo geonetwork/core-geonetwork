@@ -109,7 +109,7 @@ public class Update implements Service
 
 		//--- if finished then remove the XML from the session
 		if (finished) {
-			dataMan.removeMetadataEmbedded(session);
+			dataMan.removeMetadataEmbedded(session, id);
 		}
 
 		return elResp;

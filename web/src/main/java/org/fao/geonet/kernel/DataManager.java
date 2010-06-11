@@ -1263,32 +1263,29 @@ public class DataManager
 	//---
 	//--------------------------------------------------------------------------
 
-	private Element getMetadataFromSession(UserSession session)
+	private Element getMetadataFromSession(UserSession session, String id)
 	{
 		Log.debug(Geonet.DATA_MANAGER, "Retrieving metadata from session "+session.getUserId());
-		Element md = (Element) session.getProperty(Geonet.Session.METADATA_EDITING);
-		if (md == null)
-			throw new IllegalStateException("Metadata not in edit mode. Failed to retrieve record from session.");
-
+		Element md = (Element) session.getProperty(Geonet.Session.METADATA_EDITING + id);
 		md.detach();
 		return md;
 	}
 
-	private void setMetadataIntoSession(UserSession session, Element md)
+	private void setMetadataIntoSession(UserSession session, Element md, String id)
 	{
 		Log.debug(Geonet.DATA_MANAGER, "Storing metadata in session "+session.getUserId());
-		session.setProperty(Geonet.Session.METADATA_EDITING, md);
+		session.setProperty(Geonet.Session.METADATA_EDITING + id, md);
 	}
 
 	//--------------------------------------------------------------------------
 	/** For Ajax Editing : removes metadata from session
 	  */
-	public void removeMetadataEmbedded(UserSession session)
+	public void removeMetadataEmbedded(UserSession session, String id)
 	{
 		Log.debug(Geonet.DATA_MANAGER, "Removing metadata from session "+session.getUserId());
-		session.removeProperty(Geonet.Session.METADATA_EDITING);
+		session.removeProperty(Geonet.Session.METADATA_EDITING + id);
 	}
-
+	
 	//--------------------------------------------------------------------------
 	/** For Ajax Editing : gets Metadata from database and places it in session
 	  */
@@ -1297,7 +1294,7 @@ public class DataManager
 		Element md = getMetadata(srvContext, id, forEditing, withValidationErrors);
 
 		UserSession session = srvContext.getUserSession();
-		setMetadataIntoSession(session,md);
+		setMetadataIntoSession(session, md, id);
 		return md;
 	}
 
@@ -1310,7 +1307,7 @@ public class DataManager
 		String  schema = getMetadataSchema(dbms, id);
 
 		//--- get metadata from session
-		Element md = getMetadataFromSession(session);
+		Element md = getMetadataFromSession(session, id);
 
 		//--- ref is parent element so find it
 		Element el = (Element)editLib.findElement(md, ref);
@@ -1359,7 +1356,7 @@ public class DataManager
 		md.addContent((Element)info.clone());
 
 		//--- store the metadata in the session again 
-		setMetadataIntoSession(session,(Element)md.clone());
+		setMetadataIntoSession(session,(Element)md.clone(), id);
 
 		// Return element added
 		return child;
@@ -1376,7 +1373,7 @@ public class DataManager
 		String schema = getMetadataSchema(dbms, id);
 
 		//--- get metadata from session
-		Element md = getMetadataFromSession(session);
+		Element md = getMetadataFromSession(session, id);
 
 		//--- locate the geonet:info element and clone for later re-use
 		Element info = (Element)(md.getChild(Edit.RootChild.INFO,Edit.NAMESPACE)).clone();
@@ -1438,7 +1435,7 @@ public class DataManager
 		md.addContent((Element)info.clone());
 
 		//--- store the metadata in the session again 
-		setMetadataIntoSession(session,(Element)md.clone());
+		setMetadataIntoSession(session,(Element)md.clone(), id);
 
 		return result;
 	}
@@ -1452,7 +1449,7 @@ public class DataManager
 		String schema = getMetadataSchema(dbms, id);
 
 		//--- get metadata from session
-		Element md = getMetadataFromSession(session);
+		Element md = getMetadataFromSession(session, id);
 
 		//--- get element to swap
 		Element elSwap = editLib.findElement(md, ref);
@@ -1479,7 +1476,7 @@ public class DataManager
 			else		swapElements(elSwap, (Element) list.get(iSwapIndex -1));
 
 		//--- store the metadata in the session again 
-		setMetadataIntoSession(session,(Element)md.clone());
+		setMetadataIntoSession(session,(Element)md.clone(), id);
 
 		return;
 	}
@@ -1501,7 +1498,7 @@ public class DataManager
 		}
 
 		// --- get metadata from session
-		Element md = getMetadataFromSession(session);
+		Element md = getMetadataFromSession(session, id);
 
 		// Store XML fragments to be handled after other elements update
 		HashMap<String, String> xmlInputs = new HashMap<String, String>();
@@ -1693,7 +1690,7 @@ public class DataManager
 		String schema = getMetadataSchema(dbms, id);
 		
 		//--- get metadata from session and clone it for validation
-		Element realMd = getMetadataFromSession(session);
+		Element realMd = getMetadataFromSession(session, id);
 		Element md = (Element)realMd.clone();
 
 		//--- remove editing info
