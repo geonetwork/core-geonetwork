@@ -394,7 +394,7 @@ public class AccessManager
 
         // IPv6 link-local
         String ipv6LinkLocalPrefix = "fe80:";
-        if(ip.toLowerCase().startsWith(ipv6LinkLocalPrefix.toLowerCase())) {
+        if(ip.toLowerCase().startsWith(ipv6LinkLocalPrefix)) {
             return true;
         }
         // other IPv6
