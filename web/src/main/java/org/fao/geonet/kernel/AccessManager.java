@@ -384,7 +384,7 @@ public class AccessManager
 	//--- Private methods
 	//---
 	//--------------------------------------------------------------------------
-
+	
 	private boolean isIntranet(String ip)
 	{
 		//--- consider IPv4 & IPv6 loopback
@@ -392,19 +392,32 @@ public class AccessManager
 
 		if (ip.startsWith("0:0:0:0:0:0:0:1") || ip.equals("127.0.0.1")) return true;
 
+        // IPv6 link-local
+        String ipv6LinkLocalPrefix = "fe80:";
+        if(ip.toLowerCase().startsWith(ipv6LinkLocalPrefix.toLowerCase())) {
+            return true;
+        }
+        // other IPv6
+        else if(ip.indexOf(':') >= 0) {
+            return false;
+        }
+
+        // IPv4
+
 		String network = settMan.getValue("system/intranet/network");
 		String netmask = settMan.getValue("system/intranet/netmask");
 
 		try {
-			long lIntranetNet  = getAddress(network);
-			long lIntranetMask = getAddress(netmask);
-			long lAddress      = getAddress(ip);
-			return (lAddress & lIntranetMask) == lIntranetNet ;
+		long lIntranetNet  = getAddress(network);
+		long lIntranetMask = getAddress(netmask);
+		long lAddress      = getAddress(ip);
+		return (lAddress & lIntranetMask) == lIntranetNet ;
 		} catch (Exception nfe) {
 			nfe.printStackTrace();
 			return false;
 		}
 	}
+	
 
 	//--------------------------------------------------------------------------
 
