@@ -536,15 +536,16 @@
         <artifactId>maven-jetty-plugin</artifactId>
         <version>6.1.18</version>
         <configuration>
-          <contextPath>geonetwork</contextPath>
           <connectors>
             <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
               <port>8080</port>
               <maxIdleTime>10000</maxIdleTime>
             </connector>
           </connectors>
-          <contextPath>geonetwork</contextPath>
           <webApp>${project.build.directory}/geonetwork</webApp>
+          <webAppConfig>
+            <contextPath>/webapp</contextPath>
+          </webAppConfig>
           <contextHandlers>            
             <contextHandler implementation="org.mortbay.jetty.webapp.WebAppContext">
               <war>${basedir}/../intermap/target/intermap.war</war>
