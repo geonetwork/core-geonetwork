@@ -282,8 +282,19 @@
 			<!-- index online protocol -->
 			
 			<xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString">
-				<Field name="protocol" string="{string(.)}" store="true" index="true" token="false"/>
-			</xsl:for-each>
+				<xsl:variable name="download_check"><xsl:text>&amp;fname=&amp;access</xsl:text></xsl:variable>
+				<xsl:variable name="linkage" select="../../gmd:linkage/gmd:URL" /> 
+
+				<!-- ignore empty downloads -->
+				<xsl:if test="string($linkage)!='' and not(contains($linkage,$download_check))">  
+					<Field name="protocol" string="{string(.)}" store="true" index="true" token="false"/>
+				</xsl:if>  
+
+				<xsl:variable name="mimetype" select="../../gmd:name/gmx:MimeFileType/@type"/>
+				<xsl:if test="normalize-space($mimetype)!=''">
+          <Field name="mimetype" string="{$mimetype}" store="true" index="true" token="false"/>
+				</xsl:if>
+			</xsl:for-each>  
 		</xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		

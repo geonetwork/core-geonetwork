@@ -435,8 +435,16 @@ public class XPath {
 					else {
 						// No index is specified, so we'll get just the first
 						// child with the given name.
+						List children = ((Element)rslt).getChildren();
 
-						rslt = ((Element)rslt).getChild(pathPart);
+						for (int i = 0; i < children.size(); i++) {
+							Element child = (Element)children.get(i);
+							if (child.getQualifiedName().equals(pathPart)) {
+								rslt = child;
+								break;
+							}
+						}
+						//System.out.println("Round again with rslt "+rslt);
 					}
 				}
 
