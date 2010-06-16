@@ -34,6 +34,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+import jeeves.utils.XPath;
 
 import org.apache.lucene.search.Sort;
 import org.fao.geonet.GeonetContext;
@@ -189,11 +190,6 @@ public class SearchController
 			}
 		}
 	
-		// We provide specific mappings for profiles to ISO or OGC in separate
-		// directories - Simon Pigot - Fix
-		//if (schema.contains("iso19139")) 
-		//	schema = "iso19139";
-		
 		String schemaDir  = context.getAppPath() +"xml"+ FS +"csw"+ FS +"schemas"+ FS +schema+ FS;
 		String styleSheet = schemaDir + prefix +"-"+ setName +".xsl";
 
@@ -204,17 +200,26 @@ public class SearchController
 		
 		res = Xml.transform(res, styleSheet, params);
 
-		//--- if the client has specified some ElementNames, then we remove the unwanted children
+		//--- if the client has specified some ElementNames, then we search for them
+		//--- if they are in anything else other that csw:Record, if csw:Record 
+		//--- remove only the unwanted ones
 
 		if (elemNames != null) {
 		    if (outSchema != OutputSchema.OGC_CORE) {
-					try {
-						selectElementsUsingXPath(res, elemNames);
-					} catch (JDOMException e) {
-						throw new InvalidParameterValueEx("elementName has invalid XPath","");
-					}
+						Element frags = (Element)res.clone();
+						frags.removeContent();
+						for (String s : elemNames) {
+							try {
+								Content o = (Content)XPath.getElement(res, s);
+								if (o != null) frags.addContent((Content)o.clone());
+							} catch (Exception e) {
+								e.printStackTrace();
+								throw new InvalidParameterValueEx("elementName has invalid XPath : "+s,e.getMessage());
+							}
+						}
+						res = frags;
 				} else {
-		    	removeElements(res, elemNames);
+		    		removeElements(res, elemNames);
 				}
 		}
 		return res;
@@ -243,36 +248,6 @@ public class SearchController
 
     //---------------------------------------------------------------------------
 
-    private static void selectElementsUsingXPath(Element md, Set<String> elemNames) throws Exception
-    {
-
-			//-- build a union XPath from the elementNames specified
-
-			StringBuffer xpath = new StringBuffer();
-			for (String s : elemNames) {
-				xpath.append(s+"|");
-			}
-			xpath.deleteCharAt(xpath.length()-1);
-
-			//-- get all namespaces from the metadata
-
-			List<Namespace> theNss = new ArrayList();
-			Namespace ns = md.getNamespace();
-			if (ns != null) {
-				theNss.add(ns);
-				theNss.addAll(md.getAdditionalNamespaces());
-			}
-
-			//-- get the elements from the XPath union
-
-			Element theMd = (Element)md.clone();
-			List<Content> content  = Xml.selectNodes(theMd, xpath.toString(), theNss);
-
-			md.removeContent();
-			for (Content c : content) {
-				md.addContent(c.detach());
-			}
-    }
 }
 
 //=============================================================================
