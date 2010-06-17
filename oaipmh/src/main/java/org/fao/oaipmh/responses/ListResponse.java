@@ -25,6 +25,7 @@ package org.fao.oaipmh.responses;
 
 import java.io.IOException;
 import java.util.Iterator;
+
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.requests.ListRequest;
@@ -88,6 +89,8 @@ public abstract class ListResponse extends AbstractResponse
 
 		return createObject((Element) iterator.next());
 	}
+	
+	public abstract int getSize();
 
 	//---------------------------------------------------------------------------
 
@@ -99,6 +102,7 @@ public abstract class ListResponse extends AbstractResponse
 	{
 		this.token = token;
 	}
+	
 
 	//---------------------------------------------------------------------------
 	//---

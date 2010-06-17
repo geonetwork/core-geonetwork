@@ -91,6 +91,21 @@ public class Lib
 
 		return true;
 	}
+
+	//---------------------------------------------------------------------------
+
+	public static boolean isInteger(String value)
+  {
+    try
+    {
+      Integer.parseInt(value);
+      return true;
+    }
+    catch(Exception e)
+    {
+      return false;
+    }
+  }
 }
 
 //=============================================================================

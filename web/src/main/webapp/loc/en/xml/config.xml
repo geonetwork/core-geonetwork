@@ -16,6 +16,16 @@
 	<z3950>Z39.50 Server</z3950>
 	<enable>Enable</enable>
 
+	<oai>OAI Provider</oai>
+		<datesearch>Datesearch</datesearch>
+		<datesearchopt>
+			<dsopt label="temporal extent">1</dsopt>
+			<dsopt label="modification date">2</dsopt>
+		</datesearchopt>
+	
+		<tokentimeout>ResumptionToken Timeout </tokentimeout>
+		<cachesize>Cachesize</cachesize>
+
 	<xlinkResolver>XLink Resolver</xlinkResolver>
 		
 	<downloadservice>Data-For-Download Service</downloadservice>
@@ -206,7 +216,27 @@
 			<br/>
 			<b>Please note:</b> restart GeoNetwork to make this change active.
 		</tip>
+	
+		<!-- oai  -->
 		
+		<tip id="oai.mdmode">
+			Influences the behaviour of OAI when parameters from or until are supplied.
+			If set to temporal extent, the temporal extent of the date described by the metadata is searched.
+			If set to modification date, the date at which the metadata was last modified is searched
+			<br/>
+			<b>Please note:</b> restart GeoNetwork to make this change active.
+		</tip>
+		
+		<tip id="oai.tokentimeout">
+			The number of seconds a OAI resultset stays in the cache and can be scrolled using the OAI resumptionToken
+			<br/>
+			<b>Please note:</b> restart GeoNetwork to make this change active.
+		</tip>
+		
+		<tip id="oai.cachesize">
+			The number of OAI resultSets that can be stored in the Cache.
+		</tip>
+
 		<!-- CSW ISO Profile -->
 		<tip id="csw.enable">
 			If set, this will enable the CSW ISO Profile server functionnality. It will allow other catalogs to harvest it.

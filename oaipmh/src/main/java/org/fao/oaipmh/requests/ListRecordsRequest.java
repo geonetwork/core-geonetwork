@@ -29,58 +29,16 @@ import java.util.Map;
 
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.responses.ListRecordsResponse;
-import org.fao.oaipmh.util.ISODate;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 
 //=============================================================================
 
-public class ListRecordsRequest extends ListRequest
+public class ListRecordsRequest extends TokenListRequest
 {
 	public static final String VERB = "ListRecords";
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
-
-	public ISODate getFrom()  { return from;  }
-	public ISODate getUntil() { return until; }
-
-	public String getMetadataPrefix() { return mdPrefix; }
-	public String getSet()            { return set;      }
-
-	//---------------------------------------------------------------------------
-
-	public void setFrom(ISODate date)
-	{
-		from = date;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public void setUntil(ISODate date)
-	{
-		until = date;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public void setMetadataPrefix(String mdPrefix)
-	{
-		this.mdPrefix = mdPrefix;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public void setSet(String set)
-	{
-		this.set = set;
-	}
-
-	//---------------------------------------------------------------------------
-
+	
 	public ListRecordsResponse execute() throws IOException, OaiPmhException, JDOMException,
 															  SAXException, Exception
 	{
@@ -109,16 +67,7 @@ public class ListRecordsRequest extends ListRequest
 
 	public String getVerb() { return VERB; }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
 
-	private ISODate from;
-	private ISODate until;
-	private String  mdPrefix;
-	private String  set;
 }
 
 //=============================================================================

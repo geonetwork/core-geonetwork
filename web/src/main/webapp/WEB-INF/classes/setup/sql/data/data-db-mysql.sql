@@ -7326,6 +7326,10 @@ INSERT INTO Settings VALUES (606,600,'interval',NULL);
 INSERT INTO Settings VALUES (607,606,'day','0');
 INSERT INTO Settings VALUES (608,606,'hour','24');
 INSERT INTO Settings VALUES (609,606,'min','0');
+INSERT INTO Settings VALUES (700,1,'oai',NULL);
+INSERT INTO Settings VALUES (701,700,'mdmode',1);
+INSERT INTO Settings VALUES (702,700,'tokentimeout',3600);
+INSERT INTO Settings VALUES (703,700,'cachesize',60);
 
 -- ======================================================================
 -- === Table: Users

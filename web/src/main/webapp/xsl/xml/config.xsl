@@ -15,6 +15,7 @@
 		<xsl:variable name="indexoptimizerAt" select="$indexoptimizer/at/children"/>
 		<xsl:variable name="indexoptimizerInterval" select="$indexoptimizer/interval/children"/>
 		<xsl:variable name="z3950"      select="children/z3950/children"/>
+		<xsl:variable name="oai"      	select="children/oai/children"/>
 		<xsl:variable name="xlinkResolver"        select="children/xlinkResolver/children"/>
 		<xsl:variable name="downloadservice"      select="children/downloadservice/children"/>
 		<xsl:variable name="proxy"      select="children/proxy/children"/>
@@ -72,6 +73,12 @@
 				<enable><xsl:value-of select="$z3950/enable/value"/></enable>
 				<port><xsl:value-of select="$z3950/port/value"/></port>
 			</z3950>
+
+			<oai>
+				<mdmode><xsl:value-of select="$oai/mdmode/value"/></mdmode>
+				<tokentimeout><xsl:value-of select="$oai/tokentimeout/value"/></tokentimeout>
+				<cachesize><xsl:value-of select="$oai/cachesize/value"/></cachesize>
+			</oai>
 			
 			<xlinkResolver>
 				<enable><xsl:value-of select="$xlinkResolver/enable/value"/></enable>

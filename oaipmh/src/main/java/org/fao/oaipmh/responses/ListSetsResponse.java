@@ -61,6 +61,8 @@ public class ListSetsResponse extends ListResponse
 	//---------------------------------------------------------------------------
 
 	public void clearSets() { sets.clear(); }
+	
+	public int getSize() {	return sets.size();	}
 
 	//---------------------------------------------------------------------------
 
@@ -115,6 +117,8 @@ public class ListSetsResponse extends ListResponse
 	//---------------------------------------------------------------------------
 
 	private List<SetInfo> sets = new ArrayList<SetInfo>();
+
+	
 }
 
 //=============================================================================

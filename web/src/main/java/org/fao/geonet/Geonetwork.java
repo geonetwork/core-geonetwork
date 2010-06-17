@@ -267,9 +267,12 @@ public class Geonetwork implements ApplicationHandler
 		//------------------------------------------------------------------------
 		//--- initialize catalogue services for the web
 
-		logger.info("  - Open Archive Initiative (OAI-PMH) server...");
+		int oaimode    = settingMan.getValueAsInt("system/oai/mdmode");
+		int  oaicachesize      = settingMan.getValueAsInt("system/oai/cachesize");
+		int  oaicachelifetime  = settingMan.getValueAsInt("system/oai/tokentimeout");
+		logger.info("  - Open Archive Initiative (OAI-PMH) server: mode"+oaimode+" cachesize: "+oaicachesize+" cachelifetime: "+oaicachelifetime);
 
-		OaiPmhDispatcher oaipmhDis = new OaiPmhDispatcher();
+		OaiPmhDispatcher oaipmhDis = new OaiPmhDispatcher(oaimode,oaicachesize,oaicachelifetime);
 
 		//------------------------------------------------------------------------
 		//--- return application context

@@ -49,19 +49,25 @@ import org.jdom.Element;
 
 public class OaiPmhDispatcher
 {
+	
+	public static final int MODE_MODIFIDATE = 2;
+	public static final int MODE_TEMPEXTEND = 1;
+	
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//---------------------------------------------------------------------------
 
-	public OaiPmhDispatcher()
+	public OaiPmhDispatcher(int searchmode,  int cachesize, int oaicachelifetime)
 	{
+		ResumptionTokenCache cache = new ResumptionTokenCache(oaicachelifetime,cachesize);
+		
 		register(new GetRecord());
 		register(new Identify());
-		register(new ListIdentifiers());
+		register(new ListIdentifiers(cache,searchmode));
 		register(new ListMetadataFormats());
-		register(new ListRecords());
+		register(new ListRecords(cache,searchmode));
 		register(new ListSets());
 	}
 

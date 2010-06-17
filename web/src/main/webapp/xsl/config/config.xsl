@@ -48,6 +48,7 @@
 		<xsl:call-template name="selectionmanager"/>
 		<xsl:call-template name="indexoptimizer"/>
 		<xsl:call-template name="z3950"/>
+		<xsl:call-template name="oai"/>
 		<xsl:call-template name="xlinkResolver"/>
 		<xsl:call-template name="downloadservice"/>
 		<xsl:call-template name="csw"/>
@@ -232,7 +233,7 @@
 
 	<!-- ============================================================================================= -->
 
-	<xsl:template mode="selectoptions" match="day|hour|minute">
+	<xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
 		<option>
 			<xsl:attribute name="value">
 				<xsl:value-of select="."/>
@@ -289,6 +290,35 @@
 						</table>
 					</td>
 				</tr>
+			</table>
+		</div>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template name="oai">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/oai"/></h1>
+
+		<div align="left" style="{$style}">
+			<table>
+				<tr>
+					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/datesearch"/></td>
+					<td class="padded">
+						<select id="oai.mdmode" class="content">
+							<xsl:apply-templates mode="selectoptions" select="/root/gui/config/datesearchopt/dsopt"/>
+						</select>
+					</td>
+				</tr>
+	
+				<tr>
+					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/tokentimeout"/></td>
+					<td class="padded"><input id="oai.tokentimeout" class="content" type="text" value="" size="20"/></td>
+				</tr>
+				<tr>
+					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/cachesize"/></td>
+					<td class="padded"><input id="oai.cachesize" class="content" type="text" value="" size="20"/></td>
+				</tr>
+							
 			</table>
 		</div>
 	</xsl:template>

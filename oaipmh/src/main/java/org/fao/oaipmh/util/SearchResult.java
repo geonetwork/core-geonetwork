@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.oaipmh.services;
+package org.fao.oaipmh.util;
 
 import java.util.List;
 import org.fao.oaipmh.exceptions.BadResumptionTokenException;
@@ -30,7 +30,7 @@ import org.fao.oaipmh.responses.ResumptionToken;
 
 //=============================================================================
 
-class SearchResult
+public class SearchResult
 {
 	//---------------------------------------------------------------------------
 	//---
@@ -51,7 +51,7 @@ class SearchResult
 
 	public int parseToken(String token) throws BadResumptionTokenException
 	{
-		if (!org.fao.geonet.lib.Lib.type.isInteger(token))
+		if (!Lib.isInteger(token))
 			throw new BadResumptionTokenException("Invalid token : "+ token);
 
 		int pos = Integer.parseInt(token);
@@ -66,6 +66,7 @@ class SearchResult
 
 	//---------------------------------------------------------------------------
 
+/*
 	public void setupToken(ListResponse res, int pos)
 	{
 		if (pos < ids.size())
@@ -78,6 +79,7 @@ class SearchResult
 				res.setResumptionToken(new ResumptionToken(""));
 		}
 	}
+*/
 
 	//---------------------------------------------------------------------------
 	//---

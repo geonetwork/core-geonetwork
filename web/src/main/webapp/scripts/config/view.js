@@ -33,6 +33,10 @@ function ConfigView(strLoader)
 
 		{ id:'z3950.port',   type:'integer',  minValue:80, maxValue:65535, empty:true },
 
+		{ id:'oai.mdmode',   type:'integer',  minValue:1, maxValue:2, empty:false },
+		{ id:'oai.tokentimeout',   type:'integer',  minValue:60, maxValue:86400, empty:false },
+		{ id:'oai.cachesize',   type:'integer',  minValue:10, maxValue:1000, empty:false },
+
 		{ id:'feedback.email',     type:'length',   minSize :0,  maxSize :200 },		
 		{ id:'feedback.mail.host', type:'length',   minSize :0,  maxSize :200 },
 		{ id:'feedback.mail.host', type:'hostname' },
@@ -98,6 +102,10 @@ ConfigView.prototype.setData = function(data)
 	
 	$('z3950.enable').checked = data['Z3950_ENABLE'] == 'true';
 	$('z3950.port')  .value   = data['Z3950_PORT'];
+
+	$('oai.mdmode').value = data['OAI_MDMODE'];
+	$('oai.cachesize').value   = data['OAI_CACHESIZE'];
+	$('oai.tokentimeout').value   = data['OAI_TOKENTIMEOUT'];
 	
 	$('xlinkResolver.enable').checked = data['XLINKRESOLVER_ENABLE'] == 'true';
 
@@ -202,7 +210,11 @@ ConfigView.prototype.getData = function()
 	
 		Z3950_ENABLE : $('z3950.enable').checked,
 		Z3950_PORT   : $('z3950.port')  .value,
-	
+
+		OAI_MDMODE				: $('oai.mdmode').value,
+		OAI_TOKENTIMEOUT	: $('oai.tokentimeout')  .value,
+		OAI_CACHESIZE			: $('oai.cachesize')  .value,
+
 		XLINKRESOLVER_ENABLE : $('xlinkResolver.enable').checked,
 	
 		DOWNLOADSERVICE_SIMPLE : $('downloadservice.simple').checked,

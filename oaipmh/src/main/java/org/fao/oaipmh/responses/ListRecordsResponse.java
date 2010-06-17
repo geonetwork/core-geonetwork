@@ -82,6 +82,10 @@ public class ListRecordsResponse extends ListResponse
 
 	//---------------------------------------------------------------------------
 
+	public int getSize() { return getRecordsCount(); }
+
+	//---------------------------------------------------------------------------
+
 	public Element toXml()
 	{
 		Element root = new Element(ListRecordsRequest.VERB, OaiPmh.Namespaces.OAI_PMH);

@@ -48,6 +48,10 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			Z3950_ENABLE      : xml.evalXPath(node, 'z3950/enable'),
 			Z3950_PORT        : xml.evalXPath(node, 'z3950/port'),
 
+			OAI_MDMODE        : xml.evalXPath(node, 'oai/mdmode'),
+			OAI_CACHESIZE     : xml.evalXPath(node, 'oai/cachesize'),
+			OAI_TOKENTIMEOUT  : xml.evalXPath(node, 'oai/tokentimeout'),
+
 			XLINKRESOLVER_ENABLE      : xml.evalXPath(node, 'xlinkResolver/enable'),
 
 			DOWNLOADSERVICE_LEAVE         : xml.evalXPath(node, 'downloadservice/leave'),
@@ -170,6 +174,11 @@ ConfigModel.updateTemp =
 '		<enable>{Z3950_ENABLE}</enable>'+
 '		<port>{Z3950_PORT}</port>'+
 '	</z3950>'+
+'	<oai>'+
+'		<mdmode>{OAI_MDMODE}</mdmode>'+
+'		<tokentimeout>{OAI_TOKENTIMEOUT}</tokentimeout>'+
+'		<cachesize>{OAI_CACHESIZE}</cachesize>'+
+'	</oai>'+
 '	<xlinkResolver>'+
 '		<enable>{XLINKRESOLVER_ENABLE}</enable>'+
 '	</xlinkResolver>'+

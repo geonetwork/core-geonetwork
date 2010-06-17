@@ -82,6 +82,10 @@ public class ListIdentifiersResponse extends ListResponse
 
 	//---------------------------------------------------------------------------
 
+	public int getSize() { return getHeadersCount(); } ;
+
+	//---------------------------------------------------------------------------
+
 	public Element toXml()
 	{
 		Element root = new Element(ListIdentifiersRequest.VERB, OaiPmh.Namespaces.OAI_PMH);
