@@ -53,10 +53,8 @@
       <artifactId>jsch</artifactId>
     </dependency>
     <dependency>
-      <groupId>fop</groupId>
+      <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>fop</artifactId>
-      <version>0.93</version>
-      <classifier>jdk14</classifier>
     </dependency>
     <dependency>
       <groupId>org.apache.jcs</groupId>

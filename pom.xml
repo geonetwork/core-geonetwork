@@ -225,11 +225,9 @@
         <version>2.0.6</version>
       </dependency>
       <dependency>
-        <groupId>fop</groupId>
+        <groupId>org.apache.xmlgraphics</groupId>
         <artifactId>fop</artifactId>
-        <version>0.93</version>
-        <classifier>jdk14</classifier> <!-- TODO check which version to use -->
-        <!-- Which one to use? <classifier>jdk15</classifier> -->
+        <version>0.95</version>
       </dependency>
      
       <!-- Jetty stuff -->
