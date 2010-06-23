@@ -64,7 +64,7 @@ Date.monthNumbers = {
   Lip : 6,
   Sie : 7,
   Wrz : 8,
-  Paź : 9,
+  Paz : 9,
   Lis : 10,
   Gru : 11
 };
@@ -92,7 +92,7 @@ Date.getShortDayName = function(day) {
 		case 4: return 'czw';
 		case 5: return 'pt';				
 		case 6: return 'sob';
-                default: return '';
+    default: return '';
 	}
 };
 
