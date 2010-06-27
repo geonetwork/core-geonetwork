@@ -132,6 +132,7 @@ public class Set implements Service
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/abstract",                                "system/csw/abstract"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/fees",                                    "system/csw/fees"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/accessConstraints",                       "system/csw/accessConstraints"),
+        new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/metadataPublic",                          "system/csw/metadataPublic"),
 
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "clickablehyperlinks/enable", "system/clickablehyperlinks/enable"),
 		

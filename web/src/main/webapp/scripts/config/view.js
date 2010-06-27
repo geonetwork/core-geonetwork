@@ -142,7 +142,8 @@ ConfigView.prototype.setData = function(data)
 	$('csw.abstract').value            = data['CSW_ABSTRACT'];
 	$('csw.fees').value                = data['CSW_FEES'];
 	$('csw.accessConstraints').value   = data['CSW_ACCESS'];
-
+    $('csw.metadataPublic').checked    = data['CSW_METADATA_PUBLIC'] == 'true';
+    
 	$('clickablehyperlinks.enable').checked = data['CLICKABLE_HYPERLINKS'] == 'true';
 
 	$('localrating.enable').checked = data['LOCAL_RATING'] == 'true';
@@ -250,7 +251,8 @@ ConfigView.prototype.getData = function()
 		CSW_ABSTRACT        : $('csw.abstract').value,
 		CSW_FEES            : $('csw.fees').value,
 		CSW_ACCESS          : $('csw.accessConstraints').value,
-
+        CSW_METADATA_PUBLIC  : $('csw.metadataPublic').checked,
+        
 		CLICKABLE_HYPERLINKS : $('clickablehyperlinks.enable').checked,
 		
 		LOCAL_RATING : $('localrating.enable').checked,

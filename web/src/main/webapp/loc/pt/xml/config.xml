@@ -89,7 +89,8 @@
 	<abstract>Resumo</abstract>
 	<fees>Taxas</fees>
 	<accessConstraints>Restrições de acesso</accessConstraints>
-		
+    <cswMetadataPublic>Os metadata introduzidos são públicos</cswMetadataPublic>
+
 	<clickablehyperlinks>Clickable hyperlinks</clickablehyperlinks>
 
 	<localrating>Local Rating</localrating>

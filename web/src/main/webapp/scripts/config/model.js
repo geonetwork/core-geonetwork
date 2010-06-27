@@ -77,7 +77,8 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			CSW_ABSTRACT      : xml.evalXPath(node, 'csw/abstract'),
 			CSW_FEES          : xml.evalXPath(node, 'csw/fees'),
 			CSW_ACCESS        : xml.evalXPath(node, 'csw/accessConstraints'),
-			CLICKABLE_HYPERLINKS         : xml.evalXPath(node, 'clickablehyperlinks/enable'),			
+            CSW_METADATA_PUBLIC          : xml.evalXPath(node, 'csw/metadataPublic'),			
+            CLICKABLE_HYPERLINKS         : xml.evalXPath(node, 'clickablehyperlinks/enable'),
 			LOCAL_RATING      : xml.evalXPath(node, 'localrating/enable'),			
 			PROXY_USE         : xml.evalXPath(node, 'proxy/use'),
 			PROXY_HOST        : xml.evalXPath(node, 'proxy/host'),
@@ -213,6 +214,7 @@ ConfigModel.updateTemp =
 '		<abstract>{CSW_ABSTRACT}</abstract>'+
 '		<fees>{CSW_FEES}</fees>'+
 '		<accessConstraints>{CSW_ACCESS}</accessConstraints>'+
+'       <metadataPublic>{CSW_METADATA_PUBLIC}</metadataPublic>'+        
 '	</csw>'+
 '	<clickablehyperlinks>' +
 '		<enable>{CLICKABLE_HYPERLINKS}</enable>'+

@@ -426,6 +426,10 @@
             			<input id="csw.role" class="content" type="hidden" value="" size="20"/>
             		</td>
             	</tr>
+                <tr>
+                    <td class="padded"><xsl:value-of select="/root/gui/config/cswMetadataPublic"/></td>
+                    <td class="padded"><input id="csw.metadataPublic" class="content" type="checkbox" value=""/></td>
+                </tr>                
             </table>
         </div>
 	</xsl:template>

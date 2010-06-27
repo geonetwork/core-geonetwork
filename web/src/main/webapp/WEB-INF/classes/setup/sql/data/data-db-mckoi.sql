@@ -7283,6 +7283,7 @@ INSERT INTO Settings VALUES (127,120,'title',NULL);
 INSERT INTO Settings VALUES (128,120,'abstract',NULL);
 INSERT INTO Settings VALUES (129,120,'fees',NULL);
 INSERT INTO Settings VALUES (130,120,'accessConstraints',NULL);
+INSERT INTO Settings VALUES (131,120,'metadataPublic','false');
 INSERT INTO Settings VALUES (160,125,'phone',NULL);
 INSERT INTO Settings VALUES (161,125,'address',NULL);
 INSERT INTO Settings VALUES (162,125,'hoursOfService',NULL);

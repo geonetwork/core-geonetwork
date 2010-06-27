@@ -120,7 +120,8 @@
 				<abstract><xsl:value-of select="$csw/abstract/value"/></abstract>
 				<fees><xsl:value-of select="$csw/fees/value"/></fees>
 				<accessConstraints><xsl:value-of select="$csw/accessConstraints/value"/></accessConstraints>
-			</csw>
+                <metadataPublic><xsl:value-of select="$csw/metadataPublic/value"/></metadataPublic>			
+            </csw>
 			
 			<clickablehyperlinks>
 				<enable><xsl:value-of select="$clickablehyperlinks/enable/value"/></enable>

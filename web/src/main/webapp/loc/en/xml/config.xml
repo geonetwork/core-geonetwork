@@ -89,7 +89,8 @@
 	<abstract>Abstract</abstract>
 	<fees>Fees</fees>
 	<accessConstraints>Access Constraints</accessConstraints>
-
+    <cswMetadataPublic>Inserted metadata is public</cswMetadataPublic>
+    
 	<clickablehyperlinks>Clickable hyperlinks</clickablehyperlinks>
 
 	<localrating>Local Rating</localrating>

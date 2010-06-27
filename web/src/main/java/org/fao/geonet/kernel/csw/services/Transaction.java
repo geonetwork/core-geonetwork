@@ -45,10 +45,12 @@ import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
 //=============================================================================
@@ -208,9 +210,6 @@ public class Transaction extends AbstractOperation implements CatalogService
 		
 		String 	schema = dataMan.autodetectSchema(xml);
 		
-		// Set default group 
-		String 	group = "2";
-		
 //		String category   = Util.getParam(request, Params.CATEGORY);
 		String 	category  = "_none_";
 		String isTemplate = "n";
@@ -240,18 +239,33 @@ public class Transaction extends AbstractOperation implements CatalogService
 			throw new NoApplicableCodeEx("User not allowed to insert metadata.");
 		
 		int userId = us.getUserIdAsInt();
-		
+
+        AccessManager am = gc.getAccessManager();
+        
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		String id = dataMan.insertMetadataExt(dbms, schema, xml, context.getSerialFactory(), 
+
+        // Set default group: user first group
+        Set<String> userGroups = am.getVisibleGroups(dbms, userId);
+        String group = (String) userGroups.toArray()[0];
+
+        String id = dataMan.insertMetadataExt(dbms, schema, xml, context.getSerialFactory(),
 				source, createDate, changeDate, uuid, userId, group);
-		
+
 		if( id == null )
 			return false;
 		
 		// --- Insert category if requested
 		if (!"_none_".equals(category))
 			dataMan.setCategory(dbms, id, category);
-		
+
+        // Set metadata as public if setting enabled
+        SettingManager sm = gc.getSettingManager();
+        boolean metadataPublic = sm.getValueAsBool("system/csw/metadataPublic", false);
+
+        if (metadataPublic) {
+            dataMan.setOperation(dbms, id, "1", AccessManager.OPER_VIEW);
+        }
+
 		dataMan.indexMetadataGroup(dbms, id);
 		
 		fileIds.add( uuid );

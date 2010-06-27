@@ -89,7 +89,8 @@
 	<abstract>Abstract</abstract>
 	<fees>Fees</fees>
 	<accessConstraints>Access Constraints</accessConstraints>
-
+    <cswMetadataPublic>Inserted metadata is public</cswMetadataPublic>
+    
 	<clickablehyperlinks>التشعبية القابلة للنقر عليها</clickablehyperlinks>
 	
 	<localrating>تصنيف المحلية</localrating>

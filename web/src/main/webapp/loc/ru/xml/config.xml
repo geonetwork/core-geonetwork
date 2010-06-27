@@ -88,6 +88,7 @@
 	<abstract>Abstract</abstract>
 	<fees>Fees</fees>
 	<accessConstraints>Access Constraints</accessConstraints>
+    <cswMetadataPublic>Inserted metadata is public</cswMetadataPublic>
 	
 	<clickablehyperlinks>Работающую гиперссылку</clickablehyperlinks>
 	

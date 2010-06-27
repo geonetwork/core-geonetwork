@@ -89,6 +89,7 @@
 	<abstract>Zusammenfassung</abstract>
 	<fees>Gebühren</fees>
 	<accessConstraints>Zugangsbeschränkungen</accessConstraints>
+    <cswMetadataPublic>Inserted metadata is public</cswMetadataPublic>
 
 	<clickablehyperlinks>Anklickbare Hyperlinks</clickablehyperlinks>
 

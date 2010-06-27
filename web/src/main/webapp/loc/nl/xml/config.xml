@@ -89,7 +89,8 @@
 	<abstract>Samenvatting</abstract>
 	<fees>Kosten</fees>
 	<accessConstraints>Toegangsrestricties</accessConstraints>
-
+    <cswMetadataPublic>Toegevoegde metadata is publiek beschikbaar</cswMetadataPublic>
+    
 	<clickablehyperlinks>Klikbare hyperlinks</clickablehyperlinks>
 	
 	<localrating>Locale Waardering</localrating>

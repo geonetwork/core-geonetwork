@@ -89,7 +89,8 @@
 	<abstract>Resumen</abstract>
 	<fees>Tasas</fees>
 	<accessConstraints>Restricciones de acceso</accessConstraints>
-
+    <cswMetadataPublic>Los metadatos insertados son públicos</cswMetadataPublic>
+    
 	<clickablehyperlinks>Se puede hacer clic en hipervínculos</clickablehyperlinks>
 
 	<localrating>Clasificación Local</localrating>
