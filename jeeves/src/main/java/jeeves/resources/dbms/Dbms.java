@@ -409,10 +409,24 @@ public class Dbms
 
 		default:
 			value = rs.getString(col +1);
+			if (value != null) { value = stripIllegalChars(value); }
+
 			break;
 		}
 		return new Element(name.toString()).setText(value);
 	}
+
+    //--------------------------------------------------------------------------
+	private String stripIllegalChars(String input) {
+		String output = input;
+		for (int i=127; i<160; i++) {
+			String c = String.valueOf((char)i);
+				output = output.replaceAll(c, "");
+		}
+		
+		return output;
+	}
+
 
 	//--------------------------------------------------------------------------
 
