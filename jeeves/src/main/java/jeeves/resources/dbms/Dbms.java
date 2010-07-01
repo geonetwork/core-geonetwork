@@ -416,12 +416,14 @@ public class Dbms
 		return new Element(name.toString()).setText(value);
 	}
 
-    //--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
 	private String stripIllegalChars(String input) {
 		String output = input;
 		for (int i=127; i<160; i++) {
 			String c = String.valueOf((char)i);
-				output = output.replaceAll(c, "");
+			if (output.contains(c)) {
+                output = output.replaceAll(c, "");
+            }
 		}
 		
 		return output;
