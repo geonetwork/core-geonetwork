@@ -293,7 +293,7 @@ public class Importer {
 					// catalog
 					String mdId = id.get(index);
 					String query = "INSERT INTO Relations (id, relatedId) VALUES (?, ?)";
-					dbms.execute(query, mdId, fcId);
+					dbms.execute(query, Integer.parseInt(mdId), Integer.parseInt(fcId));
 
 					id.add(fcId);
 					// TODO : privileges not handled for feature
