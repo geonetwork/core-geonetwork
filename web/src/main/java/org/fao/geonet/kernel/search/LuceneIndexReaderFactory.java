@@ -32,25 +32,29 @@ public class LuceneIndexReaderFactory {
   public LuceneIndexReaderFactory(File dir) throws IOException {
     currentReader = IndexReader.open(dir, true);
     warm(currentReader);
-  }
+	}
+
 
 	//===========================================================================
 	// Public interface methods
 
   public IndexReader getReader() throws InterruptedException, IOException {
 		maybeReopen();
-    currentReader.incRef();
+		synchronized (this) {
+    	currentReader.incRef();
+		}
     return currentReader;
   }    
 
-  public void releaseReader(IndexReader reader) throws IOException {
-    reader.decRef();
+  public synchronized void releaseReader(IndexReader reader) throws IOException {
+		if (reader.getRefCount() > 1) reader.decRef();
   }
 
 	//===========================================================================
 	// Private Methods
 
-  private void warm(IndexReader reader) throws IOException {}                                
+  private void warm(IndexReader reader) {}                                
+
   private synchronized void startReopen() throws InterruptedException {
     while (reopening) {
 			Log.debug(Geonet.SEARCH_ENGINE, "Thread "+Thread.currentThread().getId()+": Waiting whilst IndexReader reopen completes..");
@@ -77,7 +81,7 @@ public class LuceneIndexReaderFactory {
        	swapReader(newReader);
 				Log.debug(Geonet.SEARCH_ENGINE, "Thread "+Thread.currentThread().getId()+": reopened IndexReader");
 			}
-    } finally {
+		} finally {
       finishReopen();
     }
   }
