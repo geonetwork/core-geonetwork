@@ -253,7 +253,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		List<Element> values = null;
 		String[] properties = {"keyword"};
 		try {
-			values = GetDomain.handlePropertyName(properties, context, true);
+			values = GetDomain.handlePropertyName(properties, context, true, CatalogConfiguration.getMaxNumberOfRecordsForKeywords());
 		} catch (Exception e) {
             Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
 			// If GetDomain operation failed, just add nothing to the capabilities document template.            

@@ -106,6 +106,7 @@ public class Csw {
 				public class Value {
 					public static final String GET_RECORDS = "GetRecords";
 					public static final String GET_CAPABILITIES = "GetCapabilities";
+					public static final String GET_DOMAIN = "GetDomain";
 					public static final String DESCRIBE_RECORD = "DescribeRecord";
 				}
 			}
@@ -116,6 +117,8 @@ public class Csw {
 				public static final String OUTPUTFORMAT = "outputformat";
 				public static final String CONSTRAINT_LANGUAGE = "constraintLanguage";
 				public static final String NUMBER_OF_KEYWORDS = "numberOfKeywords";
+				public static final String MAX_NUMBER_OF_RECORDS_FOR_KEYWORDS = "maxNumberOfRecordsForKeywords";
+				public static final String MAX_NUMBER_OF_RECORDS_FOR_PROPERTY_NAMES = "maxNumberOfRecordsForPropertyNames";
 			}
 		}
 

@@ -63,9 +63,14 @@ public class LuceneIndexWriterFactory {
 			_count--;
 			Log.info(Geonet.INDEX_ENGINE, "Closing Index_writer, ref _count "+_count+" ram in use "+_writer.ramSizeInBytes()+" docs buffered "+_writer.numRamDocs());
 			if (_count==0) _writer.close(); 
+			else _writer.commit();
 		}
 	}
 
+	public synchronized void commit() throws Exception {
+		if (isOpen()) _writer.commit();
+	}
+		
 	public void addDocument(Document doc) throws Exception {
 		_writer.addDocument(doc);
 	}

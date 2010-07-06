@@ -23,7 +23,9 @@
 
 package org.fao.geonet.kernel.csw.services;
 
+import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -37,8 +39,15 @@ import jeeves.utils.Log;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.search.Hits;
-import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.document.MapFieldSelector;
+import org.apache.lucene.search.CachingWrapperFilter;
+import org.apache.lucene.search.Filter;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.TopFieldCollector;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -49,10 +58,13 @@ import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.getrecords.CatalogSearcher;
+import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SummaryComparator;
 import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
+import org.fao.geonet.kernel.search.spatial.Pair;
+
 import org.jdom.Element;
 
 //=============================================================================
@@ -91,7 +103,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 		if (propertyNames != null) {
 			List<Element> domainValues = null;
 			try {
-				domainValues = handlePropertyName(propertyNames, context, false);
+				domainValues = handlePropertyName(propertyNames, context, false, CatalogConfiguration.getMaxNumberOfRecordsForPropertyNames());
 			} catch (Exception e) {
 	            Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
 	            throw new NoApplicableCodeEx(
@@ -145,9 +157,11 @@ public class GetDomain extends AbstractOperation implements CatalogService
 	//---------------------------------------------------------------------------
 	
 	public static List<Element> handlePropertyName(String[] propertyNames,
-			ServiceContext context, boolean freq) throws Exception {
+			ServiceContext context, boolean freq, int maxRecords) throws Exception {
 		 
 		List<Element> domainValuesList = null;
+
+		Log.debug(Geonet.CSW,"Handling property names '"+Arrays.toString(propertyNames)+"' with max records of "+maxRecords);
 		
 		for (int i=0; i < propertyNames.length; i++) {
 			
@@ -173,8 +187,13 @@ public class GetDomain extends AbstractOperation implements CatalogService
 			
 			IndexReader reader = sm.getIndexReader();
 			try {
-				IndexSearcher searcher = new IndexSearcher(reader);
-				Hits hits = searcher.search(CatalogSearcher.getGroupsQuery(context));
+				Query query = CatalogSearcher.getGroupsQuery(context);
+				Sort   sort = LuceneSearcher.makeSort(Collections.singletonList(Pair.read(Geonet.SearchResult.SortBy.RELEVANCE, true)));
+				CachingWrapperFilter filter = null;
+
+				Pair<TopFieldCollector,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary( maxRecords, Integer.MAX_VALUE, context.getLanguage(), "results", new Element("summary"), reader, query, filter, sort, false);
+				TopFieldCollector tfc = searchResults.one();
+				TopDocs hits = tfc.topDocs(0, maxRecords);
 			
 				try {
 					// Get mapped lucene field in CSW configuration
@@ -197,14 +216,19 @@ public class GetDomain extends AbstractOperation implements CatalogService
 						listOfValues = new Element("RangeOfValues", Csw.NAMESPACE_CSW);
 					else	
 						listOfValues = new Element("ListOfValues", Csw.NAMESPACE_CSW);
+
+					//List<String> fields = new ArrayList<String>();
+					//fields.add(property);
+					//fields.add("_isTemplate");
+					String fields[] = new String[] { property, "_isTemplate" };
+					MapFieldSelector selector = new MapFieldSelector(fields);
 	
 					// parse each document in the index
-					int numDocs = hits.length();
 					String[] fieldValues;
 					SortedSet<String> sortedValues = new TreeSet<String>();
 					HashMap<String, Integer> duplicateValues = new HashMap<String, Integer>();
-					for (int j = 0; j < numDocs; j++) {
-						Document doc = hits.doc(j);
+					for (int j = 0; j < hits.scoreDocs.length; j++) {
+						Document doc = reader.document(hits.scoreDocs[j].doc, selector);
 						
 						// Skip templates and subTemplates
 						String[] isTemplate = doc.getValues("_isTemplate");
@@ -215,14 +239,14 @@ public class GetDomain extends AbstractOperation implements CatalogService
 						fieldValues = doc.getValues(property);
 						if (fieldValues == null)
 							continue;
-					
+						
 						addtoSortedSet(sortedValues, fieldValues, duplicateValues);
 					}
-				
+					
 					SummaryComparator valuesComparator = new SummaryComparator(SortOption.FREQUENCY, Type.STRING, context.getLanguage(), null);
 					TreeSet<Map.Entry<String, Integer>> sortedValuesFrequency = new TreeSet<Map.Entry<String, Integer>>(valuesComparator);
 					sortedValuesFrequency.addAll(duplicateValues.entrySet());
-				
+					
 					if (freq)
 						return createValuesByFrequency(sortedValuesFrequency);
 					else
@@ -233,10 +257,9 @@ public class GetDomain extends AbstractOperation implements CatalogService
 					// anything about the specified parameter
 					if (listOfValues!= null && listOfValues.getChildren().size() != 0)
 						domainValues.addContent(listOfValues);
-
+	
 					// Add current DomainValues to the list
 					domainValuesList.add(domainValues);
-					searcher.close();
 				}
 			} finally {
 				sm.releaseIndexReader(reader);

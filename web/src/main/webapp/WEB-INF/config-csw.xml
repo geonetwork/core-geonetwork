@@ -4,6 +4,12 @@
 		<operation name="GetCapabilities">
 			<!-- Defines the number of keywords displayed in capabilities, ordered by frequency -->
 			<numberOfKeywords>10</numberOfKeywords>
+			<!-- Defines the number of records that will be processed to build the keyword frequency list  -->
+			<maxNumberOfRecordsForKeywords>1000</maxNumberOfRecordsForKeywords>
+		</operation>
+		<operation name="GetDomain">
+			<!-- Defines the number of records that will be processed for any propertyname  -->
+			<maxNumberOfRecordsForPropertyNames>1000</maxNumberOfRecordsForPropertyNames>
 		</operation>
 		<operation name="GetRecords">
 			<parameters>

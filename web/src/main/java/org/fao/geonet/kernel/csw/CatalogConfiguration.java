@@ -42,6 +42,10 @@ public class CatalogConfiguration {
 
 	// GetCapabilities variables
 	private static int _numberOfKeywords = 10;
+	private static int _maxNumberOfRecordsForKeywords = Integer.MAX_VALUE; 
+	
+	// GetDomain variables
+	private static int _maxNumberOfRecordsForPropertyNames = Integer.MAX_VALUE; 
 	
 	// GetRecords variables
 	private static final HashMap<String, String> _fieldMapping = new HashMap<String, String>();
@@ -102,6 +106,11 @@ public class CatalogConfiguration {
 				continue;
 			}
 			if (operationName
+					.equals(Csw.ConfigFile.Operation.Attr.Value.GET_DOMAIN)) {
+				initDomain(operation);
+				continue;
+			}
+			if (operationName
 					.equals(Csw.ConfigFile.Operation.Attr.Value.GET_RECORDS)) {
 				initGetRecordsConfig(operation);
 				continue;
@@ -122,6 +131,19 @@ public class CatalogConfiguration {
 		Element kn = operation.getChild(Csw.ConfigFile.Operation.Child.NUMBER_OF_KEYWORDS);
 		if (kn != null && kn.getText()!= null)
 			_numberOfKeywords = Integer.parseInt(kn.getText());
+
+		kn = operation.getChild(Csw.ConfigFile.Operation.Child.MAX_NUMBER_OF_RECORDS_FOR_KEYWORDS);
+		if (kn != null && kn.getText()!= null)
+			_maxNumberOfRecordsForKeywords = Integer.parseInt(kn.getText());
+	}
+
+	/**
+	 * @param operation
+	 */
+	private static void initDomain(Element operation) {
+		Element kn = operation.getChild(Csw.ConfigFile.Operation.Child.MAX_NUMBER_OF_RECORDS_FOR_PROPERTY_NAMES);
+		if (kn != null && kn.getText()!= null)
+			_maxNumberOfRecordsForPropertyNames = Integer.parseInt(kn.getText());
 	}
 
 	/**
@@ -272,6 +294,20 @@ public class CatalogConfiguration {
 	 */
 	public static int getNumberOfKeywords() {
 		return _numberOfKeywords;
+	}
+
+	/**
+	 * @return the _maxNumberOfRecordsForKeywords
+	 */
+	public static int getMaxNumberOfRecordsForKeywords() {
+		return _maxNumberOfRecordsForKeywords;
+	}
+
+	/**
+	 * @return the _maxNumberOfRecordsForPropertyNames
+	 */
+	public static int getMaxNumberOfRecordsForPropertyNames() {
+		return _maxNumberOfRecordsForPropertyNames;
 	}
 
 	/**

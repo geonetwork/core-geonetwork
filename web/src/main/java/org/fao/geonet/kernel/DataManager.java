@@ -190,6 +190,12 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
+	public void commitIndexChanges() throws Exception {
+		searchMan.commitIndexChanges();
+	}
+
+	//--------------------------------------------------------------------------
+
 	public synchronized void rebuildIndexXLinkedMetadata(ServiceContext context, Dbms dbms) throws Exception {
 		
 		if (rebuilding) throw new OperationNotAllowedEx("Index rebuilding already in progress");

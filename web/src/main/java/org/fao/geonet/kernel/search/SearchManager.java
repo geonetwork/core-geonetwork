@@ -387,7 +387,7 @@ public class SearchManager
 		Log.debug(Geonet.INDEX_ENGINE, "Opening Writer from index");
 		_indexWriter.openWriter();
 		try {
-			Document doc = buildIndexDocument(type, metadata, id, moreFields, isTemplate, title);
+			Document doc = buildIndexDocument(type, metadata, id, moreFields, isTemplate, title, false);
 			_indexWriter.addDocument(doc);
 		} finally {
 			Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from index");
@@ -404,7 +404,7 @@ public class SearchManager
 
 	public void indexGroup(String type, Element metadata, String id, List moreFields, String isTemplate, String title) throws Exception 
 	{
-		Document doc = buildIndexDocument(type, metadata, id, moreFields, isTemplate, title);
+		Document doc = buildIndexDocument(type, metadata, id, moreFields, isTemplate, title, true);
 		_indexWriter.addDocument(doc);
 
 		_spatial.writer().index(_schemasDir.getPath(), type, id, metadata);
@@ -415,11 +415,25 @@ public class SearchManager
 		_indexWriter.closeWriter();
 	}
 
-	private Document buildIndexDocument(String type, Element metadata, String id, List moreFields, String isTemplate, String title) throws Exception 
+	public void deleteGroup(String fld, String txt) throws Exception {
+		// possibly remove old document
+		Log.debug(Geonet.INDEX_ENGINE,"Deleting document ");
+		_indexWriter.deleteDocuments(new Term(fld, txt));
+
+		_spatial.writer().delete(txt);
+	}
+
+	public void commitIndexChanges() throws Exception {
+		Log.debug(Geonet.INDEX_ENGINE,"Committing index changes");
+		_indexWriter.commit();
+	}
+
+	private Document buildIndexDocument(String type, Element metadata, String id, List moreFields, String isTemplate, String title, boolean group) throws Exception 
 	{
 
 		Log.debug(Geonet.INDEX_ENGINE, "Deleting "+id+" from index");
-		delete("_id", id);
+		if (group) deleteGroup("_id", id);
+		else delete("_id", id);
 		Log.debug(Geonet.INDEX_ENGINE, "Finished Delete");
 
 		Element xmlDoc;
