@@ -913,7 +913,7 @@ public class DataManager
 				// Check if a prime namespace exists in all
 				// additional namespaces of the root element
 				for (Namespace ns : metadataAdditionalNS) {
-                    if (ns.equals(Csw.NAMESPACE_CSW)) continue;
+                    if (ns.equals(Csw.NAMESPACE_CSW) || ns.equals(Csw.NAMESPACE_GFC)) continue;
                     
 					if (ns.getURI().equals(primeNs) &&
 							metadatadRootElemenNSUri.equals(Csw.NAMESPACE_GMD)) {
@@ -1835,7 +1835,7 @@ public class DataManager
 
 	public synchronized void updateMetadataOwner(UserSession session, Dbms dbms, int id, String owner, String groupOwner) throws Exception
 	{
-		dbms.execute("UPDATE Metadata SET owner=?, groupOwner=? WHERE id=?", new Integer(owner), new Integer(groupOwner), id);
+		dbms.execute("UPDATE Metadata SET owner=?, groupOwner=? WHERE id=?", new Integer(owner), new Integer(groupOwner), new Integer(id));
 	}
 
 	//--------------------------------------------------------------------------
