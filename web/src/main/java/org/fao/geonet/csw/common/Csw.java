@@ -40,6 +40,7 @@ public class Csw {
 	public static final Namespace NAMESPACE_OWS = Namespace.getNamespace("ows", "http://www.opengis.net/ows");
 	public static final Namespace NAMESPACE_ENV = Namespace.getNamespace("env", "http://www.w3.org/2003/05/soap-envelope");
 	public static final Namespace NAMESPACE_GMD = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
+	public static final Namespace NAMESPACE_GFC = Namespace.getNamespace("gfc", "http://www.isotc211.org/2005/gfc");
 	public static final Namespace NAMESPACE_GEONET = Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork");
 	public static final Namespace NAMESPACE_DC = Namespace.getNamespace("dc","http://purl.org/dc/elements/1.1/");
 	public static final Namespace NAMESPACE_XSI = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
