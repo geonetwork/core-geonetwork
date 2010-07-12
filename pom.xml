@@ -584,7 +584,6 @@
     <module>oaipmh</module>
     <module>sde</module>
     <module>web</module>
-    <module>intermap</module>
     <module>geoserver</module>
     <module>gast</module>
   </modules>
