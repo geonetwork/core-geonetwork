@@ -228,6 +228,14 @@
       <artifactId>xmlunit</artifactId>
     </dependency>
 
+	<!-- Print service: MapFish -->
+	<dependency>
+      <groupId>org.mapfish.print</groupId>
+      <artifactId>print-lib</artifactId>
+      <version>1.2-SNAPSHOT</version>
+    </dependency>
+  
+  
     <!-- ====================== -->
     <!-- Generated dependencies -->
     <dependency>
@@ -329,6 +337,55 @@
                 <include>${geonetwork.build.dir}/scripts/prototype.js</include>
               </includes>
             </aggregation>
+			 <aggregation>
+              <output>${geonetwork.webapp.dir}/scripts/lib/gn.libs.map.js</output>
+              <includes>
+				<include>${geonetwork.build.dir}/scripts/map/core/OGCUtil.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/core/CatalogueInterface.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/core/WMCManager.js</include>
+                
+                <include>${geonetwork.build.dir}/scripts/map/Control/ExtentBox.js</include>
+                <include>${geonetwork.build.dir}/scripts/map/Control/ZoomWheel.js</include>
+                <include>${geonetwork.build.dir}/scripts/map/Control/WMSGetFeatureInfo.js</include>
+                
+				<include>${geonetwork.build.dir}/scripts/map/Format/WMSCapabilities.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/Format/WMSCapabilities_1_1_1.js</include>    
+                
+				<include>${geonetwork.build.dir}/scripts/map/lang/en.js</include>
+                
+                <include>${geonetwork.build.dir}/scripts/map/Ext.ux/form/DateTime.js</include>
+                
+				<include>${geonetwork.build.dir}/scripts/map/widgets/tree/WMSListGenerator.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/widgets/tree/WMSTreeGenerator.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/widgets/wms/BrowserPanel.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/widgets/wms/LayerInfoPanel.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/widgets/wms/LayerStylesPanel.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/widgets/wms/PreviewPanel.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/widgets/wms/WMSLayerInfo.js</include>   
+                
+				<include>${geonetwork.build.dir}/scripts/map/widgets/FeatureInfoPanel.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/widgets/LegendPanel.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/widgets/OpacitySlider.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/widgets/PrintAction.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/widgets/ProjectionSelector.js</include>
+                <include>${geonetwork.build.dir}/scripts/map/widgets/TimeSelector.js</include>
+                
+				<include>${geonetwork.build.dir}/scripts/map/windows/BaseWindow.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/windows/SingletonWindowManager.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/windows/AddWMS.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/windows/FeatureInfo.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/windows/Opacity.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/windows/LoadWmc.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/windows/LayerStyles.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/windows/WmsLayerMetadata.js</include>
+                <include>${geonetwork.build.dir}/scripts/map/windows/WmsTime.js</include>
+                
+                <include>${geonetwork.build.dir}/scripts/ol_settings.js</include>		
+                <include>${geonetwork.build.dir}/scripts/ol_minimap.js</include>
+                <include>${geonetwork.build.dir}/scripts/ol_map.js</include>             
+              </includes>
+            </aggregation>
+			
             <aggregation>
               <output>${geonetwork.webapp.dir}/scripts/lib/gn.libs.scriptaculous.js</output>
               <includes>
@@ -349,7 +406,7 @@
             <aggregation>
               <output>${geonetwork.webapp.dir}/scripts/lib/gn.search.js</output>
               <includes>
-                <include>${geonetwork.build.dir}/scripts/gn_intermap.js</include>
+                <!--include>${geonetwork.build.dir}/scripts/gn_intermap.js</include-->
                 <include>${geonetwork.build.dir}/scripts/gn_search.js</include>
               </includes>
             </aggregation>
@@ -394,6 +451,8 @@
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Feature.js</include>
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Feature/Vector.js</include>
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/WKT.js</include>
+                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/XML.js</include>
+                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/WMSGetFeatureInfo.js</include>                
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Geometry.js</include>
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control.js</include>
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control/PanZoom.js</include>
@@ -431,6 +490,8 @@
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Filter/Logical.js</include>
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Filter/Comparison.js</include>
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/Filter.js</include>
+                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Protocol.js</include>
+                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Protocol/HTTP.js</include>
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Renderer.js</include>
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Renderer/Elements.js</include>
                 <include>${geonetwork.build.dir}/scripts/geoext/lib/GeoExt/widgets/MapPanel.js</include>
@@ -481,7 +542,9 @@
                 <include>${geonetwork.build.dir}/scripts/geoext/lib/GeoExt/data/LayerReader.js</include>
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/WMSCapabilities/v1_1_0.js</include>
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/WMSCapabilities/v1_1_1.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control/ArgParser.js</include>                
+                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control/ArgParser.js</include>
+                <include>${geonetwork.build.dir}/scripts/openlayers/addins/LoadingPanel.js</include>      
+                <include>${geonetwork.build.dir}/scripts/openlayers/addins/ScaleBar.js</include>              
               </includes>
             </aggregation>
           </aggregations>
@@ -546,12 +609,12 @@
           <webAppConfig>
             <contextPath>/webapp</contextPath>
           </webAppConfig>
-          <contextHandlers>            
+          <!--contextHandlers>            
             <contextHandler implementation="org.mortbay.jetty.webapp.WebAppContext">
               <war>${basedir}/../intermap/target/intermap.war</war>
               <contextPath>/intermap</contextPath>
             </contextHandler>
-          </contextHandlers>
+          </contextHandlers-->
         </configuration>
       </plugin>
       

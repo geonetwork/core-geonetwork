@@ -2426,6 +2426,7 @@
 	<xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-map') and gmd:name]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
+		<xsl:variable name="metadata_id" select="//geonet:info/id" />
 		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
 		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)" />
 		<xsl:variable name="description" select="normalize-space(gmd:description/gco:CharacterString)" />
@@ -2445,7 +2446,18 @@
 						<!-- ETj
 						<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={gmd:linkage/gmd:URL}&amp;service={gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType}&amp;type=2')" title="{/root/strings/interactiveMap}">
 						-->
-						<a href="javascript:runIM_addService('{$linkage}','{$name}',2)" title="{/root/strings/interactiveMap}">
+						<a href="javascript:addWMSLayer([['{$name}','{$linkage}','{$name}','{$metadata_id}']])" title="{/root/strings/interactiveMap}">
+								<xsl:choose>
+								<xsl:when test="string($description)!=''">
+									<xsl:value-of select="$description"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="$name"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</a>
+						
+						<!--a href="javascript:runIM_addService('{$linkage}','{$name}',2)" title="{/root/strings/interactiveMap}">
 							<xsl:choose>
 								<xsl:when test="string($description)!=''">
 									<xsl:value-of select="$description"/>
@@ -2454,7 +2466,7 @@
 									<xsl:value-of select="$name"/>
 								</xsl:otherwise>
 							</xsl:choose>
-						</a><br/>(OGC-WMS Server: <xsl:value-of select="$linkage"/> )
+						</a--><br/>(OGC-WMS Server: <xsl:value-of select="$linkage"/> )
 					</xsl:with-param>
 				</xsl:apply-templates>
 				<!-- Create a link for a WMS service that will open in Google Earth through the reflector -->
@@ -2844,7 +2856,10 @@
 					<xsl:when test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($name)!=''">
 						<link type="wms">
 <!--							<xsl:value-of select="concat('javascript:popInterMap(&#34;',/root/gui/url,'/intermap/srv/',/root/gui/language,'/map.addServicesExt?url=',$linkage,'&amp;service=',$name,'&amp;type=2&#34;)')"/>-->
-							<xsl:value-of select="concat('javascript:runIM_addService(&#34;'  ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;, 2)' )"/>
+							
+							<!--xsl:value-of select="concat('javascript:runIM_addService(&#34;'  ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;, 2)' )"/-->
+							<xsl:value-of select="concat('javascript:addWMSLayer([[&#34;' , $name , '&#34;,&#34;' ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;,&#34;',$id,'&#34;]])')"/>
+
 						</link>
 						<link type="googleearth">
 							<xsl:value-of select="concat(/root/gui/locService,'/google.kml?uuid=',$uuid,'&amp;layers=',$name)"/>
@@ -2852,7 +2867,8 @@
 					</xsl:when>
 					<xsl:when test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-capabilities') and string($linkage)!=''">
 						<link type="wms">
-							<xsl:value-of select="concat('javascript:runIM_selectService(&#34;'  ,  $linkage  ,  '&#34;, 2,',$id,')' )"/>
+							<!--xsl:value-of select="concat('javascript:runIM_selectService(&#34;'  ,  $linkage  ,  '&#34;, 2,',$id,')' )"/-->
+							<xsl:value-of select="concat('javascript:addWMSLayer([[&#34;' , $name , '&#34;,&#34;' ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;,&#34;',$id,'&#34;]])')"/>						
 						</link>
 					</xsl:when>
 					<xsl:when test="string($linkage)!=''">

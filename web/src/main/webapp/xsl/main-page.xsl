@@ -6,13 +6,15 @@
 	<xsl:include href="main.xsl"/>
 	<xsl:include href="metadata.xsl"/>
 	<xsl:include href="searchform_simple_template.xsl"/>
+	<xsl:include href="searchform_advanced.xsl"/>
 	
 	<xsl:template mode="css" match="/">
 		<!--  FIXME : hard coded intermap link.  -->
-		<link rel="stylesheet" type="text/css" href="/intermap/intermap-embedded.css?" />
+		<!--link rel="stylesheet" type="text/css" href="/intermap/intermap-embedded.css?" /-->
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/calendar/calendar-blue2.css"></link>
 		<xsl:call-template name="geoCssHeader"/>
 		<xsl:call-template name="ext-ux-css"/>
+        <link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork_map.css" />
 	</xsl:template>
 	
 	<!--
@@ -20,6 +22,16 @@
 	-->
 	<xsl:template mode="script" match="/">
 	
+        <!-- To avoid an interaction with prototype and ExtJs.Tooltip, should be loadded before ExtJs -->
+        <xsl:choose>
+            <xsl:when test="/root/request/debug">
+                <script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"></script>
+            </xsl:when>
+            <xsl:otherwise>
+              <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.js"></script>      
+            </xsl:otherwise>
+        </xsl:choose>
+    
 		<xsl:call-template name="geoHeader"/>
 		
 		<!-- Required by keyword selection panel -->
@@ -27,46 +39,94 @@
 			<xsl:call-template name="ext-ux"/>
 		</xsl:if>
 		
-	    <xsl:choose>
-            <xsl:when test="/root/request/debug">
-	            <script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"></script>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"></script>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"></script>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"></script>
-	
-				<script type="text/javascript" src="{/root/gui/url}/scripts/gn_search.js"></script>
-				
-				<script type="text/javascript" src="/intermap/scripts/util.js"></script>
-				<script type="text/javascript" src="/intermap/scripts/im_extras.js"></script>
-				<script type="text/javascript" src="/intermap/scripts/im_ajax.js"></script>
-				<script type="text/javascript" src="/intermap/scripts/im_class.js"></script>
-				<script type="text/javascript" src="/intermap/scripts/im_minimap.js"></script>
-				<script type="text/javascript" src="/intermap/scripts/im_bigmap.js"></script>
-				<script type="text/javascript" src="/intermap/scripts/im_markers.js"></script>
-				<script type="text/javascript" src="/intermap/scripts/im_integration.js"></script>
-				<script type="text/javascript" src="/intermap/scripts/im_layers.js"></script>
-		
-				<script type="text/javascript" src="{/root/gui/url}/scripts/gn_intermap.js"></script>
-				
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip.js"></script>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip-manager.js"></script>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"></script>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-show.js"></script>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"></script>
+         <xsl:choose>
+            <xsl:when test="/root/request/debug">         	
+                <script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"></script>
+
+                <script type="text/javascript" src="{/root/gui/url}/scripts/gn_search.js"></script>
+                
+                <!--link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext/resources/css/ext-all.css" />
+                <link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext/resources/css/file-upload.css" />
+
+                <link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/openlayers/theme/default/style.css" />
+                <link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork_map.css" /-->
+         
+                <script type="text/javascript" src="{/root/gui/url}/scripts/ext/adapter/ext/ext-base.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/ext/ext-all.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/ext/form/FileUploadField.js"></script>
+
+                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/LoadingPanel.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/ScaleBar.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/geo/proj4js-compressed.js"></script>
+
+                <script type="text/javascript" src="{/root/gui/url}/scripts/geoext/lib/GeoExt.js"></script>				
+                <script type="text/javascript" src="{/root/gui/url}/scripts/mapfish/MapFish.js"></script>
+
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/core/OGCUtil.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/core/CatalogueInterface.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/core/WMCManager.js"></script>
+
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/Control/ExtentBox.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/Control/ZoomWheel.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/Control/WMSGetFeatureInfo.js"></script>
+
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/Format/WMSCapabilities.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/Format/WMSCapabilities_1_1_1.js"></script>
+
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/en.js"></script>
+
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/Ext.ux/form/DateTime.js"></script>
+
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/tree/WMSListGenerator.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/tree/WMSTreeGenerator.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/BrowserPanel.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/LayerInfoPanel.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/LayerStylesPanel.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/PreviewPanel.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/WMSLayerInfo.js"></script>
+
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/FeatureInfoPanel.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/LegendPanel.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/OpacitySlider.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/PrintAction.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/ProjectionSelector.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/TimeSelector.js"></script>
+                
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/BaseWindow.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/SingletonWindowManager.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/AddWMS.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/FeatureInfo.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/Opacity.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/LoadWmc.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/WMSTime.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/LayerStyles.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/WmsLayerMetadata.js"></script>				
+
+                <script type="text/javascript" src="{/root/gui/url}/scripts/ol_settings.js"></script>		
+                <script type="text/javascript" src="{/root/gui/url}/scripts/ol_minimap.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/ol_map.js"></script>
+                
+                <script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip-manager.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-show.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"></script>
             </xsl:when>
-            <xsl:otherwise>
-		        <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.js"></script>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"></script>
-				
-				<script type="text/javascript" src="/intermap/scripts/intermap.js"></script>
-				
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"></script>
-        		<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.search.js"></script>
-        		<!-- Editor JS is still required here at least for massive operation -->
+            <xsl:otherwise>             
+                <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.search.js"></script>
+
+                <!-- Editor JS is still required here at least for massive operation -->
         		<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"></script>
-		    </xsl:otherwise>
-        </xsl:choose>
-		
+                <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.map.js"></script>              
+            </xsl:otherwise>
+         </xsl:choose>
+            
+            
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar.js"></script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar-setup.js"></script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/lang/calendar-{/root/gui/language}.js"></script>
@@ -153,17 +213,179 @@
 				if (checkSubmit())
 					document.search.submit();
 			}
+
+			Ext.onReady(function(){
+				Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
+		 
+				GeoNetwork.mapViewer.init();
+				var mapViewport =  GeoNetwork.mapViewer.getViewport();
+				
+				var categories = new Ext.Panel({
+					region: 'south',
+					layout:'fit',
+					contentEl: 'categories_pnl',
+					title:'Categories',
+					bodyStyle: 'padding-left:15px',
+					autoHeight: true,
+					collapsible:true,
+					border:false
+				});
+				
+			    var recent = new Ext.Panel({
+					region: 'south',
+					layout:'fit',
+					contentEl: 'recent_pnl',
+					title:'Recent changes',
+					bodyStyle: 'padding-left:15px',
+					autoHeight: true,
+					collapsible:true,
+					border:false	
+				});
+				
+			   var viewport = new Ext.Panel({
+					region: 'center',
+					layout:'border',
+					border:false,
+					autoScroll:true,
+					items:[
+						// North: header
+						{
+							region:'north',
+							contentEl :'header',
+							border:false
+						},
+						
+						// Center: Content
+						{
+							region:'center',                
+							layout:'border',
+							border:false,
+							layoutConfig:{
+								animate:true
+							}, 
+							items:[
+								{region:'center',   
+								border:false,
+								layout: 'border',
+								items: 
+									[{region:'west',
+									xtype: 'panel',
+									border:false,
+									width: 370,
+									minSize: 300,
+									maxSize: 370,
+									autoScroll: true,
+									collapsible: true,
+									collapseMode: "mini",
+									split: 'true',
+									useSplitTips:true,
+									collapsibleSplitTip: 'Drag to rezise the search panel. Double click to show/hide it',
+									bodyStyle: 'padding:15px',
+									contentEl: 'search_pnl'
+									},
+									{region:'center', 
+										id: 'main-viewport',
+										border:false,
+										layout: 'border',
+										items: [
+											{region:'north',
+											id: 'north-map-panel',
+											title: 'Map viewer',
+											border:false,
+											collapsible: true,
+											collapsed: true,
+											split: true,
+											height: 450,
+											minSize: 300,
+											//maxSize: 500,
+											layout: 'fit',
+											listeners: {
+												  collapse: collapseMap,
+												  expand: expandMap
+											   },
+											items: [mapViewport]
+											
+											},
+											{region:'center', 
+											contentEl :'content',
+											border:false,
+											autoScroll: true
+											}
+										]
+										
+									}]
+							}]
+						}]});
+						
+						
+						mainViewport = new Ext.Viewport({
+							layout:'border',
+							border:false,
+							autoScroll: true,
+							items:[viewport]
+						});
+						
+						// Initialize minimaps 
+						GeoNetwork.minimapSimpleSearch.init("ol_minimap1", "region_simple");
+						GeoNetwork.minimapAdvancedSearch.init("ol_minimap2", "region");
+
+                        GeoNetwork.minimapSimpleSearch.setSynchMinimap(GeoNetwork.minimapAdvancedSearch);
+                        GeoNetwork.minimapAdvancedSearch.setSynchMinimap(GeoNetwork.minimapSimpleSearch);
+                        GeoNetwork.CatalogueInterface.init(GeoNetwork.mapViewer.getMap());
+
+                        
+						showSimpleSearch();
+			});
 			
+			function collapseMap(pnl) {
+				Ext.getCmp('main-viewport').layout.north.getCollapsedEl().titleEl.dom.innerHTML = 'Show map';
+			}
+			
+			function expandMap(pnl) {
+				Ext.getCmp('main-viewport').layout.north.getCollapsedEl().titleEl.dom.innerHTML = 'Map viewer';
+			}
 		</script>
 	</xsl:template>
 
 
 	<xsl:variable name="lang" select="/root/gui/language"/>
 
+	<xsl:template name="content">
+		<!-- content -->
+		<div id="content" >
+			<xsl:call-template name="pageContent"/>
+		</div>
+		
+		<!-- Map panel -->
+		<div id="map_container" style="overflow:hidden; clear: both;">	
+			<div id="form_wmc" style="display:none"></div>
+			<div id="ol_map"></div>
+		</div>
+		
+		<div id="search_pnl">
+			<!-- Simple search panel -->
+			<div id="simple_search_pnl">
+				<xsl:call-template name="simple_search_content"/>
+				<xsl:call-template name="categories_latestupdates"/>
+			</div>
+			
+			<!-- Advanced search panel -->
+			<div id="advanced_search_pnl">
+				<xsl:call-template name="advanced_search_content"/>
+			</div>
+			
+		</div>
+	</xsl:template>
+	
+	<xsl:template name="categories_latestupdates">
+		<xsl:call-template name="categories"/>
+		<xsl:call-template name="latestUpdates"/>
+	</xsl:template>
+	
 	<!--
 	page content
 	-->
-	<xsl:template name="content">
+	<xsl:template name="pageContent">
 		<xsl:comment xml:space="preserve">
 			page content
 		</xsl:comment>
@@ -178,9 +400,18 @@
 	</xsl:template>
 
 
+	<xsl:template name="simple_search_content">
+		<div id="simplesearch">
+			<xsl:call-template name="geofields"/>
+		</div>
+	</xsl:template>
+	
+	<xsl:template name="advanced_search_content">
+		<xsl:call-template name="advanced_search_fields"/>
+	</xsl:template>
+		
 	<xsl:template name="mapcontent">
-
-		<h1 class="padded-content" style="margin-bottom: 0px;">
+		<h1 class="padded-content" style="margin-bottom: 0px">
 			<xsl:value-of select="/root/gui/strings/mainpageTitle"/>
 		</h1>
 		
@@ -196,90 +427,28 @@
 		</form>
 
 		<xsl:comment>MAIN CONTENT TABLE</xsl:comment>
-		<table class="geosearchmain" width="100%">  <!--height="100%">-->
-
-			<tr>
-				<td colspan="2" height="0" style="height: 0px;" >
-					<div id="advancedsearch"  style="display:none;"/>															
-				</td>
-			</tr>
-			<tr>
-				<!-- search -->
-				<xsl:comment>LEFT: search, minimap and news</xsl:comment>
-
-				<td class="padded-content" id="leftcolumn" width="224px">
-					<table class="geosearch" width="224px">
-						<!--  TODO: set a fixed width  -->
-						<xsl:comment>SEARCH</xsl:comment>
-						<tr>
-							<td valign="top">
-								<div id="simplesearch">
-									<xsl:call-template name="geofields"/>
-								</div>
-							</td>
-						</tr>
-						<xsl:call-template name="categories"/>
-						<xsl:call-template name="latestUpdates"/>
-					</table>
-				</td>
-
-				<xsl:comment>RIGHT: 1st time message, collapsable extended map, search results</xsl:comment>
-				
-				<td class="padded-content" width="100%">
-					<table class="padded-content"  width="100%" height="100%" >
-						
-						<tr id="intermaprow"  width="100%" height="0">
-							<xsl:comment>COLLAPSABLE MAP</xsl:comment>
-							<td>
-								<div id="fillMeWithIntermap" style="display: none;">
-									<!--  This DIV will be filled dynamically with intermap contents -->
-								</div>
-							</td>
-						</tr>
-						
-						<tr width="100%">
-							<td width="100%">
-								<h1 id="loadingMD" align="center" style="display: none;" width="100%"><xsl:value-of select="/root/gui/strings/searching"/></h1>
+		<div class="geosearchmain">
+			<h1 id="loadingMD" style="text-align: center; display: none; width:100%"><xsl:value-of select="/root/gui/strings/searching"/></h1>
 								
-								<!-- This DIV contains a first-time message that will be removed when the first search will be run -->
-								<div id="resultList">
-
-									<table>
-										<tr>
-											<td>
-												<xsl:comment>MAINPAGE 1</xsl:comment>
-												<xsl:copy-of select="/root/gui/strings/mainpage1/node()"/>
-												<xsl:comment>MAINPAGE 2</xsl:comment>
-												<xsl:copy-of select="/root/gui/strings/mainpage2/node()"/> <a href="mailto:{/root/gui/env/feedback/email}">
-													<xsl:value-of select="/root/gui/env/feedback/email"/>
-												</a>
-											</td>
-										</tr>
-											<xsl:if test="/root/gui/featured/*">
-												<tr style="padding: 10px;">
-													<td>
-														<xsl:comment>Featured Map</xsl:comment>
-														<xsl:call-template name="featured"/>
-													</td>
-												</tr>
-											</xsl:if>
-										<tr>
-											<td>
-												<xsl:comment>END MAINPAGE</xsl:comment>
-												
-											</td>
-										</tr>
-									</table>
-								</div>
-							</td>
-						</tr>
-						
-					</table>
-				</td>
-
-			</tr>
-		</table>
-
+			<!-- This DIV contains a first-time message that will be removed when the first search will be run -->
+			<div id="resultList">
+				<div class="padded-content">
+					<xsl:comment>MAINPAGE 1</xsl:comment>
+					<xsl:copy-of select="/root/gui/strings/mainpage1/node()"/>
+					<xsl:comment>MAINPAGE 2</xsl:comment>
+					<xsl:copy-of select="/root/gui/strings/mainpage2/node()"/> <a href="mailto:{/root/gui/env/feedback/email}">
+						<xsl:value-of select="/root/gui/env/feedback/email"/>
+					</a>
+				</div>
+				
+				<xsl:if test="/root/gui/featured/*">
+					<div style="padding: 10px;">
+							<xsl:comment>Featured Map</xsl:comment>
+							<xsl:call-template name="featured"/>
+					</div>
+				</xsl:if>
+			</div>
+		</div>
 	</xsl:template>
 
 
@@ -457,12 +626,11 @@
 					<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
 					<tr>
 						<td>
-							<h2>
+							
 								<div class="arrow" onClick="gn_showSingleMetadata('{geonet:info/id}');" 
 				style="cursor:hand;cursor:pointer">
-									<xsl:value-of select="$metadata/title"/>
+									<h2><xsl:value-of select="$metadata/title"/></h2>
 								</div>
-							</h2>
 							<p/>
 							<xsl:variable name="abstract" select="$metadata/abstract"/>
 							<xsl:choose>
@@ -492,34 +660,26 @@
 	-->
 	<xsl:template name="latestUpdates">
 		<xsl:if test="/root/gui/latestUpdated/*">
-			<tr>
-				<td valign="top">
-					<table class="geosearchfields" width="100%">
-						<tr>
-							<td>
-								<h1 align="left">
-									<xsl:value-of select="/root/gui/strings/recentAdditions"/> &#160;&#160;&#160; 
-									<a href="{/root/gui/locService}/rss.latest?georss=simplepoint" target="_blank">
-										<img style="cursor:hand;cursor:pointer" src="{/root/gui/url}/images/georss.png"
-											alt="GeoRSS-GML" title="{/root/gui/strings/georss}" align="top"/>
-									</a>
-								</h1>
-								<xsl:for-each select="/root/gui/latestUpdated/*">
-									<xsl:variable name="md">
-										<xsl:apply-templates mode="brief" select="."/>
-									</xsl:variable>
-									<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
-									<div class="arrow" onClick="gn_showSingleMetadataUUID('{geonet:info/uuid}');" 
-										style="cursor:hand;cursor:pointer">
-										<xsl:value-of select="$metadata/title"/>
-										<br/>
-									</div>
-								</xsl:for-each>							
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
+			<div class="geosearchfields">
+				<h1 align="left">
+					<!--xsl:value-of select="/root/gui/strings/recentAdditions"/--> &#160;&#160;&#160; 
+					<a href="{/root/gui/locService}/rss.latest?georss=simplepoint" target="_blank">
+						<img style="cursor:hand;cursor:pointer" src="{/root/gui/url}/images/georss.png"
+							alt="GeoRSS-GML" title="{/root/gui/strings/georss}" align="top"/>
+					</a>
+				</h1>
+				<xsl:for-each select="/root/gui/latestUpdated/*">
+					<xsl:variable name="md">
+						<xsl:apply-templates mode="brief" select="."/>
+					</xsl:variable>
+					<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
+					<div class="arrow" onClick="gn_showSingleMetadataUUID('{geonet:info/uuid}');" 
+						style="cursor:hand;cursor:pointer">
+						<xsl:value-of select="$metadata/title"/>
+						<br/>
+					</div>
+				</xsl:for-each>
+			</div>
 		</xsl:if>
 	</xsl:template>
 
@@ -528,31 +688,20 @@
 	-->
 	<xsl:template name="categories">
 		<xsl:if test="/root/gui/categories/* and /root/gui/config/category/admin">
-			<tr>
-				<td valign="top">
-					<table class="geosearchfields" width="100%">
-						<tr>
-							<td>
-								<h1 align="left">
-									<xsl:value-of select="/root/gui/strings/categories"/>
-								</h1>
-								<xsl:for-each select="/root/gui/categories/*">
-									<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
-									<xsl:variable name="categoryName" select="name"/>
-									<xsl:variable name="categoryLabel" select="label/child::*[name() = $lang]"/>
-									<div class="arrow" onClick="runCategorySearch('{$categoryName}');" style="cursor:hand;cursor:pointer">
-										<xsl:if test="/root/gui/config/category/display-in-search">
-											<img class="category" src="../../images/category/{$categoryName}.png"/>
-										</xsl:if>
-										<xsl:value-of select="$categoryLabel"/>
-										<br/>
-									</div>
-								</xsl:for-each>								
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
+			<div class="geosearchfields" style="margin-top:10px">
+				<xsl:for-each select="/root/gui/categories/*">
+					<xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
+					<xsl:variable name="categoryName" select="name"/>
+					<xsl:variable name="categoryLabel" select="label/child::*[name() = $lang]"/>
+					<div class="arrow" onClick="runCategorySearch('{$categoryName}');" style="cursor:hand;cursor:pointer">
+						<xsl:if test="/root/gui/config/category/display-in-search">
+							<img class="category" src="../../images/category/{$categoryName}.png"/>
+						</xsl:if>
+						<xsl:value-of select="$categoryLabel"/>
+						<br/>
+					</div>
+				</xsl:for-each>
+			</div>
 		</xsl:if>
 	</xsl:template>
 

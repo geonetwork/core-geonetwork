@@ -181,19 +181,30 @@ form {
 /*******************************************************************************
 content
 *******************************************************************************/
+body {
+	/*background-color: #e7edf5;*/
+}
 
 td.content {
-	background: #e7edf5;
+	/*background: #e7edf5;*/
 }
 
 .padded-content {
-	background: #e7edf5;
+	/*background: #e7edf5;*/
 	padding: 5px;
 }
 
 .hit {
 	border-top: 1px solid silver;
-	padding-top: 5px;
+	padding-top: 10px;	
+	margin-top: 10px;
+}
+
+.results_header {
+	margin-top: 5px; 
+	margin-bottom: 5px; 
+	overflow: auto;	
+	width: 100%;
 }
 
 td.green-content {
@@ -221,6 +232,14 @@ input.content, select.content, textarea.content {
 	color: #064377;
 	max-width: 400px;
 	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+
+.checkbox_results {
+	font-family: Verdana;
+	font-size: 9pt;
+	color: #064377;
+	margin-right: 2px;
 }
 
 select.banner-content {
@@ -540,8 +559,8 @@ div.keywordSelectorFrame {
         background: #fff;
 		position: absolute;
 		padding: 2px;
-		left: 300px;
-		top: 225px;
+		left: 10px;
+		top: 140px;
 }
 
 * html div.keywordSelector {
@@ -831,6 +850,8 @@ div#error {
 #resultList {
 	border-top: 1px solid #2a628f;
 	padding-top: 10px;
+	margin-left: 5px;
+	margin-right: 5px;
 }
 
 #leftcolumn {
@@ -980,15 +1001,23 @@ span.labelField {
     font-size: 0.9em;
 }
 
+span.labelFieldSmall {
+    display: table-cell;
+    display: inline-block;
+    width: 60px;
+    vertical-align: top;
+    font-size: 0.9em;
+}
+
 div.inspireThemeTitle {
     margin-top: 5px;
     margin-bottom: 5px;
+    font-style: italic;
 }
 
 span.inspireThemeElement {
-    display: table-cell;
-    display: inline-block;
-    width: 230px;
+    /*display: table-cell;
+    display: inline-block; */
 	vertical-align:top;
 }
 
@@ -998,4 +1027,96 @@ span.inspireThemeElement {
 
 .xlinked {
      font-style: italic;
+}
+
+div.hittext  {
+	padding: 5px;
+	overflow: auto;
+	width: 98%;
+}
+
+div.thumbnail_results {
+	float: right;
+	width: 200px !important;
+	height: auto !important;
+    text-align:center;
+    vertical-align:middle;
+}
+
+div.hitdescription {
+
+}
+
+div.buttons {
+	margin-top: 5px; 
+	margin-bottom: 5px; 
+	/*overflow: auto;*/
+    height: 30px;
+	width: 100%;
+}
+
+div.buttonsleft {
+	float: left;
+	text-align: left;
+}
+
+div.buttonsright {
+	float: right;
+}
+
+div.caption {
+	width: 100px;
+	float: left;
+	text-align: left;
+}
+
+div.abstract1, #owslinks {
+	text-align: left;
+	margin: 5px 5px 5px 100px;
+}
+
+div.hittext_middle {
+	clear: left;
+}
+
+div.hittext_keywords {
+	clear: left;
+}
+
+div.hittitle {
+	padding-left: 28px;
+	text-align: left;
+	text-transform: uppercase;
+	font-weight: bold;
+	margin-left: 50px;
+}
+
+div.hittext_top {
+}
+
+div.keywords {
+	text-align: left;
+	margin: 5px 5px 5px 100px;	
+}
+
+div.attributionlogo {
+	padding: 5px;
+	float: left;
+}
+
+div.hitexport {
+	float: right;
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+div.ownership{
+	 float:right;
+	 clear:both;
+}
+
+div.pageList {
+	text-align: center;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }

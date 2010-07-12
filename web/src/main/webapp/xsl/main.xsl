@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:output
+		omit-xml-declaration="yes" 
+		method="html" 
+		doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"
+		doctype-system="http://www.w3.org/TR/html4/loose.dtd"
+		indent="yes"
+		encoding="UTF-8" />
 	
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="banner.xsl"/>
@@ -13,20 +20,27 @@
 			<head>
 				<xsl:call-template name="header"/>
 				<xsl:apply-templates mode="script" select="/"/>
+				
+				<style type="text/css">
+					body {
+						background-color: #E4E9F1;
+						height:100%;
+					}
+					
+					#content {
+						height:100%;
+					}
+				</style>
 			</head>
 			<body onload="init()">
-				<table width="100%" height="100%">
-					
-					<!-- banner -->
-					<tr><td>
-						<xsl:call-template name="banner"/>
-					</td></tr>
+				<!-- banner -->
+				<div id="header">
+					<xsl:call-template name="banner"/>
+				</div>
 			
-					<!-- content -->
-					<tr height="100%"><td>
-						<xsl:call-template name="content"/>
-					</td></tr>
-				</table>
+				<div id="content_container">
+					<xsl:call-template name="content"/>
+				</div>
 			</body>
 		</html>
 	</xsl:template>

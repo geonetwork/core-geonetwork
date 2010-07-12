@@ -31,7 +31,9 @@
 
 	<xsl:template name="geoCssHeader">
 	    <link rel="stylesheet" type="text/css" href="../../scripts/ext/resources/css/ext-all.css"/>
+        <link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext/resources/css/file-upload.css" />
         <link rel="stylesheet" type="text/css" href="../../scripts/openlayers/theme/geonetwork/style.css"/>
+        <link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/openlayers/theme/default/style.css" />
 	</xsl:template>
 
     <!-- Insert all required JS and CSS files:
@@ -54,13 +56,27 @@
             <xsl:when test="/root/request/debug">
             	<link rel="stylesheet" type="text/css" href="../../scripts/geoext/resources/css/geoext-all-debug.css"/>
             	<script src="../../scripts/ext/ext-all-debug.js"  type="text/javascript"/>
-                <!-- <script src="../../scripts/openlayers/lib/OpenLayers.js" type="text/javascript"/> -->
+                <script type="text/javascript" src="{/root/gui/url}/scripts/ext/form/FileUploadField.js" />
                 <script src="../../scripts/openlayers/lib/OpenLayers.js" type="text/javascript"/>
-                <script src="../../scripts/geoext/lib/GeoExt.js" type="text/javascript"/>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/LoadingPanel.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/ScaleBar.js"></script>
+                
+                <script type="text/javascript" src="{/root/gui/url}/scripts/geoext/lib/GeoExt.js"></script>			
+                <script type="text/javascript" src="{/root/gui/url}/scripts/mapfish/MapFish.js"></script>    
             </xsl:when>
-            <xsl:otherwise>
-            	<script src="../../scripts/ext/ext-all.js"  type="text/javascript"/>
-                <script src="../../scripts/lib/gn.geo.libs.js" type="text/javascript"/>
+            <xsl:otherwise>     
+                <script type="text/javascript" src="{/root/gui/url}/scripts/ext/ext-all.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/ext/form/FileUploadField.js"></script>
+              
+                <!-- For now using standard OpenLayers.js and GeoExt.js compressed files.  TODO: Change to use gn.geo.libs.js -->  
+                <!--script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.geo.libs.js"></script--> 
+                
+                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/OpenLayers.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/LoadingPanel.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/ScaleBar.js"></script>
+                                
+                <script type="text/javascript" src="{/root/gui/url}/scripts/geoext/GeoExt.js"></script>			
+                <script type="text/javascript" src="{/root/gui/url}/scripts/mapfish/MapFish.js"></script>            
             </xsl:otherwise>
         </xsl:choose>
         <script src="../../scripts/geo/extentMap.js" type="text/javascript"/>

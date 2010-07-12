@@ -218,12 +218,12 @@
         <version>1.0.9</version>
       </dependency>
       
-      <!-- PDF stuff -->
-      <dependency>
+      <!-- PDF stuff: Managed by Mapfish -->
+      <!--dependency>
         <groupId>com.lowagie</groupId>
         <artifactId>itext</artifactId>
         <version>2.0.6</version>
-      </dependency>
+      </dependency-->
       <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
         <artifactId>fop</artifactId>
@@ -558,6 +558,13 @@
       <name>GeoNetwork local repository</name>
       <url>file://maven_repo</url>
     </repository>
+
+	<!-- Mapfish repository -->
+    <repository>
+      <id>org.mapfish</id>
+      <url>http://dev.mapfish.org/maven/repository</url>
+    </repository>
+
   </repositories>
 
   <pluginRepositories>

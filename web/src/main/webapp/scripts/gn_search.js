@@ -15,14 +15,10 @@
 ***
 **********************************************************/
 
+var mainViewport;
+
 function initSimpleSearch(wmc)
 {
-	im_mm_init(wmc, function()
-			{
-				$('openIMBtn').style.cursor = 'pointer';
-				Event.observe('openIMBtn', 'click',  function(){openIntermap()} );
-			}
-		);
 }
 
 function gn_anyKeyObserver(e)
@@ -61,7 +57,7 @@ function runSimpleSearch(type)
 
 	var pars = "any=" + encodeURIComponent($('any') .value);
 
-	var region = $('region').value;
+	var region = $('region_simple').value;
 	if(region!="")
   {
 		pars += "&"+im_mm_getURLselectedbbox();
@@ -89,23 +85,47 @@ function resetSimpleSearch()
 /* make sure all values are completely reset (instead of just using the default
    form.reset that would only return to the values stored in the session */
     setParam('any','');
-    setParam('relation','overlaps');
-    setParam('region',null);
-
+    setParam('relation','overlaps');	
+    setParam('region_simple',null);
+	// Clear also region in advanced search to keep synch
+	setParam('region',null);
+    
     $('northBL').value='90';
     $('southBL').value='-90';
     $('eastBL').value='180';
     $('westBL').value='-180';
 
+	resetMinimaps();
+	
     // FIXME: maybe we should zoom back to a fullExtent (not to the whole world)
-    im_mm_redrawAoI();
-    im_mm_zoomToAoI();
- 	setParam('sortBy',      'relevance');
- 	setParam('sortOrder',   '');
- 	setParam('hitsPerPage', '10');
- 	setParam('output',      'full');
+    //im_mm_redrawAoI();
+    //im_mm_zoomToAoI();
+    setParam('sortBy',      'relevance');
+    setParam('sortBy_simple',      'relevance');
+    setParam('sortOrder',   '');
+    setParam('hitsPerPage', '10');
+    setParam('hitsPerPage_simple', '10');
+    setParam('output',      'full');
+    setParam('output_simple',      'full');
+
 }
 
+
+function resetMinimaps() {
+	GeoNetwork.minimapSimpleSearch.clearExtentBox();
+    var minimap =  GeoNetwork.minimapSimpleSearch.getMap();
+    if (minimap) {
+        var pnl = Ext.getCmp('mini_mappanel_ol_minimap1');
+        pnl.map.setCenter(pnl.center, pnl.zoom);
+    }	
+	
+	GeoNetwork.minimapAdvancedSearch.clearExtentBox();
+    minimap =  GeoNetwork.minimapAdvancedSearch.getMap();
+    if (minimap) {
+        var pnl = Ext.getCmp('mini_mappanel_ol_minimap2');
+        pnl.map.setCenter(pnl.center, pnl.zoom);
+    }	
+}
 /********************************************************************
 *
 *  Toggling between simple/advanced search
@@ -114,44 +134,18 @@ function resetSimpleSearch()
 
 function showAdvancedSearch()
 {
-	closeIntermap();
-	closeSearch('simplesearch');
+	closeSearch('simple_search_pnl');
+	openSearch('advanced_search_pnl');
 	document.cookie = "search=advanced";
-
-	var myAjax = new Ajax.Updater (
-		'advancedsearch',
-		getGNServiceURL('main.searchform.advanced.embedded'),
-		{
-			method: 'get',
-			onComplete: function()
-			{
-				openSearch('advancedsearch');
-				initAdvancedSearch();
-			},
-			onFailure: im_load_error
-		}
-	);
-
+	initAdvancedSearch();
 }
 
 function showSimpleSearch()
 {
-	closeSearch('advancedsearch');
+	closeSearch('advanced_search_pnl');
+	openSearch('simple_search_pnl');
 	document.cookie = "search=default";
-
-	var myAjax = new Ajax.Updater (
-		'simplesearch',
-		getGNServiceURL('main.searchform.simple.embedded'),
-		{
-			method: 'get',
-			onComplete: function()
-			{
-				openSearch('simplesearch');
-				initSimpleSearch();
-			},
-			onFailure: im_load_error
-		}
-	);
+	initSimpleSearch();
 }
 
 function openSearch(s)
@@ -168,16 +162,13 @@ function openSearch(s)
 
 function closeSearch(s)
 {
-	clearNode('im_mm_map');
-
 	if( ! Prototype.Browser.IE )
 	{
-		Effect.BlindUp($(s), {afterFinish: function(){ clearNode($(s)); } });
+		Effect.BlindUp($(s));
 	}
 	else
 	{
 		$(s).hide();
-		clearNode($(s))
 	}
 }
 
@@ -189,7 +180,7 @@ function closeSearch(s)
 
 function initAdvancedSearch()
 {
-	im_mm_init();
+	//im_mm_init();
 
 	new Ajax.Autocompleter('themekey', 'keywordList', 'portal.search.keywords?',{paramName: 'keyword', updateElement : addQuote});
 
@@ -320,13 +311,17 @@ function resetAdvancedSearch()
 	var radioSimil = document.getElementsByName('similarity');
 	radioSimil[1].checked=true;
 	setParam('relation','overlaps');
-	setParam('region',null);
+
+    setParam('region',null);
+	// Clear also region in simple search to keep synch
+	setParam('region_simple',null);
+	
 	$('northBL').value='90';
 	$('southBL').value='-90';
 	$('eastBL').value='180';
 	$('westBL').value='-180';
-            im_mm_redrawAoI();
-            im_mm_zoomToAoI();
+	
+	resetMinimaps();
 
 	setParam('dateFrom','');
 	setParam('dateTo','');
@@ -345,9 +340,13 @@ function resetAdvancedSearch()
 	setParam('protocol',    '');
 	setParam('template',    'n');
  	setParam('sortBy',      'relevance');
- 	setParam('sortOrder',   '');
- 	setParam('hitsPerPage', '10');
- 	setParam('output',      'full');
+    setParam('sortBy_simple',      'relevance');
+    setParam('sortOrder',   '');
+    setParam('hitsPerPage', '10');
+    setParam('hitsPerPage_simple', '10');
+    setParam('output',      'full');
+    setParam('output_simple',      'full');
+
 
     // reset INSPIRE options
     resetInspireOptions();
@@ -364,16 +363,18 @@ function resetAdvancedSearch()
 function showFields(img, div)
 {
         var img = $(img);
-        var src = img.getAttribute('src');
-        var ndx = src.lastIndexOf('/');
-        var div = $(div);
+		if (img) {
+			var src = img.getAttribute('src');
+			var ndx = src.lastIndexOf('/');
+			var div = $(div);
 
-        src = src.substring(0, ndx+1);
+			src = src.substring(0, ndx+1);
 
-        if (div.visible())      img.setAttribute('src', src +'plus.gif');
-                else                                    img.setAttribute('src', src +'minus.png');
+			if (div.visible())      img.setAttribute('src', src +'plus.gif');
+					else                                    img.setAttribute('src', src +'minus.png');
 
-        div.toggle();
+			div.toggle();
+		}
 }
 
 
@@ -483,9 +484,19 @@ function rateMetadata_OK(xmlRes)
 *** GET BOUNDINGBOX COORDINATES FOR A REGION
 ********************************************************************/
 
-function doRegionSearch()
+function doRegionSearchSimple() {
+  doRegionSearch('region_simple');
+  $('region').value = $('region_simple').value;
+}
+
+function doRegionSearchAdvanced() {
+  doRegionSearch('region');
+  $('region_simple').value = $('region').value;
+}
+
+function doRegionSearch(regionlist)
 {
-    var region = $('region').value;
+    var region = $(regionlist).value;
     if(region=="")
     {
         region=null;
@@ -494,8 +505,11 @@ function doRegionSearch()
         $('eastBL').value='180';
         $('westBL').value='-180';
 
-        im_mm_redrawAoI();
-        im_mm_zoomToAoI();
+		GeoNetwork.minimapSimpleSearch.updateExtentBox();
+		GeoNetwork.minimapAdvancedSearch.updateExtentBox();
+
+        //im_mm_redrawAoI();
+        //im_mm_zoomToAoI();
     }  else if (region=="userdefined") {
 		// Do nothing. AoI is set by the user
     } else
@@ -533,8 +547,11 @@ function getRegion_complete(req) {
     $('eastBL').value=eastcc;
     $('westBL').value=westcc;
 
-    im_mm_redrawAoI();
-    im_mm_zoomToAoI();
+	GeoNetwork.minimapSimpleSearch.updateExtentBox();
+	GeoNetwork.minimapAdvancedSearch.updateExtentBox();
+	
+    //im_mm_redrawAoI();
+    //im_mm_zoomToAoI();
 }
 
 function getRegion_error() {
@@ -578,7 +595,7 @@ function im_mm_aoiUpdated(bUpdate) {
 function preparePresent()
 {
 	// Display results area
-	clearNode('resultList');
+	//clearNode('resultList');
 	$('loadingMD').show();
 }
 
@@ -737,7 +754,8 @@ function a(msg) {
     alert(msg);
 }
 
-function gn_search_error() {
+function gn_search_error(req) {
+	alert(req.resposeText);
     $('loadingMD') .hide();
 // style.display = 'none';
     alert("ERROR)");
@@ -860,8 +878,8 @@ function setParam(p, val)
         return false;
     }
 
-    pop.style.top = el.cumulativeOffset().top + el.getHeight();
-    pop.style.left = el.cumulativeOffset().left;
+    //pop.style.top = el.cumulativeOffset().top + el.getHeight();
+    //pop.style.left = el.cumulativeOffset().left;
     pop.style.width = '250px'; //el.getWidth();
     pop.style.display = "block";
 
@@ -1003,7 +1021,6 @@ function toggleMoreFields() {
 
 function toggleInspire() {
   $("inspiresearchfields").toggle();
-  $("arrow_inspire").toggle();
 
   var src = $("i_inspire").getAttribute('src');
   var ndx = src.lastIndexOf('/');
@@ -1016,6 +1033,108 @@ function toggleInspire() {
 	$("i_inspire").setAttribute('src', src +'plus.gif');
   }
 }
+
+function toggleWhen() {
+  $("whensearchfields").toggle();
+ 
+  var src = $("i_when").getAttribute('src');
+  var ndx = src.lastIndexOf('/');
+
+  src = src.substring(0, ndx+1);
+
+  if ($("whensearchfields").visible() == true) {
+	$("i_when").setAttribute('src', src +'minus.png');
+  } else {
+	$("i_when").setAttribute('src', src +'plus.gif');
+  }
+}
+
+function addWMSLayer(layers) {
+	Ext.getCmp("north-map-panel").expand();
+	mainViewport.doLayout();
+    GeoNetwork.mapViewer.addWMSLayer(layers);
+}
+
+function addSelectedWMSLayers(metadataIdForm) {
+	var checkedBoxes = $$('#'+metadataIdForm+' input');
+	var wmsLayers = new Array();
+	for (var i=0;i<checkedBoxes.length;i++) {
+		if (checkedBoxes[i].checked) {
+			wmsLayers.push(checkedBoxes[i].value.split(','));
+		}
+	}
+	addWMSLayer(wmsLayers);
+}
+
+/********************************************************************
+* 
+*  Show list of addable interactive maps
+*
+********************************************************************/
+
+/**
+ * This method is called by the "Interactive map [+]" button in a displayed metadata.
+ * It will display the metadata distribution info in a div .
+ *  
+ * @param {int} id   		The Geonetwork metadata id
+ */
+function gn_showInterList(id) 
+{
+    var pars = 'id=' + id + "&currTab=distribution";
+    
+    // Change button appearance
+    $('gn_showinterlist_' + id) .hide();
+    $('gn_loadinterlist_' + id) .show();
+    
+    var myAjax = new Ajax.Request(
+        getGNServiceURL('metadata.show.embedded'), 
+        {
+            method: 'get',
+            parameters: pars,
+            onSuccess: function (req) {
+                // This is a normally invisible DIV below every MD 
+                var parent = $('ilwhiteboard_' + id);
+                clearNode(parent);
+                parent.show();
+                
+                $('gn_loadinterlist_' + id) .hide();
+                $('gn_hideinterlist_' + id) .show();
+                
+                // create new element
+                var div = document.createElement('div');
+                div.className = 'metadata_current';
+				div.style.width = '100%'; 
+                $(div).hide();
+                parent.appendChild(div);
+                
+                div.innerHTML = req.responseText;
+                Effect.BlindDown(div);
+                
+                var tipman = new TooltipManager();
+                ker.loadMan.wait(tipman);
+            },
+            onFailure: gn_search_error// FIXME
+        });
+}
+
+/**
+ * This method is called by the "Interactive map [-]" button in a displayed metadata.
+ * It will hide and delete the div displaying the metadata distribution info.
+ *  
+ * @param {int} id   		The Geonetwork metadata id
+ */
+function gn_hideInterList(id) 
+{
+    var parent = $('ilwhiteboard_' + id);
+    var div = parent.firstChild;
+    Effect.BlindUp(div, { afterFinish: function (obj) {
+            clearNode(parent);
+            $('gn_showinterlist_' + id) .show();
+            $('gn_hideinterlist_' + id) .hide();
+        }
+    });
+}
+
 /********************************************************************/
 /* INSPIRE                                                          */
 /********************************************************************/
@@ -1128,4 +1247,38 @@ function resetInspireOptions() {
 	$('inspire_MineralResources').checked=false;
 	// End reset INSPIRE options
 }
+
+function clearNode(node)
+{
+	var enode = $(node);
+	while (enode.firstChild) 
+	{
+		enode.removeChild(enode.firstChild);
+	}			
+}
+
+function im_mm_getURLselectedbbox()
+{
+	return urlizebb(
+		$("northBL").value,
+		$("eastBL").value,
+		$("southBL").value,
+		$("westBL").value);
+}
+
+/**
+ * Get the URLized version of the given bbox
+ * @param {int} n
+ * @param {int} e
+ * @param {int} s
+ * @param {int} w
+ * @return {String} URL
+ */
+ function urlizebb(n, e, s, w)
+{
+	return	"northBL="+n+
+			"&eastBL="+e+
+			"&southBL="+s+
+			"&westBL="+w;
+};
 /*** EOF ***********************************************************/
