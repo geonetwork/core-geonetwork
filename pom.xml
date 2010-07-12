@@ -565,6 +565,12 @@
       <url>http://dev.mapfish.org/maven/repository</url>
     </repository>
 
+     <repository>
+        <id>thus.ch</id>
+        <name>Patrick Valsecchi's repository</name>
+        <url>http://www.thus.ch/~patrick/maven</url>
+    </repository>
+    
   </repositories>
 
   <pluginRepositories>

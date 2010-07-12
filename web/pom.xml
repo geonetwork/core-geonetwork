@@ -235,6 +235,11 @@
       <version>1.2-SNAPSHOT</version>
     </dependency>
   
+	<dependency>
+      <groupId>ch.thus</groupId>
+      <artifactId>pvalsecc</artifactId>
+      <version>0.9.2</version>
+    </dependency>
   
     <!-- ====================== -->
     <!-- Generated dependencies -->
