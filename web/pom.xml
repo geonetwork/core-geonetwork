@@ -595,20 +595,12 @@
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
 <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
-          <webResources>
+<!--          <webResources>
             <resource>
               <directory>../docs/eng/users/build/html</directory>
               <targetPath>docs/eng/users</targetPath>
             </resource>
-<!--            <resource>
-              <directory>../docs/eng/developer/build/html</directory>
-              <targetPath>docs/eng/developer</targetPath>
-            </resource>-->
-<!--            <resource>
-              <directory>../docs/fra/users/build/html</directory>
-              <targetPath>docs/fra/users</targetPath>
-            </resource> -->
-          </webResources>
+          </webResources> -->
           <attachClasses>true</attachClasses>
           <warName>geonetwork</warName>
           <webappDirectory>${project.build.directory}/geonetwork</webappDirectory>
