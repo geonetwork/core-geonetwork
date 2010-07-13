@@ -5,7 +5,7 @@
             xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" 
             version="2.4">
             
-    <display-name>GeoNetwork opensource</display-name>
+    <display-name>geonetwork</display-name>
 
     <!-- shut down java cache used for xlinks and spatial index -->
     <listener>

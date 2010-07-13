@@ -204,7 +204,7 @@
 		<property name="rules" value="" />
 
 		<mkdir dir="${schematronDir}/rules/loc/${lang}"/>
-        <copy description="Copy localization file to ${schema} schema." todir="../web/src/main/webapp/xml/schemas/${schema}/loc/${lang}" verbose="true">
+		<copy description="Copy localization file to ${schema} schema." todir="../web/src/main/webapp/xml/schemas/${schema}/loc/${lang}" verbose="true">
 			<fileset dir="${schematronDir}/rules/loc/${lang}" includes="schematron-rules-${rules}.xml" />
 		</copy>
 	</target>

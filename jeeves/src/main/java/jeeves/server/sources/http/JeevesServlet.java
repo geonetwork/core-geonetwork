@@ -23,7 +23,6 @@
 
 package jeeves.server.sources.http;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import javax.servlet.ServletException;
@@ -58,8 +57,14 @@ public class JeevesServlet extends HttpServlet
 	public void init() throws ServletException
 	{
 		String appPath = getServletContext().getRealPath("/");
-		File app = new File(appPath);
-		String baseUrl = app.getName();
+
+		String baseUrl    = "";
+		
+    try {
+      baseUrl = getServletContext().getContextPath();
+    } catch (java.lang.NoSuchMethodError ex) {
+      baseUrl = getServletContext().getServletContextName();
+    }
 		
 		if (!appPath.endsWith("/"))
 			appPath += "/";
