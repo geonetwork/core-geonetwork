@@ -189,8 +189,10 @@ public class CatalogSearcher {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
-		Pair<TopFieldCollector,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary( maxHits, Integer.MAX_VALUE, _lang, ResultType.RESULTS.toString(), _summaryConfig, _reader, _query, _filter, _sort, false);
-		TopFieldCollector tfc = searchResults.one();
+		Pair<TopDocs, Element> searchResults = 
+			LuceneSearcher.doSearchAndMakeSummary( 
+					maxHits, 0, maxHits, Integer.MAX_VALUE, _lang, ResultType.RESULTS.toString(), _summaryConfig, _reader, _query, _filter, _sort, false);
+		TopDocs tdocs= searchResults.one();
 		Element summary = searchResults.two();
 
 		int numHits = Integer.parseInt(summary.getAttributeValue("count"));
@@ -198,10 +200,8 @@ public class CatalogSearcher {
 		Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
 
 		// --- retrieve results
-
 		List<String> response = new ArrayList<String>();
-		TopDocs tdocs = tfc.topDocs(0, maxHits);
-
+		
 		for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
 			Document doc = _reader.document(sdoc.doc, uuidselector);
 			String uuid = doc.get("_uuid");
@@ -391,8 +391,8 @@ public class CatalogSearcher {
 		_sort = sort;
 		_lang = context.getLanguage();
 	
-		Pair<TopFieldCollector,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, Integer.MAX_VALUE, context.getLanguage(), resultType.toString(), _summaryConfig, _reader, query, cFilter, sort, buildSummary);
-		TopFieldCollector tfc = searchResults.one();
+		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1, maxRecords, Integer.MAX_VALUE, context.getLanguage(), resultType.toString(), _summaryConfig, _reader, query, cFilter, sort, buildSummary);
+		TopDocs hits = searchResults.one();
 		Element summary = searchResults.two();
 
 		numHits = Integer.parseInt(summary.getAttributeValue("count"));
@@ -402,12 +402,17 @@ public class CatalogSearcher {
 		// --- retrieve results
 
 		List<ResultItem> results = new ArrayList<ResultItem>();
-		// FIXME : topDocs could have been used already once in MakeSummary
-		// so the second call return null docs. resultType=results return
-		// record, but results_with_summary does not.
-		TopDocs hits = tfc.topDocs(startPosition - 1, maxRecords);
-	
-		for (int i = 0; i < hits.scoreDocs.length; i++) {
+
+		// Get hits according to request (when using summary topdocs returned by
+		// LuceneSearcher already contains all docs)
+		int i = 0;
+		int iMax = hits.scoreDocs.length;
+		if (buildSummary) {
+			i = startPosition -1;
+			iMax = Math.min(hits.scoreDocs.length, maxRecords);
+		}
+		
+		for (;i < iMax; i++) {
 			Document doc = _reader.document(hits.scoreDocs[i].doc, _selector);
 			String id = doc.get("_id");
 	

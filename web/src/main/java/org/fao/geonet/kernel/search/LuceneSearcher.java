@@ -395,14 +395,14 @@ public class LuceneSearcher extends MetaSearcher
 			numHits = endHit;
 		}
 
-		Pair<TopFieldCollector,Element> results = doSearchAndMakeSummary( numHits, _maxSummaryKeys, _language, _resultType, _summaryConfig, _reader, _query, cFilter, _sort, buildSummary);
-		TopFieldCollector tfc = results.one();
+		Pair<TopDocs,Element> results = doSearchAndMakeSummary( numHits, startHit, endHit, _maxSummaryKeys, _language, _resultType, _summaryConfig, _reader, _query, cFilter, _sort, buildSummary);
+		TopDocs hits = results.one();
 		_elSummary = results.two();
 		_numHits = Integer.parseInt(_elSummary.getAttributeValue("count"));
 	
 		Log.debug(Geonet.SEARCH_ENGINE, "Hits found : "+_numHits+"");
 			
-		return tfc.topDocs(startHit, endHit);
+		return hits;
 	}
 
 	//--------------------------------------------------------------------------------
@@ -720,7 +720,31 @@ public class LuceneSearcher extends MetaSearcher
 
 	//--------------------------------------------------------------------------------
 
-	public static Pair<TopFieldCollector,Element> doSearchAndMakeSummary(int numHits, int maxSummaryKeys, String langCode, String resultType, Element summaryConfig, IndexReader reader, Query query, CachingWrapperFilter cFilter, Sort sort, boolean buildSummary) throws Exception
+	
+	/**
+	 * Do Lucene search and optionnaly build a summary for the search.
+	 * 
+	 * @param numHits	the maximum number of hits to collect
+	 * @param startHit	the start hit to return in the TopDocs if not building summary
+	 * @param endHit	the end hit to return in the TopDocs if not building summary
+	 * @param maxSummaryKeys	the max number of keys to process in a summary
+	 * @param langCode	the language code used by SummaryComparator
+	 * @param resultType	the resultType is used to define the type of summary to build according to summary configuration in config-summary.xml.
+	 * @param summaryConfig	the summary configuration
+	 * @param reader
+	 * @param query
+	 * @param cFilter
+	 * @param sort	the sort criteria
+	 * @param buildSummary	true to build query summary element. Summary is stored in the second element of the returned Pair.
+	 *
+	 * @return	the topDocs for the search. When building summary, topDocs will contains all search hits
+	 * and need to be filtered to return only required hits according to search parameters.
+	 * 
+	 * @throws Exception
+	 */
+	public static Pair<TopDocs, Element> doSearchAndMakeSummary(int numHits, int startHit, int endHit, int maxSummaryKeys, 
+			String langCode, String resultType, Element summaryConfig, 
+			IndexReader reader, Query query, CachingWrapperFilter cFilter, Sort sort, boolean buildSummary) throws Exception
 	{
 
 		Log.debug(Geonet.SEARCH_ENGINE, "Setting up the TFC with numHits "+numHits);
@@ -732,23 +756,28 @@ public class LuceneSearcher extends MetaSearcher
 		elSummary.setAttribute("count", tfc.getTotalHits()+"");
 		elSummary.setAttribute("type", "local");
 
+		// topDocs could only be called once.
+		// A second call will return null docs.
+		TopDocs tdocs = null; 
+			
 		if (buildSummary) {	
-			Log.debug(Geonet.SEARCH_ENGINE, "building summary");
+			Log.debug(Geonet.SEARCH_ENGINE, "Building summary");
 
 			// -- prepare
 			HashMap<String,HashMap<String,Object>> summaryConfigValues = getSummaryConfig(summaryConfig, resultType, maxSummaryKeys);
 			HashMap<String,HashMap<String,Integer>> summaryMaps = prepareSummaryMaps(summaryConfigValues.keySet());
 
-			// -- get topdocs from search
-			TopDocs tdocs = tfc.topDocs(0, numHits);
+			// -- get all hits from search to build the summary
+			tdocs = tfc.topDocs(0, numHits);
 
 			// -- add summary keys to summary element
 			summaryMaps = buildSummaryMaps(elSummary, reader, tdocs.scoreDocs, summaryMaps);
 			elSummary = addSortedSummaryKeys(elSummary, langCode, summaryMaps, summaryConfigValues);
+		} else {
+			tdocs = tfc.topDocs(startHit, endHit);
 		}
 
-
-		return Pair.read(tfc,elSummary);
+		return Pair.read(tdocs,elSummary);
 	}
 
 	//--------------------------------------------------------------------------------
