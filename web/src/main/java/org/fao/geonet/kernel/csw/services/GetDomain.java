@@ -191,9 +191,8 @@ public class GetDomain extends AbstractOperation implements CatalogService
 				Sort   sort = LuceneSearcher.makeSort(Collections.singletonList(Pair.read(Geonet.SearchResult.SortBy.RELEVANCE, true)));
 				CachingWrapperFilter filter = null;
 
-				Pair<TopFieldCollector,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary( maxRecords, Integer.MAX_VALUE, context.getLanguage(), "results", new Element("summary"), reader, query, filter, sort, false);
-				TopFieldCollector tfc = searchResults.one();
-				TopDocs hits = tfc.topDocs(0, maxRecords);
+				Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary( maxRecords, 0, maxRecords, Integer.MAX_VALUE, context.getLanguage(), "results", new Element("summary"), reader, query, filter, sort, false);
+				TopDocs hits = searchResults.one();
 			
 				try {
 					// Get mapped lucene field in CSW configuration
