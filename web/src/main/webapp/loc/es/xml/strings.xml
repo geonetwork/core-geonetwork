@@ -435,10 +435,14 @@
 	<doYouReallyWantToDoThis js="true">Esta operación puede tardar algún tiempo sobre los catálogos con muchos metadatados y no se debe hacer en momentos de uso intensivo. ¿Desea continuar?</doYouReallyWantToDoThis>
 	<optimize>Optimizar</optimize>
 	<metadata.admin.index>Manejar índices</metadata.admin.index>
+    <metadata-samples>Metadatos de ejemplo</metadata-samples>
+    <metadata-samples-add>Añadir metadatos de ejemplo</metadata-samples-add>
+    <metadata-samples-add-failed>Ocurrió un fallo al añadir los metadatos de ejemplo</metadata-samples-add-failed>
+    <metadata-samples-add-success>Añadidos los metadatos de ejemplo</metadata-samples-add-success>
 	<metadata-template-order>Ordenar plantillas</metadata-template-order>
 	<metadata-template-order-desc>Ordenar sus plantillas</metadata-template-order-desc>
-	<metadata-template-add-default>Add templates</metadata-template-add-default>	
-	<metadata-template-add-default-desc>Add default templates</metadata-template-add-default-desc>		
+	<metadata-template-add-default>Añadir plantillas</metadata-template-add-default>	
+	<metadata-template-add-default-desc>Añadir plantillas por defecto</metadata-template-add-default-desc>		
 	<metadata>Metadatos</metadata>
 	<metadataAdded>Metadato añadido con ID:</metadataAdded>
 	<metadataDeleted>Metadato borrado con ID:</metadataDeleted>

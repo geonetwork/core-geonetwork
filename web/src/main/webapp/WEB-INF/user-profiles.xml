@@ -34,6 +34,9 @@
 		<allow service="metadata.templates.displayorder.save"/>		
 		<allow service="metadata.templates.add.default"/>
 		
+        <!-- Sample data -->
+		<allow service="metadata.samples.add"/>
+        
 		<!-- Edit the context sensitive help -->
 		<allow service="help.edit.form"/>
 		<allow service="help.update"/>

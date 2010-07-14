@@ -436,6 +436,10 @@
 	<doYouReallyWantToDoThis js="true">This operation may take some time on large catalogs and should not be done during peak usage. Continue?</doYouReallyWantToDoThis>
 	<optimize>Optimize</optimize>
 	<metadata.admin.index>Управление индексом поиска</metadata.admin.index>
+    <metadata-samples>Sample metadata</metadata-samples>
+    <metadata-samples-add>Add sample metadata</metadata-samples-add>
+    <metadata-samples-add-failed>Add sample metadata failed</metadata-samples-add-failed>
+    <metadata-samples-add-success>Added sample metadata</metadata-samples-add-success>
 	<metadata-template-order>Sort Templates</metadata-template-order>	
 	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>
 	<metadata-template-add-default>Add templates</metadata-template-add-default>	

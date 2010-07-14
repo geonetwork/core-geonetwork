@@ -565,6 +565,13 @@
 		<service name="metadata.templates.add.default">
 			<class name=".guiservices.templates.AddDefault"/>
 		</service>
+        
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Metadata samples											   -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <service name="metadata.samples.add">
+			<class name=".guiservices.sampledata.Add"/>
+		</service>
 	</services>
 </geonet>
 

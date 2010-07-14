@@ -446,6 +446,10 @@
 	<doYouReallyWantToDoThis js="true">This operation may take some time on large catalogs and should not be done during peak usage. Continue?</doYouReallyWantToDoThis>
 	<optimize>Optimize</optimize>
 	<metadata.admin.index>Index manager</metadata.admin.index>
+    <metadata-samples>Voorbeeld metadata</metadata-samples>
+    <metadata-samples-add>Voorbeeld metadata toevoegen</metadata-samples-add>
+    <metadata-samples-add-failed>Laden voorbeeld metadata is mislukt</metadata-samples-add-failed>
+    <metadata-samples-add-success>Laden voorbeeld metadata is gelukt</metadata-samples-add-success>
 	<metadata-template-order>Templates sorteren</metadata-template-order>	
 	<metadata-template-order-desc>Sorteer uw templates</metadata-template-order-desc>
 	<metadata-template-add-default>Add templates</metadata-template-add-default>	

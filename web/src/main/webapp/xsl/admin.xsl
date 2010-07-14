@@ -7,6 +7,9 @@
 		<xsl:call-template name="jsHeader"/>
 		
 		<script language="JavaScript" type="text/javascript">   
+        	var msgFailedAddSampleMetadata = "<xsl:value-of select="/root/gui/strings/metadata-samples-add-failed"/>";
+            var msgSuccessAddSampleMetadata = "<xsl:value-of select="/root/gui/strings/metadata-samples-add-success"/>";
+                          
             function allTemplate(cb) {
                 if (cb == $('all')) {
                     if ($('all').checked) {
@@ -61,6 +64,41 @@
 							$(wait).style.display = 'none';
 							$(btn).style.display = 'block';
 							alert(msgFailed);
+						}
+				});
+			}
+            
+            function addSampleData() {
+				var wait = 'waitSamples';
+				var btn = 'tplSamples';
+				$(wait).style.display = 'block';
+				$(btn).style.display = 'none';
+				
+				var url = "metadata.samples.add?file_type=mef&amp;uuidAction=overwrite";
+				
+				var http = new Ajax.Request(
+					url, 
+					{
+						method: 'get', 
+						parameters: null,
+						onComplete: function(originalRequest){},
+						onLoaded: function(originalRequest){},
+						onSuccess: function(originalRequest){                                       
+							// get the XML root item
+							var root = originalRequest.responseXML.documentElement;
+							var resp = root.getAttribute('status');
+							$(wait).style.display = 'none';
+							$(btn).style.display = 'block';
+
+							if (resp == "true")
+								alert (msgSuccessAddSampleMetadata);
+							else
+								alert(translate('error'));
+						},
+						onFailure: function(originalRequest){
+							$(wait).style.display = 'none';
+							$(btn).style.display = 'block';							
+                            alert(msgFailedAddSampleMetadata);
 						}
 				});
 			}
@@ -263,7 +301,20 @@
 						<td class="padded"><a href="{/root/gui/locService}/test.csw"><xsl:value-of select="/root/gui/strings/cswTest"/></a></td>
 						<td class="padded"><xsl:value-of select="/root/gui/strings/cswTestDesc"/></td>
 					</tr>
-					
+	
+                    <!-- Sample metadata -->
+                    <xsl:if test="/root/gui/services/service/@name='metadata.samples.add'">
+                        <tr><td colspan="2" class="spacer"/></tr>
+                         <tr>
+                            <td class="padded"><xsl:value-of select="/root/gui/strings/metadata-samples"/></td>
+                            <td class="padded">
+                                <button class="content" onclick="addSampleData();" id="tplSamples">                                   
+                                    <xsl:value-of select="/root/gui/strings/metadata-samples-add"/>
+                                </button>
+                                <img src="{/root/gui/url}/images/loading.gif" id="waitSamples" style="display:none;"/>									
+                            </td>
+                        </tr>
+                    </xsl:if>
 				</table>
 				<p/>
 			</xsl:with-param>
