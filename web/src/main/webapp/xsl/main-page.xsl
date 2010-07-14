@@ -215,8 +215,10 @@
 			}
 
 			Ext.onReady(function(){
-				Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
-		 
+                $("loading").hide();
+
+                Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
+                
 				GeoNetwork.mapViewer.init();
 				var mapViewport =  GeoNetwork.mapViewer.getViewport();
 				
@@ -451,7 +453,15 @@
 		</div>
 	</xsl:template>
 
-
+    <xsl:template mode="loading" match="/" priority="2">
+        <div id="loading">
+            <div class="loading-indicator">
+            <img src="{/root/gui/url}/images/spinner.gif" width="32" height="32"/>GeoNetwork opensource catalogue<br />
+            <span id="loading-msg"><xsl:value-of select="/root/gui/strings/loading"/></span>
+            </div>
+        </div>
+    </xsl:template>
+    
 	<!-- FIXME : should we keep that template
 	which was used for old (2.0.3) search interface ?
 	This is UI is not fonctionnal anymore (JS error, search failed, ...)

@@ -38,16 +38,28 @@
 					<xsl:call-template name="banner"/>
 				</div>
 			
-				<div id="content_container">
+				<div id="content_container" style="display:none">
 					<xsl:call-template name="content"/>
 				</div>
+
+				<xsl:apply-templates mode="loading" select="/"/>                
 			</body>
 		</html>
 	</xsl:template>
 
 	<xsl:template mode="script" match="/"/>
 	<xsl:template mode="css" match="/"/>
-
+    
+    <xsl:template mode="loading" match="/" priority="1">
+        <script>
+           Event.observe(window, 'load', function() {
+                if ($("content_container")) {
+                    $("content_container").show();
+                }
+            });
+        </script>
+    </xsl:template>
+    
 	<xsl:template name="formLayout">
 		<xsl:param name="title"/>
 		<xsl:param name="content"/>
