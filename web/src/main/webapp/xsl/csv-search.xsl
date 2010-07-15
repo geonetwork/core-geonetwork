@@ -34,7 +34,7 @@
 		columns (eg. keywords will be keyword1###keyword2... and could be explode 
 		if needed in a spreadsheet).
 	 -->
-	<xsl:output method="text" version="1.0" encoding="iso-8859-1" indent="no"/>
+	<xsl:output method="text" version="1.0" encoding="utf-8" indent="no"/>	
 	
 	<!-- Field separator 
 		To use tab instead of semicolon, use "&#009;".
@@ -45,7 +45,7 @@
 	<!-- Intra field separator -->
 	<xsl:variable name="internalSep" select="'###'"/>
 	
-	<xsl:include href="main.xsl"/>
+	<xsl:include href="utils.xsl"/>
 	<xsl:include href="metadata.xsl"/>
 
 	<!-- A template to add a new line \n with no extra space. -->	
