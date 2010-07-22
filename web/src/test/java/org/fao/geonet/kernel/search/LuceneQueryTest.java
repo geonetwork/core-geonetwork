@@ -1188,10 +1188,10 @@ public class LuceneQueryTest extends TestCase {
 		anyW.addContent("43");
 		request.addContent(anyW);
 		Element anyN = factory.element("northBL");
-		anyN.addContent("120");
+		anyN.addContent("30");
 		request.addContent(anyN);
 		Element anyS = factory.element("southBL");
-		anyS.addContent("90");
+		anyS.addContent("0");
 		request.addContent(anyS);
 		Element anyR = factory.element("relation");
 		anyR.addContent("fullyOutsideOf");
@@ -1199,7 +1199,7 @@ public class LuceneQueryTest extends TestCase {
 		// build lucene query
 		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
-		assertEquals("+_isTemplate:n eastBL:[180 TO 404.0] +westBL:[414.0 TO 540] +northBL:[270 TO 451.0] +southBL:[479.0 TO 540]", query.toString());
+		assertEquals("+_isTemplate:n +eastBL:[180 TO 404.0] +westBL:[414.0 TO 540] +northBL:[270 TO 361.0] +southBL:[389.0 TO 450]", query.toString());
 	}
 
 	/**

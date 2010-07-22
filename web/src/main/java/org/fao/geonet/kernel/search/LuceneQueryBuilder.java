@@ -25,6 +25,12 @@ public class LuceneQueryBuilder {
 
 	HashSet<String> _tokenizedFieldSet;
 	PerFieldAnalyzerWrapper _analyzer;
+	
+	// Bounding box constants
+	static final String minBoundingLatitudeValue  = "270";  //  -90 + 360
+	static final String maxBoundingLatitudeValue  = "450";  //   90 + 360
+	static final String minBoundingLongitudeValue = "180";  // -180 + 360
+	static final String maxBoundingLongitudeValue = "540";  //  180 + 360
 
 	public LuceneQueryBuilder(HashSet<String> tokenizedFieldSet, PerFieldAnalyzerWrapper analyzer) {
 		_tokenizedFieldSet = tokenizedFieldSet;
@@ -774,7 +780,7 @@ public class LuceneQueryBuilder {
 		String southBL = request.getChildText("southBL");
 		String relation = request.getChildText("relation");
 
-		addBoundingBox(query, relation, eastBL, westBL, northBL, southBL);
+		addBoundingBoxQuery(query, relation, eastBL, westBL, northBL, southBL);
 
 //		DEBUG
 //		System.out.println("\n\nLuceneQueryBuilder: query is\n" + query + "\n\n");
@@ -807,177 +813,161 @@ public class LuceneQueryBuilder {
 			query.add(dateRangeClause);
 		}
 	}
-
-	private void addBoundingBox(BooleanQuery query, String relation, String eastBL, String westBL, String northBL, String southBL) {
+	
+	/**
+	 * Handle geographical search 
+	 * FIXME : should be handle via spatial index search
+	 * 
+	 * @param query
+	 * @param relation
+	 * @param eastBL
+	 * @param westBL
+	 * @param northBL
+	 * @param southBL
+	 */
+	private void addBoundingBoxQuery(BooleanQuery query, String relation,
+			String eastBL, String westBL, String northBL, String southBL) {
 
 		// ignore negative values
-		if(eastBL != null) {
-			double eastBLi = Double.parseDouble(eastBL);
-			eastBL = new Double(360 + eastBLi).toString();
+		if (eastBL != null) {
+			eastBL = toPositiveValue(eastBL);
 		}
-		if(westBL != null){
-            double westBLi = Double.parseDouble(westBL);
-			westBL = new Double(360 + westBLi).toString();
+		if (westBL != null) {
+			westBL = toPositiveValue(westBL);
 		}
-		if(northBL != null) {
-            double northBLi = Double.parseDouble(northBL);
-			northBL = new Double(360 + northBLi).toString();
+		if (northBL != null) {
+			northBL = toPositiveValue(northBL);
 		}
-		if(southBL != null){
-            double southBLi = Double.parseDouble(southBL);
-			southBL = new Double(360 + southBLi).toString();
+		if (southBL != null) {
+			southBL = toPositiveValue(southBL);
 		}
 
+		// Handle relation parameter
+		if (relation == null)
+			return;
+
+		// Default inclusive value for TermRangeQuery (includeLower and includeUpper)
+		boolean inclusive = true;
+
+		// Default Occur value for BBox query
+		BooleanClause.Occur defaultBBoxOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 
 		//
-		// equal: coordinates of the target rectangle within 1 degree from corresponding ones of metadata rectangle
+		// overlaps (default value) : uses the equivalence
+		// -(a + b + c + d) = -a * -b * -c * -d
 		//
-		if(relation != null && relation.equals("equal")) {
+		if (relation.equals(Geonet.SearchResult.Relation.OVERLAPS)) {
+			// eastBL
+			if (westBL != null) {
+				String lowerTerm = Double.toString(Double.parseDouble(westBL) + 1);
+				String upperTerm = maxBoundingLongitudeValue;
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.EAST, lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+			}
+			// westBL
+			if (eastBL != null) {
+				String lowerTerm = minBoundingLongitudeValue;
+				String upperTerm = Double.toString(Double.parseDouble(eastBL) - 1);
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.WEST, lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+			}
+			// northBL
+			if (southBL != null) {
+				String lowerTerm = Double.toString(Double.parseDouble(southBL) + 1);
+				String upperTerm = maxBoundingLatitudeValue;
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.NORTH, lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+			}
+			// southBL
+			if (northBL != null) {
+				String lowerTerm = minBoundingLatitudeValue;
+				String upperTerm = Double.toString(Double.parseDouble(northBL) - 1);
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.SOUTH, lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+			}
+		}
+		//
+		// equal: coordinates of the target rectangle within 1 degree from
+		// corresponding ones of metadata rectangle
+		//
+		else if (relation.equals(Geonet.SearchResult.Relation.EQUAL)) {
 			// eastBL
 			if(eastBL != null) {
-					String lowerTxt = Double.toString(Double.parseDouble(eastBL) - 1);
-					String upperTxt = Double.toString(Double.parseDouble(eastBL) + 1);
-					Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.EAST, lowerTxt.toLowerCase()));
-					Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.EAST, upperTxt.toLowerCase()));
-					boolean inclusive = true ;
-					RangeQuery eastBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-					BooleanClause.Occur eastBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-					query.add(eastBLQuery, eastBLOccur);
-				}
+				String lowerTerm = Double.toString(Double.parseDouble(eastBL) - 1);
+				String upperTerm = Double.toString(Double.parseDouble(eastBL) + 1);
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.EAST,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+			}
 			// westBL
 			if(westBL != null) {
-				String lowerTxt = Double.toString(Double.parseDouble(westBL) - 1);
-				String upperTxt = Double.toString(Double.parseDouble(westBL) + 1);
-				Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.WEST, lowerTxt.toLowerCase()));
-				Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.WEST, upperTxt.toLowerCase()));
-				boolean inclusive = true ;
-				RangeQuery westBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-				BooleanClause.Occur westBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-				query.add(westBLQuery, westBLOccur);
+				String lowerTerm = Double.toString(Double.parseDouble(westBL) - 1);
+				String upperTerm = Double.toString(Double.parseDouble(westBL) + 1);
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.WEST,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
 			}
 			// northBL
 			if(northBL != null) {
-				String lowerTxt = Double.toString(Double.parseDouble(northBL) - 1);
-				String upperTxt = Double.toString(Double.parseDouble(northBL) + 1);
-				Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.NORTH, lowerTxt.toLowerCase()));
-				Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.NORTH, upperTxt.toLowerCase()));
-				boolean inclusive = true ;
-				RangeQuery northBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-				BooleanClause.Occur northBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-				query.add(northBLQuery, northBLOccur);
+				String lowerTerm = Double.toString(Double.parseDouble(northBL) - 1);
+				String upperTerm = Double.toString(Double.parseDouble(northBL) + 1);
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.NORTH,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
 			}
 			// southBL
 			if(southBL != null) {
-				String lowerTxt = Double.toString(Double.parseDouble(southBL) - 1);
-				String upperTxt = Double.toString(Double.parseDouble(southBL) + 1);
-				Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.SOUTH, lowerTxt.toLowerCase()));
-				Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.SOUTH, upperTxt.toLowerCase()));
-				boolean inclusive = true ;
-				RangeQuery southBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-				BooleanClause.Occur southBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-				query.add(southBLQuery, southBLOccur);
+				String lowerTerm = Double.toString(Double.parseDouble(southBL) - 1);
+				String upperTerm = Double.toString(Double.parseDouble(southBL) + 1);
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.SOUTH,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
 			}
 		}
 		//
 		// encloses: metadata rectangle encloses target rectangle shrunk by 1 degree
 		//
-		else if(relation != null && relation.equals("encloses")) {
+		else if(relation.equals(Geonet.SearchResult.Relation.ENCLOSES)) {
 			// eastBL
 			if(eastBL != null) {
-					String lowerTxt = Double.toString(Double.parseDouble(eastBL) - 1);
-					// 180 + 360
-					String upperTxt = "540";
-					Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.EAST, lowerTxt.toLowerCase()));
-					Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.EAST, upperTxt.toLowerCase()));
-					boolean inclusive = true ;
-					RangeQuery eastBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-					BooleanClause.Occur eastBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-					query.add(eastBLQuery, eastBLOccur);
-				}
+				String lowerTerm = Double.toString(Double.parseDouble(eastBL) - 1);
+				String upperTerm = maxBoundingLongitudeValue;
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.EAST,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+			}
 			// westBL
 			if(westBL != null) {
-				// -180 + 360
-				String lowerTxt = "180";
-				String upperTxt = Double.toString(Double.parseDouble(westBL) + 1);
-				Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.WEST, lowerTxt.toLowerCase()));
-				Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.WEST, upperTxt.toLowerCase()));
-				boolean inclusive = true ;
-				RangeQuery westBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-				BooleanClause.Occur westBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-				query.add(westBLQuery, westBLOccur);
+				String lowerTerm = minBoundingLongitudeValue;
+				String upperTerm = Double.toString(Double.parseDouble(westBL) + 1);
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.WEST,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
 			}
 			// northBL
 			if(northBL != null) {
-				String lowerTxt = Double.toString(Double.parseDouble(northBL) - 1);
-				// 90 + 360
-				String upperTxt = "450";
-				Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.NORTH, lowerTxt.toLowerCase()));
-				Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.NORTH, upperTxt.toLowerCase()));
-				boolean inclusive = true ;
-				RangeQuery northBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-				BooleanClause.Occur northBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-				query.add(northBLQuery, northBLOccur);
+				String lowerTerm = Double.toString(Double.parseDouble(northBL) - 1);
+				String upperTerm = maxBoundingLatitudeValue;
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.NORTH,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
 			}
 			// southBL
 			if(southBL != null) {
-				// -90 + 360
-				String lowerTxt = "270";
-				String upperTxt = Double.toString(Double.parseDouble(southBL) + 1);
-				Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.SOUTH, lowerTxt.toLowerCase()));
-				Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.SOUTH, upperTxt.toLowerCase()));
-				boolean inclusive = true ;
-				RangeQuery southBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-				BooleanClause.Occur southBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-				query.add(southBLQuery, southBLOccur);
+				String lowerTerm = minBoundingLatitudeValue;
+				String upperTerm = Double.toString(Double.parseDouble(southBL) + 1);
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.SOUTH,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
 			}
 		}
 		//
 		// fullyEnclosedWithin: metadata rectangle fully enclosed within target rectangle augmented by 1 degree
 		//
-		else if(relation != null && relation.equals("fullyEnclosedWithin")) {
+		else if(relation.equals(Geonet.SearchResult.Relation.ENCLOSEDWITHIN)) {
 			// eastBL
 			if(eastBL != null) {
-					String lowerTxt = Double.toString(Double.parseDouble(westBL) - 1);
-					String upperTxt = Double.toString(Double.parseDouble(eastBL) + 1);
-					Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.EAST, lowerTxt.toLowerCase()));
-					Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.EAST, upperTxt.toLowerCase()));
-					boolean inclusive = true ;
-					RangeQuery eastBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-					BooleanClause.Occur eastBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-					query.add(eastBLQuery, eastBLOccur);
-				}
+				String lowerTerm = Double.toString(Double.parseDouble(westBL) - 1);
+				String upperTerm = Double.toString(Double.parseDouble(eastBL) + 1);
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.EAST,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+			}
 			// westBL
 			if(westBL != null) {
-				String lowerTxt = Double.toString(Double.parseDouble(westBL) - 1);
-				String upperTxt = Double.toString(Double.parseDouble(eastBL) + 1);
-				Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.WEST, lowerTxt.toLowerCase()));
-				Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.WEST, upperTxt.toLowerCase()));
-				boolean inclusive = true ;
-				RangeQuery westBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-				BooleanClause.Occur westBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-				query.add(westBLQuery, westBLOccur);
+				String lowerTerm = Double.toString(Double.parseDouble(westBL) - 1);
+				String upperTerm = Double.toString(Double.parseDouble(eastBL) + 1); 
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.WEST,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
 			}
 			// northBL
 			if(northBL != null) {
-				String lowerTxt = Double.toString(Double.parseDouble(southBL) - 1);
-				String upperTxt = Double.toString(Double.parseDouble(northBL) + 1);
-				Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.NORTH, lowerTxt.toLowerCase()));
-				Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.NORTH, upperTxt.toLowerCase()));
-				boolean inclusive = true ;
-				RangeQuery northBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-				BooleanClause.Occur northBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-				query.add(northBLQuery, northBLOccur);
+				String lowerTerm = Double.toString(Double.parseDouble(southBL) - 1);
+				String upperTerm = Double.toString(Double.parseDouble(northBL) + 1);
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.NORTH,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
 			}
 			// southBL
 			if(southBL != null) {
-				String lowerTxt = Double.toString(Double.parseDouble(southBL) - 1);
-				String upperTxt = Double.toString(Double.parseDouble(northBL) + 1);
-				Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.SOUTH, lowerTxt.toLowerCase()));
-				Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.SOUTH, upperTxt.toLowerCase()));
-				boolean inclusive = true ;
-				RangeQuery southBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-				BooleanClause.Occur southBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-				query.add(southBLQuery, southBLOccur);
+				String lowerTerm = Double.toString(Double.parseDouble(southBL) - 1);
+				String upperTerm = Double.toString(Double.parseDouble(northBL) + 1);
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.SOUTH,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
 			}
 		}
 		//
@@ -985,110 +975,62 @@ public class LuceneQueryBuilder {
 		// rectangle, that is, not true that all the 4 forbidden halfplanes do not contain
 		// the metadata rectangle
 		//
-		else if(relation != null && relation.equals("fullyOutsideOf")) {
+		else if(relation.equals(Geonet.SearchResult.Relation.OUTSIDEOF)) {
 			// eastBL
 			if(westBL != null) {
-					// -180 + 360
-					String lowerTxt = "180";
-					String upperTxt = Double.toString(Double.parseDouble(westBL) + 1);
+				String lowerTerm = minBoundingLongitudeValue;
+				String upperTerm = Double.toString(Double.parseDouble(westBL) + 1);
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.EAST,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+			}
+			// westBL
+			if(eastBL != null) {
+				String lowerTerm = Double.toString(Double.parseDouble(eastBL) - 1);
+				String upperTerm = maxBoundingLongitudeValue; 
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.WEST,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+			}
+			// northBL
+			if(southBL != null) {
+				String lowerTerm = minBoundingLatitudeValue;
+				String upperTerm = Double.toString(Double.parseDouble(southBL) + 1);
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.NORTH,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+			}
+			// southBL
+			if(northBL != null) {
+				String lowerTerm = Double.toString(Double.parseDouble(northBL) - 1);
+				String upperTerm = maxBoundingLatitudeValue;
+				query.add(getBBoxTermRangeQuery(LuceneIndexField.SOUTH,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+			}
+		}
+	}
+	
+	/**
+	 * Build TermRangeQuery for bounding box values
+	 * 
+	 * @param field - The field that holds both lower and upper terms.
+	 * @param lowerTerm - The term text at the lower end of the range
+	 * @param upperTerm - The term text at the upper end of the range
+	 * @param inclusive - If true, the lowerTerm and upperTerm are included in the range.
+	 * @return
+	 */
+	private TermRangeQuery getBBoxTermRangeQuery(String field,
+			String lowerTerm, String upperTerm, boolean inclusive) {
 
-					Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.EAST, lowerTxt.toLowerCase()));
-					Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.EAST, upperTxt.toLowerCase()));
-					boolean inclusive = true ;
-					RangeQuery eastBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-					BooleanClause.Occur eastBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
-					query.add(eastBLQuery, eastBLOccur);
-				}
-			// westBL
-			if(eastBL != null) {
-				String lowerTxt = Double.toString(Double.parseDouble(eastBL) - 1);
-				// 180 + 360
-				String upperTxt = "540";
-				Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.WEST, lowerTxt.toLowerCase()));
-				Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.WEST, upperTxt.toLowerCase()));
-				boolean inclusive = true ;
-				RangeQuery westBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-				BooleanClause.Occur westBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-				query.add(westBLQuery, westBLOccur);
-			}
-			// northBL
-			if(southBL != null) {
-				// -90 + 360
-				String lowerTxt = "270";
-				String upperTxt = Double.toString(Double.parseDouble(southBL) + 1);
-				Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.NORTH, lowerTxt.toLowerCase()));
-				Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.NORTH, upperTxt.toLowerCase()));
-				boolean inclusive = true ;
-				RangeQuery northBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-				BooleanClause.Occur northBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-				query.add(northBLQuery, northBLOccur);
-			}
-			// southBL
-			if(northBL != null) {
-				String lowerTxt = Double.toString(Double.parseDouble(northBL) - 1);
-				// 90 + 360
-				String upperTxt = "540";
-				Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.SOUTH, lowerTxt.toLowerCase()));
-				Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.SOUTH, upperTxt.toLowerCase()));
-				boolean inclusive = true ;
-				RangeQuery southBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-				BooleanClause.Occur southBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-				query.add(southBLQuery, southBLOccur);
-			}
-		}
-		//
-		// overlaps : uses the equivalence
-		// -(a + b + c + d) = -a * -b * -c * -d
-		//
-		else if(relation != null && relation.equals("overlaps")) {
-			// eastBL
-			if(westBL != null) {
-					String lowerTxt = Double.toString(Double.parseDouble(westBL) + 1);
-					// 180 + 360
-					String upperTxt = "540";
-					Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.EAST, lowerTxt.toLowerCase()));
-					Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.EAST, upperTxt.toLowerCase()));
-					boolean inclusive = true ;
-					RangeQuery eastBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-					BooleanClause.Occur eastBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-					query.add(eastBLQuery, eastBLOccur);
-				}
-			// westBL
-			if(eastBL != null) {
-				String upperTxt = Double.toString(Double.parseDouble(eastBL) - 1);
-				// -180 + 360
-				String lowerTxt = "180";
-				Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.WEST, lowerTxt.toLowerCase()));
-				Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.WEST, upperTxt.toLowerCase()));
-				boolean inclusive = true ;
-				RangeQuery westBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-				BooleanClause.Occur westBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-				query.add(westBLQuery, westBLOccur);
-			}
-			// northBL
-			if(southBL != null) {
-				String lowerTxt = Double.toString(Double.parseDouble(southBL) + 1);
-				// 90 + 360
-				String upperTxt = "450";
-				Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.NORTH, lowerTxt.toLowerCase()));
-				Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.NORTH, upperTxt.toLowerCase()));
-				boolean inclusive = true ;
-				RangeQuery northBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-				BooleanClause.Occur northBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-				query.add(northBLQuery, northBLOccur);
-			}
-			// southBL
-			if(northBL != null) {
-				String upperTxt = Double.toString(Double.parseDouble(northBL) - 1);
-				// -90 + 360
-				String lowerTxt = "270";
-				Term lowerTerm = (lowerTxt == null ? null : new Term(LuceneIndexField.SOUTH, lowerTxt.toLowerCase()));
-				Term upperTerm = (upperTxt == null ? null : new Term(LuceneIndexField.SOUTH, upperTxt.toLowerCase()));
-				boolean inclusive = true ;
-				RangeQuery southBLQuery = new RangeQuery(lowerTerm, upperTerm, inclusive);
-				BooleanClause.Occur southBLOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-				query.add(southBLQuery, southBLOccur);
-			}
-		}
+		TermRangeQuery bBoxValueQuery = new TermRangeQuery(field, lowerTerm,
+				upperTerm, inclusive, inclusive);
+
+		return bBoxValueQuery;
+	}
+	
+	
+	/**
+	 * Ignore negative bounding box values 
+	 * 
+	 * @param boundingBoxValue
+	 * @return String
+	 */
+	private String toPositiveValue (String boundingBoxValue) {
+		double tmpBoundingBoxValue = Double.parseDouble(boundingBoxValue) ;
+		boundingBoxValue = new Double(360 + tmpBoundingBoxValue).toString();
+		return boundingBoxValue;
 	}
 }
