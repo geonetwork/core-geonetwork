@@ -315,6 +315,7 @@
       <plugin>
         <groupId>net.alchim31.maven</groupId>
         <artifactId>yuicompressor-maven-plugin</artifactId>
+        <!--  mvn net.alchim31.maven:yuicompressor-maven-plugin:compress -->
         <executions>
           <execution>
             <!-- 
@@ -332,7 +333,11 @@
           <gzip>false</gzip>
           <force>true</force>
           <nomunge>false</nomunge>
-          <jswarn>${minify.verbose}</jswarn>          
+          <jswarn>${minify.verbose}</jswarn>
+          <excludes>
+            <exclude>scripts/ext/**/*.js</exclude>
+            <exclude>scripts/lib/*.js</exclude>
+          </excludes>
           <aggregations>
             <aggregation>
               <output>${geonetwork.webapp.dir}/scripts/lib/gn.libs.js</output>
