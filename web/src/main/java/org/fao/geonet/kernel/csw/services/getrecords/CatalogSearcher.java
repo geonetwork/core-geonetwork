@@ -266,7 +266,7 @@ public class CatalogSearcher {
 			String field = elem.getAttributeValue("fld");
 			String text = elem.getAttributeValue("txt");
 
-			if (_tokenizedFieldSet.contains(field) && text.indexOf(" ") != -1) {
+			if (_tokenizedFieldSet.contains(field) && text.indexOf(' ') != -1) {
 				elem.setName("PhraseQuery");
 
 				StringTokenizer st = new StringTokenizer(text, " ");

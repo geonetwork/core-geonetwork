@@ -183,7 +183,7 @@ public class Info implements Service {
 	// --------------------------------------------------------------------------
 
 	private String normalizeNamespace(Element elem, String name) {
-		int pos = name.indexOf(":");
+		int pos = name.indexOf(':');
 
 		if (pos == -1)
 			return name;

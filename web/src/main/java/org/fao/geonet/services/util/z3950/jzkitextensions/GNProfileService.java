@@ -241,8 +241,6 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
         }
       }
     }
-    else {
-    }
 
     return result;
   }

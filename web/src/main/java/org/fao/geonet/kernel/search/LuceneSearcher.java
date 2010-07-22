@@ -976,7 +976,8 @@ public class LuceneSearcher extends MetaSearcher
 
 		for (int i = 0;i < tokenList.size();i++) {
 			if (i > 0) {
-				result.append(" "+tokenList.get(i));
+				result.append(" ");
+				result.append(tokenList.get(i));
 			} else {
 				result.append(tokenList.get(i));
 			}

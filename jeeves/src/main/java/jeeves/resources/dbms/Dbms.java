@@ -413,7 +413,7 @@ public class Dbms
 
 			break;
 		}
-		return new Element(name.toString()).setText(value);
+		return new Element(name).setText(value);
 	}
 
 //--------------------------------------------------------------------------

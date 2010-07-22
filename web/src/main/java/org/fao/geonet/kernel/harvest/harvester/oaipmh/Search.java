@@ -58,7 +58,7 @@ class Search
 
 		try
 		{
-			if (from != "")
+			if (!from.equals(""))
 			{
 				fromDate = new ISODate(from);
 				from     = fromDate.getDate();
@@ -74,7 +74,7 @@ class Search
 
 		try
 		{
-			if (until != "")
+			if (!until.equals(""))
 			{
 				untilDate = new ISODate(until);
 				until     = untilDate.getDate();

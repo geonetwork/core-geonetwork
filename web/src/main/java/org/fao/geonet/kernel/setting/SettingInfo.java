@@ -76,8 +76,10 @@ public class SettingInfo
 
 		sb.append(host);
 
-		if (port.length() != 0)
-			sb.append(":"+ port);
+		if (port.length() != 0) {
+			sb.append(":");
+			sb.append(port);
+		}
 
 		return sb.toString();
 	}

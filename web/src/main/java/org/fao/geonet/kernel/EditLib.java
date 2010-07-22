@@ -925,7 +925,7 @@ public class EditLib
 
 	public String getUnqualifiedName(String qname)
 	{
-		int pos = qname.indexOf(":");
+		int pos = qname.indexOf(':');
 		if (pos < 0) return qname;
 		else         return qname.substring(pos + 1);
 	}
@@ -934,7 +934,7 @@ public class EditLib
 
 	public String getPrefix(String qname)
 	{
-		int pos = qname.indexOf(":");
+		int pos = qname.indexOf(':');
 		if (pos < 0) return "";
 		else         return qname.substring(0, pos);
 	}

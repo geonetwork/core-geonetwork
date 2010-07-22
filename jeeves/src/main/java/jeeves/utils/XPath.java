@@ -494,10 +494,10 @@ public class XPath {
 		if (lastSlash >= 0) {
 			rslt = xpath.substring(0, lastSlash);
 		}
-		else {
-			// The input path has no slashes, so we can't figure what
-			// to do. Just return null.
-		}
+//		else {
+//			The input path has no slashes, so we can't figure what
+//			to do. Just return null.
+//		}
 		
 		return rslt;
 	}

@@ -358,9 +358,9 @@ public class SearchManager
 	 * deinitializes the Z3950 client searcher
 	 */
 	private void endZ3950() {
-		if (_hssSearchable != null) {
-			// nothing ??
-		}
+//		if (_hssSearchable != null) {
+//      // nothing done ??
+//		}
 	}
 	
 	//-----------------------------------------------------------------------------

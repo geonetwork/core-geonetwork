@@ -591,7 +591,7 @@ public class Geonetwork implements ApplicationHandler
 	private String getHost(String url, String[] values) throws Exception {
 		if (url.contains("postgis")) {
 			String value = values[2];
-			return value.substring(0,value.indexOf(":"));
+			return value.substring(0,value.indexOf(':'));
 		} else if (url.contains("oracle")) {
 			return values[3];
 		} else {
@@ -604,7 +604,7 @@ public class Geonetwork implements ApplicationHandler
 	private String getPort(String url, String values[]) throws Exception {
 		if (url.contains("postgis")) {
 			String value = values[2];
-			return value.substring(value.indexOf(":")+1);
+			return value.substring(value.indexOf(':')+1);
 		} else if (url.contains("oracle")) {
 			return values[4];
 		} else {

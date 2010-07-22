@@ -264,7 +264,7 @@ public class Processor {
 			String hrefUri = xlink.getValue();
 			Log.debug(Log.XLINK_PROCESSOR, "will resolve href '"+hrefUri+"'");
 			String idSearch = null;
-			int hash = hrefUri.indexOf("#");
+			int hash = hrefUri.indexOf('#');
 			if (hash > 0 && hash != hrefUri.length()-1) {
 				idSearch = hrefUri.substring(hash+1);
 				hrefUri = hrefUri.substring(0, hash);

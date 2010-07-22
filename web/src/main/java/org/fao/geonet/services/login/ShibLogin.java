@@ -90,7 +90,7 @@ public class ShibLogin implements Service
 	
 		// Make sure the profile name is an exact match
 		profile = context.getProfileManager().getCorrectCase(profile);
-		if (profile=="")
+		if (profile.equals(""))
 		{
 			profile = ProfileManager.GUEST;
 		}

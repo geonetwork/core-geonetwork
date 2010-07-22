@@ -663,7 +663,7 @@ public class SchemaLoader
 
 				if (schemaLoc.startsWith("http:"))
 				{
-					int lastSlash = schemaLoc.lastIndexOf("/");
+					int lastSlash = schemaLoc.lastIndexOf('/');
 					schemaLoc = schemaLoc.substring(lastSlash +1);
 				}
 				if (!loadedFiles.contains(new File(path + schemaLoc).getCanonicalPath()))
@@ -1074,7 +1074,7 @@ public class SchemaLoader
 	//---------------------------------------------------------------------------
 
 	private String getPrefix(String qname) {
-		int pos = qname.indexOf(":");
+		int pos = qname.indexOf(':');
 		if (pos < 0) return "";
 		else         return qname.substring(0, pos);
 	}
@@ -1082,7 +1082,7 @@ public class SchemaLoader
 	//--------------------------------------------------------------------------
 	
 	public String getUnqualifiedName(String qname) {
-		int pos = qname.indexOf(":");
+		int pos = qname.indexOf(':');
 		if (pos < 0) return qname;
 		else         return qname.substring(pos + 1);
 	}
@@ -1090,7 +1090,7 @@ public class SchemaLoader
 	//---------------------------------------------------------------------------
 
 	private String getProfile(String name) {
-		int pos = name.indexOf(".");
+		int pos = name.indexOf('.');
 		if (pos < 0) return "";
 		else         return name.substring(pos+1);
 	}

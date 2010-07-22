@@ -80,7 +80,8 @@ public class Upload implements Service
 		StringBuffer query = new StringBuffer();
 		query.append("SELECT m.id, m.source, m.uuid ");
 		query.append("FROM   Metadata m ");
-		query.append("WHERE  m.id = " + id);
+		query.append("WHERE  m.id = ");
+		query.append(id);
 
 		String siteId = "unknown";
 		String mdUuid = "unknown";

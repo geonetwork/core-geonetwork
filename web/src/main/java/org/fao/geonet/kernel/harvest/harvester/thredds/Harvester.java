@@ -870,7 +870,8 @@ class Harvester
 			String inputLine;
 			DataInputStream dis = new DataInputStream(conn.getInputStream());
 			while ((inputLine = dis.readLine()) != null) {
-					version.append(inputLine+"\n");	
+					version.append(inputLine);
+					version.append('\n');
 			}
 			result = version.toString();  
 			log.debug("Read from URL:\n"+result);

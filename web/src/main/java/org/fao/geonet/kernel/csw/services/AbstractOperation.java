@@ -176,7 +176,7 @@ public abstract class AbstractOperation
 			while (st.hasMoreTokens())
 			{
 				String ns  = st.nextToken();
-				int    pos = ns.indexOf(":");
+				int    pos = ns.indexOf(':');
 
 				if (pos == -1)
 					hm.put("", ns);
@@ -209,7 +209,7 @@ public abstract class AbstractOperation
 			while(st.hasMoreTokens())
 			{
 				String typeName = st.nextToken();
-				int    pos      = typeName.indexOf(":");
+				int    pos      = typeName.indexOf(':');
 				String prefix   = "";
 				String type     = typeName;
 

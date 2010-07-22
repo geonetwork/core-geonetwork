@@ -215,7 +215,7 @@ public class KeywordBean {
 	}
 	
 	public String getType() {
-		int tmpDotIndex = thesaurus.indexOf(".");
+		int tmpDotIndex = thesaurus.indexOf('.');
 		return thesaurus.substring(tmpDotIndex+1, thesaurus.indexOf(".",tmpDotIndex+1));
 	}
 	

@@ -294,8 +294,8 @@ public class GetDomain extends AbstractOperation implements CatalogService
 			Element pn = new Element("ParameterName", Csw.NAMESPACE_CSW);
 			domainValues.addContent(pn.setText(paramName));
 			
-			String operationName = paramName.substring(0, paramName.indexOf("."));
-			String parameterName = paramName.substring(paramName.indexOf(".")+1);
+			String operationName = paramName.substring(0, paramName.indexOf('.'));
+			String parameterName = paramName.substring(paramName.indexOf('.')+1);
 			
 			CatalogService cs = checkOperation(operationName);
 			values = cs.retrieveValues(parameterName);

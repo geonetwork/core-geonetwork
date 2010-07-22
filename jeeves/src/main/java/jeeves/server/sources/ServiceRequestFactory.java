@@ -189,7 +189,7 @@ public class ServiceRequestFactory
 		if (url == null)
 			return false;
 
-		return url.indexOf("!") != -1;
+		return url.indexOf('!') != -1;
 	}
 
 	//---------------------------------------------------------------------------
@@ -203,7 +203,7 @@ public class ServiceRequestFactory
 
 		url = url.substring(1);
 
-		int pos = url.indexOf("/");
+		int pos = url.indexOf('/');
 
 		if (pos == -1)
 			return null;
@@ -223,7 +223,7 @@ public class ServiceRequestFactory
 		if (url.endsWith("!"))
 			url = url.substring(0, url.length() -1);
 
-		int pos = url.lastIndexOf("/");
+		int pos = url.lastIndexOf('/');
 
 		if (pos == -1)
 			return null;
@@ -333,7 +333,7 @@ public class ServiceRequestFactory
 		//--- with IE and a server running on Linux we still have a path problem
 
 		int pos1 = file.lastIndexOf("\\");
-		int pos2 = file.lastIndexOf("/");
+		int pos2 = file.lastIndexOf('/');
 
 		int pos = Math.max(pos1, pos2);
 

@@ -378,6 +378,7 @@ public class Geonet
 			public static final String OVERLAPS  = "overlaps";
 			public static final String ENCLOSES  = "encloses";
 			public static final String OUTSIDEOF = "fullyOutsideOf";
+			public static final String ENCLOSEDWITHIN = "fullyEnclosedWithin";
 			public static final String INTERSECTION = "intersection";
             public static final String CROSSES = "crosses";
             public static final String TOUCHES = "touches";

@@ -313,7 +313,7 @@ public class Set implements Service
 
 	private String getFileName(String file, boolean small)
 	{
-		int pos = file.lastIndexOf(".");
+		int pos = file.lastIndexOf('.');
 
 		if (pos != -1)
 			file = file.substring(0, pos);

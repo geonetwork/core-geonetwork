@@ -839,7 +839,7 @@ public class DataManager
 		String port    = settingMan.getValue("system/server/port");
 		String locServ = baseURL +"/"+ Jeeves.Prefix.SERVICE +"/en";
 
-		return "http://" + host + (port == "80" ? "" : ":" + port) + locServ;
+		return "http://" + host + (port.equals("80") ? "" : ":" + port) + locServ;
 	}
 
 	//--------------------------------------------------------------------------
@@ -1529,7 +1529,7 @@ public class DataManager
 				continue;
 			}
 
-			int at = ref.indexOf("_");
+			int at = ref.indexOf('_');
 			if (at != -1) {
 				attr = ref.substring(at + 1);
 				ref = ref.substring(0, at);
@@ -1578,7 +1578,7 @@ public class DataManager
 				String value = xmlInputs.get(ref);
 
 				String name = null;
-				int addIndex = ref.indexOf("_");
+				int addIndex = ref.indexOf('_');
 				if (addIndex != -1) {
 					name = ref.substring(addIndex + 1);
 					ref = ref.substring(0, addIndex);
@@ -1870,7 +1870,7 @@ public class DataManager
 			    continue;
 			}
 			
-			int at = ref.indexOf("_");
+			int at = ref.indexOf('_');
 			if (at != -1)
 			{
 				attr = ref.substring(at +1);
@@ -2113,7 +2113,7 @@ public class DataManager
 
 	public void setThumbnail(Dbms dbms, String id, boolean small, String file) throws Exception
 	{
-		int    pos = file.lastIndexOf(".");
+		int    pos = file.lastIndexOf('.');
 		String ext = (pos == -1) ? "???" : file.substring(pos +1);
 
 		Element env = new Element("env");

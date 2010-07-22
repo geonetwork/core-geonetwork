@@ -164,8 +164,10 @@ public class AccessManager
 
 		query.append("SELECT operationId, groupId ");
 		query.append("FROM   OperationAllowed ");
-		query.append("WHERE  groupId IN (" + groupList.toString() + ") ");
-		query.append("AND    metadataId = " + mdId);
+		query.append("WHERE  groupId IN (");
+		query.append(groupList.toString());
+		query.append(") AND    metadataId = ");
+		query.append(mdId);
 
 		Element operations = dbms.select(query.toString());
 
@@ -176,7 +178,8 @@ public class AccessManager
 			query.append("SELECT operationId, groupId ");
 			query.append("FROM   OperationAllowed ");
 			query.append("WHERE  groupId = -1 ");
-			query.append("AND    metadataId = " + mdId);
+			query.append("AND    metadataId = ");
+			query.append(mdId);
 
 			Element therecords = dbms.select(query.toString());
 			if (therecords != null) {

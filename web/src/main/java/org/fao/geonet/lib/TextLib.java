@@ -138,7 +138,7 @@ public class TextLib
 		for (int i=0; i<lines.size(); i++)
 		{
 			String line = lines.get(i).trim();
-			int    pos  = line.indexOf("=");
+			int    pos  = line.indexOf('=');
 
 			if (!line.startsWith("#") && pos != -1)
 			{

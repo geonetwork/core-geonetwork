@@ -84,7 +84,7 @@ public class FieldMapper
 	
 	// Remove any namespaces ... to be validated
 	if (field.contains(":"))
-		field = field.substring(field.indexOf(":")+1);
+		field = field.substring(field.indexOf(':')+1);
 
 	return field.toLowerCase();
     }

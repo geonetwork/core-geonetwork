@@ -260,10 +260,11 @@ public abstract class CatalogRequest
 
 		while(i.hasNext())
 		{
-			sb.append(prefix+i.next());
+			sb.append(prefix);
+			sb.append(i.next());
 
 			if (i.hasNext())
-				sb.append(",");
+				sb.append(',');
 		}
 
 		addParam(param, sb.toString());
@@ -342,7 +343,8 @@ public abstract class CatalogRequest
 
 		while(i.hasNext())
 		{
-			sb.append(prefix + i.next().toString());
+			sb.append(prefix);
+			sb.append(i.next().toString());
 
 			if (i.hasNext())
 				sb.append(" ");
@@ -366,10 +368,11 @@ public abstract class CatalogRequest
 		{
             Object value =  i.next();
 
-            sb.append(prefix + value.toString());
+            sb.append(prefix);
+            sb.append(value.toString());
 
 			if (i.hasNext())
-				sb.append(",");
+				sb.append(',');
 		}
 
 		el.setAttribute(name, sb.toString());

@@ -236,18 +236,18 @@ public class Harvest extends AbstractOperation implements CatalogService {
 		} else {
 			int nMinutes = 0;
 			nMinutes += Integer.parseInt(strEvery.substring(strEvery
-					.indexOf("P") + 1, strEvery.indexOf("Y"))) * 365 * 24 * 60;
+					.indexOf('P') + 1, strEvery.indexOf('Y'))) * 365 * 24 * 60;
 			nMinutes += Integer.parseInt(strEvery.substring(strEvery
-					.indexOf("Y") + 1, strEvery.indexOf("M"))) * 30 * 24 * 60;
+					.indexOf('Y') + 1, strEvery.indexOf('M'))) * 30 * 24 * 60;
 			nMinutes += Integer.parseInt(strEvery.substring(strEvery
-					.indexOf("M") + 1, strEvery.indexOf("D"))) * 24 * 60;
+					.indexOf('M') + 1, strEvery.indexOf('D'))) * 24 * 60;
 			nMinutes += Integer.parseInt(strEvery.substring(strEvery
-					.indexOf("T") + 1, strEvery.indexOf("H"))) * 60;
+					.indexOf('T') + 1, strEvery.indexOf('H'))) * 60;
 			nMinutes += Integer.parseInt(strEvery.substring(strEvery
-					.indexOf("H") + 1, strEvery.indexOf("M", strEvery
-					.indexOf("H"))));
+					.indexOf('H') + 1, strEvery.indexOf('M', strEvery
+					.indexOf('H'))));
 			nMinutes += Integer.parseInt(strEvery.substring(strEvery.indexOf(
-					"M", strEvery.indexOf("H")) + 1, strEvery.indexOf("S"))) / 60;
+					'M', strEvery.indexOf('H')) + 1, strEvery.indexOf('S'))) / 60;
 
 			eleEvery.addContent(Integer.toString(nMinutes));
 			eleOneRun.addContent("false");

@@ -103,7 +103,7 @@ public class LocalServiceRequest extends ServiceRequest
 
 		url = url.substring(1);
 
-		int pos = url.indexOf("/");
+		int pos = url.indexOf('/');
 
 		if (pos == -1)
 		{
@@ -132,7 +132,7 @@ public class LocalServiceRequest extends ServiceRequest
 			url = url.substring(0, url.length() - 1);
 		}
 
-		int pos = url.lastIndexOf("/");
+		int pos = url.lastIndexOf('/');
 
 		if (pos == -1)
 		{
@@ -174,7 +174,7 @@ public class LocalServiceRequest extends ServiceRequest
 			if (name.startsWith("@"))
 			{
 				// Some params should become attrs (indicated with @)
-				name = name.substring(name.indexOf("@") + 1);
+				name = name.substring(name.indexOf('@') + 1);
 				result.setAttribute(name, value);
 			} else
 			{

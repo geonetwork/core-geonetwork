@@ -98,7 +98,7 @@ public class Forward implements Service
 		else
 		{
 			String addr = req.getAddress();
-			int    pos  = addr.lastIndexOf("/");
+			int    pos  = addr.lastIndexOf('/');
 
 			req.setAddress(addr.substring(0, pos +1) + Geonet.Service.XML_LOGIN);
 			req.addParam("username", username);

@@ -46,8 +46,10 @@ public class IO
 
 			String inputLine;
 
-			while ((inputLine = rdr.readLine()) != null)
-				sb.append(inputLine + "\n");
+			while ((inputLine = rdr.readLine()) != null) {
+				sb.append(inputLine);
+				sb.append('\n');
+			}
 
 			rdr.close();
 

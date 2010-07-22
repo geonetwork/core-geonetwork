@@ -88,7 +88,7 @@ class ComplexTypeEntry
 			String attrName = at.getName();
 			if (attrName.equals("name")) {
         name = at.getValue();
-        if ((name.indexOf(":") == -1) && (ei.targetNSPrefix != null))
+        if ((name.indexOf(':') == -1) && (ei.targetNSPrefix != null))
           name = ei.targetNSPrefix + ":" + at.getValue();
       }
 			else if (attrName.equals("abstract")) {

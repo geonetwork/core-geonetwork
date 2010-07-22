@@ -161,7 +161,8 @@ public class JeevesServlet extends HttpServlet
 			res.sendError(400, sb.toString());
 
 			// now stick the stack trace on the end and log the whole lot
-			sb.append("Stack :\n"+Util.getStackTrace(e));
+			sb.append("Stack :\n");
+			sb.append(Util.getStackTrace(e));
 			Log.error(Log.REQUEST,sb.toString());
 			return;
 		} catch (Exception e) {
@@ -173,7 +174,8 @@ public class JeevesServlet extends HttpServlet
 			res.sendError(400, sb.toString());
 
 			// now stick the stack trace on the end and log the whole lot
-			sb.append("Stack :\n"+Util.getStackTrace(e));
+			sb.append("Stack :\n");
+			sb.append(Util.getStackTrace(e));
 			Log.error(Log.REQUEST,sb.toString());
 			return;
 		}

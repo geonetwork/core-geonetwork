@@ -462,7 +462,7 @@ public class Xml
 				//-- remove the first element to ensure XPath fits XML passed with
 				//-- root element
 				if (xpath.startsWith("/")) { 
-					int ind = xpath.indexOf("/",1);
+					int ind = xpath.indexOf('/',1);
 					if (ind != -1) {
 						xpath = xpath.substring(ind+1);
 					} else {

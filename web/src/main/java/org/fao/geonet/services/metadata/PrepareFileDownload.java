@@ -157,7 +157,7 @@ public class PrepareFileDownload implements Service
 							for (int i = 0;i < linkPieces.length;i++) {
 								String lp = linkPieces[i];
 								if (lp.startsWith("access=")) {
-									access = lp.substring(lp.indexOf("=")+1);
+									access = lp.substring(lp.indexOf('=')+1);
 								}
 							}
 					
