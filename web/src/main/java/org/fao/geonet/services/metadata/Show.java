@@ -23,15 +23,12 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.csw.common.Csw;
@@ -43,9 +40,6 @@ import org.fao.geonet.services.Utils;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
-
-import java.util.TimerTask;
-import java.util.Timer;
 
 //=============================================================================
 
@@ -134,12 +128,11 @@ public class Show implements Service
 		}
 
 		//--- increase metadata popularity
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		if (!skipPopularity) {
-			Timer t = new Timer();
-			t.schedule(new IncreasePopularityTask(context, id), 10);
-		}
-		
+		if (!skipPopularity)
+			dm.increasePopularity(dbms, id);
+
 		return elMd;
 	}
 
@@ -152,33 +145,5 @@ public class Show implements Service
 	private boolean skipPopularity;
 	private boolean skipInfo;
 }
-
-class IncreasePopularityTask extends TimerTask {
-     ServiceContext context;
-     Dbms dbms;
-     String id;
-
-     IncreasePopularityTask(ServiceContext context, String id) {
-         this.context = context;
-         this.id = id;
-     }
- 
-     public void run() {
-         try {
-             Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
- 
-             GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-             DataManager dm = gc.getDataManager();
- 
-             dm.increasePopularity(dbms, id);
-
-             //-- explicitly close Dbms resource to avoid exhausting Dbms pool
-             context.getResourceManager().close();
-
-         } catch (Exception e) {
-             e.printStackTrace();
-         }
-     }
- }
 //=============================================================================
 
