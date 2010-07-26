@@ -35,13 +35,15 @@ GeoNetwork.miniapp = function() {
      * Creates the OL Map 
      *
      */
-    var createMap = function() {
-        var options = {
+    var createMap = function(mapOptions) {
+        var options = mapOptions || {
             projection: "EPSG:4326",
             maxExtent: new OpenLayers.Bounds(-180,-90,180,90),
             restrictedExtent: new OpenLayers.Bounds(-180,-90,180,90),
             controls: []
         };
+        
+        if (!options.constrols) options.controls = [];
         miniMap = new OpenLayers.Map(options);
     };
 
@@ -194,27 +196,17 @@ GeoNetwork.miniapp = function() {
 
     // public space:
     return {
-        init: function(miniMapDiv, regionControl) {
+        init: function(miniMapDiv, regionControl, layers, mapOptions) {
             if (!$(miniMapDiv)) return;
             Ext.QuickTips.init();
 
             setRegionControl(regionControl);
             
-            createMap();
+            createMap(mapOptions);
 
-            createWmsLayer(
-                "Borders",
-                "http://localhost:8080/geoserver/wms",
-                {layers: 'gn:gboundaries', transparent: 'true', format: 'image/png'}
-            );
-
-            createWmsLayer(
-                "Ortophoto",
-                "http://localhost:8080/geoserver/wms",
-                {layers: 'gn:world', format: 'image/jpeg'},
-                {isBaseLayer: true}
-            );
-
+            for (var i=0; i<layers.length; i++) {                
+                createWmsLayer(layers[i][0],layers[i][1],layers[i][2],layers[i][3]);
+            }           
            
             createViewport(miniMapDiv);
             addMapControls();
@@ -254,7 +246,12 @@ GeoNetwork.miniapp = function() {
         
         setSynchMinimap: function (minimap) {
             synchMinimap = minimap; 
+        },
+        
+        addWmsLayer: function(name, url, params, options) {
+            createWmsLayer(name, url, params, options);
         }
+        
     };
 }; // end of app
 

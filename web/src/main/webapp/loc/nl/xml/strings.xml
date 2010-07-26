@@ -1024,4 +1024,7 @@
     <searchExactPhrase>Met de exacte woordcombinatie</searchExactPhrase>
     <searchAllWords>Met al deze woorden</searchAllWords>
     <searchWithoutWords>Zonder de woorden</searchWithoutWords>
+    
+    <showMap>Show map</showMap>
+    <mapViewer>Map viewer</mapViewer>
 </strings>

@@ -188,6 +188,20 @@ left:0;
 margin-top:0;
 }
 
+.overlay-scalechooser {
+    width: 'auto';
+    min-width: 170px;
+}
+
+.projchooser {
+    width: 'auto';
+    min-width: 170px;
+}
+
+.x-form-field {
+    min-width: 150px;
+}
+
 div.map-overlay {
 bottom:10px;
 position:absolute;

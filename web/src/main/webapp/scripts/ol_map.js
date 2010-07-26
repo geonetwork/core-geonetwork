@@ -44,8 +44,8 @@ GeoNetwork.app = function() {
      * Creates the OL Map 
      *
      */
-    var createMap = function() {
-        var options = {
+    var createMap = function(mapOptions) {
+        var options = mapOptions || {
             projection: "EPSG:4326",
             maxExtent: new OpenLayers.Bounds(-180,-90,180,90),
             restrictedExtent: new OpenLayers.Bounds(-180,-90,180,90),
@@ -63,8 +63,8 @@ GeoNetwork.app = function() {
     };
 
 
-    var createDummyBaseLayer = function() {
-        var graphic = new OpenLayers.Layer.Image('Dummy', '../../scripts/openlayers/img/blank.gif', new OpenLayers.Bounds(0, 300000, 300000, 625000),
+    var createDummyBaseLayer = function(extent) {
+        var graphic = new OpenLayers.Layer.Image('Dummy', '../../scripts/openlayers/img/blank.gif', extent,
                 map.getSize(), {isBaseLayer: true, displayInLayerSwitcher: false});
         map.addLayer(graphic);
     };
@@ -612,7 +612,13 @@ GeoNetwork.app = function() {
 
         toolbar.push('->');
         
-        toolbar.push({xtype: 'gn_projectionselector', projections: GeoNetwork.ProjectionList, fieldLabel: OpenLayers.i18n("projectionTitle"), map: map});	
+        var projPanel = new Ext.Panel({
+            layout: 'fit',
+            border: false,
+            cls: 'projchooser',
+            items: [{xtype: 'gn_projectionselector', projections: GeoNetwork.ProjectionList, fieldLabel: OpenLayers.i18n("projectionTitle"), map: map}]
+        });
+        toolbar.push(projPanel);	
     };
 
     /**
@@ -1097,27 +1103,18 @@ GeoNetwork.app = function() {
 
     // public space:
     return {
-        init: function() {
+        init: function(layers, mapOptions) {
             Ext.QuickTips.init();
 
-            createMap();
+            createMap(mapOptions);
             
-            //createDummyBaseLayer();
+            //createDummyBaseLayer(mapOptions.maxExtent);
 
            // default layers in the map
-           createWmsLayer(
-                "Borders",
-                "http://localhost:8080/geoserver/wms",
-                {layers: 'gn:gboundaries', transparent: 'true', format: 'image/png'}
-            );
-
-            createWmsLayer(
-                "Ortophoto",
-                "http://localhost:8080/geoserver/wms",
-                {layers: 'gn:world', format: 'image/jpeg'},
-                {isBaseLayer: true}
-            );
-            
+            for (var i=0; i<layers.length; i++) {                
+                createWmsLayer(layers[i][0],layers[i][1],layers[i][2],layers[i][3]);
+            }       
+                       
             // Fix for the toctree to get the correct mappanel (i
             /*GeoExt.MapPanel.guess = function() {
                 return Ext.getCmp('mappanel');
@@ -1199,13 +1196,8 @@ GeoNetwork.app = function() {
 
 
 GeoNetwork.defaultLocale = 'en';
-GeoNetwork.ProjectionList = [['EPSG:4326', 'WGS84 (lat/lon)']];
-GeoNetwork.WMSList = [
-    ['NASA JPL OneEarth Web Mapping Server (WMS)', 'http://wms.jpl.nasa.gov/wms.cgi?'],
-    ['NASA Earth Observations (NEO) WMS', 'http://neowms.sci.gsfc.nasa.gov/wms/wms?'],
-    ['DEMIS World Map Server', 'http://www2.demis.nl/mapserver/wms.asp?'],
-    ['Geoserver', 'http://localhost:8080/geoserver/wms?']
-];
+GeoNetwork.ProjectionList = [];
+GeoNetwork.WMSList = [];
 
 //Ext.onReady(GeoNetwork.app.init, GeoNetwork.app);
 GeoNetwork.mapViewer = new GeoNetwork.app();

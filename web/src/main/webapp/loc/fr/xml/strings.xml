@@ -1019,4 +1019,7 @@
     <searchExactPhrase>Cette expression exacte</searchExactPhrase>
     <searchAllWords>Tous les mots suivants</searchAllWords>
     <searchWithoutWords>Aucun des mots suivants</searchWithoutWords>
+    
+    <showMap>Show map</showMap>
+    <mapViewer>Map viewer</mapViewer>
 </strings>

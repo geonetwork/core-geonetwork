@@ -1001,4 +1001,7 @@
     <searchExactPhrase>Exact phrase</searchExactPhrase>
     <searchAllWords>All of the words</searchAllWords>
     <searchWithoutWords>Without the words</searchWithoutWords>
+    
+    <showMap>Show map</showMap>
+    <mapViewer>Map viewer</mapViewer>
 </strings>

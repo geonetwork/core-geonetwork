@@ -1002,4 +1002,7 @@
     <searchExactPhrase>Frase exacta</searchExactPhrase>
     <searchAllWords>Todas las palabras</searchAllWords>
     <searchWithoutWords>Sin las palabras</searchWithoutWords>
+    
+    <showMap>Mostrar mapa</showMap>
+    <mapViewer>Mapa</mapViewer>
 </strings>

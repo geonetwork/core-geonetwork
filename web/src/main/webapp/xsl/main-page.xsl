@@ -9,8 +9,6 @@
 	<xsl:include href="searchform_advanced.xsl"/>
 	
 	<xsl:template mode="css" match="/">
-		<!--  FIXME : hard coded intermap link.  -->
-		<!--link rel="stylesheet" type="text/css" href="/intermap/intermap-embedded.css?" /-->
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/calendar/calendar-blue2.css"></link>
 		<xsl:call-template name="geoCssHeader"/>
 		<xsl:call-template name="ext-ux-css"/>
@@ -219,7 +217,7 @@
 
                 Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
                 
-				GeoNetwork.mapViewer.init();
+				initMapViewer();
 				var mapViewport =  GeoNetwork.mapViewer.getViewport();
 				
 				var categories = new Ext.Panel({
@@ -292,7 +290,7 @@
 										items: [
 											{region:'north',
 											id: 'north-map-panel',
-											title: 'Map viewer',
+											title: '<xsl:value-of select="/root/gui/strings/mapViewer"/>',
 											border:false,
 											collapsible: true,
 											collapsed: true,
@@ -326,25 +324,126 @@
 							autoScroll: true,
 							items:[viewport]
 						});
-						
-						// Initialize minimaps 
-						GeoNetwork.minimapSimpleSearch.init("ol_minimap1", "region_simple");
-						GeoNetwork.minimapAdvancedSearch.init("ol_minimap2", "region");
 
-                        GeoNetwork.minimapSimpleSearch.setSynchMinimap(GeoNetwork.minimapAdvancedSearch);
-                        GeoNetwork.minimapAdvancedSearch.setSynchMinimap(GeoNetwork.minimapSimpleSearch);
-                        GeoNetwork.CatalogueInterface.init(GeoNetwork.mapViewer.getMap());
-
+                        // Initialize small maps for search
+                        initMapsSearch();
                         
 						showSimpleSearch();
 			});
 			
+            
+            function initMapViewer() {
+                <xsl:choose>
+                    <xsl:when test="/root/gui/config/mapViewer/proj/crs/@code">
+                        var projection = "<xsl:value-of select='/root/gui/config/mapSearch/proj/crs/@code'/>";
+                    </xsl:when>
+                    <xsl:otherwise>
+                        var projection = "EPSG:4326";
+                    </xsl:otherwise>                  
+                </xsl:choose>
+                
+                <xsl:choose>
+                    <xsl:when test="/root/gui/config/mapViewer/bounds">
+                        var extent =  new OpenLayers.Bounds(<xsl:value-of select='/root/gui/config/mapSearch/bounds/@west'/>,<xsl:value-of select='/root/gui/config/mapSearch/bounds/@south'/>,<xsl:value-of select='/root/gui/config/mapSearch/bounds/@east'/>,<xsl:value-of select='/root/gui/config/mapSearch/bounds/@north'/>);
+                    </xsl:when>
+                    <xsl:otherwise>
+                        var extent = new OpenLayers.Bounds(-180,-90,180,90);
+                    </xsl:otherwise>                  
+                </xsl:choose>
+                
+                <xsl:choose>
+                    <xsl:when test="/root/gui/config/mapViewer/restrictedBounds">
+                        var restrictedExtent =  new OpenLayers.Bounds(<xsl:value-of select='/root/gui/config/mapSearch/restrictedBounds/@west'/>,<xsl:value-of select='/root/gui/config/mapSearch/restrictedBounds/@south'/>,<xsl:value-of select='/root/gui/config/mapSearch/restrictedBounds/@east'/>,<xsl:value-of select='/root/gui/config/mapSearch/restrictedBounds/@north'/>);
+                    </xsl:when>
+                    <xsl:otherwise>
+                        var restrictedExtent = extent;
+                    </xsl:otherwise>                  
+                </xsl:choose>
+                
+                var mapOptions = {
+                    projection: projection,
+                    maxExtent: extent,
+                    restrictedExtent: restrictedExtent
+                };
+                
+                // Load layers defined in config file
+                var layers = [];
+                
+                <xsl:for-each select="/root/gui/config/mapViewer/layers/layer">
+                   layers.push(["<xsl:value-of select='@tocName'/>","<xsl:value-of select='@server'/>",<xsl:value-of select='@params'/>, <xsl:value-of select='@options'/>]);                           
+                </xsl:for-each>
+                
+                // Init projection list
+                <xsl:for-each select="/root/gui/config/mapViewer/proj/crs">
+                GeoNetwork.ProjectionList.push(["<xsl:value-of select='@code'/>","<xsl:value-of select='@name'/>"]);                
+                </xsl:for-each>
+                
+                  // Init WMS server list
+                <xsl:for-each select="/root/gui/config/mapViewer/servers/server">
+                GeoNetwork.WMSList.push(["<xsl:value-of select='@name'/>","<xsl:value-of select='@url'/>"]);                
+                </xsl:for-each>
+                
+                // Initialize map viewer 
+               GeoNetwork.mapViewer.init(layers, mapOptions);
+            }
+            
+            function initMapsSearch() {
+                <xsl:choose>
+                    <xsl:when test="/root/gui/config/mapSearch/proj/crs/@code">
+                        var projection = "<xsl:value-of select='/root/gui/config/mapSearch/proj/crs/@code'/>";
+                    </xsl:when>
+                    <xsl:otherwise>
+                        var projection = "EPSG:4326";
+                    </xsl:otherwise>                  
+                </xsl:choose>
+                
+                <xsl:choose>
+                    <xsl:when test="/root/gui/config/mapSearch/bounds">
+                        var extent =  new OpenLayers.Bounds(<xsl:value-of select='/root/gui/config/mapSearch/bounds/@west'/>,<xsl:value-of select='/root/gui/config/mapSearch/bounds/@south'/>,<xsl:value-of select='/root/gui/config/mapSearch/bounds/@east'/>,<xsl:value-of select='/root/gui/config/mapSearch/bounds/@north'/>);
+                    </xsl:when>
+                    <xsl:otherwise>
+                        var extent = new OpenLayers.Bounds(-180,-90,180,90);
+                    </xsl:otherwise>                  
+                </xsl:choose>
+                
+                <xsl:choose>
+                    <xsl:when test="/root/gui/config/mapSearch/restrictedBounds">
+                        var restrictedExtent =  new OpenLayers.Bounds(<xsl:value-of select='/root/gui/config/mapSearch/restrictedBounds/@west'/>,<xsl:value-of select='/root/gui/config/mapSearch/restrictedBounds/@south'/>,<xsl:value-of select='/root/gui/config/mapSearch/restrictedBounds/@east'/>,<xsl:value-of select='/root/gui/config/mapSearch/restrictedBounds/@north'/>);
+                    </xsl:when>
+                    <xsl:otherwise>
+                        var restrictedExtent = extent;
+                    </xsl:otherwise>                  
+                </xsl:choose>
+                
+                var mapOptions = {
+                    projection: projection,
+                    maxExtent: extent,
+                    restrictedExtent: restrictedExtent
+                };
+                
+                // Load layers defined in config file
+                var layers = [];
+                
+                <xsl:for-each select="/root/gui/config/mapSearch/layers/layer">
+                   layers.push(["<xsl:value-of select='@tocName'/>","<xsl:value-of select='@server'/>",<xsl:value-of select='@params'/>, <xsl:value-of select='@options'/>]);                           
+                </xsl:for-each>
+                
+                // Initialize minimaps 
+                GeoNetwork.minimapSimpleSearch.init("ol_minimap1", "region_simple", layers, mapOptions);
+                GeoNetwork.minimapAdvancedSearch.init("ol_minimap2", "region", layers);
+
+                
+                GeoNetwork.minimapSimpleSearch.setSynchMinimap(GeoNetwork.minimapAdvancedSearch);
+                GeoNetwork.minimapAdvancedSearch.setSynchMinimap(GeoNetwork.minimapSimpleSearch);
+                GeoNetwork.CatalogueInterface.init(GeoNetwork.mapViewer.getMap());
+            }
+            
 			function collapseMap(pnl) {
-				Ext.getCmp('main-viewport').layout.north.getCollapsedEl().titleEl.dom.innerHTML = 'Show map';
+				Ext.getCmp('main-viewport').layout.north.getCollapsedEl().titleEl.dom.innerHTML = '<xsl:value-of select="/root/gui/strings/showMap"/>';
 			}
 			
 			function expandMap(pnl) {
-				Ext.getCmp('main-viewport').layout.north.getCollapsedEl().titleEl.dom.innerHTML = 'Map viewer';
+				Ext.getCmp('main-viewport').layout.north.getCollapsedEl().titleEl.dom.innerHTML = '<xsl:value-of select="/root/gui/strings/mapViewer"/>';
 			}
 		</script>
 	</xsl:template>
