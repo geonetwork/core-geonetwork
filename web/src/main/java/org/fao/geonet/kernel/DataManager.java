@@ -939,7 +939,7 @@ public class DataManager
 	public void increasePopularity(Dbms dbms, String id) throws Exception
 	{
 		String query = "UPDATE Metadata SET popularity = popularity +1 WHERE "+
-							"id = ? AND isHarvested='n'";
+							"id = ?";
 
 		dbms.execute(query, new Integer(id));
 		indexMetadata(dbms, id);
