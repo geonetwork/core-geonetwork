@@ -393,7 +393,7 @@ public class Geonetwork implements ApplicationHandler
 		
 		// Create db if empty
 		if (!Lib.db.touch(dbms)) {
-			logger.info("      " + dbURL + " is an empry database (Metadata table not found).");
+			logger.info("      " + dbURL + " is an empty database (Metadata table not found).");
 			
 			// Do we need to remove object before creating the database ?
 			Lib.db.removeObjects(dbms, path);
