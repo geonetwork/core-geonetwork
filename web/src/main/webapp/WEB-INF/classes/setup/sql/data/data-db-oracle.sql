@@ -9,25 +9,25 @@ REM ======================================================================
 REM === Delete tables content
 REM ======================================================================
 
-TRUNCATE MetadataCateg;
-TRUNCATE MetadataRating;
-TRUNCATE OperationAllowed;
-TRUNCATE Metadata;
-TRUNCATE CategoriesDes;
-TRUNCATE Categories;
-TRUNCATE IsoLanguagesDes;
-TRUNCATE IsoLanguages;
-TRUNCATE RegionsDes;
-TRUNCATE Regions;
-TRUNCATE UserGroups;
-TRUNCATE GroupsDes;
-TRUNCATE Groups;
-TRUNCATE Users;
-TRUNCATE OperationsDes;
-TRUNCATE Operations;
-TRUNCATE Languages;
-TRUNCATE Settings;
-TRUNCATE Relations;
+DELETE FROM MetadataCateg;
+DELETE FROM MetadataRating;
+DELETE FROM OperationAllowed;
+DELETE FROM Metadata;
+DELETE FROM CategoriesDes;
+DELETE FROM Categories;
+DELETE FROM IsoLanguagesDes;
+DELETE FROM IsoLanguages;
+DELETE FROM RegionsDes;
+DELETE FROM Regions;
+DELETE FROM UserGroups;
+DELETE FROM GroupsDes;
+DELETE FROM Groups;
+DELETE FROM Users;
+DELETE FROM OperationsDes;
+DELETE FROM Operations;
+DELETE FROM Languages;
+DELETE FROM Settings;
+DELETE FROM Relations;
 
 
 REM ======================================================================
