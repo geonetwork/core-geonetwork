@@ -61,6 +61,7 @@ import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.thumbnail.Set;
+import org.fao.geonet.util.FileCopyMgr;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -691,16 +692,13 @@ class Harvester
      *                   
      */
 	private void unsetThumbnail (String id){
-		//log.debug("  - Removing thumbnail for layer metadata: " + id);
+		log.debug("  - Removing thumbnail for layer metadata: " + id);
 
 		try {
-			String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + id;
-			
-			if (!new File(file).delete())
-				log.error("  - Failed to remove thumbnail for metadata: " + id);
-			
+			String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
+			FileCopyMgr.removeDirectoryOrFile(new File(file));
 		} catch (Exception e) {
-			log.warning("  - Failed to remove thumbnail for metadata: " + e.getMessage());
+			log.warning("  - Failed to remove thumbnail for metadata: " + id + ", error: " + e.getMessage());
 		}
 	}
 
