@@ -298,6 +298,8 @@
 		<fo:table table-layout="fixed" width="100%">
 			<fo:table-column
 				column-width="proportional-column-width(1)" />
+			<fo:table-column
+				column-width="proportional-column-width(1)" />
 			<fo:table-body>
 				<fo:table-row>
 					<fo:table-cell display-align="left" background-color="#064377">
@@ -310,7 +312,8 @@
                                     </xsl:attribute>
 							</fo:external-graphic>
 					   </fo:block>
-					</fo:table-cell><fo:table-cell display-align="right" background-color="#064377">
+					</fo:table-cell>
+					<fo:table-cell display-align="right" background-color="#064377">
 					   <fo:block text-align="right">
                     		<fo:external-graphic>
 								<xsl:attribute name="src">
