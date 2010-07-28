@@ -29,6 +29,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -84,13 +85,23 @@ public class XmlSearch implements Service
 		if (remote)	 searcher = searchMan.newSearcher(SearchManager.Z3950,  Geonet.File.SEARCH_Z3950_CLIENT);
 			else      searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
 
-		searcher.search(context, params, _config);
+		searcher.search(context, elData, _config);
+		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
 
-		params.addContent(new Element("fast").setText("true"));
-		params.addContent(new Element("from").setText("1"));
-		params.addContent(new Element("to").setText(searcher.getSize() +""));
+		elData.addContent(new Element("fast").setText("true"));
+		elData.addContent(new Element("from").setText("1"));
+		// FIXME ? from and to parameter could be used but if not
+		// set, the service return the whole range of results
+		// which could be huge in non fast mode ? 
+		elData.addContent(new Element("to").setText(searcher.getSize() +""));
 
-		return searcher.present(context, params, _config);
+		Element result = searcher.present(context, elData, _config);
+		
+		// Update result elements to present
+		SelectionManager.updateMDResult(context.getUserSession(), result);
+
+		
+		return result;
 	}
 }
 
