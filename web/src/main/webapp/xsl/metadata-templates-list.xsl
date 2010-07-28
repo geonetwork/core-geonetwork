@@ -226,7 +226,7 @@
 	<xsl:template name="display-templates">
 		<xsl:comment>templates</xsl:comment>		
 		<div id="template-list" class="select-metadata-hits" style="margin:30px 0px 30px 0px;">
-			<table id="templates-table" style="table-layout: fixed; width: 100%;">
+			<table id="templates-table" style="table-layout: fixed; width: 100%;" class="text-aligned-left">
 				<col style="width:300px;"/>
 				<xsl:for-each select="/root/gui/templates/record">
 					<xsl:sort select="displayorder" data-type="number"/>

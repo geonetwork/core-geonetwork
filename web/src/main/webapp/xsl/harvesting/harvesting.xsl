@@ -88,6 +88,9 @@
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="editPanel">
+    <table class="text-aligned-left">
+    <tr>
+        <td>
 		<xsl:call-template name="editPanel-GN"/>
 		<xsl:call-template name="editPanel-WD"/>
 		<xsl:call-template name="editPanel-GN20"/>
@@ -95,11 +98,14 @@
 		<xsl:call-template name="editPanel-OGCWXS"/>
 		<xsl:call-template name="editPanel-thredds"/>
 		<xsl:call-template name="editPanel-metadatafragments"/>
-    <xsl:call-template name="editPanel-Z3950"/>
+        <xsl:call-template name="editPanel-Z3950"/>
 		<xsl:call-template name="editPanel-OAI"/>
 		<xsl:call-template name="editPanel-Arcsde"/>
 		<xsl:call-template name="editPanel-Filesystem"/>
-	</xsl:template>
+        </td>
+    </tr>
+    </table>
+    </xsl:template>
 
 	<!-- ============================================================================================= -->
 	

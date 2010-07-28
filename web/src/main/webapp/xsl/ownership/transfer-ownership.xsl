@@ -55,7 +55,7 @@
 		<div id="groups" style="margin-top:4px;">		
 			<div width="100%" class="dots"/>
 		
-			<table id="group.list">
+			<table id="group.list" class="text-aligned-left">
 				<tr>
 					<th class="padded"><b><xsl:value-of select="/root/gui/ownership/sourceGroup"/></b></th>
 					<th class="padded"><b><xsl:value-of select="/root/gui/ownership/targetGroup"/></b></th>

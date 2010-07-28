@@ -53,7 +53,7 @@
 
 	<xsl:template name="adminform">
 		<form name="AdminForm" method="get">
-			<table id="myTable">
+			<table id="myTable" class="text-aligned-left">
 				<tr><td colspan="4"><hr color="#0263b2"/></td></tr>
 				
 				<tr>
@@ -119,7 +119,7 @@
 	<xsl:template name="uploadform">
 		<form name="UploadForm" accept-charset="UTF-8" method="POST" action="{/root/gui/locService}/thesaurus.upload" enctype="multipart/form-data">
 		
-			<table align="left">
+			<table align="left"  class="text-aligned-left">
 				<tr>
   				<td class="padded-content">
   					<table>

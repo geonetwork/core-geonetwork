@@ -176,7 +176,7 @@
 			<xsl:with-param name="content">
 				<form name="xmlinsert" accept-charset="UTF-8" method="post" action="{/root/gui/locService}/metadata.insert" enctype="multipart/form-data">
 					<input type="submit" style="display: none;" />
-					<table id="gn.insertTable">
+					<table id="gn.insertTable" class="text-aligned-left">
 						<tr>
                             <th class="padded" valign="top"><xsl:value-of select="/root/gui/strings/insertMode"/></th>
                             <td>

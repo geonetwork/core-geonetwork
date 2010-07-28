@@ -103,7 +103,7 @@
 	<xsl:template name="form">
 		<form name="userupdateform" accept-charset="UTF-8" action="{/root/gui/locService}/user.update?operation=newuser" method="post">
 			<input type="hidden" name="id" value="{/root/response/record/id}"/>
-			<table>
+			<table class="text-aligned-left">
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/username"/> (*)</th>
 					<td class="padded"><input class="content" type="text" name="username" value="{/root/response/record/username}"/></td>

@@ -25,7 +25,7 @@
 		<form name="xmlbatch" accept-charset="UTF-8" action="{/root/gui/locService}/util.import" method="post">
 			<input type="submit" style="display: none;" />
 			
-			<table>
+			<table class="text-aligned-left">
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/directory"/></th>
 					<td class="padded"><input class="content" type="text" size="50" name="dir"/></td>

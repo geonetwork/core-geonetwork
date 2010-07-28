@@ -57,7 +57,7 @@
 			<xsl:if test="/root/response/record/id">
 				<input type="hidden" name="id" size="-1" value="{/root/response/record/id}"/>
 			</xsl:if>
-			<table>
+			<table class="text-aligned-left">
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/name"/></th>
 					<td class="padded"><input class="content" type="text" name="name" value="{//record/name}" size="60"/></td>

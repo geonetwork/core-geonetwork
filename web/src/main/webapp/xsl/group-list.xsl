@@ -38,7 +38,7 @@
 	-->
 	<xsl:template name="form">
 		<div class="important"><xsl:value-of select="/root/gui/strings/localizationHelp"/></div>
-		<table width="70%">
+		<table width="70%" class="text-aligned-left">
 			<tr>
 				<th class="padded, bottom_border"><xsl:value-of select="/root/gui/strings/name"/></th>
 				<th class="padded, bottom_border"><xsl:value-of select="/root/gui/strings/descriptionTab"/></th>

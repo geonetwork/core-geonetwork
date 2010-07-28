@@ -194,6 +194,10 @@ td.content {
 	padding: 5px;
 }
 
+.text-aligned-left {
+    text-align: left;
+}
+
 .hit {
 	border-top: 1px solid silver;
 	padding-top: 10px;	

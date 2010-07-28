@@ -53,7 +53,7 @@
 			<input type="hidden" name="username" value="{/root/response/record/username}"/>
 			<input type="hidden" name="password" value="password"/>
 			<input type="submit" style="display: none;" />
-			<table>
+			<table class="text-aligned-left">
 				<tr>
           <th class="padded"><xsl:value-of select="/root/gui/strings/username"/></th>
           <td class="padded"><xsl:value-of select="/root/response/record/username"/></td>

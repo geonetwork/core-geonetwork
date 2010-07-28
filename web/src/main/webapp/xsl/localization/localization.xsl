@@ -37,7 +37,7 @@
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="panel">
-		<table width="100%" height="100%">
+		<table width="100%" height="100%" class="text-aligned-left">
 			<tr>
 				<td><xsl:call-template name="entityView"/></td>
 				<td><xsl:call-template name="entityData"/></td>

@@ -23,7 +23,7 @@
 	<xsl:template name="form">
 		<form name="searchForm" accept-charset="UTF-8" action="{/root/gui/locService}/metadata.searchunused" method="post">
 			<input type="submit" style="display: none;" />
-			<table>
+			<table width="70%" class="text-aligned-left">
 				<tr>
 					<td colspan="2">
 						<xsl:value-of select="/root/gui/unused/maxTimeMsg"/>

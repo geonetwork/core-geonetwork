@@ -58,7 +58,7 @@
 	
 	<xsl:template name="template-form">
 		<form name="createform" accept-charset="UTF-8" action="metadata.create" method="post">
-			<table>
+			<table class="text-aligned-left">
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/template"/></th>
 					<td class="padded">

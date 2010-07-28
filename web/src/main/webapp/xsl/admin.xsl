@@ -113,7 +113,7 @@
 		<xsl:call-template name="formLayout">
 			<xsl:with-param name="title" select="/root/gui/strings/admin"/>
 			<xsl:with-param name="content">
-				<table width="100%">
+				<table width="100%" class="text-aligned-left">
 				
 					<!-- metadata services -->
 					<xsl:variable name="mdServices">
