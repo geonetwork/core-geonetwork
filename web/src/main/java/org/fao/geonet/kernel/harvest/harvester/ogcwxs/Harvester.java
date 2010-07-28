@@ -435,11 +435,6 @@ class Harvester
 				// Add operatesOn element at the end of identification section.
 				Element op = new Element ("operatesOn", srv);
 				op.setAttribute("uuidref", layer.uuid);
-				// FIXME : 
-				// 	* This could use URN instead of URL. But then, how to resolve URN ?
-				//  * This should use UUID instead
-				op.setAttribute("href", siteUrl + "/srv/en/metadata.show?id=" + layer.id, xlink);
-				op.setAttribute("title", layer.name, xlink);
 				
 				root.addContent(op);
 				
