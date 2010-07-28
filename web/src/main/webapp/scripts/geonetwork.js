@@ -164,8 +164,8 @@ function get_cookie ( cookie_name )
 	    	id = "";
 	    }
 	    $(name+'Ele'+id).style.width = $(name+id).getWidth();
-	    $(name+'Ele'+id).style.top = $(name+id).positionedOffset().top + $(name+id).getHeight();
-	    $(name+'Ele'+id).style.left = $(name+id).positionedOffset().left;
+	    $(name+'Ele'+id).style.top = $(name+id).positionedOffset().top + $(name+id).getHeight() + "px";
+	    $(name+'Ele'+id).style.left = $(name+id).positionedOffset().left + "px";
 	}
 
 
