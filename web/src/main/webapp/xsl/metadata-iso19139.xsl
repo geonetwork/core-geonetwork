@@ -2927,14 +2927,14 @@
 				</keyword>
 			</xsl:for-each>
 
-			<xsl:if test="gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
+			<xsl:for-each select="gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
 				<geoBox>
-					<westBL><xsl:value-of select="gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude"/></westBL>
-					<eastBL><xsl:value-of select="gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude"/></eastBL>
-					<southBL><xsl:value-of select="gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude"/></southBL>
-					<northBL><xsl:value-of select="gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude"/></northBL>
+					<westBL><xsl:value-of select="gmd:westBoundLongitude"/></westBL>
+					<eastBL><xsl:value-of select="gmd:eastBoundLongitude"/></eastBL>
+					<southBL><xsl:value-of select="gmd:southBoundLatitude"/></southBL>
+					<northBL><xsl:value-of select="gmd:northBoundLatitude"/></northBL>
 				</geoBox>
-			</xsl:if>
+			</xsl:for-each>
 
 			<xsl:for-each select="*/gmd:MD_Constraints/*">
 				<Constraints>
