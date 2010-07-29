@@ -23,13 +23,10 @@ Ext.namespace('GeoNetwork');
  * Class: GeoNetwork.SingletonWindowManager
  *      Singleton window manager for windows
  *
- * Uses:
- *  - {Prototype.Hash}
  */
 GeoNetwork.SingletonWindowManager = function() {
     // private
-    var windows = new Hash();
-
+    var windowsList = new Object();    // Associative array 
     var hiddenWindows = new Array();
 
     // public
@@ -37,27 +34,27 @@ GeoNetwork.SingletonWindowManager = function() {
         registerWindow: function(id, classz, configz) {
             var window1 = new classz(configz);
 
-            windows.set(id, {windowz: window1, classz: classz, configz: configz});
+            windowsList[id] = {windowz: window1, classz: classz, configz: configz};
         },
 
         getWindow: function(id) {
-            if (windows.get(id)) {
-                return windows.get(id).windowz;
+            if (windowsList[id]) {
+                return windowsList[id].windowz;
             } else {
                 return null;
             }
         },
 
         showWindow: function(id) {
-            if (windows.get(id)) {
+            if (windowsList[id]) {
                 if (Ext.isEmpty(Ext.getCmp(id))) {
-                	var w =  windows.get(id);
+                	var w =  windowsList[id];
 
                     var ww = new w.classz(w.configz);
 
-                    windows.set(id, {windowz: ww, classz: w.classz, configz: w.configz});
+                    windowsList[id] = {windowz: ww, classz: w.classz, configz: w.configz};
                 }
-                windows.get(id).windowz.show();
+                windowsList[id].windowz.show();
                 return true;
             } else {
                 return false;
@@ -65,18 +62,17 @@ GeoNetwork.SingletonWindowManager = function() {
         },
 
         hideAllWindows: function() {
-            windows.each(function(data) {
-                if (data.value.windowz.isVisible()) {
-                    data.value.windowz.setVisible(false);
-                    hiddenWindows[hiddenWindows.length] = data.key;
+            for(key in windowsList) {
+                if (windowsList[key].windowz.isVisible()) {
+                    windowsList[key].windowz.setVisible(false);
+                    hiddenWindows[hiddenWindows.length] = key;
                 }
-            })
-
+            }                 
         },
 
         restoreHiddenWindows: function() {
-						for (var index = 0, len = hiddenWindows.length; index < len; ++index) {
-          		windows.get(hiddenWindows[index]).windowz.setVisible(true);
+			for (var index = 0, len = hiddenWindows.length; index < len; ++index) {
+          		windowsList[hiddenWindows[index]].windowz.setVisible(true);
           	}
           	hiddenWindows = new Array();
         }
