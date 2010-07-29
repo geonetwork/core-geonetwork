@@ -1165,6 +1165,23 @@ GeoNetwork.app = function() {
                      evt.cancel=true;
                 }
             });            
+            
+            map.events.register('moveend', map, function (e) {
+                GeoNetwork.MapStateManager.stoteMapExtextState(map);
+            });
+            
+            map.events.register('addlayer', map, function (layer) {
+                GeoNetwork.MapStateManager.storeMapLayersState(map);
+            });
+            
+            map.events.register('removelayer', map, function (layer) {
+                GeoNetwork.MapStateManager.storeMapLayersState(map);
+            });
+            
+            map.events.register('changelayer', map, function (layer) {
+                GeoNetwork.MapStateManager.storeMapLayersState(map);
+            });
+               
         },
 
         /**

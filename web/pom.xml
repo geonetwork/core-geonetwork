@@ -351,6 +351,7 @@
               <output>${geonetwork.webapp.dir}/scripts/lib/gn.libs.map.js</output>
               <includes>
 				<include>${geonetwork.build.dir}/scripts/map/core/OGCUtil.js</include>
+                <include>${geonetwork.build.dir}/scripts/map/core/MapStateManager.js</include>
 				<include>${geonetwork.build.dir}/scripts/map/core/CatalogueInterface.js</include>
 				<include>${geonetwork.build.dir}/scripts/map/core/WMCManager.js</include>
                 
@@ -362,6 +363,9 @@
 				<include>${geonetwork.build.dir}/scripts/map/Format/WMSCapabilities_1_1_1.js</include>    
                 
 				<include>${geonetwork.build.dir}/scripts/map/lang/en.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/lang/de.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/lang/nl.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/lang/fr.js</include>
                 
                 <include>${geonetwork.build.dir}/scripts/map/Ext.ux/form/DateTime.js</include>
                 

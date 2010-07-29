@@ -64,6 +64,7 @@
                 <script type="text/javascript" src="{/root/gui/url}/scripts/mapfish/MapFish.js"></script>
 
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/core/OGCUtil.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/core/MapStateManager.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/core/CatalogueInterface.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/core/WMCManager.js"></script>
 
@@ -216,6 +217,8 @@
                 $("loading").hide();
 
                 Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
+                
+                GeoNetwork.MapStateManager.loadMapState();
                 
 				initMapViewer();
 				var mapViewport =  GeoNetwork.mapViewer.getViewport();
@@ -436,6 +439,7 @@
                 GeoNetwork.minimapSimpleSearch.setSynchMinimap(GeoNetwork.minimapAdvancedSearch);
                 GeoNetwork.minimapAdvancedSearch.setSynchMinimap(GeoNetwork.minimapSimpleSearch);
                 GeoNetwork.CatalogueInterface.init(GeoNetwork.mapViewer.getMap());
+                GeoNetwork.MapStateManager.applyMapState(GeoNetwork.mapViewer.getMap());
             }
             
 			function collapseMap(pnl) {
