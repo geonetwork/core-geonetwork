@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -164,10 +165,13 @@ public class Processor {
 
 		if (remoteFragment == null) {
 			Log.info(Log.XLINK_PROCESSOR, "cache MISS on "+uri.toLowerCase());
-			URL url = new URL(uri.replaceAll("&amp;", "&"));
-			URLConnection conn = url.openConnection();
-			conn.setConnectTimeout(1000);
+			
 			try {
+				URL url = new URL(uri.replaceAll("&amp;", "&"));
+				
+				URLConnection conn = url.openConnection();
+				conn.setConnectTimeout(1000);
+			
 				BufferedInputStream in = new BufferedInputStream(conn.getInputStream());
 				try {
 					remoteFragment = Xml.loadStream(in);
@@ -175,18 +179,21 @@ public class Processor {
 				} finally {
 					in.close();
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {	// MalformedURLException, IOException
 				synchronized(Processor.class) {
 					failures.add (System.currentTimeMillis());
 				}
-				Log.error(Log.XLINK_PROCESSOR,"failed on "+uri+" with exception message "+e.getMessage());
+				Log.error(Log.XLINK_PROCESSOR,"Failed on " + uri 
+						+ " with exception message " + e.getMessage());
 			}
+			
 			if (remoteFragment != null) {
 				xlinkCache.put(uri.toLowerCase(), remoteFragment);
 				Log.debug(Log.XLINK_PROCESSOR,"cache miss for "+uri);
 			} else {
 				return null;
-			}
+			}	
+					
 		} else {
 			Log.info(Log.XLINK_PROCESSOR, "cache HIT on "+uri.toLowerCase());
 		}
@@ -195,13 +202,19 @@ public class Processor {
 
 		Element res = null;
 		if (idSearch != null) {
-			res = Xml.selectElement(remoteFragment, "*//*[@id='"+idSearch+"']");
-			if (res != null) {
-				res = (Element)res.clone();
-				res.removeAttribute("id");
+			String xpath = "*//*[@id='" + idSearch + "']";
+			try {
+				res = Xml.selectElement(remoteFragment, xpath);
+				if (res != null) {
+					res = (Element)res.clone();
+					res.removeAttribute("id");
+				}	
+			} catch (Exception e) {
+				Log.debug(Log.XLINK_PROCESSOR,"Failed to search for remote fragment using " + xpath + ", error" + e.getMessage());
+				return null;
 			}
 		} else {
-     	res = (Element)remoteFragment.clone();
+			res = (Element)remoteFragment.clone();
 		}
 		Log.debug(Log.XLINK_PROCESSOR,"Read:"+Xml.getString(res));
 		return res;
@@ -338,7 +351,13 @@ public class Processor {
 				} else {
 					try {
 						Element remoteFragment = resolveXLink(hrefUri, idSearch);
+						
+						// Not resolved in cache or using href
+						if (remoteFragment == null)
+							return;
+						
 						searchXLink(remoteFragment, action);
+						
 						if (show.equalsIgnoreCase(XLink.SHOW_REPLACE)) {
 							// replace this element with the fragment
 						 	if (!action.equals(ACTION_DETACH) && show.equalsIgnoreCase(XLink.SHOW_REPLACE)) {
