@@ -443,7 +443,8 @@
 	<metadata-template-order>Sort Templates</metadata-template-order>	
 	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>
 	<metadata-template-add-default>Add templates</metadata-template-add-default>	
-	<metadata-template-add-default-desc>Add default templates</metadata-template-add-default-desc>		
+	<metadata-template-add-default-desc>Add default templates</metadata-template-add-default-desc>
+    <metadata-template-select>Select the templates to add</metadata-template-select>
 	<metadata>Metadados</metadata>
 	<metadataAdded>Metadados com o ID seguinte foram adicionados:</metadataAdded>
 	<metadataDeleted>Metadados com o ID seguinte foram apagados:</metadataDeleted>

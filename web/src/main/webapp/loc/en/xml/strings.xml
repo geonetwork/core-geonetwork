@@ -443,7 +443,8 @@
 	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>	
 	<metadata-template-add-default>Add templates</metadata-template-add-default>	
 	<metadata-template-add-default-desc>Add default templates</metadata-template-add-default-desc>	
-	<metadata>Metadata</metadata>
+	<metadata-template-select>Select the templates to add</metadata-template-select>	
+    <metadata>Metadata</metadata>
 	<metadataAdded>Metadata added with ID:</metadataAdded>
 	<metadataDeleted>Metadata deleted with ID:</metadataDeleted>
 	<metadataInsertResults>Results of Metadata Import</metadataInsertResults>

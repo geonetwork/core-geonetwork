@@ -442,7 +442,8 @@
 	<metadata-template-order>Ordenar plantillas</metadata-template-order>
 	<metadata-template-order-desc>Ordenar sus plantillas</metadata-template-order-desc>
 	<metadata-template-add-default>Añadir plantillas</metadata-template-add-default>	
-	<metadata-template-add-default-desc>Añadir plantillas por defecto</metadata-template-add-default-desc>		
+	<metadata-template-add-default-desc>Añadir plantillas por defecto</metadata-template-add-default-desc>
+    <metadata-template-select>Seleccione las plantillas a añadir</metadata-template-select>
 	<metadata>Metadatos</metadata>
 	<metadataAdded>Metadato añadido con ID:</metadataAdded>
 	<metadataDeleted>Metadato borrado con ID:</metadataDeleted>

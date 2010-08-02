@@ -442,7 +442,8 @@
 	<metadata-template-order>Sort Templates</metadata-template-order>	
 	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>
 	<metadata-template-add-default>Add templates</metadata-template-add-default>	
-	<metadata-template-add-default-desc>Add default templates</metadata-template-add-default-desc>		
+	<metadata-template-add-default-desc>Add default templates</metadata-template-add-default-desc>
+    <metadata-template-select>Select the templates to add</metadata-template-select>
 	<metadata>元数据</metadata>
 	<metadataAdded>元数据已添加，其ID为：</metadataAdded>
 	<metadataDeleted>元数据已删除，其ID为：</metadataDeleted>

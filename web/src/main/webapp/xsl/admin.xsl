@@ -23,6 +23,19 @@
             }
 
 			function addTemplate() {
+
+                if (!(($('all').checked) ||
+                      ($('iso19115').checked) ||
+                      ($('iso19139').checked) ||
+                      ($('iso19110').checked) ||
+                      ($('dublin-core').checked) ||
+                      ($('fgdc-std').checked)            
+                    )) {
+
+                    alert("<xsl:value-of select="/root/gui/strings/metadata-template-select"/>");
+                    return;
+                }
+
 				var wait = 'waitTpl';
 				var btn = 'tplBtn';
 				$(wait).style.display = 'block';
