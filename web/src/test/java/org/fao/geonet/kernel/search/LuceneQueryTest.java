@@ -559,7 +559,7 @@ public class LuceneQueryTest extends TestCase {
 		// build lucene query
 		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
-		assertEquals("+_isTemplate:n +source:f74e4ccf-755a-48ef-bedf-990f9872298b", query.toString());
+		assertEquals("+_isTemplate:n +_source:f74e4ccf-755a-48ef-bedf-990f9872298b", query.toString());
 	}
 
 	/**

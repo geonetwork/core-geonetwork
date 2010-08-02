@@ -26,7 +26,7 @@ public class LuceneIndexField {
 	public static final String NORTH = "northBL";
 	public static final String OWNER = "_owner";
 	public static final String PROTOCOL = "protocol";
-	public static final String SOURCE = "source";
+	public static final String SOURCE = "_source";
 	public static final String SOUTH = "southBL";
 	public static final String TITLE = "title";
 	public static final String TOPIC_CATEGORY = "topicCat";
