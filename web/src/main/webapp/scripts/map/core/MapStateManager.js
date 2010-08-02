@@ -21,11 +21,11 @@ Ext.namespace('GeoNetwork', 'GeoNetwork.MapStateManager');
 
 GeoNetwork.MapStateManager = function() {
     // private
-    const LAYER_SEP = "@";
-    const DATA_FIELD_SEP = "|";
+    var LAYER_SEP = "@";
+    var DATA_FIELD_SEP = "|";
     
-    const COOKIE_MAPLAYERS = "maplayers"
-    const COOKIE_MAPEXTENT = "mapextent"
+    var COOKIE_MAPLAYERS = "maplayers";
+    var COOKIE_MAPEXTENT = "mapextent";
 
     var mapLayers = "";
     var mapExtent = "";
