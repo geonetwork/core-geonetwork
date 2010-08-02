@@ -21,7 +21,7 @@
 			<xsl:call-template name="adv_when"></xsl:call-template>
 		
 			<xsl:comment>ADV SEARCH: INSPIRE</xsl:comment>
-			<xsl:if test="/root/gui/config/inspire = '1'">
+			<xsl:if test="/root/gui/env/inspire/enable = 'true'">
 				<xsl:call-template name="adv_inspire"></xsl:call-template>
 			</xsl:if>
 			

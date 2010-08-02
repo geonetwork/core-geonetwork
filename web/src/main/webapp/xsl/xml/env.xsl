@@ -22,6 +22,7 @@
 		<xsl:variable name="platform" select="children/platform/children"/>
 		<xsl:variable name="shib"       select="children/shib/children"/>
 		<xsl:variable name="shibAttrib" select="$shib/attrib/children"/>
+        <xsl:variable name="inspire" select="children/inspire/children"/>
 
 		<env>
 			<site>
@@ -75,7 +76,11 @@
 			<localrating>
 				<enable><xsl:value-of select="$localrating/enable/value"/></enable>
 			</localrating>
-			
+
+            <inspire>
+				<enable><xsl:value-of select="$inspire/enable/value"/></enable>
+			</inspire>
+
 			<proxy>
 				<use><xsl:value-of select="$proxy/use/value"/></use>
 				<host><xsl:value-of select="$proxy/host/value"/></host>

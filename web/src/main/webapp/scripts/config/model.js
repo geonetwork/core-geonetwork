@@ -79,6 +79,7 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			CSW_ACCESS        : xml.evalXPath(node, 'csw/accessConstraints'),
             CSW_METADATA_PUBLIC          : xml.evalXPath(node, 'csw/metadataPublic'),			
             CLICKABLE_HYPERLINKS         : xml.evalXPath(node, 'clickablehyperlinks/enable'),
+            INSPIRE           : xml.evalXPath(node, 'inspire/enable'),
 			LOCAL_RATING      : xml.evalXPath(node, 'localrating/enable'),			
 			PROXY_USE         : xml.evalXPath(node, 'proxy/use'),
 			PROXY_HOST        : xml.evalXPath(node, 'proxy/host'),
@@ -222,6 +223,9 @@ ConfigModel.updateTemp =
 '	<localrating>' +
 '		<enable>{LOCAL_RATING}</enable>'+
 '	</localrating>' +
+'	<inspire>' +
+'		<enable>{INSPIRE}</enable>'+
+'	</inspire>' +
 '	<proxy>'+
 '		<use>{PROXY_USE}</use>'+
 '		<host>{PROXY_HOST}</host>'+

@@ -34,6 +34,7 @@
 		<xsl:variable name="cswInfo"    select="$csw/contactInfo/children"/>
 		<xsl:variable name="cswPhone"   select="$cswInfo/phone/children"/>
 		<xsl:variable name="cswAddress" select="$cswInfo/address/children"/>
+        <xsl:variable name="inspire" select="children/inspire/children"/>
 
 		<config>
 			<site>
@@ -130,7 +131,11 @@
 			<localrating>
 				<enable><xsl:value-of select="$localrating/enable/value"/></enable>
 			</localrating>			
-			
+
+            <inspire>
+                <enable><xsl:value-of select="$inspire/enable/value"/></enable>
+            </inspire>
+
 			<proxy>
 				<use><xsl:value-of select="$proxy/use/value"/></use>
 				<host><xsl:value-of select="$proxy/host/value"/></host>

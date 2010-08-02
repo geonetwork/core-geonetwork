@@ -21,6 +21,8 @@ INSERT INTO Settings VALUES (606,600,'interval',NULL);
 INSERT INTO Settings VALUES (607,606,'day','0');
 INSERT INTO Settings VALUES (608,606,'hour','24');
 INSERT INTO Settings VALUES (609,606,'min','0');
+INSERT INTO Settings VALUES (720,1,'inspire',NULL);
+INSERT INTO Settings VALUES (721,720,'enable','false');
 
 UPDATE Settings SET value='2.5.0' WHERE name='version';
 UPDATE Settings SET value='UNSTABLE' WHERE name='subVersion';

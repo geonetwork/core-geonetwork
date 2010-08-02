@@ -27,7 +27,9 @@
 		<cachesize>Cachesize</cachesize>
 
 	<xlinkResolver>XLink Resolver</xlinkResolver>
-		
+
+    <inspire>INSPIRE</inspire>
+    
 	<downloadservice>Data-For-Download Service</downloadservice>
 	<leave>Use metadata linkage as is - no changes to linkage</leave>
 	<simple>Use GeoNetwork simple file download service (resources.get)</simple>

@@ -54,6 +54,7 @@
 		<xsl:call-template name="csw"/>
 		<xsl:call-template name="hyperlinks"/>
 		<xsl:call-template name="localrating"/>
+        <xsl:call-template name="inspire"/>
 		<xsl:call-template name="proxy"/>
 		<xsl:call-template name="feedback"/>
 		<xsl:call-template name="removedMetadata"/>
@@ -73,6 +74,21 @@
 			</table>
 		</div>
 	</xsl:template>
+
+    <!-- ============================================================================================= -->
+
+	<xsl:template name="inspire">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/inspire"/></h1>
+		<div align="left" style="{$style}">
+			<table>
+				<tr>
+					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/enable"/></td>
+					<td class="padded"><input id="inspire.enable" class="content" type="checkbox"/></td>
+				</tr>
+			</table>
+		</div>
+	</xsl:template>
+
 
 	<!-- ============================================================================================= -->
 

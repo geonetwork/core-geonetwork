@@ -147,7 +147,9 @@ ConfigView.prototype.setData = function(data)
 	$('clickablehyperlinks.enable').checked = data['CLICKABLE_HYPERLINKS'] == 'true';
 
 	$('localrating.enable').checked = data['LOCAL_RATING'] == 'true';
-	
+
+    $('inspire.enable').checked = data['INSPIRE'] == 'true';
+
 	$('proxy.use') .checked   = data['PROXY_USE'] == 'true';
 	$('proxy.host').value     = data['PROXY_HOST'];
 	$('proxy.port').value     = data['PROXY_PORT'];
@@ -256,6 +258,8 @@ ConfigView.prototype.getData = function()
 		CLICKABLE_HYPERLINKS : $('clickablehyperlinks.enable').checked,
 		
 		LOCAL_RATING : $('localrating.enable').checked,
+
+        INSPIRE : $('inspire.enable').checked,
 
 		PROXY_USE  : $('proxy.use') .checked,
 		PROXY_HOST : $('proxy.host').value,

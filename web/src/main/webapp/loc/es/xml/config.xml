@@ -95,6 +95,9 @@
 
 	<localrating>Clasificación Local</localrating>
 
+
+    <inspire>INSPIRE</inspire>
+    
 	<proxy>Proxy</proxy>
 	<use>Uso</use>
 	<username>Nombre de usuario</username>

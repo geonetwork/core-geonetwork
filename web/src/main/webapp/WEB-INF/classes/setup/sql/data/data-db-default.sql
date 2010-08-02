@@ -7330,6 +7330,8 @@ INSERT INTO Settings VALUES (700,1,'oai',NULL);
 INSERT INTO Settings VALUES (701,700,'mdmode',1);
 INSERT INTO Settings VALUES (702,700,'tokentimeout',3600);
 INSERT INTO Settings VALUES (703,700,'cachesize',60);
+INSERT INTO Settings VALUES (720,1,'inspire',NULL);
+INSERT INTO Settings VALUES (721,720,'enable','false');
 
 -- ======================================================================
 -- === Table: Users

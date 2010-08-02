@@ -5,12 +5,6 @@
  Updating a parameter don't need a restart (but need an XSL cache refresh if XSL caching is on).
 -->
 <config>
-<!--
-  INSPIRE integration:
-  Set this parameter to "1" to enable INSPIRE, showing INSPIRE panel in advanced searcher.
- -->
-<inspire>0</inspire>
-
  <!-- Comment out languages to hide them
  from language selector. -->
  <languages>
