@@ -96,10 +96,10 @@
 					<!-- Help section to be displayed according to GUI language -->
 					<xsl:choose>
 						<xsl:when test="/root/gui/language='fr'">
-							<a class="banner" href="{/root/gui/url}/docs/fra/" target="_blank"><xsl:value-of select="/root/gui/strings/help"/></a>
+							<a class="banner" href="{/root/gui/url}/docs/fra/users" target="_blank"><xsl:value-of select="/root/gui/strings/help"/></a>
 						</xsl:when>
 						<xsl:otherwise>
-							<a class="banner" href="{/root/gui/url}/docs/eng/" target="_blank"><xsl:value-of select="/root/gui/strings/help"/></a>
+							<a class="banner" href="{/root/gui/url}/docs/eng/users" target="_blank"><xsl:value-of select="/root/gui/strings/help"/></a>
 						</xsl:otherwise>
 					</xsl:choose>
 					|
