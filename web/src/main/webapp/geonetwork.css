@@ -207,7 +207,8 @@ td.content {
 .results_header {
 	margin-top: 5px; 
 	margin-bottom: 5px; 
-	overflow: auto;	
+    overflow-x: hidden;	
+	overflow-y: auto;	
 	width: 100%;
 }
 
