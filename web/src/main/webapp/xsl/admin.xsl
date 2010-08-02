@@ -156,7 +156,7 @@
 							</tr>
 						</xsl:if>
 					</xsl:variable>
-					<xsl:if test="$mdServices">
+					<xsl:if test="normalize-space($mdServices)">
 						<tr>
 							<td colspan="2"><b><xsl:value-of select="/root/gui/strings/metadata"/></b></td>
 						</tr>
@@ -192,7 +192,7 @@
 							</tr>
 						</xsl:if>
 					</xsl:variable>
-					<xsl:if test="$mdTemplate">
+					<xsl:if test="normalize-space($mdTemplate)">
 						<tr>
 							<td colspan="2"><b><xsl:value-of select="/root/gui/strings/template"/></b></td>
 						</tr>
@@ -216,7 +216,7 @@
 							</tr>
 						</xsl:if>
 					</xsl:variable>
-					<xsl:if test="$persInfoServices">
+					<xsl:if test="normalize-space($persInfoServices)">
 						<tr>
 							<td colspan="2"><b><xsl:value-of select="/root/gui/strings/persInfo"/></b></td>
 						</tr>
@@ -285,16 +285,19 @@
 						</xsl:if>
 						
 					</xsl:variable>
-					<xsl:if test="$adminServices">
+					<xsl:if test="normalize-space($adminServices)">
 						<tr>
 							<td colspan="2"><b><xsl:value-of select="/root/gui/strings/admin"/></b></td>
 						</tr>
 						<xsl:copy-of select="$adminServices"/>
 						<tr><td class="spacer"/></tr>
+                        
+                        <xsl:if test="/root/gui/services/service/@name='test.i18n'">
 						<tr>
 							<td class="padded"><a href="{/root/gui/locService}/test.i18n"><xsl:value-of select="/root/gui/strings/i18n"/></a></td>
 							<td class="padded"><xsl:value-of select="/root/gui/strings/i18nDesc"/></td>
 						</tr>
+                        </xsl:if>
 					</xsl:if>
 					
 					<tr>
