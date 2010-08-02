@@ -176,8 +176,8 @@ function get_cookie ( cookie_name )
 		if (id === undefined) {
 			id = "";
 		}
-		if (!$(name+'Ele'+id).style.top)
-			oActionsInit (name, id);
+
+		oActionsInit (name, id);
 
 	  	if ($(name+'Ele'+id).style.display == 'none') {
 	    	$(name+'Ele'+id).style.display = 'block';
