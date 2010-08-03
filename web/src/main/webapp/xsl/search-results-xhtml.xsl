@@ -341,7 +341,9 @@
 <img src="{/root/gui/url}/images/ac.png" height="20px" width="20px" alt="ISO19115 XML for ArcCatalog" title="Save ISO19115 metadata in XML for ESRI ArcCatalog" border="0"/>
 											</a> -->
 										</xsl:when>
-										
+										<xsl:otherwise>
+                                            &#160;
+                                        </xsl:otherwise>
 									</xsl:choose>
 								</div>
 								
