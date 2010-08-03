@@ -77,6 +77,8 @@
                 <!--script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.geo.libs.js"></script--> 
                 
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/OpenLayers.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Format/CSWGetRecords.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Format/CSWGetRecords/v2_0_2.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/nl.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/de.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/en.js"></script>
