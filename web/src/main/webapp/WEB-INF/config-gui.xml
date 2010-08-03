@@ -161,7 +161,7 @@
  Check that the proxy could query allowed hosts.
  <proxy-url>/cgi-bin/proxy.cgi</proxy-url>
  -->
- <proxy-url/>
+ <proxy-url>../../proxy?</proxy-url>    
  
  <!-- Display or not category information : Categories are stored in the database and a metadata
  record could be linked to one or more categories. -->
