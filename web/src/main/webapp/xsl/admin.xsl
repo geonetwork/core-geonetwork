@@ -13,9 +13,9 @@
             function allTemplate(cb) {
                 if (cb == $('all')) {
                     if ($('all').checked) {
-                        $('iso19139').checked = $('iso19110').checked = $('iso19115').checked = $('dublin-core').checked = $('fgdc-std').checked = true;
+                        $('iso19139').checked = $('iso19110').checked = $('dublin-core').checked = $('fgdc-std').checked = true;
                     } else {
-                        $('iso19139').checked = $('iso19110').checked = $('iso19115').checked = $('dublin-core').checked = $('fgdc-std').checked = false;
+                        $('iso19139').checked = $('iso19110').checked = $('dublin-core').checked = $('fgdc-std').checked = false;
                     }
                 } else {
                     $('all').checked = false;
@@ -25,7 +25,6 @@
 			function addTemplate() {
 
                 if (!(($('all').checked) ||
-                      ($('iso19115').checked) ||
                       ($('iso19139').checked) ||
                       ($('iso19110').checked) ||
                       ($('dublin-core').checked) ||
@@ -191,8 +190,7 @@
 								<td class="padded"><xsl:value-of select="/root/gui/strings/metadata-template-add-default"/></td>
 								<td class="padded">
 									<xsl:value-of select="/root/gui/strings/metadata-template-add-default-desc"/> :
-									<input type="checkbox" name="iso19139" id="iso19139" onClick="allTemplate(this);"/><label for="iso19139">iso19139</label>
-									<input type="checkbox" name="iso19115" id="iso19115" onClick="allTemplate(this);"/><label for="iso19115">iso19115</label>
+									<input type="checkbox" name="iso19139" id="iso19139" onClick="allTemplate(this);"/><label for="iso19139">iso19139/119</label>
 									<input type="checkbox" name="iso19110" id="iso19110" onClick="allTemplate(this);"/><label for="iso19110">iso19110</label>
 									<input type="checkbox" name="dublin-core" id="dublin-core" onClick="allTemplate(this);"/><label for="dublin-core">dublin-core</label>
 									<input type="checkbox" name="fgdc-std" id="fgdc-std" onClick="allTemplate(this);"/><label for="fgdc-std">fgdc-std</label>
