@@ -73,7 +73,7 @@
 	<wxstypes>
 		<type value="WMS1.0.0">OGC Web Map Service (WMS) Version 1.0.0</type>
 		<type value="WMS1.1.1">OGC Web Map Service (WMS) Version 1.1.1 - preferred</type>
-		<!-- <type value="WMS1.3.0">OGC Web Map Service (WMS) Version 1.3.0</type> -->
+		<type value="WMS1.3.0">OGC Web Map Service (WMS) Version 1.3.0</type>
 		<type value="WFS1.0.0">OGC Web Feature Service (WFS) Version 1.0.0</type>
 		<type value="WFS1.1.0">OGC Web Feature Service (WFS) Version 1.1.0 - preferred</type>
 		<type value="WCS1.0.0">OGC Web Coverage Service (WCS) Version 1.0.0</type>

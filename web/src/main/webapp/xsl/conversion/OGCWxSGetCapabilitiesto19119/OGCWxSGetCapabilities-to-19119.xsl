@@ -3,6 +3,7 @@
 Mapping between : 
 - WMS 1.0.0
 - WMS 1.1.1
+- WMS 1.3.0
 - WCS 1.0.0
 - WFS 1.0.0
 - WFS 1.1.0
@@ -20,6 +21,7 @@ Mapping between :
 										xmlns:xlink="http://www.w3.org/1999/xlink"
 										xmlns:wfs="http://www.opengis.net/wfs"
 										xmlns:wcs="http://www.opengis.net/wcs"
+										xmlns:wms="http://www.opengis.net/wms"
                                         xmlns:ows="http://www.opengis.net/ows"
 										xmlns:owsg="http://www.opengeospatial.net/ows"
                                         xmlns:ows11="http://www.opengis.net/ows/1.1"
@@ -51,7 +53,8 @@ Mapping between :
 
 	<!-- ============================================================================= -->
 
-	<xsl:template match="WMT_MS_Capabilities|wfs:WFS_Capabilities|wcs:WCS_Capabilities|wps:Capabilities|wps1:Capabilities">
+	<xsl:template match="WMT_MS_Capabilities|wfs:WFS_Capabilities|wcs:WCS_Capabilities|
+	       wps:Capabilities|wps1:Capabilities|wms:WMS_Capabilities">
 	
 		<xsl:variable name="ows">
 			<xsl:choose>
@@ -98,12 +101,14 @@ Mapping between :
 			<xsl:choose>
 				<xsl:when test="Service/ContactInformation|
 					wfs:Service/wfs:ContactInformation|
-					ows:ServiceProvider|
+					wms:Service/wms:ContactInformation|
+                    ows:ServiceProvider|
 					owsg:ServiceProvider|
 					ows11:ServiceProvider">
 					<xsl:for-each select="Service/ContactInformation|
 						wfs:Service/wfs:ContactInformation|
-						ows:ServiceProvider|
+						wms:Service/wms:ContactInformation|
+                        ows:ServiceProvider|
 						owsg:ServiceProvider|
 						ows11:ServiceProvider">
 						<contact>
@@ -183,6 +188,9 @@ Mapping between :
                                                 <xsl:value-of select="//ows:Operation[@name='GetCapabilities']/ows:DCP/ows:HTTP/ows:Get/@xlink:href|
                                                 	//ows11:Operation[@name='GetCapabilities']/ows11:DCP/ows11:HTTP/ows11:Get/@xlink:href"/>
                                             </xsl:when>
+                                            <xsl:when test="name(.)='WMS_Capabilities'">
+                                                <xsl:value-of select="//wms:GetCapabilities/wms:DCPType/wms:HTTP/wms:Get/wms:OnlineResource/@xlink:href"/>
+                                            </xsl:when>
                                             <xsl:when test="name(.)='WFS_Capabilities'">
                                                 <xsl:value-of select="//wfs:GetCapabilities/wfs:DCPType/wfs:HTTP/wfs:Get/@onlineResource"/>
                                             </xsl:when>
@@ -204,7 +212,10 @@ Mapping between :
                                                 <xsl:when test="$ows='true'">
                                                     <xsl:value-of select="//ows:Operation[@name='GetCapabilities']/ows:DCP/ows:HTTP/ows:Get/@xlink:href"/>
                                                 </xsl:when>
-                                                <xsl:when test="name(.)='WFS_Capabilities'">
+                                                <xsl:when test="name(.)='WMS_Capabilities'">
+	                                                <xsl:value-of select="//wms:GetCapabilities/wms:DCPType/wms:HTTP/wms:Get/wms:OnlineResource/@xlink:href"/>
+	                                            </xsl:when>
+	                                            <xsl:when test="name(.)='WFS_Capabilities'">
                                                     <xsl:value-of select="//wfs:GetCapabilities/wfs:DCPType/wfs:HTTP/wfs:Get/@onlineResource"/>
                                                 </xsl:when>
                                                 <xsl:when test="name(.)='WMT_MS_Capabilities'">

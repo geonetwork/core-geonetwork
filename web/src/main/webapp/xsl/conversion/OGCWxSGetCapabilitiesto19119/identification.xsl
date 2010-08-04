@@ -11,6 +11,7 @@
 										xmlns:ows="http://www.opengis.net/ows"
 										xmlns:ows11="http://www.opengis.net/ows/1.1"
 										xmlns:wcs="http://www.opengis.net/wcs"
+										xmlns:wms="http://www.opengis.net/wms"
                                         xmlns:wps="http://www.opengeospatial.net/wps"
                                         xmlns:wps1="http://www.opengis.net/wps/1.0.0"
                                         xmlns:gml="http://www.opengis.net/gml"
@@ -25,7 +26,7 @@
 		<xsl:param name="ows"/>
 		
 		
-		<xsl:variable name="s" select="Service|wfs:Service|ows:ServiceIdentification|ows11:ServiceIdentification|wcs:Service"/>
+		<xsl:variable name="s" select="Service|wfs:Service|wms:Service|ows:ServiceIdentification|ows11:ServiceIdentification|wcs:Service"/>
 		
 		<citation>
 			<CI_Citation>
@@ -38,6 +39,9 @@
 							</xsl:when>
 							<xsl:when test="name(.)='WFS_Capabilities'">
 								<xsl:value-of select="wfs:Service/wfs:Title"/>
+							</xsl:when>
+							<xsl:when test="name(.)='WMS_Capabilities'">
+								<xsl:value-of select="wms:Service/wms:Title"/>
 							</xsl:when>
 							<xsl:when test="name(.)='WMT_MS_Capabilities'">
 								<xsl:value-of select="Service/Title"/>
@@ -74,6 +78,9 @@
 					<xsl:when test="name(.)='WFS_Capabilities'">
 						<xsl:value-of select="wfs:Service/wfs:Abstract"/>
 					</xsl:when>
+					<xsl:when test="name(.)='WMS_Capabilities'">
+						<xsl:value-of select="wms:Service/wms:Abstract"/>
+					</xsl:when>
 					<xsl:when test="name(.)='WMT_MS_Capabilities'">
 						<xsl:value-of select="Service/Abstract"/>
 					</xsl:when>
@@ -92,7 +99,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<xsl:for-each select="//ContactInformation|//wcs:responsibleParty">
+		<xsl:for-each select="//ContactInformation|//wcs:responsibleParty|//wms:responsibleParty">
 			<pointOfContact>
 				<CI_ResponsibleParty>
 					<xsl:apply-templates select="." mode="RespParty"/>
@@ -110,7 +117,7 @@
 		<!-- resMaint -->
 		<!-- graphOver -->
 		<!-- dsFormat-->
-		<xsl:for-each select="$s/KeywordList|$s/wfs:keywords|$s/wcs:keywords|$s/ows:Keywords|$s/ows11:Keywords">
+		<xsl:for-each select="$s/KeywordList|$s/wms:KeywordList|$s/wfs:keywords|$s/wcs:keywords|$s/ows:Keywords|$s/ows11:Keywords">
 			<descriptiveKeywords>
 				<MD_Keywords>
 					<xsl:apply-templates select="." mode="Keywords"/>
@@ -123,7 +130,7 @@
 		<srv:serviceType>
 			<gco:LocalName codeSpace="www.w3c.org">
 				<xsl:choose>
-					<xsl:when test="name(.)='WMT_MS_Capabilities'">OGC:WMS</xsl:when>
+					<xsl:when test="name(.)='WMT_MS_Capabilities' or name(.)='WMS_Capabilities'">OGC:WMS</xsl:when>
 					<xsl:when test="name(.)='WCS_Capabilities'">OGC:WCS</xsl:when>
 					<xsl:when test="name(.)='wps:Capabilities'">OGC:WPS</xsl:when>
 					<xsl:otherwise>OGC:WFS</xsl:otherwise>
@@ -139,7 +146,7 @@
 		<srv:accessProperties>
 			<MD_StandardOrderProcess>
 				<fees>
-					<gco:CharacterString><xsl:value-of select="$s/Fees|$s/wfs:Fees|$s/ows:Fees|$s/ows11:Fees|$s/wcs:fees"/></gco:CharacterString>
+					<gco:CharacterString><xsl:value-of select="$s/Fees|$s/wms:Fees|$s/wfs:Fees|$s/ows:Fees|$s/ows11:Fees|$s/wcs:fees"/></gco:CharacterString>
 				</fees>
 			</MD_StandardOrderProcess>
 		</srv:accessProperties>
@@ -161,6 +168,15 @@
 		
 		WMS 1.1.1
 		<LatLonBoundingBox minx="-74.047185" miny="40.679648" maxx="-73.907005" maxy="40.882078"/>
+        
+        WMS 1.3.0
+        <EX_GeographicBoundingBox>
+	        <westBoundLongitude>-178.9988054730254</westBoundLongitude>
+	        <eastBoundLongitude>179.0724773329789</eastBoundLongitude>
+	        <southBoundLatitude>-0.5014529001680404</southBoundLatitude>
+	        <northBoundLatitude>88.9987992292308</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:4326" minx="27.116136375774644" miny="-17.934116876940887" maxx="44.39484823803499" maxy="6.052081516030762"/>
         
         WPS 0.4.0 : none
         
@@ -214,16 +230,16 @@
 								</xsl:when>
 								<xsl:otherwise>
 									<westBoundLongitude>
-										<gco:Decimal><xsl:value-of select="math:min(//LatLonBoundingBox/@minx|//wfs:LatLongBoundingBox/@minx)"/></gco:Decimal>
+										<gco:Decimal><xsl:value-of select="math:min(//wms:EX_GeographicBoundingBox/wms:westBoundLongitude|//LatLonBoundingBox/@minx|//wfs:LatLongBoundingBox/@minx)"/></gco:Decimal>
 									</westBoundLongitude>
 									<eastBoundLongitude>
-										<gco:Decimal><xsl:value-of select="math:max(//LatLonBoundingBox/@maxx|//wfs:LatLongBoundingBox/@maxx)"/></gco:Decimal>
+										<gco:Decimal><xsl:value-of select="math:max(//wms:EX_GeographicBoundingBox/wms:eastBoundLongitude|//LatLonBoundingBox/@maxx|//wfs:LatLongBoundingBox/@maxx)"/></gco:Decimal>
 									</eastBoundLongitude>
 									<southBoundLatitude>
-										<gco:Decimal><xsl:value-of select="math:min(//LatLonBoundingBox/@miny|//wfs:LatLongBoundingBox/@miny)"/></gco:Decimal>
+										<gco:Decimal><xsl:value-of select="math:min(//wms:EX_GeographicBoundingBox/wms:southBoundLatitude|//LatLonBoundingBox/@miny|//wfs:LatLongBoundingBox/@miny)"/></gco:Decimal>
 									</southBoundLatitude>
 									<northBoundLatitude>
-										<gco:Decimal><xsl:value-of select="math:max(//LatLonBoundingBox/@maxy|//wfs:LatLongBoundingBox/@maxy)"/></gco:Decimal>
+										<gco:Decimal><xsl:value-of select="math:max(//wms:EX_GeographicBoundingBox/wms:northBoundLatitude|//LatLonBoundingBox/@maxy|//wfs:LatLongBoundingBox/@maxy)"/></gco:Decimal>
 									</northBoundLatitude>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -250,7 +266,8 @@
         -->
 		
 		<xsl:for-each select="Capability/Request/*|
-                                wfs:Capability/wfs:Request/*|
+								wfs:Capability/wfs:Request/*|
+								wms:Capability/wms:Request/*|
                                 wcs:Capability/wcs:Request/*|
                                 ows:OperationsMetadata/ows:Operation|
                                 ows11:OperationsMetadata/ows:Operation|
@@ -269,13 +286,14 @@
 						</gco:CharacterString>
 					</srv:operationName>
 					<!--  CHECKME : DCPType/SOAP ? -->
-					<xsl:for-each select="DCPType/HTTP/*|wfs:DCPType/wfs:HTTP/*|wcs:DCPType/wcs:HTTP/*|ows:DCP/ows:HTTP/*|ows11:DCP/ows11:HTTP/*">
+					<xsl:for-each select="DCPType/HTTP/*|wfs:DCPType/wfs:HTTP/*|wms:DCPType/wms:HTTP/*|
+							wcs:DCPType/wcs:HTTP/*|ows:DCP/ows:HTTP/*|ows11:DCP/ows11:HTTP/*">
 						<srv:DCP>
 							<srv:DCPList codeList="./resources/codeList.xml#DCPList">
 								<xsl:variable name="dcp">
 									<xsl:choose>
-										<xsl:when test="name(.)='Get' or name(.)='wfs:Get' or name(.)='wcs:Get' or name(.)='ows:Get' or name(.)='ows11:Get'">HTTP-GET</xsl:when>
-										<xsl:when test="name(.)='Post' or name(.)='wfs:Post' or name(.)='wcs:Post' or name(.)='ows:Post' or name(.)='ows11:Post'">HTTP-POST</xsl:when>
+										<xsl:when test="name(.)='Get' or name(.)='wfs:Get' or name(.)='wms:Get' or name(.)='wcs:Get' or name(.)='ows:Get' or name(.)='ows11:Get'">HTTP-GET</xsl:when>
+										<xsl:when test="name(.)='Post' or name(.)='wfs:Post' or name(.)='wms:Post' or name(.)='wcs:Post' or name(.)='ows:Post' or name(.)='ows11:Post'">HTTP-POST</xsl:when>
 										<xsl:otherwise>WebServices</xsl:otherwise>
 									</xsl:choose>
 								</xsl:variable>
@@ -295,7 +313,7 @@
                       </srv:invocationName> 
                     </xsl:if>
                     
-					<xsl:for-each select="Format|ows:Parameter[@name='AcceptFormats' or @name='outputFormat']">
+					<xsl:for-each select="Format|wms:Format|ows:Parameter[@name='AcceptFormats' or @name='outputFormat']">
 						<srv:connectPoint>
 							<CI_OnlineResource>
 								<linkage>
@@ -305,7 +323,7 @@
 												<xsl:value-of select="..//ows:Get[1]/@xlink:href"/><!-- FIXME supposed at least one Get -->
 											</xsl:when>
 											<xsl:otherwise>
-												<xsl:value-of select="..//OnlineResource[1]/@xlink:href"/>
+												<xsl:value-of select="..//OnlineResource[1]/@xlink:href|..//wms:OnlineResource[1]/@xlink:href"/>
 											</xsl:otherwise>
 										</xsl:choose>
 									</URL>
@@ -387,6 +405,9 @@
 							<xsl:when test="name(.)='WFS_Capabilities' or name(.)='wfs:WFS_Capabilities' or $ows='true'">
 								<xsl:value-of select="//wfs:FeatureType[wfs:Name=$Name]/wfs:Title"/>
 							</xsl:when>
+							<xsl:when test="name(.)='WMS_Capabilities'">
+								<xsl:value-of select="//wms:Layer[wms:Name=$Name]/wms:Title"/>
+							</xsl:when>
 							<xsl:when test="name(.)='WMT_MS_Capabilities'">
 								<xsl:value-of select="//Layer[Name=$Name]/Title"/>
 							</xsl:when>
@@ -418,6 +439,9 @@
 					<xsl:when test="name(.)='WFS_Capabilities' or $ows='true'">
 						<xsl:value-of select="//wfs:FeatureType[wfs:Name=$Name]/wfs:Abstract"/>
 					</xsl:when>
+					<xsl:when test="name(.)='WMS_Capabilities'">
+						<xsl:value-of select="//wms:Layer[wms:Name=$Name]/wms:Abstract"/>
+					</xsl:when>
 					<xsl:when test="name(.)='WMT_MS_Capabilities'">
 						<xsl:value-of select="//Layer[Name=$Name]/Abstract"/>
 					</xsl:when>
@@ -436,7 +460,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<xsl:for-each select="Service/ContactInformation">
+		<xsl:for-each select="Service/ContactInformation|wms:Service/wms:ContactInformation">
 			<pointOfContact>
 				<CI_ResponsibleParty>
 					<xsl:apply-templates select="." mode="RespParty"/>
@@ -448,6 +472,13 @@
 		<!-- graphOver -->
 		<!-- dsFormat-->
 		<xsl:for-each select="//Layer[Name=$Name]/KeywordList|keywords">
+			<descriptiveKeywords>
+				<MD_Keywords>
+					<xsl:apply-templates select="." mode="Keywords"/>
+				</MD_Keywords>
+			</descriptiveKeywords>
+		</xsl:for-each>
+		<xsl:for-each select="//wms:Layer[wms:Name=$Name]/wms:KeywordList|wms:KeywordList">
 			<descriptiveKeywords>
 				<MD_Keywords>
 					<xsl:apply-templates select="." mode="Keywords"/>
@@ -491,13 +522,13 @@
 		</xsl:choose>
 		
 		<!-- TODO WCS -->
-		<xsl:if test="//Layer[Name=$Name]/MinScaleDenominator">
+		<xsl:if test="//Layer[Name=$Name]/MinScaleDenominator|//wms:Layer[wms:Name=$Name]/wms:MinScaleDenominator">
 			<spatialResolution>
 				<MD_Resolution>
 					<equivalentScale>
 						<MD_RepresentativeFraction>
 							<denominator>
-								<gco:Integer><xsl:value-of select="MinScaleDenominator"/></gco:Integer>
+								<gco:Integer><xsl:value-of select="MinScaleDenominator|wms:MinScaleDenominator"/></gco:Integer>
 							</denominator>
 						</MD_RepresentativeFraction>
 					</equivalentScale>
@@ -508,7 +539,7 @@
 					<equivalentScale>
 						<MD_RepresentativeFraction>
 							<denominator>
-								<gco:Integer><xsl:value-of select="MaxScaleDenominator"/></gco:Integer>
+								<gco:Integer><xsl:value-of select="MaxScaleDenominator|wms:MaxScaleDenominator"/></gco:Integer>
 							</denominator>
 						</MD_RepresentativeFraction>
 					</equivalentScale>
@@ -589,16 +620,20 @@
 								</xsl:when>
 								<xsl:otherwise>
 									<westBoundLongitude>
-										<gco:Decimal><xsl:value-of select="//Layer[Name=$Name]/LatLonBoundingBox/@minx"/></gco:Decimal>
+										<gco:Decimal><xsl:value-of select="//Layer[Name=$Name]/LatLonBoundingBox/@minx|
+											//wms:Layer[wms:Name=$Name]/wms:EX_GeographicBoundingBox/wms:westBoundLongitude"/></gco:Decimal>
 									</westBoundLongitude>
 									<eastBoundLongitude>
-										<gco:Decimal><xsl:value-of select="//Layer[Name=$Name]/LatLonBoundingBox/@maxx"/></gco:Decimal>
+										<gco:Decimal><xsl:value-of select="//Layer[Name=$Name]/LatLonBoundingBox/@maxx|
+											//wms:Layer[wms:Name=$Name]/wms:EX_GeographicBoundingBox/wms:eastBoundLongitude"/></gco:Decimal>
 									</eastBoundLongitude>
 									<southBoundLatitude>
-										<gco:Decimal><xsl:value-of select="//Layer[Name=$Name]/LatLonBoundingBox/@miny"/></gco:Decimal>
+										<gco:Decimal><xsl:value-of select="//Layer[Name=$Name]/LatLonBoundingBox/@miny|
+											//wms:Layer[wms:Name=$Name]/wms:EX_GeographicBoundingBox/wms:southBoundLatitude"/></gco:Decimal>
 									</southBoundLatitude>
 									<northBoundLatitude>
-										<gco:Decimal><xsl:value-of select="//Layer[Name=$Name]/LatLonBoundingBox/@maxy"/></gco:Decimal>
+										<gco:Decimal><xsl:value-of select="//Layer[Name=$Name]/LatLonBoundingBox/@maxy|
+											//wms:Layer[wms:Name=$Name]/wms:EX_GeographicBoundingBox/wms:northBoundLatitude"/></gco:Decimal>
 									</northBoundLatitude>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -625,7 +660,7 @@
 
 	<xsl:template match="*" mode="Keywords">
 		<!-- TODO : tokenize WFS 100 keywords list -->
-		<xsl:for-each select="Keyword|ows:Keyword|ows11:Keyword|wfs:Keywords|wcs:keyword">
+		<xsl:for-each select="Keyword|wms:Keyword|ows:Keyword|ows11:Keyword|wfs:Keywords|wcs:keyword">
 			<keyword>
 				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
 			</keyword>

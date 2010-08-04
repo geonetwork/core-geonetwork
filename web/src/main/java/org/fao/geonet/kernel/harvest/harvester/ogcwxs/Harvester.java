@@ -292,10 +292,12 @@ class Harvester
 			//--- Select layers, featureTypes and Coverages (for layers having no child named layer = not take group of layer into account) 
 			// and add the metadata
 			XPath xp = XPath.newInstance ("//Layer[count(./*[name(.)='Layer'])=0] | " + 
+											"//wms:Layer[count(./*[name(.)='Layer'])=0] | " +
 											"//wfs:FeatureType | " +
 											"//wcs:CoverageOfferingBrief");
 			xp.addNamespace("wfs", "http://www.opengis.net/wfs");
 			xp.addNamespace("wcs", "http://www.opengis.net/wcs");
+			xp.addNamespace("wms", "http://www.opengis.net/wms");
 										
 			List<Element> layers = xp.selectNodes(capa);
 			log.info("  - Number of layers, featureTypes or Coverages found : " + layers.size());
@@ -481,7 +483,13 @@ class Harvester
 		reg.uuid 	= UUID.randomUUID().toString();
 		
 		if (params.ogctype.substring(0,3).equals("WMS")) {
+
+			if (params.ogctype.substring(3,8).equals("1.3.0")) {
+				Namespace wms = Namespace.getNamespace("http://www.opengis.net/wms");
+				reg.name 	= layer.getChild ("Name", wms).getValue ();
+			} else {
 				reg.name 	= layer.getChild ("Name").getValue ();
+			}
 		} else if (params.ogctype.substring(0,3).equals("WFS")) {
 			Namespace wfs = Namespace.getNamespace("http://www.opengis.net/wfs");
 			reg.name 	= layer.getChild ("Name", wfs).getValue ();
