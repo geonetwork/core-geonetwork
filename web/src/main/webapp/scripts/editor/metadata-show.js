@@ -74,7 +74,17 @@
 					if (divToHide) {
 						divToHide.hide();
 					}
-					Modalbox.show(url,{title: boxTitle, width: 600, afterHide: function() { location.replace(getGNServiceURL('main.home')); }});
+					Modalbox.show(url,{title: boxTitle, width: 600, afterHide: function() {
+                        if ($("simple_search_pnl").visible()) {
+                            runSimpleSearch();
+
+                        } else if ($("advanced_search_pnl").visible()) {
+                            runAdvancedSearch();
+
+                        } else {
+                            location.replace(getGNServiceURL('main.home'));
+                        }
+                    }});
 					return true;
 				}
 				return false;

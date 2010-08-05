@@ -152,7 +152,17 @@ function get_cookie ( cookie_name )
 		}
 
 		var url = Env.locService +'/' + service;
-		Modalbox.show(url,{title: title, width: width, afterHide: function() { $('search-results-content').hide();}});
+		Modalbox.show(url,{title: title, width: width, afterHide: function() {
+                if ($("simple_search_pnl").visible()) {
+                    runSimpleSearch();
+
+                } else if ($("advanced_search_pnl").visible()) {
+                    runAdvancedSearch();
+
+                } else {
+                  $('search-results-content').hide();
+                }
+            }});
 	}
 
 /**********************************************************
