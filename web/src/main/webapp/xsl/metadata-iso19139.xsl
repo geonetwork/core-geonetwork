@@ -793,6 +793,7 @@
 		
 				<xsl:variable name="content">
 					<xsl:for-each select="gmd:MD_Keywords">
+					<tr>
 						<td class="padded-content" width="100%" colspan="2">
 							<table width="100%">
 								<tr>
@@ -819,6 +820,7 @@
 								</tr>
 							</table>
 						</td>
+					</tr>
 					</xsl:for-each>
 				</xsl:variable>
 				
@@ -2249,6 +2251,7 @@
 		
 		<xsl:variable name="content">
 			<xsl:for-each select="gmd:CI_ResponsibleParty">
+			<tr>
 				<td class="padded-content" width="100%" colspan="2">
 					<table width="100%">
 						<tr>
@@ -2292,6 +2295,7 @@
 						</tr>
 					</table>
 				</td>
+			</tr>
 			</xsl:for-each>
 		</xsl:variable>
 		
@@ -2370,7 +2374,7 @@
 		<xsl:param name="schema"/>
 	
 		<xsl:variable name="id" select="generate-id(.)"/>
-		<div id="{$id}"/>
+		<tr><td colspan="2"><div id="{$id}"/></td></tr>
 		<xsl:apply-templates mode="complexElement" select=".">
 			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="edit"   select="true()"/>

@@ -1692,10 +1692,10 @@
 			<xsl:choose>
 				<xsl:when test="starts-with($schema,'iso19139') and not(/root/gui/*[name(.)=$schema]/element[@name = $parentName]/helper)">
 					<!-- Fallback to iso19139 helper for ISO profil if not exist ... -->
-					<xsl:copy-of select="/root/gui/iso19139/element[@name = $parentName]/helper"/>
+					<xsl:copy-of select="/root/gui/iso19139/element[@name = $parentName]/helper/*"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:copy-of select="/root/gui/*[name(.)=$schema]/element[@name = $parentName]/helper"/>
+					<xsl:copy-of select="/root/gui/*[name(.)=$schema]/element[@name = $parentName]/helper/*"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
