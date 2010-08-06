@@ -45,7 +45,7 @@
 				<parameter name="Language" field="language" type="SupportedISOQueryables" />
 				<parameter name="ResourceIdentifier" field="identifier"
 					type="SupportedISOQueryables" />
-				<parameter name="ParentIdentifier" field="parentId"
+				<parameter name="ParentIdentifier" field="parentUuid"
 					type="SupportedISOQueryables" />
 				<parameter name="KeywordType" field="keywordType"
 					type="SupportedISOQueryables" />
