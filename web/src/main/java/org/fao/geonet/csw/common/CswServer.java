@@ -143,19 +143,19 @@ public class CswServer
 			Element parameter = i.next();
 			String parameterName = parameter.getAttributeValue("name"); 
 			log("Processing parameter: " + parameterName);
-			if(parameterName != null && parameterName.equals("outputSchema")) {	// CHECKME : case sensitive ?
+			if(parameterName != null && parameterName.equalsIgnoreCase("outputSchema")) {
 				Element outputSchemaListing = parameter;
 				outputSchemas = outputSchemaListing.getChildren("Value", Csw.NAMESPACE_OWS);
 				log("Found " + outputSchemas.size() + " outputSchemas for operation: " + name);
 			}
 
-            if(parameterName != null && parameterName.equals("typeName")) {	// CHECKME : case sensitive ?
+            if(parameterName != null && parameterName.equalsIgnoreCase("typeName")) {
 				Element typeNameListing = parameter;
 				typeNames = typeNameListing.getChildren("Value", Csw.NAMESPACE_OWS);
 				log("Found " + typeNames.size() + " typeNames for operation: " + name);
 			}
 
-            if(parameterName != null && parameterName.equals("outputFormat")) {	// CHECKME : case sensitive ?
+            if(parameterName != null && parameterName.equalsIgnoreCase("outputFormat")) {
 				Element outputFormatListing = parameter;
 				outputFormats = outputFormatListing.getChildren("Value", Csw.NAMESPACE_OWS);
 				log("Found " + outputFormats.size() + " outputFormats for operation: " + name);
