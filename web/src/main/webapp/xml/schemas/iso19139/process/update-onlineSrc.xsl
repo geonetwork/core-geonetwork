@@ -40,35 +40,39 @@ attached it to the metadata for data.
 			    gmd:identificationInfo|
 			    gmd:contentInfo"/>
 			
-			<!-- TODO we could check if online resource already exists before adding information -->
 			<gmd:distributionInfo>
 				<gmd:MD_Distribution>
-					<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/*"/>
-					<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/*"/>
-					<gmd:transferOptions>
-						<gmd:MD_DigitalTransferOptions>
-							<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:unitsOfDistribution/*"/>
-							<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:transferSize/*"/>
-							<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/*"/>
-							<gmd:onLine>
-								<gmd:CI_OnlineResource>
-									<gmd:linkage>
-										<gmd:URL><xsl:value-of select="$url"/></gmd:URL>
-									</gmd:linkage>
-									<gmd:protocol>
-										<gco:CharacterString><xsl:value-of select="$protocol"/></gco:CharacterString>
-									</gmd:protocol>
-									<gmd:name>
-										<gco:CharacterString><xsl:value-of select="$scopedName" /></gco:CharacterString> 
-									</gmd:name>
-									<gmd:description>
-										<gco:CharacterString><xsl:value-of select="$desc"/></gco:CharacterString>
-									</gmd:description> 
-								</gmd:CI_OnlineResource> 
-							</gmd:onLine> 
-							<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:offLine/*"/>
-						</gmd:MD_DigitalTransferOptions>
-					</gmd:transferOptions>
+					<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"/>
+					<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor"/>
+					<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions"/>
+					<!-- Add online resource if it does not exist yet -->
+					<xsl:if test="count(gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/
+						gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[
+							gmd:linkage/gmd:URL=$url 
+							and gmd:name/gco:CharacterString=$scopedName
+							and gmd:protocol/gco:CharacterString=$protocol
+							]) = 0">
+						<gmd:transferOptions>
+							<gmd:MD_DigitalTransferOptions>
+								<gmd:onLine>
+									<gmd:CI_OnlineResource>
+										<gmd:linkage>
+											<gmd:URL><xsl:value-of select="$url"/></gmd:URL>
+										</gmd:linkage>
+										<gmd:protocol>
+											<gco:CharacterString><xsl:value-of select="$protocol"/></gco:CharacterString>
+										</gmd:protocol>
+										<gmd:name>
+											<gco:CharacterString><xsl:value-of select="$scopedName" /></gco:CharacterString> 
+										</gmd:name>
+										<gmd:description>
+											<gco:CharacterString><xsl:value-of select="$desc"/></gco:CharacterString>
+										</gmd:description> 
+									</gmd:CI_OnlineResource> 
+								</gmd:onLine>
+							</gmd:MD_DigitalTransferOptions>
+						</gmd:transferOptions>
+					</xsl:if>
 				</gmd:MD_Distribution>
 				
 			</gmd:distributionInfo>
