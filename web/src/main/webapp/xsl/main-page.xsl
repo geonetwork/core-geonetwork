@@ -369,13 +369,6 @@
                     restrictedExtent: restrictedExtent
                 };
                 
-                // Load layers defined in config file
-                var layers = [];
-                
-                <xsl:for-each select="/root/gui/config/mapViewer/layers/layer">
-                   layers.push(["<xsl:value-of select='@tocName'/>","<xsl:value-of select='@server'/>",<xsl:value-of select='@params'/>, <xsl:value-of select='@options'/>]);                           
-                </xsl:for-each>
-                
                 // Init projection list
                 <xsl:for-each select="/root/gui/config/mapViewer/proj/crs">
                 GeoNetwork.ProjectionList.push(["<xsl:value-of select='@code'/>","<xsl:value-of select='@name'/>"]);                
@@ -387,7 +380,7 @@
                 </xsl:for-each>
                 
                 // Initialize map viewer 
-               GeoNetwork.mapViewer.init(layers, mapOptions);
+               GeoNetwork.mapViewer.init(backgroundLayers, mapOptions);
             }
             
             function initMapsSearch() {
@@ -424,16 +417,9 @@
                     restrictedExtent: restrictedExtent
                 };
                 
-                // Load layers defined in config file
-                var layers = [];
-                
-                <xsl:for-each select="/root/gui/config/mapSearch/layers/layer">
-                   layers.push(["<xsl:value-of select='@tocName'/>","<xsl:value-of select='@server'/>",<xsl:value-of select='@params'/>, <xsl:value-of select='@options'/>]);                           
-                </xsl:for-each>
-                
                 // Initialize minimaps 
-                GeoNetwork.minimapSimpleSearch.init("ol_minimap1", "region_simple", layers, mapOptions);
-                GeoNetwork.minimapAdvancedSearch.init("ol_minimap2", "region", layers);
+                GeoNetwork.minimapSimpleSearch.init("ol_minimap1", "region_simple", backgroundLayers, mapOptions);
+                GeoNetwork.minimapAdvancedSearch.init("ol_minimap2", "region", backgroundLayers);
 
                 
                 GeoNetwork.minimapSimpleSearch.setSynchMinimap(GeoNetwork.minimapAdvancedSearch);

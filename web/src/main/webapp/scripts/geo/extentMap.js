@@ -78,6 +78,7 @@ var extentMap = {
      *                   west, north) to listen for modifications
      */
     initMapDiv: function () {
+        
         var viewers, idFunc;
         extentMap.mainProj = new OpenLayers.Projection(extentMap.mainProjCode);
         extentMap.alternateProj = extentMap.mainProj;
@@ -405,12 +406,15 @@ var extentMap = {
         // configuration parameters should be define in order
         // to define map layers. Currently using the same
         // WMS as Intermap.
-        var layer = new OpenLayers.Layer.WMS(
-                    "Borders",
-                    "http://www2.demis.nl/mapserver/request.asp",
-                    {layers: "Borders,Coastlines"}
-                );
-        map.addLayer(layer);
+        
+        for (var i=0; i<backgroundLayers.length; i++) {
+            var layer = new OpenLayers.Layer.WMS(backgroundLayers[i][0],
+                    backgroundLayers[i][1],
+                    backgroundLayers[i][2],
+                    backgroundLayers[i][3])
+            map.addLayer(layer);    
+        }
+        
         
         // Add vector layer to draw features (ie. bbox or polygon)
         extentMap.vectorLayer = new OpenLayers.Layer.Vector(

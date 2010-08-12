@@ -92,6 +92,15 @@
                 <script type="text/javascript" src="{/root/gui/url}/scripts/mapfish/MapFish.js"></script>            
             </xsl:otherwise>
         </xsl:choose>
+        
+        <script type="text/javascript" language="JavaScript1.2">
+        // Load layers defined in config file
+        var backgroundLayers = [];
+        <xsl:for-each select="/root/gui/config/mapViewer/layers/layer">
+        backgroundLayers.push(["<xsl:value-of select='@tocName'/>","<xsl:value-of select='@server'/>",<xsl:value-of select='@params'/>, <xsl:value-of select='@options'/>]);                           
+        </xsl:for-each>
+        </script>
+        
         <script src="../../scripts/geo/extentMap.js" type="text/javascript"/>
         
         <xsl:apply-templates mode="proj4init" select="/root/gui/config/map/proj"/>

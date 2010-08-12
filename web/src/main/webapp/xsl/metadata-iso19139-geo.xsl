@@ -136,25 +136,27 @@
             </xsl:choose>
         </b>
         <br/>
+        <xsl:variable name="size" select="'8'"/>
+        
         <xsl:choose>
-            <!-- Hidden text field is use to store WGS84 values which are stored in metadata records. -->
+        	<!-- Hidden text field is use to store WGS84 values which are stored in metadata records. -->
             <xsl:when test="$edit=true()">
                 <xsl:call-template name="getElementText">
                     <xsl:with-param name="schema" select="$schema" />
                     <xsl:with-param name="edit" select="$edit" />
-                    <xsl:with-param name="cols" select="10" />
+                    <xsl:with-param name="cols" select="$size" />
                     <xsl:with-param name="validator" select="'validateNumber(this, false)'" />
                     <xsl:with-param name="no_name" select="true()" />
                 </xsl:call-template>
                 <xsl:call-template name="getElementText">
                     <xsl:with-param name="schema" select="$schema" />
                     <xsl:with-param name="edit" select="true()" />
-                    <xsl:with-param name="cols" select="10" />
+                    <xsl:with-param name="cols" select="$size" />
                     <xsl:with-param name="input_type" select="'hidden'" />
                 </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
-                <input class="md" type="text" id="{$eltRef}" value="{text()}" readonly="readonly"/>
+                <input class="md" type="text" id="{$eltRef}" value="{text()}" readonly="readonly" size="{$size}"/>
                 <input class="md" type="hidden" id="_{$eltRef}" name="_{$eltRef}" value="{text()}" readonly="readonly"/>
             </xsl:otherwise>
         </xsl:choose>

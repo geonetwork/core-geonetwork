@@ -8,7 +8,7 @@
 	exclude-result-prefixes="gco gmd dc exslt geonet"
     >
 
-	<!--
+	<!-- 
 	show metadata form
 	-->
 	
