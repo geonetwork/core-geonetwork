@@ -301,44 +301,18 @@ td.padded p {
     padding-bottom:2px;
 }
 
+legend.block-legend {
+	font-weight: bold;
+}
+
 fieldset.metadata-block {
-    margin-top: 30px;
-	border-top: 3px #266397 solid;
-	border-bottom-width: 0px;
-	border-left-width: 0px;
-	border-right: 3px #266397 solid;
+	padding: 5px;
+    border: 1px #266397 solid;
 }
 
 fieldset.metadata-block * fieldset {
-	margin-top: 2px;
-	border: 1px #266397 solid;
-	border-bottom-width: 0px;
-	border-right-width: 0px;
-	padding: 2px;
+    border: 1px #266397 solid;
 }
-
-fieldset.metadata-block legend {
-    text-transform:uppercase;
-	font-weight: bold;
-	font-size:large;
-}
-
-fieldset.metadata-block * legend {
-    font-size:medium;
-    text-transform: none;
-}
-
-fieldset.metadata-block * fieldset * legend {
-    font-size:small;
-    text-transform: none;
-}
-
-
-legend span div {
-    font-size:x-small;
-    text-transform: none;
-}
-
 
 /*******************************************************************************
 footer
