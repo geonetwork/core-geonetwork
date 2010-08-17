@@ -833,7 +833,7 @@ function validateMetadataFields() {
 
 	// --- display validator events when needed.
 	$$('input,textarea,select').each( function(input) {
-		validateMetadataField(input);
+	    validateMetadataField(input);
 	});
 
 }
@@ -1253,11 +1253,23 @@ function showCRSSelectionPanel(ref, name) {
  */
 function validateMetadataField(input) {
 	// Process only onchange and onkeyup event having validate in event name.
+    
+    var ch = input.getAttribute("onchange");
+    var ku = input.getAttribute("onkeyup");
+    // When retrieving a style attribute, IE returns a style object, 
+    // rather than an attribute value; retrieving an event-handling 
+    // attribute such as onclick, it returns the contents of the 
+    // event handler wrapped in an anonymous function; 
+    if (typeof(ch) == 'function') {
+        ch = ch.toString();
+    }
+    if (typeof(ku) == 'function') {
+        ku = ku.toString();
+    }   
+    
 	if (!input
-			|| (input.onchange && input.getAttribute("onchange").indexOf(
-					"validate") == -1)
-			|| (input.onkeyup && input.getAttribute("onkeyup").indexOf(
-					"validate") == -1))
+			|| (ch != null && ch.indexOf("validate") == -1)
+			|| (ku != null && ku.indexOf("validate") == -1))
 		return;
 
 	if (input.onkeyup)

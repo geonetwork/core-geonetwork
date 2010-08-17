@@ -1016,7 +1016,9 @@
 			<!-- list of values -->
 			<xsl:when test="geonet:element/geonet:text">
 
-
+				<xsl:variable name="mandatory" select="geonet:element/@min='1' and
+								geonet:element/@max='1'"/>
+							
 				<!-- This code is mainly run under FGDC 
 				but also for enumeration like topic category and 
 				service parameter direction in ISO. 
@@ -1049,6 +1051,11 @@
 					</xsl:if>
 					<xsl:if test="$isXLinked">
 						<xsl:attribute name="disabled">disabled</xsl:attribute>
+					</xsl:if>
+					<xsl:if test="$mandatory and $edit">
+						<xsl:attribute name="onchange">
+							validateNonEmpty(this);
+						</xsl:attribute>
 					</xsl:if>
 					<option name=""/>
 					<xsl:for-each select="exslt:node-set($list)//item">
