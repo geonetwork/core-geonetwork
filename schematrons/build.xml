@@ -134,7 +134,7 @@
 			out="${buildDir}/schematron-rules-${rules}.xsl"> 
 			<classpath>
                 <!-- FIXME should be handle with maven dependency -->
-				<pathelement location="${buildDir}/saxon9.jar"/>
+				<pathelement location="saxon9.jar"/>
 			</classpath> 
 	   </xslt>
 	</target>
