@@ -98,7 +98,7 @@ public class GetRecords extends AbstractOperation implements CatalogService
 
 	Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
 
-	ResultType      resultType  = ResultType  .parse(request.getAttributeValue("resultType"));;
+	ResultType      resultType  = ResultType  .parse(request.getAttributeValue("resultType"));
 	OutputSchema    outSchema   = OutputSchema.parse(request.getAttributeValue("outputSchema"));
 	Set<String>     elemNames   = getElementNames(query);
 	ElementSetName  setName = ElementSetName.FULL;
@@ -113,7 +113,7 @@ public class GetRecords extends AbstractOperation implements CatalogService
 	Set<TypeName> typeNames = getTypeNames(request);
 
 	Element constr = query.getChild("Constraint", Csw.NAMESPACE_CSW);
-	Element filterExpr = getFilterExpression(constr, context);
+	Element filterExpr = getFilterExpression(constr);
 	String filterVersion = getFilterVersion(constr);
 	
 	// Get max hits to be used for summary - CSW GeoNetwork extension 
@@ -311,47 +311,57 @@ public class GetRecords extends AbstractOperation implements CatalogService
     	if (parameterName.equalsIgnoreCase("resultType")) {
     		List<Element> values = new ArrayList<Element>();
     		ResultType[] resultType = ResultType.values();
-    		for (int i=0; i<resultType.length; i++) {
-    			String value = resultType[i].toString();
-    			values.add(new Element("Value", Csw.NAMESPACE_CSW).setText(value));
-    		}
-    		listOfValues.addContent(values);
-    	}
+            for (ResultType aResultType : resultType) {
+                String value = aResultType.toString();
+                values.add(new Element("Value", Csw.NAMESPACE_CSW).setText(value));
+            }
+            if (listOfValues != null) {
+                listOfValues.addContent(values);
+            }
+        }
     	
     	// Handle elementSetName parameter
     	if (parameterName.equalsIgnoreCase("elementSetName")) {
     		List<Element> values = new ArrayList<Element>();
     		ElementSetName[] esn = ElementSetName.values();
-    		for (int i=0; i<esn.length; i++) {
-    			String value = esn[i].toString();
-    			values.add(new Element("Value", Csw.NAMESPACE_CSW).setText(value));
-    		}
-    		listOfValues.addContent(values);
-    	}
+            for (ElementSetName anEsn : esn) {
+                String value = anEsn.toString();
+                values.add(new Element("Value", Csw.NAMESPACE_CSW).setText(value));
+            }
+            if (listOfValues != null) {
+                listOfValues.addContent(values);
+            }
+        }
     	
     	// Handle outputFormat parameter
 		if (parameterName.equalsIgnoreCase("outputformat")) {
 			Set<String> formats = CatalogConfiguration
 					.getGetRecordsOutputFormat();
 			List<Element> values = createValuesElement(formats);
-			listOfValues.addContent(values);
-		}
+            if (listOfValues != null) {
+                listOfValues.addContent(values);
+            }
+        }
     	
 		// Handle outputSchema parameter
 		if (parameterName.equalsIgnoreCase("outputSchema")) {
 			Set<String> namespacesUri = CatalogConfiguration
 					.getGetRecordsOutputSchema();
 			List<Element> values = createValuesElement(namespacesUri);
-			listOfValues.addContent(values);
-		}
+            if (listOfValues != null) {
+                listOfValues.addContent(values);
+            }
+        }
 
 		// Handle typenames parameter
 		if (parameterName.equalsIgnoreCase("typenames")) {
 			Set<String> typenames = CatalogConfiguration
 					.getGetRecordsTypenames();
 			List<Element> values = createValuesElement(typenames);
-			listOfValues.addContent(values);
-		}
+            if (listOfValues != null) {
+                listOfValues.addContent(values);
+            }
+        }
 		
     	return listOfValues;
 	}
@@ -404,7 +414,9 @@ public class GetRecords extends AbstractOperation implements CatalogService
 		if (value >= 1)
 		    return value;
 	    }
-	catch (NumberFormatException e) {}
+	catch (NumberFormatException ignored) {
+        // TODO what's with this?
+    }
 
 	throw new InvalidParameterValueEx("startPosition", start);
     }
@@ -425,7 +437,9 @@ public class GetRecords extends AbstractOperation implements CatalogService
 		if (value >= 1)
 		    return value;
 	    }
-	catch (NumberFormatException e) {}
+	catch (NumberFormatException ignored) {
+        // TODO what's with this ?
+    }
 
 	throw new InvalidParameterValueEx("maxRecords", max);
     }
@@ -453,7 +467,9 @@ public class GetRecords extends AbstractOperation implements CatalogService
 		if (value >= 0)
 		    return value;
 	    }
-	catch (NumberFormatException e) {}
+	catch (NumberFormatException ignored) {
+        // TODO what's with this?
+    }
 
 	throw new InvalidParameterValueEx("hopCount", hopCount);
     }
@@ -483,20 +499,22 @@ public class GetRecords extends AbstractOperation implements CatalogService
 		List list = sortBy.getChildren();
 		ArrayList<Pair<String, Boolean>> al = new ArrayList<Pair<String, Boolean>>();
 
-		for (int i = 0; i < list.size(); i++) {
-			Element el = (Element) list.get(i);
+        for (Object aList : list) {
+            Element el = (Element) aList;
 
-			String field = el.getChildText("PropertyName", Csw.NAMESPACE_OGC);
-			String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
+            String field = el.getChildText("PropertyName", Csw.NAMESPACE_OGC);
+            String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
 
-			// Map CSW search field to Lucene for sorting. And if not mapped assumes the field is a Lucene field.
-			String luceneField = FieldMapper.map(field);
-			
-			if (luceneField != null)
-				al.add(Pair.read(luceneField, "DESC".equals(order)));
-			else
-				al.add(Pair.read(field, "DESC".equals(order)));
-		}
+            // Map CSW search field to Lucene for sorting. And if not mapped assumes the field is a Lucene field.
+            String luceneField = FieldMapper.map(field);
+
+            if (luceneField != null) {
+                al.add(Pair.read(luceneField, "DESC".equals(order)));
+            }
+            else {
+                al.add(Pair.read(field, "DESC".equals(order)));
+            }
+        }
 
 		// we always want to keep the relevancy as part of the sorting mechanism
 		

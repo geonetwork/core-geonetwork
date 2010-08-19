@@ -93,7 +93,7 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 
 	Iterator<Element> i = request.getChildren("TypeName", Csw.NAMESPACE_CSW).iterator();
 	
-	HashMap<String, Element> scMap = new HashMap<String, Element>();
+	Map<String, Element> scMap = new HashMap<String, Element>();
 	// default search without typename
 	if (!i.hasNext())
 		scMap = getSchemaComponents(context, null);
@@ -169,24 +169,30 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 			Set<String> formats = CatalogConfiguration
 					.getDescribeRecordOutputFormat();
 			List<Element> values = createValuesElement(formats);
-			listOfValues.addContent(values);
-		}
+            if (listOfValues != null) {
+                listOfValues.addContent(values);
+            }
+        }
 
 		// Handle namespace parameter
 		if (parameterName.equalsIgnoreCase("namespace")) {
 			Set<Namespace> namespaces = CatalogConfiguration
 					.getDescribeRecordNamespaces();
 			List<Element> values = createValuesElementNS(namespaces);
-			listOfValues.addContent(values);
-		}
+            if (listOfValues != null) {
+                listOfValues.addContent(values);
+            }
+        }
 
 		// Handle typename parameter
 		if (parameterName.equalsIgnoreCase("typename")) {
 			Set<String> typenames = CatalogConfiguration
 					.getDescribeRecordTypename().keySet();
 			List<Element> values = createValuesElement(typenames);
-			listOfValues.addContent(values);
-		}
+            if (listOfValues != null) {
+                listOfValues.addContent(values);
+            }
+        }
 		
 		// TODO : Handle schemalanguage parameter
 
@@ -202,7 +208,7 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 	private HashMap<String, Element> getSchemaComponents(ServiceContext context, String typeName) 
     throws NoApplicableCodeEx, InvalidParameterValueEx {
 	
-	Element currentSC = null;
+	Element currentSC;
 	HashMap<String, Element> scElements = new HashMap<String, Element>();
 	
 	if (typeName == null) {

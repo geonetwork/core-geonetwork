@@ -151,7 +151,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
 		while (i.hasNext())
 		{
-			Element version = (Element) i.next();
+			Element version = i.next();
 
 			if (version.getText().equals(Csw.CSW_VERSION))
 				return;
@@ -178,17 +178,15 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
 		HashSet<String> hsSections = new HashSet<String>();
 
-		Iterator<Element> i = sections.getChildren().iterator();
-
-		while(i.hasNext())
-		{
-			Element section = (Element) i.next();
-			String sectionName = section.getText();
-			// Handle recognized section names only, others are ignored. Case Sensitive.
-			if (sectionName.equals(Csw.SECTION_SI) || sectionName.equals(Csw.SECTION_SP)
-					|| sectionName.equals(Csw.SECTION_OM))
-				hsSections.add(sectionName);
-		}
+        for (Object o : sections.getChildren()) {
+            Element section = (Element) o;
+            String sectionName = section.getText();
+            // Handle recognized section names only, others are ignored. Case Sensitive.
+            if (sectionName.equals(Csw.SECTION_SI) || sectionName.equals(Csw.SECTION_SP)
+                    || sectionName.equals(Csw.SECTION_OM)) {
+                hsSections.add(sectionName);
+            }
+        }
 
 		//--- remove not requested sections
 
@@ -247,10 +245,9 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 	 * to the document.
 	 */
 	private void setKeywords (Element capabilities, ServiceContext context) {
-		List<Element> keywords = capabilities.getChild("ServiceIdentification",
-				Csw.NAMESPACE_OWS).getChildren("Keywords", Csw.NAMESPACE_OWS);
+		List<Element> keywords = capabilities.getChild("ServiceIdentification", Csw.NAMESPACE_OWS).getChildren("Keywords", Csw.NAMESPACE_OWS);
 
-		List<Element> values = null;
+		List<Element> values;
 		String[] properties = {"keyword"};
 		try {
 			values = GetDomain.handlePropertyName(properties, context, true, CatalogConfiguration.getMaxNumberOfRecordsForKeywords());
@@ -259,30 +256,31 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 			// If GetDomain operation failed, just add nothing to the capabilities document template.            
             return;
         }
-		
-		for (Element k : keywords) {
-			Element keyword = null;
-			int cpt = 0;
-			for (Element v : values) {
-				keyword = new Element("Keyword", Csw.NAMESPACE_OWS);
-				keyword.setText(v.getText());
-				k.addContent(keyword);
-				cpt++;
-				if (cpt == CatalogConfiguration.getNumberOfKeywords())
-					break;
-			}
-			// Add <ows:Type>theme</ows:Type>
-			k.addContent(new Element("Type", Csw.NAMESPACE_OWS).setText("theme"));
-			break; // only for first Keywords element in case of several.
-		}
+
+        for (int i = 0, keywordsSize = keywords.size(); i < keywordsSize; i++) {
+            Element k = keywords.get(i);
+            Element keyword;
+            int cpt = 0;
+            for (Element v : values) {
+                keyword = new Element("Keyword", Csw.NAMESPACE_OWS);
+                keyword.setText(v.getText());
+                k.addContent(keyword);
+                cpt++;
+                if (cpt == CatalogConfiguration.getNumberOfKeywords()) {
+                    break;
+                }
+            }
+            // Add <ows:Type>theme</ows:Type>
+            k.addContent(new Element("Type", Csw.NAMESPACE_OWS).setText("theme"));
+            break; // only for first Keywords element in case of several.
+        }
 	}
 	
 	//---------------------------------------------------------------------------
 	
 	private void setOperationsParameters(Element capabilities) {
 
-		List<Element> operations = capabilities.getChild("OperationsMetadata",
-				Csw.NAMESPACE_OWS).getChildren("Operation", Csw.NAMESPACE_OWS);
+		List<Element> operations = capabilities.getChild("OperationsMetadata", Csw.NAMESPACE_OWS).getChildren("Operation", Csw.NAMESPACE_OWS);
 
 		for (Element op : operations) {
 			if (op.getAttributeValue(Csw.ConfigFile.Operation.Attr.NAME)
@@ -293,8 +291,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 			if (op.getAttributeValue(Csw.ConfigFile.Operation.Attr.NAME)
 					.equals(Csw.ConfigFile.Operation.Attr.Value.DESCRIBE_RECORD)) {
 				fillDescribeRecordTypenames(op);
-				continue;
-			}
+            }
 		}
 	}
 	

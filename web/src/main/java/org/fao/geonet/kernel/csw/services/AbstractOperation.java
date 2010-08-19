@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel.csw.services;
 
-import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
@@ -49,7 +48,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -210,13 +208,11 @@ public abstract class AbstractOperation
 				String typeName = st.nextToken();
 				int    pos      = typeName.indexOf(':');
 				String prefix   = "";
-				String type     = typeName;
 
-				if (pos != -1)
+                if (pos != -1)
 				{
 					prefix = typeName.substring(0, pos);
-					type   = typeName.substring(pos +1);
-				}
+                }
 
 				String ns= hmNamespaces.get(prefix);
 
@@ -239,11 +235,9 @@ public abstract class AbstractOperation
 	 */
 	protected List<Element> createValuesElement(Collection<String> param) {
 		List<Element> values = new ArrayList<Element>();
-		Iterator<String> it = param.iterator();
-		while (it.hasNext()) {
-			String value = (String) it.next();
-			values.add(new Element("Value",Csw.NAMESPACE_CSW).setText(value));
-		}
+        for (String value : param) {
+            values.add(new Element("Value", Csw.NAMESPACE_CSW).setText(value));
+        }
 		return values;
 	}
 	
@@ -256,12 +250,10 @@ public abstract class AbstractOperation
 	 */
 	protected List<Element> createValuesElementNS(Collection<Namespace> param) {
 		List<Element> values = new ArrayList<Element>();
-		Iterator<Namespace> it = param.iterator();
-		while (it.hasNext()) {
-			Namespace ns = (Namespace) it.next();
-			String value = ns.getURI();
-			values.add(new Element("Value",Csw.NAMESPACE_CSW).setText(value));
-		}
+        for (Namespace ns : param) {
+            String value = ns.getURI();
+            values.add(new Element("Value", Csw.NAMESPACE_CSW).setText(value));
+        }
 		return values;
 	}
 	
@@ -269,11 +261,10 @@ public abstract class AbstractOperation
 	
     /**
      * @param constr
-     * @param context
      * @return
      * @throws CatalogException
      */
-    protected Element getFilterExpression(Element constr, ServiceContext context)
+    protected Element getFilterExpression(Element constr)
 			throws CatalogException {
 
     	// Return an empty filter if no constraint

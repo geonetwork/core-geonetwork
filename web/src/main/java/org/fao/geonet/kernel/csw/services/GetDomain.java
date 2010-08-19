@@ -54,7 +54,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -95,7 +94,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 
 		// PropertyName handled first. 
 		if (propertyNames != null) {
-			List<Element> domainValues = null;
+			List<Element> domainValues;
 			try {
 				domainValues = handlePropertyName(propertyNames, context, false, CatalogConfiguration.getMaxNumberOfRecordsForPropertyNames());
 			} catch (Exception e) {
@@ -269,7 +268,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 	//---------------------------------------------------------------------------
 	
 	private List<Element> handleParameterName(String[] parameterNames) throws CatalogException {
-		Element values = null;
+		Element values;
 		List<Element> domainValuesList = null; 
 		
 		for (int i=0; i < parameterNames.length; i++) {
@@ -359,17 +358,16 @@ public class GetDomain extends AbstractOperation implements CatalogService
 
 	/**
 	 * Create value element for each item of the string array
-	 * @param values
-	 * @return
+	 * @param sortedValues
+	 * @param isRange
+     * @return
 	 */
 	private static List<Element> createValuesElement(SortedSet<String> sortedValues, boolean isRange) {
 		List<Element> valuesList = new ArrayList<Element>();
 		if (!isRange) {
-			Iterator<String> it = sortedValues.iterator();
-			while (it.hasNext()) {
-				String value = (String) it.next();
-				valuesList.add(new Element("Value",Csw.NAMESPACE_CSW).setText(value));
-			}
+            for (String value : sortedValues) {
+                valuesList.add(new Element("Value", Csw.NAMESPACE_CSW).setText(value));
+            }
 		} else {
 			valuesList.add(new Element("MinValue",Csw.NAMESPACE_CSW).setText(sortedValues.first()));
 			valuesList.add(new Element("MaxValue",Csw.NAMESPACE_CSW).setText(sortedValues.last()));
@@ -386,19 +384,17 @@ public class GetDomain extends AbstractOperation implements CatalogService
 	private static List<Element> createValuesByFrequency(TreeSet<Entry<String, Integer>> sortedValuesFrequency) {
 		
 		List<Element> values = new ArrayList<Element>();
-		Element value = null;
+		Element value;
 
-		for (Iterator iterator = sortedValuesFrequency.iterator(); iterator
-				.hasNext();) {
-			Entry<String, Integer> entry = (Entry<String, Integer>) iterator
-					.next();
-			
-			value = new Element("Value",Csw.NAMESPACE_CSW);
-			value.setAttribute("count", entry.getValue().toString());
-			value.setText(entry.getKey());
-			
-			values.add(value);
-		}
+        for (Object aSortedValuesFrequency : sortedValuesFrequency) {
+            Entry<String, Integer> entry = (Entry<String, Integer>) aSortedValuesFrequency;
+
+            value = new Element("Value", Csw.NAMESPACE_CSW);
+            value.setAttribute("count", entry.getValue().toString());
+            value.setText(entry.getKey());
+
+            values.add(value);
+        }
 		return values;
 	}
 	

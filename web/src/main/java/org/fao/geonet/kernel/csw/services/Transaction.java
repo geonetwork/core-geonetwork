@@ -91,7 +91,7 @@ public class Transaction extends AbstractOperation implements CatalogService
 		// Response element
 		Element response = new Element(getName() +"Response", Csw.NAMESPACE_CSW);
 		
-		ArrayList<String>	strFileIds = new ArrayList<String>();
+		List<String>	strFileIds = new ArrayList<String>();
 		
 		//process the transaction from the first to the last
 		List<Element> childList = request.getChildren();
@@ -99,64 +99,55 @@ public class Transaction extends AbstractOperation implements CatalogService
 		try
 		{			
 			//process the childlist
-			Iterator<Element>  i = childList.iterator();
-			while (i.hasNext())
-			{
-				Element transRequest = (Element) i.next();
-				
-				String transactionType = transRequest.getName().toLowerCase();
-				if( transactionType.equals("insert") || transactionType.equals("update") || transactionType.equals("delete") )
-				{	
-					List<Element> mdList = transRequest.getChildren();
-					GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-					DataManager dataMan = gc.getDataManager();
-					
-					// insert to database, and get the number of inserted successful
-					if( transactionType.equals("insert" ) )
-					{
-						Iterator<Element> inIt = mdList.iterator();
-						dataMan.startIndexGroup();
-						try {
-							while (inIt.hasNext()){
-								Element metadata = (Element) inIt.next().clone();
-								boolean insertSuccess = insertTransaction( metadata, strFileIds, context);
-								if (insertSuccess)
-									totalInserted++;
-							}
-						} finally {
-							dataMan.endIndexGroup();
-						}
-					}
-					// Update
-					else if( transactionType.equals("update" ) ) 
-					{
-						Iterator<Element> inIt = mdList.iterator();
-						dataMan.startIndexGroup();
-						try {
-							while (inIt.hasNext()){
-								Element metadata = (Element) inIt.next().clone();
-								if (!metadata.getName().equals("Constraint") && !metadata.getNamespace().equals(Csw.NAMESPACE_CSW))
-								{
-									boolean updateSuccess = updateTransaction( transRequest, metadata, context );
-									if (updateSuccess)
-										totalUpdated++;
-								}
-							}
-						} finally {
-							dataMan.endIndexGroup();
-						}
-					}
-					// Delete
-					else
-					{
-						totalDeleted = deleteTransaction( transRequest, context);
-					}
-				}
-				else
-				{
-					continue;
-				}				
-			}
+            for (Element transRequest : childList) {
+                String transactionType = transRequest.getName().toLowerCase();
+                if (transactionType.equals("insert") || transactionType.equals("update") || transactionType.equals("delete")) {
+                    List<Element> mdList = transRequest.getChildren();
+                    GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+                    DataManager dataMan = gc.getDataManager();
+
+                    // insert to database, and get the number of inserted successful
+                    if (transactionType.equals("insert")) {
+                        Iterator<Element> inIt = mdList.iterator();
+                        dataMan.startIndexGroup();
+                        try {
+                            while (inIt.hasNext()) {
+                                Element metadata = (Element) inIt.next().clone();
+                                boolean insertSuccess = insertTransaction(metadata, strFileIds, context);
+                                if (insertSuccess) {
+                                    totalInserted++;
+                                }
+                            }
+                        }
+                        finally {
+                            dataMan.endIndexGroup();
+                        }
+                    }
+                    // Update
+                    else if (transactionType.equals("update")) {
+                        Iterator<Element> inIt = mdList.iterator();
+                        dataMan.startIndexGroup();
+                        try {
+                            while (inIt.hasNext()) {
+                                Element metadata = (Element) inIt.next().clone();
+                                if (!metadata.getName().equals("Constraint") && !metadata.getNamespace().equals(Csw.NAMESPACE_CSW)) {
+                                    boolean updateSuccess = updateTransaction(transRequest, metadata, context);
+                                    if (updateSuccess) {
+                                        totalUpdated++;
+                                    }
+                                }
+                            }
+                        }
+                        finally {
+                            dataMan.endIndexGroup();
+                        }
+                    }
+                    // Delete
+                    else {
+                        totalDeleted = deleteTransaction(transRequest, context);
+                    }
+                }
+            }
 		}
 		catch( Exception e )
 		{
@@ -178,9 +169,8 @@ public class Transaction extends AbstractOperation implements CatalogService
 
 	public Element adaptGetRequest(Map<String, String> params)
 	{
-		Element request = new Element(getName(), Csw.NAMESPACE_CSW);
 
-		return request;
+        return new Element(getName(), Csw.NAMESPACE_CSW);
 	}
 	
 	//---------------------------------------------------------------------------
@@ -202,7 +192,7 @@ public class Transaction extends AbstractOperation implements CatalogService
 	 * @return
 	 * @throws Exception
 	 */
-	private boolean insertTransaction( Element xml, ArrayList<String> fileIds, ServiceContext context ) throws Exception
+	private boolean insertTransaction( Element xml, List<String> fileIds, ServiceContext context ) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dataMan = gc.getDataManager();
@@ -211,9 +201,7 @@ public class Transaction extends AbstractOperation implements CatalogService
 		
 //		String category   = Util.getParam(request, Params.CATEGORY);
 		String 	category  = "_none_";
-		String isTemplate = "n";
-		String title      = "";
-		String source = null;
+        String source = null;
 		String createDate = null;
 		String changeDate = null;
 		
@@ -305,9 +293,12 @@ public class Transaction extends AbstractOperation implements CatalogService
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		// only update first result matched
-		while( it.hasNext() )
+		while(true)
 		{
-			Element result = it.next();
+            if (!(it.hasNext())) {
+                break;
+            }
+            Element result = it.next();
 			String uuid = result.getChildText("identifier", Csw.NAMESPACE_DC);
 			String id = dataMan.getMetadataId(dbms, uuid);
 			String changeDate = null;
@@ -386,7 +377,7 @@ public class Transaction extends AbstractOperation implements CatalogService
 		SearchController sc = new SearchController(null, null);
 		
 		Set<TypeName> typeNames = getTypeNames(constr);
-		Element filterExpr  = getFilterExpression(constr, context);
+		Element filterExpr  = getFilterExpression(constr);
 		String filterVersion = getFilterVersion(constr);
 		
 		ElementSetName  setName = ElementSetName.BRIEF;
@@ -407,8 +398,7 @@ public class Transaction extends AbstractOperation implements CatalogService
 		//Element query = request.getChild("Query", Csw.NAMESPACE_CSW);		
 		//return TypeName.parse(request.getAttributeValue("typeNames"));
 		String	strTypeNames = request.getAttributeValue("typeNames");
-		Set<TypeName>	tnNames = TypeName.parse( strTypeNames );
-		return 	tnNames;
+        return TypeName.parse( strTypeNames );
 	}
 	
 	/**
@@ -419,7 +409,7 @@ public class Transaction extends AbstractOperation implements CatalogService
 	 * @param totalUpdated
 	 * @param totalDeleted
 	 */
-	private void getResponseResult( Element request, Element response, ArrayList<String> fileIds, 
+	private void getResponseResult( Element request, Element response, List<String> fileIds, 
 			int totalInserted, int totalUpdated, int totalDeleted )
 	{
 		// transactionSummary
@@ -438,15 +428,13 @@ public class Transaction extends AbstractOperation implements CatalogService
 			insertResult.setAttribute("handleRef", "handleRefValue");
 			
 			//Namespace NAMESPACE_DC = Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/");
-			Iterator<String> i = fileIds.iterator();
-			while( i.hasNext() )
-			{
-				Element  briefRecord = new Element("BriefRecord", Csw.NAMESPACE_CSW );
-				Element  identifier = new Element("identifier"); //,Csw.NAMESPACE_DC );
-				identifier.setText( (String)i.next() );
-				briefRecord.addContent( identifier );
-				insertResult.addContent( briefRecord );
-			}
+            for (String fileId : fileIds) {
+                Element briefRecord = new Element("BriefRecord", Csw.NAMESPACE_CSW);
+                Element identifier = new Element("identifier"); //,Csw.NAMESPACE_DC );
+                identifier.setText(fileId);
+                briefRecord.addContent(identifier);
+                insertResult.addContent(briefRecord);
+            }
 			
 			response.addContent(insertResult);
 		}
