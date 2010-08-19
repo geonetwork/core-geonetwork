@@ -269,10 +269,13 @@ public class LuceneSearcher extends MetaSearcher
 
             List<Element> requestedGroups = request.getChildren("group");
             Set<String> userGroups = gc.getAccessManager().getUserGroups(dbms, srvContext.getUserSession(), srvContext.getIpAddress());
-            if(requestedGroups != null && requestedGroups.size() > 0) {
-                for(Element group : requestedGroups) {
-                    if(! userGroups.contains(group.getText())) {
-                        throw new UnAuthorizedException("You are not authorized to do this.", null);
+            UserSession userSession = srvContext.getUserSession();
+            if (! (userSession.isAuthenticated() && userSession.getProfile().equals(Geonet.Profile.ADMINISTRATOR))) {
+                if(requestedGroups != null && requestedGroups.size() > 0) {
+                    for(Element group : requestedGroups) {
+                        if(! userGroups.contains(group.getText())) {
+                            throw new UnAuthorizedException("You are not authorized to do this.", null);
+                        }
                     }
                 }
             }
@@ -282,17 +285,16 @@ public class LuceneSearcher extends MetaSearcher
 				for (String group : userGroups) {
 					request.addContent(new Element("group").addContent(group));
                 }
-				UserSession us = srvContext.getUserSession();
-				String owner = us.getUserId();
+				String owner = userSession.getUserId();
 				if (owner != null) {
 					request.addContent(new Element("owner").addContent(owner));
                 }
 			    //--- in case of an admin we have to show all results
-				if (us.isAuthenticated()) {
-					if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
+				if (userSession.isAuthenticated()) {
+					if (userSession.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
 						request.addContent(new Element("isAdmin").addContent("true"));
                     }
-					else if (us.getProfile().equals(Geonet.Profile.REVIEWER)) {
+					else if (userSession.getProfile().equals(Geonet.Profile.REVIEWER)) {
 						request.addContent(new Element("isReviewer").addContent("true"));
                     }
 				}
