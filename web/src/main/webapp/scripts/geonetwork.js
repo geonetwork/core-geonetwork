@@ -222,7 +222,20 @@ function get_cookie ( cookie_name )
 			alert(translate("selectOwnerGroup"));
 			return false;
 		}
-		Modalbox.show(getGNServiceURL(action),{title: title, params: $('massivenewowner').serialize(true), afterHide: function() { $('search-results-content').hide(); }});
+		Modalbox.show(getGNServiceURL(action),{title: title, params: $('massivenewowner').serialize(true), afterHide: function() {
+                if ($("simple_search_pnl").visible()) {
+
+                    runSimpleSearch();
+
+                } else if ($("advanced_search_pnl").visible()) {
+                    runAdvancedSearch();
+
+                } else {
+                  $('search-results-content').hide();
+                }
+		
+		        runRssSearch();
+        }});
 	}
 
 	function addGroups(xmlRes) {
