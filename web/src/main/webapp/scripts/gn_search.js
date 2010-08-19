@@ -779,11 +779,16 @@ function gn_search_error(req) {
 }
 
 function gn_filteredSearch() {
+    var params = "";
+	if ($("advanced_search_pnl").visible()) {
+		params = fetchParam('template');
+	}
+
 	var myAjax = new Ajax.Request(
 		getGNServiceURL('selection.search'),
 		{
 			method: 'get',
-			parameters: '',
+			parameters: params,
 			onSuccess: gn_search_complete,
 			onFailure: gn_search_error
 		}
