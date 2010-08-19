@@ -38,7 +38,12 @@ function gn_anyKeyObserver(e)
 function runPdfSearch(onSelection) {
 
 	if (onSelection) {
-		location.replace (getGNServiceURL('pdf.selection.search'));
+		var serviceUrl = getGNServiceURL('pdf.selection.search');
+		if ($("advanced_search_pnl").visible()) {
+			serviceUrl = serviceUrl + "?" + fetchParam('template');
+		}
+
+		location.replace (serviceUrl);
 		metadataselect(0, 'remove-all');
 	} else {
 	    if (document.cookie.indexOf("search=advanced")!=-1)
