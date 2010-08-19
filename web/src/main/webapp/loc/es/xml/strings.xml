@@ -1006,4 +1006,6 @@
     
     <showMap>Mostrar mapa</showMap>
     <mapViewer>Mapa</mapViewer>
+
+    <uuid>Identificador único</uuid>    
 </strings>
