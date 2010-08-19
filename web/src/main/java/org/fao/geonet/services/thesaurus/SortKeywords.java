@@ -57,7 +57,7 @@ public class SortKeywords implements Service {
 		searcher.sortResults(Util.getParam(params, "pSort"));
 		
 		// get the results
-		response.addContent(searcher.getResults(params));
+		response.addContent(searcher.getResults());
 
 		
 		// If editing or consult thesaurus 

@@ -77,7 +77,7 @@ public class GetKeywords implements Service {
 		}
 
 		// get the results
-		response.addContent(searcher.getResults(params));
+		response.addContent(searcher.getResults());
 
 		
 		

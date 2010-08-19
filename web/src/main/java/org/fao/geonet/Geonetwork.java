@@ -202,7 +202,7 @@ public class Geonetwork implements ApplicationHandler
         
 		DataStore dataStore = createDataStore(context.getResourceManager().getProps(Geonet.Res.MAIN_DB), luceneDir);
 	
-		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, dataDir, summaryConfigXmlFile, guiConfigXmlFile, luceneConfigXmlFile, dataStore, new SettingInfo(settingMan));
+		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, summaryConfigXmlFile, guiConfigXmlFile, luceneConfigXmlFile, dataStore, new SettingInfo(settingMan));
 
 		//------------------------------------------------------------------------
 		//--- extract intranet ip/mask and initialize AccessManager

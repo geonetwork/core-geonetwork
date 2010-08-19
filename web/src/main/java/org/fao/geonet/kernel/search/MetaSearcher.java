@@ -30,8 +30,6 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.services.util.SearchDefaults;
 import org.jdom.Element;
 
-import java.util.Iterator;
-
 //--------------------------------------------------------------------------------
 // interface to search metadata
 //--------------------------------------------------------------------------------
@@ -116,13 +114,13 @@ public abstract class MetaSearcher
 		_to   = to;
 		
 		// skip summary
-		for (Iterator iter = result.getChildren().iterator(); iter.hasNext(); )
-		{
-			Element child = (Element) iter.next();
+        for (Object o : result.getChildren()) {
+            Element child = (Element) o;
 
-			if (!child.getName().equals(Geonet.Elem.SUMMARY))
-				return child;
-		}
+            if (!child.getName().equals(Geonet.Elem.SUMMARY)) {
+                return child;
+            }
+        }
 		return null;
 	}
 	

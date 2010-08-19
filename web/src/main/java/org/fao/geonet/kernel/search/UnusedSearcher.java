@@ -40,7 +40,7 @@ import java.util.List;
 
 class UnusedSearcher extends MetaSearcher
 {
-	private ArrayList alResult;
+	private ArrayList<String> alResult;
 	private Element   elSummary;
 
 	//--------------------------------------------------------------------------
@@ -65,7 +65,7 @@ class UnusedSearcher extends MetaSearcher
 
 		String siteId = sm.getValue("system/site/siteId");
 
-		alResult = new ArrayList();
+		alResult = new ArrayList<String>();
 
 		//--- get maximun delta in minutes
 
@@ -82,19 +82,20 @@ class UnusedSearcher extends MetaSearcher
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		List list = dbms.select(query).getChildren();
 
-		for(int i=0; i<list.size(); i++)
-		{
-			Element rec = (Element) list.get(i);
+        for (Object aList : list) {
+            Element rec = (Element) aList;
 
-			String id = rec.getChildText("id");
+            String id = rec.getChildText("id");
 
-			ISODate createDate = new ISODate(rec.getChildText("createdate"));
-			ISODate changeDate = new ISODate(rec.getChildText("changedate"));
+            ISODate createDate = new ISODate(rec.getChildText("createdate"));
+            ISODate changeDate = new ISODate(rec.getChildText("changedate"));
 
-			if (changeDate.sub(createDate) / 60 < maxDiff)
-				if (!hasInternetGroup(dbms, id))
-					alResult.add(id);
-		}
+            if (changeDate.sub(createDate) / 60 < maxDiff) {
+                if (!hasInternetGroup(dbms, id)) {
+                    alResult.add(id);
+                }
+            }
+        }
 
 		//--- build summary
 
@@ -124,7 +125,7 @@ class UnusedSearcher extends MetaSearcher
 		{
 			for(int i = getFrom() -1; i < getTo(); i++)
 			{
-				String  id = (String) alResult.get(i);
+				String  id = alResult.get(i);
 				Element md = gc.getDataManager().getMetadata(srvContext, id, false);
 
 				response.addContent(md);

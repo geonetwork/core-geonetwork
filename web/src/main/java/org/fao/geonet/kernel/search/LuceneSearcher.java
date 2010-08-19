@@ -283,20 +283,25 @@ public class LuceneSearcher extends MetaSearcher
 				for (String group : userGroups) {
 					request.addContent(new Element("group").addContent(group));
                 }
-				String owner = userSession.getUserId();
-				if (owner != null) {
+                String owner = null;
+                if (userSession != null) {
+                    owner = userSession.getUserId();
+                }
+                if (owner != null) {
 					request.addContent(new Element("owner").addContent(owner));
                 }
 			    //--- in case of an admin we have to show all results
-				if (userSession.isAuthenticated()) {
-					if (userSession.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
-						request.addContent(new Element("isAdmin").addContent("true"));
+                if (userSession != null) {
+                    if (userSession.isAuthenticated()) {
+                        if (userSession.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
+                            request.addContent(new Element("isAdmin").addContent("true"));
+}
+                        else if (userSession.getProfile().equals(Geonet.Profile.REVIEWER)) {
+                            request.addContent(new Element("isReviewer").addContent("true"));
+}
                     }
-					else if (userSession.getProfile().equals(Geonet.Profile.REVIEWER)) {
-						request.addContent(new Element("isReviewer").addContent("true"));
-                    }
-				}
-			}
+                }
+            }
 
 			//--- handle the time elements
 

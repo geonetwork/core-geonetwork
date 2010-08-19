@@ -59,10 +59,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
+
+import static java.lang.Integer.*;
 
 //--------------------------------------------------------------------------------
 // search metadata remotely using Z39.50
@@ -118,18 +119,17 @@ class Z3950Searcher extends MetaSearcher
 		Log.debug(Geonet.SEARCH_ENGINE, "OUTGOING QUERY: " + query);
 
 		// get request parameters
-		Vector servers = new Vector();
-		for (Iterator iter = request.getChildren(Geonet.SearchResult.SERVERS).iterator(); iter.hasNext(); )
-		{
-			String server = ((Element)iter.next()).getText();
-			servers.add(server);
-		}
+		Vector<String> servers = new Vector<String>();
+        for (Object o : request.getChildren(Geonet.SearchResult.SERVERS)) {
+            String server = ((Element) o).getText();
+            servers.add(server);
+        }
 		String sTimeout  = request.getChildText("timeout");
 		int timeout;
 		if (sTimeout == null) timeout = 10;
 		else
 		{
-			try { timeout = Integer.parseInt(sTimeout); }
+			try { timeout = parseInt(sTimeout); }
 			catch (NumberFormatException nfe) { throw new IllegalArgumentException("Bad 'timeout' parameter parameter: " + sTimeout); }
 		}
 		String sHtml  = request.getChildText("serverhtml");
@@ -137,10 +137,10 @@ class Z3950Searcher extends MetaSearcher
 
 		// perform the search
 		// initialize the collection
-		Vector collection_ids = new Vector();
+		Vector<String> collection_ids = new Vector<String>();
 		for (int i = 0; i < servers.size(); i++)
 		{
-			String name = (String)servers.elementAt(i);
+			String name = servers.elementAt(i);
 			collection_ids.add(name);
 		}
 
@@ -176,8 +176,7 @@ class Z3950Searcher extends MetaSearcher
 	private StatelessQueryService getQueryService(ServiceContext srvContext) {
 		GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
 		ApplicationContext app_context = gc.getApplicationContext();
-		StatelessQueryService sqs = (StatelessQueryService)app_context.getBean("StatelessQueryService");
-		return sqs;
+        return (StatelessQueryService)app_context.getBean("StatelessQueryService");
 	}
 
 	//-----------------------------------------------------------------------------
@@ -270,7 +269,7 @@ class Z3950Searcher extends MetaSearcher
 					response.addContent(md);
 				} catch (Exception ex) {
 					ex.printStackTrace();
-					Element error = new Element("error");;
+					Element error = new Element("error");
 					error.setAttribute("server",  frag.getSourceRepositoryID());
 					error.setAttribute("collection",  frag.getSourceCollectionName());
 					error.setAttribute("id",      (getFrom() + i)+"");
@@ -282,7 +281,7 @@ class Z3950Searcher extends MetaSearcher
 
 			// if we didn't get all results for a page then something went wrong!
 			for (int i = theLimit; i < getPageSize();i++) {
-				Element error = new Element("error");;
+				Element error = new Element("error");
 				error.setAttribute("message", "Unable to retrieve record "+(getFrom()+i));
 				response.addContent(error);
 			}

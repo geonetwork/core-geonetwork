@@ -38,7 +38,6 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.document.FieldSelectorResult;
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
@@ -46,7 +45,6 @@ import org.apache.lucene.index.TermEnum;
 import org.apache.lucene.search.Filter;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.DataManager;
@@ -62,7 +60,6 @@ import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.search.spatial.TouchesFilter;
 import org.fao.geonet.kernel.search.spatial.WithinFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.spring.StringUtils;
 import org.geotools.data.DataStore;
 import org.geotools.data.DefaultTransaction;
@@ -72,7 +69,6 @@ import org.geotools.gml3.GMLConfiguration;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.Parser;
 import org.jdom.Element;
-import org.jzkit.search.provider.iface.Searchable;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -85,8 +81,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -117,9 +111,7 @@ public class SearchManager
 	private File           _luceneDir;
 	private static PerFieldAnalyzerWrapper _analyzer;
 	private String         _htmlCacheDir;
-	private String         _dataDir;
-	private Searchable     _hssSearchable;
-	private Spatial        _spatial;
+    private Spatial        _spatial;
 	private LuceneIndexReaderFactory    _indexReader;
 	private LuceneIndexWriterFactory    _indexWriter;
 	private Timer					 _optimizerTimer = null;
@@ -173,7 +165,7 @@ public class SearchManager
 	 * @param dataStore
 	 * @throws Exception
 	 */
-	public SearchManager(String appPath, String luceneDir, String htmlCacheDir, String dataDir, String summaryConfigXmlFile,  String guiConfigXmlFile, String luceneConfigXmlFile, DataStore dataStore, SettingInfo si) throws Exception
+	public SearchManager(String appPath, String luceneDir, String htmlCacheDir, String summaryConfigXmlFile, String guiConfigXmlFile, String luceneConfigXmlFile, DataStore dataStore, SettingInfo si) throws Exception
 	{
 		_summaryConfig = Xml.loadStream(new FileInputStream(new File(appPath,summaryConfigXmlFile)));
 
@@ -192,10 +184,9 @@ public class SearchManager
 		if (!htmlCacheDirTest.isDirectory())
 			throw new IllegalArgumentException("directory " + htmlCacheDir + " not found");
 		_htmlCacheDir = htmlCacheDir;
-		_dataDir        = dataDir;
 
-		
-		_luceneDir = new File(luceneDir+ "/nonspatial");
+
+        _luceneDir = new File(luceneDir+ "/nonspatial");
 		
 		if (!_luceneDir.isAbsolute()) _luceneDir = new File(appPath + luceneDir+ "/nonspatial");
 
@@ -203,8 +194,8 @@ public class SearchManager
         
      _spatial = new Spatial(dataStore);
 
-		initLucene(appPath, luceneDir);
-		initZ3950(appPath);
+		initLucene();
+		initZ3950();
 
 		if (si.getLuceneIndexOptimizerSchedulerEnabled()) {
       _optimizerBeginAt  = si.getLuceneIndexOptimizerSchedulerAt();
@@ -322,11 +313,9 @@ public class SearchManager
 
 	/**
 	 * Lucene init/end methods. Creates the Lucene index directory.
-	 * @param appPath
-	 * @param luceneDir
 	 * @throws Exception
 	 */
-	private void initLucene(String appPath, String luceneDir)
+	private void initLucene()
 		throws Exception
 	{
 		setupIndex(false); 
@@ -337,10 +326,9 @@ public class SearchManager
 
 	/**
          * Initializes the Z3950 client searcher.
-	 * @param appPath
 	 * @throws Exception
 	 */
-	private void initZ3950(String appPath) {}
+	private void initZ3950() {}
 
 	/**
 	 * deinitializes the Z3950 client searcher
@@ -370,7 +358,7 @@ public class SearchManager
 	 * @param title
 	 * @throws Exception
 	 */
-	public void index(String type, Element metadata, String id, List moreFields, String isTemplate, String title) throws Exception 
+	public void index(String type, Element metadata, String id, List<Element> moreFields, String isTemplate, String title) throws Exception
 	{
 		Log.debug(Geonet.INDEX_ENGINE, "Opening Writer from index");
 		_indexWriter.openWriter();
@@ -390,7 +378,7 @@ public class SearchManager
 		_indexWriter.openWriter();
 	}
 
-	public void indexGroup(String type, Element metadata, String id, List moreFields, String isTemplate, String title) throws Exception 
+	public void indexGroup(String type, Element metadata, String id, List<Element> moreFields, String isTemplate, String title) throws Exception
 	{
 		Document doc = buildIndexDocument(type, metadata, id, moreFields, isTemplate, title, true);
 		_indexWriter.addDocument(doc);
@@ -411,12 +399,7 @@ public class SearchManager
 		_spatial.writer().delete(txt);
 	}
 
-	public void commitIndexChanges() throws Exception {
-		Log.debug(Geonet.INDEX_ENGINE,"Committing index changes");
-		_indexWriter.commit();
-	}
-
-	private Document buildIndexDocument(String type, Element metadata, String id, List moreFields, String isTemplate, String title, boolean group) throws Exception 
+    private Document buildIndexDocument(String type, Element metadata, String id, List<Element> moreFields, String isTemplate, String title, boolean group) throws Exception
 	{
 
 		Log.debug(Geonet.INDEX_ENGINE, "Deleting "+id+" from index");
@@ -439,8 +422,7 @@ public class SearchManager
 			Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n"
 					+ Xml.getString(metadata));
 
-			String mdDataDir = Lib.resource.getDir(_dataDir, Params.Access.PRIVATE, id);
-			xmlDoc = getIndexFields(type, metadata, mdDataDir);
+            xmlDoc = getIndexFields(type, metadata);
 
 			Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n"
 					+ Xml.getString(xmlDoc));
@@ -449,16 +431,14 @@ public class SearchManager
 		addField(xmlDoc, "_id", id, true, true, false);
 
 		// add more fields
-		for (Iterator iter = moreFields.iterator(); iter.hasNext();) {
-			Element field = (Element) iter.next();
-			xmlDoc.addContent(field);
-		}
+        for (Element moreField : moreFields) {
+            xmlDoc.addContent(moreField);
+        }
 
 		Log.debug(Geonet.INDEX_ENGINE, "Lucene document:\n"
 				+ Xml.getString(xmlDoc));
 
-		Document doc = newDocument(xmlDoc);
-		return doc;	
+        return newDocument(xmlDoc);
 	}
 
 	/**
@@ -497,8 +477,9 @@ public class SearchManager
 		}
 		List children = metadata.getChildren();
 		if (children.size() > 0) {
-			for (Iterator i = children.iterator(); i.hasNext();)
-				allText((Element) i.next(), sb);
+            for (Object aChildren : children) {
+                allText((Element) aChildren, sb);
+            }
 		}
 	}
 
@@ -572,8 +553,7 @@ public class SearchManager
 			HashMap<String,String> docs = new HashMap<String,String>(capacity);
 			for (int i = 0; i < reader.maxDoc(); i++) {
 				if (reader.isDeleted(i)) continue; // FIXME: strange lucene hack: sometimes it tries to load a deleted document
-				Hashtable record = new Hashtable();
-				Document doc = reader.document(i, idChangeDateSelector);
+                Document doc = reader.document(i, idChangeDateSelector);
 				String id = doc.get("_id");
 				if (id == null) {
 					Log.error(Geonet.INDEX_ENGINE, "Document with no _id field skipped! Document is "+doc);
@@ -595,9 +575,9 @@ public class SearchManager
 	 * @return	The list of values for the field
 	 * @throws Exception
 	 */
-	public Vector getTerms(String fld) throws Exception
+	public Vector<String> getTerms(String fld) throws Exception
 	{
-		Vector terms = new Vector();
+		Vector<String> terms = new Vector<String>();
 
 		IndexReader reader = getIndexReader();
 
@@ -695,14 +675,14 @@ public class SearchManager
 	//-----------------------------------------------------------------------------
 	// utilities
 
-	Element getIndexFields(String schema, Element xml, String mdDataDir) throws Exception {
+	Element getIndexFields(String schema, Element xml) throws Exception {
 		File schemaDir = new File(_schemasDir, schema);
 
 		try {
 			String styleSheet = new File(schemaDir, "index-fields.xsl")
 					.getAbsolutePath();
-            Map<String,String> params = new HashMap();
-            params.put("inspire", new Boolean(_inspireEnabled).toString());
+            Map<String,String> params = new HashMap<String, String>();
+            params.put("inspire", Boolean.toString(_inspireEnabled));
 
 			return Xml.transform(xml, styleSheet, params);
 		} catch (Exception e) {
@@ -717,11 +697,7 @@ public class SearchManager
             Element  guiConfig = Xml.loadStream(new FileInputStream(new File(appPath, guiConfigXmlFile)));
 
             String inspireParam = guiConfig.getChild("inspire").getValue();
-            if (StringUtils.hasText(inspireParam)) {
-               _inspireEnabled = (inspireParam.equals("1"));
-            } else {
-                _inspireEnabled = false;
-            }
+            _inspireEnabled = StringUtils.hasText(inspireParam) && (inspireParam.equals("1"));
         } catch (Exception ex) {
             // If not defined the parameter, then inspire is disabled
             _inspireEnabled = false;
@@ -745,12 +721,7 @@ public class SearchManager
 		}
 	}
 
-	public File getLuceneDir() 
-	{
-		return _luceneDir;
-	}
-
-	//-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 	/**
 	 * Return a reopened index reader to do operations on
 	 * an up-to-date index.
@@ -758,7 +729,7 @@ public class SearchManager
 	 * @return
 	 */
 
-	public IndexReader getIndexReader() throws InterruptedException, CorruptIndexException, IOException {
+	public IndexReader getIndexReader() throws InterruptedException, IOException {
 		return _indexReader.getReader();
 	}
 
@@ -769,13 +740,8 @@ public class SearchManager
 	}
 
 	//-----------------------------------------------------------------------------
-	
-	Searchable getSearchable() 
-	{
-		return _hssSearchable;
-	}
 
-	//-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 	// private methods
 
 	// creates an index in directory luceneDir with StandardAnalyzer if not present
@@ -863,39 +829,37 @@ public class SearchManager
 	private Document newDocument(Element xml)
 	{
 		Document doc = new Document();
-		for (Iterator iter = xml.getChildren().iterator(); iter.hasNext(); )
-		{
-			Element field = (Element)iter.next();
-			String name   = field.getAttributeValue("name");
-			String string = field.getAttributeValue("string"); // Lower case field is handled by Lucene Analyzer.
-			if (string.trim().length() > 0)
-			{
-				String sStore = field.getAttributeValue("store");
-				String sIndex = field.getAttributeValue("index");
-				String sToken = field.getAttributeValue("token");
-				boolean bStore = sStore != null && sStore.equals("true");
-				boolean bIndex = sIndex != null && sIndex.equals("true");
-				boolean token = sToken != null && sToken.equals("true");
-				Field.Store store = null;
-				if(bStore) {
-					store = Field.Store.YES;
-				}
-				else {
-					store = Field.Store.NO;
-				}
-				Field.Index index = null;
-				if(bIndex && token) {
-					index = Field.Index.TOKENIZED;
-				}
-				if(bIndex && !token) {
-					index = Field.Index.UN_TOKENIZED;
-				}
-				if(!bIndex) {
-					index = Field.Index.NO;
-				}
-				doc.add(new Field(name, string, store, index));
-			}
-		}
+        for (Object o : xml.getChildren()) {
+            Element field = (Element) o;
+            String name = field.getAttributeValue("name");
+            String string = field.getAttributeValue("string"); // Lower case field is handled by Lucene Analyzer.
+            if (string.trim().length() > 0) {
+                String sStore = field.getAttributeValue("store");
+                String sIndex = field.getAttributeValue("index");
+                String sToken = field.getAttributeValue("token");
+                boolean bStore = sStore != null && sStore.equals("true");
+                boolean bIndex = sIndex != null && sIndex.equals("true");
+                boolean token = sToken != null && sToken.equals("true");
+                Field.Store store;
+                if (bStore) {
+                    store = Field.Store.YES;
+                }
+                else {
+                    store = Field.Store.NO;
+                }
+                Field.Index index = null;
+                if (bIndex && token) {
+                    index = Field.Index.TOKENIZED;
+                }
+                if (bIndex && !token) {
+                    index = Field.Index.UN_TOKENIZED;
+                }
+                if (!bIndex) {
+                    index = Field.Index.NO;
+                }
+                doc.add(new Field(name, string, store, index));
+            }
+        }
 		return doc;
 	}
 
@@ -955,7 +919,7 @@ public class SearchManager
             _transaction = new DefaultTransaction("SpatialIndexWriter");
             _timer = new Timer(true);
             _gmlParser = new Parser(new GMLConfiguration());
-            boolean rebuildIndex = false;
+            boolean rebuildIndex;
 
             rebuildIndex = createWriter(_datastore);
             if (rebuildIndex) {

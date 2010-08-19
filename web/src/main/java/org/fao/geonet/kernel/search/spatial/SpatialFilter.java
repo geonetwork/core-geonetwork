@@ -24,7 +24,6 @@ import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.FilterFactory2;
@@ -45,14 +44,12 @@ import java.util.Set;
 public abstract class SpatialFilter extends Filter
 {
     private static final long     serialVersionUID = -6221744013750827050L;
-    private static SimpleFeatureType FEATURE_TYPE;
 
     static {
         SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
         builder.add(SpatialIndexWriter.GEOM_ATTRIBUTE_NAME, Geometry.class,DefaultGeographicCRS.WGS84);
         builder.setDefaultGeometry(SpatialIndexWriter.GEOM_ATTRIBUTE_NAME);
         builder.setName(SpatialIndexWriter.SPATIAL_INDEX_TYPENAME);
-        FEATURE_TYPE = builder.buildFeatureType();
     }
     
     
@@ -67,8 +64,8 @@ public abstract class SpatialFilter extends Filter
     private Map<String, FeatureId> _unrefinedMatches;
     private boolean warned = false;
 
-    protected SpatialFilter(Query query, Element request, Geometry geom,
-            FeatureSource featureSource, SpatialIndex index) throws IOException
+    protected SpatialFilter(Query query, Geometry geom,
+                            FeatureSource featureSource, SpatialIndex index) throws IOException
     {
         _query = query;
         _geom = geom;
@@ -88,7 +85,7 @@ public abstract class SpatialFilter extends Filter
     protected SpatialFilter(Query query, Envelope bounds,
             FeatureSource featureSource, SpatialIndex index) throws IOException
     {
-        this(query,null,JTS.toGeometry(bounds),featureSource,index);
+        this(query, JTS.toGeometry(bounds),featureSource,index);
     }
 
     public BitSet bits(final IndexReader reader) throws IOException
@@ -209,9 +206,8 @@ public abstract class SpatialFilter extends Filter
         PropertyName geomPropertyName = _filterFactory.property(geomAttName);
 
         Literal geomExpression = _filterFactory.literal(_geom);
-        org.opengis.filter.Filter filter = createGeomFilter(_filterFactory,
+        return createGeomFilter(_filterFactory,
                 geomPropertyName, geomExpression);
-        return filter;
     }
 
     protected SpatialOperator createGeomFilter(FilterFactory2 filterFactory,

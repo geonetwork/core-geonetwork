@@ -20,7 +20,6 @@ import org.fao.geonet.util.spring.StringUtils;
 import org.jdom.Element;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -74,7 +73,7 @@ public class LuceneQueryBuilder {
 	 * Creates a query for all tokens in the search param. The query must select only results
 	 * where none of the tokens in the search param is present.
 	 */
-	private BooleanClause prohibitedTextField(String searchParam, String luceneIndexField, String similarity) {
+	private BooleanClause prohibitedTextField(String searchParam, String luceneIndexField) {
 		BooleanClause booleanClause  = null;
 		BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 		BooleanClause.Occur dontOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, true);
@@ -258,7 +257,7 @@ public class LuceneQueryBuilder {
 		//
 		// without
 		//
-		BooleanClause withoutQuery = prohibitedTextField(request.getChildText("without"), LuceneIndexField.ANY, similarity);
+		BooleanClause withoutQuery = prohibitedTextField(request.getChildText("without"), LuceneIndexField.ANY);
 		if(withoutQuery != null) {
 			query.add(withoutQuery);
 		}
@@ -291,19 +290,19 @@ public class LuceneQueryBuilder {
 		if(isoTopicCategories != null && isoTopicCategories.size() > 0) {
 			BooleanQuery isoTopicCategoriesQuery = new BooleanQuery();
 			BooleanClause.Occur topicCategoryOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
-			for(Iterator<Element> i = isoTopicCategories.iterator();i.hasNext();){
-				String isoTopicCategory =  i.next().getText();
-				isoTopicCategory = isoTopicCategory.trim();
-				if(isoTopicCategory.length() > 0) {
-					// some clients (like GN's GUI) stupidly append a * already. Prevent double stars here:
-					if(isoTopicCategory.endsWith("*")) {
-						isoTopicCategory = isoTopicCategory.substring(0, isoTopicCategory.length()-1);
-					}
-					PrefixQuery topicCategoryQuery = new PrefixQuery(new Term(LuceneIndexField.TOPIC_CATEGORY, isoTopicCategory));
-					BooleanClause topicCategoryClause = new BooleanClause(topicCategoryQuery, topicCategoryOccur);
-					isoTopicCategoriesQuery.add(topicCategoryClause);
-				}
-			}
+            for (Element isoTopicCategory1 : isoTopicCategories) {
+                String isoTopicCategory = isoTopicCategory1.getText();
+                isoTopicCategory = isoTopicCategory.trim();
+                if (isoTopicCategory.length() > 0) {
+                    // some clients (like GN's GUI) stupidly append a * already. Prevent double stars here:
+                    if (isoTopicCategory.endsWith("*")) {
+                        isoTopicCategory = isoTopicCategory.substring(0, isoTopicCategory.length() - 1);
+                    }
+                    PrefixQuery topicCategoryQuery = new PrefixQuery(new Term(LuceneIndexField.TOPIC_CATEGORY, isoTopicCategory));
+                    BooleanClause topicCategoryClause = new BooleanClause(topicCategoryQuery, topicCategoryOccur);
+                    isoTopicCategoriesQuery.add(topicCategoryClause);
+                }
+            }
 			BooleanClause.Occur isoTopicCategoriesOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 			BooleanClause isoTopicCategoriesClause = new BooleanClause(isoTopicCategoriesQuery, isoTopicCategoriesOccur);
 			query.add(isoTopicCategoriesClause);
@@ -378,45 +377,45 @@ public class LuceneQueryBuilder {
 			List<Element> groups = (List<Element>)request.getChildren("group");
 			BooleanClause.Occur groupOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
 			if(groups != null && groups.size() > 0) {
-				for(Iterator<Element> i = groups.iterator(); i.hasNext();) {
-					String group = i.next().getText();
-					group = group.trim();
-					if(group.length() > 0) {
-						TermQuery groupQuery = new TermQuery(new Term(LuceneIndexField._OP0, group));
-						BooleanClause groupClause = new BooleanClause(groupQuery, groupOccur);
-						groupsQueryEmpty = false;
-						groupsQuery.add(groupClause);
-					}
-				}
+                for (Element group1 : groups) {
+                    String group = group1.getText();
+                    group = group.trim();
+                    if (group.length() > 0) {
+                        TermQuery groupQuery = new TermQuery(new Term(LuceneIndexField._OP0, group));
+                        BooleanClause groupClause = new BooleanClause(groupQuery, groupOccur);
+                        groupsQueryEmpty = false;
+                        groupsQuery.add(groupClause);
+                    }
+                }
 			}
 			String reviewer = request.getChildText("isReviewer");
 			if(reviewer != null) {
 				if(groups != null && groups.size() > 0) {
-					for(Iterator<Element> i = groups.iterator(); i.hasNext();) {
-						String group = i.next().getText();
-						group = group.trim();
-						if(group.length() > 0) {
-							TermQuery groupQuery = new TermQuery(new Term(LuceneIndexField.GROUP_OWNER, group));
-							BooleanClause groupClause = new BooleanClause(groupQuery, groupOccur);
-							groupsQueryEmpty = false;
-							groupsQuery.add(groupClause);
-						}
-					}
+                    for (Element group1 : groups) {
+                        String group = group1.getText();
+                        group = group.trim();
+                        if (group.length() > 0) {
+                            TermQuery groupQuery = new TermQuery(new Term(LuceneIndexField.GROUP_OWNER, group));
+                            BooleanClause groupClause = new BooleanClause(groupQuery, groupOccur);
+                            groupsQueryEmpty = false;
+                            groupsQuery.add(groupClause);
+                        }
+                    }
 				}
 			}
 			String userAdmin = request.getChildText("isUserAdmin");
 			if(userAdmin != null) {
 				if(groups != null && groups.size() > 0) {
-					for(Iterator<Element> i = groups.iterator(); i.hasNext();) {
-						String group = i.next().getText();
-						group = group.trim();
-						if(group.length() > 0) {
-							TermQuery groupQuery = new TermQuery(new Term(LuceneIndexField.GROUP_OWNER, group));
-							BooleanClause groupClause = new BooleanClause(groupQuery, groupOccur);
-							groupsQueryEmpty = false;
-							groupsQuery.add(groupClause);
-						}
-					}
+                    for (Element group1 : groups) {
+                        String group = group1.getText();
+                        group = group.trim();
+                        if (group.length() > 0) {
+                            TermQuery groupQuery = new TermQuery(new Term(LuceneIndexField.GROUP_OWNER, group));
+                            BooleanClause groupClause = new BooleanClause(groupQuery, groupOccur);
+                            groupsQueryEmpty = false;
+                            groupsQuery.add(groupClause);
+                        }
+                    }
 				}
 			}
 			String owner = request.getChildText("owner");
@@ -433,7 +432,7 @@ public class LuceneQueryBuilder {
 				groupsQueryEmpty = false;
 				groupsQuery.add(adminClause);
 			}
-			if(groupsQueryEmpty == false) {
+			if(!groupsQueryEmpty) {
 				BooleanClause.Occur groupsOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 				BooleanClause groupsClause = new BooleanClause(groupsQuery, groupsOccur);
 				query.add(groupsClause);
@@ -443,15 +442,15 @@ public class LuceneQueryBuilder {
 			List<Element> groupOwners = (List<Element>)request.getChildren("groupOwner");
 			if(groupOwners != null && groupOwners.size() > 0) {
 				BooleanClause.Occur groupOwnerOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-				for(Iterator<Element> i = groupOwners.iterator();i.hasNext();) {
-					String groupOwner = i.next().getText();
-					groupOwner = groupOwner.trim();
-					if(groupOwner.length() > 0) {
-						TermQuery groupOwnerQuery = new TermQuery(new Term(LuceneIndexField.GROUP_OWNER, groupOwner));
-						BooleanClause groupOwnerClause = new BooleanClause(groupOwnerQuery, groupOwnerOccur);
-						query.add(groupOwnerClause);
-					}
-				}
+                for (Element groupOwner1 : groupOwners) {
+                    String groupOwner = groupOwner1.getText();
+                    groupOwner = groupOwner.trim();
+                    if (groupOwner.length() > 0) {
+                        TermQuery groupOwnerQuery = new TermQuery(new Term(LuceneIndexField.GROUP_OWNER, groupOwner));
+                        BooleanClause groupOwnerClause = new BooleanClause(groupOwnerQuery, groupOwnerOccur);
+                        query.add(groupOwnerClause);
+                    }
+                }
 			}
 		}
 
@@ -464,21 +463,21 @@ public class LuceneQueryBuilder {
 			BooleanQuery categoriesQuery = new BooleanQuery();
 			BooleanClause.Occur categoriesOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 			BooleanClause categoriesClause = null;
-			for(Iterator<Element> i = categories.iterator(); i.hasNext();) {
-				String category = i.next().getText();
-				if(category != null){
-					category = category.trim();
-					if(category.length() > 0) {
-						BooleanClause categoryClause = notRequiredTextField(category, LuceneIndexField.CAT, similarity);
-						if(categoryClause != null) {
-							if(categoriesClause == null) {
-								categoriesClause = new BooleanClause(categoriesQuery, categoriesOccur);
-							}
-							categoriesQuery.add(categoryClause);
-						}
-					}
-				}
-			}
+            for (Element category1 : categories) {
+                String category = category1.getText();
+                if (category != null) {
+                    category = category.trim();
+                    if (category.length() > 0) {
+                        BooleanClause categoryClause = notRequiredTextField(category, LuceneIndexField.CAT, similarity);
+                        if (categoryClause != null) {
+                            if (categoriesClause == null) {
+                                categoriesClause = new BooleanClause(categoriesQuery, categoriesOccur);
+                            }
+                            categoriesQuery.add(categoryClause);
+                        }
+                    }
+                }
+            }
 			if(categoriesClause != null) {
 				query.add(categoriesClause);
 			}
@@ -489,7 +488,7 @@ public class LuceneQueryBuilder {
 		//
 		String isTemplate = request.getChildText("template");
 		BooleanClause.Occur templateOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-		TermQuery templateQuery = null;
+		TermQuery templateQuery;
 		if(isTemplate != null && isTemplate.equals("y")) {
 			templateQuery = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "y"));
 		}
@@ -542,7 +541,7 @@ public class LuceneQueryBuilder {
 
 			Term lowerTerm = null;
 			Term upperTerm = null;
-			RangeQuery temporalRangeQuery = null;
+			RangeQuery temporalRangeQuery;
 
 			// temporal extent start is within search extent
             if(extFrom != null) {
@@ -579,7 +578,6 @@ public class LuceneQueryBuilder {
 
                 lowerTerm = null;
                 upperTerm = null;
-                RangeQuery rangeQuery = null;
                 lowerTerm = new Term(LuceneIndexField.TEMPORALEXTENT_END , extTo);
                 temporalRangeQuery = new RangeQuery(lowerTerm, null, true);
                 temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
@@ -660,28 +658,28 @@ public class LuceneQueryBuilder {
 		if(inspireThemes != null && inspireThemes.size() > 0) {
 			BooleanQuery inspireThemesQuery = new BooleanQuery();
 			BooleanClause.Occur inspireThemesOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-			for(Iterator<Element> i = inspireThemes.iterator(); i.hasNext();) {
-				String inspireTheme = i.next().getText();
-				inspireTheme = inspireTheme.trim();
-				if(inspireTheme.length() > 0) {
-					// some clients (like GN's GUI) stupidly append a * already. Prevent them here:
-					if(inspireTheme.endsWith("*")) {
-						inspireTheme = inspireTheme.substring(0, inspireTheme.length()-1);
-					}
-					// NOTE if we want to support a combined phrase/prefix query we should (instead) create a MultiPhraseQuery here.
-					// but  think that may be slow.
-					PhraseQuery phraseQuery = new PhraseQuery();
-					BooleanClause.Occur phraseOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
-					// tokenize phrase
-				    StringTokenizer st = new StringTokenizer(inspireTheme);
-				    while (st.hasMoreTokens()) {
-				        String phraseElement = st.nextToken();
-				        phraseElement = phraseElement.trim().toLowerCase();
-				        phraseQuery.add(new Term(LuceneIndexField.INSPIRE_THEME, phraseElement));
-				    }
-				    inspireThemesQuery.add(phraseQuery, phraseOccur);
-				}
-			}
+            for (Element inspireTheme1 : inspireThemes) {
+                String inspireTheme = inspireTheme1.getText();
+                inspireTheme = inspireTheme.trim();
+                if (inspireTheme.length() > 0) {
+                    // some clients (like GN's GUI) stupidly append a * already. Prevent them here:
+                    if (inspireTheme.endsWith("*")) {
+                        inspireTheme = inspireTheme.substring(0, inspireTheme.length() - 1);
+                    }
+                    // NOTE if we want to support a combined phrase/prefix query we should (instead) create a MultiPhraseQuery here.
+                    // but  think that may be slow.
+                    PhraseQuery phraseQuery = new PhraseQuery();
+                    BooleanClause.Occur phraseOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
+                    // tokenize phrase
+                    StringTokenizer st = new StringTokenizer(inspireTheme);
+                    while (st.hasMoreTokens()) {
+                        String phraseElement = st.nextToken();
+                        phraseElement = phraseElement.trim().toLowerCase();
+                        phraseQuery.add(new Term(LuceneIndexField.INSPIRE_THEME, phraseElement));
+                    }
+                    inspireThemesQuery.add(phraseQuery, phraseOccur);
+                }
+            }
 			query.add(inspireThemesQuery, inspireThemesOccur);
 		}
 
@@ -707,22 +705,21 @@ public class LuceneQueryBuilder {
         @SuppressWarnings("unchecked")
         List<Element> themeKeys = (List<Element>)request.getChildren("themekey");
         if(themeKeys != null && themeKeys.size() > 0) {
-            for(Iterator<Element> i = themeKeys.iterator(); i.hasNext();) {
+            for (Element themeKey1 : themeKeys) {
                 BooleanQuery allkeywordsQuery = new BooleanQuery();
                 BooleanClause.Occur allKeywordsOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 
-                String themeKey = i.next().getText();
+                String themeKey = themeKey1.getText();
                 if (StringUtils.hasText(themeKey)) {
                     BooleanClause.Occur keywordOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
                     // TODO: Check separator
-                    String[] tokens = StringUtils.delimitedListToStringArray(themeKey," or ");
-                    for(int j = 0; j < tokens.length; j++) {
-                        String token = tokens[j];
+                    String[] tokens = StringUtils.delimitedListToStringArray(themeKey, " or ");
+                    for (String token : tokens) {
                         token = token.trim();
-                        if(token.startsWith("\"")) {
+                        if (token.startsWith("\"")) {
                             token = token.substring(1);
                         }
-                        if(token.endsWith("\"")) {
+                        if (token.endsWith("\"")) {
                             token = token.substring(0, token.length() - 1);
                         }
                         //
@@ -805,7 +802,7 @@ public class LuceneQueryBuilder {
 		if((dateTo != null && dateTo.length() > 0) || (dateFrom != null && dateFrom.length() > 0)) {
 			Term lowerTerm = null;
 			Term upperTerm = null;
-			RangeQuery rangeQuery = null;
+			RangeQuery rangeQuery;
 			if(dateFrom != null) {
 				lowerTerm = new Term(luceneIndexField, dateFrom);
 			}
@@ -1025,10 +1022,8 @@ public class LuceneQueryBuilder {
 	private TermRangeQuery getBBoxTermRangeQuery(String field,
 			String lowerTerm, String upperTerm, boolean inclusive) {
 
-		TermRangeQuery bBoxValueQuery = new TermRangeQuery(field, lowerTerm,
-				upperTerm, inclusive, inclusive);
-
-		return bBoxValueQuery;
+        return new TermRangeQuery(field, lowerTerm,
+                upperTerm, inclusive, inclusive);
 	}
 	
 	
@@ -1040,7 +1035,7 @@ public class LuceneQueryBuilder {
 	 */
 	private String toPositiveValue (String boundingBoxValue) {
 		double tmpBoundingBoxValue = Double.parseDouble(boundingBoxValue) ;
-		boundingBoxValue = new Double(360 + tmpBoundingBoxValue).toString();
+		boundingBoxValue = Double.toString(360 + tmpBoundingBoxValue);
 		return boundingBoxValue;
 	}
 }

@@ -31,7 +31,7 @@ import org.apache.lucene.search.RangeQuery;
 
       private static String formatDate(String s) {
 
-        String ret = "";
+        String ret;
 
         if (s==null) return null;
 

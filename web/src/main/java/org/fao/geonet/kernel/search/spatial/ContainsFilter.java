@@ -49,7 +49,7 @@ public class ContainsFilter extends SpatialFilter
     public ContainsFilter(Query query, Element request, Geometry geom,
             FeatureSource featureSource, SpatialIndex index) throws IOException
     {
-        super(query, request, geom, featureSource, index);
+        super(query, geom, featureSource, index);
     }
 
     protected SpatialOperator createGeomFilter(FilterFactory2 filterFactory,

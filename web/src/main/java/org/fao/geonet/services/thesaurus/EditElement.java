@@ -132,7 +132,7 @@ public class EditElement implements Service {
 					type = "related";
 				
 				Element keywordType = new Element(type);
-				keywordType.addContent(searcherBNR.getResults(params));
+				keywordType.addContent(searcherBNR.getResults());
 				
 				elResp.addContent(keywordType);
 			}

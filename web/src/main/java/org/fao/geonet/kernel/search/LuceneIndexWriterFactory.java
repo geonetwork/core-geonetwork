@@ -46,8 +46,7 @@ public class LuceneIndexWriterFactory {
 	}
 
 	public synchronized boolean isOpen() {
-		if (_count > 0) return true;
-		else return false;
+        return _count > 0;
 	}
 
 	public synchronized void closeWriter() throws Exception {

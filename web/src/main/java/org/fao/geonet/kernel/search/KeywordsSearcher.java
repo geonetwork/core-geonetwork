@@ -46,14 +46,10 @@ public class KeywordsSearcher {
 
 	private String _query;
 	private String _lang;
-	private String _sortBy = "label";
-	private String _sortOrder = "ascending";
 
-	private ArrayList<KeywordBean> _results = new ArrayList<KeywordBean>();
+    private List<KeywordBean> _results = new ArrayList<KeywordBean>();
 
-	private int _pTypeSearch = 1;
-	
-	private int _maxResults = 10000;
+    private int _maxResults = 10000;
 
 
 	// --------------------------------------------------------------------------------
@@ -122,7 +118,7 @@ public class KeywordsSearcher {
 		_maxResults = Util.getParam(params, "maxResults", _maxResults);
 
 		// Type of search
-		int pTypeSearch = _pTypeSearch;
+		int pTypeSearch;
 		if (params.getChild("pTypeSearch") != null){							// if param pTypeSearch not here
 			pTypeSearch = Util.getParamAsInt(params, "pTypeSearch");
 
@@ -154,16 +150,13 @@ public class KeywordsSearcher {
 		if (bAll){
 			Hashtable<String, Thesaurus> tt = _tm.getThesauriTable();
 
-			Enumeration e = tt.keys();
+			Enumeration<String> e = tt.keys();
 			boolean add = true;
 		    while (e.hasMoreElements())										// Fill the list with all thesauri available
 		    {
 		    	Thesaurus thesaurus = tt.get(e.nextElement());
 		    	if (pTypeThesaurus != null){
-			    	if (!thesaurus.getDname().equals(pTypeThesaurus)) // Add thesaurus only if type is corresponding with MD type (based on ISO type ie. theme, discipline, ...)
-			    		add = false;
-			    	else
-			    		add = true;
+                    add = thesaurus.getDname().equals(pTypeThesaurus);
 		    	}
 
 		    	if (add){
@@ -219,71 +212,71 @@ public class KeywordsSearcher {
 		_results = new ArrayList<KeywordBean>();
 		int idKeyword = 0;
 
-		for (int i = 0; i < listThesauri.size(); i++) { 			// Search in all Thesaurus if none selected
-			Element el = (Element) listThesauri.get(i);
-			String sThesaurusName = el.getTextTrim();
+            for (Object aListThesauri : listThesauri) {             // Search in all Thesaurus if none selected
+                Element el = (Element) aListThesauri;
+                String sThesaurusName = el.getTextTrim();
 
-			Thesaurus thesaurus = _tm.getThesaurusByName(sThesaurusName);
+                Thesaurus thesaurus = _tm.getThesaurusByName(sThesaurusName);
 
-			// Perform request
-			QueryResultsTable resultsTable = thesaurus.performRequest(_query);
+                // Perform request
+                QueryResultsTable resultsTable = thesaurus.performRequest(_query);
 
-			int rowCount = resultsTable.getRowCount();
+                int rowCount = resultsTable.getRowCount();
 
-			for (int row = 0; row < rowCount; row++) {
-				// preflab
-				Value value = resultsTable.getValue(row, 0);
-				String sValue = "";
-				if (value != null) {
-					sValue = value.toString();
-				}
-				// definition
-				Value definition = resultsTable.getValue(row, 1);
-				String sDefinition = "";
-				if (definition != null) {
-					sDefinition = definition.toString();
-				}
-				// uri (= id in RDF file != id in list)
-				Value uri = resultsTable.getValue(row, 2);
-				String sUri = "";
-				if (uri != null) {
-					sUri = uri.toString();
-				}
-				
-				
-				Value lowCorner = resultsTable.getValue(row, 3);
-				Value upperCorner = resultsTable.getValue(row, 4);
-				
-				String sUpperCorner = "";
-				String sLowCorner = "";
-				
-				String sEast = "";
-				String sSouth = "";
-				String sWest = "";
-				String sNorth = "";
-				
-				// lowcorner
-				if (lowCorner != null) {
-					sLowCorner = lowCorner.toString();
-					sWest = sLowCorner.substring(0, sLowCorner.indexOf(' ')).trim();
-					sSouth = sLowCorner.substring(sLowCorner.indexOf(' ')).trim();
-				}
-				
-				// uppercorner
-				if (upperCorner != null) {
-					sUpperCorner = upperCorner.toString();
-					sEast = sUpperCorner.substring(0,sUpperCorner.indexOf(' ')).trim();
-					sNorth = sUpperCorner.substring(sUpperCorner.indexOf(' '))
-							.trim();
-				}
+                for (int row = 0; row < rowCount; row++) {
+                    // preflab
+                    Value value = resultsTable.getValue(row, 0);
+                    String sValue = "";
+                    if (value != null) {
+                        sValue = value.toString();
+                    }
+                    // definition
+                    Value definition = resultsTable.getValue(row, 1);
+                    String sDefinition = "";
+                    if (definition != null) {
+                        sDefinition = definition.toString();
+                    }
+                    // uri (= id in RDF file != id in list)
+                    Value uri = resultsTable.getValue(row, 2);
+                    String sUri = "";
+                    if (uri != null) {
+                        sUri = uri.toString();
+                    }
 
-				KeywordBean kb = new KeywordBean(idKeyword, sValue,
-						sDefinition, sUri, sEast, sWest, sSouth, sNorth,
-						sThesaurusName, false, _lang);
-				_results.add(kb);
-				idKeyword++;
-			}
-		}
+
+                    Value lowCorner = resultsTable.getValue(row, 3);
+                    Value upperCorner = resultsTable.getValue(row, 4);
+
+                    String sUpperCorner;
+                    String sLowCorner;
+
+                    String sEast = "";
+                    String sSouth = "";
+                    String sWest = "";
+                    String sNorth = "";
+
+                    // lowcorner
+                    if (lowCorner != null) {
+                        sLowCorner = lowCorner.toString();
+                        sWest = sLowCorner.substring(0, sLowCorner.indexOf(' ')).trim();
+                        sSouth = sLowCorner.substring(sLowCorner.indexOf(' ')).trim();
+                    }
+
+                    // uppercorner
+                    if (upperCorner != null) {
+                        sUpperCorner = upperCorner.toString();
+                        sEast = sUpperCorner.substring(0, sUpperCorner.indexOf(' ')).trim();
+                        sNorth = sUpperCorner.substring(sUpperCorner.indexOf(' '))
+                                .trim();
+                    }
+
+                    KeywordBean kb = new KeywordBean(idKeyword, sValue,
+                            sDefinition, sUri, sEast, sWest, sSouth, sNorth,
+                            sThesaurusName, false, _lang);
+                    _results.add(kb);
+                    idKeyword++;
+                }
+            }
 		}
 	}
 
@@ -293,9 +286,7 @@ public class KeywordsSearcher {
 		String id = Util.getParam(params, "id");
 		String sThesaurusName = Util.getParam(params, "thesaurus");
 
-		Thesaurus thesaurus = _tm.getThesaurusByName(sThesaurusName);
-
-		String _lang = srvContext.getLanguage();
+        String _lang = srvContext.getLanguage();
 
 		searchBN(id, sThesaurusName, request, _lang);
 	}
@@ -366,10 +357,9 @@ public class KeywordsSearcher {
 	}
 
 	public void sortResults(String tri) {
-		_sortBy = tri;
-		if ("label".equals(tri)) {
+        if ("label".equals(tri)) {
 			// sort by label
-			Collections.sort((List) _results, new Comparator() {
+			Collections.sort(_results, new Comparator() {
 				public int compare(final Object o1, final Object o2) {
 					final KeywordBean kw1 = (KeywordBean) o1;
 					final KeywordBean kw2 = (KeywordBean) o2;
@@ -379,7 +369,7 @@ public class KeywordsSearcher {
 		}
 		if ("definition".equals(tri)) {
 			// sort by def
-			Collections.sort((List) _results, new Comparator() {
+			Collections.sort(_results, new Comparator() {
 				public int compare(final Object o1, final Object o2) {
 					final KeywordBean kw1 = (KeywordBean) o1;
 					final KeywordBean kw2 = (KeywordBean) o2;
@@ -390,7 +380,7 @@ public class KeywordsSearcher {
 		}
 	}
 
-	public Element getResults(Element params) throws Exception {
+	public Element getResults() throws Exception {
 
 		Element elDescKeys = new Element("descKeys");
 
@@ -398,7 +388,7 @@ public class KeywordsSearcher {
 
 		//for (int i = from; i <= to; i++) {
 		for (int i = 0; i <= nbResults - 1; i++) {
-			KeywordBean kb = (KeywordBean) _results.get(i);
+			KeywordBean kb = _results.get(i);
 			Element elKeyword = new Element("keyword");
 			Element elSelected = new Element("selected");
 			// TODO : Add Thesaurus name
@@ -435,17 +425,17 @@ public class KeywordsSearcher {
 
 	public void selectUnselectKeywords(Element params) {
 		List listIdKeywordsSelected = params.getChildren("pIdKeyword");
-		for (int i = 0; i < listIdKeywordsSelected.size(); i++) {
-			Element el = (Element) listIdKeywordsSelected.get(i);
-			int keywordId = Integer.decode(el.getTextTrim());
-			for (int j = 0; j < _results.size(); j++) {
-				if (((KeywordBean) _results.get(j)).getId() == keywordId) {
-					((KeywordBean) _results.get(j))
-							.setSelected(!((KeywordBean) _results.get(j))
-									.isSelected());
-				}
-			}
-		}
+        for (Object aListIdKeywordsSelected : listIdKeywordsSelected) {
+            Element el = (Element) aListIdKeywordsSelected;
+            int keywordId = Integer.decode(el.getTextTrim());
+            for (KeywordBean _result : _results) {
+                if (( _result).getId() == keywordId) {
+                    ( _result)
+                            .setSelected(!( _result)
+                                    .isSelected());
+                }
+            }
+        }
 	}
 
 	/**
@@ -455,7 +445,7 @@ public class KeywordsSearcher {
 		Element elDescKeys = new Element("descKeys");
 		int nbSelectedKeywords = 0;
 		for (int i = 0; i < this.getNbResults(); i++) {
-			KeywordBean kb = (KeywordBean) _results.get(i);
+			KeywordBean kb = _results.get(i);
 			if (kb.isSelected()) {
 				Element elKeyword = new Element("keyword");
 				// keyword type
@@ -516,19 +506,19 @@ public class KeywordsSearcher {
 	 * @return a collection of descKeys element describing the list of selected keywords
 	 */
 	public ArrayList getSelectedKeywordsInDescKeys() {
-		ArrayList listSelectedKeywords = new ArrayList();
+		ArrayList<KeywordBean> listSelectedKeywords = new ArrayList<KeywordBean>();
 		ArrayList listElDescKeys = new ArrayList();
 
 		// Get all selected keywords
 		for (int i=0; i<this.getNbResults(); i++){
-			KeywordBean kb = (KeywordBean) _results.get(i);
+			KeywordBean kb = _results.get(i);
 			if (kb.isSelected()) {
 				listSelectedKeywords.add(kb);
 			}
 		}
 
 		// Sort keywords
-		Collections.sort((List) listSelectedKeywords, new Comparator() {
+		Collections.sort(listSelectedKeywords, new Comparator() {
 			// Compare
 			public int compare(final Object o1, final Object o2) {
 				final KeywordBean kw1 = (KeywordBean) o1;
@@ -548,46 +538,47 @@ public class KeywordsSearcher {
 		Element elRefDateType = null;
 		Element elDateTypCd = null;
 
-		for (int i = 0; i < listSelectedKeywords.size(); i++) {
-			KeywordBean kb = (KeywordBean) listSelectedKeywords.get(i);
-			if (!thesaurusName.equals(kb.getThesaurus())) {
-				if (elDescKeys!=null){
-					elKeyTyp.addContent(elKeyTypCd);
-					elDescKeys.addContent(elKeyTyp);
-					elRefDateType.addContent(elDateTypCd);
-					elResRefDate.addContent(elRefDateType);
-					elResRefDate.addContent(elRefDate);
-					elThesaName.addContent(elResTitle);
-					elThesaName.addContent(elResRefDate);
-					elDescKeys.addContent(elThesaName);
-					listElDescKeys.add(elDescKeys.clone());
-				}
-				elDescKeys = new Element("descKeys");
-				String thesaurusType = kb.getThesaurus();
-				thesaurusType = thesaurusType.replace('.', '-');
-				thesaurusType =  thesaurusType.split("-")[1];
-				elKeyTyp = new Element("keyTyp");
-				elKeyTypCd = new Element("KeyTypCd");
-				elKeyTypCd.setAttribute("value", thesaurusType);
-				elThesaName = new Element("thesaName");
-				elResTitle = new Element("resTitle");
-				elResTitle.addContent(kb.getThesaurus());
-				elResRefDate = new Element("resRefDate");
-				elRefDate = new Element("refDate");
-				elRefDateType = new Element("refDateType");
-				elDateTypCd = new Element("DateTypCd");
-				elDateTypCd.setAttribute("value","nill");
+        for (KeywordBean kb : listSelectedKeywords) {
+            if (!thesaurusName.equals(kb.getThesaurus())) {
+                if (elDescKeys != null) {
+                    elKeyTyp.addContent(elKeyTypCd);
+                    elDescKeys.addContent(elKeyTyp);
+                    elRefDateType.addContent(elDateTypCd);
+                    elResRefDate.addContent(elRefDateType);
+                    elResRefDate.addContent(elRefDate);
+                    elThesaName.addContent(elResTitle);
+                    elThesaName.addContent(elResRefDate);
+                    elDescKeys.addContent(elThesaName);
+                    listElDescKeys.add(elDescKeys.clone());
+                }
+                elDescKeys = new Element("descKeys");
+                String thesaurusType = kb.getThesaurus();
+                thesaurusType = thesaurusType.replace('.', '-');
+                thesaurusType = thesaurusType.split("-")[1];
+                elKeyTyp = new Element("keyTyp");
+                elKeyTypCd = new Element("KeyTypCd");
+                elKeyTypCd.setAttribute("value", thesaurusType);
+                elThesaName = new Element("thesaName");
+                elResTitle = new Element("resTitle");
+                elResTitle.addContent(kb.getThesaurus());
+                elResRefDate = new Element("resRefDate");
+                elRefDate = new Element("refDate");
+                elRefDateType = new Element("refDateType");
+                elDateTypCd = new Element("DateTypCd");
+                elDateTypCd.setAttribute("value", "nill");
 
-				thesaurusName = kb.getThesaurus();
-			}
-			Element elKeyword = new Element("keyword");
-			elKeyword.addContent(kb.getValue());
-			elDescKeys.addContent(elKeyword);
-		}
+                thesaurusName = kb.getThesaurus();
+            }
+            Element elKeyword = new Element("keyword");
+            elKeyword.addContent(kb.getValue());
+            if (elDescKeys != null) {
+                elDescKeys.addContent(elKeyword);
+            }
+        }
 		// add last item
 		if (elDescKeys!=null){
-			elKeyTyp.addContent(elKeyTypCd);
-			elDescKeys.addContent(elKeyTyp);
+            elKeyTyp.addContent(elKeyTypCd);
+            elDescKeys.addContent(elKeyTyp);
 			elRefDateType.addContent(elDateTypCd);
 			elResRefDate.addContent(elRefDateType);
 			elResRefDate.addContent(elRefDate);
@@ -599,10 +590,10 @@ public class KeywordsSearcher {
 		return listElDescKeys;
 	}
 
-	public List getSelectedKeywordsInList() {
-		ArrayList keywords = new ArrayList<KeywordBean>();
+	public List<KeywordBean> getSelectedKeywordsInList() {
+		ArrayList<KeywordBean> keywords = new ArrayList<KeywordBean>();
 		for (int i = 0; i < this.getNbResults(); i++) {
-			KeywordBean kb = (KeywordBean) _results.get(i);
+			KeywordBean kb = _results.get(i);
 			if (kb.isSelected()) {
 					keywords.add(kb);
 				}
@@ -613,7 +604,7 @@ public class KeywordsSearcher {
 	public KeywordBean existsResult(String id) {
 		KeywordBean keyword = null;
 		for (int i = 0; i < this.getNbResults(); i++) {
-			KeywordBean kb = (KeywordBean) _results.get(i);
+			KeywordBean kb = _results.get(i);
 			if (kb.getId() == Integer.parseInt(id)) {
 					keyword = kb;
 					break;

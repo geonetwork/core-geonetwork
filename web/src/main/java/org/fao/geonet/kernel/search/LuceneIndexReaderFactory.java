@@ -28,7 +28,7 @@ public class LuceneIndexReaderFactory {
 
   public LuceneIndexReaderFactory(File dir) throws IOException {
     currentReader = IndexReader.open(dir, true);
-    warm(currentReader);
+    warm();
 	}
 
 
@@ -50,7 +50,7 @@ public class LuceneIndexReaderFactory {
 	//===========================================================================
 	// Private Methods
 
-  private void warm(IndexReader reader) {}                                
+  private void warm() {}                                
 
   private synchronized void startReopen() throws InterruptedException {
     while (reopening) {
@@ -74,7 +74,7 @@ public class LuceneIndexReaderFactory {
     try {
        IndexReader newReader = currentReader.reopen(); 
        if (newReader != currentReader) {
-				warm(newReader);
+				warm();
        	swapReader(newReader);
 				Log.debug(Geonet.SEARCH_ENGINE, "Thread "+Thread.currentThread().getId()+": reopened IndexReader");
 			}

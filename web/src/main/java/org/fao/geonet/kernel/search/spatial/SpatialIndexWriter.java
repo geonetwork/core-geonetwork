@@ -356,9 +356,8 @@ public class SpatialIndexWriter
 
 	private FeatureStore createFeatureStore(DataStore datastore) throws Exception
     {
-        DataStore ds = datastore;
 
-        return (FeatureStore) ds.getFeatureSource(SPATIAL_INDEX_TYPENAME);
+        return (FeatureStore) datastore.getFeatureSource(SPATIAL_INDEX_TYPENAME);
     }
 
 	public static MultiPolygon toMultiPolygon(Geometry geometry)

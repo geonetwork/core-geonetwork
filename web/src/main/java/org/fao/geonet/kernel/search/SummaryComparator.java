@@ -32,6 +32,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -46,7 +47,7 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
         STRING
         {
             @Override
-            public Comparable value(String string, Locale locale, Element configuration)
+            public Comparable<LocalizedStringComparable> value(String string, Locale locale, Element configuration)
             {
                 return new LocalizedStringComparable(string, locale);
             }
@@ -55,19 +56,19 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
         NUMBER
         {
             @Override
-            public Comparable value(String string, Locale locale, Element configuration)
+            public Comparable<Double> value(String string, Locale locale, Element configuration)
             {
             	try {
             		return Double.valueOf(string.trim());
             	} catch (NumberFormatException e) {
-					return Double.valueOf(Integer.MAX_VALUE); // Bottom of the list
+					return (double) Integer.MAX_VALUE; // Bottom of the list
 				}
             }
         },
         SCALE
         {
             @Override
-            public Comparable value(String string, Locale locale, Element configuration)
+            public Comparable<Double> value(String string, Locale locale, Element configuration)
             {
                 String scale = string;
                 /**
@@ -87,14 +88,14 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
                 try {
                 	return Double.valueOf(scale.trim());
                 } catch (NullPointerException e) {
-					return Double.valueOf(Integer.MAX_VALUE);	// if scale is not a number value - Bottom of the list
+					return (double) Integer.MAX_VALUE;	// if scale is not a number value - Bottom of the list
 				}
             }
         },
         DATE
         {
             @Override
-            public Comparable value(String string, Locale locale, Element configuration)
+            public Comparable<Date> value(String string, Locale locale, Element configuration)
             {
                 List<DateFormat> formats = new ArrayList<DateFormat>();
                 for (Object child : configuration.getChildren("dateFormat")) {
@@ -113,8 +114,7 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
 
                 for (DateFormat dateFormat : formats) {
                     try {
-                        java.util.Date date = dateFormat.parse(string);
-                        return date;
+                        return dateFormat.parse(string);
                     } catch (ParseException e) {
                         // try next
                     }
@@ -126,7 +126,7 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
 
         public abstract Comparable value(String string, Locale locale, Element configuration);
 
-        private static Map<Object, DateFormat> dateformats = new HashMap<Object, DateFormat>();
+        private static final Map<Object, DateFormat> dateformats = new HashMap<Object, DateFormat>();
         static {
             dateformats.put(SimpleDateFormat.SHORT, SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT));
             dateformats.put(SimpleDateFormat.MEDIUM, SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM));
@@ -170,10 +170,10 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
 
     public int compare(Map.Entry<String, Integer> me1, Map.Entry<String, Integer> me2)
     {
-        String key1 = (String) me1.getKey();
-        String key2 = (String) me2.getKey();
-        Integer count1 = (Integer) me1.getValue();
-        Integer count2 = (Integer) me2.getValue();
+        String key1 = me1.getKey();
+        String key2 = me2.getKey();
+        Integer count1 = me1.getValue();
+        Integer count2 = me2.getValue();
         switch (_option)
         {
         case NAME:

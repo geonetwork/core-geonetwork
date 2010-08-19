@@ -35,8 +35,10 @@ import org.geotools.data.FeatureSource;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.jdom.Element;
+import org.opengis.feature.Feature;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.feature.type.FeatureType;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
@@ -60,9 +62,9 @@ public class FullScanFilter extends SpatialFilter
     private Set<String>       _matches;
 
     public FullScanFilter(Query query, Element request, Geometry geom,
-            FeatureSource featureSource, SpatialIndex index) throws IOException
+            FeatureSource<FeatureType, Feature> featureSource, SpatialIndex index) throws IOException
     {
-        super(query, request, geom, featureSource, index);
+        super(query, geom, featureSource, index);
     }
 
     protected FullScanFilter(Query query, Envelope bounds,

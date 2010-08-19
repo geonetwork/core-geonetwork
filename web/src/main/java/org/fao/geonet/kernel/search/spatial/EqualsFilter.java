@@ -31,7 +31,6 @@ import org.jdom.Element;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
-import org.opengis.filter.spatial.Equals;
 import org.opengis.filter.spatial.SpatialOperator;
 
 import java.io.IOException;
@@ -50,14 +49,13 @@ public class EqualsFilter extends SpatialFilter
     public EqualsFilter(Query query, Element request, Geometry geom,
             FeatureSource featureSource, SpatialIndex index) throws IOException
     {
-        super(query, request, geom, featureSource, index);
+        super(query, geom, featureSource, index);
     }
 
     protected SpatialOperator createGeomFilter(FilterFactory2 filterFactory,
             PropertyName geomPropertyName, Literal geomExpression)
     {
-        Equals filter = filterFactory.equal(geomPropertyName, geomExpression);
-        return filter;
+        return filterFactory.equal(geomPropertyName, geomExpression);
     }
 
 }

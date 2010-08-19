@@ -46,10 +46,10 @@ public class TouchesFilter extends SpatialFilter
 
     private static final long serialVersionUID = 1114543251684147194L;
 
-    public TouchesFilter(Query query, Element request, Geometry geom,
-            FeatureSource featureSource, SpatialIndex index) throws IOException
+    public TouchesFilter(Query query, Geometry geom,
+                         FeatureSource featureSource, SpatialIndex index) throws IOException
     {
-        super(query, request, geom, featureSource, index);
+        super(query, geom, featureSource, index);
     }
 
     protected SpatialOperator createGeomFilter(FilterFactory2 filterFactory,
