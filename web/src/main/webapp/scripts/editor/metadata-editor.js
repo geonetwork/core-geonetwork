@@ -465,13 +465,14 @@ function doSaveAction(action,validateAction)
 		if (w)
 			w.destroy();
 		
-		var myAjax = new Ajax.Updater(document.body,
+		var myAjax = new Ajax.Updater(
+			{success: document.body},	// Replace content only on success
 			getGNServiceURL(action),
 			{
 				method: 'post',
 				parameters: $('editForm').serialize(true),
 				evalScripts: true,
-				onComplete: function(req) {
+				onSuccess: function(req) {
 					if (document.mainForm.showvalidationerrors.value=='true')
 						getValidationReport();
 					setBunload(true); // reset warning for window destroy
@@ -480,7 +481,8 @@ function doSaveAction(action,validateAction)
 				},
 				onFailure: function(req) { 
 					alert(translate("errorSaveFailed") + "/ status " + req.status+" text: " + req.statusText + " - " + translate("tryAgain"));
- 					$('editorBusy').hide();
+					// Remove overlay panel
+					Element.remove($("editorOverlay"));
 					setBunload(true); // reset warning for window destroy
 				}
 			}
