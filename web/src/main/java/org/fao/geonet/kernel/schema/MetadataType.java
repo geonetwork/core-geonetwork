@@ -30,6 +30,7 @@ package org.fao.geonet.kernel.schema;
 import org.fao.geonet.constants.Edit;
 
 import java.util.ArrayList;
+import java.util.List;
 
 //==============================================================================
 
@@ -39,12 +40,12 @@ public class MetadataType
 	private boolean isOrType;
 	public boolean hasContainers = false;
 
-	private ArrayList alElements   = new ArrayList();
-	private ArrayList alTypes      = new ArrayList();
-	private ArrayList alMinCard    = new ArrayList();
-	private ArrayList alMaxCard    = new ArrayList();
-	private ArrayList alAttribs    = new ArrayList();
-	private ArrayList alExamineSubs  = new ArrayList();
+	private ArrayList<String> alElements   = new ArrayList<String>();
+	private List<String> alTypes      = new ArrayList<String>();
+	private List<Integer> alMinCard    = new ArrayList<Integer>();
+	private List<Integer> alMaxCard    = new ArrayList<Integer>();
+	private List<MetadataAttribute> alAttribs    = new ArrayList<MetadataAttribute>();
+	private List<Boolean> alExamineSubs  = new ArrayList<Boolean>();
 
 	//---------------------------------------------------------------------------
 	//---
@@ -62,13 +63,8 @@ public class MetadataType
 
 	public int getElementCount() { return alElements.size(); }
 
-	public void resetElementAt(int pos,String name,String type) {
-		alElements.set(pos,name);
-		alTypes.set(pos,type);
-	}
-
-	public ArrayList getElementList() {
-		return (ArrayList) alElements.clone();
+    public List<String> getElementList() {
+		return (ArrayList<String>) alElements.clone();
 	}
 
 	//--------------------------------------------------------------------------
@@ -76,7 +72,7 @@ public class MetadataType
 
 	public String getElementAt(int pos)
 	{
-		return (String) alElements.get(pos);
+		return alElements.get(pos);
 	}
 
 	//--------------------------------------------------------------------------
@@ -84,24 +80,15 @@ public class MetadataType
 
 	public String getElementTypeAt(int pos)
 	{
-		return (String) alTypes.get(pos);
+		return alTypes.get(pos);
 	}
 
-	//--------------------------------------------------------------------------
-	/** Return true if subs for element in given position need to be examined, 
-	 *  false otherwise */
-
-	public Boolean examineSubs(int pos)
-	{
-		return (Boolean) alExamineSubs.get(pos);
-	}
-
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 	/** Returns the min cardinality of element in a given pos */
 
 	public int getMinCardinAt(int pos)
 	{
-		return ((Integer) alMinCard.get(pos)).intValue();
+		return alMinCard.get(pos);
 	}
 
 	//--------------------------------------------------------------------------
@@ -109,7 +96,7 @@ public class MetadataType
 
 	public int getMaxCardinAt(int pos)
 	{
-		return ((Integer) alMaxCard.get(pos)).intValue();
+		return alMaxCard.get(pos);
 	}
 
 	//--------------------------------------------------------------------------
@@ -125,7 +112,7 @@ public class MetadataType
 
 	public MetadataAttribute getAttributeAt(int i)
 	{
-		return (MetadataAttribute) alAttribs.get(i);
+		return alAttribs.get(i);
 	}
 
 	//--------------------------------------------------------------------------
@@ -185,12 +172,7 @@ public class MetadataType
 
 	//---------------------------------------------------------------------------
 
-	void addElementWithNoType(String name, int minCard, int maxCard)
-	{
-		addElement(name,null,false,minCard,maxCard);
-	}
-
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 	
 	void addRefElementWithType(String name, String elementType, int minCard, int maxCard)
 	{
@@ -199,12 +181,7 @@ public class MetadataType
 
 	//---------------------------------------------------------------------------
 
-	void addRefElementWithNoType(String name, int minCard, int maxCard)
-	{
-		addElement(name,null,true,minCard,maxCard);
-	}
-
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
 	void addElement(String name, String elementType, Boolean examineElementSubs, int minCard, int maxCard)
 	{
@@ -218,8 +195,8 @@ public class MetadataType
 		alElements.add(name);
 		alTypes.add(elementType);
 		alExamineSubs.add(examineElementSubs);
-		alMinCard.add(new Integer(minCard));
-		alMaxCard.add(new Integer(maxCard));
+		alMinCard.add(minCard);
+		alMaxCard.add(maxCard);
 		if (name.contains(Edit.RootChild.CHOICE)||
 				name.contains(Edit.RootChild.GROUP)||
 				name.contains(Edit.RootChild.SEQUENCE)) hasContainers = true;

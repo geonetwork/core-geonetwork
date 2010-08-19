@@ -38,8 +38,7 @@ import java.util.List;
 class GroupEntry
 {
 	public String  name;
-  boolean isChoice;
-	public ArrayList alElements = new ArrayList();
+    public ArrayList<ElementEntry> alElements = new ArrayList<ElementEntry>();
 
 	//---------------------------------------------------------------------------
 	//---
@@ -70,19 +69,20 @@ class GroupEntry
 	{
 		List attribs = ei.element.getAttributes();
 
-		for(int i=0; i<attribs.size(); i++)
-		{
-			Attribute at = (Attribute) attribs.get(i);
+        for (Object attrib : attribs) {
+            Attribute at = (Attribute) attrib;
 
-			String attrName = at.getName(); 
-			if (attrName.equals("name")) {
-        name = at.getValue();
-        if ((name.indexOf(':') == -1) && (ei.targetNSPrefix != null))
-          name = ei.targetNSPrefix + ":" + at.getValue();
-      }
-			else
-				Logger.log("Unknown attribute '"+ attrName +"' in <group> element", ei);
-		}
+            String attrName = at.getName();
+            if (attrName.equals("name")) {
+                name = at.getValue();
+                if ((name.indexOf(':') == -1) && (ei.targetNSPrefix != null)) {
+                    name = ei.targetNSPrefix + ":" + at.getValue();
+                }
+            }
+            else {
+                Logger.log();
+            }
+        }
 	}
 
 	//---------------------------------------------------------------------------
@@ -91,34 +91,37 @@ class GroupEntry
 	{
 		List children = ei.element.getChildren();
 
-		for(int i=0; i<children.size(); i++)
-		{
-			Element elChild = (Element) children.get(i);
-			String  elName  = elChild.getName();
+        for (Object aChildren : children) {
+            Element elChild = (Element) aChildren;
+            String elName = elChild.getName();
 
-			if (elName.equals("sequence")) {
-				List sequence = elChild.getChildren();
+            if (elName.equals("sequence")) {
+                List sequence = elChild.getChildren();
 
-				for(int j=0; j<sequence.size(); j++)
-				{
-					Element elElem = (Element) sequence.get(j);
+                for (Object aSequence : sequence) {
+                    Element elElem = (Element) aSequence;
 
-					if (elElem.getName().equals("choice") || elElem.getName().equals("element") || elElem.getName().equals("group") || elElem.getName().equals("sequence"))
-					  alElements.add(new ElementEntry(elElem, ei.file, ei.targetNS, ei.targetNSPrefix));
+                    if (elElem.getName().equals("choice") || elElem.getName().equals("element") || elElem.getName().equals("group") || elElem.getName().equals("sequence")) {
+                        alElements.add(new ElementEntry(elElem, ei.file, ei.targetNS, ei.targetNSPrefix));
+                    }
 
-					else
-						Logger.log("Unknown child '"+ elElem.getName() +"' in <sequence> element", ei);
-				}
-			}
-			else if (elName.equals("choice"))
-				 alElements.add(new ElementEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix));
+                    else {
+                        Logger.log();
+                    }
+                }
+            }
+            else if (elName.equals("choice")) {
+                alElements.add(new ElementEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix));
+            }
 
-			else if (elName.equals("annotation"))
-				;
+            else if (elName.equals("annotation")) {
+                
+            }
 
-			else
-				Logger.log("Unknown child '"+ elName +"' in <group> element", ei);
-		}
+            else {
+                Logger.log();
+            }
+        }
 	}
 
 }

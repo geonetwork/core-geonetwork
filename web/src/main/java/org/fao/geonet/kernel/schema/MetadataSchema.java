@@ -27,14 +27,12 @@
 
 package org.fao.geonet.kernel.schema;
 
-import org.jdom.Element;
 import org.jdom.Namespace;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -44,9 +42,9 @@ public class MetadataSchema
 {
 	private Map<String,List<String>> hmElements = new HashMap<String,List<String>>();
 	private Map<String,List<List>> hmRestric  = new HashMap<String,List<List>>();
-	private HashMap hmTypes    = new HashMap();
-	private HashMap hmSubs		 = new HashMap();
-	private HashMap hmSubsLink = new HashMap();
+	private Map<String, MetadataType> hmTypes    = new HashMap<String, MetadataType>();
+	private Map<String, List> hmSubs		 = new HashMap<String, List>();
+	private Map<String, String> hmSubsLink = new HashMap<String, String>();
 	private Map<String,Namespace> hmNameSpaces = new HashMap<String,Namespace>();
 	private Map<String,Namespace> hmPrefixes = new HashMap<String,Namespace>();
 	private String	schemaName;
@@ -62,7 +60,7 @@ public class MetadataSchema
 	//---
 	//---------------------------------------------------------------------------
 
-	MetadataSchema(Element root) {
+	MetadataSchema() {
 		schemaName = "UNKNOWN";
 	}
 
@@ -75,7 +73,6 @@ public class MetadataSchema
 	public void setName(String inName)
 	{
 		schemaName = inName;
-		return;
 	}
 
 	//---------------------------------------------------------------------------
@@ -108,7 +105,6 @@ public class MetadataSchema
 	public void setPrimeNS(String theNS)
 	{
 		primeNS = theNS;
-		return;
 	}
 
 	//---------------------------------------------------------------------------
@@ -122,9 +118,9 @@ public class MetadataSchema
 	
 	public MetadataType getTypeInfo(String type)
 	{
-		Logger.log("metadataSchema: Asking for type "+type);
+		Logger.log();
 		if (hmTypes.get(type) == null) return new MetadataType();
-		else return (MetadataType) hmTypes.get(type);
+		else return hmTypes.get(type);
 	}
 
 	//---------------------------------------------------------------------------
@@ -134,14 +130,14 @@ public class MetadataSchema
 		// two cases here - if we have just one element (or a substitute) with 
 		// this name then return its type
 
-	  Logger.log("metadataSchema: Asking for element "+elem+" parent "+parent);
+	  Logger.log();
 		List<String> childType = hmElements.get(elem);
 		if (childType == null) {
 			// Check and see whether we can substitute another element from the
 			// substitution link 
 			String oldelem = elem;
-			elem = (String) hmSubsLink.get(elem);
-	  	Logger.log(" -- substitute "+elem);
+			elem = hmSubsLink.get(elem);
+	  	Logger.log();
 			childType = hmElements.get(elem);
 			if (childType == null) { 
 				System.out.println("ERROR: Mismatch between schema and xml: No type for 'element' : "+oldelem+" with parent "+parent);
@@ -151,25 +147,25 @@ public class MetadataSchema
 		}
 		if (childType.size() == 1) return childType.get(0);
 
-		Logger.log("-- Multiple elements so moving to parent");
+		Logger.log();
 		// OTHERWISE get the type by examining the parent:
 		// for each parent with that name parent
 		// 1. retrieve its mdt 
 		List<String> exType = hmElements.get(parent);
 		if (exType == null) return "xs:string";
-		Iterator i = exType.iterator();
-		while (i.hasNext()) { 
-		// 2. search that mdt for the element names elem
-			String type = (String)i.next();
-			MetadataType mdt = getTypeInfo(type);
-			for (int k = 0;k < mdt.getElementCount();k++) {
-				String elemTest = mdt.getElementAt(k);
-		// 3. return the type name of that element
-				if (elem.equals(elemTest)) return mdt.getElementTypeAt(k);
-			}
-		}
+        for (String type : exType) {
+            // 2. search that mdt for the element names elem
+            MetadataType mdt = getTypeInfo(type);
+            for (int k = 0; k < mdt.getElementCount(); k++) {
+                String elemTest = mdt.getElementAt(k);
+                // 3. return the type name of that element
+                if (elem.equals(elemTest)) {
+                    return mdt.getElementTypeAt(k);
+                }
+            }
+        }
 
-		Logger.log("ERROR: could not find type for element "+elem+" with parent "+parent);
+		Logger.log();
 		return null;
 	}
 
@@ -181,18 +177,12 @@ public class MetadataSchema
 	public boolean isSimpleElement(String elem,String parent) throws Exception
 	{
 		String type = getElementType(elem,parent);
-		if (type == null) return false;
-		else return !hmTypes.containsKey(type);
+        return type != null && !hmTypes.containsKey(type);
 	}
 
 	//---------------------------------------------------------------------------
 
-	public ArrayList getElementSubs(String elem)
-	{
-		return((ArrayList)hmSubs.get(elem));
-	}
-
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
 	public ArrayList getElementValues(String elem,String parent) throws Exception
 	{
@@ -209,7 +199,7 @@ public class MetadataSchema
 
 		// OTHERWISE we don't know what to do so return the first one anyway! This
 		// should not happen....
-		Logger.log("WARNING: returning first set of values for element "+elem+" this should not happen and it may not be correct.....check logs for VALUESCLASH statements and fix schema");
+		Logger.log();
 		return (ArrayList)childValues.get(0);
 	}
 
@@ -219,7 +209,7 @@ public class MetadataSchema
 	//---
 	//---------------------------------------------------------------------------
 
-	void addElement(String name, String type, ArrayList alValues, ArrayList alSubs, String subLink)
+	void addElement(String name, String type, List alValues, List alSubs, String subLink)
 	{
 		// first just add the subs - because these are for global elements we 
 		// never have a clash because global elements are all in the same scope
@@ -234,7 +224,7 @@ public class MetadataSchema
 
 		// it's already there but doesn't have this type 
 		if (exType != null && !(exType.contains(type))) { 
-			Logger.log("CLASH: trying to add "+name+" with type "+type+": already exists with type: "+exType+" - adding overflows and code to cope");
+			Logger.log();
 
 
 		// it's not there so add a new list
@@ -249,7 +239,7 @@ public class MetadataSchema
 		// it's already there
 		List<List> exValues = hmRestric.get(restricName);
 		if (exValues != null) {
-			Logger.log("VALUESCLASH: trying to add "+restricName+" with values "+alValues+": already exists with values "+exValues+" - this should not happen");
+			Logger.log();
 
 		// it's not there so add a new list of lists
 		} else {
@@ -304,7 +294,7 @@ public class MetadataSchema
 
 	public List<Namespace> getSchemaNS()
 	{
-		return new ArrayList(hmPrefixes.values());
+		return new ArrayList<Namespace>(hmPrefixes.values());
 	}
 
 	/**
@@ -312,12 +302,10 @@ public class MetadataSchema
 	 * Schematron rules files are in schema directory
 	 * and start with "schematron-rules" prefix.
 	 * 
-	 * @param schemasDir
 	 * @return
 	 */
 	public void loadSchematronRules() {
-		String saSchemas[] = new File(schemaDir)
-				.list(new SchematronReportRulesFilter());
+		String saSchemas[] = new File(schemaDir).list(new SchematronReportRulesFilter());
 		setSchematronRules(saSchemas);
 	}
 
@@ -327,11 +315,9 @@ public class MetadataSchema
 	 */
 	private class SchematronReportRulesFilter implements FilenameFilter {
 		public boolean accept(File directory, String filename) {
-			if (filename.startsWith(SCHEMATRON_RULE_FILE_PREFIX)
-					&& filename.endsWith(".xsl"))
-				return true;
-			return false;
-		}
+            return filename.startsWith(SCHEMATRON_RULE_FILE_PREFIX)
+                    && filename.endsWith(".xsl");
+        }
 	}
 	
 	/**

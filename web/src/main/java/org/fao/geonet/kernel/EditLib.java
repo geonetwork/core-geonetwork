@@ -89,7 +89,7 @@ public class EditLib
 	{
 		String path = new File(xmlSchemaFile).getParent() +"/";
 
-		MetadataSchema mds = new SchemaLoader().load(xmlSchemaFile,name,xmlSubstitutionsFile);
+		MetadataSchema mds = new SchemaLoader().load(xmlSchemaFile, xmlSubstitutionsFile);
 		mds.setName(name);
 		mds.setSchemaDir(path);
 		mds.loadSchematronRules();

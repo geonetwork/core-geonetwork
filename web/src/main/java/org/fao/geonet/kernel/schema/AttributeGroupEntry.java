@@ -40,8 +40,8 @@ class AttributeGroupEntry
 	public String  name;
 	public String  ref;
 
-	public ArrayList alAttrs = new ArrayList();
-	public ArrayList alAttrGrps = new ArrayList();
+	public ArrayList<AttributeEntry> alAttrs = new ArrayList<AttributeEntry>();
+	public ArrayList<AttributeGroupEntry> alAttrGrps = new ArrayList<AttributeGroupEntry>();
 
 	//---------------------------------------------------------------------------
 	//---
@@ -72,26 +72,28 @@ class AttributeGroupEntry
 	{
 		List attribs = ei.element.getAttributes();
 
-		for(int i=0; i<attribs.size(); i++)
-		{
-			Attribute at = (Attribute) attribs.get(i);
+        for (Object attrib : attribs) {
+            Attribute at = (Attribute) attrib;
 
-			String attrName = at.getName();
-			if (attrName.equals("name")) {
-				name = at.getValue();
-				if (ei.targetNSPrefix != null) name = ei.targetNSPrefix + ":" + name;
-		
-				//System.out.println("-- name is "+name);
-			}
-			else if (attrName.equals("ref")) {
-				ref = at.getValue();
+            String attrName = at.getName();
+            if (attrName.equals("name")) {
+                name = at.getValue();
+                if (ei.targetNSPrefix != null) {
+                    name = ei.targetNSPrefix + ":" + name;
+                }
 
-				//System.out.println("-- ref is "+ref);
-			}
+                //System.out.println("-- name is "+name);
+            }
+            else if (attrName.equals("ref")) {
+                ref = at.getValue();
 
-			else
-				Logger.log("Unknown attribute '"+ attrName +"' in <attributeGroup> element '"+ name +"'", ei);
-		}
+                //System.out.println("-- ref is "+ref);
+            }
+
+            else {
+                Logger.log();
+            }
+        }
 	}
 
 	//---------------------------------------------------------------------------
@@ -100,25 +102,26 @@ class AttributeGroupEntry
 	{
 		List children = ei.element.getChildren();
 
-		for(int i=0; i<children.size(); i++)
-		{
-			Element elChild = (Element) children.get(i);
-			String  elName  = elChild.getName();
+        for (Object aChildren : children) {
+            Element elChild = (Element) aChildren;
+            String elName = elChild.getName();
 
-			if (elName.equals("attribute")) {
-				AttributeEntry at = new AttributeEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
-				alAttrs.add(at);
-			}
-			else if (elName.equals("attributeGroup")) {
-				AttributeGroupEntry age = new AttributeGroupEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
-				alAttrGrps.add(age);
-			}
-			else if (elName.equals("annotation"))
-				;
+            if (elName.equals("attribute")) {
+                AttributeEntry at = new AttributeEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
+                alAttrs.add(at);
+            }
+            else if (elName.equals("attributeGroup")) {
+                AttributeGroupEntry age = new AttributeGroupEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
+                alAttrGrps.add(age);
+            }
+            else if (elName.equals("annotation")) {
+                
+            }
 
-			else
-				Logger.log("Unknown child '"+ elName +"' in <attributeGroup> element '"+ name +"'", ei);
-		}
+            else {
+                Logger.log();
+            }
+        }
 	}
 }
 

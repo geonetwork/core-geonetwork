@@ -42,8 +42,7 @@ class AttributeEntry
 	public String  namespacePrefix;
 	public String  defValue;
 	public String  reference;
-	public String  referenceNS;
-	public String	 form = "unqualified";
+    public String	 form = "unqualified";
 	public boolean required = false;
 
 	public ArrayList alValues = new ArrayList();
@@ -77,44 +76,47 @@ class AttributeEntry
 	{
 		List attribs = ei.element.getAttributes();
 
-		for(int i=0; i<attribs.size(); i++)
-		{
-			Attribute at = (Attribute) attribs.get(i);
+        for (Object attrib : attribs) {
+            Attribute at = (Attribute) attrib;
 
-			String attrName = at.getName();
-			if (attrName.equals("name")) {
-				name = at.getValue();
-				unqualifiedName = name;
-				if (ei.targetNSPrefix != null) {
-					name = ei.targetNSPrefix+":"+name;
-					namespacePrefix = ei.targetNSPrefix;
-				}
-		
-				//System.out.println("-- name is "+name);
-			}
-			else if (attrName.equals("default")||attrName.equals("fixed"))
-				defValue = at.getValue();
+            String attrName = at.getName();
+            if (attrName.equals("name")) {
+                name = at.getValue();
+                unqualifiedName = name;
+                if (ei.targetNSPrefix != null) {
+                    name = ei.targetNSPrefix + ":" + name;
+                    namespacePrefix = ei.targetNSPrefix;
+                }
 
-			else if (attrName.equals("ref")) {
-				reference = at.getValue();
+                //System.out.println("-- name is "+name);
+            }
+            else if (attrName.equals("default") || attrName.equals("fixed")) {
+                defValue = at.getValue();
+            }
 
-				//System.out.println("-- ref is "+reference);
-			}
+            else if (attrName.equals("ref")) {
+                reference = at.getValue();
 
-			else if (attrName.equals("use")) {
-				required = "required".equals(at.getValue());
-				//System.out.println("-- Required is "+required);
-			}
+                //System.out.println("-- ref is "+reference);
+            }
 
-			else if (attrName.equals("type"))
-				; //Logger.log("Skipping 'type' attribute in <attribute> element '"+ name +"'");
+            else if (attrName.equals("use")) {
+                required = "required".equals(at.getValue());
+                //System.out.println("-- Required is "+required);
+            }
 
-			else if (attrName.equals("form"))
-				form = at.getValue();
+            else if (attrName.equals("type")) {
+                 //Logger.log("Skipping 'type' attribute in <attribute> element '"+ name +"'");
+            }
 
-			else
-				Logger.log("Unknown attribute '"+ attrName +"' in <attribute> element '"+ name +"'", ei);
-		}
+            else if (attrName.equals("form")) {
+                form = at.getValue();
+            }
+
+            else {
+                Logger.log();
+            }
+        }
 	}
 
 	//---------------------------------------------------------------------------
@@ -123,25 +125,26 @@ class AttributeEntry
 	{
 		List children = ei.element.getChildren();
 
-		for(int i=0; i<children.size(); i++)
-		{
-			Element elChild = (Element) children.get(i);
-			String  elName  = elChild.getName();
+        for (Object aChildren : children) {
+            Element elChild = (Element) aChildren;
+            String elName = elChild.getName();
 
-			if (elName.equals("simpleType"))
-			{
-				SimpleTypeEntry ste = new SimpleTypeEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
+            if (elName.equals("simpleType")) {
+                SimpleTypeEntry ste = new SimpleTypeEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
 
-				for(int j=0; j<ste.alEnum.size(); j++)
-					alValues.add(ste.alEnum.get(j));
-			}
+                for (int j = 0; j < ste.alEnum.size(); j++) {
+                    alValues.add(ste.alEnum.get(j));
+                }
+            }
 
-			else if (elName.equals("annotation"))
-				;
+            else if (elName.equals("annotation")) {
 
-			else
-				Logger.log("Unknown child '"+ elName +"' in <attribute> element '"+ name +"'", ei);
-		}
+            }
+
+            else {
+                Logger.log();
+            }
+        }
 	}
 }
 

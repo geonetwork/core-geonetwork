@@ -28,14 +28,13 @@ import org.jdom.Element;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 
 //=============================================================================
 
 public class SchemaSubstitutions
 {
-	private Hashtable htFields = new Hashtable();
+	private Hashtable<String, Element> htFields = new Hashtable<String, Element>();
 
 	//--------------------------------------------------------------------------
 	//---
@@ -49,12 +48,13 @@ public class SchemaSubstitutions
 
 			List list = subs.getChildren();
 
-			for(Iterator i=list.iterator(); i.hasNext();) {
-				Element el = (Element) i.next();
+            for (Object aList : list) {
+                Element el = (Element) aList;
 
-				if (el.getName().equals("field"))
-					htFields.put(el.getAttributeValue("name"), el);
-			}
+                if (el.getName().equals("field")) {
+                    htFields.put(el.getAttributeValue("name"), el);
+                }
+            }
 		}
 	}
 
@@ -64,23 +64,23 @@ public class SchemaSubstitutions
 	//---
 	//--------------------------------------------------------------------------
 
-	public ArrayList getSubstitutes(String child) {
-		Element el = (Element) htFields.get(child);
+	public ArrayList<String> getSubstitutes(String child) {
+		Element el = htFields.get(child);
 		if (el == null)
 			return null;
 
-		ArrayList results = new ArrayList();
+		ArrayList<String> results = new ArrayList<String>();
 
 		List list = el.getChildren();
 
-		for(Iterator i=list.iterator(); i.hasNext();) {
-			el = (Element) i.next();
+        for (Object aList : list) {
+            el = (Element) aList;
 
-			if (el.getName().equals("substitute")) {
-				String name = el.getAttributeValue("name");
-				results.add(name);
-			}
-		}
+            if (el.getName().equals("substitute")) {
+                String name = el.getAttributeValue("name");
+                results.add(name);
+            }
+        }
 
 		return results;
 	}

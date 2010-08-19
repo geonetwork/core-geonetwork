@@ -38,9 +38,9 @@ import java.util.List;
 class ComplexContentEntry
 {
 	public String base;
-	public ArrayList alAttribGroups = new ArrayList();
-	public ArrayList alElements = new ArrayList();
-	public ArrayList alAttribs  = new ArrayList();
+	public ArrayList<String> alAttribGroups = new ArrayList<String>();
+	public ArrayList<ElementEntry> alElements = new ArrayList<ElementEntry>();
+	public ArrayList<AttributeEntry> alAttribs  = new ArrayList<AttributeEntry>();
 	boolean restriction = false;
 
 	//---------------------------------------------------------------------------
@@ -72,17 +72,18 @@ class ComplexContentEntry
 	{
 		List attribs = ei.element.getAttributes();
 
-		for(int i=0; i<attribs.size(); i++)
-		{
-			Attribute at = (Attribute) attribs.get(i);
+        for (Object attrib : attribs) {
+            Attribute at = (Attribute) attrib;
 
-			String attrName = at.getName();
+            String attrName = at.getName();
 
-			if (attrName.equals("mixed"))
-				Logger.log("Skipping 'mixed' attribute in <complexContent> element");
-			else
-				Logger.log("Unknown attribute '"+ attrName +"' in <complexContent> element", ei);
-		}
+            if (attrName.equals("mixed")) {
+                Logger.log();
+            }
+            else {
+                Logger.log();
+            }
+        }
 	}
 
 	//---------------------------------------------------------------------------
@@ -91,22 +92,23 @@ class ComplexContentEntry
 	{
 		List children = ei.element.getChildren();
 
-		for(int i=0; i<children.size(); i++)
-		{
-			Element elChild = (Element) children.get(i);
-			String  elName  = elChild.getName();
+        for (Object aChildren : children) {
+            Element elChild = (Element) aChildren;
+            String elName = elChild.getName();
 
-			if (elChild.getName().equals("extension"))
-				handleExtension(elChild, ei);
+            if (elChild.getName().equals("extension")) {
+                handleExtension(elChild, ei);
+            }
 
-			else if (elChild.getName().equals("restriction")) {
-				handleRestriction(elChild, ei);
-				restriction = true;
-			}
+            else if (elChild.getName().equals("restriction")) {
+                handleRestriction(elChild, ei);
+                restriction = true;
+            }
 
-			else
-				Logger.log("Unknown child '"+ elName +"' in <complexContent> element", ei);
-		}
+            else {
+                Logger.log();
+            }
+        }
 	}
 
 	//---------------------------------------------------------------------------
@@ -117,45 +119,47 @@ class ComplexContentEntry
 
 		List extension = el.getChildren();
 
-		for(int j=0; j<extension.size(); j++)
-		{
-			Element elExt = (Element) extension.get(j);
+        for (Object anExtension : extension) {
+            Element elExt = (Element) anExtension;
 
-			if (elExt.getName().equals("sequence")) {
-				List sequence = elExt.getChildren();
+            if (elExt.getName().equals("sequence")) {
+                List sequence = elExt.getChildren();
 
-				for(int k=0; k<sequence.size(); k++)
-				{
-					Element elSeq = (Element) sequence.get(k);
+                for (Object aSequence : sequence) {
+                    Element elSeq = (Element) aSequence;
 
-					if (elSeq.getName().equals("element") || elSeq.getName().equals("choice") || elSeq.getName().equals("group") || elSeq.getName().equals("sequence")) 
-						alElements.add(new ElementEntry(elSeq, ei.file, ei.targetNS, ei.targetNSPrefix));
-					
-					else
-						Logger.log("Unknown child '"+ elSeq.getName() +"' in <sequence> element"+ei);
-				}
-			}
-			else if (elExt.getName().equals("group")) {
-				alElements.add(new ElementEntry(elExt, ei.file, ei.targetNS, ei.targetNSPrefix));
-			}
-			else if (elExt.getName().equals("choice")) {
-				alElements.add(new ElementEntry(elExt, ei.file, ei.targetNS, ei.targetNSPrefix));
-			}
-			else if (elExt.getName().equals("attribute"))
-				alAttribs.add(new AttributeEntry(elExt, ei.file, ei.targetNS, ei.targetNSPrefix));
-			else if (elExt.getName().equals("attributeGroup"))
-      {
-				String attribGroup = elExt.getAttributeValue("ref");
+                    if (elSeq.getName().equals("element") || elSeq.getName().equals("choice") || elSeq.getName().equals("group") || elSeq.getName().equals("sequence")) {
+                        alElements.add(new ElementEntry(elSeq, ei.file, ei.targetNS, ei.targetNSPrefix));
+                    }
 
-        if (attribGroup == null)
-          throw new IllegalArgumentException("'ref' is null for element in <attributeGroup> of ComplexContent with extension base "+base);
-				alAttribGroups.add(attribGroup);
-      }
+                    else {
+                        Logger.log();
+                    }
+                }
+            }
+            else if (elExt.getName().equals("group")) {
+                alElements.add(new ElementEntry(elExt, ei.file, ei.targetNS, ei.targetNSPrefix));
+            }
+            else if (elExt.getName().equals("choice")) {
+                alElements.add(new ElementEntry(elExt, ei.file, ei.targetNS, ei.targetNSPrefix));
+            }
+            else if (elExt.getName().equals("attribute")) {
+                alAttribs.add(new AttributeEntry(elExt, ei.file, ei.targetNS, ei.targetNSPrefix));
+            }
+            else if (elExt.getName().equals("attributeGroup")) {
+                String attribGroup = elExt.getAttributeValue("ref");
+
+                if (attribGroup == null) {
+                    throw new IllegalArgumentException("'ref' is null for element in <attributeGroup> of ComplexContent with extension base " + base);
+                }
+                alAttribGroups.add(attribGroup);
+            }
 
 
-			else
-				Logger.log("Unknown child '"+ elExt.getName() +"' in <extension> element "+ei);
-		}
+            else {
+                Logger.log();
+            }
+        }
 	}
 
 	//---------------------------------------------------------------------------
@@ -168,46 +172,47 @@ class ComplexContentEntry
 
 		List restriction = el.getChildren();
 
-		for(int i=0; i<restriction.size(); i++)
-		{
-			Element elRes = (Element) restriction.get(i);
-			String  elName= elRes.getName();
+        for (Object aRestriction : restriction) {
+            Element elRes = (Element) aRestriction;
+            String elName = elRes.getName();
 
-			if (elRes.getName().equals("sequence"))
-			{
-				List sequence = elRes.getChildren();
+            if (elRes.getName().equals("sequence")) {
+                List sequence = elRes.getChildren();
 
-				for(int k=0; k<sequence.size(); k++)
-				{
-					Element elSeq = (Element) sequence.get(k);
+                for (Object aSequence : sequence) {
+                    Element elSeq = (Element) aSequence;
 
-					if (elSeq.getName().equals("element") || elSeq.getName().equals("choice") || elSeq.getName().equals("group") || elSeq.getName().equals("sequence")) 
-						alElements.add(new ElementEntry(elSeq, ei.file, ei.targetNS, ei.targetNSPrefix));
-					else
-						Logger.log("Unknown child '"+ elSeq.getName() +"' in <sequence> element"+ei);
-				}
-			}
+                    if (elSeq.getName().equals("element") || elSeq.getName().equals("choice") || elSeq.getName().equals("group") || elSeq.getName().equals("sequence")) {
+                        alElements.add(new ElementEntry(elSeq, ei.file, ei.targetNS, ei.targetNSPrefix));
+                    }
+                    else {
+                        Logger.log();
+                    }
+                }
+            }
 
-			else if (elRes.getName().equals("group")) {
-				alElements.add(new ElementEntry(elRes, ei.file, ei.targetNS, ei.targetNSPrefix));
-			}
+            else if (elRes.getName().equals("group")) {
+                alElements.add(new ElementEntry(elRes, ei.file, ei.targetNS, ei.targetNSPrefix));
+            }
 
-			else if (elName.equals("attribute"))
-				alAttribs.add(new AttributeEntry(elRes, ei.file, ei.targetNS, ei.targetNSPrefix));
+            else if (elName.equals("attribute")) {
+                alAttribs.add(new AttributeEntry(elRes, ei.file, ei.targetNS, ei.targetNSPrefix));
+            }
 
-			else if (elName.equals("attributeGroup"))
-      {
-				String attribGroup = elRes.getAttributeValue("ref");
+            else if (elName.equals("attributeGroup")) {
+                String attribGroup = elRes.getAttributeValue("ref");
 
-        if (attribGroup == null)
-          throw new IllegalArgumentException("'ref' is null for element in <attributeGroup> of ComplexContent with restriction base "+base);
-				alAttribGroups.add(attribGroup);
-      }
+                if (attribGroup == null) {
+                    throw new IllegalArgumentException("'ref' is null for element in <attributeGroup> of ComplexContent with restriction base " + base);
+                }
+                alAttribGroups.add(attribGroup);
+            }
 
-			else
-				Logger.log("Unknown child '"+ elName +"' in <restriction> element",ei);
+            else {
+                Logger.log();
+            }
 
-		}
+        }
 	}
 }
 

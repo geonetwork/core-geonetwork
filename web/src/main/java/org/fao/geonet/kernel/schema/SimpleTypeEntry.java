@@ -43,7 +43,7 @@ class SimpleTypeEntry
 {
 	public String name;
 
-	public ArrayList alEnum = new ArrayList();
+	public List alEnum = new ArrayList();
 
 	//---------------------------------------------------------------------------
 	//---
@@ -73,20 +73,21 @@ class SimpleTypeEntry
 	private void handleAttribs(ElementInfo ei)
 	{
 		List attribs = ei.element.getAttributes();
-		for(int i=0; i<attribs.size(); i++)
-		{
-			Attribute at = (Attribute) attribs.get(i);
+        for (Object attrib : attribs) {
+            Attribute at = (Attribute) attrib;
 
-			String attrName = at.getName();
+            String attrName = at.getName();
 
-			if (attrName.equals("name")) {
-        name = at.getValue();
-        if ((name.indexOf(':') == -1) && (ei.targetNSPrefix != null))
-          name = ei.targetNSPrefix + ":" + at.getValue();
-      }
-			else
-				Logger.log("Unknown attribute '"+ attrName +"' in <simpleType> element", ei);
-		}
+            if (attrName.equals("name")) {
+                name = at.getValue();
+                if ((name.indexOf(':') == -1) && (ei.targetNSPrefix != null)) {
+                    name = ei.targetNSPrefix + ":" + at.getValue();
+                }
+            }
+            else {
+                Logger.log();
+            }
+        }
 	}
 
 	//---------------------------------------------------------------------------
@@ -95,42 +96,46 @@ class SimpleTypeEntry
 	{
 		List children = ei.element.getChildren();
 
-		for(int i=0; i<children.size(); i++)
-		{
-			Element elChild = (Element) children.get(i);
-			String  elName  = elChild.getName();
+        for (Object aChildren : children) {
+            Element elChild = (Element) aChildren;
+            String elName = elChild.getName();
 
-			if (elName.equals("restriction"))
-			{
-				List restrictions = elChild.getChildren();
+            if (elName.equals("restriction")) {
+                List restrictions = elChild.getChildren();
 
-				for(int j=0; j<restrictions.size(); j++)
-				{
-					Element elEnum   = (Element) restrictions.get(j);
-					String  elemName = elEnum.getName();
+                for (Object restriction : restrictions) {
+                    Element elEnum = (Element) restriction;
+                    String elemName = elEnum.getName();
 
-					if (elemName.equals("enumeration"))
-						alEnum.add(elEnum.getAttributeValue("value"));
+                    if (elemName.equals("enumeration")) {
+                        alEnum.add(elEnum.getAttributeValue("value"));
+                    }
 
-					else if (elemName.equals("minInclusive") || elemName.equals("maxInclusive") ||
-								elemName.equals("minExclusive") || elemName.equals("maxExclusive") ||
-							   elemName.equals("pattern"))
-						//--- we are not interested in type's domain so we skip these specifications
-						;
+                    else if (elemName.equals("minInclusive") || elemName.equals("maxInclusive") ||
+                            elemName.equals("minExclusive") || elemName.equals("maxExclusive") ||
+                            elemName.equals("pattern"))
+                    //--- we are not interested in type's domain so we skip these specifications
+                    {
 
-					else
-						Logger.log("Unknown child '"+ elEnum.getName() +"' in <restriction> element", ei);
-				}
-			}
+                    }
 
-			else if (elName.equals("union"))
-				Logger.log("Skipping 'union' child in <simpleType> element '"+ name +"'");
+                    else {
+                        Logger.log();
+                    }
+                }
+            }
 
-			else if (elName.equals("annotation"))
-			        ;
-			else
-				Logger.log("Unknown child '"+ elName +"' in <simpleType> element ", ei);
-		}
+            else if (elName.equals("union")) {
+                Logger.log();
+            }
+
+            else if (elName.equals("annotation")) {
+
+            }
+            else {
+                Logger.log();
+            }
+        }
 	}
 }
 

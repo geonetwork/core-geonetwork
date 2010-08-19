@@ -39,9 +39,8 @@ class SimpleContentEntry
 {
 	public String base;
 
-	public ArrayList alElements = new ArrayList();
-	public ArrayList alAttribs  = new ArrayList();
-	public ArrayList alAttribGroups = new ArrayList();
+    public List<AttributeEntry> alAttribs  = new ArrayList<AttributeEntry>();
+	public List<String> alAttribGroups = new ArrayList<String>();
 	public boolean restriction = false;
 
 
@@ -72,18 +71,7 @@ class SimpleContentEntry
 
 	private void handleAttribs(ElementInfo ei)
 	{
-		List attribs = ei.element.getAttributes();
-
-		for(int i=0; i<attribs.size(); i++)
-		{
-			Attribute at = (Attribute) attribs.get(i);
-
-			String attrName = at.getName();
-
-			// TODO; handle attributes
-			
-			Logger.log("Unknown attribute '"+ attrName +"' in <simpleContent> element", ei);
-		}
+            // TODO; handle attributes
 	}
 
 	//---------------------------------------------------------------------------
@@ -92,19 +80,20 @@ class SimpleContentEntry
 	{
 		List children = ei.element.getChildren();
 
-		for(int i=0; i<children.size(); i++)
-		{
-			Element elChild = (Element) children.get(i);
-			String  elName  = elChild.getName();
+        for (Object aChildren : children) {
+            Element elChild = (Element) aChildren;
 
-			if (elChild.getName().equals("extension"))
-				handleExtension(elChild, ei);
-			else if (elChild.getName().equals("restriction"))
-				handleExtension(elChild, ei);
+            if (elChild.getName().equals("extension")) {
+                handleExtension(elChild, ei);
+            }
+            else if (elChild.getName().equals("restriction")) {
+                handleExtension(elChild, ei);
+            }
 
-			else
-				Logger.log("Unknown child '"+ elName +"' in <simpleContent> element", ei);
-		}
+            else {
+                Logger.log();
+            }
+        }
 	}
 
 	//---------------------------------------------------------------------------
@@ -114,28 +103,30 @@ class SimpleContentEntry
 		restriction = false;
 		base = el.getAttributeValue("base");
 		List extension = el.getChildren();
-		for(int j=0; j<extension.size(); j++)
-		{
-			Element elExt = (Element) extension.get(j);
-			String  elName= elExt.getName();
+        for (Object anExtension : extension) {
+            Element elExt = (Element) anExtension;
+            String elName = elExt.getName();
 
-			if (elName.equals("attribute"))
-				alAttribs.add(new AttributeEntry(elExt, ei.file, ei.targetNS, ei.targetNSPrefix));
-			else if (elName.equals("attributeGroup")) {
-				String attribGroup = elExt.getAttributeValue("ref");
+            if (elName.equals("attribute")) {
+                alAttribs.add(new AttributeEntry(elExt, ei.file, ei.targetNS, ei.targetNSPrefix));
+            }
+            else if (elName.equals("attributeGroup")) {
+                String attribGroup = elExt.getAttributeValue("ref");
 
-				if (attribGroup == null)
-					throw new IllegalArgumentException("'ref' is null for element in <attributeGroup> of SimpleContent with extension base "+base);
-					
-				alAttribGroups.add(attribGroup);
+                if (attribGroup == null) {
+                    throw new IllegalArgumentException("'ref' is null for element in <attributeGroup> of SimpleContent with extension base " + base);
+                }
 
-			}
+                alAttribGroups.add(attribGroup);
+
+            }
 
 
-			else
-				Logger.log("Unknown child '"+ elName +"' in <restriction> element", ei);
+            else {
+                Logger.log();
+            }
 
-		}
+        }
 	}
 
 	//---------------------------------------------------------------------------
@@ -147,41 +138,42 @@ class SimpleContentEntry
 		
 		List attribs = el.getAttributes();
 
-		for(int i=0; i<attribs.size(); i++)
-		{
-			Attribute at = (Attribute) attribs.get(i);
+        for (Object attrib : attribs) {
+            Attribute at = (Attribute) attrib;
 
-			String attrName = at.getName();
+            String attrName = at.getName();
 
-			Logger.log("Unknown attribute '"+ attrName +"' in <restriction> element", ei);
-		}
+            Logger.log();
+        }
 
 		//--- handle children
 
 		List children = el.getChildren();
 
-		for(int i=0; i<children.size(); i++)
-		{
-			Element elRes = (Element) children.get(i);
-			String  elName= elRes.getName();
+        for (Object aChildren : children) {
+            Element elRes = (Element) aChildren;
+            String elName = elRes.getName();
 
-			if (elName.equals("attribute"))
-				alAttribs.add(new AttributeEntry(elRes, ei.file, ei.targetNS, ei.targetNSPrefix));
-			else if (elName.equals("attributeGroup")) {
-				String attribGroup = elRes.getAttributeValue("ref");
+            if (elName.equals("attribute")) {
+                alAttribs.add(new AttributeEntry(elRes, ei.file, ei.targetNS, ei.targetNSPrefix));
+            }
+            else if (elName.equals("attributeGroup")) {
+                String attribGroup = elRes.getAttributeValue("ref");
 
-				if (attribGroup == null)
-					throw new IllegalArgumentException("'ref' is null for element in <attributeGroup> of SimpleContent with restriction base "+base);
-					
-				alAttribGroups.add(attribGroup);
+                if (attribGroup == null) {
+                    throw new IllegalArgumentException("'ref' is null for element in <attributeGroup> of SimpleContent with restriction base " + base);
+                }
 
-			}
+                alAttribGroups.add(attribGroup);
+
+            }
 
 
-			else
-				Logger.log("Unknown child '"+ elName +"' in <restriction> element", ei);
+            else {
+                Logger.log();
+            }
 
-		}
+        }
 	}
 }
 

@@ -44,9 +44,9 @@ class ComplexTypeEntry
 	public ComplexContentEntry complexContent;
 	public SimpleContentEntry  simpleContent;
 
-	public ArrayList alElements = new ArrayList();
-	public ArrayList alAttribs  = new ArrayList();
-	public ArrayList  alAttribGroups = new ArrayList();
+	public List alElements = new ArrayList();
+	public List<AttributeEntry> alAttribs  = new ArrayList<AttributeEntry>();
+	public List<String> alAttribGroups = new ArrayList<String>();
 
 	//---------------------------------------------------------------------------
 	//---
@@ -81,26 +81,28 @@ class ComplexTypeEntry
 	{
 		List attribs = ei.element.getAttributes();
 
-		for(int i=0; i<attribs.size(); i++)
-		{
-			Attribute at = (Attribute) attribs.get(i);
+        for (Object attrib : attribs) {
+            Attribute at = (Attribute) attrib;
 
-			String attrName = at.getName();
-			if (attrName.equals("name")) {
-        name = at.getValue();
-        if ((name.indexOf(':') == -1) && (ei.targetNSPrefix != null))
-          name = ei.targetNSPrefix + ":" + at.getValue();
-      }
-			else if (attrName.equals("abstract")) {
-				String abValue = at.getValue();
-				isAbstract = abValue.equals("true");
-			}
-			else if (attrName.equals("mixed"))
-				Logger.log("Skipping 'mixed' attribute in <complexType> element '"+ name +"'");
-			else
-				Logger.log("Unknown attribute '"+ attrName +"' in <complexType> element", ei);
-			
-		}
+            String attrName = at.getName();
+            if (attrName.equals("name")) {
+                name = at.getValue();
+                if ((name.indexOf(':') == -1) && (ei.targetNSPrefix != null)) {
+                    name = ei.targetNSPrefix + ":" + at.getValue();
+                }
+            }
+            else if (attrName.equals("abstract")) {
+                String abValue = at.getValue();
+                isAbstract = abValue.equals("true");
+            }
+            else if (attrName.equals("mixed")) {
+                Logger.log();
+            }
+            else {
+                Logger.log();
+            }
+
+        }
 	}
 
 	//---------------------------------------------------------------------------
@@ -109,66 +111,66 @@ class ComplexTypeEntry
 	{
 		List children = ei.element.getChildren();
 
-		for(int i=0; i<children.size(); i++)
-		{
-			Element elChild = (Element) children.get(i);
-			String  elName    = elChild.getName();
-			boolean first = true;
+        for (Object aChildren : children) {
+            Element elChild = (Element) aChildren;
+            String elName = elChild.getName();
+            boolean first = true;
 
-			if (elName.equals("sequence") || elName.equals("choice"))
-			{
-				isOrType = elName.equals("choice") && (first);
+            if (elName.equals("sequence") || elName.equals("choice")) {
+                isOrType = elName.equals("choice") && (first);
 
-				List sequence = elChild.getChildren();
+                List sequence = elChild.getChildren();
 
-				for(int j=0; j<sequence.size(); j++)
-				{
-					Element elElem = (Element) sequence.get(j);
+                for (Object aSequence : sequence) {
+                    Element elElem = (Element) aSequence;
 
-					if (elElem.getName().equals("element") || elElem.getName().equals("group") || elElem.getName().equals("choice") || elElem.getName().equals("sequence")) {
-						alElements.add(new ElementEntry(elElem, ei.file, ei.targetNS, ei.targetNSPrefix));
-					}
-					else
-						Logger.log("Unknown child '"+ elElem.getName() +"' in <sequence|choice> element", ei);
-				}
-			}
-			else if (elName.equals("group")) {
-				first = false;
-				isOrType = false;
-				alElements.add(new ElementEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix));
-			}
+                    if (elElem.getName().equals("element") || elElem.getName().equals("group") || elElem.getName().equals("choice") || elElem.getName().equals("sequence")) {
+                        alElements.add(new ElementEntry(elElem, ei.file, ei.targetNS, ei.targetNSPrefix));
+                    }
+                    else {
+                        Logger.log();
+                    }
+                }
+            }
+            else if (elName.equals("group")) {
+                first = false;
+                isOrType = false;
+                alElements.add(new ElementEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix));
+            }
 
-			else if (elName.equals("attribute")) {
-				first = false;
-			  alAttribs.add(new AttributeEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix)); 
-			}
+            else if (elName.equals("attribute")) {
+                first = false;
+                alAttribs.add(new AttributeEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix));
+            }
 
-			else if (elName.equals("attributeGroup"))
-			{
-				first = false;
-				String attribGroup = elChild.getAttributeValue("ref");
+            else if (elName.equals("attributeGroup")) {
+                first = false;
+                String attribGroup = elChild.getAttributeValue("ref");
 
-				if (attribGroup == null)
-					throw new IllegalArgumentException("'ref' is null for <attributeGroup> in complexType : " + name);
+                if (attribGroup == null) {
+                    throw new IllegalArgumentException("'ref' is null for <attributeGroup> in complexType : " + name);
+                }
 
-				alAttribGroups.add(attribGroup);
-			}
+                alAttribGroups.add(attribGroup);
+            }
 
-			else if (elName.equals("complexContent")) {
-				first = false;
-				complexContent = new ComplexContentEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
-			}
+            else if (elName.equals("complexContent")) {
+                first = false;
+                complexContent = new ComplexContentEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
+            }
 
-			else if (elName.equals("simpleContent")) {
-				first = false;
-			  simpleContent = new SimpleContentEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
-			}
-			else if (elName.equals("annotation"))
-				;
+            else if (elName.equals("simpleContent")) {
+                first = false;
+                simpleContent = new SimpleContentEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
+            }
+            else if (elName.equals("annotation")) {
+                
+            }
 
-			else
-				Logger.log("Unknown child '"+ elName +"' in <complexType> element", ei);
-		}
+            else {
+                Logger.log();
+            }
+        }
 	}
 
 }
