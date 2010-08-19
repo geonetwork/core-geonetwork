@@ -773,10 +773,9 @@ function a(msg) {
 }
 
 function gn_search_error(req) {
-	alert(req.resposeText);
+	alert("ERROR " + req.responseText);
     $('loadingMD') .hide();
-// style.display = 'none';
-    alert("ERROR)");
+	return -1;
 }
 
 function gn_filteredSearch() {

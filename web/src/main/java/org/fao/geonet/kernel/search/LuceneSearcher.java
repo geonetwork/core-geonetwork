@@ -65,6 +65,7 @@ import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
 import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
@@ -264,30 +265,36 @@ public class LuceneSearcher extends MetaSearcher
 			GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
 	
 			Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
-	
+
+
+            List<Element> requestedGroups = request.getChildren("group");
+            Set<String> userGroups = gc.getAccessManager().getUserGroups(dbms, srvContext.getUserSession(), srvContext.getIpAddress());
+            if(requestedGroups != null && requestedGroups.size() > 0) {
+                for(Element group : requestedGroups) {
+                    if(! userGroups.contains(group.getText())) {
+                        throw new UnAuthorizedException("You are not authorized to do this.", null);
+                    }
+                }
+            }
+
 			// if 'restrict to' is set then don't add any other user/group info
 			if (request.getChild("group") == null) {
-				Set<String> hs = gc.getAccessManager().getUserGroups(dbms, srvContext.getUserSession(), srvContext.getIpAddress());
-	
-				for (String group : hs)
+				for (String group : userGroups) {
 					request.addContent(new Element("group").addContent(group));
-	
+                }
 				UserSession us = srvContext.getUserSession();
-	
 				String owner = us.getUserId();
-	
-				if (owner != null)
+				if (owner != null) {
 					request.addContent(new Element("owner").addContent(owner));
-	
-			//--- in case of an admin we have to show all results
-	
-				if (us.isAuthenticated())
-				{
-					if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR))
+                }
+			    //--- in case of an admin we have to show all results
+				if (us.isAuthenticated()) {
+					if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
 						request.addContent(new Element("isAdmin").addContent("true"));
-		
-					else if (us.getProfile().equals(Geonet.Profile.REVIEWER))
+                    }
+					else if (us.getProfile().equals(Geonet.Profile.REVIEWER)) {
 						request.addContent(new Element("isReviewer").addContent("true"));
+                    }
 				}
 			}
 

@@ -249,6 +249,10 @@
  			</class>
 
  			<output forward="main.present.embedded" />
+			
+			<error id="unauthorized" sheet="xml-error.xsl" statusCode="403">
+				<xml name="error" file="xml/unauthorized.xml" />
+			</error>				
  		</service>
 
 		<service name="main.search.suggest">
