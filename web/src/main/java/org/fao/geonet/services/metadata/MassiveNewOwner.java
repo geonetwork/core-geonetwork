@@ -119,7 +119,7 @@ public class MassiveNewOwner implements Service
 					}
 				}
 				// -- set the new owner into the metadata record
-				dm.updateMetadataOwner(session, dbms, id, targetUsr, targetGrp);
+				dm.updateMetadataOwner(dbms, id, targetUsr, targetGrp);
 
 				metadata.add(new Integer(id));
 			}

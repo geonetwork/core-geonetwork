@@ -847,7 +847,7 @@ public class SearchManager
 				setupIndex(true);
 				dataMan.init(context, dbms, true);
 			} else {
-				dataMan.rebuildIndexXLinkedMetadata(context, dbms);
+				dataMan.rebuildIndexXLinkedMetadata(context);
 			}
 			return true;
 		} catch (Exception e) {
