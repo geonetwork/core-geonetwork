@@ -198,7 +198,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 					}
 					else {
 						System.out.println("updating existing metadata, id is: " + id);
-						updateMetadata(iso19139, id, dbms, schema, localGroups, localCateg);
+						updateMetadata(iso19139, id, dbms, localGroups, localCateg);
 						result.updated++;
 					}
 					idsForHarvestingResult.add(id);
@@ -219,7 +219,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		}			
 	}
 
-	private void updateMetadata(Element xml, String id, Dbms dbms, String schema, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
+	private void updateMetadata(Element xml, String id, Dbms dbms, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
 		System.out.println("  - Updating metadata with id: "+ id);
 
 		dataMan.updateMetadataExt(dbms, id, xml, new ISODate().toString());

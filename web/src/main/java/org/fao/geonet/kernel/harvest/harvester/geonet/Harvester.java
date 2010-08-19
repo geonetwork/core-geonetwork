@@ -34,7 +34,6 @@ import jeeves.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -261,8 +260,7 @@ class Harvester
 	private Logger         log;
 	private Dbms           dbms;
 	private GeonetParams   params;
-	private DataManager    dataMan;
-	private ServiceContext context;
+    private ServiceContext context;
 }
 
 //=============================================================================

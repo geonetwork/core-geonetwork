@@ -349,7 +349,7 @@ public class FragmentHarvester {
 	private DataManager dataMan;
 	private FragmentParams params;
 	private String metadataGetService;
-	private List metadataTemplateNamespaces = new ArrayList();;
+	private List metadataTemplateNamespaces = new ArrayList();
 	private Element metadataTemplate;
 	private CategoryMapper localCateg;
 	private GroupMapper localGroups;

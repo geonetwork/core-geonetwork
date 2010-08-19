@@ -338,7 +338,7 @@ class Harvester
 			return;
 
 		// add Like operator
-		Element prop = null;
+		Element prop;
 		
 		if (value.contains("%")) {
 			prop = new Element("PropertyIsLike", Csw.NAMESPACE_OGC);

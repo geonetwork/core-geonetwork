@@ -87,22 +87,20 @@ public class Aligner
 	private void setupLocEntity(List list, HashMap<String, HashMap<String, String>> hmEntity)
 	{
 
-		for (int i=0; i<list.size(); i++)
-		{
-			Element entity= (Element) list.get(i);
-			String  name  = entity.getChildText("name");
+        for (Object aList : list) {
+            Element entity = (Element) aList;
+            String name = entity.getChildText("name");
 
-			HashMap<String, String> hm = new HashMap<String, String>();
-			hmEntity.put(name, hm);
+            HashMap<String, String> hm = new HashMap<String, String>();
+            hmEntity.put(name, hm);
 
-			List labels = entity.getChild("label").getChildren();
+            List labels = entity.getChild("label").getChildren();
 
-			for (int j=0; j<labels.size(); j++)
-			{
-				Element el = (Element) labels.get(j);
-				hm.put(el.getName(), el.getText());
-			}
-		}
+            for (Object label : labels) {
+                Element el = (Element) label;
+                hm.put(el.getName(), el.getText());
+            }
+        }
 	}
 
 	//--------------------------------------------------------------------------
@@ -224,7 +222,7 @@ public class Aligner
 
 				//--------------------------------------------------------------------
 
-				public void handlePrivateFile(String file, String changeDate, InputStream is) {}
+				public void handlePrivateFile() {}
 				
 				public void handleFeatureCat(Element md, int index)
 						throws Exception {
@@ -487,7 +485,7 @@ public class Aligner
 
 					//-----------------------------------------------------------------
 
-					public void handlePrivateFile(String file, String changeDate, InputStream is) {}
+					public void handlePrivateFile() {}
 								
 					public void handleFeatureCat(Element md, int index)
 							throws Exception {
@@ -594,14 +592,14 @@ public class Aligner
 	{
 		List list = files.getChildren("file");
 
-		for (int i=0; i<list.size(); i++)
-		{
-			Element elem = (Element) list.get(i);
-			String  name = elem.getAttributeValue("name");
+        for (Object aList : list) {
+            Element elem = (Element) aList;
+            String name = elem.getAttributeValue("name");
 
-			if (fileName.equals(name))
-				return true;
-		}
+            if (fileName.equals(name)) {
+                return true;
+            }
+        }
 
 		return false;
 	}

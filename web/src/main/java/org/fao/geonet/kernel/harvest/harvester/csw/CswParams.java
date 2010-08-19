@@ -132,14 +132,11 @@ public class CswParams extends AbstractParams
 		if (searches == null)
 			return;
 
-		Iterator searchList = searches.getChildren("search").iterator();
+        for (Object o : searches.getChildren("search")) {
+            Element search = (Element) o;
 
-		while (searchList.hasNext())
-		{
-			Element search = (Element) searchList.next();
-
-			alSearches.add(new Search(search));
-		}
+            alSearches.add(new Search(search));
+        }
 	}
 
 	//---------------------------------------------------------------------------
