@@ -44,7 +44,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -83,7 +82,7 @@ public class Importer {
 				fileType = "mef2";
 		}
 
-		IVisitor visitor = null;
+		IVisitor visitor;
 
 		if (fileType.equals("single"))
 			visitor = new XmlVisitor();
@@ -110,35 +109,35 @@ public class Importer {
 
 				Element metadataValidForImport = null;
 
-				for (int i = 0; i < Files.length; i++) {
-					File file = Files[i];
+                for (File file : Files) {
+                    if (file != null && !file.isDirectory()) {
+                        Element metadata = Xml.loadFile(file);
+                        String metadataSchema = dm.autodetectSchema(metadata);
 
-					if (file != null && !file.isDirectory()) {
-						Element metadata = Xml.loadFile(file);
-						String metadataSchema = dm.autodetectSchema(metadata);
+                        // If local node doesn't know metadata
+                        // schema try to load next xml file.
+                        if (metadataSchema == null) {
+                            continue;
+                        }
 
-						// If local node doesn't know metadata
-						// schema try to load next xml file.
-						if (metadataSchema == null)
-							continue;
-
-						// If schema is preferred local node schema
-						// load that file.
-						if (metadataSchema.equals(preferredSchema)) {
-							Log.debug(Geonet.MEF, "Found metadata file "
-									+ file.getName()
-									+ " with preferred schema ("
-									+ preferredSchema + ").");
-							handleMetadata(metadata, index);
-							return;
-						} else {
-							Log.debug(Geonet.MEF, "Found metadata file "
-									+ file.getName() + " with known schema ("
-									+ metadataSchema + ").");
-							metadataValidForImport = metadata;
-						}
-					}
-				}
+                        // If schema is preferred local node schema
+                        // load that file.
+                        if (metadataSchema.equals(preferredSchema)) {
+                            Log.debug(Geonet.MEF, "Found metadata file "
+                                    + file.getName()
+                                    + " with preferred schema ("
+                                    + preferredSchema + ").");
+                            handleMetadata(metadata, index);
+                            return;
+                        }
+                        else {
+                            Log.debug(Geonet.MEF, "Found metadata file "
+                                    + file.getName() + " with known schema ("
+                                    + metadataSchema + ").");
+                            metadataValidForImport = metadata;
+                        }
+                    }
+                }
 
 				// Import a valid metadata if not one found
 				// with preferred schema.
@@ -147,8 +146,7 @@ public class Importer {
 							.debug(Geonet.MEF,
 									"Importing metadata with valide schema but not preferred one.");
 					handleMetadata(metadataValidForImport, index);
-					return;
-				} else
+                } else
 					throw new BadFormatEx("No valid metadata file found.");
 			}
 
@@ -181,19 +179,19 @@ public class Importer {
 				String uuid = null;
 				String createDate = null;
 				String changeDate = null;
-				String source = null;
+				String source;
 				String sourceName = null;
 				// Schema in info.xml is not used anymore.
 				// as we use autodetect schema to define
 				// metadata schema.
 				// String schema = null;
-				String isTemplate = null;
+				String isTemplate;
 				String localId = null;
 				String rating = null;
 				String popularity = null;
 				String groupId = null;
 				Element categs = null;
-				Element privileges = null;
+				Element privileges;
 				boolean validate = false;
 
 				Element metadata = md.get(index);
@@ -468,19 +466,20 @@ public class Importer {
 				.getChildren();
 		List list = categ.getChildren("category");
 
-		for (Iterator j = list.iterator(); j.hasNext();) {
-			String catName = ((Element) j.next()).getAttributeValue("name");
-			String catId = mapLocalEntity(locCats, catName);
+        for (Object aList : list) {
+            String catName = ((Element) aList).getAttributeValue("name");
+            String catId = mapLocalEntity(locCats, catName);
 
-			if (catId == null) {
-				Log.debug(Geonet.MEF, " - Skipping inexistent category : "
-						+ catName);
-			} else {
-				// --- metadata category exists locally
-				Log.debug(Geonet.MEF, " - Setting category : " + catName);
-				dm.setCategory(dbms, id, catId);
-			}
-		}
+            if (catId == null) {
+                Log.debug(Geonet.MEF, " - Skipping inexistent category : "
+                        + catName);
+            }
+            else {
+                // --- metadata category exists locally
+                Log.debug(Geonet.MEF, " - Setting category : " + catName);
+                dm.setCategory(dbms, id, catId);
+            }
+        }
 	}
 
 	/**
@@ -534,21 +533,22 @@ public class Importer {
 			String id, String grpId) throws Exception {
 		List opers = group.getChildren("operation");
 
-		for (int j = 0; j < opers.size(); j++) {
-			Element oper = (Element) opers.get(j);
-			String opName = oper.getAttributeValue("name");
+        for (Object oper1 : opers) {
+            Element oper = (Element) oper1;
+            String opName = oper.getAttributeValue("name");
 
-			int opId = dm.getAccessManager().getPrivilegeId(opName);
+            int opId = dm.getAccessManager().getPrivilegeId(opName);
 
-			if (opId == -1)
-				Log.debug(Geonet.MEF, "   Skipping --> " + opName);
-			else {
-				// --- operation exists locally
+            if (opId == -1) {
+                Log.debug(Geonet.MEF, "   Skipping --> " + opName);
+            }
+            else {
+                // --- operation exists locally
 
-				Log.debug(Geonet.MEF, "   Adding --> " + opName);
-				dm.setOperation(dbms, id, grpId, opId + "");
-			}
-		}
+                Log.debug(Geonet.MEF, "   Adding --> " + opName);
+                dm.setOperation(dbms, id, grpId, opId + "");
+            }
+        }
 	}
 
 	private static String mapLocalEntity(List entities, String name) {

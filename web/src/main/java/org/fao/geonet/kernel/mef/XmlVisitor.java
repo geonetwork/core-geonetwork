@@ -45,7 +45,7 @@ public class XmlVisitor implements IVisitor {
 	 */
 	public Element handleXml(File xmlFile, IMEFVisitor v) throws Exception {
 
-		Element md = null;
+		Element md;
 		md = Xml.loadFile(xmlFile);
 		if (md == null)
 			throw new BadFormatEx("Missing xml metadata file .");
@@ -53,7 +53,7 @@ public class XmlVisitor implements IVisitor {
 		v.handleMetadata(md, 0);
 
 		// Generate dummy info file.
-		Element info = null;
+		Element info;
 		info = new Element("info");
 		v.handleInfo(info, 0);
 		return info;

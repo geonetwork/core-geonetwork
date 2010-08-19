@@ -56,7 +56,7 @@ public class MEF2Visitor implements IVisitor {
 		Logger log = Log.createLogger(Geonet.MEF);
 
 		int nbMetadata = 0;
-		Element fc = null;
+		Element fc;
 
 		Element info = new Element("info");
 
@@ -76,47 +76,44 @@ public class MEF2Visitor implements IVisitor {
 		} else {
 			File[] lstmdDir = metadata.getParentFile().getParentFile()
 					.listFiles();
-			for (int i = 0; i < lstmdDir.length; i++) {
-				File file = lstmdDir[i];
-				if (file != null && file.isDirectory()) {
-					// Handle metadata file
-					File metadataDir = new File(file, "metadata");
-					if (metadataDir == null)
-						throw new BadFormatEx(
-								"Missing metadata folder in MEF file "
-										+ mefFile.getName()
-										+ ". Maybe the file is in MEF v1 format?");
+            for (File file : lstmdDir) {
+                if (file != null && file.isDirectory()) {
+                    // Handle metadata file
+                    File metadataDir = new File(file, "metadata");
 
-					File[] xmlFiles = metadataDir.listFiles();
+                    File[] xmlFiles = metadataDir.listFiles();
 
-					if (xmlFiles == null || xmlFiles.length < 1)
-						throw new BadFormatEx(
-								"Missing XML document in metadata folder in MEF file "
-										+ mefFile.getName() + ".");
+                    if (xmlFiles == null || xmlFiles.length < 1) {
+                        throw new BadFormatEx(
+                                "Missing XML document in metadata folder in MEF file "
+                                        + mefFile.getName() + ".");
+                    }
 
-					// Handle feature catalog
-					File fcFile = getFeatureCalalogFile(file);
-					if (fcFile != null)
-						fc = Xml.loadFile(fcFile);
-					else
-						fc = null;
+                    // Handle feature catalog
+                    File fcFile = getFeatureCalalogFile(file);
+                    if (fcFile != null) {
+                        fc = Xml.loadFile(fcFile);
+                    }
+                    else {
+                        fc = null;
+                    }
 
-					// Handle info file
-					File fileInfo = new File(file, FILE_INFO);
-					if (fileInfo.exists()) {
-						info = Xml.loadFile(fileInfo);
-					}
+                    // Handle info file
+                    File fileInfo = new File(file, FILE_INFO);
+                    if (fileInfo.exists()) {
+                        info = Xml.loadFile(fileInfo);
+                    }
 
-					v.handleMetadataFiles(xmlFiles, nbMetadata);
-					v.handleFeatureCat(fc, nbMetadata);
-					v.handleInfo(info, nbMetadata);
+                    v.handleMetadataFiles(xmlFiles, nbMetadata);
+                    v.handleFeatureCat(fc, nbMetadata);
+                    v.handleInfo(info, nbMetadata);
 
-					// Handle binaries
-					handleBin(file, v, info, nbMetadata);
+                    // Handle binaries
+                    handleBin(file, v, info, nbMetadata);
 
-					nbMetadata++;
-				}
-			}
+                    nbMetadata++;
+                }
+            }
 		}
 
 		ZipUtil.deleteAllFiles(unzipDir);
@@ -144,7 +141,7 @@ public class MEF2Visitor implements IVisitor {
 		String fname;
 
 		// Handle public binaries files
-		if (publicFile.exists() && pubFiles.size() != 0) {
+		if (publicFile.exists() && pubFiles != null && pubFiles.size() != 0) {
 			File[] files = publicFile.listFiles();
 			for (File f : files) {
 				fname = f.getName();
@@ -155,7 +152,7 @@ public class MEF2Visitor implements IVisitor {
 		}
 
 		// Handle private binaries files
-		if (privateFile.exists() && prvFiles.size() != 0) {
+		if (privateFile.exists() && prvFiles != null && prvFiles.size() != 0) {
 			File[] files = privateFile.listFiles();
 			for (File f : files) {
 				fname = f.getName();
@@ -200,12 +197,11 @@ public class MEF2Visitor implements IVisitor {
 
 		if (!(metadata.exists() && metadata.isDirectory())) {
 			File[] list = dir.listFiles();
-			for (int i = 0; i < list.length; i++) {
-				File file = list[i];
-				if (file.isDirectory()) {
-					metadata = getMetadataDirectory(file);
-				}
-			}
+            for (File file : list) {
+                if (file.isDirectory()) {
+                    metadata = getMetadataDirectory(file);
+                }
+            }
 		}
 		return metadata;
 	}
