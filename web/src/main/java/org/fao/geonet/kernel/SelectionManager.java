@@ -31,8 +31,7 @@ public class SelectionManager {
 	// or contains value we can't parse
 	public static final int DEFAULT_MAXHITS = 1000;
 
-	private static final String STATUS_SELECTED = "status";
-	private static final String ADD_ALL_SELECTED = "add-all";
+    private static final String ADD_ALL_SELECTED = "add-all";
 	private static final String REMOVE_ALL_SELECTED = "remove-all";
 	private static final String ADD_SELECTED = "add";
 	private static final String REMOVE_SELECTED = "remove";
@@ -60,7 +59,7 @@ public class SelectionManager {
 	 * @param result
 	 *            the result modified<br/>
 	 * 
-	 * @see org.fao.geonet.services.main.Result<br/>
+	 * @see org.fao.geonet.services.main.Result <br/>
 	 */
 	public static void updateMDResult(UserSession session, Element result) {
 		SelectionManager manager = getManager(session);
@@ -70,32 +69,31 @@ public class SelectionManager {
 
 			Set<String> selection = manager.getSelection(SELECTION_METADATA);
 
-			for (Iterator<Element> iter = elList.iterator(); iter.hasNext();) {
-				Element element = (Element) iter.next();
-				if (element.getName().equals(Geonet.Elem.SUMMARY)) {
-					continue;
-				}
-				Element info = element.getChild(Edit.RootChild.INFO,
-						Edit.NAMESPACE);
-				String uuid = info.getChildText(Edit.Info.Elem.UUID);
-				if (selection.contains(uuid)) {
-					info.addContent(new Element(Edit.Info.Elem.SELECTED)
-							.setText("true"));
-				} else {
-					info.addContent(new Element(Edit.Info.Elem.SELECTED)
-							.setText("false"));
-				}
-			}
+            for (Element element : elList) {
+                if (element.getName().equals(Geonet.Elem.SUMMARY)) {
+                    continue;
+                }
+                Element info = element.getChild(Edit.RootChild.INFO,
+                        Edit.NAMESPACE);
+                String uuid = info.getChildText(Edit.Info.Elem.UUID);
+                if (selection.contains(uuid)) {
+                    info.addContent(new Element(Edit.Info.Elem.SELECTED)
+                            .setText("true"));
+                }
+                else {
+                    info.addContent(new Element(Edit.Info.Elem.SELECTED)
+                            .setText("false"));
+                }
+            }
 			result.setAttribute(Edit.Info.Elem.SELECTED, Integer
 					.toString(selection.size()));
 		} else {
-			for (Iterator<Element> iter = elList.iterator(); iter.hasNext();) {
-				Element element = (Element) iter.next();
-				Element info = element.getChild(Edit.RootChild.INFO,
-						Edit.NAMESPACE);
-				info.addContent(new Element(Edit.Info.Elem.SELECTED)
-						.setText("false"));
-			}
+            for (Element element : elList) {
+                Element info = element.getChild(Edit.RootChild.INFO,
+                        Edit.NAMESPACE);
+                info.addContent(new Element(Edit.Info.Elem.SELECTED)
+                        .setText("false"));
+            }
 			result.setAttribute(Edit.Info.Elem.SELECTED, Integer.toString(0));
 		}
 	}
@@ -179,32 +177,25 @@ public class SelectionManager {
 		}
 
 		// Remove empty/null element from the selection
-		for (Iterator iter = selection.iterator(); iter.hasNext();) {
-			Object element = (Object) iter.next();
-			if (element == null)
-				iter.remove();
-		}
+        Iterator<String> iter = null;
+        if (selection != null) {
+            iter = selection.iterator();
+        }
+        if (iter != null) {
+            while (iter.hasNext()) {
+                Object element = iter.next();
+                if (element == null)
+                    iter.remove();
+            }
+        }
 
-		return selection.size();
-	}
+        if (selection != null) {
+            return selection.size();
+        }
+        return 0;
+    }
 
-	/**
-	 * return true if metadata with defined uuid is in current selection or not.
-	 * 
-	 * @return
-	 */
-	public boolean isMetadataSelected(String uuid) {
-		Set<String> selection = this.getSelection(SELECTION_METADATA);
-		if (selection == null)
-			return false;
-
-		if (selection.contains(uuid))
-			return true;
-		else
-			return false;
-	}
-
-	/**
+    /**
 	 * <p>
 	 * Gets selection manager in session, if null creates it
 	 * </p>
@@ -260,10 +251,12 @@ public class SelectionManager {
 					uuidList = ((CatalogSearcher) searcher).getAllUuids(context, maxhits);
 				else
 					return;
-				
-				selection.addAll(uuidList);
 
-			} catch (Exception e) {
+                if (selection != null) {
+                    selection.addAll(uuidList);
+                }
+
+            } catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -287,13 +280,11 @@ public class SelectionManager {
 	 * Close the current selection manager
 	 * </p>
 	 * 
-	 * @param type
 	 */
 	public void close() {
-		for (Iterator iter = selections.values().iterator(); iter.hasNext();) {
-			Set<String> selection = (Set<String>) iter.next();
-			selection.clear();
-		}
+        for (Set<String> selection : selections.values()) {
+            selection.clear();
+        }
 	}
 
 	/**

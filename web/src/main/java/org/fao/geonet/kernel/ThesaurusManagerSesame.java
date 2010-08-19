@@ -62,9 +62,7 @@ public class ThesaurusManagerSesame {
 
 	private LocalService service = null;
 
-	private String thesauriDirectory = null;
-
-	/**
+    /**
 	 * 
 	 * @param appPath
 	 * @param thesauriRepository
@@ -80,24 +78,10 @@ public class ThesaurusManagerSesame {
 		if (!thesauriDir.isAbsolute())
 			thesauriDir = new File(appPath + thesauriDir);
 
-		thesauriDirectory = thesauriDir.getAbsolutePath();
-
-		initThesauriTable(thesauriDir);
+        initThesauriTable(thesauriDir);
 	}
 
-	/**
-	 * @param fname
-	 * @param type
-	 * @param dname
-	 * @return
-	 */
-	public String buildThesaurusFilePath(String fname, String type, String dname) {
-		return thesauriDirectory + File.separator + type + File.separator
-				+ Geonet.CodeList.THESAURUS + File.separator + dname
-				+ File.separator + fname;
-	}
-
-	/**
+    /**
 	 * 
 	 * @param thesauriDirectory
 	 */
@@ -113,12 +97,12 @@ public class ThesaurusManagerSesame {
 							+ Geonet.CodeList.THESAURUS);
 			if (externalThesauriDirectory.isDirectory()) {
 				File[] rdfDataDirectory = externalThesauriDirectory.listFiles();
-				for (int i = 0; i < rdfDataDirectory.length; i++) {
-					if (rdfDataDirectory[i].isDirectory()) {
-						loadRepositories(rdfDataDirectory[i],
-								Geonet.CodeList.EXTERNAL);
-					}
-				}
+                for (File aRdfDataDirectory : rdfDataDirectory) {
+                    if (aRdfDataDirectory.isDirectory()) {
+                        loadRepositories(aRdfDataDirectory,
+                                Geonet.CodeList.EXTERNAL);
+                    }
+                }
 			}
 
 			// init of local repositoris
@@ -127,12 +111,12 @@ public class ThesaurusManagerSesame {
 							+ Geonet.CodeList.THESAURUS);
 			if (localThesauriDirectory.isDirectory()) {
 				File[] rdfDataDirectory = localThesauriDirectory.listFiles();
-				for (int i = 0; i < rdfDataDirectory.length; i++) {
-					if (rdfDataDirectory[i].isDirectory()) {
-						loadRepositories(rdfDataDirectory[i],
-								Geonet.CodeList.LOCAL);
-					}
-				}
+                for (File aRdfDataDirectory : rdfDataDirectory) {
+                    if (aRdfDataDirectory.isDirectory()) {
+                        loadRepositories(aRdfDataDirectory,
+                                Geonet.CodeList.LOCAL);
+                    }
+                }
 			}
 		}
 	}
@@ -150,18 +134,19 @@ public class ThesaurusManagerSesame {
 
 		String[] rdfDataFile = thesauriDirectory.list(filter);
 
-		for (int i = 0; i < rdfDataFile.length; i++) {
+        for (String aRdfDataFile : rdfDataFile) {
 
-			Thesaurus gst = new Thesaurus(rdfDataFile[i], root,
-					thesauriDirectory.getName(), new File(thesauriDirectory,
-							rdfDataFile[i]));
-			try {
-				addThesaurus(gst);
-			} catch (Exception e) {
-				e.printStackTrace();
-				// continue loading
-			}
-		}
+            Thesaurus gst = new Thesaurus(aRdfDataFile, root,
+                    thesauriDirectory.getName(), new File(thesauriDirectory,
+                            aRdfDataFile));
+            try {
+                addThesaurus(gst);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                // continue loading
+            }
+        }
 	}
 
 	/**
@@ -250,27 +235,7 @@ public class ThesaurusManagerSesame {
 	// =============================================================================
 	// PUBLIC SERVICES
 
-	public String getThesauriDirectory() {
-		return thesauriDirectory;
-	}
-
-	public Hashtable<String, LocalRepository> getRepositoryTable() {
-		return repositoryTable;
-	}
-
-	public Hashtable<String, Thesaurus> getThesauriTable() {
-		return thesauriTable;
-	}
-
-	public LocalRepository getRepositoryByName(String thesaurusName) {
-		return repositoryTable.get(thesaurusName);
-	}
-
-	public Thesaurus getThesaurusByName(String thesaurusName) {
-		return thesauriTable.get(thesaurusName);
-	}
-
-	/**
+    /**
 	 * 
 	 * @param query
 	 * @param thesaurusRepository
@@ -319,8 +284,8 @@ public class ThesaurusManagerSesame {
 
 		printResultsTable(resultsTable);
 
-		Element elDescKeys = resultsTableToXmlKeywords(resultsTable,
-				thesaurusRepository);
+		Element elDescKeys = resultsTableToXmlKeywords(resultsTable
+        );
 		Element elThesaName = new Element("thesaName");
 		Element elResTitle = new Element("resTitle");
 		elResTitle.addContent(thesaurusRepository);
@@ -330,121 +295,7 @@ public class ThesaurusManagerSesame {
 		return elDescKeys;
 	}
 
-	/**
-	 * 
-	 * @param thesaurusRepository
-	 * @param word
-	 * @return
-	 * @throws IOException
-	 * @throws MalformedQueryException
-	 * @throws QueryEvaluationException
-	 * @throws AccessDeniedException
-	 */
-	public Element getPrefLabelBeginingWith(String thesaurusRepository,
-			String word) throws IOException, MalformedQueryException,
-			QueryEvaluationException, AccessDeniedException {
-
-		String query = "SELECT prefLab, note "
-				+ " from {} rdf:type {skos:Concept}; "
-				+ " skos:prefLabel {prefLab} [skos:scopeNote {note}] "
-				+ " where lang(prefLab) like \"fr\" and prefLab like \""
-				+ word
-				+ "*\" "
-				+ " USING NAMESPACE skos=<http://www.w3.org/2004/02/skos/core#>";
-
-		QueryResultsTable resultsTable = performRequest(query, repositoryTable
-				.get(thesaurusRepository));
-
-		printResultsTable(resultsTable);
-
-		Element elDescKeys = resultsTableToXmlKeywords(resultsTable,
-				thesaurusRepository);
-		Element elThesaName = new Element("thesaName");
-		Element elResTitle = new Element("resTitle");
-		elResTitle.addContent(thesaurusRepository);
-		elThesaName.addContent(elResTitle);
-		elDescKeys.addContent(elThesaName);
-
-		return elDescKeys;
-	}
-
-	/**
-	 * 
-	 * @param thesaurusRepository
-	 * @param word
-	 * @return
-	 * @throws IOException
-	 * @throws MalformedQueryException
-	 * @throws QueryEvaluationException
-	 * @throws AccessDeniedException
-	 */
-	public Element getPrefLabelIncluding(String thesaurusRepository, String word)
-			throws IOException, MalformedQueryException,
-			QueryEvaluationException, AccessDeniedException {
-
-		String query = "SELECT prefLab, note "
-				+ " from {} rdf:type {skos:Concept}; "
-				+ " skos:prefLabel {prefLab} [skos:scopeNote {note}] "
-				+ " where lang(prefLab) like \"fr\" and prefLab like \"*"
-				+ word
-				+ "*\" "
-				+ " USING NAMESPACE skos=<http://www.w3.org/2004/02/skos/core#>";
-
-		QueryResultsTable resultsTable = performRequest(query, repositoryTable
-				.get(thesaurusRepository));
-
-		printResultsTable(resultsTable);
-
-		Element elDescKeys = resultsTableToXmlKeywords(resultsTable,
-				thesaurusRepository);
-		Element elThesaName = new Element("thesaName");
-		Element elResTitle = new Element("resTitle");
-		elResTitle.addContent(thesaurusRepository);
-		elThesaName.addContent(elResTitle);
-		elDescKeys.addContent(elThesaName);
-
-		return elDescKeys;
-	}
-
-	/**
-	 * 
-	 * @param thesaurusRepository
-	 * @param word
-	 * @return
-	 * @throws IOException
-	 * @throws MalformedQueryException
-	 * @throws QueryEvaluationException
-	 * @throws AccessDeniedException
-	 */
-	public Element getPrefLabel(String thesaurusRepository, String word)
-			throws IOException, MalformedQueryException,
-			QueryEvaluationException, AccessDeniedException {
-
-		String query = "SELECT prefLab, note "
-				+ " from {} rdf:type {skos:Concept}; "
-				+ " skos:prefLabel {prefLab} [skos:scopeNote {note}] "
-				+ " where lang(prefLab) like \"fr\" and prefLab like \""
-				+ word
-				+ "\" "
-				+ " USING NAMESPACE skos=<http://www.w3.org/2004/02/skos/core#>";
-
-		QueryResultsTable resultsTable = performRequest(query, repositoryTable
-				.get(thesaurusRepository));
-
-		printResultsTable(resultsTable);
-
-		Element elDescKeys = resultsTableToXmlKeywords(resultsTable,
-				thesaurusRepository);
-		Element elThesaName = new Element("thesaName");
-		Element elResTitle = new Element("resTitle");
-		elResTitle.addContent(thesaurusRepository);
-		elThesaName.addContent(elResTitle);
-		elDescKeys.addContent(elThesaName);
-
-		return elDescKeys;
-	}
-
-	/**
+    /**
 	 * 
 	 * @param resultsTable
 	 */
@@ -472,11 +323,9 @@ public class ThesaurusManagerSesame {
 	/**
 	 * 
 	 * @param resultsTable
-	 * @param thesaurusRepository
 	 * @return
 	 */
-	private Element resultsTableToXmlKeywords(QueryResultsTable resultsTable,
-			String thesaurusRepository) {
+	private Element resultsTableToXmlKeywords(QueryResultsTable resultsTable) {
 
 		Element elDescKeys = new Element("descKeys");
 
@@ -521,21 +370,11 @@ public class ThesaurusManagerSesame {
 		return (thesauriTable.get(name) != null);
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
-	public boolean updateThesaurus(String thesaurusName, Hashtable htChanges) {
-		return false;
-	}
-
-	/**
-	 * @param args
+    /**
 	 * @throws GraphException
 	 * @throws Exception
 	 */
-	public boolean addElement(String thesaurusName, String prefLab,
-			String altLab, String note) throws GraphException {
+	public boolean addElement(String thesaurusName, String prefLab, String note) throws GraphException {
 		LocalRepository lr = repositoryTable.get(thesaurusName);
 
 		// Graph myGraph = myLocalRepository.getGraph();
@@ -601,14 +440,12 @@ public class ThesaurusManagerSesame {
 	/**
 	 * TODO ETAPE 3
 	 * 
-	 * @param args
 	 * @throws QueryEvaluationException
 	 * @throws MalformedQueryException
 	 * @throws AccessDeniedException
 	 * @throws Exception
 	 */
-	public boolean updateElement(String thesaurusName, String prefLab,
-			String altLab, String note) throws MalformedQueryException,
+	public boolean updateElement(String thesaurusName) throws MalformedQueryException,
 			QueryEvaluationException, AccessDeniedException {
 		LocalRepository lr = repositoryTable.get(thesaurusName);
 		Graph myGraph = lr.getGraph();
@@ -616,21 +453,14 @@ public class ThesaurusManagerSesame {
 		ValueFactory myFactory = myGraph.getValueFactory();
 		String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
 
-		URI subject = myFactory
-		.createURI("http://geosource.org/keyword#1165509663312");
-		
-		URI predicatePrefLabel = myFactory
-				.createURI(namespaceSkos, "prefLabel");
-		Literal myObject1 = myFactory.createLiteral(prefLab, "fr");
+		URI subject = myFactory.createURI("http://geosource.org/keyword#1165509663312");
 
-		URI predicateScopeNote = myFactory
-				.createURI(namespaceSkos, "scopeNote");
-		Literal myObject2 = myFactory.createLiteral(note,"fr");
+		URI predicateScopeNote = myFactory.createURI(namespaceSkos, "scopeNote");
 
-		 StatementIterator iter = myGraph.getStatements(subject,
+        StatementIterator iter = myGraph.getStatements(subject,
 		 predicateScopeNote, null);
 		while (iter.hasNext()) {
-			Statement st = (Statement) iter.next();
+			Statement st = iter.next();
 			if (st.getObject() instanceof Literal) {
 				Literal litt = (Literal) st.getObject();
 				System.out.println(st.getSubject().toString() + " : "
@@ -647,80 +477,12 @@ public class ThesaurusManagerSesame {
 		return false;
 	}
 
-	/**
-	 * TODO TEST ETAPE 3
-	 * 
-	 * @param args
-	 * @throws GraphException
-	 * @throws Exception
-	 */
-	public boolean deleteElement(String thesaurusName, String prefLab,
-			String altLab, String note) throws GraphException {
-		LocalRepository lr = repositoryTable.get(thesaurusName);
-
-		Graph myGraph = new org.openrdf.model.impl.GraphImpl();
-
-		ValueFactory myFactory = myGraph.getValueFactory();
-		String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
-		String namespace = "http://geosource.org/keyword#";
-
-		URI mySubject = myFactory.createURI(namespace, Long
-				.toString((new Date()).getTime()));
-
-		URI skosClass = myFactory.createURI(namespaceSkos, "Concept");
-		URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);
-		mySubject.addProperty(rdfType, skosClass); 
-		
-		
-		URI myPredicate1 = myFactory.createURI(namespaceSkos, "prefLabel");
-		Literal myObject1 = myFactory.createLiteral(prefLab, "fr");
-		myGraph.add(mySubject, myPredicate1, myObject1);
-
-		URI myPredicate2 = myFactory.createURI(namespaceSkos, "scopeNote");
-		Literal myObject2 = myFactory.createLiteral(note);
-		myGraph.add(mySubject, myPredicate2, myObject2);
-
-		// Graph myGraph = new org.openrdf.model.impl.GraphImpl();
-		//
-		// ValueFactory myFactory = myGraph.getValueFactory();
-		// String namespace = "http://www.w3.org/2004/02/skos/core#";
-		//
-		// org.openrdf.model.URI mySubject = myFactory.createURI(namespace,
-		// "Concept");
-		//		
-		// org.openrdf.model.URI myPredicate1 = myFactory.createURI(namespace,
-		// "prefLabel");
-		// Literal myObject1 = myFactory.createLiteral(prefLab);
-		// myGraph.add(mySubject, myPredicate1, myObject1);
-		//		
-		// org.openrdf.model.URI myPredicate2 = myFactory.createURI(namespace,
-		// "scopeNote");
-		// Literal myObject2 = myFactory.createLiteral(note);
-		// myGraph.add(mySubject, myPredicate2, myObject2);
-
-		try {
-			lr.removeGraph(myGraph);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		} catch (AccessDeniedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-
-		return true;
-	}
-
-	// =============================================================================
+    // =============================================================================
 
 	public static void main(String[] args) throws Exception {
 		ThesaurusManagerSesame tm = new ThesaurusManagerSesame("",
 				"E:\\workspace3.2\\TestSesame\\res\\codelist\\");
 //		 tm.addElement("local.place.regions", "monPays", "le pays de toto", "le pays de toto");
-		// tm.deleteElement("local.place.regions", "monPays", "le pays", "voila
-		// un pays");
 //		tm.updateElement("local.place.regions", "Zimbabwe", "le pays",
 //				"voila un pays");
 		// tm.getAllPrefLabel("local.place.regions");
@@ -730,7 +492,7 @@ public class ThesaurusManagerSesame {
 		
 		tm.getAllPrefLabel("local.place.toto");
 		
-		tm.addElement("local.place.toto", "monPays", "le pays de toto", "le pays de toto");
+		tm.addElement("local.place.toto", "monPays", "le pays de toto");
 		tm.getAllPrefLabel("local.place.toto");		
 		System.out.println("fin!!");
 	}

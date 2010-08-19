@@ -34,6 +34,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
@@ -172,12 +173,11 @@ public class XmlSerializer
 
 		fixCR(xml);
 
-		StringBuffer fields = new StringBuffer("id, schemaId, data, createDate, changeDate, source, "+
-															"uuid, isTemplate, isHarvested, root, owner");
+		StringBuffer fields = new StringBuffer("id, schemaId, data, createDate, changeDate, source, uuid, isTemplate, isHarvested, root, owner");
 		StringBuffer values = new StringBuffer("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
 
-		Vector args = new Vector();
-		args.add(new Integer(serial));
+		Vector<Serializable> args = new Vector<Serializable>();
+		args.add(serial);
 		args.add(schema);
 		args.add(Xml.getString(xml));
 		args.add(createDate);
@@ -225,7 +225,7 @@ public class XmlSerializer
 
 		String query = "UPDATE Metadata SET data=?, changeDate=?, root=? WHERE id=?";
 
-		Vector args = new Vector();
+		Vector<Serializable> args = new Vector<Serializable>();
 
 		fixCR(xml);
 		args.add(Xml.getString(xml));

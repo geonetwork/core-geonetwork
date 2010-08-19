@@ -41,6 +41,7 @@ import org.openrdf.sesame.sail.StatementIterator;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Thesaurus {
 	private String fname;
@@ -133,16 +134,16 @@ public class Thesaurus {
 			MalformedQueryException, QueryEvaluationException,
 			AccessDeniedException {
 		System.out.println("Query : " + query);
-		QueryResultsTable resultsTable = repository.performTableQuery(
+        //printResultsTable(resultsTable);
+		return repository.performTableQuery(
 				QueryLanguage.SERQL, query);
-		//printResultsTable(resultsTable);
-		return resultsTable;
 	}
 
 	/**
 	 * 
 	 * @param resultsTable
 	 */
+    @SuppressWarnings("unused")    
 	private void printResultsTable(QueryResultsTable resultsTable) {
 		int rowCount = resultsTable.getRowCount();
 		int columnCount = resultsTable.getColumnCount();
@@ -255,14 +256,14 @@ public class Thesaurus {
 		URI subject = myFactory.createURI(keyword.getNameSpaceCode(),keyword.getRelativeCode());
 		StatementIterator iter = myGraph.getStatements(subject,null,null);
 		while (iter.hasNext()) {
-			Statement st = (Statement) iter.next();
-			if (st.getObject() instanceof BNode) {
-				BNode node = (BNode) st.getObject();
+			AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
+			if (st.get().getObject() instanceof BNode) {
+				BNode node = (BNode) st.get().getObject();
 				repository.getGraph().remove(node, null, null);
 			}
-			System.out.println(st.getSubject().toString() + " : "
-					+ st.getPredicate().getLocalName() + " : "
-					+ st.getObject().toString());
+			System.out.println(st.get().getSubject().toString() + " : "
+					+ st.get().getPredicate().getLocalName() + " : "
+					+ st.get().getObject().toString());
 		}
 
 		myGraph.remove(subject,null,null);
@@ -289,13 +290,13 @@ public class Thesaurus {
 		StatementIterator iter = myGraph.getStatements(subject,
 				predicatePrefLabel, null);
 		while (iter.hasNext()) {
-			Statement st = (Statement) iter.next();
-			if (st.getObject() instanceof Literal) {
-				Literal litt = (Literal) st.getObject();
+			AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
+			if (st.get().getObject() instanceof Literal) {
+				Literal litt = (Literal) st.get().getObject();
 				if (litt.getLanguage() != null
 						&& litt.getLanguage().equals(lang)) {
 					// remove
-					myGraph.remove(st);
+					myGraph.remove(st.get());
 					break;
 				}
 			}
@@ -303,13 +304,13 @@ public class Thesaurus {
 		// Supp de scopeNote
 		iter = myGraph.getStatements(subject, predicateScopeNote, null);
 		while (iter.hasNext()) {
-			Statement st = (Statement) iter.next();
-			if (st.getObject() instanceof Literal) {
-				Literal litt = (Literal) st.getObject();
+			AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
+			if (st.get().getObject() instanceof Literal) {
+				Literal litt = (Literal) st.get().getObject();
 				if (litt.getLanguage() != null
 						&& litt.getLanguage().equals(lang)) {
 					// Remove
-					myGraph.remove(st);
+					myGraph.remove(st.get());
 					break;
 				}
 			}
@@ -348,24 +349,30 @@ public class Thesaurus {
 		StatementIterator iter = myGraph.getStatements(subject,
 				predicateBoundedBy, null);
 		while (iter.hasNext()) {
-			Statement st = (Statement) iter.next();
-			if (st.getObject() instanceof BNode) {
-				subjectGml = (BNode) st.getObject();
+			AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
+			if (st.get().getObject() instanceof BNode) {
+				subjectGml = (BNode) st.get().getObject();
 			}
 		}
 		if (subjectGml != null) {
 			// lowerCorner
 			iter = myGraph.getStatements(subjectGml, predicateLowerCorner, null);
-			while (iter.hasNext()) {
-				Statement st = (Statement) iter.next();
-				myGraph.remove(st);
+			while (true) {
+                if (!(iter.hasNext())) {
+                    break;
+                }
+                AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
+				myGraph.remove(st.get());
 				break;
 			}
 			// upperCorner
 			iter = myGraph.getStatements(subjectGml, predicateUpperCorner, null);
-			while (iter.hasNext()) {
-				Statement st = (Statement) iter.next();
-				myGraph.remove(st);
+			while (true) {
+                if (!(iter.hasNext())) {
+                    break;
+                }
+                AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
+				myGraph.remove(st.get());
 				break;
 			}
 			// Preparation des nouveaux statements
@@ -405,13 +412,13 @@ public class Thesaurus {
 		URI newobj = myFactory.createURI(namespace,newcode);
 		StatementIterator iterStSubject = myGraph.getStatements(oldobj,null,null);
 		while(iterStSubject.hasNext()){
-			Statement st = (Statement) iterStSubject.next();			
-			myGraph.add(newobj, st.getPredicate(), st.getObject());						
+			AtomicReference<Statement> st = new AtomicReference<Statement>(iterStSubject.next());
+			myGraph.add(newobj, st.get().getPredicate(), st.get().getObject());
 		}		
 		
 		StatementIterator iterStObject = myGraph.getStatements(null,null,oldobj);
 		while(iterStObject.hasNext()){
-			Statement st = (Statement) iterStObject.next();
+			Statement st = iterStObject.next();
 			myGraph.add(st.getSubject(), st.getPredicate(), newobj);
 		}
 		myGraph.remove(oldobj,null,null);

@@ -63,31 +63,5 @@ public final class LocaleUtil
         return defaultLocale;
     }
 
-    /**
-     * Attempts to convert the 2 letter code to a 3 letter code. Case is ignored
-     * 
-     * @param twoLetterCode the 2 letter code to convert.
-     * @return a lowercase 3 letter code or null
-     */
-    public static String twoToThreeLetterIsoCode(String twoLetterCode){
-        return twoToThreeLetterIsoCode(twoLetterCode, null);
-    }
-    
-
-    /**
-     * Attempts to convert the 2 letter code to a 3 letter code.  Case is ignored
-     * 
-     * @param twoLetterCode the 2 letter code to convert.
-     * @param defaultCode the code to return if not match if found
-     * @return a lowercase 3 letter code or the defaultCode
-     */
-    public static String twoToThreeLetterIsoCode(String twoLetterCode, String defaultCode){
-        Locale found = toLocale(twoLetterCode, null);
-        if( found==null ){
-            return defaultCode;
-        } else {
-            return found.getISO3Language().toLowerCase();
-        }
-    }
 
 }

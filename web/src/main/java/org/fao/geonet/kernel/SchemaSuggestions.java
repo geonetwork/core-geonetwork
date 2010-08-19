@@ -35,7 +35,7 @@ import java.util.List;
 
 public class SchemaSuggestions
 {
-	private Hashtable htFields = new Hashtable();
+	private Hashtable<String, Element> htFields = new Hashtable<String, Element>();
 
 	//--------------------------------------------------------------------------
 	//---
@@ -49,13 +49,13 @@ public class SchemaSuggestions
 
 		List list = sugg.getChildren();
 
-		for(Iterator i=list.iterator(); i.hasNext();)
-		{
-			Element el = (Element) i.next();
+        for (Object aList : list) {
+            Element el = (Element) aList;
 
-			if (el.getName().equals("field"))
-				htFields.put(el.getAttributeValue("name"), el);
-		}
+            if (el.getName().equals("field")) {
+                htFields.put(el.getAttributeValue("name"), el);
+            }
+        }
 	}
 
 	//--------------------------------------------------------------------------
@@ -66,25 +66,24 @@ public class SchemaSuggestions
 
 	public boolean isSuggested(String parent, String child)
 	{
-		Element el = (Element) htFields.get(parent);
+		Element el = htFields.get(parent);
 
 		if (el == null)
 			return false;
 
 		List list = el.getChildren();
 
-		for(Iterator i=list.iterator(); i.hasNext();)
-		{
-			el = (Element) i.next();
+        for (Object aList : list) {
+            el = (Element) aList;
 
-			if (el.getName().equals("suggest"))
-			{
-				String name = el.getAttributeValue("name");
+            if (el.getName().equals("suggest")) {
+                String name = el.getAttributeValue("name");
 
-				if (child.equals(name))
-					return true;
-			}
-		}
+                if (child.equals(name)) {
+                    return true;
+                }
+            }
+        }
 
 		return false;
 	}
@@ -99,11 +98,11 @@ public class SchemaSuggestions
 	 *  
 	 * 
 	 * @param parent
-	 * @param arrayList 
+	 * @param childElements
 	 * @return	true if having suggestion for at least one of its child elements.
 	 */
-	public boolean hasSuggestion(String parent, ArrayList<String> childElements) {
-		Element el = (Element) htFields.get(parent);
+	public boolean hasSuggestion(String parent, List<String> childElements) {
+		Element el = htFields.get(parent);
 
 		if (el == null)
 			return false;	// No suggestion available for element

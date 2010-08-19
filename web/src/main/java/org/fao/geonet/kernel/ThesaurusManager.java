@@ -92,11 +92,11 @@ public class ThesaurusManager {
 					Geonet.CodeList.EXTERNAL + File.separator + Geonet.CodeList.THESAURUS);
 			if (externalThesauriDirectory.isDirectory()) {
 				File[] rdfDataDirectory = externalThesauriDirectory.listFiles();
-				for (int i = 0; i < rdfDataDirectory.length; i++) {
-					if (rdfDataDirectory[i].isDirectory()) {
-						loadRepositories(rdfDataDirectory[i], Geonet.CodeList.EXTERNAL);
-					}
-				}
+                for (File aRdfDataDirectory : rdfDataDirectory) {
+                    if (aRdfDataDirectory.isDirectory()) {
+                        loadRepositories(aRdfDataDirectory, Geonet.CodeList.EXTERNAL);
+                    }
+                }
 			}
 
 			// init of local repositories
@@ -104,11 +104,11 @@ public class ThesaurusManager {
 					+ File.separator + Geonet.CodeList.THESAURUS);
 			if (localThesauriDirectory.isDirectory()) {
 				File[] rdfDataDirectory = localThesauriDirectory.listFiles();
-				for (int i = 0; i < rdfDataDirectory.length; i++) {
-					if (rdfDataDirectory[i].isDirectory()) {
-						loadRepositories(rdfDataDirectory[i], Geonet.CodeList.LOCAL);
-					}
-				}
+                for (File aRdfDataDirectory : rdfDataDirectory) {
+                    if (aRdfDataDirectory.isDirectory()) {
+                        loadRepositories(aRdfDataDirectory, Geonet.CodeList.LOCAL);
+                    }
+                }
 			}
 		}
 	}
@@ -127,16 +127,17 @@ public class ThesaurusManager {
 
 		String[] rdfDataFile = thesauriDirectory.list(filter);
 
-		for (int i = 0; i < rdfDataFile.length; i++) {
-		
-			Thesaurus gst = new Thesaurus(rdfDataFile[i], root, thesauriDirectory.getName(), new File(thesauriDirectory, rdfDataFile[i]) );
-			try {			
-				addThesaurus(gst);
-			} catch (Exception e) {
-				e.printStackTrace();
-				// continue loading
-			} 
-		}
+        for (String aRdfDataFile : rdfDataFile) {
+
+            Thesaurus gst = new Thesaurus(aRdfDataFile, root, thesauriDirectory.getName(), new File(thesauriDirectory, aRdfDataFile));
+            try {
+                addThesaurus(gst);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                // continue loading
+            }
+        }
 	}
 
 	/**
@@ -196,12 +197,8 @@ public class ThesaurusManager {
 	public Hashtable<String, Thesaurus> getThesauriTable() {
 		return thesauriTable;
 	}
-	
-	public LocalRepository getRepositoryByName(String thesaurusName) {
-		return thesauriTable.get(thesaurusName).getRepository();
-	}
-	
-	public Thesaurus getThesaurusByName(String thesaurusName) {
+
+    public Thesaurus getThesaurusByName(String thesaurusName) {
 		return thesauriTable.get(thesaurusName);
 	}	
 
