@@ -36,7 +36,6 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 //=============================================================================
@@ -47,7 +46,7 @@ import java.util.List;
  * proposed to the user.
  * By default the search is restricted to template=y, extended=off and remote=off.
  * 
- * @see search parameters
+ * see search parameters
  */
 
 public class Get implements Service
@@ -93,48 +92,48 @@ public class Get implements Service
         // heikki: geonovum: first build the list of response records
         List<Element> responseRecords = new ArrayList<Element>();
 
-		for(int i=0; i<list.size(); i++) {
-			Element elem = (Element) list.get(i);
-			Element info = elem.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+        for (Object aList : list) {
+            Element elem = (Element) aList;
+            Element info = elem.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
 
-			if (!elem.getName().equals("metadata"))
-				continue;
+            if (!elem.getName().equals("metadata")) {
+                continue;
+            }
 
-			String id       = info.getChildText(Edit.Info.Elem.ID);
-			String template = info.getChildText(Edit.Info.Elem.IS_TEMPLATE);
+            String id = info.getChildText(Edit.Info.Elem.ID);
+            String template = info.getChildText(Edit.Info.Elem.IS_TEMPLATE);
             String displayOrder = info.getChildText(Edit.Info.Elem.DISPLAY_ORDER);
 
-			if (template.equals("y"))    {
-				// heikki, GeoNovum: added displayOrder
+            if (template.equals("y")) {
+                // heikki, GeoNovum: added displayOrder
                 responseRecords.add(buildRecord(id, elem.getChildText("title"), displayOrder));
             }
-		}
+        }
         // heikki, Geonovum: then process them to ensure displayOrder is not empty and is unique
         List<Integer> displayOrderList = new ArrayList<Integer>();
-        for(Iterator<Element> i = responseRecords.iterator(); i.hasNext();){
-            Element record = i.next();
+        for (Element record : responseRecords) {
             String displayOrder = record.getChildText("displayorder");
-            if(displayOrder == null || displayOrder.equals("")) {
+            if (displayOrder == null || displayOrder.equals("")) {
                 displayOrder = "-1";
             }
             Integer displayOrderI = Integer.parseInt(displayOrder);
             // not yet in list
-            if(!displayOrderList.contains(displayOrderI)) {
+            if (!displayOrderList.contains(displayOrderI)) {
                 // add to list
                 displayOrderList.add(displayOrderI);
             }
             // already in list
             else {
                 // while in list
-                while(displayOrderList.contains(displayOrderI)) {
+                while (displayOrderList.contains(displayOrderI)) {
                     displayOrderI++;
                 }
                 // add to list
-                displayOrderList.add(displayOrderI);                
+                displayOrderList.add(displayOrderI);
             }
             record.getChild("displayorder").setText(displayOrderI.toString());
             response.addContent(record);
-		}
+        }
 		return response;
 	}
 

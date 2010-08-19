@@ -35,11 +35,11 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -78,18 +78,15 @@ public class AddDefault implements Service {
 		DataManager dataMan = gc.getDataManager();
 
 		String siteId = gc.getSiteId();
-		String date = new ISODate().toString();
-		int owner = context.getUserSession().getUserIdAsInt();
+        int owner = context.getUserSession().getUserIdAsInt();
 
-		int serial = 1;
-		Log.info(Geonet.DATA_MANAGER, "Loading default templates");
+        Log.info(Geonet.DATA_MANAGER, "Loading default templates");
 		List<File> schemaDirectoriesList = new ArrayList<File>();
 		File templateDirectory = new File(templateDirectoryPath);
 		File schemaDirectories[] = templateDirectory.listFiles();
 
 		if (schemaDirectories != null)
-			for (File file : schemaDirectories)
-				schemaDirectoriesList.add(file);
+            schemaDirectoriesList.addAll(Arrays.asList(schemaDirectories));
 
 		for (File schemaDir : schemaDirectories) {
 			String schemaName = schemaDir.getName();

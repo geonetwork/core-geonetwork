@@ -48,8 +48,7 @@ public class SaveDisplayOrder implements Service {
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         DataManager dm = gc.getDataManager() ;
         List<Element> requestParameters = params.getChildren();
-        for(Iterator<Element> i = requestParameters.iterator();i.hasNext();) {
-            Element param = i.next();
+        for (Element param : requestParameters) {
             // the request params come in as e.g. <displayorder-30749>5</displayorder-30749> where
             // the part after the dash is the metadata id.
             String id = param.getName().substring(param.getName().indexOf('-') + 1);

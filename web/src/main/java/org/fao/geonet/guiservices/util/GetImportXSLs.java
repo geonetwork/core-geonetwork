@@ -70,20 +70,20 @@ public class GetImportXSLs implements Service
 
 		Element elRoot = new Element("a");
 
-		for(int i=0; i<sheets.length; i++)
-			if (sheets[i].endsWith(".xsl"))
-			{
-				int    pos = sheets[i].lastIndexOf(".xsl");
-				String name= sheets[i].substring(0, pos);
-				String id  = sheets[i];
+        for (String sheet : sheets) {
+            if (sheet.endsWith(".xsl")) {
+                int pos = sheet.lastIndexOf(".xsl");
+                String name = sheet.substring(0, pos);
+                String id = sheet;
 
-				Element el = new Element(Jeeves.Elem.RECORD);
+                Element el = new Element(Jeeves.Elem.RECORD);
 
-				el.addContent(new Element(Geonet.Elem.ID)  .setText(id));
-				el.addContent(new Element(Geonet.Elem.NAME).setText(name));
+                el.addContent(new Element(Geonet.Elem.ID).setText(id));
+                el.addContent(new Element(Geonet.Elem.NAME).setText(name));
 
-				elRoot.addContent(el);
-			}
+                elRoot.addContent(el);
+            }
+        }
 
 		return elRoot;
 	}

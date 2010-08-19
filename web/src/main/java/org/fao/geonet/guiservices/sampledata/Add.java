@@ -59,10 +59,8 @@ public class Add implements Service {
 		String serviceStatus = "true";
 		
 		Element result = new Element(Jeeves.Elem.RESPONSE);
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-	
-		Log.info(Geonet.DATA_MANAGER, "Loading sample data");
+
+        Log.info(Geonet.DATA_MANAGER, "Loading sample data");
 		File samplesDirectory = new File(sampleDirectoryPath);
 		File sampleFiles[] = samplesDirectory.listFiles();
     

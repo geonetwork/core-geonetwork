@@ -50,9 +50,8 @@ public class Env implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager sm =gc.getSettingManager();
 
-		String  xslPath = context.getAppPath() + Geonet.Path.STYLESHEETS+ "/xml";
+        String  xslPath = context.getAppPath() + Geonet.Path.STYLESHEETS+ "/xml";
 		Element system  = gc.getSettingManager().get("system", -1);
 
 		return Xml.transform(system, xslPath +"/env.xsl");
