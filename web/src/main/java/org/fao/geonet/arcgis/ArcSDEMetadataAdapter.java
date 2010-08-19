@@ -22,15 +22,15 @@
 //==============================================================================
 package org.fao.geonet.arcgis;
 
-import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.esri.sde.sdk.client.SeError;
 import com.esri.sde.sdk.client.SeException;
 import com.esri.sde.sdk.client.SeQuery;
 import com.esri.sde.sdk.client.SeRow;
 import com.esri.sde.sdk.client.SeSqlConstruct;
+
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adapter to retrieve ISO metadata from an ArcSDE server. The metadata in ArcSDE is scanned for

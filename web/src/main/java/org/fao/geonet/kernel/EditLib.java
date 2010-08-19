@@ -27,18 +27,8 @@
 
 package org.fao.geonet.kernel;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.Vector;
-
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
-
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.schema.MetadataAttribute;
@@ -47,9 +37,17 @@ import org.fao.geonet.kernel.schema.MetadataType;
 import org.fao.geonet.kernel.schema.SchemaLoader;
 import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 
-import org.jdom.Namespace;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.Vector;
 
 
 //=============================================================================

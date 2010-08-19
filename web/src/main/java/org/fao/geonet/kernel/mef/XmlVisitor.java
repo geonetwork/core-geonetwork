@@ -23,12 +23,11 @@
 
 package org.fao.geonet.kernel.mef;
 
-import java.io.File;
-
 import jeeves.exceptions.BadFormatEx;
 import jeeves.utils.Xml;
-
 import org.jdom.Element;
+
+import java.io.File;
 
 /**
  * Import an XML file and create a temporary information file before passing the

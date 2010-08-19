@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
-import java.util.List;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
@@ -35,6 +34,8 @@ import org.fao.oaipmh.responses.AbstractResponse;
 import org.fao.oaipmh.responses.ListSetsResponse;
 import org.fao.oaipmh.responses.SetInfo;
 import org.jdom.Element;
+
+import java.util.List;
 
 //=============================================================================
 

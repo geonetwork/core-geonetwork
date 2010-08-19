@@ -23,15 +23,15 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import jeeves.exceptions.BadInputEx;
 import jeeves.utils.Util;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 //=============================================================================
 

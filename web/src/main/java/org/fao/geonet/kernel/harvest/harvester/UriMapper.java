@@ -23,10 +23,11 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import java.util.HashMap;
-import java.util.List;
 import jeeves.resources.dbms.Dbms;
 import org.jdom.Element;
+
+import java.util.HashMap;
+import java.util.List;
 
 //=============================================================================
 

@@ -23,12 +23,15 @@
 
 package org.fao.geonet.apps;
 
-import java.io.*;
-import java.util.*;
-
 import jeeves.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 public class CheckLocalizedFiles
 {

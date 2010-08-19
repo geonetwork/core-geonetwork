@@ -21,21 +21,10 @@
 package org.fao.geonet.services.util.z3950;
 
 import jeeves.utils.Log;
-
 import org.fao.geonet.constants.Geonet;
-import org.jzkit.search.util.QueryModel.InvalidQueryException;
-import org.jzkit.search.util.QueryModel.CQLString.CQLString;
+import org.fao.geonet.services.util.z3950.jzkitextensions.GNCQLString;
 import org.jzkit.search.util.QueryModel.Internal.AttrPlusTermNode;
 import org.jzkit.search.util.QueryModel.Internal.AttrValue;
-import org.jzkit.search.util.QueryModel.Internal.ComplexNode;
-import org.jzkit.search.util.QueryModel.Internal.InternalModelNamespaceNode;
-import org.jzkit.search.util.QueryModel.Internal.InternalModelRootNode;
-import org.jzkit.search.util.QueryModel.Internal.QueryNode;
-
-import org.springframework.context.ApplicationContext;
-
-import org.fao.geonet.services.util.z3950.jzkitextensions.GNCQLString;
-
 import org.z3950.zing.cql.CQLNode;
 import org.z3950.zing.cql.CQLTermNode;
 

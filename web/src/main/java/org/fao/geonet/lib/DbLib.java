@@ -23,6 +23,11 @@
 
 package org.fao.geonet.lib;
 
+import jeeves.resources.dbms.Dbms;
+import jeeves.utils.Log;
+import org.fao.geonet.constants.Geonet;
+import org.jdom.Element;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -31,12 +36,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import jeeves.resources.dbms.Dbms;
-import jeeves.utils.Log;
-
-import org.fao.geonet.constants.Geonet;
-import org.jdom.Element;
 
 //=============================================================================
 

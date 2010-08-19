@@ -23,28 +23,25 @@
 
 package org.fao.geonet.lib;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList; 
-import java.util.List; 
-import java.util.Properties;
-
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.XmlRequest;
-
+import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.HostConfiguration;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthPolicy;
 import org.apache.commons.httpclient.auth.AuthScope;
-import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
-
 import org.fao.oaipmh.requests.Transport;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 //=============================================================================
 

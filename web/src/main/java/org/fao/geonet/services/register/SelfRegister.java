@@ -23,11 +23,18 @@
 
 package org.fao.geonet.services.register;
 
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.util.Date;
-import java.util.Properties;
-import java.util.Random;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.jdom.Element;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -36,20 +43,11 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.jdom.Element;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.Date;
+import java.util.Properties;
+import java.util.Random;
 
 //=============================================================================
 

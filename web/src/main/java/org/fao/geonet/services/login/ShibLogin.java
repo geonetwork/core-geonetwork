@@ -23,10 +23,6 @@
 
 package org.fao.geonet.services.login;
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-
 import jeeves.exceptions.UserLoginEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -34,11 +30,14 @@ import jeeves.server.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 //=============================================================================
 

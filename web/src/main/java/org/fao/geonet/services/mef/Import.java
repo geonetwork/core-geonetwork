@@ -23,18 +23,17 @@
 
 package org.fao.geonet.services.mef;
 
-import java.io.File;
-import java.util.Iterator;
-import java.util.List;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.jdom.Element;
+
+import java.io.File;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Import MEF file.

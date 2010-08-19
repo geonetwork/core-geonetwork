@@ -23,7 +23,6 @@
 
 package org.fao.geonet.guiservices.groups;
 
-import java.util.Set;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -32,6 +31,8 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
+
+import java.util.Set;
 
 //=============================================================================
 

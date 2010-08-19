@@ -23,13 +23,9 @@
 
 package org.fao.geonet.kernel.csw.services;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -43,6 +39,9 @@ import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.jdom.Element;
+
+import java.util.Iterator;
+import java.util.Map;
 
 //=============================================================================
 

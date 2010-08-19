@@ -7,8 +7,7 @@
  // in Geotools 2.6.x
 package org.fao.geonet.kernel.search.spatial;
 
-import java.util.List;
-
+import com.vividsolutions.jts.geom.Geometry;
 import org.geotools.filter.visitor.DuplicatingFilterVisitor;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
@@ -39,7 +38,7 @@ import org.opengis.filter.spatial.Touches;
 import org.opengis.filter.spatial.Within;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-import com.vividsolutions.jts.geom.Geometry;
+import java.util.List;
 
 /**
  * Returns a clone of the provided filter where all geometries and bboxes have

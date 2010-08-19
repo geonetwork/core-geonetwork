@@ -23,12 +23,11 @@
 
 package org.fao.geonet.guiservices.search;
 
-import org.jdom.*;
-
-import jeeves.interfaces.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.services.util.SearchDefaults;
+import org.jdom.Element;
 
 //=============================================================================
 

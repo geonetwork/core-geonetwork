@@ -23,22 +23,20 @@
 
 package org.fao.geonet.kernel.mef;
 
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
+import jeeves.exceptions.BadFormatEx;
+import jeeves.interfaces.Logger;
+import jeeves.utils.Log;
+import jeeves.utils.Xml;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.util.ZipUtil;
+import org.jdom.Element;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
 import java.util.zip.ZipFile;
 
-import jeeves.exceptions.BadFormatEx;
-import jeeves.interfaces.Logger;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
-
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.util.ISODate;
-import org.fao.geonet.util.ZipUtil;
-import org.jdom.Element;
+import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
 
 /**
  * MEF version 2 visitor

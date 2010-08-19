@@ -27,9 +27,9 @@
 
 package org.fao.geonet.kernel.schema;
 
-import java.util.ArrayList;
-
 import org.fao.geonet.constants.Edit;
+
+import java.util.ArrayList;
 
 //==============================================================================
 

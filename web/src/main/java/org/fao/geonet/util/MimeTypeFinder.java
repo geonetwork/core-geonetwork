@@ -27,13 +27,13 @@
 
 package org.fao.geonet.util;
 
-import java.io.File;
-import java.net.URL;
-import java.util.Collection;
-
 import eu.medsea.mimeutil.MimeType;
 import eu.medsea.mimeutil.MimeUtil;
 import eu.medsea.mimeutil.MimeUtil2;
+
+import java.io.File;
+import java.net.URL;
+import java.util.Collection;
 
 //==============================================================================
 

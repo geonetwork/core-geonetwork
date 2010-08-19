@@ -23,6 +23,26 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
+import jeeves.interfaces.Logger;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.BinaryFile;
+import jeeves.utils.XmlRequest;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
+import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
+import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.mef.IMEFVisitor;
+import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.mef.MEFVisitor;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.util.ISODate;
+import org.jdom.Element;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,29 +52,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import jeeves.exceptions.BadFormatEx;
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
-import jeeves.utils.XmlRequest;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
-import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
-import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
-import org.fao.geonet.kernel.mef.MEFVisitor;
-import org.fao.geonet.kernel.mef.MEFLib;
-import org.fao.geonet.kernel.mef.IMEFVisitor;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.util.ISODate;
-import org.jdom.Element;
 
 //=============================================================================
 

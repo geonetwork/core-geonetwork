@@ -21,20 +21,30 @@
 package org.fao.geonet.services.util.z3950.jzkitextensions;
 
 
-import java.util.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jzkit.ServiceDirectory.AttributeSetDBO;
+import org.jzkit.configuration.api.Configuration;
+import org.jzkit.configuration.api.ConfigurationException;
 import org.jzkit.search.util.Profile.CrosswalkDBO;
 import org.jzkit.search.util.Profile.ProfileDBO;
 import org.jzkit.search.util.Profile.ProfileService;
 import org.jzkit.search.util.Profile.ProfileServiceException;
 import org.jzkit.search.util.Profile.ProfileServiceImpl;
 import org.jzkit.search.util.Profile.QueryVerifyResult;
-import org.jzkit.search.util.QueryModel.*;
-import org.jzkit.search.util.QueryModel.Internal.*;
-import org.jzkit.configuration.api.*;
-import org.springframework.context.*;
-import org.jzkit.ServiceDirectory.AttributeSetDBO;
+import org.jzkit.search.util.QueryModel.Internal.AttrPlusTermNode;
+import org.jzkit.search.util.QueryModel.Internal.AttrValue;
+import org.jzkit.search.util.QueryModel.Internal.ComplexNode;
+import org.jzkit.search.util.QueryModel.Internal.InternalModelNamespaceNode;
+import org.jzkit.search.util.QueryModel.Internal.InternalModelRootNode;
+import org.jzkit.search.util.QueryModel.Internal.QueryNode;
+import org.jzkit.search.util.QueryModel.QueryModel;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
                                                                                                                                        
 /**

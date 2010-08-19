@@ -23,19 +23,18 @@
 
 package org.fao.geonet.services.thesaurus;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.jdom.Element;
+
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 //=============================================================================
 

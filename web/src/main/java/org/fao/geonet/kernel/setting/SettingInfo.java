@@ -23,12 +23,11 @@
 
 package org.fao.geonet.kernel.setting;
 
-import java.util.Calendar;
-
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+
+import java.util.Calendar;
 
 //=============================================================================
 

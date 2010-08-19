@@ -1,20 +1,14 @@
 package org.fao.geonet.kernel.search;
 
-import java.io.File;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 import jeeves.utils.Log;
-
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.FSDirectory;
-
 import org.fao.geonet.constants.Geonet;
+
+import java.io.File;
 
 /* Lucene only allows one IndexWriter to be open at a time.  
    However, multiple threads can use this single IndexWriter.  

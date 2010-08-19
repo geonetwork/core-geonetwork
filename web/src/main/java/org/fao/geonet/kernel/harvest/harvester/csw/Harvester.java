@@ -23,12 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
@@ -36,8 +30,13 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
-
-import org.fao.geonet.csw.common.*;
+import org.fao.geonet.csw.common.ConstraintLanguage;
+import org.fao.geonet.csw.common.Csw;
+import org.fao.geonet.csw.common.CswOperation;
+import org.fao.geonet.csw.common.CswServer;
+import org.fao.geonet.csw.common.ElementSetName;
+import org.fao.geonet.csw.common.ResultType;
+import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
@@ -46,6 +45,12 @@ import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 //=============================================================================
 

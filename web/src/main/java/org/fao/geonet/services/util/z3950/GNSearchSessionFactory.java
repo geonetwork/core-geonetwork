@@ -20,26 +20,19 @@
 
 package org.fao.geonet.services.util.z3950;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.jzkit.ServiceDirectory.AttributeSetDBO;
-import org.jzkit.ServiceDirectory.CollectionDescriptionDBO;
 import org.jzkit.configuration.api.Configuration;
 import org.jzkit.configuration.api.ConfigurationException;
-import org.jzkit.configuration.api.RecordMappingInformationDBO;
 import org.jzkit.search.ExplainInformationDTO;
 import org.jzkit.search.impl.SearchSessionFactoryImpl;
 import org.jzkit.search.util.Profile.AttrMappingDBO;
 import org.jzkit.search.util.Profile.CrosswalkDBO;
-import org.jzkit.search.util.QueryModel.Internal.AttrValue;
 import org.springframework.context.ApplicationContext;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 //import javax.annotation.*;
 
 /**

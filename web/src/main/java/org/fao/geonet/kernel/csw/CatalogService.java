@@ -23,10 +23,11 @@
 
 package org.fao.geonet.kernel.csw;
 
-import java.util.Map;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.jdom.Element;
+
+import java.util.Map;
 
 //=============================================================================
 

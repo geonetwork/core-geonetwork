@@ -23,12 +23,12 @@
 package org.fao.geonet.apps.trash;
 
 
-import jeeves.utils.*;
-import jeeves.resources.dbms.*;
+import jeeves.resources.dbms.Dbms;
+import jeeves.resources.dbms.DbmsPool;
+import jeeves.utils.Xml;
+import org.jdom.Element;
 
-import org.jdom.*;
-
-import java.util.*;
+import java.util.List;
 
 public class Export
 {

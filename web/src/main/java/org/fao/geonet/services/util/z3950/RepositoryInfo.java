@@ -20,12 +20,8 @@
 
 package org.fao.geonet.services.util.z3950;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Vector;
-
+import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.jzkit.ServiceDirectory.CollectionDescriptionDBO;
@@ -34,7 +30,9 @@ import org.jzkit.configuration.api.Configuration;
 import org.jzkit.configuration.api.ConfigurationException;
 import org.springframework.context.ApplicationContext;
 
-import jeeves.server.context.ServiceContext;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
  * helperclass to get a list of remote searchable collections from the 

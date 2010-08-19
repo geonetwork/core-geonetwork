@@ -22,10 +22,6 @@
 
 package org.fao.geonet.kernel;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-
 import org.openrdf.model.BNode;
 import org.openrdf.model.Graph;
 import org.openrdf.model.GraphException;
@@ -41,6 +37,10 @@ import org.openrdf.sesame.query.QueryEvaluationException;
 import org.openrdf.sesame.query.QueryResultsTable;
 import org.openrdf.sesame.repository.local.LocalRepository;
 import org.openrdf.sesame.sail.StatementIterator;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
 
 public class Thesaurus {
 	private String fname;

@@ -1,14 +1,11 @@
 package org.fao.geonet.kernel.search;
 
+import jeeves.utils.Log;
+import org.apache.lucene.index.IndexReader;
+import org.fao.geonet.constants.Geonet;
+
 import java.io.File;
 import java.io.IOException;
-
-import jeeves.utils.Log;
-
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.store.Directory;
-
-import org.fao.geonet.constants.Geonet;
 
 /** Utility class to get/refresh readers for SearchManager class
 		Works by opening an IndexReader at startup and keeping that reader open. 

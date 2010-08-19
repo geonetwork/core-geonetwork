@@ -23,9 +23,6 @@
 
 package org.fao.geonet.kernel.oaipmh;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -40,6 +37,10 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.oaipmh.exceptions.IdDoesNotExistException;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.jdom.Element;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 //=============================================================================
 

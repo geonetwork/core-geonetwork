@@ -23,13 +23,12 @@
 
 package org.fao.geonet.services.crs;
 
-import java.util.Iterator;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.jdom.Element;
+
+import java.util.Iterator;
 
 /**
  * Get all Coordinate Reference System types.

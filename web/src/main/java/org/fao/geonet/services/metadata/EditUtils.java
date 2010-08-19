@@ -23,8 +23,6 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.util.Hashtable;
-import java.util.List;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.resources.dbms.Dbms;
@@ -38,6 +36,9 @@ import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.jdom.Element;
+
+import java.util.Hashtable;
+import java.util.List;
 
 //=============================================================================
 

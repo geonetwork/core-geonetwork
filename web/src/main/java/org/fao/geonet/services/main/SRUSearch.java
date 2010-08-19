@@ -20,15 +20,22 @@
 
 package org.fao.geonet.services.main;
 
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.jdom.*;
+import jeeves.constants.Jeeves;
+import jeeves.exceptions.MissingParameterEx;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.services.util.z3950.DefaultContextSetCQLString;
+import org.fao.geonet.services.util.z3950.GNExplainInfoDTO;
+import org.fao.geonet.services.util.z3950.SRUDiag;
+import org.fao.geonet.services.util.z3950.SRUParamTestDBO;
+import org.fao.geonet.services.util.z3950.SRUParamTester;
+import org.fao.geonet.services.util.z3950.jzkitextensions.GNProfileService;
+import org.jdom.Attribute;
+import org.jdom.Element;
 import org.jdom.input.DOMBuilder;
 import org.jzkit.search.ExplainInformationDTO;
 import org.jzkit.search.LandscapeSpecification;
@@ -36,38 +43,19 @@ import org.jzkit.search.SearchSessionFactory;
 import org.jzkit.search.StatelessSearchResultsPageDTO;
 import org.jzkit.search.landscape.SimpleLandscapeSpecification;
 import org.jzkit.search.provider.iface.SearchException;
-import org.jzkit.search.util.Profile.ProfileServiceException;
 import org.jzkit.search.util.QueryModel.InvalidQueryException;
-import org.jzkit.search.util.QueryModel.QueryModel;
 import org.jzkit.search.util.RecordModel.ArchetypeRecordFormatSpecification;
 import org.jzkit.search.util.RecordModel.ExplicitRecordFormatSpecification;
 import org.jzkit.search.util.RecordModel.RecordFormatSpecification;
 import org.springframework.context.ApplicationContext;
 import org.w3c.dom.Document;
 
-import org.fao.geonet.services.util.z3950.DefaultContextSetCQLString;
-import org.fao.geonet.services.util.z3950.GNExplainInfoDTO;
-import org.fao.geonet.services.util.z3950.RepositoryInfo;
-import org.fao.geonet.services.util.z3950.SRUArgumentParseException;
-import org.fao.geonet.services.util.z3950.SRUDiag;
-import org.fao.geonet.services.util.z3950.SRUParamTestDBO;
-import org.fao.geonet.services.util.z3950.SRUParamTester;
-import org.fao.geonet.services.util.z3950.jzkitextensions.GNProfileService;
-
-import jeeves.constants.Jeeves;
-import jeeves.exceptions.MissingParameterEx;
-import jeeves.interfaces.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
-
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.*;
-import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.geotools.xml.XML;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 //=============================================================================
 

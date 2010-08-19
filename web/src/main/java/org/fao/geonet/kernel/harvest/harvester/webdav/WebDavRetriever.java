@@ -23,13 +23,8 @@
 
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import jeeves.interfaces.Logger;
 import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpURL;
 import org.apache.commons.httpclient.HttpsURL;
@@ -38,6 +33,10 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 class WebDavRetriever implements RemoteRetriever {
 	//--------------------------------------------------------------------------

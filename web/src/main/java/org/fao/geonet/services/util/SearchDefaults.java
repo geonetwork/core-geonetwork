@@ -23,14 +23,13 @@
 
 package org.fao.geonet.services.util;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
+
+import java.util.Iterator;
 
 /**
  * 

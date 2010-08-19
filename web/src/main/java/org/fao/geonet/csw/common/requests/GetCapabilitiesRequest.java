@@ -23,15 +23,15 @@
 
 package org.fao.geonet.csw.common.requests;
 
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.csw.common.Csw;
+import org.fao.geonet.csw.common.Section;
+import org.jdom.Element;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.csw.common.Section;
-import org.jdom.Element;
-import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 

@@ -23,6 +23,9 @@
 
 package org.fao.geonet.kernel.search;
 
+import org.fao.geonet.kernel.LocaleUtil;
+import org.jdom.Element;
+
 import java.text.Collator;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -33,9 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import org.fao.geonet.kernel.LocaleUtil;
-import org.jdom.Element;
 
 public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
 {

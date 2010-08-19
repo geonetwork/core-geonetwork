@@ -23,11 +23,6 @@
 
 package org.fao.geonet.services.harvesting;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.net.URL;
-import java.util.Iterator;
-
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
@@ -37,23 +32,25 @@ import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.lib.Lib;
 import org.fao.oaipmh.exceptions.NoSetHierarchyException;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.requests.ListMetadataFormatsRequest;
 import org.fao.oaipmh.requests.ListSetsRequest;
+import org.fao.oaipmh.requests.Transport;
 import org.fao.oaipmh.responses.ListMetadataFormatsResponse;
 import org.fao.oaipmh.responses.ListSetsResponse;
 import org.fao.oaipmh.responses.MetadataFormat;
-import org.fao.oaipmh.requests.Transport;
 import org.fao.oaipmh.responses.SetInfo;
-
 import org.jdom.Element;
 import org.jdom.JDOMException;
-
 import org.xml.sax.SAXException;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.net.URL;
+import java.util.Iterator;
 
 //=============================================================================
 

@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.resources;
 
-import java.io.File;
 import jeeves.exceptions.ObjectNotFoundEx;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
@@ -37,6 +36,8 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.metadata.Update;
 import org.jdom.Element;
+
+import java.io.File;
 
 //=============================================================================
 

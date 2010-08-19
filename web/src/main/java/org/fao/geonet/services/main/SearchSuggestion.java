@@ -23,19 +23,18 @@
 
 package org.fao.geonet.services.main;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Browse the index for a field and return a list of suggestion. Suggested terms

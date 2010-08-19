@@ -23,15 +23,12 @@
 
 package org.fao.geonet.guiservices.keywords;
 
-import org.jdom.*;
-
-import jeeves.interfaces.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-
-
-import org.fao.geonet.*;
-import org.fao.geonet.constants.*;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.jdom.Element;
 
 //=============================================================================
 

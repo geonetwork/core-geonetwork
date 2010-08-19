@@ -23,14 +23,8 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -44,6 +38,10 @@ import org.fao.oaipmh.responses.MetadataFormat;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 //=============================================================================
 

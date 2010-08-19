@@ -23,10 +23,8 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.util.List;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.BadServerResponseEx;
-import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -46,6 +44,8 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
+
+import java.util.List;
 
 //=============================================================================
 

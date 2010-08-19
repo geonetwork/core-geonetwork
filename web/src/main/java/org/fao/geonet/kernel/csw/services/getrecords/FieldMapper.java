@@ -23,10 +23,10 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
-import java.util.Set;
-
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.jdom.Element;
+
+import java.util.Set;
 
 //==============================================================================
 

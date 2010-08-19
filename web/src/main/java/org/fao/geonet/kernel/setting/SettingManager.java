@@ -23,6 +23,13 @@
 
 package org.fao.geonet.kernel.setting;
 
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.resources.ProviderManager;
+import jeeves.server.resources.ResourceListener;
+import jeeves.server.resources.ResourceProvider;
+import org.fao.geonet.constants.Geonet;
+import org.jdom.Element;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,14 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.resources.ProviderManager;
-import jeeves.server.resources.ResourceListener;
-import jeeves.server.resources.ResourceProvider;
-
-import org.fao.geonet.constants.Geonet;
-import org.jdom.Element;
 
 //=============================================================================
 

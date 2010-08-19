@@ -23,15 +23,15 @@
 
 package org.fao.geonet.services.user;
 
-import org.jdom.*;
-
-import jeeves.constants.*;
-import jeeves.interfaces.*;
-import jeeves.resources.dbms.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-
-import org.fao.geonet.constants.*;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.jdom.Element;
 
 //=============================================================================
 

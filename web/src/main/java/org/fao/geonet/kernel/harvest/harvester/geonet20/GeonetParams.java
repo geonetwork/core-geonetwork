@@ -23,8 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet20;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.utils.Util;
@@ -32,6 +30,9 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 //=============================================================================
 

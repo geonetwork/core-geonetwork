@@ -23,8 +23,6 @@
 
 package org.fao.geonet.services.login;
 
-import java.sql.SQLException;
-import java.util.List;
 import jeeves.exceptions.UserLoginEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -36,6 +34,9 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
+
+import java.sql.SQLException;
+import java.util.List;
 
 //=============================================================================
 

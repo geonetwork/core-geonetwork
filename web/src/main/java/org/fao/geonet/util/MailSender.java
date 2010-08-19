@@ -23,11 +23,11 @@
 
 package org.fao.geonet.util;
 
-import org.apache.commons.mail.*;
-
 import jeeves.interfaces.Logger;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.SimpleEmail;
 
 public class MailSender extends Thread
 {

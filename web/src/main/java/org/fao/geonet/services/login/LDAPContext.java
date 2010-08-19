@@ -23,14 +23,15 @@
 
 package org.fao.geonet.services.login;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
 import jeeves.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
+
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 //=============================================================================
 

@@ -23,7 +23,7 @@
 
 package org.fao.geonet.constants;
 
-import jeeves.constants.*;
+import jeeves.constants.Jeeves;
 
 //=============================================================================
 

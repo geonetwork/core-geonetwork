@@ -17,28 +17,19 @@
 //==============================================================================
 package org.fao.geonet.services.util.z3950.transformers;
 
-import java.util.Map;
+import jeeves.utils.Log;
+import jeeves.utils.Xml;
+import org.fao.geonet.constants.Geonet;
+import org.jdom.input.DOMBuilder;
+import org.jzkit.search.util.RecordConversion.FragmentTransformationException;
+import org.jzkit.search.util.RecordConversion.FragmentTransformer;
+import org.springframework.context.ApplicationContext;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import jeeves.utils.Xml;
-import jeeves.utils.Log;
-
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.ContextContainer;
-import org.fao.geonet.constants.Geonet;
-
-import org.jdom.input.DOMBuilder;
-
-import org.jzkit.search.util.RecordConversion.FragmentTransformationException;
-import org.jzkit.search.util.RecordConversion.FragmentTransformer;
-
-import org.springframework.context.*;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import java.util.Map;
 
 public class GNTransformer extends FragmentTransformer {
 

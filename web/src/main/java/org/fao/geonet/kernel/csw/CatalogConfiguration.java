@@ -23,20 +23,19 @@
 
 package org.fao.geonet.kernel.csw;
 
+import jeeves.constants.ConfigFile;
+import jeeves.utils.Log;
+import jeeves.utils.Xml;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.csw.common.Csw;
+import org.jdom.Element;
+import org.jdom.Namespace;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import jeeves.constants.ConfigFile;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
-
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.csw.common.Csw;
-import org.jdom.Element;
-import org.jdom.Namespace;
 
 public class CatalogConfiguration {
 

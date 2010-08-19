@@ -22,14 +22,12 @@
 
 package org.fao.geonet.kernel.search;
 
-import org.fao.geonet.services.util.SearchDefaults;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-
-import jeeves.server.*;
-import jeeves.server.context.*;
-import jeeves.utils.Util;
-
+import org.fao.geonet.services.util.SearchDefaults;
 import org.jdom.Element;
 
 import java.util.Iterator;

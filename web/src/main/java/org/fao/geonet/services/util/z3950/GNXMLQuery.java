@@ -20,30 +20,23 @@
 
 package org.fao.geonet.services.util.z3950;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Stack;
-
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
-
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jzkit.search.provider.iface.IRQuery;
-import org.jzkit.search.util.QueryModel.InvalidQueryException;
-import org.jzkit.search.util.QueryModel.QueryModel;
 import org.jzkit.search.util.QueryModel.Internal.AttrPlusTermNode;
 import org.jzkit.search.util.QueryModel.Internal.AttrValue;
 import org.jzkit.search.util.QueryModel.Internal.ComplexNode;
-import org.jzkit.search.util.QueryModel.Internal.InternalModelNamespaceNode;
 import org.jzkit.search.util.QueryModel.Internal.InternalModelRootNode;
-import org.jzkit.search.util.QueryModel.Internal.QueryNode;
 import org.jzkit.search.util.QueryModel.Internal.QueryNodeVisitor;
-import org.jzkit.z3950.QueryModel.Z3950AttrTriple;
+import org.jzkit.search.util.QueryModel.InvalidQueryException;
+import org.jzkit.search.util.QueryModel.QueryModel;
 import org.springframework.context.ApplicationContext;
+
+import java.util.List;
+import java.util.Stack;
 
 /**
  * transforms a JZKit internal query into the GN XML query format

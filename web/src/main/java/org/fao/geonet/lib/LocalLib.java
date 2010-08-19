@@ -23,14 +23,15 @@
 
 package org.fao.geonet.lib;
 
+import jeeves.resources.dbms.Dbms;
+import org.jdom.Element;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import jeeves.resources.dbms.Dbms;
-import org.jdom.Element;
 
 //=============================================================================
 

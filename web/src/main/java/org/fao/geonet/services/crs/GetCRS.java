@@ -23,14 +23,10 @@
 
 package org.fao.geonet.services.crs;
 
-import java.util.Collection;
-import java.util.Set;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-
 import org.fao.geonet.constants.Params;
 import org.geotools.referencing.ReferencingFactoryFinder;
 import org.jdom.Element;
@@ -38,6 +34,9 @@ import org.opengis.metadata.Identifier;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CRSAuthorityFactory;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+
+import java.util.Collection;
+import java.util.Set;
 
 /**
  * Get a Coordinate Reference System and return an ISO19139 fragment.

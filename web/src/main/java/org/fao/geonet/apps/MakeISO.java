@@ -23,6 +23,11 @@
 
 package org.fao.geonet.apps;
 
+import jeeves.utils.Xml;
+import org.dlib.tools.FullTokenizer;
+import org.jdom.Document;
+import org.jdom.Element;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -31,10 +36,6 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.HashSet;
-import jeeves.utils.Xml;
-import org.dlib.tools.FullTokenizer;
-import org.jdom.Document;
-import org.jdom.Element;
 
 //==============================================================================
 

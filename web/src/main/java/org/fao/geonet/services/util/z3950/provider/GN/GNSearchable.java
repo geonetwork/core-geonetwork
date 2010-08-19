@@ -20,25 +20,19 @@
 
 package org.fao.geonet.services.util.z3950.provider.GN;
 
-import java.util.Map;
-import java.util.Observer;
-
-//import org.jzkit.search.provider.SRU.SRUResultSet;
+import jeeves.utils.Log;
+import org.fao.geonet.ContextContainer;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.services.util.z3950.GNXMLQuery;
 import org.jzkit.search.provider.iface.IRQuery;
 import org.jzkit.search.provider.iface.Searchable;
 import org.jzkit.search.util.ResultSet.IRResultSet;
 import org.jzkit.search.util.ResultSet.IRResultSetStatus;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
-import org.fao.geonet.ContextContainer;
-import org.fao.geonet.services.util.z3950.GNXMLQuery;
-
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-
-import org.fao.geonet.constants.Geonet;
+import java.util.Map;
+import java.util.Observer;
 //import org.fao.geonet.services.util.z3950.GNSearchTask;
 
 /**

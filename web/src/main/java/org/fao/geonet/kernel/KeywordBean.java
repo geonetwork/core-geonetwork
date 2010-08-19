@@ -22,12 +22,12 @@
 
 package org.fao.geonet.kernel;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class KeywordBean {
 	private int id;

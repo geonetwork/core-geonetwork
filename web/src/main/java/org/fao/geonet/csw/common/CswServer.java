@@ -23,6 +23,11 @@
 
 package org.fao.geonet.csw.common;
 
+import jeeves.utils.Log;
+import org.fao.geonet.constants.Geonet;
+import org.jdom.Element;
+import org.jdom.Namespace;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -30,13 +35,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import jeeves.utils.Log;
-
-
-import org.fao.geonet.constants.Geonet;
-import org.jdom.Element;
-import org.jdom.Namespace;
 
 //=============================================================================
 

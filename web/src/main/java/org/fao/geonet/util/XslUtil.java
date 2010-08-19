@@ -1,12 +1,11 @@
 package org.fao.geonet.util;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import jeeves.utils.Log;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All

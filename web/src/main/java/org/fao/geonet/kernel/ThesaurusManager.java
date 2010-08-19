@@ -22,14 +22,8 @@
 
 package org.fao.geonet.kernel;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.Hashtable;
-
 import jeeves.utils.Log;
-
 import org.fao.geonet.constants.Geonet;
-
 import org.openrdf.sesame.Sesame;
 import org.openrdf.sesame.config.ConfigurationException;
 import org.openrdf.sesame.config.RepositoryConfig;
@@ -37,6 +31,10 @@ import org.openrdf.sesame.config.SailConfig;
 import org.openrdf.sesame.constants.RDFFormat;
 import org.openrdf.sesame.repository.local.LocalRepository;
 import org.openrdf.sesame.repository.local.LocalService;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Hashtable;
 
 //=============================================================================
 

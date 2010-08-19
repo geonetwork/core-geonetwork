@@ -22,13 +22,13 @@
 //==============================================================================
 package org.fao.geonet.services.crs;
 
-import java.util.HashMap;
-
 import org.opengis.referencing.IdentifiedObject;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.crs.GeographicCRS;
 import org.opengis.referencing.crs.ProjectedCRS;
 import org.opengis.referencing.crs.VerticalCRS;
+
+import java.util.HashMap;
 
 public class Constant {
 	public final static HashMap<String, Class<? extends IdentifiedObject>> CRSType = 

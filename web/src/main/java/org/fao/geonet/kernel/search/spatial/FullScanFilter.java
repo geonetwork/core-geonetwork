@@ -23,11 +23,9 @@
 
 package org.fao.geonet.kernel.search.spatial;
 
-import java.io.IOException;
-import java.util.BitSet;
-import java.util.HashSet;
-import java.util.Set;
-
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.index.SpatialIndex;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.HitCollector;
@@ -44,9 +42,10 @@ import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.spatial.SpatialOperator;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.index.SpatialIndex;
+import java.io.IOException;
+import java.util.BitSet;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This filter filters out all documents that do not intersect the requested

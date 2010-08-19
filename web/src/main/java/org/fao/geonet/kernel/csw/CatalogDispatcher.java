@@ -23,11 +23,6 @@
 
 package org.fao.geonet.kernel.csw;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
@@ -35,7 +30,6 @@ import jeeves.utils.Log;
 import jeeves.utils.SOAPUtil;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
@@ -49,6 +43,11 @@ import org.fao.geonet.kernel.csw.services.GetRecords;
 import org.fao.geonet.kernel.csw.services.Harvest;
 import org.fao.geonet.kernel.csw.services.Transaction;
 import org.jdom.Element;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 //=============================================================================
 

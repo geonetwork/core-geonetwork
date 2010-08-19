@@ -27,12 +27,19 @@
 
 package org.fao.geonet.kernel.schema;
 
-import java.util.*;
-import org.jdom.*;
-
-import java.io.File;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Edit;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 //==============================================================================
 

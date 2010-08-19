@@ -23,15 +23,14 @@
 
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import java.io.IOException;
-
 import jeeves.utils.Xml;
-
 import org.apache.commons.httpclient.HttpException;
 import org.apache.webdav.lib.WebdavResource;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+
+import java.io.IOException;
 
 //=============================================================================
 

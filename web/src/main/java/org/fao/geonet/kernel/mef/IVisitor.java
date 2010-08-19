@@ -23,10 +23,11 @@
 
 package org.fao.geonet.kernel.mef;
 
+import org.jdom.Element;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import org.jdom.Element;
 
 /**
  * Register XML or binary file to process.

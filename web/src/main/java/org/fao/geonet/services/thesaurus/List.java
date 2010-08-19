@@ -23,21 +23,20 @@
 
 package org.fao.geonet.services.thesaurus;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.Iterator;
-
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.jdom.Element;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Iterator;
 
 //=============================================================================
 

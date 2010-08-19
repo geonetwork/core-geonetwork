@@ -1,16 +1,15 @@
 package org.fao.geonet.kernel.oaipmh;
 
+import jeeves.utils.Log;
+import org.fao.geonet.constants.Geonet;
+import org.fao.oaipmh.responses.ResumptionToken;
+import org.fao.oaipmh.util.ISODate;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
-
-import jeeves.utils.Log;
-
-import org.fao.geonet.constants.Geonet;
-import org.fao.oaipmh.util.ISODate;
-import org.fao.oaipmh.responses.ResumptionToken;
 
 public class ResumptionTokenCache extends Thread {
 

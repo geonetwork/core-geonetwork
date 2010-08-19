@@ -23,17 +23,17 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.UUID;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.utils.Util;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.UUID;
 
 //=============================================================================
 

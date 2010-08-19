@@ -23,13 +23,14 @@
 
 package org.fao.geonet.guiservices.util;
 
-import java.io.File;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
+
+import java.io.File;
 
 //=============================================================================
 

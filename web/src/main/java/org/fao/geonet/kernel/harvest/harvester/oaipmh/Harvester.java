@@ -23,17 +23,11 @@
 
 package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
-import java.io.File;
-import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
-
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -53,6 +47,11 @@ import org.fao.oaipmh.responses.ListIdentifiersResponse;
 import org.fao.oaipmh.util.ISODate;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+
+import java.io.File;
+import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
 //=============================================================================
 

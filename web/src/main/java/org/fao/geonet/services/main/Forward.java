@@ -23,8 +23,6 @@
 
 package org.fao.geonet.services.main;
 
-import java.net.URL;
-import java.util.List;
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.exceptions.UserNotFoundEx;
 import jeeves.interfaces.Service;
@@ -35,6 +33,9 @@ import jeeves.utils.XmlRequest;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
+
+import java.net.URL;
+import java.util.List;
 
 //=============================================================================
 

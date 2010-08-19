@@ -23,15 +23,8 @@
 
 package org.fao.geonet.kernel.csw.services;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.UUID;
-
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -40,13 +33,18 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.OperationNotSupportedEx;
 import org.fao.geonet.kernel.csw.CatalogService;
-import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
+import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
-import org.fao.geonet.kernel.harvest.harvester.csw.CswHarvester;
 import org.fao.geonet.services.harvesting.Util;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.UUID;
 
 //=============================================================================
 /**

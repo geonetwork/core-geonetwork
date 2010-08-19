@@ -27,12 +27,16 @@
 
 package org.fao.geonet.kernel.schema;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.*;
-
 import org.jdom.Element;
 import org.jdom.Namespace;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 //==============================================================================
 

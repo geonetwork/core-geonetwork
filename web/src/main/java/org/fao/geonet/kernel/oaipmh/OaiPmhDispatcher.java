@@ -23,8 +23,6 @@
 
 package org.fao.geonet.kernel.oaipmh;
 
-import java.util.HashMap;
-import java.util.Map;
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
@@ -44,6 +42,9 @@ import org.fao.oaipmh.responses.AbstractResponse;
 import org.fao.oaipmh.server.OaiPmhFactory;
 import org.fao.oaipmh.util.Lib;
 import org.jdom.Element;
+
+import java.util.HashMap;
+import java.util.Map;
 
 //=============================================================================
 

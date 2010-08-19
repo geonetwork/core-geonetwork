@@ -23,27 +23,23 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.util.List;
-import java.util.Set;
-
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
-
 import org.jdom.Element;
+
+import java.util.List;
+import java.util.Set;
 
 //=============================================================================
 

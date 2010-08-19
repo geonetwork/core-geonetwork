@@ -22,52 +22,47 @@
 
 package org.fao.geonet.kernel.search;
 
-import org.jzkit.search.LandscapeSpecification;
-import org.jzkit.search.SearchSessionFactory;
-import org.jzkit.search.StatelessSearchResultsPageDTO;
-import org.jzkit.search.impl.StatelessQueryService;
-import org.jzkit.search.landscape.SimpleLandscapeSpecification;
-import org.jzkit.search.provider.iface.IRQuery;
-import org.jzkit.search.util.QueryModel.QueryModel;
-import org.jzkit.search.util.QueryModel.PrefixString.PrefixString;
-import org.jzkit.search.util.RecordModel.ArchetypeRecordFormatSpecification;
-import org.jzkit.search.util.RecordModel.ExplicitRecordFormatSpecification;
-import org.jzkit.search.util.RecordModel.InformationFragment;
-import org.jzkit.search.util.RecordModel.RecordFormatSpecification;
-import org.jzkit.search.util.ResultSet.IRResultSetStatus;
-import org.jzkit.service.z3950server.ZSetInfo;
-
-import java.io.File;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-import java.util.Vector;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Result;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import jeeves.exceptions.BadParameterEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
-import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.jdom.input.DOMBuilder;
+import org.jzkit.search.LandscapeSpecification;
+import org.jzkit.search.StatelessSearchResultsPageDTO;
+import org.jzkit.search.impl.StatelessQueryService;
+import org.jzkit.search.landscape.SimpleLandscapeSpecification;
+import org.jzkit.search.util.QueryModel.PrefixString.PrefixString;
+import org.jzkit.search.util.QueryModel.QueryModel;
+import org.jzkit.search.util.RecordModel.ArchetypeRecordFormatSpecification;
+import org.jzkit.search.util.RecordModel.ExplicitRecordFormatSpecification;
+import org.jzkit.search.util.RecordModel.InformationFragment;
+import org.jzkit.search.util.RecordModel.RecordFormatSpecification;
+import org.jzkit.search.util.ResultSet.IRResultSetStatus;
+import org.jzkit.service.z3950server.ZSetInfo;
 import org.springframework.context.ApplicationContext;
 import org.w3c.dom.Document;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.File;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+import java.util.Vector;
 
 //--------------------------------------------------------------------------------
 // search metadata remotely using Z39.50

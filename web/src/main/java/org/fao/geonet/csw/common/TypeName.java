@@ -1,10 +1,10 @@
 package org.fao.geonet.csw.common;
 
+import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
-
-import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 
 public enum TypeName {
     DATASET("dataset"), DATASET_COLLECTION("datasetcollection"), SERVICE("service"), APPLICATION("application"),

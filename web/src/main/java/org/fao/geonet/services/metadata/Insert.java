@@ -23,10 +23,6 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.MissingParameterEx;
@@ -36,7 +32,6 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -45,6 +40,10 @@ import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 import org.jdom.Namespace;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 //=============================================================================
 

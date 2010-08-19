@@ -23,14 +23,10 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet20;
 
-import java.util.Iterator;
-import java.util.List;
-
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.XmlRequest;
-
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -39,6 +35,9 @@ import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
+
+import java.util.Iterator;
+import java.util.List;
 
 //=============================================================================
 

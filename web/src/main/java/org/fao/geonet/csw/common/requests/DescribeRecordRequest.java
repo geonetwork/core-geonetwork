@@ -23,13 +23,13 @@
 
 package org.fao.geonet.csw.common.requests;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.TypeName;
 import org.jdom.Element;
-import jeeves.server.context.ServiceContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 //=============================================================================
 

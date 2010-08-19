@@ -3,6 +3,7 @@ package org.fao.geonet.kernel.search;
 import jeeves.resources.dbms.Dbms;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
+
 import java.sql.SQLException;
 
 /**

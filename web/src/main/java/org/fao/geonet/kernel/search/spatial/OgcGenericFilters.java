@@ -1,17 +1,13 @@
 package org.fao.geonet.kernel.search.spatial;
 
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.index.SpatialIndex;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
-
 import org.apache.lucene.search.Query;
 import org.fao.geonet.constants.Geonet;
 import org.geotools.data.FeatureSource;
-//import org.geotools.data.wfs.v1_1_0.ReprojectingFilterVisitor;
-//Leave this out as we are using our own copy of this for now
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
 import org.geotools.feature.AttributeTypeBuilder;
@@ -19,12 +15,11 @@ import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.filter.visitor.DefaultFilterVisitor;
 import org.geotools.filter.visitor.DuplicatingFilterVisitor;
 import org.geotools.filter.visitor.ExtractBoundsFilterVisitor;
-import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Parser;
-
 import org.jdom.Element;
-
+import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.And;
 import org.opengis.filter.BinaryLogicOperator;
 import org.opengis.filter.Filter;
@@ -44,13 +39,10 @@ import org.opengis.filter.spatial.Intersects;
 import org.opengis.filter.spatial.Overlaps;
 import org.opengis.filter.spatial.Touches;
 import org.opengis.filter.spatial.Within;
-import org.opengis.feature.type.GeometryDescriptor;
-import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.index.SpatialIndex;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
 // -- define the featureType that will be used in the reprojectFilter
 class Reproject {

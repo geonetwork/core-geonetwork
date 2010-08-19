@@ -23,10 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet20;
 
-import java.io.File;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.UUID;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.UserNotFoundEx;
 import jeeves.interfaces.Logger;
@@ -42,6 +38,11 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
+
+import java.io.File;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.UUID;
 
 //=============================================================================
 

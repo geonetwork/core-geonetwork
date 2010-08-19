@@ -23,9 +23,6 @@
 
 package org.fao.geonet.services.schema;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.OperationAbortedEx;
@@ -39,6 +36,10 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.jdom.Element;
 import org.jdom.Namespace;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 //=============================================================================
 

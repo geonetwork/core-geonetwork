@@ -23,6 +23,8 @@
 
 package org.fao.geonet.lib;
 
+import jeeves.utils.Util;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -34,7 +36,6 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import jeeves.utils.Util;
 
 //=============================================================================
 

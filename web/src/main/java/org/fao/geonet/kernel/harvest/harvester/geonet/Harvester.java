@@ -23,11 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import jeeves.exceptions.BadServerResponseEx;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.exceptions.UserNotFoundEx;
@@ -44,6 +39,12 @@ import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 //=============================================================================
 

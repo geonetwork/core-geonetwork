@@ -23,14 +23,15 @@
 
 package org.fao.geonet.lib;
 
-import java.io.File;
-import java.util.HashSet;
 import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
+
+import java.io.File;
+import java.util.HashSet;
 
 //=============================================================================
 

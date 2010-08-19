@@ -23,24 +23,23 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-
+import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
-import org.fao.geonet.kernel.KeywordBean;
 import org.jdom.Element;
 import org.openrdf.model.Value;
 import org.openrdf.sesame.query.QueryResultsTable;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 public class KeywordsSearcher {
 	private ThesaurusManager _tm;

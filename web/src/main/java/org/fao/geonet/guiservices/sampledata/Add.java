@@ -23,19 +23,17 @@
 
 package org.fao.geonet.guiservices.sampledata;
 
-import java.io.File;
-
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.jdom.Element;
 
-import org.fao.geonet.kernel.mef.MEFLib;
+import java.io.File;
 
 /**
  * A simple service that add the sample mef files in the samples

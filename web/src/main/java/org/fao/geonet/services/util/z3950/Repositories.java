@@ -23,19 +23,14 @@
 
 package org.fao.geonet.services.util.z3950;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Properties;
-import java.util.List;
-
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadFormatEx;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
-
 import org.jdom.Comment;
 import org.jdom.Document;
 import org.jdom.Element;
+
+import java.io.FileOutputStream;
 
 //=============================================================================
 

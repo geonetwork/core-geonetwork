@@ -22,12 +22,6 @@
 
 package org.fao.geonet.kernel;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.Date;
-import java.util.Hashtable;
-
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 import org.openrdf.model.BNode;
@@ -51,6 +45,12 @@ import org.openrdf.sesame.query.QueryResultsTable;
 import org.openrdf.sesame.repository.local.LocalRepository;
 import org.openrdf.sesame.repository.local.LocalService;
 import org.openrdf.sesame.sail.StatementIterator;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Hashtable;
 
 //=============================================================================
 

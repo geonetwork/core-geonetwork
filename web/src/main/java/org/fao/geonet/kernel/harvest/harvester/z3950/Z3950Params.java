@@ -21,16 +21,15 @@
 
 package org.fao.geonet.kernel.harvest.harvester.z3950;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.utils.Util;
-
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 //=============================================================================
 

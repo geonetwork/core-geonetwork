@@ -23,22 +23,20 @@
 
 package org.fao.geonet.kernel;
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Vector;
-
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
-
 import org.jdom.Element;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Vector;
 
 //=============================================================================
 

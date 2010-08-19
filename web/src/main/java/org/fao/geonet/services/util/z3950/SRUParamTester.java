@@ -1,10 +1,10 @@
 package org.fao.geonet.services.util.z3950;
 
+import org.fao.geonet.services.main.SRUSearch;
+
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
-
-import org.fao.geonet.services.main.SRUSearch;
 
 public class SRUParamTester {
 

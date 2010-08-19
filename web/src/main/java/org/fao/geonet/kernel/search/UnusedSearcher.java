@@ -22,9 +22,6 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -34,6 +31,10 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 //==============================================================================
 

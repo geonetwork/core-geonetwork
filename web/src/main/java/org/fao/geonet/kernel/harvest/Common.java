@@ -23,9 +23,6 @@
 
 package org.fao.geonet.kernel.harvest;
 
-import org.jdom.Element;
-import org.jdom.Namespace;
-
 import jeeves.exceptions.BadParameterEx;
 
 //=============================================================================

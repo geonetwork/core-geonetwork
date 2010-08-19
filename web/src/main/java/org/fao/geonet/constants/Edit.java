@@ -23,7 +23,7 @@
 
 package org.fao.geonet.constants;
 
-import org.jdom.*;
+import org.jdom.Namespace;
 
 //=============================================================================
 

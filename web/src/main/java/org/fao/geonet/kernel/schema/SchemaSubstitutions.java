@@ -23,12 +23,13 @@
 
 package org.fao.geonet.kernel.schema;
 
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.List;
 import jeeves.utils.Xml;
 import org.jdom.Element;
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
 
 //=============================================================================
 

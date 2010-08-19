@@ -21,21 +21,20 @@
 
 package org.fao.geonet.kernel.harvest.harvester.z3950;
 
-import java.io.File;
-import java.sql.SQLException;
-import java.util.UUID;
-
 import jeeves.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
+
+import java.io.File;
+import java.sql.SQLException;
+import java.util.UUID;
 
 
 /**

@@ -22,15 +22,10 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
-
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -40,6 +35,10 @@ import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
 
 //=============================================================================
 

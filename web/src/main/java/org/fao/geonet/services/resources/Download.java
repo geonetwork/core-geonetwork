@@ -23,8 +23,6 @@
 
 package org.fao.geonet.services.resources;
 
-import java.io.File;
-import java.util.Iterator;
 import jeeves.exceptions.ResourceNotFoundEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -41,6 +39,9 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.MailSender;
 import org.jdom.Element;
+
+import java.io.File;
+import java.util.Iterator;
 
 //=============================================================================
 

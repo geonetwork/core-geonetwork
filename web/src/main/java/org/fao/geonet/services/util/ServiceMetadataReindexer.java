@@ -18,14 +18,12 @@
 
 package org.fao.geonet.services.util;
 
-import java.util.List;
-
 import jeeves.resources.dbms.Dbms;
-
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
-
 import org.jdom.Element;
+
+import java.util.List;
 
 /**
  * Class that extends MetadataIndexerProcessor to reindex the metadata
