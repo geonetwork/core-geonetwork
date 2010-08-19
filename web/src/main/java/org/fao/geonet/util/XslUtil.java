@@ -154,7 +154,7 @@ public final class XslUtil
     	String fieldname = field.toString();
     	String language = (lang.toString().equals("")?Geonet.DEFAULT_LANGUAGE:lang.toString());
     	try {
-    		return LuceneSearcher.getMetadataFromIndex(path, id, fieldname, language);
+    		return LuceneSearcher.getMetadataFromIndex(path, id, fieldname);
     	} catch (Exception e) {
 			Log.debug(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
     		return "";
