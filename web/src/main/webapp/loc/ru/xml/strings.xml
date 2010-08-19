@@ -571,7 +571,7 @@
 	<saveAndClose>Сохранить и закрыть</saveAndClose>
 	<saveAndValidate>Проверить</saveAndValidate>
 	<savepdf>Сохранить результаты поиска в формате PDF</savepdf>
-	<printSelection>Print selection</printSelection>
+	<printSelection>Print to PDF</printSelection>
 	<schema>Схема</schema>
 	<schematronError>Schematron Error</schematronError>
 	<search>Поиск</search>

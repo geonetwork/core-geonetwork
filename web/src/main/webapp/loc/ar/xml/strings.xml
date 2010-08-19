@@ -574,7 +574,7 @@
 	<saveAndClose>حفظ وإغلاق</saveAndClose>
 	<saveAndValidate>التحقق</saveAndValidate>
 	<savepdf>Save search results as pdf</savepdf>
-	<printSelection>Print selection</printSelection>
+	<printSelection>Print to PDF</printSelection>
 	<schema>وحدة</schema>
 	<schematronError>Schematron Error</schematronError>
 	<search>بحث</search>

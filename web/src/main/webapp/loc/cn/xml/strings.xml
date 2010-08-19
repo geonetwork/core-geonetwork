@@ -570,7 +570,7 @@
 	<saveAndClose>保存并关闭</saveAndClose>
 	<saveAndValidate>检查</saveAndValidate>
 	<savepdf>Save search results as pdf</savepdf>
-	<printSelection>Print selection</printSelection>
+	<printSelection>Print to PDF</printSelection>
 	<schema>模式</schema>
 	<schematronError>Schematron Error</schematronError>
 	<search>开始搜索</search>

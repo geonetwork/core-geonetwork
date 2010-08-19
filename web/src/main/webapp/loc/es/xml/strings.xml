@@ -111,8 +111,8 @@
 	<searchText js="true">Text search</searchText>
 	<mdTitle js="true">Metadata title</mdTitle>
 	<createRelation js="true">Create relation</createRelation>
-	<export>Exportar</export>
-	<exportText>Export (TXT)</exportText>	
+	<export>Exportar (ZIP)</export>
+	<exportText>Exportar (TXT)</exportText>	
 	<addXMLFragment>Add from dictionary ...</addXMLFragment>
 	<translateWithGoogle>Use Google translation service to suggest a translation for selected language.</translateWithGoogle>
 	<translateWithGoogle.maxSize js="true">Text to translate is larger than 5000 characters (see http://code.google.com/apis/ajaxlanguage/terms.html).</translateWithGoogle.maxSize>
@@ -570,7 +570,7 @@
 	<saveAndClose>Salvar y Cerrar</saveAndClose>
 	<saveAndValidate>Salvar y comprobar</saveAndValidate>
 	<savepdf>Guardar los resultados de búsqueda en formato PDF</savepdf>
-	<printSelection>Print selection</printSelection>
+	<printSelection>Imprimir a PDF</printSelection>
 	<schema>Esquema</schema>
 	<schematronError>Schematron Error</schematronError>
 	<search>Buscar</search>

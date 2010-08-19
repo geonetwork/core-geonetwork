@@ -573,7 +573,7 @@
 	<saveAndClose>Sauver et fermer</saveAndClose>
 	<saveAndValidate>Sauver et valider</saveAndValidate>
 	<savepdf>Visualiser les résultats de la recherche au format pdf</savepdf>
-	<printSelection>Imprimer la sélection</printSelection>
+	<printSelection>Imprimer au PDF</printSelection>
 	<schema>Schéma</schema>
 	<schematronError>Erreur Schematron</schematronError>
 	<search>Rechercher</search>

@@ -572,7 +572,7 @@
 	<saveAndClose>Gravar e sair</saveAndClose>
 	<saveAndValidate>Gravar e avaliar</saveAndValidate>
 	<savepdf>Gravar resultados como PDF</savepdf>
-	<printSelection>Print selection</printSelection>
+	<printSelection>Print to PDF</printSelection>
 	<schema>Esquema</schema>
 	<schematronError>Schematron erro</schematronError>
 	<search>Pesquisa</search>

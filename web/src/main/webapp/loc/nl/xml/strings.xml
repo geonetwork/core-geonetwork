@@ -588,7 +588,7 @@
 	<saveAndClose>Bewaren en sluiten</saveAndClose>
 	<saveAndValidate>Controleren</saveAndValidate>
 	<savepdf>Sla de zoek resultaten als pdf op</savepdf>
-	<printSelection>Print selection</printSelection>
+	<printSelection>Print to PDF</printSelection>
 	<schema>Schema</schema>
 	<schematronError>Schematron Fout</schematronError>
 	<search>Zoeken</search>

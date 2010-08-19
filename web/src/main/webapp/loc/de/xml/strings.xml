@@ -562,7 +562,7 @@
 	<result>Letzte Ergebnisse</result>
 	<resultsCoordinate>Ergebnisse, die auf Koordinatensuche zu treffen </resultsCoordinate>
 	<resultsFreeText>Ergebnisse, die auf Freitextsuche zu treffen </resultsFreeText>
-	<resultsMatching>Suchergebnisse :</resultsMatching>
+	<resultsMatching>Suchergebnisse :</retsultsMatching>
 	<Reviewer>Inhaltkritiker</Reviewer>
 	<rss>RSS feed öffnen</rss>
 	<rtitle>Titel</rtitle>
@@ -570,7 +570,7 @@
 	<saveAndClose>Speichern und Schließen</saveAndClose>
 	<saveAndValidate>Überprüfen</saveAndValidate>
 	<savepdf>Speichere Ergebnisse als PDF</savepdf>
-	<printSelection>Print selection</printSelection>
+	<printSelection>Print to PDF</printSelection>
 	<schema>Schema</schema>
 	<schematronError>Schematron Fehler</schematronError>
 	<search>Suche</search>
