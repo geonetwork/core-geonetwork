@@ -39,7 +39,7 @@ class SimpleContentEntry
 {
 	public String base;
 
-    public List<AttributeEntry> alAttribs  = new ArrayList<AttributeEntry>();
+    public ArrayList<AttributeEntry> alAttribs  = new ArrayList<AttributeEntry>();
 	public List<String> alAttribGroups = new ArrayList<String>();
 	public boolean restriction = false;
 

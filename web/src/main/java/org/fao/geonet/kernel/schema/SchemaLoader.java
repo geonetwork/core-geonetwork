@@ -64,10 +64,10 @@ public class SchemaLoader
 	private String targetNSPrefix;
 
 	/** Restrictions for simple types (element restriction) */
-	private HashMap<String, ArrayList> hmElemRestr = new HashMap<String, ArrayList>();
+	private Map<String, List> hmElemRestr = new HashMap<String, List>();
 
 	/** Restrictions for simple types (type restriction) */
-	private HashMap<String, ArrayList> hmTypeRestr = new HashMap<String, ArrayList>();
+	private Map<String, List> hmTypeRestr = new HashMap<String, List>();
 
 	//---------------------------------------------------------------------------
 	//---
