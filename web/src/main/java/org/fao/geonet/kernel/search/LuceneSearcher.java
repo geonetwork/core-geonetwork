@@ -268,7 +268,7 @@ public class LuceneSearcher extends MetaSearcher
             List<Element> requestedGroups = request.getChildren("group");
             Set<String> userGroups = gc.getAccessManager().getUserGroups(dbms, srvContext.getUserSession(), srvContext.getIpAddress());
             UserSession userSession = srvContext.getUserSession();
-            if (! (userSession.getProfile().equals(Geonet.Profile.ADMINISTRATOR) && userSession.isAuthenticated())) {
+            if (userSession == null || ! (userSession.getProfile().equals(Geonet.Profile.ADMINISTRATOR) && userSession.isAuthenticated())) {
                 if(requestedGroups != null && requestedGroups.size() > 0) {
                     for(Element group : requestedGroups) {
                         if(! userGroups.contains(group.getText())) {
