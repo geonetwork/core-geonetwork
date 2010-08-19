@@ -69,58 +69,46 @@ public class CatalogConfiguration {
 
 		Element configRoot = Xml.loadFile(configFile);
 
-		List<Element> operationsList = configRoot
-				.getChildren(Csw.ConfigFile.Child.OPERATIONS);
+		List<Element> operationsList = configRoot.getChildren(Csw.ConfigFile.Child.OPERATIONS);
 
-		Iterator<Element> opIt = operationsList.iterator();
-		while (opIt.hasNext()) {
-			Element element = (Element) opIt.next();
-			initOperations(element);
-		}
+        for (Element element : operationsList) {
+            initOperations(element);
+        }
 
 		// --- recurse on includes
 
 		List includes = configRoot.getChildren(ConfigFile.Child.INCLUDE);
 
-		for (int i = 0; i < includes.size(); i++) {
-			Element include = (Element) includes.get(i);
-			loadCatalogConfig(path, include.getText());
-		}
+        for (Object include1 : includes) {
+            Element include = (Element) include1;
+            loadCatalogConfig(path, include.getText());
+        }
 
 	}
 
 	private static void initOperations(Element element) {
-		List<Element> operationLst = element
-				.getChildren(Csw.ConfigFile.Operations.Child.OPERATION);
-		Iterator<Element> iter = operationLst.iterator();
+		List<Element> operationLst = element.getChildren(Csw.ConfigFile.Operations.Child.OPERATION);
 
-		while (iter.hasNext()) {
-			Element operation = (Element) iter.next();
-			String operationName = operation
-					.getAttributeValue(Csw.ConfigFile.Operation.Attr.NAME);
+        for (Element operation : operationLst) {
+            String operationName = operation.getAttributeValue(Csw.ConfigFile.Operation.Attr.NAME);
 
-			if (operationName
-					.equals(Csw.ConfigFile.Operation.Attr.Value.GET_CAPABILITIES)) {
-				initCapabilities(operation);
-				continue;
-			}
-			if (operationName
-					.equals(Csw.ConfigFile.Operation.Attr.Value.GET_DOMAIN)) {
-				initDomain(operation);
-				continue;
-			}
-			if (operationName
-					.equals(Csw.ConfigFile.Operation.Attr.Value.GET_RECORDS)) {
-				initGetRecordsConfig(operation);
-				continue;
-			}
-			if (operationName
-					.equals(Csw.ConfigFile.Operation.Attr.Value.DESCRIBE_RECORD)) {
-				initDescribeRecordConfig(operation);
-				continue;
-			}
+            if (operationName.equals(Csw.ConfigFile.Operation.Attr.Value.GET_CAPABILITIES)) {
+                initCapabilities(operation);
+                continue;
+            }
+            if (operationName.equals(Csw.ConfigFile.Operation.Attr.Value.GET_DOMAIN)) {
+                initDomain(operation);
+                continue;
+            }
+            if (operationName.equals(Csw.ConfigFile.Operation.Attr.Value.GET_RECORDS)) {
+                initGetRecordsConfig(operation);
+                continue;
+            }
+            if (operationName.equals(Csw.ConfigFile.Operation.Attr.Value.DESCRIBE_RECORD)) {
+                initDescribeRecordConfig(operation);
+            }
 
-		}
+        }
 	}
 
 	/**
@@ -154,22 +142,16 @@ public class CatalogConfiguration {
 		
 		String name, prefix, uri, schema;
 		Namespace namespace;
-		
-		Iterator it = typenameList.iterator();
-		while (it.hasNext()) {
-			Element typename = (Element) it.next();
-			name = typename
-					.getAttributeValue(Csw.ConfigFile.Typename.Attr.NAME);
-			prefix = typename
-					.getAttributeValue(Csw.ConfigFile.Typename.Attr.PREFIX);
-			schema = typename
-					.getAttributeValue(Csw.ConfigFile.Typename.Attr.SCHEMA);
-			uri = typename
-					.getAttributeValue(Csw.ConfigFile.Typename.Attr.NAMESPACE);
-			namespace = Namespace.getNamespace(prefix, uri);
-			_describeRecordNamespaces.add(namespace);
-			_describeRecordTypenames.put(prefix + ":" + name, schema);
-		}
+
+        for (Element typename : typenameList) {
+            name = typename.getAttributeValue(Csw.ConfigFile.Typename.Attr.NAME);
+            prefix = typename.getAttributeValue(Csw.ConfigFile.Typename.Attr.PREFIX);
+            schema = typename.getAttributeValue(Csw.ConfigFile.Typename.Attr.SCHEMA);
+            uri = typename.getAttributeValue(Csw.ConfigFile.Typename.Attr.NAMESPACE);
+            namespace = Namespace.getNamespace(prefix, uri);
+            _describeRecordNamespaces.add(namespace);
+            _describeRecordTypenames.put(prefix + ":" + name, schema);
+        }
 		
 		// Handle outputFormat parameter
 		_describeRecordOutputFormat.addAll(getOutputFormat(operation));
@@ -180,22 +162,18 @@ public class CatalogConfiguration {
 		Element typenames = operation
 				.getChild(Csw.ConfigFile.Operation.Child.TYPENAMES);
 
-		List<Element> typenameList = typenames
-				.getChildren(Csw.ConfigFile.Typenames.Child.TYPENAME);
-
-		return typenameList;
+        return (List<Element>) typenames.getChildren(Csw.ConfigFile.Typenames.Child.TYPENAME);
 	}
 
 	private static void initGetRecordsConfig(Element operation) {
 		// Only one child parameters
 		Element params = operation
 				.getChild(Csw.ConfigFile.Operation.Child.PARAMETERS);
-		List<Element> paramsList = params
-				.getChildren(Csw.ConfigFile.Parameters.Child.PARAMETER);
+		List<Element> paramsList = params.getChildren(Csw.ConfigFile.Parameters.Child.PARAMETER);
 		Iterator<Element> it = paramsList.iterator();
 		String name, field, type, range;
 		while (it.hasNext()) {
-			Element param = (Element) it.next();
+			Element param = it.next();
 			name = param
 					.getAttributeValue(Csw.ConfigFile.Parameter.Attr.NAME);
 			field = param
@@ -222,28 +200,21 @@ public class CatalogConfiguration {
 		// ConstraintLanguage parameter
 		Element constraintLanguageElt = operation.getChild(Csw.ConfigFile.Operation.Child.CONSTRAINT_LANGUAGE);
 		List<Element> constraintLanguageList = constraintLanguageElt.getChildren(Csw.ConfigFile.ConstraintLanguage.Child.VALUE);
-		Iterator<Element> itConstraint = constraintLanguageList.iterator();
-		while (itConstraint.hasNext()) {
-			Element constraint = (Element) itConstraint.next();
-			String value = constraint.getText();
-			_getRecordsConstraintLanguage.add(value);
-		}
+        for (Element constraint : constraintLanguageList) {
+            String value = constraint.getText();
+            _getRecordsConstraintLanguage.add(value);
+        }
 		
 		// Handle typenames parameter list value
 		List<Element> typenameList = getTypenamesConfig(operation);
 		String tname, prefix, uri;
-		Iterator<Element> itTypeName = typenameList.iterator();
-		while (itTypeName.hasNext()) {
-			Element typename = (Element) itTypeName.next();
-			tname = typename
-					.getAttributeValue(Csw.ConfigFile.Typename.Attr.NAME);
-			prefix = typename
-					.getAttributeValue(Csw.ConfigFile.Typename.Attr.PREFIX);
-			uri = typename
-					.getAttributeValue(Csw.ConfigFile.Typename.Attr.NAMESPACE);
-			_getRecordsOutputSchema.add(uri);
-			_getRecordsTypenames.add(prefix + ":" + tname);
-		}
+        for (Element typename : typenameList) {
+            tname = typename.getAttributeValue(Csw.ConfigFile.Typename.Attr.NAME);
+            prefix = typename.getAttributeValue(Csw.ConfigFile.Typename.Attr.PREFIX);
+            uri = typename.getAttributeValue(Csw.ConfigFile.Typename.Attr.NAMESPACE);
+            _getRecordsOutputSchema.add(uri);
+            _getRecordsTypenames.add(prefix + ":" + tname);
+        }
 		
 		
 	}
@@ -257,16 +228,13 @@ public class CatalogConfiguration {
 		Element outputFormat = operation
 				.getChild(Csw.ConfigFile.Operation.Child.OUTPUTFORMAT);
 
-		List<Element> formatList = outputFormat
-				.getChildren(Csw.ConfigFile.OutputFormat.Child.FORMAT);
+		List<Element> formatList = outputFormat.getChildren(Csw.ConfigFile.OutputFormat.Child.FORMAT);
 		
 		String format;
-		Iterator<Element> iter = formatList.iterator();
-		while (iter.hasNext()) {
-			Element currentFormat = (Element) iter.next();
-			format = currentFormat.getText();
-			outformatList.add(format);
-		}
+        for (Element currentFormat : formatList) {
+            format = currentFormat.getText();
+            outformatList.add(format);
+        }
 		return outformatList;
 	}
 
@@ -330,14 +298,7 @@ public class CatalogConfiguration {
 		return _describeRecordOutputFormat;
 	}
 
-	/**
-	 * @return the _getRecordsConstraintLanguage
-	 */
-	public static Set<String> getGetRecordsConstraintLanguage() {
-		return _getRecordsConstraintLanguage;
-	}
-
-	/**
+    /**
 	 * @return the _getRecordsOutputFormat
 	 */
 	public static Set<String> getGetRecordsOutputFormat() {

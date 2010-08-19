@@ -34,7 +34,6 @@ import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
 import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.ResultType;
-import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.AccessManager;
@@ -375,33 +374,19 @@ public class Transaction extends AbstractOperation implements CatalogService
 	 */
 	private List<Element> getResultsFromConstraints(ServiceContext context, Element constr) throws CatalogException {
 		SearchController sc = new SearchController(null, null);
-		
-		Set<TypeName> typeNames = getTypeNames(constr);
-		Element filterExpr  = getFilterExpression(constr);
+
+        Element filterExpr  = getFilterExpression(constr);
 		String filterVersion = getFilterVersion(constr);
 		
 		ElementSetName  setName = ElementSetName.BRIEF;
 		
-		Pair<Element, Element> results= sc.search(context, 1, 100, -1, ResultType.RESULTS, 
-				OutputSchema.OGC_CORE, setName, typeNames, filterExpr, filterVersion, null, null, 0);
+		Pair<Element, Element> results= sc.search(context, 1, 100, ResultType.RESULTS,
+				OutputSchema.OGC_CORE, setName, filterExpr, filterVersion, null, null, 0);
 		
 		return results.two().getChildren();
 	}
 
-	/**
-	 * @param request
-	 * @return
-	 * @throws CatalogException
-	 */
-	private Set<TypeName> getTypeNames(Element request) throws CatalogException
-	{
-		//Element query = request.getChild("Query", Csw.NAMESPACE_CSW);		
-		//return TypeName.parse(request.getAttributeValue("typeNames"));
-		String	strTypeNames = request.getAttributeValue("typeNames");
-        return TypeName.parse( strTypeNames );
-	}
-	
-	/**
+    /**
 	 * @param request
 	 * @param response
 	 * @param fileIds

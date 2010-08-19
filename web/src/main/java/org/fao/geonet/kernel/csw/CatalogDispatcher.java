@@ -107,8 +107,6 @@ public class CatalogDispatcher
 			if (outSOAP)
 				response = SOAPUtil.embed(response);
 
-//			validateResponse(context, response);
-
 			return response;
 		}
 
@@ -120,6 +118,7 @@ public class CatalogDispatcher
 		catch(Exception e)
 		{
 			context.info("Exception stack trace : \n"+ Util.getStackTrace(e));
+            // TODO what's this ?
 			exc = new NoApplicableCodeEx(e.toString());
 		}
 
@@ -189,60 +188,16 @@ public class CatalogDispatcher
 
 		List params = request.getChildren();
 
-		for(int i=0; i<params.size(); i++)
-		{
-			Element param = (Element) params.get(i);
+        for (Object param1 : params) {
+            Element param = (Element) param1;
 
-			String name = param.getName().toLowerCase();
-			String value= param.getTextTrim();
+            String name = param.getName().toLowerCase();
+            String value = param.getTextTrim();
 
-			hm.put(name, value);
-		}
+            hm.put(name, value);
+        }
 
 		return hm;
 	}
 
-	//---------------------------------------------------------------------------
-
-	private void validateResponse(ServiceContext context, Element response)
-	{
-//		String xml  = Xml.getString(new org.jdom.Document(response));
-//		String path = context.getAppPath() +VALIDATE_PATH;
-//
-//		byte
-//
-//		DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-//		Document        doc    = parser.parse(new StringReader(xml));
-//
-//		// create a SchemaFactory capable of understanding WXS schemas
-//		SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-//
-//		// load a WXS schema, represented by a Schema instance
-//		Source schemaFile = new StreamSource(new File(path));
-//		Schema schema = factory.newSchema(schemaFile);
-//
-//		// create a Validator instance, which can be used to validate an instance document
-//		Validator validator = schema.newValidator();
-//
-//		// validate the DOM tree
-//
-//		try
-//		{
-//			validator.validate(new DOMSource(doc));
-//		}
-//		catch (SAXException e)
-//		{
-//			// instance document is invalid!
-//   	}
-//		catch (IOException e)
-//		{
-//		}
-	}
-
-	//---------------------------------------------------------------------------
-
-	private final static String VALIDATE_PATH = "web/xml/validation/csw/2.0.2/CSW-discovery.xsd";
 }
-
-//=============================================================================
-

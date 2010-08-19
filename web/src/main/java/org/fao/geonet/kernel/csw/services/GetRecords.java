@@ -94,9 +94,8 @@ public class GetRecords extends AbstractOperation implements CatalogService
 
 	int startPos   = getStartPosition(request);
 	int maxRecords = getMaxRecords(request);
-	int hopCount   = getHopCount(request);
 
-	Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
+        Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
 
 	ResultType      resultType  = ResultType  .parse(request.getAttributeValue("resultType"));
 	OutputSchema    outSchema   = OutputSchema.parse(request.getAttributeValue("outputSchema"));
@@ -110,9 +109,7 @@ public class GetRecords extends AbstractOperation implements CatalogService
 	if ((elemNames == null) || (elemNames.size() == 0))
 	    setName = getElementSetName(query , ElementSetName.SUMMARY);
 
-	Set<TypeName> typeNames = getTypeNames(request);
-
-	Element constr = query.getChild("Constraint", Csw.NAMESPACE_CSW);
+        Element constr = query.getChild("Constraint", Csw.NAMESPACE_CSW);
 	Element filterExpr = getFilterExpression(constr);
 	String filterVersion = getFilterVersion(constr);
 	
@@ -167,8 +164,8 @@ public class GetRecords extends AbstractOperation implements CatalogService
 
 		response.addContent(status);
 		Pair<Element, Element> search = _searchController.search(context,
-					startPos, maxRecords, hopCount, resultType, outSchema,
-					setName, typeNames, filterExpr, filterVersion, sort,
+					startPos, maxRecords, resultType, outSchema,
+					setName, filterExpr, filterVersion, sort,
 					elemNames, maxHitsInSummary);
 		
 		// Only add GeoNetwork summary on results_with_summary option 

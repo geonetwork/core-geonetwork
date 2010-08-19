@@ -48,7 +48,6 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ResultType;
-import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
@@ -64,7 +63,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -131,9 +129,9 @@ public class CatalogSearcher {
 	 * @return a list of id that match the given filter, ordered by sortFields
 	 */
 	public Pair<Element, List<ResultItem>> search(ServiceContext context,
-			Element filterExpr, String filterVersion, Set<TypeName> typeNames,
-			Sort sort, ResultType resultType, int startPosition, int maxRecords,
-			int maxHitsInSummary)
+                                                  Element filterExpr, String filterVersion,
+                                                  Sort sort, ResultType resultType, int startPosition, int maxRecords,
+                                                  int maxHitsInSummary)
 			throws CatalogException {
 		Element luceneExpr = filterToLucene(context, filterExpr);
 
@@ -144,13 +142,12 @@ public class CatalogSearcher {
 		
 		try {
 			if (luceneExpr != null) {
-				convertPhrases(luceneExpr, context);
+				convertPhrases(luceneExpr);
 			}
 
-			Pair<Element, List<ResultItem>> results = performSearch(context,
-					luceneExpr, filterExpr, filterVersion, sort, resultType,
-					startPosition, maxRecords, maxHitsInSummary);
-			return results;
+            return performSearch(context,
+                    luceneExpr, filterExpr, filterVersion, sort, resultType,
+                    startPosition, maxRecords, maxHitsInSummary);
 		} catch (Exception e) {
 			Log.error(Geonet.CSW_SEARCH, "Error while searching metadata ");
 			Log.error(Geonet.CSW_SEARCH, "  (C) StackTrace:\n"
@@ -172,7 +169,7 @@ public class CatalogSearcher {
 	 * @throws IOException
 	 * @throws CorruptIndexException
 	 */
-	public List<String> getAllUuids(ServiceContext context, int maxHits) throws Exception {
+	public List<String> getAllUuids(int maxHits) throws Exception {
 
 		FieldSelector uuidselector = new FieldSelector() {
 			public final FieldSelectorResult accept(String name) {
@@ -181,12 +178,10 @@ public class CatalogSearcher {
 			}
 		};
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SearchManager sm = gc.getSearchmanager();
-		Pair<TopDocs, Element> searchResults = 
+        Pair<TopDocs, Element> searchResults =
 			LuceneSearcher.doSearchAndMakeSummary( 
 					maxHits, 0, maxHits, Integer.MAX_VALUE, _lang, ResultType.RESULTS.toString(), _summaryConfig, _reader, _query, _filter, _sort, false);
-		TopDocs tdocs= searchResults.one();
+		TopDocs tdocs = searchResults.one();
 		Element summary = searchResults.two();
 
 		int numHits = Integer.parseInt(summary.getAttributeValue("count"));
@@ -247,15 +242,16 @@ public class CatalogSearcher {
 			throw new InvalidParameterValueEx(type, oper);
 		}
 
-		for (int i = 0; i < children.size(); i++)
-			checkForErrors((Element) children.get(i));
+        for (Object aChildren : children) {
+            checkForErrors((Element) aChildren);
+        }
 	}
 
 
 	// ---------------------------------------------------------------------------
 
-	private void convertPhrases(Element elem, ServiceContext context)
-			throws InterruptedException, CorruptIndexException, IOException {
+	private void convertPhrases(Element elem)
+			throws InterruptedException, IOException {
 		if (elem.getName().equals("TermQuery")) {
 			String field = elem.getAttributeValue("fld");
 			String text = elem.getAttributeValue("txt");
@@ -278,8 +274,9 @@ public class CatalogSearcher {
 		else {
 			List children = elem.getChildren();
 
-			for (int i = 0; i < children.size(); i++)
-				convertPhrases((Element) children.get(i), context);
+            for (Object aChildren : children) {
+                convertPhrases((Element) aChildren);
+            }
 		}
 	}
 
@@ -308,8 +305,9 @@ public class CatalogSearcher {
 
 		List children = elem.getChildren();
 
-		for (int i = 0; i < children.size(); i++)
-			remapFields((Element) children.get(i));
+        for (Object aChildren : children) {
+            remapFields((Element) aChildren);
+        }
 	}
 
 	// ---------------------------------------------------------------------------
@@ -338,7 +336,7 @@ public class CatalogSearcher {
 					+ Xml.getString(luceneExpr));
 
 		Query data = (luceneExpr == null) ? null : LuceneSearcher
-				.makeQuery(luceneExpr, sm.getAnalyzer(), _tokenizedFieldSet);
+				.makeQuery(luceneExpr, SearchManager.getAnalyzer(), _tokenizedFieldSet);
 		Query groups = getGroupsQuery(context);
 
 		if (sort == null) {
@@ -518,60 +516,5 @@ class ResultItem {
 }
 
 // =============================================================================
-
-/**
- * Used to sort search results
- * 
- * comment francois : could we use {@link Sort} instead ?
- */
-class ItemComparator implements Comparator<ResultItem> {
-	private List<SortField> sortFields;
-
-	// ---------------------------------------------------------------------------
-	// ---
-	// --- Constructor
-	// ---
-	// ---------------------------------------------------------------------------
-
-	public ItemComparator(List<SortField> sf) {
-		sortFields = sf;
-	}
-
-	// ---------------------------------------------------------------------------
-	// ---
-	// --- Comparator interface
-	// ---
-	// ---------------------------------------------------------------------------
-
-	public int compare(ResultItem ri1, ResultItem ri2) {
-		for (SortField sf : sortFields) {
-			String value1 = ri1.getValue(sf.field);
-			String value2 = ri2.getValue(sf.field);
-
-			// --- some metadata may have null values for some fields
-			// --- in this case we push null values at the bottom
-
-			if (value1 == null && value2 != null)
-				return 1;
-
-			if (value1 != null && value2 == null)
-				return -1;
-
-			if (value1 == null || value2 == null)
-				return 0;
-
-			// --- values are ok, do a proper comparison
-
-			int comp = value1.compareTo(value2);
-
-			if (comp == 0)
-				continue;
-
-			return (!sf.descend) ? comp : -comp;
-		}
-
-		return 0;
-	}
-}
 
 // =============================================================================
