@@ -160,15 +160,15 @@
                 <xsl:apply-templates mode="brief" select="."/>
             </xsl:variable>
             <xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
-            
+
             <xsl:if test="$metadata/geonet:info/id != ''">
 			<fo:table-row>
 				<fo:table-cell>
-				
+
 				    <xsl:variable name="source" select="string($metadata/geonet:info/source)"/>
-                    
+
                     <fo:block font-weight="bold" font-size="14pt"
-						border-top="2pt solid black">
+						border-top="2pt solid black" padding-top="4pt" margin-top="4pt">
 						<fo:external-graphic content-width="35pt">
 	                                        <xsl:attribute name="src">
 	                            url('<xsl:value-of
@@ -177,12 +177,12 @@
 	                    </fo:external-graphic>
                     	<xsl:value-of select="concat(position()-1,' - ',$metadata/title)" />
 					</fo:block>
-					<fo:block text-align="left" font-style="italic">
+					<fo:block text-align="left" font-style="italic" margin-top="4pt">
 						<xsl:value-of select="$gui/strings/uuid" />
 						:
             <xsl:value-of select="$metadata/geonet:info/uuid" />
 					</fo:block>
-					<fo:block text-align="left">
+					<fo:block text-align="left" margin-top="4pt">
 						<xsl:value-of select="$gui/strings/abstract" />
 						:
 						<xsl:value-of select="$metadata/abstract" />
@@ -190,6 +190,7 @@
 					<!-- keywords -->
 					<xsl:if test="$metadata/keyword">
 						<fo:block text-align="left"
+							margin-top="4pt"
 							font-style="italic">
 							<xsl:value-of select="$gui/strings/keywords" />
 							:
@@ -199,7 +200,7 @@
 						</fo:block>
 					</xsl:if>
 					<xsl:if test="$remote=false()">
-						<fo:block text-align="left">
+						<fo:block text-align="left" margin-top="4pt">
 							<xsl:value-of select="$gui/strings/schema" />
 							:
             	<xsl:value-of select="$metadata/geonet:info/schema" />
@@ -207,7 +208,7 @@
 					</xsl:if>
 
 					<!-- display metadata url but only if its not a remote result -->
-					<fo:block text-align="left">
+					<fo:block text-align="left" margin-top="4pt">
 						<xsl:choose>
 							<xsl:when test="$remote=false()">
 								|<fo:basic-link text-decoration="underline" color="blue">
@@ -240,7 +241,7 @@
 								</fo:basic-link>|
 							</xsl:for-each>
 						</xsl:if>
-						
+
 						<xsl:if test="$metadata/geonet:info/dynamic='true'">
                             <xsl:for-each
                                 select="$metadata/link[@type='application/vnd.ogc.wms_xml']">
