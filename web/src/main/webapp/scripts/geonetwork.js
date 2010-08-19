@@ -162,6 +162,9 @@ function get_cookie ( cookie_name )
                 } else {
                   $('search-results-content').hide();
                 }
+		
+		        runRssSearch();
+		
             }});
 	}
 

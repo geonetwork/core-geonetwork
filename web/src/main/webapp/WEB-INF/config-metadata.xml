@@ -572,6 +572,19 @@
         <service name="metadata.samples.add">
 			<class name=".guiservices.sampledata.Add"/>
 		</service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Metadata latest updated (ajax)        						   -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <service name="metadata.latest.updated">
+            <output sheet="metadata-latest-updated.xsl">
+                <call name="latestUpdated"  class=".guiservices.metadata.GetLatestUpdated">
+                    <param name="maxItems"           value="5" />
+                    <param name="timeBetweenUpdates" value="10" />
+                </call>
+            </output>
+        </service>
+
 	</services>
 </geonet>
 

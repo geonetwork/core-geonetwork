@@ -313,6 +313,7 @@
 		<allow service="rss.latest"/>
 		<allow service="rss.search"/>
 		<allow service="rss.present"/>
+		<allow service="metadata.latest.updated"/>
 
 		<!-- CSV Service -->
 		<allow service="csv.search"/>

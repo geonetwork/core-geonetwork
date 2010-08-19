@@ -588,6 +588,24 @@ function im_mm_aoiUpdated(bUpdate) {
 	$('region').value="userdefined";
 }
 
+function runRssSearch()
+{
+	var myAjax = new Ajax.Request(
+		getGNServiceURL('metadata.latest.updated'),
+		{
+			method: 'get',
+			parameters: null,
+			onSuccess: gn_search_rss_complete
+		}
+	);
+}
+
+function gn_search_rss_complete(req) {
+    var rlist = $('latest_updates');
+
+    rlist.innerHTML = req.responseText;
+}
+
 /********************************************************************
 *** DO THE SEARCH!
 ********************************************************************/
