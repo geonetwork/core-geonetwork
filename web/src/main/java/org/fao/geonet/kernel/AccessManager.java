@@ -105,9 +105,8 @@ public class AccessManager
 	public HashSet<String> getOperations(ServiceContext context, String mdId, String ip, Element operations) throws Exception {
 
 		UserSession us = context.getUserSession();
-		String      profile = us.getProfile();
 
-		// if user is an administrator OR is the owner of the record then allow all 
+        // if user is an administrator OR is the owner of the record then allow all
 		// operations
 		if (isOwner(context,mdId)) {
 			return hsAllOps;
@@ -124,10 +123,10 @@ public class AccessManager
 		}
 
 		List operIds = Xml.selectNodes(ops, "record/operationid");
-		for (Iterator<Object> iter = operIds.iterator(); iter.hasNext();) {
-			Element elem = (Element)iter.next();
-			out.add(elem.getText());		
-		}
+        for (Object operId : operIds) {
+            Element elem = (Element) operId;
+            out.add(elem.getText());
+        }
 
 		if (us.isAuthenticated() && us.getProfile().equals(Geonet.Profile.EDITOR) 
 				 && out.contains(OPER_EDITING)) {
@@ -144,9 +143,8 @@ public class AccessManager
 	public Element getAllOperations(ServiceContext context, String mdId, String ip) throws Exception {
 		Dbms        dbms    = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		UserSession usrSess = context.getUserSession();
-		String      profile = usrSess.getProfile();
 
-		// build group list
+        // build group list
 		Set<String>  groups    = getUserGroups(dbms, usrSess, ip);
 		StringBuffer groupList = new StringBuffer();
 
@@ -217,12 +215,11 @@ public class AccessManager
 
 				List list = elUserGrp.getChildren();
 
-				for(int i=0; i<list.size(); i++)
-				{
-					Element el = (Element) list.get(i);
-					String groupId =el.getChildText("id");
-					hs.add(groupId);
-				}
+                for (Object aList : list) {
+                    Element el = (Element) aList;
+                    String groupId = el.getChildText("id");
+                    hs.add(groupId);
+                }
 			}
 			else
 			{
@@ -230,12 +227,11 @@ public class AccessManager
 
 				List list = elUserGrp.getChildren();
 
-				for(int i=0; i<list.size(); i++)
-				{
-					Element el = (Element) list.get(i);
-					String groupId =el.getChildText("groupid");
-					hs.add(groupId);
-				}
+                for (Object aList : list) {
+                    Element el = (Element) aList;
+                    String groupId = el.getChildText("groupid");
+                    hs.add(groupId);
+                }
 			}
 		}
 		return hs;

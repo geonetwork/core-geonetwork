@@ -36,6 +36,7 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataType;
 import org.fao.geonet.kernel.schema.SchemaLoader;
 import org.jdom.Attribute;
+import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
@@ -54,11 +55,10 @@ import java.util.Vector;
 
 public class EditLib
 {
-	private DataManager dataMan;
-	private Hashtable   htVersions   = new Hashtable(1000);
-	private Hashtable   htSchemas    = new Hashtable();
-	private Hashtable   htSchemaDirs = new Hashtable();
-	private Hashtable   htSchemaSugg = new Hashtable();
+    private Hashtable<String, Integer> htVersions   = new Hashtable<String, Integer>(1000);
+	private Hashtable<String, MetadataSchema> htSchemas    = new Hashtable<String, MetadataSchema>();
+	private Hashtable<String, String> htSchemaDirs = new Hashtable<String, String>();
+	private Hashtable<String, SchemaSuggestions> htSchemaSugg = new Hashtable<String, SchemaSuggestions>();
 
 	//--------------------------------------------------------------------------
 	//---
@@ -69,11 +69,10 @@ public class EditLib
 	/** Init structures
 	  */
 
-	public EditLib(DataManager dataMan)
+	public EditLib()
 	{
-		this.dataMan = dataMan;
 
-		htVersions.clear();
+        htVersions.clear();
 		htSchemas .clear();
 	}
 
@@ -103,7 +102,7 @@ public class EditLib
 
 	public MetadataSchema getSchema(String name)
 	{
-		MetadataSchema schema = (MetadataSchema) htSchemas.get(name);
+		MetadataSchema schema = htSchemas.get(name);
 
 		if (schema == null)
 			throw new IllegalArgumentException("Schema not registered : " + name);
@@ -115,7 +114,7 @@ public class EditLib
 
 	public String getSchemaDir(String name)
 	{
-		String dir = (String) htSchemaDirs.get(name);
+		String dir = htSchemaDirs.get(name);
 
 		if (dir == null)
 			throw new IllegalArgumentException("Schema not registered : " + name);
@@ -137,18 +136,7 @@ public class EditLib
 		return htSchemas.containsKey(name);
 	}
 
-	//--------------------------------------------------------------------------
-
-	public String getCasedSchemaName(String name)
-	{
-		for (String schema : getSchemas()) {
-			if (schema.equalsIgnoreCase(name)) return schema;
-		}
-
-		throw new IllegalArgumentException("Schema not registered : " + name);
-	}
-
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 	/** Expands a metadata adding all information needed for editing.
 	  */
 
@@ -167,13 +155,7 @@ public class EditLib
 		Log.debug(Geonet.EDITOR,"MD after editing infomation:\n" + jeeves.utils.Xml.getString(md));
 	}
 
-	public void addEditingInfoToSnippet(String schema, String grandParentName, String parentName, Element md) throws Exception
-	{
-		enumerateTree(md);
-		expandTreeSnippet(getSchema(schema), grandParentName, parentName, md);
-	}
-
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
 	public void enumerateTree(Element md) throws Exception
 	{
@@ -264,18 +246,17 @@ public class EditLib
 
 		List list = md.getChildren();
 
-		for(int i=0; i<list.size(); i++)
-		{
-			Element child = (Element) list.get(i);
+        for (Object aList : list) {
+            Element child = (Element) aList;
 
-			if (!Edit.NS_PREFIX.equals(child.getNamespacePrefix()))
-			{
-				child = findElement(child, ref);
+            if (!Edit.NS_PREFIX.equals(child.getNamespacePrefix())) {
+                child = findElement(child, ref);
 
-				if (child != null)
-					return child;
-			}
-		}
+                if (child != null) {
+                    return child;
+                }
+            }
+        }
 
 		return null;
 	}
@@ -321,20 +302,17 @@ public class EditLib
 
 		//--- collect all children, adding the new one at the end of the others
 
-		Vector children = new Vector();
+		Vector<Element> children = new Vector<Element>();
 
 		for(int i=0; i<type.getElementCount(); i++)
 		{
-			List list = getChildren(el, type.getElementAt(i));
+			List<Element> list = getChildren(el, type.getElementAt(i));
 
-			String childName = type.getElementAt(i);
-
-			Log.debug(Geonet.EDITORADDELEMENT,"####   - child of type " + type.getElementAt(i) + " list size = " + list.size()); 
-			for (int j=0; j<list.size(); j++) {
-				Element aChild = (Element)list.get(j);
-				children.add(aChild);
-				Log.debug(Geonet.EDITORADDELEMENT,"####		- add child "+aChild.toString());
-			}
+            Log.debug(Geonet.EDITORADDELEMENT,"####   - child of type " + type.getElementAt(i) + " list size = " + list.size());
+            for (Element aChild : list) {
+                children.add(aChild);
+                Log.debug(Geonet.EDITORADDELEMENT, "####		- add child " + aChild.toString());
+            }
 
 			if (qname.equals(type.getElementAt(i)))
 				children.add(child);
@@ -343,8 +321,9 @@ public class EditLib
 		//--- to assure a correct position for the new one
 
 		el.removeContent();
-		for(int i=0; i<children.size(); i++)
-			el.addContent((Element) children.get(i));
+        for (Element aChildren : children) {
+            el.addContent(aChildren);
+        }
 
 		//--- add mandatory sub-tags
 		fillElement(mdSchema, mdSugg, el, child);
@@ -358,11 +337,10 @@ public class EditLib
 	 * @param schema
 	 * @param el
 	 * @param qname
-	 * @param fragments
+	 * @param fragment
 	 * @throws Exception
 	 */
-	public void addFragment(String schema, Element el, String qname,
-			String fragment) throws Exception {
+	public void addFragment(String schema, Element el, String qname, String fragment) throws Exception {
 
 		String name = getUnqualifiedName(qname);
 		String ns = getNamespace(qname, el, getSchema(schema));
@@ -394,10 +372,9 @@ public class EditLib
 		{
 			List<Element> list = getChildren(el, type.getElementAt(i));
 
-			for (int j=0; j<list.size(); j++) {
-				Element aChild = (Element)list.get(j);
-				children.add(aChild);
-			}
+            for (Element aList : list) {
+                children.add(aList);
+            }
 
 			if (qname.equals(type.getElementAt(i)))
 				children.add(root);
@@ -406,8 +383,9 @@ public class EditLib
 		//--- to assure a correct position for the new one
 
 		el.removeContent();
-		for(int i=0; i<children.size(); i++)
-			el.addContent((Element) children.get(i));
+        for (Element aChildren : children) {
+            el.addContent(aChildren);
+        }
 
 		//--- add mandatory sub-tags
 		//fillElement(mdSchema, mdSugg, el, child);
@@ -419,19 +397,19 @@ public class EditLib
 	//---
 	//--------------------------------------------------------------------------
 
-	private List getChildren(Element el, String qname)
+	private List<Element> getChildren(Element el, String qname)
 	{
-		Vector result = new Vector();
+		Vector<Element> result = new Vector<Element>();
 
 		List children = el.getChildren();
 
-		for(int i=0; i<children.size(); i++)
-		{
-			Element child = (Element) children.get(i);
+        for (Object aChildren : children) {
+            Element child = (Element) aChildren;
 
-			if (child.getQualifiedName().equals(qname))
-				result.add(child);
-		}
+            if (child.getQualifiedName().equals(qname)) {
+                result.add(child);
+            }
+        }
 		return result;
 	}
 
@@ -442,17 +420,17 @@ public class EditLib
 
 	private synchronized int getVersion(String id, boolean increment)
 	{
-		Integer inVer = (Integer) htVersions.get(id);
+		Integer inVer = htVersions.get(id);
 
 		if (inVer == null)
-			inVer = new Integer(1);
+			inVer = 1;
 
 		if (increment)
-			inVer = new Integer(inVer.intValue() +1);
+			inVer = inVer + 1;
 
 		htVersions.put(id, inVer);
 
-		return inVer.intValue();
+		return inVer;
 	}
 
 	//--------------------------------------------------------------------------
@@ -577,17 +555,16 @@ public class EditLib
 	/** searches children of container elements for containers
 	  */
 
-	public List searchChildren(String chName, Element md, String schema) throws Exception	{
+	public List<Element> searchChildren(String chName, Element md, String schema) throws Exception	{
 
 		// FIXME? CHOICE_ELEMENT containers can only have one element in them
 		// if there are more then the container will need to be duplicated
 		// and the elements distributed? Doesn't seem to hurt so we'll leave it
 		// for now........
 		//
-		
-		Vector containerSubElems = new Vector();
-		boolean hasContent = false;
-		Vector holder = new Vector();
+
+        boolean hasContent = false;
+		Vector<Element> holder = new Vector<Element>();
 
 		MetadataSchema mdSchema = getSchema(schema);
 		String chUQname = getUnqualifiedName(chName);
@@ -598,7 +575,7 @@ public class EditLib
 		for (int k=0;k<containerType.getElementCount();k++) {	
 			String elemName = containerType.getElementAt(k);
 			Log.debug(Geonet.EDITOR,"		-- Searching for child "+elemName);
-			List elems;
+			List<Element> elems;
 			if (elemName.contains(Edit.RootChild.GROUP)||
 					elemName.contains(Edit.RootChild.SEQUENCE)||
 					elemName.contains(Edit.RootChild.CHOICE)) {
@@ -606,11 +583,10 @@ public class EditLib
 			} else { 
 				elems = getChildren(md,elemName);
 			}
-			for (int j=0;j<elems.size();j++) {
-				Element elem = (Element)elems.get(j);
-				container.addContent((Element)elem.clone());
-				hasContent = true;
-			}
+            for (Element elem : elems) {
+                container.addContent((Element) elem.clone());
+                hasContent = true;
+            }
 		}
 		if (hasContent) {
 			holder.add(container);
@@ -631,9 +607,10 @@ public class EditLib
 		//--- create containers and fill them with elements using a depth first 
 		//--- search 
 		
-		List childs = (List)md.getChildren();	
-		for (int i = 0;i < childs.size();i++)
-			expandElements(schema,(Element)childs.get(i));
+		List childs = md.getChildren();
+        for (Object child : childs) {
+            expandElements(schema, (Element) child);
+        }
 	
 		String name = md.getQualifiedName();
 		String parentName = getParentNameFromChild(md);
@@ -642,23 +619,22 @@ public class EditLib
 		MetadataType thisType = mdSchema.getTypeInfo(typeName);
 
 		if (thisType.hasContainers) {
-			Vector holder = new Vector();	
+			Vector<Content> holder = new Vector<Content>();
 			
 			for (int i=0;i<thisType.getElementCount();i++) {
 				String chName = thisType.getElementAt(i);
 				if (chName.contains(Edit.RootChild.CHOICE)||
 						chName.contains(Edit.RootChild.GROUP)||
 						chName.contains(Edit.RootChild.SEQUENCE)) {
-					List elems = searchChildren(chName,md,schema);
+					List<Element> elems = searchChildren(chName,md,schema);
 					if (elems.size() > 0) {
 						holder.addAll(elems);
 					}
 				} else {
-					List chElem = getChildren(md,chName);
-					for (int z=0;z < chElem.size();z++) {
-						Element elem = (Element)chElem.get(z);
-						holder.add(elem.detach());
-					}
+					List<Element> chElem = getChildren(md,chName);
+                    for (Element elem : chElem) {
+                        holder.add(elem.detach());
+                    }
 				}
 			}
 			md.removeContent();
@@ -671,21 +647,23 @@ public class EditLib
 	/** For each container element - descend and collect children
 	  */
 
-	private Vector getContainerChildren(Element md) {
-		Vector result = new Vector();
+	private Vector<Object> getContainerChildren(Element md) {
+		Vector<Object> result = new Vector<Object>();
 
 		List chChilds = md.getChildren();
-		for (int k = 0;k < chChilds.size();k++) { 
-			Element chChild = (Element)chChilds.get(k);
-			String chName = chChild.getName();
-			if (chName.contains(Edit.RootChild.CHOICE)||
-					chName.contains(Edit.RootChild.GROUP) ||
-					chName.contains(Edit.RootChild.SEQUENCE)) {
-				List moreChChilds = getContainerChildren(chChild);
-				result.addAll(moreChChilds);
-			} else 
-				result.add(chChild.clone());
-		}
+        for (Object chChild1 : chChilds) {
+            Element chChild = (Element) chChild1;
+            String chName = chChild.getName();
+            if (chName.contains(Edit.RootChild.CHOICE) ||
+                    chName.contains(Edit.RootChild.GROUP) ||
+                    chName.contains(Edit.RootChild.SEQUENCE)) {
+                List<Object> moreChChilds = getContainerChildren(chChild);
+                result.addAll(moreChChilds);
+            }
+            else {
+                result.add(chChild.clone());
+            }
+        }
 		return result;
 	}
 
@@ -696,37 +674,40 @@ public class EditLib
 	{
 		//--- contract container children at each level in the XML tree
 		
-		Vector children = new Vector();
-		List childs = md.getContent();	
-		for (int i = 0;i < childs.size();i++) {
-			Object obj = childs.get(i);
-			if (obj instanceof Element) {
-				Element mdCh = (Element)obj;
-				String mdName = mdCh.getName();
-				if (mdName.contains(Edit.RootChild.CHOICE)||
-						mdName.contains(Edit.RootChild.GROUP) ||
-						mdName.contains(Edit.RootChild.SEQUENCE)) {
-					if (mdCh.getChildren().size() > 0) {
-						Vector chChilds = getContainerChildren(mdCh);
-						if (chChilds.size() > 0) children.addAll(chChilds);
-					}
-				} else {
-					children.add(mdCh.clone());
-				}
-			} else {
-				children.add(obj);
-			}
-		}
+		Vector<Object> children = new Vector<Object>();
+		List childs = md.getContent();
+        for (Object obj : childs) {
+            if (obj instanceof Element) {
+                Element mdCh = (Element) obj;
+                String mdName = mdCh.getName();
+                if (mdName.contains(Edit.RootChild.CHOICE) ||
+                        mdName.contains(Edit.RootChild.GROUP) ||
+                        mdName.contains(Edit.RootChild.SEQUENCE)) {
+                    if (mdCh.getChildren().size() > 0) {
+                        Vector<Object> chChilds = getContainerChildren(mdCh);
+                        if (chChilds.size() > 0) {
+                            children.addAll(chChilds);
+                        }
+                    }
+                }
+                else {
+                    children.add(mdCh.clone());
+                }
+            }
+            else {
+                children.add(obj);
+            }
+        }
 		md.removeContent();
 		md.addContent(children);
 
 		//--- now move down to the next level
 
-		for (int i = 0;i < children.size();i++) {
-			Object obj = children.get(i);
-			if (obj instanceof Element)
-				contractElements((Element)obj);
-		}
+        for (Object obj : children) {
+            if (obj instanceof Element) {
+                contractElements((Element) obj);
+            }
+        }
 	}
 
 	//--------------------------------------------------------------------------
@@ -741,11 +722,12 @@ public class EditLib
 
 		List list = md.getChildren();
 
-		for(int i=0; i<list.size(); i++) {
-			Element child = (Element) list.get(i);
-			if (!Edit.NS_PREFIX.equals(child.getNamespacePrefix()))
-				ref = enumerateTree(child, ref +1, thisParent);
-		}
+        for (Object aList : list) {
+            Element child = (Element) aList;
+            if (!Edit.NS_PREFIX.equals(child.getNamespacePrefix())) {
+                ref = enumerateTree(child, ref + 1, thisParent);
+            }
+        }
 
 		Element elem = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
 		elem.setAttribute(new Attribute(Edit.Element.Attr.REF, thisRef +""));
@@ -775,33 +757,7 @@ public class EditLib
 		return iRef;
 	}
 
-	//--------------------------------------------------------------------------
-	/** Given a metadata, does a recursive scan adding information for editing
-	  * provide a parentName to this version because it is used by the snippet
-		* service because snippets are not connect to the JDOM tree 
-	  */
-
-	public void expandTreeSnippet(MetadataSchema schema, String grandParentName, String parentName, Element md) throws Exception
-	{
-		expandTree(schema, md);
-
-		// Finally get the ref element belonging to this element and add 
-		// the necessary cardinality to it using the grandParent to help
-
-		String myName = md.getQualifiedName();
-		String elemType = schema.getElementType(parentName, grandParentName);
-		MetadataType type = schema.getTypeInfo(elemType);
-		Element thisElem = md.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
-		for (int i=0; i<type.getElementCount(); i++) {
-			String listName = type.getElementAt(i);
-			if (listName.equals(myName)) {
-				thisElem.setAttribute(new Attribute(Edit.Element.Attr.MIN, ""+type.getMinCardinAt(i)));
-				thisElem.setAttribute(new Attribute(Edit.Element.Attr.MAX, ""+type.getMaxCardinAt(i)));
-			}
-		}
-	}
-
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 	/** Given a metadata, does a recursive scan adding information for editing
 	  */
 
@@ -811,20 +767,19 @@ public class EditLib
 
 		List list = md.getChildren();
 
-		for(int i=0; i<list.size(); i++)
-		{
-			Element child = (Element) list.get(i);
+        for (Object aList : list) {
+            Element child = (Element) aList;
 
-			if (!Edit.NS_PREFIX.equals(child.getNamespacePrefix()))
-				expandTree(schema, child);
-		}
+            if (!Edit.NS_PREFIX.equals(child.getNamespacePrefix())) {
+                expandTree(schema, child);
+            }
+        }
 	}
 
 	//--------------------------------------------------------------------------
 
 	private String getParentNameFromChild(Element child) {
-	  String childName = child.getQualifiedName();
-		String parentName = "root";
+        String parentName = "root";
 		Element parent = child.getParentElement();
 		if (parent != null) {
 			parentName = parent.getQualifiedName();
@@ -878,7 +833,7 @@ public class EditLib
 			if (list.size() == 0 && !(type.isOrType())) {
 				Log.debug(Geonet.EDITOREXPANDELEMENT,"- no children of this type already present"); 
 
-				Element newElem = createElement(schema, elemName, childQName, childPrefix, childNS, type.getMinCardinAt(i), type.getMaxCardinAt(i));
+				Element newElem = createElement(schema, elemName, childQName, childNS, type.getMinCardinAt(i), type.getMaxCardinAt(i));
 
 				if (i == 0)	insertFirst(md, newElem);
 				else {
@@ -913,7 +868,7 @@ public class EditLib
 						listElem.setAttribute(new Attribute(Edit.Element.Attr.ADD, Edit.Value.TRUE));
 				}
 				if (list.size() < type.getMaxCardinAt(i))
-					insertLast(md, childName, childNS, createElement(schema, elemName, childQName, childPrefix, childNS, type.getMinCardinAt(i), type.getMaxCardinAt(i)));
+					insertLast(md, childName, childNS, createElement(schema, elemName, childQName, childNS, type.getMinCardinAt(i), type.getMaxCardinAt(i)));
 			}
 		}
 		addAttribs(type, md, schema);
@@ -985,11 +940,12 @@ public class EditLib
 		// loop on namespaces to fine the one corresponding to prefix
 		Namespace rns = md.getNamespace();
 		if (prefix.equals(rns.getPrefix())) return rns.getURI();
-		for (Iterator i = md.getAdditionalNamespaces().iterator(); i.hasNext(); )
-		{
-			Namespace ns = (Namespace)i.next();
-			if (prefix.equals(ns.getPrefix())) return ns.getURI();
-		}
+        for (Object o : md.getAdditionalNamespaces()) {
+            Namespace ns = (Namespace) o;
+            if (prefix.equals(ns.getPrefix())) {
+                return ns.getURI();
+            }
+        }
 		return "UNKNOWN";
 	}
 
@@ -997,20 +953,22 @@ public class EditLib
 
 	private void insertFirst(Element md, Element child)
 	{
-		Vector v = new Vector();
+		Vector<Element> v = new Vector<Element>();
 		v.add(child);
 
 		List list = md.getChildren();
 
-		for(int i=0; i<list.size(); i++)
-			v.add((Element) list.get(i));
+        for (Object aList : list) {
+            v.add((Element) aList);
+        }
 
 		//---
 
 		md.removeContent();
 
-		for(int i=0; i<v.size(); i++)
-			md.addContent((Element) v.get(i));
+        for (Element aV : v) {
+            md.addContent(aV);
+        }
 	}
 
 	//--------------------------------------------------------------------------
@@ -1021,7 +979,7 @@ public class EditLib
 
 		List list = md.getChildren();
 
-		Vector v = new Vector();
+		Vector<Element> v = new Vector<Element>();
 
 		for(int i=0; i<list.size(); i++)
 		{
@@ -1051,8 +1009,9 @@ public class EditLib
 
 		md.removeContent();
 
-		for(int i=0; i<v.size(); i++)
-			md.addContent((Element) v.get(i));
+        for (Element aV : v) {
+            md.addContent(aV);
+        }
 	}
 
 	//--------------------------------------------------------------------------
@@ -1061,11 +1020,9 @@ public class EditLib
 	{
 		if (Edit.NS_URI.equals(el.getNamespaceURI()))
 		{
-			if (Edit.RootChild.CHILD.equals(el.getName()))
-				return childName.equals(el.getAttributeValue(Edit.ChildElem.Attr.NAME)) &&
-						 childNS.equals(el.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE));
-			else
-				return false;
+            return Edit.RootChild.CHILD.equals(el.getName())
+                    && childName.equals(el.getAttributeValue(Edit.ChildElem.Attr.NAME))
+                    && childNS.equals(el.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE));
 		}
 		else
 			return childName.equals(el.getName()) && childNS.equals(el.getNamespaceURI());
@@ -1166,13 +1123,13 @@ public class EditLib
 				max = mdt.getMaxCardinAt(i);
 			}
 		}
-		return createElement(mds,parent.getQualifiedName(),child.getQualifiedName(),child.getNamespacePrefix(),child.getNamespaceURI(), min, max);
+		return createElement(mds,parent.getQualifiedName(),child.getQualifiedName(), child.getNamespaceURI(), min, max);
 	}
 
 	//--------------------------------------------------------------------------
 	/** Create a new element for editing, adding all mandatory subtags
 	  */
-	private Element createElement(MetadataSchema schema, String parent, String qname, String childPrefix, String childNS, int min, int max) throws Exception {
+	private Element createElement(MetadataSchema schema, String parent, String qname, String childNS, int min, int max) throws Exception {
 
 		Element child = new Element(Edit.RootChild.CHILD, Edit.NAMESPACE);
 		SchemaSuggestions mdSugg   = getSchemaSuggestions(schema.getName());
@@ -1204,28 +1161,27 @@ public class EditLib
 
 					Element newElem = createElement(schema, qname,
 							"gco:CharacterString",
-							"gco",
-							"http://www.isotc211.org/2005/gco", 1, 1);
+                            "http://www.isotc211.org/2005/gco", 1, 1);
 					child.addContent(newElem);
 				} else {
 					action = "before"; // js adds new elements before this child
 					for(int l=0; l<type.getElementCount(); l++) {
 						String chElem = type.getElementAt(l);
 						if (chElem.contains(Edit.RootChild.CHOICE)) {
-							ArrayList chElems = recurseOnNestedChoices(schema,chElem,parent);
-							
-							for (int k=0;k<chElems.size();k++) {
-								chElem = (String)chElems.get(k);
-								if (!useSuggestion
-										|| (useSuggestion && mdSugg.isSuggested(qname, chElem))){
-									// Add all substitute found in the schema or all suggested if suggestion
-									createAndAddChoose(child,chElem);
-								}	
-							}
+							ArrayList<String> chElems = recurseOnNestedChoices(schema,chElem,parent);
+
+                            for (String chElem1 : chElems) {
+                                chElem = chElem1;
+                                if (!useSuggestion
+                                        || (mdSugg.isSuggested(qname, chElem))) {
+                                    // Add all substitute found in the schema or all suggested if suggestion
+                                    createAndAddChoose(child, chElem);
+                                }
+                            }
 						} else {
 							
 							if (!useSuggestion
-									|| (useSuggestion && mdSugg.isSuggested(qname, chElem))){
+									|| (mdSugg.isSuggested(qname, chElem))){
 								// Add all substitute found in the schema or all suggested if suggestion
 								createAndAddChoose(child,chElem);
 							}
@@ -1241,14 +1197,14 @@ public class EditLib
 		return child;
 	}
 
-	private ArrayList recurseOnNestedChoices(MetadataSchema schema,String chElem,String parent) throws Exception {
-		ArrayList chElems = new ArrayList();
+	private ArrayList<String> recurseOnNestedChoices(MetadataSchema schema,String chElem,String parent) throws Exception {
+		ArrayList<String> chElems = new ArrayList<String>();
 		String elemType = schema.getElementType(chElem,parent);
 		MetadataType type = schema.getTypeInfo(elemType);
 		for(int l=0; l<type.getElementCount(); l++) {
 			String subChElem = type.getElementAt(l);
 			if (subChElem.contains(Edit.RootChild.CHOICE)) {
-				ArrayList subChElems = recurseOnNestedChoices(schema,subChElem,chElem);
+				ArrayList<String> subChElems = recurseOnNestedChoices(schema,subChElem,chElem);
 				chElems.addAll(subChElems);
 			}
 			else { chElems.add(subChElem); }
@@ -1268,13 +1224,12 @@ public class EditLib
 	{
 		List values = schema.getElementValues(name,parent);
 		if (values != null)
-			for(int i=0; i<values.size(); i++)
-			{
-				Element text  = new Element(Edit.Element.Child.TEXT, Edit.NAMESPACE);
-				text.setAttribute(Edit.Attribute.Attr.VALUE, (String) values.get(i));
+            for (Object value : values) {
+                Element text = new Element(Edit.Element.Child.TEXT, Edit.NAMESPACE);
+                text.setAttribute(Edit.Attribute.Attr.VALUE, (String) value);
 
-				elem.addContent(text);
-			}
+                elem.addContent(text);
+            }
 	}
 
 	//--------------------------------------------------------------------------
@@ -1338,7 +1293,7 @@ public class EditLib
 
 	private SchemaSuggestions getSchemaSuggestions(String name)
 	{
-		SchemaSuggestions sugg = (SchemaSuggestions) htSchemaSugg.get(name);
+		SchemaSuggestions sugg = htSchemaSugg.get(name);
 
 		if (sugg == null)
 			throw new IllegalArgumentException("Schema suggestions not registered : " + name);

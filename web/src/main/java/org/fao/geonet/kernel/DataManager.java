@@ -2687,7 +2687,7 @@ public class DataManager
 
 	private String baseURL;
 
-	private EditLib editLib = new EditLib(this);
+	private EditLib editLib = new EditLib();
 
 	private AccessManager  accessMan;
 	private SearchManager  searchMan;
