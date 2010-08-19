@@ -194,10 +194,7 @@
 							<xsl:value-of select="$gui/strings/keywords" />
 							:
 							<xsl:for-each select="$metadata/keyword">
-								<xsl:if test="position() &gt; 1">
-									,
-								</xsl:if>
-								<xsl:value-of select="." />
+								<xsl:if test="position() &gt; 1">, </xsl:if><xsl:value-of select="." />
 							</xsl:for-each>
 						</fo:block>
 					</xsl:if>
