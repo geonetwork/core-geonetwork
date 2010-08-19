@@ -10,7 +10,6 @@ import org.fao.geonet.kernel.oaipmh.ResumptionTokenCache;
 import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.fao.oaipmh.exceptions.BadResumptionTokenException;
 import org.fao.oaipmh.exceptions.NoRecordsMatchException;
-import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.requests.AbstractRequest;
 import org.fao.oaipmh.requests.TokenListRequest;
 import org.fao.oaipmh.responses.AbstractResponse;
@@ -43,14 +42,14 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 	
 	
 	public AbstractResponse execute(AbstractRequest request,
-			ServiceContext context) throws OaiPmhException, Exception {
+			ServiceContext context) throws Exception {
 		
 		Log.debug(Geonet.OAI_HARVESTER,"OAI " +this.getClass().getSimpleName()+ " execute: ");
 		
 		TokenListRequest  req = (TokenListRequest)  request;
 
 		//UserSession  session = context.getUserSession();
-		SearchResult result  = null;
+		SearchResult result;
 
 		//String token = req.getResumptionToken();
 		String strToken = req.getResumptionToken();
@@ -100,7 +99,6 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 				cache.storeResumptionToken(token);
 			}
 			
-			//session.setProperty(Lib.SESSION_OBJECT, result);
 		}
 		else
 		{

@@ -118,7 +118,7 @@ public class ListMetadataFormats implements OaiPmhService
 		Element elem = Xml.loadFile(context.getAppPath() + DEFAULT_SCHEMAS_FILE);
 		List<Element> defaultSchemas = elem.getChildren();
 
-		List <MetadataFormat> defMdfs = new ArrayList();
+		List <MetadataFormat> defMdfs = new ArrayList<MetadataFormat>();
 		for (Element schema : defaultSchemas) {
 			defMdfs.add(new MetadataFormat(schema.getAttributeValue("prefix"), schema.getAttributeValue("schemaLocation"), schema.getAttributeValue("nsUrl")));
 		}

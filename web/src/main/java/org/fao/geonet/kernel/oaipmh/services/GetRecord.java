@@ -26,9 +26,7 @@ package org.fao.geonet.kernel.oaipmh.services;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
 import org.fao.oaipmh.OaiPmh;
@@ -59,9 +57,6 @@ public class GetRecord implements OaiPmhService
 
 	public AbstractResponse execute(AbstractRequest request, ServiceContext context) throws Exception
 	{
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager    dm = gc.getDataManager();
-
 		GetRecordRequest  req = (GetRecordRequest) request;
 		GetRecordResponse res = new GetRecordResponse();
 

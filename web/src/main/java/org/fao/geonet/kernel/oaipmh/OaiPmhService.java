@@ -36,7 +36,7 @@ public interface OaiPmhService
 
 	/** Executes the service on given input request */
 	public AbstractResponse execute(AbstractRequest request, ServiceContext context)
-		throws OaiPmhException, Exception;
+		throws Exception;
 }
 
 //=============================================================================
