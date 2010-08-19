@@ -31,7 +31,6 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
 
 public class CheckLocalizedFiles
 {
@@ -65,61 +64,56 @@ public class CheckLocalizedFiles
 					}
 				});
 		println("additional languages");
-		for (int i = 0; i < languages.length; i++)
-			println("- " + languages[i]);
+        for (String language1 : languages) {
+            println("- " + language1);
+        }
 		println();
 		
 		// scan main language directory
 		println("main language files");
-		Hashtable mlFiles = new Hashtable();
+		Hashtable<String, File> mlFiles = new Hashtable<String, File>();
 		scan(mainLanguageDir, mlFiles);
 		println();
 		
 		// check additional languages
-		for (int i = 0; i < languages.length; i++)
-		{
-			String language = languages[i];
-			File languageDir = new File(languagesDir, language);
-			Hashtable lFiles = new Hashtable();
-			
-			println("scanning files for language '" + language + "'");
-			scan(languageDir, lFiles);
-			
-			// for each file in main language directory
-			for (Enumeration keys = mlFiles.keys(); keys.hasMoreElements(); )
-			{
-				String mlPath = (String)keys.nextElement();
-				
-				// check if file does not exists in localized directory
-				File lFile = (File)lFiles.get(mlPath);
-				if (lFile == null)
-				{
-					println("**** file " + mlPath + " is missing for language '" + language + "'");
-					continue;
-				}
-			}
-			// for each file in localized directory
-			for (Enumeration keys = lFiles.keys(); keys.hasMoreElements(); )
-			{
-				String lPath = (String)keys.nextElement();
-				
-				println("- " + lPath);
-				
-				File lFile = (File)lFiles.get(lPath);
-				
-				// check if file does not exists in main language directory
-				File mlFile = (File)mlFiles.get(lPath);
-				if (mlFile == null)
-				{
-					println("**** extra file " + lPath);
-					continue;
-				}
-				// if file is an XML file compare with main language one
-				if (lPath.endsWith(".xml"))
-					compareXML(lFile, mlFile);
-			}
-			println();
-		}
+        for (String language : languages) {
+            File languageDir = new File(languagesDir, language);
+            Hashtable<String, File> lFiles = new Hashtable<String, File>();
+
+            println("scanning files for language '" + language + "'");
+            scan(languageDir, lFiles);
+
+            // for each file in main language directory
+            for (Enumeration<String> keys = mlFiles.keys(); keys.hasMoreElements();) {
+                String mlPath = keys.nextElement();
+
+                // check if file does not exists in localized directory
+                File lFile = lFiles.get(mlPath);
+                if (lFile == null) {
+                    println("**** file " + mlPath + " is missing for language '" + language + "'");
+                }
+            }
+            // for each file in localized directory
+            for (Enumeration<String> keys = lFiles.keys(); keys.hasMoreElements();) {
+                String lPath = keys.nextElement();
+
+                println("- " + lPath);
+
+                File lFile = lFiles.get(lPath);
+
+                // check if file does not exists in main language directory
+                File mlFile = mlFiles.get(lPath);
+                if (mlFile == null) {
+                    println("**** extra file " + lPath);
+                    continue;
+                }
+                // if file is an XML file compare with main language one
+                if (lPath.endsWith(".xml")) {
+                    compareXML(lFile, mlFile);
+                }
+            }
+            println();
+        }
 	}
 	
 	private static void compareXML(File lFile, File mlFile)
@@ -130,36 +124,30 @@ public class CheckLocalizedFiles
 			Element lElem  = Xml.loadFile(lFile);
 			
 			// for each root child in mlElem
-			for (Iterator i = mlElem.getChildren().iterator(); i.hasNext(); )
-			{
-				Element mlChild = (Element)i.next();
-				String  name    = mlChild.getName();
-				Namespace ns    = mlChild.getNamespace();
-				
-				// check if child not exists in localized document
-				Element lChild = lElem.getChild(name, ns);
-				if (lChild == null)
-				{
-					println("**** element <" + name + "> is missing");
-					println("\t" + Xml.getString(mlChild));
-					continue;
-				}
-			}
+            for (Object o : mlElem.getChildren()) {
+                Element mlChild = (Element) o;
+                String name = mlChild.getName();
+                Namespace ns = mlChild.getNamespace();
+
+                // check if child not exists in localized document
+                Element lChild = lElem.getChild(name, ns);
+                if (lChild == null) {
+                    println("**** element <" + name + "> is missing");
+                    println("\t" + Xml.getString(mlChild));
+                }
+            }
 			// for each root child in lElem
-			for (Iterator i = lElem.getChildren().iterator(); i.hasNext(); )
-			{
-				Element lChild = (Element)i.next();
-				String  name    = lChild.getName();
-				Namespace ns    = lChild.getNamespace();
-				
-				// check if child not exists in main language document
-				Element mlChild = mlElem.getChild(name, ns);
-				if (mlChild == null)
-				{
-					println("**** extra element <" + name + ">");
-					continue;
-				}
-			}
+            for (Object o : lElem.getChildren()) {
+                Element lChild = (Element) o;
+                String name = lChild.getName();
+                Namespace ns = lChild.getNamespace();
+
+                // check if child not exists in main language document
+                Element mlChild = mlElem.getChild(name, ns);
+                if (mlChild == null) {
+                    println("**** extra element <" + name + ">");
+                }
+            }
 		}
 		catch (Exception e)
 		{
@@ -167,18 +155,19 @@ public class CheckLocalizedFiles
 		}
 	}
 	
-	private static void scan(File file, Hashtable paths)
+	private static void scan(File file, Hashtable<String, File> paths)
 	{
 		scan(file, file.getPath().length() + 1, paths);
 	}
 	
-	private static void scan(File file, int basePathOffset, Hashtable paths)
+	private static void scan(File file, int basePathOffset, Hashtable<String, File> paths)
 	{
 		if (file.isDirectory())
 		{
 			File entries[] = file.listFiles(new RealFilenameFilter());
-			for (int i = 0; i < entries.length; i++)
-				scan(entries[i], basePathOffset, paths);
+            for (File entry : entries) {
+                scan(entry, basePathOffset, paths);
+            }
 		}
 		else
 		{

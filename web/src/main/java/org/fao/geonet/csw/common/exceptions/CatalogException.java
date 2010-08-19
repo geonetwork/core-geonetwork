@@ -123,7 +123,7 @@ public abstract class CatalogException extends Exception {
 
 	//---------------------------------------------------------------------------
 
-	public static void unmarshal(Element response) throws CatalogException, Exception
+	public static void unmarshal(Element response) throws Exception
 	{
 		if (!response.getName().equals("ExceptionReport"))
 			return;

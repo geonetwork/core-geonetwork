@@ -1961,7 +1961,6 @@ public class DataManager
 		Element xsdErrors = getXSDXmlReport(schema,md);
 		if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
 			errorReport.addContent(xsdErrors);
-			//throw new XSDValidationErrorEx("XSD validation errors detected", xsdXPaths);
 		}
 
 		// ...then schematrons

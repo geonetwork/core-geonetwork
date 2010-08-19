@@ -137,36 +137,31 @@ public class CswServer
         List<Element> typeNames = null;
         List<Element> outputFormats = null;
 
-		for(Iterator<Element> i = parameters.iterator();i.hasNext();) {
-			Element parameter = i.next();
-			String parameterName = parameter.getAttributeValue("name"); 
-			log("Processing parameter: " + parameterName);
-			if(parameterName != null && parameterName.equalsIgnoreCase("outputSchema")) {
-				Element outputSchemaListing = parameter;
-				outputSchemas = outputSchemaListing.getChildren("Value", Csw.NAMESPACE_OWS);
-				log("Found " + outputSchemas.size() + " outputSchemas for operation: " + name);
-			}
+        for (Element parameter : parameters) {
+            String parameterName = parameter.getAttributeValue("name");
+            log("Processing parameter: " + parameterName);
+            if (parameterName != null && parameterName.equalsIgnoreCase("outputSchema")) {
+                outputSchemas = parameter.getChildren("Value", Csw.NAMESPACE_OWS);
+                log("Found " + outputSchemas.size() + " outputSchemas for operation: " + name);
+            }
 
-            if(parameterName != null && parameterName.equalsIgnoreCase("typeName")) {
-				Element typeNameListing = parameter;
-				typeNames = typeNameListing.getChildren("Value", Csw.NAMESPACE_OWS);
-				log("Found " + typeNames.size() + " typeNames for operation: " + name);
-			}
+            if (parameterName != null && parameterName.equalsIgnoreCase("typeName")) {
+                typeNames = parameter.getChildren("Value", Csw.NAMESPACE_OWS);
+                log("Found " + typeNames.size() + " typeNames for operation: " + name);
+            }
 
-            if(parameterName != null && parameterName.equalsIgnoreCase("outputFormat")) {
-				Element outputFormatListing = parameter;
-				outputFormats = outputFormatListing.getChildren("Value", Csw.NAMESPACE_OWS);
-				log("Found " + outputFormats.size() + " outputFormats for operation: " + name);
-			}
-		}
+            if (parameterName != null && parameterName.equalsIgnoreCase("outputFormat")) {
+                outputFormats = parameter.getChildren("Value", Csw.NAMESPACE_OWS);
+                log("Found " + outputFormats.size() + " outputFormats for operation: " + name);
+            }
+        }
 
 		if(outputSchemas != null) {
-			for(Iterator<Element> i = outputSchemas.iterator(); i.hasNext();) {
-				Element outputSchema = i.next();
-				String outputSchemaValue = outputSchema.getValue(); 
-				log("Adding outputSchema: " + outputSchemaValue + " to operation: "+ name);
-				op.outputSchemaList.add(outputSchemaValue);				
-			}
+            for (Element outputSchema : outputSchemas) {
+                String outputSchemaValue = outputSchema.getValue();
+                log("Adding outputSchema: " + outputSchemaValue + " to operation: " + name);
+                op.outputSchemaList.add(outputSchemaValue);
+            }
 			op.choosePreferredOutputSchema();
 		}
 		else {
@@ -174,24 +169,24 @@ public class CswServer
 		}
 
         if(typeNames != null) {
-			for(Iterator<Element> i = typeNames.iterator(); i.hasNext();) {
-				Element typeName = i.next();
-				String typeNameValue = typeName.getValue();
-				log("Adding typeName: " + typeNameValue + " to operation: "+ name);
-				if (typeNameValue != null) op.typeNamesList.add(typeNameValue);
-			}
+            for (Element typeName : typeNames) {
+                String typeNameValue = typeName.getValue();
+                log("Adding typeName: " + typeNameValue + " to operation: " + name);
+                if (typeNameValue != null) {
+                    op.typeNamesList.add(typeNameValue);
+                }
+            }
 		}
 		else {
 			log("No typeNames for operation: " + name);
 		}
 
         if(outputSchemas != null) {
-			for(Iterator<Element> i = outputSchemas.iterator(); i.hasNext();) {
-				Element outputSchema = i.next();
-				String outputSchemaValue = outputSchema.getValue();
-				log("Adding outputSchema: " + outputSchemaValue + " to operation: "+ name);
-				op.outputSchemaList.add(outputSchemaValue);
-			}
+            for (Element outputSchema : outputSchemas) {
+                String outputSchemaValue = outputSchema.getValue();
+                log("Adding outputSchema: " + outputSchemaValue + " to operation: " + name);
+                op.outputSchemaList.add(outputSchemaValue);
+            }
 			op.choosePreferredOutputSchema();
 		}
 		else {
@@ -199,12 +194,11 @@ public class CswServer
 		}
 
         if(outputFormats != null) {
-			for(Iterator<Element> i = outputFormats.iterator(); i.hasNext();) {
-				Element outputFormat = i.next();
-				String outputFormatValue = outputFormat.getValue();
-				log("Adding outputFormat: " + outputFormatValue + " to operation: "+ name);
-				op.outputFormatList.add(outputFormatValue);
-			}
+            for (Element outputFormat : outputFormats) {
+                String outputFormatValue = outputFormat.getValue();
+                log("Adding outputFormat: " + outputFormatValue + " to operation: " + name);
+                op.outputFormatList.add(outputFormatValue);
+            }
 			op.choosePreferredOutputFormat();
 		}
 		else {
@@ -230,12 +224,11 @@ public class CswServer
         } else {
 
             List<Element> serviceIdentificationMdElems = serviceIdentificationMd.getChildren();
-            for(Iterator<Element> i = serviceIdentificationMdElems.iterator();i.hasNext();) {
-                Element value = i.next();
+            for (Element value : serviceIdentificationMdElems) {
                 String valueName = value.getName();
                 log("Processing value: " + valueName);
-                if(valueName != null && valueName.equalsIgnoreCase("ServiceTypeVersion")) {
-                    serverVersions.add(value.getValue());   
+                if (valueName != null && valueName.equalsIgnoreCase("ServiceTypeVersion")) {
+                    serverVersions.add(value.getValue());
                 }
             }
         }
@@ -248,13 +241,12 @@ public class CswServer
         preferenceVersions.add("2.0.1");
         preferenceVersions.add("2.0.0");
 
-		for(Iterator<String> i = preferenceVersions.iterator(); i.hasNext();){
-			String nextBest = i.next();
-			if(serverVersions.contains(nextBest)) {
-				preferredServerVersion = nextBest;
-				break;
-			}
-		}
+        for (String nextBest : preferenceVersions) {
+            if (serverVersions.contains(nextBest)) {
+                preferredServerVersion = nextBest;
+                break;
+            }
+        }
 
     }
 

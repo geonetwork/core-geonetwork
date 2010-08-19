@@ -81,7 +81,9 @@ public abstract class CatalogRequest
 		this.port    = port;
 
 		setMethod(Method.POST);
-		state.addCookie(cookie);
+        Cookie cookie = new Cookie();
+        HttpState state = new HttpState();
+        state.addCookie(cookie);
 		client.setState(state);
 		client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 
@@ -173,33 +175,9 @@ public abstract class CatalogRequest
 
 	//---------------------------------------------------------------------------
 
-	public boolean login(String username, String password) throws IOException, CatalogException,
-																				  JDOMException, Exception
+    //---------------------------------------------------------------------------
 
-	{
-		Element request = new Element("request")
-						.addContent(new Element("username").setText(username))
-						.addContent(new Element("password").setText(password));
-
-		PostMethod post = new PostMethod();
-
-		postData = Xml.getString(new Document(request));
-
-		post.setRequestEntity(new StringRequestEntity(postData, "application/xml", "UTF8"));
-//		post.setFollowRedirects(true);
-		post.setPath(loginAddr);
-
-		Element response = doExecute(post);
-
-		if (Csw.NAMESPACE_ENV.getURI().equals(response.getNamespace().getURI()))
-			response = soapUnembed(response);
-
-		return response.getName().equals("ok");
-	}
-
-	//---------------------------------------------------------------------------
-
-	public Element execute() throws IOException, CatalogException, JDOMException, Exception
+    public Element execute() throws Exception
 	{
 		HttpMethodBase httpMethod = setupHttpMethod();
 
@@ -214,7 +192,30 @@ public abstract class CatalogRequest
 		return response;
 	}
 
-	//---------------------------------------------------------------------------
+    public boolean login(String username, String password) throws Exception
+
+    {
+        Element request = new Element("request")
+                .addContent(new Element("username").setText(username))
+                .addContent(new Element("password").setText(password));
+
+        PostMethod post = new PostMethod();
+
+        postData = Xml.getString(new Document(request));
+
+        post.setRequestEntity(new StringRequestEntity(postData, "application/xml", "UTF8"));
+//		post.setFollowRedirects(true);
+        post.setPath(loginAddr);
+
+        Element response = doExecute(post);
+
+        if (Csw.NAMESPACE_ENV.getURI().equals(response.getNamespace().getURI()))
+            response = soapUnembed(response);
+
+        return response.getName().equals("ok");
+    }
+
+    //---------------------------------------------------------------------------
 
 	public void setCredentials(String username, String password)
 	{
@@ -520,7 +521,9 @@ public abstract class CatalogRequest
 			if (response != null)
 				receivedData += new String(response, "UTF8");
 		}
-		catch (UnsupportedEncodingException e) {}
+		catch (UnsupportedEncodingException e) {
+            // TODO what's this ?
+        }
 	}
 
 	//---------------------------------------------------------------------------
@@ -574,10 +577,8 @@ public abstract class CatalogRequest
     protected String serverVersion = Csw.CSW_VERSION;  // Sets default value
 
 	private HttpClient client = new HttpClient();
-	private HttpState  state  = new HttpState();
-	private Cookie     cookie = new Cookie();
 
-	private ArrayList<NameValuePair> alGetParams;
+    private ArrayList<NameValuePair> alGetParams;
 
 	//--- transient vars
 
