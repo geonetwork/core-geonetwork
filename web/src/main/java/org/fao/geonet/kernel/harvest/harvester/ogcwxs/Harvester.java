@@ -41,7 +41,6 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
-import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.thumbnail.Set;
@@ -164,10 +163,9 @@ class Harvester
 		GeonetContext gc = (GeonetContext) context.getHandlerContext (Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager ();
 		SettingInfo si = new SettingInfo(context);
-		siteUrl = si.getSiteUrl() + context.getBaseUrl();
-		
-		
-	}
+
+
+    }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -178,7 +176,7 @@ class Harvester
      * Start the harvesting of a WMS, WFS or WCS node.
      */
 	public OgcWxSResult harvest() throws Exception {
-        Element xml = null;
+        Element xml;
 
         log.info("Retrieving remote metadata information for : " + params.name);
         
@@ -186,7 +184,7 @@ class Harvester
         // If harvest failed (ie. if node unreachable), metadata will be removed, and
         // the node will not be referenced in the catalogue until next harvesting.
         // TODO : define a rule for UUID in order to be able to do an update operation ? 
-		localUuids = new UUIDMapper(dbms, params.uuid);
+        UUIDMapper localUuids = new UUIDMapper(dbms, params.uuid);
 
 
         // Try to load capabilities document
@@ -362,28 +360,23 @@ class Harvester
 		Namespace gmd 	= Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
 		Namespace gco 	= Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
 		Namespace srv 	= Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
-		Namespace xlink = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
-		
-		
-		Element root 	= md.getChild("identificationInfo", gmd)
-							.getChild("SV_ServiceIdentification", srv);
-		Element co 		=  md.getChild("identificationInfo", gmd)
-							.getChild("SV_ServiceIdentification", srv)
-							.getChild("containsOperations", srv);
-		int idx 		= md.indexOf(co);
 
-		
-		/*
-		 * TODO
-		 * 
-			For each queryable layer queryable = "1" et /ROOT/Capability/Request/*[name()!='getCapabilities'] 
-				or queryable = "0" et /ROOT/Capability/Request/*[name()!='getCapabilities' and name!='GetFeatureInfo']
-			should do
-				srv:coupledResource/srv:SV_CoupledResource/srv:OperationName = /ROOT/Capability/Request/child::name()
-				srv:coupledResource/srv:SV_CoupledResource/srv:identifier = UUID of the data metadata 
-				srv:coupledResource/srv:SV_CoupledResource/gco:ScopedName = Layer/Name
-			But is this really useful in ISO19119 ?
-		 */
+
+        Element root 	= md.getChild("identificationInfo", gmd)
+							.getChild("SV_ServiceIdentification", srv);
+
+
+        /*
+           * TODO
+           *
+              For each queryable layer queryable = "1" et /ROOT/Capability/Request/*[name()!='getCapabilities']
+                  or queryable = "0" et /ROOT/Capability/Request/*[name()!='getCapabilities' and name!='GetFeatureInfo']
+              should do
+                  srv:coupledResource/srv:SV_CoupledResource/srv:OperationName = /ROOT/Capability/Request/child::name()
+                  srv:coupledResource/srv:SV_CoupledResource/srv:identifier = UUID of the data metadata
+                  srv:coupledResource/srv:SV_CoupledResource/gco:ScopedName = Layer/Name
+              But is this really useful in ISO19119 ?
+           */
 		
 		if (root != null) {
 			log.debug("  - add SV_CoupledResource and OperatesOnUuid");
@@ -468,7 +461,7 @@ class Harvester
 		Date dt 			= new Date ();
 		WxSLayerRegistry reg= new WxSLayerRegistry ();
 		String schema 		= "iso19139";
-		String mdXml		= "";
+		String mdXml;
 		String date 		= df.format (dt);
 		//--- Loading stylesheet
 		String styleSheet 	= context.getAppPath () + 
@@ -476,7 +469,7 @@ class Harvester
 								"/OGCWxSGetCapabilitiesto19119/OGCWxSGetCapabilitiesLayer-to-19139.xsl";
 		Element xml 		= null;
 		
-		boolean exist		= false;
+		boolean exist;
 		boolean loaded 		= false;
 		
 		reg.uuid 	= UUID.randomUUID().toString();
@@ -614,7 +607,7 @@ class Harvester
     					);
     			
     			while (bboxes.hasNext()) {
-    				Element box = (Element) bboxes.next();
+    				Element box = bboxes.next();
     				// FIXME : Could be null. Default bbox if from root layer
     				reg.minx = Double.valueOf(box.getChild("westBoundLongitude", gmd).getChild("Decimal", gco).getText());
     				reg.miny = Double.valueOf(box.getChild("southBoundLatitude", gmd).getChild("Decimal", gco).getText());
@@ -733,7 +726,7 @@ class Harvester
         		"&FORMAT=" + IMAGE_FORMAT + 
         		"&WIDTH=" + WIDTH +
         		"&SRS=EPSG:4326" + 
-        		"&HEIGHT=" + Integer.valueOf(r.intValue()) + 
+        		"&HEIGHT=" + r.intValue() +
         		"&LAYERS=" + layer.name + 
         		"&STYLES=" +
         		"&BBOX=" + 
@@ -760,8 +753,7 @@ class Harvester
 			if (result == 200) {
 			    // Save image document to temp directory
 				// TODO: Check OGC exception
-			    File f = new File (dir + filename);
-			    OutputStream fo = new FileOutputStream (dir + filename);
+                OutputStream fo = new FileOutputStream (dir + filename);
 			    BinaryFile.copy (req.getResponseBodyAsStream(),
 						    		fo, 
 						    		true,
@@ -785,32 +777,8 @@ class Harvester
 		return filename;
 	}
 
-	
-	
-	/** 
-     * Validates metadata according to the schema.
-     * 
-     *  
-     * @param schema 	Usually iso19139
-     * @param md		Metadata to be validated
-     * 
-     * @return			true or false
-     *                   
-     */
-	private boolean validates(String schema, Element md)
-	{
-		try
-		{
-			dataMan.validate(schema, md);
-			return true;
-		}
-		catch (Exception e)
-		{
-			return false;
-		}
-	}
 
-	/** 
+    /**
      * Add categories according to harvesting configuration
      *   
      * @param id		GeoNetwork internal identifier
@@ -875,11 +843,9 @@ class Harvester
 	private DataManager    dataMan;
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
-	private UriMapper      localUris;
-	private OgcWxSResult   result;
-	private UUIDMapper     localUuids;
-	
-	/**
+    private OgcWxSResult   result;
+
+    /**
 	 * Store the GetCapabilities operation URL. This URL is scrambled
 	 * and used to uniquelly identified the service. The idea of generating
 	 * a uuid based on the URL instead of a randomuuid is to be able later
@@ -887,15 +853,11 @@ class Harvester
 	 * in the catalogue) instead of a delete/insert operation.
 	 */
 	private String capabilitiesUrl;
-	private String crs = "epsg:4326";
-	private String siteUrl;
-	private static final int WIDTH = 300;
+    private static final int WIDTH = 300;
 	private static final String GETCAPABILITIES = "GetCapabilities";
 	private static final String GETMAP = "GetMap";
-	private static final String IMAGE_TYPE   = "png";
-	private static final String IMAGE_FORMAT = "image/png";
-	private static final int BUF_SIZE = 8192;
-	private List<WxSLayerRegistry> layersRegistry = new ArrayList();
+    private static final String IMAGE_FORMAT = "image/png";
+    private List<WxSLayerRegistry> layersRegistry = new ArrayList<WxSLayerRegistry>();
 	
 	private class WxSLayerRegistry {
 		public String uuid;
@@ -906,7 +868,7 @@ class Harvester
 		public Double miny = -90.0;
 		public Double maxx = 180.0;
 		public Double maxy = 90.0;
-	};
+	}
 
 }
 

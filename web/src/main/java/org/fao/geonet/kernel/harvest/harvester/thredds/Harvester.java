@@ -39,7 +39,6 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
-import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.FragmentParams;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.HarvestSummary;
@@ -157,7 +156,7 @@ class Harvester
      * @param log		
      * @param context		Jeeves context
      * @param dbms 			Database
-     * @param ThreddsParam	Information about harvesting configuration for the node
+     * @param params	Information about harvesting configuration for the node
      * 
      * @return null
      */
@@ -203,14 +202,14 @@ class Harvester
     */
 	public ThreddsResult harvest() throws Exception {
 		
-		Element xml = null;
+		Element xml;
 		log.info("Retrieving remote metadata information for : " + params.name);
         
 		//--- Clean all before harvest : Remove/Add mechanism
 		//--- If harvest failed (ie. if node unreachable), metadata will be 
 		//--- removed, and the node will not be referenced in the catalogue 
 		//--- until next harvesting.
-		localUuids = new UUIDMapper(dbms, params.uuid);
+        UUIDMapper localUuids = new UUIDMapper(dbms, params.uuid);
 
     //--- Try to load thredds catalog document
 		String url = params.url;
@@ -283,11 +282,10 @@ class Harvester
 		localGroups = new GroupMapper (dbms);
 
 		//--- md5 the full catalog URL
-		String uuid   = Util.scramble (params.url);
-		
-		//--- load catalog
+
+        //--- load catalog
 		InvCatalogFactory factory = new InvCatalogFactory("default", true);
-		catalog = (InvCatalogImpl) factory.readXML(params.url);
+        InvCatalogImpl catalog = factory.readXML(params.url);
 		StringBuilder buff = new StringBuilder();
 		if (!catalog.check(buff, true)) {
 			throw new BadXmlResponseEx("Invalid catalog "+ params.url+"\n"+buff.toString());
@@ -343,7 +341,7 @@ class Harvester
 			param.put("uuid",			params.uuid);
 			param.put("url",			params.url);
 			param.put("name",			catalog.getName());
-			param.put("type",			"Thredds Data Service Catalog "+catalog.getVersion());
+			param.put("type",			"Thredds Data Service Catalog "+ catalog.getVersion());
 			param.put("version",	catalog.getVersion());
 			param.put("desc",			Xml.getString(cata));
 			param.put("props",		catalog.getProperties().toString());
@@ -586,7 +584,7 @@ class Harvester
 			//--- check and see whether this dataset is DIF writeable
 			DIFWriter difWriter = new DIFWriter();
 			StringBuffer sBuff = new StringBuffer();
-			Element dif = null;
+			Element dif;
 
 			if (difWriter.isDatasetUseable(ds, sBuff)) {
 				log.info("Yay! Dataset has DIF compatible metadata "+sBuff.toString());
@@ -608,7 +606,7 @@ class Harvester
 
 			//--- now convert DIF entry into an ISO entry using the appropriate
 			//--- difToIso converter (only support ISO and MCP profile)
-			Element md = null;
+			Element md;
 			if (isCollection) {
 				if (params.outputSchemaOnCollections.equals("iso19139")) {
 					log.info("Transforming collection dataset to iso19139");
@@ -779,7 +777,7 @@ class Harvester
 	private void processService(InvService serv, String uuid, InvDataset ds) {
 		
 		//--- get service, if compound service then get all nested services
-		List<InvService> servs = new ArrayList();
+		List<InvService> servs = new ArrayList<InvService>();
 		if (serv.getServiceType() == ServiceType.COMPOUND) {
 			servs.addAll(serv.getServices());
 		} else {
@@ -849,7 +847,7 @@ class Harvester
 	/** 
 	  * Get a String result from an HTTP URL
 		*
-    * @param url     						the URL to get the info from 
+    * @param href     						the URL to get the info from
 		*/
 	private String getResultFromHttpUrl(String href) {
 		String result = null;
@@ -884,7 +882,7 @@ class Harvester
 		*
     * @param cata     					the XML of the catalog
     * @param hostPart						host part of the catalog URL
-		* @param servicesStyleSheet	name of the stylesheet to produce 19119
+		* @param serviceStyleSheet	name of the stylesheet to produce 19119
 		*/
 	private void processServices(Element cata, String hostPart, String serviceStyleSheet) throws Exception {
 
@@ -895,7 +893,7 @@ class Harvester
 
 			log.debug("Processing Thredds service: "+serv.toString());
 
-			String sUrl = "";
+			String sUrl;
 			if (!serv.isRelativeBase()) {
 				sUrl = serv.getBase();
 			} else {
@@ -1036,9 +1034,8 @@ class Harvester
      */
 	 private Element addOperatesOnUuid (Element md, Map<String,String> datasets) {
 		Element root 	= md.getChild("identificationInfo", gmd).getChild("SV_ServiceIdentification", srv);
-		Element co 		= root.getChild("containsOperations", srv);
 
-		if (root != null) {
+        if (root != null) {
 			log.debug("  - add operatesOn with uuid and other attributes");
 			
 			for (String dsUuid : datasets.keySet()) {
@@ -1054,26 +1051,8 @@ class Harvester
 	}
 	
 	//---------------------------------------------------------------------------
-	/** 
-     * Validates metadata according to the schema.
-     * 
-     *  
-     * @param schema 	Usually iso19139
-     * @param md		Metadata to be validated
-     * 
-     * @return			true or false
-     *                   
-     */
-	private boolean validates(String schema, Element md) {
-		try {
-			dataMan.validate(schema, md);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 	/** 
      * Add categories according to harvesting configuration
      *   
@@ -1213,34 +1192,30 @@ class Harvester
 	private DataManager    dataMan;
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
-	private UriMapper      localUris;
-	private ThreddsResult  result;
-	private UUIDMapper     localUuids;
-	private String				 difToIsoStyleSheet; 
+    private ThreddsResult  result;
+    private String				 difToIsoStyleSheet;
 	private String				 difToIsoMcpStyleSheet; 
 	private String				 cdmCoordsToIsoKeywordsStyleSheet; 
 	private String				 cdmCoordsToIsoMcpDataParametersStyleSheet;
 	private String				 fragmentStylesheetDirectory;
 	private String	 			 metadataGetService;
-	private Map<String,ThreddsService> services = new HashMap();
-	private InvCatalogImpl catalog;
-	
-	private FragmentHarvester atomicFragmentHarvester;
+	private Map<String,ThreddsService> services = new HashMap<String, ThreddsService>();
+
+    private FragmentHarvester atomicFragmentHarvester;
 	private FragmentHarvester collectionFragmentHarvester;
 
 	private class ThreddsService {
 		public String uuid;
-		public Map<String,String> datasets = new HashMap();
+		public Map<String,String> datasets = new HashMap<String, String>();
 		public InvService service;
 		public String version;
 		public String ops;
-	};
+	}
 
 	static private final Namespace difNS = Namespace.getNamespace("http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/");
 	static private final Namespace invCatalogNS = Namespace.getNamespace("http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0");
 	static private final Namespace gmd 	= Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
-	static private final Namespace gco 	= Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
-	static private final Namespace srv 	= Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
+    static private final Namespace srv 	= Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
 	static private final Namespace xlink = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
 		
 }

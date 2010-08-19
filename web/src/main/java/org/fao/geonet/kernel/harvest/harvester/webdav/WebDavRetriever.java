@@ -133,8 +133,7 @@ class WebDavRetriever implements RemoteRetriever {
 			log.debug("local proxy not enabled");
 			log.debug("returning a new WebdavResource");
 			log.debug("using http port: " + http.getPort() + " http uri: " + http.getURI());
-			WebdavResource webdavResource = new WebdavResource(http, 1);
-			return webdavResource;
+            return new WebdavResource(http, 1);
 		}
 		else {
 			log.debug("local proxy enabled");			
@@ -149,7 +148,7 @@ class WebDavRetriever implements RemoteRetriever {
 
 	//---------------------------------------------------------------------------
 
-	private void retrieveFiles(WebdavResource wr) throws HttpException, IOException {
+	private void retrieveFiles(WebdavResource wr) throws IOException {
 		String path = wr.getPath();
 		log.debug("Scanning resource : "+ path);
 		WebdavResource[] wa = wr.listWebdavResources();

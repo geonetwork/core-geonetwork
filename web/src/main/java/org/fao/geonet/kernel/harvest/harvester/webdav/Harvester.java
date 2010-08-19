@@ -320,7 +320,7 @@ interface RemoteRetriever {
 interface RemoteFile {
 	public String  getPath();
 	public String  getChangeDate();
-	public Element getMetadata() throws JDOMException, IOException, Exception;
+	public Element getMetadata() throws Exception;
 	public boolean isMoreRecentThan(String localDate);
 }
 

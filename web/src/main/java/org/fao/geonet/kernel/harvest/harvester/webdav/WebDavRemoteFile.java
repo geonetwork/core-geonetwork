@@ -28,9 +28,7 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.webdav.lib.WebdavResource;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 
-import java.io.IOException;
 
 //=============================================================================
 
@@ -58,11 +56,10 @@ class WebDavRemoteFile implements RemoteFile {
 
 	//---------------------------------------------------------------------------
 
-	public Element getMetadata() throws JDOMException, IOException, Exception {
+	public Element getMetadata() throws Exception {
 		try {
 			wr.setPath(path);
-			Element result = Xml.loadStream(wr.getMethodData());
-			return result;
+            return Xml.loadStream(wr.getMethodData());
 		}
 		catch (HttpException x) {
 			throw new Exception("HTTPException : " + x.getMessage());
