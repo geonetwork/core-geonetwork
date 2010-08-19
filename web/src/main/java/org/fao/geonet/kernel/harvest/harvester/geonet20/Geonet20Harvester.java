@@ -35,7 +35,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
-import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
@@ -240,9 +239,8 @@ public class Geonet20Harvester extends AbstractHarvester
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
 		CategoryMapper localCateg = new CategoryMapper(dbms);
-		GroupMapper    localGroups= new GroupMapper(dbms);
 
-		XmlRequest req = new XmlRequest(params.host, params.port);
+        XmlRequest req = new XmlRequest(params.host, params.port);
 
 		Lib.net.setupProxy(context, req);
 
@@ -269,7 +267,7 @@ public class Geonet20Harvester extends AbstractHarvester
 		result = new GeonetResult();
 
 		Aligner aligner = new Aligner(log, req, params, dataMan, dbms, context,
-												localCateg, localGroups);
+												localCateg);
 
 		for(Search s : params.getSearches())
 		{

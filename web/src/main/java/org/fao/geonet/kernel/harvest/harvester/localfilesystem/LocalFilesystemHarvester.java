@@ -192,7 +192,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 
 		for(String xmlFile : results) {
 			result.total++;
-			Element xml = null;
+			Element xml;
 			try {
 				System.out.println("reading file: " + xmlFile);	
 				xml = Xml.loadFile(xmlFile);
@@ -248,7 +248,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 					}
 					else {
 						System.out.println("updating existing metadata, id is: " + id);
-						updateMetadata(xml, id, dbms, schema, localGroups, localCateg);
+						updateMetadata(xml, id, dbms, localGroups, localCateg);
 						result.updated++;
 					}
 					idsForHarvestingResult.add(id);
@@ -273,7 +273,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		System.out.println("End of alignment for : "+ params.name);
 	}
 
-	private void updateMetadata(Element xml, String id, Dbms dbms, String schema, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
+	private void updateMetadata(Element xml, String id, Dbms dbms, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
 		System.out.println("  - Updating metadata with id: "+ id);
 
 		dataMan.updateMetadataExt(dbms, id, xml, new ISODate().toString());

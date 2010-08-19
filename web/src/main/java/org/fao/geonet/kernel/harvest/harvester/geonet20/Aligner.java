@@ -31,12 +31,10 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
-import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
-import java.util.Iterator;
 import java.util.List;
 
 //=============================================================================
@@ -50,7 +48,7 @@ public class Aligner
 	//--------------------------------------------------------------------------
 
 	public Aligner(Logger log, XmlRequest req, GeonetParams params, DataManager dm,
-						Dbms dbms, ServiceContext sc, CategoryMapper cm, GroupMapper gm)
+                   Dbms dbms, ServiceContext sc, CategoryMapper cm)
 	{
 		this.log        = log;
 		this.req        = req;
@@ -59,8 +57,7 @@ public class Aligner
 		this.dbms       = dbms;
 		this.context    = sc;
 		this.localCateg = cm;
-		this.localGroups= gm;
-	}
+    }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -101,39 +98,41 @@ public class Aligner
 
 		dataMan.startIndexGroup();
 		try {
-			for(Iterator i=mdList.iterator(); i.hasNext(); )
-			{
-				Element info = ((Element) i.next()).getChild("info", Edit.NAMESPACE);
+            for (Object aMdList : mdList) {
+                Element info = ((Element) aMdList).getChild("info", Edit.NAMESPACE);
 
-				String remoteId  = info.getChildText("id");
-				String remoteUuid= info.getChildText("uuid");
-				String schema    = info.getChildText("schema");
-				String changeDate= info.getChildText("changeDate");
+                String remoteId = info.getChildText("id");
+                String remoteUuid = info.getChildText("uuid");
+                String schema = info.getChildText("schema");
+                String changeDate = info.getChildText("changeDate");
 
-				this.result.totalMetadata++;
+                this.result.totalMetadata++;
 
-				log.debug("Obtained remote id="+ remoteId +", changeDate="+ changeDate);
+                log.debug("Obtained remote id=" + remoteId + ", changeDate=" + changeDate);
 
-				if (!dataMan.existsSchema(schema))
-				{
-					log.debug("  - Skipping unsupported schema : "+ schema);
-					this.result.schemaSkipped++;
-				}
-				else
-				{
-					String id = dataMan.getMetadataId(dbms, remoteUuid);
+                if (!dataMan.existsSchema(schema)) {
+                    log.debug("  - Skipping unsupported schema : " + schema);
+                    this.result.schemaSkipped++;
+                }
+                else {
+                    String id = dataMan.getMetadataId(dbms, remoteUuid);
 
-					if (id == null)	id = addMetadata(siteId, info);
-					else				updateMetadata(siteId, info, id);
+                    if (id == null) {
+                        id = addMetadata(info);
+                    }
+                    else {
+                        updateMetadata(siteId, info, id);
+                    }
 
-					dbms.commit();
+                    dbms.commit();
 
-					//--- maybe the metadata was unretrievable
+                    //--- maybe the metadata was unretrievable
 
-					if (id != null)
-						dataMan.indexMetadataGroup(dbms, id);
-				}
-			}
+                    if (id != null) {
+                        dataMan.indexMetadataGroup(dbms, id);
+                    }
+                }
+            }
 		} finally {
 			dataMan.endIndexGroup();
 		}
@@ -149,7 +148,7 @@ public class Aligner
 	//---
 	//--------------------------------------------------------------------------
 
-	private String addMetadata(String siteId, Element info) throws Exception
+	private String addMetadata(Element info) throws Exception
 	{
 		String remoteId   = info.getChildText("id");
 		String remoteUuid = info.getChildText("uuid");
@@ -178,7 +177,7 @@ public class Aligner
 		result.addedMetadata++;
 
 		addCategories(id, info.getChildren("category"));
-		addPrivileges(id, info);
+		addPrivileges(id);
 
 		return id;
 	}
@@ -189,26 +188,24 @@ public class Aligner
 
 	private void addCategories(String id, List categ) throws Exception
 	{
-		for(Iterator j=categ.iterator(); j.hasNext();)
-		{
-			String catName = ((Element) j.next()).getText();
-			String catId   = localCateg.getID(catName);
+        for (Object aCateg : categ) {
+            String catName = ((Element) aCateg).getText();
+            String catId = localCateg.getID(catName);
 
-			if (catId != null)
-			{
-				//--- remote category exists locally
+            if (catId != null) {
+                //--- remote category exists locally
 
-				log.debug("    - Setting category : "+ catName);
-				dataMan.setCategory(dbms, id, catId);
-			}
-		}
+                log.debug("    - Setting category : " + catName);
+                dataMan.setCategory(dbms, id, catId);
+            }
+        }
 	}
 
 	//--------------------------------------------------------------------------
 	//--- Privileges
 	//--------------------------------------------------------------------------
 
-	private void addPrivileges(String id, Element info) throws Exception
+	private void addPrivileges(String id) throws Exception
 	{
 		//--- set view privilege for both groups 'intranet' and 'all'
 		dataMan.setOperation(dbms, id, "0", "0");
@@ -279,50 +276,48 @@ public class Aligner
 
 		List locCateg = dataMan.getCategories(dbms, id).getChildren();
 
-		for (int i=0; i<locCateg.size(); i++)
-		{
-			Element el = (Element) locCateg.get(i);
+        for (Object aLocCateg : locCateg) {
+            Element el = (Element) aLocCateg;
 
-			String catId   = el.getChildText("id");
-			String catName = el.getChildText("name");
+            String catId = el.getChildText("id");
+            String catName = el.getChildText("name");
 
-			if (!existsCategory(catList, catName))
-			{
-				log.debug("  - Unsetting category : "+ catName);
-				dataMan.unsetCategory(dbms, id, catId);
-			}
-		}
+            if (!existsCategory(catList, catName)) {
+                log.debug("  - Unsetting category : " + catName);
+                dataMan.unsetCategory(dbms, id, catId);
+            }
+        }
 
 		//--- add new categories
 
-		for (Iterator j=catList.iterator(); j.hasNext();)
-		{
-			Element categ   = (Element) j.next();
-			String  catName = categ.getAttributeValue("name");
-			String  catId   = localCateg.getID(catName);
+        for (Object aCatList : catList) {
+            Element categ = (Element) aCatList;
+            String catName = categ.getAttributeValue("name");
+            String catId = localCateg.getID(catName);
 
-			if (catId != null)
-				//--- it is not necessary to query the db. Anyway...
-				if (!dataMan.isCategorySet(dbms, id, catId))
-				{
-					log.debug("  - Setting category : "+ catName);
-					dataMan.setCategory(dbms, id, catId);
-				}
-		}
+            if (catId != null)
+            //--- it is not necessary to query the db. Anyway...
+            {
+                if (!dataMan.isCategorySet(dbms, id, catId)) {
+                    log.debug("  - Setting category : " + catName);
+                    dataMan.setCategory(dbms, id, catId);
+                }
+            }
+        }
 	}
 
 	//--------------------------------------------------------------------------
 
 	private boolean existsCategory(List catList, String name)
 	{
-		for(Iterator i=catList.iterator(); i.hasNext();)
-		{
-			Element categ   = (Element) i.next();
-			String  catName = categ.getText();
+        for (Object aCatList : catList) {
+            Element categ = (Element) aCatList;
+            String catName = categ.getText();
 
-			if (catName.equals(name))
-				return true;
-		}
+            if (catName.equals(name)) {
+                return true;
+            }
+        }
 
 		return false;
 	}
@@ -363,13 +358,13 @@ public class Aligner
 
 	private boolean exists(List mdList, String uuid)
 	{
-		for(Iterator i=mdList.iterator(); i.hasNext(); )
-		{
-			Element elInfo = ((Element) i.next()).getChild("info", Edit.NAMESPACE);
+        for (Object aMdList : mdList) {
+            Element elInfo = ((Element) aMdList).getChild("info", Edit.NAMESPACE);
 
-			if (uuid.equals(elInfo.getChildText("uuid")))
-				return true;
-		}
+            if (uuid.equals(elInfo.getChildText("uuid"))) {
+                return true;
+            }
+        }
 
 		return false;
 	}
@@ -399,8 +394,7 @@ public class Aligner
 	private DataManager    dataMan;
 	private ServiceContext context;
 	private CategoryMapper localCateg;
-	private GroupMapper    localGroups;
-	private UUIDMapper     localUuids;
+    private UUIDMapper     localUuids;
 	private AlignerResult  result;
 }
 

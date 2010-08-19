@@ -112,7 +112,7 @@ class Harvester
      * @param log		
      * @param context									Jeeves context
      * @param dbms 										Database
-     * @param MetadataFragmentsParam	harvesting configuration for the node
+     * @param params	harvesting configuration for the node
      * 
      * @return null
      */
@@ -177,16 +177,16 @@ class Harvester
     */
 	public MetadataFragmentsResult harvest() throws Exception {
 
-		Element xml = null;
+		Element xml;
 
 		log.info("Retrieving metadata fragments for : " + params.name);
         
 		//--- clean all before harvest : Remove/Add mechanism
-		localUuids = new UUIDMapper(dbms, params.uuid);
+        UUIDMapper localUuids = new UUIDMapper(dbms, params.uuid);
 
 		//--- parse the xml query from the string - TODO: default should be 
 		//--- get everything
-		Element xmlQuery = null;
+		Element xmlQuery;
 		
 		log.info("Parsing query :\n" + params.query);
 		try {
@@ -504,13 +504,12 @@ class Harvester
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
 	private MetadataFragmentsResult   result;
-	private UUIDMapper     localUuids;
-	private Element				 templateForLinks;
+    private Element				 templateForLinks;
 	private Namespace			 xlink;
 	private boolean 			 buildRecords = true;
 	private String	 			 metadataGetService;
 	private String	 			 stylesheetDirectory;
-	private List<Namespace> theNss = new ArrayList();
+	private List<Namespace> theNss = new ArrayList<Namespace>();
 
 
 }

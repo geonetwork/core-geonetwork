@@ -32,7 +32,6 @@ import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 //=============================================================================
 
@@ -135,27 +134,25 @@ public class GeonetParams extends AbstractParams
 		if (searches == null)
 			return;
 
-		Iterator searchList = searches.getChildren("search").iterator();
+        for (Object o : searches.getChildren("search")) {
+            Element search = (Element) o;
 
-		while (searchList.hasNext())
-		{
-			Element search = (Element) searchList.next();
+            Search s = new Search();
 
-			Search s = new Search();
+            s.freeText = Util.getParam(search, "freeText", "");
+            s.title = Util.getParam(search, "title", "");
+            s.abstrac = Util.getParam(search, "abstract", "");
+            s.keywords = Util.getParam(search, "keywords", "");
+            s.digital = Util.getParam(search, "digital", false);
+            s.hardcopy = Util.getParam(search, "hardcopy", false);
+            s.siteId = Util.getParam(search, "siteId", "");
 
-			s.freeText = Util.getParam(search, "freeText", "");
-			s.title    = Util.getParam(search, "title",    "");
-			s.abstrac  = Util.getParam(search, "abstract", "");
-			s.keywords = Util.getParam(search, "keywords", "");
-			s.digital  = Util.getParam(search, "digital",  false);
-			s.hardcopy = Util.getParam(search, "hardcopy", false);
-			s.siteId   = Util.getParam(search, "siteId",   "");
+            alSearches.add(s);
 
-			alSearches.add(s);
-
-			if (s.siteId.equals(""))
-				throw new BadParameterEx("siteId", "");
-		}
+            if (s.siteId.equals("")) {
+                throw new BadParameterEx("siteId", "");
+            }
+        }
 	}
 
 	//---------------------------------------------------------------------------
