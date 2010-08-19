@@ -68,8 +68,7 @@ public class Common {
 	{
 		OK("ok"),
 		NOT_FOUND("not-found"),
-		INACTIVE("inactive"),
-		ALREADY_ACTIVE("already-active"),
+        ALREADY_ACTIVE("already-active"),
 		ALREADY_INACTIVE("already-inactive"),
 		ALREADY_RUNNING("already-running"),
 		ERROR("error");

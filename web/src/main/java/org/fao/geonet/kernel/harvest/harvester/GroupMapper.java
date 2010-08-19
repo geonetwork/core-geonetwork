@@ -48,15 +48,14 @@ public class GroupMapper
 
 		List idsList = dbms.select(query).getChildren();
 
-		for (int i=0; i<idsList.size(); i++)
-		{
-			Element record = (Element) idsList.get(i);
+        for (Object anIdsList : idsList) {
+            Element record = (Element) anIdsList;
 
-			String id   = record.getChildText("id");
-			String name = record.getChildText("name");
+            String id = record.getChildText("id");
+            String name = record.getChildText("name");
 
-			add(name, id);
-		}
+            add(name, id);
+        }
 	}
 
 	//--------------------------------------------------------------------------

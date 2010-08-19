@@ -32,7 +32,6 @@ import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.UUID;
 
 //=============================================================================
@@ -193,30 +192,25 @@ public abstract class AbstractParams
 		if (privil == null)
 			return;
 
-		Iterator groupList = privil.getChildren("group").iterator();
+        for (Object o : privil.getChildren("group")) {
+            Element group = (Element) o;
+            String groupID = group.getAttributeValue("id");
 
-		while (groupList.hasNext())
-		{
-			Element group   = (Element) groupList.next();
-			String  groupID = group.getAttributeValue("id");
+            if (groupID == null) {
+                throw new MissingParameterEx("attribute:id", group);
+            }
 
-			if (groupID == null)
-				throw new MissingParameterEx("attribute:id", group);
+            Privileges p = new Privileges(groupID);
 
-			Privileges p = new Privileges(groupID);
+            for (Object o1 : group.getChildren("operation")) {
+                Element oper = (Element) o1;
+                int op = getOperationId(oper);
 
-			Iterator operList = group.getChildren("operation").iterator();
+                p.add(op);
+            }
 
-			while (operList.hasNext())
-			{
-				Element oper = (Element) operList.next();
-				int     op   = getOperationId(oper);
-
-				p.add(op);
-			}
-
-			alPrivileges.add(p);
-		}
+            alPrivileges.add(p);
+        }
 	}
 
 	//---------------------------------------------------------------------------
@@ -256,21 +250,20 @@ public abstract class AbstractParams
 		if (categ == null)
 			return;
 
-		Iterator categList = categ.getChildren("category").iterator();
+        for (Object o : categ.getChildren("category")) {
+            Element categElem = (Element) o;
+            String categId = categElem.getAttributeValue("id");
 
-		while (categList.hasNext())
-		{
-			Element categElem = (Element) categList.next();
-			String  categId   = categElem.getAttributeValue("id");
+            if (categId == null) {
+                throw new MissingParameterEx("attribute:id", categElem);
+            }
 
-			if (categId == null)
-				throw new MissingParameterEx("attribute:id", categElem);
+            if (!Lib.type.isInteger(categId)) {
+                throw new BadParameterEx("attribute:id", categElem);
+            }
 
-			if (!Lib.type.isInteger(categId))
-				throw new BadParameterEx("attribute:id", categElem);
-
-			alCategories.add(categId);
-		}
+            alCategories.add(categId);
+        }
 	}
 
 	//---------------------------------------------------------------------------

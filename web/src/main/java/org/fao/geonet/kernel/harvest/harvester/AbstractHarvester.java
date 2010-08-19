@@ -195,7 +195,7 @@ public abstract class AbstractHarvester
 		for (Object o : dbms.select(getQuery, getParams().uuid).getChildren())
 		{
 			Element el = (Element) o;
-			String  id = (String)  el.getChildText("id");
+			String  id = el.getChildText("id");
 
 			dataMan.deleteMetadata(dbms, id);
 			dbms.commit();

@@ -53,18 +53,18 @@ public class UUIDMapper
 
 		List idsList = dbms.select(query, harvestUuid).getChildren();
 
-		for (int i=0; i<idsList.size(); i++) {
-			Element record = (Element) idsList.get(i);
+        for (Object anIdsList : idsList) {
+            Element record = (Element) anIdsList;
 
-			String id   = record.getChildText("id");
-			String uuid = record.getChildText("uuid");
-			String date = record.getChildText("changedate");
-			String isTemplate = record.getChildText("istemplate");
+            String id = record.getChildText("id");
+            String uuid = record.getChildText("uuid");
+            String date = record.getChildText("changedate");
+            String isTemplate = record.getChildText("istemplate");
 
-			hmUuidDate.put(uuid, date);
-			hmUuidId  .put(uuid, id);
-			hmUuidTemplate  .put(uuid, isTemplate);
-		}
+            hmUuidDate.put(uuid, date);
+            hmUuidId.put(uuid, id);
+            hmUuidTemplate.put(uuid, isTemplate);
+        }
 	}
 
 	//--------------------------------------------------------------------------

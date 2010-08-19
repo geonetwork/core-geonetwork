@@ -52,17 +52,16 @@ public class UriMapper
 
 		List idsList = dbms.select(query, harvestUuid).getChildren();
 
-		for (int i=0; i<idsList.size(); i++)
-		{
-			Element record = (Element) idsList.get(i);
+        for (Object anIdsList : idsList) {
+            Element record = (Element) anIdsList;
 
-			String id   = record.getChildText("id");
-			String uri  = record.getChildText("harvesturi");
-			String date = record.getChildText("changedate");
+            String id = record.getChildText("id");
+            String uri = record.getChildText("harvesturi");
+            String date = record.getChildText("changedate");
 
-			hmUriDate.put(uri, date);
-			hmUriId  .put(uri, id);
-		}
+            hmUriDate.put(uri, date);
+            hmUriId.put(uri, id);
+        }
 	}
 
 	//--------------------------------------------------------------------------
