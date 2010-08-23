@@ -436,8 +436,8 @@ function showRatingPopup(id)
 
 	var pos = Position.cumulativeOffset($('rating.link.'+ id));
 
-	ratingPopup.style.left = pos[0] -100;
-	ratingPopup.style.top  = pos[1] +16;
+	ratingPopup.style.left = pos[0] -100 + "px";
+	ratingPopup.style.top  = pos[1] +16 + "px";
 
 	ratingPopup.setAttribute('mdid', id);
 
