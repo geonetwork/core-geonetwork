@@ -44,4 +44,5 @@ public class LuceneIndexField {
     public static final String DOWNLOAD = "download";
     public static final String DIGITAL = "digital";
     public static final String PAPER = "paper";
+	public static final String SERVICE_TYPE = "serviceType";
 }

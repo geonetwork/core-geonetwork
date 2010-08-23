@@ -630,6 +630,13 @@ public class LuceneQueryBuilder {
 			query.add(operatesOnClause);
 		}
 
+		// serviceType
+		//
+		BooleanClause serviceTypeClause = requiredTextField(request.getChildText("serviceType"), LuceneIndexField.SERVICE_TYPE, similarity);
+		if(serviceTypeClause != null) {
+			query.add(serviceTypeClause);
+		}
+		
 		//
 		// type
 		//

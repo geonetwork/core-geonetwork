@@ -195,7 +195,7 @@ Mapping between :
                                                 <xsl:value-of select="//wfs:GetCapabilities/wfs:DCPType/wfs:HTTP/wfs:Get/@onlineResource"/>
                                             </xsl:when>
                                             <xsl:when test="name(.)='WMT_MS_Capabilities'">
-                                                <xsl:value-of select="//GetCapabilities//OnlineResource[1]/@xlink:href"/>
+                                                <xsl:value-of select="//GetCapabilities/DCPType/HTTP/Get/OnlineResource[1]/@xlink:href"/>
                                             </xsl:when>
                                             <xsl:otherwise>
                                                 <xsl:value-of select="//wcs:GetCapabilities//wcs:OnlineResource[1]/@xlink:href"/>
