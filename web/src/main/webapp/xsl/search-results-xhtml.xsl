@@ -115,7 +115,8 @@
 						<div id="oAcOsEle" name="oAcOsEle" class="oAcEle" style="display:none;" onClick="oActions('oAcOs');">
 							<xsl:if test="/root/gui/services/service[starts-with(@name,'metadata.massive')]">
 								<xsl:if test="/root/gui/services/service/@name='metadata.massive.delete'">
-									<button onclick="massiveOperation('metadata.massive.delete','{/root/gui/strings/massiveDeleteTitle}',600,'{/root/gui/strings/confirmMassiveDelete}')">
+									<button onclick="massiveOperation('metadata.massive.delete','{/root/gui/strings/massiveDeleteTitle}',600,
+									    replaceStringParams('{/root/gui/strings/confirmMassiveDelete}',[$('nbselected').innerHTML]))">
 										<xsl:value-of select="/root/gui/strings/delete"/>
 									</button>
 								</xsl:if>

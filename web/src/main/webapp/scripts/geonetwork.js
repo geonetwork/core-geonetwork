@@ -10,6 +10,21 @@ function translate(text) {
 	return translations[text] || text;
 };
 
+/**
+ * Replaces parameters in a string (defined like $1, $2, ...) with the values provided in the params array
+ *
+ * @param text
+ * @param params
+ */
+function replaceStringParams(text, params) {
+    var newText = text;
+
+    for(var i = 0; i < params.length; i++) {
+        newText = newText.replace("$" + (i+1), params[i]);
+    }
+
+    return newText;
+}
 
 // Read a cookie
 function get_cookie ( cookie_name )

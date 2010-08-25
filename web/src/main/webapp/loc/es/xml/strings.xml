@@ -224,7 +224,7 @@
 	<completeTabEditor>Editar en bloques</completeTabEditor>
 	<confirmCancel>¿Está seguro de que desea abandonar el editor? (Perderá todos los cambios no guardados)</confirmCancel>
 	<confirmDelete>¿Está seguro de que desea borrar el Metadato de la Base de Datos?</confirmDelete>
-	<confirmMassiveDelete>¿Está seguro de que desea borrar todos los Metadatos seleccionados de la Base de Datos?</confirmMassiveDelete>
+	<confirmMassiveDelete>¿Está seguro de que desea borrar todos los $1 Metadatos seleccionados de la Base de Datos?</confirmMassiveDelete>
 	<confirmNewPassword>Confirmar nueva contraseña</confirmNewPassword>
 	<confirmPassword>Confirmar la Contraseña</confirmPassword>
 	<constraintsTab>Restricciones</constraintsTab>

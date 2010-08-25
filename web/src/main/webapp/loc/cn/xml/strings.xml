@@ -224,7 +224,7 @@
 	<completeTabEditor>高级编辑器</completeTabEditor>
 	<confirmCancel>Are you sure you want to leave the editor? (You will lose any unsaved changes)</confirmCancel>
 	<confirmDelete>确认要从数据库中删除该元数据吗？</confirmDelete>
-	<confirmMassiveDelete>Are you sure you want to delete all selected metadata from the database?</confirmMassiveDelete>
+	<confirmMassiveDelete>Are you sure you want to delete all $1 selected metadata from the database?</confirmMassiveDelete>
 	<confirmNewPassword>新口令确认</confirmNewPassword>
 	<confirmPassword>口令确认</confirmPassword>
 	<constraintsTab>限制信息</constraintsTab>
