@@ -470,7 +470,9 @@
 	
 	<xsl:template name="categories_latestupdates">
 		<xsl:call-template name="categories"/>
-		<xsl:call-template name="latestUpdates"/>
+        <div id="latest_updates">
+            <xsl:call-template name="latestUpdates"/>
+        </div>
 	</xsl:template>
 	
 	<!--
@@ -772,7 +774,7 @@
 						<xsl:apply-templates mode="brief" select="."/>
 					</xsl:variable>
 					<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
-					<div class="arrow" onClick="gn_showSingleMetadataUUID('{geonet:info/uuid}');" 
+					<div class="arrow" onClick="gn_showSingleMetadataUUID('{geonet:info/uuid}');"
 						style="cursor:hand;cursor:pointer">
 						<xsl:value-of select="$metadata/title"/>
 						<br/>

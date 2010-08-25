@@ -117,7 +117,7 @@
 			}
 
 			function runFileDownload(href,title) {
-				if (h |ref.include("resources.get")) { // do the file download direct
+				if (href.include("resources.get")) { // do the file download direct
 					location.replace(getGNServiceURL(href));
 				} else { // show some dialog beforehand eg. constraints
 					Modalbox.show(getGNServiceURL(href),{title:title, height:400, width:600});
