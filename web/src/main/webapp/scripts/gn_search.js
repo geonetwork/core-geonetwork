@@ -424,7 +424,7 @@ function showRatingPopup(id)
 				p.style.zIndex  = 32000;
 
 				p.setAttribute('id', 'rating.popup');
-				document.body.appendChild(p);
+				$("content").appendChild(p);
 
 				ratingPopup = p;
 
@@ -434,7 +434,7 @@ function showRatingPopup(id)
 		return;
 	}
 
-	var pos = Position.cumulativeOffset($('rating.link.'+ id));
+	var pos = Position.positionedOffset($('rating.link.'+ id));
 
 	ratingPopup.style.left = pos[0] -100 + "px";
 	ratingPopup.style.top  = pos[1] +16 + "px";
