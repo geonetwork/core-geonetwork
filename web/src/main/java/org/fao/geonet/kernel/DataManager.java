@@ -1391,11 +1391,12 @@ public class DataManager
 					String name = ch.getAttributeValue("name");
 					if (name != null && name.equals(uName)) {
 						result = (Element) ch.clone();
-						// -- now delete the element as requested
-						parent.removeContent(me);
+						break;
 					}
 				}
-               
+
+				// -- now delete the element as requested
+				parent.removeContent(me);
 
 				//--- existing geonet child element not present so create it
 				if (result == null) {
