@@ -1385,15 +1385,17 @@ public class DataManager
 				//--- get geonet child element with attribute name = unqualified name 
 				Filter chFilter = new ElementFilter(Edit.RootChild.CHILD, Edit.NAMESPACE);
 				List children = parent.getContent(chFilter);
-                for (Object aChildren : children) {
-                    Element ch = (Element) aChildren;
-                    String name = ch.getAttributeValue("name");
-                    if (name != null && name.equals(uName)) {
-                        result = (Element) ch.clone();
-                        // -- now delete the element as requested
-                        parent.removeContent(me);
-                    }
-                }
+				
+				for (int i = 0; i < children.size(); i++) {
+					Element ch = (Element) children.get(i);
+					String name = ch.getAttributeValue("name");
+					if (name != null && name.equals(uName)) {
+						result = (Element) ch.clone();
+						// -- now delete the element as requested
+						parent.removeContent(me);
+					}
+				}
+               
 
 				//--- existing geonet child element not present so create it
 				if (result == null) {
