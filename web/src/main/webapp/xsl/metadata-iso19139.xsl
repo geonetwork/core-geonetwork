@@ -3676,10 +3676,7 @@
 				</td>
 					<td align="left">
 						<xsl:choose>
-							<xsl:when test="normalize-space($mainLang)=''">
-								<!-- When no language defined by default -->
-							</xsl:when>
-							<xsl:otherwise>
+							<xsl:when test="$ptFreeTextTree//gmd:LocalisedCharacterString">								
 								<!-- Create combo to select language.
 								On change, the input with selected language is displayed. Others hidden. -->
 								
@@ -3751,7 +3748,7 @@
 										alt="{/root/gui/strings/translateWithGoogle}" title="{/root/gui/strings/translateWithGoogle}"
 									/>
 								</xsl:if>
-							</xsl:otherwise>
+							</xsl:when>
 						</xsl:choose>
 					</td></tr></table>
 			</xsl:if>
