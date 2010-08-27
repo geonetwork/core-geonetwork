@@ -149,7 +149,7 @@ function doResetCommonsAction(action, name, licenseurl, type, id, ref)
 }
 
 function getControlsFromElement(el) {
-	var id = el.getAttribute('id');
+    var id = el.getAttribute('id');
 	elButtons = $('buttons_'+id);
 	return elButtons.immediateDescendants();
 }
@@ -162,7 +162,7 @@ function topElement(el)
 
 function bottomElement(el) 
 {
-	if (el.next() == undefined) return true;
+    if (el.next() == undefined) return true;
 	else return (!isSameElement(el.next(),el));
 }
 
@@ -187,7 +187,7 @@ function orElement(el)
 
 function isSameElement(el1,el2) 
 {
-	var i1 = getIdSplit(el1);
+    var i1 = getIdSplit(el1);
 	var i2 = getIdSplit(el2);
 	if (i1 == null || i2 == null) return false;
 	if (i1[0] == i2[0]) return true;
@@ -234,7 +234,6 @@ function doRemoveElementAction(action, ref, parentref, id, min)
 	var thisElement = $(id);
 	var nextElement = thisElement.next();
 	var prevElement = thisElement.previous();
-	
 	var myExtAJaxRequest = Ext.Ajax.request({
 		url: getGNServiceURL(action),
 		method: 'GET',
@@ -242,7 +241,10 @@ function doRemoveElementAction(action, ref, parentref, id, min)
 		success: function(result, request) {
 			var html = result.responseText;
 			if (html.blank()) { // more than one left, no child-placeholder returned
-				if (bottomElement(thisElement)) { 
+			    // in simple mode, returned snippets will be empty in all cases
+			    // because a geonet:child alone is not take into account.
+			    // No elements are suggested then and last element is removed.
+				if (bottomElement(thisElement) && document.mainForm.currTab.value!='simple') { 
 					swapControls(thisElement,prevElement);
 					thisElement.remove();
 					thisElement = prevElement;
@@ -267,9 +269,8 @@ function doRemoveElementAction(action, ref, parentref, id, min)
 
 function swapControls(el1,el2) 
 {
-	var el1Descs = getControlsFromElement(el1);
+    var el1Descs = getControlsFromElement(el1);
 	var el2Descs = getControlsFromElement(el2);
-			
 	for (var index = 0; index < el1Descs.length; ++index) {
 	 var visible1 = el1Descs[index].visible();
 	 var visible2 = el2Descs[index].visible();
