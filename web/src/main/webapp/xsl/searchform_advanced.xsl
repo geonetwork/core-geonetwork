@@ -169,7 +169,11 @@
 							<xsl:for-each select="/root/gui/groups/record">
 								<xsl:sort order="ascending" select="name"/>
 								<option value="{id}">
-									<xsl:if test="id=/root/gui/searchDefaults/group">
+									<!-- after a search, many groups are defined in 
+									searchDefaults (FIXME ?) and the last group in group list
+									was selected by default even if none was
+									used in last search. Only set selected one when only one is define in searchDefaults. -->
+									<xsl:if test="id=/root/gui/searchDefaults/group and count(/root/gui/searchDefaults/group)=1">
 										<xsl:attribute name="selected"/>
 									</xsl:if>
 									<xsl:value-of select="name"/>
