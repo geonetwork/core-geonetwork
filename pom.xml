@@ -208,9 +208,9 @@
         <version>2.7.1</version>
       </dependency>
       <dependency>
-        <groupId>net.sf.saxon</groupId>  <!--FIXME Handled by local repository -->
+        <groupId>net.sf.saxon</groupId>
         <artifactId>saxon</artifactId>
-        <version>9.0</version>   <!-- FIXME no public repositories for this version -->
+        <version>9.1.0.8b-patch</version> 
       </dependency>
 
       <!-- Thesaurus stuff -->
@@ -365,6 +365,12 @@
         <artifactId>marc4j</artifactId>
         <version>2.3.1</version>
       </dependency>
+    	<dependency> 
+     		<groupId>jdbm</groupId>
+     		<artifactId>jdbm</artifactId>
+     		<version>1.0</version>
+    	</dependency>
+
       <!-- Geotools and spatial search stuff -->
       <dependency>
         <groupId>org.geotools</groupId>
@@ -527,6 +533,10 @@
     <dependency>
       <groupId>jdom</groupId>
       <artifactId>jdom</artifactId>
+    </dependency>
+    <dependency> 
+      <groupId>jdbm</groupId>
+      <artifactId>jdbm</artifactId>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
