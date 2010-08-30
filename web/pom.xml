@@ -198,6 +198,7 @@
     </dependency>
     
     <!-- those ones are from geotools repositories -->
+		<!--
     <dependency>
       <groupId>ki</groupId>
       <artifactId>a2jruntime</artifactId>
@@ -218,6 +219,7 @@
       <artifactId>ki-jzkit-z3950</artifactId>
       <version>X</version>
     </dependency>
+		-->
     
     <dependency>
       <groupId>junit</groupId>
@@ -275,28 +277,23 @@
     </dependency>
     <dependency>
       <groupId>jzkit</groupId>
-      <artifactId>jzkit-hss</artifactId>
-      <version>1.2.3</version>
-    </dependency>
-    <dependency>
-      <groupId>jzkit</groupId>
       <artifactId>jzkit-core</artifactId>
-      <version>3.r260.patch</version>
+      <version>3.r260.geonetwork.patch.1</version>
     </dependency>
     <dependency>
       <groupId>jzkit</groupId>
       <artifactId>jzkit-service</artifactId>
-      <version>3.r260.patch</version>
+      <version>3.r260.geonetwork.patch.1</version>
     </dependency>
     <dependency>
       <groupId>jzkit</groupId>
       <artifactId>jzkit-z3950-server</artifactId>
-      <version>3.r260.patch</version>
+      <version>3.r260.geonetwork.patch.1</version>
     </dependency>
     <dependency>
       <groupId>jzkit</groupId>
       <artifactId>jzkit-z3950-plugin</artifactId>
-      <version>3.r260.patch</version>
+      <version>3.r260.geonetwork.patch.1</version>
     </dependency>
     <dependency>
       <groupId>jakarta</groupId>

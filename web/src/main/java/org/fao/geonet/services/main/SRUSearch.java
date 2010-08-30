@@ -310,7 +310,7 @@ public class SRUSearch implements Service
 			String query = params.get(OP_SR_QUERY);
 
 
-			ExplicitRecordFormatSpecification display_spec = new ExplicitRecordFormatSpecification("xml",null,"f");
+			ExplicitRecordFormatSpecification display_spec = new ExplicitRecordFormatSpecification("xml","","f");
 
 
 			Log.debug(Geonet.SRU,"getting reference to search session factory");
@@ -362,10 +362,11 @@ public class SRUSearch implements Service
 					Element elem = new Element("record");
 					elem.setAttribute( new Attribute("recordPosition",""+first_record+i));
 
+					ExplicitRecordFormatSpecification res = result.records[i].getFormatSpecification();
 
 					// check if the format corresponds to what we are requesting
-					if ( ! result.records[i].getFormatSpecification().equals(display_spec) ) {
-						Log.error(Geonet.CSW_SEARCH, "error, format specification does not correspond :"+result.records[i].getOriginalObject() );
+					if ( ! res.toString().equals(display_spec.toString()) ) {
+						Log.error(Geonet.SRU, "error, format specification "+result.records[i].getFormatSpecification()+" does not correspond to "+display_spec+" :"+result.records[i].getOriginalObject() );
 
 
 						addToDiag(elem, "info:srw/diagnostic/1/67", "Record not available in this schema", result.records[i].getOriginalObject().toString());
