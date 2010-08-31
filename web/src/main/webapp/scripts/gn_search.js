@@ -719,9 +719,9 @@ function gn_showSingleMet(pars)
         });
 }
 function gn_showMetadata(id) {
-	gn_showMetadata(id, 'simple');
+	gn_showMetadataTab(id, 'simple');
 }
-function gn_showMetadata(id, currTab)
+function gn_showMetadataTab(id, currTab)
 {
     var pars = 'id=' + id + '&currTab=' + currTab;
 
