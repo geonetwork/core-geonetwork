@@ -606,6 +606,10 @@
               <directory>../docs/eng/users/build/html</directory>
               <targetPath>docs/eng/users</targetPath>
             </resource>
+              <resource>
+            <directory>../docs/eng/developer/build/html</directory>
+              <targetPath>docs/eng/developer</targetPath>
+            </resource>
             <resource>
               <directory>../docs</directory>
               <targetPath>docs</targetPath>
