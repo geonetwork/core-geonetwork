@@ -27,6 +27,13 @@ function gn_anyKeyObserver(e)
 		runSimpleSearch();
 }
 
+function runCsvSearch() {
+    var serviceUrl = getGNServiceURL('csv.search');
+    window.open(serviceUrl, 'csv')
+    metadataselect(0, 'remove-all');
+}
+
+
 /**
  * Trigger PDF search.
  *
