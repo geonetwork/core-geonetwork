@@ -72,14 +72,14 @@
 
 			<!-- bounding box -->
 
-			<xsl:for-each select="idinfo/spdom/bounding">	
+			<xsl:for-each select="idinfo/spdom/bounding">
 				<ows:BoundingBox crs="{spref/horizsys/planar/planci/coordrep}">
 					<ows:LowerCorner>
-						<xsl:value-of select="eastbc"/> <xsl:value-of select="southbc"/>
+						<xsl:value-of select="concat(eastbc, ' ', southbc)"/>
 					</ows:LowerCorner>
-	
+
 					<ows:UpperCorner>
-						<xsl:value-of select="westbc"/> <xsl:value-of select="northbc"/>
+						<xsl:value-of select="concat(westbc, ' ', northbc)"/>
 					</ows:UpperCorner>
 				</ows:BoundingBox>
 			</xsl:for-each>
