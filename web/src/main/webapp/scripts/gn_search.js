@@ -29,6 +29,9 @@ function gn_anyKeyObserver(e)
 
 function runCsvSearch() {
     var serviceUrl = getGNServiceURL('csv.search');
+    if ($("advanced_search_pnl").visible()) {
+        serviceUrl = serviceUrl + "?" + fetchParam('template');
+	}
     window.open(serviceUrl, 'csv')
     metadataselect(0, 'remove-all');
 }
