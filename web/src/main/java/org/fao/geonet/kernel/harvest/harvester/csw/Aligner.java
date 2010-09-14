@@ -70,7 +70,7 @@ public class Aligner
 
 		//--- setup get-record-by-id request
 
-		request = new GetRecordByIdRequest();
+		request = new GetRecordByIdRequest(sc);
 		request.setElementSetName(ElementSetName.FULL);
 
 		CswOperation oper = server.getOperation(CswServer.GET_RECORD_BY_ID);
