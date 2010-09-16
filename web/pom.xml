@@ -390,6 +390,7 @@
 				<include>${geonetwork.build.dir}/scripts/map/windows/LayerStyles.js</include>
 				<include>${geonetwork.build.dir}/scripts/map/windows/WmsLayerMetadata.js</include>
                 <include>${geonetwork.build.dir}/scripts/map/windows/WMSTime.js</include>
+                <include>${geonetwork.build.dir}/scripts/map/windows/Disclaimer.js</include>
                 
                 <include>${geonetwork.build.dir}/scripts/ol_settings.js</include>		
                 <include>${geonetwork.build.dir}/scripts/ol_minimap.js</include>

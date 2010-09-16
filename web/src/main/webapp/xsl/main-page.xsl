@@ -102,7 +102,8 @@
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/LoadWmc.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/WMSTime.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/LayerStyles.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/WmsLayerMetadata.js"></script>				
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/WmsLayerMetadata.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/Disclaimer.js"></script>
 
                 <script type="text/javascript" src="{/root/gui/url}/scripts/ol_settings.js"></script>		
                 <script type="text/javascript" src="{/root/gui/url}/scripts/ol_minimap.js"></script>
