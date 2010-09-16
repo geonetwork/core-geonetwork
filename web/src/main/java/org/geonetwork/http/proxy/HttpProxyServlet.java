@@ -117,11 +117,13 @@ public class HttpProxyServlet extends HttpServlet {
                     response.setContentType(getResponseContentType(contentTypesReturned));
 
                     String responseBody = httpGet.getResponseBodyAsString().trim();
-                    response.setContentLength(responseBody.length());
 
                     PrintWriter out = response.getWriter();
                     out.print(responseBody);
-                    response.flushBuffer();
+
+                    out.flush();  
+                    out.close();                    
+
                 } else {
                     returnExceptionMessage(response, "Unexpected failure: " + httpGet.getStatusLine().toString());
                 }
@@ -196,8 +198,11 @@ public class HttpProxyServlet extends HttpServlet {
                     response.setContentType(getResponseContentType(contentTypesReturned));
 
                     String responseBody = httpPost.getResponseBodyAsString();
-                    response.setContentLength(responseBody.length());
+
                     out.print(responseBody);
+                    out.flush();
+                    out.close();
+                    
                 } else {
                     returnExceptionMessage(response, "Unexpected failure: " + httpPost.getStatusLine().toString());
                 }
