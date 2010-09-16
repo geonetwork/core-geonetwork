@@ -204,7 +204,12 @@ Mapping between :
                                         </URL>
                                     </linkage>
                                     <protocol>
-                                        <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                                        <gco:CharacterString>
+                                        	<xsl:choose>
+                                        		<xsl:when test="name(.)='WMT_MS_Capabilities' or name(.)='WMS_Capabilities'">application/vnd.ogc.wms_xml</xsl:when>
+                                        		<xsl:otherwise>WWW:LINK-1.0-http--link</xsl:otherwise>
+                                        	</xsl:choose>
+                                        </gco:CharacterString>
                                     </protocol>
                                     <description>
                                         <gco:CharacterString>
