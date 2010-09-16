@@ -473,12 +473,14 @@ function doSaveAction(action,validateAction)
 				method: 'post',
 				parameters: $('editForm').serialize(true),
 				evalScripts: true,
-				onSuccess: function(req) {
-					if (document.mainForm.showvalidationerrors.value=='true')
-						getValidationReport();
-					setBunload(true); // reset warning for window destroy
-					initCalendar();
-					validateMetadataFields();
+				 onComplete: function(req) {
+					if (req.status == 200) {
+						if (document.mainForm.showvalidationerrors.value=='true')
+							getValidationReport();
+						setBunload(true); // reset warning for window destroy
+						initCalendar();
+						validateMetadataFields();
+					}
 				},
 				onFailure: function(req) { 
 					alert(translate("errorSaveFailed") + "/ status " + req.status+" text: " + req.statusText + " - " + translate("tryAgain"));
