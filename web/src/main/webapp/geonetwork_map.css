@@ -1,18 +1,7 @@
 .olCursorWait {
     cursor: wait;
 }
-.olControlDragPanActive.olDragDown {
-    cursor: url(images/map/pandown.cur) 16 16, url(images/map/pandown.cur), auto;
-}
-.olControlDragPanActive {
-    cursor: url(images/map/pan.cur) 16 16, url(images/map/pan.cur), auto;
-}
-.ZoomOutActive {
-    cursor: url(images/map/zoomout.cur) 16 16, url(images/map/zoomout.cur), auto;
-}
-.olControlZoomBoxActive {
-    cursor: url(images/map/zoomin.cur) 16 16, url(images/map/zoomin.cur), auto;
-}
+
 .print {
     background-image:url(images/map/icon_print.png) !important;
     height:20px !important;
