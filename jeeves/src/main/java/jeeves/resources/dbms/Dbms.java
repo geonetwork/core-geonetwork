@@ -294,7 +294,7 @@ public class Dbms
 
 		for (int i = 0; i < colNum; i++)
 		{
-			vHeaders.add(md.getColumnName(i + 1).toLowerCase());
+			vHeaders.add(md.getColumnLabel(i + 1).toLowerCase());
 			vTypes.add(new Integer(md.getColumnType(i + 1)));
 		}
 
