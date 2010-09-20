@@ -43,7 +43,7 @@ GeoNetwork.miniapp = function() {
             controls: []
         };
         
-        if (!options.constrols) options.controls = [];
+        if (!options.controls) options.controls = [];
         miniMap = new OpenLayers.Map(options);
     };
 
