@@ -433,9 +433,11 @@ function doSaveAction(action,validateAction)
 
 	var metadataId = document.mainForm.id.value;
 	var divToRestore = null;
-	if (opener) {
-		divToRestore = opener.document.getElementById(metadataId);
-	}
+//  Opener is not used in GeoNetwork trunk. #306
+//  Only used in Bluenet
+//  if (opener) {
+//          divToRestore = opener.document.getElementById(metadataId);
+//  }
 
 	if (action.include('finish')) { // save and then replace editor with viewer 
 		var myAjax = new Ajax.Request(
