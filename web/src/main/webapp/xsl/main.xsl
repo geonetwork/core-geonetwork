@@ -26,10 +26,6 @@
 						background-color: #E4E9F1;
 						height:100%;
 					}
-					
-					#content {
-						height:100%;
-					}
 				</style>
 			</head>
 			<body onload="init()">
