@@ -1240,6 +1240,8 @@ function addINSPIREThemes() {
 }
 
 function resetInspireOptions() {
+    if (!$('inspire')) return;
+
      // reset INSPIRE options
 	$('inspire').checked=false;
 	setParam('title','');
