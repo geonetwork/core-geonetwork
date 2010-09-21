@@ -285,6 +285,11 @@ public class Geonetwork implements ApplicationHandler
 
 		logger.info("Site ID is : " + gnContext.getSiteId());
 
+        // Creates a default site logo, only if the logo image doesn't exists
+        // This can happen if the application has been updated with a new version preserving the database and
+        // images/logos folder is not copied from old application 
+        createSiteLogo(gnContext.getSiteId());
+
 		return gnContext;
 	}
 
@@ -408,21 +413,13 @@ public class Geonetwork implements ApplicationHandler
 	/**
 	 * Copy the default dummy logo to the logo folder based on uuid
 	 * @param dbms
-	 * @param appPath
 	 * @param nodeUuid
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 * @throws SQLException
 	 */
 	private void initLogo(Dbms dbms, String nodeUuid) {
-		try {
-			FileInputStream  is = new FileInputStream (path +"/images/logos/dummy.gif");
-			FileOutputStream os = new FileOutputStream(path +"/images/logos/"+ nodeUuid +".gif");
-			logger.info("      Setting catalogue logo for current node identified by: " + nodeUuid);
-			BinaryFile.copy(is, os, true, true);
-		} catch (Exception e) {
-			logger.error("      Error when setting the logo: " + e.getMessage());
-		}
+		createSiteLogo(nodeUuid);
 		
 		try {
 			dbms.execute("UPDATE Settings SET value=? WHERE name='siteId'", nodeUuid);
@@ -430,8 +427,25 @@ public class Geonetwork implements ApplicationHandler
 			logger.error("      Error when setting siteId values: " + e.getMessage());
 		}
 	}
-	
-	
+
+    /**
+     * Creates a default site logo, only if the logo image doesn't exists
+     *
+     * @param nodeUuid
+     */
+    private void createSiteLogo(String nodeUuid) {
+        try {
+            File logo = new File(path +"/images/logos/"+ nodeUuid +".gif");
+            if (!logo.exists()) {
+                FileInputStream  is = new FileInputStream (path +"/images/logos/dummy.gif");
+                FileOutputStream os = new FileOutputStream(path +"/images/logos/"+ nodeUuid +".gif");
+                logger.info("      Setting catalogue logo for current node identified by: " + nodeUuid);
+                BinaryFile.copy(is, os, true, true);
+            }
+        } catch (Exception e) {
+            logger.error("      Error when setting the logo: " + e.getMessage());
+        }
+    }
 	
 	//---------------------------------------------------------------------------
 	//---
