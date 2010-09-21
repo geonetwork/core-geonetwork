@@ -229,7 +229,7 @@ GeoNetwork.miniapp = function() {
          * Updates the extent selection box
          */
         updateExtentBox: function() {
-            updateMap(false);
+            updateMap(true);
         },
 
         /**
