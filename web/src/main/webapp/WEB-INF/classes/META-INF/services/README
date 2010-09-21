@@ -5,7 +5,6 @@ the XSL processor to use.
  * de.fzi.dbs.xml.transform.CachingTransformerFactory for XSL caching
 (recommended value for production use).
  * net.sf.saxon.TransformerFactoryImpl to use Saxon
- * (deprecated, used with GeoNetwork 2.2) org.apache.xalan.processor.TransformerFactoryImpl to use Xalan
  
 When caching is on, only the main XSL stylesheet
 last update date is checked and not all included XSL. If you update
