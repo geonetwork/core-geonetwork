@@ -48,7 +48,7 @@
 
 		<xsl:variable name="ows">
 			<xsl:choose>
-				<xsl:when test="name(.)='wfs:WFS_Capabilities'">true</xsl:when>
+				<xsl:when test="local-name(.)='WFS_Capabilities' and namespace-uri(.)='http://www.opengis.net/wfs' and @version='1.1.0'">true</xsl:when>
 				<xsl:otherwise>false</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -193,13 +193,13 @@
 									<linkage>
 										<URL>
 											<xsl:choose>
-												<xsl:when test="name(.)='WFS_Capabilities'">
-													<xsl:value-of
-														select="//wfs:GetFeature/wfs:DCPType/wfs:HTTP/wfs:Get/@onlineResource" />
-												</xsl:when>
 												<xsl:when test="$ows='true'">
 													<xsl:value-of
 														select="//ows:Operation[@name='GetFeature']/ows:DCP/ows:HTTP/ows:Get/@xlink:href" />
+												</xsl:when>
+												<xsl:when test="name(.)='WFS_Capabilities'">
+													<xsl:value-of
+														select="//wfs:GetFeature/wfs:DCPType/wfs:HTTP/wfs:Get/@onlineResource" />
 												</xsl:when>
 												<xsl:when test="name(.)='WMT_MS_Capabilities'">
 													<xsl:value-of

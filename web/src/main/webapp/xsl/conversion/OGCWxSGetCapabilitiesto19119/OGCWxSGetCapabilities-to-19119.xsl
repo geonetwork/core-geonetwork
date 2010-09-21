@@ -58,7 +58,8 @@ Mapping between :
 	
 		<xsl:variable name="ows">
 			<xsl:choose>
-				<xsl:when test="name(.)='wfs:WFS_Capabilities' or name(.)='wps:Capabilities'">true</xsl:when>
+				<xsl:when test="(local-name(.)='WFS_Capabilities' and namespace-uri(.)='http://www.opengis.net/wfs' and @version='1.1.0') 
+					or (local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengeospatial.net/wps')">true</xsl:when>
 				<xsl:otherwise>false</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
