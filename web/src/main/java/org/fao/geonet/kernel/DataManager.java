@@ -2542,6 +2542,12 @@ public class DataManager
 			info.addContent(subs);
 		}
 		*/
+
+		// add baseUrl of this site (from settings)
+		String host    = settingMan.getValue("system/server/host");
+		String port    = settingMan.getValue("system/server/port");
+		addElement(info, Edit.Info.Elem.BASEURL, "http://" + host + (port == "80" ? "" : ":" + port) + baseURL);
+
 		return info;
 	}
 

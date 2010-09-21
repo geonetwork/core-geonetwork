@@ -8,6 +8,41 @@ var hvutil = new Object();
 
 //=====================================================================================
 
+//return the value of the radio button that is checked
+//return a null if none are checked
+
+function getCheckedValue(radioGroup) {
+	var checked = $$("input[type=radio][name="+radioGroup+"]").find(
+	  function(re) {return re.checked;}
+	);
+	return (checked) ? $F(checked) : null;
+}
+
+
+//set the radio button with the given value as being checked
+//if the given value does not exist, all the radio buttons
+//are reset to unchecked
+function setCheckedValue(radioGroup, newValue) {
+	var radioButtons  = $$('input[type=radio][name='+radioGroup+']');
+	radioButtons.each(function(radioButton) {
+		radioButton.checked = false;
+		if(radioButton.value == newValue.toString()) {
+			radioButton.checked = true;
+		}
+	});
+}
+
+hvutil.setRadioOption = function(node, name, radioGroup)
+{
+	var value = hvutil.find(node, name);
+
+	if (value == null)
+		throw 'Cannot find node with name : '+ name;
+	
+	setCheckedValue(radioGroup, value);
+}
+
+
 hvutil.setOption = function(node, name, ctrlId)
 {
 	var value = hvutil.find(node, name);
@@ -20,8 +55,9 @@ hvutil.setOption = function(node, name, ctrlId)
 	if (!ctrl)
 		throw 'Cannot find control with id : '+ ctrlId;
 		
-	if (type == 'checkbox')	ctrl.checked = (value == 'true');		
-		else						ctrl.value   = value;
+	if (type == 'checkbox')	{
+		ctrl.checked = (value == 'true');
+	} else						ctrl.value   = value;
 }
 
 hvutil.setOptionIfExists = function(node, name, ctrlId)

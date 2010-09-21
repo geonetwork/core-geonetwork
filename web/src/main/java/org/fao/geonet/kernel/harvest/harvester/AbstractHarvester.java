@@ -45,6 +45,7 @@ import org.fao.geonet.kernel.harvest.harvester.localfilesystem.LocalFilesystemHa
 import org.fao.geonet.kernel.harvest.harvester.metadatafragments.MetadataFragmentsHarvester;
 import org.fao.geonet.kernel.harvest.harvester.oaipmh.OaiPmhHarvester;
 import org.fao.geonet.kernel.harvest.harvester.ogcwxs.OgcWxSHarvester;
+import org.fao.geonet.kernel.harvest.harvester.thredds.ThreddsHarvester;
 import org.fao.geonet.kernel.harvest.harvester.webdav.WebDavHarvester;
 import org.fao.geonet.kernel.harvest.harvester.z3950.Z3950Harvester;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -75,6 +76,7 @@ public abstract class AbstractHarvester
 		register(context, Z3950Harvester   .class);
 		register(context, OaiPmhHarvester  .class);
 		register(context, OgcWxSHarvester  .class);
+		register(context, ThreddsHarvester .class);
 		register(context, ArcSDEHarvester  .class);
 		register(context, LocalFilesystemHarvester	.class);
 		register(context, MetadataFragmentsHarvester  .class);
@@ -330,7 +332,10 @@ public abstract class AbstractHarvester
 
 		//--- 'running'
 
-		boolean running = (status == Status.ACTIVE && executor.isRunning());
+		boolean running = false;
+		if (status != null && executor != null) {
+			running = (status == Status.ACTIVE && executor.isRunning());
+		}
 		info.addContent(new Element("running").setText(running+""));
 
 		//--- harvester specific info

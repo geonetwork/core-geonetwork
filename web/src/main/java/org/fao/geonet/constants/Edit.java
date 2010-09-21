@@ -91,6 +91,7 @@ public class Edit
 			public static final String SELECTED    = "selected";
 			public static final String SUBTEMPLATES = "subtemplates";
       public static final String DISPLAY_ORDER  = "displayOrder";
+      public static final String BASEURL  = "baseUrl";
 
 			//--- privileges
 

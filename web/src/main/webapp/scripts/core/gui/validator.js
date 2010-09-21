@@ -55,6 +55,17 @@
 			<notIP>{NAME} is not a valid IP address</notIP>
 		</ipaddress>
 	</validator>
+
+	An optional precond parameter is also supported on rules allowing preconditions to be  
+  specified for applying the rule.  For example, adding
+  
+    precond: [{id:'input1', value:'value1'}, {id:'input2', value:'value2'}]
+    
+  to a rule will result in the associated rule being tested only if the input with 
+  id='input1' has the value 'value1' and the input with id='input2' has the value 'value2'. 
+  
+  precond also supports testing the checked attribute.
+
  */
 
 function Validator(xmlLoader)
@@ -127,6 +138,10 @@ Validator.prototype.validate = function()
 	for (var i=0; i<this.rules.length; i++)
 	{
 		var rule   = this.rules[i];		
+
+		if (!this.checkPrecond(rule))
+			continue;
+
 		var result = rule.validator(rule);
 		
 		if (result != null)
@@ -161,6 +176,27 @@ Validator.prototype.lengthVal = function(rule)
 		result = ['invalidMaxSize', rule.maxSize];
 		
 	return result;
+}
+
+//=====================================================================================
+
+Validator.prototype.checkPrecond = function(rule)
+{
+	if (!rule.precond) return true;
+	
+	for (var j=0; j<rule.precond.length; j++) {
+		var precond = rule.precond[j];
+
+		if ('value' in precond && $(precond.id).value != precond.value) {
+			return false;
+		}
+		
+		if ('checked' in precond && $(precond.id).checked != precond.checked) {
+			return false;
+		}
+	}
+	
+	return true;
 }
 
 //=====================================================================================
