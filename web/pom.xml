@@ -305,6 +305,11 @@
       <artifactId>netcdf</artifactId>
       <version>4.0.patch</version>
     </dependency>
+    <dependency>
+      <groupId>opendap</groupId>
+      <artifactId>opendap</artifactId>
+      <version>2.1</version>
+    </dependency>
   </dependencies>
   
   <build>
