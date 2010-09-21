@@ -412,17 +412,23 @@
                     </xsl:otherwise>                  
                 </xsl:choose>
                 
-                var mapOptions = {
+                var mapOptions1 = {
                     projection: projection,
                     maxExtent: extent,
                     restrictedExtent: restrictedExtent
                 };
-                
-                // Initialize minimaps 
-                GeoNetwork.minimapSimpleSearch.init("ol_minimap1", "region_simple", backgroundLayers, mapOptions);
-                GeoNetwork.minimapAdvancedSearch.init("ol_minimap2", "region", backgroundLayers);
 
-                
+                var mapOptions2 = {
+                    projection: projection,
+                    maxExtent: extent,
+                    restrictedExtent: restrictedExtent
+                };
+
+                // Initialize minimaps
+                GeoNetwork.minimapSimpleSearch.init("ol_minimap1", "region_simple", backgroundLayersMapSearch, mapOptions1);
+                GeoNetwork.minimapAdvancedSearch.init("ol_minimap2", "region", backgroundLayersMapSearch, mapOptions2);
+
+
                 GeoNetwork.minimapSimpleSearch.setSynchMinimap(GeoNetwork.minimapAdvancedSearch);
                 GeoNetwork.minimapAdvancedSearch.setSynchMinimap(GeoNetwork.minimapSimpleSearch);
                 GeoNetwork.CatalogueInterface.init(GeoNetwork.mapViewer.getMap());

@@ -99,6 +99,14 @@
         <xsl:for-each select="/root/gui/config/mapViewer/layers/layer">
         backgroundLayers.push(["<xsl:value-of select='@tocName'/>","<xsl:value-of select='@server'/>",<xsl:value-of select='@params'/>, <xsl:value-of select='@options'/>]);                           
         </xsl:for-each>
+
+        var backgroundLayersMapSearch = [];
+        <xsl:for-each select="/root/gui/config/mapSearch/layers/layer">
+        backgroundLayersMapSearch.push(["<xsl:value-of select='@tocName'/>","<xsl:value-of select='@server'/>",<xsl:value-of select='@params'/>, <xsl:value-of select='@options'/>]);
+        </xsl:for-each>
+
+        // If no layers defined for search map, use the layers defined for map viewer
+        if (backgroundLayersMapSearch.length == 0) backgroundLayersMapSearch = backgroundLayers;
         </script>
         
         <script src="../../scripts/geo/extentMap.js" type="text/javascript"/>
