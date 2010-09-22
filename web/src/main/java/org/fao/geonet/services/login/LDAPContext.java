@@ -55,6 +55,7 @@ class LDAPContext
 		usersDN       = sm.getValue      (prefix +"/distinguishedNames/users");
 		nameAttr      = sm.getValue      (prefix +"/userAttribs/name");
 		profileAttr   = sm.getValue      (prefix +"/userAttribs/profile");
+		emailAttr     = "mail";  //TODO make it configurable
 
 		if (profileAttr.trim().length() == 0)
 			profileAttr = null;
@@ -80,7 +81,12 @@ class LDAPContext
 	{
 		try
 		{
-			String     path = "uid="+ username +","+ usersDN +","+ baseDN;
+			String uidFilter = "(uid=" + username + ")";
+
+			String usersBaseDN = usersDN +","+ baseDN;
+
+			String path = LDAPUtil.findUserDN(getUrl(), uidFilter, usersBaseDN);
+
 			DirContext dc   = LDAPUtil.openContext(getUrl(), path, password);
 
 			Map<String, ? extends List<Object>> attr = LDAPUtil.getNodeInfo(dc, path);
@@ -88,7 +94,7 @@ class LDAPContext
 
 			if (attr == null)
 			{
-				Log.info(Geonet.LDAP, "Username not found :"+ username);
+				Log.warning(Geonet.LDAP, "Username not found :"+ username);
 				return null;
 			}
 			else
@@ -101,12 +107,13 @@ class LDAPContext
 				info.profile  = (profileAttr == null)
 										? defProfile
 										: get(attr, profileAttr);
+				info.email = get(attr, emailAttr);
 
 				if (!profiles.contains(info.profile))
 				{
-					Log.info(Geonet.LDAP, "Skipping user with unknown profile");
-					Log.info(Geonet.LDAP, "  (C) Username :"+ info.username);
-					Log.info(Geonet.LDAP, "  (C) Profile  :"+ info.profile);
+					Log.warning(Geonet.LDAP, "Skipping user with unknown profile");
+					Log.warning(Geonet.LDAP, "  (C) Username :"+ info.username);
+					Log.warning(Geonet.LDAP, "  (C) Profile  :"+ info.profile);
 					return null;
 				}
 
@@ -115,8 +122,8 @@ class LDAPContext
 		}
 		catch(NamingException e)
 		{
-			Log.info(Geonet.LDAP, "Raised exception during LDAP access");
-			Log.info(Geonet.LDAP, "  (C) Message :"+ e.getMessage());
+			Log.warning(Geonet.LDAP, "Raised exception during LDAP access");
+			Log.warning(Geonet.LDAP, "  (C) Message :"+ e.getMessage());
 			return null;
 		}
 	}
@@ -168,6 +175,7 @@ class LDAPContext
 	private String  usersDN;
 	private String  nameAttr;
 	private String  profileAttr;
+	private String  emailAttr;
 
 	private HashSet<String> profiles = new HashSet<String>();
 }
@@ -180,6 +188,7 @@ class LDAPInfo
 	public String password;
 	public String profile;
 	public String name;
+	public String email;
 }
 
 //=============================================================================

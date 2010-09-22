@@ -33,6 +33,8 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
+import javax.naming.directory.SearchResult;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -72,6 +74,31 @@ public class LDAPUtil
 		}
 	}
 
+	public static String findUserDN(String url, String uidFilter, String userDN) throws NamingException
+	{
+		try
+		{
+			Hashtable<String,String> env = new Hashtable<String,String>();
+			DirContext dc = new InitialDirContext(env);
+			DirContext connection = (DirContext) dc.lookup(url);
+
+			NamingEnumeration<SearchResult> results = connection.search(userDN, uidFilter, null);
+
+
+			String usersRealDN = "";
+			while (results.hasMore()) {
+				usersRealDN = (results.nextElement().getNameInNamespace());
+			}
+
+			return usersRealDN;
+		}
+		catch(NamingException e)
+		{
+			throw e;
+		}
+	}
+
+
 	//--------------------------------------------------------------------------
 
 	public static Map<String, ? extends List<Object>> getNodeInfo(DirContext dc,
@@ -79,7 +106,7 @@ public class LDAPUtil
 	{
 		try
 		{
-			Log.info(Geonet.LDAP, "Retrieving information for :"+ dname);
+			Log.warning(Geonet.LDAP, "Retrieving information for :"+ dname);
 
 			//--- retrieve all attributes
 
