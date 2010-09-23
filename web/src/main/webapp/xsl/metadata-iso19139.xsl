@@ -2729,7 +2729,7 @@
 				<table width="100%"><tr>
 					<xsl:variable name="ref" select="geonet:element/@ref"/>
 					<td width="70%"><xsl:value-of select="string(.)"/></td>
-					<td align="right"><button class="content" onclick="javascript:doFileRemoveAction('{/root/gui/locService}/resources.del','{$ref}','{$access}',{$id})"><xsl:value-of select="/root/gui/strings/remove"/></button></td>
+					<td align="right"><button class="content" onclick="javascript:doFileRemoveAction('{/root/gui/locService}/resources.del','{$ref}','{$access}','{$id}')"><xsl:value-of select="/root/gui/strings/remove"/></button></td>
 				</tr></table>
 			</xsl:with-param>
 			<xsl:with-param name="schema"/>
