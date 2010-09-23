@@ -1437,19 +1437,33 @@ function updateUpperCardinality(ref, value) {
 }
 
 
-
 function updateValidationReportVisibilityRules(errorOnly) {
-	$('validationReport').descendants().each(function(el) {
-		if (el.nodeName == 'LI') {
-			if (el.getAttribute('name')=='pass' && errorOnly) {
-				el.style.display = "none";
-			} else {
-				el.style.display = "block";
-			}
-		}
+    $("validationReport").descendants().each(function(el) {
+        if (el.nodeName=="SPAN") {
+            // These are the titles.
+            // Look and see if the following div contains any list elements which are errors.
+            errors = $(el).next().descendants().filter(
+                function(possibleError) {
+                   return (possibleError.nodeName=='LI' && possibleError.getAttribute('name')=='error');
+                }
+            );
+            // If none are found and we are only showing errors, we should turn this one off.
+            if (errors.length==0 && errorOnly) {
+                el.style.display = "none";
+             } else {
+                el.style.display = "block";
+             }
+        } else if (el.nodeName=="LI") {
+            // These are list elements which are errors or passes.
+            // If they are not errors and we are only showing errors, we should turn them off.
+            if (el.getAttribute("name")=="pass" && errorOnly) {
+                el.style.display = "none";
+            } else {
+                el.style.display = "block";
+            }
+        }
     });
 }
-
 
 /**
  * Get the validation report for current metadata record
