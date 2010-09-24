@@ -339,7 +339,7 @@
             function initMapViewer() {
                 <xsl:choose>
                     <xsl:when test="/root/gui/config/mapViewer/proj/crs/@code">
-                        var projection = "<xsl:value-of select='/root/gui/config/mapSearch/proj/crs/@code'/>";
+                        var projection = "<xsl:value-of select='/root/gui/config/mapViewer/proj/crs/@code'/>";
                     </xsl:when>
                     <xsl:otherwise>
                         var projection = "EPSG:4326";
@@ -348,7 +348,7 @@
                 
                 <xsl:choose>
                     <xsl:when test="/root/gui/config/mapViewer/bounds">
-                        var extent =  new OpenLayers.Bounds(<xsl:value-of select='/root/gui/config/mapSearch/bounds/@west'/>,<xsl:value-of select='/root/gui/config/mapSearch/bounds/@south'/>,<xsl:value-of select='/root/gui/config/mapSearch/bounds/@east'/>,<xsl:value-of select='/root/gui/config/mapSearch/bounds/@north'/>);
+                        var extent =  new OpenLayers.Bounds(<xsl:value-of select='/root/gui/config/mapViewer/bounds/@west'/>,<xsl:value-of select='/root/gui/config/mapViewer/bounds/@south'/>,<xsl:value-of select='/root/gui/config/mapViewer/bounds/@east'/>,<xsl:value-of select='/root/gui/config/mapViewer/bounds/@north'/>);
                     </xsl:when>
                     <xsl:otherwise>
                         var extent = new OpenLayers.Bounds(-180,-90,180,90);
@@ -357,7 +357,7 @@
                 
                 <xsl:choose>
                     <xsl:when test="/root/gui/config/mapViewer/restrictedBounds">
-                        var restrictedExtent =  new OpenLayers.Bounds(<xsl:value-of select='/root/gui/config/mapSearch/restrictedBounds/@west'/>,<xsl:value-of select='/root/gui/config/mapSearch/restrictedBounds/@south'/>,<xsl:value-of select='/root/gui/config/mapSearch/restrictedBounds/@east'/>,<xsl:value-of select='/root/gui/config/mapSearch/restrictedBounds/@north'/>);
+                        var restrictedExtent =  new OpenLayers.Bounds(<xsl:value-of select='/root/gui/config/mapViewer/restrictedBounds/@west'/>,<xsl:value-of select='/root/gui/config/mapViewer/restrictedBounds/@south'/>,<xsl:value-of select='/root/gui/config/mapViewer/restrictedBounds/@east'/>,<xsl:value-of select='/root/gui/config/mapViewer/restrictedBounds/@north'/>);
                     </xsl:when>
                     <xsl:otherwise>
                         var restrictedExtent = extent;
