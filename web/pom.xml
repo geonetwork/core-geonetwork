@@ -601,13 +601,74 @@
               <workingDirectory>${basedir}/../schematrons</workingDirectory>
             </configuration>
           </execution>
+
+            <!--execution>
+              <id>user-docs-clean</id>
+              <phase>prepare-package</phase>
+              <goals>
+                <goal>exec</goal>
+              </goals>
+              <configuration>
+                <executable>make</executable>
+                  <arguments>
+                    <argument>clean</argument>
+                  </arguments>
+                <workingDirectory>${basedir}/../docs/eng/users</workingDirectory>
+              </configuration>
+            </execution>
+
+            <execution>
+             <id>user-docs-build</id>
+             <phase>prepare-package</phase>
+             <goals>
+               <goal>exec</goal>
+             </goals>
+             <configuration>
+               <executable>make</executable>
+                 <arguments>
+                   <argument>html</argument>
+                 </arguments>
+               <workingDirectory>${basedir}/../docs/eng/users</workingDirectory>
+             </configuration>
+           </execution>
+
+           <execution>
+             <id>developer-docs-clean</id>
+             <phase>prepare-package</phase>
+             <goals>
+               <goal>exec</goal>
+             </goals>
+             <configuration>
+               <executable>make</executable>
+                 <arguments>
+                   <argument>clean</argument>
+                 </arguments>
+               <workingDirectory>${basedir}/../docs/eng/developer</workingDirectory>
+             </configuration>
+           </execution>
+
+           <execution>
+             <id>developer-docs-build</id>
+             <phase>prepare-package</phase>
+             <goals>
+               <goal>exec</goal>
+             </goals>
+             <configuration>
+               <executable>make</executable>
+                 <arguments>
+                   <argument>html</argument>
+                 </arguments>
+               <workingDirectory>${basedir}/../docs/eng/developer</workingDirectory>
+             </configuration>
+           </execution-->
+            
         </executions>      
       </plugin>
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
 <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
-          <webResources>
+<!--          <webResources>
             <resource>
               <directory>../docs/eng/users/build/html</directory>
               <targetPath>docs/eng/users</targetPath>
@@ -625,7 +686,7 @@
                 <include>readme*.html</include>
               </includes>
             </resource>
-          </webResources>
+          </webResources>   -->
           <attachClasses>true</attachClasses>
           <warName>geonetwork</warName>
           <webappDirectory>${project.build.directory}/geonetwork</webappDirectory>
