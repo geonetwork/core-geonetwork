@@ -12,4 +12,15 @@
 		<substitute name="gmd:MD_DataIdentification"/>
 	</field>
 
+<!-- just VerticalCS (exclude ML_VerticalCS) -->
+	<field name="gml:VerticalCS">
+	</field>
+
+<!-- just VerticalDatum (exclude ML_VerticalDatum) -->
+	<field name="gml:VerticalDatum">
+	</field>
+
+<!-- just CoordinateSystemAxis (exclude ML_CoordinateSystemAxis) -->
+	<field name="gml:CoordinateSystemAxis">
+	</field>
 </fields>
