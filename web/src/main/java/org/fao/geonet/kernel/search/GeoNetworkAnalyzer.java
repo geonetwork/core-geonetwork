@@ -35,7 +35,7 @@ public class GeoNetworkAnalyzer extends Analyzer {
          public TokenStream reusableTokenStream(String fieldName, Reader reader) throws IOException {
            Tokenizer tokenizer = (Tokenizer) getPreviousTokenStream();
            if (tokenizer == null) {
-             tokenizer = new WhitespaceTokenizer(reader);
+             tokenizer = (Tokenizer) tokenStream(null, reader);
              setPreviousTokenStream(tokenizer);
            }
            else {
