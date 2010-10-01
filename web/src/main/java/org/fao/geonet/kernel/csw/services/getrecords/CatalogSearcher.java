@@ -220,8 +220,12 @@ public class CatalogSearcher {
 				+ Geonet.File.FILTER_TO_LUCENE;
 
 		try {
-			return Xml.transform(filterExpr, styleSheet);
-		} catch (Exception e) {
+			Element result = Xml.transform(filterExpr, styleSheet);
+            Log.info(Geonet.CSW_SEARCH,"filterToLucene result:\n" + Xml.getString(result));
+            return result;
+
+		}
+        catch (Exception e) {
 			context.error("Error during Filter to Lucene conversion : " + e);
 			context.error("  (C) StackTrace\n" + Util.getStackTrace(e));
 
@@ -331,12 +335,13 @@ public class CatalogSearcher {
 			_reader = sm.getIndexReader();
 		}
 
-		if (luceneExpr != null)
-			Log.debug(Geonet.CSW_SEARCH, "Search criteria:\n"
-					+ Xml.getString(luceneExpr));
+		if (luceneExpr != null) {
+			Log.debug(Geonet.CSW_SEARCH, "Search criteria:\n" + Xml.getString(luceneExpr));
+        }
+		Query data = (luceneExpr == null) ? null : LuceneSearcher.makeQuery(luceneExpr, SearchManager.getAnalyzer(), _tokenizedFieldSet);
+        Log.info(Geonet.CSW_SEARCH,"LuceneSearcher made query:\n" + data.toString());
 
-		Query data = (luceneExpr == null) ? null : LuceneSearcher
-				.makeQuery(luceneExpr, SearchManager.getAnalyzer(), _tokenizedFieldSet);
+
 		Query groups = getGroupsQuery(context);
 
 		if (sort == null) {

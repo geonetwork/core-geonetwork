@@ -1,13 +1,10 @@
 package org.fao.geonet.kernel.search;
 
+import jeeves.utils.Xml;
 import junit.framework.TestCase;
-
 import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
-import org.apache.lucene.analysis.WhitespaceAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.search.Query;
-
 import org.jdom.DefaultJDOMFactory;
 import org.jdom.Element;
 import org.jdom.JDOMFactory;
@@ -15,8 +12,6 @@ import org.jdom.JDOMFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashSet;
-
-import jeeves.utils.Xml;
 
 /**
  *
@@ -33,10 +28,10 @@ public class LuceneQueryTest extends TestCase {
 	public LuceneQueryTest(String name) throws Exception {
 		super(name);
 
-		_analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer());
-    _analyzer.addAnalyzer("_uuid", new StandardAnalyzer());
-    _analyzer.addAnalyzer("parentUuid", new StandardAnalyzer());
-    _analyzer.addAnalyzer("operatesOn", new StandardAnalyzer());
+	_analyzer = new PerFieldAnalyzerWrapper(new GeoNetworkAnalyzer());
+    _analyzer.addAnalyzer("_uuid", new GeoNetworkAnalyzer());
+    _analyzer.addAnalyzer("parentUuid", new GeoNetworkAnalyzer());
+    _analyzer.addAnalyzer("operatesOn", new GeoNetworkAnalyzer());
     _analyzer.addAnalyzer("subject", new KeywordAnalyzer());
 
 		Element tokenizedFields = Xml.loadStream(new FileInputStream(new File("src/main/webapp/WEB-INF/config-lucene.xml")));		
@@ -48,7 +43,7 @@ public class LuceneQueryTest extends TestCase {
       Object o = tokenized.getContent(i);
       if (o instanceof Element) {
         Element elem = (Element)o;
-        _tokenizedFieldSet.add(elem.getAttributeValue("name"));
+        _tokenizedFieldSet.add(elem.getAttributeValue("name"));        
       }
     }
 	}
@@ -67,6 +62,22 @@ public class LuceneQueryTest extends TestCase {
 		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
 		// verify query
 		assertEquals("+any:hoeperdepoep +_isTemplate:n", query.toString());
+	}
+
+	/**
+	 * 'any' parameter with a single token value that has a wildcard.
+	 */
+	public void testSingleTokenWildcardAny() {
+		// create request object
+		JDOMFactory factory = new DefaultJDOMFactory();
+		Element request = factory.element("request");
+		Element any = factory.element("any");
+		any.addContent("hoeper*poep");
+		request.addContent(any);
+		// build lucene query
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(request);
+		// verify query
+		assertEquals("+any:hoeper*poep +_isTemplate:n", query.toString());
 	}
 
 	/**
