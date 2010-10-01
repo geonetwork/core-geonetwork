@@ -33,7 +33,6 @@ import jeeves.utils.Xml;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldSelector;
@@ -80,7 +79,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -125,7 +123,8 @@ public class SearchManager
 	//-----------------------------------------------------------------------------
 	static {
     // Define the default Analyzer
-		_analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer(new HashSet<String>()));
+
+		_analyzer = new PerFieldAnalyzerWrapper(new GeoNetworkAnalyzer());
 		// Here you could define specific analyzer for each fields stored in the index.
 		//
 		// For example adding a different analyzer for any (ie. full text search) 
@@ -143,9 +142,9 @@ public class SearchManager
 		
 		// heikki doeleman: UUID must be case insensitive, as its parts are hexadecimal numbers which
 		// are not case sensitive.
-		_analyzer.addAnalyzer("_uuid", new StandardAnalyzer(new HashSet<String>()));
-		_analyzer.addAnalyzer("parentUuid", new StandardAnalyzer(new HashSet<String>()));
-		_analyzer.addAnalyzer("operatesOn", new StandardAnalyzer(new HashSet<String>()));
+		_analyzer.addAnalyzer("_uuid", new GeoNetworkAnalyzer());
+		_analyzer.addAnalyzer("parentUuid", new GeoNetworkAnalyzer());
+		_analyzer.addAnalyzer("operatesOn", new GeoNetworkAnalyzer());
 		_analyzer.addAnalyzer("subject", new KeywordAnalyzer());
 	}
 
