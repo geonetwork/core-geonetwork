@@ -4,7 +4,6 @@ import org.apache.lucene.analysis.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.LowerCaseFilter;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.WhitespaceTokenizer;
 
 import java.io.IOException;
@@ -33,15 +32,15 @@ public final class GeoNetworkAnalyzer extends Analyzer {
 
          @Override
          public TokenStream reusableTokenStream(String fieldName, Reader reader) throws IOException {
-           Tokenizer tokenizer = (Tokenizer) getPreviousTokenStream();
-           if (tokenizer == null) {
-             tokenizer = (Tokenizer) tokenStream(null, reader);
-             setPreviousTokenStream(tokenizer);
+           TokenStream ts = (TokenStream) getPreviousTokenStream();
+           if (ts == null) {
+             ts = tokenStream(null, reader);
+             setPreviousTokenStream(ts);
            }
            else {
-             tokenizer.reset(reader);
+             ts.reset();
            }
-           return tokenizer;
+           return ts;
          }
 
 }
