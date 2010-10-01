@@ -21,7 +21,7 @@ import java.io.Reader;
  *
  * @author heikki doeleman
  */
-public class GeoNetworkAnalyzer extends Analyzer {
+public final class GeoNetworkAnalyzer extends Analyzer {
     
          @Override
          public TokenStream tokenStream(String fieldName, Reader reader) {
