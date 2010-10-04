@@ -266,9 +266,9 @@
                 <span class="labelField"><xsl:value-of select="/root/gui/strings/inspire/what/l6"/></span>
                 <select id="inspireannex" name="inspireannex" class="content" style="width:200px; !important" onchange="inspireAnnexChanged(this.value)">
                     <option value="" selected="selected"/>
-                    <option value="I"><xsl:value-of select="/root/gui/strings/inspire/what/l6"/> I</option>
-                    <option value="II"><xsl:value-of select="/root/gui/strings/inspire/what/l6"/> II</option>
-                    <option value="III"><xsl:value-of select="/root/gui/strings/inspire/what/l6"/> III</option>
+                    <option value="i"><xsl:value-of select="/root/gui/strings/inspire/what/l6"/> I</option>
+                    <option value="ii"><xsl:value-of select="/root/gui/strings/inspire/what/l6"/> II</option>
+                    <option value="iii"><xsl:value-of select="/root/gui/strings/inspire/what/l6"/> III</option>
                 </select>
             </div>
 
