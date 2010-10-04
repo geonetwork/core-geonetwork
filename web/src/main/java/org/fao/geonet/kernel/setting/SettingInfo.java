@@ -141,6 +141,14 @@ public class SettingInfo
 		return sm.getValue("system/feedback/email");
 	}
 
+    //---------------------------------------------------------------------------
+
+    public boolean getInspireEnabled()
+    {
+        return sm.getValueAsBool("system/inspire/enable");
+    }
+
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Vars

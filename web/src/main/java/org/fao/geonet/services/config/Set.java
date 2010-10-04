@@ -73,6 +73,9 @@ public class Set implements Service
 		if (!sm.setValues(dbms, values))
 			throw new OperationAbortedEx("Cannot set all values");
 
+        // Update inspire property in SearchManager
+        gc.getSearchmanager().setInspireEnabled(new Boolean((String) values.get("system/inspire/enable"))); 
+
 		return new Element(Jeeves.Elem.RESPONSE).setText("ok");
 	}
 
