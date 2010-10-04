@@ -118,7 +118,11 @@ public class SearchManager
 	private Calendar       _optimizerBeginAt;
 	private SimpleDateFormat _dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-  private boolean        _inspireEnabled = false;
+    private boolean        _inspireEnabled = false;
+
+    public void setInspireEnabled(boolean inspireEnabled) {
+        this._inspireEnabled = inspireEnabled;
+    }
 
 	//-----------------------------------------------------------------------------
 	static {
@@ -160,11 +164,10 @@ public class SearchManager
 	 * @param appPath
 	 * @param luceneDir
 	 * @param summaryConfigXmlFile
-     * @param guiConfigXmlFile
 	 * @param dataStore
 	 * @throws Exception
 	 */
-	public SearchManager(String appPath, String luceneDir, String htmlCacheDir, String summaryConfigXmlFile, String guiConfigXmlFile, String luceneConfigXmlFile, DataStore dataStore, SettingInfo si) throws Exception
+	public SearchManager(String appPath, String luceneDir, String htmlCacheDir, String summaryConfigXmlFile, String luceneConfigXmlFile, DataStore dataStore, SettingInfo si) throws Exception
 	{
 		_summaryConfig = Xml.loadStream(new FileInputStream(new File(appPath,summaryConfigXmlFile)));
 
@@ -174,7 +177,7 @@ public class SearchManager
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
 		_schemasDir     = new File(appPath, SCHEMA_STYLESHEETS_DIR_PATH);
 
-        checkInspireConfig(appPath, guiConfigXmlFile);
+        _inspireEnabled = si.getInspireEnabled();
 
 		if (!_stylesheetsDir.isDirectory())
 			throw new Exception("directory " + _stylesheetsDir + " not found");
@@ -691,19 +694,6 @@ public class SearchManager
 		}
 	}
 
-    private void checkInspireConfig(String appPath, String guiConfigXmlFile) {
-        try {
-            Element  guiConfig = Xml.loadStream(new FileInputStream(new File(appPath, guiConfigXmlFile)));
-
-            String inspireParam = guiConfig.getChild("inspire").getValue();
-            _inspireEnabled = StringUtils.hasText(inspireParam) && (inspireParam.equals("1"));
-        } catch (Exception ex) {
-            // If not defined the parameter, then inspire is disabled
-            _inspireEnabled = false;
-        }
-
-    }
-    
 	//-----------------------------------------------------------------------------
 	// utilities
 

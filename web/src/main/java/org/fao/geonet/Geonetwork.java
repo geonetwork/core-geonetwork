@@ -197,12 +197,11 @@ public class Geonetwork implements ApplicationHandler
 		String luceneDir = path + handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_DIR);
 		String summaryConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.SUMMARY_CONFIG);
 		String dataDir = path + handlerConfig.getMandatoryValue(Geonet.Config.DATA_DIR);
-        String guiConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.GUI_CONFIG);
         String luceneConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
         
 		DataStore dataStore = createDataStore(context.getResourceManager().getProps(Geonet.Res.MAIN_DB), luceneDir);
 	
-		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, summaryConfigXmlFile, guiConfigXmlFile, luceneConfigXmlFile, dataStore, new SettingInfo(settingMan));
+		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, summaryConfigXmlFile, luceneConfigXmlFile, dataStore, new SettingInfo(settingMan));
 
 		//------------------------------------------------------------------------
 		//--- extract intranet ip/mask and initialize AccessManager
