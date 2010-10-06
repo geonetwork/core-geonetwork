@@ -133,17 +133,9 @@
 		<table width="100%">
 			<tr>
 				<td>
-					<input type="hidden" id="_{$ref}_format" value="{$format}"/>
-					<input class="md calendar" type="text" name="_{$ref}" id="_{$ref}_cal" value="{$date}" size="30" readonly="1"/>
-					
-					<img src="../../scripts/calendar/img.gif"
-						id="_{$ref}_trigger"
-						class="calendar"
-						title="Date selector"/>
-					
-					<a onclick="javascript:setBunload(false);" href="javascript:clearRef('{$ref}');"> 
-						<xsl:value-of select="/root/gui/strings/clear"/>
-					</a>
+				    <div class="cal" id="_{$ref}"></div>
+				    <input type="hidden" id="_{$ref}_format" value="{$format}"/>
+                    <input type="hidden" id="_{$ref}_cal" value="{$date}"/>
 				</td>
 			</tr>
 		</table>

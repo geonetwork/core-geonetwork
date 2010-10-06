@@ -198,44 +198,8 @@ function initAdvancedSearch()
 	//im_mm_init();
 
 	new Ajax.Autocompleter('themekey', 'keywordList', 'portal.search.keywords?',{paramName: 'keyword', updateElement : addQuote});
-
-	Calendar.setup({
-		inputField     :    "dateFrom",     // id of the input field
-		ifFormat       :    "%Y-%m-%dT%H:%M:00",      // format of the input field
-		button         :    "from_trigger_c",  // trigger for the calendar (button ID)
-		showsTime 		 :		true,
-		align          :    "Tl",           // alignment (defaults to "Bl")
-		singleClick    :    true
-	});
-
-	Calendar.setup({
-		inputField	:    "dateTo",     // id of the input field
-		ifFormat	:    "%Y-%m-%dT%H:%M:00",      // format of the input field
-		button		:    "to_trigger_c",  // trigger for the calendar (button ID)
-		showsTime	:    true,
-		align		:    "Tl",           // alignment (defaults to "Bl")
-		singleClick	:    true
-	});
-
-	Calendar.setup({
-		inputField     :    "extFrom",     // id of the input field
-		ifFormat       :    "%Y-%m-%dT%H:%M:00",      // format of the input field
-		button         :    "extfrom_trigger_c",  // trigger for the calendar (button ID)
-		showsTime 		 :		true,
-		align          :    "Tl",           // alignment (defaults to "Bl")
-		singleClick    :    true
-	});
-
-	Calendar.setup({
-		inputField	:    "extTo",     // id of the input field
-		ifFormat	:    "%Y-%m-%dT%H:%M:00",      // format of the input field
-		button		:    "extto_trigger_c",  // trigger for the calendar (button ID)
-		showsTime	:    true,
-		align		:    "Tl",           // alignment (defaults to "Bl")
-		singleClick	:    true
-	});
-
-}
+	initCalendar();
+	}
 
 function runAdvancedSearch(type)
 {

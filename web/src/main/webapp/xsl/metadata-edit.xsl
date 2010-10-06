@@ -35,10 +35,7 @@
 	
 		<xsl:call-template name="edit-header"/>
 		
-		<style type="text/css">@import url(<xsl:value-of select="/root/gui/url"/>/scripts/calendar/calendar-blue2.css);</style>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar.js"></script>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/lang/calendar-{/root/gui/language}.js"></script>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar-setup.js"></script>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/ext/locale/ext-lang-{/root/gui/language}.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/webtoolkit.aim.js"/>
 		<script type="text/javascript">

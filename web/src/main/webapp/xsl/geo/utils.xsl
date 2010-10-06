@@ -126,6 +126,7 @@
         <script type="text/javascript" src="../../scripts/ext-ux/MultiselectItemSelector-3.0/Multiselect.js"></script>
         <script type="text/javascript" src="../../scripts/ext-ux/MultiselectItemSelector-3.0/DDView.js"></script>
         <script type="text/javascript" src="../../scripts/ext-ux/TwinTriggerComboBox/TwinTriggerComboBox.js"></script>
+        <script type="text/javascript" src="../../scripts/map/Ext.ux/form/DateTime.js"></script>
     </xsl:template>
     
 	<!-- Insert required JS and CSS for Ext selection panel (ie KeywordSelectionPanel) -->

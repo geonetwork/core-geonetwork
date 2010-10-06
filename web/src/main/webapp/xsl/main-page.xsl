@@ -9,7 +9,6 @@
 	<xsl:include href="searchform_advanced.xsl"/>
 	
 	<xsl:template mode="css" match="/">
-		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/calendar/calendar-blue2.css"></link>
 		<xsl:call-template name="geoCssHeader"/>
 		<xsl:call-template name="ext-ux-css"/>
         <link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork_map.css" />
@@ -127,10 +126,6 @@
          </xsl:choose>
             
             
-		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar.js"></script>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar-setup.js"></script>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/lang/calendar-{/root/gui/language}.js"></script>
-		
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"></script>
 		
 		<xsl:variable name="wmc"><xsl:copy-of select="/root/request/wmc"/></xsl:variable>

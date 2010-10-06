@@ -35,13 +35,10 @@
 			<tr>
 				<td/>
 				<td class="padded"><xsl:value-of select="/root/strings/from"/></td>
-				<td class="padded"><input id="{@id}.oai.from" class="content" type="text" value="{from}" size="12" readonly="on"/></td>
-				<td>
-					<img id="{@id}.oai.from.set" style="cursor:pointer;" src="{/root/env/url}/scripts/calendar/img.gif" />
-				</td>
-				<td valign="bottom">
-					<img id="{@id}.oai.from.clear" style="cursor:pointer;" src="{/root/env/url}/images/clear_left.png"/>
-				</td>
+				<td class="padded">
+				    <div id="{@id}.oai.from" class="cal"></div>
+				    <input id="{@id}.oai.from_cal" type="hidden" value="{from}"/>
+				    </td>
 			</tr>
 
 			<!-- Until field - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -49,13 +46,9 @@
 			<tr>
 				<td/>
 				<td class="padded"><xsl:value-of select="/root/strings/until"/></td>
-				<td class="padded"><input id="{@id}.oai.until" class="content" type="text" value="{until}" size="12" readonly="on"/></td>
-				<td>
-					<img id="{@id}.oai.until.set" style="cursor:pointer;" src="{/root/env/url}/scripts/calendar/img.gif" />
-				</td>
-				<td>
-					<img id="{@id}.oai.until.clear" style="cursor:pointer;" valign="middle" src="{/root/env/url}/images/clear_left.png"/>
-				</td>
+				<td class="padded">
+                    <div id="{@id}.oai.until" class="cal"></div>
+				    <input id="{@id}.oai.until_cal" type="hidden" value="{until}"/></td>
 			</tr>
 
 			<!-- Set dropdown - - - - - - - - - - - - - - - - - - - - - - - - - -->

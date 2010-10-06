@@ -846,29 +846,59 @@ function validateMetadataFields() {
 }
 
 /**
- * Init all calendar input identified by class "calendar" 
- * @return
+ * Initialize all calendar divs identified by class "cal".
+ * 
+ * All calendars are composed of one div and 2 inputs;
+ * one for the format, one for the value. According
+ * to the format, A DateTime or a DateField component
+ * are initialized.
+ * 
+ * TODO : Add vtype control for extent (start < end)
+ * 
  */
 function initCalendar() {
-	$$('input.calendar').each( function(input) {
-		var name = input['name'];
-		var format = $(name + '_format').value;
-		var showTime = (format.indexOf('T')==-1?false:true);
 
-		// Init calendar for input field and calendar icon
-		Calendar.setup({
-				inputField  : name + "_cal",
-				ifFormat    : format,
-				showsTime   : showTime,
-				button      : name + "_trigger"
-			});
-		Calendar.setup({
-				inputField  : name + "_cal",
-				ifFormat    : format,
-				showsTime   : showTime,
-				button      : name + "_cal"
-			});
-	});
+	var calendars = Ext.DomQuery.select('div.cal');
+	
+    for (var i=0; i<calendars.length; i++) {
+    	var cal = calendars[i];
+    	var id = cal.id;	// Give render div id to calendar input and change its id.
+    	cal.id = id + 'Id';	// In order to get the input if a get by id is made later (eg. gn_search.js).
+
+    	if (cal.firstChild==null || cal.childNodes.length==1) {	// Check if already initialized or not
+	    	var format = 'Y-m-d';
+	    	var formatEl = Ext.getDom(id + '_format');
+	    	if (formatEl) {
+	    		format = formatEl.value;
+	    	}
+	    	
+			var value = Ext.getDom(id + '_cal').value;
+			var showTime = (format.indexOf('T')==-1?false:true);
+			
+			if (showTime) {
+				new Ext.ux.form.DateTime({
+					renderTo: cal.id,
+				    name : id,
+				    id : id,
+				    value : value,
+		            dateFormat : 'Y-m-d',
+		            timeFormat : 'H:i',
+		            hiddenFormat : 'Y-m-d\\TH:i:s',
+		            dtSeparator : 'T'
+				});
+			} else {
+				new Ext.form.DateField({
+				    renderTo: cal,
+				    name : id,
+				    id : id,
+				    width : 160, 
+				    value : value,
+				    format : 'Y-m-d'
+				});
+			}
+			
+    	}
+	};
 }
 
 /**

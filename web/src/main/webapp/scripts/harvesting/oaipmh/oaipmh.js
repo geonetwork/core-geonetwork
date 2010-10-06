@@ -4,9 +4,6 @@
 //===
 //=====================================================================================
 
-ker.include('calendar/calendar.js');
-ker.include('calendar/calendar-setup.js');
-ker.include('calendar/lang/calendar-en.js');
 ker.include('harvesting/oaipmh/model.js');
 ker.include('harvesting/oaipmh/view.js');
 

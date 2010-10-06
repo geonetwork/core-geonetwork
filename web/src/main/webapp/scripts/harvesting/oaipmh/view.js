@@ -304,48 +304,16 @@ function addSearch(search)
 		Element.remove(id);
 	}));
 	
-	//--- setup FROM parameter
+	//--- setup FROM and UNTIL parameters
+	initCalendar();
 	
-	Calendar.setup({
-		inputField  : id+".oai.from",
-		ifFormat    : "%Y-%m-%d",
-		button      : id+".oai.from.set",
-		showsTime   : false,
-		align       : "Br",
-		singleClick : true
-	});
-	
-	Event.observe(id+'.oai.from.clear', 'click', ker.wrap(this, function()
-	{ 
-		$(id+'.oai.from') .value=''; 
-	}));
-	
-	//--- setup UNTIL parameter
-	
-	Calendar.setup({
-		inputField  : id+".oai.until",
-		ifFormat    : "%Y-%m-%d",
-		button      : id+".oai.until.set",
-		showsTime   : false,
-		align       : "Br",
-		singleClick : true
-	});
-	
-	Event.observe(id+'.oai.until.clear', 'click', ker.wrap(this, function()
-	{ 
-		$(id+'.oai.until').value=''; 
-	}));
 	
 	//--- setup dynamic tooltips
 	
 	gui.setupTooltip(id+'.oai.remove', loader.evalNode('tips/tip[@id="oai.remove"]'));
 	
 	gui.setupTooltip(id+'.oai.from',        loader.evalNode('tips/tip[@id="oai.from"]'));
-	gui.setupTooltip(id+'.oai.from.set',    loader.evalNode('tips/tip[@id="oai.from.set"]'));
-	gui.setupTooltip(id+'.oai.from.clear',  loader.evalNode('tips/tip[@id="oai.from.clear"]'));	
 	gui.setupTooltip(id+'.oai.until',       loader.evalNode('tips/tip[@id="oai.until"]'));
-	gui.setupTooltip(id+'.oai.until.set',   loader.evalNode('tips/tip[@id="oai.until.set"]'));
-	gui.setupTooltip(id+'.oai.until.clear', loader.evalNode('tips/tip[@id="oai.until.clear"]'));
 	
 	gui.setupTooltip(id+'.oai.set',    loader.evalNode('tips/tip[@id="oai.set"]'));
 	gui.setupTooltip(id+'.oai.prefix', loader.evalNode('tips/tip[@id="oai.prefix"]'));
