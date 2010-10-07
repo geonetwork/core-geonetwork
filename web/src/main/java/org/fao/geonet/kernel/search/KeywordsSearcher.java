@@ -108,7 +108,7 @@ public class KeywordsSearcher {
 			}
 
 	}
-
+	
 	public void search(ServiceContext srvContext, Element params)
 			throws Exception {
 		// Get params from request and set default

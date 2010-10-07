@@ -22,8 +22,10 @@
 
 package org.fao.geonet.kernel.search;
 
+
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
+
 import jeeves.exceptions.JeevesException;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
@@ -31,8 +33,10 @@ import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldSelector;
@@ -42,6 +46,8 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermEnum;
 import org.apache.lucene.search.Filter;
+import org.apache.lucene.util.Version;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -84,6 +90,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
+import java.util.Map.Entry;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -105,9 +112,10 @@ public class SearchManager
 	private final File     _stylesheetsDir;
 	private final File     _schemasDir;
 	private final Element  _summaryConfig;
-	private final Element  _tokenizedFields;
+	private LuceneConfig  _luceneConfig;
 	private File           _luceneDir;
 	private static PerFieldAnalyzerWrapper _analyzer;
+	private static PerFieldAnalyzerWrapper _defaultAnalyzer;
 	private String         _htmlCacheDir;
     private Spatial        _spatial;
 	private LuceneIndexReaderFactory    _indexReader;
@@ -124,42 +132,125 @@ public class SearchManager
         this._inspireEnabled = inspireEnabled;
     }
 
-	//-----------------------------------------------------------------------------
 	static {
-    // Define the default Analyzer
-
-		_analyzer = new PerFieldAnalyzerWrapper(new GeoNetworkAnalyzer());
-		// Here you could define specific analyzer for each fields stored in the index.
-		//
-		// For example adding a different analyzer for any (ie. full text search) 
-		// could be better than a standard analyzer which has a particular way of 
-		// creating tokens.
-		// In that situation, when field is "mission AD-T" is tokenized to "mission" "AD" & "T"
-		// using StandardAnalyzer.
-		// A WhiteSpaceTokenizer tokenized to "mission" "AD-T"
-		// which could be better in some situation.
-		// But when field is "mission AD-34T" is tokenized to "mission" "AD-34T" using StandardAnalyzer due to number.
-		// analyzer.addAnalyzer("any", new WhitespaceAnalyzer());
-		// 
-		// Uuid stored using a standard analyzer will be change to lower case.
-		// Whitespace will not.
-		
-		// heikki doeleman: UUID must be case insensitive, as its parts are hexadecimal numbers which
-		// are not case sensitive.
-		_analyzer.addAnalyzer("_uuid", new GeoNetworkAnalyzer());
-		_analyzer.addAnalyzer("parentUuid", new GeoNetworkAnalyzer());
-		_analyzer.addAnalyzer("operatesOn", new GeoNetworkAnalyzer());
-		_analyzer.addAnalyzer("subject", new KeywordAnalyzer());
+		_defaultAnalyzer = new PerFieldAnalyzerWrapper(new GeoNetworkAnalyzer());
+		_defaultAnalyzer.addAnalyzer("_uuid", new GeoNetworkAnalyzer());
+		_defaultAnalyzer.addAnalyzer("parentUuid", new GeoNetworkAnalyzer());
+		_defaultAnalyzer.addAnalyzer("operatesOn", new GeoNetworkAnalyzer());
+		_defaultAnalyzer.addAnalyzer("subject", new KeywordAnalyzer());
 	}
 
-	//-----------------------------------------------------------------------------
-
+	/**
+	 * 
+	 * @return	The current analyzer used by the search manager.
+	 */
 	public static PerFieldAnalyzerWrapper getAnalyzer() {
 		return _analyzer;
 	}
 
-	//-----------------------------------------------------------------------------
+	/**
+	 * 
+	 * @return	A default analyzer if no configuration is set in Lucene configuration file.
+	 */
+	public static PerFieldAnalyzerWrapper getDefaultAnalyzer() {
+		return _defaultAnalyzer;
+	}
 
+	/**
+	 * Create analyzer according to Lucene configuration.
+	 * If default analyzer class is not set a default per field analyzer is created by @see #getDefaultAnalyzer().
+	 * If error occur on default analyzer, StandardAnalyzer is used.
+	 * 
+	 */
+	private void createAnalyzer() {
+		long start = System.currentTimeMillis();
+		Log.debug(Geonet.SEARCH_ENGINE, "Analyzer initialization ...");
+		// Define the default Analyzer
+
+		String _defaultAnalyzerClass = _luceneConfig.getDefaultAnalyzerClass();
+		if (_defaultAnalyzerClass == null) {
+			_analyzer = getDefaultAnalyzer();
+		} else {
+			Analyzer da;
+
+			try {
+				Log.debug(Geonet.SEARCH_ENGINE, "Creating default analyzer:" + _defaultAnalyzerClass);
+				Class daClass = Class.forName(_defaultAnalyzerClass);
+				Class[] clTypesArray = _luceneConfig.getDefaultAnalyzerParameterClass();				
+				Object[] inParamsArray = _luceneConfig.getDefaultAnalyzerParameter(); 
+
+				try {
+					Constructor c = daClass.getConstructor(clTypesArray);
+					da = (Analyzer)c.newInstance(inParamsArray);
+				} catch (Exception e) {
+					Log.warning(Geonet.SEARCH_ENGINE, " Failed to create default analyzer: " + e.getMessage() 
+							+ ". Check Lucene configuration.");
+					e.printStackTrace();
+				}	
+			} catch (Exception e1) {
+				Log.warning(Geonet.SEARCH_ENGINE, " Error on default analyzer initialization: " + e1.getMessage()
+						+ ". Check Lucene configuration.");
+			} finally {
+				da = new StandardAnalyzer(Version.LUCENE_29);
+			}
+
+
+			_analyzer = new PerFieldAnalyzerWrapper(da);
+			for (Entry<String, String> e : _luceneConfig.getFieldSpecificAnalyzers().entrySet()) {
+				Analyzer a;
+				String field = e.getKey();
+				String aClassName = e.getValue();
+				Log.debug(Geonet.SEARCH_ENGINE, field + ":" + aClassName);
+				try {
+					Class analyzerClass = Class.forName(aClassName);
+					Class[] clTypesArray = _luceneConfig.getAnalyzerParameterClass(field + aClassName);				
+					Object[] inParamsArray = _luceneConfig.getAnalyzerParameter(field + aClassName); 
+
+					try {
+						Log.debug(Geonet.SEARCH_ENGINE, " Creating analyzer with parameters");
+						Constructor c = analyzerClass.getConstructor(clTypesArray);
+						a = (Analyzer) c.newInstance(inParamsArray);
+					} catch (Exception e2) {
+						// Try using a default constructor without parameters
+						Log.warning(Geonet.SEARCH_ENGINE, "   Failed to create analyzer: " + e2.getMessage());
+						e2.printStackTrace();
+						
+						try {
+							Log.debug(Geonet.SEARCH_ENGINE, " Creating analyzer without parameters");
+							a = (Analyzer) analyzerClass.newInstance();
+						} catch (InstantiationException e3) {
+							Log.warning(Geonet.SEARCH_ENGINE, "   Failed to create analyzer (InstantiationException): " + e3.getMessage());
+							e3.printStackTrace();
+							continue;
+						} catch (IllegalAccessException e4) {
+							Log.warning(Geonet.SEARCH_ENGINE, "   Failed to create analyzer (IllegalAccessException): " + e4.getMessage());
+							e4.printStackTrace();
+							continue;
+						} catch (Exception e5) {
+							Log.warning(Geonet.SEARCH_ENGINE, "   Failed to create analyzer (Exception): " + e5.getMessage());
+							e5.printStackTrace();
+							continue;
+						}
+					}
+					_analyzer.addAnalyzer(e.getKey(), a);
+					
+				} catch (ClassNotFoundException e1) {
+					Log.debug(Geonet.SEARCH_ENGINE, "Class " + aClassName + " not found in classpath.");
+					e1.printStackTrace();
+				} catch (SecurityException e1) {
+					Log.debug(Geonet.SEARCH_ENGINE, "SecurityException for class " + aClassName + ".");
+					e1.printStackTrace();
+				} catch (IllegalArgumentException e1) {
+					Log.debug(Geonet.SEARCH_ENGINE, "IllegalArgumentException for class " + aClassName + ".");
+					e1.printStackTrace();
+				}
+			}
+		}
+		Log.debug(Geonet.SEARCH_ENGINE, _analyzer.toString());
+		long time = System.currentTimeMillis() - start;
+		Log.debug(Geonet.SEARCH_ENGINE, "Time (ms): " + time);
+	}
+	
 	/**
 	 * @param appPath
 	 * @param luceneDir
@@ -167,18 +258,19 @@ public class SearchManager
 	 * @param dataStore
 	 * @throws Exception
 	 */
-	public SearchManager(String appPath, String luceneDir, String htmlCacheDir, String summaryConfigXmlFile, String luceneConfigXmlFile, DataStore dataStore, SettingInfo si) throws Exception
+	public SearchManager(String appPath, String luceneDir, String htmlCacheDir, 
+			String summaryConfigXmlFile, LuceneConfig lc, DataStore dataStore, SettingInfo si) throws Exception
 	{
 		_summaryConfig = Xml.loadStream(new FileInputStream(new File(appPath,summaryConfigXmlFile)));
-
-		Element luceneConfig = Xml.loadStream(new FileInputStream(new File(appPath,luceneConfigXmlFile)));
-		_tokenizedFields = luceneConfig.getChild("tokenized");
+		
+		_luceneConfig = lc;
 
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
 		_schemasDir     = new File(appPath, SCHEMA_STYLESHEETS_DIR_PATH);
 
         _inspireEnabled = si.getInspireEnabled();
-
+        createAnalyzer();
+        
 		if (!_stylesheetsDir.isDirectory())
 			throw new Exception("directory " + _stylesheetsDir + " not found");
 
@@ -208,6 +300,15 @@ public class SearchManager
     }	
 	}
 
+	/**
+	 * Reload Lucene configuration:
+	 *  * update analyzer
+	 */
+	public void reloadLuceneConfiguration (LuceneConfig lc) {
+		_luceneConfig = lc;
+		createAnalyzer();
+	}
+	
 	//-----------------------------------------------------------------------------
 
 	public void end() throws Exception
@@ -305,7 +406,7 @@ public class SearchManager
 	{
 		switch (type)
 		{
-			case LUCENE: return new LuceneSearcher(this, stylesheetName, _summaryConfig, _tokenizedFields);
+			case LUCENE: return new LuceneSearcher(this, stylesheetName, _summaryConfig, _luceneConfig);
 			case Z3950:  return new Z3950Searcher(this, stylesheetName);
 			case UNUSED: return new UnusedSearcher();
 
@@ -439,7 +540,7 @@ public class SearchManager
 
 		Log.debug(Geonet.INDEX_ENGINE, "Lucene document:\n"
 				+ Xml.getString(xmlDoc));
-
+		
         return newDocument(xmlDoc);
 	}
 
@@ -758,7 +859,7 @@ public class SearchManager
 		}
 		
     _indexReader = new LuceneIndexReaderFactory(_luceneDir);
-		_indexWriter = new LuceneIndexWriterFactory(_luceneDir, _analyzer);
+		_indexWriter = new LuceneIndexWriterFactory(_luceneDir, _analyzer, _luceneConfig);
 	}
 
 	//----------------------------------------------------------------------------
@@ -818,6 +919,7 @@ public class SearchManager
 	private Document newDocument(Element xml)
 	{
 		Document doc = new Document();
+
         for (Object o : xml.getChildren()) {
             Element field = (Element) o;
             String name = field.getAttributeValue("name");
@@ -838,10 +940,10 @@ public class SearchManager
                 }
                 Field.Index index = null;
                 if (bIndex && token) {
-                    index = Field.Index.TOKENIZED;
+                    index = Field.Index.ANALYZED;
                 }
                 if (bIndex && !token) {
-                    index = Field.Index.UN_TOKENIZED;
+                    index = Field.Index.NOT_ANALYZED;
                 }
                 if (!bIndex) {
                     index = Field.Index.NO;

@@ -1,6 +1,110 @@
 <?xml version="1.0"?>
-
 <config>
+	<index>
+		<!-- 
+			The amount of memory to be used for buffering documents in memory.
+			48MB seems to be plenty for running at least two long 
+			 indexing jobs (eg. importing 20,000 records) and keeping disk 
+			 activity for lucene index writing to a minimum.
+		-->
+		<RAMBufferSizeMB>48.0d</RAMBufferSizeMB>
+
+		<!-- Determines how often segment indices are merged by addDocument(). -->
+		<MergeFactor>10</MergeFactor>
+
+		<!-- Default Lucene version to use (mainly for Analyzer creation). -->
+		<luceneVersion>29</luceneVersion>
+	</index>
+
+
+	<!-- Search parameters are applied at search time and does not need
+    an index rebuild in order to be take into account. -->
+	<search>
+		<!-- Score parameters. Turning these parameters to true, affects performance. -->
+		<!-- Set track doc score to true if score needs to be displayed in results using 
+    		geonet:info/score element -->
+		<trackDocScores>false</trackDocScores>
+		<trackMaxScore>false</trackMaxScore>
+
+		<!-- Not used because no Scorer defined -->
+		<docsScoredInOrder>false</docsScoredInOrder>
+
+		<!--
+            By default Lucene compute score according to search criteria
+            and the corresponding result set and their index content.
+            In case of search with no criteria, Lucene will return top docs
+            in index order (because none are more relevant than others).
+            
+            In order to change the score computation, a boost function could
+            be define. Boosting query needs to be loaded in classpath.
+            * RecencyBoostingQuery will promote recently modified documents
+      
+		<boostQuery name="org.fao.geonet.kernel.search.function.RecencyBoostingQuery">
+			<Param name="multiplier" type="double" value="2.0"/>
+            <Param name="maxDaysAgo" type="int" value="365"/>
+            <Param name="dayField" type="java.lang.String" value="_changeDate"/>
+        </boostQuery>
+		-->
+		
+		<!-- TODO : add boosting factor per field ? fuzzy factor per field ? -->
+		
+	</search>
+
+
+	<!-- Default analyzer to use for all fields not defined in the fieldSpecificAnalyzer section.
+		If not set, GeoNetwork use a default per field analyzer (ie. fieldSpecificAnalyzer is not
+		take into account). The default analyzer is defined in SearchManager.
+		
+		Example:
+		org.apache.lucene.analysis.fr.FrenchAnalyzer
+	-->
+	<defaultAnalyzer name="org.apache.lucene.analysis.standard.StandardAnalyzer">
+		<Param name="version" type="org.apache.lucene.util.Version"/>
+	</defaultAnalyzer>
+
+	<!-- TODO: Add a language specific analyzer according to:
+		 * metadata language
+		 * metadata elements language (ie. PT_FreeText elements)
+	-->
+
+
+	<!-- Field analyzer
+		Define here specific analyzer for each fields stored in the index
+		
+		For example adding a different analyzer for any (ie. full text search) 
+		could be better than a standard analyzer which has a particular way of 
+		creating tokens.
+		
+		In that situation, when field is "mission AD-T" is tokenized to "mission" "ad" & "t"
+		using StandardAnalyzer. A WhiteSpaceTokenizer tokenized to "mission" "AD-T"
+		which could be better in some situation. But when field is "mission AD-34T" is tokenized 
+		to "mission" "ad-34t" using StandardAnalyzer due to number.
+		
+		doeleman: UUID must be case insensitive, as its parts are hexadecimal numbers which
+		are not case sensitive. StandardAnalyzer is recommended for UUIDS.
+		
+		A list of analyzer is available http://lucene.apache.org/java/2_4_0/api/org/apache/lucene/analysis/Analyzer.html
+		Commons analyzer:
+		* org.apache.lucene.analysis.standard.StandardAnalyzer
+		* org.apache.lucene.analysis.WhitespaceAnalyzer
+		* org.apache.lucene.analysis.SimpleAnalyzer
+		* org.fao.geonet.kernel.search.GeoNetworkAnalyzer (recommended for wildcard query support)
+		
+		The analyzer must be in the classpath.
+		
+	-->
+	<fieldSpecificAnalyzer>
+		<Field name="_uuid" analyzer="org.apache.lucene.analysis.SimpleAnalyzer"/>
+		<Field name="parentUuid" analyzer="org.apache.lucene.analysis.SimpleAnalyzer"/>
+		<Field name="operatesOn" analyzer="org.apache.lucene.analysis.SimpleAnalyzer"/>
+		<Field name="operatesOnIdentifier" analyzer="org.apache.lucene.analysis.SimpleAnalyzer"/>
+
+		<Field name="any" analyzer="org.apache.lucene.analysis.standard.StandardAnalyzer">
+			<Param name="version" type="org.apache.lucene.util.Version"/>
+			<!--<Param name="stopWords" type="java.io.File" value="/path/to/stopwords/stopwords.txt"/>-->
+		</Field>
+		<Field name="subject" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
+	</fieldSpecificAnalyzer>
 
 	<!-- All Lucene fields that are tokenized must be kept here because it
        is impossible unfortunately from Lucene API to work out which fields are
@@ -8,13 +112,12 @@
 		 	 an index to do this on so since most fields are not tokenized we 
 		 	 keep a list of tokenized fields here
 	 -->
-		 
 	<tokenized>
 		<Field name="any"/>
 		<Field name="abstract"/>
 		<Field name="title"/>
 		<Field name="altTitle"/>
- 		<Field name="inspiretheme"/>
+		<Field name="inspiretheme"/>
 		<Field name="keywordType"/>
 		<Field name="orgName"/>
 		<Field name="specificationTitle"/>

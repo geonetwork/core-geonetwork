@@ -67,7 +67,7 @@ public class Insert implements Service {
 		Dbms dbms = (Dbms) context.getResourceManager()
 				.open(Geonet.Res.MAIN_DB);
 
-		String query = "Select count(*) exist from Relations where id=? and relatedId=?";
+		String query = "Select count(*) as exist from Relations where id=? and relatedId=?";
 		Element record = dbms.select(query, parentId, childId).getChild("record");
 		boolean exist = false;
 		if (record.getChild("exist").getText().equals("1")) {

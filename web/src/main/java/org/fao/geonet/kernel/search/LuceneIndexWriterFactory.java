@@ -21,28 +21,29 @@ public class LuceneIndexWriterFactory {
 	protected int _count;
 	private File _luceneDir;
 	private PerFieldAnalyzerWrapper _analyzer;
-		
+	private LuceneConfig _luceneConfig;
+	
 	// true iff optimization is in progress
 	private boolean _optimizing = false; 
 	private Object  _mutex = new Object(); 
-
 	
-	public LuceneIndexWriterFactory(File luceneDir, PerFieldAnalyzerWrapper analyzer) {
+	
+	public LuceneIndexWriterFactory(File luceneDir, PerFieldAnalyzerWrapper analyzer, LuceneConfig luceneConfig) {
 		_luceneDir = luceneDir;
 		_analyzer = analyzer;
+		_luceneConfig = luceneConfig;
 	}
 
 	public synchronized void openWriter() throws Exception {
 		if (_count == 0) {
 			_writer = new IndexWriter(FSDirectory.open(_luceneDir), _analyzer, IndexWriter.MaxFieldLength.UNLIMITED);
-			_writer.setRAMBufferSizeMB(48.0d); 
-			// 48MB seems to be plenty for running at least two long 
-			// indexing jobs (eg. importing 20,000 records) and keeping disk 
-			// activity for lucene index writing to a minimum - should be a config 
-			// option
+			_writer.setRAMBufferSizeMB(_luceneConfig.getRAMBufferSize());
+			_writer.setMergeFactor(_luceneConfig.getMergeFactor());
 		}
 		_count++;
-		Log.info(Geonet.INDEX_ENGINE, "Opening Index_writer, ref count "+_count+" ram in use "+_writer.ramSizeInBytes()+" docs buffered "+_writer.numRamDocs());
+		Log.info(Geonet.INDEX_ENGINE, "Opening Index_writer, ref count " + _count + " ram in use " 
+				+ _writer.ramSizeInBytes() + " docs buffered "
+				+ _writer.numRamDocs());
 	}
 
 	public synchronized boolean isOpen() {

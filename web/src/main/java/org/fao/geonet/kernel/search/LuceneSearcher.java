@@ -23,8 +23,10 @@
 
 package org.fao.geonet.kernel.search;
 
+
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -32,6 +34,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.TokenStream;
@@ -65,6 +68,7 @@ import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
@@ -74,9 +78,11 @@ import org.fao.geonet.util.JODAISODate;
 import org.jdom.Content;
 import org.jdom.Element;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.lang.reflect.Constructor;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
@@ -87,6 +93,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
 
 //==============================================================================
 // search metadata locally using lucene
@@ -112,10 +119,11 @@ public class LuceneSearcher extends MetaSearcher
   private String        _language;
 
 	private HashSet<String>	_tokenizedFieldSet;
-
+	private LuceneConfig _luceneConfig;
+	private String _boostQueryClass;
 	//--------------------------------------------------------------------------------
 	// constructor
-	public LuceneSearcher (SearchManager sm, String styleSheetName, Element summaryConfig, Element tokenizedFields)
+	public LuceneSearcher (SearchManager sm, String styleSheetName, Element summaryConfig, LuceneConfig luceneConfig)
 	{
 		_sm             = sm;
 		_styleSheetName = styleSheetName;
@@ -128,14 +136,9 @@ public class LuceneSearcher extends MetaSearcher
 		};
 
 		// build _tokenizedFieldSet
-		_tokenizedFieldSet = new HashSet<String>();
-		for ( int i = 0; i < tokenizedFields.getContentSize(); i++ ) {
-			Object o = tokenizedFields.getContent(i);
-			if (o instanceof Element) {
-				Element elem = (Element)o;
-				_tokenizedFieldSet.add(elem.getAttributeValue("name")); 
-			}
-		}
+		_luceneConfig = luceneConfig;
+		_boostQueryClass = _luceneConfig.getBoostQueryClass();
+		_tokenizedFieldSet = luceneConfig.getTokenizedField();
 	}
 
 	//--------------------------------------------------------------------------------
@@ -203,10 +206,11 @@ public class LuceneSearcher extends MetaSearcher
 	
 					if (md != null) {
 						// Calculate score and add it to info elem
-						Float score = tdocs.scoreDocs[i].score;
-						Element info = md.getChild (Edit.RootChild.INFO, Edit.NAMESPACE);
-						addElement(info, Edit.Info.Elem.SCORE, score.toString());
-
+						if (_luceneConfig.isTrackDocScores()) {
+							Float score = tdocs.scoreDocs[i].score;
+							Element info = md.getChild (Edit.RootChild.INFO, Edit.NAMESPACE);
+							addElement(info, Edit.Info.Elem.SCORE, score.toString());
+						}
 						response.addContent(md);
 					}
 				}
@@ -314,21 +318,54 @@ public class LuceneSearcher extends MetaSearcher
 			Log.debug(Geonet.SEARCH_ENGINE, "CRITERIA:\n"+ Xml.getString(request));
 
 			if (_styleSheetName.equals(Geonet.File.SEARCH_Z3950_SERVER)) {
-        // Construct Lucene query by XSLT, not Java, for Z3950 anyway :-)
+				// Construct Lucene query by XSLT, not Java, for Z3950 anyway :-)
 				Element xmlQuery = _sm.transform(_styleSheetName, request);
 				Log.debug(Geonet.SEARCH_ENGINE, "XML QUERY:\n"+ Xml.getString(xmlQuery));
 				_query = makeQuery(xmlQuery, SearchManager.getAnalyzer(), _tokenizedFieldSet);
 			} else {
-        // Construct Lucene query by Java, not XSLT
-        _query = new LuceneQueryBuilder(_tokenizedFieldSet, SearchManager.getAnalyzer()).build(request);
+		        // Construct Lucene query by Java, not XSLT
+				_query = new LuceneQueryBuilder(_tokenizedFieldSet, _sm.getAnalyzer()).build(request);
 			}
+		    
+			// Boosting query
+			if (_boostQueryClass != null) {
+				try {
+					Log.debug(Geonet.SEARCH_ENGINE, "Create boosting query:" + _boostQueryClass);
+					Class boostClass = Class.forName(_boostQueryClass);
+					Class[] clTypesArray = _luceneConfig.getBoostQueryParameterClass();				
+					Object[] inParamsArray = _luceneConfig.getBoostQueryParameter(); 
 
+					Class[] clTypesArrayAll = new Class[clTypesArray.length + 1];
+					clTypesArrayAll[0] = Class.forName("org.apache.lucene.search.Query");
 
-      // Use RegionsData rather than fetching from the DB everytime
-      //
-      //request.addContent(Lib.db.select(dbms, "Regions", "region"));
-      Element regions = RegionsData.getRegions(dbms);
-      request.addContent(regions);
+					for (int j=0; j<clTypesArray.length; j++) {
+						clTypesArrayAll[j+1] = clTypesArray[j];
+					}
+					Object[] inParamsArrayAll = new Object[inParamsArray.length + 1];
+					inParamsArrayAll[0] = _query;
+					for (int j=0; j<inParamsArray.length; j++) {
+						inParamsArrayAll[j+1] = inParamsArray[j];
+					}
+					try {
+						Log.debug(Geonet.SEARCH_ENGINE, "Creating boost query with parameters:" + inParamsArrayAll.toString());
+						Constructor c = boostClass.getConstructor(clTypesArrayAll);
+						_query = (Query) c.newInstance(inParamsArrayAll);
+					} catch (Exception e) {
+						Log.warning(Geonet.SEARCH_ENGINE, " Failed to create boosting query: " + e.getMessage() 
+								+ ". Check Lucene configuration");
+						e.printStackTrace();
+					}	
+				} catch (Exception e1) {
+					Log.warning(Geonet.SEARCH_ENGINE, " Error on boosting query initialization: " + e1.getMessage()
+							+ ". Check Lucene configuration");
+				}
+			}
+			
+		    // Use RegionsData rather than fetching from the DB everytime
+		    //
+		    //request.addContent(Lib.db.select(dbms, "Regions", "region"));
+		    Element regions = RegionsData.getRegions(dbms);
+		    request.addContent(regions);
 		}
 
 		if (srvContext != null)
@@ -405,7 +442,11 @@ public class LuceneSearcher extends MetaSearcher
 			numHits = endHit;
 		}
 
-		Pair<TopDocs,Element> results = doSearchAndMakeSummary( numHits, startHit, endHit, _maxSummaryKeys, _language, _resultType, _summaryConfig, _reader, _query, cFilter, _sort, buildSummary);
+		Pair<TopDocs,Element> results = doSearchAndMakeSummary( numHits, startHit, endHit, 
+				_maxSummaryKeys, _language, _resultType, _summaryConfig, 
+				_reader, _query, cFilter, _sort, buildSummary,
+				_luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()
+		);
 		TopDocs hits = results.one();
 		_elSummary = results.two();
 		_numHits = Integer.parseInt(_elSummary.getAttributeValue("count"));
@@ -744,6 +785,9 @@ public class LuceneSearcher extends MetaSearcher
 	 * @param cFilter
 	 * @param sort	the sort criteria
 	 * @param buildSummary	true to build query summary element. Summary is stored in the second element of the returned Pair.
+	 * @param trackDocScore	specifies whether document scores should be tracked and set on the results. 
+	 * @param trackMaxScore	specifies whether the query's maxScore should be tracked and set on the resulting TopDocs.
+	 * @param docsScoredInOrder	specifies whether documents are scored in doc Id order or not by the given Scorer
 	 *
 	 * @return	the topDocs for the search. When building summary, topDocs will contains all search hits
 	 * and need to be filtered to return only required hits according to search parameters.
@@ -752,11 +796,12 @@ public class LuceneSearcher extends MetaSearcher
 	 */
 	public static Pair<TopDocs, Element> doSearchAndMakeSummary(int numHits, int startHit, int endHit, int maxSummaryKeys, 
 			String langCode, String resultType, Element summaryConfig, 
-			IndexReader reader, Query query, CachingWrapperFilter cFilter, Sort sort, boolean buildSummary) throws Exception
+			IndexReader reader, Query query, CachingWrapperFilter cFilter, Sort sort, boolean buildSummary,
+			boolean trackDocScores, boolean trackMaxScore, boolean docsScoredInOrder) throws Exception
 	{
 
 		Log.debug(Geonet.SEARCH_ENGINE, "Setting up the TFC with numHits "+numHits);
-		TopFieldCollector tfc = TopFieldCollector.create(sort, numHits, true, false, false, false);
+		TopFieldCollector tfc = TopFieldCollector.create(sort, numHits, true, trackDocScores, trackMaxScore, docsScoredInOrder);
 
 		new IndexSearcher(reader).search(query, cFilter, tfc); 
 
@@ -875,7 +920,7 @@ public class LuceneSearcher extends MetaSearcher
 
 			MapFieldSelector selector = new MapFieldSelector(fieldnames); 
 
-			File luceneDir = new File(appPath + "WEB-INF/lucene/nonspatial");
+			File luceneDir = new File(appPath + "WEB-INF/lucene/nonspatial");	// FIXME
 			IndexReader reader = IndexReader.open(luceneDir);
       Searcher searcher = new IndexSearcher(reader);
 

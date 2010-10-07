@@ -138,8 +138,7 @@
 				<xsl:for-each select="gmd:keyword/gco:CharacterString|gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
                     <xsl:variable name="keywordLower" select="translate(string(.),$upper,$lower)"/>
                     <Field name="keyword" string="{string(.)}" store="true" index="true" token="false"/>
-					<Field name="subject" string="{string(.)}" store="true" index="true" token="false"/>
-
+					
                     <xsl:if test="$inspire='true'">
                         <xsl:if test="string-length(.) &gt; 0">
                             <xsl:if test="$keywordLower='coordinate reference systems' or $keywordLower='geographical grid systems' or $keywordLower='geographical names' or $keywordLower='administrative units' or $keywordLower='addresses' or $keywordLower='cadastral parcels' or $keywordLower='transport networks' or $keywordLower='hydrography' or $keywordLower='protected sites'">
@@ -185,17 +184,11 @@
 				</xsl:otherwise>
 			</xsl:choose>
 
-			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
-			
-			<xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode|
-								gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString">
-				<Field name="subject" string="{string(.)}" store="true" index="true" token="false"/>
-			</xsl:for-each>
-			
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
 			<xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
 				<Field name="topicCat" string="{string(.)}" store="true" index="true" token="false"/>
+				<Field name="keyword" string="{string(.)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		

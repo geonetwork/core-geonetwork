@@ -52,6 +52,7 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -73,6 +74,7 @@ import java.util.StringTokenizer;
 
 public class CatalogSearcher {
 	private Element _summaryConfig;
+	private LuceneConfig	_luceneConfig;
 	private HashSet<String> _tokenizedFieldSet;
 	private FieldSelector _selector;
 	private Query         _query;
@@ -81,7 +83,7 @@ public class CatalogSearcher {
 	private Sort          _sort;
 	private String        _lang;
 
-	public CatalogSearcher(File summaryConfig, File luceneConfig) {
+	public CatalogSearcher(File summaryConfig, LuceneConfig luceneConfig) {
 		try {
 			if (summaryConfig != null)
 				_summaryConfig = Xml.loadStream(new FileInputStream(
@@ -91,24 +93,9 @@ public class CatalogSearcher {
 					"Error reading summary configuration file", e);
 		}
 
-		_tokenizedFieldSet = new HashSet<String>();
-		try {
-			if (luceneConfig != null) {
-				Element config = Xml.loadStream(new FileInputStream(luceneConfig));
-				Element fields = config.getChild("tokenized");
-				for ( int i = 0; i < fields.getContentSize(); i++ ) {
-					Object o = fields.getContent(i);
-					if (o instanceof Element) {
-						Element elem = (Element)o;
-						_tokenizedFieldSet.add(elem.getAttributeValue("name")); 
-					}
-				}
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(
-					"Error reading tokenized fields file", e);
-		}
-
+		_luceneConfig = luceneConfig;
+		_tokenizedFieldSet = luceneConfig.getTokenizedField();
+		
 		_selector = new FieldSelector() {
 			public final FieldSelectorResult accept(String name) {
 				if (name.equals("_id")) return FieldSelectorResult.LOAD;
@@ -117,6 +104,10 @@ public class CatalogSearcher {
 		};
 	}
 
+	public void reloadLuceneConfiguration(LuceneConfig lc) {
+		_tokenizedFieldSet = lc.getTokenizedField();
+	}
+	
 	// ---------------------------------------------------------------------------
 	// ---
 	// --- Main search method
@@ -180,7 +171,11 @@ public class CatalogSearcher {
 
         Pair<TopDocs, Element> searchResults =
 			LuceneSearcher.doSearchAndMakeSummary( 
-					maxHits, 0, maxHits, Integer.MAX_VALUE, _lang, ResultType.RESULTS.toString(), _summaryConfig, _reader, _query, _filter, _sort, false);
+					maxHits, 0, maxHits, Integer.MAX_VALUE, 
+					_lang, ResultType.RESULTS.toString(), _summaryConfig, 
+					_reader, _query, _filter, _sort, false,
+					_luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()
+			);
 		TopDocs tdocs = searchResults.one();
 		Element summary = searchResults.two();
 
@@ -388,7 +383,13 @@ public class CatalogSearcher {
 		_sort = sort;
 		_lang = context.getLanguage();
 	
-		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1, maxRecords, Integer.MAX_VALUE, context.getLanguage(), resultType.toString(), _summaryConfig, _reader, query, cFilter, sort, buildSummary);
+		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(
+				numHits, startPosition - 1, maxRecords, Integer.MAX_VALUE, 
+				context.getLanguage(), resultType.toString(), _summaryConfig, 
+				_reader, query, cFilter, sort, buildSummary,
+				
+				_luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()		
+		);
 		TopDocs hits = searchResults.one();
 		Element summary = searchResults.two();
 

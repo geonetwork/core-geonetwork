@@ -42,6 +42,7 @@ import org.fao.geonet.kernel.csw.services.GetRecordById;
 import org.fao.geonet.kernel.csw.services.GetRecords;
 import org.fao.geonet.kernel.csw.services.Harvest;
 import org.fao.geonet.kernel.csw.services.Transaction;
+import org.fao.geonet.kernel.search.LuceneConfig;
 import org.jdom.Element;
 
 import java.io.File;
@@ -61,7 +62,7 @@ public class CatalogDispatcher
 	//---
 	//---------------------------------------------------------------------------
 
-	public CatalogDispatcher(File summaryConfig, File luceneConfig)
+	public CatalogDispatcher(File summaryConfig, LuceneConfig luceneConfig)
 	{
 		register(new DescribeRecord());
 		register(new GetCapabilities());
@@ -200,4 +201,9 @@ public class CatalogDispatcher
 		return hm;
 	}
 
+
+	public void reloadLuceneConfiguration(LuceneConfig lc) {
+		GetRecords op = (GetRecords) hmServices.get("GetRecords");
+		op.getSearchController().getSearcher().reloadLuceneConfiguration(lc);
+	}
 }

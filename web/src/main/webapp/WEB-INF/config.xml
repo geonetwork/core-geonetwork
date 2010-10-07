@@ -699,6 +699,10 @@
 			<class name=".services.config.Get" />
 		</service>
 
+		<service name="lucene.config.reload">
+			<class name=".services.config.Reload" />
+		</service>
+		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.config.set">

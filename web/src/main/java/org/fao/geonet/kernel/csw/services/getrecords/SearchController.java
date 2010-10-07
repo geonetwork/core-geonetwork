@@ -40,6 +40,7 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.jdom.Content;
 import org.jdom.Element;
@@ -56,11 +57,15 @@ public class SearchController
 {
     
 	private final CatalogSearcher _searcher;
-    public SearchController(File summaryConfig, File luceneConfig)
+    public SearchController(File summaryConfig, LuceneConfig luceneConfig)
     {
         _searcher = new CatalogSearcher(summaryConfig, luceneConfig);
     }
 	
+    public CatalogSearcher getSearcher() {
+    	return _searcher;
+    }
+    
 	//---------------------------------------------------------------------------
     //---
     //--- Single public method to perform the general search tasks

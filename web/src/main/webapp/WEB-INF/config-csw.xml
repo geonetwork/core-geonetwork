@@ -16,7 +16,7 @@
 				<!-- - - - - - - - - - - - - - -->
 				<!-- Core queryable properties -->
 				<!-- - - - - - - - - - - - - - -->
-				<parameter name="Subject" field="subject" type="SupportedISOQueryables" />
+				<parameter name="Subject" field="keyword" type="SupportedISOQueryables" />
 				<parameter name="Title" field="title" type="SupportedISOQueryables" />
 				<parameter name="Abstract" field="abstract" type="SupportedISOQueryables" />
 				<parameter name="AnyText" field="any" type="SupportedISOQueryables" />
