@@ -1,13 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>2.6.0</version>
+    <version>2.6.1-SNAPSHOT</version>
   </parent>
 
 
@@ -602,7 +600,7 @@
             </configuration>
           </execution>
 
-            <!--execution>
+            <execution>
               <id>user-docs-clean</id>
               <phase>prepare-package</phase>
               <goals>
@@ -660,7 +658,7 @@
                  </arguments>
                <workingDirectory>${basedir}/../docs/eng/developer</workingDirectory>
              </configuration>
-           </execution-->
+           </execution>
             
         </executions>      
       </plugin>
@@ -668,7 +666,7 @@
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
 <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
-<!--          <webResources>
+          <webResources>
             <resource>
               <directory>../docs/eng/users/build/html</directory>
               <targetPath>docs/eng/users</targetPath>
@@ -686,7 +684,7 @@
                 <include>readme*.html</include>
               </includes>
             </resource>
-          </webResources>   -->
+          </webResources>   
           <attachClasses>true</attachClasses>
           <warName>geonetwork</warName>
           <webappDirectory>${project.build.directory}/geonetwork</webappDirectory>
