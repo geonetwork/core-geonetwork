@@ -1030,13 +1030,24 @@ GeoNetwork.app = function() {
             ]
         });
        
+        var mapPanel = new GeoExt.MapPanel({
+		 	id: 'mappanel',
+            border:false,
+            map: map,
+            height: 150,		// Dummy initial value
+            width: 210,			// Dummy initial value
+            zoom: 2,
+            tbar: toolbar,
+            items: [mapOverlay]
+        });
+
         viewport = new Ext.Panel({
             layout: 'border',
             border: false,
             renderTo:'map_container',
             items: [{
                     region: 'west',
-                    xtype: 'panel',			
+                    xtype: 'panel',
                     collapsible: true,
                     collapseMode: "mini",
                     split:true,
@@ -1052,21 +1063,12 @@ GeoNetwork.app = function() {
                     frame: false,
                     border: false,
                     margins: '0 0 0 0',
-                    items: [{
-                        id: 'mappanel',
-                        xtype: 'gx_mappanel',
-                        map: map,
-                        tbar: toolbar,
-                        border: false,
-                        center: [155000, 463000],
-                        zoom: 2,
-                        items: [mapOverlay]
-                    }]
+                    items: [mapPanel]                  
                 }
             ]
         });
         
-        
+
         Ext.getCmp("toctree").on({
             "insert": registerRadio,
             "append": registerRadio,
@@ -1134,7 +1136,7 @@ GeoNetwork.app = function() {
             GeoNetwork.WindowManager.registerWindow("layerstyles", GeoNetwork.LayerStylesWindow, {map: map, id:"layerstyles"});
             GeoNetwork.WindowManager.registerWindow("wmstime", GeoNetwork.WMSTimeWindow, {map: map, id:"wmstime"});
             GeoNetwork.WindowManager.registerWindow("wmsinfo", GeoNetwork.WmsLayerMetadataWindow, {map: map, id:"wmsinfo"});
-            
+
             Ext.getCmp("toctree").on({
                 "insert": registerRadio,
                 "append": registerRadio,
