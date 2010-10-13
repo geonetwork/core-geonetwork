@@ -102,6 +102,8 @@ public class DbLib {
 			file = "postgres";
 		else if (url.indexOf("postgis") != -1)
 			file = "postgis";
+        else if (url.indexOf("sqlserver") != -1)
+			file = "sqlserver";
 
 		return file;
 	}
