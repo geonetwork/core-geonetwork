@@ -12,7 +12,7 @@
 				<link href="{/root/gui/url}/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
 				<link href="{/root/gui/url}/favicon.ico" rel="icon" type="image/x-icon"/>
 				<link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork.css"/>
-				<script type="text/javascript" src="http://openlayers.org/api/OpenLayers.js"/>
+				<script type="text/javascript" src="../../scripts/openlayers/OpenLayers.js"/>
 				<script type="text/javascript" src="../../scripts/test-csw.js"/>
 				<style type="text/css">
 					div.test {
