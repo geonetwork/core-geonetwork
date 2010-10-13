@@ -337,92 +337,25 @@
 			
             
             function initMapViewer() {
-                <xsl:choose>
-                    <xsl:when test="/root/gui/config/mapViewer/proj/crs/@code">
-                        var projection = "<xsl:value-of select='/root/gui/config/mapViewer/proj/crs/@code'/>";
-                    </xsl:when>
-                    <xsl:otherwise>
-                        var projection = "EPSG:4326";
-                    </xsl:otherwise>                  
-                </xsl:choose>
-                
-                <xsl:choose>
-                    <xsl:when test="/root/gui/config/mapViewer/bounds">
-                        var extent =  new OpenLayers.Bounds(<xsl:value-of select='/root/gui/config/mapViewer/bounds/@west'/>,<xsl:value-of select='/root/gui/config/mapViewer/bounds/@south'/>,<xsl:value-of select='/root/gui/config/mapViewer/bounds/@east'/>,<xsl:value-of select='/root/gui/config/mapViewer/bounds/@north'/>);
-                    </xsl:when>
-                    <xsl:otherwise>
-                        var extent = new OpenLayers.Bounds(-180,-90,180,90);
-                    </xsl:otherwise>                  
-                </xsl:choose>
-                
-                <xsl:choose>
-                    <xsl:when test="/root/gui/config/mapViewer/restrictedBounds">
-                        var restrictedExtent =  new OpenLayers.Bounds(<xsl:value-of select='/root/gui/config/mapViewer/restrictedBounds/@west'/>,<xsl:value-of select='/root/gui/config/mapViewer/restrictedBounds/@south'/>,<xsl:value-of select='/root/gui/config/mapViewer/restrictedBounds/@east'/>,<xsl:value-of select='/root/gui/config/mapViewer/restrictedBounds/@north'/>);
-                    </xsl:when>
-                    <xsl:otherwise>
-                        var restrictedExtent = extent;
-                    </xsl:otherwise>                  
-                </xsl:choose>
-                
-                var mapOptions = {
-                    projection: projection,
-                    maxExtent: extent,
-                    restrictedExtent: restrictedExtent
-                };
-                
+                var mapOptions = <xsl:value-of select='/root/gui/config/mapViewer/@options'/>;
+
                 // Init projection list
                 <xsl:for-each select="/root/gui/config/mapViewer/proj/crs">
-                GeoNetwork.ProjectionList.push(["<xsl:value-of select='@code'/>","<xsl:value-of select='@name'/>"]);                
+                GeoNetwork.ProjectionList.push(["<xsl:value-of select='@code'/>","<xsl:value-of select='@name'/>"]);
                 </xsl:for-each>
-                
+
                   // Init WMS server list
                 <xsl:for-each select="/root/gui/config/mapViewer/servers/server">
-                GeoNetwork.WMSList.push(["<xsl:value-of select='@name'/>","<xsl:value-of select='@url'/>"]);                
+                GeoNetwork.WMSList.push(["<xsl:value-of select='@name'/>","<xsl:value-of select='@url'/>"]);
                 </xsl:for-each>
-                
-                // Initialize map viewer 
+
+                // Initialize map viewer
                GeoNetwork.mapViewer.init(backgroundLayers, mapOptions);
             }
-            
-            function initMapsSearch() {
-                <xsl:choose>
-                    <xsl:when test="/root/gui/config/mapSearch/proj/crs/@code">
-                        var projection = "<xsl:value-of select='/root/gui/config/mapSearch/proj/crs/@code'/>";
-                    </xsl:when>
-                    <xsl:otherwise>
-                        var projection = "EPSG:4326";
-                    </xsl:otherwise>                  
-                </xsl:choose>
-                
-                <xsl:choose>
-                    <xsl:when test="/root/gui/config/mapSearch/bounds">
-                        var extent =  new OpenLayers.Bounds(<xsl:value-of select='/root/gui/config/mapSearch/bounds/@west'/>,<xsl:value-of select='/root/gui/config/mapSearch/bounds/@south'/>,<xsl:value-of select='/root/gui/config/mapSearch/bounds/@east'/>,<xsl:value-of select='/root/gui/config/mapSearch/bounds/@north'/>);
-                    </xsl:when>
-                    <xsl:otherwise>
-                        var extent = new OpenLayers.Bounds(-180,-90,180,90);
-                    </xsl:otherwise>                  
-                </xsl:choose>
-                
-                <xsl:choose>
-                    <xsl:when test="/root/gui/config/mapSearch/restrictedBounds">
-                        var restrictedExtent =  new OpenLayers.Bounds(<xsl:value-of select='/root/gui/config/mapSearch/restrictedBounds/@west'/>,<xsl:value-of select='/root/gui/config/mapSearch/restrictedBounds/@south'/>,<xsl:value-of select='/root/gui/config/mapSearch/restrictedBounds/@east'/>,<xsl:value-of select='/root/gui/config/mapSearch/restrictedBounds/@north'/>);
-                    </xsl:when>
-                    <xsl:otherwise>
-                        var restrictedExtent = extent;
-                    </xsl:otherwise>                  
-                </xsl:choose>
-                
-                var mapOptions1 = {
-                    projection: projection,
-                    maxExtent: extent,
-                    restrictedExtent: restrictedExtent
-                };
 
-                var mapOptions2 = {
-                    projection: projection,
-                    maxExtent: extent,
-                    restrictedExtent: restrictedExtent
-                };
+            function initMapsSearch() {
+                var mapOptions1 = <xsl:value-of select='/root/gui/config/mapSearch/@options'/>;
+                var mapOptions2 = <xsl:value-of select='/root/gui/config/mapSearch/@options'/>;
 
                 // Initialize minimaps
                 GeoNetwork.minimapSimpleSearch.init("ol_minimap1", "region_simple", backgroundLayersMapSearch, mapOptions1);

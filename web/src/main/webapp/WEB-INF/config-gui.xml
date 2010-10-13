@@ -45,53 +45,43 @@
   </proj>
  </map>
  
- <!-- Configuration for small map search 
-    proj/crs:       Projection used in small map search (define only one)
-        code        CSR code
-       
-    layers/layer: 
+<!-- Configuration for small map search
+    mapSearch/@options:     OpenLayers options hash as expected in new OpenLayers.Map(div, options)
+
+    layers/layer:
         server      url of the server
         tocName     layer name in map
         params      OpenLayers params hash as expected in new OpenLayers.Layer.WMS(name, url, params, options)
         options     OpenLayers options hash as expected in new OpenLayers.Layer.WMS(name, url, params, options)
-        
-    bounds              Map extent (if not defined, default is used: west="-180" south="-90" east="180" north="90")
-    restrictedBounds    Restricted map extent (if not defined bounds value is used)
  -->
- <mapSearch>
+  <mapSearch options="{projection: 'EPSG:4326', maxExtent: new OpenLayers.Bounds(-180,-90,180,90), units: 'm', restrictedExtent: new OpenLayers.Bounds(-180,-90,180,90)}">
   <layers>
     <layer server="http://localhost:8080/geoserver/wms" tocName="Borders"  params="{layers: 'gn:gboundaries', transparent: 'true', format: 'image/png'}"  options="{}" />
     <layer server="http://localhost:8080/geoserver/wms" tocName="Ortophoto" params="{layers: 'gn:world', format: 'image/jpeg'}" options="{isBaseLayer: true}" />
   </layers>
-  <proj>
-    <crs code="EPSG:4326" />
-  </proj>
-  <bounds west="-180" south="-90" east="180" north="90" />  
  </mapSearch>
- 
-  <!-- Configuration for map viewer 
+
+  <!-- Configuration for map viewer
+    mapViewer/@options:     OpenLayers options hash as expected in new OpenLayers.Map(div, options)
+
     proj/crs:       Projections used in mapViewer
         code        CSR code
         default     Indicates the default CRS (values: 0, 1)
-        
-    layers/layer: 
+
+    layers/layer:
         server      url of the server
         tocName     layer name in map
         params      OpenLayers params hash as expected in new OpenLayers.Layer.WMS(name, url, params, options)
         options     OpenLayers options hash as expected in new OpenLayers.Layer.WMS(name, url, params, options)
-        
-    bounds              Map extent (if not defined, default is used: west="-180" south="-90" east="180" north="90")
-    restrictedBounds    Restricted map extent (if not defined bounds value is used)        
  -->
- <mapViewer>
+  <mapViewer options="{projection: 'EPSG:4326', maxExtent: new OpenLayers.Bounds(-180,-90,180,90), units: 'm', restrictedExtent: new OpenLayers.Bounds(-180,-90,180,90)}">
   <layers>
     <layer server="http://localhost:8080/geoserver/wms" tocName="Borders"  params="{layers: 'gn:gboundaries', transparent: 'true', format: 'image/png'}"  options="{}" />
     <layer server="http://localhost:8080/geoserver/wms" tocName="Ortophoto" params="{layers: 'gn:world', format: 'image/jpeg'}" options="{isBaseLayer: true}" />
   </layers>
   <proj>
     <crs code="EPSG:4326" default="1" name="WGS84 (lat/lon)" />
-  </proj>  
-  <bounds west="-180" south="-90" east="180" north="90" />  
+  </proj>
   <servers>
     <server name="NASA JPL OneEarth Web Mapping Server (WMS)" url="http://wms.jpl.nasa.gov/wms.cgi?" />
     <server name="NASA Earth Observations (NEO) WMS" url="http://neowms.sci.gsfc.nasa.gov/wms/wms?" />
