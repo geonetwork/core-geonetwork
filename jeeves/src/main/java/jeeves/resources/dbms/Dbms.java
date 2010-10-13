@@ -38,8 +38,10 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 import java.util.Vector;
+
 import jeeves.constants.Jeeves;
 import jeeves.utils.Log;
+
 import org.jdom.Element;
 
 //=============================================================================
@@ -176,26 +178,26 @@ public class Dbms
 
 	public Element select(String query) throws SQLException
 	{
-		return selectFull(query, new Hashtable(), (Object[]) null);
+		return selectFull(query, new Hashtable<String, String>(), (Object[]) null);
 	}
 
 	//--------------------------------------------------------------------------
 
 	public Element select(String query, Object... args) throws SQLException
 	{
-		return selectFull(query, new Hashtable(), args);
+		return selectFull(query, new Hashtable<String, String>(), args);
 	}
 
 	//--------------------------------------------------------------------------
 
-	public Element select(String query, Hashtable formats) throws SQLException
+	public Element select(String query, Hashtable<String, String> formats) throws SQLException
 	{
 		return selectFull(query, formats, (Object[]) null);
 	}
 
 	//--------------------------------------------------------------------------
 
-	public Element selectFull(String query, Hashtable formats, Object... args) throws SQLException
+	public Element selectFull(String query, Hashtable<String, String> formats, Object... args) throws SQLException
 	{
 		Log.debug(Log.Dbms.SELECT, "Query : "+ query);
 
@@ -281,7 +283,7 @@ public class Dbms
 	//---
 	//--------------------------------------------------------------------------
 
-	private Element buildResponse(ResultSet rs, Hashtable formats) throws SQLException
+	private Element buildResponse(ResultSet rs, Hashtable<String, String> formats) throws SQLException
 	{
 		ResultSetMetaData md = rs.getMetaData();
 
@@ -289,8 +291,8 @@ public class Dbms
 
 		//--- retrieve name and type of fields
 
-		Vector vHeaders = new Vector();
-		Vector vTypes   = new Vector();
+		Vector<String> vHeaders = new Vector<String>();
+		Vector<Integer> vTypes   = new Vector<Integer>();
 
 		for (int i = 0; i < colNum; i++)
 		{
@@ -319,7 +321,7 @@ public class Dbms
 
 	//--------------------------------------------------------------------------
 
-	private Element buildElement(ResultSet rs, int col, String name, int type, Hashtable formats) throws SQLException
+	private Element buildElement(ResultSet rs, int col, String name, int type, Hashtable<String, String> formats) throws SQLException
 	{
 		String value = null;
 
@@ -330,7 +332,7 @@ public class Dbms
 			if (date == null) value = null;
 			else
 			{
-				String format = (String)formats.get(name);
+				String format = formats.get(name);
 				SimpleDateFormat df = (format == null) ? new SimpleDateFormat(DEFAULT_DATE_FORMAT) : new SimpleDateFormat(format);
 				value = df.format(date);
 			}
@@ -341,7 +343,7 @@ public class Dbms
 			if (time == null) value = null;
 			else
 			{
-				String format = (String)formats.get(name);
+				String format = formats.get(name);
 				SimpleDateFormat df = (format == null) ? new SimpleDateFormat(DEFAULT_TIME_FORMAT) : new SimpleDateFormat(format);
 				value = df.format(time);
 			}
@@ -352,7 +354,7 @@ public class Dbms
 			if (timestamp == null) value = null;
 			else
 			{
-				String format = (String)formats.get(name);
+				String format = formats.get(name);
 				SimpleDateFormat df = (format == null) ? new SimpleDateFormat(DEFAULT_TIMESTAMP_FORMAT) : new SimpleDateFormat(format);
 				value = df.format(timestamp);
 			}
@@ -366,7 +368,7 @@ public class Dbms
 			if (rs.wasNull()) value = null;
 			else
 			{
-				String format = (String)formats.get(name);
+				String format = formats.get(name);
 				if (format == null) value = l+"";
 				else
 				{
@@ -387,7 +389,7 @@ public class Dbms
 				value = null;
 			else
 			{
-				String format = (String)formats.get(name);
+				String format = formats.get(name);
 
 				if (format == null)
 				{

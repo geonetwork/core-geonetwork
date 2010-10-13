@@ -24,6 +24,7 @@
 package jeeves.server.context;
 
 import java.util.Hashtable;
+
 import jeeves.server.resources.ProviderManager;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
@@ -41,7 +42,7 @@ public class ScheduleContext extends BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public ScheduleContext(String name, ProviderManager pm, SerialFactory sf, Hashtable contexts)
+	public ScheduleContext(String name, ProviderManager pm, SerialFactory sf, Hashtable<String, Object> contexts)
 	{
 		super(pm, sf, contexts);
 

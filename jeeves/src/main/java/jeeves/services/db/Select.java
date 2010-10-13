@@ -23,15 +23,17 @@
 
 package jeeves.services.db;
 
-import java.util.*;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Vector;
 
-import org.jdom.*;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
-import jeeves.constants.*;
-import jeeves.interfaces.*;
-import jeeves.resources.dbms.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -42,8 +44,8 @@ public class Select implements Service
 {
 	private String dbName;
 	private String query;
-	private Vector inFields;
-	private Vector outFields;
+	private Vector<Element> inFields;
+	private Vector<Element> outFields;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -55,18 +57,22 @@ public class Select implements Service
 	{
 		dbName = params.getMandatoryValue(Jeeves.Config.DB);
 		query  = params.getMandatoryValue(Jeeves.Config.QUERY);
-		Iterator i = params.getChildren(Jeeves.Config.IN_FIELDS, Jeeves.Config.FIELD);
+		List<Element> inList = params.getChildren(Jeeves.Config.IN_FIELDS, Jeeves.Config.FIELD);
 
-		inFields = new Vector();
-		if (i != null)
-			while (i.hasNext())
-				inFields.add(i.next());
-
-		i = params.getChildren(Jeeves.Config.OUT_FIELDS, Jeeves.Config.FIELD);
-		outFields = new Vector();
-		if (i != null)
-			while (i.hasNext())
-				outFields.add(i.next());
+		inFields = new Vector<Element>();
+		if (inList != null) {
+			for (Element field : inList) {
+				inFields.add(field);
+			}
+		}
+		
+		List<Element> outList = params.getChildren(Jeeves.Config.OUT_FIELDS, Jeeves.Config.FIELD);
+		outFields = new Vector<Element>();
+		if (outList != null) {
+			for (Element field : outList) {
+				outFields.add(field);
+			}
+		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -75,11 +81,12 @@ public class Select implements Service
 	//---
 	//--------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		Dbms    dbms   = (Dbms) context.getResourceManager().open(dbName);
 		Vector  vArgs  = DBUtils.scanInFields(params, inFields, null, dbms);
-		Hashtable formats = DBUtils.scanOutFields(outFields);
+		Hashtable<String, String> formats = DBUtils.scanOutFields(outFields);
 		return dbms.selectFull(query, formats, vArgs.toArray());
 	}
 }

@@ -22,18 +22,19 @@
 //==============================================================================
 
 package jeeves.server;
-import jeeves.exceptions.*;
-
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 import java.util.Vector;
+
 import jeeves.constants.ConfigFile;
+import jeeves.exceptions.JeevesException;
 import jeeves.interfaces.Schedule;
 import jeeves.server.context.ScheduleContext;
 import jeeves.server.resources.ProviderManager;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
 import jeeves.utils.Util;
+
 import org.jdom.Element;
 
 //=============================================================================
@@ -48,8 +49,8 @@ public class ScheduleManager extends Thread
 	private ProviderManager providMan;
 	private SerialFactory   serialFact;
 
-	private Vector    vSchedules = new Vector();
-	private Hashtable htContexts = new Hashtable();
+	private Vector<ScheduleInfo> vSchedules = new Vector<ScheduleInfo>();
+	private Hashtable<String, Object> htContexts = new Hashtable<String, Object>();
 
 	//--------------------------------------------------------------------------
 	//---
@@ -158,12 +159,8 @@ public class ScheduleManager extends Thread
 
 	private void doJob()
 	{
-		for(int i=0; i<vSchedules.size(); i++)
-		{
-			ScheduleInfo si = (ScheduleInfo) vSchedules.get(i);
-
-			if (--si.counter <= 0)
-			{
+		for (ScheduleInfo si : vSchedules) {
+			if (--si.counter <= 0) {
 				si.counter = si.period;
 				executeSchedule(si);
 			}

@@ -39,7 +39,7 @@ import jeeves.constants.*;
 public class Get implements Service
 {
 	String  groupName;
-	HashSet outFields;
+	HashSet<String> outFields;
 	
 	//--------------------------------------------------------------------------
 	//---
@@ -50,13 +50,11 @@ public class Get implements Service
 	public void init(String appPath, ServiceConfig params) throws Exception
 	{
 		groupName = params.getValue(Jeeves.Config.GROUP);
-		Iterator i = params.getChildren(Jeeves.Config.OUT_FIELDS, Jeeves.Config.FIELD);
-		if (i != null)
-		{
-			outFields = new HashSet();
-			while (i.hasNext())
-			{
-				Element field = (Element)i.next();
+		List<Element> l = params.getChildren(Jeeves.Config.OUT_FIELDS,
+				Jeeves.Config.FIELD);
+		if (l != null) {
+			outFields = new HashSet<String>();
+			for (Element field : l) {
 				outFields.add(field.getName());
 			}
 		}
@@ -68,6 +66,7 @@ public class Get implements Service
 	//---
 	//--------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		UserSession session = context.getUserSession();

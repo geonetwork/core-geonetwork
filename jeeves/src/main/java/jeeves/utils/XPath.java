@@ -69,11 +69,12 @@ package jeeves.utils;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.jdom.Comment;
 import org.jdom.Element;
-import org.jdom.Parent;
 import org.jdom.EntityRef;
 import org.jdom.JDOMException;
+import org.jdom.Parent;
 import org.jdom.ProcessingInstruction;
 
 
@@ -294,6 +295,7 @@ public class XPath {
 	 * target is not an Element, and therefore can't be the tree root, and therefore
 	 * it will have a parent.
 	 */
+	@SuppressWarnings("unchecked")
 	private static Element findTarget(Element parent, Object target) {
 		Element rslt = null;
 		
@@ -329,6 +331,7 @@ public class XPath {
 	 * It does check to be sure the path is absolute by verifying the
 	 * first character is '/'.
 	 */
+	@SuppressWarnings("unchecked")
 	public static Object getElement(Element root, String xpath) throws JDOMException {
 		//System.out.println("xpath is \"" + xpath + "\"");
 		
@@ -378,7 +381,9 @@ public class XPath {
 					}
 				}
 				else {
+					@SuppressWarnings("unused")
 					int doubleColon = -1;
+					@SuppressWarnings("unused")
 					int openBracket = -1;
 					
 					if ((doubleColon = pathPart.indexOf("self::node()[")) >= 0) {
@@ -435,10 +440,9 @@ public class XPath {
 					else {
 						// No index is specified, so we'll get just the first
 						// child with the given name.
-						List children = ((Element)rslt).getChildren();
+						List<Element> children = ((Element)rslt).getChildren();
 
-						for (int i = 0; i < children.size(); i++) {
-							Element child = (Element)children.get(i);
+						for (Element child : children) {
 							if (child.getQualifiedName().equals(pathPart)) {
 								rslt = child;
 								break;
@@ -551,6 +555,7 @@ public class XPath {
 	 * to Element.getChildren(String name) except that it doesn't care about
 	 * the namespace of the children.
 	 */
+	@SuppressWarnings("unchecked")
 	private static List getNamedChildren(Element parent, String name) throws JDOMException {
 		List children = new ArrayList();
 		
@@ -575,6 +580,7 @@ public class XPath {
 	 * index of the specified child (origin 1). If the child is uniquely
 	 * named, this returns -1.
 	 */
+	@SuppressWarnings("unchecked")
 	private static int computeTwinIndex(Element parent, Element child) throws JDOMException {
 		int index = -1;
 
@@ -609,6 +615,7 @@ public class XPath {
 	/**
 	 * Determines the number of the child. The leftmost sibling is 1, the next is 2, etc.
 	 */
+	@SuppressWarnings("unchecked")
 	private static int computeChildIndex(Element parent, Object child) throws JDOMException {
 		int index = -1;
 		

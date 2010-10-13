@@ -53,7 +53,7 @@ public class ServiceContext extends BasicContext
 	private String service;
 	private String ipAddress;
 	private String uploadDir;
-  private int    maxUploadSize;
+	private int    maxUploadSize;
 	private JeevesServlet servlet;
 
 	//--------------------------------------------------------------------------
@@ -62,7 +62,7 @@ public class ServiceContext extends BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public ServiceContext(String service, ProviderManager pm, SerialFactory sf, ProfileManager p, Hashtable contexts)
+	public ServiceContext(String service, ProviderManager pm, SerialFactory sf, ProfileManager p, Hashtable<String, Object> contexts)
 	{
 		super(pm, sf, contexts);
 

@@ -25,10 +25,12 @@ package jeeves.server.dispatchers;
 
 import java.util.List;
 import java.util.Vector;
+
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.GuiService;
 import jeeves.utils.Util;
+
 import org.jdom.Element;
 
 //=============================================================================
@@ -39,7 +41,7 @@ public abstract class AbstractPage
 	private String  contentType;
 	private String  testCondition;
 
-	private Vector vGuiServ = new Vector();
+	private Vector<GuiService> vGuiServ = new Vector<GuiService>();
 
 	//--------------------------------------------------------------------------
 	//---
@@ -94,7 +96,7 @@ public abstract class AbstractPage
 	/** Invokes all gui services of this page (/root/gui tag)
 	  */
 
-	public Element invokeGuiServices(ServiceContext context, Element response, List defaults)
+	public Element invokeGuiServices(ServiceContext context, Element response, List<GuiService> defaults)
 	{
 		Element root = new Element(Jeeves.Elem.GUI);
 
@@ -108,23 +110,19 @@ public abstract class AbstractPage
 
 	//---------------------------------------------------------------------------
 
-	private void invokeGuiService(ServiceContext context,  Element response, Element root, List list)
+	private void invokeGuiService(ServiceContext context,  Element response, Element root, List<GuiService> guiServices)
 	{
-		for(int i=0; i<list.size(); i++)
-		{
-			GuiService guiSrv = (GuiService) list.get(i);
-
-			try
-			{
+		for(GuiService guiSrv : guiServices){
+			try {
 				Element elGui = guiSrv.exec(response, context);
 
 				if (elGui != null)
 					root.addContent(elGui);
-			}
-			catch(Exception e)
-			{
-				ServiceManager.error("Exception executing gui service : " +e.toString());
-				ServiceManager.error(" (C) Stack trace is :\n" + Util.getStackTrace(e));
+			} catch (Exception e) {
+				ServiceManager.error("Exception executing gui service : "
+						+ e.toString());
+				ServiceManager.error(" (C) Stack trace is :\n"
+						+ Util.getStackTrace(e));
 			}
 		}
 	}

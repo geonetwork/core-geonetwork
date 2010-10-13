@@ -47,7 +47,8 @@ import jeeves.utils.*;
 
 public class RegExpReplace implements Service
 {
-	private Vector patterns, replacements;
+	private Vector<Pattern> patterns ;
+	private Vector<String> replacements;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -55,18 +56,17 @@ public class RegExpReplace implements Service
 	//---
 	//--------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	public void init(String appPath, ServiceConfig params) throws Exception
 	{
 		String  file   = params.getMandatoryValue(Jeeves.Config.FILE);
 		Element config = Xml.loadFile(appPath + file);
 
-		patterns     = new Vector();
-		replacements = new Vector();
+		patterns     = new Vector<Pattern>();
+		replacements = new Vector<String>();
 
 		// read all pattern-replacement pairs
-		for (Iterator iter = config.getChildren().iterator(); iter.hasNext(); )
-		{
-			Element expr        = (Element) iter.next();
+		for (Element expr : (List<Element>) config.getChildren()) {
 			String  pattern     = expr.getAttributeValue(Jeeves.Attr.PATTERN);
 			String  replacement = expr.getAttributeValue(Jeeves.Attr.REPLACEMENT);
 
@@ -121,11 +121,12 @@ public class RegExpReplace implements Service
 	//--------------------------------------------------------------------------
 	//--- apply all pattern-replacement pairs
 
+	@SuppressWarnings("unchecked")
 	private void replaceInElement(Element e)
 	{
 		if (e.getChildren().size() != 0)
-			for (Iterator iter = e.getChildren().iterator(); iter.hasNext(); )
-				replaceInElement((Element)iter.next());
+			for (Iterator<Element> iter = e.getChildren().iterator(); iter.hasNext(); )
+				replaceInElement(iter.next());
 		else
 		{
 			String text = e.getText();

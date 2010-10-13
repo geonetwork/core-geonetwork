@@ -85,7 +85,7 @@ class Harvester
 	public OaiPmhResult harvest() throws Exception
 	{
 		ListIdentifiersRequest req = new ListIdentifiersRequest();
-		req.setValidationSchema(new File(context.getAppPath() + Geonet.SchemaPath.OAI_PMH));
+		req.setSchemaPath(new File(context.getAppPath() + Geonet.SchemaPath.OAI_PMH));
 
 		Transport t = req.getTransport();
 		t.setUrl(new URL(params.url));
@@ -273,7 +273,7 @@ class Harvester
 			log.debug("  - Getting remote metadata with id : "+ ri.id);
 
 			GetRecordRequest req = new GetRecordRequest();
-			req.setValidationSchema(new File(context.getAppPath() + Geonet.SchemaPath.OAI_PMH));
+			req.setSchemaPath(new File(context.getAppPath() + Geonet.SchemaPath.OAI_PMH));
 			req.setTransport(t);
 			req.setIdentifier(ri.id);
 			req.setMetadataPrefix(ri.prefix);

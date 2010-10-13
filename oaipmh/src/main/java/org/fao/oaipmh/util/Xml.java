@@ -23,95 +23,91 @@
 
 package org.fao.oaipmh.util;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+
 import javax.xml.XMLConstants;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 import javax.xml.validation.ValidatorHandler;
+
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.SAXOutputter;
-import org.jdom.transform.JDOMSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-
-import org.w3c.dom.ls.LSResourceResolver;
-import org.w3c.dom.ls.LSInput;
 
 //=============================================================================
 
-/** This is a portion of the jeeves.utils.Xml class and is replicated here just
-  * to avoid the jeeves jar
-  */
+/**
+ * This is a portion of the jeeves.utils.Xml class and is replicated here just
+ * to avoid the jeeves jar
+ * 
+ */
+public class Xml {
+	// ---------------------------------------------------------------------------
+	// ---
+	// --- API methods
+	// ---
+	// ---------------------------------------------------------------------------
 
-public class Xml
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+	/**
+	 * Loads an xml stream and returns its root node (validates the xml with a
+	 * dtd)
+	 */
 
-	/** Loads an xml stream and returns its root node (validates the xml with a dtd) */
-
-	public static Element loadStream(InputStream input) throws IOException, JDOMException
-	{
+	public static Element loadStream(InputStream input) throws IOException,
+			JDOMException {
 		SAXBuilder builder = new SAXBuilder();
-		Document   jdoc    = builder.build(input);
+		Document jdoc = builder.build(input);
 
 		return (Element) jdoc.getRootElement().detach();
 	}
 
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
 	/** Converts an xml element to a string */
 
-//	public static String getString(Element data)
-//	{
-//		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
-//
-//		return outputter.outputString(data);
-//	}
+	// public static String getString(Element data)
+	// {
+	// XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+	//
+	// return outputter.outputString(data);
+	// }
 
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
 
-//	public static String getString(Document data)
-//	{
-//		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
-//
-//		return outputter.outputString(data);
-//	}
+	// public static String getString(Document data)
+	// {
+	// XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+	//
+	// return outputter.outputString(data);
+	// }
 
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
 
-	public static void validate(Element xml) throws IOException, SAXException, JDOMException
-	{
-		//NOTE: Create a schema object without schema file name so that schemas
-		//will be obtained from whatever locations are provided in the document
+	public static void validate(Element xml) throws IOException, SAXException,
+			JDOMException {
+		// NOTE: Create a schema object without schema file name so that schemas
+		// will be obtained from whatever locations are provided in the document
 
-		Schema    schema     = factory.newSchema();
+		Schema schema = factory.newSchema();
 		ValidatorHandler vh = schema.newValidatorHandler();
 		so = new SAXOutputter(vh);
 		so.output(xml);
 	}
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
+	// ---
+	// --- Variables
+	// ---
+	// ---------------------------------------------------------------------------
 
-	private static SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+	private static SchemaFactory factory = SchemaFactory
+			.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 	private static SAXOutputter so;
 
 }
 
-//=============================================================================
+// =============================================================================
 

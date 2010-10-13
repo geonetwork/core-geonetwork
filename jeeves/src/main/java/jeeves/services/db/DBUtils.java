@@ -23,16 +23,17 @@
 
 package jeeves.services.db;
 
-import java.util.*;
-import java.text.SimpleDateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Vector;
 
-import org.jdom.*;
-
-import jeeves.constants.*;
-import jeeves.interfaces.*;
-import jeeves.utils.*;
+import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
+import jeeves.utils.Xml;
+
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -43,6 +44,7 @@ public class DBUtils
 {
 	public static final String DEFAULT_DATE_FORMAT = "dd-MM-yyyy";
 	
+	@SuppressWarnings("unchecked")
 	public static Vector scanInFields(Element params, Vector inFields, Element result, Dbms dbms) throws Exception
 	{
 		// build argument list
@@ -131,15 +133,12 @@ public class DBUtils
 		return vArgs;
 	}
 
-	public static Hashtable scanOutFields(Vector outFields) throws Exception
+	public static Hashtable<String, String> scanOutFields(Vector<Element> outFields) throws Exception
 	{
-		Hashtable formats = new Hashtable();
+		Hashtable<String, String> formats = new Hashtable<String, String>();
 		
 		// scan fields info
-		for (int i = 0; i < outFields.size(); i++)
-		{
-			Element field = (Element)outFields.get(i);
-			
+		for (Element field : outFields) {
 			// build Field
 			String name = field.getAttributeValue(Jeeves.Attr.NAME);
 			if (name == null)

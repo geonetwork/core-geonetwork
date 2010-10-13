@@ -24,11 +24,10 @@
 package jeeves.server.sources.http;
 
 import java.io.IOException;
+
 import javax.servlet.http.HttpServletResponse;
+
 import jeeves.server.sources.ServiceRequest;
-import jeeves.utils.Xml;
-import org.jdom.Document;
-import org.jdom.Element;
 
 //=============================================================================
 

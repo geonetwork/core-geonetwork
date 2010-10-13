@@ -24,14 +24,25 @@
 package org.fao.oaipmh.util;
 
 import java.util.List;
+
 import org.fao.oaipmh.exceptions.BadResumptionTokenException;
-import org.fao.oaipmh.responses.ListResponse;
-import org.fao.oaipmh.responses.ResumptionToken;
 
 //=============================================================================
 
 public class SearchResult
 {
+	//---------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//---------------------------------------------------------------------------
+	
+	public String        prefix;
+	public List<Integer> ids;
+	
+	private String token;
+	
+	
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -64,6 +75,50 @@ public class SearchResult
 		return pos;
 	}
 
+	/**
+	 * @return the prefix
+	 */
+	public String getPrefix() {
+		return prefix;
+	}
+
+	/**
+	 * @param prefix the prefix to set
+	 */
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+
+	/**
+	 * @return the ids
+	 */
+	public List<Integer> getIds() {
+		return ids;
+	}
+
+	/**
+	 * @param ids the ids to set
+	 */
+	public void setIds(List<Integer> ids) {
+		this.ids = ids;
+	}
+
+	/**
+	 * @return the token
+	 */
+	public String getToken() {
+		return token;
+	}
+
+	/**
+	 * @param token the token to set
+	 */
+	public void setToken(String token) {
+		this.token = token;
+	}
+	
+	
+
 	//---------------------------------------------------------------------------
 
 /*
@@ -81,16 +136,6 @@ public class SearchResult
 	}
 */
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	public String        prefix;
-	public List<Integer> ids;
-
-	private String token;
 }
 
 //=============================================================================

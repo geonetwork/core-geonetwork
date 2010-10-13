@@ -23,7 +23,9 @@
 
 package jeeves.server.resources;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Map;
 
 //=============================================================================
 
@@ -35,7 +37,7 @@ public class ResourceManager
 {
 	private ProviderManager provManager;
 
-	private Hashtable htResources = new Hashtable(10, .75f);
+	private Hashtable<String, Object> htResources = new Hashtable<String, Object>(10, .75f);
 
 	//--------------------------------------------------------------------------
 	//---
@@ -114,10 +116,10 @@ public class ResourceManager
 	private void release(boolean commit) throws Exception
 	{
 		Exception errorExc = null;
-
-		for (Enumeration e=htResources.keys(); e.hasMoreElements(); )
+		
+		for (Enumeration<String> e=htResources.keys(); e.hasMoreElements(); )
 		{
-			String name     = (String)e.nextElement();
+			String name     = e.nextElement();
 			Object resource = htResources.get(name);
 
 			ResourceProvider provider = provManager.getProvider(name);
@@ -133,7 +135,7 @@ public class ResourceManager
 			}
 		}
 
-		htResources = new Hashtable(10, .75f);
+		htResources = new Hashtable<String, Object>(10, .75f);
 
 		if (errorExc != null)
 			throw errorExc;

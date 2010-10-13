@@ -29,11 +29,12 @@ package jeeves.server;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+
 import javax.servlet.ServletException;
 import javax.xml.transform.TransformerFactory;
+
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadInputEx;
@@ -49,6 +50,7 @@ import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.apache.log4j.PropertyConfigurator;
 import org.jdom.Element;
 
@@ -78,9 +80,9 @@ public class JeevesEngine
 	private SerialFactory   serialFact  = new SerialFactory();
 
 	private Logger appHandLogger = Log.createLogger(Log.APPHAND);
-	private List   appHandList   = new ArrayList();
-	private Vector vAppHandlers  = new Vector();
-	private Vector vActivators   = new Vector();
+	private List<Element> appHandList = new ArrayList<Element>();
+	private Vector<ApplicationHandler> vAppHandlers = new Vector<ApplicationHandler>();
+	private Vector<Activator> vActivators = new Vector<Activator>();
 
 	//---------------------------------------------------------------------------
 	//---
@@ -181,6 +183,7 @@ public class JeevesEngine
 
 	//---------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	private void loadConfigFile(String path, String file, ServiceManager serviceMan) throws Exception
 	{
 		file = path + file;
@@ -216,10 +219,10 @@ public class JeevesEngine
 
 		//--- init resources
 
-		List resList = configRoot.getChildren(ConfigFile.Child.RESOURCES);
+		List<Element> resList = configRoot.getChildren(ConfigFile.Child.RESOURCES);
 
 		for(int i=0; i<resList.size(); i++)
-			initResources((Element) resList.get(i));
+			initResources(resList.get(i));
 
 		//--- init app-handlers
 
@@ -227,25 +230,25 @@ public class JeevesEngine
 
 		//--- init services
 
-		List srvList = configRoot.getChildren(ConfigFile.Child.SERVICES);
+		List<Element> srvList = configRoot.getChildren(ConfigFile.Child.SERVICES);
 
 		for(int i=0; i<srvList.size(); i++)
-			initServices((Element) srvList.get(i));
+			initServices(srvList.get(i));
 
 		//--- init schedules
 
-		List schedList = configRoot.getChildren(ConfigFile.Child.SCHEDULES);
+		List<Element> schedList = configRoot.getChildren(ConfigFile.Child.SCHEDULES);
 
 		for(int i=0; i<schedList.size(); i++)
-			initSchedules((Element) schedList.get(i));
+			initSchedules(schedList.get(i));
 
 		//--- recurse on includes
 
-		List includes = configRoot.getChildren(ConfigFile.Child.INCLUDE);
+		List<Element> includes = configRoot.getChildren(ConfigFile.Child.INCLUDE);
 
 		for(int i=0; i<includes.size(); i++)
 		{
-			Element include = (Element) includes.get(i);
+			Element include = includes.get(i);
 
 			loadConfigFile(path, include.getText(), serviceMan);
 		}
@@ -300,6 +303,7 @@ public class JeevesEngine
 	/** Setup parameters from config tag (config.xml)
 	  */
 
+	@SuppressWarnings("unchecked")
 	private void initDefault(Element defaults, ServiceManager serviceMan) throws Exception
 	{
 		info("Initializing defaults...");
@@ -316,19 +320,19 @@ public class JeevesEngine
 		serviceMan.setDefaultLocal(defaultLocal);
 		serviceMan.setDefaultContType(defaultContType);
 
-		List errorPages = defaults.getChildren(ConfigFile.Default.Child.ERROR);
+		List<Element> errorPages = defaults.getChildren(ConfigFile.Default.Child.ERROR);
 
 		for(int i=0; i<errorPages.size(); i++)
-			serviceMan.addErrorPage((Element) errorPages.get(i));
+			serviceMan.addErrorPage(errorPages.get(i));
 
 		Element gui = defaults.getChild(ConfigFile.Default.Child.GUI);
 
 		if (gui != null)
 		{
-			List guiElems = gui.getChildren();
+			List<Element> guiElems = gui.getChildren();
 
 			for(int i=0; i<guiElems.size(); i++)
-				serviceMan.addDefaultGui((Element) guiElems.get(i));
+				serviceMan.addDefaultGui(guiElems.get(i));
 		}
 	}
 
@@ -341,15 +345,16 @@ public class JeevesEngine
 	/** Setup resources from the resource element (config.xml)
 	  */
 
+	@SuppressWarnings("unchecked")
 	private void initResources(Element resources)
 	{
 		info("Initializing resources...");
 
-		List resList = resources.getChildren(ConfigFile.Resources.Child.RESOURCE);
+		List<Element> resList = resources.getChildren(ConfigFile.Resources.Child.RESOURCE);
 
 		for(int i=0; i<resList.size(); i++)
 		{
-			Element res = (Element) resList.get(i);
+			Element res = resList.get(i);
 
 			String  name      = res.getChildText(ConfigFile.Resource.Child.NAME);
 			String  provider  = res.getChildText(ConfigFile.Resource.Child.PROVIDER);
@@ -398,6 +403,7 @@ public class JeevesEngine
 	//---
 	//---------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	private void initAppHandler(Element handler, JeevesServlet servlet) throws Exception
 	{
 		if (handler == null)
@@ -457,6 +463,7 @@ public class JeevesEngine
 	/** Setup services found in the services tag (config.xml)
 	  */
 
+	@SuppressWarnings("unchecked")
 	private void initServices(Element services) throws Exception
 	{
 		info("Initializing services...");
@@ -464,28 +471,23 @@ public class JeevesEngine
 		//--- get services root package
 		String pack = services.getAttributeValue(ConfigFile.Services.Attr.PACKAGE);
 
-		//--- scan services elements
-		List srvList = services.getChildren(ConfigFile.Services.Child.SERVICE);
-
-		for(int i=0; i<srvList.size(); i++)
-		{
-			Element service = (Element) srvList.get(i);
-			String  name    = service.getAttributeValue(ConfigFile.Service.Attr.NAME);
+		// --- scan services elements
+		for (Element service : (List<Element>) services
+				.getChildren(ConfigFile.Services.Child.SERVICE)) {
+			String name = service
+					.getAttributeValue(ConfigFile.Service.Attr.NAME);
 
 			info("   Adding service : " + name);
 
-			try
-			{
+			try {
 				serviceMan.addService(pack, service);
-			}
-			catch(Exception e)
-			{
+			} catch (Exception e) {
 				warning("Raised exception while registering service. Skipped.");
-				warning("   Service   : " +name);
-				warning("   Package   : " +pack);
-				warning("   Exception : " +e);
-				warning("   Message   : " +e.getMessage());
-				warning("   Stack     : " +Util.getStackTrace(e));
+				warning("   Service   : " + name);
+				warning("   Package   : " + pack);
+				warning("   Exception : " + e);
+				warning("   Message   : " + e.getMessage());
+				warning("   Stack     : " + Util.getStackTrace(e));
 			}
 		}
 	}
@@ -499,6 +501,7 @@ public class JeevesEngine
 	/** Setup schedules found in the 'schedules' element (config.xml)
 	  */
 
+	@SuppressWarnings("unchecked")
 	private void initSchedules(Element schedules) throws Exception
 	{
 		info("Initializing schedules...");
@@ -506,28 +509,23 @@ public class JeevesEngine
 		//--- get schedules root package
 		String pack = schedules.getAttributeValue(ConfigFile.Schedules.Attr.PACKAGE);
 
-		//--- scan schedules elements
-		List schedList = schedules.getChildren(ConfigFile.Schedules.Child.SCHEDULE);
-
-		for(int i=0; i<schedList.size(); i++)
-		{
-			Element schedule = (Element) schedList.get(i);
-			String  name    = schedule.getAttributeValue(ConfigFile.Schedule.Attr.NAME);
+		// --- scan schedules elements
+		for (Element schedule : (List<Element>) schedules
+				.getChildren(ConfigFile.Schedules.Child.SCHEDULE)) {
+			String name = schedule
+					.getAttributeValue(ConfigFile.Schedule.Attr.NAME);
 
 			info("   Adding schedule : " + name);
 
-			try
-			{
+			try {
 				scheduleMan.addSchedule(pack, schedule);
-			}
-			catch(Exception e)
-			{
+			} catch (Exception e) {
 				error("Raised exception while registering schedule. Skipped.");
-				error("   Schedule  : " +name);
-				error("   Package   : " +pack);
-				error("   Exception : " +e);
-				error("   Message   : " +e.getMessage());
-				error("   Stack     : " +Util.getStackTrace(e));
+				error("   Schedule  : " + name);
+				error("   Package   : " + pack);
+				error("   Exception : " + e);
+				error("   Message   : " + e.getMessage());
+				error("   Stack     : " + Util.getStackTrace(e));
 			}
 		}
 	}
@@ -568,12 +566,8 @@ public class JeevesEngine
 	/** Stop handlers
 	  */
 
-	private void stopHandlers() throws Exception
-	{
-		for (int i = 0; i < vAppHandlers.size(); i++)
-		{
-			ApplicationHandler h = (ApplicationHandler) vAppHandlers.get(i);
-
+	private void stopHandlers() throws Exception {
+		for (ApplicationHandler h : vAppHandlers) {
 			h.stop();
 		}
 	}
@@ -585,12 +579,8 @@ public class JeevesEngine
 	private void stopResources()
 	{
 		providerMan.end();
-
-		for(Iterator i=vActivators.iterator(); i.hasNext();)
-		{
-			Activator a = (Activator) i.next();
-
-			info("   Stopping activator : "+ a.getClass().getName());
+		for (Activator a : vActivators) {
+			info("   Stopping activator : " + a.getClass().getName());
 			a.shutdown();
 		}
 	}
@@ -630,7 +620,6 @@ public class JeevesEngine
 	//---
 	//---------------------------------------------------------------------------
 
-	private void debug  (String message) { Log.debug  (Log.ENGINE, message); }
 	private void info   (String message) { Log.info   (Log.ENGINE, message); }
 	private void warning(String message) { Log.warning(Log.ENGINE, message); }
 	private void error  (String message) { Log.error  (Log.ENGINE, message); }

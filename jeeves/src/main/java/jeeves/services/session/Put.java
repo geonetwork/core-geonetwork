@@ -23,13 +23,17 @@
 
 package jeeves.services.session;
 
-import java.util.*;
-import org.jdom.*;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.List;
 
-import jeeves.interfaces.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-import jeeves.constants.*;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -39,7 +43,7 @@ import jeeves.constants.*;
 public class Put implements Service
 {
 	String  groupName;
-	HashSet inFields;
+	HashSet<String> inFields;
 	
 	//--------------------------------------------------------------------------
 	//---
@@ -50,13 +54,10 @@ public class Put implements Service
 	public void init(String appPath, ServiceConfig params) throws Exception
 	{
 		groupName = params.getMandatoryValue(Jeeves.Config.GROUP);
-		Iterator i = params.getChildren(Jeeves.Config.IN_FIELDS, Jeeves.Config.FIELD);
-		if (i != null)
-		{
-			inFields = new HashSet();
-			while (i.hasNext())
-			{
-				Element field = (Element)i.next();
+		List<Element> l = params.getChildren(Jeeves.Config.IN_FIELDS, Jeeves.Config.FIELD);
+		if (l != null) {
+			inFields = new HashSet<String>();
+			for (Element field : l) {
 				inFields.add(field.getName());
 			}
 		}
@@ -68,17 +69,19 @@ public class Put implements Service
 	//---
 	//--------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		UserSession session = context.getUserSession();
 		
-		Hashtable group = (Hashtable)session.getProperty(groupName);
-		if (group == null) group = new Hashtable();
-		for (Iterator i = params.getChildren().iterator(); i.hasNext(); )
-		{
-			Element child = (Element)i.next();
-			if (inFields == null || inFields.contains(child.getName()))
-				 group.put(child.getName(), child);
+		Hashtable<String, Element> group = (Hashtable<String, Element>) session.getProperty(groupName);
+		if (group == null) { 
+			group = new Hashtable<String, Element>();
+		}
+		for (Element child : (List<Element>) params.getChildren()) {
+			if (inFields == null || inFields.contains(child.getName())) {
+				group.put(child.getName(), child);
+			}
 		}
 		session.setProperty(groupName, group);
 		

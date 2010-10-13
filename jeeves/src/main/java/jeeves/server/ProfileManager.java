@@ -23,11 +23,19 @@
 
 package jeeves.server;
 
-import java.util.*;
-import org.jdom.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
 
-import jeeves.utils.*;
-import jeeves.constants.*;
+import jeeves.constants.Jeeves;
+import jeeves.constants.Profiles;
+import jeeves.utils.Xml;
+
+import org.jdom.Attribute;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -39,7 +47,7 @@ public class ProfileManager
 	public static final String GUEST = "Guest";
 	public static final String ADMIN = "Administrator";
 
-	private Hashtable htProfiles;
+	private Hashtable<String, Element> htProfiles;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -51,13 +59,14 @@ public class ProfileManager
 	  * putting data in memory into a convenient way
 	  */
 
+	@SuppressWarnings("unchecked")
 	public ProfileManager(String profilesFile) throws Exception
 	{
 		Element elProfiles = Xml.loadFile(profilesFile);
 
-		htProfiles  = new Hashtable(50);
+		htProfiles  = new Hashtable<String, Element>(50);
 
-		List profList = elProfiles.getChildren(Profiles.Elem.PROFILE);
+		List<Element> profList = elProfiles.getChildren(Profiles.Elem.PROFILE);
 
 		for(int i=0; i<profList.size(); i++)
 		{
@@ -88,13 +97,10 @@ public class ProfileManager
 	 */
 	public String getCorrectCase(String profile)
 	{
-		Set keys = htProfiles.keySet();
-		for (Object key : keys)
-		{
-			String keyStr = (String) key;
-			if (keyStr.equalsIgnoreCase(profile))
-			{
-				return keyStr;
+		Set<String> keys = htProfiles.keySet();
+		for (String key : keys) {
+			if (key.equalsIgnoreCase(profile)) {
+				return key;
 			}
 		}
 		
@@ -105,20 +111,17 @@ public class ProfileManager
 
 	public Element getProfilesElement(String profile)
 	{
-		Set set = getProfilesSet(profile);
+		Set<String> set = getProfilesSet(profile);
 
 		//--- build proper result
 
 		Element elResult = new Element(Jeeves.Elem.PROFILES);
 
-		for(Iterator i=set.iterator(); i.hasNext();)
-		{
-			profile = (String) i.next();
-
-			if (profile.equals(GUEST))
+		for (String p : set) {
+			if (p.equals(GUEST))
 				continue;
 
-			elResult.addContent(new Element(profile));
+			elResult.addContent(new Element(p));
 		}
 
 		return elResult;
@@ -126,10 +129,10 @@ public class ProfileManager
 
 	//--------------------------------------------------------------------------
 
-	public Set getProfilesSet(String profile)
+	public Set<String> getProfilesSet(String profile)
 	{
-		HashSet   hs = new HashSet();
-		ArrayList al = new ArrayList();
+		HashSet<String>   hs = new HashSet<String>();
+		ArrayList<String> al = new ArrayList<String>();
 
 		al.add(profile);
 
@@ -140,7 +143,7 @@ public class ProfileManager
 
 			hs.add(profile);
 
-			Element elProfile = (Element) htProfiles.get(profile);
+			Element elProfile = htProfiles.get(profile);
 
 			String extend = elProfile.getAttributeValue(Profiles.Attr.EXTENDS);
 
@@ -160,10 +163,11 @@ public class ProfileManager
 	/** Returns all services accessible by the given profile
 	  */
 
+	@SuppressWarnings("unchecked")
 	public Element getAccessibleServices(String profile)
 	{
-		HashSet   hs = new HashSet();
-		ArrayList al = new ArrayList();
+		HashSet<String>   hs = new HashSet<String>();
+		ArrayList<String> al = new ArrayList<String>();
 
 		al.add(profile);
 
@@ -176,13 +180,10 @@ public class ProfileManager
 
 			//--- scan allow list
 
-			List allowList = elProfile.getChildren(Profiles.Elem.ALLOW);
+			List<Element> allowList = elProfile.getChildren(Profiles.Elem.ALLOW);
 
-			for(int i=0; i<allowList.size(); i++)
-			{
-				Element elAllow  = (Element) allowList.get(i);
+			for (Element elAllow : allowList) {
 				String  sService = elAllow.getAttributeValue(Profiles.Attr.SERVICE);
-
 				hs.add(sService);
 			}
 
@@ -203,10 +204,9 @@ public class ProfileManager
 
 		Element elRes = new Element(Jeeves.Elem.SERVICES);
 
-		for(Iterator i=hs.iterator(); i.hasNext();)
-		{
-			String service = (String) i.next();
-			elRes.addContent(new Element(Jeeves.Elem.SERVICE).setAttribute(new Attribute(Jeeves.Attr.NAME, service)));
+		for (String service : hs) {
+			elRes.addContent(new Element(Jeeves.Elem.SERVICE)
+					.setAttribute(new Attribute(Jeeves.Attr.NAME, service)));
 		}
 
 		return elRes;
@@ -217,9 +217,10 @@ public class ProfileManager
 	  * any inheritance
 	  */
 
+	@SuppressWarnings("unchecked")
 	public boolean hasAccessTo(String profile, String service)
 	{
-		ArrayList al = new ArrayList();
+		ArrayList<String> al = new ArrayList<String>();
 		al.add(profile);
 
 		while(!al.isEmpty())
@@ -231,11 +232,9 @@ public class ProfileManager
 
 			//--- scan allow list
 
-			List allowList = elProfile.getChildren(Profiles.Elem.ALLOW);
+			List<Element> allowList = elProfile.getChildren(Profiles.Elem.ALLOW);
 
-			for(int i=0; i<allowList.size(); i++)
-			{
-				Element elAllow  = (Element) allowList.get(i);
+			for (Element elAllow : allowList) {
 				String  sService = elAllow.getAttributeValue(Profiles.Attr.SERVICE);
 
 				if (service.equals(sService))

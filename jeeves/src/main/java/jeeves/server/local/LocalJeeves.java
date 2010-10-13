@@ -4,9 +4,8 @@ import jeeves.server.JeevesEngine;
 import jeeves.server.ProfileManager;
 import jeeves.server.UserSession;
 import jeeves.utils.Xml;
-import org.jdom.Element;
 
-import java.io.File;
+import org.jdom.Element;
 
 /**
  * Provides JVM-local running/invokation of Jeeves engine.

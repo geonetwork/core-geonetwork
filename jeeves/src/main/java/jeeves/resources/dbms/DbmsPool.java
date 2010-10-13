@@ -45,7 +45,7 @@ import org.jdom.Element;
 
 public class DbmsPool implements ResourceProvider
 {
-	private Hashtable htDbms = new Hashtable(100, 0.75f);
+	private Hashtable<Dbms, Boolean> htDbms = new Hashtable<Dbms,Boolean>(100, 0.75f);
 
 	private String name;
 	private String user;
@@ -106,9 +106,9 @@ public class DbmsPool implements ResourceProvider
 	//--------------------------------------------------------------------------
 	public void end()
 	{
-		for(Enumeration e=htDbms.keys(); e.hasMoreElements();)
+		for(Enumeration<Dbms> e=htDbms.keys(); e.hasMoreElements();)
 		{
-			Dbms dbms = (Dbms)e.nextElement();
+			Dbms dbms = e.nextElement();
 			dbms.disconnect();
 		}
 	}
@@ -130,11 +130,11 @@ public class DbmsPool implements ResourceProvider
 		{
 			// try to get a free dbms
 			int i = 0;
-			for(Enumeration e=htDbms.keys(); e.hasMoreElements();)
+			for(Enumeration<Dbms> e=htDbms.keys(); e.hasMoreElements();)
 			{
 
-				Dbms    dbms   = (Dbms)    e.nextElement();
-				Boolean locked = (Boolean) htDbms.get(dbms);
+				Dbms    dbms   = e.nextElement();
+				Boolean locked = htDbms.get(dbms);
 				debug("DBMS Resource "+i+" is "+locked);
 
 				if (!locked.booleanValue())
@@ -197,7 +197,7 @@ public class DbmsPool implements ResourceProvider
         }
 		finally
 		{
-		    htDbms.put(resource, new Boolean(false));
+		    htDbms.put((Dbms) resource, new Boolean(false));
         }
 
 		synchronized(hsListeners) {
@@ -221,7 +221,7 @@ public class DbmsPool implements ResourceProvider
 		}
 		finally
 		{
-			htDbms.put(resource, new Boolean(false));
+			htDbms.put((Dbms) resource, new Boolean(false));
 		}
 
 		synchronized(hsListeners) {
@@ -263,7 +263,6 @@ public class DbmsPool implements ResourceProvider
 
 	private void debug  (String message) { Log.debug  (Log.DBMSPOOL, message); }
 	static  void info   (String message) { Log.info   (Log.DBMSPOOL, message); }
-	private void warning(String message) { Log.warning(Log.DBMSPOOL, message); }
 	static  void error  (String message) { Log.error  (Log.DBMSPOOL, message); }
 }
 

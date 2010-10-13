@@ -23,14 +23,12 @@
 
 package jeeves.server.dispatchers;
 
-import org.jdom.*;
-import jeeves.constants.*;
 
 //=============================================================================
 
- /** This class represents a single output page of a service
-  */
-
+/**
+ * This class represents a single output page of a service
+ */
 public class ErrorPage extends AbstractPage
 {
 	private int statusCode;
@@ -41,14 +39,24 @@ public class ErrorPage extends AbstractPage
 	//---
 	//--------------------------------------------------------------------------
 
+	/**
+	 * @return the statusCode
+	 */
 	public int getStatusCode() {
 		return statusCode;
 	}
 
+	/**
+	 * @param statusCode the statusCode to set
+	 */
 	public void setStatusCode(int statusCode) {
 		this.statusCode = statusCode;
 	}
 	
+	/**
+	 * @param id
+	 * @return
+	 */
 	public boolean matches(String id)
 	{
 		String test = getTestCondition();
@@ -60,6 +68,7 @@ public class ErrorPage extends AbstractPage
 
 		return test.equals(id);
 	}
+	
 }
 
 //=============================================================================

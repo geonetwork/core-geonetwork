@@ -23,15 +23,16 @@
 
 package jeeves.services.db;
 
-import java.util.*;
+import java.util.List;
+import java.util.Vector;
 
-import org.jdom.*;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
-import jeeves.constants.*;
-import jeeves.interfaces.*;
-import jeeves.resources.dbms.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -42,7 +43,7 @@ public class Execute implements Service
 {
 	private String dbName;
 	private String query;
-	private Vector inFields;
+	private Vector<Element> inFields;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -54,12 +55,12 @@ public class Execute implements Service
 	{
 		dbName = params.getMandatoryValue(Jeeves.Config.DB);
 		query  = params.getMandatoryValue(Jeeves.Config.QUERY);
-		Iterator i = params.getChildren(Jeeves.Config.IN_FIELDS, Jeeves.Config.FIELD);
+		List<Element> l = params.getChildren(Jeeves.Config.IN_FIELDS, Jeeves.Config.FIELD);
 
-		inFields = new Vector();
-		if (i != null)
-			while (i.hasNext())
-				inFields.add(i.next());
+		inFields = new Vector<Element>();
+		if (l != null)
+			for (Element field : l)
+				inFields.add(field);
 	}
 
 	//--------------------------------------------------------------------------
@@ -68,6 +69,7 @@ public class Execute implements Service
 	//---
 	//--------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		Dbms    dbms   = (Dbms) context.getResourceManager().open(dbName);

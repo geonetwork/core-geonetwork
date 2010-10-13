@@ -420,11 +420,12 @@ class Harvester
      * @param uuid 			uuid of the fragment inserted into GeoNetwork db
      * 
      */
+	@SuppressWarnings("unchecked")
 	private void insertLinkToFragmentIntoTemplate(Element templateCopy, String matchId, String uuid, String title) throws Exception {
 
 		// find all elements that have an attribute id with the matchId
 		log.info("Attempting to search metadata for "+matchId);
-		List<Element> elems = Xml.selectNodes(templateCopy,"*//*[@id='"+matchId+"']", theNss);
+		List<Element> elems = (List<Element>) Xml.selectNodes(templateCopy,"*//*[@id='"+matchId+"']", theNss);
 
 		// for each of these elements...
 		for (Element elem : elems) {

@@ -2,18 +2,18 @@
 
 package jeeves.services.http;
 
-import java.util.*;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.List;
 
-import org.jdom.*;
-
-import jeeves.constants.*;
-import jeeves.interfaces.*;
-import jeeves.server.*;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.*;
+import jeeves.utils.Xml;
 
-import java.net.*;
-import java.io.*;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -23,8 +23,6 @@ import java.io.*;
 public class Get implements Service
 {
 	public static final String URL_PARAM_NAME = "url";
-
-	private static final int BUFSIZE = 1024;
 
 	private String configUrl;
 
@@ -45,6 +43,7 @@ public class Get implements Service
 	//---
 	//--------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		// read url
@@ -55,20 +54,17 @@ public class Get implements Service
 		// add other parameters to HTTP request
 		boolean first = new URL(sUrl).getQuery() == null;
 		StringBuffer sb = new StringBuffer(sUrl);
-		for (Iterator iter = params.getChildren().iterator(); iter.hasNext(); )
-		{
-			Element child = (Element)iter.next();
-
+		for (Element child : (List<Element>) params.getChildren()) {
 			// skip the url parameter
 			if (child.getName().equals(URL_PARAM_NAME)) continue;
 
-			if (first)
-			{
+			if (first) {
 				first = false;
-				sb.append("?");
+				sb.append('?');
+			} else {
+				sb.append('&');
 			}
-			else sb.append("&");
-			sb.append(child.getName()).append("=").append(URLEncoder.encode(child.getText(), "UTF-8"));
+			sb.append(child.getName()).append('=').append(URLEncoder.encode(child.getText(), "UTF-8"));
 		}
 		URL url = new URL(sb.toString());
 		HttpURLConnection conn = (HttpURLConnection)url.openConnection();

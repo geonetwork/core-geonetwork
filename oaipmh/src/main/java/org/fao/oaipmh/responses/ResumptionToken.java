@@ -25,12 +25,11 @@ package org.fao.oaipmh.responses;
 
 import java.util.Random;
 
-import org.fao.oaipmh.util.SearchResult;
-import org.fao.oaipmh.util.ISODate;
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.exceptions.BadResumptionTokenException;
-import org.fao.oaipmh.requests.ListRecordsRequest;
 import org.fao.oaipmh.requests.TokenListRequest;
+import org.fao.oaipmh.util.ISODate;
+import org.fao.oaipmh.util.SearchResult;
 import org.jdom.Element;
 
 //=============================================================================

@@ -24,7 +24,9 @@
 package jeeves.utils;
 
 import java.util.List;
+
 import jeeves.exceptions.MissingParameterEx;
+
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -102,6 +104,7 @@ public class SOAPUtil
 
 	//---------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	public static Element unembed(Element envelope) throws MissingParameterEx
 	{
 		Namespace ns   = envelope.getNamespace();
@@ -110,12 +113,12 @@ public class SOAPUtil
 		if (body == null)
 			throw new MissingParameterEx("Body", envelope);
 
-		List list = body.getChildren();
+		List<Element> list = body.getChildren();
 
 		if (list.size() == 0)
 			throw new MissingParameterEx("*request*", body);
 
-		return (Element) list.get(0);
+		return list.get(0);
 	}
 
 	//---------------------------------------------------------------------------

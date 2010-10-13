@@ -25,6 +25,7 @@ package org.fao.oaipmh.responses;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.requests.ListMetadataFormatsRequest;
 import org.jdom.Element;
@@ -86,14 +87,15 @@ public class ListMetadataFormatsResponse extends AbstractResponse
 	//---
 	//---------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	private void build(Element response)
 	{
 		Element listMdFor = response.getChild("ListMetadataFormats", OaiPmh.Namespaces.OAI_PMH);
 
-		List mdFormats = listMdFor.getChildren("metadataFormat", OaiPmh.Namespaces.OAI_PMH);
+		List<Element> mdFormats = listMdFor.getChildren("metadataFormat", OaiPmh.Namespaces.OAI_PMH);
 
-		for (Object o : mdFormats)
-			formats.add(new MetadataFormat((Element) o));
+		for (Element el : mdFormats)
+			formats.add(new MetadataFormat(el));
 	}
 
 	//---------------------------------------------------------------------------

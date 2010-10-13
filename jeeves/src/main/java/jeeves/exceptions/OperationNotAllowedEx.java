@@ -25,6 +25,7 @@ package jeeves.exceptions;
 
 //=============================================================================
 
+@SuppressWarnings("serial")
 public class OperationNotAllowedEx extends NotAllowedEx
 {
 	//--------------------------------------------------------------------------

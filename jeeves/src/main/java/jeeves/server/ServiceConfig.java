@@ -23,18 +23,19 @@
 
 package jeeves.server;
 
-import java.util.Iterator;
-import java.util.*;
+import java.util.Hashtable;
+import java.util.List;
+
 import jeeves.constants.ConfigFile;
+
 import org.jdom.Element;
 
 //=============================================================================
 
 public class ServiceConfig
 {
-	private Vector    names    = new Vector();
-	private Hashtable values   = new Hashtable();
-	private Hashtable elements = new Hashtable();
+	private Hashtable<String, String> values   = new Hashtable<String, String>();
+	private Hashtable<String, Element> elements = new Hashtable<String, Element>();
 
 	//--------------------------------------------------------------------------
 	//---
@@ -46,6 +47,7 @@ public class ServiceConfig
 
 	//--------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	public ServiceConfig(List params)
 	{
 		for(int i=0; i<params.size(); i++)
@@ -71,7 +73,7 @@ public class ServiceConfig
 
 	public String getValue(String name)
 	{
-		return (String)values.get(name);
+		return values.get(name);
 	}
 
 	//--------------------------------------------------------------------------
@@ -100,25 +102,26 @@ public class ServiceConfig
 
 	//--------------------------------------------------------------------------
 
-	public Iterator getChildren(String paramName)
+	public List<Element> getChildren(String paramName)
 	{
 		return getChildren(paramName, null);
 	}
 
 	//--------------------------------------------------------------------------
 
-	public Iterator getChildren(String paramName, String elemName)
+	@SuppressWarnings("unchecked")
+	public List<Element> getChildren(String paramName, String elemName)
 	{
-		Element elem = (Element) elements.get(paramName);
+		Element elem = elements.get(paramName);
 
 		if (elem == null)
 			return null;
 		else
 		{
 			if (elemName == null)
-				return elem.getChildren().iterator();
+				return ((List<Element>) elem.getChildren());
 			else
-				return elem.getChildren(elemName).iterator();
+				return  ((List<Element>) elem.getChildren(elemName));
 		}
 	}
 }

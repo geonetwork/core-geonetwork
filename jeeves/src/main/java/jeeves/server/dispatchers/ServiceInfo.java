@@ -24,11 +24,12 @@
 package jeeves.server.dispatchers;
 
 import java.util.Vector;
-import jeeves.constants.ConfigFile;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+
 import org.jdom.Element;
 
 //=============================================================================
@@ -43,9 +44,9 @@ public class ServiceInfo
 	private String  sheet;
 	private boolean cache = false;
 
-	private Vector vServices= new Vector();
-	private Vector vOutputs = new Vector();
-	private Vector vErrors  = new Vector();
+	private Vector<Service> vServices= new Vector<Service>();
+	private Vector<OutputPage> vOutputs = new Vector<OutputPage>();
+	private Vector<ErrorPage> vErrors  = new Vector<ErrorPage>();
 
 	//--------------------------------------------------------------------------
 	//---
@@ -135,9 +136,7 @@ public class ServiceInfo
 
 		Element response = params;
 
-		for(int i=0; i<vServices.size(); i++)
-		{
-			Service service = (Service) vServices.get(i);
+		for(Service service : vServices) {
 			response = execService(service, response, context);
 		}
 
@@ -152,12 +151,8 @@ public class ServiceInfo
 
 	//--------------------------------------------------------------------------
 
-	public OutputPage findOutputPage(Element response) throws Exception
-	{
-		for(int i=0; i<vOutputs.size(); i++)
-		{
-			OutputPage page = (OutputPage) vOutputs.get(i);
-
+	public OutputPage findOutputPage(Element response) throws Exception {
+		for (OutputPage page : vOutputs) {
 			if (page.matches(response))
 				return page;
 		}
@@ -167,12 +162,8 @@ public class ServiceInfo
 
 	//--------------------------------------------------------------------------
 
-	public ErrorPage findErrorPage(String id)
-	{
-		for(int i=0; i<vErrors.size(); i++)
-		{
-			ErrorPage page = (ErrorPage) vErrors.get(i);
-
+	public ErrorPage findErrorPage(String id) {
+		for (ErrorPage page : vErrors) {
 			if (page.matches(id))
 				return page;
 		}
@@ -186,8 +177,10 @@ public class ServiceInfo
 
 	public boolean matches(Element request) throws Exception
 	{
-		if (match == null)	return true;
-			else					return Xml.selectBoolean(request, match);
+		if (match == null)
+			return true;
+		else
+			return Xml.selectBoolean(request, match);
 	}
 
 	//---------------------------------------------------------------------------

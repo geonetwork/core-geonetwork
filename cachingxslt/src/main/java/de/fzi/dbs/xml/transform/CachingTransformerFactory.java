@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
 public class CachingTransformerFactory extends TransformerFactoryImpl
 {
   /** Map to hold templates cache. */
-  private static Map templatesCache = new HashMap();
+  private static Map<String, TemplatesCacheEntry> templatesCache = new HashMap<String, TemplatesCacheEntry>();
 
   /** Factory logger. */
   protected static Logger logger =
@@ -133,8 +133,7 @@ public class CachingTransformerFactory extends TransformerFactoryImpl
   protected TemplatesCacheEntry read(String absolutePath)
   {
     beforeRead();
-    final TemplatesCacheEntry templatesCacheEntry =
-      (TemplatesCacheEntry) templatesCache.get(absolutePath);
+    final TemplatesCacheEntry templatesCacheEntry = templatesCache.get(absolutePath);
     afterRead();
     return templatesCacheEntry;
   }

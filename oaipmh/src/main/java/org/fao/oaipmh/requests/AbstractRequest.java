@@ -26,6 +26,7 @@ package org.fao.oaipmh.requests;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.responses.AbstractResponse;
 import org.fao.oaipmh.util.Lib;
@@ -40,27 +41,49 @@ public abstract class AbstractRequest
 {
 	//---------------------------------------------------------------------------
 	//---
+	//--- Variables
+	//---
+	//---------------------------------------------------------------------------
+
+	private File      schemaPath;
+	private Transport transport = new Transport();
+	
+	//---------------------------------------------------------------------------
+	//---
 	//--- API methods
 	//---
 	//---------------------------------------------------------------------------
 
-	public void setValidationSchema(File schemaPath)
-	{
+	/**
+	 * @return the schemaPath
+	 */
+	public File getSchemaPath() {
+		return schemaPath;
+	}
+
+
+	/**
+	 * @param schemaPath the schemaPath to set
+	 */
+	public void setSchemaPath(File schemaPath) {
 		this.schemaPath = schemaPath;
 	}
-
-	//---------------------------------------------------------------------------
-
-	public Transport getTransport() { return transport; }
-
-	//---------------------------------------------------------------------------
-
-	public void setTransport(Transport t)
-	{
-		transport = t;
+	
+	/**
+	 * @return the transport
+	 */
+	public Transport getTransport() {
+		return transport;
 	}
 
-	//---------------------------------------------------------------------------
+
+	/**
+	 * @param transport the transport to set
+	 */
+	public void setTransport(Transport transport) {
+		this.transport = transport;
+	}
+
 
 	public abstract String getVerb();
 
@@ -96,15 +119,6 @@ public abstract class AbstractRequest
 
 		return response;
 	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private File      schemaPath;
-	private Transport transport = new Transport();
 }
 
 //=============================================================================

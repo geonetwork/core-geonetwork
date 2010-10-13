@@ -27,6 +27,7 @@ import org.jdom.Element;
 
 //=============================================================================
 
+@SuppressWarnings("serial")
 public class BadSoapResponseEx extends BadResponseEx
 {
 	//--------------------------------------------------------------------------

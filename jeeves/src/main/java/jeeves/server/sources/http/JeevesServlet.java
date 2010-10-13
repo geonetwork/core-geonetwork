@@ -24,12 +24,13 @@
 package jeeves.server.sources.http;
 
 import java.io.IOException;
-import java.util.HashSet;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import jeeves.exceptions.FileUploadTooBigEx;
 import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
@@ -43,6 +44,7 @@ import jeeves.utils.Util;
 /** This is the main class. It handles http connections and inits the system
   */
 
+@SuppressWarnings("serial")
 public class JeevesServlet extends HttpServlet
 {
 	private JeevesEngine jeeves = new JeevesEngine();

@@ -24,6 +24,7 @@ package jeeves.exceptions;
 
 //=============================================================================
 
+@SuppressWarnings("serial")
 public class UserLoginEx extends NotAllowedEx
 {
 	//--------------------------------------------------------------------------

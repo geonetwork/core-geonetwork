@@ -23,14 +23,13 @@
 
 package jeeves.server.dispatchers.guiservices;
 
-import org.jdom.*;
+import jeeves.constants.ConfigFile;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
 
-import jeeves.constants.*;
-import jeeves.interfaces.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-import jeeves.server.dispatchers.*;
-import jeeves.utils.*;
+import org.jdom.Element;
 
 //=============================================================================
 

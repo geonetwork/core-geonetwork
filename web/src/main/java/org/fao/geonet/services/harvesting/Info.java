@@ -226,7 +226,7 @@ public class Info implements Service
 	private Element getMdFormats(String url, ServiceContext context) throws Exception
 	{
 		ListMetadataFormatsRequest req = new ListMetadataFormatsRequest();
-		req.setValidationSchema(oaiSchema);
+		req.setSchemaPath(oaiSchema);
 		Transport t = req.getTransport();
 		t.setUrl(new URL(url));
 		Lib.net.setupProxy(context, t);
@@ -251,7 +251,7 @@ public class Info implements Service
 		try
 		{
 			ListSetsRequest req = new ListSetsRequest();
-			req.setValidationSchema(oaiSchema);
+			req.setSchemaPath(oaiSchema);
 			Transport t = req.getTransport();
 			t.setUrl(new URL(url));
 			Lib.net.setupProxy(context, t);

@@ -24,10 +24,10 @@
 package jeeves.server.context;
 
 import java.util.Hashtable;
+
 import jeeves.interfaces.Logger;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
-import jeeves.server.resources.ResourceProvider;
 import jeeves.utils.SerialFactory;
 
 //=============================================================================
@@ -45,7 +45,7 @@ public class BasicContext
 	private   String baseUrl;
 	private   String appPath;
 
-	private Hashtable htContexts;
+	private Hashtable<String, Object> htContexts;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -53,7 +53,7 @@ public class BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public BasicContext(ProviderManager pm, SerialFactory sf, Hashtable contexts)
+	public BasicContext(ProviderManager pm, SerialFactory sf, Hashtable<String, Object> contexts)
 	{
 		resMan = new ResourceManager(pm);
 

@@ -33,14 +33,21 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
 import jeeves.exceptions.BadSoapResponseEx;
 import jeeves.exceptions.BadXmlResponseEx;
+
 import org.apache.commons.httpclient.Cookie;
+import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthPolicy;
+import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -53,11 +60,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
-import org.apache.commons.httpclient.auth.AuthPolicy;
 
 //=============================================================================
 
@@ -89,7 +91,7 @@ public class XmlRequest
 		client.setState(state);
 		client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 		client.setHostConfiguration(config);
-		List authPrefs = new ArrayList(2); 
+		List<String> authPrefs = new ArrayList<String>(2); 
 		authPrefs.add(AuthPolicy.DIGEST); 
 		authPrefs.add(AuthPolicy.BASIC); 
 		// This will exclude the NTLM authentication scheme 
@@ -497,6 +499,7 @@ public class XmlRequest
 
 	//---------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	private Element soapUnembed(Element envelope) throws BadSoapResponseEx
 	{
 		Namespace ns   = envelope.getNamespace();
@@ -505,12 +508,12 @@ public class XmlRequest
 		if (body == null)
 			throw new BadSoapResponseEx(envelope);
 
-		List list = body.getChildren();
+		List<Element> list = body.getChildren();
 
 		if (list.size() == 0)
 			throw new BadSoapResponseEx(envelope);
 
-		return (Element) list.get(0);
+		return list.get(0);
 	}
 
 	//---------------------------------------------------------------------------

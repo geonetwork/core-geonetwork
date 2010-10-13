@@ -243,11 +243,12 @@ public class FragmentHarvester {
      * @param uuid 			uuid of the fragment inserted into GeoNetwork db
      * 
      */
+	@SuppressWarnings("unchecked")
 	private void insertLinkToFragmentIntoTemplate(Element templateCopy, String matchId, String uuid, String title) throws Exception {
 
 		// find all elements that have an attribute id with the matchId
 		log.info("Attempting to search metadata for "+matchId);
-		List<Element> elems = Xml.selectNodes(templateCopy,"*//*[@id='"+matchId+"']", metadataTemplateNamespaces);
+		List<Element> elems = (List<Element>) Xml.selectNodes(templateCopy,"*//*[@id='"+matchId+"']", metadataTemplateNamespaces);
 
 		// for each of these elements...
 		for (Element elem : elems) {
@@ -274,11 +275,12 @@ public class FragmentHarvester {
      * @param fragment		Fragment to insert
      * 
      */
+	@SuppressWarnings("unchecked")
 	private void insertFragmentIntoMetadata(Element metadata, String matchId, Element fragment) throws Exception {
 		// find all elements that have an attribute id with the matchId
 		
 		log.info("Attempting to search metadata for "+matchId);
-		List<Element> elems = Xml.selectNodes(metadata,"*//*[@id='"+matchId+"']", metadataTemplateNamespaces);
+		List<Element> elems = (List<Element>) Xml.selectNodes(metadata,"*//*[@id='"+matchId+"']", metadataTemplateNamespaces);
 
 		// for each of these elements...
 		

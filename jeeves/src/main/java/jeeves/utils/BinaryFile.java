@@ -23,19 +23,25 @@
 
 package jeeves.utils;
 
-import jeeves.constants.ConfigFile;
-import java.io.*;
-import sun.misc.*;
-import org.jdom.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.Reader;
 
-import com.jcraft.jsch.*;
-
-import org.globus.ftp.Buffer;
 import org.globus.ftp.DataSink;
 import org.globus.ftp.FTPClient;
 import org.globus.ftp.Session;
+import org.jdom.Element;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.UserInfo;
 
 
 //=============================================================================

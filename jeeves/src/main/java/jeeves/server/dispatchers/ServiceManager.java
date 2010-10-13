@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
+
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.JeevesException;
@@ -40,15 +41,14 @@ import jeeves.server.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ErrorPage;
 import jeeves.server.dispatchers.guiservices.Call;
 import jeeves.server.dispatchers.guiservices.GuiService;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.resources.ProviderManager;
-import jeeves.server.sources.http.JeevesServlet;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
+import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.BLOB;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Log;
@@ -56,17 +56,19 @@ import jeeves.utils.SOAPUtil;
 import jeeves.utils.SerialFactory;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.jdom.Element;
-import org.jdom.Namespace;
 
 //=============================================================================
 
 public class ServiceManager
 {
-	private Hashtable htServices = new Hashtable(100);
-	private Hashtable htContexts = new Hashtable();
-	private Vector    vErrorPipe = new Vector();
-	private Vector    vDefaultGui= new Vector();
+	private Hashtable<String, ArrayList<ServiceInfo>> htServices = 
+		new Hashtable<String, ArrayList<ServiceInfo>>(100);
+	private Hashtable<String, Object> htContexts = 
+		new Hashtable<String, Object>();
+	private Vector<ErrorPage> vErrorPipe = new Vector<ErrorPage>();
+	private Vector<GuiService> vDefaultGui = new Vector<GuiService>();
 
 	private ProviderManager providMan;
 	private ProfileManager  profilMan;
@@ -134,6 +136,7 @@ public class ServiceManager
 	//---
 	//---------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	public void addService(String pack, Element srv) throws Exception
 	{
 		String name  = srv.getAttributeValue(ConfigFile.Service.Attr.NAME);
@@ -147,11 +150,10 @@ public class ServiceManager
 		si.setSheet(sheet);
 		si.setCache(cache);
 
-		ArrayList al = (ArrayList) htServices.get(name);
+		ArrayList<ServiceInfo> al = htServices.get(name);
 
-		if (al == null)
-		{
-			al = new ArrayList();
+		if (al == null) {
+			al = new ArrayList<ServiceInfo>();
 			htServices.put(name, al);
 		}
 
@@ -159,24 +161,27 @@ public class ServiceManager
 
 		//--- parse classes elements
 
-		List classes = srv.getChildren(ConfigFile.Service.Child.CLASS);
+		List<Element> classes = srv.getChildren(ConfigFile.Service.Child.CLASS);
 
-		for(int i=0; i<classes.size(); i++)
-			si.addService(buildService(pack, (Element) classes.get(i)));
+		for (Element classe : classes) {
+			si.addService(buildService(pack, classe));
+		}
 
 		//--- parse output pages
 
-		List outputs = srv.getChildren(ConfigFile.Service.Child.OUTPUT);
+		List<Element> outputs = srv.getChildren(ConfigFile.Service.Child.OUTPUT);
 
-		for(int i=0; i<outputs.size(); i++)
-			si.addOutputPage(buildOutputPage(pack, (Element) outputs.get(i)));
+		for(Element output : outputs) {
+			si.addOutputPage(buildOutputPage(pack, output));
+		}
 
 		//--- parse error pages
 
-		List errors = srv.getChildren(ConfigFile.Service.Child.ERROR);
+		List<Element> errors = srv.getChildren(ConfigFile.Service.Child.ERROR);
 
-		for(int j=0; j<errors.size(); j++)
-			si.addErrorPage(buildErrorPage((Element) errors.get(j)));
+		for(Element error : errors) {
+			si.addErrorPage(buildErrorPage(error));
+		}
 	}
 
 	//---------------------------------------------------------------------------
@@ -204,6 +209,7 @@ public class ServiceManager
 
 	//---------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	private OutputPage buildOutputPage(String pack, Element output) throws Exception
 	{
 		OutputPage outPage = new OutputPage();
@@ -225,10 +231,11 @@ public class ServiceManager
 
 		//--- handle children
 
-		List guiList = output.getChildren();
+		List<Element> guiList = output.getChildren();
 
-		for(int i=0; i<guiList.size(); i++)
-			outPage.addGuiService(getGuiService(pack, (Element) guiList.get(i)));
+		for(Element gui : guiList) {
+			outPage.addGuiService(getGuiService(pack, gui));
+		}
 
 		return outPage;
 	}
@@ -248,6 +255,7 @@ public class ServiceManager
 
 	//---------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	private ErrorPage buildErrorPage(Element err) throws Exception
 	{
 		ErrorPage errPage = new ErrorPage();
@@ -279,10 +287,11 @@ public class ServiceManager
 
 		//--- handle children
 
-		List guiList = err.getChildren();
+		List<Element> guiList = err.getChildren();
 
-		for(int i=0; i<guiList.size(); i++)
-			errPage.addGuiService(getGuiService("?", (Element) guiList.get(i)));
+		for(Element gui : guiList) {
+			errPage.addGuiService(getGuiService("?", gui));	
+		}
 
 		return errPage;
 	}
@@ -354,7 +363,7 @@ public class ServiceManager
 				info("Dispatching : " +srvName);
 				logParameters(req.getParams());
 
-				ArrayList al = (ArrayList) htServices.get(srvName);
+				ArrayList<ServiceInfo> al = htServices.get(srvName);
 
 				if (al == null)
 				{
@@ -362,12 +371,8 @@ public class ServiceManager
 					throw new ServiceNotFoundEx(srvName);
 				}
 
-				for(int i=0; i<al.size(); i++)
-				{
-					ServiceInfo si = (ServiceInfo) al.get(i);
-
-					if (si.matches(req.getParams()))
-					{
+				for (ServiceInfo si : al) {
+					if (si.matches(req.getParams())) {
 						srvInfo = si;
 						break;
 					}
@@ -594,8 +599,6 @@ public class ServiceManager
 					try
 					{
 						//--- first we do the transformation
-						ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
 						String file = Xml.transformFOP(uploadDir, rootElem, styleSheet);
 						response = BinaryFile.encode(200, file, "document.pdf", true);
 					}
@@ -845,9 +848,10 @@ public class ServiceManager
 
 	//---------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	private void logParameters(Element params)
 	{
-		List paramsList = params.getChildren();
+		List<Element> paramsList = params.getChildren();
 
 		if (paramsList.size() == 0)
 			debug(" -> no input parameters");

@@ -98,6 +98,7 @@ public class Record
 	//---
 	//---------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	private void build(Element record)
 	{
 		Element header = record.getChild("header",   OaiPmh.Namespaces.OAI_PMH);
@@ -109,15 +110,15 @@ public class Record
 
 		//--- store metadata
 
-		List list = mdata.getChildren();
+		List<Element> list = mdata.getChildren();
 
 		if (list.size() != 0)
-			metadata = (Element) list.get(0);
+			metadata = list.get(0);
 
 		//--- add about information
 
-		for (Object o : record.getChildren("about", OaiPmh.Namespaces.OAI_PMH))
-			abouts.add((Element) o);
+		for (Element e : (List<Element>) record.getChildren("about", OaiPmh.Namespaces.OAI_PMH))
+			abouts.add(e);
 	}
 
 	//---------------------------------------------------------------------------

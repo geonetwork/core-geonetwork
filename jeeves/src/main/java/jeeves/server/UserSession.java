@@ -24,6 +24,7 @@
 package jeeves.server;
 
 import java.util.Hashtable;
+
 import javax.servlet.http.HttpSession;
 
 //=============================================================================
@@ -33,7 +34,7 @@ import javax.servlet.http.HttpSession;
 
 public class UserSession
 {
-	private Hashtable htProperties = new Hashtable(10, .75f);
+	private Hashtable<String, Object> htProperties = new Hashtable<String, Object>(10, .75f);
 
 	private String  sUserId;
 	private String  sUsername;
@@ -56,8 +57,18 @@ public class UserSession
 	//---
 	//--------------------------------------------------------------------------
 	
-	public void setHttpSession(HttpSession httpSession) {
-		sHttpSession = httpSession;
+	/**
+	 * @return the sHttpSession
+	 */
+	public HttpSession getsHttpSession() {
+		return sHttpSession;
+	}
+
+	/**
+	 * @param sHttpSession the sHttpSession to set
+	 */
+	public void setsHttpSession(HttpSession sHttpSession) {
+		this.sHttpSession = sHttpSession;
 	}
 
 	/** Sets a generic property

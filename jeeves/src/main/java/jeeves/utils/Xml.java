@@ -23,20 +23,21 @@
 
 package jeeves.utils;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
-import java.net.URL;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
 import javax.xml.XMLConstants;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -48,17 +49,21 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.ValidatorHandler;
+
 import jeeves.exceptions.XSDValidationErrorEx;
-import org.apache.fop.apps.FopFactory;
+import net.sf.saxon.Configuration;
+import net.sf.saxon.FeatureKeys;
+
 import org.apache.fop.apps.Fop;
+import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
 import org.jdom.Namespace;
-import org.jdom.output.SAXOutputter;
+import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
+import org.jdom.output.SAXOutputter;
 import org.jdom.output.XMLOutputter;
 import org.jdom.transform.JDOMResult;
 import org.jdom.transform.JDOMSource;
@@ -66,8 +71,6 @@ import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
-import net.sf.saxon.FeatureKeys;
-import net.sf.saxon.Configuration;
 
 //=============================================================================
 
@@ -374,14 +377,14 @@ public class Xml
 
 	//---------------------------------------------------------------------------
 	/** Evaluates an XPath expression on an element and returns Elements */
-	public static List selectNodes(Element xml, String xpath, List<Namespace> theNSs) throws JDOMException {
+	public static List<?> selectNodes(Element xml, String xpath, List<Namespace> theNSs) throws JDOMException {
 		XPath xp = prepareXPath(xml, xpath, theNSs);
 		return xp.selectNodes(xml);
 	}
 		
 	//---------------------------------------------------------------------------
 	/** Evaluates an XPath expression on an element and returns Elements */
-	public static List selectNodes(Element xml, String xpath) throws JDOMException {
+	public static List<?> selectNodes(Element xml, String xpath) throws JDOMException {
 		return selectNodes(xml, xpath, new ArrayList<Namespace>());
 	}
 		
@@ -434,7 +437,6 @@ public class Xml
 	public static class ErrorHandler extends DefaultHandler {
 
 		private int errorCount = 0;
-		private String errors = " ";
 		private Element xpaths;
 		private Namespace ns = Namespace.NO_NAMESPACE;
 		private SAXOutputter so;

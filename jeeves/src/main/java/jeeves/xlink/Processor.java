@@ -1,10 +1,7 @@
 package jeeves.xlink;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -17,10 +14,7 @@ import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
 import org.apache.jcs.access.exception.CacheException;
-import org.apache.log4j.Logger;
-
 import org.jdom.Attribute;
-import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -241,12 +235,13 @@ public class Processor {
     * Utility to return all XLinks child of the input XML document that match
 		* specified XPath.
     */
+	@SuppressWarnings("unchecked")
 	private static List<Attribute> getXLinksWithXPath(Element md, String xpath) {
-		List<Namespace> theNss = new ArrayList();
+		List<Namespace> theNss = new ArrayList<Namespace>();
 		theNss.add(XLink.NAMESPACE_XLINK);
-		List<Attribute> xlinks = new ArrayList();
+		List<Attribute> xlinks = new ArrayList<Attribute>();
 		try {
-			xlinks = Xml.selectNodes(md, xpath, theNss);
+			xlinks = (List<Attribute>) Xml.selectNodes(md, xpath, theNss);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.error(Log.XLINK_PROCESSOR, e.getMessage());

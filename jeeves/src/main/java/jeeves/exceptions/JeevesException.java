@@ -24,11 +24,12 @@
 package jeeves.exceptions;
 
 import jeeves.constants.Jeeves;
-import jeeves.utils.Util;
+
 import org.jdom.Element;
 
 //=============================================================================
 
+@SuppressWarnings("serial")
 public abstract class JeevesException extends Exception
 {
 	//--------------------------------------------------------------------------

@@ -33,13 +33,15 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.FileUploadTooBigEx;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
-import jeeves.utils.Xml;
 import jeeves.utils.Log;
+import jeeves.utils.Xml;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -69,22 +71,20 @@ public class ServiceRequestFactory
 		// FIXME: if request character encoding is undefined set it to UTF-8
 
 		String encoding = req.getCharacterEncoding();
-        try {
-            // verify that encoding is valid
-            Charset.forName(encoding);
-        } catch (Exception e) {
-            encoding = null;
-        }
+		try {
+			// verify that encoding is valid
+			Charset.forName(encoding);
+		} catch (Exception e) {
+			encoding = null;
+		}
 
-		if (encoding == null)
-			try
-			{
+		if (encoding == null) {
+			try {
 				req.setCharacterEncoding("UTF-8");
-			}
-			catch(UnsupportedEncodingException ex)
-			{
+			} catch (UnsupportedEncodingException ex) {
 				ex.printStackTrace();
 			}
+		}
 
 		//--- extract basic info
 
@@ -159,6 +159,7 @@ public class ServiceRequestFactory
 	 * @param req The web request
 	 * @return Map of header keys and values.
 	 */
+	@SuppressWarnings("unchecked")
 	private static Map<String, String> extractHeaders(HttpServletRequest req)
 	{
 		Map<String, String> headerMap = new HashMap<String, String>(); 
@@ -241,6 +242,7 @@ public class ServiceRequestFactory
 
 	//---------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	private static Element extractParameters(HttpServletRequest req, String uploadDir, int maxUploadSize) throws Exception
 	{
 		//--- set parameters from multipart request
@@ -252,9 +254,9 @@ public class ServiceRequestFactory
 
 		//--- add parameters from POST request
 
-		for(Enumeration e = req.getParameterNames(); e.hasMoreElements();)
+		for(Enumeration<String> e = req.getParameterNames(); e.hasMoreElements();)
 		{
-			String name     = (String) e.nextElement();
+			String name     = e.nextElement();
 			String values[] = req.getParameterValues(name);
 
 			//--- we don't overwrite params given in the url

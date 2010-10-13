@@ -39,6 +39,16 @@ public abstract class ListResponse extends AbstractResponse
 {
 	//---------------------------------------------------------------------------
 	//---
+	//--- Variables
+	//---
+	//---------------------------------------------------------------------------
+	
+	private ListRequest listReq;
+	private ResumptionToken token;
+	private Iterator<Element> iterator;
+
+	//---------------------------------------------------------------------------
+	//---
 	//--- Constructor
 	//---
 	//---------------------------------------------------------------------------
@@ -77,7 +87,7 @@ public abstract class ListResponse extends AbstractResponse
 	public Object next() throws IOException, OaiPmhException, JDOMException, SAXException, Exception
 	{
 		if (iterator.hasNext())
-			return createObject((Element) iterator.next());
+			return createObject(iterator.next());
 
 		if (token == null || token.isTokenEmpty())
 			throw new RuntimeException("Iterator exausted");
@@ -87,7 +97,7 @@ public abstract class ListResponse extends AbstractResponse
 		//--- just to avoid problems...
 		iterator.hasNext();
 
-		return createObject((Element) iterator.next());
+		return createObject(iterator.next());
 	}
 	
 	public abstract int getSize();
@@ -119,6 +129,7 @@ public abstract class ListResponse extends AbstractResponse
 	//---
 	//---------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	private void build(Element response)
 	{
 		Element operElem = response.getChild(listReq.getVerb(), OaiPmh.Namespaces.OAI_PMH);
@@ -128,15 +139,6 @@ public abstract class ListResponse extends AbstractResponse
 		iterator = operElem.getChildren(getListElementName(), OaiPmh.Namespaces.OAI_PMH).iterator();
 	}
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private ListRequest     listReq;
-	private ResumptionToken token;
-	private Iterator        iterator;
 }
 
 //=============================================================================

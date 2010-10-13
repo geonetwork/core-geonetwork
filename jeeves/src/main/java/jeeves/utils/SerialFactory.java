@@ -23,14 +23,13 @@
 
 package jeeves.utils;
 
-import java.io.*;
-import java.sql.*;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.Hashtable;
 
-import org.jdom.*;
+import jeeves.constants.Jeeves;
+import jeeves.resources.dbms.Dbms;
 
-import jeeves.constants.*;
-import jeeves.resources.dbms.*;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -39,7 +38,7 @@ import jeeves.resources.dbms.*;
 
 public class SerialFactory
 {
-	private Hashtable htSerials = new Hashtable(20, .75f);
+	private Hashtable<String, Integer> htSerials = new Hashtable<String, Integer>(20, .75f);
 
 	//--------------------------------------------------------------------------
 	//---
@@ -63,7 +62,7 @@ public class SerialFactory
 
 	public synchronized int getSerial(Dbms dbms, String table, String field, int minSerial) throws SQLException
 	{
-		Integer intSerial = (Integer) htSerials.get(table);
+		Integer intSerial = htSerials.get(table);
 
 		//--- is the serial already in memory ?
 

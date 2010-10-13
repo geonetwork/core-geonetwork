@@ -23,7 +23,6 @@
 
 package jeeves.server.resources;
 
-import org.jdom.Element;
 
 //=============================================================================
 

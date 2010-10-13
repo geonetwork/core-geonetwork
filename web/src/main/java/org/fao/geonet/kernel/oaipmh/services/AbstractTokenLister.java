@@ -88,13 +88,13 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 				params.addContent(new Element("category").setText(set));
 
 			result     = new SearchResult(prefix);
-			result.ids = Lib.search(context, params);
+			result.setIds(Lib.search(context, params));
 
-			if (result.ids.size() == 0)
+			if (result.getIds().size() == 0)
 				throw new NoRecordsMatchException("No results");
 
 			// we only need a new token if the result set is big enough
-			if (result.ids.size() > Lib.MAX_RECORDS ) {
+			if (result.getIds().size() > Lib.MAX_RECORDS ) {
 				token = new ResumptionToken(req,result);
 				cache.storeResumptionToken(token);
 			}

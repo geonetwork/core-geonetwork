@@ -1,5 +1,7 @@
 package com.esri.sde.sdk.client;
 
+import java.util.Vector;
+
 public class SeConnection {
 
     public static int SE_TRYLOCK_POLICY = 0;
@@ -16,8 +18,10 @@ public class SeConnection {
 	
 	public String getDatabaseName() throws SeException { return null; }
 	public String getUser() throws SeException { return null; }
-	public java.util.Vector getLayers() throws SeException { return null; }
-	public java.util.Vector getRasterColumns() throws SeException { return null; }
+	@SuppressWarnings("unchecked")
+	public Vector getLayers() throws SeException { return null; }
+	@SuppressWarnings("unchecked")
+	public Vector getRasterColumns() throws SeException { return null; }
 	public SeRelease getRelease() { return null; }
 	public boolean isClosed() { return false; }
 	
