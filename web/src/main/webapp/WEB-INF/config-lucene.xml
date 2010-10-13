@@ -94,10 +94,10 @@
 		
 	-->
 	<fieldSpecificAnalyzer>
-		<Field name="_uuid" analyzer="org.apache.lucene.analysis.SimpleAnalyzer"/>
-		<Field name="parentUuid" analyzer="org.apache.lucene.analysis.SimpleAnalyzer"/>
-		<Field name="operatesOn" analyzer="org.apache.lucene.analysis.SimpleAnalyzer"/>
-		<Field name="operatesOnIdentifier" analyzer="org.apache.lucene.analysis.SimpleAnalyzer"/>
+		<Field name="_uuid" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
+		<Field name="parentUuid" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
+		<Field name="operatesOn" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
+		<Field name="operatesOnIdentifier" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
 
 		<Field name="any" analyzer="org.apache.lucene.analysis.standard.StandardAnalyzer">
 			<Param name="version" type="org.apache.lucene.util.Version"/>
