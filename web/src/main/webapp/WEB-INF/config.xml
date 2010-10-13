@@ -162,6 +162,23 @@
 			</config>
 		</resource>
 	    
+	    
+	    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- sqlserver 2008 -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<resource enabled="false">
+			<name>main-db</name>
+			<provider>jeeves.resources.dbms.DbmsPool</provider>
+			<config>
+				<user>www-data</user>
+				<password>www-data</password>
+				  <driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver>
+                  <url>jdbc:sqlserver://SERVER;database=geonetwork;integratedSecurity=false;</url>
+				<poolSize>10</poolSize>
+			</config>
+		</resource>
+		
 	</resources>
 
 	<!-- ====================================================================== -->
