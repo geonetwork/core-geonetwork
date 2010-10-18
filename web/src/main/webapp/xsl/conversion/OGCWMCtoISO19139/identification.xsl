@@ -14,7 +14,8 @@
 	<!-- ============================================================================= -->
 
 	<xsl:template match="*" mode="DataIdentification">
-	
+		<xsl:param name="topic"/>
+		
 		<citation>
 			<CI_Citation>
 				<title>
@@ -72,7 +73,7 @@
 		
 		<xsl:choose>
 			<xsl:when test="/wmc:ViewContext/wmc:General/wmc:BoundingBox/@SRS='EPSG:4326'
-				|/wmc11:ViewContext/wmc11:General/wmc11:BoundingBox/@SRS='EPSG:4326'">
+				or /wmc11:ViewContext/wmc11:General/wmc11:BoundingBox/@SRS='EPSG:4326'">
 				<extent>
 				<EX_Extent>
 					<geographicElement>
