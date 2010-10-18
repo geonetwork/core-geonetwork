@@ -194,6 +194,16 @@ public class Importer {
 				Element privileges;
 				boolean validate = false;
 
+				
+				// Apply a stylesheet transformation if requested
+				String style = Util.getParam(params, Params.STYLESHEET,
+				"_none_");
+
+				if (!style.equals("_none_"))
+					md.add(index, Xml.transform(md.get(index), stylePath
+							+ FS + style));
+				
+				
 				Element metadata = md.get(index);
 				String schema = dm.autodetectSchema(metadata);
 
@@ -228,14 +238,6 @@ public class Importer {
 							.setAttribute("name", "dynamic"));
 					privileges.addContent(new Element("operation")
 							.setAttribute("name", "featured"));
-
-					String style = Util.getParam(params, Params.STYLESHEET,
-							"_none_");
-
-					// Apply a stylesheet transformation if requested
-					if (!style.equals("_none_"))
-						md.add(index, Xml.transform(md.get(index), stylePath
-								+ FS + style));
 
 					// Get the Metadata uuid if it's not a template.
 					if (isTemplate.equals("n"))
