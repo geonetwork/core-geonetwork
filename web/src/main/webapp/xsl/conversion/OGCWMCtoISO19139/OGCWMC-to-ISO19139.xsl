@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" 
+<xsl:stylesheet version="2.0" 
 				xmlns="http://www.isotc211.org/2005/gmd" 
                 xmlns:geonet="http://www.fao.org/geonetwork" 
 				xmlns:wmc="http://www.opengis.net/context"
