@@ -34,11 +34,22 @@ public class FileCopyMgr {
 			copyFiles(src, dest);
 		}
 
+		/**
+		 * Remove directory or file recursively
+		 * 
+		 * @param dir
+		 * @throws IOException
+		 */
 		public static void removeDirectoryOrFile(File dir) throws IOException {
 			if (dir.isDirectory()) {
 				File list[] = dir.listFiles();
 				for (int i = 0; i < list.length; i++) {
-					list[i].delete(); 
+					File currentFile = list[i]; 
+					if(currentFile.isDirectory()) {
+						removeDirectoryOrFile(currentFile);
+				    } else {
+				    	currentFile.delete(); 
+				    }
 				}
 			}
 			dir.delete();

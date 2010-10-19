@@ -103,11 +103,9 @@ public class MassiveDelete implements Service
 					backupFile(context, id, info.uuid, MEFLib.doExport(context, info.uuid, "full", false));
 				}
 		
-				//--- remove the public and private directories
-				File pb = new File(Lib.resource.getDir(context, Params.Access.PUBLIC, id));
+				//--- remove the metadata directory
+				File pb = new File(Lib.resource.getMetadataDir(context, id));
 				FileCopyMgr.removeDirectoryOrFile(pb);
-				File pr = new File(Lib.resource.getDir(context, Params.Access.PRIVATE, id));
-				FileCopyMgr.removeDirectoryOrFile(pr);
 
 				//--- delete metadata and return status
 				dataMan.deleteMetadata(dbms, id);

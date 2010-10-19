@@ -91,15 +91,10 @@ public class Delete implements Service
 			backupFile(context, id, info.uuid, MEFLib.doExport(context, info.uuid, "full", false));
 
 		//-----------------------------------------------------------------------
-		//--- remove the public and private directories
-		// FIXME ? Is there any reason to keep the metadata directory
-		// and only remove public and private sub dir ?
-		
-		File pb = new File(Lib.resource.getDir(context, Params.Access.PUBLIC, id));
+		//--- remove the metadata directory including the public and private directories.
+		File pb = new File(Lib.resource.getMetadataDir(context, id));
 		FileCopyMgr.removeDirectoryOrFile(pb);
-		File pr = new File(Lib.resource.getDir(context, Params.Access.PRIVATE, id));
-		FileCopyMgr.removeDirectoryOrFile(pr);
-
+		
 		//-----------------------------------------------------------------------
 		//--- delete metadata and return status
 
