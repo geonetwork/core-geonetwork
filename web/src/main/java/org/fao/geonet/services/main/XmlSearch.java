@@ -27,9 +27,12 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -53,12 +56,15 @@ public class XmlSearch implements Service
 		_config = config;
 	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
-
+	/**
+	 * Run a search and return results as XML.
+	 * 
+	 * @param params	All search parameters defined in {@link LuceneIndexField}.
+	 * <br/>
+	 * To return only results summary, set summaryOnly parameter to 1. 
+	 * Default is 0 (ie.results and summary).
+	 * 
+	 */
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -88,20 +94,25 @@ public class XmlSearch implements Service
 		searcher.search(context, elData, _config);
 		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
 
-		elData.addContent(new Element("fast").setText("true"));
-		elData.addContent(new Element("from").setText("1"));
-		// FIXME ? from and to parameter could be used but if not
-		// set, the service return the whole range of results
-		// which could be huge in non fast mode ? 
-		elData.addContent(new Element("to").setText(searcher.getSize() +""));
-
-		Element result = searcher.present(context, elData, _config);
 		
-		// Update result elements to present
-		SelectionManager.updateMDResult(context.getUserSession(), result);
-
-		
-		return result;
+		if (!"0".equals(Util.getParam(params, "summaryOnly", "0"))) {
+			return searcher.getSummary();
+		} else {
+			
+			elData.addContent(new Element("fast").setText("true"));
+			elData.addContent(new Element("from").setText("1"));
+			// FIXME ? from and to parameter could be used but if not
+			// set, the service return the whole range of results
+			// which could be huge in non fast mode ? 
+			elData.addContent(new Element("to").setText(searcher.getSize() +""));
+	
+			Element result = searcher.present(context, elData, _config);
+			
+			// Update result elements to present
+			SelectionManager.updateMDResult(context.getUserSession(), result);
+	
+			return result;
+		}
 	}
 }
 
