@@ -924,7 +924,9 @@
 		<iso19139>Bewaar ISO19115/19139 metadata als XML</iso19139>
 		<iso19139fra>Bewaar ISO19115/19139 Fra metadata als XML</iso19139fra>
 	</savexml>
-	<thesaurus>
+  <url>URL</url>
+  <thesaurus>
+    <load>Load from GeoNetwork thesaurus repository</load>    
 		<addelement>Element toevoegen</addelement>			
 		<admin>Beheer thesaurus</admin>
 		<broader>Algemenere term</broader>

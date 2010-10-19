@@ -906,7 +906,9 @@
 		<iso19139>Сохранить метаданные ISO19115/19139 в формате XML</iso19139>
 		<iso19139fra>Сохранить метаданные ISO19115/19139 Fra в формате XML</iso19139fra>
 	</savexml>
-	<thesaurus>
+  <url>URL</url>
+  <thesaurus>
+    <load>Load from GeoNetwork thesaurus repository</load>    
 		<addelement>Добавить элемент</addelement>
 		<admin>Управлять тезаурусом</admin>
 		<broader>Более широкое понятие</broader>

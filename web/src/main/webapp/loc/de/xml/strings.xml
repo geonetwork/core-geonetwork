@@ -896,7 +896,9 @@
 		<iso19139>Speicher ISO19115/19139 Metadaten als XML</iso19139>
 		<iso19139fra>Speicher ISO19115/19139 Fra Metadata als XML</iso19139fra>
 	</savexml>
-	<thesaurus>
+  <url>URL</url>
+  <thesaurus>
+    <load>Load from GeoNetwork thesaurus repository</load>    
 		<addelement>Element hinzufügen</addelement>
 		<admin>Thesaurus Management</admin>
 		<broader>weiterer Ausdruck</broader>

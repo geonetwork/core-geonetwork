@@ -14,6 +14,7 @@
 	<showRemoteHTML>Show HTML from remote server</showRemoteHTML>
 	<!-- end new strings -->
 
+	<url>URL</url>
 	<createChild>Create child</createChild>
 	<updateChildren>Update children</updateChildren>
 	<updateChildrenOk>Children updated</updateChildrenOk>
@@ -905,6 +906,7 @@
 		<iso19139fra>Save ISO19115/19139 Fra metadata as XML</iso19139fra>
 	</savexml>
 	<thesaurus>
+	  <load>Load from GeoNetwork thesaurus repository</load>
 		<addelement>Add element</addelement>
 		<admin>Manage thesaurus</admin>
 		<broader>Broader Term</broader>

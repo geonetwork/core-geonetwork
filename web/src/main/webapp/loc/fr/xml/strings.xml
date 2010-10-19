@@ -919,7 +919,9 @@
 		<iso19139>Télécharger les métadonnées au format ISO19115/19139</iso19139>
 		<iso19139fra>Télécharger les métadonnées au format ISO19115/19139 profil France</iso19139fra>
 	</savexml>
-	<thesaurus>
+  <url>URL</url>
+  <thesaurus>
+    <load>Installer un thésaurus à partir du dépôt GeoNetwork disponible en ligne</load>    
 		<addelement>Ajouter un élément</addelement>
 		<admin>Gérer le thésaurus</admin>
 		<broader>Broader Term</broader>

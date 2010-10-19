@@ -130,8 +130,8 @@
   to edit all elements defined in a schema. -->
   <iso/>
   <!-- This view display all INSPIRE recommended elements
-  <inspire flat="true"/>
-  in a view -->
+    <inspire flat="true"/>
+    in a view -->
   <xml/>
  </metadata-tab>
  
@@ -184,4 +184,9 @@
    <keyword-selection-panel/> 
   -->
  </search>
+	
+	
+  <repository>
+    <thesaurus>http://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/repository/thesaurus.xml</thesaurus>
+  </repository>
 </config>

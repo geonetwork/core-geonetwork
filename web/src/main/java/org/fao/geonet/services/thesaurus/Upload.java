@@ -23,73 +23,77 @@
 
 package org.fao.geonet.services.thesaurus;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.net.URI;
+
+import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+import jeeves.utils.XmlRequest;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.FileOutputStream;
-
-//=============================================================================
-
-/** 
- *  
- *  Upload one thesaurus file
+/**
+ * Upload one thesaurus file using file upload or file URL. <br/>
+ * Thesaurus may be in W3C SKOS format with an RDF extension. Optionnaly an XSL
+ * transformation could be run to convert the thesaurus to SKOS.
+ * 
  */
-
-public class Upload implements Service
-{
+public class Upload implements Service {
 	static String FS = System.getProperty("file.separator", "/");
-	static int inc = 0;
-	
+
 	private String stylePath;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
-
-	public void init(String appPath, ServiceConfig params) throws Exception
-	{
+	public void init(String appPath, ServiceConfig params) throws Exception {
 		this.stylePath = appPath + FS + Geonet.Path.STYLESHEETS + FS;
 	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API
-	//---
-	//--------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+	/**
+	 * Load a thesaurus to GeoNetwork codelist directory.
+	 * 
+	 * @param params
+	 *            <ul>
+	 *            <li>fname: if set, do a file upload</li>
+	 *            <li>url: if set, try to download from the Internet</li>
+	 *            <li>type: local or external (default)</li>
+	 *            <li>dir: type of thesaurus, usually one of the ISO thesaurus
+	 *            type codelist value. Default is theme.</li>
+	 *            <li>stylesheet: XSL to be use to convert the thesaurus before
+	 *            load. Default _none_.</li>
+	 *            </ul>
+	 * 
+	 */
+	public Element exec(Element params, ServiceContext context)
+			throws Exception {
 		long start = System.currentTimeMillis();
 		Element uploadResult;
 
 		uploadResult = upload(params, context);
-		
+
 		long end = System.currentTimeMillis();
 		long duration = (end - start) / 1000;
 
-		Log.debug("Thesaurus","Uploaded in " + duration + " s.");
-		
-		Element response =  new Element("response");
+		Log.debug("Thesaurus", "Uploaded in " + duration + " s.");
+
+		Element response = new Element("response");
+		response.setAttribute("time", duration + "");
 		if (uploadResult != null)
 			response.addContent(uploadResult);
-		return response; 
-		
-	}
+		return response;
 
+	}
 
 	/**
 	 * 
@@ -98,103 +102,136 @@ public class Upload implements Service
 	 * @return
 	 * @throws Exception
 	 */
-	private Element upload(Element params, ServiceContext context) throws Exception
-	{
+	private Element upload(Element params, ServiceContext context)
+			throws Exception {
 		String uploadDir = context.getUploadDir();
-		Element uploadResult = null; 
-		
-		// RDF file
+		Element uploadResult = null;
+
+		// Upload RDF file
 		String fname = null;
+		String url = null;
+		File rdfFile = null;
+
 		Element param = params.getChild(Params.FNAME);
-		if (!(param == null || param.getTextTrim().length() == 0)) {
+		if (param == null) {
+			url = Util.getParam(params, "url", "");
+
+			// -- get the rdf file from the net
+			if (!"".equals(url)) {
+				Log.debug("Thesaurus", "Uploading thesaurus: " + url);
+
+				URI uri = new URI(url);
+				rdfFile = File.createTempFile("thesaurus", ".rdf");
+
+				XmlRequest httpReq = new XmlRequest(uri.getHost(),
+						uri.getPort());
+				httpReq.setAddress(uri.getPath());
+
+				Lib.net.setupProxy(context, httpReq);
+
+				httpReq.executeLarge(rdfFile);
+
+				fname = url.substring(url.lastIndexOf("/") + 1, url.length());
+			} else {
+				Log.debug("Thesaurus",
+						"No URL or file name provided for thesaurus upload.");
+			}
+		} else {
 			fname = param.getTextTrim();
+			rdfFile = new File(uploadDir, fname);
+		}
+
+		if (fname == null || "".equals(fname)) {
+			throw new OperationAbortedEx(
+					"File upload from URL or file return null.");
+		}
+
+		long fsize = 0;
+		if (rdfFile.exists()) {
+			fsize = rdfFile.length();
+		} else {
+			throw new OperationAbortedEx("Thesaurus file doesn't exist");
+		}
+
+		// -- check that the archive actually has something in it
+		if (fsize == 0) {
+			throw new OperationAbortedEx("Thesaurus file has zero size");
 		}
 
 		// Thesaurus Type (local, external)
 		String type = Util.getParam(params, Params.TYPE, "external");
-		
-		// Thesaurus directory - one of the ISO theme (Discipline, Place, Stratum, Temporal, Theme)
-		String dir = Util.getParam(params, Params.DIR);
+
+		// Thesaurus directory - one of the ISO theme (Discipline, Place,
+		// Stratum, Temporal, Theme)
+		String dir = Util.getParam(params, Params.DIR, "theme");
 
 		// no XSL to be applied
-		String style    = Util.getParam(params, Params.STYLESHEET, "_none_");
-		
-		// Validation or not
-		boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
+		String style = Util.getParam(params, Params.STYLESHEET, "_none_");
 
-		if ((fname != null) && !fname.equals("")) {
-			
-			Element eTSResult;
-			
-			File oldFile = new File(uploadDir, fname);
-			String extension = fname.substring(fname.lastIndexOf('.')).toLowerCase();
+		Element eTSResult;
 
-			if (extension.equals(".rdf")) {
+		String extension = fname.substring(fname.lastIndexOf('.'))
+				.toLowerCase();
 
-					Log.debug("Thesaurus","Uploading thesaurus: "+fname);
-					eTSResult = UploadThesaurus(oldFile, style, context, validate, fname, type, dir);
-				}
-				else {
-					Log.debug("Thesaurus","Incorrect extension for thesaurus file name : "+fname);
-					throw new Exception("Incorrect extension for thesaurus file name : " + fname);
-				}
-			
-			uploadResult = new Element("record").setText("Thesaurus uploaded");
-			uploadResult.addContent(eTSResult);
+		if (extension.equals(".rdf") || extension.equals(".xml")) {
+
+			Log.debug("Thesaurus", "Uploading thesaurus: " + fname);
+			eTSResult = UploadThesaurus(rdfFile, style, context, fname, type,
+					dir);
+		} else {
+			Log.debug("Thesaurus", "Incorrect extension for thesaurus named: "
+					+ fname);
+			throw new Exception("Incorrect extension for thesaurus named: "
+					+ fname);
 		}
+
+		uploadResult = new Element("record").setText("Thesaurus uploaded");
+		uploadResult.addContent(eTSResult);
 
 		return uploadResult;
 	}
 
-
 	/**
-	 * Upload one Thesaurus
-	 * @param oldFile
-	 * @param style
-	 * @param context
-	 * @param validate
-	 * @param siteId
-	 * @param fname
-	 * @param type
-	 * @param dir
+	 * Load a thesaurus in the catalogue and optionnaly convert it using XSL.
+	 * 
 	 * @return Element thesaurus uploaded
 	 * @throws Exception
 	 */
-	private Element UploadThesaurus(File oldFile, String style, ServiceContext context, boolean validate, String fname, String type, String dir) throws Exception {
+	private Element UploadThesaurus(File rdfFile, String style,
+			ServiceContext context, String fname, String type, String dir)
+			throws Exception {
 
 		Element TS_xml = null;
-		Element xml = Xml.loadFile(oldFile);
+		Element xml = Xml.loadFile(rdfFile);
 		xml.detach();
-		
+
 		if (!style.equals("_none_")) {
-			TS_xml = Xml.transform(xml, stylePath +"/"+ style);
+			TS_xml = Xml.transform(xml, stylePath + "/" + style);
 			TS_xml.detach();
-		}
-		else TS_xml = xml;
-		
+		} else
+			TS_xml = xml;
+
 		// Load document and check namespace
-		if (TS_xml.getNamespacePrefix().equals("rdf") && TS_xml.getName().equals("RDF")) {
-				
-			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		if (TS_xml.getNamespacePrefix().equals("rdf")
+				&& TS_xml.getName().equals("RDF")) {
+
+			GeonetContext gc = (GeonetContext) context
+					.getHandlerContext(Geonet.CONTEXT_NAME);
 			ThesaurusManager thesaurusMan = gc.getThesaurusManager();
 
-			// copy to directory according to type			
-			String path = thesaurusMan.buildThesaurusFilePath( fname, type, dir);
+			// copy to directory according to type
+			String path = thesaurusMan.buildThesaurusFilePath(fname, type, dir);
 			File newFile = new File(path);
-			Xml.writeResponse(new Document(TS_xml), new FileOutputStream(newFile));
-			
+			Xml.writeResponse(new Document(TS_xml), new FileOutputStream(
+					newFile));
+
 			Thesaurus gst = new Thesaurus(fname, type, dir, newFile);
 			thesaurusMan.addThesaurus(gst);
-		}
-		else
-		{
-			oldFile.delete();
-			
+		} else {
+			rdfFile.delete();
 			throw new Exception("Unknown format (Must be in SKOS format).");
-			
 		}
 
-		return new Element("Thesaurus").setText(oldFile.getName());
+		return new Element("Thesaurus").setText(fname);
 	}
-
 }

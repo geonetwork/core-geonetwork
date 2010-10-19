@@ -902,7 +902,9 @@
 		<iso19139>Guardar metadatos ISO19115/19139 como XML</iso19139>
 		<iso19139fra>Guardar metadatos Fra ISO19115/19139 como XML</iso19139fra>
 	</savexml>
-	<thesaurus>
+  <url>URL</url>
+  <thesaurus>
+    <load>Load from GeoNetwork thesaurus repository</load>    
 		<addelement>Agregar elemento</addelement>
 		<admin>Administrar tesauro</admin>
 		<broader>Término mas amplio</broader>

@@ -910,7 +910,9 @@
 		<iso19139>Save ISO19115/19139 metadata as XML</iso19139>
 		<iso19139fra>Save ISO19115/19139 Fra metadata as XML</iso19139fra>
 	</savexml>
+  <url>URL</url>
 	<thesaurus>
+	  <load>Load from GeoNetwork thesaurus repository</load>	  
 		<addelement>Add element</addelement>
 		<admin>Manage thesaurus</admin>
 		<broader>Broader Term</broader>
