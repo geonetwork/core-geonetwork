@@ -261,10 +261,12 @@ class Harvester
 		
 		//--- Loading stylesheet
 		String styleSheet = context.getAppPath() + 
-								Geonet.Path.IMPORT_STYLESHEETS +
-								"/OGCWxSGetCapabilities-to-ISO19119_ISO19139.xsl";
-		
-		log.debug ("  - XSLT transformation using OGCWxSGetCapabilities-to-ISO19119_ISO19139.xsl");
+							Geonet.Path.IMPORT_STYLESHEETS 
+							+ "/OGC"
+							+ params.ogctype.substring(0,3)
+							+ "GetCapabilities-to-ISO19119_ISO19139.xsl";
+
+		log.debug ("  - XSLT transformation using " + styleSheet);
 		
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("lang", params.lang);
@@ -297,18 +299,19 @@ class Harvester
 			xp.addNamespace("wms", "http://www.opengis.net/wms");
 										
 			List<Element> layers = xp.selectNodes(capa);
-			log.info("  - Number of layers, featureTypes or Coverages found : " + layers.size());
-		
-			for (Element layer : layers) {
-				WxSLayerRegistry s = addLayerMetadata (layer, capa);
-				if (s != null)
-					layersRegistry.add(s);
-			}       
+			if (layers.size()>0) {
+				log.info("  - Number of layers, featureTypes or Coverages found : " + layers.size());
 			
-	  // Update ISO19119 for data/service links creation (ie. operatesOn element)
-		// The editor will support that but it will make quite heavy XML.
-			md = addOperatesOnUuid (md, layersRegistry);
-			
+				for (Element layer : layers) {
+					WxSLayerRegistry s = addLayerMetadata (layer, capa);
+					if (s != null)
+						layersRegistry.add(s);
+				}       
+				
+				// Update ISO19119 for data/service links creation (ie. operatesOn element)
+				// The editor will support that but it will make quite heavy XML.
+				md = addOperatesOnUuid (md, layersRegistry);
+			}
 		}	
 
         // Save iso19119 metadata in DB
@@ -466,7 +469,10 @@ class Harvester
 		//--- Loading stylesheet
 		String styleSheet 	= context.getAppPath () + 
 								Geonet.Path.CONV_STYLESHEETS +
-								"/OGCWxSGetCapabilitiesto19119/OGCWxSGetCapabilitiesLayer-to-19139.xsl";
+								"/OGCWxSGetCapabilitiesto19119/" + 
+								"/OGC" +
+								params.ogctype.substring(0,3) + 
+								"GetCapabilitiesLayer-to-19139.xsl";
 		Element xml 		= null;
 		
 		boolean exist;

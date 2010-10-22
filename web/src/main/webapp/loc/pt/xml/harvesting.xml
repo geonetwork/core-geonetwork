@@ -44,7 +44,7 @@
 	
 	<info type="ogcwxs">
 		<short>OGC WxS</short>
-		<long>Serviços de web OGC (isso é WMS, WFS, WCS, WPS)</long>
+		<long>Serviços de web OGC (isso é WMS, WFS, WCS, WPS, CSW)</long>
 	</info>
 
 	<info type="arcsde">
@@ -80,7 +80,8 @@
 		<type value="WFS1.1.0">OGC Web Feature Service (WFS) Versão 1.1.0 - preferido</type>
 		<type value="WCS1.0.0">OGC Web Coverage Service (WCS) Versão 1.0.0</type>
         <type value="WPS0.4.0">OGC Web Processing Service (WPS) Versão 0.4.0</type>
-        <type value="WPS1.0.0">OGC Web Processing Service (WPS) Versão 1.0.0</type>        
+        <type value="WPS1.0.0">OGC Web Processing Service (WPS) Versão 1.0.0</type>  
+		<type value="CSW2.0.2">OGC Catalogue Service (CSW) Versão 2.0.2</type>
 	</wxstypes>
 	
 	<wxslang>Idioma de metadados</wxslang>
