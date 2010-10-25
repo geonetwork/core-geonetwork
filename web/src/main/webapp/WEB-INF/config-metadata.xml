@@ -187,6 +187,11 @@
 			</error>
 		</service>
 
+		<service name="metadata.relation">
+			<class name=".guiservices.metadata.GetRelated"/>
+		</service>
+		
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="metadata.elem.down">
@@ -298,7 +303,7 @@
 
 		<service name="metadata.massive.admin.form">
 			<class name=".services.metadata.PrepareMassiveUpdatePrivileges"/>
-
+			
 			<output sheet="metadata-admin.xsl"/>
 		</service>
 
@@ -412,14 +417,6 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="metadata.admin.form">
-			<class name=".services.metadata.GetAdminOper"/>
-
-			<output sheet="metadata-admin.xsl"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.massive.admin.form">
 			<class name=".services.metadata.GetAdminOper"/>
 
 			<output sheet="metadata-admin.xsl"/>

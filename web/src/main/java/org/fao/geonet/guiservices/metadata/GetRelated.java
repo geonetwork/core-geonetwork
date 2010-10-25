@@ -25,6 +25,7 @@ package org.fao.geonet.guiservices.metadata;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
@@ -33,8 +34,11 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.relations.Get;
 import org.jdom.Element;
 
@@ -46,6 +50,16 @@ import org.jdom.Element;
  * <li>could not be readable by current user.</li>
  * <li>could not be visible by current user.</li>
  * </ul>
+ * 
+ * Parameters:
+ * <ul>
+ * <li>type: service|children|related|null (ie. all)</li>
+ * <li>from: start record</li>
+ * <li>to: end record</li>
+ * <li>id or uuid: could be optional if call in Jeeves service forward call. In
+ * that case geonet:info/uuid is used.</li>
+ * </ul>
+ * 
  */
 public class GetRelated implements Service {
 
@@ -59,32 +73,51 @@ public class GetRelated implements Service {
 			throws Exception {
 		// Check for one of service|children|related|null (ie. all)
 		String type = Util.getParam(params, "type", "");
+		String from = Util.getParam(params, "from", "1");
+		String to = Util.getParam(params, "to", "1000");
 
 		Element info = params.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
-		String uuid = info.getChildText(Params.UUID);
-		if (uuid == null)
-			throw new Exception(
-					"Could not retrieve UUID from geonet:info element provided.");
-		int id = Integer.parseInt(info.getChildText(Params.ID));
+		int id;
+		String uuid;
+		if (info == null) {
+			GeonetContext gc = (GeonetContext) context
+					.getHandlerContext(Geonet.CONTEXT_NAME);
+			DataManager dm = gc.getDataManager();
+			Dbms dbms = (Dbms) context.getResourceManager().open(
+					Geonet.Res.MAIN_DB);
 
+			String mdId = Utils.getIdentifierFromParameters(params, context);
+			
+			uuid = dm.getMetadataUuid(dbms, mdId);
+			if (uuid == null)
+				throw new MetadataNotFoundEx("Metadata not found.");
+			
+			id = Integer.parseInt(mdId);
+		} else {
+			uuid = info.getChildText(Params.UUID);
+			id = Integer.parseInt(info.getChildText(Params.ID));
+		}
 
 		Element relatedRecords = new Element("relations");
 
 		if (type.equals("") || type.equals("children"))
-			relatedRecords.addContent(search(uuid, "children", context));
+			relatedRecords.addContent(search(uuid, "children", context, from,
+					to));
 		if (type.equals("") || type.equals("service"))
-				relatedRecords.addContent(search(uuid, "services", context));
+			relatedRecords.addContent(search(uuid, "services", context, from,
+					to));
 		if (type.equals("") || type.equals("related")) {
 			Element relation = Get.getRelation(id, "full", context);
-			relatedRecords.addContent(new Element("related").addContent(relation));
+			relatedRecords.addContent(new Element("related")
+					.addContent(relation));
 		}
-		
+
 		return relatedRecords;
 
 	}
 
-	private Element search(String uuid, String type, ServiceContext context)
-			throws Exception {
+	private Element search(String uuid, String type, ServiceContext context,
+			String from, String to) throws Exception {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager searchMan = gc.getSearchmanager();
@@ -102,6 +135,8 @@ public class GetRelated implements Service {
 		else if ("services".equals(type))
 			parameters.addContent(new Element("operatesOn").setText(uuid));
 		parameters.addContent(new Element("fast").addContent("true"));
+		parameters.addContent(new Element("from").addContent(from));
+		parameters.addContent(new Element("to").addContent(to));
 
 		searcher.search(context, parameters, _config);
 
