@@ -187,6 +187,11 @@
 			</error>
 		</service>
 
+		<service name="metadata.relation">
+			<class name=".guiservices.metadata.GetRelated"/>
+		</service>
+		
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="metadata.elem.down">

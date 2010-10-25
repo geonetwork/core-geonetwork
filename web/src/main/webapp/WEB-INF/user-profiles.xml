@@ -228,6 +228,7 @@
 		<allow service="main.present"/>
 		<allow service="main.present.embedded"/> <!--  ETj -->
 		<allow service="metadata.show"/>
+		<allow service="metadata.relation"/>
 		<allow service="metadata.show.embedded"/> <!--  ETj -->
 		<allow service="remote.show"/>
 		<allow service="rating.popup"/>
