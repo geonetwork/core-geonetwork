@@ -600,7 +600,7 @@
             </configuration>
           </execution>
 
-            <execution>
+            <!--execution>
               <id>user-docs-clean</id>
               <phase>prepare-package</phase>
               <goals>
@@ -658,7 +658,7 @@
                  </arguments>
                <workingDirectory>${basedir}/../docs/eng/developer</workingDirectory>
              </configuration>
-           </execution>
+           </execution-->
             
         </executions>      
       </plugin>
@@ -666,7 +666,7 @@
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
 <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
-          <webResources>
+<!--          <webResources>
             <resource>
               <directory>../docs/eng/users/build/html</directory>
               <targetPath>docs/eng/users</targetPath>
@@ -684,7 +684,7 @@
                 <include>readme*.html</include>
               </includes>
             </resource>
-          </webResources>   
+          </webResources>     -->
           <attachClasses>true</attachClasses>
           <warName>geonetwork</warName>
           <webappDirectory>${project.build.directory}/geonetwork</webappDirectory>
