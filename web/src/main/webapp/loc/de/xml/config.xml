@@ -120,6 +120,7 @@
 		
 	<ldap>LDAP Authentifizierung</ldap>
 	<defProfile>Voreingestelltes Profil</defProfile>
+    <uidAttr>Uid attribute</uidAttr>
 	<login>Login</login>
 	<userDN>User DN</userDN>
 	<distNames>Distinguished names</distNames>

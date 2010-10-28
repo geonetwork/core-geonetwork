@@ -95,6 +95,7 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			LDAP_HOST         : xml.evalXPath(node, 'ldap/host'),
 			LDAP_PORT         : xml.evalXPath(node, 'ldap/port'),
 			LDAP_DEF_PROFILE  : xml.evalXPath(node, 'ldap/defaultProfile'),
+            LDAP_ATTR_UID     : xml.evalXPath(node, 'ldap/uidAttr'),
 			LDAP_DN_BASE      : xml.evalXPath(node, 'ldap/distinguishedNames/base'),
 			LDAP_DN_USERS     : xml.evalXPath(node, 'ldap/distinguishedNames/users'),
 			LDAP_ATTR_NAME    : xml.evalXPath(node, 'ldap/userAttribs/name'),
@@ -248,6 +249,7 @@ ConfigModel.updateTemp =
 '		<host>{LDAP_HOST}</host>'+
 '		<port>{LDAP_PORT}</port>'+
 '		<defaultProfile>{LDAP_DEF_PROFILE}</defaultProfile>'+
+'		<uidAttr>{LDAP_ATTR_UID}</uidAttr>'+        
 '		<distinguishedNames>'+
 '			<base>{LDAP_DN_BASE}</base>'+
 '			<users>{LDAP_DN_USERS}</users>'+

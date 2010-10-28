@@ -121,6 +121,7 @@
 		
 	<ldap>LDAP Autenticación</ldap>
 	<defProfile>Default profile</defProfile>
+    <uidAttr>Uid attribute</uidAttr>
 	<login>Login</login>
 	<userDN>User DN</userDN>
 	<distNames>Distinguished names</distNames>

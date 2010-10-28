@@ -594,7 +594,12 @@
 					<td class="padded"><xsl:value-of select="/root/gui/config/defProfile"/></td>
 					<td class="padded"><xsl:call-template name="ldapDefProfile"/></td>
 				</tr>
-							
+
+                <tr>
+					<td class="padded"><xsl:value-of select="/root/gui/config/uidAttr"/></td>
+					<td class="padded"><input id="ldap.uidAttr" class="content" type="text" value="" size="20"/></td>
+				</tr>
+														
 				<!-- distinguished names -->
 							
 				<tr>

@@ -119,6 +119,7 @@
 		
 	<ldap>Аутентификация LDAP</ldap>
 	<defProfile>Профиль по умолчанию</defProfile>
+    <uidAttr>Uid attribute</uidAttr>
 	<login>Логин</login>
 	<userDN>Пользовательский DN</userDN>
 	<distNames>Distinguished names</distNames>
