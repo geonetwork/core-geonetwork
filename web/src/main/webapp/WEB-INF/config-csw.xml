@@ -118,6 +118,9 @@
 				<parameter name="MetadataPointOfContact" field="metadataPOC"
 					type="AdditionalQueryables" />
 				<parameter name="Lineage" field="lineage" type="AdditionalQueryables" />
+                <parameter name="ResponsiblePartyRole" field="responsiblePartyRole"
+                    type="AdditionalQueryables" />
+                
 				<!-- - - - - - - - - - - - - - - - - - - - - - -->
 				<!-- Other additional queryable properties   -->
 				<!-- - - - - - - - - - - - - - - - - - - - - - -->
