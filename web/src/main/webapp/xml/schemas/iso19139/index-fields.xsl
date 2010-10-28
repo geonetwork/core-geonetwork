@@ -54,6 +54,11 @@
 				<xsl:for-each select="gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString">
 					<Field name="identifier" string="{string(.)}" store="true" index="true" token="false"/>
 				</xsl:for-each>
+
+                <xsl:for-each select="gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString">
+					<Field name="identifier" string="{string(.)}" store="true" index="true" token="false"/>
+				</xsl:for-each>
+	                
 	
 				<xsl:for-each select="gmd:title/gco:CharacterString">
 					<Field name="title" string="{string(.)}" store="true" index="true" token="true"/>
@@ -98,6 +103,12 @@
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:for-each>
+
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            
+            <xsl:for-each select="gmd:pointOfContact[1]/*/gmd:role/*/@codeListValue">
+                <Field name="responsiblePartyRole" string="{string(.)}" store="true" index="true" token="false"/>
+            </xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 	
