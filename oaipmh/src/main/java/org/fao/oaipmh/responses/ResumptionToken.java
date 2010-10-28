@@ -38,7 +38,7 @@ import org.jdom.Element;
 
 public class ResumptionToken
 {
-	public static final String SEPARATOR = "-";
+	public static final String SEPARATOR = "/";
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
