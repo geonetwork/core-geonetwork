@@ -288,6 +288,9 @@
 		<allow service="xml.file.disclaimer"/>
 		<allow service="xml.file.download"/>
 
+           <!-- Allow to retrieve user owned metadata -->
+        <allow service="xml.user.metadata"/>
+        
 		<!-- Portal XML services -->
 		<allow service="portal.search"/>
 		<allow service="portal.opensearch"/>

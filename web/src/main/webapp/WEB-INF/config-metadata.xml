@@ -590,6 +590,15 @@
             </output>
         </service>
 
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- Metadata owned by user                                                        -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="xml.user.metadata">
+          <class name=".guiservices.metadata.GetByOwner" />
+        </service>
+
+
 	</services>
 </geonet>
 
