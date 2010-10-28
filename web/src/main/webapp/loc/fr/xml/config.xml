@@ -6,6 +6,7 @@
 	<dir>Répertoire</dir>
 	<ldap>Authentification LDAP</ldap>
 	<defProfile>Profil par défaut</defProfile>
+    <uidAttr>Uid attribute</uidAttr>
 	<login>Nom d'utilisateur</login>
 	<userDN>User DN</userDN>
 	<distNames>Distinguished names</distNames>

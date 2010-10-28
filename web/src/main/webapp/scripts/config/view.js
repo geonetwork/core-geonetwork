@@ -56,7 +56,8 @@ function ConfigView(strLoader)
 		{ id:'ldap.baseDN',       type:'length',  minSize :1,  maxSize :200 },
 		{ id:'ldap.usersDN',      type:'length',  minSize :1,  maxSize :200 },
 		{ id:'ldap.nameAttr',     type:'length',  minSize :1,  maxSize :200 },
-
+        { id:'ldap.uidAttr',      type:'length',  minSize :1,  maxSize :20 },
+        
 		{ id:'shib.path',              type:'length',   minSize :0, maxSize :256 },
 		{ id:'shib.attrib.username',   type:'length',   minSize :0, maxSize :150 },
 		{ id:'shib.attrib.surname',    type:'length',   minSize :0, maxSize :150 },
@@ -166,6 +167,7 @@ ConfigView.prototype.setData = function(data)
 	$('ldap.host')        .value = data['LDAP_HOST'];
 	$('ldap.port')        .value = data['LDAP_PORT'];
 	$('ldap.defProfile')  .value = data['LDAP_DEF_PROFILE'];
+    $('ldap.uidAttr')     .value = data['LDAP_ATTR_UID'];    
 	$('ldap.baseDN')      .value = data['LDAP_DN_BASE'];
 	$('ldap.usersDN')     .value = data['LDAP_DN_USERS'];
 	$('ldap.nameAttr')    .value = data['LDAP_ATTR_NAME'];
@@ -277,6 +279,7 @@ ConfigView.prototype.getData = function()
 		LDAP_HOST          : $F('ldap.host'),
 		LDAP_PORT          : $F('ldap.port'),
 		LDAP_DEF_PROFILE   : $F('ldap.defProfile'),
+        LDAP_ATTR_UID      : $F('ldap.uidAttr'),        
 		LDAP_DN_BASE       : $F('ldap.baseDN'),
 		LDAP_DN_USERS      : $F('ldap.usersDN'),
 		LDAP_ATTR_NAME     : $F('ldap.nameAttr'),

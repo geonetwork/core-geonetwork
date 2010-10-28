@@ -160,7 +160,8 @@
 				<use><xsl:value-of select="$ldap/use/value"/></use>
 				<host><xsl:value-of select="$ldap/host/value"/></host>
 				<port><xsl:value-of select="$ldap/port/value"/></port>
-				<defaultProfile><xsl:value-of select="$ldap/defaultProfile/value"/></defaultProfile>				
+				<defaultProfile><xsl:value-of select="$ldap/defaultProfile/value"/></defaultProfile>
+                <uidAttr><xsl:value-of select="$ldap/uidAttr/value"/></uidAttr>                
 				<distinguishedNames>
 					<base><xsl:value-of select="$ldapDisNam/base/value"/></base>
 					<users><xsl:value-of select="$ldapDisNam/users/value"/></users>

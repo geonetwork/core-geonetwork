@@ -56,6 +56,7 @@ class LDAPContext
 		nameAttr      = sm.getValue      (prefix +"/userAttribs/name");
 		profileAttr   = sm.getValue      (prefix +"/userAttribs/profile");
 		emailAttr     = "mail";  //TODO make it configurable
+        uidAttr       = sm.getValue      (prefix +"/uidAttr");
 
 		if (profileAttr.trim().length() == 0)
 			profileAttr = null;
@@ -81,7 +82,7 @@ class LDAPContext
 	{
 		try
 		{
-			String uidFilter = "(uid=" + username + ")";
+            String uidFilter = "("+ uidAttr + "=" + username + ")";			
 
 			String usersBaseDN = usersDN +","+ baseDN;
 
@@ -176,6 +177,7 @@ class LDAPContext
 	private String  nameAttr;
 	private String  profileAttr;
 	private String  emailAttr;
+    private String  uidAttr;
 
 	private HashSet<String> profiles = new HashSet<String>();
 }
