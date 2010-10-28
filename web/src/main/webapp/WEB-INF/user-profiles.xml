@@ -169,6 +169,9 @@
 		<allow service="metadata.processing"/>
 		<allow service="xml.metadata.processing"/>
 
+        <!-- Allow to retrieve user owned metadata -->
+        <allow service="xml.user.metadata"/>
+
 		<!-- Allow to add a metadata record in XML format -->
 		<allow service="metadata.xmlinsert.form"/>
 		<allow service="metadata.insert"/>
@@ -287,9 +290,6 @@
 		<allow service="xml.keyword.get"/>
 		<allow service="xml.file.disclaimer"/>
 		<allow service="xml.file.download"/>
-
-           <!-- Allow to retrieve user owned metadata -->
-        <allow service="xml.user.metadata"/>
         
 		<!-- Portal XML services -->
 		<allow service="portal.search"/>
