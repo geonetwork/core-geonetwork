@@ -333,6 +333,7 @@
 	<harvestingManagement>Harvesting Management</harvestingManagement>
 	<harvestingManDes>Hinzufügen/Bearbeiten/Löschen und Ansehen von Harvesting Aufgaben</harvestingManDes>
 	<help>Hilfe</help>
+    <helpLinkTooltip js="true">Hilfe</helpLinkTooltip>    
 	<helpComplete>Komplette Hilfe</helpComplete>
 	<helperList>Vorschläge </helperList>
 	<hideAdvancedOptions>Verstecke erweiterte Optionen</hideAdvancedOptions>

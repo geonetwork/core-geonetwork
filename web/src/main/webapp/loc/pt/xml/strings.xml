@@ -334,6 +334,7 @@
 	<harvestingManagement>Gestão de harvesting</harvestingManagement>
 	<harvestingManDes>Adicionar/Modificar/Apagar/Iniciar/Parar tarefas de harvesting</harvestingManDes>
 	<help>Apoio</help>
+    <helpLinkTooltip js="true">Apoio</helpLinkTooltip>
 	<helpComplete>Apoio completo</helpComplete>
 	<helperList>Sugestões</helperList>
 	<hideAdvancedOptions>Ocultar os opções ampliadas</hideAdvancedOptions>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-          <ar>عربي</ar> <!-- Do not translate! -->
+    <ar>عربي</ar> <!-- Do not translate! -->
 	<cn>中文</cn> <!-- Do not translate! -->
 	<de>Deutsch</de> <!-- Do not translate! -->
 	<en>English</en> <!-- Do not translate! -->
@@ -333,6 +333,7 @@
 	<harvestingManagement>Manejo de harvesting</harvestingManagement>
 	<harvestingManDes>Agregar/modificar/borrar/iniciar/parar tareas de harvesting</harvestingManDes>
 	<help>Ayuda</help>
+    <helpLinkTooltip js="true">Ayuda</helpLinkTooltip>
 	<helpComplete>Ayuda Completa</helpComplete>
 	<helperList>Sugerencias:</helperList>
 	<hideAdvancedOptions>Búsqueda Simple</hideAdvancedOptions>

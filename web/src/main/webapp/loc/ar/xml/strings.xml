@@ -116,7 +116,7 @@
 	<addXMLFragment>Add from dictionary ...</addXMLFragment>
 	<translateWithGoogle>Use Google translation service to suggest a translation for selected language.</translateWithGoogle>
     <translateWithGoogle.maxSize js="true">Text to translate is larger than 5000 characters (see http://code.google.com/apis/ajaxlanguage/terms.html).</translateWithGoogle.maxSize>
-    <translateWithGoogle.emptyInput js="true">Main language input is empty. Add the main language value before using the translation service.</translateWithGoogle.emptyInput>    
+    <translateWithGoogle.emptyInput js="true">Main language input is empty. Add the main language value before using the translation service.</translateWithGoogle.emptyInput>
     <layersAdded js="true">Selected layers have been added</layersAdded>
 	<registrationFailed js="true">Error, registration failed:</registrationFailed>	
 	<tryAgain js="true">Try again later</tryAgain>
@@ -333,6 +333,7 @@
 	<harvestingManagement>Harvesting management</harvestingManagement>
 	<harvestingManDes>Add/modify/delete/start/stop harvesting tasks</harvestingManDes>
 	<help>تعليمات</help>
+    <helpLinkTooltip js="true">تعليمات</helpLinkTooltip>
 	<helpComplete>تعليمات كاملة</helpComplete>
 	<helperList>Suggestions:</helperList>	
 	<hideAdvancedOptions>خيارات أقل</hideAdvancedOptions>

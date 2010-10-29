@@ -333,6 +333,7 @@
 	<harvestingManagement>Harvesting management</harvestingManagement>
 	<harvestingManDes>Add/modify/delete/start/stop harvesting tasks</harvestingManDes>
 	<help>显示帮助信息</help>
+    <helpLinkTooltip js="true">显示帮助信息</helpLinkTooltip>    
 	<helpComplete>显示完整版帮助信息</helpComplete>
 	<helperList>Suggestions:</helperList>
 	<hideAdvancedOptions>简单搜索</hideAdvancedOptions>

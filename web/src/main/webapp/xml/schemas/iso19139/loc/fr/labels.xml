@@ -11,7 +11,13 @@
   portant modalités d'application de la directive 2007/2/CE du Parlement européen et du Conseil en
   ce qui concerne les métadonnées.
   -->
-<labels xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xmlns:srv="http://www.isotc211.org/2005/srv">
+<labels xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:gts="http://www.isotc211.org/2005/gts"
+        xmlns:gco="http://www.isotc211.org/2005/gco"
+        xmlns:gml="http://www.opengis.net/gml"
+        xmlns:srv="http://www.isotc211.org/2005/srv"
+        xmlns:gmx="http://www.isotc211.org/2005/gmx">
+        
   <element name="gmd:MD_ScopeCode">
     <label>Code du sujet</label>
     <description></description>
