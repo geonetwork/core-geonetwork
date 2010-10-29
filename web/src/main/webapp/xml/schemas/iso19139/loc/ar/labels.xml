@@ -4,8 +4,9 @@
 		  xmlns:gts="http://www.isotc211.org/2005/gts" 
 		  xmlns:gco="http://www.isotc211.org/2005/gco"
 		  xmlns:gml="http://www.opengis.net/gml"
-			xmlns:srv="http://www.isotc211.org/2005/srv">
-	
+          xmlns:srv="http://www.isotc211.org/2005/srv"
+          xmlns:gmx="http://www.isotc211.org/2005/gmx">			
+
 	<!-- ==================================================== -->
 	<element name="gmd:CI_OnlineResource">
 		<label>OnLine resource</label>

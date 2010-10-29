@@ -12,9 +12,11 @@ function toolTip(spanId)
 		var schema = tokens[0].substring(5); // remove stip. 
 		var name   = tokens[1];
 		var context = tokens[2];
-		var isoType = tokens[3];
-	
-		var request = str.substitute(toolTipRequestTemp, { SCHEMA:schema, NAME:name, CONTEXT: context, ISOTYPE: isoType });
+        var fullContext = tokens[3];
+        var isoType = tokens[4];
+
+		var request = str.substitute(toolTipRequestTemp, { SCHEMA:schema, NAME:name, CONTEXT: context,
+            FULLCONTEXT: fullContext, ISOTYPE: isoType });
 		
 		ker.send('xml.schema.info', request, ker.wrap(this, function(xmlRes) {
 			var htmlTip = '';
@@ -58,15 +60,22 @@ function getHtmlTip(node)
 		var descr= xml.evalXPath(node, 'description');
 		var cond = xml.evalXPath(node, 'condition');
 		var help = xml.evalXPath(node, 'help');
+        var help_link = xml.evalXPath(node, 'help_link');
 		
 		if (cond == null)
 			cond = '';
 		if (help == null)
 			help = '';
 			
-		var data = { LABEL: label, DESCRIPTION : descr, CONDITION : cond, HELP : help };
-				
-		return str.substitute(toolTipTemp, data);
+        if (help_link != null) {
+		    var data = { LABEL: label, DESCRIPTION : descr, HELP_LINK: help_link, CONDITION : cond, HELP : help };
+
+		    return str.substitute(toolTipTempLink, data);
+        } else {
+            var data = { LABEL: label, DESCRIPTION : descr, CONDITION : cond,  HELP : help };
+
+		    return str.substitute(toolTipTemp, data);
+        }
 	}
 }
 
@@ -84,7 +93,7 @@ var toolTipRequestTemp =
 '         xmlns:gco="http://www.isotc211.org/2005/gco"'+
 '         xmlns:dct="http://purl.org/dc/terms/"'+
 '         xmlns:dc ="http://purl.org/dc/elements/1.1/">'+
-'   <element schema="{SCHEMA}" name="{NAME}" context="{CONTEXT}" isoType="{ISOTYPE}"/>'+
+'   <element schema="{SCHEMA}" name="{NAME}" context="{CONTEXT}" fullContext="{FULLCONTEXT}" isoType="{ISOTYPE}"/>'+
 '</request>';
 
 //=====================================================================================
@@ -96,6 +105,12 @@ var toolTipTemp =
 	'   <br/>'+
 	'   <font color="#C00000">{CONDITION}</font>'+
 	'   <i>{HELP}</i>';
+
+//=====================================================================================
+
+var toolTipTempLink =  toolTipTemp +
+'   <br/>'+
+'   <a href="{HELP_LINK}" target="_blank">' + translate('helpLinkTooltip') + '</a>';
 
 //=====================================================================================
 

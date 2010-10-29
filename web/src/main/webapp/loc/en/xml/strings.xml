@@ -334,6 +334,7 @@
 	<harvestingManagement>Harvesting management</harvestingManagement>
 	<harvestingManDes>Add/modify/delete/start/stop harvesting tasks</harvestingManDes>
 	<help>Help</help>
+    <helpLinkTooltip js="true">Help</helpLinkTooltip>  
 	<helpComplete>Complete help</helpComplete>
 	<helperList>Suggestions:</helperList>
 	<hideAdvancedOptions>Hide advanced options</hideAdvancedOptions>

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<labels xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gts="http://www.isotc211.org/2005/gts"
-    xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml"
-    xmlns:srv="http://www.isotc211.org/2005/srv">
+<labels xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:gts="http://www.isotc211.org/2005/gts"
+        xmlns:gco="http://www.isotc211.org/2005/gco"
+        xmlns:gml="http://www.opengis.net/gml"
+        xmlns:srv="http://www.isotc211.org/2005/srv"
+        xmlns:gmx="http://www.isotc211.org/2005/gmx">
+        
     <element name="gmd:MD_ScopeCode">
         <label>Scope code</label>
         <description>Class of information to which the referencing entity applies</description>

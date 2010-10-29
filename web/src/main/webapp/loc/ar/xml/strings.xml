@@ -333,6 +333,7 @@
 	<harvestingManagement>Harvesting management</harvestingManagement>
 	<harvestingManDes>Add/modify/delete/start/stop harvesting tasks</harvestingManDes>
 	<help>تعليمات</help>
+    <helpLinkTooltip js="true">تعليمات</helpLinkTooltip>
 	<helpComplete>تعليمات كاملة</helpComplete>
 	<helperList>Suggestions:</helperList>	
 	<hideAdvancedOptions>خيارات أقل</hideAdvancedOptions>

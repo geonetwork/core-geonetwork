@@ -113,10 +113,12 @@ public class Info implements Service {
 		String name = Util.getAttrib(elem, "name");
 		String context = Util.getAttrib(elem, "context", "");
 		String isoType = Util.getAttrib(elem, "isoType", "");
+        String fullContext = Util.getAttrib(elem, "fullContext", "");
 
 		name = normalizeNamespace(elem, name);
 		context = normalizeNamespace(elem, context);
 		isoType = normalizeNamespace(elem, isoType);
+        fullContext = normalizeNamespace(elem, fullContext);
 
 		if (name == null)
 			return buildError(elem, UNKNOWN_NAMESPACE);
@@ -124,12 +126,12 @@ public class Info implements Service {
 		if (!dm.existsSchema(schema))
 			return buildError(elem, UNKNOWN_SCHEMA);
 
-		return getHelp(dm, langCode, elem, fileName, schema, name, context,
+        return getHelp(dm, langCode, elem, fileName, schema, name, context, fullContext,
 				isoType);
 	}
 
 	private Element getHelp(DataManager dm, String langCode, Element elem,
-			String fileName, String schema, String name, String context,
+            String fileName, String schema, String name, String context,  String fullContext,
 			String isoType) throws BadInputEx, OperationAbortedEx {
 		File file = getFile(langCode, schema, fileName);
 
@@ -147,6 +149,7 @@ public class Info implements Service {
 		try {
 			Element entries = xfc.get();
 
+            // Check fullContext
 			for (Object o : entries.getChildren()) {
 				Element currElem = (Element) o;
 				String currName = currElem.getAttributeValue("name");
@@ -162,20 +165,46 @@ public class Info implements Service {
 					currContext = normalizeNamespace(entries, currContext);
 
 					if (name.equals(currName)
-							&& (context.equals(currContext) || isoType
+							&& (fullContext.equals(currContext) || isoType
 									.equals(currContext)))
 						return (Element) currElem.clone();
-				} else if (name.equals(currName))
+				} else if (name.equals(currName)
+                        && (currContext != null) && fullContext.equals(currContext))
 					return (Element) currElem.clone();
 
 			}
 
+            // Check context
+            for (Object o : entries.getChildren()) {
+                Element currElem = (Element) o;
+                String currName = currElem.getAttributeValue("name");
+                String currContext = currElem.getAttributeValue("context");
+
+                currName = normalizeNamespace(entries, currName);
+
+                if (currName == null)
+                    throw new OperationAbortedEx("No namespace found for : "
+                            + currName);
+
+                if (currContext != null && context != null && isoType != null) {
+                    currContext = normalizeNamespace(entries, currContext);
+
+                    if (name.equals(currName)
+                            && (context.equals(currContext) || isoType
+                                    .equals(currContext)))
+                        return (Element) currElem.clone();
+                } else if (name.equals(currName))
+                    return (Element) currElem.clone();
+
+            }
+
 			if (schema.contains("iso19139") && !(schema.equals("iso19139"))) {
 				return getHelp(dm, langCode, elem, fileName, "iso19139", name,
-						context, isoType);
+                        context, fullContext, isoType);
 			} else
 				return buildError(elem, NOT_FOUND);
 		} catch (Exception e) {
+            e.printStackTrace();
 			throw new OperationAbortedEx("Can't load xml file : " + file
 					+ " element name:" + name, e);
 		}

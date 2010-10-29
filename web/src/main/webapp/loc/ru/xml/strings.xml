@@ -334,6 +334,7 @@
 	<harvestingManagement>Управление сбором метаданных</harvestingManagement>
 	<harvestingManDes>Добавить/изменить/удалить/запустить/остановить сбор метаданных</harvestingManDes>
 	<help>Помощь</help>
+    <helpLinkTooltip js="true">Помощь</helpLinkTooltip>  
 	<helpComplete>Полная помощь</helpComplete>
 	<helperList>Suggestions:</helperList>
 	<hideAdvancedOptions>Простой поиск</hideAdvancedOptions>

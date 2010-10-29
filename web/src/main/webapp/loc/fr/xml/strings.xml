@@ -336,6 +336,7 @@
 	<harvestingManagement>Gestion du moissonnage</harvestingManagement>
 	<harvestingManDes>Ajouter/modifier/supprimer/lancer/arrêter les moissons (récupération de métadonnées depuis un noeud distant)</harvestingManDes>
 	<help>Aide</help>
+    <helpLinkTooltip js="true">Aide</helpLinkTooltip>  
 	<helpComplete>Aide complet</helpComplete>
 	<helperList>Suggestions :</helperList>	
 	<hideAdvancedOptions>Recherche simple</hideAdvancedOptions>

@@ -334,6 +334,7 @@
 	<harvestingManagement>Harvesting beheer</harvestingManagement>
 	<harvestingManDes>Toevoegen/wijzigen/verwijderen/starten/stoppen van harvesting taken</harvestingManDes>
 	<help>Help</help>
+    <helpLinkTooltip js="true">Help</helpLinkTooltip>  
 	<helpComplete>Complete help</helpComplete>
 	<helperList>Suggestions:</helperList>
 	<hideAdvancedOptions>Verberg geavanceerde opties</hideAdvancedOptions>
