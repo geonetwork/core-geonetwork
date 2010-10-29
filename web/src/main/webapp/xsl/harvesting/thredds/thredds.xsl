@@ -152,7 +152,6 @@
 			&#160;
 			<select id="thredds.outputSchemaOnCollections">
 				<option value="iso19139">iso19115/19139</option>
-				<option value="iso19139.mcp">Marine Community Profile of ISO19115/19139</option>
 			</select><br/>
 		</div>
 		
@@ -184,7 +183,6 @@
 			&#160;
 			<select id="thredds.outputSchemaOnAtomics">
 				<option value="iso19139">iso19115/19139</option>
-				<option value="iso19139.mcp">Marine Community Profile of ISO19115/19139</option>
 			</select><br/>
 		</div>
 		
