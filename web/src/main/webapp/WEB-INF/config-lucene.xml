@@ -23,7 +23,7 @@
 		<Field name="_uuid"/>
 		<Field name="parentUuid"/>
 		<Field name="operatesOn"/>
-		<Field name="subject"/>
+		<!--Field name="subject"/-->
 	</tokenized>
 
 </config>
