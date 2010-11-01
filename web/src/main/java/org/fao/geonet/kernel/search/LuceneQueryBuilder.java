@@ -46,27 +46,36 @@ public class LuceneQueryBuilder {
 		_analyzer          = analyzer;
 	}
 
-	/**
-	 * Creates a query for a string.
-	 */
+    /**
+     * Creates a query for a string. If the string contains a wildcard, similarity is ignored.
+     *
+     * @param string
+     * @param luceneIndexField
+     * @param similarity
+     * @return
+     */
 	private Query textFieldToken(String string, String luceneIndexField, String similarity) {
-		// similarity is not set or is 1
-		if(similarity == null || similarity.equals("1")) {
-			TermQuery query = null;
-			if(string != null) {
-				query = new TermQuery(new Term(luceneIndexField, LuceneSearcher.analyzeQueryText(luceneIndexField, string, _analyzer, _tokenizedFieldSet)));
-			}
-			return query;
-		}
-		// similarity is not null and not 1
-		else {
-			FuzzyQuery query = null;
-			if(string != null) {
-				Float minimumSimilarity = Float.parseFloat(similarity);
-				query = new FuzzyQuery(new Term(luceneIndexField, LuceneSearcher.analyzeQueryText(luceneIndexField, string, _analyzer, _tokenizedFieldSet)), minimumSimilarity);
-			}
-			return query;
-		}
+        if(string == null) {
+            throw new IllegalArgumentException("Cannot create Lucene query for null string");
+        }
+        Query query = null;
+        // no wildcards
+        if(string.indexOf('*') < 0 && string.indexOf('?') < 0) {
+            // similarity is not set or is 1
+            if(similarity == null || similarity.equals("1")) {
+                query = new TermQuery(new Term(luceneIndexField, LuceneSearcher.analyzeQueryText(luceneIndexField, string, _analyzer, _tokenizedFieldSet)));
+            }
+            // similarity is not null and not 1
+            else {
+                Float minimumSimilarity = Float.parseFloat(similarity);
+                query = new FuzzyQuery(new Term(luceneIndexField, LuceneSearcher.analyzeQueryText(luceneIndexField, string, _analyzer, _tokenizedFieldSet)), minimumSimilarity);
+            }
+        }
+        // wildcards
+        else {
+            query = new WildcardQuery(new Term(luceneIndexField, LuceneSearcher.analyzeQueryText(luceneIndexField, string, _analyzer, _tokenizedFieldSet)));
+        }		
+        return query;
 	}
 
 	/**
