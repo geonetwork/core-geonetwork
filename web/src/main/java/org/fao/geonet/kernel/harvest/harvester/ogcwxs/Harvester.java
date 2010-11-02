@@ -194,7 +194,9 @@ class Harvester
         		"&VERSION=" + params.ogctype.substring(3) +
         		"&REQUEST=" + GETCAPABILITIES
         		;
-
+		
+		log.debug("GetCapabilities document: " + this.capabilitiesUrl);
+		
         XmlRequest req = new XmlRequest();
         req.setUrl(new URL(this.capabilitiesUrl));
         req.setMethod(XmlRequest.Method.GET);
@@ -652,7 +654,10 @@ class Harvester
 		
 		try {
 			String filename = getMapThumbnail(layer);
+			
 			if (filename != null) {
+				log.debug("  - File: " + filename);
+				
 				Element par = new Element ("request");
 				par.addContent(new Element ("id").setText(layer.id));
 				par.addContent(new Element ("version").setText("10"));
@@ -663,11 +668,8 @@ class Harvester
 				fname.setAttribute("type", "file");
 				fname.setAttribute("size", "");
 				
-				par.addContent(fname); // TODO
+				par.addContent(fname);
 				par.addContent(new Element ("add").setText("Add"));
-				par.addContent(new Element ("scaling").setText("on"));
-				par.addContent(new Element ("scalingFactor").setText("800"));
-				par.addContent(new Element ("scalingDir").setText("width"));
 				par.addContent(new Element ("createSmall").setText("on"));
 				par.addContent(new Element ("smallScalingFactor").setText("180"));
 				par.addContent(new Element ("smallScalingDir").setText("width"));
@@ -680,6 +682,7 @@ class Harvester
 				result.thumbnailsFailed ++;
 		} catch (Exception e) {
 			log.warning("  - Failed to set thumbnail for metadata: " + e.getMessage());
+			e.printStackTrace();
 			result.thumbnailsFailed ++;
 		}
 		
@@ -859,7 +862,7 @@ class Harvester
 	 * in the catalogue) instead of a delete/insert operation.
 	 */
 	private String capabilitiesUrl;
-    private static final int WIDTH = 300;
+    private static final int WIDTH = 900;
 	private static final String GETCAPABILITIES = "GetCapabilities";
 	private static final String GETMAP = "GetMap";
     private static final String IMAGE_FORMAT = "image/png";

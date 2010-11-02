@@ -167,19 +167,19 @@ public class Set implements Service
 		String  type          = Util.getParam     (params, Params.TYPE);
 		String  version       = Util.getParam     (params, Params.VERSION);
 		String  file          = Util.getParam     (params, Params.FNAME);
-		String  scalingDir    = Util.getParam     (params, Params.SCALING_DIR);
+		String  scalingDir    = Util.getParam     (params, Params.SCALING_DIR, "width");
 		boolean scaling       = Util.getParam     (params, Params.SCALING, false);
-		int     scalingFactor = Util.getParamAsInt(params, Params.SCALING_FACTOR);
+		int     scalingFactor = Util.getParam     (params, Params.SCALING_FACTOR, 1);
 		
 		boolean createSmall        = Util.getParam(params, Params.CREATE_SMALL,        false);
 		String  smallScalingDir    = Util.getParam(params, Params.SMALL_SCALING_DIR,   "");
 		int     smallScalingFactor = Util.getParam(params, Params.SMALL_SCALING_FACTOR, 0);
 		
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
 		String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
-
-		new File(dataDir).mkdirs();
+		
+		if (!new File(dataDir).mkdirs())
+			context.error("Failed to make dir: " + dataDir);
+		
 		//-----------------------------------------------------------------------
 		//--- create the small thumbnail, removing the old one
 
@@ -213,7 +213,6 @@ public class Set implements Service
 		else
 		{
 			//--- move uploaded file to destination directory
-
 			File inFile  = new File(context.getUploadDir(), file);
 			File outFile = new File(dataDir,                file);
 
