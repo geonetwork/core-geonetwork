@@ -14,6 +14,30 @@
 	<showRemoteHTML>Show HTML from remote server</showRemoteHTML>
 	<!-- end new strings -->
 
+	<geopublisher>GéoPublication</geopublisher>
+	<geoPublisherWindowTitle js="true">Géo-publication : </geoPublisherWindowTitle>
+	<geopublisherHelp>Publier/dépublier la données dans GeoServer (WMS,WFS).</geopublisherHelp>
+	<publish js="true">Publer</publish>
+	<publishTooltip js="true">Publier le jeu de données en cours dans le noeud distant. Si le jeu de données est présent, il est mis à jour.</publishTooltip>
+	<publishError js="true">Echec lors de la publication.</publishError>
+	<publishErrorCode js="true">Code de l&apos;erreur :</publishErrorCode>
+	<publishSuccess js="true">Publication effectuée.</publishSuccess>
+	<publishLayerAdded js="true"> Couche ajoutée à la carte.</publishLayerAdded>
+	<unpublish js="true">Dépublier</unpublish>
+	<unpublishTooltip js="true">Supprimer le jeu de données en cours dans le noeud distant.</unpublishTooltip>
+	<unpublishError js="true">Echec de la dépublication. </unpublishError>
+	<unpublishSuccess js="true">Dépublication effectuée.</unpublishSuccess>
+	<check js="true">Vérifier</check>
+	<errorConnectionRefused js="true">Connexion échouée.</errorConnectionRefused>
+	<errorDatasetNotFound js="true">Jeu de données non trouvé.</errorDatasetNotFound>
+	<datasetFound js="true">Jeu de données trouvé et ajouté à la carte.</datasetFound>
+	<checkFailure js="true">Echec de la vérification de la présence du jeu de données dans le noeud distant.</checkFailure>
+	<addOnlineSource js="true">Ajouter le lien WMS à la fiche</addOnlineSource>
+	<statusInformation js="true">Status.</statusInformation>
+	<mapPreview js="true">Carte</mapPreview>
+	<selectANode js="true">Choisir un noeud ...</selectANode>
+	<publishing js="true">Publication en cours ...</publishing>
+	
 	<createChild>Créer un enfant</createChild>
 	<updateChildren>Mettre à jour les enfants</updateChildren>
 	<updateChildrenOk>Enfants mis à jour</updateChildrenOk>
@@ -531,6 +555,7 @@
 	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC-WMS Web Map Service (ver 1.1.1)</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Fichier à télécharger (FTP)</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Fichier à télécharger</protocolChoice>
+	<protocolChoice show="-" value="DB:POSTGIS">PostGIS database table</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Adresse Internet (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Site web partenaire (URL)</protocolChoice>

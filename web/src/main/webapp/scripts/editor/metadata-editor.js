@@ -550,6 +550,7 @@ function checkForFileUpload(fref, pref)
 	// vice versa depending on protocol
 	finput = $('di_'+fref);
 	fbuttn = $('db_'+fref);
+    
 	if (protocolDownload) {
 		if (finput != null) finput.hide();
 		if (fbuttn != null) fbuttn.show();
@@ -602,6 +603,8 @@ function doFileUploadSubmit(form)
 						$('di_'+$F(ref)).show();
 						$('db_'+$F(ref)).hide();
 						Modalbox.show(doc.body.innerHTML,{width:600});
+						
+						doSaveAction('metadata.update');
 					} else {
 						alert(translate("uploadSetFileNameFailed"));
 					}
@@ -1118,6 +1121,74 @@ function showLinkedMetadataSelectionPanel(ref, name) {
 }
 
 
+/**
+ * Property: geoPublisherWindow
+ * The window in which we can publish dataset to geoserver
+ */
+var geoPublisherWindow;
+
+/**
+ * Display geo publisher panel
+ * 
+ * @param id                metadata identifier
+ * @param name              file name (usually a zip file which contains ESRI Shapefile)
+ * @param accessStatus      public/private according to privileges
+ * @param nodeName          node name to insert (ie. gmd:online)
+ * @param insertNodeRef     reference where XML fragement should be inserted.
+ * 
+ * @return
+ */
+function showGeoPublisherPanel(id, name, accessStatus, nodeName, insertNodeRef, extent) {
+    Ext.QuickTips.init();
+    
+    // Destroy all previously created windows which may
+    // have been altered by save/check editor action.
+    if (geoPublisherWindow && geoPublisherWindow.getEl().dom.parentNode==null) {
+        geoPublisherWindow.close();
+        geoPublisherWindow = undefined;
+    }
+    
+    if (!geoPublisherWindow) {
+        var geoPublisherPanel = new GeoNetwork.GeoPublisherPanel({
+            width: 650,
+            height: 300,
+            layers : backgroundLayers,
+            extent : extent,
+            listeners: {
+                addOnLineSource: function(panel, url, layerName, serviceTypes) {
+                    var id = '_X' + insertNodeRef + '_' + nodeName.replace(":","COLON");
+                    var wmsOnlineSource = '<gmd:CI_OnlineResource xmlns:gmd=&quot;http://www.isotc211.org/2005/gmd&quot; xmlns:gco=&quot;http://www.isotc211.org/2005/gco&quot;><gmd:linkage><gmd:URL>' +
+                    url + '</gmd:URL></gmd:linkage><gmd:protocol><gco:CharacterString>OGC:WMS-1.1.1-http-get-map</gco:CharacterString></gmd:protocol>' + 
+                    '<gmd:name gco:nilReason=&quot;missing&quot;><gco:CharacterString>' + layerName + '</gco:CharacterString></gmd:name><gmd:description><gco:CharacterString>' +
+                    layerName + '</gco:CharacterString></gmd:description></gmd:CI_OnlineResource>';
+                    
+                    // Add XML fragments into main form.
+                    var input = {tag: 'input', type: 'hidden', id: id, name: id, value: wmsOnlineSource};
+                    var dh = Ext.DomHelper;
+                    dh.append(Ext.get("hiddenFormElements"), input);
+                        
+                    // Save
+                    doAction('metadata.update');
+                }
+            }
+        });
+
+        geoPublisherWindow = new Ext.Window({
+            title: translate('geoPublisherWindowTitle'),
+            layout: 'fit',
+            modal: true,
+            items: geoPublisherPanel,
+            closeAction: 'hide',
+            //resizable: false,
+            constrain: true,
+            iconCls: 'repository'
+        });
+    }
+    geoPublisherWindow.items.get(0).setRef(id, name, accessStatus);
+    geoPublisherWindow.setTitle(translate('geoPublisherWindowTitle') + " " + name);
+    geoPublisherWindow.show();
+    
+}
 
 
 /**
@@ -1395,6 +1466,8 @@ function show(nodes, ref, focus) {
  */
 function googleTranslate(ref, divSuggestion, target, fromLang, toLang) {
 	// --- map language code to Google language code
+    // See http://code.google.com/apis/ajaxlanguage/documentation/reference.html#_intro_fonje 
+    // for google code list
 	var map = {
 		"GE" :"de",
 		"SP" :"es",

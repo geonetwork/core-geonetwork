@@ -143,6 +143,7 @@
 		        <script type="text/javascript" src="../../scripts/editor/app.KeywordSelectionPanel.js"></script>
 				<script type="text/javascript" src="../../scripts/editor/app.CRSSelectionPanel.js"></script>
 				<script type="text/javascript" src="../../scripts/editor/app.LinkedMetadataSelectionPanel.js"></script>
+				<script type="text/javascript" src="../../scripts/editor/app.GeoPublisherPanel.js"></script>
 			</xsl:when>
 			<xsl:otherwise>
 				<!-- 
@@ -155,7 +156,12 @@
     </xsl:template>
     
     <xsl:template name="css">
+        <link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork_map.css" />
+    
         <style type="text/css">
+            .styler {
+            background-image:url(<xsl:value-of select="/root/gui/url"/>/images/map/layerstyles.png) !important;
+            }
             .drawPolygon {
             background-image:url(<xsl:value-of select="/root/gui/url"/>/images/draw_polygon_off.png) !important;
             }

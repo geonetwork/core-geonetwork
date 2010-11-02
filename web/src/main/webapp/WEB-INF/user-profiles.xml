@@ -201,6 +201,8 @@
 		<allow service="xml.relation.insert"/>
 		<allow service="xml.relation.delete"/>
 		
+		<!-- GeoServer publication -->
+		<allow service="geoserver.publisher"/>
 	</profile>
 
 	<!-- ====================================================================== -->

@@ -14,6 +14,30 @@
 	<showRemoteHTML>Show HTML from remote server</showRemoteHTML>
 	<!-- end new strings -->
 
+	<geopublisher>GeoPublisher</geopublisher>
+	<geoPublisherWindowTitle js="true">Geo-publication: </geoPublisherWindowTitle>
+	<geopublisherHelp>Publish or unpublish dataset as WMS or WFS in remote geoserver.</geopublisherHelp>
+	<publish js="true">Publish</publish>
+	<publishTooltip js="true">Publish current dataset to remote node. If dataset is already publish in that node, it will be updated.</publishTooltip>
+	<publishError js="true">Publication failed.</publishError>
+	<publishErrorCode js="true">Error code:</publishErrorCode>
+	<publishSuccess js="true">Successful publication.</publishSuccess>
+	<publishLayerAdded js="true"> Layer added to map preview.</publishLayerAdded>
+	<unpublish js="true">Unpublish</unpublish>
+	<unpublishTooltip js="true">Remove current dataset from remote node.</unpublishTooltip>
+	<unpublishError js="true">Unpublication failed. </unpublishError>
+	<unpublishSuccess js="true">Successful unpublication.</unpublishSuccess>
+	<check js="true">Check</check>
+	<errorConnectionRefused js="true">Connection refused.</errorConnectionRefused>
+	<errorDatasetNotFound js="true">Dataset not found.</errorDatasetNotFound>
+	<datasetFound js="true">Dataset found and added to the map preview.</datasetFound>
+	<checkFailure js="true">Failed to check dataset in remote node.</checkFailure>
+	<addOnlineSource js="true">Add WMS info to online source</addOnlineSource>
+	<statusInformation js="true">Status information.</statusInformation>
+	<mapPreview js="true">Map preview</mapPreview>
+	<selectANode js="true">Select a node ...</selectANode>
+	<publishing js="true">Publishing ...</publishing>
+	
 	<createChild>Create child</createChild>
 	<updateChildren>Update children</updateChildren>
 	<updateChildrenOk>Children updated</updateChildrenOk>
@@ -530,6 +554,7 @@
 	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Ficheiro para download por FTP</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Ficheiro para download</protocolChoice>
+	<protocolChoice show="-" value="DB:POSTGIS">PostGIS database table</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Domínio (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Domínio de parceiro (URL)</protocolChoice>

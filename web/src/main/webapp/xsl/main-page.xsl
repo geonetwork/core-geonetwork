@@ -11,7 +11,6 @@
 	<xsl:template mode="css" match="/">
 		<xsl:call-template name="geoCssHeader"/>
 		<xsl:call-template name="ext-ux-css"/>
-        <link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork_map.css" />
 	</xsl:template>
 	
 	<!--

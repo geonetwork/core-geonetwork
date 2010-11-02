@@ -113,6 +113,10 @@
  <!-- Display error only when loading validation report 
   <editor-validation-errors-only-on-load/>-->
  
+ <!-- Display the geopublisher option for all updloaded files
+ 	<editor-geopublisher/>  -->
+ 
+ 
  <!-- Display metadata tabs in edit and view mode. 
   ISO and INSPIRE view only available for ISO19139 records.
   Default view is always visible.

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:java="java:org.fao.geonet.util.XslUtil" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="gmd gco gml gts srv xlink exslt geonet java">
+<xsl:stylesheet version="1.0" xmlns:java="java:org.fao.geonet.util.XslUtil" 
+    xmlns:math="http://exslt.org/math" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="gmd gco gml gts srv xlink exslt geonet java math">
 
     <xsl:template mode="iso19139" match="gmd:EX_BoundingPolygon" priority="20">
         <xsl:param name="schema"/>
@@ -59,6 +60,20 @@
     <xsl:template mode="gml" match="gml:coordinates"><xsl:variable name="ts" select="string(@ts)"/><xsl:variable name="cs" select="string(@cs)"/>(<xsl:value-of select="java:takeUntil(java:toWktCoords(string(.),$ts,$cs), ';\Z')"/>),</xsl:template>
     <xsl:template mode="gml" match="gml:posList">(<xsl:value-of select="java:takeUntil(java:posListToWktCoords(string(.), string(@dimension)), ';\Z')"/>),</xsl:template>
     <xsl:template mode="gml" match="text()"/>
+    
+    <!-- Compute global bbox of current metadata record -->
+    <xsl:template name="iso19139-global-bbox">
+        <xsl:param name="separator" select="','"/>
+        <xsl:if test="//gmd:EX_GeographicBoundingBox">
+            <xsl:value-of select="math:min(//gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal)"/>
+            <xsl:value-of select="$separator"/>
+            <xsl:value-of select="math:min(//gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude/gco:Decimal)"/>
+            <xsl:value-of select="$separator"/>
+            <xsl:value-of select="math:max(//gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude/gco:Decimal)"/>
+            <xsl:value-of select="$separator"/>
+            <xsl:value-of select="math:max(//gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude/gco:Decimal)"/>
+        </xsl:if>
+    </xsl:template>
     
     <!-- Do not allow multiple polygons in same extent. -->
     <xsl:template mode="elementEP" match="geonet:child[@name='polygon' and @prefix='gmd' and preceding-sibling::gmd:polygon]" priority="20"/>

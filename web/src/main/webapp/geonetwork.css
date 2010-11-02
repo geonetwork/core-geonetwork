@@ -948,6 +948,19 @@ div.toolTipOverlay ul li, div.shortcutHelp ul li {
 .validationReportIcon { background-image: url('images/schematron.gif') !important; }
 .shortcutHelpIcon { background-image: url('images/schematron.gif') !important; }
 .linkIcon { background-image: url('images/link.png') !important; }
+.addVector { background-image: url('images/vector_add.png') !important; }
+.delVector { background-image: url('images/vector_delete.png') !important; }
+.connect { background-image: url('images/connect.png') !important; }
+.processMetadata { background-image: url('images/table_gear.png') !important; }
+.repository { 
+    background-image: url('images/database_yellow.png') !important; 
+    background-repeat: no-repeat;
+    padding-left: 15px;
+}
+ a.repository {
+    cursor: pointer;
+}
+
 
 img.category {
     width:15px;
