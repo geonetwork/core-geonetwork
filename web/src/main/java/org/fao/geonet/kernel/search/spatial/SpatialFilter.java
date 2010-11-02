@@ -1,9 +1,32 @@
+//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
+
 package org.fao.geonet.kernel.search.spatial;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.TopologyException;
 import com.vividsolutions.jts.index.SpatialIndex;
+import com.vividsolutions.jts.io.WKTReader;
 import jeeves.utils.Log;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.FieldSelector;
@@ -190,7 +213,27 @@ public abstract class SpatialFilter extends Filter
      */
     protected synchronized Map<String,FeatureId> unrefinedSpatialMatches(){
         if(_unrefinedMatches==null){
-            List<Pair<FeatureId,String>> fids = _index.query(_geom.getEnvelopeInternal());
+            Geometry geom = null;
+
+            // _index.query returns geometries that intersect with provided envelope. To use later a spatial filter that
+            // provides geometries that don't intersect with the query envelope (_geom) should be used a full extent
+            // envelope in this method, instead of the query envelope (_geom)
+            if (getFilter().getClass().getName().equals("org.geotools.filter.spatial.DisjointImpl")) {
+                try {
+                    WKTReader reader = new WKTReader();
+
+                    String geomWKT = "POLYGON((-180 90, 180 90, 180 -90, -180 -90, -180 90))";
+                    geom = reader.read(geomWKT);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    return _unrefinedMatches;
+                }
+
+            } else {
+                geom = _geom;
+            }
+
+            List<Pair<FeatureId,String>> fids = _index.query(geom.getEnvelopeInternal());
             _unrefinedMatches = new HashMap<String,FeatureId>();
             for (Pair<FeatureId, String> match : fids) {
                 _unrefinedMatches.put(match.two(), match.one());
