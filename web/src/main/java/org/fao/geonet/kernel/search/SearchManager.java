@@ -56,7 +56,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.spatial.ContainsFilter;
 import org.fao.geonet.kernel.search.spatial.CrossesFilter;
 import org.fao.geonet.kernel.search.spatial.EqualsFilter;
-import org.fao.geonet.kernel.search.spatial.FullScanFilter;
+import org.fao.geonet.kernel.search.spatial.IsFullyOutsideOfFilter;
 import org.fao.geonet.kernel.search.spatial.IntersectionFilter;
 import org.fao.geonet.kernel.search.spatial.OgcGenericFilters;
 import org.fao.geonet.kernel.search.spatial.OverlapsFilter;
@@ -65,7 +65,6 @@ import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.search.spatial.TouchesFilter;
 import org.fao.geonet.kernel.search.spatial.WithinFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.util.spring.StringUtils;
 import org.geotools.data.DataStore;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureSource;
@@ -976,7 +975,7 @@ public class SearchManager
                 types.put(Geonet.SearchResult.Relation.CROSSES,
                         constructor(CrossesFilter.class));
                 types.put(Geonet.SearchResult.Relation.OUTSIDEOF,
-                        constructor(FullScanFilter.class));
+                        constructor(IsFullyOutsideOfFilter.class));
                 types.put(Geonet.SearchResult.Relation.EQUAL,
                         constructor(EqualsFilter.class));
                 types.put(Geonet.SearchResult.Relation.INTERSECTION,

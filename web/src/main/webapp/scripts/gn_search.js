@@ -1262,26 +1262,11 @@ function clearNode(node)
 
 function im_mm_getURLselectedbbox()
 {
-	return urlizebb(
-		$("northBL").value,
-		$("eastBL").value,
-		$("southBL").value,
-		$("westBL").value);
-}
 
-/**
- * Get the URLized version of the given bbox
- * @param {int} n
- * @param {int} e
- * @param {int} s
- * @param {int} w
- * @return {String} URL
- */
- function urlizebb(n, e, s, w)
-{
-	return	"northBL="+n+
-			"&eastBL="+e+
-			"&southBL="+s+
-			"&westBL="+w;
-};
+    return "geometry=POLYGON(( " + $("westBL").value + " "  + $("northBL").value + ", " +
+            $("eastBL").value + " " + $("northBL").value + ", " +
+            $("eastBL").value + " " + $("southBL").value + ", " +
+            $("westBL").value + " " + $("southBL").value + ", " +
+            $("westBL").value + " "  + $("northBL").value + "))";
+}
 /*** EOF ***********************************************************/
