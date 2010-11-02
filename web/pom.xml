@@ -431,6 +431,7 @@
                 <include>${geonetwork.build.dir}/scripts/editor/app.CRSSelectionPanel.js</include>
                 <include>${geonetwork.build.dir}/scripts/editor/app.KeywordSelectionPanel.js</include>
                 <include>${geonetwork.build.dir}/scripts/editor/app.LinkedMetadataSelectionPanel.js</include>
+                <include>${geonetwork.build.dir}/scripts/editor/app.GeoPublisherPanel.js</include>
                 <include>${geonetwork.build.dir}/scripts/editor/app.SearchField.js</include>
                 <include>${geonetwork.build.dir}/scripts/editor/csw.SearchTools.js</include>
                 <include>${geonetwork.build.dir}/scripts/editor/metadata-editor.js</include>
