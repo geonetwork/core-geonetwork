@@ -96,6 +96,8 @@
 	<clickablehyperlinks>التشعبية القابلة للنقر عليها</clickablehyperlinks>
 	
 	<localrating>تصنيف المحلية</localrating>
+
+    <autofixing>التلقائي إصلاحات</autofixing>
 	
 	<proxy>Proxy</proxy>
 	<use>Use</use>
@@ -265,7 +267,11 @@
 		<tip id="localrating.enable">
 			إذا كان تعيين وسوف الشبكة الأرضية للمستخدم حساب التصنيفات الفوقية من هذه العقدة فقط (وليس توزيعها بين العقدتين الشبكة الأرضية الأخرى).
 		</tip>		
-		
+
+        <!-- automatic fixing -->
+        <tip id="autofixing.enable">
+            عند تمكين الشبكة الأرضية ينطبق تلقائيا إصلاحات معينة عند حفظ البيانات الوصفية.
+        </tip>
                     <!-- proxy -->
 		
 		<tip id="proxy.use">

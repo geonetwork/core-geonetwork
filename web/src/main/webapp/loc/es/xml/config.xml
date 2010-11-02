@@ -94,7 +94,7 @@
 	<clickablehyperlinks>Se puede hacer clic en hipervínculos</clickablehyperlinks>
 
 	<localrating>Clasificación Local</localrating>
-
+    <autofixing>Automática corrige</autofixing>
 
     <inspire>INSPIRE</inspire>
     
@@ -299,7 +299,12 @@
 		<tip id="localrating.enable">
 			Si está establecido, GeoNetwork calculará puntuaciones de usuario para los metadatos de este nodo sólo (no distribuida entre los otros nodos de GeoNetwork).
 		</tip>
-		
+
+		<!-- automatic fixes -->
+		<tip id="autofixing.enable">
+            Cuando se activa, GeoNetwork aplica automáticamente corrige algunos al guardar los metadatos.
+        </tip>
+
 		<!-- proxy -->
 			
 		<tip id="proxy.use">

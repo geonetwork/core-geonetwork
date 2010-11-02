@@ -95,6 +95,7 @@
 	<clickablehyperlinks>Работающую гиперссылку</clickablehyperlinks>
 	
 	<localrating>Местные Рейтинг</localrating>
+    <autofixing>Автоматического исправления</autofixing>
 
 	<proxy>Прокси</proxy>
 	<use>Использовать</use>
@@ -261,7 +262,12 @@
 		<tip id="localrating.enable">
 			Если установлено, GeoNetwork будет вычислять пользователей оценки для метаданных из этого узла (хоть и не распределяется между другими узлами GeoNetwork).
 		</tip>
-		
+
+		<!-- automatic fixes -->
+		<tip id="autofixing.enable">
+            Когда включен, GeoNetwork автоматически применяет определенные исправления при сохранении метаданных.
+        </tip>
+
 		<!-- proxy -->
 
 		<tip id="proxy.use">
