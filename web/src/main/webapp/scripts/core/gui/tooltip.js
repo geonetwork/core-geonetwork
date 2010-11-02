@@ -41,8 +41,8 @@ function mouseIn(event)
 		document.body.appendChild(tip);	
 	}
 		
-	tip.style.left = Event.pointerX(event) +12;
-	tip.style.top  = Event.pointerY(event) +12;
+	tip.style.left = Event.pointerX(event) +12 + "px";
+	tip.style.top  = Event.pointerY(event) +12 + "px";
 	
 	timer = setTimeout(ker.wrap(this, mouseIn_CB), initDelay);	
 }
