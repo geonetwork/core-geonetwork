@@ -2329,27 +2329,37 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
-	private Element updateFixedInfo(String schema, Element md, Element env) throws Exception
-	{
-
+    /**
+     * Applies automatic fixes to the metadata (if that is enabled) and adds some environmental information about
+     * this system.
+     *
+     * @param schema
+     * @param md
+     * @param env
+     * @return
+     * @throws Exception
+     */
+	private Element updateFixedInfo(String schema, Element md, Element env) throws Exception {
+        Element result = new Element("root");
+        result.addContent(md);
 		//--- environment common to both existing and new records goes here
-		
 		env.addContent(new Element("changeDate").setText(new ISODate().toString()));
 		env.addContent(new Element("siteURL")   .setText(getSiteURL()));
 		Element system = settingMan.get("system", -1);
 		env.addContent(Xml.transform(system, appPath + Geonet.Path.STYLESHEETS+ "/xml/config.xsl"));
-
-		//--- setup root element
-
-		Element root = new Element("root");
-		root.addContent(md);
-		root.addContent(env);
-
-		//--- do the XSL transformation using update-fixed-info.xsl
-
+        //--- setup result element
+        result.addContent(env);
+        boolean autoFixing = settingMan.getValueAsBool("system/autofixing/enabled", true);
+        if(autoFixing) {
+            Log.debug(Geonet.DATA_MANAGER, "Autofixing is enabled, applying update-fixed-info");
+            //--- do an XSLT transformation using update-fixed-info.xsl
 		String styleSheet = editLib.getSchemaDir(schema) + Geonet.File.UPDATE_FIXED_INFO;
-
-		return Xml.transform(root, styleSheet);
+            result = Xml.transform(result, styleSheet);
+        }
+        else {
+            Log.debug(Geonet.DATA_MANAGER, "Autofixing is disabled, not applying update-fixed-info");
+        }
+		return result;
 	}
 
 	//--------------------------------------------------------------------------

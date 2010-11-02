@@ -96,6 +96,7 @@
 	<clickablehyperlinks>Clickable hyperlinks</clickablehyperlinks>
 
 	<localrating>Local Rating</localrating>
+    <autofixing>Correções automáticas</autofixing>
 	
 	<proxy>Proxy</proxy>
 	<use>Usar</use>
@@ -265,6 +266,11 @@
 			If set, GeoNetwork will calculate user ratings for metadata from this node only (not distributed among other GeoNetwork nodes).
 		</tip>
 		
+		<!-- automatic fixes -->
+		<tip id="autofixing.enable">
+            Quando ativado, GeoNetwork aplica automaticamente corrige certas quando você salvar metadados.
+        </tip>
+
 		<!-- proxy -->
 		
 		<tip id="proxy.use">

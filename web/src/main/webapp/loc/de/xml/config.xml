@@ -96,6 +96,7 @@
 	<clickablehyperlinks>Anklickbare Hyperlinks</clickablehyperlinks>
 
 	<localrating>Lokale Bewertung</localrating>
+    <autofixing>Automatische Updates</autofixing>
 
 	<proxy>Proxy</proxy>
 	<use>Use</use>
@@ -252,6 +253,11 @@
 			Falls gesetzt, werden GeoNetwork Ihre Bewertung für Metadaten aus diesen Knoten zu berechnen nur (nicht unter anderem GeoNetwork Knoten verteilt).
 		</tip>
 		
+        <!-- automatic fixes -->
+        <tip id="autofixing.enable">
+            Wenn aktiviert, GeoNetwork gilt automatisch bestimmte Korrekturen, wenn Sie Metadaten speichern.
+        </tip>
+
 		<!-- proxy -->
 		
 		<tip id="proxy.use">

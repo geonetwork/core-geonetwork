@@ -54,6 +54,7 @@
 		<xsl:call-template name="csw"/>
 		<xsl:call-template name="hyperlinks"/>
 		<xsl:call-template name="localrating"/>
+        <xsl:call-template name="autofixing"/>
         <xsl:call-template name="inspire"/>
 		<xsl:call-template name="proxy"/>
 		<xsl:call-template name="feedback"/>
@@ -478,6 +479,20 @@
 		</div>
 	</xsl:template>
 	
+	<!-- ============================================================================================= -->
+	<xsl:template name="autofixing">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/autofixing"/></h1>
+
+		<div align="left" style="{$style}">
+			<table>
+				<tr>
+					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/enable"/></td>
+					<td class="padded"><input id="autofixing.enable" class="content" type="checkbox" value=""/></td>
+				</tr>
+			</table>
+		</div>
+	</xsl:template>
+
 	<!-- ============================================================================================= -->
 	<xsl:template name="proxy">
 		<h1 align="left"><xsl:value-of select="/root/gui/config/proxy"/></h1>

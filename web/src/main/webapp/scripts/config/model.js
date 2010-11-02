@@ -81,6 +81,7 @@ ConfigModel.prototype.getConfig_OK = function(node)
             CLICKABLE_HYPERLINKS         : xml.evalXPath(node, 'clickablehyperlinks/enable'),
             INSPIRE           : xml.evalXPath(node, 'inspire/enable'),
 			LOCAL_RATING      : xml.evalXPath(node, 'localrating/enable'),			
+            AUTO_FIXING       : xml.evalXPath(node, 'autofixing/enable'),
 			PROXY_USE         : xml.evalXPath(node, 'proxy/use'),
 			PROXY_HOST        : xml.evalXPath(node, 'proxy/host'),
 			PROXY_PORT        : xml.evalXPath(node, 'proxy/port'),
@@ -224,6 +225,9 @@ ConfigModel.updateTemp =
 '	<localrating>' +
 '		<enable>{LOCAL_RATING}</enable>'+
 '	</localrating>' +
+'	<autofixing>' +
+'		<enable>{AUTO_FIXING}</enable>'+
+'	</autofixing>' +
 '	<inspire>' +
 '		<enable>{INSPIRE}</enable>'+
 '	</inspire>' +

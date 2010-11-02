@@ -128,6 +128,7 @@
 	<clickablehyperlinks>Hyperliens cliquables</clickablehyperlinks>
 
 	<localrating>Evaluation Local</localrating>
+    <autofixing>Automatique fixe</autofixing>
 	
 	<proxy>Proxy</proxy>
 	<use>Activé</use>
@@ -281,6 +282,11 @@
 			Si défini, GeoNetwork va calculer les cotes de l'utilisateur pour les métadonnées de ce nœud seulement (pas répartis entre les autres nœuds GeoNetwork).
 		</tip>
 		
+		<!-- automatic fixes -->
+		<tip id="autofixing.enable">
+            Lorsqu'elle est activée, GeoNetwork s'applique automatiquement les correctifs de certains lorsque vous enregistrez des métadonnées.
+        </tip>
+
 		<!-- proxy -->
 
 		<tip id="proxy.use">

@@ -96,6 +96,7 @@
 	<clickablehyperlinks>Klikbare hyperlinks</clickablehyperlinks>
 	
 	<localrating>Locale Waardering</localrating>
+    <autofixing>Automatische correcties</autofixing>
 	
 	<proxy>Proxy</proxy>
 	<use>Gebruik</use>
@@ -265,6 +266,11 @@
 			Als deze optie is ingeschakeld zal GeoNetwork de gebruikerswaardering van metadata alleen van deze node berekenen (niet gedistribueerd met andere GeoNetwork nodes).
 		</tip>
 		
+		<!-- automatic fixes -->
+		<tip id="autofixing.enable">
+            Wanneer ingeschakeld, GeoNetwork geldt automatisch bepaalde correcties bij het opslaan van metadata.
+        </tip>
+
 		<!-- proxy -->
 		
 		<tip id="proxy.use">
