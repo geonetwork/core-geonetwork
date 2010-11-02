@@ -152,12 +152,16 @@
 				<user>www-data</user>
 				<password>www-data</password>
 				<driver>org.postgresql.Driver</driver>
-				<!--					
+				<!-- 					
 					jdbc:postgresql:database
 					jdbc:postgresql://host/database
 					jdbc:postgresql://host:port/database
+					
+					or
+					
+					jdbc:postgis://host:port/database
 				-->
-                <url>jdbc:postgresql:geonetwork</url>
+                <url>jdbc:postgresql://localhost:5432/geonetwork</url>
 				<poolSize>10</poolSize>
 			</config>
 		</resource>
@@ -1204,7 +1208,8 @@
 	<include>config-test.xml</include>
 	<include>config-csw.xml</include>
 	<include>config-sru.xml</include>
-
+	<include>config-geoserverpublisher.xml</include>
+	
 	<!-- ====================================================================== -->
 
 </geonet>
