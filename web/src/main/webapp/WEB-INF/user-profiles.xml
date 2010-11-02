@@ -203,6 +203,11 @@
 		
 		<!-- GeoServer publication -->
 		<allow service="geoserver.publisher"/>
+		
+		<allow service="logo"/>
+		<allow service="logo.add"/>
+		<allow service="logo.delete"/>
+		<allow service="logo.set"/>
 	</profile>
 
 	<!-- ====================================================================== -->

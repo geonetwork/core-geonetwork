@@ -283,6 +283,13 @@
 							</tr>
 						</xsl:if>
 						
+						<xsl:if test="/root/gui/services/service/@name='logo'">
+							<tr>
+								<td class="padded"><a href="{/root/gui/locService}/logo"><xsl:value-of select="/root/gui/strings/logo"/></a></td>
+								<td class="padded"><xsl:value-of select="/root/gui/strings/logoDes"/></td>
+							</tr>
+						</xsl:if>
+						
 						<xsl:if test="/root/gui/services/service/@name='localization'">
 							<tr>
 								<td class="padded"><a href="{/root/gui/locService}/localization"><xsl:value-of select="/root/gui/strings/localiz"/></a></td>

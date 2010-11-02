@@ -38,7 +38,14 @@
 	<selectANode js="true">Select a node ...</selectANode>
 	<publishing js="true">Publishing ...</publishing>
 	
-
+	<logo>Logo configuration</logo>
+	<logoDes>Manage catalogue logo (node and harvesting logo)</logoDes>
+	<logoRegistered js="true">Registered logos</logoRegistered>
+	<logoAdd js="true">Add new logo</logoAdd>
+	<logoDel js="true">Remove selected logo</logoDel>
+	<logoForNode js="true">Set selected logo for the catalogue</logoForNode>
+	<logoSelect js="true">Select image for logo ...</logoSelect>
+	
 	<createChild>Create child</createChild>
 	<updateChildren>Update children</updateChildren>
 	<updateChildrenOk>Children updated</updateChildrenOk>
@@ -675,7 +682,7 @@
 	<updateGroup>更新用户组</updateGroup>
 	<updatePrivileges>Update privileges</updatePrivileges>
 	<updateUserAccount>更新用户帐号</updateUserAccount>
-	<upload>上载</upload>
+	<upload js="true">上载</upload>
 	<user>用户</user>
 	<UserAdmin>用户管理员</UserAdmin>
 	<userAtLeastOneGroup js="true">Please, select at least one group.</userAtLeastOneGroup>	

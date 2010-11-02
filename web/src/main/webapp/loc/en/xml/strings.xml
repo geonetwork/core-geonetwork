@@ -37,6 +37,13 @@
     <selectANode js="true">Select a node ...</selectANode>
     <publishing js="true">Publishing ...</publishing>
     
+	<logo>Logo configuration</logo>
+	<logoDes>Manage catalogue logo (node and harvesting logo)</logoDes>
+	<logoRegistered js="true">Registered logos</logoRegistered>
+	<logoAdd js="true">Add new logo</logoAdd>
+	<logoDel js="true">Remove selected logo</logoDel>
+	<logoForNode js="true">Set selected logo for the catalogue</logoForNode>
+	<logoSelect js="true">Select image for logo ...</logoSelect>
 	<url>URL</url>
 	<createChild>Create child</createChild>
 	<updateChildren>Update children</updateChildren>
@@ -674,7 +681,7 @@
 	<updateGroup>Update group</updateGroup>
 	<updatePrivileges>Update privileges</updatePrivileges>
 	<updateUserAccount>Update User Account </updateUserAccount>
-	<upload>Upload </upload>
+	<upload js="true">Upload </upload>
 	<user>User</user>
 	<UserAdmin>User administrator</UserAdmin>
 	<userAtLeastOneGroup js="true">Please, select at least one group.</userAtLeastOneGroup>

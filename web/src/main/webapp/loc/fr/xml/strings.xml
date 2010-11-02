@@ -37,6 +37,13 @@
 	<mapPreview js="true">Carte</mapPreview>
 	<selectANode js="true">Choisir un noeud ...</selectANode>
 	<publishing js="true">Publication en cours ...</publishing>
+	<logo>Configuration des logos</logo>
+	<logoDes>Gestion des logos (catalogues local et moissonnés)</logoDes>
+	<logoRegistered js="true">Logos enregistrés</logoRegistered>
+	<logoAdd js="true">Ajouter un logo</logoAdd>
+	<logoDel js="true">Supprimer le logo sélectionné</logoDel>
+	<logoForNode js="true">Utiliser le logo sélectionné pour le catalogue</logoForNode>
+	<logoSelect js="true">Choisir une image ...</logoSelect>
 	
 	<createChild>Créer un enfant</createChild>
 	<updateChildren>Mettre à jour les enfants</updateChildren>
@@ -678,7 +685,7 @@
 	<updateGroup>Mettre à jour le groupe</updateGroup>
 	<updatePrivileges>Mettre à jour les privilèges</updatePrivileges>
 	<updateUserAccount>Mettre à jour le compte utilisateur</updateUserAccount>
-	<upload>Téléchargement </upload>
+	<upload js="true">Téléchargement </upload>
 	<user>Utilisateur</user>
 	<UserAdmin>Administrateur d'utilisateur</UserAdmin>
 	<userAtLeastOneGroup js="true">Vous devez saisir au moins un groupe.</userAtLeastOneGroup>	

@@ -37,7 +37,13 @@
 	<mapPreview js="true">Map preview</mapPreview>
 	<selectANode js="true">Select a node ...</selectANode>
 	<publishing js="true">Publishing ...</publishing>
-	
+	<logo>Logo configuration</logo>
+	<logoDes>Manage catalogue logo (node and harvesting logo)</logoDes>
+	<logoRegistered js="true">Registered logos</logoRegistered>
+	<logoAdd js="true">Add new logo</logoAdd>
+	<logoDel js="true">Remove selected logo</logoDel>
+	<logoForNode js="true">Set selected logo for the catalogue</logoForNode>
+	<logoSelect js="true">Select image for logo ...</logoSelect>
 	<createChild>Create child</createChild>
 	<updateChildren>Update children</updateChildren>
 	<updateChildrenOk>Children updated</updateChildrenOk>
@@ -674,7 +680,7 @@
 	<updateGroup>Update Gruppep</updateGroup>
 	<updatePrivileges>Update Privilegien</updatePrivileges>
 	<updateUserAccount>Update Benutzer Account </updateUserAccount>
-	<upload>Upload </upload>
+	<upload js="true">Upload </upload>
 	<user>Benutzer</user>
 	<UserAdmin>Benutzer Administrator</UserAdmin>
 	<userAtLeastOneGroup js="true">Please, select at least one group.</userAtLeastOneGroup>	
