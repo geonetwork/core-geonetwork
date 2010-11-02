@@ -45,6 +45,7 @@ import jeeves.server.dispatchers.guiservices.Call;
 import jeeves.server.dispatchers.guiservices.GuiService;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.resources.ProviderManager;
+import jeeves.server.sources.http.HttpServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
@@ -410,17 +411,26 @@ public class ServiceManager
 				{
 					info(" -> forwarding to : " +forward);
 
-					Element elForward = new Element(Jeeves.Elem.FORWARD);
-					elForward.setAttribute(Jeeves.Attr.SERVICE, srvName);
+                    // Use servlet redirect for user.login and user.logout services.
+                    // TODO: Make redirect configurable for services in jeeves
+                    if (srvName.equals("user.login") || srvName.equals("user.logout")) {
+                        HttpServiceRequest req2 = (HttpServiceRequest) req;
+                        req2.getHttpServletResponse().sendRedirect(baseUrl +  "/srv/" +  req.getLanguage() + "/" + forward);
 
-					// --- send response to forwarded service request
+                        return;
+                    } else {
+                        Element elForward = new Element(Jeeves.Elem.FORWARD);
+                        elForward.setAttribute(Jeeves.Attr.SERVICE, srvName);
 
-					response.setName(Jeeves.Elem.REQUEST);
-					response.addContent(elForward);
+                        // --- send response to forwarded service request
 
-					context.setService(forward);
-					req.setService(forward);
-					req.setParams(response);
+                        response.setName(Jeeves.Elem.REQUEST);
+                        response.addContent(elForward);
+
+                        context.setService(forward);
+                        req.setService(forward);
+                        req.setParams(response);
+                    }
 				}
 			}
 		}

@@ -50,6 +50,12 @@ public class HttpServiceRequest extends ServiceRequest
 		httpRes = res;
 	}
 
+    //---------------------------------------------------------------------------
+    
+    public HttpServletResponse getHttpServletResponse() {
+        return httpRes;
+    }
+
 	//---------------------------------------------------------------------------
 
 	public void beginStream(String contentType, boolean cache)
