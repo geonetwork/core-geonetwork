@@ -114,18 +114,25 @@ public class Show implements Service
 		// TODO currently it's only set for ISO metadata - this should all move to
 		// the updatefixedinfo.xsl for each schema
 
-		// document has ISO root element and ISO namespace
-		Namespace gmdNs = elMd.getNamespace("gmd");
-		if (gmdNs != null && gmdNs.getURI().equals("http://www.isotc211.org/2005/gmd")) {
-			// document gets default gmd namespace schemalocation
-			String locations = "http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd";
-			// if document has srv namespace then add srv namespace location
-			if (elMd.getNamespace("srv") != null) {
-				locations += " http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd";
-			}
-			Attribute schemaLocation = new Attribute("schemaLocation", locations, Csw.NAMESPACE_XSI);
-			elMd.setAttribute(schemaLocation);			
-		}
+        // do not set schemaLocation if it is already there
+        if(elMd.getAttribute("schemaLocation", Csw.NAMESPACE_XSI) == null) {
+            Namespace gmdNs = elMd.getNamespace("gmd");
+            // document has ISO root element and ISO namespace
+            if (gmdNs != null && gmdNs.getURI().equals("http://www.isotc211.org/2005/gmd")) {
+                String schemaLocation;
+                // if document has srv namespace then add srv schemaLocation
+                if (elMd.getNamespace("srv") != null) {
+                    schemaLocation = " http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd";
+                }
+                // otherwise add gmd schemaLocation
+                // (but not both! as that is invalid, the schemas describe partially the same schema types)
+                else {
+                    schemaLocation = "http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd";
+                }
+                Attribute schemaLocationA = new Attribute("schemaLocation", schemaLocation, Csw.NAMESPACE_XSI);
+                elMd.setAttribute(schemaLocationA);
+            }
+        }
 
 		//--- increase metadata popularity
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
