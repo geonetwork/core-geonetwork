@@ -240,6 +240,11 @@
 			</output>
 		</service>
 
+        <service name="metadata.quiet.delete">
+            <class name=".services.metadata.Delete"/>
+            <output forward="admin" />
+        </service>
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="metadata.recent.additions.embedded">
