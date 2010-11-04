@@ -413,7 +413,7 @@ public class ServiceManager
 
                     // Use servlet redirect for user.login and user.logout services.
                     // TODO: Make redirect configurable for services in jeeves
-                    if (srvName.equals("user.login") || srvName.equals("user.logout")) {
+                    if (srvName.equals("metadata.quiet.delete") || srvName.equals("user.login") || srvName.equals("user.logout")) {
                         HttpServiceRequest req2 = (HttpServiceRequest) req;
                         req2.getHttpServletResponse().sendRedirect(baseUrl +  "/srv/" +  req.getLanguage() + "/" + forward);
 
