@@ -1,13 +1,10 @@
 package org.fao.geonet.kernel.search;
 
 import org.apache.lucene.analysis.ASCIIFoldingFilter;
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.LowerCaseFilter;
-import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.WhitespaceTokenizer;
 import org.apache.lucene.analysis.Tokenizer;
 
-import java.io.IOException;
 import java.io.Reader;
 
 /**
@@ -21,21 +18,15 @@ import java.io.Reader;
  *
  * @author heikki doeleman
  */
-public final class GeoNetworkAnalyzer extends Analyzer {
+public final class GeoNetworkAnalyzer extends GeonetWorkReusableAnalyzerBase {
+
 
     @Override
-    public TokenStream tokenStream(String fieldName, Reader reader) {
-        return new ASCIIFoldingFilter(new LowerCaseFilter(new WhitespaceTokenizer(reader)));
-    }
+    protected TokenStreamComponents createComponents(final String fieldName,
+                                                     final Reader reader) {
 
-    @Override
-    public TokenStream reusableTokenStream(String fieldName, Reader reader) throws IOException {
-        Tokenizer tokenizer = (Tokenizer) getPreviousTokenStream();
-        if (tokenizer == null) {
-            tokenizer = new WhitespaceTokenizer(reader);
-            setPreviousTokenStream(tokenizer);
-        } else
-            tokenizer.reset(reader);
-        return tokenizer;
+        final Tokenizer source = new WhitespaceTokenizer(reader);
+        return new TokenStreamComponents(source, new ASCIIFoldingFilter(new LowerCaseFilter(
+                source)));
     }
 }
