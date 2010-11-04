@@ -46,6 +46,7 @@ public class Params
 	public static final String GROUP        = "group";
 	public static final String GROUPS       = "groups";
 	public static final String ID           = "id";
+    public static final String JUST_CREATED = "just-created";
 	public static final String RELATED_ID   = "relatedid";
     public static final String PARENT_ID    = "parentId";
     public static final String PARENT_UUID  = "parentUuid";

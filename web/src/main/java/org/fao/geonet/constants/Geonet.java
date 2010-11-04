@@ -93,6 +93,7 @@ public class Geonet
 		public static final String SUMMARY    = "summary";
 		public static final String SITE_URL   = "siteURL";
 		public static final String APP_PATH   = "path";
+        public static final String JUSTCREATED = "JUSTCREATED";
 	}
 
 	//--------------------------------------------------------------------------

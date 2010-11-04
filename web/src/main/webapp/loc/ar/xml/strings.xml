@@ -255,6 +255,7 @@
 	<completeTab>عرض متقدم</completeTab>
 	<completeTabEditor>تحرير متقدم</completeTabEditor>
 	<confirmCancel>Are you sure you want to leave the editor? (You will lose any unsaved changes)</confirmCancel>
+    <confirmCancelCreate>هل أنت متأكد أنك تريد إلغاء خلق هذا التعريف؟</confirmCancelCreate>
 	<confirmDelete>هل أنت متأكد من مسح البيانات الاساسية meta data من قاعدة البيانات؟</confirmDelete>
 	<confirmMassiveDelete>Are you sure you want to delete all $1 selected metadata from the database?</confirmMassiveDelete>
 	<confirmNewPassword>أعادة تأكيد كلمة المرور</confirmNewPassword>

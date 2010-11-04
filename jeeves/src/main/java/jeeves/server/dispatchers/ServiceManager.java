@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
-
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.JeevesException;
@@ -415,6 +414,14 @@ public class ServiceManager
 				{
 					info(" -> forwarding to : " +forward);
 
+                    // Use servlet redirect for user.login and user.logout services.
+                    // TODO: Make redirect configurable for services in jeeves
+                    if (srvName.equals("metadata.quiet.delete") || srvName.equals("user.login") || srvName.equals("user.logout")) {
+                        HttpServiceRequest req2 = (HttpServiceRequest) req;
+                        req2.getHttpServletResponse().sendRedirect(baseUrl +  "/srv/" +  req.getLanguage() + "/" + forward);
+
+                        return;
+                    } else {
 					Element elForward = new Element(Jeeves.Elem.FORWARD);
 					elForward.setAttribute(Jeeves.Attr.SERVICE, srvName);
 
@@ -428,6 +435,7 @@ public class ServiceManager
 					req.setParams(response);
 				}
 			}
+		}
 		}
 		catch(Throwable e)
 		{

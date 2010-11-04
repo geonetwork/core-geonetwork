@@ -257,6 +257,7 @@
 	<completeTab>Vue avancée</completeTab>
 	<completeTabEditor>Editeur avancé</completeTabEditor>
 	<confirmCancel>Êtes-vous sûr de vouloir quitter l\'éditeur? (vous allez perdre les changements non sauvegardés)</confirmCancel>
+    <confirmCancelCreate>Etes-vous sûr de vouloir annuler la création de ces métadonnées?</confirmCancelCreate>
 	<confirmDelete js="true">Êtes-vous sûr de vouloir supprimer cette métadonnée ?</confirmDelete> <!-- Check if js=true is required -->
 	<confirmMassiveDelete>Êtes-vous sûr de vouloir supprimer toutes les $1 métadonnées sélectionnées ?</confirmMassiveDelete>
 	<confirmNewPassword>Confirmer le nouveau mot de passe</confirmNewPassword>

@@ -87,8 +87,10 @@ public class Create implements Service
 												  gc.getSiteId(), context.getUserSession().getUserIdAsInt(), 
 												  (child.equals("n")?null:uuid));
 
-		return new Element(Jeeves.Elem.RESPONSE)
-							.addContent(new Element(Geonet.Elem.ID).setText(newId));
+        Element response = new Element(Jeeves.Elem.RESPONSE);
+        response.addContent(new Element(Geonet.Elem.JUSTCREATED).setText("true"));
+        response.addContent(new Element(Geonet.Elem.ID).setText(newId));
+		return response;
 	}
 }
 

@@ -47,6 +47,12 @@
 				}
 				timeId = setTimeout('scrollIt()',1000);	
 			</xsl:if>
+			function removeJustCreated() {
+				var justCreated = $('just-created');
+				if(justCreated != null) {
+					justCreated.parentNode.removeChild(justCreated);
+				}
+			}
 		</script>
 		
 		
@@ -88,6 +94,9 @@
 							<input class="md" type="hidden" name="child"/>
 							<input class="md" type="hidden" name="fname"/>
 							<input class="md" type="hidden" name="access"/>
+                            <xsl:if test="//JUSTCREATED">
+                                <input id="just-created" class="md" type="hidden" name="just-created" value="true"/>
+                            </xsl:if>
 							<input class="md" type="hidden" name="position" value="-1"/>
 							<!-- showvalidationerrors is only set to true when 'Check' is 
 							     pressed - default is false -->
@@ -148,19 +157,19 @@
 		
 		<!-- save button -->
 		&#160;
-		<button class="content" id="btnSave" onclick="doSaveAction('metadata.update')" type="button">
+		<button class="content" id="btnSave" onclick="removeJustCreated();doSaveAction('metadata.update')" type="button">
 			<xsl:value-of select="/root/gui/strings/save"/>
 		</button>
 		
 		<!-- save and close button -->
 		&#160;
-		<button class="content" id="btnSaveAndClose" onclick="doSaveAction('metadata.update.finish')" type="button">
+		<button class="content" id="btnSaveAndClose" onclick="removeJustCreated();doSaveAction('metadata.update.finish')" type="button">
 			<xsl:value-of select="/root/gui/strings/saveAndClose"/>
 		</button>
 		
 		<!-- save and validate button -->
 		&#160;
-		<button class="content" id="btnValidate" onclick="doSaveAction('metadata.update','metadata.validate');return false;" type="button">
+		<button class="content" id="btnValidate" onclick="removeJustCreated();doSaveAction('metadata.update','metadata.validate');return false;" type="button">
 			<xsl:value-of select="/root/gui/strings/saveAndValidate"/>
 		</button>
 		
@@ -197,9 +206,19 @@
 		
 		<!-- cancel button -->
 		&#160;
-		<button class="content" id="btnCancel" onclick="doCancelAction('metadata.update.forgetandfinish','{/root/gui/strings/confirmCancel}',this.id)" type="button">
+        <xsl:choose>
+            <xsl:when test="//JUSTCREATED">
+                <button class="content" id="btnCancelCreation" onclick="cancelCreation('{/root/gui/locService}/metadata.quiet.delete?id={geonet:info/id}','{/root/gui/strings/confirmCancelCreate}');" type="button">
+                    <xsl:value-of select="/root/gui/strings/cancel"/>
+                </button>
+            </xsl:when>
+            <xsl:otherwise>
+                <button class="content" id="btnCancelEdit" onclick="doCancelAction('metadata.update.forgetandfinish','{/root/gui/strings/confirmCancel}',this.id)" type="button">
 			<xsl:value-of select="/root/gui/strings/cancel"/>
 		</button>
+            </xsl:otherwise>
+        </xsl:choose>
+
 		
 		
 	</xsl:template>

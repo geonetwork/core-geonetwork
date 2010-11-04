@@ -255,6 +255,7 @@
 	<completeTab>Vista ampliada</completeTab>
 	<completeTabEditor>Editor ampliado</completeTabEditor>
 	<confirmCancel>Tem certeza que quer sair do editor? (Todas as alterações não gravadas perderiam-se)</confirmCancel>
+    <confirmCancelCreate>Tem certeza que quer cancelar a criação de metadados?</confirmCancelCreate>
 	<confirmDelete>Tem certeza que quer realmente apagar os metadados do banco de dados?</confirmDelete>
 	<confirmMassiveDelete>Tem certeza que quer realmente apagar todos os $1 metadados seleccionados do banco de dados?</confirmMassiveDelete>
 	<confirmNewPassword>Confirmar palavra-passe nova</confirmNewPassword>
