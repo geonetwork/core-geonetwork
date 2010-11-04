@@ -133,9 +133,8 @@
 
 	<xsl:template match="ogc:PropertyIsLike">
 		<xsl:choose>
-			<!-- If search for all, MatchAllDocsQuery is faster than WildcardQuery. -->
+			<!-- If search for all, nothing (empty query) is faster than WildcardQuery or MatchAllDocsQuery. -->
 			<xsl:when test="ogc:PropertyName and ogc:Literal=@wildCard">
-				<MatchAllDocsQuery required="true" prohibited="false"/>
 			</xsl:when>
             
 			<!-- Lucene supports single and multiple character wildcard searches within
