@@ -505,6 +505,13 @@ function doCancelAction(action, message)
 	return false;
 }
 
+function cancelCreation(action, message) {
+    if(confirm(message)) {
+        window.location = action;
+        return true;
+    }
+}
+
 function doConfirm(action, message)
 {
 	if(confirm(message)) {
