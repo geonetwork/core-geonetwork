@@ -222,7 +222,8 @@
 	<close js="true">Close</close>
 	<completeTab>Advanced view</completeTab>
 	<completeTabEditor>Advanced editor</completeTabEditor>
-	<confirmCancel>Are you sure you want to leave the editor? (You will lose any unsaved changes)</confirmCancel>
+    <confirmCancel>Are you sure you want to leave the editor? (You will lose any unsaved changes)</confirmCancel>
+    <confirmCancelCreate>Are you sure you want to cancel creating this metadata?</confirmCancelCreate>
 	<confirmDelete>Are you sure you want to delete the metadata from the database?</confirmDelete>
 	<confirmMassiveDelete>Are you sure you want to delete all $1 selected metadata from the database?</confirmMassiveDelete>
 	<confirmNewPassword>Confirm new password</confirmNewPassword>

@@ -223,7 +223,8 @@
 	<close js="true">Sluiten</close>
 	<completeTab>Uitgebreide weergave</completeTab>
 	<completeTabEditor>Geavanceerde editor</completeTabEditor>
-	<confirmCancel>Weet u zeker dat u de editor wilt sluiten? (Alle niet bewaarde aanpassingen gaan verloren)</confirmCancel>
+    <confirmCancel>Weet u zeker dat u de editor wilt sluiten? (Alle niet bewaarde aanpassingen gaan verloren)</confirmCancel>
+    <confirmCancelCreate>Weet u zeker dat u wilt annuleren creëren van deze metadata?</confirmCancelCreate>
 	<confirmDelete>Weet u zeker dat u de metadata wilt verwijderen uit de database?</confirmDelete>
 	<confirmMassiveDelete>Weet u zeker dat u alle $1 geselecteerde metadata wild verwijderen uit de database?</confirmMassiveDelete>
 	<confirmNewPassword>Bevestig nieuw wachtwoord</confirmNewPassword>

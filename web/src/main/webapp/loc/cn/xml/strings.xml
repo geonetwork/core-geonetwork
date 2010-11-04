@@ -222,7 +222,8 @@
 	<close js="true">Close</close>
 	<completeTab>高级视图</completeTab>
 	<completeTabEditor>高级编辑器</completeTabEditor>
-	<confirmCancel>Are you sure you want to leave the editor? (You will lose any unsaved changes)</confirmCancel>
+    <confirmCancel>Are you sure you want to leave the editor? (You will lose any unsaved changes)</confirmCancel>
+    <confirmCancelCreate>你确定要取消建立此元数据？</confirmCancelCreate>
 	<confirmDelete>确认要从数据库中删除该元数据吗？</confirmDelete>
 	<confirmMassiveDelete>Are you sure you want to delete all $1 selected metadata from the database?</confirmMassiveDelete>
 	<confirmNewPassword>新口令确认</confirmNewPassword>

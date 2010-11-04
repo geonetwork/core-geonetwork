@@ -223,7 +223,8 @@
 	<close js="true">Закрыть</close>
 	<completeTab>Улучшенный вид</completeTab>
 	<completeTabEditor>Улучшенный редактор</completeTabEditor>
-	<confirmCancel>Are you sure you want to leave the editor? (You will lose any unsaved changes)</confirmCancel>
+    <confirmCancel>Are you sure you want to leave the editor? (You will lose any unsaved changes)</confirmCancel>
+    <confirmCancelCreate>Вы уверены, что хотите отменить создание этих метаданных?</confirmCancelCreate>
 	<confirmDelete>Вы уверены, что хотите удалить метаданные из базы данных?</confirmDelete>
 	<confirmMassiveDelete>Вы уверены, что хотите удалить все выбранные метаданные из базы данных?</confirmMassiveDelete>
 	<confirmNewPassword>Подтверждение нового пароля</confirmNewPassword>

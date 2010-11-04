@@ -222,7 +222,8 @@
 	<close js="true">Schließen</close>
 	<completeTab>Erweiterte Ansicht</completeTab>
 	<completeTabEditor>Erweiterter Editor</completeTabEditor>
-	<confirmCancel>Sind Sie sicher, dass Sie die Aktione abbrechen wollen? (Alle ungespeicherten Eingaben gehen verloren)</confirmCancel>
+    <confirmCancel>Sind Sie sicher, dass Sie die Aktione abbrechen wollen? (Alle ungespeicherten Eingaben gehen verloren)</confirmCancel>
+    <confirmCancelCreate>Sind Sie sicher, Sie stornieren möchten Erstellung dieser Metadaten?</confirmCancelCreate>
 	<confirmDelete>Wollen Sie die Metadaten wirklich aus der Datenbank löschen?</confirmDelete>
 	<confirmMassiveDelete>Sind Sie sicher, dass Sie alle $1 ausgewählten Metadatensätze löschen wollen?</confirmMassiveDelete>
 	<confirmNewPassword>Neues Passwort bestätigen</confirmNewPassword>
