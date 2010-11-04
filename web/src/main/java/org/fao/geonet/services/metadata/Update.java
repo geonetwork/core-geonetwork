@@ -77,8 +77,7 @@ public class Update implements Service
 		String id         = Util.getParam(params, Params.ID);
 		String version    = Util.getParam(params, Params.VERSION);
 		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
-		String showValidationErrors = 
-						Util.getParam(params, Params.SHOWVALIDATIONERRORS, "false");
+		String showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, "false");
 		String title      = params.getChildText(Params.TITLE);
 		String data       = params.getChildText(Params.DATA);
 
@@ -103,10 +102,12 @@ public class Update implements Service
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
-		elResp.addContent(new Element(Geonet.Elem.SHOWVALIDATIONERRORS)
-													.setText(showValidationErrors));
-
-		//--- if finished then remove the XML from the session
+		elResp.addContent(new Element(Geonet.Elem.SHOWVALIDATIONERRORS).setText(showValidationErrors));
+        boolean justCreated = Util.getParam(params, Params.JUST_CREATED, null) != null ;
+        if(justCreated) {
+            elResp.addContent(new Element(Geonet.Elem.JUSTCREATED).setText("true"));
+        }
+        //--- if finished then remove the XML from the session
 		if (finished) {
 			dataMan.removeMetadataEmbedded(session, id);
 		}

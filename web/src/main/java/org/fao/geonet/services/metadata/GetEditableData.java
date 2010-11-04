@@ -60,8 +60,8 @@ public class GetEditableData implements Service
 		DataManager   dataMan   = gc.getDataManager();
 
 		String id = Util.getParam(params, Params.ID);
-		boolean showValidationErrors = 
-						Util.getParam(params, Params.SHOWVALIDATIONERRORS, false);
+		boolean showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, false);
+        String justCreated = Util.getParam(params, Geonet.Elem.JUSTCREATED, null);
 
 		//-----------------------------------------------------------------------
 		//--- get metadata
@@ -70,6 +70,9 @@ public class GetEditableData implements Service
 		if (elMd == null)
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
+        if(justCreated != null) {
+       //   elMd.addContent(new Element("JUSTCREATED").setText("true"));
+        }
 		//-----------------------------------------------------------------------
 		//--- return metadata
 
