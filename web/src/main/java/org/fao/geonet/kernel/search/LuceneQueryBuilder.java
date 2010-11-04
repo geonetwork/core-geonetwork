@@ -217,7 +217,7 @@ public class LuceneQueryBuilder {
 		BooleanClause anyClause  = null;
 		BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 		String any = request.getChildText("any");
-		if(any != null) {
+		if(any != null && !onlyWildcard(any)) {
 			any = any.trim();
 			if(any.length() > 0) {
 				// tokenize searchParam
@@ -1054,4 +1054,8 @@ public class LuceneQueryBuilder {
 		boundingBoxValue = Double.toString(360 + tmpBoundingBoxValue);
 		return boundingBoxValue;
 	}
+
+    private boolean onlyWildcard(String s) {
+        return s != null && s.trim().equals("*") ? true : false;
+    }
 }
