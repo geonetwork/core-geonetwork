@@ -3,7 +3,7 @@
 
 	<property name="schematronDir" value="." description="Schematron directory" />
 	<property name="buildDir" value=".build" description="Build directory" />
-	<property name="schemaDir" value="../web/src/main/webapp/xml/schemas/" description="Schemas directory" />
+	<property name="schemaDir" value="../web/src/main/webapp/xml/schemas" description="Schemas directory" />
 	<property name="defaultLang" value="en" />
 
 	<target name="clean">
@@ -34,8 +34,8 @@
 		<echo message="Cleanning schema: ${schema}."/>
 		
 		<delete verbose="true">
-			<fileset dir="../web/src/main/webapp/xml/schemas/${schema}/" includes="schematron-rules-*.xsl" />
-			<fileset dir="../web/src/main/webapp/xml/schemas/${schema}/loc" includes="**/schematron-rules-*.xml" />
+			<fileset dir="${schemaDir}/${schema}/" includes="schematron-rules-*.xsl" />
+			<fileset dir="${schemaDir}/${schema}/loc" includes="**/schematron-rules-*.xml" />
 		</delete>
 	</target>
 
@@ -143,7 +143,7 @@
 		<property name="rules" value="" />
 		<property name="schema" value="" />
 		<echo level="info" message=" - copy rules: ${rules} to schema: ${schema}" />
-		<copy description="Copy schematron XSLT to ${schema} schema." todir="../web/src/main/webapp/xml/schemas/${schema}" verbose="true">
+		<copy description="Copy schematron XSLT to ${schema} schema." todir="${schemaDir}/${schema}" verbose="true">
 			<fileset dir="${buildDir}" includes="schematron-rules-${rules}.xsl" />
 		</copy>
 
@@ -204,7 +204,7 @@
 		<property name="rules" value="" />
 
 		<mkdir dir="${schematronDir}/rules/loc/${lang}"/>
-		<copy description="Copy localization file to ${schema} schema." todir="../web/src/main/webapp/xml/schemas/${schema}/loc/${lang}" verbose="true">
+		<copy description="Copy localization file to ${schema} schema." todir="${schemaDir}/${schema}/loc/${lang}" verbose="true">
 			<fileset dir="${schematronDir}/rules/loc/${lang}" includes="schematron-rules-${rules}.xml" />
 		</copy>
 	</target>
