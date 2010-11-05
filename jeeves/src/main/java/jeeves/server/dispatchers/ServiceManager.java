@@ -47,6 +47,7 @@ import jeeves.server.resources.ProviderManager;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
+import jeeves.server.sources.http.HttpServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.BLOB;
 import jeeves.utils.BinaryFile;

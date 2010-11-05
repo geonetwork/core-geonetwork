@@ -91,6 +91,10 @@ public class HttpServiceRequest extends ServiceRequest
 	{
 		httpRes.flushBuffer();
 	}
+
+	public HttpServletResponse getHttpServletResponse() {
+		return httpRes;
+	}
 }
 
 //=============================================================================
