@@ -232,7 +232,8 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		vars.put("$ABSTRACT", sm.getValue("system/csw/abstract"));
 		vars.put("$FEES", sm.getValue("system/csw/fees"));
 		vars.put("$ACCESS_CONSTRAINTS", sm.getValue("system/csw/accessConstraints"));
-
+		vars.put("$LOCALE",context.getLanguage());
+		
 		Lib.element.substitute(capab, vars);
 	}
 	
