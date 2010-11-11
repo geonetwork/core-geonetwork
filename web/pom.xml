@@ -609,14 +609,14 @@
              </goals>
              <configuration>
                <executable>make</executable>
-                 <arguments>
-                   <argument>clean</argument>
-                 </arguments>
+               <arguments>
+                 <argument>clean</argument>
+               </arguments>
                <workingDirectory>${basedir}/../docs/eng/users</workingDirectory>
              </configuration>
-           </execution>
+          </execution>
 
-           <execution>
+          <execution>
             <id>user-docs-build</id>
             <phase>prepare-package</phase>
             <goals>
@@ -627,7 +627,37 @@
                 <arguments>
                   <argument>html</argument>
                 </arguments>
+                <workingDirectory>${basedir}/../docs/eng/users</workingDirectory>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>user-docs-build-latex</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>make</executable>
+              <arguments>
+                <argument>latex</argument>
+              </arguments>
               <workingDirectory>${basedir}/../docs/eng/users</workingDirectory>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>users-docs-build-pdf</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>make</executable>
+              <arguments>
+                <argument>all-pdf</argument>
+              </arguments>
+              <workingDirectory>${basedir}/../docs/eng/users/build/latex</workingDirectory>
             </configuration>
           </execution>
 
@@ -639,9 +669,9 @@
             </goals>
             <configuration>
               <executable>make</executable>
-                <arguments>
-                  <argument>clean</argument>
-                </arguments>
+              <arguments>
+                <argument>clean</argument>
+              </arguments>
               <workingDirectory>${basedir}/../docs/eng/developer</workingDirectory>
             </configuration>
           </execution>
@@ -654,10 +684,40 @@
             </goals>
             <configuration>
               <executable>make</executable>
+              <arguments>
+                <argument>html</argument>
+              </arguments>
+              <workingDirectory>${basedir}/../docs/eng/developer</workingDirectory>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>developer-docs-build-latex</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>make</executable>
                 <arguments>
-                  <argument>html</argument>
+                  <argument>latex</argument>
                 </arguments>
               <workingDirectory>${basedir}/../docs/eng/developer</workingDirectory>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>developer-docs-build-pdf</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>make</executable>
+                <arguments>
+                  <argument>all-pdf</argument>
+                </arguments>
+                <workingDirectory>${basedir}/../docs/eng/developer/build/latex</workingDirectory>
             </configuration>
           </execution-->
             
@@ -672,10 +732,24 @@
               <directory>../docs/eng/users/build/html</directory>
               <targetPath>docs/eng/users</targetPath>
             </resource>
-              <resource>
-            <directory>../docs/eng/developer/build/html</directory>
+            <resource>
+              <directory>../docs/eng/developer/build/html</directory>
               <targetPath>docs/eng/developer</targetPath>
             </resource>
+            <resource>
+              <directory>../docs/eng/users/build/latex</directory>
+              <targetPath>docs</targetPath>
+               <includes>
+                <include>GeoNetworkUserManual.pdf</include>
+              </includes>
+            </resource>
+            <resource>
+              <directory>../docs/eng/developer/build/latex</directory>
+              <targetPath>docs</targetPath>
+               <includes>
+                <include>GeoNetworkDeveloperManual.pdf</include>
+              </includes>
+            </resource>  
             <resource>
               <directory>../docs</directory>
               <targetPath>docs</targetPath>
