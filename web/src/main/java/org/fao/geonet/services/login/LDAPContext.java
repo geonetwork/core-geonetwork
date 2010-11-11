@@ -86,7 +86,17 @@ class LDAPContext
 
 			String usersBaseDN = usersDN +","+ baseDN;
 
-			String path = LDAPUtil.findUserDN(getUrl(), uidFilter, usersBaseDN);
+            String path = null;
+
+            try {
+                path = LDAPUtil.findUserDN(getUrl(), uidFilter, usersBaseDN);
+            } catch (NamingException ex) {
+                Log.warning(Geonet.LDAP, ex.getMessage());
+            }
+
+            if (path == null || path.length() == 0) {
+                path = uidAttr + "="+ username +","+ usersDN +","+ baseDN;
+            }
 
 			DirContext dc   = LDAPUtil.openContext(getUrl(), path, password);
 
