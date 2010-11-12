@@ -2340,26 +2340,29 @@ public class DataManager
      * @throws Exception
      */
 	private Element updateFixedInfo(String schema, Element md, Element env) throws Exception {
-        Element result = new Element("root");
-        result.addContent(md);
-		//--- environment common to both existing and new records goes here
-		env.addContent(new Element("changeDate").setText(new ISODate().toString()));
-		env.addContent(new Element("siteURL")   .setText(getSiteURL()));
-		Element system = settingMan.get("system", -1);
-		env.addContent(Xml.transform(system, appPath + Geonet.Path.STYLESHEETS+ "/xml/config.xsl"));
-        //--- setup result element
-        result.addContent(env);
-        boolean autoFixing = settingMan.getValueAsBool("system/autofixing/enabled", true);
+        boolean autoFixing = settingMan.getValueAsBool("system/autofixing/enable", true);
         if(autoFixing) {
-            Log.debug(Geonet.DATA_MANAGER, "Autofixing is enabled, applying update-fixed-info");
-            //--- do an XSLT transformation using update-fixed-info.xsl
-		String styleSheet = editLib.getSchemaDir(schema) + Geonet.File.UPDATE_FIXED_INFO;
-            result = Xml.transform(result, styleSheet);
+        	Log.debug(Geonet.DATA_MANAGER, "Autofixing is enabled, applying update-fixed-info");
+
+        	Element result = new Element("root");
+        	result.addContent(md);
+
+        	//--- environment common to both existing and new records goes here
+			env.addContent(new Element("changeDate").setText(new ISODate().toString()));
+			env.addContent(new Element("siteURL")   .setText(getSiteURL()));
+			Element system = settingMan.get("system", -1);
+			env.addContent(Xml.transform(system, appPath + Geonet.Path.STYLESHEETS+ "/xml/config.xsl"));
+	        result.addContent(env);
+
+	        //--- do an XSLT transformation using update-fixed-info.xsl
+	        String styleSheet = editLib.getSchemaDir(schema) + Geonet.File.UPDATE_FIXED_INFO;
+             result = Xml.transform(result, styleSheet);
+            return result;
         }
         else {
             Log.debug(Geonet.DATA_MANAGER, "Autofixing is disabled, not applying update-fixed-info");
+            return md;
         }
-		return result;
 	}
 
 	//--------------------------------------------------------------------------
