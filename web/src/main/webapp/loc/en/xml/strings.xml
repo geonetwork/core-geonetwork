@@ -10,6 +10,8 @@
 	<ru>Русский</ru> <!-- Do not translate! -->
           <pt>Рortuguês</pt> <!-- Do not translate! -->
     
+    <useStopwords>The Lucene index uses stopwords for these languages:</useStopwords>    
+    <rebuildIndexMessage>If you change these values, it is recommended you rebuild the Lucene index.</rebuildIndexMessage>
 	<!-- new strings - SP 2.5 -->
 	<showRemoteHTML>Show HTML from remote server</showRemoteHTML>
 	<!-- end new strings -->
@@ -387,6 +389,8 @@
 	<imZoomIn>Zoom in</imZoomIn>
 	<imZoomOut>Zoom out</imZoomOut>
 	<imZoomToLayer>Zoom to selected layer extent</imZoomToLayer>
+    <indexLanguages>Stopwords</indexLanguages>
+    <indexLanguagesDes>You can define the languages for which stopwords are used.</indexLanguagesDes>    
 	<infoTitle>Info</infoTitle>
 	<insert>Insert</insert>
 	<insertFileMode js="true">File Upload</insertFileMode>

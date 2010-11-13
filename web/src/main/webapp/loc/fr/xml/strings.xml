@@ -10,6 +10,8 @@
 	<ru>Русский</ru> <!-- Do not translate! -->
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
 
+    <useStopwords>L'index de Lucene utilise des mots vides pour les langues suivantes:</useStopwords>    
+    <rebuildIndexMessage>Si vous modifiez ces valeurs, il est recommandé de reconstruire l'index Lucene.</rebuildIndexMessage>
 	<!-- new strings - SP 2.5 -->
 	<showRemoteHTML>Show HTML from remote server</showRemoteHTML>
 	<!-- end new strings -->
@@ -390,6 +392,8 @@
 	<imZoomIn>Zoom in</imZoomIn>
 	<imZoomOut>Zoom out</imZoomOut>
 	<imZoomToLayer>Zoom to selected layer extent</imZoomToLayer>
+    <indexLanguages>Mots vides</indexLanguages>
+    <indexLanguagesDes>Vous pouvez définir les langues pour lesquelles sont utilisés les mots vides.</indexLanguagesDes>    
 	<infoTitle>Info</infoTitle>
 	<insert>Insérer</insert>
 	<insertFileMode js="true">Import de fichiers</insertFileMode>

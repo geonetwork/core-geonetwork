@@ -10,6 +10,8 @@
 	<ru>Русский</ru> <!-- Do not translate! -->
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
 	
+    <useStopwords>De Lucene index gebruikt stopwoorden voor de volgende talen:</useStopwords>
+    <rebuildIndexMessage>Als u deze waarden wijzigt, is het raadzaam, de wederopbouw van de Lucene index.</rebuildIndexMessage>
 	<!-- new strings - SP 2.5 -->
 	<showRemoteHTML>Show HTML from remote server</showRemoteHTML>
 	<!-- end new strings -->
@@ -389,6 +391,8 @@
 	<imZoomIn>Zoom in</imZoomIn>
 	<imZoomOut>Zoom out</imZoomOut>
 	<imZoomToLayer>Laat de geselecteerde layer van de map zien</imZoomToLayer>
+    <indexLanguages>Stopwoorden</indexLanguages>
+    <indexLanguagesDes>U kunt de talen definiëren waarvoor stopwoorden worden gebruikt.</indexLanguagesDes>    
 	<infoTitle>Info</infoTitle>
 	<insert>Invoegen</insert>
 	<insertFileMode js="true">Bestand Toevoegen</insertFileMode>

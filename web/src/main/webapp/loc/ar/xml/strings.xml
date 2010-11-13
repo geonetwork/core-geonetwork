@@ -10,6 +10,8 @@
 	<ru>Русский</ru> <!-- Do not translate! -->
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
 
+    <useStopwords>مؤشر يستخدم stopwords وسين لهذه اللغات :</useStopwords>    
+    <rebuildIndexMessage>إذا قمت بتغيير هذه القيم ، من المستحسن إعادة إنشاء الفهرس وسين.</rebuildIndexMessage>
 	<!-- new strings - SP 2.5 -->
 	<showRemoteHTML>Show HTML from remote server</showRemoteHTML>
 	<!-- end new strings -->
@@ -388,6 +390,8 @@
 	<imZoomIn>Zoom in</imZoomIn>
 	<imZoomOut>Zoom out</imZoomOut>
 	<imZoomToLayer>Zoom to selected layer extent</imZoomToLayer>
+    <indexLanguages>Stopwords</indexLanguages>
+    <indexLanguagesDes>يمكنك تحديد اللغات التي تستخدم stopwords.</indexLanguagesDes>
 	<infoTitle>معلومات</infoTitle>
 	<insert>إدخال</insert>
 	<insertFileMode js="true">File Upload</insertFileMode>

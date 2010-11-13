@@ -1,0 +1,1 @@
+Files taken from: http://svn.apache.org/repos/asf/lucene/dev/trunk/modules/analysis/common/src/resources/org/apache/lucene/analysis/snowball/

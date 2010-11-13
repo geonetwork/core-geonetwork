@@ -58,9 +58,7 @@
 		Example:
 		org.apache.lucene.analysis.fr.FrenchAnalyzer
 	-->
-	<defaultAnalyzer name="org.apache.lucene.analysis.standard.StandardAnalyzer">
-		<Param name="version" type="org.apache.lucene.util.Version"/>
-	</defaultAnalyzer>
+	<defaultAnalyzer name="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
 
 	<!-- TODO: Add a language specific analyzer according to:
 		 * metadata language
@@ -99,10 +97,10 @@
 		<Field name="operatesOn" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
 		<Field name="operatesOnIdentifier" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
 
-		<Field name="any" analyzer="org.apache.lucene.analysis.standard.StandardAnalyzer">
-			<Param name="version" type="org.apache.lucene.util.Version"/>
-			<!--<Param name="stopWords" type="java.io.File" value="/path/to/stopwords/stopwords.txt"/>-->
-		</Field>
+		<Field name="any" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
+			<!-- <Param name="version" type="org.apache.lucene.util.Version"/>
+			<Param name="stopWords" type="java.io.File" value="/path/to/stopwords/stopwords.txt"/>
+		</Field> -->
 		<Field name="subject" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
 	</fieldSpecificAnalyzer>
 

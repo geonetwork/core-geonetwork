@@ -10,6 +10,8 @@
 	<ru>Русский</ru> <!-- Do not translate! -->
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
 	
+    <useStopwords>Индекс Lucene использует стоп-слова на этих языках:</useStopwords>
+    <rebuildIndexMessage>Если вы измените эти значения, мы рекомендуем это восстановление индекса Lucene.</rebuildIndexMessage>
 	<!-- new strings - SP 2.5 -->
 	<showRemoteHTML>Show HTML from remote server</showRemoteHTML>
 	<!-- end new strings -->
@@ -388,6 +390,8 @@
 	<imZoomIn>Увеличить</imZoomIn>
 	<imZoomOut>Уменьшить</imZoomOut>
 	<imZoomToLayer>Увеличить/уменьшить до размеров выбранного слоя</imZoomToLayer>
+    <indexLanguages>Стоп-слова</indexLanguages>
+    <indexLanguagesDes>Вы можете определить языки, для которых используются стоп-слова.</indexLanguagesDes>    
 	<infoTitle>Информация</infoTitle>
 	<insert>Вставить</insert>
 	<insertFileMode js="true">Выгрузить файл</insertFileMode>
