@@ -802,9 +802,9 @@ public class LuceneSearcher extends MetaSearcher
         if(query != null && reader != null ){
             // too dangerous to do this only for logging, as it may throw NPE if Query was not constructed correctly
             // However if you need to see what Lucene queries are really used, print the rewritten query instead
-            Query rw = query.rewrite(reader);
+            // Query rw = query.rewrite(reader);
+            // System.out.println("Lucene query: " + rw.toString());
             Log.debug(Geonet.SEARCH_ENGINE, "Lucene query: " + query.toString());
-            System.out.println("Lucene query: " + rw.toString());
         }
 		new IndexSearcher(reader).search(query, cFilter, tfc); 
 
