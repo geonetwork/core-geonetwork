@@ -23,10 +23,8 @@
 
 package org.fao.geonet.kernel.search;
 
-
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
-
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -34,7 +32,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.TokenStream;
@@ -68,7 +65,6 @@ import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
@@ -77,7 +73,6 @@ import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.util.JODAISODate;
 import org.jdom.Content;
 import org.jdom.Element;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -93,7 +88,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
 
 //==============================================================================
 // search metadata locally using lucene
@@ -532,6 +526,7 @@ public class LuceneSearcher extends MetaSearcher
 	@SuppressWarnings({"deprecation"})
     public static Query makeQuery(Element xmlQuery, PerFieldAnalyzerWrapper analyzer, HashSet<String> tokenizedFieldSet) throws Exception
 	{
+        System.out.println("\n\n\n* * makeQuery input XML:\n" + Xml.getString(xmlQuery));
 		String name = xmlQuery.getName();
 		Query returnValue;
 		
@@ -618,8 +613,9 @@ public class LuceneSearcher extends MetaSearcher
 			returnValue = query;
 		}
 		else throw new Exception("unknown lucene query type: " + name);
-		
-		Log.debug(Geonet.SEARCH_ENGINE, "Lucene Query: " + returnValue.toString());
+
+        Log.debug(Geonet.SEARCH_ENGINE, "Lucene Query: " + returnValue.toString());
+        System.out.println("\n* * makeQuery Lucene Query: " + returnValue.toString() + "\n\n\n");
 		return returnValue;
 	}
 
@@ -785,7 +781,7 @@ public class LuceneSearcher extends MetaSearcher
 	 * @param cFilter
 	 * @param sort	the sort criteria
 	 * @param buildSummary	true to build query summary element. Summary is stored in the second element of the returned Pair.
-	 * @param trackDocScore	specifies whether document scores should be tracked and set on the results. 
+	 * @param trackDocScores	specifies whether document scores should be tracked and set on the results. 
 	 * @param trackMaxScore	specifies whether the query's maxScore should be tracked and set on the resulting TopDocs.
 	 * @param docsScoredInOrder	specifies whether documents are scored in doc Id order or not by the given Scorer
 	 *
@@ -803,6 +799,13 @@ public class LuceneSearcher extends MetaSearcher
 		Log.debug(Geonet.SEARCH_ENGINE, "Setting up the TFC with numHits "+numHits);
 		TopFieldCollector tfc = TopFieldCollector.create(sort, numHits, true, trackDocScores, trackMaxScore, docsScoredInOrder);
 
+        if(query != null && reader != null ){
+            // too dangerous to do this only for logging, as it may throw NPE if Query was not constructed correctly
+            // However if you need to see what Lucene queries are really used, print the rewritten query instead
+            Query rw = query.rewrite(reader);
+            Log.debug(Geonet.SEARCH_ENGINE, "Lucene query: " + query.toString());
+            System.out.println("Lucene query: " + rw.toString());
+        }
 		new IndexSearcher(reader).search(query, cFilter, tfc); 
 
 		Element elSummary= new Element("summary");

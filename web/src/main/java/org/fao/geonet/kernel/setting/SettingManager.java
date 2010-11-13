@@ -152,6 +152,15 @@ public class SettingManager
 	//--- Setters
 	//---------------------------------------------------------------------------
 
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param path
+     * @param name
+     * @return
+     * @throws SQLException
+     */
 	public boolean setName(Dbms dbms, String path, String name) throws SQLException
 	{
 		if (path == null)
@@ -179,6 +188,15 @@ public class SettingManager
 
 	//---------------------------------------------------------------------------
 
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param path
+     * @param value
+     * @return
+     * @throws SQLException
+     */
 	public boolean setValue(Dbms dbms, String path, Object value) throws SQLException
 	{
 		Map<String, Object> values = new HashMap<String, Object>();
@@ -189,6 +207,14 @@ public class SettingManager
 
 	//---------------------------------------------------------------------------
 
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param values
+     * @return
+     * @throws SQLException
+     */
 	public boolean setValues(Dbms dbms, Map<String, Object> values) throws SQLException
 	{
 		lock.writeLock().lock();
@@ -223,10 +249,17 @@ public class SettingManager
 		}
 	}
 
-	//---------------------------------------------------------------------------
-	/** When adding to a newly created node, path must be 'id:...'
-	  */
 
+    /**
+     * When adding to a newly created node, path must be 'id:...'.
+     *
+     * @param dbms
+     * @param path
+     * @param name
+     * @param value
+     * @return
+     * @throws SQLException
+     */
 	public String add(Dbms dbms, String path, Object name, Object value) throws SQLException
 	{
 		if (name == null)
@@ -270,6 +303,14 @@ public class SettingManager
 
 	//---------------------------------------------------------------------------
 
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param path
+     * @return
+     * @throws SQLException
+     */
 	public boolean remove(Dbms dbms, String path) throws SQLException
 	{
 		lock.writeLock().lock();
@@ -293,6 +334,14 @@ public class SettingManager
 
 	//---------------------------------------------------------------------------
 
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param path
+     * @return
+     * @throws SQLException
+     */
 	public boolean removeChildren(Dbms dbms, String path) throws SQLException
 	{
 		lock.writeLock().lock();
@@ -320,9 +369,8 @@ public class SettingManager
 	//---------------------------------------------------------------------------
 
 	/**
-	 * Refresh current settings manager. This has to be used
-	 * when updating the Settings table without using this class.
-	 * For example when using an SQL script.
+	 * Refreshes current settings manager. This has to be used when updating the Settings table without using this
+     * class. For example when using an SQL script.
 	 */
 	public boolean refresh() throws SQLException
 	{
@@ -376,6 +424,12 @@ public class SettingManager
 	//---
 	//---------------------------------------------------------------------------
 
+    /**
+     * TODO javadoc.
+     *
+     * @param s
+     * @param elemList
+     */
 	private void createSubTree(Setting s, List elemList)
 	{
 		for(Iterator i=elemList.iterator(); i.hasNext(); )
@@ -410,6 +464,12 @@ public class SettingManager
 
 	//---------------------------------------------------------------------------
 
+    /**
+     * TODO javadoc.
+     *
+     * @param path
+     * @return
+     */
 	private Setting resolve(String path)
 	{
 		StringTokenizer st = new StringTokenizer(path, SEPARATOR);
@@ -429,6 +489,13 @@ public class SettingManager
 
 	//---------------------------------------------------------------------------
 
+    /**
+     * TODO javadoc.
+     *
+     * @param s
+     * @param id
+     * @return
+     */
 	private Setting find(Setting s, int id)
 	{
 		ArrayList<Setting> stack = new ArrayList<Setting>();
@@ -453,6 +520,13 @@ public class SettingManager
 
 	//---------------------------------------------------------------------------
 
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param path
+     * @return
+     */
 	private Setting findAmongAdded(Dbms dbms, String path)
 	{
 		if (!path.startsWith("id:"))
@@ -476,6 +550,13 @@ public class SettingManager
 
 	//---------------------------------------------------------------------------
 
+    /**
+     * TODO javadoc.
+     *
+     * @param s
+     * @param level
+     * @return
+     */
 	private Element build(Setting s, int level)
 	{
 		Element el = new Element(s.getName());
@@ -535,6 +616,12 @@ public class SettingManager
 	//---
 	//---------------------------------------------------------------------------
 
+    /**
+     * TODO javadoc.
+     *
+     * @param resource
+     * @param commit
+     */
 	private void flush(Object resource, boolean commit)
 	{
 		lock.writeLock().lock();
@@ -575,7 +662,9 @@ public class SettingManager
 	private int maxSerial = 0;
 
 	//---------------------------------------------------------------------------
-
+    /**
+     * TODO javadoc.
+     */
 	private ResourceListener resList = new ResourceListener()
 	{
 		public void close(Object resource) { flush(resource, true);  }
