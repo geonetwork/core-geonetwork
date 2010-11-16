@@ -710,7 +710,36 @@ td.advsearchfields {
 	padding: 2px 8px 2px 2px;
 }
 
+/* Search input boxes */
 
+#similarity1, #similarity02, #similarity04, #similarity06, #similarity08, #radfrom0, #radfrom1, #radfromext1 {
+	margin: 3px;
+}
+
+#dateFrom, #dateTo, #extTo, #extFrom {
+	margin: 3px;
+}
+
+#digital, #download, #dynamic, #paper {
+	margin: 3px;
+}
+
+#northBL, #eastBL, #southBL, #westBL {
+	margin:  3px;;
+}
+
+#inspire {
+	margin:  3px;
+}
+
+#inspirethemesdiv {
+	margin: 3px;
+}
+
+label {
+	padding-right: 3px;
+	padding-left: 3px;
+}
 
 #openIMBtn{
 	background: url(images/arrow.gif) no-repeat right;
