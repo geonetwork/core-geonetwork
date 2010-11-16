@@ -362,8 +362,8 @@
 					var msgFailed = "<xsl:value-of select="/root/gui/strings/metadata.admin.index.failed"/>";
 					var doYouReally = "<xsl:value-of select="/root/gui/strings/doYouReallyWantToDoThis"/>";
 					
-					function idxOperation(service, wait, btn){
-						if (!confirm(doYouReally)) return;
+					function idxOperation(service, wait, btn, warning){
+						if (warning &amp;&amp; !confirm(doYouReally)) return;
 
 						var url = Env.locService + '/' + service;
 					  $(wait).style.display = 'block';
@@ -398,17 +398,24 @@
 				</script>
 			</td>
 			<td>
-				<button class="content" onclick="idxOperation('metadata.admin.index.rebuild','waitIdx', this.name)" id="btIdx" name="btIdx"><xsl:value-of select="/root/gui/strings/rebuild"/></button>
+				<button class="content" onclick="idxOperation('metadata.admin.index.rebuild','waitIdx', this.name, true)" id="btIdx" name="btIdx"><xsl:value-of select="/root/gui/strings/rebuild"/></button>
 				<img src="{/root/gui/url}/images/loading.gif" id="waitIdx" style="display:none;"/>
 			</td>
 		</tr>
 		<tr>
       <td class="padded"><xsl:value-of select="/root/gui/strings/metadata.admin.index.optimize.desc"/></td>
       <td>
-        <button class="content" onclick="idxOperation('metadata.admin.index.optimize', 'waitIdxOpt', this.name)" id="btOptIdx" name="btOptIdx"><xsl:value-of select="/root/gui/strings/optimize"/></button>
+        <button class="content" onclick="idxOperation('metadata.admin.index.optimize', 'waitIdxOpt', this.name, true)" id="btOptIdx" name="btOptIdx"><xsl:value-of select="/root/gui/strings/optimize"/></button>
         <img src="{/root/gui/url}/images/loading.gif" id="waitIdxOpt" style="display:none;"/>
       </td>
-    </tr>
+		</tr>
+		<tr>
+			<td class="padded"><xsl:value-of select="/root/gui/strings/lucene.config.reload"/></td>
+			<td>
+				<button class="content" onclick="idxOperation('lucene.config.reload', 'waitIdxReload', this.name, false)" id="btReloadIdx" name="btReloadIdx"><xsl:value-of select="/root/gui/strings/reload"/></button>
+				<img src="{/root/gui/url}/images/loading.gif" id="waitIdxReload" style="display:none;"/>
+			</td>
+		</tr>
 		<xsl:if test="string(/root/gui/env/xlinkResolver/enable)='true'">
 			<tr>
 				<td class="padded"><xsl:value-of select="/root/gui/strings/metadata.admin.index.rebuildxlinks.desc"/></td>

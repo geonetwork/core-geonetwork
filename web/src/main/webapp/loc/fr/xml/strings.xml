@@ -470,20 +470,22 @@
 	<metadata.admin.index.failed>Echec lors de la mise à jour de l'index.</metadata.admin.index.failed>
 	<metadata.admin.index.success>Mise à jour de l'index réussie.</metadata.admin.index.success>
 	<metadata.admin.index.optimize.desc>Optimisation de l'index Lucene</metadata.admin.index.optimize.desc>
-	<metadata.admin.index.rebuildxlinks.desc>Clear XLink Cache and Rebuild Index of Records with XLinks</metadata.admin.index.rebuildxlinks.desc>
-	<rebuildxlinks>Rebuild XLinks</rebuildxlinks>
+	<metadata.admin.index.rebuildxlinks.desc>Vider le cache d'XLink et reconstruire l'index</metadata.admin.index.rebuildxlinks.desc>
+	<lucene.config.reload>Recharger la configuration Lucene</lucene.config.reload>
+	<reload>Recharger</reload>
+	<rebuildxlinks>Reconstruire</rebuildxlinks>
 	<doYouReallyWantToDoThis js="true">Cette opération peut prendre du temps sur des catalogues volumineux. Il n'est pas recommandé de la lancer lors des périodes d'utilisation intense. Continuer ?</doYouReallyWantToDoThis>
 	<optimize>Optimiser</optimize>
 	<metadata.admin.index>Gestion de l&apos;index</metadata.admin.index>
-    <metadata-samples>Sample metadata</metadata-samples>
-    <metadata-samples-add>Add sample metadata</metadata-samples-add>
-    <metadata-samples-add-failed>Add sample metadata failed</metadata-samples-add-failed>
-    <metadata-samples-add-success>Added sample metadata</metadata-samples-add-success>
+    <metadata-samples>Exemple de métadonnées</metadata-samples>
+    <metadata-samples-add>Ajouter les exemples</metadata-samples-add>
+    <metadata-samples-add-failed>Echec de l'ajout des exemples</metadata-samples-add-failed>
+    <metadata-samples-add-success>Exemples ajoutés</metadata-samples-add-success>
 	<metadata-template-order>Ordonner les modèles</metadata-template-order>	
 	<metadata-template-order-desc>Ordonner les modèles de saisie</metadata-template-order-desc>
-	<metadata-template-add-default>Add templates</metadata-template-add-default>	
-	<metadata-template-add-default-desc>Add default templates</metadata-template-add-default-desc>
-    <metadata-template-select>Select the templates to add</metadata-template-select>
+	<metadata-template-add-default>Ajouter les modèles</metadata-template-add-default>	
+	<metadata-template-add-default-desc>Ajouter les modèles par défaut</metadata-template-add-default-desc>
+    <metadata-template-select>Sélectionner les modèles à ajouter</metadata-template-select>
 	<metadata>Métadonnées</metadata>
 	<metadataAdded>Métadonnées ajouter avec l'ID:</metadataAdded>
 	<metadataDeleted>Métadonnées supprimer avec l'ID:</metadataDeleted>

@@ -469,6 +469,8 @@
 	<metadata.admin.index.success>La operación de generar índice de Lucene se completó con éxito.</metadata.admin.index.success>
 	<metadata.admin.index.optimize.desc>Optimizar el índice de Lucene</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>Clear XLink Cache and Rebuild Index of Records with XLinks</metadata.admin.index.rebuildxlinks.desc>
+	<lucene.config.reload>Reload Lucene configuration</lucene.config.reload>
+	<reload>Reload</reload>
 	<rebuildxlinks>Rebuild XLinks</rebuildxlinks>
 	<doYouReallyWantToDoThis js="true">Esta operación puede tardar algún tiempo sobre los catálogos con muchos metadatados y no se debe hacer en momentos de uso intensivo. ¿Desea continuar?</doYouReallyWantToDoThis>
 	<optimize>Optimizar</optimize>
