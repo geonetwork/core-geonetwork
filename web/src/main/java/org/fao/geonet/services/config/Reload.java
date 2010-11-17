@@ -42,6 +42,7 @@ public class Reload implements Service {
 
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
+		String status = "true";
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		ServiceConfig handlerConfig = gc.getHandlerConfig();
@@ -62,8 +63,11 @@ public class Reload implements Service {
 
 		Logger logger = context.getLogger();
 		logger.info("  - Lucene configuration is:");
-		logger.info(lc.toString());
+		String config = lc.toString();
+		logger.info(config);
 
-		return new Element("ok");
+		return new Element("response")
+			.addContent(new Element("status").setText(status))
+			.addContent(new Element("config").setText(config));
 	}
 }

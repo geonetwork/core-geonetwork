@@ -32,13 +32,15 @@ operations[i++] = [
 		'csw-GetRecords | no filter | outputSchema: own (CSW GeoNetwork extension)',
 		'' ];
 operations[i++] = [ 'csw-GetRecordsElementName',
-		'csw-GetRecords | SortBy title', '' ];
+		'csw-GetRecords | Element name', '' ];
 //GetRecords ------------- FILTER -- //
 operations[i++] = [ 'csw-GetRecordsSortBy',
             		'csw-GetRecords | SortBy title', '' ];
 // GetRecords ------------- FILTER -- //
 operations[i++] = [ 'csw-GetRecordsFilterService',
 		'csw-GetRecords | filter \'service\'', '' ];
+operations[i++] = [ 'csw-GetRecordsFilterRangeCswIsoRecord',
+            		'csw-GetRecords | filter range', '' ];
 // GetRecords ------------- GEOFILTER -- //
 operations[i++] = [ 'csw-GetRecordsFilterGeoBboxEquals',
 		'csw-GetRecords | filter ogc:Equals+bbox -90,-180 90,180', '' ];
