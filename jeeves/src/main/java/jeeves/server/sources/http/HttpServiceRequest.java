@@ -50,8 +50,6 @@ public class HttpServiceRequest extends ServiceRequest
 		httpRes = res;
 	}
 
-    //---------------------------------------------------------------------------
-    
     public HttpServletResponse getHttpServletResponse() {
         return httpRes;
     }
