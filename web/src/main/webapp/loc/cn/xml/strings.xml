@@ -10,6 +10,8 @@
 	<ru>Русский</ru> <!-- Do not translate! -->
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
 	
+    <useStopwords>Lucene的索引使用这些语言的stopwords:</useStopwords>    
+    <rebuildIndexMessage>如果你改变这些值，建议您重建Lucene索引。</rebuildIndexMessage>
 	<!-- new strings - SP 2.5 -->
 	<showRemoteHTML>Show HTML from remote server</showRemoteHTML>
 	<!-- end new strings -->
@@ -356,6 +358,8 @@
 	<imZoomIn>Zoom in</imZoomIn>
 	<imZoomOut>Zoom out</imZoomOut>
 	<imZoomToLayer>Zoom to selected layer extent</imZoomToLayer>
+    <indexLanguages>Stopwords</indexLanguages>
+    <indexLanguagesDes>您可以定义哪些stopwords使用的语言。</indexLanguagesDes>    
 	<infoTitle>信息</infoTitle>
 	<insert>插入</insert>
 	<insertFileMode js="true">File Upload</insertFileMode>

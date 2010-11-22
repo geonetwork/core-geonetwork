@@ -10,6 +10,8 @@
 	<ru>Русский</ru> <!-- Do not translate! -->
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
 	
+    <useStopwords>El índice Lucene utiliza palabras vacías de estos idiomas:</useStopwords>    
+    <rebuildIndexMessage>Si cambia estos valores, se recomienda volver a generar el índice Lucene.</rebuildIndexMessage>
 	<!-- new strings - SP 2.5 -->
 	<showRemoteHTML>Show HTML from remote server</showRemoteHTML>
 	<!-- end new strings -->
@@ -356,6 +358,8 @@
 	<imZoomIn>Acercar</imZoomIn>
 	<imZoomOut>Alejar</imZoomOut>
 	<imZoomToLayer>Zoom a la capa</imZoomToLayer>
+    <indexLanguages>Palabras vacías</indexLanguages>
+    <indexLanguagesDes>Puede definir los idiomas que se utilizan palabras vacías.</indexLanguagesDes>    
 	<infoTitle>Información</infoTitle>
 	<insert>Insertar</insert>
 	<insertFileMode js="true">Subir fichero</insertFileMode>
