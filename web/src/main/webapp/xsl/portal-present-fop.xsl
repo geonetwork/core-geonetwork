@@ -11,8 +11,8 @@
 		<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
 			<fo:layout-master-set>
 				<fo:simple-page-master master-name="simpleA4"
-					page-height="29.7cm" page-width="21cm" margin-top="1cm"
-					margin-bottom="1cm" margin-left="1cm" margin-right="1cm">
+					page-height="29.7cm" page-width="21cm" margin-top="1.5cm"
+					margin-bottom="1.5cm" margin-left="1.5cm" margin-right="1.5cm">
 					<fo:region-body margin-top="1cm" />
 					<fo:region-before extent="1cm" />
 				</fo:simple-page-master>
@@ -30,9 +30,9 @@
                 <xsl:variable name="df">yyyy-MM-dd'T'HH:mm:ss</xsl:variable>
             
 				<fo:static-content flow-name="xsl-region-before">
-					<fo:block text-align="end">
+					<fo:block text-align="end" font-size="9pt">
  						<xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable> 
-							GeoNetwork opensource - <xsl:value-of select="format-dateTime(current-dateTime(),$df)"/> - <fo:page-number /> / <fo:page-number-citation ref-id="terminator" />
+							<xsl:value-of	select="/root/gui/env/site/name" /> - <xsl:value-of select="format-dateTime(current-dateTime(),$df)"/> - <fo:page-number /> / <fo:page-number-citation ref-id="terminator" />
 					</fo:block>
 				</fo:static-content>
 
@@ -42,7 +42,7 @@
 					<xsl:call-template name="banner" />
 
 
-					<fo:block font-size="10pt">
+					<fo:block font-size="9pt">
 
 						<fo:table width="100%" table-layout="fixed">
 							<fo:table-column column-width="13cm" />

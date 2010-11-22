@@ -23,7 +23,7 @@
 				
 				<style type="text/css">
 					body {
-						background-color: #E4E9F1;
+/*						background-color: #E4E9F1; */
 						height:100%;
 					}
 				</style>

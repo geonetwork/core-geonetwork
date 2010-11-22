@@ -45,7 +45,7 @@
 		<fo:table-row>
 			<fo:table-cell>
 				<fo:block>
-					<fo:inline font-weight="bold">
+					<fo:inline font-weight="normal">
 						<xsl:value-of select="$title" />
 					</fo:inline>
 				</fo:block>
@@ -106,8 +106,8 @@
 								<fo:table-cell
 									number-columns-spanned="3">
 									<fo:block
-										border-top="2pt solid black">
-										<fo:inline font-weight="bold">
+										border-top="1pt solid black">
+										<fo:inline font-weight="normal">
 											<xsl:text>::</xsl:text>
 											<xsl:value-of
 												select="$title" />
@@ -162,26 +162,101 @@
             <xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
 
             <xsl:if test="$metadata/geonet:info/id != ''">
-			<fo:table-row>
-				<fo:table-cell>
-
 				    <xsl:variable name="source" select="string($metadata/geonet:info/source)"/>
 
-                    <fo:block font-weight="bold" font-size="14pt"
-						border-top="2pt solid black" padding-top="4pt" margin-top="4pt">
-						<fo:external-graphic content-width="35pt">
-	                                        <xsl:attribute name="src">
-	                            url('<xsl:value-of
-	                                                select="concat('http://', $server/host,':', $server/port, $gui/url, '/images/logos/', $source , '.gif')" />')"
-	                                </xsl:attribute>
-	                    </fo:external-graphic>
-                    	<xsl:value-of select="concat(position()-1,' - ',$metadata/title)" />
-					</fo:block>
-					<fo:block text-align="left" font-style="italic" margin-top="4pt">
-						<xsl:value-of select="$gui/strings/uuid" />
-						:
-            <xsl:value-of select="$metadata/geonet:info/uuid" />
-					</fo:block>
+            	<!-- Header for each result -->
+            	<fo:table-row border-top="1pt solid black">
+            		<fo:table-cell number-columns-spanned="2">
+            			<fo:block font-weight="bold" font-size="10pt"
+            				border-top="0pt solid black" padding-top="4pt" margin-top="4pt" color="#003f83">
+            				<fo:external-graphic content-width="30pt">
+                       <xsl:attribute name="src">
+                          url('<xsl:value-of
+                            select="concat('http://', $server/host,':', $server/port, $gui/url, '/images/logos/', $source , '.gif')" />')"
+                       </xsl:attribute>
+                    </fo:external-graphic>
+                  	<xsl:value-of select="concat(position()-1,' - ',$metadata/title)" />
+        					</fo:block>
+            		</fo:table-cell>
+            	</fo:table-row>
+            	
+            	<fo:table-row>
+            		<xsl:choose>
+	            		<xsl:when test="$metadata/image">
+	            			<!-- Two columns -->
+	            			<fo:table-cell>
+	            				<xsl:call-template name="fo_met">
+	            					<xsl:with-param name="metadata"
+	            						select="$metadata" />
+	            					<xsl:with-param name="gui"
+	            						select="$gui" />
+	            					<xsl:with-param name="server"
+	            						select="$server" />
+	            					<xsl:with-param name="remote"
+	            						select="$remote" />
+	            					<xsl:with-param name="source"
+	            						select="$source" />
+	            				</xsl:call-template>
+	            			</fo:table-cell>
+	            			<fo:table-cell padding-left="5pt" padding-top="15pt" padding-right="2cm">
+	            				<fo:block>
+	            					<xsl:if test="$metadata/image">
+	            						<xsl:choose>
+	            							<xsl:when
+	            								test="contains($metadata/image ,'://')">
+	            								<fo:external-graphic width="125pt" content-width="scale-to-fit" scaling="uniform" content-height="100%">
+	            									<xsl:attribute name="src"><xsl:text>url('</xsl:text><xsl:value-of
+	            										select="$metadata/image" /><xsl:text>')"</xsl:text></xsl:attribute>
+	            								</fo:external-graphic>
+	            							</xsl:when>
+	            							<xsl:otherwise>
+	            								<fo:external-graphic width="125pt" content-width="scale-to-fit" scaling="uniform" content-height="100%">
+	            									<xsl:attribute name="src"><xsl:text>url('</xsl:text><xsl:value-of
+	            										select="concat('http://', $server/host,':', $server/port, $metadata/image)" /><xsl:text>')"</xsl:text></xsl:attribute>
+	            								</fo:external-graphic>
+	            							</xsl:otherwise>
+	            						</xsl:choose>
+	            						
+	            					</xsl:if>
+					            </fo:block>
+	            			</fo:table-cell>
+	            			
+	            		</xsl:when>
+	            		<xsl:otherwise>
+	            			<!-- One column -->
+	            			<fo:table-cell number-columns-spanned="2">
+	            				<xsl:call-template name="fo_met">
+	            					<xsl:with-param name="metadata"
+	            						select="$metadata" />
+	            					<xsl:with-param name="gui"
+	            						select="$gui" />
+	            					<xsl:with-param name="server"
+	            						select="$server" />
+	            					<xsl:with-param name="remote"
+	            						select="$remote" />
+	            					<xsl:with-param name="source"
+	            						select="$source" />
+	            				</xsl:call-template>
+	            			</fo:table-cell>
+	            		</xsl:otherwise>
+            		</xsl:choose>
+           		</fo:table-row>
+			</xsl:if>
+		</xsl:for-each>
+		
+	</xsl:template>
+
+	<!--
+		metadata summary
+	-->
+	<xsl:template name="fo_met">
+		<xsl:param name="metadata" />
+		<xsl:param name="server" />
+		<xsl:param name="gui" />
+		<xsl:param name="remote" />
+		<xsl:param name="source" />
+			
+		<!-- Metadata summary -->
 					<fo:block text-align="left" margin-top="4pt">
 						<xsl:value-of select="$gui/strings/abstract" />
 						:
@@ -206,6 +281,11 @@
             	<xsl:value-of select="$metadata/geonet:info/schema" />
 						</fo:block>
 					</xsl:if>
+		<fo:block text-align="left" font-style="italic" margin-top="4pt">
+			<xsl:value-of select="$gui/strings/uuid" />
+			:
+			<xsl:value-of select="$metadata/geonet:info/uuid" />
+		</fo:block>
 
 					<!-- display metadata url but only if its not a remote result -->
 					<fo:block text-align="left" margin-top="4pt">
@@ -214,7 +294,7 @@
 								|<fo:basic-link text-decoration="underline" color="blue">
 									<xsl:attribute name="external-destination">
                                   			url('<xsl:value-of
-											select="concat('http://', $server/host,':', $server/port, $gui/locService,'/metadata.show?id=', $metadata/geonet:info/id, '&amp;currTab=simple')" />')
+								select="concat('http://', $server/host,':', $server/port, $gui/locService,'/metadata.show?uuid=', $metadata/geonet:info/uuid, '&amp;currTab=simple')" />')
                               			</xsl:attribute>
 									<xsl:value-of select="$gui/strings/show" />
 								</fo:basic-link>|
@@ -257,35 +337,7 @@
                                 </fo:basic-link>|
                             </xsl:for-each>
                         </xsl:if>
-
-
 					</fo:block>
-				</fo:table-cell>
-				<fo:table-cell>
-					<fo:block>
-						<xsl:if test="$metadata/image">
-						    <xsl:choose>
-								<xsl:when
-									test="contains($metadata/image ,'://')">
-									<fo:external-graphic>
-										<xsl:attribute name="src"><xsl:text>url('</xsl:text><xsl:value-of
-												select="$metadata/image" /><xsl:text>')"</xsl:text></xsl:attribute>
-									</fo:external-graphic>
-								</xsl:when>
-								<xsl:otherwise>
-									<fo:external-graphic>
-										<xsl:attribute name="src"><xsl:text>url('</xsl:text><xsl:value-of
-												select="concat('http://', $server/host,':', $server/port, $metadata/image)" /><xsl:text>')"</xsl:text></xsl:attribute>
-									</fo:external-graphic>
-								</xsl:otherwise>
-							</xsl:choose>
-
-						</xsl:if>
-					</fo:block>
-				</fo:table-cell>
-			</fo:table-row>
-			</xsl:if>
-		</xsl:for-each>
 	</xsl:template>
 
 
