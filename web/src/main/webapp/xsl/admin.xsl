@@ -289,7 +289,13 @@
 								<td class="padded"><xsl:value-of select="/root/gui/strings/localizDes"/></td>
 							</tr>
 						</xsl:if>
-						
+
+						<xsl:if test="/root/gui/services/service/@name='index.languages.get'">
+							<tr>
+								<td class="padded"><a href="{/root/gui/locService}/index.languages.get"><xsl:value-of select="/root/gui/strings/indexLanguages"/></a></td>
+								<td class="padded"><xsl:value-of select="/root/gui/strings/indexLanguagesDes"/></td>
+							</tr>
+						</xsl:if>						
 						
 						<xsl:if test="/root/gui/services/service/@name='metadata.admin.index.rebuild' and /root/gui/services/service/@name='metadata.admin.index.optimize'">            
 							<xsl:call-template name="admin-index"/>
