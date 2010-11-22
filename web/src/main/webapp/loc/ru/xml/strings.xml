@@ -47,8 +47,8 @@
 	<logoForNode js="true">Set selected logo for the catalogue</logoForNode>
 	<logoSelect js="true">Select image for logo ...</logoSelect>
 	
-	<createChild>Create child</createChild>
-	<updateChildren>Update children</updateChildren>
+	<createChild>Создать подчиненные</createChild>
+	<updateChildren>Изменить подчиненные</updateChildren>
 	<updateChildrenOk>Children updated</updateChildrenOk>
 	<updateChildrenFailed>Children update failed</updateChildrenFailed>
 	<massiveUpdateChildrenTitle>Update children</massiveUpdateChildrenTitle>
@@ -77,9 +77,9 @@
 			ISO19115 does not allow to have more than one.
 		</div>
 	</updateChildrenHelp>
-	<otherActions>Other actions</otherActions>
-	<computeExtentFromKeywords>Compute extent (add)</computeExtentFromKeywords>
-	<computeExtentFromKeywordsReplace>Compute extent (replace)</computeExtentFromKeywordsReplace>
+	<otherActions>Другие действия</otherActions>
+	<computeExtentFromKeywords>Вычислить экстент (добавить)</computeExtentFromKeywords>
+	<computeExtentFromKeywordsReplace>Вычислить экстент (заменить)</computeExtentFromKeywordsReplace>
 	<computeExtentFromKeywordsHelp>Compute extent action analyses metadata keywords section
 	and search for similar concept having an extent in all thesaurus available.
 	One extent is added for each matching keywords. In "add" mode, existing extent are
@@ -133,9 +133,9 @@
 	<datasetCreate>Create dataset metadata</datasetCreate>
 	<linkedServices> Related service metadata:</linkedServices>
 	<linkedServiceMetadataHelp>To add a relation to a service, go to ISO view &gt; Distribution tab.</linkedServiceMetadataHelp>
-	<linkedParentMetadata> Parent/child metadata:</linkedParentMetadata>
+	<linkedParentMetadata> Иерархия метаданных:</linkedParentMetadata>
 	<linkedParentMetadataHelp>To add a relation to a parent, go to ISO view &gt; Metadata tab.</linkedParentMetadataHelp>
-	<linkedChildrenMetadata> Children metadata:</linkedChildrenMetadata>
+	<linkedChildrenMetadata> Подчиненные метаданные:</linkedChildrenMetadata>
 	<linkedChildrenMetadataHelp>List of children linked to current metadata record.</linkedChildrenMetadataHelp>
 	<linkedDatasetMetadata> Related datasets:</linkedDatasetMetadata>
 	<serviceCreate>Create new service metadata</serviceCreate>
@@ -144,8 +144,8 @@
 	<searchText js="true">Text search</searchText>
 	<mdTitle js="true">Metadata title</mdTitle>
 	<createRelation js="true">Create relation</createRelation>
-	<export>Export</export>
-	<exportText>Export (TXT)</exportText>	
+	<export>Экспорт (ZIP)</export>
+	<exportText>Экспорт (TXT)</exportText>	
 	<addXMLFragment>Add from dictionary ...</addXMLFragment>	
 	<translateWithGoogle>Use Google translation service to suggest a translation for selected language.</translateWithGoogle>
 	<translateWithGoogle.maxSize js="true">Text to translate is larger than 5000 characters (see http://code.google.com/apis/ajaxlanguage/terms.html).</translateWithGoogle.maxSize>
@@ -193,9 +193,9 @@
 	<selectedCRS js="true">Selected coordinate systems</selectedCRS>
 	<foundCRS js="true">Available coordinate systems</foundCRS>
 	
-	<about>О системе</about>
-	<abstract>Резюме</abstract>
-	<accept>Принять</accept>
+	<about>О&#xA0;системе</about>
+	<abstract>Аннотация</abstract>
+	<accept>Отправить</accept>
 	<actionOnSelect>действия над выделением</actionOnSelect>
 	<add js="true">добавить</add>
 	<addNewMetadata>Добавить новые метаданные</addNewMetadata>
@@ -217,7 +217,7 @@
 	<batchImport>Импортировать все метаданные в формате XML из локального каталога</batchImport>
 	<batchImportTitle>Массовый импорт из XML</batchImportTitle>
 	<begdate>Дата начала</begdate>
-	<begtime>Дата начала</begtime>
+	<begtime>Время начала</begtime>
 	<bgFileDescChoice value="large_thumbnail">Большой эскиз</bgFileDescChoice>
 	<bgFileDescChoice value="thumbnail">Эскиз</bgFileDescChoice>
 	<bookmarkDelicious>Bookmark on Delicious</bookmarkDelicious>
@@ -244,13 +244,13 @@
 	<categoryManagement>Категории данных</categoryManagement>
 	<categoryManDes>Добавить/изменить/удалить информацию о категориях</categoryManDes>
 	<categoryNameMandatory>A category name must be filled in.</categoryNameMandatory>
-	<changeDate>Metadata change date</changeDate>
+	<changeDate>Дата изменения метаданных</changeDate>
 	<checkusername>Check</checkusername>
 	<choose>- Выбрать -</choose>
 	<chooseFile>Укажите местоположение файла для загрузки</chooseFile>
 	<chooseLargeThumbnail>Укажите местоположение файла большого эскиза</chooseLargeThumbnail>
 	<chooseThumbnail>Укажите местоположение файла маленького эскиза</chooseThumbnail>
-	<city>City</city>
+	<city>Город</city>
 	<clear js="true">Очистить</clear>
 	<clearAll>Очистить все</clearAll>
 	<close js="true">Закрыть</close>
@@ -277,7 +277,7 @@
 	<cswTest>CSW ISO Profile test</cswTest>
 	<cswTestDesc>Test interface for the CSW ISO Profile catalog interface</cswTestDesc>
 	<dataQualityTab>Качество данных</dataQualityTab>
-	<datasetIssued>Temporal Extent</datasetIssued>
+	<datasetIssued>Временной интервал</datasetIssued>
 	<datasetTab>Набор данных</datasetTab>
 	<dateModified>Date Modified</dateModified>
 	<dateRelChoice value="14">до</dateRelChoice>
@@ -290,9 +290,9 @@
 	<definition>Определение</definition>
 	<del>удалить</del>
 	<delete>Удалить</delete>
-	<deleteCategory>Delete the category?</deleteCategory>
+	<deleteCategory>Удалить категорию?</deleteCategory>
 	<deleteConfirmationTitle>Delete Metadata Confirmation</deleteConfirmationTitle>
-	<deleteGroup>Delete the group ?</deleteGroup>
+	<deleteGroup>Удалить группу?</deleteGroup>
 	<descriptionTab>Описание</descriptionTab>
 	<desSchema>Целевая схема</desSchema>
 	<digital>Цифровая</digital>
@@ -306,7 +306,7 @@
 	<downloadable>Загружаемая</downloadable><!-- имеется в виду карта -->
 	<downloadData>Данные для загрузки</downloadData>
 	<downloadEmail>Электронная почта</downloadEmail>
-	<downloadSelect>Download?</downloadSelect>
+	<downloadSelect>Загрузить?</downloadSelect>
 	<downloadSelected>Download Selected</downloadSelected>
 	<downloadSummary>Download Summary</downloadSummary>
 	<downloadThemAll>Download All Local</downloadThemAll>
@@ -336,10 +336,10 @@
 	<enttypl>Entity Type Label</enttypl>
 	<exactCoordinate>Точные координаты </exactCoordinate>
 	<exactTerm>Точное совпадение</exactTerm>
-	<extended>Улучшенный поиск</extended>
+	<extended>Расширенный&#xA0;поиск</extended>
 	<extensionInfoTab>Ext. Info</extensionInfoTab>
 	<extent>Extent</extent>
-	<featuredMap>Предлагаемая карта</featuredMap>
+	<featuredMap>Предлагаемый ресурс</featuredMap>
 	<feedback>Обратная связь</feedback>
 	<feedbackCardTitle>Обратная связь и комментарии</feedbackCardTitle>
 	<feedbackComments>Сообщение/Комментарий</feedbackComments>
@@ -378,7 +378,7 @@
 	<hitsPerPageChoice value="100">100 результатов</hitsPerPageChoice>
 	<hitsPerPageChoice value="20">20 результатов</hitsPerPageChoice>
 	<hitsPerPageChoice value="50">50 результатов</hitsPerPageChoice>
-	<home>Старт</home>
+	<home>Главная</home>
 	<i18n>Test i18n</i18n>
 	<i18nDesc>This service should help GeoNetwork opensource developers to have up to date localized files for the GUI.</i18nDesc>
 	<identificationTab>Идентификация</identificationTab>
@@ -422,7 +422,7 @@
 	<latMax>Широта (max)</latMax>
 	<latMin>Широта (min)</latMin>
 	<legend>Легенда</legend>
-	<link>Link</link>
+	<link>Ссылка</link>
 	<links>Ссылки</links>
 	<loading>Загрузка...</loading>
 	<local>Локальный поиск</local>
@@ -439,7 +439,7 @@
 	<longitude>Долгота (от -180 до 180) в градусах</longitude>
 	<longMax>Долгота (max)</longMax>
 	<longMin>Долгота (min)</longMin>
-	<mainpageTitle>Поиск интерактивных карт, GIS-данных, спутниковых снимков и связанных программ</mainpageTitle>
+	<mainpageTitle>Поиск интерактивных карт, наборов и баз данных, спутниковых снимков ...</mainpageTitle>
 	<maintenanceTab>Сопровождение</maintenanceTab>
 	<management>Управление</management>
 	<mandatory>Обязательно</mandatory>
@@ -465,9 +465,9 @@
 	<messageNoPrivileges>Недостаточно привилегий для выполнения данной операции.</messageNoPrivileges>
 	<messageNotPerformed>Операция не может быть выполнена.</messageNotPerformed>
 	<metadata.admin.index.desc>Перестроить индекс Lucene</metadata.admin.index.desc>
-	<metadata.admin.index.failed>Index operation failed.</metadata.admin.index.failed>
-	<metadata.admin.index.success>Index operation was successful.</metadata.admin.index.success>
-	<metadata.admin.index.optimize.desc>Optimize Lucene index</metadata.admin.index.optimize.desc>
+	<metadata.admin.index.failed>Индекс не может быть перестроен.</metadata.admin.index.failed>
+	<metadata.admin.index.success>Индекс успешно перестроен.</metadata.admin.index.success>
+	<metadata.admin.index.optimize.desc>Управление индексом Lucene</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>Clear XLink Cache and Rebuild Index of Records with XLinks</metadata.admin.index.rebuildxlinks.desc>
 	<lucene.config.reload>Reload Lucene configuration</lucene.config.reload>
 	<reload>Reload</reload>
@@ -501,7 +501,7 @@
 	<newMdDes>Добавить новые метаданные из шаблона</newMdDes>
 	<newMdInsert>Добавлены новые метаданные:</newMdInsert>
 	<newMetadata>Новые метаданные</newMetadata>
-	<newOwner>New Owner</newOwner>
+	<newOwner>Новый собственник</newOwner>
 	<newPassword>Новый пароль</newPassword>
 	<newUser>Добавить нового пользователя</newUser>
 	<next>Следующие</next>
@@ -520,14 +520,14 @@
 	<onlink>Интернет-ссылки</onlink>
 	<opensearch>Сервис GeoNetwork opensearch позволяет проводить поиск в каталоге метаданных.</opensearch>
 	<operation>Операция</operation>
-	<options>Настройки</options>
+	<options>Опции</options>
 	<organisation>Организация/Отдел</organisation>
 	<output>Результаты</output>
 	<outputType id="full">Полные</outputType>
 	<outputType id="text">Только текст</outputType>
 	<overwrite>Переписать метаданные с одинаковым UUID-идентификатором</overwrite>
 	<overwriteFile>Overwrite?</overwriteFile>
-	<owner>Owner</owner>
+	<owner>Собственник</owner>
 	<ownerRights>Delete/Privileges/Categories Unlocked: You have ownership rights</ownerRights>
 	<paper>Бумажная копия</paper>
 	<partial>Частичное перекрытие</partial>
@@ -557,20 +557,20 @@
 	<progressChoice/>
 	<protocol>Protocol</protocol>
 	<protocolChoice show="y" value="ESRI:AIMS--http--configuration">Конфигурационный файл сервиса ArcIMS (*.AXL)</protocolChoice>
-	<protocolChoice show="y" value="ESRI:AIMS--http-get-feature">Интернет-сервис ArcIMS Feature Map</protocolChoice>
-	<protocolChoice show="-" value="ESRI:AIMS--http-get-image">Интернет-сервис ArcIMS Image Map</protocolChoice>
+	<protocolChoice show="y" value="ESRI:AIMS--http-get-feature">Интернет-сервис ArcIMS Feature Map Service</protocolChoice>
+	<protocolChoice show="-" value="ESRI:AIMS--http-get-image">Интернет-сервис ArcIMS Image Map Service</protocolChoice>
 	<protocolChoice show="y" value="GLG:KML-2.0-http-get-map">Сервис Google Earth KML (версия 2.0)</protocolChoice>
-	<protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">Сервис OGC-WCS Web Coverage (версия 1.1.0)</protocolChoice>
-	<protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">Сервис OGC-WFS Web Feature (версия 1.0.0)</protocolChoice>
-	<protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">Сервис OGC-WMC Web Map Context (версия 1.1)</protocolChoice>
-	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">Сервис OGC-WMS Capabilities (версия 1.1.1)</protocolChoice>
-	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">Интернет-сервис карт OGC (версия 1.1.1)</protocolChoice>
+	<protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">Сервис OGC-WCS Web Coverage Service (версия 1.1.0)</protocolChoice>
+	<protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">Сервис OGC-WFS Web Feature Service(версия 1.0.0)</protocolChoice>
+	<protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">Сервис OGC-WMC Web Map Context Service (версия 1.1)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">Сервис OGC-WMS Capabilities service(версия 1.1.1)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">Cервис OGC Web Map Service (версия 1.1.1)</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Файл для загрузки по FTP</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Файл для загрузки</protocolChoice>
 	<protocolChoice show="-" value="DB:POSTGIS">PostGIS database table</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Интернет-адрес (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Интернет-адрес партнера (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">Файл календаря iCalendar (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Web-адрес (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Web-адрес партнера (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--related">Родственная ссылка (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--rss">Новостная лента RSS (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Демонстрация (URL)</protocolChoice>
@@ -584,7 +584,7 @@
 	<rebuild>Перестроить</rebuild>
 	<recentAdditions>Последние изменения</recentAdditions>
 	<refSysTab>Система ссылки</refSysTab>
-	<region>Область</region>
+	<region>Регион</region>
 	<register>Register</register>
 	<registerChoose>I want to</registerChoose>
 	<RegisteredUser>Зарегистрированный пользователь</RegisteredUser>
@@ -606,16 +606,16 @@
 	<resultsMatching>Суммарное число результатов, удовлетворяющих критерию поиска:</resultsMatching>
 	<Reviewer>Обозреватель содержимого</Reviewer>
 	<rss>Открыть ленту RSS</rss>
-	<rtitle>Заголовок</rtitle>
+	<rtitle>Название</rtitle>
 	<save>Сохранить</save>
 	<saveAndClose>Сохранить и закрыть</saveAndClose>
 	<saveAndValidate>Проверить</saveAndValidate>
 	<savepdf>Сохранить результаты поиска в формате PDF</savepdf>
-	<printSelection>Print to PDF</printSelection>
+	<printSelection>Печать в PDF</printSelection>
 	<schema>Схема</schema>
 	<schematronError>Schematron Error</schematronError>
 	<search>Поиск</search>
-	<searchAllText>Что?</searchAllText>
+	<searchAllText>Все слова</searchAllText>
 	<searchBox>Поиск данных и информации</searchBox>
 	<searchIndex>Поисковый индекс</searchIndex>
 	<searching js="true">...Поиск метаданных...</searching>
@@ -650,7 +650,7 @@
 	<sortByType id="popularity">Популярности</sortByType>
 	<sortByType id="rating">Рейтингу</sortByType>
 	<sortByType id="relevance">Значимости</sortByType>
-	<sortByType id="title">Title</sortByType>
+	<sortByType id="title">Названию</sortByType>
 	<southbc>Южная координата</southbc>
 	<spacesNot js="true">Spaces in this field are not allowed</spacesNot>
 	<spatial2Tab>Простр. предст.</spatial2Tab>
@@ -674,7 +674,7 @@
 	<timeoutChoice value="10">10 секунд</timeoutChoice>
 	<timeoutChoice value="20">20 секунд</timeoutChoice>
 	<timeoutChoice value="30">30 секунд</timeoutChoice>
-	<title>ТИНРО GeoNetwork - Портал пространственных данных и информации</title>
+	<title>Geonetwork - Портал пространственных данных и информации</title>
 	<to>До </to>
 	<toDateSelector>Выбрать дату окончания</toDateSelector>
 	<tools>Tools</tools>
@@ -684,16 +684,16 @@
 	<type>Тип</type>
 	<up>вверх</up>
 	<update>Обновить</update>
-	<updateCategories>Update categories</updateCategories>
-	<updateCategory>Обновить категорию</updateCategory>
-	<updateGroup>Обновить группу</updateGroup>
-	<updatePrivileges>Update privileges</updatePrivileges>
-	<updateUserAccount>Обновить учетную запись</updateUserAccount>
+	<updateCategories>Изменить категории</updateCategories>
+	<updateCategory>Изменить категорию</updateCategory>
+	<updateGroup>Изменить группу</updateGroup>
+	<updatePrivileges>Изменить привилегии</updatePrivileges>
+	<updateUserAccount>Изменить учетную запись</updateUserAccount>
 	<upload js="true">Выгрузить</upload>
 	<user>Пользователь</user>
 	<UserAdmin>Администратор пользователей</UserAdmin>
 	<userAtLeastOneGroup js="true">Please, select at least one group.</userAtLeastOneGroup>
-	<userDefined>- Свободный выбор -</userDefined>
+	<userDefined>- По выбранному региону -</userDefined>
 	<userInfo>Информация о пользователе</userInfo>
 	<userInfoDes>Позволяет текущему пользователю изменить информацию о себе</userInfoDes>
 	<userManagement>Пользователи</userManagement>
@@ -899,17 +899,16 @@
 	<mainpage1>
 		<h1>Цели GeoNetwork:</h1>
 		<ul>
-			<li>Усовершенствовать доступ и интеграцию пространственных данных и информации</li>
-			<li>Поддержать принятие решений</li>
-			<li>Способствовать многопрофильным подходам для обоснованной разработки</li>
-			<li>Улучшить понимание преимуществ географической информации</li>
+			<li>Улучшить доступ к пространственным данным и информации и их комплексное использование</li>
+			<li>Содействовать поддержке принятия решений</li>
+			<li>Способствовать междисциплинарному подходу к устойчивому развитию</li>
+			<li>Содействовать более глубокому пониманию преимуществ географической информации</li>
+		<li>Обмениваться географически привязанной тематической информацией между разными организациями</li>
 		</ul>
 	</mainpage1>
 	<mainpage2>
 		<p>
-			GeoNetwork opensource позволяет облегчить совместное использование
-			географической тематической информации разными организациями.
-			За дополнительной информацией обращайтесь по адресу:
+			<br></br>			За дополнительной информацией обращайтесь по адресу:
 		</p>
 	</mainpage2>
 	<mainhelp1>Как выполнять поиск...</mainhelp1>
@@ -985,73 +984,73 @@
 
     <inspire>
         <what>
-            <l1>INSPIRE search options</l1>
-            <l2>INSPIRE metadata</l2>
-            <l3>Only INSPIRE metadata</l3>
-            <l4>Hide INSPIRE options</l4>
-            <l5>Show INSPIRE options</l5>
-            <l6>Annex </l6>
-            <l7>Source type</l7>
-            <l8>Everything</l8>
-            <l9>Datasets and dataset series</l9>
-            <l10>Services</l10>
-            <l11>Organisation</l11>
-            <l12>Show INSPIRE Themes</l12>
-            <l13>Hide INSPIRE Themes</l13>
-            <l14>INSPIRE Theme</l14>
-            <l15>Service type</l15>
+            <l1>INSPIRE поиск</l1>
+            <l2>INSPIRE метаданные</l2>
+            <l3>Только метаданные INSPIRE</l3>
+            <l4>Показать опции INSPIRE</l4>
+            <l5>Скрыть опции INSPIRE</l5>
+            <l6>Приложение </l6>
+            <l7>Тип источника</l7>
+            <l8>Все</l8>
+            <l9>Наборы данных и серии наборов данных</l9>
+            <l10>Сервисы</l10>
+            <l11>Огранизация</l11>
+            <l12>Показать темы INSPIRE</l12>
+            <l13>Скрыть темы INSPIRE</l13>
+            <l14>Темы INSPIRE</l14>
+            <l15>Тип сервиса</l15>
         </what>
         <annex1>
-            <l1>Coordinate reference systems</l1>
-            <l2>Geographical grid systems</l2>
-            <l3>Geographical names</l3>
-            <l4>Administrative units</l4>
-            <l5>Addresses</l5>
-            <l6>Cadastral parcels</l6>
-            <l7>Transport networks</l7>
-            <l8>Hydrography</l8>
-            <l9>Protected sites</l9>
+            <l1>Системы координат</l1>
+            <l2>Регулярные географические сетки</l2>
+            <l3>Географические названия</l3>
+            <l4>Административные единицы</l4>
+            <l5>Адреса</l5>
+            <l6>Земельные участки</l6>
+            <l7>Транспортные сети</l7>
+            <l8>Гидрография</l8>
+            <l9>Особо охраняемые территории</l9>
         </annex1>
         <annex2>
-            <l1>Elevation</l1>
-            <l2>Land cover</l2>
-            <l3>Orthoimagery</l3>
-            <l4>Geology</l4>
+            <l1>Рельеф</l1>
+            <l2>Земной покров</l2>
+            <l3>Ортоизображения</l3>
+            <l4>Геология</l4>
         </annex2>
         <annex3>
-            <l1>Statistical units</l1>
-            <l2>Buildings</l2>
-            <l3>Soil</l3>
-            <l4>Land use</l4>
-            <l5>Human health and safety</l5>
-            <l6>Utility and Government services</l6>
-            <l7>Environmental monitoring facilities</l7>
-            <l8>Production and industrial facilities</l8>
-            <l9>Agriculture and aquaculture facilities</l9>
-            <l10>Population distribution - demography</l10>
-            <l11>Area management/restriction/regulation zones and reporting units</l11>
-            <l12>Natural risk zones</l12>
-            <l13>Atmospheric conditions</l13>
-            <l14>Meteorological geographical features</l14>
-            <l15>Oceanographic geographical features</l15>
-            <l16>Sea regions</l16>
-            <l17>Bio-geographical regions</l17>
-            <l18>Habitats and biotopes</l18>
-            <l19>Species distribution</l19>
-            <l20>Energy resources</l20>
-            <l21>Mineral resources</l21>
+            <l1>Статистические единицы</l1>
+            <l2>Строения</l2>
+            <l3>Почвы</l3>
+            <l4>Землепользование</l4>
+            <l5>Здравоохранение и безопасность среды обитания</l5>
+            <l6>Коммунальное хозяйство и социальные службы</l6>
+            <l7>Объекты экологического мониторинга</l7>
+            <l8>Проиводство и индустриальные сооружения</l8>
+            <l9>Объекты сельского хозяйства и аквакультуры</l9>
+            <l10>Демография</l10>
+            <l11>Управление территориями/Ограничения/Особые зоны и отчетность</l11>
+            <l12>Зоны природных рисков</l12>
+            <l13>Атмосферные условия</l13>
+            <l14>Метеорология</l14>
+            <l15>Океанографические объекты</l15>
+            <l16>Морские регионы</l16>
+            <l17>Биогеографическое районирование</l17>
+            <l18>Местообитания и биотопы</l18>
+            <l19>Биологическое разнообразие</l19>
+            <l20>Энергетические ресурсы</l20>
+            <l21>Минеральные ресурсы</l21>
         </annex3>
     </inspire>
     
     <selectMetadataFileAlert>You must select a metadata file to insert</selectMetadataFileAlert>        
     <showMoreSearchFields>Show/Hide more search fields</showMoreSearchFields>
-    <searchEitherOfTheWords>Either of the words</searchEitherOfTheWords>
-    <searchExactPhrase>Exact phrase</searchExactPhrase>
-    <searchAllWords>All of the words</searchAllWords>
-    <searchWithoutWords>Without the words</searchWithoutWords>
+    <searchEitherOfTheWords>Любое из слов</searchEitherOfTheWords>
+    <searchExactPhrase>Точная фраза</searchExactPhrase>
+    <searchAllWords>Все слова</searchAllWords>
+    <searchWithoutWords>Не содержит слова</searchWithoutWords>
     
-    <showMap>Show map</showMap>
-    <mapViewer>Map viewer</mapViewer>
+    <showMap>Показать карту</showMap>
+    <mapViewer>Просмотр карт</mapViewer>
 
     <uuid>Unique identifier</uuid>    
 </strings>
