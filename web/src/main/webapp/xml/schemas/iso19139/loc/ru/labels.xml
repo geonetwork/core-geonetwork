@@ -4,13 +4,13 @@
 		  xmlns:gts="http://www.isotc211.org/2005/gts" 
 		  xmlns:gco="http://www.isotc211.org/2005/gco"
 		  xmlns:gml="http://www.opengis.net/gml"
-          xmlns:srv="http://www.isotc211.org/2005/srv"
-          xmlns:gmx="http://www.isotc211.org/2005/gmx">	       
+		  xmlns:srv="http://www.isotc211.org/2005/srv"
+          xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	
 	<!-- ==================================================== -->
 	<element name="gmd:CI_OnlineResource">
 		<label>Онлайн ресурс</label>
-		<description>информация об онлайновом источнике, с которого ресурс мжет быть получен</description>
+		<description>информация об онлайновом источнике, с которого ресурс может быть получен</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:aggregateDataSetIdentifier">
@@ -24,8 +24,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:aggregationInfo">
-		<label>aggregationInfo</label>
-		<description>aggregationInfo</description>
+		<label>Информация о соглашении</label>
+		<description>aggregation Info</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:associationType">
@@ -60,8 +60,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dataSetURI">
-		<label>dataSetURI</label>
-		<description>dataSetURI</description>
+		<label>URI данных</label>
+		<description>URI данных</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:describes">
@@ -70,8 +70,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributionOrderProcess">
-		<label>distributionOrderProcess</label>
-		<description>distributionOrderProcess</description>
+		<label>Процесс передачи</label>
+		<description>Общие сведения о способах получения набора данных, денежных взносах и соответствующих инструкциях</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DS_Association">
@@ -180,8 +180,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:onlineResource">
-		<label>onlineResource</label>
-		<description>onlineResource</description>
+		<label>Онлайновые источники</label>
+		<description>Онлайновые источники, из которых можно получить набор данных</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:partOf">
@@ -241,14 +241,14 @@
 	<!-- ==================================================== -->
 	<element name="gmd:abstract">
 		<label>Аннотация</label>
-		<description>краткое резюме описывающее содержание ресурса</description>
+		<description>Краткое описание содержания ресурса</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:accessConstraints">
-		<label>Ограничения доступа</label>
+		<label>Ограничения на получение</label>
 		<description>ограничения доступа применяются для обеспечения защиты личной жизни 
-		или интеллектуальной собственности, а также каких-либо специальные ограничения
+		или интеллектуальной собственности, а также какие-либо специальные ограничения
 		на получение ресурса</description>
 	</element>
 	<!-- ==================================================== -->
@@ -264,9 +264,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:alternateTitle">
-		<label>Alternate title</label>
-		<description>short name or other language name by which the cited information is known.
-			Example: "DCW" as an alternative title for "Digital Chart of the World</description>
+		<label>Альтернативное название</label>
+		<description>Аббревиатура или краткое название набора данных</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:amendmentNumber">
@@ -275,9 +274,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:applicationProfile">
-		<label>Application profile</label>
-		<description>name of an application profile that can be used with the online
-		resource</description>
+		<label>Профиль приложения</label>
+		<description>Обозначение и наименование профиля приложения, используемого для работы с Интернет-ресурсом </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:applicationSchemaInfo">
@@ -335,8 +333,8 @@
 	<!-- ==================================================== -->
 	<element name="gmd:characterSet">
 		<label>Кодировка</label>
-		<description>полное название стандарта кодирования, используемого внаборе метаданных</description>
-		<condition>conditional</condition>
+		<description>Наименование и обозначение стандарта кодировки, используемого в наборе метаданных</description>
+		<condition>условное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:checkPointAvailability">
@@ -354,28 +352,28 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_Address">
-		<label>Address</label>
+		<label>Адрес</label>
 		<description>location of the responsible individual or organization</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_Citation">
-		<label>CI Citation</label>
-		<description>standardized resource reference</description>
+		<label>Ссылка на описание</label>
+		<description>Стандартизованная ссылка на ресурс</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_Contact">
-		<label>Contact</label>
-		<description>information required to enable contact with the responsible person and/or
-			organization</description>
+		<label>Контактная информация</label>
+		<description>Контактная информация для связи с ответственным субъектом (information required to enable contact with the responsible person and/or
+			organization)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_Date">
-		<label>Date</label>
-		<description>reference date and event used to describe it (YYYY-MM-DD)</description>
+		<label>Дата</label>
+		<description>Дата создания объекта ссылки (reference date and event used to describe it (YYYY-MM-DD))</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_DateTypeCode">
-		<label>Date type code</label>
+		<label>Код типа даты</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
@@ -390,37 +388,36 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_ResponsibleParty">
-		<label>Responsible party</label>
-		<description>identification of, and means of communication with, person(s) and organizations
-			associated with the dataset</description>
+		<label>Ответственный субъект</label>
+		<description>Информация о субъекте, ответственном за набор данных (identification of, and means of communication with, person(s) and organizations
+			associated with the dataset)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_RoleCode">
-		<label>Role code</label>
+		<label>Код роли</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_Series">
-		<label>Series</label>
-		<description>information about the series, or aggregate dataset, to which a dataset
-		belongs</description>
+		<label>Совокупность данных</label>
+		<description>Информация о совокупности данных, частью которой является этот ресурс</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_Telephone">
-		<label>Telephone</label>
+		<label>Телефон</label>
 		<description>telephone numbers for contacting the responsible individual or
 		organization</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:citation">
-		<label>Citation</label>
-		<description>citation data for the resource(s)</description>
+		<label>Ссылка</label>
+		<description>Ссылка на описание ресурса (ов)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:citedResponsibleParty">
-		<label>Cited responsible party</label>
-		<description>name and position information for an individual or organization that is
-			responsible for the resource</description>
+		<label>Ответственный субъект</label>
+		<description>Субъект, ответственный за объект ссылки (name and position information for an individual or organization that is
+			responsible for the resource)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:city">
@@ -429,13 +426,13 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:classification">
-		<label>Class</label>
-		<description>name of the handling restrictions on the resource</description>
+		<label>Категория информации по уровню доступа</label>
+		<description>Категория информации по уровню доступа (name of the handling restrictions on the resource)</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:classificationSystem">
-		<label>Classification system</label>
+		<label>Система классификации</label>
 		<description>name of the classification system</description>
 	</element>
 	<!-- ==================================================== -->
@@ -452,10 +449,10 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:collectiveTitle">
-		<label>Collective title</label>
-		<description>common title with holdings note. NOTE title identifies elements of a series
+		<label>Общее наименование с пометкой о заимствовании</label>
+		<description>Общее наименование с пометкой о заимствовании (common title with holdings note. NOTE title identifies elements of a series
 			collectively, combined with information about what volumes are available at the source
-			cited</description>
+			cited)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:complianceCode">
@@ -483,17 +480,17 @@
 	<!-- ==================================================== -->
 	<element name="gmd:contact">
 		<label>Автор метаданных</label>
-		<description>человек, отвечающий за метаданные</description>
+		<description>Субъект, ответственный за метаданные</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:contactInfo">
-		<label>Contact info</label>
+		<label>Контактная информация</label>
 		<description>address of the responsible party</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:contactInstructions">
-		<label>Contact instructions</label>
+		<label>Дополнительные сведения о контакте</label>
 		<description>supplemental instructions on how or when to contact the individual or
 			organization</description>
 	</element>
@@ -537,8 +534,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dataQualityInfo">
-		<label>Инфомация о качестве данных</label>
-		<description>дает общую оценку качества ресурса(ов)</description>
+		<label>Информация о качестве данных</label>
+		<description>Дает общую оценку качества ресурса(ов)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dataset">
@@ -561,13 +558,13 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dateOfNextUpdate">
-		<label>Date of next update</label>
+		<label>Дата следующего обновления</label>
 		<description>scheduled revision date for resource (YYYY-MM-DD)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dateStamp">
 		<label>Время создания метаданных</label>
-		<description>Дата, когда были созданы данные в формате (ГГГГ-ММ-ДДTЧЧ:мм:сс</description>
+		<description>Дата, когда были созданы данные в формате (ГГГГ-ММ-ДДTЧЧ:мм:сс)</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -579,7 +576,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:dateType">
 		<label>Тип даты</label>
-		<description>event used for reference date</description>
+		<description>для какого события указана дата? (event used for reference date</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -595,31 +592,31 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:denominator">
-		<label>Знаменатель</label>
-		<description>число после знака деления в простой дроби</description>
+		<label>Знаменатель масштаба</label>
+		<description>Знаменатель численного масштаба, который определяет степень детализации, соответствующий масштабу твердой копии карты или плана</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:density">
-		<label>Density</label>
+		<label>Плотность записи данных</label>
 		<description>density at which the data is recorded</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:densityUnits">
-		<label>Density units</label>
-		<description>units of measure for the recording density</description>
+		<label>Единицы измерения плотности записи данных</label>
+		<description>Единицы измерения плотности записи данных (units of measure for the recording density)</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:description">
 		<label>Описание</label>
-		<description>описание событий, в том числе связанных с параметрами или допуски</description>
+		<description>Description of the event, including related parameters or tolerances</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:descriptiveKeywords">
-		<label>Описательные ключевые слова</label>
-		<description>предусматривает категории ключевых слов, их тип, а также справочник</description>
+		<label>Ключевые слова</label>
+		<description>предусматривает набор ключевых слов, их тип, а также их источник (тезаурус)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:descriptor">
@@ -645,31 +642,30 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distance">
-		<label>Distance</label>
-		<description>ground sample distance</description>
+		<label>Расстояние</label>
+		<description>Расстояние на местности, соответствующее пикселу изображения (с указанием единиц измерения)</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributionFormat">
-		<label>Distribution format</label>
-		<description/>
+		<label>Формат представления</label>
+		<description>Формат представления данных (Distribution format)</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributionInfo">
-		<label>Дистрибутивная информация</label>
-		<description>provides information about the distributor of and options for obtaining the
-			resource(s)</description>
+		<label>Информация о распространении ресурса</label>
+		<description>Информация о распространении ресурса</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributor">
-		<label>Distributor</label>
-		<description>provides information about the distributor</description>
+		<label>Дистрибьютор</label>
+		<description>распространитель (provides information about the distributor)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributorContact">
-		<label>Distributor contact</label>
-		<description>party from whom the resource may be obtained. This list need not be exhaustive</description>
+		<label>Контакт дистрибьютора</label>
+		<description>Субъект, осуществляющий распространение (party from whom the resource may be obtained. This list need not be exhaustive)</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -735,8 +731,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_DataQuality">
-		<label>Data quality</label>
-		<description>quality information for the data specified by a data quality scope</description>
+		<label>Качество данных</label>
+		<description>Происхождение набора данных, подтверждение соответствия</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_DomainConsistency">
@@ -834,25 +830,23 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:edition">
-		<label>Редакция</label>
-		<description>версия приведенного ресурса</description>
+		<label>Версия набора данных</label>
+		<description>версия набора данных</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:editionDate">
-		<label>Edition date</label>
-		<description>date of the edition (YYYY-MM-DD)</description>
+		<label>Дата версии</label>
+		<description>Дата редакции (date of the edition (YYYY-MM-DD))</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:electronicMailAddress">
 		<label>Адрес электронной почты</label>
-		<description>одрес электронного почтового ящика соответствующей организации или человека</description>
+		<description>Адрес электронного почтового ящика соответствующей организации или человека</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:environmentDescription">
-		<label>Environment description</label>
-		<description>description of the dataset in the producer_s processing environment, including
-			items such as the software, the computer operating system, file name, and the dataset
-		size</description>
+		<label>Среда разработки</label>
+		<description>Описание среды разработки ресурса (программное обеспечение, операционная система, имя файла, размер набора данных и т.д.)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:equivalentScale">
@@ -889,18 +883,17 @@
 	<!-- ==================================================== -->
 	<element name="gmd:EX_Extent">
 		<label>Протяженность</label>
-		<description>информация о пространственной, вертикальной или временной протяженности
-		information about spatial, vertical, and temporal extent</description>
+		<description>Пространственно-временные характеристики набора данных(пространственные, вертикальные, временные)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:EX_GeographicBoundingBox">
 		<label>Географические границы</label>
-		<description>gгеографическое положение набора данных</description>
+		<description>географическое положение набора данных</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:EX_GeographicDescription">
-		<label>Geographic description</label>
-		<description>Description of the geographic area using identifiers</description>
+		<label>Географическое описание</label>
+		<description>описание географической протяженности с использованием идентификаторов (Description of the geographic area using identifiers)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:EX_TemporalExtent">
@@ -909,8 +902,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:EX_VerticalExtent">
-		<label>Vertical extent</label>
-		<description>vertical domain of dataset</description>
+		<label>Протяженность по вертикали</label>
+		<description>высотный компонент протяженности набора данных (vertical domain of dataset)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:explanation">
@@ -932,21 +925,21 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:extent">
-		<label>Extent</label>
+		<label>Протяженность</label>
 		<description>information about the spatial, vertical and temporal extent of the data specified
 			by the scope</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:extent">
-		<label>Extent</label>
+		<label>Протяженность</label>
 		<description>information about the spatial, vertical and temporal extent of the data specified
 			by the scope</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:extent">
-		<label>Extent</label>
+		<label>Протяженность</label>
 		<description>information about the spatial, vertical and temporal extent of the data specified
 			by the scope</description>
 		<condition>conditional</condition>
@@ -989,9 +982,9 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fees">
-		<label>Fees</label>
-		<description>fees and terms for retrieving the resource. Include monetary units (as specified
-			in ISO 4217)</description>
+		<label>Сумма денежного взноса и сроки </label>
+		<description>Сумма денежного взноса и сроки получения набора данных, включая наименование денежных единиц (Fees and terms for retrieving the resource. Include monetary units (as specified
+			in ISO 4217))</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fileDecompressionTechnique">
@@ -1001,8 +994,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fileDescription">
-		<label>File description</label>
-		<description>text description of the illustration</description>
+		<label>Описание файла</label>
+		<description>Текстовое описание графического файла</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fileIdentifier">
@@ -1011,15 +1004,14 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fileName">
-		<label>File name</label>
-		<description>name of the file that contains a graphic that provides an illustration of the
-			dataset</description>
+		<label>Имя файла</label>
+		<description>Имя графического файла, иллюстрирующего набор данных</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fileType">
-		<label>File type</label>
-		<description>format in which the illustration is encoded</description>
+		<label>Тип файла</label>
+		<description>Графический формат файла (CGM, EPS, GIF, JPEG, PBM, PS, TIFF, XWD)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:filmDistortionInformationAvailability">
@@ -1034,13 +1026,13 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:function">
-		<label>Function</label>
+		<label>Возможности Интернет-ресурса</label>
 		<description>code for function performed by the online resource</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:geographicElement">
-		<label>Geographic element</label>
-		<description>provides geographic component of the extent of the referring object</description>
+		<label>Географичекий компонент</label>
+		<description>географический компонент протяженности набора данных (provides geographic component of the extent of the referring object)</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1051,27 +1043,26 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:geometricObjectCount">
-		<label>Geometric object count</label>
+		<label>Число объектов</label>
 		<description>total number of the point or vector object type occurring in the
 		dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:geometricObjects">
-		<label>Geometric objects</label>
+		<label>Геометрические объекты</label>
 		<description>information about the geometric objects used in the dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:geometricObjectType">
-		<label>Geometric object type</label>
+		<label>Тип объектов</label>
 		<description>name of point and vector spatial objects used to locate zero-, one-, and
 			two-dimensional spatial locations in the dataset</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:graphicOverview">
-		<label>Graphic overview</label>
-		<description>provides a graphic that illustrates the resource(s) (should include a legend for
-			the graphic)</description>
+		<label>Графическое представление</label>
+		<description>Графическое представление ресурса (ов) (с включением легенды для картографических произведений)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:graphicsFile">
@@ -1080,31 +1071,30 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:handlingDescription">
-		<label>Handling description</label>
-		<description>additional information about the restrictions on handling the
-		resource</description>
+		<label>Дополнительные сведения об ограничениях</label>
+		<description>Дополнительные сведения об ограничениях</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:hierarchyLevel">
-		<label>Иерархический уровень</label>
+		<label>Уровень иерархии </label>
 		<description>scope to which the metadata applies (see annex H for more information about
 			metadata hierarchy levels)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:hierarchyLevelName">
-		<label>Hierarchy level name</label>
-		<description>name of the hierarchy levels for which the metadata is provided</description>
+		<label>Наименование уровня иерархии</label>
+		<description>Наименование уровня иерархии, для которого созданы метаданные</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:hoursOfService">
-		<label>Hours of service</label>
+		<label>Время контакта</label>
 		<description>time period (including time zone) when individuals can contact the organization
 			or individual</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:identificationInfo">
-		<label>Identification info</label>
-		<description>basic information about the resource(s) to which the metadata applies</description>
+		<label>Идентификационная информация</label>
+		<description>Основная идентификационная информация о ресурсе, для которого созданы метаданные</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1145,9 +1135,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:individualName">
-		<label>Персональное имя</label>
-		<description>name of the responsible person- surname, given name, title separated by a
-			delimiter</description>
+		<label>ФИО персоны</label>
+		<description>Фамилия, имя, отчество физического лица (сведения заносятся через разделитель)</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1162,19 +1151,18 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:issueIdentification">
-		<label>Issue identification</label>
+		<label>Выпуск</label>
 		<description>information identifying the issue of the series</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:keyword">
 		<label>Ключевое слово</label>
-		<description>commonly used word(s) or formalised word(s) or phrase(s) used to describe the
-			subject</description>
+		<description>Часто употребляемые, общеупотребительные, формализованные слова или фразы, используемые для описания субъекта</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:language">
 		<label>Язык</label>
-		<description>language used for documenting metadata</description>
+		<description>Язык, используемый для документирования метаданных</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1202,32 +1190,30 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:LI_Lineage">
-		<label>Lineage</label>
+		<label>Происхождение ресурса</label>
 		<description>information about the events or source data used in constructing the data
 			specified by the scope or lack of knowledge about lineage</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:LI_ProcessStep">
-		<label>Process step</label>
-		<description>information about an event in the creation process for the data specified by the
-			scope</description>
+		<label>Технология создания</label>
+		<description>Технология создания/обновления набора данных</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:LI_Source">
-		<label>Source</label>
-		<description>information about the source data used in creating the data specified by the
-			scope</description>
+		<label>Источник</label>
+		<description>Источник данных (исходный материал)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:lineage">
-		<label>Lineage</label>
+		<label>Происхождение</label>
 		<description>non-quantitative quality information about the lineage of the data specified by
 			the scope</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:linkage">
-		<label>Linkage</label>
+		<label>Ссылка</label>
 		<description>location (address) for on-line access using a Uniform Resource Locator address or
 			similar addressing scheme such as http://www.statkart.no/isotc211</description>
 		<condition>обязательное поле</condition>
@@ -1235,13 +1221,12 @@
 	<!-- ==================================================== -->
 	<element name="gmd:maintenanceAndUpdateFrequency">
 		<label>Частота обновления</label>
-		<description>frequency with which changes and additions are made to the resource after the
-			initial resource is completed</description>
+		<description>периодичность обновления ресурса или метаданных после их создания</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:maintenanceNote">
-		<label>Maintenance note</label>
+		<label>Требования к обновлению</label>
 		<description>information regarding specific requirements for maintaining the
 		resource</description>
 	</element>
@@ -1252,7 +1237,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:maximumValue">
-		<label>Maximum value</label>
+		<label>Максимальное значение высоты</label>
 		<description>highest vertical extent contained in the dataset</description>
 		<condition>обязательное поле</condition>
 	</element>
@@ -1275,8 +1260,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:MD_BrowseGraphic">
 		<label>MD_BrowseGraphic</label>
-		<description>graphic that provides an illustration of the dataset (should include a legend for
-			the graphic)</description>
+		<description>Графическое представление набора данных (с включением легенды для картографических произведений)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_CellGeometryCode">
@@ -1295,8 +1279,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Constraints">
-		<label>Constraints</label>
-		<description>restrictions on the access and use of a resource or metadata</description>
+		<label>Ограничения</label>
+		<description>Ограничения на доступ, получение и использование набора данных или метаданных</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_CoverageContentTypeCode">
@@ -1310,8 +1294,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_DataIdentification">
-		<label>Data identification</label>
-		<description>information required to identify a dataset</description>
+		<label>Идентификация данных</label>
+		<description>Информация, позволяющая идентифицировать данные в наборе данных</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_DatatypeCode">
@@ -1320,9 +1304,9 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_DigitalTransferOptions">
-		<label>Digital transfer options</label>
-		<description>technical means and media by which a resource is obtained from the
-		distributor</description>
+		<label>Параметры цифровой передачи</label>
+		<description>Технические характеристики набора данных и носители информации, с помощью которых ресурс
+		получен от дистрибьютора</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Dimension">
@@ -1342,8 +1326,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Distributor">
-		<label>Distributor</label>
-		<description>information about the distributor</description>
+		<label>Субъекты, ответственные за распространение</label>
+		<description>Распространители набора данных</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_ExtendedElementInformation">
@@ -1358,10 +1342,10 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Format">
-		<label>Format</label>
-		<description>description of the computer language construct that specifies the representation
+		<label>Формат</label>
+		<description>Формат представления данных (description of the computer language construct that specifies the representation
 			of data objects in a record, file, message, storage device or transmission
-		channel</description>
+		channel)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_GeometricObjects">
@@ -1413,8 +1397,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Keywords">
-		<label>Keywords</label>
-		<description>keywords, their type and reference source</description>
+		<label>Ключевые слова</label>
+		<description>Совокупность ключевых слов, характеризующих ресурс, а также описание их источника (например, тезауруса)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_KeywordTypeCode">
@@ -1423,9 +1407,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_LegalConstraints">
-		<label>Legal constraints</label>
-		<description>restrictions and legal prerequisites for accessing and using the
-		resource</description>
+		<label>Ограничение на получение и использование</label>
+		<description>Ограничение на получение и использование ресурса с целью соблюдения требований законодательства Российской Федерации в отноении интеллектуальной собственности</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_MaintenanceFrequencyCode">
@@ -1435,8 +1418,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_MaintenanceInformation">
-		<label>Maintenance information</label>
-		<description>information about the scope and frequency of updating</description>
+		<label>Информация об обновлении</label>
+		<description>Информация о содержании и частоте обновлений набора данных или метаданных</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Medium">
@@ -1446,7 +1429,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_MediumFormatCode">
-		<label>Medium format</label>
+		<label>Формат носителя</label>
 		<description>method used to write to the medium</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1456,7 +1439,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Metadata">
-		<label>Metadata</label>
+		<label>Информация о метаданных</label>
 		<description>root entity which defines metadata about a resource or resources</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1492,7 +1475,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_ReferenceSystem">
-		<label>Reference system</label>
+		<label>Координатная основа</label>
 		<description>information about the reference system.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1504,7 +1487,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Resolution">
 		<label>Разрешение</label>
-		<description>level of detail expressed as a scale factor or a ground distance</description>
+		<description>Степень детализации (точности представления) объектов набора данных</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_RestrictionCode">
@@ -1523,9 +1506,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_SecurityConstraints">
-		<label>Security constraints</label>
-		<description>handling restrictions imposed on the resource for national security or similar
-			security concerns</description>
+		<label>Security ограничения</label>
+		<description>Ограничения на доступ и использование набора данных или метаданных с целью соблюдения требований законодательства Российской Федерации о государственной тайне и устанавливаемых ограничений в связи с охраной коммерческой тайны</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_ServiceIdentification">
@@ -1543,18 +1525,18 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_SpatialRepresentationTypeCode">
-		<label>Spatial representation type code</label>
+		<label>код способа представления данных</label>
 		<description>method used to represent geographic information in the dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_StandardOrderProcess">
-		<label>Standard order process</label>
-		<description>common ways in which the resource may be obtained or received, and related
-			instructions and fee information</description>
+		<label>Способы получения</label>
+		<description>Способ(ы) получения набора данных, соответствующих инструкций и информация об оплате (Common ways in which the resource may be obtained or received, and related
+			instructions and fee information)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_TopicCategoryCode">
-		<label>Код категории темы</label>
+		<label>Тематика пространственных данных</label>
 		<description>high-level geographic data thematic classification to assist in the grouping and
 			search of available geographic data sets. Can be used to group keywords as well. Listed
 			examples are not exhaustive. NOTE It is understood there are overlaps between general
@@ -1568,9 +1550,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Usage">
-		<label>Usage</label>
-		<description>brief description of ways in which the resource(s) is/are currently
-		used</description>
+		<label>Применение</label>
+		<description>Область применения ресурса</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_VectorSpatialRepresentation">
@@ -1594,14 +1575,14 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:mediumNote">
-		<label>Medium note</label>
-		<description>description of other limitations or requirements for using the
-		medium</description>
+		<label>Ограничения к использованию</label>
+		<description>описание ограничений или требований к использованию носителя информации (description of other limitations or requirements for using the
+		medium)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:metadataConstraints">
-		<label>Metadata constraints</label>
-		<description>provides restrictions on the access and use of data</description>
+		<label>Ограничения метаданных</label>
+		<description>Ограничение на распространение и использование метаданных (provides restrictions on the access and use of data)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:metadataExtensionInfo">
@@ -1610,23 +1591,22 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:metadataMaintenance">
-		<label>Metadata maintenance</label>
-		<description>provides information about the frequency of metadata updates, and the scope of
-			those updates</description>
+		<label>Обновление метаданных</label>
+		<description>Информация о частоте обновления метаданных и масштабе обновлений</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:metadataStandardName">
 		<label>Название стандарта метаданных</label>
-		<description>name of the metadata standard (including profile name) used</description>
+		<description>Обозначение и наименование используемого стандарта метаданных (включая обозначение и наименование профиля)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:metadataStandardVersion">
 		<label>Версия стандарта метаданных</label>
-		<description>version (profile) of the metadata standard used</description>
+		<description>Версия используемого стандарта (профиля) метаданных</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:minimumValue">
-		<label>Minimum value</label>
+		<label>Минимальное значение высоты</label>
 		<description>lowest vertical extent contained in the dataset</description>
 		<condition>обязательное поле</condition>
 	</element>
@@ -1638,43 +1618,43 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:name">
-		<label>Name</label>
+		<label>Наименование</label>
 		<description>name of the series, or aggregate dataset, of which the dataset is a part</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:name">
-		<label>Name</label>
+		<label>Наименование</label>
 		<description>name of the series, or aggregate dataset, of which the dataset is a part</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:name">
-		<label>Name</label>
+		<label>Наименование</label>
 		<description>name of the series, or aggregate dataset, of which the dataset is a part</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:name">
-		<label>Name</label>
+		<label>Наименование</label>
 		<description>name of the series, or aggregate dataset, of which the dataset is a part</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:name">
-		<label>Name</label>
+		<label>Наименование</label>
 		<description>name of the series, or aggregate dataset, of which the dataset is a part</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:name">
-		<label>Name</label>
+		<label>Наименование</label>
 		<description>name of the series, or aggregate dataset, of which the dataset is a part</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:name">
-		<label>Name</label>
+		<label>Наименование</label>
 		<description>name of the series, or aggregate dataset, of which the dataset is a part</description>
 		<condition>обязательное поле</condition>
 	</element>
@@ -1703,8 +1683,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:offLine">
-		<label>Offline</label>
-		<description>information about offline media on whichthe resource can be obtaned</description>
+		<label>Автономные носители</label>
+		<description>Автономные носители, с помощью которых можно получить набор данных</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:offset">
@@ -1719,9 +1699,9 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:orderingInstructions">
-		<label>Ordering instructions</label>
-		<description>general instructions, terms and services provided by the
-		distributor</description>
+		<label>Общие инструкции</label>
+		<description>Общие инстркуции, сроки и услуги распространителя (General instructions, terms and services provided by the
+		distributor)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:organisationName">
@@ -1749,19 +1729,19 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:otherCitationDetails">
-		<label>Other citation details</label>
-		<description>other information required to complete the citation that is not recorded
-			elsewhere</description>
+		<label>Другая информация о ссылке</label>
+		<description>Другая информация об объекте ссылки, которая не использовалась ранее (other information required to complete the citation that is not recorded
+			elsewhere)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:otherConstraints">
 		<label>Другие ограничения</label>
-		<description>other restrictions and legal prerequisites for accessing and using the resource</description>
+		<description>Ограничения на получение и использование по иным правовым основаниям</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:page">
-		<label>Page</label>
+		<label>Страницы</label>
 		<description>details on which pages of the publication the article was published</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1796,15 +1776,15 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:phone">
-		<label>Phone</label>
+		<label>Телефон</label>
 		<description>telephone numbers at which the organization or individual may be
 		contacted</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:plannedAvailableDateTime">
-		<label>Planned available datetime</label>
-		<description>date and time when the dataset will be available
-		(CCYY-MM-DDThh:mm:ss)</description>
+		<label>Планируемое время готовности</label>
+		<description>Сумма денежного взноса и сроки получения набора данных, включая наименование денежных единиц (Fees and terms for retrieving the resource. Include monetary units (as specified
+			in ISO 4217))</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:pointInPixel">
@@ -1815,13 +1795,12 @@
 	<!-- ==================================================== -->
 	<element name="gmd:pointOfContact">
 		<label>Точка контакта</label>
-		<description>identification of, and means of communication with, person(s) and
-			organizations(s) associated with the resource(s)</description>
+		<description>Cубъект, ответственный за создание ресурса и способы связи с ним</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:polygon">
-		<label>polygon</label>
-		<description>sets of points defining the bounding polygon</description>
+		<label>Полигон</label>
+		<description>Набор точек, определяющих границы полигона</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1832,7 +1811,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:portrayalCatalogueInfo">
-		<label>Portrayal catalogue info</label>
+		<label>Классификатор ресурса</label>
 		<description>provides information about the catalogue of rules defined for the portrayal of a
 			resource(s)</description>
 	</element>
@@ -1866,15 +1845,14 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:processStep">
-		<label>Process step</label>
-		<description>information about an event in the creation process for the data specified by the
-			scope</description>
+		<label>Технология создания</label>
+		<description>Технология создания/обновления набора данных</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:protocol">
-		<label>Протокол</label>
-		<description>connection protocol to be used</description>
+		<label>Используемый протокол связи</label>
+		<description>Используемый протокол связи</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:PT_FreeText">
@@ -1883,8 +1861,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:purpose">
-		<label>Цель</label>
-		<description>summary of the intentions with which the resource(s) was developed</description>
+		<label>Назначение набора данных</label>
+		<description>Назначение ресурса</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:radiometricCalibrationDataAvailability">
@@ -1910,9 +1888,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:referenceSystemInfo">
-		<label>Данные о ссылочной системе</label>
-		<description>description of the spatial and temporal reference systems used in the
-		dataset</description>
+		<label>Данные о координатной основе</label>
+		<description>Информация о координатной и временной основах, используемых в наборе данных </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:report">
@@ -1927,9 +1904,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:resourceConstraints">
-		<label>Resource constraints</label>
-		<description>provides information about constraints which apply to the
-		resource(s)</description>
+		<label>Ограничения на ресурс</label>
+		<description>Ограничения, накладываемые на ресурс (ы)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:resourceFormat">
@@ -1938,19 +1914,18 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:resourceMaintenance">
-		<label>Resource maintenance</label>
-		<description>provides information about the frequency of resource updates, and the scope of
-			those updates</description>
+		<label>Обновление ресурса</label>
+		<description>Информация о частоте обновления ресурса и масштабе обновления</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:resourceSpecificUsage">
-		<label>Resource specific usage</label>
+		<label>Область применения ресурса</label>
 		<description>provides basic information about specific application(s) for which the
 			resource(s) has/have been or is being used by different users</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:result">
-		<label>Result</label>
+		<label>Результат</label>
 		<description>value (or set of values) obtained from applying a data quality measure or the out
 			come of evaluating the obtained value (or set of values) against a specified acceptable
 			conformance quality level</description>
@@ -1981,8 +1956,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:scaleDenominator">
-		<label>Scale</label>
-		<description>denominator of the representative fraction on a source map</description>
+		<label>Масштаб исходного материала</label>
+		<description>Знаменатель численного масштаба исходного материала</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:scaleFactor">
@@ -2013,13 +1988,13 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:series">
-		<label>Series</label>
-		<description>information about the series, or aggregate dataset, of which the dataset is a
-			part</description>
+		<label>Серия (сборник)</label>
+		<description>Информация о совокупности данных, частью которой является описываемый набор данных (information about the series, or aggregate dataset, of which the dataset is a
+			part)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:series">
-		<label>Series</label>
+		<label>Серия (сборник)</label>
 		<description>information about the series, or aggregate dataset, of which the dataset is a
 			part</description>
 	</element>
@@ -2042,29 +2017,29 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:source">
-		<label>Source</label>
+		<label>Источник</label>
 		<description>information about the source data used in creating the data specified by the
 			scope</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:source">
-		<label>Source</label>
+		<label>Источник</label>
 		<description>information about the source data used in creating the data specified by the
 			scope</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:source">
-		<label>Source</label>
+		<label>Источник</label>
 		<description>information about the source data used in creating the data specified by the
 			scope</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:sourceCitation">
-		<label>Source citation</label>
-		<description>recommended reference to be used for the source data</description>
+		<label>Ссылка на источник</label>
+		<description>ссылка на описание источника (recommended reference to be used for the source data)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:sourceExtent">
@@ -2074,7 +2049,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:sourceReferenceSystem">
-		<label>Source reference system</label>
+		<label>Координатная система</label>
 		<description>spatial reference system used by the source data</description>
 	</element>
 	<!-- ==================================================== -->
@@ -2104,60 +2079,58 @@
 	<!-- ==================================================== -->
 	<element name="gmd:spatialRepresentationType">
 		<label>Тип пространственного представления</label>
-		<description>method used to spatially represent geographic information</description>
+		<description>Способ, используемый для пространственного представления географической информации</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:spatialResolution">
-		<label>Spatial resolution</label>
+		<label>Пространственное разрешение</label>
 		<description>factor which provides a general understanding of the density of spatial data in
 			the dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:specification">
-		<label>Specification</label>
+		<label>Спецификация</label>
 		<description>name of a subset, profile, or product specification of the format</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:specification">
-		<label>Specification</label>
+		<label>Спецификация</label>
 		<description>name of a subset, profile, or product specification of the format</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:specificUsage">
-		<label>Specific usage</label>
-		<description>brief description of the resource and/or resource series usage</description>
+		<label>Конкретное применение</label>
+		<description>Краткое описание области применения набора данных</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:statement">
-		<label>Пояснение</label>
-		<description>general explanation of the data producer_s knowledge about the lineage of a
-			dataset</description>
+		<label>Общие сведения о происхождении данных</label>
+		<description>Общие сведения производителя о происхождении данных</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:status">
 		<label>Статус</label>
-		<description>status of the resource(s)</description>
+		<description>Состояние (статус) ресурса</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:supplementalInformation">
-		<label>Сопроводительная информация</label>
-		<description>any other descriptive information about the dataset</description>
+		<label>Дополнительная информация</label>
+		<description>Другая описательная информация о ресурсе</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:temporalElement">
-		<label>Temporal element</label>
-		<description>provides temporal component of the extent of the referring object</description>
+		<label>Временной компонент</label>
+		<description>временной компонент протяженности набора данных (provides temporal component of the extent of the referring object)</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:thesaurusName">
-		<label>Thesaurus name</label>
-		<description>name of the formally registered thesaurus or a similar authoritative source of
-			keywords</description>
+		<label>Название тезауруса</label>
+		<description>Наименование официально зарегистрированного тезауруса или другого источника ключевых слов</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:title">
@@ -2172,27 +2145,26 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:topicCategory">
-		<label>Категория темы</label>
-		<description>main theme(s) of the datset</description>
+		<label>Предметная область</label>
+		<description>Предметная область набора данных</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:topologyLevel">
-		<label>Topology level</label>
+		<label>Уровень топологии</label>
 		<description>code which identifies the degree of complexity of the spatial
 		relationships</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:transferOptions">
-		<label>Transfer options</label>
-		<description>provides information about technical means and media by which a resource is
-			obtained from the distributor</description>
+		<label>Носители информации</label>
+		<description>Технические характеристики данных и носители информации, с помощью которых ресурс получен от дистрибьютора</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:transferSize">
-		<label>Transfer size</label>
-		<description>estimated size of a unit in the specified transfer format, expressed in
-			megabytes. The transfer size is &gt; 0.0</description>
+		<label>Объем данных</label>
+		<description>Примерный размер данных в указанном формате передачи данных, выраженном в мегабайтах (estimated size of a unit in the specified transfer format, expressed in
+			megabytes. The transfer size is &gt; 0.0)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:transformationDimensionDescription">
@@ -2219,8 +2191,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:turnaround">
-		<label>Turnaround</label>
-		<description>typical turnaround time for the filling of an order</description>
+		<label>Время выполнения</label>
+		<description>Типовое время выполнения заказа (Typical turnaround time for the filling of an order)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:type">
@@ -2234,13 +2206,13 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:unitsOfDistribution">
-		<label>Units of distribution</label>
-		<description>tiles, layers, geographic areas, etc., in which data is available</description>
+		<label>Единицы объема данных</label>
+		<description>Доступные тематические слои, географические области и т.д. (tiles, layers, geographic areas, etc., in which data is available)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:updateScope">
-		<label>Update scope</label>
-		<description>scope of data to which maintenance is applied</description>
+		<label>Состав обновления</label>
+		<description>состав данных, подлежащих обновлению (scope of data to which maintenance is applied)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:updateScopeDescription">
@@ -2249,27 +2221,24 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:usageDateTime">
-		<label>Usage datetime</label>
-		<description>date and time of the first use or range of uses of the resource and/or resource
-			series (YYYY-MM-DDThh:mm:ss)</description>
+		<label>Время применения</label>
+		<description>Данные о времени первого применения ресурса (ГГГГ-MM-ДДTчч:мм:сс)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:useConstraints">
-		<label>Ограничения использования</label>
+		<label>Ограничения на использование</label>
 		<description>constraints applied to assure the protection of privacy or intellectual property,
 			and any special restrictions or limitations or warnings on using the resource</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:useLimitation">
-		<label>Use limitation</label>
-		<description>limitation affecting the fitness for use of the resource. Example, _not to be
-			used for navigation_</description>
+		<label>Ограничения на области использования</label>
+		<description>Ограничения на области использования, например: не использовать для навигации</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:userContactInfo">
-		<label>User contact info</label>
-		<description>identification of and means of communicating with person(s) and organization(s)
-			using the resource(s)</description>
+		<label>Пользователь</label>
+		<description>Субъект (персона или организация), использующий ресурс и способы связи с ним</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -2280,14 +2249,12 @@
 	<!-- ==================================================== -->
 	<element name="gmd:userDeterminedLimitations">
 		<label>User determined limitations</label>
-		<description>applications, determined by the user for which the resource and/or resource
-			series is not suitable</description>
+		<description>Области, определенные пользователем, для которых ресурс неприменим</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:userNote">
-		<label>User note</label>
-		<description>explanation of the application of the legal constraints or other restrictions and
-			legal prerequisites for obtaining and using the resource</description>
+		<label>Пояснения по ограничениям на доступ для пользователя</label>
+		<description>Пояснения по ограничениям на доступ и использование набора данных или метаданных для пользователя</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:value">
@@ -2308,14 +2275,14 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:version">
-		<label>Version</label>
+		<label>Версия формата</label>
 		<description>version of the format (date, number, etc.)</description>
 		<condition>обязательное поле</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:verticalElement">
-		<label>Vertical element</label>
-		<description>provides vertical component of the extent of the referring object</description>
+		<label>Высотный компонент</label>
+		<description>Высотный компонент протяженности набора данных (provides vertical component of the extent of the referring object)</description>
 		<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -2326,8 +2293,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:volumes">
-		<label>Volumes</label>
-		<description>number of items in the media identified</description>
+		<label>Число томов</label>
+		<description>число томов, определенных в носителе информации (number of items in the media identified)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:westBoundLongitude">
@@ -2342,14 +2309,14 @@
 	<!-- ==================================================== -->
 	
 	<element name="gco:Date">
-		<label>Date</label>
+		<label>Дата</label>
 		<description>Formatted as 2007-09-12 (YYYY-MM-DD)</description>
 	</element>	
 	
 	<!-- ==================================================== -->
 	
 	<element name="gco:DateTime">
-		<label>Date and time</label>
+		<label>Дата и время</label>
 		<description>Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
 	</element>	
 	
@@ -2365,7 +2332,7 @@
 	<!-- ==================================================== -->
 	
 	<element name="gts:TM_PeriodDuration">
-		<label>Period duration</label>
+		<label>Период продолжительности</label>
 		<description>
 			The duration data type is used to specify a time interval.
 			
@@ -2572,8 +2539,8 @@
 		<description>Geographic/Temporal Extent of Service</description>
 	</element>
 	<element name="srv:keywords">
-		<label>Keywords</label>
-		<description>Keywords describing service</description>
+		<label>Ключевые слова</label>
+		<description>Ключевые слова, описывающие сервис</description>
 	</element>
 	
 	<!-- ==================================================== -->
@@ -2613,23 +2580,24 @@
 		<label>Reference Authority</label>
 		<description>Authority responsible for codification. i.e. EPSG</description>
 	</element>
+	<!-- ==================================================== -->
 	<element name="gco:aName" context="gco:TypeName">
-		<label>Type name</label>
-		<description/>
-		<helper>
-			<option value="BOOLEAN">BOOLEAN</option>
-			<option vaue="BYTE">BYTE</option>
-			<option value="CHARACTER">CHARACTER</option>
-			<option value="DATE">DATE</option>
-			<option value="DATETIME">DATETIME</option>
-			<option value="DOUBLE">DOUBLE</option>
-			<option value="FLOAT">FLOAT</option>
-			<option value="INTEGER">INTEGER</option>
-			<option value="NUMERIC">NUMERIC</option>
-			<option value="REAL">REAL</option>
-			<option value="SERIAL">SERIAL</option>
-			<option value="VARCHAR">VARCHAR</option>
-			<option value="TEXT">TEXT</option>
-		</helper>
+	    <label>Type name</label>
+	    <description/>
+	    <helper>
+		<option value="BOOLEAN">BOOLEAN</option>
+		<option value="BYTE">BYTE</option>
+		<option value="CHARACTER">CHARACTER</option>
+		<option value="DATE">DATE</option>
+		<option value="DATETIME">DATETIME</option>
+		<option value="DOUBLE">DOUBLE</option>
+		<option value="FLOAT">FLOAT</option>
+		<option value="INTEGER">INTEGER</option>
+		<option value="NUMERIC">NUMERIC</option>
+		<option value="REAL">REAL</option>
+		<option value="SERIAL">SERIAL</option>
+		<option value="VARCHAR">VARCHAR</option>
+		<option value="TEXT">TEXT</option>
+	    </helper>
 	</element>
 </labels>

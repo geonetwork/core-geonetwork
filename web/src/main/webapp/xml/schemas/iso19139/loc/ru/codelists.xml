@@ -27,33 +27,33 @@
 	<codelist name="gmd:CI_OnLineFunctionCode">
 		<entry>
 			<code>download</code>
-			<label>download</label>
+			<label>Скачать</label>
 			<description>online instructions for transferring data from one storage device or system to
 				another</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>information</code>
-			<label>information</label>
+			<label>Информация</label>
 			<description>online information about the resource</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>offlineAccess</code>
-			<label>offlineAccess</label>
+			<label>Оффлайн доступ</label>
 			<description>online instructions for requesting the resource from the
 			provider</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>order</code>
-			<label>order</label>
+			<label>Заказывать</label>
 			<description>online order process for obtening the resource</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>search</code>
-			<label>search</label>
+			<label>Поиск</label>
 			<description>online search interface for seeking out information about the
 			resource</description>
 		</entry>
@@ -63,21 +63,21 @@
 	<codelist name="gmd:CI_PresentationFormCode">
 		<entry>
 			<code>documentDigital</code>
-			<label>электронный документ</label>
+			<label>электронная форма документа</label>
 			<description>digital representation of a primarily textual item (can contain illustrations
 				also)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>imageDigital</code>
-			<label>цифровое изображение</label>
+			<label>цифровой снимок</label>
 			<description>representation of a primarily textual item (can contain illustrations also) on
 				paper, photograhic material, or other media</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>documentHardcopy</code>
-			<label>бумажный документ</label>
+			<label>бумажная форма документа</label>
 			<description>likeness of natural or man-made features, objects, and activities acquired
 				through the sensing of visual or any other segment of the electromagnetic spectrum by
 				sensors, such as thermal infrared, and high resolution radar and stored in digital
@@ -86,7 +86,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>imageHardcopy</code>
-			<label>напечатанное изображение</label>
+			<label>бумажный снимок</label>
 			<description>likeness of natural or man-made features, objects, and activities acquired
 				through the sensing of visual or any other segment of the electromagnetic spectrum by
 				sensors, such as thermal infrared, and high resolution radar and reproduced on paper,
@@ -115,7 +115,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>modelHardcopy</code>
-			<label>modelHardcopy</label>
+			<label>аналоговая модель</label>
 			<description>3-dimensional, physical model</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -127,7 +127,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>profileHardcopy</code>
-			<label>напечатанный профиль</label>
+			<label>аналоговый профиль</label>
 			<description>vertical cross-section printed on paper, etc.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -140,7 +140,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>tableHardcopy</code>
-			<label>напечатанная таблица</label>
+			<label>твердая копия таблицы</label>
 			<description>representation of facts or figures systematically displayed, especially in
 				columns, printed onpapers, photographic material, or other media</description>
 		</entry>
@@ -153,7 +153,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>videoHardcopy</code>
-			<label>videoHardcopy</label>
+			<label>аналоговое видео</label>
 			<description>video recording on film</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -162,7 +162,7 @@
 	<codelist name="gmd:CI_RoleCode">
 		<entry>
 			<code>resourceProvider</code>
-			<label>провайдер ресурса</label>
+			<label>поставщик ресурса</label>
 			<description>party that supplies the resource</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -175,7 +175,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>owner</code>
-			<label>собственник</label>
+			<label>владелец</label>
 			<description>party that owns the resource</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -187,26 +187,26 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>distributor</code>
-			<label>дистрибьютер</label>
+			<label>распространитель</label>
 			<description>party who distributes the resource</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>originator</code>
-			<label>originator</label>
+			<label>создатель</label>
 			<description>party who created the resource</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>pointOfContact</code>
-			<label>точка контакта</label>
+			<label>контактное лицо</label>
 			<description>party who can be contacted for acquiring knowledge about or acquisition of the
 				resource</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>principalInvestigator</code>
-			<label>организатор исследований</label>
+			<label>главный исследователь</label>
 			<description>key party responsible for gathering information and conducting
 			research</description>
 		</entry>
@@ -593,7 +593,7 @@
 	<codelist name="gmd:MD_ClassificationCode">
 		<entry>
 			<code>unclassified</code>
-			<label>неопределённый</label>
+			<label>для открытого опубликования</label>
 			<description>available for general disclosure</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -677,7 +677,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>abstractClass</code>
-			<label>aабстрактный класс</label>
+			<label>aбстрактный класс</label>
 			<description>class that cannot be directly instantiated</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -817,7 +817,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>curve</code>
-			<label>curve</label>
+			<label>кривая</label>
 			<description>bounded, 1-dimensional geometric primitive, representing the continuous image
 				of a line</description>
 		</entry>
@@ -848,8 +848,8 @@
 	<codelist name="gmd:MD_ImagingConditionCode">
 		<entry>
 			<code>blurredImage</code>
-			<label>blurredImage</label>
-			<description>portion of the image is blurred</description>
+			<label>размытое изображение</label>
+			<description>часть изображения размыто (portion of the image is blurred)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -860,9 +860,9 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>degradingObliquity</code>
-			<label>degradingObliquity</label>
-			<description>acute angle between the plane of the ecliptic (the plane of the Earth s orbit)
-				and the plane of the celestial equator</description>
+			<label>наклон орбиты</label>
+			<description>острый угол между плоскостью эклиптики и плоскостью небесного экватора (acute angle between the plane of the ecliptic (the plane of the Earth s orbit)
+				and the plane of the celestial equator)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -935,7 +935,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>stratum</code>
-			<label>стратум</label>
+			<label>слой</label>
 			<description>keyword identifies the layer(s) of any deposited substance</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -947,7 +947,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>theme</code>
-			<label>тема</label>
+			<label>предмет</label>
 			<description>keyword identifies a particular subject or topic</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -992,7 +992,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>biannually</code>
-			<label>биенале</label>
+			<label>дважды в год</label>
 			<description>data is updated twice each year</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1022,7 +1022,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>unknown</code>
-			<label>не извесно</label>
+			<label>не известно</label>
 			<description>frequency of maintenance for the data is not known</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1076,7 +1076,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>dvd</code>
-			<label>dvd</label>
+			<label>Dvd</label>
 			<description>digital versatile disk</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1088,13 +1088,13 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>3halfInchFloppy</code>
-			<label>3halfInchFloppy</label>
+			<label>Диск 3,5"</label>
 			<description>3,5 inch magnetic disk</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>5quarterInchFloppy</code>
-			<label>5quarterInchFloppy</label>
+			<label>Диск 5,25"</label>
 			<description>5,25 inch magnetic disk</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1154,25 +1154,25 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>onLine</code>
-			<label>onLine</label>
+			<label>Онлайн доступ</label>
 			<description>direct computer linkage</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>satellite</code>
-			<label>satellite</label>
+			<label>Спутниковая связь</label>
 			<description>linkage through a satellite communication system</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>telephoneLink</code>
-			<label>telephoneLink</label>
+			<label>Телефонная связь</label>
 			<description>communication through a telephone network</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>hardcopy</code>
-			<label>hardcopy</label>
+			<label>Твердая копия</label>
 			<description>pamphlet or leaflet giving descriptive information</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1237,45 +1237,44 @@
 	<codelist name="gmd:MD_ProgressCode">
 		<entry>
 			<code>completed</code>
-			<label>завершен</label>
-			<description>production of the data has been completed</description>
+			<label>завершенный</label>
+			<description>создание данных завершено</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>historicalArchive</code>
 			<label>исторический архив</label>
-			<description>data has been stored in an offline storage facility</description>
+			<description>данные хранятся в хранилище/архиве</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>obsolete</code>
 			<label>устаревший</label>
-			<description>data is no longer relevant</description>
+			<description>данные устарели</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>onGoing</code>
-			<label>в процессе</label>
-			<description>data is continually being updated</description>
+			<label>постоянно обновляемый</label>
+			<description>данные постоянно обновляются</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>planned</code>
-			<label>планируется</label>
-			<description>fixed date has been established upon or by which the data will be created or
-				updated</description>
+			<label>планируемый к созданию/обновлению</label>
+			<description>планируется создание или обновление к установленной дате</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>required</code>
-			<label>требуется</label>
-			<description>data needs to be generated or updated</description>
+			<label>требуемый</label>
+			<description>данные требуется создать или обновить</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>underDevelopment</code>
 			<label>в разработке</label>
-			<description>data is currently in the process of being created</description>
+			<description>данные в текущий момент времени находятся в процессе создания</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -1299,13 +1298,13 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>patentPending</code>
-			<label>оформление патента</label>
+			<label>заявка на патент</label>
 			<description>produced or sold information awaiting a patent</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>trademark</code>
-			<label>торговая марка</label>
+			<label>товарный знак</label>
 			<description>a name, symbol, or other device identifying a product, officially registered
 				and legally restricted to the use of the owner or manufacturer</description>
 		</entry>
@@ -1325,7 +1324,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>restricted</code>
-			<label>ограниченно</label>
+			<label>ограничения раскрытия информации</label>
 			<description>withheld from general circulation or disclosure</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1449,25 +1448,25 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>grid</code>
-			<label>сетка</label>
+			<label>растр</label>
 			<description>grid data is used to represent geographic data</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>textTable</code>
-			<label>текстовая таблица</label>
+			<label>текст/таблица</label>
 			<description>textual or tabular data is used to represent geographic data</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>tin</code>
-			<label>tin</label>
+			<label>TIN-модель</label>
 			<description>triangulated irregular network</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>stereoModel</code>
-			<label>стерео модель</label>
+			<label>3D-модель</label>
 			<description>three-dimensional view formed by the intersecting homologous rays of an
 				overlapping pair of images</description>
 		</entry>
@@ -1483,7 +1482,7 @@
 	<codelist name="gmd:MD_TopicCategoryCode">
 		<entry>
 			<code>farming</code>
-			<label>сельское хозяйство</label>
+			<label>Сельское хозяйство</label>
 			<description>rearing of animals and/or cultivation of plants. Examples: agriculture,
 				irrigation, aquaculture, plantations, herding, pests and diseases affecting crops and
 				livestock</description>
@@ -1491,28 +1490,28 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>biota</code>
-			<label>биота</label>
+			<label>Флора и фауна</label>
 			<description>flora and/or fauna in natural environment. Examples: wildlife, vegetation,
 				biological sciences, ecology, wilderness, sealife, wetlands, habitat</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>boundaries</code>
-			<label>границы</label>
+			<label>Границы</label>
 			<description>legal land descriptions. Examples: political and administrative
 			boundaries</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>climatologyMeteorologyAtmosphere</code>
-			<label>слиматология метеорология атмосфера</label>
+			<label>Климатология и метеорология</label>
 			<description>processes and phenomena of the atmosphere. Examples: cloud cover, weather,
 				climate, atmospheric conditions, climate change, precipitation</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>economy</code>
-			<label>экономика</label>
+			<label>Экономика</label>
 			<description>economic activities, conditions and employment. Examples: production, labour,
 				revenue, commerce, industry, tourism and ecotourism, forestry, fisheries, commercial or
 				subsistence hunting, exploration and exploitation of resources such as minerals, oil and
@@ -1521,14 +1520,14 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>elevation</code>
-			<label>отметка высоты над уровнем моря</label>
+			<label>Рельеф</label>
 			<description>height above or below sea level. Examples: altitude, bathymetry, digital
 				elevation models, slope, derived products</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>environment</code>
-			<label>окружающая среда</label>
+			<label>Окружающая среда</label>
 			<description>environmental resources, protection and conservation. Examples: environmental
 				pollution, waste storage and treatment, environmental impact assessment, monitoring
 				environmental risk, nature reserves, landscape</description>
@@ -1536,7 +1535,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>geoscientificInformation</code>
-			<label>научная геоинформация</label>
+			<label>Данные наук о Земле</label>
 			<description>information pertaining to earth sciences. Examples: geophysical features and
 				processes, geology, minerals, sciences dealing with the composition, structure and
 				origin of the earth s rocks, risks of earthquakes, volcanic activity, landslides,
@@ -1545,7 +1544,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>health</code>
-			<label>здоровье</label>
+			<label>Здравоохранение</label>
 			<description>health, health services, human ecology, and safety. Examples: disease and
 				illness, factors affecting health, hygiene, substance abuse, mental and physical health,
 				health services</description>
@@ -1553,21 +1552,21 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>imageryBaseMapsEarthCover</code>
-			<label>imageryBaseMapsEarthCover</label>
+			<label>Картография</label>
 			<description>base maps. Examples: land cover, topographic maps, imagery, unclassified
 				images, annotations</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>intelligenceMilitary</code>
-			<label>военная разведка</label>
+			<label>Оборона</label>
 			<description>military bases, structures, activities. Examples: barracks, training grounds,
 				military transportation, information collection</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>inlandWaters</code>
-			<label>внутренние водоёмы</label>
+			<label>Поверхностные воды</label>
 			<description>inland water features, drainage systems and their characteristics. Examples:
 				rivers and glaciers, salt lakes, water utilization plans, dams, currents, floods, water
 				quality, hydrographic charts</description>
@@ -1575,28 +1574,28 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>location</code>
-			<label>расположение</label>
+			<label>Координатные и адресные данные</label>
 			<description>positional information and services. Examples: addresses, geodetic networks,
 				control points, postal zones and services, place names</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>oceans</code>
-			<label>океаны</label>
+			<label>Океанология</label>
 			<description>features and characteristics of salt water bodies (excluding inland waters).
 				Examples: tides, tidal waves, coastal information, reefs</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>planningCadastre</code>
-			<label>землеустройство </label>
+			<label>Кадастр </label>
 			<description>information used for appropriate actions for future use of the land. Examples:
 				land use maps, zoning maps, cadastral surveys, land ownership</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>society</code>
-			<label>общество</label>
+			<label>Обществознание</label>
 			<description>characteristics of society and cultures. Examples: settlements, anthropology,
 				archaeology, education, traditional beliefs, manners and customs, demographic data,
 				recreational areas and activities, social impact assessments, crime and justice, census
@@ -1605,14 +1604,14 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>structure</code>
-			<label>структура</label>
+			<label>Здания и сооружения</label>
 			<description>man-made construction. Examples: buildings, museums, churches, factories,
 				housing, monuments, shops, towers</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>transportation</code>
-			<label>трансформация</label>
+			<label>Транспорт</label>
 			<description>means and aids for conveying persons and/or goods. Examples: roads,
 				airports/airstrips, shipping routes, tunnels, nautical charts, vehicle or vessel
 				location, aeronautical charts, railways</description>
@@ -1620,7 +1619,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utilitiesCommunication</code>
-			<label>прикладные коммуникации</label>
+			<label>Инженерные коммуникации</label>
 			<description>energy, water and waste systems and communications infrastructure and
 				services. Examples: hydroelectricity, geothermal, solar and nuclear sources of energy,
 				water purification and distribution, sewage collection and disposal, electricity and gas
