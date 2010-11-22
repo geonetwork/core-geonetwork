@@ -616,6 +616,12 @@
   <!--     Modules for the build in approximate dependency order   -->
   <!-- =========================================================== -->
   <modules>
+    
+    <!-- Remove comment tag to include documentation in the build. 
+      Python and Latex are required to build the documentation. -->
+    
+<!--    <module>docs</module> -->
+
     <module>cachingxslt</module>
     <module>jeeves</module> 
     <module>oaipmh</module>
