@@ -44,7 +44,6 @@ import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.lib.ServerLib;
@@ -201,7 +200,7 @@ public class Geonetwork implements ApplicationHandler
         
 		DataStore dataStore = createDataStore(context.getResourceManager().getProps(Geonet.Res.MAIN_DB), luceneDir);
 	
-		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, summaryConfigXmlFile, luceneConfigXmlFile, dataStore, new SettingInfo(settingMan));
+		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, summaryConfigXmlFile, luceneConfigXmlFile, dataStore, settingMan, dbms);
 
 		//------------------------------------------------------------------------
 		//--- extract intranet ip/mask and initialize AccessManager
