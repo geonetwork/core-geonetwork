@@ -42,6 +42,10 @@ import java.util.Map;
 
 //=============================================================================
 
+/**
+ * TODO javadoc.
+ * 
+ */
 public class Set implements Service
 {
 	//--------------------------------------------------------------------------
@@ -58,6 +62,14 @@ public class Set implements Service
 	//---
 	//--------------------------------------------------------------------------
 
+    /**
+     * TODO javadoc.
+     *
+     * @param params
+     * @param context
+     * @return
+     * @throws Exception
+     */
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -84,7 +96,9 @@ public class Set implements Service
 	//--- Vars
 	//---
 	//--------------------------------------------------------------------------
-
+    /**
+     * TODO javadoc.
+     */
 	private ConfigEntry entries[] =
 	{
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "site/name",                "system/site/name"),
@@ -179,9 +193,18 @@ public class Set implements Service
 
 //=============================================================================
 
-class ConfigEntry
-{
-	/** @param mandatory Means that the value, if the element is present, cannot be empty */
+/**
+ * TODO javadoc.
+ */
+class ConfigEntry {
+    /**
+     * TODO javadoc.
+     *
+     * @param type
+     * @param mandatory Means that the value, if the element is present, cannot be empty
+     * @param srcPath
+     * @param desPath
+     */
 	public ConfigEntry(Type type, boolean mandatory, String srcPath, String desPath)
 	{
 		this.srcPath   = srcPath;
@@ -196,6 +219,13 @@ class ConfigEntry
 	//---
 	//--------------------------------------------------------------------------
 
+    /**
+     * TODO javadoc.
+     *
+     * @param values
+     * @param elem
+     * @throws BadInputEx
+     */
 	public void eval(Map<String, Object> values, Element elem) throws BadInputEx
 	{
 		String value = Lib.element.eval(elem, srcPath);
@@ -205,17 +235,16 @@ class ConfigEntry
 
 		//--- ok, the element is present
 
-		if (mandatory)
-		{
-			if (value.length() == 0)
+		if (mandatory) {
+			if (value.length() == 0) {
 				throw new BadParameterEx("srcPath", value);
-
+            }
 			checkValue(value);
 		}
-		else
-		{
-			if (value.length() != 0)
+		else {
+			if (value.length() != 0) {
 				checkValue(value);
+		}
 		}
 
 		values.put(desPath, value);
@@ -227,6 +256,12 @@ class ConfigEntry
 	//---
 	//--------------------------------------------------------------------------
 
+    /**
+     * TODO javadoc.
+     *
+     * @param value
+     * @throws BadInputEx
+     */
 	private void checkValue(String value) throws BadInputEx
 	{
 		if (type == Type.INT && !Lib.type.isInteger(value))

@@ -53,8 +53,7 @@ public abstract class GeoNetworkReusableAnalyzerBase extends Analyzer {
      * @param aReader   the reader passed to the {@link Tokenizer} constructor
      * @return the {@link TokenStreamComponents} for this analyzer.
      */
-    protected abstract TokenStreamComponents createComponents(String fieldName,
-                                                              Reader aReader);
+    protected abstract TokenStreamComponents createComponents(String fieldName, Reader aReader);
 
     /**
      * This method uses {@link #createComponents(String, Reader)} to obtain an
@@ -69,10 +68,8 @@ public abstract class GeoNetworkReusableAnalyzerBase extends Analyzer {
      * @param reader    the reader the streams source reads from
      */
     @Override
-    public final TokenStream reusableTokenStream(final String fieldName,
-                                                 final Reader reader) throws IOException {
-        TokenStreamComponents streamChain = (TokenStreamComponents)
-                getPreviousTokenStream();
+    public final TokenStream reusableTokenStream(final String fieldName, final Reader reader) throws IOException {
+        TokenStreamComponents streamChain = (TokenStreamComponents) getPreviousTokenStream();
         if (streamChain == null || !streamChain.reset(reader)) {
             streamChain = createComponents(fieldName, reader);
             setPreviousTokenStream(streamChain);
@@ -91,8 +88,7 @@ public abstract class GeoNetworkReusableAnalyzerBase extends Analyzer {
      * @param reader    the reader the streams source reads from
      */
     @Override
-    public final TokenStream tokenStream(final String fieldName,
-                                         final Reader reader) {
+    public final TokenStream tokenStream(final String fieldName, final Reader reader) {
         return createComponents(fieldName, reader).getTokenStream();
     }
 
@@ -114,8 +110,7 @@ public abstract class GeoNetworkReusableAnalyzerBase extends Analyzer {
          * @param source the analyzer's tokenizer
          * @param result the analyzer's resulting token stream
          */
-        public TokenStreamComponents(final Tokenizer source,
-                                     final TokenStream result) {
+        public TokenStreamComponents(final Tokenizer source, final TokenStream result) {
             this.source = source;
             this.sink = result;
         }
@@ -144,8 +139,9 @@ public abstract class GeoNetworkReusableAnalyzerBase extends Analyzer {
          */
         protected boolean reset(final Reader reader) throws IOException {
             source.reset(reader);
-            if (sink != source)
+            if (sink != source) {
                 sink.reset(); // only reset if the sink reference is different from source
+            }
             return true;
         }
 

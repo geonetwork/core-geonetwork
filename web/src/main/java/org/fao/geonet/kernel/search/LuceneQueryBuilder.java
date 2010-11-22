@@ -59,21 +59,24 @@ public class LuceneQueryBuilder {
             throw new IllegalArgumentException("Cannot create Lucene query for null string");
         }
         Query query = null;
+        String analyzedString = LuceneSearcher.analyzeQueryText(luceneIndexField, string, _analyzer, _tokenizedFieldSet);
+        if(StringUtils.hasLength(analyzedString)) {
         // no wildcards
         if(string.indexOf('*') < 0 && string.indexOf('?') < 0) {
             // similarity is not set or is 1
             if(similarity == null || similarity.equals("1")) {
-                query = new TermQuery(new Term(luceneIndexField, LuceneSearcher.analyzeQueryText(luceneIndexField, string, _analyzer, _tokenizedFieldSet)));
+                    query = new TermQuery(new Term(luceneIndexField, analyzedString));
             }
             // similarity is not null and not 1
             else {
                 Float minimumSimilarity = Float.parseFloat(similarity);
-                query = new FuzzyQuery(new Term(luceneIndexField, LuceneSearcher.analyzeQueryText(luceneIndexField, string, _analyzer, _tokenizedFieldSet)), minimumSimilarity);
+                    query = new FuzzyQuery(new Term(luceneIndexField, analyzedString), minimumSimilarity);
             }
         }
         // wildcards
         else {
-            query = new WildcardQuery(new Term(luceneIndexField, LuceneSearcher.analyzeQueryText(luceneIndexField, string, _analyzer, _tokenizedFieldSet)));
+                query = new WildcardQuery(new Term(luceneIndexField, analyzedString));
+            }
         }		
         return query;
 	}
@@ -99,8 +102,10 @@ public class LuceneQueryBuilder {
 			        String token = st.nextToken();
 			        // ignore fuzziness in without-queries
 			        Query subQuery = textFieldToken(token, luceneIndexField, null);
+					if(subQuery != null) {
 					BooleanClause subClause = new BooleanClause(subQuery, dontOccur);
 					booleanQuery.add(subClause);
+			    }
 			    }
 			    booleanClause = new BooleanClause(booleanQuery, occur);
 			}
@@ -126,8 +131,10 @@ public class LuceneQueryBuilder {
 			    while (st.hasMoreTokens()) {
 			        String token = st.nextToken();
 			        Query subQuery = textFieldToken(token, luceneIndexField, similarity);
+                    if(subQuery != null) {
 					BooleanClause subClause = new BooleanClause(subQuery, tokenOccur);
 					booleanQuery.add(subClause);
+			    }
 			    }
 			    booleanClause = new BooleanClause(booleanQuery, occur);
 			}
@@ -151,15 +158,19 @@ public class LuceneQueryBuilder {
 			    if(st.countTokens() == 1) {
 			        String token = st.nextToken();
 			        Query subQuery = textFieldToken(token, luceneIndexField, similarity);
+                    if(subQuery != null) {
 				    booleanClause = new BooleanClause(subQuery, occur);
+			    }
 			    }
 			    else {
 					BooleanQuery booleanQuery = new BooleanQuery();
 				    while (st.hasMoreTokens()) {
 				        String token = st.nextToken();
 				        Query subQuery = textFieldToken(token, luceneIndexField, similarity);
+						if(subQuery != null) {
 						BooleanClause subClause = new BooleanClause(subQuery, occur);
 						booleanQuery.add(subClause);
+				    }
 				    }
 				    booleanClause = new BooleanClause(booleanQuery, occur);
 			    }
@@ -234,10 +245,12 @@ public class LuceneQueryBuilder {
 				    while (st.hasMoreTokens()) {
 				        String token = st.nextToken();
 				        Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
+						if(subQuery != null) {
 						BooleanClause subClause = new BooleanClause(subQuery, occur);
 						if(subClause != null){
 							booleanQuery.add(subClause);
 						}
+				    }
 				    }
 				    anyClause = new BooleanClause(booleanQuery, occur);
 			    }
