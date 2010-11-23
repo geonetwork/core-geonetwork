@@ -27,6 +27,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -413,9 +414,9 @@ public class BinaryFile
 		}
 	}
 
-	//----------------------------------------------------------------------------
-	// copies an input stream (from a file) to an output stream
-
+	/**
+	 * Copies an input stream (from a file) to an output stream 
+	 */
 	public static void copy(InputStream in, OutputStream out, boolean closeInput,
 									boolean closeOutput) throws IOException
 	{
@@ -439,6 +440,33 @@ public class BinaryFile
 		}
 	}
 
+	/**
+	 * Copy a directory from one location to another.
+	 * 
+	 * @param sourceLocation
+	 * @param targetLocation
+	 * @throws IOException
+	 */
+	public static void copyDirectory(File sourceLocation , File targetLocation)
+    throws IOException {
+        
+        if (sourceLocation.isDirectory()) {
+            if (!targetLocation.exists()) {
+                targetLocation.mkdir();
+            }
+            
+            String[] children = sourceLocation.list();
+            for (int i=0; i<children.length; i++) {
+                copyDirectory(new File(sourceLocation, children[i]),
+                        new File(targetLocation, children[i]));
+            }
+        } else {
+            InputStream in = new FileInputStream(sourceLocation);
+            OutputStream out = new FileOutputStream(targetLocation);
+            copy(in, out, true, true);
+        }
+    }
+	
 	//----------------------------------------------------------------------------
 	// Returns the mime-type corresponding to the given file extension
 

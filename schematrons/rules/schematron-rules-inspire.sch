@@ -167,7 +167,7 @@ USA.
 			or normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = '')]">
 			<!-- resource language is only conditional for 'dataset' and 'series'. 
 			-->			
-			<sch:let name="resourceLanguage" value="normalize-space(gmd:language/gco:CharacterString)"/>
+			<sch:let name="resourceLanguage" value="normalize-space(gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue)"/>
 			<sch:let name="euLanguage" value="
 				not(gmd:language/@gco:nilReason='missing') and 
 				geonet:contains-any-of($resourceLanguage, 
@@ -573,7 +573,7 @@ USA.
 
 			
 			<!--  Language -->
-			<sch:let name="language" value="gmd:language/gco:CharacterString"/>
+			<sch:let name="language" value="gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue"/>
 			<sch:let name="language_present" value="geonet:contains-any-of($language, 
 				('eng', 'fre', 'ger', 'spa', 'dut', 'ita', 'cze', 'lav', 'dan', 'lit', 'mlt', 
 				'pol', 'est', 'por', 'fin', 'rum', 'slo', 'slv', 'gre', 'bul', 
@@ -584,7 +584,7 @@ USA.
 			</sch:assert>
 			<sch:report test="$language_present">
 				<sch:value-of select="$loc/strings/report.M49/div"/>				
-				<sch:value-of select="$language"/>
+				<sch:value-of select="normalize-space($language)"/>
 			</sch:report>
 
 

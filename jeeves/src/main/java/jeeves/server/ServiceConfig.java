@@ -76,6 +76,11 @@ public class ServiceConfig
 		return values.get(name);
 	}
 
+	public void setValue(String name, String value)
+	{
+		values.put(name, value);
+	}
+	
 	//--------------------------------------------------------------------------
 
 	public String getValue(String name, String def)
