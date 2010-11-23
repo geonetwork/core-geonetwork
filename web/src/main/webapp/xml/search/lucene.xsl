@@ -20,29 +20,29 @@ computes bounding box values
 
 <xsl:variable name="westBL">
 	<xsl:choose>
-		<xsl:when test="$region"><xsl:value-of select="$regionData/west + 360"/></xsl:when>
-		<xsl:otherwise><xsl:value-of select="/request/westBL + 360"/></xsl:otherwise>
+		<xsl:when test="$region"><xsl:value-of select="$regionData/west"/></xsl:when>
+		<xsl:otherwise><xsl:value-of select="/request/westBL"/></xsl:otherwise>
 	</xsl:choose>
 </xsl:variable>
 
 <xsl:variable name="eastBL">
 	<xsl:choose>
-		<xsl:when test="$region"><xsl:value-of select="$regionData/east + 360"/></xsl:when>
-		<xsl:otherwise><xsl:value-of select="/request/eastBL + 360"/></xsl:otherwise>
+		<xsl:when test="$region"><xsl:value-of select="$regionData/east"/></xsl:when>
+		<xsl:otherwise><xsl:value-of select="/request/eastBL"/></xsl:otherwise>
 	</xsl:choose>
 </xsl:variable>
 
 <xsl:variable name="southBL">
 	<xsl:choose>
-		<xsl:when test="$region"><xsl:value-of select="$regionData/south + 360"/></xsl:when>
-		<xsl:otherwise><xsl:value-of select="/request/southBL + 360"/></xsl:otherwise>
+		<xsl:when test="$region"><xsl:value-of select="$regionData/south"/></xsl:when>
+		<xsl:otherwise><xsl:value-of select="/request/southBL"/></xsl:otherwise>
 	</xsl:choose>
 </xsl:variable>
 
 <xsl:variable name="northBL">
 	<xsl:choose>
-		<xsl:when test="$region"><xsl:value-of select="$regionData/north + 360"/></xsl:when>
-		<xsl:otherwise><xsl:value-of select="/request/northBL + 360"/></xsl:otherwise>
+		<xsl:when test="$region"><xsl:value-of select="$regionData/north"/></xsl:when>
+		<xsl:otherwise><xsl:value-of select="/request/northBL"/></xsl:otherwise>
 	</xsl:choose>
 </xsl:variable>
 

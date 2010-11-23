@@ -3,91 +3,91 @@
 xmlns:exslt = "http://exslt.org/common" exclude-result-prefixes="exslt">
 
 <!--
-equal: coordinates of the target rectangle within 1 degree from corresponding ones of metadata rectangle
+equal: coordinates of the target rectangle
 -->
 <xsl:template name="equal">
 	<BooleanClause required="true" prohibited="false">
 		<RangeQuery fld="westBL"
-						lowerTxt="{$westBL - 1}"
-						upperTxt="{$westBL + 1}"
+						lowerTxt="{$westBL}"
+						upperTxt="{$westBL}"
 						inclusive="true"/>
 	</BooleanClause>
 	<BooleanClause required="true" prohibited="false">
 		<RangeQuery fld="eastBL"
-						lowerTxt="{$eastBL - 1}"
-						upperTxt="{$eastBL + 1}"
+						lowerTxt="{$eastBL}"
+						upperTxt="{$eastBL}"
 						inclusive="true"/>
 	</BooleanClause>
 	<BooleanClause required="true" prohibited="false">
 		<RangeQuery fld="southBL"
-						lowerTxt="{$southBL - 1}"
-						upperTxt="{$southBL + 1}"
+						lowerTxt="{$southBL}"
+						upperTxt="{$southBL}"
 						inclusive="true"/>
 	</BooleanClause>
 	<BooleanClause required="true" prohibited="false">
 		<RangeQuery fld="northBL"
-						lowerTxt="{$northBL - 1}"
-						upperTxt="{$northBL + 1}"
+						lowerTxt="{$northBL}"
+						upperTxt="{$northBL}"
 						inclusive="true"/>
 	</BooleanClause>
 </xsl:template>
 
 <!--
-encloses: metadata rectangle encloses target rectangle shrunk by 1 degree
+encloses: metadata rectangle encloses target rectangle
 -->
 <xsl:template name="encloses">
 	<BooleanClause required="true" prohibited="false">
 		<RangeQuery fld="westBL"
-						lowerTxt="{-180 + 360}"
-						upperTxt="{$westBL + 1}"
+						lowerTxt="{-180}"
+						upperTxt="{$westBL}"
 						inclusive="true"/>
 	</BooleanClause>
 	<BooleanClause required="true" prohibited="false">
 		<RangeQuery fld="eastBL"
-						lowerTxt="{$eastBL - 1}"
-						upperTxt="{180 + 360}"
+						lowerTxt="{$eastBL}"
+						upperTxt="{180}"
 						inclusive="true"/>
 	</BooleanClause>
 	<BooleanClause required="true" prohibited="false">
 		<RangeQuery fld="southBL"
-						lowerTxt="{-90 + 360}"
-						upperTxt="{$southBL + 1}"
+						lowerTxt="{-90}"
+						upperTxt="{$southBL}"
 						inclusive="true"/>
 	</BooleanClause>
 	<BooleanClause required="true" prohibited="false">
 		<RangeQuery fld="northBL"
-						lowerTxt="{$northBL - 1}"
-						upperTxt="{90 + 360}"
+						lowerTxt="{$northBL}"
+						upperTxt="{90}"
 						inclusive="true"/>
 	</BooleanClause>
 </xsl:template>
 
 <!--
-fullyEnclosedWithin: metadata rectangle fully enclosed within target rectangle augmented by 1 degree
+fullyEnclosedWithin: metadata rectangle fully enclosed within target rectangle
 -->
 <xsl:template name="fullyEnclosedWithin">
 	<BooleanClause required="true" prohibited="false">
 		<RangeQuery fld="westBL"
-						lowerTxt="{$westBL - 1}"
-						upperTxt="{$eastBL + 1}"
+						lowerTxt="{$westBL}"
+						upperTxt="{$eastBL}"
 						inclusive="true"/>
 	</BooleanClause>
 	<BooleanClause required="true" prohibited="false">
 		<RangeQuery fld="eastBL"
-						lowerTxt="{$westBL - 1}"
-						upperTxt="{$eastBL + 1}"
+						lowerTxt="{$westBL}"
+						upperTxt="{$eastBL}"
 						inclusive="true"/>
 	</BooleanClause>
 	<BooleanClause required="true" prohibited="false">
 		<RangeQuery fld="southBL"
-						lowerTxt="{$southBL - 1}"
-						upperTxt="{$northBL + 1}"
+						lowerTxt="{$southBL}"
+						upperTxt="{$northBL}"
 						inclusive="true"/>
 	</BooleanClause>
 	<BooleanClause required="true" prohibited="false">
 		<RangeQuery fld="northBL"
-						lowerTxt="{$southBL - 1}"
-						upperTxt="{$northBL + 1}"
+						lowerTxt="{$southBL}"
+						upperTxt="{$northBL}"
 						inclusive="true"/>
 	</BooleanClause>
 </xsl:template>
@@ -104,61 +104,28 @@ overlaps: not fullyOutsideOf
 	-->
 	<BooleanClause required="true" prohibited="false">
 		<RangeQuery fld="eastBL"
-						lowerTxt="{$westBL + 1}"
-						upperTxt="{180 + 360}"
+						lowerTxt="{$westBL}"
+						upperTxt="{180}"
 						inclusive="true"/>
 	</BooleanClause>
 	<BooleanClause required="true" prohibited="false">
 		<RangeQuery fld="westBL"
-						lowerTxt="{-180 + 360}"
-						upperTxt="{$eastBL - 1}"
+						lowerTxt="{-180}"
+						upperTxt="{$eastBL}"
 						inclusive="true"/>
 	</BooleanClause>
 	<BooleanClause required="true" prohibited="false">
 		<RangeQuery fld="northBL"
-						lowerTxt="{$southBL + 1}"
-						upperTxt="{90 + 360}"
+						lowerTxt="{$southBL}"
+						upperTxt="{90}"
 						inclusive="true"/>
 	</BooleanClause>
 	<BooleanClause required="true" prohibited="false">
 		<RangeQuery fld="southBL"
-						lowerTxt="{-90 + 360}"
-						upperTxt="{$northBL - 1}"
+						lowerTxt="{-90}"
+						upperTxt="{$northBL}"
 						inclusive="true"/>
 	</BooleanClause>
-	
-	<!--
-	old implementation
-	
-	<BooleanClause required="false" prohibited="true">
-		<BooleanQuery>
-			<BooleanClause required="false" prohibited="false">
-				<RangeQuery fld="eastBL"
-								lowerTxt="{-180 + 360}"
-								upperTxt="{$westBL + 1}"
-								inclusive="true"/>
-			</BooleanClause>
-			<BooleanClause required="false" prohibited="false">
-				<RangeQuery fld="westBL"
-								lowerTxt="{$eastBL - 1}"
-								upperTxt="{180 + 360}"
-								inclusive="true"/>
-			</BooleanClause>
-			<BooleanClause required="false" prohibited="false">
-				<RangeQuery fld="northBL"
-								lowerTxt="{-90 + 360}"
-								upperTxt="{$southBL + 1}"
-								inclusive="true"/>
-			</BooleanClause>
-			<BooleanClause required="false" prohibited="false">
-				<RangeQuery fld="southBL"
-								lowerTxt="{$northBL - 1}"
-								upperTxt="{90 + 360}"
-								inclusive="true"/>
-			</BooleanClause>
-		</BooleanQuery>
-	</BooleanClause>
-	-->
 </xsl:template>
 
 <!--
@@ -170,26 +137,26 @@ that is, not true that all the 4 forbidden halfplanes do not contain the metadat
 		<BooleanQuery>
 			<BooleanClause required="false" prohibited="false">
 				<RangeQuery fld="eastBL"
-								lowerTxt="{-180 + 360}"
-								upperTxt="{$westBL + 1}"
+								lowerTxt="{-180}"
+								upperTxt="{$westBL}"
 								inclusive="true"/>
 			</BooleanClause>
 			<BooleanClause required="false" prohibited="false">
 				<RangeQuery fld="westBL"
-								lowerTxt="{$eastBL - 1}"
-								upperTxt="{180 + 360}"
+								lowerTxt="{$eastBL}"
+								upperTxt="{180}"
 								inclusive="true"/>
 			</BooleanClause>
 			<BooleanClause required="false" prohibited="false">
 				<RangeQuery fld="northBL"
-								lowerTxt="{-90 + 360}"
-								upperTxt="{$southBL + 1}"
+								lowerTxt="{-90}"
+								upperTxt="{$southBL}"
 								inclusive="true"/>
 			</BooleanClause>
 			<BooleanClause required="false" prohibited="false">
 				<RangeQuery fld="southBL"
-								lowerTxt="{$northBL - 1}"
-								upperTxt="{90 + 360}"
+								lowerTxt="{$northBL}"
+								upperTxt="{90}"
 								inclusive="true"/>
 			</BooleanClause>
 		</BooleanQuery>
