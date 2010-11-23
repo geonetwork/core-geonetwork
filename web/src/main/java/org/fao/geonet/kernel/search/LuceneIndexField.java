@@ -33,6 +33,9 @@ public class LuceneIndexField {
 	public static final String TYPE = "type";
 	public static final String UUID = "_uuid";
 	public static final String WEST = "westBL";
+	public static final String DENOMINATOR_FROM = "denominatorFrom";
+	public static final String DENOMINATOR_TO = "denominatorTo";
+	public static final String DENOMINATOR = "denominator";
     public static final String PARENTUUID = "parentUuid";
     public static final String OPERATESON = "operatesOn";
     public static final String SCHEMA =  "_schema";

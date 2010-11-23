@@ -138,23 +138,30 @@ public final class XslUtil
     
 
     /**
-     * Get field value for metadata identified by uuid. Return "" if uuid not found.
+     * Get field value for metadata identified by uuid.
      * 
-     * @param appPath 	Application path to access Lucene index in a static context
+     * @param appPath 	Web application name to access Lucene index from environment variable
      * @param uuid 		Metadata uuid
      * @param field 	Lucene field name
      * @param lang 		Language of the index to search in
      * 
-     * @return metadata title
+     * @return metadata title or an empty string if Lucene index or uuid could not be found
      */
-    public static String getIndexField(Object appPath, Object uuid, Object field, Object lang)
+    public static String getIndexField(Object appName, Object uuid, Object field, Object lang)
     {
-    	String path = appPath.toString();
+    	String webappName = appName.toString();
+		String luceneSystemDir = System.getProperty(webappName + ".lucene.dir");
+		
+		if (luceneSystemDir == null) {
+			Log.debug(Geonet.GEONETWORK, "Failed to get Lucene directory from environment.");
+			return "";
+		}
+			
     	String id = uuid.toString();
     	String fieldname = field.toString();
     	String language = (lang.toString().equals("")?Geonet.DEFAULT_LANGUAGE:lang.toString());
     	try {
-    		return LuceneSearcher.getMetadataFromIndex(path, id, fieldname);
+    		return LuceneSearcher.getMetadataFromIndex(luceneSystemDir + "/nonspatial", id, fieldname);
     	} catch (Exception e) {
 			Log.debug(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
     		return "";

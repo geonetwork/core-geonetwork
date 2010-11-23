@@ -32,6 +32,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.TokenStream;
@@ -50,6 +51,7 @@ import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
+import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
@@ -66,6 +68,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.UnAuthorizedException;
+import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
 import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
@@ -115,6 +118,7 @@ public class LuceneSearcher extends MetaSearcher
 	private HashSet<String>	_tokenizedFieldSet;
 	private LuceneConfig _luceneConfig;
 	private String _boostQueryClass;
+	
 	//--------------------------------------------------------------------------------
 	// constructor
 	public LuceneSearcher (SearchManager sm, String styleSheetName, Element summaryConfig, LuceneConfig luceneConfig)
@@ -315,10 +319,10 @@ public class LuceneSearcher extends MetaSearcher
 				// Construct Lucene query by XSLT, not Java, for Z3950 anyway :-)
 				Element xmlQuery = _sm.transform(_styleSheetName, request);
 				Log.debug(Geonet.SEARCH_ENGINE, "XML QUERY:\n"+ Xml.getString(xmlQuery));
-				_query = makeQuery(xmlQuery, SearchManager.getAnalyzer(), _tokenizedFieldSet);
+				_query = makeQuery(xmlQuery, SearchManager.getAnalyzer(), _tokenizedFieldSet, _luceneConfig.getNumericFields());
 			} else {
 		        // Construct Lucene query by Java, not XSLT
-				_query = new LuceneQueryBuilder(_tokenizedFieldSet, _sm.getAnalyzer()).build(request);
+				_query = new LuceneQueryBuilder(_tokenizedFieldSet, _luceneConfig.getNumericFields(), _sm.getAnalyzer()).build(request);
 			}
 		    
 			// Boosting query
@@ -446,7 +450,7 @@ public class LuceneSearcher extends MetaSearcher
 		_numHits = Integer.parseInt(_elSummary.getAttributeValue("count"));
 	
 		Log.debug(Geonet.SEARCH_ENGINE, "Hits found : "+_numHits+"");
-			
+		
 		return hits;
 	}
 
@@ -521,10 +525,11 @@ public class LuceneSearcher extends MetaSearcher
 	 *  
 	 *  If the field to be queried is tokenized then this method applies 
 	 *  the appropriate analyzer (see SearchManager) to the field.
+	 * @param numericFieldSet TODO
 	 *   
 	 */
 	@SuppressWarnings({"deprecation"})
-    public static Query makeQuery(Element xmlQuery, PerFieldAnalyzerWrapper analyzer, HashSet<String> tokenizedFieldSet) throws Exception
+    public static Query makeQuery(Element xmlQuery, PerFieldAnalyzerWrapper analyzer, HashSet<String> tokenizedFieldSet, HashMap<String, LuceneConfigNumericField> numericFieldSet) throws Exception
 	{
         System.out.println("\n\n\n* * makeQuery input XML:\n" + Xml.getString(xmlQuery));
 		String name = xmlQuery.getName();
@@ -577,11 +582,15 @@ public class LuceneSearcher extends MetaSearcher
 			String  upperTxt   = xmlQuery.getAttributeValue("upperTxt");
 			String  sInclusive = xmlQuery.getAttributeValue("inclusive");
 			boolean inclusive  = "true".equals(sInclusive);
-
-			Term lowerTerm = (lowerTxt == null ? null : new Term(fld, analyzeQueryText(fld, lowerTxt, analyzer, tokenizedFieldSet)));
-			Term upperTerm = (upperTxt == null ? null : new Term(fld, analyzeQueryText(fld, upperTxt, analyzer, tokenizedFieldSet)));
-
-			returnValue = new RangeQuery(lowerTerm, upperTerm, inclusive);
+			LuceneConfigNumericField fieldConfig = numericFieldSet.get(fld);
+			if (fieldConfig != null) {
+				returnValue = LuceneQueryBuilder.buildNumericRangeQueryForType(null, lowerTxt, upperTxt, inclusive, inclusive, fieldConfig.getType());
+			} else {
+				Term lowerTerm = (lowerTxt == null ? null : new Term(fld, analyzeQueryText(fld, lowerTxt, analyzer, tokenizedFieldSet)));
+				Term upperTerm = (upperTxt == null ? null : new Term(fld, analyzeQueryText(fld, upperTxt, analyzer, tokenizedFieldSet)));
+	
+				returnValue = new RangeQuery(lowerTerm, upperTerm, inclusive);
+			}
 		}
 		else if (name.equals("DateRangeQuery"))
 		{
@@ -605,7 +614,7 @@ public class LuceneSearcher extends MetaSearcher
                 Element xmlSubQuery;
                 if (subQueries != null && subQueries.size() != 0) {
                     xmlSubQuery = subQueries.get(0);
-                    query.add(makeQuery(xmlSubQuery, analyzer, tokenizedFieldSet), occur);
+                    query.add(makeQuery(xmlSubQuery, analyzer, tokenizedFieldSet, numericFieldSet), occur);
                 }
             }
 			BooleanQuery.setMaxClauseCount(16384); // FIXME: quick fix; using Filters should be better
@@ -911,19 +920,19 @@ public class LuceneSearcher extends MetaSearcher
      * @param fieldname lucene field value
      * @return
      */
-    public static String getMetadataFromIndex(String appPath, String id, String fieldname) throws Exception
+    public static String getMetadataFromIndex(String indexPath, String id, String fieldname) throws Exception
     {
 			List<String> fieldnames = new ArrayList<String>();
 			fieldnames.add(fieldname);
-			return getMetadataFromIndex(appPath, id, fieldnames).get(fieldname);
+			return getMetadataFromIndex(indexPath, id, fieldnames).get(fieldname);
 		}
 
-    public static Map<String,String> getMetadataFromIndex(String appPath, String id, List<String> fieldnames) throws Exception
+    public static Map<String,String> getMetadataFromIndex(String indexPath, String id, List<String> fieldnames) throws Exception
     {
 
 			MapFieldSelector selector = new MapFieldSelector(fieldnames); 
 
-			File luceneDir = new File(appPath + "WEB-INF/lucene/nonspatial");	// FIXME
+			File luceneDir = new File(indexPath);
 			IndexReader reader = IndexReader.open(luceneDir);
       Searcher searcher = new IndexSearcher(reader);
 

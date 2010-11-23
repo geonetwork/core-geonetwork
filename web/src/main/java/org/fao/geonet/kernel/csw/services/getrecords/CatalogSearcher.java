@@ -29,6 +29,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
+import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.document.FieldSelectorResult;
@@ -53,6 +55,7 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.search.LuceneConfig;
+import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -76,13 +79,14 @@ public class CatalogSearcher {
 	private Element _summaryConfig;
 	private LuceneConfig	_luceneConfig;
 	private HashSet<String> _tokenizedFieldSet;
+	private HashMap<String, LuceneConfigNumericField> _numericFieldSet;
 	private FieldSelector _selector;
 	private Query         _query;
 	private IndexReader   _reader;
 	private CachingWrapperFilter _filter;
 	private Sort          _sort;
 	private String        _lang;
-
+	
 	public CatalogSearcher(File summaryConfig, LuceneConfig luceneConfig) {
 		try {
 			if (summaryConfig != null)
@@ -95,6 +99,7 @@ public class CatalogSearcher {
 
 		_luceneConfig = luceneConfig;
 		_tokenizedFieldSet = luceneConfig.getTokenizedField();
+		_numericFieldSet = luceneConfig.getNumericFields();
 		
 		_selector = new FieldSelector() {
 			public final FieldSelectorResult accept(String name) {
@@ -106,6 +111,7 @@ public class CatalogSearcher {
 
 	public void reloadLuceneConfiguration(LuceneConfig lc) {
 		_tokenizedFieldSet = lc.getTokenizedField();
+		_numericFieldSet = lc.getNumericFields();
 	}
 	
 	// ---------------------------------------------------------------------------
@@ -345,7 +351,7 @@ public class CatalogSearcher {
 		if (luceneExpr != null) {
 			Log.debug(Geonet.CSW_SEARCH, "Search criteria:\n" + Xml.getString(luceneExpr));
         }
-		Query data = (luceneExpr == null) ? null : LuceneSearcher.makeQuery(luceneExpr, SearchManager.getAnalyzer(), _tokenizedFieldSet);
+		Query data = (luceneExpr == null) ? null : LuceneSearcher.makeQuery(luceneExpr, SearchManager.getAnalyzer(), _tokenizedFieldSet, _numericFieldSet);
         Log.info(Geonet.CSW_SEARCH,"LuceneSearcher made query:\n" + data.toString());
 
 
@@ -397,7 +403,7 @@ public class CatalogSearcher {
 	
 		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(
 				numHits, startPosition - 1, maxRecords, Integer.MAX_VALUE, 
-				context.getLanguage(), resultType.toString(), _summaryConfig, 
+				_lang, resultType.toString(), _summaryConfig, 
 				_reader, query, cFilter, sort, buildSummary,
 				
 				_luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()		
@@ -408,7 +414,7 @@ public class CatalogSearcher {
 		numHits = Integer.parseInt(summary.getAttributeValue("count"));
 	
 		Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
-
+		
 		// --- retrieve results
 
 		List<ResultItem> results = new ArrayList<ResultItem>();

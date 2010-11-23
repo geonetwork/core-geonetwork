@@ -8,6 +8,7 @@ import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.MatchAllDocsQuery;
+import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
@@ -16,9 +17,12 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.SearchResult.Relation;
+import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.util.spring.StringUtils;
 import org.jdom.Element;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -34,15 +38,17 @@ public class LuceneQueryBuilder {
 
 	HashSet<String> _tokenizedFieldSet;
 	PerFieldAnalyzerWrapper _analyzer;
+	HashMap<String, LuceneConfigNumericField> _numericFieldSet;
 	
-	// Bounding box constants
-	static final String minBoundingLatitudeValue  = "270";  //  -90 + 360
-	static final String maxBoundingLatitudeValue  = "450";  //   90 + 360
-	static final String minBoundingLongitudeValue = "180";  // -180 + 360
-	static final String maxBoundingLongitudeValue = "540";  //  180 + 360
+	// Lat long bounding box constants
+	static final Double minBoundingLatitudeValue  = -90.0;
+	static final Double maxBoundingLatitudeValue  = 90.0;
+	static final Double minBoundingLongitudeValue = -180.0;
+	static final Double maxBoundingLongitudeValue = 180.0;
 
-	public LuceneQueryBuilder(HashSet<String> tokenizedFieldSet, PerFieldAnalyzerWrapper analyzer) {
+	public LuceneQueryBuilder(HashSet<String> tokenizedFieldSet, HashMap<String, LuceneConfigNumericField> numericFieldSet, PerFieldAnalyzerWrapper analyzer) {
 		_tokenizedFieldSet = tokenizedFieldSet;
+		_numericFieldSet = numericFieldSet;
 		_analyzer          = analyzer;
 	}
 
@@ -523,7 +529,7 @@ public class LuceneQueryBuilder {
 		query.add(templateQuery, templateOccur);
 
 		// metadata date range
-		addDateRangeQuery(query, 
+		addRangeQuery(query, 
 				request.getChildText("dateTo"), 
 				request.getChildText("dateFrom"), 
 				LuceneIndexField.CHANGE_DATE);
@@ -531,19 +537,19 @@ public class LuceneQueryBuilder {
 		// Revision, publication and creation dates may
 		// have been index as temporal extent also.
 		// data revision date range
-		addDateRangeQuery(query, 
+		addRangeQuery(query, 
 				request.getChildText("revisionDateTo"), 
 				request.getChildText("revisionDateFrom"), 
 				LuceneIndexField.REVISION_DATE);
 
 		// data publication date range
-		addDateRangeQuery(query, 
+		addRangeQuery(query, 
 				request.getChildText("publicationDateTo"), 
 				request.getChildText("publicationDateFrom"), 
 				LuceneIndexField.PUBLICATION_DATE);
 
 		// data creation date range
-		addDateRangeQuery(query, 
+		addRangeQuery(query, 
 				request.getChildText("creationDateTo"), 
 				request.getChildText("creationDateFrom"), 
 				LuceneIndexField.CREATE_DATE);
@@ -667,6 +673,18 @@ public class LuceneQueryBuilder {
 			query.add(typeClause);
 		}
 
+		
+		addRangeQuery(query, 
+				request.getChildText(LuceneIndexField.DENOMINATOR), 
+				request.getChildText(LuceneIndexField.DENOMINATOR), 
+				LuceneIndexField.DENOMINATOR);
+		
+		addRangeQuery(query, 
+				request.getChildText(LuceneIndexField.DENOMINATOR_FROM), 
+				request.getChildText(LuceneIndexField.DENOMINATOR_TO), 
+				LuceneIndexField.DENOMINATOR);
+		
+		
         //
 		// inspire
 		//
@@ -804,12 +822,6 @@ public class LuceneQueryBuilder {
 		//
 		// bounding box
 		//
-		// TODO handle regions if set
-		// Note that this has been removed from the NGR search options
-		Element region = request.getChild("region");
-		Element regionData = request.getChild("regions");
-
-
 		String eastBL = request.getChildText("eastBL");
 		String westBL = request.getChildText("westBL");
 		String northBL = request.getChildText("northBL");
@@ -826,7 +838,93 @@ public class LuceneQueryBuilder {
 	}
 
 	
-	private void addDateRangeQuery(BooleanQuery query, String dateTo,
+	/**
+	 * Add a range query according to field type. If field type is numeric,
+	 * then a numeric range query is used. If not a default range query is uses.
+	 * 
+	 * Range query include lower and upper bounds by default.
+	 * 
+	 * @param query
+	 * @param from
+	 * @param to
+	 * @param luceneIndexField
+	 */
+	private void addRangeQuery(BooleanQuery query, String from,
+			String to, String luceneIndexField) {
+		if (from == null && to == null)
+			return;
+		
+		LuceneConfigNumericField type = _numericFieldSet.get(luceneIndexField);
+		if (type == null) {
+			addTextRangeQuery(query, from, to, luceneIndexField);
+		} else {
+			addNumericRangeQuery(query, from, to, true, true, luceneIndexField, true);
+		}
+	}
+	
+	/**
+	 * Add a numeric range query according to field numeric type.
+	 * 
+	 * @param query
+	 * @param min
+	 * @param max
+	 * @param minInclusive 
+	 * @param maxExclusive 
+	 * @param luceneIndexField
+	 * @param required TODO
+	 */
+	private void addNumericRangeQuery(BooleanQuery query, String min,
+			String max, boolean minInclusive, boolean maxExclusive, String luceneIndexField, boolean required) {
+		if (min != null && max != null) {
+			String type = _numericFieldSet.get(luceneIndexField).getType();
+			
+			NumericRangeQuery rangeQuery = buildNumericRangeQueryForType(luceneIndexField,
+					min, max, minInclusive, maxExclusive, type);
+			
+			BooleanClause.Occur denoOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(required, false);
+			BooleanClause rangeClause = new BooleanClause(rangeQuery, denoOccur);
+			
+			query.add(rangeClause);	
+		}
+	}
+
+	public static NumericRangeQuery buildNumericRangeQueryForType(String fieldName,
+			String min, String max, boolean minInclusive, boolean maxInclusive, String type) {
+		NumericRangeQuery rangeQuery;
+		if ("double".equals(type)) {
+			rangeQuery = NumericRangeQuery.newDoubleRange(fieldName, 
+					 (min == null?Double.MIN_VALUE:Double.valueOf(min)), 
+					 (max == null?Double.MAX_VALUE:Double.valueOf(max)),
+					 true, true);
+			
+		} else if ("float".equals(type)) {
+			rangeQuery = NumericRangeQuery.newFloatRange(fieldName, 
+					 (min == null?Float.MIN_VALUE:Float.valueOf(min)), 
+					 (max == null?Float.MAX_VALUE:Float.valueOf(max)), 
+					 true, true);
+		} else if ("long".equals(type)) {
+			rangeQuery = NumericRangeQuery.newLongRange(fieldName, 
+					 (min == null?Long.MIN_VALUE:Long.valueOf(min)), 
+					 (max == null?Long.MAX_VALUE:Long.valueOf(max)), 
+					 true, true);
+		} else {
+			rangeQuery = NumericRangeQuery.newIntRange(fieldName, 
+					 (min == null?Integer.MIN_VALUE:Integer.valueOf(min)), 
+					 (max == null?Integer.MAX_VALUE:Integer.valueOf(max)), 
+					 true, true);
+		}
+		return rangeQuery;
+	}
+	
+	/**
+	 * Add a date range query for a text field type.
+	 *  
+	 * @param query
+	 * @param dateTo
+	 * @param dateFrom
+	 * @param luceneIndexField
+	 */
+	private void addTextRangeQuery(BooleanQuery query, String dateTo,
 			String dateFrom, String luceneIndexField) {
 		if((dateTo != null && dateTo.length() > 0) || (dateFrom != null && dateFrom.length() > 0)) {
 			Term lowerTerm = null;
@@ -850,9 +948,20 @@ public class LuceneQueryBuilder {
 		}
 	}
 	
+	
 	/**
-	 * Handle geographical search 
-	 * FIXME : should be handle via spatial index search
+	 *  Handle geographical search using Lucene.
+	 * 
+	 *  East, North, South and West bounds are indexed as numeric in Lucene.
+	 *  
+	 *  Lucene bounding box searches are probably faster than using spatial 
+	 *  index using geometry criteria. It does not support complex geometries 
+	 *  and all type of relation. 
+	 *  
+	 *  If metadata contains multiple bounding boxes invalid results may appear.  
+	 * 
+	 *  If relation is null or is not a known relation type (See {@link Relation}),
+	 *  overlap is used.
 	 * 
 	 * @param query
 	 * @param relation
@@ -863,59 +972,32 @@ public class LuceneQueryBuilder {
 	 */
 	private void addBoundingBoxQuery(BooleanQuery query, String relation,
 			String eastBL, String westBL, String northBL, String southBL) {
-
-		// ignore negative values
-		if (eastBL != null) {
-			eastBL = toPositiveValue(eastBL);
-		}
-		if (westBL != null) {
-			westBL = toPositiveValue(westBL);
-		}
-		if (northBL != null) {
-			northBL = toPositiveValue(northBL);
-		}
-		if (southBL != null) {
-			southBL = toPositiveValue(southBL);
-		}
-
-		// Handle relation parameter
-		if (relation == null)
-			return;
-
-		// Default inclusive value for TermRangeQuery (includeLower and includeUpper)
+		
+		// Default inclusive value for RangeQuery (includeLower and includeUpper)
 		boolean inclusive = true;
+		
+		
+		if (relation == null || relation.equals(Geonet.SearchResult.Relation.OVERLAPS)){
 
-		// Default Occur value for BBox query
-		BooleanClause.Occur defaultBBoxOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-
-		//
-		// overlaps (default value) : uses the equivalence
-		// -(a + b + c + d) = -a * -b * -c * -d
-		//
-		if (relation.equals(Geonet.SearchResult.Relation.OVERLAPS)) {
+			//
+			// overlaps (default value) : uses the equivalence
+			// -(a + b + c + d) = -a * -b * -c * -d
+			//
 			// eastBL
 			if (westBL != null) {
-				String lowerTerm = Double.toString(Double.parseDouble(westBL) + 1);
-				String upperTerm = maxBoundingLongitudeValue;
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.EAST, lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, westBL, String.valueOf(maxBoundingLongitudeValue), inclusive, inclusive, LuceneIndexField.EAST, true);
 			}
 			// westBL
 			if (eastBL != null) {
-				String lowerTerm = minBoundingLongitudeValue;
-				String upperTerm = Double.toString(Double.parseDouble(eastBL) - 1);
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.WEST, lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, String.valueOf(minBoundingLongitudeValue), eastBL, inclusive, inclusive, LuceneIndexField.WEST, true);
 			}
 			// northBL
 			if (southBL != null) {
-				String lowerTerm = Double.toString(Double.parseDouble(southBL) + 1);
-				String upperTerm = maxBoundingLatitudeValue;
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.NORTH, lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, southBL, String.valueOf(maxBoundingLatitudeValue), inclusive, inclusive, LuceneIndexField.NORTH, true);
 			}
 			// southBL
 			if (northBL != null) {
-				String lowerTerm = minBoundingLatitudeValue;
-				String upperTerm = Double.toString(Double.parseDouble(northBL) - 1);
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.SOUTH, lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, String.valueOf(minBoundingLatitudeValue), northBL, inclusive, inclusive, LuceneIndexField.SOUTH, true);
 			}
 		}
 		//
@@ -925,85 +1007,61 @@ public class LuceneQueryBuilder {
 		else if (relation.equals(Geonet.SearchResult.Relation.EQUAL)) {
 			// eastBL
 			if(eastBL != null) {
-				String lowerTerm = Double.toString(Double.parseDouble(eastBL) - 1);
-				String upperTerm = Double.toString(Double.parseDouble(eastBL) + 1);
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.EAST,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, eastBL, eastBL, inclusive, inclusive, LuceneIndexField.EAST, true);
 			}
 			// westBL
 			if(westBL != null) {
-				String lowerTerm = Double.toString(Double.parseDouble(westBL) - 1);
-				String upperTerm = Double.toString(Double.parseDouble(westBL) + 1);
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.WEST,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, westBL, westBL, inclusive, inclusive, LuceneIndexField.WEST, true);
 			}
 			// northBL
 			if(northBL != null) {
-				String lowerTerm = Double.toString(Double.parseDouble(northBL) - 1);
-				String upperTerm = Double.toString(Double.parseDouble(northBL) + 1);
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.NORTH,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, northBL, northBL, inclusive, inclusive, LuceneIndexField.NORTH, true);
 			}
 			// southBL
 			if(southBL != null) {
-				String lowerTerm = Double.toString(Double.parseDouble(southBL) - 1);
-				String upperTerm = Double.toString(Double.parseDouble(southBL) + 1);
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.SOUTH,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, southBL, southBL, inclusive, inclusive, LuceneIndexField.SOUTH, true);
 			}
 		}
 		//
-		// encloses: metadata rectangle encloses target rectangle shrunk by 1 degree
+		// encloses: metadata rectangle encloses target rectangle
 		//
 		else if(relation.equals(Geonet.SearchResult.Relation.ENCLOSES)) {
 			// eastBL
 			if(eastBL != null) {
-				String lowerTerm = Double.toString(Double.parseDouble(eastBL) - 1);
-				String upperTerm = maxBoundingLongitudeValue;
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.EAST,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, eastBL, String.valueOf(maxBoundingLongitudeValue), inclusive, inclusive, LuceneIndexField.EAST, true);
 			}
 			// westBL
 			if(westBL != null) {
-				String lowerTerm = minBoundingLongitudeValue;
-				String upperTerm = Double.toString(Double.parseDouble(westBL) + 1);
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.WEST,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, String.valueOf(minBoundingLongitudeValue), westBL, inclusive, inclusive, LuceneIndexField.WEST, true);
 			}
 			// northBL
 			if(northBL != null) {
-				String lowerTerm = Double.toString(Double.parseDouble(northBL) - 1);
-				String upperTerm = maxBoundingLatitudeValue;
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.NORTH,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, northBL, String.valueOf(maxBoundingLatitudeValue), inclusive, inclusive, LuceneIndexField.NORTH, true);
 			}
 			// southBL
 			if(southBL != null) {
-				String lowerTerm = minBoundingLatitudeValue;
-				String upperTerm = Double.toString(Double.parseDouble(southBL) + 1);
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.SOUTH,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, String.valueOf(minBoundingLatitudeValue), southBL, inclusive, inclusive, LuceneIndexField.SOUTH, true);
 			}
 		}
 		//
-		// fullyEnclosedWithin: metadata rectangle fully enclosed within target rectangle augmented by 1 degree
+		// fullyEnclosedWithin: metadata rectangle fully enclosed within target rectangle
 		//
 		else if(relation.equals(Geonet.SearchResult.Relation.ENCLOSEDWITHIN)) {
 			// eastBL
 			if(eastBL != null) {
-				String lowerTerm = Double.toString(Double.parseDouble(westBL) - 1);
-				String upperTerm = Double.toString(Double.parseDouble(eastBL) + 1);
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.EAST,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, westBL, eastBL, inclusive, inclusive, LuceneIndexField.EAST, true);
 			}
 			// westBL
 			if(westBL != null) {
-				String lowerTerm = Double.toString(Double.parseDouble(westBL) - 1);
-				String upperTerm = Double.toString(Double.parseDouble(eastBL) + 1); 
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.WEST,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, westBL, eastBL, inclusive, inclusive, LuceneIndexField.WEST, true);
 			}
 			// northBL
 			if(northBL != null) {
-				String lowerTerm = Double.toString(Double.parseDouble(southBL) - 1);
-				String upperTerm = Double.toString(Double.parseDouble(northBL) + 1);
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.NORTH,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, southBL, northBL, inclusive, inclusive, LuceneIndexField.NORTH, true);
 			}
 			// southBL
 			if(southBL != null) {
-				String lowerTerm = Double.toString(Double.parseDouble(southBL) - 1);
-				String upperTerm = Double.toString(Double.parseDouble(northBL) + 1);
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.SOUTH,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, southBL, northBL, inclusive, inclusive, LuceneIndexField.SOUTH, true);
 			}
 		}
 		//
@@ -1014,60 +1072,23 @@ public class LuceneQueryBuilder {
 		else if(relation.equals(Geonet.SearchResult.Relation.OUTSIDEOF)) {
 			// eastBL
 			if(westBL != null) {
-				String lowerTerm = minBoundingLongitudeValue;
-				String upperTerm = Double.toString(Double.parseDouble(westBL) + 1);
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.EAST,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, String.valueOf(minBoundingLongitudeValue), westBL, inclusive, inclusive, LuceneIndexField.EAST, false);
 			}
 			// westBL
 			if(eastBL != null) {
-				String lowerTerm = Double.toString(Double.parseDouble(eastBL) - 1);
-				String upperTerm = maxBoundingLongitudeValue; 
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.WEST,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, eastBL, String.valueOf(maxBoundingLongitudeValue), inclusive, inclusive, LuceneIndexField.WEST, false);
 			}
 			// northBL
 			if(southBL != null) {
-				String lowerTerm = minBoundingLatitudeValue;
-				String upperTerm = Double.toString(Double.parseDouble(southBL) + 1);
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.NORTH,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, String.valueOf(minBoundingLatitudeValue), southBL, inclusive, inclusive, LuceneIndexField.NORTH, false);
 			}
 			// southBL
 			if(northBL != null) {
-				String lowerTerm = Double.toString(Double.parseDouble(northBL) - 1);
-				String upperTerm = maxBoundingLatitudeValue;
-				query.add(getBBoxTermRangeQuery(LuceneIndexField.SOUTH,lowerTerm, upperTerm, inclusive), defaultBBoxOccur);
+				addNumericRangeQuery(query, northBL, String.valueOf(maxBoundingLatitudeValue), inclusive, inclusive, LuceneIndexField.SOUTH, false);
 			}
 		}
 	}
 	
-	/**
-	 * Build TermRangeQuery for bounding box values
-	 * 
-	 * @param field - The field that holds both lower and upper terms.
-	 * @param lowerTerm - The term text at the lower end of the range
-	 * @param upperTerm - The term text at the upper end of the range
-	 * @param inclusive - If true, the lowerTerm and upperTerm are included in the range.
-	 * @return
-	 */
-	private TermRangeQuery getBBoxTermRangeQuery(String field,
-			String lowerTerm, String upperTerm, boolean inclusive) {
-
-        return new TermRangeQuery(field, lowerTerm,
-                upperTerm, inclusive, inclusive);
-	}
-	
-	
-	/**
-	 * Ignore negative bounding box values 
-	 * 
-	 * @param boundingBoxValue
-	 * @return String
-	 */
-	private String toPositiveValue (String boundingBoxValue) {
-		double tmpBoundingBoxValue = Double.parseDouble(boundingBoxValue) ;
-		boundingBoxValue = Double.toString(360 + tmpBoundingBoxValue);
-		return boundingBoxValue;
-	}
-
     private boolean onlyWildcard(String s) {
         return s != null && s.trim().equals("*") ? true : false;
     }

@@ -31,7 +31,6 @@
 			<xml name="csw-record" base="xml/schemas/csw-record/loc" file="labels.xml" />			
 			<call name="session" class="jeeves.guiservices.session.Get" />
 			<call name="env" class="org.fao.geonet.guiservices.util.Env" />
-			<call name="app" class="org.fao.geonet.guiservices.util.GetAppPath" />
 			<call name="results" class="org.fao.geonet.guiservices.search.GetResultsInfo" />
 		    <xml name="config" file="WEB-INF/config-gui.xml" localized="false" />
 		</gui>
@@ -189,15 +188,17 @@
 
 	<appHandler class="org.fao.geonet.Geonetwork">
 		<param name="luceneDir" value="WEB-INF/lucene" />
+		<param name="dataDir" value="WEB-INF/data" />
+		
 		<!-- this must be a directory in web/geonetwork because html is served -->
 		<param name="htmlCacheDir" value="htmlCache" />
-		<param name="dataDir" value="../../data" />
-		<param name="licenseDir" value="WEB-INF/licenses" />
-		<param name="thesauriDir" value="WEB-INF/gsthesauri" />
-		<param name="codeListDir" value="xml/codelist" />
-	  <param name="summaryConfig" value="WEB-INF/config-summary.xml" />
-    <param name="guiConfig" value="WEB-INF/config-gui.xml" />        
-    <param name="luceneConfig" value="WEB-INF/config-lucene.xml" />        
+		
+		<param name="licenseDir" value="WEB-INF/licenses" /> 
+		
+	  	<param name="summaryConfig" value="WEB-INF/config-summary.xml" />
+    	<param name="guiConfig" value="WEB-INF/config-gui.xml" />        
+    	<param name="luceneConfig" value="WEB-INF/config-lucene.xml" />        
+		
 		<!-- Preferred schema parameter is used on import
 			when a ZIP or MEF file is imported with more than one
 			xml files. For example, export produce one file for

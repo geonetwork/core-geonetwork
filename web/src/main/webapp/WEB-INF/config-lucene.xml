@@ -129,4 +129,19 @@
 		<Field name="operatesOn"/>
 		<Field name="subject"/>
 	</tokenized>
+	
+	<!-- All Lucene numeric fields.
+		Use of numeric field will increase index size.
+		It could give better search results for numeric values.
+		
+		Type attribute : int (default), double, long, float
+		Precision attribute : see NumericUtils.PRECISION_STEP_DEFAULT
+	-->
+	<numeric>
+		<Field name="denominator"/>
+		<Field name="northBL" type="double"/>
+		<Field name="eastBL" type="double"/>
+		<Field name="southBL" type="double"/>
+		<Field name="westBL" type="double"/>
+	</numeric> 
 </config>

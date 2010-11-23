@@ -17,13 +17,9 @@
 	<xsl:template match="/">
 		<Document>
 	
-			<xsl:apply-templates select="/metadata/idinfo/citation/citeinfo/title">
-				<xsl:with-param name="token" select="'true'"/>
-			</xsl:apply-templates>
+			<xsl:apply-templates select="/metadata/idinfo/citation/citeinfo/title"/>
 			
-			<xsl:apply-templates select="/metadata/idinfo/descript/abstract">
-				<xsl:with-param name="token" select="'true'"/>
-			</xsl:apply-templates>
+			<xsl:apply-templates select="/metadata/idinfo/descript/abstract"/>
 			
 			<xsl:apply-templates select="/metadata/idinfo/spdom/bounding/westbc" mode="latLon">
 				<xsl:with-param name="name" select="'westBL'"/>
@@ -41,22 +37,18 @@
 			<xsl:apply-templates select="/metadata/idinfo/keywords/theme/themekey">
 				<xsl:with-param name="name" select="'keyword'"/>
 				<xsl:with-param name="store" select="'true'"/>
-				<xsl:with-param name="token" select="'false'"/>
 			</xsl:apply-templates>
 			<xsl:apply-templates select="/metadata/idinfo/keywords/place/placekey">
 				<xsl:with-param name="name" select="'keyword'"/>
 				<xsl:with-param name="store" select="'true'"/>
-				<xsl:with-param name="token" select="'false'"/>
 			</xsl:apply-templates>
 			<xsl:apply-templates select="/metadata/idinfo/keywords/stratum/stratkey">
 				<xsl:with-param name="name" select="'keyword'"/>
 				<xsl:with-param name="store" select="'true'"/>
-				<xsl:with-param name="token" select="'false'"/>
 			</xsl:apply-templates>
 			<xsl:apply-templates select="/metadata/idinfo/keywords/temporal/tempkey">
 				<xsl:with-param name="name" select="'keyword'"/>
 				<xsl:with-param name="store" select="'true'"/>
-				<xsl:with-param name="token" select="'false'"/>
 			</xsl:apply-templates>
 	
 			<Field name="any" store="false" index="true" token="true">
@@ -72,7 +64,7 @@
 				
             <!-- not tokenized title for sorting -->
             <Field name="_title" string="{string(/metadata/idinfo/citation/citeinfo/title)}" 
-                    store="true" index="true" token="false"/>
+                    store="true" index="true"/>
         </Document>
 	</xsl:template>
 	
@@ -83,17 +75,16 @@
 		<xsl:param name="name"  select="name(.)"/>
 		<xsl:param name="store" select="'false'"/>
 		<xsl:param name="index" select="'true'"/>
-		<xsl:param name="token" select="'false'"/>
 		
-	   <Field name="{$name}" string="{string(.)}" store="{$store}" index="{$index}" token="{$token}"/>
+	   <Field name="{$name}" string="{string(.)}" store="{$store}" index="{$index}"/>
 	</xsl:template>
 	
 	<!-- ========================================================================================= -->
 	
-	<!-- latlon coordinates + 360, zero-padded, indexed, not stored, not tokenized -->
+	<!-- latlon coordinates indexed as numeric -->
 	<xsl:template match="*" mode="latLon">
 		<xsl:param name="name" select="name(.)"/>
-		<Field name="{$name}" string="{string(.) + 360}" store="true" index="true" token="false"/>
+		<Field name="{$name}" string="{string(.)}" store="true" index="true" token="false"/>
 	</xsl:template>
 	
 	<!-- ========================================================================================= -->

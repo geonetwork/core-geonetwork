@@ -36,8 +36,12 @@ import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Field.Index;
+import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.document.FieldSelectorResult;
+import org.apache.lucene.document.Fieldable;
+import org.apache.lucene.document.NumericField;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
@@ -48,6 +52,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.spatial.ContainsFilter;
 import org.fao.geonet.kernel.search.spatial.CrossesFilter;
 import org.fao.geonet.kernel.search.spatial.EqualsFilter;
@@ -336,9 +341,9 @@ public class SearchManager
 		_htmlCacheDir = htmlCacheDir;
 
 
-        _luceneDir = new File(luceneDir+ "/nonspatial");
+        _luceneDir = new File(luceneDir + "/nonspatial");
 
-		if (!_luceneDir.isAbsolute()) _luceneDir = new File(appPath + luceneDir+ "/nonspatial");
+		if (!_luceneDir.isAbsolute()) _luceneDir = new File(luceneDir+ "/nonspatial");
 
      _luceneDir.getParentFile().mkdirs();
 
@@ -1007,8 +1012,6 @@ public class SearchManager
 		_indexReader.releaseReader(reader);
 	}
 
-	//-----------------------------------------------------------------------------
-	// private methods
 
     /**
      *  Creates an index in directory luceneDir if not already there.
@@ -1039,10 +1042,8 @@ public class SearchManager
 		_indexWriter = new LuceneIndexWriterFactory(_luceneDir, _analyzer, _luceneConfig);
 	}
 
-	//----------------------------------------------------------------------------
-	/*
-	 *  Optimizes the Lucene index.
-	 *
+	/**
+	 *  Optimizes the Lucene index (See {@link IndexWriter#optimize()}).
 	 */
 	public boolean optimizeIndex() {
 		try {
@@ -1058,8 +1059,7 @@ public class SearchManager
 		}
 	}
 
-	//----------------------------------------------------------------------------
-	/*
+	/**
 	 *  Rebuilds the Lucene index.
 	 *
 	 *  @param context
@@ -1092,25 +1092,29 @@ public class SearchManager
 	}
 
     /**
-     * Creates a new document.
+     * Creates a new {@link Document} for each input fields in xml
+     * taking {@link LuceneConfig} and field's attributes for configuration. 
      *
-     * @param xml
+     * @param xml	The list of field to be indexed.
      * @return
      */
 	private Document newDocument(Element xml)
 	{
 		Document doc = new Document();
+		
         for (Object o : xml.getChildren()) {
             Element field = (Element) o;
             String name = field.getAttributeValue("name");
             String string = field.getAttributeValue("string"); // Lower case field is handled by Lucene Analyzer.
             if (string.trim().length() > 0) {
-                String sStore = field.getAttributeValue("store");
+            	String sStore = field.getAttributeValue("store");
                 String sIndex = field.getAttributeValue("index");
-                String sToken = field.getAttributeValue("token");
+
                 boolean bStore = sStore != null && sStore.equals("true");
                 boolean bIndex = sIndex != null && sIndex.equals("true");
-                boolean token = sToken != null && sToken.equals("true");
+                boolean token = _luceneConfig.isTokenizedField(name);
+                boolean isNumeric = _luceneConfig.isNumericField(name);
+                
                 Field.Store store;
                 if (bStore) {
                     store = Field.Store.YES;
@@ -1128,13 +1132,62 @@ public class SearchManager
                 if (!bIndex) {
                     index = Field.Index.NO;
                 }
-                doc.add(new Field(name, string, store, index));
+                if (isNumeric) {
+                	addNumericField(doc, name, string, store, bIndex);
+                } else {
+                	doc.add(new Field(name, string, store, index));
+                }
             }
         }
 		return doc;
 	}
 
-	//--------------------------------------------------------------------------------
+	/**
+	 * Create Lucene numeric field
+	 * 
+	 * @param doc	The document to add the field
+	 * @param name	The field name
+	 * @param string	The value to be indexed. It is parsed to its numeric type. If exception occurs
+	 * field is not added to the index. 
+	 * @param store
+	 * @param index
+	 * @return
+	 */
+	private void addNumericField(Document doc, String name, String string, Store store,
+			boolean index) {
+		LuceneConfigNumericField fieldConfig = _luceneConfig.getNumericField(name);
+		
+		// string = cleanNumericField(string);	
+		NumericField field = new NumericField(name, fieldConfig.getPrecisionStep(), store, index);
+		// TODO : reuse the numeric field for better performance
+		
+		Log.debug(Geonet.INDEX_ENGINE,
+				"Indexing numeric field: " + name +
+						" with value: " + string );
+		
+		try {
+			String paramType = fieldConfig.getType();
+			if ("double".equals(paramType)) {
+				double d = Double.valueOf(string);
+				field.setDoubleValue(d);
+			} else if ("float".equals(paramType)) {
+				float f = Float.valueOf(string);
+				field.setFloatValue(f);
+			} else if ("long".equals(paramType)) {
+				long l = Long.valueOf(string);
+				field.setLongValue(l);
+			} else {
+				int i = Integer.valueOf(string);
+				field.setIntValue(i);
+			}
+			
+			doc.add(field);
+		} catch (Exception e) {
+			Log.warning(Geonet.INDEX_ENGINE,
+					"Failed to index numeric field: " + name +
+							" with value: " + string + ", error is:" + e.getMessage());
+		}
+	}
 
 	public Spatial getSpatial()
     {

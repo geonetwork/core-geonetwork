@@ -21,49 +21,46 @@
 			<!-- === Title === -->
 			<xsl:apply-templates select="/gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString">
 				<xsl:with-param name="name" select="'title'"/>
-				<xsl:with-param name="token" select="'true'"/>
 			</xsl:apply-templates>
 
 			<!-- not tokenized title for sorting -->
-			<Field name="_title" string="{string(/gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString)}" store="true" index="true" token="false"/>
+			<Field name="_title" string="{string(/gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString)}" store="true" index="true"/>
 
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === Abstract === -->
 			<xsl:apply-templates select="/gfc:FC_FeatureCatalogue/gfc:scope/gco:CharacterString">
 				<xsl:with-param name="name" select="'abstract'"/>
-				<xsl:with-param name="token" select="'true'"/>
 			</xsl:apply-templates>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === Revision date === -->
 			<xsl:for-each select="/gfc:FC_FeatureCatalogue/gfc:versionDate/gco:Date">
-				<Field name="revisionDate" string="{string(.)}" store="true" index="true" token="false"/>
+				<Field name="revisionDate" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === metadata language === -->
 			<xsl:for-each select="/gfc:FC_FeatureCatalogue/gfc:language/gmd:LanguageCode">
-				<Field name="language" string="{string(.)}" store="true" index="true" token="false"/>
+				<Field name="language" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === Metadata file identifier (GUID in GeoNetwork) === -->
 			<xsl:apply-templates select="/gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString">
 				<xsl:with-param name="name" select="'fileId'"/>
-				<xsl:with-param name="token" select="'false'"/>
 			</xsl:apply-templates>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === Responsible organization === -->
 			<xsl:for-each select="/gfc:FC_FeatureCatalogue/gfc:producer/gmd:CI_ResponsibleParty">
 				<!-- TODO : Add complete xPath -->
-				<Field name="orgName" string="{string(.)}" store="true" index="true" token="true"/>
+				<Field name="orgName" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === all text === -->
-			<Field name="any" store="false" index="true" token="true">
+			<Field name="any" store="false" index="true">
 				<xsl:attribute name="string">
 					<xsl:apply-templates select="/gfc:FC_FeatureCatalogue" mode="allText"/>
 				</xsl:attribute>
@@ -71,7 +68,7 @@
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === Metadata type (iso19110 is used to describe attribute datasets) === -->
-			<Field name="type" string="model" store="true" index="true" token="false"/>
+			<Field name="type" string="model" store="true" index="true"/>
 
 
 		</Document>
@@ -84,9 +81,8 @@
 		<xsl:param name="name" select="name(.)"/>
 		<xsl:param name="store" select="'false'"/>
 		<xsl:param name="index" select="'true'"/>
-		<xsl:param name="token" select="'false'"/>
 
-		<Field name="{$name}" string="{string(.)}" store="{$store}" index="{$index}" token="{$token}"/>
+		<Field name="{$name}" string="{string(.)}" store="{$store}" index="{$index}"/>
 	</xsl:template>
 
 	<!-- ========================================================================================= -->
@@ -95,7 +91,7 @@
 	<xsl:template match="*[./*/@value]">
 		<xsl:param name="name" select="name(.)"/>
 
-		<Field name="{$name}" string="{*/@value}" store="false" index="true" token="false"/>
+		<Field name="{$name}" string="{*/@value}" store="false" index="true"/>
 	</xsl:template>
 
 	<!-- ========================================================================================= -->
@@ -104,7 +100,7 @@
 	<xsl:template match="*" mode="latLon">
 		<xsl:param name="name" select="name(.)"/>
 
-		<Field name="{$name}" string="{string(.) + 360}" store="true" index="true" token="false"/>
+		<Field name="{$name}" string="{string(.) + 360}" store="true" index="true"/>
 	</xsl:template>
 
 	<!-- ========================================================================================= -->

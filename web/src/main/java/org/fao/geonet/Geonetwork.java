@@ -115,6 +115,7 @@ public class Geonetwork implements ApplicationHandler
 
 		path    = context.getAppPath();
 		String baseURL = context.getBaseUrl();
+		String webappName = baseURL.substring(1);
 
 		ServerLib sl = new ServerLib(path);
 		String version = sl.getVersion();
@@ -122,12 +123,54 @@ public class Geonetwork implements ApplicationHandler
 		
 		logger.info("Initializing GeoNetwork " + version +  "." + subVersion +  " ...");
 
+		// Init directory path
+		ServiceConfig handlerConfig = new ServiceConfig(config.getChildren());
+
+		// Lucene
+		String luceneSystemDir = System.getProperty(webappName + ".lucene.dir");
+		String luceneDir = (luceneSystemDir != null ? luceneSystemDir : path
+				+ handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_DIR));
+		handlerConfig.setValue(Geonet.Config.LUCENE_DIR, luceneDir);
+		System.setProperty(webappName + ".lucene.dir", luceneDir);
+		
+		logger.info("   - Lucene directory is:" + luceneDir);
+		
+		
+		// Data directory
+		String defaultDataDir = handlerConfig.getMandatoryValue(Geonet.Config.DATA_DIR);
+		String dataSystemDir = System.getProperty(webappName + ".data.dir");
+		if (dataSystemDir != null)
+			initDataDirectory(dataSystemDir, path + defaultDataDir);
+		
+		String dataDir = (dataSystemDir != null ? dataSystemDir : path
+				+ defaultDataDir);
+		handlerConfig.setValue(Geonet.Config.DATA_DIR, dataDir);
+		if (!new File(dataDir).isAbsolute())
+			logger.info("   - Data directory is not an absolute path. Relative path is not recommended.\n" +
+					"Update " + webappName + ".data.dir environment variable or dataDir parameter in config.xml." );
+		
+		
+		String thesauriDir = dataDir + "/codelist/";
+		handlerConfig.setValue(Geonet.Config.CODELIST_DIR, thesauriDir);
+		
+		System.setProperty(webappName + ".data.dir", dataDir);
+		
+		logger.info("   - Data directory is:" + dataDir);
+
+
+		String luceneConfigXmlFile = handlerConfig
+				.getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
+		String summaryConfigXmlFile = handlerConfig
+				.getMandatoryValue(Geonet.Config.SUMMARY_CONFIG);
+		String htmlCacheDir = handlerConfig
+				.getMandatoryValue(Geonet.Config.HTMLCACHE_DIR);
+		
+		
 		JeevesJCS.setConfigFilename(path+"WEB-INF/classes/cache.ccf");
 		// force cache to be config'd so shutdown hook works correctly
 		JeevesJCS jcsDummy = JeevesJCS.getInstance(Processor.XLINK_JCS);
 
-		ServiceConfig handlerConfig = new ServiceConfig(config.getChildren());
-
+		
 		// --- Check current database and create database if an emty one is found
 		Dbms dbms = initDatabase(context);
 
@@ -146,8 +189,6 @@ public class Geonetwork implements ApplicationHandler
 		//--- Initialize thesaurus
 
 		logger.info("  - Thesaurus...");
-
-		String thesauriDir = handlerConfig.getMandatoryValue(Geonet.Config.CODELIST_DIR);
 
 		thesaurusMan = new ThesaurusManager(path, thesauriDir);
 
@@ -168,24 +209,30 @@ public class Geonetwork implements ApplicationHandler
 		if (Repositories.build(path, context)) {
 			logger.info("     Repositories file built from template.");
 
-			app_context = new  ClassPathXmlApplicationContext( handlerConfig.getMandatoryValue( Geonet.Config.JZKITCONFIG )   );
+			try {
+				app_context = new  ClassPathXmlApplicationContext( handlerConfig.getMandatoryValue( Geonet.Config.JZKITCONFIG )   );
 
-			// to have access to the GN context in spring-managed objects
-			ContextContainer cc = (ContextContainer)app_context.getBean("ContextGateway");
-			cc.setSrvctx(context);
+				// to have access to the GN context in spring-managed objects
+				ContextContainer cc = (ContextContainer)app_context.getBean("ContextGateway");
+				cc.setSrvctx(context);
 
-			if (!z3950Enable)
-				logger.info("     Server is Disabled.");
-			else
-			{
-				logger.info("     Server is Enabled.");
-	
-				UserSession session = new UserSession();
-				session.authenticate(null, "z39.50", "", "", "Guest");
-				context.setUserSession(session);
-				context.setIpAddress("127.0.0.1");
-				Server.init(host, z3950port, path, context, app_context);
+				if (!z3950Enable)
+					logger.info("     Server is Disabled.");
+				else
+				{
+					logger.info("     Server is Enabled.");
+		
+					UserSession session = new UserSession();
+					session.authenticate(null, "z39.50", "", "", "Guest");
+					context.setUserSession(session);
+					context.setIpAddress("127.0.0.1");
+					Server.init(host, z3950port, path, context, app_context);
+				}	
+			} catch (Exception e) {
+				logger.error("     Repositories file init FAILED - Z3950 server disabled and Z3950 client services (remote search, harvesting) may not work. Error is:" 
+						+ e.getMessage());
 			}
+			
 		} else {
 			logger.error("     Repositories file builder FAILED - Z3950 server disabled and Z3950 client services (remote search, harvesting) may not work.");
 		}
@@ -195,12 +242,7 @@ public class Geonetwork implements ApplicationHandler
 
 		logger.info("  - Search...");
 
-		String htmlCacheDir = handlerConfig.getMandatoryValue(Geonet.Config.HTMLCACHE_DIR);
-		String luceneDir = path + handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_DIR);
-		String summaryConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.SUMMARY_CONFIG);
-		String dataDir = path + handlerConfig.getMandatoryValue(Geonet.Config.DATA_DIR);
-        String luceneConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
-        LuceneConfig lc = new LuceneConfig(path + luceneConfigXmlFile);
+		LuceneConfig lc = new LuceneConfig(path + luceneConfigXmlFile);
         logger.info("  - Lucene configuration is:");
         logger.info(lc.toString());
         
@@ -297,6 +339,31 @@ public class Geonetwork implements ApplicationHandler
 		return gnContext;
 	}
 
+
+	/**
+	 * Check if data directory is empty or not. If empty,
+	 * add mandatory elements (codelist).
+	 *  
+	 * @param dataSystemDir
+	 * @param defaultDataDir 
+	 */
+	private void initDataDirectory(String dataSystemDir, String defaultDataDir) {
+		logger.info("   - Data directory initialization ...");
+		File dataDir = new File(dataSystemDir);
+		if (!dataDir.exists()) {
+			dataDir.mkdir();
+		}
+		File codelistDir = new File(dataSystemDir + "/codelist");
+		if (!codelistDir.exists()) {
+			logger.info("     - Copying codelists directory ...");
+			try {
+				BinaryFile.copyDirectory(new File(defaultDataDir + "/codelist"), codelistDir);
+			} catch (IOException e) {			
+				logger.info("     - Copy failed: " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
+	}
 
 	/**
 	 * Check if current database is running same version as the web application.

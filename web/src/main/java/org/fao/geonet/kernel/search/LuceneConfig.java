@@ -35,16 +35,17 @@ import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
 import org.apache.lucene.search.TopFieldCollector;
+import org.apache.lucene.util.NumericUtils;
 import org.apache.lucene.util.Version;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
 /**
- * Lucene configuration class load Lucene XML configuration file. 
+ * Lucene configuration class load Lucene XML configuration file.
  * 
  * @author fxprunayre
- *
+ * 
  */
 public class LuceneConfig {
 
@@ -54,7 +55,55 @@ public class LuceneConfig {
 
 	private File configurationFile;
 
+	/**
+	 * Lucene numeric field configuration
+	 */
+	public class LuceneConfigNumericField {
+		private String name;
+		private String DEFAULT_TYPE = "int";
+		private String type;
+		private int precisionStep = NumericUtils.PRECISION_STEP_DEFAULT;
+
+		public LuceneConfigNumericField(String name, String type,
+				String precisionStep) {
+			this.name = name;
+			if (type != null)
+				this.type = type;
+			else
+				this.type = DEFAULT_TYPE;
+
+			try {
+				int p = Integer.valueOf(precisionStep);
+				this.precisionStep = p;
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		public int getPrecisionStep() {
+			return precisionStep;
+		}
+
+		public boolean equals(Object a) {
+			if (this == a)
+				return true;
+			if (!(a instanceof LuceneConfigNumericField))
+				return false;
+			LuceneConfigNumericField f = (LuceneConfigNumericField) a;
+			return f.getName().equals(this.name);
+		}
+	};
+
 	private HashSet<String> tokenizedFields = new HashSet<String>();
+	private HashMap<String, LuceneConfigNumericField> numericFields = new HashMap<String, LuceneConfigNumericField>();
 
 	private String defaultAnalyzerClass;
 	private HashMap<String, Object[]> defaultAnalyzerParameters = new HashMap<String, Object[]>();
@@ -79,8 +128,7 @@ public class LuceneConfig {
 	private boolean trackDocScores = false;
 	private boolean trackMaxScore = false;
 	private boolean docsScoredInOrder = false;
-	
-	
+
 	private Version LUCENE_VERSION = Version.LUCENE_29;
 
 	/**
@@ -110,7 +158,8 @@ public class LuceneConfig {
 					LUCENE_VERSION = new Version("LUCENE_" + version, v);
 				} catch (Exception e) {
 					Log.warning(Geonet.SEARCH_ENGINE,
-							"Failed to set Lucene version to: " + version + ". Set to default LUCENE_29.");
+							"Failed to set Lucene version to: " + version
+									+ ". Set to default LUCENE_29.");
 					LUCENE_VERSION = new Version("LUCENE_29", 29000);
 				}
 			}
@@ -122,9 +171,8 @@ public class LuceneConfig {
 				try {
 					RAMBufferSizeMB = Double.valueOf(rb);
 				} catch (NumberFormatException e) {
-					Log
-							.warning(Geonet.SEARCH_ENGINE,
-									"Invalid double value for RAM buffer size. Using default value.");
+					Log.warning(Geonet.SEARCH_ENGINE,
+							"Invalid double value for RAM buffer size. Using default value.");
 					RAMBufferSizeMB = DEFAULT_RAMBUFFERSIZEMB;
 				}
 			}
@@ -136,36 +184,54 @@ public class LuceneConfig {
 				try {
 					MergeFactor = Integer.valueOf(mf);
 				} catch (NumberFormatException e) {
-					Log
-							.warning(Geonet.SEARCH_ENGINE,
-									"Invalid integer value for merge factor. Using default value.");
+					Log.warning(Geonet.SEARCH_ENGINE,
+							"Invalid integer value for merge factor. Using default value.");
 					MergeFactor = DEFAULT_MERGEFACTOR;
 				}
 			}
-			
-			
-			
 
 			// Tokenized fields
 			elem = luceneConfig.getChild("tokenized");
 			tokenizedFields = new HashSet<String>();
-			for (Object o : elem.getChildren()) {
-				if (o instanceof Element) {
-					String name = ((Element) o).getAttributeValue("name");
-					if (name == null) {
-						Log
-								.warning(
-										Geonet.SEARCH_ENGINE,
-										"Tokenized element must have a name attribute, check Lucene configuration file.");
-					} else {
-						tokenizedFields.add(name);
+			if (elem != null) {
+				for (Object o : elem.getChildren()) {
+					if (o instanceof Element) {
+						String name = ((Element) o).getAttributeValue("name");
+						if (name == null) {
+							Log.warning(
+									Geonet.SEARCH_ENGINE,
+									"Tokenized element must have a name attribute, check Lucene configuration file.");
+						} else {
+							tokenizedFields.add(name);
+						}
 					}
 				}
 			}
 
-			
-			
-			
+			// Numeric fields
+			elem = luceneConfig.getChild("numeric");
+			numericFields = new HashMap<String, LuceneConfigNumericField>();
+			if (elem != null) {
+				for (Object o : elem.getChildren()) {
+					if (o instanceof Element) {
+						String name = ((Element) o).getAttributeValue("name");
+						String type = ((Element) o).getAttributeValue("type");
+						String precisionStep = ((Element) o)
+								.getAttributeValue("precision");
+						if (name == null) {
+							Log.warning(
+									Geonet.SEARCH_ENGINE,
+									"Numeric field element must have a name attribute, check Lucene configuration file.");
+						} else {
+
+							LuceneConfigNumericField field = new LuceneConfigNumericField(
+									name, type, precisionStep);
+							numericFields.put(name, field);
+						}
+					}
+				}
+			}
+
 			// Default analyzer
 			elem = luceneConfig.getChild("defaultAnalyzer");
 			if (elem != null) {
@@ -183,21 +249,17 @@ public class LuceneConfig {
 					String name = e.getAttributeValue("name");
 					String analyzer = e.getAttributeValue("analyzer");
 					if (name == null || analyzer == null) {
-						Log
-								.warning(
-										Geonet.SEARCH_ENGINE,
-										"Field must have a name and an analyzer attribute, check Lucene configuration file.");
+						Log.warning(
+								Geonet.SEARCH_ENGINE,
+								"Field must have a name and an analyzer attribute, check Lucene configuration file.");
 					} else {
 						fieldSpecificAnalyzers.put(name, analyzer);
-						loadClassParameters(ANALYZER_CLASS, name, analyzer, e
-								.getChildren("Param"));
+						loadClassParameters(ANALYZER_CLASS, name, analyzer,
+								e.getChildren("Param"));
 					}
 				}
 			}
 
-			
-			
-			
 			// Search
 			Element searchConfig = luceneConfig.getChild("search");
 
@@ -207,11 +269,10 @@ public class LuceneConfig {
 				// TODO : maybe try to create a boost query instance to
 				// check class is in classpath.
 				boostQueryClass = elem.getAttribute("name").getValue();
-				loadClassParameters(BOOST_CLASS, "", boostQueryClass, elem
-						.getChildren("Param"));
+				loadClassParameters(BOOST_CLASS, "", boostQueryClass,
+						elem.getChildren("Param"));
 			}
-			
-			
+
 			// Score
 			elem = searchConfig.getChild("trackDocScores");
 			if (elem != null && elem.getText().equals("true")) {
@@ -227,11 +288,13 @@ public class LuceneConfig {
 			}
 
 		} catch (FileNotFoundException e) {
-			Log.error(Geonet.SEARCH_ENGINE,
+			Log.error(
+					Geonet.SEARCH_ENGINE,
 					"Can't find Lucene configuration file. Error is: "
 							+ e.getMessage());
 		} catch (IOException e) {
-			Log.error(Geonet.SEARCH_ENGINE,
+			Log.error(
+					Geonet.SEARCH_ENGINE,
 					"Failed to load Lucene configuration file. Error is: "
 							+ e.getMessage());
 		} catch (JDOMException e) {
@@ -246,7 +309,8 @@ public class LuceneConfig {
 		if (children == null)
 			return; // No params
 
-		Log.debug(Geonet.SEARCH_ENGINE, "  Field: " + field + ", loading analyzer " + clazz + " ...");
+		Log.debug(Geonet.SEARCH_ENGINE, "  Field: " + field
+				+ ", loading analyzer " + clazz + " ...");
 
 		Object[] params = new Object[children.size()];
 		Class[] paramsClass = new Class[children.size()];
@@ -258,8 +322,8 @@ public class LuceneConfig {
 				String paramType = c.getAttributeValue("type");
 				String value = c.getAttributeValue("value");
 
-				Log.debug(Geonet.SEARCH_ENGINE, "    * Parameter: " + name + ", type: "
-						+ paramType + ", value: " + value);
+				Log.debug(Geonet.SEARCH_ENGINE, "    * Parameter: " + name
+						+ ", type: " + paramType + ", value: " + value);
 
 				try {
 
@@ -286,13 +350,15 @@ public class LuceneConfig {
 					} else if (value != null) {
 						params[i] = value;
 					} else {
-						// No value. eg. Version 
+						// No value. eg. Version
 					}
-					
+
 					i++;
-					
+
 				} catch (ClassNotFoundException e) {
-					Log.warning(Geonet.SEARCH_ENGINE, "  Class not found for parameter: " + name + ", type: " + paramType);
+					Log.warning(Geonet.SEARCH_ENGINE,
+							"  Class not found for parameter: " + name
+									+ ", type: " + paramType);
 					e.printStackTrace();
 					return;
 				}
@@ -301,7 +367,7 @@ public class LuceneConfig {
 		}
 
 		String id = field + clazz;
-		
+
 		switch (type) {
 		case ANALYZER_CLASS:
 			analyzerParametersClass.put(id, paramsClass);
@@ -331,8 +397,47 @@ public class LuceneConfig {
 
 	/**
 	 * 
-	 * @param analyzer	The analyzer name (could be a class name 
-	 * or field concatenated with class name for specific field analyzer)
+	 * @param name
+	 * @return	True if the field has to be tokenized
+	 */
+	public boolean isTokenizedField(String name) {
+		return this.tokenizedFields.contains(name);
+	}
+
+	/**
+	 * 
+	 * @return The list of numeric fields which could not determined using
+	 *         Lucene API.
+	 */
+	public HashMap<String, LuceneConfigNumericField> getNumericFields() {
+		return this.numericFields;
+	}
+
+	/**
+	 * 
+	 * @return The list of numeric fields which could not determined using
+	 *         Lucene API.
+	 */
+	public LuceneConfigNumericField getNumericField(String fieldName) {
+		return this.numericFields.get(fieldName);
+	}
+
+	/**
+	 * Check if a field is numeric or not
+	 * 
+	 * @param The
+	 *            field name
+	 * @return True if the field has to be indexed as a numeric field
+	 */
+	public boolean isNumericField(String fieldName) {
+		return this.numericFields.containsKey(fieldName);
+	}
+
+	/**
+	 * 
+	 * @param analyzer
+	 *            The analyzer name (could be a class name or field concatenated
+	 *            with class name for specific field analyzer)
 	 * @return The list of values for analyzer parameters.
 	 */
 	public Object[] getAnalyzerParameter(String analyzer) {
@@ -341,8 +446,9 @@ public class LuceneConfig {
 
 	/**
 	 * 
-	 * @param analyzer	The analyzer name (could be a class name 
-	 * or field concatenated with class name for specific field analyzer)
+	 * @param analyzer
+	 *            The analyzer name (could be a class name or field concatenated
+	 *            with class name for specific field analyzer)
 	 * @return The list of classes for analyzer parameters
 	 */
 	public Class[] getAnalyzerParameterClass(String analyzer) {
@@ -432,8 +538,10 @@ public class LuceneConfig {
 		sb.append(" * Default analyzer: " + getDefaultAnalyzerClass() + "\n");
 		sb.append(" * Field analyzers: "
 				+ getFieldSpecificAnalyzers().toString() + "\n");
-		sb.append(" * Tokenized field: " + getTokenizedField().toString()
+		sb.append(" * Tokenized fields: " + getTokenizedField().toString()
 				+ "\n");
+		sb.append(" * Numeric fields: "
+				+ getNumericFields().keySet().toString() + "\n");
 		sb.append(" * Search boost query: " + getBoostQueryClass() + "\n");
 		sb.append(" * Score: \n");
 		sb.append("  * trackDocScores: " + isTrackDocScores() + " \n");
@@ -447,9 +555,10 @@ public class LuceneConfig {
 	}
 
 	/**
-	 * @see TopFieldCollector#create(org.apache.lucene.search.Sort, int, boolean, boolean, boolean, boolean)
+	 * @see TopFieldCollector#create(org.apache.lucene.search.Sort, int,
+	 *      boolean, boolean, boolean, boolean)
 	 * 
-	 * @return	whether document scores should be tracked and set on the results.
+	 * @return whether document scores should be tracked and set on the results.
 	 */
 	public boolean isTrackDocScores() {
 		return trackDocScores;
@@ -460,9 +569,11 @@ public class LuceneConfig {
 	}
 
 	/**
-	 * @see TopFieldCollector#create(org.apache.lucene.search.Sort, int, boolean, boolean, boolean, boolean)
+	 * @see TopFieldCollector#create(org.apache.lucene.search.Sort, int,
+	 *      boolean, boolean, boolean, boolean)
 	 * 
-	 * @return	whether the query's maxScore should be tracked and set on the resulting TopDocs
+	 * @return whether the query's maxScore should be tracked and set on the
+	 *         resulting TopDocs
 	 */
 	public boolean isTrackMaxScore() {
 		return trackMaxScore;
@@ -473,9 +584,11 @@ public class LuceneConfig {
 	}
 
 	/**
-	 * @see TopFieldCollector#create(org.apache.lucene.search.Sort, int, boolean, boolean, boolean, boolean)
+	 * @see TopFieldCollector#create(org.apache.lucene.search.Sort, int,
+	 *      boolean, boolean, boolean, boolean)
 	 * 
-	 * @return	whether documents are scored in doc Id order or not by the given Scorer
+	 * @return whether documents are scored in doc Id order or not by the given
+	 *         Scorer
 	 */
 	public boolean isDocsScoredInOrder() {
 		return docsScoredInOrder;
