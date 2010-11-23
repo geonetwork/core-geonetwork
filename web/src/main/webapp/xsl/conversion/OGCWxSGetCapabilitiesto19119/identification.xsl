@@ -522,24 +522,28 @@
 		</xsl:choose>
 		
 		<!-- TODO WCS -->
-		<xsl:if test="//Layer[Name=$Name]/MinScaleDenominator|//wms:Layer[wms:Name=$Name]/wms:MinScaleDenominator">
+		<xsl:variable name="minScale" select="//Layer[Name=$Name]/MinScaleDenominator|//wms:Layer[wms:Name=$Name]/wms:MinScaleDenominator"/>
+		<xsl:if test="$minScale">
 			<spatialResolution>
 				<MD_Resolution>
 					<equivalentScale>
 						<MD_RepresentativeFraction>
 							<denominator>
-								<gco:Integer><xsl:value-of select="MinScaleDenominator|wms:MinScaleDenominator"/></gco:Integer>
+								<gco:Integer><xsl:value-of select="$minScale"/></gco:Integer>
 							</denominator>
 						</MD_RepresentativeFraction>
 					</equivalentScale>
 				</MD_Resolution>
 			</spatialResolution>
+		</xsl:if>
+		<xsl:variable name="maxScale" select="//Layer[Name=$Name]/MaxScaleDenominator|//wms:Layer[wms:Name=$Name]/wms:MaxScaleDenominator"/>
+		<xsl:if test="$maxScale">
 			<spatialResolution>
 				<MD_Resolution>
 					<equivalentScale>
 						<MD_RepresentativeFraction>
 							<denominator>
-								<gco:Integer><xsl:value-of select="MaxScaleDenominator|wms:MaxScaleDenominator"/></gco:Integer>
+								<gco:Integer><xsl:value-of select="$maxScale"/></gco:Integer>
 							</denominator>
 						</MD_RepresentativeFraction>
 					</equivalentScale>

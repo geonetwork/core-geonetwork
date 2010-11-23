@@ -141,17 +141,7 @@ Mapping between :
 			<metadataStandardVersion>
 				<gco:CharacterString>1.0</gco:CharacterString>
 			</metadataStandardVersion>
-
-			<!-- spatRepInfo-->
-			<!-- TODO - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-			<xsl:for-each select="refSysInfo">
-				<referenceSystemInfo>
-					<MD_ReferenceSystem>
-						<xsl:apply-templates select="." mode="RefSystemTypes"/>
-					</MD_ReferenceSystem>
-				</referenceSystemInfo>
-			</xsl:for-each>
+			
 
 			<!--mdExtInfo-->
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
