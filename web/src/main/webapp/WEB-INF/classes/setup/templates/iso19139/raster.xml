@@ -10,7 +10,7 @@
 	<gco:CharacterString></gco:CharacterString>
 </fileIdentifier>
 <language>
-	<gco:CharacterString>eng</gco:CharacterString>
+	<LanguageCode codeList="" codeListValue="eng"></LanguageCode>
 </language>
 <characterSet>
 	<MD_CharacterSetCode codeListValue="utf8" codeList="./resources/codeList.xml#MD_CharacterSetCode"/>

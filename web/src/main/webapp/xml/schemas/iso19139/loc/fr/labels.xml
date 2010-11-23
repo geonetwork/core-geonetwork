@@ -3216,6 +3216,11 @@
     <condition/>
     
   </element>
+	
+  <element name="gmd:LanguageCode">
+	<label>Code ISO de la langue</label>
+	<description></description>
+  </element>
   <element name="gmd:characterEncoding">
     <label>CharacterEncoding</label>
     <description>CharacterEncoding</description>

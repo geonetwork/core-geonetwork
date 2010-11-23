@@ -146,8 +146,8 @@
 
 			<!-- language -->
 
-			<xsl:for-each select="$identification/gmd:language/gco:CharacterString">
-				<dc:language><xsl:value-of select="."/></dc:language>
+			<xsl:for-each select="$identification/gmd:language">
+				<dc:language><xsl:value-of select="gco:CharacterString|gmd:LanguageCode/@codeListValue"/></dc:language>
 			</xsl:for-each>
 			
 			<!-- Lineage -->

@@ -52,7 +52,7 @@
 
 			<xsl:for-each select="mdLang">
 				<language>
-					<gco:CharacterString><xsl:value-of select="languageCode/@value"/></gco:CharacterString>
+					<LanguageCode codeList="" codeListValue="{languageCode/@value}"></LanguageCode>
 				</language>
 			</xsl:for-each>
 

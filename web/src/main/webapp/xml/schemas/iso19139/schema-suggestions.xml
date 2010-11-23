@@ -4,7 +4,13 @@
 	<field name="gmd:otherCitationDetails">
 		<suggest name="gco:CharacterString"/>
 		<suggest name="gmx:FileName"/>
-	</field> 
+	</field>
+	
+	<field name="gmd:language">
+		<suggest name="gco:CharacterString"/>
+		<suggest name="gmd:LanguageCode"/>
+	</field>
+	
 	<field name="gmx:FileName">
 		<suggest name="src"/>
 	</field> 
