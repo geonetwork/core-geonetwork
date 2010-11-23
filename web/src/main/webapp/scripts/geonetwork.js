@@ -388,4 +388,22 @@ function displayBox(content, contentDivId, modal) {
     }
 
 }
-	
+
+/**
+ * Toggle visibility of an element
+ * updating button icon.
+ * 
+ * @param btn	The button with downBt or rightBt css class icon
+ * @param elem	The element to display or not
+ */
+function toggleFieldset(btn, elem) {
+	if (btn.hasClassName('downBt')) {
+		btn.removeClassName('downBt');
+		elem.style.display='none';
+		btn.addClassName('rightBt');		
+	} else {
+		btn.removeClassName('rightBt');
+		elem.style.display='block';
+		btn.addClassName('downBt');
+	}
+}

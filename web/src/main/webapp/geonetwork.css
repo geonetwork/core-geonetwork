@@ -1202,3 +1202,17 @@ div.pageList {
     margin-bottom: 6px;
     margin-top: 8px;
 }
+
+.Bt{
+	float: left;
+	background-repeat: no-repeat;
+	width: 15px;
+	height: 15px;
+}
+
+.rightBt{
+	background-image: url(images/bullet_arrow_right.png);
+}
+.downBt{
+	background-image: url(images/bullet_arrow_down.png);
+}

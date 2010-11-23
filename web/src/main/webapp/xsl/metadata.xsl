@@ -857,17 +857,9 @@
 			<td class="padded-content" width="100%" colspan="2">
 				<fieldset class="metadata-block">
 					<legend class="block-legend">
+						<span>
 						<xsl:if test="/root/gui/config/metadata-view-toggleTab">
-							<input id="toggle{$id}" type="checkbox" class="toggle" 
-								onclick="$('toggled{$id}').style.display=($(this.id).checked?'none':'block');"
-							/>
-							<!--
-								Toggle mechanism could have been achieved without any JS but pure CSS
-								input.toggle { display: block; }
-								input.toggle:checked+table { display: none; }
-								
-								Issue is IE does not support pseudo class selection checked.
-							 -->
+							<div class="downBt Bt" onclick="toggleFieldset(this, $('toggled{$id}'));"></div>
 						</xsl:if>
 						<xsl:choose>
 							<xsl:when test="$helpLink!=''">
@@ -900,6 +892,7 @@
 								<xsl:with-param name="id" select="$id"/>
 							</xsl:call-template>
 						</xsl:if>
+						</span>
 					</legend>
 					<table width="100%" id="toggled{$id}">
 						<xsl:copy-of select="$content"/>
