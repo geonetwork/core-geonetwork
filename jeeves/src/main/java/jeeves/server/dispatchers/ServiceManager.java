@@ -59,6 +59,8 @@ import jeeves.utils.Xml;
 
 import org.jdom.Element;
 
+import javax.servlet.http.HttpServletResponse;
+
 //=============================================================================
 
 public class ServiceManager
@@ -419,7 +421,9 @@ public class ServiceManager
                     // TODO: Make redirect configurable for services in jeeves
                     if (srvName.equals("metadata.quiet.delete") || srvName.equals("user.login") || srvName.equals("user.logout")) {
                         HttpServiceRequest req2 = (HttpServiceRequest) req;
-                        req2.getHttpServletResponse().sendRedirect(baseUrl +  "/srv/" +  req.getLanguage() + "/" + forward);
+
+                        req2.getHttpServletResponse().setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+                        req2.getHttpServletResponse().setHeader("Location", baseUrl +  "/srv/" +  req.getLanguage() + "/" + forward); 
 
                         return;
                     } else {
