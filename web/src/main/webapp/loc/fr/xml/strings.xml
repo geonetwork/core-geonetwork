@@ -15,7 +15,11 @@
 	<!-- new strings - SP 2.5 -->
 	<showRemoteHTML>Show HTML from remote server</showRemoteHTML>
 	<!-- end new strings -->
-
+	
+	<drawRectangle js="true">Dessiner une emprise</drawRectangle>
+	<drawPolygon js="true">Dessiner un polygone</drawPolygon>
+	<drawCircle js="true">Dessiner un cercle</drawCircle>
+	<clear js="true">Effacer</clear>
 	<geopublisher>GéoPublication</geopublisher>
 	<geoPublisherWindowTitle js="true">Géo-publication : </geoPublisherWindowTitle>
 	<geopublisherHelp>Publier/dépublier la données dans GeoServer (WMS,WFS).</geopublisherHelp>

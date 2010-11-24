@@ -820,16 +820,16 @@
 
 		<xsl:choose>
 			<xsl:when test="contains($title,'CHOICE_ELEMENT')">
-				<a class="{$class}" title="{$conthelp}">Choice</a>
+				<span class="{$class}" title="{$conthelp}">Choice</span>
 			</xsl:when>
 			<xsl:when test="contains($title,'GROUP_ELEMENT')">
-				<a class="{$class}" title="{$conthelp}">Group</a>
+				<span class="{$class}" title="{$conthelp}">Group</span>
 			</xsl:when>
 			<xsl:when test="contains($title,'SEQUENCE_ELEMENT')">
-				<a class="{$class}" title="{$conthelp}">Sequence</a>
+				<span class="{$class}" title="{$conthelp}">Sequence</span>
 			</xsl:when>
 			<xsl:otherwise>
-				<a class="{$class}" title="{$nohelp}"><xsl:value-of select="$title"/></a>
+				<span class="{$class}" title="{$nohelp}"><xsl:value-of select="$title"/></span>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

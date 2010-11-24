@@ -171,7 +171,7 @@ var extentMap = {
 		            tbarItems.push(new GeoExt.Action({
 		                map: map,
 		                control: control,
-		                text: "draw rectangle",// TODO i18n
+		                text: translate('drawRectangle'),
 		                pressed: false,
 		                allowDepress: true,
 		                toggleGroup: "tool",
@@ -198,7 +198,7 @@ var extentMap = {
 		            tbarItems.push(new GeoExt.Action({
 		                map: map,
 		                control: control,
-		                text: "Draw polygon", // TODO i18n
+		                text: translate('drawPolygon'),
 		                pressed: false,
 		                allowDepress: true,
 		                toggleGroup: "tool",
@@ -222,7 +222,7 @@ var extentMap = {
 		            tbarItems.push(new GeoExt.Action({
 		                map: map,
 		                control: control,
-		                text: "Draw circle", // TODO i18n
+		                text: translate('drawCircle'),
 		                pressed: false,
 		                allowDepress: true,
 		                toggleGroup: "tool",
@@ -280,7 +280,7 @@ var extentMap = {
 	            
 	            // Clear button
 	            tbarItems.push({
-	            	text: "Clear",// TODO i18n
+	            	text: translate('clear'),
 	            	iconCls: "clearPolygon",
 	            	handler: function() {
 	            		// Destroy geometry

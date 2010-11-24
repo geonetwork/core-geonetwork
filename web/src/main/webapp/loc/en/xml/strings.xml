@@ -15,7 +15,12 @@
 	<!-- new strings - SP 2.5 -->
 	<showRemoteHTML>Show HTML from remote server</showRemoteHTML>
 	<!-- end new strings -->
-    <geopublisher>GeoPublisher</geopublisher>
+	
+	<drawRectangle js="true">Draw rectangle</drawRectangle>
+	<drawPolygon js="true">Draw polygon</drawPolygon>
+	<drawCircle js="true">Draw circle</drawCircle>
+	<clear js="true">Clear</clear>
+	<geopublisher>GeoPublisher</geopublisher>
     <geoPublisherWindowTitle js="true">Geo-publication: </geoPublisherWindowTitle>
     <geopublisherHelp>Publish or unpublish dataset as WMS or WFS in remote geoserver.</geopublisherHelp>
     <publish js="true">Publish</publish>
