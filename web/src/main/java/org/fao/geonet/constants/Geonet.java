@@ -85,6 +85,7 @@ public class Geonet
 		public static final String ON         = "on";
 		public static final String METADATA   = "metadata";
 		public static final String NAME       = "name";
+        public static final String NOTIFICATIONS = "notifications";
 		public static final String SURNAME    = "surname";
 		public static final String PROFILE    = "profile";
 		public static final String OPERATIONS = "operations";
@@ -438,7 +439,6 @@ public class Geonet
 		public static final String LUCENE_CONFIG    = "luceneConfig";
 		public static final String GUI_CONFIG       = "guiConfig";
 		public static final String JZKITCONFIG      = "jzkitConfig";
-        
 	}
 
 	//--------------------------------------------------------------------------

@@ -1,3 +1,31 @@
+CREATE TABLE MetadataNotifiers
+  (
+    id         int,
+    name       varchar(32)    not null,
+    url        varchar(255)   not null,
+    enabled    char(1)        default 'n' not null,
+    username       varchar(32),
+    password       varchar(32),
+
+    primary key(id)
+  );
+
+-- ======================================================================
+
+CREATE TABLE MetadataNotifications
+  (
+    metadataId         int,
+    notifierId         int,
+    notified           char(1)        default 'n' not null,
+    metadataUuid       varchar(250)   not null,
+    action             char(1)        not null,
+    errormsg           text,
+
+    primary key(metadataId,notifierId),
+
+    foreign key(notifierId) references MetadataNotifiers(id)
+  );
+
 INSERT INTO settings VALUES (85,80,'uidAttr','uid');
 INSERT INTO Settings VALUES (240,1,'autofixing',NULL);
 INSERT INTO Settings VALUES (241,240,'enable','true');

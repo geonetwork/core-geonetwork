@@ -1,3 +1,30 @@
+CREATE TABLE MetadataNotifiers
+  (
+    id         int,
+    name       varchar(32)    not null,
+    url        varchar(255)   not null,
+    enabled    char(1)        default 'n' not null,
+    username       varchar(32),
+    password       varchar(32),
+
+    primary key(id)
+  );
+
+REM ======================================================================
+
+CREATE TABLE MetadataNotifications
+  (
+    metadataId         int,
+    notifierId         int,
+    notified           char(1)        default 'n' not null,
+    metadataUuid       varchar(250)   not null,
+    action             char(1)        not null,
+    errormsg           long,
+
+    primary key(metadataId,notifierId)
+  );
+
+ALTER TABLE MetadataNotifications ADD FOREIGN KEY (notifierId) REFERENCES MetadataNotifiers(id);
 ALTER TABLE Settings MODIFY value long;    
 ALTER TABLE Metadata ADD displayorder int;
 

@@ -1014,4 +1014,10 @@
     <mapViewer>Mapa</mapViewer>
 
     <uuid>Identificador único</uuid>    
+        
+    <addremove>Agregar o quitar</addremove>
+    <enabled>Habilitado</enabled>
+    <notifications>Notificación a los objetivos a distancia</notifications>
+    <url>URL</url>
+    
 </strings>

@@ -234,6 +234,34 @@ CREATE TABLE MetadataRating
 
 REM ======================================================================
 
+CREATE TABLE MetadataNotifiers
+  (
+    id         int,
+    name       varchar(32)    not null,
+    url        varchar(255)   not null,
+    enabled    char(1)        default 'n' not null,
+    username       varchar(32),
+    password       varchar(32),
+
+    primary key(id)
+  );
+
+REM ======================================================================
+
+CREATE TABLE MetadataNotifications
+  (
+    metadataId         int,
+    notifierId         int,
+    notified           char(1)        default 'n' not null,
+    metadataUuid       varchar(250)   not null,
+    action             char(1)        not null,
+    errormsg           long,
+
+    primary key(metadataId,notifierId)
+  );
+
+REM ======================================================================
+
 REM CREATE INDEX MetadataNDX1 ON Metadata(uuid);
 CREATE INDEX MetadataNDX2 ON Metadata(source);
 
@@ -259,3 +287,4 @@ ALTER TABLE RegionsDes ADD FOREIGN KEY (idDes) REFERENCES Regions (id);
 ALTER TABLE Settings ADD FOREIGN KEY (parentId) REFERENCES Settings (id);
 ALTER TABLE UserGroups ADD FOREIGN KEY (userId) REFERENCES Users (id);
 ALTER TABLE UserGroups ADD FOREIGN KEY (groupId) REFERENCES Groups (id);
+ALTER TABLE MetadataNotifications ADD FOREIGN KEY (notifierId) REFERENCES MetadataNotifiers(id);

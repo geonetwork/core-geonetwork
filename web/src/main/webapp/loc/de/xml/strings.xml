@@ -1008,4 +1008,9 @@
     <mapViewer>Map viewer</mapViewer>
 
     <uuid>Unique identifier</uuid>    
+
+    <addremove>Hinzufügen / Entfernen</addremove>
+    <enabled>Aktiviert</enabled>
+    <notifications>Mitteilung an ferne Ziele</notifications>
+    <url>URL</url>
 </strings>

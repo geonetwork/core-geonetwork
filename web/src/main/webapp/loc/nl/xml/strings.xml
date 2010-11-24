@@ -1036,4 +1036,10 @@
     <mapViewer>Map viewer</mapViewer>
 
     <uuid>Unique identifier</uuid>    
+
+    <addremove>Toevoegen / Verwijderen</addremove>
+    <enabled>Ingeschakeld</enabled>
+    <notifications>Kennisgeving aan externe doelen</notifications>
+    <url>URL</url>
+    
 </strings>

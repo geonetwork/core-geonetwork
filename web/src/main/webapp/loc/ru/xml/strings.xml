@@ -1015,4 +1015,10 @@
     <mapViewer>Просмотр карт</mapViewer>
 
     <uuid>Unique identifier</uuid>    
+
+    <addremove>Добавить / удалить</addremove>
+    <enabled>включен</enabled>
+    <notifications>Уведомление на удаленные цели</notifications>
+    <url>единый указатель ресурсов</url>
+    
 </strings>

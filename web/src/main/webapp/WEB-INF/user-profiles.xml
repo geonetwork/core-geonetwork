@@ -16,6 +16,10 @@
 		<allow service="category.remove"/>
 		<allow service="category.update"/>
 
+		<!-- Notification maintenance services -->
+		<allow service="notifications.list"/>
+		<allow service="notifications.save"/>
+		
 		<!-- Localization -->
 		<allow service="localization"/>
 		<allow service="xml.group.update"/>
