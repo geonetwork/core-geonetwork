@@ -23,7 +23,7 @@
 	<geopublisher>GéoPublication</geopublisher>
 	<geoPublisherWindowTitle js="true">Géo-publication : </geoPublisherWindowTitle>
 	<geopublisherHelp>Publier/dépublier la données dans GeoServer (WMS,WFS).</geopublisherHelp>
-	<publish js="true">Publer</publish>
+	<publish js="true">Publier</publish>
 	<publishTooltip js="true">Publier le jeu de données en cours dans le noeud distant. Si le jeu de données est présent, il est mis à jour.</publishTooltip>
 	<publishError js="true">Echec lors de la publication.</publishError>
 	<publishErrorCode js="true">Code de l&apos;erreur :</publishErrorCode>
@@ -602,7 +602,7 @@
 	<res>résultats</res>
 	<reset>Réinitialiser</reset>
 	<resetFeedbackForm>Réinitialiser</resetFeedbackForm>
-	<resetPassword>Reset Password</resetPassword>
+	<resetPassword>Changer le mot de passe</resetPassword>
 	<resetSearch>Réinitialiser</resetSearch>
 	<ress>résultat</ress>
 	<restrictTo>Limiter a</restrictTo>
