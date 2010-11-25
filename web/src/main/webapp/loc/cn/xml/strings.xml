@@ -1054,4 +1054,10 @@
     <mapViewer>Map viewer</mapViewer>
 
     <uuid>Unique identifier</uuid>    
+
+    <addremove>添加/删除</addremove>
+    <enabled>启用</enabled>
+    <notifications>远程目标的通知</notifications>
+    <url>网址</url>
+    
 </strings>

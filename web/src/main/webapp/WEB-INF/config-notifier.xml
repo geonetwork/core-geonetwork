@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<config>
+	<notifier>
+        <!-- values: 0:disable, 1: enable -->
+        <enable>1</enable>
+
+        <!-- Notifier servlet url
+
+             Parameters expected by servlet:
+                action: update (for inserts/updates), delete
+                XMLFile: metadata xml content (only for update action)
+                uuid: metadata uuid       
+        -->
+        <url>http://localhost:8080/geonetwork/CSWTHandlerServlet</url>
+        <!--url>http://utv.geodata.se/MetaGIS/CSWTHandlerServlet</url-->
+	</notifier>
+</config>

@@ -50,6 +50,8 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.lib.ServerLib;
+import org.fao.geonet.notifier.MetadataNotifierControl;
+import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
 import org.geotools.data.DataStore;
@@ -313,6 +315,13 @@ public class Geonetwork implements ApplicationHandler
 
 		OaiPmhDispatcher oaipmhDis = new OaiPmhDispatcher(oaimode,oaicachesize,oaicachelifetime);
 
+
+        //------------------------------------------------------------------------
+		//--- initialize metadata notifier subsystem
+        MetadataNotifierManager metadataNotifierMan = new MetadataNotifierManager(dataMan);
+
+        logger.info("  - Metadata notifier ...");
+
 		//------------------------------------------------------------------------
 		//--- return application context
 
@@ -328,6 +337,7 @@ public class Geonetwork implements ApplicationHandler
 		gnContext.thesaurusMan= thesaurusMan;
 		gnContext.oaipmhDis   = oaipmhDis;
 		gnContext.app_context = app_context;
+        gnContext.metadataNotifierMan = metadataNotifierMan;
 
 		logger.info("Site ID is : " + gnContext.getSiteId());
 
@@ -335,6 +345,12 @@ public class Geonetwork implements ApplicationHandler
         // This can happen if the application has been updated with a new version preserving the database and
         // images/logos folder is not copied from old application 
         createSiteLogo(gnContext.getSiteId());
+
+        // Notify unregistered metadata at startup. Needed, for example, when the user enables the notifier config
+        // to notify the existing metadata in database
+        // TODO: Fix DataManager.getUnregisteredMetadata and uncomment next lines
+        MetadataNotifierControl metadataNotifierControl = new MetadataNotifierControl(context, gnContext);
+        metadataNotifierControl.runOnce();
 
 		return gnContext;
 	}

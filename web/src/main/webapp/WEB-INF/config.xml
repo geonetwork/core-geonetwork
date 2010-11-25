@@ -210,6 +210,8 @@
 		-->
 		<param name="preferredSchema" value="iso19139" />
 		<param name="jzkitConfig" value="JZkitApplicationContext.xml" />
+
+        <param name="metadataNotifierConfig" value="WEB-INF/config-notifier.xml" /> />
 	</appHandler>
 
 	<!-- ====================================================================== -->
@@ -658,6 +660,19 @@
 			<class name=".services.category.XmlUpdate" />
 		</service>
 
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Notifications services                                        -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<service name="notifications.list">
+			<class name=".services.notifications.List" />
+			<output sheet="notifications-list.xsl" />
+		</service>
+
+		<service name="notifications.save">
+			<class name=".services.notifications.Save" />
+			<output forward="admin" />
+		</service>
+		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!--                   Login services                              -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

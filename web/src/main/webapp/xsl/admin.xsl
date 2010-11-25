@@ -289,6 +289,13 @@
 								<td class="padded"><xsl:value-of select="/root/gui/strings/logoDes"/></td>
 							</tr>
 						</xsl:if>
+
+						<xsl:if test="/root/gui/services/service/@name='notifications.list'">
+							<tr>
+								<td class="padded"><a href="{/root/gui/locService}/notifications.list">notifications</a></td>
+								<td class="padded">remote updates</td>
+							</tr>
+						</xsl:if>
 						
 						<xsl:if test="/root/gui/services/service/@name='localization'">
 							<tr>

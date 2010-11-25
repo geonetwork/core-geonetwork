@@ -38,6 +38,7 @@ import jeeves.utils.SerialFactory;
 import jeeves.utils.Xml;
 import jeeves.utils.Xml.ErrorHandler;
 import jeeves.xlink.Processor;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -91,6 +92,7 @@ public class DataManager
 		searchMan = sm;
 		accessMan = am;
 		settingMan= ss;
+        servContext=context;
 
 		this.baseURL = baseURL;
         this.dataDir = dataDir;
@@ -707,6 +709,22 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
+	public String getMetadataTemplate(Dbms dbms, String id) throws Exception
+	{
+		String query = "SELECT istemplate FROM Metadata WHERE id=?";
+
+		List list = dbms.select(query, new Integer(id)).getChildren();
+
+		if (list.size() == 0)
+			return null;
+
+		Element record = (Element) list.get(0);
+
+		return record.getChildText("istemplate");
+	}
+
+	//--------------------------------------------------------------------------
+
 	public MdInfo getMetadataInfo(Dbms dbms, String id) throws Exception
 	{
 		String query = "SELECT id, uuid, schemaId, isTemplate, isHarvested, createDate, "+
@@ -1082,8 +1100,13 @@ public class DataManager
 
 		//--- Note: we cannot index metadata here. Indexing is done in the harvesting part
 
-		return XmlSerializer.insert(dbms, schema, md, id, source, uuid, createDate,
+	    String record = XmlSerializer.insert(dbms, schema, md, id, source, uuid, createDate,
 											 changeDate, isTemplate, null, owner, groupOwner);
+
+        // Notifies the metadata change to metatada notifier service
+        notifyMetadataChange(dbms, md, id + "");
+
+        return record;
 	}
 
 	//--------------------------------------------------------------------------
@@ -1118,6 +1141,9 @@ public class DataManager
 		if (category != null)
 			setCategory(dbms, id, category);
 		indexMetadata(dbms, id);
+
+        // Notifies the metadata change to metatada notifier service
+        notifyMetadataChange(dbms, xml, id);
 
 		return id;
 	}
@@ -1730,6 +1756,9 @@ public class DataManager
 		md = updateFixedInfo(schema, id, md, dbms);
 		XmlSerializer.update(dbms, id, md);
 
+        // Notifies the metadata change to metatada notifier service
+        notifyMetadataChange(dbms, md, id);
+
 		//--- update search criteria
 		indexMetadata(dbms, id);
 
@@ -1772,6 +1801,9 @@ public class DataManager
 		editLib.contractElements(md);
 		md = updateFixedInfo(schema, id, md, dbms);
 		XmlSerializer.update(dbms, id, md);
+
+        // Notifies the metadata change to metatada notifier service
+        notifyMetadataChange(dbms, md, id);
 
 		//--- update search criteria
 		indexMetadata(dbms, id);
@@ -1920,6 +1952,9 @@ public class DataManager
 		//--- write metadata to dbms
 		XmlSerializer.update(dbms, id, md);
 
+        // Notifies the metadata change to metatada notifier service
+        notifyMetadataChange(dbms, md, id);
+
 		//--- update search criteria
 		indexMetadata(dbms, id);
 
@@ -1989,6 +2024,13 @@ public class DataManager
 											throws Exception
 	{
 		XmlSerializer.update(dbms, id, md, changeDate);
+
+        String isTemplate = getMetadataTemplate(dbms, id);
+        // Notifies the metadata change to metatada notifier service
+        if (isTemplate.equals("n")) {
+            // Notifies the metadata change to metatada notifier service
+            notifyMetadataChange(dbms, md, id);
+        }
 	}
 
 	//--------------------------------------------------------------------------
@@ -2002,6 +2044,9 @@ public class DataManager
 
 	public synchronized void deleteMetadata(Dbms dbms, String id) throws Exception
 	{
+        String uuid = getMetadataUuid(dbms, id);
+        String isTemplate = getMetadataTemplate(dbms, id);
+
 		//--- remove operations
 		deleteMetadataOper(dbms, id, false);
 
@@ -2012,6 +2057,13 @@ public class DataManager
 
 		//--- remove metadata
 		XmlSerializer.delete(dbms, "Metadata", id);
+
+        // Notifies the metadata delete to metatada notifier service
+
+        // Notifies the metadata change to metatada notifier service
+        if (isTemplate.equals("n")) {
+            notifyMetadataDelete(dbms, id, uuid);
+        }
 
 		//--- update search criteria
 		searchMan.delete("_id", id+"");
@@ -2134,6 +2186,10 @@ public class DataManager
 
 		md = Xml.transform(root, styleSheet);
 		XmlSerializer.update(dbms, id, md);
+
+        // Notifies the metadata change to metatada notifier service
+        notifyMetadataChange(dbms, md, id);
+
 
 		//--- update search criteria
 		indexMetadata(dbms, id);
@@ -2330,6 +2386,137 @@ public class DataManager
 	//--------------------------------------------------------------------------
 
     /**
+     * Retrieves the unnotified metadata to update/insert for a notifier service
+     *
+     * @param dbms
+     * @param notifierId
+     * @return
+     * @throws Exception
+     */
+    public Map<String,Element> getUnnotifiedMetadata(Dbms dbms, String notifierId) throws Exception {
+        Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadata start");
+        Map<String,Element> unregisteredMetadata = new HashMap<String,Element>();
+
+        String query = "select m.id, m.uuid, m.data, mn.notifierId, mn.action from metadata m left join metadatanotifications mn on m.id = mn.metadataId\n" +
+                "where (mn.notified is null or mn.notified = 'n') and (mn.action <> 'd') and (mn.notifierId is null or mn.notifierId = " + notifierId + ")";
+        List<Element> results = dbms.select(query).getChildren();
+        Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadata after select: " + (results != null));
+
+        if (results != null) {
+          for(Element result : results) {
+              String uuid = result.getChild("uuid").getText();
+              System.out.println("getUnnotifiedMetadata: " + uuid);
+              unregisteredMetadata.put(uuid, (Element)((Element)result.clone()).detach());
+
+          }
+        }
+
+        Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadata returning #" + unregisteredMetadata.size() + " results");
+        return unregisteredMetadata;
+    }
+
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Retrieves the unnotified metadata to delete for a notifier service
+     *
+     * @param dbms
+     * @param notifierId
+     * @return
+     * @throws Exception
+     */
+    public Map<String,Element> getUnnotifiedMetadataToDelete(Dbms dbms, String notifierId) throws Exception {
+        Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadataToDelete start");
+        Map<String,Element> unregisteredMetadata = new HashMap<String,Element>();
+        Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadataToDelete after dbms");
+
+        String query = "select metadataId as id, metadataUuid as uuid, notifierId, action from metadatanotifications " +
+                "where (notified = 'n') and (action = 'd') and (notifierId = " + notifierId + ")";
+        List<Element> results = dbms.select(query).getChildren();
+        Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadataToDelete after select: " + (results != null));
+
+        if (results != null) {
+          for(Element result : results) {
+              String uuid = result.getChild("uuid").getText();
+              System.out.println("getUnnotifiedMetadataToDelete: " + uuid);
+              unregisteredMetadata.put(uuid, (Element)((Element)result.clone()).detach());
+
+          }
+        }
+
+        Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadataToDelete returning #" + unregisteredMetadata.size() + " results");
+        return unregisteredMetadata;
+    }
+
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Mark a metadata record as notified for a notifier service
+     *
+     * @param metadataId    Metadata identifier
+     * @param notifierId    Notifier service identifier
+     * @param deleteNotification    Indicates if the notification was a delete action
+     * @param dbms
+     * @throws Exception
+     */
+    public void setMetadataNotified(String metadataId, String metadataUuid, String notifierId, boolean deleteNotification, Dbms dbms) throws Exception {
+        String query = "DELETE FROM MetadataNotifications WHERE metadataId=? AND notifierId=?";
+        dbms.execute(query, new Integer(metadataId), new Integer(notifierId));
+        dbms.commit();
+
+        if (!deleteNotification) {
+            query = "INSERT INTO MetadataNotifications (metadataId, notifierId, metadataUuid, notified, action) VALUES (?,?,?,?,?)";
+            dbms.execute(query, new Integer(metadataId), new Integer(notifierId), metadataUuid, "y", "u");
+            dbms.commit();
+        }
+
+
+        Log.debug(Geonet.DATA_MANAGER, "setMetadataNotified finished for metadata with id " + metadataId + "and notitifer with id " + notifierId);
+    }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Mark a metadata record as notified for a notifier service
+     *
+     * @param metadataId    Metadata identifier
+     * @param notifierId    Notifier service identifier
+     * @param dbms
+     * @throws Exception
+     */
+    public void setMetadataNotifiedError(String metadataId, String metadataUuid, String notifierId, boolean deleteNotification, String error, Dbms dbms) throws Exception {
+        System.out.println("setMetadataNotifiedError");
+       try {
+       String query = "DELETE FROM MetadataNotifications WHERE metadataId=? AND notifierId=?";
+       dbms.execute(query, new Integer(metadataId), new Integer(notifierId));
+
+       String action = (deleteNotification == true)?"d":"u";
+       query = "INSERT INTO MetadataNotifications (metadataId, notifierId, metadataUuid, notified, action, errormsg) VALUES (?,?,?,?,?,?)";
+       dbms.execute(query, new Integer(metadataId), new Integer(notifierId), metadataUuid, "n", action, error);
+       dbms.commit();
+
+       Log.debug(Geonet.DATA_MANAGER, "setMetadataNotifiedError finished for metadata with id " + metadataId + "and notitifer with id " + notifierId);
+       } catch (Exception ex) {
+           ex.printStackTrace();
+           throw ex;
+       }
+    }
+
+    //--------------------------------------------------------------------------
+
+    public List<Element> retrieveNotifierServices(Dbms dbms) throws Exception {
+        String query = "SELECT id, url, username, password FROM MetadataNotifiers WHERE enabled = 'y'";
+        List<Element> results = dbms.select(query).getChildren();
+
+        return results;
+    }
+
+	//--------------------------------------------------------------------------
+
+
+    /**
      * Applies automatic fixes to the metadata (if that is enabled) and adds some environmental information about
      * this system.
      *
@@ -2450,6 +2637,10 @@ public class DataManager
 			
 			XmlSerializer.update(dbms, childId, childForUpdate, new ISODate()
 					.toString());
+
+
+            // Notifies the metadata change to metatada notifier service
+            notifyMetadataChange(dbms, childForUpdate, childId);
 
 			rootEl = null;
 		}
@@ -2685,6 +2876,28 @@ public class DataManager
 		throw new IllegalArgumentException("Cannot find a namespace to set for element "+md.getQualifiedName()+" with namespace URI "+nsUri);
 	}
 
+    //--------------------------------------------------------------------------
+
+    private void notifyMetadataChange(Dbms dbms, Element md, String id) throws Exception {
+        String isTemplate = getMetadataTemplate(dbms, id);
+
+        if (isTemplate.equals("n")) {
+            GeonetContext gc = (GeonetContext) servContext.getHandlerContext(Geonet.CONTEXT_NAME);
+
+            String uuid = getMetadataUuid(dbms, id);
+            gc.getMetadataNotifier().updateMetadata(md, id, uuid, dbms, gc);
+        }
+    }
+
+    //--------------------------------------------------------------------------
+
+    private void notifyMetadataDelete(Dbms dbms, String id, String uuid) throws Exception {
+        GeonetContext gc = (GeonetContext) servContext.getHandlerContext(Geonet.CONTEXT_NAME);
+        gc.getMetadataNotifier().deleteMetadata(id, uuid, dbms, gc);        
+    }
+
+    //--------------------------------------------------------------------------
+
 	/**
 	 * Update group owner when handling privileges during import.
 	 * Does not update the index.
@@ -2714,6 +2927,8 @@ public class DataManager
 	private SearchManager  searchMan;
 	private SettingManager settingMan;
 	private HarvestManager harvestMan;
+    private ServiceContext servContext;
+
     private String dataDir;
 	private String appPath;
 	private boolean rebuilding = false;
