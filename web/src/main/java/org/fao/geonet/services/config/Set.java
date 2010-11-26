@@ -23,6 +23,9 @@
 
 package org.fao.geonet.services.config;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
@@ -31,14 +34,12 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
-
-import java.util.HashMap;
-import java.util.Map;
 
 //=============================================================================
 
@@ -110,9 +111,9 @@ public class Set implements Service
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "intranet/network",         "system/intranet/network"),
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "intranet/netmask",         "system/intranet/netmask"),
 
-		new ConfigEntry(ConfigEntry.Type.INT,		 true,  "selectionmanager/maxrecords",         "system/selectionmanager/maxrecords"),
+		new ConfigEntry(ConfigEntry.Type.INT,    true,  "selectionmanager/maxrecords",         "system/selectionmanager/maxrecords"),
 
-		new ConfigEntry(ConfigEntry.Type.BOOL,    true,  "indexoptimizer/enable",  "system/indexoptimizer/enable"),
+		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "indexoptimizer/enable",  "system/indexoptimizer/enable"),
 		new ConfigEntry(ConfigEntry.Type.INT,    true,  "indexoptimizer/at/hour",  "system/indexoptimizer/at/hour"),
 		new ConfigEntry(ConfigEntry.Type.INT,    true,  "indexoptimizer/at/min",  "system/indexoptimizer/at/min"),
 		new ConfigEntry(ConfigEntry.Type.INT,    true,  "indexoptimizer/at/sec",  "system/indexoptimizer/at/sec"),
@@ -122,6 +123,10 @@ public class Set implements Service
 
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "z3950/enable",             "system/z3950/enable"),
 		new ConfigEntry(ConfigEntry.Type.INT,    false, "z3950/port",               "system/z3950/port"),
+		
+		new ConfigEntry(ConfigEntry.Type.INT,    true, "oai/mdmode",                "system/oai/mdmode"),
+		new ConfigEntry(ConfigEntry.Type.INT,    true, "oai/tokentimeout",          "system/oai/tokentimeout"),
+		new ConfigEntry(ConfigEntry.Type.INT,    true, "oai/cachesize",             "system/oai/cachesize"),
 		
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "downloadservice/enable",             "system/downloadservice/enable"),
 		new ConfigEntry(ConfigEntry.Type.BOOL,   false, "downloadservice/simple",             "system/downloadservice/simple"),

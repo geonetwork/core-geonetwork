@@ -1,30 +1,49 @@
 package org.fao.geonet.kernel.oaipmh;
 
-import jeeves.utils.Log;
-import org.fao.geonet.constants.Geonet;
-import org.fao.oaipmh.responses.ResumptionToken;
-import org.fao.oaipmh.util.ISODate;
-
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+import jeeves.utils.Log;
+
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.oaipmh.responses.ResumptionToken;
+import org.fao.oaipmh.util.ISODate;
+
 public class ResumptionTokenCache extends Thread {
 
-	//public final static int CACHE_TIMEOUT = 200 ; // 200 sec 
 	public final static int CACHE_EXPUNGE_DELAY = 10*1000; // 10 seconds
 
 	private Map<String,ResumptionToken> map ; 
 	private boolean running = true;
-	private long timeout;
-	private int cachemaxsize;
+	private SettingManager settingMan;
 
-	public ResumptionTokenCache(int timeout, int cachesize) {
-		Log.debug(Geonet.OAI_HARVESTER,"OAI cache ::init timout:"+timeout);
-		this.timeout=timeout*1000;
-		this.cachemaxsize=cachesize;
+	/**
+	 * @return the timeout
+	 */
+	public long getTimeout() {
+		return settingMan.getValueAsInt("system/oai/tokentimeout");
+	}
+
+	/**
+	 * @return the cachemaxsize
+	 */
+	public int getCachemaxsize() {
+	    return settingMan.getValueAsInt("system/oai/cachesize");
+	}
+
+	/**
+	 * Constructor
+	 * @param sm
+	 */
+	public ResumptionTokenCache(SettingManager sm) {
+		
+		this.settingMan=sm;
+		Log.debug(Geonet.OAI_HARVESTER,"OAI cache ::init timout:"+getTimeout());
+		
 		map = Collections.synchronizedMap( new HashMap<String,ResumptionToken>()  );
 
 		this.setDaemon(true);
@@ -87,11 +106,11 @@ public class ResumptionTokenCache extends Thread {
 	public synchronized void storeResumptionToken(ResumptionToken resumptionToken) {
 		Log.debug(Geonet.OAI_HARVESTER,"OAI cache ::store "+resumptionToken.getKey() + " size: "+map.size() );
 		
-		if ( map.size() == cachemaxsize ) {
+		if ( map.size() == getCachemaxsize() ) {
 			removeLast();
 		}
 		
-		resumptionToken.setExpirDate(new ISODate( getUTCTime().getTime() + timeout  ));
+		resumptionToken.setExpirDate(new ISODate( getUTCTime().getTime() + getTimeout()  ));
 		map.put(resumptionToken.getKey(), resumptionToken);
 	}
 

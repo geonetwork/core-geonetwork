@@ -23,12 +23,16 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
+import java.util.List;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.ResumptionTokenCache;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.requests.ListRecordsRequest;
 import org.fao.oaipmh.requests.TokenListRequest;
@@ -39,16 +43,14 @@ import org.fao.oaipmh.util.ISODate;
 import org.fao.oaipmh.util.SearchResult;
 import org.jdom.Element;
 
-import java.util.List;
-
 //=============================================================================
 
 public class ListRecords extends AbstractTokenLister
 {
 
 
-	public ListRecords(ResumptionTokenCache cache,int mode) {
-	    super(cache,mode);
+	public ListRecords(ResumptionTokenCache cache, SettingManager sm) {
+	    super(cache, sm);
 	}
 
 	public String getVerb() { return ListRecordsRequest.VERB; }
@@ -94,20 +96,21 @@ public class ListRecords extends AbstractTokenLister
 	//---
 	//---------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	private Record buildRecord(ServiceContext context, int id, String prefix) throws Exception
 	{
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String query = "SELECT uuid, schemaId, changeDate, data FROM Metadata WHERE id=?";
 
-		List list = dbms.select(query, id).getChildren();
+		List<Element> list = dbms.select(query, id).getChildren();
 
 		//--- maybe the metadata has been removed
 
 		if (list.size() == 0)
 			return null;
 
-		Element rec = (Element) list.get(0);
+		Element rec = list.get(0);
 
 		String uuid       = rec.getChildText("uuid");
 		String schema     = rec.getChildText("schemaid");
@@ -143,11 +146,9 @@ public class ListRecords extends AbstractTokenLister
 
 		list = dbms.select(query, id).getChildren();
 
-		for (Object o : list)
+		for (Element record : list)
 		{
-			rec = (Element) o;
-
-			h.addSet(rec.getChildText("name"));
+			h.addSet(record.getChildText("name"));
 		}
 
 		//--- build and return record

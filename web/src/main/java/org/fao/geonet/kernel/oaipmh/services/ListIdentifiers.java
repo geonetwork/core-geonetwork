@@ -23,11 +23,15 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
+import java.util.List;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.ResumptionTokenCache;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.oaipmh.requests.ListIdentifiersRequest;
 import org.fao.oaipmh.requests.TokenListRequest;
 import org.fao.oaipmh.responses.Header;
@@ -37,14 +41,12 @@ import org.fao.oaipmh.util.ISODate;
 import org.fao.oaipmh.util.SearchResult;
 import org.jdom.Element;
 
-import java.util.List;
-
 //=============================================================================
 
 public class ListIdentifiers extends AbstractTokenLister
 {
-	public ListIdentifiers(ResumptionTokenCache cache,int mode) {
-		super(cache,mode);
+	public ListIdentifiers(ResumptionTokenCache cache, SettingManager sm) {
+		super(cache, sm);
 	}
 
 	public String getVerb() { return ListIdentifiersRequest.VERB; }
@@ -88,20 +90,21 @@ public class ListIdentifiers extends AbstractTokenLister
 	//---
 	//---------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	private Header buildHeader(ServiceContext context, int id, String prefix) throws Exception
 	{
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String query = "SELECT uuid, schemaId, changeDate FROM Metadata WHERE id=?";
 
-		List list = dbms.select(query, id).getChildren();
+		List<Element> list = dbms.select(query, id).getChildren();
 
 		//--- maybe the metadata has been removed
 
 		if (list.size() == 0)
 			return null;
 
-		Element rec = (Element) list.get(0);
+		Element rec = list.get(0);
 
 		String uuid       = rec.getChildText("uuid");
 		String schema     = rec.getChildText("schemaid");

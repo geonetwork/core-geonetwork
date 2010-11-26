@@ -2,11 +2,13 @@ package org.fao.geonet.kernel.oaipmh.services;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
 import org.fao.geonet.kernel.oaipmh.ResumptionTokenCache;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.fao.oaipmh.exceptions.BadResumptionTokenException;
 import org.fao.oaipmh.exceptions.NoRecordsMatchException;
@@ -22,22 +24,46 @@ import org.jdom.Element;
 public abstract class AbstractTokenLister implements OaiPmhService {
 
 	protected ResumptionTokenCache cache;
-	protected String dateFrom ;
-	protected String dateUntil ;
+	private SettingManager settingMan;
 	
-	public AbstractTokenLister(ResumptionTokenCache cache, int mode) {
-		this.cache=cache;
+	/**
+	 * @return the mode
+	 */
+	public int getMode() {
+		return settingMan.getValueAsInt("system/oai/mdmode");
+	}
 
-		// these are taken from the hard coding in
-		// web/src/main/java/org/fao/geonet/kernel/search/LuceneQueryBuilder.java
-		if (mode == OaiPmhDispatcher.MODE_TEMPEXTEND) {
+	/**
+	 * Get the dateFrom
+	 * Possible values are taken from the LuceneQueryBuilder class (hard coding)
+	 * @return the dateFrom
+	 */
+	public String getDateFrom() {
+		// Default mode is set to OaiPmhDispatcher.MODE_MODIFIDATE
+		String dateFrom = "dateFrom";
+		if (getMode() == OaiPmhDispatcher.MODE_TEMPEXTEND) {
 			dateFrom = "extFrom";
+		}
+		return dateFrom;
+	}
+
+	/**
+	 * Get the dateUntil
+	 * Possible values are taken from the LuceneQueryBuilder class (hard coding)
+	 * @return the dateUntil
+	 */
+	public String getDateUntil() {
+		// Default mode is set to OaiPmhDispatcher.MODE_MODIFIDATE
+		String dateUntil = "dateTo";
+		if (getMode() == OaiPmhDispatcher.MODE_TEMPEXTEND) {
 			dateUntil = "extTo";
 		}
-		if (mode==OaiPmhDispatcher.MODE_MODIFIDATE) {
-			dateFrom = "dateFrom";
-			dateUntil = "dateTo";
-		}
+		return dateUntil;
+	}
+	
+	public AbstractTokenLister(ResumptionTokenCache cache, SettingManager sm) {
+		this.cache=cache;
+		this.settingMan = sm;
 	}
 	
 	
@@ -72,13 +98,13 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 			if (from != null)
 			{
 				String sFrom = from.isShort ? from.getDate() : from.toString();
-				params.addContent(new Element(dateFrom).setText(sFrom));
+				params.addContent(new Element(getDateFrom()).setText(sFrom));
 			}
 
 			if (until != null)
 			{
 				String sTo = until.isShort ? until.getDate() : until.toString();
-				params.addContent(new Element(dateUntil).setText(sTo));
+				params.addContent(new Element(getDateUntil()).setText(sTo));
 			}
 
 			if (from != null && until != null && from.sub(until) > 0)

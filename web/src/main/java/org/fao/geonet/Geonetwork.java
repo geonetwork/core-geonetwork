@@ -23,7 +23,18 @@
 
 package org.fao.geonet;
 
-import com.vividsolutions.jts.geom.MultiPolygon;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import jeeves.JeevesJCS;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
@@ -34,6 +45,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Util;
 import jeeves.xlink.Processor;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.AccessManager;
@@ -43,7 +55,6 @@ import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
-import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
@@ -68,17 +79,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URI;
-import java.nio.charset.Charset;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import com.vividsolutions.jts.geom.MultiPolygon;
 
 //=============================================================================
 
@@ -111,6 +112,7 @@ public class Geonetwork implements ApplicationHandler
 	/** Inits the engine, loading all needed data
 	  */
 
+	@SuppressWarnings("unchecked")
 	public Object start(Element config, ServiceContext context) throws Exception
 	{
 		logger = context.getLogger();
@@ -170,7 +172,7 @@ public class Geonetwork implements ApplicationHandler
 		
 		JeevesJCS.setConfigFilename(path+"WEB-INF/classes/cache.ccf");
 		// force cache to be config'd so shutdown hook works correctly
-		JeevesJCS jcsDummy = JeevesJCS.getInstance(Processor.XLINK_JCS);
+		JeevesJCS.getInstance(Processor.XLINK_JCS);
 
 		
 		// --- Check current database and create database if an emty one is found
@@ -308,12 +310,9 @@ public class Geonetwork implements ApplicationHandler
 		//------------------------------------------------------------------------
 		//--- initialize catalogue services for the web
 
-		int oaimode    = settingMan.getValueAsInt("system/oai/mdmode");
-		int  oaicachesize      = settingMan.getValueAsInt("system/oai/cachesize");
-		int  oaicachelifetime  = settingMan.getValueAsInt("system/oai/tokentimeout");
-		logger.info("  - Open Archive Initiative (OAI-PMH) server: mode"+oaimode+" cachesize: "+oaicachesize+" cachelifetime: "+oaicachelifetime);
+		logger.info("  - Open Archive Initiative (OAI-PMH) server...");
 
-		OaiPmhDispatcher oaipmhDis = new OaiPmhDispatcher(oaimode,oaicachesize,oaicachelifetime);
+		OaiPmhDispatcher oaipmhDis = new OaiPmhDispatcher(settingMan);
 
 
         //------------------------------------------------------------------------
@@ -620,8 +619,8 @@ public class Geonetwork implements ApplicationHandler
 
 	private DataStore createOracleDatastore(String user, String passwd, String url) throws Exception {
 
-		String[] values = url.split(":");
 /*
+		String[] values = url.split(":");
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(OracleDataStoreFactory.DBTYPE.key, OracleDataStoreFactory.DBTYPE.sample);
 		params.put(OracleDataStoreFactory.DATABASE.key, getDatabase(url, values));

@@ -23,10 +23,14 @@
 
 package org.fao.geonet.kernel.oaipmh;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.oaipmh.services.GetRecord;
 import org.fao.geonet.kernel.oaipmh.services.Identify;
@@ -35,6 +39,7 @@ import org.fao.geonet.kernel.oaipmh.services.ListMetadataFormats;
 import org.fao.geonet.kernel.oaipmh.services.ListRecords;
 import org.fao.geonet.kernel.oaipmh.services.ListSets;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.requests.AbstractRequest;
@@ -42,9 +47,6 @@ import org.fao.oaipmh.responses.AbstractResponse;
 import org.fao.oaipmh.server.OaiPmhFactory;
 import org.fao.oaipmh.util.Lib;
 import org.jdom.Element;
-
-import java.util.HashMap;
-import java.util.Map;
 
 //=============================================================================
 
@@ -60,15 +62,15 @@ public class OaiPmhDispatcher
 	//---
 	//---------------------------------------------------------------------------
 
-	public OaiPmhDispatcher(int searchmode,  int cachesize, int oaicachelifetime)
+	public OaiPmhDispatcher(SettingManager sm)
 	{
-		ResumptionTokenCache cache = new ResumptionTokenCache(oaicachelifetime,cachesize);
+		ResumptionTokenCache cache = new ResumptionTokenCache(sm);
 		
 		register(new GetRecord());
 		register(new Identify());
-		register(new ListIdentifiers(cache,searchmode));
+		register(new ListIdentifiers(cache, sm));
 		register(new ListMetadataFormats());
-		register(new ListRecords(cache,searchmode));
+		register(new ListRecords(cache, sm));
 		register(new ListSets());
 	}
 
