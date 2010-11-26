@@ -1404,7 +1404,7 @@ public class DataManager
 		if (parent != null) {
 			int me = parent.indexOf(el);
 		
-			//--- check and see whether the element to be deleted is the last one 
+			//--- check and see whether the element to be deleted is the last one of its kind
 			Filter elFilter = new ElementFilter(uName,ns);
 			if (parent.getContent(elFilter).size() == 1) {
 
@@ -1424,10 +1424,11 @@ public class DataManager
 				// -- now delete the element as requested
 				parent.removeContent(me);
 
-				//--- existing geonet child element not present so create it
+				//--- existing geonet child element not present so create it and insert it
+				//--- where the last element was deleted
 				if (result == null) {
 					result = editLib.createElement(schema,el,parent);
-					parent.setContent(me,result);
+					parent.addContent(me,result);
 				}
 				result.setAttribute(Edit.ChildElem.Attr.PARENT,parentRef);
 				result.addContent(info);
@@ -1543,8 +1544,10 @@ public class DataManager
 			}
 
 			Element el = editLib.findElement(md, ref);
-			if (el == null)
+			if (el == null) {
 				Log.error(Geonet.DATA_MANAGER, "Element not found at ref = " + ref);
+				continue;
+			}
 
 			if (attr != null) {
 				Integer indexColon = attr.indexOf("COLON");
