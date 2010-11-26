@@ -69,13 +69,12 @@ public class Execute implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	@SuppressWarnings("unchecked")
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		Dbms    dbms   = (Dbms) context.getResourceManager().open(dbName);
 
 		Element result = new Element(Jeeves.Elem.RESPONSE);
-		Vector  vArgs  = DBUtils.scanInFields(params, inFields, result, dbms);
+		Vector<Object>  vArgs  = DBUtils.scanInFields(params, inFields, result, dbms);
 		dbms.execute(query, vArgs.toArray());
 		return result;
 	}

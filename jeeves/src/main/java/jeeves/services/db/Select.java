@@ -81,11 +81,10 @@ public class Select implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	@SuppressWarnings("unchecked")
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		Dbms    dbms   = (Dbms) context.getResourceManager().open(dbName);
-		Vector  vArgs  = DBUtils.scanInFields(params, inFields, null, dbms);
+		Vector<Object>  vArgs  = DBUtils.scanInFields(params, inFields, null, dbms);
 		Hashtable<String, String> formats = DBUtils.scanOutFields(outFields);
 		return dbms.selectFull(query, formats, vArgs.toArray());
 	}

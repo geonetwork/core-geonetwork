@@ -295,11 +295,10 @@ public class XPath {
 	 * target is not an Element, and therefore can't be the tree root, and therefore
 	 * it will have a parent.
 	 */
-	@SuppressWarnings("unchecked")
 	private static Element findTarget(Element parent, Object target) {
 		Element rslt = null;
 		
-		List children = parent.getContent();
+		List<?> children = parent.getContent();
 		for (int i = 0; rslt == null && i < children.size(); ++i) {
 			Object x = children.get(i);
 			
@@ -398,7 +397,7 @@ public class XPath {
 						
 						// Get a list of the children.
 
-						List children = ((Element)rslt).getContent();
+						List<?> children = ((Element)rslt).getContent();
 
 						if (childIndex >= 0 && childIndex < children.size()) {
 							// Get the nth child from that list.
@@ -424,12 +423,12 @@ public class XPath {
 
 						// Get a list of the children with the specified name.
 
-						List children = getNamedChildren((Element)rslt, nodeName);
+						List<Element> children = getNamedChildren((Element)rslt, nodeName);
 						
 						if (childIndex >= 0 && childIndex < children.size()) {
 							// Get the nth child from that list.
 
-							rslt = (Element)children.get(childIndex);
+							rslt = children.get(childIndex);
 							//System.out.println("got child " + childIndex + " of " + children.size());
 						}
 						else {
@@ -555,19 +554,18 @@ public class XPath {
 	 * to Element.getChildren(String name) except that it doesn't care about
 	 * the namespace of the children.
 	 */
-	@SuppressWarnings("unchecked")
-	private static List getNamedChildren(Element parent, String name) throws JDOMException {
-		List children = new ArrayList();
+	private static List<Element> getNamedChildren(Element parent, String name) throws JDOMException {
+		List<Element> children = new ArrayList<Element>();
 		
 		if (parent == null) {
 			throw new JDOMException("can't use null parent");
 		}
 		
-		Iterator it = parent.getChildren().iterator();
+		Iterator<?> it = parent.getChildren().iterator();
 		while (it.hasNext()) {
 			Object child = it.next();
 			if (child instanceof Element && ((Element)child).getQualifiedName().equals(name)) {
-				children.add(child);
+				children.add((Element) child);
 			}
 		}
 		
@@ -580,7 +578,6 @@ public class XPath {
 	 * index of the specified child (origin 1). If the child is uniquely
 	 * named, this returns -1.
 	 */
-	@SuppressWarnings("unchecked")
 	private static int computeTwinIndex(Element parent, Element child) throws JDOMException {
 		int index = -1;
 
@@ -588,11 +585,11 @@ public class XPath {
 			throw new JDOMException("can't use null parent");
 		}
 		
-		List identicalTwins = getNamedChildren(parent, child.getQualifiedName());
+		List<Element> identicalTwins = getNamedChildren(parent, child.getQualifiedName());
 
 		if (identicalTwins.size() > 1) {
 			for (int j = 0; index < 0 && j < identicalTwins.size(); ++j) {
-				if ((Element)identicalTwins.get(j) == child) {
+				if (identicalTwins.get(j) == child) {
 					// Add 1 to convert to 1-origin index used by
 					// Xpath.
 
@@ -615,11 +612,10 @@ public class XPath {
 	/**
 	 * Determines the number of the child. The leftmost sibling is 1, the next is 2, etc.
 	 */
-	@SuppressWarnings("unchecked")
 	private static int computeChildIndex(Element parent, Object child) throws JDOMException {
 		int index = -1;
 		
-		List content = parent.getContent();
+		List<?> content = parent.getContent();
 		
 		for (int i = 0; index < 0 && i < content.size(); ++i) {
 			if (content.get(i) == child) {

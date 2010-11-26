@@ -90,7 +90,8 @@ public class ScheduleManager extends Thread
 
 	//--------------------------------------------------------------------------
 
-	public void addSchedule(String pack, Element sched) throws Exception
+	@SuppressWarnings("unchecked")
+   public void addSchedule(String pack, Element sched) throws Exception
 	{
 		String name = sched.getAttributeValue(ConfigFile.Schedule.Attr.NAME);
 		String clas = sched.getAttributeValue(ConfigFile.Schedule.Attr.CLASS);

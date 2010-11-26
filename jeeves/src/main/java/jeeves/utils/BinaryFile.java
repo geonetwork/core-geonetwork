@@ -59,12 +59,21 @@ public class BinaryFile
 	private static String remoteSite = "";
 	private static String remotePath = "";
 	private static String remoteProtocol = "";
-
+	
+	/**
+	 * Gets the remotePassword.
+	 * @return the remotePassword.
+	 */
+	public static String getRemotePassword() {
+	   return remotePassword;
+	}
+	
 	//---------------------------------------------------------------------------
 	// Read the first 2000 chars from the file to get the info we want if the
 	// file is remote
 
-	static String readInput(String path) {
+
+   static String readInput(String path) {
     StringBuffer buffer = new StringBuffer();
     try {
 			FileInputStream fis = new FileInputStream(path);
@@ -220,7 +229,7 @@ public class BinaryFile
 		//----------------------------------------------------------------------
 		// Local class required by jsch for scp
 		class MyUserInfo implements UserInfo {
-			String passwd = remotePassword;
+			String passwd = getRemotePassword();
 
 			public String getPassword() { 
 				return passwd; 

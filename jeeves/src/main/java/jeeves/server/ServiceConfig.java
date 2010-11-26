@@ -47,12 +47,11 @@ public class ServiceConfig
 
 	//--------------------------------------------------------------------------
 
-	@SuppressWarnings("unchecked")
-	public ServiceConfig(List params)
+	public ServiceConfig(List<Element> params)
 	{
 		for(int i=0; i<params.size(); i++)
 		{
-			Element param = (Element) params.get(i);
+			Element param = params.get(i);
 
 			String name    = param.getAttributeValue(ConfigFile.Param.Attr.NAME);
 			String value   = param.getAttributeValue(ConfigFile.Param.Attr.VALUE);

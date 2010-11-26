@@ -44,16 +44,13 @@ public class DBUtils
 {
 	public static final String DEFAULT_DATE_FORMAT = "dd-MM-yyyy";
 	
-	@SuppressWarnings("unchecked")
-	public static Vector scanInFields(Element params, Vector inFields, Element result, Dbms dbms) throws Exception
-	{
+   public static Vector<Object> scanInFields(Element params, Vector<Element> inFields,
+         Element result, Dbms dbms) throws Exception {
 		// build argument list
-		Vector vArgs = new Vector();
+		Vector<Object> vArgs = new Vector<Object>();
 
-		for (int i = 0; i < inFields.size(); i++)
+		for (Element field : inFields)
 		{
-			Element field = (Element)inFields.get(i);
-			
 			// extract field attributes and value
 			String name      = field.getAttributeValue(Jeeves.Attr.NAME);
 			String mandatory = field.getAttributeValue(Jeeves.Attr.MANDATORY);
@@ -133,8 +130,8 @@ public class DBUtils
 		return vArgs;
 	}
 
-	public static Hashtable<String, String> scanOutFields(Vector<Element> outFields) throws Exception
-	{
+   public static Hashtable<String, String> scanOutFields(Vector<Element> outFields)
+         throws Exception {
 		Hashtable<String, String> formats = new Hashtable<String, String>();
 		
 		// scan fields info

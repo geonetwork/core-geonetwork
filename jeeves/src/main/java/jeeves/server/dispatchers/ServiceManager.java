@@ -188,7 +188,8 @@ public class ServiceManager
 
 	//---------------------------------------------------------------------------
 
-	private Service buildService(String pack, Element clas) throws Exception
+	@SuppressWarnings("unchecked")
+   private Service buildService(String pack, Element clas) throws Exception
 	{
 		//--- get class name
 

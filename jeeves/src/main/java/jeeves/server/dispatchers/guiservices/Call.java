@@ -44,7 +44,8 @@ public class Call implements GuiService
 	//---
 	//--------------------------------------------------------------------------
 
-	public Call(Element config, String pack, String appPath) throws Exception
+	@SuppressWarnings("unchecked")
+   public Call(Element config, String pack, String appPath) throws Exception
 	{
 		name = Util.getAttrib(config, ConfigFile.Call.Attr.NAME);
 
