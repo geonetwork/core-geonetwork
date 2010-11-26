@@ -51,13 +51,13 @@ import org.jdom.JDOMException;
 
 //=============================================================================
 
-public class ServiceRequestFactory
+public final class ServiceRequestFactory
 {
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+	/**
+	 * Default constructor.
+	 * Builds a ServiceRequestFactory.
+	 */
+	private ServiceRequestFactory() {}
 
 	/** Builds the request with data supplied by tomcat.
 	  * A request is in the form: srv/<language>/<service>[!]<parameters>

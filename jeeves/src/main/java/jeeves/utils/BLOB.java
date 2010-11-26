@@ -37,11 +37,15 @@ import org.jdom.Element;
 /** class to encode/decode blobs to base64 strings
   */
 
-public class BLOB
+public final class BLOB
 {
 	private static final int BUF_SIZE = 8192;
 
-	//---------------------------------------------------------------------------
+	/**
+    * Default constructor.
+    * Builds a BLOB.
+    */
+   private BLOB() {}
 
 	public static Element encode(int responseCode, byte blob[], String contentType, String filename)
 	{

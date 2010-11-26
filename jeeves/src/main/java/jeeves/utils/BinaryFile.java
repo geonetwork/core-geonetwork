@@ -50,8 +50,14 @@ import com.jcraft.jsch.UserInfo;
 /** class to encode/decode binary files to base64 strings
   */
 
-public class BinaryFile
+public final class BinaryFile
 {
+   /**
+    * Default constructor.
+    * Builds a BinaryFile.
+    */
+   private BinaryFile(){}
+   
 	private static final int BUF_SIZE = 8192;
 	private static boolean remoteFile = false;
 	private static String remoteUser = "";

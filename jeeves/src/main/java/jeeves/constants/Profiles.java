@@ -30,17 +30,29 @@ package jeeves.constants;
 
 public class Profiles
 {
-	public class Elem
+	public final class Elem
 	{
-		public static final String PROFILE = "profile";
+		/**
+       * Default constructor.
+       * Builds a Profiles.Elem.
+       */
+      private Elem() {}
+      
+	   public static final String PROFILE = "profile";
 		public static final String ALLOW   = "allow";
 	}
 
 	//--------------------------------------------------------------------------
 
-	public class Attr
+	public final class Attr
 	{
-		public static final String NAME    = "name";
+		/**
+       * Default constructor.
+       * Builds a Profiles.Attr.
+       */
+      private Attr() {}
+      
+	   public static final String NAME    = "name";
 		public static final String SERVICE = "service";
 		public static final String EXTENDS = "extends";
 	}

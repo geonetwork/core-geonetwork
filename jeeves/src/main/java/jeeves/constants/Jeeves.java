@@ -26,9 +26,15 @@ package jeeves.constants;
 
 //=============================================================================
 
-public class Jeeves
+public final class Jeeves
 {
-	public static final int MAX_UPLOAD_SIZE = 50; // 50 MB
+	/**
+    * Default constructor.
+    * Builds a Jeeves.
+    */
+   private Jeeves() {}
+   
+   public static final int MAX_UPLOAD_SIZE = 50; // 50 MB
 
 	public static final String CONFIG_FILE = "config.xml";
 
@@ -38,9 +44,15 @@ public class Jeeves
 	//---
 	//--------------------------------------------------------------------------
 
-	public class Prefix
+	public final class Prefix
 	{
-		public static final String SERVICE = "srv";
+		/**
+		 * Default constructor.
+		 * Builds a Prefix.
+		 */
+		private Prefix() {}
+		
+	   public static final String SERVICE = "srv";
 	}
 
 	//--------------------------------------------------------------------------
@@ -49,9 +61,15 @@ public class Jeeves
 	//---
 	//--------------------------------------------------------------------------
 
-	public class Elem
+	public final class Elem
 	{
-		public static final String ROOT      = "root";
+		/**
+       * Default constructor.
+       * Builds a Jeeves.Elem.
+       */
+	   private Elem() {}
+      
+	   public static final String ROOT      = "root";
 		public static final String RESPONSE  = "response";
 		public static final String RECORD    = "record";
 		public static final String OPERATION = "operation";
@@ -79,9 +97,15 @@ public class Jeeves
 	//---
 	//--------------------------------------------------------------------------
 
-	public class Text
+	public final class Text
 	{
-		public static final String TRUE    = "true";
+		/**
+       * Default constructor.
+       * Builds a Jeeves.Text.
+       */
+	   private Text() {}
+	   
+	   public static final String TRUE    = "true";
 		public static final String FALSE   = "false";
 		public static final String ADDED   = "added";
 		public static final String REMOVED = "removed";
@@ -94,9 +118,15 @@ public class Jeeves
 	//---
 	//--------------------------------------------------------------------------
 
-	public class Attr
+	public final class Attr
 	{
-		public static final String ID          = "id";
+		/**
+       * Default constructor.
+       * Builds a Jeeves.Attr.
+       */
+	   private Attr() {}
+	   
+	   public static final String ID          = "id";
 		public static final String PATH        = "path";
 		public static final String MANDATORY   = "mandatory";
 		public static final String FORWARD     = "forward";
@@ -111,16 +141,28 @@ public class Jeeves
 
 		//--- values of the 'id' attribute in the error element
 
-		public class Id
+		public final class Id
 		{
-			public static final String ERROR   = "error";
+			/**
+          * Default constructor.
+          * Builds a Jeeves.Attr.Id.
+          */
+		   private Id() {}
+         
+		   public static final String ERROR   = "error";
 		}
 
 		//--- values of the type's attribute
 
-		public class Type
+		public final class Type
 		{
-			public static final String STRING  = "string";
+			/**
+          * Default constructor.
+          * Builds a Jeeves.Attr.Type.
+          */
+		   private Type() {}
+		   
+		   public static final String STRING  = "string";
 			public static final String INT     = "int";
 			public static final String DOUBLE  = "double";
 			public static final String DATE    = "date";
@@ -133,9 +175,15 @@ public class Jeeves
 	//---
 	//--------------------------------------------------------------------------
 
-	public class Path
+	public final class Path
 	{
-		public static final String XML = "xml/";
+		/**
+       * Default constructor.
+       * Builds a Jeeves.Path.
+       */
+	   private Path() {}
+      
+	   public static final String XML = "xml/";
 		public static final String XSL = "xsl/";
 		public static final String WEBINF = "WEB-INF/";
 	}
@@ -146,9 +194,15 @@ public class Jeeves
 	//---
 	//--------------------------------------------------------------------------
 
-	public class Config
+	public final class Config
 	{
-		public static final String FILE       = "file";
+		/**
+       * Default constructor.
+       * Builds a Jeeves.Config.
+       */
+	   private Config() {}
+      
+	   public static final String FILE       = "file";
 		public static final String SHEET      = "sheet";
 		public static final String IN_FIELDS  = "inFields";
 		public static final String OUT_FIELDS = "outFields";
@@ -172,9 +226,15 @@ public class Jeeves
 
 	public class Res
 	{
-		public class Pool
+		public final class Pool
 		{
-			public static final String USER           = "user";
+			/**
+          * Default constructor.
+          * Builds a Jeeves.Res.Pool.
+          */
+		   private Pool() {}
+		   
+		   public static final String USER           = "user";
 			public static final String PASSWORD       = "password";
 			public static final String DRIVER         = "driver";
 			public static final String URL            = "url";
@@ -192,9 +252,15 @@ public class Jeeves
 	//--------------------------------------------------------------------------
 	//--- xml parameters for modules
 
-	public class Param
+	public final class Param
 	{
-		public static final String MODULE = "module";
+		/**
+       * Default constructor.
+       * Builds a Jeeves.Param.
+       */
+      private Param() {}
+      
+	   public static final String MODULE = "module";
 	}
 }
 

@@ -29,11 +29,11 @@ import org.jdom.Namespace;
  * @author fxprunayre
  * @author sppigot
  */
-public class Processor {
+public final class Processor {
 
 	private static TreeSet<Long> failures = new TreeSet<Long>();
 
-	private static int MAX_FAILURES = 50;
+	private static final int MAX_FAILURES = 50;
 
 	private static final long ELAPSE_TIME = 30000;
 
@@ -58,9 +58,14 @@ public class Processor {
 	private static final String ACTION_DETACH = "detach";
 
 	public static final String XLINK_JCS = "xlink";
+	
+	/**
+    * Default constructor.
+    * Builds a Processor.
+    */
+   private Processor() {}
 
-	//--------------------------------------------------------------------------
-  /**
+   /**
     * Resolve all XLinks of the input XML document.
     */
 	public static Element processXLink(Element xml) {

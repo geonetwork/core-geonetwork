@@ -27,9 +27,15 @@ import org.apache.log4j.Logger;
 
 //=============================================================================
 
-public class Log
+public final class Log
 {
-	//---------------------------------------------------------------------------
+	/**
+    * Default constructor.
+    * Builds a Log.
+    */
+   private Log() {}
+   
+   //---------------------------------------------------------------------------
 	//--- Logging constants
 	//---------------------------------------------------------------------------
 
@@ -46,9 +52,15 @@ public class Log
 	public static final String DBMSPOOL	 = JEEVES+ ".dbmspool";
 	public static final String XLINK_PROCESSOR = JEEVES+ ".xlinkprocessor";
 
-	public class Dbms
+	public final class Dbms
 	{
-		public static final String SELECT = DBMS  + ".select";
+		/**
+       * Default constructor.
+       * Builds a Log.Dbms.
+       */
+      private Dbms() {}
+      
+	   public static final String SELECT = DBMS  + ".select";
 		public static final String EXECUTE= DBMS  + ".execute";
 	}
 

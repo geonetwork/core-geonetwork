@@ -77,9 +77,15 @@ import org.xml.sax.helpers.DefaultHandler;
 /** General class of useful static methods
   */
 
-public class Xml
+public final class Xml
 {
-	//--------------------------------------------------------------------------
+	/**
+    * Default constructor.
+    * Builds a Xml.
+    */
+   private Xml() {}
+   
+   //--------------------------------------------------------------------------
 	//---
 	//--- Load API
 	//---

@@ -32,15 +32,15 @@ import org.jdom.Namespace;
 
 //=============================================================================
 
-public class SOAPUtil
+public final class SOAPUtil
 {
 	public static final Namespace NAMESPACE_ENV = Namespace.getNamespace("env", "http://www.w3.org/2003/05/soap-envelope");
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+	/**
+    * Default constructor.
+    * Builds a SOAPUtil.
+    */
+   private SOAPUtil() {}
 
 	public static Element embed(Element response)
 	{

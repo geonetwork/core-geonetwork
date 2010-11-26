@@ -40,9 +40,15 @@ import org.jdom.Element;
 /** DB Utilities
   */
 
-public class DBUtils
+public final class DBUtils
 {
 	public static final String DEFAULT_DATE_FORMAT = "dd-MM-yyyy";
+	
+	/**
+    * Default constructor.
+    * Builds a DBUtils.
+    */
+   private DBUtils() {}
 	
    public static Vector<Object> scanInFields(Element params, Vector<Element> inFields,
          Element result, Dbms dbms) throws Exception {

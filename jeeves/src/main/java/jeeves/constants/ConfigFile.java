@@ -30,9 +30,15 @@ package jeeves.constants;
 
 public class ConfigFile
 {
-	public class Child
+	public final class Child
 	{
-		public static final String GENERAL     = "general";
+		/**
+		 * Default constructor.
+		 * Builds a Child.
+		 */
+		private Child() {}
+		
+	   public static final String GENERAL     = "general";
 		public static final String DEFAULT     = "default";
 		public static final String RESOURCES   = "resources";
 		public static final String APP_HANDLER = "appHandler";
@@ -49,12 +55,18 @@ public class ConfigFile
 
 	public class General
 	{
-		public class Child
+		public final class Child
 		{
-			public static final String PROFILES   = "profiles";
+			/**
+			 * Default constructor.
+			 * Builds a Child.
+			 */
+			private Child() {}
+			
+		   public static final String PROFILES   = "profiles";
 			public static final String DEBUG      = "debug";
 			public static final String UPLOAD_DIR = "uploadDir";
-            public static final String MAX_UPLOAD_SIZE = "maxUploadSize";
+			public static final String MAX_UPLOAD_SIZE = "maxUploadSize";
 		}
 	}
 
@@ -66,9 +78,15 @@ public class ConfigFile
 
 	public class Default
 	{
-		public class Child
+		public final class Child
 		{
-			public static final String SERVICE      = "service";
+			/**
+			 * Default constructor.
+			 * Builds a Child.
+			 */
+			private Child() {}
+			
+		   public static final String SERVICE      = "service";
 			public static final String LANGUAGE     = "language";
 			public static final String LOCALIZED    = "localized";
 			public static final String CONTENT_TYPE = "contentType";
@@ -85,9 +103,15 @@ public class ConfigFile
 
 	public class Resources
 	{
-		public class Child
+		public final class Child
 		{
-			public static final String RESOURCE = "resource";
+			/**
+			 * Default constructor.
+			 * Builds a Child.
+			 */
+			private Child() {}
+			
+		   public static final String RESOURCE = "resource";
 		}
 	}
 
@@ -95,14 +119,26 @@ public class ConfigFile
 
 	public class Resource
 	{
-		public class Attr
+		public final class Attr
 		{
-			public static final String ENABLED = "enabled";
+			/**
+			 * Default constructor.
+			 * Builds a Attr.
+			 */
+			private Attr() {}
+			
+		   public static final String ENABLED = "enabled";
 		}
 
-		public class Child
+		public final class Child
 		{
-			public static final String NAME     = "name";
+			/**
+			 * Default constructor.
+			 * Builds a Child.
+			 */
+			private Child() {}
+			
+		   public static final String NAME     = "name";
 			public static final String PROVIDER = "provider";
 			public static final String CONFIG   = "config";
 			public static final String ACTIVATOR= "activator";
@@ -113,9 +149,15 @@ public class ConfigFile
 
 	public class Activator
 	{
-		public class Attr
+		public final class Attr
 		{
-			public static final String CLASS = "class";
+			/**
+			 * Default constructor.
+			 * Builds a Attr.
+			 */
+			private Attr() {}
+			
+		   public static final String CLASS = "class";
 		}
 	}
 
@@ -127,9 +169,15 @@ public class ConfigFile
 
 	public class AppHandler
 	{
-		public class Attr
+		public final class Attr
 		{
-			public static final String CLASS = "class";
+			/**
+			 * Default constructor.
+			 * Builds a Attr.
+			 */
+			private Attr() {}
+			
+		   public static final String CLASS = "class";
 		}
 	}
 
@@ -141,14 +189,26 @@ public class ConfigFile
 
 	public class Schedules
 	{
-		public class Attr
+		public final class Attr
 		{
+			/**
+			 * Default constructor.
+			 * Builds a Attr.
+			 */
+			private Attr() {}
+			
 			public static final String PACKAGE = "package";
 		}
 
-		public class Child
+		public final class Child
 		{
-			public static final String SCHEDULE = "schedule";
+			/**
+			 * Default constructor.
+			 * Builds a Child.
+			 */
+			private Child() {}
+			
+		   public static final String SCHEDULE = "schedule";
 		}
 	}
 
@@ -156,16 +216,28 @@ public class ConfigFile
 
 	public class Schedule
 	{
-		public class Attr
+		public final class Attr
 		{
-			public static final String NAME  = "name";
+			/**
+			 * Default constructor.
+			 * Builds a Attr.
+			 */
+			private Attr() {}
+			
+		   public static final String NAME  = "name";
 			public static final String CLASS = "class";
 			public static final String WHEN  = "when";
 		}
 
-		public class Child
+		public final class Child
 		{
-			public static final String PARAM = "param";
+			/**
+			 * Default constructor.
+			 * Builds a Child.
+			 */
+			private Child() {}
+			
+		   public static final String PARAM = "param";
 		}
 	}
 
@@ -177,14 +249,26 @@ public class ConfigFile
 
 	public class Services
 	{
-		public class Attr
+		public final class Attr
 		{
-			public static final String PACKAGE = "package";
+		   /**
+		    * Default constructor.
+		    * Builds a Attr.
+		    */
+		   private Attr() {}
+		   
+		   public static final String PACKAGE = "package";
 		}
 
-		public class Child
+		public final class Child
 		{
-			public static final String SERVICE = "service";
+			/**
+			 * Default constructor.
+			 * Builds a Child.
+			 */
+			private Child() {}
+			
+		   public static final String SERVICE = "service";
 		}
 	}
 
@@ -192,24 +276,42 @@ public class ConfigFile
 
 	public class Service
 	{
-		public class Attr
+		public final class Attr
 		{
-			public static final String NAME  = "name";
+			/**
+			 * Default constructor.
+			 * Builds a Attr.
+			 */
+			private Attr() {}
+			
+		   public static final String NAME  = "name";
 			public static final String TYPE  = "type";
 			public static final String MATCH = "match";
 			public static final String SHEET = "sheet";
 			public static final String CACHE = "cache";
 
-			public class Type
+			public final class Type
 			{
-				public static final String HTML = "html";
+				/**
+				 * Default constructor.
+				 * Builds a Type.
+				 */
+				private Type() {}
+				
+			   public static final String HTML = "html";
 				public static final String XML  = "xml";
 			}
 		}
 
-		public class Child
+		public final class Child
 		{
-			public static final String CLASS  = "class";
+			/**
+			 * Default constructor.
+			 * Builds a Child.
+			 */
+			private Child() {}
+			
+		   public static final String CLASS  = "class";
 			public static final String OUTPUT = "output";
 			public static final String ERROR  = "error";
 		}
@@ -219,14 +321,26 @@ public class ConfigFile
 
 	public class Class
 	{
-		public class Attr
+		public final class Attr
 		{
-			public static final String NAME = "name";
+			/**
+			 * Default constructor.
+			 * Builds a Attr.
+			 */
+			private Attr() {}
+			
+		   public static final String NAME = "name";
 		}
 
-		public class Child
+		public final class Child
 		{
-			public static final String PARAM = "param";
+			/**
+			 * Default constructor.
+			 * Builds a Child.
+			 */
+			private Child() {}
+			
+		   public static final String PARAM = "param";
 		}
 	}
 
@@ -234,9 +348,15 @@ public class ConfigFile
 
 	public class Param
 	{
-		public class Attr
+		public final class Attr
 		{
-			public static final String NAME  = "name";
+			/**
+			 * Default constructor.
+			 * Builds a Attr.
+			 */
+			private Attr() {}
+			
+		   public static final String NAME  = "name";
 			public static final String VALUE = "value";
 		}
 	}
@@ -245,9 +365,15 @@ public class ConfigFile
 
 	public class Output
 	{
-		public class Attr
+		public final class Attr
 		{
-			public static final String TEST         = "test";
+			/**
+			 * Default constructor.
+			 * Builds a Attr.
+			 */
+			private Attr() {}
+			
+		   public static final String TEST         = "test";
 			public static final String SHEET        = "sheet";
 			public static final String FORWARD      = "forward";
 			public static final String FILE         = "file";
@@ -255,9 +381,15 @@ public class ConfigFile
 			public static final String CONTENT_TYPE = "contentType";
 		}
 
-		public class Child
+		public final class Child
 		{
-			public static final String XML  = "xml";
+			/**
+			 * Default constructor.
+			 * Builds a Child.
+			 */
+			private Child() {}
+			
+		   public static final String XML  = "xml";
 			public static final String CALL = "call";
 		}
 	}
@@ -266,17 +398,29 @@ public class ConfigFile
 
 	public class Error
 	{
-		public class Attr
+		public final class Attr
 		{
-			public static final String ID           = "id";
+			/**
+			 * Default constructor.
+			 * Builds a Attr.
+			 */
+			private Attr() {}
+			
+		   public static final String ID           = "id";
 			public static final String SHEET        = "sheet";
 			public static final String CONTENT_TYPE = "contentType";
 			public static final String STATUS_CODE  = "statusCode";
 		}
 
-		public class Child
+		public final class Child
 		{
-			public static final String XML  = "xml";
+			/**
+			 * Default constructor.
+			 * Builds a Child.
+			 */
+			private Child() {}
+			
+		   public static final String XML  = "xml";
 			public static final String CALL = "call";
 		}
 	}
@@ -289,9 +433,15 @@ public class ConfigFile
 
 	public class Xml
 	{
-		public class Attr
+		public final class Attr
 		{
-			public static final String NAME      = "name";
+			/**
+			 * Default constructor.
+			 * Builds a Attr.
+			 */
+			private Attr() {}
+			
+		   public static final String NAME      = "name";
 			public static final String FILE      = "file";
 			public static final String BASE      = "base";
 			public static final String LANGUAGE  = "language";
@@ -303,9 +453,15 @@ public class ConfigFile
 
 	public class Call
 	{
-		public class Attr
+		public final class Attr
 		{
-			public static final String NAME     = "name";
+			/**
+			 * Default constructor.
+			 * Builds a Attr.
+			 */
+			private Attr() {}
+			
+		   public static final String NAME     = "name";
 			public static final String CLASS    = "class";
 		}
 	}

@@ -29,14 +29,23 @@ import java.io.IOException;
 
 //=============================================================================
 
-/** A container of I/O methods
-  */
-
-public class IO
+/**
+ * A container of I/O methods. <P>
+ * 
+ */
+public final class IO
 {
-	/** Loads a text file, handling the exceptions
-	  */
-
+	/**
+    * Default constructor.
+    * Builds a IO.
+    */
+   private IO() {}
+   
+   /**
+	 * Loads a text file, handling the exceptions
+	 * @param name
+	 * @return
+	 */
 	public static String loadFile(String name)
 	{
 		StringBuffer sb = new StringBuffer();

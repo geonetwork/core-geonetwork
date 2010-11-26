@@ -23,11 +23,6 @@
 
 package jeeves.utils;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.MissingParameterEx;
-import org.jdom.Element;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -35,13 +30,25 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
+import jeeves.exceptions.BadInputEx;
+import jeeves.exceptions.BadParameterEx;
+import jeeves.exceptions.MissingParameterEx;
+
+import org.jdom.Element;
+
 //=============================================================================
 
 /** Generic utility class (static methods)
   */
 
-public class Util
+public final class Util
 {
+	/**
+	 * Default constructor.
+	 * Builds a Util.
+	 */
+	private Util() {}
+	
 	//--------------------------------------------------------------------------
 	//---
 	//--- API methods
