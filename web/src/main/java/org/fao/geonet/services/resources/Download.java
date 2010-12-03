@@ -23,6 +23,10 @@
 
 package org.fao.geonet.services.resources;
 
+import java.io.File;
+import java.util.Iterator;
+
+import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.ResourceNotFoundEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -30,6 +34,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -39,9 +44,6 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.MailSender;
 import org.jdom.Element;
-
-import java.io.File;
-import java.util.Iterator;
 
 //=============================================================================
 
@@ -72,6 +74,10 @@ public class Download implements Service
 
 		boolean doNotify = false;
 
+		if (fname.contains("..")) {
+			throw new BadParameterEx("Invalid character found in resource name.", fname);
+		}
+		
 		if (access.equals(Params.Access.PRIVATE))
 		{
 			Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
