@@ -72,6 +72,10 @@ public class Download implements Service
 
 		boolean doNotify = false;
 
+		if (fname.contains("..")) {
+			throw new ResourceNotFoundEx("Resource contains invalid characters.");
+		}
+
 		if (access.equals(Params.Access.PRIVATE))
 		{
 			Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
