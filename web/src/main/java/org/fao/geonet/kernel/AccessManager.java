@@ -163,10 +163,9 @@ public class AccessManager
 		query.append("FROM   OperationAllowed ");
 		query.append("WHERE  groupId IN (");
 		query.append(groupList.toString());
-		query.append(") AND    metadataId = ");
-		query.append(mdId);
-
-		Element operations = dbms.select(query.toString());
+		query.append(") AND    metadataId = ?");
+		
+		Element operations = dbms.select(query.toString(), new Integer(mdId));
 
 		// find out what they could do if they registered and offer that as
 		// as a separate element
@@ -175,10 +174,9 @@ public class AccessManager
 			query.append("SELECT operationId, groupId ");
 			query.append("FROM   OperationAllowed ");
 			query.append("WHERE  groupId = -1 ");
-			query.append("AND    metadataId = ");
-			query.append(mdId);
-
-			Element therecords = dbms.select(query.toString());
+			query.append("AND    metadataId = ?");
+			
+			Element therecords = dbms.select(query.toString(), new Integer(mdId));
 			if (therecords != null) {
 				Element guestOperations = new Element("guestoperations");
 				guestOperations.addContent(therecords.cloneContent());
