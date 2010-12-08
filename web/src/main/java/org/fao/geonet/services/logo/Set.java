@@ -30,6 +30,7 @@ import java.io.FileOutputStream;
 
 import javax.imageio.ImageIO;
 
+import jeeves.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -61,6 +62,10 @@ public class Set implements Service {
 			throws Exception {
 		String file = Util.getParam(params, Params.FNAME);
 
+		if (file.contains("..")) {
+			throw new BadParameterEx("Invalid character found in resource name.", file);
+		}
+		
 		if ("".equals(file)) {
 			throw new Exception("Logo name is not defined.");
 		}

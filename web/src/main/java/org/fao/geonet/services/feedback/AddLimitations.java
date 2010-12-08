@@ -23,6 +23,12 @@
 
 package org.fao.geonet.services.feedback;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -32,6 +38,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -40,12 +47,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
-
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 //=============================================================================
 
@@ -127,6 +128,10 @@ public class AddLimitations implements Service
 
 			String fname = elem.getText();
 
+			if (fname.contains("..")) {
+				continue;	// Avoid unsecured file name
+			}
+			
 			File file = new File(dir, fname);
 
 			Element fileInfo = new Element("file");
