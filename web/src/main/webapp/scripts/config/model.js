@@ -80,6 +80,7 @@ ConfigModel.prototype.getConfig_OK = function(node)
             CSW_METADATA_PUBLIC          : xml.evalXPath(node, 'csw/metadataPublic'),			
             CLICKABLE_HYPERLINKS         : xml.evalXPath(node, 'clickablehyperlinks/enable'),
             INSPIRE           : xml.evalXPath(node, 'inspire/enable'),
+            HARVESTER           : xml.evalXPath(node, 'harvester/enableEditing'),
 			LOCAL_RATING      : xml.evalXPath(node, 'localrating/enable'),			
             AUTO_FIXING       : xml.evalXPath(node, 'autofixing/enable'),
 			PROXY_USE         : xml.evalXPath(node, 'proxy/use'),
@@ -231,6 +232,9 @@ ConfigModel.updateTemp =
 '	<inspire>' +
 '		<enable>{INSPIRE}</enable>'+
 '	</inspire>' +
+'	<harvester>' +
+'		<enableEditing>{HARVESTER}</enableEditing>'+
+'	</harvester>' +
 '	<proxy>'+
 '		<use>{PROXY_USE}</use>'+
 '		<host>{PROXY_HOST}</host>'+

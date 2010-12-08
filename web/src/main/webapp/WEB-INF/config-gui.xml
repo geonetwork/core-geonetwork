@@ -98,13 +98,6 @@
  <editor-google-translate>0</editor-google-translate>
  
  
- <!-- 
- By default harvested metadata record could be edited.
- Set this parameter to "0" or "1".
- -->
- <allow-editing-for-harvested-record>0</allow-editing-for-harvested-record>
- 
- 
  <!-- Metadata relation information
  Comment out this element to turn off metadata relation display in metadata
  edit and view mode. 

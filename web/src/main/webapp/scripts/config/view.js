@@ -150,6 +150,7 @@ ConfigView.prototype.setData = function(data)
 	$('localrating.enable').checked = data['LOCAL_RATING'] == 'true';
 	$('autofixing.enable').checked = data['AUTO_FIXING'] == 'true';
     $('inspire.enable').checked = data['INSPIRE'] == 'true';
+    $('harvester.enableEditing').checked = data['HARVESTER'] == 'true';
 
 	$('proxy.use') .checked   = data['PROXY_USE'] == 'true';
 	$('proxy.host').value     = data['PROXY_HOST'];
@@ -262,6 +263,7 @@ ConfigView.prototype.getData = function()
 		LOCAL_RATING : $('localrating.enable').checked,
 		AUTO_FIXING : $('autofixing.enable').checked,
         INSPIRE : $('inspire.enable').checked,
+        HARVESTER : $('harvester.enableEditing').checked,
 
 		PROXY_USE  : $('proxy.use') .checked,
 		PROXY_HOST : $('proxy.host').value,

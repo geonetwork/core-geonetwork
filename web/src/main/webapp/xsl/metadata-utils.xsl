@@ -174,8 +174,8 @@
 			<button class="content" onclick="load('{/root/gui/locService}/metadata.duplicate.form?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/create"/></button>
 		</xsl:if>
 		<xsl:if test="
-		(/root/gui/config/allow-editing-for-harvested-record = 1 and geonet:info/isHarvested = 'y' and geonet:info/edit='true')
-		or (geonet:info/isHarvested = 'n' and geonet:info/edit='true')">
+			(/root/gui/env/harvester/enableEditing = 'true' and geonet:info/isHarvested = 'y' and geonet:info/edit='true')
+			or (geonet:info/isHarvested = 'n' and geonet:info/edit='true')">
 			<!-- edit button -->
 			&#160;
 			<button class="content" onclick="load('{/root/gui/locService}/metadata.edit?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/edit"/></button>

@@ -114,7 +114,10 @@
 	<xlinkResolver>XLink Resolver</xlinkResolver>
 
     <inspire>INSPIRE</inspire>
-
+	
+	<harvester>Moissonnage</harvester>
+	<enableEditing>Autoriser l'édition des métadonnées moissonnées</enableEditing>
+	
 	<downloadservice>Service de téléchargement</downloadservice>
 	<leave>Utiliser les liens de la section distribution - sans changement</leave>
 	<simple>Utiliser le service de téléchargement GeoNetwork (resources.get)</simple>

@@ -56,6 +56,7 @@
 		<xsl:call-template name="localrating"/>
         <xsl:call-template name="autofixing"/>
         <xsl:call-template name="inspire"/>
+		<xsl:call-template name="harvester"/>
 		<xsl:call-template name="proxy"/>
 		<xsl:call-template name="feedback"/>
 		<xsl:call-template name="removedMetadata"/>
@@ -69,7 +70,7 @@
 		<div align="left" style="{$style}">
 			<table>
 				<tr>
-					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/enable"/></td>
+					<td class="padded" width="{$width}"><label for="xlinkResolver.enable"><xsl:value-of select="/root/gui/config/enable"/></label></td>
 					<td class="padded"><input id="xlinkResolver.enable" class="content" type="checkbox"/></td>
 				</tr>
 			</table>
@@ -83,14 +84,25 @@
 		<div align="left" style="{$style}">
 			<table>
 				<tr>
-					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/enable"/></td>
+					<td class="padded" width="{$width}"><label for="inspire.enable"><xsl:value-of select="/root/gui/config/enable"/></label></td>
 					<td class="padded"><input id="inspire.enable" class="content" type="checkbox"/></td>
 				</tr>
 			</table>
 		</div>
 	</xsl:template>
 
-
+	<xsl:template name="harvester">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/harvester"/></h1>
+		<div align="left" style="{$style}">
+			<table>
+				<tr>
+					<td class="padded" width="{$width}"><label for="harvester.enableEditing"><xsl:value-of select="/root/gui/config/enableEditing"/></label></td>
+					<td class="padded"><input id="harvester.enableEditing" class="content" type="checkbox"/></td>
+				</tr>
+			</table>
+		</div>
+	</xsl:template>
+	
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="authentication">
@@ -98,11 +110,11 @@
 		<div align="left" style="{$style}">
 			<b><xsl:value-of select="concat(/root/gui/config/loginuses,': ')"/></b>
 			<div align="left" style="{$style}">
-				<input align="left" type="radio" id="geonetworkdb.use" name="authentication" value="default"><xsl:value-of select="/root/gui/config/geonetworkdb"/></input>
+				<input align="left" type="radio" id="geonetworkdb.use" name="authentication" value="default"/><label for="geonetworkdb.use"><xsl:value-of select="/root/gui/config/geonetworkdb"/></label>
 				<xsl:call-template name="geonetworkdb"/>
 			</div>
 			<div align="left" style="{$style}">
-				<input align="left" type="radio" id="ldap.use" name="authentication" value="ldap"><xsl:value-of select="/root/gui/config/ldap"/></input>
+				<input align="left" type="radio" id="ldap.use" name="authentication" value="ldap"/><label for="ldap.use"><xsl:value-of select="/root/gui/config/ldap"/></label>
 				<xsl:call-template name="ldap"/>
 			</div>
 		</div>
@@ -110,9 +122,10 @@
 		<div align="left" style="{$style}">
 			<b><xsl:value-of select="concat(/root/gui/config/otherlogins,': ')"/></b>
 			<div align="left" style="{$style}">
-				<input align="left" type="checkbox" id="shib.use" name="authentication" value="shib">
+				<input align="left" type="checkbox" id="shib.use" name="authentication" value="shib"/>
+				<label for="shib.use">
 					<xsl:value-of select="/root/gui/config/shib"/> 
-				</input>
+				</label>
 				<xsl:call-template name="shib"/>
 			</div>
 		</div>
@@ -183,7 +196,8 @@
 		<h1 align="left"><xsl:value-of select="/root/gui/config/downloadservice"/></h1>
 
 		<div align="left" style="{$style}">
-			<input align="left" type="radio" id="downloadservice.simple" value="simple" name="downloadservice"><xsl:value-of select="/root/gui/config/simple"/></input>
+			<input align="left" type="radio" id="downloadservice.simple" value="simple" name="downloadservice"/>
+			<label for="downloadservice.simple"><xsl:value-of select="/root/gui/config/simple"/></label>
 			<div align="left" style="{$style}">
 				<span id="downloadservice_simple.subpanel">
 					<xsl:value-of select="/root/gui/config/tips/tip[id='downloadservice.simple']"/>
@@ -191,7 +205,8 @@
 			</div>
 		</div>
 		<div align="left" style="{$style}">
-			<input align="left" type="radio" id="downloadservice.withdisclaimer" value="disclaimer" name="downloadservice"><xsl:value-of select="/root/gui/config/withdisclaimer"/></input>
+			<input align="left" type="radio" id="downloadservice.withdisclaimer" value="disclaimer" name="downloadservice"/>
+			<label for="downloadservice.withdisclaimer"><xsl:value-of select="/root/gui/config/withdisclaimer"/></label>
 			<div align="left" style="{$style}">
 				<span id="downloadservice_withdisclaimer.subpanel">
 					<xsl:value-of select="/root/gui/config/tips/tip[id='downloadservice.withdisclaimer']"/>
@@ -199,7 +214,8 @@
 			</div>
 		</div>
 		<div align="left" style="{$style}">
-			<input align="left" type="radio" id="downloadservice.leave" value="leave" name="downloadservice"><xsl:value-of select="/root/gui/config/leave"/></input>
+			<input align="left" type="radio" id="downloadservice.leave" value="leave" name="downloadservice"/>
+			<label for="downloadservice.leave"><xsl:value-of select="/root/gui/config/leave"/></label>
 			<div align="left" style="{$style}">
 				<span id="downloadservice_leave.subpanel">
 					<xsl:value-of select="/root/gui/config/tips/tip[id='downloadservice.leave']"/>
@@ -216,7 +232,7 @@
 		<div align="left" style="{$style}">
 			<table>
 				<tr>
-					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/enable"/></td>
+					<td class="padded" width="{$width}"><label for="z3950.enable"><xsl:value-of select="/root/gui/config/enable"/></label></td>
 					<td class="padded"><input id="z3950.enable" class="content" type="checkbox"/></td>
 				</tr>
 	
@@ -267,7 +283,7 @@
 		<div align="left" style="{$style}">
 			<table>
 				<tr>
-					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/enable"/></td>
+					<td class="padded" width="{$width}"><label for="indexoptimizer.enable"><xsl:value-of select="/root/gui/config/enable"/></label></td>
 					<td class="padded"><input id="indexoptimizer.enable" class="content" type="checkbox"/></td>
 				</tr>
 	
@@ -387,7 +403,7 @@
 		<div align="left" style="{$style}">
             <table>
             	<tr>
-					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/enable"/></td>
+            		<td class="padded" width="{$width}"><label for="csw.enable"><xsl:value-of select="/root/gui/config/enable"/></label></td>
 					<td class="padded"><input id="csw.enable" class="content" type="checkbox"/></td>
 				</tr>
             	<tr>
@@ -444,7 +460,7 @@
             		</td>
             	</tr>
                 <tr>
-                    <td class="padded"><xsl:value-of select="/root/gui/config/cswMetadataPublic"/></td>
+                	<td class="padded"><label for="csw.metadataPublic"><xsl:value-of select="/root/gui/config/cswMetadataPublic"/></label></td>
                     <td class="padded"><input id="csw.metadataPublic" class="content" type="checkbox" value=""/></td>
                 </tr>                
             </table>
@@ -458,7 +474,7 @@
 		<div align="left" style="{$style}">
 			<table>
 				<tr>
-					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/enable"/></td>
+					<td class="padded" width="{$width}"><label for="clickablehyperlinks.enable"><xsl:value-of select="/root/gui/config/enable"/></label></td>
 					<td class="padded"><input id="clickablehyperlinks.enable" class="content" type="checkbox" value=""/></td>
 				</tr>
 			</table>
@@ -472,7 +488,7 @@
 		<div align="left" style="{$style}">
 			<table>
 				<tr>
-					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/enable"/></td>
+					<td class="padded" width="{$width}"><label for="localrating.enable"><xsl:value-of select="/root/gui/config/enable"/></label></td>
 					<td class="padded"><input id="localrating.enable" class="content" type="checkbox" value=""/></td>
 				</tr>
 			</table>
@@ -486,7 +502,7 @@
 		<div align="left" style="{$style}">
 			<table>
 				<tr>
-					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/enable"/></td>
+					<td class="padded" width="{$width}"><label for="autofixing.enable"><xsl:value-of select="/root/gui/config/enable"/></label></td>
 					<td class="padded"><input id="autofixing.enable" class="content" type="checkbox" value=""/></td>
 				</tr>
 			</table>
@@ -500,7 +516,7 @@
 		<div align="left" style="{$style}">
 			<table>
 				<tr>
-					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/use"/></td>
+					<td class="padded" width="{$width}"><label for="proxy.use"><xsl:value-of select="/root/gui/config/use"/></label></td>
 					<td class="padded"><input id="proxy.use" class="content" type="checkbox" value=""/></td>
 				</tr>
 				<tr>
@@ -581,7 +597,7 @@
 		<div align="left" style="{$style}">
 			<table id="geonetworkdb.subpanel">
 				<tr>
-					<td class="padded" width="40%"><xsl:value-of select="concat(/root/gui/config/enable,' ',/root/gui/config/userSelfRegistration)"/></td>
+					<td class="padded" width="40%"><label for="userSelfRegistration.enable"><xsl:value-of select="concat(/root/gui/config/enable,' ',/root/gui/config/userSelfRegistration)"/></label></td>
 					<td class="padded"><input id="userSelfRegistration.enable" class="content" type="checkbox"/></td>
 				</tr>
 			</table>

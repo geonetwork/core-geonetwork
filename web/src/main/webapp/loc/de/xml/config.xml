@@ -79,7 +79,10 @@
 	<xlinkResolver>XLink Resolver</xlinkResolver>
 
     <inspire>INSPIRE</inspire>
-    
+	
+	<harvester>Harvesting</harvester>
+	<enableEditing>Allow editing on harvested records</enableEditing>
+	
 	<downloadservice>Data-For-Download Service</downloadservice>
 	<leave>Use metadata linkage as is - no changes to linkage</leave>
 	<simple>Use GeoNetwork simple file download service (resources.get)</simple>

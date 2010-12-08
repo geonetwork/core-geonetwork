@@ -97,7 +97,10 @@
     <autofixing>Automática corrige</autofixing>
 
     <inspire>INSPIRE</inspire>
-    
+	
+	<harvester>Harvesting</harvester>
+	<enableEditing>Allow editing on harvested records</enableEditing>
+	
 	<proxy>Proxy</proxy>
 	<use>Uso</use>
 	<username>Nombre de usuario</username>

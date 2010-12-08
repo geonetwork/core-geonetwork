@@ -7375,6 +7375,8 @@ INSERT INTO Settings VALUES (836,834,'selected','false');
 INSERT INTO Settings VALUES (837,800,'indexlanguage',NULL);
 INSERT INTO Settings VALUES (838,837,'name','swedish');
 INSERT INTO Settings VALUES (839,837,'selected','false');
+INSERT INTO Settings VALUES (900,1,'harvester',NULL);
+INSERT INTO Settings VALUES (901,900,'enableEditing','false');
 
 -- ======================================================================
 -- === Table: Users
