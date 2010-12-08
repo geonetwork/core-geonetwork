@@ -233,7 +233,7 @@
                     <xsl:otherwise><xsl:value-of select="@code"/></xsl:otherwise>
                 </xsl:choose>
             </label>
-            <xsl:text> </xsl:text>
+        	<xsl:text>&#160;&#160;</xsl:text>
         </xsl:for-each>
         
         
