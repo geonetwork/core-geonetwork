@@ -19,7 +19,6 @@
 	<drawRectangle js="true">Draw rectangle</drawRectangle>
 	<drawPolygon js="true">Draw polygon</drawPolygon>
 	<drawCircle js="true">Draw circle</drawCircle>
-	<clear js="true">Clear</clear>
 	<geopublisher>GeoPublisher</geopublisher>
 	<geoPublisherWindowTitle js="true">Geo-publication: </geoPublisherWindowTitle>
 	<geopublisherHelp>Publish or unpublish dataset as WMS or WFS in remote geoserver.</geopublisherHelp>
