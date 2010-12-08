@@ -29,6 +29,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+import jeeves.exceptions.BadParameterEx;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -123,7 +125,9 @@ public class Upload implements Service
 		boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
 
 		if ((fname != null) && !fname.equals("")) {
-			
+			if (fname.contains("..")) {
+				throw new BadParameterEx("Invalid character found in thesaurus name.", fname);
+			}
 			Element eTSResult;
 			
 			File oldFile = new File(uploadDir, fname);

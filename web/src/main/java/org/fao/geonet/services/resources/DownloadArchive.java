@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.resources;
 
+import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.exceptions.ResourceNotFoundEx;
 import jeeves.interfaces.Service;
@@ -121,6 +122,11 @@ public class DownloadArchive implements Service
 		if (access.equals(Params.Access.PUBLIC)) { 
 			File dir = new File(Lib.resource.getDir(context, access, id));
 			String fname = Util.getParam(params, Params.FNAME);
+
+			if (fname.contains("..")) {
+				throw new BadParameterEx("Invalid character found in resource name.", fname);
+			}
+
 			File file = new File(dir, fname);
 			return BinaryFile.encode(200, file.getAbsolutePath(),false);
 		}
@@ -183,6 +189,10 @@ public class DownloadArchive implements Service
 		for (Object o : files) {
 			Element elem = (Element)o;
 			String fname = elem.getText();
+
+			if (fname.contains("..")) {
+				continue;
+			}
 
 			File file = new File(dir, fname);
 			if (!file.exists()) throw new ResourceNotFoundEx(file.getAbsolutePath());

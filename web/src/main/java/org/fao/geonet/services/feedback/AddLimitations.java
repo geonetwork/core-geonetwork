@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.feedback;
 
+import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -126,6 +127,9 @@ public class AddLimitations implements Service
 			response.addContent((Element)elem.clone());
 
 			String fname = elem.getText();
+			if (fname.contains("..")) {
+				continue;	// Avoid unsecured file name
+			}
 
 			File file = new File(dir, fname);
 
