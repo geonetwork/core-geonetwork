@@ -174,7 +174,7 @@ public class AccessManager
 			query.append("SELECT operationId, groupId ");
 			query.append("FROM   OperationAllowed ");
 			query.append("WHERE  groupId = -1 ");
-			query.append(") AND    metadataId = ?");
+			query.append("AND    metadataId = ?");
 
 			Element therecords = dbms.select(query.toString(), new Integer(mdId));
 			if (therecords != null) {
