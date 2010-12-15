@@ -21,6 +21,7 @@
 						<td class="tipHeader"> <xsl:value-of select="/root/strings/tipHeader/updated"/> </td>
 						<td class="tipHeader"> <xsl:value-of select="/root/strings/tipHeader/unchanged"/> </td>
 						<td class="tipHeader"> <xsl:value-of select="/root/strings/tipHeader/skipped"/> </td>
+                        <td class="tipHeader"> <xsl:value-of select="/root/strings/tipHeader/doesNotValidate"/> </td>
 					</tr>
 					<xsl:for-each select="info/search">
 						<tr class="tipRow">
@@ -30,6 +31,7 @@
 							<td class="tipCell"><xsl:value-of select="updated"/></td>
 							<td class="tipCell"><xsl:value-of select="unchanged"/></td>
 							<td class="tipCell"><xsl:value-of select="skipped"/></td>					
+                            <td class="tipCell"><xsl:value-of select="doesNotValidate"/></td>					
 						</tr>
 					</xsl:for-each>
 				</table>

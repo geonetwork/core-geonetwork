@@ -95,11 +95,12 @@
     <!-- ============================================================================================= -->
 
     <xsl:template name="content-Arcsde">
-    <div style="display:none;"> <!-- UNUSED -->
+    <div>
         <h1 align="left"><xsl:value-of select="/root/gui/harvesting/content"/></h1>
 
         <table border="0">
-            <tr>
+             <!-- UNUSED -->
+			<tr style="display:none;">
                 <td class="padded"><xsl:value-of select="/root/gui/harvesting/importxslt"/></td>
                 <td class="padded">
                     &#160;
@@ -115,6 +116,7 @@
     </div>
     </xsl:template>
     
+
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="privileges-Arcsde">

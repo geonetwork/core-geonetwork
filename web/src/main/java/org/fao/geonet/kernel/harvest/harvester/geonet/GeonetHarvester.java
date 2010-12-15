@@ -268,6 +268,7 @@ class GeonetResult
 	public int locallyRemoved;
 	public int unknownSchema;
 	public int unretrievable;
+    
 }
 
 //=============================================================================

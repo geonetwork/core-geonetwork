@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester.geonet20;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -328,6 +329,14 @@ public class Aligner
 	//---
 	//--------------------------------------------------------------------------
 
+    /**
+     * Retrieves remote metadata. If validation is requested and the metadata does not validate, returns null.
+     *
+     * @param req
+     * @param id
+     * @return
+     * @throws Exception
+     */
 	private Element getRemoteMetadata(XmlRequest req, String id) throws Exception
 	{
 		req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_METADATA_GET);
@@ -342,6 +351,17 @@ public class Aligner
 			if (info != null)
 				info.detach();
 
+            // validate it here if requested
+            if (params.validate) {
+                try {
+                    Xml.validate(md);
+                }
+                // invalid: skip this one
+                catch (Exception x) {
+                    System.out.println("Cannot validate XML, ignoring. Error was: "+ x.getMessage());
+                    result.doesNotValidate++;
+                }
+            }
 			return md;
 		}
 		catch(Exception e)
@@ -411,6 +431,7 @@ class AlignerResult
 	public int locallyRemoved;
 	public int schemaSkipped;
 	public int uuidSkipped;
+    public int doesNotValidate;    
 }
 
 //=============================================================================

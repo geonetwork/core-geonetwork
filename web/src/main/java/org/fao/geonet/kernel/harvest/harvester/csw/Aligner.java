@@ -302,8 +302,13 @@ public class Aligner
 	//---
 	//--------------------------------------------------------------------------
 
-	/** Return true if the uuid is present in the remote node */
-
+    /**
+     *  Returns true if the uuid is present in the remote node.
+     * 
+     * @param records
+     * @param uuid
+     * @return
+     */
 	private boolean exists(Set<RecordInfo> records, String uuid)
 	{
 		for(RecordInfo ri : records)
@@ -316,7 +321,11 @@ public class Aligner
 	//--------------------------------------------------------------------------
 
 	/**
-	 * Does CSW GetRecordById request.
+	 * Does CSW GetRecordById request. If validation is requested and the metadata
+     * does not validate, null is returned.
+     *
+     * @param uuid uuid of metadata to request
+     * @return metadata the metadata
 	 */
 	private Element retrieveMetadata(String uuid)
 	{
@@ -337,8 +346,20 @@ public class Aligner
 				return null;
 
 			response = (Element) list.get(0);
+			response = (Element) response.detach();
 
-			return (Element) response.detach();
+            // validate it here if requested
+            if (params.validate) {
+                try {
+                    Xml.validate(response);
+                }
+                // invalid: skip this one
+                catch (Exception x) {
+                    System.out.println("Cannot validate XML, ignoring. Error was: "+ x.getMessage());
+                    result.doesNotValidate++;
+                }
+            }
+            return response;
 		}
 		catch(Exception e)
 		{
