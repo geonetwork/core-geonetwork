@@ -22,6 +22,11 @@
 
 package org.fao.geonet.kernel;
 
+import jeeves.utils.Log;
+import jeeves.utils.Xml;
+import org.fao.geonet.constants.Geonet;
+import org.jdom.Element;
+import org.jdom.Namespace;
 import org.openrdf.model.BNode;
 import org.openrdf.model.Graph;
 import org.openrdf.model.GraphException;
@@ -40,7 +45,9 @@ import org.openrdf.sesame.sail.StatementIterator;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Thesaurus {
@@ -53,6 +60,8 @@ public class Thesaurus {
 	private File thesaurusFile;
 
 	private LocalRepository repository;
+
+    private String title;
 
 	@SuppressWarnings("unused")
 	private String name;
@@ -83,6 +92,8 @@ public class Thesaurus {
 		this.dname = dname;
 		this.thesaurusFile = thesaurusFile; 
 		
+        this.title = retrieveThesaurusTitle(thesaurusFile, type);
+
 	}
 
 	/**
@@ -107,6 +118,10 @@ public class Thesaurus {
 
 	public String getType() {
 		return type;
+	}
+
+    public String getTitle() {
+		return title;
 	}
 
 	/**
@@ -425,4 +440,33 @@ public class Thesaurus {
 		myGraph.remove(null,null,oldobj);		
 		//repository.addGraph(myTmpGraph);
 	}
+
+    /**
+     * Retrieves the thesaurus title from rdf file.
+     *
+     * Used to set the thesaurusName for keywords
+     *
+     * @return
+     */
+    private String retrieveThesaurusTitle(File thesaurusFile, String defaultTitle) {
+        try {
+            Element thesaurusEl = Xml.loadFile(thesaurusFile);
+
+            List<Namespace> theNSs = new ArrayList<Namespace>();
+            theNSs.add(Namespace.getNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"));
+            theNSs.add(Namespace.getNamespace("skos", "http://www.w3.org/2004/02/skos/core#"));
+            theNSs.add(Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/"));
+
+            Element title = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dc:title", theNSs);
+            if (title != null) {
+                return title.getValue();
+            }
+
+        } catch (Exception ex) {
+            Log.info(Geonet.THESAURUS_MAN, "Error getting thesaurus title, using default value: " + ex.getMessage()); 
+        }
+
+        return defaultTitle;
+
+    }
 }
