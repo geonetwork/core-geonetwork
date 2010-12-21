@@ -68,6 +68,8 @@
         code        CSR code
         default     Indicates the default CRS (values: 0, 1)
 
+    scales: array with scales to show in scale selector control. Empty array, uses scales created from map configuration
+
     layers/layer:
         server      url of the server
         tocName     layer name in map
@@ -79,6 +81,8 @@
     <layer server="http://localhost:8080/geoserver/wms" tocName="Borders"  params="{layers: 'gn:gboundaries', transparent: 'true', format: 'image/png'}"  options="{}" />
     <layer server="http://localhost:8080/geoserver/wms" tocName="Ortophoto" params="{layers: 'gn:world', format: 'image/jpeg'}" options="{isBaseLayer: true}" />
   </layers>
+  <scales values="[7500000, 5000000, 2500000,  1000000, 750000, 500000, 250000, 100000, 75000, 50000, 25000, 10000, 7500, 5000, 2500, 1000]" />
+  <!--scales values="[]" /-->    
   <proj>
     <crs code="EPSG:4326" default="1" name="WGS84 (lat/lon)" />
   </proj>
