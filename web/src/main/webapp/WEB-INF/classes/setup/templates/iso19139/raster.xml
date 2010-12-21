@@ -300,7 +300,7 @@
 </MD_Resolution>
 </spatialResolution>
 <language>
-<gco:CharacterString>eng</gco:CharacterString>
+	<gmd:LanguageCode codeList="" codeListValue="eng" />
 </language>
 <characterSet>
 <MD_CharacterSetCode codeListValue="utf8" codeList="./resources/codeList.xml#MD_CharacterSetCode"/>

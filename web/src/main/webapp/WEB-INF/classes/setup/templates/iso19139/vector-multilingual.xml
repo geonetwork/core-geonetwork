@@ -338,7 +338,7 @@
                 </gmd:MD_Resolution>
             </gmd:spatialResolution>
             <gmd:language>
-                <gco:CharacterString>eng</gco:CharacterString>
+            	<gmd:LanguageCode codeList="" codeListValue="eng" />            	
             </gmd:language>
             <gmd:characterSet>
                 <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>

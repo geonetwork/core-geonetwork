@@ -12,7 +12,7 @@
 	<gmd:hierarchyLevel> 
 		<gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode" codeListValue="service" /> 
 	</gmd:hierarchyLevel>
-    <gmd:contact>
+	<gmd:contact>
         <gmd:CI_ResponsibleParty>
             <gmd:individualName>
                 <gco:CharacterString>The administrator of the service</gco:CharacterString>
@@ -103,7 +103,7 @@
             </gmd:abstract>
         	<gmd:status>
                 <gmd:MD_ProgressCode codeListValue="completed" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ProgressCode"/>
-            </gmd:status>
+        	</gmd:status>
         	<gmd:pointOfContact>
                 <gmd:CI_ResponsibleParty>
                     <gmd:individualName gco:nilReason="missing">
