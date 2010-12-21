@@ -419,7 +419,7 @@ class Harvester
 		catch(Exception e)
 		{
 			log.warning("Raised exception when searching : "+ e);
-			throw new OperationAbortedEx("Raised exception when searching", e);
+			throw new OperationAbortedEx("Raised exception when searching: " + e.getMessage(), e);
 		}
 	}
 
