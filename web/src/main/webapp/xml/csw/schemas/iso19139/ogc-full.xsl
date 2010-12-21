@@ -62,7 +62,7 @@
 				
 				<!-- subject -->
 				
-				<xsl:for-each select="../../gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword">
+				<xsl:for-each select="../../gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[not(@gco:nilReason)]">
 					<dc:subject>
 						<xsl:apply-templates mode="localised" select=".">
 								<xsl:with-param name="langId" select="$langId"/>

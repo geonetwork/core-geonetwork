@@ -118,13 +118,14 @@
 			thumbnail using a simple URL.
 		-->		
 		<xsl:variable name="exception" select="../gmd:graphicOverview[gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='thumbnail' or gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='large_thumbnail']"/>
-		
 		<!-- <xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)=$name]"/> -->
 		<xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)='']"/>
-		<xsl:if test="$currTab!='simple' and (geonet:choose or name($prevBrother)!=$name) or $subtemplates"> 
+		
+		
+		<xsl:if test="$currTab!='simple'"> 
 			<xsl:if test="(geonet:choose 
-							or name($prevBrother)!=$name 
-							or $exception) 
+							or name($prevBrother)!=$name
+							or $exception)
 							or $subtemplates">
 				<xsl:variable name="text">
 					<xsl:if test="geonet:choose">
@@ -200,7 +201,7 @@
 		<xsl:param name="edit"   select="false()"/>
 		<xsl:param name="flat"   select="false()"/>
 		<xsl:param name="embedded" />
-							
+		
 		<xsl:choose>
 			<!-- has children or attributes, existing or potential -->
 			<xsl:when test="*[namespace-uri(.)!=$geonetUri]|@*|geonet:child|geonet:element/geonet:attribute">
@@ -217,18 +218,7 @@
 								<xsl:with-param name="edit"   select="$edit"/>
 							</xsl:apply-templates>
 						</xsl:if>
-						<!-- existing attributes -->
-						<xsl:apply-templates mode="simpleElement" select="@*">
-							<xsl:with-param name="schema" select="$schema"/>
-							<xsl:with-param name="edit"   select="$edit"/>
-						</xsl:apply-templates>
-						<!-- new attributes -->
-						<!-- FIXME
-						<xsl:apply-templates mode="elementEP" select="geonet:attribute">
-							<xsl:with-param name="schema" select="$schema"/>
-							<xsl:with-param name="edit"   select="$edit"/>
-						</xsl:apply-templates>
-						-->
+						
 						<!-- existing and new children -->
 						<xsl:apply-templates mode="elementEP" select="*[namespace-uri(.)!=$geonetUri]|geonet:child">
 							<xsl:with-param name="schema" select="$schema"/>
@@ -299,7 +289,9 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template mode="simpleElement" match="@*">
+	<xsl:template mode="simpleElement" match="@*"/>
+		
+	<xsl:template name="simpleAttribute" mode="simpleAttribute" match="@*" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"   select="false()"/>
 		<xsl:param name="title">
@@ -320,14 +312,25 @@
 				<xsl:with-param name="schema" select="$schema"/>
 			</xsl:call-template>
 		</xsl:param>
-		
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
+				<xsl:variable name="name" select="name(.)"/>
+				<xsl:variable name="id" select="concat('_', ../geonet:element/@ref, '_', $name)"/>
+				
 				<xsl:call-template name="editAttribute">
 					<xsl:with-param name="schema"   select="$schema"/>
 					<xsl:with-param name="title"    select="$title"/>
+					<xsl:with-param name="id"     select="concat($id, '_block')"/>
 					<xsl:with-param name="text"     select="$text"/>
 					<xsl:with-param name="helpLink" select="$helpLink"/>
+					<xsl:with-param name="name" select="$name"/>
+					<xsl:with-param name="elemId" select="geonet:element/@uuid"/>
+					<xsl:with-param name="removeLink">
+						<xsl:if test="count(../geonet:attribute[@name=$name and @del])!=0">
+							<xsl:value-of select="concat('doRemoveAttributeAction(',$apos,'/metadata.attr.delete',$apos,',',$apos,$id,$apos,',',$apos,../geonet:element/@ref,$apos,',',
+								$apos,$id,$apos,',',$apos,$apos,');')"/>
+						</xsl:if>
+					</xsl:with-param>
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:otherwise>
@@ -340,6 +343,48 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+
+
+	<!-- Display non existing geonet:attribute -->
+	<xsl:template mode="simpleAttribute" match="geonet:attribute" priority="2">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"   select="false()"/>
+		<xsl:param name="title">
+			<xsl:call-template name="getTitle">
+				<xsl:with-param name="name"   select="@name"/>
+				<xsl:with-param name="schema" select="$schema"/>
+			</xsl:call-template>
+		</xsl:param>
+		<xsl:param name="text"/>
+		<xsl:param name="helpLink">
+			<xsl:call-template name="getHelpLink">
+				<xsl:with-param name="name"   select="name(.)"/>
+				<xsl:with-param name="schema" select="$schema"/>
+			</xsl:call-template>
+		</xsl:param>
+		<xsl:variable name="name" select="@name"/>
+		
+		<!-- Display non existing child only -->
+		<xsl:if test="$edit=true() and count(../@*[name(.)=$name])=0">
+			<xsl:variable name="id" select="concat('_', ../geonet:element/@ref, '_', @name)"/>
+
+			<xsl:call-template name="editAttribute">
+				<xsl:with-param name="schema"   select="$schema"/>
+				<xsl:with-param name="title"    select="$title"/>
+				<xsl:with-param name="text"     select="$text"/>
+				<xsl:with-param name="helpLink" select="$helpLink"/>
+				<xsl:with-param name="name" select="@name"/>
+				<xsl:with-param name="elemId" select="../geonet:element/@uuid"/>
+				<xsl:with-param name="addLink">
+					<xsl:if test="@add='true'">
+						<xsl:value-of select="concat('doNewAttributeAction(',$apos,'/metadata.elem.add',$apos,',',../geonet:element/@ref,',',$apos,@name,$apos,',',
+							$apos,$id,$apos,',',$apos,'add',$apos,');')"/>
+					</xsl:if>
+				</xsl:with-param>
+			</xsl:call-template>
+		</xsl:if>
+	</xsl:template>
+
 
 	<xsl:template mode="complexElement" match="*">
 		<xsl:param name="schema"/>
@@ -390,7 +435,7 @@
     <xsl:template mode="element" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType|@gco:nilReason"/>
     <xsl:template mode="simpleElement" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType|@gco:nilReason"/>
     <xsl:template mode="complexElement" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType|@gco:nilReason"/>
-	
+	<xsl:template mode="simpleAttribute" match="@geonet:xsderror" priority="2"/>
 	<!--
 	prevent drawing of attributes starting with "_", used in old GeoNetwork versions
 	-->
@@ -413,6 +458,7 @@
 		<xsl:if test="normalize-space($text)!=''">
 			<xsl:call-template name="simpleElementGui">
 				<xsl:with-param name="title" select="$title"/>
+				<xsl:with-param name="schema" select="$schema"/>
 				<xsl:with-param name="text" select="$text"/>
 				<xsl:with-param name="helpLink" select="$helpLink"/>
 			</xsl:call-template>
@@ -492,6 +538,7 @@
 		<xsl:call-template name="simpleElementGui">
 			<xsl:with-param name="title" select="$title"/>
 			<xsl:with-param name="text" select="$text"/>
+			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="addLink" select="$addLink"/>
 			<xsl:with-param name="addXMLFragment" select="$addXMLFragment"/>
 			<xsl:with-param name="removeLink" select="$removeLink"/>
@@ -636,20 +683,27 @@
 	<!--
 	shows editable fields for an attribute
 	-->
-	<!-- FIXME: not schema-configurable -->
 	<xsl:template name="editAttribute">
 		<xsl:param name="schema"/>
 		<xsl:param name="title"/>
+		<xsl:param name="id"/>
 		<xsl:param name="text"/>
 		<xsl:param name="helpLink"/>
+		<xsl:param name="elemId"/>
+		<xsl:param name="name"/>
+		<xsl:param name="addLink"/>
+		<xsl:param name="removeLink"/>
 		
-		<xsl:variable name="name" select="name(.)"/>
 		<xsl:variable name="value" select="string(.)"/>
+		
 		<xsl:call-template name="simpleElementGui">
 			<xsl:with-param name="title" select="$title"/>
 			<xsl:with-param name="text" select="$text"/>
+			<xsl:with-param name="id" select="$id"/>
 			<xsl:with-param name="helpLink" select="$helpLink"/>
 			<xsl:with-param name="edit"     select="true()"/>
+			<xsl:with-param name="addLink" select="$addLink"/>
+			<xsl:with-param name="removeLink" select="$removeLink"/>
 		</xsl:call-template>
 	</xsl:template>
 	
@@ -756,7 +810,7 @@
 						<xsl:attribute name="class">md</xsl:attribute>
 					</xsl:otherwise>
 				</xsl:choose>
-			
+				
 				<xsl:choose>
 					<xsl:when test="$helpLink!=''">
 						<span id="stip.{$helpLink}|{$id}" onclick="toolTip(this.id);" class="content" style="cursor:help;">
@@ -804,10 +858,69 @@
 							<xsl:with-param name="txt" select="$text"/>
 						</xsl:call-template>
 					</xsl:otherwise>
-				</xsl:choose>			
+				</xsl:choose>
+				<!-- Display attributes for :
+					* non codelist element
+				 	* empty field with nilReason attributes 
+				-->
+				<xsl:choose>
+					<xsl:when test="$edit 
+						and count(geonet:attribute)&gt;0 
+						and count(*/geonet:attribute[@name='codeList'])=0 
+						and count(*/geonet:attribute[@name='gco:nilReason'])=0
+						and	count(geonet:attribute[@name!='gco:nilReason'])!=0
+						and not(gco:CharacterString)
+						">
+						<!-- Display attributes if used -->
+						<xsl:variable name="visibleAttributes" select="count(@*)!=0"/>
+						
+						<fieldset class="attributes metadata-block">
+							<legend>
+								<span>
+									<div onclick="toggleFieldset(this, $('toggled{$id}'));">
+									<xsl:attribute name="class">
+										<xsl:choose>
+											<xsl:when test="$visibleAttributes">downBt Bt</xsl:when>
+											<xsl:otherwise>rightBt Bt</xsl:otherwise>
+										</xsl:choose>
+									</xsl:attribute>
+									</div>
+								</span>
+								...
+							</legend>
+							<table id="toggled{$id}" style="display:none;">
+								<xsl:attribute name="style">
+									<xsl:if test="not($visibleAttributes)">display:none;</xsl:if>
+								</xsl:attribute>
+								<xsl:apply-templates mode="simpleAttribute" select="@*|geonet:attribute">
+									<xsl:with-param name="schema" select="$schema"/>
+									<xsl:with-param name="edit"   select="$edit"/>
+								</xsl:apply-templates>
+							</table>
+						</fieldset>
+					</xsl:when>
+					<xsl:when test="$edit
+						and /root/gui/config/metadata-editor-nilReason
+						and	count(geonet:attribute[@name='gco:nilReason'])!=0
+						and normalize-space(gco:CharacterString)=''">
+						<xsl:for-each select="@gco:nilReason">
+							<xsl:call-template name="getAttributeText">
+								<xsl:with-param name="schema" select="$schema"/>
+								<xsl:with-param name="edit"   select="$edit"/>
+							</xsl:call-template>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:when test="not($edit) and @*">
+						<xsl:apply-templates mode="simpleAttribute" select="@*">
+							<xsl:with-param name="schema" select="$schema"/>
+							<xsl:with-param name="edit"   select="$edit"/>
+						</xsl:apply-templates>
+					</xsl:when>
+				</xsl:choose>
 			</td>
 		</tr>
 	</xsl:template>
+	
 	<!--
 	gui to show a title and do special mapping for container elements
 	-->
@@ -987,7 +1100,7 @@
 
         If not iso based, search in corresponding schema.
 
-        If not found return the element name between "[]".
+        If not found return the element name.
     -->
     <xsl:template name="getTitle">
         <xsl:param name="name"/>
@@ -1266,8 +1379,7 @@
 				<xsl:variable name="label" select="/root/gui/*[name(.)=$schema]/codelist[@name = $name]/entry[code=$value]/label"/>
 				<xsl:choose>
 					<xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
-					<xsl:when test="starts-with($schema,'iso19139') 
-							and name(.)!='gco:ScopedName' and name(.)!='gco:Date' and name(.)!='gco:DateTime'">
+					<xsl:when test="starts-with($schema,'iso19139')">
 						<xsl:apply-templates mode="localised" select="..">
 							<xsl:with-param name="langId" select="$langId"></xsl:with-param>
 						</xsl:apply-templates>
@@ -1287,7 +1399,12 @@
 		<xsl:param name="rows" select="1"/>
 		<xsl:param name="cols" select="40"/>
 		
-		<xsl:variable name="name"  select="name(.)"/>
+		<xsl:variable name="name">
+			<xsl:choose>
+				<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
+				<xsl:otherwise><xsl:value-of select="name(.)"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:variable name="value" select="string(.)"/>
 		<xsl:variable name="parent"  select="name(..)"/>
 		<!-- the following variable is used in place of name as a work-around to
@@ -1307,9 +1424,9 @@
     	<xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0" />
 		
 		<xsl:choose>
-			<!-- list of values -->
-			<xsl:when test="../geonet:attribute[string(@name)=$name]/geonet:text">
-				<select class="md" name="_{../geonet:element/@ref}_{name(.)}" size="1">
+			<!-- list of values for existing attribute or non existing ones -->
+			<xsl:when test="../geonet:attribute[string(@name)=$name]/geonet:text|geonet:text">
+				<select class="md" name="_{../geonet:element/@ref}_{$updatename}" size="1">
 					<xsl:if test="$isXLinked">
 						<xsl:attribute name="disabled">disabled</xsl:attribute>
 					</xsl:if>

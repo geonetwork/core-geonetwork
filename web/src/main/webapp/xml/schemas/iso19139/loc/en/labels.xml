@@ -911,12 +911,12 @@
         <description>Ground sample distance</description>
         <condition>Provide a distance if no equivalent Scale is documented</condition>
     <helper>
-		<option value="0.10">10 cm</option>
-		<option value="0.25">25 cm</option>
-		<option value="0.50">50 cm</option>
-		<option value="1">1 m</option>
-		<option value="30">30 m</option>
-		<option value="100">100 m</option>
+		<option value="0.10">10</option>
+		<option value="0.25">25</option>
+		<option value="0.50">50</option>
+		<option value="1">1</option>
+		<option value="30">30</option>
+		<option value="100">100</option>
     </helper>
     </element>
     <element name="gmd:distributionFormat" id="271.0">
@@ -2091,13 +2091,35 @@
     </element>
     <element name="gml:duration">
         <label>Duration</label>
-        <description/>
+    	<description>Conforms to the ISO 8601 syntax for temporal length as implemented by the XML Schema duration type.</description>
     </element>    
     <element name="gml:timeInterval">
         <label>Time interval</label>
-        <description/>
+    	<description>conforms to ISO 11404 which is based on floating point values for temporal length.
+    		ISO 11404 syntax specifies the use of a positiveInteger together with appropriate values for radix and factor. The resolution of the time interval is to one radix ^(-factor) of the specified time unit.
+    		The value of the unit is either selected from the units for time intervals from ISO 31-1:1992, or is another suitable unit.  The encoding is defined for GML in gml:TimeUnitType. The second component of this union type provides a method for indicating time units other than the six standard units given in the enumeration.</description>
     </element>
-    <element name="gml:TimeInstant">
+	<element name="gml:name">
+		<label>Name</label>
+		<description></description>
+	</element>
+	<element name="gml:metaDataProperty">
+		<label>Metadata property</label>
+		<description></description>
+	</element>
+	<element name="gml:identifier">
+		<label>Identifier</label>
+		<description></description>
+	</element>
+	<element name="gml:description">
+		<label>Description</label>
+		<description>Text description of the element</description>
+	</element>
+	<element name="gml:descriptionReference">
+		<label>Description reference</label>
+		<description></description>
+	</element>
+	<element name="gml:TimeInstant">
         <label>Time instant</label>
         <description/>
     </element>
@@ -2105,6 +2127,10 @@
         <label>Time position</label>
         <description/>
     </element>
+	<element name="gml:timePosition">
+		<label>Time position</label>
+		<description/>
+	</element>
     <element name="gml:TimePeriod">
         <label>Time period</label>
         <description/>
@@ -2132,6 +2158,32 @@
         <label>Identifier</label>
         <description>Unique identifier</description>
     </element>
+	<element name="indeterminatePosition">
+		<label>Indeterminate position</label>
+		<description></description>
+	</element>
+	<element name="frame">
+		<label>Frame</label>
+		<description>Frame attribute provides a URI reference that identifies a description of the reference system</description>
+	</element>
+	<element name="calendarEraName">
+		<label>Name of the calendar era</label>
+		<description></description>
+	</element>
+	<element name="unit">
+		<label>Unit</label>
+		<description></description>
+	</element>
+	<element name="radix">
+		<label>Radix</label>
+		<description></description>
+	</element>
+	<element name="factor">
+		<label>Factor</label>
+		<description></description>
+	</element>
+	
+	
 
     <element name="srv:SV_ServiceIdentification">
         <label>Service Identification (19119)</label>
@@ -2145,17 +2197,17 @@
         <description>Service type name from a registry of services. For example, the values of the
             nameSpace and name attributes of GeneralName may be 'OGC' and 'catalogue'</description>
         <helper>
-            <option value="OGC:WMS">OGC Web Map Service (OGC:WMS)</option>
+        	<option value="OGC:WMS">OGC Web Map Service (OGC:WMS)</option>
             <option value="OGC:WFS">OGC Web Feature Service (OGC:WFS)</option>
             <option value="OGC:WCS">OGC Web Coverage Service (OGC:WCS)</option>
             <option value="W3C:HTML:DOWNLOAD">Download (W3C:HTML:DOWNLOAD)</option>
             <option value="W3C:HTML:LINK">Information (W3C:HTML:LINK)</option>
-            <!-- INSPIRE Service type defined in MD IR / 1.3.1 Spatial data service type
+        	<!--INSPIRE Service type defined in MD IR / 1.3.1 Spatial data service type
             <option value="discovery">Discovery Service (discovery)</option>
             <option value="view">View Service (view)</option>
             <option value="download">Download Service (download)</option>
             <option value="transformation">Transformation Service (transformation)</option>
-            <option value="other">Other Services (other)</option> --> 
+            <option value="other">Other Services (other)</option>  -->
         </helper>
     </element>
     <element name="srv:serviceTypeVersion">
@@ -2492,7 +2544,7 @@
         <description/>
     </element>
     <element name="gco:nilReason">
-        <label>Nil reason attribute</label>
+        <label>Nil reason</label>
         <description/>
     </element>
     <element name="srv:DCPList">

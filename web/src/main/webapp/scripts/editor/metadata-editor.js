@@ -228,6 +228,30 @@ function topControls(el,min)
 	else elDescs[3+index].show();
 }
 
+
+function doRemoveAttributeAction(action, ref, parentref)
+{
+	var metadataId = document.mainForm.id.value;
+	var thisElement = $(ref + '_block');
+	var myExtAJaxRequest = Ext.Ajax.request({
+		url: getGNServiceURL(action),
+		method: 'GET',
+		params: {id:metadataId, ref:ref},
+		success: function(result, request) {
+			var html = result.responseText;
+			//TODO replace element by result. Need #122 to be fixed thisElement.remove();
+			doSaveAction('metadata.update');
+			setBunload(true); // reset warning for window destroy
+		},
+		failure:function (result, request) { 
+			Ext.MessageBox.alert(translate("errorDeleteAttribute") + name + " " + translate("errorFromDoc") 
+						+ " / status " + result.status + " text: " + result.statusText + " - " + translate("tryAgain"));
+			setBunload(true); // reset warning for window destroy
+		}
+	});
+}
+
+
 function doRemoveElementAction(action, ref, parentref, id, min)
 {
 	var metadataId = document.mainForm.id.value;
@@ -322,6 +346,14 @@ function doNewElementAction(action, ref, name, id, what, max)
 	doNewElementAjax(action, ref, name, child, id, what, max, orElement);
 }
 
+function doNewAttributeAction(action, ref, name, id, what)
+{
+	var child = "geonet:attribute";
+	var max = null;
+	var orElement = false;
+	doNewElementAjax(action, ref, name, child, id, what, max, orElement);
+}
+
 function doNewORElementAction(action, ref, name, child, id, what, max)
 {
 	var orElement = true;
@@ -380,6 +412,12 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement)
 			parameters: pars,
 			onSuccess: function(req) {
 				var html = req.responseText;
+				
+				if (child == "geonet:attribute") {	// Need #122 to be fixed
+					doSaveAction('metadata.update');
+					return;
+				}
+				
 				if (what == 'replace') {
 					thisElement.replace(html);
 				} else if (what == 'add' || what == 'after') {

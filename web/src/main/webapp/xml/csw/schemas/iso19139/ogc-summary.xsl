@@ -40,7 +40,7 @@
 				gmd:identificationInfo/srv:SV_ServiceIdentification|
 				gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']">
 				
-				<xsl:for-each select="gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString">
+				<xsl:for-each select="gmd:citation/gmd:CI_Citation/gmd:title">
 					<dc:title>
 						<xsl:apply-templates mode="localised" select=".">
 							<xsl:with-param name="langId" select="$langId"/>
@@ -54,7 +54,7 @@
 				</xsl:for-each>
 				
 				
-				<xsl:for-each select="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword">
+				<xsl:for-each select="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[not(@gco:nilReason)]">
 					<dc:subject>
 						<xsl:apply-templates mode="localised" select=".">
 							<xsl:with-param name="langId" select="$langId"/>

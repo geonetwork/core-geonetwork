@@ -111,11 +111,19 @@
 	<xsl:template match="*[gco:CharacterString]">
 		<xsl:copy>
 			<xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
-			<xsl:if test="normalize-space(gco:CharacterString)=''">
-				<xsl:attribute name="gco:nilReason">
-					<xsl:value-of select="'missing'"/>
-				</xsl:attribute>
-			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="normalize-space(gco:CharacterString)=''">
+					<xsl:attribute name="gco:nilReason">
+						<xsl:choose>
+							<xsl:when test="@gco:nilReason"><xsl:value-of select="@gco:nilReason"/></xsl:when>
+							<xsl:otherwise>missing</xsl:otherwise>
+						</xsl:choose>
+					</xsl:attribute>
+				</xsl:when>
+				<xsl:when test="@gco:nilReason!='missing' and normalize-space(gco:CharacterString)!=''">
+					<xsl:copy-of select="@gco:nilReason"/>
+				</xsl:when>
+			</xsl:choose>
 			<xsl:apply-templates select="gco:CharacterString"/>
 			<xsl:copy-of select="*[name(.)!='gco:CharacterString']"/>
 		</xsl:copy>

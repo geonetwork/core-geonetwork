@@ -1119,6 +1119,10 @@ div.hittitle {
 	margin-left: 50px;
 }
 
+div.hittitle a {
+	text-decoration: none;
+}
+
 div.hittext_top {
 }
 
@@ -1215,4 +1219,10 @@ div.pageList {
 }
 .downBt{
 	background-image: url(images/bullet_arrow_down.png);
+}
+
+fieldset .attributes {
+	float: none;
+	width: 200px !important;
+	border-width: 0px !important;
 }

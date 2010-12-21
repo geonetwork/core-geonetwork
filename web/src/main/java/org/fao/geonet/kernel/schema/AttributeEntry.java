@@ -38,6 +38,7 @@ import java.util.List;
 class AttributeEntry
 {
 	public String  name;
+	public String  type;
 	public String  unqualifiedName;
 	public String  namespacePrefix;
 	public String  defValue;
@@ -46,7 +47,8 @@ class AttributeEntry
 	public boolean required = false;
 
 	public ArrayList alValues = new ArrayList();
-
+	public ArrayList alTypes = new ArrayList();
+	
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -106,7 +108,7 @@ class AttributeEntry
             }
 
             else if (attrName.equals("type")) {
-                 //Logger.log("Skipping 'type' attribute in <attribute> element '"+ name +"'");
+            	type = ei.element.getAttributeValue(attrName);
             }
 
             else if (attrName.equals("form")) {
@@ -128,12 +130,15 @@ class AttributeEntry
         for (Object aChildren : children) {
             Element elChild = (Element) aChildren;
             String elName = elChild.getName();
-
             if (elName.equals("simpleType")) {
                 SimpleTypeEntry ste = new SimpleTypeEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
-
+                
                 for (int j = 0; j < ste.alEnum.size(); j++) {
                     alValues.add(ste.alEnum.get(j));
+                }
+                
+                for (int j = 0; j < ste.alTypes.size(); j++) {
+                	alTypes.add(ste.alTypes.get(j));
                 }
             }
 
@@ -142,9 +147,23 @@ class AttributeEntry
             }
 
             else {
-                Logger.log();
+            	Logger.log();
             }
         }
+	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("AttributeEntry name:" + name + ", type:" + type + " [");
+		for (int j = 0; j < alValues.size(); j++) {
+		    sb.append(alValues.get(j) + ",");
+		}
+		sb.append("], types:[");
+		for (int j = 0; j < alTypes.size(); j++) {
+		    sb.append(alTypes.get(j) + ",");
+		}
+		sb.append("]");
+		return sb.toString();
 	}
 }
 

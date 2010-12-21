@@ -9,7 +9,7 @@
     version="2.0">
 
 
-    <!-- Template use to return a gco:CharacterString element
+    <!-- Template used to return a gco:CharacterString element
         in default metadata language or in a specific locale
         if exist. 
         FIXME : gmd:PT_FreeText should not be in the match clause as gco:CharacterString 
@@ -38,6 +38,13 @@
         </xsl:choose>
 
     </xsl:template>
+
+    <!-- Template used to match any other element eg. gco:Boolean, gco:Date
+         when looking for localised strings -->
+    <xsl:template mode="localised" match="*[not(gco:CharacterString or gmd:PT_FreeText)]">
+        <xsl:param name="langId"/>
+				<xsl:value-of select="*[1]"/>
+		</xsl:template>
 
     <!-- Map GUI language to iso3code -->
     <xsl:template name="getLangId">

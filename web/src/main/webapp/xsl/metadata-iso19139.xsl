@@ -98,6 +98,57 @@
 	
 	<!-- ==================================================================== -->
 
+	<!-- Distance widget with value + uom attribute in one line.
+	Suggestion (from label files) update the value element. 
+	-->
+	<xsl:template mode="iso19139" match="gmd:distance" priority="2">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+		
+		<xsl:choose>
+			<xsl:when test="$edit=true()">
+				<xsl:variable name="text">
+					<xsl:variable name="ref" select="gco:Distance/geonet:element/@ref"/>
+					
+					<input type="text" class="md" name="_{$ref}" id="_{$ref}"  
+						onkeyup="validateNumber(this,true,true);"
+						onchange="validateNumber(this,true,true);"
+						value="{gco:Distance}" size="30"/>
+					
+					&#160;
+					<xsl:value-of select="/root/gui/iso19139/element[@name = 'uom']/label"/>
+					&#160;
+					<input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"  
+						value="{gco:Distance/@uom}" size="10"/>
+					
+					<xsl:for-each select="gco:Distance">
+						<xsl:call-template name="helper">
+							<xsl:with-param name="schema" select="$schema"/>
+							<xsl:with-param name="attribute" select="false()"/>
+						</xsl:call-template>
+					</xsl:for-each>
+					
+				</xsl:variable>
+				
+				<xsl:apply-templates mode="simpleElement" select=".">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit"   select="true()"/>
+					<xsl:with-param name="text"   select="$text"/>
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates mode="simpleElement" select=".">
+					<xsl:with-param name="schema"  select="$schema"/>
+					<xsl:with-param name="text">
+						<xsl:value-of select="gco:Distance"/>&#160;<xsl:value-of select="gco:Distance/@uom"/>
+					</xsl:with-param>
+				</xsl:apply-templates>
+			</xsl:otherwise>
+		</xsl:choose>
+		
+	</xsl:template>
+	
+
 	<!--
 		OperatesOn element display or edit attribute uuidref. In edit mode
 		the metadata selection panel is provided to set the uuid.
@@ -223,7 +274,7 @@
 		input class when needed.
 		
 	-->
-	<xsl:template mode="iso19139" match="gts:TM_PeriodDuration" priority="100">
+	<xsl:template mode="iso19139" match="gts:TM_PeriodDuration|gml:duration" priority="100">
 		<xsl:param name="schema" />
 		<xsl:param name="edit" />
 		
@@ -413,6 +464,58 @@
 			<xsl:with-param name="text"     select="$text"/>
 		</xsl:apply-templates>
 	</xsl:template>
+
+
+	<!-- GML time interval -->
+	<xsl:template mode="iso19139" match="gml:timeInterval">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+		
+		<xsl:choose>
+			<xsl:when test="$edit">
+				<xsl:apply-templates mode="simpleElement" select=".">
+					<xsl:with-param name="schema"   select="$schema"/>
+					<xsl:with-param name="edit"     select="$edit"/>
+					<xsl:with-param name="title"    select="/root/gui/iso19139/element[@name='gml:timeInterval']/label"/>
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:variable name="text">
+					<xsl:choose>
+						<xsl:when test="@radix and @factor"><xsl:value-of select=". * @factor div @radix"/>&#160;<xsl:value-of select="@unit"/></xsl:when>
+						<xsl:when test="@factor"><xsl:value-of select=". * @factor"/>&#160;<xsl:value-of select="@unit"/></xsl:when>
+						<xsl:when test="@radix"><xsl:value-of select=". div @radix"/>&#160;<xsl:value-of select="@unit"/></xsl:when>
+						<xsl:otherwise><xsl:value-of select="."/>&#160;<xsl:value-of select="@unit"/></xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				<xsl:apply-templates mode="simpleElement" select=".">
+					<xsl:with-param name="schema"   select="$schema"/>
+					<xsl:with-param name="edit"     select="$edit"/>
+					<xsl:with-param name="title"    select="/root/gui/iso19139/element[@name='gml:timeInterval']/label"/>
+					<xsl:with-param name="text"     select="$text"/>
+				</xsl:apply-templates>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<!-- Display element attributes only in edit mode 
+		* GML time interval 
+	-->
+	<xsl:template mode="simpleAttribute" match="gml:timeInterval/@*" priority="99">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+		
+		<xsl:choose>
+			<xsl:when test="$edit">
+				<xsl:call-template name="simpleAttribute">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit" select="$edit"/>
+				</xsl:call-template>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template mode="simpleAttribute" match="@xsi:type" priority="99"/>
 
 	<!-- ================================================================= -->
 	<!-- some elements that have both attributes and content               -->
@@ -954,9 +1057,9 @@
 	<xsl:template mode="iso19139" match="gml:*[gml:beginPosition|gml:endPosition]|gml:TimeInstant[gml:timePosition]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
-		<xsl:for-each select="gml:beginPosition|gml:endPosition|gml:timePosition">
+		<xsl:for-each select="*">
 		<xsl:choose>
-			<xsl:when test="$edit=true()">
+			<xsl:when test="$edit=true() and (name(.)='gml:beginPosition' or name(.)='gml:endPosition' or name(.)='gml:timePosition')">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
@@ -969,32 +1072,18 @@
 							<xsl:with-param name="date" select="text()"/>
 							<xsl:with-param name="format" select="$format"/>
 						</xsl:call-template>
-												
-						<xsl:if test="@indeterminatePosition">
-							<xsl:apply-templates mode="simpleElement" select="@indeterminatePosition">
-								<xsl:with-param name="schema" select="$schema"/>
-								<xsl:with-param name="edit"   select="$edit"/>
-							</xsl:apply-templates>
-						</xsl:if>
+											
 					</xsl:with-param>
 				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:when test="name(.)='gml:timeInterval'">
+				<xsl:apply-templates mode="iso19139" select="."/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="text">
-						<xsl:choose>
-							<xsl:when test="normalize-space(.)=''">
-								<xsl:value-of select="@indeterminatePosition"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="text()"/>
-								<xsl:if test="@indeterminatePosition">
-									&#160;
-									<xsl:value-of select="concat('Qualified by indeterminatePosition',': ',@indeterminatePosition)"/>
-								</xsl:if>
-							</xsl:otherwise>
-						</xsl:choose>
+						<xsl:value-of select="text()"/>
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:otherwise>
@@ -2984,7 +3073,7 @@
 				</abstract>
 			</xsl:if>
 
-			<xsl:for-each select=".//gmd:keyword/gco:CharacterString[text()]">
+			<xsl:for-each select=".//gmd:keyword[not(@gco:nilReason)]">
 				<keyword>
 					<xsl:apply-templates mode="localised" select=".">
 						<xsl:with-param name="langId" select="$langId"></xsl:with-param>
@@ -3551,6 +3640,15 @@
 				<xsl:when test="name(.)='gmd:description'
 					or name(.)='gmd:specificUsage'
 					or name(.)='gmd:explanation'
+					or name(.)='gmd:evaluationMethodDescription'
+					or name(.)='gmd:measureDescription'
+					or name(.)='gmd:maintenanceNote'
+					or name(.)='gmd:otherConstraints'
+					or name(.)='gmd:handlingDescription'
+					or name(.)='gmd:userNote'
+					or name(.)='gmd:checkPointDescription'
+					or name(.)='gmd:evaluationMethodDescription'
+					or name(.)='gmd:measureDescription'
 					">3</xsl:when>
 				<xsl:otherwise>1</xsl:otherwise>
 			</xsl:choose>
@@ -3611,8 +3709,6 @@
 		gmd:edition[gco:CharacterString]|
 		gmd:ISBN[gco:CharacterString]|
 		gmd:ISSN[gco:CharacterString]|
-		gmd:measureDescription[gco:CharacterString]|
-		gmd:evaluationMethodDescription[gco:CharacterString]|
 		gmd:errorStatistic[gco:CharacterString]|
 		gmd:schemaAscii[gco:CharacterString]|
 		gmd:softwareDevelopmentFileFormat[gco:CharacterString]|

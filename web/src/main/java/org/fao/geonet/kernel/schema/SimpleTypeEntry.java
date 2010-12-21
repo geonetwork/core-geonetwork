@@ -29,6 +29,7 @@ package org.fao.geonet.kernel.schema;
 
 import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jdom.Namespace;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,7 @@ import java.util.List;
 class SimpleTypeEntry
 {
 	public String name;
-
+	public List alTypes = new ArrayList();
 	public List alEnum = new ArrayList();
 
 	//---------------------------------------------------------------------------
@@ -64,6 +65,21 @@ class SimpleTypeEntry
 		handleChildren(ei);
 	}
 
+
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("SimpleTypeEntry name:" + name + " Enums:[");
+		for (int j = 0; j < alEnum.size(); j++) {
+		    sb.append(alEnum.get(j) + ", ");
+		}
+		sb.append("], types:[");
+		for (int j = 0; j < alTypes.size(); j++) {
+		    sb.append(alTypes.get(j) + ", ");
+		}
+		sb.append("]");
+		return sb.toString();
+	}
+	
 	//---------------------------------------------------------------------------
 	//---
 	//--- Private methods
@@ -126,7 +142,35 @@ class SimpleTypeEntry
             }
 
             else if (elName.equals("union")) {
-                Logger.log();
+                List simpleTypes = elChild.getChildren("simpleType", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
+                // Load enumeration of union of simpleType (eg. gml:TimeUnitType, gml:NilReasonEnumeration)
+                if (simpleTypes.size()>0) {
+	                for (Object st : simpleTypes) {
+	                	Element stEl = (Element) st;
+	                	List restrictions = stEl.getChildren("restriction", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
+	                
+	                	for (Object r : restrictions) {
+							Element rEl = (Element) r;
+							List enumerationList = rEl.getChildren("enumeration", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
+							for (Object e : enumerationList) {
+								Element elEnum = (Element) e;
+								String v = elEnum.getAttributeValue("value");
+								alEnum.add(v);
+							}
+	                	}
+	                }
+	                // TODO : Optional pattern restriction
+                } else {
+                	// List of member types are loaded in order to retrieve type enumeration list when available (eg. gco:nilReason).
+                	String memberTypes = elChild.getAttributeValue("memberTypes");
+                	// TODO : Probably member types should be handled as geonet:choose style complexElement
+                	if (memberTypes != null) {
+                		String[] types = memberTypes.split(" ");
+                		for (String type : types) {
+                			alTypes.add(type);
+                		}
+                	}
+                }
             }
 
             else if (elName.equals("annotation")) {
@@ -136,6 +180,7 @@ class SimpleTypeEntry
                 Logger.log();
             }
         }
+        
 	}
 }
 

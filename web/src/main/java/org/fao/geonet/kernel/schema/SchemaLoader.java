@@ -69,6 +69,8 @@ public class SchemaLoader
 	/** Restrictions for simple types (type restriction) */
 	private Map<String, List> hmTypeRestr = new HashMap<String, List>();
 
+	private Map<String, List> hmMemberTypeRestr = new HashMap<String, List>();
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -830,6 +832,9 @@ public class SchemaLoader
 			throw new IllegalArgumentException("Namespace collision for : " + st.name);
 
 		hmTypeRestr.put(st.name, st.alEnum);
+		
+		if (!hmMemberTypeRestr.containsKey(st.name))
+			hmMemberTypeRestr.put(st.name, st.alTypes);
 	}
 
 	//---------------------------------------------------------------------------
@@ -1080,6 +1085,30 @@ public class SchemaLoader
 
 		ma.required = overRequired;
 
+		// Load simple type entry values
+		if (ae.type != null) {
+			List values = hmTypeRestr.get(ae.type);
+			if (values != null){
+				for (Object v : values) {
+					ae.alValues.add((String) v);
+				}
+			}
+			
+			// Load member types entry values
+			List memberTypes = hmMemberTypeRestr.get(ae.type);
+			if (memberTypes != null) {
+				for (Object type : memberTypes) {
+					List memberTypeValues = hmTypeRestr.get((String)type);
+					if (memberTypeValues != null){
+						for (Object v : memberTypeValues) {
+							ma.values.add((String) v);
+						}
+					}
+				}
+			}
+		}
+
+		
 		for(int k=0; k<ae.alValues.size(); k++)
 			ma.values.add(ae.alValues.get(k));
 

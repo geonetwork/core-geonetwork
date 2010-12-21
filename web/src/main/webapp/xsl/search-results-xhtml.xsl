@@ -360,7 +360,9 @@
 										</xsl:otherwise>
 									</xsl:choose>
 									<!-- <input id="selId" name="{$metadata/geonet:info/id}" type="checkbox" /> -->
-									<xsl:value-of select="$metadata/title"/>
+									<a href="metadata.show?id={$metadata/geonet:info/id}&amp;currTab={name(/root/gui/config/metadata-tab/*[@default])}">
+										<xsl:value-of select="$metadata/title"/>
+									</a>
 								</div>
 
 							</xsl:otherwise>

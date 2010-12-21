@@ -187,6 +187,10 @@
 			</error>
 		</service>
 
+		<service name="xml.metadata.validate">
+			<class name=".services.metadata.Validate"/>
+		</service>
+
 		<service name="metadata.relation">
 			<class name=".guiservices.metadata.GetRelated"/>
 		</service>
@@ -212,22 +216,8 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.attr.add">
-			<class name=".services.metadata.AddAttribute"/>
-
-			<output forward="metadata.edit" />
-
-			<error id="concurrent-update" sheet="metadata-error.xsl"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
 		<service name="metadata.attr.delete">
 			<class name=".services.metadata.DeleteAttribute"/>
-
-			<output forward="metadata.edit" />
-
-			<error id="concurrent-update" sheet="metadata-error.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

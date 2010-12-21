@@ -175,6 +175,7 @@
 		<allow service="metadata.elem.delete"/>
 		<allow service="metadata.elem.down"/>
 		<allow service="metadata.elem.up"/>
+		<allow service="metadata.attr.delete"/>
 		<allow service="metadata.update"/>
 		<allow service="metadata.update.finish"/>
 		<allow service="metadata.update.forget"/>
@@ -182,6 +183,7 @@
 		<allow service="metadata.massive.children.form"/>
 		<allow service="metadata.massive.update.children"/>
 		<allow service="metadata.validate"/>
+		<allow service="xml.metadata.validate"/>
 		<allow service="metadata.processing"/>
 		<allow service="xml.metadata.processing"/>
 

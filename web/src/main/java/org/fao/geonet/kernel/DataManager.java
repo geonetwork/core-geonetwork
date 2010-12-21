@@ -542,6 +542,7 @@ public class DataManager
 				Map<String,String> params = new HashMap<String,String>();
 				params.put("lang", lang);
 				params.put("rule", rule);
+				params.put("dataDir", this.dataDir);
 				Element xmlReport = Xml.transform(md, schemaTronXmlXslt, params);
 				if (xmlReport != null)
 					report.addContent(xmlReport);
@@ -1310,7 +1311,7 @@ public class DataManager
 	}
 
 	//--------------------------------------------------------------------------
-	/** For Ajax Editing : adds an element to a metadata ([add] link)
+	/** For Ajax Editing : adds an element or an attribute to a metadata element ([add] link)
 	  */
 	public synchronized Element addElementEmbedded(Dbms dbms, UserSession session, String id, String ref, String name, String childName)  throws Exception
 	{
@@ -1331,26 +1332,50 @@ public class DataManager
 		Element info = (Element)(md.getChild(Edit.RootChild.INFO,Edit.NAMESPACE)).clone();
 		md.removeChild(Edit.RootChild.INFO,Edit.NAMESPACE);
 		
-		//--- normal element
-		Element child = editLib.addElement(schema, el, name);
+		Element child = null;
 		MetadataSchema mds = editLib.getSchema(schema);
-		if (childName != null && !childName.equals(""))
-		{
-			//--- or element
-			String uChildName = editLib.getUnqualifiedName(childName);
-      String prefix     = editLib.getPrefix(childName);
-      String ns         = editLib.getNamespace(childName,md,mds);
-      if (prefix.equals("")) {
-         prefix = editLib.getPrefix(el.getName());
-         ns = editLib.getNamespace(el.getName(),md,mds);
-      }
-      Element orChild = new Element(uChildName,prefix,ns);
-      child.addContent(orChild);
-
-      //--- add mandatory sub-tags
-      editLib.fillElement(schema, child, orChild);
+		
+		if (childName != null) {
+			if (childName.equals("geonet:attribute")) {
+				 String defaultValue = "";
+				 List attributeDefs = el.getChildren(Edit.RootChild.ATTRIBUTE, Edit.NAMESPACE);
+				 for (Object a : attributeDefs) {
+					 Element attributeDef = (Element) a;
+					 if (attributeDef != null && attributeDef.getAttributeValue(Edit.Attribute.Attr.NAME).equals(name)) {
+						 Element defaultChild = attributeDef.getChild(Edit.Attribute.Child.DEFAULT, Edit.NAMESPACE);
+						 if (defaultChild != null) {
+							defaultValue = defaultChild.getAttributeValue(Edit.Attribute.Attr.VALUE); 
+						 }
+					 }
+				 }
+				 //--- Add new attribute with default value  
+				 el.setAttribute(new Attribute(name, defaultValue));
+	
+				child = el;
+			} else {
+				//--- normal element
+				child = editLib.addElement(schema, el, name);
+				if (!childName.equals(""))
+				{
+					//--- or element
+					String uChildName = editLib.getUnqualifiedName(childName);
+			        String prefix     = editLib.getPrefix(childName);
+			        String ns         = editLib.getNamespace(childName,md,mds);
+			        if (prefix.equals("")) {
+			           prefix = editLib.getPrefix(el.getName());
+			           ns = editLib.getNamespace(el.getName(),md,mds);
+			        }
+			        Element orChild = new Element(uChildName,prefix,ns);
+			        child.addContent(orChild);
+			
+			        //--- add mandatory sub-tags
+			        editLib.fillElement(schema, child, orChild);
+				}
+			}
+		} else {
+			child = editLib.addElement(schema, el, name);
 		}
-
+		
 		//--- now add the geonet:element back again to keep ref number
 		el.addContent(refEl);
 
@@ -1455,6 +1480,38 @@ public class DataManager
 		return result;
 	}
 
+	/**
+	 * Remove attribute in embedded mode
+	 * 
+	 * @param dbms
+	 * @param session
+	 * @param id
+	 * @param ref	Attribute identifier (eg. _169_uom).
+	 * @return
+	 * @throws Exception
+	 */
+	public synchronized Element deleteAttributeEmbedded(Dbms dbms, UserSession session, String id, String ref) throws Exception {
+		String[] token = ref.split("_");
+		String elementId = token[1];
+		String attributeName = token[2];
+		Element result = new Element(Edit.RootChild.NULL, Edit.NAMESPACE);
+		
+		//--- get metadata from session
+		Element md = getMetadataFromSession(session, id);
+
+		//--- get element to remove
+		Element el = editLib.findElement(md, elementId);
+
+		if (el != null) {
+			el.removeAttribute(attributeName);
+		}
+		
+		//--- store the metadata in the session again 
+		setMetadataIntoSession(session,(Element)md.clone(), id);
+
+		return result;
+	}
+	
 	//--------------------------------------------------------------------------
 	/** For Ajax Editing : swap element with sibling ([up] and [down] links)
 	  */

@@ -23,68 +23,41 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.DataManager;
 import org.jdom.Element;
 
-//=============================================================================
+/**
+ * For editing : removes an attribute from a metadata. Access is restricted
+ * Metadata must be in current user session in edit mode.
+ */
+public class DeleteAttribute implements Service {
+	public void init(String appPath, ServiceConfig params) throws Exception {
+	}
 
-/** For editing : removes a tag from a metadata. Access is restricted
-  */
+	public Element exec(Element params, ServiceContext context)
+			throws Exception {
+		GeonetContext gc = (GeonetContext) context
+				.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager dataMan = gc.getDataManager();
+		UserSession session = context.getUserSession();
+		Dbms dbms = (Dbms) context.getResourceManager()
+				.open(Geonet.Res.MAIN_DB);
 
-public class DeleteAttribute implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+		String id = Util.getParam(params, Params.ID);
+		String ref = Util.getParam(params, Params.REF);
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+		Element child = dataMan.deleteAttributeEmbedded(dbms, session, id, ref);
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		EditUtils.preprocessUpdate(params, context);
-
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan = gc.getDataManager();
-
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-		String id      = Util.getParam(params, Params.ID);
-		String ref     = Util.getParam(params, Params.REF);
-		String name    = Util.getParam(params, Params.NAME);
-
-		//-----------------------------------------------------------------------
-		//--- delete element and return status
-
-		EditUtils.updateContent(params, context);
-
-		// version already checked in updateContent
-		if (!dataMan.deleteAttribute(dbms, id, ref, name, null))
-			throw new ConcurrentUpdateEx(id);
-
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
-
-		return elResp;
+		return child;
 	}
 }
-
-//=============================================================================
-

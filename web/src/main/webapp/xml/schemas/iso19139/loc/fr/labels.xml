@@ -1192,15 +1192,15 @@
     <help>La valeur se trouvant sous la barre de fraction. Il s'agit ici de l'échelle : dans le cas d'une carte à l'échelle du 1:25000, seul le terme "25000" est entré. Cette valeur peut également représenter une indication de précision dans le cas d'un jeu de données vectorielles. Exemple : des limites saisies à une échelle de 1:25'000 et présentant ce niveau de précision.</help>
     <condition>Il faut saisir ou une échelle ou une distance</condition>
     <helper>
-		<option value="5000">1:5´000</option>
-		<option value="10000">1:10´000</option>
-		<option value="25000">1:25´000</option>
-		<option value="50000">1:50´000</option>
-		<option value="100000">1:100´000</option>
-		<option value="200000">1:200´000</option>
-		<option value="300000">1:300´000</option>
-		<option value="500000">1:500´000</option>
-		<option value="1000000">1:1´000´000</option>
+		<option value="5000">1:5 000</option>
+		<option value="10000">1:10 000</option>
+		<option value="25000">1:25 000</option>
+		<option value="50000">1:50 000</option>
+		<option value="100000">1:100 000</option>
+		<option value="200000">1:200 000</option>
+		<option value="300000">1:300 000</option>
+		<option value="500000">1:500 000</option>
+		<option value="1000000">1:1 000 000</option>
     </helper>    
   </element>
   <element name="gmd:density" id="293.0">
@@ -1290,12 +1290,12 @@
     <help>Résolution au sol</help>
     <condition>Saisir une distance si pas d'échelle</condition>
     <helper>
-		<option value="0.10">10 cm</option>
-		<option value="0.25">25 cm</option>
-		<option value="0.50">50 cm</option>
-		<option value="1">1 m</option>
-		<option value="30">30 m</option>
-		<option value="100">100 m</option>
+		<option value="0.10">10</option>
+		<option value="0.25">25</option>
+		<option value="0.50">50</option>
+		<option value="1">1</option>
+		<option value="30">30</option>
+		<option value="100">100</option>
     </helper>    
   </element>
   
@@ -2941,6 +2941,33 @@
     <condition/>
     
   </element>
+	
+  <element name="indeterminatePosition">
+	<label>Position indéterminée</label>
+	<description></description>
+  </element>
+  <element name="frame">
+	<label>Cadre</label>
+	<description>Frame attribute provides a URI reference that identifies a description of the reference system</description>
+  </element>
+  <element name="calendarEraName">
+  	<label>Nom de l'ère</label>
+	<description></description>
+  </element>
+  <element name="unit">
+	<label>Unité</label>
+	<description></description>
+  </element>
+  <element name="radix">
+    <label>Radical</label>
+	<description></description>
+  </element>
+  <element name="factor">
+	<label>Facteur</label>
+	<description></description>
+  </element>
+	
+	
   <element name="id">
     <label>Identifiant</label>
     <description/>
